@@ -432,21 +432,21 @@
 
 @stack('scripts')
 
-{{-- =============== SESSION TIMEOUT MODAL =============== --}}
-<div id="sessionModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:12px;padding:40px;max-width:400px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.18);">
-        <img src="{{ asset('Logo2.png') }}" alt="ENESA" style="width:56px;height:56px;object-fit:contain;margin-bottom:16px;">
-        <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#1A4D3A;margin-bottom:8px;">Sesja wygasła</h2>
-        <p style="font-size:13px;color:#5a6a60;margin-bottom:24px;">Zaloguj się ponownie, aby kontynuować.</p>
+{{-- =============== SESSION EXPIRED MODAL =============== --}}
+<div id="session-expired-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:36px;max-width:420px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.22);">
+        <i class="ti ti-lock-off" style="font-size:48px;color:#EF6C00;display:block;margin-bottom:16px;"></i>
+        <h2 style="font-family:'Lato',sans-serif;font-size:20px;font-weight:700;color:#1A4D3A;margin-bottom:10px;">Sesja wygasła</h2>
+        <p style="font-size:13px;color:#5a6a60;margin-bottom:24px;line-height:1.6;">Twoja sesja wygasła z powodu braku aktywności. Zaloguj się ponownie aby kontynuować.</p>
 
         <div id="sessionModalError" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:13px;padding:8px 12px;margin-bottom:14px;text-align:left;"></div>
 
         <form id="sessionModalForm">
             <div style="margin-bottom:12px;text-align:left;">
                 <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:4px;">E-mail</label>
-                <input id="smEmail" type="email" name="email" required
+                <input id="smEmail" type="text" name="email" required
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;outline:none;"
-                    placeholder="adres@firma.pl">
+                    placeholder="Twój email">
             </div>
             <div style="margin-bottom:20px;text-align:left;">
                 <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:4px;">Hasło</label>
@@ -463,19 +463,23 @@
 </div>
 
 <script>
-    // Session keepalive / expiry check — every 30 seconds
+    // Session expiry check — every 60 seconds
+    let _sessionExpired = false;
     let _sessionCheckInterval = setInterval(function () {
-        fetch('/api/user', {
+        fetch('/session-check', {
             headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
             credentials: 'same-origin'
         }).then(function (res) {
-            if (res.status === 401) {
+            return res.json();
+        }).then(function (data) {
+            if (!data.authenticated && !_sessionExpired) {
+                _sessionExpired = true;
                 clearInterval(_sessionCheckInterval);
-                const modal = document.getElementById('sessionModal');
-                modal.style.display = 'flex';
+                document.getElementById('session-expired-modal').style.display = 'flex';
+                document.title = '\u26A0 Sesja wygasła — ENESA';
             }
         }).catch(function () { /* network error – ignore */ });
-    }, 30000);
+    }, 60000);
 
     // Modal form submit — re-login without page reload
     document.getElementById('sessionModalForm').addEventListener('submit', function (e) {
@@ -486,7 +490,7 @@
         const formData = new FormData();
         formData.append('email',    document.getElementById('smEmail').value);
         formData.append('password', document.getElementById('smPassword').value);
-        formData.append('_token',   '{{ csrf_token() }}');
+        formData.append('_token',   document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
         fetch('{{ route("login") }}', {
             method: 'POST',
@@ -495,9 +499,12 @@
             body: formData
         }).then(function (res) {
             if (res.ok || res.redirected) {
-                document.getElementById('sessionModal').style.display = 'none';
-                // restart keepalive
-                _sessionCheckInterval = setInterval(arguments.callee, 30000);
+                _sessionExpired = false;
+                document.getElementById('session-expired-modal').style.display = 'none';
+                document.title = document.title.replace('\u26A0 Sesja wygasła — ', '');
+                // restart check
+                _sessionCheckInterval = setInterval(arguments.callee.caller, 60000);
+                location.reload();
             } else {
                 return res.json().then(function (data) {
                     errBox.textContent = data.message || 'Nieprawidłowe dane logowania.';

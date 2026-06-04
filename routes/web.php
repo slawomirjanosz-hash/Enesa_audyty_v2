@@ -36,4 +36,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Session check endpoint (used by session-expired modal JS)
+Route::get('/session-check', function () {
+    return response()->json(['authenticated' => auth()->check()]);
+})->name('session.check');
+
 require __DIR__.'/auth.php';
