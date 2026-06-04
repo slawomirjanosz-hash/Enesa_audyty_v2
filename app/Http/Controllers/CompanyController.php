@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
 {
@@ -61,7 +65,7 @@ class CompanyController extends Controller
         $company->load([
             'audits.auditType',
             'offers',
-            'users',
+            'users.roles',
         ]);
 
         $stats = [
@@ -81,6 +85,37 @@ class CompanyController extends Controller
 
         return redirect()->route('companies.show', $company)
             ->with('success', 'Klient został zaakceptowany');
+    }
+
+    public function storeUser(Request $request, Company $company)
+    {
+        $data = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name'  => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone'      => ['nullable', 'string', 'max:30'],
+            'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
+            'password'   => ['required', 'string', 'min:8'],
+        ]);
+
+        DB::transaction(function () use ($data, $company) {
+            $user = User::create([
+                'name'      => trim($data['first_name'] . ' ' . $data['last_name']),
+                'email'     => $data['email'],
+                'phone'     => $data['phone'] ?? null,
+                'password'  => Hash::make($data['password']),
+                'is_active' => true,
+            ]);
+
+            $user->assignRole($data['role']);
+
+            $company->users()->attach($user->id, [
+                'is_admin' => $data['role'] === 'client_admin',
+            ]);
+        });
+
+        return redirect()->route('companies.show', $company)
+            ->with('success', 'Użytkownik został dodany do firmy.');
     }
 
     public function store(Request $request)

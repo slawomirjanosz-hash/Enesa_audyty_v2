@@ -398,6 +398,207 @@
     }
 
     .role-badge.admin { background: #1A4D3A; color: #fff; }
+
+    .role-badge.user { background: #F5F5F5; color: #757575; }
+
+    .online-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        font-family: 'Manrope', sans-serif;
+        color: #757575;
+        white-space: nowrap;
+    }
+
+    .online-state .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #BDBDBD;
+    }
+
+    .online-state.online { color: #2E7D32; }
+    .online-state.online .dot { background: #2E7D32; }
+
+    .company-users-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .btn-add-user {
+        background: #1A4D3A;
+        color: #F5F0E8;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: background .15s, transform .1s;
+    }
+
+    .btn-add-user:hover { background: #153d2e; }
+
+    .user-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .user-action-btn {
+        border: 1px solid #D0CCC0;
+        background: #F4F1EA;
+        color: #1A4D3A;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        font-family: 'Manrope', sans-serif;
+        cursor: pointer;
+    }
+
+    .user-action-btn.delete {
+        background: #fff0f0;
+        color: #C62828;
+        border-color: #f0c7c7;
+    }
+
+    .user-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.55);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+
+    .user-modal {
+        background: #fff;
+        border-radius: 14px;
+        width: 100%;
+        max-width: 520px;
+        padding: 30px;
+        box-shadow: 0 18px 50px rgba(0,0,0,.22);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .user-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .user-modal-header h2 {
+        font-family: 'Lato', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1A4D3A;
+    }
+
+    .user-modal-header p {
+        font-family: 'Manrope', sans-serif;
+        font-size: 13px;
+        color: #5a6a60;
+        margin-top: 4px;
+    }
+
+    .modal-close-btn {
+        border: none;
+        background: transparent;
+        font-size: 22px;
+        color: #888;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .modal-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .modal-field { margin-bottom: 14px; }
+
+    .modal-field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: #3a3a3a;
+        margin-bottom: 5px;
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .modal-field input,
+    .modal-field select {
+        width: 100%;
+        background: #FAFAF6;
+        border: 1px solid #D0CCC0;
+        border-radius: 8px;
+        padding: 11px 12px;
+        font-size: 14px;
+        font-family: 'Lato', sans-serif;
+        outline: none;
+    }
+
+    .role-choice {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .role-choice label {
+        border: 1px solid #D0CCC0;
+        border-radius: 10px;
+        padding: 12px;
+        background: #FAFAF6;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        cursor: pointer;
+        font-family: 'Manrope', sans-serif;
+        font-size: 13px;
+        color: #2a2a2a;
+        font-weight: 600;
+    }
+
+    .role-choice input { margin-top: 2px; }
+
+    .modal-submit {
+        width: 100%;
+        margin-top: 8px;
+        background: #1A4D3A;
+        color: #F5F0E8;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .modal-submit:hover { background: #153d2e; }
+
+    @media (max-width: 768px) {
+        .modal-grid { grid-template-columns: 1fr; }
+        .role-choice { grid-template-columns: 1fr; }
+    }
 </style>
 @endpush
 
@@ -698,32 +899,69 @@
 
     {{-- ═══ ZAKŁADKA: UŻYTKOWNICY ═══ --}}
     <div id="tab-users" class="tab-panel">
+        <div class="company-users-toolbar">
+            <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;">
+                Zarządzaj użytkownikami przypisanymi do tej firmy.
+            </div>
+            <button type="button" class="btn-add-user" onclick="openUserModal()">
+                <i class="ti ti-user-plus"></i> Dodaj użytkownika
+            </button>
+        </div>
+
         @if($company->users->isEmpty())
             <div class="empty-tab">
                 <i class="ti ti-users"></i>
                 <p>Brak powiązanych użytkowników.</p>
             </div>
         @else
-            <div class="user-list">
-                @foreach($company->users as $user)
-                    <div class="user-item">
-                        <div class="user-item-avatar">
-                            {{ strtoupper(substr($user->name, 0, 2)) }}
-                        </div>
-                        <div>
-                            <div class="user-item-name">{{ $user->name }}</div>
-                            <div class="user-item-email">{{ $user->email }}</div>
-                        </div>
-                        <div class="user-item-badge">
-                            @foreach($user->getRoleNames() as $role)
-                                <span class="role-badge {{ in_array($role, ['admin', 'superadmin']) ? 'admin' : '' }}">
-                                    {{ $role }}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Imię i nazwisko</th>
+                        <th>Email</th>
+                        <th>Rola</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($company->users as $user)
+                        @php
+                            $isOnline = $user->is_active && $user->last_seen_at && $user->last_seen_at->greaterThan(now()->subMinutes(15));
+                            $roleName = $user->hasRole('client_admin') ? 'Główny kontakt' : 'Użytkownik';
+                            $roleClass = $user->hasRole('client_admin') ? 'admin' : 'user';
+                        @endphp
+                        <tr>
+                            <td>
+                                <div class="user-item-avatar" style="width:40px;height:40px;">
+                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:#1e1e1e;">{{ $user->name }}</div>
+                                <div style="font-size:12px;color:#7a8a80;">{{ $user->phone ?? 'Brak telefonu' }}</div>
+                            </td>
+                            <td>{{ $user->email }}</td>
+                            <td>
+                                <span class="role-badge {{ $roleClass }}">{{ $roleName }}</span>
+                            </td>
+                            <td>
+                                <span class="online-state {{ $isOnline ? 'online' : '' }}">
+                                    <span class="dot"></span>
+                                    {{ $isOnline ? 'Online' : 'Offline' }}
                                 </span>
-                            @endforeach
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+                            </td>
+                            <td>
+                                <div class="user-actions">
+                                    <button type="button" class="user-action-btn">Edytuj</button>
+                                    <button type="button" class="user-action-btn delete">Usuń</button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         @endif
     </div>
 
@@ -743,6 +981,66 @@
         </div>
     </div>
 </div>
+
+{{-- ═══ MODAL DODAJ UŻYTKOWNIKA ═══ --}}
+<div id="userModalOverlay" class="user-modal-overlay" onclick="closeUserModalOutside(event)">
+    <div class="user-modal">
+        <div class="user-modal-header">
+            <div>
+                <h2>Dodaj użytkownika</h2>
+                <p>Utwórz nowe konto powiązane z tą firmą.</p>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeUserModal()">&times;</button>
+        </div>
+
+        <form method="POST" action="{{ route('companies.users.store', $company) }}">
+            @csrf
+
+            <div class="modal-grid">
+                <div class="modal-field">
+                    <label for="user-first-name">Imię</label>
+                    <input id="user-first-name" type="text" name="first_name" value="{{ old('first_name') }}" required>
+                </div>
+                <div class="modal-field">
+                    <label for="user-last-name">Nazwisko</label>
+                    <input id="user-last-name" type="text" name="last_name" value="{{ old('last_name') }}" required>
+                </div>
+            </div>
+
+            <div class="modal-grid">
+                <div class="modal-field">
+                    <label for="user-email">Email</label>
+                    <input id="user-email" type="email" name="email" value="{{ old('email') }}" required>
+                </div>
+                <div class="modal-field">
+                    <label for="user-phone">Telefon</label>
+                    <input id="user-phone" type="text" name="phone" value="{{ old('phone') }}">
+                </div>
+            </div>
+
+            <div class="modal-field">
+                <label>Rola</label>
+                <div class="role-choice">
+                    <label>
+                        <input type="radio" name="role" value="client_admin" {{ old('role', 'client_admin') === 'client_admin' ? 'checked' : '' }}>
+                        <span>Główny kontakt</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="role" value="client_user" {{ old('role') === 'client_user' ? 'checked' : '' }}>
+                        <span>Użytkownik firmy</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-field">
+                <label for="user-password">Hasło</label>
+                <input id="user-password" type="password" name="password" required>
+            </div>
+
+            <button type="submit" class="modal-submit">Utwórz użytkownika</button>
+        </form>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -753,5 +1051,25 @@
         document.getElementById('tab-' + name).classList.add('active');
         btn.classList.add('active');
     }
+
+    function openUserModal() {
+        document.getElementById('userModalOverlay').style.display = 'flex';
+    }
+
+    function closeUserModal() {
+        document.getElementById('userModalOverlay').style.display = 'none';
+    }
+
+    function closeUserModalOutside(event) {
+        if (event.target.id === 'userModalOverlay') {
+            closeUserModal();
+        }
+    }
+
+    @if($errors->any())
+        window.addEventListener('DOMContentLoaded', function () {
+            openUserModal();
+        });
+    @endif
 </script>
 @endpush
