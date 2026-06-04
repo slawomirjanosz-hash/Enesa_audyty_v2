@@ -113,6 +113,9 @@
     .btn-primary-action { background: #1A4D3A; color: #F5F0E8; }
     .btn-primary-action:hover { background: #153d2e; }
 
+        .btn-accept-action { background: #EF6C00; color: #fff; }
+        .btn-accept-action:hover { background: #d95f00; }
+
     .btn-secondary-action { background: #F4F1EA; color: #1A4D3A; border: 1px solid #D0CCC0; }
     .btn-secondary-action:hover { background: #EAE6DC; }
 
@@ -438,12 +441,23 @@
     </div>
 
     <div class="company-header-actions">
-        <button class="btn-action btn-secondary-action" type="button">
+        <a href="#" class="btn-action {{ $company->status === 'active' ? 'btn-primary-action' : 'btn-secondary-action' }}">
             <i class="ti ti-edit"></i> Edytuj
-        </button>
-        <button class="btn-action btn-primary-action" type="button">
-            <i class="ti ti-plus"></i> Nowy audyt
-        </button>
+        </a>
+
+        @if($company->status === 'pending')
+            <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-block;">
+                @csrf
+                <button type="submit" class="btn-action btn-accept-action">
+                    <i class="ti ti-check"></i> Akceptuj klienta
+                </button>
+            </form>
+        @elseif($company->status === 'active')
+            <span class="status-badge active-inline">
+                <i class="ti ti-circle-filled" style="font-size:8px;"></i>
+                Aktywny
+            </span>
+        @endif
     </div>
 </div>
 
