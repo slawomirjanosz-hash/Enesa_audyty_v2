@@ -109,6 +109,7 @@
     }
     .badge-superadmin { background: #0d3b12; color: #A8D5B5; }
     .badge-admin      { background: rgba(26,77,58,0.12); color: #1A4D3A; }
+    .badge-auditor-senior { background: rgba(100,60,180,0.10); color: #6433A0; }
     .badge-auditor    { background: rgba(30,80,150,0.10); color: #1E5096; }
 
     /* ── Online status ────────────────────── */
@@ -207,7 +208,7 @@
     <a href="{{ route('settings.users.index') }}" class="settings-tab active">
         <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy ENESA
     </a>
-    <a href="#" class="settings-tab">
+    <a href="{{ route('settings.company') }}" class="settings-tab">
         <i class="ti ti-building" style="margin-right:6px;"></i>Dane firmy
     </a>
     <a href="#" class="settings-tab">
@@ -272,6 +273,8 @@
                             <span class="badge badge-superadmin"><i class="ti ti-crown"></i> Super Admin</span>
                         @elseif($role === 'admin')
                             <span class="badge badge-admin"><i class="ti ti-shield"></i> Admin</span>
+                        @elseif($role === 'auditor_senior')
+                            <span class="badge badge-auditor-senior"><i class="ti ti-clipboard-check"></i> Audytor Senior</span>
                         @elseif($role === 'auditor')
                             <span class="badge badge-auditor"><i class="ti ti-clipboard-check"></i> Audytor</span>
                         @else
@@ -360,8 +363,9 @@
                     <label class="mf-label" for="add_role">Rola</label>
                     <select id="add_role" name="role" class="mf-select mf-input" required>
                         <option value="">— wybierz —</option>
-                        <option value="admin"   {{ old('role') === 'admin'   ? 'selected' : '' }}>Admin</option>
-                        <option value="auditor" {{ old('role') === 'auditor' ? 'selected' : '' }}>Audytor</option>
+                        <option value="admin"          {{ old('role') === 'admin'          ? 'selected' : '' }}>Administrator</option>
+                        <option value="auditor_senior" {{ old('role') === 'auditor_senior' ? 'selected' : '' }}>Audytor Senior</option>
+                        <option value="auditor"        {{ old('role') === 'auditor'        ? 'selected' : '' }}>Audytor</option>
                     </select>
                 </div>
             </div>
@@ -405,7 +409,8 @@
                 <div class="mf-group">
                     <label class="mf-label" for="edit_role">Rola</label>
                     <select id="edit_role" name="role" class="mf-select mf-input" required>
-                        <option value="admin">Admin</option>
+                        <option value="admin">Administrator</option>
+                        <option value="auditor_senior">Audytor Senior</option>
                         <option value="auditor">Audytor</option>
                     </select>
                 </div>

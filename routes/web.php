@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
         Route::resource('users', Settings\UserController::class)->names('users');
+        Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
+        Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
     });
 });
 
