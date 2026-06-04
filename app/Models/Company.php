@@ -13,6 +13,7 @@ class Company extends Model
         'nip',
         'email',
         'phone',
+        'address',
         'city',
         'status',
     ];

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ENESA — System zarządzania audytami energetycznymi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Manrope:wght@400;500;600;700&display=swap">
@@ -125,9 +126,42 @@
         .modal-login-link { display: block; text-align: center; font-size: 13px; color: #888; margin-top: 16px; text-decoration: none; }
         .modal-login-link a { color: #1A4D3A; font-weight: 700; text-decoration: none; }
         .modal-login-link a:hover { text-decoration: underline; }
+
+        /* FLASH BANNER */
+        .flash-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: #E8F5E9;
+            border-left: 4px solid #2E7D32;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1B5E20;
+            box-shadow: 0 2px 12px rgba(46,125,50,0.15);
+        }
+        .flash-banner-msg { display: flex; align-items: center; gap: 10px; }
+        .flash-banner-close { background: none; border: none; font-size: 20px; color: #2E7D32; cursor: pointer; line-height: 1; padding: 0 4px; }
+        .flash-banner-close:hover { color: #1B5E20; }
     </style>
 </head>
 <body>
+
+@if(session('success'))
+<div class="flash-banner" id="flashBanner">
+    <div class="flash-banner-msg">
+        <i class="ti ti-circle-check" style="font-size:18px;"></i>
+        {{ session('success') }}
+    </div>
+    <button class="flash-banner-close" onclick="document.getElementById('flashBanner').remove()" title="Zamknij">&times;</button>
+</div>
+@endif
 
 <!-- NAVBAR -->
 <nav class="navbar">
@@ -308,43 +342,164 @@
             <span>ENESA</span>
         </div>
         <h2>Zarejestruj firmę</h2>
-        <p>Wypełnij formularz, a nasz zespół skontaktuje się z Tobą w ciągu jednego dnia roboczego z ofertą dostosowaną do Twoich potrzeb.</p>
-        <form id="registerForm" onsubmit="return false;">
+        <p>Zarejestruj firmę i otrzymaj ofertę audytu energetycznego dotosowaną do Twoich potrzeb.</p>
+
+        @if($errors->any())
+        <div style="background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:6px;padding:10px 14px;font-size:13px;margin-bottom:16px;">
+            <strong>Proszę poprawć błędy:</strong>
+            <ul style="margin:6px 0 0 16px;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <form method="POST" action="{{ route('register.client.store') }}">
+            @csrf
+
+            {{-- NIP + GUS --}}
             <div class="form-group">
-                <label for="regNip">NIP firmy</label>
+                <label for="nip-input">NIP firmy</label>
                 <div class="form-row">
-                    <input id="regNip" type="text" class="form-input" placeholder="000-000-00-00" maxlength="13">
-                    <button type="button" class="btn-gus" onclick="fetchGUS()">Pobierz z GUS</button>
+                    <input id="nip-input" type="text" name="nip" class="form-input"
+                           placeholder="np. 527-000-11-22 lub 5270001122" maxlength="13"
+                           value="{{ old('nip') }}"
+                           oninput="formatNipHint()">
+                    <button type="button" class="btn-gus" onclick="fetchFromGus()">Pobierz z GUS</button>
                 </div>
+                <div id="nip-hint" style="font-size:11px;margin-top:4px;"></div>
+                <div id="gus-status" style="font-size:12px;margin-top:4px;"></div>
+            </div>
+
+            {{-- Dane firmy --}}
+            <div class="form-group">
+                <label for="company-name">Nazwa firmy</label>
+                <input id="company-name" type="text" name="name" class="form-input"
+                       placeholder="Pobrana automatycznie z GUS lub wpisz ręcznie"
+                       value="{{ old('name') }}" required>
             </div>
             <div class="form-group">
-                <label for="regNazwa">Nazwa firmy</label>
-                <input id="regNazwa" type="text" class="form-input" placeholder="Pobrana automatycznie z GUS" readonly>
+                <label for="company-address">Adres</label>
+                <input id="company-address" type="text" name="address" class="form-input"
+                       placeholder="ul. Przykładowa 1" value="{{ old('address') }}">
             </div>
             <div class="form-group">
-                <label for="regAdres">Adres</label>
-                <input id="regAdres" type="text" class="form-input" placeholder="Pobrana automatycznie z GUS" readonly>
+                <label for="company-city">Miasto</label>
+                <input id="company-city" type="text" name="city" class="form-input"
+                       placeholder="Warszawa" value="{{ old('city') }}">
             </div>
+
             <hr class="modal-divider">
+
+            {{-- Dane kontaktowe --}}
             <div class="form-group">
-                <label for="regImie">Imię i nazwisko osoby kontaktowej</label>
-                <input id="regImie" type="text" class="form-input" placeholder="Jan Kowalski">
+                <label for="reg-first-name">Imię</label>
+                <input id="reg-first-name" type="text" name="first_name" class="form-input"
+                       placeholder="Jan" value="{{ old('first_name') }}" required>
             </div>
             <div class="form-group">
-                <label for="regEmail">Adres e-mail</label>
-                <input id="regEmail" type="email" class="form-input" placeholder="jan.kowalski@firma.pl">
+                <label for="reg-last-name">Nazwisko</label>
+                <input id="reg-last-name" type="text" name="last_name" class="form-input"
+                       placeholder="Kowalski" value="{{ old('last_name') }}" required>
             </div>
             <div class="form-group">
-                <label for="regTelefon">Telefon</label>
-                <input id="regTelefon" type="tel" class="form-input" placeholder="+48 000 000 000">
+                <label for="reg-email">Adres e-mail</label>
+                <input id="reg-email" type="email" name="email" class="form-input"
+                       placeholder="jan.kowalski@firma.pl" value="{{ old('email') }}" required>
             </div>
-            <button type="submit" class="btn-submit">Wyślij zgłoszenie do ENESA</button>
+            <div class="form-group">
+                <label for="reg-phone">Telefon</label>
+                <input id="reg-phone" type="tel" name="phone" class="form-input"
+                       placeholder="+48 000 000 000" value="{{ old('phone') }}">
+            </div>
+
+            <hr class="modal-divider">
+
+            {{-- Hasło --}}
+            <div class="form-group">
+                <label for="reg-password">Hasło</label>
+                <input id="reg-password" type="password" name="password" class="form-input"
+                       placeholder="min. 8 znaków" required minlength="8">
+            </div>
+            <div class="form-group">
+                <label for="reg-password-confirm">Powtórz hasło</label>
+                <input id="reg-password-confirm" type="password" name="password_confirmation" class="form-input"
+                       placeholder="powtórz hasło" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Wyślij zgłoszenie</button>
         </form>
+
         <p class="modal-login-link">Masz już konto? <a href="{{ route('login') }}">Zaloguj się</a></p>
     </div>
 </div>
 
 <script>
+    function cleanNip(val) {
+        return val.replace(/[^0-9]/g, '');
+    }
+
+    function formatNipHint() {
+        const raw   = document.getElementById('nip-input').value;
+        const clean = cleanNip(raw);
+        const hint  = document.getElementById('nip-hint');
+        if (clean.length === 0) { hint.textContent = ''; return; }
+        if (clean.length === 10) {
+            hint.style.color = '#2E7D32';
+            hint.textContent = 'Oczyszczony NIP: ' + clean + ' — 10/10 cyfr ✓';
+        } else {
+            hint.style.color = '#EF6C00';
+            hint.textContent = 'Oczyszczony NIP: ' + clean + ' — ' + clean.length + '/10 cyfr';
+        }
+    }
+
+    function fetchFromGus() {
+        const raw   = document.getElementById('nip-input').value;
+        const clean = cleanNip(raw);
+        const status = document.getElementById('gus-status');
+
+        if (clean.length !== 10) {
+            status.style.color = '#b91c1c';
+            status.textContent = 'Podaj poprawny 10-cyfrowy NIP przed pobraniem danych.';
+            return;
+        }
+
+        status.style.color = '#888';
+        status.textContent = 'Pobieranie danych z GUS…';
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch('{{ route("companies.fetchGus") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({ nip: clean }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                status.style.color = '#b91c1c';
+                status.textContent = data.error;
+                return;
+            }
+            const nameField    = document.getElementById('company-name');
+            const addressField = document.getElementById('company-address');
+            const cityField    = document.getElementById('company-city');
+            if (data.name)    { nameField.value    = data.name;    nameField.style.borderColor    = '#2E7D32'; }
+            if (data.address) { addressField.value = data.address; addressField.style.borderColor = '#2E7D32'; }
+            if (data.city)    { cityField.value    = data.city;    cityField.style.borderColor    = '#2E7D32'; }
+            status.style.color = '#2E7D32';
+            status.textContent = 'Dane pobrane poprawnie ✓';
+        })
+        .catch(() => {
+            status.style.color = '#b91c1c';
+            status.textContent = 'Błąd połączenia z GUS. Wypełnij dane ręcznie.';
+        });
+    }
+
     function openModal() {
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -358,12 +513,14 @@
             closeModal();
         }
     }
-    function fetchGUS() {
-        alert('Funkcja pobierania danych z GUS zostanie uruchomiona wkrótce.');
-    }
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
+
+    @if($errors->any())
+    document.addEventListener('DOMContentLoaded', function() { openModal(); });
+    @endif
 </script>
 </body>
 </html>
