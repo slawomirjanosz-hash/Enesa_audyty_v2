@@ -278,7 +278,7 @@
         <span class="page-badge">Widok audytora</span>
         <h1 class="page-title">Klienci wymagający uwagi</h1>
     </div>
-    <a href="#" class="btn-add">
+    <a href="#" class="btn-add" onclick="openModal()">
         <i class="ti ti-plus"></i>Dodaj klienta
     </a>
 </div>
@@ -416,5 +416,131 @@
         </div>
     @endforelse
 </div>
+
+{{-- ══════ MODAL DODAJ KLIENTA ══════ --}}
+<div id="addClientModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:36px;max-width:500px;width:95%;max-height:90vh;overflow-y:auto;position:relative;">
+        <button onclick="closeModal()" style="position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#aaa;cursor:pointer;line-height:1;">&times;</button>
+        <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#1A4D3A;margin-bottom:6px;">
+            <i class="ti ti-building" style="margin-right:8px;"></i>Dodaj klienta
+        </div>
+        <div style="font-size:13px;color:#888;margin-bottom:24px;">Wypełnij dane firmy lub pobierz automatycznie z GUS.</div>
+
+        <form method="POST" action="{{ route('companies.store') }}">
+            @csrf
+
+            {{-- NIP + GUS --}}
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">NIP firmy</label>
+                <div style="display:flex;gap:8px;">
+                    <input id="nip-input" type="text" name="nip" placeholder="np. 527-000-11-22"
+                           style="flex:1;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;"
+                           oninput="this.value=this.value.replace(/[^0-9\-]/g,'')"
+                           maxlength="13">
+                    <button type="button" onclick="fetchFromGus()"
+                            style="padding:10px 14px;background:rgba(26,77,58,0.08);border:1px solid rgba(26,77,58,0.25);border-radius:6px;color:#1A4D3A;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                        Pobierz z GUS
+                    </button>
+                </div>
+            </div>
+
+            {{-- Nazwa firmy --}}
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Nazwa firmy<span style="color:#b91c1c;">*</span></label>
+                <input id="company-name" type="text" name="name" required readonly
+                       style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
+                       placeholder="Pobrana z GUS lub wpisz ręcznie">
+            </div>
+
+            {{-- Adres + Miasto --}}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+                <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Adres</label>
+                    <input id="company-address" type="text" name="address" readonly
+                           style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
+                           placeholder="ul. Przykładowa 1">
+                </div>
+                <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Miasto</label>
+                    <input id="company-city" type="text" name="city" readonly
+                           style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
+                           placeholder="Warszawa">
+                </div>
+            </div>
+
+            {{-- Email + Telefon --}}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+                <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Email</label>
+                    <input type="email" name="email"
+                           style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
+                           placeholder="biuro@firma.pl">
+                </div>
+                <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Telefon</label>
+                    <input type="tel" name="phone"
+                           style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
+                           placeholder="+48 000 000 000">
+                </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+                <button type="submit"
+                        style="flex:1;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:12px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;">
+                    <i class="ti ti-plus" style="margin-right:6px;"></i>Dodaj klienta
+                </button>
+                <button type="button" onclick="closeModal()"
+                        style="padding:12px 20px;background:transparent;color:#888;border:1px solid #E5E1D8;border-radius:8px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">
+                    Anuluj
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openModal() {
+        document.getElementById('addClientModal').style.display = 'flex';
+    }
+    function closeModal() {
+        document.getElementById('addClientModal').style.display = 'none';
+    }
+    function fetchFromGus() {
+        const nip = document.getElementById('nip-input').value.replace(/[^0-9]/g, '');
+        if (nip.length !== 10) {
+            alert('NIP musi mieć 10 cyfr');
+            return;
+        }
+        fetch('{{ route("companies.fetchGus") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ nip: nip }),
+        })
+        .then(r => r.json())
+        .then(d => {
+            const name = document.getElementById('company-name');
+            const addr = document.getElementById('company-address');
+            const city = document.getElementById('company-city');
+            name.value = d.name    || '';
+            addr.value = d.address || '';
+            city.value = d.city    || '';
+            if (d.name)    { name.style.borderColor = '#2E7D32'; name.readOnly = true; }
+            if (d.address) { addr.style.borderColor = '#2E7D32'; }
+            if (d.city)    { city.style.borderColor = '#2E7D32'; }
+        })
+        .catch(() => alert('Błąd pobierania danych z GUS'));
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+    document.getElementById('addClientModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>
+@endpush
 
 @endsection
