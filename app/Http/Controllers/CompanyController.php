@@ -73,7 +73,7 @@ class CompanyController extends Controller
         return view('companies.show', compact('company', 'stats'));
     }
 
-    public function accept(Company $company): RedirectResponse
+    public function accept(Company $company)
     {
         if ($company->status === 'pending') {
             $company->update(['status' => 'active']);
