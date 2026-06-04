@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ClientAccepted;
+use App\Mail\ClientRegistered;
+use App\Mail\NewClientUser;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
@@ -36,17 +40,16 @@ class CompanyController extends Controller
                 return response()->json(['error' => 'Brak danych dla podanego NIP.'], 404);
             }
 
-            $name       = $subject['name'] ?? '';
+            $name = $subject['name'] ?? '';
             $rawAddress = $subject['residenceAddress'] ?? $subject['workingAddress'] ?? '';
-            $address    = '';
-            $city       = '';
+            $address = '';
+            $city = '';
 
             if ($rawAddress) {
                 $lastComma = strrpos($rawAddress, ',');
                 if ($lastComma !== false) {
-                    $address  = trim(substr($rawAddress, 0, $lastComma));
+                    $address = trim(substr($rawAddress, 0, $lastComma));
                     $cityPart = trim(substr($rawAddress, $lastComma + 1));
-                    // Strip Polish postcode pattern "00-000 " from city
                     $city = trim(preg_replace('/^\d{2}-\d{3}\s+/', '', $cityPart));
                 } else {
                     $address = $rawAddress;
@@ -54,7 +57,6 @@ class CompanyController extends Controller
             }
 
             return response()->json(compact('name', 'address', 'city'));
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Błąd połączenia z API. Spróbuj ponownie później.'], 503);
         }
@@ -69,9 +71,9 @@ class CompanyController extends Controller
         ]);
 
         $stats = [
-            'audits_count'  => $company->audits->count(),
-            'offers_count'  => $company->offers->count(),
-            'users_count'   => $company->users->count(),
+            'audits_count' => $company->audits->count(),
+            'offers_count' => $company->offers->count(),
+            'users_count' => $company->users->count(),
         ];
 
         return view('companies.show', compact('company', 'stats'));
@@ -81,6 +83,14 @@ class CompanyController extends Controller
     {
         if ($company->status === 'pending') {
             $company->update(['status' => 'active']);
+
+            $company->loadMissing('users.roles');
+
+            $clientAdmin = $company->users->first(fn ($user) => $user->hasRole('client_admin'));
+
+            if ($clientAdmin?->email) {
+                Mail::to($clientAdmin->email)->send(new ClientAccepted($company));
+            }
         }
 
         return redirect()->route('companies.show', $company)
@@ -91,19 +101,22 @@ class CompanyController extends Controller
     {
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name'  => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone'      => ['nullable', 'string', 'max:30'],
-            'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
-            'password'   => ['required', 'string', 'min:8'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role' => ['required', Rule::in(['client_admin', 'client_user'])],
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
-        DB::transaction(function () use ($data, $company) {
+        $temporaryPassword = $data['password'];
+        $user = null;
+
+        DB::transaction(function () use ($data, $company, &$user) {
             $user = User::create([
-                'name'      => trim($data['first_name'] . ' ' . $data['last_name']),
-                'email'     => $data['email'],
-                'phone'     => $data['phone'] ?? null,
-                'password'  => Hash::make($data['password']),
+                'name' => trim($data['first_name'] . ' ' . $data['last_name']),
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'password' => Hash::make($data['password']),
                 'is_active' => true,
             ]);
 
@@ -114,6 +127,10 @@ class CompanyController extends Controller
             ]);
         });
 
+        if ($user?->email) {
+            Mail::to($user->email)->send(new NewClientUser($user, $company, $temporaryPassword));
+        }
+
         return redirect()->route('companies.show', $company)
             ->with('success', 'Użytkownik został dodany do firmy.');
     }
@@ -121,17 +138,20 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'    => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string', 'max:255'],
-            'city'    => ['nullable', 'string', 'max:100'],
-            'email'   => ['nullable', 'email', 'max:255'],
-            'phone'   => ['nullable', 'string', 'max:30'],
-            'nip'     => ['nullable', 'digits:10', 'unique:companies,nip'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'nip' => ['nullable', 'digits:10', 'unique:companies,nip'],
         ]);
 
-        Company::create(array_merge($data, ['status' => 'pending']));
+        $company = Company::create(array_merge($data, ['status' => 'pending']));
+
+        Mail::to(config('mail.admin_email', 'admin@enesa.pl'))
+            ->send(new ClientRegistered($company, $request->user()));
 
         return redirect()->route('dashboard')
-            ->with('success', 'Klient zosta\u0142 dodany.');
+            ->with('success', 'Klient został dodany.');
     }
 }
