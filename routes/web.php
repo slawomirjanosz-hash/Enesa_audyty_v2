@@ -14,7 +14,7 @@ Route::get('/', function () {
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
 
-Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])->middleware('auth')->name('companies.fetchGus');
+Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])->name('companies.fetchGus');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
