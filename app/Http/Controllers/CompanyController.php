@@ -56,6 +56,23 @@ class CompanyController extends Controller
         }
     }
 
+    public function show(Company $company)
+    {
+        $company->load([
+            'audits.auditType',
+            'offers',
+            'users',
+        ]);
+
+        $stats = [
+            'audits_count'  => $company->audits->count(),
+            'offers_count'  => $company->offers->count(),
+            'users_count'   => $company->users->count(),
+        ];
+
+        return view('companies.show', compact('company', 'stats'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

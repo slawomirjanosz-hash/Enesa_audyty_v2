@@ -400,7 +400,7 @@
 
             {{-- Przyciski --}}
             <div class="tile-footer">
-                <a href="#" class="tile-btn-primary">
+                <a href="{{ route('companies.show', $company) }}" class="tile-btn-primary">
                     <i class="ti ti-layout-2"></i>Otwórz kartę
                 </a>
                 <a href="#" class="tile-btn-secondary">
