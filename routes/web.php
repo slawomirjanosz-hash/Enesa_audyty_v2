@@ -14,9 +14,7 @@ Route::get('/', function () {
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
 
-Route::post('/companies/fetch-gus', function (\Illuminate\Http\Request $request) {
-    return response()->json(['error' => 'Integracja z GUS niedostepna.'], 503);
-})->name('companies.fetchGus');
+Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])->middleware('auth')->name('companies.fetchGus');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 

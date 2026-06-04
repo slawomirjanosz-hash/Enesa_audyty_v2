@@ -7,6 +7,22 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function fetchGus(Request $request)
+    {
+        $nip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
+
+        if (strlen($nip) !== 10) {
+            return response()->json(['error' => 'NIP musi miec dokladnie 10 cyfr.'], 422);
+        }
+
+        // Placeholder — integracja z GUS do implementacji
+        return response()->json([
+            'name'    => 'Firma testowa Sp. z o.o.',
+            'address' => 'ul. Testowa 1',
+            'city'    => 'Warszawa',
+        ]);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
