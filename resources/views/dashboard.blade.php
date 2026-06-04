@@ -442,12 +442,13 @@
                         Pobierz z GUS
                     </button>
                 </div>
+                <div id="gus-status" style="margin-top:6px;font-size:12px;color:#888;"></div>
             </div>
 
             {{-- Nazwa firmy --}}
             <div style="margin-bottom:14px;">
                 <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Nazwa firmy<span style="color:#b91c1c;">*</span></label>
-                <input id="company-name" type="text" name="name" required readonly
+                <input id="company-name" type="text" name="name" required
                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                        placeholder="Pobrana z GUS lub wpisz ręcznie">
             </div>
@@ -456,13 +457,13 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Adres</label>
-                    <input id="company-address" type="text" name="address" readonly
+                    <input id="company-address" type="text" name="address"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="ul. Przykładowa 1">
                 </div>
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Miasto</label>
-                    <input id="company-city" type="text" name="city" readonly
+                    <input id="company-city" type="text" name="city"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="Warszawa">
                 </div>
@@ -500,18 +501,44 @@
 
 @push('scripts')
 <script>
+    function resetAddClientForm() {
+        const form = document.querySelector('#addClientModal form');
+        const fields = ['company-name', 'company-address', 'company-city', 'nip-input'];
+        const status = document.getElementById('gus-status');
+
+        form.reset();
+
+        fields.forEach(function(id) {
+            document.getElementById(id).style.borderColor = '#D0CCC0';
+        });
+
+        status.textContent = '';
+        status.style.color = '#888';
+    }
+
     function openModal() {
+        resetAddClientForm();
         document.getElementById('addClientModal').style.display = 'flex';
     }
+
     function closeModal() {
         document.getElementById('addClientModal').style.display = 'none';
+        resetAddClientForm();
     }
+
     function fetchFromGus() {
         const nip = document.getElementById('nip-input').value.replace(/[^0-9]/g, '');
+        const status = document.getElementById('gus-status');
+
         if (nip.length !== 10) {
-            alert('NIP musi mieć 10 cyfr');
+            status.style.color = '#b91c1c';
+            status.textContent = 'NIP musi mieć 10 cyfr.';
             return;
         }
+
+        status.style.color = '#888';
+        status.textContent = 'Pobieranie danych z GUS...';
+
         fetch('{{ route("companies.fetchGus") }}', {
             method: 'POST',
             headers: {
@@ -520,23 +547,41 @@
             },
             body: JSON.stringify({ nip: nip }),
         })
-        .then(r => r.json())
+        .then(async function(r) {
+            const data = await r.json();
+
+            if (!r.ok) {
+                throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+            }
+
+            return data;
+        })
         .then(d => {
             const name = document.getElementById('company-name');
             const addr = document.getElementById('company-address');
             const city = document.getElementById('company-city');
+
             name.value = d.name    || '';
             addr.value = d.address || '';
             city.value = d.city    || '';
-            if (d.name)    { name.style.borderColor = '#2E7D32'; name.readOnly = true; }
+
+            if (d.name)    { name.style.borderColor = '#2E7D32'; }
             if (d.address) { addr.style.borderColor = '#2E7D32'; }
             if (d.city)    { city.style.borderColor = '#2E7D32'; }
+
+            status.style.color = '#2E7D32';
+            status.textContent = 'Dane pobrane poprawnie.';
         })
-        .catch(() => alert('Błąd pobierania danych z GUS'));
+        .catch(function(error) {
+            status.style.color = '#b91c1c';
+            status.textContent = error.message;
+        });
     }
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
+
     document.getElementById('addClientModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });

@@ -15,12 +15,9 @@ class CompanyController extends Controller
             return response()->json(['error' => 'NIP musi miec dokladnie 10 cyfr.'], 422);
         }
 
-        // Placeholder — integracja z GUS do implementacji
         return response()->json([
-            'name'    => 'Firma testowa Sp. z o.o.',
-            'address' => 'ul. Testowa 1',
-            'city'    => 'Warszawa',
-        ]);
+            'error' => 'Integracja z GUS nie jest jeszcze skonfigurowana. Wpisz dane firmy recznie.',
+        ], 503);
     }
 
     public function store(Request $request)
