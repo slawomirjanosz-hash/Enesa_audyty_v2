@@ -11,7 +11,7 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    private const MANAGED_ROLES = ['superadmin', 'admin', 'auditor'];
+    private const MANAGED_ROLES = ['superadmin', 'admin', 'auditor_senior', 'auditor'];
 
     public function index()
     {
@@ -36,7 +36,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor'])],
+            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor'])],
             'password' => ['nullable', 'string', 'min:8'],
         ]);
 
@@ -75,7 +75,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor'])],
+            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor'])],
             'password' => ['nullable', 'string', 'min:8'],
         ]);
 
