@@ -441,7 +441,8 @@
 
         <div id="sessionModalError" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:13px;padding:8px 12px;margin-bottom:14px;text-align:left;"></div>
 
-        <form id="sessionModalForm">
+        <form id="sessionModalForm" action="{{ route('login') }}" method="POST">
+            @csrf
             <div style="margin-bottom:12px;text-align:left;">
                 <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:4px;">E-mail</label>
                 <input id="smEmail" type="text" name="email" required
