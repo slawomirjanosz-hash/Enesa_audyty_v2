@@ -86,9 +86,9 @@ class CompanyController extends Controller
 
             $company->loadMissing('users.roles');
 
-            $clientAdmin = $company->users->first(fn ($user) => $user->hasRole('client_admin'));
+            $clientAdmin = $company->users()->wherePivot('is_admin', true)->first();
 
-            if ($clientAdmin?->email) {
+            if ($clientAdmin) {
                 Mail::to($clientAdmin->email)->send(new ClientAccepted($company));
             }
         }
@@ -108,15 +108,15 @@ class CompanyController extends Controller
             'password' => ['required', 'string', 'min:8'],
         ]);
 
-        $temporaryPassword = $data['password'];
+        $plainPassword = $data['password'];
         $user = null;
 
-        DB::transaction(function () use ($data, $company, &$user) {
+        DB::transaction(function () use ($data, $company, &$user, $plainPassword) {
             $user = User::create([
                 'name' => trim($data['first_name'] . ' ' . $data['last_name']),
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
-                'password' => Hash::make($data['password']),
+                'password' => Hash::make($plainPassword),
                 'is_active' => true,
             ]);
 
@@ -128,7 +128,7 @@ class CompanyController extends Controller
         });
 
         if ($user?->email) {
-            Mail::to($user->email)->send(new NewClientUser($user, $company, $temporaryPassword));
+            Mail::to($user->email)->send(new NewClientUser($user, $company, $plainPassword));
         }
 
         return redirect()->route('companies.show', $company)
@@ -148,8 +148,8 @@ class CompanyController extends Controller
 
         $company = Company::create(array_merge($data, ['status' => 'pending']));
 
-        Mail::to(config('mail.admin_email', 'admin@enesa.pl'))
-            ->send(new ClientRegistered($company, $request->user()));
+        Mail::to(env('ADMIN_EMAIL', 'proximalumine@gmail.com'))
+            ->send(new ClientRegistered($company, $request->user() ?? auth()->user()));
 
         return redirect()->route('dashboard')
             ->with('success', 'Klient został dodany.');
