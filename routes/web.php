@@ -15,6 +15,12 @@ Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('r
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
 
 Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])->name('companies.fetchGus');
+Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('companies.destroy');
+Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])
+    ->middleware('auth')
+    ->name('companies.restore');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
@@ -26,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
     Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
     Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
+    Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');
+    Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->name('companies.users.destroy');
     Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

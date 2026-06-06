@@ -607,6 +607,33 @@
 @endpush
 
 @section('content')
+{{-- ─── FLASH ALERTS ─── --}}
+@if(session('success'))
+    <div style="display:flex;align-items:center;gap:10px;background:#E8F5E9;border-left:4px solid #2E7D32;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:14px;color:#1B5E20;font-family:'Manrope',sans-serif;">
+        <i class="ti ti-circle-check" style="font-size:20px;flex-shrink:0;"></i>
+        {{ session('success') }}
+    </div>
+@endif
+@if(session('error'))
+    <div style="display:flex;align-items:center;gap:10px;background:#FFEBEE;border-left:4px solid #C62828;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:14px;color:#B71C1C;font-family:'Manrope',sans-serif;">
+        <i class="ti ti-alert-circle" style="font-size:20px;flex-shrink:0;"></i>
+        {{ session('error') }}
+    </div>
+@endif
+@if(session('can_force_assign'))
+    <div style="display:flex;align-items:center;gap:14px;background:#FFF8E1;border-left:4px solid #F9A825;padding:14px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-family:'Manrope',sans-serif;">
+        <i class="ti ti-alert-triangle" style="font-size:22px;color:#F9A825;flex-shrink:0;"></i>
+        <div style="flex:1;">
+            <p style="margin:0 0 10px;font-size:14px;color:#5D4037;font-weight:600;">Użytkownik z tym adresem email już istnieje w systemie.</p>
+            <form method="POST" action="{{ route('companies.users.assignExisting', $company) }}" style="display:inline;">
+                @csrf
+                <input type="hidden" name="email" value="{{ session('can_force_assign') }}">
+                <button type="submit" style="background:#F9A825;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">Przypisz istniejącego użytkownika do tej firmy</button>
+            </form>
+        </div>
+    </div>
+@endif
+
 {{-- ─── BREADCRUMB ─── --}}
 <div style="margin-bottom:16px;font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;display:flex;align-items:center;gap:6px;">
     <a href="{{ route('dashboard') }}" style="color:#1A4D3A;text-decoration:none;font-weight:600;">Dashboard</a>
@@ -973,7 +1000,11 @@
                             <td>
                                 <div class="user-actions">
                                     <button type="button" class="user-action-btn">Edytuj</button>
-                                    <button type="button" class="user-action-btn delete">Usuń</button>
+                                    <form method="POST" action="{{ route('companies.users.destroy', [$company, $user]) }}" style="display:inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć tego użytkownika z firmy? Konto użytkownika zostanie zachowane.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="user-action-btn delete">Usuń</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

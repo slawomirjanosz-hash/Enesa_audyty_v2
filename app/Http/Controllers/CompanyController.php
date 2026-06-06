@@ -106,24 +106,48 @@ class CompanyController extends Controller
     {
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:30'],
-            'role' => ['required', Rule::in(['client_admin', 'client_user'])],
-            'password' => ['required', 'string', 'min:8'],
-        ], [
-            'email.unique' => 'Użytkownik z tym adresem email już istnieje w systemie. Użyj innego adresu.',
+            'last_name'  => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'email', 'max:255'],
+            'phone'      => ['nullable', 'string', 'max:30'],
+            'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
+            'password'   => ['required', 'string', 'min:8'],
         ]);
+
+        // Check for existing user (including soft-deleted)
+        $existing = User::withTrashed()->where('email', $data['email'])->first();
+
+        if ($existing) {
+            if ($existing->trashed()) {
+                // Restore soft-deleted user and attach to company
+                DB::transaction(function () use ($existing, $data, $company) {
+                    $existing->restore();
+                    $existing->syncRoles([$data['role']]);
+                    if (!$company->users()->where('user_id', $existing->id)->exists()) {
+                        $company->users()->attach($existing->id, [
+                            'is_admin' => $data['role'] === 'client_admin',
+                        ]);
+                    }
+                });
+
+                return redirect()->route('companies.show', $company)
+                    ->with('success', 'Konto użytkownika zostało przywrócone i przypisane do firmy.');
+            }
+
+            // Active user exists — offer force-assign
+            return redirect()->route('companies.show', $company)
+                ->withErrors(['email' => 'Użytkownik z tym emailem już istnieje. Jeśli jesteś administratorem możesz go przypisać do tej firmy.'])
+                ->with('can_force_assign', $data['email']);
+        }
 
         $plainPassword = $data['password'];
         $user = null;
 
         DB::transaction(function () use ($data, $company, &$user, $plainPassword) {
             $user = User::create([
-                'name' => trim($data['first_name'] . ' ' . $data['last_name']),
-                'email' => $data['email'],
-                'phone' => $data['phone'] ?? null,
-                'password' => Hash::make($plainPassword),
+                'name'      => trim($data['first_name'] . ' ' . $data['last_name']),
+                'email'     => $data['email'],
+                'phone'     => $data['phone'] ?? null,
+                'password'  => Hash::make($plainPassword),
                 'is_active' => true,
             ]);
 
@@ -140,6 +164,28 @@ class CompanyController extends Controller
 
         return redirect()->route('companies.show', $company)
             ->with('success', 'Użytkownik został dodany do firmy.');
+    }
+
+    public function assignExisting(Request $request, Company $company)
+    {
+        $request->validate(['email' => ['required', 'email']]);
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        if (!$company->users()->where('user_id', $user->id)->exists()) {
+            $company->users()->attach($user->id, ['is_admin' => false]);
+        }
+
+        return redirect()->route('companies.show', $company)
+            ->with('success', 'Istniejący użytkownik został przypisany do firmy.');
+    }
+
+    public function destroyUser(Request $request, Company $company, User $user)
+    {
+        $company->users()->detach($user->id);
+
+        return redirect()->route('companies.show', $company)
+            ->with('success', 'Użytkownik został odpięty od firmy. Konto użytkownika zostało zachowane.');
     }
 
     public function store(Request $request)
