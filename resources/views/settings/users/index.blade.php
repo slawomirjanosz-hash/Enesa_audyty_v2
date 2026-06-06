@@ -205,7 +205,7 @@
 
 {{-- Zakładki --}}
 <div class="settings-tabs">
-    <a href="{{ route('settings.users.index') }}" class="settings-tab active">
+    <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
         <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy ENESA
     </a>
     <a href="{{ route('settings.company') }}" class="settings-tab">
@@ -213,6 +213,12 @@
     </a>
     <a href="#" class="settings-tab">
         <i class="ti ti-shield-lock" style="margin-right:6px;"></i>Role
+    </a>
+    <a href="{{ route('settings.users.index') }}?tab=archiwum" class="settings-tab {{ request('tab') === 'archiwum' ? 'active' : '' }}">
+        <i class="ti ti-archive" style="margin-right:6px;"></i>Archiwum
+        @if($archivedUsers->isNotEmpty())
+            <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedUsers->count() }}</span>
+        @endif
     </a>
 </div>
 
@@ -228,6 +234,72 @@
     </div>
 @endif
 
+@if(request('tab') === 'archiwum')
+{{-- ══════ ZAKŁADKA: ARCHIWUM ══════ --}}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-header-title">Zarchiwizowani użytkownicy</div>
+            <div class="card-header-sub">{{ $archivedUsers->count() }} usuniętych kont</div>
+        </div>
+    </div>
+
+    @if($archivedUsers->isEmpty())
+        <div style="text-align:center;padding:40px;color:#888;">
+            <i class="ti ti-archive" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+            Brak archiwalnych użytkowników
+        </div>
+    @else
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Użytkownik</th>
+                    <th>Rola</th>
+                    <th>Data usunięcia</th>
+                    <th style="text-align:right;width:120px;">Akcja</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($archivedUsers as $archivedUser)
+                    @php
+                        $initials = collect(explode(' ', $archivedUser->name))
+                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $role = $archivedUser->roles->first()?->name ?? '—';
+                    @endphp
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="avatar" style="background:#9e9e9e;">{{ $initials }}</div>
+                                <div>
+                                    <div class="user-name" style="color:#888;">{{ $archivedUser->name }}</div>
+                                    <div class="user-email">{{ $archivedUser->email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
+                        </td>
+                        <td style="color:#888;font-size:13px;">
+                            {{ $archivedUser->deleted_at->format('d.m.Y') }}
+                        </td>
+                        <td>
+                            <div style="display:flex;justify-content:flex-end;">
+                                <form method="POST" action="{{ route('settings.users.restore', $archivedUser) }}">
+                                    @csrf
+                                    <button type="submit" class="btn-action" title="Przywróć" style="width:auto;padding:6px 12px;gap:6px;">
+                                        <i class="ti ti-restore"></i> Przywróć
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
+
+@else
 {{-- Tabela użytkowników --}}
 <div class="card">
     <div class="card-header">
@@ -334,6 +406,8 @@
         </div>
     @endif
 </div>
+
+@endif
 
 {{-- ══════ MODAL DODAJ ══════ --}}
 <div id="addModal" class="modal-overlay" onclick="closeModalOutside(event,'addModal')">

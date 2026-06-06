@@ -22,7 +22,9 @@ class UserController extends Controller
 
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
-        return view('settings.users.index', compact('users', 'roles'));
+        $archivedUsers = User::onlyTrashed()->with('roles')->orderByDesc('deleted_at')->get();
+
+        return view('settings.users.index', compact('users', 'roles', 'archivedUsers'));
     }
 
     public function create()
@@ -110,5 +112,12 @@ class UserController extends Controller
 
         return redirect()->route('settings.users.index')
             ->with('success', 'Użytkownik został usunięty.');
+    }
+
+    public function restore(User $user)
+    {
+        $user->restore();
+
+        return redirect()->back()->with('success', 'Użytkownik został przywrócony.');
     }
 }
