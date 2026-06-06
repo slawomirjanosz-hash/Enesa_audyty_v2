@@ -111,6 +111,8 @@ class CompanyController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', Rule::in(['client_admin', 'client_user'])],
             'password' => ['required', 'string', 'min:8'],
+        ], [
+            'email.unique' => 'Użytkownik z tym adresem email już istnieje w systemie. Użyj innego adresu.',
         ]);
 
         $plainPassword = $data['password'];

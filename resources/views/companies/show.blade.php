@@ -1040,6 +1040,14 @@
         <form method="POST" action="{{ route('companies.users.store', $company) }}">
             @csrf
 
+            @if($errors->any())
+                <div style="background:#FFEBEE;border-left:4px solid #C62828;padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:16px;">
+                    @foreach($errors->all() as $error)
+                        <p style="margin:0;font-size:13px;color:#B71C1C;">{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="modal-grid">
                 <div class="modal-field">
                     <label for="user-first-name">Imię</label>
@@ -1088,6 +1096,11 @@
 @endsection
 
 @push('scripts')
+@if($errors->any())
+<script>
+document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
+</script>
+@endif
 <script>
     function switchTab(name, btn) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1123,11 +1136,5 @@
             closeUserModal();
         }
     }
-
-    @if($errors->any())
-        window.addEventListener('DOMContentLoaded', function () {
-            openUserModal();
-        });
-    @endif
 </script>
 @endpush
