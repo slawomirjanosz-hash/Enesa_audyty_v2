@@ -73,6 +73,7 @@
     .status-badge.pending  { background: #FFF3E0; color: #E65100; }
     .status-badge.active   { background: #E8F5E9; color: #2E7D32; }
     .status-badge.inactive { background: #F5F5F5; color: #757575; }
+    .status-badge.archived { background: #FDECEA; color: #C62828; }
 
     .company-header-meta {
         display: flex;
@@ -115,6 +116,9 @@
 
         .btn-accept-action { background: #EF6C00; color: #fff; }
         .btn-accept-action:hover { background: #d95f00; }
+
+    .btn-delete-action { background: #C62828; color: #fff; }
+    .btn-delete-action:hover { background: #a91f1f; }
 
     .btn-secondary-action { background: #F4F1EA; color: #1A4D3A; border: 1px solid #D0CCC0; }
     .btn-secondary-action:hover { background: #EAE6DC; }
@@ -624,6 +628,7 @@
                 <i class="ti ti-circle-filled" style="font-size:8px;"></i>
                 @if($company->status === 'active') Aktywny
                 @elseif($company->status === 'pending') Oczekujący
+                @elseif($company->status === 'archived') Zarchiwizowany
                 @else Nieaktywny
                 @endif
             </span>
@@ -646,13 +651,26 @@
             <i class="ti ti-edit"></i> Edytuj
         </a>
 
+        @if(auth()->check() && auth()->user()->hasAnyRole(['admin', 'superadmin']))
+            <button type="button" class="btn-action btn-delete-action" onclick="openCompanyDeleteModal()">
+                <i class="ti ti-trash"></i> Usuń firmę
+            </button>
+        @endif
+
         @if($company->status === 'pending')
-            <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-block;">
-                @csrf
-                <button type="submit" class="btn-action btn-accept-action">
-                    <i class="ti ti-check"></i> Akceptuj klienta
-                </button>
-            </form>
+            @if($company->users->count() > 0)
+                <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-block;">
+                    @csrf
+                    <button type="submit" class="btn-action btn-accept-action">
+                        <i class="ti ti-check"></i> Akceptuj klienta
+                    </button>
+                </form>
+            @else
+                <div style="display:inline-flex;align-items:center;gap:10px;background:#FFF3E0;color:#E65100;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;">
+                    <i class="ti ti-alert-triangle" style="font-size:18px;"></i>
+                    Dodaj najpierw użytkownika głównego aby zaakceptować klienta
+                </div>
+            @endif
         @elseif($company->status === 'active')
             <span class="status-badge active-inline">
                 <i class="ti ti-circle-filled" style="font-size:8px;"></i>
@@ -982,6 +1000,32 @@
     </div>
 </div>
 
+{{-- ═══ MODAL USUWANIA / ARCHIWIZACJI FIRMY ═══ --}}
+<div id="companyDeleteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:10000;align-items:center;justify-content:center;padding:16px;" onclick="closeCompanyDeleteModalOutside(event)">
+    <div style="background:#fff;border-radius:14px;max-width:520px;width:100%;padding:30px 28px;box-shadow:0 18px 50px rgba(0,0,0,.22);">
+        <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:#FDECEA;color:#C62828;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="ti ti-trash" style="font-size:22px;"></i>
+            </div>
+            <div>
+                <h2 style="font-family:'Lato',sans-serif;font-size:20px;font-weight:700;color:#1e1e1e;margin:0 0 6px;">Usunąć firmę?</h2>
+                <p style="font-family:'Manrope',sans-serif;font-size:14px;line-height:1.7;color:#5a6a60;margin:0;">
+                    Czy na pewno chcesz usunąć tę firmę? Jeśli firma ma audyty lub oferty zostanie zarchiwizowana.
+                </p>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;">
+            <button type="button" class="btn-action btn-secondary-action" onclick="closeCompanyDeleteModal()">Anuluj</button>
+            <form method="POST" action="{{ route('companies.destroy', $company) }}" style="display:inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn-action btn-delete-action">Potwierdź</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 {{-- ═══ MODAL DODAJ UŻYTKOWNIKA ═══ --}}
 <div id="userModalOverlay" class="user-modal-overlay" onclick="closeUserModalOutside(event)">
     <div class="user-modal">
@@ -1050,6 +1094,20 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('tab-' + name).classList.add('active');
         btn.classList.add('active');
+    }
+
+    function openCompanyDeleteModal() {
+        document.getElementById('companyDeleteModal').style.display = 'flex';
+    }
+
+    function closeCompanyDeleteModal() {
+        document.getElementById('companyDeleteModal').style.display = 'none';
+    }
+
+    function closeCompanyDeleteModalOutside(event) {
+        if (event.target.id === 'companyDeleteModal') {
+            closeCompanyDeleteModal();
+        }
     }
 
     function openUserModal() {

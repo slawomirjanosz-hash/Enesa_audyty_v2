@@ -82,6 +82,11 @@ class CompanyController extends Controller
     public function accept(Company $company)
     {
         if ($company->status === 'pending') {
+            // Validate that company has a client_admin user
+            if ($company->users()->wherePivot('is_admin', true)->doesntExist()) {
+                return redirect()->back()->with('error', 'Firma musi mieć przypisanego głównego użytkownika przed akceptacją.');
+            }
+
             $company->update(['status' => 'active']);
 
             $company->loadMissing('users.roles');
@@ -153,5 +158,34 @@ class CompanyController extends Controller
 
         return redirect()->route('dashboard')
             ->with('success', 'Klient został dodany.');
+    }
+
+    public function destroy(Company $company)
+    {
+        if ($company->audits()->exists() || $company->offers()->exists()) {
+            $company->update([
+                'archived_at' => now(),
+                'status' => 'archived',
+            ]);
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Firma została zarchiwizowana.');
+        }
+
+        $company->delete();
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Firma została trwale usunięta.');
+    }
+
+    public function restore(Company $company)
+    {
+        $company->update([
+            'archived_at' => null,
+            'status' => 'active',
+        ]);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Firma została przywrócona.');
     }
 }
