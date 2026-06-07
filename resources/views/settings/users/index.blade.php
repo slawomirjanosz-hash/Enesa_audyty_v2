@@ -294,7 +294,7 @@
                                         <i class="ti ti-restore"></i> Przywróć
                                     </button>
                                 </form>
-                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" onclick="openAssignToCompanyModal({{ $archivedUser->id }}, @json($archivedUser->name), @json($archivedUser->email))">
+                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $archivedUser->id }}" data-user-name="{{ e($archivedUser->name) }}" data-user-email="{{ e($archivedUser->email) }}" onclick="openAssignToCompanyModal(this)">
                                     <i class="ti ti-building-plus"></i> Przypisz
                                 </button>
                             </div>
@@ -678,7 +678,11 @@
         document.body.style.overflow = '';
     }
 
-    function openAssignToCompanyModal(userId, userName, userEmail) {
+    function openAssignToCompanyModal(el) {
+        const userId = el.dataset.userId;
+        const userName = el.dataset.userName;
+        const userEmail = el.dataset.userEmail;
+        
         document.getElementById('assignToCompanyForm').action = '/settings/users/' + userId + '/assign-to-company';
         document.getElementById('assignToCompanyName').textContent = userName;
         document.getElementById('assignToCompanyEmail').textContent = userEmail;
