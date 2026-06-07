@@ -141,6 +141,7 @@
     .btn-action:hover { background: #F4F1EA; color: #1A4D3A; }
     .btn-action.danger:hover { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; }
     .btn-action i { font-size: 16px; }
+    .btn-action.success:hover { background: #e8f5e9; color: #1B5E20; border-color: #a5d6a7; }
 
     /* ── Add button ───────────────────────── */
     .btn-primary {
@@ -297,6 +298,94 @@
             </tbody>
         </table>
     @endif
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <div class="card-header">
+        <div>
+            <div class="card-header-title">Użytkownicy bez firmy</div>
+            <div class="card-header-sub">{{ $orphanUsers->count() }} użytkowników z rolą client_admin / client_user</div>
+        </div>
+    </div>
+
+    @if($orphanUsers->isEmpty())
+        <div style="text-align:center;padding:40px;color:#888;">
+            <i class="ti ti-user-off" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+            Brak użytkowników bez firmy
+        </div>
+    @else
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Użytkownik</th>
+                    <th>Email</th>
+                    <th>Data utworzenia</th>
+                    <th style="text-align:right;width:260px;">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($orphanUsers as $orphanUser)
+                    @php
+                        $initials = collect(explode(' ', $orphanUser->name))
+                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                    @endphp
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="avatar" style="background:#6b7a70;">{{ $initials }}</div>
+                                <div>
+                                    <div class="user-name">{{ $orphanUser->name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ $orphanUser->email }}</td>
+                        <td style="color:#888;font-size:13px;">{{ $orphanUser->created_at->format('d.m.Y') }}</td>
+                        <td>
+                            <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;">
+                                <form method="POST" action="{{ route('settings.users.destroy', $orphanUser) }}" onsubmit="return confirm('Czy na pewno chcesz usunąć trwale tego użytkownika?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action danger" title="Usuń trwale" style="width:auto;padding:6px 12px;gap:6px;background:#C62828;color:#fff;border-color:#C62828;">
+                                        <i class="ti ti-trash"></i> Usuń trwale
+                                    </button>
+                                </form>
+                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" onclick="openAssignCompanyModal({{ $orphanUser->id }}, @json($orphanUser->name))">
+                                    <i class="ti ti-building-plus"></i> Przypisz do firmy
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
+
+<div id="assignCompanyModal" class="modal-overlay" onclick="closeModalOutside(event,'assignCompanyModal')">
+    <div class="modal-box">
+        <button class="modal-close-btn" onclick="closeAssignCompanyModal()">&times;</button>
+        <div class="modal-title"><i class="ti ti-building-plus" style="margin-right:8px;"></i>Przypisz do firmy</div>
+        <div class="modal-subtitle" id="assignCompanySubtitle">Wybierz firmę dla użytkownika.</div>
+
+        <form method="POST" id="assignCompanyForm" action="">
+            @csrf
+            <div class="mf-group">
+                <label class="mf-label" for="assign_company_id">Firma</label>
+                <select id="assign_company_id" name="company_id" class="mf-select mf-input" required>
+                    <option value="">— wybierz firmę —</option>
+                    @forelse($companies as $company)
+                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                    @empty
+                        <option value="">Brak dostępnych firm</option>
+                    @endforelse
+                </select>
+            </div>
+
+            <button type="submit" class="btn-modal-submit">
+                <i class="ti ti-check" style="margin-right:6px;"></i>Przypisz
+            </button>
+        </form>
+    </div>
 </div>
 
 @else
@@ -530,6 +619,18 @@
         document.body.style.overflow = '';
     }
 
+    function openAssignCompanyModal(userId, userName) {
+        document.getElementById('assignCompanyForm').action = '/settings/users/' + userId + '/assign-company';
+        document.getElementById('assignCompanySubtitle').textContent = 'Wybierz firmę dla użytkownika ' + userName + '.';
+        document.getElementById('assignCompanyModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAssignCompanyModal() {
+        document.getElementById('assignCompanyModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
     function closeModalOutside(event, id) {
         if (event.target === document.getElementById(id)) {
             document.getElementById(id).classList.remove('open');
@@ -541,6 +642,7 @@
         if (e.key === 'Escape') {
             closeAddModal();
             closeEditModal();
+            closeAssignCompanyModal();
         }
     });
 

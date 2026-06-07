@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,8 +24,14 @@ class UserController extends Controller
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
         $archivedUsers = User::onlyTrashed()->with('roles')->orderByDesc('deleted_at')->get();
+        $orphanUsers = User::whereDoesntHave('companies')
+            ->whereHas('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))
+            ->with('roles')
+            ->orderByDesc('created_at')
+            ->get();
+        $companies = Company::active()->orderBy('name')->get();
 
-        return view('settings.users.index', compact('users', 'roles', 'archivedUsers'));
+        return view('settings.users.index', compact('users', 'roles', 'archivedUsers', 'orphanUsers', 'companies'));
     }
 
     public function create()
@@ -99,19 +106,22 @@ class UserController extends Controller
             ->with('success', 'Dane użytkownika zaktualizowane.');
     }
 
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
-
         if ($user->hasRole('superadmin')) {
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie można usunąć superadmina.');
         }
 
-        $user->delete();
+        if ($user->companies()->exists()) {
+            return redirect()->route('settings.users.index')
+                ->with('error', 'Nie można trwale usunąć użytkownika przypisanego do firmy.');
+        }
+
+        $user->forceDelete();
 
         return redirect()->route('settings.users.index')
-            ->with('success', 'Użytkownik został usunięty.');
+            ->with('success', 'Użytkownik został trwale usunięty.');
     }
 
     public function restore(User $user)
@@ -119,5 +129,22 @@ class UserController extends Controller
         $user->restore();
 
         return redirect()->back()->with('success', 'Użytkownik został przywrócony.');
+    }
+
+    public function assignToCompany(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'company_id' => ['required', 'exists:companies,id'],
+        ]);
+
+        $company = Company::findOrFail($data['company_id']);
+
+        $user->companies()->syncWithoutDetaching([
+            $company->id => [
+                'is_admin' => $user->hasRole('client_admin'),
+            ],
+        ]);
+
+        return redirect()->back()->with('success', 'Użytkownik został przypisany do firmy.');
     }
 }
