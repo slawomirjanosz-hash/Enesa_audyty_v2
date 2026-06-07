@@ -355,7 +355,7 @@
                                         <i class="ti ti-trash"></i> Usuń trwale
                                     </button>
                                 </form>
-                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" onclick="openAssignCompanyModal({{ $orphanUser->id }}, @json($orphanUser->name))">
+                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $orphanUser->id }}" data-user-name="{{ e($orphanUser->name) }}" onclick="openAssignCompanyModal(this)">
                                     <i class="ti ti-building-plus"></i> Przypisz do firmy
                                 </button>
                             </div>
@@ -666,7 +666,10 @@
         document.body.style.overflow = '';
     }
 
-    function openAssignCompanyModal(userId, userName) {
+    function openAssignCompanyModal(el) {
+        const userId = el.dataset.userId;
+        const userName = el.dataset.userName;
+        
         document.getElementById('assignCompanyForm').action = '/settings/users/' + userId + '/assign-company';
         document.getElementById('assignCompanySubtitle').textContent = 'Wybierz firmę dla użytkownika ' + userName + '.';
         document.getElementById('assignCompanyModal').classList.add('open');
