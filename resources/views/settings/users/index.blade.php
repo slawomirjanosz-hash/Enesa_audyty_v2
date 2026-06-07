@@ -717,7 +717,7 @@
     });
 
     // Auto-open add modal after validation error
-    @if($errors->any() && old('_method') !== 'PUT')
+    @if($errors->any() && old('_method') !== 'PUT' && !request()->is('settings/users/*/assign*'))
         openAddModal();
     @endif
 </script>
