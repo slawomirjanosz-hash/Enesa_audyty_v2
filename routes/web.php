@@ -52,6 +52,10 @@ Route::middleware('auth')->group(function () {
         Route::post('users/{user}/assign-company', [Settings\UserController::class, 'assignToCompany'])
             ->middleware('auth')
             ->name('users.assignCompany');
+        Route::post('users/{user}/assign-to-company', [Settings\UserController::class, 'assignToCompany'])
+            ->middleware('auth')
+            ->name('users.assign-to-company')
+            ->withTrashed();
         Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
         Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
     });

@@ -256,8 +256,9 @@
                 <tr>
                     <th>Użytkownik</th>
                     <th>Rola</th>
+                    <th>Ostatnia firma</th>
                     <th>Data usunięcia</th>
-                    <th style="text-align:right;width:120px;">Akcja</th>
+                    <th style="text-align:right;width:200px;">Akcja</th>
                 </tr>
             </thead>
             <tbody>
@@ -266,6 +267,7 @@
                         $initials = collect(explode(' ', $archivedUser->name))
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $archivedUser->roles->first()?->name ?? '—';
+                        $lastCompany = $archivedUser->companies()->withPivot('deleted_at')->orderByPivot('deleted_at', 'desc')->first()?->name ?? 'Brak danych';
                     @endphp
                     <tr>
                         <td>
@@ -280,17 +282,21 @@
                         <td>
                             <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
                         </td>
+                        <td style="color:#888;font-size:13px;">{{ $lastCompany }}</td>
                         <td style="color:#888;font-size:13px;">
                             {{ $archivedUser->deleted_at->format('d.m.Y') }}
                         </td>
                         <td>
-                            <div style="display:flex;justify-content:flex-end;">
+                            <div style="display:flex;justify-content:flex-end;gap:6px;">
                                 <form method="POST" action="{{ route('settings.users.restore', $archivedUser) }}">
                                     @csrf
                                     <button type="submit" class="btn-action" title="Przywróć" style="width:auto;padding:6px 12px;gap:6px;">
                                         <i class="ti ti-restore"></i> Przywróć
                                     </button>
                                 </form>
+                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" onclick="openAssignToCompanyModal({{ $archivedUser->id }}, @json($archivedUser->name), @json($archivedUser->email))">
+                                    <i class="ti ti-building-plus"></i> Przypisz
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -379,6 +385,47 @@
                         <option value="">Brak dostępnych firm</option>
                     @endforelse
                 </select>
+            </div>
+
+            <button type="submit" class="btn-modal-submit">
+                <i class="ti ti-check" style="margin-right:6px;"></i>Przypisz
+            </button>
+        </form>
+    </div>
+</div>
+
+{{-- Modal: przypisz archiwalnego użytkownika do firmy --}}
+<div id="assignToCompanyModal" class="modal-overlay" onclick="closeModalOutside(event,'assignToCompanyModal')">
+    <div class="modal-box">
+        <button class="modal-close-btn" onclick="closeAssignToCompanyModal()">&times;</button>
+        <div class="modal-title"><i class="ti ti-building-plus" style="margin-right:8px;"></i>Przypisz użytkownika do firmy</div>
+
+        <div id="assignToCompanyUserInfo" style="background:#F4F1EA;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
+            <div id="assignToCompanyName" style="font-weight:700;font-size:14px;color:#1A1A1A;"></div>
+            <div id="assignToCompanyEmail" style="font-size:12px;color:#888;margin-top:2px;"></div>
+        </div>
+
+        <form method="POST" id="assignToCompanyForm" action="">
+            @csrf
+            <div class="mf-group">
+                <label class="mf-label" for="assign_to_company_id">Firma</label>
+                <select id="assign_to_company_id" name="company_id" class="mf-select mf-input" required>
+                    <option value="">— wybierz firmę —</option>
+                    @foreach($companies as $company)
+                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mf-group">
+                <label class="mf-label">Rola</label>
+                <div style="display:flex;gap:16px;padding-top:4px;">
+                    <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;">
+                        <input type="radio" name="role" value="client_admin" required> Główny kontakt
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;">
+                        <input type="radio" name="role" value="client_user"> Użytkownik firmy
+                    </label>
+                </div>
             </div>
 
             <button type="submit" class="btn-modal-submit">
@@ -631,6 +678,21 @@
         document.body.style.overflow = '';
     }
 
+    function openAssignToCompanyModal(userId, userName, userEmail) {
+        document.getElementById('assignToCompanyForm').action = '/settings/users/' + userId + '/assign-to-company';
+        document.getElementById('assignToCompanyName').textContent = userName;
+        document.getElementById('assignToCompanyEmail').textContent = userEmail;
+        document.getElementById('assign_to_company_id').value = '';
+        document.querySelectorAll('#assignToCompanyForm input[name="role"]').forEach(r => r.checked = false);
+        document.getElementById('assignToCompanyModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAssignToCompanyModal() {
+        document.getElementById('assignToCompanyModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
     function closeModalOutside(event, id) {
         if (event.target === document.getElementById(id)) {
             document.getElementById(id).classList.remove('open');
@@ -643,6 +705,7 @@
             closeAddModal();
             closeEditModal();
             closeAssignCompanyModal();
+            closeAssignToCompanyModal();
         }
     });
 

@@ -135,13 +135,20 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'company_id' => ['required', 'exists:companies,id'],
+            'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
         ]);
 
         $company = Company::findOrFail($data['company_id']);
 
-        $user->companies()->syncWithoutDetaching([
-            $company->id => [
-                'is_admin' => $user->hasRole('client_admin'),
+        if ($user->trashed()) {
+            $user->restore();
+        }
+
+        $user->syncRoles([$data['role']]);
+
+        $company->users()->syncWithoutDetaching([
+            $user->id => [
+                'is_admin' => $data['role'] === 'client_admin',
             ],
         ]);
 
