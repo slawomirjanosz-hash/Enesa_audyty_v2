@@ -387,7 +387,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-modal-submit">
+            <button type="submit" class="btn-modal-submit" onclick="event.stopPropagation()">
                 <i class="ti ti-check" style="margin-right:6px;"></i>Przypisz
             </button>
         </form>
@@ -428,7 +428,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-modal-submit">
+            <button type="submit" class="btn-modal-submit" onclick="event.stopPropagation()">
                 <i class="ti ti-check" style="margin-right:6px;"></i>Przypisz
             </button>
         </form>
