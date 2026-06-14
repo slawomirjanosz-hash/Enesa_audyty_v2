@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             AddSeniorAuditorRoleSeeder::class,
             SuperAdminSeeder::class,
+            AuditTypesSeeder::class,
         ]);
 
         User::factory()->create([

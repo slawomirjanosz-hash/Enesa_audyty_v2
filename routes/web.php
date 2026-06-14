@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\Client\RegistrationController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('audit-types', [AuditTypeController::class, 'index'])->name('audit-types.index');
+    Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->name('audit-types.show');
+    Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->name('audit-types.versions.store');
+    Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
 
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
