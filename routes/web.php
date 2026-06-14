@@ -49,6 +49,10 @@ Route::middleware('auth')->group(function () {
         Route::post('users/{user}/restore', [Settings\UserController::class, 'restore'])
             ->name('users.restore')
             ->withTrashed();
+        Route::delete('users/{user}/force-destroy', [Settings\UserController::class, 'forceDestroy'])
+            ->middleware('auth')
+            ->name('users.forceDestroy')
+            ->withTrashed();
         Route::post('users/{user}/assign-company', [Settings\UserController::class, 'assignCompany'])
             ->middleware('auth')
             ->name('users.assignCompany');

@@ -294,6 +294,13 @@
                                 <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $archivedUser->id }}" data-user-name="{{ e($archivedUser->name) }}" data-user-email="{{ e($archivedUser->email) }}" onclick="openAssignToCompanyModal(this)">
                                     <i class="ti ti-building-plus"></i> Przypisz
                                 </button>
+                                <form method="POST" action="{{ route('settings.users.forceDestroy', $archivedUser) }}" onsubmit="return confirm('Czy na pewno chcesz trwale usunąć użytkownika {{ e($archivedUser->name) }}? Tej operacji nie można cofnąć.');" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action danger" title="Usuń na stałe" style="width:auto;padding:6px 12px;gap:6px;background:#C62828;color:#fff;border-color:#C62828;">
+                                        <i class="ti ti-trash"></i> Usuń
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

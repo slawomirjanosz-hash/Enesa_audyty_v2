@@ -143,6 +143,24 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Użytkownik został przywrócony.');
     }
 
+    public function forceDestroy(User $user)
+    {
+        if ($user->hasRole('superadmin')) {
+            return redirect()->route('settings.users.index')
+                ->with('error', 'Nie można usunąć superadmina.');
+        }
+
+        if ($user->companies()->exists()) {
+            return redirect()->route('settings.users.index')
+                ->with('error', 'Nie można usunąć użytkownika przypisanego do firmy.');
+        }
+
+        $name = $user->name;
+        $user->forceDelete();
+
+        return redirect()->back()->with('success', "Użytkownik $name został trwale usunięty.");
+    }
+
     public function assignToCompany(Request $request, User $user)
     {
         $data = $request->validate([
