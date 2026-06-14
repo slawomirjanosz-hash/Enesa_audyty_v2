@@ -370,7 +370,7 @@
 </div>
 
 <div id="assignCompanyModal" class="modal-overlay" onclick="closeModalOutside(event,'assignCompanyModal')">
-    <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAssignCompanyModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-building-plus" style="margin-right:8px;"></i>Przypisz do firmy</div>
         <div class="modal-subtitle" id="assignCompanySubtitle">Wybierz firmę dla użytkownika.</div>
@@ -398,7 +398,7 @@
 
 {{-- Modal: przypisz archiwalnego użytkownika do firmy --}}
 <div id="assignToCompanyModal" class="modal-overlay" onclick="closeModalOutside(event,'assignToCompanyModal')">
-    <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAssignToCompanyModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-building-plus" style="margin-right:8px;"></i>Przypisz użytkownika do firmy</div>
 
@@ -549,7 +549,7 @@
 
 {{-- ══════ MODAL DODAJ ══════ --}}
 <div id="addModal" class="modal-overlay" onclick="closeModalOutside(event,'addModal')">
-    <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAddModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-user-plus" style="margin-right:8px;"></i>Nowy użytkownik</div>
         <div class="modal-subtitle">Wypełnij dane — użytkownik otrzyma email z dostępem.</div>
@@ -595,7 +595,7 @@
 
 {{-- ══════ MODAL EDYTUJ ══════ --}}
 <div id="editModal" class="modal-overlay-edit" onclick="closeModalOutside(event,'editModal')">
-    <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-box">
         <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-pencil" style="margin-right:8px;"></i>Edytuj użytkownika</div>
         <div class="modal-subtitle">Zmień dane — hasło zostaw puste jeśli nie chcesz go zmieniać.</div>
