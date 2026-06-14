@@ -672,8 +672,9 @@
         const userId = el.dataset.userId;
         const userName = el.dataset.userName;
         
-        document.getElementById('assignCompanyForm').action = '/settings/users/' + userId + '/assign-company';
+        document.getElementById('assignCompanyForm').dataset.userId = userId;
         document.getElementById('assignCompanySubtitle').textContent = 'Wybierz firmę dla użytkownika ' + userName + '.';
+        document.getElementById('assign_company_id').value = '';
         document.getElementById('assignCompanyModal').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
@@ -688,7 +689,7 @@
         const userName = el.dataset.userName;
         const userEmail = el.dataset.userEmail;
         
-        document.getElementById('assignToCompanyForm').action = '/settings/users/' + userId + '/assign-to-company';
+        document.getElementById('assignToCompanyForm').dataset.userId = userId;
         document.getElementById('assignToCompanyName').textContent = userName;
         document.getElementById('assignToCompanyEmail').textContent = userEmail;
         document.getElementById('assign_to_company_id').value = '';
@@ -708,6 +709,30 @@
             document.body.style.overflow = '';
         }
     }
+
+    // Handle assignToCompanyForm submit
+    document.getElementById('assignToCompanyForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const userId = this.dataset.userId;
+        if (!userId) {
+            alert('Błąd: brak ID użytkownika');
+            return;
+        }
+        this.action = '/settings/users/' + userId + '/assign-to-company';
+        this.submit();
+    });
+
+    // Handle assignCompanyForm submit
+    document.getElementById('assignCompanyForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const userId = this.dataset.userId;
+        if (!userId) {
+            alert('Błąd: brak ID użytkownika');
+            return;
+        }
+        this.action = '/settings/users/' + userId + '/assign-company';
+        this.submit();
+    });
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
