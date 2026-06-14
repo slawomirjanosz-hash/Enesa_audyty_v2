@@ -29,6 +29,8 @@ Route::get('/client/dashboard', function () {
     return view('client.dashboard');
 })->middleware(['auth'])->name('client.dashboard');
 
+Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware('auth')->name('audit-types.versions.preview');
+
 Route::middleware('auth')->group(function () {
     Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
     Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
@@ -41,7 +43,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('audit-types', [AuditTypeController::class, 'index'])->name('audit-types.index');
-    Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware('auth')->name('audit-types.versions.preview');
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->name('audit-types.show');
     Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->name('audit-types.versions.store');
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
