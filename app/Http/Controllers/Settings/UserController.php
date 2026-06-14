@@ -67,6 +67,7 @@ class UserController extends Controller
             'is_active' => true,
         ]);
 
+        Role::findOrCreate($data['role']);
         $user->assignRole($data['role']);
 
         return redirect()->route('settings.users.index')
@@ -109,6 +110,7 @@ class UserController extends Controller
         $user->save();
 
         if (!$user->hasRole('superadmin')) {
+            Role::findOrCreate($data['role']);
             $user->syncRoles([$data['role']]);
         }
 
@@ -154,6 +156,7 @@ class UserController extends Controller
             $user->restore();
         }
 
+        Role::findOrCreate($data['role']);
         $user->syncRoles([$data['role']]);
 
         $company->users()->syncWithoutDetaching([
@@ -174,6 +177,7 @@ class UserController extends Controller
         $company = Company::findOrFail($data['company_id']);
 
         if (!$user->hasAnyRole(['client_admin', 'client_user'])) {
+            Role::findOrCreate('client_user');
             $user->assignRole('client_user');
         }
 
