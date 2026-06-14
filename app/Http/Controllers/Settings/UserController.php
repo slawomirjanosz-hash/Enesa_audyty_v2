@@ -158,4 +158,25 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Użytkownik został przypisany do firmy.');
     }
+
+    public function assignCompany(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'company_id' => ['required', 'exists:companies,id'],
+        ]);
+
+        $company = Company::findOrFail($data['company_id']);
+
+        if (!$user->hasAnyRole(['client_admin', 'client_user'])) {
+            $user->assignRole('client_user');
+        }
+
+        $company->users()->syncWithoutDetaching([
+            $user->id => [
+                'is_admin' => false,
+            ],
+        ]);
+
+        return redirect()->back()->with('success', 'Użytkownik został przypisany do firmy.');
+    }
 }

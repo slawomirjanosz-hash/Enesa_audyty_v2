@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::post('users/{user}/restore', [Settings\UserController::class, 'restore'])
             ->name('users.restore')
             ->withTrashed();
-        Route::post('users/{user}/assign-company', [Settings\UserController::class, 'assignToCompany'])
+        Route::post('users/{user}/assign-company', [Settings\UserController::class, 'assignCompany'])
             ->middleware('auth')
             ->name('users.assignCompany');
         Route::post('users/{user}/assign-to-company', [Settings\UserController::class, 'assignToCompany'])
