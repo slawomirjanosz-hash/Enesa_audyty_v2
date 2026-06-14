@@ -16,6 +16,11 @@ class Company extends Model
         'address',
         'city',
         'status',
+        'archived_at',
+    ];
+
+    protected $casts = [
+        'archived_at' => 'datetime',
     ];
 
     public function audits(): HasMany
@@ -33,5 +38,15 @@ class Company extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('is_admin')
             ->withTimestamps();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereNull('archived_at');
+    }
+
+    public function scopeArchived($query)
+    {
+        return $query->whereNotNull('archived_at');
     }
 }
