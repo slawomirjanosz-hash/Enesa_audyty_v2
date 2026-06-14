@@ -267,7 +267,9 @@
                         $initials = collect(explode(' ', $archivedUser->name))
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $archivedUser->roles->first()?->name ?? '—';
-                        $lastCompany = $archivedUser->companies()->withPivot('deleted_at')->orderByPivot('deleted_at', 'desc')->first()?->name ?? 'Brak danych';
+                        $lastCompany = $archivedUser->companies
+                            ->sortByDesc('pivot.deleted_at')
+                            ->first()?->name ?? 'Brak danych';
                     @endphp
                     <tr>
                         <td>

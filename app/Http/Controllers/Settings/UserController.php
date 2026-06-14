@@ -23,7 +23,11 @@ class UserController extends Controller
 
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
-        $archivedUsers = User::onlyTrashed()->with('roles')->orderByDesc('deleted_at')->get();
+        $archivedUsers = User::onlyTrashed()
+            ->with('roles')
+            ->with('companies', fn ($q) => $q->withPivot('deleted_at'))
+            ->orderByDesc('deleted_at')
+            ->get();
         $orphanUsers = User::whereDoesntHave('companies')
             ->whereHas('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))
             ->with('roles')
