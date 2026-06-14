@@ -53,4 +53,9 @@ class AuditTypeController extends Controller
         return redirect()->route('audit-types.show', $version->auditType)
             ->with('success', 'Wersja ' . $version->version_number . ' jest teraz aktualna.');
     }
+
+    public function previewVersion(AuditTypeVersion $version)
+    {
+        return response($version->html_content)->header('Content-Type', 'text/html');
+    }
 }
