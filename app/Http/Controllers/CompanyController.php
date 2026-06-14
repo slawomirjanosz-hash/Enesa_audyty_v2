@@ -196,7 +196,7 @@ class CompanyController extends Controller
             'city' => ['nullable', 'string', 'max:100'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
-            'nip' => ['nullable', 'digits:10', 'unique:companies,nip'],
+            'nip' => ['nullable', 'digits:10', Rule::unique('companies', 'nip')->whereNull('archived_at')],
         ]);
 
         $company = Company::create(array_merge($data, ['status' => 'pending']));
