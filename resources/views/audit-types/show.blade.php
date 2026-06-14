@@ -398,15 +398,9 @@
 
 @push('scripts')
 <script>
-    const versionUrls = {
-        @foreach($auditType->versions as $version)
-            {{ $version->id }}: "{{ route('audit-types.show', $auditType) }}/versions/{{ $version->id }}/preview",
-        @endforeach
-    };
-
     function openPreview(versionNumber, versionId) {
         document.getElementById('previewTitle').textContent = 'Podgląd: ' + versionNumber;
-        document.getElementById('previewFrame').src = '{{ url('/audit-types') }}/' + {{ $auditType->id }} + '/versions/' + versionId + '/preview';
+        document.getElementById('previewFrame').src = '{{ url('/audit-types/versions') }}/' + versionId + '/preview';
         document.getElementById('previewOverlay').classList.add('open');
     }
 
