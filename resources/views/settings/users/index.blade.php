@@ -217,8 +217,8 @@
     </a>
     <a href="{{ route('settings.users.index') }}?tab=archiwum" class="settings-tab {{ request('tab') === 'archiwum' ? 'active' : '' }}">
         <i class="ti ti-archive" style="margin-right:6px;"></i>Archiwum
-        @if($archivedUsers->isNotEmpty())
-            <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedUsers->count() }}</span>
+        @if(($archivedStaff->count() + $archivedClients->count()) > 0)
+            <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedStaff->count() + $archivedClients->count() }}</span>
         @endif
     </a>
 </div>
@@ -240,15 +240,15 @@
 <div class="card">
     <div class="card-header">
         <div>
-            <div class="card-header-title">Zarchiwizowani użytkownicy</div>
-            <div class="card-header-sub">{{ $archivedUsers->count() }} usuniętych kont</div>
+            <div class="card-header-title">Zarchiwizowani pracownicy ENESA</div>
+            <div class="card-header-sub">{{ $archivedStaff->count() }} usuniętych kont</div>
         </div>
     </div>
 
-    @if($archivedUsers->isEmpty())
+    @if($archivedStaff->isEmpty())
         <div style="text-align:center;padding:40px;color:#888;">
             <i class="ti ti-archive" style="font-size:32px;display:block;margin-bottom:8px;"></i>
-            Brak archiwalnych użytkowników
+            Brak zarchiwizowanych pracowników ENESA
         </div>
     @else
         <table class="users-table">
@@ -256,20 +256,16 @@
                 <tr>
                     <th>Użytkownik</th>
                     <th>Rola</th>
-                    <th>Ostatnia firma</th>
                     <th>Data usunięcia</th>
                     <th style="text-align:right;width:200px;">Akcja</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($archivedUsers as $archivedUser)
+                @foreach($archivedStaff as $archivedUser)
                     @php
                         $initials = collect(explode(' ', $archivedUser->name))
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $archivedUser->roles->first()?->name ?? '—';
-                        $lastCompany = $archivedUser->companies
-                            ->sortByDesc('pivot.deleted_at')
-                            ->first()?->name ?? 'Brak danych';
                     @endphp
                     <tr>
                         <td>
@@ -284,7 +280,6 @@
                         <td>
                             <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
                         </td>
-                        <td style="color:#888;font-size:13px;">{{ $lastCompany }}</td>
                         <td style="color:#888;font-size:13px;">
                             {{ $archivedUser->deleted_at->format('d.m.Y') }}
                         </td>
@@ -297,6 +292,72 @@
                                     </button>
                                 </form>
                                 <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $archivedUser->id }}" data-user-name="{{ e($archivedUser->name) }}" data-user-email="{{ e($archivedUser->email) }}" onclick="openAssignToCompanyModal(this)">
+                                    <i class="ti ti-building-plus"></i> Przypisz
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <div class="card-header">
+        <div>
+            <div class="card-header-title">Zarchiwizowani klienci</div>
+            <div class="card-header-sub">{{ $archivedClients->count() }} usuniętych kont klientów</div>
+        </div>
+    </div>
+
+    @if($archivedClients->isEmpty())
+        <div style="text-align:center;padding:40px;color:#888;">
+            <i class="ti ti-archive" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+            Brak zarchiwizowanych klientów
+        </div>
+    @else
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Użytkownik</th>
+                    <th>Rola</th>
+                    <th>Firma</th>
+                    <th>Data usunięcia</th>
+                    <th style="text-align:right;width:200px;">Akcja</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($archivedClients as $archivedClient)
+                    @php
+                        $initials = collect(explode(' ', $archivedClient->name))
+                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $role = $archivedClient->roles->first()?->name ?? '—';
+                        $companyNames = $archivedClient->companies->pluck('name')->implode(', ') ?: 'Brak danych';
+                    @endphp
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="avatar" style="background:#6b7a70;">{{ $initials }}</div>
+                                <div>
+                                    <div class="user-name">{{ $archivedClient->name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
+                        </td>
+                        <td style="color:#888;font-size:13px;">{{ $companyNames }}</td>
+                        <td style="color:#888;font-size:13px;">{{ $archivedClient->deleted_at->format('d.m.Y') }}</td>
+                        <td>
+                            <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;">
+                                <form method="POST" action="{{ route('settings.users.restore', $archivedClient) }}">
+                                    @csrf
+                                    <button type="submit" class="btn-action" title="Przywróć" style="width:auto;padding:6px 12px;gap:6px;">
+                                        <i class="ti ti-restore"></i> Przywróć
+                                    </button>
+                                </form>
+                                <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $archivedClient->id }}" data-user-name="{{ e($archivedClient->name) }}" data-user-email="{{ e($archivedClient->email) }}" onclick="openAssignToCompanyModal(this)">
                                     <i class="ti ti-building-plus"></i> Przypisz
                                 </button>
                             </div>

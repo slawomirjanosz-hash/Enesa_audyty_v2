@@ -23,9 +23,15 @@ class UserController extends Controller
 
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
-        $archivedUsers = User::onlyTrashed()
+        $archivedStaff = User::onlyTrashed()
             ->with('roles')
-            ->with('companies', fn ($q) => $q->withPivot('deleted_at'))
+            ->whereHas('roles', fn ($q) => $q->whereIn('name', ['admin', 'auditor', 'auditor_senior', 'superadmin']))
+            ->orderByDesc('deleted_at')
+            ->get();
+        $archivedClients = User::onlyTrashed()
+            ->with('roles')
+            ->with('companies')
+            ->whereHas('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))
             ->orderByDesc('deleted_at')
             ->get();
         $orphanUsers = User::whereDoesntHave('companies')
@@ -35,7 +41,7 @@ class UserController extends Controller
             ->get();
         $companies = Company::active()->orderBy('name')->get();
 
-        return view('settings.users.index', compact('users', 'roles', 'archivedUsers', 'orphanUsers', 'companies'));
+        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies'));
     }
 
     public function create()
@@ -122,10 +128,10 @@ class UserController extends Controller
                 ->with('error', 'Nie można trwale usunąć użytkownika przypisanego do firmy.');
         }
 
-        $user->forceDelete();
+        $user->delete();
 
         return redirect()->route('settings.users.index')
-            ->with('success', 'Użytkownik został trwale usunięty.');
+            ->with('success', 'Użytkownik został zarchiwizowany.');
     }
 
     public function restore(User $user)
