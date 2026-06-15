@@ -437,29 +437,11 @@
     <div style="background:#fff;border-radius:14px;padding:36px;max-width:420px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.22);">
         <i class="ti ti-lock-off" style="font-size:48px;color:#EF6C00;display:block;margin-bottom:16px;"></i>
         <h2 style="font-family:'Lato',sans-serif;font-size:20px;font-weight:700;color:#1A4D3A;margin-bottom:10px;">Sesja wygasła</h2>
-        <p style="font-size:13px;color:#5a6a60;margin-bottom:24px;line-height:1.6;">Twoja sesja wygasła z powodu braku aktywności. Zaloguj się ponownie aby kontynuować.</p>
-
-        <div id="sessionModalError" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:13px;padding:8px 12px;margin-bottom:14px;text-align:left;"></div>
-
-        <form id="sessionModalForm" action="{{ route('login') }}" method="POST">
-            @csrf
-            <div style="margin-bottom:12px;text-align:left;">
-                <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:4px;">E-mail</label>
-                <input id="smEmail" type="text" name="email" required
-                    style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;outline:none;"
-                    placeholder="Twój email">
-            </div>
-            <div style="margin-bottom:20px;text-align:left;">
-                <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:4px;">Hasło</label>
-                <input id="smPassword" type="password" name="password" required
-                    style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;outline:none;"
-                    placeholder="••••••••">
-            </div>
-            <button type="submit"
-                style="width:100%;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:12px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">
-                Zaloguj się ponownie
-            </button>
-        </form>
+        <p style="font-size:13px;color:#5a6a60;margin-bottom:24px;line-height:1.6;">Twoja sesja wygasła z powodu braku aktywności.</p>
+        <button type="button" onclick="window.location.href = '/login';"
+            style="width:100%;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:12px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">
+            Przejdź do logowania
+        </button>
     </div>
 </div>
 
