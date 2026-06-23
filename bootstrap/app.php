@@ -15,7 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: ['/logout']);
 
         $middleware->alias([
-            'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth'               => \App\Http\Middleware\Authenticate::class,
+            'client.role'        => \App\Http\Middleware\EnsureClientRole::class,
+            'client.admin'       => \App\Http\Middleware\EnsureClientAdmin::class,
+            'client.zone.session' => \App\Http\Middleware\EnsureClientZoneSession::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -4,13 +4,91 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Offer extends Model
 {
-    protected $fillable = ['company_id', 'title', 'status'];
+    use SoftDeletes;
+
+    protected $fillable = [
+        'offer_number',
+        'offer_slug',
+        'offer_full_number',
+        'status',
+        'won_as',
+        'company_id',
+        'assigned_user_id',
+        'created_by_id',
+        'offer_template_version_id',
+        'offer_request_id',
+        'kwota_netto',
+        'notes',
+    ];
+
+    protected $casts = [
+        'kwota_netto' => 'decimal:2',
+    ];
 
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function offerTemplateVersion(): BelongsTo
+    {
+        return $this->belongsTo(OfferTemplateVersion::class);
+    }
+
+    public function offerRequest(): BelongsTo
+    {
+        return $this->belongsTo(OfferRequest::class);
+    }
+
+    public function offerDelegation(): HasOne
+    {
+        return $this->hasOne(OfferDelegation::class);
+    }
+
+    public function offerMessages(): HasMany
+    {
+        return $this->hasMany(OfferMessage::class);
+    }
+
+    public function fullNumber(): string
+    {
+        return $this->offer_full_number
+            ?? ($this->offer_number . ($this->offer_slug ? '_' . $this->offer_slug : ''));
+    }
+
+    public static function generateNumber(): string
+    {
+        $now = now();
+        $monthPrefix = 'OF_Enesa_' . $now->format('Ym');
+
+        $maxSeq = static::withTrashed()
+            ->where('offer_number', 'like', $monthPrefix . '%')
+            ->pluck('offer_number')
+            ->map(function (string $num): int {
+                $parts = explode('_', $num);
+                return (int) end($parts);
+            })
+            ->max() ?? 0;
+
+        $seq = str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
+
+        return 'OF_Enesa_' . $now->format('Ymd') . '_' . $seq;
     }
 }

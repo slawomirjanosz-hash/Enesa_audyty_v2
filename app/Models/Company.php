@@ -33,11 +33,25 @@ class Company extends Model
         return $this->hasMany(Offer::class);
     }
 
+    public function offerRequests(): HasMany
+    {
+        return $this->hasMany(OfferRequest::class);
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
-            ->withPivot('is_admin')
-            ->withTimestamps();
+            ->withPivot('is_admin', 'deleted_at')
+            ->withTimestamps()
+            ->wherePivotNull('deleted_at');
+    }
+
+    public function archivedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('is_admin', 'deleted_at')
+            ->withTimestamps()
+            ->wherePivotNotNull('deleted_at');
     }
 
     public function scopeActive($query)

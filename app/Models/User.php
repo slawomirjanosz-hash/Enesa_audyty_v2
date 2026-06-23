@@ -61,4 +61,14 @@ class User extends Authenticatable
             ->withPivot('is_admin')
             ->withTimestamps();
     }
+
+    public function assignedOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Offer::class, 'assigned_user_id');
+    }
+
+    public function createdOffers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Offer::class, 'created_by_id');
+    }
 }

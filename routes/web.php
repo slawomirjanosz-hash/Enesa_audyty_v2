@@ -1,8 +1,18 @@
 <?php
 
 use App\Http\Controllers\AuditTypeController;
+use App\Http\Controllers\Client\AuditController as ClientAuditController;
+use App\Http\Controllers\Client\ChatController as ClientChatController;
+use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
+use App\Http\Controllers\Client\DocumentController as ClientDocumentController;
+use App\Http\Controllers\Client\OfferController as ClientOfferController;
+use App\Http\Controllers\Client\OfferRequestController as ClientOfferRequestController;
 use App\Http\Controllers\Client\RegistrationController;
+use App\Http\Controllers\Client\UserController as ClientUserController;
+use App\Http\Controllers\ClientZoneController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\OfferController;
+use App\Http\Controllers\OfferTemplateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings;
@@ -25,9 +35,31 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
-Route::get('/client/dashboard', function () {
-    return view('client.dashboard');
-})->middleware(['auth'])->name('client.dashboard');
+Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->group(function () {
+    Route::get('/dashboard',     [ClientDashboardController::class,    'index'])->name('dashboard');
+    Route::get('/audits',        [ClientAuditController::class,        'index'])->name('audits');
+    Route::get('/offers',        [ClientOfferController::class,        'index'])->name('offers');
+    Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->name('request-offer');
+    Route::get('/documents',     [ClientDocumentController::class,     'index'])->name('documents');
+    Route::get('/chat',          [ClientChatController::class,         'index'])->name('chat');
+    Route::get('/users',                    [ClientUserController::class, 'index'])->middleware('client.admin')->name('users');
+    Route::post('/users',                   [ClientUserController::class, 'store'])->middleware('client.admin')->name('users.store');
+    Route::delete('/users/{user}',          [ClientUserController::class, 'destroy'])->middleware('client.admin')->name('users.destroy');
+    Route::delete('/users/{user}/permanent',[ClientUserController::class, 'permanentDelete'])->middleware('client.admin')->name('users.permanent-delete');
+});
+
+Route::prefix('client-zone')->name('client-zone.')->middleware('auth')->group(function () {
+    Route::get('/',  [ClientZoneController::class, 'index'])->name('index');
+    Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
+    Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');
+    Route::get('/dashboard',     [ClientZoneController::class, 'dashboard'])->middleware('client.zone.session')->name('dashboard');
+    Route::get('/audits',        [ClientZoneController::class, 'audits'])->middleware('client.zone.session')->name('audits');
+    Route::get('/offers',        [ClientZoneController::class, 'offers'])->middleware('client.zone.session')->name('offers');
+    Route::get('/request-offer', [ClientZoneController::class, 'requestOffer'])->middleware('client.zone.session')->name('request-offer');
+    Route::get('/documents',     [ClientZoneController::class, 'documents'])->middleware('client.zone.session')->name('documents');
+    Route::get('/chat',          [ClientZoneController::class, 'chat'])->middleware('client.zone.session')->name('chat');
+    Route::get('/users',         [ClientZoneController::class, 'users'])->middleware('client.zone.session')->name('users');
+});
 
 Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware('auth')->name('audit-types.versions.preview');
 
@@ -46,6 +78,27 @@ Route::middleware('auth')->group(function () {
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->name('audit-types.show');
     Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->name('audit-types.versions.store');
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
+
+    Route::prefix('offers')->name('offers.')->group(function () {
+        Route::get('/',                  [OfferController::class, 'index'])->name('index');
+        Route::get('/create',            [OfferController::class, 'create'])->name('create');
+        Route::get('/get-distance',      [OfferController::class, 'getDistance'])->name('get-distance');
+        Route::post('/',                 [OfferController::class, 'store'])->name('store');
+        Route::get('/{offer}',           [OfferController::class, 'show'])->name('show');
+        Route::get('/{offer}/edit',      [OfferController::class, 'edit'])->name('edit');
+        Route::put('/{offer}',           [OfferController::class, 'update'])->name('update');
+        Route::patch('/{offer}/status',  [OfferController::class, 'updateStatus'])->name('status');
+        Route::post('/{offer}/messages', [OfferController::class, 'storeMessage'])->name('messages.store');
+    });
+
+    Route::prefix('offer-templates')->name('offer-templates.')->group(function () {
+        Route::get('/',                                [OfferTemplateController::class, 'index'])->name('index');
+        Route::post('/',                               [OfferTemplateController::class, 'store'])->name('store');
+        Route::post('/{type}/versions',                [OfferTemplateController::class, 'storeVersion'])->name('versions.store');
+        Route::post('/versions/{version}/set-current', [OfferTemplateController::class, 'setAsCurrent'])->name('versions.set-current');
+        Route::get('/versions/{version}/preview',      [OfferTemplateController::class, 'previewVersion'])->name('versions.preview');
+        Route::delete('/{type}',                       [OfferTemplateController::class, 'destroy'])->name('destroy');
+    });
 
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
