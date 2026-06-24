@@ -80,15 +80,17 @@ Route::middleware('auth')->group(function () {
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
 
     Route::prefix('offers')->name('offers.')->group(function () {
-        Route::get('/',                  [OfferController::class, 'index'])->name('index');
-        Route::get('/create',            [OfferController::class, 'create'])->name('create');
-        Route::get('/get-distance',      [OfferController::class, 'getDistance'])->name('get-distance');
-        Route::post('/',                 [OfferController::class, 'store'])->name('store');
-        Route::get('/{offer}',           [OfferController::class, 'show'])->name('show');
-        Route::get('/{offer}/edit',      [OfferController::class, 'edit'])->name('edit');
-        Route::put('/{offer}',           [OfferController::class, 'update'])->name('update');
-        Route::patch('/{offer}/status',  [OfferController::class, 'updateStatus'])->name('status');
-        Route::post('/{offer}/messages', [OfferController::class, 'storeMessage'])->name('messages.store');
+        Route::get('/',                              [OfferController::class, 'index'])->name('index');
+        Route::get('/create',                        [OfferController::class, 'create'])->name('create');
+        Route::get('/get-distance',                  [OfferController::class, 'getDistance'])->name('get-distance');
+        Route::post('/',                             [OfferController::class, 'store'])->name('store');
+        Route::get('/{offer}',                       [OfferController::class, 'show'])->name('show');
+        Route::get('/{offer}/edit',                  [OfferController::class, 'edit'])->name('edit');
+        Route::get('/{offer}/pdf',                   [OfferController::class, 'pdf'])->name('pdf');
+        Route::put('/{offer}',                       [OfferController::class, 'update'])->name('update');
+        Route::patch('/{offer}/status',              [OfferController::class, 'updateStatus'])->name('status');
+        Route::post('/{offer}/messages',             [OfferController::class, 'storeMessage'])->name('messages.store');
+        Route::post('/{offer}/save-as-template',     [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
     });
 
     Route::prefix('offer-templates')->name('offer-templates.')->group(function () {

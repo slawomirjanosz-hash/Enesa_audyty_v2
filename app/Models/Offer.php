@@ -17,6 +17,7 @@ class Offer extends Model
         'offer_number',
         'offer_slug',
         'offer_full_number',
+        'offer_title',
         'status',
         'won_as',
         'company_id',
@@ -25,11 +26,21 @@ class Offer extends Model
         'offer_template_version_id',
         'offer_request_id',
         'kwota_netto',
+        'valid_until',
         'notes',
+        'content_subject',
+        'content_scope',
+        'content_deadline',
+        'content_payment',
+        'show_unit_prices',
+        'price_sections',
     ];
 
     protected $casts = [
-        'kwota_netto' => 'decimal:2',
+        'kwota_netto'       => 'decimal:2',
+        'valid_until'       => 'date',
+        'show_unit_prices'  => 'boolean',
+        'price_sections'    => 'array',
     ];
 
     public function company(): BelongsTo

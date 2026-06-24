@@ -7,11 +7,14 @@ use App\Models\Offer;
 use App\Models\OfferDelegation;
 use App\Models\OfferMessage;
 use App\Models\OfferRequest;
+use App\Models\OfferSavedTemplate;
 use App\Models\OfferTemplateType;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -169,14 +172,24 @@ class OfferController extends Controller
             'company_id'                => ['required', 'exists:companies,id'],
             'offer_number'              => ['required', 'string', 'unique:offers,offer_number,' . $offer->id],
             'offer_slug'                => ['nullable', 'string', 'max:255'],
+            'offer_title'               => ['nullable', 'string', 'max:500'],
             'status'                    => ['required', 'in:w_toku,wygrana,przegrana,zarchiwizowana'],
             'assigned_user_id'          => ['nullable', 'exists:users,id'],
             'kwota_netto'               => ['nullable', 'numeric', 'min:0'],
+            'valid_until'               => ['nullable', 'date'],
             'notes'                     => ['nullable', 'string'],
             'offer_template_version_id' => ['nullable', 'exists:offer_template_versions,id'],
             'offer_request_id'          => ['nullable', 'exists:offer_requests,id'],
+            // Rich content
+            'content_subject'           => ['nullable', 'string'],
+            'content_scope'             => ['nullable', 'string'],
+            'content_deadline'          => ['nullable', 'string'],
+            'content_payment'           => ['nullable', 'string'],
+            'show_unit_prices'          => ['nullable'],
+            'price_sections'            => ['nullable', 'string'],
             // Delegation
             'km_do_klienta'             => ['nullable', 'integer', 'min:0'],
+            'stawka_km'                 => ['nullable', 'numeric', 'min:0'],
             'czas_dojazdu_min'          => ['nullable', 'integer', 'min:0'],
             'liczba_wyjazdow'           => ['required', 'integer', 'min:1'],
             'czy_kilkudniowy'           => ['boolean'],
@@ -189,22 +202,37 @@ class OfferController extends Controller
             ? '_' . Str::slug($request->offer_slug, '_')
             : '';
 
+        $priceSections = null;
+        if ($request->filled('price_sections')) {
+            $decoded = json_decode($request->input('price_sections'), true);
+            $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+
         $offer->update([
             'company_id'                => $data['company_id'],
             'offer_number'              => $data['offer_number'],
             'offer_slug'                => $data['offer_slug'] ?? null,
             'offer_full_number'         => $data['offer_number'] . $slug,
+            'offer_title'               => $data['offer_title'] ?? null,
             'status'                    => $data['status'],
             'assigned_user_id'          => $data['assigned_user_id'] ?? null,
             'kwota_netto'               => $data['kwota_netto'] ?? null,
+            'valid_until'               => $data['valid_until'] ?? null,
             'notes'                     => $data['notes'] ?? null,
             'offer_template_version_id' => $data['offer_template_version_id'] ?? null,
             'offer_request_id'          => $data['offer_request_id'] ?? null,
+            'content_subject'           => $data['content_subject'] ?? null,
+            'content_scope'             => $data['content_scope'] ?? null,
+            'content_deadline'          => $data['content_deadline'] ?? null,
+            'content_payment'           => $data['content_payment'] ?? null,
+            'show_unit_prices'          => $request->input('show_unit_prices') === '1',
+            'price_sections'            => $priceSections,
         ]);
 
         $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
         $delegation->fill([
             'km_do_klienta'    => $data['km_do_klienta'] ?? null,
+            'stawka_km'        => $data['stawka_km'] ?? 1.10,
             'czas_dojazdu_min' => $data['czas_dojazdu_min'] ?? null,
             'liczba_wyjazdow'  => $data['liczba_wyjazdow'],
             'czy_kilkudniowy'  => $request->boolean('czy_kilkudniowy'),
@@ -244,6 +272,34 @@ class OfferController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Wiadomość została dodana.')->withFragment('messages');
+    }
+
+    public function pdf(Offer $offer): Response
+    {
+        $offer->load(['company', 'assignedUser', 'offerDelegation']);
+
+        return Pdf::loadView('offers.pdf', compact('offer'))
+            ->stream('oferta-' . $offer->fullNumber() . '.pdf');
+    }
+
+    public function saveAsTemplate(Request $request, Offer $offer): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        OfferSavedTemplate::create([
+            'name'             => $data['name'],
+            'offer_id'         => $offer->id,
+            'content_subject'  => $offer->content_subject,
+            'content_scope'    => $offer->content_scope,
+            'content_deadline' => $offer->content_deadline,
+            'content_payment'  => $offer->content_payment,
+            'price_sections'   => $offer->price_sections,
+            'created_by'       => auth()->id(),
+        ]);
+
+        return redirect()->back()->with('success', 'Szablon został zapisany jako: ' . $data['name']);
     }
 
     public function getDistance(Request $request): JsonResponse

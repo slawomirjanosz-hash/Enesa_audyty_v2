@@ -4,560 +4,725 @@
 
 @push('styles')
 <style>
-    .form-layout {
-        display: grid;
-        grid-template-columns: 1fr 360px;
-        gap: 20px;
-        align-items: start;
-    }
-    .form-card {
-        background: #fff;
-        border: 1px solid #E5E1D8;
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 16px;
-    }
-    .form-card:last-child { margin-bottom: 0; }
-    .form-card-header {
-        padding: 16px 24px;
-        border-bottom: 1px solid #F0EDE6;
-        background: #FAFAF6;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .form-card-header i { font-size: 18px; color: #1A4D3A; }
-    .form-card-title {
-        font-family: 'Manrope', sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        color: #1A1A1A;
-    }
-    .form-card-body { padding: 24px; }
-
-    /* ── Fields ────────────────────────────── */
-    .field-group { margin-bottom: 16px; }
-    .field-group:last-child { margin-bottom: 0; }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .field-label {
-        display: block;
-        font-size: 12px;
-        font-weight: 700;
-        color: #3a3a3a;
-        margin-bottom: 5px;
-        font-family: 'Manrope', sans-serif;
-    }
-    .field-label .req { color: #DC2626; margin-left: 2px; }
-    .field-input {
-        width: 100%;
-        background: #FAFAF6;
-        border: 1px solid #D0CCC0;
-        border-radius: 7px;
-        padding: 9px 12px;
-        font-size: 14px;
-        font-family: 'Lato', sans-serif;
-        color: #1A1A1A;
-        outline: none;
-        transition: border-color .15s, background .15s;
-    }
-    .field-input:focus { border-color: #1A4D3A; background: #fff; }
-    .field-input.error { border-color: #FCA5A5; background: #FFF5F5; }
-    .field-error { font-size: 11px; color: #B91C1C; margin-top: 4px; }
-    .field-hint  { font-size: 11px; color: #888; margin-top: 4px; }
-
-    .input-group { display: flex; }
-    .input-group .field-input { border-radius: 7px 0 0 7px; border-right: none; flex: 1; }
-    .input-group-suffix {
-        background: #F0EDE6;
-        border: 1px solid #D0CCC0;
-        border-radius: 0 7px 7px 0;
-        padding: 9px 12px;
-        font-size: 13px;
-        color: #666;
-        white-space: nowrap;
-    }
-
-    /* ── Full number preview ─────────────── */
-    .full-number-preview {
-        font-family: 'Lato', sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        color: #1A4D3A;
-        background: #F0F7F3;
-        border: 1px dashed #94C4B0;
-        border-radius: 7px;
-        padding: 9px 14px;
-        letter-spacing: .03em;
-    }
-
-    /* ── Warning box ─────────────────────── */
-    .warning-box {
-        background: #FFFBEB;
-        border: 1px solid #FCD34D;
-        border-radius: 7px;
-        padding: 10px 14px;
-        font-size: 12px;
-        color: #92400E;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-    }
-
-    /* ── Delegation calculator ───────────── */
-    .calc-result {
-        background: #F0F7F3;
-        border: 1px solid #94C4B0;
-        border-radius: 8px;
-        padding: 14px 16px;
-        margin-top: 16px;
-    }
-    .calc-result-label { font-size: 11px; font-weight: 700; color: #1A4D3A; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
-    .calc-result-value { font-size: 24px; font-weight: 900; font-family: 'Lato', sans-serif; color: #1A4D3A; }
-
-    /* ── Overnights section ──────────────── */
-    #overnightSection { display: none; margin-top: 14px; }
-
-    /* ── Sidebar card ────────────────────── */
-    .sidebar-meta { font-size: 13px; color: #5a6a60; margin-bottom: 6px; }
-
-    /* ── Submit ──────────────────────────── */
-    .btn-submit {
-        width: 100%;
-        background: #1A4D3A;
-        color: #F5F0E8;
-        border: none;
-        border-radius: 8px;
-        padding: 13px;
-        font-family: 'Manrope', sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background .15s;
-    }
-    .btn-submit:hover { background: #143d2d; }
-
-    @media (max-width: 900px) {
-        .form-layout { grid-template-columns: 1fr; }
-    }
+/* ── Editor topbar ─────────────────────────────────── */
+#editor-topbar {
+    position: sticky;
+    top: var(--topbar, 60px);
+    z-index: 50;
+    background: #fff;
+    border-bottom: 1px solid #E5E1D8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: -20px -20px 20px -20px;
+}
+.etb-left  { display: flex; align-items: center; gap: 10px; }
+.etb-right { display: flex; align-items: center; gap: 10px; }
+.toggle-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.toggle-wrap input { display: none; }
+.toggle-track {
+    width: 40px; height: 22px; background: #D0CCC0;
+    border-radius: 11px; position: relative; transition: background .2s;
+}
+.toggle-track::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 16px; height: 16px; background: #fff; border-radius: 50%;
+    transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.25);
+}
+.toggle-wrap input:checked + .toggle-track { background: #1A4D3A; }
+.toggle-wrap input:checked + .toggle-track::after { left: 21px; }
+.toggle-label { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; color: #555; }
+.btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 8px;
+    padding: 8px 16px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
+    text-decoration: none; cursor: pointer; transition: background .15s; white-space: nowrap;
+}
+.btn-primary:hover { background: #143d2d; color: #F5F0E8; }
+.btn-secondary {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; color: #333; border: 1px solid #D0CCC0; border-radius: 8px;
+    padding: 7px 14px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600;
+    text-decoration: none; cursor: pointer; transition: background .15s;
+}
+.btn-secondary:hover { background: #F4F1EA; }
+.badge { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; font-family:'Manrope',sans-serif; }
+.badge-blue { background:#DBEAFE; color:#1D4ED8; }
+.ed-card { background:#fff; border:1px solid #E5E1D8; border-radius:12px; overflow:hidden; margin-bottom:16px; }
+.ed-card-header { padding:13px 20px; border-bottom:1px solid #F0EDE6; background:#FAFAF6; display:flex; align-items:center; gap:10px; }
+.ed-card-header > i { font-size:17px; color:#1A4D3A; }
+.ed-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
+.ed-card-body { padding:20px; }
+.doc-header-bar { background:#1A4D3A; color:#fff; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.doc-header-bar .offer-num { font-family:'Lato',sans-serif; font-size:15px; font-weight:900; letter-spacing:.04em; }
+.doc-header-bar .doc-date  { font-size:12px; opacity:.8; }
+.doc-parties { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid #F0EDE6; }
+.doc-party { padding:18px 22px; }
+.doc-party:first-child { border-right:1px solid #F0EDE6; }
+.doc-party-label { font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:.07em; margin-bottom:8px; }
+.doc-party-name  { font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:#1A1A1A; margin-bottom:4px; }
+.doc-party-line  { font-family:'Lato',sans-serif; font-size:12px; color:#555; line-height:1.7; }
+.doc-title-wrap  { padding:16px 22px; }
+.doc-title-input { width:100%; border:none; outline:none; font-family:'Manrope',sans-serif; font-size:18px; font-weight:700; color:#1A4D3A; background:transparent; border-bottom:2px dashed #94C4B0; padding:4px 0; transition:border-color .15s; }
+.doc-title-input:focus { border-color:#1A4D3A; }
+.doc-title-input::placeholder { color:#bbb; font-weight:400; }
+.rte-toolbar { display:flex; gap:4px; padding:8px 16px; border-bottom:1px solid #F0EDE6; background:#FAFAF6; flex-wrap:wrap; }
+.rte-btn { min-width:30px; height:28px; padding:0 8px; background:#fff; border:1px solid #D0CCC0; border-radius:5px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-family:'Lato',sans-serif; color:#333; transition:background .12s; }
+.rte-btn:hover { background:#F0EDE6; }
+.rich-editor { min-height:90px; padding:14px 20px; font-family:'Lato',sans-serif; font-size:14px; color:#1A1A1A; line-height:1.8; outline:none; }
+.rich-editor:empty::before { content:attr(data-placeholder); color:#bbb; pointer-events:none; }
+.rich-editor ul, .rich-editor ol { padding-left:20px; }
+.section-name-input { flex:1; border:none; outline:none; background:transparent; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; border-bottom:1px dashed #bbb; padding:2px 4px; }
+.price-table { width:100%; border-collapse:collapse; font-size:13px; }
+.price-table th { font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.05em; padding:8px 10px; border-bottom:2px solid #E5E1D8; background:#FAFAF6; white-space:nowrap; text-align:left; }
+.price-table td { padding:6px 6px; border-bottom:1px solid #F0EDE6; vertical-align:middle; }
+.price-table tr:last-child td { border-bottom:none; }
+.cell-input { width:100%; border:1px solid transparent; border-radius:5px; padding:5px 8px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; background:transparent; outline:none; transition:border-color .12s, background .12s; box-sizing:border-box; }
+.cell-input:hover { border-color:#D0CCC0; background:#FAFAF6; }
+.cell-input:focus { border-color:#1A4D3A; background:#fff; }
+.cell-readonly { font-family:'Lato',sans-serif; font-size:13px; color:#333; font-weight:700; padding:5px 8px; }
+.btn-add-row { background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px; padding:6px 14px; font-size:12px; font-family:'Manrope',sans-serif; font-weight:700; cursor:pointer; transition:background .12s; }
+.btn-add-row:hover { background:#F0F7F3; }
+.btn-del-row { background:none; border:none; color:#DC2626; cursor:pointer; font-size:16px; padding:4px; border-radius:4px; display:flex; align-items:center; justify-content:center; }
+.btn-del-row:hover { background:#FEE2E2; }
+.btn-del-section { margin-left:auto; background:none; border:1px solid #FCA5A5; color:#B91C1C; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
+.btn-del-section:hover { background:#FEE2E2; }
+.btn-add-section { display:inline-flex; align-items:center; gap:6px; border:1px dashed #94C4B0; color:#1A4D3A; background:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
+.btn-add-section:hover { background:#F0F7F3; }
+.unit-col { }
+.hide-units .unit-col { display:none; }
+.deleg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; }
+.field-label { display:block; font-size:11px; font-weight:700; color:#555; margin-bottom:4px; font-family:'Manrope',sans-serif; }
+.field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:8px 10px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; outline:none; transition:border-color .15s; box-sizing:border-box; }
+.field-input:focus { border-color:#1A4D3A; background:#fff; }
+.input-group { display:flex; }
+.input-group .field-input { border-radius:7px 0 0 7px; border-right:none; }
+.input-suffix { background:#F0EDE6; border:1px solid #D0CCC0; border-radius:0 7px 7px 0; padding:8px 10px; font-size:12px; color:#666; white-space:nowrap; }
+.summary-row { display:flex; justify-content:space-between; padding:9px 16px; font-size:13px; }
+.summary-row.sub { background:#fff; border-bottom:1px solid #F0EDE6; }
+.summary-row.markup { background:#FFFBEB; border-bottom:1px solid #FDE68A; }
+.summary-row.total { background:#1A4D3A; color:#fff; border-radius:0 0 10px 10px; }
+.summary-label { font-family:'Manrope',sans-serif; font-weight:600; }
+.summary-value { font-family:'Lato',sans-serif; font-weight:900; font-size:15px; }
+.summary-row.total .summary-value { font-size:20px; }
+.markup-bar { background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:14px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.markup-bar .field-label { color:#92400E; }
 </style>
 @endpush
 
 @section('content')
+@php
+    $validUntilDefault = now()->addDays(30)->format('Y-m-d');
+@endphp
 
-<div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;">
-    <div>
-        <a href="{{ route('offers.index') }}" style="font-size:13px;color:#5a6a60;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
-            <i class="ti ti-arrow-left"></i> Powrót do listy ofert
+{{-- ═══ EDITOR TOPBAR ═══ --}}
+<div id="editor-topbar">
+    <div class="etb-left">
+        <a href="{{ route('offers.index') }}" class="btn-secondary" style="padding:6px 10px;">
+            <i class="ti ti-arrow-left"></i>
         </a>
-        <h1 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#1A4D3A;margin-top:4px;">
+        <span style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:#1A4D3A;">
             Nowa oferta
-        </h1>
+        </span>
+        <span class="badge badge-blue">W toku</span>
+    </div>
+    <div class="etb-right">
+        <label class="toggle-wrap" title="Pokaż ceny jednostkowe klientowi (widoczne w PDF)">
+            <input type="checkbox" id="show-unit-toggle" onchange="toggleUnitPrices(this)">
+            <span class="toggle-track"></span>
+            <span class="toggle-label">Ceny jedn. w PDF</span>
+        </label>
+        <button type="submit" form="offer-form" class="btn-primary">
+            <i class="ti ti-plus"></i> Utwórz ofertę
+        </button>
     </div>
 </div>
 
-<form method="POST" action="{{ route('offers.store') }}" id="offerForm">
+@if(session('success'))
+    <div style="background:#F0FDF4;border:1px solid #86EFAC;color:#166534;border-radius:8px;padding:11px 16px;margin-bottom:14px;font-size:13px;display:flex;align-items:center;gap:10px;">
+        <i class="ti ti-circle-check"></i> {{ session('success') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div style="background:#FEF2F2;border:1px solid #FCA5A5;color:#B91C1C;border-radius:8px;padding:11px 16px;margin-bottom:14px;font-size:13px;">
+        <strong>Popraw błędy formularza:</strong>
+        <ul style="margin:6px 0 0 16px;">
+            @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+        </ul>
+    </div>
+@endif
+
+{{-- ═══ FORM ═══ --}}
+<form id="offer-form" method="POST" action="{{ route('offers.store') }}">
 @csrf
 
-<div class="form-layout">
-{{-- ═══ MAIN COLUMN ═══ --}}
-<div>
-
-{{-- SEKCJA 1: Podstawowe dane --}}
-<div class="form-card">
-    <div class="form-card-header">
-        <i class="ti ti-file-invoice"></i>
-        <span class="form-card-title">Podstawowe dane</span>
+{{-- ── SEKCJA A: NAGŁÓWEK DOKUMENTU ─────────── --}}
+<div class="ed-card">
+    <div class="doc-header-bar">
+        <div>
+            <div class="offer-num">{{ $suggestedNumber }}</div>
+            <div class="doc-date">Nowa oferta · {{ now()->format('d.m.Y') }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <label style="font-size:11px;opacity:.8;white-space:nowrap;">Ważna do:</label>
+                <input type="date" name="valid_until" value="{{ $validUntilDefault }}"
+                       style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 10px;color:#fff;font-size:13px;font-family:'Lato',sans-serif;outline:none;cursor:pointer;">
+            </div>
+        </div>
     </div>
-    <div class="form-card-body">
 
-        {{-- Numer oferty --}}
-        <div class="field-group field-row">
-            <div>
-                <label class="field-label" for="offer_number">Numer oferty <span class="req">*</span></label>
-                <input type="text" id="offer_number" name="offer_number"
-                       class="field-input @error('offer_number') error @enderror"
-                       value="{{ old('offer_number', $suggestedNumber) }}" required>
-                @if($numberExists)
-                    <div class="warning-box">
-                        <i class="ti ti-alert-triangle"></i>
-                        Oferta o tym numerze już istnieje — możesz kontynuować z innym numerem.
-                    </div>
-                @endif
-                @error('offer_number')<div class="field-error">{{ $message }}</div>@enderror
-            </div>
-            <div>
-                <label class="field-label" for="offer_slug">Opis / slug oferty</label>
-                <input type="text" id="offer_slug" name="offer_slug"
-                       class="field-input @error('offer_slug') error @enderror"
-                       value="{{ old('offer_slug') }}"
-                       placeholder="np. Białe Certyfikaty kompresory">
-                @error('offer_slug')<div class="field-error">{{ $message }}</div>@enderror
+    {{-- Firma klienta i osoba prowadząca --}}
+    <div class="doc-parties">
+        <div class="doc-party">
+            <div class="doc-party-label">Wystawca</div>
+            <div class="doc-party-name">ENESA Sp. z o.o.</div>
+            <div class="doc-party-line">
+                ul. Konarskiego 18C<br>
+                44-100 Gliwice<br>
+                NIP: — do uzupełnienia —<br>
+                system@enesa.pl
             </div>
         </div>
-
-        {{-- Podgląd pełnego numeru --}}
-        <div class="field-group">
-            <label class="field-label">Pełny numer oferty (podgląd live)</label>
-            <div class="full-number-preview" id="fullNumberPreview">
-                {{ $suggestedNumber }}
-            </div>
-        </div>
-
-        {{-- Firma + Prowadzący --}}
-        <div class="field-group field-row">
-            <div>
-                <label class="field-label" for="company_id">Firma klienta <span class="req">*</span></label>
-                <select id="company_id" name="company_id"
-                        class="field-input @error('company_id') error @enderror"
-                        {{ $offerRequest ? 'disabled' : '' }} required>
-                    <option value="">— wybierz firmę —</option>
-                    @foreach($companies as $company)
-                        <option value="{{ $company->id }}"
-                            {{ old('company_id', $offerRequest?->company_id) == $company->id ? 'selected' : '' }}>
-                            {{ $company->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @if($offerRequest)
-                    <input type="hidden" name="company_id" value="{{ $offerRequest->company_id }}">
-                    <div class="field-hint">Firma z zapytania ofertowego — zablokowana.</div>
-                @endif
-                @error('company_id')<div class="field-error">{{ $message }}</div>@enderror
-                <div id="distance-info" style="display:none;margin-top:8px;padding:10px 14px;background:#f0f7f3;border:1px solid #c8ddd4;border-radius:8px;font-size:13px;color:#1A4D3A;">
-                    <span id="distance-text"></span>
-                    <span id="distance-loading" style="display:none;">&#x23F3; Pobieranie odleg&#322;o&#347;ci...</span>
-                    <span id="distance-error" style="display:none;color:#b91c1c;"></span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label" for="assigned_user_id">Osoba prowadząca (ENESA)</label>
-                <select id="assigned_user_id" name="assigned_user_id"
-                        class="field-input @error('assigned_user_id') error @enderror">
-                    <option value="">— nieprzypisana —</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->id }}"
-                            {{ old('assigned_user_id') == $user->id ? 'selected' : '' }}>
-                            {{ $user->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('assigned_user_id')<div class="field-error">{{ $message }}</div>@enderror
-            </div>
-        </div>
-
-        {{-- Kwota + Szablon --}}
-        <div class="field-group field-row">
-            <div>
-                <label class="field-label" for="kwota_netto">Kwota netto</label>
-                <div class="input-group">
-                    <input type="number" id="kwota_netto" name="kwota_netto"
-                           class="field-input @error('kwota_netto') error @enderror"
-                           value="{{ old('kwota_netto') }}" step="0.01" min="0"
-                           placeholder="0.00">
-                    <span class="input-group-suffix">zł netto</span>
-                </div>
-                @error('kwota_netto')<div class="field-error">{{ $message }}</div>@enderror
-            </div>
-            <div>
-                <label class="field-label" for="offer_template_version_id">Szablon oferty</label>
-                <select id="offer_template_version_id" name="offer_template_version_id"
-                        class="field-input @error('offer_template_version_id') error @enderror">
-                    <option value="">— bez szablonu —</option>
-                    @foreach($offerTemplateTypes as $type)
-                        @if($type->currentVersion())
-                            <option value="{{ $type->currentVersion()->id }}"
-                                {{ old('offer_template_version_id') == $type->currentVersion()->id ? 'selected' : '' }}>
-                                {{ $type->name }} (v.{{ $type->currentVersion()->version_number }})
-                            </option>
-                        @endif
-                    @endforeach
-                </select>
-                @error('offer_template_version_id')<div class="field-error">{{ $message }}</div>@enderror
-            </div>
-        </div>
-
-        @if($offerRequest)
-            <input type="hidden" name="offer_request_id" value="{{ $offerRequest->id }}">
-        @endif
-
-        {{-- Status --}}
-        <div class="field-group" style="max-width:260px;">
-            <label class="field-label" for="status">Status oferty <span class="req">*</span></label>
-            <select id="status" name="status" class="field-input @error('status') error @enderror" required>
-                <option value="w_toku"         {{ old('status','w_toku') === 'w_toku'         ? 'selected':'' }}>W toku</option>
-                <option value="wygrana"        {{ old('status') === 'wygrana'        ? 'selected':'' }}>Wygrana</option>
-                <option value="przegrana"      {{ old('status') === 'przegrana'      ? 'selected':'' }}>Przegrana</option>
-                <option value="zarchiwizowana" {{ old('status') === 'zarchiwizowana' ? 'selected':'' }}>Zarchiwizowana</option>
+        <div class="doc-party">
+            <div class="doc-party-label">Odbiorca — wybierz firmę <span style="color:#DC2626;">*</span></div>
+            <select name="company_id" id="company_id"
+                    class="field-input @error('company_id') error @enderror"
+                    style="margin-bottom:8px;"
+                    {{ $offerRequest ? 'disabled' : '' }} required>
+                <option value="">— wybierz firmę klienta —</option>
+                @foreach($companies as $company)
+                    <option value="{{ $company->id }}"
+                        {{ old('company_id', $offerRequest?->company_id) == $company->id ? 'selected' : '' }}>
+                        {{ $company->name }}
+                        @if($company->city) — {{ $company->city }} @endif
+                    </option>
+                @endforeach
             </select>
-            @error('status')<div class="field-error">{{ $message }}</div>@enderror
-        </div>
-
-    </div>
-</div>
-
-{{-- SEKCJA 2: Delegacja --}}
-<div class="form-card">
-    <div class="form-card-header">
-        <i class="ti ti-car"></i>
-        <span class="form-card-title">Delegacja</span>
-    </div>
-    <div class="form-card-body">
-
-        <div class="field-group field-row">
-            <div>
-                <label class="field-label" for="km_do_klienta">Odległość do klienta (km)</label>
-                <div class="input-group">
-                    <input type="number" id="km_do_klienta" name="km_do_klienta"
-                           class="field-input" value="{{ old('km_do_klienta', 0) }}" min="0"
-                           oninput="calcDelegation()">
-                    <span class="input-group-suffix">km</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label" for="czas_dojazdu_min">Szac. czas dojazdu</label>
-                <div class="input-group">
-                    <input type="number" id="czas_dojazdu_min" name="czas_dojazdu_min"
-                           class="field-input" value="{{ old('czas_dojazdu_min', 0) }}" min="0">
-                    <span class="input-group-suffix">min</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="field-group field-row">
-            <div>
-                <label class="field-label" for="liczba_wyjazdow">Liczba wyjazdów <span class="req">*</span></label>
-                <input type="number" id="liczba_wyjazdow" name="liczba_wyjazdow"
-                       class="field-input" value="{{ old('liczba_wyjazdow', 1) }}" min="1" required
-                       oninput="calcDelegation()">
-            </div>
-            <div style="display:flex;align-items:flex-end;padding-bottom:2px;">
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#1A1A1A;">
-                    <input type="checkbox" id="czy_kilkudniowy" name="czy_kilkudniowy" value="1"
-                           {{ old('czy_kilkudniowy') ? 'checked' : '' }}
-                           onchange="toggleOvernight(this)" style="width:16px;height:16px;accent-color:#1A4D3A;">
-                    Wyjazd wielodniowy?
-                </label>
-            </div>
-        </div>
-
-        {{-- Nocleg (hidden by default) --}}
-        <div id="overnightSection">
-            <div class="field-group field-row">
-                <div>
-                    <label class="field-label" for="liczba_noc">Liczba nocy <span class="req">*</span></label>
-                    <input type="number" id="liczba_noc" name="liczba_noc"
-                           class="field-input" value="{{ old('liczba_noc', 0) }}" min="0"
-                           oninput="calcDelegation()">
-                </div>
-                <div>
-                    <label class="field-label" for="liczba_osob">Liczba osób <span class="req">*</span></label>
-                    <input type="number" id="liczba_osob" name="liczba_osob"
-                           class="field-input" value="{{ old('liczba_osob', 1) }}" min="1"
-                           oninput="calcDelegation()">
-                </div>
-            </div>
-            <div class="field-group" style="max-width:260px;">
-                <label class="field-label" for="stawka_noc">Stawka za dobę hotelową</label>
-                <div class="input-group">
-                    <input type="number" id="stawka_noc" name="stawka_noc"
-                           class="field-input" value="{{ old('stawka_noc', 300) }}" min="0" step="0.01"
-                           oninput="calcDelegation()">
-                    <span class="input-group-suffix">zł / doba</span>
-                </div>
-            </div>
-        </div>
-
-        {{-- Hidden defaults for non-overnight --}}
-        <input type="hidden" id="liczba_noc_hidden" name="_noc_placeholder" value="0">
-        <input type="hidden" id="liczba_osob_hidden" name="_osob_placeholder" value="1">
-        <input type="hidden" id="stawka_noc_hidden" name="_stawka_placeholder" value="300">
-
-        {{-- Calc result --}}
-        <div class="calc-result">
-            <div class="calc-result-label">Szacowany koszt delegacji</div>
-            <div class="calc-result-value" id="calcResult">0,00 zł</div>
-        </div>
-
-    </div>
-</div>
-
-{{-- SEKCJA 3: Notatki --}}
-<div class="form-card">
-    <div class="form-card-header">
-        <i class="ti ti-notes"></i>
-        <span class="form-card-title">Notatki</span>
-    </div>
-    <div class="form-card-body">
-        <textarea id="notes" name="notes" class="field-input" rows="4"
-                  placeholder="Dodatkowe uwagi do oferty...">{{ old('notes') }}</textarea>
-        @error('notes')<div class="field-error">{{ $message }}</div>@enderror
-    </div>
-</div>
-
-</div>{{-- /main column --}}
-
-{{-- ═══ SIDEBAR COLUMN ═══ --}}
-<div>
-    <div class="form-card">
-        <div class="form-card-header">
-            <i class="ti ti-send"></i>
-            <span class="form-card-title">Utwórz ofertę</span>
-        </div>
-        <div class="form-card-body">
             @if($offerRequest)
-                <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:#1E40AF;">
-                    <div style="font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
-                        <i class="ti ti-link"></i> Powiązane zapytanie
-                    </div>
-                    <div>{{ $offerRequest->company->name ?? '' }}</div>
-                    <div style="color:#93C5FD;margin-top:2px;">#{{ $offerRequest->id }}</div>
+                <input type="hidden" name="company_id" value="{{ $offerRequest->company_id }}">
+                <div class="doc-party-name">{{ $offerRequest->company?->name }}</div>
+                <div class="doc-party-line">
+                    {{ $offerRequest->company?->address ?? '' }}
+                    @if($offerRequest->company?->city), {{ $offerRequest->company->city }} @endif
                 </div>
             @endif
+            @error('company_id')<div style="font-size:11px;color:#B91C1C;margin-top:4px;">{{ $message }}</div>@enderror
+        </div>
+    </div>
 
-            <div class="field-group">
-                <label class="field-label">Pełny numer oferty</label>
-                <div class="full-number-preview" id="fullNumberPreviewSidebar" style="font-size:12px;">
-                    {{ $suggestedNumber }}
+    {{-- Osoba prowadząca + status --}}
+    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px;gap:14px;align-items:end;">
+        <div>
+            <label class="field-label">Osoba prowadząca (ENESA)</label>
+            <select name="assigned_user_id" class="field-input">
+                <option value="">— nieprzypisana —</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}" {{ old('assigned_user_id') == $user->id ? 'selected' : '' }}>
+                        {{ $user->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="field-label">Numer oferty <span style="color:#DC2626;">*</span></label>
+            <input type="text" name="offer_number" class="field-input @error('offer_number') error @enderror"
+                   value="{{ old('offer_number', $suggestedNumber) }}" required>
+            @error('offer_number')<div style="font-size:11px;color:#B91C1C;margin-top:4px;">{{ $message }}</div>@enderror
+        </div>
+        <div>
+            <label class="field-label">Status <span style="color:#DC2626;">*</span></label>
+            <select name="status" class="field-input" required>
+                <option value="w_toku" selected>W toku</option>
+                <option value="wygrana">Wygrana</option>
+                <option value="przegrana">Przegrana</option>
+                <option value="zarchiwizowana">Zarchiwizowana</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="doc-title-wrap">
+        <input type="text" name="offer_title"
+               class="doc-title-input"
+               value="{{ old('offer_title') }}"
+               placeholder="Wpisz tytuł oferty — będzie widoczny na dokumencie">
+    </div>
+</div>
+
+@if($offerRequest)
+    <input type="hidden" name="offer_request_id" value="{{ $offerRequest->id }}">
+@endif
+
+{{-- ── SEKCJA B1: PRZEDMIOT OFERTY ───────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-target"></i>
+        <span class="ed-card-title">Przedmiot oferty</span>
+    </div>
+    <div class="rte-toolbar">
+        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
+        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
+        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+    </div>
+    <div class="rich-editor" id="editor-subject" contenteditable="true"
+         data-placeholder="Opisz przedmiot oferty..."></div>
+</div>
+
+{{-- ── SEKCJA B2: ZAKRES PRAC ────────────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-list-check"></i>
+        <span class="ed-card-title">Zakres prac</span>
+    </div>
+    <div class="rte-toolbar">
+        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
+        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
+        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+    </div>
+    <div class="rich-editor" id="editor-scope" contenteditable="true"
+         data-placeholder="Opisz zakres prac..."></div>
+</div>
+
+{{-- ── SEKCJA C: WYCENA ───────────────────────── --}}
+<div class="ed-card" id="section-main">
+    <div class="ed-card-header">
+        <i class="ti ti-calculator"></i>
+        <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="price-table" id="table-main">
+            <thead>
+                <tr>
+                    <th style="width:28px;"></th>
+                    <th>Opis pozycji</th>
+                    <th class="unit-col" style="width:70px;">Jedn.</th>
+                    <th class="unit-col" style="width:80px;">Ilość</th>
+                    <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
+                    <th style="width:130px;">Wartość netto</th>
+                    <th style="width:130px;">Z narzutem</th>
+                    <th style="width:32px;"></th>
+                </tr>
+            </thead>
+            <tbody id="tbody-main"></tbody>
+        </table>
+    </div>
+    <div style="padding:10px 16px;">
+        <button type="button" class="btn-add-row" onclick="addRow('tbody-main')">
+            <i class="ti ti-plus"></i> Dodaj pozycję
+        </button>
+    </div>
+</div>
+
+<div id="dynamic-sections"></div>
+<div style="margin-bottom:16px;">
+    <button type="button" class="btn-add-section" onclick="addSection()">
+        <i class="ti ti-section"></i> Dodaj sekcję wyceny
+    </button>
+</div>
+
+{{-- C3: Delegacje --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-car"></i>
+        <span class="ed-card-title">Delegacja</span>
+    </div>
+    <div class="ed-card-body">
+        <div class="deleg-grid">
+            <div>
+                <label class="field-label">Odległość do klienta</label>
+                <div class="input-group">
+                    <input type="number" id="d_km" class="field-input" min="0" value="{{ old('km_do_klienta', 0) }}" oninput="calcDeleg()">
+                    <span class="input-suffix">km</span>
                 </div>
             </div>
-
-            <button type="submit" class="btn-submit">
-                <i class="ti ti-plus" style="margin-right:6px;"></i> Utwórz ofertę
-            </button>
-
-            <div style="margin-top:12px;text-align:center;">
-                <a href="{{ route('offers.index') }}" style="font-size:12px;color:#888;text-decoration:none;">
-                    Anuluj i wróć do listy
-                </a>
+            <div>
+                <label class="field-label">Stawka za km</label>
+                <div class="input-group">
+                    <input type="number" id="d_stawka_km" class="field-input" min="0" step="0.01" value="{{ old('stawka_km', 1.10) }}" oninput="calcDeleg()">
+                    <span class="input-suffix">zł/km</span>
+                </div>
             </div>
+            <div>
+                <label class="field-label">Czas dojazdu</label>
+                <div class="input-group">
+                    <input type="number" id="d_czas" class="field-input" min="0" value="{{ old('czas_dojazdu_min', 0) }}">
+                    <span class="input-suffix">min</span>
+                </div>
+            </div>
+            <div>
+                <label class="field-label">Liczba wyjazdów</label>
+                <input type="number" id="d_wyjazdy" class="field-input" min="1" value="{{ old('liczba_wyjazdow', 1) }}" oninput="calcDeleg()">
+            </div>
+        </div>
+        <div style="margin-top:14px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;color:#555;">
+                <input type="checkbox" id="d_kilkudniowy" value="1"
+                       {{ old('czy_kilkudniowy') ? 'checked' : '' }}
+                       onchange="toggleOvernight(this);calcDeleg();"
+                       style="width:16px;height:16px;accent-color:#1A4D3A;">
+                Wyjazd wielodniowy?
+            </label>
+        </div>
+        <div id="overnightSection" style="{{ old('czy_kilkudniowy') ? '' : 'display:none;' }}margin-top:12px;">
+            <div class="deleg-grid">
+                <div>
+                    <label class="field-label">Liczba nocy</label>
+                    <input type="number" id="d_noc" class="field-input" min="0" value="{{ old('liczba_noc', 0) }}" oninput="calcDeleg()">
+                </div>
+                <div>
+                    <label class="field-label">Liczba osób</label>
+                    <input type="number" id="d_osoby" class="field-input" min="1" value="{{ old('liczba_osob', 1) }}" oninput="calcDeleg()">
+                </div>
+                <div>
+                    <label class="field-label">Stawka za dobę hotelową</label>
+                    <div class="input-group">
+                        <input type="number" id="d_stawka_noc" class="field-input" min="0" step="0.01" value="{{ old('stawka_noc', 300) }}" oninput="calcDeleg()">
+                        <span class="input-suffix">zł</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="background:#F0F7F3;border:1px solid #94C4B0;border-radius:8px;padding:12px 16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:.05em;">Koszt delegacji netto</span>
+            <span id="deleg-result" style="font-family:'Lato',sans-serif;font-size:20px;font-weight:900;color:#1A4D3A;">0,00 zł</span>
         </div>
     </div>
 </div>
-</div>{{-- /form-layout --}}
+
+{{-- ── SEKCJA B3: TERMIN REALIZACJI ──────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-calendar-time"></i>
+        <span class="ed-card-title">Termin realizacji</span>
+    </div>
+    <div class="rte-toolbar">
+        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
+        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
+        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+    </div>
+    <div class="rich-editor" id="editor-deadline" contenteditable="true"
+         data-placeholder="Opisz termin realizacji..."></div>
+</div>
+
+{{-- ── SEKCJA B4: WARUNKI PŁATNOŚCI ──────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-credit-card"></i>
+        <span class="ed-card-title">Warunki płatności</span>
+    </div>
+    <div class="rte-toolbar">
+        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
+        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
+        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
+        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+    </div>
+    <div class="rich-editor" id="editor-payment" contenteditable="true"
+         data-placeholder="Opisz warunki płatności..."></div>
+</div>
+
+{{-- ── C4: NARZUT + PODSUMOWANIE ──────────────── --}}
+<div class="ed-card" style="overflow:hidden;">
+    <div class="ed-card-header">
+        <i class="ti ti-report-money"></i>
+        <span class="ed-card-title">Podsumowanie wyceny</span>
+    </div>
+    <div class="ed-card-body" style="padding:0;">
+        <div class="markup-bar" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
+            <span style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#92400E;">Narzut globalny:</span>
+            <div class="input-group" style="width:120px;">
+                <input type="number" id="markup-pct" class="field-input" min="0" max="999" step="0.1" value="0" oninput="syncMarkup('pct')" style="border-radius:7px 0 0 7px;">
+                <span class="input-suffix">%</span>
+            </div>
+            <div class="input-group" style="width:140px;">
+                <input type="number" id="markup-zl" class="field-input" min="0" step="0.01" value="0" oninput="syncMarkup('zl')" style="border-radius:7px 0 0 7px;">
+                <span class="input-suffix">zł</span>
+            </div>
+        </div>
+        <div class="summary-row sub">
+            <span class="summary-label">Suma usług netto</span>
+            <span class="summary-value" id="sum-services">0,00 zł</span>
+        </div>
+        <div class="summary-row sub">
+            <span class="summary-label">Delegacje netto</span>
+            <span class="summary-value" id="sum-deleg">0,00 zł</span>
+        </div>
+        <div class="summary-row markup">
+            <span class="summary-label" style="color:#92400E;">Narzut</span>
+            <span class="summary-value" id="sum-markup" style="color:#92400E;">0,00 zł</span>
+        </div>
+        <div class="summary-row total">
+            <span class="summary-label" style="font-size:15px;">ŁĄCZNIE NETTO</span>
+            <span class="summary-value" id="sum-total">0,00 zł</span>
+        </div>
+    </div>
+</div>
+
+{{-- ── NOTATKI ─────────────────────────────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-notes"></i>
+        <span class="ed-card-title">Notatki wewnętrzne</span>
+    </div>
+    <div class="ed-card-body">
+        <textarea name="notes" class="field-input" rows="3"
+                  placeholder="Uwagi wewnętrzne (niewidoczne w PDF)...">{{ old('notes') }}</textarea>
+    </div>
+</div>
+
+{{-- Hidden fields --}}
+<input type="hidden" name="offer_number"    value="{{ $suggestedNumber }}">
+<input type="hidden" name="liczba_wyjazdow" value="1" id="h-wyjazdy">
+<input type="hidden" name="liczba_noc"      value="0" id="h-noc">
+<input type="hidden" name="liczba_osob"     value="1" id="h-osoby">
+<input type="hidden" name="stawka_noc"      value="300" id="h-stawka-noc">
+<input type="hidden" name="kwota_netto"     id="h-kwota-netto" value="0">
+<input type="hidden" id="hidden-content-subject"  name="content_subject"  value="">
+<input type="hidden" id="hidden-content-scope"    name="content_scope"    value="">
+<input type="hidden" id="hidden-content-deadline" name="content_deadline" value="">
+<input type="hidden" id="hidden-content-payment"  name="content_payment"  value="">
+<input type="hidden" id="hidden-price-sections"   name="price_sections"   value="">
+<input type="hidden" id="hidden-show-unit"        name="show_unit_prices" value="0">
+<input type="hidden" name="km_do_klienta"    id="h-km">
+<input type="hidden" name="stawka_km"        id="h-stawka-km">
+<input type="hidden" name="czas_dojazdu_min" id="h-czas">
+<input type="hidden" name="czy_kilkudniowy"  id="h-kilkudniowy" value="0">
+
 </form>
 
 @endsection
 
 @push('scripts')
 <script>
-    // ── Full number live preview ──────────────────────────────
-    const numInput  = document.getElementById('offer_number');
-    const slugInput = document.getElementById('offer_slug');
-    const prevMain  = document.getElementById('fullNumberPreview');
-    const prevSide  = document.getElementById('fullNumberPreviewSidebar');
+let priceSections = [{ id: 'main', name: 'Wycena ogólna', rows: [] }];
+let sectionCounter = 100;
+let rowCounter     = 1000;
+const globalMarkup = { pct: 0, zl: 0 };
 
-    function slugify(str) {
-        return str.trim()
-            .toLowerCase()
-            .replace(/\s+/g, '_')
-            .replace(/[^a-z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/gi, '');
+function fmt(cmd) { document.execCommand(cmd, false, null); }
+document.querySelectorAll('.rte-toolbar .rte-btn').forEach(btn => {
+    btn.addEventListener('mousedown', e => e.preventDefault());
+});
+
+function makePl(n) {
+    return Number(n).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function parsePl(str) {
+    return parseFloat(str.replace(/\s/g,'').replace(',','.').replace(/[^\d.-]/g,'')) || 0;
+}
+
+function addRow(tbodyId, rowData) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    const rid = 'r' + (rowCounter++);
+    const d   = rowData || { opis: '', jedn: 'szt', ilosc: 1, cena_jedn: 0, z_narzutem: 0 };
+    const tr  = document.createElement('tr');
+    tr.dataset.rid = rid;
+    tr.innerHTML = `
+        <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
+        <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
+        <td class="unit-col"><input class="cell-input" type="text" value="${escHtml(d.jedn)}" style="width:60px;"></td>
+        <td class="unit-col"><input class="cell-input num-input ilosc-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:70px;" oninput="recalcRow(this.closest('tr'))"></td>
+        <td class="unit-col"><input class="cell-input num-input cena-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:110px;" oninput="recalcRow(this.closest('tr'))"></td>
+        <td><span class="cell-readonly wartosc-display">${makePl(d.ilosc * d.cena_jedn)}</span> <span style="font-size:11px;color:#999;">zł</span></td>
+        <td><input class="cell-input num-input narzut-input" type="number" value="${d.z_narzutem}" min="0" step="0.01" style="width:110px;" oninput="recalcAll()"> <span style="font-size:11px;color:#999;">zł</span></td>
+        <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
+    `;
+    tbody.appendChild(tr);
+    recalcAll();
+}
+
+function removeRow(btn) { btn.closest('tr').remove(); recalcAll(); }
+
+function recalcRow(tr) {
+    const ilosc   = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
+    const cena    = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
+    const wartosc = ilosc * cena;
+    const display = tr.querySelector('.wartosc-display');
+    if (display) display.textContent = makePl(wartosc);
+    const narzutInput = tr.querySelector('.narzut-input');
+    if (narzutInput) {
+        narzutInput.value = globalMarkup.pct > 0
+            ? makePl(wartosc * (1 + globalMarkup.pct / 100))
+            : makePl(wartosc);
     }
+    recalcAll();
+}
 
-    function updatePreview() {
-        const num  = numInput.value.trim();
-        const slug = slugify(slugInput.value.trim());
-        const full = slug ? num + '_' + slug : num;
-        if (prevMain)  prevMain.textContent  = full || '—';
-        if (prevSide)  prevSide.textContent  = full || '—';
-    }
-
-    numInput.addEventListener('input', updatePreview);
-    slugInput.addEventListener('input', updatePreview);
-
-    // ── Overnight toggle ──────────────────────────────────────
-    function toggleOvernight(checkbox) {
-        const sec = document.getElementById('overnightSection');
-        sec.style.display = checkbox.checked ? 'block' : 'none';
-        calcDelegation();
-    }
-
-    // ── Delegation cost calculator ────────────────────────────
-    function calcDelegation() {
-        const km       = parseFloat(document.getElementById('km_do_klienta').value)  || 0;
-        const wyjazdy  = parseFloat(document.getElementById('liczba_wyjazdow').value) || 1;
-        const overnight = document.getElementById('czy_kilkudniowy').checked;
-        const noc      = parseFloat(document.getElementById('liczba_noc').value)     || 0;
-        const osoby    = parseFloat(document.getElementById('liczba_osob').value)    || 1;
-        const stawka   = parseFloat(document.getElementById('stawka_noc').value)     || 300;
-
-        const dojazd   = km * 2 * wyjazdy * 0.89;
-        const nocleg   = overnight ? noc * osoby * stawka : 0;
-        const total    = dojazd + nocleg;
-
-        document.getElementById('calcResult').textContent =
-            total.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł';
-    }
-
-    // ── Distance Matrix ───────────────────────────────────────
-    const distanceInfo    = document.getElementById('distance-info');
-    const distanceText    = document.getElementById('distance-text');
-    const distanceLoading = document.getElementById('distance-loading');
-    const distanceError   = document.getElementById('distance-error');
-
-    function resetDistanceUI() {
-        distanceInfo.style.display    = 'none';
-        distanceText.textContent      = '';
-        distanceLoading.style.display = 'none';
-        distanceError.style.display   = 'none';
-        distanceError.textContent     = '';
-    }
-
-    document.getElementById('company_id').addEventListener('change', function () {
-        const companyId = this.value;
-
-        if (!companyId) {
-            resetDistanceUI();
-            document.getElementById('km_do_klienta').value    = 0;
-            document.getElementById('czas_dojazdu_min').value = 0;
-            calcDelegation();
-            return;
-        }
-
-        distanceInfo.style.display    = 'block';
-        distanceText.style.display    = 'none';
-        distanceError.style.display   = 'none';
-        distanceLoading.style.display = 'inline';
-
-        const url = '{{ route('offers.get-distance') }}?company_id=' + encodeURIComponent(companyId);
-
-        fetch(url, {
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-            }
-        })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-            distanceLoading.style.display = 'none';
-
-            if (data.error) {
-                distanceError.textContent   = data.error;
-                distanceError.style.display = 'inline';
-                return;
-            }
-
-            document.getElementById('km_do_klienta').value    = data.km;
-            document.getElementById('czas_dojazdu_min').value = data.minutes;
-            calcDelegation();
-
-            distanceText.textContent   = '📍 ' + data.address + ' — ' + data.km + ' km, ~' + data.minutes + ' min jazdy';
-            distanceText.style.display = 'inline';
-        })
-        .catch(function () {
-            distanceLoading.style.display = 'none';
-            distanceError.textContent     = 'Błąd połączenia z serwerem.';
-            distanceError.style.display   = 'inline';
-        });
+function recalcAll() {
+    let sumServices = 0;
+    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
+        sumServices += parseFloat(tr.querySelector('.narzut-input')?.value) || 0;
     });
+    const delegCost = parsePl(document.getElementById('deleg-result').textContent);
+    const markupZl  = parseFloat(document.getElementById('markup-zl').value) || 0;
+    const total     = sumServices + delegCost + markupZl;
+    document.getElementById('sum-services').textContent = makePl(sumServices) + ' zł';
+    document.getElementById('sum-deleg').textContent    = makePl(delegCost) + ' zł';
+    document.getElementById('sum-markup').textContent   = makePl(markupZl) + ' zł';
+    document.getElementById('sum-total').textContent    = makePl(total) + ' zł';
+    document.getElementById('h-kwota-netto').value = total.toFixed(2);
+}
 
-    // ── Init ──────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', function () {
-        @if(old('czy_kilkudniowy'))
-            document.getElementById('overnightSection').style.display = 'block';
-        @endif
-        calcDelegation();
-        updatePreview();
+function syncMarkup(source) {
+    let sumBase = 0;
+    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
+        sumBase += (parseFloat(tr.querySelector('.ilosc-input')?.value) || 0)
+                 * (parseFloat(tr.querySelector('.cena-input')?.value)  || 0);
     });
+    if (source === 'pct') {
+        const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
+        globalMarkup.pct = pct;
+        const zl = sumBase * (pct / 100);
+        globalMarkup.zl = zl;
+        document.getElementById('markup-zl').value = zl.toFixed(2);
+    } else {
+        const zl = parseFloat(document.getElementById('markup-zl').value) || 0;
+        globalMarkup.zl = zl;
+        const pct = sumBase > 0 ? (zl / sumBase) * 100 : 0;
+        globalMarkup.pct = pct;
+        document.getElementById('markup-pct').value = pct.toFixed(2);
+    }
+    recalcAll();
+}
+
+function calcDeleg() {
+    const km       = parseFloat(document.getElementById('d_km').value)        || 0;
+    const stawkaKm = parseFloat(document.getElementById('d_stawka_km').value) || 1.10;
+    const wyjazdy  = parseFloat(document.getElementById('d_wyjazdy').value)   || 1;
+    const over     = document.getElementById('d_kilkudniowy').checked;
+    const noc      = parseFloat(document.getElementById('d_noc')?.value)      || 0;
+    const osoby    = parseFloat(document.getElementById('d_osoby')?.value)    || 1;
+    const stawkaNoc= parseFloat(document.getElementById('d_stawka_noc')?.value) || 300;
+    const deleg = (km * 2 * wyjazdy * stawkaKm) + (over ? noc * osoby * stawkaNoc : 0);
+    document.getElementById('deleg-result').textContent = makePl(deleg) + ' zł';
+    recalcAll();
+}
+
+function toggleOvernight(cb) {
+    document.getElementById('overnightSection').style.display = cb.checked ? 'block' : 'none';
+}
+
+function toggleUnitPrices(cb) {
+    document.querySelectorAll('.price-table').forEach(t => {
+        t.classList.toggle('hide-units', !cb.checked);
+    });
+    document.getElementById('hidden-show-unit').value = cb.checked ? '1' : '0';
+}
+
+function addSection(sectionData) {
+    const sid  = 'sec' + (sectionCounter++);
+    const name = sectionData?.name || 'Nowa sekcja';
+    const card = document.createElement('div');
+    card.className = 'ed-card';
+    card.id = 'section-' + sid;
+    card.style.marginBottom = '16px';
+    card.innerHTML = `
+        <div class="ed-card-header">
+            <i class="ti ti-calculator"></i>
+            <input type="text" class="section-name-input" value="${escHtml(name)}">
+            <button type="button" class="btn-del-section" onclick="removeSection('${sid}')">
+                <i class="ti ti-trash"></i> Usuń sekcję
+            </button>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="price-table" id="table-${sid}">
+                <thead><tr>
+                    <th style="width:28px;"></th><th>Opis pozycji</th>
+                    <th class="unit-col" style="width:70px;">Jedn.</th>
+                    <th class="unit-col" style="width:80px;">Ilość</th>
+                    <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
+                    <th style="width:130px;">Wartość netto</th>
+                    <th style="width:130px;">Z narzutem</th>
+                    <th style="width:32px;"></th>
+                </tr></thead>
+                <tbody id="tbody-${sid}"></tbody>
+            </table>
+        </div>
+        <div style="padding:10px 16px;">
+            <button type="button" class="btn-add-row" onclick="addRow('tbody-${sid}')">
+                <i class="ti ti-plus"></i> Dodaj pozycję
+            </button>
+        </div>
+    `;
+    document.getElementById('dynamic-sections').appendChild(card);
+    if (!document.getElementById('show-unit-toggle').checked) {
+        document.getElementById('table-' + sid).classList.add('hide-units');
+    }
+    if (sectionData?.rows?.length) {
+        sectionData.rows.forEach(r => addRow('tbody-' + sid, r));
+    } else {
+        addRow('tbody-' + sid);
+    }
+}
+
+function removeSection(sid) {
+    if (!confirm('Usunąć tę sekcję wyceny?')) return;
+    document.getElementById('section-' + sid)?.remove();
+    recalcAll();
+}
+
+function collectSections() {
+    const sections = [];
+    const main = { id: 'main', name: document.getElementById('section-main-name')?.value || 'Wycena ogólna', rows: [] };
+    document.querySelectorAll('#tbody-main tr').forEach(tr => main.rows.push(collectRow(tr)));
+    sections.push(main);
+    document.querySelectorAll('#dynamic-sections .ed-card').forEach(card => {
+        const sec = { id: card.id.replace('section-', ''), name: card.querySelector('.section-name-input')?.value || 'Sekcja', rows: [] };
+        card.querySelectorAll('tbody tr').forEach(tr => sec.rows.push(collectRow(tr)));
+        sections.push(sec);
+    });
+    return sections;
+}
+
+function collectRow(tr) {
+    const inputs = tr.querySelectorAll('.cell-input');
+    return {
+        opis: inputs[0]?.value || '', jedn: inputs[1]?.value || 'szt',
+        ilosc: parseFloat(tr.querySelector('.ilosc-input')?.value) || 0,
+        cena_jedn: parseFloat(tr.querySelector('.cena-input')?.value) || 0,
+        z_narzutem: parseFloat(tr.querySelector('.narzut-input')?.value) || 0,
+    };
+}
+
+function syncDelegHiddens() {
+    document.getElementById('h-km').value          = document.getElementById('d_km').value || 0;
+    document.getElementById('h-stawka-km').value   = document.getElementById('d_stawka_km').value || 1.10;
+    document.getElementById('h-czas').value        = document.getElementById('d_czas').value || 0;
+    document.getElementById('h-wyjazdy').value     = document.getElementById('d_wyjazdy').value || 1;
+    document.getElementById('h-kilkudniowy').value = document.getElementById('d_kilkudniowy').checked ? '1' : '0';
+    document.getElementById('h-noc').value         = document.getElementById('d_noc')?.value || 0;
+    document.getElementById('h-osoby').value       = document.getElementById('d_osoby')?.value || 1;
+    document.getElementById('h-stawka-noc').value  = document.getElementById('d_stawka_noc')?.value || 300;
+}
+
+document.getElementById('offer-form').addEventListener('submit', function () {
+    document.getElementById('hidden-content-subject').value  = document.getElementById('editor-subject').innerHTML;
+    document.getElementById('hidden-content-scope').value    = document.getElementById('editor-scope').innerHTML;
+    document.getElementById('hidden-content-deadline').value = document.getElementById('editor-deadline').innerHTML;
+    document.getElementById('hidden-content-payment').value  = document.getElementById('editor-payment').innerHTML;
+    document.getElementById('hidden-price-sections').value   = JSON.stringify(collectSections());
+    document.getElementById('hidden-show-unit').value        = document.getElementById('show-unit-toggle').checked ? '1' : '0';
+    syncDelegHiddens();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    addRow('tbody-main');
+    toggleUnitPrices(document.getElementById('show-unit-toggle'));
+    calcDeleg();
+});
 </script>
 @endpush

@@ -332,7 +332,7 @@
                 </span>
                 <ul class="nav-sub">
                     <li><a href="{{ url('/offer-templates') }}" class="nav-link">Szablony</a></li>
-                    <li><a href="{{ url('/offers') }}" class="nav-link">Wysłane oferty</a></li>
+                    <li><a href="{{ url('/offers') }}" class="nav-link">Oferty</a></li>
                 </ul>
             </li>
 
