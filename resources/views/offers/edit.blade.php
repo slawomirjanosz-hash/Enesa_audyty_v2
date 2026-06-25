@@ -198,8 +198,7 @@
 .btn-add-section:hover { background:#F0F7F3; }
 
 /* â”€â”€ Show/hide unit price columns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.unit-col { /* visible by default */ }
-.hide-units .unit-col { display:none; }
+
 
 /* â”€â”€ Delegation fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .deleg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; }
@@ -390,8 +389,8 @@
                     <th style="width:28px;"></th>
                     <th style="min-width:160px;">Opis pozycji</th>
                     <th style="width:90px;">Jednostka</th>
-                    <th class="unit-col" style="width:70px;">Ilość</th>
-                    <th class="unit-col" style="width:90px;">Cena jedn. netto</th>
+                    <th style="width:70px;">Ilość</th>
+                    <th style="width:90px;">Cena jedn. netto</th>
                     <th style="width:120px;text-align:right;">Wartość netto</th>
                     <th style="width:120px;">Z narzutem</th>
                     <th style="width:32px;"></th>
@@ -699,8 +698,8 @@ function addRow(tbodyId, rowData) {
         <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
         <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
         <td style="width:90px;"><select class="cell-input unit-select" style="width:90px;" data-prev="${escHtml(d.jedn)}" onchange="handleUnitChange(this)">${buildUnitOptions(d.jedn)}</select></td>
-        <td class="unit-col" style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:68px;" oninput="recalcRow('${rid}')"></td>
-        <td class="unit-col" style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
+        <td style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:68px;" oninput="recalcRow('${rid}')"></td>
+        <td style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
         <td style="text-align:right;white-space:nowrap;padding-right:8px;"><span class="net-display">${makePl(d.ilosc * d.cena_jedn)}</span>&nbsp;<span style="font-size:11px;color:#999;">zł</span></td>
         <td><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input markup-input" type="number" value="${d.z_narzutem}" min="0" step="0.01" style="width:84px;" oninput="recalcAll()"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
         <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
@@ -774,9 +773,6 @@ function toggleOvernight(cb) {
 // UNIT PRICES TOGGLE
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function toggleUnitPrices(cb) {
-    document.querySelectorAll('.price-table').forEach(t => {
-        t.classList.toggle('hide-units', !cb.checked);
-    });
     document.getElementById('hidden-show-unit').value = cb.checked ? '1' : '0';
 }
 
