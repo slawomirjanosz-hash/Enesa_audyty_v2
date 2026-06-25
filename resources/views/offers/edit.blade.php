@@ -139,6 +139,12 @@
     transition:background .12s;
 }
 .rte-btn:hover { background:#F0EDE6; }
+.rte-btn-ai {
+    margin-left:auto; background:#1A4D3A; color:#fff; border-color:#1A4D3A;
+    font-size:12px; font-weight:600; padding:0 10px; gap:4px;
+}
+.rte-btn-ai:hover { background:#14392b; border-color:#14392b; color:#fff; }
+.rte-btn-ai:disabled { opacity:.6; cursor:not-allowed; }
 .rich-editor {
     min-height:90px; padding:14px 20px;
     font-family:'Lato',sans-serif; font-size:14px; color:#1A1A1A; line-height:1.8;
@@ -359,6 +365,7 @@
         <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
         <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
         <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-subject','content_subject')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
     </div>
     <div class="rich-editor" id="editor-subject" contenteditable="true"
          data-placeholder="Opisz przedmiot oferty...">{!! $offer->content_subject ?? '' !!}</div>
@@ -376,6 +383,7 @@
         <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
         <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
         <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-scope','content_scope')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
     </div>
     <div class="rich-editor" id="editor-scope" contenteditable="true"
          data-placeholder="Opisz zakres prac...">{!! $offer->content_scope ?? '' !!}</div>
@@ -516,6 +524,7 @@
         <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
         <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
         <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-deadline','content_deadline')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
     </div>
     <div class="rich-editor" id="editor-deadline" contenteditable="true"
          data-placeholder="Opisz termin realizacji...">{!! $offer->content_deadline ?? '' !!}</div>
@@ -533,6 +542,7 @@
         <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
         <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
         <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
+        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-payment','content_payment')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
     </div>
     <div class="rich-editor" id="editor-payment" contenteditable="true"
          data-placeholder="Opisz warunki płatności...">{!! $offer->content_payment ?? '' !!}</div>
@@ -1135,6 +1145,44 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 }); // DOMContentLoaded
+
+async function improveWithAi(btn, editorId, field) {
+    const editor = document.getElementById(editorId);
+    if (!editor) return;
+    const currentHtml = editor.innerHTML.trim();
+    if (!currentHtml || currentHtml === '<br>') {
+        alert('Najpierw wpisz tekst, który ma zostać poprawiony.');
+        return;
+    }
+    btn.disabled = true;
+    const origContent = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> Poprawiam...';
+    try {
+        const offerTitle   = document.querySelector('input[name="offer_title"]')?.value  || '';
+        const companyInput = document.getElementById('company_id');
+        const companyName  = companyInput?.options[companyInput.selectedIndex]?.text || '';
+        const res = await fetch('{{ route("offers.ai-assist") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ field, mode: 'improve', current: currentHtml, offer_title: offerTitle, company_name: companyName })
+        });
+        const data = await res.json();
+        if (data.html) {
+            editor.innerHTML = data.html;
+            editor.dispatchEvent(new Event('input'));
+        } else {
+            alert('Błąd AI: ' + (data.error || 'Nieznany błąd'));
+        }
+    } catch (e) {
+        alert('Błąd połączenia z serwerem AI.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = origContent;
+    }
+}
 </script>
 @endpush
 
