@@ -77,10 +77,19 @@
 .rich-editor:empty::before { content:attr(data-placeholder); color:#bbb; pointer-events:none; }
 .rich-editor ul, .rich-editor ol { padding-left:20px; }
 .section-name-input { flex:1; border:none; outline:none; background:transparent; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; border-bottom:1px dashed #bbb; padding:2px 4px; }
-.price-table { width:100%; border-collapse:collapse; font-size:13px; }
+.price-table { width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed; }
+.price-table td, .price-table th { overflow:hidden; }
 .price-table th { font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.05em; padding:8px 10px; border-bottom:2px solid #E5E1D8; background:#FAFAF6; white-space:nowrap; text-align:left; }
 .price-table td { padding:6px 6px; border-bottom:1px solid #F0EDE6; vertical-align:middle; }
 .price-table tr:last-child td { border-bottom:none; }
+.col-drag  { width:32px; }
+.col-opis  { width:auto; min-width:180px; }
+.col-jedn  { width:100px; }
+.col-ilosc { width:80px; }
+.col-cena  { width:110px; }
+.col-netto { width:110px; }
+.col-narzut{ width:120px; }
+.col-del   { width:40px; }
 .cell-input { width:100%; border:1px solid transparent; border-radius:5px; padding:5px 8px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; background:transparent; outline:none; transition:border-color .12s, background .12s; box-sizing:border-box; }
 .cell-input:hover { border-color:#D0CCC0; background:#FAFAF6; }
 .cell-input:focus { border-color:#1A4D3A; background:#fff; }
@@ -290,14 +299,14 @@
         <table class="price-table" id="table-main">
             <thead>
                 <tr>
-                    <th style="width:28px;"></th>
-                    <th style="min-width:160px;">Opis pozycji</th>
-                    <th style="width:90px;">Jednostka</th>
-                    <th class="unit-col" style="width:70px;">Ilość</th>
-                    <th class="unit-col" style="width:90px;">Cena jedn. netto</th>
-                    <th style="width:120px;text-align:right;">Wartość netto</th>
-                    <th style="width:120px;">Z narzutem</th>
-                    <th style="width:32px;"></th>
+                    <th class="col-drag"></th>
+                    <th class="col-opis">Opis pozycji</th>
+                    <th class="col-jedn">Jednostka</th>
+                    <th class="col-ilosc unit-col">Ilość</th>
+                    <th class="col-cena unit-col">Cena jedn.</th>
+                    <th class="col-netto">Wartość netto</th>
+                    <th class="col-narzut">Z narzutem</th>
+                    <th class="col-del"></th>
                 </tr>
             </thead>
             <tbody id="tbody-main"></tbody>
@@ -526,29 +535,62 @@ function addRow(tbodyId, rowData) {
     const tbody = document.getElementById(tbodyId);
     if (!tbody) return;
     const rid = 'r' + (rowCounter++);
-    const d   = rowData || { opis: '', jedn: 'szt', ilosc: 1, cena_jedn: 0, z_narzutem: 0 };
-    const tr  = document.createElement('tr');
-    tr.dataset.rid = rid;
+    const d = rowData || { opis: '', jedn: 'szt', ilosc: 1, cena_jedn: 0, z_narzutem: 0 };
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + rid;
     tr.innerHTML = `
-        <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
-        <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
-        <td class="unit-col"><input class="cell-input" type="text" value="${escHtml(d.jedn)}" style="width:60px;"></td>
-        <td class="unit-col"><input class="cell-input num-input ilosc-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:70px;" oninput="recalcRow(this.closest('tr'))"></td>
-        <td class="unit-col"><input class="cell-input num-input cena-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:110px;" oninput="recalcRow(this.closest('tr'))"></td>
-        <td><span class="cell-readonly wartosc-display">${makePl(d.ilosc * d.cena_jedn)}</span> <span style="font-size:11px;color:#999;">zł</span></td>
-        <td><input class="cell-input num-input narzut-input" type="number" value="${d.z_narzutem}" min="0" step="0.01" style="width:110px;" oninput="recalcAll()"> <span style="font-size:11px;color:#999;">zł</span></td>
-        <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
+        <td class="col-drag" style="text-align:center;color:#ccc;cursor:grab;">
+            <i class="ti ti-grip-vertical"></i>
+        </td>
+        <td class="col-opis">
+            <input class="cell-input opis-input" type="text"
+                   placeholder="Opis pozycji..."
+                   value="${escHtml(d.opis)}"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addRow('${tbodyId}');}">
+        </td>
+        <td class="col-jedn">
+            <select class="cell-input unit-select" onchange="handleUnitChange(this)" data-prev="${escHtml(d.jedn)}">
+                ${buildUnitOptions(d.jedn)}
+            </select>
+        </td>
+        <td class="col-ilosc unit-col">
+            <input class="cell-input ilosc-input" type="number"
+                   value="${d.ilosc}" min="0" step="0.01"
+                   oninput="recalcRow(document.getElementById('row-${rid}'))">
+        </td>
+        <td class="col-cena unit-col">
+            <input class="cell-input cena-input" type="number"
+                   value="${d.cena_jedn}" min="0" step="0.01"
+                   oninput="recalcRow(document.getElementById('row-${rid}'))">
+        </td>
+        <td class="col-netto" style="text-align:right;padding-right:8px;">
+            <span class="wartosc-display">${makePl(d.ilosc * d.cena_jedn)}</span>
+            <span style="font-size:11px;color:#999;"> zł</span>
+        </td>
+        <td class="col-narzut">
+            <input class="cell-input narzut-input" type="number"
+                   value="${d.z_narzutem}" min="0" step="0.01"
+                   oninput="recalcAll()">
+            <span style="font-size:11px;color:#999;"> zł</span>
+        </td>
+        <td class="col-del">
+            <button type="button" class="btn-del-row" onclick="removeRow(this)" title="Usuń pozycję">
+                <i class="ti ti-trash"></i>
+            </button>
+        </td>
     `;
     tbody.appendChild(tr);
+    tr.querySelector('.opis-input').focus();
     recalcAll();
 }
 
 function removeRow(btn) { btn.closest('tr').remove(); recalcAll(); }
 
 function recalcRow(tr) {
-    const qty   = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
-    const price = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
-    const net   = qty * price;
+    if (!tr) return;
+    const ilosc = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
+    const cena  = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
+    const net   = ilosc * cena;
     const display = tr.querySelector('.wartosc-display');
     if (display) display.textContent = makePl(net);
     const narzut = tr.querySelector('.narzut-input');
@@ -637,14 +679,14 @@ function addSection(sectionData) {
         <div style="overflow-x:auto;">
             <table class="price-table" id="table-${sid}">
                 <thead><tr>
-                    <th style="width:28px;"></th>
-                    <th>Opis pozycji</th>
-                    <th style="width:90px;">Jednostka</th>
-                    <th class="unit-col" style="width:70px;">Ilość</th>
-                    <th class="unit-col" style="width:110px;">Cena jedn. netto</th>
-                    <th>Wartość netto</th>
-                    <th>Z narzutem</th>
-                    <th style="width:32px;"></th>
+                    <th class="col-drag"></th>
+                    <th class="col-opis">Opis pozycji</th>
+                    <th class="col-jedn">Jednostka</th>
+                    <th class="col-ilosc unit-col">Ilość</th>
+                    <th class="col-cena unit-col">Cena jedn.</th>
+                    <th class="col-netto">Wartość netto</th>
+                    <th class="col-narzut">Z narzutem</th>
+                    <th class="col-del"></th>
                 </tr></thead>
                 <tbody id="tbody-${sid}"></tbody>
             </table>
