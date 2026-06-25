@@ -304,7 +304,7 @@ body {
 
     <div class="deleg-outer">
         <table class="deleg-row-tbl">
-            @if($km > 0)
+            @if($km > 0 && $offer->show_unit_prices)
             <tr>
                 <td>Delegacja</td>
                 <td class="r">{{ number_format($totalDel, 2, ',', ' ') }} zł</td>
@@ -321,6 +321,7 @@ body {
     $totalNet = $netServices + ($totalDel ?? 0);
 @endphp
 <table class="sum-tbl">
+    @if($offer->show_unit_prices)
     <tr>
         <td class="muted">Suma usług netto</td>
         <td class="r">{{ number_format($netServices, 2, ',', ' ') }} zł</td>
@@ -330,6 +331,7 @@ body {
         <td class="muted">Delegacje netto</td>
         <td class="r">{{ number_format($totalDel, 2, ',', ' ') }} zł</td>
     </tr>
+    @endif
     @endif
     <tr class="sum-total">
         <td>Łącznie netto</td>
