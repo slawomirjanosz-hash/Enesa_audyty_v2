@@ -3,6 +3,7 @@
 @section('page-title', 'Nowa oferta')
 
 @push('styles')
+<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <style>
 /* ── Editor topbar ─────────────────────────────────── */
 #editor-topbar {
@@ -180,12 +181,15 @@
     <div class="doc-parties">
         <div class="doc-party">
             <div class="doc-party-label">Wystawca</div>
-            <div class="doc-party-name">ENESA Sp. z o.o.</div>
+            <div class="doc-party-name">{{ $companySettings->name ?? 'ENESA Sp. z o.o.' }}</div>
             <div class="doc-party-line">
-                ul. Konarskiego 18C<br>
-                44-100 Gliwice<br>
-                NIP: — do uzupełnienia —<br>
-                system@enesa.pl
+                @if($companySettings?->address){{ $companySettings->address }}<br>@endif
+                @if($companySettings?->postcode || $companySettings?->city)
+                    {{ trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')) }}<br>
+                @endif
+                @if($companySettings?->nip)NIP: {{ $companySettings->nip }}<br>@endif
+                @if($companySettings?->phone)tel. {{ $companySettings->phone }}<br>@endif
+                @if($companySettings?->email){{ $companySettings->email }}@endif
             </div>
         </div>
         <div class="doc-party">
@@ -212,6 +216,7 @@
                 </div>
             @endif
             @error('company_id')<div style="font-size:11px;color:#B91C1C;margin-top:4px;">{{ $message }}</div>@enderror
+            <div id="distance-info" style="display:none;margin-top:6px;font-size:12px;color:#1A4D3A;font-family:'Lato',sans-serif;"></div>
         </div>
     </div>
 
@@ -263,15 +268,7 @@
         <i class="ti ti-target"></i>
         <span class="ed-card-title">Przedmiot oferty</span>
     </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-    </div>
-    <div class="rich-editor" id="editor-subject" contenteditable="true"
-         data-placeholder="Opisz przedmiot oferty..."></div>
+    <div id="editor-subject" style="min-height:100px;font-size:14px;"></div>
 </div>
 
 {{-- ── SEKCJA B2: ZAKRES PRAC ────────────────── --}}
@@ -280,15 +277,7 @@
         <i class="ti ti-list-check"></i>
         <span class="ed-card-title">Zakres prac</span>
     </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-    </div>
-    <div class="rich-editor" id="editor-scope" contenteditable="true"
-         data-placeholder="Opisz zakres prac..."></div>
+    <div id="editor-scope" style="min-height:100px;font-size:14px;"></div>
 </div>
 
 {{-- ── SEKCJA C: WYCENA ───────────────────────── --}}
@@ -302,12 +291,12 @@
             <thead>
                 <tr>
                     <th style="width:28px;"></th>
-                    <th>Opis pozycji</th>
-                    <th class="unit-col" style="width:70px;">Jedn.</th>
-                    <th class="unit-col" style="width:80px;">Ilość</th>
-                    <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
-                    <th style="width:130px;">Wartość netto</th>
-                    <th style="width:130px;">Z narzutem</th>
+                    <th style="min-width:160px;">Opis pozycji</th>
+                    <th style="width:90px;">Jednostka</th>
+                    <th class="unit-col" style="width:70px;">Ilość</th>
+                    <th class="unit-col" style="width:90px;">Cena jedn. netto</th>
+                    <th style="width:120px;text-align:right;">Wartość netto</th>
+                    <th style="width:120px;">Z narzutem</th>
                     <th style="width:32px;"></th>
                 </tr>
             </thead>
@@ -403,15 +392,7 @@
         <i class="ti ti-calendar-time"></i>
         <span class="ed-card-title">Termin realizacji</span>
     </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-    </div>
-    <div class="rich-editor" id="editor-deadline" contenteditable="true"
-         data-placeholder="Opisz termin realizacji..."></div>
+    <div id="editor-deadline" style="min-height:80px;font-size:14px;"></div>
 </div>
 
 {{-- ── SEKCJA B4: WARUNKI PŁATNOŚCI ──────────── --}}
@@ -420,15 +401,7 @@
         <i class="ti ti-credit-card"></i>
         <span class="ed-card-title">Warunki płatności</span>
     </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-    </div>
-    <div class="rich-editor" id="editor-payment" contenteditable="true"
-         data-placeholder="Opisz warunki płatności..."></div>
+    <div id="editor-payment" style="min-height:80px;font-size:14px;"></div>
 </div>
 
 {{-- ── C4: NARZUT + PODSUMOWANIE ──────────────── --}}
@@ -503,16 +476,12 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
-let priceSections = [{ id: 'main', name: 'Wycena ogólna', rows: [] }];
+let priceSections = null;
 let sectionCounter = 100;
 let rowCounter     = 1000;
 const globalMarkup = { pct: 0, zl: 0 };
-
-function fmt(cmd) { document.execCommand(cmd, false, null); }
-document.querySelectorAll('.rte-toolbar .rte-btn').forEach(btn => {
-    btn.addEventListener('mousedown', e => e.preventDefault());
-});
 
 function makePl(n) {
     return Number(n).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -521,7 +490,36 @@ function escHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function parsePl(str) {
-    return parseFloat(str.replace(/\s/g,'').replace(',','.').replace(/[^\d.-]/g,'')) || 0;
+    return parseFloat(String(str).replace(/\s/g,'').replace(',','.').replace(/[^\d.-]/g,'')) || 0;
+}
+
+/* ── Unit select ── */
+const UNIT_OPTIONS = ['szt','godz','dni','kg','km','m','m\u00B2','m\u00B3','l','t','kpl','us\u0142uga'];
+function buildUnitOptions(selected) {
+    return UNIT_OPTIONS.map(u =>
+        `<option value="${escHtml(u)}" ${u === selected ? 'selected' : ''}>${escHtml(u)}</option>`
+    ).join('') + `<option value="__custom__">+ Dodaj jednostk\u0119...</option>`;
+}
+function handleUnitChange(sel) {
+    if (sel.value === '__custom__') {
+        const custom = prompt('Wpisz nazw\u0119 nowej jednostki:');
+        if (custom && custom.trim()) {
+            const val = custom.trim();
+            document.querySelectorAll('.unit-select').forEach(s => {
+                if (![...s.options].some(o => o.value === val)) {
+                    const opt = document.createElement('option');
+                    opt.value = val; opt.textContent = val;
+                    s.insertBefore(opt, s.lastElementChild);
+                }
+            });
+            sel.value = val;
+            sel.dataset.prev = val;
+        } else {
+            sel.value = sel.dataset.prev || 'szt';
+        }
+    } else {
+        sel.dataset.prev = sel.value;
+    }
 }
 
 function addRow(tbodyId, rowData) {
@@ -548,16 +546,14 @@ function addRow(tbodyId, rowData) {
 function removeRow(btn) { btn.closest('tr').remove(); recalcAll(); }
 
 function recalcRow(tr) {
-    const ilosc   = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
-    const cena    = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
-    const wartosc = ilosc * cena;
+    const qty   = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
+    const price = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
+    const net   = qty * price;
     const display = tr.querySelector('.wartosc-display');
-    if (display) display.textContent = makePl(wartosc);
-    const narzutInput = tr.querySelector('.narzut-input');
-    if (narzutInput) {
-        narzutInput.value = globalMarkup.pct > 0
-            ? makePl(wartosc * (1 + globalMarkup.pct / 100))
-            : makePl(wartosc);
+    if (display) display.textContent = makePl(net);
+    const narzut = tr.querySelector('.narzut-input');
+    if (narzut && parseFloat(narzut.value) === 0) {
+        narzut.value = net.toFixed(2);
     }
     recalcAll();
 }
@@ -580,8 +576,8 @@ function recalcAll() {
 function syncMarkup(source) {
     let sumBase = 0;
     document.querySelectorAll('.price-table tbody tr').forEach(tr => {
-        sumBase += (parseFloat(tr.querySelector('.ilosc-input')?.value) || 0)
-                 * (parseFloat(tr.querySelector('.cena-input')?.value)  || 0);
+        sumBase += (parseFloat(tr.querySelector('.qty-input')?.value)   || 0)
+                 * (parseFloat(tr.querySelector('.price-input')?.value) || 0);
     });
     if (source === 'pct') {
         const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
@@ -641,12 +637,13 @@ function addSection(sectionData) {
         <div style="overflow-x:auto;">
             <table class="price-table" id="table-${sid}">
                 <thead><tr>
-                    <th style="width:28px;"></th><th>Opis pozycji</th>
-                    <th class="unit-col" style="width:70px;">Jedn.</th>
-                    <th class="unit-col" style="width:80px;">Ilość</th>
-                    <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
-                    <th style="width:130px;">Wartość netto</th>
-                    <th style="width:130px;">Z narzutem</th>
+                    <th style="width:28px;"></th>
+                    <th>Opis pozycji</th>
+                    <th style="width:90px;">Jednostka</th>
+                    <th class="unit-col" style="width:70px;">Ilość</th>
+                    <th class="unit-col" style="width:110px;">Cena jedn. netto</th>
+                    <th>Wartość netto</th>
+                    <th>Z narzutem</th>
                     <th style="width:32px;"></th>
                 </tr></thead>
                 <tbody id="tbody-${sid}"></tbody>
@@ -689,11 +686,11 @@ function collectSections() {
 }
 
 function collectRow(tr) {
-    const inputs = tr.querySelectorAll('.cell-input');
     return {
-        opis: inputs[0]?.value || '', jedn: inputs[1]?.value || 'szt',
-        ilosc: parseFloat(tr.querySelector('.ilosc-input')?.value) || 0,
-        cena_jedn: parseFloat(tr.querySelector('.cena-input')?.value) || 0,
+        opis:       tr.querySelector('input[type="text"]')?.value    || '',
+        jedn:       tr.querySelector('td:nth-child(3) input')?.value  || 'szt',
+        ilosc:      parseFloat(tr.querySelector('.ilosc-input')?.value)  || 0,
+        cena_jedn:  parseFloat(tr.querySelector('.cena-input')?.value)   || 0,
         z_narzutem: parseFloat(tr.querySelector('.narzut-input')?.value) || 0,
     };
 }
@@ -709,20 +706,67 @@ function syncDelegHiddens() {
     document.getElementById('h-stawka-noc').value  = document.getElementById('d_stawka_noc')?.value || 300;
 }
 
-document.getElementById('offer-form').addEventListener('submit', function () {
-    document.getElementById('hidden-content-subject').value  = document.getElementById('editor-subject').innerHTML;
-    document.getElementById('hidden-content-scope').value    = document.getElementById('editor-scope').innerHTML;
-    document.getElementById('hidden-content-deadline').value = document.getElementById('editor-deadline').innerHTML;
-    document.getElementById('hidden-content-payment').value  = document.getElementById('editor-payment').innerHTML;
-    document.getElementById('hidden-price-sections').value   = JSON.stringify(collectSections());
-    document.getElementById('hidden-show-unit').value        = document.getElementById('show-unit-toggle').checked ? '1' : '0';
-    syncDelegHiddens();
-});
-
 document.addEventListener('DOMContentLoaded', function () {
+    const toolbarOptions = [
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['clean']
+    ];
+    const quillSubject  = new Quill('#editor-subject',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    const quillScope    = new Quill('#editor-scope',    { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    const quillDeadline = new Quill('#editor-deadline', { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    const quillPayment  = new Quill('#editor-payment',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
+
+    document.getElementById('offer-form').addEventListener('submit', function () {
+        document.getElementById('hidden-content-subject').value  = quillSubject.root.innerHTML;
+        document.getElementById('hidden-content-scope').value    = quillScope.root.innerHTML;
+        document.getElementById('hidden-content-deadline').value = quillDeadline.root.innerHTML;
+        document.getElementById('hidden-content-payment').value  = quillPayment.root.innerHTML;
+        document.getElementById('hidden-price-sections').value   = JSON.stringify(collectSections());
+        document.getElementById('hidden-show-unit').value        = document.getElementById('show-unit-toggle').checked ? '1' : '0';
+        syncDelegHiddens();
+    });
+
     addRow('tbody-main');
     toggleUnitPrices(document.getElementById('show-unit-toggle'));
     calcDeleg();
+
+    /* ── Distance Matrix ── */
+    const companySelect = document.getElementById('company_id');
+    const distanceInfo  = document.getElementById('distance-info');
+    if (companySelect) {
+        companySelect.addEventListener('change', function () {
+            const companyId = this.value;
+            if (!companyId) {
+                if (distanceInfo) distanceInfo.style.display = 'none';
+                return;
+            }
+            fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(companyId), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.km !== undefined) {
+                    document.getElementById('d_km').value   = data.km;
+                    document.getElementById('d_czas').value = data.minutes;
+                    calcDeleg();
+                    if (distanceInfo) {
+                        distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
+                        distanceInfo.style.display = 'block';
+                    }
+                } else if (distanceInfo) {
+                    distanceInfo.textContent = '\u26A0\uFE0F ' + (data.error || 'Nie uda\u0142o si\u0119 pobra\u0107 odleg\u0142o\u015bci.');
+                    distanceInfo.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                if (distanceInfo) {
+                    distanceInfo.textContent = '\u26A0\uFE0F B\u0142\u0105d po\u0142\u0105czenia z serwerem.';
+                    distanceInfo.style.display = 'block';
+                }
+            });
+        });
+    }
 });
 </script>
 @endpush

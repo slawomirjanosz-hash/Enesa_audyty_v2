@@ -309,13 +309,15 @@
     <div class="doc-parties">
         <div class="doc-party">
             <div class="doc-party-label">Wystawca</div>
-            <div class="doc-party-name">ENESA Sp. z o.o.</div>
+            <div class="doc-party-name">{{ $companySettings->name ?? 'ENESA Sp. z o.o.' }}</div>
             <div class="doc-party-line">
-                ul. Konarskiego 18C<br>
-                44-100 Gliwice<br>
-                NIP: — do uzupełnienia —<br>
-                tel.: â€”<br>
-                system@enesa.pl
+                @if($companySettings?->address){{ $companySettings->address }}<br>@endif
+                @if($companySettings?->postcode || $companySettings?->city)
+                    {{ trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')) }}<br>
+                @endif
+                @if($companySettings?->nip)NIP: {{ $companySettings->nip }}<br>@endif
+                @if($companySettings?->phone)tel. {{ $companySettings->phone }}<br>@endif
+                @if($companySettings?->email){{ $companySettings->email }}@endif
             </div>
         </div>
         <div class="doc-party">
