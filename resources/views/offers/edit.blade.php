@@ -259,7 +259,7 @@
         <span class="badge {{ $statusLabel['class'] }}">{{ $statusLabel['label'] }}</span>
     </div>
     <div class="etb-right">
-        <label class="toggle-wrap" title="PokaĹĽ ceny jednostkowe klientowi (widoczne w PDF)">
+        <label class="toggle-wrap" title="Pokaż ceny jednostkowe klientowi (widoczne w PDF)">
             <input type="checkbox" id="show-unit-toggle"
                    {{ $offer->show_unit_prices ? 'checked' : '' }}
                    onchange="toggleUnitPrices(this)">
@@ -298,7 +298,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <div style="display:flex;align-items:center;gap:8px;">
-                <label style="font-size:11px;opacity:.8;white-space:nowrap;">WaĹĽna do:</label>
+                <label style="font-size:11px;opacity:.8;white-space:nowrap;">Ważna do:</label>
                 <input type="date" name="valid_until" value="{{ $validUntilDefault }}"
                        style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 10px;color:#fff;font-size:13px;font-family:'Lato',sans-serif;outline:none;cursor:pointer;">
             </div>
@@ -313,7 +313,7 @@
             <div class="doc-party-line">
                 ul. Konarskiego 18C<br>
                 44-100 Gliwice<br>
-                NIP: â€” do uzupeĹ‚nienia â€”<br>
+                NIP: — do uzupełnienia —<br>
                 tel.: â€”<br>
                 system@enesa.pl
             </div>
@@ -335,7 +335,7 @@
         <input type="text" name="offer_title"
                class="doc-title-input"
                value="{{ old('offer_title', $offer->offer_title) }}"
-               placeholder="Wpisz tytuĹ‚ oferty â€” bÄ™dzie widoczny na dokumencie">
+               placeholder="Wpisz tytuł oferty — będzie widoczny na dokumencie">
     </div>
 </div>
 
@@ -379,19 +379,19 @@
 <div class="ed-card" id="section-main">
     <div class="ed-card-header">
         <i class="ti ti-calculator"></i>
-        <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogĂłlna">
+        <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
     </div>
     <div style="overflow-x:auto;">
         <table class="price-table" id="table-main">
             <thead>
                 <tr>
                     <th style="width:28px;"></th>
-                    <th>Opis pozycji</th>
-                    <th class="unit-col" style="width:70px;">Jedn.</th>
-                    <th class="unit-col" style="width:80px;">IloĹ›Ä‡</th>
-                    <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
-                    <th style="width:130px;">WartoĹ›Ä‡ netto</th>
-                    <th style="width:130px;">Z narzutem</th>
+                    <th style="min-width:160px;">Opis pozycji</th>
+                    <th style="width:90px;">Jednostka</th>
+                    <th class="unit-col" style="width:70px;">Ilość</th>
+                    <th class="unit-col" style="width:90px;">Cena jedn. netto</th>
+                    <th style="width:120px;text-align:right;">Wartość netto</th>
+                    <th style="width:120px;">Z narzutem</th>
                     <th style="width:32px;"></th>
                 </tr>
             </thead>
@@ -400,7 +400,7 @@
     </div>
     <div style="padding:10px 16px;">
         <button type="button" class="btn-add-row" onclick="addRow('tbody-main')">
-            <i class="ti ti-plus"></i> Dodaj pozycjÄ™
+            <i class="ti ti-plus"></i> Dodaj pozycję
         </button>
     </div>
 </div>
@@ -409,7 +409,7 @@
 <div id="dynamic-sections"></div>
 <div style="margin-bottom:16px;">
     <button type="button" class="btn-add-section" onclick="addSection()">
-        <i class="ti ti-section"></i> Dodaj sekcjÄ™ wyceny
+        <i class="ti ti-section"></i> Dodaj sekcję wyceny
     </button>
 </div>
 
@@ -418,11 +418,15 @@
     <div class="ed-card-header">
         <i class="ti ti-car"></i>
         <span class="ed-card-title">Delegacja</span>
+        <button type="button" id="btn-fetch-distance" onclick="fetchDistanceForOffer()" class="btn-secondary" style="margin-left:auto;padding:4px 10px;font-size:12px;">
+            <i class="ti ti-map-pin"></i> Pobierz z Google Maps
+        </button>
     </div>
     <div class="ed-card-body">
+        <div id="distance-info" style="margin-bottom:10px;min-height:18px;font-size:12px;"></div>
         <div class="deleg-grid">
             <div>
-                <label class="field-label">OdlegĹ‚oĹ›Ä‡ do klienta</label>
+                <label class="field-label">Odległość do klienta</label>
                 <div class="input-group">
                     <input type="number" id="d_km" class="field-input" min="0"
                            value="{{ old('km_do_klienta', $d?->km_do_klienta ?? 0) }}" oninput="calcDeleg()">
@@ -434,7 +438,7 @@
                 <div class="input-group">
                     <input type="number" id="d_stawka_km" class="field-input" min="0" step="0.01"
                            value="{{ old('stawka_km', $d?->stawka_km ?? 1.10) }}" oninput="calcDeleg()">
-                    <span class="input-suffix">zĹ‚/km</span>
+                    <span class="input-suffix">zł/km</span>
                 </div>
             </div>
             <div>
@@ -446,7 +450,7 @@
                 </div>
             </div>
             <div>
-                <label class="field-label">Liczba wyjazdĂłw</label>
+                <label class="field-label">Liczba wyjazdów</label>
                 <input type="number" id="d_wyjazdy" class="field-input" min="1"
                        value="{{ old('liczba_wyjazdow', $d?->liczba_wyjazdow ?? 1) }}" oninput="calcDeleg()">
             </div>
@@ -475,11 +479,11 @@
                            value="{{ old('liczba_osob', $d?->liczba_osob ?? 1) }}" oninput="calcDeleg()">
                 </div>
                 <div>
-                    <label class="field-label">Stawka za dobÄ™ hotelowÄ…</label>
+                    <label class="field-label">Stawka za dobę hotelową</label>
                     <div class="input-group">
                         <input type="number" id="d_stawka_noc" class="field-input" min="0" step="0.01"
                                value="{{ old('stawka_noc', $d?->stawka_noc ?? 300) }}" oninput="calcDeleg()">
-                        <span class="input-suffix">zĹ‚</span>
+                        <span class="input-suffix">zł</span>
                     </div>
                 </div>
             </div>
@@ -487,7 +491,7 @@
 
         <div style="background:#F0F7F3;border:1px solid #94C4B0;border-radius:8px;padding:12px 16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;">
             <span style="font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:.05em;">Koszt delegacji netto</span>
-            <span id="deleg-result" style="font-family:'Lato',sans-serif;font-size:20px;font-weight:900;color:#1A4D3A;">0,00 zĹ‚</span>
+            <span id="deleg-result" style="font-family:'Lato',sans-serif;font-size:20px;font-weight:900;color:#1A4D3A;">0,00 zł</span>
         </div>
     </div>
 </div>
@@ -513,7 +517,7 @@
 <div class="ed-card">
     <div class="ed-card-header">
         <i class="ti ti-credit-card"></i>
-        <span class="ed-card-title">Warunki pĹ‚atnoĹ›ci</span>
+        <span class="ed-card-title">Warunki płatności</span>
     </div>
     <div class="rte-toolbar">
         <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
@@ -523,7 +527,7 @@
         <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
     </div>
     <div class="rich-editor" id="editor-payment" contenteditable="true"
-         data-placeholder="Opisz warunki pĹ‚atnoĹ›ci...">{!! $offer->content_payment ?? '' !!}</div>
+         data-placeholder="Opisz warunki płatności...">{!! $offer->content_payment ?? '' !!}</div>
 </div>
 
 {{-- â”€â”€ C4: NARZUT + PODSUMOWANIE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
@@ -544,25 +548,25 @@
             <div class="input-group" style="width:140px;">
                 <input type="number" id="markup-zl" class="field-input" min="0" step="0.01"
                        value="0" oninput="syncMarkup('zl')" style="border-radius:7px 0 0 7px;">
-                <span class="input-suffix">zĹ‚</span>
+                <span class="input-suffix">zł</span>
             </div>
         </div>
         {{-- Summary rows --}}
         <div class="summary-row sub">
-            <span class="summary-label">Suma usĹ‚ug netto</span>
-            <span class="summary-value" id="sum-services">0,00 zĹ‚</span>
+            <span class="summary-label">Suma usług netto</span>
+            <span class="summary-value" id="sum-services">0,00 zł</span>
         </div>
         <div class="summary-row sub">
             <span class="summary-label">Delegacje netto</span>
-            <span class="summary-value" id="sum-deleg">0,00 zĹ‚</span>
+            <span class="summary-value" id="sum-deleg">0,00 zł</span>
         </div>
         <div class="summary-row markup">
             <span class="summary-label" style="color:#92400E;">Narzut</span>
-            <span class="summary-value" id="sum-markup" style="color:#92400E;">0,00 zĹ‚</span>
+            <span class="summary-value" id="sum-markup" style="color:#92400E;">0,00 zł</span>
         </div>
         <div class="summary-row total">
-            <span class="summary-label" style="font-size:15px;">ĹÄ„CZNIE NETTO</span>
-            <span class="summary-value" id="sum-total">0,00 zĹ‚</span>
+            <span class="summary-label" style="font-size:15px;">ŁĄCZNIE NETTO</span>
+            <span class="summary-value" id="sum-total">0,00 zł</span>
         </div>
     </div>
 </div>
@@ -571,11 +575,11 @@
 <div class="ed-card">
     <div class="ed-card-header">
         <i class="ti ti-notes"></i>
-        <span class="ed-card-title">Notatki wewnÄ™trzne</span>
+        <span class="ed-card-title">Notatki wewnętrzne</span>
     </div>
     <div class="ed-card-body">
         <textarea name="notes" class="field-input" rows="3"
-                  placeholder="Uwagi wewnÄ™trzne (niewidoczne w PDF)...">{{ old('notes', $offer->notes) }}</textarea>
+                  placeholder="Uwagi wewnętrzne (niewidoczne w PDF)...">{{ old('notes', $offer->notes) }}</textarea>
     </div>
 </div>
 
@@ -653,10 +657,10 @@
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 let priceSections = @json($offer->price_sections ?? null);
 if (!priceSections || !Array.isArray(priceSections) || priceSections.length === 0) {
-    priceSections = [{ id: 'main', name: 'Wycena ogĂłlna', rows: [] }];
+    priceSections = [{ id: 'main', name: 'Wycena ogólna', rows: [] }];
 }
 // Ensure main section exists
-if (!priceSections[0]) priceSections[0] = { id: 'main', name: 'Wycena ogĂłlna', rows: [] };
+if (!priceSections[0]) priceSections[0] = { id: 'main', name: 'Wycena ogólna', rows: [] };
 
 let sectionCounter = 100;
 let rowCounter     = 1000;
@@ -687,15 +691,16 @@ function addRow(tbodyId, rowData) {
     const rid = 'r' + (rowCounter++);
     const d   = rowData || { opis: '', jedn: 'szt', ilosc: 1, cena_jedn: 0, z_narzutem: 0 };
     const tr  = document.createElement('tr');
+    tr.id = 'row-' + rid;
     tr.dataset.rid = rid;
     tr.innerHTML = `
         <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
         <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
-        <td class="unit-col"><input class="cell-input" type="text" value="${escHtml(d.jedn)}" style="width:60px;"></td>
-        <td class="unit-col"><input class="cell-input num-input ilosc-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:70px;" oninput="recalcRow(this.closest('tr'))"></td>
-        <td class="unit-col"><input class="cell-input num-input cena-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:110px;" oninput="recalcRow(this.closest('tr'))"></td>
-        <td><span class="cell-readonly wartosc-display">${makePl(d.ilosc * d.cena_jedn)}</span> <span style="font-size:11px;color:#999;">zĹ‚</span></td>
-        <td><input class="cell-input num-input narzut-input" type="number" value="${d.z_narzutem}" min="0" step="0.01" style="width:110px;" oninput="recalcAll()"> <span style="font-size:11px;color:#999;">zĹ‚</span></td>
+        <td style="width:90px;"><select class="cell-input unit-select" style="width:90px;" data-prev="${escHtml(d.jedn)}" onchange="handleUnitChange(this)">${buildUnitOptions(d.jedn)}</select></td>
+        <td class="unit-col" style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:68px;" oninput="recalcRow('${rid}')"></td>
+        <td class="unit-col" style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
+        <td style="text-align:right;white-space:nowrap;padding-right:8px;"><span class="net-display">${makePl(d.ilosc * d.cena_jedn)}</span>&nbsp;<span style="font-size:11px;color:#999;">zł</span></td>
+        <td><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input markup-input" type="number" value="${d.z_narzutem}" min="0" step="0.01" style="width:84px;" oninput="recalcAll()"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
         <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
     `;
     tbody.appendChild(tr);
@@ -709,44 +714,6 @@ function escHtml(str) {
 function removeRow(btn) {
     btn.closest('tr').remove();
     recalcAll();
-}
-
-function recalcRow(tr) {
-    const ilosc    = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
-    const cena     = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
-    const wartosc  = ilosc * cena;
-    const display  = tr.querySelector('.wartosc-display');
-    if (display) display.textContent = makePl(wartosc);
-
-    // auto-set z_narzutem based on global markup %
-    const narzutInput = tr.querySelector('.narzut-input');
-    if (narzutInput && globalMarkup.pct > 0) {
-        narzutInput.value = makePl(wartosc * (1 + globalMarkup.pct / 100));
-    } else if (narzutInput && globalMarkup.pct === 0) {
-        narzutInput.value = makePl(wartosc);
-    }
-    recalcAll();
-}
-
-function recalcAll() {
-    let sumServices = 0;
-
-    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
-        const val = parseFloat(tr.querySelector('.narzut-input')?.value) || 0;
-        sumServices += val;
-    });
-
-    const delegCost = parsePl(document.getElementById('deleg-result').textContent);
-
-    const markupZl = parseFloat(document.getElementById('markup-zl').value) || 0;
-    const total    = sumServices + delegCost + markupZl;
-
-    document.getElementById('sum-services').textContent = makePl(sumServices) + ' zĹ‚';
-    document.getElementById('sum-deleg').textContent    = makePl(delegCost) + ' zĹ‚';
-    document.getElementById('sum-markup').textContent   = makePl(markupZl) + ' zĹ‚';
-    document.getElementById('sum-total').textContent    = makePl(total) + ' zĹ‚';
-
-    document.getElementById('h-kwota-netto').value = total.toFixed(2);
 }
 
 function parsePl(str) {
@@ -793,7 +760,7 @@ function calcDeleg() {
     const stawkaNoc= parseFloat(document.getElementById('d_stawka_noc')?.value) || 300;
 
     const deleg = (km * 2 * wyjazdy * stawkaKm) + (over ? noc * osoby * stawkaNoc : 0);
-    document.getElementById('deleg-result').textContent = makePl(deleg) + ' zĹ‚';
+    document.getElementById('deleg-result').textContent = makePl(deleg) + ' zł';
     recalcAll();
 }
 
@@ -828,7 +795,7 @@ function addSection(sectionData) {
             <i class="ti ti-calculator"></i>
             <input type="text" class="section-name-input" value="${escHtml(name)}">
             <button type="button" class="btn-del-section" onclick="removeSection('${sid}')">
-                <i class="ti ti-trash"></i> UsuĹ„ sekcjÄ™
+                <i class="ti ti-trash"></i> Usuń sekcję
             </button>
         </div>
         <div style="overflow-x:auto;">
@@ -838,9 +805,9 @@ function addSection(sectionData) {
                         <th style="width:28px;"></th>
                         <th>Opis pozycji</th>
                         <th class="unit-col" style="width:70px;">Jedn.</th>
-                        <th class="unit-col" style="width:80px;">IloĹ›Ä‡</th>
+                        <th class="unit-col" style="width:80px;">Ilość</th>
                         <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
-                        <th style="width:130px;">WartoĹ›Ä‡ netto</th>
+                        <th style="width:130px;">Wartość netto</th>
                         <th style="width:130px;">Z narzutem</th>
                         <th style="width:32px;"></th>
                     </tr>
@@ -850,7 +817,7 @@ function addSection(sectionData) {
         </div>
         <div style="padding:10px 16px;">
             <button type="button" class="btn-add-row" onclick="addRow('tbody-${sid}')">
-                <i class="ti ti-plus"></i> Dodaj pozycjÄ™
+                <i class="ti ti-plus"></i> Dodaj pozycję
             </button>
         </div>
     `;
@@ -871,7 +838,7 @@ function addSection(sectionData) {
 }
 
 function removeSection(sid) {
-    if (!confirm('UsunÄ…Ä‡ tÄ™ sekcjÄ™ wyceny?')) return;
+    if (!confirm('Usunąć tę sekcję wyceny?')) return;
     document.getElementById('section-' + sid)?.remove();
     recalcAll();
 }
@@ -884,7 +851,7 @@ function collectSections() {
 
     // Main section
     const mainSection = { id: 'main', name: '', rows: [] };
-    mainSection.name = document.getElementById('section-main-name')?.value || 'Wycena ogĂłlna';
+    mainSection.name = document.getElementById('section-main-name')?.value || 'Wycena ogólna';
     document.querySelectorAll('#tbody-main tr').forEach(tr => {
         mainSection.rows.push(collectRow(tr));
     });
@@ -901,17 +868,6 @@ function collectSections() {
     });
 
     return sections;
-}
-
-function collectRow(tr) {
-    const inputs = tr.querySelectorAll('.cell-input');
-    return {
-        opis:      inputs[0]?.value || '',
-        jedn:      inputs[1]?.value || 'szt',
-        ilosc:     parseFloat(tr.querySelector('.ilosc-input')?.value)  || 0,
-        cena_jedn: parseFloat(tr.querySelector('.cena-input')?.value)   || 0,
-        z_narzutem:parseFloat(tr.querySelector('.narzut-input')?.value) || 0,
-    };
 }
 
 function syncDelegHiddens() {
@@ -948,6 +904,105 @@ document.getElementById('offer-form').addEventListener('submit', function () {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // INIT
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ── Unit helpers (overrides) ── */
+const UNIT_OPTIONS = ['szt','godz','dni','kg','km','m','m\u00B2','m\u00B3','l','t','kpl','us\u0142uga'];
+function buildUnitOptions(selected) {
+    return UNIT_OPTIONS.map(u =>
+        `<option value="${escHtml(u)}" ${u === selected ? 'selected' : ''}>${escHtml(u)}</option>`
+    ).join('') + `<option value="__custom__">+ Dodaj jednostk\u0119...</option>`;
+}
+function handleUnitChange(sel) {
+    if (sel.value === '__custom__') {
+        const custom = prompt('Wpisz nazw\u0119 nowej jednostki:');
+        if (custom && custom.trim()) {
+            const val = custom.trim();
+            document.querySelectorAll('.unit-select').forEach(s => {
+                if (![...s.options].some(o => o.value === val)) {
+                    const opt = document.createElement('option');
+                    opt.value = val; opt.textContent = val;
+                    s.insertBefore(opt, s.lastElementChild);
+                }
+            });
+            sel.value = val;
+            sel.dataset.prev = val;
+        } else {
+            sel.value = sel.dataset.prev || 'szt';
+        }
+    } else {
+        sel.dataset.prev = sel.value;
+    }
+}
+
+/* ── recalcRow override: takes row ID (string), not DOM element ── */
+function recalcRow(id) {
+    const tr = document.getElementById('row-' + id);
+    if (!tr) return;
+    const qty   = parseFloat(tr.querySelector('.qty-input')?.value)   || 0;
+    const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
+    const net   = qty * price;
+    const netDisplay = tr.querySelector('.net-display');
+    if (netDisplay) netDisplay.textContent = makePl(net) + ' z\u0142';
+    const markupInput = tr.querySelector('.markup-input');
+    if (markupInput) {
+        if (globalMarkup.pct > 0) {
+            markupInput.value = (net * (1 + globalMarkup.pct / 100)).toFixed(2);
+        } else if (parseFloat(markupInput.value) === 0) {
+            markupInput.value = net.toFixed(2);
+        }
+    }
+    recalcAll();
+}
+
+/* ── recalcAll override: uses .markup-input ── */
+function recalcAll() {
+    let sumServices = 0;
+    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
+        sumServices += parseFloat(tr.querySelector('.markup-input')?.value) || 0;
+    });
+    const delegCost = parsePl(document.getElementById('deleg-result').textContent);
+    const markupZl  = parseFloat(document.getElementById('markup-zl').value) || 0;
+    const total     = sumServices + delegCost + markupZl;
+    document.getElementById('sum-services').textContent = makePl(sumServices) + ' z\u0142';
+    document.getElementById('sum-deleg').textContent    = makePl(delegCost) + ' z\u0142';
+    document.getElementById('sum-markup').textContent   = makePl(markupZl) + ' z\u0142';
+    document.getElementById('sum-total').textContent    = makePl(total) + ' z\u0142';
+    document.getElementById('h-kwota-netto').value = total.toFixed(2);
+}
+
+/* ── syncMarkup override: uses .qty-input / .price-input ── */
+function syncMarkup(source) {
+    let sumBase = 0;
+    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
+        sumBase += (parseFloat(tr.querySelector('.qty-input')?.value)   || 0)
+                 * (parseFloat(tr.querySelector('.price-input')?.value) || 0);
+    });
+    if (source === 'pct') {
+        const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
+        globalMarkup.pct = pct;
+        const zl = sumBase * (pct / 100);
+        globalMarkup.zl = zl;
+        document.getElementById('markup-zl').value = zl.toFixed(2);
+    } else {
+        const zl = parseFloat(document.getElementById('markup-zl').value) || 0;
+        globalMarkup.zl = zl;
+        const pct = sumBase > 0 ? (zl / sumBase) * 100 : 0;
+        globalMarkup.pct = pct;
+        document.getElementById('markup-pct').value = pct.toFixed(2);
+    }
+    recalcAll();
+}
+
+/* ── collectRow override: uses new selectors ── */
+function collectRow(tr) {
+    return {
+        opis:       tr.querySelector('input[type="text"]')?.value    || '',
+        jedn:       tr.querySelector('.unit-select')?.value           || 'szt',
+        ilosc:      parseFloat(tr.querySelector('.qty-input')?.value)    || 0,
+        cena_jedn:  parseFloat(tr.querySelector('.price-input')?.value)  || 0,
+        z_narzutem: parseFloat(tr.querySelector('.markup-input')?.value) || 0,
+    };
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Load main section rows
     const mainRows = priceSections[0]?.rows || [];
@@ -964,8 +1019,70 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleUnitPrices(document.getElementById('show-unit-toggle'));
 
     // Init delegation calc
+    const distanceInfo = document.getElementById('distance-info');
     calcDeleg();
-});
+
+    /* ── Distance Matrix ── */
+    const companySelect = document.getElementById('company_id');
+    if (companySelect) {
+        companySelect.addEventListener('change', function () {
+            const companyId = this.value;
+            if (!companyId) {
+                if (distanceInfo) distanceInfo.style.display = 'none';
+                return;
+            }
+            fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(companyId), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.km !== undefined) {
+                    document.getElementById('d_km').value   = data.km;
+                    document.getElementById('d_czas').value = data.minutes;
+                    calcDeleg();
+                    if (distanceInfo) {
+                        distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
+                        distanceInfo.style.display = 'block';
+                    }
+                } else if (distanceInfo) {
+                    distanceInfo.textContent = '\u26A0\uFE0F ' + (data.error || 'Nie uda\u0142o si\u0119 pobra\u0107 odleg\u0142o\u015bci.');
+                    distanceInfo.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                if (distanceInfo) {
+                    distanceInfo.textContent = '\u26A0\uFE0F B\u0142\u0105d po\u0142\u0105czenia z serwerem.';
+                    distanceInfo.style.display = 'block';
+                }
+            });
+        });
+    }
+
+    /* also trigger Distance Matrix for edit (fetch current company) */
+    const fetchDistBtn = document.getElementById('btn-fetch-distance');
+    if (fetchDistBtn) fetchDistBtn.onclick = function () {
+        const hiddenCid = document.querySelector('input[name="company_id"]');
+        if (!hiddenCid || !hiddenCid.value) return;
+        fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(hiddenCid.value), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.km !== undefined) {
+                document.getElementById('d_km').value   = data.km;
+                document.getElementById('d_czas').value = data.minutes;
+                calcDeleg();
+                if (distanceInfo) {
+                    distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
+                    distanceInfo.style.display = 'block';
+                }
+            } else if (distanceInfo) {
+                distanceInfo.textContent = '\u26A0\uFE0F ' + (data.error || 'Nie uda\u0142o si\u0119 pobra\u0107.');
+                distanceInfo.style.display = 'block';
+            }
+        });
+    };
+}); // DOMContentLoaded
 </script>
 @endpush
 
