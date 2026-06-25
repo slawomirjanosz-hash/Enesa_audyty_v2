@@ -276,17 +276,14 @@
         <i class="ti ti-target"></i>
         <span class="ed-card-title">Przedmiot oferty</span>
     </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
-        <button type="button" onclick="aiAssist('content_subject','generate',quillSubject)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-sparkles"></i> Generuj AI
-        </button>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
         <button type="button" onclick="aiAssist('content_subject','improve',quillSubject)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw AI
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw z AI
         </button>
-        <span class="ai-status-subject" style="font-size:12px;color:#888;align-self:center;display:none;">
-            <i class="ti ti-loader-2"></i> Generuję...
+        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
+        <span class="ai-status-subject" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
+            <i class="ti ti-loader-2"></i> Poprawiam...
         </span>
     </div>
     <div id="editor-subject" style="min-height:100px;font-size:14px;"></div>
@@ -298,17 +295,14 @@
         <i class="ti ti-list-check"></i>
         <span class="ed-card-title">Zakres prac</span>
     </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
-        <button type="button" onclick="aiAssist('content_scope','generate',quillScope)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-sparkles"></i> Generuj AI
-        </button>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
         <button type="button" onclick="aiAssist('content_scope','improve',quillScope)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw AI
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw z AI
         </button>
-        <span class="ai-status-scope" style="font-size:12px;color:#888;align-self:center;display:none;">
-            <i class="ti ti-loader-2"></i> Generuję...
+        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
+        <span class="ai-status-scope" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
+            <i class="ti ti-loader-2"></i> Poprawiam...
         </span>
     </div>
     <div id="editor-scope" style="min-height:100px;font-size:14px;"></div>
@@ -426,17 +420,14 @@
         <i class="ti ti-calendar-time"></i>
         <span class="ed-card-title">Termin realizacji</span>
     </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
-        <button type="button" onclick="aiAssist('content_deadline','generate',quillDeadline)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-sparkles"></i> Generuj AI
-        </button>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
         <button type="button" onclick="aiAssist('content_deadline','improve',quillDeadline)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw AI
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw z AI
         </button>
-        <span class="ai-status-deadline" style="font-size:12px;color:#888;align-self:center;display:none;">
-            <i class="ti ti-loader-2"></i> Generuję...
+        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
+        <span class="ai-status-deadline" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
+            <i class="ti ti-loader-2"></i> Poprawiam...
         </span>
     </div>
     <div id="editor-deadline" style="min-height:80px;font-size:14px;"></div>
@@ -448,17 +439,14 @@
         <i class="ti ti-credit-card"></i>
         <span class="ed-card-title">Warunki płatności</span>
     </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
-        <button type="button" onclick="aiAssist('content_payment','generate',quillPayment)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-sparkles"></i> Generuj AI
-        </button>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
         <button type="button" onclick="aiAssist('content_payment','improve',quillPayment)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw AI
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw z AI
         </button>
-        <span class="ai-status-payment" style="font-size:12px;color:#888;align-self:center;display:none;">
-            <i class="ti ti-loader-2"></i> Generuję...
+        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
+        <span class="ai-status-payment" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
+            <i class="ti ti-loader-2"></i> Poprawiam...
         </span>
     </div>
     <div id="editor-payment" style="min-height:80px;font-size:14px;"></div>
@@ -887,10 +875,12 @@ async function aiAssist(field, mode, quillInstance) {
 
         const data = await response.json();
 
-        if (data.html) {
+        if (data.html && data.html.trim() !== '') {
             quillInstance.root.innerHTML = data.html;
+        } else if (data.error) {
+            alert('Błąd AI: ' + data.error);
         } else {
-            alert('Błąd AI: ' + (data.error || 'Nieznany błąd'));
+            alert('AI nie zwróciło treści. Sprawdź czy wpisałeś tekst do poprawy.');
         }
     } catch (e) {
         alert('Błąd połączenia z AI');
