@@ -96,10 +96,10 @@ body {
 .sum-tbl td.r { text-align: right; font-weight: 600; }
 .sum-tbl td.muted { color: #555; }
 .sum-total td {
-    background: #1A4D3A; color: #fff !important; font-size: 12pt;
-    font-weight: bold; padding: 12px 13px; border-bottom: none;
+    background: #1A4D3A; color: #fff !important; font-size: 10pt;
+    font-weight: bold; padding: 10px 11px; border-bottom: none;
 }
-.sum-total td.r { text-align: right; font-size: 16pt; font-weight: 900; }
+.sum-total td.r { text-align: right; font-size: 11pt; font-weight: bold; }
 
 /* TERMIN + WARUNKI */
 .terms-tbl { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
@@ -334,7 +334,7 @@ body {
     </tr>
     @endif
     <tr class="sum-total">
-        <td>ŁĄCZNIE NETTO</td>
+        <td>Łącznie netto</td>
         <td class="r">{{ number_format($totalNet, 2, ',', ' ') }} zł</td>
     </tr>
 </table>
