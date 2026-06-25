@@ -304,7 +304,7 @@ class OfferController extends Controller
         return redirect()->back()->with('success', 'Wiadomość została dodana.')->withFragment('messages');
     }
 
-    public function pdf(Offer $offer): \Illuminate\Http\Response
+    public function pdf(Request $request, Offer $offer): \Illuminate\Http\Response
     {
         $offer->load(['company', 'assignedUser', 'offerDelegation']);
         $companySettings = \App\Models\CompanySettings::first();
@@ -313,6 +313,11 @@ class OfferController extends Controller
         $offer->content_scope    = $this->cleanQuillHtml($offer->content_scope);
         $offer->content_deadline = $this->cleanQuillHtml($offer->content_deadline);
         $offer->content_payment  = $this->cleanQuillHtml($offer->content_payment);
+
+        // Allow toggle state to be passed via ?unit= query param (from edit page PDF button)
+        if ($request->has('unit')) {
+            $offer->show_unit_prices = $request->boolean('unit');
+        }
 
         $html = view('offers.pdf', compact('offer', 'companySettings'))->render();
 

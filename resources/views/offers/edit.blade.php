@@ -271,7 +271,7 @@
             <span class="toggle-label">Ceny jedn. w PDF</span>
         </label>
         @if(!$offer->is_template)
-            <a href="{{ route('offers.pdf', $offer) }}" target="_blank" class="btn-secondary">
+            <a id="pdf-link" href="{{ route('offers.pdf', $offer) }}?unit={{ $offer->show_unit_prices ? '1' : '0' }}" target="_blank" class="btn-secondary">
                 <i class="ti ti-file-type-pdf"></i> PDF
             </a>
         @endif
@@ -799,7 +799,14 @@ function toggleUnitPrices(cb) {
         t.classList.toggle('hide-units', !cb.checked);
     });
 
-    // Save immediately to DB so PDF reflects the change right away
+    // Update PDF link to pass current toggle state as query param
+    const pdfLink = document.getElementById('pdf-link');
+    if (pdfLink) {
+        const base = pdfLink.href.split('?')[0];
+        pdfLink.href = base + '?unit=' + (cb.checked ? '1' : '0');
+    }
+
+    // Also save to DB via AJAX
     fetch('{{ route('offers.unit-prices', $offer) }}', {
         method: 'PATCH',
         headers: {
