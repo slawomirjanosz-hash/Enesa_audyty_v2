@@ -276,6 +276,19 @@
         <i class="ti ti-target"></i>
         <span class="ed-card-title">Przedmiot oferty</span>
     </div>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
+        <button type="button" onclick="aiAssist('content_subject','generate',quillSubject)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-sparkles"></i> Generuj AI
+        </button>
+        <button type="button" onclick="aiAssist('content_subject','improve',quillSubject)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw AI
+        </button>
+        <span class="ai-status-subject" style="font-size:12px;color:#888;align-self:center;display:none;">
+            <i class="ti ti-loader-2"></i> Generuję...
+        </span>
+    </div>
     <div id="editor-subject" style="min-height:100px;font-size:14px;"></div>
 </div>
 
@@ -284,6 +297,19 @@
     <div class="ed-card-header">
         <i class="ti ti-list-check"></i>
         <span class="ed-card-title">Zakres prac</span>
+    </div>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
+        <button type="button" onclick="aiAssist('content_scope','generate',quillScope)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-sparkles"></i> Generuj AI
+        </button>
+        <button type="button" onclick="aiAssist('content_scope','improve',quillScope)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw AI
+        </button>
+        <span class="ai-status-scope" style="font-size:12px;color:#888;align-self:center;display:none;">
+            <i class="ti ti-loader-2"></i> Generuję...
+        </span>
     </div>
     <div id="editor-scope" style="min-height:100px;font-size:14px;"></div>
 </div>
@@ -400,6 +426,19 @@
         <i class="ti ti-calendar-time"></i>
         <span class="ed-card-title">Termin realizacji</span>
     </div>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
+        <button type="button" onclick="aiAssist('content_deadline','generate',quillDeadline)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-sparkles"></i> Generuj AI
+        </button>
+        <button type="button" onclick="aiAssist('content_deadline','improve',quillDeadline)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw AI
+        </button>
+        <span class="ai-status-deadline" style="font-size:12px;color:#888;align-self:center;display:none;">
+            <i class="ti ti-loader-2"></i> Generuję...
+        </span>
+    </div>
     <div id="editor-deadline" style="min-height:80px;font-size:14px;"></div>
 </div>
 
@@ -408,6 +447,19 @@
     <div class="ed-card-header">
         <i class="ti ti-credit-card"></i>
         <span class="ed-card-title">Warunki płatności</span>
+    </div>
+    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;">
+        <button type="button" onclick="aiAssist('content_payment','generate',quillPayment)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-sparkles"></i> Generuj AI
+        </button>
+        <button type="button" onclick="aiAssist('content_payment','improve',quillPayment)"
+                style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #1A4D3A;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+            <i class="ti ti-wand"></i> Popraw AI
+        </button>
+        <span class="ai-status-payment" style="font-size:12px;color:#888;align-self:center;display:none;">
+            <i class="ti ti-loader-2"></i> Generuję...
+        </span>
     </div>
     <div id="editor-payment" style="min-height:80px;font-size:14px;"></div>
 </div>
@@ -746,16 +798,18 @@ function syncDelegHiddens() {
     document.getElementById('h-stawka-noc').value  = document.getElementById('d_stawka_noc')?.value || 300;
 }
 
+let quillSubject, quillScope, quillDeadline, quillPayment;
+
 document.addEventListener('DOMContentLoaded', function () {
     const toolbarOptions = [
         ['bold', 'italic', 'underline'],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         ['clean']
     ];
-    const quillSubject  = new Quill('#editor-subject',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
-    const quillScope    = new Quill('#editor-scope',    { theme: 'snow', modules: { toolbar: toolbarOptions } });
-    const quillDeadline = new Quill('#editor-deadline', { theme: 'snow', modules: { toolbar: toolbarOptions } });
-    const quillPayment  = new Quill('#editor-payment',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    quillSubject  = new Quill('#editor-subject',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    quillScope    = new Quill('#editor-scope',    { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    quillDeadline = new Quill('#editor-deadline', { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    quillPayment  = new Quill('#editor-payment',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
 
     document.getElementById('offer-form').addEventListener('submit', function () {
         document.getElementById('hidden-content-subject').value  = quillSubject.root.innerHTML;
@@ -812,5 +866,37 @@ setTimeout(() => {
         });
     }
 });
+
+async function aiAssist(field, mode, quillInstance) {
+    const statusEl = document.querySelector('.ai-status-' + field.replace('content_', ''));
+    if (statusEl) statusEl.style.display = 'inline-flex';
+
+    const offerTitle  = document.querySelector('input[name="offer_title"]')?.value || '';
+    const companyName = document.querySelector('select[name="company_id"] option:checked')?.text?.split('—')[0]?.trim() || '';
+    const current     = quillInstance.root.innerHTML;
+
+    try {
+        const response = await fetch('{{ route("offers.ai-assist") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ field, mode, current, offer_title: offerTitle, company_name: companyName }),
+        });
+
+        const data = await response.json();
+
+        if (data.html) {
+            quillInstance.root.innerHTML = data.html;
+        } else {
+            alert('Błąd AI: ' + (data.error || 'Nieznany błąd'));
+        }
+    } catch (e) {
+        alert('Błąd połączenia z AI');
+    } finally {
+        if (statusEl) statusEl.style.display = 'none';
+    }
+}
 </script>
 @endpush
