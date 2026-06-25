@@ -431,28 +431,33 @@ class OfferController extends Controller
         $label   = $fieldLabels[$data['field']];
         $title   = $data['offer_title'] ?? 'oferta';
         $company = $data['company_name'] ?? 'klient';
-        $current = strip_tags($data['current'] ?? '');
+        $current = preg_replace('/<br\s*\/?>/i', "\n", $data['current'] ?? '');
+        $current = preg_replace('/<\/p>/i', "\n", $current);
+        $current = preg_replace('/<\/li>/i', "\n", $current);
+        $current = strip_tags($current);
+        $current = trim($current);
 
         $prompt = "Jesteś asystentem pomagającym pisać profesjonalne oferty handlowe w branży audytów energetycznych i efektywności energetycznej.
 
-Sekcja: {$label}
+Sekcja dokumentu: {$label}
 Tytuł oferty: {$title}
 Firma klienta: {$company}
 
-Tekst do poprawy napisany przez użytkownika:
+Tekst wpisany przez użytkownika (może zawierać skróty, literówki, niedokończone zdania):
 {$current}
 
 Twoje zadanie:
-- Popraw błędy ortograficzne, gramatyczne i literówki
-- Popraw interpunkcję
-- Ułóż zdania płynnie i naturalnie
-- Jeśli zdanie jest urwane lub niekompletne — uzupełnij je sensownie w kontekście branży energetycznej
-- Zachowaj oryginalny sens i wszystkie informacje które podał użytkownik
-- NIE wymyślaj nowych informacji, kwot, dat ani warunków których nie ma w tekście
-- NIE zaczynaj od słów 'Przedmiot oferty', 'Zakres prac', 'Termin realizacji', 'Warunki płatności' — to już jest w nagłówku sekcji
-- Dla zakresu prac użyj listy HTML (<ul><li>...</li></ul>)
-- Dla pozostałych sekcji użyj akapitów HTML (<p>...</p>)
-- Zwróć TYLKO poprawiony tekst HTML, bez komentarzy, bez markdown, bez backtików";
+- Popraw błędy ortograficzne, gramatyczne i literówki (np. 'tygoss' → 'tydzień')
+- Uzupełnij skrócone lub urwane zdania zachowując sens oryginału
+- Zachowaj WSZYSTKIE informacje, liczby i okresy czasu które podał użytkownik
+- NIE dodawaj nowych etapów, dat ani informacji których nie ma w tekście
+- NIE zaczynaj od słów 'Przedmiot oferty', 'Zakres prac', 'Termin realizacji', 'Warunki płatności'
+
+Formatowanie HTML:
+- Jeśli tekst zawiera harmonogram, etapy lub listę punktów → użyj <ul><li>...</li></ul>
+- Jeśli tekst to jeden lub kilka zdań → użyj <p>...</p>
+- Dla sekcji 'Warunki płatności' możesz użyć <ul> dla poszczególnych warunków
+- Zwróć TYLKO HTML, bez markdown, bez backtików, bez komentarzy";
 
         $response = Http::withHeaders([
             'x-api-key'         => config('services.anthropic.key'),
