@@ -562,15 +562,20 @@ function addRow(tbodyId, rowData) {
                    value="${d.cena_jedn}" min="0" step="0.01"
                    oninput="recalcRow(document.getElementById('row-${rid}'))">
         </td>
-        <td class="col-netto" style="text-align:right;padding-right:8px;">
-            <span class="wartosc-display">${makePl(d.ilosc * d.cena_jedn)}</span>
-            <span style="font-size:11px;color:#999;"> zł</span>
+        <td class="col-netto" style="white-space:nowrap;text-align:right;">
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+                <span class="wartosc-display">${makePl(d.ilosc * d.cena_jedn)}</span>
+                <span style="font-size:11px;color:#999;">zł</span>
+            </div>
         </td>
-        <td class="col-narzut">
-            <input class="cell-input narzut-input" type="number"
-                   value="${d.z_narzutem}" min="0" step="0.01"
-                   oninput="recalcAll()">
-            <span style="font-size:11px;color:#999;"> zł</span>
+        <td class="col-narzut" style="white-space:nowrap;">
+            <div style="display:flex;align-items:center;gap:4px;">
+                <input class="cell-input narzut-input" type="number"
+                       value="${d.z_narzutem}" min="0" step="0.01"
+                       style="width:90px;"
+                       oninput="recalcAll()">
+                <span style="font-size:11px;color:#999;">zł</span>
+            </div>
         </td>
         <td class="col-del">
             <button type="button" class="btn-del-row" onclick="removeRow(this)" title="Usuń pozycję">
