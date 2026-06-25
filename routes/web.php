@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
 
     Route::prefix('offers')->name('offers.')->group(function () {
+        Route::post('/ai-assist',                     [OfferController::class, 'aiAssist'])->name('ai-assist');
         Route::get('/',                              [OfferController::class, 'index'])->name('index');
         Route::get('/create',                        [OfferController::class, 'create'])->name('create');
         Route::get('/get-distance',                  [OfferController::class, 'getDistance'])->name('get-distance');
