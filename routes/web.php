@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{offer}/messages',             [OfferController::class, 'storeMessage'])->name('messages.store');
         Route::post('/{offer}/save-as-template',     [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
         Route::post('/{offer}/clone',                [OfferController::class, 'clone'])->name('clone');
+        Route::patch('/{offer}/unit-prices',             [OfferController::class, 'updateUnitPrices'])->name('unit-prices');
     });
 
     Route::prefix('settings')->name('settings.')->group(function () {

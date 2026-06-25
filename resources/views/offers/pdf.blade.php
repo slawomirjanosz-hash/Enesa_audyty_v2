@@ -102,8 +102,10 @@ body {
 .sum-total td.r { text-align: right; font-size: 16pt; font-weight: 900; }
 
 /* TERMIN + WARUNKI */
-.terms-tbl { width: 100%; border-collapse: separate; border-spacing: 12px 0; margin-bottom: 18px; }
+.terms-tbl { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
 .terms-cell { width: 50%; vertical-align: top; }
+.terms-cell-l { padding-right: 10px; }
+.terms-cell-r { padding-left: 10px; }
 
 /* FOOTER */
 .footer-sep { height: 1px; background: #E5E1D8; margin: 28px 0 14px 0; border: none; display: block; }
@@ -199,7 +201,7 @@ body {
 </table>
 
 {{-- PRZEDMIOT OFERTY --}}
-@if($offer->content_subject)
+@if(!empty($offer->content_subject))
 <div class="sec-block">
     <table class="sec-hdr-tbl"><tr>
         <td class="sec-lbl-text">Przedmiot oferty</td>
@@ -210,7 +212,7 @@ body {
 @endif
 
 {{-- ZAKRES PRAC --}}
-@if($offer->content_scope)
+@if(!empty($offer->content_scope))
 <div class="sec-block">
     <table class="sec-hdr-tbl"><tr>
         <td class="sec-lbl-text">Zakres prac</td>
@@ -306,20 +308,10 @@ body {
         <table class="deleg-row-tbl">
             @if($km > 0)
             <tr>
-                <td>Dojazd ({{ $km }} km × 2 × {{ $wyjazdy }} wyjazd/y × {{ number_format($stawkaKm, 2, ',', ' ') }} zł/km)</td>
-                <td class="r">{{ number_format($kosztKm, 2, ',', ' ') }} zł</td>
-            </tr>
-            @endif
-            @if($noce > 0)
-            <tr>
-                <td>Noclegi ({{ $noce }} noc × {{ $osoby }} os. × {{ number_format($stawkaNoc, 2, ',', ' ') }} zł)</td>
-                <td class="r">{{ number_format($kosztNoc, 2, ',', ' ') }} zł</td>
-            </tr>
-            @endif
-            <tr>
-                <td>Koszt delegacji</td>
+                <td>Delegacja</td>
                 <td class="r">{{ number_format($totalDel, 2, ',', ' ') }} zł</td>
             </tr>
+            @endif
         </table>
     </div>
 </div>
@@ -350,27 +342,20 @@ body {
 {{-- TERMIN + WARUNKI --}}
 <table class="terms-tbl">
 <tr>
-    <td class="terms-cell">
-        <table class="sec-hdr-tbl"><tr>
-            <td class="sec-lbl-text">Termin realizacji</td>
-            <td class="sec-lbl-line"></td>
-        </tr></table>
+    <td class="terms-cell terms-cell-l">
+        <div style="font-size:7.5pt; font-weight:bold; text-transform:uppercase; letter-spacing:.1em; color:#1A4D3A; border-bottom:1px solid #E5E1D8; padding-bottom:4px; margin-bottom:8px;">Termin realizacji</div>
         <div class="sec-content">
-            @if($offer->content_deadline)
+            @if(!empty($offer->content_deadline))
                 {!! $offer->content_deadline !!}
             @else
                 Do uzgodnienia po podpisaniu umowy.
             @endif
         </div>
     </td>
-    <td style="width:12px;"></td>
-    <td class="terms-cell">
-        <table class="sec-hdr-tbl"><tr>
-            <td class="sec-lbl-text">Warunki płatności</td>
-            <td class="sec-lbl-line"></td>
-        </tr></table>
+    <td class="terms-cell terms-cell-r">
+        <div style="font-size:7.5pt; font-weight:bold; text-transform:uppercase; letter-spacing:.1em; color:#1A4D3A; border-bottom:1px solid #E5E1D8; padding-bottom:4px; margin-bottom:8px;">Warunki p&#322;atno&#347;ci</div>
         <div class="sec-content">
-            @if($offer->content_payment)
+            @if(!empty($offer->content_payment))
                 {!! $offer->content_payment !!}
             @else
                 Przelew bankowy, 14 dni od wystawienia faktury.
@@ -396,8 +381,15 @@ body {
 <table class="footer-tbl">
 <tr>
     <td class="footer-info">
-        ENESA Sp. z o.o. · ul. Konarskiego 18C, 44-100 Gliwice<br>
-        NIP: 123-456-78-90 · system@enesa.pl · app.enesa.pl<br>
+        {{ $companySettings->name ?? 'ENESA Sp. z o.o.' }}
+        @if($companySettings?->address) · {{ $companySettings->address }}@endif
+        @if($companySettings?->postcode || $companySettings?->city)
+            , {{ trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')) }}
+        @endif
+        <br>
+        @if($companySettings?->nip)NIP: {{ $companySettings->nip }} · @endif
+        @if($companySettings?->email){{ $companySettings->email }}@endif
+        <br>
         Oferta ważna 30 dni od daty wystawienia. Wszystkie ceny podano w kwotach netto.
     </td>
     <td class="sign-cell">

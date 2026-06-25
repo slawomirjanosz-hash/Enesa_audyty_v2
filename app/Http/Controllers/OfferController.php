@@ -309,6 +309,11 @@ class OfferController extends Controller
         $offer->load(['company', 'assignedUser', 'offerDelegation']);
         $companySettings = \App\Models\CompanySettings::first();
 
+        $offer->content_subject  = $this->cleanQuillHtml($offer->content_subject);
+        $offer->content_scope    = $this->cleanQuillHtml($offer->content_scope);
+        $offer->content_deadline = $this->cleanQuillHtml($offer->content_deadline);
+        $offer->content_payment  = $this->cleanQuillHtml($offer->content_payment);
+
         $html = view('offers.pdf', compact('offer', 'companySettings'))->render();
 
         $mpdf = new \Mpdf\Mpdf([
@@ -330,6 +335,12 @@ class OfferController extends Controller
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
+    }
+
+    public function updateUnitPrices(Request $request, Offer $offer): \Illuminate\Http\JsonResponse
+    {
+        $offer->update(['show_unit_prices' => $request->boolean('show_unit_prices')]);
+        return response()->json(['ok' => true]);
     }
 
     public function saveAsTemplate(Request $request, Offer $offer): RedirectResponse
@@ -516,5 +527,38 @@ Formatowanie HTML:
 
         $route = $isTemplate ? route('offers.edit', $newOffer) : route('offers.edit', $newOffer);
         return redirect($route)->with('success', $isTemplate ? 'Szablon został zapisany.' : 'Nowa oferta została utworzona.');
+    }
+
+    private function cleanQuillHtml(?string $html): string
+    {
+        if (!$html) return '';
+
+        // Zamień listy Quill 2 (data-list="bullet") na zwykłe <ul><li>
+        $html = preg_replace_callback(
+            '/<ol>(.*?)<\/ol>/s',
+            function ($matches) {
+                $inner = $matches[1];
+                $inner = preg_replace('/<li[^>]*data-list="bullet"[^>]*>/i', '<li>', $inner);
+                $inner = preg_replace('/<li[^>]*data-list="ordered"[^>]*>/i', '<li>', $inner);
+                $inner = preg_replace('/<span[^>]*class="ql-ui"[^>]*>.*?<\/span>/s', '', $inner);
+                return '<ul>' . $inner . '</ul>';
+            },
+            $html
+        );
+
+        // Usuń wszystkie atrybuty class z tagów
+        $html = preg_replace('/\s+class="[^"]*"/', '', $html);
+
+        // Usuń contenteditable
+        $html = preg_replace('/\s+contenteditable="[^"]*"/', '', $html);
+
+        // Usuń puste paragrafy
+        $html = preg_replace('/<p>\s*<br\s*\/?>\s*<\/p>/i', '', $html);
+        $html = preg_replace('/<p>\s*<\/p>/i', '', $html);
+
+        // Usuń pozostałe span ql-ui
+        $html = preg_replace('/<span[^>]*ql-ui[^>]*>.*?<\/span>/s', '', $html);
+
+        return trim($html);
     }
 }

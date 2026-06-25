@@ -256,6 +256,11 @@
             {{ $offer->fullNumber() }}
         </span>
         <span class="badge {{ $statusLabel['class'] }}">{{ $statusLabel['label'] }}</span>
+        @if($offer->is_template)
+            <span style="background:#F0F7F3;color:#1A4D3A;border:1px solid #94C4B0;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;">
+                <i class="ti ti-bookmark"></i> Szablon
+            </span>
+        @endif
     </div>
     <div class="etb-right">
         <label class="toggle-wrap" title="Pokaż ceny jednostkowe klientowi (widoczne w PDF)">
@@ -265,14 +270,16 @@
             <span class="toggle-track"></span>
             <span class="toggle-label">Ceny jedn. w PDF</span>
         </label>
-        <a href="{{ route('offers.pdf', $offer) }}" target="_blank" class="btn-secondary">
-            <i class="ti ti-file-type-pdf"></i> Podgląd PDF
-        </a>
-        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-save-tpl').style.display='flex'">
-            <i class="ti ti-bookmark"></i> Zapisz jako szablon
+        @if(!$offer->is_template)
+            <a href="{{ route('offers.pdf', $offer) }}" target="_blank" class="btn-secondary">
+                <i class="ti ti-file-type-pdf"></i> PDF
+            </a>
+        @endif
+        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-clone').style.display='flex'">
+            <i class="ti ti-copy"></i> Zapisz jako...
         </button>
         <button type="submit" form="offer-form" class="btn-primary">
-            <i class="ti ti-device-floppy"></i> Zapisz
+            <i class="ti ti-device-floppy"></i> {{ $offer->is_template ? 'Zapisz szablon' : 'Zapisz ofertę' }}
         </button>
     </div>
 </div>
@@ -612,40 +619,52 @@
 
 </form>
 
-{{-- ═══ MODAL: ZAPISZ JAKO SZABLON ═══ --}}
-<div id="modal-save-tpl"
+{{-- ═══ MODAL: ZAPISZ JAKO... ═══ --}}
+<div id="modal-clone"
      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;">
-                <i class="ti ti-bookmark" style="color:#1A4D3A;"></i> Zapisz jako szablon
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A1A1A;">
+                <i class="ti ti-copy" style="color:#1A4D3A;margin-right:8px;"></i>Zapisz jako...
             </div>
-            <button type="button" onclick="document.getElementById('modal-save-tpl').style.display='none'"
+            <button type="button" onclick="document.getElementById('modal-clone').style.display='none'"
                     style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;line-height:1;">×</button>
         </div>
-        <p style="font-size:13px;color:#666;font-family:'Lato',sans-serif;margin-bottom:16px;">
-            Zapisze treść, zakres, warunki i sekcje wyceny jako szablon wielokrotnego użytku.
-        </p>
-        <form method="POST" action="{{ route('offers.save-as-template', $offer) }}">
+
+        {{-- Zapisz jako nowa oferta --}}
+        <form method="POST" action="{{ route('offers.clone', $offer) }}" style="margin-bottom:12px;">
             @csrf
-            <div style="margin-bottom:16px;">
-                <label class="field-label" style="font-size:12px;font-weight:700;color:#3a3a3a;display:block;margin-bottom:5px;font-family:'Manrope',sans-serif;">
-                    Nazwa szablonu <span style="color:#DC2626;">*</span>
+            <input type="hidden" name="mode" value="offer">
+            <div style="margin-bottom:10px;">
+                <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;font-family:'Manrope',sans-serif;">
+                    Firma klienta (opcjonalnie)
                 </label>
-                <input type="text" name="name"
-                       class="field-input"
-                       placeholder="np. Audyt energetyczny — zakres standardowy"
-                       required autofocus>
+                <select name="company_id" class="field-input">
+                    <option value="">— taka sama jak obecna —</option>
+                    @foreach(\App\Models\Company::orderBy('name')->get() as $company)
+                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div style="display:flex;gap:10px;justify-content:flex-end;">
-                <button type="button"
-                        onclick="document.getElementById('modal-save-tpl').style.display='none'"
-                        class="btn-secondary">Anuluj</button>
-                <button type="submit" class="btn-primary">
-                    <i class="ti ti-bookmark"></i> Zapisz szablon
-                </button>
-            </div>
+            <button type="submit"
+                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:11px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;">
+                <i class="ti ti-file-plus"></i> Utwórz nową ofertę z tej treści
+            </button>
         </form>
+
+        {{-- Zapisz jako szablon --}}
+        <form method="POST" action="{{ route('offers.clone', $offer) }}">
+            @csrf
+            <input type="hidden" name="mode" value="template">
+            <button type="submit"
+                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:#1A4D3A;border:2px solid #1A4D3A;border-radius:8px;padding:10px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+                <i class="ti ti-bookmark"></i> Zapisz jako szablon
+            </button>
+        </form>
+
+        <div style="margin-top:12px;font-size:11px;color:#aaa;text-align:center;">
+            Szablon to oferta-wzorzec którą możesz wielokrotnie wykorzystać.
+        </div>
     </div>
 </div>
 
@@ -774,6 +793,21 @@ function toggleOvernight(cb) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function toggleUnitPrices(cb) {
     document.getElementById('hidden-show-unit').value = cb.checked ? '1' : '0';
+
+    // Toggle hide-units class on all price tables in UI
+    document.querySelectorAll('.price-table').forEach(t => {
+        t.classList.toggle('hide-units', !cb.checked);
+    });
+
+    // Save immediately to DB so PDF reflects the change right away
+    fetch('{{ route('offers.unit-prices', $offer) }}', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ show_unit_prices: cb.checked ? 1 : 0 })
+    });
 }
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
