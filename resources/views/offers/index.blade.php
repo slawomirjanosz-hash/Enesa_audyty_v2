@@ -341,6 +341,17 @@
                             <a href="{{ route('offers.edit', $offer) }}" class="btn-icon btn-icon-edit" title="Edytuj" style="margin-left:4px;">
                                 <i class="ti ti-pencil"></i>
                             </a>
+                            <form method="POST" action="{{ route('offers.destroy', $offer) }}"
+                                  onsubmit="return confirm('Czy na pewno chcesz usunąć ofertę {{ $offer->offer_full_number }}?')"
+                                  style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        style="background:none;border:none;cursor:pointer;color:#DC2626;padding:4px 6px;border-radius:6px;display:inline-flex;align-items:center;"
+                                        title="Usuń ofertę">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach
