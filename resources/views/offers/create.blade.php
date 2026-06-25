@@ -462,7 +462,7 @@
 </div>
 
 {{-- Hidden fields --}}
-<input type="hidden" name="offer_number"    value="{{ $suggestedNumber }}">
+
 <input type="hidden" name="liczba_wyjazdow" value="1" id="h-wyjazdy">
 <input type="hidden" name="liczba_noc"      value="0" id="h-noc">
 <input type="hidden" name="liczba_osob"     value="1" id="h-osoby">
@@ -761,10 +761,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('hidden-show-unit').value        = document.getElementById('show-unit-toggle').checked ? '1' : '0';
         syncDelegHiddens();
     });
-
-    addRow('tbody-main');
-    toggleUnitPrices(document.getElementById('show-unit-toggle'));
-    calcDeleg();
+window.scrollTo(0, 0);
+addRow('tbody-main');
+toggleUnitPrices(document.getElementById('show-unit-toggle'));
+calcDeleg();
+setTimeout(() => {
+    window.scrollTo(0, 0);
+    document.getElementById('company_id')?.focus();
+}, 50);
 
     /* ── Distance Matrix ── */
     const companySelect = document.getElementById('company_id');
