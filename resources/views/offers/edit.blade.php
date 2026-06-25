@@ -399,7 +399,7 @@
                     <th style="width:70px;">Ilość</th>
                     <th style="width:90px;">Cena jedn. netto</th>
                     <th style="width:120px;text-align:right;">Wartość netto</th>
-                    <th style="width:120px;">Z narzutem</th>
+                    <th style="width:120px;text-align:right;">Kwota</th>
                     <th style="width:32px;"></th>
                 </tr>
             </thead>
@@ -720,7 +720,7 @@ function addRow(tbodyId, rowData) {
         <td style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:68px;" oninput="recalcRow('${rid}')"></td>
         <td style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
         <td style="text-align:right;white-space:nowrap;padding-right:8px;"><span class="net-display">${makePl(d.ilosc * d.cena_jedn)}</span>&nbsp;<span style="font-size:11px;color:#999;">zł</span></td>
-        <td><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input markup-input" type="number" value="${d.z_narzutem}" min="0" step="0.01" style="width:84px;" oninput="recalcAll()"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
+        <td style="text-align:right;white-space:nowrap;padding-right:10px;font-weight:600;"><span class="markup-display">${makePl(d.z_narzutem)}</span>&nbsp;<span style="font-size:11px;color:#999;white-space:nowrap;">zł</span><input type="hidden" class="markup-input" value="${d.z_narzutem}"></td>
         <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
     `;
     tbody.appendChild(tr);
@@ -847,7 +847,7 @@ function addSection(sectionData) {
                         <th class="unit-col" style="width:80px;">Ilość</th>
                         <th class="unit-col" style="width:130px;">Cena jedn. netto</th>
                         <th style="width:130px;">Wartość netto</th>
-                        <th style="width:130px;">Z narzutem</th>
+                        <th style="width:130px;text-align:right;">Kwota</th>
                         <th style="width:32px;"></th>
                     </tr>
                 </thead>
@@ -923,6 +923,12 @@ function syncDelegHiddens() {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // FORM SUBMIT
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+document.getElementById('offer-form').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+        e.preventDefault();
+    }
+});
+
 document.getElementById('offer-form').addEventListener('submit', function () {
     // Collect rich editor content
     document.getElementById('hidden-content-subject').value  = document.getElementById('editor-subject').innerHTML;
@@ -979,16 +985,13 @@ function recalcRow(id) {
     const qty   = parseFloat(tr.querySelector('.qty-input')?.value)   || 0;
     const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
     const net   = qty * price;
+    const zn    = net * (1 + (globalMarkup.pct || 0) / 100);
     const netDisplay = tr.querySelector('.net-display');
-    if (netDisplay) netDisplay.textContent = makePl(net) + ' z\u0142';
+    if (netDisplay) netDisplay.textContent = makePl(net);
     const markupInput = tr.querySelector('.markup-input');
-    if (markupInput) {
-        if (globalMarkup.pct > 0) {
-            markupInput.value = (net * (1 + globalMarkup.pct / 100)).toFixed(2);
-        } else if (parseFloat(markupInput.value) === 0) {
-            markupInput.value = net.toFixed(2);
-        }
-    }
+    if (markupInput) markupInput.value = zn.toFixed(2);
+    const markupDisplay = tr.querySelector('.markup-display');
+    if (markupDisplay) markupDisplay.textContent = makePl(zn);
     recalcAll();
 }
 
@@ -1028,6 +1031,16 @@ function syncMarkup(source) {
         globalMarkup.pct = pct;
         document.getElementById('markup-pct').value = pct.toFixed(2);
     }
+    // Recalculate Kwota for each row with updated markup
+    document.querySelectorAll('.price-table tbody tr[data-rid]').forEach(tr => {
+        const qty   = parseFloat(tr.querySelector('.qty-input')?.value)   || 0;
+        const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
+        const zn    = qty * price * (1 + (globalMarkup.pct || 0) / 100);
+        const markupInput = tr.querySelector('.markup-input');
+        if (markupInput) markupInput.value = zn.toFixed(2);
+        const markupDisplay = tr.querySelector('.markup-display');
+        if (markupDisplay) markupDisplay.textContent = makePl(zn);
+    });
     recalcAll();
 }
 

@@ -251,8 +251,7 @@ body {
             <th class="r" style="width:10%">Ilość</th>
             <th class="r" style="width:12%">Jedn.</th>
             @if($offer->show_unit_prices)
-                <th class="r" style="width:16%">Cena jedn.</th>
-                <th class="r" style="width:18%">Wartość netto</th>
+                <th class="r" style="width:18%">Kwota</th>
             @endif
         </tr>
         </thead>
@@ -260,7 +259,7 @@ body {
         @foreach($sections as $section)
             @if($multiSection)
             <tr class="section-name-row">
-                <td colspan="{{ $offer->show_unit_prices ? 6 : 4 }}">{{ $section['name'] }}</td>
+                <td colspan="{{ $offer->show_unit_prices ? 5 : 4 }}">{{ $section['name'] }}</td>
             </tr>
             @endif
             @foreach($section['rows'] ?? [] as $i => $row)
@@ -270,7 +269,6 @@ body {
                 <td class="r">{{ $row['ilosc'] }}</td>
                 <td class="r">{{ $row['jedn'] }}</td>
                 @if($offer->show_unit_prices)
-                    <td class="r">{{ number_format((float)($row['cena_jedn'] ?? 0), 2, ',', ' ') }} zł</td>
                     <td class="r"><strong>{{ number_format((float)($row['z_narzutem'] ?? 0), 2, ',', ' ') }} zł</strong></td>
                 @endif
             </tr>
