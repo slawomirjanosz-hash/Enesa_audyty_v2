@@ -415,7 +415,7 @@ class OfferController extends Controller
     {
         $data = $request->validate([
             'field'        => ['required', 'in:content_subject,content_scope,content_deadline,content_payment'],
-            'mode'         => ['required', 'in:generate,improve'],
+            'mode'         => ['required', 'in:improve'],
             'current'      => ['nullable', 'string'],
             'offer_title'  => ['nullable', 'string'],
             'company_name' => ['nullable', 'string'],
@@ -428,31 +428,31 @@ class OfferController extends Controller
             'content_payment'  => 'Warunki płatności',
         ];
 
-        $label = $fieldLabels[$data['field']];
-        $title = $data['offer_title'] ?? 'oferta';
+        $label   = $fieldLabels[$data['field']];
+        $title   = $data['offer_title'] ?? 'oferta';
         $company = $data['company_name'] ?? 'klient';
+        $current = strip_tags($data['current'] ?? '');
 
-        if ($data['mode'] === 'generate') {
-            $prompt = "Jesteś ekspertem ds. audytów energetycznych i efektywności energetycznej. 
-Wygeneruj profesjonalny tekst dla sekcji \"{$label}\" oferty handlowej.
+        $prompt = "Jesteś asystentem pomagającym pisać profesjonalne oferty handlowe w branży audytów energetycznych i efektywności energetycznej.
+
+Sekcja: {$label}
 Tytuł oferty: {$title}
 Firma klienta: {$company}
-Napisz konkretny, profesjonalny tekst w języku polskim. 
-Dla zakresu prac użyj listy punktowanej HTML (<ul><li>...</li></ul>).
-Dla pozostałych sekcji użyj krótkich akapitów HTML (<p>...</p>).
-Zwróć TYLKO treść HTML bez dodatkowych komentarzy.";
-        } else {
-            $current = strip_tags($data['current'] ?? '');
-            $prompt = "Jesteś ekspertem ds. audytów energetycznych. 
-Popraw i sformatuj poniższy tekst dla sekcji \"{$label}\" oferty handlowej.
-Tytuł oferty: {$title}
-Firma klienta: {$company}
-Tekst do poprawy: {$current}
-Popraw styl, gramatykę i profesjonalizm. 
-Dla zakresu prac użyj listy punktowanej HTML (<ul><li>...</li></ul>).
-Dla pozostałych sekcji użyj krótkich akapitów HTML (<p>...</p>).
-Zwróć TYLKO poprawiony tekst HTML bez dodatkowych komentarzy.";
-        }
+
+Tekst do poprawy napisany przez użytkownika:
+{$current}
+
+Twoje zadanie:
+- Popraw błędy ortograficzne, gramatyczne i literówki
+- Popraw interpunkcję
+- Ułóż zdania płynnie i naturalnie
+- Jeśli zdanie jest urwane lub niekompletne — uzupełnij je sensownie w kontekście branży energetycznej
+- Zachowaj oryginalny sens i wszystkie informacje które podał użytkownik
+- NIE wymyślaj nowych informacji, kwot, dat ani warunków których nie ma w tekście
+- NIE zaczynaj od słów 'Przedmiot oferty', 'Zakres prac', 'Termin realizacji', 'Warunki płatności' — to już jest w nagłówku sekcji
+- Dla zakresu prac użyj listy HTML (<ul><li>...</li></ul>)
+- Dla pozostałych sekcji użyj akapitów HTML (<p>...</p>)
+- Zwróć TYLKO poprawiony tekst HTML, bez komentarzy, bez markdown, bez backtików";
 
         $response = Http::withHeaders([
             'x-api-key'         => config('services.anthropic.key'),
@@ -471,6 +471,12 @@ Zwróć TYLKO poprawiony tekst HTML bez dodatkowych komentarzy.";
         }
 
         $content = $response->json('content.0.text') ?? '';
+        $content = preg_replace('/^```[\w]*\n?/m', '', $content);
+        $content = preg_replace('/```$/m', '', $content);
+        $content = preg_replace('/<p>\s*<br\s*\/?>\s*<\/p>/i', '', $content);
+        $content = preg_replace('/<p>\s*<\/p>/i', '', $content);
+        $content = trim($content);
 
         return response()->json(['html' => $content]);
-    }}
+    }
+}
