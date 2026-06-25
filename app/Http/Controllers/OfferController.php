@@ -395,7 +395,7 @@ class OfferController extends Controller
         }
 
         $element = $json['rows'][0]['elements'][0];
-        $km      = round($element['distance']['value'] / 1000, 1);
+        $km      = round($element['distance']['value'] / 1000);
         $minutes = (int) round($element['duration']['value'] / 60);
 
         return response()->json([
@@ -403,5 +403,12 @@ class OfferController extends Controller
             'minutes' => $minutes,
             'address' => $destination,
         ]);
+    }
+
+    public function destroy(Offer $offer): RedirectResponse
+    {
+        $offer->delete();
+        return redirect()->route('offers.index')
+            ->with('success', 'Oferta ' . $offer->offer_full_number . ' została usunięta.');
     }
 }

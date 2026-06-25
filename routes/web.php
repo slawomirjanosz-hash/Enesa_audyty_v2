@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{offer}/edit',                  [OfferController::class, 'edit'])->name('edit');
         Route::get('/{offer}/pdf',                   [OfferController::class, 'pdf'])->name('pdf');
         Route::put('/{offer}',                       [OfferController::class, 'update'])->name('update');
+        Route::delete('/{offer}',                    [OfferController::class, 'destroy'])->name('destroy');
         Route::patch('/{offer}/status',              [OfferController::class, 'updateStatus'])->name('status');
         Route::post('/{offer}/messages',             [OfferController::class, 'storeMessage'])->name('messages.store');
         Route::post('/{offer}/save-as-template',     [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
