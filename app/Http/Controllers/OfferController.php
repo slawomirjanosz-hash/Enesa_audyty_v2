@@ -411,4 +411,66 @@ class OfferController extends Controller
         return redirect()->route('offers.index')
             ->with('success', 'Oferta ' . $offer->offer_full_number . ' została usunięta.');
     }
-}
+    public function aiAssist(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'field'        => ['required', 'in:content_subject,content_scope,content_deadline,content_payment'],
+            'mode'         => ['required', 'in:generate,improve'],
+            'current'      => ['nullable', 'string'],
+            'offer_title'  => ['nullable', 'string'],
+            'company_name' => ['nullable', 'string'],
+        ]);
+
+        $fieldLabels = [
+            'content_subject'  => 'Przedmiot oferty',
+            'content_scope'    => 'Zakres prac',
+            'content_deadline' => 'Termin realizacji',
+            'content_payment'  => 'Warunki płatności',
+        ];
+
+        $label = $fieldLabels[$data['field']];
+        $title = $data['offer_title'] ?? 'oferta';
+        $company = $data['company_name'] ?? 'klient';
+
+        if ($data['mode'] === 'generate') {
+            $prompt = "Jesteś ekspertem ds. audytów energetycznych i efektywności energetycznej. 
+Wygeneruj profesjonalny tekst dla sekcji \"{$label}\" oferty handlowej.
+Tytuł oferty: {$title}
+Firma klienta: {$company}
+Napisz konkretny, profesjonalny tekst w języku polskim. 
+Dla zakresu prac użyj listy punktowanej HTML (<ul><li>...</li></ul>).
+Dla pozostałych sekcji użyj krótkich akapitów HTML (<p>...</p>).
+Zwróć TYLKO treść HTML bez dodatkowych komentarzy.";
+        } else {
+            $current = strip_tags($data['current'] ?? '');
+            $prompt = "Jesteś ekspertem ds. audytów energetycznych. 
+Popraw i sformatuj poniższy tekst dla sekcji \"{$label}\" oferty handlowej.
+Tytuł oferty: {$title}
+Firma klienta: {$company}
+Tekst do poprawy: {$current}
+Popraw styl, gramatykę i profesjonalizm. 
+Dla zakresu prac użyj listy punktowanej HTML (<ul><li>...</li></ul>).
+Dla pozostałych sekcji użyj krótkich akapitów HTML (<p>...</p>).
+Zwróć TYLKO poprawiony tekst HTML bez dodatkowych komentarzy.";
+        }
+
+        $response = Http::withHeaders([
+            'x-api-key'         => config('services.anthropic.key'),
+            'anthropic-version' => '2023-06-01',
+            'content-type'      => 'application/json',
+        ])->post('https://api.anthropic.com/v1/messages', [
+            'model'      => 'claude-haiku-4-5-20251001',
+            'max_tokens' => 1024,
+            'messages'   => [
+                ['role' => 'user', 'content' => $prompt],
+            ],
+        ]);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Błąd API AI'], 500);
+        }
+
+        $content = $response->json('content.0.text') ?? '';
+
+        return response()->json(['html' => $content]);
+    }}
