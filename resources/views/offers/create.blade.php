@@ -102,8 +102,7 @@
 .btn-del-section:hover { background:#FEE2E2; }
 .btn-add-section { display:inline-flex; align-items:center; gap:6px; border:1px dashed #94C4B0; color:#1A4D3A; background:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
 .btn-add-section:hover { background:#F0F7F3; }
-.unit-col { }
-.hide-units .unit-col { display:none; }
+
 .deleg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; }
 .field-label { display:block; font-size:11px; font-weight:700; color:#555; margin-bottom:4px; font-family:'Manrope',sans-serif; }
 .field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:8px 10px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; outline:none; transition:border-color .15s; box-sizing:border-box; }
@@ -302,8 +301,8 @@
                     <th class="col-drag"></th>
                     <th class="col-opis">Opis pozycji</th>
                     <th class="col-jedn">Jednostka</th>
-                    <th class="col-ilosc unit-col">Ilość</th>
-                    <th class="col-cena unit-col">Cena jedn.</th>
+                    <th class="col-ilosc">Ilość</th>
+                    <th class="col-cena">Cena jedn.</th>
                     <th class="col-netto">Wartość netto</th>
                     <th class="col-narzut">Z narzutem</th>
                     <th class="col-del"></th>
@@ -553,12 +552,12 @@ function addRow(tbodyId, rowData) {
                 ${buildUnitOptions(d.jedn)}
             </select>
         </td>
-        <td class="col-ilosc unit-col">
+        <td class="col-ilosc">
             <input class="cell-input ilosc-input" type="number"
                    value="${d.ilosc}" min="0" step="0.01"
                    oninput="recalcRow(document.getElementById('row-${rid}'))">
         </td>
-        <td class="col-cena unit-col">
+        <td class="col-cena">
             <input class="cell-input cena-input" type="number"
                    value="${d.cena_jedn}" min="0" step="0.01"
                    oninput="recalcRow(document.getElementById('row-${rid}'))">
@@ -655,9 +654,6 @@ function toggleOvernight(cb) {
 }
 
 function toggleUnitPrices(cb) {
-    document.querySelectorAll('.price-table').forEach(t => {
-        t.classList.toggle('hide-units', !cb.checked);
-    });
     document.getElementById('hidden-show-unit').value = cb.checked ? '1' : '0';
 }
 
@@ -682,8 +678,8 @@ function addSection(sectionData) {
                     <th class="col-drag"></th>
                     <th class="col-opis">Opis pozycji</th>
                     <th class="col-jedn">Jednostka</th>
-                    <th class="col-ilosc unit-col">Ilość</th>
-                    <th class="col-cena unit-col">Cena jedn.</th>
+                    <th class="col-ilosc">Ilość</th>
+                    <th class="col-cena">Cena jedn.</th>
                     <th class="col-netto">Wartość netto</th>
                     <th class="col-narzut">Z narzutem</th>
                     <th class="col-del"></th>
@@ -698,9 +694,6 @@ function addSection(sectionData) {
         </div>
     `;
     document.getElementById('dynamic-sections').appendChild(card);
-    if (!document.getElementById('show-unit-toggle').checked) {
-        document.getElementById('table-' + sid).classList.add('hide-units');
-    }
     if (sectionData?.rows?.length) {
         sectionData.rows.forEach(r => addRow('tbody-' + sid, r));
     } else {
