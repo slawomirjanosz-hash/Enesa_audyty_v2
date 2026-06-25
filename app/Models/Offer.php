@@ -34,6 +34,7 @@ class Offer extends Model
         'content_payment',
         'show_unit_prices',
         'price_sections',
+        'is_template',
     ];
 
     protected $casts = [
@@ -41,6 +42,7 @@ class Offer extends Model
         'valid_until'       => 'date',
         'show_unit_prices'  => 'boolean',
         'price_sections'    => 'array',
+        'is_template'       => 'boolean',
     ];
 
     public function company(): BelongsTo

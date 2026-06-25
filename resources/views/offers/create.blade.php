@@ -876,7 +876,7 @@ async function aiAssist(field, mode, quillInstance) {
         const data = await response.json();
 
         if (data.html && data.html.trim() !== '') {
-            quillInstance.root.innerHTML = data.html;
+            quillInstance.clipboard.dangerouslyPasteHTML(data.html);
         } else if (data.error) {
             alert('Błąd AI: ' + data.error);
         } else {

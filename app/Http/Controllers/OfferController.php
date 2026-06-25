@@ -23,7 +23,9 @@ class OfferController extends Controller
 {
     public function index(Request $request): View
     {
+        $isTemplate = $request->boolean('template');
         $query = Offer::with(['company', 'assignedUser', 'createdBy'])
+            ->where('is_template', $isTemplate)
             ->orderByDesc('created_at');
 
         if ($request->filled('status')) {
@@ -33,10 +35,10 @@ class OfferController extends Controller
         $offers = $query->paginate(20)->withQueryString();
 
         $stats = [
-            'w_toku'        => Offer::where('status', 'w_toku')->count(),
-            'wygrana'       => Offer::where('status', 'wygrana')->count(),
-            'przegrana'     => Offer::where('status', 'przegrana')->count(),
-            'zarchiwizowana'=> Offer::where('status', 'zarchiwizowana')->count(),
+            'w_toku'        => Offer::where('status', 'w_toku')->where('is_template', $isTemplate)->count(),
+            'wygrana'       => Offer::where('status', 'wygrana')->where('is_template', $isTemplate)->count(),
+            'przegrana'     => Offer::where('status', 'przegrana')->where('is_template', $isTemplate)->count(),
+            'zarchiwizowana'=> Offer::where('status', 'zarchiwizowana')->where('is_template', $isTemplate)->count(),
         ];
 
         return view('offers.index', compact('offers', 'stats'));
@@ -483,5 +485,36 @@ Formatowanie HTML:
         $content = trim($content);
 
         return response()->json(['html' => $content]);
+    }
+
+    public function clone(Request $request, Offer $offer): RedirectResponse
+    {
+        $data = $request->validate([
+            'mode' => ['required', 'in:offer,template'],
+            'company_id' => ['nullable', 'exists:companies,id'],
+        ]);
+
+        $isTemplate = $data['mode'] === 'template';
+
+        $newOffer = $offer->replicate();
+        $newOffer->offer_number = Offer::generateNumber();
+        $newOffer->offer_full_number = $newOffer->offer_number;
+        $newOffer->status = 'w_toku';
+        $newOffer->is_template = $isTemplate;
+        $newOffer->created_by_id = auth()->id();
+        $newOffer->kwota_netto = $offer->kwota_netto;
+        if ($data['company_id'] ?? false) {
+            $newOffer->company_id = $data['company_id'];
+        }
+        $newOffer->save();
+
+        if ($offer->offerDelegation) {
+            $newDelegation = $offer->offerDelegation->replicate();
+            $newDelegation->offer_id = $newOffer->id;
+            $newDelegation->save();
+        }
+
+        $route = $isTemplate ? route('offers.edit', $newOffer) : route('offers.edit', $newOffer);
+        return redirect($route)->with('success', $isTemplate ? 'Szablon został zapisany.' : 'Nowa oferta została utworzona.');
     }
 }

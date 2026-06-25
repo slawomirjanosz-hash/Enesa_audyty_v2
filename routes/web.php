@@ -12,7 +12,6 @@ use App\Http\Controllers\Client\UserController as ClientUserController;
 use App\Http\Controllers\ClientZoneController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OfferController;
-use App\Http\Controllers\OfferTemplateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings;
@@ -93,15 +92,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{offer}/status',              [OfferController::class, 'updateStatus'])->name('status');
         Route::post('/{offer}/messages',             [OfferController::class, 'storeMessage'])->name('messages.store');
         Route::post('/{offer}/save-as-template',     [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
-    });
-
-    Route::prefix('offer-templates')->name('offer-templates.')->group(function () {
-        Route::get('/',                                [OfferTemplateController::class, 'index'])->name('index');
-        Route::post('/',                               [OfferTemplateController::class, 'store'])->name('store');
-        Route::post('/{type}/versions',                [OfferTemplateController::class, 'storeVersion'])->name('versions.store');
-        Route::post('/versions/{version}/set-current', [OfferTemplateController::class, 'setAsCurrent'])->name('versions.set-current');
-        Route::get('/versions/{version}/preview',      [OfferTemplateController::class, 'previewVersion'])->name('versions.preview');
-        Route::delete('/{type}',                       [OfferTemplateController::class, 'destroy'])->name('destroy');
+        Route::post('/{offer}/clone',                [OfferController::class, 'clone'])->name('clone');
     });
 
     Route::prefix('settings')->name('settings.')->group(function () {

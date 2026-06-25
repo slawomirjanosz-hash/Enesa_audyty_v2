@@ -38,5 +38,7 @@ return [
     'google' => [
         'maps_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
-
+'anthropic' => [
+    'key' => env('ANTHROPIC_API_KEY'),
+],
 ];

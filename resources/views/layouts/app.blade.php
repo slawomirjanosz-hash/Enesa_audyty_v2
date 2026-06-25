@@ -331,7 +331,9 @@
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
-                    <li><a href="{{ url('/offer-templates') }}" class="nav-link">Szablony</a></li>
+                    <li><a href="{{ url('/offers?template=1') }}" class="nav-link {{ request()->is('offers*') && request('template') ? 'active' : '' }}">
+                        <i class="ti ti-bookmark"></i> Szablony ofert
+                    </a></li>
                     <li><a href="{{ url('/offers') }}" class="nav-link">Oferty</a></li>
                 </ul>
             </li>
