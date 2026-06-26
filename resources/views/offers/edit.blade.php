@@ -277,9 +277,9 @@
             <span class="toggle-label">Ceny jedn. w PDF</span>
         </label>
         @if(!$offer->is_template)
-            <a id="pdf-link" href="{{ route('offers.pdf', $offer) }}?unit={{ $offer->show_unit_prices ? '1' : '0' }}" target="_blank" class="btn-secondary">
-                <i class="ti ti-file-type-pdf"></i> PDF
-            </a>
+            <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-secondary">
+                <i class="ti ti-file-type-pdf"></i> Podgląd PDF
+            </button>
         @endif
         <button type="button" class="btn-secondary" onclick="document.getElementById('modal-clone').style.display='flex'">
             <i class="ti ti-copy"></i> Zapisz jako...

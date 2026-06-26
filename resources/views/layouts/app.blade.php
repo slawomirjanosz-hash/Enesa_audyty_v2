@@ -334,7 +334,9 @@
                     <li><a href="{{ url('/offers?template=1') }}" class="nav-link {{ request()->is('offers*') && request('template') ? 'active' : '' }}">
                         <i class="ti ti-bookmark"></i> Szablony ofert
                     </a></li>
-                    <li><a href="{{ url('/offers') }}" class="nav-link">Oferty</a></li>
+                    <li><a href="{{ url('/offers') }}" class="nav-link {{ request()->is('offers*') && !request('template') ? 'active' : '' }}">
+    <i class="ti ti-file-invoice"></i> Oferty
+</a></li>
                 </ul>
             </li>
 
@@ -432,8 +434,6 @@
     });
 </script>
 
-@stack('scripts')
-
 {{-- =============== SESSION EXPIRED MODAL =============== --}}
 <div id="session-expired-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:36px;max-width:420px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.22);">
@@ -502,5 +502,98 @@
         });
     });
 </script>
+
+<div id="pdf-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#2d2d2d;border-radius:12px;width:100%;max-width:900px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#1e1e1e;flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <i class="ti ti-file-type-pdf" style="font-size:18px;color:#ef4444;"></i>
+                <span id="pdf-modal-title" style="font-size:13px;font-weight:600;color:#fff;font-family:'Manrope',sans-serif;">Podgląd oferty</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a id="pdf-modal-download" href="#"
+                   style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;text-decoration:none;">
+                    <i class="ti ti-download"></i> Pobierz PDF
+                </a>
+                <button onclick="closePdfModal()" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:7px;color:#fff;cursor:pointer;font-size:18px;">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+        </div>
+        <div id="pdf-canvas-container" style="background:#525659;flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:20px;gap:12px;min-height:500px;">
+            <div id="pdf-modal-loading" style="color:#ccc;font-family:'Manrope',sans-serif;font-size:14px;display:flex;align-items:center;gap:8px;padding:40px;">
+                <i class="ti ti-loader-2" style="font-size:22px;"></i> Ładowanie PDF...
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+var _pdfDownloadUrl = null;
+
+if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+}
+
+async function openPdfModal(url, title) {
+    var modal = document.getElementById('pdf-modal');
+    var container = document.getElementById('pdf-canvas-container');
+    var titleEl = document.getElementById('pdf-modal-title');
+    var downloadEl = document.getElementById('pdf-modal-download');
+
+    _pdfDownloadUrl = url;
+    titleEl.textContent = title || 'Podgląd oferty';
+    downloadEl.href = url;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    container.innerHTML = '<div style="color:#ccc;font-family:\'Manrope\',sans-serif;font-size:14px;display:flex;align-items:center;gap:8px;padding:40px;"><i class="ti ti-loader-2" style="font-size:22px;"></i> Ładowanie PDF...</div>';
+
+    try {
+        var response = await fetch(url, { credentials: 'same-origin' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        var arrayBuffer = await response.arrayBuffer();
+
+        var pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        container.innerHTML = '';
+
+        for (var i = 1; i <= pdfDoc.numPages; i++) {
+            var page = await pdfDoc.getPage(i);
+            var viewport = page.getViewport({ scale: 1.5 });
+
+            var canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            canvas.style.cssText = 'display:block;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
+            container.appendChild(canvas);
+
+            await page.render({
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport
+            }).promise;
+        }
+    } catch(err) {
+        container.innerHTML = '<div style="color:#f87171;font-family:\'Manrope\',sans-serif;font-size:13px;text-align:center;padding:40px;">Błąd ładowania podglądu.<br><small>' + err.message + '</small></div>';
+    }
+}
+
+function closePdfModal() {
+    document.getElementById('pdf-modal').style.display = 'none';
+    document.getElementById('pdf-canvas-container').innerHTML = '';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('pdf-modal').addEventListener('click', function(e) {
+        if (e.target === this) closePdfModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closePdfModal();
+    });
+});
+</script>
+
+@stack('scripts')
 </body>
 </html>

@@ -221,6 +221,9 @@
         </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
+        <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->fullNumber() }}')" class="btn-primary">
+            <i class="ti ti-file-type-pdf"></i> Podgląd PDF
+        </button>
         <a href="{{ route('offers.edit', $offer) }}" class="btn-primary">
             <i class="ti ti-pencil"></i> Edytuj
         </a>

@@ -103,6 +103,8 @@
     .btn-icon-view:hover  { background: #d4edde; }
     .btn-icon-edit  { color: #1D4ED8; background: #EFF6FF; }
     .btn-icon-edit:hover  { background: #DBEAFE; }
+    .btn-icon-pdf   { color: #B91C1C; background: #FEF2F2; }
+    .btn-icon-pdf:hover   { background: #FEE2E2; }
 
     /* ── Card wrapper ───────────────────────────────── */
     .table-card {
@@ -338,6 +340,9 @@
                             <a href="{{ route('offers.show', $offer) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
+                            <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-icon btn-icon-pdf" title="Podgląd PDF" style="margin-left:4px;border:none;cursor:pointer;">
+                                <i class="ti ti-file-type-pdf"></i>
+                            </button>
                             <a href="{{ route('offers.edit', $offer) }}" class="btn-icon btn-icon-edit" title="Edytuj" style="margin-left:4px;">
                                 <i class="ti ti-pencil"></i>
                             </a>
