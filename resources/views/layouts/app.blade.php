@@ -318,10 +318,9 @@
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
-                    <li><a href="{{ url('/companies') }}" class="nav-link">Firmy</a></li>
-                    <li><a href="{{ url('/contacts') }}" class="nav-link">Kontakty</a></li>
-                    <li><a href="{{ url('/pipeline') }}" class="nav-link">Lejek sprzedaży</a></li>
-                    <li><a href="{{ url('/tasks') }}" class="nav-link">Zadania</a></li>
+                    <li><a href="{{ route('crm.index') }}" class="nav-link">Firmy</a></li>
+                    <li><a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="nav-link">Lejek sprzedaży</a></li>
+                    <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link">Zadania</a></li>
                 </ul>
             </li>
 

@@ -17,6 +17,9 @@ class Company extends Model
         'city',
         'status',
         'archived_at',
+        'show_in_dashboard',
+        'notes',
+        'source',
     ];
 
     protected $casts = [
@@ -52,6 +55,16 @@ class Company extends Model
             ->withPivot('is_admin', 'deleted_at')
             ->withTimestamps()
             ->wherePivotNotNull('deleted_at');
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function crmOpportunities(): HasMany
+    {
+        return $this->hasMany(CrmOpportunity::class);
     }
 
     public function scopeActive($query)

@@ -12,6 +12,7 @@ use App\Http\Controllers\Client\UserController as ClientUserController;
 use App\Http\Controllers\ClientZoneController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings;
@@ -23,6 +24,10 @@ Route::get('/', function () {
 
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
+
+Route::get('/companies', function () {
+    return redirect()->route('crm.index');
+});
 
 Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])->name('companies.fetchGus');
 Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
@@ -120,6 +125,20 @@ Route::middleware('auth')->group(function () {
         Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
         Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
     });
+});
+
+Route::prefix('crm')->name('crm.')->middleware(['auth'])->group(function () {
+    Route::get('/', [CrmController::class, 'index'])->name('index');
+    Route::patch('/companies/{company}/dashboard', [CrmController::class, 'toggleDashboard'])->name('companies.dashboard');
+    Route::patch('/companies/{company}/archive', [CrmController::class, 'archiveCompany'])->name('companies.archive');
+    Route::patch('/companies/{company}/restore', [CrmController::class, 'restoreCompany'])->name('companies.restore');
+    Route::delete('/companies/{company}', [CrmController::class, 'destroyCompany'])->name('companies.destroy');
+    Route::post('/opportunities', [CrmController::class, 'storeOpportunity'])->name('opportunities.store');
+    Route::patch('/opportunities/{opportunity}/stage', [CrmController::class, 'updateOpportunityStage'])->name('opportunities.stage');
+    Route::post('/tasks', [CrmController::class, 'storeTask'])->name('tasks.store');
+    Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
+    Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
 });
 
 // Session check endpoint (used by session-expired modal JS)
