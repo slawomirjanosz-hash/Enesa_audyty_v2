@@ -1071,7 +1071,7 @@ function collectRow(tr) {
         cena_jedn:  price,
         z_narzutem: qty * price * (1 + pct / 100),
     };
-}}
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     // Load main section rows
