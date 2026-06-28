@@ -66,7 +66,15 @@ class ClientZoneController extends Controller
     {
         $company = Company::findOrFail(session('client_zone_company_id'));
 
-        return view('client-zone.request-offer', compact('company'));
+        $templates = \App\Models\OfferFormTemplate::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        $myRequests = \App\Models\OfferRequest::where('company_id', $company->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('client-zone.request-offer', compact('company', 'templates', 'myRequests'));
     }
 
     public function documents(): View
