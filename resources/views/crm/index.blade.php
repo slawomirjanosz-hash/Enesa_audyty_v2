@@ -794,8 +794,6 @@
     </div>
 </div>
 
-@endsection
-
 <div id="modal-edit-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
@@ -888,6 +886,8 @@
         </form>
     </div>
 </div>
+
+@endsection
 
 @push('scripts')
 <script>
