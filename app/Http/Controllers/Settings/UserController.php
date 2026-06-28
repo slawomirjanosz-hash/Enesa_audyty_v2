@@ -23,10 +23,20 @@ class UserController extends Controller
 
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
-        // All users in system (for email verification)
+        // All users in system (for email verification) - exclude client users with no active companies
         $allUsers = User::with('roles')
             ->orderBy('email')
-            ->get();
+            ->get()
+            ->filter(function ($user) {
+                // Keep all non-client users
+                $role = $user->roles->first()?->name;
+                if (!in_array($role, ['client_admin', 'client_user'])) {
+                    return true;
+                }
+                // For client users, only keep if they have at least 1 active company
+                return $user->companies()->exists();
+            })
+            ->values();
 
         $archivedStaff = User::onlyTrashed()
             ->with('roles')
