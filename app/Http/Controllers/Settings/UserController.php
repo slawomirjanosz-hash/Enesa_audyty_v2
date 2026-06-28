@@ -141,9 +141,26 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $currentUser = auth()->user();
+        $targetRole = $user->roles->first()?->name ?? 'none';
+
+        // Superadmin protection - cannot be deleted
         if ($user->hasRole('superadmin')) {
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie można usunąć superadmina.');
+        }
+
+        // Permission hierarchy check
+        if ($currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+            // Admin cannot delete other admins or superadmins
+            if (in_array($targetRole, ['admin', 'superadmin'])) {
+                return redirect()->route('settings.users.index')
+                    ->with('error', 'Nie masz uprawnień do usunięcia tego użytkownika.');
+            }
+        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+            // Only admin and superadmin can delete users
+            return redirect()->route('settings.users.index')
+                ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
         if ($user->companies()->exists()) {
@@ -166,9 +183,26 @@ class UserController extends Controller
 
     public function forceDestroy(User $user)
     {
+        $currentUser = auth()->user();
+        $targetRole = $user->roles->first()?->name ?? 'none';
+
+        // Superadmin protection
         if ($user->hasRole('superadmin')) {
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie można usunąć superadmina.');
+        }
+
+        // Permission hierarchy check
+        if ($currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+            // Admin cannot delete other admins
+            if (in_array($targetRole, ['admin', 'superadmin'])) {
+                return redirect()->route('settings.users.index')
+                    ->with('error', 'Nie masz uprawnień do usunięcia tego użytkownika.');
+            }
+        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+            // Only admin and superadmin can delete users
+            return redirect()->route('settings.users.index')
+                ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
         if ($user->companies()->exists()) {
