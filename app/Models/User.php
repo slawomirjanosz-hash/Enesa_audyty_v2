@@ -58,7 +58,15 @@ class User extends Authenticatable
     public function companies(): BelongsToMany
     {
         return $this->belongsToMany(Company::class)
-            ->withPivot('is_admin')
+            ->withPivot('is_admin', 'deleted_at')
+            ->wherePivotNull('deleted_at')
+            ->withTimestamps();
+    }
+
+    public function allCompanies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class)
+            ->withPivot('is_admin', 'deleted_at')
             ->withTimestamps();
     }
 

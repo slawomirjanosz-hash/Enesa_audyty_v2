@@ -556,7 +556,7 @@
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $user->roles->first()?->name ?? '—';
                         $isActive = !$user->deleted_at;
-                        $companyNames = $user->companies->pluck('name')->implode(', ') ?: '—';
+                        $companyNames = $user->companies()->pluck('name')->implode(', ') ?: '—';
                         $currentUser = auth()->user();
                         $canDelete = false;
                         
