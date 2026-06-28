@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('offers')->name('offers.')->group(function () {
+        Route::get('/template/{offer}',               [OfferController::class, 'getTemplate'])->name('template');
         Route::post('/ai-assist',                     [OfferController::class, 'aiAssist'])->name('ai-assist');
         Route::get('/',                              [OfferController::class, 'index'])->name('index');
         Route::get('/create',                        [OfferController::class, 'create'])->name('create');

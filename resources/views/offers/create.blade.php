@@ -127,8 +127,69 @@
     $validUntilDefault = now()->addDays(30)->format('Y-m-d');
 @endphp
 
+{{-- ═══ MODAL WYBORU SZABLONU ═══ --}}
+@if($offerRequest)
+<div id="modal-template-pick" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;padding:32px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+        <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#1A4D3A;margin-bottom:6px;display:flex;align-items:center;gap:10px;">
+            <i class="ti ti-file-plus"></i> Nowa oferta
+        </div>
+        <div style="font-size:13px;color:#888;margin-bottom:24px;font-family:'Manrope',sans-serif;">
+            Zapytanie: <strong style="color:#1A1A1A;">{{ $offerRequest->offerFormTemplate?->name ?? 'Ogólne' }}</strong>
+            od <strong style="color:#1A1A1A;">{{ $offerRequest->company?->name }}</strong>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:#555;font-family:'Manrope',sans-serif;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">
+            Wybierz sposób tworzenia oferty:
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+
+            {{-- Opcja: pusta oferta --}}
+            <button onclick="pickTemplate(null)" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='#1A4D3A'" onmouseout="this.style.borderColor='#E5E1D8'">
+                <div style="width:44px;height:44px;background:#F0F7F3;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="ti ti-file" style="font-size:22px;color:#1A4D3A;"></i>
+                </div>
+                <div>
+                    <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:3px;">Pusta oferta</div>
+                    <div style="font-size:12px;color:#888;">Zacznij od zera — wypełnij wszystko ręcznie</div>
+                </div>
+            </button>
+
+            {{-- Opcja: wybierz szablon --}}
+            @if($offerTemplates->isNotEmpty())
+                @foreach($offerTemplates as $tpl)
+                <button onclick="pickTemplate({{ $tpl->id }})" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='#1A4D3A'" onmouseout="this.style.borderColor='#E5E1D8'">
+                    <div style="width:44px;height:44px;background:#FFFBEB;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="ti ti-template" style="font-size:22px;color:#92400E;"></i>
+                    </div>
+                    <div>
+                        <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:3px;">{{ $tpl->offer_title ?? 'Szablon #'.$tpl->id }}</div>
+                        <div style="font-size:12px;color:#888;">Użyj tego szablonu jako bazy oferty</div>
+                    </div>
+                </button>
+                @endforeach
+            @else
+                <div style="background:#FAFAF6;border:1px dashed #D0CCC0;border-radius:10px;padding:16px 20px;font-size:13px;color:#888;font-family:'Manrope',sans-serif;text-align:center;">
+                    <i class="ti ti-template" style="font-size:20px;display:block;margin-bottom:6px;color:#D0CCC0;"></i>
+                    Brak szablonów — idź do Strefa Ofert → Szablony ofert aby je dodać
+                </div>
+            @endif
+        </div>
+
+        <button onclick="closeTemplatePick()" style="width:100%;background:none;border:1px solid #D0CCC0;border-radius:8px;padding:10px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;color:#888;cursor:pointer;">
+            Anuluj — wróć do karty firmy
+        </button>
+    </div>
+</div>
+@endif
+
 {{-- ═══ EDITOR TOPBAR ═══ --}}
+@if($offerRequest)
+<div id="editor-topbar" style="display:none;">
+@else
 <div id="editor-topbar">
+@endif
     <div class="etb-left">
         <a href="{{ route('offers.index') }}" class="btn-secondary" style="padding:6px 10px;">
             <i class="ti ti-arrow-left"></i>
@@ -166,7 +227,7 @@
 @endif
 
 {{-- ═══ FORM ═══ --}}
-<form id="offer-form" method="POST" action="{{ route('offers.store') }}">
+<form id="offer-form" method="POST" action="{{ route('offers.store') }}" @if($offerRequest) style="display:none;" @endif>
 @csrf
 
 {{-- ── SEKCJA A: NAGŁÓWEK DOKUMENTU ─────────── --}}
@@ -891,6 +952,57 @@ async function aiAssist(field, mode, quillInstance) {
     } finally {
         if (statusEl) statusEl.style.display = 'none';
     }
+}
+
+function pickTemplate(templateId) {
+    document.getElementById('modal-template-pick')?.remove();
+    document.getElementById('editor-topbar').style.display = 'flex';
+    document.getElementById('offer-form').style.display = 'block';
+
+    if (templateId) {
+        fetch('/offers/template/' + templateId, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.offer_title) {
+                document.querySelector('input[name="offer_title"]').value = data.offer_title;
+            }
+            if (data.content_subject && quillSubject) {
+                quillSubject.clipboard.dangerouslyPasteHTML(data.content_subject);
+            }
+            if (data.content_scope && quillScope) {
+                quillScope.clipboard.dangerouslyPasteHTML(data.content_scope);
+            }
+            if (data.content_deadline && quillDeadline) {
+                quillDeadline.clipboard.dangerouslyPasteHTML(data.content_deadline);
+            }
+            if (data.content_payment && quillPayment) {
+                quillPayment.clipboard.dangerouslyPasteHTML(data.content_payment);
+            }
+            if (data.price_sections) {
+                const sections = typeof data.price_sections === 'string'
+                    ? JSON.parse(data.price_sections)
+                    : data.price_sections;
+                document.getElementById('tbody-main').innerHTML = '';
+                document.getElementById('dynamic-sections').innerHTML = '';
+                sections.forEach((sec, i) => {
+                    if (i === 0) {
+                        document.getElementById('section-main-name').value = sec.name || 'Wycena ogólna';
+                        (sec.rows || []).forEach(r => addRow('tbody-main', r));
+                    } else {
+                        addSection(sec);
+                    }
+                });
+            }
+            recalcAll();
+        })
+        .catch(() => console.warn('Nie udało się załadować szablonu'));
+    }
+}
+
+function closeTemplatePick() {
+    window.history.back();
 }
 </script>
 @endpush

@@ -57,6 +57,10 @@ class OfferController extends Controller
             ? OfferRequest::find($request->offer_request_id)
             : null;
 
+        $offerTemplates = Offer::where('is_template', true)
+            ->orderBy('offer_title')
+            ->get();
+
         $suggestedNumber = Offer::generateNumber();
         $numberExists    = Offer::where('offer_number', $suggestedNumber)->exists();
 
@@ -66,9 +70,22 @@ class OfferController extends Controller
             'users',
             'offerTemplateTypes',
             'offerRequest',
+            'offerTemplates',
             'suggestedNumber',
             'numberExists',
         ));
+    }
+
+    public function getTemplate(Offer $offer): JsonResponse
+    {
+        return response()->json([
+            'offer_title'      => $offer->offer_title,
+            'content_subject'  => $offer->content_subject,
+            'content_scope'    => $offer->content_scope,
+            'content_deadline' => $offer->content_deadline,
+            'content_payment'  => $offer->content_payment,
+            'price_sections'   => $offer->price_sections,
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
