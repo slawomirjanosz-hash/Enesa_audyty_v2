@@ -1,0 +1,5 @@
+[phases.install]
+cmds = [
+  'install-php-extensions gd',
+  'composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd'
+]
