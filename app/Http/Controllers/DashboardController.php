@@ -24,10 +24,11 @@ class DashboardController extends Controller
                                         ->count(),
         ];
 
-        $newRequests = OfferRequest::with(['company', 'offerFormTemplate', 'createdBy'])
+        $newRequests = OfferRequest::with(['offerFormTemplate', 'createdBy'])
             ->where('status', 'nowe')
             ->orderByDesc('created_at')
-            ->get();
+            ->get()
+            ->groupBy('company_id');
 
         return view('dashboard', compact('companies', 'stats', 'newRequests'));
     }

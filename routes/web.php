@@ -13,6 +13,7 @@ use App\Http\Controllers\ClientZoneController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
+use App\Http\Controllers\OfferRequestController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -84,6 +85,11 @@ Route::middleware('auth')->group(function () {
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->name('audit-types.show');
     Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->name('audit-types.versions.store');
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
+
+    Route::prefix('offer-requests')->name('offer-requests.')->group(function () {
+        Route::get('/{offerRequest}',               [OfferRequestController::class, 'show'])->name('show');
+        Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
+    });
 
     Route::prefix('offer-forms')->name('offer-forms.')->group(function () {
         Route::get('/',                              [OfferFormTemplateController::class, 'index'])->name('index');

@@ -455,41 +455,6 @@
 
 </div>
 
-{{-- ══════ NOWE ZAPYTANIA ══════ --}}
-@if($newRequests->isNotEmpty())
-<div style="margin-bottom:20px;">
-    <div style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:#1A1A1A;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-        <i class="ti ti-inbox" style="color:#1A4D3A;"></i>
-        Nowe zapytania od klientów
-        <span style="background:#DC2626;color:#fff;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:700;">{{ $newRequests->count() }}</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
-        @foreach($newRequests as $req)
-        <div style="background:#fff;border:1px solid #E5E1D8;border-left:4px solid #1A4D3A;border-radius:0 10px 10px 0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
-            <div style="display:flex;flex-direction:column;gap:3px;">
-                <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A1A1A;">
-                    {{ $req->company?->name ?? '—' }}
-                </div>
-                <div style="font-size:12px;color:#888;">
-                    {{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}
-                    · {{ $req->created_at->diffForHumans() }}
-                    @if($req->createdBy)
-                        · przez {{ $req->createdBy->name }}
-                    @endif
-                </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-                <span style="background:#DBEAFE;color:#1D4ED8;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">Nowe</span>
-                <a href="#" style="display:inline-flex;align-items:center;gap:5px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:7px;padding:6px 12px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;text-decoration:none;">
-                    <i class="ti ti-eye"></i> Otwórz
-                </a>
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div>
-@endif
-
 {{-- ══════ SIATKA KLIENTÓW ══════ --}}
 <div class="clients-grid" id="clientsGrid">
     @forelse($companies as $company)
@@ -547,6 +512,28 @@
                     <span>0 wiadomości</span>
                 </div>
             </div>
+
+            {{-- Nowe zapytania w kafelku --}}
+            @php $tileRequests = $newRequests->get($company->id, collect()); @endphp
+            @if($tileRequests->isNotEmpty())
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #F0EDE6;">
+                <div style="font-size:11px;font-weight:700;color:#1A4D3A;margin-bottom:6px;display:flex;align-items:center;gap:5px;">
+                    <i class="ti ti-inbox" style="font-size:12px;"></i> Nowe zapytania
+                    <span style="background:#DC2626;color:#fff;border-radius:999px;padding:0 6px;font-size:10px;font-weight:700;">{{ $tileRequests->count() }}</span>
+                </div>
+                @foreach($tileRequests as $req)
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;{{ !$loop->last ? 'border-bottom:1px solid #F7F5F0;' : '' }}">
+                    <div>
+                        <div style="font-size:12px;font-weight:600;color:#1A1A1A;">{{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}</div>
+                        <div style="font-size:11px;color:#888;">{{ $req->created_at->diffForHumans() }}</div>
+                    </div>
+                    <a href="{{ route('offer-requests.show', $req) }}" style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;text-decoration:none;flex-shrink:0;">
+                        <i class="ti ti-eye" style="font-size:11px;"></i> Otwórz
+                    </a>
+                </div>
+                @endforeach
+            </div>
+            @endif
 
             {{-- Przyciski --}}
             <div class="tile-footer">
