@@ -869,21 +869,22 @@
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
 
-            <div style="display:flex;gap:10px;justify-content:space-between;">
-                <form method="POST" id="form-delete-opp" style="margin:0;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Usunąć tę szansę?')"
-                        style="display:inline-flex;align-items:center;gap:6px;background:#FEE2E2;color:#B91C1C;border:none;border-radius:7px;padding:8px 14px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
-                        <i class="ti ti-trash"></i> Usuń
-                    </button>
-                </form>
-                <div style="display:flex;gap:8px;">
-                    <button type="button" onclick="closeEditOpp()" class="btn-secondary">Anuluj</button>
-                    <button type="submit" class="btn-primary"><i class="ti ti-device-floppy"></i> Zapisz</button>
-                </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+                <button type="button" onclick="closeEditOpp()" class="btn-secondary">Anuluj</button>
+                <button type="submit" class="btn-primary"><i class="ti ti-device-floppy"></i> Zapisz</button>
             </div>
         </form>
+
+        <div style="margin-top:16px;">
+            <form method="POST" id="form-delete-opp" style="margin:0;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" onclick="return confirm('Usunąć tę szansę?')"
+                    style="display:inline-flex;align-items:center;gap:6px;background:#FEE2E2;color:#B91C1C;border:none;border-radius:7px;padding:8px 14px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+                    <i class="ti ti-trash"></i> Usuń szansę
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
