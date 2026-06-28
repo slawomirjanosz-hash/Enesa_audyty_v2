@@ -146,4 +146,27 @@ class CrmController extends Controller
         $task->update($data);
         return response()->json(['status' => $task->status]);
     }
+
+    public function updateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse
+    {
+        $data = $request->validate([
+            'title'               => ['required', 'string', 'max:255'],
+            'description'         => ['nullable', 'string'],
+            'company_id'          => ['nullable', 'exists:companies,id'],
+            'assigned_to'         => ['nullable', 'exists:users,id'],
+            'stage'               => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
+            'value'               => ['nullable', 'numeric', 'min:0'],
+            'expected_close_date' => ['nullable', 'date'],
+            'notes'               => ['nullable', 'string'],
+        ]);
+
+        $opportunity->update($data);
+        return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');
+    }
+
+    public function destroyOpportunity(CrmOpportunity $opportunity): RedirectResponse
+    {
+        $opportunity->delete();
+        return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została usunięta.');
+    }
 }

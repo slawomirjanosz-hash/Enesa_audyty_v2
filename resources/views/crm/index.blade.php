@@ -302,7 +302,8 @@
             @if($stageOpps->count() > 0)
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 @foreach($stageOpps as $opp)
-                <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};">
+                <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};cursor:pointer;"
+                    onclick="openEditOpp({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}')">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     <div class="opp-card-sub">{{ $opp->company?->name ?? 'bez klienta' }}</div>
                     @if($opp->value)
@@ -380,7 +381,8 @@
                     <td style="font-size:12px;color:#555;">{{ $opp->assignedUser?->name ?? '—' }}</td>
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
-                            <button class="btn-icon btn-icon-edit" title="Edytuj"><i class="ti ti-pencil"></i></button>
+                            <button class="btn-icon btn-icon-edit" title="Edytuj"
+                                onclick="openEditOpp({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}')"><i class="ti ti-pencil"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -794,6 +796,99 @@
 
 @endsection
 
+<div id="modal-edit-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:#1A4D3A;margin-right:8px;"></i>Edytuj szansę</div>
+            <button onclick="closeEditOpp()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
+        </div>
+        <form id="form-edit-opp" method="POST">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" id="edit-opp-id" name="opp_id">
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Tytuł *</label>
+                <input type="text" id="edit-opp-title" name="title" required
+                    style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
+                    <select id="edit-opp-company" name="company_id"
+                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                        <option value="">— bez klienta —</option>
+                        @foreach($companies as $c)
+                        <option value="{{ $c->id }}">{{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Etap</label>
+                    <select id="edit-opp-stage" name="stage"
+                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                        @foreach($stageMeta as $key => $meta)
+                        <option value="{{ $key }}">{{ $meta['label'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Wartość (zł)</label>
+                    <input type="number" id="edit-opp-value" name="value" min="0" step="0.01"
+                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Termin zamknięcia</label>
+                    <input type="date" id="edit-opp-date" name="expected_close_date"
+                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;">
+                </div>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Przypisany</label>
+                <select id="edit-opp-assigned" name="assigned_to"
+                    style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                    <option value="">— brak —</option>
+                    @foreach($users as $u)
+                    <option value="{{ $u->id }}">{{ $u->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Opis</label>
+                <textarea id="edit-opp-description" name="description" rows="2"
+                    style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Notatki</label>
+                <textarea id="edit-opp-notes" name="notes" rows="2"
+                    style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:space-between;">
+                <form method="POST" id="form-delete-opp" style="margin:0;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('Usunąć tę szansę?')"
+                        style="display:inline-flex;align-items:center;gap:6px;background:#FEE2E2;color:#B91C1C;border:none;border-radius:7px;padding:8px 14px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+                        <i class="ti ti-trash"></i> Usuń
+                    </button>
+                </form>
+                <div style="display:flex;gap:8px;">
+                    <button type="button" onclick="closeEditOpp()" class="btn-secondary">Anuluj</button>
+                    <button type="submit" class="btn-primary"><i class="ti ti-device-floppy"></i> Zapisz</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 function toggleDashboard(companyId, btn) {
@@ -874,5 +969,32 @@ function openEditTask(id, title, description, assignedTo, companyId, dueDate, pr
     sel('edit-task-status', status);
     document.getElementById('modal-task-edit').style.display = 'flex';
 }
+
+function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes) {
+    document.getElementById('edit-opp-id').value = id;
+    document.getElementById('edit-opp-title').value = title;
+    document.getElementById('edit-opp-company').value = companyId || '';
+    document.getElementById('edit-opp-stage').value = stage;
+    document.getElementById('edit-opp-value').value = value || '';
+    document.getElementById('edit-opp-date').value = closeDate || '';
+    document.getElementById('edit-opp-assigned').value = assignedTo || '';
+    document.getElementById('edit-opp-description').value = description || '';
+    document.getElementById('edit-opp-notes').value = notes || '';
+
+    document.getElementById('form-edit-opp').action = '/crm/opportunities/' + id;
+    document.getElementById('form-delete-opp').action = '/crm/opportunities/' + id;
+
+    document.getElementById('modal-edit-opp').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeEditOpp() {
+    document.getElementById('modal-edit-opp').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+document.getElementById('modal-edit-opp').addEventListener('click', function(e) {
+    if (e.target === this) closeEditOpp();
+});
 </script>
 @endpush

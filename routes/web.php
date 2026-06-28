@@ -135,6 +135,8 @@ Route::prefix('crm')->name('crm.')->middleware(['auth'])->group(function () {
     Route::delete('/companies/{company}', [CrmController::class, 'destroyCompany'])->name('companies.destroy');
     Route::post('/opportunities', [CrmController::class, 'storeOpportunity'])->name('opportunities.store');
     Route::patch('/opportunities/{opportunity}/stage', [CrmController::class, 'updateOpportunityStage'])->name('opportunities.stage');
+    Route::patch('/opportunities/{opportunity}', [CrmController::class, 'updateOpportunity'])->name('opportunities.update');
+    Route::delete('/opportunities/{opportunity}', [CrmController::class, 'destroyOpportunity'])->name('opportunities.destroy');
     Route::post('/tasks', [CrmController::class, 'storeTask'])->name('tasks.store');
     Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
