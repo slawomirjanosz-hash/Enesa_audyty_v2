@@ -281,9 +281,9 @@ function addField(data) {
                     ${getFieldsForCondition(id)}
                 </select>
                 <span style="font-size:12px;color:#555;">równa się</span>
-                <select class="condition-select condition-value-select" id="cond-val-${id}">
-                    <option value="">— wybierz wartość —</option>
-                </select>
+                <div id="cond-val-wrap-${id}" style="display:contents;">
+                    <input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">
+                </div>
                 <button type="button" onclick="removeCondition('${id}')" style="background:none;border:none;color:#DC2626;cursor:pointer;font-size:12px;">Usuń regułę</button>
             </div>
         </div>
@@ -347,15 +347,34 @@ function removeCondition(id) {
     const panel = document.getElementById('condition-' + id);
     if (panel) panel.style.display = 'none';
     const fieldSel = document.getElementById('cond-field-' + id);
-    const valSel   = document.getElementById('cond-val-' + id);
     if (fieldSel) fieldSel.value = '';
-    if (valSel)   valSel.innerHTML = '<option value="">— wybierz wartość —</option>';
+    const wrap = document.getElementById('cond-val-wrap-' + id);
+    if (wrap) wrap.innerHTML = `<input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">`;
 }
 
 function onCondFieldChange(id) {
     const fieldKey = document.getElementById('cond-field-' + id)?.value;
-    const valSel   = document.getElementById('cond-val-' + id);
-    if (valSel) valSel.innerHTML = getOptionsForField(fieldKey);
+    const wrap = document.getElementById('cond-val-wrap-' + id);
+    if (!wrap) return;
+
+    if (!fieldKey) {
+        wrap.innerHTML = `<input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">`;
+        return;
+    }
+
+    let refType = 'text';
+    document.querySelectorAll('#fields-container .field-row').forEach(row => {
+        if (row.dataset.key === fieldKey) {
+            refType = row.querySelector('.field-type-select')?.value || 'text';
+        }
+    });
+
+    if (refType === 'select') {
+        const opts = getOptionsForField(fieldKey);
+        wrap.innerHTML = `<select class="condition-select" id="cond-val-${id}">${opts}</select>`;
+    } else {
+        wrap.innerHTML = `<input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">`;
+    }
 }
 
 function showConditionPanel(id, fieldKey, fieldVal) {
@@ -366,11 +385,11 @@ function showConditionPanel(id, fieldKey, fieldVal) {
         if (fieldSel) {
             fieldSel.innerHTML = getFieldsForCondition(id);
             fieldSel.value = fieldKey;
-            const valSel = document.getElementById('cond-val-' + id);
-            if (valSel) {
-                valSel.innerHTML = getOptionsForField(fieldKey);
-                valSel.value = fieldVal;
-            }
+            onCondFieldChange(id);
+            setTimeout(() => {
+                const valEl = document.getElementById('cond-val-' + id);
+                if (valEl) valEl.value = fieldVal;
+            }, 10);
         }
     }, 50);
 }
@@ -381,14 +400,18 @@ function refreshConditionDropdowns() {
         const panel = document.getElementById('condition-' + id);
         if (!panel || panel.style.display === 'none') return;
         const fieldSel = document.getElementById('cond-field-' + id);
-        const valSel   = document.getElementById('cond-val-' + id);
         const curField = fieldSel?.value;
-        const curVal   = valSel?.value;
-        if (fieldSel) fieldSel.innerHTML = getFieldsForCondition(id);
-        if (fieldSel && curField) fieldSel.value = curField;
-        if (valSel && curField) {
-            valSel.innerHTML = getOptionsForField(curField);
-            if (curVal) valSel.value = curVal;
+        const curVal   = document.getElementById('cond-val-' + id)?.value;
+        if (fieldSel) {
+            fieldSel.innerHTML = getFieldsForCondition(id);
+            if (curField) fieldSel.value = curField;
+        }
+        if (curField) {
+            onCondFieldChange(id);
+            if (curVal) {
+                const valEl = document.getElementById('cond-val-' + id);
+                if (valEl) valEl.value = curVal;
+            }
         }
     });
 }
