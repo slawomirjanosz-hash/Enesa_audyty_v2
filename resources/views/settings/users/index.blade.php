@@ -322,8 +322,9 @@
             <thead>
                 <tr>
                     <th style="cursor:pointer;" onclick="sortArchivedTable(0, 'archivedStaffTable')">Użytkownik <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortArchivedTable(1, 'archivedStaffTable')">Rola <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortArchivedTable(2, 'archivedStaffTable')">Data usunięcia <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(1, 'archivedStaffTable')">Email <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(2, 'archivedStaffTable')">Rola <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(3, 'archivedStaffTable')">Data usunięcia <span class="sort-indicator"></span></th>
                     <th style="text-align:right;width:200px;">Akcja</th>
                 </tr>
             </thead>
@@ -334,16 +335,16 @@
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $archivedUser->roles->first()?->name ?? '—';
                     @endphp
-                    <tr data-sort-name="{{ strtolower($archivedUser->name) }}" data-sort-role="{{ $role }}" data-sort-date="{{ $archivedUser->deleted_at->format('Y-m-d') }}">
+                    <tr data-sort-name="{{ strtolower($archivedUser->name) }}" data-sort-email="{{ strtolower($archivedUser->email) }}" data-sort-role="{{ $role }}" data-sort-date="{{ $archivedUser->deleted_at->format('Y-m-d') }}">
                         <td>
                             <div class="user-cell">
                                 <div class="avatar" style="background:#9e9e9e;">{{ $initials }}</div>
                                 <div>
                                     <div class="user-name" style="color:#888;">{{ $archivedUser->name }}</div>
-                                    <div class="user-email">{{ $archivedUser->email }}</div>
                                 </div>
                             </div>
                         </td>
+                        <td style="font-family:monospace;font-size:12px;">{{ $archivedUser->email }}</td>
                         <td>
                             <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
                         </td>
@@ -397,9 +398,10 @@
             <thead>
                 <tr>
                     <th style="cursor:pointer;" onclick="sortArchivedTable(0, 'archivedClientsTable')">Użytkownik <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortArchivedTable(1, 'archivedClientsTable')">Rola <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortArchivedTable(2, 'archivedClientsTable')">Firma <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortArchivedTable(3, 'archivedClientsTable')">Data usunięcia <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(1, 'archivedClientsTable')">Email <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(2, 'archivedClientsTable')">Rola <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(3, 'archivedClientsTable')">Firma <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(4, 'archivedClientsTable')">Data usunięcia <span class="sort-indicator"></span></th>
                     <th style="text-align:right;width:200px;">Akcja</th>
                 </tr>
             </thead>
@@ -411,7 +413,7 @@
                         $role = $archivedClient->roles->first()?->name ?? '—';
                         $companyNames = $archivedClient->companies->pluck('name')->implode(', ') ?: 'Brak danych';
                     @endphp
-                    <tr data-sort-name="{{ strtolower($archivedClient->name) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-date="{{ $archivedClient->deleted_at->format('Y-m-d') }}">
+                    <tr data-sort-name="{{ strtolower($archivedClient->name) }}" data-sort-email="{{ strtolower($archivedClient->email) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-date="{{ $archivedClient->deleted_at->format('Y-m-d') }}">
                         <td>
                             <div class="user-cell">
                                 <div class="avatar" style="background:#6b7a70;">{{ $initials }}</div>
@@ -420,6 +422,7 @@
                                 </div>
                             </div>
                         </td>
+                        <td style="font-family:monospace;font-size:12px;">{{ $archivedClient->email }}</td>
                         <td>
                             <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
                         </td>
@@ -954,9 +957,9 @@
         
         let sortKeys;
         if (tableId === 'archivedStaffTable') {
-            sortKeys = ['data-sort-name', 'data-sort-role', 'data-sort-date'];
+            sortKeys = ['data-sort-name', 'data-sort-email', 'data-sort-role', 'data-sort-date'];
         } else if (tableId === 'archivedClientsTable') {
-            sortKeys = ['data-sort-name', 'data-sort-role', 'data-sort-company', 'data-sort-date'];
+            sortKeys = ['data-sort-name', 'data-sort-email', 'data-sort-role', 'data-sort-company', 'data-sort-date'];
         } else {
             return;
         }
