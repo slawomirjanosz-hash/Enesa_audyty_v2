@@ -210,7 +210,7 @@ function escHtml(str) {
 
 function buildTypeOptions(selected) {
     return FIELD_TYPES.map(t =>
-        `<option value="${t.value}" ${t.value === selected ? 'selected' : '}>${t.label}</option>`
+        `<option value="${t.value}" ${t.value === selected ? 'selected' : ''}>${t.label}</option>`
     ).join('');
 }
 
