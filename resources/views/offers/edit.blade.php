@@ -452,7 +452,7 @@
             <div>
                 <label class="field-label">Stawka za km</label>
                 <div class="input-group">
-                    <input type="number" id="d_stawka_km" class="field-input" min="0" step="0.01"
+                    <input type="number" id="d_stawka_km" class="field-input" min="0" step="1"
                            value="{{ old('stawka_km', $d?->stawka_km ?? 1.10) }}" oninput="calcDeleg()">
                     <span class="input-suffix">zł/km</span>
                 </div>
@@ -497,7 +497,7 @@
                 <div>
                     <label class="field-label">Stawka za dobę hotelową</label>
                     <div class="input-group">
-                        <input type="number" id="d_stawka_noc" class="field-input" min="0" step="0.01"
+                        <input type="number" id="d_stawka_noc" class="field-input" min="0" step="1"
                                value="{{ old('stawka_noc', $d?->stawka_noc ?? 300) }}" oninput="calcDeleg()">
                         <span class="input-suffix">zł</span>
                     </div>
@@ -559,12 +559,12 @@
         <div class="markup-bar" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
             <span style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#92400E;">Narzut globalny:</span>
             <div class="input-group" style="width:120px;">
-                <input type="number" id="markup-pct" class="field-input" min="0" max="999" step="0.1"
+                <input type="number" id="markup-pct" class="field-input" min="0" max="999" step="1"
                        value="0" oninput="syncMarkup('pct')" style="border-radius:7px 0 0 7px;">
                 <span class="input-suffix">%</span>
             </div>
             <div class="input-group" style="width:140px;">
-                <input type="number" id="markup-zl" class="field-input" min="0" step="0.01"
+                <input type="number" id="markup-zl" class="field-input" min="0" step="1"
                        value="0" oninput="syncMarkup('zl')" style="border-radius:7px 0 0 7px;">
                 <span class="input-suffix">zł</span>
             </div>
@@ -727,8 +727,8 @@ function addRow(tbodyId, rowData) {
         <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
         <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
         <td style="width:90px;"><select class="cell-input unit-select" style="width:90px;" data-prev="${escHtml(d.jedn)}" onchange="handleUnitChange(this)">${buildUnitOptions(d.jedn)}</select></td>
-        <td style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="0.01" style="width:68px;" oninput="recalcRow('${rid}')"></td>
-        <td style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="0.01" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
+        <td style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="1" style="width:68px;" oninput="recalcRow('${rid}')"></td>
+        <td style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="1" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
         <td style="text-align:right;white-space:nowrap;padding-right:8px;"><span class="net-display">${makePl(d.ilosc * d.cena_jedn)}</span>&nbsp;<span style="font-size:11px;color:#999;">zł</span></td>
         <td style="text-align:right;white-space:nowrap;padding-right:10px;font-weight:600;"><span class="markup-display">${makePl(d.z_narzutem)}</span>&nbsp;<span style="font-size:11px;color:#999;white-space:nowrap;">zł</span><input type="hidden" class="markup-input" value="${d.z_narzutem}"></td>
         <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
@@ -995,7 +995,8 @@ function recalcRow(id) {
     const qty   = parseFloat(tr.querySelector('.qty-input')?.value)   || 0;
     const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
     const net   = qty * price;
-    const zn    = net * (1 + (globalMarkup.pct || 0) / 100);
+    const pct   = parseFloat(document.getElementById('markup-pct').value) || 0;
+    const zn    = net * (1 + pct / 100);
     const netDisplay = tr.querySelector('.net-display');
     if (netDisplay) netDisplay.textContent = makePl(net);
     const markupInput = tr.querySelector('.markup-input');
@@ -1007,14 +1008,19 @@ function recalcRow(id) {
 
 /* ── recalcAll override: uses .markup-input ── */
 function recalcAll() {
-    let sumServices = 0;
+    let sumNetto = 0;
+    const pct    = parseFloat(document.getElementById('markup-pct').value) || 0;
     document.querySelectorAll('.price-table tbody tr').forEach(tr => {
-        sumServices += parseFloat(tr.querySelector('.markup-input')?.value) || 0;
+        const qty   = parseFloat(tr.querySelector('.qty-input')?.value)   || 0;
+        const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
+        const net   = qty * price;
+        sumNetto += net;
     });
     const delegCost = parsePl(document.getElementById('deleg-result').textContent);
-    const markupZl  = parseFloat(document.getElementById('markup-zl').value) || 0;
-    const total     = sumServices + delegCost + markupZl;
-    document.getElementById('sum-services').textContent = makePl(sumServices) + ' z\u0142';
+    const markupZl  = sumNetto * (pct / 100);
+    document.getElementById('markup-zl').value = markupZl.toFixed(2);
+    const total     = sumNetto + delegCost + markupZl;
+    document.getElementById('sum-services').textContent = makePl(sumNetto) + ' z\u0142';
     document.getElementById('sum-deleg').textContent    = makePl(delegCost) + ' z\u0142';
     document.getElementById('sum-markup').textContent   = makePl(markupZl) + ' z\u0142';
     document.getElementById('sum-total').textContent    = makePl(total) + ' z\u0142';
@@ -1023,21 +1029,19 @@ function recalcAll() {
 
 /* ── syncMarkup override: uses .qty-input / .price-input ── */
 function syncMarkup(source) {
-    let sumBase = 0;
+    let sumNetto = 0;
     document.querySelectorAll('.price-table tbody tr').forEach(tr => {
-        sumBase += (parseFloat(tr.querySelector('.qty-input')?.value)   || 0)
-                 * (parseFloat(tr.querySelector('.price-input')?.value) || 0);
+        sumNetto += (parseFloat(tr.querySelector('.qty-input')?.value)   || 0)
+                  * (parseFloat(tr.querySelector('.price-input')?.value) || 0);
     });
     if (source === 'pct') {
         const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
         globalMarkup.pct = pct;
-        const zl = sumBase * (pct / 100);
-        globalMarkup.zl = zl;
-        document.getElementById('markup-zl').value = zl.toFixed(2);
+        globalMarkup.zl  = sumNetto * (pct / 100);
     } else {
         const zl = parseFloat(document.getElementById('markup-zl').value) || 0;
-        globalMarkup.zl = zl;
-        const pct = sumBase > 0 ? (zl / sumBase) * 100 : 0;
+        globalMarkup.zl  = zl;
+        const pct = sumNetto > 0 ? (zl / sumNetto) * 100 : 0;
         globalMarkup.pct = pct;
         document.getElementById('markup-pct').value = pct.toFixed(2);
     }
@@ -1045,7 +1049,8 @@ function syncMarkup(source) {
     document.querySelectorAll('.price-table tbody tr[data-rid]').forEach(tr => {
         const qty   = parseFloat(tr.querySelector('.qty-input')?.value)   || 0;
         const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
-        const zn    = qty * price * (1 + (globalMarkup.pct || 0) / 100);
+        const pct   = parseFloat(document.getElementById('markup-pct').value) || 0;
+        const zn    = qty * price * (1 + pct / 100);
         const markupInput = tr.querySelector('.markup-input');
         if (markupInput) markupInput.value = zn.toFixed(2);
         const markupDisplay = tr.querySelector('.markup-display');
@@ -1056,14 +1061,17 @@ function syncMarkup(source) {
 
 /* ── collectRow override: uses new selectors ── */
 function collectRow(tr) {
+    const qty   = parseFloat(tr.querySelector('.qty-input')?.value)    || 0;
+    const price = parseFloat(tr.querySelector('.price-input')?.value)  || 0;
+    const pct   = parseFloat(document.getElementById('markup-pct').value) || 0;
     return {
-        opis:       tr.querySelector('input[type="text"]')?.value    || '',
+        opis:       tr.querySelector('input[type="text"]')?.value || '',
         jedn:       tr.querySelector('.unit-select')?.value           || 'szt',
-        ilosc:      parseFloat(tr.querySelector('.qty-input')?.value)    || 0,
-        cena_jedn:  parseFloat(tr.querySelector('.price-input')?.value)  || 0,
-        z_narzutem: parseFloat(tr.querySelector('.markup-input')?.value) || 0,
+        ilosc:      qty,
+        cena_jedn:  price,
+        z_narzutem: qty * price * (1 + pct / 100),
     };
-}
+}}
 
 document.addEventListener('DOMContentLoaded', function () {
     // Load main section rows
