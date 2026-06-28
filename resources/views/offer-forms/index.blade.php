@@ -429,7 +429,7 @@ function collectFields() {
 function openModal() {
     editingId = null;
     document.getElementById('modal-title-text').textContent = 'Nowy formularz';
-    document.getElementById('form-template').action = '{{ route(""offer-forms.store"") }}';
+    document.getElementById('form-template').action = '{{ route("offer-forms.store") }}';
     document.getElementById('method-field').innerHTML = '';
     document.getElementById('f-name').value = '';
     document.getElementById('f-desc').value = '';
