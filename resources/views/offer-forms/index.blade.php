@@ -188,7 +188,7 @@
 
             <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
                 <button type="button" class="btn-secondary" onclick="closeModal()">Anuluj</button>
-                <button type="submit" class="btn-primary" onclick="serializeFields()">
+                <button type="submit" id="btn-submit-create" class="btn-primary">
                     <i class="ti ti-check"></i> Zapisz formularz
                 </button>
             </div>
@@ -242,7 +242,7 @@
 
             <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Anuluj</button>
-                <button type="submit" class="btn-primary" onclick="serializeFields('edit')">
+                <button type="submit" id="btn-submit-edit" class="btn-primary">
                     <i class="ti ti-check"></i> Zapisz zmiany
                 </button>
             </div>
@@ -400,6 +400,40 @@ function toggleActive(id, btn) {
     })
     .catch(() => alert('Błąd — nie udało się zmienić statusu.'));
 }
+
+// ── Anti double-submit ──────────────────────────────────
+function lockSubmit(btn, label) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .7s linear infinite;"></i> ' + label;
+    btn.style.opacity = '0.7';
+}
+
+document.getElementById('form-create').addEventListener('submit', function(e) {
+    serializeFields('new');
+    const fields = JSON.parse(document.getElementById('form-fields-json').value || '[]');
+    if (!fields.length) {
+        e.preventDefault();
+        alert('Dodaj co najmniej jedno pole formularza.');
+        return;
+    }
+    lockSubmit(document.getElementById('btn-submit-create'), 'Zapisywanie...');
+});
+
+document.getElementById('form-edit').addEventListener('submit', function(e) {
+    serializeFields('edit');
+    const fields = JSON.parse(document.getElementById('edit-fields-json').value || '[]');
+    if (!fields.length) {
+        e.preventDefault();
+        alert('Dodaj co najmniej jedno pole formularza.');
+        return;
+    }
+    lockSubmit(document.getElementById('btn-submit-edit'), 'Zapisywanie...');
+});
+
+// CSS spin keyframe
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }';
+document.head.appendChild(style);
 
 // ── Close on Escape / backdrop click ─────────────────────
 document.addEventListener('keydown', e => {
