@@ -753,6 +753,7 @@
                     <label class="mf-label" for="add_role">Rola *</label>
                     <select id="add_role" name="role" class="mf-select mf-input" required style="{{ $errors->has('role') ? 'border-color:#ef4444;' : '' }}">
                         <option value="">— wybierz —</option>
+                        <option value="superadmin"    {{ old('role') === 'superadmin'    ? 'selected' : '' }}>Super Admin</option>
                         <option value="admin"          {{ old('role') === 'admin'          ? 'selected' : '' }}>Administrator</option>
                         <option value="auditor_senior" {{ old('role') === 'auditor_senior' ? 'selected' : '' }}>Audytor Senior</option>
                         <option value="auditor"        {{ old('role') === 'auditor'        ? 'selected' : '' }}>Audytor</option>

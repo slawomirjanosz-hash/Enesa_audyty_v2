@@ -71,7 +71,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor'])],
+            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor', 'superadmin'])],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
             'name.required'  => 'Imię i nazwisko jest wymagane.',
@@ -93,6 +93,14 @@ class UserController extends Controller
 
         Role::findOrCreate($data['role']);
         $user->assignRole($data['role']);
+
+        // Auto-assign ENESA company for admin/auditor_senior/superadmin roles
+        if (in_array($data['role'], ['admin', 'auditor_senior', 'superadmin'])) {
+            $enesaCompany = Company::active()->first();
+            if ($enesaCompany) {
+                $user->companies()->attach($enesaCompany->id);
+            }
+        }
 
         return redirect()->route('settings.users.index')
             ->with('success', 'Użytkownik został utworzony.');
