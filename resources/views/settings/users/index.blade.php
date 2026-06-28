@@ -178,9 +178,9 @@
     .pagination-wrap { padding: 16px 24px; border-top: 1px solid #F0EDE6; }
 
     /* ── Modal ────────────────────────────── */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9000; align-items: center; justify-content: center; }
-    .modal-overlay.open { display: flex; }
-    .modal-box { background: #fff; border-radius: 14px; padding: 36px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9000; align-items: center; justify-content: center; pointer-events: none; }
+    .modal-overlay.open { display: flex; pointer-events: auto; }
+    .modal-box { background: #fff; border-radius: 14px; padding: 36px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; position: relative; pointer-events: auto; }
     .modal-close-btn { position: absolute; top: 14px; right: 18px; background: none; border: none; font-size: 20px; color: #aaa; cursor: pointer; line-height: 1; }
     .modal-close-btn:hover { color: #333; }
     .modal-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: #1A4D3A; margin-bottom: 6px; }
@@ -197,8 +197,8 @@
     .btn-modal-submit:hover { background: #153d2e; }
 
     /* ── Edit modal ───────────────────────── */
-    .modal-overlay-edit { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9000; align-items: center; justify-content: center; }
-    .modal-overlay-edit.open { display: flex; }
+    .modal-overlay-edit { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9000; align-items: center; justify-content: center; pointer-events: none; }
+    .modal-overlay-edit.open { display: flex; pointer-events: auto; }
 </style>
 @endpush
 
