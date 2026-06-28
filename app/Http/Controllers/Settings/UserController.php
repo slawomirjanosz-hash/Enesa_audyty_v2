@@ -45,8 +45,9 @@ class UserController extends Controller
             ->orderByDesc('created_at')
             ->get();
         $companies = Company::active()->orderBy('name')->get();
+        $archivedCompanies = Company::archived()->orderBy('name')->get();
 
-        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'allUsers'));
+        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers'));
     }
 
     public function create()

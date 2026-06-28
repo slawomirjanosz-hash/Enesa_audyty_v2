@@ -51,7 +51,7 @@ if ($authUser->hasRole('superadmin')) {
         ];
 
         $archivedCompanies = Company::with(['offers', 'audits'])
-            ->where('status', 'archived')
+            ->whereNotNull('archived_at')
             ->orderBy('name')
             ->get();
 

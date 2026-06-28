@@ -216,8 +216,14 @@
     <a href="#" class="settings-tab">
         <i class="ti ti-shield-lock" style="margin-right:6px;"></i>Role
     </a>
+    <a href="{{ route('settings.users.index') }}?tab=firmy" class="settings-tab {{ request('tab') === 'firmy' ? 'active' : '' }}">
+        <i class="ti ti-archive" style="margin-right:6px;"></i>Zarchiwizowane firmy
+        @if($archivedCompanies->count() > 0)
+            <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedCompanies->count() }}</span>
+        @endif
+    </a>
     <a href="{{ route('settings.users.index') }}?tab=archiwum" class="settings-tab {{ request('tab') === 'archiwum' ? 'active' : '' }}">
-        <i class="ti ti-archive" style="margin-right:6px;"></i>Archiwum
+        <i class="ti ti-archive" style="margin-right:6px;"></i>Archiwum użytkowników
         @if(($archivedStaff->count() + $archivedClients->count()) > 0)
             <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedStaff->count() + $archivedClients->count() }}</span>
         @endif
@@ -236,7 +242,58 @@
     </div>
 @endif
 
-@if(request('tab') === 'archiwum')
+@if(request('tab') === 'firmy')
+{{-- ══════ ZAKŁADKA: ZARCHIWIZOWANE FIRMY ══════ --}}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-header-title">Zarchiwizowane firmy</div>
+            <div class="card-header-sub">{{ $archivedCompanies->count() }} zarchiwizowanych firm</div>
+        </div>
+    </div>
+
+    @if($archivedCompanies->isEmpty())
+        <div style="text-align:center;padding:40px;color:#888;">
+            <i class="ti ti-archive" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+            Brak zarchiwizowanych firm
+        </div>
+    @else
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Nazwa firmy</th>
+                    <th>NIP</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($archivedCompanies as $company)
+                <tr>
+                    <td>
+                        <strong>{{ $company->name }}</strong>
+                    </td>
+                    <td style="font-family:monospace;font-size:12px;">{{ $company->nip ?? '—' }}</td>
+                    <td style="color:#888;font-size:13px;">
+                        @if($company->status === 'archived')
+                            <span style="color:#d97706;">Zarchiwizowana</span>
+                        @else
+                            <span style="color:#999;">{{ $company->status ?? '—' }}</span>
+                        @endif
+                    </td>
+                    <td style="text-align:right;">
+                        <a href="{{ route('companies.show', $company) }}" class="btn-action" title="Podgląd" style="display:inline-flex;">
+                            <i class="ti ti-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
+
+@elseif(request('tab') === 'archiwum')
 {{-- ══════ ZAKŁADKA: ARCHIWUM ══════ --}}
 <div class="card">
     <div class="card-header">
