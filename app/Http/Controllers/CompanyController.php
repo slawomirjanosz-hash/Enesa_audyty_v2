@@ -210,7 +210,21 @@ class CompanyController extends Controller
 
     public function destroy(Company $company)
     {
-        // Always archive company instead of hard-deleting
+        // If company is already archived, hard-delete it
+        if ($company->archived_at) {
+            // First, hard-delete the pivot records
+            DB::table('company_user')
+                ->where('company_id', $company->id)
+                ->delete();
+            
+            // Then hard-delete the company
+            $company->delete();
+            
+            return redirect()->route('settings.users.index', ['tab' => 'firmy'])
+                ->with('success', 'Zarchiwizowana firma została trwale usunięta.');
+        }
+        
+        // Otherwise, archive the company
         $company->update([
             'archived_at' => now(),
             'status' => 'archived',

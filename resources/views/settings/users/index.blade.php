@@ -285,6 +285,15 @@
                         <a href="{{ route('companies.show', $company) }}" class="btn-action" title="Podgląd" style="display:inline-flex;">
                             <i class="ti ti-eye"></i>
                         </a>
+                        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin'))
+                        <form method="POST" action="{{ route('companies.destroy', $company) }}" onsubmit="return confirm('Czy na pewno chcesz trwale usunąć firmę {{ e($company->name) }}? Tej operacji nie można cofnąć.');" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-action danger" title="Usuń na stałe" style="display:inline-flex;">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
