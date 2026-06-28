@@ -733,6 +733,8 @@
                         <option value="admin">Administrator</option>
                         <option value="auditor_senior">Audytor Senior</option>
                         <option value="auditor">Audytor</option>
+                        <option value="client_admin">Klient - Admin</option>
+                        <option value="client_user">Klient - User</option>
                     </select>
                 </div>
             </div>
