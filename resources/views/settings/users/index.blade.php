@@ -620,18 +620,29 @@
     <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAddModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-user-plus" style="margin-right:8px;"></i>Nowy użytkownik</div>
-        <div class="modal-subtitle">Wypełnij dane — użytkownik otrzyma email z dostępem.</div>
+        <div class="modal-subtitle">Wypełnij dane — hasło zostanie wygenerowane automatycznie.</div>
+
+        @if($errors->any())
+        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#b91c1c;">
+            <strong>Błędy formularza:</strong>
+            <ul style="margin:4px 0 0 16px;padding:0;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
 
         <form method="POST" action="{{ route('settings.users.store') }}">
             @csrf
             <div class="mf-row">
                 <div class="mf-group">
-                    <label class="mf-label" for="add_name">Imię i nazwisko</label>
-                    <input id="add_name" type="text" name="name" class="mf-input" placeholder="Jan Kowalski" required value="{{ old('name') }}">
+                    <label class="mf-label" for="add_name">Imię i nazwisko *</label>
+                    <input id="add_name" type="text" name="name" class="mf-input" placeholder="Jan Kowalski" required value="{{ old('name') }}" style="{{ $errors->has('name') ? 'border-color:#ef4444;' : '' }}">
                 </div>
                 <div class="mf-group">
-                    <label class="mf-label" for="add_email">Adres e-mail</label>
-                    <input id="add_email" type="email" name="email" class="mf-input" placeholder="jan@enesa.pl" required value="{{ old('email') }}">
+                    <label class="mf-label" for="add_email">Adres e-mail *</label>
+                    <input id="add_email" type="email" name="email" class="mf-input" placeholder="jan@enesa.pl" required value="{{ old('email') }}" style="{{ $errors->has('email') ? 'border-color:#ef4444;' : '' }}">
                 </div>
             </div>
             <div class="mf-row">
@@ -640,8 +651,8 @@
                     <input id="add_phone" type="tel" name="phone" class="mf-input" placeholder="+48 000 000 000" value="{{ old('phone') }}">
                 </div>
                 <div class="mf-group">
-                    <label class="mf-label" for="add_role">Rola</label>
-                    <select id="add_role" name="role" class="mf-select mf-input" required>
+                    <label class="mf-label" for="add_role">Rola *</label>
+                    <select id="add_role" name="role" class="mf-select mf-input" required style="{{ $errors->has('role') ? 'border-color:#ef4444;' : '' }}">
                         <option value="">— wybierz —</option>
                         <option value="admin"          {{ old('role') === 'admin'          ? 'selected' : '' }}>Administrator</option>
                         <option value="auditor_senior" {{ old('role') === 'auditor_senior' ? 'selected' : '' }}>Audytor Senior</option>
@@ -655,7 +666,7 @@
             </div>
 
             <button type="submit" class="btn-modal-submit">
-                <i class="ti ti-send" style="margin-right:6px;"></i>Utwórz i wyślij email
+                <i class="ti ti-user-plus" style="margin-right:6px;"></i>Utwórz użytkownika
             </button>
         </form>
     </div>
@@ -719,6 +730,11 @@
         document.getElementById('addModal').classList.remove('open');
         document.body.style.overflow = '';
     }
+
+    // Auto-open add modal if there were validation errors
+    @if($errors->any() && old('name') !== null)
+    document.addEventListener('DOMContentLoaded', function() { openAddModal(); });
+    @endif
 
     function openEditModal(id, name, email, phone, role) {
         const form = document.getElementById('editForm');
