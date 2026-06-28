@@ -211,14 +211,26 @@ class CompanyController extends Controller
     public function destroy(Company $company)
     {
         if ($company->audits()->exists() || $company->offers()->exists()) {
+            // Archive company and soft-delete all user assignments
             $company->update([
                 'archived_at' => now(),
                 'status' => 'archived',
             ]);
+            
+            // Soft-delete all user-company relationships (mark pivot as deleted)
+            DB::table('company_user')
+                ->where('company_id', $company->id)
+                ->whereNull('deleted_at')
+                ->update(['deleted_at' => now()]);
 
             return redirect()->route('dashboard')
                 ->with('success', 'Firma została zarchiwizowana.');
         }
+
+        // Soft-delete all user-company relationships before hard delete
+        DB::table('company_user')
+            ->where('company_id', $company->id)
+            ->delete();
 
         $company->delete();
 

@@ -163,9 +163,10 @@ class UserController extends Controller
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
-        if ($user->companies()->exists()) {
+        // Check if user is assigned to an active (non-archived) company
+        if ($user->companies()->where('archived_at', null)->exists()) {
             return redirect()->route('settings.users.index')
-                ->with('error', 'Nie można trwale usunąć użytkownika przypisanego do firmy.');
+                ->with('error', 'Nie można usunąć użytkownika przypisanego do aktywnej firmy.');
         }
 
         $user->delete();
@@ -205,9 +206,10 @@ class UserController extends Controller
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
-        if ($user->companies()->exists()) {
+        // Check if user is assigned to an active (non-archived) company
+        if ($user->companies()->where('archived_at', null)->exists()) {
             return redirect()->route('settings.users.index')
-                ->with('error', 'Nie można usunąć użytkownika przypisanego do firmy.');
+                ->with('error', 'Nie można trwale usunąć użytkownika przypisanego do aktywnej firmy.');
         }
 
         $name = $user->name;
