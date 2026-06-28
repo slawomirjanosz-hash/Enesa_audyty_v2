@@ -544,7 +544,8 @@
                     <th style="cursor:pointer;" onclick="sortTable(0)">Użytkownik <span class="sort-indicator"></span></th>
                     <th style="cursor:pointer;" onclick="sortTable(1)">Email <span class="sort-indicator"></span></th>
                     <th style="cursor:pointer;" onclick="sortTable(2)">Role <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortTable(3)">Status <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortTable(3)">Firma <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortTable(4)">Status <span class="sort-indicator"></span></th>
                     <th style="text-align:right;">Akcje</th>
                 </tr>
             </thead>
@@ -555,6 +556,7 @@
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $user->roles->first()?->name ?? '—';
                         $isActive = !$user->deleted_at;
+                        $companyNames = $user->companies->pluck('name')->implode(', ') ?: '—';
                         $currentUser = auth()->user();
                         $canDelete = false;
                         
@@ -564,7 +566,7 @@
                             $canDelete = !in_array($role, ['superadmin', 'admin']) && $isActive;
                         }
                     @endphp
-                    <tr data-user-id="{{ $user->id }}" data-sort-name="{{ strtolower($user->name) }}" data-sort-email="{{ strtolower($user->email) }}" data-sort-role="{{ $role }}" data-sort-status="{{ $isActive ? 'aktywny' : 'usuniety' }}">
+                    <tr data-user-id="{{ $user->id }}" data-sort-name="{{ strtolower($user->name) }}" data-sort-email="{{ strtolower($user->email) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-status="{{ $isActive ? 'aktywny' : 'usuniety' }}">
                         <td>
                             <div class="user-cell">
                                 <div class="avatar" style="background:{{ $isActive ? '#1A4D3A' : '#999' }};">{{ $initials }}</div>
@@ -591,6 +593,7 @@
                                 <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
                             @endif
                         </td>
+                        <td style="color:#888;font-size:13px;">{{ $companyNames }}</td>
                         <td>
                             @if($isActive)
                                 <span style="color:#166534;font-size:13px;">✓ Aktywny</span>
@@ -838,7 +841,7 @@
         const tbody = table.querySelector('tbody');
         const rows = Array.from(tbody.querySelectorAll('tr[data-user-id]'));
         
-        const sortKeys = ['data-sort-name', 'data-sort-email', 'data-sort-role', 'data-sort-status'];
+        const sortKeys = ['data-sort-name', 'data-sort-email', 'data-sort-role', 'data-sort-company', 'data-sort-status'];
         const key = sortKeys[columnIndex];
         
         // Toggle sort direction if same column clicked

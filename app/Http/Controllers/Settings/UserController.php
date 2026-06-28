@@ -24,7 +24,7 @@ class UserController extends Controller
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
         // All users in system (for email verification)
-        $allUsers = User::with('roles')
+        $allUsers = User::with('roles', 'companies')
             ->orderBy('email')
             ->get();
 
