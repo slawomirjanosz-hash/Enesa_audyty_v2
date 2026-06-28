@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Audit;
 use App\Models\Company;
 use App\Models\Offer;
+use App\Models\OfferRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,11 @@ class DashboardController extends Controller
                                         ->count(),
         ];
 
-        return view('dashboard', compact('companies', 'stats'));
+        $newRequests = OfferRequest::with(['company', 'offerFormTemplate', 'createdBy'])
+            ->where('status', 'nowe')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('dashboard', compact('companies', 'stats', 'newRequests'));
     }
 }
