@@ -1,5 +1,7 @@
+[variables]
+COMPOSER_IGNORE_PLATFORM_REQS = "1"
+
 [phases.install]
 cmds = [
-  'install-php-extensions gd',
   'composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd'
 ]
