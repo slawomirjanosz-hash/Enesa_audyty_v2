@@ -252,12 +252,12 @@
             Brak zarchiwizowanych pracowników ENESA
         </div>
     @else
-        <table class="users-table">
+        <table class="users-table" id="archivedStaffTable">
             <thead>
                 <tr>
-                    <th>Użytkownik</th>
-                    <th>Rola</th>
-                    <th>Data usunięcia</th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(0, 'archivedStaffTable')">Użytkownik <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(1, 'archivedStaffTable')">Rola <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(2, 'archivedStaffTable')">Data usunięcia <span class="sort-indicator"></span></th>
                     <th style="text-align:right;width:200px;">Akcja</th>
                 </tr>
             </thead>
@@ -268,7 +268,7 @@
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
                         $role = $archivedUser->roles->first()?->name ?? '—';
                     @endphp
-                    <tr>
+                    <tr data-sort-name="{{ strtolower($archivedUser->name) }}" data-sort-role="{{ $role }}" data-sort-date="{{ $archivedUser->deleted_at->format('Y-m-d') }}">
                         <td>
                             <div class="user-cell">
                                 <div class="avatar" style="background:#9e9e9e;">{{ $initials }}</div>
@@ -295,6 +295,7 @@
                                 <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $archivedUser->id }}" data-user-name="{{ e($archivedUser->name) }}" data-user-email="{{ e($archivedUser->email) }}" onclick="openAssignToCompanyModal(this)">
                                     <i class="ti ti-building-plus"></i> Przypisz
                                 </button>
+                                @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin'))
                                 <form method="POST" action="{{ route('settings.users.forceDestroy', $archivedUser) }}" onsubmit="return confirm('Czy na pewno chcesz trwale usunąć użytkownika {{ e($archivedUser->name) }}? Tej operacji nie można cofnąć.');" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -302,6 +303,7 @@
                                         <i class="ti ti-trash"></i> Usuń
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -325,13 +327,13 @@
             Brak zarchiwizowanych klientów
         </div>
     @else
-        <table class="users-table">
+        <table class="users-table" id="archivedClientsTable">
             <thead>
                 <tr>
-                    <th>Użytkownik</th>
-                    <th>Rola</th>
-                    <th>Firma</th>
-                    <th>Data usunięcia</th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(0, 'archivedClientsTable')">Użytkownik <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(1, 'archivedClientsTable')">Rola <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(2, 'archivedClientsTable')">Firma <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortArchivedTable(3, 'archivedClientsTable')">Data usunięcia <span class="sort-indicator"></span></th>
                     <th style="text-align:right;width:200px;">Akcja</th>
                 </tr>
             </thead>
@@ -343,7 +345,7 @@
                         $role = $archivedClient->roles->first()?->name ?? '—';
                         $companyNames = $archivedClient->companies->pluck('name')->implode(', ') ?: 'Brak danych';
                     @endphp
-                    <tr>
+                    <tr data-sort-name="{{ strtolower($archivedClient->name) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-date="{{ $archivedClient->deleted_at->format('Y-m-d') }}">
                         <td>
                             <div class="user-cell">
                                 <div class="avatar" style="background:#6b7a70;">{{ $initials }}</div>
@@ -368,6 +370,15 @@
                                 <button type="button" class="btn-action success" title="Przypisz do firmy" style="width:auto;padding:6px 12px;gap:6px;background:#1B5E20;color:#fff;border-color:#1B5E20;" data-user-id="{{ $archivedClient->id }}" data-user-name="{{ e($archivedClient->name) }}" data-user-email="{{ e($archivedClient->email) }}" onclick="openAssignToCompanyModal(this)">
                                     <i class="ti ti-building-plus"></i> Przypisz
                                 </button>
+                                @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin'))
+                                <form method="POST" action="{{ route('settings.users.forceDestroy', $archivedClient) }}" onsubmit="return confirm('Czy na pewno chcesz trwale usunąć użytkownika {{ e($archivedClient->name) }}? Tej operacji nie można cofnąć.');" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action danger" title="Usuń na stałe" style="width:auto;padding:6px 12px;gap:6px;background:#C62828;color:#fff;border-color:#C62828;">
+                                        <i class="ti ti-trash"></i> Usuń
+                                    </button>
+                                </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -853,6 +864,62 @@
             const indicator = th.querySelector('.sort-indicator');
             if (indicator) {
                 indicator.textContent = sortState.ascending ? ' ▲' : ' ▼';
+            }
+        }
+        
+        // Reorder rows in tbody
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // Sorting for archived tables
+    let archivedSortState = {};
+    
+    function sortArchivedTable(columnIndex, tableId) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        let sortKeys;
+        if (tableId === 'archivedStaffTable') {
+            sortKeys = ['data-sort-name', 'data-sort-role', 'data-sort-date'];
+        } else if (tableId === 'archivedClientsTable') {
+            sortKeys = ['data-sort-name', 'data-sort-role', 'data-sort-company', 'data-sort-date'];
+        } else {
+            return;
+        }
+        
+        const key = sortKeys[columnIndex];
+        
+        // Initialize or toggle sort state for this table
+        if (!archivedSortState[tableId]) {
+            archivedSortState[tableId] = { column: null, ascending: true };
+        }
+        
+        const state = archivedSortState[tableId];
+        if (state.column === columnIndex) {
+            state.ascending = !state.ascending;
+        } else {
+            state.column = columnIndex;
+            state.ascending = true;
+        }
+        
+        // Sort rows
+        rows.sort((a, b) => {
+            const aVal = a.getAttribute(key) || '';
+            const bVal = b.getAttribute(key) || '';
+            const comparison = aVal.localeCompare(bVal, 'pl');
+            return state.ascending ? comparison : -comparison;
+        });
+        
+        // Update sort indicators
+        table.querySelectorAll('th .sort-indicator').forEach(el => el.textContent = '');
+        const th = table.querySelectorAll('th')[columnIndex];
+        if (th) {
+            const indicator = th.querySelector('.sort-indicator');
+            if (indicator) {
+                indicator.textContent = state.ascending ? ' ▲' : ' ▼';
             }
         }
         
