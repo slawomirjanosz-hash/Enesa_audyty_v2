@@ -439,7 +439,7 @@ document.head.appendChild(style);
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeModal(); closeEditModal(); }
 });
-['modal-form', 'modal-edit'].forEach(id => {
+['modal-edit'].forEach(id => {
     document.getElementById(id).addEventListener('click', function(e) {
         if (e.target === this) {
             this.classList.remove('open');
