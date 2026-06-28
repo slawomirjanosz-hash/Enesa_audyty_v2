@@ -584,9 +584,12 @@ function closePdfModal() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('pdf-modal').addEventListener('click', function(e) {
-        if (e.target === this) closePdfModal();
-    });
+    const pdfModalEl = document.getElementById('pdf-modal');
+    if (pdfModalEl) {
+        pdfModalEl.addEventListener('click', function(e) {
+            if (e.target === this) closePdfModal();
+        });
+    }
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closePdfModal();
     });
