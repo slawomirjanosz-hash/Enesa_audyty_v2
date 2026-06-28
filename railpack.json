@@ -4,6 +4,11 @@
       "cmds": [
         "install-php-extensions gd ctype curl dom exif fileinfo filter hash mbstring openssl pcre pdo session tokenizer xml pdo_mysql zip"
       ]
+    },
+    "install:composer": {
+      "cmds": [
+        "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd"
+      ]
     }
   }
 }
