@@ -518,7 +518,7 @@
     @endif
 </div>
 
-<div id="assignCompanyModal" class="modal-overlay" onclick="closeModalOutside(event,'assignCompanyModal')">
+<div id="assignCompanyModal" class="modal-overlay">
     <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAssignCompanyModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-building-plus" style="margin-right:8px;"></i>Przypisz do firmy</div>
@@ -546,7 +546,7 @@
 </div>
 
 {{-- Modal: przypisz archiwalnego użytkownika do firmy --}}
-<div id="assignToCompanyModal" class="modal-overlay" onclick="closeModalOutside(event,'assignToCompanyModal')">
+<div id="assignToCompanyModal" class="modal-overlay">
     <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAssignToCompanyModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-building-plus" style="margin-right:8px;"></i>Przypisz użytkownika do firmy</div>
@@ -715,7 +715,7 @@
 @endif
 
 {{-- ══════ MODAL DODAJ ══════ --}}
-<div id="addModal" class="modal-overlay" onclick="closeModalOutside(event,'addModal')">
+<div id="addModal" class="modal-overlay">
     <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAddModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-user-plus" style="margin-right:8px;"></i>Nowy użytkownik</div>
@@ -773,7 +773,7 @@
 </div>
 
 {{-- ══════ MODAL EDYTUJ ══════ --}}
-<div id="editModal" class="modal-overlay-edit" onclick="closeModalOutside(event,'editModal')">
+<div id="editModal" class="modal-overlay-edit">
     <div class="modal-box">
         <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-pencil" style="margin-right:8px;"></i>Edytuj użytkownika</div>
