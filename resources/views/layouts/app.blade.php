@@ -336,7 +336,7 @@
                     <li><a href="{{ url('/offers') }}" class="nav-link {{ request()->is('offers*') && !request('template') ? 'active' : '' }}">
     <i class="ti ti-file-invoice"></i> Oferty
 </a></li>
-                    <li><a href="{{ url('/offer-forms') }}" class="nav-link {{ request()->is('offer-forms*') ? 'active' : '' }}">Formularze zapytań</a></li>
+                    <li><a href="{{ url('/offer-forms') }}" class="nav-link {{ request()->is('offer-forms*') ? 'active' : '' }}"><i class="ti ti-clipboard-list"></i> Formularze zapytań</a></li>
                 </ul>
             </li>
 
