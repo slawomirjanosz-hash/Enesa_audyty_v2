@@ -267,6 +267,111 @@
         .stats-grid { grid-template-columns: 1fr; }
         .clients-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── View toggle ──────────────────────── */
+    .view-toggle {
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        background: #F4F1EA;
+        border-radius: 7px;
+    }
+    .view-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: #888;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: background .15s, color .15s;
+    }
+    .view-toggle-btn.active {
+        background: #fff;
+        color: #1A4D3A;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .view-toggle-btn:hover { color: #1A4D3A; }
+
+    /* ── Table view ───────────────────────── */
+    .companies-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 0.5px solid #E5E1D8;
+        border-radius: 12px;
+        overflow: hidden;
+        display: none;
+    }
+    .companies-table.active {
+        display: table;
+    }
+    .companies-table th {
+        padding: 12px 16px;
+        text-align: left;
+        font-family: 'Manrope', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #888;
+        background: #FAFAF6;
+        border-bottom: 1px solid #F0EDE6;
+    }
+    .companies-table td {
+        padding: 12px 16px;
+        font-size: 13px;
+        color: #1A1A1A;
+        border-bottom: 1px solid #F7F5F0;
+    }
+    .companies-table tr:last-child td {
+        border-bottom: none;
+    }
+    .companies-table tr:hover td {
+        background: #FAFAF6;
+    }
+    .table-status {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 99px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .table-status-pending { background: #FFF3E0; color: #E65100; }
+    .table-status-active { background: #E8F5E9; color: #2E7D32; }
+    .table-status-other { background: #F0EDE6; color: #888; }
+    .table-status-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+    .table-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 6px 12px;
+        background: #1A4D3A;
+        color: #F5F0E8;
+        border: none;
+        border-radius: 5px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background .15s;
+    }
+    .table-btn-primary:hover { background: #153d2e; }
 </style>
 @endpush
 
@@ -278,9 +383,19 @@
         <span class="page-badge">Widok audytora</span>
         <h1 class="page-title">Klienci wymagający uwagi</h1>
     </div>
-    <a href="#" class="btn-add" onclick="openModal()">
-        <i class="ti ti-plus"></i>Dodaj klienta
-    </a>
+    <div style="display:flex;gap:12px;align-items:center;">
+        <div class="view-toggle">
+            <button class="view-toggle-btn active" id="viewTilesBtn" onclick="switchView('tiles')" title="Widok kafelków">
+                <i class="ti ti-layout-grid"></i>
+            </button>
+            <button class="view-toggle-btn" id="viewTableBtn" onclick="switchView('table')" title="Widok tabeli">
+                <i class="ti ti-table"></i>
+            </button>
+        </div>
+        <a href="#" class="btn-add" onclick="openModal()">
+            <i class="ti ti-plus"></i>Dodaj klienta
+        </a>
+    </div>
 </div>
 
 {{-- ══════ STATYSTYKI ══════ --}}
@@ -341,7 +456,7 @@
 </div>
 
 {{-- ══════ SIATKA KLIENTÓW ══════ --}}
-<div class="clients-grid">
+<div class="clients-grid" id="clientsGrid">
     @forelse($companies as $company)
         @php
             $isOnline = $company->users->contains(
@@ -416,6 +531,59 @@
         </div>
     @endforelse
 </div>
+
+{{-- ══════ WIDOK TABELI ══════ --}}
+<table class="companies-table" id="companiesTable">
+    <thead>
+        <tr>
+            <th>Firma</th>
+            <th>NIP</th>
+            <th>Status</th>
+            <th>Audyty</th>
+            <th>Oferty</th>
+            <th>Użytkownicy</th>
+            <th style="text-align:right;">Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($companies as $company)
+            @php
+                $isOnline = $company->users->contains(
+                    fn($u) => $u->last_seen_at && $u->last_seen_at->gt(now()->subMinutes(5))
+                );
+            @endphp
+            <tr>
+                <td>
+                    <strong>{{ $company->name }}</strong>
+                </td>
+                <td style="font-family:monospace;font-size:12px;">{{ $company->nip ?? '—' }}</td>
+                <td>
+                    <span class="table-status {{ match($company->status) {
+                        'pending' => 'table-status-pending',
+                        'active'  => 'table-status-active',
+                        default   => 'table-status-other',
+                    } }}">
+                        <span class="table-status-dot {{ $isOnline ? 'dot-green' : 'dot-gray' }}" style="display:inline-block;"></span>
+                        {{ match($company->status) {
+                            'pending' => 'Oczekuje',
+                            'active'  => 'Aktywny',
+                            default   => ucfirst($company->status),
+                        } }}
+                    </span>
+                </td>
+                <td style="text-align:center;">{{ $company->audits->count() }}</td>
+                <td style="text-align:center;">{{ $company->offers->count() }}</td>
+                <td style="text-align:center;">{{ $company->users->count() }}</td>
+                <td style="text-align:right;">
+                    <a href="{{ route('companies.show', $company) }}" class="table-btn-primary">
+                        <i class="ti ti-eye"></i>Otwórz
+                    </a>
+                </td>
+            </tr>
+        @empty
+        @endforelse
+    </tbody>
+</table>
 
 {{-- ══════ MODAL DODAJ KLIENTA ══════ --}}
 <div id="addClientModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
@@ -501,6 +669,35 @@
 
 @push('scripts')
 <script>
+    // View toggle functionality
+    function switchView(view) {
+        const grid = document.getElementById('clientsGrid');
+        const table = document.getElementById('companiesTable');
+        const btnTiles = document.getElementById('viewTilesBtn');
+        const btnTable = document.getElementById('viewTableBtn');
+
+        if (view === 'tiles') {
+            grid.style.display = 'grid';
+            table.classList.remove('active');
+            btnTiles.classList.add('active');
+            btnTable.classList.remove('active');
+        } else {
+            grid.style.display = 'none';
+            table.classList.add('active');
+            btnTiles.classList.remove('active');
+            btnTable.classList.add('active');
+        }
+
+        // Save preference to localStorage
+        localStorage.setItem('dashboardView', view);
+    }
+
+    // Load saved view preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedView = localStorage.getItem('dashboardView') || 'tiles';
+        switchView(savedView);
+    });
+
     function resetAddClientForm() {
         const form = document.querySelector('#addClientModal form');
         const fields = ['company-name', 'company-address', 'company-city', 'nip-input'];
