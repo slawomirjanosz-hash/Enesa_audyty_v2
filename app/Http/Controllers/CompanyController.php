@@ -76,7 +76,12 @@ class CompanyController extends Controller
             'users_count' => $company->users->count(),
         ];
 
-        return view('companies.show', compact('company', 'stats'));
+        $offerRequests = \App\Models\OfferRequest::with('offerFormTemplate')
+            ->where('company_id', $company->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('companies.show', compact('company', 'stats', 'offerRequests'));
     }
 
     public function accept(Company $company)

@@ -513,25 +513,14 @@
                 </div>
             </div>
 
-            {{-- Nowe zapytania w kafelku --}}
+            {{-- Nowe zapytania w kafelku — tylko badge --}}
             @php $tileRequests = $newRequests->get($company->id, collect()); @endphp
             @if($tileRequests->isNotEmpty())
-            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #F0EDE6;">
-                <div style="font-size:11px;font-weight:700;color:#1A4D3A;margin-bottom:6px;display:flex;align-items:center;gap:5px;">
-                    <i class="ti ti-inbox" style="font-size:12px;"></i> Nowe zapytania
-                    <span style="background:#DC2626;color:#fff;border-radius:999px;padding:0 6px;font-size:10px;font-weight:700;">{{ $tileRequests->count() }}</span>
-                </div>
-                @foreach($tileRequests as $req)
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;{{ !$loop->last ? 'border-bottom:1px solid #F7F5F0;' : '' }}">
-                    <div>
-                        <div style="font-size:12px;font-weight:600;color:#1A1A1A;">{{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}</div>
-                        <div style="font-size:11px;color:#888;">{{ $req->created_at->diffForHumans() }}</div>
-                    </div>
-                    <a href="{{ route('offer-requests.show', $req) }}" style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;text-decoration:none;flex-shrink:0;">
-                        <i class="ti ti-eye" style="font-size:11px;"></i> Otwórz
-                    </a>
-                </div>
-                @endforeach
+            <div style="margin-bottom:8px;">
+                <a href="{{ route('companies.show', $company) }}#zapytania" style="display:inline-flex;align-items:center;gap:6px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:5px 10px;text-decoration:none;">
+                    <i class="ti ti-inbox" style="font-size:13px;color:#DC2626;"></i>
+                    <span style="font-size:12px;font-weight:700;color:#DC2626;">{{ $tileRequests->count() }} nowe {{ $tileRequests->count() === 1 ? 'zapytanie' : 'zapytania' }}</span>
+                </a>
             </div>
             @endif
 

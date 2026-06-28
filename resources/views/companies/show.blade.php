@@ -762,6 +762,12 @@
         <button class="tab-btn" onclick="switchTab('documents', this)">
             <i class="ti ti-paperclip"></i> Dokumenty
         </button>
+        <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests', this)">
+            <i class="ti ti-inbox"></i> Zapytania
+            @if(isset($offerRequests) && $offerRequests->isNotEmpty())
+                <span class="tab-badge" style="background:#FEE2E2;color:#DC2626;">{{ $offerRequests->count() }}</span>
+            @endif
+        </button>
     </div>
 
     {{-- ═══ ZAKŁADKA: PRZEGLĄD ═══ --}}
@@ -1029,6 +1035,61 @@
             <p>Moduł dokumentów jest w przygotowaniu.</p>
         </div>
     </div>
+
+    {{-- ═══ ZAKŁADKA: ZAPYTANIA ═══ --}}
+    <div id="tab-requests" class="tab-panel">
+        @if(!isset($offerRequests) || $offerRequests->isEmpty())
+            <div class="empty-tab">
+                <i class="ti ti-inbox"></i>
+                <p>Brak zapytań od tej firmy.</p>
+            </div>
+        @else
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Formularz</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th style="text-align:right;">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($offerRequests as $req)
+                    @php
+                        $statusLabel = match($req->status) {
+                            'nowe'      => 'Nowe',
+                            'w_toku'    => 'W toku',
+                            'zamńnięte' => 'Zamńnięte',
+                            default     => $req->status,
+                        };
+                        $statusStyle = match($req->status) {
+                            'nowe'      => 'background:#DBEAFE;color:#1D4ED8;',
+                            'w_toku'    => 'background:#FEF3C7;color:#92400E;',
+                            'zamńnięte' => 'background:#DCFCE7;color:#166534;',
+                            default     => 'background:#F3F4F6;color:#4B5563;',
+                        };
+                    @endphp
+                    <tr>
+                        <td style="color:#888;font-size:12px;">{{ $req->id }}</td>
+                        <td style="font-weight:600;">{{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}</td>
+                        <td>
+                            <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;{{ $statusStyle }}">
+                                {{ $statusLabel }}
+                            </span>
+                        </td>
+                        <td style="color:#7a8a80;font-size:12px;">{{ $req->created_at->format('d.m.Y H:i') }}</td>
+                        <td style="text-align:right;">
+                            <a href="{{ route('offer-requests.show', $req) }}" style="display:inline-flex;align-items:center;gap:5px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+                                <i class="ti ti-eye" style="font-size:12px;"></i> Otwórz
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
 </div>
 
 {{-- ═══ MODAL USUWANIA / ARCHIWIZACJI FIRMY ═══ --}}
@@ -1138,6 +1199,12 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('tab-' + name).classList.add('active');
         btn.classList.add('active');
+    }
+
+    // Auto-open Zapytania tab when URL has #zapytania
+    if (window.location.hash === '#zapytania') {
+        const btn = document.getElementById('tab-btn-requests');
+        if (btn) switchTab('requests', btn);
     }
 
     function openCompanyDeleteModal() {
