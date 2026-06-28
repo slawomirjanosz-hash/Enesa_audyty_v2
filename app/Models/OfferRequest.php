@@ -14,6 +14,7 @@ class OfferRequest extends Model
     protected $fillable = [
         'company_id',
         'created_by_id',
+        'offer_form_template_id',
         'offer_form_version_id',
         'status',
         'form_responses',
@@ -40,6 +41,11 @@ class OfferRequest extends Model
     public function offerFormVersion(): BelongsTo
     {
         return $this->belongsTo(OfferFormVersion::class);
+    }
+
+    public function offerFormTemplate(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\OfferFormTemplate::class);
     }
 
     public function offerMessages(): HasMany
