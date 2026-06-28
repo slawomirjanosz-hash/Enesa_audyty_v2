@@ -333,15 +333,32 @@
             </div>
         </div>
         <div class="doc-party">
-            <div class="doc-party-label">Odbiorca</div>
-            <div class="doc-party-name">{{ $offer->company?->name ?? 'â€”' }}</div>
-            <div class="doc-party-line">
-                {{ $offer->company?->address ?? '' }}
-                @if($offer->company?->address && $offer->company?->city), @endif
-                {{ $offer->company?->city ?? '' }}<br>
-                @if($offer->company?->nip) NIP: {{ $offer->company->nip }}<br> @endif
-                @if($offer->company?->email) {{ $offer->company->email }} @endif
+            <div class="doc-party-label">Odbiorca &mdash; zmień firmę</div>
+            <select name="company_id" id="company_id_select" class="field-input" style="margin-bottom:8px;" onchange="updateCompanyInfo(this)">
+                <option value="">— wybierz firmę klienta —</option>
+                @foreach($companies as $c)
+                    <option value="{{ $c->id }}"
+                        data-name="{{ $c->name }}"
+                        data-address="{{ $c->address ?? '' }}"
+                        data-city="{{ $c->city ?? '' }}"
+                        data-nip="{{ $c->nip ?? '' }}"
+                        data-email="{{ $c->email ?? '' }}"
+                        {{ $offer->company_id == $c->id ? 'selected' : '' }}>
+                        {{ $c->name }}@if($c->city) — {{ $c->city }}@endif
+                    </option>
+                @endforeach
+            </select>
+            <div id="company-info-display">
+                <div class="doc-party-name" id="disp-name">{{ $offer->company?->name ?? '—' }}</div>
+                <div class="doc-party-line" id="disp-details">
+                    {{ $offer->company?->address ?? '' }}
+                    @if($offer->company?->address && $offer->company?->city), @endif
+                    {{ $offer->company?->city ?? '' }}
+                    @if($offer->company?->nip)<br>NIP: {{ $offer->company->nip }}@endif
+                    @if($offer->company?->email)<br>{{ $offer->company->email }}@endif
+                </div>
             </div>
+            <div id="company-distance-info" style="margin-top:6px;font-size:12px;color:#1A4D3A;display:none;"></div>
         </div>
     </div>
 
@@ -604,9 +621,34 @@
 {{-- Inne pola z oryginalnego formularza potrzebne do walidacji --}}
 <input type="hidden" name="offer_number"     value="{{ $offer->offer_number }}">
 <input type="hidden" name="offer_slug"       value="{{ $offer->offer_slug }}">
-<input type="hidden" name="company_id"       value="{{ $offer->company_id }}">
-<input type="hidden" name="assigned_user_id" value="{{ $offer->assigned_user_id }}">
-<input type="hidden" name="status"           value="{{ $offer->status }}">
+
+{{-- Osoba prowadząca + status --}}
+<div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px;gap:14px;align-items:end;">
+    <div>
+        <label class="field-label">Osoba prowadząca (ENESA)</label>
+        <select name="assigned_user_id" class="field-input">
+            <option value="">— nieprzypisana —</option>
+            @foreach($users as $user)
+                <option value="{{ $user->id }}" {{ $offer->assigned_user_id == $user->id ? 'selected' : '' }}>
+                    {{ $user->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div>
+        <label class="field-label">Numer oferty</label>
+        <input type="text" name="offer_number" class="field-input" value="{{ $offer->offer_number }}" required>
+    </div>
+    <div>
+        <label class="field-label">Status</label>
+        <select name="status" class="field-input" required>
+            <option value="w_toku"         {{ $offer->status === 'w_toku'         ? 'selected' : '' }}>W toku</option>
+            <option value="wygrana"        {{ $offer->status === 'wygrana'        ? 'selected' : '' }}>Wygrana</option>
+            <option value="przegrana"      {{ $offer->status === 'przegrana'      ? 'selected' : '' }}>Przegrana</option>
+            <option value="zarchiwizowana" {{ $offer->status === 'zarchiwizowana' ? 'selected' : '' }}>Zarchiwizowana</option>
+        </select>
+    </div>
+</div>
 <input type="hidden" name="liczba_wyjazdow"  value="1" id="h-wyjazdy">
 <input type="hidden" name="liczba_noc"       value="0" id="h-noc">
 <input type="hidden" name="liczba_osob"      value="1" id="h-osoby">
@@ -1190,6 +1232,35 @@ async function improveWithAi(btn, editorId, field) {
         btn.disabled = false;
         btn.innerHTML = origContent;
     }
+}
+
+function updateCompanyInfo(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.value) return;
+    document.getElementById('disp-name').textContent = opt.dataset.name || '—';
+    let details = '';
+    if (opt.dataset.address) details += opt.dataset.address;
+    if (opt.dataset.address && opt.dataset.city) details += ', ';
+    if (opt.dataset.city) details += opt.dataset.city;
+    if (opt.dataset.nip) details += '\nNIP: ' + opt.dataset.nip;
+    if (opt.dataset.email) details += '\n' + opt.dataset.email;
+    document.getElementById('disp-details').innerText = details;
+
+    const distInfo = document.getElementById('company-distance-info');
+    fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(opt.value), {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.km !== undefined) {
+            document.getElementById('d_km').value   = data.km;
+            document.getElementById('d_czas').value = data.minutes;
+            calcDeleg();
+            distInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
+            distInfo.style.display = 'block';
+        }
+    })
+    .catch(() => {});
 }
 </script>
 @endpush
