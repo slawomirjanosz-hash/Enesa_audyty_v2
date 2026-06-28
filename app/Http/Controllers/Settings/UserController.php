@@ -57,6 +57,14 @@ class UserController extends Controller
             'phone'    => ['nullable', 'string', 'max:30'],
             'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor'])],
             'password' => ['nullable', 'string', 'min:8'],
+        ], [
+            'name.required'  => 'Imię i nazwisko jest wymagane.',
+            'email.required' => 'Adres e-mail jest wymagany.',
+            'email.email'    => 'Podaj prawidłowy adres e-mail.',
+            'email.unique'   => 'Ten adres e-mail jest już zajęty.',
+            'role.required'  => 'Wybierz rolę użytkownika.',
+            'role.in'        => 'Wybrana rola jest nieprawidłowa.',
+            'password.min'   => 'Hasło musi mieć co najmniej 8 znaków.',
         ]);
 
         $user = User::create([
@@ -97,6 +105,14 @@ class UserController extends Controller
             'phone'    => ['nullable', 'string', 'max:30'],
             'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor'])],
             'password' => ['nullable', 'string', 'min:8'],
+        ], [
+            'name.required'  => 'Imię i nazwisko jest wymagane.',
+            'email.required' => 'Adres e-mail jest wymagany.',
+            'email.email'    => 'Podaj prawidłowy adres e-mail.',
+            'email.unique'   => 'Ten adres e-mail jest już zajęty.',
+            'role.required'  => 'Wybierz rolę użytkownika.',
+            'role.in'        => 'Wybrana rola jest nieprawidłowa.',
+            'password.min'   => 'Hasło musi mieć co najmniej 8 znaków.',
         ]);
 
         $user->name  = $data['name'];
