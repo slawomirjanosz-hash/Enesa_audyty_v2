@@ -66,6 +66,7 @@
         background: #FAFAF6;
         border-bottom: 1px solid #F0EDE6;
     }
+    .sort-indicator { font-size: 10px; color: #1A4D3A; margin-left: 2px; }
     .users-table td {
         padding: 14px 16px;
         font-size: 14px;
@@ -207,10 +208,7 @@
 {{-- Zakładki --}}
 <div class="settings-tabs">
     <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
-        <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy ENESA
-    </a>
-    <a href="{{ route('settings.users.index') }}?tab=all" class="settings-tab {{ request('tab') === 'all' ? 'active' : '' }}">
-        <i class="ti ti-users-group" style="margin-right:6px;"></i>Wszyscy użytkownicy
+        <i class="ti ti-users" style="margin-right:6px;"></i>Wszyscy użytkownicy
     </a>
     <a href="{{ route('settings.company') }}" class="settings-tab">
         <i class="ti ti-building" style="margin-right:6px;"></i>Dane firmy
@@ -508,16 +506,19 @@
     </div>
 </div>
 
-@elseif(request('tab') === 'all')
-{{-- ══════ ZAKŁADKA: WSZYSCY UŻYTKOWNICY ══════ --}}
+@else
+{{-- Tabela wszystkich użytkowników --}}
 <div class="card">
     <div class="card-header">
         <div>
             <div class="card-header-title">Wszyscy użytkownicy w systemie</div>
-            <div class="card-header-sub">{{ $allUsers->count() }} użytkowników (wszystkie role)</div>
+            <div class="card-header-sub">{{ $allUsers->count() }} użytkowników</div>
         </div>
-        <input type="text" id="search-all-users" placeholder="🔍 Wyszukaj po emailu lub imieniu..." 
-            style="padding:8px 12px;border:1px solid #D0CCC0;border-radius:6px;font-size:13px;width:250px;">
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin'))
+            <button class="btn-primary" onclick="openAddModal()">
+                <i class="ti ti-user-plus"></i> Dodaj użytkownika
+            </button>
+        @endif
     </div>
 
     @if($allUsers->isEmpty())
@@ -526,24 +527,33 @@
             Brak użytkowników w systemie
         </div>
     @else
-        <table class="users-table">
+        <table class="users-table" id="usersTable">
             <thead>
                 <tr>
-                    <th>Użytkownik</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
+                    <th style="cursor:pointer;" onclick="sortTable(0)">Użytkownik <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortTable(1)">Email <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortTable(2)">Role <span class="sort-indicator"></span></th>
+                    <th style="cursor:pointer;" onclick="sortTable(3)">Status <span class="sort-indicator"></span></th>
+                    <th style="text-align:right;">Akcje</th>
                 </tr>
             </thead>
-            <tbody id="all-users-tbody">
-                @foreach($allUsers as $user)
+            <tbody>
+                @forelse($allUsers as $user)
                     @php
                         $initials = collect(explode(' ', $user->name))
                             ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
-                        $rolesList = $user->roles->pluck('name')->implode(', ') ?: '—';
+                        $role = $user->roles->first()?->name ?? '—';
                         $isActive = !$user->deleted_at;
+                        $currentUser = auth()->user();
+                        $canDelete = false;
+                        
+                        if ($currentUser->hasRole('superadmin')) {
+                            $canDelete = $role !== 'superadmin' && $isActive;
+                        } elseif ($currentUser->hasRole('admin')) {
+                            $canDelete = !in_array($role, ['superadmin', 'admin']) && $isActive;
+                        }
                     @endphp
-                    <tr class="all-user-row" data-search="{{ strtolower($user->name . ' ' . $user->email) }}">
+                    <tr data-user-id="{{ $user->id }}" data-sort-name="{{ strtolower($user->name) }}" data-sort-email="{{ strtolower($user->email) }}" data-sort-role="{{ $role }}" data-sort-status="{{ $isActive ? 'aktywny' : 'usuniety' }}">
                         <td>
                             <div class="user-cell">
                                 <div class="avatar" style="background:{{ $isActive ? '#1A4D3A' : '#999' }};">{{ $initials }}</div>
@@ -554,11 +564,21 @@
                         </td>
                         <td style="font-family:monospace;font-size:12px;">{{ $user->email }}</td>
                         <td>
-                            <div style="display:flex;flex-wrap:wrap;gap:4px;">
-                                @foreach($user->roles as $role)
-                                    <span class="badge" style="background:#F4F1EA;color:#888;font-size:10px;">{{ $role->name }}</span>
-                                @endforeach
-                            </div>
+                            @if($role === 'superadmin')
+                                <span class="badge badge-superadmin"><i class="ti ti-crown"></i> Super Admin</span>
+                            @elseif($role === 'admin')
+                                <span class="badge badge-admin"><i class="ti ti-shield"></i> Admin</span>
+                            @elseif($role === 'auditor_senior')
+                                <span class="badge badge-auditor-senior"><i class="ti ti-clipboard-check"></i> Audytor Senior</span>
+                            @elseif($role === 'auditor')
+                                <span class="badge badge-auditor"><i class="ti ti-clipboard-check"></i> Audytor</span>
+                            @elseif($role === 'client_admin')
+                                <span class="badge" style="background:rgba(13,59,18,0.15);color:#0D3B12;">Klient - Admin</span>
+                            @elseif($role === 'client_user')
+                                <span class="badge" style="background:rgba(13,59,18,0.10);color:#0D3B12;">Klient - User</span>
+                            @else
+                                <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
+                            @endif
                         </td>
                         <td>
                             @if($isActive)
@@ -567,118 +587,45 @@
                                 <span style="color:#999;font-size:13px;">✗ Usunięty</span>
                             @endif
                         </td>
+                        <td>
+                            <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                @if($canDelete)
+                                    <button class="btn-action"
+                                        title="Edytuj"
+                                        onclick="openEditModal(
+                                            {{ $user->id }},
+                                            '{{ e($user->name) }}',
+                                            '{{ e($user->email) }}',
+                                            '{{ e($user->phone ?? '') }}',
+                                            '{{ $role }}'
+                                        )">
+                                        <i class="ti ti-pencil"></i>
+                                    </button>
+                                    <form method="POST"
+                                        action="{{ route('settings.users.destroy', $user) }}"
+                                        onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ e($user->name) }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-action danger" title="Usuń">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <span style="font-size:11px;color:#A8D5B5;padding:0 4px;">chroniony</span>
+                                @endif
+                            </div>
+                        </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:40px; color:#888;">
+                            <i class="ti ti-users" style="font-size:32px; display:block; margin-bottom:8px;"></i>
+                            Brak użytkowników
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
-    @endif
-</div>
-
-@else
-{{-- Tabela użytkowników --}}
-<div class="card">
-    <div class="card-header">
-        <div>
-            <div class="card-header-title">Użytkownicy systemu</div>
-            <div class="card-header-sub">{{ $users->total() }} użytkowników (superadmin, admin, audytor)</div>
-        </div>
-        <button class="btn-primary" onclick="openAddModal()">
-            <i class="ti ti-user-plus"></i> Dodaj użytkownika
-        </button>
-    </div>
-
-    <table class="users-table">
-        <thead>
-            <tr>
-                <th>Użytkownik</th>
-                <th>Rola</th>
-                <th>Status</th>
-                <th>Ostatnio widziany</th>
-                <th style="width:80px; text-align:right;">Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($users as $user)
-                @php
-                    $initials = collect(explode(' ', $user->name))
-                        ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
-                    $role     = $user->roles->first()?->name ?? '—';
-                    $isOnline = $user->last_seen_at && $user->last_seen_at->gt(now()->subMinutes(5));
-                @endphp
-                <tr>
-                    <td>
-                        <div class="user-cell">
-                            <div class="avatar">{{ $initials }}</div>
-                            <div>
-                                <div class="user-name">{{ $user->name }}</div>
-                                <div class="user-email">{{ $user->email }}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        @if($role === 'superadmin')
-                            <span class="badge badge-superadmin"><i class="ti ti-crown"></i> Super Admin</span>
-                        @elseif($role === 'admin')
-                            <span class="badge badge-admin"><i class="ti ti-shield"></i> Admin</span>
-                        @elseif($role === 'auditor_senior')
-                            <span class="badge badge-auditor-senior"><i class="ti ti-clipboard-check"></i> Audytor Senior</span>
-                        @elseif($role === 'auditor')
-                            <span class="badge badge-auditor"><i class="ti ti-clipboard-check"></i> Audytor</span>
-                        @else
-                            <span class="badge" style="background:#F4F1EA;color:#888;">{{ $role }}</span>
-                        @endif
-                    </td>
-                    <td>
-                        <span class="status-dot {{ $isOnline ? 'dot-online' : 'dot-offline' }}"></span>
-                        {{ $isOnline ? 'Online' : 'Offline' }}
-                    </td>
-                    <td style="color:#888; font-size:13px;">
-                        {{ $user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'Nigdy' }}
-                    </td>
-                    <td>
-                        <div style="display:flex; justify-content:flex-end; gap:6px;">
-                            @if($role !== 'superadmin')
-                                <button class="btn-action"
-                                    title="Edytuj"
-                                    onclick="openEditModal(
-                                        {{ $user->id }},
-                                        '{{ e($user->name) }}',
-                                        '{{ e($user->email) }}',
-                                        '{{ e($user->phone ?? '') }}',
-                                        '{{ $role }}'
-                                    )">
-                                    <i class="ti ti-pencil"></i>
-                                </button>
-                                <form method="POST"
-                                    action="{{ route('settings.users.destroy', $user) }}"
-                                    onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ e($user->name) }}?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action danger" title="Usuń">
-                                        <i class="ti ti-trash"></i>
-                                    </button>
-                                </form>
-                            @else
-                                <span style="font-size:11px;color:#A8D5B5;padding:0 4px;">chroniony</span>
-                            @endif
-                        </div>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" style="text-align:center; padding:40px; color:#888;">
-                        <i class="ti ti-users" style="font-size:32px; display:block; margin-bottom:8px;"></i>
-                        Brak użytkowników
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    @if($users->hasPages())
-        <div class="pagination-wrap">
-            {{ $users->links() }}
-        </div>
     @endif
 </div>
 
@@ -872,16 +819,45 @@
         }
     });
 
-    // Search for all users by email or name
-    const searchInput = document.getElementById('search-all-users');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
-            const query = this.value.toLowerCase();
-            document.querySelectorAll('.all-user-row').forEach(row => {
-                const text = row.dataset.search || '';
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
+    // Sorting for users table
+    let sortState = { column: null, ascending: true };
+    
+    function sortTable(columnIndex) {
+        const table = document.getElementById('usersTable');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr[data-user-id]'));
+        
+        const sortKeys = ['data-sort-name', 'data-sort-email', 'data-sort-role', 'data-sort-status'];
+        const key = sortKeys[columnIndex];
+        
+        // Toggle sort direction if same column clicked
+        if (sortState.column === columnIndex) {
+            sortState.ascending = !sortState.ascending;
+        } else {
+            sortState.column = columnIndex;
+            sortState.ascending = true;
+        }
+        
+        // Sort rows
+        rows.sort((a, b) => {
+            const aVal = a.getAttribute(key) || '';
+            const bVal = b.getAttribute(key) || '';
+            const comparison = aVal.localeCompare(bVal, 'pl');
+            return sortState.ascending ? comparison : -comparison;
         });
+        
+        // Update sort indicators
+        table.querySelectorAll('th .sort-indicator').forEach(el => el.textContent = '');
+        const th = table.querySelectorAll('th')[columnIndex];
+        if (th) {
+            const indicator = th.querySelector('.sort-indicator');
+            if (indicator) {
+                indicator.textContent = sortState.ascending ? ' ▲' : ' ▼';
+            }
+        }
+        
+        // Reorder rows in tbody
+        rows.forEach(row => tbody.appendChild(row));
     }
 </script>
 @endpush

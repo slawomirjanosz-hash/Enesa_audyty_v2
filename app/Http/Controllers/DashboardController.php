@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $companies = Company::active()->with(['audits', 'offers', 'users'])->get();
+        $companies = Company::active()->where('show_in_dashboard', true)->with(['audits', 'offers', 'users'])->get();
 
         $stats = [
             'active_audits'      => Audit::where('status', 'in_progress')->count(),

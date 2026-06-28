@@ -28,7 +28,20 @@ class CrmController extends Controller
             ->orderBy('due_date')
             ->get();
 
-        $users = User::role(['admin', 'auditor'])->orderBy('name')->get();
+        $authUser = auth()->user();
+
+if ($authUser->hasRole('superadmin')) {
+    $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
+} elseif ($authUser->hasRole('admin')) {
+    $users = User::role(['admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
+} elseif ($authUser->hasRole('auditor_senior')) {
+    $users = User::role(['auditor_senior', 'auditor'])->orderBy('name')->get();
+} elseif ($authUser->hasRole('auditor')) {
+    // Audytor widzi tylko siebie
+    $users = User::where('id', $authUser->id)->get();
+} else {
+    $users = collect();
+}
 
         $stats = [
             'active_companies'    => $companies->count(),
