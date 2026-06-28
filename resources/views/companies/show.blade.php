@@ -744,6 +744,12 @@
                 <span class="tab-badge">{{ $stats['audits_count'] }}</span>
             @endif
         </button>
+        <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests', this)">
+            <i class="ti ti-inbox"></i> Zapytania
+            @if(isset($offerRequests) && $offerRequests->isNotEmpty())
+                <span class="tab-badge" style="background:#FEE2E2;color:#DC2626;">{{ $offerRequests->count() }}</span>
+            @endif
+        </button>
         <button class="tab-btn" onclick="switchTab('offers', this)">
             <i class="ti ti-file-invoice"></i> Oferty
             @if($stats['offers_count'] > 0)
@@ -761,12 +767,6 @@
         </button>
         <button class="tab-btn" onclick="switchTab('documents', this)">
             <i class="ti ti-paperclip"></i> Dokumenty
-        </button>
-        <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests', this)">
-            <i class="ti ti-inbox"></i> Zapytania
-            @if(isset($offerRequests) && $offerRequests->isNotEmpty())
-                <span class="tab-badge" style="background:#FEE2E2;color:#DC2626;">{{ $offerRequests->count() }}</span>
-            @endif
         </button>
     </div>
 
@@ -909,6 +909,86 @@
         @endif
     </div>
 
+    {{-- ═══ ZAKŁADKA: ZAPYTANIA ═══ --}}
+    <div id="tab-requests" class="tab-panel">
+        @if(!isset($offerRequests) || $offerRequests->isEmpty())
+            <div class="empty-tab">
+                <i class="ti ti-inbox"></i>
+                <p>Brak zapytań od tej firmy.</p>
+            </div>
+        @else
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Formularz</th>
+                        <th>Odpowiedzi klienta</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th style="text-align:right;">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($offerRequests as $req)
+                    @php
+                        $statusLabel = match($req->status) {
+                            'nowe'      => 'Nowe',
+                            'w_toku'    => 'W toku',
+                            'zamknięte' => 'Zamknięte',
+                            default     => $req->status,
+                        };
+                        $statusStyle = match($req->status) {
+                            'nowe'      => 'background:#DBEAFE;color:#1D4ED8;',
+                            'w_toku'    => 'background:#FEF3C7;color:#92400E;',
+                            'zamknięte' => 'background:#DCFCE7;color:#166534;',
+                            default     => 'background:#F3F4F6;color:#4B5563;',
+                        };
+                        $responses = $req->form_responses ?? [];
+                        $fields    = $req->offerFormTemplate?->fields ?? [];
+                    @endphp
+                    <tr>
+                        <td style="color:#888;font-size:12px;">{{ $req->id }}</td>
+                        <td style="font-weight:600;">{{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}</td>
+                        <td>
+                            @if(!empty($responses) && !empty($fields))
+                                @foreach($fields as $field)
+                                    @php $val = $responses[$field['key']] ?? null; @endphp
+                                    @if($val)
+                                        <div style="font-size:11px;margin-bottom:2px;">
+                                            <span style="color:#888;">{{ $field['label'] }}:</span>
+                                            <span style="color:#1A1A1A;font-weight:600;">{{ $val }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @else
+                                <span style="color:#bbb;font-size:12px;">Brak odpowiedzi</span>
+                            @endif
+                        </td>
+                        <td>
+                            <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;{{ $statusStyle }}">
+                                {{ $statusLabel }}
+                            </span>
+                        </td>
+                        <td style="color:#7a8a80;font-size:12px;">{{ $req->created_at->format('d.m.Y H:i') }}</td>
+                        <td style="text-align:right;">
+                            <div style="display:flex;gap:6px;justify-content:flex-end;">
+                                <a href="{{ route('offers.create', ['company_id' => $company->id, 'offer_request_id' => $req->id]) }}"
+                                   style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+                                    <i class="ti ti-file-plus" style="font-size:12px;"></i> Zrób ofertę
+                                </a>
+                                <button onclick="markRequestDone({{ $req->id }}, this)"
+                                        style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;color:#4B5563;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;">
+                                    <i class="ti ti-check" style="font-size:12px;"></i> Zamknij
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
+
     {{-- ═══ ZAKŁADKA: OFERTY ═══ --}}
     <div id="tab-offers" class="tab-panel">
         @if($company->offers->isEmpty())
@@ -1036,59 +1116,6 @@
         </div>
     </div>
 
-    {{-- ═══ ZAKŁADKA: ZAPYTANIA ═══ --}}
-    <div id="tab-requests" class="tab-panel">
-        @if(!isset($offerRequests) || $offerRequests->isEmpty())
-            <div class="empty-tab">
-                <i class="ti ti-inbox"></i>
-                <p>Brak zapytań od tej firmy.</p>
-            </div>
-        @else
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Formularz</th>
-                        <th>Status</th>
-                        <th>Data</th>
-                        <th style="text-align:right;">Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($offerRequests as $req)
-                    @php
-                        $statusLabel = match($req->status) {
-                            'nowe'      => 'Nowe',
-                            'w_toku'    => 'W toku',
-                            'zamńnięte' => 'Zamńnięte',
-                            default     => $req->status,
-                        };
-                        $statusStyle = match($req->status) {
-                            'nowe'      => 'background:#DBEAFE;color:#1D4ED8;',
-                            'w_toku'    => 'background:#FEF3C7;color:#92400E;',
-                            'zamńnięte' => 'background:#DCFCE7;color:#166534;',
-                            default     => 'background:#F3F4F6;color:#4B5563;',
-                        };
-                    @endphp
-                    <tr>
-                        <td style="color:#888;font-size:12px;">{{ $req->id }}</td>
-                        <td style="font-weight:600;">{{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}</td>
-                        <td>
-                            <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;{{ $statusStyle }}">
-                                {{ $statusLabel }}
-                            </span>
-                        </td>
-                        <td style="color:#7a8a80;font-size:12px;">{{ $req->created_at->format('d.m.Y H:i') }}</td>
-                        <td style="text-align:right;">
-                            <a href="{{ route('offer-requests.show', $req) }}" style="display:inline-flex;align-items:center;gap:5px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
-                                <i class="ti ti-eye" style="font-size:12px;"></i> Otwórz
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
     </div>
 </div>
 
@@ -1205,6 +1232,20 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
     if (window.location.hash === '#zapytania') {
         const btn = document.getElementById('tab-btn-requests');
         if (btn) switchTab('requests', btn);
+    }
+
+    function markRequestDone(id, btn) {
+        if (!confirm('Zamknąć to zapytanie?')) return;
+        fetch('/offer-requests/' + id + '/status', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ status: 'zamknięte' })
+        }).then(r => {
+            if (r.ok) location.reload();
+        });
     }
 
     function openCompanyDeleteModal() {
