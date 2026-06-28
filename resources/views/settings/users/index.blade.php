@@ -209,6 +209,9 @@
     <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
         <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy ENESA
     </a>
+    <a href="{{ route('settings.users.index') }}?tab=all" class="settings-tab {{ request('tab') === 'all' ? 'active' : '' }}">
+        <i class="ti ti-users-group" style="margin-right:6px;"></i>Wszyscy użytkownicy
+    </a>
     <a href="{{ route('settings.company') }}" class="settings-tab">
         <i class="ti ti-building" style="margin-right:6px;"></i>Dane firmy
     </a>
@@ -503,6 +506,72 @@
             </button>
         </form>
     </div>
+</div>
+
+@elseif(request('tab') === 'all')
+{{-- ══════ ZAKŁADKA: WSZYSCY UŻYTKOWNICY ══════ --}}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-header-title">Wszyscy użytkownicy w systemie</div>
+            <div class="card-header-sub">{{ $allUsers->count() }} użytkowników (wszystkie role)</div>
+        </div>
+        <input type="text" id="search-all-users" placeholder="🔍 Wyszukaj po emailu lub imieniu..." 
+            style="padding:8px 12px;border:1px solid #D0CCC0;border-radius:6px;font-size:13px;width:250px;">
+    </div>
+
+    @if($allUsers->isEmpty())
+        <div style="text-align:center;padding:40px;color:#888;">
+            <i class="ti ti-users" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+            Brak użytkowników w systemie
+        </div>
+    @else
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Użytkownik</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="all-users-tbody">
+                @foreach($allUsers as $user)
+                    @php
+                        $initials = collect(explode(' ', $user->name))
+                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $rolesList = $user->roles->pluck('name')->implode(', ') ?: '—';
+                        $isActive = !$user->deleted_at;
+                    @endphp
+                    <tr class="all-user-row" data-search="{{ strtolower($user->name . ' ' . $user->email) }}">
+                        <td>
+                            <div class="user-cell">
+                                <div class="avatar" style="background:{{ $isActive ? '#1A4D3A' : '#999' }};">{{ $initials }}</div>
+                                <div>
+                                    <div class="user-name" style="color:{{ $isActive ? '#1A1A1A' : '#999' }};">{{ $user->name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-family:monospace;font-size:12px;">{{ $user->email }}</td>
+                        <td>
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                @foreach($user->roles as $role)
+                                    <span class="badge" style="background:#F4F1EA;color:#888;font-size:10px;">{{ $role->name }}</span>
+                                @endforeach
+                            </div>
+                        </td>
+                        <td>
+                            @if($isActive)
+                                <span style="color:#166534;font-size:13px;">✓ Aktywny</span>
+                            @else
+                                <span style="color:#999;font-size:13px;">✗ Usunięty</span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
 
 @else
@@ -802,5 +871,17 @@
             closeAssignToCompanyModal();
         }
     });
+
+    // Search for all users by email or name
+    const searchInput = document.getElementById('search-all-users');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.all-user-row').forEach(row => {
+                const text = row.dataset.search || '';
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    }
 </script>
 @endpush

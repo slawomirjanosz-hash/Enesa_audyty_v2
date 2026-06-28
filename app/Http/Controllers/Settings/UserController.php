@@ -23,6 +23,11 @@ class UserController extends Controller
 
         $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
 
+        // All users in system (for email verification)
+        $allUsers = User::with('roles')
+            ->orderBy('email')
+            ->get();
+
         $archivedStaff = User::onlyTrashed()
             ->with('roles')
             ->whereHas('roles', fn ($q) => $q->whereIn('name', ['admin', 'auditor', 'auditor_senior', 'superadmin']))
@@ -41,7 +46,7 @@ class UserController extends Controller
             ->get();
         $companies = Company::active()->orderBy('name')->get();
 
-        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies'));
+        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'allUsers'));
     }
 
     public function create()
