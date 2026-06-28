@@ -1,8 +1,8 @@
 {
   "phases": {
-    "extensions": {
+    "install:composer": {
       "cmds": [
-        "install-php-extensions ctype curl dom exif fileinfo filter gd hash mbstring openssl pcre pdo session tokenizer xml pdo_mysql zip"
+        "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd"
       ]
     }
   }
