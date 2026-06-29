@@ -47,6 +47,8 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->g
     Route::get('/offers',        [ClientOfferController::class,        'index'])->name('offers');
     Route::get('/offers/{offer}', [ClientOfferController::class,       'show'])->name('offers.show');
     Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->name('offers.accept');
+    Route::post('/offers/{offer}/reject', [ClientOfferController::class, 'reject'])->name('offers.reject');
+    Route::post('/offers/{offer}/negotiate', [ClientOfferController::class, 'negotiate'])->name('offers.negotiate');
     Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->name('request-offer');
     Route::post('/request-offer', [ClientOfferRequestController::class, 'store'])->name('request-offer.store');
     Route::get('/documents',     [ClientDocumentController::class,     'index'])->name('documents');

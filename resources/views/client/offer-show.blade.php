@@ -232,6 +232,10 @@
         gap: 10px;
         flex-wrap: wrap;
         margin-bottom: 24px;
+        padding: 16px 20px;
+        background: #F4F1EA;
+        border-radius: 10px;
+        border: 1px solid #E5E1D8;
     }
     .btn-secondary {
         display: inline-flex;
@@ -247,8 +251,45 @@
         border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
+        transition: all 0.2s ease;
     }
     .btn-secondary:hover { background: #F4F1EA; border-color: #1A4D3A; }
+    
+    .btn-danger {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #FEE2E2;
+        color: #B91C1C;
+        border: 1.5px solid #FECACA;
+        font-family: 'Manrope', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 9px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .btn-danger:hover { background: #FCA5A5; border-color: #B91C1C; }
+    
+    .btn-warning {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #FEF3C7;
+        color: #92400E;
+        border: 1.5px solid #FCD34D;
+        font-family: 'Manrope', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 9px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .btn-warning:hover { background: #FCD34D; border-color: #92400E; }
 
     /* Flash messages */
     .flash-success {
@@ -281,8 +322,15 @@
     }
 
     @media print {
-        .back-btn, .banner-accept, .actions-row { display: none !important; }
-        .offer-card { border: 1px solid #ccc; }
+        * { margin: 0 !important; padding: 0 !important; }
+        body { background: white !important; }
+        .back-btn, .banner-accept, .banner-accepted, .actions-row, .flash-success, .flash-error { display: none !important; }
+        .offer-card, .summary-card { border: 1px solid #999 !important; page-break-inside: avoid; }
+        .offer-header, .offer-main-title, .meta-grid, .content-section, .summary-card { page-break-inside: avoid; }
+        .offer-card-header { background: #f0f0f0 !important; }
+        .summary-card { background: #f9f9f9 !important; color: #000 !important; }
+        .summary-amount { color: #000 !important; }
+        .banner-accept-text { display: block !important; }
     }
 
     @media (max-width: 600px) {
@@ -315,11 +363,22 @@
             'w_toku'         => ['badge-w-toku',    'W toku'],
             'wygrana'        => ['badge-wygrana',   'Zaakceptowana'],
             'przegrana'      => ['badge-przegrana', 'Odrzucona'],
+            'w_negocjacji'   => ['badge-other',     'W negocjacji'],
             'zarchiwizowana' => ['badge-other',     'Archiwalna'],
             default          => ['badge-other',      $offer->status],
         };
     @endphp
     <span class="status-badge {{ $badgeClass }}">{{ $statusLabel }}</span>
+</div>
+
+{{-- Action buttons (top) --}}
+<div class="actions-row">
+    <a href="{{ route('offers.pdf', $offer) }}" target="_blank" class="btn-secondary">
+        <i class="ti ti-file-type-pdf"></i> Pobierz PDF
+    </a>
+    <button type="button" onclick="window.print()" class="btn-secondary">
+        <i class="ti ti-printer"></i> Drukuj
+    </button>
 </div>
 
 {{-- Action banner --}}
@@ -329,17 +388,41 @@
             <h3>Czy akceptujesz tę ofertę?</h3>
             <p>Po akceptacji nasz zespół skontaktuje się z Tobą w celu realizacji.</p>
         </div>
-        <form method="POST" action="{{ route('client.offers.accept', $offer) }}">
-            @csrf
-            <button type="submit" class="btn-accept">
-                <i class="ti ti-circle-check"></i> Zaakceptuj ofertę
-            </button>
-        </form>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <form method="POST" action="{{ route('client.offers.accept', $offer) }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-accept">
+                    <i class="ti ti-circle-check"></i> Zaakceptuj
+                </button>
+            </form>
+            <form method="POST" action="{{ route('client.offers.negotiate', $offer) }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-warning">
+                    <i class="ti ti-message-circle"></i> Negocjuj
+                </button>
+            </form>
+            <form method="POST" action="{{ route('client.offers.reject', $offer) }}" style="display: inline;" onsubmit="return confirm('Czy na pewno chcesz odrzucić tę ofertę?');">
+                @csrf
+                <button type="submit" class="btn-danger">
+                    <i class="ti ti-circle-x"></i> Odrzuć
+                </button>
+            </form>
+        </div>
     </div>
 @elseif($offer->status === 'wygrana')
     <div class="banner-accepted">
         <i class="ti ti-rosette-discount-check"></i>
         <span>Oferta zaakceptowana — dziękujemy! Nasz zespół skontaktuje się z Tobą wkrótce.</span>
+    </div>
+@elseif($offer->status === 'w_negocjacji')
+    <div class="banner-accepted" style="background: #FEF3C7; border-color: #FCD34D;">
+        <i class="ti ti-message-circle" style="color: #92400E;"></i>
+        <span style="color: #92400E;">Oferta wysłana do negocjacji — czekamy na Twoją odpowiedź.</span>
+    </div>
+@elseif($offer->status === 'przegrana')
+    <div class="banner-accepted" style="background: #FEE2E2; border-color: #FCA5A5;">
+        <i class="ti ti-circle-x" style="color: #B91C1C;"></i>
+        <span style="color: #B91C1C;">Oferta została odrzucona.</span>
     </div>
 @endif
 
@@ -411,15 +494,5 @@
     </div>
 </div>
 @endif
-
-{{-- Actions --}}
-<div class="actions-row">
-    <a href="{{ route('offers.pdf', $offer) }}" target="_blank" class="btn-secondary">
-        <i class="ti ti-file-type-pdf"></i> Pobierz PDF
-    </a>
-    <button type="button" onclick="window.print()" class="btn-secondary">
-        <i class="ti ti-printer"></i> Drukuj
-    </button>
-</div>
 
 @endsection

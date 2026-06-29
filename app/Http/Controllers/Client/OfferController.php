@@ -57,4 +57,40 @@ class OfferController extends Controller
         return redirect()->route('client.offers.show', $offer)
             ->with('success', 'Oferta została zaakceptowana');
     }
+
+    public function reject(Offer $offer)
+    {
+        $company = auth()->user()->companies->first();
+
+        if (!$company || $company->id !== $offer->company_id) {
+            abort(403);
+        }
+
+        if ($offer->status !== 'w_toku') {
+            return back()->with('error', 'Nie można odrzucić tej oferty.');
+        }
+
+        $offer->update(['status' => 'przegrana']);
+
+        return redirect()->route('client.offers.show', $offer)
+            ->with('success', 'Oferta została odrzucona');
+    }
+
+    public function negotiate(Offer $offer)
+    {
+        $company = auth()->user()->companies->first();
+
+        if (!$company || $company->id !== $offer->company_id) {
+            abort(403);
+        }
+
+        if ($offer->status !== 'w_toku') {
+            return back()->with('error', 'Nie można przesłać tej oferty do negocjacji.');
+        }
+
+        $offer->update(['status' => 'w_negocjacji']);
+
+        return redirect()->route('client.offers.show', $offer)
+            ->with('success', 'Oferta została przesłana do negocjacji');
+    }
 }

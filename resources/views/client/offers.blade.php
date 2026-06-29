@@ -115,6 +115,7 @@
     .badge-w-toku        { background: #DBEAFE; color: #1D4ED8; }
     .badge-wygrana       { background: #DCFCE7; color: #166534; }
     .badge-przegrana     { background: #FEE2E2; color: #B91C1C; }
+    .badge-w-negocjacji  { background: #FEF3C7; color: #92400E; }
     .badge-zarchiwizowana{ background: #F3F4F6; color: #4B5563; }
 
     @media (max-width: 640px) {
@@ -144,6 +145,7 @@
                 'w_toku'         => 'badge-w-toku',
                 'wygrana'        => 'badge-wygrana',
                 'przegrana'      => 'badge-przegrana',
+                'w_negocjacji'   => 'badge-w-negocjacji',
                 'zarchiwizowana' => 'badge-zarchiwizowana',
                 default          => 'badge-zarchiwizowana',
             };
@@ -151,6 +153,7 @@
                 'w_toku'         => 'W toku',
                 'wygrana'        => 'Zaakceptowana',
                 'przegrana'      => 'Odrzucona',
+                'w_negocjacji'   => 'W negocjacji',
                 'zarchiwizowana' => 'Archiwalna',
                 default          => $offer->status,
             };
