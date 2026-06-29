@@ -45,6 +45,8 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->g
     Route::get('/dashboard',     [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits',        [ClientAuditController::class,        'index'])->name('audits');
     Route::get('/offers',        [ClientOfferController::class,        'index'])->name('offers');
+    Route::get('/offers/{offer}', [ClientOfferController::class,       'show'])->name('offers.show');
+    Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->name('offers.accept');
     Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->name('request-offer');
     Route::post('/request-offer', [ClientOfferRequestController::class, 'store'])->name('request-offer.store');
     Route::get('/documents',     [ClientDocumentController::class,     'index'])->name('documents');
