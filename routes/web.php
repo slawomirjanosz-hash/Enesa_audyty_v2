@@ -110,11 +110,12 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('chat')->name('chat.')->group(function () {
-        Route::get('/',                              [ChatController::class, 'index'])->name('index');
-        Route::get('/{company}',                     [ChatController::class, 'show'])->name('show');
-        Route::post('/{company}/send',               [ChatController::class, 'send'])->name('send');
-        Route::get('/{company}/poll',                [ChatController::class, 'poll'])->name('poll');
-        Route::post('/{company}/end',                [ChatController::class, 'endConversation'])->name('end');
+        Route::get('/',                                          [ChatController::class, 'index'])->name('index');
+        Route::get('/{company}',                                 [ChatController::class, 'show'])->name('show');
+        Route::post('/{company}/send',                           [ChatController::class, 'send'])->name('send');
+        Route::get('/{company}/poll',                            [ChatController::class, 'poll'])->name('poll');
+        Route::post('/{company}/end',                            [ChatController::class, 'endConversation'])->name('end');
+        Route::get('/{company}/archive/{conversationId}',        [ChatController::class, 'archiveConversation'])->name('archive');
     });
 
     Route::prefix('offers')->name('offers.')->group(function () {

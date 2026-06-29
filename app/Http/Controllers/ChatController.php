@@ -144,4 +144,30 @@ class ChatController extends Controller
 
         return back()->with('success', 'Rozmowa została zakończona.');
     }
+
+    public function archiveConversation(Request $request, Company $company, string $conversationId)
+    {
+        $messages = Message::where('company_id', $company->id)
+            ->where('conversation_id', $conversationId)
+            ->with('sender')
+            ->orderBy('created_at')
+            ->get();
+
+        if ($messages->isEmpty() || $messages->first()->company_id !== $company->id) {
+            return response()->json(['error' => 'Nie znaleziono rozmowy.'], 404);
+        }
+
+        return response()->json([
+            'messages' => $messages->map(fn($msg) => [
+                'id'          => $msg->id,
+                'body'        => $msg->body,
+                'sender_name' => $msg->sender?->name ?? 'Nieznany',
+                'created_at'  => $msg->created_at->format('d.m.Y H:i'),
+                'is_own'      => $msg->user_id === auth()->id(),
+            ]),
+            'ended_at' => $messages->last()?->conversation_ended_at?->format('d.m.Y H:i'),
+            'ended_by' => $messages->last()?->ended_by,
+        ]);
+    }
+    }
 }

@@ -1195,13 +1195,20 @@
                 </div>
             @else
                 @foreach($chatArchives as $arc)
-                <div style="padding:10px 14px;border-bottom:1px solid #F0EDE6;">
+                <div onclick="cmpOpenArchive('{{ $arc->conversation_id }}')"
+                    style="padding:10px 14px;border-bottom:1px solid #F0EDE6;cursor:pointer;transition:background .12s;"
+                    onmouseover="this.style.background='#F4F1EA'" onmouseout="this.style.background=''">
                     <div style="font-size:11px;color:#555;font-family:'Lato',sans-serif;">
+                        <i class="ti ti-calendar-event" style="font-size:10px;"></i>
                         {{ \Carbon\Carbon::parse($arc->started_at)->format('d.m.Y H:i') }}
+                    </div>
+                    <div style="font-size:11px;color:#999;font-family:'Lato',sans-serif;margin-top:1px;">
                         → {{ \Carbon\Carbon::parse($arc->ended_at)->format('d.m.Y H:i') }}
                     </div>
-                    <div style="font-size:11px;color:#999;font-family:'Lato',sans-serif;margin-top:2px;">
-                        {{ $arc->message_count }} wiadomości
+                    <div style="font-size:11px;color:#1A4D3A;font-family:'Manrope',sans-serif;font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px;">
+                        <i class="ti ti-messages" style="font-size:11px;"></i>
+                        {{ $arc->message_count }} wiad.
+                        <span style="margin-left:auto;color:#888;font-weight:400;font-size:10px;">Podgląd →</span>
                     </div>
                 </div>
                 @endforeach
@@ -1339,6 +1346,79 @@
 
         cmpScroll();
         setInterval(cmpPoll, 5000);
+    })();
+    </script>
+
+    {{-- ═══ MODAL: ARCHIWALNA ROZMOWA ═══ --}}
+    <div id="cmp-archive-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;width:min(640px,95vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+            {{-- Modal header --}}
+            <div style="background:#1A4D3A;color:#F5F0E8;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+                <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;">
+                    <i class="ti ti-archive"></i>
+                    <span id="cmp-arc-title">Archiwalna rozmowa</span>
+                </div>
+                <button onclick="cmpCloseArchive()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">×</button>
+            </div>
+            {{-- Modal body --}}
+            <div id="cmp-arc-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:#FAFAF6;">
+                <div style="text-align:center;padding:40px 0;color:#bbb;font-family:'Manrope',sans-serif;font-size:13px;">
+                    <i class="ti ti-loader-2" style="font-size:28px;display:block;margin-bottom:8px;"></i>
+                    Ładowanie…
+                </div>
+            </div>
+            {{-- Modal footer --}}
+            <div id="cmp-arc-footer" style="border-top:1px solid #E5E1D8;padding:10px 16px;background:#fff;font-size:11px;color:#999;font-family:'Lato',sans-serif;flex-shrink:0;"></div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        var ARC_BASE = '{{ url('chat/'.$company->id.'/archive') }}';
+        var CSRF = '{{ csrf_token() }}';
+
+        function arcIni(n){ if(!n)return'?'; var p=n.trim().split(' '); return(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+        function arcEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+        window.cmpOpenArchive = async function(convId){
+            var modal = document.getElementById('cmp-archive-modal');
+            var win   = document.getElementById('cmp-arc-messages');
+            var foot  = document.getElementById('cmp-arc-footer');
+            modal.style.display = 'flex';
+            win.innerHTML = '<div style="text-align:center;padding:40px 0;color:#bbb;font-family:\'Manrope\',sans-serif;font-size:13px;"><i class="ti ti-loader-2" style="font-size:28px;display:block;margin-bottom:8px;"></i>Ładowanie…</div>';
+            foot.textContent = '';
+            try {
+                var res = await fetch(ARC_BASE+'/'+convId, {headers:{'Accept':'application/json','X-CSRF-TOKEN':CSRF}});
+                if(!res.ok){ win.innerHTML='<div style="text-align:center;padding:30px;color:#e00;font-size:13px;font-family:\'Manrope\',sans-serif;">Błąd ładowania rozmowy.</div>'; return; }
+                var data = await res.json();
+                if(!data.messages||!data.messages.length){ win.innerHTML='<div style="text-align:center;padding:30px;color:#bbb;font-size:13px;font-family:\'Manrope\',sans-serif;">Brak wiadomości.</div>'; return; }
+
+                document.getElementById('cmp-arc-title').textContent = 'Archiwalna rozmowa · ' + data.messages.length + ' wiad.';
+
+                win.innerHTML = data.messages.map(function(msg){
+                    var cls = msg.is_own ? 'cmp-own' : 'cmp-other';
+                    return '<div class="cmp-msg-row '+cls+'">'
+                        +'<div class="cmp-avatar '+cls+'">'+arcIni(msg.sender_name)+'</div>'
+                        +'<div class="cmp-bubble '+cls+'">'+arcEsc(msg.body)
+                        +'<div class="cmp-time">'+arcEsc(msg.sender_name)+' · '+msg.created_at+'</div>'
+                        +'</div></div>';
+                }).join('');
+
+                if(data.ended_by) foot.textContent = 'Zakończono: '+(data.ended_at||'')+' przez '+data.ended_by;
+                win.scrollTop = win.scrollHeight;
+            } catch(e) {
+                win.innerHTML = '<div style="text-align:center;padding:30px;color:#e00;font-size:13px;font-family:\'Manrope\',sans-serif;">Błąd połączenia.</div>';
+            }
+        };
+
+        window.cmpCloseArchive = function(){
+            document.getElementById('cmp-archive-modal').style.display = 'none';
+        };
+
+        // Close on backdrop click
+        document.getElementById('cmp-archive-modal').addEventListener('click', function(e){
+            if(e.target === this) cmpCloseArchive();
+        });
     })();
     </script>
 
