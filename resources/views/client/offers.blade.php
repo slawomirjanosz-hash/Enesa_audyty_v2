@@ -64,6 +64,11 @@
         border-color: #B8D4C8;
         box-shadow: 0 2px 8px rgba(26,77,58,0.06);
     }
+    a.offer-card {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+    }
     .offer-left {
         display: flex;
         flex-direction: column;
@@ -150,7 +155,7 @@
                 default          => $offer->status,
             };
         @endphp
-        <div class="offer-card">
+        <a href="{{ route('client.offers.show', $offer) }}" class="offer-card">
             <div class="offer-left">
                 <span class="offer-number">{{ $offer->offer_full_number ?? $offer->offer_number }}</span>
                 @if($offer->offer_title)
@@ -164,7 +169,7 @@
                 @endif
                 <span class="offer-badge {{ $badgeClass }}">{{ $statusLabel }}</span>
             </div>
-        </div>
+        </a>
         @endforeach
     </div>
 @endif
