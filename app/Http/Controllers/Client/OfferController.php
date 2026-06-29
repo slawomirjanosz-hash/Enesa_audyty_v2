@@ -23,4 +23,17 @@ class OfferController extends Controller
 
         return view('client.offers', compact('offers', 'company'));
     }
+
+    public function show(Offer $offer)
+    {
+        $company = auth()->user()->companies->first();
+
+        if (!$company || $company->id !== $offer->company_id) {
+            abort(403);
+        }
+
+        $offer->load('company', 'assignedUser', 'offerDelegation');
+
+        return view('client.offer-show', compact('offer', 'company'));
+    }
 }
