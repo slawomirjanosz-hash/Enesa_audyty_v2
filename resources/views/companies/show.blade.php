@@ -1000,27 +1000,50 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Wersja</th>
-                        <th>Cena netto</th>
-                        <th>Koszt dojazdu</th>
-                        <th>Łącznie</th>
+                        <th>Numer oferty</th>
+                        <th>Tytuł</th>
+                        <th>Kwota netto</th>
                         <th>Status</th>
                         <th>Data</th>
+                        <th style="text-align:right;">Akcje</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($company->offers as $offer)
+                    @foreach($company->offers->where('is_template', false) as $offer)
+                    @php
+                        $statusStyle = match($offer->status) {
+                            'w_toku'         => 'background:#DBEAFE;color:#1D4ED8;',
+                            'wygrana'        => 'background:#DCFCE7;color:#166534;',
+                            'przegrana'      => 'background:#FEE2E2;color:#B91C1C;',
+                            'zarchiwizowana' => 'background:#F3F4F6;color:#4B5563;',
+                            default          => 'background:#F3F4F6;color:#4B5563;',
+                        };
+                        $statusLabel = match($offer->status) {
+                            'w_toku'         => 'W toku',
+                            'wygrana'        => 'Wygrana',
+                            'przegrana'      => 'Przegrana',
+                            'zarchiwizowana' => 'Zarchiwizowana',
+                            default          => $offer->status,
+                        };
+                    @endphp
                         <tr>
-                            <td style="color:#888;font-size:12px;">{{ $offer->id }}</td>
-                            <td>v{{ $offer->version ?? 1 }}</td>
-                            <td>{{ number_format($offer->audit_price ?? 0, 2) }} zł</td>
-                            <td>{{ number_format($offer->travel_cost ?? 0, 2) }} zł</td>
-                            <td style="font-weight:700;color:#1A4D3A;">{{ number_format($offer->total_price ?? 0, 2) }} zł</td>
+                            <td style="font-weight:700;font-family:'Lato',sans-serif;">{{ $offer->offer_full_number ?? $offer->offer_number }}</td>
+                            <td style="color:#555;">{{ $offer->offer_title ?? '—' }}</td>
+                            <td style="font-weight:700;color:#1A4D3A;">{{ number_format($offer->kwota_netto ?? 0, 2) }} zł</td>
                             <td>
-                                <span class="audit-status {{ $offer->status }}">{{ $offer->status }}</span>
+                                <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $statusStyle }}">
+                                    {{ $statusLabel }}
+                                </span>
                             </td>
                             <td style="color:#7a8a80;font-size:12px;">{{ $offer->created_at->format('d.m.Y') }}</td>
+                            <td style="text-align:right;">
+                                <a href="{{ route('offers.edit', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;cursor:pointer;">
+                                    <i class="ti ti-edit"></i> Edytuj
+                                </a>
+                                <a href="{{ route('offers.show', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;background:#fff;color:#333;border:1px solid #D0CCC0;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;font-family:'Manrope',sans-serif;text-decoration:none;cursor:pointer;margin-left:4px;">
+                                    <i class="ti ti-eye"></i> Podgląd
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

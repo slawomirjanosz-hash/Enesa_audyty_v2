@@ -921,38 +921,43 @@ setTimeout(() => {
     /* ── Distance Matrix ── */
     const companySelect = document.getElementById('company_id');
     const distanceInfo  = document.getElementById('distance-info');
+
+    function fetchDistance(companyId) {
+        if (!companyId) return;
+        fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(companyId), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.km !== undefined) {
+                document.getElementById('d_km').value   = data.km;
+                document.getElementById('d_czas').value = data.minutes;
+                calcDeleg();
+                if (distanceInfo) {
+                    distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
+                    distanceInfo.style.display = 'block';
+                }
+            } else if (distanceInfo) {
+                distanceInfo.textContent = '\u26A0\uFE0F ' + (data.error || 'Nie uda\u0142o si\u0119 pobra\u0107 odleg\u0142o\u015bci.');
+                distanceInfo.style.display = 'block';
+            }
+        })
+        .catch(() => {
+            if (distanceInfo) {
+                distanceInfo.textContent = '\u26A0\uFE0F B\u0142\u0105d po\u0142\u0105czenia z serwerem.';
+                distanceInfo.style.display = 'block';
+            }
+        });
+    }
+
     if (companySelect) {
         companySelect.addEventListener('change', function () {
-            const companyId = this.value;
-            if (!companyId) {
-                if (distanceInfo) distanceInfo.style.display = 'none';
-                return;
-            }
-            fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(companyId), {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.km !== undefined) {
-                    document.getElementById('d_km').value   = data.km;
-                    document.getElementById('d_czas').value = data.minutes;
-                    calcDeleg();
-                    if (distanceInfo) {
-                        distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
-                        distanceInfo.style.display = 'block';
-                    }
-                } else if (distanceInfo) {
-                    distanceInfo.textContent = '\u26A0\uFE0F ' + (data.error || 'Nie uda\u0142o si\u0119 pobra\u0107 odleg\u0142o\u015bci.');
-                    distanceInfo.style.display = 'block';
-                }
-            })
-            .catch(() => {
-                if (distanceInfo) {
-                    distanceInfo.textContent = '\u26A0\uFE0F B\u0142\u0105d po\u0142\u0105czenia z serwerem.';
-                    distanceInfo.style.display = 'block';
-                }
-            });
+            fetchDistance(this.value);
         });
+        // Auto-fetch if company already pre-selected (e.g. from offerRequest)
+        if (companySelect.value) {
+            fetchDistance(companySelect.value);
+        }
     }
 });
 
