@@ -417,27 +417,27 @@
             <div>
                 <label class="field-label">Odległość do klienta</label>
                 <div class="input-group">
-                    <input type="number" id="d_km" class="field-input" min="0" value="{{ old('km_do_klienta', 0) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_km" class="field-input" value="{{ old('km_do_klienta', 0) }}" placeholder="0" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
                     <span class="input-suffix">km</span>
                 </div>
             </div>
             <div>
                 <label class="field-label">Stawka za km</label>
                 <div class="input-group">
-                    <input type="number" id="d_stawka_km" class="field-input" min="0" step="1" value="{{ old('stawka_km', 1.10) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_stawka_km" class="field-input" value="{{ old('stawka_km', 1.10) }}" placeholder="1,10" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
                     <span class="input-suffix">zł/km</span>
                 </div>
             </div>
             <div>
                 <label class="field-label">Czas dojazdu</label>
                 <div class="input-group">
-                    <input type="number" id="d_czas" class="field-input" min="0" value="{{ old('czas_dojazdu_min', 0) }}">
+                    <input type="text" id="d_czas" class="field-input" value="{{ old('czas_dojazdu_min', 0) }}" placeholder="0" oninput="validateDecimal(this)" onkeydown="return allowDecimalInput(event)">
                     <span class="input-suffix">min</span>
                 </div>
             </div>
             <div>
                 <label class="field-label">Liczba wyjazdów</label>
-                <input type="number" id="d_wyjazdy" class="field-input" min="1" value="{{ old('liczba_wyjazdow', 1) }}" oninput="calcDeleg()">
+                <input type="text" id="d_wyjazdy" class="field-input" value="{{ old('liczba_wyjazdow', 1) }}" placeholder="1" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
             </div>
         </div>
         <div style="margin-top:14px;">
@@ -453,16 +453,16 @@
             <div class="deleg-grid">
                 <div>
                     <label class="field-label">Liczba nocy</label>
-                    <input type="number" id="d_noc" class="field-input" min="0" value="{{ old('liczba_noc', 0) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_noc" class="field-input" value="{{ old('liczba_noc', 0) }}" placeholder="0" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
                 </div>
                 <div>
                     <label class="field-label">Liczba osób</label>
-                    <input type="number" id="d_osoby" class="field-input" min="1" value="{{ old('liczba_osob', 1) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_osoby" class="field-input" value="{{ old('liczba_osob', 1) }}" placeholder="1" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
                 </div>
                 <div>
                     <label class="field-label">Stawka za dobę hotelową</label>
                     <div class="input-group">
-                        <input type="number" id="d_stawka_noc" class="field-input" min="0" step="1" value="{{ old('stawka_noc', 300) }}" oninput="calcDeleg()">
+                        <input type="text" id="d_stawka_noc" class="field-input" value="{{ old('stawka_noc', 300) }}" placeholder="300,00" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
                         <span class="input-suffix">zł</span>
                     </div>
                 </div>
@@ -523,11 +523,11 @@
         <div class="markup-bar" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
             <span style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#92400E;">Narzut globalny:</span>
             <div class="input-group" style="width:120px;">
-                <input type="number" id="markup-pct" class="field-input" min="0" max="999" step="1" value="0" oninput="syncMarkup('pct')" style="border-radius:7px 0 0 7px;">
+                <input type="text" id="markup-pct" class="field-input" value="0" placeholder="0" oninput="validateDecimal(this); syncMarkup('pct')" onkeydown="return allowDecimalInput(event)" style="border-radius:7px 0 0 7px;">
                 <span class="input-suffix">%</span>
             </div>
             <div class="input-group" style="width:140px;">
-                <input type="number" id="markup-zl" class="field-input" min="0" step="1" value="0" oninput="syncMarkup('zl')" style="border-radius:7px 0 0 7px;">
+                <input type="text" id="markup-zl" class="field-input" value="0" placeholder="0" oninput="validateDecimal(this); syncMarkup('zl')" onkeydown="return allowDecimalInput(event)" style="border-radius:7px 0 0 7px;">
                 <span class="input-suffix">zł</span>
             </div>
         </div>
@@ -654,14 +654,14 @@ function addRow(tbodyId, rowData) {
             </select>
         </td>
         <td class="col-ilosc">
-            <input class="cell-input ilosc-input" type="number"
-                   value="${d.ilosc}" min="0" step="1"
-                   oninput="recalcRow(document.getElementById('row-${rid}'))">
+            <input class="cell-input ilosc-input" type="text"
+                   value="${d.ilosc}" placeholder="0"
+                   oninput="validateDecimal(this); recalcRow(document.getElementById('row-${rid}'))" onkeydown="return allowDecimalInput(event)">
         </td>
         <td class="col-cena">
-            <input class="cell-input cena-input" type="number"
-                   value="${d.cena_jedn}" min="0" step="1"
-                   oninput="recalcRow(document.getElementById('row-${rid}'))">
+            <input class="cell-input cena-input" type="text"
+                   value="${d.cena_jedn}" placeholder="0"
+                   oninput="validateDecimal(this); recalcRow(document.getElementById('row-${rid}'))" onkeydown="return allowDecimalInput(event)">
         </td>
         <td class="col-netto" style="white-space:nowrap;text-align:right;">
             <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
@@ -690,12 +690,12 @@ function removeRow(btn) { btn.closest('tr').remove(); recalcAll(); }
 
 function recalcRow(tr) {
     if (!tr) return;
-    const ilosc = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
-    const cena  = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
+    const ilosc = parseValue(tr.querySelector('.ilosc-input')?.value) || 0;
+    const cena  = parseValue(tr.querySelector('.cena-input')?.value)  || 0;
     const net   = ilosc * cena;
     const display = tr.querySelector('.wartosc-display');
     if (display) display.textContent = makePl(net);
-    const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
+    const pct = parseValue(document.getElementById('markup-pct').value) || 0;
     const zNDisplay = tr.querySelector('.z-narzutem-display');
     if (zNDisplay) zNDisplay.textContent = makePl(net * (1 + pct / 100));
     recalcAll();
@@ -703,10 +703,10 @@ function recalcRow(tr) {
 
 function recalcAll() {
     let sumNetto = 0;
-    const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
+    const pct = parseValue(document.getElementById('markup-pct').value) || 0;
     document.querySelectorAll('.price-table tbody tr').forEach(tr => {
-        const ilosc = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
-        const cena  = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
+        const ilosc = parseValue(tr.querySelector('.ilosc-input')?.value) || 0;
+        const cena  = parseValue(tr.querySelector('.cena-input')?.value)  || 0;
         const net   = ilosc * cena;
         sumNetto += net;
         const zNDisplay = tr.querySelector('.z-narzutem-display');
@@ -726,15 +726,15 @@ function recalcAll() {
 function syncMarkup(source) {
     let sumNetto = 0;
     document.querySelectorAll('.price-table tbody tr').forEach(tr => {
-        sumNetto += (parseFloat(tr.querySelector('.ilosc-input')?.value) || 0)
-                  * (parseFloat(tr.querySelector('.cena-input')?.value)  || 0);
+        sumNetto += (parseValue(tr.querySelector('.ilosc-input')?.value) || 0)
+                  * (parseValue(tr.querySelector('.cena-input')?.value)  || 0);
     });
     if (source === 'pct') {
-        const pct = parseFloat(document.getElementById('markup-pct').value) || 0;
+        const pct = parseValue(document.getElementById('markup-pct').value) || 0;
         globalMarkup.pct = pct;
         globalMarkup.zl  = sumNetto * (pct / 100);
     } else {
-        const zl = parseFloat(document.getElementById('markup-zl').value) || 0;
+        const zl = parseValue(document.getElementById('markup-zl').value) || 0;
         globalMarkup.zl  = zl;
         const pct = sumNetto > 0 ? (zl / sumNetto) * 100 : 0;
         globalMarkup.pct = pct;
@@ -743,14 +743,41 @@ function syncMarkup(source) {
     recalcAll();
 }
 
+function parseValue(val) {
+    if (!val) return 0;
+    val = val.toString().replace(',', '.');
+    return parseFloat(val) || 0;
+}
+
+function allowDecimalInput(event) {
+    const key = event.key;
+    if (/^[0-9.,\-]$/.test(key) ||
+        ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'].includes(key) ||
+        event.ctrlKey) {
+        return true;
+    }
+    event.preventDefault();
+    return false;
+}
+
+function validateDecimal(input) {
+    if (!input.value) return;
+    let val = input.value.toString().replace('.', ',');
+    val = val.replace(/[^0-9,\-]/g, '');
+    const parts = val.split(',');
+    if (parts.length > 2) val = parts[0] + ',' + parts.slice(1).join('');
+    if (parts.length === 2 && parts[1].length > 2) val = parts[0] + ',' + parts[1].substring(0, 2);
+    input.value = val;
+}
+
 function calcDeleg() {
-    const km       = parseFloat(document.getElementById('d_km').value)        || 0;
-    const stawkaKm = parseFloat(document.getElementById('d_stawka_km').value) || 1.10;
-    const wyjazdy  = parseFloat(document.getElementById('d_wyjazdy').value)   || 1;
+    const km       = parseValue(document.getElementById('d_km').value)        || 0;
+    const stawkaKm = parseValue(document.getElementById('d_stawka_km').value) || 1.10;
+    const wyjazdy  = parseValue(document.getElementById('d_wyjazdy').value)   || 1;
     const over     = document.getElementById('d_kilkudniowy').checked;
-    const noc      = parseFloat(document.getElementById('d_noc')?.value)      || 0;
-    const osoby    = parseFloat(document.getElementById('d_osoby')?.value)    || 1;
-    const stawkaNoc= parseFloat(document.getElementById('d_stawka_noc')?.value) || 300;
+    const noc      = parseValue(document.getElementById('d_noc')?.value)      || 0;
+    const osoby    = parseValue(document.getElementById('d_osoby')?.value)    || 1;
+    const stawkaNoc= parseValue(document.getElementById('d_stawka_noc')?.value) || 300;
     const deleg = (km * 2 * wyjazdy * stawkaKm) + (over ? noc * osoby * stawkaNoc : 0);
     document.getElementById('deleg-result').textContent = makePl(deleg) + ' zł';
     recalcAll();
@@ -828,9 +855,9 @@ function collectSections() {
 }
 
 function collectRow(tr) {
-    const ilosc   = parseFloat(tr.querySelector('.ilosc-input')?.value) || 0;
-    const cena    = parseFloat(tr.querySelector('.cena-input')?.value)  || 0;
-    const pct     = parseFloat(document.getElementById('markup-pct').value) || 0;
+    const ilosc   = parseValue(tr.querySelector('.ilosc-input')?.value) || 0;
+    const cena    = parseValue(tr.querySelector('.cena-input')?.value)  || 0;
+    const pct     = parseValue(document.getElementById('markup-pct').value) || 0;
     return {
         opis:       tr.querySelector('input[type="text"]')?.value || '',
         jedn:       tr.querySelector('.unit-select')?.value       || 'szt',
@@ -865,6 +892,15 @@ document.addEventListener('DOMContentLoaded', function () {
     quillPayment  = new Quill('#editor-payment',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
 
     document.getElementById('offer-form').addEventListener('submit', function () {
+        // Convert decimal separators from comma to dot for numeric fields
+        const decimalFields = ['d_km','d_stawka_km','d_czas','d_wyjazdy','d_noc','d_osoby','d_stawka_noc','markup-pct','markup-zl'];
+        decimalFields.forEach(id => {
+            const field = document.getElementById(id);
+            if (field && field.value) field.value = field.value.toString().replace(',', '.');
+        });
+        document.querySelectorAll('.ilosc-input, .cena-input').forEach(input => {
+            if (input.value) input.value = input.value.toString().replace(',', '.');
+        });
         document.getElementById('hidden-content-subject').value  = quillSubject.root.innerHTML;
         document.getElementById('hidden-content-scope').value    = quillScope.root.innerHTML;
         document.getElementById('hidden-content-deadline').value = quillDeadline.root.innerHTML;
