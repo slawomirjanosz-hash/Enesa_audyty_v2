@@ -1011,6 +1011,26 @@ document.getElementById('offer-form').addEventListener('keydown', function(e) {
 });
 
 document.getElementById('offer-form').addEventListener('submit', function () {
+    // Convert decimal separators from comma to dot for numeric fields
+    const decimalFields = [
+        'd_km', 'd_stawka_km', 'd_czas', 'd_wyjazdy', 'd_noc', 'd_osoby', 'd_stawka_noc',
+        'markup-pct', 'markup-zl'
+    ];
+    
+    decimalFields.forEach(id => {
+        const field = document.getElementById(id);
+        if (field && field.value) {
+            field.value = field.value.toString().replace(',', '.');
+        }
+    });
+    
+    // Also convert table inputs (qty and price)
+    document.querySelectorAll('.qty-input, .price-input').forEach(input => {
+        if (input.value) {
+            input.value = input.value.toString().replace(',', '.');
+        }
+    });
+    
     // Collect rich editor content
     document.getElementById('hidden-content-subject').value  = document.getElementById('editor-subject').innerHTML;
     document.getElementById('hidden-content-scope').value    = document.getElementById('editor-scope').innerHTML;

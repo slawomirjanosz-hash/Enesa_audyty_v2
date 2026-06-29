@@ -110,13 +110,13 @@ class OfferController extends Controller
             'show_unit_prices'          => ['nullable'],
             'price_sections'            => ['nullable', 'string'],
             // Delegation
-            'km_do_klienta'             => ['nullable', 'integer', 'min:0'],
+            'km_do_klienta'             => ['nullable', 'numeric', 'min:0'],
             'stawka_km'                 => ['nullable', 'numeric', 'min:0'],
-            'czas_dojazdu_min'          => ['nullable', 'integer', 'min:0'],
-            'liczba_wyjazdow'           => ['required', 'integer', 'min:1'],
+            'czas_dojazdu_min'          => ['nullable', 'numeric', 'min:0'],
+            'liczba_wyjazdow'           => ['required', 'numeric', 'min:1'],
             'czy_kilkudniowy'           => ['boolean'],
-            'liczba_noc'                => ['required', 'integer', 'min:0'],
-            'liczba_osob'               => ['required', 'integer', 'min:1'],
+            'liczba_noc'                => ['required', 'numeric', 'min:0'],
+            'liczba_osob'               => ['required', 'numeric', 'min:1'],
             'stawka_noc'                => ['required', 'numeric', 'min:0'],
         ]);
 
@@ -235,13 +235,13 @@ class OfferController extends Controller
             'show_unit_prices'          => ['nullable'],
             'price_sections'            => ['nullable', 'string'],
             // Delegation
-            'km_do_klienta'             => ['nullable', 'integer', 'min:0'],
+            'km_do_klienta'             => ['nullable', 'numeric', 'min:0'],
             'stawka_km'                 => ['nullable', 'numeric', 'min:0'],
-            'czas_dojazdu_min'          => ['nullable', 'integer', 'min:0'],
-            'liczba_wyjazdow'           => ['required', 'integer', 'min:1'],
+            'czas_dojazdu_min'          => ['nullable', 'numeric', 'min:0'],
+            'liczba_wyjazdow'           => ['required', 'numeric', 'min:1'],
             'czy_kilkudniowy'           => ['boolean'],
-            'liczba_noc'                => ['required', 'integer', 'min:0'],
-            'liczba_osob'               => ['required', 'integer', 'min:1'],
+            'liczba_noc'                => ['required', 'numeric', 'min:0'],
+            'liczba_osob'               => ['required', 'numeric', 'min:1'],
             'stawka_noc'                => ['required', 'numeric', 'min:0'],
         ]);
 
