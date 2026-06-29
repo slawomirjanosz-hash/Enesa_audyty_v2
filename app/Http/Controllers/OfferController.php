@@ -48,7 +48,7 @@ class OfferController extends Controller
     {
         $companySettings     = \App\Models\CompanySettings::first();
         $companies           = Company::orderBy('name')->get();
-        $users               = User::role(['admin', 'auditor'])->orderBy('name')->get();
+        $users               = User::role(['superadmin'])->orderBy('name')->get();
         $offerTemplateTypes  = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
             ->get();
@@ -192,7 +192,7 @@ class OfferController extends Controller
     {
         $companySettings     = \App\Models\CompanySettings::first();
         $companies           = Company::orderBy('name')->get();
-        $users               = User::role(['admin', 'auditor'])->orderBy('name')->get();
+        $users               = User::role(['superadmin'])->orderBy('name')->get();
         $offerTemplateTypes  = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
             ->get();

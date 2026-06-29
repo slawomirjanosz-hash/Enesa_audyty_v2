@@ -461,31 +461,43 @@
             <div>
                 <label class="field-label">Odległość do klienta</label>
                 <div class="input-group">
-                    <input type="number" id="d_km" class="field-input" min="0"
-                           value="{{ old('km_do_klienta', $d?->km_do_klienta ?? 0) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_km" class="field-input decimal-input"
+                           value="{{ old('km_do_klienta', $d?->km_do_klienta ?? 0) }}"
+                           placeholder="0"
+                           oninput="validateDecimal(this); calcDeleg()"
+                           onkeydown="return allowDecimalInput(event)">
                     <span class="input-suffix">km</span>
                 </div>
             </div>
             <div>
                 <label class="field-label">Stawka za km</label>
                 <div class="input-group">
-                    <input type="number" id="d_stawka_km" class="field-input" min="0" step="1"
-                           value="{{ old('stawka_km', $d?->stawka_km ?? 1.10) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_stawka_km" class="field-input decimal-input" 
+                           value="{{ old('stawka_km', $d?->stawka_km ?? 1.10) }}" 
+                           placeholder="np. 1,50" 
+                           oninput="validateDecimal(this); calcDeleg()"
+                           onkeydown="return allowDecimalInput(event)">
                     <span class="input-suffix">zł/km</span>
                 </div>
             </div>
             <div>
                 <label class="field-label">Czas dojazdu</label>
                 <div class="input-group">
-                    <input type="number" id="d_czas" class="field-input" min="0"
-                           value="{{ old('czas_dojazdu_min', $d?->czas_dojazdu_min ?? 0) }}">
+                    <input type="text" id="d_czas" class="field-input decimal-input"
+                           value="{{ old('czas_dojazdu_min', $d?->czas_dojazdu_min ?? 0) }}"
+                           placeholder="0"
+                           oninput="validateDecimal(this)"
+                           onkeydown="return allowDecimalInput(event)">
                     <span class="input-suffix">min</span>
                 </div>
             </div>
             <div>
                 <label class="field-label">Liczba wyjazdów</label>
-                <input type="number" id="d_wyjazdy" class="field-input" min="1"
-                       value="{{ old('liczba_wyjazdow', $d?->liczba_wyjazdow ?? 1) }}" oninput="calcDeleg()">
+                <input type="text" id="d_wyjazdy" class="field-input decimal-input"
+                       value="{{ old('liczba_wyjazdow', $d?->liczba_wyjazdow ?? 1) }}"
+                       placeholder="1"
+                       oninput="validateDecimal(this); calcDeleg()"
+                       onkeydown="return allowDecimalInput(event)">
             </div>
         </div>
 
@@ -503,19 +515,28 @@
             <div class="deleg-grid">
                 <div>
                     <label class="field-label">Liczba nocy</label>
-                    <input type="number" id="d_noc" class="field-input" min="0"
-                           value="{{ old('liczba_noc', $d?->liczba_noc ?? 0) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_noc" class="field-input decimal-input"
+                           value="{{ old('liczba_noc', $d?->liczba_noc ?? 0) }}"
+                           placeholder="0"
+                           oninput="validateDecimal(this); calcDeleg()"
+                           onkeydown="return allowDecimalInput(event)">
                 </div>
                 <div>
                     <label class="field-label">Liczba osĂłb</label>
-                    <input type="number" id="d_osoby" class="field-input" min="1"
-                           value="{{ old('liczba_osob', $d?->liczba_osob ?? 1) }}" oninput="calcDeleg()">
+                    <input type="text" id="d_osoby" class="field-input decimal-input"
+                           value="{{ old('liczba_osob', $d?->liczba_osob ?? 1) }}"
+                           placeholder="1"
+                           oninput="validateDecimal(this); calcDeleg()"
+                           onkeydown="return allowDecimalInput(event)">
                 </div>
                 <div>
                     <label class="field-label">Stawka za dobę hotelową</label>
                     <div class="input-group">
-                        <input type="number" id="d_stawka_noc" class="field-input" min="0" step="1"
-                               value="{{ old('stawka_noc', $d?->stawka_noc ?? 300) }}" oninput="calcDeleg()">
+                        <input type="text" id="d_stawka_noc" class="field-input decimal-input" 
+                               value="{{ old('stawka_noc', $d?->stawka_noc ?? 300) }}" 
+                               placeholder="np. 300,00"
+                               oninput="validateDecimal(this); calcDeleg()"
+                               onkeydown="return allowDecimalInput(event)">
                         <span class="input-suffix">zł</span>
                     </div>
                 </div>
@@ -576,13 +597,21 @@
         <div class="markup-bar" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
             <span style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#92400E;">Narzut globalny:</span>
             <div class="input-group" style="width:120px;">
-                <input type="number" id="markup-pct" class="field-input" min="0" max="999" step="1"
-                       value="0" oninput="syncMarkup('pct')" style="border-radius:7px 0 0 7px;">
+                <input type="text" id="markup-pct" class="field-input decimal-input" 
+                       value="0" 
+                       placeholder="0"
+                       oninput="validateDecimal(this); syncMarkup('pct')" 
+                       onkeydown="return allowDecimalInput(event)"
+                       style="border-radius:7px 0 0 7px;">
                 <span class="input-suffix">%</span>
             </div>
             <div class="input-group" style="width:140px;">
-                <input type="number" id="markup-zl" class="field-input" min="0" step="1"
-                       value="0" oninput="syncMarkup('zl')" style="border-radius:7px 0 0 7px;">
+                <input type="text" id="markup-zl" class="field-input decimal-input" 
+                       value="0" 
+                       placeholder="0"
+                       oninput="validateDecimal(this); syncMarkup('zl')" 
+                       onkeydown="return allowDecimalInput(event)"
+                       style="border-radius:7px 0 0 7px;">
                 <span class="input-suffix">zł</span>
             </div>
         </div>
@@ -769,8 +798,8 @@ function addRow(tbodyId, rowData) {
         <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
         <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
         <td style="width:90px;"><select class="cell-input unit-select" style="width:90px;" data-prev="${escHtml(d.jedn)}" onchange="handleUnitChange(this)">${buildUnitOptions(d.jedn)}</select></td>
-        <td style="width:70px;"><input class="cell-input qty-input" type="number" value="${d.ilosc}" min="0" step="1" style="width:68px;" oninput="recalcRow('${rid}')"></td>
-        <td style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="number" value="${d.cena_jedn}" min="0" step="1" style="width:80px;" oninput="recalcRow('${rid}')"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
+        <td style="width:70px;"><input class="cell-input qty-input" type="text" value="${d.ilosc}" placeholder="0" style="width:68px;" oninput="validateDecimal(this); recalcRow('${rid}')" onkeydown="return allowDecimalInput(event)"></td>
+        <td style="width:110px;"><div style="display:flex;align-items:center;gap:4px;"><input class="cell-input price-input" type="text" value="${d.cena_jedn}" placeholder="0" style="width:80px;" oninput="validateDecimal(this); recalcRow('${rid}')" onkeydown="return allowDecimalInput(event)"><span style="font-size:11px;color:#999;white-space:nowrap;">zł</span></div></td>
         <td style="text-align:right;white-space:nowrap;padding-right:8px;"><span class="net-display">${makePl(d.ilosc * d.cena_jedn)}</span>&nbsp;<span style="font-size:11px;color:#999;">zł</span></td>
         <td style="text-align:right;white-space:nowrap;padding-right:10px;font-weight:600;"><span class="markup-display">${makePl(d.z_narzutem)}</span>&nbsp;<span style="font-size:11px;color:#999;white-space:nowrap;">zł</span><input type="hidden" class="markup-input" value="${d.z_narzutem}"></td>
         <td><button type="button" class="btn-del-row" onclick="removeRow(this)"><i class="ti ti-trash"></i></button></td>
@@ -823,13 +852,13 @@ function syncMarkup(source) {
 // DELEGATION CALC
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function calcDeleg() {
-    const km       = parseFloat(document.getElementById('d_km').value)        || 0;
-    const stawkaKm = parseFloat(document.getElementById('d_stawka_km').value) || 1.10;
-    const wyjazdy  = parseFloat(document.getElementById('d_wyjazdy').value)   || 1;
+    const km       = parseValue(document.getElementById('d_km').value)        || 0;
+    const stawkaKm = parseValue(document.getElementById('d_stawka_km').value) || 1.10;
+    const wyjazdy  = parseValue(document.getElementById('d_wyjazdy').value)   || 1;
     const over     = document.getElementById('d_kilkudniowy').checked;
-    const noc      = parseFloat(document.getElementById('d_noc')?.value)      || 0;
-    const osoby    = parseFloat(document.getElementById('d_osoby')?.value)    || 1;
-    const stawkaNoc= parseFloat(document.getElementById('d_stawka_noc')?.value) || 300;
+    const noc      = parseValue(document.getElementById('d_noc')?.value)      || 0;
+    const osoby    = parseValue(document.getElementById('d_osoby')?.value)    || 1;
+    const stawkaNoc= parseValue(document.getElementById('d_stawka_noc')?.value) || 300;
 
     const deleg = (km * 2 * wyjazdy * stawkaKm) + (over ? noc * osoby * stawkaNoc : 0);
     document.getElementById('deleg-result').textContent = makePl(deleg) + ' zł';
@@ -1262,6 +1291,141 @@ function updateCompanyInfo(sel) {
     })
     .catch(() => {});
 }
+
+/* ── Funkcje do obsługi wartości z przecinkami ── */
+function allowDecimalInput(event) {
+    // Allow: 0-9, comma, dot, backspace, delete, arrows, tab
+    const key = event.key;
+    if (/^[0-9.,\-]$/.test(key) || 
+        ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'].includes(key) ||
+        event.ctrlKey) {
+        return true;
+    }
+    event.preventDefault();
+    return false;
+}
+
+function validateDecimal(input) {
+    if (!input.value) return;
+    // Replace dot with comma if needed (for Polish locale)
+    let val = input.value.toString();
+    val = val.replace('.', ',');
+    
+    // Allow only numbers, comma, and minus (for negative values if needed)
+    val = val.replace(/[^0-9,\-]/g, '');
+    
+    // Ensure only one comma
+    const parts = val.split(',');
+    if (parts.length > 2) {
+        val = parts[0] + ',' + parts.slice(1).join('');
+    }
+    
+    // Limit to 2 decimal places
+    if (parts.length === 2 && parts[1].length > 2) {
+        val = parts[0] + ',' + parts[1].substring(0, 2);
+    }
+    
+    input.value = val;
+}
+
+// Helper: convert text value (with comma) to number
+function parseValue(val) {
+    if (!val) return 0;
+    val = val.toString().replace(',', '.');
+    return parseFloat(val) || 0;
+}
+
+// Override parseFloat in calculations - wrap all parseFloat calls
+const originalParseFloat = window.parseFloat;
+
+// Update recalcRow to use parseValue
+const originalRecalcRow = window.recalcRow;
+window.recalcRow = function(rid) {
+    if (!rid) return;
+    const tr = document.querySelector(`tr[data-rid="${rid}"]`);
+    if (!tr) return;
+    const qty   = parseValue(tr.querySelector('.qty-input')?.value);
+    const price = parseValue(tr.querySelector('.price-input')?.value);
+    const net   = qty * price;
+    const pct   = parseValue(document.getElementById('markup-pct').value);
+    const zn    = net * (1 + pct / 100);
+    const netDisplay = tr.querySelector('.net-display');
+    if (netDisplay) netDisplay.textContent = makePl(net);
+    const markupInput = tr.querySelector('.markup-input');
+    if (markupInput) markupInput.value = zn.toFixed(2);
+    const markupDisplay = tr.querySelector('.markup-display');
+    if (markupDisplay) markupDisplay.textContent = makePl(zn);
+    recalcAll();
+};
+
+// Update recalcAll to use parseValue
+const originalRecalcAll = window.recalcAll;
+window.recalcAll = function() {
+    let sumNetto = 0;
+    const pct    = parseValue(document.getElementById('markup-pct').value);
+    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
+        const qty   = parseValue(tr.querySelector('.qty-input')?.value);
+        const price = parseValue(tr.querySelector('.price-input')?.value);
+        const net   = qty * price;
+        sumNetto += net;
+    });
+    const delegCost = parsePl(document.getElementById('deleg-result').textContent);
+    const markupZl  = sumNetto * (pct / 100);
+    document.getElementById('markup-zl').value = markupZl.toFixed(2);
+    const total     = sumNetto + delegCost + markupZl;
+    document.getElementById('sum-services').textContent = makePl(sumNetto) + ' z\u0142';
+    document.getElementById('sum-deleg').textContent    = makePl(delegCost) + ' z\u0142';
+    document.getElementById('sum-markup').textContent   = makePl(markupZl) + ' z\u0142';
+    document.getElementById('sum-total').textContent    = makePl(total) + ' z\u0142';
+    document.getElementById('h-kwota-netto').value = total.toFixed(2);
+};
+
+// Update syncMarkup to use parseValue
+const originalSyncMarkup = window.syncMarkup;
+window.syncMarkup = function(source) {
+    let sumNetto = 0;
+    document.querySelectorAll('.price-table tbody tr').forEach(tr => {
+        sumNetto += parseValue(tr.querySelector('.qty-input')?.value)
+                  * parseValue(tr.querySelector('.price-input')?.value);
+    });
+    if (source === 'pct') {
+        const pct = parseValue(document.getElementById('markup-pct').value);
+        globalMarkup.pct = pct;
+        globalMarkup.zl  = sumNetto * (pct / 100);
+    } else {
+        const zl = parseValue(document.getElementById('markup-zl').value);
+        globalMarkup.zl  = zl;
+        const pct = sumNetto > 0 ? (zl / sumNetto) * 100 : 0;
+        globalMarkup.pct = pct;
+        document.getElementById('markup-pct').value = pct.toFixed(2);
+    }
+    document.querySelectorAll('.price-table tbody tr[data-rid]').forEach(tr => {
+        const qty   = parseValue(tr.querySelector('.qty-input')?.value);
+        const price = parseValue(tr.querySelector('.price-input')?.value);
+        const pct   = parseValue(document.getElementById('markup-pct').value);
+        const zn    = qty * price * (1 + pct / 100);
+        const markupInput = tr.querySelector('.markup-input');
+        if (markupInput) markupInput.value = zn.toFixed(2);
+        const markupDisplay = tr.querySelector('.markup-display');
+        if (markupDisplay) markupDisplay.textContent = makePl(zn);
+    });
+    recalcAll();
+};
+
+// Update collectRow to use parseValue
+const originalCollectRow = window.collectRow;
+window.collectRow = function(tr) {
+    const qty   = parseValue(tr.querySelector('.qty-input')?.value);
+    const price = parseValue(tr.querySelector('.price-input')?.value);
+    const pct   = parseValue(document.getElementById('markup-pct').value);
+    return {
+        opis:       tr.querySelector('input[type="text"]')?.value || '',
+        jedn:       tr.querySelector('.unit-select')?.value           || 'szt',
+        ilosc:      qty,
+        cena_jedn:  price,
+        z_narzutem: qty * price * (1 + pct / 100),
+    };
+};
 </script>
 @endpush
 
