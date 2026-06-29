@@ -351,15 +351,17 @@
                     default     => $req->status,
                 };
             @endphp
-            <div class="item-row">
-                <div class="item-left">
-                    <div class="item-title">{{ $req->offerFormTemplate?->name ?? 'Zapytanie #' . $req->id }}</div>
-                    <div class="item-meta">{{ $req->created_at->format('d.m.Y H:i') }}</div>
+            <a href="{{ route('client.request-offer.show', $req) }}" style="text-decoration: none; color: inherit;">
+                <div class="item-row">
+                    <div class="item-left">
+                        <div class="item-title">{{ $req->offerFormTemplate?->name ?? 'Zapytanie #' . $req->id }}</div>
+                        <div class="item-meta">{{ $req->created_at->format('d.m.Y H:i') }}</div>
+                    </div>
+                    <div class="item-right">
+                        <span class="badge {{ $badgeClass }}">{{ $statusLabel }}</span>
+                    </div>
                 </div>
-                <div class="item-right">
-                    <span class="badge {{ $badgeClass }}">{{ $statusLabel }}</span>
-                </div>
-            </div>
+            </a>
             @endforeach
         @endif
     </div>

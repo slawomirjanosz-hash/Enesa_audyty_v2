@@ -26,6 +26,18 @@ class OfferRequestController extends Controller
         return view('client.request-offer', compact('templates', 'myRequests', 'company'));
     }
 
+    public function show(OfferRequest $offerRequest): View
+    {
+        $company = auth()->user()->companies->first();
+        
+        if (!$company || $offerRequest->company_id !== $company->id) {
+            abort(403, 'Nie masz dostępu do tego zapytania.');
+        }
+
+        $offerRequest->load(['company', 'offerFormTemplate', 'createdBy']);
+        return view('client.request-show', compact('offerRequest'));
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
