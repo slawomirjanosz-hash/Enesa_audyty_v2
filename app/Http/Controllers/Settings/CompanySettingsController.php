@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\CompanySettings;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,39 @@ class CompanySettingsController extends Controller
 
         CompanySettings::updateOrCreate(['id' => 1], $data);
 
+        // Keep the owner Company record in sync
+        $this->syncOwnerCompany();
+
         return redirect()->route('settings.company')
             ->with('success', 'Dane firmy zostały zapisane.');
+    }
+
+    public function syncOwner()
+    {
+        $this->syncOwnerCompany();
+
+        return redirect()->route('settings.company')
+            ->with('success', 'Firma właściciela została zsynchronizowana z bazą danych.');
+    }
+
+    private function syncOwnerCompany(): void
+    {
+        $settings = CompanySettings::first();
+        if (!$settings) {
+            return;
+        }
+
+        Company::updateOrCreate(
+            ['is_owner' => true],
+            [
+                'name'    => $settings->name,
+                'nip'     => $settings->nip,
+                'email'   => $settings->email,
+                'phone'   => $settings->phone,
+                'address' => $settings->address,
+                'city'    => $settings->city,
+                'is_owner' => true,
+            ]
+        );
     }
 }

@@ -160,6 +160,7 @@ Route::middleware('auth')->group(function () {
             ->withTrashed();
         Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
         Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
+        Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
     });
 });
 

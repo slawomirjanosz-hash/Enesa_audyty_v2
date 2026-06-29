@@ -18,6 +18,7 @@ class Company extends Model
         'status',
         'archived_at',
         'show_in_dashboard',
+        'is_owner',
         'notes',
         'source',
     ];
@@ -76,4 +77,12 @@ class Company extends Model
     {
         return $query->whereNotNull('archived_at');
     }
+
+    public function scopeOwner($query)
+    {
+        return $query->where('is_owner', true);
+    }
+
+    /** Roles that belong to the application owner (Enesa) firm. */
+    public const STAFF_ROLES = ['superadmin', 'admin', 'auditor_senior', 'auditor'];
 }

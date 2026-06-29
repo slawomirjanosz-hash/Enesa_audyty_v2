@@ -308,10 +308,36 @@
             <button type="submit" class="btn-save">
                 <i class="ti ti-device-floppy"></i>Zapisz zmiany
             </button>
-            <span style="font-size:12px;color:#aaa;">Zmiany będą widoczne natychmiast po zapisaniu.</span>
+            <span style="font-size:12px;color:#aaa;">Zmiany będą widoczne natychmiast po zapisaniu. Firma właściciela zostanie automatycznie zsynchronizowana.</span>
         </div>
 
     </form>
+
+    {{-- Owner company sync status --}}
+    @php $ownerCompany = \App\Models\Company::owner()->first(); @endphp
+    <div style="margin-top:16px;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            @if($ownerCompany)
+                <span style="width:10px;height:10px;background:#16a34a;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+                <div>
+                    <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#1A1A1A;">Firma właściciela zsynchronizowana</div>
+                    <div style="font-size:12px;color:#888;font-family:'Lato',sans-serif;">{{ $ownerCompany->name }} (ID: {{ $ownerCompany->id }}) — pracownicy są przypisywani do tej firmy automatycznie.</div>
+                </div>
+            @else
+                <span style="width:10px;height:10px;background:#ef4444;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+                <div>
+                    <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#b91c1c;">Firma właściciela nie jest skonfigurowana</div>
+                    <div style="font-size:12px;color:#888;font-family:'Lato',sans-serif;">Kliknij "Synchronizuj", aby utworzyć firmę właściciela na podstawie danych powyżej.</div>
+                </div>
+            @endif
+        </div>
+        <form method="POST" action="{{ route('settings.company.sync-owner') }}" style="flex-shrink:0;">
+            @csrf
+            <button type="submit" style="background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
+                <i class="ti ti-refresh"></i> Synchronizuj teraz
+            </button>
+        </form>
+    </div>
 </div>
 
 @endsection

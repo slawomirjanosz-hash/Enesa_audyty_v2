@@ -94,11 +94,11 @@ class UserController extends Controller
         Role::findOrCreate($data['role']);
         $user->assignRole($data['role']);
 
-        // Auto-assign ENESA company for admin/auditor_senior/superadmin roles
-        if (in_array($data['role'], ['admin', 'auditor_senior', 'superadmin'])) {
-            $enesaCompany = Company::active()->first();
-            if ($enesaCompany) {
-                $user->companies()->attach($enesaCompany->id);
+        // Auto-assign owner (Enesa) company for all staff roles
+        if (in_array($data['role'], Company::STAFF_ROLES)) {
+            $ownerCompany = Company::owner()->first();
+            if ($ownerCompany && !$user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
+                $user->companies()->attach($ownerCompany->id);
             }
         }
 
