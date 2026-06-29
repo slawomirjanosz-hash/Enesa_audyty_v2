@@ -380,5 +380,404 @@
         }).catch(function () { /* network error – ignore */ });
     }, 60000);
 </script>
+
+{{-- ===================== CHAT WIDGET ===================== --}}
+@php $isOnChatPage = request()->routeIs('client.chat'); @endphp
+@unless($isOnChatPage)
+<div id="chat-widget">
+
+    {{-- Toggle button --}}
+    <button id="chat-toggle" onclick="widgetToggle()" title="Chat" aria-label="Otwórz chat">
+        <i class="ti ti-message-circle"></i>
+        <span id="widget-badge" style="display:none;"></span>
+    </button>
+
+    {{-- Bubble --}}
+    <div id="chat-bubble">
+
+        {{-- Bubble header --}}
+        <div id="bubble-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span id="bubble-status-dot" class="w-status-dot w-status-offline"></span>
+                <div>
+                    <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#fff;">Chat ENESA</div>
+                    <div style="font-size:11px;color:#C8DDD4;font-family:'Lato',sans-serif;" id="bubble-status-label">Niedostępny</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+                <button class="bubble-ctrl-btn" id="expand-btn" onclick="widgetExpand()" title="Rozszerz"><i class="ti ti-arrows-maximize"></i></button>
+                <button class="bubble-ctrl-btn" onclick="widgetClose()" title="Zamknij"><i class="ti ti-x"></i></button>
+            </div>
+        </div>
+
+        {{-- Messages --}}
+        <div id="bubble-messages"></div>
+
+        {{-- Input --}}
+        <div id="bubble-footer">
+            <textarea id="bubble-input" placeholder="Napisz wiadomość…" rows="2"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();widgetSend();}"></textarea>
+            <button id="bubble-send-btn" onclick="widgetSend()">
+                <i class="ti ti-send"></i> Wyślij
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<style>
+#chat-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+#chat-toggle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #1A4D3A;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(26,77,58,.35);
+    position: relative;
+    transition: background .15s, transform .15s;
+    flex-shrink: 0;
+}
+#chat-toggle:hover { background: #143d2d; transform: scale(1.07); }
+#widget-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+.w-status-online  { background: #4ADE80; }
+.w-status-offline { background: #9CA3AF; }
+.w-status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+#chat-bubble {
+    display: none;
+    flex-direction: column;
+    width: 340px;
+    max-height: 480px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.10);
+    overflow: hidden;
+    transition: width .2s, max-height .2s;
+}
+#chat-bubble.open { display: flex; }
+#chat-bubble.expanded { width: 600px; max-height: 640px; }
+#bubble-header {
+    background: #1A4D3A;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+.bubble-ctrl-btn {
+    background: rgba(255,255,255,.12);
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .12s;
+}
+.bubble-ctrl-btn:hover { background: rgba(255,255,255,.22); }
+#bubble-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    background: #FAFAF6;
+}
+.w-msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+}
+.w-msg-row.own   { flex-direction: row-reverse; }
+.w-msg-row.other { flex-direction: row; }
+.w-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.w-avatar.own   { background: #1A4D3A; color: #fff; }
+.w-avatar.other { background: #E5E1D8; color: #555; }
+.w-bubble {
+    max-width: 75%;
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: 'Lato', sans-serif;
+    line-height: 1.45;
+    word-break: break-word;
+}
+.w-bubble.own   { background: #1A4D3A; color: #fff; border-bottom-right-radius: 3px; }
+.w-bubble.other { background: #F0EDE6; color: #1A1A1A; border-bottom-left-radius: 3px; }
+.w-time {
+    font-size: 10px;
+    margin-top: 3px;
+    opacity: .6;
+    text-align: right;
+}
+.w-bubble.other .w-time { text-align: left; }
+.w-empty {
+    text-align: center;
+    color: #ccc;
+    font-size: 12px;
+    font-family: 'Manrope', sans-serif;
+    padding: 24px 8px;
+}
+#bubble-footer {
+    border-top: 1px solid #E5E1D8;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+    background: #fff;
+}
+#bubble-input {
+    width: 100%;
+    background: #FAFAF6;
+    border: 1px solid #D0CCC0;
+    border-radius: 7px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: 'Lato', sans-serif;
+    color: #1A1A1A;
+    outline: none;
+    resize: none;
+    transition: border-color .15s;
+    box-sizing: border-box;
+}
+#bubble-input:focus { border-color: #1A4D3A; background: #fff; }
+#bubble-send-btn {
+    align-self: flex-end;
+    background: #1A4D3A;
+    color: #F5F0E8;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background .15s;
+}
+#bubble-send-btn:hover { background: #143d2d; }
+</style>
+
+<script>
+(function () {
+    var SEND = '{{ route('client.chat.send') }}';
+    var POLL = '{{ route('client.chat.poll') }}';
+    var CSRF = '{{ csrf_token() }}';
+    var MY_ID = {{ auth()->id() }};
+    var widgetOpen = false;
+    var widgetExpanded = false;
+    var wLastId = 0;
+    var wPollTimer = null;
+
+    function wInitials(name) {
+        if (!name) return '?';
+        var parts = name.trim().split(' ');
+        return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+    }
+
+    function wEsc(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+    }
+
+    function wBuildBubble(msg) {
+        var cls = msg.is_own ? 'own' : 'other';
+        return '<div class="w-msg-row ' + cls + '" data-id="' + msg.id + '">' +
+            '<div class="w-avatar ' + cls + '">' + wInitials(msg.sender_name) + '</div>' +
+            '<div class="w-bubble ' + cls + '">' + wEsc(msg.body) +
+            '<div class="w-time">' + msg.created_at + '</div>' +
+            '</div></div>';
+    }
+
+    function wScrollBottom() {
+        var el = document.getElementById('bubble-messages');
+        if (el) el.scrollTop = el.scrollHeight;
+    }
+
+    function wSetStatus(isOnline) {
+        var dot   = document.getElementById('bubble-status-dot');
+        var label = document.getElementById('bubble-status-label');
+        var badge = document.getElementById('widget-badge');
+        if (dot) {
+            dot.className = 'w-status-dot ' + (isOnline ? 'w-status-online' : 'w-status-offline');
+        }
+        if (label) label.textContent = isOnline ? 'Dostępny' : 'Niedostępny';
+        if (badge) {
+            badge.className = isOnline ? 'w-status-online' : 'w-status-offline';
+        }
+    }
+
+    async function wPoll() {
+        if (!widgetOpen) return;
+        try {
+            var res = await fetch(POLL + '?last_id=' + wLastId, {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF }
+            });
+            if (!res.ok) return;
+            var data = await res.json();
+
+            if (data.onlineUsers !== undefined) {
+                wSetStatus(data.onlineUsers.length > 0);
+            }
+
+            if (data.messages && data.messages.length > 0) {
+                var win = document.getElementById('bubble-messages');
+                var empty = win.querySelector('.w-empty');
+                if (empty) empty.remove();
+                data.messages.forEach(function (msg) {
+                    if (!win.querySelector('[data-id="' + msg.id + '"]')) {
+                        win.insertAdjacentHTML('beforeend', wBuildBubble(msg));
+                        wLastId = Math.max(wLastId, msg.id);
+                    }
+                });
+                wScrollBottom();
+            }
+        } catch (e) {}
+    }
+
+    window.widgetToggle = function () {
+        var bubble = document.getElementById('chat-bubble');
+        if (widgetOpen) {
+            widgetClose();
+        } else {
+            bubble.classList.add('open');
+            widgetOpen = true;
+            var badge = document.getElementById('widget-badge');
+            if (badge) badge.style.display = 'none';
+            wPoll();
+            wPollTimer = setInterval(wPoll, 5000);
+            wScrollBottom();
+        }
+    };
+
+    window.widgetClose = function () {
+        var bubble = document.getElementById('chat-bubble');
+        bubble.classList.remove('open');
+        widgetOpen = false;
+        clearInterval(wPollTimer);
+        wPollTimer = null;
+    };
+
+    window.widgetExpand = function () {
+        var bubble = document.getElementById('chat-bubble');
+        var btn    = document.getElementById('expand-btn');
+        widgetExpanded = !widgetExpanded;
+        bubble.classList.toggle('expanded', widgetExpanded);
+        btn.innerHTML = widgetExpanded
+            ? '<i class="ti ti-arrows-minimize"></i>'
+            : '<i class="ti ti-arrows-maximize"></i>';
+    };
+
+    window.widgetSend = async function () {
+        var input = document.getElementById('bubble-input');
+        var body  = input.value.trim();
+        if (!body) return;
+        input.value = '';
+        try {
+            var res = await fetch(SEND, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': CSRF,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ body: body }),
+            });
+            if (!res.ok) return;
+            var msg = await res.json();
+            msg.is_own = true;
+            wLastId = Math.max(wLastId, msg.id);
+
+            var win   = document.getElementById('bubble-messages');
+            var empty = win.querySelector('.w-empty');
+            if (empty) empty.remove();
+            win.insertAdjacentHTML('beforeend', wBuildBubble(msg));
+            wScrollBottom();
+        } catch (e) {}
+    };
+
+    // Check online status immediately (lightweight poll with last_id=0)
+    (async function () {
+        try {
+            var res = await fetch(POLL + '?last_id=0', {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF }
+            });
+            if (!res.ok) return;
+            var data = await res.json();
+
+            // Pre-load messages into widget
+            var win = document.getElementById('bubble-messages');
+            if (data.messages && data.messages.length > 0) {
+                win.innerHTML = '';
+                data.messages.forEach(function (msg) {
+                    win.insertAdjacentHTML('beforeend', wBuildBubble(msg));
+                    wLastId = Math.max(wLastId, msg.id);
+                });
+            } else {
+                win.innerHTML = '<div class="w-empty"><i class="ti ti-message-off" style="font-size:24px;display:block;margin-bottom:6px;"></i>Brak wiadomości</div>';
+            }
+
+            if (data.onlineUsers !== undefined) {
+                wSetStatus(data.onlineUsers.length > 0);
+                var badge = document.getElementById('widget-badge');
+                if (badge) badge.style.display = data.onlineUsers.length > 0 ? 'block' : 'none';
+            }
+        } catch (e) {}
+    })();
+})();
+</script>
+@endunless
+
 </body>
 </html>
