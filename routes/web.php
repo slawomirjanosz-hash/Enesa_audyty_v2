@@ -57,7 +57,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->g
     Route::get('/chat',          [ClientChatController::class,         'index'])->name('chat');
     Route::post('/chat/send',    [ClientChatController::class,         'send'])->name('chat.send');
     Route::get('/chat/poll',     [ClientChatController::class,         'poll'])->name('chat.poll');
-    Route::post('/chat/end-conversation', [ClientChatController::class, 'endConversation'])->name('chat.end-conversation');
+    Route::post('/chat/end',     [ClientChatController::class,         'endConversation'])->name('chat.end');
     Route::get('/users',                    [ClientUserController::class, 'index'])->middleware('client.admin')->name('users');
     Route::post('/users',                   [ClientUserController::class, 'store'])->middleware('client.admin')->name('users.store');
     Route::delete('/users/{user}',          [ClientUserController::class, 'destroy'])->middleware('client.admin')->name('users.destroy');
@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{company}',                     [ChatController::class, 'show'])->name('show');
         Route::post('/{company}/send',               [ChatController::class, 'send'])->name('send');
         Route::get('/{company}/poll',                [ChatController::class, 'poll'])->name('poll');
-        Route::post('/{company}/end-conversation',   [ChatController::class, 'endConversation'])->name('end-conversation');
+        Route::post('/{company}/end',                [ChatController::class, 'endConversation'])->name('end');
     });
 
     Route::prefix('offers')->name('offers.')->group(function () {
