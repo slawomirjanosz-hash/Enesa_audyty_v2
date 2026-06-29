@@ -1167,10 +1167,181 @@
 
     {{-- ═══ ZAKŁADKA: CHAT ═══ --}}
     <div id="tab-chat" class="tab-panel">
-        <div class="empty-tab">
-            <i class="ti ti-message-circle"></i>
-            <p>Moduł czatu jest w przygotowaniu.</p>
+    @php
+        $chatMessages = \App\Models\Message::where('company_id', $company->id)
+            ->whereNull('conversation_ended_at')
+            ->with('sender')
+            ->orderBy('created_at')
+            ->get();
+        $chatArchives = \App\Models\Message::where('company_id', $company->id)
+            ->whereNotNull('conversation_ended_at')
+            ->selectRaw('conversation_id, MIN(created_at) as started_at, MAX(conversation_ended_at) as ended_at, COUNT(*) as message_count')
+            ->groupBy('conversation_id')
+            ->orderByDesc('ended_at')
+            ->get();
+    @endphp
+
+    <div style="display:flex;gap:16px;align-items:flex-start;margin-top:4px;">
+
+        {{-- Archive sidebar --}}
+        <div style="width:240px;flex-shrink:0;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:10px;overflow:hidden;">
+            <div style="background:#1A4D3A;color:#F5F0E8;padding:11px 14px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;">
+                <i class="ti ti-archive"></i> Archiwum
+            </div>
+            @if($chatArchives->isEmpty())
+                <div style="padding:20px 14px;text-align:center;color:#bbb;font-size:12px;font-family:'Manrope',sans-serif;">
+                    <i class="ti ti-history-off" style="font-size:22px;display:block;margin-bottom:6px;color:#ddd;"></i>
+                    Brak archiwalnych rozmów
+                </div>
+            @else
+                @foreach($chatArchives as $arc)
+                <div style="padding:10px 14px;border-bottom:1px solid #F0EDE6;">
+                    <div style="font-size:11px;color:#555;font-family:'Lato',sans-serif;">
+                        {{ \Carbon\Carbon::parse($arc->started_at)->format('d.m.Y H:i') }}
+                        → {{ \Carbon\Carbon::parse($arc->ended_at)->format('d.m.Y H:i') }}
+                    </div>
+                    <div style="font-size:11px;color:#999;font-family:'Lato',sans-serif;margin-top:2px;">
+                        {{ $arc->message_count }} wiadomości
+                    </div>
+                </div>
+                @endforeach
+            @endif
         </div>
+
+        {{-- Active chat --}}
+        <div style="flex:1;min-width:0;background:#fff;border:1px solid #E5E1D8;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;">
+
+            {{-- Chat header --}}
+            <div style="background:#1A4D3A;color:#F5F0E8;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+                <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;">
+                    <i class="ti ti-message-2"></i> Aktywna rozmowa
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    @if($chatMessages->isNotEmpty())
+                    <button onclick="cmpEndChat()" style="background:#ef4444;color:#fff;border:none;border-radius:7px;padding:5px 12px;font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;">
+                        <i class="ti ti-circle-x"></i> Zakończ rozmowę
+                    </button>
+                    @endif
+                    <a href="{{ route('chat.show', $company) }}" style="background:rgba(255,255,255,.15);color:#fff;border-radius:7px;padding:5px 10px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:5px;">
+                        <i class="ti ti-external-link"></i> Pełny widok
+                    </a>
+                </div>
+            </div>
+
+            {{-- Messages --}}
+            <div id="cmp-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#FAFAF6;height:340px;min-height:150px;resize:vertical;">
+                @if($chatMessages->isEmpty())
+                    <div id="cmp-empty" style="text-align:center;color:#bbb;font-size:13px;font-family:'Manrope',sans-serif;padding:40px 16px;">
+                        <i class="ti ti-message-off" style="font-size:36px;display:block;margin-bottom:10px;color:#ddd;"></i>
+                        Brak wiadomości. Rozpocznij rozmowę!
+                    </div>
+                @else
+                    @foreach($chatMessages as $msg)
+                    @php
+                        $isOwn = auth()->id() == $msg->user_id;
+                        $name  = $msg->sender?->name ?? 'Nieznany';
+                        $parts = explode(' ', trim($name));
+                        $ini   = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+                    @endphp
+                    <div class="cmp-msg-row {{ $isOwn ? 'cmp-own' : 'cmp-other' }}" data-id="{{ $msg->id }}">
+                        <div class="cmp-avatar {{ $isOwn ? 'cmp-own' : 'cmp-other' }}">{{ $ini }}</div>
+                        <div class="cmp-bubble {{ $isOwn ? 'cmp-own' : 'cmp-other' }}">
+                            {{ $msg->body }}
+                            <div class="cmp-time">{{ $msg->sender?->name ?? '' }} · {{ $msg->created_at->format('H:i') }}</div>
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
+            </div>
+
+            {{-- Input --}}
+            <div style="border-top:1px solid #E5E1D8;padding:10px 14px;display:flex;gap:8px;align-items:flex-end;background:#fff;flex-shrink:0;">
+                <textarea id="cmp-input" placeholder="Napisz wiadomość…" rows="2"
+                    style="flex:1;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;color:#1A1A1A;outline:none;resize:none;transition:border-color .15s;box-sizing:border-box;"
+                    onfocus="this.style.borderColor='#1A4D3A'" onblur="this.style.borderColor='#D0CCC0'"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();cmpSend();}"></textarea>
+                <button onclick="cmpSend()" style="background:#1A4D3A;color:#F5F0E8;border:none;border-radius:7px;padding:9px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;">
+                    <i class="ti ti-send"></i> Wyślij
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .cmp-msg-row { display:flex; align-items:flex-end; gap:7px; }
+    .cmp-own   { flex-direction:row-reverse; }
+    .cmp-other { flex-direction:row; }
+    .cmp-avatar { width:28px;height:28px;border-radius:50%;font-size:10px;font-weight:700;font-family:'Manrope',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+    .cmp-avatar.cmp-own   { background:#1A4D3A;color:#fff; }
+    .cmp-avatar.cmp-other { background:#E5E1D8;color:#555; }
+    .cmp-bubble { max-width:68%;padding:9px 13px;border-radius:13px;font-size:13px;font-family:'Lato',sans-serif;line-height:1.45;word-break:break-word; }
+    .cmp-bubble.cmp-own   { background:#1A4D3A;color:#fff;border-bottom-right-radius:3px; }
+    .cmp-bubble.cmp-other { background:#F0EDE6;color:#1A1A1A;border-bottom-left-radius:3px; }
+    .cmp-time { font-size:10px;margin-top:3px;opacity:.6;text-align:right; }
+    .cmp-bubble.cmp-other .cmp-time { text-align:left; }
+    </style>
+
+    <script>
+    (function(){
+        var SEND = '{{ route('chat.send', $company) }}';
+        var POLL = '{{ route('chat.poll', $company) }}';
+        var END  = '{{ route('chat.end', $company) }}';
+        var CSRF = '{{ csrf_token() }}';
+        var cmpLastId = {{ $chatMessages->last()?->id ?? 0 }};
+
+        function cmpIni(n){ if(!n)return'?'; var p=n.trim().split(' '); return(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+        function cmpEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+        function cmpBubble(msg){
+            var cls=msg.is_own?'cmp-own':'cmp-other';
+            return '<div class="cmp-msg-row '+cls+'" data-id="'+msg.id+'"><div class="cmp-avatar '+cls+'">'+cmpIni(msg.sender_name)+'</div>'
+                +'<div class="cmp-bubble '+cls+'">'+cmpEsc(msg.body)+'<div class="cmp-time">'+cmpEsc(msg.sender_name)+' · '+msg.created_at+'</div></div></div>';
+        }
+        function cmpScroll(){ var el=document.getElementById('cmp-messages'); if(el) el.scrollTop=el.scrollHeight; }
+
+        window.cmpSend = async function(){
+            var input=document.getElementById('cmp-input');
+            var body=input.value.trim(); if(!body)return;
+            input.value='';
+            try{
+                var res=await fetch(SEND,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':CSRF,'Accept':'application/json'},body:JSON.stringify({body:body})});
+                if(!res.ok)return;
+                var msg=await res.json(); msg.is_own=true;
+                cmpLastId=Math.max(cmpLastId,msg.id);
+                var win=document.getElementById('cmp-messages');
+                var empty=document.getElementById('cmp-empty'); if(empty)empty.remove();
+                win.insertAdjacentHTML('beforeend',cmpBubble(msg)); cmpScroll();
+            }catch(e){}
+        };
+
+        window.cmpEndChat = async function(){
+            if(!confirm('Zakończyć rozmowę z tą firmą?'))return;
+            try{
+                var res=await fetch(END,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':CSRF,'Accept':'application/json'}});
+                if(res.ok) window.location.reload();
+            }catch(e){}
+        };
+
+        async function cmpPoll(){
+            try{
+                var res=await fetch(POLL+'?json=1&last_id='+cmpLastId,{headers:{'Accept':'application/json','X-CSRF-TOKEN':CSRF}});
+                if(!res.ok)return;
+                var data=await res.json();
+                (data.messages||[]).forEach(function(msg){
+                    var win=document.getElementById('cmp-messages');
+                    if(!win||win.querySelector('[data-id="'+msg.id+'"]'))return;
+                    var empty=document.getElementById('cmp-empty'); if(empty)empty.remove();
+                    win.insertAdjacentHTML('beforeend',cmpBubble(msg));
+                    cmpLastId=Math.max(cmpLastId,msg.id);
+                });
+                if(data.messages&&data.messages.length)cmpScroll();
+            }catch(e){}
+        }
+
+        cmpScroll();
+        setInterval(cmpPoll, 5000);
+    })();
+    </script>
+
     </div>
 
     {{-- ═══ ZAKŁADKA: DOKUMENTY ═══ --}}
