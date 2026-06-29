@@ -30,6 +30,13 @@ class DashboardController extends Controller
             ->get()
             ->groupBy('company_id');
 
-        return view('dashboard', compact('companies', 'stats', 'newRequests'));
+        $acceptedOffers = Offer::with(['company', 'assignedUser'])
+            ->where('status', 'wygrana')
+            ->where('updated_at', '>=', now()->subDays(30))
+            ->orderByDesc('updated_at')
+            ->limit(10)
+            ->get();
+
+        return view('dashboard', compact('companies', 'stats', 'newRequests', 'acceptedOffers'));
     }
 }

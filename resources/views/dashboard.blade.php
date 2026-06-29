@@ -596,6 +596,54 @@
     </tbody>
 </table>
 
+{{-- ══════ ZAAKCEPTOWANE OFERTY ══════ --}}
+@if($acceptedOffers->isNotEmpty())
+<div style="margin-top:32px;margin-bottom:32px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:#1A4D3A;">
+            <i class="ti ti-rosette-discount-check" style="margin-right:6px;"></i>Zaakceptowane oferty
+        </span>
+        <span style="font-family:'Manrope',sans-serif;font-size:12px;color:#888;">(ostatnie 30 dni)</span>
+    </div>
+    <div style="background:#fff;border:0.5px solid #E5E1D8;border-radius:12px;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;font-family:'Manrope',sans-serif;font-size:13px;">
+            <thead>
+                <tr style="background:#F4F1EA;">
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Firma</th>
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Numer oferty</th>
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Data akceptacji</th>
+                    <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Kwota netto</th>
+                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($acceptedOffers as $ao)
+                <tr style="border-top:0.5px solid #F0EDE6;">
+                    <td style="padding:10px 16px;">
+                        <a href="{{ route('companies.show', $ao->company) }}" style="color:#1A4D3A;font-weight:600;text-decoration:none;">{{ $ao->company?->name ?? '—' }}</a>
+                    </td>
+                    <td style="padding:10px 16px;">
+                        <a href="{{ route('offers.edit', $ao) }}" style="color:#1A1A1A;text-decoration:none;font-weight:500;">{{ $ao->offer_full_number ?? $ao->offer_number }}</a>
+                    </td>
+                    <td style="padding:10px 16px;color:#5a6a60;">{{ $ao->updated_at->format('d.m.Y H:i') }}</td>
+                    <td style="padding:10px 16px;text-align:right;font-family:'Lato',sans-serif;font-weight:700;color:#1A1A1A;">
+                        @if($ao->kwota_netto !== null)
+                            {{ number_format($ao->kwota_netto, 2, ',', ' ') }} zł
+                        @else
+                            —
+                        @endif
+                    </td>
+                    <td style="padding:10px 16px;text-align:center;">
+                        <span style="display:inline-block;padding:2px 10px;border-radius:20px;background:#DCFCE7;color:#166534;font-size:11px;font-weight:700;">Zaakceptowana</span>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
+
 {{-- ══════ MODAL DODAJ KLIENTA ══════ --}}
 <div id="addClientModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:36px;max-width:500px;width:95%;max-height:90vh;overflow-y:auto;position:relative;">
