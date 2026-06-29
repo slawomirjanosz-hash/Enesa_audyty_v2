@@ -923,6 +923,7 @@
                         <th>#</th>
                         <th>Formularz</th>
                         <th>Odpowiedzi klienta</th>
+                        <th>Oferty</th>
                         <th>Status</th>
                         <th>Data</th>
                         <th style="text-align:right;">Akcje</th>
@@ -945,6 +946,7 @@
                         };
                         $responses = $req->form_responses ?? [];
                         $fields    = $req->offerFormTemplate?->fields ?? [];
+                        $offers    = $req->offers;
                     @endphp
                     <tr>
                         <td style="color:#888;font-size:12px;">{{ $req->id }}</td>
@@ -965,6 +967,39 @@
                             @endif
                         </td>
                         <td>
+                            @if($offers->isNotEmpty())
+                                @foreach($offers as $offer)
+                                <div style="font-size:11px;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+                                    <a href="{{ route('offers.edit', $offer) }}" style="color:#1A4D3A;text-decoration:none;font-weight:600;">
+                                        {{ $offer->offer_full_number ?? $offer->offer_number }}
+                                    </a>
+                                    <span style="color:#888;font-size:10px;">
+                                        @php
+                                            $offerStatusLabel = match($offer->status) {
+                                                'w_toku'         => 'W toku',
+                                                'wygrana'        => 'Wygrana',
+                                                'przegrana'      => 'Przegrana',
+                                                'zarchiwizowana' => 'Zarchiwizowana',
+                                                default          => $offer->status,
+                                            };
+                                            $offerStatusBg = match($offer->status) {
+                                                'wygrana'        => 'background:#DCFCE7;color:#166534;',
+                                                'przegrana'      => 'background:#FEE2E2;color:#B91C1C;',
+                                                'zarchiwizowana' => 'background:#F3F4F6;color:#4B5563;',
+                                                default          => 'background:#DBEAFE;color:#1D4ED8;',
+                                            };
+                                        @endphp
+                                        <span style="display:inline-block;padding:1px 6px;border-radius:12px;font-size:10px;font-weight:600;{{ $offerStatusBg }};">
+                                            {{ $offerStatusLabel }}
+                                        </span>
+                                    </span>
+                                </div>
+                                @endforeach
+                            @else
+                                <span style="color:#bbb;font-size:12px;">—</span>
+                            @endif
+                        </td>
+                        <td>
                             <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;{{ $statusStyle }}">
                                 {{ $statusLabel }}
                             </span>
@@ -972,10 +1007,17 @@
                         <td style="color:#7a8a80;font-size:12px;">{{ $req->created_at->format('d.m.Y H:i') }}</td>
                         <td style="text-align:right;">
                             <div style="display:flex;gap:6px;justify-content:flex-end;">
+                                @if($offers->isEmpty())
                                 <a href="{{ route('offers.create', ['company_id' => $company->id, 'offer_request_id' => $req->id]) }}"
                                    style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
                                     <i class="ti ti-file-plus" style="font-size:12px;"></i> Zrób ofertę
                                 </a>
+                                @else
+                                <a href="{{ route('offers.create', ['company_id' => $company->id, 'offer_request_id' => $req->id]) }}"
+                                   style="display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;color:#92400E;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+                                    <i class="ti ti-file-plus" style="font-size:12px;"></i> Nowa oferta
+                                </a>
+                                @endif
                                 <button onclick="markRequestDone({{ $req->id }}, this)"
                                         style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;color:#4B5563;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;">
                                     <i class="ti ti-check" style="font-size:12px;"></i> Zamknij

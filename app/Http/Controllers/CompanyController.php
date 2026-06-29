@@ -76,7 +76,7 @@ class CompanyController extends Controller
             'users_count' => $company->users->count(),
         ];
 
-        $offerRequests = \App\Models\OfferRequest::with('offerFormTemplate')
+        $offerRequests = \App\Models\OfferRequest::with('offerFormTemplate', 'offers')
             ->where('company_id', $company->id)
             ->orderByDesc('created_at')
             ->get();
