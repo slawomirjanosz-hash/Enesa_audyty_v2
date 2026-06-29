@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
     Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
     Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');
+    Route::put('/companies/{company}/users/{user}', [CompanyController::class, 'updateUser'])->name('companies.users.update');
     Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->name('companies.users.destroy');
     Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

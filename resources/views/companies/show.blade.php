@@ -1085,7 +1085,7 @@
                             </td>
                             <td>
                                 <div class="user-actions">
-                                    <button type="button" class="user-action-btn">Edytuj</button>
+                                    <button type="button" class="user-action-btn" onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}', '{{ $user->phone ?? '' }}', '{{ $user->hasRole('client_admin') ? 'client_admin' : 'client_user' }}')">Edytuj</button>
                                     <form method="POST" action="{{ route('companies.users.destroy', [$company, $user]) }}" style="display:inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć tego użytkownika z firmy? Konto użytkownika zostanie zachowane.');">
                                         @csrf
                                         @method('DELETE')
@@ -1145,47 +1145,40 @@
     </div>
 </div>
 
-{{-- ═══ MODAL DODAJ UŻYTKOWNIKA ═══ --}}
+{{-- ═══ MODAL DODAJ/EDYTUJ UŻYTKOWNIKA ═══ --}}
 <div id="userModalOverlay" class="user-modal-overlay" onclick="closeUserModalOutside(event)">
     <div class="user-modal">
         <div class="user-modal-header">
             <div>
-                <h2>Dodaj użytkownika</h2>
-                <p>Utwórz nowe konto powiązane z tą firmą.</p>
+                <h2 id="userModalTitle">Dodaj użytkownika</h2>
+                <p id="userModalSubtitle">Utwórz nowe konto powiązane z tą firmą.</p>
             </div>
             <button type="button" class="modal-close-btn" onclick="closeUserModal()">&times;</button>
         </div>
 
-        <form method="POST" action="{{ route('companies.users.store', $company) }}">
+        {{-- FORMULARZ DODAWANIA --}}
+        <form id="userCreateForm" method="POST" action="{{ route('companies.users.store', $company) }}" style="display:none;">
             @csrf
-
-            @if($errors->any())
-                <div style="background:#FFEBEE;border-left:4px solid #C62828;padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:16px;">
-                    @foreach($errors->all() as $error)
-                        <p style="margin:0;font-size:13px;color:#B71C1C;">{{ $error }}</p>
-                    @endforeach
-                </div>
-            @endif
 
             <div class="modal-grid">
                 <div class="modal-field">
                     <label for="user-first-name">Imię</label>
-                    <input id="user-first-name" type="text" name="first_name" value="{{ old('first_name') }}" required>
+                    <input id="user-first-name" type="text" name="first_name" required>
                 </div>
                 <div class="modal-field">
                     <label for="user-last-name">Nazwisko</label>
-                    <input id="user-last-name" type="text" name="last_name" value="{{ old('last_name') }}" required>
+                    <input id="user-last-name" type="text" name="last_name" required>
                 </div>
             </div>
 
             <div class="modal-grid">
                 <div class="modal-field">
                     <label for="user-email">Email</label>
-                    <input id="user-email" type="email" name="email" value="{{ old('email') }}" required>
+                    <input id="user-email" type="email" name="email" required>
                 </div>
                 <div class="modal-field">
                     <label for="user-phone">Telefon</label>
-                    <input id="user-phone" type="text" name="phone" value="{{ old('phone') }}">
+                    <input id="user-phone" type="text" name="phone">
                 </div>
             </div>
 
@@ -1193,11 +1186,11 @@
                 <label>Rola</label>
                 <div class="role-choice">
                     <label>
-                        <input type="radio" name="role" value="client_admin" {{ old('role', 'client_admin') === 'client_admin' ? 'checked' : '' }}>
+                        <input type="radio" name="role" value="client_admin" checked>
                         <span>Główny kontakt</span>
                     </label>
                     <label>
-                        <input type="radio" name="role" value="client_user" {{ old('role') === 'client_user' ? 'checked' : '' }}>
+                        <input type="radio" name="role" value="client_user">
                         <span>Użytkownik firmy</span>
                     </label>
                 </div>
@@ -1209,6 +1202,46 @@
             </div>
 
             <button type="submit" class="modal-submit">Utwórz użytkownika</button>
+        </form>
+
+        {{-- FORMULARZ EDYCJI --}}
+        <form id="userEditForm" method="POST" style="display:none;">
+            @csrf
+            @method('PUT')
+
+            <input type="hidden" id="edit-user-id" name="user_id">
+
+            <div class="modal-grid">
+                <div class="modal-field">
+                    <label for="edit-user-name">Imię i nazwisko</label>
+                    <input id="edit-user-name" type="text" name="name" required>
+                </div>
+                <div class="modal-field">
+                    <label for="edit-user-phone">Telefon</label>
+                    <input id="edit-user-phone" type="text" name="phone">
+                </div>
+            </div>
+
+            <div class="modal-field">
+                <label for="edit-user-email">Email</label>
+                <input id="edit-user-email" type="email" name="email" required>
+            </div>
+
+            <div class="modal-field">
+                <label>Rola</label>
+                <div class="role-choice">
+                    <label>
+                        <input type="radio" id="edit-role-admin" name="role" value="client_admin">
+                        <span>Główny kontakt</span>
+                    </label>
+                    <label>
+                        <input type="radio" id="edit-role-user" name="role" value="client_user">
+                        <span>Użytkownik firmy</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="modal-submit">Zapisz zmiany</button>
         </form>
     </div>
 </div>
@@ -1268,12 +1301,45 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
 
     function closeUserModal() {
         document.getElementById('userModalOverlay').style.display = 'none';
+        // Reset to create form
+        document.getElementById('userCreateForm').style.display = 'block';
+        document.getElementById('userEditForm').style.display = 'none';
+        document.getElementById('userCreateForm').reset();
     }
 
     function closeUserModalOutside(event) {
         if (event.target.id === 'userModalOverlay') {
             closeUserModal();
         }
+    }
+
+    function editUser(userId, userName, userEmail, userPhone, userRole) {
+        // Show edit form, hide create form
+        document.getElementById('userCreateForm').style.display = 'none';
+        document.getElementById('userEditForm').style.display = 'block';
+        
+        // Update modal title
+        document.getElementById('userModalTitle').textContent = 'Edytuj użytkownika';
+        document.getElementById('userModalSubtitle').textContent = 'Zmień dane użytkownika.';
+        
+        // Populate form fields
+        document.getElementById('edit-user-id').value = userId;
+        document.getElementById('edit-user-name').value = userName;
+        document.getElementById('edit-user-email').value = userEmail;
+        document.getElementById('edit-user-phone').value = userPhone;
+        
+        // Set role radio button
+        if (userRole === 'client_admin') {
+            document.getElementById('edit-role-admin').checked = true;
+        } else {
+            document.getElementById('edit-role-user').checked = true;
+        }
+        
+        // Update form action to point to update route
+        document.getElementById('userEditForm').action = '/companies/{{ $company->id }}/users/' + userId;
+        
+        // Open modal
+        openUserModal();
     }
 </script>
 @endpush

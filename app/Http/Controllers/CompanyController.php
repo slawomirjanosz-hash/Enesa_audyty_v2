@@ -193,6 +193,34 @@ class CompanyController extends Controller
             ->with('success', 'Użytkownik został odpięty od firmy. Konto użytkownika zostało zachowane.');
     }
 
+    public function updateUser(Request $request, Company $company, User $user)
+    {
+        $data = $request->validate([
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role'  => ['required', Rule::in(['client_admin', 'client_user'])],
+        ]);
+
+        // Update user data
+        $user->update([
+            'name'  => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+        ]);
+
+        // Sync role
+        $user->syncRoles([$data['role']]);
+
+        // Update company relationship is_admin flag
+        $company->users()->updateExistingPivot($user->id, [
+            'is_admin' => $data['role'] === 'client_admin',
+        ]);
+
+        return redirect()->route('companies.show', $company)
+            ->with('success', 'Dane użytkownika zostały zaktualizowane.');
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
