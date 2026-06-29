@@ -757,6 +757,8 @@
                         <option value="admin"          {{ old('role') === 'admin'          ? 'selected' : '' }}>Administrator</option>
                         <option value="auditor_senior" {{ old('role') === 'auditor_senior' ? 'selected' : '' }}>Audytor Senior</option>
                         <option value="auditor"        {{ old('role') === 'auditor'        ? 'selected' : '' }}>Audytor</option>
+                        <option value="client_admin"   {{ old('role') === 'client_admin'   ? 'selected' : '' }}>Klient - Admin</option>
+                        <option value="client_user"    {{ old('role') === 'client_user'    ? 'selected' : '' }}>Klient - User</option>
                     </select>
                 </div>
             </div>

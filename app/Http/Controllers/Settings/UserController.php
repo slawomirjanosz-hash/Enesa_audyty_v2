@@ -71,7 +71,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor', 'superadmin'])],
+            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor', 'superadmin', 'client_admin', 'client_user'])],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
             'name.required'  => 'Imię i nazwisko jest wymagane.',
@@ -127,7 +127,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor'])],
+            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor', 'superadmin', 'client_admin', 'client_user'])],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
             'name.required'  => 'Imię i nazwisko jest wymagane.',
