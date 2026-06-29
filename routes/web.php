@@ -54,6 +54,9 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->g
     Route::get('/request-offer/{offerRequest}', [ClientOfferRequestController::class, 'show'])->name('request-offer.show');
     Route::get('/documents',     [ClientDocumentController::class,     'index'])->name('documents');
     Route::get('/chat',          [ClientChatController::class,         'index'])->name('chat');
+    Route::post('/chat/send',    [ClientChatController::class,         'send'])->name('chat.send');
+    Route::get('/chat/poll',     [ClientChatController::class,         'poll'])->name('chat.poll');
+    Route::post('/chat/end-conversation', [ClientChatController::class, 'endConversation'])->name('chat.end-conversation');
     Route::get('/users',                    [ClientUserController::class, 'index'])->middleware('client.admin')->name('users');
     Route::post('/users',                   [ClientUserController::class, 'store'])->middleware('client.admin')->name('users.store');
     Route::delete('/users/{user}',          [ClientUserController::class, 'destroy'])->middleware('client.admin')->name('users.destroy');
