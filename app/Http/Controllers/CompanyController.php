@@ -200,14 +200,22 @@ class CompanyController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'role'  => ['required', Rule::in(['client_admin', 'client_user'])],
+            'password' => ['nullable', 'string', 'min:8'],
         ]);
 
         // Update user data
-        $user->update([
+        $updateData = [
             'name'  => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
-        ]);
+        ];
+
+        // Only update password if provided
+        if (!empty($data['password'])) {
+            $updateData['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($updateData);
 
         // Sync role
         $user->syncRoles([$data['role']]);

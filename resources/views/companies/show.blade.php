@@ -1249,6 +1249,11 @@
                 </div>
             </div>
 
+            <div class="modal-field">
+                <label for="edit-user-password">Nowe hasło <span style="color:#999;font-size:12px;">(opcjonalnie, zostaw puste aby nie zmieniać)</span></label>
+                <input id="edit-user-password" type="password" name="password">
+            </div>
+
             <button type="submit" class="modal-submit">Zapisz zmiany</button>
         </form>
     </div>
