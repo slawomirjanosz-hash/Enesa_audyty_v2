@@ -36,4 +36,25 @@ class OfferController extends Controller
 
         return view('client.offer-show', compact('offer', 'company'));
     }
+
+    public function accept(Offer $offer)
+    {
+        $company = auth()->user()->companies->first();
+
+        if (!$company || $company->id !== $offer->company_id) {
+            abort(403);
+        }
+
+        if ($offer->status !== 'w_toku') {
+            return back()->with('error', 'Nie można zaakceptować tej oferty.');
+        }
+
+        $offer->update([
+            'status' => 'wygrana',
+            'won_as' => 'audyt',
+        ]);
+
+        return redirect()->route('client.offers.show', $offer)
+            ->with('success', 'Oferta została zaakceptowana');
+    }
 }
