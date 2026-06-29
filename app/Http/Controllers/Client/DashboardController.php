@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Offer;
 use App\Models\OfferRequest;
+use App\Models\Audit;
 
 class DashboardController extends Controller
 {
@@ -26,6 +27,10 @@ class DashboardController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view('client.dashboard', compact('company', 'offers', 'offerRequests'));
+        $audits = Audit::where('company_id', $company->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('client.dashboard', compact('company', 'offers', 'offerRequests', 'audits'));
     }
 }
