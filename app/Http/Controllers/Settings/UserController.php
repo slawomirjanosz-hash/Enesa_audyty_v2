@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -96,7 +97,7 @@ class UserController extends Controller
 
         // Auto-assign owner (Enesa) company for all staff roles
         if (in_array($data['role'], Company::STAFF_ROLES)) {
-            $ownerCompany = Company::owner()->first();
+            $ownerCompany = Company::owner()->first() ?? $this->ensureOwnerCompany();
             if ($ownerCompany && !$user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
                 $user->companies()->attach($ownerCompany->id);
             }
@@ -282,5 +283,26 @@ class UserController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Użytkownik został przypisany do firmy.');
+    }
+
+    private function ensureOwnerCompany(): ?Company
+    {
+        $settings = CompanySettings::first();
+        if (!$settings || !$settings->name) {
+            return null;
+        }
+
+        return Company::updateOrCreate(
+            ['is_owner' => true],
+            [
+                'name'     => $settings->name,
+                'nip'      => $settings->nip,
+                'email'    => $settings->email,
+                'phone'    => $settings->phone,
+                'address'  => $settings->address,
+                'city'     => $settings->city,
+                'is_owner' => true,
+            ]
+        );
     }
 }
