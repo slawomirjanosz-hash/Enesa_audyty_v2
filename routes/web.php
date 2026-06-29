@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuditTypeController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AuditController as ClientAuditController;
 use App\Http\Controllers\Client\ChatController as ClientChatController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
@@ -106,6 +107,14 @@ Route::middleware('auth')->group(function () {
         Route::put('/{offerForm}',                   [OfferFormTemplateController::class, 'update'])->name('update');
         Route::delete('/{offerForm}',                [OfferFormTemplateController::class, 'destroy'])->name('destroy');
         Route::patch('/{offerForm}/toggle',          [OfferFormTemplateController::class, 'toggleActive'])->name('toggle');
+    });
+
+    Route::prefix('chat')->name('chat.')->group(function () {
+        Route::get('/',                              [ChatController::class, 'index'])->name('index');
+        Route::get('/{company}',                     [ChatController::class, 'show'])->name('show');
+        Route::post('/{company}/send',               [ChatController::class, 'send'])->name('send');
+        Route::get('/{company}/poll',                [ChatController::class, 'poll'])->name('poll');
+        Route::post('/{company}/end-conversation',   [ChatController::class, 'endConversation'])->name('end-conversation');
     });
 
     Route::prefix('offers')->name('offers.')->group(function () {
