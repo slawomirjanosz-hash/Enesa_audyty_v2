@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $companyIds = Message::whereNull('conversation_ended_at')
             ->distinct()
@@ -18,10 +18,9 @@ class ChatController extends Controller
         $companies = Company::whereIn('id', $companyIds)
             ->get()
             ->map(function ($company) {
-                $messages = Message::where('company_id', $company->id)
+                $lastMessage = Message::where('company_id', $company->id)
                     ->whereNull('conversation_ended_at')
                     ->orderByDesc('created_at')
-                    ->limit(1)
                     ->first();
 
                 $unreadCount = Message::where('company_id', $company->id)
@@ -30,22 +29,41 @@ class ChatController extends Controller
                     ->count();
 
                 return [
-                    'company' => $company,
-                    'last_message' => $messages,
+                    'company'      => $company,
+                    'last_message' => $lastMessage,
                     'unread_count' => $unreadCount,
                 ];
             });
 
+        if ($request->expectsJson() || $request->query('json')) {
+            return response()->json([
+                'companies'    => $companies->values(),
+                'total_unread' => $companies->sum('unread_count'),
+            ]);
+        }
+
         return view('chat.index', compact('companies'));
     }
 
-    public function show(Company $company)
+    public function show(Request $request, Company $company)
     {
         $messages = Message::where('company_id', $company->id)
             ->whereNull('conversation_ended_at')
             ->with('sender')
             ->orderBy('created_at')
             ->get();
+
+        if ($request->expectsJson() || $request->query('json')) {
+            return response()->json([
+                'messages' => $messages->map(fn($msg) => [
+                    'id'          => $msg->id,
+                    'body'        => $msg->body,
+                    'sender_name' => $msg->sender?->name ?? 'Nieznany',
+                    'created_at'  => $msg->created_at->format('H:i'),
+                    'is_own'      => $msg->user_id === auth()->id(),
+                ]),
+            ]);
+        }
 
         $archives = Message::where('company_id', $company->id)
             ->whereNotNull('conversation_ended_at')

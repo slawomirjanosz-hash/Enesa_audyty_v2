@@ -598,5 +598,481 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 @stack('scripts')
+
+{{-- ===================== AUDITOR CHAT WIDGET ===================== --}}
+@auth
+<div id="aud-chat-widget">
+
+    {{-- Toggle button --}}
+    <button id="aud-chat-toggle" onclick="audWidgetToggle()" title="Chat z klientami" aria-label="Chat">
+        <i class="ti ti-message-circle"></i>
+        <span id="aud-badge" style="display:none;">0</span>
+    </button>
+
+    {{-- Bubble --}}
+    <div id="aud-chat-bubble">
+
+        {{-- Header --}}
+        <div id="aud-bubble-header">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                <button id="aud-back-btn" onclick="audShowList()" title="Wróć" style="display:none;background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:6px;width:26px;height:26px;display:none;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                    <i class="ti ti-arrow-left" style="font-size:13px;"></i>
+                </button>
+                <div style="min-width:0;">
+                    <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="aud-header-title">Chat z klientami</div>
+                    <div style="font-size:11px;color:#C8DDD4;font-family:'Lato',sans-serif;" id="aud-header-sub">Wybierz rozmowę</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0;">
+                <button class="aud-ctrl-btn" id="aud-expand-btn" onclick="audWidgetExpand()" title="Rozszerz"><i class="ti ti-arrows-maximize"></i></button>
+                <button class="aud-ctrl-btn" onclick="audWidgetClose()" title="Zamknij"><i class="ti ti-x"></i></button>
+            </div>
+        </div>
+
+        {{-- Company list --}}
+        <div id="aud-company-list"></div>
+
+        {{-- Messages pane --}}
+        <div id="aud-messages-pane" style="display:none;flex-direction:column;flex:1;min-height:0;">
+            <div id="aud-messages-window"></div>
+            <div id="aud-msg-footer">
+                <textarea id="aud-msg-input" placeholder="Napisz wiadomość…" rows="2"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();audSend();}"></textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <button id="aud-end-btn" onclick="audEndConversation()">
+                        <i class="ti ti-circle-x"></i> Zakończ rozmowę
+                    </button>
+                    <button id="aud-send-btn" onclick="audSend()">
+                        <i class="ti ti-send"></i> Wyślij
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+#aud-chat-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+#aud-chat-toggle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #1A4D3A;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(26,77,58,.35);
+    position: relative;
+    transition: background .15s, transform .15s;
+    flex-shrink: 0;
+}
+#aud-chat-toggle:hover { background: #143d2d; transform: scale(1.07); }
+#aud-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background: #EF4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #fff;
+}
+#aud-chat-bubble {
+    display: none;
+    flex-direction: column;
+    width: 340px;
+    height: 460px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.10);
+    overflow: hidden;
+    transition: width .2s, height .2s;
+}
+#aud-chat-bubble.open { display: flex; }
+#aud-chat-bubble.expanded { width: 600px; height: 620px; }
+#aud-bubble-header {
+    background: #1A4D3A;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 8px;
+}
+.aud-ctrl-btn {
+    background: rgba(255,255,255,.12);
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .12s;
+}
+.aud-ctrl-btn:hover { background: rgba(255,255,255,.22); }
+#aud-company-list {
+    flex: 1;
+    overflow-y: auto;
+    background: #FAFAF6;
+}
+.aud-company-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #F0EDE6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: background .12s;
+}
+.aud-company-item:hover { background: #F4F1EA; }
+.aud-company-name {
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1A1A1A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.aud-company-last {
+    font-size: 11px;
+    color: #888;
+    font-family: 'Lato', sans-serif;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.aud-unread-badge {
+    background: #EF4444;
+    color: #fff;
+    border-radius: 9px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    flex-shrink: 0;
+    font-family: 'Manrope', sans-serif;
+}
+.aud-list-empty {
+    padding: 32px 16px;
+    text-align: center;
+    color: #bbb;
+    font-size: 12px;
+    font-family: 'Manrope', sans-serif;
+}
+#aud-messages-pane {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+#aud-messages-window {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #FAFAF6;
+    min-height: 0;
+}
+.aud-msg-row { display:flex; align-items:flex-end; gap:6px; }
+.aud-msg-row.own   { flex-direction:row-reverse; }
+.aud-msg-row.other { flex-direction:row; }
+.aud-avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    font-size: 10px; font-weight: 700; font-family: 'Manrope', sans-serif;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.aud-avatar.own   { background: #1A4D3A; color: #fff; }
+.aud-avatar.other { background: #E5E1D8; color: #555; }
+.aud-bubble {
+    max-width: 75%; padding: 8px 11px; border-radius: 12px;
+    font-size: 13px; font-family: 'Lato', sans-serif; line-height: 1.45; word-break: break-word;
+}
+.aud-bubble.own   { background: #1A4D3A; color: #fff; border-bottom-right-radius: 3px; }
+.aud-bubble.other { background: #F0EDE6; color: #1A1A1A; border-bottom-left-radius: 3px; }
+.aud-time { font-size: 10px; margin-top: 3px; opacity: .6; text-align: right; }
+.aud-bubble.other .aud-time { text-align: left; }
+.aud-msg-empty {
+    text-align: center; color: #ccc;
+    font-size: 12px; font-family: 'Manrope', sans-serif; padding: 24px 8px;
+}
+#aud-msg-footer {
+    border-top: 1px solid #E5E1D8;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+    background: #fff;
+}
+#aud-msg-input {
+    width: 100%; background: #FAFAF6; border: 1px solid #D0CCC0;
+    border-radius: 7px; padding: 8px 10px; font-size: 13px;
+    font-family: 'Lato', sans-serif; color: #1A1A1A; outline: none;
+    resize: none; transition: border-color .15s; box-sizing: border-box;
+}
+#aud-msg-input:focus { border-color: #1A4D3A; background: #fff; }
+#aud-send-btn {
+    background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 7px;
+    padding: 7px 14px; font-family: 'Manrope', sans-serif; font-size: 12px;
+    font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: background .15s;
+}
+#aud-send-btn:hover { background: #143d2d; }
+#aud-end-btn {
+    background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA;
+    border-radius: 7px; padding: 6px 12px; font-family: 'Manrope', sans-serif;
+    font-size: 11px; font-weight: 700; cursor: pointer; display: flex;
+    align-items: center; gap: 5px; transition: background .15s;
+}
+#aud-end-btn:hover { background: #FEE2E2; }
+</style>
+
+<script>
+(function () {
+    var BASE      = '{{ url('/chat') }}';
+    var CSRF      = '{{ csrf_token() }}';
+    var MY_ID     = {{ auth()->id() }};
+    var isOpen    = false;
+    var expanded  = false;
+    var activeCompanyId   = null;
+    var activeCompanyName = null;
+    var audLastId = 0;
+    var pollTimer = null;
+
+    function esc(t) {
+        return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
+    function initials(n) {
+        if (!n) return '?';
+        var p = n.trim().split(' ');
+        return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
+    }
+    function scrollBottom() {
+        var el = document.getElementById('aud-messages-window');
+        if (el) el.scrollTop = el.scrollHeight;
+    }
+    function buildBubble(msg) {
+        var cls = msg.is_own ? 'own' : 'other';
+        return '<div class="aud-msg-row ' + cls + '" data-id="' + msg.id + '">' +
+            '<div class="aud-avatar ' + cls + '">' + initials(msg.sender_name) + '</div>' +
+            '<div class="aud-bubble ' + cls + '">' + esc(msg.body) +
+            '<div class="aud-time">' + msg.created_at + '</div></div></div>';
+    }
+
+    // ---- Company list ----
+    async function loadCompanyList() {
+        try {
+            var res = await fetch(BASE + '?json=1', {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF }
+            });
+            if (!res.ok) return;
+            var data = await res.json();
+            renderCompanyList(data.companies || [], data.total_unread || 0);
+        } catch (e) {}
+    }
+
+    function renderCompanyList(companies, totalUnread) {
+        var badge = document.getElementById('aud-badge');
+        if (badge) {
+            badge.style.display = totalUnread > 0 ? 'flex' : 'none';
+            badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+        }
+        var list = document.getElementById('aud-company-list');
+        if (!list) return;
+        if (companies.length === 0) {
+            list.innerHTML = '<div class="aud-list-empty"><i class="ti ti-messages-off" style="font-size:24px;display:block;margin-bottom:8px;"></i>Brak aktywnych rozmów</div>';
+            return;
+        }
+        list.innerHTML = companies.map(function (item) {
+            var c = item.company;
+            var last = item.last_message ? esc(item.last_message.body || '').substring(0, 40) : '';
+            var unread = item.unread_count > 0
+                ? '<span class="aud-unread-badge">' + item.unread_count + '</span>' : '';
+            return '<div class="aud-company-item" onclick="audSelectCompany(' + c.id + ', \'' + esc(c.name) + '\')">' +
+                '<div style="min-width:0;">' +
+                '<div class="aud-company-name">' + esc(c.name) + '</div>' +
+                (last ? '<div class="aud-company-last">' + last + '</div>' : '') +
+                '</div>' + unread + '</div>';
+        }).join('');
+    }
+
+    // ---- Messages ----
+    async function loadMessages(companyId, since) {
+        since = since || 0;
+        try {
+            var res = await fetch(BASE + '/' + companyId + '?json=1&last_id=' + since, {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF }
+            });
+            if (!res.ok) return;
+            var data = await res.json();
+            var msgs = data.messages || [];
+            var win  = document.getElementById('aud-messages-window');
+            if (!win) return;
+
+            if (since === 0) {
+                // Full load
+                if (msgs.length === 0) {
+                    win.innerHTML = '<div class="aud-msg-empty"><i class="ti ti-message-off" style="font-size:24px;display:block;margin-bottom:6px;"></i>Brak wiadomości</div>';
+                } else {
+                    win.innerHTML = msgs.map(buildBubble).join('');
+                    audLastId = msgs[msgs.length - 1].id;
+                }
+            } else {
+                // Append new
+                msgs.forEach(function (msg) {
+                    if (!win.querySelector('[data-id="' + msg.id + '"]')) {
+                        var empty = win.querySelector('.aud-msg-empty');
+                        if (empty) empty.remove();
+                        win.insertAdjacentHTML('beforeend', buildBubble(msg));
+                        audLastId = Math.max(audLastId, msg.id);
+                    }
+                });
+            }
+            scrollBottom();
+        } catch (e) {}
+    }
+
+    // ---- Poll ----
+    async function audPoll() {
+        if (!isOpen) return;
+        if (activeCompanyId) {
+            await loadMessages(activeCompanyId, audLastId);
+        }
+        await loadCompanyList();
+    }
+
+    // ---- Public API ----
+    window.audWidgetToggle = function () {
+        if (isOpen) { audWidgetClose(); return; }
+        var bubble = document.getElementById('aud-chat-bubble');
+        bubble.classList.add('open');
+        isOpen = true;
+        loadCompanyList();
+        pollTimer = setInterval(audPoll, 5000);
+    };
+
+    window.audWidgetClose = function () {
+        document.getElementById('aud-chat-bubble').classList.remove('open');
+        isOpen = false;
+        clearInterval(pollTimer);
+        pollTimer = null;
+    };
+
+    window.audWidgetExpand = function () {
+        expanded = !expanded;
+        var bubble = document.getElementById('aud-chat-bubble');
+        var btn    = document.getElementById('aud-expand-btn');
+        bubble.classList.toggle('expanded', expanded);
+        btn.innerHTML = expanded
+            ? '<i class="ti ti-arrows-minimize"></i>'
+            : '<i class="ti ti-arrows-maximize"></i>';
+    };
+
+    window.audSelectCompany = function (companyId, companyName) {
+        activeCompanyId   = companyId;
+        activeCompanyName = companyName;
+        audLastId = 0;
+
+        document.getElementById('aud-header-title').textContent = companyName;
+        document.getElementById('aud-header-sub').textContent   = 'Aktywna rozmowa';
+        document.getElementById('aud-company-list').style.display  = 'none';
+        document.getElementById('aud-messages-pane').style.display = 'flex';
+        var backBtn = document.getElementById('aud-back-btn');
+        backBtn.style.display = 'flex';
+
+        document.getElementById('aud-messages-window').innerHTML = '';
+        loadMessages(companyId, 0);
+    };
+
+    window.audShowList = function () {
+        activeCompanyId   = null;
+        activeCompanyName = null;
+        audLastId = 0;
+
+        document.getElementById('aud-header-title').textContent = 'Chat z klientami';
+        document.getElementById('aud-header-sub').textContent   = 'Wybierz rozmowę';
+        document.getElementById('aud-company-list').style.display  = '';
+        document.getElementById('aud-messages-pane').style.display = 'none';
+        document.getElementById('aud-back-btn').style.display = 'none';
+        loadCompanyList();
+    };
+
+    window.audSend = async function () {
+        if (!activeCompanyId) return;
+        var input = document.getElementById('aud-msg-input');
+        var body  = input.value.trim();
+        if (!body) return;
+        input.value = '';
+        try {
+            var res = await fetch(BASE + '/' + activeCompanyId + '/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': CSRF,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ body: body }),
+            });
+            if (!res.ok) return;
+            var msg = await res.json();
+            msg.is_own = true;
+            var win   = document.getElementById('aud-messages-window');
+            var empty = win.querySelector('.aud-msg-empty');
+            if (empty) empty.remove();
+            win.insertAdjacentHTML('beforeend', buildBubble(msg));
+            audLastId = Math.max(audLastId, msg.id);
+            scrollBottom();
+        } catch (e) {}
+    };
+
+    window.audEndConversation = async function () {
+        if (!activeCompanyId) return;
+        if (!confirm('Zakończyć rozmowę z tą firmą?')) return;
+        try {
+            var res = await fetch(BASE + '/' + activeCompanyId + '/end', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+            });
+            if (res.ok) audShowList();
+        } catch (e) {}
+    };
+
+    // Initial badge load
+    loadCompanyList();
+})();
+</script>
+@endauth
+
 </body>
 </html>
