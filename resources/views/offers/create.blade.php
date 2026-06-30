@@ -237,13 +237,6 @@
             <div class="offer-num">{{ $suggestedNumber }}</div>
             <div class="doc-date">Nowa oferta · {{ now()->format('d.m.Y') }}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <div style="display:flex;align-items:center;gap:8px;">
-                <label style="font-size:11px;opacity:.8;white-space:nowrap;">Ważna do:</label>
-                <input type="date" name="valid_until" value="{{ $validUntilDefault }}"
-                       style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 10px;color:#fff;font-size:13px;font-family:'Lato',sans-serif;outline:none;cursor:pointer;">
-            </div>
-        </div>
     </div>
 
     {{-- Firma klienta i osoba prowadząca --}}
@@ -546,6 +539,23 @@
         <div class="summary-row total">
             <span class="summary-label" style="font-size:15px;">ŁĄCZNIE NETTO</span>
             <span class="summary-value" id="sum-total">0,00 zł</span>
+        </div>
+    </div>
+</div>
+
+{{-- ── TERMIN WAŻNOŚCI ─────────────────────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-calendar-check"></i>
+        <span class="ed-card-title">Termin ważności oferty</span>
+    </div>
+    <div class="ed-card-body">
+        <div style="display:grid;grid-template-columns:1fr;">
+            <div>
+                <label class="field-label">Ważna do <span style="color:#DC2626;">*</span></label>
+                <input type="date" name="valid_until" class="field-input" 
+                       value="{{ old('valid_until', $validUntilDefault) }}" required>
+            </div>
         </div>
     </div>
 </div>

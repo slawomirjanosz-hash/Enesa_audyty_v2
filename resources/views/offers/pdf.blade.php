@@ -121,8 +121,8 @@ body {
 {{-- NAGŁÓWEK --}}
 <table class="hdr-tbl">
 <tr>
-    <td style="width:56px; padding-right:12px;">
-        <div class="logo-sq">EN<br>ESA</div>
+    <td style="width:100px; padding-right:12px;">
+        <img src="{{ public_path('Logo2.png') }}" style="width:100%; height:auto; max-width:100px;" alt="ENESA Logo">
     </td>
     <td>
         <div class="brand-name">ENESA</div>
@@ -131,10 +131,7 @@ body {
     <td style="text-align:right; white-space:nowrap;">
         <div class="doc-ref-num">OFERTA NR {{ $offer->fullNumber() }}</div>
         <div class="doc-ref-dates">
-            Data wystawienia: <strong>{{ $offer->created_at->format('d.m.Y') }}</strong><br>
-            @if($offer->valid_until)
-                Ważna do: <strong>{{ $offer->valid_until->format('d.m.Y') }}</strong>
-            @endif
+            Data wystawienia: <strong>{{ $offer->created_at->format('d.m.Y') }}</strong>
         </div>
     </td>
 </tr>
@@ -316,17 +313,6 @@ body {
 @endif
 @endif
 
-{{-- OPIS DODATKOWY --}}
-@if(!empty($offer->additional_description))
-<div class="sec-block">
-    <table class="sec-hdr-tbl"><tr>
-        <td class="sec-lbl-text">Opis dodatkowy</td>
-        <td class="sec-lbl-line"></td>
-    </tr></table>
-    <div class="sec-content">{!! nl2br(e($offer->additional_description)) !!}</div>
-</div>
-@endif
-
 {{-- PODSUMOWANIE --}}
 @php
     $totalNet = $netServices + ($totalDel ?? 0);
@@ -349,6 +335,30 @@ body {
         <td class="r">{{ number_format($totalNet, 2, ',', ' ') }} zł</td>
     </tr>
 </table>
+
+{{-- TERMIN WAŻNOŚCI --}}
+@if($offer->valid_until)
+<div class="sec-block">
+    <table class="sec-hdr-tbl"><tr>
+        <td class="sec-lbl-text">Termin ważności oferty</td>
+        <td class="sec-lbl-line"></td>
+    </tr></table>
+    <div class="sec-content">
+        Niniejsza oferta ważna jest do dnia <strong>{{ $offer->valid_until->format('d.m.Y') }}</strong>.
+    </div>
+</div>
+@endif
+
+{{-- OPIS DODATKOWY --}}
+@if(!empty($offer->additional_description))
+<div class="sec-block">
+    <table class="sec-hdr-tbl"><tr>
+        <td class="sec-lbl-text">Opis dodatkowy</td>
+        <td class="sec-lbl-line"></td>
+    </tr></table>
+    <div class="sec-content">{!! nl2br(e($offer->additional_description)) !!}</div>
+</div>
+@endif
 
 {{-- TERMIN + WARUNKI --}}
 <table class="terms-tbl">
