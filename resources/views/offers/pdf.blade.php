@@ -280,40 +280,74 @@ body {
 @endif
 
 {{-- DELEGACJE --}}
-@if($offer->offerDelegation)
 @php
-    $del      = $offer->offerDelegation;
-    $stawkaKm = (float)($del->stawka_km ?? 1.10);
-    $km       = (int)($del->km_do_klienta ?? 0);
-    $wyjazdy  = (int)($del->liczba_wyjazdow ?? 1);
-    $osoby    = (int)($del->liczba_osob ?? 1);
-    $noce     = (int)($del->liczba_noc ?? 0);
-    $stawkaNoc = (float)($del->stawka_noc ?? 0);
+    $delegSections = [];
 
-    $kosztKm  = $km * 2 * $wyjazdy * $stawkaKm;
-    $kosztNoc = $noce * $osoby * $stawkaNoc;
-    $totalDel = $kosztKm + $kosztNoc;
+    if (!empty($offer->delegations)) {
+        // Nowy format — wiele lokalizacji jako JSON
+        foreach ($offer->delegations as $loc) {
+            $km      = (float)($loc['km'] ?? 0);
+            $wyjazdy = (int)($loc['wyjazdy'] ?? 1);
+            $osoby   = (int)($loc['osoby'] ?? 1);
+            $noce    = (int)($loc['noce'] ?? 0);
+            $sKm     = (float)($loc['stawka_km'] ?? 1.10);
+            $sNoc    = (float)($loc['stawka_noc'] ?? 200);
+            $total   = $km * 2 * $wyjazdy * $sKm + $noce * $osoby * $sNoc;
+            if ($total > 0) {
+                $delegSections[] = [
+                    'nazwa' => $loc['nazwa'] ?? 'Siedziba zamawiającego',
+                    'adres' => $loc['adres'] ?? '',
+                    'total' => $total,
+                ];
+            }
+        }
+    } elseif ($offer->offerDelegation) {
+        // Stary format — jeden rekord
+        $del     = $offer->offerDelegation;
+        $km      = (float)($del->km_do_klienta ?? 0);
+        $wyjazdy = (int)($del->liczba_wyjazdow ?? 1);
+        $osoby   = (int)($del->liczba_osob ?? 1);
+        $noce    = (int)($del->liczba_noc ?? 0);
+        $sKm     = (float)($del->stawka_km ?? 1.10);
+        $sNoc    = (float)($del->stawka_noc ?? 200);
+        $total   = $km * 2 * $wyjazdy * $sKm + $noce * $osoby * $sNoc;
+        if ($total > 0) {
+            $delegSections[] = [
+                'nazwa' => 'Siedziba zamawiającego',
+                'adres' => '',
+                'total' => $total,
+            ];
+        }
+    }
+
+    $totalDel = collect($delegSections)->sum('total');
 @endphp
 
-@if($totalDel > 0)
+@if(count($delegSections) > 0)
 <div class="sec-block">
     <table class="sec-hdr-tbl"><tr>
         <td class="sec-lbl-text">Delegacje</td>
         <td class="sec-lbl-line"></td>
     </tr></table>
 
+    @foreach($delegSections as $loc)
     <div class="deleg-outer">
         <table class="deleg-row-tbl">
-            @if($km > 0 && $offer->show_unit_prices)
             <tr>
-                <td>Delegacja</td>
-                <td class="r">{{ number_format($totalDel, 2, ',', ' ') }} zł</td>
+                <td>
+                    <strong>{{ $loc['nazwa'] }}</strong>
+                    @if($loc['adres'])
+                        <br><span style="font-size:8pt;color:#888;">{{ $loc['adres'] }}</span>
+                    @endif
+                </td>
+                @if($offer->show_unit_prices)
+                <td class="r">{{ number_format($loc['total'], 2, ',', ' ') }} zł</td>
+                @endif
             </tr>
-            @endif
         </table>
     </div>
+    @endforeach
 </div>
-@endif
 @endif
 
 {{-- PODSUMOWANIE --}}
