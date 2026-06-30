@@ -44,7 +44,7 @@ body {
 .offer-title-sub  { font-size: 8.5pt; color: #888; margin-top: 4px; }
 
 /* STRONY */
-.party-accent { width: 3px; background: #1A4D3A; padding: 0; }
+.party-accent { width: 5px; background: #1A4D3A; padding: 0; }
 .party-inner {
     background: #F9F7F4;
     border-top: 1px solid #E5E1D8;
@@ -127,8 +127,8 @@ body {
         @endif
     </td>
     <td>
-        <div class="brand-name">ENESA</div>
-        <div class="brand-sub">Efektywność Energetyczna · Białe Certyfikaty · ISO 50001</div>
+        <div class="brand-sub">Efektywność Energetyczna</div>
+        <div class="brand-sub">Białe Certyfikaty · ISO 50001</div>
     </td>
     <td style="text-align:right; white-space:nowrap;">
         <div class="doc-ref-num">OFERTA NR {{ $offer->fullNumber() }}</div>

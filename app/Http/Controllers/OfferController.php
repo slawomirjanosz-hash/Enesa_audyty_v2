@@ -360,7 +360,7 @@ class OfferController extends Controller
             $mpdf = new \Mpdf\Mpdf([
                 'mode' => 'utf-8',
                 'format' => 'A4',
-                'margin_top' => 20,
+                'margin_top' => 12,
                 'margin_bottom' => 20,
                 'margin_left' => 15,
                 'margin_right' => 15,
