@@ -330,9 +330,6 @@
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
-                    <li><a href="{{ route('offer-requests.create') }}" class="nav-link {{ request()->routeIs('offer-requests.create') ? 'active' : '' }}">
-                        <i class="ti ti-mail-plus"></i> Nowe zapytanie (z maila)
-                    </a></li>
                     <li><a href="{{ url('/offers?template=1') }}" class="nav-link {{ request()->is('offers*') && request('template') ? 'active' : '' }}">
                         <i class="ti ti-bookmark"></i> Szablony ofert
                     </a></li>
