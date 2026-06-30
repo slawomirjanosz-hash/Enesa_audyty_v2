@@ -123,7 +123,7 @@ body {
 <tr>
     <td style="width:70px; padding-right:12px; vertical-align:top;">
         @if($logoBase64)
-        <img src="{{ $logoBase64 }}" width="60" height="60" alt="ENESA Logo">
+        <img src="{{ $logoBase64 }}" width="60" alt="ENESA Logo">
         @endif
     </td>
     <td>
