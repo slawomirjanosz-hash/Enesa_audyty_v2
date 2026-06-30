@@ -181,6 +181,7 @@ Route::prefix('crm')->name('crm.')->middleware(['auth'])->group(function () {
     Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
     Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
+    Route::delete('/orphaned-users/{assignmentId}', [CrmController::class, 'detachOrphanedUser'])->name('detach-orphaned-user');
 });
 
 // Session check endpoint (used by session-expired modal JS)

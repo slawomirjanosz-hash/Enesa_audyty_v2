@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class CrmController extends Controller
 {
@@ -55,8 +56,31 @@ if ($authUser->hasRole('superadmin')) {
             ->orderBy('name')
             ->get();
 
+        // Orphaned user-company assignments (assigned to archived/deleted companies)
+        $orphanedAssignments = DB::table('company_user')
+            ->leftJoin('companies', 'company_user.company_id', '=', 'companies.id')
+            ->leftJoin('users', 'company_user.user_id', '=', 'users.id')
+            ->where(function ($q) {
+                $q->whereNull('companies.id')  // Company doesn't exist (hard deleted)
+                  ->orWhereNotNull('companies.archived_at');  // Or company is archived
+            })
+            ->wherePivotNull('company_user.deleted_at')  // And assignment is not soft-deleted
+            ->select(
+                'company_user.id',
+                'company_user.user_id',
+                'company_user.company_id',
+                'users.name as user_name',
+                'users.email as user_email',
+                'companies.name as company_name',
+                'companies.archived_at'
+            )
+            ->orderBy('users.name')
+            ->get();
+
+        $currentTab = request('tab', 'companies');
+
         return view('crm.index', compact(
-            'companies', 'opportunities', 'tasks', 'users', 'stats', 'archivedCompanies'
+            'companies', 'opportunities', 'tasks', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
         ));
     }
 
@@ -181,5 +205,21 @@ if ($authUser->hasRole('superadmin')) {
     {
         $opportunity->delete();
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została usunięta.');
+    }
+
+    public function detachOrphanedUser($assignmentId): RedirectResponse
+    {
+        $assignment = DB::table('company_user')->find($assignmentId);
+
+        if (!$assignment) {
+            return redirect()->route('crm.index')->with('error', 'Powiązanie nie znalezione.');
+        }
+
+        // Soft-delete the assignment
+        DB::table('company_user')
+            ->where('id', $assignmentId)
+            ->update(['deleted_at' => now()]);
+
+        return redirect()->route('crm.index')->with('success', 'Powiązanie użytkownika zostało usunięte.');
     }
 }

@@ -607,6 +607,59 @@
 </div>
 @endif
 
+{{-- ═══ NIEKOMPLETNE POWIĄZANIA UŻYTKOWNIKÓW ═══ --}}
+@if($orphanedAssignments->count() > 0)
+<div class="table-card" style="margin-top:20px;border-left:4px solid #DC2626;">
+    <div class="table-card-header" style="background:#FEE2E2;">
+        <div class="table-card-title" style="color:#991B1B;"><i class="ti ti-alert-circle" style="margin-right:6px;"></i> Niekompletne powiązania użytkowników ({{ $orphanedAssignments->count() }})</div>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Użytkownik</th>
+                    <th>Email</th>
+                    <th>Przydzielona firma</th>
+                    <th>Status</th>
+                    <th style="text-align:center;">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($orphanedAssignments as $assignment)
+                <tr style="background:#FFFBFB;">
+                    <td style="font-weight:600;">{{ $assignment->user_name ?? '—' }}</td>
+                    <td style="color:#888;font-size:12px;">{{ $assignment->user_email ?? '—' }}</td>
+                    <td style="color:#DC2626;font-weight:600;">
+                        {{ $assignment->company_name ?? '(USUNIĘTA)' }}
+                        @if(is_null($assignment->company_name))
+                            <span style="display:inline-block;background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:6px;">NIEISTNIEJĄCA</span>
+                        @elseif($assignment->archived_at)
+                            <span style="display:inline-block;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:6px;">ZARCHIWIZOWANA</span>
+                        @endif
+                    </td>
+                    <td>
+                        <span class="badge badge-red">Brak dostępu</span>
+                    </td>
+                    <td style="text-align:center;">
+                        <form method="POST" action="{{ route('crm.detach-orphaned-user', $assignment->id) }}" style="display:inline;" onsubmit="return confirm('Czy na pewno odłączyć tego użytkownika? Powiązanie zostanie usunięte.');">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-icon btn-icon-delete" title="Usuń powiązanie">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div style="padding:14px 18px;background:#FFFBFB;border-top:1px solid #FEE2E2;font-size:12px;color:#DC2626;">
+        <i class="ti ti-info-circle" style="margin-right:4px;"></i>
+        <strong>Uwaga:</strong> Te użytkowniki są przydzieleni do firm które zostały usunięte lub zarchiwizowane. Aby uniknąć problemów z usuwaniem użytkowników, należy je odłączyć.
+    </div>
+</div>
+@endif
+
 {{-- ═══ MODAL: NOWA SZANSA ═══ --}}
 <div id="modal-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
