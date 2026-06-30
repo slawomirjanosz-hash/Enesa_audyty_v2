@@ -441,109 +441,28 @@
     </button>
 </div>
 
-{{-- C3: Delegacje --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-car"></i>
-        <span class="ed-card-title">Delegacja</span>
-        <button type="button" id="btn-fetch-distance" onclick="fetchDistanceForOffer()" class="btn-secondary" style="margin-left:auto;padding:4px 10px;font-size:12px;">
-            <i class="ti ti-map-pin"></i> Pobierz z Google Maps
-        </button>
+{{-- DELEGACJE --}}
+<div class="form-section" id="section-delegacje">
+    <div class="form-section-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <i class="ti ti-car" style="font-size:18px;color:#1A4D3A;"></i>
+            <span class="form-section-title">Delegacje</span>
+        </div>
     </div>
-    <div class="ed-card-body">
-        <div id="distance-info" style="margin-bottom:10px;min-height:18px;font-size:12px;"></div>
-        <div class="deleg-grid">
-            <div>
-                <label class="field-label">Odległość do klienta</label>
-                <div class="input-group">
-                    <input type="text" id="d_km" class="field-input decimal-input"
-                           value="{{ old('km_do_klienta', $d?->km_do_klienta ?? 0) }}"
-                           placeholder="0"
-                           oninput="validateDecimal(this); calcDeleg()"
-                           onkeydown="return allowDecimalInput(event)">
-                    <span class="input-suffix">km</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label">Stawka za km</label>
-                <div class="input-group">
-                    <input type="text" id="d_stawka_km" class="field-input decimal-input" 
-                           value="{{ old('stawka_km', $d?->stawka_km ?? 1.10) }}" 
-                           placeholder="np. 1,50" 
-                           oninput="validateDecimal(this); calcDeleg()"
-                           onkeydown="return allowDecimalInput(event)">
-                    <span class="input-suffix">zł/km</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label">Czas dojazdu</label>
-                <div class="input-group">
-                    <input type="text" id="d_czas" class="field-input decimal-input"
-                           value="{{ old('czas_dojazdu_min', $d?->czas_dojazdu_min ?? 0) }}"
-                           placeholder="0"
-                           oninput="validateDecimal(this)"
-                           onkeydown="return allowDecimalInput(event)">
-                    <span class="input-suffix">min</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label">Liczba wyjazdów</label>
-                <input type="text" id="d_wyjazdy" class="field-input decimal-input"
-                       value="{{ old('liczba_wyjazdow', $d?->liczba_wyjazdow ?? 1) }}"
-                       placeholder="1"
-                       oninput="validateDecimal(this); calcDeleg()"
-                       onkeydown="return allowDecimalInput(event)">
-            </div>
-        </div>
+    <div class="form-section-body">
 
-        <div style="margin-top:14px;">
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;color:#555;">
-                <input type="checkbox" id="d_kilkudniowy" value="1"
-                       {{ ($d?->czy_kilkudniowy || old('czy_kilkudniowy')) ? 'checked' : '' }}
-                       onchange="toggleOvernight(this);calcDeleg();"
-                       style="width:16px;height:16px;accent-color:#1A4D3A;">
-                Wyjazd wielodniowy?
-            </label>
-        </div>
+        <div id="deleg-sections"></div>
 
-        <div id="overnightSection" style="{{ ($d?->czy_kilkudniowy || old('czy_kilkudniowy')) ? '' : 'display:none;' }}margin-top:12px;">
-            <div class="deleg-grid">
-                <div>
-                    <label class="field-label">Liczba nocy</label>
-                    <input type="text" id="d_noc" class="field-input decimal-input"
-                           value="{{ old('liczba_noc', $d?->liczba_noc ?? 0) }}"
-                           placeholder="0"
-                           oninput="validateDecimal(this); calcDeleg()"
-                           onkeydown="return allowDecimalInput(event)">
-                </div>
-                <div>
-                    <label class="field-label">Liczba osĂłb</label>
-                    <input type="text" id="d_osoby" class="field-input decimal-input"
-                           value="{{ old('liczba_osob', $d?->liczba_osob ?? 1) }}"
-                           placeholder="1"
-                           oninput="validateDecimal(this); calcDeleg()"
-                           onkeydown="return allowDecimalInput(event)">
-                </div>
-                <div>
-                    <label class="field-label">Stawka za dobę hotelową</label>
-                    <div class="input-group">
-                        <input type="text" id="d_stawka_noc" class="field-input decimal-input" 
-                               value="{{ old('stawka_noc', $d?->stawka_noc ?? 300) }}" 
-                               placeholder="np. 300,00"
-                               oninput="validateDecimal(this); calcDeleg()"
-                               onkeydown="return allowDecimalInput(event)">
-                        <span class="input-suffix">zł</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <button type="button" class="btn-add-section" onclick="delegAddSection()">
+            <i class="ti ti-plus"></i> Dodaj lokalizację
+        </button>
 
-        <div style="background:#F0F7F3;border:1px solid #94C4B0;border-radius:8px;padding:12px 16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:.05em;">Koszt delegacji netto</span>
-            <span id="deleg-result" style="font-family:'Lato',sans-serif;font-size:20px;font-weight:900;color:#1A4D3A;">0,00 zł</span>
-        </div>
+        <input type="hidden" name="delegations" id="delegations-json">
+        {{-- Ukryty element zachowany dla kompatybilności z recalcAll() --}}
+        <span id="deleg-result" style="display:none;">0,00 zł</span>
     </div>
 </div>
+
 
 {{-- â”€â”€ SEKCJA B3: TERMIN REALIZACJI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
 <div class="ed-card">
@@ -876,7 +795,9 @@ function syncMarkup(source) {
 // DELEGATION CALC
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function calcDeleg() {
-    const km       = parseValue(document.getElementById('d_km').value)        || 0;
+    const kmEl = document.getElementById('d_km');
+    if (!kmEl) return; // delegacje obsługuje teraz dynamiczny builder (delegRender)
+    const km       = parseValue(kmEl.value)        || 0;
     const stawkaKm = parseValue(document.getElementById('d_stawka_km').value) || 1.10;
     const wyjazdy  = parseValue(document.getElementById('d_wyjazdy').value)   || 1;
     const over     = document.getElementById('d_kilkudniowy').checked;
@@ -1015,14 +936,20 @@ function collectSections() {
 }
 
 function syncDelegHiddens() {
-    document.getElementById('h-km').value          = document.getElementById('d_km').value || 0;
-    document.getElementById('h-stawka-km').value   = document.getElementById('d_stawka_km').value || 1.10;
-    document.getElementById('h-czas').value        = document.getElementById('d_czas').value || 0;
-    document.getElementById('h-wyjazdy').value     = document.getElementById('d_wyjazdy').value || 1;
-    document.getElementById('h-kilkudniowy').value = document.getElementById('d_kilkudniowy').checked ? '1' : '0';
-    document.getElementById('h-noc').value         = document.getElementById('d_noc')?.value || 0;
-    document.getElementById('h-osoby').value       = document.getElementById('d_osoby')?.value || 1;
-    document.getElementById('h-stawka-noc').value  = document.getElementById('d_stawka_noc')?.value || 300;
+    // Delegacje pochodzą teraz z dynamicznego buildera (delegSections).
+    // Wypełniamy stare ukryte pola na podstawie pierwszej lokalizacji,
+    // aby zachować zgodność z istniejącym zapisem OfferDelegation.
+    if (typeof delegSections === 'undefined' || !delegSections.length) return;
+    const first = delegSections[0];
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    setVal('h-km',          first.km || 0);
+    setVal('h-stawka-km',   first.stawka_km || 1.10);
+    setVal('h-czas',        0);
+    setVal('h-wyjazdy',     first.wyjazdy || 1);
+    setVal('h-kilkudniowy', (first.noce > 0) ? '1' : '0');
+    setVal('h-noc',         first.noce || 0);
+    setVal('h-osoby',       first.osoby || 1);
+    setVal('h-stawka-noc',  first.stawka_noc || 300);
 }
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1222,9 +1149,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(r => r.json())
             .then(data => {
                 if (data.km !== undefined) {
-                    document.getElementById('d_km').value   = data.km;
-                    document.getElementById('d_czas').value = data.minutes;
-                    calcDeleg();
+                    if (typeof delegSections !== 'undefined' && delegSections[0]) {
+                        delegSections[0].km = data.km;
+                        if (typeof delegRender === 'function') delegRender();
+                    }
                     if (distanceInfo) {
                         distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
                         distanceInfo.style.display = 'block';
@@ -1254,9 +1182,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(r => r.json())
         .then(data => {
             if (data.km !== undefined) {
-                document.getElementById('d_km').value   = data.km;
-                document.getElementById('d_czas').value = data.minutes;
-                calcDeleg();
+                if (typeof delegSections !== 'undefined' && delegSections[0]) {
+                    delegSections[0].km = data.km;
+                    if (typeof delegRender === 'function') delegRender();
+                }
                 if (distanceInfo) {
                     distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
                     distanceInfo.style.display = 'block';
@@ -1326,9 +1255,10 @@ function updateCompanyInfo(sel) {
     .then(r => r.json())
     .then(data => {
         if (data.km !== undefined) {
-            document.getElementById('d_km').value   = data.km;
-            document.getElementById('d_czas').value = data.minutes;
-            calcDeleg();
+            if (typeof delegSections !== 'undefined' && delegSections[0]) {
+                delegSections[0].km = data.km;
+                if (typeof delegRender === 'function') delegRender();
+            }
             distInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
             distInfo.style.display = 'block';
         }
@@ -1470,6 +1400,173 @@ window.collectRow = function(tr) {
         z_narzutem: qty * price * (1 + pct / 100),
     };
 };
+</script>
+
+<script>
+// ── Delegacje builder ──────────────────────────────────────────────
+
+const DELEG_STAWKA_KM  = 1.10;
+const DELEG_STAWKA_NOC = 200;
+
+let delegSections = @json(old('delegations') ? json_decode(old('delegations'), true) : ($offer->delegations ?? []));
+
+// Jeśli brak danych JSON ale istnieje stary offerDelegation — importuj go
+@if($offer->delegations === null && $offer->offerDelegation)
+delegSections = [{
+    nazwa:    'Siedziba zamawiającego',
+    adres:    '',
+    km:       {{ (int)($offer->offerDelegation->km_do_klienta ?? 0) }},
+    wyjazdy:  {{ (int)($offer->offerDelegation->liczba_wyjazdow ?? 1) }},
+    osoby:    {{ (int)($offer->offerDelegation->liczba_osob ?? 1) }},
+    noce:     {{ (int)($offer->offerDelegation->liczba_noc ?? 0) }},
+    stawka_km:  {{ (float)($offer->offerDelegation->stawka_km ?? 1.10) }},
+    stawka_noc: {{ (float)($offer->offerDelegation->stawka_noc ?? 200) }},
+}];
+@endif
+
+if (!delegSections || delegSections.length === 0) {
+    delegSections = [{
+        nazwa: 'Siedziba zamawiającego',
+        adres: '',
+        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
+        stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
+    }];
+}
+
+function delegRender() {
+    const wrap = document.getElementById('deleg-sections');
+    wrap.innerHTML = '';
+
+    delegSections.forEach(function(sec, idx) {
+        const isFirst = idx === 0;
+        const total = delegCalc(sec);
+
+        const div = document.createElement('div');
+        div.className = 'deleg-section-card';
+        div.style.cssText = 'background:#FAFAF6;border:1px solid #E5E1D8;border-radius:10px;padding:18px;margin-bottom:14px;';
+        div.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <i class="ti ti-map-pin" style="color:#1A4D3A;font-size:16px;"></i>
+                    <strong style="font-family:'Manrope',sans-serif;font-size:13px;color:#1A1A1A;">
+                        ${isFirst ? 'Siedziba zamawiającego' : 'Inna lokalizacja'}
+                    </strong>
+                </div>
+                ${!isFirst ? `<button type="button" onclick="delegRemoveSection(${idx})"
+                    style="background:none;border:none;color:#DC2626;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;">
+                    <i class="ti ti-trash"></i> Usuń
+                </button>` : ''}
+            </div>
+
+            ${!isFirst ? `
+            <div class="row-2col" style="margin-bottom:12px;">
+                <div>
+                    <label class="field-label">Nazwa lokalizacji</label>
+                    <input type="text" class="field-input" placeholder="np. Fabryka Kraków"
+                        value="${esc(sec.nazwa)}"
+                        oninput="delegSections[${idx}].nazwa=this.value;delegSave()">
+                </div>
+                <div>
+                    <label class="field-label">Adres lokalizacji</label>
+                    <input type="text" class="field-input" placeholder="ul. Przykładowa 1, Kraków"
+                        value="${esc(sec.adres)}"
+                        oninput="delegSections[${idx}].adres=this.value;delegSave()">
+                </div>
+            </div>` : ''}
+
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
+                <div>
+                    <label class="field-label">Km do klienta (w jedną stronę)</label>
+                    <input type="number" class="field-input" min="0" step="1"
+                        value="${sec.km}"
+                        oninput="delegSections[${idx}].km=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Liczba wyjazdów</label>
+                    <input type="number" class="field-input" min="1" step="1"
+                        value="${sec.wyjazdy}"
+                        oninput="delegSections[${idx}].wyjazdy=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Liczba osób</label>
+                    <input type="number" class="field-input" min="1" step="1"
+                        value="${sec.osoby}"
+                        oninput="delegSections[${idx}].osoby=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Liczba noclegów</label>
+                    <input type="number" class="field-input" min="0" step="1"
+                        value="${sec.noce}"
+                        oninput="delegSections[${idx}].noce=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Stawka za km (zł)</label>
+                    <input type="number" class="field-input" min="0" step="0.01"
+                        value="${sec.stawka_km}"
+                        oninput="delegSections[${idx}].stawka_km=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Stawka za nocleg (zł)</label>
+                    <input type="number" class="field-input" min="0" step="1"
+                        value="${sec.stawka_noc}"
+                        oninput="delegSections[${idx}].stawka_noc=+this.value;delegUpdateTotal(${idx})">
+                </div>
+            </div>
+
+            <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:#1A4D3A;font-weight:700;">
+                Koszt tej lokalizacji: ${delegFmt(total)} zł
+            </div>
+        `;
+        wrap.appendChild(div);
+    });
+
+    delegSave();
+}
+
+function delegCalc(sec) {
+    const km  = (sec.km || 0) * 2 * (sec.wyjazdy || 1) * (sec.stawka_km || DELEG_STAWKA_KM);
+    const noc = (sec.noce || 0) * (sec.osoby || 1) * (sec.stawka_noc || DELEG_STAWKA_NOC);
+    return km + noc;
+}
+
+function delegUpdateTotal(idx) {
+    const el = document.getElementById('deleg-total-' + idx);
+    if (el) el.textContent = 'Koszt tej lokalizacji: ' + delegFmt(delegCalc(delegSections[idx])) + ' zł';
+    delegSave();
+}
+
+function delegAddSection() {
+    delegSections.push({
+        nazwa: '', adres: '',
+        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
+        stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
+    });
+    delegRender();
+}
+
+function delegRemoveSection(idx) {
+    delegSections.splice(idx, 1);
+    delegRender();
+}
+
+function delegSave() {
+    document.getElementById('delegations-json').value = JSON.stringify(delegSections);
+    // Aktualizuj ukryty #deleg-result i podsumowanie oferty
+    var grand = delegSections.reduce(function(s, sec){ return s + delegCalc(sec); }, 0);
+    var dr = document.getElementById('deleg-result');
+    if (dr) dr.textContent = delegFmt(grand) + ' zł';
+    if (typeof recalcAll === 'function') recalcAll();
+}
+
+function esc(str) {
+    return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function delegFmt(n) {
+    return parseFloat(n || 0).toLocaleString('pl-PL', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+delegRender();
 </script>
 @endpush
 

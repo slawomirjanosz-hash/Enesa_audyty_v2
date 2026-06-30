@@ -109,6 +109,7 @@ class OfferController extends Controller
             'content_payment'           => ['nullable', 'string'],
             'show_unit_prices'          => ['nullable'],
             'price_sections'            => ['nullable', 'string'],
+            'delegations'               => ['nullable', 'string'],
             // Delegation
             'km_do_klienta'             => ['nullable', 'numeric', 'min:0'],
             'stawka_km'                 => ['nullable', 'numeric', 'min:0'],
@@ -128,6 +129,12 @@ class OfferController extends Controller
         if ($request->filled('price_sections')) {
             $decoded = json_decode($request->input('price_sections'), true);
             $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+
+        $delegations = null;
+        if ($request->filled('delegations')) {
+            $decoded = json_decode($request->input('delegations'), true);
+            $delegations = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
         }
 
         $offer = Offer::create([
@@ -151,6 +158,7 @@ class OfferController extends Controller
             'content_payment'           => $data['content_payment'] ?? null,
             'show_unit_prices'          => $request->input('show_unit_prices') === '1',
             'price_sections'            => $priceSections,
+            'delegations'               => $delegations,
         ]);
 
         OfferDelegation::create([
@@ -235,6 +243,7 @@ class OfferController extends Controller
             'content_payment'           => ['nullable', 'string'],
             'show_unit_prices'          => ['nullable'],
             'price_sections'            => ['nullable', 'string'],
+            'delegations'               => ['nullable', 'string'],
             // Delegation
             'km_do_klienta'             => ['nullable', 'numeric', 'min:0'],
             'stawka_km'                 => ['nullable', 'numeric', 'min:0'],
@@ -254,6 +263,12 @@ class OfferController extends Controller
         if ($request->filled('price_sections')) {
             $decoded = json_decode($request->input('price_sections'), true);
             $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+
+        $delegations = null;
+        if ($request->filled('delegations')) {
+            $decoded = json_decode($request->input('delegations'), true);
+            $delegations = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
         }
 
         $offer->update([
@@ -276,6 +291,7 @@ class OfferController extends Controller
             'content_payment'           => $data['content_payment'] ?? null,
             'show_unit_prices'          => $request->input('show_unit_prices') === '1',
             'price_sections'            => $priceSections,
+            'delegations'               => $delegations,
         ]);
 
         $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
