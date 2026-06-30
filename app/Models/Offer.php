@@ -28,6 +28,7 @@ class Offer extends Model
         'kwota_netto',
         'valid_until',
         'notes',
+        'additional_description',
         'content_subject',
         'content_scope',
         'content_deadline',

@@ -316,6 +316,17 @@ body {
 @endif
 @endif
 
+{{-- OPIS DODATKOWY --}}
+@if(!empty($offer->additional_description))
+<div class="sec-block">
+    <table class="sec-hdr-tbl"><tr>
+        <td class="sec-lbl-text">Opis dodatkowy</td>
+        <td class="sec-lbl-line"></td>
+    </tr></table>
+    <div class="sec-content">{!! nl2br(e($offer->additional_description)) !!}</div>
+</div>
+@endif
+
 {{-- PODSUMOWANIE --}}
 @php
     $totalNet = $netServices + ($totalDel ?? 0);

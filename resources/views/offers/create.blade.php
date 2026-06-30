@@ -562,6 +562,18 @@
     </div>
 </div>
 
+{{-- ── OPIS DODATKOWY ────────────────────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-file-description"></i>
+        <span class="ed-card-title">Opis dodatkowy</span>
+    </div>
+    <div class="ed-card-body">
+        <textarea name="additional_description" class="field-input" rows="4"
+                  placeholder="Dodatkowe informacje, warunki, uwagi — będą widoczne w PDF oferty...">{{ old('additional_description') }}</textarea>
+    </div>
+</div>
+
 {{-- Hidden fields --}}
 
 <input type="hidden" name="liczba_wyjazdow" value="1" id="h-wyjazdy">

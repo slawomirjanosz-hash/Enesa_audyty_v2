@@ -647,6 +647,18 @@
     </div>
 </div>
 
+{{-- ── OPIS DODATKOWY ────────────────────────── --}}
+<div class="ed-card">
+    <div class="ed-card-header">
+        <i class="ti ti-file-description"></i>
+        <span class="ed-card-title">Opis dodatkowy</span>
+    </div>
+    <div class="ed-card-body">
+        <textarea name="additional_description" class="field-input" rows="4"
+                  placeholder="Dodatkowe informacje, warunki, uwagi — będą widoczne w PDF oferty...">{{ old('additional_description', $offer->additional_description) }}</textarea>
+    </div>
+</div>
+
 {{-- Inne pola z oryginalnego formularza potrzebne do walidacji --}}
 <input type="hidden" name="offer_number"     value="{{ $offer->offer_number }}">
 <input type="hidden" name="offer_slug"       value="{{ $offer->offer_slug }}">
