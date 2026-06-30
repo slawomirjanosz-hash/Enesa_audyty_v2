@@ -186,4 +186,29 @@ Route::get('/session-check', function () {
     return response()->json(['authenticated' => auth()->check()]);
 })->name('session.check');
 
+Route::get('/debug-logo', function () {
+    $results = [];
+
+    $b64File = app_path('Support/logo_b64.txt');
+    $results['logo_b64_txt_exists'] = file_exists($b64File);
+    if (file_exists($b64File)) {
+        $raw = file_get_contents($b64File);
+        $results['logo_b64_txt_size'] = strlen($raw);
+        $results['logo_b64_txt_starts_with'] = substr($raw, 0, 30);
+        $results['logo_b64_txt_has_newlines'] = str_contains($raw, "\n") || str_contains($raw, "\r");
+    }
+
+    $pngPath = public_path('Logo2.png');
+    $results['public_logo2_png_exists'] = file_exists($pngPath);
+    if (file_exists($pngPath)) {
+        $results['public_logo2_png_size'] = filesize($pngPath);
+        $results['public_logo2_png_readable'] = is_readable($pngPath);
+    }
+
+    $results['app_path'] = app_path();
+    $results['public_path'] = public_path();
+
+    return response()->json($results, 200, [], JSON_PRETTY_PRINT);
+})->middleware('auth');
+
 require __DIR__.'/auth.php';
