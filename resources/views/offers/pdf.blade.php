@@ -62,6 +62,7 @@ body {
 .sec-lbl-text {
     font-size: 7.5pt; font-weight: bold; text-transform: uppercase;
     letter-spacing: .1em; color: #1A4D3A; white-space: nowrap; padding-right: 8px;
+    width: 1%;
 }
 .sec-lbl-line { width: 100%; border-bottom: 1px solid #E5E1D8; }
 .sec-block   { margin-bottom: 18px; }
