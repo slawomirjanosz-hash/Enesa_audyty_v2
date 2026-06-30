@@ -343,15 +343,25 @@ class OfferController extends Controller
         $logoBase64 = null;
 
         if (file_exists($logoB64File)) {
-            $logoBase64 = trim(file_get_contents($logoB64File));
-            \Illuminate\Support\Facades\Log::info('PDF logo: loaded from logo_b64.txt', [
-                'length' => strlen($logoBase64),
-            ]);
+            $raw = file_get_contents($logoB64File);
+            // Strip ALL whitespace (spaces, tabs, newlines) — wrapped base64 breaks data URIs
+            $cleaned = preg_replace('/\s+/', '', $raw);
+
+            if (str_starts_with($cleaned, 'data:image')) {
+                $logoBase64 = $cleaned;
+                \Illuminate\Support\Facades\Log::info('PDF logo: loaded from logo_b64.txt', [
+                    'length' => strlen($logoBase64),
+                ]);
+            } else {
+                \Illuminate\Support\Facades\Log::warning('PDF logo: logo_b64.txt content does not start with data:image after cleaning', [
+                    'first_50_chars' => substr($cleaned, 0, 50),
+                ]);
+            }
         } else {
             \Illuminate\Support\Facades\Log::warning('PDF logo: logo_b64.txt not found at ' . $logoB64File);
         }
 
-        // Fallback: try public path
+        // Fallback: build base64 fresh from public/Logo2.png (guaranteed no wrapping issues)
         if (!$logoBase64) {
             $logoPath = public_path('Logo2.png');
             if (file_exists($logoPath)) {
