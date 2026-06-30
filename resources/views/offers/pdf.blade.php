@@ -122,7 +122,9 @@ body {
 <table class="hdr-tbl">
 <tr>
     <td style="width:100px; padding-right:12px;">
-        <img src="{{ asset('Logo2.png') }}" style="width:100%; height:auto; max-width:100px;" alt="ENESA Logo">
+        @if($logoBase64)
+        <img src="{{ $logoBase64 }}" style="width:100%; height:auto; max-width:100px;" alt="ENESA Logo">
+        @endif
     </td>
     <td>
         <div class="brand-name">ENESA</div>

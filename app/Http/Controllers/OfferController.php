@@ -338,7 +338,12 @@ class OfferController extends Controller
             $offer->show_unit_prices = $request->boolean('unit');
         }
 
-        $html = view('offers.pdf', compact('offer', 'companySettings'))->render();
+        $logoPath = public_path('Logo2.png');
+        $logoBase64 = file_exists($logoPath)
+            ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+            : null;
+
+        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
 
         $mpdf = new \Mpdf\Mpdf([
             'mode' => 'utf-8',
