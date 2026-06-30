@@ -453,9 +453,15 @@
 
         <div id="deleg-sections"></div>
 
-        <button type="button" class="btn-add-section" onclick="delegAddSection()">
-            <i class="ti ti-plus"></i> Dodaj lokalizację
-        </button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+            <button type="button" class="btn-add-section" onclick="delegAddSection()">
+                <i class="ti ti-plus"></i> Dodaj lokalizację
+            </button>
+            <button type="button" id="btn-fetch-distance"
+                    style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 13px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+                <i class="ti ti-map-pin"></i> Pobierz z Google Maps
+            </button>
+        </div>
 
         <input type="hidden" name="delegations" id="delegations-json">
         {{-- Ukryty element zachowany dla kompatybilności z recalcAll() --}}
@@ -1131,7 +1137,7 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleUnitPrices(document.getElementById('show-unit-toggle'));
 
     // Init delegation calc
-    const distanceInfo = document.getElementById('distance-info');
+    const distanceInfo = document.getElementById('company-distance-info');
     calcDeleg();
 
     /* ── Distance Matrix ── */
@@ -1174,7 +1180,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* also trigger Distance Matrix for edit (fetch current company) */
     const fetchDistBtn = document.getElementById('btn-fetch-distance');
     if (fetchDistBtn) fetchDistBtn.onclick = function () {
-        const hiddenCid = document.querySelector('input[name="company_id"]');
+        const hiddenCid = document.querySelector('select[name="company_id"], input[name="company_id"]');
         if (!hiddenCid || !hiddenCid.value) return;
         fetch("{{ route('offers.get-distance') }}?company_id=" + encodeURIComponent(hiddenCid.value), {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }

@@ -601,6 +601,7 @@
 <input type="hidden" name="stawka_km"        id="h-stawka-km">
 <input type="hidden" name="czas_dojazdu_min" id="h-czas">
 <input type="hidden" name="czy_kilkudniowy"  id="h-kilkudniowy" value="0">
+<input type="hidden" name="delegations"      id="delegations-json">
 
 </form>
 
@@ -890,14 +891,20 @@ function collectRow(tr) {
 }
 
 function syncDelegHiddens() {
-    document.getElementById('h-km').value          = document.getElementById('d_km').value || 0;
-    document.getElementById('h-stawka-km').value   = document.getElementById('d_stawka_km').value || 1.10;
-    document.getElementById('h-czas').value        = document.getElementById('d_czas').value || 0;
-    document.getElementById('h-wyjazdy').value     = document.getElementById('d_wyjazdy').value || 1;
-    document.getElementById('h-kilkudniowy').value = document.getElementById('d_kilkudniowy').checked ? '1' : '0';
-    document.getElementById('h-noc').value         = document.getElementById('d_noc')?.value || 0;
-    document.getElementById('h-osoby').value       = document.getElementById('d_osoby')?.value || 1;
-    document.getElementById('h-stawka-noc').value  = document.getElementById('d_stawka_noc')?.value || 300;
+    // Save delegations JSON
+    if (typeof delegSections !== 'undefined' && delegSections.length) {
+        delegSave();
+        // Populate legacy hidden fields from first location for backward compat
+        const first = delegSections[0];
+        document.getElementById('h-km').value          = first.km || 0;
+        document.getElementById('h-stawka-km').value   = first.stawka_km || 1.10;
+        document.getElementById('h-czas').value        = 0;
+        document.getElementById('h-wyjazdy').value     = first.wyjazdy || 1;
+        document.getElementById('h-kilkudniowy').value = (first.noce > 0) ? '1' : '0';
+        document.getElementById('h-noc').value         = first.noce || 0;
+        document.getElementById('h-osoby').value       = first.osoby || 1;
+        document.getElementById('h-stawka-noc').value  = first.stawka_noc || 300;
+    }
 }
 
 let quillSubject, quillScope, quillDeadline, quillPayment;
@@ -914,12 +921,6 @@ document.addEventListener('DOMContentLoaded', function () {
     quillPayment  = new Quill('#editor-payment',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
 
     document.getElementById('offer-form').addEventListener('submit', function () {
-        // Convert decimal separators from comma to dot for numeric fields
-        const decimalFields = ['d_km','d_stawka_km','d_czas','d_wyjazdy','d_noc','d_osoby','d_stawka_noc','markup-pct','markup-zl'];
-        decimalFields.forEach(id => {
-            const field = document.getElementById(id);
-            if (field && field.value) field.value = field.value.toString().replace(',', '.');
-        });
         document.querySelectorAll('.ilosc-input, .cena-input').forEach(input => {
             if (input.value) input.value = input.value.toString().replace(',', '.');
         });
@@ -934,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
 window.scrollTo(0, 0);
 addRow('tbody-main');
 toggleUnitPrices(document.getElementById('show-unit-toggle'));
-calcDeleg();
+delegRender();
 setTimeout(() => {
     window.scrollTo(0, 0);
     document.getElementById('company_id')?.focus();
@@ -952,9 +953,10 @@ setTimeout(() => {
         .then(r => r.json())
         .then(data => {
             if (data.km !== undefined) {
-                document.getElementById('d_km').value   = data.km;
-                document.getElementById('d_czas').value = data.minutes;
-                calcDeleg();
+                if (typeof delegSections !== 'undefined' && delegSections[0]) {
+                    delegSections[0].km = data.km;
+                    if (typeof delegRender === 'function') delegRender();
+                }
                 if (distanceInfo) {
                     distanceInfo.textContent = '\uD83D\uDCCD ' + data.address + ' \u2014 ' + data.km + ' km (' + data.minutes + ' min)';
                     distanceInfo.style.display = 'block';
@@ -969,6 +971,15 @@ setTimeout(() => {
                 distanceInfo.textContent = '\u26A0\uFE0F B\u0142\u0105d po\u0142\u0105czenia z serwerem.';
                 distanceInfo.style.display = 'block';
             }
+        });
+    }
+
+    // Wire btn-fetch-distance for manual trigger
+    const fetchDistBtn = document.getElementById('btn-fetch-distance');
+    if (fetchDistBtn) {
+        fetchDistBtn.addEventListener('click', function () {
+            const cid = document.getElementById('company_id')?.value;
+            if (cid) fetchDistance(cid);
         });
     }
 
@@ -1066,6 +1077,158 @@ function pickTemplate(templateId) {
 
 function closeTemplatePick() {
     window.history.back();
+}
+</script>
+
+<script>
+// ── Delegacje builder (create) ──────────────────────────────────────────────
+
+const DELEG_STAWKA_KM  = 1.10;
+const DELEG_STAWKA_NOC = 200;
+
+let delegSections = @json(old('delegations') ? json_decode(old('delegations'), true) : []);
+
+if (!delegSections || delegSections.length === 0) {
+    delegSections = [{
+        nazwa: 'Siedziba zamawia\u0107\u00f3w',
+        adres: '',
+        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
+        stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
+    }];
+}
+
+function delegFmt(n) {
+    return Number(n).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function delegRender() {
+    const wrap = document.getElementById('deleg-sections');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+
+    delegSections.forEach(function(sec, idx) {
+        const isFirst = idx === 0;
+        const total = delegCalc(sec);
+
+        const div = document.createElement('div');
+        div.className = 'deleg-section-card';
+        div.style.cssText = 'background:#FAFAF6;border:1px solid #E5E1D8;border-radius:10px;padding:18px;margin-bottom:14px;';
+        div.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <i class="ti ti-map-pin" style="color:#1A4D3A;font-size:16px;"></i>
+                    <strong style="font-family:'Manrope',sans-serif;font-size:13px;color:#1A1A1A;">
+                        ${isFirst ? 'Siedziba zamawiaj\u0105cego' : 'Inna lokalizacja'}
+                    </strong>
+                </div>
+                ${!isFirst ? `<button type="button" onclick="delegRemoveSection(${idx})"
+                    style="background:none;border:none;color:#DC2626;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;">
+                    <i class="ti ti-trash"></i> Usu\u0144
+                </button>` : ''}
+            </div>
+
+            ${!isFirst ? `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                <div>
+                    <label class="field-label">Nazwa lokalizacji</label>
+                    <input type="text" class="field-input" placeholder="np. Fabryka Krak\u00f3w"
+                        value="${esc(sec.nazwa)}"
+                        oninput="delegSections[${idx}].nazwa=this.value;delegSave()">
+                </div>
+                <div>
+                    <label class="field-label">Adres lokalizacji</label>
+                    <input type="text" class="field-input" placeholder="ul. Przyk\u0142adowa 1, Krak\u00f3w"
+                        value="${esc(sec.adres)}"
+                        oninput="delegSections[${idx}].adres=this.value;delegSave()">
+                </div>
+            </div>` : ''}
+
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
+                <div>
+                    <label class="field-label">Km do klienta (w jedn\u0105 stron\u0119)</label>
+                    <input type="number" class="field-input" min="0" step="1"
+                        value="${sec.km}"
+                        oninput="delegSections[${idx}].km=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Liczba wyjazd\u00f3w</label>
+                    <input type="number" class="field-input" min="1" step="1"
+                        value="${sec.wyjazdy}"
+                        oninput="delegSections[${idx}].wyjazdy=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Liczba os\u00f3b</label>
+                    <input type="number" class="field-input" min="1" step="1"
+                        value="${sec.osoby}"
+                        oninput="delegSections[${idx}].osoby=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Liczba nocleg\u00f3w</label>
+                    <input type="number" class="field-input" min="0" step="1"
+                        value="${sec.noce}"
+                        oninput="delegSections[${idx}].noce=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Stawka za km (z\u0142)</label>
+                    <input type="number" class="field-input" min="0" step="0.01"
+                        value="${sec.stawka_km}"
+                        oninput="delegSections[${idx}].stawka_km=+this.value;delegUpdateTotal(${idx})">
+                </div>
+                <div>
+                    <label class="field-label">Stawka za nocleg (z\u0142)</label>
+                    <input type="number" class="field-input" min="0" step="1"
+                        value="${sec.stawka_noc}"
+                        oninput="delegSections[${idx}].stawka_noc=+this.value;delegUpdateTotal(${idx})">
+                </div>
+            </div>
+
+            <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:#1A4D3A;font-weight:700;">
+                Koszt tej lokalizacji: ${delegFmt(total)} z\u0142
+            </div>
+        `;
+        wrap.appendChild(div);
+    });
+
+    delegSave();
+}
+
+function delegCalc(sec) {
+    const km  = (sec.km || 0) * 2 * (sec.wyjazdy || 1) * (sec.stawka_km || DELEG_STAWKA_KM);
+    const noc = (sec.noce || 0) * (sec.osoby || 1) * (sec.stawka_noc || DELEG_STAWKA_NOC);
+    return km + noc;
+}
+
+function delegUpdateTotal(idx) {
+    const el = document.getElementById('deleg-total-' + idx);
+    if (el) el.textContent = 'Koszt tej lokalizacji: ' + delegFmt(delegCalc(delegSections[idx])) + ' z\u0142';
+    delegSave();
+}
+
+function delegAddSection() {
+    delegSections.push({
+        nazwa: '', adres: '',
+        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
+        stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
+    });
+    delegRender();
+}
+
+function delegRemoveSection(idx) {
+    delegSections.splice(idx, 1);
+    delegRender();
+}
+
+function delegSave() {
+    const jsonEl = document.getElementById('delegations-json');
+    if (jsonEl) jsonEl.value = JSON.stringify(delegSections);
+    var grand = delegSections.reduce(function(s, sec){ return s + delegCalc(sec); }, 0);
+    var dr = document.getElementById('deleg-result');
+    if (dr) dr.textContent = delegFmt(grand) + ' z\u0142';
+    if (typeof recalcAll === 'function') recalcAll();
 }
 </script>
 @endpush
