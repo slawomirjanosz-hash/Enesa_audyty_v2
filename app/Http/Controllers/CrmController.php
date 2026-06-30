@@ -64,7 +64,7 @@ if ($authUser->hasRole('superadmin')) {
                 $q->whereNull('companies.id')  // Company doesn't exist (hard deleted)
                   ->orWhereNotNull('companies.archived_at');  // Or company is archived
             })
-            ->wherePivotNull('company_user.deleted_at')  // And assignment is not soft-deleted
+            ->whereNull('company_user.deleted_at')  // And assignment is not soft-deleted
             ->select(
                 'company_user.id',
                 'company_user.user_id',
