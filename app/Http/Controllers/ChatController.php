@@ -169,5 +169,4 @@ class ChatController extends Controller
             'ended_by' => $messages->last()?->ended_by,
         ]);
     }
-    }
 }

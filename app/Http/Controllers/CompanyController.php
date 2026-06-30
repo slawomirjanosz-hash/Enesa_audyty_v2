@@ -84,6 +84,24 @@ class CompanyController extends Controller
         return view('companies.show', compact('company', 'stats', 'offerRequests'));
     }
 
+    public function update(Request $request, Company $company)
+    {
+        $data = $request->validate([
+            'name'    => ['required', 'string', 'max:255'],
+            'nip'     => ['nullable', 'string', 'max:20'],
+            'email'   => ['nullable', 'email', 'max:255'],
+            'phone'   => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'city'    => ['nullable', 'string', 'max:100'],
+            'notes'   => ['nullable', 'string'],
+            'source'  => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $company->update($data);
+
+        return redirect()->back()->with('success', 'Dane firmy zostały zaktualizowane.');
+    }
+
     public function accept(Company $company)
     {
         if ($company->status === 'pending') {

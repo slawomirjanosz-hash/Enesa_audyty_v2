@@ -243,6 +243,9 @@
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
+                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}')">
+                                <i class="ti ti-pencil"></i>
+                            </button>
                             @if($company->offers->count() > 0 || $company->audits->count() > 0)
                                 <form method="POST" action="{{ route('crm.companies.archive', $company) }}" style="display:inline;">
                                     @csrf @method('PATCH')
@@ -569,6 +572,9 @@
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
+                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}')">
+                                <i class="ti ti-pencil"></i>
+                            </button>
                             <form method="POST" action="{{ route('crm.companies.restore', $company) }}" style="display:inline;">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn-icon btn-icon-restore" title="Przywróć">
@@ -887,6 +893,95 @@
         </div>
     </div>
 </div>
+
+{{-- MODAL: Edycja firmy --}}
+<div id="modal-edit-company" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;width:100%;max-width:520px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden;">
+        <div style="background:#1A4D3A;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj firmę</span>
+            <button onclick="closeEditCompanyModal()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+        </div>
+        <form id="form-edit-company" method="POST" style="padding:24px;display:flex;flex-direction:column;gap:14px;">
+            @csrf
+            @method('PUT')
+            <input type="hidden" id="edit-company-id">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Nazwa firmy *</label>
+                    <input type="text" id="edit-name" name="name" required
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">NIP</label>
+                    <input type="text" id="edit-nip" name="nip"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">E-mail</label>
+                    <input type="email" id="edit-email" name="email"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Telefon</label>
+                    <input type="text" id="edit-phone" name="phone"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Adres</label>
+                    <input type="text" id="edit-address" name="address"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Miasto</label>
+                    <input type="text" id="edit-city" name="city"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Źródło</label>
+                    <input type="text" id="edit-source" name="source" placeholder="np. polecenie, targi, LinkedIn..."
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Notatki</label>
+                    <textarea id="edit-notes" name="notes" rows="3"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;resize:vertical;"></textarea>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
+                <button type="button" onclick="closeEditCompanyModal()"
+                    style="padding:9px 20px;border:1.5px solid #D1D5DB;border-radius:8px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
+                    Anuluj
+                </button>
+                <button type="submit"
+                    style="padding:9px 22px;border:none;border-radius:8px;background:#1A4D3A;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+                    <i class="ti ti-check"></i> Zapisz zmiany
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditCompanyModal(id, name, nip, email, phone, address, city, source, notes) {
+    document.getElementById('edit-company-id').value = id;
+    document.getElementById('edit-name').value = name;
+    document.getElementById('edit-nip').value = nip;
+    document.getElementById('edit-email').value = email;
+    document.getElementById('edit-phone').value = phone;
+    document.getElementById('edit-address').value = address;
+    document.getElementById('edit-city').value = city;
+    document.getElementById('edit-source').value = source;
+    document.getElementById('edit-notes').value = notes;
+    document.getElementById('form-edit-company').action = '/companies/' + id;
+    document.getElementById('modal-edit-company').style.display = 'flex';
+}
+function closeEditCompanyModal() {
+    document.getElementById('modal-edit-company').style.display = 'none';
+}
+document.getElementById('modal-edit-company').addEventListener('click', function(e) {
+    if (e.target === this) closeEditCompanyModal();
+});
+</script>
 
 @endsection
 

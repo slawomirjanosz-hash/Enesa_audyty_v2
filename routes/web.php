@@ -81,6 +81,7 @@ Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class
 
 Route::middleware('auth')->group(function () {
     Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
+    Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
     Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
     Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
     Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');

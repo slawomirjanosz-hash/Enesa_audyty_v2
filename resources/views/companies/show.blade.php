@@ -674,9 +674,9 @@
     </div>
 
     <div class="company-header-actions">
-        <a href="#" class="btn-action {{ $company->status === 'active' ? 'btn-primary-action' : 'btn-secondary-action' }}">
+        <button type="button" class="btn-action {{ $company->status === 'active' ? 'btn-primary-action' : 'btn-secondary-action' }}" onclick="openEditModal()">
             <i class="ti ti-edit"></i> Edytuj
-        </a>
+        </button>
 
         @if(auth()->check() && auth()->user()->hasAnyRole(['admin', 'superadmin']))
             <button type="button" class="btn-action btn-delete-action" onclick="openCompanyDeleteModal()">
@@ -1574,6 +1574,86 @@
         </form>
     </div>
 </div>
+
+{{-- MODAL: Edycja danych firmy --}}
+<div id="modal-edit-firm" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;width:100%;max-width:540px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden;">
+        <div style="background:#1A4D3A;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj dane firmy</span>
+            <button onclick="closeEditModal()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+        </div>
+        <form method="POST" action="{{ route('companies.update', $company) }}" style="padding:24px;display:flex;flex-direction:column;gap:14px;">
+            @csrf
+            @method('PUT')
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Nazwa firmy *</label>
+                    <input type="text" name="name" value="{{ $company->name }}" required
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">NIP</label>
+                    <input type="text" name="nip" value="{{ $company->nip }}"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">E-mail</label>
+                    <input type="email" name="email" value="{{ $company->email }}"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Telefon</label>
+                    <input type="text" name="phone" value="{{ $company->phone }}"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Adres</label>
+                    <input type="text" name="address" value="{{ $company->address }}"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Miasto</label>
+                    <input type="text" name="city" value="{{ $company->city }}"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Źródło</label>
+                    <input type="text" name="source" value="{{ $company->source }}" placeholder="np. polecenie, targi, LinkedIn..."
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Notatki</label>
+                    <textarea name="notes" rows="3"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;resize:vertical;">{{ $company->notes }}</textarea>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
+                <button type="button" onclick="closeEditModal()"
+                    style="padding:9px 20px;border:1.5px solid #D1D5DB;border-radius:8px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
+                    Anuluj
+                </button>
+                <button type="submit"
+                    style="padding:9px 22px;border:none;border-radius:8px;background:#1A4D3A;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+                    <i class="ti ti-check"></i> Zapisz zmiany
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+function openEditModal() {
+    document.getElementById('modal-edit-firm').style.display = 'flex';
+}
+function closeEditModal() {
+    document.getElementById('modal-edit-firm').style.display = 'none';
+}
+document.getElementById('modal-edit-firm').addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+});
+@if(request()->has('edit'))
+document.addEventListener('DOMContentLoaded', () => openEditModal());
+@endif
+</script>
 @endsection
 
 @push('scripts')
