@@ -122,7 +122,7 @@ body {
 <table class="hdr-tbl">
 <tr>
     <td style="width:100px; padding-right:12px;">
-        <img src="{{ public_path('Logo2.png') }}" style="width:100%; height:auto; max-width:100px;" alt="ENESA Logo">
+        <img src="https://enesa.pl/wp-content/uploads/2026/03/cropped-Logo2.png" style="width:100%; height:auto; max-width:100px;" alt="ENESA Logo">
     </td>
     <td>
         <div class="brand-name">ENESA</div>
