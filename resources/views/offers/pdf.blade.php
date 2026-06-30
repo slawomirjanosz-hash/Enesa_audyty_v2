@@ -244,7 +244,7 @@ body {
         <thead>
         <tr>
             <th style="width:5%">#</th>
-            <th>Opis pozycji</th>
+            <th style="display:none;"></th>
             <th class="r" style="width:10%">Ilość</th>
             <th class="r" style="width:12%">Jedn.</th>
             @if($offer->show_unit_prices)
