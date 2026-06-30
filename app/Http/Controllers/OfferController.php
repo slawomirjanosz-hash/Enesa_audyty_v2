@@ -338,10 +338,17 @@ class OfferController extends Controller
             $offer->show_unit_prices = $request->boolean('unit');
         }
 
-        $logoPath = public_path('Logo2.png');
-        $logoBase64 = file_exists($logoPath)
-            ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
-            : null;
+        // Logo embedded as base64 - works on all deployments (Railway, local, etc.)
+        $logoB64File = app_path('Support/logo_b64.txt');
+        $logoBase64 = file_exists($logoB64File) ? file_get_contents($logoB64File) : null;
+
+        // Fallback: try public path
+        if (!$logoBase64) {
+            $logoPath = public_path('Logo2.png');
+            if (file_exists($logoPath)) {
+                $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+            }
+        }
 
         $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
 
