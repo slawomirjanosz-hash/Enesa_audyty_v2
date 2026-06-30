@@ -911,6 +911,12 @@
 
     {{-- ═══ ZAKŁADKA: ZAPYTANIA ═══ --}}
     <div id="tab-requests" class="tab-panel">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+            <a href="{{ route('offer-requests.create', ['company_id' => $company->id]) }}"
+               style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#F5F0E8;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+                <i class="ti ti-mail-plus"></i> Dodaj zapytanie ręcznie
+            </a>
+        </div>
         @if(!isset($offerRequests) || $offerRequests->isEmpty())
             <div class="empty-tab">
                 <i class="ti ti-inbox"></i>
