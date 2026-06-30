@@ -349,25 +349,41 @@ class OfferController extends Controller
 
         $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
 
-        $mpdf = new \Mpdf\Mpdf([
-            'mode' => 'utf-8',
-            'format' => 'A4',
-            'margin_top' => 20,
-            'margin_bottom' => 20,
-            'margin_left' => 15,
-            'margin_right' => 15,
-            'setAutoTopMargin' => false,
-            'setAutoBottomMargin' => false,
+        \Illuminate\Support\Facades\Log::info('PDF generation environment', [
+            'memory_limit' => ini_get('memory_limit'),
+            'gd_loaded' => extension_loaded('gd'),
+            'php_version' => PHP_VERSION,
+            'logoBase64_length' => $logoBase64 ? strlen($logoBase64) : 0,
         ]);
 
-        $mpdf->WriteHTML($html);
+        try {
+            $mpdf = new \Mpdf\Mpdf([
+                'mode' => 'utf-8',
+                'format' => 'A4',
+                'margin_top' => 20,
+                'margin_bottom' => 20,
+                'margin_left' => 15,
+                'margin_right' => 15,
+                'setAutoTopMargin' => false,
+                'setAutoBottomMargin' => false,
+            ]);
 
-        $filename = 'oferta-' . $offer->fullNumber() . '.pdf';
+            $mpdf->WriteHTML($html);
 
-        return response($mpdf->Output($filename, 'S'), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $filename . '"',
-        ]);
+            $filename = 'oferta-' . $offer->fullNumber() . '.pdf';
+
+            return response($mpdf->Output($filename, 'S'), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('mPDF generation failed', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            throw $e;
+        }
     }
 
     public function updateUnitPrices(Request $request, Offer $offer): \Illuminate\Http\JsonResponse
