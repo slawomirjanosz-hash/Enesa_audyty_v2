@@ -186,4 +186,21 @@ Route::get('/session-check', function () {
     return response()->json(['authenticated' => auth()->check()]);
 })->name('session.check');
 
+Route::get('/debug-logo2', function () {
+    $logoPath = public_path('Logo2.png');
+    $exists = file_exists($logoPath);
+    $base64 = $exists ? base64_encode(file_get_contents($logoPath)) : null;
+
+    return response()->json([
+        'public_logo_exists' => $exists,
+        'public_logo_size' => $exists ? filesize($logoPath) : null,
+        'generated_base64_length' => $base64 ? strlen($base64) : null,
+        'data_uri_starts_with' => $base64 ? 'data:image/png;base64,' . substr($base64, 0, 30) : null,
+        'controller_file_contains_new_code' => str_contains(
+            file_get_contents(app_path('Http/Controllers/OfferController.php')),
+            "base64_encode(file_get_contents(\$logoPath))"
+        ),
+    ], 200, [], JSON_PRETTY_PRINT);
+})->middleware('auth');
+
 require __DIR__.'/auth.php';
