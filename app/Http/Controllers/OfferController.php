@@ -338,38 +338,13 @@ class OfferController extends Controller
             $offer->show_unit_prices = $request->boolean('unit');
         }
 
-        // Logo embedded as base64 - works on all deployments (Railway, local, etc.)
-        $logoB64File = app_path('Support/logo_b64.txt');
+        // Logo: always generate fresh base64 from PNG to avoid encoding issues
         $logoBase64 = null;
-
-        if (file_exists($logoB64File)) {
-            $raw = file_get_contents($logoB64File);
-            // Strip ALL whitespace (spaces, tabs, newlines) — wrapped base64 breaks data URIs
-            $cleaned = preg_replace('/\s+/', '', $raw);
-
-            if (str_starts_with($cleaned, 'data:image')) {
-                $logoBase64 = $cleaned;
-                \Illuminate\Support\Facades\Log::info('PDF logo: loaded from logo_b64.txt', [
-                    'length' => strlen($logoBase64),
-                ]);
-            } else {
-                \Illuminate\Support\Facades\Log::warning('PDF logo: logo_b64.txt content does not start with data:image after cleaning', [
-                    'first_50_chars' => substr($cleaned, 0, 50),
-                ]);
-            }
+        $logoPath = public_path('Logo2.png');
+        if (file_exists($logoPath)) {
+            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
         } else {
-            \Illuminate\Support\Facades\Log::warning('PDF logo: logo_b64.txt not found at ' . $logoB64File);
-        }
-
-        // Fallback: build base64 fresh from public/Logo2.png (guaranteed no wrapping issues)
-        if (!$logoBase64) {
-            $logoPath = public_path('Logo2.png');
-            if (file_exists($logoPath)) {
-                $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
-                \Illuminate\Support\Facades\Log::info('PDF logo: loaded from public/Logo2.png fallback');
-            } else {
-                \Illuminate\Support\Facades\Log::error('PDF logo: no logo source found (neither logo_b64.txt nor public/Logo2.png exist)');
-            }
+            \Illuminate\Support\Facades\Log::error('PDF logo: nie znaleziono public/Logo2.png pod ' . $logoPath);
         }
 
         $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
