@@ -246,7 +246,7 @@ body {
         <thead>
         <tr>
             <th style="width:5%">#</th>
-            <th style="display:none;"></th>
+            <th>Opis</th>
             <th class="r" style="width:10%">Ilość</th>
             <th class="r" style="width:12%">Jedn.</th>
             @if($offer->show_unit_prices)
@@ -363,30 +363,33 @@ body {
 @endif
 
 {{-- TERMIN + WARUNKI --}}
-<table class="terms-tbl">
-<tr>
-    <td class="terms-cell terms-cell-l">
-        <div style="font-size:7.5pt; font-weight:bold; text-transform:uppercase; letter-spacing:.1em; color:#1A4D3A; border-bottom:1px solid #E5E1D8; padding-bottom:4px; margin-bottom:8px;">Termin realizacji</div>
-        <div class="sec-content">
-            @if(!empty($offer->content_deadline))
-                {!! $offer->content_deadline !!}
-            @else
-                Do uzgodnienia po podpisaniu umowy.
-            @endif
-        </div>
-    </td>
-    <td class="terms-cell terms-cell-r">
-        <div style="font-size:7.5pt; font-weight:bold; text-transform:uppercase; letter-spacing:.1em; color:#1A4D3A; border-bottom:1px solid #E5E1D8; padding-bottom:4px; margin-bottom:8px;">Warunki p&#322;atno&#347;ci</div>
-        <div class="sec-content">
-            @if(!empty($offer->content_payment))
-                {!! $offer->content_payment !!}
-            @else
-                Przelew bankowy, 14 dni od wystawienia faktury.
-            @endif
-        </div>
-    </td>
-</tr>
-</table>
+<div class="sec-block">
+    <table class="sec-hdr-tbl"><tr>
+        <td class="sec-lbl-text">Termin realizacji</td>
+        <td class="sec-lbl-line"></td>
+    </tr></table>
+    <div class="sec-content">
+        @if(!empty($offer->content_deadline))
+            {!! $offer->content_deadline !!}
+        @else
+            Do uzgodnienia po podpisaniu umowy.
+        @endif
+    </div>
+</div>
+
+<div class="sec-block">
+    <table class="sec-hdr-tbl"><tr>
+        <td class="sec-lbl-text">Warunki p&#322;atno&#347;ci</td>
+        <td class="sec-lbl-line"></td>
+    </tr></table>
+    <div class="sec-content">
+        @if(!empty($offer->content_payment))
+            {!! $offer->content_payment !!}
+        @else
+            Przelew bankowy, 14 dni od wystawienia faktury.
+        @endif
+    </div>
+</div>
 
 {{-- UWAGI --}}
 @if($offer->notes)
