@@ -400,71 +400,28 @@
 </div>
 
 {{-- C3: Delegacje --}}
-<div class="ed-card">
+<div class="ed-card" id="section-delegacje">
     <div class="ed-card-header">
         <i class="ti ti-car"></i>
-        <span class="ed-card-title">Delegacja</span>
+        <span class="ed-card-title">Delegacje</span>
     </div>
     <div class="ed-card-body">
-        <div class="deleg-grid">
-            <div>
-                <label class="field-label">Odległość do klienta</label>
-                <div class="input-group">
-                    <input type="text" id="d_km" class="field-input" value="{{ old('km_do_klienta', 0) }}" placeholder="0" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
-                    <span class="input-suffix">km</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label">Stawka za km</label>
-                <div class="input-group">
-                    <input type="text" id="d_stawka_km" class="field-input" value="{{ old('stawka_km', 1.10) }}" placeholder="1,10" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
-                    <span class="input-suffix">zł/km</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label">Czas dojazdu</label>
-                <div class="input-group">
-                    <input type="text" id="d_czas" class="field-input" value="{{ old('czas_dojazdu_min', 0) }}" placeholder="0" oninput="validateDecimal(this)" onkeydown="return allowDecimalInput(event)">
-                    <span class="input-suffix">min</span>
-                </div>
-            </div>
-            <div>
-                <label class="field-label">Liczba wyjazdów</label>
-                <input type="text" id="d_wyjazdy" class="field-input" value="{{ old('liczba_wyjazdow', 1) }}" placeholder="1" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
-            </div>
+
+        <div id="deleg-sections"></div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+            <button type="button" class="btn-add-section" onclick="delegAddSection()">
+                <i class="ti ti-plus"></i> Dodaj lokalizację
+            </button>
+            <button type="button" id="btn-fetch-distance"
+                    style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 13px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
+                <i class="ti ti-map-pin"></i> Pobierz z Google Maps
+            </button>
         </div>
-        <div style="margin-top:14px;">
-            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;color:#555;">
-                <input type="checkbox" id="d_kilkudniowy" value="1"
-                       {{ old('czy_kilkudniowy') ? 'checked' : '' }}
-                       onchange="toggleOvernight(this);calcDeleg();"
-                       style="width:16px;height:16px;accent-color:#1A4D3A;">
-                Wyjazd wielodniowy?
-            </label>
-        </div>
-        <div id="overnightSection" style="{{ old('czy_kilkudniowy') ? '' : 'display:none;' }}margin-top:12px;">
-            <div class="deleg-grid">
-                <div>
-                    <label class="field-label">Liczba nocy</label>
-                    <input type="text" id="d_noc" class="field-input" value="{{ old('liczba_noc', 0) }}" placeholder="0" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
-                </div>
-                <div>
-                    <label class="field-label">Liczba osób</label>
-                    <input type="text" id="d_osoby" class="field-input" value="{{ old('liczba_osob', 1) }}" placeholder="1" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
-                </div>
-                <div>
-                    <label class="field-label">Stawka za dobę hotelową</label>
-                    <div class="input-group">
-                        <input type="text" id="d_stawka_noc" class="field-input" value="{{ old('stawka_noc', 300) }}" placeholder="300,00" oninput="validateDecimal(this); calcDeleg()" onkeydown="return allowDecimalInput(event)">
-                        <span class="input-suffix">zł</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="background:#F0F7F3;border:1px solid #94C4B0;border-radius:8px;padding:12px 16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:.05em;">Koszt delegacji netto</span>
-            <span id="deleg-result" style="font-family:'Lato',sans-serif;font-size:20px;font-weight:900;color:#1A4D3A;">0,00 zł</span>
-        </div>
+
+        <input type="hidden" name="delegations" id="delegations-json">
+        {{-- Ukryty span dla recalcAll() --}}
+        <span id="deleg-result" style="display:none;">0,00 zł</span>
     </div>
 </div>
 
