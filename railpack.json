@@ -5,13 +5,5 @@
         "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd"
       ]
     }
-  },
-  "packages": {
-    "php": "8.2"
-  },
-  "providers": {
-    "php": {
-      "extensions": ["gd"]
-    }
   }
 }
