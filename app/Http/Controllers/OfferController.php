@@ -340,13 +340,25 @@ class OfferController extends Controller
 
         // Logo embedded as base64 - works on all deployments (Railway, local, etc.)
         $logoB64File = app_path('Support/logo_b64.txt');
-        $logoBase64 = file_exists($logoB64File) ? file_get_contents($logoB64File) : null;
+        $logoBase64 = null;
+
+        if (file_exists($logoB64File)) {
+            $logoBase64 = trim(file_get_contents($logoB64File));
+            \Illuminate\Support\Facades\Log::info('PDF logo: loaded from logo_b64.txt', [
+                'length' => strlen($logoBase64),
+            ]);
+        } else {
+            \Illuminate\Support\Facades\Log::warning('PDF logo: logo_b64.txt not found at ' . $logoB64File);
+        }
 
         // Fallback: try public path
         if (!$logoBase64) {
             $logoPath = public_path('Logo2.png');
             if (file_exists($logoPath)) {
                 $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+                \Illuminate\Support\Facades\Log::info('PDF logo: loaded from public/Logo2.png fallback');
+            } else {
+                \Illuminate\Support\Facades\Log::error('PDF logo: no logo source found (neither logo_b64.txt nor public/Logo2.png exist)');
             }
         }
 
