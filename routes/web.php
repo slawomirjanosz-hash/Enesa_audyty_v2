@@ -98,7 +98,9 @@ Route::middleware('auth')->group(function () {
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
 
     Route::prefix('offer-requests')->name('offer-requests.')->group(function () {
-        Route::get('/{offerRequest}',               [OfferRequestController::class, 'show'])->name('show');
+        Route::get('/create',                        [OfferRequestController::class, 'create'])->name('create');
+        Route::post('/',                             [OfferRequestController::class, 'store'])->name('store');
+        Route::get('/{offerRequest}',                [OfferRequestController::class, 'show'])->name('show');
         Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
     });
 
