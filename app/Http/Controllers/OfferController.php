@@ -225,7 +225,9 @@ class OfferController extends Controller
     public function update(Request $request, Offer $offer): RedirectResponse
     {
         $data = $request->validate([
-            'company_id'                => ['required', 'exists:companies,id'],
+            'company_id'                => $offer->is_template
+                ? ['nullable', 'exists:companies,id']
+                : ['required', 'exists:companies,id'],
             'offer_number'              => ['required', 'string', 'unique:offers,offer_number,' . $offer->id],
             'offer_slug'                => ['nullable', 'string', 'max:255'],
             'offer_title'               => ['nullable', 'string', 'max:500'],
@@ -272,7 +274,7 @@ class OfferController extends Controller
         }
 
         $offer->update([
-            'company_id'                => $data['company_id'],
+            'company_id'                => $offer->is_template ? null : $data['company_id'],
             'offer_number'              => $data['offer_number'],
             'offer_slug'                => $data['offer_slug'] ?? null,
             'offer_full_number'         => $data['offer_number'] . $slug,
@@ -578,13 +580,15 @@ Formatowanie HTML:
         $isTemplate = $data['mode'] === 'template';
 
         $newOffer = $offer->replicate();
-        $newOffer->offer_number = Offer::generateNumber();
+        $newOffer->offer_number = Offer::generateNumber($isTemplate);
         $newOffer->offer_full_number = $newOffer->offer_number;
         $newOffer->status = 'w_toku';
         $newOffer->is_template = $isTemplate;
         $newOffer->created_by_id = auth()->id();
         $newOffer->kwota_netto = $offer->kwota_netto;
-        if ($data['company_id'] ?? false) {
+        if ($isTemplate) {
+            $newOffer->company_id = null;
+        } elseif ($data['company_id'] ?? false) {
             $newOffer->company_id = $data['company_id'];
         }
         $newOffer->save();

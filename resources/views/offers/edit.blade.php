@@ -328,32 +328,41 @@
             </div>
         </div>
         <div class="doc-party">
-            <div class="doc-party-label">Odbiorca &mdash; zmień firmę</div>
-            <select name="company_id" id="company_id_select" class="field-input" style="margin-bottom:8px;" onchange="updateCompanyInfo(this)">
-                <option value="">— wybierz firmę klienta —</option>
-                @foreach($companies as $c)
-                    <option value="{{ $c->id }}"
-                        data-name="{{ $c->name }}"
-                        data-address="{{ $c->address ?? '' }}"
-                        data-city="{{ $c->city ?? '' }}"
-                        data-nip="{{ $c->nip ?? '' }}"
-                        data-email="{{ $c->email ?? '' }}"
-                        {{ $offer->company_id == $c->id ? 'selected' : '' }}>
-                        {{ $c->name }}@if($c->city) — {{ $c->city }}@endif
-                    </option>
-                @endforeach
-            </select>
-            <div id="company-info-display">
-                <div class="doc-party-name" id="disp-name">{{ $offer->company?->name ?? '—' }}</div>
-                <div class="doc-party-line" id="disp-details">
-                    {{ $offer->company?->address ?? '' }}
-                    @if($offer->company?->address && $offer->company?->city), @endif
-                    {{ $offer->company?->city ?? '' }}
-                    @if($offer->company?->nip)<br>NIP: {{ $offer->company->nip }}@endif
-                    @if($offer->company?->email)<br>{{ $offer->company->email }}@endif
+            @if($offer->is_template)
+                <div class="doc-party-label">Odbiorca</div>
+                <input type="hidden" name="company_id" value="">
+                <div style="padding:10px 12px;background:#F5F0E8;border:1px dashed #C8B89A;border-radius:8px;font-size:13px;color:#666;font-family:'Manrope',sans-serif;">
+                    <i class="ti ti-bookmark" style="color:#1A4D3A;margin-right:6px;"></i>
+                    Szablon nie jest przypisany do firmy
                 </div>
-            </div>
-            <div id="company-distance-info" style="margin-top:6px;font-size:12px;color:#1A4D3A;display:none;"></div>
+            @else
+                <div class="doc-party-label">Odbiorca &mdash; zmień firmę</div>
+                <select name="company_id" id="company_id_select" class="field-input" style="margin-bottom:8px;" onchange="updateCompanyInfo(this)">
+                    <option value="">— wybierz firmę klienta —</option>
+                    @foreach($companies as $c)
+                        <option value="{{ $c->id }}"
+                            data-name="{{ $c->name }}"
+                            data-address="{{ $c->address ?? '' }}"
+                            data-city="{{ $c->city ?? '' }}"
+                            data-nip="{{ $c->nip ?? '' }}"
+                            data-email="{{ $c->email ?? '' }}"
+                            {{ $offer->company_id == $c->id ? 'selected' : '' }}>
+                            {{ $c->name }}@if($c->city) — {{ $c->city }}@endif
+                        </option>
+                    @endforeach
+                </select>
+                <div id="company-info-display">
+                    <div class="doc-party-name" id="disp-name">{{ $offer->company?->name ?? '—' }}</div>
+                    <div class="doc-party-line" id="disp-details">
+                        {{ $offer->company?->address ?? '' }}
+                        @if($offer->company?->address && $offer->company?->city), @endif
+                        {{ $offer->company?->city ?? '' }}
+                        @if($offer->company?->nip)<br>NIP: {{ $offer->company->nip }}@endif
+                        @if($offer->company?->email)<br>{{ $offer->company->email }}@endif
+                    </div>
+                </div>
+                <div id="company-distance-info" style="margin-top:6px;font-size:12px;color:#1A4D3A;display:none;"></div>
+            @endif
         </div>
     </div>
 

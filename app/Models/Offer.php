@@ -89,10 +89,11 @@ class Offer extends Model
             ?? ($this->offer_number . ($this->offer_slug ? '_' . $this->offer_slug : ''));
     }
 
-    public static function generateNumber(): string
+    public static function generateNumber(bool $isTemplate = false): string
     {
-        $now = now();
-        $monthPrefix = 'OF_Enesa_' . $now->format('Ym');
+        $now    = now();
+        $prefix = $isTemplate ? 'SZ' : 'OF';
+        $monthPrefix = $prefix . '_Enesa_' . $now->format('Ym');
 
         $maxSeq = static::withTrashed()
             ->where('offer_number', 'like', $monthPrefix . '%')
@@ -105,6 +106,6 @@ class Offer extends Model
 
         $seq = str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
 
-        return 'OF_Enesa_' . $now->format('Ymd') . '_' . $seq;
+        return $prefix . '_Enesa_' . $now->format('Ymd') . '_' . $seq;
     }
 }
