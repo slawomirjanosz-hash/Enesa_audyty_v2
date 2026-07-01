@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Shared\Converter;
+use PhpOffice\PhpWord\Style\Language;
 
 class OfferController extends Controller
 {
@@ -402,6 +406,195 @@ class OfferController extends Controller
             ]);
             throw $e;
         }
+    }
+
+    public function downloadWord(Offer $offer): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $offer->load(['company', 'offerRequest']);
+
+        $phpWord = new PhpWord();
+        $phpWord->getSettings()->setThemeFontLang(new Language(Language::PL_PL));
+
+        // Styl dokumentu
+        $phpWord->setDefaultFontName('Calibri');
+        $phpWord->setDefaultFontSize(11);
+
+        $phpWord->addTitleStyle(1, [
+            'bold'  => true, 'size' => 16, 'color' => '1A4D3A', 'name' => 'Calibri'
+        ], ['spaceAfter' => Converter::pointToTwip(6)]);
+
+        $phpWord->addTitleStyle(2, [
+            'bold'  => true, 'size' => 13, 'color' => '1A4D3A', 'name' => 'Calibri'
+        ], ['spaceBefore' => Converter::pointToTwip(10), 'spaceAfter' => Converter::pointToTwip(4)]);
+
+        $section = $phpWord->addSection([
+            'marginTop'    => Converter::cmToTwip(2),
+            'marginBottom' => Converter::cmToTwip(2),
+            'marginLeft'   => Converter::cmToTwip(2.5),
+            'marginRight'  => Converter::cmToTwip(2.5),
+        ]);
+
+        // ── Logo ──────────────────────────────────────────────────────────────
+        $logoPath = public_path('images/logo.png');
+        if (file_exists($logoPath)) {
+            $section->addImage($logoPath, [
+                'width'            => 120,
+                'height'           => 40,
+                'wrappingStyle'    => 'inline',
+                'alignment'        => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+            ]);
+        }
+
+        $section->addTextBreak(1);
+
+        // ── Nagłówek oferty ────────────────────────────────────────────────
+        $section->addTitle('OFERTA NR ' . ($offer->offer_number ?? $offer->id), 1);
+        $section->addText(
+            'Data wystawienia: ' . ($offer->created_at?->format('d.m.Y') ?? '—'),
+            ['size' => 10, 'color' => '666666']
+        );
+
+        $section->addTextBreak(1);
+
+        // ── Dane zamawiającego ─────────────────────────────────────────────
+        $section->addTitle('Zamawiający', 2);
+
+        $tableStyle = [
+            'borderColor' => 'E5E1D8', 'borderSize' => 6,
+            'cellMargin'  => 80,
+        ];
+        $cellStyle  = ['valign' => 'center'];
+
+        $table = $section->addTable($tableStyle);
+
+        $rows = [
+            ['Nazwa',   $offer->company?->name ?? '—'],
+            ['Adres',   implode(', ', array_filter([$offer->company?->address, $offer->company?->city]))],
+            ['NIP',     $offer->company?->nip ?? '—'],
+            ['Kontakt', $offer->company?->email ?? '—'],
+        ];
+
+        foreach ($rows as [$label, $value]) {
+            $row = $table->addRow(Converter::cmToTwip(0.8));
+            $cell1 = $row->addCell(Converter::cmToTwip(4), array_merge($cellStyle, ['bgColor' => 'F0F4F1']));
+            $cell1->addText($label, ['bold' => true, 'size' => 10, 'color' => '1A4D3A']);
+            $cell2 = $row->addCell(Converter::cmToTwip(12), $cellStyle);
+            $cell2->addText($value ?: '—', ['size' => 10]);
+        }
+
+        $section->addTextBreak(1);
+
+        // ── Sekcje cenowe ─────────────────────────────────────────────────
+        $priceSections = $offer->price_sections ?? [];
+        if (!empty($priceSections)) {
+            $section->addTitle('Zakres i wycena', 2);
+
+            $priceTable = $section->addTable([
+                'borderColor' => 'E5E1D8', 'borderSize' => 6,
+                'cellMargin'  => 80,
+            ]);
+
+            // Nagłówek tabeli
+            $hRow = $priceTable->addRow(Converter::cmToTwip(0.9));
+            foreach (['Pozycja', 'Opis', 'Cena netto (zł)'] as $i => $h) {
+                $widths = [Converter::cmToTwip(3), Converter::cmToTwip(9), Converter::cmToTwip(4)];
+                $cell = $hRow->addCell($widths[$i], ['bgColor' => '1A4D3A', 'valign' => 'center']);
+                $cell->addText($h, ['bold' => true, 'size' => 10, 'color' => 'FFFFFF']);
+            }
+
+            $grand = 0;
+            foreach ($priceSections as $ps) {
+                $price = (float)($ps['price'] ?? 0);
+                $grand += $price;
+                $dRow = $priceTable->addRow();
+                $dRow->addCell(Converter::cmToTwip(3))->addText($ps['name'] ?? '—', ['size' => 10]);
+                $dRow->addCell(Converter::cmToTwip(9))->addText($ps['description'] ?? '', ['size' => 9, 'color' => '555555']);
+                $dRow->addCell(Converter::cmToTwip(4), ['bgColor' => 'F9FBF9'])
+                     ->addText(number_format($price, 2, ',', ' '), ['size' => 10, 'bold' => true]);
+            }
+
+            // Suma
+            $sumRow = $priceTable->addRow(Converter::cmToTwip(1));
+            $sumRow->addCell(Converter::cmToTwip(12), ['bgColor' => 'E8F5E9', 'gridSpan' => 2])
+                   ->addText('RAZEM NETTO', ['bold' => true, 'size' => 11, 'color' => '1A4D3A']);
+            $sumRow->addCell(Converter::cmToTwip(4), ['bgColor' => 'E8F5E9'])
+                   ->addText(number_format($grand, 2, ',', ' ') . ' zł', ['bold' => true, 'size' => 11, 'color' => '1A4D3A']);
+
+            $section->addTextBreak(1);
+        }
+
+        // ── Delegacje ─────────────────────────────────────────────────────
+        $delegations = $offer->delegations ?? [];
+        if (!empty($delegations)) {
+            $section->addTitle('Koszty delegacji', 2);
+
+            $delegTable = $section->addTable([
+                'borderColor' => 'E5E1D8', 'borderSize' => 6,
+                'cellMargin'  => 80,
+            ]);
+
+            $dh = $delegTable->addRow(Converter::cmToTwip(0.9));
+            foreach (['Lokalizacja', 'Km', 'Wyjazdy', 'Osoby', 'Noclegi', 'Koszt'] as $i => $h) {
+                $ws = [Converter::cmToTwip(5), Converter::cmToTwip(1.5), Converter::cmToTwip(2), Converter::cmToTwip(2), Converter::cmToTwip(2), Converter::cmToTwip(3.5)];
+                $c = $dh->addCell($ws[$i], ['bgColor' => '1A4D3A']);
+                $c->addText($h, ['bold' => true, 'size' => 9, 'color' => 'FFFFFF']);
+            }
+
+            $delegTotal = 0;
+            foreach ($delegations as $del) {
+                $km    = (int)($del['km'] ?? 0);
+                $wyj   = (int)($del['wyjazdy'] ?? 1);
+                $os    = (int)($del['osoby'] ?? 1);
+                $noc   = (int)($del['noce'] ?? 0);
+                $sKm   = (float)($del['stawka_km'] ?? 1.10);
+                $sNoc  = (float)($del['stawka_noc'] ?? 200);
+                $koszt = $km * 2 * $wyj * $sKm + $noc * $os * $sNoc;
+                $delegTotal += $koszt;
+
+                $dr = $delegTable->addRow();
+                $dr->addCell(Converter::cmToTwip(5))->addText(
+                    ($del['nazwa'] ?? '—') . "\n" . ($del['adres'] ?? ''),
+                    ['size' => 9]
+                );
+                $dr->addCell(Converter::cmToTwip(1.5))->addText($km . ' km', ['size' => 9]);
+                $dr->addCell(Converter::cmToTwip(2))->addText($wyj, ['size' => 9]);
+                $dr->addCell(Converter::cmToTwip(2))->addText($os, ['size' => 9]);
+                $dr->addCell(Converter::cmToTwip(2))->addText($noc, ['size' => 9]);
+                $dr->addCell(Converter::cmToTwip(3.5), ['bgColor' => 'F9FBF9'])
+                   ->addText(number_format($koszt, 2, ',', ' ') . ' zł', ['bold' => true, 'size' => 9]);
+            }
+
+            // Suma delegacji
+            $ds = $delegTable->addRow(Converter::cmToTwip(1));
+            $ds->addCell(Converter::cmToTwip(12.5), ['bgColor' => 'E8F5E9', 'gridSpan' => 5])
+               ->addText('RAZEM DELEGACJE', ['bold' => true, 'size' => 10, 'color' => '1A4D3A']);
+            $ds->addCell(Converter::cmToTwip(3.5), ['bgColor' => 'E8F5E9'])
+               ->addText(number_format($delegTotal, 2, ',', ' ') . ' zł', ['bold' => true, 'size' => 10, 'color' => '1A4D3A']);
+
+            $section->addTextBreak(1);
+        }
+
+        // ── Stopka / uwagi ─────────────────────────────────────────────────
+        $section->addTextBreak(2);
+        $section->addText(
+            'Oferta ważna 30 dni od daty wystawienia. Ceny netto, do których należy doliczyć podatek VAT 23%.',
+            ['size' => 9, 'color' => '888888', 'italic' => true]
+        );
+
+        // ── Generowanie pliku ──────────────────────────────────────────────
+        $filename = 'Oferta_' . str_replace(['/', '\\', ' '], '_', $offer->offer_number ?? $offer->id) . '.docx';
+        $tempPath = storage_path('app/temp/' . $filename);
+
+        if (!is_dir(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        $writer = IOFactory::createWriter($phpWord, 'Word2007');
+        $writer->save($tempPath);
+
+        return response()->download($tempPath, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ])->deleteFileAfterSend(true);
     }
 
     public function updateUnitPrices(Request $request, Offer $offer): \Illuminate\Http\JsonResponse
