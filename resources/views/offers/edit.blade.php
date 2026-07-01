@@ -280,7 +280,7 @@
             <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-secondary">
                 <i class="ti ti-file-type-pdf"></i> Podgląd PDF
             </button>
-            <a href="{{ route('offers.word', $offer) }}" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
+            <a href="{{ route('offers.download-word', $offer) }}" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
                 <i class="ti ti-file-type-doc"></i> Pobierz DOCX
             </a>
         @endif

@@ -131,7 +131,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{offer}',                       [OfferController::class, 'show'])->name('show');
         Route::get('/{offer}/edit',                  [OfferController::class, 'edit'])->name('edit');
         Route::get('/{offer}/pdf',                   [OfferController::class, 'pdf'])->name('pdf');
-        Route::get('/{offer}/word',                  [OfferController::class, 'downloadWord'])->name('word');
+        Route::get('/{offer}/word',                  [OfferController::class, 'downloadWord'])->name('download-word');
         Route::put('/{offer}',                       [OfferController::class, 'update'])->name('update');
         Route::delete('/{offer}',                    [OfferController::class, 'destroy'])->name('destroy');
         Route::patch('/{offer}/status',              [OfferController::class, 'updateStatus'])->name('status');
