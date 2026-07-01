@@ -430,17 +430,28 @@ class OfferController extends Controller
 
     public function getDistance(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'company_id' => ['required', 'exists:companies,id'],
-        ]);
+        $destination = null;
 
-        $company = Company::findOrFail($data['company_id']);
+        if ($request->filled('destination')) {
+            $raw = trim($request->input('destination'));
+            if (empty($raw)) {
+                return response()->json(['error' => 'Podaj adres lub miasto.'], 422);
+            }
+            $lower = strtolower($raw);
+            $destination = (!str_contains($lower, 'polska') && !str_contains($lower, 'poland'))
+                ? $raw . ', Polska'
+                : $raw;
 
-        $parts       = array_filter([$company->address, $company->city, 'Polska']);
-        $destination = implode(', ', $parts);
-
-        if (empty(trim(str_replace(['Polska', ',', ' '], '', $destination)))) {
-            return response()->json(['error' => 'Firma nie ma uzupełnionego adresu.'], 422);
+        } elseif ($request->filled('company_id')) {
+            $request->validate(['company_id' => ['required', 'exists:companies,id']]);
+            $company     = Company::findOrFail($request->company_id);
+            $parts       = array_filter([$company->address, $company->city, 'Polska']);
+            $destination = implode(', ', $parts);
+            if (empty(trim(str_replace(['Polska', ',', ' '], '', $destination)))) {
+                return response()->json(['error' => 'Firma nie ma uzupełnionego adresu.'], 422);
+            }
+        } else {
+            return response()->json(['error' => 'Podaj adres lub ID firmy.'], 422);
         }
 
         $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json', [
@@ -451,25 +462,19 @@ class OfferController extends Controller
             'key'          => config('services.google.maps_key'),
         ]);
 
-        $json   = $response->json();
-        $status = $json['status'] ?? '';
+        $json       = $response->json();
+        $status     = $json['status'] ?? '';
         $elemStatus = $json['rows'][0]['elements'][0]['status'] ?? '';
 
         if ($status !== 'OK' || $elemStatus !== 'OK') {
             Log::error('Distance Matrix error', [
-                'response_body' => $json,
-                'address_used' => $destination,
-                'status' => $status,
+                'address_used'   => $destination,
+                'status'         => $status,
                 'element_status' => $elemStatus,
             ]);
             return response()->json([
-                'debug' => true,
-                'status' => $status,
-                'element_status' => $elemStatus,
-                'full_response' => $json,
-                'address_used' => $destination,
-                'api_key_first_chars' => substr(config('services.google.maps_key'), 0, 10) . '...',
-            ]);
+                'error' => 'Nie udało się pobrać odległości dla: "' . $destination . '". Sprawdź wpisany adres.',
+            ], 422);
         }
 
         $element = $json['rows'][0]['elements'][0];
