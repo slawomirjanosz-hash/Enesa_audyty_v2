@@ -263,6 +263,9 @@
                 <option value="">— wybierz firmę klienta —</option>
                 @foreach($companies as $company)
                     <option value="{{ $company->id }}"
+                        data-name="{{ $company->name }}"
+                        data-address="{{ $company->address ?? '' }}"
+                        data-city="{{ $company->city ?? '' }}"
                         {{ old('company_id', $offerRequest?->company_id) == $company->id ? 'selected' : '' }}>
                         {{ $company->name }}
                         @if($company->city) — {{ $company->city }} @endif
@@ -406,21 +409,13 @@
         <span class="ed-card-title">Delegacje</span>
     </div>
     <div class="ed-card-body">
-
         <div id="deleg-sections"></div>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+        <div style="margin-top:4px;">
             <button type="button" class="btn-add-section" onclick="delegAddSection()">
                 <i class="ti ti-plus"></i> Dodaj lokalizację
             </button>
-            <button type="button" id="btn-fetch-distance"
-                    style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 13px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-                <i class="ti ti-map-pin"></i> Pobierz z Google Maps
-            </button>
         </div>
-
         <input type="hidden" name="delegations" id="delegations-json">
-        {{-- Ukryty span dla recalcAll() --}}
         <span id="deleg-result" style="display:none;">0,00 zł</span>
     </div>
 </div>
@@ -943,6 +938,15 @@ setTimeout(() => {
     if (companySelect) {
         companySelect.addEventListener('change', function () {
             fetchDistance(this.value);
+            const opt = this.options[this.selectedIndex];
+            if (!opt || !opt.value) return;
+            const addr = [opt.dataset.address, opt.dataset.city].filter(Boolean).join(', ');
+            if (typeof delegSections !== 'undefined' && delegSections.length > 0) {
+                delegSections[0].nazwa = opt.dataset.name || 'Siedziba zamawiającego';
+                delegSections[0].adres = addr;
+                delegRender();
+                if (addr) delegFetchKm(0);
+            }
         });
         // Auto-fetch if company already pre-selected (e.g. from offerRequest)
         if (companySelect.value) {
@@ -1037,29 +1041,29 @@ function closeTemplatePick() {
 }
 </script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places"></script>
 <script>
-// ── Delegacje builder (create) ──────────────────────────────────────────────
+// ── Delegacje builder ──────────────────────────────────────────────────────
 
 const DELEG_STAWKA_KM  = 1.10;
 const DELEG_STAWKA_NOC = 200;
+const DIST_URL = '{{ route("offers.get-distance") }}';
 
 let delegSections = @json(old('delegations') ? json_decode(old('delegations'), true) : []);
 
 if (!delegSections || delegSections.length === 0) {
     delegSections = [{
-        nazwa: 'Siedziba zamawia\u0107\u00f3w',
-        adres: '',
-        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
+        nazwa: 'Siedziba zamawiającego',
+        adres: '', km: 0, wyjazdy: 1, osoby: 1, noce: 0,
         stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
     }];
 }
 
 function delegFmt(n) {
-    return Number(n).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return parseFloat(n || 0).toLocaleString('pl-PL', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
-
-function esc(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function escD(s) {
+    return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
 
 function delegRender() {
@@ -1067,76 +1071,88 @@ function delegRender() {
     if (!wrap) return;
     wrap.innerHTML = '';
 
-    delegSections.forEach(function(sec, idx) {
-        const isFirst = idx === 0;
-        const total = delegCalc(sec);
+    if (delegSections.length === 0) {
+        wrap.innerHTML = '<div style="padding:14px;text-align:center;color:#aaa;font-size:13px;font-family:\'Manrope\',sans-serif;">Brak lokalizacji — kliknij „Dodaj lokalizację"</div>';
+        delegSave(); return;
+    }
 
+    delegSections.forEach(function(sec, idx) {
+        const total = delegCalc(sec);
         const div = document.createElement('div');
-        div.className = 'deleg-section-card';
         div.style.cssText = 'background:#FAFAF6;border:1px solid #E5E1D8;border-radius:10px;padding:18px;margin-bottom:14px;';
         div.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:8px;">
                     <i class="ti ti-map-pin" style="color:#1A4D3A;font-size:16px;"></i>
                     <strong style="font-family:'Manrope',sans-serif;font-size:13px;color:#1A1A1A;">
-                        ${isFirst ? 'Siedziba zamawiaj\u0105cego' : 'Inna lokalizacja'}
+                        Lokalizacja ${idx + 1}
                     </strong>
                 </div>
-                ${!isFirst ? `<button type="button" onclick="delegRemoveSection(${idx})"
+                <button type="button" onclick="delegRemoveSection(${idx})"
                     style="background:none;border:none;color:#DC2626;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;">
-                    <i class="ti ti-trash"></i> Usu\u0144
-                </button>` : ''}
+                    <i class="ti ti-trash"></i> Usuń
+                </button>
             </div>
 
-            ${!isFirst ? `
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
                 <div>
                     <label class="field-label">Nazwa lokalizacji</label>
-                    <input type="text" class="field-input" placeholder="np. Fabryka Krak\u00f3w"
-                        value="${esc(sec.nazwa)}"
+                    <input type="text" class="field-input" placeholder="np. Siedziba, Fabryka Kraków"
+                        value="${escD(sec.nazwa)}"
                         oninput="delegSections[${idx}].nazwa=this.value;delegSave()">
                 </div>
                 <div>
-                    <label class="field-label">Adres lokalizacji</label>
-                    <input type="text" class="field-input" placeholder="ul. Przyk\u0142adowa 1, Krak\u00f3w"
-                        value="${esc(sec.adres)}"
-                        oninput="delegSections[${idx}].adres=this.value;delegSave()">
+                    <label class="field-label">Adres / Miasto</label>
+                    <div style="display:flex;gap:6px;">
+                        <input type="text" class="field-input"
+                            id="deleg-adres-${idx}"
+                            placeholder="np. Warszawa lub ul. Jana 1, Kraków"
+                            value="${escD(sec.adres)}"
+                            oninput="delegSections[${idx}].adres=this.value;delegSave()"
+                            style="flex:1;min-width:0;">
+                        <button type="button" onclick="delegFetchKm(${idx})"
+                            id="deleg-mapbtn-${idx}"
+                            style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                            <i class="ti ti-map-pin"></i> Pobierz km
+                        </button>
+                    </div>
                 </div>
-            </div>` : ''}
+            </div>
 
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
                 <div>
-                    <label class="field-label">Km do klienta (w jedn\u0105 stron\u0119)</label>
+                    <label class="field-label">Km (w jedną stronę)</label>
                     <input type="number" class="field-input" min="0" step="1"
+                        id="deleg-km-${idx}"
                         value="${sec.km}"
                         oninput="delegSections[${idx}].km=+this.value;delegUpdateTotal(${idx})">
                 </div>
                 <div>
-                    <label class="field-label">Liczba wyjazd\u00f3w</label>
+                    <label class="field-label">Liczba wyjazdów</label>
                     <input type="number" class="field-input" min="1" step="1"
                         value="${sec.wyjazdy}"
                         oninput="delegSections[${idx}].wyjazdy=+this.value;delegUpdateTotal(${idx})">
                 </div>
                 <div>
-                    <label class="field-label">Liczba os\u00f3b</label>
+                    <label class="field-label">Liczba osób</label>
                     <input type="number" class="field-input" min="1" step="1"
                         value="${sec.osoby}"
                         oninput="delegSections[${idx}].osoby=+this.value;delegUpdateTotal(${idx})">
                 </div>
                 <div>
-                    <label class="field-label">Liczba nocleg\u00f3w</label>
+                    <label class="field-label">Liczba noclegów</label>
                     <input type="number" class="field-input" min="0" step="1"
                         value="${sec.noce}"
                         oninput="delegSections[${idx}].noce=+this.value;delegUpdateTotal(${idx})">
                 </div>
                 <div>
-                    <label class="field-label">Stawka za km (z\u0142)</label>
+                    <label class="field-label">Stawka za km (zł)</label>
                     <input type="number" class="field-input" min="0" step="0.01"
                         value="${sec.stawka_km}"
                         oninput="delegSections[${idx}].stawka_km=+this.value;delegUpdateTotal(${idx})">
                 </div>
                 <div>
-                    <label class="field-label">Stawka za nocleg (z\u0142)</label>
+                    <label class="field-label">Stawka za nocleg (zł)</label>
                     <input type="number" class="field-input" min="0" step="1"
                         value="${sec.stawka_noc}"
                         oninput="delegSections[${idx}].stawka_noc=+this.value;delegUpdateTotal(${idx})">
@@ -1144,10 +1160,11 @@ function delegRender() {
             </div>
 
             <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:#1A4D3A;font-weight:700;">
-                Koszt tej lokalizacji: ${delegFmt(total)} z\u0142
+                Koszt tej lokalizacji: ${delegFmt(total)} zł
             </div>
         `;
         wrap.appendChild(div);
+        delegInitAutocomplete(idx);
     });
 
     delegSave();
@@ -1161,17 +1178,20 @@ function delegCalc(sec) {
 
 function delegUpdateTotal(idx) {
     const el = document.getElementById('deleg-total-' + idx);
-    if (el) el.textContent = 'Koszt tej lokalizacji: ' + delegFmt(delegCalc(delegSections[idx])) + ' z\u0142';
+    if (el) el.textContent = 'Koszt tej lokalizacji: ' + delegFmt(delegCalc(delegSections[idx])) + ' zł';
     delegSave();
 }
 
 function delegAddSection() {
     delegSections.push({
-        nazwa: '', adres: '',
-        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
+        nazwa: '', adres: '', km: 0, wyjazdy: 1, osoby: 1, noce: 0,
         stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
     });
     delegRender();
+    const wrap = document.getElementById('deleg-sections');
+    if (wrap && wrap.lastElementChild) {
+        wrap.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 function delegRemoveSection(idx) {
@@ -1182,10 +1202,66 @@ function delegRemoveSection(idx) {
 function delegSave() {
     const jsonEl = document.getElementById('delegations-json');
     if (jsonEl) jsonEl.value = JSON.stringify(delegSections);
-    var grand = delegSections.reduce(function(s, sec){ return s + delegCalc(sec); }, 0);
-    var dr = document.getElementById('deleg-result');
-    if (dr) dr.textContent = delegFmt(grand) + ' z\u0142';
+    const grand = delegSections.reduce(function(s, sec) { return s + delegCalc(sec); }, 0);
+    const dr = document.getElementById('deleg-result');
+    if (dr) dr.textContent = delegFmt(grand) + ' zł';
     if (typeof recalcAll === 'function') recalcAll();
 }
+
+async function delegFetchKm(idx) {
+    const adresEl = document.getElementById('deleg-adres-' + idx);
+    const kmEl    = document.getElementById('deleg-km-' + idx);
+    const btn     = document.getElementById('deleg-mapbtn-' + idx);
+    const adres   = adresEl ? adresEl.value.trim() : '';
+
+    if (!adres) { alert('Wpisz adres lub miasto przed pobraniem odległości.'); return; }
+
+    const origHTML = btn ? btn.innerHTML : '';
+    if (btn) { btn.innerHTML = '<i class="ti ti-loader-2"></i>'; btn.disabled = true; }
+
+    try {
+        const res  = await fetch(DIST_URL + '?destination=' + encodeURIComponent(adres), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        const data = await res.json();
+        if (data.km !== undefined) {
+            delegSections[idx].km = data.km;
+            if (kmEl) kmEl.value = data.km;
+            delegUpdateTotal(idx);
+            const totalEl = document.getElementById('deleg-total-' + idx);
+            if (totalEl) {
+                totalEl.innerHTML = 'Koszt tej lokalizacji: <strong>'
+                    + delegFmt(delegCalc(delegSections[idx])) + ' zł</strong>'
+                    + '&nbsp;&nbsp;—&nbsp;&nbsp;📍 ' + data.km + ' km (' + data.minutes + ' min od Gliwic)';
+            }
+        } else {
+            alert('Błąd: ' + (data.error || 'Sprawdź wpisany adres.'));
+        }
+    } catch (e) {
+        alert('Błąd połączenia z serwerem.');
+    } finally {
+        if (btn) { btn.innerHTML = origHTML; btn.disabled = false; }
+    }
+}
+
+function delegInitAutocomplete(idx) {
+    const input = document.getElementById('deleg-adres-' + idx);
+    if (!input || typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+    const ac = new google.maps.places.Autocomplete(input, {
+        componentRestrictions: { country: 'pl' },
+        fields: ['formatted_address'],
+        types: ['geocode']
+    });
+    ac.addListener('place_changed', function() {
+        const place = ac.getPlace();
+        if (!place || !place.formatted_address) return;
+        delegSections[idx].adres = place.formatted_address;
+        input.value = place.formatted_address;
+        delegSave();
+        delegFetchKm(idx);
+    });
+}
+
+delegRender();
 </script>
 @endpush
