@@ -413,7 +413,7 @@ class OfferController extends Controller
         $offer->load(['company', 'offerRequest']);
 
         $phpWord = new PhpWord();
-        $phpWord->getSettings()->setThemeFontLang(new Language(Language::PL_PL));
+        $phpWord->getSettings()->setThemeFontLang(new Language('pl-PL'));
 
         // Styl dokumentu
         $phpWord->setDefaultFontName('Calibri');
