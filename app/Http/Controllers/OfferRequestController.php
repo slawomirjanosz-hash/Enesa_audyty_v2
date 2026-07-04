@@ -24,7 +24,7 @@ class OfferRequestController extends Controller
             'company_id'              => ['required', 'exists:companies,id'],
             'offer_form_template_id'  => ['nullable', 'exists:offer_form_templates,id'],
             'form_responses'          => ['nullable', 'array'],
-            'tresc'                   => ['nullable', 'string'],
+            'tresc'                   => ['nullable', 'string', 'max:65000'],
         ]);
 
         if (empty($data['offer_form_template_id']) && empty($data['form_responses']) && empty($data['tresc'])) {
@@ -43,7 +43,7 @@ class OfferRequestController extends Controller
             'completion_percent'     => 0,
         ]);
 
-        return redirect()->route('companies.show', $data['company_id'])
+        return redirect(route('companies.show', $data['company_id']) . '#zapytania')
             ->with('success', 'Zapytanie zostało utworzone i jest widoczne w karcie firmy.');
     }
 
