@@ -92,13 +92,13 @@ if ($authUser->hasRole('superadmin')) {
 
     public function archiveCompany(Company $company): RedirectResponse
     {
-        $company->update(['status' => 'archived', 'show_in_dashboard' => false]);
+        $company->update(['status' => 'archived', 'show_in_dashboard' => false, 'archived_at' => now()]);
         return redirect()->route('crm.index')->with('success', 'Firma została zarchiwizowana.');
     }
 
     public function restoreCompany(Company $company): RedirectResponse
     {
-        $company->update(['status' => 'active']);
+        $company->update(['status' => 'active', 'archived_at' => null]);
         return redirect()->route('crm.index')->with('success', 'Firma została przywrócona.');
     }
 
