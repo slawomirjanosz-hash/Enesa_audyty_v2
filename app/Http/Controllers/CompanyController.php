@@ -40,7 +40,7 @@ class CompanyController extends Controller
                 return response()->json(['error' => 'Brak danych dla podanego NIP.'], 404);
             }
 
-            $name = $subject['name'] ?? '';
+            $name = $this->abbreviateCompanyForm($subject['name'] ?? '');
             $rawAddress = $subject['residenceAddress'] ?? $subject['workingAddress'] ?? '';
             $address = '';
             $city = '';
@@ -60,6 +60,34 @@ class CompanyController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Błąd połączenia z API. Spróbuj ponownie później.'], 503);
         }
+    }
+
+    private function abbreviateCompanyForm(string $name): string
+    {
+        if (empty($name)) {
+            return $name;
+        }
+
+        // Kolejność ma znaczenie: dłuższe/złożone frazy muszą być zamieniane PRZED krótszymi,
+        // żeby np. "spółka komandytowa" nie zostało podmienione zanim wykryjemy pełną frazę
+        // "spółka z ograniczoną odpowiedzialnością spółka komandytowa".
+        $replacements = [
+            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\s+spółka\s+komandytowo-akcyjna\b/iu' => 'sp. z o.o. S.K.A.',
+            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\s+spółka\s+komandytowa\b/iu'          => 'sp. z o.o. sp.k.',
+            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\b/iu'                                  => 'sp. z o.o.',
+            '/\bspółka\s+komandytowo-akcyjna\b/iu'                                                   => 'S.K.A.',
+            '/\bspółka\s+komandytowa\b/iu'                                                           => 'sp.k.',
+            '/\bspółka\s+jawna\b/iu'                                                                 => 'sp.j.',
+            '/\bspółka\s+partnerska\b/iu'                                                            => 'sp.p.',
+            '/\bspółka\s+akcyjna\b/iu'                                                               => 'S.A.',
+            '/\bspółka\s+cywilna\b/iu'                                                               => 's.c.',
+        ];
+
+        foreach ($replacements as $pattern => $abbreviation) {
+            $name = preg_replace($pattern, $abbreviation, $name);
+        }
+
+        return trim($name);
     }
 
     public function show(Company $company)
