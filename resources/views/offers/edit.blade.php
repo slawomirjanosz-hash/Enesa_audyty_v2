@@ -1,8 +1,9 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('page-title', $offer->fullNumber())
 
 @push('styles')
+<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <style>
 /* â”€â”€ Editor topbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #editor-topbar {
@@ -91,6 +92,12 @@
 .ed-card-header > i { font-size: 17px; color: #1A4D3A; }
 .ed-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
 .ed-card-body { padding: 20px; }
+.ed-card.type-text { border-left: 4px solid #1A4D3A; }
+.ed-card.type-text .ed-card-header { background: #F0F7F3; }
+.ed-card.type-price { border-left: 4px solid #D97706; }
+.ed-card.type-price .ed-card-header { background: #FFF8E8; }
+.ed-card.type-deleg { border-left: 4px solid #2563EB; }
+.ed-card.type-deleg .ed-card-header { background: #EFF6FF; }
 
 /* â”€â”€ Document header card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .doc-header-bar {
@@ -169,13 +176,14 @@
 .price-table td { padding:6px 6px; border-bottom:1px solid #F0EDE6; vertical-align:middle; }
 .price-table tr:last-child td { border-bottom:none; }
 .cell-input {
-    width:100%; border:1px solid transparent; border-radius:5px;
-    padding:5px 8px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A;
-    background:transparent; outline:none; transition:border-color .12s, background .12s;
+    width:100%; border:1px solid #D8D4C8; border-radius:5px;
+    padding:6px 9px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A;
+    background:#fff; outline:none; transition:border-color .12s, box-shadow .12s;
     box-sizing:border-box;
 }
-.cell-input:hover { border-color:#D0CCC0; background:#FAFAF6; }
-.cell-input:focus { border-color:#1A4D3A; background:#fff; }
+.cell-input::placeholder { color: #B0AA9E; }
+.cell-input:hover { border-color:#94C4B0; }
+.cell-input:focus { border-color:#1A4D3A; box-shadow: 0 0 0 2px rgba(26,77,58,0.08); }
 .cell-readonly { font-family:'Lato',sans-serif; font-size:13px; color:#333; font-weight:700; padding:5px 8px; }
 .btn-add-row {
     background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px;
@@ -250,6 +258,16 @@
     $validUntilDefault = $offer->valid_until
         ? $offer->valid_until->format('Y-m-d')
         : now()->addDays(30)->format('Y-m-d');
+
+    $existingTextSections = $offer->text_sections;
+    if (empty($existingTextSections)) {
+        $existingTextSections = [
+            ['name' => 'Przedmiot oferty', 'content' => $offer->content_subject ?? ''],
+            ['name' => 'Zakres prac', 'content' => $offer->content_scope ?? ''],
+            ['name' => 'Termin realizacji', 'content' => $offer->content_deadline ?? ''],
+            ['name' => 'Warunki płatności', 'content' => $offer->content_payment ?? ''],
+        ];
+    }
 @endphp
 
 {{-- â•â•â• EDITOR TOPBAR â•â•â• --}}
@@ -377,46 +395,18 @@
     </div>
 </div>
 
-{{-- â”€â”€ SEKCJA B1: PRZEDMIOT OFERTY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-target"></i>
-        <span class="ed-card-title">Przedmiot oferty</span>
-    </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-subject','content_subject')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
-    </div>
-    <div class="rich-editor" id="editor-subject" contenteditable="true"
-         data-placeholder="Opisz przedmiot oferty...">{!! $offer->content_subject ?? '' !!}</div>
-</div>
-
-{{-- â”€â”€ SEKCJA B2: ZAKRES PRAC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-list-check"></i>
-        <span class="ed-card-title">Zakres prac</span>
-    </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-scope','content_scope')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
-    </div>
-    <div class="rich-editor" id="editor-scope" contenteditable="true"
-         data-placeholder="Opisz zakres prac...">{!! $offer->content_scope ?? '' !!}</div>
+{{-- ── SEKCJE OPISOWE (dynamiczne) ───────────── --}}
+<div id="text-sections-container"></div>
+<div style="margin-bottom:16px;">
+    <button type="button" class="btn-add-section" onclick="addTextSection()">
+        <i class="ti ti-file-text"></i> Dodaj sekcję opisową
+    </button>
 </div>
 
 {{-- â”€â”€ SEKCJA C: WYCENA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
 
 {{-- C1: Sekcja gĹ‚Ăłwna --}}
-<div class="ed-card" id="section-main">
+<div class="ed-card type-price" id="section-main">
     <div class="ed-card-header">
         <i class="ti ti-calculator"></i>
         <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
@@ -454,67 +444,24 @@
 </div>
 
 {{-- DELEGACJE --}}
-<div class="form-section" id="section-delegacje">
-    <div class="form-section-header">
-        <div style="display:flex;align-items:center;gap:10px;">
-            <i class="ti ti-car" style="font-size:18px;color:#1A4D3A;"></i>
-            <span class="form-section-title">Delegacje</span>
-        </div>
+<div class="ed-card type-deleg" id="section-delegacje">
+    <div class="ed-card-header">
+        <i class="ti ti-car"></i>
+        <span class="ed-card-title">Delegacje</span>
     </div>
-    <div class="form-section-body">
-
+    <div class="ed-card-body">
         <div id="deleg-sections"></div>
-
         <div style="margin-top:4px;">
             <button type="button" class="btn-add-section" onclick="delegAddSection()">
                 <i class="ti ti-plus"></i> Dodaj lokalizację
             </button>
         </div>
-
         <input type="hidden" name="delegations" id="delegations-json">
-        {{-- Ukryty element zachowany dla kompatybilności z recalcAll() --}}
         <span id="deleg-result" style="display:none;">0,00 zł</span>
     </div>
 </div>
 
-
-{{-- â”€â”€ SEKCJA B3: TERMIN REALIZACJI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-calendar-time"></i>
-        <span class="ed-card-title">Termin realizacji</span>
-    </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-deadline','content_deadline')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
-    </div>
-    <div class="rich-editor" id="editor-deadline" contenteditable="true"
-         data-placeholder="Opisz termin realizacji...">{!! $offer->content_deadline ?? '' !!}</div>
-</div>
-
-{{-- â”€â”€ SEKCJA B4: WARUNKI PĹATNOĹšCI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-credit-card"></i>
-        <span class="ed-card-title">Warunki płatności</span>
-    </div>
-    <div class="rte-toolbar">
-        <button type="button" class="rte-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button type="button" class="rte-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button type="button" class="rte-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertUnorderedList')"><i class="ti ti-list"></i></button>
-        <button type="button" class="rte-btn" onclick="fmt('insertOrderedList')"><i class="ti ti-list-numbers"></i></button>
-        <button type="button" class="rte-btn rte-btn-ai" onclick="improveWithAi(this,'editor-payment','content_payment')" title="Popraw tekst z AI"><i class="ti ti-wand"></i> Popraw AI</button>
-    </div>
-    <div class="rich-editor" id="editor-payment" contenteditable="true"
-         data-placeholder="Opisz warunki płatności...">{!! $offer->content_payment ?? '' !!}</div>
-</div>
-
-{{-- â”€â”€ C4: NARZUT + PODSUMOWANIE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
+{{-- C4: NARZUT + PODSUMOWANIE --}}
 <div class="ed-card" style="overflow:hidden;">
     <div class="ed-card-header">
         <i class="ti ti-report-money"></i>
@@ -647,10 +594,7 @@
 <input type="hidden" name="kwota_netto"      id="h-kwota-netto" value="{{ $offer->kwota_netto }}">
 
 {{-- Rich editor hidden inputs --}}
-<input type="hidden" id="hidden-content-subject"  name="content_subject"  value="{{ $offer->content_subject }}">
-<input type="hidden" id="hidden-content-scope"    name="content_scope"    value="{{ $offer->content_scope }}">
-<input type="hidden" id="hidden-content-deadline" name="content_deadline" value="{{ $offer->content_deadline }}">
-<input type="hidden" id="hidden-content-payment"  name="content_payment"  value="{{ $offer->content_payment }}">
+<input type="hidden" id="hidden-text-sections"    name="text_sections"    value="">
 <input type="hidden" id="hidden-price-sections"   name="price_sections"   value="">
 <input type="hidden" id="hidden-show-unit"        name="show_unit_prices" value="{{ $offer->show_unit_prices ? '1' : '0' }}">
 
@@ -714,6 +658,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // DATA INIT
@@ -1001,11 +946,8 @@ document.getElementById('offer-form').addEventListener('submit', function () {
         }
     });
     
-    // Collect rich editor content
-    document.getElementById('hidden-content-subject').value  = document.getElementById('editor-subject').innerHTML;
-    document.getElementById('hidden-content-scope').value    = document.getElementById('editor-scope').innerHTML;
-    document.getElementById('hidden-content-deadline').value = document.getElementById('editor-deadline').innerHTML;
-    document.getElementById('hidden-content-payment').value  = document.getElementById('editor-payment').innerHTML;
+    // Collect dynamic text sections
+    document.getElementById('hidden-text-sections').value = JSON.stringify(collectTextSections());
 
     // Collect price sections
     document.getElementById('hidden-price-sections').value = JSON.stringify(collectSections());
@@ -1146,6 +1088,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load dynamic sections
     priceSections.slice(1).forEach(sec => addSection(sec));
 
+    // Load existing text sections (or fallback to old columns)
+    const existingTextSections = @json($existingTextSections);
+    existingTextSections.forEach(s => addTextSection(s));
+
     // Apply unit toggle initial state
     toggleUnitPrices(document.getElementById('show-unit-toggle'));
 
@@ -1216,44 +1162,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 }); // DOMContentLoaded
-
-async function improveWithAi(btn, editorId, field) {
-    const editor = document.getElementById(editorId);
-    if (!editor) return;
-    const currentHtml = editor.innerHTML.trim();
-    if (!currentHtml || currentHtml === '<br>') {
-        alert('Najpierw wpisz tekst, który ma zostać poprawiony.');
-        return;
-    }
-    btn.disabled = true;
-    const origContent = btn.innerHTML;
-    btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> Poprawiam...';
-    try {
-        const offerTitle   = document.querySelector('input[name="offer_title"]')?.value  || '';
-        const companyInput = document.getElementById('company_id');
-        const companyName  = companyInput?.options[companyInput.selectedIndex]?.text || '';
-        const res = await fetch('{{ route("offers.ai-assist") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ field, mode: 'improve', current: currentHtml, offer_title: offerTitle, company_name: companyName })
-        });
-        const data = await res.json();
-        if (data.html) {
-            editor.innerHTML = data.html;
-            editor.dispatchEvent(new Event('input'));
-        } else {
-            alert('Błąd AI: ' + (data.error || 'Nieznany błąd'));
-        }
-    } catch (e) {
-        alert('Błąd połączenia z serwerem AI.');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = origContent;
-    }
-}
 
 function updateCompanyInfo(sel) {
     const opt = sel.options[sel.selectedIndex];
@@ -1428,6 +1336,94 @@ window.collectRow = function(tr) {
         z_narzutem: qty * price * (1 + pct / 100),
     };
 };
+
+/* ── Dynamiczne sekcje opisowe ─────────────────────── */
+let textSectionCounter = 0;
+let textQuills = {};
+
+function addTextSection(sectionData) {
+    const sid = 'txt' + (textSectionCounter++);
+    const name = sectionData?.name || 'Nowa sekcja';
+    const content = sectionData?.content || '';
+
+    const card = document.createElement('div');
+    card.className = 'ed-card type-text';
+    card.id = 'text-section-' + sid;
+    card.style.marginBottom = '16px';
+    card.innerHTML = `
+        <div class="ed-card-header">
+            <i class="ti ti-file-text"></i>
+            <input type="text" class="section-name-input text-section-name" value="${name.replace(/"/g,'&quot;')}" style="flex:1;">
+            <button type="button" class="btn-del-section" onclick="removeTextSection('${sid}')">
+                <i class="ti ti-trash"></i> Usuń sekcję
+            </button>
+        </div>
+        <div class="rte-toolbar" data-target="editor-${sid}">
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','bold')"><b>B</b></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','italic')"><i>I</i></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','underline')"><u>U</u></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','list','bullet')"><i class="ti ti-list"></i></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','list','ordered')"><i class="ti ti-list-numbers"></i></button>
+            <button type="button" class="rte-btn rte-btn-ai" onclick="aiAssistDynamic('${sid}')"><i class="ti ti-wand"></i> Popraw AI</button>
+        </div>
+        <div id="editor-${sid}" style="min-height:90px;font-size:14px;"></div>
+    `;
+    document.getElementById('text-sections-container').appendChild(card);
+
+    const toolbarOptions = [['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['clean']];
+    textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    if (content) textQuills[sid].clipboard.dangerouslyPasteHTML(content);
+}
+
+function removeTextSection(sid) {
+    if (!confirm('Usunąć tę sekcję?')) return;
+    document.getElementById('text-section-' + sid)?.remove();
+    delete textQuills[sid];
+}
+
+function fmtOn(editorId, cmd, value) {
+    document.execCommand(cmd, false, value || null);
+}
+
+function collectTextSections() {
+    const sections = [];
+    document.querySelectorAll('#text-sections-container .ed-card').forEach(card => {
+        const sid = card.id.replace('text-section-', '');
+        const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
+        const content = textQuills[sid] ? textQuills[sid].root.innerHTML : '';
+        sections.push({ name, content });
+    });
+    return sections;
+}
+
+async function aiAssistDynamic(sid) {
+    const card = document.getElementById('text-section-' + sid);
+    const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
+    const quill = textQuills[sid];
+    const current = quill.root.innerHTML.trim();
+    if (!current || current === '<p><br></p>') {
+        alert('Najpierw wpisz tekst do poprawy.');
+        return;
+    }
+    const btn = card.querySelector('.rte-btn-ai');
+    btn.disabled = true;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader-2"></i> Poprawiam...';
+    try {
+        const offerTitle = document.querySelector('input[name="offer_title"]')?.value || '';
+        const companySel = document.getElementById('company_id_select');
+        const companyName = companySel?.options[companySel.selectedIndex]?.text?.split('—')[0]?.trim() || '';
+        const res = await fetch('{{ route("offers.ai-assist") }}', {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ field: 'custom_' + sid, section_name: name, mode: 'improve', current, offer_title: offerTitle, company_name: companyName })
+        });
+        const data = await res.json();
+        if (data.html) quill.clipboard.dangerouslyPasteHTML(data.html);
+        else alert('Błąd AI: ' + (data.error || 'nieznany'));
+    } catch(e) { alert('Błąd połączenia z AI'); }
+    finally { btn.disabled = false; btn.innerHTML = orig; }
+}
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places"></script>
