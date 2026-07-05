@@ -114,6 +114,7 @@ class OfferController extends Controller
             'content_payment'           => ['nullable', 'string'],
             'show_unit_prices'          => ['nullable'],
             'price_sections'            => ['nullable', 'string'],
+            'text_sections'             => ['nullable', 'string'],
             'delegations'               => ['nullable', 'string'],
             // Delegation
             'km_do_klienta'             => ['nullable', 'numeric', 'min:0'],
@@ -134,6 +135,12 @@ class OfferController extends Controller
         if ($request->filled('price_sections')) {
             $decoded = json_decode($request->input('price_sections'), true);
             $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+
+        $textSections = null;
+        if ($request->filled('text_sections')) {
+            $decoded = json_decode($request->input('text_sections'), true);
+            $textSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
         }
 
         $delegations = null;
@@ -163,6 +170,7 @@ class OfferController extends Controller
             'content_payment'           => $data['content_payment'] ?? null,
             'show_unit_prices'          => $request->input('show_unit_prices') === '1',
             'price_sections'            => $priceSections,
+            'text_sections'             => $textSections,
             'delegations'               => $delegations,
         ]);
 
@@ -256,6 +264,7 @@ class OfferController extends Controller
             'content_payment'           => ['nullable', 'string'],
             'show_unit_prices'          => ['nullable'],
             'price_sections'            => ['nullable', 'string'],
+            'text_sections'             => ['nullable', 'string'],
             'delegations'               => ['nullable', 'string'],
             // Delegation
             'km_do_klienta'             => ['nullable', 'numeric', 'min:0'],
@@ -276,6 +285,12 @@ class OfferController extends Controller
         if ($request->filled('price_sections')) {
             $decoded = json_decode($request->input('price_sections'), true);
             $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+
+        $textSections = null;
+        if ($request->filled('text_sections')) {
+            $decoded = json_decode($request->input('text_sections'), true);
+            $textSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
         }
 
         $delegations = null;
@@ -304,6 +319,7 @@ class OfferController extends Controller
             'content_payment'           => $data['content_payment'] ?? null,
             'show_unit_prices'          => $request->input('show_unit_prices') === '1',
             'price_sections'            => $priceSections,
+            'text_sections'             => $textSections,
             'delegations'               => $delegations,
         ]);
 
@@ -844,11 +860,12 @@ class OfferController extends Controller
     public function aiAssist(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'field'        => ['required', 'in:content_subject,content_scope,content_deadline,content_payment'],
+            'field'        => ['required', 'string', 'max:50'],
             'mode'         => ['required', 'in:improve'],
             'current'      => ['nullable', 'string'],
             'offer_title'  => ['nullable', 'string'],
             'company_name' => ['nullable', 'string'],
+            'section_name' => ['nullable', 'string', 'max:255'],
         ]);
 
         $fieldLabels = [
@@ -858,7 +875,7 @@ class OfferController extends Controller
             'content_payment'  => 'Warunki płatności',
         ];
 
-        $label   = $fieldLabels[$data['field']];
+        $label   = $fieldLabels[$data['field']] ?? ($request->input('section_name') ?? 'Sekcja oferty');
         $title   = $data['offer_title'] ?? 'oferta';
         $company = $data['company_name'] ?? 'klient';
         $current = preg_replace('/<br\s*\/?>/i', "\n", $data['current'] ?? '');
