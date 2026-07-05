@@ -570,7 +570,8 @@
     </div>
     <div>
         <label class="field-label">Numer oferty</label>
-        <input type="text" name="offer_number" class="field-input" value="{{ $offer->offer_number }}" required>
+        <input type="text" class="field-input" value="{{ $offer->offer_number }}" readonly disabled
+               style="background:#F3F4F6;color:#888;cursor:not-allowed;">
     </div>
     <div>
         <label class="field-label">Status</label>
