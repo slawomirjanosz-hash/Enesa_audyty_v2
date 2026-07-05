@@ -286,6 +286,7 @@
                 <thead>
                     <tr>
                         <th>Numer oferty</th>
+                        <th>Tytuł</th>
                         <th>Klient</th>
                         <th>Prowadzi</th>
                         <th>Kwota netto</th>
@@ -303,6 +304,7 @@
                                 {{ $offer->fullNumber() }}
                             </a>
                         </td>
+                        <td style="color:#555;">{{ $offer->offer_title ?? '—' }}</td>
                         <td style="color:#333;">{{ $offer->company?->name ?? '—' }}</td>
                         <td style="color:#555;">{{ $offer->assignedUser?->name ?? '—' }}</td>
                         <td>
