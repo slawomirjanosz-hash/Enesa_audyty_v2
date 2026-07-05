@@ -35,6 +35,7 @@ class Offer extends Model
         'content_payment',
         'show_unit_prices',
         'price_sections',
+        'text_sections',
         'delegations',
         'is_template',
     ];
@@ -44,6 +45,7 @@ class Offer extends Model
         'valid_until'       => 'date',
         'show_unit_prices'  => 'boolean',
         'price_sections'    => 'array',
+        'text_sections'     => 'array',
         'delegations'       => 'array',
         'is_template'       => 'boolean',
     ];
