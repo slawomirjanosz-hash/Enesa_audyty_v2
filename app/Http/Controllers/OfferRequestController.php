@@ -59,4 +59,26 @@ class OfferRequestController extends Controller
         $offerRequest->update(['status' => $request->status]);
         return back()->with('success', 'Status zapytania został zaktualizowany.');
     }
+
+    public function edit(OfferRequest $offerRequest)
+    {
+        $offerRequest->load(['company', 'offerFormTemplate']);
+        return view('offer-requests.edit', compact('offerRequest'));
+    }
+
+    public function update(Request $request, OfferRequest $offerRequest)
+    {
+        $data = $request->validate([
+            'form_responses' => ['nullable', 'array'],
+            'tresc'          => ['nullable', 'string', 'max:65000'],
+        ]);
+
+        $offerRequest->update([
+            'form_responses' => $data['form_responses'] ?? [],
+            'tresc'          => $data['tresc'] ?? null,
+        ]);
+
+        return redirect(route('companies.show', $offerRequest->company_id) . '#zapytania')
+            ->with('success', 'Zapytanie zostało zaktualizowane.');
+    }
 }

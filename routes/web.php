@@ -101,6 +101,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create',                        [OfferRequestController::class, 'create'])->name('create');
         Route::post('/',                             [OfferRequestController::class, 'store'])->name('store');
         Route::get('/{offerRequest}',                [OfferRequestController::class, 'show'])->name('show');
+        Route::get('/{offerRequest}/edit',           [OfferRequestController::class, 'edit'])->name('edit');
+        Route::put('/{offerRequest}',                [OfferRequestController::class, 'update'])->name('update');
         Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
     });
 
