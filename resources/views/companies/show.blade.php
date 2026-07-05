@@ -1013,7 +1013,16 @@
                         </td>
                         <td style="color:#7a8a80;font-size:12px;">{{ $req->created_at->format('d.m.Y H:i') }}</td>
                         <td style="text-align:right;">
-                            <div style="display:flex;gap:6px;justify-content:flex-end;">
+                            <div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;">
+                                <a href="{{ route('offer-requests.show', $req) }}" title="Podgląd zapytania"
+                                   style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:#1A4D3A;border-radius:6px;text-decoration:none;">
+                                    <i class="ti ti-eye" style="font-size:13px;"></i>
+                                </a>
+                                <a href="{{ route('offer-requests.edit', $req) }}" title="Edytuj zapytanie"
+                                   style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#EFF6FF;color:#1D4ED8;border-radius:6px;text-decoration:none;">
+                                    <i class="ti ti-pencil" style="font-size:13px;"></i>
+                                </a>
+
                                 @if($offers->isEmpty())
                                 <a href="{{ route('offers.create', ['company_id' => $company->id, 'offer_request_id' => $req->id]) }}"
                                    style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
