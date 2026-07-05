@@ -1436,7 +1436,8 @@ const DIST_URL = '{{ route("offers.get-distance") }}';
 
 let delegSections = @json(old('delegations') ? json_decode(old('delegations'), true) : ($offer->delegations ?? []));
 
-// Jeśli brak danych JSON ale istnieje stary offerDelegation — importuj go
+// Jeśli brak danych JSON ale istnieje stary offerDelegation — importuj go (zachowanie 
+// zapisanych wcześniej delegacji w starym formacie)
 @if($offer->delegations === null && $offer->offerDelegation)
 delegSections = [{
     nazwa:    'Siedziba zamawiającego',
@@ -1450,13 +1451,8 @@ delegSections = [{
 }];
 @endif
 
-if (!delegSections || delegSections.length === 0) {
-    delegSections = [{
-        nazwa: 'Siedziba zamawiającego',
-        adres: '',
-        km: 0, wyjazdy: 1, osoby: 1, noce: 0,
-        stawka_km: DELEG_STAWKA_KM, stawka_noc: DELEG_STAWKA_NOC
-    }];
+if (!delegSections) {
+    delegSections = [];
 }
 
 function delegFmt(n) {
