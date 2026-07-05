@@ -653,6 +653,17 @@
         </div>
         <div style="font-size:13px;color:#888;margin-bottom:24px;">Wypełnij dane firmy lub pobierz automatycznie z GUS.</div>
 
+        @if($errors->any())
+        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;font-size:13px;margin-bottom:16px;">
+            <strong style="color:#b91c1c;">Popraw błędy:</strong>
+            <ul style="margin:6px 0 0 16px;color:#b91c1c;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <form method="POST" action="{{ route('companies.store') }}">
             @csrf
 
@@ -661,6 +672,7 @@
                 <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">NIP firmy</label>
                 <div style="display:flex;gap:8px;">
                     <input id="nip-input" type="text" name="nip" placeholder="np. 527-000-11-22"
+                           value="{{ old('nip') }}"
                            style="flex:1;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;"
                            oninput="this.value=this.value.replace(/[^0-9\-]/g,'')"
                            maxlength="13">
@@ -676,6 +688,7 @@
             <div style="margin-bottom:14px;">
                 <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Nazwa firmy<span style="color:#b91c1c;">*</span></label>
                 <input id="company-name" type="text" name="name" required
+                       value="{{ old('name') }}"
                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                        placeholder="Pobrana z GUS lub wpisz ręcznie">
             </div>
@@ -685,12 +698,14 @@
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Adres</label>
                     <input id="company-address" type="text" name="address"
+                           value="{{ old('address') }}"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="ul. Przykładowa 1">
                 </div>
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Miasto</label>
                     <input id="company-city" type="text" name="city"
+                           value="{{ old('city') }}"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="Warszawa">
                 </div>
@@ -701,12 +716,14 @@
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Email</label>
                     <input type="email" name="email"
+                           value="{{ old('email') }}"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="biuro@firma.pl">
                 </div>
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Telefon</label>
                     <input type="tel" name="phone"
+                           value="{{ old('phone') }}"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="+48 000 000 000">
                 </div>
@@ -755,6 +772,10 @@
     document.addEventListener('DOMContentLoaded', function() {
         const savedView = localStorage.getItem('dashboardView') || 'tiles';
         switchView(savedView);
+
+        @if($errors->any())
+        openModal();
+        @endif
     });
 
     function resetAddClientForm() {

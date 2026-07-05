@@ -249,6 +249,9 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
+        $cleanNip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
+        $request->merge(['nip' => $cleanNip]);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string', 'max:255'],
