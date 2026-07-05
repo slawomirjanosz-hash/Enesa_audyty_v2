@@ -89,6 +89,7 @@ class OfferController extends Controller
             'content_deadline' => $offer->content_deadline,
             'content_payment'  => $offer->content_payment,
             'price_sections'   => $offer->price_sections,
+            'text_sections'    => $offer->text_sections,
         ]);
     }
 
