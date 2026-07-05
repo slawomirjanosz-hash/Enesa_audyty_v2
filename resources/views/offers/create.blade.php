@@ -286,7 +286,7 @@
     </div>
 
     {{-- Osoba prowadząca + status --}}
-    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px;gap:14px;align-items:end;">
+    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px 160px;gap:14px;align-items:end;">
         <div>
             <label class="field-label">Osoba prowadząca (ENESA)</label>
             <select name="assigned_user_id" class="field-input">
@@ -312,6 +312,11 @@
                 <option value="przegrana">Przegrana</option>
                 <option value="zarchiwizowana">Zarchiwizowana</option>
             </select>
+        </div>
+        <div>
+            <label class="field-label">Data utworzenia</label>
+            <input type="date" name="created_at" class="field-input"
+                   value="{{ old('created_at', now()->format('Y-m-d')) }}">
         </div>
     </div>
 

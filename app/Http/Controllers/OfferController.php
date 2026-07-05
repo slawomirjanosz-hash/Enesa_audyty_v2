@@ -103,6 +103,7 @@ class OfferController extends Controller
             'assigned_user_id'          => ['nullable', 'exists:users,id'],
             'kwota_netto'               => ['nullable', 'numeric', 'min:0'],
             'valid_until'               => ['nullable', 'date'],
+            'created_at'                => ['nullable', 'date'],
             'notes'                     => ['nullable', 'string'],
             'offer_template_version_id' => ['nullable', 'exists:offer_template_versions,id'],
             'offer_request_id'          => ['nullable', 'exists:offer_requests,id'],
@@ -164,6 +165,11 @@ class OfferController extends Controller
             'price_sections'            => $priceSections,
             'delegations'               => $delegations,
         ]);
+
+        if (!empty($data['created_at'])) {
+            $offer->created_at = \Carbon\Carbon::parse($data['created_at']);
+            $offer->save();
+        }
 
         OfferDelegation::create([
             'offer_id'         => $offer->id,
@@ -239,6 +245,7 @@ class OfferController extends Controller
             'assigned_user_id'          => ['nullable', 'exists:users,id'],
             'kwota_netto'               => ['nullable', 'numeric', 'min:0'],
             'valid_until'               => ['nullable', 'date'],
+            'created_at'                => ['nullable', 'date'],
             'notes'                     => ['nullable', 'string'],
             'offer_template_version_id' => ['nullable', 'exists:offer_template_versions,id'],
             'offer_request_id'          => ['nullable', 'exists:offer_requests,id'],
@@ -299,6 +306,11 @@ class OfferController extends Controller
             'price_sections'            => $priceSections,
             'delegations'               => $delegations,
         ]);
+
+        if (!empty($data['created_at'])) {
+            $offer->created_at = \Carbon\Carbon::parse($data['created_at']);
+            $offer->save();
+        }
 
         $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
         $delegation->fill([

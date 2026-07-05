@@ -609,7 +609,7 @@
 <input type="hidden" name="offer_slug"       value="{{ $offer->offer_slug }}">
 
 {{-- Osoba prowadząca + status --}}
-<div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px;gap:14px;align-items:end;">
+<div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px 160px;gap:14px;align-items:end;">
     <div>
         <label class="field-label">Osoba prowadząca (ENESA)</label>
         <select name="assigned_user_id" class="field-input">
@@ -633,6 +633,11 @@
             <option value="przegrana"      {{ $offer->status === 'przegrana'      ? 'selected' : '' }}>Przegrana</option>
             <option value="zarchiwizowana" {{ $offer->status === 'zarchiwizowana' ? 'selected' : '' }}>Zarchiwizowana</option>
         </select>
+    </div>
+    <div>
+        <label class="field-label">Data utworzenia</label>
+        <input type="date" name="created_at" class="field-input"
+               value="{{ old('created_at', $offer->created_at->format('Y-m-d')) }}">
     </div>
 </div>
 <input type="hidden" name="liczba_wyjazdow"  value="1" id="h-wyjazdy">
