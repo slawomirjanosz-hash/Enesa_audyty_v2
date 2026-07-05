@@ -54,6 +54,12 @@
 .badge-blue { background:#DBEAFE; color:#1D4ED8; }
 .ed-card { background:#fff; border:1px solid #E5E1D8; border-radius:12px; overflow:hidden; margin-bottom:16px; }
 .ed-card-header { padding:13px 20px; border-bottom:1px solid #F0EDE6; background:#FAFAF6; display:flex; align-items:center; gap:10px; }
+.ed-card.type-text { border-left: 4px solid #1A4D3A; }
+.ed-card.type-text .ed-card-header { background: #F0F7F3; }
+.ed-card.type-price { border-left: 4px solid #D97706; }
+.ed-card.type-price .ed-card-header { background: #FFF8E8; }
+.ed-card.type-deleg { border-left: 4px solid #2563EB; }
+.ed-card.type-deleg .ed-card-header { background: #EFF6FF; }
 .ed-card-header > i { font-size:17px; color:#1A4D3A; }
 .ed-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
 .ed-card-body { padding:20px; }
@@ -90,9 +96,10 @@
 .col-netto { width:110px; }
 .col-narzut{ width:120px; }
 .col-del   { width:40px; }
-.cell-input { width:100%; border:1px solid transparent; border-radius:5px; padding:5px 8px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; background:transparent; outline:none; transition:border-color .12s, background .12s; box-sizing:border-box; }
-.cell-input:hover { border-color:#D0CCC0; background:#FAFAF6; }
-.cell-input:focus { border-color:#1A4D3A; background:#fff; }
+.cell-input { width:100%; border:1px solid #D8D4C8; border-radius:5px; padding:6px 9px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; background:#fff; outline:none; transition:border-color .12s, box-shadow .12s; box-sizing:border-box; }
+.cell-input::placeholder { color: #B0AA9E; }
+.cell-input:hover { border-color:#94C4B0; }
+.cell-input:focus { border-color:#1A4D3A; box-shadow: 0 0 0 2px rgba(26,77,58,0.08); }
 .cell-readonly { font-family:'Lato',sans-serif; font-size:13px; color:#333; font-weight:700; padding:5px 8px; }
 .btn-add-row { background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px; padding:6px 14px; font-size:12px; font-family:'Manrope',sans-serif; font-weight:700; cursor:pointer; transition:background .12s; }
 .btn-add-row:hover { background:#F0F7F3; }
@@ -332,46 +339,16 @@
     <input type="hidden" name="offer_request_id" value="{{ $offerRequest->id }}">
 @endif
 
-{{-- ── SEKCJA B1: PRZEDMIOT OFERTY ───────────── --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-target"></i>
-        <span class="ed-card-title">Przedmiot oferty</span>
-    </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
-        <button type="button" onclick="aiAssist('content_subject','improve',quillSubject)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw z AI
-        </button>
-        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
-        <span class="ai-status-subject" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
-            <i class="ti ti-loader-2"></i> Poprawiam...
-        </span>
-    </div>
-    <div id="editor-subject" style="min-height:100px;font-size:14px;"></div>
-</div>
-
-{{-- ── SEKCJA B2: ZAKRES PRAC ────────────────── --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-list-check"></i>
-        <span class="ed-card-title">Zakres prac</span>
-    </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
-        <button type="button" onclick="aiAssist('content_scope','improve',quillScope)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw z AI
-        </button>
-        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
-        <span class="ai-status-scope" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
-            <i class="ti ti-loader-2"></i> Poprawiam...
-        </span>
-    </div>
-    <div id="editor-scope" style="min-height:100px;font-size:14px;"></div>
+{{-- ── SEKCJE OPISOWE (dynamiczne) ───────────── --}}
+<div id="text-sections-container"></div>
+<div style="margin-bottom:16px;">
+    <button type="button" class="btn-add-section" onclick="addTextSection()">
+        <i class="ti ti-file-text"></i> Dodaj sekcję opisową
+    </button>
 </div>
 
 {{-- ── SEKCJA C: WYCENA ───────────────────────── --}}
-<div class="ed-card" id="section-main">
+<div class="ed-card type-price" id="section-main">
     <div class="ed-card-header">
         <i class="ti ti-calculator"></i>
         <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
@@ -408,7 +385,7 @@
 </div>
 
 {{-- C3: Delegacje --}}
-<div class="ed-card" id="section-delegacje">
+<div class="ed-card type-deleg" id="section-delegacje">
     <div class="ed-card-header">
         <i class="ti ti-car"></i>
         <span class="ed-card-title">Delegacje</span>
@@ -423,44 +400,6 @@
         <input type="hidden" name="delegations" id="delegations-json">
         <span id="deleg-result" style="display:none;">0,00 zł</span>
     </div>
-</div>
-
-{{-- ── SEKCJA B3: TERMIN REALIZACJI ──────────── --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-calendar-time"></i>
-        <span class="ed-card-title">Termin realizacji</span>
-    </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
-        <button type="button" onclick="aiAssist('content_deadline','improve',quillDeadline)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw z AI
-        </button>
-        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
-        <span class="ai-status-deadline" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
-            <i class="ti ti-loader-2"></i> Poprawiam...
-        </span>
-    </div>
-    <div id="editor-deadline" style="min-height:80px;font-size:14px;"></div>
-</div>
-
-{{-- ── SEKCJA B4: WARUNKI PŁATNOŚCI ──────────── --}}
-<div class="ed-card">
-    <div class="ed-card-header">
-        <i class="ti ti-credit-card"></i>
-        <span class="ed-card-title">Warunki płatności</span>
-    </div>
-    <div style="display:flex;gap:8px;padding:8px 16px;background:#F0F7F3;border-bottom:1px solid #E5E1D8;align-items:center;">
-        <button type="button" onclick="aiAssist('content_payment','improve',quillPayment)"
-                style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;">
-            <i class="ti ti-wand"></i> Popraw z AI
-        </button>
-        <span style="font-size:11px;color:#888;">Wpisz tekst — AI poprawi błędy i ułoży zdania</span>
-        <span class="ai-status-payment" style="font-size:12px;color:#1A4D3A;display:none;align-items:center;gap:4px;">
-            <i class="ti ti-loader-2"></i> Poprawiam...
-        </span>
-    </div>
-    <div id="editor-payment" style="min-height:80px;font-size:14px;"></div>
 </div>
 
 {{-- ── C4: NARZUT + PODSUMOWANIE ──────────────── --}}
@@ -548,10 +487,7 @@
 <input type="hidden" name="liczba_osob"     value="1" id="h-osoby">
 <input type="hidden" name="stawka_noc"      value="300" id="h-stawka-noc">
 <input type="hidden" name="kwota_netto"     id="h-kwota-netto" value="0">
-<input type="hidden" id="hidden-content-subject"  name="content_subject"  value="">
-<input type="hidden" id="hidden-content-scope"    name="content_scope"    value="">
-<input type="hidden" id="hidden-content-deadline" name="content_deadline" value="">
-<input type="hidden" id="hidden-content-payment"  name="content_payment"  value="">
+<input type="hidden" id="hidden-text-sections" name="text_sections" value="">
 <input type="hidden" id="hidden-price-sections"   name="price_sections"   value="">
 <input type="hidden" id="hidden-show-unit"        name="show_unit_prices" value="0">
 <input type="hidden" name="km_do_klienta"    id="h-km">
@@ -775,7 +711,7 @@ function addSection(sectionData) {
     const sid  = 'sec' + (sectionCounter++);
     const name = sectionData?.name || 'Nowa sekcja';
     const card = document.createElement('div');
-    card.className = 'ed-card';
+    card.className = 'ed-card type-price';
     card.id = 'section-' + sid;
     card.style.marginBottom = '16px';
     card.innerHTML = `
@@ -864,33 +800,119 @@ function syncDelegHiddens() {
     }
 }
 
-let quillSubject, quillScope, quillDeadline, quillPayment;
+/* ── Dynamiczne sekcje opisowe ─────────────────────────────── */
+let textSectionCounter = 0;
+let textQuills = {}; // mapa: sectionId -> instancja Quill
+
+const DEFAULT_TEXT_SECTIONS = [
+    { name: 'Przedmiot oferty',     content: '' },
+    { name: 'Zakres prac',          content: '' },
+    { name: 'Termin realizacji',    content: '' },
+    { name: 'Warunki płatności',    content: '' },
+];
+
+function addTextSection(sectionData) {
+    const sid = 'txt' + (textSectionCounter++);
+    const name = sectionData?.name || 'Nowa sekcja';
+    const content = sectionData?.content || '';
+
+    const card = document.createElement('div');
+    card.className = 'ed-card type-text';
+    card.id = 'text-section-' + sid;
+    card.style.marginBottom = '16px';
+    card.innerHTML = `
+        <div class="ed-card-header">
+            <i class="ti ti-file-text"></i>
+            <input type="text" class="section-name-input text-section-name" value="${name.replace(/"/g,'&quot;')}" style="flex:1;">
+            <button type="button" class="btn-del-section" onclick="removeTextSection('${sid}')">
+                <i class="ti ti-trash"></i> Usuń sekcję
+            </button>
+        </div>
+        <div class="rte-toolbar" data-target="editor-${sid}">
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','bold')"><b>B</b></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','italic')"><i>I</i></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','underline')"><u>U</u></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','list','bullet')"><i class="ti ti-list"></i></button>
+            <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','list','ordered')"><i class="ti ti-list-numbers"></i></button>
+            <button type="button" class="rte-btn rte-btn-ai" onclick="aiAssistDynamic('${sid}')"><i class="ti ti-wand"></i> Popraw AI</button>
+        </div>
+        <div id="editor-${sid}" style="min-height:90px;font-size:14px;"></div>
+    `;
+    document.getElementById('text-sections-container').appendChild(card);
+
+    const toolbarOptions = [['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['clean']];
+    textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    if (content) textQuills[sid].clipboard.dangerouslyPasteHTML(content);
+}
+
+function removeTextSection(sid) {
+    if (!confirm('Usunąć tę sekcję?')) return;
+    document.getElementById('text-section-' + sid)?.remove();
+    delete textQuills[sid];
+}
+
+function fmtOn(editorId, cmd, value) {
+    // Quill toolbar buttons już wywołują execCommand poprawnie przez moduł toolbar,
+    // ta funkcja jest fallbackiem — jeśli natywny toolbar Quill jest podłączony
+    // (patrz modules.toolbar wyżej), te przyciski są opcjonalne i mogą być usunięte
+    // jeśli powodują konflikt. Zostaw jak jest — Quill sam obsługuje formatowanie
+    // przez swój wewnętrzny toolbar UI, ten kod tylko zapewnia kompatybilność wizualną
+    // z istniejącym stylem .rte-btn.
+    document.execCommand(cmd, false, value || null);
+}
+
+function collectTextSections() {
+    const sections = [];
+    document.querySelectorAll('#text-sections-container .ed-card').forEach(card => {
+        const sid = card.id.replace('text-section-', '');
+        const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
+        const content = textQuills[sid] ? textQuills[sid].root.innerHTML : '';
+        sections.push({ name, content });
+    });
+    return sections;
+}
+
+async function aiAssistDynamic(sid) {
+    const card = document.getElementById('text-section-' + sid);
+    const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
+    const quill = textQuills[sid];
+    const current = quill.root.innerHTML.trim();
+    if (!current || current === '<p><br></p>') {
+        alert('Najpierw wpisz tekst do poprawy.');
+        return;
+    }
+    const btn = card.querySelector('.rte-btn-ai');
+    btn.disabled = true;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader-2"></i> Poprawiam...';
+    try {
+        const offerTitle = document.querySelector('input[name="offer_title"]')?.value || '';
+        const companyName = document.querySelector('#company_id option:checked')?.text?.split('—')[0]?.trim() || '';
+        const res = await fetch('{{ route("offers.ai-assist") }}', {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ field: 'custom_' + sid, section_name: name, mode: 'improve', current, offer_title: offerTitle, company_name: companyName })
+        });
+        const data = await res.json();
+        if (data.html) quill.clipboard.dangerouslyPasteHTML(data.html);
+        else alert('Błąd AI: ' + (data.error || 'nieznany'));
+    } catch(e) { alert('Błąd połączenia z AI'); }
+    finally { btn.disabled = false; btn.innerHTML = orig; }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
-    const toolbarOptions = [
-        ['bold', 'italic', 'underline'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        ['clean']
-    ];
-    quillSubject  = new Quill('#editor-subject',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
-    quillScope    = new Quill('#editor-scope',    { theme: 'snow', modules: { toolbar: toolbarOptions } });
-    quillDeadline = new Quill('#editor-deadline', { theme: 'snow', modules: { toolbar: toolbarOptions } });
-    quillPayment  = new Quill('#editor-payment',  { theme: 'snow', modules: { toolbar: toolbarOptions } });
-
     document.getElementById('offer-form').addEventListener('submit', function () {
         document.querySelectorAll('.ilosc-input, .cena-input').forEach(input => {
             if (input.value) input.value = input.value.toString().replace(',', '.');
         });
-        document.getElementById('hidden-content-subject').value  = quillSubject.root.innerHTML;
-        document.getElementById('hidden-content-scope').value    = quillScope.root.innerHTML;
-        document.getElementById('hidden-content-deadline').value = quillDeadline.root.innerHTML;
-        document.getElementById('hidden-content-payment').value  = quillPayment.root.innerHTML;
+        document.getElementById('hidden-text-sections').value    = JSON.stringify(collectTextSections());
         document.getElementById('hidden-price-sections').value   = JSON.stringify(collectSections());
         document.getElementById('hidden-show-unit').value        = document.getElementById('show-unit-toggle').checked ? '1' : '0';
         syncDelegHiddens();
     });
 window.scrollTo(0, 0);
 addRow('tbody-main');
+DEFAULT_TEXT_SECTIONS.forEach(s => addTextSection(s));
 toggleUnitPrices(document.getElementById('show-unit-toggle'));
 delegRender();
 setTimeout(() => {
@@ -1008,17 +1030,15 @@ function pickTemplate(templateId) {
             if (data.offer_title) {
                 document.querySelector('input[name="offer_title"]').value = data.offer_title;
             }
-            if (data.content_subject && quillSubject) {
-                quillSubject.clipboard.dangerouslyPasteHTML(data.content_subject);
-            }
-            if (data.content_scope && quillScope) {
-                quillScope.clipboard.dangerouslyPasteHTML(data.content_scope);
-            }
-            if (data.content_deadline && quillDeadline) {
-                quillDeadline.clipboard.dangerouslyPasteHTML(data.content_deadline);
-            }
-            if (data.content_payment && quillPayment) {
-                quillPayment.clipboard.dangerouslyPasteHTML(data.content_payment);
+            document.getElementById('text-sections-container').innerHTML = '';
+            textQuills = {};
+            if (data.text_sections && data.text_sections.length > 0) {
+                data.text_sections.forEach(s => addTextSection(s));
+            } else {
+                addTextSection({ name: 'Przedmiot oferty', content: data.content_subject || '' });
+                addTextSection({ name: 'Zakres prac', content: data.content_scope || '' });
+                addTextSection({ name: 'Termin realizacji', content: data.content_deadline || '' });
+                addTextSection({ name: 'Warunki płatności', content: data.content_payment || '' });
             }
             if (data.price_sections) {
                 const sections = typeof data.price_sections === 'string'
