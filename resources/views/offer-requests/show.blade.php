@@ -35,6 +35,12 @@
             <span style="background:{{ $sc['bg'] }};color:{{ $sc['text'] }};border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;">
                 {{ ucfirst(str_replace('_', ' ', $offerRequest->status)) }}
             </span>
+            <div style="margin-top:8px;">
+                <a href="{{ route('offer-requests.edit', $offerRequest) }}"
+                   style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+                    <i class="ti ti-pencil"></i> Edytuj zapytanie
+                </a>
+            </div>
         </div>
     </div>
 
