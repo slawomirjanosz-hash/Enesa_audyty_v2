@@ -285,7 +285,7 @@
             </div>
             <div>
                 <div class="meta-item-label">Data utworzenia</div>
-                <div class="meta-item-value">{{ $offer->created_at->format('d.m.Y H:i') }}</div>
+                <div class="meta-item-value">{{ $offer->created_at->format('d.m.Y') }}</div>
             </div>
         </div>
     </div>
@@ -499,7 +499,7 @@
             </div>
             <div style="margin-bottom:6px;">
                 <span style="font-weight:700;">Data utworzenia:</span><br>
-                <span style="color:#333;">{{ $offer->created_at->format('d.m.Y H:i') }}</span>
+                <span style="color:#333;">{{ $offer->created_at->format('d.m.Y') }}</span>
             </div>
             <div>
                 <span style="font-weight:700;">Ostatnia aktualizacja:</span><br>
