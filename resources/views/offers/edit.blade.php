@@ -552,7 +552,6 @@
 </div>
 
 {{-- Inne pola z oryginalnego formularza potrzebne do walidacji --}}
-<input type="hidden" name="offer_number"     value="{{ $offer->offer_number }}">
 <input type="hidden" name="offer_slug"       value="{{ $offer->offer_slug }}">
 
 {{-- Osoba prowadząca + status --}}
@@ -570,8 +569,7 @@
     </div>
     <div>
         <label class="field-label">Numer oferty</label>
-        <input type="text" class="field-input" value="{{ $offer->offer_number }}" readonly disabled
-               style="background:#F3F4F6;color:#888;cursor:not-allowed;">
+        <input type="text" name="offer_number" class="field-input" value="{{ $offer->offer_number }}" required>
     </div>
     <div>
         <label class="field-label">Status</label>
