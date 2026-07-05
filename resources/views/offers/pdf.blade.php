@@ -92,7 +92,7 @@ body {
 .deleg-row-tbl tr:last-child td { border-bottom: none; font-weight: bold; color: #1A1A1A; }
 
 /* PODSUMOWANIE */
-.sum-tbl { width: 100%; border-collapse: collapse; margin-top: 12px; margin-bottom: 20px; font-size: 9.5pt; }
+.sum-tbl { width: 100%; border-collapse: collapse; margin-top: 12px; margin-bottom: 20px; font-size: 9.5pt; page-break-inside: avoid; }
 .sum-tbl td { padding: 7px 11px; border-bottom: 1px solid #F0EDE6; }
 .sum-tbl td.r { text-align: right; font-weight: 600; }
 .sum-tbl td.muted { color: #555; }
@@ -375,7 +375,7 @@ body {
 
 {{-- TERMIN WAŻNOŚCI --}}
 @if($offer->valid_until)
-<div class="sec-block">
+<div class="sec-block" style="page-break-inside: avoid;">
     <table class="sec-hdr-tbl"><tr>
         <td class="sec-lbl-text">Termin ważności oferty</td>
         <td class="sec-lbl-line"></td>
