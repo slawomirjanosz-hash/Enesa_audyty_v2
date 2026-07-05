@@ -348,9 +348,18 @@
                             <a href="{{ route('offers.edit', $offer) }}" class="btn-icon btn-icon-edit" title="Edytuj" style="margin-left:4px;">
                                 <i class="ti ti-pencil"></i>
                             </a>
+                            <form method="POST" action="{{ route('offers.clone', $offer) }}" style="display:inline;margin-left:4px;">
+                                @csrf
+                                <input type="hidden" name="mode" value="offer">
+                                <button type="submit"
+                                        style="background:#F0F7F3;border:none;cursor:pointer;color:#1A4D3A;padding:6px 7px;border-radius:6px;display:inline-flex;align-items:center;"
+                                        title="Kopiuj ofertę">
+                                    <i class="ti ti-copy"></i>
+                                </button>
+                            </form>
                             <form method="POST" action="{{ route('offers.destroy', $offer) }}"
                                   onsubmit="return confirm('Czy na pewno chcesz usunąć ofertę {{ $offer->offer_full_number }}?')"
-                                  style="display:inline;">
+                                  style="display:inline;margin-left:4px;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
