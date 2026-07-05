@@ -68,6 +68,11 @@ class CompanyController extends Controller
             return $name;
         }
 
+        // Wykryj czy nazwa jest zapisana WIELKIMI LITERAMI (porównujemy tylko litery,
+        // ignorując cyfry, spacje i znaki specjalne, żeby nie dać się zmylić np. przez "sp.").
+        $lettersOnly = preg_replace('/[^\p{L}]/u', '', $name);
+        $isUpperCase = !empty($lettersOnly) && $lettersOnly === mb_strtoupper($lettersOnly, 'UTF-8');
+
         // Kolejność ma znaczenie: dłuższe/złożone frazy muszą być zamieniane PRZED krótszymi,
         // żeby np. "spółka komandytowa" nie zostało podmienione zanim wykryjemy pełną frazę
         // "spółka z ograniczoną odpowiedzialnością spółka komandytowa".
@@ -84,7 +89,8 @@ class CompanyController extends Controller
         ];
 
         foreach ($replacements as $pattern => $abbreviation) {
-            $name = preg_replace($pattern, $abbreviation, $name);
+            $abbreviationToUse = $isUpperCase ? mb_strtoupper($abbreviation, 'UTF-8') : $abbreviation;
+            $name = preg_replace($pattern, $abbreviationToUse, $name);
         }
 
         return trim($name);
