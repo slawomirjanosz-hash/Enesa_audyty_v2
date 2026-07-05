@@ -960,10 +960,11 @@
                         <td>
                             @if(!empty($responses) && !empty($fields))
                                 @foreach($fields as $field)
+                                    @continue(!isset($field['key']))
                                     @php $val = $responses[$field['key']] ?? null; @endphp
                                     @if($val)
                                         <div style="font-size:11px;margin-bottom:2px;">
-                                            <span style="color:#888;">{{ $field['label'] }}:</span>
+                                            <span style="color:#888;">{{ $field['label'] ?? $field['key'] }}:</span>
                                             <span style="color:#1A1A1A;font-weight:600;">{{ $val }}</span>
                                         </div>
                                     @endif
