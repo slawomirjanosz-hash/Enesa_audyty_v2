@@ -200,27 +200,32 @@ body {
 </tr>
 </table>
 
-{{-- PRZEDMIOT OFERTY --}}
-@if(!empty($offer->content_subject))
-<div class="sec-block">
-    <table class="sec-hdr-tbl"><tr>
-        <td class="sec-lbl-text">Przedmiot oferty</td>
-        <td class="sec-lbl-line"></td>
-    </tr></table>
-    <div class="sec-content">{!! $offer->content_subject !!}</div>
-</div>
-@endif
+{{-- SEKCJE OPISOWE (przed wyceną) --}}
+@php
+    $__textSections = $offer->text_sections;
+    if (empty($__textSections)) {
+        $__textSections = [
+            ['name' => 'Przedmiot oferty', 'content' => $offer->content_subject ?? ''],
+            ['name' => 'Zakres prac', 'content' => $offer->content_scope ?? ''],
+        ];
+    } else {
+        // pierwsze dwie sekcje idą przed wyceną, resztę wyświetlimy po delegacjach
+        $__firstTwoTextSections = array_slice($__textSections, 0, 2);
+        $__restTextSections = array_slice($__textSections, 2);
+    }
+    $__firstTwoTextSections = $__firstTwoTextSections ?? $__textSections;
+@endphp
 
-{{-- ZAKRES PRAC --}}
-@if(!empty($offer->content_scope))
-<div class="sec-block">
-    <table class="sec-hdr-tbl"><tr>
-        <td class="sec-lbl-text">Zakres prac</td>
-        <td class="sec-lbl-line"></td>
-    </tr></table>
-    <div class="sec-content">{!! $offer->content_scope !!}</div>
-</div>
-@endif
+@foreach($__firstTwoTextSections as $section)
+    @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    <div class="sec-block">
+        <table class="sec-hdr-tbl"><tr>
+            <td class="sec-lbl-text">{{ $section['name'] }}</td>
+            <td class="sec-lbl-line"></td>
+        </tr></table>
+        <div class="sec-content">{!! $section['content'] !!}</div>
+    </div>
+@endforeach
 
 {{-- TABELA WYCENY (price_sections) --}}
 @php
@@ -397,34 +402,33 @@ body {
 </div>
 @endif
 
-{{-- TERMIN + WARUNKI --}}
-<div class="sec-block">
-    <table class="sec-hdr-tbl"><tr>
-        <td class="sec-lbl-text">Termin realizacji</td>
-        <td class="sec-lbl-line"></td>
-    </tr></table>
-    <div class="sec-content">
-        @if(!empty($offer->content_deadline))
-            {!! $offer->content_deadline !!}
-        @else
-            Do uzgodnienia po podpisaniu umowy.
-        @endif
+{{-- SEKCJE OPISOWE (po delegacjach) --}}
+@foreach($__restTextSections ?? [] as $section)
+    @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    <div class="sec-block">
+        <table class="sec-hdr-tbl"><tr>
+            <td class="sec-lbl-text">{{ $section['name'] }}</td>
+            <td class="sec-lbl-line"></td>
+        </tr></table>
+        <div class="sec-content">{!! $section['content'] !!}</div>
     </div>
-</div>
+@endforeach
 
-<div class="sec-block">
-    <table class="sec-hdr-tbl"><tr>
-        <td class="sec-lbl-text">Warunki p&#322;atno&#347;ci</td>
-        <td class="sec-lbl-line"></td>
-    </tr></table>
-    <div class="sec-content">
-        @if(!empty($offer->content_payment))
-            {!! $offer->content_payment !!}
-        @else
-            Przelew bankowy, 14 dni od wystawienia faktury.
-        @endif
+@if(empty($offer->text_sections))
+    {{-- fallback dla starych ofert bez text_sections --}}
+    @if(!empty($offer->content_deadline))
+    <div class="sec-block">
+        <table class="sec-hdr-tbl"><tr><td class="sec-lbl-text">Termin realizacji</td><td class="sec-lbl-line"></td></tr></table>
+        <div class="sec-content">{!! $offer->content_deadline !!}</div>
     </div>
-</div>
+    @endif
+    @if(!empty($offer->content_payment))
+    <div class="sec-block">
+        <table class="sec-hdr-tbl"><tr><td class="sec-lbl-text">Warunki płatności</td><td class="sec-lbl-line"></td></tr></table>
+        <div class="sec-content">{!! $offer->content_payment !!}</div>
+    </div>
+    @endif
+@endif
 
 {{-- UWAGI --}}
 @if($offer->notes)
