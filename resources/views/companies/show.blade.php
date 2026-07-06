@@ -1442,12 +1442,105 @@
 
     {{-- ═══ ZAKŁADKA: DOKUMENTY ═══ --}}
     <div id="tab-documents" class="tab-panel">
-        <div class="empty-tab">
-            <i class="ti ti-paperclip"></i>
-            <p>Moduł dokumentów jest w przygotowaniu.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;">
+                Dokumenty firmy — oferty PDF, audyty i pliki wgrane ręcznie.
+            </div>
+            <button type="button" onclick="document.getElementById('modal-upload-doc').style.display='flex'"
+                    style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+                <i class="ti ti-upload"></i> Wgraj plik
+            </button>
         </div>
+
+        @if($documents->isEmpty())
+            <div class="empty-tab">
+                <i class="ti ti-paperclip"></i>
+                <p>Brak dokumentów dla tej firmy.</p>
+            </div>
+        @else
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nazwa pliku</th>
+                        <th>Typ</th>
+                        <th>Rozmiar</th>
+                        <th>Data zapisu</th>
+                        <th>Dodał</th>
+                        <th style="text-align:right;">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($documents as $doc)
+                    @php
+                        $typeLabel = match($doc->type) {
+                            'offer_pdf' => 'Oferta PDF',
+                            'audit_pdf' => 'Audyt PDF',
+                            default => 'Plik',
+                        };
+                        $typeColor = match($doc->type) {
+                            'offer_pdf' => 'background:#DBEAFE;color:#1D4ED8;',
+                            'audit_pdf' => 'background:#DCFCE7;color:#166534;',
+                            default => 'background:#F3F4F6;color:#4B5563;',
+                        };
+                    @endphp
+                    <tr>
+                        <td style="font-weight:600;">
+                            @if($doc->offer_id)
+                                <a href="{{ route('offers.show', $doc->offer_id) }}" style="color:#1A4D3A;text-decoration:none;">
+                                    {{ $doc->original_filename }}
+                                </a>
+                            @else
+                                {{ $doc->original_filename }}
+                            @endif
+                        </td>
+                        <td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $typeColor }}">{{ $typeLabel }}</span></td>
+                        <td style="color:#888;font-size:12px;">{{ $doc->formattedSize() }}</td>
+                        <td style="color:#7a8a80;font-size:12px;">{{ $doc->updated_at->format('d.m.Y H:i') }}</td>
+                        <td style="color:#888;font-size:12px;">{{ $doc->uploader?->name ?? 'System' }}</td>
+                        <td style="text-align:right;">
+                            <a href="{{ route('documents.download', $doc) }}" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:#1A4D3A;border-radius:6px;text-decoration:none;" title="Pobierz">
+                                <i class="ti ti-download" style="font-size:13px;"></i>
+                            </a>
+                            <form method="POST" action="{{ route('documents.destroy', $doc) }}" style="display:inline;" onsubmit="return confirm('Usunąć ten dokument?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#FEF2F2;color:#DC2626;border:none;border-radius:6px;cursor:pointer;" title="Usuń">
+                                    <i class="ti ti-trash" style="font-size:13px;"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
     </div>
 
+    </div>
+</div>
+
+{{-- Modal uploadu pliku --}}
+<div id="modal-upload-doc" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9500;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+        <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A1A1A;margin-bottom:18px;">
+            <i class="ti ti-upload" style="color:#1A4D3A;margin-right:8px;"></i>Wgraj plik
+        </div>
+        <form method="POST" action="{{ route('documents.store') }}" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="company_id" value="{{ $company->id }}">
+            <div style="margin-bottom:16px;">
+                <input type="file" name="file" required
+                       style="width:100%;font-family:'Manrope',sans-serif;font-size:13px;">
+                <div style="font-size:11px;color:#999;margin-top:6px;">Maks. 20 MB. PDF, Word, Excel, obrazy, ZIP.</div>
+            </div>
+            <button type="submit" style="width:100%;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:11px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+                Wgraj
+            </button>
+        </form>
+        <button type="button" onclick="document.getElementById('modal-upload-doc').style.display='none'"
+                style="display:block;width:100%;margin-top:10px;background:transparent;border:1px solid #ddd;border-radius:8px;padding:9px;font-family:'Manrope',sans-serif;font-size:13px;cursor:pointer;color:#666;">
+            Anuluj
+        </button>
     </div>
 </div>
 
