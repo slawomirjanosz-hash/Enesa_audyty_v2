@@ -39,7 +39,8 @@ class DocumentController extends Controller
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
         $safeName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
-        $relativePath = 'documents/company_' . $company->id . '/' . $safeName;
+        $companyFolder = $company->folderSlug();
+        $relativePath = 'documents/' . $companyFolder . '/' . $safeName;
 
         Storage::disk('local')->put($relativePath, file_get_contents($file->getRealPath()));
 
