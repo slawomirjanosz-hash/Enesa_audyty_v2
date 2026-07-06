@@ -182,6 +182,14 @@
     @media (max-width: 500px) {
         .stats-grid { grid-template-columns: 1fr 1fr; }
     }
+
+    .search-box { position:relative; }
+    .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:220px; font-family:'Lato',sans-serif; }
+    .search-box input:focus { border-color:#1A4D3A; }
+    .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
+    .sort-icon { font-size:10px; color:#bbb; margin-left:3px; }
+    .offers-table th { cursor:pointer; user-select:none; }
+    .offers-table th:hover { color:#1A4D3A; }
 </style>
 @endpush
 
@@ -268,6 +276,10 @@
                 <span style="font-weight:400;color:#888;">({{ $offers->total() }})</span>
             @endif
         </div>
+        <div class="search-box">
+            <i class="ti ti-search"></i>
+            <input type="text" id="search-offers" placeholder="Szukaj po numerze, tytule, kliencie..." oninput="filterOffersTable(this.value)">
+        </div>
     </div>
 
     @if($offers->isEmpty())
@@ -285,17 +297,17 @@
             <table class="offers-table">
                 <thead>
                     <tr>
-                        <th>Numer oferty</th>
-                        <th>Tytuł</th>
-                        <th>Klient</th>
-                        <th>Prowadzi</th>
-                        <th>Kwota netto</th>
-                        <th>Status</th>
-                        <th>Data</th>
+                        <th onclick="sortOffersTable(0)">Numer oferty <span class="sort-icon">⇅</span></th>
+                        <th onclick="sortOffersTable(1)">Tytuł <span class="sort-icon">⇅</span></th>
+                        <th onclick="sortOffersTable(2)">Klient <span class="sort-icon">⇅</span></th>
+                        <th onclick="sortOffersTable(3)">Prowadzi <span class="sort-icon">⇅</span></th>
+                        <th onclick="sortOffersTable(4,true)">Kwota netto <span class="sort-icon">⇅</span></th>
+                        <th onclick="sortOffersTable(5)">Status <span class="sort-icon">⇅</span></th>
+                        <th onclick="sortOffersTable(6)">Data <span class="sort-icon">⇅</span></th>
                         <th style="text-align:center;">Akcje</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="offers-tbody">
                     @foreach($offers as $offer)
                     <tr>
                         <td>
@@ -384,3 +396,36 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function filterOffersTable(query) {
+    const q = query.toLowerCase();
+    document.querySelectorAll('#offers-tbody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = !q || text.includes(q) ? '' : 'none';
+    });
+}
+
+const offersSortState = {};
+function sortOffersTable(colIdx, numeric = false) {
+    const tbody = document.getElementById('offers-tbody');
+    if (!tbody) return;
+    offersSortState[colIdx] = offersSortState[colIdx] === 'asc' ? 'desc' : 'asc';
+    const dir = offersSortState[colIdx];
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort((a, b) => {
+        let av = a.cells[colIdx]?.textContent.trim() || '';
+        let bv = b.cells[colIdx]?.textContent.trim() || '';
+        if (numeric) {
+            av = parseFloat(av.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+            bv = parseFloat(bv.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+        }
+        if (av < bv) return dir === 'asc' ? -1 : 1;
+        if (av > bv) return dir === 'asc' ? 1 : -1;
+        return 0;
+    });
+    rows.forEach(r => tbody.appendChild(r));
+}
+</script>
+@endpush
