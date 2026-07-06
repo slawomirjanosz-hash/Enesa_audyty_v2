@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Document;
 use App\Models\Offer;
 use App\Models\OfferDelegation;
 use App\Models\OfferMessage;
@@ -376,51 +377,8 @@ class OfferController extends Controller
 
     public function pdf(Request $request, Offer $offer): \Illuminate\Http\Response
     {
-        $offer->load(['company', 'assignedUser', 'offerDelegation']);
-        $companySettings = \App\Models\CompanySettings::first();
-
-        $offer->content_subject  = $this->cleanQuillHtml($offer->content_subject);
-        $offer->content_scope    = $this->cleanQuillHtml($offer->content_scope);
-        $offer->content_deadline = $this->cleanQuillHtml($offer->content_deadline);
-        $offer->content_payment  = $this->cleanQuillHtml($offer->content_payment);
-
-        // Allow toggle state to be passed via ?unit= query param (from edit page PDF button)
-        if ($request->has('unit')) {
-            $offer->show_unit_prices = $request->boolean('unit');
-        }
-
-        // Logo: always generate fresh base64 from PNG to avoid encoding issues
-        $logoBase64 = null;
-        $logoPath = public_path('Logo2.png');
-        if (file_exists($logoPath)) {
-            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
-        } else {
-            \Illuminate\Support\Facades\Log::error('PDF logo: nie znaleziono public/Logo2.png pod ' . $logoPath);
-        }
-
-        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
-
-        \Illuminate\Support\Facades\Log::info('PDF generation environment', [
-            'memory_limit' => ini_get('memory_limit'),
-            'gd_loaded' => extension_loaded('gd'),
-            'php_version' => PHP_VERSION,
-            'logoBase64_length' => $logoBase64 ? strlen($logoBase64) : 0,
-        ]);
-
         try {
-            $mpdf = new \Mpdf\Mpdf([
-                'mode' => 'utf-8',
-                'format' => 'A4',
-                'margin_top' => 12,
-                'margin_bottom' => 20,
-                'margin_left' => 15,
-                'margin_right' => 15,
-                'setAutoTopMargin' => false,
-                'setAutoBottomMargin' => false,
-            ]);
-
-            $mpdf->WriteHTML($html);
-
+            $mpdf = $this->buildOfferPdf($offer, $request->has('unit') ? $request->boolean('unit') : null);
             $filename = 'oferta-' . $offer->fullNumber() . '.pdf';
 
             return response($mpdf->Output($filename, 'S'), 200, [
@@ -430,11 +388,75 @@ class OfferController extends Controller
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('mPDF generation failed', [
                 'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
             ]);
             throw $e;
         }
+    }
+
+    public function saveToStorage(Offer $offer): RedirectResponse
+    {
+        $mpdf   = $this->buildOfferPdf($offer);
+        $binary = $mpdf->Output('', 'S');
+
+        $safeNumber   = str_replace(['/', '\\', ' '], '_', $offer->fullNumber());
+        $filename     = 'oferta_' . $safeNumber . '.pdf';
+        $relativePath = 'documents/company_' . $offer->company_id . '/' . $filename;
+
+        \Illuminate\Support\Facades\Storage::disk('local')->put($relativePath, $binary);
+
+        Document::updateOrCreate(
+            ['offer_id' => $offer->id, 'type' => 'offer_pdf'],
+            [
+                'company_id'        => $offer->company_id,
+                'original_filename' => $filename,
+                'stored_path'       => $relativePath,
+                'mime_type'         => 'application/pdf',
+                'size'              => strlen($binary),
+                'uploaded_by'       => null,
+            ]
+        );
+
+        return redirect()->back()->with('success', 'PDF oferty został zapisany w dokumentach firmy.');
+    }
+
+    private function buildOfferPdf(Offer $offer, ?bool $forceUnitPrices = null): \Mpdf\Mpdf
+    {
+        $offer->load(['company', 'assignedUser', 'offerDelegation']);
+        $companySettings = \App\Models\CompanySettings::first();
+
+        $offer->content_subject  = $this->cleanQuillHtml($offer->content_subject);
+        $offer->content_scope    = $this->cleanQuillHtml($offer->content_scope);
+        $offer->content_deadline = $this->cleanQuillHtml($offer->content_deadline);
+        $offer->content_payment  = $this->cleanQuillHtml($offer->content_payment);
+
+        if ($forceUnitPrices !== null) {
+            $offer->show_unit_prices = $forceUnitPrices;
+        }
+
+        $logoBase64 = null;
+        $logoPath   = public_path('Logo2.png');
+        if (file_exists($logoPath)) {
+            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+        }
+
+        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'                => 'utf-8',
+            'format'              => 'A4',
+            'margin_top'          => 12,
+            'margin_bottom'       => 20,
+            'margin_left'         => 15,
+            'margin_right'        => 15,
+            'setAutoTopMargin'    => false,
+            'setAutoBottomMargin' => false,
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return $mpdf;
     }
 
     public function downloadWord(Offer $offer): \Symfony\Component\HttpFoundation\BinaryFileResponse
