@@ -357,6 +357,12 @@
                             <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-icon btn-icon-pdf" title="Podgląd PDF" style="margin-left:4px;border:none;cursor:pointer;">
                                 <i class="ti ti-file-type-pdf"></i>
                             </button>
+                            <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;margin-left:4px;">
+                                @csrf
+                                <button type="submit" class="btn-icon" style="background:#EFF6FF;color:#2563EB;border:none;cursor:pointer;" title="Zapisz na dysku">
+                                    <i class="ti ti-device-floppy"></i>
+                                </button>
+                            </form>
                             <a href="{{ route('offers.edit', $offer) }}" class="btn-icon btn-icon-edit" title="Edytuj" style="margin-left:4px;">
                                 <i class="ti ti-pencil"></i>
                             </a>
