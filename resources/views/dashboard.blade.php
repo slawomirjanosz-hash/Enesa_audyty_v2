@@ -372,6 +372,14 @@
         transition: background .15s;
     }
     .table-btn-primary:hover { background: #153d2e; }
+
+    .search-box-dash { position:relative; margin-bottom:12px; display:inline-block; }
+    .search-box-dash input { font-size:13px; padding:8px 12px 8px 34px; border-radius:7px; border:1px solid #D0CCC0; outline:none; width:280px; font-family:'Lato',sans-serif; }
+    .search-box-dash input:focus { border-color:#1A4D3A; }
+    .search-box-dash i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#aaa; font-size:16px; }
+    .companies-table th { cursor:pointer; user-select:none; }
+    .companies-table th:hover { color:#fff; }
+    .sort-icon-dash { font-size:10px; opacity:.6; margin-left:3px; }
 </style>
 @endpush
 
@@ -544,19 +552,23 @@
 </div>
 
 {{-- ══════ WIDOK TABELI ══════ --}}
+<div class="search-box-dash">
+    <i class="ti ti-search"></i>
+    <input type="text" id="search-companies-table" placeholder="Szukaj firmy, NIP..." oninput="filterCompaniesTable(this.value)">
+</div>
 <table class="companies-table" id="companiesTable">
     <thead>
         <tr>
-            <th>Firma</th>
-            <th>NIP</th>
-            <th>Status</th>
-            <th>Audyty</th>
-            <th>Oferty</th>
-            <th>Użytkownicy</th>
+            <th onclick="sortCompaniesTable(0)">Firma <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable(1)">NIP <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable(2)">Status <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable(3,true)">Audyty <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable(4,true)">Oferty <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable(5,true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
             <th style="text-align:right;">Akcje</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="companies-table-tbody">
         @forelse($companies as $company)
             @php
                 $isOnline = $company->users->contains(
@@ -862,6 +874,35 @@
     document.getElementById('addClientModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
+
+    function filterCompaniesTable(query) {
+        const q = query.toLowerCase();
+        document.querySelectorAll('#companies-table-tbody tr').forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = !q || text.includes(q) ? '' : 'none';
+        });
+    }
+
+    const companiesSortState = {};
+    function sortCompaniesTable(colIdx, numeric = false) {
+        const tbody = document.getElementById('companies-table-tbody');
+        if (!tbody) return;
+        companiesSortState[colIdx] = companiesSortState[colIdx] === 'asc' ? 'desc' : 'asc';
+        const dir = companiesSortState[colIdx];
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort((a, b) => {
+            let av = a.cells[colIdx]?.textContent.trim() || '';
+            let bv = b.cells[colIdx]?.textContent.trim() || '';
+            if (numeric) {
+                av = parseFloat(av.replace(/[^\d.-]/g, '')) || 0;
+                bv = parseFloat(bv.replace(/[^\d.-]/g, '')) || 0;
+            }
+            if (av < bv) return dir === 'asc' ? -1 : 1;
+            if (av > bv) return dir === 'asc' ? 1 : -1;
+            return 0;
+        });
+        rows.forEach(r => tbody.appendChild(r));
+    }
 </script>
 @endpush
 
