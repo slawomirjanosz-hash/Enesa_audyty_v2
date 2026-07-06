@@ -347,6 +347,15 @@
                 </a>
             </li>
 
+            @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
+            <li class="nav-item">
+                <a href="{{ route('documents.index') }}"
+                   class="nav-link {{ request()->routeIs('documents.index') ? 'active' : '' }}">
+                    <i class="ti ti-folder"></i> Wszystkie dokumenty
+                </a>
+            </li>
+            @endif
+
             <li class="nav-item nav-group {{ request()->is('settings*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-settings"></i> Ustawienia
