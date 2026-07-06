@@ -19,13 +19,16 @@ class DocumentController extends Controller
             'Brak uprawnień do przeglądania wszystkich dokumentów.'
         );
 
-        $documents = Document::with(['company', 'offer', 'uploader'])
+        $docs = Document::with(['company', 'offer', 'uploader'])
             ->orderByDesc('updated_at')
             ->get();
 
-        $companies = Company::orderBy('name')->get();
+        // Group documents by company name
+        $documents = $docs->groupBy(function ($doc) {
+            return $doc->company?->name ?? 'Brak firmy';
+        })->sortKeys();
 
-        return view('documents.index', compact('documents', 'companies'));
+        return view('documents.index', compact('documents'));
     }
 
     public function store(Request $request): RedirectResponse
