@@ -98,8 +98,8 @@
     $funnelStages = ['new_lead','contact','offer','negotiation','realization'];
     $endStages    = ['won','lost','rejected'];
 
-    $myTasks    = $tasks->filter(fn($t) => $t->assigned_to == $userId || $t->created_by == $userId);
-    $otherTasks = $tasks->filter(fn($t) => $t->assigned_to != $userId && $t->created_by != $userId);
+    // $myTasks przychodzi już gotowe z kontrolera (Task::forUser()) — tylko zadania przypisane do mnie
+    $otherTasks = $tasks->filter(fn($t) => $t->assigned_to != $userId);
 
     $priorityMeta = [
         'high'   => ['label'=>'Wysoki',  'class'=>'badge-red'],

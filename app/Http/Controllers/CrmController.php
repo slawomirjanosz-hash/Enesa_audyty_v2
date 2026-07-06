@@ -29,6 +29,11 @@ class CrmController extends Controller
             ->orderBy('due_date')
             ->get();
 
+        $myTasks = Task::forUser(auth()->id())
+            ->with(['assignedUser', 'company', 'offer'])
+            ->orderBy('due_date')
+            ->get();
+
         $authUser = auth()->user();
 
 if ($authUser->hasRole('superadmin')) {
@@ -80,7 +85,7 @@ if ($authUser->hasRole('superadmin')) {
         $currentTab = request('tab', 'companies');
 
         return view('crm.index', compact(
-            'companies', 'opportunities', 'tasks', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
+            'companies', 'opportunities', 'tasks', 'myTasks', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
         ));
     }
 
