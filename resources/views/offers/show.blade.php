@@ -224,6 +224,12 @@
         <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->fullNumber() }}')" class="btn-primary">
             <i class="ti ti-file-type-pdf"></i> Podgląd PDF
         </button>
+        <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;">
+            @csrf
+            <button type="submit" class="btn-primary" style="background:#2563EB;">
+                <i class="ti ti-device-floppy"></i> Zapisz na dysku
+            </button>
+        </form>
         <a href="{{ route('offers.download-word', $offer) }}"
            style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;text-decoration:none;">
             <i class="ti ti-file-type-doc"></i> Pobierz Word
