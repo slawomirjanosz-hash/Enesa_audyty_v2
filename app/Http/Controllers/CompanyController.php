@@ -115,7 +115,12 @@ class CompanyController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view('companies.show', compact('company', 'stats', 'offerRequests'));
+        $documents = \App\Models\Document::with('uploader', 'offer')
+            ->where('company_id', $company->id)
+            ->orderByDesc('updated_at')
+            ->get();
+
+        return view('companies.show', compact('company', 'stats', 'offerRequests', 'documents'));
     }
 
     public function update(Request $request, Company $company)
