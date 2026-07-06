@@ -397,12 +397,15 @@ class OfferController extends Controller
 
     public function saveToStorage(Offer $offer): RedirectResponse
     {
+        $offer->loadMissing('company');
+
         $mpdf   = $this->buildOfferPdf($offer);
         $binary = $mpdf->Output('', 'S');
 
         $safeNumber   = str_replace(['/', '\\', ' '], '_', $offer->fullNumber());
         $filename     = 'oferta_' . $safeNumber . '.pdf';
-        $relativePath = 'documents/company_' . $offer->company_id . '/' . $filename;
+        $companyFolder = $offer->company?->folderSlug() ?? ('firma_' . $offer->company_id);
+        $relativePath = 'documents/' . $companyFolder . '/' . $filename;
 
         \Illuminate\Support\Facades\Storage::disk('local')->put($relativePath, $binary);
 
