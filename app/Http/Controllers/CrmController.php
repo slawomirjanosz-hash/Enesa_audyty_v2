@@ -150,7 +150,16 @@ if ($authUser->hasRole('superadmin')) {
             'due_date'    => ['nullable', 'date'],
         ]);
 
-        Task::create(array_merge($data, ['created_by' => auth()->id()]));
+        $task = Task::create(array_merge($data, ['created_by' => auth()->id()]));
+
+        if ($task->assigned_to && $task->assigned_to !== auth()->id()) {
+            $assignedUser = $task->assignedUser;
+            if ($assignedUser && $assignedUser->email) {
+                \Illuminate\Support\Facades\Mail::to($assignedUser->email)
+                    ->send(new \App\Mail\TaskAssigned($task));
+            }
+        }
+
         return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało dodane.');
     }
 
