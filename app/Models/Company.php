@@ -83,6 +83,34 @@ class Company extends Model
         return $query->where('is_owner', true);
     }
 
+    public function folderSlug(): string
+    {
+        $name = $this->name ?? ('firma_' . $this->id);
+
+        // Zamiana polskich znaków diakrytycznych na łacińskie odpowiedniki
+        $map = [
+            'ą'=>'a','ć'=>'c','ę'=>'e','ł'=>'l','ń'=>'n','ó'=>'o','ś'=>'s','ź'=>'z','ż'=>'z',
+            'Ą'=>'A','Ć'=>'C','Ę'=>'E','Ł'=>'L','Ń'=>'N','Ó'=>'O','Ś'=>'S','Ź'=>'Z','Ż'=>'Z',
+        ];
+        $name = strtr($name, $map);
+
+        // Usuń wszystko poza literami, cyframi, spacjami i myślnikami
+        $name = preg_replace('/[^A-Za-z0-9 \-]/', '', $name);
+
+        // Zamień spacje i wielokrotne myślniki na pojedynczy podkreślnik
+        $name = preg_replace('/[\s\-]+/', '_', trim($name));
+
+        // Usuń podkreślniki na początku/końcu, ogranicz długość
+        $name = trim($name, '_');
+        $name = substr($name, 0, 80);
+
+        if (empty($name)) {
+            $name = 'firma_' . $this->id;
+        }
+
+        return $name . '_' . $this->id;
+    }
+
     /** Roles that belong to the application owner (Enesa) firm. */
     public const STAFF_ROLES = ['superadmin', 'admin', 'auditor_senior', 'auditor'];
 }
