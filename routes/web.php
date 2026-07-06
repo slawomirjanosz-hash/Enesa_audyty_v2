@@ -134,6 +134,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{offer}/edit',                  [OfferController::class, 'edit'])->name('edit');
         Route::get('/{offer}/pdf',                   [OfferController::class, 'pdf'])->name('pdf');
         Route::get('/{offer}/word',                  [OfferController::class, 'downloadWord'])->name('download-word');
+        Route::post('/{offer}/save-to-storage',      [OfferController::class, 'saveToStorage'])->name('save-to-storage');
         Route::put('/{offer}',                       [OfferController::class, 'update'])->name('update');
         Route::delete('/{offer}',                    [OfferController::class, 'destroy'])->name('destroy');
         Route::patch('/{offer}/status',              [OfferController::class, 'updateStatus'])->name('status');
@@ -167,6 +168,13 @@ Route::middleware('auth')->group(function () {
         Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
         Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
         Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
+    });
+
+    Route::prefix('documents')->name('documents.')->group(function () {
+        Route::get('/',                              [\App\Http\Controllers\DocumentController::class, 'index'])->name('index');
+        Route::post('/',                             [\App\Http\Controllers\DocumentController::class, 'store'])->name('store');
+        Route::get('/{document}/download',           [\App\Http\Controllers\DocumentController::class, 'download'])->name('download');
+        Route::delete('/{document}',                 [\App\Http\Controllers\DocumentController::class, 'destroy'])->name('destroy');
     });
 });
 
