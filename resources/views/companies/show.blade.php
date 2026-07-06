@@ -1098,6 +1098,12 @@
                                 <a href="{{ route('offers.edit', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;cursor:pointer;">
                                     <i class="ti ti-edit"></i> Edytuj
                                 </a>
+                                <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;margin-left:4px;">
+                                    @csrf
+                                    <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#EFF6FF;color:#2563EB;border:none;border-radius:7px;cursor:pointer;" title="Zapisz na dysku">
+                                        <i class="ti ti-device-floppy"></i>
+                                    </button>
+                                </form>
                                 <a href="{{ route('offers.show', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;background:#fff;color:#333;border:1px solid #D0CCC0;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;font-family:'Manrope',sans-serif;text-decoration:none;cursor:pointer;margin-left:4px;">
                                     <i class="ti ti-eye"></i> Podgląd
                                 </a>
