@@ -66,12 +66,12 @@
 .opp-card-val { font-size:12px; font-weight:700; color:#1A4D3A; margin-top:4px; font-family:'Lato',sans-serif; }
 
 /* Task tables */
-.task-table-wrap { border-radius:12px; overflow:hidden; margin-bottom:16px; }
-.task-table-wrap.mine { border:2px solid #1A4D3A; }
-.task-table-wrap.team { border:1px solid #E5E1D8; }
+.task-table-wrap { border-radius:12px; overflow:hidden; margin-bottom:16px; background:#fff; border:1px solid #E5E1D8; }
+.task-table-wrap.mine { border-left:4px solid #1A4D3A; }
+.task-table-wrap.team { border-left:4px solid #94A3B8; }
 .task-hdr { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid #F0EDE6; }
 .task-hdr.mine { background:#F0F7F3; }
-.task-hdr.team { background:#FAFAF6; }
+.task-hdr.team { background:#F8FAFC; }
 
 .archive-info { background:#FEF3C7; border:1px solid #FCD34D; border-radius:8px; padding:10px 16px; margin-bottom:16px; font-size:13px; color:#92400E; display:flex; align-items:center; gap:8px; }
 
