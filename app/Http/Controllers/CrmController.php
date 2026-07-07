@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Company;
 use App\Models\CrmOpportunity;
 use App\Models\Task;
@@ -34,6 +35,10 @@ class CrmController extends Controller
             ->orderBy('due_date')
             ->get();
 
+        $audits = Audit::with('company')
+            ->orderByDesc('created_at')
+            ->get();
+
         $authUser = auth()->user();
 
 if ($authUser->hasRole('superadmin')) {
@@ -54,6 +59,7 @@ if ($authUser->hasRole('superadmin')) {
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
             'active_opps'         => $opportunities->whereNotIn('stage', ['won','lost','rejected'])->count(),
             'open_tasks'          => $tasks->where('status', '!=', 'done')->count(),
+            'active_audits'       => $audits->where('status', 'in_progress')->count(),
         ];
 
         $archivedCompanies = Company::with(['offers', 'audits'])
@@ -85,7 +91,7 @@ if ($authUser->hasRole('superadmin')) {
         $currentTab = request('tab', 'companies');
 
         return view('crm.index', compact(
-            'companies', 'opportunities', 'tasks', 'myTasks', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
+            'companies', 'opportunities', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
         ));
     }
 
