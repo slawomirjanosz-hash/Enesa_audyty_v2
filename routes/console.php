@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
 
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::command('tasks:send-overdue-reminders')->dailyAt('08:00');
+Schedule::command('tasks:send-overdue-reminders')->dailyAt('08:00')->timezone('Europe/Warsaw');
