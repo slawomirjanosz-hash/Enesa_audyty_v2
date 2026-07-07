@@ -420,7 +420,7 @@
 <div class="stats-grid">
 
     {{-- Aktywne audyty --}}
-    <div class="stat-card">
+    <a href="{{ route('crm.index', ['tab' => 'audits']) }}" class="stat-card">
         <div class="stat-icon stat-icon-green">
             <i class="ti ti-clipboard-list"></i>
         </div>
@@ -429,7 +429,7 @@
             <div class="stat-label">Aktywne audyty</div>
             <div class="stat-sub" style="color:#2E7D32;">↑ w tym tygodniu</div>
         </div>
-    </div>
+    </a>
 
     {{-- Oferty do wysłania --}}
     <div class="stat-card">
