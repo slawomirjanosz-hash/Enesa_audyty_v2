@@ -99,6 +99,16 @@
         font-size: 11px;
         color: #999;
     }
+    a.stat-card {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+        transition: box-shadow .15s, transform .15s;
+    }
+    a.stat-card:hover {
+        box-shadow: 0 4px 14px rgba(0,0,0,.10);
+        transform: translateY(-1px);
+    }
 
     /* ── Clients grid ─────────────────────── */
     .clients-grid {
@@ -448,7 +458,7 @@
     </div>
 
     {{-- Zadania po terminie --}}
-    <div class="stat-card">
+    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card">
         <div class="stat-icon stat-icon-red">
             <i class="ti ti-clock"></i>
         </div>
@@ -459,7 +469,7 @@
                 {{ $stats['overdue_tasks'] > 0 ? 'Pilne — sprawdź teraz' : 'Wszystko na czas' }}
             </div>
         </div>
-    </div>
+    </a>
 
 </div>
 
