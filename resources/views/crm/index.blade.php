@@ -184,6 +184,10 @@
         <i class="ti ti-checklist"></i> Zadania
         <span class="tab-count">{{ $stats['open_tasks'] }}</span>
     </a>
+    <a href="{{ route('crm.index', ['tab'=>'audits']) }}" class="crm-tab {{ $currentTab==='audits'?'active':'' }}">
+        <i class="ti ti-clipboard-check"></i> Audyty
+        <span class="tab-count">{{ $stats['active_audits'] }}</span>
+    </a>
     <a href="{{ route('crm.index', ['tab'=>'archive']) }}" class="crm-tab archive-tab {{ $currentTab==='archive'?'active':'' }}">
         <i class="ti ti-archive"></i> Archiwum
         <span class="tab-count">{{ $archivedCompanies->count() }}</span>
@@ -529,6 +533,78 @@
     </table>
 </div>
 @endif
+@endif
+
+{{-- ═══ TAB: AUDYTY ═══ --}}
+@if($currentTab === 'audits')
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="ti ti-clipboard-check" style="color:#1A4D3A;margin-right:6px;"></i> Audyty ({{ $audits->count() }})</div>
+        <div class="search-box">
+            <i class="ti ti-search"></i>
+            <input type="text" placeholder="Szukaj audytów..." oninput="filterTable('audits-tbody', this.value, [0,1])">
+        </div>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable('audits-tbody',0)">Tytuł audytu <span class="sort-icon">⇅</span></th>
+                    <th onclick="sortTable('audits-tbody',1)">Firma <span class="sort-icon">⇅</span></th>
+                    <th onclick="sortTable('audits-tbody',2)">Status <span class="sort-icon">⇅</span></th>
+                    <th onclick="sortTable('audits-tbody',3)">Data <span class="sort-icon">⇅</span></th>
+                    <th style="text-align:center;">Akcje</th>
+                </tr>
+            </thead>
+            <tbody id="audits-tbody">
+                @forelse($audits as $audit)
+                @php
+                    $auditBadge = match($audit->status) {
+                        'draft'       => 'badge-gray',
+                        'in_progress' => 'badge-blue',
+                        'done'        => 'badge-green',
+                        'cancelled'   => 'badge-red',
+                        default       => 'badge-gray',
+                    };
+                    $auditLabel = match($audit->status) {
+                        'draft'       => 'Szkic',
+                        'in_progress' => 'W trakcie',
+                        'done'        => 'Zakończony',
+                        'cancelled'   => 'Odwołany',
+                        default       => $audit->status,
+                    };
+                @endphp
+                <tr>
+                    <td style="font-weight:600;">{{ $audit->title }}</td>
+                    <td style="color:#888;font-size:12px;">
+                        @if($audit->company)
+                            <a href="{{ route('companies.show', $audit->company) }}" style="color:#1A4D3A;text-decoration:none;font-weight:600;">{{ $audit->company->name }}</a>
+                        @else
+                            —
+                        @endif
+                    </td>
+                    <td><span class="badge {{ $auditBadge }}">{{ $auditLabel }}</span></td>
+                    <td style="color:#7a8a80;font-size:12px;">{{ $audit->created_at->format('d.m.Y') }}</td>
+                    <td style="text-align:center;">
+                        @if($audit->company)
+                        <a href="{{ route('companies.show', $audit->company) }}" class="btn-icon btn-icon-view" title="Podgląd w karcie firmy">
+                            <i class="ti ti-eye"></i>
+                        </a>
+                        @endif
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" style="padding:40px;text-align:center;color:#aaa;">
+                        <i class="ti ti-clipboard-off" style="font-size:40px;display:block;margin-bottom:8px;"></i>
+                        Brak audytów w systemie.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 @endif
 
 {{-- ═══ TAB: ARCHIWUM ═══ --}}
