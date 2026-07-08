@@ -901,6 +901,12 @@ async function aiAssistDynamic(sid) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('offer-form').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+            e.preventDefault();
+        }
+    });
+
     document.getElementById('offer-form').addEventListener('submit', function () {
         document.querySelectorAll('.ilosc-input, .cena-input').forEach(input => {
             if (input.value) input.value = input.value.toString().replace(',', '.');
