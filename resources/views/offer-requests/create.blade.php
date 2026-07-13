@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('page-title', 'Nowe zapytanie')
 
@@ -129,7 +129,7 @@ function renderRequestFields(fields, container) {
     const hasSections = nodes.some(f => f && f.type === 'section');
 
     if (hasSections) {
-        nodes.forEach(sec => {
+        nodes.forEach(function(sec) {
             if (!sec || sec.type !== 'section') return;
             if (sec.title) {
                 const h = document.createElement('div');
@@ -137,10 +137,10 @@ function renderRequestFields(fields, container) {
                 h.style.cssText = "font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#1A4D3A;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;";
                 container.appendChild(h);
             }
-            (sec.fields || []).forEach(f => renderRespField(container, f));
+            (sec.fields || []).forEach(function(f) { renderRespField(container, f); });
         });
     } else {
-        nodes.forEach(f => renderRespField(container, f));
+        nodes.forEach(function(f) { renderRespField(container, f); });
     }
 }
 
@@ -158,7 +158,7 @@ function renderRespField(parent, field) {
         input = document.createElement('select');
         input.className = 'field-input';
         let html = '<option value="">— wybierz —</option>';
-        (field.options || []).forEach(o => {
+        (field.options || []).forEach(function(o) {
             const v = String(o).replace(/"/g, '&quot;');
             html += '<option value="' + v + '">' + v + '</option>';
         });
@@ -184,17 +184,17 @@ function renderRespField(parent, field) {
         parent.appendChild(host);
 
         const wraps = {};
-        Object.keys(field.branches || {}).forEach(opt => {
+        Object.keys(field.branches || {}).forEach(function(opt) {
             const wrap = document.createElement('div');
             wrap.style.cssText = 'display:none;border-left:3px solid #FCD34D;padding-left:12px;margin:4px 0 8px;';
-            (field.branches[opt] || []).forEach(cf => renderRespField(wrap, cf));
+            (field.branches[opt] || []).forEach(function(cf) { renderRespField(wrap, cf); });
             setBranchDisabled(wrap, true);
             host.appendChild(wrap);
             wraps[opt] = wrap;
         });
 
-        input.addEventListener('change', () => {
-            Object.keys(wraps).forEach(opt => {
+        input.addEventListener('change', function() {
+            Object.keys(wraps).forEach(function(opt) {
                 const show = (opt === input.value);
                 wraps[opt].style.display = show ? 'block' : 'none';
                 setBranchDisabled(wraps[opt], !show);
@@ -204,12 +204,14 @@ function renderRespField(parent, field) {
 }
 
 function setBranchDisabled(wrap, disabled) {
-    wrap.querySelectorAll('input, select, textarea').forEach(elm => { elm.disabled = disabled; });
+    wrap.querySelectorAll('input, select, textarea').forEach(function(elm) { elm.disabled = disabled; });
 }
 
 function selectTemplate(id, name, fields) {
     document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('card-' + id).classList.add('selected'); = document.getElementById('template-id-input');
+    document.getElementById('card-' + id).classList.add('selected');
+
+    let existingHidden = document.getElementById('template-id-input');
     if (!existingHidden) {
         existingHidden = document.createElement('input');
         existingHidden.type = 'hidden';
@@ -220,8 +222,6 @@ function selectTemplate(id, name, fields) {
     existingHidden.value = id;
 
     const container = document.getElementById('dynamic-fields');
-    container.innerHTML = '';
-
     renderRequestFields(fields, container);
 
     document.getElementById('dynamic-fields-wrap').style.display = 'block';
