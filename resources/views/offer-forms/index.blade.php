@@ -21,39 +21,47 @@
 .btn-icon { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:7px; border:none; cursor:pointer; font-size:15px; transition:background .12s; }
 .btn-icon-edit { background:#EFF6FF; color:#1D4ED8; }
 .btn-icon-delete { background:#FEE2E2; color:#B91C1C; }
-.badge { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; font-family:'Manrope',sans-serif; }
-.badge-green { background:#DCFCE7; color:#166534; }
-.badge-gray { background:#F3F4F6; color:#4B5563; }
 .toggle-wrap { display:inline-flex; align-items:center; cursor:pointer; }
 .toggle-track { width:36px; height:20px; background:#D1D5DB; border-radius:10px; position:relative; transition:background .2s; }
 .toggle-track::after { content:''; position:absolute; top:3px; left:3px; width:14px; height:14px; background:#fff; border-radius:50%; transition:left .2s; }
 .toggle-wrap.on .toggle-track { background:#1A4D3A; }
 .toggle-wrap.on .toggle-track::after { left:19px; }
 .field-tag { display:inline-flex; align-items:center; gap:4px; background:#F0F7F3; border:1px solid #94C4B0; border-radius:20px; padding:2px 8px; font-size:11px; font-weight:600; color:#1A4D3A; margin:2px; }
-.field-tag.conditional { background:#FEF3C7; border-color:#FCD34D; color:#92400E; }
+.field-tag.section { background:#EAF3FF; border-color:#93C5FD; color:#1E40AF; }
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9000; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
-.modal-box { background:#fff; border-radius:14px; padding:28px; width:100%; max-width:680px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); }
+.modal-box { background:#fff; border-radius:14px; padding:28px; width:100%; max-width:760px; max-height:92vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); }
 .modal-title { font-family:'Manrope',sans-serif; font-size:16px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:8px; }
 .mf-label { display:block; font-size:11px; font-weight:700; color:#555; margin-bottom:4px; font-family:'Manrope',sans-serif; }
 .mf-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:8px 10px; font-size:13px; font-family:'Lato',sans-serif; outline:none; transition:border-color .15s; box-sizing:border-box; }
 .mf-input:focus { border-color:#1A4D3A; background:#fff; }
 .mf-group { margin-bottom:14px; }
-.field-builder { border:1px solid #E5E1D8; border-radius:10px; overflow:hidden; margin-bottom:14px; }
-.field-builder-header { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#FAFAF6; border-bottom:1px solid #F0EDE6; }
-.field-builder-title { font-family:'Manrope',sans-serif; font-size:12px; font-weight:700; color:#1A4D3A; }
-.field-row { border-bottom:1px solid #F7F5F0; padding:10px 14px; background:#fff; }
-.field-row:last-child { border-bottom:none; }
-.field-row-main { display:grid; grid-template-columns:1fr 130px 90px 32px; gap:8px; align-items:center; }
+
+.section-block { border:1px solid #CBD9F0; border-radius:10px; margin-bottom:16px; background:#F7FAFF; }
+.section-head { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid #E1E9F7; }
+.section-head i.ti-layout-list { color:#1E40AF; }
+.section-title-input { flex:1; background:#fff; border:1px solid #C7D6EE; border-radius:7px; padding:7px 10px; font-size:13px; font-weight:700; font-family:'Manrope',sans-serif; color:#1E3A8A; outline:none; }
+.section-title-input:focus { border-color:#1E40AF; }
+.btn-del-section { background:none; border:none; color:#B91C1C; cursor:pointer; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px; }
+.section-fields { padding:10px 12px 0; }
+
+.field-row { border:1px solid #E5E1D8; border-radius:8px; padding:10px 12px; background:#fff; margin-bottom:10px; }
+.field-row-main { display:grid; grid-template-columns:1fr 150px 100px 32px; gap:8px; align-items:center; }
 .field-row-options { margin-top:8px; padding:8px 10px; background:#F9F7F4; border-radius:6px; }
-.field-row-condition { margin-top:8px; padding:8px 10px; background:#FFFBEB; border:1px solid #FDE68A; border-radius:6px; }
+.options-tags { min-height:4px; }
 .option-tag { display:inline-flex; align-items:center; gap:4px; background:#E8F5E9; border:1px solid #A5D6A7; border-radius:20px; padding:2px 8px; font-size:12px; color:#1B5E20; margin:2px; }
 .option-tag button { background:none; border:none; cursor:pointer; color:#4CAF50; font-size:12px; padding:0; line-height:1; }
-.btn-add-field { display:inline-flex; align-items:center; gap:6px; background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; margin:8px 14px 10px; transition:background .12s; }
+.field-branches { margin-top:8px; }
+.branch-block { border-left:3px solid #FCD34D; background:#FFFBEB; border-radius:0 8px 8px 0; padding:8px 10px 4px; margin:8px 0 8px 6px; }
+.branch-head { font-size:11px; color:#92400E; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:4px; }
+.btn-add-field { display:inline-flex; align-items:center; gap:6px; background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; margin:2px 0 12px; transition:background .12s; }
 .btn-add-field:hover { background:#F0F7F3; }
+.btn-add-question { display:inline-flex; align-items:center; gap:5px; background:none; border:1px dashed #FCD34D; color:#92400E; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; margin-bottom:6px; }
+.btn-add-question:hover { background:#FEF3C7; }
+.btn-add-section { display:inline-flex; align-items:center; gap:6px; background:none; border:1px dashed #93C5FD; color:#1E40AF; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
+.btn-add-section:hover { background:#EAF3FF; }
 .btn-del-field { background:none; border:none; color:#DC2626; cursor:pointer; font-size:16px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:5px; }
 .btn-del-field:hover { background:#FEE2E2; }
-.condition-select { background:#FAFAF6; border:1px solid #D0CCC0; border-radius:6px; padding:5px 8px; font-size:12px; font-family:'Lato',sans-serif; outline:none; }
 .empty-state { text-align:center; padding:60px 24px; color:#888; }
 .empty-state i { font-size:48px; color:#D0CCC0; margin-bottom:12px; display:block; }
 </style>
@@ -88,13 +96,14 @@
             <thead>
                 <tr>
                     <th>Nazwa formularza</th>
-                    <th>Pola</th>
+                    <th>Struktura</th>
                     <th>Aktywny</th>
                     <th style="text-align:center;">Akcje</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($templates as $template)
+                @php $secs = collect($template->fields ?? [])->where('type', 'section'); @endphp
                 <tr>
                     <td>
                         <div style="font-weight:700;">{{ $template->name }}</div>
@@ -103,12 +112,15 @@
                         @endif
                     </td>
                     <td>
-                        @foreach($template->fields as $field)
-                            <span class="field-tag {{ isset($field['show_when']) ? 'conditional' : '' }}">
-                                @if(isset($field['show_when']))<i class="ti ti-git-branch" style="font-size:10px;"></i>@endif
-                                {{ $field['label'] }}
-                            </span>
-                        @endforeach
+                        @if($secs->isNotEmpty())
+                            @foreach($secs as $sec)
+                                <span class="field-tag section"><i class="ti ti-layout-list" style="font-size:10px;"></i> {{ $sec['title'] ?? 'Sekcja' }} ({{ count($sec['fields'] ?? []) }})</span>
+                            @endforeach
+                        @else
+                            @foreach($template->flatFields() as $f)
+                                <span class="field-tag">{{ $f['label'] }}</span>
+                            @endforeach
+                        @endif
                     </td>
                     <td>
                         <button class="toggle-wrap {{ $template->is_active ? 'on' : '' }}"
@@ -159,17 +171,11 @@
             </div>
 
             <div class="mf-group">
-                <label class="mf-label" style="margin-bottom:8px;">Pola formularza *</label>
-                <div class="field-builder">
-                    <div class="field-builder-header">
-                        <span class="field-builder-title">Definicja pól</span>
-                        <span style="font-size:11px;color:#888;">Pola z <i class="ti ti-git-branch" style="font-size:10px;color:#92400E;"></i> są warunkowe</span>
-                    </div>
-                    <div id="fields-container"></div>
-                    <button type="button" class="btn-add-field" onclick="addField()">
-                        <i class="ti ti-plus"></i> Dodaj pole
-                    </button>
-                </div>
+                <label class="mf-label" style="margin-bottom:8px;">Struktura formularza *</label>
+                <div id="sections-container"></div>
+                <button type="button" class="btn-add-section" onclick="addSection()">
+                    <i class="ti ti-layout-list"></i> Dodaj sekcję
+                </button>
             </div>
 
             <div class="mf-group" style="display:flex;align-items:center;gap:10px;">
@@ -193,8 +199,9 @@
 
 @push('scripts')
 <script>
-let fieldCounter = 0;
-let editingId = null;
+let secCounter = 0;
+let keyCounter = 0;
+let editingId  = null;
 
 const FIELD_TYPES = [
     { value: 'text',     label: 'Tekst (1 linia)' },
@@ -204,249 +211,212 @@ const FIELD_TYPES = [
     { value: 'select',   label: 'Lista wyboru' },
 ];
 
-function escHtml(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function esc(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function newKey() { return 'pole_' + (++keyCounter); }
+function el(tag, cls, html) {
+    const d = document.createElement(tag);
+    if (cls)  d.className = cls;
+    if (html != null) d.innerHTML = html;
+    return d;
+}
+function findBranch(branchWrap, opt) {
+    return [...branchWrap.querySelectorAll(':scope > .branch-block')].find(b => b.dataset.opt === opt) || null;
 }
 
-function buildTypeOptions(selected) {
-    return FIELD_TYPES.map(t =>
-        `<option value="${t.value}" ${t.value === selected ? 'selected' : ''}>${t.label}</option>`
-    ).join('');
+function addSection(data) {
+    const sec = el('div', 'section-block');
+    sec.dataset.sid = 'sec_' + (++secCounter);
+
+    const head  = el('div', 'section-head', '<i class="ti ti-layout-list"></i>');
+    const title = el('input', 'section-title-input');
+    title.type = 'text';
+    title.placeholder = 'Nazwa sekcji (np. Dane ogólne)';
+    title.value = (data && data.title) || '';
+    const del = el('button', 'btn-del-section', '<i class="ti ti-trash"></i> Usuń sekcję');
+    del.type = 'button';
+    del.addEventListener('click', () => sec.remove());
+    head.appendChild(title);
+    head.appendChild(del);
+
+    const list = el('div', 'section-fields');
+    const addBtn = el('button', 'btn-add-field', '<i class="ti ti-plus"></i> Dodaj pole');
+    addBtn.type = 'button';
+    addBtn.addEventListener('click', () => renderField(list));
+
+    sec.appendChild(head);
+    sec.appendChild(list);
+    sec.appendChild(addBtn);
+    document.getElementById('sections-container').appendChild(sec);
+
+    ((data && data.fields) || []).forEach(f => renderField(list, f));
+    return sec;
 }
 
-function getFieldsForCondition(excludeId) {
-    const rows = document.querySelectorAll('#fields-container .field-row');
-    let opts = '<option value="">— wybierz pole —</option>';
-    rows.forEach(row => {
-        if (row.id === excludeId) return;
-        const label = row.querySelector('.field-label-input')?.value?.trim();
-        const key   = row.dataset.key;
-        if (label && key) {
-            opts += `<option value="${escHtml(key)}">${escHtml(label)}</option>`;
-        }
-    });
-    return opts;
-}
+function renderField(listEl, data) {
+    const d = data || { label: '', type: 'text', required: false, options: [], branches: {} };
+    const row = el('div', 'field-row');
+    row.dataset.key = d.key || newKey();
 
-function getOptionsForField(fieldKey) {
-    const rows = document.querySelectorAll('#fields-container .field-row');
-    let opts = '<option value="">— wybierz wartość —</option>';
-    rows.forEach(row => {
-        if (row.dataset.key !== fieldKey) return;
-        const tags = row.querySelectorAll('.option-value');
-        tags.forEach(tag => {
-            opts += `<option value="${escHtml(tag.dataset.val)}">${escHtml(tag.dataset.val)}</option>`;
+    const main = el('div', 'field-row-main');
+    const labelInput = el('input', 'mf-input field-label-input');
+    labelInput.type = 'text';
+    labelInput.placeholder = 'Treść pytania / nazwa pola...';
+    labelInput.value = d.label || '';
+    const typeSel = el('select', 'mf-input field-type-select',
+        FIELD_TYPES.map(t => `<option value="${t.value}" ${t.value === d.type ? 'selected' : ''}>${t.label}</option>`).join(''));
+    const reqLabel = el('label', null,
+        '<input type="checkbox" class="field-required-check" ' + (d.required ? 'checked' : '') + ' style="accent-color:#1A4D3A;"> Wymagane');
+    reqLabel.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;';
+    const delBtn = el('button', 'btn-del-field', '<i class="ti ti-trash"></i>');
+    delBtn.type = 'button';
+    delBtn.addEventListener('click', () => row.remove());
+    main.appendChild(labelInput);
+    main.appendChild(typeSel);
+    main.appendChild(reqLabel);
+    main.appendChild(delBtn);
+
+    const optWrap = el('div', 'field-row-options');
+    optWrap.style.display = d.type === 'select' ? 'block' : 'none';
+    optWrap.innerHTML = '<div style="font-size:11px;color:#555;font-weight:700;margin-bottom:6px;">Odpowiedzi (opcje listy):</div>';
+    const optTags = el('div', 'options-tags');
+    const optRow  = el('div');
+    optRow.style.cssText = 'display:flex;gap:6px;margin-top:6px;';
+    const optInput = el('input', 'mf-input option-input');
+    optInput.type = 'text';
+    optInput.placeholder = 'Wpisz odpowiedź i naciśnij Enter...';
+    optInput.style.cssText = 'font-size:12px;padding:5px 8px;';
+    const optAdd = el('button', null, 'Dodaj');
+    optAdd.type = 'button';
+    optAdd.style.cssText = 'background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;';
+    optWrap.appendChild(optTags);
+    optRow.appendChild(optInput);
+    optRow.appendChild(optAdd);
+    optWrap.appendChild(optRow);
+
+    const branchWrap = el('div', 'field-branches');
+    branchWrap.style.display = d.type === 'select' ? 'block' : 'none';
+
+    function currentOptions() {
+        return [...optTags.querySelectorAll('.option-value')].map(t => t.dataset.val);
+    }
+    function syncBranches() {
+        const opts = currentOptions();
+        [...branchWrap.querySelectorAll(':scope > .branch-block')].forEach(b => {
+            if (!opts.includes(b.dataset.opt)) b.remove();
         });
-    });
-    return opts;
-}
-
-function addField(data) {
-    const id  = 'field-' + (fieldCounter++);
-    const key = data?.key || 'pole_' + fieldCounter;
-    const d   = data || { label: '', type: 'text', required: false, options: [], show_when: null };
-
-    const div = document.createElement('div');
-    div.className = 'field-row';
-    div.id = id;
-    div.dataset.key = key;
-
-    div.innerHTML = `
-        <div class="field-row-main">
-            <input type="text" class="mf-input field-label-input" placeholder="Nazwa pola..." value="${escHtml(d.label)}" oninput="refreshConditionDropdowns()">
-            <select class="mf-input field-type-select" onchange="onTypeChange(this, '${id}')">
-                ${buildTypeOptions(d.type)}
-            </select>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;">
-                <input type="checkbox" class="field-required-check" ${d.required ? 'checked' : ''} style="accent-color:#1A4D3A;"> Wymagane
-            </label>
-            <button type="button" class="btn-del-field" onclick="removeField('${id}')">
-                <i class="ti ti-trash"></i>
-            </button>
-        </div>
-        <div class="field-row-options" id="options-${id}" style="display:${d.type === 'select' ? 'block' : 'none'};">
-            <div style="font-size:11px;color:#555;font-weight:700;margin-bottom:6px;">Opcje listy:</div>
-            <div class="options-tags" id="tags-${id}"></div>
-            <div style="display:flex;gap:6px;margin-top:6px;">
-                <input type="text" class="mf-input option-input" id="opt-input-${id}" placeholder="Wpisz opcję i naciśnij Enter..." style="font-size:12px;padding:5px 8px;" onkeydown="if(event.key==='Enter'){event.preventDefault();addOption('${id}');}">
-                <button type="button" onclick="addOption('${id}')" style="background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">Dodaj</button>
-            </div>
-        </div>
-        <div class="field-row-condition" id="condition-${id}" style="display:none;">
-            <div style="font-size:11px;color:#92400E;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
-                <i class="ti ti-git-branch" style="font-size:11px;"></i> Reguła warunkowa — pokaż to pole gdy:
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <select class="condition-select condition-field-select" id="cond-field-${id}" onchange="onCondFieldChange('${id}')">
-                    ${getFieldsForCondition(id)}
-                </select>
-                <span style="font-size:12px;color:#555;">równa się</span>
-                <div id="cond-val-wrap-${id}" style="display:contents;">
-                    <input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">
-                </div>
-                <button type="button" onclick="removeCondition('${id}')" style="background:none;border:none;color:#DC2626;cursor:pointer;font-size:12px;">Usuń regułę</button>
-            </div>
-        </div>
-        <div style="margin-top:8px;display:flex;gap:8px;">
-            <button type="button" onclick="toggleCondition('${id}')" id="cond-btn-${id}" style="background:none;border:1px dashed #FCD34D;color:#92400E;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;">
-                <i class="ti ti-git-branch" style="font-size:11px;"></i> Dodaj regułę warunkową
-            </button>
-        </div>
-    `;
-    document.getElementById('fields-container').appendChild(div);
-
-    if (d.options && d.options.length > 0) {
-        d.options.forEach(opt => addOptionValue(id, opt));
+        opts.forEach(opt => {
+            if (findBranch(branchWrap, opt)) return;
+            const b = el('div', 'branch-block');
+            b.dataset.opt = opt;
+            const head = el('div', 'branch-head', '<i class="ti ti-corner-down-right"></i> Pytania dla odpowiedzi: „' + esc(opt) + '"');
+            const bfields = el('div', 'branch-fields');
+            const bAdd = el('button', 'btn-add-question', '<i class="ti ti-plus"></i> Dodaj pytanie');
+            bAdd.type = 'button';
+            bAdd.addEventListener('click', () => renderField(bfields));
+            b.appendChild(head);
+            b.appendChild(bfields);
+            b.appendChild(bAdd);
+            branchWrap.appendChild(b);
+        });
     }
-
-    if (d.show_when) {
-        showConditionPanel(id, d.show_when.field, d.show_when.value);
+    function addOptionTag(val) {
+        val = (val || '').trim();
+        if (!val) return;
+        if (currentOptions().includes(val)) return;
+        const tag = el('span', 'option-tag option-value', esc(val) + ' ');
+        tag.dataset.val = val;
+        const x = el('button', null, '&times;');
+        x.type = 'button';
+        x.addEventListener('click', () => { tag.remove(); syncBranches(); });
+        tag.appendChild(x);
+        optTags.appendChild(tag);
+        syncBranches();
     }
-}
+    optAdd.addEventListener('click', () => { addOptionTag(optInput.value); optInput.value = ''; optInput.focus(); });
+    optInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); optAdd.click(); } });
 
-function onTypeChange(sel, id) {
-    const optPanel = document.getElementById('options-' + id);
-    if (optPanel) optPanel.style.display = sel.value === 'select' ? 'block' : 'none';
-}
-
-function addOption(id) {
-    const input = document.getElementById('opt-input-' + id);
-    const val = input.value.trim();
-    if (!val) return;
-    addOptionValue(id, val);
-    input.value = '';
-    input.focus();
-    refreshConditionDropdowns();
-}
-
-function addOptionValue(id, val) {
-    const tags = document.getElementById('tags-' + id);
-    const span = document.createElement('span');
-    span.className = 'option-tag option-value';
-    span.dataset.val = val;
-    span.innerHTML = `${escHtml(val)} <button type="button" onclick="this.parentElement.remove();refreshConditionDropdowns();">&times;</button>`;
-    tags.appendChild(span);
-}
-
-function removeField(id) {
-    document.getElementById(id)?.remove();
-    refreshConditionDropdowns();
-}
-
-function toggleCondition(id) {
-    const panel = document.getElementById('condition-' + id);
-    if (panel.style.display === 'none') {
-        panel.style.display = 'block';
-        refreshConditionDropdowns();
-    } else {
-        panel.style.display = 'none';
-    }
-}
-
-function removeCondition(id) {
-    const panel = document.getElementById('condition-' + id);
-    if (panel) panel.style.display = 'none';
-    const fieldSel = document.getElementById('cond-field-' + id);
-    if (fieldSel) fieldSel.value = '';
-    const wrap = document.getElementById('cond-val-wrap-' + id);
-    if (wrap) wrap.innerHTML = `<input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">`;
-}
-
-function onCondFieldChange(id) {
-    const fieldKey = document.getElementById('cond-field-' + id)?.value;
-    const wrap = document.getElementById('cond-val-wrap-' + id);
-    if (!wrap) return;
-
-    if (!fieldKey) {
-        wrap.innerHTML = `<input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">`;
-        return;
-    }
-
-    let refType = 'text';
-    document.querySelectorAll('#fields-container .field-row').forEach(row => {
-        if (row.dataset.key === fieldKey) {
-            refType = row.querySelector('.field-type-select')?.value || 'text';
-        }
+    typeSel.addEventListener('change', () => {
+        const isSel = typeSel.value === 'select';
+        optWrap.style.display    = isSel ? 'block' : 'none';
+        branchWrap.style.display = isSel ? 'block' : 'none';
+        if (isSel) syncBranches();
     });
 
-    if (refType === 'select') {
-        const opts = getOptionsForField(fieldKey);
-        wrap.innerHTML = `<select class="condition-select" id="cond-val-${id}">${opts}</select>`;
-    } else {
-        wrap.innerHTML = `<input type="text" class="condition-select" id="cond-val-${id}" placeholder="Wartość warunku..." style="min-width:140px;">`;
+    row.appendChild(main);
+    row.appendChild(optWrap);
+    row.appendChild(branchWrap);
+    listEl.appendChild(row);
+
+    if (d.type === 'select') {
+        (d.options || []).forEach(o => addOptionTag(o));
+        if (d.branches) {
+            Object.keys(d.branches).forEach(opt => {
+                const b = findBranch(branchWrap, opt);
+                if (b) {
+                    const bf = b.querySelector(':scope > .branch-fields');
+                    (d.branches[opt] || []).forEach(cf => renderField(bf, cf));
+                }
+            });
+        }
     }
+    return row;
 }
 
-function showConditionPanel(id, fieldKey, fieldVal) {
-    const panel = document.getElementById('condition-' + id);
-    if (panel) panel.style.display = 'block';
-    setTimeout(() => {
-        const fieldSel = document.getElementById('cond-field-' + id);
-        if (fieldSel) {
-            fieldSel.innerHTML = getFieldsForCondition(id);
-            fieldSel.value = fieldKey;
-            onCondFieldChange(id);
-            setTimeout(() => {
-                const valEl = document.getElementById('cond-val-' + id);
-                if (valEl) valEl.value = fieldVal;
-            }, 10);
-        }
-    }, 50);
-}
+function collectFieldList(listEl) {
+    const out = [];
+    listEl.querySelectorAll(':scope > .field-row').forEach(row => {
+        const label    = row.querySelector(':scope > .field-row-main > .field-label-input').value.trim();
+        const type     = row.querySelector(':scope > .field-row-main > .field-type-select').value;
+        const required = row.querySelector(':scope > .field-row-main .field-required-check').checked;
+        if (!label) return;
 
-function refreshConditionDropdowns() {
-    document.querySelectorAll('#fields-container .field-row').forEach(row => {
-        const id = row.id;
-        const panel = document.getElementById('condition-' + id);
-        if (!panel || panel.style.display === 'none') return;
-        const fieldSel = document.getElementById('cond-field-' + id);
-        const curField = fieldSel?.value;
-        const curVal   = document.getElementById('cond-val-' + id)?.value;
-        if (fieldSel) {
-            fieldSel.innerHTML = getFieldsForCondition(id);
-            if (curField) fieldSel.value = curField;
+        const f = { key: row.dataset.key, label, type, required };
+
+        if (type === 'select') {
+            const optWrap = row.querySelector(':scope > .field-row-options');
+            f.options = [...optWrap.querySelectorAll('.option-value')].map(t => t.dataset.val);
+            f.branches = {};
+            const bw = row.querySelector(':scope > .field-branches');
+            bw.querySelectorAll(':scope > .branch-block').forEach(b => {
+                f.branches[b.dataset.opt] = collectFieldList(b.querySelector(':scope > .branch-fields'));
+            });
         }
-        if (curField) {
-            onCondFieldChange(id);
-            if (curVal) {
-                const valEl = document.getElementById('cond-val-' + id);
-                if (valEl) valEl.value = curVal;
-            }
-        }
+        out.push(f);
     });
+    return out;
 }
 
 function collectFields() {
-    const rows = document.querySelectorAll('#fields-container .field-row');
-    const fields = [];
-    rows.forEach((row, i) => {
-        const label    = row.querySelector('.field-label-input')?.value?.trim();
-        const type     = row.querySelector('.field-type-select')?.value;
-        const required = row.querySelector('.field-required-check')?.checked;
-        const key      = row.dataset.key || 'pole_' + i;
-        if (!label) return;
-
-        const field = { key, label, type, required };
-
-        if (type === 'select') {
-            field.options = [];
-            row.querySelectorAll('.option-value').forEach(tag => {
-                if (tag.dataset.val) field.options.push(tag.dataset.val);
-            });
-        }
-
-        const condPanel = document.getElementById('condition-' + row.id);
-        if (condPanel && condPanel.style.display !== 'none') {
-            const condField = document.getElementById('cond-field-' + row.id)?.value;
-            const condVal   = document.getElementById('cond-val-' + row.id)?.value;
-            if (condField && condVal) {
-                field.show_when = { field: condField, value: condVal };
-            }
-        }
-
-        fields.push(field);
+    const sections = [];
+    document.querySelectorAll('#sections-container > .section-block').forEach(sec => {
+        const title  = sec.querySelector(':scope > .section-head > .section-title-input').value.trim() || 'Sekcja';
+        const fields = collectFieldList(sec.querySelector(':scope > .section-fields'));
+        sections.push({ type: 'section', title, fields });
     });
-    document.getElementById('f-fields-json').value = JSON.stringify(fields);
+    document.getElementById('f-fields-json').value = JSON.stringify(sections);
+}
+
+function loadSections(fields) {
+    document.getElementById('sections-container').innerHTML = '';
+    secCounter = 0;
+
+    let mx = 0;
+    JSON.stringify(fields || []).replace(/pole_(\d+)/g, (m, n) => { mx = Math.max(mx, +n); return m; });
+    keyCounter = mx;
+
+    if (!Array.isArray(fields) || fields.length === 0) {
+        addSection({ title: 'Sekcja 1' });
+        return;
+    }
+    const hasSections = fields.some(f => f && f.type === 'section');
+    if (hasSections) {
+        fields.forEach(f => { if (f && f.type === 'section') addSection(f); });
+    } else {
+        const clean = fields.map(f => { const c = { ...f }; delete c.show_when; return c; });
+        addSection({ title: 'Sekcja 1', fields: clean });
+    }
 }
 
 function openModal() {
@@ -457,9 +427,7 @@ function openModal() {
     document.getElementById('f-name').value = '';
     document.getElementById('f-desc').value = '';
     document.getElementById('f-active').checked = true;
-    document.getElementById('fields-container').innerHTML = '';
-    fieldCounter = 0;
-    addField();
+    loadSections([]);
     document.getElementById('modal-form').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
@@ -472,13 +440,7 @@ function openEditModal(id, name, description, fields, isActive) {
     document.getElementById('f-name').value = name || '';
     document.getElementById('f-desc').value = description || '';
     document.getElementById('f-active').checked = isActive;
-    document.getElementById('fields-container').innerHTML = '';
-    fieldCounter = 0;
-    if (fields && fields.length > 0) {
-        fields.forEach(f => addField(f));
-    } else {
-        addField();
-    }
+    loadSections(fields);
     document.getElementById('modal-form').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
@@ -500,8 +462,6 @@ function toggleActive(id, btn) {
     .then(data => { btn.classList.toggle('on', data.is_active); });
 }
 
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 @endpush
