@@ -130,35 +130,96 @@
 
 @push('scripts')
 <script>
+function renderRequestFields(fields, container) {
+    container.innerHTML = '';
+    const nodes = Array.isArray(fields) ? fields : [];
+    const hasSections = nodes.some(f => f && f.type === 'section');
+
+    if (hasSections) {
+        nodes.forEach(sec => {
+            if (!sec || sec.type !== 'section') return;
+            if (sec.title) {
+                const h = document.createElement('div');
+                h.textContent = sec.title;
+                h.style.cssText = "font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#1A4D3A;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;";
+                container.appendChild(h);
+            }
+            (sec.fields || []).forEach(f => renderRespField(container, f));
+        });
+    } else {
+        nodes.forEach(f => renderRespField(container, f));
+    }
+}
+
+function renderRespField(parent, field) {
+    const group = document.createElement('div');
+    group.className = 'field-group';
+
+    const label = document.createElement('label');
+    label.className = 'field-label';
+    label.innerHTML = field.label + (field.required ? ' <span class="required">*</span>' : '');
+    group.appendChild(label);
+
+    let input;
+    if (field.type === 'select') {
+        input = document.createElement('select');
+        input.className = 'field-input';
+        let html = '<option value="">— wybierz —</option>';
+        (field.options || []).forEach(o => {
+            const v = String(o).replace(/"/g, '&quot;');
+            html += '<option value="' + v + '">' + v + '</option>';
+        });
+        input.innerHTML = html;
+    } else if (field.type === 'textarea') {
+        input = document.createElement('textarea');
+        input.rows = 3;
+        input.style.resize = 'vertical';
+        input.className = 'field-input';
+    } else {
+        input = document.createElement('input');
+        input.type = field.type === 'number' ? 'number' : (field.type === 'date' ? 'date' : 'text');
+        input.className = 'field-input';
+    }
+    input.name = 'form_responses[' + field.key + ']';
+    if (field.required) input.required = true;
+    group.appendChild(input);
+    parent.appendChild(group);
+
+    if (field.type === 'select') {
+        const host = document.createElement('div');
+        host.style.cssText = 'margin-left:4px;';
+        parent.appendChild(host);
+
+        const wraps = {};
+        Object.keys(field.branches || {}).forEach(opt => {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'display:none;border-left:3px solid #FCD34D;padding-left:12px;margin:4px 0 8px;';
+            (field.branches[opt] || []).forEach(cf => renderRespField(wrap, cf));
+            setBranchDisabled(wrap, true);
+            host.appendChild(wrap);
+            wraps[opt] = wrap;
+        });
+
+        input.addEventListener('change', () => {
+            Object.keys(wraps).forEach(opt => {
+                const show = (opt === input.value);
+                wraps[opt].style.display = show ? 'block' : 'none';
+                setBranchDisabled(wraps[opt], !show);
+            });
+        });
+    }
+}
+
+function setBranchDisabled(wrap, disabled) {
+    wrap.querySelectorAll('input, select, textarea').forEach(elm => { elm.disabled = disabled; });
+}
+
 function selectTemplate(id, name, fields) {
     document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('card-' + id).classList.add('selected');
     document.getElementById('form-card-title').textContent = name;
 
-    const container = document.getElementById('dynamic-fields');
-    container.innerHTML = '';
-
-    fields.forEach(function(field) {
-        const div = document.createElement('div');
-        div.className = 'field-group';
-        const label = document.createElement('label');
-        label.className = 'field-label';
-        label.innerHTML = field.label + (field.required ? '<span class="required">*</span>' : '');
-        div.appendChild(label);
-        let input;
-        if (field.type === 'textarea') {
-            input = document.createElement('textarea');
-            input.rows = 3;
-            input.style.resize = 'vertical';
-        } else {
-            input = document.createElement('input');
-            input.type = field.type === 'number' ? 'number' : (field.type === 'date' ? 'date' : 'text');
-        }
-        input.className = 'field-input';
-        input.disabled = true;
-        div.appendChild(input);
-        container.appendChild(div);
-    });
+    renderRequestFields(fields, container);
 
     document.getElementById('form-card').classList.add('visible');
     document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
