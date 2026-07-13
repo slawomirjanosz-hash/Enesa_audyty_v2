@@ -52,11 +52,18 @@
         </div>
         <div class="form-card-body">
             @php $responses = $offerRequest->form_responses ?? []; @endphp
-            @foreach($offerRequest->offerFormTemplate->fields as $field)
+            @foreach($offerRequest->offerFormTemplate->flatFields() as $field)
                 @continue(!isset($field['key']))
                 <div class="field-group">
                     <label class="field-label">{{ $field['label'] ?? $field['key'] }}</label>
-                    @if(($field['type'] ?? 'text') === 'textarea')
+                    @if(($field['type'] ?? 'text') === 'select')
+                        <select name="form_responses[{{ $field['key'] }}]" class="field-input">
+                            <option value="">— wybierz —</option>
+                            @foreach(($field['options'] ?? []) as $opt)
+                                <option value="{{ $opt }}" {{ (old('form_responses.'.$field['key'], $responses[$field['key']] ?? '') == $opt) ? 'selected' : '' }}>{{ $opt }}</option>
+                            @endforeach
+                        </select>
+                    @elseif(($field['type'] ?? 'text') === 'textarea')
                         <textarea name="form_responses[{{ $field['key'] }}]" class="field-input" rows="3">{{ old('form_responses.'.$field['key'], $responses[$field['key']] ?? '') }}</textarea>
                     @else
                         <input type="{{ $field['type'] === 'number' ? 'number' : ($field['type'] === 'date' ? 'date' : 'text') }}"

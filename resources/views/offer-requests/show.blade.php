@@ -57,7 +57,7 @@
         </div>
 
         @php
-            $fields = $offerRequest->offerFormTemplate?->fields ?? [];
+            $fields = $offerRequest->offerFormTemplate?->flatFields() ?? [];
             $responses = $offerRequest->form_responses ?? [];
             $fieldMap = collect($fields)->keyBy('key');
         @endphp

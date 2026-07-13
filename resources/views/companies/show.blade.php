@@ -951,7 +951,7 @@
                             default     => 'background:#F3F4F6;color:#4B5563;',
                         };
                         $responses = $req->form_responses ?? [];
-                        $fields    = $req->offerFormTemplate?->fields ?? [];
+                        $fields    = $req->offerFormTemplate?->flatFields() ?? [];
                         $offers    = $req->offers;
                     @endphp
                     <tr>
