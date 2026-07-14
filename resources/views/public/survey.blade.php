@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>Ankieta — {{ $broker->name }}</title>
+<title>Ankieta &mdash; {{ $broker->name }}</title>
 <link rel="icon" href="data:,">
 <style>
   * { box-sizing: border-box; }
@@ -22,7 +22,9 @@
   .field-label .required { color:#DC2626; }
   .field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:8px; padding:10px 12px; font-size:14px; outline:none; }
   .field-input:focus { border-color:#1A1A1A; background:#fff; }
-  .btn { display:inline-flex; align-items:center; gap:8px; background:#1A1A1A; color:#fff; border:none; border-radius:9px; padding:12px 26px; font-size:15px; font-weight:700; cursor:pointer; }
+  .btn { display:inline-flex; align-items:center; gap:8px; background:#1A1A1A; color:#fff; border:none; border-radius:9px; padding:12px 24px; font-size:15px; font-weight:700; cursor:pointer; }
+  .btn-ghost { background:#fff; color:#1A1A1A; border:1px solid #C9C4B8; }
+  .note { background:#F0FDF4; border:1px solid #86EFAC; color:#166534; border-radius:8px; padding:10px 14px; margin-bottom:16px; font-size:13px; }
   .foot { text-align:center; color:#9a958a; font-size:11px; margin-top:26px; line-height:1.6; }
   .done { text-align:center; padding:24px 8px; }
   .done .tick { width:56px; height:56px; border-radius:50%; background:#E8F5E9; color:#1B5E20; display:flex; align-items:center; justify-content:center; font-size:30px; margin:0 auto 14px; }
@@ -42,18 +44,24 @@
     @if(!empty($submitted))
       <div class="done">
         <div class="tick">&#10003;</div>
-        <h1>Dziękujemy — ankieta została wysłana.</h1>
-        <p class="lead">Twoje odpowiedzi zostały przekazane do przygotowania oferty.</p>
+        <h1>Dzi&#281;kujemy &mdash; ankieta zosta&#322;a wys&#322;ana.</h1>
+        <p class="lead">Twoje odpowiedzi zosta&#322;y przekazane do przygotowania oferty.</p>
       </div>
     @else
+      @if(!empty($draftSaved))
+        <div class="note">Zapisano roboczo &mdash; mo&#380;esz wr&#243;ci&#263; do tego linku w dowolnej chwili i doko&#324;czy&#263;.</div>
+      @endif
+
       <h1>{{ $template->name }}</h1>
       @if($template->description)<p class="lead">{{ $template->description }}</p>@endif
 
       <form method="POST" action="{{ route('public.survey.submit', $offerRequest->public_token) }}" id="survey-form">
         @csrf
         <div id="dynamic-fields"></div>
-        <div style="margin-top:22px;">
-          <button type="submit" class="btn">Wyślij ankietę</button>
+        <div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;">
+          <button type="submit" name="mode" value="submit" class="btn">Wy&#347;lij ankiet&#281;</button>
+          <button type="submit" name="mode" value="draft" formnovalidate class="btn btn-ghost">Zapisz roboczo</button>
+          <button type="submit" formaction="{{ route('public.survey.pdf', $offerRequest->public_token) }}" formtarget="_blank" formnovalidate class="btn btn-ghost">Pobierz PDF</button>
         </div>
       </form>
     @endif
@@ -61,13 +69,14 @@
 
   <div class="foot">
     Formularz przygotowany przez {{ $broker->name }}.
-    {{-- TODO RODO: uzupełnij administratora danych osobowych zgodnie z ustaleniami prawnymi --}}
+    {{-- TODO RODO: uzupelnij administratora danych osobowych zgodnie z ustaleniami prawnymi --}}
   </div>
 </div>
 
 @unless(!empty($submitted))
 <script>
 const TEMPLATE_FIELDS = @json($template->fields);
+const RESPONSES = @json($responses ?? []);
 
 function renderRequestFields(fields, container) {
     container.innerHTML = '';
@@ -99,11 +108,13 @@ function renderRespField(parent, field) {
     label.innerHTML = field.label + (field.required ? ' <span class="required">*</span>' : '');
     group.appendChild(label);
 
+    const saved = RESPONSES[field.key];
+
     let input;
     if (field.type === 'select') {
         input = document.createElement('select');
         input.className = 'field-input';
-        let html = '<option value="">— wybierz —</option>';
+        let html = '<option value="">&#8212; wybierz &#8212;</option>';
         (field.options || []).forEach(function(o) {
             const v = String(o).replace(/"/g, '&quot;');
             html += '<option value="' + v + '">' + v + '</option>';
@@ -123,6 +134,10 @@ function renderRespField(parent, field) {
     if (field.required) input.required = true;
     group.appendChild(input);
     parent.appendChild(group);
+
+    if (field.type !== 'select' && saved != null) {
+        input.value = saved;
+    }
 
     if (field.type === 'select') {
         const host = document.createElement('div');
@@ -146,6 +161,11 @@ function renderRespField(parent, field) {
                 setBranchDisabled(wraps[opt], !show);
             });
         });
+
+        if (saved != null && saved !== '') {
+            input.value = saved;
+            input.dispatchEvent(new Event('change'));
+        }
     }
 }
 
