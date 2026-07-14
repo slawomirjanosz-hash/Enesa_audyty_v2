@@ -69,6 +69,15 @@ class OfferRequestController extends Controller
         return view('offer-requests.show', compact('offerRequest'));
     }
 
+    public function destroy(OfferRequest $offerRequest)
+    {
+        $companyId = $offerRequest->company_id;
+        $offerRequest->forceDelete();
+
+        return redirect(route('companies.show', $companyId) . '#zapytania')
+            ->with('success', 'Zapytanie zostało trwale usunięte.');
+    }
+
     public function updateStatus(Request $request, OfferRequest $offerRequest)
     {
         $request->validate(['status' => 'required|in:nowe,w_toku,zamknięte']);

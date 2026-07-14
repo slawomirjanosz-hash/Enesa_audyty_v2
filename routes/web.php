@@ -110,6 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{offerRequest}/edit',           [OfferRequestController::class, 'edit'])->name('edit');
         Route::put('/{offerRequest}',                [OfferRequestController::class, 'update'])->name('update');
         Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{offerRequest}',             [OfferRequestController::class, 'destroy'])->name('destroy');
         Route::post('/{offerRequest}/public-link',   [OfferRequestController::class, 'savePublic'])->name('save-public');
     });
 
