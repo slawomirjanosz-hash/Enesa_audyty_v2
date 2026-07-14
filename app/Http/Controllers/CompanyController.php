@@ -134,7 +134,17 @@ class CompanyController extends Controller
             'city'    => ['nullable', 'string', 'max:100'],
             'notes'   => ['nullable', 'string'],
             'source'  => ['nullable', 'string', 'max:100'],
+            'logo'    => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
         ]);
+
+        if ($request->hasFile('logo')) {
+            if ($company->logo_path && \Illuminate\Support\Facades\Storage::disk('local')->exists($company->logo_path)) {
+                \Illuminate\Support\Facades\Storage::disk('local')->delete($company->logo_path);
+            }
+            $data['logo_path'] = $request->file('logo')->store('company-logos', 'local');
+        }
+
+        unset($data['logo']);
 
         $company->update($data);
 

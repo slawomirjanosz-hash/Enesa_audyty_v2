@@ -1697,7 +1697,7 @@
             <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj dane firmy</span>
             <button onclick="closeEditModal()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
         </div>
-        <form method="POST" action="{{ route('companies.update', $company) }}" style="padding:24px;display:flex;flex-direction:column;gap:14px;">
+        <form method="POST" action="{{ route('companies.update', $company) }}" enctype="multipart/form-data" style="padding:24px;display:flex;flex-direction:column;gap:14px;">
             @csrf
             @method('PUT')
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -1735,6 +1735,14 @@
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Źródło</label>
                     <input type="text" name="source" value="{{ $company->source }}" placeholder="np. polecenie, targi, LinkedIn..."
                         style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Logo firmy (pojawia się na ankietach i dokumentach)</label>
+                    @if($company->logoDataUri())
+                        <div style="margin-top:6px;"><img src="{{ $company->logoDataUri() }}" style="max-height:44px;max-width:160px;border:1px solid #E5E7EB;border-radius:6px;padding:4px;background:#fff;"></div>
+                    @endif
+                    <input type="file" name="logo" accept="image/png,image/jpeg" style="width:100%;margin-top:6px;font-size:13px;">
+                    <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">PNG lub JPG, do 2 MB.</div>
                 </div>
                 <div style="grid-column:1/-1;">
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Notatki</label>
