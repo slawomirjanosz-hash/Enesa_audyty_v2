@@ -154,11 +154,6 @@ class CompanyController extends Controller
     public function accept(Company $company)
     {
         if ($company->status === 'pending') {
-            // Validate that company has a client_admin user
-            if ($company->users()->wherePivot('is_admin', true)->doesntExist()) {
-                return redirect()->back()->with('error', 'Firma musi mieć przypisanego głównego użytkownika przed akceptacją.');
-            }
-
             $company->update(['status' => 'active']);
 
             $company->loadMissing('users.roles');

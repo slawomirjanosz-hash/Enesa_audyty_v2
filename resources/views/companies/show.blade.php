@@ -685,19 +685,12 @@
         @endif
 
         @if($company->status === 'pending')
-            @if($company->users->count() > 0)
-                <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-block;">
-                    @csrf
-                    <button type="submit" class="btn-action btn-accept-action">
-                        <i class="ti ti-check"></i> Akceptuj klienta
-                    </button>
-                </form>
-            @else
-                <div style="display:inline-flex;align-items:center;gap:10px;background:#FFF3E0;color:#E65100;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;">
-                    <i class="ti ti-alert-triangle" style="font-size:18px;"></i>
-                    Dodaj najpierw użytkownika głównego aby zaakceptować klienta
-                </div>
-            @endif
+            <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-block;">
+                @csrf
+                <button type="submit" class="btn-action btn-accept-action">
+                    <i class="ti ti-check"></i> Akceptuj klienta
+                </button>
+            </form>
         @elseif($company->status === 'active')
             <span class="status-badge active-inline">
                 <i class="ti ti-circle-filled" style="font-size:8px;"></i>
