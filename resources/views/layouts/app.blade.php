@@ -476,7 +476,8 @@
     }, 60000);
 
     // Modal form submit — re-login without page reload
-    document.getElementById('sessionModalForm').addEventListener('submit', function (e) {
+    const sessionModalForm = document.getElementById('sessionModalForm');
+    if (sessionModalForm) sessionModalForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const errBox = document.getElementById('sessionModalError');
         errBox.style.display = 'none';
