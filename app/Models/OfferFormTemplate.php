@@ -35,6 +35,36 @@ class OfferFormTemplate extends Model
         return $this->flattenNodes($this->fields ?? []);
     }
 
+    /**
+     * Pola pogrupowane po sekcjach (gałęzie spłaszczone w obrębie sekcji).
+     * Zwraca [ ['title' => ?string, 'fields' => [...]], ... ].
+     * Dla starych, płaskich szablonów zwraca jedną grupę bez tytułu.
+     */
+    public function sectionedFields(): array
+    {
+        $nodes = $this->fields ?? [];
+        $hasSections = collect($nodes)->contains(
+            fn ($n) => is_array($n) && ($n['type'] ?? null) === 'section'
+        );
+
+        if (!$hasSections) {
+            return [['title' => null, 'fields' => $this->flattenNodes($nodes)]];
+        }
+
+        $out = [];
+        foreach ($nodes as $node) {
+            if (!is_array($node) || ($node['type'] ?? null) !== 'section') {
+                continue;
+            }
+            $out[] = [
+                'title'  => $node['title'] ?? null,
+                'fields' => $this->flattenNodes($node['fields'] ?? []),
+            ];
+        }
+
+        return $out;
+    }
+
     private function flattenNodes(array $nodes): array
     {
         $out = [];
