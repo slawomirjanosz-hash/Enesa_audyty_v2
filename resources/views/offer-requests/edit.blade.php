@@ -29,6 +29,11 @@
 
 @section('content')
 
+<div style="margin-bottom:14px;">
+    <a href="{{ route('offer-requests.show', $offerRequest) }}" style="display:inline-flex;align-items:center;gap:6px;color:#1A4D3A;text-decoration:none;font-size:13px;font-weight:600;">
+        <i class="ti ti-arrow-left"></i> Wróć do zapytania
+    </a>
+</div>
 <div class="page-header">
     <h1><i class="ti ti-pencil"></i>Edytuj zapytanie</h1>
     <p>{{ $offerRequest->company?->name }} &mdash; zapytanie #{{ $offerRequest->id }}</p>
