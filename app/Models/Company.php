@@ -28,6 +28,23 @@ class Company extends Model
         'archived_at' => 'datetime',
     ];
 
+    public function logoDataUri(): ?string
+    {
+        if (!$this->logo_path) {
+            return null;
+        }
+
+        $disk = \Illuminate\Support\Facades\Storage::disk('local');
+
+        if (!$disk->exists($this->logo_path)) {
+            return null;
+        }
+
+        $mime = $disk->mimeType($this->logo_path) ?: 'image/png';
+
+        return 'data:' . $mime . ';base64,' . base64_encode($disk->get($this->logo_path));
+    }
+
     public function audits(): HasMany
     {
         return $this->hasMany(Audit::class);
