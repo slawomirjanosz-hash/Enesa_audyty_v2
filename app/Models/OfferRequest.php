@@ -13,6 +13,7 @@ class OfferRequest extends Model
 
     protected $fillable = [
         'company_id',
+        'title',
         'created_by_id',
         'offer_form_template_id',
         'offer_form_version_id',
