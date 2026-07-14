@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'public_survey_url' => env('PUBLIC_SURVEY_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
