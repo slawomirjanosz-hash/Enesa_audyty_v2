@@ -40,6 +40,16 @@
     @endif
   </div>
 
+  @if($offerRequest->end_client_company || $offerRequest->end_client_name)
+  <div style="padding:0 4px 14px;font-size:14px;color:#444;">
+    Ankieta dla:
+    <strong>{{ $offerRequest->end_client_company ?: $offerRequest->end_client_name }}</strong>
+    @if($offerRequest->end_client_company && $offerRequest->end_client_name)
+      <span style="color:#777;">({{ $offerRequest->end_client_name }})</span>
+    @endif
+  </div>
+  @endif
+
   <div class="card">
     @if(!empty($submitted))
       <div class="done">
