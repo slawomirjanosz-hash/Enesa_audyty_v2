@@ -12,7 +12,10 @@
 .form-card-header i { color:#1A4D3A; font-size:17px; }
 .form-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
 .form-card-body { padding:20px; }
+.rq-section-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:800; color:#1A4D3A; margin:20px 0 10px; padding-bottom:6px; border-bottom:1px solid #E5E1D8; }
+.rq-section-title:first-child { margin-top:0; }
 .field-label { display:block; font-family:'Manrope',sans-serif; font-size:12px; font-weight:700; color:#3a3a3a; margin-bottom:5px; }
+.field-label .required { color:#DC2626; }
 .field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:9px 12px; font-size:14px; font-family:'Lato',sans-serif; color:#1A1A1A; outline:none; transition:border-color .15s; box-sizing:border-box; }
 .field-input:focus { border-color:#1A4D3A; background:#fff; }
 .field-group { margin-bottom:16px; }
@@ -28,12 +31,12 @@
 
 <div class="page-header">
     <h1><i class="ti ti-pencil"></i>Edytuj zapytanie</h1>
-    <p>{{ $offerRequest->company?->name }} — zapytanie #{{ $offerRequest->id }}</p>
+    <p>{{ $offerRequest->company?->name }} &mdash; zapytanie #{{ $offerRequest->id }}</p>
 </div>
 
 @if($errors->any())
     <div class="alert-error">
-        <strong>Popraw błędy:</strong>
+        <strong>Popraw b&#322;&#281;dy:</strong>
         <ul style="margin:6px 0 0 16px;">
             @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
         </ul>
@@ -51,28 +54,7 @@
             <span class="form-card-title">{{ $offerRequest->offerFormTemplate->name }}</span>
         </div>
         <div class="form-card-body">
-            @php $responses = $offerRequest->form_responses ?? []; @endphp
-            @foreach($offerRequest->offerFormTemplate->flatFields() as $field)
-                @continue(!isset($field['key']))
-                <div class="field-group">
-                    <label class="field-label">{{ $field['label'] ?? $field['key'] }}</label>
-                    @if(($field['type'] ?? 'text') === 'select')
-                        <select name="form_responses[{{ $field['key'] }}]" class="field-input">
-                            <option value="">— wybierz —</option>
-                            @foreach(($field['options'] ?? []) as $opt)
-                                <option value="{{ $opt }}" {{ (old('form_responses.'.$field['key'], $responses[$field['key']] ?? '') == $opt) ? 'selected' : '' }}>{{ $opt }}</option>
-                            @endforeach
-                        </select>
-                    @elseif(($field['type'] ?? 'text') === 'textarea')
-                        <textarea name="form_responses[{{ $field['key'] }}]" class="field-input" rows="3">{{ old('form_responses.'.$field['key'], $responses[$field['key']] ?? '') }}</textarea>
-                    @else
-                        <input type="{{ $field['type'] === 'number' ? 'number' : ($field['type'] === 'date' ? 'date' : 'text') }}"
-                               name="form_responses[{{ $field['key'] }}]"
-                               class="field-input"
-                               value="{{ old('form_responses.'.$field['key'], $responses[$field['key']] ?? '') }}">
-                    @endif
-                </div>
-            @endforeach
+            <div id="dynamic-fields"></div>
         </div>
     </div>
     @endif
@@ -80,11 +62,11 @@
     <div class="form-card">
         <div class="form-card-header">
             <i class="ti ti-mail"></i>
-            <span class="form-card-title">Treść zapytania / wiadomość od klienta</span>
+            <span class="form-card-title">Tre&#347;&#263; zapytania / wiadomo&#347;&#263; od klienta</span>
         </div>
         <div class="form-card-body">
             <textarea name="tresc" class="field-input" rows="6"
-                      placeholder="Treść zapytania...">{{ old('tresc', $offerRequest->tresc) }}</textarea>
+                      placeholder="Tre&#347;&#263; zapytania...">{{ old('tresc', $offerRequest->tresc) }}</textarea>
         </div>
     </div>
 
@@ -99,3 +81,111 @@
 </form>
 
 @endsection
+
+@push('scripts')
+@if($offerRequest->offerFormTemplate && !empty($offerRequest->offerFormTemplate->fields))
+<script>
+const TEMPLATE_FIELDS = @json($offerRequest->offerFormTemplate->fields);
+const RESPONSES = @json($offerRequest->form_responses ?? []);
+
+function renderRequestFields(fields, container) {
+    container.innerHTML = '';
+    const nodes = Array.isArray(fields) ? fields : [];
+    const hasSections = nodes.some(f => f && f.type === 'section');
+
+    if (hasSections) {
+        nodes.forEach(function(sec) {
+            if (!sec || sec.type !== 'section') return;
+            if (sec.title) {
+                const h = document.createElement('div');
+                h.className = 'rq-section-title';
+                h.textContent = sec.title;
+                container.appendChild(h);
+            }
+            (sec.fields || []).forEach(function(f) { renderRespField(container, f); });
+        });
+    } else {
+        nodes.forEach(function(f) { renderRespField(container, f); });
+    }
+}
+
+function renderRespField(parent, field) {
+    const group = document.createElement('div');
+    group.className = 'field-group';
+
+    const label = document.createElement('label');
+    label.className = 'field-label';
+    label.textContent = field.label || field.key;
+    group.appendChild(label);
+
+    const saved = RESPONSES[field.key];
+
+    let input;
+    if (field.type === 'select') {
+        input = document.createElement('select');
+        input.className = 'field-input';
+        let html = '<option value="">&#8212; wybierz &#8212;</option>';
+        (field.options || []).forEach(function(o) {
+            const v = String(o).replace(/"/g, '&quot;');
+            html += '<option value="' + v + '">' + v + '</option>';
+        });
+        input.innerHTML = html;
+    } else if (field.type === 'textarea') {
+        input = document.createElement('textarea');
+        input.rows = 3;
+        input.style.resize = 'vertical';
+        input.className = 'field-input';
+    } else {
+        input = document.createElement('input');
+        input.type = field.type === 'number' ? 'number' : (field.type === 'date' ? 'date' : 'text');
+        input.className = 'field-input';
+    }
+    input.name = 'form_responses[' + field.key + ']';
+    group.appendChild(input);
+    parent.appendChild(group);
+
+    if (field.type !== 'select' && saved != null) {
+        input.value = saved;
+    }
+
+    if (field.type === 'select') {
+        const host = document.createElement('div');
+        host.style.cssText = 'margin-left:4px;';
+        parent.appendChild(host);
+
+        const wraps = {};
+        Object.keys(field.branches || {}).forEach(function(opt) {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'display:none;border-left:3px solid #FCD34D;padding-left:12px;margin:4px 0 8px;';
+            (field.branches[opt] || []).forEach(function(cf) { renderRespField(wrap, cf); });
+            setBranchDisabled(wrap, true);
+            host.appendChild(wrap);
+            wraps[opt] = wrap;
+        });
+
+        input.addEventListener('change', function() {
+            Object.keys(wraps).forEach(function(opt) {
+                const show = (opt === input.value);
+                wraps[opt].style.display = show ? 'block' : 'none';
+                setBranchDisabled(wraps[opt], !show);
+            });
+        });
+
+        if (saved != null && saved !== '') {
+            input.value = saved;
+            input.dispatchEvent(new Event('change'));
+        }
+    }
+}
+
+function setBranchDisabled(wrap, disabled) {
+    wrap.querySelectorAll('input, select, textarea').forEach(function(elm) { elm.disabled = disabled; });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const c = document.getElementById('dynamic-fields');
+    if (c) renderRequestFields(TEMPLATE_FIELDS, c);
+});
+</script>
+@endif
+@endpush
