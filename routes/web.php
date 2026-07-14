@@ -32,6 +32,7 @@ Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('
 // Publiczna ankieta dla klienta końcowego (bez logowania, white-label)
 Route::get('/f/{token}',  [PublicSurveyController::class, 'show'])->name('public.survey.show');
 Route::post('/f/{token}', [PublicSurveyController::class, 'submit'])->name('public.survey.submit');
+Route::post('/f/{token}/pdf', [PublicSurveyController::class, 'pdf'])->name('public.survey.pdf');
 
 Route::get('/companies', function () {
     return redirect()->route('crm.index');
