@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Ankieta — {{ $broker->name }}</title>
+<link rel="icon" href="data:,">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#F4F1EA; font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#1A1A1A; }
+  .wrap { max-width:720px; margin:0 auto; padding:24px 16px 60px; }
+  .brand { display:flex; align-items:center; gap:14px; padding:18px 4px 22px; }
+  .brand img { max-height:52px; max-width:220px; }
+  .brand .bname { font-size:20px; font-weight:800; }
+  .card { background:#fff; border:1px solid #E5E1D8; border-radius:14px; padding:24px; box-shadow:0 2px 14px rgba(0,0,0,.04); }
+  h1 { font-size:19px; margin:0 0 6px; }
+  .lead { color:#666; font-size:14px; margin:0 0 20px; }
+  .rq-section-title { font-size:14px; font-weight:800; color:#1A1A1A; margin:22px 0 10px; padding-bottom:6px; border-bottom:1px solid #E5E1D8; }
+  .field-group { margin-bottom:16px; }
+  .field-label { display:block; font-size:13px; font-weight:700; margin-bottom:5px; }
+  .field-label .required { color:#DC2626; }
+  .field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:8px; padding:10px 12px; font-size:14px; outline:none; }
+  .field-input:focus { border-color:#1A1A1A; background:#fff; }
+  .btn { display:inline-flex; align-items:center; gap:8px; background:#1A1A1A; color:#fff; border:none; border-radius:9px; padding:12px 26px; font-size:15px; font-weight:700; cursor:pointer; }
+  .foot { text-align:center; color:#9a958a; font-size:11px; margin-top:26px; line-height:1.6; }
+  .done { text-align:center; padding:24px 8px; }
+  .done .tick { width:56px; height:56px; border-radius:50%; background:#E8F5E9; color:#1B5E20; display:flex; align-items:center; justify-content:center; font-size:30px; margin:0 auto 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    @if(!empty($broker->logo_path))
+      <img src="{{ $broker->logo_path }}" alt="{{ $broker->name }}">
+    @else
+      <span class="bname">{{ $broker->name }}</span>
+    @endif
+  </div>
+
+  <div class="card">
+    @if(!empty($submitted))
+      <div class="done">
+        <div class="tick">&#10003;</div>
+        <h1>Dziękujemy — ankieta została wysłana.</h1>
+        <p class="lead">Twoje odpowiedzi zostały przekazane do przygotowania oferty.</p>
+      </div>
+    @else
+      <h1>{{ $template->name }}</h1>
+      @if($template->description)<p class="lead">{{ $template->description }}</p>@endif
+
+      <form method="POST" action="{{ route('public.survey.submit', $offerRequest->public_token) }}" id="survey-form">
+        @csrf
+        <div id="dynamic-fields"></div>
+        <div style="margin-top:22px;">
+          <button type="submit" class="btn">Wyślij ankietę</button>
+        </div>
+      </form>
+    @endif
+  </div>
+
+  <div class="foot">
+    Formularz przygotowany przez {{ $broker->name }}.
+    {{-- TODO RODO: uzupełnij administratora danych osobowych zgodnie z ustaleniami prawnymi --}}
+  </div>
+</div>
+
+@unless(!empty($submitted))
+<script>
+const TEMPLATE_FIELDS = @json($template->fields);
+
+function renderRequestFields(fields, container) {
+    container.innerHTML = '';
+    const nodes = Array.isArray(fields) ? fields : [];
+    const hasSections = nodes.some(f => f && f.type === 'section');
+
+    if (hasSections) {
+        nodes.forEach(function(sec) {
+            if (!sec || sec.type !== 'section') return;
+            if (sec.title) {
+                const h = document.createElement('div');
+                h.className = 'rq-section-title';
+                h.textContent = sec.title;
+                container.appendChild(h);
+            }
+            (sec.fields || []).forEach(function(f) { renderRespField(container, f); });
+        });
+    } else {
+        nodes.forEach(function(f) { renderRespField(container, f); });
+    }
+}
+
+function renderRespField(parent, field) {
+    const group = document.createElement('div');
+    group.className = 'field-group';
+
+    const label = document.createElement('label');
+    label.className = 'field-label';
+    label.innerHTML = field.label + (field.required ? ' <span class="required">*</span>' : '');
+    group.appendChild(label);
+
+    let input;
+    if (field.type === 'select') {
+        input = document.createElement('select');
+        input.className = 'field-input';
+        let html = '<option value="">— wybierz —</option>';
+        (field.options || []).forEach(function(o) {
+            const v = String(o).replace(/"/g, '&quot;');
+            html += '<option value="' + v + '">' + v + '</option>';
+        });
+        input.innerHTML = html;
+    } else if (field.type === 'textarea') {
+        input = document.createElement('textarea');
+        input.rows = 3;
+        input.style.resize = 'vertical';
+        input.className = 'field-input';
+    } else {
+        input = document.createElement('input');
+        input.type = field.type === 'number' ? 'number' : (field.type === 'date' ? 'date' : 'text');
+        input.className = 'field-input';
+    }
+    input.name = 'form_responses[' + field.key + ']';
+    if (field.required) input.required = true;
+    group.appendChild(input);
+    parent.appendChild(group);
+
+    if (field.type === 'select') {
+        const host = document.createElement('div');
+        host.style.cssText = 'margin-left:4px;';
+        parent.appendChild(host);
+
+        const wraps = {};
+        Object.keys(field.branches || {}).forEach(function(opt) {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'display:none;border-left:3px solid #FCD34D;padding-left:12px;margin:4px 0 8px;';
+            (field.branches[opt] || []).forEach(function(cf) { renderRespField(wrap, cf); });
+            setBranchDisabled(wrap, true);
+            host.appendChild(wrap);
+            wraps[opt] = wrap;
+        });
+
+        input.addEventListener('change', function() {
+            Object.keys(wraps).forEach(function(opt) {
+                const show = (opt === input.value);
+                wraps[opt].style.display = show ? 'block' : 'none';
+                setBranchDisabled(wraps[opt], !show);
+            });
+        });
+    }
+}
+
+function setBranchDisabled(wrap, disabled) {
+    wrap.querySelectorAll('input, select, textarea').forEach(function(elm) { elm.disabled = disabled; });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderRequestFields(TEMPLATE_FIELDS, document.getElementById('dynamic-fields'));
+});
+</script>
+@endunless
+</body>
+</html>

@@ -79,6 +79,53 @@
         @endif
     </div>
 
+    {{-- Klient końcowy / link do ankiety --}}
+    <div id="klient-koncowy" style="background:#fff;border:1px solid #E5E1D8;border-radius:12px;padding:18px 20px;margin-bottom:16px;">
+        <div style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+            <i class="ti ti-user-share" style="color:#1A4D3A;"></i> Klient końcowy — ankieta do wypełnienia
+        </div>
+
+        <form method="POST" action="{{ route('offer-requests.save-public', $offerRequest) }}">
+            @csrf
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#555;">Osoba (klient końcowy)</label>
+                    <input type="text" name="end_client_name" value="{{ old('end_client_name', $offerRequest->end_client_name) }}" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#555;">Firma klienta końcowego</label>
+                    <input type="text" name="end_client_company" value="{{ old('end_client_company', $offerRequest->end_client_company) }}" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#555;">E-mail</label>
+                    <input type="email" name="end_client_email" value="{{ old('end_client_email', $offerRequest->end_client_email) }}" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:11px;font-weight:700;color:#555;">Telefon</label>
+                    <input type="text" name="end_client_phone" value="{{ old('end_client_phone', $offerRequest->end_client_phone) }}" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+                </div>
+            </div>
+            <button type="submit" style="margin-top:12px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+                <i class="ti ti-link"></i> Zapisz i wygeneruj link
+            </button>
+        </form>
+
+        @if($offerRequest->publicUrl())
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid #F0EDE6;">
+                <label style="font-size:11px;font-weight:700;color:#555;">Link do wysłania klientowi końcowemu:</label>
+                <div style="display:flex;gap:8px;margin-top:6px;">
+                    <input type="text" id="public-link" readonly value="{{ $offerRequest->publicUrl() }}" style="flex:1;background:#F0F7F3;border:1px solid #94C4B0;border-radius:7px;padding:8px 10px;font-size:13px;color:#1A4D3A;box-sizing:border-box;">
+                    <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('public-link').value); this.textContent='Skopiowano';" style="background:#fff;border:1px solid #D0CCC0;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Kopiuj</button>
+                </div>
+                @if($offerRequest->public_filled_at)
+                    <div style="margin-top:8px;font-size:12px;color:#166534;font-weight:600;"><i class="ti ti-circle-check"></i> Ankieta wypełniona przez klienta końcowego {{ $offerRequest->public_filled_at->format('d.m.Y H:i') }}</div>
+                @else
+                    <div style="margin-top:8px;font-size:12px;color:#888;">Wyślij ten link klientowi końcowemu ze swojej skrzynki. Odpowiedzi pojawią się tu automatycznie.</div>
+                @endif
+            </div>
+        @endif
+    </div>
+
     {{-- Zmiana statusu --}}
     <div style="background:#fff;border:1px solid #E5E1D8;border-radius:12px;padding:22px;">
         <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A4D3A;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
