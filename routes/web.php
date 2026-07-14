@@ -15,6 +15,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
 use App\Http\Controllers\OfferRequestController;
+use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -27,6 +28,10 @@ Route::get('/', function () {
 
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
+
+// Publiczna ankieta dla klienta końcowego (bez logowania, white-label)
+Route::get('/f/{token}',  [PublicSurveyController::class, 'show'])->name('public.survey.show');
+Route::post('/f/{token}', [PublicSurveyController::class, 'submit'])->name('public.survey.submit');
 
 Route::get('/companies', function () {
     return redirect()->route('crm.index');
@@ -104,6 +109,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{offerRequest}/edit',           [OfferRequestController::class, 'edit'])->name('edit');
         Route::put('/{offerRequest}',                [OfferRequestController::class, 'update'])->name('update');
         Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{offerRequest}/public-link',   [OfferRequestController::class, 'savePublic'])->name('save-public');
     });
 
     Route::prefix('offer-forms')->name('offer-forms.')->group(function () {

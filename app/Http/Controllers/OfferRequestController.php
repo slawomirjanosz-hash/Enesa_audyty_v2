@@ -47,9 +47,25 @@ class OfferRequestController extends Controller
             ->with('success', 'Zapytanie zostało utworzone i jest widoczne w karcie firmy.');
     }
 
+    public function savePublic(Request $request, OfferRequest $offerRequest)
+    {
+        $data = $request->validate([
+            'end_client_name'    => ['nullable', 'string', 'max:255'],
+            'end_client_company' => ['nullable', 'string', 'max:255'],
+            'end_client_email'   => ['nullable', 'email', 'max:255'],
+            'end_client_phone'   => ['nullable', 'string', 'max:30'],
+        ]);
+
+        $offerRequest->fill($data);
+        $offerRequest->ensurePublicToken();
+        $offerRequest->save();
+
+        return redirect(route('offer-requests.show', $offerRequest) . '#klient-koncowy')
+            ->with('success', 'Zapisano dane klienta końcowego. Link do ankiety jest gotowy do skopiowania.');
+    }
+
     public function show(OfferRequest $offerRequest)
     {
-        $offerRequest->load(['company', 'offerFormTemplate', 'createdBy']);
         return view('offer-requests.show', compact('offerRequest'));
     }
 
