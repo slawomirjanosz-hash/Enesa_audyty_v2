@@ -46,7 +46,11 @@
 .section-fields { padding:10px 12px 0; }
 
 .field-row { border:1px solid #E5E1D8; border-radius:8px; padding:10px 12px; background:#fff; margin-bottom:10px; }
-.field-row-main { display:grid; grid-template-columns:1fr 150px 100px 32px; gap:8px; align-items:center; }
+.field-row-main { display:grid; grid-template-columns:1fr 140px 92px auto; gap:8px; align-items:center; }
+.field-tools { display:inline-flex; gap:2px; }
+.field-tools button { background:none; border:none; cursor:pointer; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:5px; color:#666; font-size:15px; }
+.field-tools button:hover { background:#F0EDE6; color:#1A4D3A; }
+.field-tools .del:hover { background:#FEE2E2; color:#DC2626; }
 .field-row-options { margin-top:8px; padding:8px 10px; background:#F9F7F4; border-radius:6px; }
 .options-tags { min-height:4px; }
 .option-tag { display:inline-flex; align-items:center; gap:4px; background:#E8F5E9; border:1px solid #A5D6A7; border-radius:20px; padding:2px 8px; font-size:12px; color:#1B5E20; margin:2px; }
@@ -254,7 +258,7 @@ function addSection(data) {
     return sec;
 }
 
-function renderField(listEl, data) {
+function renderField(listEl, data, beforeNode) {
     const d = data || { label: '', type: 'text', required: false, options: [], branches: {} };
     const row = el('div', 'field-row');
     row.dataset.key = d.key || newKey();
@@ -269,13 +273,43 @@ function renderField(listEl, data) {
     const reqLabel = el('label', null,
         '<input type="checkbox" class="field-required-check" ' + (d.required ? 'checked' : '') + ' style="accent-color:#1A4D3A;"> Wymagane');
     reqLabel.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;';
-    const delBtn = el('button', 'btn-del-field', '<i class="ti ti-trash"></i>');
+    const tools = el('div', 'field-tools');
+
+    const insBtn = el('button', null, '<i class="ti ti-plus"></i>');
+    insBtn.type = 'button';
+    insBtn.title = 'Wstaw pytanie powyżej';
+    insBtn.addEventListener('click', () => renderField(row.parentNode, null, row));
+
+    const upBtn = el('button', null, '<i class="ti ti-chevron-up"></i>');
+    upBtn.type = 'button';
+    upBtn.title = 'Przenieś w górę';
+    upBtn.addEventListener('click', () => {
+        const p = row.previousElementSibling;
+        if (p && p.classList.contains('field-row')) row.parentNode.insertBefore(row, p);
+    });
+
+    const downBtn = el('button', null, '<i class="ti ti-chevron-down"></i>');
+    downBtn.type = 'button';
+    downBtn.title = 'Przenieś w dół';
+    downBtn.addEventListener('click', () => {
+        const n = row.nextElementSibling;
+        if (n && n.classList.contains('field-row')) row.parentNode.insertBefore(n, row);
+    });
+
+    const delBtn = el('button', 'del', '<i class="ti ti-trash"></i>');
     delBtn.type = 'button';
+    delBtn.title = 'Usuń';
     delBtn.addEventListener('click', () => row.remove());
+
+    tools.appendChild(insBtn);
+    tools.appendChild(upBtn);
+    tools.appendChild(downBtn);
+    tools.appendChild(delBtn);
+
     main.appendChild(labelInput);
     main.appendChild(typeSel);
     main.appendChild(reqLabel);
-    main.appendChild(delBtn);
+    main.appendChild(tools);
 
     const optWrap = el('div', 'field-row-options');
     optWrap.style.display = d.type === 'select' ? 'block' : 'none';
@@ -347,7 +381,11 @@ function renderField(listEl, data) {
     row.appendChild(main);
     row.appendChild(optWrap);
     row.appendChild(branchWrap);
-    listEl.appendChild(row);
+    if (beforeNode) {
+        listEl.insertBefore(row, beforeNode);
+    } else {
+        listEl.appendChild(row);
+    }
 
     if (d.type === 'select') {
         (d.options || []).forEach(o => addOptionTag(o));
