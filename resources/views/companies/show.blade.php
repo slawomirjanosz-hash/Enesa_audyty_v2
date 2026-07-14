@@ -1034,10 +1034,26 @@
                                     <i class="ti ti-file-plus" style="font-size:12px;"></i> Nowa oferta
                                 </a>
                                 @endif
-                                <button onclick="markRequestDone({{ $req->id }}, this)"
-                                        style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;color:#4B5563;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;">
-                                    <i class="ti ti-check" style="font-size:12px;"></i> Zamknij
-                                </button>
+                                @if($req->status !== 'zamknięte')
+                                <form method="POST" action="{{ route('offer-requests.update-status', $req) }}" style="display:inline;" onsubmit="return confirm('Zamknąć to zapytanie?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="zamknięte">
+                                    <button type="submit" title="Zamknij zapytanie"
+                                            style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;color:#4B5563;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;">
+                                        <i class="ti ti-check" style="font-size:12px;"></i> Zamknij
+                                    </button>
+                                </form>
+                                @endif
+
+                                <form method="POST" action="{{ route('offer-requests.destroy', $req) }}" style="display:inline;" onsubmit="return confirm('Trwale usunąć to zapytanie? Tej operacji nie można cofnąć.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" title="Usuń zapytanie"
+                                            style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#FEE2E2;color:#C62828;border:none;border-radius:6px;cursor:pointer;">
+                                        <i class="ti ti-trash" style="font-size:13px;"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
