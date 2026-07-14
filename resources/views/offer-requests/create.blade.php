@@ -73,6 +73,18 @@
 
     <div class="form-card">
         <div class="form-card-header">
+            <i class="ti ti-tag"></i>
+            <span class="form-card-title">Nazwa zapytania</span>
+        </div>
+        <div class="form-card-body">
+            <input type="text" name="title" value="{{ old('title') }}" class="field-input"
+                   placeholder="np. Audyt energetyczny — hala produkcyjna, Gliwice">
+            <p class="hint">Krótka nazwa, po której rozpoznasz to zapytanie na liście.</p>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <div class="form-card-header">
             <i class="ti ti-clipboard-list"></i>
             <span class="form-card-title">Formularz zapytania (opcjonalnie)</span>
         </div>

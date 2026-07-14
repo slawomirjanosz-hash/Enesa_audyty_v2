@@ -22,6 +22,7 @@ class OfferRequestController extends Controller
     {
         $data = $request->validate([
             'company_id'              => ['required', 'exists:companies,id'],
+            'title'                   => ['nullable', 'string', 'max:255'],
             'offer_form_template_id'  => ['nullable', 'exists:offer_form_templates,id'],
             'form_responses'          => ['nullable', 'array'],
             'tresc'                   => ['nullable', 'string', 'max:65000'],
@@ -35,6 +36,7 @@ class OfferRequestController extends Controller
 
         $offerRequest = OfferRequest::create([
             'company_id'             => $data['company_id'],
+            'title'                  => $data['title'] ?? null,
             'created_by_id'          => auth()->id(),
             'offer_form_template_id' => $data['offer_form_template_id'] ?? null,
             'form_responses'         => $data['form_responses'] ?? [],

@@ -949,7 +949,12 @@
                     @endphp
                     <tr>
                         <td style="color:#888;font-size:12px;">{{ $req->id }}</td>
-                        <td style="font-weight:600;">{{ $req->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}</td>
+                        <td style="font-weight:600;">
+                            {{ $req->title ?: ($req->offerFormTemplate?->name ?? 'Zapytanie ogólne') }}
+                            @if($req->title && $req->offerFormTemplate?->name)
+                                <div style="font-weight:400;font-size:11px;color:#9a958a;">{{ $req->offerFormTemplate->name }}</div>
+                            @endif
+                        </td>
                         <td>
                             @if(!empty($responses) && !empty($fields))
                                 @foreach($fields as $field)
