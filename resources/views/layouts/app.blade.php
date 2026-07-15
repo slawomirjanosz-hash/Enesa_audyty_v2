@@ -278,6 +278,50 @@
         }
     </style>
 
+    <style>
+    /* Globalne dymki: dodaj data-tooltip="..." do dowolnego elementu */
+    [data-tooltip] { position: relative; }
+    [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #1A4D3A;
+    color: #F5F0E8;
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    padding: 6px 10px;
+    border-radius: 7px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .12s ease, transform .12s ease;
+    z-index: 9999;
+    }
+    [data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 3px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    border: 5px solid transparent;
+    border-top-color: #1A4D3A;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .12s ease, transform .12s ease;
+    z-index: 9999;
+    }
+    [data-tooltip]:hover::after,
+    [data-tooltip]:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    }
+    </style>
+
     @stack('styles')
 </head>
 <body>

@@ -1012,11 +1012,11 @@
                         <td style="color:#7a8a80;font-size:12px;">{{ $req->created_at->format('d.m.Y H:i') }}</td>
                         <td style="text-align:right;">
                             <div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;">
-                                <a href="{{ route('offer-requests.show', $req) }}" title="Podgląd zapytania"
+                                <a href="{{ route('offer-requests.show', $req) }}" data-tooltip="Podgląd i link do klienta"
                                    style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:#1A4D3A;border-radius:6px;text-decoration:none;">
                                     <i class="ti ti-eye" style="font-size:13px;"></i>
                                 </a>
-                                <a href="{{ route('offer-requests.edit', $req) }}" title="Edytuj zapytanie"
+                                <a href="{{ route('offer-requests.edit', $req) }}" data-tooltip="Uzupełnij ankietę"
                                    style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#EFF6FF;color:#1D4ED8;border-radius:6px;text-decoration:none;">
                                     <i class="ti ti-pencil" style="font-size:13px;"></i>
                                 </a>
@@ -1037,7 +1037,7 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="zamknięte">
-                                    <button type="submit" title="Zamknij zapytanie"
+                                    <button type="submit" data-tooltip="Zamknij zapytanie"
                                             style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;color:#4B5563;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;">
                                         <i class="ti ti-check" style="font-size:12px;"></i> Zamknij
                                     </button>
@@ -1047,7 +1047,7 @@
                                 <form method="POST" action="{{ route('offer-requests.destroy', $req) }}" style="display:inline;" onsubmit="return confirm('Trwale usunąć to zapytanie? Tej operacji nie można cofnąć.')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" title="Usuń zapytanie"
+                                    <button type="submit" data-tooltip="Usuń na stałe"
                                             style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#FEE2E2;color:#C62828;border:none;border-radius:6px;cursor:pointer;">
                                         <i class="ti ti-trash" style="font-size:13px;"></i>
                                     </button>
