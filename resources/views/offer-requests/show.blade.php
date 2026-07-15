@@ -106,7 +106,11 @@
                 </div>
             </div>
             <button type="submit" style="margin-top:12px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
-                <i class="ti ti-link"></i> Zapisz i wygeneruj link
+                @if($offerRequest->publicUrl())
+                    <i class="ti ti-device-floppy"></i> Zapisz dane klienta
+                @else
+                    <i class="ti ti-link"></i> Zapisz i wygeneruj link
+                @endif
             </button>
         </form>
 
