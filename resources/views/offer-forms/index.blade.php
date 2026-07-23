@@ -213,6 +213,7 @@ const FIELD_TYPES = [
     { value: 'number',   label: 'Liczba' },
     { value: 'date',     label: 'Data' },
     { value: 'select',   label: 'Lista wyboru' },
+    { value: 'address',  label: 'Adres (z podpowiedziami)' },
 ];
 
 function esc(s) {

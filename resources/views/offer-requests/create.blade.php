@@ -165,6 +165,29 @@ function renderRespField(parent, field) {
     label.innerHTML = field.label + (field.required ? ' <span class="required">*</span>' : '');
     group.appendChild(label);
 
+    if (field.type === 'address') {
+        const av = {};
+        const grid = document.createElement('div');
+        grid.style.cssText = 'display:grid;grid-template-columns:1fr 2fr;gap:8px;';
+        [['zip','Kod pocztowy'],['city','Miejscowość'],['street','Ulica'],['no','Nr']].forEach(function(p) {
+            const w = document.createElement('div');
+            const l = document.createElement('div');
+            l.textContent = p[1];
+            l.style.cssText = 'font-size:11px;font-weight:700;color:#777;margin-bottom:3px;';
+            const i = document.createElement('input');
+            i.type = 'text';
+            i.className = 'field-input';
+            i.name = 'form_responses[' + field.key + '][' + p[0] + ']';
+            i.value = av[p[0]] || '';
+            w.appendChild(l);
+            w.appendChild(i);
+            grid.appendChild(w);
+        });
+        group.appendChild(grid);
+        parent.appendChild(group);
+        return;
+    }
+
     let input;
     if (field.type === 'select') {
         input = document.createElement('select');

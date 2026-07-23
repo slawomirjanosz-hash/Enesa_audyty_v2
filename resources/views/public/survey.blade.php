@@ -29,6 +29,7 @@
   .done { text-align:center; padding:24px 8px; }
   .done .tick { width:56px; height:56px; border-radius:50%; background:#E8F5E9; color:#1B5E20; display:flex; align-items:center; justify-content:center; font-size:30px; margin:0 auto 14px; }
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places"></script>
 </head>
 <body>
 <div class="wrap">
@@ -120,6 +121,11 @@ function renderRespField(parent, field) {
 
     const saved = RESPONSES[field.key];
 
+    if (field.type === 'address') {
+        renderAddressField(parent, group, field, saved);
+        return;
+    }
+
     let input;
     if (field.type === 'select') {
         input = document.createElement('select');
@@ -177,6 +183,78 @@ function renderRespField(parent, field) {
             input.dispatchEvent(new Event('change'));
         }
     }
+}
+
+function renderAddressField(parent, group, field, saved) {
+    const v = (saved && typeof saved === 'object') ? saved : {};
+
+    const box = document.createElement('div');
+    box.style.cssText = 'border:1px solid #E5E1D8;border-radius:10px;padding:12px;background:#FCFBF8;';
+
+    const search = document.createElement('input');
+    search.type = 'text';
+    search.className = 'field-input';
+    search.placeholder = 'Zacznij pisać adres, np. Zwycięstwa 1 Gliwice...';
+    search.autocomplete = 'off';
+    search.style.marginBottom = '10px';
+    box.appendChild(search);
+
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:1fr 2fr;gap:8px;';
+
+    function part(name, placeholder, value) {
+        const wrap = document.createElement('div');
+        const lab = document.createElement('div');
+        lab.textContent = placeholder;
+        lab.style.cssText = 'font-size:11px;font-weight:700;color:#777;margin-bottom:3px;';
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'field-input';
+        inp.name = 'form_responses[' + field.key + '][' + name + ']';
+        inp.value = value || '';
+        if (field.required && (name === 'city' || name === 'street')) inp.required = true;
+        wrap.appendChild(lab);
+        wrap.appendChild(inp);
+        grid.appendChild(wrap);
+        return inp;
+    }
+
+    const zipInp    = part('zip',    'Kod pocztowy', v.zip);
+    const cityInp   = part('city',   'Miejscowość',  v.city);
+    const streetInp = part('street', 'Ulica',        v.street);
+    const noInp     = part('no',     'Nr',           v.no);
+
+    box.appendChild(grid);
+    group.appendChild(box);
+    parent.appendChild(group);
+
+    if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+
+    const ac = new google.maps.places.Autocomplete(search, {
+        componentRestrictions: { country: 'pl' },
+        fields: ['address_components', 'formatted_address'],
+        types: ['geocode']
+    });
+
+    ac.addListener('place_changed', function() {
+        const place = ac.getPlace();
+        if (!place || !place.address_components) return;
+
+        const get = function(type) {
+            const c = place.address_components.find(function(x) { return x.types.indexOf(type) !== -1; });
+            return c ? c.long_name : '';
+        };
+
+        zipInp.value    = get('postal_code');
+        cityInp.value   = get('locality') || get('postal_town') || get('administrative_area_level_3');
+        streetInp.value = get('route');
+        noInp.value     = get('street_number');
+        search.value    = place.formatted_address || search.value;
+    });
+
+    search.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') e.preventDefault();
+    });
 }
 
 function setBranchDisabled(wrap, disabled) {
