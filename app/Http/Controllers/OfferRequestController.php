@@ -71,6 +71,34 @@ class OfferRequestController extends Controller
         return view('offer-requests.show', compact('offerRequest'));
     }
 
+    public function pdf(OfferRequest $offerRequest)
+    {
+        $template = $offerRequest->offerFormTemplate;
+        abort_if(!$template, 404, 'Do tego zapytania nie przypisano formularza.');
+
+        $responses = $offerRequest->form_responses ?? [];
+        $broker = $offerRequest->company;
+
+        $html = view('public.survey-pdf', compact('template', 'broker', 'offerRequest', 'responses'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'          => 'utf-8',
+            'format'        => 'A4',
+            'margin_top'    => 14,
+            'margin_bottom' => 16,
+            'margin_left'   => 15,
+            'margin_right'  => 15,
+        ]);
+        $mpdf->WriteHTML($html);
+
+        $filename = 'ankieta-' . $offerRequest->id . '.pdf';
+
+        return response($mpdf->Output($filename, 'S'), 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
     public function destroy(OfferRequest $offerRequest)
     {
         $companyId = $offerRequest->company_id;

@@ -9,13 +9,15 @@ class PublicSurveyController extends Controller
 {
     public function show(string $token)
     {
-        $offerRequest = OfferRequest::where('public_token', $token)->firstOrFail();
-        $template = $offerRequest->offerFormTemplate;
-        abort_if(!$template, 404, 'Do tego zapytania nie przypisano formularza.');
+        $offerRequest = OfferRequest::where('public_token', $token)->first();
+
+        if (!$offerRequest || !$offerRequest->offerFormTemplate) {
+            return response()->view('public.survey-expired', [], 410);
+        }
 
         return view('public.survey', [
             'offerRequest' => $offerRequest,
-            'template'     => $template,
+            'template'     => $offerRequest->offerFormTemplate,
             'broker'       => $offerRequest->company,
             'responses'    => $offerRequest->form_responses ?? [],
         ]);
@@ -23,7 +25,11 @@ class PublicSurveyController extends Controller
 
     public function submit(Request $request, string $token)
     {
-        $offerRequest = OfferRequest::where('public_token', $token)->firstOrFail();
+        $offerRequest = OfferRequest::where('public_token', $token)->first();
+
+        if (!$offerRequest) {
+            return response()->view('public.survey-expired', [], 410);
+        }
 
         $data = $request->validate([
             'form_responses' => ['nullable', 'array'],
@@ -60,9 +66,11 @@ class PublicSurveyController extends Controller
 
     public function pdf(Request $request, string $token)
     {
-        $offerRequest = OfferRequest::where('public_token', $token)->firstOrFail();
-        $template = $offerRequest->offerFormTemplate;
-        abort_if(!$template, 404);
+        $offerRequest = OfferRequest::where('public_token', $token)->first();
+
+        if (!$offerRequest || !$offerRequest->offerFormTemplate) {
+            return response()->view('public.survey-expired', [], 410);
+        }
 
         $responses = (array) $request->input('form_responses', $offerRequest->form_responses ?? []);
         $broker = $offerRequest->company;

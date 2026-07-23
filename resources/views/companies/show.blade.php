@@ -955,20 +955,21 @@
                                 <div style="font-weight:400;font-size:11px;color:#9a958a;">{{ $req->offerFormTemplate->name }}</div>
                             @endif
                         </td>
-                        <td>
-                            @if(!empty($responses) && !empty($fields))
-                                @foreach($fields as $field)
-                                    @continue(!isset($field['key']))
-                                    @php $val = $responses[$field['key']] ?? null; @endphp
-                                    @if($val)
-                                        <div style="font-size:11px;margin-bottom:2px;">
-                                            <span style="color:#888;">{{ $field['label'] ?? $field['key'] }}:</span>
-                                            <span style="color:#1A1A1A;font-weight:600;">{{ $val }}</span>
-                                        </div>
-                                    @endif
-                                @endforeach
+                        <td style="min-width:170px;">
+                            @if($req->offerFormTemplate)
+                                @php
+                                    $prog = $req->offerFormTemplate->progress($responses);
+                                    $barColor = $prog['percent'] >= 100 ? '#1A4D3A' : ($prog['percent'] > 0 ? '#F59E0B' : '#D1D5DB');
+                                @endphp
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div style="flex:1;height:8px;background:#EFEDE7;border-radius:5px;overflow:hidden;min-width:70px;">
+                                        <div style="width:{{ $prog['percent'] }}%;height:100%;background:{{ $barColor }};border-radius:5px;transition:width .3s;"></div>
+                                    </div>
+                                    <span style="font-size:12px;font-weight:700;color:#1A1A1A;white-space:nowrap;">{{ $prog['percent'] }}%</span>
+                                </div>
+                                <div style="font-size:11px;color:#9a958a;margin-top:3px;">{{ $prog['answered'] }}/{{ $prog['total'] }} odpowiedzi</div>
                             @else
-                                <span style="color:#bbb;font-size:12px;">Brak odpowiedzi</span>
+                                <span style="color:#bbb;font-size:12px;">Brak formularza</span>
                             @endif
                         </td>
                         <td>

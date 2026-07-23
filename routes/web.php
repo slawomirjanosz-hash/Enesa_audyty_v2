@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
         Route::delete('/{offerRequest}',             [OfferRequestController::class, 'destroy'])->name('destroy');
         Route::post('/{offerRequest}/public-link',   [OfferRequestController::class, 'savePublic'])->name('save-public');
+        Route::get('/{offerRequest}/pdf',            [OfferRequestController::class, 'pdf'])->name('pdf');
     });
 
     Route::prefix('offer-forms')->name('offer-forms.')->group(function () {

@@ -35,11 +35,17 @@
             <span style="background:{{ $sc['bg'] }};color:{{ $sc['text'] }};border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;">
                 {{ ucfirst(str_replace('_', ' ', $offerRequest->status)) }}
             </span>
-            <div style="margin-top:8px;">
-                <a href="{{ route('offer-requests.edit', $offerRequest) }}"
+            <div style="margin-top:8px;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;">
+                <a href="{{ route('offer-requests.edit', $offerRequest) }}" data-tooltip="Uzupełnij ankietę"
                    style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
                     <i class="ti ti-pencil"></i> Edytuj zapytanie
                 </a>
+                @if($offerRequest->offerFormTemplate)
+                <a href="{{ route('offer-requests.pdf', $offerRequest) }}" target="_blank" data-tooltip="Pobierz ankietę w PDF"
+                   style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+                    <i class="ti ti-file-type-pdf"></i> PDF
+                </a>
+                @endif
             </div>
         </div>
     </div>
@@ -57,25 +63,59 @@
         </div>
 
         @php
-            $fields = $offerRequest->offerFormTemplate?->flatFields() ?? [];
+            $sections = $offerRequest->offerFormTemplate?->sectionedFields() ?? [];
             $responses = $offerRequest->form_responses ?? [];
-            $fieldMap = collect($fields)->keyBy('key');
+            $usedKeys = [];
         @endphp
 
         @if(empty($responses))
             <p style="color:#888;font-size:13px;">Brak odpowiedzi.</p>
         @else
-            @foreach($responses as $key => $value)
-                @php $field = $fieldMap->get($key); @endphp
-                <div style="margin-bottom:14px;">
-                    <div style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        {{ $field['label'] ?? $key }}
-                    </div>
-                    <div style="background:#FAFAF6;border:1px solid #E5E1D8;border-radius:7px;padding:10px 12px;font-size:13px;color:#1A1A1A;word-break:break-word;">
-                        {{ $value ?: '—' }}
-                    </div>
-                </div>
+            @foreach($sections as $section)
+                @php
+                    $answered = collect($section['fields'])->filter(function ($f) use ($responses) {
+                        return isset($f['key'])
+                            && array_key_exists($f['key'], $responses)
+                            && $responses[$f['key']] !== null
+                            && $responses[$f['key']] !== '';
+                    });
+                @endphp
+
+                @if($answered->isNotEmpty())
+                    @if(!empty($section['title']))
+                        <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;color:#1A4D3A;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;">
+                            {{ $section['title'] }}
+                        </div>
+                    @endif
+
+                    @foreach($answered as $f)
+                        @php $usedKeys[] = $f['key']; @endphp
+                        <div style="margin-bottom:14px;">
+                            <div style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
+                                {{ $f['label'] ?: $f['key'] }}
+                            </div>
+                            <div style="background:#FAFAF6;border:1px solid #E5E1D8;border-radius:7px;padding:10px 12px;font-size:13px;color:#1A1A1A;word-break:break-word;">
+                                {{ is_array($responses[$f['key']]) ? implode(', ', $responses[$f['key']]) : $responses[$f['key']] }}
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             @endforeach
+
+            @php $orphans = collect($responses)->except($usedKeys)->filter(fn ($v) => $v !== null && $v !== ''); @endphp
+            @if($orphans->isNotEmpty())
+                <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;color:#92400E;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;">
+                    Pozostałe odpowiedzi
+                </div>
+                @foreach($orphans as $key => $value)
+                    <div style="margin-bottom:14px;">
+                        <div style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">{{ $key }}</div>
+                        <div style="background:#FAFAF6;border:1px solid #E5E1D8;border-radius:7px;padding:10px 12px;font-size:13px;color:#1A1A1A;word-break:break-word;">
+                            {{ is_array($value) ? implode(', ', $value) : $value }}
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         @endif
     </div>
 

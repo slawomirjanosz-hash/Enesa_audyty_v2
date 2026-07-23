@@ -65,6 +65,59 @@ class OfferFormTemplate extends Model
         return $out;
     }
 
+    /**
+     * Postęp wypełnienia: ['answered' => int, 'total' => int, 'percent' => int].
+     * Pola z gałęzi liczone tylko wtedy, gdy wybrano prowadzącą do nich odpowiedź.
+     */
+    public function progress(array $responses): array
+    {
+        $counts = ['answered' => 0, 'total' => 0];
+        $this->countNodes($this->fields ?? [], $responses, $counts);
+
+        $counts['percent'] = $counts['total'] > 0
+            ? (int) round($counts['answered'] / $counts['total'] * 100)
+            : 0;
+
+        return $counts;
+    }
+
+    private function countNodes(array $nodes, array $responses, array &$counts): void
+    {
+        foreach ($nodes as $node) {
+            if (!is_array($node)) {
+                continue;
+            }
+
+            if (($node['type'] ?? null) === 'section') {
+                $this->countNodes($node['fields'] ?? [], $responses, $counts);
+                continue;
+            }
+
+            $key = $node['key'] ?? null;
+            if (!$key) {
+                continue;
+            }
+
+            $counts['total']++;
+
+            $value = $responses[$key] ?? null;
+            $isAnswered = $value !== null && $value !== '' && $value !== [];
+
+            if ($isAnswered) {
+                $counts['answered']++;
+            }
+
+            if (($node['type'] ?? null) === 'select'
+                && $isAnswered
+                && is_scalar($value)
+                && !empty($node['branches'][$value])
+                && is_array($node['branches'][$value])
+            ) {
+                $this->countNodes($node['branches'][$value], $responses, $counts);
+            }
+        }
+    }
+
     private function flattenNodes(array $nodes): array
     {
         $out = [];
