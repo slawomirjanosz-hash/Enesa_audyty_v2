@@ -30,6 +30,8 @@
   .done .tick { width:56px; height:56px; border-radius:50%; background:#E8F5E9; color:#1B5E20; display:flex; align-items:center; justify-content:center; font-size:30px; margin:0 auto 14px; }
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places"></script>
+<link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
 </head>
 <body>
 <div class="wrap">

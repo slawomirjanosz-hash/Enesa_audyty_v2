@@ -77,6 +77,8 @@
         .modal-login-link a { color: #1A4D3A; font-weight: 700; text-decoration: none; }
         .modal-login-link a:hover { text-decoration: underline; }
     </style>
+    <link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
 </head>
 <body>
 

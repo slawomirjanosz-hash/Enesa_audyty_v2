@@ -218,6 +218,8 @@
     </style>
 
     @stack('styles')
+    <link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
 </head>
 <body>
 

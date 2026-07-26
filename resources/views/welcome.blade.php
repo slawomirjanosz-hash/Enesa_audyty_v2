@@ -150,6 +150,8 @@
         .flash-banner-close { background: none; border: none; font-size: 20px; color: #2E7D32; cursor: pointer; line-height: 1; padding: 0 4px; }
         .flash-banner-close:hover { color: #1B5E20; }
     </style>
+    <link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
 </head>
 <body>
 
