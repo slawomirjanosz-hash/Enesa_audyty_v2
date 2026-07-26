@@ -66,6 +66,25 @@ class OfferFormTemplate extends Model
     }
 
     /**
+     * Zamienia wartość odpowiedzi na tekst (adres zapisany jest jako tablica zip/city/street/no).
+     */
+    public static function displayValue($value): string
+    {
+        if (!is_array($value)) {
+            return (string) $value;
+        }
+
+        if (isset($value['city']) || isset($value['street']) || isset($value['zip'])) {
+            $line1 = trim(($value['zip'] ?? '') . ' ' . ($value['city'] ?? ''));
+            $line2 = trim(($value['street'] ?? '') . ' ' . ($value['no'] ?? ''));
+
+            return trim(implode(', ', array_filter([$line1, $line2])));
+        }
+
+        return implode(', ', array_filter($value, fn ($v) => $v !== null && $v !== ''));
+    }
+
+    /**
      * Postęp wypełnienia: ['answered' => int, 'total' => int, 'percent' => int].
      * Pola z gałęzi liczone tylko wtedy, gdy wybrano prowadzącą do nich odpowiedź.
      */

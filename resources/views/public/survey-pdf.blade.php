@@ -29,7 +29,7 @@
       @php $hasAny = true; @endphp
       <div class="qa">
         <div class="q">{{ $f['label'] }}</div>
-        <div class="a">{{ is_array($val) ? implode(', ', $val) : $val }}</div>
+        <div class="a">{{ \App\Models\OfferFormTemplate::displayValue($val) }}</div>
       </div>
     @endif
   @endforeach

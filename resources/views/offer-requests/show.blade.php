@@ -95,7 +95,7 @@
                                 {{ $f['label'] ?: $f['key'] }}
                             </div>
                             <div style="background:#FAFAF6;border:1px solid #E5E1D8;border-radius:7px;padding:10px 12px;font-size:13px;color:#1A1A1A;word-break:break-word;">
-                                {{ is_array($responses[$f['key']]) ? implode(', ', $responses[$f['key']]) : $responses[$f['key']] }}
+                                {{ \App\Models\OfferFormTemplate::displayValue($responses[$f['key']]) }}
                             </div>
                         </div>
                     @endforeach

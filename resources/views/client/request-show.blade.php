@@ -59,7 +59,7 @@
                         {{ $label }}
                     </div>
                     <div style="background: #FAFAF6; border: 1px solid #E5E1D8; border-radius: 8px; padding: 12px; font-size: 13px; color: #1A1A1A; word-break: break-word; line-height: 1.5;">
-                        {{ $value ?: '—' }}
+                        {{ \App\Models\OfferFormTemplate::displayValue($value) ?: '—' }}
                     </div>
                 </div>
             @endforeach
