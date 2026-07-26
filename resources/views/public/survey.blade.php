@@ -29,7 +29,12 @@
   .done { text-align:center; padding:24px 8px; }
   .done .tick { width:56px; height:56px; border-radius:50%; background:#E8F5E9; color:#1B5E20; display:flex; align-items:center; justify-content:center; font-size:30px; margin:0 auto 14px; }
 </style>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&libraries=places"></script>
+<script>
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({    
+    key: "{{ config('services.google.maps_key') }}",
+    v: "weekly"
+  });
+</script>
 <link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
 <link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
 </head>
@@ -187,76 +192,68 @@ function renderRespField(parent, field) {
     }
 }
 
-function renderAddressField(parent, group, field, saved) {
+async function renderAddressField(parent, group, field, saved) {
     const v = (saved && typeof saved === 'object') ? saved : {};
 
     const box = document.createElement('div');
     box.style.cssText = 'border:1px solid #E5E1D8;border-radius:10px;padding:12px;background:#FCFBF8;';
 
-    const search = document.createElement('input');
-    search.type = 'text';
-    search.className = 'field-input';
-    search.placeholder = 'Zacznij pisać adres, np. Zwycięstwa 1 Gliwice...';
-    search.autocomplete = 'off';
-    search.style.marginBottom = '10px';
-    box.appendChild(search);
+    const acHost = document.createElement('div');
+    acHost.style.marginBottom = '10px';
+    box.appendChild(acHost);
 
     const grid = document.createElement('div');
     grid.style.cssText = 'display:grid;grid-template-columns:1fr 2fr;gap:8px;';
 
-    function part(name, placeholder, value) {
+    const inputs = {};
+    [['zip', 'Kod pocztowy'], ['city', 'Miejscowość'], ['street', 'Ulica'], ['no', 'Nr']].forEach(function(p) {
         const wrap = document.createElement('div');
         const lab = document.createElement('div');
-        lab.textContent = placeholder;
+        lab.textContent = p[1];
         lab.style.cssText = 'font-size:11px;font-weight:700;color:#777;margin-bottom:3px;';
         const inp = document.createElement('input');
         inp.type = 'text';
         inp.className = 'field-input';
-        inp.name = 'form_responses[' + field.key + '][' + name + ']';
-        inp.value = value || '';
-        if (field.required && (name === 'city' || name === 'street')) inp.required = true;
+        inp.name = 'form_responses[' + field.key + '][' + p[0] + ']';
+        inp.value = v[p[0]] || '';
+        if (field.required && (p[0] === 'city' || p[0] === 'street')) inp.required = true;
         wrap.appendChild(lab);
         wrap.appendChild(inp);
         grid.appendChild(wrap);
-        return inp;
-    }
-
-    const zipInp    = part('zip',    'Kod pocztowy', v.zip);
-    const cityInp   = part('city',   'Miejscowość',  v.city);
-    const streetInp = part('street', 'Ulica',        v.street);
-    const noInp     = part('no',     'Nr',           v.no);
+        inputs[p[0]] = inp;
+    });
 
     box.appendChild(grid);
     group.appendChild(box);
     parent.appendChild(group);
 
-    if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+    if (typeof google === 'undefined' || !google.maps || !google.maps.importLibrary) return;
 
-    const ac = new google.maps.places.Autocomplete(search, {
-        componentRestrictions: { country: 'pl' },
-        fields: ['address_components', 'formatted_address'],
-        types: ['geocode']
-    });
+    try {
+        const { PlaceAutocompleteElement } = await google.maps.importLibrary('places');
 
-    ac.addListener('place_changed', function() {
-        const place = ac.getPlace();
-        if (!place || !place.address_components) return;
+        const pac = new PlaceAutocompleteElement({ includedRegionCodes: ['pl'] });
+        pac.style.width = '100%';
+        acHost.appendChild(pac);
 
-        const get = function(type) {
-            const c = place.address_components.find(function(x) { return x.types.indexOf(type) !== -1; });
-            return c ? c.long_name : '';
-        };
+        pac.addEventListener('gmp-select', async function(event) {
+            const place = event.placePrediction.toPlace();
+            await place.fetchFields({ fields: ['addressComponents'] });
 
-        zipInp.value    = get('postal_code');
-        cityInp.value   = get('locality') || get('postal_town') || get('administrative_area_level_3');
-        streetInp.value = get('route');
-        noInp.value     = get('street_number');
-        search.value    = place.formatted_address || search.value;
-    });
+            const comps = place.addressComponents || [];
+            const get = function(type) {
+                const c = comps.find(function(x) { return (x.types || []).indexOf(type) !== -1; });
+                return c ? (c.longText || c.shortText || '') : '';
+            };
 
-    search.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') e.preventDefault();
-    });
+            inputs.zip.value    = get('postal_code');
+            inputs.city.value   = get('locality') || get('postal_town') || get('administrative_area_level_3');
+            inputs.street.value = get('route');
+            inputs.no.value     = get('street_number');
+        });
+    } catch (e) {
+        // Jeśli biblioteka niedostępna — zostają cztery pola do ręcznego wpisania.
+    }
 }
 
 function setBranchDisabled(wrap, disabled) {
