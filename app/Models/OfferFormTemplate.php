@@ -120,7 +120,9 @@ class OfferFormTemplate extends Model
             $counts['total']++;
 
             $value = $responses[$key] ?? null;
-            $isAnswered = $value !== null && $value !== '' && $value !== [];
+            $isAnswered = is_array($value)
+                ? collect($value)->contains(fn ($v) => $v !== null && $v !== '')
+                : ($value !== null && $value !== '');
 
             if ($isAnswered) {
                 $counts['answered']++;
