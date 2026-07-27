@@ -155,7 +155,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::patch('/{offer}/unit-prices',             [OfferController::class, 'updateUnitPrices'])->name('unit-prices');
     });
 
-    Route::prefix('settings')->name('settings.')->group(function () {
+    Route::prefix('settings')->name('settings.')->middleware('full.staff')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
         Route::resource('users', Settings\UserController::class)->names('users')->except('destroy');
         Route::delete('users/{user}', [Settings\UserController::class, 'destroy'])
@@ -176,8 +176,14 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
             ->middleware('auth')
             ->name('users.assign-to-company')
             ->withTrashed();
-        Route::put('users/{user}/auditor-access', [Settings\UserController::class, 'updateAuditorAccess'])
+        Route::get('users/{user}/auditor-access', [Settings\UserController::class, 'showAuditorAccess'])
             ->name('users.auditor-access');
+        Route::post('users/{user}/auditor-access', [Settings\UserController::class, 'storeAuditorAccess'])
+            ->name('users.auditor-access.store');
+        Route::patch('users/{user}/auditor-access/{access}', [Settings\UserController::class, 'updateAuditorAccess'])
+            ->name('users.auditor-access.update');
+        Route::delete('users/{user}/auditor-access/{access}', [Settings\UserController::class, 'destroyAuditorAccess'])
+            ->name('users.auditor-access.destroy');
         Route::post('users/{user}/auditor-documents', [Settings\UserController::class, 'assignAuditorDocument'])
             ->name('users.auditor-documents');
         Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');

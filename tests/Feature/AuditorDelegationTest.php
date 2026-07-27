@@ -197,3 +197,90 @@ test('admin retains full document access and client user remains blocked from in
     $this->actingAs($admin)->get(route('documents.download', $document))->assertOk();
     $this->actingAs($client)->get('/documents')->assertForbidden();
 });
+
+test('admin can open an auditor access page while an auditor receives forbidden', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+
+    $this->actingAs($admin)->get(route('settings.users.auditor-access', $auditor))->assertOk();
+    $this->actingAs($auditor)->get(route('settings.users.auditor-access', $auditor))->assertForbidden();
+});
+
+test('admin can add two different company accesses for an auditor', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+    $firstCompany = Company::create(['name' => 'Pierwsza firma']);
+    $secondCompany = Company::create(['name' => 'Druga firma']);
+
+    $this->actingAs($admin)->post(route('settings.users.auditor-access.store', $auditor), [
+        'company_id' => $firstCompany->id,
+        'can_view_dashboard' => true,
+    ])->assertRedirect();
+    $this->actingAs($admin)->post(route('settings.users.auditor-access.store', $auditor), [
+        'company_id' => $secondCompany->id,
+        'can_view_documents' => true,
+    ])->assertRedirect();
+
+    $this->assertDatabaseHas('auditor_company_accesses', ['auditor_id' => $auditor->id, 'company_id' => $firstCompany->id, 'can_view_dashboard' => true]);
+    $this->assertDatabaseHas('auditor_company_accesses', ['auditor_id' => $auditor->id, 'company_id' => $secondCompany->id, 'can_view_documents' => true]);
+});
+
+test('admin can update access flags and remove an auditor company access', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+    $access = AuditorCompanyAccess::create([
+        'auditor_id' => $auditor->id,
+        'company_id' => Company::create(['name' => 'Firma do edycji'])->id,
+        'can_view_dashboard' => true,
+    ]);
+
+    $this->actingAs($admin)->patch(route('settings.users.auditor-access.update', [$auditor, $access]), [
+        'can_view_offers' => true,
+        'can_view_offer_prices' => true,
+    ])->assertRedirect();
+
+    $this->assertDatabaseHas('auditor_company_accesses', [
+        'id' => $access->id,
+        'can_view_dashboard' => false,
+        'can_view_offers' => true,
+        'can_view_offer_prices' => true,
+    ]);
+
+    $this->actingAs($admin)->delete(route('settings.users.auditor-access.destroy', [$auditor, $access]))->assertRedirect();
+    $this->assertDatabaseMissing('auditor_company_accesses', ['id' => $access->id]);
+});
+
+test('an auditor company access cannot be duplicated', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+    $company = Company::create(['name' => 'Firma bez duplikatu']);
+    AuditorCompanyAccess::create(['auditor_id' => $auditor->id, 'company_id' => $company->id]);
+
+    $this->actingAs($admin)->post(route('settings.users.auditor-access.store', $auditor), [
+        'company_id' => $company->id,
+        'can_view_documents' => true,
+    ])->assertRedirect();
+
+    $this->assertSame(1, AuditorCompanyAccess::where('auditor_id', $auditor->id)->where('company_id', $company->id)->count());
+});
+
+test('auditor is forbidden from all user settings endpoints including direct writes', function () {
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+    $targetUser = User::factory()->create();
+    $targetAuditor = User::factory()->create();
+    $targetAuditor->assignRole('auditor');
+
+    $this->actingAs($auditor)->get(route('settings.users.index'))->assertForbidden();
+    $this->actingAs($auditor)->post(route('settings.users.store'), [])->assertForbidden();
+    $this->actingAs($auditor)->patch(route('settings.users.update', $targetUser), [])->assertForbidden();
+    $this->actingAs($auditor)->post(route('settings.users.auditor-access.store', $targetAuditor), [])->assertForbidden();
+});

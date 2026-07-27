@@ -242,50 +242,6 @@
     </div>
 @endif
 
-@if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) && $auditors->isNotEmpty())
-<div class="card" style="margin-bottom:20px;">
-    <div class="card-header">
-        <div>
-            <div class="card-header-title">Dostęp audytora</div>
-            <div class="card-header-sub">Przydziały są niezależne od kont klientów i nie dają dostępu poza wybraną firmą.</div>
-        </div>
-    </div>
-    <div style="padding:20px;display:grid;gap:20px;">
-        @foreach($auditors as $auditor)
-            <div style="border:1px solid #E5E1D8;border-radius:8px;padding:16px;">
-                <strong>{{ $auditor->name }}</strong><span style="color:#888;font-size:12px;margin-left:8px;">{{ $auditor->email }}</span>
-                <form method="POST" action="{{ route('settings.users.auditor-access', $auditor) }}" style="margin-top:12px;display:grid;gap:10px;">
-                    @csrf
-                    @method('PUT')
-                    <select name="company_id" class="mf-select" required>
-                        <option value="">Wybierz firmę</option>
-                        @foreach($companies as $company)
-                            <option value="{{ $company->id }}">{{ $company->name }}</option>
-                        @endforeach
-                    </select>
-                    <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;">
-                        @foreach(['can_view_dashboard' => 'Dashboard', 'can_view_audits' => 'Audyty', 'can_view_offer_requests' => 'Zapytania', 'can_view_offers' => 'Oferty', 'can_view_offer_prices' => 'Ceny ofert', 'can_view_documents' => 'Dokumenty', 'can_view_chat' => 'Czat'] as $field => $label)
-                            <label><input type="checkbox" name="{{ $field }}" value="1"> {{ $label }}</label>
-                        @endforeach
-                    </div>
-                    <button type="submit" class="btn-primary">Zapisz dostęp firmy</button>
-                </form>
-                <form method="POST" action="{{ route('settings.users.auditor-documents', $auditor) }}" style="margin-top:12px;display:flex;gap:8px;">
-                    @csrf
-                    <select name="document_id" class="mf-select" required>
-                        <option value="">Przydziel pojedynczy dokument</option>
-                        @foreach($documents as $document)
-                            <option value="{{ $document->id }}">{{ $document->company?->name }}: {{ $document->original_filename }}</option>
-                        @endforeach
-                    </select>
-                    <button type="submit" class="btn-primary">Przydziel</button>
-                </form>
-            </div>
-        @endforeach
-    </div>
-</div>
-@endif
-
 @if(request('tab') === 'firmy')
 {{-- ══════ ZAKŁADKA: ZARCHIWIZOWANE FIRMY ══════ --}}
 <div class="card">
@@ -716,6 +672,11 @@
                         </td>
                         <td>
                             <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                @if($role === 'auditor' && $currentUser->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
+                                    <a href="{{ route('settings.users.auditor-access', $user) }}" class="btn-action" title="Uprawnienia" style="width:auto;padding:0 10px;gap:5px;">
+                                        <i class="ti ti-key"></i> Uprawnienia
+                                    </a>
+                                @endif
                                 @if($canDelete)
                                     <button class="btn-action"
                                         title="Edytuj"

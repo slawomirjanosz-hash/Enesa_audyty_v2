@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client.admin'       => \App\Http\Middleware\EnsureClientAdmin::class,
             'client.zone.session' => \App\Http\Middleware\EnsureClientZoneSession::class,
             'staff.role'         => \App\Http\Middleware\EnsureStaffRole::class,
+            'full.staff'         => \App\Http\Middleware\EnsureFullStaffAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
