@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\OfferFormTemplate;
 use App\Models\OfferRequest;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 
 class OfferRequestController extends Controller
 {
     public function create(Request $request)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $companies = Company::active()->orderBy('name')->get();
         $templates = OfferFormTemplate::where('is_active', true)->orderBy('name')->get();
         $preselectedCompanyId = $request->integer('company_id') ?: null;
@@ -20,6 +23,8 @@ class OfferRequestController extends Controller
 
     public function store(Request $request)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $data = $request->validate([
             'company_id'              => ['required', 'exists:companies,id'],
             'title'                   => ['nullable', 'string', 'max:255'],
@@ -51,6 +56,8 @@ class OfferRequestController extends Controller
 
     public function savePublic(Request $request, OfferRequest $offerRequest)
     {
+        $this->authorize('update', $offerRequest);
+
         $data = $request->validate([
             'end_client_name'    => ['nullable', 'string', 'max:255'],
             'end_client_company' => ['nullable', 'string', 'max:255'],
@@ -68,11 +75,15 @@ class OfferRequestController extends Controller
 
     public function show(OfferRequest $offerRequest)
     {
+        $this->authorize('view', $offerRequest);
+
         return view('offer-requests.show', compact('offerRequest'));
     }
 
     public function pdf(OfferRequest $offerRequest)
     {
+        $this->authorize('view', $offerRequest);
+
         $template = $offerRequest->offerFormTemplate;
         abort_if(!$template, 404, 'Do tego zapytania nie przypisano formularza.');
 
@@ -101,6 +112,8 @@ class OfferRequestController extends Controller
 
     public function destroy(OfferRequest $offerRequest)
     {
+        $this->authorize('delete', $offerRequest);
+
         $companyId = $offerRequest->company_id;
         $offerRequest->forceDelete();
 
@@ -110,6 +123,8 @@ class OfferRequestController extends Controller
 
     public function updateStatus(Request $request, OfferRequest $offerRequest)
     {
+        $this->authorize('update', $offerRequest);
+
         $request->validate(['status' => 'required|in:nowe,w_toku,zamknięte']);
         $offerRequest->update(['status' => $request->status]);
         return back()->with('success', 'Status zapytania został zaktualizowany.');
@@ -117,12 +132,16 @@ class OfferRequestController extends Controller
 
     public function edit(OfferRequest $offerRequest)
     {
+        $this->authorize('update', $offerRequest);
+
         $offerRequest->load(['company', 'offerFormTemplate']);
         return view('offer-requests.edit', compact('offerRequest'));
     }
 
     public function update(Request $request, OfferRequest $offerRequest)
     {
+        $this->authorize('update', $offerRequest);
+
         $data = $request->validate([
             'form_responses' => ['nullable', 'array'],
             'tresc'          => ['nullable', 'string', 'max:65000'],

@@ -86,6 +86,11 @@ class Company extends Model
         return $this->hasMany(CrmOpportunity::class);
     }
 
+    public function auditorAccesses(): HasMany
+    {
+        return $this->hasMany(AuditorCompanyAccess::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->whereNull('archived_at');

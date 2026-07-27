@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client.role'        => \App\Http\Middleware\EnsureClientRole::class,
             'client.admin'       => \App\Http\Middleware\EnsureClientAdmin::class,
             'client.zone.session' => \App\Http\Middleware\EnsureClientZoneSession::class,
+            'staff.role'         => \App\Http\Middleware\EnsureStaffRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

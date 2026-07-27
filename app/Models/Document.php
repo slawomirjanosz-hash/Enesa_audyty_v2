@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Document extends Model
 {
@@ -25,6 +26,11 @@ class Document extends Model
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    public function auditorAccesses(): HasMany
+    {
+        return $this->hasMany(AuditorDocumentAccess::class);
     }
 
     public function formattedSize(): string

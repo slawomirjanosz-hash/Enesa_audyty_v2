@@ -11,35 +11,34 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use App\Services\AuditorAccessService;
 
 class CrmController extends Controller
 {
     public function index(): View
     {
-        $companies = Company::with(['offers', 'audits', 'tasks', 'crmOpportunities'])
-            ->where('status', '!=', 'archived')
-            ->orderBy('name')
-            ->get();
-
-        $opportunities = CrmOpportunity::with(['company', 'assignedUser'])
-            ->whereNull('deleted_at')
-            ->orderByDesc('created_at')
-            ->get();
-
-        $tasks = Task::with(['assignedUser', 'company', 'offer'])
-            ->orderBy('due_date')
-            ->get();
-
-        $myTasks = Task::forUser(auth()->id())
-            ->with(['assignedUser', 'company', 'offer'])
-            ->orderBy('due_date')
-            ->get();
-
-        $audits = Audit::with('company')
-            ->orderByDesc('created_at')
-            ->get();
-
+        $access = app(AuditorAccessService::class);
         $authUser = auth()->user();
+        $companies = $access->scopeByCompanyAccess(Company::with(['offers', 'audits', 'tasks', 'crmOpportunities'])
+            ->where('status', '!=', 'archived')
+            ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
+            ->get();
+
+        $opportunities = $access->scopeByCompanyAccess(CrmOpportunity::with(['company', 'assignedUser'])
+            ->whereNull('deleted_at')
+            ->orderByDesc('created_at'), $authUser, 'can_view_dashboard')
+            ->get();
+
+        $tasks = $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer'])
+            ->orderBy('due_date'), $authUser, 'can_view_dashboard')
+            ->get();
+
+        $myTasks = $access->scopeByCompanyAccess(Task::forUser(auth()->id())
+            ->with(['assignedUser', 'company', 'offer'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
+            ->get();
+
+        $audits = $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')
+            ->get();
 
 if ($authUser->hasRole('superadmin')) {
     $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
@@ -97,24 +96,28 @@ if ($authUser->hasRole('superadmin')) {
 
     public function toggleDashboard(Request $request, Company $company): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('update', $company);
         $company->update(['show_in_dashboard' => !$company->show_in_dashboard]);
         return response()->json(['show_in_dashboard' => $company->show_in_dashboard]);
     }
 
     public function archiveCompany(Company $company): RedirectResponse
     {
+        $this->authorize('update', $company);
         $company->update(['status' => 'archived', 'show_in_dashboard' => false, 'archived_at' => now()]);
         return redirect()->route('crm.index')->with('success', 'Firma została zarchiwizowana.');
     }
 
     public function restoreCompany(Company $company): RedirectResponse
     {
+        $this->authorize('update', $company);
         $company->update(['status' => 'active', 'archived_at' => null]);
         return redirect()->route('crm.index')->with('success', 'Firma została przywrócona.');
     }
 
     public function destroyCompany(Company $company): RedirectResponse
     {
+        $this->authorize('delete', $company);
         if ($company->offers()->exists() || $company->audits()->exists()) {
             return redirect()->route('crm.index')->with('error', 'Nie można usunąć firmy która ma oferty lub audyty.');
         }
@@ -124,6 +127,7 @@ if ($authUser->hasRole('superadmin')) {
 
     public function storeOpportunity(Request $request): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $data = $request->validate([
             'title'               => ['required', 'string', 'max:255'],
             'description'         => ['nullable', 'string'],
@@ -141,6 +145,7 @@ if ($authUser->hasRole('superadmin')) {
 
     public function updateOpportunityStage(Request $request, CrmOpportunity $opportunity): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('update', $opportunity);
         $data = $request->validate([
             'stage' => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
         ]);
@@ -150,6 +155,7 @@ if ($authUser->hasRole('superadmin')) {
 
     public function storeTask(Request $request): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $data = $request->validate([
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -176,6 +182,7 @@ if ($authUser->hasRole('superadmin')) {
 
     public function updateTask(Request $request, Task $task): RedirectResponse
     {
+        $this->authorize('update', $task);
         $data = $request->validate([
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -191,12 +198,14 @@ if ($authUser->hasRole('superadmin')) {
 
     public function destroyTask(Task $task): RedirectResponse
     {
+        $this->authorize('delete', $task);
         $task->delete();
         return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało usunięte.');
     }
 
     public function updateTaskStatus(Request $request, Task $task): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('update', $task);
         $data = $request->validate([
             'status' => ['required', 'in:todo,in_progress,done'],
         ]);
@@ -206,6 +215,7 @@ if ($authUser->hasRole('superadmin')) {
 
     public function updateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse
     {
+        $this->authorize('update', $opportunity);
         $data = $request->validate([
             'title'               => ['required', 'string', 'max:255'],
             'description'         => ['nullable', 'string'],
@@ -223,6 +233,7 @@ if ($authUser->hasRole('superadmin')) {
 
     public function destroyOpportunity(CrmOpportunity $opportunity): RedirectResponse
     {
+        $this->authorize('delete', $opportunity);
         $opportunity->delete();
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została usunięta.');
     }

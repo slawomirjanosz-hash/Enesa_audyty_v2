@@ -38,15 +38,17 @@ Route::get('/companies', function () {
     return redirect()->route('crm.index');
 });
 
-Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])->name('companies.fetchGus');
+Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])
+    ->middleware(['auth', 'staff.role'])
+    ->name('companies.fetchGus');
 Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
-    ->middleware('auth')
+    ->middleware(['auth', 'staff.role'])
     ->name('companies.destroy');
 Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])
-    ->middleware('auth')
+    ->middleware(['auth', 'staff.role'])
     ->name('companies.restore');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role'])->name('dashboard');
 
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->group(function () {
     Route::get('/dashboard',     [ClientDashboardController::class,    'index'])->name('dashboard');
@@ -70,7 +72,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->g
     Route::delete('/users/{user}/permanent',[ClientUserController::class, 'permanentDelete'])->middleware('client.admin')->name('users.permanent-delete');
 });
 
-Route::prefix('client-zone')->name('client-zone.')->middleware('auth')->group(function () {
+Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role'])->group(function () {
     Route::get('/',  [ClientZoneController::class, 'index'])->name('index');
     Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
     Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');
@@ -83,9 +85,9 @@ Route::prefix('client-zone')->name('client-zone.')->middleware('auth')->group(fu
     Route::get('/users',         [ClientZoneController::class, 'users'])->middleware('client.zone.session')->name('users');
 });
 
-Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware('auth')->name('audit-types.versions.preview');
+Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware(['auth', 'staff.role'])->name('audit-types.versions.preview');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
     Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
     Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
@@ -94,9 +96,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/companies/{company}/users/{user}', [CompanyController::class, 'updateUser'])->name('companies.users.update');
     Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->name('companies.users.destroy');
     Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->withoutMiddleware('staff.role')->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->withoutMiddleware('staff.role')->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware('staff.role')->name('profile.destroy');
 
     Route::get('audit-types', [AuditTypeController::class, 'index'])->name('audit-types.index');
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->name('audit-types.show');
@@ -174,6 +176,10 @@ Route::middleware('auth')->group(function () {
             ->middleware('auth')
             ->name('users.assign-to-company')
             ->withTrashed();
+        Route::put('users/{user}/auditor-access', [Settings\UserController::class, 'updateAuditorAccess'])
+            ->name('users.auditor-access');
+        Route::post('users/{user}/auditor-documents', [Settings\UserController::class, 'assignAuditorDocument'])
+            ->name('users.auditor-documents');
         Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
         Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
         Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
@@ -187,7 +193,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::prefix('crm')->name('crm.')->middleware(['auth'])->group(function () {
+Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role'])->group(function () {
     Route::get('/', [CrmController::class, 'index'])->name('index');
     Route::patch('/companies/{company}/dashboard', [CrmController::class, 'toggleDashboard'])->name('companies.dashboard');
     Route::patch('/companies/{company}/archive', [CrmController::class, 'archiveCompany'])->name('companies.archive');
@@ -224,6 +230,6 @@ Route::get('/debug-logo2', function () {
             "base64_encode(file_get_contents(\$logoPath))"
         ),
     ], 200, [], JSON_PRETTY_PRINT);
-})->middleware('auth');
+})->middleware(['auth', 'staff.role']);
 
 require __DIR__.'/auth.php';

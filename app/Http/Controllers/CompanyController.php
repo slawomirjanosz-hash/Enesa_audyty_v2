@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use App\Services\AuditorAccessService;
 use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
@@ -98,11 +99,30 @@ class CompanyController extends Controller
 
     public function show(Company $company)
     {
-        $company->load([
+        $this->authorize('view', $company);
+        $access = app(AuditorAccessService::class);
+        $user = auth()->user();
+
+        $relations = [
             'audits.auditType',
             'offers',
-            'users.roles',
-        ]);
+        ];
+
+        if ($access->hasFullAccess($user)) {
+            $relations[] = 'users.roles';
+        }
+
+        $company->load($relations);
+
+        if (! $access->canViewCompany($user, $company->id, 'can_view_audits')) {
+            $company->setRelation('audits', collect());
+        }
+        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
+            $company->setRelation('offers', collect());
+        }
+        if (! $access->hasFullAccess($user)) {
+            $company->setRelation('users', collect());
+        }
 
         $stats = [
             'audits_count' => $company->audits->count(),
@@ -110,14 +130,14 @@ class CompanyController extends Controller
             'users_count' => $company->users->count(),
         ];
 
-        $offerRequests = \App\Models\OfferRequest::with('offerFormTemplate', 'offers')
+        $offerRequests = $access->scopeByCompanyAccess(\App\Models\OfferRequest::with('offerFormTemplate', 'offers')
             ->where('company_id', $company->id)
-            ->orderByDesc('created_at')
+            ->orderByDesc('created_at'), $user, 'can_view_offer_requests')
             ->get();
 
-        $documents = \App\Models\Document::with('uploader', 'offer')
+        $documents = $access->scopeDocumentsVisibleTo(\App\Models\Document::with('uploader', 'offer')
             ->where('company_id', $company->id)
-            ->orderByDesc('updated_at')
+            ->orderByDesc('updated_at'), $user)
             ->get();
 
         return view('companies.show', compact('company', 'stats', 'offerRequests', 'documents'));
@@ -125,6 +145,8 @@ class CompanyController extends Controller
 
     public function update(Request $request, Company $company)
     {
+        $this->authorize('update', $company);
+
         $data = $request->validate([
             'name'    => ['required', 'string', 'max:255'],
             'nip'     => ['nullable', 'string', 'max:20'],
@@ -153,6 +175,8 @@ class CompanyController extends Controller
 
     public function accept(Company $company)
     {
+        $this->authorize('update', $company);
+
         if ($company->status === 'pending') {
             $company->update(['status' => 'active']);
 

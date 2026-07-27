@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\AuditorCompanyAccess;
+use App\Models\AuditorDocumentAccess;
+use App\Models\Document;
 use App\Models\User;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -17,6 +21,8 @@ class UserController extends Controller
 
     public function index()
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess(auth()->user()), 403);
+
         $users = User::with('roles')
             ->whereHas('roles', fn ($q) => $q->whereIn('name', self::MANAGED_ROLES))
             ->orderByDesc('created_at')
@@ -57,8 +63,49 @@ class UserController extends Controller
             ->get();
         $companies = Company::active()->orderBy('name')->get();
         $archivedCompanies = Company::archived()->orderBy('name')->get();
+        $auditors = User::with('auditorCompanyAccesses')
+            ->role('auditor')
+            ->orderBy('name')
+            ->get();
+        $documents = Document::with('company')->orderByDesc('updated_at')->get();
 
-        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers'));
+        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers', 'auditors', 'documents'));
+    }
+
+    public function updateAuditorAccess(Request $request, User $user)
+    {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        abort_unless($user->hasRole('auditor'), 422);
+
+        $data = $request->validate([
+            'company_id' => ['required', 'exists:companies,id'],
+            'can_view_dashboard' => ['nullable', 'boolean'],
+            'can_view_audits' => ['nullable', 'boolean'],
+            'can_view_offer_requests' => ['nullable', 'boolean'],
+            'can_view_offers' => ['nullable', 'boolean'],
+            'can_view_offer_prices' => ['nullable', 'boolean'],
+            'can_view_documents' => ['nullable', 'boolean'],
+            'can_view_chat' => ['nullable', 'boolean'],
+        ]);
+
+        $flags = collect($data)->except('company_id')->map(fn ($value) => (bool) $value)->all();
+        AuditorCompanyAccess::updateOrCreate(
+            ['auditor_id' => $user->id, 'company_id' => $data['company_id']],
+            $flags
+        );
+
+        return redirect()->back()->with('success', 'Dostęp audytora do firmy został zapisany.');
+    }
+
+    public function assignAuditorDocument(Request $request, User $user)
+    {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        abort_unless($user->hasRole('auditor'), 422);
+
+        $data = $request->validate(['document_id' => ['required', 'exists:documents,id']]);
+        AuditorDocumentAccess::firstOrCreate(['user_id' => $user->id, 'document_id' => $data['document_id']]);
+
+        return redirect()->back()->with('success', 'Dokument został przydzielony audytorowi.');
     }
 
     public function create()

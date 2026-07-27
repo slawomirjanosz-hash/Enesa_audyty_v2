@@ -13,7 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("UPDATE tasks SET status = 'todo' WHERE status = 'pending'");
-        DB::statement("ALTER TABLE tasks MODIFY COLUMN status ENUM('todo','in_progress','done') NOT NULL DEFAULT 'todo'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE tasks MODIFY COLUMN status ENUM('todo','in_progress','done') NOT NULL DEFAULT 'todo'");
+        }
     }
 
     /**
@@ -22,6 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         DB::statement("UPDATE tasks SET status = 'pending' WHERE status = 'todo'");
-        DB::statement("ALTER TABLE tasks MODIFY COLUMN status ENUM('pending','in_progress','done') NOT NULL DEFAULT 'pending'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE tasks MODIFY COLUMN status ENUM('pending','in_progress','done') NOT NULL DEFAULT 'pending'");
+        }
     }
 };

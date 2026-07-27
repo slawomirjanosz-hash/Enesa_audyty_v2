@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Models\Company;
 use App\Models\User;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
     public function index(Request $request)
     {
-        $companyIds = Message::whereNull('conversation_ended_at')
+        $access = app(AuditorAccessService::class);
+        $companyIds = $access->scopeByCompanyAccess(
+            Message::whereNull('conversation_ended_at'),
+            $request->user(),
+            'can_view_chat'
+        )
             ->distinct()
             ->pluck('company_id');
 
@@ -47,6 +53,8 @@ class ChatController extends Controller
 
     public function show(Request $request, Company $company)
     {
+        abort_unless(app(AuditorAccessService::class)->canViewCompany($request->user(), $company->id, 'can_view_chat'), 403);
+
         $messages = Message::where('company_id', $company->id)
             ->whereNull('conversation_ended_at')
             ->with('sender')
@@ -81,6 +89,8 @@ class ChatController extends Controller
 
     public function send(Request $request, Company $company)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $data = $request->validate([
             'body' => ['required', 'string', 'max:1000'],
         ]);
@@ -109,6 +119,8 @@ class ChatController extends Controller
 
     public function poll(Request $request, Company $company)
     {
+        abort_unless(app(AuditorAccessService::class)->canViewCompany($request->user(), $company->id, 'can_view_chat'), 403);
+
         $lastId = $request->input('last_id', 0);
 
         $messages = Message::where('company_id', $company->id)
@@ -131,6 +143,8 @@ class ChatController extends Controller
 
     public function endConversation(Company $company)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess(auth()->user()), 403);
+
         Message::where('company_id', $company->id)
             ->whereNull('conversation_ended_at')
             ->update([
@@ -147,6 +161,8 @@ class ChatController extends Controller
 
     public function archiveConversation(Request $request, Company $company, string $conversationId)
     {
+        abort_unless(app(AuditorAccessService::class)->canViewCompany($request->user(), $company->id, 'can_view_chat'), 403);
+
         $messages = Message::where('company_id', $company->id)
             ->where('conversation_id', $conversationId)
             ->with('sender')

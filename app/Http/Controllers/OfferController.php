@@ -11,6 +11,7 @@ use App\Models\OfferRequest;
 use App\Models\OfferSavedTemplate;
 use App\Models\OfferTemplateType;
 use App\Models\User;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,13 @@ class OfferController extends Controller
     public function index(Request $request): View
     {
         $isTemplate = $request->boolean('template');
-        $query = Offer::with(['company', 'assignedUser', 'createdBy'])
+        $access = app(AuditorAccessService::class);
+        $user = $request->user();
+        $query = $access->scopeByCompanyAccess(
+            Offer::with(['company', 'assignedUser', 'createdBy']),
+            $user,
+            'can_view_offers'
+        )
             ->where('is_template', $isTemplate)
             ->orderByDesc('created_at');
 
@@ -39,11 +46,23 @@ class OfferController extends Controller
 
         $offers = $query->paginate(20)->withQueryString();
 
+        $offers->each(function (Offer $offer) use ($user) {
+            if (! $user->can('viewPrices', $offer)) {
+                $this->removePriceData($offer);
+            }
+        });
+
+        $visibleOffers = $access->scopeByCompanyAccess(
+            Offer::query(),
+            $user,
+            'can_view_offers'
+        )->where('is_template', $isTemplate);
+
         $stats = [
-            'w_toku'        => Offer::where('status', 'w_toku')->where('is_template', $isTemplate)->count(),
-            'wygrana'       => Offer::where('status', 'wygrana')->where('is_template', $isTemplate)->count(),
-            'przegrana'     => Offer::where('status', 'przegrana')->where('is_template', $isTemplate)->count(),
-            'zarchiwizowana'=> Offer::where('status', 'zarchiwizowana')->where('is_template', $isTemplate)->count(),
+            'w_toku'        => (clone $visibleOffers)->where('status', 'w_toku')->count(),
+            'wygrana'       => (clone $visibleOffers)->where('status', 'wygrana')->count(),
+            'przegrana'     => (clone $visibleOffers)->where('status', 'przegrana')->count(),
+            'zarchiwizowana'=> (clone $visibleOffers)->where('status', 'zarchiwizowana')->count(),
         ];
 
         return view('offers.index', compact('offers', 'stats'));
@@ -51,6 +70,7 @@ class OfferController extends Controller
 
     public function create(Request $request): View
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $companySettings     = \App\Models\CompanySettings::first();
         $companies           = Company::orderBy('name')->get();
         $users               = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
@@ -83,6 +103,9 @@ class OfferController extends Controller
 
     public function getTemplate(Offer $offer): JsonResponse
     {
+        $this->authorize('view', $offer);
+        $this->authorize('viewPrices', $offer);
+
         return response()->json([
             'offer_title'      => $offer->offer_title,
             'content_subject'  => $offer->content_subject,
@@ -96,6 +119,7 @@ class OfferController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $data = $request->validate([
             'company_id'                => ['required', 'exists:companies,id'],
             'offer_number'              => ['required', 'string', 'unique:offers,offer_number'],
@@ -204,6 +228,7 @@ class OfferController extends Controller
 
     public function show(Offer $offer): View
     {
+        $this->authorize('view', $offer);
         $offer->load([
             'company',
             'assignedUser',
@@ -214,11 +239,16 @@ class OfferController extends Controller
             'offerMessages.user',
         ]);
 
+        if (! auth()->user()->can('viewPrices', $offer)) {
+            $this->removePriceData($offer);
+        }
+
         return view('offers.show', compact('offer'));
     }
 
     public function edit(Offer $offer): View
     {
+        $this->authorize('update', $offer);
         $companySettings     = \App\Models\CompanySettings::first();
         $companies           = Company::orderBy('name')->get();
         $users               = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
@@ -244,6 +274,7 @@ class OfferController extends Controller
 
     public function update(Request $request, Offer $offer): RedirectResponse
     {
+        $this->authorize('update', $offer);
         $data = $request->validate([
             'company_id'                => $offer->is_template
                 ? ['nullable', 'exists:companies,id']
@@ -348,6 +379,7 @@ class OfferController extends Controller
 
     public function updateStatus(Request $request, Offer $offer): RedirectResponse
     {
+        $this->authorize('update', $offer);
         $data = $request->validate([
             'status' => ['required', 'in:w_toku,wygrana,przegrana,zarchiwizowana'],
             'won_as' => ['nullable', 'in:audyt,projekt,inne'],
@@ -360,6 +392,7 @@ class OfferController extends Controller
 
     public function storeMessage(Request $request, Offer $offer): RedirectResponse
     {
+        $this->authorize('update', $offer);
         $data = $request->validate([
             'tresc'       => ['required', 'string'],
             'is_internal' => ['boolean'],
@@ -377,6 +410,8 @@ class OfferController extends Controller
 
     public function pdf(Request $request, Offer $offer): \Illuminate\Http\Response
     {
+        $this->authorize('view', $offer);
+        $this->authorize('viewPrices', $offer);
         try {
             $mpdf = $this->buildOfferPdf($offer, $request->has('unit') ? $request->boolean('unit') : null);
             $filename = 'oferta-' . $offer->fullNumber() . '.pdf';
@@ -397,6 +432,7 @@ class OfferController extends Controller
 
     public function saveToStorage(Offer $offer): RedirectResponse
     {
+        $this->authorize('update', $offer);
         $offer->loadMissing('company');
 
         $mpdf   = $this->buildOfferPdf($offer);
@@ -464,6 +500,8 @@ class OfferController extends Controller
 
     public function downloadWord(Offer $offer): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
+        $this->authorize('view', $offer);
+        $this->authorize('viewPrices', $offer);
         $offer->load(['company', 'offerRequest']);
 
         $phpWord = new PhpWord();
@@ -793,12 +831,16 @@ class OfferController extends Controller
 
     public function updateUnitPrices(Request $request, Offer $offer): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('update', $offer);
+
         $offer->update(['show_unit_prices' => $request->boolean('show_unit_prices')]);
         return response()->json(['ok' => true]);
     }
 
     public function saveAsTemplate(Request $request, Offer $offer): RedirectResponse
     {
+        $this->authorize('update', $offer);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
         ]);
@@ -819,6 +861,8 @@ class OfferController extends Controller
 
     public function getDistance(Request $request): JsonResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $destination = null;
 
         if ($request->filled('destination')) {
@@ -879,12 +923,16 @@ class OfferController extends Controller
 
     public function destroy(Offer $offer): RedirectResponse
     {
+        $this->authorize('delete', $offer);
+
         $offer->delete();
         return redirect()->route('offers.index')
             ->with('success', 'Oferta ' . $offer->offer_full_number . ' została usunięta.');
     }
     public function aiAssist(Request $request): JsonResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $data = $request->validate([
             'field'        => ['required', 'string', 'max:50'],
             'mode'         => ['required', 'in:improve'],
@@ -960,6 +1008,8 @@ Formatowanie HTML:
 
     public function clone(Request $request, Offer $offer): RedirectResponse
     {
+        $this->authorize('update', $offer);
+
         $data = $request->validate([
             'mode' => ['required', 'in:offer,template'],
             'company_id' => ['nullable', 'exists:companies,id'],
@@ -989,6 +1039,15 @@ Formatowanie HTML:
 
         $route = $isTemplate ? route('offers.edit', $newOffer) : route('offers.edit', $newOffer);
         return redirect($route)->with('success', $isTemplate ? 'Szablon został zapisany.' : 'Nowa oferta została utworzona.');
+    }
+
+    private function removePriceData(Offer $offer): void
+    {
+        $offer->setAttribute('kwota_netto', null);
+        $offer->setAttribute('price_sections', null);
+        $offer->setAttribute('show_unit_prices', false);
+        $offer->setAttribute('delegations', null);
+        $offer->setAttribute('content_payment', null);
     }
 
     private function cleanQuillHtml(?string $html): string

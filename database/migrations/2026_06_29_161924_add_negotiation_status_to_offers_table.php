@@ -12,7 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE offers MODIFY status ENUM('w_toku', 'wygrana', 'przegrana', 'w_negocjacji', 'zarchiwizowana') NOT NULL DEFAULT 'w_toku'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE offers MODIFY status ENUM('w_toku', 'wygrana', 'przegrana', 'w_negocjacji', 'zarchiwizowana') NOT NULL DEFAULT 'w_toku'");
+        }
     }
 
     /**
@@ -20,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE offers MODIFY status ENUM('w_toku', 'wygrana', 'przegrana', 'zarchiwizowana') NOT NULL DEFAULT 'w_toku'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE offers MODIFY status ENUM('w_toku', 'wygrana', 'przegrana', 'zarchiwizowana') NOT NULL DEFAULT 'w_toku'");
+        }
     }
 };
