@@ -67,6 +67,7 @@ body {
 .sec-lbl-line { width: 0; padding: 0; }
 .sec-block   { margin-bottom: 20px; }
 .sec-header-with-intro { page-break-inside: avoid; }
+.pricing-keep { page-break-inside: avoid; }
 .sec-content { font-size: 9.5pt; line-height: 1.8; color: #1A1A1A; }
 .sec-content ol, .sec-content ul { padding-left: 18px; }
 .sec-content li { margin-bottom: 2px; }
@@ -260,16 +261,24 @@ body {
 @php
     $sections = $offer->price_sections ?? [];
     $multiSection = count($sections) > 1;
+    $priceRowCount = 0;
 
     // Suma wszystkich z_narzutem ze wszystkich sekcji
     $netServices = 0;
     foreach ($sections as $sec) {
         foreach ($sec['rows'] ?? [] as $row) {
+            $priceRowCount++;
             $netServices += (float)($row['z_narzutem'] ?? 0);
         }
     }
+    // Krótka wycena wygląda źle, gdy nagłówek i pozycje zostają na jednej
+    // stronie, a suma netto samotnie na następnej. Długie tabele nadal mogą
+    // łamać się naturalnie między stronami.
+    $delegationCount = count($offer->delegations ?? []) ?: ($offer->offerDelegation ? 1 : 0);
+    $keepPricingTogether = $priceRowCount > 0 && ($priceRowCount + $delegationCount) <= 4;
 @endphp
 
+@if($keepPricingTogether)<div class="pricing-keep">@endif
 @if(count($sections) > 0)
 <div class="sec-block">
     <table class="sec-hdr-tbl"><tr>
@@ -406,6 +415,7 @@ body {
         <td class="r">{{ number_format($totalNet, 2, ',', ' ') }} zł</td>
     </tr>
 </table>
+@if($keepPricingTogether)</div>@endif
 
 {{-- SEKCJE OPISOWE (po wycenie) --}}
 @foreach($__restTextSections as $section)
