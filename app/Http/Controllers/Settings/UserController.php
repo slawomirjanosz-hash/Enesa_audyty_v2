@@ -19,6 +19,15 @@ class UserController extends Controller
 {
     private const MANAGED_ROLES = ['superadmin', 'admin', 'auditor_senior', 'auditor'];
 
+    private const ROLE_RANKS = [
+        'client_user' => 10,
+        'client_admin' => 10,
+        'auditor' => 20,
+        'auditor_senior' => 30,
+        'admin' => 40,
+        'superadmin' => 50,
+    ];
+
     public function index()
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess(auth()->user()), 403);
@@ -28,7 +37,10 @@ class UserController extends Controller
             ->orderByDesc('created_at')
             ->paginate(15);
 
-        $roles = Role::whereIn('name', self::MANAGED_ROLES)->get();
+        $roles = Role::whereIn('name', self::MANAGED_ROLES)
+            ->get()
+            ->filter(fn (Role $role) => $this->canAssignRole(auth()->user(), $role->name))
+            ->values();
 
         // All users in system (for email verification) - exclude client users with no active companies
         $allUsers = User::with('roles')
@@ -160,8 +172,8 @@ class UserController extends Controller
 
     private function ensureAuditorAccessManager(User $manager, User $auditor): void
     {
-        abort_unless(app(AuditorAccessService::class)->hasFullAccess($manager), 403);
         abort_unless($auditor->hasRole('auditor'), 403);
+        $this->ensureCanManageUser($manager, $auditor);
     }
 
     public function create()
@@ -186,6 +198,8 @@ class UserController extends Controller
             'role.in'        => 'Wybrana rola jest nieprawidłowa.',
             'password.min'   => 'Hasło musi mieć co najmniej 8 znaków.',
         ]);
+
+        $this->ensureCanAssignRole($request->user(), $data['role']);
 
         $user = User::create([
             'name'      => $data['name'],
@@ -226,6 +240,7 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
+        $this->ensureCanManageUser($request->user(), $user);
 
         $data = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
@@ -242,6 +257,8 @@ class UserController extends Controller
             'role.in'        => 'Wybrana rola jest nieprawidłowa.',
             'password.min'   => 'Hasło musi mieć co najmniej 8 znaków.',
         ]);
+
+        $this->ensureCanAssignRole($request->user(), $data['role']);
 
         $user->name  = $data['name'];
         $user->email = $data['email'];
@@ -273,6 +290,8 @@ class UserController extends Controller
                 ->with('error', 'Nie można usunąć superadmina.');
         }
 
+        $this->ensureCanManageUser($currentUser, $user);
+
         // Permission hierarchy check
         if ($currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
             // Admin cannot delete other admins or superadmins
@@ -280,14 +299,14 @@ class UserController extends Controller
                 return redirect()->route('settings.users.index')
                     ->with('error', 'Nie masz uprawnień do usunięcia tego użytkownika.');
             }
-        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin') && !$currentUser->hasRole('auditor_senior')) {
             // Only admin and superadmin can delete users
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
         // Check if user is assigned to an active (non-archived) company
-        if ($user->companies()->where('archived_at', null)->exists()) {
+        if ($this->hasBlockingActiveCompanyAssignment($user)) {
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie można usunąć użytkownika przypisanego do aktywnej firmy.');
         }
@@ -300,6 +319,8 @@ class UserController extends Controller
 
     public function restore(User $user)
     {
+        $this->ensureCanManageUser(auth()->user(), $user);
+
         $user->restore();
 
         return redirect()->back()->with('success', 'Użytkownik został przywrócony.');
@@ -316,6 +337,8 @@ class UserController extends Controller
                 ->with('error', 'Nie można usunąć superadmina.');
         }
 
+        $this->ensureCanManageUser($currentUser, $user);
+
         // Permission hierarchy check
         if ($currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
             // Admin cannot delete other admins
@@ -323,14 +346,14 @@ class UserController extends Controller
                 return redirect()->route('settings.users.index')
                     ->with('error', 'Nie masz uprawnień do usunięcia tego użytkownika.');
             }
-        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin') && !$currentUser->hasRole('auditor_senior')) {
             // Only admin and superadmin can delete users
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
         // Check if user is assigned to an active (non-archived) company
-        if ($user->companies()->where('archived_at', null)->exists()) {
+        if ($this->hasBlockingActiveCompanyAssignment($user)) {
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie można trwale usunąć użytkownika przypisanego do aktywnej firmy.');
         }
@@ -343,6 +366,8 @@ class UserController extends Controller
 
     public function assignToCompany(Request $request, User $user)
     {
+        $this->ensureCanManageUser($request->user(), $user);
+
         $data = $request->validate([
             'company_id' => ['required', 'exists:companies,id'],
             'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
@@ -368,6 +393,8 @@ class UserController extends Controller
 
     public function assignCompany(Request $request, User $user)
     {
+        $this->ensureCanManageUser($request->user(), $user);
+
         $data = $request->validate([
             'company_id' => ['required', 'exists:companies,id'],
         ]);
@@ -407,5 +434,46 @@ class UserController extends Controller
                 'is_owner' => true,
             ]
         );
+    }
+
+    private function ensureCanManageUser(User $manager, User $target): void
+    {
+        abort_unless(
+            $this->roleRank($manager) > $this->roleRank($target),
+            403,
+            'Nie masz uprawnień do zarządzania tym użytkownikiem.'
+        );
+    }
+
+    private function ensureCanAssignRole(User $manager, string $role): void
+    {
+        abort_unless(
+            $this->canAssignRole($manager, $role),
+            403,
+            'Nie masz uprawnień do nadania tej roli.'
+        );
+    }
+
+    private function canAssignRole(User $manager, string $role): bool
+    {
+        return $this->roleRank($manager) > (self::ROLE_RANKS[$role] ?? PHP_INT_MAX);
+    }
+
+    private function roleRank(User $user): int
+    {
+        return collect($user->getRoleNames())
+            ->map(fn (string $role) => self::ROLE_RANKS[$role] ?? 0)
+            ->max() ?? 0;
+    }
+
+    private function hasBlockingActiveCompanyAssignment(User $user): bool
+    {
+        $companies = $user->companies()->whereNull('companies.archived_at');
+
+        if ($user->hasAnyRole(Company::STAFF_ROLES)) {
+            return $companies->where('companies.is_owner', false)->exists();
+        }
+
+        return $companies->exists();
     }
 }
