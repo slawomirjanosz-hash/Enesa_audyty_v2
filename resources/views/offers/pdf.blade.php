@@ -66,6 +66,7 @@ body {
 }
 .sec-lbl-line { width: 0; padding: 0; }
 .sec-block   { margin-bottom: 20px; }
+.sec-header-with-intro { page-break-inside: avoid; }
 .sec-content { font-size: 9.5pt; line-height: 1.8; color: #1A1A1A; }
 .sec-content ol, .sec-content ul { padding-left: 18px; }
 .sec-content li { margin-bottom: 2px; }
@@ -226,16 +227,32 @@ body {
             $__firstTwoTextSections[] = $__section;
         }
     }
+    // mPDF potrafi utrzymać razem mały blok, ale nie całą wielostronicową
+    // sekcję. Dlatego łączymy nagłówek wyłącznie z pierwszym akapitem.
+    $__splitTextSection = function ($content) {
+        $content = (string) $content;
+        if (preg_match('/^\s*((?:<h[23][^>]*>.*?<\/h[23]>\s*)?<p\b[^>]*>.*?<\/p>)(.*)$/is', $content, $matches)) {
+            return [$matches[1], $matches[2]];
+        }
+
+        return ['', $content];
+    };
 @endphp
 
 @foreach($__firstTwoTextSections as $section)
     @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    @php
+        [$sectionIntro, $sectionRest] = $__splitTextSection($section['content'] ?? '');
+    @endphp
     <div class="sec-block">
-        <table class="sec-hdr-tbl"><tr>
-            <td class="sec-lbl-text">{{ $section['name'] }}</td>
-            <td class="sec-lbl-line"></td>
-        </tr></table>
-        <div class="sec-content">{!! $section['content'] !!}</div>
+        <div class="sec-header-with-intro">
+            <table class="sec-hdr-tbl"><tr>
+                <td class="sec-lbl-text">{{ $section['name'] }}</td>
+                <td class="sec-lbl-line"></td>
+            </tr></table>
+            @if($sectionIntro)<div class="sec-content">{!! $sectionIntro !!}</div>@endif
+        </div>
+        @if($sectionRest)<div class="sec-content">{!! $sectionRest !!}</div>@endif
     </div>
 @endforeach
 
@@ -393,12 +410,18 @@ body {
 {{-- SEKCJE OPISOWE (po wycenie) --}}
 @foreach($__restTextSections as $section)
     @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    @php
+        [$sectionIntro, $sectionRest] = $__splitTextSection($section['content'] ?? '');
+    @endphp
     <div class="sec-block">
-        <table class="sec-hdr-tbl"><tr>
-            <td class="sec-lbl-text">{{ $section['name'] }}</td>
-            <td class="sec-lbl-line"></td>
-        </tr></table>
-        <div class="sec-content">{!! $section['content'] !!}</div>
+        <div class="sec-header-with-intro">
+            <table class="sec-hdr-tbl"><tr>
+                <td class="sec-lbl-text">{{ $section['name'] }}</td>
+                <td class="sec-lbl-line"></td>
+            </tr></table>
+            @if($sectionIntro)<div class="sec-content">{!! $sectionIntro !!}</div>@endif
+        </div>
+        @if($sectionRest)<div class="sec-content">{!! $sectionRest !!}</div>@endif
     </div>
 @endforeach
 
