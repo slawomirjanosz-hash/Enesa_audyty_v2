@@ -23,6 +23,7 @@ use Illuminate\View\View;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Shared\Converter;
+use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
 
 class OfferController extends Controller
@@ -612,15 +613,39 @@ class OfferController extends Controller
             ]);
         };
 
-        // ── PRZEDMIOT OFERTY ─────────────────────────────────────────────────
-        if ($offer->content_subject) {
-            $addSectionHeader('Przedmiot oferty');
-            $section->addText(
-                strip_tags($offer->content_subject),
-                ['size' => 11],
-                ['spaceAfter' => Converter::pointToTwip(10)]
-            );
+        // Tekst oferty jest wspólny dla PDF i DOCX. Starsze oferty, które nie
+        // mają jeszcze JSON-a sekcji, zachowują dotychczasowy układ.
+        $textSections = $this->normalizeTextSections($offer->text_sections ?? []);
+        if (empty($textSections)) {
+            $textSections = $this->normalizeTextSections([
+                ['name' => 'Przedmiot oferty', 'content' => $offer->content_subject ?? '', 'placement' => 'before_price'],
+                ['name' => 'Zakres prac', 'content' => $offer->content_scope ?? '', 'placement' => 'before_price'],
+                ['name' => 'Termin realizacji', 'content' => $offer->content_deadline ?? '', 'placement' => 'after_price'],
+                ['name' => 'Warunki płatności', 'content' => $offer->content_payment ?? '', 'placement' => 'after_price'],
+            ]) ?? [];
+        }
+
+        $beforePriceSections = array_values(array_filter(
+            $textSections,
+            fn (array $item) => $item['placement'] === 'before_price'
+        ));
+        $afterPriceSections = array_values(array_filter(
+            $textSections,
+            fn (array $item) => $item['placement'] === 'after_price'
+        ));
+
+        $addTextSection = function (array $item) use ($section, $addSectionHeader): void {
+            if (trim(strip_tags($item['content'])) === '') {
+                return;
+            }
+
+            $addSectionHeader($item['name']);
+            Html::addHtml($section, $item['content'], false, false);
             $section->addTextBreak(1);
+        };
+
+        foreach ($beforePriceSections as $textSection) {
+            $addTextSection($textSection);
         }
 
         // ── WYCENA ───────────────────────────────────────────────────────────
@@ -776,6 +801,10 @@ class OfferController extends Controller
             $section->addTextBreak(1);
         }
 
+        foreach ($afterPriceSections as $textSection) {
+            $addTextSection($textSection);
+        }
+
         // ── TERMIN WAŻNOŚCI ──────────────────────────────────────────────────
         if ($offer->valid_until) {
             $addSectionHeader('Termin ważności oferty');
@@ -784,23 +813,6 @@ class OfferController extends Controller
                 ['size' => 11],
                 ['spaceAfter' => Converter::pointToTwip(10)]
             );
-            $section->addTextBreak(1);
-        }
-
-        // ── WARUNKI PŁATNOŚCI ────────────────────────────────────────────────
-        if ($offer->content_payment) {
-            $addSectionHeader('Warunki płatności');
-            preg_match_all('/<li[^>]*>(.*?)<\/li>/is', $offer->content_payment, $matches);
-            if (!empty($matches[1])) {
-                foreach ($matches[1] as $item) {
-                    $text = trim(strip_tags($item));
-                    if ($text) {
-                        $section->addListItem($text, 0, ['size' => 10]);
-                    }
-                }
-            } else {
-                $section->addText(strip_tags($offer->content_payment), ['size' => 11]);
-            }
             $section->addTextBreak(1);
         }
 

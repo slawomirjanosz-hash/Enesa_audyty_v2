@@ -58,13 +58,13 @@ body {
 .party-det  { font-size: 8.5pt; color: #555; line-height: 1.75; }
 
 /* SEKCJA LABEL */
-.sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+.sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; border-bottom: 1px solid #E5E1D8; }
 .sec-lbl-text {
     font-size: 10pt; font-weight: bold; text-transform: uppercase;
-    letter-spacing: .07em; color: #1A4D3A; white-space: nowrap; padding-right: 10px;
-    width: 1%;
+    letter-spacing: .07em; color: #1A4D3A; white-space: normal; line-height: 1.3;
+    padding: 0 0 3px 0; width: 100%;
 }
-.sec-lbl-line { width: 100%; border-bottom: 1px solid #E5E1D8; }
+.sec-lbl-line { width: 0; padding: 0; }
 .sec-block   { margin-bottom: 20px; }
 .sec-content { font-size: 9.5pt; line-height: 1.8; color: #1A1A1A; }
 .sec-content ol, .sec-content ul { padding-left: 18px; }
