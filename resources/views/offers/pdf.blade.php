@@ -58,17 +58,22 @@ body {
 .party-det  { font-size: 8.5pt; color: #555; line-height: 1.75; }
 
 /* SEKCJA LABEL */
-.sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
 .sec-lbl-text {
-    font-size: 7.5pt; font-weight: bold; text-transform: uppercase;
-    letter-spacing: .1em; color: #1A4D3A; white-space: nowrap; padding-right: 8px;
+    font-size: 10pt; font-weight: bold; text-transform: uppercase;
+    letter-spacing: .07em; color: #1A4D3A; white-space: nowrap; padding-right: 10px;
     width: 1%;
 }
 .sec-lbl-line { width: 100%; border-bottom: 1px solid #E5E1D8; }
-.sec-block   { margin-bottom: 18px; }
+.sec-block   { margin-bottom: 20px; }
 .sec-content { font-size: 9.5pt; line-height: 1.8; color: #1A1A1A; }
 .sec-content ol, .sec-content ul { padding-left: 18px; }
 .sec-content li { margin-bottom: 2px; }
+.sec-content h2 { font-size: 12pt; line-height: 1.3; margin: 12px 0 6px; color: #1A4D3A; }
+.sec-content h3 { font-size: 10.5pt; line-height: 1.35; margin: 10px 0 5px; color: #1A1A1A; }
+.sec-content table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 8.8pt; page-break-inside: avoid; }
+.sec-content th { padding: 6px 7px; text-align: left; font-size: 8pt; color: #1A4D3A; background: #F4F1EA; border: 1px solid #E5E1D8; }
+.sec-content td { padding: 6px 7px; vertical-align: top; border: 1px solid #E5E1D8; }
 
 /* TABELA WYCENY */
 .price-tbl { width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 9pt; }
@@ -208,12 +213,19 @@ body {
             ['name' => 'Przedmiot oferty', 'content' => $offer->content_subject ?? ''],
             ['name' => 'Zakres prac', 'content' => $offer->content_scope ?? ''],
         ];
-    } else {
-        // pierwsze dwie sekcje idą przed wyceną, resztę wyświetlimy po delegacjach
-        $__firstTwoTextSections = array_slice($__textSections, 0, 2);
-        $__restTextSections = array_slice($__textSections, 2);
     }
-    $__firstTwoTextSections = $__firstTwoTextSections ?? $__textSections;
+    // Dla ofert sprzed tej zmiany zachowujemy dawny układ: dwie pierwsze
+    // sekcje przed wyceną, kolejne po niej.
+    $__firstTwoTextSections = [];
+    $__restTextSections = [];
+    foreach ($__textSections as $__index => $__section) {
+        $__placement = $__section['placement'] ?? ($__index < 2 ? 'before_price' : 'after_price');
+        if ($__placement === 'after_price') {
+            $__restTextSections[] = $__section;
+        } else {
+            $__firstTwoTextSections[] = $__section;
+        }
+    }
 @endphp
 
 @foreach($__firstTwoTextSections as $section)
@@ -378,6 +390,18 @@ body {
     </tr>
 </table>
 
+{{-- SEKCJE OPISOWE (po wycenie) --}}
+@foreach($__restTextSections as $section)
+    @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    <div class="sec-block">
+        <table class="sec-hdr-tbl"><tr>
+            <td class="sec-lbl-text">{{ $section['name'] }}</td>
+            <td class="sec-lbl-line"></td>
+        </tr></table>
+        <div class="sec-content">{!! $section['content'] !!}</div>
+    </div>
+@endforeach
+
 {{-- TERMIN WAŻNOŚCI --}}
 @if($offer->valid_until)
 <div class="sec-block" style="page-break-inside: avoid;">
@@ -401,18 +425,6 @@ body {
     <div class="sec-content">{!! nl2br(e($offer->additional_description)) !!}</div>
 </div>
 @endif
-
-{{-- SEKCJE OPISOWE (po delegacjach) --}}
-@foreach($__restTextSections ?? [] as $section)
-    @continue(empty(trim(strip_tags($section['content'] ?? ''))))
-    <div class="sec-block">
-        <table class="sec-hdr-tbl"><tr>
-            <td class="sec-lbl-text">{{ $section['name'] }}</td>
-            <td class="sec-lbl-line"></td>
-        </tr></table>
-        <div class="sec-content">{!! $section['content'] !!}</div>
-    </div>
-@endforeach
 
 @if(empty($offer->text_sections))
     {{-- fallback dla starych ofert bez text_sections --}}

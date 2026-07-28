@@ -805,16 +805,17 @@ let textSectionCounter = 0;
 let textQuills = {}; // mapa: sectionId -> instancja Quill
 
 const DEFAULT_TEXT_SECTIONS = [
-    { name: 'Przedmiot oferty',     content: '' },
-    { name: 'Zakres prac',          content: '' },
-    { name: 'Termin realizacji',    content: '' },
-    { name: 'Warunki płatności',    content: '' },
+    { name: 'Przedmiot oferty',  content: '', placement: 'before_price' },
+    { name: 'Zakres prac',       content: '', placement: 'before_price' },
+    { name: 'Termin realizacji', content: '', placement: 'after_price' },
+    { name: 'Warunki płatności', content: '', placement: 'after_price' },
 ];
 
 function addTextSection(sectionData) {
     const sid = 'txt' + (textSectionCounter++);
     const name = sectionData?.name || 'Nowa sekcja';
     const content = sectionData?.content || '';
+    const placement = sectionData?.placement || (textSectionCounter <= 2 ? 'before_price' : 'after_price');
 
     const card = document.createElement('div');
     card.className = 'ed-card type-text';
@@ -824,6 +825,10 @@ function addTextSection(sectionData) {
         <div class="ed-card-header">
             <i class="ti ti-file-text"></i>
             <input type="text" class="section-name-input text-section-name" value="${name.replace(/"/g,'&quot;')}" style="flex:1;">
+            <select class="text-section-placement" title="Położenie sekcji w PDF" style="max-width:165px;">
+                <option value="before_price" ${placement === 'before_price' ? 'selected' : ''}>Przed wyceną</option>
+                <option value="after_price" ${placement === 'after_price' ? 'selected' : ''}>Po wycenie</option>
+            </select>
             <button type="button" class="btn-del-section" onclick="removeTextSection('${sid}')">
                 <i class="ti ti-trash"></i> Usuń sekcję
             </button>
@@ -835,13 +840,14 @@ function addTextSection(sectionData) {
             <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','list','bullet')"><i class="ti ti-list"></i></button>
             <button type="button" class="rte-btn" onclick="fmtOn('editor-${sid}','list','ordered')"><i class="ti ti-list-numbers"></i></button>
             <button type="button" class="rte-btn rte-btn-ai" onclick="aiAssistDynamic('${sid}')"><i class="ti ti-wand"></i> Popraw AI</button>
+            <button type="button" class="rte-btn rte-btn-ai" onclick="aiGenerateTable('${sid}')"><i class="ti ti-table"></i> Tabela AI</button>
         </div>
         <div id="editor-${sid}" style="min-height:90px;font-size:14px;"></div>
     `;
     document.getElementById('text-sections-container').appendChild(card);
 
-    const toolbarOptions = [['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['clean']];
-    textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { toolbar: toolbarOptions } });
+    const toolbarOptions = [['bold','italic','underline'],[{header:[2,3,false]}],[{list:'ordered'},{list:'bullet'}],['clean']];
+    textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { table: true, toolbar: toolbarOptions } });
     if (content) textQuills[sid].clipboard.dangerouslyPasteHTML(content);
 }
 
@@ -867,7 +873,8 @@ function collectTextSections() {
         const sid = card.id.replace('text-section-', '');
         const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
         const content = textQuills[sid] ? textQuills[sid].root.innerHTML : '';
-        sections.push({ name, content });
+        const placement = card.querySelector('.text-section-placement')?.value || 'before_price';
+        sections.push({ name, content, placement });
     });
     return sections;
 }
@@ -898,6 +905,35 @@ async function aiAssistDynamic(sid) {
         else alert('Błąd AI: ' + (data.error || 'nieznany'));
     } catch(e) { alert('Błąd połączenia z AI'); }
     finally { btn.disabled = false; btn.innerHTML = orig; }
+}
+
+async function aiGenerateTable(sid) {
+    const description = prompt('Opisz nagłówki i dane tabeli. AI nie dopisze cen ani innych danych, których tu nie podasz.');
+    if (!description || !description.trim()) return;
+
+    const card = document.getElementById('text-section-' + sid);
+    const quill = textQuills[sid];
+    const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
+    const btn = card.querySelectorAll('.rte-btn-ai')[1];
+    btn.disabled = true;
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-loader-2"></i> Tworzę tabelę...';
+
+    try {
+        const offerTitle = document.querySelector('input[name="offer_title"]')?.value || '';
+        const companyName = document.querySelector('#company_id option:checked')?.text?.split('—')[0]?.trim() || '';
+        const res = await fetch('{{ route("offers.ai-assist") }}', {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ field: 'custom_' + sid, section_name: name, mode: 'generate_table', table_request: description, offer_title: offerTitle, company_name: companyName })
+        });
+        const data = await res.json();
+        if (data.html) {
+            const at = quill.getSelection(true)?.index ?? quill.getLength() - 1;
+            quill.clipboard.dangerouslyPasteHTML(at, data.html);
+        } else alert('Błąd AI: ' + (data.error || 'nieznany'));
+    } catch (e) { alert('Błąd połączenia z AI'); }
+    finally { btn.disabled = false; btn.innerHTML = original; }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -166,7 +166,9 @@ class OfferController extends Controller
         $textSections = null;
         if ($request->filled('text_sections')) {
             $decoded = json_decode($request->input('text_sections'), true);
-            $textSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+            $textSections = json_last_error() === JSON_ERROR_NONE
+                ? $this->normalizeTextSections($decoded)
+                : null;
         }
 
         $delegations = null;
@@ -323,7 +325,9 @@ class OfferController extends Controller
         $textSections = null;
         if ($request->filled('text_sections')) {
             $decoded = json_decode($request->input('text_sections'), true);
-            $textSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+            $textSections = json_last_error() === JSON_ERROR_NONE
+                ? $this->normalizeTextSections($decoded)
+                : null;
         }
 
         $delegations = null;
@@ -935,11 +939,12 @@ class OfferController extends Controller
 
         $data = $request->validate([
             'field'        => ['required', 'string', 'max:50'],
-            'mode'         => ['required', 'in:improve'],
+            'mode'         => ['required', 'in:improve,generate_table'],
             'current'      => ['nullable', 'string'],
             'offer_title'  => ['nullable', 'string'],
             'company_name' => ['nullable', 'string'],
             'section_name' => ['nullable', 'string', 'max:255'],
+            'table_request' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $fieldLabels = [
@@ -958,6 +963,27 @@ class OfferController extends Controller
         $current = strip_tags($current);
         $current = trim($current);
 
+        if ($data['mode'] === 'generate_table') {
+            $tableRequest = trim($data['table_request'] ?? '');
+            if ($tableRequest === '') {
+                return response()->json(['error' => 'Opisz dane, które mają znaleźć się w tabeli.'], 422);
+            }
+
+            $prompt = "Jesteś asystentem przygotowującym profesjonalne oferty handlowe w branży audytów energetycznych i efektywności energetycznej.
+
+Sekcja dokumentu: {$label}
+Tytuł oferty: {$title}
+Firma klienta: {$company}
+
+Zadanie użytkownika:
+{$tableRequest}
+
+Utwórz czytelną, zwartą tabelę HTML do wklejenia do oferty.
+- Zwróć wyłącznie jeden element <table> z <thead>, <tbody>, <tr>, <th> i <td>.
+- Użyj od 2 do 6 kolumn i od 1 do 12 wierszy danych, zależnie od polecenia.
+- Nie wymyślaj danych, cen, terminów ani parametrów. Gdy użytkownik nie podał konkretnej wartości, pozostaw komórkę pustą.
+- Nie dodawaj żadnego tekstu przed ani po tabeli, markdownu ani komentarzy.";
+        } else {
         $prompt = "Jesteś asystentem pomagającym pisać profesjonalne oferty handlowe w branży audytów energetycznych i efektywności energetycznej.
 
 Sekcja dokumentu: {$label}
@@ -980,6 +1006,8 @@ Formatowanie HTML:
 - Dla sekcji 'Warunki płatności' możesz użyć <ul> dla poszczególnych warunków
 - Zwróć TYLKO HTML, bez markdown, bez backtików, bez komentarzy";
 
+        }
+
         $response = Http::withHeaders([
             'x-api-key'         => config('services.anthropic.key'),
             'anthropic-version' => '2023-06-01',
@@ -1001,7 +1029,11 @@ Formatowanie HTML:
         $content = preg_replace('/```$/m', '', $content);
         $content = preg_replace('/<p>\s*<br\s*\/?>\s*<\/p>/i', '', $content);
         $content = preg_replace('/<p>\s*<\/p>/i', '', $content);
-        $content = trim($content);
+        $content = $this->cleanQuillHtml(trim($content));
+
+        if ($data['mode'] === 'generate_table' && !str_starts_with($content, '<table>')) {
+            return response()->json(['error' => 'AI nie zwróciło poprawnej tabeli. Spróbuj opisać dane dokładniej.'], 422);
+        }
 
         return response()->json(['html' => $content]);
     }
@@ -1059,10 +1091,10 @@ Formatowanie HTML:
             '/<ol>(.*?)<\/ol>/s',
             function ($matches) {
                 $inner = $matches[1];
-                $inner = preg_replace('/<li[^>]*data-list="bullet"[^>]*>/i', '<li>', $inner);
-                $inner = preg_replace('/<li[^>]*data-list="ordered"[^>]*>/i', '<li>', $inner);
+                $isOrdered = preg_match('/data-list="ordered"/i', $inner) === 1;
+                $inner = preg_replace('/<li[^>]*>/i', '<li>', $inner);
                 $inner = preg_replace('/<span[^>]*class="ql-ui"[^>]*>.*?<\/span>/s', '', $inner);
-                return '<ul>' . $inner . '</ul>';
+                return ($isOrdered ? '<ol>' : '<ul>') . $inner . ($isOrdered ? '</ol>' : '</ul>');
             },
             $html
         );
@@ -1080,6 +1112,39 @@ Formatowanie HTML:
         // Usuń pozostałe span ql-ui
         $html = preg_replace('/<span[^>]*ql-ui[^>]*>.*?<\/span>/s', '', $html);
 
+        // Zawartość sekcji trafia potem bezpośrednio do PDF. Pozwalamy tylko na
+        // formatowanie obsługiwane przez edytor i szablon oferty, bez atrybutów.
+        $html = strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><h2><h3><table><thead><tbody><tr><th><td>');
+        $html = preg_replace('/<(p|br|strong|b|em|i|u|ul|ol|li|h2|h3|table|thead|tbody|tr|th|td)\\b[^>]*>/i', '<$1>', $html);
+
         return trim($html);
+    }
+
+    private function normalizeTextSections(mixed $sections): ?array
+    {
+        if (!is_array($sections)) {
+            return null;
+        }
+
+        $normalized = [];
+        foreach ($sections as $index => $section) {
+            if (!is_array($section)) {
+                continue;
+            }
+
+            $name = trim(strip_tags((string) ($section['name'] ?? '')));
+            $content = $this->cleanQuillHtml((string) ($section['content'] ?? ''));
+            $placement = $section['placement'] ?? ($index < 2 ? 'before_price' : 'after_price');
+
+            $normalized[] = [
+                'name' => mb_substr($name !== '' ? $name : 'Sekcja oferty', 0, 120),
+                'content' => $content,
+                'placement' => in_array($placement, ['before_price', 'after_price'], true)
+                    ? $placement
+                    : ($index < 2 ? 'before_price' : 'after_price'),
+            ];
+        }
+
+        return $normalized;
     }
 }
