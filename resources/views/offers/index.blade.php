@@ -181,6 +181,10 @@
     }
     @media (max-width: 500px) {
         .stats-grid { grid-template-columns: 1fr 1fr; }
+        .table-card-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+        .table-card-header .search-box { width: 100%; }
+        .search-box input { width: 100%; }
+        .offers-table { min-width: 820px; }
     }
 
     .search-box { position:relative; }

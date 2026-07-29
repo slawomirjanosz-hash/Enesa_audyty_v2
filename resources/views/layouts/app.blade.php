@@ -276,6 +276,68 @@
         .content-area {
             padding: 32px;
         }
+
+        .mobile-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            color: #fff;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        .sidebar-backdrop { display: none; }
+
+        @media (max-width: 767px) {
+            html, body { overflow-x: hidden; }
+
+            #sidebar {
+                width: min(280px, 86vw);
+                transform: translateX(-100%);
+                transition: transform .2s ease;
+                z-index: 1001;
+                box-shadow: 8px 0 24px rgba(0,0,0,.24);
+            }
+
+            body.mobile-menu-open #sidebar { transform: translateX(0); }
+
+            .sidebar-backdrop {
+                position: fixed;
+                inset: 0;
+                display: block;
+                visibility: hidden;
+                opacity: 0;
+                background: rgba(0,0,0,.42);
+                transition: opacity .2s ease, visibility .2s ease;
+                z-index: 1000;
+            }
+
+            body.mobile-menu-open .sidebar-backdrop {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            #topbar {
+                left: 0;
+                height: 56px;
+                padding: 0 16px;
+                gap: 12px;
+                z-index: 900;
+            }
+
+            .mobile-menu-toggle { display: inline-flex; }
+            .topbar-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .topbar-right { display: none; }
+
+            #main { margin-left: 0; padding-top: 56px; }
+            .content-area { padding: 16px; }
+        }
     </style>
 
     <style>
@@ -434,8 +496,13 @@
     </div>
 </aside>
 
+<div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
 {{-- =============== TOPBAR =============== --}}
 <header id="topbar">
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Otwórz menu" aria-controls="sidebar" aria-expanded="false">
+        <i class="ti ti-menu-2"></i>
+    </button>
     <div class="topbar-title">@yield('page-title', 'Panel')</div>
 
     <div class="topbar-right">
@@ -482,6 +549,22 @@
     function toggleOnline() {
         document.getElementById('onlineWrapper').classList.toggle('open');
     }
+
+    function setMobileMenu(open) {
+        document.body.classList.toggle('mobile-menu-open', open);
+        document.getElementById('mobileMenuToggle').setAttribute('aria-expanded', String(open));
+    }
+
+    document.getElementById('mobileMenuToggle').addEventListener('click', function () {
+        setMobileMenu(!document.body.classList.contains('mobile-menu-open'));
+    });
+    document.getElementById('sidebarBackdrop').addEventListener('click', function () { setMobileMenu(false); });
+    document.querySelectorAll('#sidebar a').forEach(function (link) {
+        link.addEventListener('click', function () { setMobileMenu(false); });
+    });
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 767) setMobileMenu(false);
+    });
 
     document.addEventListener('click', function(e) {
         const wrapper = document.getElementById('onlineWrapper');

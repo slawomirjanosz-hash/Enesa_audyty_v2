@@ -76,6 +76,19 @@
 .archive-info { background:#FEF3C7; border:1px solid #FCD34D; border-radius:8px; padding:10px 16px; margin-bottom:16px; font-size:13px; color:#92400E; display:flex; align-items:center; gap:8px; }
 
 @media(max-width:900px) { .crm-stats { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:640px) {
+    .crm-stats { grid-template-columns:1fr; }
+    .crm-tabs { overflow-x:auto; scrollbar-width:thin; }
+    .crm-tab { flex:0 0 auto; padding:10px 14px; }
+    .table-card-header, .task-hdr { align-items:flex-start; flex-wrap:wrap; gap:10px; }
+    .table-card-header .search-box { width:100%; }
+    .search-box input { width:100%; }
+    .crm-table { min-width:680px; }
+    .funnel-stage { display:block; margin-bottom:10px; }
+    .funnel-label { width:auto; padding:0 0 6px; }
+    .funnel-bar .opp-card { width:100% !important; max-width:none !important; }
+    div[style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns:1fr !important; }
+}
 </style>
 @endpush
 
