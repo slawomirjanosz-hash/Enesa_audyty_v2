@@ -445,6 +445,9 @@
     <i class="ti ti-file-invoice"></i> Oferty
 </a></li>
                     <li><a href="{{ url('/offer-forms') }}" class="nav-link {{ request()->is('offer-forms*') ? 'active' : '' }}"><i class="ti ti-clipboard-list"></i> Formularze zapytań</a></li>
+                    @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
+                    <li><a href="{{ route('pricing-catalog.index') }}" class="nav-link {{ request()->is('pricing-catalog*') ? 'active' : '' }}"><i class="ti ti-currency-zloty"></i> Cennik usług</a></li>
+                    @endif
                 </ul>
             </li>
 

@@ -19,6 +19,7 @@ use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
 
@@ -123,6 +124,13 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::put('/{offerForm}',                   [OfferFormTemplateController::class, 'update'])->name('update');
         Route::delete('/{offerForm}',                [OfferFormTemplateController::class, 'destroy'])->name('destroy');
         Route::patch('/{offerForm}/toggle',          [OfferFormTemplateController::class, 'toggleActive'])->name('toggle');
+    });
+
+    Route::prefix('pricing-catalog')->name('pricing-catalog.')->middleware('full.staff')->group(function () {
+        Route::get('/', [PriceCatalogController::class, 'index'])->name('index');
+        Route::post('/', [PriceCatalogController::class, 'store'])->name('store');
+        Route::put('/{priceCatalogItem}', [PriceCatalogController::class, 'update'])->name('update');
+        Route::patch('/{priceCatalogItem}/toggle', [PriceCatalogController::class, 'toggle'])->name('toggle');
     });
 
     Route::prefix('chat')->name('chat.')->group(function () {

@@ -152,6 +152,18 @@
 
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
 
+            @if(!empty($pricingSuggestion['rows']))
+            <button onclick="pickTemplate(null, true)" style="display:flex;align-items:center;gap:16px;background:#FFFBEB;border:2px solid #FCD34D;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='#D97706'" onmouseout="this.style.borderColor='#FCD34D'">
+                <div style="width:44px;height:44px;background:#FEF3C7;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="ti ti-calculator" style="font-size:22px;color:#92400E;"></i>
+                </div>
+                <div>
+                    <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:3px;">Użyj wyceny wstępnej z ankiety</div>
+                    <div style="font-size:12px;color:#775B16;">{{ $pricingSuggestion['matched_rules'] }} {{ $pricingSuggestion['matched_rules'] === 1 ? 'pozycja' : 'pozycje' }} · {{ number_format($pricingSuggestion['net_total'], 2, ',', ' ') }} zł netto — możesz ją potem zmienić</div>
+                </div>
+            </button>
+            @endif
+
             {{-- Opcja: pusta oferta --}}
             <button onclick="pickTemplate(null)" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='#1A4D3A'" onmouseout="this.style.borderColor='#E5E1D8'">
                 <div style="width:44px;height:44px;background:#F0F7F3;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -1058,7 +1070,21 @@ async function aiAssist(field, mode, quillInstance) {
     }
 }
 
-function pickTemplate(templateId) {
+const PRICING_SUGGESTION = @json($pricingSuggestion ?? ['rows' => []]);
+
+function applyPricingSuggestion() {
+    const rows = Array.isArray(PRICING_SUGGESTION.rows) ? PRICING_SUGGESTION.rows : [];
+    if (!rows.length) return;
+
+    priceSections = [{ id: 'main', name: 'Wycena wstępna z ankiety', rows }];
+    document.getElementById('section-main-name').value = 'Wycena wstępna z ankiety';
+    document.getElementById('tbody-main').innerHTML = '';
+    document.getElementById('dynamic-sections').innerHTML = '';
+    rows.forEach(row => addRow('tbody-main', row));
+    recalcAll();
+}
+
+function pickTemplate(templateId, usePricingSuggestion = false) {
     document.getElementById('modal-template-pick')?.remove();
     document.getElementById('editor-topbar').style.display = 'flex';
     document.getElementById('offer-form').style.display = 'block';
@@ -1098,8 +1124,11 @@ function pickTemplate(templateId) {
                 });
             }
             recalcAll();
+            if (usePricingSuggestion) applyPricingSuggestion();
         })
         .catch(() => console.warn('Nie udało się załadować szablonu'));
+    } else if (usePricingSuggestion) {
+        applyPricingSuggestion();
     }
 }
 

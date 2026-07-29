@@ -36,6 +36,12 @@
                 {{ ucfirst(str_replace('_', ' ', $offerRequest->status)) }}
             </span>
             <div style="margin-top:8px;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;">
+                @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
+                <a href="{{ route('offers.create', ['offer_request_id' => $offerRequest->id]) }}"
+                   style="display:inline-flex;align-items:center;gap:6px;background:#92400E;color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+                    <i class="ti ti-calculator"></i> Utwórz ofertę
+                </a>
+                @endif
                 <a href="{{ route('offer-requests.edit', $offerRequest) }}" data-tooltip="Uzupełnij ankietę"
                    style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
                     <i class="ti ti-pencil"></i> Edytuj zapytanie

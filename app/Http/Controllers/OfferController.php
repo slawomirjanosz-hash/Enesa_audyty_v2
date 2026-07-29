@@ -12,6 +12,7 @@ use App\Models\OfferSavedTemplate;
 use App\Models\OfferTemplateType;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Services\OfferPricingSuggestionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -80,7 +81,11 @@ class OfferController extends Controller
             ->get();
 
         $offerRequest = $request->filled('offer_request_id')
-            ? OfferRequest::find($request->offer_request_id)
+            ? OfferRequest::with(['company', 'offerFormTemplate'])->find($request->offer_request_id)
+            : null;
+
+        $pricingSuggestion = $offerRequest
+            ? app(OfferPricingSuggestionService::class)->forOfferRequest($offerRequest)
             : null;
 
         $offerTemplates = Offer::where('is_template', true)
@@ -96,6 +101,7 @@ class OfferController extends Controller
             'users',
             'offerTemplateTypes',
             'offerRequest',
+            'pricingSuggestion',
             'offerTemplates',
             'suggestedNumber',
             'numberExists',
