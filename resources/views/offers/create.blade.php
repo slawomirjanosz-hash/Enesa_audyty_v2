@@ -285,7 +285,7 @@
                         data-name="{{ $company->name }}"
                         data-address="{{ $company->address ?? '' }}"
                         data-city="{{ $company->city ?? '' }}"
-                        {{ old('company_id', $offerRequest?->company_id) == $company->id ? 'selected' : '' }}>
+                        {{ old('company_id', $selectedCompanyId) == $company->id ? 'selected' : '' }}>
                         {{ $company->name }}
                         @if($company->city) — {{ $company->city }} @endif
                     </option>
@@ -305,17 +305,32 @@
     </div>
 
     {{-- Osoba prowadząca + status --}}
-    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px 160px;gap:14px;align-items:end;">
+    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end;">
         <div>
             <label class="field-label">Osoba prowadząca (ENESA)</label>
             <select name="assigned_user_id" class="field-input">
                 <option value="">— nieprzypisana —</option>
                 @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ old('assigned_user_id') == $user->id ? 'selected' : '' }}>
+                    <option value="{{ $user->id }}" {{ old('assigned_user_id', $selectedCrmOpportunity?->assigned_to) == $user->id ? 'selected' : '' }}>
                         {{ $user->name }}
                     </option>
                 @endforeach
             </select>
+        </div>
+        <div>
+            <label class="field-label">Powiązana szansa CRM</label>
+            <select name="crm_opportunity_id" id="crm_opportunity_id" class="field-input">
+                <option value="">— bez powiązania —</option>
+                @foreach($crmOpportunities as $opportunity)
+                    <option value="{{ $opportunity->id }}"
+                            data-company-id="{{ $opportunity->company_id }}"
+                            {{ old('crm_opportunity_id', $selectedCrmOpportunity?->id) == $opportunity->id ? 'selected' : '' }}>
+                        {{ $opportunity->title }} — {{ $opportunity->company?->name ?? 'bez firmy' }}
+                    </option>
+                @endforeach
+            </select>
+            <div id="crm-opportunity-help" style="font-size:11px;color:#888;margin-top:4px;">Dostępne są tylko leady wybranej firmy.</div>
+            @error('crm_opportunity_id')<div style="font-size:11px;color:#B91C1C;margin-top:4px;">{{ $message }}</div>@enderror
         </div>
         <div>
             <label class="field-label">Numer oferty <span style="color:#DC2626;">*</span></label>
@@ -342,7 +357,7 @@
     <div class="doc-title-wrap">
         <input type="text" name="offer_title"
                class="doc-title-input"
-               value="{{ old('offer_title') }}"
+               value="{{ old('offer_title', $selectedCrmOpportunity?->title) }}"
                placeholder="Wpisz tytuł oferty — będzie widoczny na dokumencie">
     </div>
 </div>
@@ -1016,9 +1031,25 @@ setTimeout(() => {
         });
     }
 
+    const crmOpportunitySelect = document.getElementById('crm_opportunity_id');
+    const filterCrmOpportunities = (companyId) => {
+        if (!crmOpportunitySelect) return;
+
+        Array.from(crmOpportunitySelect.options).forEach((option) => {
+            if (!option.value) return;
+            const belongsToSelectedCompany = option.dataset.companyId === String(companyId);
+            option.hidden = !belongsToSelectedCompany;
+            option.disabled = !belongsToSelectedCompany;
+        });
+
+        const selected = crmOpportunitySelect.options[crmOpportunitySelect.selectedIndex];
+        if (selected?.value && selected.disabled) crmOpportunitySelect.value = '';
+    };
+
     if (companySelect) {
         companySelect.addEventListener('change', function () {
             fetchDistance(this.value);
+            filterCrmOpportunities(this.value);
             const opt = this.options[this.selectedIndex];
             if (!opt || !opt.value) return;
             const addr = [opt.dataset.address, opt.dataset.city].filter(Boolean).join(', ');
@@ -1032,8 +1063,10 @@ setTimeout(() => {
         // Auto-fetch if company already pre-selected (e.g. from offerRequest)
         if (companySelect.value) {
             fetchDistance(companySelect.value);
+            filterCrmOpportunities(companySelect.value);
         }
     }
+    filterCrmOpportunities(companySelect?.value || '');
 });
 
 async function aiAssist(field, mode, quillInstance) {

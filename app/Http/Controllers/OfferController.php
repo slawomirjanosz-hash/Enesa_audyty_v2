@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\CrmOpportunity;
 use App\Models\Document;
 use App\Models\Offer;
 use App\Models\OfferDelegation;
@@ -20,6 +21,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
@@ -84,6 +86,23 @@ class OfferController extends Controller
             ? OfferRequest::with(['company', 'offerFormTemplate'])->find($request->offer_request_id)
             : null;
 
+        $selectedCrmOpportunity = $request->filled('crm_opportunity_id')
+            ? CrmOpportunity::with('company')->findOrFail($request->integer('crm_opportunity_id'))
+            : null;
+
+        if ($selectedCrmOpportunity && $request->filled('company_id')
+            && $selectedCrmOpportunity->company_id !== $request->integer('company_id')) {
+            abort(422, 'Wybrany lead nie należy do wskazanej firmy.');
+        }
+
+        $selectedCompanyId = $offerRequest?->company_id
+            ?? $selectedCrmOpportunity?->company_id
+            ?? ($request->filled('company_id') ? $request->integer('company_id') : null);
+
+        $crmOpportunities = CrmOpportunity::with('company')
+            ->orderByDesc('created_at')
+            ->get();
+
         $pricingSuggestion = $offerRequest
             ? app(OfferPricingSuggestionService::class)->forOfferRequest($offerRequest)
             : null;
@@ -101,6 +120,9 @@ class OfferController extends Controller
             'users',
             'offerTemplateTypes',
             'offerRequest',
+            'crmOpportunities',
+            'selectedCrmOpportunity',
+            'selectedCompanyId',
             'pricingSuggestion',
             'offerTemplates',
             'suggestedNumber',
@@ -140,6 +162,14 @@ class OfferController extends Controller
             'notes'                     => ['nullable', 'string'],
             'offer_template_version_id' => ['nullable', 'exists:offer_template_versions,id'],
             'offer_request_id'          => ['nullable', 'exists:offer_requests,id'],
+            'crm_opportunity_id'         => [
+                'nullable',
+                'integer',
+                Rule::exists('crm_opportunities', 'id')->where(function ($query) use ($request) {
+                    $query->where('company_id', $request->input('company_id'))
+                        ->whereNull('deleted_at');
+                }),
+            ],
             // Rich content
             'content_subject'           => ['nullable', 'string'],
             'content_scope'             => ['nullable', 'string'],
@@ -199,6 +229,7 @@ class OfferController extends Controller
             'additional_description'    => $data['additional_description'] ?? null,
             'offer_template_version_id' => $data['offer_template_version_id'] ?? null,
             'offer_request_id'          => $data['offer_request_id'] ?? null,
+            'crm_opportunity_id'         => $data['crm_opportunity_id'] ?? null,
             'content_subject'           => $data['content_subject'] ?? null,
             'content_scope'             => $data['content_scope'] ?? null,
             'content_deadline'          => $data['content_deadline'] ?? null,
@@ -231,6 +262,8 @@ class OfferController extends Controller
                 ->update(['status' => 'w_toku']);
         }
 
+        $this->synchronizeCrmOpportunityStage($offer);
+
         return redirect()->route('offers.show', $offer)
             ->with('success', 'Oferta ' . $offer->offer_full_number . ' została utworzona.');
     }
@@ -244,6 +277,7 @@ class OfferController extends Controller
             'createdBy',
             'offerTemplateVersion',
             'offerRequest',
+            'crmOpportunity',
             'offerDelegation',
             'offerMessages.user',
         ]);
@@ -266,6 +300,10 @@ class OfferController extends Controller
             ->get();
         $offerRequest = $offer->offerRequest;
 
+        $crmOpportunities = CrmOpportunity::with('company')
+            ->orderByDesc('created_at')
+            ->get();
+
         $suggestedNumber = $offer->offer_number;
         $numberExists    = false;
 
@@ -276,6 +314,7 @@ class OfferController extends Controller
             'users',
             'offerTemplateTypes',
             'offerRequest',
+            'crmOpportunities',
             'suggestedNumber',
             'numberExists',
         ));
@@ -299,6 +338,14 @@ class OfferController extends Controller
             'notes'                     => ['nullable', 'string'],
             'offer_template_version_id' => ['nullable', 'exists:offer_template_versions,id'],
             'offer_request_id'          => ['nullable', 'exists:offer_requests,id'],
+            'crm_opportunity_id'         => [
+                'nullable',
+                'integer',
+                Rule::exists('crm_opportunities', 'id')->where(function ($query) use ($request) {
+                    $query->where('company_id', $request->input('company_id'))
+                        ->whereNull('deleted_at');
+                }),
+            ],
             // Rich content
             'content_subject'           => ['nullable', 'string'],
             'content_scope'             => ['nullable', 'string'],
@@ -357,6 +404,7 @@ class OfferController extends Controller
             'additional_description'    => $data['additional_description'] ?? null,
             'offer_template_version_id' => $data['offer_template_version_id'] ?? null,
             'offer_request_id'          => $data['offer_request_id'] ?? null,
+            'crm_opportunity_id'         => $data['crm_opportunity_id'] ?? null,
             'content_subject'           => $data['content_subject'] ?? null,
             'content_scope'             => $data['content_scope'] ?? null,
             'content_deadline'          => $data['content_deadline'] ?? null,
@@ -371,6 +419,8 @@ class OfferController extends Controller
             $offer->created_at = \Carbon\Carbon::parse($data['created_at']);
             $offer->save();
         }
+
+        $this->synchronizeCrmOpportunityStage($offer);
 
         $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
         $delegation->fill([
@@ -398,7 +448,30 @@ class OfferController extends Controller
 
         $offer->update($data);
 
+        $this->synchronizeCrmOpportunityStage($offer);
+
         return redirect()->back()->with('success', 'Status oferty został zaktualizowany.');
+    }
+
+    /** Keep the CRM lead in step with the outcome of its linked offer. */
+    private function synchronizeCrmOpportunityStage(Offer $offer): void
+    {
+        $opportunity = $offer->crmOpportunity()->first();
+
+        if (! $opportunity) {
+            return;
+        }
+
+        $nextStage = match ($offer->status) {
+            'wygrana' => 'realization',
+            'przegrana' => 'lost',
+            'w_toku' => in_array($opportunity->stage, ['new_lead', 'contact'], true) ? 'offer' : null,
+            default => null,
+        };
+
+        if ($nextStage && $opportunity->stage !== $nextStage) {
+            $opportunity->update(['stage' => $nextStage]);
+        }
     }
 
     public function storeMessage(Request $request, Offer $offer): RedirectResponse

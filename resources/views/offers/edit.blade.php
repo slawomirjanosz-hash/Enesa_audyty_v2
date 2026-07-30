@@ -561,7 +561,7 @@
 <input type="hidden" name="offer_slug"       value="{{ $offer->offer_slug }}">
 
 {{-- Osoba prowadząca + status --}}
-<div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:1fr 1fr 180px 160px;gap:14px;align-items:end;">
+<div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end;">
     <div>
         <label class="field-label">Osoba prowadząca (ENESA)</label>
         <select name="assigned_user_id" class="field-input">
@@ -573,6 +573,23 @@
             @endforeach
         </select>
     </div>
+    @if(!$offer->is_template)
+    <div>
+        <label class="field-label">Powiązana szansa CRM</label>
+        <select name="crm_opportunity_id" id="crm_opportunity_id" class="field-input">
+            <option value="">— bez powiązania —</option>
+            @foreach($crmOpportunities as $opportunity)
+                <option value="{{ $opportunity->id }}"
+                        data-company-id="{{ $opportunity->company_id }}"
+                        {{ old('crm_opportunity_id', $offer->crm_opportunity_id) == $opportunity->id ? 'selected' : '' }}>
+                    {{ $opportunity->title }} — {{ $opportunity->company?->name ?? 'bez firmy' }}
+                </option>
+            @endforeach
+        </select>
+        <div style="font-size:11px;color:#888;margin-top:4px;">Dostępne są tylko leady wybranej firmy.</div>
+        @error('crm_opportunity_id')<div style="font-size:11px;color:#B91C1C;margin-top:4px;">{{ $message }}</div>@enderror
+    </div>
+    @endif
     <div>
         <label class="field-label">Numer oferty</label>
         <input type="text" name="offer_number" class="field-input" value="{{ $offer->offer_number }}" required>
@@ -1168,9 +1185,25 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 }); // DOMContentLoaded
 
+function filterCrmOpportunities(companyId) {
+    const select = document.getElementById('crm_opportunity_id');
+    if (!select) return;
+
+    Array.from(select.options).forEach((option) => {
+        if (!option.value) return;
+        const belongsToSelectedCompany = option.dataset.companyId === String(companyId);
+        option.hidden = !belongsToSelectedCompany;
+        option.disabled = !belongsToSelectedCompany;
+    });
+
+    const selected = select.options[select.selectedIndex];
+    if (selected?.value && selected.disabled) select.value = '';
+}
+
 function updateCompanyInfo(sel) {
     const opt = sel.options[sel.selectedIndex];
     if (!opt || !opt.value) return;
+    filterCrmOpportunities(opt.value);
     document.getElementById('disp-name').textContent = opt.dataset.name || '—';
     let details = '';
     if (opt.dataset.address) details += opt.dataset.address;
@@ -1208,6 +1241,8 @@ function updateCompanyInfo(sel) {
 }
 
 /* ── Funkcje do obsługi wartości z przecinkami ── */
+filterCrmOpportunities(document.getElementById('company_id_select')?.value || '');
+
 function allowDecimalInput(event) {
     // Allow: 0-9, comma, dot, backspace, delete, arrows, tab
     const key = event.key;

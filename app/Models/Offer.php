@@ -25,6 +25,7 @@ class Offer extends Model
         'created_by_id',
         'offer_template_version_id',
         'offer_request_id',
+        'crm_opportunity_id',
         'kwota_netto',
         'valid_until',
         'notes',
@@ -73,6 +74,11 @@ class Offer extends Model
     public function offerRequest(): BelongsTo
     {
         return $this->belongsTo(OfferRequest::class);
+    }
+
+    public function crmOpportunity(): BelongsTo
+    {
+        return $this->belongsTo(CrmOpportunity::class);
     }
 
     public function offerDelegation(): HasOne

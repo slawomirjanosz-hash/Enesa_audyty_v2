@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Audit;
 use App\Models\Company;
 use App\Models\CrmOpportunity;
+use App\Models\Offer;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,10 +25,18 @@ class CrmController extends Controller
             ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
             ->get();
 
-        $opportunities = $access->scopeByCompanyAccess(CrmOpportunity::with(['company', 'assignedUser'])
+        $opportunities = $access->scopeByCompanyAccess(CrmOpportunity::with(['company', 'assignedUser', 'offers'])
             ->whereNull('deleted_at')
             ->orderByDesc('created_at'), $authUser, 'can_view_dashboard')
             ->get();
+
+        $unlinkedOffers = $access->scopeByCompanyAccess(
+            Offer::with('company')->where('is_template', false)->whereNull('crm_opportunity_id')->orderByDesc('created_at'),
+            $authUser,
+            'can_view_offers'
+        )->get();
+
+        $canManageCrm = $access->hasFullAccess($authUser);
 
         $tasks = $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer'])
             ->orderBy('due_date'), $authUser, 'can_view_dashboard')
@@ -90,7 +99,7 @@ if ($authUser->hasRole('superadmin')) {
         $currentTab = request('tab', 'companies');
 
         return view('crm.index', compact(
-            'companies', 'opportunities', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
+            'companies', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
         ));
     }
 
@@ -231,11 +240,54 @@ if ($authUser->hasRole('superadmin')) {
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');
     }
 
+    public function attachOffer(Request $request, CrmOpportunity $opportunity): RedirectResponse
+    {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $this->authorize('update', $opportunity);
+
+        $data = $request->validate([
+            'offer_id' => ['required', 'exists:offers,id'],
+        ]);
+
+        $offer = Offer::findOrFail($data['offer_id']);
+        $this->authorize('update', $offer);
+
+        if (! $opportunity->company_id || $offer->is_template || $offer->company_id !== $opportunity->company_id) {
+            return redirect()->route('crm.index', ['tab' => 'pipeline'])
+                ->with('error', 'Można przypiąć tylko ofertę tej samej firmy.');
+        }
+
+        if ($offer->crm_opportunity_id && $offer->crm_opportunity_id !== $opportunity->id) {
+            return redirect()->route('crm.index', ['tab' => 'pipeline'])
+                ->with('error', 'Ta oferta jest już przypięta do innego leada.');
+        }
+
+        $offer->update(['crm_opportunity_id' => $opportunity->id]);
+        $this->synchronizeOpportunityStage($opportunity, $offer);
+
+        return redirect()->route('crm.index', ['tab' => 'pipeline'])
+            ->with('success', 'Oferta została przypięta do leada.');
+    }
+
     public function destroyOpportunity(CrmOpportunity $opportunity): RedirectResponse
     {
         $this->authorize('delete', $opportunity);
         $opportunity->delete();
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została usunięta.');
+    }
+
+    private function synchronizeOpportunityStage(CrmOpportunity $opportunity, Offer $offer): void
+    {
+        $nextStage = match ($offer->status) {
+            'wygrana' => 'realization',
+            'przegrana' => 'lost',
+            'w_toku' => in_array($opportunity->stage, ['new_lead', 'contact'], true) ? 'offer' : null,
+            default => null,
+        };
+
+        if ($nextStage && $opportunity->stage !== $nextStage) {
+            $opportunity->update(['stage' => $nextStage]);
+        }
     }
 
     public function detachOrphanedUser($assignmentId): RedirectResponse

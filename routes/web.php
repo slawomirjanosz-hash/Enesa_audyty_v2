@@ -216,6 +216,7 @@ Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role'])->group(fu
     Route::post('/opportunities', [CrmController::class, 'storeOpportunity'])->name('opportunities.store');
     Route::patch('/opportunities/{opportunity}/stage', [CrmController::class, 'updateOpportunityStage'])->name('opportunities.stage');
     Route::patch('/opportunities/{opportunity}', [CrmController::class, 'updateOpportunity'])->name('opportunities.update');
+    Route::post('/opportunities/{opportunity}/attach-offer', [CrmController::class, 'attachOffer'])->name('opportunities.attach-offer');
     Route::delete('/opportunities/{opportunity}', [CrmController::class, 'destroyOpportunity'])->name('opportunities.destroy');
     Route::post('/tasks', [CrmController::class, 'storeTask'])->name('tasks.store');
     Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');

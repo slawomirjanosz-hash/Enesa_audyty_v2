@@ -110,6 +110,7 @@
     ];
     $funnelStages = ['new_lead','contact','offer','negotiation','realization'];
     $endStages    = ['won','lost','rejected'];
+    $offerStatusLabels = ['w_toku' => 'W toku', 'wygrana' => 'Wygrana', 'przegrana' => 'Przegrana', 'zarchiwizowana' => 'Archiwalna'];
 
     // $myTasks przychodzi już gotowe z kontrolera (Task::forUser()) — tylko zadania przypisane do mnie
     $otherTasks = $tasks->filter(fn($t) => $t->assigned_to != $userId);
@@ -325,7 +326,32 @@
                 <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};cursor:pointer;"
                     onclick="openEditOpp({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}')">
                     <div class="opp-card-title">{{ $opp->title }}</div>
-                    <div class="opp-card-sub">{{ $opp->company?->name ?? 'bez klienta' }}</div>
+                    @if($opp->company)
+                        <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:#1A4D3A;text-decoration:none;font-weight:600;">
+                            <i class="ti ti-building"></i> {{ $opp->company->name }}
+                        </a>
+                    @else
+                        <div class="opp-card-sub">bez klienta</div>
+                    @endif
+                    @if($opp->offers->isNotEmpty())
+                        <div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">
+                            @foreach($opp->offers as $offer)
+                                <a href="{{ route('offers.show', $offer) }}" onclick="event.stopPropagation()" style="font-size:10px;color:#555;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="{{ $offer->fullNumber() }}">
+                                    <i class="ti ti-file-text" style="color:#D97706;"></i> {{ $offer->fullNumber() }} · {{ $offerStatusLabels[$offer->status] ?? $offer->status }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if($canManageCrm && $opp->company_id)
+                        <div style="display:flex;gap:5px;margin-top:8px;" onclick="event.stopPropagation()">
+                            <a href="{{ route('offers.create', ['company_id' => $opp->company_id, 'crm_opportunity_id' => $opp->id]) }}" style="flex:1;text-align:center;background:#1A4D3A;color:#fff;border-radius:5px;padding:5px 4px;font-size:10px;font-weight:700;text-decoration:none;">
+                                <i class="ti ti-file-plus"></i> Nowa oferta
+                            </a>
+                            <button type="button" onclick="openAttachOffer({{ $opp->id }}, {{ $opp->company_id }}, '{{ addslashes($opp->title) }}')" style="background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Przypnij istniejącą ofertę">
+                                <i class="ti ti-link"></i>
+                            </button>
+                        </div>
+                    @endif
                     @if($opp->value)
                     <div class="opp-card-val">{{ number_format($opp->value, 2, ',', ' ') }} zł</div>
                     @endif
@@ -942,6 +968,33 @@
     </div>
 </div>
 
+<div id="modal-attach-offer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:14px;padding:24px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A4D3A;"><i class="ti ti-link" style="margin-right:8px;"></i>Przypnij ofertę</div>
+            <button type="button" onclick="closeAttachOffer()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
+        </div>
+        <div id="attach-offer-lead-title" style="font-size:12px;color:#666;margin-bottom:16px;"></div>
+        <form id="form-attach-offer" method="POST">
+            @csrf
+            <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:5px;font-family:'Manrope',sans-serif;">Nieprzypisana oferta tej firmy</label>
+            <select name="offer_id" id="attach-offer-select" required style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:9px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                <option value="">— wybierz ofertę —</option>
+                @foreach($unlinkedOffers as $unlinkedOffer)
+                    <option value="{{ $unlinkedOffer->id }}" data-company-id="{{ $unlinkedOffer->company_id }}">
+                        {{ $unlinkedOffer->fullNumber() }} — {{ $unlinkedOffer->offer_title ?: 'bez tytułu' }}
+                    </option>
+                @endforeach
+            </select>
+            <div id="attach-offer-empty" style="display:none;font-size:12px;color:#888;margin-top:8px;">Brak nieprzypisanych ofert dla tej firmy.</div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
+                <button type="button" onclick="closeAttachOffer()" class="btn-secondary">Anuluj</button>
+                <button type="submit" class="btn-primary"><i class="ti ti-link"></i> Przypnij</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="modal-edit-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
@@ -1265,6 +1318,36 @@ function openEditTask(id, title, description, assignedTo, companyId, dueDate, pr
     sel('edit-task-priority', priority);
     sel('edit-task-status', status);
     document.getElementById('modal-task-edit').style.display = 'flex';
+}
+
+function openAttachOffer(opportunityId, companyId, title) {
+    const modal = document.getElementById('modal-attach-offer');
+    const select = document.getElementById('attach-offer-select');
+    const form = document.getElementById('form-attach-offer');
+    const empty = document.getElementById('attach-offer-empty');
+    const baseUrl = '{{ url('/crm/opportunities') }}/';
+    let available = 0;
+
+    form.action = baseUrl + opportunityId + '/attach-offer';
+    document.getElementById('attach-offer-lead-title').textContent = 'Lead: ' + title;
+    select.value = '';
+
+    Array.from(select.options).forEach((option) => {
+        if (!option.value) return;
+        const belongsToCompany = option.dataset.companyId === String(companyId);
+        option.hidden = !belongsToCompany;
+        option.disabled = !belongsToCompany;
+        if (belongsToCompany) available += 1;
+    });
+
+    empty.style.display = available ? 'none' : 'block';
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAttachOffer() {
+    document.getElementById('modal-attach-offer').style.display = 'none';
+    document.body.style.overflow = '';
 }
 
 function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes) {
