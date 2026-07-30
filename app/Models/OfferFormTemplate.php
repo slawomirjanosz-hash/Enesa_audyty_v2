@@ -160,6 +160,7 @@ class OfferFormTemplate extends Model
                 'type'     => $node['type']     ?? 'text',
                 'required' => $node['required'] ?? false,
                 'options'  => $node['options']  ?? [],
+                'pricing'  => $node['pricing']  ?? null,
             ];
 
             if (!empty($node['branches']) && is_array($node['branches'])) {

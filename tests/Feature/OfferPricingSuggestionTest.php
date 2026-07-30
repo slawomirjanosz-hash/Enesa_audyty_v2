@@ -69,3 +69,53 @@ test('pricing suggestion ignores inactive catalog items', function () {
     expect(app(OfferPricingSuggestionService::class)->forOfferRequest($request))
         ->toMatchArray(['rows' => [], 'net_total' => 0.0, 'matched_rules' => 0]);
 });
+
+test('pricing suggestion uses a number answer as the quantity and prepares travel from an address', function () {
+    $company = Company::create(['name' => 'Firma testowa']);
+    $perBuilding = PriceCatalogItem::create([
+        'name' => 'Audyt obiektu',
+        'unit' => 'obiekt',
+        'net_unit_price' => 250,
+        'is_active' => true,
+    ]);
+    $template = OfferFormTemplate::create([
+        'name' => 'Ankieta z ilością i dojazdem',
+        'fields' => [[
+            'type' => 'section',
+            'title' => 'Zakres',
+            'fields' => [
+                [
+                    'key' => 'liczba_obiektow',
+                    'label' => 'Liczba obiektów',
+                    'type' => 'number',
+                    'pricing' => ['type' => 'quantity', 'price_catalog_item_id' => $perBuilding->id, 'multiplier' => 1],
+                ],
+                [
+                    'key' => 'adres_audytu',
+                    'label' => 'Adres audytu',
+                    'type' => 'address',
+                    'pricing' => ['type' => 'travel', 'trips' => 2, 'people' => 1, 'rate_per_km' => 1.25],
+                ],
+            ],
+        ]],
+        'is_active' => true,
+    ]);
+    $request = OfferRequest::create([
+        'company_id' => $company->id,
+        'offer_form_template_id' => $template->id,
+        'form_responses' => [
+            'liczba_obiektow' => 3,
+            'adres_audytu' => ['zip' => '00-001', 'city' => 'Warszawa', 'street' => 'Marszałkowska', 'no' => '1'],
+        ],
+    ]);
+
+    $suggestion = app(OfferPricingSuggestionService::class)->forOfferRequest($request);
+
+    expect($suggestion['rows'])->toHaveCount(1)
+        ->and($suggestion['rows'][0]['ilosc'])->toBe(3.0)
+        ->and($suggestion['net_total'])->toBe(750.0)
+        ->and($suggestion['delegations'])->toHaveCount(1)
+        ->and($suggestion['delegations'][0]['wyjazdy'])->toBe(2)
+        ->and($suggestion['delegations'][0]['stawka_km'])->toBe(1.25)
+        ->and($suggestion['delegations'][0]['adres'])->toContain('Warszawa');
+});

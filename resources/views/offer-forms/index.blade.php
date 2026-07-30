@@ -177,7 +177,7 @@
 
             <div class="mf-group pricing-rules-box">
                 <div style="font:700 13px 'Manrope',sans-serif;color:#92400E;margin-bottom:4px;"><i class="ti ti-calculator" style="margin-right:5px;"></i>Reguły wyceny wstępnej</div>
-                <p style="font-size:12px;color:#775B16;line-height:1.5;margin:0 0 10px;">Gdy klient wybierze odpowiedź z listy, system doda wskazaną pozycję z cennika do propozycji oferty. Cena pozostaje edytowalna.</p>
+                <p style="font-size:12px;color:#775B16;line-height:1.5;margin:0 0 10px;">Dla pytań „Liczba” i „Adres” ustawienia wyceny znajdziesz bezpośrednio pod pytaniem. Poniższe reguły służą dla odpowiedzi z „Listy wyboru”. Cena w ofercie zawsze pozostaje edytowalna.</p>
                 <div id="pricing-rules-container"></div>
                 <button type="button" class="btn-add-question" onclick="addPricingRule()"><i class="ti ti-plus"></i> Dodaj regułę wyceny</button>
                 @if($priceItems->isEmpty())
@@ -362,6 +362,45 @@ function renderField(listEl, data, beforeNode) {
     const branchWrap = el('div', 'field-branches');
     branchWrap.style.display = d.type === 'select' ? 'block' : 'none';
 
+    const pricingWrap = el('div', 'field-pricing-config');
+    const catalogOptions = () => PRICE_CATALOG_ITEMS.map(item =>
+        `<option value="${item.id}">${esc(item.name)} — ${item.price.toLocaleString('pl-PL', {minimumFractionDigits:2})} zł/${esc(item.unit)}</option>`
+    ).join('');
+
+    function renderPricingConfig() {
+        const pricing = d.pricing || {};
+        pricingWrap.innerHTML = '';
+
+        if (typeSel.value === 'number') {
+            pricingWrap.style.display = 'block';
+            pricingWrap.innerHTML = `
+                <div style="margin-top:10px;padding:10px 12px;background:#F0F7F3;border:1px solid #B7D9C8;border-radius:8px;display:flex;gap:10px;align-items:end;flex-wrap:wrap;">
+                    <label style="font-size:12px;font-weight:700;color:#1A4D3A;display:flex;gap:6px;align-items:center;"><input type="checkbox" class="pricing-enabled" ${pricing.type === 'quantity' ? 'checked' : ''}> Użyj odpowiedzi jako ilości do wyceny</label>
+                    <div style="flex:1;min-width:190px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Pozycja z cennika</div><select class="mf-input pricing-item" ${PRICE_CATALOG_ITEMS.length ? '' : 'disabled'}>${catalogOptions()}</select></div>
+                    <div style="width:110px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Mnożnik</div><input class="mf-input pricing-multiplier" type="number" min="0.01" step="0.01" value="${Number(pricing.multiplier) || 1}"></div>
+                    ${PRICE_CATALOG_ITEMS.length ? '' : '<div style="font-size:11px;color:#92400E;">Dodaj pozycję w Cenniku usług.</div>'}
+                </div>`;
+            const item = pricingWrap.querySelector('.pricing-item');
+            if (item) item.value = String(pricing.price_catalog_item_id || PRICE_CATALOG_ITEMS[0]?.id || '');
+            return;
+        }
+
+        if (typeSel.value === 'address') {
+            pricingWrap.style.display = 'block';
+            pricingWrap.innerHTML = `
+                <div style="margin-top:10px;padding:10px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;display:flex;gap:10px;align-items:end;flex-wrap:wrap;">
+                    <label style="font-size:12px;font-weight:700;color:#1D4ED8;display:flex;gap:6px;align-items:center;"><input type="checkbox" class="pricing-enabled" ${pricing.type === 'travel' ? 'checked' : ''}> Wylicz dojazd z tego adresu</label>
+                    <div style="width:105px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Wyjazdy</div><input class="mf-input pricing-trips" type="number" min="1" step="1" value="${Number(pricing.trips) || 1}"></div>
+                    <div style="width:95px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Osoby</div><input class="mf-input pricing-people" type="number" min="1" step="1" value="${Number(pricing.people) || 1}"></div>
+                    <div style="width:115px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Stawka zł/km</div><input class="mf-input pricing-rate" type="number" min="0" step="0.01" value="${Number(pricing.rate_per_km) || 1.10}"></div>
+                    <div style="font-size:11px;color:#1D4ED8;max-width:220px;">Odległość zostanie pobrana przy tworzeniu oferty. Koszt liczy trasę w obie strony.</div>
+                </div>`;
+            return;
+        }
+
+        pricingWrap.style.display = 'none';
+    }
+
     function currentOptions() {
         return [...optTags.querySelectorAll('.option-value')].map(t => t.dataset.val);
     }
@@ -406,11 +445,13 @@ function renderField(listEl, data, beforeNode) {
         optWrap.style.display    = isSel ? 'block' : 'none';
         branchWrap.style.display = isSel ? 'block' : 'none';
         if (isSel) syncBranches();
+        renderPricingConfig();
     });
 
     row.appendChild(main);
     row.appendChild(optWrap);
     row.appendChild(branchWrap);
+    row.appendChild(pricingWrap);
     if (beforeNode) {
         listEl.insertBefore(row, beforeNode);
     } else {
@@ -429,6 +470,7 @@ function renderField(listEl, data, beforeNode) {
             });
         }
     }
+    renderPricingConfig();
     return row;
 }
 
@@ -450,6 +492,21 @@ function collectFieldList(listEl) {
             bw.querySelectorAll(':scope > .branch-block').forEach(b => {
                 f.branches[b.dataset.opt] = collectFieldList(b.querySelector(':scope > .branch-fields'));
             });
+        }
+        if (type === 'number' && row.querySelector('.pricing-enabled')?.checked) {
+            f.pricing = {
+                type: 'quantity',
+                price_catalog_item_id: Number(row.querySelector('.pricing-item')?.value || 0),
+                multiplier: Number(row.querySelector('.pricing-multiplier')?.value || 1),
+            };
+        }
+        if (type === 'address' && row.querySelector('.pricing-enabled')?.checked) {
+            f.pricing = {
+                type: 'travel',
+                trips: Number(row.querySelector('.pricing-trips')?.value || 1),
+                people: Number(row.querySelector('.pricing-people')?.value || 1),
+                rate_per_km: Number(row.querySelector('.pricing-rate')?.value || 1.10),
+            };
         }
         out.push(f);
     });
