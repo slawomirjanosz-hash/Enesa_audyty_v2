@@ -276,6 +276,10 @@
     @media (max-width: 640px) {
         .stats-grid { grid-template-columns: 1fr; }
         .clients-grid { grid-template-columns: 1fr; }
+        .page-header { gap:14px; }
+        .page-header > div:last-child { width:100%; flex-wrap:wrap; }
+        .dashboard-search-box { order:3; width:100%; }
+        .dashboard-search-box input { width:100%; }
     }
 
     /* ── View toggle ──────────────────────── */
@@ -383,10 +387,11 @@
     }
     .table-btn-primary:hover { background: #153d2e; }
 
-    .search-box-dash { position:relative; margin-bottom:12px; display:inline-block; }
-    .search-box-dash input { font-size:13px; padding:8px 12px 8px 34px; border-radius:7px; border:1px solid #D0CCC0; outline:none; width:280px; font-family:'Lato',sans-serif; }
-    .search-box-dash input:focus { border-color:#1A4D3A; }
-    .search-box-dash i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#aaa; font-size:16px; }
+    .dashboard-search-box { position:relative; }
+    .dashboard-search-box input { font-size:13px; padding:8px 12px 8px 34px; border-radius:7px; border:1px solid #D0CCC0; outline:none; width:300px; font-family:'Lato',sans-serif; }
+    .dashboard-search-box input:focus { border-color:#1A4D3A; }
+    .dashboard-search-box i { position:absolute; left:10px; top:16px; color:#aaa; font-size:16px; }
+    .dashboard-search-result { min-height:15px; margin-top:4px; color:#777; font-size:11px; }
     .companies-table th { cursor:pointer; user-select:none; }
     .companies-table th:hover { color:#fff; }
     .sort-icon-dash { font-size:10px; opacity:.6; margin-left:3px; }
@@ -402,6 +407,13 @@
         <h1 class="page-title">Klienci wymagający uwagi</h1>
     </div>
     <div style="display:flex;gap:12px;align-items:center;">
+        <div class="dashboard-search-box">
+            <i class="ti ti-search"></i>
+            <input type="search" id="dashboard-company-search" autocomplete="off"
+                   placeholder="Szukaj: nazwa, NIP, miasto, opis…"
+                   oninput="searchDashboardCompanies(this.value)">
+            <div id="dashboard-search-result" class="dashboard-search-result" aria-live="polite"></div>
+        </div>
         <div class="view-toggle">
             <button class="view-toggle-btn active" id="viewTilesBtn" onclick="switchView('tiles')" title="Widok kafelków">
                 <i class="ti ti-layout-grid"></i>
@@ -486,7 +498,13 @@
                 default   => '#E5E1D8',
             };
         @endphp
-        <div class="client-tile" style="border-left-color: {{ $borderColor }};">
+        @php
+            $searchData = implode(' ', array_filter([
+                $company->name, $company->nip, $company->email, $company->phone,
+                $company->address, $company->city, $company->source, $company->notes, $company->status,
+            ]));
+        @endphp
+        <div class="client-tile" data-company-search="{{ $searchData }}" style="border-left-color: {{ $borderColor }};">
 
             {{-- Status online --}}
             <div class="tile-status-bar">
@@ -562,10 +580,6 @@
 </div>
 
 {{-- ══════ WIDOK TABELI ══════ --}}
-<div class="search-box-dash">
-    <i class="ti ti-search"></i>
-    <input type="text" id="search-companies-table" placeholder="Szukaj firmy, NIP..." oninput="filterCompaniesTable(this.value)">
-</div>
 <table class="companies-table" id="companiesTable">
     <thead>
         <tr>
@@ -585,7 +599,13 @@
                     fn($u) => $u->last_seen_at && $u->last_seen_at->gt(now()->subMinutes(5))
                 );
             @endphp
-            <tr>
+            @php
+                $searchData = implode(' ', array_filter([
+                    $company->name, $company->nip, $company->email, $company->phone,
+                    $company->address, $company->city, $company->source, $company->notes, $company->status,
+                ]));
+            @endphp
+            <tr data-company-search="{{ $searchData }}">
                 <td>
                     <strong>{{ $company->name }}</strong>
                 </td>
@@ -885,12 +905,35 @@
         if (e.target === this) closeModal();
     });
 
-    function filterCompaniesTable(query) {
-        const q = query.toLowerCase();
-        document.querySelectorAll('#companies-table-tbody tr').forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = !q || text.includes(q) ? '' : 'none';
+    function normalizeCompanySearch(value) {
+        return String(value || '')
+            .toLocaleLowerCase('pl-PL')
+            .replace(/ł/g, 'l')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, ' ')
+            .trim();
+    }
+
+    function searchDashboardCompanies(query) {
+        const normalizedQuery = normalizeCompanySearch(query);
+        const terms = normalizedQuery.split(' ').filter(Boolean);
+        let matches = 0;
+
+        document.querySelectorAll('[data-company-search]').forEach(element => {
+            const searchable = normalizeCompanySearch(element.dataset.companySearch);
+            const compactSearchable = searchable.replace(/\s/g, '');
+            const isMatch = terms.every(term => searchable.includes(term) || compactSearchable.includes(term));
+            element.style.display = isMatch ? '' : 'none';
+            if (isMatch && element.classList.contains('client-tile')) matches++;
         });
+
+        const result = document.getElementById('dashboard-search-result');
+        if (result) {
+            result.textContent = normalizedQuery
+                ? `Znaleziono: ${matches} ${matches === 1 ? 'firmę' : 'firm'}.`
+                : '';
+        }
     }
 
     const companiesSortState = {};
