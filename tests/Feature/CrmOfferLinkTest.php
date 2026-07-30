@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Company;
+use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
 use App\Models\Offer;
 use App\Models\User;
@@ -35,13 +36,15 @@ test('admin can attach an unlinked offer to a lead of the same company', functio
         ->assertRedirect(route('crm.index', ['tab' => 'pipeline']));
 
     expect($offer->refresh()->crm_opportunity_id)->toBe($opportunity->id)
-        ->and($opportunity->refresh()->stage)->toBe('offer');
+        ->and($opportunity->refresh()->stage)->toBe('offer')
+        ->and(CrmActivity::where('company_id', $company->id)->where('type', 'offer_linked')->exists())->toBeTrue();
 
     $this->actingAs($admin)
         ->patch(route('offers.status', $offer), ['status' => 'wygrana'])
         ->assertSessionHas('success');
 
-    expect($opportunity->refresh()->stage)->toBe('realization');
+    expect($opportunity->refresh()->stage)->toBe('realization')
+        ->and(CrmActivity::where('company_id', $company->id)->where('type', 'offer_status_changed')->exists())->toBeTrue();
 });
 
 test('offer cannot be attached to a lead of another company', function () {

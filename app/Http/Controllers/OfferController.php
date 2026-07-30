@@ -13,6 +13,7 @@ use App\Models\OfferSavedTemplate;
 use App\Models\OfferTemplateType;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Services\CrmActivityLogger;
 use App\Services\OfferPricingSuggestionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -262,6 +263,10 @@ class OfferController extends Controller
                 ->update(['status' => 'w_toku']);
         }
 
+        if ($offer->crm_opportunity_id) {
+            app(CrmActivityLogger::class)->offerLinked($offer, $offer->crmOpportunity);
+        }
+
         $this->synchronizeCrmOpportunityStage($offer);
 
         return redirect()->route('offers.show', $offer)
@@ -323,6 +328,8 @@ class OfferController extends Controller
     public function update(Request $request, Offer $offer): RedirectResponse
     {
         $this->authorize('update', $offer);
+        $previousStatus = $offer->status;
+        $previousOpportunityId = $offer->crm_opportunity_id;
         $data = $request->validate([
             'company_id'                => $offer->is_template
                 ? ['nullable', 'exists:companies,id']
@@ -420,6 +427,14 @@ class OfferController extends Controller
             $offer->save();
         }
 
+        if ($offer->crm_opportunity_id && $offer->crm_opportunity_id !== $previousOpportunityId) {
+            app(CrmActivityLogger::class)->offerLinked($offer, $offer->crmOpportunity);
+        }
+
+        if ($offer->status !== $previousStatus) {
+            app(CrmActivityLogger::class)->offerStatusChanged($offer, $previousStatus, $offer->status);
+        }
+
         $this->synchronizeCrmOpportunityStage($offer);
 
         $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
@@ -446,7 +461,12 @@ class OfferController extends Controller
             'won_as' => ['nullable', 'in:audyt,projekt,inne'],
         ]);
 
+        $previousStatus = $offer->status;
         $offer->update($data);
+
+        if ($offer->status !== $previousStatus) {
+            app(CrmActivityLogger::class)->offerStatusChanged($offer, $previousStatus, $offer->status);
+        }
 
         $this->synchronizeCrmOpportunityStage($offer);
 
@@ -470,7 +490,9 @@ class OfferController extends Controller
         };
 
         if ($nextStage && $opportunity->stage !== $nextStage) {
+            $previousStage = $opportunity->stage;
             $opportunity->update(['stage' => $nextStage]);
+            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $nextStage);
         }
     }
 

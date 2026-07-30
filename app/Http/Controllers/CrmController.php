@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use App\Services\AuditorAccessService;
+use App\Services\CrmActivityLogger;
 
 class CrmController extends Controller
 {
@@ -148,7 +149,8 @@ if ($authUser->hasRole('superadmin')) {
             'notes'               => ['nullable', 'string'],
         ]);
 
-        CrmOpportunity::create(array_merge($data, ['created_by' => auth()->id()]));
+        $opportunity = CrmOpportunity::create(array_merge($data, ['created_by' => auth()->id()]));
+        app(CrmActivityLogger::class)->leadCreated($opportunity);
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została dodana.');
     }
 
@@ -158,7 +160,11 @@ if ($authUser->hasRole('superadmin')) {
         $data = $request->validate([
             'stage' => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
         ]);
+        $previousStage = $opportunity->stage;
         $opportunity->update($data);
+        if ($previousStage !== $opportunity->stage) {
+            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
+        }
         return response()->json(['stage' => $opportunity->stage]);
     }
 
@@ -236,7 +242,11 @@ if ($authUser->hasRole('superadmin')) {
             'notes'               => ['nullable', 'string'],
         ]);
 
+        $previousStage = $opportunity->stage;
         $opportunity->update($data);
+        if ($previousStage !== $opportunity->stage) {
+            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
+        }
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');
     }
 
@@ -263,6 +273,7 @@ if ($authUser->hasRole('superadmin')) {
         }
 
         $offer->update(['crm_opportunity_id' => $opportunity->id]);
+        app(CrmActivityLogger::class)->offerLinked($offer, $opportunity);
         $this->synchronizeOpportunityStage($opportunity, $offer);
 
         return redirect()->route('crm.index', ['tab' => 'pipeline'])
@@ -286,7 +297,9 @@ if ($authUser->hasRole('superadmin')) {
         };
 
         if ($nextStage && $opportunity->stage !== $nextStage) {
+            $previousStage = $opportunity->stage;
             $opportunity->update(['stage' => $nextStage]);
+            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $nextStage);
         }
     }
 

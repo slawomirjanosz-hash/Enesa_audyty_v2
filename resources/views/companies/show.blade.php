@@ -126,7 +126,7 @@
     /* ── STATS BAR ── */
     .stats-bar {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 16px;
         margin-bottom: 24px;
     }
@@ -600,6 +600,7 @@
     .modal-submit:hover { background: #153d2e; }
 
     @media (max-width: 768px) {
+        .stats-bar { grid-template-columns: repeat(2, 1fr); }
         .modal-grid { grid-template-columns: 1fr; }
         .role-choice { grid-template-columns: 1fr; }
     }
@@ -717,6 +718,13 @@
         </div>
     </div>
     <div class="stat-card">
+        <div class="stat-icon blue"><i class="ti ti-target"></i></div>
+        <div>
+            <div class="stat-value">{{ $stats['crm_opportunities_count'] }}</div>
+            <div class="stat-label">Leady CRM</div>
+        </div>
+    </div>
+    <div class="stat-card">
         <div class="stat-icon blue"><i class="ti ti-users"></i></div>
         <div>
             <div class="stat-value">{{ $stats['users_count'] }}</div>
@@ -747,6 +755,12 @@
             <i class="ti ti-file-invoice"></i> Oferty
             @if($stats['offers_count'] > 0)
                 <span class="tab-badge">{{ $stats['offers_count'] }}</span>
+            @endif
+        </button>
+        <button class="tab-btn" onclick="switchTab('crm', this)">
+            <i class="ti ti-target"></i> Leady CRM
+            @if($stats['crm_opportunities_count'] > 0)
+                <span class="tab-badge">{{ $stats['crm_opportunities_count'] }}</span>
             @endif
         </button>
         <button class="tab-btn" onclick="switchTab('users', this)">
@@ -1130,7 +1144,68 @@
         @endif
     </div>
 
-    {{-- ═══ ZAKŁADKA: UŻYTKOWNICY ═══ --}}
+    {{-- ═══════ ZAKŁADKA: LEADY CRM ═══════ --}}
+    <div id="tab-crm" class="tab-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+            <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;">Leady i szanse sprzedażowe powiązane z tym klientem.</div>
+            <a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="btn-action btn-secondary-action" style="padding:7px 12px;">
+                <i class="ti ti-target"></i> Otwórz lejek CRM
+            </a>
+        </div>
+        @if($crmOpportunities->isEmpty())
+            <div class="empty-tab">
+                <i class="ti ti-target-off"></i>
+                <p>Brak leadów CRM dla tej firmy.</p>
+            </div>
+        @else
+            @php
+                $crmStageLabels = ['new_lead' => 'Nowy lead', 'contact' => 'Kontakt', 'offer' => 'Oferta', 'negotiation' => 'Negocjacje', 'realization' => 'Realizacja', 'won' => 'Wygrana', 'lost' => 'Przegrana', 'rejected' => 'Odrzucona'];
+                $crmStageColors = ['new_lead' => 'background:#EDE9FE;color:#5B21B6;', 'contact' => 'background:#DBEAFE;color:#1D4ED8;', 'offer' => 'background:#FEF3C7;color:#92400E;', 'negotiation' => 'background:#FFEDD5;color:#9A3412;', 'realization' => 'background:#DCFCE7;color:#166534;', 'won' => 'background:#D1FAE5;color:#065F46;', 'lost' => 'background:#FEE2E2;color:#B91C1C;', 'rejected' => 'background:#F3F4F6;color:#4B5563;'];
+                $offerStatusLabels = ['w_toku' => 'W toku', 'wygrana' => 'Wygrana', 'przegrana' => 'Przegrana', 'zarchiwizowana' => 'Archiwalna'];
+            @endphp
+            <table class="data-table">
+                <thead><tr><th>Lead / szansa</th><th>Etap</th><th>Przypisany</th><th>Powiązane oferty</th><th>Planowane zamknięcie</th></tr></thead>
+                <tbody>
+                    @foreach($crmOpportunities as $opportunity)
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;color:#1A4D3A;">{{ $opportunity->title }}</div>
+                                @if($opportunity->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($opportunity->description, 100) }}</div>@endif
+                            </td>
+                            <td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $crmStageColors[$opportunity->stage] ?? 'background:#F3F4F6;color:#4B5563;' }}">{{ $crmStageLabels[$opportunity->stage] ?? $opportunity->stage }}</span></td>
+                            <td style="font-size:12px;color:#555;">{{ $opportunity->assignedUser?->name ?? '—' }}</td>
+                            <td>
+                                @forelse($opportunity->offers as $offer)
+                                    <a href="{{ route('offers.show', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;margin:2px 4px 2px 0;padding:3px 7px;border-radius:5px;background:#FFF8E8;color:#92400E;font-size:11px;font-weight:700;text-decoration:none;"><i class="ti ti-file-text"></i> {{ $offer->fullNumber() }} · {{ $offerStatusLabels[$offer->status] ?? $offer->status }}</a>
+                                @empty
+                                    <span style="color:#aaa;font-size:12px;">Brak</span>
+                                @endforelse
+                            </td>
+                            <td style="font-size:12px;color:#7a8a80;">{{ $opportunity->expected_close_date?->format('d.m.Y') ?? '—' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+        <div style="margin-top:24px;border-top:1px solid #E5E1D8;padding-top:18px;">
+            <h3 style="font-family:'Manrope',sans-serif;font-size:14px;color:#1A4D3A;margin:0 0 12px;display:flex;align-items:center;gap:7px;"><i class="ti ti-history"></i> Historia CRM</h3>
+            @forelse($crmActivities as $activity)
+                <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F0EDE6;">
+                    <div style="width:30px;height:30px;border-radius:50%;background:#F0F7F3;color:#1A4D3A;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="ti {{ str_starts_with($activity->type, 'offer_') ? 'ti-file-invoice' : 'ti-target' }}"></i>
+                    </div>
+                    <div style="min-width:0;flex:1;">
+                        <div style="font-size:13px;color:#333;">{{ $activity->description }}</div>
+                        <div style="font-size:11px;color:#888;margin-top:3px;">{{ $activity->user?->name ?? 'System' }} · {{ $activity->created_at->format('d.m.Y H:i') }}</div>
+                    </div>
+                </div>
+            @empty
+                <div style="font-size:12px;color:#999;padding:12px 0;">Historia będzie tworzona od teraz, gdy wykonasz działania w CRM.</div>
+            @endforelse
+        </div>
+    </div>
+
     <div id="tab-users" class="tab-panel">
         <div class="company-users-toolbar">
             <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;">

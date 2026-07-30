@@ -86,6 +86,11 @@ class Company extends Model
         return $this->hasMany(CrmOpportunity::class);
     }
 
+    public function crmActivities(): HasMany
+    {
+        return $this->hasMany(CrmActivity::class);
+    }
+
     public function auditorAccesses(): HasMany
     {
         return $this->hasMany(AuditorCompanyAccess::class);

@@ -6,6 +6,8 @@ use App\Mail\ClientAccepted;
 use App\Mail\ClientRegistered;
 use App\Mail\NewClientUser;
 use App\Models\Company;
+use App\Models\CrmOpportunity;
+use App\Models\CrmActivity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -130,6 +132,34 @@ class CompanyController extends Controller
             'users_count' => $company->users->count(),
         ];
 
+        $crmOpportunities = $access->scopeByCompanyAccess(
+            CrmOpportunity::with(['assignedUser', 'offers'])
+                ->where('company_id', $company->id)
+                ->orderByDesc('created_at'),
+            $user,
+            'can_view_dashboard'
+        )->get();
+
+        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
+            $crmOpportunities->each(fn (CrmOpportunity $opportunity) => $opportunity->setRelation('offers', collect()));
+        }
+
+        $stats['crm_opportunities_count'] = $crmOpportunities->count();
+
+        $crmActivitiesQuery = CrmActivity::with(['user', 'crmOpportunity', 'offer'])
+            ->where('company_id', $company->id)
+            ->orderByDesc('created_at');
+
+        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
+            $crmActivitiesQuery->whereNull('offer_id');
+        }
+
+        $crmActivities = $access->scopeByCompanyAccess(
+            $crmActivitiesQuery,
+            $user,
+            'can_view_dashboard'
+        )->get();
+
         $offerRequests = $access->scopeByCompanyAccess(\App\Models\OfferRequest::with('offerFormTemplate', 'offers')
             ->where('company_id', $company->id)
             ->orderByDesc('created_at'), $user, 'can_view_offer_requests')
@@ -140,7 +170,7 @@ class CompanyController extends Controller
             ->orderByDesc('updated_at'), $user)
             ->get();
 
-        return view('companies.show', compact('company', 'stats', 'offerRequests', 'documents'));
+        return view('companies.show', compact('company', 'stats', 'crmOpportunities', 'crmActivities', 'offerRequests', 'documents'));
     }
 
     public function update(Request $request, Company $company)
