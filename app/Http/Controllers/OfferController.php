@@ -14,7 +14,6 @@ use App\Models\OfferTemplateType;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
-use App\Services\OfferPricingSuggestionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -104,10 +103,6 @@ class OfferController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $pricingSuggestion = $offerRequest
-            ? app(OfferPricingSuggestionService::class)->forOfferRequest($offerRequest)
-            : null;
-
         $offerTemplates = Offer::where('is_template', true)
             ->orderBy('offer_title')
             ->get();
@@ -124,7 +119,6 @@ class OfferController extends Controller
             'crmOpportunities',
             'selectedCrmOpportunity',
             'selectedCompanyId',
-            'pricingSuggestion',
             'offerTemplates',
             'suggestedNumber',
             'numberExists',

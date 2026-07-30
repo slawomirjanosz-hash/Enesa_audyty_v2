@@ -68,11 +68,7 @@
 .btn-del-field:hover { background:#FEE2E2; }
 .empty-state { text-align:center; padding:60px 24px; color:#888; }
 .empty-state i { font-size:48px; color:#D0CCC0; margin-bottom:12px; display:block; }
-.pricing-rules-box { border:1px solid #FCD34D; background:#FFFBEB; border-radius:10px; padding:14px; }
-.pricing-rule { display:grid; grid-template-columns:1.2fr 1fr 1.3fr 90px auto; gap:8px; align-items:end; padding:10px; margin-bottom:8px; background:#fff; border:1px solid #FDE68A; border-radius:8px; }
-.pricing-rule label { display:block; margin-bottom:4px; font:700 10px 'Manrope',sans-serif; color:#775B16; text-transform:uppercase; letter-spacing:.04em; }
-.btn-del-rule { background:none; border:0; color:#B91C1C; cursor:pointer; padding:8px; font-size:17px; }
-@media(max-width:700px) { .field-row-main { grid-template-columns:1fr; } .pricing-rule { grid-template-columns:1fr; } }
+@media(max-width:700px) { .field-row-main { grid-template-columns:1fr; } }
 </style>
 @endpush
 
@@ -139,7 +135,7 @@
                     </td>
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
-                            <button class="btn-icon btn-icon-edit" onclick="openEditModal({{ $template->id }}, @js($template->name), @js($template->description), @js($template->fields), @js($template->pricing_rules ?? []), {{ $template->is_active ? 'true' : 'false' }})">
+                            <button class="btn-icon btn-icon-edit" onclick="openEditModal({{ $template->id }}, @js($template->name), @js($template->description), @js($template->fields), {{ $template->is_active ? 'true' : 'false' }})">
                                 <i class="ti ti-pencil"></i>
                             </button>
                             <form method="POST" action="{{ route('offer-forms.destroy', $template) }}" style="display:inline;" onsubmit="return confirm('Usunąć formularz?')">
@@ -166,7 +162,7 @@
             <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;line-height:1;">&times;</button>
         </div>
 
-        <form id="form-template" method="POST" action="{{ route('offer-forms.store') }}" onsubmit="collectFields(); collectPricingRules();">
+        <form id="form-template" method="POST" action="{{ route('offer-forms.store') }}" onsubmit="collectFields();">
             @csrf
             <span id="method-field"></span>
 
@@ -175,15 +171,6 @@
                 <input type="text" name="name" id="f-name" class="mf-input" required placeholder="np. Audyt Energetyczny">
             </div>
 
-            <div class="mf-group pricing-rules-box">
-                <div style="font:700 13px 'Manrope',sans-serif;color:#92400E;margin-bottom:4px;"><i class="ti ti-calculator" style="margin-right:5px;"></i>Reguły wyceny wstępnej</div>
-                <p style="font-size:12px;color:#775B16;line-height:1.5;margin:0 0 10px;">Dla pytań „Liczba” i „Adres” ustawienia wyceny znajdziesz bezpośrednio pod pytaniem. Poniższe reguły służą dla odpowiedzi z „Listy wyboru”. Cena w ofercie zawsze pozostaje edytowalna.</p>
-                <div id="pricing-rules-container"></div>
-                <button type="button" class="btn-add-question" onclick="addPricingRule()"><i class="ti ti-plus"></i> Dodaj regułę wyceny</button>
-                @if($priceItems->isEmpty())
-                    <div style="margin-top:8px;font-size:12px;color:#92400E;">Najpierw dodaj pozycję w <a href="{{ route('pricing-catalog.index') }}" target="_blank" style="color:#1A4D3A;font-weight:700;">Cenniku usług</a>.</div>
-                @endif
-            </div>
             <div class="mf-group">
                 <label class="mf-label">Opis (widoczny dla klienta)</label>
                 <textarea name="description" id="f-desc" class="mf-input" rows="2" placeholder="Krótki opis..."></textarea>
@@ -203,7 +190,6 @@
             </div>
 
             <input type="hidden" name="fields" id="f-fields-json">
-            <input type="hidden" name="pricing_rules" id="f-pricing-rules-json">
 
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
                 <button type="button" onclick="closeModal()" class="btn-secondary">Anuluj</button>
@@ -217,24 +203,11 @@
 
 @endsection
 
-@php
-    $priceCatalogForJs = $priceItems->map(function ($item) {
-        return [
-            'id' => $item->id,
-            'name' => $item->name,
-            'unit' => $item->unit,
-            'price' => (float) $item->net_unit_price,
-        ];
-    })->values();
-@endphp
-
 @push('scripts')
 <script>
 let secCounter = 0;
 let keyCounter = 0;
 let editingId  = null;
-let pricingRules = [];
-const PRICE_CATALOG_ITEMS = @json($priceCatalogForJs);
 
 const FIELD_TYPES = [
     { value: 'text',     label: 'Tekst (1 linia)' },
@@ -362,45 +335,6 @@ function renderField(listEl, data, beforeNode) {
     const branchWrap = el('div', 'field-branches');
     branchWrap.style.display = d.type === 'select' ? 'block' : 'none';
 
-    const pricingWrap = el('div', 'field-pricing-config');
-    const catalogOptions = () => PRICE_CATALOG_ITEMS.map(item =>
-        `<option value="${item.id}">${esc(item.name)} — ${item.price.toLocaleString('pl-PL', {minimumFractionDigits:2})} zł/${esc(item.unit)}</option>`
-    ).join('');
-
-    function renderPricingConfig() {
-        const pricing = d.pricing || {};
-        pricingWrap.innerHTML = '';
-
-        if (typeSel.value === 'number') {
-            pricingWrap.style.display = 'block';
-            pricingWrap.innerHTML = `
-                <div style="margin-top:10px;padding:10px 12px;background:#F0F7F3;border:1px solid #B7D9C8;border-radius:8px;display:flex;gap:10px;align-items:end;flex-wrap:wrap;">
-                    <label style="font-size:12px;font-weight:700;color:#1A4D3A;display:flex;gap:6px;align-items:center;"><input type="checkbox" class="pricing-enabled" ${pricing.type === 'quantity' ? 'checked' : ''}> Użyj odpowiedzi jako ilości do wyceny</label>
-                    <div style="flex:1;min-width:190px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Pozycja z cennika</div><select class="mf-input pricing-item" ${PRICE_CATALOG_ITEMS.length ? '' : 'disabled'}>${catalogOptions()}</select></div>
-                    <div style="width:110px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Mnożnik</div><input class="mf-input pricing-multiplier" type="number" min="0.01" step="0.01" value="${Number(pricing.multiplier) || 1}"></div>
-                    ${PRICE_CATALOG_ITEMS.length ? '' : '<div style="font-size:11px;color:#92400E;">Dodaj pozycję w Cenniku usług.</div>'}
-                </div>`;
-            const item = pricingWrap.querySelector('.pricing-item');
-            if (item) item.value = String(pricing.price_catalog_item_id || PRICE_CATALOG_ITEMS[0]?.id || '');
-            return;
-        }
-
-        if (typeSel.value === 'address') {
-            pricingWrap.style.display = 'block';
-            pricingWrap.innerHTML = `
-                <div style="margin-top:10px;padding:10px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;display:flex;gap:10px;align-items:end;flex-wrap:wrap;">
-                    <label style="font-size:12px;font-weight:700;color:#1D4ED8;display:flex;gap:6px;align-items:center;"><input type="checkbox" class="pricing-enabled" ${pricing.type === 'travel' ? 'checked' : ''}> Wylicz dojazd z tego adresu</label>
-                    <div style="width:105px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Wyjazdy</div><input class="mf-input pricing-trips" type="number" min="1" step="1" value="${Number(pricing.trips) || 1}"></div>
-                    <div style="width:95px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Osoby</div><input class="mf-input pricing-people" type="number" min="1" step="1" value="${Number(pricing.people) || 1}"></div>
-                    <div style="width:115px;"><div style="font-size:10px;font-weight:700;color:#555;margin-bottom:4px;">Stawka zł/km</div><input class="mf-input pricing-rate" type="number" min="0" step="0.01" value="${Number(pricing.rate_per_km) || 1.10}"></div>
-                    <div style="font-size:11px;color:#1D4ED8;max-width:220px;">Odległość zostanie pobrana przy tworzeniu oferty. Koszt liczy trasę w obie strony.</div>
-                </div>`;
-            return;
-        }
-
-        pricingWrap.style.display = 'none';
-    }
-
     function currentOptions() {
         return [...optTags.querySelectorAll('.option-value')].map(t => t.dataset.val);
     }
@@ -445,13 +379,11 @@ function renderField(listEl, data, beforeNode) {
         optWrap.style.display    = isSel ? 'block' : 'none';
         branchWrap.style.display = isSel ? 'block' : 'none';
         if (isSel) syncBranches();
-        renderPricingConfig();
     });
 
     row.appendChild(main);
     row.appendChild(optWrap);
     row.appendChild(branchWrap);
-    row.appendChild(pricingWrap);
     if (beforeNode) {
         listEl.insertBefore(row, beforeNode);
     } else {
@@ -470,7 +402,6 @@ function renderField(listEl, data, beforeNode) {
             });
         }
     }
-    renderPricingConfig();
     return row;
 }
 
@@ -492,21 +423,6 @@ function collectFieldList(listEl) {
             bw.querySelectorAll(':scope > .branch-block').forEach(b => {
                 f.branches[b.dataset.opt] = collectFieldList(b.querySelector(':scope > .branch-fields'));
             });
-        }
-        if (type === 'number' && row.querySelector('.pricing-enabled')?.checked) {
-            f.pricing = {
-                type: 'quantity',
-                price_catalog_item_id: Number(row.querySelector('.pricing-item')?.value || 0),
-                multiplier: Number(row.querySelector('.pricing-multiplier')?.value || 1),
-            };
-        }
-        if (type === 'address' && row.querySelector('.pricing-enabled')?.checked) {
-            f.pricing = {
-                type: 'travel',
-                trips: Number(row.querySelector('.pricing-trips')?.value || 1),
-                people: Number(row.querySelector('.pricing-people')?.value || 1),
-                rate_per_km: Number(row.querySelector('.pricing-rate')?.value || 1.10),
-            };
         }
         out.push(f);
     });
@@ -544,65 +460,6 @@ function loadSections(fields) {
     }
 }
 
-function selectableQuestions() {
-    return [...document.querySelectorAll('#sections-container .field-row')]
-        .map(row => {
-            const type = row.querySelector(':scope > .field-row-main > .field-type-select')?.value;
-            const label = row.querySelector(':scope > .field-row-main > .field-label-input')?.value.trim();
-            const options = [...row.querySelectorAll(':scope > .field-row-options .option-value')].map(tag => tag.dataset.val);
-            return { key: row.dataset.key, label, type, options };
-        })
-        .filter(question => question.key && question.type === 'select' && question.options.length);
-}
-
-function syncPricingRulesFromDom() {
-    pricingRules = [...document.querySelectorAll('#pricing-rules-container .pricing-rule')].map(row => ({
-        question_key: row.querySelector('.pricing-question')?.value || '',
-        answer: row.querySelector('.pricing-answer')?.value || '',
-        price_catalog_item_id: Number(row.querySelector('.pricing-item')?.value || 0),
-        quantity: Number(row.querySelector('.pricing-quantity')?.value || 1),
-    }));
-}
-
-function renderPricingRules() {
-    const container = document.getElementById('pricing-rules-container');
-    const questions = selectableQuestions();
-    container.innerHTML = '';
-
-    if (!pricingRules.length) {
-        container.innerHTML = '<div style="font-size:12px;color:#8A742B;margin-bottom:10px;">Brak reguł. Dodaj pytanie typu „Lista wyboru”, np. „Czy potrzebna jest wizja lokalna?”, a następnie połącz odpowiedź „Tak” z pozycją cennika.</div>';
-        return;
-    }
-
-    pricingRules.forEach((rule, index) => {
-        const question = questions.find(q => q.key === rule.question_key) || questions[0];
-        const row = el('div', 'pricing-rule');
-        row.innerHTML = `
-            <div><label>Pytanie</label><select class="mf-input pricing-question">${questions.map(q => `<option value="${esc(q.key)}" ${q.key === rule.question_key ? 'selected' : ''}>${esc(q.label || q.key)}</option>`).join('')}</select></div>
-            <div><label>Gdy odpowiedź to</label><select class="mf-input pricing-answer">${(question?.options || []).map(option => `<option value="${esc(option)}" ${option === rule.answer ? 'selected' : ''}>${esc(option)}</option>`).join('')}</select></div>
-            <div><label>Dodaj z cennika</label><select class="mf-input pricing-item">${PRICE_CATALOG_ITEMS.map(item => `<option value="${item.id}" ${item.id === Number(rule.price_catalog_item_id) ? 'selected' : ''}>${esc(item.name)} — ${item.price.toLocaleString('pl-PL', {minimumFractionDigits:2})} zł/${esc(item.unit)}</option>`).join('')}</select></div>
-            <div><label>Ilość</label><input class="mf-input pricing-quantity" type="number" min="0.01" step="0.01" value="${Number(rule.quantity) || 1}"></div>
-            <button type="button" class="btn-del-rule" title="Usuń regułę"><i class="ti ti-trash"></i></button>`;
-        row.querySelector('.pricing-question').addEventListener('change', () => { syncPricingRulesFromDom(); pricingRules[index].answer = ''; renderPricingRules(); });
-        row.querySelector('.btn-del-rule').addEventListener('click', () => { syncPricingRulesFromDom(); pricingRules.splice(index, 1); renderPricingRules(); });
-        container.appendChild(row);
-    });
-}
-
-function addPricingRule() {
-    const question = selectableQuestions()[0];
-    if (!question) { alert('Najpierw dodaj pytanie typu „Lista wyboru” oraz jego odpowiedzi.'); return; }
-    if (!PRICE_CATALOG_ITEMS.length) { alert('Najpierw dodaj aktywną pozycję w Cenniku usług.'); return; }
-    syncPricingRulesFromDom();
-    pricingRules.push({ question_key: question.key, answer: question.options[0] || '', price_catalog_item_id: PRICE_CATALOG_ITEMS[0].id, quantity: 1 });
-    renderPricingRules();
-}
-
-function collectPricingRules() {
-    syncPricingRulesFromDom();
-    document.getElementById('f-pricing-rules-json').value = JSON.stringify(pricingRules.filter(rule => rule.question_key && rule.answer && rule.price_catalog_item_id && rule.quantity > 0));
-}
-
 function openModal() {
     editingId = null;
     document.getElementById('modal-title-text').textContent = 'Nowy formularz';
@@ -612,13 +469,11 @@ function openModal() {
     document.getElementById('f-desc').value = '';
     document.getElementById('f-active').checked = true;
     loadSections([]);
-    pricingRules = [];
-    renderPricingRules();
     document.getElementById('modal-form').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 
-function openEditModal(id, name, description, fields, rules, isActive) {
+function openEditModal(id, name, description, fields, isActive) {
     editingId = id;
     document.getElementById('modal-title-text').textContent = 'Edytuj formularz';
     document.getElementById('form-template').action = '/offer-forms/' + id;
@@ -627,8 +482,6 @@ function openEditModal(id, name, description, fields, rules, isActive) {
     document.getElementById('f-desc').value = description || '';
     document.getElementById('f-active').checked = isActive;
     loadSections(fields);
-    pricingRules = Array.isArray(rules) ? rules : [];
-    renderPricingRules();
     document.getElementById('modal-form').classList.add('open');
     document.body.style.overflow = 'hidden';
 }

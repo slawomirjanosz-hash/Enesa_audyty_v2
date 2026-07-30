@@ -12,12 +12,11 @@ class OfferFormTemplate extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'fields', 'pricing_rules', 'is_active', 'created_by',
+        'name', 'description', 'fields', 'is_active', 'created_by',
     ];
 
     protected $casts = [
         'fields'    => 'array',
-        'pricing_rules' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -160,7 +159,6 @@ class OfferFormTemplate extends Model
                 'type'     => $node['type']     ?? 'text',
                 'required' => $node['required'] ?? false,
                 'options'  => $node['options']  ?? [],
-                'pricing'  => $node['pricing']  ?? null,
             ];
 
             if (!empty($node['branches']) && is_array($node['branches'])) {
