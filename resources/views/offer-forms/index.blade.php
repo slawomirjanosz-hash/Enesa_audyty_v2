@@ -217,13 +217,24 @@
 
 @endsection
 
+@php
+    $priceCatalogForJs = $priceItems->map(function ($item) {
+        return [
+            'id' => $item->id,
+            'name' => $item->name,
+            'unit' => $item->unit,
+            'price' => (float) $item->net_unit_price,
+        ];
+    })->values();
+@endphp
+
 @push('scripts')
 <script>
 let secCounter = 0;
 let keyCounter = 0;
 let editingId  = null;
 let pricingRules = [];
-const PRICE_CATALOG_ITEMS = @json($priceItems->map(fn ($item) => ['id' => $item->id, 'name' => $item->name, 'unit' => $item->unit, 'price' => (float) $item->net_unit_price])->values());
+const PRICE_CATALOG_ITEMS = @json($priceCatalogForJs);
 
 const FIELD_TYPES = [
     { value: 'text',     label: 'Tekst (1 linia)' },
