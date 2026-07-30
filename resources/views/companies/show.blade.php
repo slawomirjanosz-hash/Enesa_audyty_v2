@@ -1718,13 +1718,20 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div style="grid-column:1/-1;">
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Nazwa firmy *</label>
-                    <input type="text" name="name" value="{{ $company->name }}" required
+                    <input type="text" id="edit-company-name" name="name" value="{{ $company->name }}" required
                         style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                 </div>
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">NIP</label>
-                    <input type="text" name="nip" value="{{ $company->nip }}"
-                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                    <div style="display:flex;gap:6px;margin-top:4px;">
+                        <input type="text" id="edit-company-nip" name="nip" value="{{ $company->nip }}" maxlength="20"
+                            style="min-width:0;flex:1;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                        <button type="button" onclick="fetchCompanyFromGus()"
+                            style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:#1A4D3A;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
+                            <i class="ti ti-download"></i> GUS
+                        </button>
+                    </div>
+                    <div id="edit-company-gus-status" style="font-size:11px;margin-top:5px;min-height:15px;"></div>
                 </div>
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">E-mail</label>
@@ -1738,12 +1745,12 @@
                 </div>
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Adres</label>
-                    <input type="text" name="address" value="{{ $company->address }}"
+                    <input type="text" id="edit-company-address" name="address" value="{{ $company->address }}"
                         style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                 </div>
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Miasto</label>
-                    <input type="text" name="city" value="{{ $company->city }}"
+                    <input type="text" id="edit-company-city" name="city" value="{{ $company->city }}"
                         style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                 </div>
                 <div>
@@ -1780,6 +1787,7 @@
 </div>
 <script>
 function openEditModal() {
+    document.getElementById('edit-company-gus-status').textContent = '';
     document.getElementById('modal-edit-firm').style.display = 'flex';
 }
 function closeEditModal() {
@@ -1788,6 +1796,57 @@ function closeEditModal() {
 document.getElementById('modal-edit-firm').addEventListener('click', function(e) {
     if (e.target === this) closeEditModal();
 });
+
+function fetchCompanyFromGus() {
+    const nipInput = document.getElementById('edit-company-nip');
+    const nip = nipInput.value.replace(/[^0-9]/g, '');
+    const status = document.getElementById('edit-company-gus-status');
+
+    if (nip.length !== 10) {
+        status.style.color = '#B91C1C';
+        status.textContent = 'NIP musi mieć 10 cyfr.';
+        return;
+    }
+
+    status.style.color = '#6B7280';
+    status.textContent = 'Pobieranie danych z GUS…';
+
+    fetch('{{ route("companies.fetchGus") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+        body: JSON.stringify({ nip })
+    })
+    .then(async response => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+        return data;
+    })
+    .then(data => {
+        const fields = {
+            name: document.getElementById('edit-company-name'),
+            address: document.getElementById('edit-company-address'),
+            city: document.getElementById('edit-company-city'),
+        };
+        const hasExistingData = Object.values(fields).some(field => field.value.trim() !== '');
+        if (hasExistingData && !confirm('Pobrane dane zastąpią obecną nazwę, adres i miasto w formularzu. Kontynuować?')) {
+            status.style.color = '#6B7280';
+            status.textContent = 'Nie zmieniono danych w formularzu.';
+            return;
+        }
+
+        nipInput.value = nip;
+        Object.entries(fields).forEach(([key, field]) => {
+            field.value = data[key] || '';
+            field.style.borderColor = data[key] ? '#2E7D32' : '#D1D5DB';
+        });
+        status.style.color = '#166534';
+        status.textContent = 'Dane pobrane. Sprawdź je i zapisz zmiany.';
+    })
+    .catch(error => {
+        status.style.color = '#B91C1C';
+        status.textContent = error.message;
+    });
+}
 @if(request()->has('edit'))
 document.addEventListener('DOMContentLoaded', () => openEditModal());
 @endif
