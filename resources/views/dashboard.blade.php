@@ -410,7 +410,7 @@
         <div class="dashboard-search-box">
             <i class="ti ti-search"></i>
             <input type="search" id="dashboard-company-search" autocomplete="off"
-                   placeholder="Szukaj: nazwa, NIP, miasto, opis…"
+                   placeholder="Szukaj: firma, oferta, zapytanie, audyt…"
                    oninput="searchDashboardCompanies(this.value)">
             <div id="dashboard-search-result" class="dashboard-search-result" aria-live="polite"></div>
         </div>
@@ -499,9 +499,24 @@
             };
         @endphp
         @php
+            $relatedSearchData = collect()
+                ->merge($company->audits->pluck('title'))
+                ->merge($company->offers->flatMap(fn ($offer) => [
+                    $offer->offer_title,
+                    $offer->offer_full_number,
+                    $offer->offer_number,
+                    $offer->offer_slug,
+                ]))
+                ->merge($company->offerRequests->flatMap(fn ($request) => [
+                    $request->title,
+                    $request->offerFormTemplate?->name,
+                ]))
+                ->filter()
+                ->implode(' ');
             $searchData = implode(' ', array_filter([
                 $company->name, $company->nip, $company->email, $company->phone,
                 $company->address, $company->city, $company->source, $company->notes, $company->status,
+                $relatedSearchData,
             ]));
         @endphp
         <div class="client-tile" data-company-search="{{ $searchData }}" style="border-left-color: {{ $borderColor }};">
@@ -600,9 +615,24 @@
                 );
             @endphp
             @php
+                $relatedSearchData = collect()
+                    ->merge($company->audits->pluck('title'))
+                    ->merge($company->offers->flatMap(fn ($offer) => [
+                        $offer->offer_title,
+                        $offer->offer_full_number,
+                        $offer->offer_number,
+                        $offer->offer_slug,
+                    ]))
+                    ->merge($company->offerRequests->flatMap(fn ($request) => [
+                        $request->title,
+                        $request->offerFormTemplate?->name,
+                    ]))
+                    ->filter()
+                    ->implode(' ');
                 $searchData = implode(' ', array_filter([
                     $company->name, $company->nip, $company->email, $company->phone,
                     $company->address, $company->city, $company->source, $company->notes, $company->status,
+                    $relatedSearchData,
                 ]));
             @endphp
             <tr data-company-search="{{ $searchData }}">

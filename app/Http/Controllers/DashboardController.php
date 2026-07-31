@@ -17,7 +17,14 @@ class DashboardController extends Controller
         $access = app(AuditorAccessService::class);
         $user = $request->user();
         $companies = $access->scopeByCompanyAccess(
-            Company::active()->where('show_in_dashboard', true)->with(['audits', 'offers', 'users']),
+            Company::active()->where('show_in_dashboard', true)->with([
+                'users',
+                'audits' => fn ($query) => $access->scopeByCompanyAccess($query, $user, 'can_view_audits'),
+                'offers' => fn ($query) => $access->scopeByCompanyAccess($query, $user, 'can_view_offers'),
+                'offerRequests' => fn ($query) => $access
+                    ->scopeByCompanyAccess($query, $user, 'can_view_offer_requests')
+                    ->with('offerFormTemplate:id,name'),
+            ]),
             $user,
             'can_view_dashboard',
             'id'
