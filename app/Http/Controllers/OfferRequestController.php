@@ -143,11 +143,13 @@ class OfferRequestController extends Controller
         $this->authorize('update', $offerRequest);
 
         $data = $request->validate([
+            'title'          => ['nullable', 'string', 'max:255'],
             'form_responses' => ['nullable', 'array'],
             'tresc'          => ['nullable', 'string', 'max:65000'],
         ]);
 
         $offerRequest->update([
+            'title'          => $data['title'] ?? null,
             'form_responses' => $data['form_responses'] ?? [],
             'tresc'          => $data['tresc'] ?? null,
         ]);

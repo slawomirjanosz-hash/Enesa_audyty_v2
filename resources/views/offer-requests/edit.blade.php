@@ -52,6 +52,20 @@
     @csrf
     @method('PUT')
 
+    <div class="form-card">
+        <div class="form-card-header">
+            <i class="ti ti-tag"></i>
+            <span class="form-card-title">Nazwa zapytania</span>
+        </div>
+        <div class="form-card-body">
+            <label class="field-label" for="title">Nazwa widoczna na dashboardzie</label>
+            <input type="text" name="title" id="title" class="field-input"
+                   value="{{ old('title', $offerRequest->title) }}"
+                   placeholder="np. Audyt energetyczny — hala produkcyjna, Gliwice">
+            <p style="font-size:12px;color:#888;margin:6px 0 0;">Ta nazwa ułatwia rozpoznanie ankiety na liście zapytań.</p>
+        </div>
+    </div>
+
     @if($offerRequest->offerFormTemplate && !empty($offerRequest->offerFormTemplate->fields))
     <div class="form-card">
         <div class="form-card-header">
