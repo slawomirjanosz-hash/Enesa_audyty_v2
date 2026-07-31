@@ -509,7 +509,6 @@
 <input type="hidden" name="stawka_km"        id="h-stawka-km">
 <input type="hidden" name="czas_dojazdu_min" id="h-czas">
 <input type="hidden" name="czy_kilkudniowy"  id="h-kilkudniowy" value="0">
-<input type="hidden" name="delegations"      id="delegations-json">
 
 </form>
 
@@ -774,7 +773,12 @@ function removeSection(sid) {
 
 function collectSections() {
     const sections = [];
-    const main = { id: 'main', name: document.getElementById('section-main-name')?.value || 'Wycena ogólna', rows: [] };
+    const main = {
+        id: 'main',
+        name: document.getElementById('section-main-name')?.value || 'Wycena ogólna',
+        markup_pct: parseValue(document.getElementById('markup-pct')?.value) || 0,
+        rows: [],
+    };
     document.querySelectorAll('#tbody-main tr').forEach(tr => main.rows.push(collectRow(tr)));
     sections.push(main);
     document.querySelectorAll('#dynamic-sections .ed-card').forEach(card => {

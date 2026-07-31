@@ -694,7 +694,31 @@ if (!priceSections[0]) priceSections[0] = { id: 'main', name: 'Wycena ogólna', 
 
 let sectionCounter = 100;
 let rowCounter     = 1000;
-const globalMarkup = { pct: 0, zl: 0 };
+
+function savedMarkupPct() {
+    const explicitlySaved = Number(priceSections[0]?.markup_pct);
+    if (Number.isFinite(explicitlySaved) && explicitlySaved >= 0) {
+        return explicitlySaved;
+    }
+
+    // Oferty zapisane przed tą poprawką nie mają markup_pct. Odtwarzamy
+    // narzut z zapisanej kwoty pozycji, aby zachować dotychczasową wycenę.
+    for (const section of priceSections) {
+        for (const row of (section.rows || [])) {
+            const base = Number(row.ilosc || 0) * Number(row.cena_jedn || 0);
+            const withMarkup = Number(row.z_narzutem);
+            if (base > 0 && Number.isFinite(withMarkup)) {
+                return Math.max(0, ((withMarkup / base) - 1) * 100);
+            }
+        }
+    }
+
+    return 0;
+}
+
+const initialMarkupPct = savedMarkupPct();
+const globalMarkup = { pct: initialMarkupPct, zl: 0 };
+document.getElementById('markup-pct').value = initialMarkupPct.toFixed(2);
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // RTE HELPERS
@@ -901,7 +925,12 @@ function collectSections() {
     const sections = [];
 
     // Main section
-    const mainSection = { id: 'main', name: '', rows: [] };
+    const mainSection = {
+        id: 'main',
+        name: '',
+        markup_pct: parseValue(document.getElementById('markup-pct')?.value) || 0,
+        rows: [],
+    };
     mainSection.name = document.getElementById('section-main-name')?.value || 'Wycena ogólna';
     document.querySelectorAll('#tbody-main tr').forEach(tr => {
         mainSection.rows.push(collectRow(tr));
@@ -926,6 +955,7 @@ function syncDelegHiddens() {
     // Wypełniamy stare ukryte pola na podstawie pierwszej lokalizacji,
     // aby zachować zgodność z istniejącym zapisem OfferDelegation.
     if (typeof delegSections === 'undefined' || !delegSections.length) return;
+    delegSave();
     const first = delegSections[0];
     const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
     setVal('h-km',          first.km || 0);

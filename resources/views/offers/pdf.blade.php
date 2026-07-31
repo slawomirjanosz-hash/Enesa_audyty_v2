@@ -274,7 +274,9 @@ body {
     // Krótka wycena wygląda źle, gdy nagłówek i pozycje zostają na jednej
     // stronie, a suma netto samotnie na następnej. Długie tabele nadal mogą
     // łamać się naturalnie między stronami.
-    $delegationCount = count($offer->delegations ?? []) ?: ($offer->offerDelegation ? 1 : 0);
+    $delegationCount = $offer->show_unit_prices
+        ? (count($offer->delegations ?? []) ?: ($offer->offerDelegation ? 1 : 0))
+        : 0;
     $keepPricingTogether = $priceRowCount > 0 && ($priceRowCount + $delegationCount) <= 4;
 @endphp
 
@@ -366,7 +368,7 @@ body {
     $totalDel = collect($delegSections)->sum('total');
 @endphp
 
-@if(count($delegSections) > 0)
+@if($offer->show_unit_prices && count($delegSections) > 0)
 <div class="sec-block">
     <table class="sec-hdr-tbl"><tr>
         <td class="sec-lbl-text">Delegacje</td>
