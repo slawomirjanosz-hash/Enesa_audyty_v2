@@ -1,10 +1,15 @@
+@php
+    $brandName = $appBrand?->name ?: 'ENESA';
+    $brandColor = $appBrand?->primaryColor() ?: '#1A4D3A';
+    $brandLogo = $appBrand?->logoUrl() ?: asset('Logo2.png');
+@endphp
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'ENESA') — Panel</title>
+    <title>@yield('title', $brandName)   Panel</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +20,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --green:   #1A4D3A;
+            --green:   {{ $brandColor }};
             --cream:   #F4F1EA;
             --sidebar: 260px;
             --topbar:  60px;
@@ -385,8 +390,8 @@
     </style>
 
     @stack('styles')
-    <link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
+    <link rel="icon" type="image/png" href="{{ $brandLogo }}">
+    <link rel="apple-touch-icon" href="{{ $brandLogo }}">
 </head>
 <body>
 
@@ -394,8 +399,8 @@
 <aside id="sidebar">
     <div class="sidebar-logo">
         <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-            <img src="{{ asset('Logo2.png') }}" alt="ENESA logo">
-            <span class="sidebar-logo-text">ENESA</span>
+            <img src="{{ $brandLogo }}" alt="{{ $brandName }} logo">
+            <span class="sidebar-logo-text">{{ $brandName }}</span>
         </a>
     </div>
 
@@ -473,7 +478,7 @@
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
-                    <li><a href="{{ url('/settings/company') }}" class="nav-link">Dane ENESA</a></li>
+                    <li><a href="{{ url('/settings/company') }}" class="nav-link">Dane firmy</a></li>
                     <li><a href="{{ url('/settings/users') }}" class="nav-link">Użytkownicy</a></li>
                     <li><a href="{{ url('/settings/roles') }}" class="nav-link">Role i uprawnienia</a></li>
                 </ul>
@@ -589,7 +594,7 @@
 </div>
 
 <script>
-    // Session expiry check — every 60 seconds
+    // Session expiry check   every 60 seconds
     let _sessionExpired = false;
     let _sessionCheckInterval = setInterval(function () {
         fetch('/session-check', {
@@ -602,12 +607,12 @@
                 _sessionExpired = true;
                 clearInterval(_sessionCheckInterval);
                 document.getElementById('session-expired-modal').style.display = 'flex';
-                document.title = '\u26A0 Sesja wygasła — ENESA';
+                document.title = '\u26A0 Sesja wygasła   ENESA';
             }
         }).catch(function () { /* network error – ignore */ });
     }, 60000);
 
-    // Modal form submit — re-login without page reload
+    // Modal form submit   re-login without page reload
     const sessionModalForm = document.getElementById('sessionModalForm');
     if (sessionModalForm) sessionModalForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -628,7 +633,7 @@
             if (res.ok || res.redirected) {
                 _sessionExpired = false;
                 document.getElementById('session-expired-modal').style.display = 'none';
-                document.title = document.title.replace('\u26A0 Sesja wygasła — ', '');
+                document.title = document.title.replace('\u26A0 Sesja wygasła   ', '');
                 // restart check
                 _sessionCheckInterval = setInterval(arguments.callee.caller, 60000);
                 location.reload();

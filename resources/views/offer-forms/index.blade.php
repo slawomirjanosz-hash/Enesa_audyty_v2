@@ -1,11 +1,11 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('page-title', 'Formularze zapytań')
 
 @push('styles')
 <style>
 .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.page-title { font-family:'Manrope',sans-serif; font-size:22px; font-weight:700; color:#1A4D3A; margin:0; }
+.page-title { font-family:'Manrope',sans-serif; font-size:22px; font-weight:700; color:var(--green); margin:0; }
 .table-card { background:#fff; border:1px solid #E5E1D8; border-radius:12px; overflow:hidden; }
 .table-card-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:#FAFAF6; border-bottom:1px solid #F0EDE6; }
 .table-card-title { font-family:'Manrope',sans-serif; font-size:14px; font-weight:700; color:#1A1A1A; }
@@ -14,7 +14,7 @@
 .crm-table td { padding:12px 14px; border-bottom:1px solid #F7F5F0; color:#1A1A1A; vertical-align:middle; }
 .crm-table tr:last-child td { border-bottom:none; }
 .crm-table tr:hover td { background:#FAFAF6; }
-.btn-primary { display:inline-flex; align-items:center; gap:6px; background:#1A4D3A; color:#F5F0E8; border:none; border-radius:8px; padding:8px 16px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s; }
+.btn-primary { display:inline-flex; align-items:center; gap:6px; background:var(--green); color:#F5F0E8; border:none; border-radius:8px; padding:8px 16px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s; }
 .btn-primary:hover { background:#143d2d; color:#F5F0E8; }
 .btn-secondary { display:inline-flex; align-items:center; gap:6px; background:#fff; color:#333; border:1px solid #D0CCC0; border-radius:8px; padding:7px 14px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:background .15s; }
 .btn-secondary:hover { background:#F4F1EA; }
@@ -24,9 +24,9 @@
 .toggle-wrap { display:inline-flex; align-items:center; cursor:pointer; }
 .toggle-track { width:36px; height:20px; background:#D1D5DB; border-radius:10px; position:relative; transition:background .2s; }
 .toggle-track::after { content:''; position:absolute; top:3px; left:3px; width:14px; height:14px; background:#fff; border-radius:50%; transition:left .2s; }
-.toggle-wrap.on .toggle-track { background:#1A4D3A; }
+.toggle-wrap.on .toggle-track { background:var(--green); }
 .toggle-wrap.on .toggle-track::after { left:19px; }
-.field-tag { display:inline-flex; align-items:center; gap:4px; background:#F0F7F3; border:1px solid #94C4B0; border-radius:20px; padding:2px 8px; font-size:11px; font-weight:600; color:#1A4D3A; margin:2px; }
+.field-tag { display:inline-flex; align-items:center; gap:4px; background:#F0F7F3; border:1px solid #94C4B0; border-radius:20px; padding:2px 8px; font-size:11px; font-weight:600; color:var(--green); margin:2px; }
 .field-tag.section { background:#EAF3FF; border-color:#93C5FD; color:#1E40AF; }
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9000; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
@@ -34,7 +34,7 @@
 .modal-title { font-family:'Manrope',sans-serif; font-size:16px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:8px; }
 .mf-label { display:block; font-size:11px; font-weight:700; color:#555; margin-bottom:4px; font-family:'Manrope',sans-serif; }
 .mf-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:8px 10px; font-size:13px; font-family:'Lato',sans-serif; outline:none; transition:border-color .15s; box-sizing:border-box; }
-.mf-input:focus { border-color:#1A4D3A; background:#fff; }
+.mf-input:focus { border-color:var(--green); background:#fff; }
 .mf-group { margin-bottom:14px; }
 
 .section-block { border:1px solid #CBD9F0; border-radius:10px; margin-bottom:16px; background:#F7FAFF; }
@@ -49,7 +49,7 @@
 .field-row-main { display:grid; grid-template-columns:1fr 140px 92px auto; gap:8px; align-items:center; }
 .field-tools { display:inline-flex; gap:2px; }
 .field-tools button { background:none; border:none; cursor:pointer; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:5px; color:#666; font-size:15px; }
-.field-tools button:hover { background:#F0EDE6; color:#1A4D3A; }
+.field-tools button:hover { background:#F0EDE6; color:var(--green); }
 .field-tools .del:hover { background:#FEE2E2; color:#DC2626; }
 .field-row-options { margin-top:8px; padding:8px 10px; background:#F9F7F4; border-radius:6px; }
 .options-tags { min-height:4px; }
@@ -58,7 +58,7 @@
 .field-branches { margin-top:8px; }
 .branch-block { border-left:3px solid #FCD34D; background:#FFFBEB; border-radius:0 8px 8px 0; padding:8px 10px 4px; margin:8px 0 8px 6px; }
 .branch-head { font-size:11px; color:#92400E; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:4px; }
-.btn-add-field { display:inline-flex; align-items:center; gap:6px; background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; margin:2px 0 12px; transition:background .12s; }
+.btn-add-field { display:inline-flex; align-items:center; gap:6px; background:none; border:1px dashed #94C4B0; color:var(--green); border-radius:6px; padding:6px 14px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; margin:2px 0 12px; transition:background .12s; }
 .btn-add-field:hover { background:#F0F7F3; }
 .btn-add-question { display:inline-flex; align-items:center; gap:5px; background:none; border:1px dashed #FCD34D; color:#92400E; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; margin-bottom:6px; }
 .btn-add-question:hover { background:#FEF3C7; }
@@ -89,7 +89,7 @@
 
 <div class="table-card">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-clipboard-list" style="color:#1A4D3A;margin-right:6px;"></i> Szablony formularzy ({{ $templates->count() }})</div>
+        <div class="table-card-title"><i class="ti ti-clipboard-list" style="color:var(--green);margin-right:6px;"></i> Szablony formularzy ({{ $templates->count() }})</div>
     </div>
     @if($templates->isEmpty())
         <div class="empty-state">
@@ -156,7 +156,7 @@
     <div class="modal-box">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
             <div class="modal-title" style="margin-bottom:0;">
-                <i class="ti ti-clipboard-list" style="color:#1A4D3A;"></i>
+                <i class="ti ti-clipboard-list" style="color:var(--green);"></i>
                 <span id="modal-title-text">Nowy formularz</span>
             </div>
             <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;line-height:1;">&times;</button>
@@ -185,7 +185,7 @@
             </div>
 
             <div class="mf-group" style="display:flex;align-items:center;gap:10px;">
-                <input type="checkbox" name="is_active" id="f-active" value="1" checked style="width:16px;height:16px;accent-color:#1A4D3A;">
+                <input type="checkbox" name="is_active" id="f-active" value="1" checked style="width:16px;height:16px;accent-color:var(--green);">
                 <label for="f-active" class="mf-label" style="margin:0;cursor:pointer;">Formularz aktywny</label>
             </div>
 
@@ -274,7 +274,7 @@ function renderField(listEl, data, beforeNode) {
     const typeSel = el('select', 'mf-input field-type-select',
         FIELD_TYPES.map(t => `<option value="${t.value}" ${t.value === d.type ? 'selected' : ''}>${t.label}</option>`).join(''));
     const reqLabel = el('label', null,
-        '<input type="checkbox" class="field-required-check" ' + (d.required ? 'checked' : '') + ' style="accent-color:#1A4D3A;"> Wymagane');
+        '<input type="checkbox" class="field-required-check" ' + (d.required ? 'checked' : '') + ' style="accent-color:var(--green);"> Wymagane');
     reqLabel.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;';
     const tools = el('div', 'field-tools');
 
@@ -326,7 +326,7 @@ function renderField(listEl, data, beforeNode) {
     optInput.style.cssText = 'font-size:12px;padding:5px 8px;';
     const optAdd = el('button', null, 'Dodaj');
     optAdd.type = 'button';
-    optAdd.style.cssText = 'background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;';
+    optAdd.style.cssText = 'background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;';
     optWrap.appendChild(optTags);
     optRow.appendChild(optInput);
     optRow.appendChild(optAdd);

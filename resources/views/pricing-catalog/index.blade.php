@@ -10,9 +10,9 @@
 .price-card-body { padding:18px; }
 .price-label { display:block; margin:0 0 5px; font:700 11px 'Manrope',sans-serif; color:#555; }
 .price-input { width:100%; box-sizing:border-box; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:8px 10px; font:13px 'Lato',sans-serif; color:#1A1A1A; }
-.price-input:focus { outline:none; background:#fff; border-color:#1A4D3A; }
+.price-input:focus { outline:none; background:#fff; border-color:var(--green); }
 .price-group { margin-bottom:13px; }
-.btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#1A4D3A; color:#F5F0E8; border:0; border-radius:8px; padding:9px 16px; font:700 13px 'Manrope',sans-serif; cursor:pointer; text-decoration:none; }
+.btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:6px; background:var(--green); color:#F5F0E8; border:0; border-radius:8px; padding:9px 16px; font:700 13px 'Manrope',sans-serif; cursor:pointer; text-decoration:none; }
 .btn-primary:hover { background:#143d2d; }
 .btn-secondary { display:inline-flex; align-items:center; gap:6px; background:#fff; color:#333; border:1px solid #D0CCC0; border-radius:7px; padding:7px 10px; font:600 12px 'Manrope',sans-serif; cursor:pointer; }
 .catalog-table { width:100%; border-collapse:collapse; font:13px 'Lato',sans-serif; }
@@ -30,7 +30,7 @@
 
 @section('content')
 <div style="margin-bottom:20px;">
-    <h1 style="margin:0;color:#1A4D3A;font:700 22px 'Manrope',sans-serif;"><i class="ti ti-currency-zloty" style="margin-right:8px;"></i>Cennik usług</h1>
+    <h1 style="margin:0;color:var(--green);font:700 22px 'Manrope',sans-serif;"><i class="ti ti-currency-zloty" style="margin-right:8px;"></i>Cennik usług</h1>
     <p style="margin:6px 0 0;color:#777;font-size:13px;">Wewnętrzne ceny netto używane do tworzenia wstępnej wyceny z ankiety. Klient ich nie widzi.</p>
 </div>
 
@@ -40,7 +40,7 @@
 
 <div class="pricing-grid">
     <div class="price-card">
-        <div class="price-card-head"><i class="ti ti-plus" style="color:#1A4D3A;margin-right:6px;"></i>Nowa pozycja</div>
+        <div class="price-card-head"><i class="ti ti-plus" style="color:var(--green);margin-right:6px;"></i>Nowa pozycja</div>
         <form class="price-card-body" method="POST" action="{{ route('pricing-catalog.store') }}">
             @csrf
             <div class="price-group"><label class="price-label">Nazwa usługi *</label><input class="price-input" name="name" required placeholder="np. Wizja lokalna"></div>
@@ -51,13 +51,13 @@
                 <div><label class="price-label">Cena netto *</label><input class="price-input" name="net_unit_price" type="number" min="0" step="0.01" required></div>
             </div>
             <input type="hidden" name="is_active" value="0">
-            <label style="display:flex;gap:7px;align-items:center;margin-bottom:16px;font-size:12px;cursor:pointer;"><input type="checkbox" name="is_active" value="1" checked style="accent-color:#1A4D3A;"> Pozycja aktywna</label>
+            <label style="display:flex;gap:7px;align-items:center;margin-bottom:16px;font-size:12px;cursor:pointer;"><input type="checkbox" name="is_active" value="1" checked style="accent-color:var(--green);"> Pozycja aktywna</label>
             <button class="btn-primary" style="width:100%;" type="submit"><i class="ti ti-device-floppy"></i> Dodaj do cennika</button>
         </form>
     </div>
 
     <div class="price-card">
-        <div class="price-card-head"><i class="ti ti-list" style="color:#1A4D3A;margin-right:6px;"></i>Pozycje cennika ({{ $items->count() }})</div>
+        <div class="price-card-head"><i class="ti ti-list" style="color:var(--green);margin-right:6px;"></i>Pozycje cennika ({{ $items->count() }})</div>
         @if($items->isEmpty())
             <div style="padding:42px;text-align:center;color:#888;font-size:13px;">Dodaj pierwszą pozycję, aby móc połączyć ją z odpowiedzią w ankiecie.</div>
         @else
@@ -68,7 +68,7 @@
                 <tr>
                     <td><strong>{{ $item->name }}</strong>@if($item->code)<div class="price-code">{{ $item->code }}</div>@endif</td>
                     <td>{{ $item->unit }}</td>
-                    <td style="font-weight:700;color:#1A4D3A;">{{ number_format($item->net_unit_price, 2, ',', ' ') }} zł</td>
+                    <td style="font-weight:700;color:var(--green);">{{ number_format($item->net_unit_price, 2, ',', ' ') }} zł</td>
                     <td><span class="{{ $item->is_active ? 'price-active' : 'price-inactive' }}">{{ $item->is_active ? 'Aktywna' : 'Wyłączona' }}</span></td>
                     <td style="text-align:right;white-space:nowrap;">
                         <button type="button" class="btn-secondary" onclick="document.getElementById('edit-{{ $item->id }}').classList.toggle('open')"><i class="ti ti-pencil"></i> Edytuj</button>

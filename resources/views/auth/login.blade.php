@@ -1,17 +1,23 @@
+@php
+    $brandName = $appBrand?->name ?: 'ENESA';
+    $brandColor = $appBrand?->primaryColor() ?: '#1A4D3A';
+    $brandLogo = $appBrand?->logoUrl() ?: asset('Logo2.png');
+@endphp
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logowanie — ENESA</title>
+    <title>Logowanie — {{ $brandName }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Manrope:wght@400;500;600;700&display=swap">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --green: {{ $brandColor }}; }
         body { font-family: 'Lato', sans-serif; background: #F4F1EA; }
 
         /* NAVBAR */
-        .navbar { position: sticky; top: 0; z-index: 500; background: #1A4D3A; height: 64px; padding: 0 48px; display: flex; align-items: center; gap: 40px; }
+        .navbar { position: sticky; top: 0; z-index: 500; background: var(--green); height: 64px; padding: 0 48px; display: flex; align-items: center; gap: 40px; }
         .navbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
         .navbar-brand img { width: 38px; height: 38px; object-fit: contain; }
         .navbar-brand span { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 18px; color: #F5F0E8; letter-spacing: 0.04em; }
@@ -19,7 +25,7 @@
         .navbar-actions { display: flex; align-items: center; gap: 10px; }
         .btn-outline-nav { padding: 8px 18px; border: 1px solid rgba(255,255,255,0.5); border-radius: 7px; background: transparent; color: #F5F0E8; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; transition: background .2s, border-color .2s; }
         .btn-outline-nav:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.8); }
-        .btn-filled-nav { padding: 8px 18px; border: 1px solid #F5F0E8; border-radius: 7px; background: #F5F0E8; color: #1A4D3A; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s, transform .15s; }
+        .btn-filled-nav { padding: 8px 18px; border: 1px solid #F5F0E8; border-radius: 7px; background: #F5F0E8; color: var(--green); font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s, transform .15s; }
         .btn-filled-nav:hover { background: #fff; transform: translateY(-1px); }
 
         /* MAIN */
@@ -28,7 +34,7 @@
         /* LOGIN BOX */
         .login-box { background: #fff; max-width: 420px; width: 100%; border-radius: 12px; padding: 40px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); text-align: center; }
         .login-logo { width: 52px; height: 52px; object-fit: contain; margin-bottom: 18px; }
-        .login-box h2 { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 700; color: #1A4D3A; margin-bottom: 8px; }
+        .login-box h2 { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
         .login-desc { font-size: 13px; color: #5a6a60; margin-bottom: 26px; line-height: 1.55; }
 
         .form-group { text-align: left; margin-bottom: 14px; }
@@ -38,14 +44,14 @@
         .form-group input:focus { border-color: #2E7D32; background: #fff; }
 
         .remember-row { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
-        .remember-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #1A4D3A; cursor: pointer; }
+        .remember-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; }
         .remember-row label { font-size: 13px; color: #5a6a60; cursor: pointer; }
 
         .error-msg { color: #b91c1c; font-size: 12px; margin-top: 4px; }
         .alert-error { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 6px; color: #b91c1c; font-size: 13px; padding: 10px 14px; margin-bottom: 16px; text-align: left; }
         .session-status { background: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; color: #166534; font-size: 13px; padding: 10px 14px; margin-bottom: 16px; text-align: left; }
 
-        .btn-submit { width: 100%; background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-family: 'Manrope', sans-serif; font-weight: 700; cursor: pointer; transition: background .15s; }
+        .btn-submit { width: 100%; background: var(--green); color: #F5F0E8; border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-family: 'Manrope', sans-serif; font-weight: 700; cursor: pointer; transition: background .15s; }
         .btn-submit:hover { background: #153d2e; }
 
         .forgot-link { display: block; margin-top: 16px; font-size: 13px; color: #2E7D32; text-decoration: none; text-align: center; }
@@ -59,8 +65,8 @@
         .modal-close:hover { color: #333; }
         .modal-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
         .modal-brand img { width: 40px; height: 40px; object-fit: contain; }
-        .modal-brand span { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 16px; color: #1A4D3A; }
-        .modal-box h2 { font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 700; color: #1A4D3A; margin-bottom: 8px; }
+        .modal-brand span { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 16px; color: var(--green); }
+        .modal-box h2 { font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
         .modal-box > p { font-size: 13px; color: #5a6a60; margin-bottom: 24px; line-height: 1.6; }
         .mform-group { margin-bottom: 14px; }
         .mform-group label { display: block; font-size: 12px; font-weight: 700; color: #3a3a3a; margin-bottom: 5px; }
@@ -68,25 +74,25 @@
         .mform-row input { flex: 1; }
         .mform-input { width: 100%; background: #FAFAF6; border: 1px solid #D0CCC0; border-radius: 6px; padding: 10px 12px; font-size: 14px; font-family: 'Lato', sans-serif; outline: none; transition: border-color .2s; }
         .mform-input:focus { border-color: #2E7D32; }
-        .btn-gus { padding: 10px 14px; background: rgba(26,77,58,0.08); border: 1px solid rgba(26,77,58,0.25); border-radius: 6px; color: #1A4D3A; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background .2s; }
+        .btn-gus { padding: 10px 14px; background: rgba(26,77,58,0.08); border: 1px solid rgba(26,77,58,0.25); border-radius: 6px; color: var(--green); font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background .2s; }
         .btn-gus:hover { background: rgba(26,77,58,0.15); }
         .modal-divider { border: none; border-top: 1px solid #E5E1D8; margin: 20px 0; }
-        .btn-modal-submit { width: 100%; background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 8px; padding: 13px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s; margin-top: 4px; }
+        .btn-modal-submit { width: 100%; background: var(--green); color: #F5F0E8; border: none; border-radius: 8px; padding: 13px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s; margin-top: 4px; }
         .btn-modal-submit:hover { background: #2E7D32; }
         .modal-login-link { display: block; text-align: center; font-size: 13px; color: #888; margin-top: 16px; }
-        .modal-login-link a { color: #1A4D3A; font-weight: 700; text-decoration: none; }
+        .modal-login-link a { color: var(--green); font-weight: 700; text-decoration: none; }
         .modal-login-link a:hover { text-decoration: underline; }
     </style>
-    <link rel="icon" type="image/png" sizes="114x114" href="{{ asset('logo1.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('logo1.png') }}">
+    <link rel="icon" type="image/png" href="{{ $brandLogo }}">
+    <link rel="apple-touch-icon" href="{{ $brandLogo }}">
 </head>
 <body>
 
 <!-- NAVBAR -->
 <nav class="navbar">
     <a href="{{ url('/') }}" class="navbar-brand">
-        <img src="{{ asset('Logo2.png') }}" alt="ENESA logo">
-        <span>ENESA</span>
+        <img src="{{ $brandLogo }}" alt="{{ $brandName }} logo">
+        <span>{{ $brandName }}</span>
     </a>
     <div class="navbar-spacer"></div>
     <div class="navbar-actions">
@@ -99,7 +105,7 @@
 <div class="main-wrap">
     <div class="login-box">
         <a href="{{ url('/') }}">
-            <img src="{{ asset('Logo2.png') }}" alt="ENESA logo" class="login-logo">
+            <img src="{{ $brandLogo }}" alt="{{ $brandName }} logo" class="login-logo">
         </a>
         <h2>Zaloguj si&#281;</h2>
         <p class="login-desc">Witaj z powrotem. Zaloguj si&#281; do swojego konta.</p>
@@ -149,8 +155,8 @@
     <div class="modal-box">
         <button class="modal-close" onclick="closeModal()" title="Zamknij">&times;</button>
         <div class="modal-brand">
-            <img src="{{ asset('Logo2.png') }}" alt="ENESA">
-            <span>ENESA</span>
+            <img src="{{ $brandLogo }}" alt="{{ $brandName }}">
+            <span>{{ $brandName }}</span>
         </div>
         <h2>Zarejestruj firm&#281;</h2>
         <p>Wype&#322;nij formularz, a nasz zesp&#243;&#322; skontaktuje si&#281; z Tob&#261; w ci&#261;gu jednego dnia roboczego z ofert&#261; dostosowan&#261; do Twoich potrzeb.</p>
@@ -183,7 +189,7 @@
                 <label for="regTelefon">Telefon</label>
                 <input id="regTelefon" type="tel" class="mform-input" placeholder="+48 000 000 000">
             </div>
-            <button type="submit" class="btn-modal-submit">Wy&#347;lij zg&#322;oszenie do ENESA</button>
+            <button type="submit" class="btn-modal-submit">Wy&#347;lij zg&#322;oszenie do {{ $brandName }}</button>
         </form>
         <p class="modal-login-link">Masz ju&#380; konto? <a href="{{ route('login') }}">Zaloguj si&#281;</a></p>
     </div>

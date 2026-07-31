@@ -34,7 +34,7 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 7px;
@@ -216,7 +216,7 @@
         justify-content: center;
         gap: 5px;
         padding: 7px 0;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 6px;
@@ -235,7 +235,7 @@
         gap: 5px;
         padding: 7px 14px;
         background: transparent;
-        color: #1A4D3A;
+        color: var(--green);
         border: 1px solid #C8DDD4;
         border-radius: 6px;
         font-family: 'Manrope', sans-serif;
@@ -245,7 +245,7 @@
         text-decoration: none;
         transition: background .15s, border-color .15s;
     }
-    .tile-btn-secondary:hover { background: #F0F8F4; border-color: #1A4D3A; }
+    .tile-btn-secondary:hover { background: #F0F8F4; border-color: var(--green); }
 
     /* ── Empty state ──────────────────────── */
     .empty-state {
@@ -306,10 +306,10 @@
     }
     .view-toggle-btn.active {
         background: #fff;
-        color: #1A4D3A;
+        color: var(--green);
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-    .view-toggle-btn:hover { color: #1A4D3A; }
+    .view-toggle-btn:hover { color: var(--green); }
 
     /* ── Table view ───────────────────────── */
     .companies-table {
@@ -374,7 +374,7 @@
         justify-content: center;
         gap: 5px;
         padding: 6px 12px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 5px;
@@ -389,7 +389,7 @@
 
     .dashboard-search-box { position:relative; }
     .dashboard-search-box input { font-size:13px; padding:8px 12px 8px 34px; border-radius:7px; border:1px solid #D0CCC0; outline:none; width:300px; font-family:'Lato',sans-serif; }
-    .dashboard-search-box input:focus { border-color:#1A4D3A; }
+    .dashboard-search-box input:focus { border-color:var(--green); }
     .dashboard-search-box i { position:absolute; left:10px; top:16px; color:#aaa; font-size:16px; }
     .dashboard-search-result { min-height:15px; margin-top:4px; color:#777; font-size:11px; }
     .companies-table th { cursor:pointer; user-select:none; }
@@ -672,7 +672,7 @@
 @if($acceptedOffers->isNotEmpty())
 <div style="margin-top:32px;margin-bottom:32px;">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <span style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:#1A4D3A;">
+        <span style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:var(--green);">
             <i class="ti ti-rosette-discount-check" style="margin-right:6px;"></i>Zaakceptowane oferty
         </span>
         <span style="font-family:'Manrope',sans-serif;font-size:12px;color:#888;">(ostatnie 30 dni)</span>
@@ -681,18 +681,18 @@
         <table style="width:100%;border-collapse:collapse;font-family:'Manrope',sans-serif;font-size:13px;">
             <thead>
                 <tr style="background:#F4F1EA;">
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Firma</th>
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Numer oferty</th>
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Data akceptacji</th>
-                    <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Kwota netto</th>
-                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#1A4D3A;text-transform:uppercase;letter-spacing:0.4px;">Status</th>
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.4px;">Firma</th>
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.4px;">Numer oferty</th>
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.4px;">Data akceptacji</th>
+                    <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.4px;">Kwota netto</th>
+                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.4px;">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($acceptedOffers as $ao)
                 <tr style="border-top:0.5px solid #F0EDE6;">
                     <td style="padding:10px 16px;">
-                        <a href="{{ route('companies.show', $ao->company) }}" style="color:#1A4D3A;font-weight:600;text-decoration:none;">{{ $ao->company?->name ?? '—' }}</a>
+                        <a href="{{ route('companies.show', $ao->company) }}" style="color:var(--green);font-weight:600;text-decoration:none;">{{ $ao->company?->name ?? '—' }}</a>
                     </td>
                     <td style="padding:10px 16px;">
                         <a href="{{ route('offers.edit', $ao) }}" style="color:#1A1A1A;text-decoration:none;font-weight:500;">{{ $ao->offer_full_number ?? $ao->offer_number }}</a>
@@ -720,7 +720,7 @@
 <div id="addClientModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:36px;max-width:500px;width:95%;max-height:90vh;overflow-y:auto;position:relative;">
         <button onclick="closeModal()" style="position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#aaa;cursor:pointer;line-height:1;">&times;</button>
-        <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#1A4D3A;margin-bottom:6px;">
+        <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:6px;">
             <i class="ti ti-building" style="margin-right:8px;"></i>Dodaj klienta
         </div>
         <div style="font-size:13px;color:#888;margin-bottom:24px;">Wypełnij dane firmy lub pobierz automatycznie z GUS.</div>
@@ -749,7 +749,7 @@
                            oninput="this.value=this.value.replace(/[^0-9\-]/g,'')"
                            maxlength="13">
                     <button type="button" onclick="fetchFromGus()"
-                            style="padding:10px 14px;background:rgba(26,77,58,0.08);border:1px solid rgba(26,77,58,0.25);border-radius:6px;color:#1A4D3A;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                            style="padding:10px 14px;background:rgba(26,77,58,0.08);border:1px solid rgba(26,77,58,0.25);border-radius:6px;color:var(--green);font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
                         Pobierz z GUS
                     </button>
                 </div>
@@ -803,7 +803,7 @@
 
             <div style="display:flex;gap:10px;">
                 <button type="submit"
-                        style="flex:1;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:12px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;">
+                        style="flex:1;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:12px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;">
                     <i class="ti ti-plus" style="margin-right:6px;"></i>Dodaj klienta
                 </button>
                 <button type="button" onclick="closeModal()"

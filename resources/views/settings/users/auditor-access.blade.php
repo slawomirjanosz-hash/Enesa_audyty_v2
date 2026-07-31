@@ -17,10 +17,10 @@
 
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;">
     <div>
-        <h1 style="margin:0;font-size:22px;color:#1A4D3A;">Uprawnienia audytora</h1>
+        <h1 style="margin:0;font-size:22px;color:var(--green);">Uprawnienia audytora</h1>
         <div style="margin-top:6px;color:#555;">{{ $user->name }} · {{ $user->email }} · Audytor</div>
     </div>
-    <a href="{{ route('settings.users.index') }}" style="color:#1A4D3A;text-decoration:none;font-weight:700;">Wróć do użytkowników</a>
+    <a href="{{ route('settings.users.index') }}" style="color:var(--green);text-decoration:none;font-weight:700;">Wróć do użytkowników</a>
 </div>
 
 @if(session('success'))
@@ -48,7 +48,7 @@
                             @foreach($flags as $field => $label)
                                 <label style="font-size:12px;"><input type="checkbox" name="{{ $field }}" value="1" @checked($access->$field)> {{ $label }}</label>
                             @endforeach
-                            <button type="submit" style="border:1px solid #1A4D3A;background:#fff;color:#1A4D3A;border-radius:6px;padding:5px 10px;font-weight:700;cursor:pointer;">Edytuj</button>
+                            <button type="submit" style="border:1px solid var(--green);background:#fff;color:var(--green);border-radius:6px;padding:5px 10px;font-weight:700;cursor:pointer;">Edytuj</button>
                         </form>
                     </td>
                     <td style="padding:14px 20px;text-align:right;vertical-align:top;">
@@ -66,7 +66,7 @@
 </section>
 
 <section style="background:#fff;border:1px solid #E5E1D8;border-radius:8px;padding:20px;">
-    <h2 style="margin:0 0 16px;font-size:16px;color:#1A4D3A;">Dodaj firmę</h2>
+    <h2 style="margin:0 0 16px;font-size:16px;color:var(--green);">Dodaj firmę</h2>
     <form method="POST" action="{{ route('settings.users.auditor-access.store', $user) }}" style="display:grid;gap:14px;">
         @csrf
         <select name="company_id" required style="max-width:520px;padding:9px 12px;border:1px solid #D0CCC0;border-radius:6px;">
@@ -80,12 +80,12 @@
                 <label style="font-size:13px;"><input type="checkbox" name="{{ $field }}" value="1"> {{ $label }}</label>
             @endforeach
         </div>
-        <button type="submit" style="width:max-content;background:#1A4D3A;color:#fff;border:0;border-radius:6px;padding:9px 14px;font-weight:700;cursor:pointer;">Dodaj firmę</button>
+        <button type="submit" style="width:max-content;background:var(--green);color:#fff;border:0;border-radius:6px;padding:9px 14px;font-weight:700;cursor:pointer;">Dodaj firmę</button>
     </form>
 </section>
 
 <section style="background:#fff;border:1px solid #E5E1D8;border-radius:8px;padding:20px;margin-top:20px;">
-    <h2 style="margin:0 0 16px;font-size:16px;color:#1A4D3A;">Przydziel pojedynczy dokument</h2>
+    <h2 style="margin:0 0 16px;font-size:16px;color:var(--green);">Przydziel pojedynczy dokument</h2>
     <form method="POST" action="{{ route('settings.users.auditor-documents', $user) }}" style="display:flex;gap:10px;max-width:720px;">
         @csrf
         <select name="document_id" required style="flex:1;padding:9px 12px;border:1px solid #D0CCC0;border-radius:6px;">
@@ -94,7 +94,7 @@
                 <option value="{{ $document->id }}">{{ $document->company?->name }}: {{ $document->original_filename }}</option>
             @endforeach
         </select>
-        <button type="submit" style="background:#1A4D3A;color:#fff;border:0;border-radius:6px;padding:9px 14px;font-weight:700;cursor:pointer;">Przydziel</button>
+        <button type="submit" style="background:var(--green);color:#fff;border:0;border-radius:6px;padding:9px 14px;font-weight:700;cursor:pointer;">Przydziel</button>
     </form>
 </section>
 @endsection

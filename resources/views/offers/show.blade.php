@@ -29,7 +29,7 @@
         align-items: center;
         gap: 10px;
     }
-    .show-card-header i { font-size: 17px; color: #1A4D3A; }
+    .show-card-header i { font-size: 17px; color: var(--green); }
     .show-card-title {
         font-family: 'Manrope', sans-serif;
         font-size: 13px;
@@ -82,8 +82,8 @@
     .deleg-table td:first-child { color: #666; font-family: 'Manrope', sans-serif; font-weight: 600; width: 55%; }
     .deleg-table td:last-child  { color: #1A1A1A; font-family: 'Lato', sans-serif; font-weight: 700; text-align: right; }
     .deleg-total { background: #F0F7F3; border-radius: 8px; padding: 12px 14px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .deleg-total-label { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; color: #1A4D3A; text-transform: uppercase; letter-spacing: .05em; }
-    .deleg-total-value { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 900; color: #1A4D3A; }
+    .deleg-total-label { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .05em; }
+    .deleg-total-value { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 900; color: var(--green); }
 
     /* ── Messages ───────────────────────────────────── */
     .message-item {
@@ -94,7 +94,7 @@
     .message-avatar {
         width: 32px; height: 32px;
         border-radius: 50%;
-        background: #1A4D3A;
+        background: var(--green);
         color: #fff;
         font-family: 'Manrope', sans-serif;
         font-size: 12px;
@@ -139,14 +139,14 @@
         transition: border-color .15s;
         box-sizing: border-box;
     }
-    .field-input:focus { border-color: #1A4D3A; background: #fff; }
+    .field-input:focus { border-color: var(--green); background: #fff; }
 
     /* ── Buttons ────────────────────────────────────── */
     .btn-primary {
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 8px;
@@ -211,7 +211,7 @@
             <i class="ti ti-arrow-left"></i> Powrót do listy
         </a>
         <div style="margin-top:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <h1 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#1A4D3A;margin:0;">
+            <h1 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:var(--green);margin:0;">
                 {{ $offer->fullNumber() }}
             </h1>
             <span class="badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
@@ -231,7 +231,7 @@
             </button>
         </form>
         <a href="{{ route('offers.download-word', $offer) }}"
-           style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;text-decoration:none;">
+           style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--green);border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-family:'Manrope',sans-serif;font-weight:600;text-decoration:none;">
             <i class="ti ti-file-type-doc"></i> Pobierz Word
         </a>
         <a href="{{ route('offers.edit', $offer) }}" class="btn-primary">
@@ -417,7 +417,7 @@
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-family:'Manrope',sans-serif;color:#555;">
                         <input type="checkbox" name="is_internal" value="1"
                                {{ old('is_internal') ? 'checked' : '' }}
-                               style="width:15px;height:15px;accent-color:#1A4D3A;">
+                               style="width:15px;height:15px;accent-color:var(--green);">
                         Notatka wewnętrzna (widoczna tylko dla ENESA)
                     </label>
                     <button type="submit" class="btn-primary">

@@ -33,12 +33,12 @@
     width: 16px; height: 16px; background: #fff; border-radius: 50%;
     transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.25);
 }
-.toggle-wrap input:checked + .toggle-track { background: #1A4D3A; }
+.toggle-wrap input:checked + .toggle-track { background: var(--green); }
 .toggle-wrap input:checked + .toggle-track::after { left: 21px; }
 .toggle-label { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; color: #555; }
 .btn-primary {
     display: inline-flex; align-items: center; gap: 6px;
-    background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 8px;
+    background: var(--green); color: #F5F0E8; border: none; border-radius: 8px;
     padding: 8px 16px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
     text-decoration: none; cursor: pointer; transition: background .15s; white-space: nowrap;
 }
@@ -54,16 +54,16 @@
 .badge-blue { background:#DBEAFE; color:#1D4ED8; }
 .ed-card { background:#fff; border:1px solid #E5E1D8; border-radius:12px; overflow:hidden; margin-bottom:16px; }
 .ed-card-header { padding:13px 20px; border-bottom:1px solid #F0EDE6; background:#FAFAF6; display:flex; align-items:center; gap:10px; }
-.ed-card.type-text { border-left: 4px solid #1A4D3A; }
+.ed-card.type-text { border-left: 4px solid var(--green); }
 .ed-card.type-text .ed-card-header { background: #F0F7F3; }
 .ed-card.type-price { border-left: 4px solid #D97706; }
 .ed-card.type-price .ed-card-header { background: #FFF8E8; }
 .ed-card.type-deleg { border-left: 4px solid #2563EB; }
 .ed-card.type-deleg .ed-card-header { background: #EFF6FF; }
-.ed-card-header > i { font-size:17px; color:#1A4D3A; }
+.ed-card-header > i { font-size:17px; color:var(--green); }
 .ed-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
 .ed-card-body { padding:20px; }
-.doc-header-bar { background:#1A4D3A; color:#fff; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.doc-header-bar { background:var(--green); color:#fff; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
 .doc-header-bar .offer-num { font-family:'Lato',sans-serif; font-size:15px; font-weight:900; letter-spacing:.04em; }
 .doc-header-bar .doc-date  { font-size:12px; opacity:.8; }
 .doc-parties { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid #F0EDE6; }
@@ -73,8 +73,8 @@
 .doc-party-name  { font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:#1A1A1A; margin-bottom:4px; }
 .doc-party-line  { font-family:'Lato',sans-serif; font-size:12px; color:#555; line-height:1.7; }
 .doc-title-wrap  { padding:16px 22px; }
-.doc-title-input { width:100%; border:none; outline:none; font-family:'Manrope',sans-serif; font-size:18px; font-weight:700; color:#1A4D3A; background:transparent; border-bottom:2px dashed #94C4B0; padding:4px 0; transition:border-color .15s; }
-.doc-title-input:focus { border-color:#1A4D3A; }
+.doc-title-input { width:100%; border:none; outline:none; font-family:'Manrope',sans-serif; font-size:18px; font-weight:700; color:var(--green); background:transparent; border-bottom:2px dashed #94C4B0; padding:4px 0; transition:border-color .15s; }
+.doc-title-input:focus { border-color:var(--green); }
 .doc-title-input::placeholder { color:#bbb; font-weight:400; }
 .rte-toolbar { display:flex; gap:4px; padding:8px 16px; border-bottom:1px solid #F0EDE6; background:#FAFAF6; flex-wrap:wrap; }
 .rte-btn { min-width:30px; height:28px; padding:0 8px; background:#fff; border:1px solid #D0CCC0; border-radius:5px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-family:'Lato',sans-serif; color:#333; transition:background .12s; }
@@ -99,28 +99,28 @@
 .cell-input { width:100%; border:1px solid #D8D4C8; border-radius:5px; padding:6px 9px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; background:#fff; outline:none; transition:border-color .12s, box-shadow .12s; box-sizing:border-box; }
 .cell-input::placeholder { color: #B0AA9E; }
 .cell-input:hover { border-color:#94C4B0; }
-.cell-input:focus { border-color:#1A4D3A; box-shadow: 0 0 0 2px rgba(26,77,58,0.08); }
+.cell-input:focus { border-color:var(--green); box-shadow: 0 0 0 2px rgba(26,77,58,0.08); }
 .cell-readonly { font-family:'Lato',sans-serif; font-size:13px; color:#333; font-weight:700; padding:5px 8px; }
-.btn-add-row { background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px; padding:6px 14px; font-size:12px; font-family:'Manrope',sans-serif; font-weight:700; cursor:pointer; transition:background .12s; }
+.btn-add-row { background:none; border:1px dashed #94C4B0; color:var(--green); border-radius:6px; padding:6px 14px; font-size:12px; font-family:'Manrope',sans-serif; font-weight:700; cursor:pointer; transition:background .12s; }
 .btn-add-row:hover { background:#F0F7F3; }
 .btn-del-row { background:none; border:none; color:#DC2626; cursor:pointer; font-size:16px; padding:4px; border-radius:4px; display:flex; align-items:center; justify-content:center; }
 .btn-del-row:hover { background:#FEE2E2; }
 .btn-del-section { margin-left:auto; background:none; border:1px solid #FCA5A5; color:#B91C1C; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
 .btn-del-section:hover { background:#FEE2E2; }
-.btn-add-section { display:inline-flex; align-items:center; gap:6px; border:1px dashed #94C4B0; color:#1A4D3A; background:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
+.btn-add-section { display:inline-flex; align-items:center; gap:6px; border:1px dashed #94C4B0; color:var(--green); background:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s; }
 .btn-add-section:hover { background:#F0F7F3; }
 
 .deleg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; }
 .field-label { display:block; font-size:11px; font-weight:700; color:#555; margin-bottom:4px; font-family:'Manrope',sans-serif; }
 .field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:8px 10px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A; outline:none; transition:border-color .15s; box-sizing:border-box; }
-.field-input:focus { border-color:#1A4D3A; background:#fff; }
+.field-input:focus { border-color:var(--green); background:#fff; }
 .input-group { display:flex; }
 .input-group .field-input { border-radius:7px 0 0 7px; border-right:none; }
 .input-suffix { background:#F0EDE6; border:1px solid #D0CCC0; border-radius:0 7px 7px 0; padding:8px 10px; font-size:12px; color:#666; white-space:nowrap; }
 .summary-row { display:flex; justify-content:space-between; padding:9px 16px; font-size:13px; }
 .summary-row.sub { background:#fff; border-bottom:1px solid #F0EDE6; }
 .summary-row.markup { background:#FFFBEB; border-bottom:1px solid #FDE68A; }
-.summary-row.total { background:#1A4D3A; color:#fff; border-radius:0 0 10px 10px; }
+.summary-row.total { background:var(--green); color:#fff; border-radius:0 0 10px 10px; }
 .summary-label { font-family:'Manrope',sans-serif; font-weight:600; }
 .summary-value { font-family:'Lato',sans-serif; font-weight:900; font-size:15px; }
 .summary-row.total .summary-value { font-size:20px; }
@@ -138,7 +138,7 @@
 @if($offerRequest)
 <div id="modal-template-pick" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;padding:20px;">
     <div style="background:#fff;border-radius:16px;padding:32px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
-        <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#1A4D3A;margin-bottom:6px;display:flex;align-items:center;gap:10px;">
+        <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
             <i class="ti ti-file-plus"></i> Nowa oferta
         </div>
         <div style="font-size:13px;color:#888;margin-bottom:24px;font-family:'Manrope',sans-serif;">
@@ -153,9 +153,9 @@
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
 
             {{-- Opcja: pusta oferta --}}
-            <button onclick="pickTemplate(null)" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='#1A4D3A'" onmouseout="this.style.borderColor='#E5E1D8'">
+            <button onclick="pickTemplate(null)" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='#E5E1D8'">
                 <div style="width:44px;height:44px;background:#F0F7F3;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <i class="ti ti-file" style="font-size:22px;color:#1A4D3A;"></i>
+                    <i class="ti ti-file" style="font-size:22px;color:var(--green);"></i>
                 </div>
                 <div>
                     <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:3px;">Pusta oferta</div>
@@ -166,7 +166,7 @@
             {{-- Opcja: wybierz szablon --}}
             @if($offerTemplates->isNotEmpty())
                 @foreach($offerTemplates as $tpl)
-                <button onclick="pickTemplate({{ $tpl->id }})" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='#1A4D3A'" onmouseout="this.style.borderColor='#E5E1D8'">
+                <button onclick="pickTemplate({{ $tpl->id }})" style="display:flex;align-items:center;gap:16px;background:#fff;border:2px solid #E5E1D8;border-radius:10px;padding:16px 20px;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='#E5E1D8'">
                     <div style="width:44px;height:44px;background:#FFFBEB;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                         <i class="ti ti-template" style="font-size:22px;color:#92400E;"></i>
                     </div>
@@ -201,7 +201,7 @@
         <a href="{{ route('offers.index') }}" class="btn-secondary" style="padding:6px 10px;">
             <i class="ti ti-arrow-left"></i>
         </a>
-        <span style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:#1A4D3A;">
+        <span style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:var(--green);">
             Nowa oferta
         </span>
         <span class="badge badge-blue">W toku</span>
@@ -288,7 +288,7 @@
                 </div>
             @endif
             @error('company_id')<div style="font-size:11px;color:#B91C1C;margin-top:4px;">{{ $message }}</div>@enderror
-            <div id="distance-info" style="display:none;margin-top:6px;font-size:12px;color:#1A4D3A;font-family:'Lato',sans-serif;"></div>
+            <div id="distance-info" style="display:none;margin-top:6px;font-size:12px;color:var(--green);font-family:'Lato',sans-serif;"></div>
         </div>
     </div>
 
@@ -1187,7 +1187,7 @@ function delegRender() {
         div.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <i class="ti ti-map-pin" style="color:#1A4D3A;font-size:16px;"></i>
+                    <i class="ti ti-map-pin" style="color:var(--green);font-size:16px;"></i>
                     <strong style="font-family:'Manrope',sans-serif;font-size:13px;color:#1A1A1A;">
                         Lokalizacja ${idx + 1}
                     </strong>
@@ -1216,7 +1216,7 @@ function delegRender() {
                             style="flex:1;min-width:0;">
                         <button type="button" onclick="delegFetchKm(${idx})"
                             id="deleg-mapbtn-${idx}"
-                            style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                            style="display:inline-flex;align-items:center;gap:4px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                             <i class="ti ti-map-pin"></i> Pobierz km
                         </button>
                     </div>
@@ -1263,7 +1263,7 @@ function delegRender() {
                 </div>
             </div>
 
-            <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:#1A4D3A;font-weight:700;">
+            <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:var(--green);font-weight:700;">
                 Koszt tej lokalizacji: ${delegFmt(total)} zł
             </div>
         `;

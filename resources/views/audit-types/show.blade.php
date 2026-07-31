@@ -8,7 +8,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #1A4D3A;
+        color: var(--green);
         font-size: 13px;
         font-weight: 600;
         text-decoration: none;
@@ -92,7 +92,7 @@
         align-items: center;
         gap: 5px;
         background: #E8F5E9;
-        color: #1A4D3A;
+        color: var(--green);
         font-size: 11px;
         font-weight: 700;
         padding: 3px 10px;
@@ -125,7 +125,7 @@
     }
     .btn-set-current {
         background: #E8F5E9;
-        color: #1A4D3A;
+        color: var(--green);
         border-color: #A5D6A7;
     }
     .btn-set-current:hover { background: #C8E6C9; }
@@ -158,14 +158,14 @@
         background: #fff;
         transition: border-color .15s;
     }
-    .form-control:focus { outline: none; border-color: #1A4D3A; }
+    .form-control:focus { outline: none; border-color: var(--green); }
     .form-error { font-size: 12px; color: #C62828; margin-top: 4px; }
 
     .btn-submit {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #fff;
         padding: 11px 22px;
         border-radius: 8px;
@@ -281,7 +281,7 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header-title">
-            <i class="ti ti-versions" style="margin-right:8px;color:#1A4D3A;"></i>
+            <i class="ti ti-versions" style="margin-right:8px;color:var(--green);"></i>
             Wersje formularza
             <span style="font-size:12px;font-weight:500;color:#888;margin-left:8px;">({{ $auditType->versions->count() }})</span>
         </div>
@@ -351,7 +351,7 @@
 
 {{-- Upload Form --}}
 <div class="upload-card">
-    <div class="upload-card-title"><i class="ti ti-upload" style="margin-right:8px;color:#1A4D3A;"></i>Dodaj nową wersję</div>
+    <div class="upload-card-title"><i class="ti ti-upload" style="margin-right:8px;color:var(--green);"></i>Dodaj nową wersję</div>
 
     <form method="POST" action="{{ route('audit-types.versions.store', $auditType) }}" enctype="multipart/form-data">
         @csrf

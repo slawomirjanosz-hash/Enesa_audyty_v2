@@ -5,7 +5,7 @@
 @push('styles')
 <style>
 .page-header { margin-bottom:24px; }
-.page-header h1 { font-family:'Manrope',sans-serif; font-size:20px; font-weight:700; color:#1A4D3A; margin:0 0 4px; }
+.page-header h1 { font-family:'Manrope',sans-serif; font-size:20px; font-weight:700; color:var(--green); margin:0 0 4px; }
 .page-header p { font-size:13px; color:#888; margin:0; }
 .templates-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px; margin-bottom:32px; }
 .template-card { background:#fff; border:2px solid #E5E1D8; border-radius:12px; padding:20px; cursor:pointer; transition:border-color .15s, box-shadow .15s; }
@@ -141,7 +141,7 @@ function renderRequestFields(fields, container) {
             if (sec.title) {
                 const h = document.createElement('div');
                 h.textContent = sec.title;
-                h.style.cssText = "font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#1A4D3A;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;";
+                h.style.cssText = "font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--green);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;";
                 container.appendChild(h);
             }
             (sec.fields || []).forEach(f => renderRespField(container, f));

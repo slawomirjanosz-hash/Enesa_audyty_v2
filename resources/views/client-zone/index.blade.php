@@ -12,7 +12,7 @@
     .cz-header h1 {
         font-size: 22px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         font-family: 'Manrope', sans-serif;
     }
     .cz-header p {
@@ -45,7 +45,7 @@
     .cz-card-name {
         font-size: 16px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         font-family: 'Manrope', sans-serif;
     }
 
@@ -65,7 +65,7 @@
     .cz-card-btn {
         margin-top: auto;
         width: 100%;
-        background: #1A4D3A;
+        background: var(--green);
         color: #fff;
         border: none;
         border-radius: 8px;

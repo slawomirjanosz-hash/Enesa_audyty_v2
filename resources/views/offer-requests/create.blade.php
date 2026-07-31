@@ -1,29 +1,29 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('page-title', 'Nowe zapytanie')
 
 @push('styles')
 <style>
 .page-header { margin-bottom:24px; }
-.page-header h1 { font-family:'Manrope',sans-serif; font-size:20px; font-weight:700; color:#1A4D3A; margin:0 0 4px; display:flex; align-items:center; gap:8px; }
+.page-header h1 { font-family:'Manrope',sans-serif; font-size:20px; font-weight:700; color:var(--green); margin:0 0 4px; display:flex; align-items:center; gap:8px; }
 .page-header p { font-size:13px; color:#888; margin:0; }
 .form-card { background:#fff; border:1px solid #E5E1D8; border-radius:12px; overflow:hidden; margin-bottom:20px; }
 .form-card-header { padding:14px 20px; background:#FAFAF6; border-bottom:1px solid #F0EDE6; display:flex; align-items:center; gap:10px; }
-.form-card-header i { color:#1A4D3A; font-size:17px; }
+.form-card-header i { color:var(--green); font-size:17px; }
 .form-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
 .form-card-body { padding:20px; }
 .field-label { display:block; font-family:'Manrope',sans-serif; font-size:12px; font-weight:700; color:#3a3a3a; margin-bottom:5px; }
 .field-label .required { color:#DC2626; margin-left:2px; }
 .field-input { width:100%; background:#FAFAF6; border:1px solid #D0CCC0; border-radius:7px; padding:9px 12px; font-size:14px; font-family:'Lato',sans-serif; color:#1A1A1A; outline:none; transition:border-color .15s; box-sizing:border-box; }
-.field-input:focus { border-color:#1A4D3A; background:#fff; }
+.field-input:focus { border-color:var(--green); background:#fff; }
 .field-group { margin-bottom:16px; }
 .templates-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px; }
 .template-card { background:#FAFAF6; border:2px solid #E5E1D8; border-radius:10px; padding:16px; cursor:pointer; transition:border-color .15s, box-shadow .15s; }
-.template-card:hover { border-color:#1A4D3A; box-shadow:0 2px 10px rgba(26,77,58,.10); }
-.template-card.selected { border-color:#1A4D3A; background:#F0F7F3; }
-.template-card-icon { width:36px; height:36px; background:#E8F5E9; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:17px; color:#1A4D3A; margin-bottom:10px; }
+.template-card:hover { border-color:var(--green); box-shadow:0 2px 10px rgba(26,77,58,.10); }
+.template-card.selected { border-color:var(--green); background:#F0F7F3; }
+.template-card-icon { width:36px; height:36px; background:#E8F5E9; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:17px; color:var(--green); margin-bottom:10px; }
 .template-card-name { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
-.btn-primary { display:inline-flex; align-items:center; gap:7px; background:#1A4D3A; color:#F5F0E8; border:none; border-radius:8px; padding:10px 20px; font-family:'Manrope',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:background .15s; }
+.btn-primary { display:inline-flex; align-items:center; gap:7px; background:var(--green); color:#F5F0E8; border:none; border-radius:8px; padding:10px 20px; font-family:'Manrope',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:background .15s; }
 .btn-primary:hover { background:#143d2d; }
 .btn-secondary { display:inline-flex; align-items:center; gap:7px; background:#fff; color:#333; border:1px solid #D0CCC0; border-radius:8px; padding:9px 18px; font-family:'Manrope',sans-serif; font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; transition:background .15s; }
 .btn-secondary:hover { background:#F4F1EA; }
@@ -146,7 +146,7 @@ function renderRequestFields(fields, container) {
             if (sec.title) {
                 const h = document.createElement('div');
                 h.textContent = sec.title;
-                h.style.cssText = "font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#1A4D3A;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;";
+                h.style.cssText = "font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--green);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;";
                 container.appendChild(h);
             }
             (sec.fields || []).forEach(function(f) { renderRespField(container, f); });

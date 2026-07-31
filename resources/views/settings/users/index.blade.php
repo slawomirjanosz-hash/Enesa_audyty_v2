@@ -23,8 +23,8 @@
         border-radius: 6px 6px 0 0;
         transition: color .15s, border-color .15s;
     }
-    .settings-tab:hover { color: #1A4D3A; }
-    .settings-tab.active { color: #1A4D3A; border-bottom-color: #1A4D3A; }
+    .settings-tab:hover { color: var(--green); }
+    .settings-tab.active { color: var(--green); border-bottom-color: var(--green); }
 
     /* ── Card ─────────────────────────────── */
     .card {
@@ -66,7 +66,7 @@
         background: #FAFAF6;
         border-bottom: 1px solid #F0EDE6;
     }
-    .sort-indicator { font-size: 10px; color: #1A4D3A; margin-left: 2px; }
+    .sort-indicator { font-size: 10px; color: var(--green); margin-left: 2px; }
     .users-table td {
         padding: 14px 16px;
         font-size: 14px;
@@ -82,7 +82,7 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         font-family: 'Manrope', sans-serif;
         font-size: 13px;
@@ -109,7 +109,7 @@
         white-space: nowrap;
     }
     .badge-superadmin { background: #0d3b12; color: #A8D5B5; }
-    .badge-admin      { background: rgba(26,77,58,0.12); color: #1A4D3A; }
+    .badge-admin      { background: rgba(26,77,58,0.12); color: var(--green); }
     .badge-auditor-senior { background: rgba(100,60,180,0.10); color: #6433A0; }
     .badge-auditor    { background: rgba(30,80,150,0.10); color: #1E5096; }
 
@@ -139,7 +139,7 @@
         transition: background .15s, color .15s;
         text-decoration: none;
     }
-    .btn-action:hover { background: #F4F1EA; color: #1A4D3A; }
+    .btn-action:hover { background: #F4F1EA; color: var(--green); }
     .btn-action.danger:hover { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; }
     .btn-action i { font-size: 16px; }
     .btn-action.success:hover { background: #e8f5e9; color: #1B5E20; border-color: #a5d6a7; }
@@ -150,7 +150,7 @@
         align-items: center;
         gap: 7px;
         padding: 9px 18px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 8px;
@@ -184,7 +184,7 @@
     .modal-box { background: #fff; border-radius: 14px; padding: 36px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; position: relative; pointer-events: auto; }
     .modal-close-btn { position: absolute; top: 14px; right: 18px; background: none; border: none; font-size: 20px; color: #aaa; cursor: pointer; line-height: 1; }
     .modal-close-btn:hover { color: #333; }
-    .modal-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: #1A4D3A; margin-bottom: 6px; }
+    .modal-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
     .modal-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
     .mf-group { margin-bottom: 14px; }
     .mf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -194,7 +194,7 @@
     .mf-select { width: 100%; background: #FAFAF6; border: 1px solid #D0CCC0; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: 'Lato', sans-serif; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
     .mf-select:focus { border-color: #2E7D32; }
     .modal-divider { border: none; border-top: 1px solid #E5E1D8; margin: 20px 0; }
-    .btn-modal-submit { width: 100%; background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 8px; padding: 12px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; }
+    .btn-modal-submit { width: 100%; background: var(--green); color: #F5F0E8; border: none; border-radius: 8px; padding: 12px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; }
     .btn-modal-submit:hover { background: #153d2e; }
 
     /* ── Edit modal ───────────────────────── */
@@ -307,7 +307,7 @@
 <div class="card">
     <div class="card-header">
         <div>
-            <div class="card-header-title">Zarchiwizowani pracownicy ENESA</div>
+            <div class="card-header-title">Zarchiwizowani pracownicy firmy właściciela</div>
             <div class="card-header-sub">{{ $archivedStaff->count() }} usuniętych kont</div>
         </div>
     </div>
@@ -315,7 +315,7 @@
     @if($archivedStaff->isEmpty())
         <div style="text-align:center;padding:40px;color:#888;">
             <i class="ti ti-archive" style="font-size:32px;display:block;margin-bottom:8px;"></i>
-            Brak zarchiwizowanych pracowników ENESA
+            Brak zarchiwizowanych pracowników firmy właściciela
         </div>
     @else
         <table class="users-table" id="archivedStaffTable">
@@ -638,7 +638,7 @@
                     <tr data-user-id="{{ $user->id }}" data-sort-name="{{ strtolower($user->name) }}" data-sort-email="{{ strtolower($user->email) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-status="{{ $isActive ? 'aktywny' : 'usuniety' }}">
                         <td>
                             <div class="user-cell">
-                                <div class="avatar" style="background:{{ $isActive ? '#1A4D3A' : '#999' }};">{{ $initials }}</div>
+                                <div class="avatar" style="background:{{ $isActive ? 'var(--green)' : '#999' }};">{{ $initials }}</div>
                                 <div>
                                     <div class="user-name" style="color:{{ $isActive ? '#1A1A1A' : '#999' }};">{{ $user->name }}</div>
                                 </div>

@@ -52,7 +52,7 @@
         align-items: center;
         justify-content: center;
         font-size: 22px;
-        color: #1A4D3A;
+        color: var(--green);
         flex-shrink: 0;
     }
 
@@ -84,14 +84,14 @@
         align-items: center;
         gap: 5px;
     }
-    .audit-type-meta i { color: #1A4D3A; }
+    .audit-type-meta i { color: var(--green); }
 
     .badge-current {
         display: inline-flex;
         align-items: center;
         gap: 5px;
         background: #E8F5E9;
-        color: #1A4D3A;
+        color: var(--green);
         font-size: 12px;
         font-weight: 600;
         padding: 3px 10px;
@@ -113,7 +113,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #fff;
         padding: 9px 18px;
         border-radius: 8px;

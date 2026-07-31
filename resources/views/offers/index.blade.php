@@ -99,7 +99,7 @@
         font-size: 16px;
         transition: background .12s;
     }
-    .btn-icon-view  { color: #1A4D3A; background: #F0F7F3; }
+    .btn-icon-view  { color: var(--green); background: #F0F7F3; }
     .btn-icon-view:hover  { background: #d4edde; }
     .btn-icon-edit  { color: #1D4ED8; background: #EFF6FF; }
     .btn-icon-edit:hover  { background: #DBEAFE; }
@@ -130,7 +130,7 @@
         align-items: center;
         gap: 8px;
     }
-    .table-card-title i { color: #1A4D3A; }
+    .table-card-title i { color: var(--green); }
 
     /* ── Empty state ────────────────────────────────── */
     .empty-state {
@@ -146,7 +146,7 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 8px;
@@ -171,7 +171,7 @@
         padding: 4px 10px;
         font-size: 12px;
         font-family: 'Manrope', sans-serif;
-        color: #1A4D3A;
+        color: var(--green);
         text-decoration: none;
     }
     .filter-pill:hover { background: #d4edde; }
@@ -189,11 +189,11 @@
 
     .search-box { position:relative; }
     .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:220px; font-family:'Lato',sans-serif; }
-    .search-box input:focus { border-color:#1A4D3A; }
+    .search-box input:focus { border-color:var(--green); }
     .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
     .sort-icon { font-size:10px; color:#bbb; margin-left:3px; }
     .offers-table th { cursor:pointer; user-select:none; }
-    .offers-table th:hover { color:#1A4D3A; }
+    .offers-table th:hover { color:var(--green); }
 </style>
 @endpush
 
@@ -212,7 +212,7 @@
 {{-- Nagłówek strony --}}
 <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
     <div>
-        <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:#1A4D3A;margin:0;">
+        <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:var(--green);margin:0;">
             <i class="ti ti-file-invoice" style="margin-right:8px;"></i>Oferty
         </h1>
         @if($activeStatus)
@@ -316,7 +316,7 @@
                     <tr>
                         <td>
                             <a href="{{ route('offers.show', $offer) }}"
-                               style="color:#1A4D3A;font-weight:700;text-decoration:none;font-family:'Manrope',sans-serif;font-size:13px;">
+                               style="color:var(--green);font-weight:700;text-decoration:none;font-family:'Manrope',sans-serif;font-size:13px;">
                                 {{ $offer->fullNumber() }}
                             </a>
                         </td>
@@ -374,7 +374,7 @@
                                 @csrf
                                 <input type="hidden" name="mode" value="offer">
                                 <button type="submit"
-                                        style="background:#F0F7F3;border:none;cursor:pointer;color:#1A4D3A;padding:6px 7px;border-radius:6px;display:inline-flex;align-items:center;"
+                                        style="background:#F0F7F3;border:none;cursor:pointer;color:var(--green);padding:6px 7px;border-radius:6px;display:inline-flex;align-items:center;"
                                         title="Kopiuj ofertę">
                                     <i class="ti ti-copy"></i>
                                 </button>

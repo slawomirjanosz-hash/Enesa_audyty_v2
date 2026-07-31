@@ -21,7 +21,7 @@
         width: 64px;
         height: 64px;
         border-radius: 14px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #fff;
         font-family: 'Lato', sans-serif;
         font-size: 22px;
@@ -47,7 +47,7 @@
         font-family: 'Lato', sans-serif;
         font-size: 22px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         margin: 0;
     }
 
@@ -111,7 +111,7 @@
 
     .btn-action:active { transform: translateY(1px); }
 
-    .btn-primary-action { background: #1A4D3A; color: #F5F0E8; }
+    .btn-primary-action { background: var(--green); color: #F5F0E8; }
     .btn-primary-action:hover { background: #153d2e; }
 
         .btn-accept-action { background: #EF6C00; color: #fff; }
@@ -120,7 +120,7 @@
     .btn-delete-action { background: #C62828; color: #fff; }
     .btn-delete-action:hover { background: #a91f1f; }
 
-    .btn-secondary-action { background: #F4F1EA; color: #1A4D3A; border: 1px solid #D0CCC0; }
+    .btn-secondary-action { background: #F4F1EA; color: var(--green); border: 1px solid #D0CCC0; }
     .btn-secondary-action:hover { background: #EAE6DC; }
 
     /* ── STATS BAR ── */
@@ -160,7 +160,7 @@
         font-family: 'Lato', sans-serif;
         font-size: 26px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         line-height: 1;
         margin-bottom: 3px;
     }
@@ -207,8 +207,8 @@
         transition: color .15s, border-color .15s;
     }
 
-    .tab-btn:hover { color: #1A4D3A; }
-    .tab-btn.active { color: #1A4D3A; border-bottom-color: #1A4D3A; }
+    .tab-btn:hover { color: var(--green); }
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
     .tab-btn i { font-size: 16px; }
 
     .tab-badge {
@@ -262,7 +262,7 @@
 
     .info-row:last-child { border-bottom: none; }
 
-    .info-row i { font-size: 16px; color: #1A4D3A; margin-top: 1px; flex-shrink: 0; }
+    .info-row i { font-size: 16px; color: var(--green); margin-top: 1px; flex-shrink: 0; }
 
     .info-label { color: #7a8a80; font-size: 12px; font-weight: 600; min-width: 80px; }
     .info-value { color: #1e1e1e; font-weight: 500; }
@@ -377,7 +377,7 @@
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: #1A4D3A;
+        background: var(--green);
         color: #fff;
         font-size: 13px;
         font-weight: 700;
@@ -401,7 +401,7 @@
         font-family: 'Manrope', sans-serif;
     }
 
-    .role-badge.admin { background: #1A4D3A; color: #fff; }
+    .role-badge.admin { background: var(--green); color: #fff; }
 
     .role-badge.user { background: #F5F5F5; color: #757575; }
 
@@ -436,7 +436,7 @@
     }
 
     .btn-add-user {
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         padding: 10px 16px;
@@ -462,7 +462,7 @@
     .user-action-btn {
         border: 1px solid #D0CCC0;
         background: #F4F1EA;
-        color: #1A4D3A;
+        color: var(--green);
         padding: 6px 10px;
         border-radius: 7px;
         font-size: 12px;
@@ -511,7 +511,7 @@
         font-family: 'Lato', sans-serif;
         font-size: 22px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
     }
 
     .user-modal-header p {
@@ -586,7 +586,7 @@
     .modal-submit {
         width: 100%;
         margin-top: 8px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 8px;
@@ -637,7 +637,7 @@
 
 {{-- ─── BREADCRUMB ─── --}}
 <div style="margin-bottom:16px;font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;display:flex;align-items:center;gap:6px;">
-    <a href="{{ route('dashboard') }}" style="color:#1A4D3A;text-decoration:none;font-weight:600;">Dashboard</a>
+    <a href="{{ route('dashboard') }}" style="color:var(--green);text-decoration:none;font-weight:600;">Dashboard</a>
     <i class="ti ti-chevron-right" style="font-size:12px;"></i>
     <span>{{ $company->name }}</span>
 </div>
@@ -920,7 +920,7 @@
     <div id="tab-requests" class="tab-panel">
         <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
             <a href="{{ route('offer-requests.create', ['company_id' => $company->id]) }}"
-               style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#F5F0E8;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+               style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#F5F0E8;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
                 <i class="ti ti-mail-plus"></i> Dodaj zapytanie ręcznie
             </a>
         </div>
@@ -973,7 +973,7 @@
                             @if($req->offerFormTemplate)
                                 @php
                                     $prog = $req->offerFormTemplate->progress($responses);
-                                    $barColor = $prog['percent'] >= 100 ? '#1A4D3A' : ($prog['percent'] > 0 ? '#F59E0B' : '#D1D5DB');
+                                    $barColor = $prog['percent'] >= 100 ? 'var(--green)' : ($prog['percent'] > 0 ? '#F59E0B' : '#D1D5DB');
                                 @endphp
                                 <div style="display:flex;align-items:center;gap:8px;">
                                     <div style="flex:1;height:8px;background:#EFEDE7;border-radius:5px;overflow:hidden;min-width:70px;">
@@ -990,7 +990,7 @@
                             @if($offers->isNotEmpty())
                                 @foreach($offers as $offer)
                                 <div style="font-size:11px;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
-                                    <a href="{{ route('offers.edit', $offer) }}" style="color:#1A4D3A;text-decoration:none;font-weight:600;">
+                                    <a href="{{ route('offers.edit', $offer) }}" style="color:var(--green);text-decoration:none;font-weight:600;">
                                         {{ $offer->offer_full_number ?? $offer->offer_number }}
                                     </a>
                                     <span style="color:#888;font-size:10px;">
@@ -1028,7 +1028,7 @@
                         <td style="text-align:right;">
                             <div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;">
                                 <a href="{{ route('offer-requests.show', $req) }}" data-tooltip="Podgląd i link do klienta"
-                                   style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:#1A4D3A;border-radius:6px;text-decoration:none;">
+                                   style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:var(--green);border-radius:6px;text-decoration:none;">
                                     <i class="ti ti-eye" style="font-size:13px;"></i>
                                 </a>
                                 <a href="{{ route('offer-requests.edit', $req) }}" data-tooltip="Uzupełnij ankietę"
@@ -1038,7 +1038,7 @@
 
                                 @if($offers->isEmpty())
                                 <a href="{{ route('offers.create', ['company_id' => $company->id, 'offer_request_id' => $req->id]) }}"
-                                   style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+                                   style="display:inline-flex;align-items:center;gap:4px;background:var(--green);color:#F5F0E8;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">
                                     <i class="ti ti-file-plus" style="font-size:12px;"></i> Zrób ofertę
                                 </a>
                                 @else
@@ -1116,7 +1116,7 @@
                         <tr>
                             <td style="font-weight:700;font-family:'Lato',sans-serif;">{{ $offer->offer_full_number ?? $offer->offer_number }}</td>
                             <td style="color:#555;">{{ $offer->offer_title ?? '—' }}</td>
-                            <td style="font-weight:700;color:#1A4D3A;">{{ number_format($offer->kwota_netto ?? 0, 2) }} zł</td>
+                            <td style="font-weight:700;color:var(--green);">{{ number_format($offer->kwota_netto ?? 0, 2) }} zł</td>
                             <td>
                                 <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $statusStyle }}">
                                     {{ $statusLabel }}
@@ -1124,7 +1124,7 @@
                             </td>
                             <td style="color:#7a8a80;font-size:12px;">{{ $offer->created_at->format('d.m.Y') }}</td>
                             <td style="text-align:right;">
-                                <a href="{{ route('offers.edit', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;cursor:pointer;">
+                                <a href="{{ route('offers.edit', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;cursor:pointer;">
                                     <i class="ti ti-edit"></i> Edytuj
                                 </a>
                                 <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;margin-left:4px;">
@@ -1169,7 +1169,7 @@
                     @foreach($crmOpportunities as $opportunity)
                         <tr>
                             <td>
-                                <div style="font-weight:700;color:#1A4D3A;">{{ $opportunity->title }}</div>
+                                <div style="font-weight:700;color:var(--green);">{{ $opportunity->title }}</div>
                                 @if($opportunity->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($opportunity->description, 100) }}</div>@endif
                             </td>
                             <td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $crmStageColors[$opportunity->stage] ?? 'background:#F3F4F6;color:#4B5563;' }}">{{ $crmStageLabels[$opportunity->stage] ?? $opportunity->stage }}</span></td>
@@ -1189,10 +1189,10 @@
         @endif
 
         <div style="margin-top:24px;border-top:1px solid #E5E1D8;padding-top:18px;">
-            <h3 style="font-family:'Manrope',sans-serif;font-size:14px;color:#1A4D3A;margin:0 0 12px;display:flex;align-items:center;gap:7px;"><i class="ti ti-history"></i> Historia CRM</h3>
+            <h3 style="font-family:'Manrope',sans-serif;font-size:14px;color:var(--green);margin:0 0 12px;display:flex;align-items:center;gap:7px;"><i class="ti ti-history"></i> Historia CRM</h3>
             @forelse($crmActivities as $activity)
                 <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F0EDE6;">
-                    <div style="width:30px;height:30px;border-radius:50%;background:#F0F7F3;color:#1A4D3A;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <div style="width:30px;height:30px;border-radius:50%;background:#F0F7F3;color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                         <i class="ti {{ str_starts_with($activity->type, 'offer_') ? 'ti-file-invoice' : 'ti-target' }}"></i>
                     </div>
                     <div style="min-width:0;flex:1;">
@@ -1297,7 +1297,7 @@
 
         {{-- Archive sidebar --}}
         <div style="width:240px;flex-shrink:0;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:10px;overflow:hidden;">
-            <div style="background:#1A4D3A;color:#F5F0E8;padding:11px 14px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;">
+            <div style="background:var(--green);color:#F5F0E8;padding:11px 14px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;">
                 <i class="ti ti-archive"></i> Archiwum
             </div>
             @if($chatArchives->isEmpty())
@@ -1317,7 +1317,7 @@
                     <div style="font-size:11px;color:#999;font-family:'Lato',sans-serif;margin-top:1px;">
                         → {{ \Carbon\Carbon::parse($arc->ended_at)->format('d.m.Y H:i') }}
                     </div>
-                    <div style="font-size:11px;color:#1A4D3A;font-family:'Manrope',sans-serif;font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px;">
+                    <div style="font-size:11px;color:var(--green);font-family:'Manrope',sans-serif;font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px;">
                         <i class="ti ti-messages" style="font-size:11px;"></i>
                         {{ $arc->message_count }} wiad.
                         <span style="margin-left:auto;color:#888;font-weight:400;font-size:10px;">Podgląd →</span>
@@ -1331,7 +1331,7 @@
         <div style="flex:1;min-width:0;background:#fff;border:1px solid #E5E1D8;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;">
 
             {{-- Chat header --}}
-            <div style="background:#1A4D3A;color:#F5F0E8;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+            <div style="background:var(--green);color:#F5F0E8;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
                 <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;">
                     <i class="ti ti-message-2"></i> Aktywna rozmowa
                 </div>
@@ -1377,9 +1377,9 @@
             <div style="border-top:1px solid #E5E1D8;padding:10px 14px;display:flex;gap:8px;align-items:flex-end;background:#fff;flex-shrink:0;">
                 <textarea id="cmp-input" placeholder="Napisz wiadomość…" rows="2"
                     style="flex:1;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;color:#1A1A1A;outline:none;resize:none;transition:border-color .15s;box-sizing:border-box;"
-                    onfocus="this.style.borderColor='#1A4D3A'" onblur="this.style.borderColor='#D0CCC0'"
+                    onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='#D0CCC0'"
                     onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();cmpSend();}"></textarea>
-                <button onclick="cmpSend()" style="background:#1A4D3A;color:#F5F0E8;border:none;border-radius:7px;padding:9px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;">
+                <button onclick="cmpSend()" style="background:var(--green);color:#F5F0E8;border:none;border-radius:7px;padding:9px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;">
                     <i class="ti ti-send"></i> Wyślij
                 </button>
             </div>
@@ -1391,10 +1391,10 @@
     .cmp-own   { flex-direction:row-reverse; }
     .cmp-other { flex-direction:row; }
     .cmp-avatar { width:28px;height:28px;border-radius:50%;font-size:10px;font-weight:700;font-family:'Manrope',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
-    .cmp-avatar.cmp-own   { background:#1A4D3A;color:#fff; }
+    .cmp-avatar.cmp-own   { background:var(--green);color:#fff; }
     .cmp-avatar.cmp-other { background:#E5E1D8;color:#555; }
     .cmp-bubble { max-width:68%;padding:9px 13px;border-radius:13px;font-size:13px;font-family:'Lato',sans-serif;line-height:1.45;word-break:break-word; }
-    .cmp-bubble.cmp-own   { background:#1A4D3A;color:#fff;border-bottom-right-radius:3px; }
+    .cmp-bubble.cmp-own   { background:var(--green);color:#fff;border-bottom-right-radius:3px; }
     .cmp-bubble.cmp-other { background:#F0EDE6;color:#1A1A1A;border-bottom-left-radius:3px; }
     .cmp-time { font-size:10px;margin-top:3px;opacity:.6;text-align:right; }
     .cmp-bubble.cmp-other .cmp-time { text-align:left; }
@@ -1465,7 +1465,7 @@
     <div id="cmp-archive-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
         <div style="background:#fff;border-radius:14px;width:min(640px,95vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
             {{-- Modal header --}}
-            <div style="background:#1A4D3A;color:#F5F0E8;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+            <div style="background:var(--green);color:#F5F0E8;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
                 <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;">
                     <i class="ti ti-archive"></i>
                     <span id="cmp-arc-title">Archiwalna rozmowa</span>
@@ -1543,7 +1543,7 @@
                 Dokumenty firmy — oferty PDF, audyty i pliki wgrane ręcznie.
             </div>
             <button type="button" onclick="document.getElementById('modal-upload-doc').style.display='flex'"
-                    style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+                    style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:9px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
                 <i class="ti ti-upload"></i> Wgraj plik
             </button>
         </div>
@@ -1582,7 +1582,7 @@
                     <tr>
                         <td style="font-weight:600;">
                             @if($doc->offer_id)
-                                <a href="{{ route('offers.show', $doc->offer_id) }}" style="color:#1A4D3A;text-decoration:none;">
+                                <a href="{{ route('offers.show', $doc->offer_id) }}" style="color:var(--green);text-decoration:none;">
                                     {{ $doc->original_filename }}
                                 </a>
                             @else
@@ -1594,7 +1594,7 @@
                         <td style="color:#7a8a80;font-size:12px;">{{ $doc->updated_at->format('d.m.Y H:i') }}</td>
                         <td style="color:#888;font-size:12px;">{{ $doc->uploader?->name ?? 'System' }}</td>
                         <td style="text-align:right;">
-                            <a href="{{ route('documents.download', $doc) }}" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:#1A4D3A;border-radius:6px;text-decoration:none;" title="Pobierz">
+                            <a href="{{ route('documents.download', $doc) }}" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#F0F7F3;color:var(--green);border-radius:6px;text-decoration:none;" title="Pobierz">
                                 <i class="ti ti-download" style="font-size:13px;"></i>
                             </a>
                             <form method="POST" action="{{ route('documents.destroy', $doc) }}" style="display:inline;" onsubmit="return confirm('Usunąć ten dokument?')">
@@ -1619,7 +1619,7 @@
 <div id="modal-upload-doc" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9500;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A1A1A;margin-bottom:18px;">
-            <i class="ti ti-upload" style="color:#1A4D3A;margin-right:8px;"></i>Wgraj plik
+            <i class="ti ti-upload" style="color:var(--green);margin-right:8px;"></i>Wgraj plik
         </div>
         <form method="POST" action="{{ route('documents.store') }}" enctype="multipart/form-data">
             @csrf
@@ -1629,7 +1629,7 @@
                        style="width:100%;font-family:'Manrope',sans-serif;font-size:13px;">
                 <div style="font-size:11px;color:#999;margin-top:6px;">Maks. 20 MB. PDF, Word, Excel, obrazy, ZIP.</div>
             </div>
-            <button type="submit" style="width:100%;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:11px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+            <button type="submit" style="width:100%;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:11px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
                 Wgraj
             </button>
         </form>
@@ -1783,7 +1783,7 @@
 {{-- MODAL: Edycja danych firmy --}}
 <div id="modal-edit-firm" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;width:100%;max-width:540px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden;">
-        <div style="background:#1A4D3A;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="background:var(--green);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
             <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj dane firmy</span>
             <button onclick="closeEditModal()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
         </div>
@@ -1802,7 +1802,7 @@
                         <input type="text" id="edit-company-nip" name="nip" value="{{ $company->nip }}" maxlength="20"
                             style="min-width:0;flex:1;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                         <button type="button" onclick="fetchCompanyFromGus()"
-                            style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:#1A4D3A;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
+                            style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
                             <i class="ti ti-download"></i> GUS
                         </button>
                     </div>
@@ -1853,7 +1853,7 @@
                     Anuluj
                 </button>
                 <button type="submit"
-                    style="padding:9px 22px;border:none;border-radius:8px;background:#1A4D3A;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+                    style="padding:9px 22px;border:none;border-radius:8px;background:var(--green);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
                     <i class="ti ti-check"></i> Zapisz zmiany
                 </button>
             </div>

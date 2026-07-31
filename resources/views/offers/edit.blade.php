@@ -43,7 +43,7 @@
     transition: left .2s;
     box-shadow: 0 1px 3px rgba(0,0,0,.25);
 }
-.toggle-wrap input:checked + .toggle-track { background: #1A4D3A; }
+.toggle-wrap input:checked + .toggle-track { background: var(--green); }
 .toggle-wrap input:checked + .toggle-track::after { left: 21px; }
 .toggle-label { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; color: #555; }
 
@@ -57,7 +57,7 @@
 /* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn-primary {
     display: inline-flex; align-items: center; gap: 6px;
-    background: #1A4D3A; color: #F5F0E8; border: none;
+    background: var(--green); color: #F5F0E8; border: none;
     border-radius: 8px; padding: 8px 16px;
     font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
     text-decoration: none; cursor: pointer; transition: background .15s;
@@ -89,10 +89,10 @@
     align-items: center;
     gap: 10px;
 }
-.ed-card-header > i { font-size: 17px; color: #1A4D3A; }
+.ed-card-header > i { font-size: 17px; color: var(--green); }
 .ed-card-title { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; }
 .ed-card-body { padding: 20px; }
-.ed-card.type-text { border-left: 4px solid #1A4D3A; }
+.ed-card.type-text { border-left: 4px solid var(--green); }
 .ed-card.type-text .ed-card-header { background: #F0F7F3; }
 .ed-card.type-price { border-left: 4px solid #D97706; }
 .ed-card.type-price .ed-card-header { background: #FFF8E8; }
@@ -101,7 +101,7 @@
 
 /* â”€â”€ Document header card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .doc-header-bar {
-    background: #1A4D3A;
+    background: var(--green);
     color: #fff;
     padding: 14px 22px;
     display: flex;
@@ -121,13 +121,13 @@
 .doc-title-wrap  { padding:16px 22px; }
 .doc-title-input {
     width:100%; border:none; outline:none;
-    font-family:'Manrope',sans-serif; font-size:18px; font-weight:700; color:#1A4D3A;
+    font-family:'Manrope',sans-serif; font-size:18px; font-weight:700; color:var(--green);
     background:transparent;
     border-bottom:2px dashed #94C4B0;
     padding:4px 0;
     transition:border-color .15s;
 }
-.doc-title-input:focus { border-color:#1A4D3A; }
+.doc-title-input:focus { border-color:var(--green); }
 .doc-title-input::placeholder { color:#bbb; font-weight:400; }
 
 /* â”€â”€ Rich text editor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -147,7 +147,7 @@
 }
 .rte-btn:hover { background:#F0EDE6; }
 .rte-btn-ai {
-    margin-left:auto; background:#1A4D3A; color:#fff; border-color:#1A4D3A;
+    margin-left:auto; background:var(--green); color:#fff; border-color:var(--green);
     font-size:12px; font-weight:600; padding:0 10px; gap:4px;
 }
 .rte-btn-ai:hover { background:#14392b; border-color:#14392b; color:#fff; }
@@ -183,10 +183,10 @@
 }
 .cell-input::placeholder { color: #B0AA9E; }
 .cell-input:hover { border-color:#94C4B0; }
-.cell-input:focus { border-color:#1A4D3A; box-shadow: 0 0 0 2px rgba(26,77,58,0.08); }
+.cell-input:focus { border-color:var(--green); box-shadow: 0 0 0 2px rgba(26,77,58,0.08); }
 .cell-readonly { font-family:'Lato',sans-serif; font-size:13px; color:#333; font-weight:700; padding:5px 8px; }
 .btn-add-row {
-    background:none; border:1px dashed #94C4B0; color:#1A4D3A; border-radius:6px;
+    background:none; border:1px dashed #94C4B0; color:var(--green); border-radius:6px;
     padding:6px 14px; font-size:12px; font-family:'Manrope',sans-serif; font-weight:700;
     cursor:pointer; transition:background .12s;
 }
@@ -205,7 +205,7 @@
 .btn-del-section:hover { background:#FEE2E2; }
 .btn-add-section {
     display:inline-flex; align-items:center; gap:6px;
-    border:1px dashed #94C4B0; color:#1A4D3A; background:none;
+    border:1px dashed #94C4B0; color:var(--green); background:none;
     border-radius:8px; padding:8px 16px; font-size:12px; font-weight:700;
     font-family:'Manrope',sans-serif; cursor:pointer; transition:background .12s;
 }
@@ -222,7 +222,7 @@
     padding:8px 10px; font-size:13px; font-family:'Lato',sans-serif; color:#1A1A1A;
     outline:none; transition:border-color .15s; box-sizing:border-box;
 }
-.field-input:focus { border-color:#1A4D3A; background:#fff; }
+.field-input:focus { border-color:var(--green); background:#fff; }
 .input-group { display:flex; }
 .input-group .field-input { border-radius:7px 0 0 7px; border-right:none; }
 .input-suffix {
@@ -234,7 +234,7 @@
 .summary-row { display:flex; justify-content:space-between; padding:9px 16px; font-size:13px; }
 .summary-row.sub { background:#fff; border-bottom:1px solid #F0EDE6; }
 .summary-row.markup { background:#FFFBEB; border-bottom:1px solid #FDE68A; }
-.summary-row.total { background:#1A4D3A; color:#fff; border-radius:0 0 10px 10px; }
+.summary-row.total { background:var(--green); color:#fff; border-radius:0 0 10px 10px; }
 .summary-label { font-family:'Manrope',sans-serif; font-weight:600; }
 .summary-value { font-family:'Lato',sans-serif; font-weight:900; font-size:15px; }
 .summary-row.total .summary-value { font-size:20px; }
@@ -276,12 +276,12 @@
         <a href="{{ route('offers.show', $offer) }}" class="btn-secondary" style="padding:6px 10px;">
             <i class="ti ti-arrow-left"></i>
         </a>
-        <span style="font-family:'Lato',sans-serif;font-size:15px;font-weight:900;color:#1A4D3A;letter-spacing:.02em;">
+        <span style="font-family:'Lato',sans-serif;font-size:15px;font-weight:900;color:var(--green);letter-spacing:.02em;">
             {{ $offer->fullNumber() }}
         </span>
         <span class="badge {{ $statusLabel['class'] }}">{{ $statusLabel['label'] }}</span>
         @if($offer->is_template)
-            <span style="background:#F0F7F3;color:#1A4D3A;border:1px solid #94C4B0;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;">
+            <span style="background:#F0F7F3;color:var(--green);border:1px solid #94C4B0;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;">
                 <i class="ti ti-bookmark"></i> Szablon
             </span>
         @endif
@@ -359,7 +359,7 @@
                 <div class="doc-party-label">Odbiorca</div>
                 <input type="hidden" name="company_id" value="">
                 <div style="padding:10px 12px;background:#F5F0E8;border:1px dashed #C8B89A;border-radius:8px;font-size:13px;color:#666;font-family:'Manrope',sans-serif;">
-                    <i class="ti ti-bookmark" style="color:#1A4D3A;margin-right:6px;"></i>
+                    <i class="ti ti-bookmark" style="color:var(--green);margin-right:6px;"></i>
                     Szablon nie jest przypisany do firmy
                 </div>
             @else
@@ -388,7 +388,7 @@
                         @if($offer->company?->email)<br>{{ $offer->company->email }}@endif
                     </div>
                 </div>
-                <div id="company-distance-info" style="margin-top:6px;font-size:12px;color:#1A4D3A;display:none;"></div>
+                <div id="company-distance-info" style="margin-top:6px;font-size:12px;color:var(--green);display:none;"></div>
             @endif
         </div>
     </div>
@@ -634,7 +634,7 @@
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
             <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A1A1A;">
-                <i class="ti ti-copy" style="color:#1A4D3A;margin-right:8px;"></i>Zapisz jako...
+                <i class="ti ti-copy" style="color:var(--green);margin-right:8px;"></i>Zapisz jako...
             </div>
             <button type="button" onclick="document.getElementById('modal-clone').style.display='none'"
                     style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;line-height:1;">×</button>
@@ -656,7 +656,7 @@
                 </select>
             </div>
             <button type="submit"
-                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:11px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;">
+                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:11px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;">
                 <i class="ti ti-file-plus"></i> Utwórz nową ofertę z tej treści
             </button>
         </form>
@@ -666,7 +666,7 @@
             @csrf
             <input type="hidden" name="mode" value="template">
             <button type="submit"
-                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:#1A4D3A;border:2px solid #1A4D3A;border-radius:8px;padding:10px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:var(--green);border:2px solid var(--green);border-radius:8px;padding:10px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
                 <i class="ti ti-bookmark"></i> Zapisz jako szablon
             </button>
         </form>
@@ -1586,7 +1586,7 @@ function delegRender() {
         div.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <i class="ti ti-map-pin" style="color:#1A4D3A;font-size:16px;"></i>
+                    <i class="ti ti-map-pin" style="color:var(--green);font-size:16px;"></i>
                     <strong style="font-family:'Manrope',sans-serif;font-size:13px;color:#1A1A1A;">
                         Lokalizacja ${idx + 1}
                     </strong>
@@ -1615,7 +1615,7 @@ function delegRender() {
                             style="flex:1;min-width:0;">
                         <button type="button" onclick="delegFetchKm(${idx})"
                             id="deleg-mapbtn-${idx}"
-                            style="display:inline-flex;align-items:center;gap:4px;background:#1A4D3A;color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                            style="display:inline-flex;align-items:center;gap:4px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:11px;font-family:'Manrope',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                             <i class="ti ti-map-pin"></i> Pobierz km
                         </button>
                     </div>
@@ -1662,7 +1662,7 @@ function delegRender() {
                 </div>
             </div>
 
-            <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:#1A4D3A;font-weight:700;">
+            <div id="deleg-total-${idx}" style="background:#E8F5E9;border-radius:7px;padding:9px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:var(--green);font-weight:700;">
                 Koszt tej lokalizacji: ${delegFmt(total)} zł
             </div>
         `;

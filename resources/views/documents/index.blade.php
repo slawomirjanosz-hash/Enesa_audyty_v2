@@ -5,7 +5,7 @@
 @push('styles')
 <style>
 .page-header { margin-bottom:20px; }
-.page-header h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:700; color:#1A4D3A; margin:0; }
+.page-header h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:700; color:var(--green); margin:0; }
 .search-box { position:relative; }
 .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:260px; font-family:'Lato',sans-serif; }
 .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
@@ -99,7 +99,7 @@
                         <td style="color:#7a8a80;">{{ $doc->updated_at->format('d.m.Y H:i') }}</td>
                         <td style="color:#888;">{{ $doc->uploader?->name ?? 'System' }}</td>
                         <td style="text-align:right;">
-                            <a href="{{ route('documents.download', $doc) }}" class="btn-icon" style="background:#F0F7F3;color:#1A4D3A;" title="Pobierz">
+                            <a href="{{ route('documents.download', $doc) }}" class="btn-icon" style="background:#F0F7F3;color:var(--green);" title="Pobierz">
                                 <i class="ti ti-download"></i>
                             </a>
                             @if($doc->offer_id)

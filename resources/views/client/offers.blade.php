@@ -12,7 +12,7 @@
         font-family: 'Manrope', sans-serif;
         font-size: 22px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         margin-bottom: 4px;
         display: flex;
         align-items: center;
@@ -78,7 +78,7 @@
         font-family: 'Manrope', sans-serif;
         font-size: 13px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
     }
     .offer-title {
         font-family: 'Manrope', sans-serif;

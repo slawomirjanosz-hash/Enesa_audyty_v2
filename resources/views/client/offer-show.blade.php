@@ -17,7 +17,7 @@
         text-decoration: none;
         margin-bottom: 20px;
     }
-    .back-btn:hover { color: #1A4D3A; }
+    .back-btn:hover { color: var(--green); }
 
     /* Offer header */
     .offer-header {
@@ -31,7 +31,7 @@
         font-family: 'Manrope', sans-serif;
         font-size: 20px;
         font-weight: 800;
-        color: #1A4D3A;
+        color: var(--green);
         margin: 0;
     }
     .status-badge {
@@ -78,7 +78,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F4F1EA;
         font-family: 'Manrope', sans-serif;
         font-size: 14px;
@@ -128,7 +128,7 @@
         font-family: 'Manrope', sans-serif;
         font-size: 12px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
@@ -185,7 +185,7 @@
     .content-section h4 {
         font-size: 12px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin: 0 0 10px;
@@ -196,7 +196,7 @@
 
     /* Summary */
     .summary-card {
-        background: #1A4D3A;
+        background: var(--green);
         border-radius: 12px;
         padding: 22px 24px;
         display: flex;
@@ -242,7 +242,7 @@
         align-items: center;
         gap: 6px;
         background: #fff;
-        color: #1A4D3A;
+        color: var(--green);
         border: 1.5px solid #C8DDD4;
         font-family: 'Manrope', sans-serif;
         font-size: 13px;
@@ -253,7 +253,7 @@
         text-decoration: none;
         transition: all 0.2s ease;
     }
-    .btn-secondary:hover { background: #F4F1EA; border-color: #1A4D3A; }
+    .btn-secondary:hover { background: #F4F1EA; border-color: var(--green); }
     
     .btn-danger {
         display: inline-flex;
@@ -432,7 +432,7 @@
         @if($offer->offer_title)
             <div class="meta-item" style="grid-column: 1 / -1;">
                 <label>Tytuł oferty</label>
-                <span style="font-size:16px;font-weight:700;color:#1A4D3A;">{{ $offer->offer_title }}</span>
+                <span style="font-size:16px;font-weight:700;color:var(--green);">{{ $offer->offer_title }}</span>
             </div>
         @endif
         @if($offer->valid_until)

@@ -10,7 +10,7 @@
         font-family: 'Manrope', sans-serif;
         font-size: 22px;
         font-weight: 700;
-        color: #1A4D3A;
+        color: var(--green);
         margin-bottom: 4px;
     }
     .welcome-block p {
@@ -90,10 +90,10 @@
         position: relative;
         top: 1px;
     }
-    .tab-btn:hover { color: #1A4D3A; background: #F4F1EA; }
+    .tab-btn:hover { color: var(--green); background: #F4F1EA; }
     .tab-btn.active {
-        color: #1A4D3A;
-        border-bottom-color: #1A4D3A;
+        color: var(--green);
+        border-bottom-color: var(--green);
         background: #fff;
     }
     
@@ -133,7 +133,7 @@
     }
     .empty-state a {
         display: inline-block;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F4F1EA;
         font-family: 'Manrope', sans-serif;
         font-size: 13px;

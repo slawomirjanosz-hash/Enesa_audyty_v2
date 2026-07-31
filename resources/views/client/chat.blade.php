@@ -21,7 +21,7 @@
     overflow: hidden;
 }
 .chat-sidebar-header {
-    background: #1A4D3A;
+    background: var(--green);
     color: #F5F0E8;
     padding: 14px 18px;
     display: flex;
@@ -69,7 +69,7 @@
     flex-direction: column;
 }
 .chat-main-header {
-    background: #1A4D3A;
+    background: var(--green);
     color: #F5F0E8;
     padding: 14px 18px;
     display: flex;
@@ -140,7 +140,7 @@
     font-weight: 700;
     flex-shrink: 0;
 }
-.msg-avatar.own   { background: #1A4D3A; color: #F5F0E8; }
+.msg-avatar.own   { background: var(--green); color: #F5F0E8; }
 .msg-avatar.other { background: #E5E1D8; color: #555; }
 
 .msg-bubble {
@@ -153,7 +153,7 @@
     word-break: break-word;
     position: relative;
 }
-.msg-bubble.own   { background: #1A4D3A; color: #fff; border-bottom-right-radius: 4px; }
+.msg-bubble.own   { background: var(--green); color: #fff; border-bottom-right-radius: 4px; }
 .msg-bubble.other { background: #F4F1EA; color: #1A1A1A; border-bottom-left-radius: 4px; }
 
 .msg-time {
@@ -193,9 +193,9 @@
     max-height: 120px;
     transition: border-color .15s;
 }
-#message-input:focus { border-color: #1A4D3A; background: #fff; }
+#message-input:focus { border-color: var(--green); background: #fff; }
 .btn-send {
-    background: #1A4D3A;
+    background: var(--green);
     color: #F5F0E8;
     border: none;
     border-radius: 8px;

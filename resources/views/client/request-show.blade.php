@@ -9,7 +9,7 @@
     {{-- Nagłówek --}}
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
         <div style="flex: 1;">
-            <a href="{{ route('client.dashboard') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #1A4D3A; text-decoration: none; font-weight: 600; margin-bottom: 12px;">
+            <a href="{{ route('client.dashboard') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--green); text-decoration: none; font-weight: 600; margin-bottom: 12px;">
                 <i class="ti ti-arrow-left"></i> Wróć do dashboarda
             </a>
             <h1 style="font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 700; color: #1A1A1A; margin: 0;">
@@ -36,7 +36,7 @@
 
     {{-- Odpowiedzi formularza --}}
     <div style="background: #fff; border: 1px solid #E5E1D8; border-radius: 12px; padding: 22px; margin-bottom: 20px;">
-        <div style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: #1A4D3A; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
             <i class="ti ti-clipboard-list"></i> Odpowiedzi
         </div>
 
@@ -69,7 +69,7 @@
     {{-- Dodatkowe notatki --}}
     @if($offerRequest->tresc)
         <div style="background: #fff; border: 1px solid #E5E1D8; border-radius: 12px; padding: 22px; margin-bottom: 20px;">
-            <div style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: #1A4D3A; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <div style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                 <i class="ti ti-note"></i> Dodatkowe informacje
             </div>
             <div style="background: #FAFAF6; border: 1px solid #E5E1D8; border-radius: 8px; padding: 14px; font-size: 13px; color: #1A1A1A; white-space: pre-wrap; word-break: break-word; line-height: 1.6;">

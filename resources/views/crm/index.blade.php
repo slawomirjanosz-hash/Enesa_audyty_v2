@@ -6,15 +6,15 @@
 <style>
 .crm-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
 .crm-stat { background:#fff; border:1px solid #E5E1D8; border-radius:12px; padding:18px 20px; }
-.crm-stat-num { font-size:28px; font-weight:900; color:#1A4D3A; line-height:1; font-family:'Lato',sans-serif; }
+.crm-stat-num { font-size:28px; font-weight:900; color:var(--green); line-height:1; font-family:'Lato',sans-serif; }
 .crm-stat-lbl { font-size:11px; color:#888; margin-top:4px; text-transform:uppercase; letter-spacing:.05em; font-family:'Manrope',sans-serif; }
-.crm-stat-icon { font-size:20px; color:#1A4D3A; margin-bottom:8px; }
+.crm-stat-icon { font-size:20px; color:var(--green); margin-bottom:8px; }
 
 .crm-tabs { display:flex; gap:0; border-bottom:2px solid #E5E1D8; margin-bottom:20px; }
 .crm-tab { padding:10px 20px; font-size:13px; font-weight:600; cursor:pointer; color:#888; border-bottom:2px solid transparent; margin-bottom:-2px; font-family:'Manrope',sans-serif; text-decoration:none; display:flex; align-items:center; gap:6px; transition:color .15s; }
-.crm-tab:hover { color:#1A4D3A; }
-.crm-tab.active { color:#1A4D3A; border-bottom-color:#1A4D3A; }
-.crm-tab .tab-count { background:#F0F7F3; color:#1A4D3A; border-radius:20px; font-size:10px; font-weight:700; padding:1px 7px; }
+.crm-tab:hover { color:var(--green); }
+.crm-tab.active { color:var(--green); border-bottom-color:var(--green); }
+.crm-tab .tab-count { background:#F0F7F3; color:var(--green); border-radius:20px; font-size:10px; font-weight:700; padding:1px 7px; }
 .crm-tab.archive-tab .tab-count { background:#FEF3C7; color:#92400E; }
 
 .table-card { background:#fff; border:1px solid #E5E1D8; border-radius:12px; overflow:hidden; }
@@ -23,7 +23,7 @@
 
 .crm-table { width:100%; border-collapse:collapse; font-family:'Lato',sans-serif; font-size:13px; }
 .crm-table th { padding:9px 14px; text-align:left; font-size:11px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid #F0EDE6; background:#FAFAF6; cursor:pointer; user-select:none; white-space:nowrap; font-family:'Manrope',sans-serif; }
-.crm-table th:hover { color:#1A4D3A; }
+.crm-table th:hover { color:var(--green); }
 .crm-table td { padding:12px 14px; border-bottom:1px solid #F7F5F0; color:#1A1A1A; vertical-align:middle; }
 .crm-table tr:last-child td { border-bottom:none; }
 .crm-table tr:hover td { background:#FAFAF6; }
@@ -36,13 +36,13 @@
 .badge-gray   { background:#F3F4F6; color:#4B5563; }
 .badge-purple { background:#EDE9FE; color:#5B21B6; }
 
-.btn-primary { display:inline-flex; align-items:center; gap:6px; background:#1A4D3A; color:#F5F0E8; border:none; border-radius:8px; padding:8px 16px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s; }
+.btn-primary { display:inline-flex; align-items:center; gap:6px; background:var(--green); color:#F5F0E8; border:none; border-radius:8px; padding:8px 16px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s; }
 .btn-primary:hover { background:#143d2d; color:#F5F0E8; }
 .btn-secondary { display:inline-flex; align-items:center; gap:6px; background:#fff; color:#333; border:1px solid #D0CCC0; border-radius:8px; padding:7px 14px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:background .15s; }
 .btn-secondary:hover { background:#F4F1EA; }
 
 .btn-icon { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:7px; border:none; cursor:pointer; font-size:15px; transition:background .12s; }
-.btn-icon-view   { background:#F0F7F3; color:#1A4D3A; }
+.btn-icon-view   { background:#F0F7F3; color:var(--green); }
 .btn-icon-edit   { background:#EFF6FF; color:#1D4ED8; }
 .btn-icon-archive{ background:#FEF3C7; color:#92400E; }
 .btn-icon-delete { background:#FEE2E2; color:#B91C1C; }
@@ -50,7 +50,7 @@
 
 .search-box { position:relative; }
 .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:200px; font-family:'Lato',sans-serif; }
-.search-box input:focus { border-color:#1A4D3A; }
+.search-box input:focus { border-color:var(--green); }
 .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
 
 .toggle-wrap { width:36px; height:20px; border-radius:10px; position:relative; cursor:pointer; transition:background .2s; border:none; padding:0; }
@@ -63,11 +63,11 @@
 .opp-card { background:#fff; border:1px solid #E5E1D8; border-radius:8px; padding:10px 12px; }
 .opp-card-title { font-size:12px; font-weight:700; color:#1A1A1A; margin-bottom:2px; font-family:'Manrope',sans-serif; }
 .opp-card-sub { font-size:11px; color:#888; }
-.opp-card-val { font-size:12px; font-weight:700; color:#1A4D3A; margin-top:4px; font-family:'Lato',sans-serif; }
+.opp-card-val { font-size:12px; font-weight:700; color:var(--green); margin-top:4px; font-family:'Lato',sans-serif; }
 
 /* Task tables */
 .task-table-wrap { border-radius:12px; overflow:hidden; margin-bottom:16px; background:#fff; border:1px solid #E5E1D8; }
-.task-table-wrap.mine { border-left:4px solid #1A4D3A; }
+.task-table-wrap.mine { border-left:4px solid var(--green); }
 .task-table-wrap.team { border-left:4px solid #94A3B8; }
 .task-hdr { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid #F0EDE6; }
 .task-hdr.mine { background:#F0F7F3; }
@@ -129,7 +129,7 @@
 
 {{-- HEADER --}}
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
-    <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:#1A4D3A;margin:0;">
+    <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:var(--green);margin:0;">
         <i class="ti ti-users"></i> CRM
     </h1>
     <div style="display:flex;gap:8px;">
@@ -212,7 +212,7 @@
 @if($currentTab === 'companies')
 <div class="table-card">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-building" style="color:#1A4D3A;margin-right:6px;"></i> Aktywne firmy ({{ $companies->count() }})</div>
+        <div class="table-card-title"><i class="ti ti-building" style="color:var(--green);margin-right:6px;"></i> Aktywne firmy ({{ $companies->count() }})</div>
         <div style="display:flex;gap:8px;align-items:center;">
             <div class="search-box">
                 <i class="ti ti-search"></i>
@@ -242,14 +242,14 @@
                 @foreach($companies as $company)
                 <tr data-dashboard="{{ $company->show_in_dashboard ? 'yes' : 'no' }}">
                     <td>
-                        <a href="{{ route('companies.show', $company) }}" style="font-weight:700;color:#1A4D3A;text-decoration:none;">{{ $company->name }}</a>
+                        <a href="{{ route('companies.show', $company) }}" style="font-weight:700;color:var(--green);text-decoration:none;">{{ $company->name }}</a>
                     </td>
                     <td style="color:#888;font-size:12px;">{{ $company->nip ?? '—' }}</td>
                     <td style="color:#888;">{{ $company->city ?? '—' }}</td>
                     <td>
                         <button class="toggle-wrap" id="toggle-{{ $company->id }}"
                             onclick="toggleDashboard({{ $company->id }}, this)"
-                            style="background:{{ $company->show_in_dashboard ? '#1A4D3A' : '#D1D5DB' }};"
+                            style="background:{{ $company->show_in_dashboard ? 'var(--green)' : '#D1D5DB' }};"
                             title="{{ $company->show_in_dashboard ? 'Widoczna w dashboardzie' : 'Niewidoczna w dashboardzie' }}">
                             <span class="knob" style="left:{{ $company->show_in_dashboard ? '19px' : '3px' }};"></span>
                         </button>
@@ -295,7 +295,7 @@
 @if($currentTab === 'pipeline')
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
     <div style="font-size:13px;color:#888;">
-        Pipeline: <strong style="color:#1A4D3A;">{{ number_format($opportunities->whereNotIn('stage',['won','lost','rejected'])->sum('value'), 2, ',', ' ') }} zł</strong>
+        Pipeline: <strong style="color:var(--green);">{{ number_format($opportunities->whereNotIn('stage',['won','lost','rejected'])->sum('value'), 2, ',', ' ') }} zł</strong>
     </div>
 </div>
 
@@ -327,7 +327,7 @@
                     onclick="openOpportunity({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}', @json($opp->company ? route('companies.show', $opp->company) : null))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
-                        <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:#1A4D3A;text-decoration:none;font-weight:600;">
+                        <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:var(--green);text-decoration:none;font-weight:600;">
                             <i class="ti ti-building"></i> {{ $opp->company->name }}
                         </a>
                     @else
@@ -345,13 +345,13 @@
                     @if($canManageCrm)
                         <div style="display:flex;gap:5px;margin-top:8px;" onclick="event.stopPropagation()">
                             @if($opp->company_id)
-                            <button type="button" onclick="openAttachOffer({{ $opp->id }}, {{ $opp->company_id }}, '{{ addslashes($opp->title) }}')" style="background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Przypnij istniejącą ofertę">
+                            <button type="button" onclick="openAttachOffer({{ $opp->id }}, {{ $opp->company_id }}, '{{ addslashes($opp->title) }}')" style="background:#fff;color:var(--green);border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Przypnij istniejącą ofertę">
                                 <i class="ti ti-link"></i>
                             </button>
                             @endif
                             <form method="POST" action="{{ route('crm.opportunities.duplicate', $opp) }}" onsubmit="return confirm('Utworzyć kopię tej szansy?')" style="display:inline;">
                                 @csrf
-                                <button type="submit" style="background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Kopiuj szansę">
+                                <button type="submit" style="background:#fff;color:var(--green);border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Kopiuj szansę">
                                     <i class="ti ti-copy"></i>
                                 </button>
                             </form>
@@ -401,7 +401,7 @@
 {{-- Tabela szans --}}
 <div class="table-card">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-target" style="color:#1A4D3A;margin-right:6px;"></i> Wszystkie szanse ({{ $opportunities->count() }})</div>
+        <div class="table-card-title"><i class="ti ti-target" style="color:var(--green);margin-right:6px;"></i> Wszystkie szanse ({{ $opportunities->count() }})</div>
         <div class="search-box">
             <i class="ti ti-search"></i>
             <input type="text" placeholder="Szukaj szans..." oninput="filterTable('opps-tbody', this.value, [0,1])">
@@ -428,7 +428,7 @@
                     <td>
                         <span class="badge" style="background:{{ $meta['color'] }};color:{{ $meta['text'] }};">{{ $meta['label'] }}</span>
                     </td>
-                    <td style="font-weight:700;color:#1A4D3A;">{{ $opp->value ? number_format($opp->value, 2, ',', ' ').' zł' : '—' }}</td>
+                    <td style="font-weight:700;color:var(--green);">{{ $opp->value ? number_format($opp->value, 2, ',', ' ').' zł' : '—' }}</td>
                     <td style="font-size:12px;color:#555;">{{ $opp->assignedUser?->name ?? '—' }}</td>
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
@@ -457,8 +457,8 @@
 <div class="task-table-wrap mine">
     <div class="task-hdr mine">
         <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:#1A4D3A;"></div>
-            <span style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A4D3A;">Moje zadania</span>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div>
+            <span style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:var(--green);">Moje zadania</span>
             <span style="font-size:12px;color:#888;">({{ $myTasks->count() }})</span>
         </div>
         <div class="search-box">
@@ -488,7 +488,7 @@
                 <td style="color:#888;font-size:12px;">{{ $task->company?->name ?? '—' }}</td>
                 <td>
                     <div style="display:flex;align-items:center;gap:8px;">
-                        <div style="width:26px;height:26px;border-radius:50%;background:#1A4D3A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
+                        <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
                             {{ strtoupper(substr($task->assignedUser?->name ?? '?', 0, 2)) }}
                         </div>
                         <span style="font-size:12px;">{{ $task->assignedUser?->name ?? '—' }}</span>
@@ -589,7 +589,7 @@
 @if($currentTab === 'audits')
 <div class="table-card">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-clipboard-check" style="color:#1A4D3A;margin-right:6px;"></i> Audyty ({{ $audits->count() }})</div>
+        <div class="table-card-title"><i class="ti ti-clipboard-check" style="color:var(--green);margin-right:6px;"></i> Audyty ({{ $audits->count() }})</div>
         <div class="search-box">
             <i class="ti ti-search"></i>
             <input type="text" placeholder="Szukaj audytów..." oninput="filterTable('audits-tbody', this.value, [0,1])">
@@ -628,7 +628,7 @@
                     <td style="font-weight:600;">{{ $audit->title }}</td>
                     <td style="color:#888;font-size:12px;">
                         @if($audit->company)
-                            <a href="{{ route('companies.show', $audit->company) }}" style="color:#1A4D3A;text-decoration:none;font-weight:600;">{{ $audit->company->name }}</a>
+                            <a href="{{ route('companies.show', $audit->company) }}" style="color:var(--green);text-decoration:none;font-weight:600;">{{ $audit->company->name }}</a>
                         @else
                             —
                         @endif
@@ -790,7 +790,7 @@
 <div id="modal-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:#1A4D3A;margin-right:8px;"></i>Nowa szansa</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Nowa szansa</div>
             <button onclick="document.getElementById('modal-opp').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
         </div>
         <form method="POST" action="{{ route('crm.opportunities.store') }}">
@@ -849,7 +849,7 @@
 <div id="modal-task" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-checklist" style="color:#1A4D3A;margin-right:8px;"></i>Nowe zadanie</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-checklist" style="color:var(--green);margin-right:8px;"></i>Nowe zadanie</div>
             <button onclick="document.getElementById('modal-task').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
         </div>
         <form method="POST" action="{{ route('crm.tasks.store') }}">
@@ -982,7 +982,7 @@
 <div id="modal-attach-offer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;align-items:center;justify-content:center;padding:16px;">
     <div style="background:#fff;border-radius:14px;padding:24px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#1A4D3A;"><i class="ti ti-link" style="margin-right:8px;"></i>Przypnij ofertę</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:var(--green);"><i class="ti ti-link" style="margin-right:8px;"></i>Przypnij ofertę</div>
             <button type="button" onclick="closeAttachOffer()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
         </div>
         <div id="attach-offer-lead-title" style="font-size:12px;color:#666;margin-bottom:16px;"></div>
@@ -1009,7 +1009,7 @@
 <div id="modal-edit-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:#1A4D3A;margin-right:8px;"></i>Edytuj szansę</div>
+            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Edytuj szansę</div>
             <button onclick="closeEditOpp()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
         </div>
         <form id="form-edit-opp" method="POST">
@@ -1103,7 +1103,7 @@
 {{-- MODAL: Edycja firmy --}}
 <div id="modal-edit-company" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;width:100%;max-width:520px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden;">
-        <div style="background:#1A4D3A;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="background:var(--green);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
             <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj firmę</span>
             <button onclick="closeEditCompanyModal()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
         </div>
@@ -1123,7 +1123,7 @@
                         <input type="text" id="edit-nip" name="nip" maxlength="20"
                             style="min-width:0;flex:1;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                         <button type="button" onclick="fetchCompanyEditFromGus()"
-                            style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:#1A4D3A;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
+                            style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
                             <i class="ti ti-download"></i> GUS
                         </button>
                     </div>
@@ -1166,7 +1166,7 @@
                     Anuluj
                 </button>
                 <button type="submit"
-                    style="padding:9px 22px;border:none;border-radius:8px;background:#1A4D3A;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+                    style="padding:9px 22px;border:none;border-radius:8px;background:var(--green);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
                     <i class="ti ti-check"></i> Zapisz zmiany
                 </button>
             </div>
@@ -1263,7 +1263,7 @@ function toggleDashboard(companyId, btn) {
     .then(r => r.json())
     .then(data => {
         const on = data.show_in_dashboard;
-        btn.style.background = on ? '#1A4D3A' : '#D1D5DB';
+        btn.style.background = on ? 'var(--green)' : '#D1D5DB';
         btn.querySelector('.knob').style.left = on ? '19px' : '3px';
         const row = btn.closest('tr');
         if (row) row.dataset.dashboard = on ? 'yes' : 'no';

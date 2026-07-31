@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CompanySettingsController extends Controller
 {
@@ -28,9 +29,24 @@ class CompanySettingsController extends Controller
             'postcode' => ['nullable', 'string', 'max:10'],
             'nip'      => ['nullable', 'string', 'size:10'],
             'website'  => ['nullable', 'url', 'max:255'],
+            'primary_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'logo'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
         ]);
 
-        CompanySettings::updateOrCreate(['id' => 1], $data);
+        $logo = $request->file('logo');
+        unset($data['logo']);
+
+        $settings = CompanySettings::updateOrCreate(['id' => 1], $data);
+
+        if ($logo) {
+            if ($settings->logo_path) {
+                Storage::disk('public')->delete($settings->logo_path);
+            }
+
+            $settings->update([
+                'logo_path' => $logo->store('branding', 'public'),
+            ]);
+        }
 
         // Keep the owner Company record in sync
         $this->syncOwnerCompany();

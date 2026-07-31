@@ -9,7 +9,7 @@
     {{-- Nagłówek --}}
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
         <div>
-            <a href="javascript:history.back()" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#1A4D3A;text-decoration:none;font-weight:600;margin-bottom:8px;">
+            <a href="javascript:history.back()" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--green);text-decoration:none;font-weight:600;margin-bottom:8px;">
                 <i class="ti ti-arrow-left"></i> Wróć
             </a>
             <h1 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#1A1A1A;margin:0;">
@@ -43,12 +43,12 @@
                 </a>
                 @endif
                 <a href="{{ route('offer-requests.edit', $offerRequest) }}" data-tooltip="Uzupełnij ankietę"
-                   style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+                   style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
                     <i class="ti ti-pencil"></i> Edytuj zapytanie
                 </a>
                 @if($offerRequest->offerFormTemplate)
                 <a href="{{ route('offer-requests.pdf', $offerRequest) }}" target="_blank" data-tooltip="Pobierz ankietę w PDF"
-                   style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
+                   style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--green);border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
                     <i class="ti ti-file-type-pdf"></i> PDF
                 </a>
                 @endif
@@ -64,7 +64,7 @@
 
     {{-- Odpowiedzi formularza --}}
     <div style="background:#fff;border:1px solid #E5E1D8;border-radius:12px;padding:22px;margin-bottom:16px;">
-        <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A4D3A;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
             <i class="ti ti-clipboard-list"></i> Odpowiedzi
         </div>
 
@@ -89,7 +89,7 @@
 
                 @if($answered->isNotEmpty())
                     @if(!empty($section['title']))
-                        <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;color:#1A4D3A;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;">
+                        <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 12px;padding-bottom:6px;border-bottom:1px solid #E5E1D8;">
                             {{ $section['title'] }}
                         </div>
                     @endif
@@ -128,7 +128,7 @@
     {{-- Klient końcowy / link do ankiety --}}
     <div id="klient-koncowy" style="background:#fff;border:1px solid #E5E1D8;border-radius:12px;padding:18px 20px;margin-bottom:16px;">
         <div style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
-            <i class="ti ti-user-share" style="color:#1A4D3A;"></i> Klient końcowy — ankieta do wypełnienia
+            <i class="ti ti-user-share" style="color:var(--green);"></i> Klient końcowy — ankieta do wypełnienia
         </div>
 
         <form method="POST" action="{{ route('offer-requests.save-public', $offerRequest) }}">
@@ -151,7 +151,7 @@
                     <input type="text" name="end_client_phone" value="{{ old('end_client_phone', $offerRequest->end_client_phone) }}" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
                 </div>
             </div>
-            <button type="submit" style="margin-top:12px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+            <button type="submit" style="margin-top:12px;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
                 @if($offerRequest->publicUrl())
                     <i class="ti ti-device-floppy"></i> Zapisz dane klienta
                 @else
@@ -164,7 +164,7 @@
             <div style="margin-top:16px;padding-top:14px;border-top:1px solid #F0EDE6;">
                 <label style="font-size:11px;font-weight:700;color:#555;">Link do wysłania klientowi końcowemu:</label>
                 <div style="display:flex;gap:8px;margin-top:6px;">
-                    <input type="text" id="public-link" readonly value="{{ $offerRequest->publicUrl() }}" style="flex:1;background:#F0F7F3;border:1px solid #94C4B0;border-radius:7px;padding:8px 10px;font-size:13px;color:#1A4D3A;box-sizing:border-box;">
+                    <input type="text" id="public-link" readonly value="{{ $offerRequest->publicUrl() }}" style="flex:1;background:#F0F7F3;border:1px solid #94C4B0;border-radius:7px;padding:8px 10px;font-size:13px;color:var(--green);box-sizing:border-box;">
                     <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('public-link').value); this.textContent='Skopiowano';" style="background:#fff;border:1px solid #D0CCC0;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Kopiuj</button>
                 </div>
                 @if($offerRequest->public_filled_at)
@@ -178,7 +178,7 @@
 
     {{-- Zmiana statusu --}}
     <div style="background:#fff;border:1px solid #E5E1D8;border-radius:12px;padding:22px;">
-        <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#1A4D3A;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <div style="font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
             <i class="ti ti-settings"></i> Zmień status
         </div>
         <form method="POST" action="{{ route('offer-requests.update-status', $offerRequest) }}" style="display:flex;gap:10px;align-items:center;">
@@ -188,7 +188,7 @@
                 <option value="w_toku"    {{ $offerRequest->status === 'w_toku'    ? 'selected' : '' }}>W toku</option>
                 <option value="zamknięte" {{ $offerRequest->status === 'zamknięte' ? 'selected' : '' }}>Zamknięte</option>
             </select>
-            <button type="submit" style="display:inline-flex;align-items:center;gap:6px;background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:8px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+            <button type="submit" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:8px 16px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
                 <i class="ti ti-device-floppy"></i> Zapisz
             </button>
         </form>

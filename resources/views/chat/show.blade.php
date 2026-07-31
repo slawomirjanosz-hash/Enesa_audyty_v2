@@ -13,7 +13,7 @@
     border: 1px solid #E5E1D8; border-radius: 12px; overflow: hidden;
 }
 .cs-sidebar-header {
-    background: #1A4D3A; color: #F5F0E8; padding: 14px 16px;
+    background: var(--green); color: #F5F0E8; padding: 14px 16px;
     font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
     display: flex; align-items: center; gap: 8px;
 }
@@ -33,7 +33,7 @@
     display: flex; flex-direction: column;
 }
 .cs-header {
-    background: #1A4D3A; color: #F5F0E8; padding: 14px 18px;
+    background: var(--green); color: #F5F0E8; padding: 14px 18px;
     display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
 }
 .cs-header-left h2 {
@@ -61,13 +61,13 @@
     font-weight: 700; font-family: 'Manrope', sans-serif;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.cs-avatar.own   { background: #1A4D3A; color: #fff; }
+.cs-avatar.own   { background: var(--green); color: #fff; }
 .cs-avatar.other { background: #E5E1D8; color: #555; }
 .cs-bubble {
     max-width: 65%; padding: 10px 14px; border-radius: 14px;
     font-size: 13px; font-family: 'Lato', sans-serif; line-height: 1.5; word-break: break-word;
 }
-.cs-bubble.own   { background: #1A4D3A; color: #fff; border-bottom-right-radius: 4px; }
+.cs-bubble.own   { background: var(--green); color: #fff; border-bottom-right-radius: 4px; }
 .cs-bubble.other { background: #F4F1EA; color: #1A1A1A; border-bottom-left-radius: 4px; }
 .cs-time { font-size: 10px; margin-top: 4px; opacity: .6; text-align: right; }
 .cs-bubble.other .cs-time { text-align: left; }
@@ -84,9 +84,9 @@
     outline: none; resize: none; min-height: 42px; max-height: 120px; transition: border-color .15s;
     box-sizing: border-box;
 }
-#cs-input:focus { border-color: #1A4D3A; background: #fff; }
+#cs-input:focus { border-color: var(--green); background: #fff; }
 .cs-btn-send {
-    background: #1A4D3A; color: #F5F0E8; border: none; border-radius: 8px;
+    background: var(--green); color: #F5F0E8; border: none; border-radius: 8px;
     padding: 10px 18px; font-family: 'Manrope', sans-serif; font-size: 13px;
     font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;
     white-space: nowrap; transition: background .15s; flex-shrink: 0;
@@ -116,7 +116,7 @@
 
 <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
     <div>
-        <a href="{{ route('companies.show', $company) }}" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#1A4D3A;font-weight:600;text-decoration:none;margin-bottom:8px;">
+        <a href="{{ route('companies.show', $company) }}" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--green);font-weight:600;text-decoration:none;margin-bottom:8px;">
             <i class="ti ti-arrow-left"></i> Wróć do karty firmy
         </a>
         <h1 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#1A1A1A;margin:0;">

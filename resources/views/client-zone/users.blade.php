@@ -4,7 +4,7 @@
 
 @section('content')
 <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,.07);">
-    <h2 style="font-size:20px;font-weight:700;color:#1A4D3A;margin-bottom:20px;font-family:'Manrope',sans-serif;">
+    <h2 style="font-size:20px;font-weight:700;color:var(--green);margin-bottom:20px;font-family:'Manrope',sans-serif;">
         <i class="ti ti-users" style="vertical-align:middle;margin-right:6px;"></i>Użytkownicy — {{ $company->name }}
     </h2>
 
@@ -29,7 +29,7 @@
                         <td style="padding:10px 12px;color:#4a5568;">{{ $user->email }}</td>
                         <td style="padding:10px 12px;">
                             @foreach($user->roles as $role)
-                                <span style="background:#E8F4EE;color:#1A4D3A;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;">
+                                <span style="background:#E8F4EE;color:var(--green);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;">
                                     {{ $role->name }}
                                 </span>
                             @endforeach

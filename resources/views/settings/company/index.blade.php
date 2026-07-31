@@ -23,8 +23,8 @@
         border-radius: 6px 6px 0 0;
         transition: color .15s, border-color .15s;
     }
-    .settings-tab:hover { color: #1A4D3A; }
-    .settings-tab.active { color: #1A4D3A; border-bottom-color: #1A4D3A; }
+    .settings-tab:hover { color: var(--green); }
+    .settings-tab.active { color: var(--green); border-bottom-color: var(--green); }
 
     /* ── Card ─────────────────────────────── */
     .card {
@@ -72,7 +72,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: #1A4D3A;
+        color: var(--green);
         margin: 0 0 16px;
         padding-bottom: 8px;
         border-bottom: 1px solid #F0EDE6;
@@ -110,6 +110,19 @@
     }
     .cf-input:focus { border-color: #2E7D32; background: #fff; }
     .cf-input::placeholder { color: #b0aa9e; }
+    .brand-preview {
+        width: 88px;
+        height: 88px;
+        border: 1px solid #D0CCC0;
+        border-radius: 10px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .brand-preview img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+    .color-input { width: 64px; height: 42px; padding: 3px; cursor: pointer; }
     .cf-hint {
         font-size: 11px;
         color: #aaa;
@@ -133,7 +146,7 @@
         align-items: center;
         gap: 8px;
         padding: 10px 24px;
-        background: #1A4D3A;
+        background: var(--green);
         color: #F5F0E8;
         border: none;
         border-radius: 8px;
@@ -156,7 +169,7 @@
 {{-- Zakładki --}}
 <div class="settings-tabs">
     <a href="{{ route('settings.users.index') }}" class="settings-tab">
-        <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy ENESA
+        <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy systemu
     </a>
     <a href="{{ route('settings.company') }}" class="settings-tab active">
         <i class="ti ti-building" style="margin-right:6px;"></i>Dane firmy
@@ -182,15 +195,52 @@
 <div class="card">
     <div class="card-header">
         <div>
-            <div class="card-header-title"><i class="ti ti-building" style="margin-right:8px;color:#1A4D3A;"></i>Dane firmy ENESA</div>
-            <div class="card-header-sub">Informacje wyświetlane na fakturach, ofertach i w stopce systemu.</div>
+            <div class="card-header-title"><i class="ti ti-building" style="margin-right:8px;color:var(--green);"></i>Dane firmy właściciela aplikacji</div>
+            <div class="card-header-sub">Dane marki, która prowadzi system i wystawia oferty.</div>
         </div>
     </div>
 
-    <form method="POST" action="{{ route('settings.company.update') }}">
+    <form method="POST" action="{{ route('settings.company.update') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="cf-body">
+
+            {{-- SEKCJA: Marka aplikacji --}}
+            <p class="cf-section-title"><i class="ti ti-palette" style="margin-right:6px;"></i>Marka aplikacji</p>
+
+            <div class="cf-row">
+                <div class="cf-group">
+                    <label class="cf-label" for="logo">Logo aplikacji</label>
+                    <div style="display:flex;align-items:center;gap:14px;">
+                        <div class="brand-preview">
+                            <img src="{{ $appBrand?->logoUrl() ?? asset('Logo2.png') }}" alt="Aktualne logo">
+                        </div>
+                        <div style="flex:1;">
+                            <input id="logo" type="file" name="logo" class="cf-input @error('logo') is-invalid @enderror" accept="image/png,image/jpeg,image/webp">
+                            <span class="cf-hint">PNG, JPG lub WebP, maksymalnie 2 MB. Logo pojawi się w panelu i strefie klienta.</span>
+                            @error('logo')
+                                <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="primary_color">Kolor wiodący aplikacji<span>*</span></label>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <input id="primary_color" type="color" name="primary_color" class="cf-input color-input @error('primary_color') is-invalid @enderror"
+                               value="{{ old('primary_color', $appBrand?->primaryColor() ?? '#1A4D3A') }}">
+                        <output id="primary-color-value" style="font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:var(--green);">
+                            {{ old('primary_color', $appBrand?->primaryColor() ?? '#1A4D3A') }}
+                        </output>
+                    </div>
+                    <span class="cf-hint">Zmienia kolor nawigacji, przycisków i akcentów w aplikacji.</span>
+                    @error('primary_color')
+                        <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <hr class="cf-divider">
 
             {{-- SEKCJA: Informacje podstawowe --}}
             <p class="cf-section-title"><i class="ti ti-info-circle" style="margin-right:6px;"></i>Informacje podstawowe</p>
@@ -333,7 +383,7 @@
         </div>
         <form method="POST" action="{{ route('settings.company.sync-owner') }}" style="flex-shrink:0;">
             @csrf
-            <button type="submit" style="background:#1A4D3A;color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
+            <button type="submit" style="background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
                 <i class="ti ti-refresh"></i> Synchronizuj teraz
             </button>
         </form>
@@ -341,3 +391,11 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    document.getElementById('primary_color')?.addEventListener('input', function () {
+        document.getElementById('primary-color-value').textContent = this.value.toUpperCase();
+    });
+</script>
+@endpush
