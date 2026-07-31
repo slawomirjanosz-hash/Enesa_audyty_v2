@@ -6,6 +6,7 @@ use App\Models\AuditorCompanyAccess;
 use App\Models\Document;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AuditorAccessService
 {
@@ -68,7 +69,7 @@ class AuditorAccessService
             ->all();
     }
 
-    public function scopeByCompanyAccess(Builder $query, User $user, string $ability, string $companyColumn = 'company_id'): Builder
+    public function scopeByCompanyAccess(Builder|Relation $query, User $user, string $ability, string $companyColumn = 'company_id'): Builder|Relation
     {
         if ($this->hasFullAccess($user)) {
             return $query;

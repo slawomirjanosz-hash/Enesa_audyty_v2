@@ -33,10 +33,11 @@ test('client user can access the client dashboard and profile', function () {
     $this->actingAs($clientUser)->get('/profile')->assertOk();
 });
 
-test('admin can access CRM and documents', function () {
+test('admin can access dashboard, CRM and documents', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
+    $this->actingAs($admin)->get('/dashboard')->assertOk();
     $this->actingAs($admin)->get('/crm')->assertOk();
     $this->actingAs($admin)->get('/documents')->assertOk();
 });

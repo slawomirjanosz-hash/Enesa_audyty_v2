@@ -250,6 +250,23 @@ if ($authUser->hasRole('superadmin')) {
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');
     }
 
+    public function duplicateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse
+    {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $this->authorize('update', $opportunity);
+
+        $copy = $opportunity->replicate();
+        $copy->title = 'Kopia — ' . $opportunity->title;
+        $copy->stage = 'new_lead';
+        $copy->created_by = $request->user()->id;
+        $copy->save();
+
+        app(CrmActivityLogger::class)->leadCreated($copy);
+
+        return redirect()->route('crm.index', ['tab' => 'pipeline'])
+            ->with('success', 'Utworzono kopię szansy.');
+    }
+
     public function attachOffer(Request $request, CrmOpportunity $opportunity): RedirectResponse
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);

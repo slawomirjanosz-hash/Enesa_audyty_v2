@@ -324,7 +324,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 @foreach($stageOpps as $opp)
                 <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};cursor:pointer;"
-                    onclick="openEditOpp({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}')">
+                    onclick="openOpportunity({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}', @json($opp->company ? route('companies.show', $opp->company) : null))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
                         <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:#1A4D3A;text-decoration:none;font-weight:600;">
@@ -342,14 +342,19 @@
                             @endforeach
                         </div>
                     @endif
-                    @if($canManageCrm && $opp->company_id)
+                    @if($canManageCrm)
                         <div style="display:flex;gap:5px;margin-top:8px;" onclick="event.stopPropagation()">
-                            <a href="{{ route('offers.create', ['company_id' => $opp->company_id, 'crm_opportunity_id' => $opp->id]) }}" style="flex:1;text-align:center;background:#1A4D3A;color:#fff;border-radius:5px;padding:5px 4px;font-size:10px;font-weight:700;text-decoration:none;">
-                                <i class="ti ti-file-plus"></i> Nowa oferta
-                            </a>
+                            @if($opp->company_id)
                             <button type="button" onclick="openAttachOffer({{ $opp->id }}, {{ $opp->company_id }}, '{{ addslashes($opp->title) }}')" style="background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Przypnij istniejącą ofertę">
                                 <i class="ti ti-link"></i>
                             </button>
+                            @endif
+                            <form method="POST" action="{{ route('crm.opportunities.duplicate', $opp) }}" onsubmit="return confirm('Utworzyć kopię tej szansy?')" style="display:inline;">
+                                @csrf
+                                <button type="submit" style="background:#fff;color:#1A4D3A;border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Kopiuj szansę">
+                                    <i class="ti ti-copy"></i>
+                                </button>
+                            </form>
                         </div>
                     @endif
                     @if($opp->value)
@@ -428,7 +433,13 @@
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <button class="btn-icon btn-icon-edit" title="Edytuj"
-                                onclick="openEditOpp({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}')"><i class="ti ti-pencil"></i></button>
+                                onclick="openOpportunity({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}', @json($opp->company ? route('companies.show', $opp->company) : null))"><i class="ti ti-pencil"></i></button>
+                            @if($canManageCrm)
+                                <form method="POST" action="{{ route('crm.opportunities.duplicate', $opp) }}" onsubmit="return confirm('Utworzyć kopię tej szansy?')" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn-icon" title="Kopiuj szansę"><i class="ti ti-copy"></i></button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -1348,6 +1359,21 @@ function openAttachOffer(opportunityId, companyId, title) {
 function closeAttachOffer() {
     document.getElementById('modal-attach-offer').style.display = 'none';
     document.body.style.overflow = '';
+}
+
+function openOpportunity(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, companyUrl) {
+    if (companyUrl) {
+        const goToCompany = confirm(
+            `Szansa „${title}” jest powiązana z klientem.\n\nCzy przejść do jego karty?\n\nOK — karta klienta\nAnuluj — edycja szansy`
+        );
+
+        if (goToCompany) {
+            window.location.href = companyUrl;
+            return;
+        }
+    }
+
+    openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes);
 }
 
 function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes) {
