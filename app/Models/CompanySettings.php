@@ -19,6 +19,7 @@ class CompanySettings extends Model
         'website',
         'logo_path',
         'primary_color',
+        'welcome_page_mode',
     ];
 
     public function primaryColor(): string

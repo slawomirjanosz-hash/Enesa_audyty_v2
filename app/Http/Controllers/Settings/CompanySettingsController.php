@@ -30,6 +30,7 @@ class CompanySettingsController extends Controller
             'nip'      => ['nullable', 'string', 'size:10'],
             'website'  => ['nullable', 'url', 'max:255'],
             'primary_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'welcome_page_mode' => ['required', 'in:audit,general,login_only'],
             'logo'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
         ]);
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuditTypeController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AuditController as ClientAuditController;
 use App\Http\Controllers\Client\ChatController as ClientChatController;
@@ -23,9 +24,7 @@ use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [LandingPageController::class, 'show'])->name('home');
 
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');

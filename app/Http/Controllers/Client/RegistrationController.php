@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,10 @@ class RegistrationController extends Controller
 {
     public function showForm()
     {
+        if ((CompanySettings::query()->value('welcome_page_mode') ?? 'audit') !== 'audit') {
+            return redirect()->route('home');
+        }
+
         return view('welcome');
     }
 

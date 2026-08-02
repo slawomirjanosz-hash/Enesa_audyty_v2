@@ -166,18 +166,7 @@
 
 @section('content')
 
-{{-- Zakładki --}}
-<div class="settings-tabs">
-    <a href="{{ route('settings.users.index') }}" class="settings-tab">
-        <i class="ti ti-users" style="margin-right:6px;"></i>Użytkownicy systemu
-    </a>
-    <a href="{{ route('settings.company') }}" class="settings-tab active">
-        <i class="ti ti-building" style="margin-right:6px;"></i>Dane firmy
-    </a>
-    <a href="#" class="settings-tab">
-        <i class="ti ti-shield-lock" style="margin-right:6px;"></i>Role
-    </a>
-</div>
+<h1 style="margin:0 0 24px;">Dane firmy</h1>
 
 {{-- Flash messages --}}
 @if(session('success'))
@@ -237,6 +226,19 @@
                     @error('primary_color')
                         <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
                     @enderror
+                </div>
+            </div>
+
+            <div class="cf-row-full">
+                <div class="cf-group">
+                    <label class="cf-label" for="welcome_page_mode">Ekran powitalny aplikacji<span>*</span></label>
+                    <select id="welcome_page_mode" name="welcome_page_mode" class="cf-input">
+                        <option value="audit" {{ old('welcome_page_mode', $company->welcome_page_mode ?? 'audit') === 'audit' ? 'selected' : '' }}>Strona audytowa — obecna strona ENESA</option>
+                        <option value="general" {{ old('welcome_page_mode', $company->welcome_page_mode ?? 'audit') === 'general' ? 'selected' : '' }}>Strona uniwersalna — bez treści o audytach</option>
+                        <option value="login_only" {{ old('welcome_page_mode', $company->welcome_page_mode ?? 'audit') === 'login_only' ? 'selected' : '' }}>Bez strony powitalnej — od razu ekran logowania</option>
+                    </select>
+                    <span class="cf-hint">Ta opcja określa, co zobaczy osoba wchodząca na główny adres aplikacji.</span>
+                    @error('welcome_page_mode')<span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>@enderror
                 </div>
             </div>
 
