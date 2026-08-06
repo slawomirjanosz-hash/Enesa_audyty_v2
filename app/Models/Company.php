@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
 {
+    public const CLIENT_MODULES = [
+        'audits' => 'Audyty',
+        'offer_requests' => 'Zapytania ofertowe',
+        'offers' => 'Oferty',
+        'documents' => 'Dokumenty',
+        'chat' => 'Chat',
+        'users' => 'Użytkownicy firmy',
+    ];
+
     protected $fillable = [
         'name',
         'logo_path',
@@ -19,6 +28,7 @@ class Company extends Model
         'status',
         'archived_at',
         'show_in_dashboard',
+        'enabled_modules',
         'is_owner',
         'notes',
         'source',
@@ -26,7 +36,13 @@ class Company extends Model
 
     protected $casts = [
         'archived_at' => 'datetime',
+        'enabled_modules' => 'array',
     ];
+
+    public function moduleEnabled(string $module): bool
+    {
+        return in_array($module, $this->enabled_modules ?? array_keys(self::CLIENT_MODULES), true);
+    }
 
     public function logoDataUri(): ?string
     {

@@ -52,24 +52,24 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->group(function () {
     Route::get('/dashboard',     [ClientDashboardController::class,    'index'])->name('dashboard');
-    Route::get('/audits',        [ClientAuditController::class,        'index'])->name('audits');
-    Route::get('/offers',        [ClientOfferController::class,        'index'])->name('offers');
-    Route::get('/offers/{offer}', [ClientOfferController::class,       'show'])->name('offers.show');
-    Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->name('offers.accept');
-    Route::post('/offers/{offer}/reject', [ClientOfferController::class, 'reject'])->name('offers.reject');
-    Route::post('/offers/{offer}/negotiate', [ClientOfferController::class, 'negotiate'])->name('offers.negotiate');
-    Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->name('request-offer');
-    Route::post('/request-offer', [ClientOfferRequestController::class, 'store'])->name('request-offer.store');
-    Route::get('/request-offer/{offerRequest}', [ClientOfferRequestController::class, 'show'])->name('request-offer.show');
-    Route::get('/documents',     [ClientDocumentController::class,     'index'])->name('documents');
-    Route::get('/chat',          [ClientChatController::class,         'index'])->name('chat');
-    Route::post('/chat/send',    [ClientChatController::class,         'send'])->name('chat.send');
-    Route::get('/chat/poll',     [ClientChatController::class,         'poll'])->name('chat.poll');
-    Route::post('/chat/end',     [ClientChatController::class,         'endConversation'])->name('chat.end');
-    Route::get('/users',                    [ClientUserController::class, 'index'])->middleware('client.admin')->name('users');
-    Route::post('/users',                   [ClientUserController::class, 'store'])->middleware('client.admin')->name('users.store');
-    Route::delete('/users/{user}',          [ClientUserController::class, 'destroy'])->middleware('client.admin')->name('users.destroy');
-    Route::delete('/users/{user}/permanent',[ClientUserController::class, 'permanentDelete'])->middleware('client.admin')->name('users.permanent-delete');
+    Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('company.module:audits')->name('audits');
+    Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('company.module:offers')->name('offers');
+    Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->middleware('company.module:offers')->name('offers.show');
+    Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->middleware('company.module:offers')->name('offers.accept');
+    Route::post('/offers/{offer}/reject', [ClientOfferController::class, 'reject'])->middleware('company.module:offers')->name('offers.reject');
+    Route::post('/offers/{offer}/negotiate', [ClientOfferController::class, 'negotiate'])->middleware('company.module:offers')->name('offers.negotiate');
+    Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->middleware('company.module:offer_requests')->name('request-offer');
+    Route::post('/request-offer', [ClientOfferRequestController::class, 'store'])->middleware('company.module:offer_requests')->name('request-offer.store');
+    Route::get('/request-offer/{offerRequest}', [ClientOfferRequestController::class, 'show'])->middleware('company.module:offer_requests')->name('request-offer.show');
+    Route::get('/documents', [ClientDocumentController::class, 'index'])->middleware('company.module:documents')->name('documents');
+    Route::get('/chat', [ClientChatController::class, 'index'])->middleware('company.module:chat')->name('chat');
+    Route::post('/chat/send', [ClientChatController::class, 'send'])->middleware('company.module:chat')->name('chat.send');
+    Route::get('/chat/poll', [ClientChatController::class, 'poll'])->middleware('company.module:chat')->name('chat.poll');
+    Route::post('/chat/end', [ClientChatController::class, 'endConversation'])->middleware('company.module:chat')->name('chat.end');
+    Route::get('/users', [ClientUserController::class, 'index'])->middleware(['client.admin', 'company.module:users'])->name('users');
+    Route::post('/users', [ClientUserController::class, 'store'])->middleware(['client.admin', 'company.module:users'])->name('users.store');
+    Route::delete('/users/{user}', [ClientUserController::class, 'destroy'])->middleware(['client.admin', 'company.module:users'])->name('users.destroy');
+    Route::delete('/users/{user}/permanent', [ClientUserController::class, 'permanentDelete'])->middleware(['client.admin', 'company.module:users'])->name('users.permanent-delete');
 });
 
 Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role'])->group(function () {
@@ -77,12 +77,12 @@ Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.r
     Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
     Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');
     Route::get('/dashboard',     [ClientZoneController::class, 'dashboard'])->middleware('client.zone.session')->name('dashboard');
-    Route::get('/audits',        [ClientZoneController::class, 'audits'])->middleware('client.zone.session')->name('audits');
-    Route::get('/offers',        [ClientZoneController::class, 'offers'])->middleware('client.zone.session')->name('offers');
-    Route::get('/request-offer', [ClientZoneController::class, 'requestOffer'])->middleware('client.zone.session')->name('request-offer');
-    Route::get('/documents',     [ClientZoneController::class, 'documents'])->middleware('client.zone.session')->name('documents');
-    Route::get('/chat',          [ClientZoneController::class, 'chat'])->middleware('client.zone.session')->name('chat');
-    Route::get('/users',         [ClientZoneController::class, 'users'])->middleware('client.zone.session')->name('users');
+    Route::get('/audits', [ClientZoneController::class, 'audits'])->middleware(['client.zone.session', 'company.module:audits'])->name('audits');
+    Route::get('/offers', [ClientZoneController::class, 'offers'])->middleware(['client.zone.session', 'company.module:offers'])->name('offers');
+    Route::get('/request-offer', [ClientZoneController::class, 'requestOffer'])->middleware(['client.zone.session', 'company.module:offer_requests'])->name('request-offer');
+    Route::get('/documents', [ClientZoneController::class, 'documents'])->middleware(['client.zone.session', 'company.module:documents'])->name('documents');
+    Route::get('/chat', [ClientZoneController::class, 'chat'])->middleware(['client.zone.session', 'company.module:chat'])->name('chat');
+    Route::get('/users', [ClientZoneController::class, 'users'])->middleware(['client.zone.session', 'company.module:users'])->name('users');
 });
 
 Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware(['auth', 'staff.role'])->name('audit-types.versions.preview');
@@ -90,6 +90,8 @@ Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class
 Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
     Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
+    Route::patch('/companies/{company}/modules', [CompanyController::class, 'updateModules'])
+        ->middleware('superadmin.only')->name('companies.modules.update');
     Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
     Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
     Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');

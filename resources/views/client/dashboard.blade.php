@@ -220,6 +220,11 @@
 
 @section('content')
 
+@php
+    $firstDashboardModule = collect(['offers', 'offer_requests', 'audits', 'documents', 'chat'])
+        ->first(fn (string $module) => $company->moduleEnabled($module));
+@endphp
+
 {{-- Welcome --}}
 <div class="welcome-block">
     <h1>Witaj, {{ auth()->user()->name }}</h1>
@@ -228,6 +233,7 @@
 
 {{-- Stats --}}
 <div class="stats-grid">
+    @if($company->moduleEnabled('offers'))
     <div class="stat-card">
         <div class="stat-icon stat-icon-green"><i class="ti ti-file-invoice"></i></div>
         <div>
@@ -235,6 +241,8 @@
             <div class="stat-label">Oferty</div>
         </div>
     </div>
+    @endif
+    @if($company->moduleEnabled('offer_requests'))
     <div class="stat-card">
         <div class="stat-icon stat-icon-blue"><i class="ti ti-inbox"></i></div>
         <div>
@@ -249,6 +257,8 @@
             <div class="stat-label">Nowe zapytania</div>
         </div>
     </div>
+    @endif
+    @if($company->moduleEnabled('audits'))
     <div class="stat-card">
         <div class="stat-icon stat-icon-purple"><i class="ti ti-clipboard-check"></i></div>
         <div>
@@ -256,30 +266,41 @@
             <div class="stat-label">Audyty</div>
         </div>
     </div>
+    @endif
 </div>
 
 {{-- Tabs --}}
 <div class="tabs-header">
-    <button class="tab-btn active" onclick="switchTab('offers')">
+    @if($company->moduleEnabled('offers'))
+    <button class="tab-btn {{ $firstDashboardModule === 'offers' ? 'active' : '' }}" onclick="switchTab('offers')">
         <i class="ti ti-file-invoice"></i> Oferty
     </button>
-    <button class="tab-btn" onclick="switchTab('requests')">
+    @endif
+    @if($company->moduleEnabled('offer_requests'))
+    <button class="tab-btn {{ $firstDashboardModule === 'offer_requests' ? 'active' : '' }}" onclick="switchTab('requests')">
         <i class="ti ti-send"></i> Zapytania
     </button>
-    <button class="tab-btn" onclick="switchTab('audits')">
+    @endif
+    @if($company->moduleEnabled('audits'))
+    <button class="tab-btn {{ $firstDashboardModule === 'audits' ? 'active' : '' }}" onclick="switchTab('audits')">
         <i class="ti ti-clipboard-check"></i> Audyty
     </button>
-    <button class="tab-btn" onclick="switchTab('documents')">
+    @endif
+    @if($company->moduleEnabled('documents'))
+    <button class="tab-btn {{ $firstDashboardModule === 'documents' ? 'active' : '' }}" onclick="switchTab('documents')">
         <i class="ti ti-files"></i> Dokumenty
     </button>
-    <button class="tab-btn" onclick="switchTab('chat')">
+    @endif
+    @if($company->moduleEnabled('chat'))
+    <button class="tab-btn {{ $firstDashboardModule === 'chat' ? 'active' : '' }}" onclick="switchTab('chat')">
         <i class="ti ti-message-2"></i> Chat
     </button>
+    @endif
 </div>
 
 <div class="tabs-content">
     {{-- OFFERS TAB --}}
-    <div id="offers" class="tab-pane active">
+    <div id="offers" class="tab-pane {{ $firstDashboardModule === 'offers' ? 'active' : '' }}">
         @if($offers->isEmpty())
             <div class="empty-state">
                 <i class="ti ti-file-off"></i>
@@ -328,7 +349,7 @@
     </div>
 
     {{-- REQUESTS TAB --}}
-    <div id="requests" class="tab-pane">
+    <div id="requests" class="tab-pane {{ $firstDashboardModule === 'offer_requests' ? 'active' : '' }}">
         @if($offerRequests->isEmpty())
             <div class="empty-state">
                 <i class="ti ti-inbox-off"></i>
@@ -367,7 +388,7 @@
     </div>
 
     {{-- AUDITS TAB --}}
-    <div id="audits" class="tab-pane">
+    <div id="audits" class="tab-pane {{ $firstDashboardModule === 'audits' ? 'active' : '' }}">
         @if($audits->isEmpty())
             <div class="empty-state">
                 <i class="ti ti-clipboard-x"></i>
@@ -389,7 +410,7 @@
     </div>
 
     {{-- DOCUMENTS TAB --}}
-    <div id="documents" class="tab-pane">
+    <div id="documents" class="tab-pane {{ $firstDashboardModule === 'documents' ? 'active' : '' }}">
         <div class="empty-state">
             <i class="ti ti-file-off"></i>
             <p>Brak dokumentów.</p>
@@ -397,7 +418,7 @@
     </div>
 
     {{-- CHAT TAB --}}
-    <div id="chat" class="tab-pane">
+    <div id="chat" class="tab-pane {{ $firstDashboardModule === 'chat' ? 'active' : '' }}">
         <div class="empty-state">
             <i class="ti ti-message-off"></i>
             <p>Brak wiadomości.</p>

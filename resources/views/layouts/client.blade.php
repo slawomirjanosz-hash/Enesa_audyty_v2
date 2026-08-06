@@ -271,6 +271,9 @@
         </a>
     </div>
 
+    @php
+        $moduleCompany = auth()->user()?->companies()->first();
+    @endphp
     <nav class="sidebar-nav">
         <ul>
             <li class="nav-item">
@@ -280,28 +283,34 @@
                 </a>
             </li>
 
+            @if($moduleCompany?->moduleEnabled('audits'))
             <li class="nav-item">
                 <a href="{{ route('client.audits') }}"
                    class="nav-link {{ request()->routeIs('client.audits') ? 'active' : '' }}">
                     <i class="ti ti-clipboard-check"></i> Moje audyty
                 </a>
             </li>
+            @endif
 
+            @if($moduleCompany?->moduleEnabled('offer_requests'))
             <li class="nav-item">
                 <a href="{{ route('client.request-offer') }}"
                    class="nav-link {{ request()->routeIs('client.request-offer') ? 'active' : '' }}">
                     <i class="ti ti-send"></i> Zapytaj o ofertę
                 </a>
             </li>
+            @endif
 
+            @if($moduleCompany?->moduleEnabled('offers'))
             <li class="nav-item">
                 <a href="{{ route('client.offers') }}"
                    class="nav-link {{ request()->routeIs('client.offers') ? 'active' : '' }}">
                     <i class="ti ti-file-invoice"></i> Oferty
                 </a>
             </li>
+            @endif
 
-            @if(auth()->user()->hasRole('client_admin'))
+            @if(auth()->user()->hasRole('client_admin') && $moduleCompany?->moduleEnabled('users'))
             <li class="nav-item">
                 <a href="{{ route('client.users') }}"
                    class="nav-link {{ request()->routeIs('client.users') ? 'active' : '' }}">
@@ -310,19 +319,23 @@
             </li>
             @endif
 
+            @if($moduleCompany?->moduleEnabled('documents'))
             <li class="nav-item">
                 <a href="{{ route('client.documents') }}"
                    class="nav-link {{ request()->routeIs('client.documents') ? 'active' : '' }}">
                     <i class="ti ti-files"></i> Dokumenty
                 </a>
             </li>
+            @endif
 
+            @if($moduleCompany?->moduleEnabled('chat'))
             <li class="nav-item">
                 <a href="{{ route('client.chat') }}"
                    class="nav-link {{ request()->routeIs('client.chat') ? 'active' : '' }}">
                     <i class="ti ti-message-2"></i> Chat
                 </a>
             </li>
+            @endif
         </ul>
     </nav>
 

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Audit;
 use App\Models\Offer;
 use App\Models\OfferRequest;
-use App\Models\Audit;
 
 class DashboardController extends Controller
 {
@@ -13,23 +13,29 @@ class DashboardController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company) {
+        if (! $company) {
             return redirect()->route('client.login')
                 ->with('error', 'Brak przypisanej firmy.');
         }
 
-        $offers = Offer::where('company_id', $company->id)
-            ->where('is_template', false)
-            ->orderByDesc('created_at')
-            ->get();
+        $offers = $company->moduleEnabled('offers')
+            ? Offer::where('company_id', $company->id)
+                ->where('is_template', false)
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
 
-        $offerRequests = OfferRequest::where('company_id', $company->id)
-            ->orderByDesc('created_at')
-            ->get();
+        $offerRequests = $company->moduleEnabled('offer_requests')
+            ? OfferRequest::where('company_id', $company->id)
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
 
-        $audits = Audit::where('company_id', $company->id)
-            ->orderByDesc('created_at')
-            ->get();
+        $audits = $company->moduleEnabled('audits')
+            ? Audit::where('company_id', $company->id)
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
 
         return view('client.dashboard', compact('company', 'offers', 'offerRequests', 'audits'));
     }
