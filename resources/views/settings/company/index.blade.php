@@ -157,6 +157,27 @@
         transition: background .15s;
     }
     .btn-save:hover { background: #153d2e; }
+    .nip-actions { display: flex; gap: 8px; align-items: stretch; }
+    .nip-actions .cf-input { flex: 1; }
+    .btn-gus {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 10px 14px;
+        border: 1px solid rgba(26, 77, 58, .25);
+        border-radius: 7px;
+        background: rgba(26, 77, 58, .08);
+        color: var(--green);
+        font-family: 'Manrope', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .btn-gus:hover { background: rgba(26, 77, 58, .14); }
+    .btn-gus:disabled { cursor: wait; opacity: .65; }
+    .gus-status { min-height: 16px; }
 
     @media (max-width: 640px) {
         .cf-row { grid-template-columns: 1fr; }
@@ -271,10 +292,15 @@
             <div class="cf-row">
                 <div class="cf-group">
                     <label class="cf-label" for="nip">NIP</label>
-                    <input id="nip" type="text" name="nip" class="cf-input @error('nip') is-invalid @enderror"
-                           value="{{ old('nip', $company->nip ?? '') }}"
-                           placeholder="0000000000" maxlength="10">
-                    <span class="cf-hint">Dokładnie 10 cyfr, bez myślników.</span>
+                    <div class="nip-actions">
+                        <input id="nip" type="text" name="nip" class="cf-input @error('nip') is-invalid @enderror"
+                               value="{{ old('nip', $company->nip ?? '') }}"
+                               placeholder="0000000000" maxlength="13">
+                        <button id="fetch-gus" type="button" class="btn-gus">
+                            <i class="ti ti-download"></i>Pobierz z GUS
+                        </button>
+                    </div>
+                    <span id="gus-status" class="cf-hint gus-status">Wpisz 10 cyfr; myślniki i spacje zostaną pominięte.</span>
                     @error('nip')
                         <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
                     @enderror
@@ -398,6 +424,55 @@
 <script>
     document.getElementById('primary_color')?.addEventListener('input', function () {
         document.getElementById('primary-color-value').textContent = this.value.toUpperCase();
+    });
+
+    document.getElementById('fetch-gus')?.addEventListener('click', async function () {
+        const button = this;
+        const nipInput = document.getElementById('nip');
+        const status = document.getElementById('gus-status');
+        const nip = nipInput.value.replace(/\D/g, '');
+
+        if (nip.length !== 10) {
+            status.style.color = '#b91c1c';
+            status.textContent = 'NIP musi mieć dokładnie 10 cyfr.';
+            return;
+        }
+
+        button.disabled = true;
+        status.style.color = '#888';
+        status.textContent = 'Pobieranie danych z GUS...';
+
+        try {
+            const response = await fetch('{{ route('companies.fetchGus') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ nip }),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+            }
+
+            nipInput.value = nip;
+            ['name', 'address', 'city', 'postcode'].forEach(function (fieldName) {
+                const field = document.getElementById(fieldName);
+                field.value = data[fieldName] || '';
+                field.style.borderColor = data[fieldName] ? '#2E7D32' : '#D0CCC0';
+            });
+
+            status.style.color = '#166534';
+            status.textContent = 'Dane pobrane. Możesz je poprawić przed zapisaniem.';
+        } catch (error) {
+            status.style.color = '#b91c1c';
+            status.textContent = error.message;
+        } finally {
+            button.disabled = false;
+        }
     });
 </script>
 @endpush

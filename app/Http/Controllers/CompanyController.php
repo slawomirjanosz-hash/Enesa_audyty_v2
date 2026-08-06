@@ -47,19 +47,23 @@ class CompanyController extends Controller
             $rawAddress = $subject['residenceAddress'] ?? $subject['workingAddress'] ?? '';
             $address = '';
             $city = '';
+            $postcode = '';
 
             if ($rawAddress) {
                 $lastComma = strrpos($rawAddress, ',');
                 if ($lastComma !== false) {
                     $address = trim(substr($rawAddress, 0, $lastComma));
                     $cityPart = trim(substr($rawAddress, $lastComma + 1));
+                    if (preg_match('/\b(\d{2}-\d{3})\b/', $cityPart, $postcodeMatch)) {
+                        $postcode = $postcodeMatch[1];
+                    }
                     $city = trim(preg_replace('/^\d{2}-\d{3}\s+/', '', $cityPart));
                 } else {
                     $address = $rawAddress;
                 }
             }
 
-            return response()->json(compact('name', 'address', 'city'));
+            return response()->json(compact('name', 'address', 'city', 'postcode'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Błąd połączenia z API. Spróbuj ponownie później.'], 503);
         }
