@@ -14,6 +14,8 @@ use App\Models\OfferTemplateType;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
+use App\Services\OfferContentService;
+use App\Services\OfferCrmStageSynchronizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,6 +33,11 @@ use PhpOffice\PhpWord\Style\Language;
 
 class OfferController extends Controller
 {
+    public function __construct(
+        private readonly OfferContentService $offerContent,
+        private readonly OfferCrmStageSynchronizer $crmStageSynchronizer,
+    ) {}
+
     public function index(Request $request): View
     {
         $isTemplate = $request->boolean('template');
@@ -52,7 +59,7 @@ class OfferController extends Controller
 
         $offers->each(function (Offer $offer) use ($user) {
             if (! $user->can('viewPrices', $offer)) {
-                $this->removePriceData($offer);
+                $this->offerContent->hidePrices($offer);
             }
         });
 
@@ -199,7 +206,7 @@ class OfferController extends Controller
         if ($request->filled('text_sections')) {
             $decoded = json_decode($request->input('text_sections'), true);
             $textSections = json_last_error() === JSON_ERROR_NONE
-                ? $this->normalizeTextSections($decoded)
+                ? $this->offerContent->normalizeTextSections($decoded)
                 : null;
         }
 
@@ -261,7 +268,7 @@ class OfferController extends Controller
             app(CrmActivityLogger::class)->offerLinked($offer, $offer->crmOpportunity);
         }
 
-        $this->synchronizeCrmOpportunityStage($offer);
+        $this->crmStageSynchronizer->synchronize($offer);
 
         return redirect()->route('offers.show', $offer)
             ->with('success', 'Oferta ' . $offer->offer_full_number . ' została utworzona.');
@@ -282,7 +289,7 @@ class OfferController extends Controller
         ]);
 
         if (! auth()->user()->can('viewPrices', $offer)) {
-            $this->removePriceData($offer);
+            $this->offerContent->hidePrices($offer);
         }
 
         return view('offers.show', compact('offer'));
@@ -381,7 +388,7 @@ class OfferController extends Controller
         if ($request->filled('text_sections')) {
             $decoded = json_decode($request->input('text_sections'), true);
             $textSections = json_last_error() === JSON_ERROR_NONE
-                ? $this->normalizeTextSections($decoded)
+                ? $this->offerContent->normalizeTextSections($decoded)
                 : null;
         }
 
@@ -429,7 +436,7 @@ class OfferController extends Controller
             app(CrmActivityLogger::class)->offerStatusChanged($offer, $previousStatus, $offer->status);
         }
 
-        $this->synchronizeCrmOpportunityStage($offer);
+        $this->crmStageSynchronizer->synchronize($offer);
 
         $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
         $delegation->fill([
@@ -462,32 +469,9 @@ class OfferController extends Controller
             app(CrmActivityLogger::class)->offerStatusChanged($offer, $previousStatus, $offer->status);
         }
 
-        $this->synchronizeCrmOpportunityStage($offer);
+        $this->crmStageSynchronizer->synchronize($offer);
 
         return redirect()->back()->with('success', 'Status oferty został zaktualizowany.');
-    }
-
-    /** Keep the CRM lead in step with the outcome of its linked offer. */
-    private function synchronizeCrmOpportunityStage(Offer $offer): void
-    {
-        $opportunity = $offer->crmOpportunity()->first();
-
-        if (! $opportunity) {
-            return;
-        }
-
-        $nextStage = match ($offer->status) {
-            'wygrana' => 'realization',
-            'przegrana' => 'lost',
-            'w_toku' => in_array($opportunity->stage, ['new_lead', 'contact'], true) ? 'offer' : null,
-            default => null,
-        };
-
-        if ($nextStage && $opportunity->stage !== $nextStage) {
-            $previousStage = $opportunity->stage;
-            $opportunity->update(['stage' => $nextStage]);
-            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $nextStage);
-        }
     }
 
     public function storeMessage(Request $request, Offer $offer): RedirectResponse
@@ -565,10 +549,10 @@ class OfferController extends Controller
         $offer->load(['company', 'assignedUser', 'offerDelegation']);
         $companySettings = \App\Models\CompanySettings::first();
 
-        $offer->content_subject  = $this->cleanQuillHtml($offer->content_subject);
-        $offer->content_scope    = $this->cleanQuillHtml($offer->content_scope);
-        $offer->content_deadline = $this->cleanQuillHtml($offer->content_deadline);
-        $offer->content_payment  = $this->cleanQuillHtml($offer->content_payment);
+        $offer->content_subject  = $this->offerContent->cleanHtml($offer->content_subject);
+        $offer->content_scope    = $this->offerContent->cleanHtml($offer->content_scope);
+        $offer->content_deadline = $this->offerContent->cleanHtml($offer->content_deadline);
+        $offer->content_payment  = $this->offerContent->cleanHtml($offer->content_payment);
 
         if ($forceUnitPrices !== null) {
             $offer->show_unit_prices = $forceUnitPrices;
@@ -710,9 +694,9 @@ class OfferController extends Controller
 
         // Tekst oferty jest wspólny dla PDF i DOCX. Starsze oferty, które nie
         // mają jeszcze JSON-a sekcji, zachowują dotychczasowy układ.
-        $textSections = $this->normalizeTextSections($offer->text_sections ?? []);
+        $textSections = $this->offerContent->normalizeTextSections($offer->text_sections ?? []);
         if (empty($textSections)) {
-            $textSections = $this->normalizeTextSections([
+            $textSections = $this->offerContent->normalizeTextSections([
                 ['name' => 'Przedmiot oferty', 'content' => $offer->content_subject ?? '', 'placement' => 'before_price'],
                 ['name' => 'Zakres prac', 'content' => $offer->content_scope ?? '', 'placement' => 'before_price'],
                 ['name' => 'Termin realizacji', 'content' => $offer->content_deadline ?? '', 'placement' => 'after_price'],
@@ -1136,7 +1120,7 @@ Formatowanie HTML:
         $content = preg_replace('/```$/m', '', $content);
         $content = preg_replace('/<p>\s*<br\s*\/?>\s*<\/p>/i', '', $content);
         $content = preg_replace('/<p>\s*<\/p>/i', '', $content);
-        $content = $this->cleanQuillHtml(trim($content));
+        $content = $this->offerContent->cleanHtml(trim($content));
 
         if ($data['mode'] === 'generate_table' && !str_starts_with($content, '<table>')) {
             return response()->json(['error' => 'AI nie zwróciło poprawnej tabeli. Spróbuj opisać dane dokładniej.'], 422);
@@ -1180,78 +1164,4 @@ Formatowanie HTML:
         return redirect($route)->with('success', $isTemplate ? 'Szablon został zapisany.' : 'Nowa oferta została utworzona.');
     }
 
-    private function removePriceData(Offer $offer): void
-    {
-        $offer->setAttribute('kwota_netto', null);
-        $offer->setAttribute('price_sections', null);
-        $offer->setAttribute('show_unit_prices', false);
-        $offer->setAttribute('delegations', null);
-        $offer->setAttribute('content_payment', null);
-    }
-
-    private function cleanQuillHtml(?string $html): string
-    {
-        if (!$html) return '';
-
-        // Zamień listy Quill 2 (data-list="bullet") na zwykłe <ul><li>
-        $html = preg_replace_callback(
-            '/<ol>(.*?)<\/ol>/s',
-            function ($matches) {
-                $inner = $matches[1];
-                $isOrdered = preg_match('/data-list="ordered"/i', $inner) === 1;
-                $inner = preg_replace('/<li[^>]*>/i', '<li>', $inner);
-                $inner = preg_replace('/<span[^>]*class="ql-ui"[^>]*>.*?<\/span>/s', '', $inner);
-                return ($isOrdered ? '<ol>' : '<ul>') . $inner . ($isOrdered ? '</ol>' : '</ul>');
-            },
-            $html
-        );
-
-        // Usuń wszystkie atrybuty class z tagów
-        $html = preg_replace('/\s+class="[^"]*"/', '', $html);
-
-        // Usuń contenteditable
-        $html = preg_replace('/\s+contenteditable="[^"]*"/', '', $html);
-
-        // Usuń puste paragrafy
-        $html = preg_replace('/<p>\s*<br\s*\/?>\s*<\/p>/i', '', $html);
-        $html = preg_replace('/<p>\s*<\/p>/i', '', $html);
-
-        // Usuń pozostałe span ql-ui
-        $html = preg_replace('/<span[^>]*ql-ui[^>]*>.*?<\/span>/s', '', $html);
-
-        // Zawartość sekcji trafia potem bezpośrednio do PDF. Pozwalamy tylko na
-        // formatowanie obsługiwane przez edytor i szablon oferty, bez atrybutów.
-        $html = strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><h2><h3><table><thead><tbody><tr><th><td>');
-        $html = preg_replace('/<(p|br|strong|b|em|i|u|ul|ol|li|h2|h3|table|thead|tbody|tr|th|td)\\b[^>]*>/i', '<$1>', $html);
-
-        return trim($html);
-    }
-
-    private function normalizeTextSections(mixed $sections): ?array
-    {
-        if (!is_array($sections)) {
-            return null;
-        }
-
-        $normalized = [];
-        foreach ($sections as $index => $section) {
-            if (!is_array($section)) {
-                continue;
-            }
-
-            $name = trim(strip_tags((string) ($section['name'] ?? '')));
-            $content = $this->cleanQuillHtml((string) ($section['content'] ?? ''));
-            $placement = $section['placement'] ?? ($index < 2 ? 'before_price' : 'after_price');
-
-            $normalized[] = [
-                'name' => mb_substr($name !== '' ? $name : 'Sekcja oferty', 0, 120),
-                'content' => $content,
-                'placement' => in_array($placement, ['before_price', 'after_price'], true)
-                    ? $placement
-                    : ($index < 2 ? 'before_price' : 'after_price'),
-            ];
-        }
-
-        return $normalized;
-    }
 }

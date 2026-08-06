@@ -14,9 +14,12 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
+use App\Services\OfferCrmStageSynchronizer;
 
 class CrmController extends Controller
 {
+    public function __construct(private readonly OfferCrmStageSynchronizer $crmStageSynchronizer) {}
+
     public function index(): View
     {
         $access = app(AuditorAccessService::class);
@@ -291,7 +294,7 @@ if ($authUser->hasRole('superadmin')) {
 
         $offer->update(['crm_opportunity_id' => $opportunity->id]);
         app(CrmActivityLogger::class)->offerLinked($offer, $opportunity);
-        $this->synchronizeOpportunityStage($opportunity, $offer);
+        $this->crmStageSynchronizer->synchronize($offer, $opportunity);
 
         return redirect()->route('crm.index', ['tab' => 'pipeline'])
             ->with('success', 'Oferta została przypięta do leada.');
@@ -302,22 +305,6 @@ if ($authUser->hasRole('superadmin')) {
         $this->authorize('delete', $opportunity);
         $opportunity->delete();
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została usunięta.');
-    }
-
-    private function synchronizeOpportunityStage(CrmOpportunity $opportunity, Offer $offer): void
-    {
-        $nextStage = match ($offer->status) {
-            'wygrana' => 'realization',
-            'przegrana' => 'lost',
-            'w_toku' => in_array($opportunity->stage, ['new_lead', 'contact'], true) ? 'offer' : null,
-            default => null,
-        };
-
-        if ($nextStage && $opportunity->stage !== $nextStage) {
-            $previousStage = $opportunity->stage;
-            $opportunity->update(['stage' => $nextStage]);
-            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $nextStage);
-        }
     }
 
     public function detachOrphanedUser($assignmentId): RedirectResponse
