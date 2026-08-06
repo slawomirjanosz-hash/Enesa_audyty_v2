@@ -265,6 +265,26 @@
 
             <hr class="cf-divider">
 
+            {{-- SEKCJA: Moduły aplikacji --}}
+            <p class="cf-section-title"><i class="ti ti-layout-dashboard" style="margin-right:6px;"></i>Moduły aplikacji</p>
+            <p style="font-size:13px;color:#6b7a70;margin:0 0 16px;">
+                Wybierz elementy dostępne w tej instalacji. Wyłączone moduły znikną z panelu pracowników i zostaną zablokowane także przy wejściu bezpośrednim adresem.
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 16px;">
+                @foreach(\App\Models\CompanySettings::APP_MODULES as $module => $label)
+                    <label style="display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid #E5E1D8;border-radius:8px;background:#FAFAF6;cursor:pointer;">
+                        <input type="checkbox" name="enabled_modules[]" value="{{ $module }}"
+                               {{ in_array($module, old('enabled_modules', $company?->enabled_modules ?? array_keys(\App\Models\CompanySettings::APP_MODULES)), true) ? 'checked' : '' }}>
+                        <span style="font-size:13px;font-weight:700;">{{ $label }}</span>
+                    </label>
+                @endforeach
+            </div>
+            @error('enabled_modules.*')
+                <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
+            @enderror
+
+            <hr class="cf-divider">
+
             {{-- SEKCJA: Informacje podstawowe --}}
             <p class="cf-section-title"><i class="ti ti-info-circle" style="margin-right:6px;"></i>Informacje podstawowe</p>
 

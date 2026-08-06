@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'staff.role'         => \App\Http\Middleware\EnsureStaffRole::class,
             'full.staff'         => \App\Http\Middleware\EnsureFullStaffAccess::class,
             'superadmin.only'    => \App\Http\Middleware\EnsureSuperAdmin::class,
-            'company.module'     => \App\Http\Middleware\EnsureCompanyModuleEnabled::class,
+            'app.module'         => \App\Http\Middleware\EnsureAppModuleEnabled::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

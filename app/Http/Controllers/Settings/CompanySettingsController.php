@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class CompanySettingsController extends Controller
 {
@@ -31,11 +32,14 @@ class CompanySettingsController extends Controller
             'website'  => ['nullable', 'url', 'max:255'],
             'primary_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'welcome_page_mode' => ['required', 'in:audit,general,login_only'],
+            'enabled_modules' => ['nullable', 'array'],
+            'enabled_modules.*' => ['string', Rule::in(array_keys(CompanySettings::APP_MODULES))],
             'logo'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
         ]);
 
         $logo = $request->file('logo');
         unset($data['logo']);
+        $data['enabled_modules'] = array_values($data['enabled_modules'] ?? []);
 
         $settings = CompanySettings::updateOrCreate(['id' => 1], $data);
 

@@ -207,20 +207,6 @@ class CompanyController extends Controller
         return redirect()->back()->with('success', 'Dane firmy zostały zaktualizowane.');
     }
 
-    public function updateModules(Request $request, Company $company)
-    {
-        $data = $request->validate([
-            'enabled_modules' => ['nullable', 'array'],
-            'enabled_modules.*' => ['string', Rule::in(array_keys(Company::CLIENT_MODULES))],
-        ]);
-
-        $company->update([
-            'enabled_modules' => array_values($data['enabled_modules'] ?? []),
-        ]);
-
-        return redirect()->back()->with('success', 'Widoczność modułów firmy została zaktualizowana.');
-    }
-
     public function accept(Company $company)
     {
         $this->authorize('update', $company);

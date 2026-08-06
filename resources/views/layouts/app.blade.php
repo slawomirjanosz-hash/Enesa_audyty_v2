@@ -404,15 +404,21 @@
         </a>
     </div>
 
+    @php
+        $appModuleEnabled = fn (string $module): bool => $appBrand?->moduleEnabled($module) ?? true;
+    @endphp
     <nav class="sidebar-nav">
         <ul>
+            @if($appModuleEnabled('dashboard'))
             <li class="nav-item">
                 <a href="{{ url('/dashboard') }}"
                    class="nav-link {{ request()->is('dashboard*') ? 'active' : '' }}">
                     <i class="ti ti-layout-dashboard"></i> Dashboard
                 </a>
             </li>
+            @endif
 
+            @if($appModuleEnabled('audits'))
             <li class="nav-item nav-group {{ request()->is('audit*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-clipboard-list"></i> System Audytów
@@ -424,7 +430,9 @@
                     <li><a href="{{ url('/versioning') }}" class="nav-link">Wersjonowanie</a></li>
                 </ul>
             </li>
+            @endif
 
+            @if($appModuleEnabled('crm'))
             <li class="nav-item nav-group {{ request()->is('crm*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-users"></i> CRM
@@ -436,7 +444,9 @@
                     <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link">Zadania</a></li>
                 </ul>
             </li>
+            @endif
 
+            @if($appModuleEnabled('offers'))
             <li class="nav-item nav-group {{ request()->is('offer*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-file-invoice"></i> Strefa Ofert
@@ -455,15 +465,18 @@
                     @endif
                 </ul>
             </li>
+            @endif
 
+            @if($appModuleEnabled('client_zone'))
             <li class="nav-item">
                 <a href="{{ url('/client-zone') }}"
                    class="nav-link {{ request()->is('client-zone*') ? 'active' : '' }}">
                     <i class="ti ti-eye"></i> Strefa klienta
                 </a>
             </li>
+            @endif
 
-            @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) || auth()->user()->getAllPermissions()->contains('name', 'system.full_access'))
+            @if($appModuleEnabled('documents') && (auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) || auth()->user()->getAllPermissions()->contains('name', 'system.full_access')))
             <li class="nav-item">
                 <a href="{{ route('documents.index') }}"
                    class="nav-link {{ request()->routeIs('documents.index') ? 'active' : '' }}">

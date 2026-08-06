@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Audit;
+use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\OfferRequest;
 
@@ -18,20 +19,20 @@ class DashboardController extends Controller
                 ->with('error', 'Brak przypisanej firmy.');
         }
 
-        $offers = $company->moduleEnabled('offers')
+        $offers = CompanySettings::moduleIsEnabled('offers')
             ? Offer::where('company_id', $company->id)
                 ->where('is_template', false)
                 ->orderByDesc('created_at')
                 ->get()
             : collect();
 
-        $offerRequests = $company->moduleEnabled('offer_requests')
+        $offerRequests = CompanySettings::moduleIsEnabled('offers')
             ? OfferRequest::where('company_id', $company->id)
                 ->orderByDesc('created_at')
                 ->get()
             : collect();
 
-        $audits = $company->moduleEnabled('audits')
+        $audits = CompanySettings::moduleIsEnabled('audits')
             ? Audit::where('company_id', $company->id)
                 ->orderByDesc('created_at')
                 ->get()

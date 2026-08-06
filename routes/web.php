@@ -30,84 +30,84 @@ Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('r
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
 
 // Publiczna ankieta dla klienta końcowego (bez logowania, white-label)
-Route::get('/f/{token}',  [PublicSurveyController::class, 'show'])->name('public.survey.show');
-Route::post('/f/{token}', [PublicSurveyController::class, 'submit'])->name('public.survey.submit');
-Route::post('/f/{token}/pdf', [PublicSurveyController::class, 'pdf'])->name('public.survey.pdf');
+Route::get('/f/{token}', [PublicSurveyController::class, 'show'])->middleware('app.module:audits')->name('public.survey.show');
+Route::post('/f/{token}', [PublicSurveyController::class, 'submit'])->middleware('app.module:audits')->name('public.survey.submit');
+Route::post('/f/{token}/pdf', [PublicSurveyController::class, 'pdf'])->middleware('app.module:audits')->name('public.survey.pdf');
 
 Route::get('/companies', function () {
     return redirect()->route('crm.index');
-});
+})->middleware('app.module:crm');
 
 Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])
-    ->middleware(['auth', 'staff.role'])
+    ->middleware(['auth', 'staff.role', 'app.module:crm'])
     ->name('companies.fetchGus');
 Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
-    ->middleware(['auth', 'staff.role'])
+    ->middleware(['auth', 'staff.role', 'app.module:crm'])
     ->name('companies.destroy');
 Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])
-    ->middleware(['auth', 'staff.role'])
+    ->middleware(['auth', 'staff.role', 'app.module:crm'])
     ->name('companies.restore');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
 
-Route::prefix('client')->name('client.')->middleware(['auth', 'client.role'])->group(function () {
+Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
     Route::get('/dashboard',     [ClientDashboardController::class,    'index'])->name('dashboard');
-    Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('company.module:audits')->name('audits');
-    Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('company.module:offers')->name('offers');
-    Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->middleware('company.module:offers')->name('offers.show');
-    Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->middleware('company.module:offers')->name('offers.accept');
-    Route::post('/offers/{offer}/reject', [ClientOfferController::class, 'reject'])->middleware('company.module:offers')->name('offers.reject');
-    Route::post('/offers/{offer}/negotiate', [ClientOfferController::class, 'negotiate'])->middleware('company.module:offers')->name('offers.negotiate');
-    Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->middleware('company.module:offer_requests')->name('request-offer');
-    Route::post('/request-offer', [ClientOfferRequestController::class, 'store'])->middleware('company.module:offer_requests')->name('request-offer.store');
-    Route::get('/request-offer/{offerRequest}', [ClientOfferRequestController::class, 'show'])->middleware('company.module:offer_requests')->name('request-offer.show');
-    Route::get('/documents', [ClientDocumentController::class, 'index'])->middleware('company.module:documents')->name('documents');
-    Route::get('/chat', [ClientChatController::class, 'index'])->middleware('company.module:chat')->name('chat');
-    Route::post('/chat/send', [ClientChatController::class, 'send'])->middleware('company.module:chat')->name('chat.send');
-    Route::get('/chat/poll', [ClientChatController::class, 'poll'])->middleware('company.module:chat')->name('chat.poll');
-    Route::post('/chat/end', [ClientChatController::class, 'endConversation'])->middleware('company.module:chat')->name('chat.end');
-    Route::get('/users', [ClientUserController::class, 'index'])->middleware(['client.admin', 'company.module:users'])->name('users');
-    Route::post('/users', [ClientUserController::class, 'store'])->middleware(['client.admin', 'company.module:users'])->name('users.store');
-    Route::delete('/users/{user}', [ClientUserController::class, 'destroy'])->middleware(['client.admin', 'company.module:users'])->name('users.destroy');
-    Route::delete('/users/{user}/permanent', [ClientUserController::class, 'permanentDelete'])->middleware(['client.admin', 'company.module:users'])->name('users.permanent-delete');
+    Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
+    Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('app.module:offers')->name('offers');
+    Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->middleware('app.module:offers')->name('offers.show');
+    Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->middleware('app.module:offers')->name('offers.accept');
+    Route::post('/offers/{offer}/reject', [ClientOfferController::class, 'reject'])->middleware('app.module:offers')->name('offers.reject');
+    Route::post('/offers/{offer}/negotiate', [ClientOfferController::class, 'negotiate'])->middleware('app.module:offers')->name('offers.negotiate');
+    Route::get('/request-offer', [ClientOfferRequestController::class, 'index'])->middleware('app.module:offers')->name('request-offer');
+    Route::post('/request-offer', [ClientOfferRequestController::class, 'store'])->middleware('app.module:offers')->name('request-offer.store');
+    Route::get('/request-offer/{offerRequest}', [ClientOfferRequestController::class, 'show'])->middleware('app.module:offers')->name('request-offer.show');
+    Route::get('/documents', [ClientDocumentController::class, 'index'])->middleware('app.module:documents')->name('documents');
+    Route::get('/chat', [ClientChatController::class, 'index'])->middleware('app.module:client_zone')->name('chat');
+    Route::post('/chat/send', [ClientChatController::class, 'send'])->middleware('app.module:client_zone')->name('chat.send');
+    Route::get('/chat/poll', [ClientChatController::class, 'poll'])->middleware('app.module:client_zone')->name('chat.poll');
+    Route::post('/chat/end', [ClientChatController::class, 'endConversation'])->middleware('app.module:client_zone')->name('chat.end');
+    Route::get('/users', [ClientUserController::class, 'index'])->middleware(['client.admin', 'app.module:client_zone'])->name('users');
+    Route::post('/users', [ClientUserController::class, 'store'])->middleware(['client.admin', 'app.module:client_zone'])->name('users.store');
+    Route::delete('/users/{user}', [ClientUserController::class, 'destroy'])->middleware(['client.admin', 'app.module:client_zone'])->name('users.destroy');
+    Route::delete('/users/{user}/permanent', [ClientUserController::class, 'permanentDelete'])->middleware(['client.admin', 'app.module:client_zone'])->name('users.permanent-delete');
 });
 
-Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role'])->group(function () {
+Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role', 'app.module:client_zone'])->group(function () {
     Route::get('/',  [ClientZoneController::class, 'index'])->name('index');
     Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
     Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');
     Route::get('/dashboard',     [ClientZoneController::class, 'dashboard'])->middleware('client.zone.session')->name('dashboard');
-    Route::get('/audits', [ClientZoneController::class, 'audits'])->middleware(['client.zone.session', 'company.module:audits'])->name('audits');
-    Route::get('/offers', [ClientZoneController::class, 'offers'])->middleware(['client.zone.session', 'company.module:offers'])->name('offers');
-    Route::get('/request-offer', [ClientZoneController::class, 'requestOffer'])->middleware(['client.zone.session', 'company.module:offer_requests'])->name('request-offer');
-    Route::get('/documents', [ClientZoneController::class, 'documents'])->middleware(['client.zone.session', 'company.module:documents'])->name('documents');
-    Route::get('/chat', [ClientZoneController::class, 'chat'])->middleware(['client.zone.session', 'company.module:chat'])->name('chat');
-    Route::get('/users', [ClientZoneController::class, 'users'])->middleware(['client.zone.session', 'company.module:users'])->name('users');
+    Route::get('/audits', [ClientZoneController::class, 'audits'])->middleware(['client.zone.session', 'app.module:audits'])->name('audits');
+    Route::get('/offers', [ClientZoneController::class, 'offers'])->middleware(['client.zone.session', 'app.module:offers'])->name('offers');
+    Route::get('/request-offer', [ClientZoneController::class, 'requestOffer'])->middleware(['client.zone.session', 'app.module:offers'])->name('request-offer');
+    Route::get('/documents', [ClientZoneController::class, 'documents'])->middleware(['client.zone.session', 'app.module:documents'])->name('documents');
+    Route::get('/chat', [ClientZoneController::class, 'chat'])->middleware(['client.zone.session', 'app.module:client_zone'])->name('chat');
+    Route::get('/users', [ClientZoneController::class, 'users'])->middleware(['client.zone.session', 'app.module:client_zone'])->name('users');
 });
 
-Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware(['auth', 'staff.role'])->name('audit-types.versions.preview');
+Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class, 'previewVersion'])->middleware(['auth', 'staff.role', 'app.module:audits'])->name('audit-types.versions.preview');
 
 Route::middleware(['auth', 'staff.role'])->group(function () {
-    Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
-    Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
-    Route::patch('/companies/{company}/modules', [CompanyController::class, 'updateModules'])
-        ->middleware('superadmin.only')->name('companies.modules.update');
-    Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
-    Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
-    Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');
-    Route::put('/companies/{company}/users/{user}', [CompanyController::class, 'updateUser'])->name('companies.users.update');
-    Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->name('companies.users.destroy');
-    Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
+    Route::middleware('app.module:crm')->group(function () {
+        Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
+        Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
+        Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
+        Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
+        Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');
+        Route::put('/companies/{company}/users/{user}', [CompanyController::class, 'updateUser'])->name('companies.users.update');
+        Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->name('companies.users.destroy');
+        Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
+    });
     Route::get('/profile', [ProfileController::class, 'edit'])->withoutMiddleware('staff.role')->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->withoutMiddleware('staff.role')->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware('staff.role')->name('profile.destroy');
 
-    Route::get('audit-types', [AuditTypeController::class, 'index'])->name('audit-types.index');
-    Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->name('audit-types.show');
-    Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->name('audit-types.versions.store');
-    Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->name('audit-types.versions.set-current');
+    Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
+    Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
+    Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->middleware('app.module:audits')->name('audit-types.versions.store');
+    Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware('app.module:audits')->name('audit-types.versions.set-current');
 
-    Route::prefix('offer-requests')->name('offer-requests.')->group(function () {
+    Route::prefix('offer-requests')->name('offer-requests.')->middleware('app.module:offers')->group(function () {
         Route::get('/create',                        [OfferRequestController::class, 'create'])->name('create');
         Route::post('/',                             [OfferRequestController::class, 'store'])->name('store');
         Route::get('/{offerRequest}',                [OfferRequestController::class, 'show'])->name('show');
@@ -119,7 +119,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::get('/{offerRequest}/pdf',            [OfferRequestController::class, 'pdf'])->name('pdf');
     });
 
-    Route::prefix('offer-forms')->name('offer-forms.')->group(function () {
+    Route::prefix('offer-forms')->name('offer-forms.')->middleware('app.module:offers')->group(function () {
         Route::get('/',                              [OfferFormTemplateController::class, 'index'])->name('index');
         Route::post('/',                             [OfferFormTemplateController::class, 'store'])->name('store');
         Route::put('/{offerForm}',                   [OfferFormTemplateController::class, 'update'])->name('update');
@@ -127,14 +127,14 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::patch('/{offerForm}/toggle',          [OfferFormTemplateController::class, 'toggleActive'])->name('toggle');
     });
 
-    Route::prefix('pricing-catalog')->name('pricing-catalog.')->middleware('staff.role')->group(function () {
+    Route::prefix('pricing-catalog')->name('pricing-catalog.')->middleware(['staff.role', 'app.module:offers'])->group(function () {
         Route::get('/', [PriceCatalogController::class, 'index'])->name('index');
         Route::post('/', [PriceCatalogController::class, 'store'])->name('store');
         Route::put('/{priceCatalogItem}', [PriceCatalogController::class, 'update'])->name('update');
         Route::patch('/{priceCatalogItem}/toggle', [PriceCatalogController::class, 'toggle'])->name('toggle');
     });
 
-    Route::prefix('chat')->name('chat.')->group(function () {
+    Route::prefix('chat')->name('chat.')->middleware('app.module:client_zone')->group(function () {
         Route::get('/',                                          [ChatController::class, 'index'])->name('index');
         Route::get('/{company}',                                 [ChatController::class, 'show'])->name('show');
         Route::post('/{company}/send',                           [ChatController::class, 'send'])->name('send');
@@ -143,7 +143,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::get('/{company}/archive/{conversationId}',        [ChatController::class, 'archiveConversation'])->name('archive');
     });
 
-    Route::prefix('offers')->name('offers.')->group(function () {
+    Route::prefix('offers')->name('offers.')->middleware('app.module:offers')->group(function () {
         Route::get('/template/{offer}',               [OfferController::class, 'getTemplate'])->name('template');
         Route::post('/ai-assist',                     [OfferController::class, 'aiAssist'])->name('ai-assist');
         Route::get('/',                              [OfferController::class, 'index'])->name('index');
@@ -207,7 +207,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         });
     });
 
-    Route::prefix('documents')->name('documents.')->group(function () {
+    Route::prefix('documents')->name('documents.')->middleware('app.module:documents')->group(function () {
         Route::get('/',                              [\App\Http\Controllers\DocumentController::class, 'index'])->name('index');
         Route::post('/',                             [\App\Http\Controllers\DocumentController::class, 'store'])->name('store');
         Route::get('/{document}/download',           [\App\Http\Controllers\DocumentController::class, 'download'])->name('download');
@@ -215,7 +215,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     });
 });
 
-Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role'])->group(function () {
+Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.module:crm'])->group(function () {
     Route::get('/', [CrmController::class, 'index'])->name('index');
     Route::patch('/companies/{company}/dashboard', [CrmController::class, 'toggleDashboard'])->name('companies.dashboard');
     Route::patch('/companies/{company}/archive', [CrmController::class, 'archiveCompany'])->name('companies.archive');

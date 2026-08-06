@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\CompanySettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,15 +31,11 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
-        if ($user->hasRole(['admin', 'auditor'])) {
-            return redirect()->intended(route('dashboard'));
-        }
-
         if ($user->hasRole(['client_admin', 'client_user'])) {
             return redirect()->intended(route('client.dashboard'));
         }
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route(CompanySettings::staffLandingRoute()));
     }
 
     /**

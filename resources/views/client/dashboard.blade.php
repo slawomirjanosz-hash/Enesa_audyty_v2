@@ -222,7 +222,11 @@
 
 @php
     $firstDashboardModule = collect(['offers', 'offer_requests', 'audits', 'documents', 'chat'])
-        ->first(fn (string $module) => $company->moduleEnabled($module));
+        ->first(fn (string $module) => match ($module) {
+            'offer_requests' => $appBrand?->moduleEnabled('offers') ?? true,
+            'chat' => $appBrand?->moduleEnabled('client_zone') ?? true,
+            default => $appBrand?->moduleEnabled($module) ?? true,
+        });
 @endphp
 
 {{-- Welcome --}}
@@ -233,7 +237,7 @@
 
 {{-- Stats --}}
 <div class="stats-grid">
-    @if($company->moduleEnabled('offers'))
+    @if($appBrand?->moduleEnabled('offers') ?? true)
     <div class="stat-card">
         <div class="stat-icon stat-icon-green"><i class="ti ti-file-invoice"></i></div>
         <div>
@@ -242,7 +246,7 @@
         </div>
     </div>
     @endif
-    @if($company->moduleEnabled('offer_requests'))
+    @if($appBrand?->moduleEnabled('offers') ?? true)
     <div class="stat-card">
         <div class="stat-icon stat-icon-blue"><i class="ti ti-inbox"></i></div>
         <div>
@@ -258,7 +262,7 @@
         </div>
     </div>
     @endif
-    @if($company->moduleEnabled('audits'))
+    @if($appBrand?->moduleEnabled('audits') ?? true)
     <div class="stat-card">
         <div class="stat-icon stat-icon-purple"><i class="ti ti-clipboard-check"></i></div>
         <div>
@@ -271,27 +275,27 @@
 
 {{-- Tabs --}}
 <div class="tabs-header">
-    @if($company->moduleEnabled('offers'))
+    @if($appBrand?->moduleEnabled('offers') ?? true)
     <button class="tab-btn {{ $firstDashboardModule === 'offers' ? 'active' : '' }}" onclick="switchTab('offers')">
         <i class="ti ti-file-invoice"></i> Oferty
     </button>
     @endif
-    @if($company->moduleEnabled('offer_requests'))
+    @if($appBrand?->moduleEnabled('offers') ?? true)
     <button class="tab-btn {{ $firstDashboardModule === 'offer_requests' ? 'active' : '' }}" onclick="switchTab('requests')">
         <i class="ti ti-send"></i> Zapytania
     </button>
     @endif
-    @if($company->moduleEnabled('audits'))
+    @if($appBrand?->moduleEnabled('audits') ?? true)
     <button class="tab-btn {{ $firstDashboardModule === 'audits' ? 'active' : '' }}" onclick="switchTab('audits')">
         <i class="ti ti-clipboard-check"></i> Audyty
     </button>
     @endif
-    @if($company->moduleEnabled('documents'))
+    @if($appBrand?->moduleEnabled('documents') ?? true)
     <button class="tab-btn {{ $firstDashboardModule === 'documents' ? 'active' : '' }}" onclick="switchTab('documents')">
         <i class="ti ti-files"></i> Dokumenty
     </button>
     @endif
-    @if($company->moduleEnabled('chat'))
+    @if($appBrand?->moduleEnabled('client_zone') ?? true)
     <button class="tab-btn {{ $firstDashboardModule === 'chat' ? 'active' : '' }}" onclick="switchTab('chat')">
         <i class="ti ti-message-2"></i> Chat
     </button>

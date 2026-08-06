@@ -271,9 +271,6 @@
         </a>
     </div>
 
-    @php
-        $moduleCompany = auth()->user()?->companies()->first();
-    @endphp
     <nav class="sidebar-nav">
         <ul>
             <li class="nav-item">
@@ -283,7 +280,7 @@
                 </a>
             </li>
 
-            @if($moduleCompany?->moduleEnabled('audits'))
+            @if($appBrand?->moduleEnabled('audits') ?? true)
             <li class="nav-item">
                 <a href="{{ route('client.audits') }}"
                    class="nav-link {{ request()->routeIs('client.audits') ? 'active' : '' }}">
@@ -292,7 +289,7 @@
             </li>
             @endif
 
-            @if($moduleCompany?->moduleEnabled('offer_requests'))
+            @if($appBrand?->moduleEnabled('offers') ?? true)
             <li class="nav-item">
                 <a href="{{ route('client.request-offer') }}"
                    class="nav-link {{ request()->routeIs('client.request-offer') ? 'active' : '' }}">
@@ -301,7 +298,7 @@
             </li>
             @endif
 
-            @if($moduleCompany?->moduleEnabled('offers'))
+            @if($appBrand?->moduleEnabled('offers') ?? true)
             <li class="nav-item">
                 <a href="{{ route('client.offers') }}"
                    class="nav-link {{ request()->routeIs('client.offers') ? 'active' : '' }}">
@@ -310,7 +307,7 @@
             </li>
             @endif
 
-            @if(auth()->user()->hasRole('client_admin') && $moduleCompany?->moduleEnabled('users'))
+            @if(auth()->user()->hasRole('client_admin') && ($appBrand?->moduleEnabled('client_zone') ?? true))
             <li class="nav-item">
                 <a href="{{ route('client.users') }}"
                    class="nav-link {{ request()->routeIs('client.users') ? 'active' : '' }}">
@@ -319,7 +316,7 @@
             </li>
             @endif
 
-            @if($moduleCompany?->moduleEnabled('documents'))
+            @if($appBrand?->moduleEnabled('documents') ?? true)
             <li class="nav-item">
                 <a href="{{ route('client.documents') }}"
                    class="nav-link {{ request()->routeIs('client.documents') ? 'active' : '' }}">
@@ -328,7 +325,7 @@
             </li>
             @endif
 
-            @if($moduleCompany?->moduleEnabled('chat'))
+            @if($appBrand?->moduleEnabled('client_zone') ?? true)
             <li class="nav-item">
                 <a href="{{ route('client.chat') }}"
                    class="nav-link {{ request()->routeIs('client.chat') ? 'active' : '' }}">
