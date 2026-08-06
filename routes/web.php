@@ -125,7 +125,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::patch('/{offerForm}/toggle',          [OfferFormTemplateController::class, 'toggleActive'])->name('toggle');
     });
 
-    Route::prefix('pricing-catalog')->name('pricing-catalog.')->middleware('full.staff')->group(function () {
+    Route::prefix('pricing-catalog')->name('pricing-catalog.')->middleware('staff.role')->group(function () {
         Route::get('/', [PriceCatalogController::class, 'index'])->name('index');
         Route::post('/', [PriceCatalogController::class, 'store'])->name('store');
         Route::put('/{priceCatalogItem}', [PriceCatalogController::class, 'update'])->name('update');
@@ -164,6 +164,11 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
 
     Route::prefix('settings')->name('settings.')->middleware('full.staff')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
+        Route::get('archive', [Settings\ArchiveController::class, 'index'])->name('archive.index');
+        Route::get('roles', [Settings\RoleController::class, 'index'])->name('roles.index');
+        Route::post('roles', [Settings\RoleController::class, 'store'])->name('roles.store');
+        Route::put('roles/{role}', [Settings\RoleController::class, 'update'])->name('roles.update');
+        Route::delete('roles/{role}', [Settings\RoleController::class, 'destroy'])->name('roles.destroy');
         Route::resource('users', Settings\UserController::class)->names('users')->except('destroy');
         Route::delete('users/{user}', [Settings\UserController::class, 'destroy'])
             ->middleware('auth')
@@ -193,9 +198,11 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
             ->name('users.auditor-access.destroy');
         Route::post('users/{user}/auditor-documents', [Settings\UserController::class, 'assignAuditorDocument'])
             ->name('users.auditor-documents');
-        Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
-        Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
-        Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
+        Route::middleware('superadmin.only')->group(function () {
+            Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
+            Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
+            Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
+        });
     });
 
     Route::prefix('documents')->name('documents.')->group(function () {

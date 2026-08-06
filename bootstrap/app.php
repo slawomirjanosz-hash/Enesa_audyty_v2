@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client.zone.session' => \App\Http\Middleware\EnsureClientZoneSession::class,
             'staff.role'         => \App\Http\Middleware\EnsureStaffRole::class,
             'full.staff'         => \App\Http\Middleware\EnsureFullStaffAccess::class,
+            'superadmin.only'    => \App\Http\Middleware\EnsureSuperAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

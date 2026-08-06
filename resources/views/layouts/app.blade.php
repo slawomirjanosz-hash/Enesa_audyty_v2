@@ -450,7 +450,7 @@
     <i class="ti ti-file-invoice"></i> Oferty
 </a></li>
                     <li><a href="{{ url('/offer-forms') }}" class="nav-link {{ request()->is('offer-forms*') ? 'active' : '' }}"><i class="ti ti-clipboard-list"></i> Formularze zapytań</a></li>
-                    @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
+                    @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) || auth()->user()->getAllPermissions()->contains('name', 'system.full_access'))
                     <li><a href="{{ route('pricing-catalog.index') }}" class="nav-link {{ request()->is('pricing-catalog*') ? 'active' : '' }}"><i class="ti ti-currency-zloty"></i> Cennik usług</a></li>
                     @endif
                 </ul>
@@ -463,7 +463,7 @@
                 </a>
             </li>
 
-            @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
+            @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) || auth()->user()->getAllPermissions()->contains('name', 'system.full_access'))
             <li class="nav-item">
                 <a href="{{ route('documents.index') }}"
                    class="nav-link {{ request()->routeIs('documents.index') ? 'active' : '' }}">
@@ -478,9 +478,11 @@
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
+                    @if(auth()->user()->hasRole('superadmin'))
                     <li><a href="{{ url('/settings/company') }}" class="nav-link">Dane firmy</a></li>
-                    <li><a href="{{ url('/settings/users') }}" class="nav-link">Użytkownicy</a></li>
-                    <li><a href="{{ url('/settings/roles') }}" class="nav-link">Role i uprawnienia</a></li>
+                    @endif
+                    <li><a href="{{ url('/settings/users') }}" class="nav-link {{ request()->routeIs('settings.users.*', 'settings.roles.*') ? 'active' : '' }}">Użytkownicy i role</a></li>
+                    <li><a href="{{ route('settings.archive.index') }}" class="nav-link {{ request()->routeIs('settings.archive.*') ? 'active' : '' }}">Archiwum</a></li>
                 </ul>
             </li>
         </ul>

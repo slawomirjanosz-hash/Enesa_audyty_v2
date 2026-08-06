@@ -14,7 +14,8 @@ class AuditorAccessService
 
     public function hasFullAccess(User $user): bool
     {
-        return $user->hasAnyRole(self::FULL_ACCESS_ROLES);
+        return $user->hasAnyRole(self::FULL_ACCESS_ROLES)
+            || $user->getAllPermissions()->contains('name', 'system.full_access');
     }
 
     public function isDelegatedAuditor(User $user): bool

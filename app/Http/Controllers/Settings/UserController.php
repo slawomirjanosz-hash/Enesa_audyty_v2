@@ -17,8 +17,6 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    private const MANAGED_ROLES = ['superadmin', 'admin', 'auditor_senior', 'auditor'];
-
     private const ROLE_RANKS = [
         'client_user' => 10,
         'client_admin' => 10,
@@ -32,12 +30,16 @@ class UserController extends Controller
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess(auth()->user()), 403);
 
+        if (request()->has('tab')) {
+            return redirect()->route('settings.archive.index');
+        }
+
         $users = User::with('roles')
-            ->whereHas('roles', fn ($q) => $q->whereIn('name', self::MANAGED_ROLES))
+            ->whereHas('roles', fn ($q) => $q->whereNotIn('name', ['client_admin', 'client_user']))
             ->orderByDesc('created_at')
             ->paginate(15);
 
-        $roles = Role::whereIn('name', self::MANAGED_ROLES)
+        $roles = Role::query()
             ->get()
             ->filter(fn (Role $role) => $this->canAssignRole(auth()->user(), $role->name))
             ->values();
@@ -59,7 +61,7 @@ class UserController extends Controller
 
         $archivedStaff = User::onlyTrashed()
             ->with('roles')
-            ->whereHas('roles', fn ($q) => $q->whereIn('name', ['admin', 'auditor', 'auditor_senior', 'superadmin']))
+            ->whereHas('roles', fn ($q) => $q->whereNotIn('name', ['client_admin', 'client_user']))
             ->orderByDesc('deleted_at')
             ->get();
         $archivedClients = User::onlyTrashed()
@@ -187,7 +189,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor', 'superadmin', 'client_admin', 'client_user'])],
+            'role'     => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
             'name.required'  => 'Imię i nazwisko jest wymagane.',
@@ -209,11 +211,10 @@ class UserController extends Controller
             'is_active' => true,
         ]);
 
-        Role::findOrCreate($data['role']);
         $user->assignRole($data['role']);
 
         // Auto-assign owner (Enesa) company for all staff roles
-        if (in_array($data['role'], Company::STAFF_ROLES)) {
+        if ($this->isStaffRole($data['role'])) {
             $ownerCompany = Company::owner()->first() ?? $this->ensureOwnerCompany();
             if ($ownerCompany && !$user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
                 $user->companies()->attach($ownerCompany->id);
@@ -246,7 +247,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', Rule::in(['admin', 'auditor_senior', 'auditor', 'superadmin', 'client_admin', 'client_user'])],
+            'role'     => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
             'name.required'  => 'Imię i nazwisko jest wymagane.',
@@ -271,7 +272,6 @@ class UserController extends Controller
         $user->save();
 
         if (!$user->hasRole('superadmin')) {
-            Role::findOrCreate($data['role']);
             $user->syncRoles([$data['role']]);
         }
 
@@ -456,13 +456,19 @@ class UserController extends Controller
 
     private function canAssignRole(User $manager, string $role): bool
     {
+        // Only administrators may delegate roles created in the Roles screen.
+        // A senior auditor must never be able to turn somebody into a full-access user.
+        if (! array_key_exists($role, self::ROLE_RANKS)) {
+            return $manager->hasAnyRole(['superadmin', 'admin']);
+        }
+
         return $this->roleRank($manager) > (self::ROLE_RANKS[$role] ?? PHP_INT_MAX);
     }
 
     private function roleRank(User $user): int
     {
         return collect($user->getRoleNames())
-            ->map(fn (string $role) => self::ROLE_RANKS[$role] ?? 0)
+            ->map(fn (string $role) => self::ROLE_RANKS[$role] ?? 35)
             ->max() ?? 0;
     }
 
@@ -470,10 +476,15 @@ class UserController extends Controller
     {
         $companies = $user->companies()->whereNull('companies.archived_at');
 
-        if ($user->hasAnyRole(Company::STAFF_ROLES)) {
+        if ($user->getRoleNames()->contains(fn (string $role) => $this->isStaffRole($role))) {
             return $companies->where('companies.is_owner', false)->exists();
         }
 
         return $companies->exists();
+    }
+
+    private function isStaffRole(string $role): bool
+    {
+        return ! in_array($role, ['client_admin', 'client_user'], true);
     }
 }

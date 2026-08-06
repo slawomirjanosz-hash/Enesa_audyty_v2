@@ -14,8 +14,10 @@ class DocumentController extends Controller
 {
     private function ensureStaffAccess(): void
     {
+        $user = auth()->user();
+
         abort_unless(
-            auth()->user()?->hasAnyRole(['superadmin', 'admin', 'auditor_senior', 'auditor']),
+            $user?->hasRole('auditor') || app(AuditorAccessService::class)->hasFullAccess($user),
             403,
             'Brak uprawnień do dokumentów.'
         );

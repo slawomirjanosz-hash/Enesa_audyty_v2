@@ -210,24 +210,11 @@
     <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
         <i class="ti ti-users" style="margin-right:6px;"></i>Wszyscy użytkownicy
     </a>
-    <a href="{{ route('settings.company') }}" class="settings-tab">
-        <i class="ti ti-building" style="margin-right:6px;"></i>Dane firmy
-    </a>
-    <a href="#" class="settings-tab">
+    @if(auth()->user()->hasAnyRole(['superadmin', 'admin']))
+    <a href="{{ route('settings.roles.index') }}" class="settings-tab">
         <i class="ti ti-shield-lock" style="margin-right:6px;"></i>Role
     </a>
-    <a href="{{ route('settings.users.index') }}?tab=firmy" class="settings-tab {{ request('tab') === 'firmy' ? 'active' : '' }}">
-        <i class="ti ti-archive" style="margin-right:6px;"></i>Zarchiwizowane firmy
-        @if($archivedCompanies->count() > 0)
-            <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedCompanies->count() }}</span>
-        @endif
-    </a>
-    <a href="{{ route('settings.users.index') }}?tab=archiwum" class="settings-tab {{ request('tab') === 'archiwum' ? 'active' : '' }}">
-        <i class="ti ti-archive" style="margin-right:6px;"></i>Archiwum użytkowników
-        @if(($archivedStaff->count() + $archivedClients->count()) > 0)
-            <span style="background:#C62828;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:4px;">{{ $archivedStaff->count() + $archivedClients->count() }}</span>
-        @endif
-    </a>
+    @endif
 </div>
 
 {{-- Flash messages --}}
@@ -758,12 +745,9 @@
                     <label class="mf-label" for="add_role">Rola *</label>
                     <select id="add_role" name="role" class="mf-select mf-input" required style="{{ $errors->has('role') ? 'border-color:#ef4444;' : '' }}">
                         <option value="">— wybierz —</option>
-                        <option value="superadmin"    {{ old('role') === 'superadmin'    ? 'selected' : '' }}>Super Admin</option>
-                        <option value="admin"          {{ old('role') === 'admin'          ? 'selected' : '' }}>Administrator</option>
-                        <option value="auditor_senior" {{ old('role') === 'auditor_senior' ? 'selected' : '' }}>Audytor Senior</option>
-                        <option value="auditor"        {{ old('role') === 'auditor'        ? 'selected' : '' }}>Audytor</option>
-                        <option value="client_admin"   {{ old('role') === 'client_admin'   ? 'selected' : '' }}>Klient - Admin</option>
-                        <option value="client_user"    {{ old('role') === 'client_user'    ? 'selected' : '' }}>Klient - User</option>
+                        @foreach($roles as $availableRole)
+                            <option value="{{ $availableRole->name }}" {{ old('role') === $availableRole->name ? 'selected' : '' }}>{{ str($availableRole->name)->replace('_', ' ')->title() }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -807,11 +791,9 @@
                 <div class="mf-group">
                     <label class="mf-label" for="edit_role">Rola</label>
                     <select id="edit_role" name="role" class="mf-select mf-input" required>
-                        <option value="admin">Administrator</option>
-                        <option value="auditor_senior">Audytor Senior</option>
-                        <option value="auditor">Audytor</option>
-                        <option value="client_admin">Klient - Admin</option>
-                        <option value="client_user">Klient - User</option>
+                        @foreach($roles as $availableRole)
+                            <option value="{{ $availableRole->name }}">{{ str($availableRole->name)->replace('_', ' ')->title() }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
