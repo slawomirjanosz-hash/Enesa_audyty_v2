@@ -266,6 +266,8 @@ class CompanyController extends Controller
 
     public function storeUser(Request $request, Company $company)
     {
+        $this->authorize('update', $company);
+
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -333,6 +335,8 @@ class CompanyController extends Controller
 
     public function assignExisting(Request $request, Company $company)
     {
+        $this->authorize('update', $company);
+
         $request->validate(['email' => ['required', 'email']]);
 
         $user = User::where('email', $request->email)->firstOrFail();
@@ -345,8 +349,11 @@ class CompanyController extends Controller
             ->with('success', 'Istniejący użytkownik został przypisany do firmy.');
     }
 
-    public function destroyUser(Request $request, Company $company, User $user)
+    public function destroyUser(Company $company, User $user)
     {
+        $this->authorize('update', $company);
+        abort_unless($company->users()->whereKey($user->id)->exists(), 404);
+
         $company->users()->detach($user->id);
 
         return redirect()->route('companies.show', $company)
@@ -355,6 +362,9 @@ class CompanyController extends Controller
 
     public function updateUser(Request $request, Company $company, User $user)
     {
+        $this->authorize('update', $company);
+        abort_unless($company->users()->whereKey($user->id)->exists(), 404);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -391,6 +401,8 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $cleanNip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
         $request->merge([
             'nip' => $cleanNip,
@@ -414,7 +426,7 @@ class CompanyController extends Controller
         ]));
 
         if ($company->company_type === 'client') {
-            Mail::to(env('ADMIN_EMAIL', 'proximalumine@gmail.com'))
+            Mail::to(config('mail.admin_email'))
                 ->send(new ClientRegistered($company, $request->user() ?? auth()->user()));
         }
 
@@ -425,6 +437,8 @@ class CompanyController extends Controller
 
     public function destroy(Company $company)
     {
+        $this->authorize('delete', $company);
+
         // If company is already archived, hard-delete it
         if ($company->archived_at) {
             // First, hard-delete the pivot records
@@ -457,6 +471,8 @@ class CompanyController extends Controller
 
     public function restore(Company $company)
     {
+        $this->authorize('update', $company);
+
         $company->update([
             'archived_at' => null,
             'status' => 'active',

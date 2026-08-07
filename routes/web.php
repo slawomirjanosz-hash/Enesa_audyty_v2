@@ -31,12 +31,12 @@ Route::get('/', [LandingPageController::class, 'show'])->name('home');
 Route::get('/branding/logo', [BrandingController::class, 'logo'])->name('branding.logo');
 
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
-Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');
+Route::post('/rejestracja', [RegistrationController::class, 'register'])->middleware('throttle:5,1')->name('register.client.store');
 
 // Publiczna ankieta dla klienta końcowego (bez logowania, white-label)
 Route::get('/f/{token}', [PublicSurveyController::class, 'show'])->middleware('app.module:audits')->name('public.survey.show');
-Route::post('/f/{token}', [PublicSurveyController::class, 'submit'])->middleware('app.module:audits')->name('public.survey.submit');
-Route::post('/f/{token}/pdf', [PublicSurveyController::class, 'pdf'])->middleware('app.module:audits')->name('public.survey.pdf');
+Route::post('/f/{token}', [PublicSurveyController::class, 'submit'])->middleware(['app.module:audits', 'throttle:20,1'])->name('public.survey.submit');
+Route::post('/f/{token}/pdf', [PublicSurveyController::class, 'pdf'])->middleware(['app.module:audits', 'throttle:10,1'])->name('public.survey.pdf');
 
 Route::get('/companies', function () {
     return redirect()->route('crm.index');
@@ -76,7 +76,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
     Route::delete('/users/{user}/permanent', [ClientUserController::class, 'permanentDelete'])->middleware(['client.admin', 'app.module:client_zone'])->name('users.permanent-delete');
 });
 
-Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role', 'app.module:client_zone'])->group(function () {
+Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role', 'full.staff', 'app.module:client_zone'])->group(function () {
     Route::get('/',  [ClientZoneController::class, 'index'])->name('index');
     Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
     Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');

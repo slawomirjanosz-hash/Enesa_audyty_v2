@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditType;
 use App\Models\AuditTypeVersion;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 
 class AuditTypeController extends Controller
@@ -27,6 +28,8 @@ class AuditTypeController extends Controller
 
     public function storeVersion(Request $request, AuditType $auditType)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $data = $request->validate([
             'version_number' => ['required', 'string', 'max:50'],
             'html_file'      => ['required', 'file', 'mimetypes:text/html,application/octet-stream', 'max:2048'],
@@ -47,6 +50,8 @@ class AuditTypeController extends Controller
 
     public function setAsCurrent(AuditTypeVersion $version)
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess(request()->user()), 403);
+
         $version->auditType->versions()->update(['is_current' => false]);
         $version->update(['is_current' => true]);
 

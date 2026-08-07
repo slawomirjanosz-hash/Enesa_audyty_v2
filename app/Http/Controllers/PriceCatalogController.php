@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PriceCatalogItem;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -19,6 +20,8 @@ class PriceCatalogController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         PriceCatalogItem::create($this->validatedData($request));
 
         return redirect()->route('pricing-catalog.index')->with('success', 'Pozycja cennika została dodana.');
@@ -26,6 +29,8 @@ class PriceCatalogController extends Controller
 
     public function update(Request $request, PriceCatalogItem $priceCatalogItem): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $priceCatalogItem->update($this->validatedData($request, $priceCatalogItem));
 
         return redirect()->route('pricing-catalog.index')->with('success', 'Pozycja cennika została zapisana.');
@@ -33,6 +38,8 @@ class PriceCatalogController extends Controller
 
     public function toggle(PriceCatalogItem $priceCatalogItem): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess(request()->user()), 403);
+
         $priceCatalogItem->update(['is_active' => ! $priceCatalogItem->is_active]);
 
         return redirect()->route('pricing-catalog.index')->with('success', 'Status pozycji cennika został zmieniony.');

@@ -1,59 +1,73 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# System zarządzania firmą
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikacja Laravel wspierająca obsługę klientów i dostawców, CRM, oferty, audyty, projekty, harmonogramy Gantta, finanse, zapotrzebowania, dokumenty i strefę klienta. Widoczność modułów można ustawić osobno dla każdego wdrożenia w `Ustawienia → Dane firmy`.
 
-## About Laravel
+## Wymagania
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.2 lub nowszy z rozszerzeniami GD i ZIP
+- Composer 2
+- Node.js i npm
+- MySQL/MariaDB w środowisku produkcyjnym; testy używają SQLite
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Uruchomienie lokalne
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate
+npm ci
+npm run build
+php artisan serve
+```
 
-## Learning Laravel
+Na Windows plik `.env.example` można również skopiować ręcznie. Dane pierwszego administratora należy utworzyć odpowiednim seederem lub w istniejącym procesie administracyjnym.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Kontrola jakości
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+php artisan test
+npm run build
+composer audit --locked --no-dev
+npm audit
+```
 
-## Laravel Sponsors
+Testy funkcjonalne obejmują uprawnienia, moduły aplikacji, klientów, dostawców, projekty, finanse, import Excela i Gantta.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Konfiguracja środowiska
 
-### Premium Partners
+Najważniejsze zmienne znajdują się w `.env.example`. W produkcji należy ustawić co najmniej:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL` i `APP_KEY`
+- połączenie `DB_*`
+- `MAIL_MAILER`, `MAIL_FROM_*`, `ADMIN_EMAIL` i klucz wybranego dostawcy poczty
+- `PUBLIC_SURVEY_URL`, jeśli publiczne formularze mają korzystać z innej domeny
+- `APP_TIMEZONE=Europe/Warsaw`
 
-## Contributing
+Nie należy przechowywać prawdziwych kluczy ani haseł w repozytorium.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Railway
 
-## Code of Conduct
+Plik `nixpacks.toml` instaluje zależności PHP i Node, buduje zasoby Vite, cache'uje Laravel, tworzy dowiązanie storage oraz wykonuje migracje przy starcie.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Przypomnienia o zaległych zadaniach korzystają z harmonogramu Laravel. Na Railway trzeba dodać osobny Cron Job uruchamiany co minutę:
 
-## Security Vulnerabilities
+```bash
+php artisan schedule:run
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Harmonogram aplikacji sam wysyła przypomnienia codziennie o 08:00 czasu `Europe/Warsaw`. Obecne wiadomości e-mail są wysyłane synchronicznie, więc osobny worker kolejki nie jest wymagany.
 
-## License
+## Struktura modułów
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `CompanySettings::enabled_modules` steruje dostępnością modułów całego wdrożenia.
+- Dostęp pracowników do klientów i dokumentów jest ograniczany przez `AuditorAccessService` i polityki Laravel.
+- Klienci korzystają wyłącznie ze strefy klienta; trasy pracowników są chronione middleware `staff.role`.
+- Dostawcy są oddzieleni od klientów przez `companies.company_type`.
+- Projekt może być wewnętrzny (`company_id = null`) albo przypisany do klienta.
+
+## Dalsza rozbudowa
+
+Największe starsze widoki i kontrolery zawierają nadal dużo kodu w pojedynczych plikach. Nowe funkcje warto dodawać jako osobne serwisy, Form Requesty i komponenty Blade/Livewire zamiast rozszerzać szczególnie `OfferController`, `companies/show.blade.php`, `offers/edit.blade.php` i `crm/index.blade.php`.
+
+Globalna kontrola Laravel Pint nie jest jeszcze częścią CI, ponieważ starsze pliki wymagają osobnego, mechanicznego uporządkowania formatowania. Taką zmianę najlepiej wykonać w oddzielnym commicie, bez łączenia jej z rozwojem funkcji.

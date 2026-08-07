@@ -85,10 +85,6 @@
         }
     },
     "config": {
-        "platform-check": false,
-        "platform": {
-            "ext-gd": "1.0"
-        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,

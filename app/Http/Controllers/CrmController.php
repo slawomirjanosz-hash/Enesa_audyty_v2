@@ -317,6 +317,8 @@ if ($authUser->hasRole('superadmin')) {
 
     public function detachOrphanedUser($assignmentId): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess(request()->user()), 403);
+
         $assignment = DB::table('company_user')->find($assignmentId);
 
         if (!$assignment) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OfferFormTemplate;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -20,6 +21,8 @@ class OfferFormTemplateController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -47,6 +50,8 @@ class OfferFormTemplateController extends Controller
 
     public function update(Request $request, OfferFormTemplate $offerForm): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -71,16 +76,20 @@ class OfferFormTemplateController extends Controller
             ->with('success', 'Formularz został zaktualizowany.');
     }
 
-    public function destroy(OfferFormTemplate $offerForm): RedirectResponse
+    public function destroy(Request $request, OfferFormTemplate $offerForm): RedirectResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $offerForm->delete();
 
         return redirect()->route('offer-forms.index')
             ->with('success', 'Formularz został usunięty.');
     }
 
-    public function toggleActive(OfferFormTemplate $offerForm): \Illuminate\Http\JsonResponse
+    public function toggleActive(Request $request, OfferFormTemplate $offerForm): \Illuminate\Http\JsonResponse
     {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
         $offerForm->update(['is_active' => !$offerForm->is_active]);
 
         return response()->json(['is_active' => $offerForm->is_active]);

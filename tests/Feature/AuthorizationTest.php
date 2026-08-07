@@ -112,3 +112,82 @@ test('admin can create and delegate a custom role without granting company setti
 test('guest is redirected to login for CRM', function () {
     $this->get('/crm')->assertRedirect(route('login'));
 });
+
+test('delegated auditor cannot modify companies or their users', function () {
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+
+    $company = Company::create(['name' => 'Firma chroniona']);
+    $client = User::factory()->create();
+    $client->assignRole('client_user');
+    $company->users()->attach($client, ['is_admin' => false]);
+
+    $this->actingAs($auditor)
+        ->post('/companies', ['name' => 'Niedozwolona firma', 'company_type' => 'client'])
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->post("/companies/{$company->id}/users", [])
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->put("/companies/{$company->id}/users/{$client->id}", [])
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->delete("/companies/{$company->id}/users/{$client->id}")
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->delete("/companies/{$company->id}")
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->post("/companies/{$company->id}/restore")
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->delete('/crm/orphaned-users/999999')
+        ->assertForbidden();
+
+    expect(Company::where('name', 'Niedozwolona firma')->exists())->toBeFalse()
+        ->and($company->users()->whereKey($client->id)->exists())->toBeTrue();
+});
+
+test('company user update cannot target a user from another company', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $firstCompany = Company::create(['name' => 'Pierwsza firma']);
+    $secondCompany = Company::create(['name' => 'Druga firma']);
+    $client = User::factory()->create();
+    $client->assignRole('client_user');
+    $secondCompany->users()->attach($client, ['is_admin' => false]);
+
+    $this->actingAs($admin)
+        ->put("/companies/{$firstCompany->id}/users/{$client->id}", [
+            'name' => 'Nieautoryzowana zmiana',
+            'email' => $client->email,
+            'role' => 'client_user',
+        ])
+        ->assertNotFound();
+
+    expect($client->fresh()->name)->not->toBe('Nieautoryzowana zmiana');
+});
+
+test('delegated auditor cannot mutate shared configuration or impersonate clients', function () {
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+
+    $this->actingAs($auditor)
+        ->post('/pricing-catalog', [])
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->post('/offer-forms', [])
+        ->assertForbidden();
+
+    $this->actingAs($auditor)
+        ->get('/client-zone')
+        ->assertForbidden();
+});
