@@ -62,6 +62,7 @@ test('project editor changes an internal project into a client project', functio
     $this->actingAs($admin)->get(route('projects.show', $project))
         ->assertOk()
         ->assertSee('Edytuj projekt')
+        ->assertSee("document.getElementById('project-edit-modal').classList.add('open')", false)
         ->assertSee('Projekt dla klienta: Klient przypisany');
 
     $this->actingAs($admin)->put(route('projects.update', $project), [
