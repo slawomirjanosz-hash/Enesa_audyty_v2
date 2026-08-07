@@ -4,16 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
     protected $fillable = [
         'title', 'description', 'assigned_to', 'created_by',
-        'company_id', 'offer_id', 'status', 'priority', 'due_date',
+        'company_id', 'offer_id', 'project_id', 'depends_on_task_id', 'status', 'priority', 'start_date', 'due_date', 'progress', 'project_position',
     ];
 
     protected $casts = [
         'due_date' => 'date',
+        'start_date' => 'date',
+        'progress' => 'integer',
+        'project_position' => 'integer',
     ];
 
     public function assignedUser(): BelongsTo
@@ -34,6 +38,21 @@ class Task extends Model
     public function offer(): BelongsTo
     {
         return $this->belongsTo(Offer::class);
+    }
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function dependency(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'depends_on_task_id');
+    }
+
+    public function dependents(): HasMany
+    {
+        return $this->hasMany(self::class, 'depends_on_task_id');
     }
 
     public function scopeForUser($query, $userId)

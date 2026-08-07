@@ -237,6 +237,9 @@
 @if(session('success'))
     <div class="alert alert-success"><i class="ti ti-circle-check"></i> {{ session('success') }}</div>
 @endif
+@if(session('temporary_password'))
+    <div class="alert alert-success"><i class="ti ti-key"></i> Hasło tymczasowe nowego użytkownika: <strong style="font-family:monospace;font-size:15px;user-select:all;">{{ session('temporary_password') }}</strong>. Zapisz je teraz — później nie będzie ponownie widoczne.</div>
+@endif
 @if(session('error'))
     <div class="alert alert-error"><i class="ti ti-alert-circle"></i> {{ session('error') }}</div>
 @endif
@@ -378,9 +381,9 @@
     <div class="modal-box" onclick="event.stopPropagation()">
         <button class="modal-close-btn" onclick="closeAddModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-user-plus" style="margin-right:8px;"></i>Nowy użytkownik</div>
-        <div class="modal-subtitle">Wypełnij dane — użytkownik otrzyma email z tymczasowym hasłem.</div>
+        <div class="modal-subtitle">Wypełnij dane i zdecyduj, czy wysłać klientowi dane dostępowe.</div>
 
-        <form id="addUserForm" method="POST" action="{{ route('client.users.store') }}">
+        <form id="addUserForm" method="POST" action="{{ route('client.users.store') }}" onsubmit="return !this.elements.send_email.checked || confirm('Wysłać klientowi dane dostępowe mailem?');">
             @csrf
             <div class="mf-row">
                 <div class="mf-group">
@@ -425,8 +428,13 @@
                 </div>
             </div>
 
+            <label style="display:flex;align-items:center;gap:8px;margin:14px 0;font-size:13px;cursor:pointer;">
+                <input type="checkbox" name="send_email" value="1">
+                Wyślij klientowi mail z hasłem tymczasowym
+            </label>
+
             <button type="submit" class="btn-modal-submit">
-                <i class="ti ti-send" style="margin-right:6px;"></i>Dodaj i wyślij email
+                <i class="ti ti-user-plus" style="margin-right:6px;"></i>Dodaj użytkownika
             </button>
         </form>
     </div>

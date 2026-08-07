@@ -6,15 +6,18 @@ use App\Mail\ClientAccepted;
 use App\Mail\ClientRegistered;
 use App\Mail\NewClientUser;
 use App\Models\Company;
-use App\Models\CrmOpportunity;
 use App\Models\CrmActivity;
+use App\Models\CrmOpportunity;
+use App\Models\Document;
+use App\Models\OfferRequest;
 use App\Models\User;
+use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use App\Services\AuditorAccessService;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
@@ -78,21 +81,21 @@ class CompanyController extends Controller
         // Wykryj czy nazwa jest zapisana WIELKIMI LITERAMI (porównujemy tylko litery,
         // ignorując cyfry, spacje i znaki specjalne, żeby nie dać się zmylić np. przez "sp.").
         $lettersOnly = preg_replace('/[^\p{L}]/u', '', $name);
-        $isUpperCase = !empty($lettersOnly) && $lettersOnly === mb_strtoupper($lettersOnly, 'UTF-8');
+        $isUpperCase = ! empty($lettersOnly) && $lettersOnly === mb_strtoupper($lettersOnly, 'UTF-8');
 
         // Kolejność ma znaczenie: dłuższe/złożone frazy muszą być zamieniane PRZED krótszymi,
         // żeby np. "spółka komandytowa" nie zostało podmienione zanim wykryjemy pełną frazę
         // "spółka z ograniczoną odpowiedzialnością spółka komandytowa".
         $replacements = [
             '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\s+spółka\s+komandytowo-akcyjna\b/iu' => 'sp. z o.o. S.K.A.',
-            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\s+spółka\s+komandytowa\b/iu'          => 'sp. z o.o. sp.k.',
-            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\b/iu'                                  => 'sp. z o.o.',
-            '/\bspółka\s+komandytowo-akcyjna\b/iu'                                                   => 'S.K.A.',
-            '/\bspółka\s+komandytowa\b/iu'                                                           => 'sp.k.',
-            '/\bspółka\s+jawna\b/iu'                                                                 => 'sp.j.',
-            '/\bspółka\s+partnerska\b/iu'                                                            => 'sp.p.',
-            '/\bspółka\s+akcyjna\b/iu'                                                               => 'S.A.',
-            '/\bspółka\s+cywilna\b/iu'                                                               => 's.c.',
+            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\s+spółka\s+komandytowa\b/iu' => 'sp. z o.o. sp.k.',
+            '/\bspółka\s+z\s+ograniczoną\s+odpowiedzialnością\b/iu' => 'sp. z o.o.',
+            '/\bspółka\s+komandytowo-akcyjna\b/iu' => 'S.K.A.',
+            '/\bspółka\s+komandytowa\b/iu' => 'sp.k.',
+            '/\bspółka\s+jawna\b/iu' => 'sp.j.',
+            '/\bspółka\s+partnerska\b/iu' => 'sp.p.',
+            '/\bspółka\s+akcyjna\b/iu' => 'S.A.',
+            '/\bspółka\s+cywilna\b/iu' => 's.c.',
         ];
 
         foreach ($replacements as $pattern => $abbreviation) {
@@ -164,12 +167,12 @@ class CompanyController extends Controller
             'can_view_dashboard'
         )->get();
 
-        $offerRequests = $access->scopeByCompanyAccess(\App\Models\OfferRequest::with('offerFormTemplate', 'offers')
+        $offerRequests = $access->scopeByCompanyAccess(OfferRequest::with('offerFormTemplate', 'offers')
             ->where('company_id', $company->id)
             ->orderByDesc('created_at'), $user, 'can_view_offer_requests')
             ->get();
 
-        $documents = $access->scopeDocumentsVisibleTo(\App\Models\Document::with('uploader', 'offer')
+        $documents = $access->scopeDocumentsVisibleTo(Document::with('uploader', 'offer')
             ->where('company_id', $company->id)
             ->orderByDesc('updated_at'), $user)
             ->get();
@@ -182,20 +185,20 @@ class CompanyController extends Controller
         $this->authorize('update', $company);
 
         $data = $request->validate([
-            'name'    => ['required', 'string', 'max:255'],
-            'nip'     => ['nullable', 'string', 'max:20'],
-            'email'   => ['nullable', 'email', 'max:255'],
-            'phone'   => ['nullable', 'string', 'max:50'],
+            'name' => ['required', 'string', 'max:255'],
+            'nip' => ['nullable', 'string', 'max:20'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
-            'city'    => ['nullable', 'string', 'max:100'],
-            'notes'   => ['nullable', 'string'],
-            'source'  => ['nullable', 'string', 'max:100'],
-            'logo'    => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'notes' => ['nullable', 'string'],
+            'source' => ['nullable', 'string', 'max:100'],
+            'logo' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
         ]);
 
         if ($request->hasFile('logo')) {
-            if ($company->logo_path && \Illuminate\Support\Facades\Storage::disk('local')->exists($company->logo_path)) {
-                \Illuminate\Support\Facades\Storage::disk('local')->delete($company->logo_path);
+            if ($company->logo_path && Storage::disk('local')->exists($company->logo_path)) {
+                Storage::disk('local')->delete($company->logo_path);
             }
             $data['logo_path'] = $request->file('logo')->store('company-logos', 'local');
         }
@@ -207,9 +210,10 @@ class CompanyController extends Controller
         return redirect()->back()->with('success', 'Dane firmy zostały zaktualizowane.');
     }
 
-    public function accept(Company $company)
+    public function accept(Request $request, Company $company)
     {
         $this->authorize('update', $company);
+        $request->validate(['send_email' => ['nullable', 'boolean']]);
 
         if ($company->status === 'pending') {
             $company->update(['status' => 'active']);
@@ -218,24 +222,27 @@ class CompanyController extends Controller
 
             $clientAdmin = $company->users()->wherePivot('is_admin', true)->first();
 
-            if ($clientAdmin) {
+            if ($clientAdmin && $request->boolean('send_email')) {
                 Mail::to($clientAdmin->email)->send(new ClientAccepted($company));
             }
         }
 
         return redirect()->route('companies.show', $company)
-            ->with('success', 'Klient został zaakceptowany');
+            ->with('success', $request->boolean('send_email')
+                ? 'Klient został zaakceptowany i otrzymał wiadomość e-mail.'
+                : 'Klient został zaakceptowany bez wysyłania wiadomości e-mail.');
     }
 
     public function storeUser(Request $request, Company $company)
     {
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name'  => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'email', 'max:255'],
-            'phone'      => ['nullable', 'string', 'max:30'],
-            'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
-            'password'   => ['required', 'string', 'min:8'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role' => ['required', Rule::in(['client_admin', 'client_user'])],
+            'password' => ['required', 'string', 'min:8'],
+            'send_email' => ['nullable', 'boolean'],
         ]);
 
         // Check for existing user (including soft-deleted)
@@ -247,7 +254,7 @@ class CompanyController extends Controller
                 DB::transaction(function () use ($existing, $data, $company) {
                     $existing->restore();
                     $existing->syncRoles([$data['role']]);
-                    if (!$company->users()->where('user_id', $existing->id)->exists()) {
+                    if (! $company->users()->where('user_id', $existing->id)->exists()) {
                         $company->users()->attach($existing->id, [
                             'is_admin' => $data['role'] === 'client_admin',
                         ]);
@@ -269,10 +276,10 @@ class CompanyController extends Controller
 
         DB::transaction(function () use ($data, $company, &$user, $plainPassword) {
             $user = User::create([
-                'name'      => trim($data['first_name'] . ' ' . $data['last_name']),
-                'email'     => $data['email'],
-                'phone'     => $data['phone'] ?? null,
-                'password'  => Hash::make($plainPassword),
+                'name' => trim($data['first_name'].' '.$data['last_name']),
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'password' => Hash::make($plainPassword),
                 'is_active' => true,
             ]);
 
@@ -283,12 +290,14 @@ class CompanyController extends Controller
             ]);
         });
 
-        if ($user?->email) {
+        if ($user?->email && $request->boolean('send_email')) {
             Mail::to($user->email)->send(new NewClientUser($user, $company, $plainPassword));
         }
 
         return redirect()->route('companies.show', $company)
-            ->with('success', 'Użytkownik został dodany do firmy.');
+            ->with('success', $request->boolean('send_email')
+                ? 'Użytkownik został dodany do firmy, a dane dostępowe wysłano mailem.'
+                : 'Użytkownik został dodany do firmy bez wysyłania maila.');
     }
 
     public function assignExisting(Request $request, Company $company)
@@ -297,7 +306,7 @@ class CompanyController extends Controller
 
         $user = User::where('email', $request->email)->firstOrFail();
 
-        if (!$company->users()->where('user_id', $user->id)->exists()) {
+        if (! $company->users()->where('user_id', $user->id)->exists()) {
             $company->users()->attach($user->id, ['is_admin' => false]);
         }
 
@@ -316,22 +325,22 @@ class CompanyController extends Controller
     public function updateUser(Request $request, Company $company, User $user)
     {
         $data = $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
-            'role'  => ['required', Rule::in(['client_admin', 'client_user'])],
+            'role' => ['required', Rule::in(['client_admin', 'client_user'])],
             'password' => ['nullable', 'string', 'min:8'],
         ]);
 
         // Update user data
         $updateData = [
-            'name'  => $data['name'],
+            'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
         ];
 
         // Only update password if provided
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $updateData['password'] = Hash::make($data['password']);
         }
 
@@ -380,20 +389,20 @@ class CompanyController extends Controller
             DB::table('company_user')
                 ->where('company_id', $company->id)
                 ->delete();
-            
+
             // Then hard-delete the company
             $company->delete();
-            
+
             return redirect()->route('settings.users.index', ['tab' => 'firmy'])
                 ->with('success', 'Zarchiwizowana firma została trwale usunięta.');
         }
-        
+
         // Otherwise, archive the company
         $company->update([
             'archived_at' => now(),
             'status' => 'archived',
         ]);
-        
+
         // Soft-delete all user-company relationships (mark pivot as deleted)
         DB::table('company_user')
             ->where('company_id', $company->id)

@@ -23,7 +23,7 @@ class UserController extends Controller
                 ->with('error', 'Twoje konto nie jest przypisane do żadnej firmy.');
         }
 
-        $users         = $company->users()->get();
+        $users = $company->users()->get();
         $archivedUsers = $company->archivedUsers()->get();
 
         return view('client.users', compact('company', 'users', 'archivedUsers'));
@@ -35,10 +35,11 @@ class UserController extends Controller
 
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name'  => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'email', 'max:255'],
-            'phone'      => ['nullable', 'string', 'max:30'],
-            'is_admin'   => ['required', 'boolean'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'is_admin' => ['required', 'boolean'],
+            'send_email' => ['nullable', 'boolean'],
         ]);
 
         $existingUser = User::where('email', $data['email'])->first();
@@ -65,10 +66,10 @@ class UserController extends Controller
         $temporaryPassword = Str::random(10);
 
         $user = User::create([
-            'name'      => $data['first_name'] . ' ' . $data['last_name'],
-            'email'     => $data['email'],
-            'phone'     => $data['phone'] ?? null,
-            'password'  => Hash::make($temporaryPassword),
+            'name' => $data['first_name'].' '.$data['last_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'password' => Hash::make($temporaryPassword),
             'is_active' => true,
         ]);
 
@@ -78,10 +79,18 @@ class UserController extends Controller
 
         $company->users()->attach($user->id, ['is_admin' => (bool) $data['is_admin']]);
 
-        Mail::to($user->email)->send(new NewClientUser($user, $company, $temporaryPassword));
+        if ($request->boolean('send_email')) {
+            Mail::to($user->email)->send(new NewClientUser($user, $company, $temporaryPassword));
+        }
 
-        return redirect()->route('client.users')
-            ->with('success', 'Użytkownik został dodany i otrzymał dane dostępowe mailem.');
+        $response = redirect()->route('client.users')
+            ->with('success', $request->boolean('send_email')
+                ? 'Użytkownik został dodany i otrzymał dane dostępowe mailem.'
+                : 'Użytkownik został dodany bez wysyłania maila. Skopiuj hasło tymczasowe wyświetlone poniżej.');
+
+        return $request->boolean('send_email')
+            ? $response
+            : $response->with('temporary_password', $temporaryPassword);
     }
 
     public function destroy(User $user)

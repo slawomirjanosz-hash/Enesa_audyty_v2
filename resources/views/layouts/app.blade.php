@@ -467,6 +467,15 @@
             </li>
             @endif
 
+            @if($appModuleEnabled('projects'))
+            <li class="nav-item">
+                <a href="{{ route('projects.index') }}"
+                   class="nav-link {{ request()->routeIs('projects.*') ? 'active' : '' }}">
+                    <i class="ti ti-briefcase"></i> Projekty
+                </a>
+            </li>
+            @endif
+
             @if($appModuleEnabled('client_zone'))
             <li class="nav-item">
                 <a href="{{ url('/client-zone') }}"

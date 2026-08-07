@@ -686,8 +686,9 @@
         @endif
 
         @if($company->status === 'pending')
-            <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-block;">
+            <form method="POST" action="{{ route('companies.accept', $company) }}" style="display:inline-flex;align-items:center;gap:8px;" onsubmit="return !this.elements.send_email.checked || confirm('Wysłać klientowi wiadomość o akceptacji konta?');">
                 @csrf
+                <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;"><input type="checkbox" name="send_email" value="1"> Wyślij mail klientowi</label>
                 <button type="submit" class="btn-action btn-accept-action">
                     <i class="ti ti-check"></i> Akceptuj klienta
                 </button>
@@ -1679,7 +1680,7 @@
         </div>
 
         {{-- FORMULARZ DODAWANIA --}}
-        <form id="userCreateForm" method="POST" action="{{ route('companies.users.store', $company) }}" style="display:none;">
+        <form id="userCreateForm" method="POST" action="{{ route('companies.users.store', $company) }}" style="display:none;" onsubmit="return !this.elements.send_email.checked || confirm('Wysłać klientowi dane dostępowe mailem?');">
             @csrf
 
             <div class="modal-grid">
@@ -1722,6 +1723,11 @@
                 <label for="user-password">Hasło</label>
                 <input id="user-password" type="password" name="password" required>
             </div>
+
+            <label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:13px;cursor:pointer;">
+                <input type="checkbox" name="send_email" value="1">
+                Wyślij klientowi mail z danymi dostępowymi
+            </label>
 
             <button type="submit" class="modal-submit">Utwórz użytkownika</button>
         </form>

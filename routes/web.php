@@ -21,6 +21,7 @@ use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
@@ -234,6 +235,34 @@ Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.modul
     Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
     Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
     Route::delete('/orphaned-users/{assignmentId}', [CrmController::class, 'detachOrphanedUser'])->name('detach-orphaned-user');
+});
+
+Route::get('/public/project-gantt/{token}', [ProjectController::class, 'publicGantt'])->name('projects.public-gantt');
+
+Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 'app.module:projects'])->group(function () {
+    Route::get('/', [ProjectController::class, 'index'])->name('index');
+    Route::post('/', [ProjectController::class, 'store'])->name('store');
+    Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
+    Route::put('/{project}', [ProjectController::class, 'update'])->name('update');
+    Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
+    Route::post('/{project}/tasks', [ProjectController::class, 'storeTask'])->name('tasks.store');
+    Route::post('/{project}/tasks/reorder', [ProjectController::class, 'reorderTasks'])->name('tasks.reorder');
+    Route::patch('/{project}/tasks/{task}', [ProjectController::class, 'updateTask'])->name('tasks.update');
+    Route::delete('/{project}/tasks/{task}', [ProjectController::class, 'destroyTask'])->name('tasks.destroy');
+    Route::post('/{project}/public-gantt', [ProjectController::class, 'generatePublicGantt'])->name('public-gantt.generate');
+    Route::post('/{project}/finances', [ProjectController::class, 'storeFinancialEntry'])->name('finances.store');
+    Route::post('/{project}/finances/import', [ProjectController::class, 'importFinancialEntries'])->name('finances.import');
+    Route::post('/{project}/finances/bulk', [ProjectController::class, 'bulkUpdateFinancialEntries'])->name('finances.bulk');
+    Route::patch('/{project}/finances/{entry}', [ProjectController::class, 'updateFinancialEntry'])->name('finances.update');
+    Route::delete('/{project}/finances/{entry}', [ProjectController::class, 'destroyFinancialEntry'])->name('finances.destroy');
+    Route::post('/{project}/finance-groups', [ProjectController::class, 'storeFinanceGroup'])->name('finance-groups.store');
+    Route::delete('/{project}/finance-groups/{group}', [ProjectController::class, 'destroyFinanceGroup'])->name('finance-groups.destroy');
+    Route::post('/{project}/requirements', [ProjectController::class, 'storeRequirement'])->name('requirements.store');
+    Route::patch('/{project}/requirements/{requirement}', [ProjectController::class, 'updateRequirement'])->name('requirements.update');
+    Route::delete('/{project}/requirements/{requirement}', [ProjectController::class, 'destroyRequirement'])->name('requirements.destroy');
+    Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->name('documents.store');
+    Route::get('/{project}/documents/{document}', [ProjectController::class, 'downloadDocument'])->name('documents.download');
+    Route::delete('/{project}/documents/{document}', [ProjectController::class, 'destroyDocument'])->name('documents.destroy');
 });
 
 // Session check endpoint (used by session-expired modal JS)
