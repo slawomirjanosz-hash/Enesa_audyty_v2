@@ -167,7 +167,9 @@ test('client card follows audit and project module visibility', function () {
     ]);
     $admin = User::factory()->create();
     $admin->assignRole('admin');
-    $client = Company::create(['name' => 'Klient z projektem', 'company_type' => 'client', 'status' => 'active']);
+    $client = Company::create([
+        'name' => 'Klient z projektem', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true,
+    ]);
     $otherClient = Company::create(['name' => 'Inny klient', 'company_type' => 'client', 'status' => 'active']);
     Project::create([
         'number' => 'PRJ/CARD/001', 'name' => 'Projekt widoczny na karcie', 'company_id' => $client->id,
@@ -186,6 +188,13 @@ test('client card follows audit and project module visibility', function () {
         ->assertSee('id="tab-projects"', false)
         ->assertSee('Projekt widoczny na karcie')
         ->assertDontSee('Projekt innego klienta');
+
+    $this->actingAs($admin)->get(route('dashboard'))
+        ->assertOk()
+        ->assertDontSee('data-dashboard-metric="audits"', false)
+        ->assertSee('data-dashboard-metric="projects"', false)
+        ->assertSee('1 projekt')
+        ->assertSee('Aktywne projekty');
 });
 
 test('excel finance import recognizes polish columns and never imports a duplicate twice', function () {

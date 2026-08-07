@@ -53,7 +53,7 @@
     /* ── Stats grid ───────────────────────── */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
         gap: 12px;
         margin-bottom: 20px;
     }
@@ -410,7 +410,7 @@
         <div class="dashboard-search-box">
             <i class="ti ti-search"></i>
             <input type="search" id="dashboard-company-search" autocomplete="off"
-                   placeholder="Szukaj: firma, oferta, zapytanie, audyt…"
+                   placeholder="Szukaj: firma, oferta, zapytanie{{ $auditsEnabled ? ', audyt' : '' }}{{ $projectsEnabled ? ', projekt' : '' }}…"
                    oninput="searchDashboardCompanies(this.value)">
             <div id="dashboard-search-result" class="dashboard-search-result" aria-live="polite"></div>
         </div>
@@ -431,6 +431,7 @@
 {{-- ══════ STATYSTYKI ══════ --}}
 <div class="stats-grid">
 
+    @if($auditsEnabled)
     {{-- Aktywne audyty --}}
     <a href="{{ route('crm.index', ['tab' => 'audits']) }}" class="stat-card">
         <div class="stat-icon stat-icon-green">
@@ -442,6 +443,18 @@
             <div class="stat-sub" style="color:#2E7D32;">↑ w tym tygodniu</div>
         </div>
     </a>
+    @endif
+
+    @if($projectsEnabled)
+    <a href="{{ route('projects.index') }}" class="stat-card">
+        <div class="stat-icon stat-icon-green"><i class="ti ti-folders"></i></div>
+        <div>
+            <div class="stat-value">{{ $stats['active_projects'] }}</div>
+            <div class="stat-label">Aktywne projekty</div>
+            <div class="stat-sub">Przejdź do projektów</div>
+        </div>
+    </a>
+    @endif
 
     {{-- Oferty do wysłania --}}
     <div class="stat-card">
@@ -501,6 +514,7 @@
         @php
             $relatedSearchData = collect()
                 ->merge($company->audits->pluck('title'))
+                ->merge($company->projects->flatMap(fn ($project) => [$project->number, $project->name, $project->description]))
                 ->merge($company->offers->flatMap(fn ($offer) => [
                     $offer->offer_title,
                     $offer->offer_full_number,
@@ -550,10 +564,18 @@
 
             {{-- Info wiersze --}}
             <div class="tile-info">
-                <div class="tile-info-row">
+                @if($auditsEnabled)
+                <div class="tile-info-row" data-dashboard-metric="audits">
                     <i class="ti ti-clipboard"></i>
                     <span>{{ $company->audits->count() }} {{ $company->audits->count() === 1 ? 'audyt' : ($company->audits->count() < 5 ? 'audyty' : 'audytów') }}</span>
                 </div>
+                @endif
+                @if($projectsEnabled)
+                <div class="tile-info-row" data-dashboard-metric="projects">
+                    <i class="ti ti-folders"></i>
+                    <span>{{ $company->projects->count() }} {{ $company->projects->count() === 1 ? 'projekt' : ($company->projects->count() < 5 ? 'projekty' : 'projektów') }}</span>
+                </div>
+                @endif
                 <div class="tile-info-row">
                     <i class="ti ti-file-invoice"></i>
                     <span>{{ $company->offers->count() }} {{ $company->offers->count() === 1 ? 'oferta' : ($company->offers->count() < 5 ? 'oferty' : 'ofert') }}</span>
@@ -601,9 +623,10 @@
             <th onclick="sortCompaniesTable(0)">Firma <span class="sort-icon-dash">⇅</span></th>
             <th onclick="sortCompaniesTable(1)">NIP <span class="sort-icon-dash">⇅</span></th>
             <th onclick="sortCompaniesTable(2)">Status <span class="sort-icon-dash">⇅</span></th>
-            <th onclick="sortCompaniesTable(3,true)">Audyty <span class="sort-icon-dash">⇅</span></th>
-            <th onclick="sortCompaniesTable(4,true)">Oferty <span class="sort-icon-dash">⇅</span></th>
-            <th onclick="sortCompaniesTable(5,true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
+            @if($auditsEnabled)<th data-dashboard-metric="audits" onclick="sortCompaniesTable(3,true)">Audyty <span class="sort-icon-dash">⇅</span></th>@endif
+            @if($projectsEnabled)<th data-dashboard-metric="projects" onclick="sortCompaniesTable({{$auditsEnabled ? 4 : 3}},true)">Projekty <span class="sort-icon-dash">⇅</span></th>@endif
+            <th onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Oferty <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
             <th style="text-align:right;">Akcje</th>
         </tr>
     </thead>
@@ -617,6 +640,7 @@
             @php
                 $relatedSearchData = collect()
                     ->merge($company->audits->pluck('title'))
+                    ->merge($company->projects->flatMap(fn ($project) => [$project->number, $project->name, $project->description]))
                     ->merge($company->offers->flatMap(fn ($offer) => [
                         $offer->offer_title,
                         $offer->offer_full_number,
@@ -654,7 +678,8 @@
                         } }}
                     </span>
                 </td>
-                <td style="text-align:center;">{{ $company->audits->count() }}</td>
+                @if($auditsEnabled)<td data-dashboard-metric="audits" style="text-align:center;">{{ $company->audits->count() }}</td>@endif
+                @if($projectsEnabled)<td data-dashboard-metric="projects" style="text-align:center;">{{ $company->projects->count() }}</td>@endif
                 <td style="text-align:center;">{{ $company->offers->count() }}</td>
                 <td style="text-align:center;">{{ $company->users->count() }}</td>
                 <td style="text-align:right;">

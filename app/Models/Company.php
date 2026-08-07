@@ -84,6 +84,11 @@ class Company extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
     public function crmOpportunities(): HasMany
     {
         return $this->hasMany(CrmOpportunity::class);
