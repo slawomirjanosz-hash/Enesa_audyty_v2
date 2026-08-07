@@ -6,10 +6,12 @@ use App\Mail\ClientAccepted;
 use App\Mail\ClientRegistered;
 use App\Mail\NewClientUser;
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
 use App\Models\Document;
 use App\Models\OfferRequest;
+use App\Models\Project;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
@@ -114,11 +116,15 @@ class CompanyController extends Controller
         }
         $access = app(AuditorAccessService::class);
         $user = auth()->user();
+        $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
+        $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
 
         $relations = [
-            'audits.auditType',
             'offers',
         ];
+        if ($auditsEnabled) {
+            $relations[] = 'audits.auditType';
+        }
 
         if ($access->hasFullAccess($user)) {
             $relations[] = 'users.roles';
@@ -126,7 +132,7 @@ class CompanyController extends Controller
 
         $company->load($relations);
 
-        if (! $access->canViewCompany($user, $company->id, 'can_view_audits')) {
+        if (! $auditsEnabled || ! $access->canViewCompany($user, $company->id, 'can_view_audits')) {
             $company->setRelation('audits', collect());
         }
         if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
@@ -141,6 +147,20 @@ class CompanyController extends Controller
             'offers_count' => $company->offers->count(),
             'users_count' => $company->users->count(),
         ];
+
+        $projects = collect();
+        if ($projectsEnabled) {
+            $projectsQuery = Project::with(['manager', 'members'])
+                ->where('company_id', $company->id)
+                ->orderByDesc('created_at');
+            if (! $access->hasFullAccess($user)) {
+                $projectsQuery->where(fn ($query) => $query
+                    ->where('manager_id', $user->id)
+                    ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));
+            }
+            $projects = $projectsQuery->get();
+        }
+        $stats['projects_count'] = $projects->count();
 
         $crmOpportunities = $access->scopeByCompanyAccess(
             CrmOpportunity::with(['assignedUser', 'offers'])
@@ -180,7 +200,10 @@ class CompanyController extends Controller
             ->orderByDesc('updated_at'), $user)
             ->get();
 
-        return view('companies.show', compact('company', 'stats', 'crmOpportunities', 'crmActivities', 'offerRequests', 'documents'));
+        return view('companies.show', compact(
+            'company', 'stats', 'crmOpportunities', 'crmActivities', 'offerRequests', 'documents',
+            'projects', 'auditsEnabled', 'projectsEnabled'
+        ));
     }
 
     public function update(Request $request, Company $company)

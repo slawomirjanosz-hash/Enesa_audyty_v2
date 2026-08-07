@@ -126,7 +126,7 @@
     /* ── STATS BAR ── */
     .stats-bar {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 16px;
         margin-bottom: 24px;
     }
@@ -356,7 +356,11 @@
     .audit-status.offer_accepted { background: #EDE7F6; color: #4527A0; }
     .audit-status.in_progress { background: #E8F5E9; color: #2E7D32; }
     .audit-status.review      { background: #FFF9C4; color: #F57F17; }
+    .audit-status.planned     { background: #E3F2FD; color: #1565C0; }
+    .audit-status.active      { background: #E8F5E9; color: #2E7D32; }
+    .audit-status.on_hold     { background: #FFF3E0; color: #E65100; }
     .audit-status.completed   { background: #E8F5E9; color: #1B5E20; }
+    .audit-status.cancelled   { background: #FDECEA; color: #C62828; }
     .audit-status.archived    { background: #F5F5F5; color: #757575; }
 
     /* ── USERS ── */
@@ -706,6 +710,7 @@
 
 {{-- ─── STATS BAR ─── --}}
 <div class="stats-bar">
+    @if($auditsEnabled)
     <div class="stat-card">
         <div class="stat-icon green"><i class="ti ti-clipboard-list"></i></div>
         <div>
@@ -713,6 +718,16 @@
             <div class="stat-label">Audyty</div>
         </div>
     </div>
+    @endif
+    @if($projectsEnabled)
+    <div class="stat-card">
+        <div class="stat-icon green"><i class="ti ti-folders"></i></div>
+        <div>
+            <div class="stat-value">{{ $stats['projects_count'] }}</div>
+            <div class="stat-label">Projekty</div>
+        </div>
+    </div>
+    @endif
     <div class="stat-card">
         <div class="stat-icon orange"><i class="ti ti-file-invoice"></i></div>
         <div>
@@ -742,12 +757,14 @@
         <button class="tab-btn active" onclick="switchTab('overview', this)">
             <i class="ti ti-layout-grid"></i> Przegląd
         </button>
-        <button class="tab-btn" onclick="switchTab('audits', this)">
+        @if($auditsEnabled)
+        <button class="tab-btn" id="tab-btn-audits" onclick="switchTab('audits', this)">
             <i class="ti ti-clipboard-list"></i> Audyty
             @if($stats['audits_count'] > 0)
                 <span class="tab-badge">{{ $stats['audits_count'] }}</span>
             @endif
         </button>
+        @endif
         <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests', this)">
             <i class="ti ti-inbox"></i> Zapytania
             @if(isset($offerRequests) && $offerRequests->isNotEmpty())
@@ -760,6 +777,14 @@
                 <span class="tab-badge">{{ $stats['offers_count'] }}</span>
             @endif
         </button>
+        @if($projectsEnabled)
+        <button class="tab-btn" id="tab-btn-projects" onclick="switchTab('projects', this)">
+            <i class="ti ti-folders"></i> Projekty
+            @if($stats['projects_count'] > 0)
+                <span class="tab-badge">{{ $stats['projects_count'] }}</span>
+            @endif
+        </button>
+        @endif
         <button class="tab-btn" onclick="switchTab('crm', this)">
             <i class="ti ti-target"></i> Leady CRM
             @if($stats['crm_opportunities_count'] > 0)
@@ -879,6 +904,7 @@
     </div>
 
     {{-- ═══ ZAKŁADKA: AUDYTY ═══ --}}
+    @if($auditsEnabled)
     <div id="tab-audits" class="tab-panel">
         @if($company->audits->isEmpty())
             <div class="empty-tab">
@@ -919,6 +945,35 @@
             </table>
         @endif
     </div>
+    @endif
+
+    @if($projectsEnabled)
+    <div id="tab-projects" class="tab-panel">
+        @if($projects->isEmpty())
+            <div class="empty-tab">
+                <i class="ti ti-folders"></i>
+                <p>Brak projektów przypisanych do tej firmy.</p>
+            </div>
+        @else
+            <table class="data-table">
+                <thead><tr><th>Numer</th><th>Projekt</th><th>Kierownik</th><th>Status</th><th>Termin</th><th>Wartość</th><th></th></tr></thead>
+                <tbody>
+                    @foreach($projects as $project)
+                    <tr>
+                        <td style="font-weight:700;color:var(--green)">{{ $project->number }}</td>
+                        <td><strong>{{ $project->name }}</strong></td>
+                        <td>{{ $project->manager?->name ?? '—' }}</td>
+                        <td><span class="audit-status {{ $project->status }}">{{ ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'][$project->status] ?? $project->status }}</span></td>
+                        <td>{{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</td>
+                        <td style="font-weight:700">{{ number_format((float)$project->contract_value, 2, ',', ' ') }} zł</td>
+                        <td><a href="{{ route('projects.show', $project) }}" class="btn-action btn-secondary-action"><i class="ti ti-eye"></i> Otwórz</a></td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
+    @endif
 
     {{-- ═══ ZAKŁADKA: ZAPYTANIA ═══ --}}
     <div id="tab-requests" class="tab-panel">

@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
-    foreach (['superadmin', 'admin', 'auditor'] as $role) {
+    foreach (['superadmin', 'admin', 'auditor_senior', 'auditor', 'client_admin', 'client_user'] as $role) {
         Role::findOrCreate($role);
     }
 });
@@ -158,6 +158,34 @@ test('projects module can be disabled for an application deployment', function (
 
     $this->actingAs($admin)->get(route('projects.index'))->assertForbidden();
     $this->actingAs($admin)->get(route('dashboard'))->assertOk()->assertDontSee('Projekty');
+});
+
+test('client card follows audit and project module visibility', function () {
+    CompanySettings::create([
+        'name' => 'Firma projektowa', 'primary_color' => '#123456',
+        'welcome_page_mode' => 'general', 'enabled_modules' => ['dashboard', 'crm', 'projects'],
+    ]);
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $client = Company::create(['name' => 'Klient z projektem', 'company_type' => 'client', 'status' => 'active']);
+    $otherClient = Company::create(['name' => 'Inny klient', 'company_type' => 'client', 'status' => 'active']);
+    Project::create([
+        'number' => 'PRJ/CARD/001', 'name' => 'Projekt widoczny na karcie', 'company_id' => $client->id,
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 42000, 'created_by' => $admin->id,
+    ]);
+    Project::create([
+        'number' => 'PRJ/CARD/002', 'name' => 'Projekt innego klienta', 'company_id' => $otherClient->id,
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 12000, 'created_by' => $admin->id,
+    ]);
+
+    $this->actingAs($admin)->get(route('companies.show', $client))
+        ->assertOk()
+        ->assertDontSee('id="tab-btn-audits"', false)
+        ->assertDontSee('id="tab-audits"', false)
+        ->assertSee('id="tab-btn-projects"', false)
+        ->assertSee('id="tab-projects"', false)
+        ->assertSee('Projekt widoczny na karcie')
+        ->assertDontSee('Projekt innego klienta');
 });
 
 test('excel finance import recognizes polish columns and never imports a duplicate twice', function () {
