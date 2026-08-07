@@ -43,6 +43,44 @@ test('admin creates a project with manager and team', function () {
     $this->actingAs($member)->get(route('projects.show', $project))->assertOk();
 });
 
+test('project editor changes an internal project into a client project', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $client = Company::create(['name' => 'Klient przypisany', 'company_type' => 'client']);
+    $supplier = Company::create(['name' => 'Dostawca niedozwolony', 'company_type' => 'supplier']);
+    $project = Project::create([
+        'number' => 'PRJ/2026/EDIT', 'name' => 'Projekt wewnętrzny', 'manager_id' => $admin->id,
+        'status' => 'planned', 'contract_value' => 10000, 'created_by' => $admin->id,
+    ]);
+    $project->members()->attach($admin);
+    $task = $project->tasks()->create([
+        'title' => 'Zadanie projektu', 'assigned_to' => $admin->id, 'created_by' => $admin->id,
+        'status' => 'todo', 'priority' => 'medium', 'progress' => 0,
+        'start_date' => '2026-08-10', 'due_date' => '2026-08-12', 'project_position' => 1,
+    ]);
+
+    $this->actingAs($admin)->get(route('projects.show', $project))
+        ->assertOk()
+        ->assertSee('Edytuj projekt')
+        ->assertSee('Projekt dla klienta: Klient przypisany');
+
+    $this->actingAs($admin)->put(route('projects.update', $project), [
+        'number' => $project->number, 'name' => 'Projekt klienta', 'company_id' => $client->id,
+        'manager_id' => $admin->id, 'member_ids' => [$admin->id], 'status' => 'active',
+        'start_date' => '2026-08-10', 'end_date' => '2026-09-30', 'contract_value' => 15000,
+        'description' => 'Projekt zmieniony z wewnętrznego.',
+    ])->assertRedirect(route('projects.show', $project));
+
+    expect($project->refresh()->company_id)->toBe($client->id)
+        ->and($project->name)->toBe('Projekt klienta')
+        ->and($task->refresh()->company_id)->toBe($client->id);
+
+    $this->actingAs($admin)->put(route('projects.update', $project), [
+        'number' => $project->number, 'name' => $project->name, 'company_id' => $supplier->id,
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 15000,
+    ])->assertSessionHasErrors(['company_id'], null, 'projectEdit');
+});
+
 test('project manager manages schedule tasks finances and requirements', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');

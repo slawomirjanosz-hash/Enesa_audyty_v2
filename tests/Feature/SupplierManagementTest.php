@@ -105,3 +105,30 @@ test('client cannot be assigned as a registered project supplier', function () {
 
     expect($project->requirements()->count())->toBe(0);
 });
+
+test('client and supplier details expose editing through explicit buttons', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $client = Company::create(['company_type' => 'client', 'name' => 'Klient do edycji', 'status' => 'active']);
+    $supplier = Company::create(['company_type' => 'supplier', 'name' => 'Dostawca do edycji', 'status' => 'active']);
+
+    $this->actingAs($admin)->get(route('companies.show', $client))
+        ->assertOk()
+        ->assertSee('Edytuj klienta');
+
+    $this->actingAs($admin)->get(route('suppliers.show', $supplier))
+        ->assertOk()
+        ->assertSee('Edytuj dostawcę')
+        ->assertDontSee('Edytuj profil dostawcy');
+
+    $this->actingAs($admin)->put(route('suppliers.update', $supplier), [
+        'name' => '', 'email' => 'niepoprawny-adres',
+    ])->assertSessionHasErrors(['name', 'email'], null, 'supplierEdit');
+
+    $this->actingAs($admin)->put(route('suppliers.update', $supplier), [
+        'name' => 'Dostawca po edycji', 'supplier_materials' => 'Pompy, zawory',
+    ])->assertRedirect(route('suppliers.show', $supplier));
+
+    expect($supplier->refresh()->name)->toBe('Dostawca po edycji')
+        ->and($supplier->supplier_materials)->toBe('Pompy, zawory');
+});

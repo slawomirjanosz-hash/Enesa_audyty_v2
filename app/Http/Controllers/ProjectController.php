@@ -90,6 +90,7 @@ class ProjectController extends Controller
         return view('projects.show', [
             'project' => $project,
             'users' => $this->staffUsers(),
+            'companies' => Company::clients()->active()->orderBy('name')->get(),
             'suppliers' => Company::suppliers()->active()->orderBy('name')->get(),
             'timelineItems' => $timelineItems,
         ]);
@@ -98,13 +99,17 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project): RedirectResponse
     {
         $this->authorize('update', $project);
-        $data = $this->validateProject($request, $project);
+        $data = $this->validateProject($request, $project, 'projectEdit');
         $members = $data['member_ids'] ?? [];
         unset($data['member_ids']);
+        $companyChanged = (int) $project->company_id !== (int) ($data['company_id'] ?? 0);
         $project->update($data);
         $project->members()->sync(array_unique(array_filter([...$members, $project->manager_id])));
+        if ($companyChanged) {
+            $project->tasks()->update(['company_id' => $project->company_id]);
+        }
 
-        return redirect()->back()->with('success', 'Dane projektu zostały zapisane.');
+        return redirect()->route('projects.show', $project)->with('success', 'Dane projektu zostały zapisane.');
     }
 
     public function destroy(Project $project): RedirectResponse
@@ -759,12 +764,17 @@ class ProjectController extends Controller
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'finances'])->with('success', $message);
     }
 
-    private function validateProject(Request $request, ?Project $project = null): array
+    private function validateProject(Request $request, ?Project $project = null, ?string $errorBag = null): array
     {
-        return $request->validate([
+        $rules = [
             'number' => ['required', 'string', 'max:100', Rule::unique('projects', 'number')->ignore($project?->id)],
             'name' => ['required', 'string', 'max:255'],
-            'company_id' => ['nullable', 'exists:companies,id'],
+            'company_id' => [
+                'nullable', 'integer',
+                Rule::exists('companies', 'id')->where(fn ($query) => $query
+                    ->where('company_type', 'client')
+                    ->whereNull('archived_at')),
+            ],
             'manager_id' => ['required', 'exists:users,id'],
             'member_ids' => ['nullable', 'array'],
             'member_ids.*' => ['integer', 'exists:users,id'],
@@ -773,7 +783,11 @@ class ProjectController extends Controller
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'contract_value' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
-        ]);
+        ];
+
+        return $errorBag
+            ? $request->validateWithBag($errorBag, $rules)
+            : $request->validate($rules);
     }
 
     private function staffUsers()

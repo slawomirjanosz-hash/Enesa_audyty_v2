@@ -675,9 +675,11 @@
     </div>
 
     <div class="company-header-actions">
+        @can('update', $company)
         <button type="button" class="btn-action {{ $company->status === 'active' ? 'btn-primary-action' : 'btn-secondary-action' }}" onclick="openEditModal()">
-            <i class="ti ti-edit"></i> Edytuj
+            <i class="ti ti-edit"></i> Edytuj klienta
         </button>
+        @endcan
 
         @if(auth()->check() && auth()->user()->hasAnyRole(['admin', 'superadmin']))
             <button type="button" class="btn-action btn-delete-action" onclick="openCompanyDeleteModal()">
@@ -1791,7 +1793,7 @@
 <div id="modal-edit-firm" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;width:100%;max-width:540px;box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden;">
         <div style="background:var(--green);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj dane firmy</span>
+            <span style="color:#fff;font-size:16px;font-weight:700;"><i class="ti ti-building"></i> Edytuj klienta</span>
             <button onclick="closeEditModal()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
         </div>
         <form method="POST" action="{{ route('companies.update', $company) }}" enctype="multipart/form-data" style="padding:24px;display:flex;flex-direction:column;gap:14px;">

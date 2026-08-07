@@ -25,7 +25,7 @@
     .finance-section{background:#fff;border:1px solid #e5e1d8;border-radius:11px;margin-bottom:14px;overflow:hidden}.finance-section>summary{display:flex;align-items:center;gap:10px;padding:15px 18px;cursor:pointer;font-size:15px;font-weight:800;list-style:none}.finance-section>summary::-webkit-details-marker{display:none}.finance-section>summary:before{content:'›';font-size:22px;line-height:1;transition:transform .18s}.finance-section[open]>summary:before{transform:rotate(90deg)}.finance-section>summary small{margin-left:auto;color:#77827b;font-size:10px;font-weight:700}.finance-section-body{border-top:1px solid #eee;padding:18px}.finance-import-note{font-size:11px;color:#66736b;line-height:1.5;background:#f7f8f5;border-radius:7px;padding:10px;margin-bottom:13px}.import-report{border:1px solid #bae6c6;background:#f0fdf4;border-radius:9px;padding:14px;margin-bottom:14px}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.report-value{background:#fff;border-radius:7px;padding:9px}.report-value small{display:block;color:#66736b;font-size:9px;text-transform:uppercase}.report-value strong{font-size:15px}.finance-groups{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.finance-group-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;background:#f0f5f1;border-radius:999px;font-size:11px}.finance-group-chip form{display:inline}.finance-group-chip button{border:0;background:none;color:#b91c1c;cursor:pointer;padding:0}.finance-table{min-width:1050px}.source-badge{display:inline-block;border-radius:999px;background:#eef2ff;color:#4338ca;padding:3px 6px;font-size:9px;font-weight:800}.finance-edit{position:relative}.finance-edit>summary{list-style:none}.finance-edit-box{position:absolute;right:0;z-index:20;width:min(650px,80vw);background:#fff;border:1px solid #d8d3c8;border-radius:9px;padding:14px;box-shadow:0 12px 35px rgba(0,0,0,.16)}.chart-overview-shell{height:90px;margin-top:8px;position:relative;border-top:1px solid #eee;padding-top:7px}@media(max-width:700px){.report-grid{grid-template-columns:1fr 1fr}.finance-section-body{padding:12px}}
 </style>
 
-<div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div>
+<div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canEdit)<button class="btn btn-soft" type="button" onclick="openProjectEditModal()"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
 
 @if(session('success'))<div style="padding:12px 15px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:15px;">{{ session('success') }}</div>@endif
 @if($errors->any())<div style="padding:12px 15px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:15px;">{{ $errors->first() }}</div>@endif
@@ -36,6 +36,33 @@
     <div class="sum"><small>Koszty</small><strong>{{ number_format($project->totalCosts(),2,',',' ') }} zł</strong></div>
     <div class="sum"><small>Wynik</small><strong style="color:{{ $project->result()>=0?'#15803d':'#b91c1c' }}">{{ number_format($project->result(),2,',',' ') }} zł</strong></div>
 </div>
+
+@if($canEdit)
+<div id="project-edit-modal" class="project-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="project-modal-box">
+        <div class="modal-head"><div><h2>Edytuj projekt</h2><small style="color:#718078">Zmień dane projektu, jego typ lub przypisanego klienta.</small></div><button type="button" class="modal-close" onclick="document.getElementById('project-edit-modal').classList.remove('open')">×</button></div>
+        @if($errors->projectEdit->any())
+            <div style="padding:11px 13px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:14px;">{{ $errors->projectEdit->first() }}</div>
+        @endif
+        <form method="POST" action="{{ route('projects.update',$project) }}">@csrf @method('PUT')
+            <div class="grid2">
+                <div class="field"><label>Numer projektu</label><input name="number" value="{{ old('number',$project->number) }}" required></div>
+                <div class="field"><label>Nazwa projektu</label><input name="name" value="{{ old('name',$project->name) }}" required></div>
+                <div class="field full"><label>Typ projektu / klient</label><select name="company_id"><option value="">Projekt wewnętrzny</option>@foreach($companies as $company)<option value="{{ $company->id }}" {{ (string)old('company_id',$project->company_id)===(string)$company->id?'selected':'' }}>Projekt dla klienta: {{ $company->name }}</option>@endforeach</select><small style="color:#718078">Wybierz klienta, aby zmienić projekt wewnętrzny w projekt klienta.</small></div>
+                <div class="field"><label>Kierownik</label><select name="manager_id" required>@foreach($users as $user)<option value="{{ $user->id }}" {{ (string)old('manager_id',$project->manager_id)===(string)$user->id?'selected':'' }}>{{ $user->name }}</option>@endforeach</select></div>
+                <div class="field"><label>Status</label><select name="status">@foreach($statusLabels as $value=>$label)<option value="{{$value}}" {{old('status',$project->status)===$value?'selected':''}}>{{$label}}</option>@endforeach</select></div>
+                <div class="field"><label>Data rozpoczęcia</label><input type="date" name="start_date" value="{{ old('start_date',$project->start_date?->format('Y-m-d')) }}"></div>
+                <div class="field"><label>Data zakończenia</label><input type="date" name="end_date" value="{{ old('end_date',$project->end_date?->format('Y-m-d')) }}"></div>
+                <div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="{{ old('contract_value',$project->contract_value) }}" required></div>
+                <div class="field full"><label>Osoby zaangażowane</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ collect(old('member_ids',$project->members->pluck('id')->all()))->contains(fn($id)=>(int)$id===$user->id) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div></div>
+                <div class="field full"><label>Opis</label><textarea name="description" rows="4">{{ old('description',$project->description) }}</textarea></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="document.getElementById('project-edit-modal').classList.remove('open')">Anuluj</button><button class="btn">Zapisz zmiany</button></div>
+        </form>
+    </div>
+</div>
+@if($errors->projectEdit->any())<script>document.addEventListener('DOMContentLoaded',()=>document.getElementById('project-edit-modal')?.classList.add('open'));</script>@endif
+@endif
 
 <div class="tabs">
     @foreach(['overview'=>'Przegląd','gantt'=>'Harmonogram i zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','documents'=>'Dokumenty'] as $id=>$label)
@@ -48,17 +75,6 @@
         <div class="card"><h2>Zespół projektu</h2><div class="team"><span class="person"><strong>Kierownik:</strong> {{ $project->manager?->name ?? '—' }}</span>@foreach($project->members as $member)<span class="person">{{ $member->name }}</span>@endforeach</div></div>
         <div class="card"><h2>Opis</h2><div style="font-size:13px;line-height:1.6;color:#55625a;white-space:pre-line;">{{ $project->description ?: 'Brak opisu.' }}</div></div>
     </div>
-    @if($canEdit)
-    <div class="card"><h2>Edytuj dane projektu</h2><form method="POST" action="{{ route('projects.update',$project) }}">@csrf @method('PUT')<div class="grid2">
-        <div class="field"><label>Numer</label><input name="number" value="{{ $project->number }}" required></div><div class="field"><label>Nazwa</label><input name="name" value="{{ $project->name }}" required></div>
-        <input type="hidden" name="company_id" value="{{ $project->company_id }}"><div class="field"><label>Kierownik</label><select name="manager_id" required>@foreach($users as $user)<option value="{{ $user->id }}" {{$project->manager_id===$user->id?'selected':''}}>{{ $user->name }}</option>@endforeach</select></div>
-        <div class="field"><label>Status</label><select name="status">@foreach($statusLabels as $v=>$l)<option value="{{$v}}" {{$project->status===$v?'selected':''}}>{{$l}}</option>@endforeach</select></div>
-        <div class="field"><label>Start</label><input type="date" name="start_date" value="{{ $project->start_date?->format('Y-m-d') }}"></div><div class="field"><label>Koniec</label><input type="date" name="end_date" value="{{ $project->end_date?->format('Y-m-d') }}"></div>
-        <div class="field"><label>Wartość kontraktu</label><input type="number" step="0.01" min="0" name="contract_value" value="{{ $project->contract_value }}" required></div>
-        <div class="field full"><label>Zespół</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ $project->members->contains($user) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div></div>
-        <div class="field full"><label>Opis</label><textarea name="description" rows="4">{{ $project->description }}</textarea></div>
-    </div><button class="btn" style="margin-top:14px;">Zapisz projekt</button></form></div>
-    @endif
 </section>
 
 <section id="pane-gantt" class="pane">

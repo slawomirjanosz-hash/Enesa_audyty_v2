@@ -66,7 +66,7 @@ class SupplierController extends Controller
     {
         abort_unless($supplier->company_type === 'supplier', 404);
         $this->authorize('update', $supplier);
-        $data = $request->validate([
+        $data = $request->validateWithBag('supplierEdit', [
             'name' => ['required', 'string', 'max:255'],
             'nip' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
