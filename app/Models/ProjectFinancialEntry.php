@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProjectFinancialEntry extends Model
 {
     protected $fillable = [
-        'project_id', 'finance_group_id', 'type', 'name', 'document_number', 'supplier',
+        'project_id', 'finance_group_id', 'type', 'name', 'document_number', 'supplier', 'supplier_company_id',
         'entry_date', 'payment_date', 'amount', 'status', 'source', 'import_row_order',
         'import_fingerprint', 'notes', 'created_by',
     ];
@@ -28,5 +28,10 @@ class ProjectFinancialEntry extends Model
     public function financeGroup(): BelongsTo
     {
         return $this->belongsTo(ProjectFinanceGroup::class, 'finance_group_id');
+    }
+
+    public function supplierCompany(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'supplier_company_id');
     }
 }

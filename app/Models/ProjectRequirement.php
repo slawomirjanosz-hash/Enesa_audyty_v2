@@ -9,7 +9,7 @@ class ProjectRequirement extends Model
 {
     protected $fillable = [
         'project_id', 'type', 'name', 'description', 'quantity', 'unit',
-        'estimated_cost', 'supplier', 'status', 'needed_by', 'responsible_id', 'created_by',
+        'estimated_cost', 'supplier', 'supplier_company_id', 'status', 'needed_by', 'responsible_id', 'created_by',
     ];
 
     protected $casts = ['quantity' => 'decimal:2', 'estimated_cost' => 'decimal:2', 'needed_by' => 'date'];
@@ -22,5 +22,10 @@ class ProjectRequirement extends Model
     public function responsible(): BelongsTo
     {
         return $this->belongsTo(User::class, 'responsible_id');
+    }
+
+    public function supplierCompany(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'supplier_company_id');
     }
 }

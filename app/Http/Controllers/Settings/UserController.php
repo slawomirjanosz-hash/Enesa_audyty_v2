@@ -75,7 +75,7 @@ class UserController extends Controller
             ->with('roles')
             ->orderByDesc('created_at')
             ->get();
-        $companies = Company::active()->orderBy('name')->get();
+        $companies = Company::clients()->active()->orderBy('name')->get();
         $archivedCompanies = Company::archived()->orderBy('name')->get();
 
         return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers'));
@@ -89,7 +89,7 @@ class UserController extends Controller
             ->with('company')
             ->orderBy('company_id')
             ->get();
-        $availableCompanies = Company::active()
+        $availableCompanies = Company::clients()->active()
             ->whereNotIn('id', $accesses->pluck('company_id'))
             ->orderBy('name')
             ->get();

@@ -109,6 +109,9 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         $this->authorize('view', $company);
+        if ($company->company_type === 'supplier') {
+            return redirect()->route('suppliers.show', $company);
+        }
         $access = app(AuditorAccessService::class);
         $user = auth()->user();
 
@@ -186,12 +189,15 @@ class CompanyController extends Controller
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'company_type' => ['nullable', Rule::in(['client', 'supplier'])],
             'nip' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
             'notes' => ['nullable', 'string'],
+            'supplier_capabilities' => ['nullable', 'string'],
+            'supplier_materials' => ['nullable', 'string'],
             'source' => ['nullable', 'string', 'max:100'],
             'logo' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
         ]);
@@ -207,7 +213,9 @@ class CompanyController extends Controller
 
         $company->update($data);
 
-        return redirect()->back()->with('success', 'Dane firmy zostały zaktualizowane.');
+        return $company->company_type === 'supplier'
+            ? redirect()->route('suppliers.show', $company)->with('success', 'Dane dostawcy zostały zaktualizowane.')
+            : redirect()->back()->with('success', 'Dane firmy zostały zaktualizowane.');
     }
 
     public function accept(Request $request, Company $company)
@@ -361,24 +369,35 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $cleanNip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
-        $request->merge(['nip' => $cleanNip]);
+        $request->merge([
+            'nip' => $cleanNip,
+            'company_type' => $request->input('company_type', 'client'),
+        ]);
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'company_type' => ['required', Rule::in(['client', 'supplier'])],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'nip' => ['nullable', 'digits:10', Rule::unique('companies', 'nip')->whereNull('archived_at')],
+            'supplier_capabilities' => ['nullable', 'string'],
+            'supplier_materials' => ['nullable', 'string'],
         ]);
 
-        $company = Company::create(array_merge($data, ['status' => 'pending']));
+        $company = Company::create(array_merge($data, [
+            'status' => $data['company_type'] === 'supplier' ? 'active' : 'pending',
+        ]));
 
-        Mail::to(env('ADMIN_EMAIL', 'proximalumine@gmail.com'))
-            ->send(new ClientRegistered($company, $request->user() ?? auth()->user()));
+        if ($company->company_type === 'client') {
+            Mail::to(env('ADMIN_EMAIL', 'proximalumine@gmail.com'))
+                ->send(new ClientRegistered($company, $request->user() ?? auth()->user()));
+        }
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Klient został dodany.');
+        return $company->company_type === 'supplier'
+            ? redirect()->route('suppliers.show', $company)->with('success', 'Dostawca został dodany.')
+            : redirect()->route('dashboard')->with('success', 'Klient został dodany.');
     }
 
     public function destroy(Company $company)

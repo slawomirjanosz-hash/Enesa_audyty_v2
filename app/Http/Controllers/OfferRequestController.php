@@ -14,7 +14,7 @@ class OfferRequestController extends Controller
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
 
-        $companies = Company::active()->orderBy('name')->get();
+        $companies = Company::clients()->active()->orderBy('name')->get();
         $templates = OfferFormTemplate::where('is_active', true)->orderBy('name')->get();
         $preselectedCompanyId = $request->integer('company_id') ?: null;
 

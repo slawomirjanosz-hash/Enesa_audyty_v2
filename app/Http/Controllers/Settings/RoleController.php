@@ -43,12 +43,26 @@ class RoleController extends Controller
     {
         $this->ensureRoleManager();
 
+        $request->merge([
+            'name' => preg_replace('/\s+/u', ' ', trim((string) $request->input('name'))),
+        ]);
+
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:60', 'regex:/^[a-z0-9_]+$/', 'unique:roles,name'],
+            'name' => [
+                'required',
+                'string',
+                'max:60',
+                'regex:/^[\pL\pN][\pL\pN ._()&\/-]*$/u',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (Role::query()->whereRaw('LOWER(name) = LOWER(?)', [$value])->exists()) {
+                        $fail('Rola o tej nazwie już istnieje.');
+                    }
+                },
+            ],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string'],
         ], [
-            'name.regex' => 'Nazwa roli może zawierać małe litery, cyfry i podkreślenia, np. kierownik_projektu.',
+            'name.regex' => 'Nazwa roli może zawierać litery, cyfry, spacje oraz typowe znaki, np. Kierownik Projektu.',
         ]);
 
         $role = Role::create(['name' => $data['name'], 'guard_name' => 'web']);

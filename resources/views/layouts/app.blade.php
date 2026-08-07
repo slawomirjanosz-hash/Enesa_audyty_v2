@@ -433,13 +433,14 @@
             @endif
 
             @if($appModuleEnabled('crm'))
-            <li class="nav-item nav-group {{ request()->is('crm*') ? 'open' : '' }}">
+            <li class="nav-item nav-group {{ request()->is('crm*', 'suppliers*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-users"></i> CRM
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
                     <li><a href="{{ route('crm.index') }}" class="nav-link">Firmy</a></li>
+                    <li><a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">Dostawcy</a></li>
                     <li><a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="nav-link">Lejek sprzedaży</a></li>
                     <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link">Zadania</a></li>
                 </ul>

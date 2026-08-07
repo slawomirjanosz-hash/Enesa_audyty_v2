@@ -83,7 +83,7 @@ class OfferController extends Controller
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $companySettings     = \App\Models\CompanySettings::first();
-        $companies           = Company::orderBy('name')->get();
+        $companies           = Company::clients()->orderBy('name')->get();
         $users               = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
         $offerTemplateTypes  = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
@@ -299,7 +299,7 @@ class OfferController extends Controller
     {
         $this->authorize('update', $offer);
         $companySettings     = \App\Models\CompanySettings::first();
-        $companies           = Company::orderBy('name')->get();
+        $companies           = Company::clients()->orderBy('name')->get();
         $users               = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
         $offerTemplateTypes  = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')

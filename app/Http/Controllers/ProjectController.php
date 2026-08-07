@@ -44,7 +44,7 @@ class ProjectController extends Controller
 
         return view('projects.index', [
             'projects' => $query->paginate(20)->withQueryString(),
-            'companies' => Company::active()->orderBy('name')->get(),
+            'companies' => Company::clients()->active()->orderBy('name')->get(),
             'users' => $this->staffUsers(),
         ]);
     }
@@ -68,7 +68,8 @@ class ProjectController extends Controller
         $this->authorize('view', $project);
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
-            'financialEntries.financeGroup', 'financeGroups.entries', 'requirements.responsible', 'documents.uploader',
+            'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financeGroups.entries',
+            'requirements.responsible', 'requirements.supplierCompany', 'documents.uploader',
         ]);
 
         $timelineItems = $project->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
@@ -89,6 +90,7 @@ class ProjectController extends Controller
         return view('projects.show', [
             'project' => $project,
             'users' => $this->staffUsers(),
+            'suppliers' => Company::suppliers()->active()->orderBy('name')->get(),
             'timelineItems' => $timelineItems,
         ]);
     }
@@ -231,6 +233,10 @@ class ProjectController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'document_number' => ['nullable', 'string', 'max:100'],
             'supplier' => ['nullable', 'string', 'max:255'],
+            'supplier_company_id' => [
+                'nullable', 'integer',
+                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
+            ],
             'finance_group_id' => ['nullable', 'integer'],
             'entry_date' => ['required', 'date'],
             'payment_date' => ['nullable', 'date'],
@@ -239,6 +245,9 @@ class ProjectController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
         $this->validateFinanceGroup($project, $data['finance_group_id'] ?? null);
+        if (! empty($data['supplier_company_id'])) {
+            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
+        }
         $project->financialEntries()->create($data + ['created_by' => $request->user()->id]);
 
         return $this->financeRedirect($project, 'Pozycja finansowa została dodana.');
@@ -253,6 +262,10 @@ class ProjectController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'document_number' => ['nullable', 'string', 'max:100'],
             'supplier' => ['nullable', 'string', 'max:255'],
+            'supplier_company_id' => [
+                'nullable', 'integer',
+                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
+            ],
             'finance_group_id' => ['nullable', 'integer'],
             'entry_date' => ['required', 'date'],
             'payment_date' => ['nullable', 'date'],
@@ -261,6 +274,9 @@ class ProjectController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
         $this->validateFinanceGroup($project, $data['finance_group_id'] ?? null);
+        if (! empty($data['supplier_company_id'])) {
+            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
+        }
         $entry->update($data);
 
         return $this->financeRedirect($project, 'Pozycja finansowa została zaktualizowana.');
@@ -322,6 +338,9 @@ class ProjectController extends Controller
             }
 
             $supplier = $this->nullableFinanceText($this->financeCell($row, $columns['supplier']));
+            $supplierCompanyId = $supplier
+                ? Company::suppliers()->whereRaw('LOWER(name) = LOWER(?)', [$supplier])->value('id')
+                : null;
             $document = $this->nullableFinanceText($this->financeCell($row, $columns['document']));
             $description = $this->nullableFinanceText($this->financeCell($row, $columns['description']));
             $paymentDate = $this->parseFinanceDate($this->financeCell($row, $columns['payment_date']));
@@ -347,6 +366,7 @@ class ProjectController extends Controller
                     'name' => Str::limit($name, 255, ''),
                     'document_number' => $document ? Str::limit($document, 100, '') : null,
                     'supplier' => $supplier ? Str::limit($supplier, 255, '') : null,
+                    'supplier_company_id' => $supplierCompanyId,
                     'entry_date' => $date,
                     'payment_date' => $paymentDate,
                     'amount' => $amount,
@@ -441,10 +461,17 @@ class ProjectController extends Controller
             'unit' => ['nullable', 'string', 'max:30'],
             'estimated_cost' => ['nullable', 'numeric', 'min:0'],
             'supplier' => ['nullable', 'string', 'max:255'],
+            'supplier_company_id' => [
+                'nullable', 'integer',
+                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
+            ],
             'status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled'],
             'needed_by' => ['nullable', 'date'],
             'responsible_id' => ['nullable', 'exists:users,id'],
         ]);
+        if (! empty($data['supplier_company_id'])) {
+            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
+        }
         $project->requirements()->create($data + ['created_by' => $request->user()->id]);
 
         return redirect()->back()->with('success', 'Zapotrzebowanie zostało dodane.');
@@ -454,10 +481,18 @@ class ProjectController extends Controller
     {
         $this->authorize('update', $project);
         abort_unless($requirement->project_id === $project->id, 404);
-        $requirement->update($request->validate([
+        $data = $request->validate([
             'status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled'],
             'supplier' => ['nullable', 'string', 'max:255'],
-        ]));
+            'supplier_company_id' => [
+                'nullable', 'integer',
+                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
+            ],
+        ]);
+        if (! empty($data['supplier_company_id'])) {
+            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
+        }
+        $requirement->update($data);
 
         return redirect()->back()->with('success', 'Status zapotrzebowania został zmieniony.');
     }

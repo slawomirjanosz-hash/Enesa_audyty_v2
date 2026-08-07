@@ -10,6 +10,7 @@ class Company extends Model
 {
     protected $fillable = [
         'name',
+        'company_type',
         'logo_path',
         'nip',
         'email',
@@ -21,6 +22,8 @@ class Company extends Model
         'show_in_dashboard',
         'is_owner',
         'notes',
+        'supplier_capabilities',
+        'supplier_materials',
         'source',
     ];
 
@@ -89,6 +92,26 @@ class Company extends Model
     public function crmActivities(): HasMany
     {
         return $this->hasMany(CrmActivity::class);
+    }
+
+    public function supplierRequirements(): HasMany
+    {
+        return $this->hasMany(ProjectRequirement::class, 'supplier_company_id');
+    }
+
+    public function supplierFinancialEntries(): HasMany
+    {
+        return $this->hasMany(ProjectFinancialEntry::class, 'supplier_company_id');
+    }
+
+    public function scopeClients($query)
+    {
+        return $query->where('company_type', 'client');
+    }
+
+    public function scopeSuppliers($query)
+    {
+        return $query->where('company_type', 'supplier');
     }
 
     public function auditorAccesses(): HasMany

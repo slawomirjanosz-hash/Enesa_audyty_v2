@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $access = app(AuditorAccessService::class);
         $user = $request->user();
         $companies = $access->scopeByCompanyAccess(
-            Company::active()->where('show_in_dashboard', true)->with([
+            Company::clients()->active()->where('show_in_dashboard', true)->with([
                 'users',
                 'audits' => fn ($query) => $access->scopeByCompanyAccess($query, $user, 'can_view_audits'),
                 'offers' => fn ($query) => $access->scopeByCompanyAccess($query, $user, 'can_view_offers'),
@@ -33,7 +33,7 @@ class DashboardController extends Controller
         $stats = [
             'active_audits'      => $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $user, 'can_view_audits')->count(),
             'pending_offers'     => $access->scopeByCompanyAccess(Offer::whereIn('status', ['draft', 'sent']), $user, 'can_view_offers')->count(),
-            'new_registrations'  => $access->hasFullAccess($user) ? Company::where('status', 'pending')->count() : 0,
+            'new_registrations'  => $access->hasFullAccess($user) ? Company::clients()->where('status', 'pending')->count() : 0,
             'overdue_tasks'      => $access->scopeByCompanyAccess(Task::where('due_date', '<', now())->where('status', '!=', 'done'), $user, 'can_view_dashboard')->count(),
         ];
 

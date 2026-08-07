@@ -22,6 +22,7 @@ use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
@@ -263,6 +264,12 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->name('documents.store');
     Route::get('/{project}/documents/{document}', [ProjectController::class, 'downloadDocument'])->name('documents.download');
     Route::delete('/{project}/documents/{document}', [ProjectController::class, 'destroyDocument'])->name('documents.destroy');
+});
+
+Route::prefix('suppliers')->name('suppliers.')->middleware(['auth', 'staff.role', 'app.module:crm'])->group(function () {
+    Route::get('/', [SupplierController::class, 'index'])->name('index');
+    Route::get('/{supplier}', [SupplierController::class, 'show'])->name('show');
+    Route::put('/{supplier}', [SupplierController::class, 'update'])->name('update');
 });
 
 // Session check endpoint (used by session-expired modal JS)

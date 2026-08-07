@@ -78,20 +78,28 @@ test('admin can create and delegate a custom role without granting company setti
 
     $this->actingAs($admin)
         ->post('/settings/roles', [
-            'name' => 'kierownik_projektu',
+            'name' => '  Kierownik   Projektu  ',
             'permissions' => ['system.full_access'],
         ])
         ->assertRedirect('/settings/roles');
 
     $this->actingAs($admin)
+        ->from('/settings/roles')
+        ->post('/settings/roles', ['name' => 'kierownik projektu'])
+        ->assertRedirect('/settings/roles')
+        ->assertSessionHasErrors('name');
+
+    $this->actingAs($admin)
         ->post('/settings/users', [
             'name' => 'Kierownik Testowy',
             'email' => 'kierownik@example.test',
-            'role' => 'kierownik_projektu',
+            'role' => 'Kierownik Projektu',
         ])
         ->assertRedirect('/settings/users');
 
     $user = User::where('email', 'kierownik@example.test')->firstOrFail();
+
+    expect($user->hasRole('Kierownik Projektu'))->toBeTrue();
 
     $this->actingAs($user)->get('/dashboard')->assertOk();
     $this->actingAs($user)->get('/crm')->assertOk();

@@ -423,7 +423,7 @@
             </button>
         </div>
         <a href="#" class="btn-add" onclick="openModal()">
-            <i class="ti ti-plus"></i>Dodaj klienta
+            <i class="ti ti-plus"></i>Dodaj firmę
         </a>
     </div>
 </div>
@@ -721,7 +721,7 @@
     <div style="background:#fff;border-radius:14px;padding:36px;max-width:500px;width:95%;max-height:90vh;overflow-y:auto;position:relative;">
         <button onclick="closeModal()" style="position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#aaa;cursor:pointer;line-height:1;">&times;</button>
         <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:6px;">
-            <i class="ti ti-building" style="margin-right:8px;"></i>Dodaj klienta
+            <i class="ti ti-building" style="margin-right:8px;"></i>Dodaj firmę
         </div>
         <div style="font-size:13px;color:#888;margin-bottom:24px;">Wypełnij dane firmy lub pobierz automatycznie z GUS.</div>
 
@@ -738,6 +738,14 @@
 
         <form method="POST" action="{{ route('companies.store') }}">
             @csrf
+
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Rodzaj firmy *</label>
+                <select id="company-type" name="company_type" onchange="updateCompanyTypeFields()" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;" required>
+                    <option value="client" {{old('company_type','client')==='client'?'selected':''}}>Klient</option>
+                    <option value="supplier" {{old('company_type')==='supplier'?'selected':''}}>Dostawca</option>
+                </select>
+            </div>
 
             {{-- NIP + GUS --}}
             <div style="margin-bottom:14px;">
@@ -801,10 +809,15 @@
                 </div>
             </div>
 
+            <div id="supplier-profile-fields" style="display:none;margin-bottom:18px;">
+                <div style="margin-bottom:12px;"><label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Co może dostarczać / jakie świadczy usługi</label><textarea name="supplier_capabilities" rows="3" style="width:100%;box-sizing:border-box;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font:inherit;" placeholder="np. dostawy armatury, montaż instalacji…">{{old('supplier_capabilities')}}</textarea></div>
+                <div><label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Materiały i asortyment</label><textarea name="supplier_materials" rows="3" style="width:100%;box-sizing:border-box;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font:inherit;" placeholder="np. pompy, przewody, zawory…">{{old('supplier_materials')}}</textarea></div>
+            </div>
+
             <div style="display:flex;gap:10px;">
-                <button type="submit"
+                <button type="submit" id="company-submit-label"
                         style="flex:1;background:var(--green);color:#F5F0E8;border:none;border-radius:8px;padding:12px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;">
-                    <i class="ti ti-plus" style="margin-right:6px;"></i>Dodaj klienta
+                    <i class="ti ti-plus" style="margin-right:6px;"></i><span>Dodaj klienta</span>
                 </button>
                 <button type="button" onclick="closeModal()"
                         style="padding:12px 20px;background:transparent;color:#888;border:1px solid #E5E1D8;border-radius:8px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">
@@ -863,6 +876,15 @@
 
         status.textContent = '';
         status.style.color = '#888';
+        updateCompanyTypeFields();
+    }
+
+    function updateCompanyTypeFields() {
+        const type = document.getElementById('company-type')?.value || 'client';
+        const supplierFields = document.getElementById('supplier-profile-fields');
+        const label = document.querySelector('#company-submit-label span');
+        if (supplierFields) supplierFields.style.display = type === 'supplier' ? 'block' : 'none';
+        if (label) label.textContent = type === 'supplier' ? 'Dodaj dostawcę' : 'Dodaj klienta';
     }
 
     function openModal() {

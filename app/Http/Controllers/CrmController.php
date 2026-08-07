@@ -24,7 +24,14 @@ class CrmController extends Controller
     {
         $access = app(AuditorAccessService::class);
         $authUser = auth()->user();
-        $companies = $access->scopeByCompanyAccess(Company::with(['offers', 'audits', 'tasks', 'crmOpportunities'])
+        $companies = $access->scopeByCompanyAccess(Company::clients()->with(['offers', 'audits', 'tasks', 'crmOpportunities'])
+            ->where('status', '!=', 'archived')
+            ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
+            ->get();
+
+        $suppliers = $access->scopeByCompanyAccess(Company::suppliers()
+            ->withCount(['supplierRequirements', 'supplierFinancialEntries'])
+            ->with(['supplierRequirements.project', 'supplierFinancialEntries.project'])
             ->where('status', '!=', 'archived')
             ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
             ->get();
@@ -68,6 +75,7 @@ if ($authUser->hasRole('superadmin')) {
 
         $stats = [
             'active_companies'    => $companies->count(),
+            'active_suppliers'    => $suppliers->count(),
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
             'active_opps'         => $opportunities->whereNotIn('stage', ['won','lost','rejected'])->count(),
             'open_tasks'          => $tasks->where('status', '!=', 'done')->count(),
@@ -103,7 +111,7 @@ if ($authUser->hasRole('superadmin')) {
         $currentTab = request('tab', 'companies');
 
         return view('crm.index', compact(
-            'companies', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
+            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
         ));
     }
 

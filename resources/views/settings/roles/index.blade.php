@@ -30,8 +30,8 @@
     <p class="muted">Nie tworzę gotowych stanowisk. Administrator sam nadaje nazwę roli, wybiera jej realny zakres i później przypisuje ją użytkownikowi.</p>
     <form method="POST" action="{{ route('settings.roles.store') }}">
         @csrf
-        <label for="name" style="display:block;font-weight:700;margin:16px 0 6px;">Nazwa techniczna roli</label>
-        <input id="name" name="name" class="input" value="{{ old('name') }}" placeholder="np. kierownik_projektu" required>
+        <label for="name" style="display:block;font-weight:700;margin:16px 0 6px;">Nazwa roli</label>
+        <input id="name" name="name" class="input" value="{{ old('name') }}" placeholder="np. Kierownik Projektu" required>
         @error('name') <div style="color:#b91c1c;font-size:13px;margin-top:5px;">{{ $message }}</div> @enderror
         @foreach($availablePermissions as $permission => $meta)
             <label class="permission">

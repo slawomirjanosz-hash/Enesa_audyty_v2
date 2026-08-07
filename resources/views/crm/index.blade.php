@@ -190,6 +190,10 @@
         <i class="ti ti-building"></i> Firmy
         <span class="tab-count">{{ $stats['active_companies'] }}</span>
     </a>
+    <a href="{{ route('crm.index', ['tab'=>'suppliers']) }}" class="crm-tab {{ $currentTab==='suppliers'?'active':'' }}">
+        <i class="ti ti-truck-delivery"></i> Dostawcy
+        <span class="tab-count">{{ $stats['active_suppliers'] }}</span>
+    </a>
     <a href="{{ route('crm.index', ['tab'=>'pipeline']) }}" class="crm-tab {{ $currentTab==='pipeline'?'active':'' }}">
         <i class="ti ti-target"></i> Szanse
         <span class="tab-count">{{ $stats['active_opps'] }}</span>
@@ -261,7 +265,7 @@
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
-                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}')">
+                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}', '{{$company->company_type}}')">
                                 <i class="ti ti-pencil"></i>
                             </button>
                             @if($company->offers->count() > 0 || $company->audits->count() > 0)
@@ -288,6 +292,14 @@
             </tbody>
         </table>
     </div>
+</div>
+@endif
+
+{{-- ═══ TAB: DOSTAWCY ═══ --}}
+@if($currentTab === 'suppliers')
+<div class="table-card">
+    <div class="table-card-header"><div class="table-card-title"><i class="ti ti-truck-delivery" style="color:var(--green);margin-right:6px"></i> Dostawcy ({{$suppliers->count()}})</div><div style="display:flex;gap:8px;align-items:center"><div class="search-box"><i class="ti ti-search"></i><input type="text" placeholder="Szukaj dostawcy…" oninput="filterTable('suppliers-tbody',this.value,[0,1,2,3])"></div><a href="{{route('suppliers.index')}}" class="btn-secondary">Pełny widok</a></div></div>
+    <div style="overflow-x:auto"><table class="crm-table"><thead><tr><th>Dostawca</th><th>Miasto</th><th>Zakres dostaw</th><th>Materiały</th><th>Projekty</th><th></th></tr></thead><tbody id="suppliers-tbody">@forelse($suppliers as $supplier)<tr><td><a href="{{route('suppliers.show',$supplier)}}" style="font-weight:800;color:var(--green);text-decoration:none">{{$supplier->name}}</a><br><small>NIP {{$supplier->nip ?: '—'}}</small></td><td>{{$supplier->city ?: '—'}}</td><td>{{str($supplier->supplier_capabilities ?: '—')->limit(80)}}</td><td>{{str($supplier->supplier_materials ?: '—')->limit(80)}}</td><td>{{$supplier->supplierRequirements->pluck('project_id')->merge($supplier->supplierFinancialEntries->pluck('project_id'))->filter()->unique()->count()}}</td><td><a class="btn-icon btn-icon-view" href="{{route('suppliers.show',$supplier)}}"><i class="ti ti-eye"></i></a></td></tr>@empty<tr><td colspan="6" style="padding:35px;text-align:center;color:#888">Brak dostawców. Dodając firmę wybierz typ „Dostawca”.</td></tr>@endforelse</tbody></table></div>
 </div>
 @endif
 
@@ -698,7 +710,7 @@
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
-                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}')">
+                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}', '{{$company->company_type}}')">
                                 <i class="ti ti-pencil"></i>
                             </button>
                             <form method="POST" action="{{ route('crm.companies.restore', $company) }}" style="display:inline;">
@@ -1129,6 +1141,7 @@
                     </div>
                     <div id="edit-gus-status" style="font-size:11px;margin-top:5px;min-height:15px;"></div>
                 </div>
+                <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Rodzaj firmy</label><select id="edit-company-type" name="company_type" style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px"><option value="client">Klient</option><option value="supplier">Dostawca</option></select></div>
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">E-mail</label>
                     <input type="email" id="edit-email" name="email"
@@ -1175,7 +1188,7 @@
 </div>
 
 <script>
-function openEditCompanyModal(id, name, nip, email, phone, address, city, source, notes) {
+function openEditCompanyModal(id, name, nip, email, phone, address, city, source, notes, companyType) {
     document.getElementById('edit-company-id').value = id;
     document.getElementById('edit-name').value = name;
     document.getElementById('edit-nip').value = nip;
@@ -1185,6 +1198,7 @@ function openEditCompanyModal(id, name, nip, email, phone, address, city, source
     document.getElementById('edit-city').value = city;
     document.getElementById('edit-source').value = source;
     document.getElementById('edit-notes').value = notes;
+    document.getElementById('edit-company-type').value = companyType || 'client';
     document.getElementById('edit-gus-status').textContent = '';
     document.getElementById('form-edit-company').action = '/companies/' + id;
     document.getElementById('modal-edit-company').style.display = 'flex';
