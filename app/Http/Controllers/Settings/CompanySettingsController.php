@@ -50,6 +50,8 @@ class CompanySettingsController extends Controller
 
             $settings->update([
                 'logo_path' => $logo->store('branding', 'public'),
+                'logo_data' => base64_encode($logo->getContent()),
+                'logo_mime' => $logo->getMimeType(),
             ]);
         }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuditTypeController;
+use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AuditController as ClientAuditController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
+Route::get('/branding/logo', [BrandingController::class, 'logo'])->name('branding.logo');
 
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->name('register.client.store');

@@ -27,6 +27,8 @@ class CompanySettings extends Model
         'nip',
         'website',
         'logo_path',
+        'logo_data',
+        'logo_mime',
         'primary_color',
         'welcome_page_mode',
         'enabled_modules',
@@ -75,6 +77,10 @@ class CompanySettings extends Model
 
     public function logoUrl(): string
     {
+        if ($this->logo_data) {
+            return route('branding.logo', ['v' => $this->updated_at?->timestamp]);
+        }
+
         if ($this->logo_path && Storage::disk('public')->exists($this->logo_path)) {
             return Storage::disk('public')->url($this->logo_path);
         }
