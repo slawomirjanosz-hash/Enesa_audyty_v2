@@ -148,6 +148,51 @@ test('project manager manages schedule tasks finances and requirements', functio
     $this->get($publicUrl)->assertOk()->assertSee('Publiczny harmonogram projektu');
 });
 
+test('project manager bulk deletes selected gantt tasks only', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/BULK', 'name' => 'Usuwanie grupowe', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($manager);
+    $first = $project->tasks()->create([
+        'title' => 'Pierwsze', 'created_by' => $manager->id, 'status' => 'todo', 'priority' => 'medium',
+        'progress' => 0, 'start_date' => '2026-08-01', 'due_date' => '2026-08-02', 'project_position' => 0,
+    ]);
+    $remaining = $project->tasks()->create([
+        'title' => 'Pozostające', 'created_by' => $manager->id, 'depends_on_task_id' => $first->id,
+        'status' => 'todo', 'priority' => 'medium', 'progress' => 0,
+        'start_date' => '2026-08-03', 'due_date' => '2026-08-04', 'project_position' => 1,
+    ]);
+    $last = $project->tasks()->create([
+        'title' => 'Ostatnie', 'created_by' => $manager->id, 'status' => 'todo', 'priority' => 'medium',
+        'progress' => 0, 'start_date' => '2026-08-05', 'due_date' => '2026-08-06', 'project_position' => 2,
+    ]);
+
+    $this->actingAs($manager)->deleteJson(route('projects.tasks.bulk-destroy', $project), [
+        'task_ids' => [$first->id, $last->id],
+    ])->assertOk()->assertJsonPath('deleted', 2);
+
+    expect($project->tasks()->pluck('id')->all())->toBe([$remaining->id])
+        ->and($remaining->refresh()->depends_on_task_id)->toBeNull()
+        ->and($remaining->project_position)->toBe(0);
+
+    $otherProject = Project::create([
+        'number' => 'PRJ/2026/OTHER', 'name' => 'Inny projekt', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $foreignTask = $otherProject->tasks()->create([
+        'title' => 'Obce zadanie', 'created_by' => $manager->id, 'status' => 'todo', 'priority' => 'medium',
+        'progress' => 0, 'start_date' => '2026-08-01', 'due_date' => '2026-08-02', 'project_position' => 0,
+    ]);
+    $this->actingAs($manager)->deleteJson(route('projects.tasks.bulk-destroy', $project), [
+        'task_ids' => [$remaining->id, $foreignTask->id],
+    ])->assertUnprocessable()->assertJsonValidationErrors('task_ids');
+    expect($project->tasks()->whereKey($remaining)->exists())->toBeTrue()
+        ->and($otherProject->tasks()->whereKey($foreignTask)->exists())->toBeTrue();
+});
+
 test('projects module can be disabled for an application deployment', function () {
     CompanySettings::create([
         'name' => 'Firma bez projektów', 'primary_color' => '#123456',

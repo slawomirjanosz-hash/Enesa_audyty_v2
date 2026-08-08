@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -212,6 +213,33 @@ class ProjectController extends Controller
         }
 
         return redirect()->back()->with('success', 'Zadanie zostało usunięte.');
+    }
+
+    public function bulkDestroyTasks(Request $request, Project $project): JsonResponse
+    {
+        $this->authorize('update', $project);
+        $data = $request->validate([
+            'task_ids' => ['required', 'array', 'min:1'],
+            'task_ids.*' => ['required', 'integer', 'distinct'],
+        ]);
+        $taskIds = collect($data['task_ids'])->map(fn ($id) => (int) $id)->values();
+        $tasks = $project->tasks()->whereKey($taskIds)->get();
+        if ($tasks->count() !== $taskIds->count()) {
+            throw ValidationException::withMessages([
+                'task_ids' => 'Wybrane zadania muszą należeć do tego projektu.',
+            ]);
+        }
+
+        DB::transaction(function () use ($project, $tasks) {
+            $tasks->each->delete();
+            $project->tasks()->orderBy('project_position')->orderBy('id')->pluck('id')
+                ->each(fn ($taskId, $position) => Task::whereKey($taskId)->update(['project_position' => $position]));
+        });
+
+        return response()->json([
+            'success' => true,
+            'deleted' => $tasks->count(),
+        ]);
     }
 
     public function reorderTasks(Request $request, Project $project): JsonResponse
