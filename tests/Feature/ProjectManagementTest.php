@@ -344,6 +344,44 @@ test('gantt import accepts the previous export format with dependency names', fu
     @unlink($path);
 });
 
+test('gantt import recognizes dependency column from external schedule and repairs existing tasks', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/EXTERNAL', 'name' => 'Import zewnętrznego harmonogramu', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $first = $project->tasks()->create([
+        'title' => 'Podpisanie umowy', 'created_by' => $manager->id, 'status' => 'done', 'priority' => 'medium',
+        'progress' => 100, 'start_date' => '2026-06-28', 'due_date' => '2026-07-09', 'project_position' => 0,
+    ]);
+    $dependent = $project->tasks()->create([
+        'title' => 'Czyszczenie wymiennika', 'created_by' => $manager->id, 'status' => 'todo', 'priority' => 'medium',
+        'progress' => 0, 'start_date' => '2026-07-23', 'due_date' => '2026-07-31', 'project_position' => 1,
+    ]);
+
+    $spreadsheet = new Spreadsheet;
+    $spreadsheet->getActiveSheet()->fromArray([
+        ['Nazwa zadania', 'Data rozpoczęcia', 'Data zakończenia', 'Czas trwania (dni)', 'Postęp (%)', 'Zależność od'],
+        ['Podpisanie umowy', '28.06.2026', '9.07.2026', 12, 100, 'Brak'],
+        ['Czyszczenie wymiennika', '23.07.2026', '31.07.2026', 9, 0, 'Podpisanie umowy'],
+    ]);
+    $path = tempnam(sys_get_temp_dir(), 'project-gantt-external-');
+    (new Xlsx($spreadsheet))->save($path);
+
+    $response = $this->actingAs($manager)->post(route('projects.gantt.import', $project), [
+        'file' => new UploadedFile($path, 'harmonogram-zewnetrzny.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', null, true),
+    ])->assertSessionHas('gantt_import_report');
+
+    $report = $response->getSession()->get('gantt_import_report');
+    expect($report['inserted'])->toBe(0)
+        ->and($report['duplicates'])->toBe(2)
+        ->and($dependent->refresh()->depends_on_task_id)->toBe($first->id)
+        ->and($project->tasks()->count())->toBe(2);
+
+    @unlink($path);
+});
+
 test('excel finance import recognizes polish columns and never imports a duplicate twice', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');

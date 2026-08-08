@@ -52,7 +52,7 @@ class ProjectGanttImportService
             'status' => $this->findColumn($headers, ['status', 'stan']),
             'priority' => $this->findColumn($headers, ['priorytet']),
             'dependency_id' => $this->findColumn($headers, ['zalezne od id', 'id poprzednika', 'poprzednik id']),
-            'dependency_name' => $this->findColumn($headers, ['zalezne od', 'poprzednik', 'zadanie poprzedzajace']),
+            'dependency_name' => $this->findColumn($headers, ['zalezne od', 'zaleznosc od', 'zaleznosc', 'poprzednik', 'zadanie poprzedzajace']),
             'assignee_email' => $this->findColumn($headers, ['e mail osoby odpowiedzialnej', 'email osoby odpowiedzialnej', 'email']),
             'assignee_name' => $this->findColumn($headers, ['osoba odpowiedzialna', 'osoba', 'przypisane do']),
             'description' => $this->findColumn($headers, ['opis', 'uwagi']),
@@ -113,7 +113,7 @@ class ProjectGanttImportService
                 'status' => $status,
                 'priority' => $this->priority($this->cell($row, $columns['priority'])),
                 'dependency_id' => Str::upper((string) ($this->text($this->cell($row, $columns['dependency_id'])) ?? '')),
-                'dependency_name' => $this->text($this->cell($row, $columns['dependency_name'])),
+                'dependency_name' => $this->dependencyName($this->cell($row, $columns['dependency_name'])),
                 'assignee_email' => Str::lower((string) ($this->text($this->cell($row, $columns['assignee_email'])) ?? '')),
                 'assignee_name' => $this->text($this->cell($row, $columns['assignee_name'])),
                 'description' => $this->text($this->cell($row, $columns['description'])),
@@ -197,9 +197,8 @@ class ProjectGanttImportService
         ));
         $report = ['inserted' => 0, 'duplicates' => 0, 'invalid' => $invalid, 'unassigned' => 0];
         $taskMap = [];
-        $newExternalIds = [];
 
-        DB::transaction(function () use ($rows, $project, $actor, $staffByEmail, $staffByName, $existingTasks, &$report, &$taskMap, &$newExternalIds) {
+        DB::transaction(function () use ($rows, $project, $actor, $staffByEmail, $staffByName, $existingTasks, &$report, &$taskMap) {
             $nextPosition = ((int) $project->tasks()->max('project_position')) + 1;
             foreach ($rows as $row) {
                 $fingerprint = $this->fingerprint($row['title'], $row['start_date'], $row['due_date']);
@@ -233,13 +232,12 @@ class ProjectGanttImportService
                     'project_position' => $nextPosition++,
                 ]);
                 $taskMap[$row['external_id']] = $task;
-                $newExternalIds[$row['external_id']] = true;
                 $existingTasks->put($fingerprint, $task);
                 $report['inserted']++;
             }
 
             foreach ($rows as $row) {
-                if (isset($newExternalIds[$row['external_id']]) && $row['dependency_id'] !== '') {
+                if ($row['dependency_id'] !== '' && isset($taskMap[$row['external_id']], $taskMap[$row['dependency_id']])) {
                     $taskMap[$row['external_id']]->update([
                         'depends_on_task_id' => $taskMap[$row['dependency_id']]->id,
                     ]);
@@ -277,6 +275,16 @@ class ProjectGanttImportService
         $value = trim((string) ($value ?? ''));
 
         return $value === '' ? null : $value;
+    }
+
+    private function dependencyName(mixed $value): ?string
+    {
+        $value = $this->text($value);
+        if (! $value || in_array($this->normalize($value), ['brak', 'bez zaleznosci', 'none', 'n a'], true)) {
+            return null;
+        }
+
+        return $value;
     }
 
     private function date(mixed $value): ?string
