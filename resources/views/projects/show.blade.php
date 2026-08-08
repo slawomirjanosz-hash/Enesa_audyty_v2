@@ -78,10 +78,15 @@
 </section>
 
 <section id="pane-gantt" class="pane">
+    @if(session('gantt_import_report'))
+        @php($ganttReport = session('gantt_import_report'))
+        <div class="import-report" style="margin-bottom:16px"><strong>Import harmonogramu zakończony</strong><div class="report-grid" style="margin-top:10px"><div class="report-value"><small>Dodano</small><strong>{{$ganttReport['inserted']}}</strong></div><div class="report-value"><small>Duplikaty</small><strong>{{$ganttReport['duplicates']}}</strong></div><div class="report-value"><small>Błędne wiersze</small><strong>{{$ganttReport['invalid']}}</strong></div><div class="report-value"><small>Bez przypisanej osoby</small><strong>{{$ganttReport['unassigned']}}</strong></div></div></div>
+    @endif
     <div class="card"><h2>Interaktywny wykres Gantta</h2>
         <div class="gantt-toolbar">
             @if($canEdit)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button>@endif
-            <button type="button" class="tool-btn" id="gantt-export"><i class="ti ti-file-spreadsheet"></i> Eksport Excel</button>
+            <a class="tool-btn" style="text-decoration:none" href="{{route('projects.gantt.export',$project)}}"><i class="ti ti-file-spreadsheet"></i> Eksport Excel</a>
+            @if($canEdit)<button type="button" class="tool-btn" onclick="document.getElementById('gantt-import-modal').classList.add('open')"><i class="ti ti-file-upload"></i> Import Excel</button>@endif
             @if($canEdit)<button type="button" class="tool-btn" id="gantt-share"><i class="ti ti-link"></i> Link dla klienta</button>@endif
             <span class="tool-label">Widok:</span>
             @foreach(['Day'=>'Dzień','Week'=>'Tydzień','Month'=>'Miesiąc'] as $mode=>$label)<button type="button" class="tool-btn gantt-mode {{ $mode==='Week'?'active':'' }}" data-mode="{{ $mode }}">{{ $label }}</button>@endforeach
@@ -245,14 +250,31 @@
 </div>
 @endif
 
+@if($canEdit)
+<div id="gantt-import-modal" class="project-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="project-modal-box" style="width:min(620px,100%)">
+        <div class="modal-head"><div><h2>Import harmonogramu z Excela</h2><small style="color:#718078">Zadania, kolejność i zależności zostaną przeniesione do tego projektu.</small></div><button type="button" class="modal-close" onclick="document.getElementById('gantt-import-modal').classList.remove('open')">×</button></div>
+        @if($errors->ganttImport->any())<div style="padding:11px 13px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:14px;">{{$errors->ganttImport->first()}}</div>@endif
+        <form method="POST" enctype="multipart/form-data" action="{{route('projects.gantt.import',$project)}}">@csrf
+            <div class="grid2">
+                <div class="field full"><label>Plik harmonogramu *</label><input type="file" name="file" accept=".xlsx,.xls,.csv" required><small style="color:#718078">Obsługiwany jest nowy eksport oraz wcześniejszy format eksportu Gantta.</small></div>
+                <div class="field full"><label>Nowa data rozpoczęcia harmonogramu</label><input type="date" name="new_start_date" value="{{old('new_start_date',$project->start_date?->format('Y-m-d'))}}"><small style="color:#718078">Wszystkie zadania przesuną się o tę samą liczbę dni. Wyczyść pole, aby zachować daty z pliku.</small></div>
+            </div>
+            <div style="padding:10px 12px;background:#f6f8f5;border-radius:8px;margin-top:14px;font-size:12px;color:#66736b">Istniejące identyczne zadania nie zostaną dodane ponownie. Osoby z zespołu projektu są dopasowywane po adresie e-mail, a potem po unikalnej nazwie.</div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="document.getElementById('gantt-import-modal').classList.remove('open')">Anuluj</button><button class="btn"><i class="ti ti-file-upload"></i> Importuj harmonogram</button></div>
+        </form>
+    </div>
+</div>
+@if($errors->ganttImport->any())<script>document.addEventListener('DOMContentLoaded',()=>document.getElementById('gantt-import-modal')?.classList.add('open'));</script>@endif
+@endif
+
 <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.0/dist/frappe-gantt.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <script>
 const projectTimelineItems = @json($timelineItems);
 const projectFinanceItems = @json($financeChartData);
 const projectContractValue = @json((float) $project->contract_value);
-const requestedProjectTab = @json(request('tab'));
+const requestedProjectTab = @json(request('tab') ?: ($errors->ganttImport->any() ? 'gantt' : null));
 const projectCanEdit = @json($canEdit);
 const projectCsrfToken = document.querySelector('meta[name="csrf-token"]')?.content || @json(csrf_token());
 let projectGantt = null;
@@ -501,19 +523,6 @@ document.getElementById('gantt-share')?.addEventListener('click', async () => {
         catch { window.prompt('Skopiuj publiczny link do harmonogramu:', data.url); }
     } catch (error) { alert(error.message); }
 });
-document.getElementById('gantt-export')?.addEventListener('click', () => {
-    if (typeof XLSX === 'undefined') { alert('Nie udało się załadować eksportu Excel. Odśwież stronę.'); return; }
-    const rows = projectTimelineItems.map(item => ({
-        'Rodzaj': 'Zadanie', 'Nazwa': item.name,
-        'Data rozpoczęcia': item.start, 'Data zakończenia': item.end,
-        'Czas trwania (dni)': taskDurationDays(item.start,item.end), 'Postęp (%)': item.progress,
-        'Zależne od': item.dependencies ? projectTimelineItems.find(source=>source.id===item.dependencies)?.name || '' : '',
-        'Osoba odpowiedzialna': item.assignee || '', 'Opis': item.description || '',
-    }));
-    const workbook=XLSX.utils.book_new(), sheet=XLSX.utils.json_to_sheet(rows); sheet['!cols']=[{wch:12},{wch:35},{wch:18},{wch:18},{wch:20},{wch:13},{wch:35},{wch:28},{wch:45}];
-    XLSX.utils.book_append_sheet(workbook,sheet,'Harmonogram'); XLSX.writeFile(workbook,'Harmonogram_{{ preg_replace('/[^A-Za-z0-9_-]/','_',$project->number) }}.xlsx');
-});
-
 const cashflowState = {mode: 'month', cumulative: true, offset: 0};
 function financePeriodKey(date, mode) {
     if (mode === 'day') return date;

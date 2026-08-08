@@ -248,6 +248,8 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
     Route::post('/{project}/tasks', [ProjectController::class, 'storeTask'])->name('tasks.store');
     Route::post('/{project}/tasks/reorder', [ProjectController::class, 'reorderTasks'])->name('tasks.reorder');
+    Route::get('/{project}/gantt/export', [ProjectController::class, 'exportGantt'])->name('gantt.export');
+    Route::post('/{project}/gantt/import', [ProjectController::class, 'importGantt'])->name('gantt.import');
     Route::patch('/{project}/tasks/{task}', [ProjectController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/{project}/tasks/{task}', [ProjectController::class, 'destroyTask'])->name('tasks.destroy');
     Route::post('/{project}/public-gantt', [ProjectController::class, 'generatePublicGantt'])->name('public-gantt.generate');

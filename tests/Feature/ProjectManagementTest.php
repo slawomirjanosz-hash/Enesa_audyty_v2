@@ -197,6 +197,108 @@ test('client card follows audit and project module visibility', function () {
         ->assertSee('Aktywne projekty');
 });
 
+test('gantt excel can be exported and imported into another project with dependencies', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $source = Project::create([
+        'number' => 'PRJ/2026/SOURCE', 'name' => 'Projekt źródłowy', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $firstSourceTask = $source->tasks()->create([
+        'title' => 'Przygotowanie', 'assigned_to' => $manager->id, 'created_by' => $manager->id,
+        'status' => 'in_progress', 'priority' => 'high', 'progress' => 25,
+        'start_date' => '2026-01-10', 'due_date' => '2026-01-12', 'project_position' => 1,
+    ]);
+    $source->tasks()->create([
+        'title' => 'Montaż', 'assigned_to' => $manager->id, 'created_by' => $manager->id,
+        'depends_on_task_id' => $firstSourceTask->id, 'status' => 'todo', 'priority' => 'medium', 'progress' => 0,
+        'start_date' => '2026-01-13', 'due_date' => '2026-01-15', 'project_position' => 2,
+    ]);
+
+    $this->actingAs($manager)->get(route('projects.show', ['project' => $source, 'tab' => 'gantt']))
+        ->assertOk()
+        ->assertSee('Eksport Excel')
+        ->assertSee('Import Excel');
+
+    $this->actingAs($manager)
+        ->get(route('projects.gantt.export', $source))
+        ->assertOk()
+        ->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    $target = Project::create([
+        'number' => 'PRJ/2026/TARGET', 'name' => 'Projekt docelowy', 'manager_id' => $manager->id,
+        'status' => 'planned', 'start_date' => '2026-09-01', 'contract_value' => 20000, 'created_by' => $manager->id,
+    ]);
+
+    $spreadsheet = new Spreadsheet;
+    $spreadsheet->getActiveSheet()->fromArray([
+        ['ID zadania', 'Kolejność', 'Nazwa', 'Data rozpoczęcia', 'Data zakończenia', 'Postęp (%)', 'Status', 'Priorytet', 'Zależne od ID', 'Zależne od', 'E-mail osoby odpowiedzialnej', 'Osoba odpowiedzialna', 'Opis'],
+        ['T001', 1, 'Przygotowanie', '2026-01-10', '2026-01-12', 25, 'W trakcie', 'Wysoki', null, null, $manager->email, $manager->name, 'Opis pierwszego zadania'],
+        ['T002', 2, 'Montaż', '2026-01-13', '2026-01-15', 0, 'Do zrobienia', 'Średni', 'T001', 'Przygotowanie', $manager->email, $manager->name, null],
+    ]);
+    $path = tempnam(sys_get_temp_dir(), 'project-gantt-');
+    (new Xlsx($spreadsheet))->save($path);
+    $upload = fn () => new UploadedFile($path, 'harmonogram.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', null, true);
+
+    $response = $this->actingAs($manager)->post(route('projects.gantt.import', $target), [
+        'file' => $upload(),
+        'new_start_date' => '2026-09-01',
+    ])->assertRedirect(route('projects.show', ['project' => $target, 'tab' => 'gantt']))
+        ->assertSessionHas('gantt_import_report');
+
+    $report = $response->getSession()->get('gantt_import_report');
+    $importedFirst = $target->tasks()->where('title', 'Przygotowanie')->firstOrFail();
+    $importedSecond = $target->tasks()->where('title', 'Montaż')->firstOrFail();
+    expect($report['inserted'])->toBe(2)
+        ->and($report['duplicates'])->toBe(0)
+        ->and($importedFirst->start_date->format('Y-m-d'))->toBe('2026-09-01')
+        ->and($importedFirst->due_date->format('Y-m-d'))->toBe('2026-09-03')
+        ->and($importedFirst->assigned_to)->toBe($manager->id)
+        ->and($importedSecond->start_date->format('Y-m-d'))->toBe('2026-09-04')
+        ->and($importedSecond->depends_on_task_id)->toBe($importedFirst->id);
+
+    $secondResponse = $this->actingAs($manager)->post(route('projects.gantt.import', $target), [
+        'file' => $upload(),
+        'new_start_date' => '2026-09-01',
+    ])->assertSessionHas('gantt_import_report');
+    $secondReport = $secondResponse->getSession()->get('gantt_import_report');
+    expect($secondReport['inserted'])->toBe(0)
+        ->and($secondReport['duplicates'])->toBe(2)
+        ->and($target->tasks()->count())->toBe(2);
+
+    @unlink($path);
+});
+
+test('gantt import accepts the previous export format with dependency names', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/LEGACY', 'name' => 'Import starego formatu', 'manager_id' => $manager->id,
+        'status' => 'planned', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+
+    $spreadsheet = new Spreadsheet;
+    $spreadsheet->getActiveSheet()->fromArray([
+        ['Rodzaj', 'Nazwa', 'Data rozpoczęcia', 'Data zakończenia', 'Czas trwania (dni)', 'Postęp (%)', 'Zależne od', 'Osoba odpowiedzialna', 'Opis'],
+        ['Zadanie', 'Etap pierwszy', '2026-10-01', '2026-10-02', 2, 0, null, $manager->name, null],
+        ['Zadanie', 'Etap drugi', '2026-10-03', '2026-10-05', 3, 0, 'Etap pierwszy', $manager->name, null],
+    ]);
+    $path = tempnam(sys_get_temp_dir(), 'project-gantt-legacy-');
+    (new Xlsx($spreadsheet))->save($path);
+
+    $this->actingAs($manager)->post(route('projects.gantt.import', $project), [
+        'file' => new UploadedFile($path, 'stary-harmonogram.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', null, true),
+    ])->assertSessionHas('gantt_import_report');
+
+    $first = $project->tasks()->where('title', 'Etap pierwszy')->firstOrFail();
+    $second = $project->tasks()->where('title', 'Etap drugi')->firstOrFail();
+    expect($second->depends_on_task_id)->toBe($first->id)
+        ->and($first->assigned_to)->toBe($manager->id)
+        ->and($project->tasks()->count())->toBe(2);
+
+    @unlink($path);
+});
+
 test('excel finance import recognizes polish columns and never imports a duplicate twice', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');

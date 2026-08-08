@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProjectGanttExport;
 use App\Models\Company;
 use App\Models\Document;
 use App\Models\Project;
@@ -11,6 +12,7 @@ use App\Models\ProjectRequirement;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Services\ProjectGanttImportService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -22,6 +24,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
 class ProjectController extends Controller
@@ -228,6 +231,30 @@ class ProjectController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function exportGantt(Project $project): BinaryFileResponse
+    {
+        $this->authorize('view', $project);
+
+        $filename = 'Harmonogram_'.Str::slug($project->number ?: $project->name, '_').'.xlsx';
+
+        return Excel::download(new ProjectGanttExport($project), $filename);
+    }
+
+    public function importGantt(Request $request, Project $project, ProjectGanttImportService $importer): RedirectResponse
+    {
+        $this->authorize('update', $project);
+        $data = $request->validateWithBag('ganttImport', [
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:10240'],
+            'new_start_date' => ['nullable', 'date'],
+        ]);
+
+        $report = $importer->import($project, $data['file'], $data['new_start_date'] ?? null, $request->user());
+
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'gantt'])
+            ->with('success', "Import harmonogramu zakończony: dodano {$report['inserted']} zadań, pominięto {$report['duplicates']} duplikatów.")
+            ->with('gantt_import_report', $report);
     }
 
     public function storeFinancialEntry(Request $request, Project $project): RedirectResponse
