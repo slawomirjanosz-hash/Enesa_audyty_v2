@@ -180,6 +180,28 @@ test('finance and requirement statuses are saved through background endpoints', 
     expect($entry->refresh()->status)->toBe('paid')
         ->and($requirement->refresh()->status)->toBe('ordered');
 
+    $purchaseResponse = $this->actingAs($manager)
+        ->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'purchased'])
+        ->assertOk()
+        ->assertJsonPath('status', 'purchased')
+        ->assertJsonPath('financial_entry.name', 'Pompa')
+        ->assertJsonPath('financial_entry.amount', 3000)
+        ->assertJsonPath('financial_entry.type', 'cost')
+        ->assertJsonPath('financial_entry.status', 'issued')
+        ->assertJsonPath('summary.costs', 4200);
+
+    $copiedEntryId = $purchaseResponse->json('financial_entry.id');
+    expect($requirement->refresh()->status)->toBe('purchased')
+        ->and($requirement->financialEntry?->id)->toBe($copiedEntryId)
+        ->and($project->requirements()->whereKey($requirement)->exists())->toBeTrue()
+        ->and($project->financialEntries()->where('project_requirement_id', $requirement->id)->count())->toBe(1);
+
+    $this->actingAs($manager)
+        ->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'purchased'])
+        ->assertOk()
+        ->assertJsonPath('financial_entry.id', $copiedEntryId);
+    expect($project->financialEntries()->where('project_requirement_id', $requirement->id)->count())->toBe(1);
+
     $this->actingAs($manager)
         ->get(route('projects.show', ['project' => $project, 'tab' => 'finances']))
         ->assertOk()
@@ -308,6 +330,8 @@ test('project manager edits material details and quantities are displayed cleanl
         ->assertSee('1,5 szt.')
         ->assertSee('2 000,00 zł / szt.')
         ->assertSee('Łącznie: 3 000,00 zł')
+        ->assertSee('Łączna wartość zamówienia')
+        ->assertSee('Dostawca testowy · 1 poz.')
         ->assertSee('Cena za jednostkę')
         ->assertSee('Edytuj materiał lub usługę')
         ->assertSee('Import z Excela')

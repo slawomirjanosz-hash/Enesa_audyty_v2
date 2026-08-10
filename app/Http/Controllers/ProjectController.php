@@ -649,12 +649,29 @@ class ProjectController extends Controller
         abort_unless($requirement->project_id === $project->id, 404);
         $data = $request->validate(['status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled']]);
         $requirement->update(['status' => $data['status']]);
+        $requirement->load('financialEntry');
+        $project->load('financialEntries');
 
         return response()->json([
             'status' => $requirement->status,
             'committed_requirements' => (float) $project->requirements()
                 ->whereIn('status', ['ordered', 'in_progress', 'purchased'])
                 ->sum('estimated_cost'),
+            'financial_entry' => $requirement->status === 'purchased' && $requirement->financialEntry ? [
+                'id' => $requirement->financialEntry->id,
+                'date' => $requirement->financialEntry->entry_date->format('Y-m-d'),
+                'amount' => (float) $requirement->financialEntry->amount,
+                'type' => $requirement->financialEntry->type,
+                'status' => $requirement->financialEntry->status,
+                'name' => $requirement->financialEntry->name,
+            ] : null,
+            'summary' => [
+                'invoiced' => $project->totalInvoiced(),
+                'planned_invoiced' => $project->plannedInvoiced(),
+                'costs' => $project->totalCosts(),
+                'planned_costs' => $project->plannedCosts(),
+                'result' => $project->result(),
+            ],
         ]);
     }
 
