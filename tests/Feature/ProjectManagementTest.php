@@ -280,8 +280,9 @@ test('project manager edits material details and quantities are displayed cleanl
 
     $this->actingAs($manager)->post(route('projects.requirements.store', $project), [
         'type' => 'material', 'name' => 'Pompa Grundfos', 'quantity' => 1, 'unit' => '2',
-        'estimated_cost' => 2500, 'status' => 'requested', 'responsible_id' => $manager->id,
-    ])->assertSessionHas('success');
+        'unit_cost' => 2500, 'status' => 'requested', 'responsible_id' => $manager->id,
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertSessionHas('success');
     $requirement = $project->requirements()->firstOrFail();
     expect($requirement->unit)->toBe('szt.')
         ->and($requirement->formattedQuantity())->toBe('1')
@@ -289,19 +290,25 @@ test('project manager edits material details and quantities are displayed cleanl
 
     $this->actingAs($manager)->patch(route('projects.requirements.update', [$project, $requirement]), [
         'type' => 'material', 'name' => 'Pompa Grundfos TP', 'description' => 'Pompa obiegowa',
-        'quantity' => 1.5, 'unit' => 'szt.', 'estimated_cost' => 2750,
+        'quantity' => 1.5, 'unit' => 'szt.', 'unit_cost' => 2000,
         'needed_by' => '2026-09-15', 'responsible_id' => $manager->id,
         'status' => 'ordered', 'supplier' => 'Dostawca testowy',
-    ])->assertSessionHas('success');
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertSessionHas('success');
 
     expect($requirement->refresh()->name)->toBe('Pompa Grundfos TP')
         ->and($requirement->formattedQuantity())->toBe('1,5')
+        ->and((float) $requirement->estimated_cost)->toBe(3000.0)
+        ->and($requirement->unitCost())->toBe(2000.0)
         ->and($requirement->status)->toBe('ordered')
         ->and($requirement->needed_by->format('Y-m-d'))->toBe('2026-09-15');
 
     $this->actingAs($manager)->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
         ->assertOk()
         ->assertSee('1,5 szt.')
+        ->assertSee('2 000,00 zł / szt.')
+        ->assertSee('Łącznie: 3 000,00 zł')
+        ->assertSee('Cena za jednostkę')
         ->assertSee('Edytuj materiał lub usługę')
         ->assertSee('Import z Excela')
         ->assertSee('Import z PDF')

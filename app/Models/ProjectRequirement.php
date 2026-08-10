@@ -42,4 +42,13 @@ class ProjectRequirement extends Model
             ? ($this->type === 'material' ? 'szt.' : 'usł.')
             : $unit;
     }
+
+    public function unitCost(): ?float
+    {
+        if ($this->estimated_cost === null || (float) $this->quantity <= 0) {
+            return null;
+        }
+
+        return round((float) $this->estimated_cost / (float) $this->quantity, 2);
+    }
 }

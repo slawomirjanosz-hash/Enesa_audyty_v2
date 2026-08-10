@@ -549,7 +549,8 @@ class ProjectController extends Controller
         $data = $this->requirementData($request);
         $project->requirements()->create($data + ['created_by' => $request->user()->id]);
 
-        return redirect()->back()->with('success', 'Zapotrzebowanie zostało dodane.');
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
+            ->with('success', 'Zapotrzebowanie zostało dodane.');
     }
 
     public function downloadRequirementsTemplate(Project $project): BinaryFileResponse
@@ -638,7 +639,8 @@ class ProjectController extends Controller
         $data = $this->requirementData($request);
         $requirement->update($data);
 
-        return redirect()->back()->with('success', 'Status zapotrzebowania został zmieniony.');
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
+            ->with('success', 'Materiał lub usługa zostały zaktualizowane.');
     }
 
     public function updateRequirementStatus(Request $request, Project $project, ProjectRequirement $requirement): JsonResponse
@@ -662,7 +664,8 @@ class ProjectController extends Controller
         abort_unless($requirement->project_id === $project->id, 404);
         $requirement->delete();
 
-        return redirect()->back()->with('success', 'Zapotrzebowanie zostało usunięte.');
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
+            ->with('success', 'Zapotrzebowanie zostało usunięte.');
     }
 
     private function requirementData(Request $request): array
@@ -673,6 +676,7 @@ class ProjectController extends Controller
             'description' => ['nullable', 'string'],
             'quantity' => ['required', 'numeric', 'min:0.01'],
             'unit' => ['nullable', 'string', 'max:30'],
+            'unit_cost' => ['nullable', 'numeric', 'min:0'],
             'estimated_cost' => ['nullable', 'numeric', 'min:0'],
             'supplier' => ['nullable', 'string', 'max:255'],
             'supplier_company_id' => [
@@ -688,6 +692,13 @@ class ProjectController extends Controller
             $unit = $data['type'] === 'material' ? 'szt.' : 'usł.';
         }
         $data['unit'] = $unit;
+        if ($request->exists('unit_cost')) {
+            $unitCost = $data['unit_cost'] ?? null;
+            $data['estimated_cost'] = $unitCost === null
+                ? null
+                : round((float) $unitCost * (float) $data['quantity'], 2);
+        }
+        unset($data['unit_cost']);
         if (! empty($data['supplier_company_id'])) {
             $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
         }

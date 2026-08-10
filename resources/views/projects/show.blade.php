@@ -27,6 +27,7 @@
         'description' => $requirement->description,
         'quantity' => (float) $requirement->quantity,
         'unit' => $requirement->displayUnit(),
+        'unit_cost' => $requirement->unitCost(),
         'estimated_cost' => $requirement->estimated_cost !== null ? (float) $requirement->estimated_cost : null,
         'needed_by' => $requirement->needed_by?->format('Y-m-d'),
         'responsible_id' => $requirement->responsible_id,
@@ -266,7 +267,7 @@
         @if($project->requirements->isEmpty())
             <div class="empty">Brak zapotrzebowań.</div>
         @else
-            <div class="requirements-table-wrap"><table class="requirements-table"><thead><tr><th>Pozycja</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th><th>Koszt</th><th></th></tr></thead><tbody>
+            <div class="requirements-table-wrap"><table class="requirements-table"><thead><tr><th>Pozycja</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th><th>Cena / wartość</th><th></th></tr></thead><tbody>
             @foreach($project->requirements as $req)
                 <tr>
                     <td><strong class="requirement-name">{{$req->name}}</strong><div class="requirement-meta"><span class="requirement-type">{{$req->type==='material'?'Materiał':'Usługa'}}</span>@if($req->description)<span class="requirement-description" title="{{$req->description}}">{{$req->description}}</span>@endif</div></td>
@@ -274,7 +275,7 @@
                     <td>{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
                     <td>@if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}" style="color:var(--green);font-weight:700">{{$req->supplierCompany->name}}</a>@else{{$req->supplier ?: '—'}}@endif</td>
                     <td>@if($canEdit)<select class="status-select requirement-status {{$req->status}} project-async-status" data-kind="requirement" data-id="{{$req->id}}" data-current="{{$req->status}}" data-url="{{route('projects.requirements.status',[$project,$req])}}" aria-label="Status {{$req->name}}">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}" {{$req->status===$value?'selected':''}}>{{$label}}</option>@endforeach</select>@else<span class="requirement-status {{$req->status}}">{{$requirementStatusLabels[$req->status]??$req->status}}</span>@endif</td>
-                    <td><span class="requirement-cost">{{$req->estimated_cost!==null?number_format((float)$req->estimated_cost,2,',',' ').' zł':'—'}}</span></td>
+                    <td>@if($req->unitCost()!==null)<span class="requirement-cost">{{number_format($req->unitCost(),2,',',' ')}} zł / {{$req->displayUnit()}}</span><br><small>Łącznie: {{number_format((float)$req->estimated_cost,2,',',' ')}} zł</small>@else<span class="requirement-cost">—</span>@endif</td>
                     <td>@if($canEdit)<div class="requirement-actions"><button type="button" class="mini-btn edit" title="Edytuj" onclick="openRequirementModal({{$req->id}})">✎</button><form method="POST" action="{{route('projects.requirements.destroy',[$project,$req])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form></div>@endif</td>
                 </tr>
             @endforeach
@@ -293,7 +294,7 @@
                 <div class="field"><label>Nazwa *</label><input name="name" id="requirement-name" required></div>
                 <div class="field"><label>Ilość *</label><input type="number" step="1" min="1" name="quantity" id="requirement-quantity" value="1" required></div>
                 <div class="field"><label>Jednostka</label><input name="unit" id="requirement-unit" placeholder="np. szt., kg, m, usł."><small style="color:#718078">Gdy pole pozostanie puste, użyjemy „szt.” lub „usł.”.</small></div>
-                <div class="field"><label>Szacowany koszt</label><input type="number" step="0.01" min="0" name="estimated_cost" id="requirement-cost"></div>
+                <div class="field"><label>Cena za jednostkę</label><input type="number" step="0.01" min="0" name="unit_cost" id="requirement-unit-cost"><small style="color:#718078">Wartość łączna zostanie obliczona jako ilość × cena za jednostkę.</small></div>
                 <div class="field"><label>Potrzebne do</label><input type="date" name="needed_by" id="requirement-needed-by"></div>
                 <div class="field"><label>Odpowiedzialny</label><select name="responsible_id" id="requirement-responsible"><option value="">Nieprzypisane</option>@foreach($project->members as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
                 <div class="field"><label>Status</label><select name="status" id="requirement-status">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></div>
@@ -400,7 +401,7 @@ function openRequirementModal(requirementId = null) {
     document.getElementById('requirement-name').value=requirement?.name||'';
     document.getElementById('requirement-quantity').value=requirement?.quantity??1;
     document.getElementById('requirement-unit').value=requirement?.unit||'';
-    document.getElementById('requirement-cost').value=requirement?.estimated_cost??'';
+    document.getElementById('requirement-unit-cost').value=requirement?.unit_cost??'';
     document.getElementById('requirement-needed-by').value=requirement?.needed_by||'';
     document.getElementById('requirement-responsible').value=requirement?.responsible_id||'';
     document.getElementById('requirement-supplier-company').value=requirement?.supplier_company_id||'';
