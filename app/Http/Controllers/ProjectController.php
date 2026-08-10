@@ -15,14 +15,12 @@ use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\ProjectGanttImportService;
 use App\Services\ProjectRequirementsImportService;
-use App\Services\ProjectRequirementsPdfService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -573,62 +571,6 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
             ->with('success', "Import zakończony: dodano {$report['inserted']}, pominięto duplikatów {$report['duplicates']} i błędnych wierszy {$report['invalid']}.")
-            ->with('requirements_import_report', $report);
-    }
-
-    public function previewRequirementsPdf(Request $request, Project $project, ProjectRequirementsPdfService $pdfImporter): View
-    {
-        $this->authorize('update', $project);
-        $data = $request->validateWithBag('requirementsPdf', [
-            'pdf_file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
-        ]);
-        $preview = $pdfImporter->preview($project, $data['pdf_file']);
-        $team = $project->members()->get()->push($project->manager)->filter()->unique('id')->sortBy('name')->values();
-
-        return view('projects.requirements-pdf-preview', [
-            'project' => $project,
-            'rows' => $preview['rows'],
-            'warnings' => $preview['warnings'],
-            'pages' => $preview['pages'],
-            'team' => $team,
-            'suppliers' => Company::suppliers()->active()->orderBy('name')->get(),
-            'statusLabels' => ['requested' => 'Zapotrzebowanie', 'ordered' => 'Zamówione', 'in_progress' => 'W realizacji', 'purchased' => 'Kupione', 'cancelled' => 'Anulowane'],
-        ]);
-    }
-
-    public function confirmRequirementsPdf(Request $request, Project $project, ProjectRequirementsImportService $importer): RedirectResponse
-    {
-        $this->authorize('update', $project);
-        try {
-            $rows = json_decode($request->string('rows_json')->toString(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (Throwable) {
-            $rows = null;
-        }
-        $validator = Validator::make(['rows' => $rows], [
-            'rows' => ['required', 'array', 'min:1', 'max:300'],
-            'rows.*.type' => ['required', 'in:material,service'],
-            'rows.*.name' => ['required', 'string', 'max:255'],
-            'rows.*.description' => ['nullable', 'string'],
-            'rows.*.quantity' => ['required', 'numeric', 'min:0.01'],
-            'rows.*.unit' => ['nullable', 'string', 'max:30'],
-            'rows.*.estimated_cost' => ['nullable', 'numeric', 'min:0'],
-            'rows.*.needed_by' => ['nullable', 'date'],
-            'rows.*.status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled'],
-            'rows.*.supplier' => ['nullable', 'string', 'max:255'],
-            'rows.*.supplier_company_id' => [
-                'nullable', 'integer',
-                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
-            ],
-            'rows.*.responsible_id' => ['nullable', 'integer', 'exists:users,id'],
-        ]);
-        if ($validator->fails()) {
-            return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
-                ->withErrors($validator, 'requirementsPdf');
-        }
-        $report = $importer->importReviewed($project, $validator->validated()['rows'], $request->user());
-
-        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
-            ->with('success', "Import PDF zakończony: dodano {$report['inserted']} i pominięto duplikatów {$report['duplicates']}.")
             ->with('requirements_import_report', $report);
     }
 
