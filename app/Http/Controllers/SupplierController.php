@@ -39,6 +39,7 @@ class SupplierController extends Controller
 
         return view('suppliers.index', [
             'suppliers' => $query->paginate(24)->withQueryString(),
+            'canCreateSupplier' => app(AuditorAccessService::class)->hasFullAccess($request->user()),
         ]);
     }
 

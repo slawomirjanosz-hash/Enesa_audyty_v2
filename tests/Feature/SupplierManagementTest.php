@@ -18,6 +18,13 @@ test('admin creates a supplier instead of a client and sees it in supplier views
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
+    $this->actingAs($admin)->get(route('suppliers.index'))
+        ->assertOk()
+        ->assertSee('Dodaj dostawcę')
+        ->assertSee('name="company_type"', false)
+        ->assertSee('value="supplier" selected', false)
+        ->assertSee(route('companies.store'), false);
+
     $response = $this->actingAs($admin)->post(route('companies.store'), [
         'company_type' => 'supplier',
         'name' => 'Hydro Dostawy',
