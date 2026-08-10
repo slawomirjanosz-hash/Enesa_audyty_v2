@@ -243,21 +243,21 @@
     <div class="card">
         <div class="requirements-head">
             <div><h2>Materiały i usługi</h2><p>Zapotrzebowania, zamówienia i dostawy dla tego projektu.</p></div>
-            @if($canEdit)<div class="requirements-head-actions"><a class="btn btn-soft" href="{{route('projects.requirements.template',$project)}}"><i class="ti ti-download"></i> Pobierz wzór Excel</a><button type="button" class="btn" onclick="openRequirementModal()"><i class="ti ti-plus"></i> Dodaj pozycję</button></div>@endif
+            @if($canEdit)<div class="requirements-head-actions"><a class="btn btn-soft" href="{{route('projects.requirements.template',$project)}}"><i class="ti ti-download"></i> Pobierz wzór Excel</a><button type="button" class="btn btn-soft" onclick="document.getElementById('requirements-import').open=true;document.getElementById('requirements-excel-input').click()"><i class="ti ti-file-spreadsheet"></i> Import z Excela</button><button type="button" class="btn btn-soft" onclick="document.getElementById('requirements-import').open=true;document.getElementById('requirements-pdf-input').click()"><i class="ti ti-file-type-pdf"></i> Import z PDF</button><button type="button" class="btn" onclick="openRequirementModal()"><i class="ti ti-plus"></i> Dodaj pozycję</button></div>@endif
         </div>
         @if($canEdit)
-            <details class="requirement-import" @if($errors->requirementsImport->any() || $errors->requirementsPdf->any()) open @endif>
+            <details id="requirements-import" class="requirement-import" @if($errors->requirementsImport->any() || $errors->requirementsPdf->any()) open @endif>
                 <summary><i class="ti ti-file-upload"></i> Importuj materiały i usługi z Excela lub PDF</summary>
                 <div class="requirement-import-body">
                     <strong style="display:block;margin-bottom:5px;font-size:12px">Excel / CSV</strong>
                     <p class="requirement-import-help">System sam odnajdzie nagłówki nawet po kilku wierszach tytułu i rozpozna popularne nazwy kolumn, np. „Nazwa materiału”, „Towar”, „Ilość”, „J.m.”, „Cena netto”, „Termin dostawy”, „Dostawca” czy „Status”. Obsługiwane są XLSX, XLS i CSV. Wymagana jest nazwa pozycji oraz co najmniej jedna dodatkowa rozpoznawalna kolumna.</p>
                     @if($errors->requirementsImport->any())<div style="padding:9px 11px;background:#fef2f2;color:#991b1b;border-radius:7px;margin-bottom:10px;font-size:12px">{{$errors->requirementsImport->first()}}</div>@endif
-                    <form class="requirement-import-form" method="POST" enctype="multipart/form-data" action="{{route('projects.requirements.import',$project)}}">@csrf<input type="file" name="file" accept=".xlsx,.xls,.csv" required><button class="btn"><i class="ti ti-file-import"></i> Importuj plik</button></form>
+                    <form class="requirement-import-form" method="POST" enctype="multipart/form-data" action="{{route('projects.requirements.import',$project)}}">@csrf<input id="requirements-excel-input" type="file" name="file" accept=".xlsx,.xls,.csv" required><button class="btn"><i class="ti ti-file-import"></i> Importuj plik</button></form>
                     <div style="height:1px;background:#e2e6e1;margin:15px 0"></div>
                     <strong style="display:block;margin-bottom:5px;font-size:12px">PDF z tekstem</strong>
                     <p class="requirement-import-help">Po odczytaniu PDF zobaczysz tabelę podglądu. Przed zapisaniem możesz poprawić każdą nazwę, ilość, cenę, datę, status, dostawcę i osobę odpowiedzialną. Skan bez warstwy tekstowej wymaga OCR i zostanie oznaczony czytelnym komunikatem.</p>
                     @if($errors->requirementsPdf->any())<div style="padding:9px 11px;background:#fef2f2;color:#991b1b;border-radius:7px;margin-bottom:10px;font-size:12px">{{$errors->requirementsPdf->first()}}</div>@endif
-                    <form class="requirement-import-form" method="POST" enctype="multipart/form-data" action="{{route('projects.requirements.pdf.preview',$project)}}">@csrf<input type="file" name="pdf_file" accept="application/pdf,.pdf" required><button class="btn"><i class="ti ti-file-search"></i> Odczytaj i pokaż podgląd</button></form>
+                    <form class="requirement-import-form" method="POST" enctype="multipart/form-data" action="{{route('projects.requirements.pdf.preview',$project)}}">@csrf<input id="requirements-pdf-input" type="file" name="pdf_file" accept="application/pdf,.pdf" required><button class="btn"><i class="ti ti-file-search"></i> Odczytaj i pokaż podgląd</button></form>
                 </div>
             </details>
         @endif

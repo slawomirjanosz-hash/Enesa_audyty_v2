@@ -261,7 +261,11 @@ test('project manager edits material details and quantities are displayed cleanl
         ->and($requirement->needed_by->format('Y-m-d'))->toBe('2026-09-15');
 
     $this->actingAs($manager)->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
-        ->assertOk()->assertSee('1,5 szt.')->assertSee('Edytuj materiał lub usługę');
+        ->assertOk()
+        ->assertSee('1,5 szt.')
+        ->assertSee('Edytuj materiał lub usługę')
+        ->assertSee('Import z Excela')
+        ->assertSee('Import z PDF');
 });
 
 test('requirements excel import recognizes flexible columns matches relations and skips duplicates', function () {
