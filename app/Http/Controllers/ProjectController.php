@@ -522,6 +522,33 @@ class ProjectController extends Controller
     public function storeRequirement(Request $request, Project $project): RedirectResponse
     {
         $this->authorize('update', $project);
+        $data = $this->requirementData($request);
+        $project->requirements()->create($data + ['created_by' => $request->user()->id]);
+
+        return redirect()->back()->with('success', 'Zapotrzebowanie zostało dodane.');
+    }
+
+    public function updateRequirement(Request $request, Project $project, ProjectRequirement $requirement): RedirectResponse
+    {
+        $this->authorize('update', $project);
+        abort_unless($requirement->project_id === $project->id, 404);
+        $data = $this->requirementData($request);
+        $requirement->update($data);
+
+        return redirect()->back()->with('success', 'Status zapotrzebowania został zmieniony.');
+    }
+
+    public function destroyRequirement(Project $project, ProjectRequirement $requirement): RedirectResponse
+    {
+        $this->authorize('update', $project);
+        abort_unless($requirement->project_id === $project->id, 404);
+        $requirement->delete();
+
+        return redirect()->back()->with('success', 'Zapotrzebowanie zostało usunięte.');
+    }
+
+    private function requirementData(Request $request): array
+    {
         $data = $request->validate([
             'type' => ['required', 'in:material,service'],
             'name' => ['required', 'string', 'max:255'],
@@ -538,41 +565,16 @@ class ProjectController extends Controller
             'needed_by' => ['nullable', 'date'],
             'responsible_id' => ['nullable', 'exists:users,id'],
         ]);
+        $unit = trim((string) ($data['unit'] ?? ''));
+        if ($unit === '' || is_numeric(str_replace(',', '.', $unit))) {
+            $unit = $data['type'] === 'material' ? 'szt.' : 'usł.';
+        }
+        $data['unit'] = $unit;
         if (! empty($data['supplier_company_id'])) {
             $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
         }
-        $project->requirements()->create($data + ['created_by' => $request->user()->id]);
 
-        return redirect()->back()->with('success', 'Zapotrzebowanie zostało dodane.');
-    }
-
-    public function updateRequirement(Request $request, Project $project, ProjectRequirement $requirement): RedirectResponse
-    {
-        $this->authorize('update', $project);
-        abort_unless($requirement->project_id === $project->id, 404);
-        $data = $request->validate([
-            'status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled'],
-            'supplier' => ['nullable', 'string', 'max:255'],
-            'supplier_company_id' => [
-                'nullable', 'integer',
-                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
-            ],
-        ]);
-        if (! empty($data['supplier_company_id'])) {
-            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
-        }
-        $requirement->update($data);
-
-        return redirect()->back()->with('success', 'Status zapotrzebowania został zmieniony.');
-    }
-
-    public function destroyRequirement(Project $project, ProjectRequirement $requirement): RedirectResponse
-    {
-        $this->authorize('update', $project);
-        abort_unless($requirement->project_id === $project->id, 404);
-        $requirement->delete();
-
-        return redirect()->back()->with('success', 'Zapotrzebowanie zostało usunięte.');
+        return $data;
     }
 
     public function storeDocument(Request $request, Project $project): RedirectResponse

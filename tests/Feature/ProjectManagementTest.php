@@ -230,6 +230,40 @@ test('project manager creates and edits a milestone with a single deadline', fun
         ->assertSee('projectEndDate', false);
 });
 
+test('project manager edits material details and quantities are displayed cleanly', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/MATERIAL', 'name' => 'Projekt materiałowy', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($manager);
+
+    $this->actingAs($manager)->post(route('projects.requirements.store', $project), [
+        'type' => 'material', 'name' => 'Pompa Grundfos', 'quantity' => 1, 'unit' => '2',
+        'estimated_cost' => 2500, 'status' => 'requested', 'responsible_id' => $manager->id,
+    ])->assertSessionHas('success');
+    $requirement = $project->requirements()->firstOrFail();
+    expect($requirement->unit)->toBe('szt.')
+        ->and($requirement->formattedQuantity())->toBe('1')
+        ->and($requirement->displayUnit())->toBe('szt.');
+
+    $this->actingAs($manager)->patch(route('projects.requirements.update', [$project, $requirement]), [
+        'type' => 'material', 'name' => 'Pompa Grundfos TP', 'description' => 'Pompa obiegowa',
+        'quantity' => 1.5, 'unit' => 'szt.', 'estimated_cost' => 2750,
+        'needed_by' => '2026-09-15', 'responsible_id' => $manager->id,
+        'status' => 'ordered', 'supplier' => 'Dostawca testowy',
+    ])->assertSessionHas('success');
+
+    expect($requirement->refresh()->name)->toBe('Pompa Grundfos TP')
+        ->and($requirement->formattedQuantity())->toBe('1,5')
+        ->and($requirement->status)->toBe('ordered')
+        ->and($requirement->needed_by->format('Y-m-d'))->toBe('2026-09-15');
+
+    $this->actingAs($manager)->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertOk()->assertSee('1,5 szt.')->assertSee('Edytuj materiał lub usługę');
+});
+
 test('projects module can be disabled for an application deployment', function () {
     CompanySettings::create([
         'name' => 'Firma bez projektów', 'primary_color' => '#123456',

@@ -7,6 +7,7 @@
 @php
     $canEdit = auth()->user()->can('update', $project);
     $statusLabels = ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'];
+    $requirementStatusLabels = ['requested'=>'Zapotrzebowanie','ordered'=>'Zamówione','in_progress'=>'W realizacji','purchased'=>'Kupione','cancelled'=>'Anulowane'];
     $financeChartData = $project->financialEntries->sortBy('entry_date')->map(fn($entry) => [
         'date' => $entry->entry_date->format('Y-m-d'),
         'amount' => (float) $entry->amount,
@@ -17,6 +18,21 @@
     $committedRequirements = $project->requirements
         ->whereIn('status', ['ordered', 'in_progress', 'purchased'])
         ->sum(fn($requirement) => (float) $requirement->estimated_cost);
+    $requirementItems = $project->requirements->map(fn($requirement) => [
+        'id' => $requirement->id,
+        'type' => $requirement->type,
+        'name' => $requirement->name,
+        'description' => $requirement->description,
+        'quantity' => (float) $requirement->quantity,
+        'unit' => $requirement->displayUnit(),
+        'estimated_cost' => $requirement->estimated_cost !== null ? (float) $requirement->estimated_cost : null,
+        'needed_by' => $requirement->needed_by?->format('Y-m-d'),
+        'responsible_id' => $requirement->responsible_id,
+        'supplier_company_id' => $requirement->supplier_company_id,
+        'supplier' => $requirement->supplier,
+        'status' => $requirement->status,
+        'update_url' => route('projects.requirements.update', [$project, $requirement]),
+    ])->values();
 @endphp
 <style>
     .p-head{display:flex;justify-content:space-between;gap:20px;margin-bottom:18px}.p-kicker{font-size:12px;font-weight:800;color:var(--green);letter-spacing:.08em}.p-head h1{margin:4px 0 7px;font-size:25px}.p-meta{display:flex;flex-wrap:wrap;gap:9px 18px;color:#66736b;font-size:13px}.badge{padding:5px 10px;border-radius:999px;background:#edf5ef;color:#24543d;font-size:11px;font-weight:800}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.sum{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:16px}.sum small{display:block;color:#77827b;margin-bottom:6px}.sum strong{font-size:20px}.tabs{display:flex;gap:4px;border-bottom:2px solid #e5e1d8;overflow:auto}.tab{border:0;background:none;padding:12px 16px;font-weight:700;color:#66736b;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px}.tab.active{color:var(--green);border-color:var(--green)}.pane{display:none;padding-top:20px}.pane.active{display:block}.card{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:20px;margin-bottom:16px}.card h2{font-size:16px;margin:0 0 15px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:11px;font-weight:800;color:#4b5650}.field input,.field select,.field textarea{border:1px solid #d8d3c8;border-radius:7px;padding:9px 10px;font:inherit}.full{grid-column:1/-1}.member-checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 12px;padding:10px;border:1px solid #d8d3c8;border-radius:8px;background:#fafaf7}.member-check{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-size:12px!important;font-weight:600!important}.member-check input{width:16px;height:16px}.btn{border:0;border-radius:7px;padding:9px 13px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;text-decoration:none}.btn-red{background:#b91c1c}.btn-soft{background:#edf4ef;color:var(--green)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee;font-size:12px}th{font-size:10px;text-transform:uppercase;color:#7b847f;background:#fafaf6}.gantt{overflow-x:auto}.g-row{display:grid;grid-template-columns:220px minmax(700px,1fr);min-height:46px;border-bottom:1px solid #eee;align-items:center}.g-name{padding:8px;font-size:12px}.g-track{height:28px;background:repeating-linear-gradient(90deg,#f7f7f3 0,#f7f7f3 calc(10% - 1px),#e7e4dc calc(10% - 1px),#e7e4dc 10%);position:relative}.g-bar{position:absolute;top:4px;height:20px;border-radius:5px;min-width:4px;color:#fff;font-size:10px;display:flex;align-items:center;padding:0 6px;overflow:hidden}.g-progress{position:absolute;inset:0 auto 0 0;background:rgba(0,0,0,.18)}.legend{display:flex;gap:16px;font-size:11px;color:#66736b;margin:8px 0}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}.finance-chart{width:100%;height:auto;background:#fbfbf8;border-radius:8px}.status-select{padding:6px;border:1px solid #ddd;border-radius:6px}.empty{padding:28px;text-align:center;color:#888}.team{display:flex;flex-wrap:wrap;gap:8px}.person{padding:7px 10px;border-radius:999px;background:#f0f5f1;font-size:12px}@media(max-width:850px){.summary{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.full{grid-column:auto}.member-checks{grid-template-columns:1fr 1fr}.g-row{grid-template-columns:150px minmax(650px,1fr)}}
@@ -24,6 +40,7 @@
     .gantt-list-table{min-width:1020px}.gantt-list-table tr.done-row{background:#f2fbf5}.gantt-list-table tr.overdue-row{background:#fff1f1}.gantt-select-cell{width:38px;text-align:center}.gantt-task-check,.gantt-check-all{width:16px;height:16px;accent-color:var(--green);cursor:pointer}.gantt-bulk-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:9px;margin-bottom:10px}.gantt-bulk-count{font-size:11px;color:#66736b;font-weight:700}.gantt-bulk-delete{border:0;border-radius:7px;padding:7px 10px;background:#b91c1c;color:#fff;font-size:11px;font-weight:800;cursor:pointer}.gantt-bulk-delete:disabled{opacity:.4;cursor:not-allowed}.progress-wrap{display:flex;align-items:center;gap:7px;min-width:190px}.progress-wrap input[type=range]{width:150px;height:6px;accent-color:#2563eb;cursor:pointer}.progress-wrap strong{min-width:36px;font-size:11px}.task-status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap}.task-status.done{background:#d1fae5;color:#047857}.task-status.overdue{background:#fee2e2;color:#b91c1c}.task-status.active{background:#dbeafe;color:#1d4ed8}.days-value{font-size:11px;font-weight:800}.days-value.late{color:#dc2626}.days-value.ok{color:#15803d}.mini-actions{display:flex;gap:4px;justify-content:flex-end}.mini-btn{width:27px;height:25px;border:0;border-radius:5px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;cursor:pointer;color:#fff}.mini-btn.edit{background:#2563eb}.mini-btn.delete{background:#dc2626}.mini-btn.move{background:#93c5fd}.mini-btn:disabled{opacity:.35;cursor:not-allowed}
     .frappe-gantt-wrap .today-highlight{fill:#ef4444!important;opacity:.16!important}.frappe-gantt-wrap .bar-wrapper.project-range-row{pointer-events:none}.frappe-gantt-wrap .bar-wrapper.project-range-row .bar{fill:#cbd5e1}.frappe-gantt-wrap .bar-wrapper.project-range-row .bar-progress{fill:#64748b}.frappe-gantt-wrap .bar-wrapper.project-range-row .handle{display:none}.frappe-gantt-wrap .bar-wrapper.milestone-row .bar{fill:#f59e0b;stroke:#b45309;stroke-width:1;transform:rotate(45deg) scale(.72);transform-box:fill-box;transform-origin:center;rx:0;ry:0}.frappe-gantt-wrap .bar-wrapper.milestone-row .bar-progress,.frappe-gantt-wrap .bar-wrapper.milestone-row .handle{display:none}.frappe-gantt-wrap .bar-wrapper.milestone-row.done-milestone .bar{fill:#16a34a;stroke:#15803d}.project-date-marker{pointer-events:none}.project-date-marker line{stroke-width:2}.project-date-marker.today line{stroke:#ef4444;stroke-dasharray:5 4}.project-date-marker.deadline line{stroke:#111827;stroke-dasharray:8 4}.project-date-marker text{font-size:10px;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}.project-date-marker.today text{fill:#dc2626}.project-date-marker.deadline text{fill:#111827}.milestone-badge{display:inline-flex;align-items:center;gap:4px;margin-left:6px;padding:3px 7px;border-radius:999px;background:#fef3c7;color:#92400e;font-size:9px;font-weight:800}.milestone-note{padding:9px 11px;border-radius:7px;background:#fffbeb;color:#92400e;font-size:11px}.field-hidden{display:none!important}
     .finance-section{background:#fff;border:1px solid #e5e1d8;border-radius:11px;margin-bottom:14px;overflow:hidden}.finance-section>summary{display:flex;align-items:center;gap:10px;padding:15px 18px;cursor:pointer;font-size:15px;font-weight:800;list-style:none}.finance-section>summary::-webkit-details-marker{display:none}.finance-section>summary:before{content:'›';font-size:22px;line-height:1;transition:transform .18s}.finance-section[open]>summary:before{transform:rotate(90deg)}.finance-section>summary small{margin-left:auto;color:#77827b;font-size:10px;font-weight:700}.finance-section-body{border-top:1px solid #eee;padding:18px}.finance-import-note{font-size:11px;color:#66736b;line-height:1.5;background:#f7f8f5;border-radius:7px;padding:10px;margin-bottom:13px}.import-report{border:1px solid #bae6c6;background:#f0fdf4;border-radius:9px;padding:14px;margin-bottom:14px}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.report-value{background:#fff;border-radius:7px;padding:9px}.report-value small{display:block;color:#66736b;font-size:9px;text-transform:uppercase}.report-value strong{font-size:15px}.finance-groups{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.finance-group-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;background:#f0f5f1;border-radius:999px;font-size:11px}.finance-group-chip form{display:inline}.finance-group-chip button{border:0;background:none;color:#b91c1c;cursor:pointer;padding:0}.finance-table{min-width:1050px}.source-badge{display:inline-block;border-radius:999px;background:#eef2ff;color:#4338ca;padding:3px 6px;font-size:9px;font-weight:800}.finance-edit{position:relative}.finance-edit>summary{list-style:none}.finance-edit-box{position:absolute;right:0;z-index:20;width:min(650px,80vw);background:#fff;border:1px solid #d8d3c8;border-radius:9px;padding:14px;box-shadow:0 12px 35px rgba(0,0,0,.16)}.chart-overview-shell{height:90px;margin-top:8px;position:relative;border-top:1px solid #eee;padding-top:7px}@media(max-width:700px){.report-grid{grid-template-columns:1fr 1fr}.finance-section-body{padding:12px}}
+    .requirements-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.requirements-head h2{margin:0}.requirements-head p{margin:4px 0 0;color:#6b776f;font-size:12px}.requirements-table-wrap{overflow-x:auto}.requirements-table{min-width:850px;table-layout:fixed}.requirements-table th,.requirements-table td{padding:9px 8px;vertical-align:middle}.requirements-table th:nth-child(1){width:29%}.requirements-table th:nth-child(2){width:9%}.requirements-table th:nth-child(3){width:16%}.requirements-table th:nth-child(4){width:15%}.requirements-table th:nth-child(5){width:11%}.requirements-table th:nth-child(6){width:11%}.requirements-table th:nth-child(7){width:9%}.requirement-name{display:block;line-height:1.3}.requirement-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;color:#758078}.requirement-type{padding:3px 6px;border-radius:999px;background:#eef4ef;color:#285740;font-size:9px;font-weight:800}.requirement-description{display:block;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.requirement-qty{font-size:13px;font-weight:800;white-space:nowrap}.requirement-cost{font-weight:800;white-space:nowrap}.requirement-status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;font-weight:800;white-space:nowrap}.requirement-status.requested{background:#f1f5f9;color:#475569}.requirement-status.ordered{background:#fef3c7;color:#92400e}.requirement-status.in_progress{background:#dbeafe;color:#1d4ed8}.requirement-status.purchased{background:#d1fae5;color:#047857}.requirement-status.cancelled{background:#fee2e2;color:#b91c1c}.requirement-actions{display:flex;justify-content:flex-end;gap:5px}.requirement-modal-box{width:min(760px,100%)}@media(max-width:700px){.requirements-head{align-items:flex-start;flex-direction:column}.requirements-table{min-width:760px}}
 </style>
 
 <div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
@@ -219,9 +236,54 @@
 
 @endif
 <section id="pane-requirements" class="pane">
-    @if($canEdit)<div class="card"><h2>Nowe zapotrzebowanie</h2><form method="POST" action="{{route('projects.requirements.store',$project)}}">@csrf<div class="grid2"><div class="field"><label>Rodzaj</label><select name="type"><option value="material">Materiał</option><option value="service">Usługa</option></select></div><div class="field"><label>Nazwa</label><input name="name" required></div><div class="field"><label>Ilość</label><input type="number" step="0.01" min="0.01" name="quantity" value="1" required></div><div class="field"><label>Jednostka</label><input name="unit" placeholder="szt., kg, usł."></div><div class="field"><label>Szacowany koszt</label><input type="number" step="0.01" min="0" name="estimated_cost"></div><div class="field"><label>Potrzebne do</label><input type="date" name="needed_by"></div><div class="field"><label>Odpowiedzialny</label><select name="responsible_id"><option value="">—</option>@foreach($project->members as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div><div class="field"><label>Dostawca z bazy</label><select name="supplier_company_id"><option value="">Nie wybrano</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}">{{$supplier->name}}</option>@endforeach</select></div><div class="field"><label>Dostawca spoza bazy</label><input name="supplier"></div><input type="hidden" name="status" value="requested"><div class="field full"><label>Opis</label><textarea name="description"></textarea></div></div><button class="btn" style="margin-top:12px">Dodaj zapotrzebowanie</button></form></div>@endif
-    <div class="card"><h2>Materiały i usługi</h2>@if($project->requirements->isEmpty())<div class="empty">Brak zapotrzebowań.</div>@else<table><thead><tr><th>Pozycja</th><th>Ilość</th><th>Odpowiedzialny</th><th>Termin</th><th>Koszt</th><th>Status i dostawca</th><th></th></tr></thead><tbody>@foreach($project->requirements as $req)<tr><td><strong>{{$req->name}}</strong><br><small>{{$req->type==='material'?'Materiał':'Usługa'}} · @if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}">{{$req->supplierCompany->name}}</a>@else{{$req->supplier}}@endif</small></td><td>{{$req->quantity}} {{$req->unit}}</td><td>{{$req->responsible?->name??'—'}}</td><td>{{$req->needed_by?->format('d.m.Y')??'—'}}</td><td>{{number_format((float)$req->estimated_cost,2,',',' ')}} zł</td><td>@if($canEdit)<form method="POST" action="{{route('projects.requirements.update',[$project,$req])}}" style="display:flex;gap:5px;flex-wrap:wrap">@csrf @method('PATCH')<select name="status" class="status-select"><option value="requested" {{$req->status==='requested'?'selected':''}}>Zapotrzebowanie</option><option value="ordered" {{$req->status==='ordered'?'selected':''}}>Zamówione</option><option value="in_progress" {{$req->status==='in_progress'?'selected':''}}>W realizacji</option><option value="purchased" {{$req->status==='purchased'?'selected':''}}>Kupione</option><option value="cancelled" {{$req->status==='cancelled'?'selected':''}}>Anulowane</option></select><select name="supplier_company_id" class="status-select"><option value="">Bez dostawcy</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}" {{$req->supplier_company_id===$supplier->id?'selected':''}}>{{$supplier->name}}</option>@endforeach</select><input name="supplier" value="{{$req->supplier}}" placeholder="Dostawca spoza bazy" style="width:140px"><button class="btn btn-soft">Zapisz</button></form>@else {{$req->status}} @endif</td><td>@if($canEdit)<form method="POST" action="{{route('projects.requirements.destroy',[$project,$req])}}">@csrf @method('DELETE')<button class="btn btn-red">×</button></form>@endif</td></tr>@endforeach</tbody></table>@endif</div>
+    <div class="card">
+        <div class="requirements-head">
+            <div><h2>Materiały i usługi</h2><p>Zapotrzebowania, zamówienia i dostawy dla tego projektu.</p></div>
+            @if($canEdit)<button type="button" class="btn" onclick="openRequirementModal()"><i class="ti ti-plus"></i> Dodaj pozycję</button>@endif
+        </div>
+        @if($project->requirements->isEmpty())
+            <div class="empty">Brak zapotrzebowań.</div>
+        @else
+            <div class="requirements-table-wrap"><table class="requirements-table"><thead><tr><th>Pozycja</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th><th>Koszt</th><th></th></tr></thead><tbody>
+            @foreach($project->requirements as $req)
+                <tr>
+                    <td><strong class="requirement-name">{{$req->name}}</strong><div class="requirement-meta"><span class="requirement-type">{{$req->type==='material'?'Materiał':'Usługa'}}</span>@if($req->description)<span class="requirement-description" title="{{$req->description}}">{{$req->description}}</span>@endif</div></td>
+                    <td><span class="requirement-qty">{{$req->formattedQuantity()}} {{$req->displayUnit()}}</span></td>
+                    <td>{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
+                    <td>@if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}" style="color:var(--green);font-weight:700">{{$req->supplierCompany->name}}</a>@else{{$req->supplier ?: '—'}}@endif</td>
+                    <td><span class="requirement-status {{$req->status}}">{{$requirementStatusLabels[$req->status]??$req->status}}</span></td>
+                    <td><span class="requirement-cost">{{$req->estimated_cost!==null?number_format((float)$req->estimated_cost,2,',',' ').' zł':'—'}}</span></td>
+                    <td>@if($canEdit)<div class="requirement-actions"><button type="button" class="mini-btn edit" title="Edytuj" onclick="openRequirementModal({{$req->id}})">✎</button><form method="POST" action="{{route('projects.requirements.destroy',[$project,$req])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form></div>@endif</td>
+                </tr>
+            @endforeach
+            </tbody></table></div>
+        @endif
+    </div>
 </section>
+
+@if($canEdit)
+<div id="requirement-modal" class="project-modal" onclick="if(event.target===this)closeRequirementModal()">
+    <div class="project-modal-box requirement-modal-box">
+        <div class="modal-head"><h2 id="requirement-modal-title">Dodaj materiał lub usługę</h2><button type="button" class="modal-close" onclick="closeRequirementModal()">×</button></div>
+        <form id="requirement-form" method="POST" action="{{route('projects.requirements.store',$project)}}">@csrf<input type="hidden" name="_method" id="requirement-method" value="POST">
+            <div class="grid2">
+                <div class="field"><label>Rodzaj *</label><select name="type" id="requirement-type"><option value="material">Materiał</option><option value="service">Usługa</option></select></div>
+                <div class="field"><label>Nazwa *</label><input name="name" id="requirement-name" required></div>
+                <div class="field"><label>Ilość *</label><input type="number" step="0.01" min="0.01" name="quantity" id="requirement-quantity" value="1" required></div>
+                <div class="field"><label>Jednostka</label><input name="unit" id="requirement-unit" placeholder="np. szt., kg, m, usł."><small style="color:#718078">Gdy pole pozostanie puste, użyjemy „szt.” lub „usł.”.</small></div>
+                <div class="field"><label>Szacowany koszt</label><input type="number" step="0.01" min="0" name="estimated_cost" id="requirement-cost"></div>
+                <div class="field"><label>Potrzebne do</label><input type="date" name="needed_by" id="requirement-needed-by"></div>
+                <div class="field"><label>Odpowiedzialny</label><select name="responsible_id" id="requirement-responsible"><option value="">Nieprzypisane</option>@foreach($project->members as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
+                <div class="field"><label>Status</label><select name="status" id="requirement-status">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></div>
+                <div class="field"><label>Dostawca z bazy</label><select name="supplier_company_id" id="requirement-supplier-company"><option value="">Nie wybrano</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}">{{$supplier->name}}</option>@endforeach</select></div>
+                <div class="field"><label>Dostawca spoza bazy</label><input name="supplier" id="requirement-supplier"></div>
+                <div class="field full"><label>Opis</label><textarea name="description" id="requirement-description" rows="3"></textarea></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="closeRequirementModal()">Anuluj</button><button class="btn">Zapisz pozycję</button></div>
+        </form>
+    </div>
+</div>
+@endif
 
 <section id="pane-documents" class="pane">
     @if($canEdit)<div class="card"><h2>Dodaj dokument projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:center"><input type="file" name="file" required><button class="btn">Wgraj dokument</button></div><small>PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB.</small></form></div>@endif
@@ -283,6 +345,8 @@ const projectStartDate = @json($project->start_date?->format('Y-m-d'));
 const projectEndDate = @json($project->end_date?->format('Y-m-d'));
 const projectCsrfToken = document.querySelector('meta[name="csrf-token"]')?.content || @json(csrf_token());
 const ganttBulkDeleteUrl = @json(route('projects.tasks.bulk-destroy', $project));
+const requirementStoreUrl = @json(route('projects.requirements.store', $project));
+const projectRequirementItems = @json($requirementItems);
 let projectGantt = null;
 let projectCashflowChart = null;
 let projectCashflowOverview = null;
@@ -304,6 +368,27 @@ function localDate(date) {
 function escapeProjectHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[character]));
 }
+
+function openRequirementModal(requirementId = null) {
+    const modal=document.getElementById('requirement-modal'),form=document.getElementById('requirement-form');if(!modal||!form)return;
+    form.reset();form.action=requirementStoreUrl;document.getElementById('requirement-method').value='POST';
+    const requirement=requirementId?projectRequirementItems.find(item=>item.id===Number(requirementId)):null;
+    document.getElementById('requirement-modal-title').textContent=requirement?'Edytuj materiał lub usługę':'Dodaj materiał lub usługę';
+    document.getElementById('requirement-type').value=requirement?.type||'material';
+    document.getElementById('requirement-name').value=requirement?.name||'';
+    document.getElementById('requirement-quantity').value=requirement?.quantity??1;
+    document.getElementById('requirement-unit').value=requirement?.unit||'';
+    document.getElementById('requirement-cost').value=requirement?.estimated_cost??'';
+    document.getElementById('requirement-needed-by').value=requirement?.needed_by||'';
+    document.getElementById('requirement-responsible').value=requirement?.responsible_id||'';
+    document.getElementById('requirement-supplier-company').value=requirement?.supplier_company_id||'';
+    document.getElementById('requirement-supplier').value=requirement?.supplier||'';
+    document.getElementById('requirement-status').value=requirement?.status||'requested';
+    document.getElementById('requirement-description').value=requirement?.description||'';
+    if(requirement){form.action=requirement.update_url;document.getElementById('requirement-method').value='PATCH';}
+    modal.classList.add('open');
+}
+function closeRequirementModal(){document.getElementById('requirement-modal')?.classList.remove('open');}
 
 async function saveGanttChange(task, start, end, progress) {
     if (!projectCanEdit) return;

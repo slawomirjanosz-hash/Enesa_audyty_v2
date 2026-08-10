@@ -28,4 +28,18 @@ class ProjectRequirement extends Model
     {
         return $this->belongsTo(Company::class, 'supplier_company_id');
     }
+
+    public function formattedQuantity(): string
+    {
+        return rtrim(rtrim(number_format((float) $this->quantity, 2, ',', ' '), '0'), ',');
+    }
+
+    public function displayUnit(): string
+    {
+        $unit = trim((string) $this->unit);
+
+        return $unit === '' || is_numeric(str_replace(',', '.', $unit))
+            ? ($this->type === 'material' ? 'szt.' : 'usł.')
+            : $unit;
+    }
 }
