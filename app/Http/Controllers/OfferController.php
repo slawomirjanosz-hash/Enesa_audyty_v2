@@ -558,11 +558,7 @@ class OfferController extends Controller
             $offer->show_unit_prices = $forceUnitPrices;
         }
 
-        $logoBase64 = null;
-        $logoPath   = public_path('Logo2.png');
-        if (file_exists($logoPath)) {
-            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
-        }
+        $logoBase64 = $companySettings?->logoDataUri();
 
         $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
 

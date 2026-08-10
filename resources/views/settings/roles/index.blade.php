@@ -31,8 +31,8 @@
     <form method="POST" action="{{ route('settings.roles.store') }}">
         @csrf
         <label for="name" style="display:block;font-weight:700;margin:16px 0 6px;">Nazwa roli</label>
-        <input id="name" name="name" class="input" value="{{ old('name') }}" placeholder="np. Kierownik Projektu" required>
-        @error('name') <div style="color:#b91c1c;font-size:13px;margin-top:5px;">{{ $message }}</div> @enderror
+        <input id="name" name="name" class="input" value="{{ old('role_id') ? '' : old('name') }}" placeholder="np. Kierownik Projektu" required>
+        @if(!old('role_id')) @error('name') <div style="color:#b91c1c;font-size:13px;margin-top:5px;">{{ $message }}</div> @enderror @endif
         @foreach($availablePermissions as $permission => $meta)
             <label class="permission">
                 <input type="checkbox" name="permissions[]" value="{{ $permission }}" {{ in_array($permission, old('permissions', []), true) ? 'checked' : '' }}>
@@ -48,22 +48,25 @@
     @forelse($roles as $role)
         <div class="role-row">
             <div style="flex:1;">
-                <strong>{{ $role->name }}</strong>
                 <div class="muted">Przypisani użytkownicy: {{ $role->users_count }}</div>
                 <form method="POST" action="{{ route('settings.roles.update', $role) }}" style="margin-top:10px;">
                     @csrf @method('PUT')
+                    <input type="hidden" name="role_id" value="{{ $role->id }}">
+                    <label for="role-name-{{ $role->id }}" style="display:block;font-weight:700;margin:0 0 6px;">Nazwa roli</label>
+                    <input id="role-name-{{ $role->id }}" name="name" class="input" value="{{ (int) old('role_id') === $role->id ? old('name') : $role->name }}" required>
+                    @if((int) old('role_id') === $role->id) @error('name') <div style="color:#b91c1c;font-size:13px;margin-top:5px;">{{ $message }}</div> @enderror @endif
                     @foreach($availablePermissions as $permission => $meta)
                         <label class="permission">
                             <input type="checkbox" name="permissions[]" value="{{ $permission }}" {{ $role->hasPermissionTo($permission) ? 'checked' : '' }}>
                             <span><strong>{{ $meta['label'] }}</strong><br><span class="muted">{{ $meta['description'] }}</span></span>
                         </label>
                     @endforeach
-                    <button class="btn" type="submit">Zapisz uprawnienia</button>
+                    <button class="btn" type="submit">Zapisz zmiany</button>
                 </form>
             </div>
-            <form method="POST" action="{{ route('settings.roles.destroy', $role) }}" onsubmit="return confirm('Usunąć rolę {{ $role->name }}?');">
+            <form method="POST" action="{{ route('settings.roles.destroy', $role) }}" onsubmit="return confirm('Usunąć rolę {{ $role->name }}?{{ $role->users_count ? ' Przypisani użytkownicy pozostaną w systemie bez roli.' : '' }}');">
                 @csrf @method('DELETE')
-                <button class="btn btn-danger" type="submit" {{ $role->users_count ? 'disabled title=\"Najpierw zmień role przypisanych użytkowników\"' : '' }}>Usuń</button>
+                <button class="btn btn-danger" type="submit">Usuń</button>
             </form>
         </div>
     @empty

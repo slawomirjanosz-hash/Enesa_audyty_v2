@@ -101,12 +101,53 @@ test('admin can create and delegate a custom role without granting company setti
 
     expect($user->hasRole('Kierownik Projektu'))->toBeTrue();
 
+    $this->actingAs($admin)
+        ->get('/settings/users')
+        ->assertOk()
+        ->assertSee('Kierownik Testowy')
+        ->assertSee('kierownik@example.test')
+        ->assertSee('Kierownik Projektu');
+
     $this->actingAs($user)->get('/dashboard')->assertOk();
     $this->actingAs($user)->get('/crm')->assertOk();
     $this->actingAs($user)->get('/documents')->assertOk();
     $this->actingAs($user)->get('/pricing-catalog')->assertOk();
     $this->actingAs($user)->get('/settings/company')->assertForbidden();
     $this->actingAs($user)->get('/settings/roles')->assertForbidden();
+});
+
+test('admin can rename and delete an assigned custom role without deleting its user', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $role = Role::create(['name' => 'Kierownik Projektu', 'guard_name' => 'web']);
+    $employee = User::factory()->create(['email' => 'pracownik@example.test']);
+    $employee->assignRole($role);
+
+    $this->actingAs($admin)
+        ->put("/settings/roles/{$role->id}", [
+            'name' => 'Dyrektor Projektu',
+            'permissions' => ['system.full_access'],
+        ])
+        ->assertRedirect('/settings/roles');
+
+    expect($role->fresh()->name)->toBe('Dyrektor Projektu')
+        ->and($employee->fresh()->hasRole('Dyrektor Projektu'))->toBeTrue();
+
+    $this->actingAs($admin)
+        ->delete("/settings/roles/{$role->id}")
+        ->assertRedirect('/settings/roles')
+        ->assertSessionHas('success');
+
+    expect(Role::query()->whereKey($role->id)->exists())->toBeFalse()
+        ->and(User::query()->whereKey($employee->id)->exists())->toBeTrue()
+        ->and($employee->fresh()->roles)->toBeEmpty();
+
+    $this->actingAs($admin)
+        ->get('/settings/users')
+        ->assertOk()
+        ->assertSee('pracownik@example.test')
+        ->assertSee('—');
 });
 
 test('guest is redirected to login for CRM', function () {

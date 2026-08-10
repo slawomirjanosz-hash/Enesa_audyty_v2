@@ -89,4 +89,26 @@ class CompanySettings extends Model
 
         return asset('Logo2.png');
     }
+
+    public function logoDataUri(): ?string
+    {
+        if ($this->logo_data) {
+            return 'data:' . ($this->logo_mime ?: 'image/png') . ';base64,' . $this->logo_data;
+        }
+
+        if ($this->logo_path && Storage::disk('public')->exists($this->logo_path)) {
+            $disk = Storage::disk('public');
+
+            return 'data:' . ($disk->mimeType($this->logo_path) ?: 'image/png')
+                . ';base64,' . base64_encode($disk->get($this->logo_path));
+        }
+
+        $defaultLogo = public_path('Logo2.png');
+
+        if (! is_file($defaultLogo)) {
+            return null;
+        }
+
+        return 'data:image/png;base64,' . base64_encode(file_get_contents($defaultLogo));
+    }
 }

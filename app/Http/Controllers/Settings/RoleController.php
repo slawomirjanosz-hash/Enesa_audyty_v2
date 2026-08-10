@@ -76,14 +76,35 @@ class RoleController extends Controller
         $this->ensureRoleManager();
         $this->ensureCustomRole($role);
 
-        $data = $request->validate([
-            'permissions' => ['nullable', 'array'],
-            'permissions.*' => ['string'],
+        $request->merge([
+            'name' => preg_replace('/\s+/u', ' ', trim((string) $request->input('name'))),
         ]);
 
+        $data = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:60',
+                'regex:/^[\pL\pN][\pL\pN ._()&\/-]*$/u',
+                function (string $attribute, mixed $value, \Closure $fail) use ($role): void {
+                    if (Role::query()
+                        ->whereKeyNot($role->id)
+                        ->whereRaw('LOWER(name) = LOWER(?)', [$value])
+                        ->exists()) {
+                        $fail('Rola o tej nazwie już istnieje.');
+                    }
+                },
+            ],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string'],
+        ], [
+            'name.regex' => 'Nazwa roli może zawierać litery, cyfry, spacje oraz typowe znaki, np. Kierownik Projektu.',
+        ]);
+
+        $role->update(['name' => $data['name']]);
         $this->syncPermissions($role, $data['permissions'] ?? []);
 
-        return redirect()->route('settings.roles.index')->with('success', 'Uprawnienia roli zostały zapisane.');
+        return redirect()->route('settings.roles.index')->with('success', 'Nazwa i uprawnienia roli zostały zapisane.');
     }
 
     public function destroy(Role $role)
@@ -91,14 +112,15 @@ class RoleController extends Controller
         $this->ensureRoleManager();
         $this->ensureCustomRole($role);
 
-        if ($role->users()->exists()) {
-            return redirect()->route('settings.roles.index')
-                ->with('error', 'Nie można usunąć roli przypisanej do użytkowników. Najpierw zmień ich role.');
-        }
-
+        $assignedUsers = $role->users()->count();
         $role->delete();
 
-        return redirect()->route('settings.roles.index')->with('success', 'Rola została usunięta.');
+        $message = 'Rola została usunięta.';
+        if ($assignedUsers > 0) {
+            $message .= " Użytkownicy bez roli: {$assignedUsers}. Są nadal widoczni na liście i można przypisać im inną rolę.";
+        }
+
+        return redirect()->route('settings.roles.index')->with('success', $message);
     }
 
     private function syncPermissions(Role $role, array $permissionNames): void

@@ -56,3 +56,14 @@ test('saving settings without a new logo keeps the persisted logo', function () 
 
     expect($settings->refresh()->logo_data)->toBe(base64_encode('existing-logo'));
 });
+
+test('offer documents can embed the logo saved in company settings', function () {
+    $settings = CompanySettings::create([
+        'name' => 'Firma z własnym logo',
+        'logo_data' => base64_encode('custom-logo-binary'),
+        'logo_mime' => 'image/webp',
+    ]);
+
+    expect($settings->logoDataUri())
+        ->toBe('data:image/webp;base64,' . base64_encode('custom-logo-binary'));
+});
