@@ -34,17 +34,39 @@ test('a higher ranked employee can archive a staff member assigned only to the o
     $this->assertSoftDeleted('users', ['id' => $auditor->id]);
 });
 
-test('a client assigned to an active client company cannot be archived', function () {
+test('admin sees every active user and can edit or archive lower ranked accounts', function () {
     $admin = userWithRole('admin');
     $client = userWithRole('client_user');
+    $orphanClient = userWithRole('client_user');
     $clientCompany = Company::create(['name' => 'Aktywny klient']);
     $client->companies()->attach($clientCompany->id);
+
+    $this->actingAs($admin)
+        ->get(route('settings.users.index'))
+        ->assertOk()
+        ->assertSee($client->email)
+        ->assertSee($orphanClient->email);
+
+    $this->actingAs($admin)
+        ->put(route('settings.users.update', $orphanClient), [
+            'name' => 'Zmieniony użytkownik',
+            'email' => $orphanClient->email,
+            'phone' => '',
+            'role' => 'client_user',
+            'password' => '',
+        ])
+        ->assertRedirect(route('settings.users.index'));
+
+    $this->assertDatabaseHas('users', [
+        'id' => $orphanClient->id,
+        'name' => 'Zmieniony użytkownik',
+    ]);
 
     $this->actingAs($admin)
         ->delete(route('settings.users.destroy', $client))
         ->assertRedirect(route('settings.users.index'));
 
-    $this->assertDatabaseHas('users', ['id' => $client->id, 'deleted_at' => null]);
+    $this->assertSoftDeleted('users', ['id' => $client->id]);
 });
 
 test('users cannot manage peers or users higher in the hierarchy', function () {

@@ -34,30 +34,15 @@ class UserController extends Controller
             return redirect()->route('settings.archive.index');
         }
 
-        $users = User::with('roles')
-            ->whereHas('roles', fn ($q) => $q->whereNotIn('name', ['client_admin', 'client_user']))
-            ->orderByDesc('created_at')
-            ->paginate(15);
-
         $roles = Role::query()
             ->get()
             ->filter(fn (Role $role) => $this->canAssignRole(auth()->user(), $role->name))
             ->values();
 
-        // All users in system (for email verification) - exclude client users with no active companies
-        $allUsers = User::with('roles')
+        // Include every active account, also client accounts without a company.
+        $allUsers = User::with(['roles', 'companies'])
             ->orderBy('email')
-            ->get()
-            ->filter(function ($user) {
-                // Keep all non-client users
-                $role = $user->roles->first()?->name;
-                if (!in_array($role, ['client_admin', 'client_user'])) {
-                    return true;
-                }
-                // For client users, only keep if they have at least 1 active company
-                return $user->companies()->exists();
-            })
-            ->values();
+            ->get();
 
         $archivedStaff = User::onlyTrashed()
             ->with('roles')
@@ -78,7 +63,7 @@ class UserController extends Controller
         $companies = Company::clients()->active()->orderBy('name')->get();
         $archivedCompanies = Company::archived()->orderBy('name')->get();
 
-        return view('settings.users.index', compact('users', 'roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers'));
+        return view('settings.users.index', compact('roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers'));
     }
 
     public function showAuditorAccess(User $user)
@@ -263,7 +248,7 @@ class UserController extends Controller
 
         $user->name  = $data['name'];
         $user->email = $data['email'];
-        $user->phone = $data['phone'] ?? $user->phone;
+        $user->phone = $data['phone'] ?? null;
 
         if (!empty($data['password'])) {
             $user->password = Hash::make($data['password']);
@@ -303,12 +288,6 @@ class UserController extends Controller
             // Only admin and superadmin can delete users
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
-        }
-
-        // Check if user is assigned to an active (non-archived) company
-        if ($this->hasBlockingActiveCompanyAssignment($user)) {
-            return redirect()->route('settings.users.index')
-                ->with('error', 'Nie można usunąć użytkownika przypisanego do aktywnej firmy.');
         }
 
         $user->delete();
