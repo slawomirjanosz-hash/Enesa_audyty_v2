@@ -78,6 +78,54 @@ class ProjectRequirementsImportService
         return $this->persist($project, $parsedRows, $invalid, $recognizedSheets, $actor);
     }
 
+    public function importReviewed(Project $project, array $rows, User $actor): array
+    {
+        $eligiblePeople = $project->members()->pluck('users.id')->push($project->manager_id)->filter()->unique()->map(fn ($id) => (int) $id);
+        $suppliers = Company::suppliers()->active()->whereIn('id', collect($rows)->pluck('supplier_company_id')->filter())->get()->keyBy('id');
+        $known = $project->requirements()->get()->mapWithKeys(fn (ProjectRequirement $item) => [$this->fingerprint([
+            'type' => $item->type, 'name' => $item->name, 'description' => $item->description,
+            'quantity' => (float) $item->quantity, 'unit' => $item->displayUnit(),
+            'estimated_cost' => $item->estimated_cost === null ? null : (float) $item->estimated_cost,
+            'needed_by' => $item->needed_by?->format('Y-m-d'), 'supplier' => $item->supplier,
+        ]) => true]);
+        $report = ['inserted' => 0, 'duplicates' => 0, 'invalid' => 0, 'unassigned' => 0, 'unmatched_suppliers' => 0, 'sheets' => 0, 'preview' => []];
+
+        DB::transaction(function () use ($rows, $project, $actor, $eligiblePeople, $suppliers, $known, &$report) {
+            foreach ($rows as $index => $row) {
+                $supplier = ! empty($row['supplier_company_id']) ? $suppliers->get((int) $row['supplier_company_id']) : null;
+                $row['supplier'] = $supplier?->name ?? ($row['supplier'] ?? null);
+                $row['unit'] = trim((string) ($row['unit'] ?? '')) ?: ($row['type'] === 'service' ? 'usł.' : 'szt.');
+                $fingerprint = $this->fingerprint($row);
+                if ($known->has($fingerprint)) {
+                    $report['duplicates']++;
+
+                    continue;
+                }
+                $responsibleId = ! empty($row['responsible_id']) && $eligiblePeople->contains((int) $row['responsible_id'])
+                    ? (int) $row['responsible_id']
+                    : null;
+                if (! empty($row['responsible_id']) && ! $responsibleId) {
+                    $report['unassigned']++;
+                }
+
+                $item = $project->requirements()->create([
+                    'type' => $row['type'], 'name' => Str::limit($row['name'], 255, ''),
+                    'description' => $row['description'] ?? null, 'quantity' => $row['quantity'], 'unit' => Str::limit($row['unit'], 30, ''),
+                    'estimated_cost' => $row['estimated_cost'] ?? null, 'needed_by' => $row['needed_by'] ?? null,
+                    'status' => $row['status'], 'supplier' => $row['supplier'], 'supplier_company_id' => $supplier?->id,
+                    'responsible_id' => $responsibleId, 'created_by' => $actor->id,
+                ]);
+                $known->put($fingerprint, true);
+                $report['inserted']++;
+                if (count($report['preview']) < 12) {
+                    $report['preview'][] = ['name' => $item->name, 'quantity' => $item->formattedQuantity().' '.$item->displayUnit(), 'sheet' => 'PDF', 'row' => $index + 1];
+                }
+            }
+        });
+
+        return $report;
+    }
+
     private function findHeader(Collection $rows): ?array
     {
         $best = null;

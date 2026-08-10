@@ -334,6 +334,79 @@ test('requirements excel import recognizes flexible columns matches relations an
     @unlink($path);
 });
 
+test('requirements pdf import shows an editable preview before saving', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/REQ-PDF', 'name' => 'Import z PDF', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 25000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($manager);
+
+    $pdf = new Dompdf\Dompdf(['defaultFont' => 'DejaVu Sans']);
+    $pdf->loadHtml('<h1>Zestawienie materiałów</h1><table><tr><th>Rodzaj</th><th>Nazwa</th><th>Ilość</th><th>J.m.</th><th>Cena netto</th><th>Status</th></tr><tr><td>Materiał</td><td>Pompa obiegowa</td><td>2,5</td><td>szt.</td><td>1200,50</td><td>Zamówione</td></tr><tr><td>Usługa</td><td>Montaż pomp</td><td>1</td><td>usł.</td><td>850</td><td>W realizacji</td></tr></table>');
+    $pdf->render();
+    $path = tempnam(sys_get_temp_dir(), 'requirements-pdf-');
+    file_put_contents($path, $pdf->output());
+
+    $previewResponse = $this->actingAs($manager)->post(route('projects.requirements.pdf.preview', $project), [
+        'pdf_file' => new UploadedFile($path, 'materialy.pdf', 'application/pdf', null, true),
+    ])->assertOk()
+        ->assertViewIs('projects.requirements-pdf-preview')
+        ->assertSee('Sprawdź dane odczytane z PDF')
+        ->assertSee('Pompa obiegowa');
+
+    $rows = $previewResponse->viewData('rows');
+    expect($rows)->toHaveCount(2)
+        ->and($rows[0]['name'])->toBe('Pompa obiegowa')
+        ->and($rows[0]['quantity'])->toBe(2.5)
+        ->and($rows[0]['estimated_cost'])->toBe(3001.25)
+        ->and($rows[0]['status'])->toBe('ordered')
+        ->and($rows[1]['type'])->toBe('service');
+
+    $rows[0]['name'] = 'Pompa obiegowa po korekcie';
+    $firstImport = $this->actingAs($manager)->post(route('projects.requirements.pdf.confirm', $project), [
+        'rows_json' => json_encode($rows, JSON_UNESCAPED_UNICODE),
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertSessionHas('requirements_import_report');
+
+    $report = $firstImport->getSession()->get('requirements_import_report');
+    expect($report['inserted'])->toBe(2)
+        ->and($project->requirements()->where('name', 'Pompa obiegowa po korekcie')->exists())->toBeTrue();
+
+    $secondImport = $this->actingAs($manager)->post(route('projects.requirements.pdf.confirm', $project), [
+        'rows_json' => json_encode($rows, JSON_UNESCAPED_UNICODE),
+    ])->assertSessionHas('requirements_import_report');
+    expect($secondImport->getSession()->get('requirements_import_report')['duplicates'])->toBe(2)
+        ->and($project->requirements()->count())->toBe(2);
+
+    @unlink($path);
+});
+
+test('requirements pdf import explains when a scan has no text layer', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/REQ-SCAN', 'name' => 'Skan materiałów', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+
+    $pdf = new Dompdf\Dompdf;
+    $pdf->loadHtml('<div style="height:500px"></div>');
+    $pdf->render();
+    $path = tempnam(sys_get_temp_dir(), 'requirements-scan-');
+    file_put_contents($path, $pdf->output());
+
+    $this->actingAs($manager)->from(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->post(route('projects.requirements.pdf.preview', $project), [
+            'pdf_file' => new UploadedFile($path, 'skan.pdf', 'application/pdf', null, true),
+        ])
+        ->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertSessionHasErrors('pdf_file', null, 'requirementsPdf');
+
+    @unlink($path);
+});
+
 test('projects module can be disabled for an application deployment', function () {
     CompanySettings::create([
         'name' => 'Firma bez projektów', 'primary_color' => '#123456',
