@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ProjectGanttExport;
+use App\Exports\ProjectRequirementsTemplateExport;
 use App\Models\Company;
 use App\Models\Document;
 use App\Models\Project;
@@ -13,6 +14,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\ProjectGanttImportService;
+use App\Services\ProjectRequirementsImportService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -526,6 +528,29 @@ class ProjectController extends Controller
         $project->requirements()->create($data + ['created_by' => $request->user()->id]);
 
         return redirect()->back()->with('success', 'Zapotrzebowanie zostało dodane.');
+    }
+
+    public function downloadRequirementsTemplate(Project $project): BinaryFileResponse
+    {
+        $this->authorize('view', $project);
+
+        return Excel::download(
+            new ProjectRequirementsTemplateExport,
+            'Wzor_materialy_i_uslugi.xlsx'
+        );
+    }
+
+    public function importRequirements(Request $request, Project $project, ProjectRequirementsImportService $importer): RedirectResponse
+    {
+        $this->authorize('update', $project);
+        $data = $request->validateWithBag('requirementsImport', [
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:10240'],
+        ]);
+        $report = $importer->import($project, $data['file'], $request->user());
+
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
+            ->with('success', "Import zakończony: dodano {$report['inserted']}, pominięto duplikatów {$report['duplicates']} i błędnych wierszy {$report['invalid']}.")
+            ->with('requirements_import_report', $report);
     }
 
     public function updateRequirement(Request $request, Project $project, ProjectRequirement $requirement): RedirectResponse

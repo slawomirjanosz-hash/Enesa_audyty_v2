@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\BrandingController;
-use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AuditController as ClientAuditController;
 use App\Http\Controllers\Client\ChatController as ClientChatController;
@@ -14,17 +13,19 @@ use App\Http\Controllers\Client\RegistrationController;
 use App\Http\Controllers\Client\UserController as ClientUserController;
 use App\Http\Controllers\ClientZoneController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CrmController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
 use App\Http\Controllers\OfferRequestController;
-use App\Http\Controllers\PublicSurveyController;
-use App\Http\Controllers\CrmController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\PriceCatalogController;
+use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\Settings;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
@@ -55,7 +56,7 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
 
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
-    Route::get('/dashboard',     [ClientDashboardController::class,    'index'])->name('dashboard');
+    Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
     Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('app.module:offers')->name('offers');
     Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->middleware('app.module:offers')->name('offers.show');
@@ -77,10 +78,10 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
 });
 
 Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role', 'full.staff', 'app.module:client_zone'])->group(function () {
-    Route::get('/',  [ClientZoneController::class, 'index'])->name('index');
+    Route::get('/', [ClientZoneController::class, 'index'])->name('index');
     Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
     Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');
-    Route::get('/dashboard',     [ClientZoneController::class, 'dashboard'])->middleware('client.zone.session')->name('dashboard');
+    Route::get('/dashboard', [ClientZoneController::class, 'dashboard'])->middleware('client.zone.session')->name('dashboard');
     Route::get('/audits', [ClientZoneController::class, 'audits'])->middleware(['client.zone.session', 'app.module:audits'])->name('audits');
     Route::get('/offers', [ClientZoneController::class, 'offers'])->middleware(['client.zone.session', 'app.module:offers'])->name('offers');
     Route::get('/request-offer', [ClientZoneController::class, 'requestOffer'])->middleware(['client.zone.session', 'app.module:offers'])->name('request-offer');
@@ -112,23 +113,23 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware('app.module:audits')->name('audit-types.versions.set-current');
 
     Route::prefix('offer-requests')->name('offer-requests.')->middleware('app.module:offers')->group(function () {
-        Route::get('/create',                        [OfferRequestController::class, 'create'])->name('create');
-        Route::post('/',                             [OfferRequestController::class, 'store'])->name('store');
-        Route::get('/{offerRequest}',                [OfferRequestController::class, 'show'])->name('show');
-        Route::get('/{offerRequest}/edit',           [OfferRequestController::class, 'edit'])->name('edit');
-        Route::put('/{offerRequest}',                [OfferRequestController::class, 'update'])->name('update');
-        Route::patch('/{offerRequest}/status',       [OfferRequestController::class, 'updateStatus'])->name('update-status');
-        Route::delete('/{offerRequest}',             [OfferRequestController::class, 'destroy'])->name('destroy');
-        Route::post('/{offerRequest}/public-link',   [OfferRequestController::class, 'savePublic'])->name('save-public');
-        Route::get('/{offerRequest}/pdf',            [OfferRequestController::class, 'pdf'])->name('pdf');
+        Route::get('/create', [OfferRequestController::class, 'create'])->name('create');
+        Route::post('/', [OfferRequestController::class, 'store'])->name('store');
+        Route::get('/{offerRequest}', [OfferRequestController::class, 'show'])->name('show');
+        Route::get('/{offerRequest}/edit', [OfferRequestController::class, 'edit'])->name('edit');
+        Route::put('/{offerRequest}', [OfferRequestController::class, 'update'])->name('update');
+        Route::patch('/{offerRequest}/status', [OfferRequestController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{offerRequest}', [OfferRequestController::class, 'destroy'])->name('destroy');
+        Route::post('/{offerRequest}/public-link', [OfferRequestController::class, 'savePublic'])->name('save-public');
+        Route::get('/{offerRequest}/pdf', [OfferRequestController::class, 'pdf'])->name('pdf');
     });
 
     Route::prefix('offer-forms')->name('offer-forms.')->middleware('app.module:offers')->group(function () {
-        Route::get('/',                              [OfferFormTemplateController::class, 'index'])->name('index');
-        Route::post('/',                             [OfferFormTemplateController::class, 'store'])->name('store');
-        Route::put('/{offerForm}',                   [OfferFormTemplateController::class, 'update'])->name('update');
-        Route::delete('/{offerForm}',                [OfferFormTemplateController::class, 'destroy'])->name('destroy');
-        Route::patch('/{offerForm}/toggle',          [OfferFormTemplateController::class, 'toggleActive'])->name('toggle');
+        Route::get('/', [OfferFormTemplateController::class, 'index'])->name('index');
+        Route::post('/', [OfferFormTemplateController::class, 'store'])->name('store');
+        Route::put('/{offerForm}', [OfferFormTemplateController::class, 'update'])->name('update');
+        Route::delete('/{offerForm}', [OfferFormTemplateController::class, 'destroy'])->name('destroy');
+        Route::patch('/{offerForm}/toggle', [OfferFormTemplateController::class, 'toggleActive'])->name('toggle');
     });
 
     Route::prefix('pricing-catalog')->name('pricing-catalog.')->middleware(['staff.role', 'app.module:offers'])->group(function () {
@@ -139,33 +140,33 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     });
 
     Route::prefix('chat')->name('chat.')->middleware('app.module:client_zone')->group(function () {
-        Route::get('/',                                          [ChatController::class, 'index'])->name('index');
-        Route::get('/{company}',                                 [ChatController::class, 'show'])->name('show');
-        Route::post('/{company}/send',                           [ChatController::class, 'send'])->name('send');
-        Route::get('/{company}/poll',                            [ChatController::class, 'poll'])->name('poll');
-        Route::post('/{company}/end',                            [ChatController::class, 'endConversation'])->name('end');
-        Route::get('/{company}/archive/{conversationId}',        [ChatController::class, 'archiveConversation'])->name('archive');
+        Route::get('/', [ChatController::class, 'index'])->name('index');
+        Route::get('/{company}', [ChatController::class, 'show'])->name('show');
+        Route::post('/{company}/send', [ChatController::class, 'send'])->name('send');
+        Route::get('/{company}/poll', [ChatController::class, 'poll'])->name('poll');
+        Route::post('/{company}/end', [ChatController::class, 'endConversation'])->name('end');
+        Route::get('/{company}/archive/{conversationId}', [ChatController::class, 'archiveConversation'])->name('archive');
     });
 
     Route::prefix('offers')->name('offers.')->middleware('app.module:offers')->group(function () {
-        Route::get('/template/{offer}',               [OfferController::class, 'getTemplate'])->name('template');
-        Route::post('/ai-assist',                     [OfferController::class, 'aiAssist'])->name('ai-assist');
-        Route::get('/',                              [OfferController::class, 'index'])->name('index');
-        Route::get('/create',                        [OfferController::class, 'create'])->name('create');
-        Route::get('/get-distance',                  [OfferController::class, 'getDistance'])->name('get-distance');
-        Route::post('/',                             [OfferController::class, 'store'])->name('store');
-        Route::get('/{offer}',                       [OfferController::class, 'show'])->name('show');
-        Route::get('/{offer}/edit',                  [OfferController::class, 'edit'])->name('edit');
-        Route::get('/{offer}/pdf',                   [OfferController::class, 'pdf'])->name('pdf');
-        Route::get('/{offer}/word',                  [OfferController::class, 'downloadWord'])->name('download-word');
-        Route::post('/{offer}/save-to-storage',      [OfferController::class, 'saveToStorage'])->name('save-to-storage');
-        Route::put('/{offer}',                       [OfferController::class, 'update'])->name('update');
-        Route::delete('/{offer}',                    [OfferController::class, 'destroy'])->name('destroy');
-        Route::patch('/{offer}/status',              [OfferController::class, 'updateStatus'])->name('status');
-        Route::post('/{offer}/messages',             [OfferController::class, 'storeMessage'])->name('messages.store');
-        Route::post('/{offer}/save-as-template',     [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
-        Route::post('/{offer}/clone',                [OfferController::class, 'clone'])->name('clone');
-        Route::patch('/{offer}/unit-prices',             [OfferController::class, 'updateUnitPrices'])->name('unit-prices');
+        Route::get('/template/{offer}', [OfferController::class, 'getTemplate'])->name('template');
+        Route::post('/ai-assist', [OfferController::class, 'aiAssist'])->name('ai-assist');
+        Route::get('/', [OfferController::class, 'index'])->name('index');
+        Route::get('/create', [OfferController::class, 'create'])->name('create');
+        Route::get('/get-distance', [OfferController::class, 'getDistance'])->name('get-distance');
+        Route::post('/', [OfferController::class, 'store'])->name('store');
+        Route::get('/{offer}', [OfferController::class, 'show'])->name('show');
+        Route::get('/{offer}/edit', [OfferController::class, 'edit'])->name('edit');
+        Route::get('/{offer}/pdf', [OfferController::class, 'pdf'])->name('pdf');
+        Route::get('/{offer}/word', [OfferController::class, 'downloadWord'])->name('download-word');
+        Route::post('/{offer}/save-to-storage', [OfferController::class, 'saveToStorage'])->name('save-to-storage');
+        Route::put('/{offer}', [OfferController::class, 'update'])->name('update');
+        Route::delete('/{offer}', [OfferController::class, 'destroy'])->name('destroy');
+        Route::patch('/{offer}/status', [OfferController::class, 'updateStatus'])->name('status');
+        Route::post('/{offer}/messages', [OfferController::class, 'storeMessage'])->name('messages.store');
+        Route::post('/{offer}/save-as-template', [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
+        Route::post('/{offer}/clone', [OfferController::class, 'clone'])->name('clone');
+        Route::patch('/{offer}/unit-prices', [OfferController::class, 'updateUnitPrices'])->name('unit-prices');
     });
 
     Route::prefix('settings')->name('settings.')->middleware('full.staff')->group(function () {
@@ -212,10 +213,10 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     });
 
     Route::prefix('documents')->name('documents.')->middleware('app.module:documents')->group(function () {
-        Route::get('/',                              [\App\Http\Controllers\DocumentController::class, 'index'])->name('index');
-        Route::post('/',                             [\App\Http\Controllers\DocumentController::class, 'store'])->name('store');
-        Route::get('/{document}/download',           [\App\Http\Controllers\DocumentController::class, 'download'])->name('download');
-        Route::delete('/{document}',                 [\App\Http\Controllers\DocumentController::class, 'destroy'])->name('destroy');
+        Route::get('/', [DocumentController::class, 'index'])->name('index');
+        Route::post('/', [DocumentController::class, 'store'])->name('store');
+        Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
+        Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
     });
 });
 
@@ -262,6 +263,8 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/{project}/finance-groups', [ProjectController::class, 'storeFinanceGroup'])->name('finance-groups.store');
     Route::delete('/{project}/finance-groups/{group}', [ProjectController::class, 'destroyFinanceGroup'])->name('finance-groups.destroy');
     Route::post('/{project}/requirements', [ProjectController::class, 'storeRequirement'])->name('requirements.store');
+    Route::get('/{project}/requirements/template', [ProjectController::class, 'downloadRequirementsTemplate'])->name('requirements.template');
+    Route::post('/{project}/requirements/import', [ProjectController::class, 'importRequirements'])->name('requirements.import');
     Route::patch('/{project}/requirements/{requirement}', [ProjectController::class, 'updateRequirement'])->name('requirements.update');
     Route::delete('/{project}/requirements/{requirement}', [ProjectController::class, 'destroyRequirement'])->name('requirements.destroy');
     Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->name('documents.store');
@@ -289,10 +292,10 @@ Route::get('/debug-logo2', function () {
         'public_logo_exists' => $exists,
         'public_logo_size' => $exists ? filesize($logoPath) : null,
         'generated_base64_length' => $base64 ? strlen($base64) : null,
-        'data_uri_starts_with' => $base64 ? 'data:image/png;base64,' . substr($base64, 0, 30) : null,
+        'data_uri_starts_with' => $base64 ? 'data:image/png;base64,'.substr($base64, 0, 30) : null,
         'controller_file_contains_new_code' => str_contains(
             file_get_contents(app_path('Http/Controllers/OfferController.php')),
-            "base64_encode(file_get_contents(\$logoPath))"
+            'base64_encode(file_get_contents($logoPath))'
         ),
     ], 200, [], JSON_PRETTY_PRINT);
 })->middleware(['auth', 'staff.role']);

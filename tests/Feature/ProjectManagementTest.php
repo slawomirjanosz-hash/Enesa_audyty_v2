@@ -1,10 +1,10 @@
 <?php
 
+use App\Exports\ProjectGanttExport;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
 use App\Models\User;
-use App\Exports\ProjectGanttExport;
 use Illuminate\Http\UploadedFile;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -262,6 +262,76 @@ test('project manager edits material details and quantities are displayed cleanl
 
     $this->actingAs($manager)->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
         ->assertOk()->assertSee('1,5 szt.')->assertSee('Edytuj materiał lub usługę');
+});
+
+test('requirements excel import recognizes flexible columns matches relations and skips duplicates', function () {
+    $manager = User::factory()->create(['name' => 'Kierownik Importu', 'email' => 'kierownik.importu@example.test']);
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/REQ-IMPORT', 'name' => 'Import materiałów', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 50000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($manager);
+    $supplier = Company::create([
+        'name' => 'Hurtownia Techniczna', 'nip' => '1234567890', 'company_type' => 'supplier', 'status' => 'active',
+    ]);
+
+    $this->actingAs($manager)
+        ->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertOk()
+        ->assertSee('Importuj materiały i usługi z Excela')
+        ->assertSee('Pobierz wzór Excel');
+
+    $this->actingAs($manager)
+        ->get(route('projects.requirements.template', $project))
+        ->assertOk()
+        ->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    $spreadsheet = new Spreadsheet;
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->fromArray([
+        ['Zestawienie zakupów dla projektu'],
+        ['Wygenerowano', '10.08.2026'],
+        [],
+        ['Typ pozycji', 'Nazwa materiału / usługi', 'Ilość zamawiana', 'J.m.', 'Cena netto', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
+        ['Materiał', 'Pompa obiegowa', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni'],
+        ['Usługa', 'Montaż pomp', 1, 'usł.', 850, '2026-09-02', 'W realizacji', 'Firma spoza CRM', null, 'brak@example.test', 'Montaż i rozruch'],
+        ['Materiał', null, 5, 'szt.', 100, null, null, null, null, null, 'Wiersz bez nazwy'],
+    ]);
+    $path = tempnam(sys_get_temp_dir(), 'project-requirements-');
+    (new Xlsx($spreadsheet))->save($path);
+    $upload = fn () => new UploadedFile($path, 'materialy.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', null, true);
+
+    $firstResponse = $this->actingAs($manager)->post(route('projects.requirements.import', $project), [
+        'file' => $upload(),
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertSessionHas('requirements_import_report');
+
+    $report = $firstResponse->getSession()->get('requirements_import_report');
+    $pump = $project->requirements()->where('name', 'Pompa obiegowa')->firstOrFail();
+    $service = $project->requirements()->where('name', 'Montaż pomp')->firstOrFail();
+    expect($report['inserted'])->toBe(2)
+        ->and($report['duplicates'])->toBe(0)
+        ->and($report['invalid'])->toBe(1)
+        ->and($report['unassigned'])->toBe(1)
+        ->and($report['unmatched_suppliers'])->toBe(1)
+        ->and($pump->supplier_company_id)->toBe($supplier->id)
+        ->and((float) $pump->quantity)->toBe(2.5)
+        ->and((float) $pump->estimated_cost)->toBe(3001.25)
+        ->and($pump->status)->toBe('ordered')
+        ->and($pump->responsible_id)->toBe($manager->id)
+        ->and($service->type)->toBe('service')
+        ->and($service->status)->toBe('in_progress');
+
+    $secondResponse = $this->actingAs($manager)->post(route('projects.requirements.import', $project), [
+        'file' => $upload(),
+    ])->assertSessionHas('requirements_import_report');
+    $secondReport = $secondResponse->getSession()->get('requirements_import_report');
+    expect($secondReport['inserted'])->toBe(0)
+        ->and($secondReport['duplicates'])->toBe(2)
+        ->and($project->requirements()->count())->toBe(2);
+
+    @unlink($path);
 });
 
 test('projects module can be disabled for an application deployment', function () {
