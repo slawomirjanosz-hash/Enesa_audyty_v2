@@ -46,6 +46,7 @@ class ProjectGanttImportService
             'external_id' => $this->findColumn($headers, ['id zadania', 'identyfikator zadania', 'id']),
             'position' => $this->findColumn($headers, ['kolejnosc', 'pozycja', 'lp']),
             'title' => $this->findColumn($headers, ['nazwa', 'zadanie', 'nazwa zadania']),
+            'type' => $this->findColumn($headers, ['typ pozycji', 'typ', 'rodzaj']),
             'start' => $this->findColumn($headers, ['data rozpoczecia', 'start', 'data startu']),
             'end' => $this->findColumn($headers, ['data zakonczenia', 'koniec', 'termin', 'data koncowa']),
             'progress' => $this->findColumn($headers, ['postep', 'wykonanie', 'procent wykonania']),
@@ -102,13 +103,15 @@ class ProjectGanttImportService
             if ($status === 'done') {
                 $progress = 100;
             }
+            $isMilestone = $this->milestone($this->cell($row, $columns['type']));
 
             $parsed->push([
                 'external_id' => $externalId,
                 'position' => (int) ($this->number($this->cell($row, $columns['position'])) ?? ($rowIndex + 1)),
                 'title' => Str::limit($title, 255, ''),
+                'is_milestone' => $isMilestone,
                 'start_date' => $start,
-                'due_date' => $end,
+                'due_date' => $isMilestone ? $start : $end,
                 'progress' => $progress,
                 'status' => $status,
                 'priority' => $this->priority($this->cell($row, $columns['priority'])),
@@ -204,6 +207,9 @@ class ProjectGanttImportService
                 $fingerprint = $this->fingerprint($row['title'], $row['start_date'], $row['due_date']);
                 if ($existingTasks->has($fingerprint)) {
                     $taskMap[$row['external_id']] = $existingTasks->get($fingerprint);
+                    if ($row['is_milestone'] !== null) {
+                        $taskMap[$row['external_id']]->update(['is_milestone' => $row['is_milestone']]);
+                    }
                     $report['duplicates']++;
 
                     continue;
@@ -229,6 +235,7 @@ class ProjectGanttImportService
                     'start_date' => $row['start_date'],
                     'due_date' => $row['due_date'],
                     'progress' => $row['progress'],
+                    'is_milestone' => $row['is_milestone'] ?? false,
                     'project_position' => $nextPosition++,
                 ]);
                 $taskMap[$row['external_id']] = $task;
@@ -285,6 +292,16 @@ class ProjectGanttImportService
         }
 
         return $value;
+    }
+
+    private function milestone(mixed $value): ?bool
+    {
+        $value = $this->text($value);
+        if (! $value) {
+            return null;
+        }
+
+        return Str::contains($this->normalize($value), ['kamien milowy', 'milestone', 'etap']);
     }
 
     private function date(mixed $value): ?string

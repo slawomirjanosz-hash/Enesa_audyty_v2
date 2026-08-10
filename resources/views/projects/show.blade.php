@@ -22,6 +22,7 @@
     .p-head{display:flex;justify-content:space-between;gap:20px;margin-bottom:18px}.p-kicker{font-size:12px;font-weight:800;color:var(--green);letter-spacing:.08em}.p-head h1{margin:4px 0 7px;font-size:25px}.p-meta{display:flex;flex-wrap:wrap;gap:9px 18px;color:#66736b;font-size:13px}.badge{padding:5px 10px;border-radius:999px;background:#edf5ef;color:#24543d;font-size:11px;font-weight:800}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.sum{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:16px}.sum small{display:block;color:#77827b;margin-bottom:6px}.sum strong{font-size:20px}.tabs{display:flex;gap:4px;border-bottom:2px solid #e5e1d8;overflow:auto}.tab{border:0;background:none;padding:12px 16px;font-weight:700;color:#66736b;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px}.tab.active{color:var(--green);border-color:var(--green)}.pane{display:none;padding-top:20px}.pane.active{display:block}.card{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:20px;margin-bottom:16px}.card h2{font-size:16px;margin:0 0 15px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:11px;font-weight:800;color:#4b5650}.field input,.field select,.field textarea{border:1px solid #d8d3c8;border-radius:7px;padding:9px 10px;font:inherit}.full{grid-column:1/-1}.member-checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 12px;padding:10px;border:1px solid #d8d3c8;border-radius:8px;background:#fafaf7}.member-check{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-size:12px!important;font-weight:600!important}.member-check input{width:16px;height:16px}.btn{border:0;border-radius:7px;padding:9px 13px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;text-decoration:none}.btn-red{background:#b91c1c}.btn-soft{background:#edf4ef;color:var(--green)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee;font-size:12px}th{font-size:10px;text-transform:uppercase;color:#7b847f;background:#fafaf6}.gantt{overflow-x:auto}.g-row{display:grid;grid-template-columns:220px minmax(700px,1fr);min-height:46px;border-bottom:1px solid #eee;align-items:center}.g-name{padding:8px;font-size:12px}.g-track{height:28px;background:repeating-linear-gradient(90deg,#f7f7f3 0,#f7f7f3 calc(10% - 1px),#e7e4dc calc(10% - 1px),#e7e4dc 10%);position:relative}.g-bar{position:absolute;top:4px;height:20px;border-radius:5px;min-width:4px;color:#fff;font-size:10px;display:flex;align-items:center;padding:0 6px;overflow:hidden}.g-progress{position:absolute;inset:0 auto 0 0;background:rgba(0,0,0,.18)}.legend{display:flex;gap:16px;font-size:11px;color:#66736b;margin:8px 0}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}.finance-chart{width:100%;height:auto;background:#fbfbf8;border-radius:8px}.status-select{padding:6px;border:1px solid #ddd;border-radius:6px}.empty{padding:28px;text-align:center;color:#888}.team{display:flex;flex-wrap:wrap;gap:8px}.person{padding:7px 10px;border-radius:999px;background:#f0f5f1;font-size:12px}@media(max-width:850px){.summary{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.full{grid-column:auto}.member-checks{grid-template-columns:1fr 1fr}.g-row{grid-template-columns:150px minmax(650px,1fr)}}
     .gantt-toolbar,.chart-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:13px}.tool-label{font-size:11px;font-weight:800;color:#66736b;margin-right:3px}.tool-btn{border:1px solid #d8d3c8;background:#fff;color:#46524b;border-radius:7px;padding:7px 10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.tool-btn:hover,.tool-btn.active{background:var(--green);border-color:var(--green);color:#fff}.tool-btn.primary{background:var(--green);border-color:var(--green);color:#fff}.gantt-help{padding:9px 11px;background:#f6f8f5;border:1px solid #e1e6df;border-radius:7px;color:#66736b;font-size:11px;margin-bottom:12px}.frappe-gantt-wrap{min-height:260px;overflow-x:auto;border:1px solid #e3e0d8;border-radius:9px;background:#fff}.frappe-gantt-wrap .gantt-container{overflow:visible}.frappe-gantt-wrap svg{min-width:100%}.frappe-gantt-wrap.gantt-readonly svg{pointer-events:none}.frappe-gantt-wrap .bar-wrapper.stage-row .bar{fill:#2563eb}.frappe-gantt-wrap .bar-wrapper.stage-row .bar-progress{fill:#1d4ed8}.frappe-gantt-wrap .bar-wrapper.task-row .bar{fill:#8b5cf6}.frappe-gantt-wrap .bar-wrapper.task-row .bar-progress{fill:#6d28d9}.frappe-gantt-wrap .bar-label{font-size:11px;font-weight:700}.gantt-fallback{padding:45px;text-align:center;color:#777}.project-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;align-items:center;justify-content:center;padding:16px}.project-modal.open{display:flex}.project-modal-box{width:min(760px,100%);max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:13px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.22)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-head h2{margin:0}.modal-close{border:0;background:none;font-size:25px;cursor:pointer}.finance-summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px}.finance-kpi{border-radius:9px;padding:12px 13px;background:#f7f8f5;border:1px solid #e4e5df}.finance-kpi small{display:block;color:#6d786f;font-size:10px;font-weight:800;margin-bottom:5px}.finance-kpi strong{font-size:15px}.chart-shell{height:330px;position:relative}.chart-range{font-size:11px;color:#66736b;font-weight:700;padding:7px 10px;background:#f7f8f5;border-radius:7px}.finance-register-tabs{display:flex;gap:5px;margin-bottom:12px}.register-tab{border:1px solid #d8d3c8;background:#f7f8f5;border-radius:7px;padding:7px 11px;font-size:11px;font-weight:800;cursor:pointer}.register-tab.active{background:#243f31;color:#fff;border-color:#243f31}.finance-row-hidden{display:none}@media(max-width:1050px){.finance-summary-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.finance-summary-grid{grid-template-columns:1fr 1fr}.chart-shell{height:280px}}
     .gantt-list-table{min-width:1020px}.gantt-list-table tr.done-row{background:#f2fbf5}.gantt-list-table tr.overdue-row{background:#fff1f1}.gantt-select-cell{width:38px;text-align:center}.gantt-task-check,.gantt-check-all{width:16px;height:16px;accent-color:var(--green);cursor:pointer}.gantt-bulk-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:9px;margin-bottom:10px}.gantt-bulk-count{font-size:11px;color:#66736b;font-weight:700}.gantt-bulk-delete{border:0;border-radius:7px;padding:7px 10px;background:#b91c1c;color:#fff;font-size:11px;font-weight:800;cursor:pointer}.gantt-bulk-delete:disabled{opacity:.4;cursor:not-allowed}.progress-wrap{display:flex;align-items:center;gap:7px;min-width:190px}.progress-wrap input[type=range]{width:150px;height:6px;accent-color:#2563eb;cursor:pointer}.progress-wrap strong{min-width:36px;font-size:11px}.task-status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap}.task-status.done{background:#d1fae5;color:#047857}.task-status.overdue{background:#fee2e2;color:#b91c1c}.task-status.active{background:#dbeafe;color:#1d4ed8}.days-value{font-size:11px;font-weight:800}.days-value.late{color:#dc2626}.days-value.ok{color:#15803d}.mini-actions{display:flex;gap:4px;justify-content:flex-end}.mini-btn{width:27px;height:25px;border:0;border-radius:5px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;cursor:pointer;color:#fff}.mini-btn.edit{background:#2563eb}.mini-btn.delete{background:#dc2626}.mini-btn.move{background:#93c5fd}.mini-btn:disabled{opacity:.35;cursor:not-allowed}
+    .frappe-gantt-wrap .today-highlight{fill:#ef4444!important;opacity:.16!important}.frappe-gantt-wrap .bar-wrapper.project-range-row{pointer-events:none}.frappe-gantt-wrap .bar-wrapper.project-range-row .bar{fill:#cbd5e1}.frappe-gantt-wrap .bar-wrapper.project-range-row .bar-progress{fill:#64748b}.frappe-gantt-wrap .bar-wrapper.project-range-row .handle{display:none}.frappe-gantt-wrap .bar-wrapper.milestone-row .bar{fill:#f59e0b;stroke:#b45309;stroke-width:1;transform:rotate(45deg) scale(.72);transform-box:fill-box;transform-origin:center;rx:0;ry:0}.frappe-gantt-wrap .bar-wrapper.milestone-row .bar-progress,.frappe-gantt-wrap .bar-wrapper.milestone-row .handle{display:none}.frappe-gantt-wrap .bar-wrapper.milestone-row.done-milestone .bar{fill:#16a34a;stroke:#15803d}.project-date-marker{pointer-events:none}.project-date-marker line{stroke-width:2}.project-date-marker.today line{stroke:#ef4444;stroke-dasharray:5 4}.project-date-marker.deadline line{stroke:#111827;stroke-dasharray:8 4}.project-date-marker text{font-size:10px;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}.project-date-marker.today text{fill:#dc2626}.project-date-marker.deadline text{fill:#111827}.milestone-badge{display:inline-flex;align-items:center;gap:4px;margin-left:6px;padding:3px 7px;border-radius:999px;background:#fef3c7;color:#92400e;font-size:9px;font-weight:800}.milestone-note{padding:9px 11px;border-radius:7px;background:#fffbeb;color:#92400e;font-size:11px}.field-hidden{display:none!important}
     .finance-section{background:#fff;border:1px solid #e5e1d8;border-radius:11px;margin-bottom:14px;overflow:hidden}.finance-section>summary{display:flex;align-items:center;gap:10px;padding:15px 18px;cursor:pointer;font-size:15px;font-weight:800;list-style:none}.finance-section>summary::-webkit-details-marker{display:none}.finance-section>summary:before{content:'›';font-size:22px;line-height:1;transition:transform .18s}.finance-section[open]>summary:before{transform:rotate(90deg)}.finance-section>summary small{margin-left:auto;color:#77827b;font-size:10px;font-weight:700}.finance-section-body{border-top:1px solid #eee;padding:18px}.finance-import-note{font-size:11px;color:#66736b;line-height:1.5;background:#f7f8f5;border-radius:7px;padding:10px;margin-bottom:13px}.import-report{border:1px solid #bae6c6;background:#f0fdf4;border-radius:9px;padding:14px;margin-bottom:14px}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.report-value{background:#fff;border-radius:7px;padding:9px}.report-value small{display:block;color:#66736b;font-size:9px;text-transform:uppercase}.report-value strong{font-size:15px}.finance-groups{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.finance-group-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;background:#f0f5f1;border-radius:999px;font-size:11px}.finance-group-chip form{display:inline}.finance-group-chip button{border:0;background:none;color:#b91c1c;cursor:pointer;padding:0}.finance-table{min-width:1050px}.source-badge{display:inline-block;border-radius:999px;background:#eef2ff;color:#4338ca;padding:3px 6px;font-size:9px;font-weight:800}.finance-edit{position:relative}.finance-edit>summary{list-style:none}.finance-edit-box{position:absolute;right:0;z-index:20;width:min(650px,80vw);background:#fff;border:1px solid #d8d3c8;border-radius:9px;padding:14px;box-shadow:0 12px 35px rgba(0,0,0,.16)}.chart-overview-shell{height:90px;margin-top:8px;position:relative;border-top:1px solid #eee;padding-top:7px}@media(max-width:700px){.report-grid{grid-template-columns:1fr 1fr}.finance-section-body{padding:12px}}
 </style>
 
@@ -84,19 +85,19 @@
     @endif
     <div class="card"><h2>Interaktywny wykres Gantta</h2>
         <div class="gantt-toolbar">
-            @if($canEdit)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button>@endif
+            @if($canEdit)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button><button type="button" class="tool-btn" id="gantt-add-milestone"><i class="ti ti-diamond"></i> Dodaj kamień milowy</button>@endif
             <a class="tool-btn" style="text-decoration:none" href="{{route('projects.gantt.export',$project)}}"><i class="ti ti-file-spreadsheet"></i> Eksport Excel</a>
             @if($canEdit)<button type="button" class="tool-btn" onclick="document.getElementById('gantt-import-modal').classList.add('open')"><i class="ti ti-file-upload"></i> Import Excel</button>@endif
             @if($canEdit)<button type="button" class="tool-btn" id="gantt-share"><i class="ti ti-link"></i> Link dla klienta</button>@endif
             <span class="tool-label">Widok:</span>
             @foreach(['Day'=>'Dzień','Week'=>'Tydzień','Month'=>'Miesiąc'] as $mode=>$label)<button type="button" class="tool-btn gantt-mode {{ $mode==='Week'?'active':'' }}" data-mode="{{ $mode }}">{{ $label }}</button>@endforeach
             <button type="button" class="tool-btn" id="gantt-today"><i class="ti ti-calendar-event"></i> Dzisiaj</button>
-            <span class="legend" style="margin:0 0 0 auto"><span><i class="dot" style="background:#7C3AED"></i>Pozycje harmonogramu</span><span>Strzałki oznaczają zależności</span></span>
+            <span class="legend" style="margin:0 0 0 auto"><span><i class="dot" style="background:#7C3AED"></i>Zadania</span><span><i class="dot" style="background:#f59e0b;transform:rotate(45deg);border-radius:1px"></i>Kamienie milowe</span><span>Linie: dziś i koniec projektu {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></span>
         </div>
         @if($canEdit)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
         <div id="project-frappe-gantt" class="frappe-gantt-wrap"></div>
     </div>
-    <div class="card"><h2>Lista zadań <small style="font-weight:500;color:#78827b">(kolejność jak na Gantcie)</small></h2><div id="gantt-task-list"></div></div>
+    <div class="card"><h2>Lista zadań i kamieni milowych <small style="font-weight:500;color:#78827b">(kolejność jak na Gantcie)</small></h2><div id="gantt-task-list"></div></div>
 </section>
 
 <section id="pane-finances" class="pane">
@@ -235,9 +236,11 @@
             <input type="hidden" id="gantt-task-id">
             <div class="grid2">
                 <div class="field full"><label>Nazwa zadania *</label><input id="gantt-task-title" required></div>
-                <div class="field"><label>Data rozpoczęcia *</label><input type="date" id="gantt-task-start" required></div>
-                <div class="field"><label>Liczba dni *</label><input type="number" id="gantt-task-duration" min="1" value="1" required></div>
-                <div class="field"><label>Data zakończenia *</label><input type="date" id="gantt-task-end" required></div>
+                <div class="field full"><label>Typ pozycji</label><select id="gantt-task-type"><option value="task">Zadanie</option><option value="milestone">Kamień milowy — etap projektu</option></select></div>
+                <div class="field" id="gantt-task-start-field"><label id="gantt-task-start-label">Data rozpoczęcia *</label><input type="date" id="gantt-task-start" required></div>
+                <div class="field" id="gantt-task-duration-field"><label>Liczba dni *</label><input type="number" id="gantt-task-duration" min="1" value="1" required></div>
+                <div class="field" id="gantt-task-end-field"><label>Data zakończenia *</label><input type="date" id="gantt-task-end" required></div>
+                <div class="field full milestone-note field-hidden" id="gantt-milestone-note">Kamień milowy ma jeden termin. Na wykresie pojawi się jako romb, a jego status pokaże, czy etap został wykonany w terminie.</div>
                 <div class="field"><label>Postęp (%)</label><input type="number" id="gantt-task-progress" min="0" max="100" value="0" required></div>
                 <div class="field"><label>Zależne od zadania</label><select id="gantt-task-dependency"><option value="">Brak — zadanie główne</option></select></div>
                 <div class="field"><label>Osoba odpowiedzialna</label><select id="gantt-task-assignee"><option value="">Nieprzypisane</option>@foreach($project->members as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
@@ -276,6 +279,8 @@ const projectFinanceItems = @json($financeChartData);
 const projectContractValue = @json((float) $project->contract_value);
 const requestedProjectTab = @json(request('tab') ?: ($errors->ganttImport->any() ? 'gantt' : null));
 const projectCanEdit = @json($canEdit);
+const projectStartDate = @json($project->start_date?->format('Y-m-d'));
+const projectEndDate = @json($project->end_date?->format('Y-m-d'));
 const projectCsrfToken = document.querySelector('meta[name="csrf-token"]')?.content || @json(csrf_token());
 const ganttBulkDeleteUrl = @json(route('projects.tasks.bulk-destroy', $project));
 let projectGantt = null;
@@ -306,7 +311,7 @@ async function saveGanttChange(task, start, end, progress) {
     if (!source) return;
     const payload = { progress: Math.round(progress ?? task.progress ?? 0) };
     payload.start_date = localDate(start);
-    payload.due_date = localDate(end);
+    payload.due_date = source.is_milestone ? payload.start_date : localDate(end);
     const response = await fetch(source.update_url, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': projectCsrfToken},
@@ -357,8 +362,14 @@ function initProjectGantt() {
         end: item.end,
         progress: item.progress,
         dependencies: item.dependencies || '',
-        custom_class: 'task-row',
+        custom_class: item.is_milestone ? 'milestone-row' + (Number(item.progress) >= 100 ? ' done-milestone' : '') : 'task-row',
     }));
+    if(projectEndDate){
+        const rangeStart=projectStartDate||projectTimelineItems.map(item=>item.start).sort()[0]||projectEndDate;
+        const total=Math.max(1,new Date(projectEndDate+'T00:00:00')-new Date(rangeStart+'T00:00:00'));
+        const elapsed=Math.max(0,Math.min(100,Math.round((new Date()-new Date(rangeStart+'T00:00:00'))/total*100)));
+        tasks.unshift({id:'project-range',name:'Okres projektu',start:rangeStart,end:projectEndDate,progress:elapsed,dependencies:'',custom_class:'project-range-row'});
+    }
     projectGantt = new Gantt('#project-frappe-gantt', tasks, {
         view_mode: projectGanttMode,
         language: 'en',
@@ -368,13 +379,42 @@ function initProjectGantt() {
         on_progress_change: (task, progress) => saveGanttChange(task, task._start || task.start, task._end || task.end, progress).catch(error => { alert(error.message); window.location.reload(); }),
         custom_popup_html: task => {
             const source = projectTimelineItems.find(item => item.id === task.id);
-            const kind = 'Zadanie harmonogramu';
+            const kind = source?.is_milestone ? 'Kamień milowy — etap projektu' : 'Zadanie harmonogramu';
             const person = source?.assignee ? '<div style="margin-top:4px">Osoba: ' + escapeProjectHtml(source.assignee) + '</div>' : '';
             const dependency = source?.dependencies ? projectTimelineItems.find(item => item.id === source.dependencies)?.name : null;
-            return '<div class="details-container"><strong>' + escapeProjectHtml(task.name) + '</strong><div>' + kind + ' · ' + task.progress + '%</div><div>' + localDate(task._start || task.start) + ' – ' + localDate(task._end || task.end) + '</div>' + person + (dependency ? '<div>Zależne od: ' + escapeProjectHtml(dependency) + '</div>' : '') + '</div>';
+            const dates = source?.is_milestone ? localDate(task._start || task.start) : localDate(task._start || task.start) + ' – ' + localDate(task._end || task.end);
+            return '<div class="details-container"><strong>' + escapeProjectHtml(task.name) + '</strong><div>' + kind + ' · ' + task.progress + '%</div><div>' + dates + '</div>' + person + (dependency ? '<div>Zależne od: ' + escapeProjectHtml(dependency) + '</div>' : '') + '</div>';
         },
+        on_view_change: () => setTimeout(renderGanttDateMarkers, 0),
     });
-    setTimeout(bindGanttTaskEditing, 50);
+    setTimeout(() => { bindGanttTaskEditing(); renderGanttDateMarkers(); }, 50);
+}
+
+function ganttMarkerX(date, kind) {
+    const svg=document.querySelector('#project-frappe-gantt svg.gantt');
+    if(!svg||!projectGantt)return null;
+    if(kind==='today'){
+        const highlight=svg.querySelector('.today-highlight');
+        if(highlight)return Number(highlight.getAttribute('x'))+Number(highlight.getAttribute('width')||0)/2;
+    }
+    const start=new Date(projectGantt.gantt_start),target=new Date(date+'T00:00:00');
+    const step=Number(projectGantt.options?.step||24),columnWidth=Number(projectGantt.options?.column_width||38);
+    return ((target-start)/3600000/step)*columnWidth;
+}
+function renderGanttDateMarkers() {
+    const svg=document.querySelector('#project-frappe-gantt svg.gantt');if(!svg||!projectGantt)return;
+    svg.querySelectorAll('.project-date-marker').forEach(marker=>marker.remove());
+    const background=svg.querySelector('.grid-background');
+    const width=Number(background?.getAttribute('width')||svg.getAttribute('width')||0),height=Number(background?.getAttribute('height')||svg.getAttribute('height')||0);
+    const markers=[{kind:'today',date:localDate(new Date()),label:'Dzisiaj',labelY:16}];
+    if(projectEndDate)markers.push({kind:'deadline',date:projectEndDate,label:'Koniec projektu',labelY:29});
+    markers.forEach(marker=>{
+        const x=ganttMarkerX(marker.date,marker.kind);if(x===null||x<0||x>width)return;
+        const group=document.createElementNS('http://www.w3.org/2000/svg','g');group.setAttribute('class','project-date-marker '+marker.kind);
+        const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x);line.setAttribute('x2',x);line.setAttribute('y1',0);line.setAttribute('y2',height);
+        const label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('x',x+4);label.setAttribute('y',marker.labelY);label.textContent=marker.label;
+        group.append(line,label);svg.appendChild(group);
+    });
 }
 
 document.querySelectorAll('.gantt-mode').forEach(button => button.addEventListener('click', () => {
@@ -382,6 +422,7 @@ document.querySelectorAll('.gantt-mode').forEach(button => button.addEventListen
     if (!projectGantt) return;
     projectGanttMode = button.dataset.mode;
     projectGantt.change_view_mode(projectGanttMode);
+    setTimeout(renderGanttDateMarkers, 0);
     document.querySelectorAll('.gantt-mode').forEach(item => item.classList.toggle('active', item === button));
 }));
 document.getElementById('gantt-today')?.addEventListener('click', () => {
@@ -398,19 +439,29 @@ function populateDependencyOptions(editingId = null) {
     const select = document.getElementById('gantt-task-dependency');
     if (!select) return;
     select.innerHTML = '<option value="">Brak — zadanie główne</option>';
-    projectTimelineItems.filter(item => item.kind === 'task' && item.id !== editingId).forEach(item => {
+    projectTimelineItems.filter(item => item.id !== editingId).forEach(item => {
         const option = document.createElement('option'); option.value = item.id; option.textContent = item.name; select.appendChild(option);
     });
 }
-function openGanttTaskModal(taskId = null) {
+function toggleGanttMilestoneFields() {
+    const milestone=document.getElementById('gantt-task-type')?.value==='milestone';
+    document.getElementById('gantt-task-duration-field')?.classList.toggle('field-hidden',milestone);
+    document.getElementById('gantt-task-end-field')?.classList.toggle('field-hidden',milestone);
+    document.getElementById('gantt-milestone-note')?.classList.toggle('field-hidden',!milestone);
+    const label=document.getElementById('gantt-task-start-label');if(label)label.textContent=milestone?'Termin kamienia milowego *':'Data rozpoczęcia *';
+    if(milestone){document.getElementById('gantt-task-duration').value=1;document.getElementById('gantt-task-end').value=document.getElementById('gantt-task-start').value;}
+}
+function openGanttTaskModal(taskId = null, defaultType = 'task') {
     const modal = document.getElementById('gantt-task-modal');
     if (!modal) return;
     document.getElementById('gantt-task-form').reset();
     document.getElementById('gantt-task-id').value = taskId || '';
     populateDependencyOptions(taskId);
-    const task = taskId ? projectTimelineItems.find(item => item.id === taskId && item.kind === 'task') : null;
+    const task = taskId ? projectTimelineItems.find(item => item.id === taskId) : null;
     const today = localDate(new Date());
-    document.getElementById('gantt-modal-title').textContent = task ? 'Edytuj zadanie' : 'Dodaj zadanie';
+    const milestone=task?.is_milestone||(!task&&defaultType==='milestone');
+    document.getElementById('gantt-modal-title').textContent = task ? (milestone?'Edytuj kamień milowy':'Edytuj zadanie') : (milestone?'Dodaj kamień milowy':'Dodaj zadanie');
+    document.getElementById('gantt-task-type').value = milestone ? 'milestone' : 'task';
     document.getElementById('gantt-task-title').value = task?.name || '';
     document.getElementById('gantt-task-start').value = task?.start || today;
     document.getElementById('gantt-task-end').value = task?.end || today;
@@ -420,6 +471,7 @@ function openGanttTaskModal(taskId = null) {
     document.getElementById('gantt-task-assignee').value = task?.assigned_to || '';
     document.getElementById('gantt-task-priority').value = task?.priority || 'medium';
     document.getElementById('gantt-task-description').value = task?.description || '';
+    toggleGanttMilestoneFields();
     modal.classList.add('open');
 }
 function closeGanttTaskModal() { document.getElementById('gantt-task-modal')?.classList.remove('open'); }
@@ -434,9 +486,9 @@ function ganttTaskTiming(task) {
     const today = new Date(); today.setHours(0,0,0,0);
     const end = new Date(task.end + 'T00:00:00');
     const days = Math.ceil((end - today) / 86400000);
-    if (Number(task.progress) >= 100) return {status:'done',label:'✓ Wykonano',days,daysLabel:days >= 0 ? '+' + days : String(days)};
-    if (days < 0) return {status:'overdue',label:'Po terminie',days,daysLabel:String(days)};
-    return {status:'active',label:'W realizacji',days,daysLabel:'+' + days};
+    if (Number(task.progress) >= 100) return {status:'done',label:task.is_milestone?'✓ Etap wykonany':'✓ Wykonano',days,daysLabel:days >= 0 ? '+' + days : String(days)};
+    if (days < 0) return {status:'overdue',label:task.is_milestone?'Etap po terminie':'Po terminie',days,daysLabel:String(days)};
+    return {status:'active',label:task.is_milestone?'Etap w terminie':'W realizacji',days,daysLabel:'+' + days};
 }
 function renderGanttTaskList() {
     const container = document.getElementById('gantt-task-list');
@@ -447,7 +499,8 @@ function renderGanttTaskList() {
         const actions=projectCanEdit ? '<div class="mini-actions"><button class="mini-btn edit list-edit" data-index="'+index+'" title="Edytuj">✎</button><button class="mini-btn delete list-delete" data-index="'+index+'" title="Usuń">×</button><button class="mini-btn move list-up" data-index="'+index+'" title="Przesuń wyżej" '+(index===0?'disabled':'')+'>↑</button><button class="mini-btn move list-down" data-index="'+index+'" title="Przesuń niżej" '+(index===projectTimelineItems.length-1?'disabled':'')+'>↓</button></div>' : '';
         const slider=projectCanEdit ? '<div class="progress-wrap"><input class="list-progress" data-index="'+index+'" type="range" min="0" max="100" value="'+task.progress+'"><strong>'+task.progress+'%</strong></div>' : task.progress+'%';
         const checkbox=projectCanEdit ? '<td class="gantt-select-cell"><input class="gantt-task-check" type="checkbox" value="'+task.db_id+'" aria-label="Zaznacz zadanie '+escapeProjectHtml(task.name)+'"></td>' : '';
-        return '<tr class="'+(timing.status==='done'?'done-row':timing.status==='overdue'?'overdue-row':'')+'">'+checkbox+'<td><strong>'+escapeProjectHtml(task.name)+'</strong><br><small>Zależne od: '+escapeProjectHtml(dependency)+'</small></td><td>'+escapeProjectHtml(task.assignee||'—')+'</td><td title="'+escapeProjectHtml(task.description||'')+'">'+escapeProjectHtml(task.description ? (task.description.length>55?task.description.slice(0,55)+'…':task.description) : '—')+'</td><td>'+localDate(task.end)+'</td><td>'+slider+'</td><td><span class="task-status '+timing.status+'">'+timing.label+'</span></td><td><span class="days-value '+(timing.days<0?'late':'ok')+'">'+timing.daysLabel+'</span></td><td>'+actions+'</td></tr>';
+        const milestoneBadge=task.is_milestone?'<span class="milestone-badge">◆ Kamień milowy</span>':'';
+        return '<tr class="'+(timing.status==='done'?'done-row':timing.status==='overdue'?'overdue-row':'')+'">'+checkbox+'<td><strong>'+escapeProjectHtml(task.name)+'</strong>'+milestoneBadge+'<br><small>Zależne od: '+escapeProjectHtml(dependency)+'</small></td><td>'+escapeProjectHtml(task.assignee||'—')+'</td><td title="'+escapeProjectHtml(task.description||'')+'">'+escapeProjectHtml(task.description ? (task.description.length>55?task.description.slice(0,55)+'…':task.description) : '—')+'</td><td>'+localDate(task.end)+'</td><td>'+slider+'</td><td><span class="task-status '+timing.status+'">'+timing.label+'</span></td><td><span class="days-value '+(timing.days<0?'late':'ok')+'">'+timing.daysLabel+'</span></td><td>'+actions+'</td></tr>';
     }).join('');
     const bulkToolbar=projectCanEdit ? '<div class="gantt-bulk-toolbar"><span class="gantt-bulk-count">Nie zaznaczono zadań</span><button type="button" class="gantt-bulk-delete" disabled><i class="ti ti-trash"></i> Usuń zaznaczone</button></div>' : '';
     const selectAllHeader=projectCanEdit ? '<th class="gantt-select-cell"><input class="gantt-check-all" type="checkbox" aria-label="Zaznacz wszystkie zadania" title="Zaznacz wszystkie"></th>' : '';
@@ -500,7 +553,10 @@ async function deleteGanttTask(index) {
     projectTimelineItems.splice(index,1);projectTimelineItems.forEach(item=>{if(item.dependencies===task.id)item.dependencies='';});renderProjectGantt();
 }
 document.getElementById('gantt-add-task')?.addEventListener('click', () => openGanttTaskModal());
+document.getElementById('gantt-add-milestone')?.addEventListener('click', () => openGanttTaskModal(null,'milestone'));
+document.getElementById('gantt-task-type')?.addEventListener('change',toggleGanttMilestoneFields);
 document.getElementById('gantt-task-start')?.addEventListener('change', event => {
+    if(document.getElementById('gantt-task-type').value==='milestone'){document.getElementById('gantt-task-end').value=event.target.value;return;}
     const duration = Number(document.getElementById('gantt-task-duration').value || 1);
     const end = new Date(event.target.value + 'T12:00:00'); end.setDate(end.getDate() + duration - 1);
     document.getElementById('gantt-task-end').value = localDate(end);
@@ -520,10 +576,13 @@ document.getElementById('gantt-task-form')?.addEventListener('submit', async eve
     const existing = editingId ? projectTimelineItems.find(item => item.id === editingId) : null;
     const progress = Number(document.getElementById('gantt-task-progress').value || 0);
     const dependency = document.getElementById('gantt-task-dependency').value;
+    const isMilestone = document.getElementById('gantt-task-type').value === 'milestone';
+    const startDate = document.getElementById('gantt-task-start').value;
     const payload = {
         title: document.getElementById('gantt-task-title').value,
-        start_date: document.getElementById('gantt-task-start').value,
-        due_date: document.getElementById('gantt-task-end').value,
+        start_date: startDate,
+        due_date: isMilestone ? startDate : document.getElementById('gantt-task-end').value,
+        is_milestone: isMilestone,
         progress,
         status: progress >= 100 ? 'done' : (progress > 0 ? 'in_progress' : 'todo'),
         priority: document.getElementById('gantt-task-priority').value,

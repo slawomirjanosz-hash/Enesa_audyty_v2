@@ -4,6 +4,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
 use App\Models\User;
+use App\Exports\ProjectGanttExport;
 use Illuminate\Http\UploadedFile;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -193,6 +194,42 @@ test('project manager bulk deletes selected gantt tasks only', function () {
         ->and($otherProject->tasks()->whereKey($foreignTask)->exists())->toBeTrue();
 });
 
+test('project manager creates and edits a milestone with a single deadline', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/MILESTONE', 'name' => 'Projekt z etapami', 'manager_id' => $manager->id,
+        'status' => 'active', 'start_date' => '2026-08-01', 'end_date' => '2026-10-31',
+        'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($manager);
+
+    $response = $this->actingAs($manager)->postJson(route('projects.tasks.store', $project), [
+        'title' => 'Odbiór etapu pierwszego', 'is_milestone' => true,
+        'start_date' => '2026-08-20', 'due_date' => '2026-08-25',
+        'status' => 'todo', 'priority' => 'high', 'progress' => 0,
+    ])->assertCreated()->assertJsonPath('kind', 'milestone')->assertJsonPath('is_milestone', true);
+
+    $milestone = $project->tasks()->findOrFail($response->json('db_id'));
+    expect($milestone->is_milestone)->toBeTrue()
+        ->and($milestone->start_date->format('Y-m-d'))->toBe('2026-08-20')
+        ->and($milestone->due_date->format('Y-m-d'))->toBe('2026-08-20');
+
+    $this->actingAs($manager)->patchJson(route('projects.tasks.update', [$project, $milestone]), [
+        'start_date' => '2026-08-22', 'due_date' => '2026-08-30', 'progress' => 100,
+    ])->assertOk()->assertJsonPath('kind', 'milestone');
+    expect($milestone->refresh()->due_date->format('Y-m-d'))->toBe('2026-08-22');
+    $export = new ProjectGanttExport($project);
+    expect($export->headings()[0])->toContain('Typ pozycji')
+        ->and($export->array()[0][3])->toBe('Kamień milowy');
+
+    $this->actingAs($manager)->get(route('projects.show', ['project' => $project, 'tab' => 'gantt']))
+        ->assertOk()
+        ->assertSee('Dodaj kamień milowy')
+        ->assertSee('Koniec projektu')
+        ->assertSee('projectEndDate', false);
+});
+
 test('projects module can be disabled for an application deployment', function () {
     CompanySettings::create([
         'name' => 'Firma bez projektów', 'primary_color' => '#123456',
@@ -327,6 +364,7 @@ test('gantt import accepts the previous export format with dependency names', fu
         ['Rodzaj', 'Nazwa', 'Data rozpoczęcia', 'Data zakończenia', 'Czas trwania (dni)', 'Postęp (%)', 'Zależne od', 'Osoba odpowiedzialna', 'Opis'],
         ['Zadanie', 'Etap pierwszy', '2026-10-01', '2026-10-02', 2, 0, null, $manager->name, null],
         ['Zadanie', 'Etap drugi', '2026-10-03', '2026-10-05', 3, 0, 'Etap pierwszy', $manager->name, null],
+        ['Kamień milowy', 'Odbiór etapu', '2026-10-06', '2026-10-08', 1, 0, 'Etap drugi', $manager->name, null],
     ]);
     $path = tempnam(sys_get_temp_dir(), 'project-gantt-legacy-');
     (new Xlsx($spreadsheet))->save($path);
@@ -337,9 +375,13 @@ test('gantt import accepts the previous export format with dependency names', fu
 
     $first = $project->tasks()->where('title', 'Etap pierwszy')->firstOrFail();
     $second = $project->tasks()->where('title', 'Etap drugi')->firstOrFail();
+    $milestone = $project->tasks()->where('title', 'Odbiór etapu')->firstOrFail();
     expect($second->depends_on_task_id)->toBe($first->id)
         ->and($first->assigned_to)->toBe($manager->id)
-        ->and($project->tasks()->count())->toBe(2);
+        ->and($milestone->is_milestone)->toBeTrue()
+        ->and($milestone->due_date->format('Y-m-d'))->toBe('2026-10-06')
+        ->and($milestone->depends_on_task_id)->toBe($second->id)
+        ->and($project->tasks()->count())->toBe(3);
 
     @unlink($path);
 });

@@ -37,6 +37,7 @@ class ProjectGanttExport implements FromArray, ShouldAutoSize, WithHeadings, Wit
             'ID zadania',
             'Kolejność',
             'Nazwa',
+            'Typ pozycji',
             'Data rozpoczęcia',
             'Data zakończenia',
             'Czas trwania (dni)',
@@ -65,6 +66,7 @@ class ProjectGanttExport implements FromArray, ShouldAutoSize, WithHeadings, Wit
                 $this->externalIds[$task->id],
                 $index + 1,
                 $task->title,
+                $task->is_milestone ? 'Kamień milowy' : 'Zadanie',
                 $task->start_date?->format('Y-m-d'),
                 $task->due_date?->format('Y-m-d'),
                 $duration,
@@ -84,8 +86,8 @@ class ProjectGanttExport implements FromArray, ShouldAutoSize, WithHeadings, Wit
     {
         $sheet->freezePane('A2');
         $sheet->setAutoFilter($sheet->calculateWorksheetDimension());
-        $sheet->getStyle('A1:N1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:N1')->getFill()->setFillType('solid')->getStartColor()->setARGB('FFE8F1EB');
+        $sheet->getStyle('A1:O1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:O1')->getFill()->setFillType('solid')->getStartColor()->setARGB('FFE8F1EB');
 
         return [];
     }

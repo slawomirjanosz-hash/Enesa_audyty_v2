@@ -77,13 +77,14 @@ class ProjectController extends Controller
         ]);
 
         $timelineItems = $project->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
-            'kind' => 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id, 'name' => $task->title,
+            'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id, 'name' => $task->title,
             'start' => $task->start_date->format('Y-m-d'), 'end' => $task->due_date->format('Y-m-d'),
             'progress' => $task->progress, 'color' => '#7C3AED',
             'assignee' => $task->assignedUser?->name,
             'description' => $task->description,
             'priority' => $task->priority,
             'status' => $task->status,
+            'is_milestone' => $task->is_milestone,
             'assigned_to' => $task->assigned_to,
             'dependencies' => $task->depends_on_task_id ? 'task-'.$task->depends_on_task_id : '',
             'update_url' => route('projects.tasks.update', [$project, $task]),
@@ -137,7 +138,11 @@ class ProjectController extends Controller
             'status' => ['required', 'in:todo,in_progress,done'],
             'priority' => ['required', 'in:low,medium,high'],
             'progress' => ['required', 'integer', 'between:0,100'],
+            'is_milestone' => ['sometimes', 'boolean'],
         ]);
+        if ($data['is_milestone'] ?? false) {
+            $data['due_date'] = $data['start_date'];
+        }
         $this->validateTaskDependency($project, null, $data['depends_on_task_id'] ?? null);
         $data['project_position'] = ((int) $project->tasks()->max('project_position')) + 1;
         $task = $project->tasks()->create($data + [
@@ -168,7 +173,11 @@ class ProjectController extends Controller
             'progress' => ['required', 'integer', 'between:0,100'],
             'start_date' => ['sometimes', 'date'],
             'due_date' => ['sometimes', 'date', 'after_or_equal:start_date'],
+            'is_milestone' => ['sometimes', 'boolean'],
         ]);
+        if (($data['is_milestone'] ?? $task->is_milestone) && isset($data['start_date'])) {
+            $data['due_date'] = $data['start_date'];
+        }
         if (array_key_exists('depends_on_task_id', $data)) {
             $this->validateTaskDependency($project, $task, $data['depends_on_task_id']);
         }
@@ -631,7 +640,8 @@ class ProjectController extends Controller
             'end' => $task->due_date->format('Y-m-d'),
             'progress' => $task->progress,
             'dependencies' => $task->depends_on_task_id ? 'task-'.$task->depends_on_task_id : '',
-            'kind' => 'task',
+            'kind' => $task->is_milestone ? 'milestone' : 'task',
+            'is_milestone' => $task->is_milestone,
             'assignee' => $task->assignedUser?->name,
         ])->values();
 
@@ -681,7 +691,7 @@ class ProjectController extends Controller
     private function taskTimelinePayload(Project $project, Task $task): array
     {
         return [
-            'kind' => 'task',
+            'kind' => $task->is_milestone ? 'milestone' : 'task',
             'id' => 'task-'.$task->id,
             'db_id' => $task->id,
             'name' => $task->title,
@@ -693,6 +703,7 @@ class ProjectController extends Controller
             'description' => $task->description,
             'assigned_to' => $task->assigned_to,
             'assignee' => $task->assignedUser?->name,
+            'is_milestone' => $task->is_milestone,
             'dependencies' => $task->depends_on_task_id ? 'task-'.$task->depends_on_task_id : '',
             'update_url' => route('projects.tasks.update', [$project, $task]),
             'delete_url' => route('projects.tasks.destroy', [$project, $task]),
