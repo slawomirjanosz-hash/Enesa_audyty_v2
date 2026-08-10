@@ -268,6 +268,7 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/{project}/requirements/import', [ProjectController::class, 'importRequirements'])->name('requirements.import');
     Route::post('/{project}/requirements/pdf/preview', [ProjectController::class, 'previewRequirementsPdf'])->name('requirements.pdf.preview');
     Route::post('/{project}/requirements/pdf/confirm', [ProjectController::class, 'confirmRequirementsPdf'])->name('requirements.pdf.confirm');
+    Route::post('/{project}/requirements/bulk', [ProjectController::class, 'bulkUpdateRequirements'])->name('requirements.bulk');
     Route::patch('/{project}/requirements/{requirement}/status', [ProjectController::class, 'updateRequirementStatus'])->name('requirements.status');
     Route::patch('/{project}/requirements/{requirement}', [ProjectController::class, 'updateRequirement'])->name('requirements.update');
     Route::delete('/{project}/requirements/{requirement}', [ProjectController::class, 'destroyRequirement'])->name('requirements.destroy');

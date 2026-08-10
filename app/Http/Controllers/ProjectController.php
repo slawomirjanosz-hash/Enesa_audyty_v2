@@ -675,6 +675,68 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function bulkUpdateRequirements(Request $request, Project $project): RedirectResponse
+    {
+        $this->authorize('update', $project);
+        $data = $request->validate([
+            'requirement_ids' => ['required', 'array', 'min:1'],
+            'requirement_ids.*' => ['required', 'integer', 'distinct'],
+            'action' => ['required', 'in:delete,set_status,set_supplier,set_responsible,set_needed_by,set_type'],
+            'status' => ['nullable', 'required_if:action,set_status', 'in:requested,ordered,in_progress,purchased,cancelled'],
+            'supplier_company_id' => [
+                'nullable', 'integer',
+                Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->where('status', 'active')->whereNull('archived_at')),
+            ],
+            'responsible_id' => ['nullable', 'integer', 'exists:users,id'],
+            'needed_by' => ['nullable', 'date'],
+            'type' => ['nullable', 'required_if:action,set_type', 'in:material,service'],
+        ]);
+
+        $requirements = $project->requirements()->whereKey($data['requirement_ids'])->get();
+        if ($requirements->count() !== count($data['requirement_ids'])) {
+            throw ValidationException::withMessages(['requirement_ids' => 'Co najmniej jedna pozycja nie należy do tego projektu.']);
+        }
+
+        if ($data['action'] === 'set_responsible' && ! empty($data['responsible_id'])) {
+            $eligibleIds = $project->members()->pluck('users.id')->push($project->manager_id)->filter()->map(fn ($id) => (int) $id);
+            if (! $eligibleIds->contains((int) $data['responsible_id'])) {
+                throw ValidationException::withMessages(['responsible_id' => 'Odpowiedzialny musi należeć do zespołu projektu.']);
+            }
+        }
+
+        $supplier = $data['action'] === 'set_supplier' && ! empty($data['supplier_company_id'])
+            ? Company::find($data['supplier_company_id'])
+            : null;
+
+        DB::transaction(function () use ($requirements, $data, $supplier): void {
+            foreach ($requirements as $requirement) {
+                match ($data['action']) {
+                    'delete' => $requirement->delete(),
+                    'set_status' => $requirement->update(['status' => $data['status']]),
+                    'set_supplier' => $requirement->update([
+                        'supplier_company_id' => $supplier?->id,
+                        'supplier' => $supplier?->name,
+                    ]),
+                    'set_responsible' => $requirement->update(['responsible_id' => $data['responsible_id'] ?? null]),
+                    'set_needed_by' => $requirement->update(['needed_by' => $data['needed_by'] ?? null]),
+                    'set_type' => $requirement->update(['type' => $data['type']]),
+                };
+            }
+        });
+
+        $messages = [
+            'delete' => 'Usunięto zaznaczone materiały i usługi.',
+            'set_status' => 'Zmieniono status zaznaczonych pozycji.',
+            'set_supplier' => 'Zmieniono dostawcę zaznaczonych pozycji.',
+            'set_responsible' => 'Zmieniono osobę odpowiedzialną za zaznaczone pozycje.',
+            'set_needed_by' => 'Zmieniono termin zaznaczonych pozycji.',
+            'set_type' => 'Zmieniono rodzaj zaznaczonych pozycji.',
+        ];
+
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
+            ->with('success', $messages[$data['action']]);
+    }
+
     public function destroyRequirement(Project $project, ProjectRequirement $requirement): RedirectResponse
     {
         $this->authorize('update', $project);

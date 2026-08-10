@@ -255,6 +255,72 @@ test('project manager bulk deletes selected gantt tasks only', function () {
         ->and($otherProject->tasks()->whereKey($foreignTask)->exists())->toBeTrue();
 });
 
+test('project manager performs bulk actions on selected requirements only', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $member = User::factory()->create();
+    $supplier = Company::create([
+        'name' => 'Dostawca grupowy', 'nip' => '9876543210', 'company_type' => 'supplier', 'status' => 'active',
+    ]);
+    $project = Project::create([
+        'number' => 'PRJ/2026/REQ-BULK', 'name' => 'Grupowe materiały', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 25000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($member);
+    $requirements = collect(['Pompa', 'Zawór', 'Montaż'])->map(fn ($name, $index) => $project->requirements()->create([
+        'type' => $index === 2 ? 'service' : 'material', 'name' => $name, 'quantity' => 1, 'unit' => 'szt.',
+        'estimated_cost' => 1000 + ($index * 500), 'status' => 'requested', 'created_by' => $manager->id,
+    ]));
+
+    $this->actingAs($manager)->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertOk()
+        ->assertSee('requirements-select-all', false)
+        ->assertSee(route('projects.requirements.bulk', $project), false)
+        ->assertSee('Zmień dostawcę');
+
+    $selectedIds = [$requirements[0]->id, $requirements[1]->id];
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => $selectedIds, 'action' => 'set_supplier', 'supplier_company_id' => $supplier->id,
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']));
+    expect($requirements[0]->refresh()->supplier_company_id)->toBe($supplier->id)
+        ->and($requirements[1]->refresh()->supplier_company_id)->toBe($supplier->id)
+        ->and($requirements[2]->refresh()->supplier_company_id)->toBeNull();
+
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => $selectedIds, 'action' => 'set_responsible', 'responsible_id' => $member->id,
+    ])->assertSessionHas('success');
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => $selectedIds, 'action' => 'set_needed_by', 'needed_by' => '2026-09-30',
+    ])->assertSessionHas('success');
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => $selectedIds, 'action' => 'set_status', 'status' => 'purchased',
+    ])->assertSessionHas('success');
+
+    expect($requirements[0]->refresh()->responsible_id)->toBe($member->id)
+        ->and($requirements[0]->needed_by->format('Y-m-d'))->toBe('2026-09-30')
+        ->and($requirements[0]->status)->toBe('purchased')
+        ->and($requirements[1]->refresh()->status)->toBe('purchased')
+        ->and($project->financialEntries()->whereIn('project_requirement_id', $selectedIds)->count())->toBe(2);
+
+    $otherProject = Project::create([
+        'number' => 'PRJ/2026/REQ-OTHER', 'name' => 'Obcy projekt', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 1000, 'created_by' => $manager->id,
+    ]);
+    $foreignRequirement = $otherProject->requirements()->create([
+        'type' => 'material', 'name' => 'Obca pozycja', 'quantity' => 1, 'status' => 'requested', 'created_by' => $manager->id,
+    ]);
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => [$requirements[2]->id, $foreignRequirement->id], 'action' => 'set_type', 'type' => 'material',
+    ])->assertSessionHasErrors('requirement_ids');
+    expect($requirements[2]->refresh()->type)->toBe('service');
+
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => $selectedIds, 'action' => 'delete',
+    ])->assertSessionHas('success');
+    expect($project->requirements()->pluck('id')->all())->toBe([$requirements[2]->id])
+        ->and($project->financialEntries()->count())->toBe(2);
+});
+
 test('project manager creates and edits a milestone with a single deadline', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');
