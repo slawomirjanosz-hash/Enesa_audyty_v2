@@ -355,6 +355,26 @@ class ProjectController extends Controller
         return $this->financeRedirect($project, 'Pozycja finansowa została zaktualizowana.');
     }
 
+    public function updateFinancialEntryStatus(Request $request, Project $project, ProjectFinancialEntry $entry): JsonResponse
+    {
+        $this->authorize('update', $project);
+        abort_unless($entry->project_id === $project->id, 404);
+        $data = $request->validate(['status' => ['required', 'in:planned,issued,paid']]);
+        $entry->update(['status' => $data['status']]);
+        $project->load('financialEntries');
+
+        return response()->json([
+            'status' => $entry->status,
+            'summary' => [
+                'invoiced' => $project->totalInvoiced(),
+                'planned_invoiced' => $project->plannedInvoiced(),
+                'costs' => $project->totalCosts(),
+                'planned_costs' => $project->plannedCosts(),
+                'result' => $project->result(),
+            ],
+        ]);
+    }
+
     public function importFinancialEntries(Request $request, Project $project): RedirectResponse
     {
         $this->authorize('update', $project);
@@ -619,6 +639,21 @@ class ProjectController extends Controller
         $requirement->update($data);
 
         return redirect()->back()->with('success', 'Status zapotrzebowania został zmieniony.');
+    }
+
+    public function updateRequirementStatus(Request $request, Project $project, ProjectRequirement $requirement): JsonResponse
+    {
+        $this->authorize('update', $project);
+        abort_unless($requirement->project_id === $project->id, 404);
+        $data = $request->validate(['status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled']]);
+        $requirement->update(['status' => $data['status']]);
+
+        return response()->json([
+            'status' => $requirement->status,
+            'committed_requirements' => (float) $project->requirements()
+                ->whereIn('status', ['ordered', 'in_progress', 'purchased'])
+                ->sum('estimated_cost'),
+        ]);
     }
 
     public function destroyRequirement(Project $project, ProjectRequirement $requirement): RedirectResponse

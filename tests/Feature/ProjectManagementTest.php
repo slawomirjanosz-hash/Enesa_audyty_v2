@@ -149,6 +149,45 @@ test('project manager manages schedule tasks finances and requirements', functio
     $this->get($publicUrl)->assertOk()->assertSee('Publiczny harmonogram projektu');
 });
 
+test('finance and requirement statuses are saved through background endpoints', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/ASYNC', 'name' => 'Statusy bez przeładowania', 'manager_id' => $manager->id,
+        'status' => 'active', 'contract_value' => 50000, 'created_by' => $manager->id,
+    ]);
+    $project->members()->attach($manager);
+    $entry = $project->financialEntries()->create([
+        'type' => 'cost', 'name' => 'Koszt planowany', 'entry_date' => '2026-08-10',
+        'amount' => 1200, 'status' => 'planned', 'created_by' => $manager->id,
+    ]);
+    $requirement = $project->requirements()->create([
+        'type' => 'material', 'name' => 'Pompa', 'quantity' => 1, 'unit' => 'szt.',
+        'estimated_cost' => 3000, 'status' => 'requested', 'created_by' => $manager->id,
+    ]);
+
+    $this->actingAs($manager)
+        ->patchJson(route('projects.finances.status', [$project, $entry]), ['status' => 'paid'])
+        ->assertOk()
+        ->assertJsonPath('status', 'paid')
+        ->assertJsonPath('summary.costs', 1200);
+    $this->actingAs($manager)
+        ->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'ordered'])
+        ->assertOk()
+        ->assertJsonPath('status', 'ordered')
+        ->assertJsonPath('committed_requirements', 3000);
+
+    expect($entry->refresh()->status)->toBe('paid')
+        ->and($requirement->refresh()->status)->toBe('ordered');
+
+    $this->actingAs($manager)
+        ->get(route('projects.show', ['project' => $project, 'tab' => 'finances']))
+        ->assertOk()
+        ->assertSee('project-async-status', false)
+        ->assertSee(route('projects.finances.status', [$project, $entry]), false)
+        ->assertSee(route('projects.requirements.status', [$project, $requirement]), false);
+});
+
 test('project manager bulk deletes selected gantt tasks only', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');
