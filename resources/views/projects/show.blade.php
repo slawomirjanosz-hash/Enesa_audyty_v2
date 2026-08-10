@@ -291,7 +291,7 @@
             <div class="grid2">
                 <div class="field"><label>Rodzaj *</label><select name="type" id="requirement-type"><option value="material">Materiał</option><option value="service">Usługa</option></select></div>
                 <div class="field"><label>Nazwa *</label><input name="name" id="requirement-name" required></div>
-                <div class="field"><label>Ilość *</label><input type="number" step="0.01" min="0.01" name="quantity" id="requirement-quantity" value="1" required></div>
+                <div class="field"><label>Ilość *</label><input type="number" step="1" min="1" name="quantity" id="requirement-quantity" value="1" required></div>
                 <div class="field"><label>Jednostka</label><input name="unit" id="requirement-unit" placeholder="np. szt., kg, m, usł."><small style="color:#718078">Gdy pole pozostanie puste, użyjemy „szt.” lub „usł.”.</small></div>
                 <div class="field"><label>Szacowany koszt</label><input type="number" step="0.01" min="0" name="estimated_cost" id="requirement-cost"></div>
                 <div class="field"><label>Potrzebne do</label><input type="date" name="needed_by" id="requirement-needed-by"></div>
@@ -407,10 +407,21 @@ function openRequirementModal(requirementId = null) {
     document.getElementById('requirement-supplier').value=requirement?.supplier||'';
     document.getElementById('requirement-status').value=requirement?.status||'requested';
     document.getElementById('requirement-description').value=requirement?.description||'';
+    syncRequirementQuantityIncrement();
     if(requirement){form.action=requirement.update_url;document.getElementById('requirement-method').value='PATCH';}
     modal.classList.add('open');
 }
 function closeRequirementModal(){document.getElementById('requirement-modal')?.classList.remove('open');}
+function syncRequirementQuantityIncrement() {
+    const quantity = document.getElementById('requirement-quantity');
+    const unit = document.getElementById('requirement-unit')?.value.toLowerCase().replace(/[.\s]/g, '') || '';
+    const type = document.getElementById('requirement-type')?.value || 'material';
+    const requirementQuantityUsesWholePieces = unit.startsWith('szt') || (unit === '' && type === 'material');
+    quantity.step = requirementQuantityUsesWholePieces ? '1' : '0.01';
+    quantity.min = requirementQuantityUsesWholePieces ? '1' : '0.01';
+}
+document.getElementById('requirement-unit')?.addEventListener('input', syncRequirementQuantityIncrement);
+document.getElementById('requirement-type')?.addEventListener('change', syncRequirementQuantityIncrement);
 
 function projectMoney(value) {
     return Number(value || 0).toLocaleString('pl-PL', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' zł';

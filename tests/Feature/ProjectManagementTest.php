@@ -304,7 +304,10 @@ test('project manager edits material details and quantities are displayed cleanl
         ->assertSee('1,5 szt.')
         ->assertSee('Edytuj materiał lub usługę')
         ->assertSee('Import z Excela')
-        ->assertSee('Import z PDF');
+        ->assertSee('Import z PDF')
+        ->assertSee('id="requirement-quantity" value="1"', false)
+        ->assertSee('requirementQuantityUsesWholePieces', false)
+        ->assertSee('modalBackdropGuard', false);
 });
 
 test('requirements excel import recognizes flexible columns matches relations and skips duplicates', function () {

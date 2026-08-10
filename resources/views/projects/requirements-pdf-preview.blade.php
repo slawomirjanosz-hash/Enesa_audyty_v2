@@ -45,6 +45,14 @@
 document.querySelectorAll('.pdf-import-row').forEach(row=>{
     const checkbox=row.querySelector('.pdf-include');
     checkbox.addEventListener('change',()=>row.querySelectorAll('input:not(.pdf-include),select,textarea').forEach(field=>field.disabled=!checkbox.checked));
+    const syncPdfQuantityIncrement=()=>{
+        const quantity=row.querySelector('.pdf-quantity'),unit=row.querySelector('.pdf-unit').value.toLowerCase().replace(/[.\s]/g,''),type=row.querySelector('.pdf-type').value;
+        const wholePieces=unit.startsWith('szt')||(unit===''&&type==='material');
+        quantity.step=wholePieces?'1':'0.01';quantity.min=wholePieces?'1':'0.01';
+    };
+    row.querySelector('.pdf-unit').addEventListener('input',syncPdfQuantityIncrement);
+    row.querySelector('.pdf-type').addEventListener('change',syncPdfQuantityIncrement);
+    syncPdfQuantityIncrement();
 });
 document.getElementById('pdf-confirm-form').addEventListener('submit',function(event){
     const rows=[...document.querySelectorAll('.pdf-import-row')].filter(row=>row.querySelector('.pdf-include').checked).map(row=>{

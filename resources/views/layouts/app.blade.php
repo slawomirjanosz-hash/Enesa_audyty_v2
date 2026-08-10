@@ -1048,5 +1048,30 @@ document.addEventListener('DOMContentLoaded', function() {
 @endif
 @endauth
 
+<script>
+// Formularze modalne zamykamy wyłącznie świadomą akcją: przyciskiem w oknie.
+function modalBackdropGuard(element) {
+    if (!(element instanceof HTMLElement)) return false;
+    const marker = `${element.id} ${element.className}`.toLowerCase();
+    if (!marker.includes('modal') && !marker.includes('overlay')) return false;
+    const style = window.getComputedStyle(element);
+    return style.position === 'fixed' && style.display !== 'none' && style.visibility !== 'hidden';
+}
+document.addEventListener('click', function (event) {
+    if (modalBackdropGuard(event.target)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }
+}, true);
+document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    const openModal = [...document.querySelectorAll('body *')].some(modalBackdropGuard);
+    if (openModal) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }
+}, true);
+</script>
+
 </body>
 </html>
