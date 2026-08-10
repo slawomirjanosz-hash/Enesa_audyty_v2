@@ -20,7 +20,7 @@ class ProjectRequirementsPdfService
         'quantity' => ['ilosc', 'ilosc zamawiana', 'liczba', 'qty', 'quantity'],
         'unit' => ['jednostka', 'jednostka miary', 'jm', 'j m', 'unit'],
         'total_cost' => ['szacowany koszt', 'koszt laczny', 'koszt netto', 'wartosc laczna', 'wartosc netto', 'kwota netto', 'wartosc', 'koszt', 'total'],
-        'unit_cost' => ['cena jednostkowa', 'cena netto', 'cena jedn', 'koszt jednostkowy', 'unit price', 'price'],
+        'unit_cost' => ['cena', 'cena jednostkowa', 'cena netto', 'cena jedn', 'koszt jednostkowy', 'unit price', 'price'],
         'needed_by' => ['potrzebne do', 'termin', 'termin dostawy', 'data dostawy', 'deadline'],
         'status' => ['status', 'stan', 'etap', 'state'],
         'supplier' => ['dostawca', 'kontrahent', 'producent', 'vendor', 'supplier'],

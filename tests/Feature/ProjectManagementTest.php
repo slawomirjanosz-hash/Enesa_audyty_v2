@@ -370,7 +370,7 @@ test('requirements excel import recognizes flexible columns matches relations an
         ['Zestawienie zakupów dla projektu'],
         ['Wygenerowano', '10.08.2026'],
         [],
-        ['Typ pozycji', 'Nazwa materiału / usługi', 'Ilość zamawiana', 'J.m.', 'Cena netto', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
+        ['Typ pozycji', 'Nazwa materiału / usługi', 'Ilość zamawiana', 'J.m.', 'Cena', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
         ['Materiał', 'Pompa obiegowa', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni'],
         ['Usługa', 'Montaż pomp', 1, 'usł.', 850, '2026-09-02', 'W realizacji', 'Firma spoza CRM', null, 'brak@example.test', 'Montaż i rozruch'],
         ['Materiał', null, 5, 'szt.', 100, null, null, null, null, null, 'Wiersz bez nazwy'],
