@@ -20,7 +20,11 @@ class ProjectRequirement extends Model
         static::saved(function (self $requirement): void {
             if ($requirement->status === 'purchased') {
                 $requirement->syncPurchasedFinancialEntry();
+
+                return;
             }
+
+            $requirement->financialEntry()->where('source', 'requirement')->delete();
         });
     }
 

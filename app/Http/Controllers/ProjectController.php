@@ -590,6 +590,7 @@ class ProjectController extends Controller
         $this->authorize('update', $project);
         abort_unless($requirement->project_id === $project->id, 404);
         $data = $request->validate(['status' => ['required', 'in:requested,ordered,in_progress,purchased,cancelled']]);
+        $previousFinancialEntryId = $requirement->financialEntry()->where('source', 'requirement')->value('id');
         $requirement->update(['status' => $data['status']]);
         $requirement->load('financialEntry');
         $project->load('financialEntries');
@@ -607,6 +608,7 @@ class ProjectController extends Controller
                 'status' => $requirement->financialEntry->status,
                 'name' => $requirement->financialEntry->name,
             ] : null,
+            'removed_financial_entry_id' => $requirement->status !== 'purchased' ? $previousFinancialEntryId : null,
             'summary' => [
                 'invoiced' => $project->totalInvoiced(),
                 'planned_invoiced' => $project->plannedInvoiced(),

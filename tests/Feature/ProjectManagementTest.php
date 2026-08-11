@@ -203,6 +203,17 @@ test('finance and requirement statuses are saved through background endpoints', 
     expect($project->financialEntries()->where('project_requirement_id', $requirement->id)->count())->toBe(1);
 
     $this->actingAs($manager)
+        ->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'in_progress'])
+        ->assertOk()
+        ->assertJsonPath('status', 'in_progress')
+        ->assertJsonPath('financial_entry', null)
+        ->assertJsonPath('removed_financial_entry_id', $copiedEntryId)
+        ->assertJsonPath('summary.costs', 1200);
+    expect($requirement->refresh()->status)->toBe('in_progress')
+        ->and($project->financialEntries()->where('project_requirement_id', $requirement->id)->count())->toBe(0)
+        ->and($project->financialEntries()->whereKey($entry)->exists())->toBeTrue();
+
+    $this->actingAs($manager)
         ->get(route('projects.show', ['project' => $project, 'tab' => 'finances']))
         ->assertOk()
         ->assertSee('project-async-status', false)
