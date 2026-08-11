@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CompanySettings extends Model
 {
@@ -19,6 +20,7 @@ class CompanySettings extends Model
 
     protected $fillable = [
         'name',
+        'short_name',
         'tagline',
         'email',
         'phone',
@@ -42,6 +44,24 @@ class CompanySettings extends Model
     public function moduleEnabled(string $module): bool
     {
         return in_array($module, $this->enabled_modules ?? array_keys(self::APP_MODULES), true);
+    }
+
+    public static function normalizeShortName(?string $shortName, ?string $companyName = null): string
+    {
+        $normalized = strtoupper((string) preg_replace('/[^A-Za-z0-9]/', '', Str::ascii((string) $shortName)));
+
+        if ($normalized !== '') {
+            return Str::limit($normalized, 20, '');
+        }
+
+        $companyName = strtoupper((string) preg_replace('/[^A-Za-z0-9]/', '', Str::ascii((string) $companyName)));
+
+        return Str::substr($companyName, 0, 2) ?: 'FI';
+    }
+
+    public function offerShortName(): string
+    {
+        return self::normalizeShortName($this->short_name, $this->name);
     }
 
     public static function moduleIsEnabled(string $module): bool
@@ -93,14 +113,14 @@ class CompanySettings extends Model
     public function logoDataUri(): ?string
     {
         if ($this->logo_data) {
-            return 'data:' . ($this->logo_mime ?: 'image/png') . ';base64,' . $this->logo_data;
+            return 'data:'.($this->logo_mime ?: 'image/png').';base64,'.$this->logo_data;
         }
 
         if ($this->logo_path && Storage::disk('public')->exists($this->logo_path)) {
             $disk = Storage::disk('public');
 
-            return 'data:' . ($disk->mimeType($this->logo_path) ?: 'image/png')
-                . ';base64,' . base64_encode($disk->get($this->logo_path));
+            return 'data:'.($disk->mimeType($this->logo_path) ?: 'image/png')
+                .';base64,'.base64_encode($disk->get($this->logo_path));
         }
 
         $defaultLogo = public_path('Logo2.png');
@@ -109,6 +129,6 @@ class CompanySettings extends Model
             return null;
         }
 
-        return 'data:image/png;base64,' . base64_encode(file_get_contents($defaultLogo));
+        return 'data:image/png;base64,'.base64_encode(file_get_contents($defaultLogo));
     }
 }

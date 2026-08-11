@@ -309,6 +309,19 @@
                 </div>
             </div>
 
+            <div class="cf-row-full">
+                <div class="cf-group">
+                    <label class="cf-label" for="short_name">Skrócona nazwa firmy</label>
+                    <input id="short_name" type="text" name="short_name" class="cf-input @error('short_name') is-invalid @enderror"
+                           value="{{ old('short_name', $company?->offerShortName() ?? '') }}"
+                           placeholder="np. PRINZ" maxlength="20">
+                    <span class="cf-hint">Używana w numerach ofert, np. OF_PRINZ_20260811_001. Pole jest zapisywane wielkimi literami; pozostaw puste, aby użyć pierwszych dwóch liter nazwy firmy.</span>
+                    @error('short_name')
+                        <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
             <div class="cf-row">
                 <div class="cf-group">
                     <label class="cf-label" for="nip">NIP</label>

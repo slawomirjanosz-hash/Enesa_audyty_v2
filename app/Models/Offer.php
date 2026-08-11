@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 class Offer extends Model
 {
@@ -42,13 +41,13 @@ class Offer extends Model
     ];
 
     protected $casts = [
-        'kwota_netto'       => 'decimal:2',
-        'valid_until'       => 'date',
-        'show_unit_prices'  => 'boolean',
-        'price_sections'    => 'array',
-        'text_sections'     => 'array',
-        'delegations'       => 'array',
-        'is_template'       => 'boolean',
+        'kwota_netto' => 'decimal:2',
+        'valid_until' => 'date',
+        'show_unit_prices' => 'boolean',
+        'price_sections' => 'array',
+        'text_sections' => 'array',
+        'delegations' => 'array',
+        'is_template' => 'boolean',
     ];
 
     public function company(): BelongsTo
@@ -94,26 +93,28 @@ class Offer extends Model
     public function fullNumber(): string
     {
         return $this->offer_full_number
-            ?? ($this->offer_number . ($this->offer_slug ? '_' . $this->offer_slug : ''));
+            ?? ($this->offer_number.($this->offer_slug ? '_'.$this->offer_slug : ''));
     }
 
     public static function generateNumber(bool $isTemplate = false): string
     {
-        $now    = now();
+        $now = now();
         $prefix = $isTemplate ? 'SZ' : 'OF';
-        $monthPrefix = $prefix . '_Enesa_' . $now->format('Ym');
+        $companyShortName = CompanySettings::query()->first()?->offerShortName() ?? 'FI';
+        $monthPrefix = $prefix.'_'.$companyShortName.'_'.$now->format('Ym');
 
         $maxSeq = static::withTrashed()
-            ->where('offer_number', 'like', $monthPrefix . '%')
+            ->where('offer_number', 'like', $monthPrefix.'%')
             ->pluck('offer_number')
             ->map(function (string $num): int {
                 $parts = explode('_', $num);
+
                 return (int) end($parts);
             })
             ->max() ?? 0;
 
         $seq = str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
 
-        return $prefix . '_Enesa_' . $now->format('Ymd') . '_' . $seq;
+        return $prefix.'_'.$companyShortName.'_'.$now->format('Ymd').'_'.$seq;
     }
 }

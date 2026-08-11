@@ -403,7 +403,7 @@
 {{-- ══════ NAGŁÓWEK ══════ --}}
 <div class="page-header">
     <div>
-        <span class="page-badge">Widok audytora</span>
+        <span class="page-badge">{{ $auditsEnabled ? 'Widok audytora' : 'Widok kart klientów' }}</span>
         <h1 class="page-title">Klienci wymagający uwagi</h1>
     </div>
     <div style="display:flex;gap:12px;align-items:center;">

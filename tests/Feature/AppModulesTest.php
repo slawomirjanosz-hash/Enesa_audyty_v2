@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CompanySettings;
+use App\Models\Offer;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -23,7 +24,8 @@ test('superadmin configures modules for the whole application in company setting
         ])
         ->assertRedirect(route('settings.company'));
 
-    expect(CompanySettings::first()->enabled_modules)->toBe(['dashboard', 'crm', 'offers']);
+    expect(CompanySettings::first()->enabled_modules)->toBe(['dashboard', 'crm', 'offers'])
+        ->and(CompanySettings::first()->short_name)->toBe('FI');
 });
 
 test('disabled application modules disappear from navigation and reject direct access', function () {
@@ -39,6 +41,8 @@ test('disabled application modules disappear from navigation and reject direct a
     $this->actingAs($admin)
         ->get(route('dashboard'))
         ->assertOk()
+        ->assertSee('Widok kart klientów')
+        ->assertDontSee('Widok audytora')
         ->assertSee('CRM')
         ->assertSee('Strefa Ofert')
         ->assertDontSee('System Audytów')
@@ -46,6 +50,23 @@ test('disabled application modules disappear from navigation and reject direct a
 
     $this->actingAs($admin)->get(route('audit-types.index'))->assertForbidden();
     $this->actingAs($admin)->get(route('client-zone.index'))->assertForbidden();
+});
+
+test('offer numbers use the editable company short name', function () {
+    CompanySettings::create([
+        'name' => 'Prinż Cieszyn',
+        'short_name' => 'PRINZ',
+    ]);
+
+    $firstNumber = Offer::generateNumber();
+    Offer::create([
+        'offer_number' => $firstNumber,
+        'offer_full_number' => $firstNumber,
+        'status' => 'w_toku',
+    ]);
+
+    expect($firstNumber)->toBe('OF_PRINZ_'.now()->format('Ymd').'_001')
+        ->and(Offer::generateNumber())->toBe('OF_PRINZ_'.now()->format('Ymd').'_002');
 });
 
 test('staff login redirects to the first enabled module', function () {
