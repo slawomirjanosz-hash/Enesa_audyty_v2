@@ -50,7 +50,7 @@ class ProjectRequirementsTemplateExport implements FromArray, ShouldAutoSize, Wi
             ->setFormula1('"Materiał,Usługa"')->setSqref('A2:A200');
         $statusValidation = $sheet->getCell('G2')->getDataValidation();
         $statusValidation->setType(DataValidation::TYPE_LIST)->setAllowBlank(true)->setShowDropDown(true)
-            ->setFormula1('"Zapotrzebowanie,Zamówione,W realizacji,Kupione,Anulowane"')->setSqref('G2:G200');
+            ->setFormula1('"Planowane,Zapotrzebowanie,Zamówione,W realizacji,Kupione,Anulowane"')->setSqref('G2:G200');
 
         $comments = [
             'A1' => 'Opcjonalnie: Materiał albo Usługa. Puste pole oznacza materiał.',

@@ -75,7 +75,10 @@ class Project extends Model
 
     public function plannedCosts(): float
     {
-        return (float) $this->financialEntries->where('type', 'cost')->where('status', 'planned')->sum('amount');
+        $financialCosts = (float) $this->financialEntries->where('type', 'cost')->where('status', 'planned')->sum('amount');
+        $plannedRequirements = (float) $this->requirements->where('status', 'planned')->sum('estimated_cost');
+
+        return $financialCosts + $plannedRequirements;
     }
 
     public function totalInvoiced(): float

@@ -214,6 +214,18 @@ test('finance and requirement statuses are saved through background endpoints', 
         ->and($project->financialEntries()->whereKey($entry)->exists())->toBeTrue();
 
     $this->actingAs($manager)
+        ->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'planned'])
+        ->assertOk()
+        ->assertJsonPath('status', 'planned')
+        ->assertJsonPath('planned_requirements', 3000)
+        ->assertJsonPath('planned_requirement_entry.amount', 3000)
+        ->assertJsonPath('summary.costs', 1200)
+        ->assertJsonPath('summary.planned_costs', 3000);
+    expect($requirement->refresh()->status)->toBe('planned')
+        ->and($project->refresh()->plannedCosts())->toBe(3000.0)
+        ->and($project->financialEntries()->where('project_requirement_id', $requirement->id)->count())->toBe(0);
+
+    $this->actingAs($manager)
         ->get(route('projects.show', ['project' => $project, 'tab' => 'finances']))
         ->assertOk()
         ->assertSee('project-async-status', false)
@@ -411,6 +423,8 @@ test('project manager edits material details and quantities are displayed cleanl
         ->assertSee('Łączna wartość zamówienia')
         ->assertSee('Dostawca testowy · 1 poz.')
         ->assertSee('Cena za jednostkę')
+        ->assertSee('Planowany budżet')
+        ->assertSee('Planowane')
         ->assertSee('Edytuj materiał lub usługę')
         ->assertSee('Import z Excela')
         ->assertDontSee('Import z PDF')
@@ -453,6 +467,7 @@ test('requirements excel import recognizes flexible columns matches relations an
         ['Typ pozycji', 'Nazwa materiału / usługi', 'Ilość zamawiana', 'J.m.', 'Cena', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
         ['Materiał', 'Pompa obiegowa', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni'],
         ['Usługa', 'Montaż pomp', 1, 'usł.', 850, '2026-09-02', 'W realizacji', 'Firma spoza CRM', null, 'brak@example.test', 'Montaż i rozruch'],
+        ['Materiał', 'Filtr do wyceny', 3, 'szt.', 100, '2026-09-10', 'Planowane', null, null, null, 'Budżet wstępny'],
         ['Materiał', null, 5, 'szt.', 100, null, null, null, null, null, 'Wiersz bez nazwy'],
     ]);
     $path = tempnam(sys_get_temp_dir(), 'project-requirements-');
@@ -467,7 +482,8 @@ test('requirements excel import recognizes flexible columns matches relations an
     $report = $firstResponse->getSession()->get('requirements_import_report');
     $pump = $project->requirements()->where('name', 'Pompa obiegowa')->firstOrFail();
     $service = $project->requirements()->where('name', 'Montaż pomp')->firstOrFail();
-    expect($report['inserted'])->toBe(2)
+    $planned = $project->requirements()->where('name', 'Filtr do wyceny')->firstOrFail();
+    expect($report['inserted'])->toBe(3)
         ->and($report['duplicates'])->toBe(0)
         ->and($report['invalid'])->toBe(1)
         ->and($report['unassigned'])->toBe(1)
@@ -478,15 +494,17 @@ test('requirements excel import recognizes flexible columns matches relations an
         ->and($pump->status)->toBe('ordered')
         ->and($pump->responsible_id)->toBe($manager->id)
         ->and($service->type)->toBe('service')
-        ->and($service->status)->toBe('in_progress');
+        ->and($service->status)->toBe('in_progress')
+        ->and($planned->status)->toBe('planned')
+        ->and((float) $planned->estimated_cost)->toBe(300.0);
 
     $secondResponse = $this->actingAs($manager)->post(route('projects.requirements.import', $project), [
         'file' => $upload(),
     ])->assertSessionHas('requirements_import_report');
     $secondReport = $secondResponse->getSession()->get('requirements_import_report');
     expect($secondReport['inserted'])->toBe(0)
-        ->and($secondReport['duplicates'])->toBe(2)
-        ->and($project->requirements()->count())->toBe(2);
+        ->and($secondReport['duplicates'])->toBe(3)
+        ->and($project->requirements()->count())->toBe(3);
 
     @unlink($path);
 });

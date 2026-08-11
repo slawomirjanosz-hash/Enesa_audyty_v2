@@ -302,6 +302,9 @@ class ProjectRequirementsImportService
     private function status(mixed $value): string
     {
         $value = $this->normalize($value);
+        if (Str::contains($value, ['planowan', 'plan', 'planned', 'budget'])) {
+            return 'planned';
+        }
         if (Str::contains($value, ['anul', 'cancel'])) {
             return 'cancelled';
         }
