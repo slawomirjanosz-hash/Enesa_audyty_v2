@@ -878,6 +878,8 @@ function renderProjectCashflow() {
         invoice.push(invoiceTotal); cost.push(costTotal); plannedInvoice.push(plannedInvoiceTotal); plannedCost.push(plannedCostTotal); result.push(invoiceTotal - costTotal); forecast.push(invoiceTotal + plannedInvoiceTotal - costTotal - plannedCostTotal); contract.push(projectContractValue);
     });
     const context = document.getElementById('project-cashflow-chart');
+    const range = document.getElementById('cashflow-range');
+    if (!context || !range) return;
     projectCashflowChart?.destroy();
     projectCashflowChart = new Chart(context, {
         data: {labels: rows.map(([key]) => financePeriodLabel(key, cashflowState.mode)), datasets: [
@@ -892,7 +894,6 @@ function renderProjectCashflow() {
         options: {responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{callbacks:{label:context => context.dataset.label + ': ' + Number(context.raw).toLocaleString('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' zł'}}}, scales:{y:{beginAtZero:true,ticks:{callback:value => Number(value).toLocaleString('pl-PL') + ' zł'}},x:{grid:{display:false}}}},
     });
     renderCashflowOverview(allRows, pageSize);
-    const range = document.getElementById('cashflow-range');
     range.textContent = rows.length ? financePeriodLabel(rows[0][0], cashflowState.mode) + ' – ' + financePeriodLabel(rows.at(-1)[0], cashflowState.mode) : 'Brak danych';
 }
 function renderCashflowOverview(allRows, pageSize) {

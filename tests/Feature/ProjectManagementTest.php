@@ -207,7 +207,8 @@ test('finance and requirement statuses are saved through background endpoints', 
         ->assertOk()
         ->assertSee('project-async-status', false)
         ->assertSee(route('projects.finances.status', [$project, $entry]), false)
-        ->assertSee(route('projects.requirements.status', [$project, $requirement]), false);
+        ->assertSee(route('projects.requirements.status', [$project, $requirement]), false)
+        ->assertSee('if (!context || !range) return;', false);
 });
 
 test('project manager bulk deletes selected gantt tasks only', function () {
