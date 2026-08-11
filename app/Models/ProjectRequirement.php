@@ -17,6 +17,10 @@ class ProjectRequirement extends Model
 
     protected static function booted(): void
     {
+        static::deleting(function (self $requirement): void {
+            $requirement->financialEntry()->where('source', 'requirement')->delete();
+        });
+
         static::saved(function (self $requirement): void {
             if ($requirement->status === 'purchased') {
                 $requirement->syncPurchasedFinancialEntry();

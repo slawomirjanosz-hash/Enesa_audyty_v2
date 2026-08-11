@@ -74,7 +74,7 @@ class ProjectController extends Controller
         $this->authorize('view', $project);
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
-            'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financeGroups.entries',
+            'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financialEntries.projectRequirement', 'financeGroups.entries',
             'requirements.responsible', 'requirements.supplierCompany', 'documents.uploader',
         ]);
 
@@ -359,7 +359,7 @@ class ProjectController extends Controller
         abort_unless($entry->project_id === $project->id, 404);
         $data = $request->validate(['status' => ['required', 'in:planned,issued,paid']]);
         $entry->update(['status' => $data['status']]);
-        $project->load('financialEntries');
+        $project->load('financialEntries.projectRequirement');
 
         return response()->json([
             'status' => $entry->status,
@@ -593,7 +593,7 @@ class ProjectController extends Controller
         $previousFinancialEntryId = $requirement->financialEntry()->where('source', 'requirement')->value('id');
         $requirement->update(['status' => $data['status']]);
         $requirement->load('financialEntry');
-        $project->load('financialEntries');
+        $project->load('financialEntries.projectRequirement');
 
         return response()->json([
             'status' => $requirement->status,

@@ -10,7 +10,8 @@
     $statusLabels = ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'];
     $requirementStatusLabels = ['planned'=>'Planowane','requested'=>'Zapotrzebowanie','ordered'=>'Zamówione','in_progress'=>'W realizacji','purchased'=>'Kupione','cancelled'=>'Anulowane'];
     $financeStatusLabels = ['planned'=>'Planowana','issued'=>'Wystawiona / zaksięgowana','paid'=>'Opłacona'];
-    $financeChartData = $project->financialEntries->sortBy('entry_date')->map(fn($entry) => [
+    $financialEntries = $project->effectiveFinancialEntries();
+    $financeChartData = $financialEntries->sortBy('entry_date')->map(fn($entry) => [
         'id' => $entry->id,
         'date' => $entry->entry_date->format('Y-m-d'),
         'amount' => (float) $entry->amount,

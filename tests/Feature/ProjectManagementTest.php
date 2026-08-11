@@ -4,6 +4,7 @@ use App\Exports\ProjectGanttExport;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
+use App\Models\ProjectFinancialEntry;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -234,6 +235,40 @@ test('finance and requirement statuses are saved through background endpoints', 
         ->assertSee('if (!context || !range) return;', false);
 });
 
+test('orphaned material costs are ignored and deleting a purchased item removes its cost', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/2026/ORPHAN', 'name' => 'Koszty materiałów', 'manager_id' => $manager->id,
+        'status' => 'active', 'created_by' => $manager->id,
+    ]);
+    $requirement = $project->requirements()->create([
+        'type' => 'material', 'name' => 'Pozycja testowa', 'quantity' => 1, 'unit' => 'szt.',
+        'estimated_cost' => 299.40, 'status' => 'purchased', 'created_by' => $manager->id,
+    ]);
+    $linkedEntryId = $requirement->financialEntry()->value('id');
+
+    $this->actingAs($manager)
+        ->delete(route('projects.requirements.destroy', [$project, $requirement]))
+        ->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']));
+
+    expect(ProjectFinancialEntry::whereKey($linkedEntryId)->exists())->toBeFalse();
+
+    ProjectFinancialEntry::create([
+        'project_id' => $project->id,
+        'project_requirement_id' => null,
+        'type' => 'cost',
+        'name' => 'Osierocony koszt materiału',
+        'entry_date' => '2026-08-11',
+        'amount' => 299.40,
+        'status' => 'issued',
+        'source' => 'requirement',
+    ]);
+
+    expect($project->refresh()->totalCosts())->toBe(0.0)
+        ->and($project->financialEntries()->count())->toBe(0);
+});
+
 test('project manager bulk deletes selected gantt tasks only', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');
@@ -342,7 +377,7 @@ test('project manager performs bulk actions on selected requirements only', func
         'requirement_ids' => $selectedIds, 'action' => 'delete',
     ])->assertSessionHas('success');
     expect($project->requirements()->pluck('id')->all())->toBe([$requirements[2]->id])
-        ->and($project->financialEntries()->count())->toBe(2);
+        ->and($project->financialEntries()->count())->toBe(0);
 });
 
 test('project manager creates and edits a milestone with a single deadline', function () {

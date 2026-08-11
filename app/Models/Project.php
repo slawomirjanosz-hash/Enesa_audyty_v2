@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Project extends Model
 {
@@ -50,7 +51,11 @@ class Project extends Model
 
     public function financialEntries(): HasMany
     {
-        return $this->hasMany(ProjectFinancialEntry::class)->orderBy('entry_date');
+        return $this->hasMany(ProjectFinancialEntry::class)
+            ->where(fn ($entries) => $entries
+                ->where('source', '!=', 'requirement')
+                ->orWhereHas('projectRequirement', fn ($requirement) => $requirement->where('status', 'purchased')))
+            ->orderBy('entry_date');
     }
 
     public function financeGroups(): HasMany
@@ -70,12 +75,12 @@ class Project extends Model
 
     public function totalCosts(): float
     {
-        return (float) $this->financialEntries->where('type', 'cost')->whereIn('status', ['issued', 'paid'])->sum('amount');
+        return (float) $this->effectiveFinancialEntries()->where('type', 'cost')->whereIn('status', ['issued', 'paid'])->sum('amount');
     }
 
     public function plannedCosts(): float
     {
-        $financialCosts = (float) $this->financialEntries->where('type', 'cost')->where('status', 'planned')->sum('amount');
+        $financialCosts = (float) $this->effectiveFinancialEntries()->where('type', 'cost')->where('status', 'planned')->sum('amount');
         $plannedRequirements = (float) $this->requirements->where('status', 'planned')->sum('estimated_cost');
 
         return $financialCosts + $plannedRequirements;
@@ -83,12 +88,18 @@ class Project extends Model
 
     public function totalInvoiced(): float
     {
-        return (float) $this->financialEntries->where('type', 'invoice')->whereIn('status', ['issued', 'paid'])->sum('amount');
+        return (float) $this->effectiveFinancialEntries()->where('type', 'invoice')->whereIn('status', ['issued', 'paid'])->sum('amount');
     }
 
     public function plannedInvoiced(): float
     {
-        return (float) $this->financialEntries->where('type', 'invoice')->where('status', 'planned')->sum('amount');
+        return (float) $this->effectiveFinancialEntries()->where('type', 'invoice')->where('status', 'planned')->sum('amount');
+    }
+
+    public function effectiveFinancialEntries(): Collection
+    {
+        return $this->financialEntries->filter(fn (ProjectFinancialEntry $entry) => $entry->source !== 'requirement'
+            || ($entry->project_requirement_id !== null && $entry->projectRequirement?->status === 'purchased'));
     }
 
     public function result(): float
