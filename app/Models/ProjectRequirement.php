@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class ProjectRequirement extends Model
 {
     protected $fillable = [
-        'project_id', 'type', 'name', 'description', 'quantity', 'unit',
+        'project_id', 'type', 'name', 'technology', 'description', 'quantity', 'unit',
         'estimated_cost', 'supplier', 'supplier_company_id', 'status', 'needed_by', 'responsible_id', 'created_by',
     ];
 
@@ -99,6 +99,7 @@ class ProjectRequirement extends Model
             'amount' => (float) ($this->estimated_cost ?? 0),
             'notes' => trim(implode("\n", array_filter([
                 'Automatycznie z materiałów i usług: '.$this->formattedQuantity().' '.$this->displayUnit().'.',
+                $this->technology ? 'Technologia: '.$this->technology.'.' : null,
                 $this->description,
             ]))),
         ]);

@@ -50,6 +50,7 @@
         'id' => $requirement->id,
         'type' => $requirement->type,
         'name' => $requirement->name,
+        'technology' => $requirement->technology,
         'description' => $requirement->description,
         'quantity' => (float) $requirement->quantity,
         'unit' => $requirement->displayUnit(),
@@ -280,7 +281,7 @@
                 <summary><i class="ti ti-file-upload"></i> Importuj materiały i usługi z Excela</summary>
                 <div class="requirement-import-body">
                     <strong style="display:block;margin-bottom:5px;font-size:12px">Excel / CSV</strong>
-                    <p class="requirement-import-help">System sam odnajdzie nagłówki nawet po kilku wierszach tytułu i rozpozna popularne nazwy kolumn, np. „Nazwa materiału”, „Towar”, „Ilość”, „J.m.”, „Cena netto”, „Termin dostawy”, „Dostawca” czy „Status”. Obsługiwane są XLSX, XLS i CSV. Wymagana jest nazwa pozycji oraz co najmniej jedna dodatkowa rozpoznawalna kolumna.</p>
+                    <p class="requirement-import-help">System sam odnajdzie nagłówki nawet po kilku wierszach tytułu i rozpozna popularne nazwy kolumn, np. „Nazwa materiału”, „Technologia”, „Towar”, „Ilość”, „J.m.”, „Cena netto”, „Termin dostawy”, „Dostawca” czy „Status”. Obsługiwane są XLSX, XLS i CSV. Wymagana jest nazwa pozycji oraz co najmniej jedna dodatkowa rozpoznawalna kolumna.</p>
                     @if($errors->requirementsImport->any())<div style="padding:9px 11px;background:#fef2f2;color:#991b1b;border-radius:7px;margin-bottom:10px;font-size:12px">{{$errors->requirementsImport->first()}}</div>@endif
                     <form class="requirement-import-form" method="POST" enctype="multipart/form-data" action="{{route('projects.requirements.import',$project)}}">@csrf<input id="requirements-excel-input" type="file" name="file" accept=".xlsx,.xls,.csv" required><button class="btn"><i class="ti ti-file-import"></i> Importuj plik</button></form>
                 </div>
@@ -298,7 +299,7 @@
         @else
             <label class="requirement-search" for="requirements-live-search">
                 <i class="ti ti-search"></i>
-                <input id="requirements-live-search" type="search" autocomplete="off" placeholder="Szukaj po nazwie, opisie, dostawcy, osobie, statusie, terminie lub cenie…">
+                <input id="requirements-live-search" type="search" autocomplete="off" placeholder="Szukaj po nazwie, technologii, opisie, dostawcy, osobie, statusie, terminie lub cenie…">
                 <span class="requirement-search-count" id="requirements-search-count">{{$project->requirements->count()}} poz.</span>
             </label>
             @if($canEdit)
@@ -311,6 +312,7 @@
                         <option value="set_responsible">Zmień odpowiedzialnego</option>
                         <option value="set_needed_by">Zmień termin</option>
                         <option value="set_type">Zmień rodzaj</option>
+                        <option value="set_technology">Zmień technologię</option>
                         <option value="delete">Usuń zaznaczone</option>
                     </select>
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_status" hidden><select name="status" disabled>@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></span>
@@ -318,14 +320,15 @@
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_responsible" hidden><select name="responsible_id" disabled><option value="">Usuń przypisanie osoby</option>@foreach($projectTeam as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></span>
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_needed_by" hidden><input type="date" name="needed_by" disabled title="Pozostaw puste, aby usunąć termin"></span>
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_type" hidden><select name="type" disabled><option value="material">Materiał</option><option value="service">Usługa</option></select></span>
+                    <span class="requirement-bulk-value" data-requirement-bulk-field="set_technology" hidden><input name="technology" disabled maxlength="255" placeholder="Np. Pomiary, Zawory; puste usuwa przypisanie"></span>
                     <button class="btn btn-soft" type="submit">Wykonaj</button>
                     <span class="requirement-selected-count" id="requirements-selected-count">Zaznaczono: 0</span>
                 </form>
             @endif
-            <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th><th>Cena / wartość</th><th></th></tr></thead><tbody>
+            <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}" style="min-width:1050px"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th style="width:13%">Technologia</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th><th>Cena / wartość</th><th></th></tr></thead><tbody>
             @foreach($project->requirements as $req)
                 <tr class="requirement-data-row" data-requirement-search="{{collect([
-                    $req->type === 'material' ? 'Materiał' : 'Usługa', $req->name, $req->description,
+                    $req->type === 'material' ? 'Materiał' : 'Usługa', $req->name, $req->technology, $req->description,
                     $req->formattedQuantity(), $req->displayUnit(), $req->needed_by?->format('d.m.Y'), $req->needed_by?->format('Y-m-d'),
                     $req->responsible?->name, $req->supplierCompany?->name ?? $req->supplier, $req->supplierCompany?->nip,
                     $requirementStatusLabels[$req->status] ?? $req->status, $req->status,
@@ -333,6 +336,7 @@
                 ])->filter(fn($value) => $value !== null && $value !== '')->implode(' ')}}">
                     @if($canEdit)<td><input type="checkbox" name="requirement_ids[]" value="{{$req->id}}" form="requirements-bulk-form" class="requirement-entry-check" aria-label="Zaznacz {{$req->name}}"></td>@endif
                     <td><strong class="requirement-name">{{$req->name}}</strong><div class="requirement-meta"><span class="requirement-type">{{$req->type==='material'?'Materiał':'Usługa'}}</span>@if($req->description)<span class="requirement-description" title="{{$req->description}}">{{$req->description}}</span>@endif</div></td>
+                    <td><strong>{{$req->technology ?: '—'}}</strong></td>
                     <td><span class="requirement-qty">{{$req->formattedQuantity()}} {{$req->displayUnit()}}</span></td>
                     <td>{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
                     <td>@if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}" style="color:var(--green);font-weight:700">{{$req->supplierCompany->name}}</a>@else{{$req->supplier ?: '—'}}@endif</td>
@@ -355,6 +359,7 @@
             <div class="grid2">
                 <div class="field"><label>Rodzaj *</label><select name="type" id="requirement-type"><option value="material">Materiał</option><option value="service">Usługa</option></select></div>
                 <div class="field"><label>Nazwa *</label><input name="name" id="requirement-name" required></div>
+                <div class="field full"><label>Technologia</label><input name="technology" id="requirement-technology" maxlength="255" placeholder="Np. Pomiary, Zawory, Obieg kotłowy lub oznaczenie ze schematu"><small style="color:#718078">Pozwala sprawdzić, czy wszystkie urządzenia technologiczne mają przypisane materiały.</small></div>
                 <div class="field"><label>Ilość *</label><input type="number" step="1" min="1" name="quantity" id="requirement-quantity" value="1" required></div>
                 <div class="field"><label>Jednostka</label><input name="unit" id="requirement-unit" placeholder="np. szt., kg, m, usł."><small style="color:#718078">Gdy pole pozostanie puste, użyjemy „szt.” lub „usł.”.</small></div>
                 <div class="field"><label>Cena za jednostkę</label><input type="number" step="0.01" min="0" name="unit_cost" id="requirement-unit-cost"><small style="color:#718078">Wartość łączna zostanie obliczona jako ilość × cena za jednostkę.</small></div>
@@ -462,6 +467,7 @@ function openRequirementModal(requirementId = null) {
     document.getElementById('requirement-modal-title').textContent=requirement?'Edytuj materiał lub usługę':'Dodaj materiał lub usługę';
     document.getElementById('requirement-type').value=requirement?.type||'material';
     document.getElementById('requirement-name').value=requirement?.name||'';
+    document.getElementById('requirement-technology').value=requirement?.technology||'';
     document.getElementById('requirement-quantity').value=requirement?.quantity??1;
     document.getElementById('requirement-unit').value=requirement?.unit||'';
     document.getElementById('requirement-unit-cost').value=requirement?.unit_cost??'';

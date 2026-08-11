@@ -352,10 +352,15 @@ test('project manager performs bulk actions on selected requirements only', func
         'requirement_ids' => $selectedIds, 'action' => 'set_needed_by', 'needed_by' => '2026-09-30',
     ])->assertSessionHas('success');
     $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
+        'requirement_ids' => $selectedIds, 'action' => 'set_technology', 'technology' => 'Zawory',
+    ])->assertSessionHas('success');
+    $this->actingAs($manager)->post(route('projects.requirements.bulk', $project), [
         'requirement_ids' => $selectedIds, 'action' => 'set_status', 'status' => 'purchased',
     ])->assertSessionHas('success');
 
     expect($requirements[0]->refresh()->responsible_id)->toBe($member->id)
+        ->and($requirements[0]->technology)->toBe('Zawory')
+        ->and($requirements[1]->refresh()->technology)->toBe('Zawory')
         ->and($requirements[0]->needed_by->format('Y-m-d'))->toBe('2026-09-30')
         ->and($requirements[0]->status)->toBe('purchased')
         ->and($requirements[1]->refresh()->status)->toBe('purchased')
@@ -426,7 +431,7 @@ test('project manager edits material details and quantities are displayed cleanl
     $project->members()->attach($manager);
 
     $this->actingAs($manager)->post(route('projects.requirements.store', $project), [
-        'type' => 'material', 'name' => 'Pompa Grundfos', 'quantity' => 1, 'unit' => '2',
+        'type' => 'material', 'name' => 'Pompa Grundfos', 'technology' => 'Pomiary', 'quantity' => 1, 'unit' => '2',
         'unit_cost' => 2500, 'status' => 'requested', 'responsible_id' => $manager->id,
     ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
         ->assertSessionHas('success');
@@ -436,7 +441,7 @@ test('project manager edits material details and quantities are displayed cleanl
         ->and($requirement->displayUnit())->toBe('szt.');
 
     $this->actingAs($manager)->patch(route('projects.requirements.update', [$project, $requirement]), [
-        'type' => 'material', 'name' => 'Pompa Grundfos TP', 'description' => 'Pompa obiegowa',
+        'type' => 'material', 'name' => 'Pompa Grundfos TP', 'technology' => 'Pomiary kotłowni', 'description' => 'Pompa obiegowa',
         'quantity' => 1.5, 'unit' => 'szt.', 'unit_cost' => 2000,
         'needed_by' => '2026-09-15', 'responsible_id' => $manager->id,
         'status' => 'ordered', 'supplier' => 'Dostawca testowy',
@@ -444,6 +449,7 @@ test('project manager edits material details and quantities are displayed cleanl
         ->assertSessionHas('success');
 
     expect($requirement->refresh()->name)->toBe('Pompa Grundfos TP')
+        ->and($requirement->technology)->toBe('Pomiary kotłowni')
         ->and($requirement->formattedQuantity())->toBe('1,5')
         ->and((float) $requirement->estimated_cost)->toBe(3000.0)
         ->and($requirement->unitCost())->toBe(2000.0)
@@ -460,6 +466,9 @@ test('project manager edits material details and quantities are displayed cleanl
         ->assertSee('Cena za jednostkę')
         ->assertSee('Planowany budżet')
         ->assertSee('Planowane')
+        ->assertSee('Technologia')
+        ->assertSee('Pomiary kotłowni')
+        ->assertSee('id="requirement-technology"', false)
         ->assertSee('Edytuj materiał lub usługę')
         ->assertSee('Import z Excela')
         ->assertDontSee('Import z PDF')
@@ -499,11 +508,11 @@ test('requirements excel import recognizes flexible columns matches relations an
         ['Zestawienie zakupów dla projektu'],
         ['Wygenerowano', '10.08.2026'],
         [],
-        ['Typ pozycji', 'Nazwa materiału / usługi', 'Ilość zamawiana', 'J.m.', 'Cena', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
-        ['Materiał', 'Pompa obiegowa', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni'],
-        ['Usługa', 'Montaż pomp', 1, 'usł.', 850, '2026-09-02', 'W realizacji', 'Firma spoza CRM', null, 'brak@example.test', 'Montaż i rozruch'],
-        ['Materiał', 'Filtr do wyceny', 3, 'szt.', 100, '2026-09-10', 'Planowane', null, null, null, 'Budżet wstępny'],
-        ['Materiał', null, 5, 'szt.', 100, null, null, null, null, null, 'Wiersz bez nazwy'],
+        ['Typ pozycji', 'Nazwa materiału / usługi', 'Technologia', 'Ilość zamawiana', 'J.m.', 'Cena', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
+        ['Materiał', 'Pompa obiegowa', 'Pomiary', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni'],
+        ['Usługa', 'Montaż pomp', 'Pompy', 1, 'usł.', 850, '2026-09-02', 'W realizacji', 'Firma spoza CRM', null, 'brak@example.test', 'Montaż i rozruch'],
+        ['Materiał', 'Filtr do wyceny', 'Uzdatnianie', 3, 'szt.', 100, '2026-09-10', 'Planowane', null, null, null, 'Budżet wstępny'],
+        ['Materiał', null, 'Zawory', 5, 'szt.', 100, null, null, null, null, null, 'Wiersz bez nazwy'],
     ]);
     $path = tempnam(sys_get_temp_dir(), 'project-requirements-');
     (new Xlsx($spreadsheet))->save($path);
@@ -524,6 +533,7 @@ test('requirements excel import recognizes flexible columns matches relations an
         ->and($report['unassigned'])->toBe(1)
         ->and($report['unmatched_suppliers'])->toBe(1)
         ->and($pump->supplier_company_id)->toBe($supplier->id)
+        ->and($pump->technology)->toBe('Pomiary')
         ->and((float) $pump->quantity)->toBe(2.5)
         ->and((float) $pump->estimated_cost)->toBe(3001.25)
         ->and($pump->status)->toBe('ordered')

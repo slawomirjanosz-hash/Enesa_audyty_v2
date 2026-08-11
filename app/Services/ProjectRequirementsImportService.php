@@ -20,6 +20,7 @@ class ProjectRequirementsImportService
 {
     private const ALIASES = [
         'name' => ['nazwa', 'nazwa pozycji', 'nazwa materialu', 'material', 'towar', 'produkt', 'asortyment', 'pozycja', 'item', 'item name', 'product', 'service name', 'opis pozycji'],
+        'technology' => ['technologia', 'uklad technologiczny', 'schemat technologiczny', 'oznaczenie technologiczne', 'tag technologiczny', 'obieg', 'instalacja', 'technology', 'system'],
         'type' => ['rodzaj', 'typ', 'typ pozycji', 'rodzaj pozycji', 'kategoria', 'category', 'type'],
         'quantity' => ['ilosc', 'ilosc zamawiana', 'zapotrzebowanie', 'liczba', 'qty', 'quantity'],
         'unit' => ['jednostka', 'jednostka miary', 'jm', 'j m', 'unit'],
@@ -87,7 +88,7 @@ class ProjectRequirementsImportService
                 ->mapWithKeys(fn (string $field) => [$field => $this->findColumn($headers, self::ALIASES[$field])])
                 ->all();
             $score = collect($columns)->filter(fn ($column) => $column !== null)->count();
-            $hasSupportingColumn = collect(['type', 'quantity', 'unit', 'total_cost', 'unit_cost', 'needed_by', 'status', 'supplier', 'supplier_nip'])
+            $hasSupportingColumn = collect(['technology', 'type', 'quantity', 'unit', 'total_cost', 'unit_cost', 'needed_by', 'status', 'supplier', 'supplier_nip'])
                 ->contains(fn (string $field) => $columns[$field] !== null);
             if ($columns['name'] !== null && $hasSupportingColumn && $score >= 2 && (! $best || $score > $best[2])) {
                 $best = [(int) $rowIndex, $columns, $score];
@@ -155,6 +156,7 @@ class ProjectRequirementsImportService
         return [
             'type' => $type,
             'name' => Str::limit($name, 255, ''),
+            'technology' => Str::limit($this->text($this->cell($row, $columns['technology'])) ?? '', 255, '') ?: null,
             'description' => $this->text($this->cell($row, $columns['description'])),
             'quantity' => round($quantity, 2),
             'unit' => Str::limit($unit, 30, ''),
@@ -180,7 +182,7 @@ class ProjectRequirementsImportService
         $suppliersByNip = $suppliers->filter(fn (Company $supplier) => $supplier->nip)->keyBy(fn (Company $supplier) => preg_replace('/\D+/', '', $supplier->nip));
         $suppliersByName = $suppliers->groupBy(fn (Company $supplier) => $this->normalize($supplier->name));
         $known = $project->requirements()->get()->mapWithKeys(fn (ProjectRequirement $item) => [$this->fingerprint([
-            'type' => $item->type, 'name' => $item->name, 'description' => $item->description,
+            'type' => $item->type, 'name' => $item->name, 'technology' => $item->technology, 'description' => $item->description,
             'quantity' => (float) $item->quantity, 'unit' => $item->displayUnit(),
             'estimated_cost' => $item->estimated_cost === null ? null : (float) $item->estimated_cost,
             'needed_by' => $item->needed_by?->format('Y-m-d'), 'supplier' => $item->supplier,
@@ -215,7 +217,7 @@ class ProjectRequirementsImportService
                 }
 
                 $item = $project->requirements()->create([
-                    'type' => $row['type'], 'name' => $row['name'], 'description' => $row['description'],
+                    'type' => $row['type'], 'name' => $row['name'], 'technology' => $row['technology'], 'description' => $row['description'],
                     'quantity' => $row['quantity'], 'unit' => $row['unit'], 'estimated_cost' => $row['estimated_cost'],
                     'needed_by' => $row['needed_by'], 'status' => $row['status'],
                     'supplier' => $row['supplier'], 'supplier_company_id' => $supplier?->id,
@@ -324,7 +326,7 @@ class ProjectRequirementsImportService
     private function fingerprint(array $row): string
     {
         return hash('sha256', implode('|', [
-            $row['type'], $this->normalize($row['name']), number_format((float) $row['quantity'], 2, '.', ''),
+            $row['type'], $this->normalize($row['name']), $this->normalize($row['technology'] ?? ''), number_format((float) $row['quantity'], 2, '.', ''),
             $this->normalize($row['unit']), $row['estimated_cost'] === null ? '' : number_format((float) $row['estimated_cost'], 2, '.', ''),
             $row['needed_by'] ?? '', $this->normalize($row['supplier'] ?? ''), $this->normalize($row['description'] ?? ''),
         ]));

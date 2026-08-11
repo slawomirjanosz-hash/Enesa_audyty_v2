@@ -634,7 +634,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'requirement_ids' => ['required', 'array', 'min:1'],
             'requirement_ids.*' => ['required', 'integer', 'distinct'],
-            'action' => ['required', 'in:delete,set_status,set_supplier,set_responsible,set_needed_by,set_type'],
+            'action' => ['required', 'in:delete,set_status,set_supplier,set_responsible,set_needed_by,set_type,set_technology'],
             'status' => ['nullable', 'required_if:action,set_status', 'in:planned,requested,ordered,in_progress,purchased,cancelled'],
             'supplier_company_id' => [
                 'nullable', 'integer',
@@ -643,6 +643,7 @@ class ProjectController extends Controller
             'responsible_id' => ['nullable', 'integer', 'exists:users,id'],
             'needed_by' => ['nullable', 'date'],
             'type' => ['nullable', 'required_if:action,set_type', 'in:material,service'],
+            'technology' => ['nullable', 'string', 'max:255'],
         ]);
 
         $requirements = $project->requirements()->whereKey($data['requirement_ids'])->get();
@@ -673,6 +674,7 @@ class ProjectController extends Controller
                     'set_responsible' => $requirement->update(['responsible_id' => $data['responsible_id'] ?? null]),
                     'set_needed_by' => $requirement->update(['needed_by' => $data['needed_by'] ?? null]),
                     'set_type' => $requirement->update(['type' => $data['type']]),
+                    'set_technology' => $requirement->update(['technology' => $data['technology'] ?? null]),
                 };
             }
         });
@@ -684,6 +686,7 @@ class ProjectController extends Controller
             'set_responsible' => 'Zmieniono osobę odpowiedzialną za zaznaczone pozycje.',
             'set_needed_by' => 'Zmieniono termin zaznaczonych pozycji.',
             'set_type' => 'Zmieniono rodzaj zaznaczonych pozycji.',
+            'set_technology' => 'Zmieniono technologię zaznaczonych pozycji.',
         ];
 
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
@@ -705,6 +708,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'type' => ['required', 'in:material,service'],
             'name' => ['required', 'string', 'max:255'],
+            'technology' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'quantity' => ['required', 'numeric', 'min:0.01'],
             'unit' => ['nullable', 'string', 'max:30'],
