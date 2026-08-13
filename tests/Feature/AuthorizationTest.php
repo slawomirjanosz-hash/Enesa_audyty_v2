@@ -188,6 +188,32 @@ test('superadmin manages system roles and granular custom role access', function
         ->and($role->hasPermissionTo('projects.requirements.manage'))->toBeFalse();
 });
 
+test('role settings hide globally disabled modules and preserve their existing permissions', function () {
+    CompanySettings::create([
+        'name' => 'Firma bez audytów i projektów',
+        'enabled_modules' => ['dashboard', 'crm'],
+    ]);
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole('superadmin');
+    $role = Role::create(['name' => 'Koordynator', 'guard_name' => 'web']);
+    $role->givePermissionTo(\Spatie\Permission\Models\Permission::findOrCreate('projects.view'));
+
+    $this->actingAs($superadmin)->get('/settings/roles')
+        ->assertOk()
+        ->assertSee('CRM i dostawcy')
+        ->assertDontSee('Zarządzanie finansami projektu')
+        ->assertDontSee('Podgląd modułu audytów');
+
+    $this->actingAs($superadmin)->put("/settings/roles/{$role->id}", [
+        'name' => 'Koordynator',
+        'display_name' => 'Koordynator firmy',
+        'permissions' => ['crm.view'],
+    ])->assertRedirect('/settings/roles');
+
+    expect($role->fresh()->hasPermissionTo('crm.view'))->toBeTrue()
+        ->and($role->fresh()->hasPermissionTo('projects.view'))->toBeTrue();
+});
+
 test('guest is redirected to login for CRM', function () {
     $this->get('/crm')->assertRedirect(route('login'));
 });

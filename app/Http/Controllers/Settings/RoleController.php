@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanySettings;
 use App\Support\RolePermissionCatalog;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -22,9 +23,11 @@ class RoleController extends Controller
                 $role->name
             ))->values();
 
+        $permissionGroups = $this->visiblePermissionGroups();
+
         return view('settings.roles.index', [
             'roles' => $roles,
-            'permissionGroups' => RolePermissionCatalog::groups(),
+            'permissionGroups' => $permissionGroups,
             'systemRoles' => RolePermissionCatalog::SYSTEM_ROLES,
             'protectedRoles' => RolePermissionCatalog::PROTECTED_ROLES,
         ]);
@@ -39,7 +42,7 @@ class RoleController extends Controller
             'display_name' => $data['display_name'],
             'guard_name' => 'web',
         ]);
-        $this->syncPermissions($role, $data['permissions'] ?? []);
+        $this->syncPermissions($role, $this->visiblePermissionNames($data['permissions'] ?? []));
 
         return redirect()->route('settings.roles.index')->with('success', 'Rola została utworzona.');
     }
@@ -58,7 +61,10 @@ class RoleController extends Controller
         if ($role->name === 'superadmin') {
             $this->syncPermissions($role, RolePermissionCatalog::names());
         } elseif (! in_array($role->name, ['client_admin', 'client_user'], true)) {
-            $this->syncPermissions($role, $data['permissions'] ?? []);
+            $visibleNames = $this->visiblePermissionNames();
+            $hiddenExistingNames = $role->permissions->pluck('name')->diff($visibleNames)->all();
+            $selectedVisibleNames = collect($data['permissions'] ?? [])->intersect($visibleNames)->all();
+            $this->syncPermissions($role, array_merge($hiddenExistingNames, $selectedVisibleNames));
         }
 
         return redirect()->route('settings.roles.index')->with('success', 'Nazwa i uprawnienia roli zostały zapisane.');
@@ -132,5 +138,24 @@ class RoleController extends Controller
             403,
             'Nie masz uprawnień do zarządzania rolami.'
         );
+    }
+
+    private function visiblePermissionGroups(): array
+    {
+        $settings = CompanySettings::query()->first();
+
+        return collect(RolePermissionCatalog::groups())
+            ->filter(fn (array $group, string $key) => in_array($key, ['settings', 'advanced'], true)
+                || ($settings?->moduleEnabled($key) ?? true))
+            ->all();
+    }
+
+    private function visiblePermissionNames(array $submitted = []): array
+    {
+        $visible = collect($this->visiblePermissionGroups())
+            ->flatMap(fn (array $group) => array_keys($group['permissions']))
+            ->values();
+
+        return $submitted === [] ? $visible->all() : $visible->intersect($submitted)->all();
     }
 }

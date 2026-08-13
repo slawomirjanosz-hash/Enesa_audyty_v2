@@ -19,7 +19,7 @@
 @if(session('error')) <div class="alert alert-error">{{ session('error') }}</div> @endif
 
 <div class="roles-heading">
-    <div><h2 style="margin:0 0 6px">Wszystkie role</h2><p class="muted" style="margin:0">Rozwiń rolę, aby zmienić nazwę wyświetlaną i uprawnienia.</p></div>
+    <div><h2 style="margin:0 0 6px">Wszystkie role</h2><p class="muted" style="margin:0">Rozwiń rolę, aby zmienić nazwę wyświetlaną i uprawnienia. Opcje modułów wyłączonych globalnie są ukryte.</p></div>
     <button type="button" class="btn" onclick="openCreateRoleModal()"><i class="ti ti-plus"></i> Utwórz rolę</button>
 </div>
 
