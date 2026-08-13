@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TaskAssigned;
 use App\Models\Audit;
 use App\Models\Company;
 use App\Models\CrmOpportunity;
 use App\Models\Offer;
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
 use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
 use App\Services\OfferCrmStageSynchronizer;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class CrmController extends Controller
 {
@@ -60,26 +63,26 @@ class CrmController extends Controller
         $audits = $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')
             ->get();
 
-if ($authUser->hasRole('superadmin')) {
-    $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
-} elseif ($authUser->hasRole('admin')) {
-    $users = User::role(['admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
-} elseif ($authUser->hasRole('auditor_senior')) {
-    $users = User::role(['auditor_senior', 'auditor'])->orderBy('name')->get();
-} elseif ($authUser->hasRole('auditor')) {
-    // Audytor widzi tylko siebie
-    $users = User::where('id', $authUser->id)->get();
-} else {
-    $users = collect();
-}
+        if ($authUser->hasRole('superadmin')) {
+            $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
+        } elseif ($authUser->hasRole('admin')) {
+            $users = User::role(['admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
+        } elseif ($authUser->hasRole('auditor_senior')) {
+            $users = User::role(['auditor_senior', 'auditor'])->orderBy('name')->get();
+        } elseif ($authUser->hasRole('auditor')) {
+            // Audytor widzi tylko siebie
+            $users = User::where('id', $authUser->id)->get();
+        } else {
+            $users = collect();
+        }
 
         $stats = [
-            'active_companies'    => $companies->count(),
-            'active_suppliers'    => $suppliers->count(),
+            'active_companies' => $companies->count(),
+            'active_suppliers' => $suppliers->count(),
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
-            'active_opps'         => $opportunities->whereNotIn('stage', ['won','lost','rejected'])->count(),
-            'open_tasks'          => $tasks->where('status', '!=', 'done')->count(),
-            'active_audits'       => $audits->where('status', 'in_progress')->count(),
+            'active_opps' => $opportunities->whereNotIn('stage', ['won', 'lost', 'rejected'])->count(),
+            'open_tasks' => $tasks->where('status', '!=', 'done')->count(),
+            'active_audits' => $audits->where('status', 'in_progress')->count(),
         ];
 
         $archivedCompanies = Company::with(['offers', 'audits'])
@@ -93,7 +96,7 @@ if ($authUser->hasRole('superadmin')) {
             ->leftJoin('users', 'company_user.user_id', '=', 'users.id')
             ->where(function ($q) {
                 $q->whereNull('companies.id')  // Company doesn't exist (hard deleted)
-                  ->orWhereNotNull('companies.archived_at');  // Or company is archived
+                    ->orWhereNotNull('companies.archived_at');  // Or company is archived
             })
             ->whereNull('company_user.deleted_at')  // And assignment is not soft-deleted
             ->select(
@@ -115,10 +118,11 @@ if ($authUser->hasRole('superadmin')) {
         ));
     }
 
-    public function toggleDashboard(Request $request, Company $company): \Illuminate\Http\JsonResponse
+    public function toggleDashboard(Request $request, Company $company): JsonResponse
     {
         $this->authorize('update', $company);
-        $company->update(['show_in_dashboard' => !$company->show_in_dashboard]);
+        $company->update(['show_in_dashboard' => ! $company->show_in_dashboard]);
+
         return response()->json(['show_in_dashboard' => $company->show_in_dashboard]);
     }
 
@@ -126,6 +130,7 @@ if ($authUser->hasRole('superadmin')) {
     {
         $this->authorize('update', $company);
         $company->update(['status' => 'archived', 'show_in_dashboard' => false, 'archived_at' => now()]);
+
         return redirect()->route('crm.index')->with('success', 'Firma została zarchiwizowana.');
     }
 
@@ -133,6 +138,7 @@ if ($authUser->hasRole('superadmin')) {
     {
         $this->authorize('update', $company);
         $company->update(['status' => 'active', 'archived_at' => null]);
+
         return redirect()->route('crm.index')->with('success', 'Firma została przywrócona.');
     }
 
@@ -143,29 +149,39 @@ if ($authUser->hasRole('superadmin')) {
             return redirect()->route('crm.index')->with('error', 'Nie można usunąć firmy która ma oferty lub audyty.');
         }
         $company->delete();
+
         return redirect()->route('crm.index')->with('success', 'Firma została usunięta.');
     }
 
     public function storeOpportunity(Request $request): RedirectResponse
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
-        $data = $request->validate([
-            'title'               => ['required', 'string', 'max:255'],
-            'description'         => ['nullable', 'string'],
-            'company_id'          => ['nullable', 'exists:companies,id'],
-            'assigned_to'         => ['nullable', 'exists:users,id'],
-            'stage'               => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
-            'value'               => ['nullable', 'numeric', 'min:0'],
+        $data = $request->validateWithBag('leadCreate', [
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'company_id' => ['nullable', 'exists:companies,id'],
+            'assigned_to' => ['nullable', 'exists:users,id'],
+            'stage' => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
+            'value' => ['nullable', 'numeric', 'min:0'],
             'expected_close_date' => ['nullable', 'date'],
-            'notes'               => ['nullable', 'string'],
+            'notes' => ['nullable', 'string'],
+            'company_context_id' => ['nullable', 'integer', 'exists:companies,id'],
         ]);
 
+        $companyContextId = $data['company_context_id'] ?? null;
+        unset($data['company_context_id']);
         $opportunity = CrmOpportunity::create(array_merge($data, ['created_by' => auth()->id()]));
         app(CrmActivityLogger::class)->leadCreated($opportunity);
+
+        if ($companyContextId && (int) $companyContextId === (int) $opportunity->company_id) {
+            return redirect()->to(route('companies.show', $opportunity->company_id).'#crm')
+                ->with('success', 'Lead został dodany do klienta.');
+        }
+
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została dodana.');
     }
 
-    public function updateOpportunityStage(Request $request, CrmOpportunity $opportunity): \Illuminate\Http\JsonResponse
+    public function updateOpportunityStage(Request $request, CrmOpportunity $opportunity): JsonResponse
     {
         $this->authorize('update', $opportunity);
         $data = $request->validate([
@@ -176,6 +192,7 @@ if ($authUser->hasRole('superadmin')) {
         if ($previousStage !== $opportunity->stage) {
             app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
         }
+
         return response()->json(['stage' => $opportunity->stage]);
     }
 
@@ -183,14 +200,14 @@ if ($authUser->hasRole('superadmin')) {
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $data = $request->validate([
-            'title'       => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'assigned_to' => ['nullable', 'exists:users,id'],
-            'company_id'  => ['nullable', 'exists:companies,id'],
-            'offer_id'    => ['nullable', 'exists:offers,id'],
-            'status'      => ['required', 'in:todo,in_progress,done'],
-            'priority'    => ['required', 'in:low,medium,high'],
-            'due_date'    => ['nullable', 'date'],
+            'company_id' => ['nullable', 'exists:companies,id'],
+            'offer_id' => ['nullable', 'exists:offers,id'],
+            'status' => ['required', 'in:todo,in_progress,done'],
+            'priority' => ['required', 'in:low,medium,high'],
+            'due_date' => ['nullable', 'date'],
         ]);
 
         $task = Task::create(array_merge($data, ['created_by' => auth()->id()]));
@@ -198,8 +215,8 @@ if ($authUser->hasRole('superadmin')) {
         if ($task->assigned_to && $task->assigned_to !== auth()->id()) {
             $assignedUser = $task->assignedUser;
             if ($assignedUser && $assignedUser->email) {
-                \Illuminate\Support\Facades\Mail::to($assignedUser->email)
-                    ->send(new \App\Mail\TaskAssigned($task));
+                Mail::to($assignedUser->email)
+                    ->send(new TaskAssigned($task));
             }
         }
 
@@ -210,15 +227,16 @@ if ($authUser->hasRole('superadmin')) {
     {
         $this->authorize('update', $task);
         $data = $request->validate([
-            'title'       => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'assigned_to' => ['nullable', 'exists:users,id'],
-            'company_id'  => ['nullable', 'exists:companies,id'],
-            'status'      => ['required', 'in:todo,in_progress,done'],
-            'priority'    => ['required', 'in:low,medium,high'],
-            'due_date'    => ['nullable', 'date'],
+            'company_id' => ['nullable', 'exists:companies,id'],
+            'status' => ['required', 'in:todo,in_progress,done'],
+            'priority' => ['required', 'in:low,medium,high'],
+            'due_date' => ['nullable', 'date'],
         ]);
         $task->update($data);
+
         return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało zaktualizowane.');
     }
 
@@ -226,16 +244,18 @@ if ($authUser->hasRole('superadmin')) {
     {
         $this->authorize('delete', $task);
         $task->delete();
+
         return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało usunięte.');
     }
 
-    public function updateTaskStatus(Request $request, Task $task): \Illuminate\Http\JsonResponse
+    public function updateTaskStatus(Request $request, Task $task): JsonResponse
     {
         $this->authorize('update', $task);
         $data = $request->validate([
             'status' => ['required', 'in:todo,in_progress,done'],
         ]);
         $task->update($data);
+
         return response()->json(['status' => $task->status]);
     }
 
@@ -243,14 +263,14 @@ if ($authUser->hasRole('superadmin')) {
     {
         $this->authorize('update', $opportunity);
         $data = $request->validate([
-            'title'               => ['required', 'string', 'max:255'],
-            'description'         => ['nullable', 'string'],
-            'company_id'          => ['nullable', 'exists:companies,id'],
-            'assigned_to'         => ['nullable', 'exists:users,id'],
-            'stage'               => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
-            'value'               => ['nullable', 'numeric', 'min:0'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'company_id' => ['nullable', 'exists:companies,id'],
+            'assigned_to' => ['nullable', 'exists:users,id'],
+            'stage' => ['required', 'in:new_lead,contact,offer,negotiation,realization,won,lost,rejected'],
+            'value' => ['nullable', 'numeric', 'min:0'],
             'expected_close_date' => ['nullable', 'date'],
-            'notes'               => ['nullable', 'string'],
+            'notes' => ['nullable', 'string'],
         ]);
 
         $previousStage = $opportunity->stage;
@@ -258,6 +278,7 @@ if ($authUser->hasRole('superadmin')) {
         if ($previousStage !== $opportunity->stage) {
             app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
         }
+
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');
     }
 
@@ -267,7 +288,7 @@ if ($authUser->hasRole('superadmin')) {
         $this->authorize('update', $opportunity);
 
         $copy = $opportunity->replicate();
-        $copy->title = 'Kopia — ' . $opportunity->title;
+        $copy->title = 'Kopia — '.$opportunity->title;
         $copy->stage = 'new_lead';
         $copy->created_by = $request->user()->id;
         $copy->save();
@@ -312,6 +333,7 @@ if ($authUser->hasRole('superadmin')) {
     {
         $this->authorize('delete', $opportunity);
         $opportunity->delete();
+
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została usunięta.');
     }
 
@@ -321,7 +343,7 @@ if ($authUser->hasRole('superadmin')) {
 
         $assignment = DB::table('company_user')->find($assignmentId);
 
-        if (!$assignment) {
+        if (! $assignment) {
             return redirect()->route('crm.index')->with('error', 'Powiązanie nie znalezione.');
         }
 

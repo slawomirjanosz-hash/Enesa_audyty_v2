@@ -73,3 +73,40 @@ test('offer cannot be attached to a lead of another company', function () {
     expect($offer->refresh()->crm_opportunity_id)->toBeNull()
         ->and($opportunity->refresh()->stage)->toBe('contact');
 });
+
+test('admin adds a lead directly from the client card with company preselected', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create([
+        'name' => 'Klient dla leada',
+        'company_type' => 'client',
+        'status' => 'active',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('companies.show', $company))
+        ->assertOk()
+        ->assertSee('Dodaj lead')
+        ->assertSee('id="companyLeadModal"', false)
+        ->assertSee('name="company_id" value="'.$company->id.'"', false)
+        ->assertSee('name="company_context_id" value="'.$company->id.'"', false)
+        ->assertSee('name="stage" value="new_lead"', false);
+
+    $this->actingAs($admin)
+        ->post(route('crm.opportunities.store'), [
+            'title' => 'Modernizacja instalacji klienta',
+            'description' => 'Lead utworzony z karty klienta',
+            'company_id' => $company->id,
+            'company_context_id' => $company->id,
+            'stage' => 'new_lead',
+            'assigned_to' => $admin->id,
+            'value' => 125000,
+        ])
+        ->assertRedirect(route('companies.show', $company).'#crm')
+        ->assertSessionHas('success');
+
+    $lead = CrmOpportunity::where('title', 'Modernizacja instalacji klienta')->firstOrFail();
+    expect($lead->company_id)->toBe($company->id)
+        ->and($lead->stage)->toBe('new_lead')
+        ->and($lead->assigned_to)->toBe($admin->id);
+});

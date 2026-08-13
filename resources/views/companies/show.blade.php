@@ -552,7 +552,8 @@
     }
 
     .modal-field input,
-    .modal-field select {
+    .modal-field select,
+    .modal-field textarea {
         width: 100%;
         background: #FAFAF6;
         border: 1px solid #D0CCC0;
@@ -562,6 +563,8 @@
         font-family: 'Lato', sans-serif;
         outline: none;
     }
+
+    .modal-field textarea { resize: vertical; min-height: 80px; }
 
     .role-choice {
         display: grid;
@@ -785,7 +788,7 @@
             @endif
         </button>
         @endif
-        <button class="tab-btn" onclick="switchTab('crm', this)">
+        <button class="tab-btn" id="tab-btn-crm" onclick="switchTab('crm', this)">
             <i class="ti ti-target"></i> Leady CRM
             @if($stats['crm_opportunities_count'] > 0)
                 <span class="tab-badge">{{ $stats['crm_opportunities_count'] }}</span>
@@ -1207,9 +1210,16 @@
     <div id="tab-crm" class="tab-panel">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
             <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;">Leady i szanse sprzedażowe powiązane z tym klientem.</div>
-            <a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="btn-action btn-secondary-action" style="padding:7px 12px;">
-                <i class="ti ti-target"></i> Otwórz lejek CRM
-            </a>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                @if($canManageCrm)
+                    <button type="button" class="btn-action btn-primary-action" style="padding:7px 12px;border:0;cursor:pointer;" onclick="openCompanyLeadModal()">
+                        <i class="ti ti-plus"></i> Dodaj lead
+                    </button>
+                @endif
+                <a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="btn-action btn-secondary-action" style="padding:7px 12px;">
+                    <i class="ti ti-target"></i> Otwórz lejek CRM
+                </a>
+            </div>
         </div>
         @if($crmOpportunities->isEmpty())
             <div class="empty-tab">
@@ -1726,6 +1736,69 @@
 </div>
 
 {{-- ═══ MODAL DODAJ/EDYTUJ UŻYTKOWNIKA ═══ --}}
+@if($canManageCrm)
+<div id="companyLeadModal" class="user-modal-overlay">
+    <div class="user-modal" role="dialog" aria-modal="true" aria-labelledby="companyLeadModalTitle">
+        <div class="user-modal-header">
+            <div>
+                <h2 id="companyLeadModalTitle">Dodaj lead</h2>
+                <p>Klient jest już przypisany: <strong>{{ $company->name }}</strong></p>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeCompanyLeadModal()" aria-label="Zamknij">&times;</button>
+        </div>
+
+        @if($errors->leadCreate->any())
+            <div style="padding:10px 12px;background:#FEF2F2;color:#991B1B;border-radius:8px;margin-bottom:14px;font-size:12px;">
+                {{ $errors->leadCreate->first() }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('crm.opportunities.store') }}">
+            @csrf
+            <input type="hidden" name="company_id" value="{{ $company->id }}">
+            <input type="hidden" name="company_context_id" value="{{ $company->id }}">
+            <input type="hidden" name="stage" value="new_lead">
+
+            <div class="modal-field">
+                <label for="company-lead-title">Nazwa leada *</label>
+                <input id="company-lead-title" name="title" value="{{ old('title') }}" required maxlength="255" autofocus placeholder="Np. Modernizacja kotłowni">
+            </div>
+            <div class="modal-field">
+                <label for="company-lead-description">Opis</label>
+                <textarea id="company-lead-description" name="description" placeholder="Czego dotyczy szansa i czego potrzebuje klient?">{{ old('description') }}</textarea>
+            </div>
+            <div class="modal-grid">
+                <div class="modal-field">
+                    <label for="company-lead-value">Szacowana wartość</label>
+                    <input id="company-lead-value" type="number" name="value" value="{{ old('value') }}" min="0" step="0.01" placeholder="0,00">
+                </div>
+                <div class="modal-field">
+                    <label for="company-lead-close-date">Planowane zamknięcie</label>
+                    <input id="company-lead-close-date" type="date" name="expected_close_date" value="{{ old('expected_close_date') }}">
+                </div>
+            </div>
+            <div class="modal-field">
+                <label for="company-lead-assigned">Przypisany pracownik</label>
+                <select id="company-lead-assigned" name="assigned_to">
+                    <option value="">Nieprzypisany</option>
+                    @foreach($crmAssignableUsers as $crmUser)
+                        <option value="{{ $crmUser->id }}" {{ (string) old('assigned_to', auth()->id()) === (string) $crmUser->id ? 'selected' : '' }}>{{ $crmUser->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="modal-field">
+                <label for="company-lead-notes">Notatki</label>
+                <textarea id="company-lead-notes" name="notes" rows="2">{{ old('notes') }}</textarea>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
+                <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="closeCompanyLeadModal()">Anuluj</button>
+                <button type="submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-plus"></i> Dodaj lead</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 <div id="userModalOverlay" class="user-modal-overlay" onclick="closeUserModalOutside(event)">
     <div class="user-modal">
         <div class="user-modal-header">
@@ -2006,11 +2079,36 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         btn.classList.add('active');
     }
 
+    function openCompanyLeadModal() {
+        const modal = document.getElementById('companyLeadModal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        window.setTimeout(() => document.getElementById('company-lead-title')?.focus(), 30);
+    }
+
+    function closeCompanyLeadModal() {
+        const modal = document.getElementById('companyLeadModal');
+        if (modal) modal.style.display = 'none';
+    }
+
     // Auto-open Zapytania tab when URL has #zapytania
     if (window.location.hash === '#zapytania') {
         const btn = document.getElementById('tab-btn-requests');
         if (btn) switchTab('requests', btn);
     }
+
+    if (window.location.hash === '#crm') {
+        const btn = document.getElementById('tab-btn-crm');
+        if (btn) switchTab('crm', btn);
+    }
+
+    @if($errors->leadCreate->any())
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('tab-btn-crm');
+        if (btn) switchTab('crm', btn);
+        openCompanyLeadModal();
+    });
+    @endif
 
     function markRequestDone(id, btn) {
         if (!confirm('Zamknąć to zapytanie?')) return;

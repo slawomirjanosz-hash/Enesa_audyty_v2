@@ -116,6 +116,7 @@ class CompanyController extends Controller
         }
         $access = app(AuditorAccessService::class);
         $user = auth()->user();
+        $canManageCrm = $access->hasFullAccess($user);
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
         $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
 
@@ -176,6 +177,13 @@ class CompanyController extends Controller
 
         $stats['crm_opportunities_count'] = $crmOpportunities->count();
 
+        $crmAssignableUsers = $canManageCrm
+            ? User::where('is_active', true)
+                ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))
+                ->orderBy('name')
+                ->get()
+            : collect();
+
         $crmActivitiesQuery = CrmActivity::with(['user', 'crmOpportunity', 'offer'])
             ->where('company_id', $company->id)
             ->orderByDesc('created_at');
@@ -202,7 +210,7 @@ class CompanyController extends Controller
 
         return view('companies.show', compact(
             'company', 'stats', 'crmOpportunities', 'crmActivities', 'offerRequests', 'documents',
-            'projects', 'auditsEnabled', 'projectsEnabled'
+            'projects', 'auditsEnabled', 'projectsEnabled', 'canManageCrm', 'crmAssignableUsers'
         ));
     }
 
