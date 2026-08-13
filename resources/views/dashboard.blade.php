@@ -584,6 +584,10 @@
                     <i class="ti ti-message"></i>
                     <span>0 wiadomości</span>
                 </div>
+                <div class="tile-info-row" title="{{ $company->updated_at?->format('d.m.Y H:i') }}">
+                    <i class="ti ti-history"></i>
+                    <span>Ostatnia zmiana: {{ $company->updated_at?->format('d.m.Y H:i') ?? '—' }}</span>
+                </div>
             </div>
 
             {{-- Nowe zapytania w kafelku — tylko badge --}}
@@ -627,6 +631,7 @@
             @if($projectsEnabled)<th data-dashboard-metric="projects" onclick="sortCompaniesTable({{$auditsEnabled ? 4 : 3}},true)">Projekty <span class="sort-icon-dash">⇅</span></th>@endif
             <th onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Oferty <span class="sort-icon-dash">⇅</span></th>
             <th onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable({{5 + (int)$auditsEnabled + (int)$projectsEnabled}})">Data dodania <span class="sort-icon-dash">⇅</span></th>
             <th style="text-align:right;">Akcje</th>
         </tr>
     </thead>
@@ -682,6 +687,7 @@
                 @if($projectsEnabled)<td data-dashboard-metric="projects" style="text-align:center;">{{ $company->projects->count() }}</td>@endif
                 <td style="text-align:center;">{{ $company->offers->count() }}</td>
                 <td style="text-align:center;">{{ $company->users->count() }}</td>
+                <td data-sort-value="{{ $company->created_at?->format('Y-m-d H:i:s') }}" style="white-space:nowrap;">{{ $company->created_at?->format('d.m.Y H:i') ?? '—' }}</td>
                 <td style="text-align:right;">
                     <a href="{{ route('companies.show', $company) }}" class="table-btn-primary">
                         <i class="ti ti-eye"></i>Otwórz
@@ -1021,8 +1027,8 @@
         const dir = companiesSortState[colIdx];
         const rows = Array.from(tbody.querySelectorAll('tr'));
         rows.sort((a, b) => {
-            let av = a.cells[colIdx]?.textContent.trim() || '';
-            let bv = b.cells[colIdx]?.textContent.trim() || '';
+            let av = a.cells[colIdx]?.dataset.sortValue || a.cells[colIdx]?.textContent.trim() || '';
+            let bv = b.cells[colIdx]?.dataset.sortValue || b.cells[colIdx]?.textContent.trim() || '';
             if (numeric) {
                 av = parseFloat(av.replace(/[^\d.-]/g, '')) || 0;
                 bv = parseFloat(bv.replace(/[^\d.-]/g, '')) || 0;

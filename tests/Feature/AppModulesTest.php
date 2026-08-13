@@ -84,3 +84,29 @@ test('staff login redirects to the first enabled module', function () {
         'password' => 'password',
     ])->assertRedirect(route('crm.index'));
 });
+
+test('dashboard shows company creation date in table and last change on card', function () {
+    CompanySettings::create([
+        'name' => 'Firma testowa',
+        'enabled_modules' => ['dashboard', 'crm'],
+    ]);
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = \App\Models\Company::create([
+        'name' => 'Klient datowany',
+        'company_type' => 'client',
+        'status' => 'active',
+        'show_in_dashboard' => true,
+    ]);
+    $company->forceFill([
+        'created_at' => '2026-07-01 08:15:00',
+        'updated_at' => '2026-08-12 16:40:00',
+    ])->saveQuietly();
+
+    $this->actingAs($admin)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Data dodania')
+        ->assertSee('01.07.2026 08:15')
+        ->assertSee('Ostatnia zmiana: 12.08.2026 16:40')
+        ->assertSee('data-sort-value="2026-07-01 08:15:00"', false);
+});
