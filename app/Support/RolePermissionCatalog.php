@@ -8,6 +8,8 @@ class RolePermissionCatalog
         'superadmin', 'admin', 'auditor_senior', 'auditor', 'client_admin', 'client_user',
     ];
 
+    public const PROTECTED_ROLES = ['superadmin', 'client_admin', 'client_user'];
+
     public static function groups(): array
     {
         return [

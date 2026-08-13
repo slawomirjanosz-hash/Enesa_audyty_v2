@@ -746,7 +746,7 @@
                     <select id="add_role" name="role" class="mf-select mf-input" required style="{{ $errors->has('role') ? 'border-color:#ef4444;' : '' }}">
                         <option value="">— wybierz —</option>
                         @foreach($roles as $availableRole)
-                            <option value="{{ $availableRole->name }}" {{ old('role') === $availableRole->name ? 'selected' : '' }}>{{ str($availableRole->name)->replace('_', ' ')->title() }}</option>
+                            <option value="{{ $availableRole->name }}" {{ old('role') === $availableRole->name ? 'selected' : '' }}>{{ $availableRole->display_name ?: \App\Support\RolePermissionCatalog::roleLabel($availableRole->name) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -792,7 +792,7 @@
                     <label class="mf-label" for="edit_role">Rola</label>
                     <select id="edit_role" name="role" class="mf-select mf-input" required>
                         @foreach($roles as $availableRole)
-                            <option value="{{ $availableRole->name }}">{{ str($availableRole->name)->replace('_', ' ')->title() }}</option>
+                            <option value="{{ $availableRole->name }}">{{ $availableRole->display_name ?: \App\Support\RolePermissionCatalog::roleLabel($availableRole->name) }}</option>
                         @endforeach
                     </select>
                 </div>

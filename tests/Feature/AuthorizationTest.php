@@ -116,7 +116,7 @@ test('admin can create and delegate a custom role without granting company setti
     $this->actingAs($user)->get('/settings/roles')->assertForbidden();
 });
 
-test('admin can rename and delete an assigned custom role without deleting its user', function () {
+test('admin can rename a custom role and delete it only when no user is assigned', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
@@ -133,6 +133,15 @@ test('admin can rename and delete an assigned custom role without deleting its u
 
     expect($role->fresh()->name)->toBe('Dyrektor Projektu')
         ->and($employee->fresh()->hasRole('Dyrektor Projektu'))->toBeTrue();
+
+    $this->actingAs($admin)
+        ->delete("/settings/roles/{$role->id}")
+        ->assertUnprocessable();
+
+    expect(Role::query()->whereKey($role->id)->exists())->toBeTrue()
+        ->and($employee->fresh()->hasRole('Dyrektor Projektu'))->toBeTrue();
+
+    $employee->removeRole($role);
 
     $this->actingAs($admin)
         ->delete("/settings/roles/{$role->id}")
