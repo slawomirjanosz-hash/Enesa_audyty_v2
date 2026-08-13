@@ -258,8 +258,8 @@
                             <span class="knob" style="left:{{ $company->show_in_dashboard ? '19px' : '3px' }};"></span>
                         </button>
                     </td>
-                    <td>{{ $company->offers->count() }}</td>
-                    <td>{{ $company->audits->count() }}</td>
+                    <td>{{ $company->offers_count }}</td>
+                    <td>{{ $company->audits_count }}</td>
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
@@ -309,6 +309,9 @@
     <div style="font-size:13px;color:#888;">
         Pipeline: <strong style="color:var(--green);">{{ number_format($opportunities->whereNotIn('stage',['won','lost','rejected'])->sum('value'), 2, ',', ' ') }} zł</strong>
     </div>
+    <a href="{{ route('crm.index', array_filter(['tab' => 'pipeline', 'related_to_me' => request()->boolean('related_to_me') ? null : 1])) }}" class="{{ request()->boolean('related_to_me') ? 'btn-primary' : 'btn-secondary' }}">
+        <i class="ti ti-user-check"></i> Leady związane ze mną
+    </a>
 </div>
 
 {{-- Lejek --}}
@@ -336,7 +339,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 @foreach($stageOpps as $opp)
                 <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};cursor:pointer;"
-                    onclick="openOpportunity({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}', @json($opp->company ? route('companies.show', $opp->company) : null))">
+                    onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
                         <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:var(--green);text-decoration:none;font-weight:600;">
@@ -371,6 +374,9 @@
                     @endif
                     @if($opp->value)
                     <div class="opp-card-val">{{ number_format($opp->value, 2, ',', ' ') }} zł</div>
+                    @endif
+                    @if($opp->relatedUsers->isNotEmpty())
+                        <div class="opp-card-sub" style="margin-top:5px"><i class="ti ti-users"></i> {{ $opp->relatedUsers->pluck('name')->join(', ') }}</div>
                     @endif
                 </div>
                 @endforeach
@@ -445,7 +451,7 @@
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <button class="btn-icon btn-icon-edit" title="Edytuj"
-                                onclick="openOpportunity({{ $opp->id }}, '{{ addslashes($opp->title) }}', {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, '{{ addslashes($opp->description ?? '') }}', '{{ addslashes($opp->notes ?? '') }}', @json($opp->company ? route('companies.show', $opp->company) : null))"><i class="ti ti-pencil"></i></button>
+                                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()))"><i class="ti ti-pencil"></i></button>
                             @if($canManageCrm)
                                 <form method="POST" action="{{ route('crm.opportunities.duplicate', $opp) }}" onsubmit="return confirm('Utworzyć kopię tej szansy?')" style="display:inline;">
                                     @csrf
@@ -846,6 +852,15 @@
                 </div>
             </div>
             <div style="margin-bottom:16px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;font-family:'Manrope',sans-serif;">Osoby związane z leadem</label>
+                <div style="max-height:130px;overflow:auto;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;background:#FAFAF6;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                    @foreach($users as $u)
+                        <label style="display:flex;align-items:center;gap:7px;font-size:12px;"><input type="checkbox" name="related_users[]" value="{{ $u->id }}"> {{ $u->name }}</label>
+                    @endforeach
+                </div>
+                <div style="font-size:11px;color:#888;margin-top:4px;">Możesz wskazać również osoby bez pełnego dostępu operacyjnego.</div>
+            </div>
+            <div style="margin-bottom:16px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Notatki</label>
                 <textarea name="notes" rows="2" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
@@ -1079,6 +1094,15 @@
                     <option value="{{ $u->id }}">{{ $u->name }}</option>
                     @endforeach
                 </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;font-family:'Manrope',sans-serif;">Osoby związane z leadem</label>
+                <div style="max-height:130px;overflow:auto;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;background:#FAFAF6;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                    @foreach($users as $u)
+                        <label style="display:flex;align-items:center;gap:7px;font-size:12px;"><input class="edit-related-user" type="checkbox" name="related_users[]" value="{{ $u->id }}"> {{ $u->name }}</label>
+                    @endforeach
+                </div>
             </div>
 
             <div style="margin-bottom:12px;">
@@ -1375,7 +1399,7 @@ function closeAttachOffer() {
     document.body.style.overflow = '';
 }
 
-function openOpportunity(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, companyUrl) {
+function openOpportunity(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, companyUrl, relatedUsers = []) {
     if (companyUrl) {
         const goToCompany = confirm(
             `Szansa „${title}” jest powiązana z klientem.\n\nCzy przejść do jego karty?\n\nOK — karta klienta\nAnuluj — edycja szansy`
@@ -1387,10 +1411,10 @@ function openOpportunity(id, title, companyId, stage, value, closeDate, assigned
         }
     }
 
-    openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes);
+    openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers);
 }
 
-function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes) {
+function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {
     document.getElementById('edit-opp-id').value = id;
     document.getElementById('edit-opp-title').value = title;
     document.getElementById('edit-opp-company').value = companyId || '';
@@ -1400,6 +1424,9 @@ function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, 
     document.getElementById('edit-opp-assigned').value = assignedTo || '';
     document.getElementById('edit-opp-description').value = description || '';
     document.getElementById('edit-opp-notes').value = notes || '';
+    document.querySelectorAll('.edit-related-user').forEach(input => {
+        input.checked = relatedUsers.map(Number).includes(Number(input.value));
+    });
 
     document.getElementById('form-edit-opp').action = '/crm/opportunities/' + id;
     document.getElementById('form-delete-opp').action = '/crm/opportunities/' + id;

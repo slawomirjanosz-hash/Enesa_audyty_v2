@@ -27,71 +27,87 @@ class CrmController extends Controller
     {
         $access = app(AuditorAccessService::class);
         $authUser = auth()->user();
-        $companies = $access->scopeByCompanyAccess(Company::clients()->with(['offers', 'audits', 'tasks', 'crmOpportunities'])
-            ->where('status', '!=', 'archived')
-            ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
-            ->get();
+        $currentTab = in_array(request('tab'), ['companies', 'suppliers', 'pipeline', 'tasks', 'audits', 'archive'], true)
+            ? request('tab')
+            : 'companies';
 
-        $suppliers = $access->scopeByCompanyAccess(Company::suppliers()
+        $companyQuery = Company::clients()
+            ->where('status', '!=', 'archived')
+            ->orderBy('name');
+        if ($currentTab === 'companies') {
+            $companyQuery->withCount(['offers', 'audits']);
+        }
+        $companies = $access->scopeByCompanyAccess($companyQuery, $authUser, 'can_view_dashboard', 'id')->get();
+
+        $suppliers = $currentTab === 'suppliers' ? $access->scopeByCompanyAccess(Company::suppliers()
             ->withCount(['supplierRequirements', 'supplierFinancialEntries'])
             ->with(['supplierRequirements.project', 'supplierFinancialEntries.project'])
             ->where('status', '!=', 'archived')
             ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
-            ->get();
+            ->get() : collect();
 
-        $opportunities = $access->scopeByCompanyAccess(CrmOpportunity::with(['company', 'assignedUser', 'offers'])
-            ->whereNull('deleted_at')
-            ->orderByDesc('created_at'), $authUser, 'can_view_dashboard')
-            ->get();
+        $opportunitiesQuery = CrmOpportunity::query()->whereNull('deleted_at')->orderByDesc('created_at');
+        if ($access->hasFullAccess($authUser)) {
+            $opportunitiesQuery = $access->scopeByCompanyAccess($opportunitiesQuery, $authUser, 'can_view_dashboard');
+        }
+        if (! $access->hasFullAccess($authUser) || request()->boolean('related_to_me')) {
+            $opportunitiesQuery->where(function ($query) use ($authUser): void {
+                $query->where('assigned_to', $authUser->id)
+                    ->orWhere('created_by', $authUser->id)
+                    ->orWhereHas('relatedUsers', fn ($users) => $users->whereKey($authUser->id));
+            });
+        }
+        $opportunities = $currentTab === 'pipeline'
+            ? $opportunitiesQuery->with(['company', 'assignedUser', 'relatedUsers', 'offers'])->get()
+            : collect();
 
-        $unlinkedOffers = $access->scopeByCompanyAccess(
+        $unlinkedOffers = $currentTab === 'pipeline' ? $access->scopeByCompanyAccess(
             Offer::with('company')->where('is_template', false)->whereNull('crm_opportunity_id')->orderByDesc('created_at'),
             $authUser,
             'can_view_offers'
-        )->get();
+        )->get() : collect();
 
         $canManageCrm = $access->hasFullAccess($authUser);
 
-        $tasks = $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer'])
+        $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer'])
             ->orderBy('due_date'), $authUser, 'can_view_dashboard')
-            ->get();
+            ->get() : collect();
 
-        $myTasks = $access->scopeByCompanyAccess(Task::forUser(auth()->id())
+        $myTasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::forUser(auth()->id())
             ->with(['assignedUser', 'company', 'offer'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
-            ->get();
+            ->get() : collect();
 
-        $audits = $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')
-            ->get();
+        $audits = $currentTab === 'audits'
+            ? $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')->get()
+            : collect();
 
-        if ($authUser->hasRole('superadmin')) {
-            $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
-        } elseif ($authUser->hasRole('admin')) {
-            $users = User::role(['admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
-        } elseif ($authUser->hasRole('auditor_senior')) {
-            $users = User::role(['auditor_senior', 'auditor'])->orderBy('name')->get();
-        } elseif ($authUser->hasRole('auditor')) {
-            // Audytor widzi tylko siebie
-            $users = User::where('id', $authUser->id)->get();
-        } else {
-            $users = collect();
-        }
+        $users = $access->hasFullAccess($authUser)
+            ? User::query()->where('is_active', true)
+                ->whereHas('roles', fn ($roles) => $roles->whereNotIn('name', ['client_admin', 'client_user']))
+                ->orderBy('name')->get()
+            : User::query()->whereKey($authUser->id)->get();
 
         $stats = [
             'active_companies' => $companies->count(),
-            'active_suppliers' => $suppliers->count(),
+            'active_suppliers' => $access->scopeByCompanyAccess(
+                Company::suppliers()->where('status', '!=', 'archived'),
+                $authUser,
+                'can_view_dashboard',
+                'id'
+            )->count(),
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
-            'active_opps' => $opportunities->whereNotIn('stage', ['won', 'lost', 'rejected'])->count(),
-            'open_tasks' => $tasks->where('status', '!=', 'done')->count(),
-            'active_audits' => $audits->where('status', 'in_progress')->count(),
+            'active_opps' => (clone $opportunitiesQuery)->whereNotIn('stage', ['won', 'lost', 'rejected'])->count(),
+            'open_tasks' => $access->scopeByCompanyAccess(Task::where('status', '!=', 'done'), $authUser, 'can_view_dashboard')->count(),
+            'active_audits' => $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $authUser, 'can_view_audits')->count(),
         ];
 
-        $archivedCompanies = Company::with(['offers', 'audits'])
+        $archivedCompanies = $currentTab === 'archive' ? Company::with(['offers', 'audits'])
             ->whereNotNull('archived_at')
             ->orderBy('name')
-            ->get();
+            ->get() : collect();
 
         // Orphaned user-company assignments (assigned to archived/deleted companies)
-        $orphanedAssignments = DB::table('company_user')
+        $orphanedAssignments = $currentTab === 'archive' ? DB::table('company_user')
             ->leftJoin('companies', 'company_user.company_id', '=', 'companies.id')
             ->leftJoin('users', 'company_user.user_id', '=', 'users.id')
             ->where(function ($q) {
@@ -109,9 +125,7 @@ class CrmController extends Controller
                 'companies.archived_at'
             )
             ->orderBy('users.name')
-            ->get();
-
-        $currentTab = request('tab', 'companies');
+            ->get() : collect();
 
         return view('crm.index', compact(
             'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
@@ -166,11 +180,16 @@ class CrmController extends Controller
             'expected_close_date' => ['nullable', 'date'],
             'notes' => ['nullable', 'string'],
             'company_context_id' => ['nullable', 'integer', 'exists:companies,id'],
+            'related_users' => ['nullable', 'array'],
+            'related_users.*' => ['integer', 'exists:users,id'],
         ]);
 
         $companyContextId = $data['company_context_id'] ?? null;
+        $relatedUsers = $data['related_users'] ?? [];
         unset($data['company_context_id']);
+        unset($data['related_users']);
         $opportunity = CrmOpportunity::create(array_merge($data, ['created_by' => auth()->id()]));
+        $opportunity->relatedUsers()->sync($relatedUsers);
         app(CrmActivityLogger::class)->leadCreated($opportunity);
 
         if ($companyContextId && (int) $companyContextId === (int) $opportunity->company_id) {
@@ -271,10 +290,15 @@ class CrmController extends Controller
             'value' => ['nullable', 'numeric', 'min:0'],
             'expected_close_date' => ['nullable', 'date'],
             'notes' => ['nullable', 'string'],
+            'related_users' => ['nullable', 'array'],
+            'related_users.*' => ['integer', 'exists:users,id'],
         ]);
 
+        $relatedUsers = $data['related_users'] ?? [];
+        unset($data['related_users']);
         $previousStage = $opportunity->stage;
         $opportunity->update($data);
+        $opportunity->relatedUsers()->sync($relatedUsers);
         if ($previousStage !== $opportunity->stage) {
             app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
         }

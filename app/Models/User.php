@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(AuditorDocumentAccess::class);
     }
+
+    public function relatedCrmOpportunities(): BelongsToMany
+    {
+        return $this->belongsToMany(CrmOpportunity::class, 'crm_opportunity_user')->withTimestamps();
+    }
 }

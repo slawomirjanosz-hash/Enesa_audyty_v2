@@ -10,7 +10,50 @@ use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     app(PermissionRegistrar::class)->forgetCachedPermissions();
-    Role::findOrCreate('admin');
+    foreach (['admin', 'auditor'] as $role) Role::findOrCreate($role);
+});
+
+test('crm companies and pipeline tabs render without loading errors', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    Company::create(['name' => 'Firma CRM', 'company_type' => 'client', 'status' => 'active']);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'companies']))
+        ->assertOk()->assertSee('Firma CRM');
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline']))
+        ->assertOk()->assertSee('Leady związane ze mną');
+});
+
+test('lead can include users without full operational access and be filtered as related to them', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $employee = User::factory()->create(['name' => 'Pracownik powiązany']);
+    $employee->assignRole('auditor');
+    $company = Company::create(['name' => 'Firma powiązana', 'company_type' => 'client', 'status' => 'active']);
+
+    $this->actingAs($admin)->post(route('crm.opportunities.store'), [
+        'title' => 'Lead z zespołem',
+        'company_id' => $company->id,
+        'stage' => 'new_lead',
+        'assigned_to' => $admin->id,
+        'related_users' => [$employee->id],
+    ])->assertRedirect(route('crm.index', ['tab' => 'pipeline']));
+
+    $lead = CrmOpportunity::where('title', 'Lead z zespołem')->firstOrFail();
+    expect($lead->relatedUsers()->whereKey($employee->id)->exists())->toBeTrue();
+
+    CrmOpportunity::create([
+        'title' => 'Lead niezwiązany',
+        'company_id' => $company->id,
+        'stage' => 'new_lead',
+        'created_by' => User::factory()->create()->id,
+    ]);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline', 'related_to_me' => 1]))
+        ->assertOk()->assertSee('Lead z zespołem')->assertDontSee('Lead niezwiązany');
+
+    $this->actingAs($employee)->get(route('crm.index', ['tab' => 'pipeline']))
+        ->assertOk()->assertSee('Lead z zespołem')->assertDontSee('Lead niezwiązany');
 });
 
 test('admin can attach an unlinked offer to a lead of the same company', function () {
