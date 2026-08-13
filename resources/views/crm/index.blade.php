@@ -94,7 +94,6 @@
 
 @section('content')
 @php
-    $currentTab = request('tab', 'companies');
     $userId = auth()->id();
     $isAdmin = auth()->user()->hasRole('admin');
 
@@ -202,10 +201,12 @@
         <i class="ti ti-checklist"></i> Zadania
         <span class="tab-count">{{ $stats['open_tasks'] }}</span>
     </a>
-    <a href="{{ route('crm.index', ['tab'=>'audits']) }}" class="crm-tab {{ $currentTab==='audits'?'active':'' }}">
-        <i class="ti ti-clipboard-check"></i> Audyty
-        <span class="tab-count">{{ $stats['active_audits'] }}</span>
-    </a>
+    @if($auditsEnabled)
+        <a href="{{ route('crm.index', ['tab'=>'audits']) }}" class="crm-tab {{ $currentTab==='audits'?'active':'' }}">
+            <i class="ti ti-clipboard-check"></i> Audyty
+            <span class="tab-count">{{ $stats['active_audits'] }}</span>
+        </a>
+    @endif
     <a href="{{ route('crm.index', ['tab'=>'archive']) }}" class="crm-tab archive-tab {{ $currentTab==='archive'?'active':'' }}">
         <i class="ti ti-archive"></i> Archiwum
         <span class="tab-count">{{ $archivedCompanies->count() }}</span>
@@ -238,7 +239,9 @@
                     <th onclick="sortTable('companies-tbody',2)">Miasto <span class="sort-icon">⇅</span></th>
                     <th>Dashboard</th>
                     <th onclick="sortTable('companies-tbody',4,true)">Oferty <span class="sort-icon">⇅</span></th>
-                    <th onclick="sortTable('companies-tbody',5,true)">Audyty <span class="sort-icon">⇅</span></th>
+                    @if($auditsEnabled)
+                        <th onclick="sortTable('companies-tbody',5,true)">Audyty <span class="sort-icon">⇅</span></th>
+                    @endif
                     <th style="text-align:center;">Akcje</th>
                 </tr>
             </thead>
@@ -259,7 +262,9 @@
                         </button>
                     </td>
                     <td>{{ $company->offers_count }}</td>
-                    <td>{{ $company->audits_count }}</td>
+                    @if($auditsEnabled)
+                        <td>{{ $company->audits_count }}</td>
+                    @endif
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
@@ -604,7 +609,7 @@
 @endif
 
 {{-- ═══ TAB: AUDYTY ═══ --}}
-@if($currentTab === 'audits')
+@if($auditsEnabled && $currentTab === 'audits')
 <div class="table-card">
     <div class="table-card-header">
         <div class="table-card-title"><i class="ti ti-clipboard-check" style="color:var(--green);margin-right:6px;"></i> Audyty ({{ $audits->count() }})</div>
@@ -697,7 +702,9 @@
                     <th onclick="sortTable('archive-tbody',1)">NIP <span class="sort-icon">⇅</span></th>
                     <th onclick="sortTable('archive-tbody',2)">Miasto <span class="sort-icon">⇅</span></th>
                     <th onclick="sortTable('archive-tbody',3,true)">Oferty <span class="sort-icon">⇅</span></th>
-                    <th onclick="sortTable('archive-tbody',4,true)">Audyty <span class="sort-icon">⇅</span></th>
+                    @if($auditsEnabled)
+                        <th onclick="sortTable('archive-tbody',4,true)">Audyty <span class="sort-icon">⇅</span></th>
+                    @endif
                     <th style="text-align:center;">Akcje</th>
                 </tr>
             </thead>
@@ -710,7 +717,9 @@
                     <td style="color:#aaa;font-size:12px;">{{ $company->nip ?? '—' }}</td>
                     <td style="color:#888;">{{ $company->city ?? '—' }}</td>
                     <td style="color:#888;">{{ $company->offers->count() }}</td>
-                    <td style="color:#888;">{{ $company->audits->count() }}</td>
+                    @if($auditsEnabled)
+                        <td style="color:#888;">{{ $company->audits->count() }}</td>
+                    @endif
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">

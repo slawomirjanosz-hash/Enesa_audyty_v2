@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\TaskAssigned;
 use App\Models\Audit;
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\CrmOpportunity;
 use App\Models\Offer;
 use App\Models\Task;
@@ -27,7 +28,12 @@ class CrmController extends Controller
     {
         $access = app(AuditorAccessService::class);
         $authUser = auth()->user();
-        $currentTab = in_array(request('tab'), ['companies', 'suppliers', 'pipeline', 'tasks', 'audits', 'archive'], true)
+        $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
+        $availableTabs = ['companies', 'suppliers', 'pipeline', 'tasks', 'archive'];
+        if ($auditsEnabled) {
+            $availableTabs[] = 'audits';
+        }
+        $currentTab = in_array(request('tab'), $availableTabs, true)
             ? request('tab')
             : 'companies';
 
@@ -77,7 +83,7 @@ class CrmController extends Controller
             ->with(['assignedUser', 'company', 'offer'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
 
-        $audits = $currentTab === 'audits'
+        $audits = $auditsEnabled && $currentTab === 'audits'
             ? $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')->get()
             : collect();
 
@@ -98,7 +104,9 @@ class CrmController extends Controller
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
             'active_opps' => (clone $opportunitiesQuery)->whereNotIn('stage', ['won', 'lost', 'rejected'])->count(),
             'open_tasks' => $access->scopeByCompanyAccess(Task::where('status', '!=', 'done'), $authUser, 'can_view_dashboard')->count(),
-            'active_audits' => $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $authUser, 'can_view_audits')->count(),
+            'active_audits' => $auditsEnabled
+                ? $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $authUser, 'can_view_audits')->count()
+                : 0,
         ];
 
         $archivedCompanies = $currentTab === 'archive' ? Company::with(['offers', 'audits'])
@@ -128,7 +136,7 @@ class CrmController extends Controller
             ->get() : collect();
 
         return view('crm.index', compact(
-            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab'
+            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
         ));
     }
 

@@ -52,6 +52,33 @@ test('disabled application modules disappear from navigation and reject direct a
     $this->actingAs($admin)->get(route('client-zone.index'))->assertForbidden();
 });
 
+test('disabled audits module disappears from CRM and audits tab cannot be forced by URL', function () {
+    CompanySettings::create([
+        'name' => 'Firma instalatorska',
+        'enabled_modules' => ['dashboard', 'crm', 'offers'],
+    ]);
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    \App\Models\Company::create([
+        'name' => 'Klient CRM',
+        'company_type' => 'client',
+        'status' => 'active',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('crm.index', ['tab' => 'companies']))
+        ->assertOk()
+        ->assertDontSee(route('crm.index', ['tab' => 'audits']), false)
+        ->assertDontSee('audits-tbody', false);
+
+    $this->actingAs($admin)
+        ->get(route('crm.index', ['tab' => 'audits']))
+        ->assertOk()
+        ->assertSee('Aktywne firmy')
+        ->assertSee('Klient CRM')
+        ->assertDontSee('audits-tbody', false);
+});
+
 test('offer numbers use the editable company short name', function () {
     CompanySettings::create([
         'name' => 'Prinż Cieszyn',
