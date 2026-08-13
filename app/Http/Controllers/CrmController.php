@@ -300,15 +300,23 @@ class CrmController extends Controller
             'notes' => ['nullable', 'string'],
             'related_users' => ['nullable', 'array'],
             'related_users.*' => ['integer', 'exists:users,id'],
+            'company_context_id' => ['nullable', 'integer', 'exists:companies,id'],
         ]);
 
         $relatedUsers = $data['related_users'] ?? [];
+        $companyContextId = $data['company_context_id'] ?? null;
         unset($data['related_users']);
+        unset($data['company_context_id']);
         $previousStage = $opportunity->stage;
         $opportunity->update($data);
         $opportunity->relatedUsers()->sync($relatedUsers);
         if ($previousStage !== $opportunity->stage) {
             app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
+        }
+
+        if ($companyContextId && (int) $companyContextId === (int) $opportunity->company_id) {
+            return redirect()->to(route('companies.show', $companyContextId).'#crm')
+                ->with('success', 'Szansa została zaktualizowana.');
         }
 
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');

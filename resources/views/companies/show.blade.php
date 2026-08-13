@@ -615,6 +615,31 @@
 @endpush
 
 @section('content')
+@php
+    $crmStageLabels = ['new_lead' => 'Nowy lead', 'contact' => 'Kontakt', 'offer' => 'Oferta', 'negotiation' => 'Negocjacje', 'realization' => 'Realizacja', 'won' => 'Wygrana', 'lost' => 'Przegrana', 'rejected' => 'Odrzucona'];
+    $offerStatusLabels = ['w_toku' => 'W toku', 'wygrana' => 'Wygrana', 'przegrana' => 'Przegrana', 'zarchiwizowana' => 'Archiwalna'];
+    $crmOpportunityPreviews = $crmOpportunities->mapWithKeys(fn ($opportunity) => [$opportunity->id => [
+        'id' => $opportunity->id,
+        'title' => $opportunity->title,
+        'description' => $opportunity->description,
+        'stage' => $opportunity->stage,
+        'stage_label' => $crmStageLabels[$opportunity->stage] ?? $opportunity->stage,
+        'value' => $opportunity->value,
+        'expected_close_date' => $opportunity->expected_close_date?->format('Y-m-d'),
+        'expected_close_date_label' => $opportunity->expected_close_date?->format('d.m.Y') ?? '—',
+        'assigned_to' => $opportunity->assigned_to,
+        'assigned_name' => $opportunity->assignedUser?->name ?? '—',
+        'notes' => $opportunity->notes,
+        'related_user_ids' => $opportunity->relatedUsers->pluck('id')->values(),
+        'related_user_names' => $opportunity->relatedUsers->pluck('name')->values(),
+        'offers' => $opportunity->offers->map(fn ($offer) => [
+            'number' => $offer->fullNumber(),
+            'status' => $offerStatusLabels[$offer->status] ?? $offer->status,
+            'url' => route('offers.show', $offer),
+        ])->values(),
+        'update_url' => route('crm.opportunities.update', $opportunity),
+    ]]);
+@endphp
 {{-- ─── FLASH ALERTS ─── --}}
 @if(session('success'))
     <div style="display:flex;align-items:center;gap:10px;background:#E8F5E9;border-left:4px solid #2E7D32;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:14px;color:#1B5E20;font-family:'Manrope',sans-serif;">
@@ -1228,24 +1253,22 @@
             </div>
         @else
             @php
-                $crmStageLabels = ['new_lead' => 'Nowy lead', 'contact' => 'Kontakt', 'offer' => 'Oferta', 'negotiation' => 'Negocjacje', 'realization' => 'Realizacja', 'won' => 'Wygrana', 'lost' => 'Przegrana', 'rejected' => 'Odrzucona'];
                 $crmStageColors = ['new_lead' => 'background:#EDE9FE;color:#5B21B6;', 'contact' => 'background:#DBEAFE;color:#1D4ED8;', 'offer' => 'background:#FEF3C7;color:#92400E;', 'negotiation' => 'background:#FFEDD5;color:#9A3412;', 'realization' => 'background:#DCFCE7;color:#166534;', 'won' => 'background:#D1FAE5;color:#065F46;', 'lost' => 'background:#FEE2E2;color:#B91C1C;', 'rejected' => 'background:#F3F4F6;color:#4B5563;'];
-                $offerStatusLabels = ['w_toku' => 'W toku', 'wygrana' => 'Wygrana', 'przegrana' => 'Przegrana', 'zarchiwizowana' => 'Archiwalna'];
             @endphp
             <table class="data-table">
                 <thead><tr><th>Lead / szansa</th><th>Etap</th><th>Przypisany</th><th>Powiązane oferty</th><th>Planowane zamknięcie</th></tr></thead>
                 <tbody>
                     @foreach($crmOpportunities as $opportunity)
-                        <tr>
+                        <tr onclick="openCompanyOpportunityById({{ $opportunity->id }})" style="cursor:pointer;" title="Kliknij, aby zobaczyć szczegóły">
                             <td>
-                                <div style="font-weight:700;color:var(--green);">{{ $opportunity->title }}</div>
+                                <div style="font-weight:700;color:var(--green);text-decoration:underline;text-decoration-color:#b8c9c0;text-underline-offset:3px;">{{ $opportunity->title }}</div>
                                 @if($opportunity->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($opportunity->description, 100) }}</div>@endif
                             </td>
                             <td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $crmStageColors[$opportunity->stage] ?? 'background:#F3F4F6;color:#4B5563;' }}">{{ $crmStageLabels[$opportunity->stage] ?? $opportunity->stage }}</span></td>
                             <td style="font-size:12px;color:#555;">{{ $opportunity->assignedUser?->name ?? '—' }}</td>
                             <td>
                                 @forelse($opportunity->offers as $offer)
-                                    <a href="{{ route('offers.show', $offer) }}" style="display:inline-flex;align-items:center;gap:4px;margin:2px 4px 2px 0;padding:3px 7px;border-radius:5px;background:#FFF8E8;color:#92400E;font-size:11px;font-weight:700;text-decoration:none;"><i class="ti ti-file-text"></i> {{ $offer->fullNumber() }} · {{ $offerStatusLabels[$offer->status] ?? $offer->status }}</a>
+                                    <a href="{{ route('offers.show', $offer) }}" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;margin:2px 4px 2px 0;padding:3px 7px;border-radius:5px;background:#FFF8E8;color:#92400E;font-size:11px;font-weight:700;text-decoration:none;"><i class="ti ti-file-text"></i> {{ $offer->fullNumber() }} · {{ $offerStatusLabels[$offer->status] ?? $offer->status }}</a>
                                 @empty
                                     <span style="color:#aaa;font-size:12px;">Brak</span>
                                 @endforelse
@@ -1799,6 +1822,59 @@
 </div>
 @endif
 
+<div id="companyOpportunityModal" class="user-modal-overlay">
+    <div class="user-modal" role="dialog" aria-modal="true" aria-labelledby="companyOpportunityModalTitle" style="max-width:680px;max-height:90vh;overflow-y:auto;">
+        <div class="user-modal-header">
+            <div>
+                <h2 id="companyOpportunityModalTitle">Szczegóły szansy</h2>
+                <p>Klient: <strong>{{ $company->name }}</strong></p>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeCompanyOpportunityModal()" aria-label="Zamknij">&times;</button>
+        </div>
+
+        <div id="companyOpportunityPreview">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px;">
+                <div style="background:#F8FAF9;border:1px solid #E5E1D8;border-radius:9px;padding:11px 12px;"><div style="font-size:10px;text-transform:uppercase;color:#888;font-weight:700;">Etap</div><div id="opportunityPreviewStage" style="margin-top:5px;font-weight:700;"></div></div>
+                <div style="background:#F8FAF9;border:1px solid #E5E1D8;border-radius:9px;padding:11px 12px;"><div style="font-size:10px;text-transform:uppercase;color:#888;font-weight:700;">Przypisany</div><div id="opportunityPreviewAssigned" style="margin-top:5px;font-weight:700;"></div></div>
+                <div style="background:#F8FAF9;border:1px solid #E5E1D8;border-radius:9px;padding:11px 12px;"><div style="font-size:10px;text-transform:uppercase;color:#888;font-weight:700;">Wartość</div><div id="opportunityPreviewValue" style="margin-top:5px;font-weight:700;"></div></div>
+                <div style="background:#F8FAF9;border:1px solid #E5E1D8;border-radius:9px;padding:11px 12px;"><div style="font-size:10px;text-transform:uppercase;color:#888;font-weight:700;">Planowane zamknięcie</div><div id="opportunityPreviewDate" style="margin-top:5px;font-weight:700;"></div></div>
+            </div>
+            <div class="modal-field"><label>Opis</label><div id="opportunityPreviewDescription" style="white-space:pre-wrap;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:8px;padding:11px;min-height:44px;"></div></div>
+            <div class="modal-field"><label>Notatki</label><div id="opportunityPreviewNotes" style="white-space:pre-wrap;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:8px;padding:11px;min-height:44px;"></div></div>
+            <div class="modal-field"><label>Osoby powiązane</label><div id="opportunityPreviewUsers" style="color:#555;"></div></div>
+            <div class="modal-field"><label>Powiązane oferty</label><div id="opportunityPreviewOffers" style="display:flex;gap:6px;flex-wrap:wrap;"></div></div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
+                <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="closeCompanyOpportunityModal()">Zamknij</button>
+                @if($canManageCrm)
+                    <button type="button" class="btn-action btn-primary-action" style="border:0;cursor:pointer;" onclick="editCompanyOpportunity()"><i class="ti ti-pencil"></i> Edytuj</button>
+                @endif
+            </div>
+        </div>
+
+        @if($canManageCrm)
+        <form id="companyOpportunityEdit" method="POST" style="display:none;">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="company_id" value="{{ $company->id }}">
+            <input type="hidden" name="company_context_id" value="{{ $company->id }}">
+            <div class="modal-field"><label for="opportunityEditTitle">Nazwa *</label><input id="opportunityEditTitle" name="title" required maxlength="255"></div>
+            <div class="modal-field"><label for="opportunityEditDescription">Opis</label><textarea id="opportunityEditDescription" name="description"></textarea></div>
+            <div class="modal-grid">
+                <div class="modal-field"><label for="opportunityEditStage">Etap</label><select id="opportunityEditStage" name="stage" required>@foreach($crmStageLabels as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach</select></div>
+                <div class="modal-field"><label for="opportunityEditAssigned">Przypisany</label><select id="opportunityEditAssigned" name="assigned_to"><option value="">Nieprzypisany</option>@foreach($crmAssignableUsers as $crmUser)<option value="{{ $crmUser->id }}">{{ $crmUser->name }}</option>@endforeach</select></div>
+            </div>
+            <div class="modal-grid">
+                <div class="modal-field"><label for="opportunityEditValue">Szacowana wartość</label><input id="opportunityEditValue" type="number" name="value" min="0" step="0.01"></div>
+                <div class="modal-field"><label for="opportunityEditDate">Planowane zamknięcie</label><input id="opportunityEditDate" type="date" name="expected_close_date"></div>
+            </div>
+            <div class="modal-field"><label>Osoby powiązane</label><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;">@foreach($crmAssignableUsers as $crmUser)<label style="display:flex;align-items:center;gap:7px;font-weight:500;"><input type="checkbox" name="related_users[]" value="{{ $crmUser->id }}" style="width:auto;"> {{ $crmUser->name }}</label>@endforeach</div></div>
+            <div class="modal-field"><label for="opportunityEditNotes">Notatki</label><textarea id="opportunityEditNotes" name="notes"></textarea></div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;"><button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="cancelCompanyOpportunityEdit()">Anuluj</button><button type="submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-device-floppy"></i> Zapisz</button></div>
+        </form>
+        @endif
+    </div>
+</div>
+
 <div id="userModalOverlay" class="user-modal-overlay" onclick="closeUserModalOutside(event)">
     <div class="user-modal">
         <div class="user-modal-header">
@@ -2089,6 +2165,75 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
     function closeCompanyLeadModal() {
         const modal = document.getElementById('companyLeadModal');
         if (modal) modal.style.display = 'none';
+    }
+
+    let selectedCompanyOpportunity = null;
+    const companyOpportunities = @json($crmOpportunityPreviews);
+
+    function openCompanyOpportunityById(opportunityId) {
+        const opportunity = companyOpportunities[opportunityId];
+        if (opportunity) openCompanyOpportunity(opportunity);
+    }
+
+    function openCompanyOpportunity(opportunity) {
+        selectedCompanyOpportunity = opportunity;
+        document.getElementById('companyOpportunityModalTitle').textContent = opportunity.title;
+        document.getElementById('opportunityPreviewStage').textContent = opportunity.stage_label;
+        document.getElementById('opportunityPreviewAssigned').textContent = opportunity.assigned_name || '—';
+        document.getElementById('opportunityPreviewValue').textContent = opportunity.value !== null && opportunity.value !== ''
+            ? Number(opportunity.value).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł'
+            : '—';
+        document.getElementById('opportunityPreviewDate').textContent = opportunity.expected_close_date_label || '—';
+        document.getElementById('opportunityPreviewDescription').textContent = opportunity.description || 'Brak opisu';
+        document.getElementById('opportunityPreviewNotes').textContent = opportunity.notes || 'Brak notatek';
+        document.getElementById('opportunityPreviewUsers').textContent = opportunity.related_user_names?.length ? opportunity.related_user_names.join(', ') : 'Brak';
+
+        const offers = document.getElementById('opportunityPreviewOffers');
+        offers.replaceChildren();
+        if (!opportunity.offers?.length) {
+            offers.textContent = 'Brak';
+        } else {
+            opportunity.offers.forEach(offer => {
+                const link = document.createElement('a');
+                link.href = offer.url;
+                link.className = 'btn-action btn-secondary-action';
+                link.style.padding = '5px 9px';
+                link.textContent = offer.number + ' · ' + offer.status;
+                offers.appendChild(link);
+            });
+        }
+
+        document.getElementById('companyOpportunityPreview').style.display = 'block';
+        const editForm = document.getElementById('companyOpportunityEdit');
+        if (editForm) editForm.style.display = 'none';
+        document.getElementById('companyOpportunityModal').style.display = 'flex';
+    }
+
+    function closeCompanyOpportunityModal() {
+        document.getElementById('companyOpportunityModal').style.display = 'none';
+    }
+
+    function editCompanyOpportunity() {
+        if (!selectedCompanyOpportunity) return;
+        const form = document.getElementById('companyOpportunityEdit');
+        form.action = selectedCompanyOpportunity.update_url;
+        form.querySelector('#opportunityEditTitle').value = selectedCompanyOpportunity.title || '';
+        form.querySelector('#opportunityEditDescription').value = selectedCompanyOpportunity.description || '';
+        form.querySelector('#opportunityEditStage').value = selectedCompanyOpportunity.stage;
+        form.querySelector('#opportunityEditAssigned').value = selectedCompanyOpportunity.assigned_to || '';
+        form.querySelector('#opportunityEditValue').value = selectedCompanyOpportunity.value || '';
+        form.querySelector('#opportunityEditDate').value = selectedCompanyOpportunity.expected_close_date || '';
+        form.querySelector('#opportunityEditNotes').value = selectedCompanyOpportunity.notes || '';
+        const relatedIds = (selectedCompanyOpportunity.related_user_ids || []).map(String);
+        form.querySelectorAll('input[name="related_users[]"]').forEach(input => input.checked = relatedIds.includes(input.value));
+        document.getElementById('companyOpportunityPreview').style.display = 'none';
+        form.style.display = 'block';
+        form.querySelector('#opportunityEditTitle').focus();
+    }
+
+    function cancelCompanyOpportunityEdit() {
+        document.getElementById('companyOpportunityEdit').style.display = 'none';
+        document.getElementById('companyOpportunityPreview').style.display = 'block';
     }
 
     // Auto-open Zapytania tab when URL has #zapytania

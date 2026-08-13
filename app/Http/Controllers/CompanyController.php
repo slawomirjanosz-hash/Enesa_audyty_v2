@@ -164,7 +164,7 @@ class CompanyController extends Controller
         $stats['projects_count'] = $projects->count();
 
         $crmOpportunities = $access->scopeByCompanyAccess(
-            CrmOpportunity::with(['assignedUser', 'offers'])
+            CrmOpportunity::with(['assignedUser', 'relatedUsers', 'offers'])
                 ->where('company_id', $company->id)
                 ->orderByDesc('created_at'),
             $user,

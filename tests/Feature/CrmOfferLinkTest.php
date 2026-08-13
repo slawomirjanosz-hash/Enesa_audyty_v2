@@ -5,6 +5,7 @@ use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
 use App\Models\Offer;
 use App\Models\User;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -154,4 +155,43 @@ test('admin adds a lead directly from the client card with company preselected',
     expect($lead->company_id)->toBe($company->id)
         ->and($lead->stage)->toBe('new_lead')
         ->and($lead->assigned_to)->toBe($admin->id);
+});
+
+test('client card opens a CRM opportunity preview and saves edits back to the card', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('system.full_access'));
+    $company = Company::create(['name' => 'Klient z szansą', 'company_type' => 'client', 'status' => 'active']);
+    $opportunity = CrmOpportunity::create([
+        'title' => 'Modernizacja instalacji',
+        'description' => 'Opis szansy widoczny w podglądzie',
+        'company_id' => $company->id,
+        'assigned_to' => $admin->id,
+        'created_by' => $admin->id,
+        'stage' => 'contact',
+        'value' => 125000,
+        'expected_close_date' => '2026-10-15',
+        'notes' => 'Ważna notatka CRM',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('companies.show', $company).'#crm')
+        ->assertOk()
+        ->assertSee('openCompanyOpportunityById('.$opportunity->id.')', false)
+        ->assertSee('companyOpportunityModal', false)
+        ->assertSee('Opis szansy widoczny w podglądzie')
+        ->assertSee('Modernizacja instalacji');
+
+    $this->actingAs($admin)
+        ->patch(route('crm.opportunities.update', $opportunity), [
+            'title' => 'Modernizacja instalacji po edycji',
+            'company_id' => $company->id,
+            'company_context_id' => $company->id,
+            'stage' => 'offer',
+            'value' => 130000,
+        ])
+        ->assertRedirect(route('companies.show', $company).'#crm');
+
+    expect($opportunity->refresh()->title)->toBe('Modernizacja instalacji po edycji')
+        ->and($opportunity->stage)->toBe('offer');
 });
