@@ -10,19 +10,24 @@ class ProjectPolicy
 {
     public function view(User $user, Project $project): bool
     {
-        return app(AuditorAccessService::class)->hasFullAccess($user)
+        return (app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('projects.view'))
+            && (
+                app(AuditorAccessService::class)->hasFullAccess($user)
+                || $user->can('projects.edit')
             || $project->manager_id === $user->id
-            || $project->members()->whereKey($user->id)->exists();
+                || $project->members()->whereKey($user->id)->exists()
+            );
     }
 
     public function update(User $user, Project $project): bool
     {
         return app(AuditorAccessService::class)->hasFullAccess($user)
+            || $user->can('projects.edit')
             || $project->manager_id === $user->id;
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return app(AuditorAccessService::class)->hasFullAccess($user);
+        return app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('projects.delete');
     }
 }

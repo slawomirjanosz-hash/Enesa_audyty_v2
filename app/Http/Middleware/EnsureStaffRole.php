@@ -13,8 +13,10 @@ class EnsureStaffRole
     {
         $user = $request->user();
 
-        if (! $user?->hasAnyRole(['superadmin', 'admin', 'auditor_senior', 'auditor'])
-            && ! $user?->getAllPermissions()->contains('name', 'system.full_access')) {
+        $hasStaffRole = $user?->getRoleNames()
+            ->contains(fn (string $role) => ! in_array($role, ['client_admin', 'client_user'], true));
+
+        if (! $hasStaffRole) {
             abort(403, 'Brak uprawnień do panelu wewnętrznego.');
         }
 

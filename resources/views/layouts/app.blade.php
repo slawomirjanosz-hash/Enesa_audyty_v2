@@ -406,10 +406,13 @@
 
     @php
         $appModuleEnabled = fn (string $module): bool => $appBrand?->moduleEnabled($module) ?? true;
+        $canAccessModule = fn (string $permission): bool => auth()->user()->hasRole('superadmin')
+            || auth()->user()->can('system.full_access')
+            || auth()->user()->can($permission);
     @endphp
     <nav class="sidebar-nav">
         <ul>
-            @if($appModuleEnabled('dashboard'))
+            @if($appModuleEnabled('dashboard') && $canAccessModule('dashboard.view'))
             <li class="nav-item">
                 <a href="{{ url('/dashboard') }}"
                    class="nav-link {{ request()->is('dashboard*') ? 'active' : '' }}">
@@ -418,7 +421,7 @@
             </li>
             @endif
 
-            @if($appModuleEnabled('audits'))
+            @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
             <li class="nav-item nav-group {{ request()->is('audit*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-clipboard-list"></i> System Audytów
@@ -432,7 +435,7 @@
             </li>
             @endif
 
-            @if($appModuleEnabled('crm'))
+            @if($appModuleEnabled('crm') && $canAccessModule('crm.view'))
             <li class="nav-item nav-group {{ request()->is('crm*', 'suppliers*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-users"></i> CRM
@@ -447,7 +450,7 @@
             </li>
             @endif
 
-            @if($appModuleEnabled('offers'))
+            @if($appModuleEnabled('offers') && $canAccessModule('offers.view'))
             <li class="nav-item nav-group {{ request()->is('offer*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-file-invoice"></i> Strefa Ofert
@@ -461,14 +464,14 @@
     <i class="ti ti-file-invoice"></i> Oferty
 </a></li>
                     <li><a href="{{ url('/offer-forms') }}" class="nav-link {{ request()->is('offer-forms*') ? 'active' : '' }}"><i class="ti ti-clipboard-list"></i> Formularze zapytań</a></li>
-                    @if(auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) || auth()->user()->getAllPermissions()->contains('name', 'system.full_access'))
+                    @if(auth()->user()->hasRole('superadmin') || auth()->user()->can('offers.catalog.manage'))
                     <li><a href="{{ route('pricing-catalog.index') }}" class="nav-link {{ request()->is('pricing-catalog*') ? 'active' : '' }}"><i class="ti ti-currency-zloty"></i> Cennik usług</a></li>
                     @endif
                 </ul>
             </li>
             @endif
 
-            @if($appModuleEnabled('projects'))
+            @if($appModuleEnabled('projects') && $canAccessModule('projects.view'))
             <li class="nav-item">
                 <a href="{{ route('projects.index') }}"
                    class="nav-link {{ request()->routeIs('projects.*') ? 'active' : '' }}">
@@ -477,7 +480,7 @@
             </li>
             @endif
 
-            @if($appModuleEnabled('client_zone'))
+            @if($appModuleEnabled('client_zone') && $canAccessModule('client_zone.view'))
             <li class="nav-item">
                 <a href="{{ url('/client-zone') }}"
                    class="nav-link {{ request()->is('client-zone*') ? 'active' : '' }}">
@@ -486,7 +489,7 @@
             </li>
             @endif
 
-            @if($appModuleEnabled('documents') && (auth()->user()->hasAnyRole(['superadmin', 'admin', 'auditor_senior']) || auth()->user()->getAllPermissions()->contains('name', 'system.full_access')))
+            @if($appModuleEnabled('documents') && $canAccessModule('documents.view'))
             <li class="nav-item">
                 <a href="{{ route('documents.index') }}"
                    class="nav-link {{ request()->routeIs('documents.index') ? 'active' : '' }}">
@@ -495,19 +498,21 @@
             </li>
             @endif
 
+            @if(auth()->user()->hasRole('superadmin') || auth()->user()->canAny(['settings.users.view', 'settings.roles.manage', 'settings.company.manage', 'settings.archive.view']))
             <li class="nav-item nav-group {{ request()->is('settings*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-settings"></i> Ustawienia
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
-                    @if(auth()->user()->hasRole('superadmin'))
+                    @if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.company.manage'))
                     <li><a href="{{ url('/settings/company') }}" class="nav-link">Dane firmy</a></li>
                     @endif
                     <li><a href="{{ url('/settings/users') }}" class="nav-link {{ request()->routeIs('settings.users.*', 'settings.roles.*') ? 'active' : '' }}">Użytkownicy i role</a></li>
                     <li><a href="{{ route('settings.archive.index') }}" class="nav-link {{ request()->routeIs('settings.archive.*') ? 'active' : '' }}">Archiwum</a></li>
                 </ul>
             </li>
+            @endif
         </ul>
     </nav>
 

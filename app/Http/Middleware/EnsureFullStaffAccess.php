@@ -10,7 +10,17 @@ class EnsureFullStaffAccess
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()?->hasAnyRole(['superadmin', 'admin', 'auditor_senior'])) {
+        $user = $request->user();
+
+        if (! $user?->hasRole('superadmin')
+            && ! $user?->canAny([
+                'settings.users.view',
+                'settings.users.manage',
+                'settings.roles.manage',
+                'settings.company.manage',
+                'settings.archive.view',
+                'system.full_access',
+            ])) {
             abort(403, 'Brak uprawnień do ustawień.');
         }
 

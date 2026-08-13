@@ -17,6 +17,6 @@ class TaskPolicy
             && app(AuditorAccessService::class)->canViewCompany($user, $task->company_id, 'can_view_dashboard');
     }
 
-    public function update(User $user, Task $task): bool { return $this->canModify($user); }
-    public function delete(User $user, Task $task): bool { return $this->canModify($user); }
+    public function update(User $user, Task $task): bool { return $this->canModify($user, 'crm.tasks.manage'); }
+    public function delete(User $user, Task $task): bool { return $this->canModify($user, 'crm.tasks.manage'); }
 }

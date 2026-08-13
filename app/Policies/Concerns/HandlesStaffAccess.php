@@ -12,8 +12,8 @@ trait HandlesStaffAccess
         return app(AuditorAccessService::class)->hasFullAccess($user) ? true : null;
     }
 
-    protected function canModify(User $user): bool
+    protected function canModify(User $user, string $permission): bool
     {
-        return app(AuditorAccessService::class)->hasFullAccess($user);
+        return app(AuditorAccessService::class)->hasFullAccess($user) || $user->can($permission);
     }
 }

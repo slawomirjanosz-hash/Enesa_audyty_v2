@@ -10,12 +10,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AuditorAccessService
 {
-    public const FULL_ACCESS_ROLES = ['superadmin', 'admin', 'auditor_senior'];
-
     public function hasFullAccess(User $user): bool
     {
-        return $user->hasAnyRole(self::FULL_ACCESS_ROLES)
-            || $user->getAllPermissions()->contains('name', 'system.full_access');
+        return $user->hasRole('superadmin') || $user->can('system.full_access');
     }
 
     public function isDelegatedAuditor(User $user): bool
@@ -29,9 +26,21 @@ class AuditorAccessService
             return true;
         }
 
-        if (! $this->isDelegatedAuditor($user)) {
-            return false;
+        $modulePermission = [
+            'can_view_dashboard' => 'crm.view',
+            'can_view_audits' => 'audits.view',
+            'can_view_offer_requests' => 'offers.view',
+            'can_view_offers' => 'offers.view',
+            'can_view_offer_prices' => 'offers.prices.view',
+            'can_view_documents' => 'documents.view',
+            'can_view_chat' => 'client_zone.chat.manage',
+        ][$ability] ?? null;
+
+        if (! $this->isDelegatedAuditor($user) && $modulePermission && $user->can($modulePermission)) {
+            return true;
         }
+
+        if (! $this->isDelegatedAuditor($user)) return false;
 
         return AuditorCompanyAccess::query()
             ->where('auditor_id', $user->id)
@@ -46,6 +55,8 @@ class AuditorAccessService
             return true;
         }
 
+        if (! $this->isDelegatedAuditor($user) && $user->can('crm.view')) return true;
+
         return $this->isDelegatedAuditor($user)
             && AuditorCompanyAccess::query()
                 ->where('auditor_id', $user->id)
@@ -58,6 +69,18 @@ class AuditorAccessService
         if ($this->hasFullAccess($user)) {
             return [];
         }
+
+        $modulePermission = [
+            'can_view_dashboard' => 'crm.view',
+            'can_view_audits' => 'audits.view',
+            'can_view_offer_requests' => 'offers.view',
+            'can_view_offers' => 'offers.view',
+            'can_view_offer_prices' => 'offers.prices.view',
+            'can_view_documents' => 'documents.view',
+            'can_view_chat' => 'client_zone.chat.manage',
+        ][$ability] ?? null;
+
+        if (! $this->isDelegatedAuditor($user) && $modulePermission && $user->can($modulePermission)) return [];
 
         if (! $this->isDelegatedAuditor($user)) {
             return [-1];

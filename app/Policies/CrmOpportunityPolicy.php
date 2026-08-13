@@ -17,6 +17,6 @@ class CrmOpportunityPolicy
             && app(AuditorAccessService::class)->canViewCompany($user, $opportunity->company_id, 'can_view_dashboard');
     }
 
-    public function update(User $user, CrmOpportunity $opportunity): bool { return $this->canModify($user); }
-    public function delete(User $user, CrmOpportunity $opportunity): bool { return $this->canModify($user); }
+    public function update(User $user, CrmOpportunity $opportunity): bool { return $this->canModify($user, 'crm.leads.manage'); }
+    public function delete(User $user, CrmOpportunity $opportunity): bool { return $this->canModify($user, 'crm.leads.manage'); }
 }

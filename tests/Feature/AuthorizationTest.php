@@ -150,6 +150,35 @@ test('admin can rename and delete an assigned custom role without deleting its u
         ->assertSee('—');
 });
 
+test('superadmin manages system roles and granular custom role access', function () {
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole('superadmin');
+
+    $this->actingAs($superadmin)
+        ->get('/settings/roles')
+        ->assertOk()
+        ->assertSee('Super Admin')
+        ->assertSee('Administrator')
+        ->assertSee('Audytor')
+        ->assertSee('Zarządzanie finansami projektu');
+
+    $this->actingAs($superadmin)->post('/settings/roles', [
+        'name' => 'Kontroler Projektu',
+        'permissions' => ['projects.view', 'projects.finances.manage'],
+    ])->assertRedirect('/settings/roles');
+
+    $role = Role::findByName('Kontroler Projektu');
+    $employee = User::factory()->create();
+    $employee->assignRole($role);
+
+    $this->actingAs($employee)->get('/projects')->assertOk();
+    $this->actingAs($employee)->get('/crm')->assertForbidden();
+    $this->actingAs($employee)->get('/settings/roles')->assertForbidden();
+
+    expect($role->hasPermissionTo('projects.finances.manage'))->toBeTrue()
+        ->and($role->hasPermissionTo('projects.requirements.manage'))->toBeFalse();
+});
+
 test('guest is redirected to login for CRM', function () {
     $this->get('/crm')->assertRedirect(route('login'));
 });

@@ -44,13 +44,13 @@ Route::get('/companies', function () {
 })->middleware('app.module:crm');
 
 Route::post('/companies/fetch-gus', [CompanyController::class, 'fetchGus'])
-    ->middleware(['auth', 'staff.role', 'app.module:crm'])
+    ->middleware(['auth', 'staff.role', 'app.module:crm', 'app.permission:crm.companies.manage'])
     ->name('companies.fetchGus');
 Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
-    ->middleware(['auth', 'staff.role', 'app.module:crm'])
+    ->middleware(['auth', 'staff.role', 'app.module:crm', 'app.permission:crm.companies.manage'])
     ->name('companies.destroy');
 Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])
-    ->middleware(['auth', 'staff.role', 'app.module:crm'])
+    ->middleware(['auth', 'staff.role', 'app.module:crm', 'app.permission:crm.companies.manage'])
     ->name('companies.restore');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
@@ -95,13 +95,13 @@ Route::get('audit-types/versions/{version}/preview', [AuditTypeController::class
 Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::middleware('app.module:crm')->group(function () {
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
-        Route::put('/companies/{company}', [CompanyController::class, 'update'])->name('companies.update');
-        Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->name('companies.accept');
-        Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->name('companies.users.store');
-        Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->name('companies.users.assignExisting');
-        Route::put('/companies/{company}/users/{user}', [CompanyController::class, 'updateUser'])->name('companies.users.update');
-        Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->name('companies.users.destroy');
-        Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
+        Route::put('/companies/{company}', [CompanyController::class, 'update'])->middleware('app.permission:crm.companies.manage')->name('companies.update');
+        Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->middleware('app.permission:crm.companies.manage')->name('companies.accept');
+        Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->middleware('app.permission:crm.companies.manage')->name('companies.users.store');
+        Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->middleware('app.permission:crm.companies.manage')->name('companies.users.assignExisting');
+        Route::put('/companies/{company}/users/{user}', [CompanyController::class, 'updateUser'])->middleware('app.permission:crm.companies.manage')->name('companies.users.update');
+        Route::delete('/companies/{company}/users/{user}', [CompanyController::class, 'destroyUser'])->middleware('app.permission:crm.companies.manage')->name('companies.users.destroy');
+        Route::post('/companies', [CompanyController::class, 'store'])->middleware('app.permission:crm.companies.manage')->name('companies.store');
     });
     Route::get('/profile', [ProfileController::class, 'edit'])->withoutMiddleware('staff.role')->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->withoutMiddleware('staff.role')->name('profile.update');
@@ -109,8 +109,8 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
 
     Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
-    Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->middleware('app.module:audits')->name('audit-types.versions.store');
-    Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware('app.module:audits')->name('audit-types.versions.set-current');
+    Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.store');
+    Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.set-current');
 
     Route::prefix('offer-requests')->name('offer-requests.')->middleware('app.module:offers')->group(function () {
         Route::get('/create', [OfferRequestController::class, 'create'])->name('create');
@@ -152,9 +152,9 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::get('/template/{offer}', [OfferController::class, 'getTemplate'])->name('template');
         Route::post('/ai-assist', [OfferController::class, 'aiAssist'])->name('ai-assist');
         Route::get('/', [OfferController::class, 'index'])->name('index');
-        Route::get('/create', [OfferController::class, 'create'])->name('create');
+        Route::get('/create', [OfferController::class, 'create'])->middleware('app.permission:offers.create')->name('create');
         Route::get('/get-distance', [OfferController::class, 'getDistance'])->name('get-distance');
-        Route::post('/', [OfferController::class, 'store'])->name('store');
+        Route::post('/', [OfferController::class, 'store'])->middleware('app.permission:offers.create')->name('store');
         Route::get('/{offer}', [OfferController::class, 'show'])->name('show');
         Route::get('/{offer}/edit', [OfferController::class, 'edit'])->name('edit');
         Route::get('/{offer}/pdf', [OfferController::class, 'pdf'])->name('pdf');
@@ -165,34 +165,35 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::patch('/{offer}/status', [OfferController::class, 'updateStatus'])->name('status');
         Route::post('/{offer}/messages', [OfferController::class, 'storeMessage'])->name('messages.store');
         Route::post('/{offer}/save-as-template', [OfferController::class, 'saveAsTemplate'])->name('save-as-template');
-        Route::post('/{offer}/clone', [OfferController::class, 'clone'])->name('clone');
+        Route::post('/{offer}/clone', [OfferController::class, 'clone'])->middleware('app.permission:offers.create')->name('clone');
         Route::patch('/{offer}/unit-prices', [OfferController::class, 'updateUnitPrices'])->name('unit-prices');
     });
 
     Route::prefix('settings')->name('settings.')->middleware('full.staff')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
-        Route::get('archive', [Settings\ArchiveController::class, 'index'])->name('archive.index');
-        Route::get('roles', [Settings\RoleController::class, 'index'])->name('roles.index');
-        Route::post('roles', [Settings\RoleController::class, 'store'])->name('roles.store');
-        Route::put('roles/{role}', [Settings\RoleController::class, 'update'])->name('roles.update');
-        Route::delete('roles/{role}', [Settings\RoleController::class, 'destroy'])->name('roles.destroy');
-        Route::resource('users', Settings\UserController::class)->names('users')->except('destroy');
+        Route::get('archive', [Settings\ArchiveController::class, 'index'])->middleware('app.permission:settings.archive.view')->name('archive.index');
+        Route::get('roles', [Settings\RoleController::class, 'index'])->middleware('app.permission:settings.roles.manage')->name('roles.index');
+        Route::post('roles', [Settings\RoleController::class, 'store'])->middleware('app.permission:settings.roles.manage')->name('roles.store');
+        Route::put('roles/{role}', [Settings\RoleController::class, 'update'])->middleware('app.permission:settings.roles.manage')->name('roles.update');
+        Route::delete('roles/{role}', [Settings\RoleController::class, 'destroy'])->middleware('app.permission:settings.roles.manage')->name('roles.destroy');
+        Route::resource('users', Settings\UserController::class)->names('users')->except('destroy')->middlewareFor(['index', 'show'], 'app.permission:settings.users.view')->middlewareFor(['store', 'update'], 'app.permission:settings.users.manage');
         Route::delete('users/{user}', [Settings\UserController::class, 'destroy'])
-            ->middleware('auth')
+            ->middleware(['auth', 'app.permission:settings.users.manage'])
             ->name('users.destroy')
             ->withTrashed();
         Route::post('users/{user}/restore', [Settings\UserController::class, 'restore'])
+            ->middleware('app.permission:settings.users.manage')
             ->name('users.restore')
             ->withTrashed();
         Route::delete('users/{user}/force-destroy', [Settings\UserController::class, 'forceDestroy'])
-            ->middleware('auth')
+            ->middleware(['auth', 'app.permission:settings.users.manage'])
             ->name('users.forceDestroy')
             ->withTrashed();
         Route::post('users/{user}/assign-company', [Settings\UserController::class, 'assignCompany'])
-            ->middleware('auth')
+            ->middleware(['auth', 'app.permission:settings.users.manage'])
             ->name('users.assignCompany');
         Route::post('users/{user}/assign-to-company', [Settings\UserController::class, 'assignToCompany'])
-            ->middleware('auth')
+            ->middleware(['auth', 'app.permission:settings.users.manage'])
             ->name('users.assign-to-company')
             ->withTrashed();
         Route::get('users/{user}/auditor-access', [Settings\UserController::class, 'showAuditorAccess'])
@@ -205,7 +206,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
             ->name('users.auditor-access.destroy');
         Route::post('users/{user}/auditor-documents', [Settings\UserController::class, 'assignAuditorDocument'])
             ->name('users.auditor-documents');
-        Route::middleware('superadmin.only')->group(function () {
+        Route::middleware('app.permission:settings.company.manage')->group(function () {
             Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
             Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
             Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
@@ -214,25 +215,25 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
 
     Route::prefix('documents')->name('documents.')->middleware('app.module:documents')->group(function () {
         Route::get('/', [DocumentController::class, 'index'])->name('index');
-        Route::post('/', [DocumentController::class, 'store'])->name('store');
+        Route::post('/', [DocumentController::class, 'store'])->middleware('app.permission:documents.upload')->name('store');
         Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
-        Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
+        Route::delete('/{document}', [DocumentController::class, 'destroy'])->middleware('app.permission:documents.delete')->name('destroy');
     });
 });
 
 Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.module:crm'])->group(function () {
     Route::get('/', [CrmController::class, 'index'])->name('index');
-    Route::patch('/companies/{company}/dashboard', [CrmController::class, 'toggleDashboard'])->name('companies.dashboard');
-    Route::patch('/companies/{company}/archive', [CrmController::class, 'archiveCompany'])->name('companies.archive');
-    Route::patch('/companies/{company}/restore', [CrmController::class, 'restoreCompany'])->name('companies.restore');
-    Route::delete('/companies/{company}', [CrmController::class, 'destroyCompany'])->name('companies.destroy');
-    Route::post('/opportunities', [CrmController::class, 'storeOpportunity'])->name('opportunities.store');
+    Route::patch('/companies/{company}/dashboard', [CrmController::class, 'toggleDashboard'])->middleware('app.permission:crm.companies.manage')->name('companies.dashboard');
+    Route::patch('/companies/{company}/archive', [CrmController::class, 'archiveCompany'])->middleware('app.permission:crm.companies.manage')->name('companies.archive');
+    Route::patch('/companies/{company}/restore', [CrmController::class, 'restoreCompany'])->middleware('app.permission:crm.companies.manage')->name('companies.restore');
+    Route::delete('/companies/{company}', [CrmController::class, 'destroyCompany'])->middleware('app.permission:crm.companies.manage')->name('companies.destroy');
+    Route::post('/opportunities', [CrmController::class, 'storeOpportunity'])->middleware('app.permission:crm.leads.manage')->name('opportunities.store');
     Route::patch('/opportunities/{opportunity}/stage', [CrmController::class, 'updateOpportunityStage'])->name('opportunities.stage');
     Route::patch('/opportunities/{opportunity}', [CrmController::class, 'updateOpportunity'])->name('opportunities.update');
     Route::post('/opportunities/{opportunity}/duplicate', [CrmController::class, 'duplicateOpportunity'])->name('opportunities.duplicate');
     Route::post('/opportunities/{opportunity}/attach-offer', [CrmController::class, 'attachOffer'])->name('opportunities.attach-offer');
     Route::delete('/opportunities/{opportunity}', [CrmController::class, 'destroyOpportunity'])->name('opportunities.destroy');
-    Route::post('/tasks', [CrmController::class, 'storeTask'])->name('tasks.store');
+    Route::post('/tasks', [CrmController::class, 'storeTask'])->middleware('app.permission:crm.tasks.manage')->name('tasks.store');
     Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
     Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
@@ -243,36 +244,36 @@ Route::get('/public/project-gantt/{token}', [ProjectController::class, 'publicGa
 
 Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 'app.module:projects'])->group(function () {
     Route::get('/', [ProjectController::class, 'index'])->name('index');
-    Route::post('/', [ProjectController::class, 'store'])->name('store');
+    Route::post('/', [ProjectController::class, 'store'])->middleware('app.permission:projects.create')->name('store');
     Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
-    Route::put('/{project}', [ProjectController::class, 'update'])->name('update');
-    Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
-    Route::post('/{project}/tasks', [ProjectController::class, 'storeTask'])->name('tasks.store');
-    Route::post('/{project}/tasks/reorder', [ProjectController::class, 'reorderTasks'])->name('tasks.reorder');
-    Route::delete('/{project}/tasks/bulk', [ProjectController::class, 'bulkDestroyTasks'])->name('tasks.bulk-destroy');
+    Route::put('/{project}', [ProjectController::class, 'update'])->middleware('app.permission:projects.edit')->name('update');
+    Route::delete('/{project}', [ProjectController::class, 'destroy'])->middleware('app.permission:projects.delete')->name('destroy');
+    Route::post('/{project}/tasks', [ProjectController::class, 'storeTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.store');
+    Route::post('/{project}/tasks/reorder', [ProjectController::class, 'reorderTasks'])->middleware('app.permission:projects.schedule.manage')->name('tasks.reorder');
+    Route::delete('/{project}/tasks/bulk', [ProjectController::class, 'bulkDestroyTasks'])->middleware('app.permission:projects.schedule.manage')->name('tasks.bulk-destroy');
     Route::get('/{project}/gantt/export', [ProjectController::class, 'exportGantt'])->name('gantt.export');
-    Route::post('/{project}/gantt/import', [ProjectController::class, 'importGantt'])->name('gantt.import');
-    Route::patch('/{project}/tasks/{task}', [ProjectController::class, 'updateTask'])->name('tasks.update');
-    Route::delete('/{project}/tasks/{task}', [ProjectController::class, 'destroyTask'])->name('tasks.destroy');
-    Route::post('/{project}/public-gantt', [ProjectController::class, 'generatePublicGantt'])->name('public-gantt.generate');
-    Route::post('/{project}/finances', [ProjectController::class, 'storeFinancialEntry'])->name('finances.store');
-    Route::post('/{project}/finances/import', [ProjectController::class, 'importFinancialEntries'])->name('finances.import');
-    Route::post('/{project}/finances/bulk', [ProjectController::class, 'bulkUpdateFinancialEntries'])->name('finances.bulk');
-    Route::patch('/{project}/finances/{entry}/status', [ProjectController::class, 'updateFinancialEntryStatus'])->name('finances.status');
-    Route::patch('/{project}/finances/{entry}', [ProjectController::class, 'updateFinancialEntry'])->name('finances.update');
-    Route::delete('/{project}/finances/{entry}', [ProjectController::class, 'destroyFinancialEntry'])->name('finances.destroy');
-    Route::post('/{project}/finance-groups', [ProjectController::class, 'storeFinanceGroup'])->name('finance-groups.store');
-    Route::delete('/{project}/finance-groups/{group}', [ProjectController::class, 'destroyFinanceGroup'])->name('finance-groups.destroy');
-    Route::post('/{project}/requirements', [ProjectController::class, 'storeRequirement'])->name('requirements.store');
+    Route::post('/{project}/gantt/import', [ProjectController::class, 'importGantt'])->middleware('app.permission:projects.schedule.manage')->name('gantt.import');
+    Route::patch('/{project}/tasks/{task}', [ProjectController::class, 'updateTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.update');
+    Route::delete('/{project}/tasks/{task}', [ProjectController::class, 'destroyTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.destroy');
+    Route::post('/{project}/public-gantt', [ProjectController::class, 'generatePublicGantt'])->middleware('app.permission:projects.schedule.manage')->name('public-gantt.generate');
+    Route::post('/{project}/finances', [ProjectController::class, 'storeFinancialEntry'])->middleware('app.permission:projects.finances.manage')->name('finances.store');
+    Route::post('/{project}/finances/import', [ProjectController::class, 'importFinancialEntries'])->middleware('app.permission:projects.finances.manage')->name('finances.import');
+    Route::post('/{project}/finances/bulk', [ProjectController::class, 'bulkUpdateFinancialEntries'])->middleware('app.permission:projects.finances.manage')->name('finances.bulk');
+    Route::patch('/{project}/finances/{entry}/status', [ProjectController::class, 'updateFinancialEntryStatus'])->middleware('app.permission:projects.finances.manage')->name('finances.status');
+    Route::patch('/{project}/finances/{entry}', [ProjectController::class, 'updateFinancialEntry'])->middleware('app.permission:projects.finances.manage')->name('finances.update');
+    Route::delete('/{project}/finances/{entry}', [ProjectController::class, 'destroyFinancialEntry'])->middleware('app.permission:projects.finances.manage')->name('finances.destroy');
+    Route::post('/{project}/finance-groups', [ProjectController::class, 'storeFinanceGroup'])->middleware('app.permission:projects.finances.manage')->name('finance-groups.store');
+    Route::delete('/{project}/finance-groups/{group}', [ProjectController::class, 'destroyFinanceGroup'])->middleware('app.permission:projects.finances.manage')->name('finance-groups.destroy');
+    Route::post('/{project}/requirements', [ProjectController::class, 'storeRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.store');
     Route::get('/{project}/requirements/template', [ProjectController::class, 'downloadRequirementsTemplate'])->name('requirements.template');
-    Route::post('/{project}/requirements/import', [ProjectController::class, 'importRequirements'])->name('requirements.import');
-    Route::post('/{project}/requirements/bulk', [ProjectController::class, 'bulkUpdateRequirements'])->name('requirements.bulk');
-    Route::patch('/{project}/requirements/{requirement}/status', [ProjectController::class, 'updateRequirementStatus'])->name('requirements.status');
-    Route::patch('/{project}/requirements/{requirement}', [ProjectController::class, 'updateRequirement'])->name('requirements.update');
-    Route::delete('/{project}/requirements/{requirement}', [ProjectController::class, 'destroyRequirement'])->name('requirements.destroy');
-    Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->name('documents.store');
+    Route::post('/{project}/requirements/import', [ProjectController::class, 'importRequirements'])->middleware('app.permission:projects.requirements.manage')->name('requirements.import');
+    Route::post('/{project}/requirements/bulk', [ProjectController::class, 'bulkUpdateRequirements'])->middleware('app.permission:projects.requirements.manage')->name('requirements.bulk');
+    Route::patch('/{project}/requirements/{requirement}/status', [ProjectController::class, 'updateRequirementStatus'])->middleware('app.permission:projects.requirements.manage')->name('requirements.status');
+    Route::patch('/{project}/requirements/{requirement}', [ProjectController::class, 'updateRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.update');
+    Route::delete('/{project}/requirements/{requirement}', [ProjectController::class, 'destroyRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.destroy');
+    Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->middleware('app.permission:projects.documents.manage')->name('documents.store');
     Route::get('/{project}/documents/{document}', [ProjectController::class, 'downloadDocument'])->name('documents.download');
-    Route::delete('/{project}/documents/{document}', [ProjectController::class, 'destroyDocument'])->name('documents.destroy');
+    Route::delete('/{project}/documents/{document}', [ProjectController::class, 'destroyDocument'])->middleware('app.permission:projects.documents.manage')->name('documents.destroy');
 });
 
 Route::prefix('suppliers')->name('suppliers.')->middleware(['auth', 'staff.role', 'app.module:crm'])->group(function () {

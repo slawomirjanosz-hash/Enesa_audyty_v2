@@ -16,6 +16,6 @@ class CompanyPolicy
         return app(AuditorAccessService::class)->hasAnyCompanyAccess($user, $company->id);
     }
 
-    public function update(User $user, Company $company): bool { return $this->canModify($user); }
-    public function delete(User $user, Company $company): bool { return $this->canModify($user); }
+    public function update(User $user, Company $company): bool { return $this->canModify($user, 'crm.companies.manage'); }
+    public function delete(User $user, Company $company): bool { return $this->canModify($user, 'crm.companies.manage'); }
 }

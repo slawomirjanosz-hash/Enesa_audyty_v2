@@ -28,7 +28,11 @@ class UserController extends Controller
 
     public function index()
     {
-        abort_unless(app(AuditorAccessService::class)->hasFullAccess(auth()->user()), 403);
+        abort_unless(
+            app(AuditorAccessService::class)->hasFullAccess(auth()->user())
+                || auth()->user()?->can('settings.users.view'),
+            403
+        );
 
         if (request()->has('tab')) {
             return redirect()->route('settings.archive.index');
@@ -438,7 +442,7 @@ class UserController extends Controller
         // Only administrators may delegate roles created in the Roles screen.
         // A senior auditor must never be able to turn somebody into a full-access user.
         if (! array_key_exists($role, self::ROLE_RANKS)) {
-            return $manager->hasAnyRole(['superadmin', 'admin']);
+            return $manager->hasAnyRole(['superadmin', 'admin']) || $manager->can('settings.users.manage');
         }
 
         return $this->roleRank($manager) > (self::ROLE_RANKS[$role] ?? PHP_INT_MAX);
