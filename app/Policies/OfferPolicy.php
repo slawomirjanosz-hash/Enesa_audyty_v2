@@ -23,6 +23,13 @@ class OfferPolicy
             && app(AuditorAccessService::class)->canViewCompany($user, $offer->company_id, 'can_view_offer_prices');
     }
 
-    public function update(User $user, Offer $offer): bool { return $this->canModify($user, 'offers.edit'); }
-    public function delete(User $user, Offer $offer): bool { return $this->canModify($user, 'offers.delete'); }
+    public function update(User $user, Offer $offer): bool
+    {
+        return $this->canModify($user, 'offers.edit');
+    }
+
+    public function delete(User $user, Offer $offer): bool
+    {
+        return $this->canModify($user, 'offers.delete');
+    }
 }

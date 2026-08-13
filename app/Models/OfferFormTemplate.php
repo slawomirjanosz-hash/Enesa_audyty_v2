@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OfferFormTemplate extends Model
@@ -16,7 +15,7 @@ class OfferFormTemplate extends Model
     ];
 
     protected $casts = [
-        'fields'    => 'array',
+        'fields' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -47,17 +46,17 @@ class OfferFormTemplate extends Model
             fn ($n) => is_array($n) && ($n['type'] ?? null) === 'section'
         );
 
-        if (!$hasSections) {
+        if (! $hasSections) {
             return [['title' => null, 'fields' => $this->flattenNodes($nodes)]];
         }
 
         $out = [];
         foreach ($nodes as $node) {
-            if (!is_array($node) || ($node['type'] ?? null) !== 'section') {
+            if (! is_array($node) || ($node['type'] ?? null) !== 'section') {
                 continue;
             }
             $out[] = [
-                'title'  => $node['title'] ?? null,
+                'title' => $node['title'] ?? null,
                 'fields' => $this->flattenNodes($node['fields'] ?? []),
             ];
         }
@@ -70,13 +69,13 @@ class OfferFormTemplate extends Model
      */
     public static function displayValue($value): string
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             return (string) $value;
         }
 
         if (isset($value['city']) || isset($value['street']) || isset($value['zip'])) {
-            $line1 = trim(($value['zip'] ?? '') . ' ' . ($value['city'] ?? ''));
-            $line2 = trim(($value['street'] ?? '') . ' ' . ($value['no'] ?? ''));
+            $line1 = trim(($value['zip'] ?? '').' '.($value['city'] ?? ''));
+            $line2 = trim(($value['street'] ?? '').' '.($value['no'] ?? ''));
 
             return trim(implode(', ', array_filter([$line1, $line2])));
         }
@@ -103,17 +102,18 @@ class OfferFormTemplate extends Model
     private function countNodes(array $nodes, array $responses, array &$counts): void
     {
         foreach ($nodes as $node) {
-            if (!is_array($node)) {
+            if (! is_array($node)) {
                 continue;
             }
 
             if (($node['type'] ?? null) === 'section') {
                 $this->countNodes($node['fields'] ?? [], $responses, $counts);
+
                 continue;
             }
 
             $key = $node['key'] ?? null;
-            if (!$key) {
+            if (! $key) {
                 continue;
             }
 
@@ -131,7 +131,7 @@ class OfferFormTemplate extends Model
             if (($node['type'] ?? null) === 'select'
                 && $isAnswered
                 && is_scalar($value)
-                && !empty($node['branches'][$value])
+                && ! empty($node['branches'][$value])
                 && is_array($node['branches'][$value])
             ) {
                 $this->countNodes($node['branches'][$value], $responses, $counts);
@@ -144,24 +144,25 @@ class OfferFormTemplate extends Model
         $out = [];
 
         foreach ($nodes as $node) {
-            if (!is_array($node)) {
+            if (! is_array($node)) {
                 continue;
             }
 
             if (($node['type'] ?? null) === 'section') {
                 $out = array_merge($out, $this->flattenNodes($node['fields'] ?? []));
+
                 continue;
             }
 
             $out[] = [
-                'key'      => $node['key']      ?? null,
-                'label'    => $node['label']    ?? '',
-                'type'     => $node['type']     ?? 'text',
+                'key' => $node['key'] ?? null,
+                'label' => $node['label'] ?? '',
+                'type' => $node['type'] ?? 'text',
                 'required' => $node['required'] ?? false,
-                'options'  => $node['options']  ?? [],
+                'options' => $node['options'] ?? [],
             ];
 
-            if (!empty($node['branches']) && is_array($node['branches'])) {
+            if (! empty($node['branches']) && is_array($node['branches'])) {
                 foreach ($node['branches'] as $branchFields) {
                     if (is_array($branchFields)) {
                         $out = array_merge($out, $this->flattenNodes($branchFields));

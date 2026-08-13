@@ -18,8 +18,7 @@ class NewClientUser extends Mailable
         public User $user,
         public Company $company,
         public string $temporaryPassword,
-    ) {
-    }
+    ) {}
 
     public function envelope(): Envelope
     {

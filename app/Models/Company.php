@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
@@ -33,19 +34,19 @@ class Company extends Model
 
     public function logoDataUri(): ?string
     {
-        if (!$this->logo_path) {
+        if (! $this->logo_path) {
             return null;
         }
 
-        $disk = \Illuminate\Support\Facades\Storage::disk('local');
+        $disk = Storage::disk('local');
 
-        if (!$disk->exists($this->logo_path)) {
+        if (! $disk->exists($this->logo_path)) {
             return null;
         }
 
         $mime = $disk->mimeType($this->logo_path) ?: 'image/png';
 
-        return 'data:' . $mime . ';base64,' . base64_encode($disk->get($this->logo_path));
+        return 'data:'.$mime.';base64,'.base64_encode($disk->get($this->logo_path));
     }
 
     public function audits(): HasMany
@@ -141,12 +142,12 @@ class Company extends Model
 
     public function folderSlug(): string
     {
-        $name = $this->name ?? ('firma_' . $this->id);
+        $name = $this->name ?? ('firma_'.$this->id);
 
         // Zamiana polskich znaków diakrytycznych na łacińskie odpowiedniki
         $map = [
-            'ą'=>'a','ć'=>'c','ę'=>'e','ł'=>'l','ń'=>'n','ó'=>'o','ś'=>'s','ź'=>'z','ż'=>'z',
-            'Ą'=>'A','Ć'=>'C','Ę'=>'E','Ł'=>'L','Ń'=>'N','Ó'=>'O','Ś'=>'S','Ź'=>'Z','Ż'=>'Z',
+            'ą' => 'a', 'ć' => 'c', 'ę' => 'e', 'ł' => 'l', 'ń' => 'n', 'ó' => 'o', 'ś' => 's', 'ź' => 'z', 'ż' => 'z',
+            'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'E', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'O', 'Ś' => 'S', 'Ź' => 'Z', 'Ż' => 'Z',
         ];
         $name = strtr($name, $map);
 
@@ -161,10 +162,10 @@ class Company extends Model
         $name = substr($name, 0, 80);
 
         if (empty($name)) {
-            $name = 'firma_' . $this->id;
+            $name = 'firma_'.$this->id;
         }
 
-        return $name . '_' . $this->id;
+        return $name.'_'.$this->id;
     }
 
     /** Roles that belong to the application owner (Enesa) firm. */

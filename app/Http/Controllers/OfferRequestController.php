@@ -7,6 +7,7 @@ use App\Models\OfferFormTemplate;
 use App\Models\OfferRequest;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
+use Mpdf\Mpdf;
 
 class OfferRequestController extends Controller
 {
@@ -26,11 +27,11 @@ class OfferRequestController extends Controller
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
 
         $data = $request->validate([
-            'company_id'              => ['required', 'exists:companies,id'],
-            'title'                   => ['nullable', 'string', 'max:255'],
-            'offer_form_template_id'  => ['nullable', 'exists:offer_form_templates,id'],
-            'form_responses'          => ['nullable', 'array'],
-            'tresc'                   => ['nullable', 'string', 'max:65000'],
+            'company_id' => ['required', 'exists:companies,id'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'offer_form_template_id' => ['nullable', 'exists:offer_form_templates,id'],
+            'form_responses' => ['nullable', 'array'],
+            'tresc' => ['nullable', 'string', 'max:65000'],
         ]);
 
         if (empty($data['offer_form_template_id']) && empty($data['form_responses']) && empty($data['tresc'])) {
@@ -40,17 +41,17 @@ class OfferRequestController extends Controller
         }
 
         $offerRequest = OfferRequest::create([
-            'company_id'             => $data['company_id'],
-            'title'                  => $data['title'] ?? null,
-            'created_by_id'          => auth()->id(),
+            'company_id' => $data['company_id'],
+            'title' => $data['title'] ?? null,
+            'created_by_id' => auth()->id(),
             'offer_form_template_id' => $data['offer_form_template_id'] ?? null,
-            'form_responses'         => $data['form_responses'] ?? [],
-            'tresc'                  => $data['tresc'] ?? null,
-            'status'                 => 'nowe',
-            'completion_percent'     => 0,
+            'form_responses' => $data['form_responses'] ?? [],
+            'tresc' => $data['tresc'] ?? null,
+            'status' => 'nowe',
+            'completion_percent' => 0,
         ]);
 
-        return redirect(route('companies.show', $data['company_id']) . '#zapytania')
+        return redirect(route('companies.show', $data['company_id']).'#zapytania')
             ->with('success', 'Zapytanie zostało utworzone i jest widoczne w karcie firmy.');
     }
 
@@ -59,17 +60,17 @@ class OfferRequestController extends Controller
         $this->authorize('update', $offerRequest);
 
         $data = $request->validate([
-            'end_client_name'    => ['nullable', 'string', 'max:255'],
+            'end_client_name' => ['nullable', 'string', 'max:255'],
             'end_client_company' => ['nullable', 'string', 'max:255'],
-            'end_client_email'   => ['nullable', 'email', 'max:255'],
-            'end_client_phone'   => ['nullable', 'string', 'max:30'],
+            'end_client_email' => ['nullable', 'email', 'max:255'],
+            'end_client_phone' => ['nullable', 'string', 'max:30'],
         ]);
 
         $offerRequest->fill($data);
         $offerRequest->ensurePublicToken();
         $offerRequest->save();
 
-        return redirect(route('offer-requests.show', $offerRequest) . '#klient-koncowy')
+        return redirect(route('offer-requests.show', $offerRequest).'#klient-koncowy')
             ->with('success', 'Zapisano dane klienta końcowego. Link do ankiety jest gotowy do skopiowania.');
     }
 
@@ -85,28 +86,28 @@ class OfferRequestController extends Controller
         $this->authorize('view', $offerRequest);
 
         $template = $offerRequest->offerFormTemplate;
-        abort_if(!$template, 404, 'Do tego zapytania nie przypisano formularza.');
+        abort_if(! $template, 404, 'Do tego zapytania nie przypisano formularza.');
 
         $responses = $offerRequest->form_responses ?? [];
         $broker = $offerRequest->company;
 
         $html = view('public.survey-pdf', compact('template', 'broker', 'offerRequest', 'responses'))->render();
 
-        $mpdf = new \Mpdf\Mpdf([
-            'mode'          => 'utf-8',
-            'format'        => 'A4',
-            'margin_top'    => 14,
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 14,
             'margin_bottom' => 16,
-            'margin_left'   => 15,
-            'margin_right'  => 15,
+            'margin_left' => 15,
+            'margin_right' => 15,
         ]);
         $mpdf->WriteHTML($html);
 
-        $filename = 'ankieta-' . $offerRequest->id . '.pdf';
+        $filename = 'ankieta-'.$offerRequest->id.'.pdf';
 
         return response($mpdf->Output($filename, 'S'), 200, [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 
@@ -117,7 +118,7 @@ class OfferRequestController extends Controller
         $companyId = $offerRequest->company_id;
         $offerRequest->forceDelete();
 
-        return redirect(route('companies.show', $companyId) . '#zapytania')
+        return redirect(route('companies.show', $companyId).'#zapytania')
             ->with('success', 'Zapytanie zostało trwale usunięte.');
     }
 
@@ -127,6 +128,7 @@ class OfferRequestController extends Controller
 
         $request->validate(['status' => 'required|in:nowe,w_toku,zamknięte']);
         $offerRequest->update(['status' => $request->status]);
+
         return back()->with('success', 'Status zapytania został zaktualizowany.');
     }
 
@@ -135,6 +137,7 @@ class OfferRequestController extends Controller
         $this->authorize('update', $offerRequest);
 
         $offerRequest->load(['company', 'offerFormTemplate']);
+
         return view('offer-requests.edit', compact('offerRequest'));
     }
 
@@ -143,18 +146,18 @@ class OfferRequestController extends Controller
         $this->authorize('update', $offerRequest);
 
         $data = $request->validate([
-            'title'          => ['nullable', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
             'form_responses' => ['nullable', 'array'],
-            'tresc'          => ['nullable', 'string', 'max:65000'],
+            'tresc' => ['nullable', 'string', 'max:65000'],
         ]);
 
         $offerRequest->update([
-            'title'          => $data['title'] ?? null,
+            'title' => $data['title'] ?? null,
             'form_responses' => $data['form_responses'] ?? [],
-            'tresc'          => $data['tresc'] ?? null,
+            'tresc' => $data['tresc'] ?? null,
         ]);
 
-        return redirect(route('companies.show', $offerRequest->company_id) . '#zapytania')
+        return redirect(route('companies.show', $offerRequest->company_id).'#zapytania')
             ->with('success', 'Zapytanie zostało zaktualizowane.');
     }
 }

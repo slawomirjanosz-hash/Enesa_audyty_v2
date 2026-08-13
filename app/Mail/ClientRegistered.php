@@ -17,8 +17,7 @@ class ClientRegistered extends Mailable
     public function __construct(
         public Company $company,
         public User $user,
-    ) {
-    }
+    ) {}
 
     public function envelope(): Envelope
     {

@@ -40,7 +40,9 @@ class AuditorAccessService
             return true;
         }
 
-        if (! $this->isDelegatedAuditor($user)) return false;
+        if (! $this->isDelegatedAuditor($user)) {
+            return false;
+        }
 
         return AuditorCompanyAccess::query()
             ->where('auditor_id', $user->id)
@@ -55,7 +57,9 @@ class AuditorAccessService
             return true;
         }
 
-        if (! $this->isDelegatedAuditor($user) && $user->can('crm.view')) return true;
+        if (! $this->isDelegatedAuditor($user) && $user->can('crm.view')) {
+            return true;
+        }
 
         return $this->isDelegatedAuditor($user)
             && AuditorCompanyAccess::query()
@@ -80,7 +84,9 @@ class AuditorAccessService
             'can_view_chat' => 'client_zone.chat.manage',
         ][$ability] ?? null;
 
-        if (! $this->isDelegatedAuditor($user) && $modulePermission && $user->can($modulePermission)) return [];
+        if (! $this->isDelegatedAuditor($user) && $modulePermission && $user->can($modulePermission)) {
+            return [];
+        }
 
         if (! $this->isDelegatedAuditor($user)) {
             return [-1];

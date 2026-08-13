@@ -15,7 +15,7 @@ class TaskOverdue extends Mailable
 
     public function build()
     {
-        return $this->subject('Masz ' . $this->tasks->count() . ' zaległych zadań w ENESA CRM')
+        return $this->subject('Masz '.$this->tasks->count().' zaległych zadań w ENESA CRM')
             ->view('emails.task-overdue')
             ->with(['tasks' => $this->tasks]);
     }

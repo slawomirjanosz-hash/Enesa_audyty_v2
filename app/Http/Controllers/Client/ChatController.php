@@ -14,7 +14,7 @@ class ChatController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company) {
+        if (! $company) {
             abort(403, 'Nie jesteś przypisany do żadnej firmy.');
         }
 
@@ -31,7 +31,7 @@ class ChatController extends Controller
             ->orderByDesc('ended_at')
             ->get();
 
-        $onlineUsers = User::whereHas('roles', fn($q) => $q->whereIn('name', ['auditor', 'auditor_senior', 'admin', 'superadmin']))
+        $onlineUsers = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['auditor', 'auditor_senior', 'admin', 'superadmin']))
             ->where('last_seen_at', '>=', now()->subMinutes(5))
             ->get();
 
@@ -46,7 +46,7 @@ class ChatController extends Controller
 
         $company = auth()->user()->companies->first();
 
-        if (!$company) {
+        if (! $company) {
             return response()->json(['error' => 'Nie jesteś przypisany do żadnej firmy.'], 403);
         }
 
@@ -76,7 +76,7 @@ class ChatController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company) {
+        if (! $company) {
             return response()->json(['error' => 'Nie jesteś przypisany do żadnej firmy.'], 403);
         }
 
@@ -89,12 +89,12 @@ class ChatController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        $onlineUsers = User::whereHas('roles', fn($q) => $q->whereIn('name', ['auditor', 'auditor_senior', 'admin', 'superadmin']))
+        $onlineUsers = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['auditor', 'auditor_senior', 'admin', 'superadmin']))
             ->where('last_seen_at', '>=', now()->subMinutes(5))
             ->get();
 
         return response()->json([
-            'messages' => $messages->map(fn($msg) => [
+            'messages' => $messages->map(fn ($msg) => [
                 'id' => $msg->id,
                 'body' => $msg->body,
                 'sender_name' => $msg->sender->name,
@@ -109,7 +109,7 @@ class ChatController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company) {
+        if (! $company) {
             return $request->expectsJson()
                 ? response()->json(['error' => 'Nie jesteś przypisany do żadnej firmy.'], 403)
                 : back()->withErrors(['error' => 'Nie jesteś przypisany do żadnej firmy.']);
@@ -129,4 +129,3 @@ class ChatController extends Controller
         return back()->with('success', 'Rozmowa została zakończona.');
     }
 }
-

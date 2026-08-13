@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Company;
 use App\Models\Document;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +21,7 @@ class MigrateDocumentFolders extends Command
 
         if ($documents->isEmpty()) {
             $this->info('Brak dokumentów w bazie do zmigrowania.');
+
             return self::SUCCESS;
         }
 
@@ -30,32 +30,35 @@ class MigrateDocumentFolders extends Command
         $errors = 0;
 
         foreach ($documents as $doc) {
-            if (!$doc->company) {
+            if (! $doc->company) {
                 $this->warn("Dokument #{$doc->id} ({$doc->original_filename}) nie ma przypisanej firmy — pomijam.");
                 $skipped++;
+
                 continue;
             }
 
             $oldPath = $doc->stored_path;
             $filename = basename($oldPath);
-            $newFolder = 'documents/' . $doc->company->folderSlug();
-            $newPath = $newFolder . '/' . $filename;
+            $newFolder = 'documents/'.$doc->company->folderSlug();
+            $newPath = $newFolder.'/'.$filename;
 
             if ($oldPath === $newPath) {
                 $skipped++;
+
                 continue;
             }
 
-            if (!$disk->exists($oldPath)) {
+            if (! $disk->exists($oldPath)) {
                 $this->error("Plik fizyczny nie istnieje dla dokumentu #{$doc->id}: {$oldPath} — pomijam.");
                 $errors++;
+
                 continue;
             }
 
-            $this->line(($dryRun ? '[DRY-RUN] ' : '') . "Przenoszę: {$oldPath}  →  {$newPath}");
+            $this->line(($dryRun ? '[DRY-RUN] ' : '')."Przenoszę: {$oldPath}  →  {$newPath}");
 
-            if (!$dryRun) {
-                if (!$disk->exists($newFolder)) {
+            if (! $dryRun) {
+                if (! $disk->exists($newFolder)) {
                     $disk->makeDirectory($newFolder);
                 }
 

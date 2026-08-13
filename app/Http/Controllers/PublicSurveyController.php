@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OfferRequest;
 use Illuminate\Http\Request;
+use Mpdf\Mpdf;
 
 class PublicSurveyController extends Controller
 {
@@ -11,15 +12,15 @@ class PublicSurveyController extends Controller
     {
         $offerRequest = OfferRequest::where('public_token', $token)->first();
 
-        if (!$offerRequest || !$offerRequest->offerFormTemplate) {
+        if (! $offerRequest || ! $offerRequest->offerFormTemplate) {
             return response()->view('public.survey-expired', [], 410);
         }
 
         return view('public.survey', [
             'offerRequest' => $offerRequest,
-            'template'     => $offerRequest->offerFormTemplate,
-            'broker'       => $offerRequest->company,
-            'responses'    => $offerRequest->form_responses ?? [],
+            'template' => $offerRequest->offerFormTemplate,
+            'broker' => $offerRequest->company,
+            'responses' => $offerRequest->form_responses ?? [],
         ]);
     }
 
@@ -27,7 +28,7 @@ class PublicSurveyController extends Controller
     {
         $offerRequest = OfferRequest::where('public_token', $token)->first();
 
-        if (!$offerRequest) {
+        if (! $offerRequest) {
             return response()->view('public.survey-expired', [], 410);
         }
 
@@ -42,25 +43,25 @@ class PublicSurveyController extends Controller
 
             return view('public.survey', [
                 'offerRequest' => $offerRequest,
-                'template'     => $offerRequest->offerFormTemplate,
-                'broker'       => $offerRequest->company,
-                'responses'    => $responses,
-                'draftSaved'   => true,
+                'template' => $offerRequest->offerFormTemplate,
+                'broker' => $offerRequest->company,
+                'responses' => $responses,
+                'draftSaved' => true,
             ]);
         }
 
         $offerRequest->update([
-            'form_responses'   => $responses,
+            'form_responses' => $responses,
             'public_filled_at' => now(),
-            'status'           => $offerRequest->status === 'nowe' ? 'w_toku' : $offerRequest->status,
+            'status' => $offerRequest->status === 'nowe' ? 'w_toku' : $offerRequest->status,
         ]);
 
         return view('public.survey', [
             'offerRequest' => $offerRequest,
-            'template'     => $offerRequest->offerFormTemplate,
-            'broker'       => $offerRequest->company,
-            'responses'    => $responses,
-            'submitted'    => true,
+            'template' => $offerRequest->offerFormTemplate,
+            'broker' => $offerRequest->company,
+            'responses' => $responses,
+            'submitted' => true,
         ]);
     }
 
@@ -68,30 +69,31 @@ class PublicSurveyController extends Controller
     {
         $offerRequest = OfferRequest::where('public_token', $token)->first();
 
-        if (!$offerRequest || !$offerRequest->offerFormTemplate) {
+        if (! $offerRequest || ! $offerRequest->offerFormTemplate) {
             return response()->view('public.survey-expired', [], 410);
         }
 
         $responses = (array) $request->input('form_responses', $offerRequest->form_responses ?? []);
+        $template = $offerRequest->offerFormTemplate;
         $broker = $offerRequest->company;
 
         $html = view('public.survey-pdf', compact('template', 'broker', 'offerRequest', 'responses'))->render();
 
-        $mpdf = new \Mpdf\Mpdf([
-            'mode'          => 'utf-8',
-            'format'        => 'A4',
-            'margin_top'    => 14,
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 14,
             'margin_bottom' => 16,
-            'margin_left'   => 15,
-            'margin_right'  => 15,
+            'margin_left' => 15,
+            'margin_right' => 15,
         ]);
         $mpdf->WriteHTML($html);
 
-        $filename = 'ankieta-' . $offerRequest->id . '.pdf';
+        $filename = 'ankieta-'.$offerRequest->id.'.pdf';
 
         return response($mpdf->Output($filename, 'S'), 200, [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 }

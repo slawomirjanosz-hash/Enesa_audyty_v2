@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrmOpportunity extends Model
@@ -18,7 +18,7 @@ class CrmOpportunity extends Model
     ];
 
     protected $casts = [
-        'value'               => 'decimal:2',
+        'value' => 'decimal:2',
         'expected_close_date' => 'date',
     ];
 

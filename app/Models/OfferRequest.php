@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class OfferRequest extends Model
 {
@@ -31,28 +32,28 @@ class OfferRequest extends Model
     ];
 
     protected $casts = [
-        'form_responses'     => 'array',
+        'form_responses' => 'array',
         'completion_percent' => 'integer',
-        'public_filled_at'   => 'datetime',
+        'public_filled_at' => 'datetime',
     ];
 
     public function ensurePublicToken(): void
     {
         if (empty($this->public_token)) {
-            $this->public_token = \Illuminate\Support\Str::random(48);
+            $this->public_token = Str::random(48);
         }
     }
 
     public function publicUrl(): ?string
     {
-        if (!$this->public_token) {
+        if (! $this->public_token) {
             return null;
         }
 
         $base = config('app.public_survey_url');
 
         return $base
-            ? rtrim($base, '/') . '/f/' . $this->public_token
+            ? rtrim($base, '/').'/f/'.$this->public_token
             : route('public.survey.show', $this->public_token);
     }
 
@@ -73,7 +74,7 @@ class OfferRequest extends Model
 
     public function offerFormTemplate(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\OfferFormTemplate::class);
+        return $this->belongsTo(OfferFormTemplate::class);
     }
 
     public function offerMessages(): HasMany

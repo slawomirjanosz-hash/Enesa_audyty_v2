@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Document;
 use App\Services\AuditorAccessService;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -55,9 +55,9 @@ class DocumentController extends Controller
         $company = Company::findOrFail($data['company_id']);
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $safeName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
+        $safeName = time().'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
         $companyFolder = $company->folderSlug();
-        $relativePath = 'documents/' . $companyFolder . '/' . $safeName;
+        $relativePath = 'documents/'.$companyFolder.'/'.$safeName;
 
         Storage::disk('local')->put($relativePath, file_get_contents($file->getRealPath()));
 
@@ -82,7 +82,7 @@ class DocumentController extends Controller
             $this->authorize('viewPrices', $document->offer);
         }
 
-        if (!Storage::disk('local')->exists($document->stored_path)) {
+        if (! Storage::disk('local')->exists($document->stored_path)) {
             abort(404, 'Plik nie istnieje na dysku.');
         }
 

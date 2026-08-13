@@ -1,5 +1,14 @@
 <?php
 
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\EnsureAppModuleEnabled;
+use App\Http\Middleware\EnsureClientAdmin;
+use App\Http\Middleware\EnsureClientRole;
+use App\Http\Middleware\EnsureClientZoneSession;
+use App\Http\Middleware\EnsureFullStaffAccess;
+use App\Http\Middleware\EnsurePermission;
+use App\Http\Middleware\EnsureStaffRole;
+use App\Http\Middleware\EnsureSuperAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,15 +23,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
 
         $middleware->alias([
-            'auth'               => \App\Http\Middleware\Authenticate::class,
-            'client.role'        => \App\Http\Middleware\EnsureClientRole::class,
-            'client.admin'       => \App\Http\Middleware\EnsureClientAdmin::class,
-            'client.zone.session' => \App\Http\Middleware\EnsureClientZoneSession::class,
-            'staff.role'         => \App\Http\Middleware\EnsureStaffRole::class,
-            'full.staff'         => \App\Http\Middleware\EnsureFullStaffAccess::class,
-            'superadmin.only'    => \App\Http\Middleware\EnsureSuperAdmin::class,
-            'app.module'         => \App\Http\Middleware\EnsureAppModuleEnabled::class,
-            'app.permission'     => \App\Http\Middleware\EnsurePermission::class,
+            'auth' => Authenticate::class,
+            'client.role' => EnsureClientRole::class,
+            'client.admin' => EnsureClientAdmin::class,
+            'client.zone.session' => EnsureClientZoneSession::class,
+            'staff.role' => EnsureStaffRole::class,
+            'full.staff' => EnsureFullStaffAccess::class,
+            'superadmin.only' => EnsureSuperAdmin::class,
+            'app.module' => EnsureAppModuleEnabled::class,
+            'app.permission' => EnsurePermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

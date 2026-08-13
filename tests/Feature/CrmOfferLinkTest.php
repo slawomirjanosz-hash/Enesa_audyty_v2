@@ -10,7 +10,9 @@ use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     app(PermissionRegistrar::class)->forgetCachedPermissions();
-    foreach (['admin', 'auditor'] as $role) Role::findOrCreate($role);
+    foreach (['admin', 'auditor'] as $role) {
+        Role::findOrCreate($role);
+    }
 });
 
 test('crm companies and pipeline tabs render without loading errors', function () {

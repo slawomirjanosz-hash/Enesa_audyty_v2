@@ -52,14 +52,14 @@ return new class extends Migration
     {
         Schema::table('offers', function (Blueprint $table) {
             $table->dropColumn(array_filter([
-                Schema::hasColumn('offers', 'offer_title')       ? 'offer_title'       : null,
-                Schema::hasColumn('offers', 'valid_until')       ? 'valid_until'       : null,
-                Schema::hasColumn('offers', 'content_subject')   ? 'content_subject'   : null,
-                Schema::hasColumn('offers', 'content_scope')     ? 'content_scope'     : null,
-                Schema::hasColumn('offers', 'content_deadline')  ? 'content_deadline'  : null,
-                Schema::hasColumn('offers', 'content_payment')   ? 'content_payment'   : null,
-                Schema::hasColumn('offers', 'price_sections')    ? 'price_sections'    : null,
-                Schema::hasColumn('offers', 'show_unit_prices')  ? 'show_unit_prices'  : null,
+                Schema::hasColumn('offers', 'offer_title') ? 'offer_title' : null,
+                Schema::hasColumn('offers', 'valid_until') ? 'valid_until' : null,
+                Schema::hasColumn('offers', 'content_subject') ? 'content_subject' : null,
+                Schema::hasColumn('offers', 'content_scope') ? 'content_scope' : null,
+                Schema::hasColumn('offers', 'content_deadline') ? 'content_deadline' : null,
+                Schema::hasColumn('offers', 'content_payment') ? 'content_payment' : null,
+                Schema::hasColumn('offers', 'price_sections') ? 'price_sections' : null,
+                Schema::hasColumn('offers', 'show_unit_prices') ? 'show_unit_prices' : null,
             ]));
         });
 

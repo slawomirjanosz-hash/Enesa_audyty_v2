@@ -16,6 +16,13 @@ class DocumentPolicy
         return app(AuditorAccessService::class)->canViewDocument($user, $document);
     }
 
-    public function update(User $user, Document $document): bool { return $this->canModify($user, 'documents.upload'); }
-    public function delete(User $user, Document $document): bool { return $this->canModify($user, 'documents.delete'); }
+    public function update(User $user, Document $document): bool
+    {
+        return $this->canModify($user, 'documents.upload');
+    }
+
+    public function delete(User $user, Document $document): bool
+    {
+        return $this->canModify($user, 'documents.delete');
+    }
 }

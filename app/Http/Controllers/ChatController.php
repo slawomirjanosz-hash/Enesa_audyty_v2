@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
 use App\Models\Company;
+use App\Models\Message;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
@@ -35,7 +35,7 @@ class ChatController extends Controller
                     ->count();
 
                 return [
-                    'company'      => $company,
+                    'company' => $company,
                     'last_message' => $lastMessage,
                     'unread_count' => $unreadCount,
                 ];
@@ -43,7 +43,7 @@ class ChatController extends Controller
 
         if ($request->expectsJson() || $request->query('json')) {
             return response()->json([
-                'companies'    => $companies->values(),
+                'companies' => $companies->values(),
                 'total_unread' => $companies->sum('unread_count'),
             ]);
         }
@@ -63,12 +63,12 @@ class ChatController extends Controller
 
         if ($request->expectsJson() || $request->query('json')) {
             return response()->json([
-                'messages' => $messages->map(fn($msg) => [
-                    'id'          => $msg->id,
-                    'body'        => $msg->body,
+                'messages' => $messages->map(fn ($msg) => [
+                    'id' => $msg->id,
+                    'body' => $msg->body,
                     'sender_name' => $msg->sender?->name ?? 'Nieznany',
-                    'created_at'  => $msg->created_at->format('H:i'),
-                    'is_own'      => $msg->user_id === auth()->id(),
+                    'created_at' => $msg->created_at->format('H:i'),
+                    'is_own' => $msg->user_id === auth()->id(),
                 ]),
             ]);
         }
@@ -80,7 +80,7 @@ class ChatController extends Controller
             ->orderByDesc('ended_at')
             ->get();
 
-        $onlineUsers = User::whereHas('roles', fn($q) => $q->whereIn('name', ['auditor', 'auditor_senior', 'admin', 'superadmin']))
+        $onlineUsers = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['auditor', 'auditor_senior', 'admin', 'superadmin']))
             ->where('last_seen_at', '>=', now()->subMinutes(5))
             ->get();
 
@@ -131,7 +131,7 @@ class ChatController extends Controller
             ->get();
 
         return response()->json([
-            'messages' => $messages->map(fn($msg) => [
+            'messages' => $messages->map(fn ($msg) => [
                 'id' => $msg->id,
                 'body' => $msg->body,
                 'sender_name' => $msg->sender->name,
@@ -174,12 +174,12 @@ class ChatController extends Controller
         }
 
         return response()->json([
-            'messages' => $messages->map(fn($msg) => [
-                'id'          => $msg->id,
-                'body'        => $msg->body,
+            'messages' => $messages->map(fn ($msg) => [
+                'id' => $msg->id,
+                'body' => $msg->body,
                 'sender_name' => $msg->sender?->name ?? 'Nieznany',
-                'created_at'  => $msg->created_at->format('d.m.Y H:i'),
-                'is_own'      => $msg->user_id === auth()->id(),
+                'created_at' => $msg->created_at->format('d.m.Y H:i'),
+                'is_own' => $msg->user_id === auth()->id(),
             ]),
             'ended_at' => $messages->last()?->conversation_ended_at?->format('d.m.Y H:i'),
             'ended_by' => $messages->last()?->ended_by,

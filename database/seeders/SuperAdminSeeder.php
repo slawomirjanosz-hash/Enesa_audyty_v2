@@ -16,8 +16,8 @@ class SuperAdminSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => 'proximalumine@gmail.com'],
             [
-                'name'      => 'Super Admin',
-                'password'  => Hash::make('Gwiazda1!'),
+                'name' => 'Super Admin',
+                'password' => Hash::make('Gwiazda1!'),
                 'is_active' => true,
             ]
         );

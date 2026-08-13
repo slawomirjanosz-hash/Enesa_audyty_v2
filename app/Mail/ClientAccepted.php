@@ -13,9 +13,7 @@ class ClientAccepted extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Company $company)
-    {
-    }
+    public function __construct(public Company $company) {}
 
     public function envelope(): Envelope
     {

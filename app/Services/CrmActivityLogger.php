@@ -28,7 +28,7 @@ class CrmActivityLogger
 
     public function leadCreated(CrmOpportunity $opportunity): void
     {
-        $this->record($opportunity->company_id, 'lead_created', 'Utworzono lead: ' . $opportunity->title, $opportunity);
+        $this->record($opportunity->company_id, 'lead_created', 'Utworzono lead: '.$opportunity->title, $opportunity);
     }
 
     public function leadStageChanged(CrmOpportunity $opportunity, string $from, string $to): void
@@ -36,7 +36,7 @@ class CrmActivityLogger
         $this->record(
             $opportunity->company_id,
             'lead_stage_changed',
-            'Lead „' . $opportunity->title . '”: ' . $this->stageLabel($from) . ' → ' . $this->stageLabel($to),
+            'Lead „'.$opportunity->title.'”: '.$this->stageLabel($from).' → '.$this->stageLabel($to),
             $opportunity,
             null,
             ['from' => $from, 'to' => $to]
@@ -48,7 +48,7 @@ class CrmActivityLogger
         $this->record(
             $offer->company_id,
             'offer_linked',
-            'Przypięto ofertę ' . $offer->fullNumber() . ' do leada „' . $opportunity->title . '”.',
+            'Przypięto ofertę '.$offer->fullNumber().' do leada „'.$opportunity->title.'”.',
             $opportunity,
             $offer
         );
@@ -63,7 +63,7 @@ class CrmActivityLogger
         $this->record(
             $offer->company_id,
             'offer_status_changed',
-            'Oferta ' . $offer->fullNumber() . ': ' . $this->offerStatusLabel($from) . ' → ' . $this->offerStatusLabel($to),
+            'Oferta '.$offer->fullNumber().': '.$this->offerStatusLabel($from).' → '.$this->offerStatusLabel($to),
             $offer->crmOpportunity,
             $offer,
             ['from' => $from, 'to' => $to]

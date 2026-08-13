@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\OfferFormTemplate;
+use App\Models\OfferRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ClientZoneController extends Controller
@@ -27,7 +28,7 @@ class ClientZoneController extends Controller
     public function impersonate(Company $company): RedirectResponse
     {
         session([
-            'client_zone_company_id'   => $company->id,
+            'client_zone_company_id' => $company->id,
             'client_zone_company_name' => $company->name,
         ]);
 
@@ -66,11 +67,11 @@ class ClientZoneController extends Controller
     {
         $company = Company::findOrFail(session('client_zone_company_id'));
 
-        $templates = \App\Models\OfferFormTemplate::where('is_active', true)
+        $templates = OfferFormTemplate::where('is_active', true)
             ->orderBy('name')
             ->get();
 
-        $myRequests = \App\Models\OfferRequest::where('company_id', $company->id)
+        $myRequests = OfferRequest::where('company_id', $company->id)
             ->orderByDesc('created_at')
             ->get();
 

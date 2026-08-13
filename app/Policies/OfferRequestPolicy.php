@@ -16,6 +16,13 @@ class OfferRequestPolicy
         return app(AuditorAccessService::class)->canViewCompany($user, $offerRequest->company_id, 'can_view_offer_requests');
     }
 
-    public function update(User $user, OfferRequest $offerRequest): bool { return $this->canModify($user); }
-    public function delete(User $user, OfferRequest $offerRequest): bool { return $this->canModify($user); }
+    public function update(User $user, OfferRequest $offerRequest): bool
+    {
+        return $this->canModify($user, 'offers.edit');
+    }
+
+    public function delete(User $user, OfferRequest $offerRequest): bool
+    {
+        return $this->canModify($user, 'offers.delete');
+    }
 }

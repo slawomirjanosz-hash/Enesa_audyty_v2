@@ -65,5 +65,5 @@ test('offer documents can embed the logo saved in company settings', function ()
     ]);
 
     expect($settings->logoDataUri())
-        ->toBe('data:image/webp;base64,' . base64_encode('custom-logo-binary'));
+        ->toBe('data:image/webp;base64,'.base64_encode('custom-logo-binary'));
 });

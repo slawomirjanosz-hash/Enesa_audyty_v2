@@ -26,7 +26,7 @@ return new class extends Migration
                 'realization',
                 'won',
                 'lost',
-                'rejected'
+                'rejected',
             ])->default('new_lead');
             $table->decimal('value', 12, 2)->nullable();
             $table->date('expected_close_date')->nullable();

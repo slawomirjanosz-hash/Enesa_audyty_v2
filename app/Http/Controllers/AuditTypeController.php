@@ -32,20 +32,20 @@ class AuditTypeController extends Controller
 
         $data = $request->validate([
             'version_number' => ['required', 'string', 'max:50'],
-            'html_file'      => ['required', 'file', 'mimetypes:text/html,application/octet-stream', 'max:2048'],
+            'html_file' => ['required', 'file', 'mimetypes:text/html,application/octet-stream', 'max:2048'],
         ]);
 
         $htmlContent = file_get_contents($request->file('html_file')->getRealPath());
 
         $auditType->versions()->create([
             'version_number' => $data['version_number'],
-            'html_content'   => $htmlContent,
-            'is_current'     => false,
-            'created_by'     => auth()->id(),
+            'html_content' => $htmlContent,
+            'is_current' => false,
+            'created_by' => auth()->id(),
         ]);
 
         return redirect()->route('audit-types.show', $auditType)
-            ->with('success', 'Wersja ' . $data['version_number'] . ' została dodana.');
+            ->with('success', 'Wersja '.$data['version_number'].' została dodana.');
     }
 
     public function setAsCurrent(AuditTypeVersion $version)
@@ -56,7 +56,7 @@ class AuditTypeController extends Controller
         $version->update(['is_current' => true]);
 
         return redirect()->route('audit-types.show', $version->auditType)
-            ->with('success', 'Wersja ' . $version->version_number . ' jest teraz aktualna.');
+            ->with('success', 'Wersja '.$version->version_number.' jest teraz aktualna.');
     }
 
     public function previewVersion(AuditTypeVersion $version)

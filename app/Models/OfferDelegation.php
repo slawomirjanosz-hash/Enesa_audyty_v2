@@ -21,8 +21,8 @@ class OfferDelegation extends Model
 
     protected $casts = [
         'czy_kilkudniowy' => 'boolean',
-        'stawka_km'       => 'decimal:2',
-        'stawka_noc'      => 'decimal:2',
+        'stawka_km' => 'decimal:2',
+        'stawka_noc' => 'decimal:2',
     ];
 
     public function offer(): BelongsTo

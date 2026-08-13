@@ -26,7 +26,7 @@ function auditorDocument(Company $company, string $name): Document
         'company_id' => $company->id,
         'type' => 'upload',
         'original_filename' => $name,
-        'stored_path' => 'documents/' . $company->id . '/' . $name,
+        'stored_path' => 'documents/'.$company->id.'/'.$name,
         'mime_type' => 'application/pdf',
         'size' => 4,
     ]);

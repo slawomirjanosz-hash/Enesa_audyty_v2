@@ -10,8 +10,8 @@ class OfferController extends Controller
     public function index()
     {
         $company = auth()->user()->companies->first();
-        
-        if (!$company) {
+
+        if (! $company) {
             return redirect()->route('client.dashboard')
                 ->with('error', 'Brak przypisanej firmy.');
         }
@@ -28,7 +28,7 @@ class OfferController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company || $company->id !== $offer->company_id) {
+        if (! $company || $company->id !== $offer->company_id) {
             abort(403);
         }
 
@@ -41,7 +41,7 @@ class OfferController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company || $company->id !== $offer->company_id) {
+        if (! $company || $company->id !== $offer->company_id) {
             abort(403);
         }
 
@@ -62,7 +62,7 @@ class OfferController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company || $company->id !== $offer->company_id) {
+        if (! $company || $company->id !== $offer->company_id) {
             abort(403);
         }
 
@@ -80,7 +80,7 @@ class OfferController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (!$company || $company->id !== $offer->company_id) {
+        if (! $company || $company->id !== $offer->company_id) {
             abort(403);
         }
 

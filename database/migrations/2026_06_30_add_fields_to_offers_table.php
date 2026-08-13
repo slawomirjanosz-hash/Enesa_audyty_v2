@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('offers', function (Blueprint $table) {
             // Dodaj pole na opis dodatkowy jeśli nie istnieje
-            if (!Schema::hasColumn('offers', 'additional_description')) {
+            if (! Schema::hasColumn('offers', 'additional_description')) {
                 $table->text('additional_description')->nullable()->after('notes');
             }
         });

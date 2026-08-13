@@ -3,6 +3,7 @@
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\User;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -196,7 +197,7 @@ test('role settings hide globally disabled modules and preserve their existing p
     $superadmin = User::factory()->create();
     $superadmin->assignRole('superadmin');
     $role = Role::create(['name' => 'Koordynator', 'guard_name' => 'web']);
-    $role->givePermissionTo(\Spatie\Permission\Models\Permission::findOrCreate('projects.view'));
+    $role->givePermissionTo(Permission::findOrCreate('projects.view'));
 
     $this->actingAs($superadmin)->get('/settings/roles')
         ->assertOk()

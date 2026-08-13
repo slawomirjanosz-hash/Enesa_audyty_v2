@@ -13,7 +13,7 @@ class AdminUserSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => 'admin@enesa.pl'],
             [
-                'name'     => 'Admin ENESA',
+                'name' => 'Admin ENESA',
                 'password' => Hash::make('zmien_haslo_123'),
             ]
         );

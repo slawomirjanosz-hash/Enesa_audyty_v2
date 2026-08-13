@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 class SendOverdueTaskReminders extends Command
 {
     protected $signature = 'tasks:send-overdue-reminders';
+
     protected $description = 'Wysyła codzienne przypomnienia mailowe o zaległych zadaniach do przypisanych użytkowników';
 
     public function handle(): int
@@ -22,6 +23,7 @@ class SendOverdueTaskReminders extends Command
 
         if ($overdueTasks->isEmpty()) {
             $this->info('Brak zaległych zadań.');
+
             return self::SUCCESS;
         }
 
@@ -35,7 +37,8 @@ class SendOverdueTaskReminders extends Command
             }
         }
 
-        $this->info('Zakończono. Wysłano przypomnienia do ' . $grouped->count() . ' użytkowników.');
+        $this->info('Zakończono. Wysłano przypomnienia do '.$grouped->count().' użytkowników.');
+
         return self::SUCCESS;
     }
 }

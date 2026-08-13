@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\User;
@@ -59,7 +60,7 @@ test('disabled audits module disappears from CRM and audits tab cannot be forced
     ]);
     $admin = User::factory()->create();
     $admin->assignRole('admin');
-    \App\Models\Company::create([
+    Company::create([
         'name' => 'Klient CRM',
         'company_type' => 'client',
         'status' => 'active',
@@ -119,7 +120,7 @@ test('dashboard shows company creation date in table and last change on card', f
     ]);
     $admin = User::factory()->create();
     $admin->assignRole('admin');
-    $company = \App\Models\Company::create([
+    $company = Company::create([
         'name' => 'Klient datowany',
         'company_type' => 'client',
         'status' => 'active',

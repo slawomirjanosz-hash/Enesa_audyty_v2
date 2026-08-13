@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
-use App\Models\CompanySettings;
 use App\Models\AuditorCompanyAccess;
 use App\Models\AuditorDocumentAccess;
+use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\Document;
 use App\Models\User;
 use App\Services\AuditorAccessService;
@@ -175,28 +175,28 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', 'string', Rule::exists('roles', 'name')],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
-            'name.required'  => 'Imię i nazwisko jest wymagane.',
+            'name.required' => 'Imię i nazwisko jest wymagane.',
             'email.required' => 'Adres e-mail jest wymagany.',
-            'email.email'    => 'Podaj prawidłowy adres e-mail.',
-            'email.unique'   => 'Ten adres e-mail jest już zajęty.',
-            'role.required'  => 'Wybierz rolę użytkownika.',
-            'role.in'        => 'Wybrana rola jest nieprawidłowa.',
-            'password.min'   => 'Hasło musi mieć co najmniej 8 znaków.',
+            'email.email' => 'Podaj prawidłowy adres e-mail.',
+            'email.unique' => 'Ten adres e-mail jest już zajęty.',
+            'role.required' => 'Wybierz rolę użytkownika.',
+            'role.in' => 'Wybrana rola jest nieprawidłowa.',
+            'password.min' => 'Hasło musi mieć co najmniej 8 znaków.',
         ]);
 
         $this->ensureCanAssignRole($request->user(), $data['role']);
 
         $user = User::create([
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'phone'     => $data['phone'] ?? null,
-            'password'  => Hash::make($data['password'] ?? str()->random(16)),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'password' => Hash::make($data['password'] ?? str()->random(16)),
             'is_active' => true,
         ]);
 
@@ -205,7 +205,7 @@ class UserController extends Controller
         // Auto-assign owner (Enesa) company for all staff roles
         if ($this->isStaffRole($data['role'])) {
             $ownerCompany = Company::owner()->first() ?? $this->ensureOwnerCompany();
-            if ($ownerCompany && !$user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
+            if ($ownerCompany && ! $user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
                 $user->companies()->attach($ownerCompany->id);
             }
         }
@@ -233,34 +233,34 @@ class UserController extends Controller
         $this->ensureCanManageUser($request->user(), $user);
 
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'phone'    => ['nullable', 'string', 'max:30'],
-            'role'     => ['required', 'string', Rule::exists('roles', 'name')],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
         ], [
-            'name.required'  => 'Imię i nazwisko jest wymagane.',
+            'name.required' => 'Imię i nazwisko jest wymagane.',
             'email.required' => 'Adres e-mail jest wymagany.',
-            'email.email'    => 'Podaj prawidłowy adres e-mail.',
-            'email.unique'   => 'Ten adres e-mail jest już zajęty.',
-            'role.required'  => 'Wybierz rolę użytkownika.',
-            'role.in'        => 'Wybrana rola jest nieprawidłowa.',
-            'password.min'   => 'Hasło musi mieć co najmniej 8 znaków.',
+            'email.email' => 'Podaj prawidłowy adres e-mail.',
+            'email.unique' => 'Ten adres e-mail jest już zajęty.',
+            'role.required' => 'Wybierz rolę użytkownika.',
+            'role.in' => 'Wybrana rola jest nieprawidłowa.',
+            'password.min' => 'Hasło musi mieć co najmniej 8 znaków.',
         ]);
 
         $this->ensureCanAssignRole($request->user(), $data['role']);
 
-        $user->name  = $data['name'];
+        $user->name = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
 
         $user->save();
 
-        if (!$user->hasRole('superadmin')) {
+        if (! $user->hasRole('superadmin')) {
             $user->syncRoles([$data['role']]);
         }
 
@@ -282,13 +282,13 @@ class UserController extends Controller
         $this->ensureCanManageUser($currentUser, $user);
 
         // Permission hierarchy check
-        if ($currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+        if ($currentUser->hasRole('admin') && ! $currentUser->hasRole('superadmin')) {
             // Admin cannot delete other admins or superadmins
             if (in_array($targetRole, ['admin', 'superadmin'])) {
                 return redirect()->route('settings.users.index')
                     ->with('error', 'Nie masz uprawnień do usunięcia tego użytkownika.');
             }
-        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin') && !$currentUser->hasRole('auditor_senior')) {
+        } elseif (! $currentUser->hasRole('admin') && ! $currentUser->hasRole('superadmin') && ! $currentUser->hasRole('auditor_senior')) {
             // Only admin and superadmin can delete users
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
@@ -323,13 +323,13 @@ class UserController extends Controller
         $this->ensureCanManageUser($currentUser, $user);
 
         // Permission hierarchy check
-        if ($currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin')) {
+        if ($currentUser->hasRole('admin') && ! $currentUser->hasRole('superadmin')) {
             // Admin cannot delete other admins
             if (in_array($targetRole, ['admin', 'superadmin'])) {
                 return redirect()->route('settings.users.index')
                     ->with('error', 'Nie masz uprawnień do usunięcia tego użytkownika.');
             }
-        } elseif (!$currentUser->hasRole('admin') && !$currentUser->hasRole('superadmin') && !$currentUser->hasRole('auditor_senior')) {
+        } elseif (! $currentUser->hasRole('admin') && ! $currentUser->hasRole('superadmin') && ! $currentUser->hasRole('auditor_senior')) {
             // Only admin and superadmin can delete users
             return redirect()->route('settings.users.index')
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
@@ -353,7 +353,7 @@ class UserController extends Controller
 
         $data = $request->validate([
             'company_id' => ['required', 'exists:companies,id'],
-            'role'       => ['required', Rule::in(['client_admin', 'client_user'])],
+            'role' => ['required', Rule::in(['client_admin', 'client_user'])],
         ]);
 
         $company = Company::findOrFail($data['company_id']);
@@ -384,7 +384,7 @@ class UserController extends Controller
 
         $company = Company::findOrFail($data['company_id']);
 
-        if (!$user->hasAnyRole(['client_admin', 'client_user'])) {
+        if (! $user->hasAnyRole(['client_admin', 'client_user'])) {
             Role::findOrCreate('client_user');
             $user->assignRole('client_user');
         }
@@ -401,19 +401,19 @@ class UserController extends Controller
     private function ensureOwnerCompany(): ?Company
     {
         $settings = CompanySettings::first();
-        if (!$settings || !$settings->name) {
+        if (! $settings || ! $settings->name) {
             return null;
         }
 
         return Company::updateOrCreate(
             ['is_owner' => true],
             [
-                'name'     => $settings->name,
-                'nip'      => $settings->nip,
-                'email'    => $settings->email,
-                'phone'    => $settings->phone,
-                'address'  => $settings->address,
-                'city'     => $settings->city,
+                'name' => $settings->name,
+                'nip' => $settings->nip,
+                'email' => $settings->email,
+                'phone' => $settings->phone,
+                'address' => $settings->address,
+                'city' => $settings->city,
                 'is_owner' => true,
             ]
         );
