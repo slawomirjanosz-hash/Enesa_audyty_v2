@@ -12,6 +12,7 @@ use App\Models\CrmOpportunity;
 use App\Models\Document;
 use App\Models\OfferRequest;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
@@ -177,6 +178,23 @@ class CompanyController extends Controller
 
         $stats['crm_opportunities_count'] = $crmOpportunities->count();
 
+        $crmTasks = $access->scopeByCompanyAccess(
+            Task::with(['assignedUser', 'offer'])
+                ->where('company_id', $company->id)
+                ->whereNull('project_id')
+                ->orderByRaw("CASE WHEN status = 'done' THEN 1 ELSE 0 END")
+                ->orderBy('due_date')
+                ->orderByDesc('created_at'),
+            $user,
+            'can_view_dashboard'
+        )->get();
+
+        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
+            $crmTasks->each(fn (Task $task) => $task->setRelation('offer', null));
+        }
+
+        $stats['crm_tasks_count'] = $crmTasks->count();
+
         $crmAssignableUsers = $canManageCrm
             ? User::where('is_active', true)
                 ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))
@@ -209,7 +227,7 @@ class CompanyController extends Controller
             ->get();
 
         return view('companies.show', compact(
-            'company', 'stats', 'crmOpportunities', 'crmActivities', 'offerRequests', 'documents',
+            'company', 'stats', 'crmOpportunities', 'crmTasks', 'crmActivities', 'offerRequests', 'documents',
             'projects', 'auditsEnabled', 'projectsEnabled', 'canManageCrm', 'crmAssignableUsers'
         ));
     }

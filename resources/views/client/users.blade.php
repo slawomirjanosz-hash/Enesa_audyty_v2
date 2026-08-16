@@ -274,13 +274,12 @@
             <tbody>
                 @foreach($users as $u)
                     @php
-                        $initials = $u->initials();
                         $isAdmin = (bool) $u->pivot->is_admin;
                     @endphp
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <div class="u-avatar">{{ $initials }}</div>
+                                <div class="u-avatar"><x-user-avatar :user="$u" /></div>
                                 <div>
                                     <div class="user-name">{{ $u->name }}</div>
                                     @if($u->id === auth()->id())
@@ -341,13 +340,10 @@
             </thead>
             <tbody>
                 @foreach($archivedUsers as $u)
-                    @php
-                        $initials = $u->initials();
-                    @endphp
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <div class="u-avatar" style="opacity:.5;">{{ $initials }}</div>
+                                <div class="u-avatar" style="opacity:.5;"><x-user-avatar :user="$u" /></div>
                                 <div class="user-name" style="color:#888;">{{ $u->name }}</div>
                             </div>
                         </td>

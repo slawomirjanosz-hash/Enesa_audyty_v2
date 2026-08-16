@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -31,6 +32,40 @@ test('profile information can be updated', function () {
     $this->assertSame('Test User', $user->name);
     $this->assertSame('test@example.com', $user->email);
     $this->assertNull($user->email_verified_at);
+});
+
+test('profile avatar can be uploaded displayed and removed', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => UploadedFile::fake()->image('avatar.png', 200, 200),
+        ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
+
+    $user->refresh();
+    expect($user->avatar_data)->not->toBeNull()
+        ->and($user->avatar_mime)->toBe('image/png');
+
+    $this->actingAs($user)
+        ->get('/profile')
+        ->assertOk()
+        ->assertSee('data:image/png;base64,', false);
+
+    $this->actingAs($user)
+        ->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'remove_avatar' => '1',
+        ])
+        ->assertSessionHasNoErrors();
+
+    $user->refresh();
+    expect($user->avatar_data)->toBeNull()
+        ->and($user->avatar_mime)->toBeNull();
 });
 
 test('email verification status is unchanged when the email address is unchanged', function () {

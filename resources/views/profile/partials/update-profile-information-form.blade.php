@@ -13,9 +13,29 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <div>
+            <x-input-label for="avatar" value="Zdjęcie profilowe" />
+            <div class="mt-2 flex items-center gap-4">
+                <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;background:#1A4D3A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0;">
+                    <x-user-avatar :user="$user" />
+                </div>
+                <div class="flex-1">
+                    <input id="avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-gray-700 dark:text-gray-300" />
+                    <p class="mt-1 text-xs text-gray-500">JPG, PNG lub WEBP, maksymalnie 2 MB.</p>
+                    @if($user->avatar_data)
+                        <label class="mt-2 inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                            <input type="checkbox" name="remove_avatar" value="1">
+                            Usuń obecne zdjęcie i pokaż inicjały
+                        </label>
+                    @endif
+                </div>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />

@@ -344,7 +344,7 @@
         @endphp
         <div class="sidebar-footer">
             <div class="avatar">
-                {{ $clientUser->initials() }}
+                <x-user-avatar :user="$clientUser" />
             </div>
             <div style="flex:1;min-width:0;">
                 <div class="sidebar-user-name">{{ $clientUser->name }}</div>

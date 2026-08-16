@@ -186,10 +186,9 @@
                 @foreach($messages as $msg)
                 @php
                     $isOwn = auth()->id() == $msg->user_id;
-                    $ini = $msg->sender?->initials() ?? '?';
                 @endphp
                 <div class="cs-msg-row {{ $isOwn ? 'own' : 'other' }}" data-id="{{ $msg->id }}">
-                    <div class="cs-avatar {{ $isOwn ? 'own' : 'other' }}">{{ $ini }}</div>
+                    <div class="cs-avatar {{ $isOwn ? 'own' : 'other' }}"><x-user-avatar :user="$msg->sender" /></div>
                     <div class="cs-bubble {{ $isOwn ? 'own' : 'other' }}">
                         {{ $msg->body }}
                         <div class="cs-time">{{ $msg->sender?->name ?? '' }} · {{ $msg->created_at->format('H:i') }}</div>

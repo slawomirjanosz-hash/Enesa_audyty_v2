@@ -771,6 +771,13 @@
         </div>
     </div>
     <div class="stat-card">
+        <div class="stat-icon blue"><i class="ti ti-list-check"></i></div>
+        <div>
+            <div class="stat-value">{{ $stats['crm_tasks_count'] }}</div>
+            <div class="stat-label">Zadania CRM</div>
+        </div>
+    </div>
+    <div class="stat-card">
         <div class="stat-icon blue"><i class="ti ti-users"></i></div>
         <div>
             <div class="stat-value">{{ $stats['users_count'] }}</div>
@@ -814,9 +821,9 @@
         </button>
         @endif
         <button class="tab-btn" id="tab-btn-crm" onclick="switchTab('crm', this)">
-            <i class="ti ti-target"></i> Leady CRM
-            @if($stats['crm_opportunities_count'] > 0)
-                <span class="tab-badge">{{ $stats['crm_opportunities_count'] }}</span>
+            <i class="ti ti-target"></i> CRM klienta
+            @if($stats['crm_opportunities_count'] + $stats['crm_tasks_count'] > 0)
+                <span class="tab-badge">{{ $stats['crm_opportunities_count'] + $stats['crm_tasks_count'] }}</span>
             @endif
         </button>
         <button class="tab-btn" onclick="switchTab('users', this)">
@@ -1281,6 +1288,56 @@
         @endif
 
         <div style="margin-top:24px;border-top:1px solid #E5E1D8;padding-top:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+                <h3 style="font-family:'Manrope',sans-serif;font-size:14px;color:var(--green);margin:0;display:flex;align-items:center;gap:7px;">
+                    <i class="ti ti-list-check"></i> Powiązane zadania CRM ({{ $crmTasks->count() }})
+                </h3>
+                <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="btn-action btn-secondary-action" style="padding:7px 12px;">
+                    <i class="ti ti-external-link"></i> Otwórz zadania CRM
+                </a>
+            </div>
+
+            @if($crmTasks->isEmpty())
+                <div style="font-size:12px;color:#999;padding:12px 0;">Brak zadań CRM powiązanych z tym klientem.</div>
+            @else
+                @php
+                    $crmTaskStatuses = ['todo' => ['Do zrobienia', 'background:#F3F4F6;color:#4B5563;'], 'in_progress' => ['W trakcie', 'background:#DBEAFE;color:#1D4ED8;'], 'done' => ['Wykonane', 'background:#D1FAE5;color:#065F46;']];
+                    $crmTaskPriorities = ['low' => 'Niski', 'medium' => 'Średni', 'high' => 'Wysoki'];
+                @endphp
+                <table class="data-table">
+                    <thead><tr><th>Zadanie</th><th>Przypisany</th><th>Termin</th><th>Priorytet</th><th>Status</th><th>Oferta</th></tr></thead>
+                    <tbody>
+                        @foreach($crmTasks as $task)
+                            @php
+                                $taskOverdue = $task->due_date && $task->due_date->isPast() && $task->status !== 'done';
+                            @endphp
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;color:#1e1e1e;">{{ $task->title }}</div>
+                                    @if($task->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($task->description, 100) }}</div>@endif
+                                </td>
+                                <td style="font-size:12px;color:#555;">{{ $task->assignedUser?->name ?? '—' }}</td>
+                                <td style="font-size:12px;color:{{ $taskOverdue ? '#B91C1C' : '#7a8a80' }};font-weight:{{ $taskOverdue ? '700' : '400' }};">
+                                    {{ $task->due_date?->format('d.m.Y') ?? '—' }}
+                                    @if($taskOverdue)<span title="Po terminie"> ⚠</span>@endif
+                                </td>
+                                <td style="font-size:12px;">{{ $crmTaskPriorities[$task->priority] ?? $task->priority }}</td>
+                                <td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;{{ $crmTaskStatuses[$task->status][1] ?? 'background:#F3F4F6;color:#4B5563;' }}">{{ $crmTaskStatuses[$task->status][0] ?? $task->status }}</span></td>
+                                <td>
+                                    @if($task->offer)
+                                        <a href="{{ route('offers.show', $task->offer) }}" style="font-size:11px;font-weight:700;color:#92400E;text-decoration:none;">{{ $task->offer->fullNumber() }}</a>
+                                    @else
+                                        <span style="color:#aaa;font-size:12px;">—</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+
+        <div style="margin-top:24px;border-top:1px solid #E5E1D8;padding-top:18px;">
             <h3 style="font-family:'Manrope',sans-serif;font-size:14px;color:var(--green);margin:0 0 12px;display:flex;align-items:center;gap:7px;"><i class="ti ti-history"></i> Historia CRM</h3>
             @forelse($crmActivities as $activity)
                 <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F0EDE6;">
@@ -1335,7 +1392,7 @@
                         <tr>
                             <td>
                                 <div class="user-item-avatar" style="width:40px;height:40px;">
-                                    {{ $user->initials() }}
+                                    <x-user-avatar :user="$user" />
                                 </div>
                             </td>
                             <td>
@@ -1450,10 +1507,9 @@
                     @foreach($chatMessages as $msg)
                     @php
                         $isOwn = auth()->id() == $msg->user_id;
-                        $ini = $msg->sender?->initials() ?? '?';
                     @endphp
                     <div class="cmp-msg-row {{ $isOwn ? 'cmp-own' : 'cmp-other' }}" data-id="{{ $msg->id }}">
-                        <div class="cmp-avatar {{ $isOwn ? 'cmp-own' : 'cmp-other' }}">{{ $ini }}</div>
+                        <div class="cmp-avatar {{ $isOwn ? 'cmp-own' : 'cmp-other' }}"><x-user-avatar :user="$msg->sender" /></div>
                         <div class="cmp-bubble {{ $isOwn ? 'cmp-own' : 'cmp-other' }}">
                             {{ $msg->body }}
                             <div class="cmp-time">{{ $msg->sender?->name ?? '' }} · {{ $msg->created_at->format('H:i') }}</div>

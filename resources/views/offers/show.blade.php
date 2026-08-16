@@ -380,7 +380,7 @@
             <div class="message-item">
                 <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;">
                     <div style="display:flex;align-items:center;gap:8px;">
-                        <div class="message-avatar">{{ $msg->user?->initials() ?? '?' }}</div>
+                        <div class="message-avatar"><x-user-avatar :user="$msg->user" /></div>
                         <div>
                             <div style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#1A1A1A;">
                                 {{ $msg->user?->name ?? 'Nieznany użytkownik' }}

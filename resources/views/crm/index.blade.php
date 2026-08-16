@@ -512,7 +512,7 @@
                 <td>
                     <div style="display:flex;align-items:center;gap:8px;">
                         <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
-                            {{ $task->assignedUser?->initials() ?? '?' }}
+                            <x-user-avatar :user="$task->assignedUser" />
                         </div>
                         <span style="font-size:12px;">{{ $task->assignedUser?->name ?? '—' }}</span>
                     </div>
@@ -576,7 +576,7 @@
                 <td>
                     <div style="display:flex;align-items:center;gap:8px;">
                         <div style="width:26px;height:26px;border-radius:50%;background:#94C4B0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
-                            {{ $task->assignedUser?->initials() ?? '?' }}
+                            <x-user-avatar :user="$task->assignedUser" />
                         </div>
                         <span style="font-size:12px;">{{ $task->assignedUser?->name ?? '—' }}</span>
                     </div>

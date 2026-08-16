@@ -26,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
+        'avatar_data',
+        'avatar_mime',
         'password',
         'is_active',
         'last_seen_at',
@@ -39,6 +41,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'avatar_data',
     ];
 
     /**
@@ -70,6 +73,15 @@ class User extends Authenticatable
             : '';
 
         return mb_strtoupper($firstInitial.$lastInitial);
+    }
+
+    public function avatarDataUri(): ?string
+    {
+        if (! $this->avatar_data) {
+            return null;
+        }
+
+        return 'data:'.($this->avatar_mime ?: 'image/jpeg').';base64,'.$this->avatar_data;
     }
 
     public function companies(): BelongsToMany

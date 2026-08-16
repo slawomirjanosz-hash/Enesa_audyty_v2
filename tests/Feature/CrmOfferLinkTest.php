@@ -4,6 +4,7 @@ use App\Models\Company;
 use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
 use App\Models\Offer;
+use App\Models\Task;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -194,4 +195,36 @@ test('client card opens a CRM opportunity preview and saves edits back to the ca
 
     expect($opportunity->refresh()->title)->toBe('Modernizacja instalacji po edycji')
         ->and($opportunity->stage)->toBe('offer');
+});
+
+test('client CRM card shows tasks related to that company', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('system.full_access'));
+    $company = Company::create(['name' => 'Klient z zadaniami', 'company_type' => 'client', 'status' => 'active']);
+    $otherCompany = Company::create(['name' => 'Inny klient', 'company_type' => 'client', 'status' => 'active']);
+
+    Task::create([
+        'title' => 'Telefon do klienta',
+        'company_id' => $company->id,
+        'assigned_to' => $admin->id,
+        'created_by' => $admin->id,
+        'status' => 'todo',
+        'priority' => 'high',
+        'due_date' => '2026-08-20',
+    ]);
+    Task::create([
+        'title' => 'Zadanie innej firmy',
+        'company_id' => $otherCompany->id,
+        'created_by' => $admin->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('companies.show', $company).'#crm')
+        ->assertOk()
+        ->assertSee('Powiązane zadania CRM')
+        ->assertSee('Telefon do klienta')
+        ->assertDontSee('Zadanie innej firmy');
 });

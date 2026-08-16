@@ -318,13 +318,12 @@
             <tbody>
                 @foreach($archivedStaff as $archivedUser)
                     @php
-                        $initials = $archivedUser->initials();
                         $role = $archivedUser->roles->first()?->name ?? '—';
                     @endphp
                     <tr data-sort-name="{{ strtolower($archivedUser->name) }}" data-sort-email="{{ strtolower($archivedUser->email) }}" data-sort-role="{{ $role }}" data-sort-date="{{ $archivedUser->deleted_at->format('Y-m-d') }}">
                         <td>
                             <div class="user-cell">
-                                <div class="avatar" style="background:#9e9e9e;">{{ $initials }}</div>
+                                <div class="avatar" style="background:#9e9e9e;"><x-user-avatar :user="$archivedUser" /></div>
                                 <div>
                                     <div class="user-name" style="color:#888;">{{ $archivedUser->name }}</div>
                                 </div>
@@ -394,14 +393,13 @@
             <tbody>
                 @foreach($archivedClients as $archivedClient)
                     @php
-                        $initials = $archivedClient->initials();
                         $role = $archivedClient->roles->first()?->name ?? '—';
                         $companyNames = $archivedClient->companies->pluck('name')->implode(', ') ?: 'Brak danych';
                     @endphp
                     <tr data-sort-name="{{ strtolower($archivedClient->name) }}" data-sort-email="{{ strtolower($archivedClient->email) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-date="{{ $archivedClient->deleted_at->format('Y-m-d') }}">
                         <td>
                             <div class="user-cell">
-                                <div class="avatar" style="background:#6b7a70;">{{ $initials }}</div>
+                                <div class="avatar" style="background:#6b7a70;"><x-user-avatar :user="$archivedClient" /></div>
                                 <div>
                                     <div class="user-name">{{ $archivedClient->name }}</div>
                                 </div>
@@ -467,13 +465,10 @@
             </thead>
             <tbody>
                 @foreach($orphanUsers as $orphanUser)
-                    @php
-                        $initials = $orphanUser->initials();
-                    @endphp
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <div class="avatar" style="background:#6b7a70;">{{ $initials }}</div>
+                                <div class="avatar" style="background:#6b7a70;"><x-user-avatar :user="$orphanUser" /></div>
                                 <div>
                                     <div class="user-name">{{ $orphanUser->name }}</div>
                                 </div>
@@ -605,7 +600,6 @@
             <tbody>
                 @forelse($allUsers as $user)
                     @php
-                        $initials = $user->initials();
                         $role = $user->roles->first()?->name ?? '—';
                         $isActive = !$user->deleted_at;
                         $companyNames = $user->companies->pluck('name')->implode(', ') ?: '—';
@@ -621,7 +615,7 @@
                     <tr data-user-id="{{ $user->id }}" data-sort-name="{{ strtolower($user->name) }}" data-sort-email="{{ strtolower($user->email) }}" data-sort-role="{{ $role }}" data-sort-company="{{ strtolower($companyNames) }}" data-sort-status="{{ $isActive ? 'aktywny' : 'usuniety' }}">
                         <td>
                             <div class="user-cell">
-                                <div class="avatar" style="background:{{ $isActive ? 'var(--green)' : '#999' }};">{{ $initials }}</div>
+                                <div class="avatar" style="background:{{ $isActive ? 'var(--green)' : '#999' }};"><x-user-avatar :user="$user" /></div>
                                 <div>
                                     <div class="user-name" style="color:{{ $isActive ? '#1A1A1A' : '#999' }};">{{ $user->name }}</div>
                                 </div>
