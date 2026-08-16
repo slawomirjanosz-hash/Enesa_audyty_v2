@@ -64,6 +64,7 @@ class DashboardController extends Controller
             'active_projects' => $projectsEnabled ? $activeProjectsQuery->count() : 0,
             'pending_offers' => $access->scopeByCompanyAccess(Offer::whereIn('status', ['draft', 'sent']), $user, 'can_view_offers')->count(),
             'new_registrations' => $access->hasFullAccess($user) ? Company::clients()->where('status', 'pending')->count() : 0,
+            'my_open_tasks' => Task::forUser($user->id)->where('status', '!=', 'done')->count(),
             'overdue_tasks' => $access->scopeByCompanyAccess(Task::where('due_date', '<', now())->where('status', '!=', 'done'), $user, 'can_view_dashboard')->count(),
         ];
 

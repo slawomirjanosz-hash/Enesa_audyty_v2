@@ -3,6 +3,7 @@
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Offer;
+use App\Models\Task;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -137,4 +138,25 @@ test('dashboard shows company creation date in table and last change on card', f
         ->assertSee('01.07.2026 08:15')
         ->assertSee('Ostatnia zmiana: 12.08.2026 16:40')
         ->assertSee('data-sort-value="2026-07-01 08:15:00"', false);
+});
+
+test('dashboard shows only current user open task count', function () {
+    CompanySettings::create([
+        'name' => 'Firma zadaniowa',
+        'enabled_modules' => ['dashboard', 'crm'],
+    ]);
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $otherUser = User::factory()->create();
+    $otherUser->assignRole('admin');
+
+    Task::create(['title' => 'Moje zadanie pierwsze', 'assigned_to' => $admin->id, 'created_by' => $admin->id, 'status' => 'todo', 'priority' => 'medium']);
+    Task::create(['title' => 'Moje zadanie drugie', 'assigned_to' => $admin->id, 'created_by' => $admin->id, 'status' => 'in_progress', 'priority' => 'high']);
+    Task::create(['title' => 'Moje zakończone', 'assigned_to' => $admin->id, 'created_by' => $admin->id, 'status' => 'done', 'priority' => 'low']);
+    Task::create(['title' => 'Zadanie innej osoby', 'assigned_to' => $otherUser->id, 'created_by' => $admin->id, 'status' => 'todo', 'priority' => 'medium']);
+
+    $this->actingAs($admin)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('data-dashboard-stat="my-open-tasks"', false)
+        ->assertSeeInOrder(['>2</div>', 'Moje zadania do zrobienia'], false);
 });

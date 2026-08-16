@@ -496,6 +496,20 @@
         </div>
     </a>
 
+    {{-- Zadania aktualnie zalogowanego użytkownika --}}
+    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card" data-dashboard-stat="my-open-tasks">
+        <div class="stat-icon stat-icon-blue">
+            <i class="ti ti-list-check"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ $stats['my_open_tasks'] }}</div>
+            <div class="stat-label">Moje zadania do zrobienia</div>
+            <div class="stat-sub" @if($stats['my_open_tasks'] > 0) style="color:#1565C0;" @endif>
+                {{ $stats['my_open_tasks'] > 0 ? 'Przypisane do Ciebie' : 'Brak otwartych zadań' }}
+            </div>
+        </div>
+    </a>
+
 </div>
 
 {{-- ══════ SIATKA KLIENTÓW ══════ --}}
