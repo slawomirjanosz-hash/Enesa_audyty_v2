@@ -39,9 +39,13 @@
 
         .form-group { text-align: left; margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; color: #3a3a3a; margin-bottom: 5px; }
-        .form-group input[type="email"],
-        .form-group input[type="password"] { width: 100%; background: #FAFAF6; border: 1px solid #D0CCC0; border-radius: 6px; padding: 10px 13px; font-size: 14px; font-family: 'Lato', sans-serif; color: #1e1e1e; outline: none; transition: border-color .15s; }
+        .form-group .login-input { width: 100%; background: #FAFAF6; border: 1px solid #D0CCC0; border-radius: 6px; padding: 10px 13px; font-size: 14px; font-family: 'Lato', sans-serif; color: #1e1e1e; outline: none; transition: border-color .15s; }
         .form-group input:focus { border-color: #2E7D32; background: #fff; }
+        .password-field { position: relative; }
+        .password-field .login-input { padding-right: 46px; }
+        .password-toggle { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 36px; height: 34px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; border-radius: 6px; color: #65756c; font-size: 19px; cursor: pointer; }
+        .password-toggle:hover { background: rgba(26,77,58,.08); color: var(--green); }
+        .password-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
 
         .remember-row { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
         .remember-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; }
@@ -123,7 +127,7 @@
 
             <div class="form-group">
                 <label for="email">Adres e-mail</label>
-                <input id="email" type="email" name="email"
+                <input id="email" class="login-input" type="email" name="email"
                        value="{{ old('email') }}"
                        required autofocus autocomplete="username"
                        placeholder="adres@firma.pl">
@@ -131,9 +135,14 @@
 
             <div class="form-group">
                 <label for="password">Has&#322;o</label>
-                <input id="password" type="password" name="password"
-                       required autocomplete="current-password"
-                       placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+                <div class="password-field">
+                    <input id="password" class="login-input" type="password" name="password"
+                           required autocomplete="current-password"
+                           placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+                    <button id="passwordToggle" type="button" class="password-toggle" aria-label="Pokaż hasło" aria-pressed="false" title="Pokaż hasło">
+                        <i class="ti ti-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="remember-row">
@@ -196,6 +205,19 @@
 </div>
 
 <script>
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('passwordToggle');
+
+    passwordToggle.addEventListener('click', function () {
+        const showPassword = passwordInput.type === 'password';
+        passwordInput.type = showPassword ? 'text' : 'password';
+        passwordToggle.setAttribute('aria-pressed', showPassword ? 'true' : 'false');
+        passwordToggle.setAttribute('aria-label', showPassword ? 'Ukryj hasło' : 'Pokaż hasło');
+        passwordToggle.title = showPassword ? 'Ukryj hasło' : 'Pokaż hasło';
+        passwordToggle.querySelector('i').className = showPassword ? 'ti ti-eye-off' : 'ti ti-eye';
+        passwordInput.focus({ preventScroll: true });
+    });
+
     function openModal() {
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';

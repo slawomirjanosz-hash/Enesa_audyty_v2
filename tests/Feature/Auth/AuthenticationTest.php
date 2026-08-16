@@ -5,7 +5,10 @@ use App\Models\User;
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
 
-    $response->assertStatus(200);
+    $response->assertStatus(200)
+        ->assertSee('id="passwordToggle"', false)
+        ->assertSee('aria-label="Pokaż hasło"', false)
+        ->assertSee("passwordInput.type = showPassword ? 'text' : 'password'", false);
 });
 
 test('users can authenticate using the login screen', function () {
