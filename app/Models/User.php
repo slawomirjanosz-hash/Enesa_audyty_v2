@@ -56,6 +56,22 @@ class User extends Authenticatable
         ];
     }
 
+    public function initials(): string
+    {
+        $nameParts = preg_split('/\s+/u', trim((string) $this->name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        if ($nameParts === []) {
+            return '?';
+        }
+
+        $firstInitial = mb_substr($nameParts[0], 0, 1);
+        $lastInitial = count($nameParts) > 1
+            ? mb_substr($nameParts[array_key_last($nameParts)], 0, 1)
+            : '';
+
+        return mb_strtoupper($firstInitial.$lastInitial);
+    }
+
     public function companies(): BelongsToMany
     {
         return $this->belongsToMany(Company::class)

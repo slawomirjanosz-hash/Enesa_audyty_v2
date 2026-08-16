@@ -1335,7 +1335,7 @@
                         <tr>
                             <td>
                                 <div class="user-item-avatar" style="width:40px;height:40px;">
-                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                    {{ $user->initials() }}
                                 </div>
                             </td>
                             <td>
@@ -1450,9 +1450,7 @@
                     @foreach($chatMessages as $msg)
                     @php
                         $isOwn = auth()->id() == $msg->user_id;
-                        $name  = $msg->sender?->name ?? 'Nieznany';
-                        $parts = explode(' ', trim($name));
-                        $ini   = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+                        $ini = $msg->sender?->initials() ?? '?';
                     @endphp
                     <div class="cmp-msg-row {{ $isOwn ? 'cmp-own' : 'cmp-other' }}" data-id="{{ $msg->id }}">
                         <div class="cmp-avatar {{ $isOwn ? 'cmp-own' : 'cmp-other' }}">{{ $ini }}</div>
@@ -1500,7 +1498,7 @@
         var CSRF = '{{ csrf_token() }}';
         var cmpLastId = {{ $chatMessages->last()?->id ?? 0 }};
 
-        function cmpIni(n){ if(!n)return'?'; var p=n.trim().split(' '); return(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+        function cmpIni(n){ if(!n)return'?'; var p=n.trim().split(/\s+/).filter(Boolean); if(!p.length)return'?'; return(p[0][0]+(p.length>1?p[p.length-1][0]:'')).toLocaleUpperCase('pl-PL'); }
         function cmpEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
         function cmpBubble(msg){
             var cls=msg.is_own?'cmp-own':'cmp-other';
@@ -1581,7 +1579,7 @@
         var ARC_BASE = '{{ url('chat/'.$company->id.'/archive') }}';
         var CSRF = '{{ csrf_token() }}';
 
-        function arcIni(n){ if(!n)return'?'; var p=n.trim().split(' '); return(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+        function arcIni(n){ if(!n)return'?'; var p=n.trim().split(/\s+/).filter(Boolean); if(!p.length)return'?'; return(p[0][0]+(p.length>1?p[p.length-1][0]:'')).toLocaleUpperCase('pl-PL'); }
         function arcEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
 
         window.cmpOpenArchive = async function(convId){

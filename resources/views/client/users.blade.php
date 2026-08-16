@@ -274,8 +274,7 @@
             <tbody>
                 @foreach($users as $u)
                     @php
-                        $initials = collect(explode(' ', $u->name))
-                            ->take(2)->map(fn($w) => strtoupper(substr($w, 0, 1)))->implode('');
+                        $initials = $u->initials();
                         $isAdmin = (bool) $u->pivot->is_admin;
                     @endphp
                     <tr>
@@ -343,8 +342,7 @@
             <tbody>
                 @foreach($archivedUsers as $u)
                     @php
-                        $initials = collect(explode(' ', $u->name))
-                            ->take(2)->map(fn($w) => strtoupper(substr($w, 0, 1)))->implode('');
+                        $initials = $u->initials();
                     @endphp
                     <tr>
                         <td>

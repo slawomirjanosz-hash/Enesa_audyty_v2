@@ -318,8 +318,7 @@
             <tbody>
                 @foreach($archivedStaff as $archivedUser)
                     @php
-                        $initials = collect(explode(' ', $archivedUser->name))
-                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $initials = $archivedUser->initials();
                         $role = $archivedUser->roles->first()?->name ?? '—';
                     @endphp
                     <tr data-sort-name="{{ strtolower($archivedUser->name) }}" data-sort-email="{{ strtolower($archivedUser->email) }}" data-sort-role="{{ $role }}" data-sort-date="{{ $archivedUser->deleted_at->format('Y-m-d') }}">
@@ -395,8 +394,7 @@
             <tbody>
                 @foreach($archivedClients as $archivedClient)
                     @php
-                        $initials = collect(explode(' ', $archivedClient->name))
-                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $initials = $archivedClient->initials();
                         $role = $archivedClient->roles->first()?->name ?? '—';
                         $companyNames = $archivedClient->companies->pluck('name')->implode(', ') ?: 'Brak danych';
                     @endphp
@@ -470,8 +468,7 @@
             <tbody>
                 @foreach($orphanUsers as $orphanUser)
                     @php
-                        $initials = collect(explode(' ', $orphanUser->name))
-                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $initials = $orphanUser->initials();
                     @endphp
                     <tr>
                         <td>
@@ -608,8 +605,7 @@
             <tbody>
                 @forelse($allUsers as $user)
                     @php
-                        $initials = collect(explode(' ', $user->name))
-                            ->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $initials = $user->initials();
                         $role = $user->roles->first()?->name ?? '—';
                         $isActive = !$user->deleted_at;
                         $companyNames = $user->companies->pluck('name')->implode(', ') ?: '—';

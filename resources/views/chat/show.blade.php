@@ -186,9 +186,7 @@
                 @foreach($messages as $msg)
                 @php
                     $isOwn = auth()->id() == $msg->user_id;
-                    $name  = $msg->sender?->name ?? 'Nieznany';
-                    $parts = explode(' ', trim($name));
-                    $ini   = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+                    $ini = $msg->sender?->initials() ?? '?';
                 @endphp
                 <div class="cs-msg-row {{ $isOwn ? 'own' : 'other' }}" data-id="{{ $msg->id }}">
                     <div class="cs-avatar {{ $isOwn ? 'own' : 'other' }}">{{ $ini }}</div>
@@ -227,8 +225,9 @@ var csLastId = {{ $messages->last()?->id ?? 0 }};
 
 function csInitials(n) {
     if (!n) return '?';
-    var p = n.trim().split(' ');
-    return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
+    var p = n.trim().split(/\s+/).filter(Boolean);
+    if (!p.length) return '?';
+    return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toLocaleUpperCase('pl-PL');
 }
 function csEsc(t) {
     return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');

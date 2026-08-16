@@ -318,10 +318,7 @@
                 @foreach($messages as $msg)
                 @php
                     $isOwn = auth()->id() == $msg->user_id;
-                    $initials = strtoupper(substr($msg->sender->name ?? 'U', 0, 1));
-                    if (($pos = strpos($msg->sender->name ?? '', ' ')) !== false) {
-                        $initials = strtoupper(substr($msg->sender->name, 0, 1) . substr($msg->sender->name, $pos + 1, 1));
-                    }
+                    $initials = $msg->sender?->initials() ?? '?';
                 @endphp
                 <div class="msg-row {{ $isOwn ? 'own' : 'other' }}" data-id="{{ $msg->id }}">
                     <div class="msg-avatar {{ $isOwn ? 'own' : 'other' }}">{{ $initials }}</div>
@@ -367,8 +364,9 @@ let lastId = {{ $messages->last()?->id ?? 0 }};
 
 function initials(name) {
     if (!name) return '?';
-    const parts = name.trim().split(' ');
-    return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toLocaleUpperCase('pl-PL');
 }
 
 function buildBubble(msg) {

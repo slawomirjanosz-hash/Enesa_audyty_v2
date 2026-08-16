@@ -344,7 +344,7 @@
         @endphp
         <div class="sidebar-footer">
             <div class="avatar">
-                {{ strtoupper(substr($clientUser->name, 0, 2)) }}
+                {{ $clientUser->initials() }}
             </div>
             <div style="flex:1;min-width:0;">
                 <div class="sidebar-user-name">{{ $clientUser->name }}</div>
@@ -682,8 +682,9 @@
 
     function wInitials(name) {
         if (!name) return '?';
-        var parts = name.trim().split(' ');
-        return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+        var parts = name.trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return '?';
+        return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toLocaleUpperCase('pl-PL');
     }
 
     function wEsc(text) {

@@ -393,7 +393,7 @@
     @auth
         <div class="sidebar-footer">
             <div class="avatar">
-                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                {{ auth()->user()->initials() }}
             </div>
             <div style="flex:1;min-width:0;">
                 <div class="sidebar-user-name">{{ auth()->user()->name }}</div>

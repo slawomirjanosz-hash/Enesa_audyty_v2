@@ -519,7 +519,7 @@
     <div class="sidebar-footer">
         @auth
             <div class="avatar">
-                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                {{ Auth::user()->initials() }}
             </div>
             <div style="flex:1;min-width:0;">
                 <span class="sidebar-user-name">{{ Auth::user()->name }}</span>
@@ -920,8 +920,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     function initials(n) {
         if (!n) return '?';
-        var p = n.trim().split(' ');
-        return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
+        var p = n.trim().split(/\s+/).filter(Boolean);
+        if (!p.length) return '?';
+        return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toLocaleUpperCase('pl-PL');
     }
     function scrollBottom() {
         var el = document.getElementById('aud-messages-window');
