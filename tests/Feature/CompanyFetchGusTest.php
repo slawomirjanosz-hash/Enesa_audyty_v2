@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
 test('staff can fetch editable company data including postcode by nip', function () {
@@ -21,7 +22,7 @@ test('staff can fetch editable company data including postcode by nip', function
     ]);
 
     $this->actingAs($admin)
-        ->postJson(route('companies.fetchGus'), ['nip' => '123-456-78-90'])
+        ->postJson(route('companies.fetchGus'), ['nip' => '  NIP: PL 123-456-78-90 / skopiowany z KRS  '])
         ->assertOk()
         ->assertJson([
             'address' => 'ul. Testowa 12',
@@ -30,4 +31,30 @@ test('staff can fetch editable company data including postcode by nip', function
         ]);
 
     Http::assertSent(fn ($request) => str_contains($request->url(), '/api/search/nip/1234567890'));
+});
+
+test('company form keeps an untrimmed NIP and normalizes it when saved', function () {
+    Mail::fake();
+    Role::findOrCreate('superadmin');
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole('superadmin');
+
+    $dashboard = $this->actingAs($superadmin)->get(route('dashboard'))->assertOk();
+    preg_match('/<input[^>]+id="nip-input"[^>]*>/i', $dashboard->getContent(), $nipInput);
+
+    expect($nipInput[0] ?? '')->not->toContain('maxlength=')
+        ->and($nipInput[0] ?? '')->not->toContain('oninput=');
+
+    $this->actingAs($superadmin)
+        ->post(route('companies.store'), [
+            'company_type' => 'client',
+            'name' => 'Firma z kopiowanym NIP',
+            'nip' => '  NIP: PL 123-456-78-90 / skopiowany z KRS  ',
+        ])
+        ->assertSessionHasNoErrors();
+
+    $this->assertDatabaseHas('companies', [
+        'name' => 'Firma z kopiowanym NIP',
+        'nip' => '1234567890',
+    ]);
 });

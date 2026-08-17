@@ -2066,7 +2066,7 @@
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">NIP</label>
                     <div style="display:flex;gap:6px;margin-top:4px;">
-                        <input type="text" id="edit-company-nip" name="nip" value="{{ $company->nip }}" maxlength="20"
+                        <input type="text" id="edit-company-nip" name="nip" value="{{ $company->nip }}"
                             style="min-width:0;flex:1;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                         <button type="button" onclick="fetchCompanyFromGus()"
                             style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">

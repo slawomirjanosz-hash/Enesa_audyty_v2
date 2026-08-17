@@ -18,7 +18,7 @@
 
             <label>NIP firmy</label>
             <div class="supplier-nip-row">
-                <input id="supplier-nip" name="nip" value="{{ old('nip') }}" maxlength="13" placeholder="np. 527-000-11-22" oninput="this.value=this.value.replace(/[^0-9\-]/g,'')">
+                <input id="supplier-nip" name="nip" value="{{ old('nip') }}" placeholder="np. 527-000-11-22">
                 <button type="button" onclick="fetchSupplierFromGus()">Pobierz z GUS</button>
             </div>
             <div id="supplier-gus-status" class="supplier-gus-status"></div>

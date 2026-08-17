@@ -27,7 +27,7 @@ class CompanyController extends Controller
 {
     public function fetchGus(Request $request)
     {
-        $nip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
+        $nip = Company::normalizeNip($request->nip) ?? '';
 
         if (strlen($nip) !== 10) {
             return response()->json(['error' => 'NIP musi mieć dokładnie 10 cyfr.'], 422);
@@ -236,10 +236,12 @@ class CompanyController extends Controller
     {
         $this->authorize('update', $company);
 
+        $request->merge(['nip' => Company::normalizeNip($request->nip)]);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'company_type' => ['nullable', Rule::in(['client', 'supplier'])],
-            'nip' => ['nullable', 'string', 'max:20'],
+            'nip' => ['nullable', 'digits:10'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
@@ -429,7 +431,7 @@ class CompanyController extends Controller
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
 
-        $cleanNip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
+        $cleanNip = Company::normalizeNip($request->nip);
         $request->merge([
             'nip' => $cleanNip,
             'company_type' => $request->input('company_type', 'client'),

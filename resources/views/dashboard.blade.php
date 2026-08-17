@@ -799,8 +799,7 @@
                     <input id="nip-input" type="text" name="nip" placeholder="np. 527-000-11-22"
                            value="{{ old('nip') }}"
                            style="flex:1;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;"
-                           oninput="this.value=this.value.replace(/[^0-9\-]/g,'')"
-                           maxlength="13">
+                           autocomplete="off">
                     <button type="button" onclick="fetchFromGus()"
                             style="padding:10px 14px;background:rgba(26,77,58,0.08);border:1px solid rgba(26,77,58,0.25);border-radius:6px;color:var(--green);font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
                         Pobierz z GUS
@@ -943,7 +942,8 @@
     }
 
     function fetchFromGus() {
-        const nip = document.getElementById('nip-input').value.replace(/[^0-9]/g, '');
+        const nipInput = document.getElementById('nip-input');
+        const nip = nipInput.value.replace(/[^0-9]/g, '');
         const status = document.getElementById('gus-status');
 
         if (nip.length !== 10) {
@@ -976,6 +976,8 @@
             const name = document.getElementById('company-name');
             const addr = document.getElementById('company-address');
             const city = document.getElementById('company-city');
+
+            nipInput.value = nip;
 
             name.value = d.name    || '';
             addr.value = d.address || '';

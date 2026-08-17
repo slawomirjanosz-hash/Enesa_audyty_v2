@@ -25,7 +25,7 @@ class RegistrationController extends Controller
 
     public function register(Request $request)
     {
-        $cleanNip = preg_replace('/[^0-9]/', '', $request->nip ?? '');
+        $cleanNip = Company::normalizeNip($request->nip);
         $request->merge(['nip' => $cleanNip]);
 
         $data = $request->validate([

@@ -20,6 +20,8 @@ class CompanySettingsController extends Controller
 
     public function update(Request $request)
     {
+        $request->merge(['nip' => Company::normalizeNip($request->nip)]);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'short_name' => ['nullable', 'string', 'max:20'],
@@ -29,7 +31,7 @@ class CompanySettingsController extends Controller
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
             'postcode' => ['nullable', 'string', 'max:10'],
-            'nip' => ['nullable', 'string', 'size:10'],
+            'nip' => ['nullable', 'digits:10'],
             'website' => ['nullable', 'url', 'max:255'],
             'primary_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'welcome_page_mode' => ['required', 'in:audit,general,login_only'],

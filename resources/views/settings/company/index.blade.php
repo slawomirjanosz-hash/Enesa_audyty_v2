@@ -328,7 +328,7 @@
                     <div class="nip-actions">
                         <input id="nip" type="text" name="nip" class="cf-input @error('nip') is-invalid @enderror"
                                value="{{ old('nip', $company->nip ?? '') }}"
-                               placeholder="0000000000" maxlength="13">
+                               placeholder="0000000000">
                         <button id="fetch-gus" type="button" class="btn-gus">
                             <i class="ti ti-download"></i>Pobierz z GUS
                         </button>

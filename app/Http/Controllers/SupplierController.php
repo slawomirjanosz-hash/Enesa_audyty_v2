@@ -67,9 +67,10 @@ class SupplierController extends Controller
     {
         abort_unless($supplier->company_type === 'supplier', 404);
         $this->authorize('update', $supplier);
+        $request->merge(['nip' => Company::normalizeNip($request->nip)]);
         $data = $request->validateWithBag('supplierEdit', [
             'name' => ['required', 'string', 'max:255'],
-            'nip' => ['nullable', 'string', 'max:20'],
+            'nip' => ['nullable', 'digits:10'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],

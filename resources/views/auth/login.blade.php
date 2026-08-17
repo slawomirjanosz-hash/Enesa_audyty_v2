@@ -173,7 +173,7 @@
             <div class="mform-group">
                 <label for="regNip">NIP firmy</label>
                 <div class="mform-row">
-                    <input id="regNip" type="text" class="mform-input" placeholder="000-000-00-00" maxlength="13">
+                    <input id="regNip" type="text" class="mform-input" placeholder="000-000-00-00">
                     <button type="button" class="btn-gus" onclick="fetchGUS()">Pobierz z GUS</button>
                 </div>
             </div>

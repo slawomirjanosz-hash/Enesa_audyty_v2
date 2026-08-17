@@ -365,7 +365,7 @@
                 <label for="nip-input">NIP firmy</label>
                 <div class="form-row">
                     <input id="nip-input" type="text" name="nip" class="form-input"
-                           placeholder="np. 527-000-11-22 lub 5270001122" maxlength="13"
+                           placeholder="np. 527-000-11-22 lub 5270001122"
                            value="{{ old('nip') }}"
                            oninput="formatNipHint()">
                     <button type="button" class="btn-gus" onclick="fetchFromGus()">Pobierz z GUS</button>
@@ -490,6 +490,7 @@
             const nameField    = document.getElementById('company-name');
             const addressField = document.getElementById('company-address');
             const cityField    = document.getElementById('company-city');
+            document.getElementById('nip-input').value = clean;
             if (data.name)    { nameField.value    = data.name;    nameField.style.borderColor    = '#2E7D32'; }
             if (data.address) { addressField.value = data.address; addressField.style.borderColor = '#2E7D32'; }
             if (data.city)    { cityField.value    = data.city;    cityField.style.borderColor    = '#2E7D32'; }

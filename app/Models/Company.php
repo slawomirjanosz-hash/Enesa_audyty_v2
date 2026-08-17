@@ -32,6 +32,13 @@ class Company extends Model
         'archived_at' => 'datetime',
     ];
 
+    public static function normalizeNip(mixed $value): ?string
+    {
+        $digits = preg_replace('/\D+/u', '', (string) $value) ?? '';
+
+        return $digits !== '' ? $digits : null;
+    }
+
     public function logoDataUri(): ?string
     {
         if (! $this->logo_path) {
