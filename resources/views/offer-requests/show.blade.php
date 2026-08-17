@@ -9,8 +9,8 @@
     {{-- Nagłówek --}}
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
         <div>
-            <a href="javascript:history.back()" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--green);text-decoration:none;font-weight:600;margin-bottom:8px;">
-                <i class="ti ti-arrow-left"></i> Wróć
+            <a href="{{ route('companies.show', $offerRequest->company_id) }}#zapytania" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--green);text-decoration:none;font-weight:600;margin-bottom:8px;">
+                <i class="ti ti-arrow-left"></i> Wróć do zapytań
             </a>
             <h1 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#1A1A1A;margin:0;">
                 Zapytanie: {{ $offerRequest->offerFormTemplate?->name ?? 'Zapytanie ogólne' }}
