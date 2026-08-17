@@ -57,4 +57,15 @@ test('company form keeps an untrimmed NIP and normalizes it when saved', functio
         'name' => 'Firma z kopiowanym NIP',
         'nip' => '1234567890',
     ]);
+
+    $duplicate = $this->actingAs($superadmin)
+        ->from(route('dashboard'))
+        ->post(route('companies.store'), [
+            'company_type' => 'client',
+            'name' => 'Druga firma z tym samym NIP',
+            'nip' => '123-456-78-90',
+        ]);
+
+    $duplicate->assertRedirect(route('dashboard'))
+        ->assertSessionHasErrors(['nip' => 'Firma o podanym NIP już istnieje.']);
 });
