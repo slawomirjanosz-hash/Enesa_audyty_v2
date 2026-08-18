@@ -86,7 +86,7 @@ class DocumentController extends Controller
             abort(404, 'Plik nie istnieje na dysku.');
         }
 
-        return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+        return Storage::disk('local')->download($document->stored_path, $document->displayFilename());
     }
 
     public function destroy(Document $document): RedirectResponse

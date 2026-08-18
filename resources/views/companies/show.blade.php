@@ -1740,10 +1740,10 @@
                         <td style="font-weight:600;">
                             @if($doc->offer_id)
                                 <a href="{{ route('offers.show', $doc->offer_id) }}" style="color:var(--green);text-decoration:none;">
-                                    {{ $doc->original_filename }}
+                                    {{ $doc->displayFilename() }}
                                 </a>
                             @else
-                                {{ $doc->original_filename }}
+                                {{ $doc->displayFilename() }}
                             @endif
                         </td>
                         <td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $typeColor }}">{{ $typeLabel }}</span></td>

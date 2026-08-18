@@ -577,7 +577,7 @@ class OfferController extends Controller
         $this->authorize('viewPrices', $offer);
         try {
             $mpdf = $this->buildOfferPdf($offer, $request->has('unit') ? $request->boolean('unit') : null);
-            $filename = 'oferta-'.$offer->fullNumber().'.pdf';
+            $filename = $offer->documentFilename('pdf');
 
             return response($mpdf->Output($filename, 'S'), 200, [
                 'Content-Type' => 'application/pdf',
@@ -601,10 +601,14 @@ class OfferController extends Controller
         $mpdf = $this->buildOfferPdf($offer);
         $binary = $mpdf->Output('', 'S');
 
-        $safeNumber = str_replace(['/', '\\', ' '], '_', $offer->fullNumber());
-        $filename = 'oferta_'.$safeNumber.'.pdf';
+        $filename = $offer->documentFilename('pdf');
         $companyFolder = $offer->company?->folderSlug() ?? ('firma_'.$offer->company_id);
         $relativePath = 'documents/'.$companyFolder.'/'.$filename;
+        $existingDocument = Document::query()
+            ->where('offer_id', $offer->id)
+            ->where('type', 'offer_pdf')
+            ->first();
+        $previousPath = $existingDocument?->stored_path;
 
         Storage::disk('local')->put($relativePath, $binary);
 
@@ -619,6 +623,10 @@ class OfferController extends Controller
                 'uploaded_by' => null,
             ]
         );
+
+        if ($previousPath && $previousPath !== $relativePath) {
+            Storage::disk('local')->delete($previousPath);
+        }
 
         return redirect()->back()->with('success', 'PDF oferty został zapisany w dokumentach firmy.');
     }
@@ -992,7 +1000,7 @@ class OfferController extends Controller
         );
 
         // ── GENEROWANIE ──────────────────────────────────────────────────────
-        $filename = 'Oferta_'.str_replace(['/', '\\', ' '], '_', $offer->offer_number ?? $offer->id).'.docx';
+        $filename = $offer->documentFilename('docx');
         $tempPath = storage_path('app/temp/'.$filename);
 
         if (! is_dir(storage_path('app/temp'))) {

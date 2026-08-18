@@ -50,4 +50,13 @@ class Document extends Model
 
         return $bytes.' B';
     }
+
+    public function displayFilename(): string
+    {
+        if ($this->type === 'offer_pdf' && $this->offer) {
+            return $this->offer->documentFilename('pdf');
+        }
+
+        return $this->original_filename;
+    }
 }

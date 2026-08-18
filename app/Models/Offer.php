@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Offer extends Model
 {
@@ -94,6 +95,23 @@ class Offer extends Model
     {
         return $this->offer_full_number
             ?? ($this->offer_number.($this->offer_slug ? '_'.$this->offer_slug : ''));
+    }
+
+    public function documentFilename(string $extension = 'pdf'): string
+    {
+        $safeNumber = trim((string) preg_replace(
+            '/[^A-Za-z0-9_-]+/',
+            '_',
+            Str::ascii($this->fullNumber())
+        ), '_');
+        $safeTitle = trim((string) preg_replace(
+            '/[^A-Za-z0-9_-]+/',
+            '_',
+            Str::ascii($this->offer_title ?: 'bez_nazwy')
+        ), '_');
+        $safeTitle = Str::limit($safeTitle, 100, '');
+
+        return 'oferta_'.$safeNumber.'_'.$safeTitle.'.'.ltrim($extension, '.');
     }
 
     public static function generateNumber(bool $isTemplate = false): string

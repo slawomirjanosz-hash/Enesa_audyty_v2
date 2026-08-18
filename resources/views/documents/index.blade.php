@@ -92,7 +92,7 @@
                     @endphp
                     <tr>
                         <td style="font-weight:600;">
-                            {{ $doc->original_filename }}
+                            {{ $doc->displayFilename() }}
                         </td>
                         <td><span class="badge {{ $typeClass }}">{{ $typeLabel }}</span></td>
                         <td style="color:#888;">{{ $doc->formattedSize() }}</td>
