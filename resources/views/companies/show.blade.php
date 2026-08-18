@@ -1308,7 +1308,7 @@
                     $crmTaskPriorities = ['low' => 'Niski', 'medium' => 'Średni', 'high' => 'Wysoki'];
                 @endphp
                 <table class="data-table">
-                    <thead><tr><th>Zadanie</th><th>Lead</th><th>Przypisany</th><th>Termin</th><th>Priorytet</th><th>Status</th><th>Oferta</th></tr></thead>
+                    <thead><tr><th>Zadanie</th><th>Lead</th><th>Przypisany</th><th>Termin</th><th>Priorytet</th><th>Status</th><th>Oferta</th>@if($canManageCrm)<th>Akcje</th>@endif</tr></thead>
                     <tbody>
                         @foreach($crmTasks as $task)
                             @php
@@ -1316,7 +1316,11 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <div style="font-weight:700;color:#1e1e1e;">{{ $task->title }}</div>
+                                    @if($canManageCrm)
+                                        <button type="button" onclick="openCompanyTaskEditModal({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->crm_opportunity_id ?? 'null' }}, {{ $task->assigned_to ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), @js($task->priority), @js($task->status))" style="padding:0;border:0;background:none;font:inherit;font-weight:700;color:#1e1e1e;cursor:pointer;text-align:left;">{{ $task->title }}</button>
+                                    @else
+                                        <div style="font-weight:700;color:#1e1e1e;">{{ $task->title }}</div>
+                                    @endif
                                     @if($task->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($task->description, 100) }}</div>@endif
                                 </td>
                                 <td style="font-size:12px;color:#555;">{{ $task->crmOpportunity?->title ?? '—' }}</td>
@@ -1334,6 +1338,9 @@
                                         <span style="color:#aaa;font-size:12px;">—</span>
                                     @endif
                                 </td>
+                                @if($canManageCrm)
+                                    <td><button type="button" class="btn-action btn-secondary-action" style="padding:5px 9px;border:1px solid #D0CCC0;cursor:pointer;" onclick="openCompanyTaskEditModal({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->crm_opportunity_id ?? 'null' }}, {{ $task->assigned_to ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), @js($task->priority), @js($task->status))"><i class="ti ti-pencil"></i> Edytuj</button></td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -1897,8 +1904,9 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('crm.tasks.store') }}">
+        <form method="POST" action="{{ route('crm.tasks.store') }}" id="companyTaskForm">
             @csrf
+            <input type="hidden" name="_method" value="PUT" id="company-task-method" disabled>
             <input type="hidden" name="company_id" value="{{ $company->id }}">
             <input type="hidden" name="company_context_id" value="{{ $company->id }}">
 
@@ -1954,7 +1962,7 @@
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
                 <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="closeCompanyTaskModal()">Anuluj</button>
-                <button type="submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-plus"></i> Dodaj zadanie</button>
+                <button type="submit" id="company-task-submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-plus"></i> Dodaj zadanie</button>
             </div>
         </form>
     </div>
@@ -2306,9 +2314,35 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         if (modal) modal.style.display = 'none';
     }
 
-    function openCompanyTaskModal() {
+    function openCompanyTaskModal(preserveValues = false) {
         const modal = document.getElementById('companyTaskModal');
         if (!modal) return;
+        const form = document.getElementById('companyTaskForm');
+        if (!preserveValues) form.reset();
+        form.action = @js(route('crm.tasks.store'));
+        document.getElementById('company-task-method').disabled = true;
+        document.getElementById('companyTaskModalTitle').textContent = 'Dodaj zadanie';
+        document.getElementById('company-task-submit').innerHTML = '<i class="ti ti-plus"></i> Dodaj zadanie';
+        modal.style.display = 'flex';
+        window.setTimeout(() => document.getElementById('company-task-title')?.focus(), 30);
+    }
+
+    function openCompanyTaskEditModal(id, title, description, leadId, assignedTo, dueDate, priority, status) {
+        const modal = document.getElementById('companyTaskModal');
+        const form = document.getElementById('companyTaskForm');
+        if (!modal || !form) return;
+
+        form.action = @js(url('/crm/tasks')) + '/' + id;
+        document.getElementById('company-task-method').disabled = false;
+        document.getElementById('companyTaskModalTitle').textContent = 'Edytuj zadanie';
+        document.getElementById('company-task-submit').innerHTML = '<i class="ti ti-check"></i> Zapisz zmiany';
+        document.getElementById('company-task-title').value = title || '';
+        document.getElementById('company-task-description').value = description || '';
+        document.getElementById('company-task-lead').value = leadId || '';
+        document.getElementById('company-task-assigned').value = assignedTo || '';
+        document.getElementById('company-task-due-date').value = dueDate || '';
+        document.getElementById('company-task-priority').value = priority || 'medium';
+        document.getElementById('company-task-status').value = status || 'todo';
         modal.style.display = 'flex';
         window.setTimeout(() => document.getElementById('company-task-title')?.focus(), 30);
     }
@@ -2399,7 +2433,7 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
     }
 
     @if($errors->taskCreate->any())
-        openCompanyTaskModal();
+        openCompanyTaskModal(true);
     @endif
 
     @if($errors->leadCreate->any())

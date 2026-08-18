@@ -204,7 +204,7 @@ test('client CRM card shows tasks related to that company', function () {
     $company = Company::create(['name' => 'Klient z zadaniami', 'company_type' => 'client', 'status' => 'active']);
     $otherCompany = Company::create(['name' => 'Inny klient', 'company_type' => 'client', 'status' => 'active']);
 
-    Task::create([
+    $task = Task::create([
         'title' => 'Telefon do klienta',
         'company_id' => $company->id,
         'assigned_to' => $admin->id,
@@ -226,7 +226,49 @@ test('client CRM card shows tasks related to that company', function () {
         ->assertOk()
         ->assertSee('Powiązane zadania CRM')
         ->assertSee('Telefon do klienta')
+        ->assertSee('openCompanyTaskEditModal('.$task->id, false)
+        ->assertSee('Edytuj')
         ->assertDontSee('Zadanie innej firmy');
+});
+
+test('admin edits a client task directly from the client CRM card', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('system.full_access'));
+    $company = Company::create(['name' => 'Klient edytowanego zadania', 'company_type' => 'client', 'status' => 'active']);
+    $lead = CrmOpportunity::create([
+        'title' => 'Lead po edycji',
+        'company_id' => $company->id,
+        'created_by' => $admin->id,
+        'stage' => 'new_lead',
+    ]);
+    $task = Task::create([
+        'title' => 'Pierwotne zadanie',
+        'company_id' => $company->id,
+        'created_by' => $admin->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+    ]);
+
+    $this->actingAs($admin)
+        ->put(route('crm.tasks.update', $task), [
+            'title' => 'Zadanie po edycji',
+            'description' => 'Uzupełniony opis',
+            'company_id' => $company->id,
+            'company_context_id' => $company->id,
+            'crm_opportunity_id' => $lead->id,
+            'assigned_to' => $admin->id,
+            'status' => 'in_progress',
+            'priority' => 'high',
+            'due_date' => '2026-08-28',
+        ])
+        ->assertRedirect(route('companies.show', $company).'#crm')
+        ->assertSessionHas('success');
+
+    expect($task->refresh()->title)->toBe('Zadanie po edycji')
+        ->and($task->crm_opportunity_id)->toBe($lead->id)
+        ->and($task->status)->toBe('in_progress')
+        ->and($task->priority)->toBe('high');
 });
 
 test('admin adds a client task with an optional related lead from the client card', function () {
