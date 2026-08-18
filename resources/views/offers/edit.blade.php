@@ -159,6 +159,13 @@
 }
 .rich-editor:empty::before { content:attr(data-placeholder); color:#bbb; pointer-events:none; }
 .rich-editor ul, .rich-editor ol { padding-left:20px; }
+.ql-editor table { width:100%; table-layout:fixed; border-collapse:collapse; }
+.ql-editor th, .ql-editor td { min-width:40px; }
+body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !important; user-select:none !important; }
+.btn-section-action { width:30px; height:28px; padding:0; border:1px solid #D0CCC0; border-radius:6px; background:#fff; color:var(--green); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; }
+.btn-section-action:hover { background:#F0F7F3; }
+.btn-section-action:disabled { opacity:.35; cursor:not-allowed; }
+.btn-section-clear { width:auto; padding:0 9px; gap:4px; color:#8A5A00; border-color:#E8C77B; }
 
 /* â”€â”€ Price table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section-name-input {
@@ -1423,6 +1430,9 @@ function addTextSection(sectionData) {
         <div class="ed-card-header">
             <i class="ti ti-file-text"></i>
             <input type="text" class="section-name-input text-section-name" value="${name.replace(/"/g,'&quot;')}" style="flex:1;">
+            <button type="button" class="btn-section-action move-up" onclick="moveTextSection('${sid}', -1)" title="Przesuń sekcję wyżej" aria-label="Przesuń sekcję wyżej"><i class="ti ti-arrow-up"></i></button>
+            <button type="button" class="btn-section-action move-down" onclick="moveTextSection('${sid}', 1)" title="Przesuń sekcję niżej" aria-label="Przesuń sekcję niżej"><i class="ti ti-arrow-down"></i></button>
+            <button type="button" class="btn-section-action btn-section-clear" onclick="clearTextSection('${sid}')" title="Usuń zawartość, pozostawiając nazwę"><i class="ti ti-eraser"></i> Wyczyść</button>
             <select class="text-section-placement" title="Położenie sekcji w PDF" style="max-width:165px;">
                 <option value="before_price" ${placement === 'before_price' ? 'selected' : ''}>Przed wyceną</option>
                 <option value="after_price" ${placement === 'after_price' ? 'selected' : ''}>Po wycenie</option>
@@ -1446,13 +1456,132 @@ function addTextSection(sectionData) {
 
     const toolbarOptions = [['bold','italic','underline'],[{header:[2,3,false]}],[{list:'ordered'},{list:'bullet'}],['clean']];
     textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { table: true, toolbar: toolbarOptions } });
-    if (content) textQuills[sid].clipboard.dangerouslyPasteHTML(content);
+    if (content) {
+        textQuills[sid].clipboard.dangerouslyPasteHTML(content);
+        restoreTableColumnWidths(textQuills[sid].root, content);
+    }
+    enableResizableTables(textQuills[sid].root);
+    updateTextSectionMoveButtons();
 }
 
 function removeTextSection(sid) {
     if (!confirm('Usunąć tę sekcję?')) return;
     document.getElementById('text-section-' + sid)?.remove();
     delete textQuills[sid];
+    updateTextSectionMoveButtons();
+}
+
+function moveTextSection(sid, direction) {
+    const card = document.getElementById('text-section-' + sid);
+    const container = document.getElementById('text-sections-container');
+    if (!card || !container) return;
+
+    const target = direction < 0 ? card.previousElementSibling : card.nextElementSibling;
+    if (!target) return;
+
+    const targetPlacement = target.querySelector('.text-section-placement')?.value;
+    const placement = card.querySelector('.text-section-placement');
+    if (placement && targetPlacement) placement.value = targetPlacement;
+
+    if (direction < 0) {
+        container.insertBefore(card, target);
+    } else {
+        container.insertBefore(target, card);
+    }
+
+    updateTextSectionMoveButtons();
+}
+
+function updateTextSectionMoveButtons() {
+    const cards = Array.from(document.querySelectorAll('#text-sections-container .ed-card'));
+    cards.forEach((card, index) => {
+        const up = card.querySelector('.move-up');
+        const down = card.querySelector('.move-down');
+        if (up) up.disabled = index === 0;
+        if (down) down.disabled = index === cards.length - 1;
+    });
+}
+
+function clearTextSection(sid) {
+    const quill = textQuills[sid];
+    if (!quill) return;
+
+    const hasContent = quill.getText().trim() !== '' || quill.root.querySelector('table, img');
+    if (hasContent && !confirm('Wyczyścić całą zawartość tej sekcji? Jej nazwa pozostanie bez zmian.')) return;
+
+    quill.setContents([]);
+    quill.focus();
+}
+
+function enableResizableTables(editor) {
+    if (!editor || editor.dataset.resizableTables === '1') return;
+    editor.dataset.resizableTables = '1';
+
+    editor.addEventListener('mousemove', event => {
+        const cell = event.target.closest('th, td');
+        if (!cell || !editor.contains(cell)) {
+            editor.style.cursor = '';
+            return;
+        }
+
+        const edgeDistance = cell.getBoundingClientRect().right - event.clientX;
+        editor.style.cursor = edgeDistance >= 0 && edgeDistance <= 8 ? 'col-resize' : '';
+    });
+
+    editor.addEventListener('mouseleave', () => {
+        if (!document.body.classList.contains('table-column-resizing')) editor.style.cursor = '';
+    });
+
+    editor.addEventListener('mousedown', event => {
+        const cell = event.target.closest('th, td');
+        if (!cell || !editor.contains(cell)) return;
+
+        const edgeDistance = cell.getBoundingClientRect().right - event.clientX;
+        if (edgeDistance < 0 || edgeDistance > 8) return;
+
+        const table = cell.closest('table');
+        const columnIndex = Array.from(cell.parentElement.children).indexOf(cell);
+        if (!table || columnIndex < 0) return;
+
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = cell.getBoundingClientRect().width;
+        const columnCells = Array.from(table.rows)
+            .map(row => row.cells[columnIndex])
+            .filter(Boolean);
+
+        table.style.tableLayout = 'fixed';
+        table.style.width = '100%';
+        document.body.classList.add('table-column-resizing');
+
+        const onMove = moveEvent => {
+            const width = Math.max(40, Math.round(startWidth + moveEvent.clientX - startX));
+            columnCells.forEach(columnCell => { columnCell.style.width = width + 'px'; });
+        };
+        const onUp = () => {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            document.body.classList.remove('table-column-resizing');
+            editor.style.cursor = '';
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+    });
+}
+
+function restoreTableColumnWidths(editor, html) {
+    const source = document.createElement('div');
+    source.innerHTML = html;
+    const sourceCells = source.querySelectorAll('th, td');
+    const targetCells = editor.querySelectorAll('th, td');
+
+    sourceCells.forEach((cell, index) => {
+        const width = parseInt(cell.style.width, 10);
+        if (targetCells[index] && Number.isFinite(width)) {
+            targetCells[index].style.width = Math.max(40, width) + 'px';
+        }
+    });
 }
 
 function fmtOn(editorId, cmd, value) {
@@ -1543,7 +1672,7 @@ let delegSections = @json(old('delegations') ? json_decode(old('delegations'), t
 
 // Jeśli brak danych JSON ale istnieje stary offerDelegation — importuj go (zachowanie 
 // zapisanych wcześniej delegacji w starym formacie)
-@if(empty($editorDelegations) && $offer->offerDelegation)
+@if($editorUsesLegacyDelegation && $offer->offerDelegation)
 delegSections = [{
     nazwa:    'Siedziba zamawiającego',
     adres:    '',

@@ -310,6 +310,7 @@ class OfferController extends Controller
         $editorPriceSections = $this->safeEditorArray($offer, 'price_sections');
         $editorTextSections = $this->safeEditorArray($offer, 'text_sections');
         $editorDelegations = $this->safeEditorArray($offer, 'delegations');
+        $editorUsesLegacyDelegation = $offer->getRawOriginal('delegations') === null;
         $companySettings = CompanySettings::first();
         $companies = Company::clients()->orderBy('name')->get();
         $users = $this->offerAssignableUsers();
@@ -340,6 +341,7 @@ class OfferController extends Controller
             'editorPriceSections',
             'editorTextSections',
             'editorDelegations',
+            'editorUsesLegacyDelegation',
         ));
     }
 
@@ -517,17 +519,21 @@ class OfferController extends Controller
 
         $this->crmStageSynchronizer->synchronize($offer);
 
-        $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
-        $delegation->fill([
-            'km_do_klienta' => $data['km_do_klienta'] ?? null,
-            'stawka_km' => $data['stawka_km'] ?? 1.10,
-            'czas_dojazdu_min' => $data['czas_dojazdu_min'] ?? null,
-            'liczba_wyjazdow' => $data['liczba_wyjazdow'],
-            'czy_kilkudniowy' => $request->boolean('czy_kilkudniowy'),
-            'liczba_noc' => $data['liczba_noc'],
-            'liczba_osob' => $data['liczba_osob'],
-            'stawka_noc' => $data['stawka_noc'],
-        ])->save();
+        if ($delegations === []) {
+            $offer->offerDelegation?->delete();
+        } else {
+            $delegation = $offer->offerDelegation ?? new OfferDelegation(['offer_id' => $offer->id]);
+            $delegation->fill([
+                'km_do_klienta' => $data['km_do_klienta'] ?? null,
+                'stawka_km' => $data['stawka_km'] ?? 1.10,
+                'czas_dojazdu_min' => $data['czas_dojazdu_min'] ?? null,
+                'liczba_wyjazdow' => $data['liczba_wyjazdow'],
+                'czy_kilkudniowy' => $request->boolean('czy_kilkudniowy'),
+                'liczba_noc' => $data['liczba_noc'],
+                'liczba_osob' => $data['liczba_osob'],
+                'stawka_noc' => $data['stawka_noc'],
+            ])->save();
+        }
 
         return redirect()->route('offers.show', $offer)
             ->with('success', 'Oferta '.$offer->offer_full_number.' została zaktualizowana.');

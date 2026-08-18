@@ -40,7 +40,22 @@ class OfferContentService
         $html = preg_replace('/<p>\s*<\/p>/i', '', $html);
         $html = preg_replace('/<span[^>]*ql-ui[^>]*>.*?<\/span>/s', '', $html);
         $html = strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><h2><h3><table><thead><tbody><tr><th><td>');
-        $html = preg_replace('/<(p|br|strong|b|em|i|u|ul|ol|li|h2|h3|table|thead|tbody|tr|th|td)\b[^>]*>/i', '<$1>', $html);
+        $html = preg_replace_callback(
+            '/<(p|br|strong|b|em|i|u|ul|ol|li|h2|h3|table|thead|tbody|tr|th|td)\b([^>]*)>/i',
+            function (array $matches): string {
+                $tag = strtolower($matches[1]);
+
+                if (in_array($tag, ['th', 'td'], true)
+                    && preg_match('/style\s*=\s*["\'][^"\']*width\s*:\s*([0-9]+(?:\.[0-9]+)?)px/i', $matches[2], $widthMatch)) {
+                    $width = min(2000, max(40, (int) round((float) $widthMatch[1])));
+
+                    return sprintf('<%s style="width: %dpx">', $tag, $width);
+                }
+
+                return '<'.$tag.'>';
+            },
+            $html
+        );
 
         return trim($html);
     }

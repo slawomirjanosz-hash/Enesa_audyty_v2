@@ -2,6 +2,7 @@
 
 use App\Models\Company;
 use App\Models\Offer;
+use App\Models\OfferDelegation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -94,10 +95,55 @@ test('missing optional staff role does not break offer forms', function () {
 
     $this->actingAs($admin)
         ->get(route('offers.create'))
-        ->assertOk();
+        ->assertOk()
+        ->assertSee('moveTextSection', false)
+        ->assertSee('clearTextSection', false)
+        ->assertSee('enableResizableTables', false);
 
     $this->actingAs($admin)
         ->get(route('offers.edit', $offer))
         ->assertOk()
-        ->assertSee('OF_NO_ROLE_001');
+        ->assertSee('OF_NO_ROLE_001')
+        ->assertSee('moveTextSection', false)
+        ->assertSee('clearTextSection', false)
+        ->assertSee('enableResizableTables', false);
+});
+
+test('empty delegation list is not rebuilt from the legacy delegation', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Klient bez delegacji', 'company_type' => 'client', 'status' => 'active']);
+    $offer = Offer::create([
+        'company_id' => $company->id,
+        'offer_number' => 'OF_NO_DELEGATION_001',
+        'offer_full_number' => 'OF_NO_DELEGATION_001',
+        'status' => 'w_toku',
+    ]);
+
+    OfferDelegation::create([
+        'offer_id' => $offer->id,
+        'km_do_klienta' => 777,
+        'liczba_wyjazdow' => 1,
+        'liczba_noc' => 0,
+        'liczba_osob' => 1,
+    ]);
+    $this->actingAs($admin)
+        ->put(route('offers.update', $offer), [
+            'company_id' => $company->id,
+            'offer_number' => $offer->offer_number,
+            'status' => 'w_toku',
+            'delegations' => '[]',
+            'liczba_wyjazdow' => 1,
+            'liczba_noc' => 0,
+            'liczba_osob' => 1,
+            'stawka_noc' => 0,
+        ])
+        ->assertRedirect(route('offers.show', $offer));
+
+    $this->assertDatabaseMissing('offer_delegations', ['offer_id' => $offer->id]);
+
+    $this->actingAs($admin)
+        ->get(route('offers.edit', $offer))
+        ->assertOk()
+        ->assertDontSee('km:       777', false);
 });

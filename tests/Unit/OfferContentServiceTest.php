@@ -25,6 +25,15 @@ test('it normalizes text section names content and placement', function () {
     ]);
 });
 
+test('it preserves safe table column widths and removes other table styles', function () {
+    $service = new OfferContentService;
+
+    $html = '<table><tr><th style="width: 180px; color:red">Nazwa</th><td style="width:99999px;background:url(x)" onclick="alert(1)">Opis</td></tr></table>';
+
+    expect($service->cleanHtml($html))
+        ->toBe('<table><tr><th style="width: 180px">Nazwa</th><td style="width: 2000px">Opis</td></tr></table>');
+});
+
 test('it removes price data from an in-memory offer', function () {
     $offer = new Offer([
         'kwota_netto' => 100,
