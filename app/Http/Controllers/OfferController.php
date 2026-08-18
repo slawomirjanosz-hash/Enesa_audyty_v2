@@ -305,6 +305,11 @@ class OfferController extends Controller
     public function edit(Offer $offer): View
     {
         $this->authorize('update', $offer);
+        $editorCreatedAt = $this->safeEditorDate($offer, 'created_at') ?? now();
+        $editorValidUntil = $this->safeEditorDate($offer, 'valid_until') ?? now()->addDays(30);
+        $editorPriceSections = $this->safeEditorArray($offer, 'price_sections');
+        $editorTextSections = $this->safeEditorArray($offer, 'text_sections');
+        $editorDelegations = $this->safeEditorArray($offer, 'delegations');
         $companySettings = CompanySettings::first();
         $companies = Company::clients()->orderBy('name')->get();
         $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
@@ -330,7 +335,61 @@ class OfferController extends Controller
             'crmOpportunities',
             'suggestedNumber',
             'numberExists',
+            'editorCreatedAt',
+            'editorValidUntil',
+            'editorPriceSections',
+            'editorTextSections',
+            'editorDelegations',
         ));
+    }
+
+    private function safeEditorDate(Offer $offer, string $attribute): ?Carbon
+    {
+        $value = $offer->getRawOriginal($attribute);
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($value);
+        } catch (\Throwable $exception) {
+            Log::warning('Offer editor ignored an invalid date', [
+                'offer_id' => $offer->id,
+                'attribute' => $attribute,
+                'value' => $value,
+                'exception' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function safeEditorArray(Offer $offer, string $attribute): array
+    {
+        $value = $offer->getRawOriginal($attribute);
+
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $decoded = json_decode((string) $value, true, flags: JSON_INVALID_UTF8_SUBSTITUTE);
+
+        if (! is_array($decoded)) {
+            Log::warning('Offer editor ignored invalid structured data', [
+                'offer_id' => $offer->id,
+                'attribute' => $attribute,
+                'json_error' => json_last_error_msg(),
+            ]);
+
+            return [];
+        }
+
+        return $decoded;
     }
 
     public function update(Request $request, Offer $offer): RedirectResponse

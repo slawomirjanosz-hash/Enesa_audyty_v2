@@ -255,11 +255,9 @@
         'zarchiwizowana' => ['label' => 'Zarchiwizowana','class' => 'badge-gray'],
         default          => ['label' => $offer->status,  'class' => 'badge-gray'],
     };
-    $validUntilDefault = $offer->valid_until
-        ? $offer->valid_until->format('Y-m-d')
-        : now()->addDays(30)->format('Y-m-d');
+    $validUntilDefault = $editorValidUntil->format('Y-m-d');
 
-    $existingTextSections = $offer->text_sections;
+    $existingTextSections = $editorTextSections;
     if (empty($existingTextSections)) {
         $existingTextSections = [
             ['name' => 'Przedmiot oferty', 'content' => $offer->content_subject ?? '', 'placement' => 'before_price'],
@@ -333,7 +331,7 @@
     <div class="doc-header-bar">
         <div>
             <div class="offer-num">{{ $offer->offer_number }}</div>
-            <div class="doc-date">Wystawiona: {{ $offer->created_at->format('d.m.Y') }}</div>
+            <div class="doc-date">Wystawiona: {{ $editorCreatedAt->format('d.m.Y') }}</div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <span class="badge {{ $statusLabel['class'] }}">{{ $statusLabel['label'] }}</span>
@@ -539,7 +537,7 @@
             <div>
                 <label class="field-label">Ważna do <span style="color:#DC2626;">*</span></label>
                 <input type="date" name="valid_until" class="field-input" 
-                       value="{{ old('valid_until', $offer->valid_until?->format('Y-m-d')) }}" required>
+                       value="{{ old('valid_until', $validUntilDefault) }}" required>
             </div>
         </div>
     </div>
@@ -606,7 +604,7 @@
     <div>
         <label class="field-label">Data utworzenia</label>
         <input type="date" name="created_at" class="field-input"
-               value="{{ old('created_at', $offer->created_at->format('Y-m-d')) }}">
+               value="{{ old('created_at', $editorCreatedAt->format('Y-m-d')) }}">
     </div>
 </div>
 <input type="hidden" name="liczba_wyjazdow"  value="1" id="h-wyjazdy">
@@ -685,7 +683,7 @@
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // DATA INIT
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-let priceSections = @json($offer->price_sections ?? null);
+let priceSections = @json($editorPriceSections);
 if (!priceSections || !Array.isArray(priceSections) || priceSections.length === 0) {
     priceSections = [{ id: 'main', name: 'Wycena ogólna', rows: [] }];
 }
@@ -1541,11 +1539,11 @@ const DELEG_STAWKA_KM  = 1.10;
 const DELEG_STAWKA_NOC = 200;
 const DIST_URL = '{{ route("offers.get-distance") }}';
 
-let delegSections = @json(old('delegations') ? json_decode(old('delegations'), true) : ($offer->delegations ?? []));
+let delegSections = @json(old('delegations') ? json_decode(old('delegations'), true) : $editorDelegations);
 
 // Jeśli brak danych JSON ale istnieje stary offerDelegation — importuj go (zachowanie 
 // zapisanych wcześniej delegacji w starym formacie)
-@if($offer->delegations === null && $offer->offerDelegation)
+@if(empty($editorDelegations) && $offer->offerDelegation)
 delegSections = [{
     nazwa:    'Siedziba zamawiającego',
     adres:    '',
