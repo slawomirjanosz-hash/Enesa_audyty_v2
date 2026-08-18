@@ -436,9 +436,14 @@
 
     @php
         $appModuleEnabled = fn (string $module): bool => $appBrand?->moduleEnabled($module) ?? true;
-        $canAccessModule = fn (string $permission): bool => auth()->user()->hasRole('superadmin')
-            || auth()->user()->can('system.full_access')
-            || auth()->user()->can($permission);
+        $layoutUser = auth()->user();
+        $layoutPermissionNames = $layoutUser->getAllPermissions()->pluck('name');
+        $layoutAvailablePermissionNames = app(\Spatie\Permission\PermissionRegistrar::class)
+            ->getPermissions()
+            ->pluck('name');
+        $layoutHasFullAccess = $layoutUser->hasRole('superadmin') || $layoutPermissionNames->contains('system.full_access');
+        $canAccessModule = fn (string $permission): bool => $layoutAvailablePermissionNames->contains($permission)
+            && ($layoutHasFullAccess || $layoutPermissionNames->contains($permission));
     @endphp
     <nav class="sidebar-nav">
         <ul>
