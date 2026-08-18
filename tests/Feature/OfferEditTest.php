@@ -5,6 +5,7 @@ use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 test('admin can edit a legacy offer with optional fields left empty', function () {
@@ -75,4 +76,28 @@ test('admin can edit an older offer containing malformed editor data', function 
         ->assertOk()
         ->assertSee('OF_OLD_001')
         ->assertSee('Zapisz ofertę');
+});
+
+test('missing optional staff role does not break offer forms', function () {
+    Role::query()->where('name', 'auditor_senior')->delete();
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Klient bez starszej roli', 'company_type' => 'client', 'status' => 'active']);
+    $offer = Offer::create([
+        'company_id' => $company->id,
+        'offer_number' => 'OF_NO_ROLE_001',
+        'offer_full_number' => 'OF_NO_ROLE_001',
+        'status' => 'w_toku',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('offers.create'))
+        ->assertOk();
+
+    $this->actingAs($admin)
+        ->get(route('offers.edit', $offer))
+        ->assertOk()
+        ->assertSee('OF_NO_ROLE_001');
 });

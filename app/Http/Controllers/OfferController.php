@@ -91,7 +91,7 @@ class OfferController extends Controller
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $companySettings = CompanySettings::first();
         $companies = Company::clients()->orderBy('name')->get();
-        $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
+        $users = $this->offerAssignableUsers();
         $offerTemplateTypes = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
             ->get();
@@ -312,7 +312,7 @@ class OfferController extends Controller
         $editorDelegations = $this->safeEditorArray($offer, 'delegations');
         $companySettings = CompanySettings::first();
         $companies = Company::clients()->orderBy('name')->get();
-        $users = User::role(['superadmin', 'admin', 'auditor_senior', 'auditor'])->orderBy('name')->get();
+        $users = $this->offerAssignableUsers();
         $offerTemplateTypes = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
             ->get();
@@ -390,6 +390,19 @@ class OfferController extends Controller
         }
 
         return $decoded;
+    }
+
+    private function offerAssignableUsers()
+    {
+        return User::query()
+            ->whereHas('roles', fn ($roles) => $roles->whereIn('name', [
+                'superadmin',
+                'admin',
+                'auditor_senior',
+                'auditor',
+            ]))
+            ->orderBy('name')
+            ->get();
     }
 
     public function update(Request $request, Offer $offer): RedirectResponse
