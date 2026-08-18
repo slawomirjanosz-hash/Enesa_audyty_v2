@@ -226,16 +226,34 @@ class CrmController extends Controller
     public function storeTask(Request $request): RedirectResponse
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
-        $data = $request->validate([
+        $data = $request->validateWithBag('taskCreate', [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'assigned_to' => ['nullable', 'exists:users,id'],
             'company_id' => ['nullable', 'exists:companies,id'],
+            'crm_opportunity_id' => ['nullable', 'exists:crm_opportunities,id'],
             'offer_id' => ['nullable', 'exists:offers,id'],
             'status' => ['required', 'in:todo,in_progress,done'],
             'priority' => ['required', 'in:low,medium,high'],
             'due_date' => ['nullable', 'date'],
+            'company_context_id' => ['nullable', 'integer', 'exists:companies,id'],
         ]);
+
+        $companyContextId = $data['company_context_id'] ?? null;
+        unset($data['company_context_id']);
+
+        if (! empty($data['crm_opportunity_id'])) {
+            $leadBelongsToCompany = CrmOpportunity::query()
+                ->whereKey($data['crm_opportunity_id'])
+                ->where('company_id', $data['company_id'] ?? null)
+                ->exists();
+
+            if (! $leadBelongsToCompany) {
+                return back()->withErrors([
+                    'crm_opportunity_id' => 'Wybrany lead nie należy do wskazanego klienta.',
+                ], 'taskCreate')->withInput();
+            }
+        }
 
         $task = Task::create(array_merge($data, ['created_by' => auth()->id()]));
 
@@ -245,6 +263,11 @@ class CrmController extends Controller
                 Mail::to($assignedUser->email)
                     ->send(new TaskAssigned($task));
             }
+        }
+
+        if ($companyContextId && (int) $companyContextId === (int) $task->company_id) {
+            return redirect()->to(route('companies.show', $companyContextId).'#crm')
+                ->with('success', 'Zadanie zostało dodane do klienta.');
         }
 
         return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało dodane.');

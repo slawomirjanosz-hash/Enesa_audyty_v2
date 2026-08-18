@@ -1247,6 +1247,9 @@
                     <button type="button" class="btn-action btn-primary-action" style="padding:7px 12px;border:0;cursor:pointer;" onclick="openCompanyLeadModal()">
                         <i class="ti ti-plus"></i> Dodaj lead
                     </button>
+                    <button type="button" class="btn-action btn-primary-action" style="padding:7px 12px;border:0;cursor:pointer;" onclick="openCompanyTaskModal()">
+                        <i class="ti ti-list-check"></i> Dodaj zadanie
+                    </button>
                 @endif
                 <a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="btn-action btn-secondary-action" style="padding:7px 12px;">
                     <i class="ti ti-target"></i> Otwórz lejek CRM
@@ -1305,7 +1308,7 @@
                     $crmTaskPriorities = ['low' => 'Niski', 'medium' => 'Średni', 'high' => 'Wysoki'];
                 @endphp
                 <table class="data-table">
-                    <thead><tr><th>Zadanie</th><th>Przypisany</th><th>Termin</th><th>Priorytet</th><th>Status</th><th>Oferta</th></tr></thead>
+                    <thead><tr><th>Zadanie</th><th>Lead</th><th>Przypisany</th><th>Termin</th><th>Priorytet</th><th>Status</th><th>Oferta</th></tr></thead>
                     <tbody>
                         @foreach($crmTasks as $task)
                             @php
@@ -1316,6 +1319,7 @@
                                     <div style="font-weight:700;color:#1e1e1e;">{{ $task->title }}</div>
                                     @if($task->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($task->description, 100) }}</div>@endif
                                 </td>
+                                <td style="font-size:12px;color:#555;">{{ $task->crmOpportunity?->title ?? '—' }}</td>
                                 <td style="font-size:12px;color:#555;">{{ $task->assignedUser?->name ?? '—' }}</td>
                                 <td style="font-size:12px;color:{{ $taskOverdue ? '#B91C1C' : '#7a8a80' }};font-weight:{{ $taskOverdue ? '700' : '400' }};">
                                     {{ $task->due_date?->format('d.m.Y') ?? '—' }}
@@ -1876,6 +1880,87 @@
 </div>
 @endif
 
+@if($canManageCrm)
+<div id="companyTaskModal" class="user-modal-overlay">
+    <div class="user-modal" role="dialog" aria-modal="true" aria-labelledby="companyTaskModalTitle">
+        <div class="user-modal-header">
+            <div>
+                <h2 id="companyTaskModalTitle">Dodaj zadanie</h2>
+                <p>Klient jest już przypisany: <strong>{{ $company->name }}</strong></p>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeCompanyTaskModal()" aria-label="Zamknij">&times;</button>
+        </div>
+
+        @if($errors->taskCreate->any())
+            <div style="padding:10px 12px;background:#FEF2F2;color:#991B1B;border-radius:8px;margin-bottom:14px;font-size:12px;">
+                {{ $errors->taskCreate->first() }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('crm.tasks.store') }}">
+            @csrf
+            <input type="hidden" name="company_id" value="{{ $company->id }}">
+            <input type="hidden" name="company_context_id" value="{{ $company->id }}">
+
+            <div class="modal-field">
+                <label for="company-task-title">Nazwa zadania *</label>
+                <input id="company-task-title" name="title" value="{{ old('title') }}" required maxlength="255" autofocus placeholder="Np. Zadzwonić do klienta">
+            </div>
+            <div class="modal-field">
+                <label for="company-task-lead">Powiązany lead (opcjonalnie)</label>
+                <select id="company-task-lead" name="crm_opportunity_id">
+                    <option value="">Bez powiązania z leadem</option>
+                    @foreach($crmOpportunities as $opportunity)
+                        <option value="{{ $opportunity->id }}" {{ (string) old('crm_opportunity_id') === (string) $opportunity->id ? 'selected' : '' }}>{{ $opportunity->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="modal-grid">
+                <div class="modal-field">
+                    <label for="company-task-assigned">Przypisana osoba</label>
+                    <select id="company-task-assigned" name="assigned_to">
+                        <option value="">Nieprzypisane</option>
+                        @foreach($crmAssignableUsers as $crmUser)
+                            <option value="{{ $crmUser->id }}" {{ (string) old('assigned_to', auth()->id()) === (string) $crmUser->id ? 'selected' : '' }}>{{ $crmUser->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label for="company-task-due-date">Termin</label>
+                    <input id="company-task-due-date" type="date" name="due_date" value="{{ old('due_date') }}">
+                </div>
+            </div>
+            <div class="modal-grid">
+                <div class="modal-field">
+                    <label for="company-task-priority">Priorytet</label>
+                    <select id="company-task-priority" name="priority">
+                        <option value="low" {{ old('priority') === 'low' ? 'selected' : '' }}>Niski</option>
+                        <option value="medium" {{ old('priority', 'medium') === 'medium' ? 'selected' : '' }}>Średni</option>
+                        <option value="high" {{ old('priority') === 'high' ? 'selected' : '' }}>Wysoki</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label for="company-task-status">Status</label>
+                    <select id="company-task-status" name="status">
+                        <option value="todo" {{ old('status', 'todo') === 'todo' ? 'selected' : '' }}>Do zrobienia</option>
+                        <option value="in_progress" {{ old('status') === 'in_progress' ? 'selected' : '' }}>W trakcie</option>
+                        <option value="done" {{ old('status') === 'done' ? 'selected' : '' }}>Wykonane</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-field">
+                <label for="company-task-description">Opis</label>
+                <textarea id="company-task-description" name="description" rows="3" placeholder="Dodatkowe informacje o zadaniu">{{ old('description') }}</textarea>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
+                <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="closeCompanyTaskModal()">Anuluj</button>
+                <button type="submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-plus"></i> Dodaj zadanie</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 <div id="companyOpportunityModal" class="user-modal-overlay">
     <div class="user-modal" role="dialog" aria-modal="true" aria-labelledby="companyOpportunityModalTitle" style="max-width:680px;max-height:90vh;overflow-y:auto;">
         <div class="user-modal-header">
@@ -2221,6 +2306,18 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         if (modal) modal.style.display = 'none';
     }
 
+    function openCompanyTaskModal() {
+        const modal = document.getElementById('companyTaskModal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        window.setTimeout(() => document.getElementById('company-task-title')?.focus(), 30);
+    }
+
+    function closeCompanyTaskModal() {
+        const modal = document.getElementById('companyTaskModal');
+        if (modal) modal.style.display = 'none';
+    }
+
     let selectedCompanyOpportunity = null;
     const companyOpportunities = @json($crmOpportunityPreviews);
 
@@ -2300,6 +2397,10 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         const btn = document.getElementById('tab-btn-crm');
         if (btn) switchTab('crm', btn);
     }
+
+    @if($errors->taskCreate->any())
+        openCompanyTaskModal();
+    @endif
 
     @if($errors->leadCreate->any())
     document.addEventListener('DOMContentLoaded', function () {

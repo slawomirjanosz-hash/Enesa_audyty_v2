@@ -228,3 +228,65 @@ test('client CRM card shows tasks related to that company', function () {
         ->assertSee('Telefon do klienta')
         ->assertDontSee('Zadanie innej firmy');
 });
+
+test('admin adds a client task with an optional related lead from the client card', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('system.full_access'));
+    $company = Company::create(['name' => 'Klient z nowym zadaniem', 'company_type' => 'client', 'status' => 'active']);
+    $otherCompany = Company::create(['name' => 'Inny klient z leadem', 'company_type' => 'client', 'status' => 'active']);
+    $lead = CrmOpportunity::create([
+        'title' => 'Lead klienta',
+        'company_id' => $company->id,
+        'created_by' => $admin->id,
+        'stage' => 'new_lead',
+    ]);
+    $foreignLead = CrmOpportunity::create([
+        'title' => 'Obcy lead',
+        'company_id' => $otherCompany->id,
+        'created_by' => $admin->id,
+        'stage' => 'new_lead',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('companies.show', $company).'#crm')
+        ->assertOk()
+        ->assertSee('Dodaj zadanie')
+        ->assertSee('id="companyTaskModal"', false)
+        ->assertSee('name="company_id" value="'.$company->id.'"', false)
+        ->assertSee('Powiązany lead (opcjonalnie)')
+        ->assertSee('Lead klienta')
+        ->assertDontSee('Obcy lead');
+
+    $this->actingAs($admin)
+        ->post(route('crm.tasks.store'), [
+            'title' => 'Przygotować rozmowę',
+            'company_id' => $company->id,
+            'company_context_id' => $company->id,
+            'crm_opportunity_id' => $lead->id,
+            'assigned_to' => $admin->id,
+            'status' => 'todo',
+            'priority' => 'high',
+            'due_date' => '2026-08-25',
+        ])
+        ->assertRedirect(route('companies.show', $company).'#crm')
+        ->assertSessionHas('success');
+
+    $task = Task::where('title', 'Przygotować rozmowę')->firstOrFail();
+    expect($task->company_id)->toBe($company->id)
+        ->and($task->crm_opportunity_id)->toBe($lead->id)
+        ->and($task->assigned_to)->toBe($admin->id);
+
+    $this->actingAs($admin)
+        ->post(route('crm.tasks.store'), [
+            'title' => 'Niepoprawne powiązanie',
+            'company_id' => $company->id,
+            'company_context_id' => $company->id,
+            'crm_opportunity_id' => $foreignLead->id,
+            'status' => 'todo',
+            'priority' => 'medium',
+        ])
+        ->assertSessionHasErrors('crm_opportunity_id', null, 'taskCreate');
+
+    expect(Task::where('title', 'Niepoprawne powiązanie')->exists())->toBeFalse();
+});

@@ -46,4 +46,9 @@ class CrmOpportunity extends Model
     {
         return $this->hasMany(Offer::class);
     }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
 }

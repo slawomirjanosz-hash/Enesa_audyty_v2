@@ -179,7 +179,7 @@ class CompanyController extends Controller
         $stats['crm_opportunities_count'] = $crmOpportunities->count();
 
         $crmTasks = $access->scopeByCompanyAccess(
-            Task::with(['assignedUser', 'offer'])
+            Task::with(['assignedUser', 'offer', 'crmOpportunity'])
                 ->where('company_id', $company->id)
                 ->whereNull('project_id')
                 ->orderByRaw("CASE WHEN status = 'done' THEN 1 ELSE 0 END")
