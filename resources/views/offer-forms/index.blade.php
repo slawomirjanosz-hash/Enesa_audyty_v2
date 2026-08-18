@@ -135,6 +135,9 @@
                     </td>
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
+                            <button class="btn-icon" title="Kopiuj formularz" style="background:#F0F7F3;color:var(--green);" onclick="openCopyModal(@js($template->name), @js($template->description), @js($template->fields), {{ $template->is_active ? 'true' : 'false' }})">
+                                <i class="ti ti-copy"></i>
+                            </button>
                             <button class="btn-icon btn-icon-edit" onclick="openEditModal({{ $template->id }}, @js($template->name), @js($template->description), @js($template->fields), {{ $template->is_active ? 'true' : 'false' }})">
                                 <i class="ti ti-pencil"></i>
                             </button>
@@ -484,6 +487,24 @@ function openEditModal(id, name, description, fields, isActive) {
     loadSections(fields);
     document.getElementById('modal-form').classList.add('open');
     document.body.style.overflow = 'hidden';
+}
+
+function openCopyModal(name, description, fields, isActive) {
+    editingId = null;
+    document.getElementById('modal-title-text').textContent = 'Kopiuj formularz';
+    document.getElementById('form-template').action = '{{ route("offer-forms.store") }}';
+    document.getElementById('method-field').innerHTML = '';
+    document.getElementById('f-name').value = (name || 'Formularz') + ' — kopia';
+    document.getElementById('f-desc').value = description || '';
+    document.getElementById('f-active').checked = isActive;
+    loadSections(JSON.parse(JSON.stringify(fields || [])));
+    document.getElementById('modal-form').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(() => {
+        const nameInput = document.getElementById('f-name');
+        nameInput?.focus();
+        nameInput?.select();
+    }, 30);
 }
 
 function closeModal() {
