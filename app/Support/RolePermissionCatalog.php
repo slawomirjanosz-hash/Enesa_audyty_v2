@@ -16,6 +16,10 @@ class RolePermissionCatalog
             'dashboard' => ['label' => 'Dashboard', 'permissions' => [
                 'dashboard.view' => 'Wejście do zakładki Dashboard',
             ]],
+            'calendar' => ['label' => 'Kalendarz', 'permissions' => [
+                'calendar.view' => 'Podgląd własnego kalendarza zadań',
+                'calendar.team.view' => 'Podgląd kalendarzy wszystkich użytkowników',
+            ]],
             'crm' => ['label' => 'CRM i dostawcy', 'permissions' => [
                 'crm.view' => 'Podgląd CRM, klientów i dostawców',
                 'crm.companies.manage' => 'Dodawanie, edycja, archiwizacja i usuwanie firm',

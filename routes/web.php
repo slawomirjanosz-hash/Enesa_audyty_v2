@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\BrandingController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AuditController as ClientAuditController;
 use App\Http\Controllers\Client\ChatController as ClientChatController;
@@ -54,6 +55,9 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
     ->name('companies.restore');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
+Route::get('/calendar', [CalendarController::class, 'index'])
+    ->middleware(['auth', 'staff.role', 'app.module:calendar', 'app.permission:calendar.view'])
+    ->name('calendar.index');
 
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');

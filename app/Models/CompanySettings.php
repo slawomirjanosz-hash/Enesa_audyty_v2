@@ -10,6 +10,7 @@ class CompanySettings extends Model
 {
     public const APP_MODULES = [
         'dashboard' => 'Dashboard',
+        'calendar' => 'Kalendarz',
         'crm' => 'CRM i firmy',
         'offers' => 'Oferty i zapytania',
         'projects' => 'Projekty',
@@ -73,6 +74,7 @@ class CompanySettings extends Model
     {
         $routes = [
             'dashboard' => 'dashboard',
+            'calendar' => 'calendar.index',
             'crm' => 'crm.index',
             'offers' => 'offers.index',
             'projects' => 'projects.index',

@@ -299,6 +299,33 @@
 
         .sidebar-backdrop { display: none; }
 
+        .calendar-quick-link {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
+            border: 2px solid rgba(255,255,255,.85);
+            box-shadow: 0 8px 24px rgba(0,0,0,.24);
+            text-decoration: none;
+            z-index: 850;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .calendar-quick-link:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 11px 28px rgba(0,0,0,.28);
+        }
+
+        .calendar-quick-link i { font-size: 23px; }
+
         @media (max-width: 767px) {
             html, body { overflow-x: hidden; }
 
@@ -342,6 +369,7 @@
 
             #main { margin-left: 0; padding-top: 56px; }
             .content-area { padding: 16px; }
+            .calendar-quick-link { right: 16px; bottom: 16px; width: 46px; height: 46px; }
         }
     </style>
 
@@ -417,6 +445,15 @@
                 <a href="{{ url('/dashboard') }}"
                    class="nav-link {{ request()->is('dashboard*') ? 'active' : '' }}">
                     <i class="ti ti-layout-dashboard"></i> Dashboard
+                </a>
+            </li>
+            @endif
+
+            @if($appModuleEnabled('calendar') && $canAccessModule('calendar.view'))
+            <li class="nav-item">
+                <a href="{{ route('calendar.index') }}"
+                   class="nav-link {{ request()->routeIs('calendar.*') ? 'active' : '' }}">
+                    <i class="ti ti-calendar-month"></i> Kalendarz
                 </a>
             </li>
             @endif
@@ -569,6 +606,12 @@
         @yield('content')
     </div>
 </main>
+
+@if($appModuleEnabled('calendar') && $canAccessModule('calendar.view'))
+    <a href="{{ route('calendar.index') }}" class="calendar-quick-link" aria-label="Otwórz kalendarz" data-tooltip="Kalendarz">
+        <i class="ti ti-calendar-month"></i>
+    </a>
+@endif
 
 <script>
     function updateClock() {

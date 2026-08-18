@@ -20,6 +20,7 @@ class EnsureAppModuleEnabled
         $user = $request->user();
         $permission = [
             'dashboard' => 'dashboard.view',
+            'calendar' => 'calendar.view',
             'crm' => 'crm.view',
             'offers' => 'offers.view',
             'projects' => 'projects.view',
