@@ -314,7 +314,7 @@
             border: 2px solid rgba(255,255,255,.85);
             box-shadow: 0 8px 24px rgba(0,0,0,.24);
             text-decoration: none;
-            z-index: 850;
+            z-index: 9998;
             transition: transform .15s ease, box-shadow .15s ease;
         }
 
@@ -325,6 +325,7 @@
         }
 
         .calendar-quick-link i { font-size: 23px; }
+        .calendar-quick-link.with-chat { bottom: 92px; }
 
         @media (max-width: 767px) {
             html, body { overflow-x: hidden; }
@@ -370,6 +371,7 @@
             #main { margin-left: 0; padding-top: 56px; }
             .content-area { padding: 16px; }
             .calendar-quick-link { right: 16px; bottom: 16px; width: 46px; height: 46px; }
+            .calendar-quick-link.with-chat { bottom: 88px; }
         }
     </style>
 
@@ -445,15 +447,6 @@
                 <a href="{{ url('/dashboard') }}"
                    class="nav-link {{ request()->is('dashboard*') ? 'active' : '' }}">
                     <i class="ti ti-layout-dashboard"></i> Dashboard
-                </a>
-            </li>
-            @endif
-
-            @if($appModuleEnabled('calendar') && $canAccessModule('calendar.view'))
-            <li class="nav-item">
-                <a href="{{ route('calendar.index') }}"
-                   class="nav-link {{ request()->routeIs('calendar.*') ? 'active' : '' }}">
-                    <i class="ti ti-calendar-month"></i> Kalendarz
                 </a>
             </li>
             @endif
@@ -550,6 +543,15 @@
                 </ul>
             </li>
             @endif
+
+            @if($appModuleEnabled('calendar') && $canAccessModule('calendar.view'))
+            <li class="nav-item">
+                <a href="{{ route('calendar.index') }}"
+                   class="nav-link {{ request()->routeIs('calendar.*') ? 'active' : '' }}">
+                    <i class="ti ti-calendar-month"></i> Kalendarz
+                </a>
+            </li>
+            @endif
         </ul>
     </nav>
 
@@ -608,7 +610,7 @@
 </main>
 
 @if($appModuleEnabled('calendar') && $canAccessModule('calendar.view'))
-    <a href="{{ route('calendar.index') }}" class="calendar-quick-link" aria-label="Otwórz kalendarz" data-tooltip="Kalendarz">
+    <a href="{{ route('calendar.index') }}" class="calendar-quick-link{{ request()->routeIs('companies.show') ? ' with-chat' : '' }}" aria-label="Otwórz kalendarz" title="Kalendarz">
         <i class="ti ti-calendar-month"></i>
     </a>
 @endif

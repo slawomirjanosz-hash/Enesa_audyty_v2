@@ -97,12 +97,15 @@ test('calendar is available from navigation and floating shortcut only with perm
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
-    $this->actingAs($admin)
+    $response = $this->actingAs($admin)
         ->get(route('dashboard'))
         ->assertOk()
         ->assertSee('Kalendarz')
         ->assertSee('class="calendar-quick-link"', false)
-        ->assertSee('href="'.route('calendar.index').'"', false);
+        ->assertSee('href="'.route('calendar.index').'"', false)
+        ->assertDontSee('data-tooltip="Kalendarz"', false);
+
+    $response->assertSeeInOrder(['Ustawienia', 'Kalendarz']);
 
     $role = Role::findOrCreate('bez_kalendarza');
     $user = User::factory()->create();
