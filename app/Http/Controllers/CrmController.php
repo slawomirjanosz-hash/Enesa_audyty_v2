@@ -29,7 +29,11 @@ class CrmController extends Controller
         $access = app(AuditorAccessService::class);
         $authUser = auth()->user();
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
+        $canManageCrm = $access->hasFullAccess($authUser);
         $availableTabs = ['companies', 'suppliers', 'pipeline', 'tasks', 'archive'];
+        if ($canManageCrm) {
+            $availableTabs[] = 'trash';
+        }
         if ($auditsEnabled) {
             $availableTabs[] = 'audits';
         }
@@ -73,8 +77,6 @@ class CrmController extends Controller
             'can_view_offers'
         )->get() : collect();
 
-        $canManageCrm = $access->hasFullAccess($authUser);
-
         $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer'])
             ->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
@@ -82,6 +84,22 @@ class CrmController extends Controller
         $myTasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::forUser(auth()->id())
             ->with(['assignedUser', 'company', 'offer'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
+
+        $trashTasksQuery = $access->scopeByCompanyAccess(
+            Task::onlyTrashed()->whereNull('project_id'),
+            $authUser,
+            'can_view_dashboard'
+        );
+        $trashTasksCount = $canManageCrm ? (clone $trashTasksQuery)->count() : 0;
+        $trashTasks = $currentTab === 'trash' && $canManageCrm
+            ? $trashTasksQuery->with(['assignedUser', 'company', 'deletedBy'])
+                ->orderByDesc('deleted_at')
+                ->get()
+            : collect();
+        $trashTaskSummary = $trashTasks
+            ->groupBy(fn (Task $task) => $task->assignedUser?->name ?? 'Nieprzypisane')
+            ->map->count()
+            ->sortDesc();
 
         $audits = $auditsEnabled && $currentTab === 'audits'
             ? $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')->get()
@@ -136,7 +154,7 @@ class CrmController extends Controller
             ->get() : collect();
 
         return view('crm.index', compact(
-            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
+            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
         ));
     }
 
@@ -317,9 +335,21 @@ class CrmController extends Controller
     public function destroyTask(Task $task): RedirectResponse
     {
         $this->authorize('delete', $task);
+        $task->update(['deleted_by' => auth()->id()]);
         $task->delete();
 
-        return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało usunięte.');
+        return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało przeniesione do kosza.');
+    }
+
+    public function restoreTask(Request $request, int $taskId): RedirectResponse
+    {
+        $task = Task::onlyTrashed()->findOrFail($taskId);
+        $this->authorize('update', $task);
+        $task->restore();
+        $task->update(['deleted_by' => null]);
+
+        return redirect()->route('crm.index', ['tab' => 'trash'])
+            ->with('success', 'Zadanie zostało przywrócone.');
     }
 
     public function updateTaskStatus(Request $request, Task $task): JsonResponse

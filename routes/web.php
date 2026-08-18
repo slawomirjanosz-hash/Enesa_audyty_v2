@@ -240,6 +240,7 @@ Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.modul
     Route::post('/tasks', [CrmController::class, 'storeTask'])->middleware('app.permission:crm.tasks.manage')->name('tasks.store');
     Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
+    Route::patch('/tasks/{taskId}/restore', [CrmController::class, 'restoreTask'])->middleware('app.permission:crm.tasks.manage')->name('tasks.restore');
     Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
     Route::delete('/orphaned-users/{assignmentId}', [CrmController::class, 'detachOrphanedUser'])->name('detach-orphaned-user');
 });

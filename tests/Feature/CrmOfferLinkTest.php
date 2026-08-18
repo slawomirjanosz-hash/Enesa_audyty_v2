@@ -271,6 +271,47 @@ test('admin edits a client task directly from the client CRM card', function () 
         ->and($task->priority)->toBe('high');
 });
 
+test('deleted CRM task is visible in trash statistics and can be restored', function () {
+    $admin = User::factory()->create(['name' => 'Administrator CRM']);
+    $admin->assignRole('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('system.full_access'));
+    $employee = User::factory()->create(['name' => 'Jan Zadaniowy']);
+    $employee->assignRole('auditor');
+    $company = Company::create(['name' => 'Klient zadania w koszu', 'company_type' => 'client', 'status' => 'active']);
+    $task = Task::create([
+        'title' => 'Zadanie do zachowania w historii',
+        'company_id' => $company->id,
+        'assigned_to' => $employee->id,
+        'created_by' => $admin->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+        'due_date' => '2026-08-30',
+    ]);
+
+    $this->actingAs($admin)
+        ->delete(route('crm.tasks.destroy', $task))
+        ->assertRedirect(route('crm.index', ['tab' => 'tasks']))
+        ->assertSessionHas('success');
+
+    $this->assertSoftDeleted('tasks', ['id' => $task->id, 'deleted_by' => $admin->id]);
+
+    $this->actingAs($admin)
+        ->get(route('crm.index', ['tab' => 'trash']))
+        ->assertOk()
+        ->assertSee('Zadanie do zachowania w historii')
+        ->assertSee('Jan Zadaniowy')
+        ->assertSee('Administrator CRM')
+        ->assertSee('Przywróć');
+
+    $this->actingAs($admin)
+        ->patch(route('crm.tasks.restore', $task->id))
+        ->assertRedirect(route('crm.index', ['tab' => 'trash']))
+        ->assertSessionHas('success');
+
+    expect(Task::find($task->id))->not->toBeNull()
+        ->and(Task::find($task->id)?->deleted_by)->toBeNull();
+});
+
 test('admin adds a client task with an optional related lead from the client card', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

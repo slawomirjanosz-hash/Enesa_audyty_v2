@@ -201,6 +201,12 @@
         <i class="ti ti-checklist"></i> Zadania
         <span class="tab-count">{{ $stats['open_tasks'] }}</span>
     </a>
+    @if($canManageCrm)
+        <a href="{{ route('crm.index', ['tab'=>'trash']) }}" class="crm-tab {{ $currentTab==='trash'?'active':'' }}">
+            <i class="ti ti-trash"></i> Kosz
+            <span class="tab-count">{{ $trashTasksCount }}</span>
+        </a>
+    @endif
     @if($auditsEnabled)
         <a href="{{ route('crm.index', ['tab'=>'audits']) }}" class="crm-tab {{ $currentTab==='audits'?'active':'' }}">
             <i class="ti ti-clipboard-check"></i> Audyty
@@ -609,6 +615,56 @@
 @endif
 
 {{-- ═══ TAB: AUDYTY ═══ --}}
+@if($currentTab === 'trash' && $canManageCrm)
+<div class="table-card" style="margin-bottom:16px;">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="ti ti-chart-bar" style="color:var(--green);margin-right:6px;"></i> Usunięte zadania według przypisanej osoby</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;padding:16px;">
+        @forelse($trashTaskSummary as $person => $count)
+            <div style="min-width:170px;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:9px;padding:11px 13px;">
+                <div style="font-size:12px;color:#666;">{{ $person }}</div>
+                <div style="font-size:20px;font-weight:800;color:var(--green);margin-top:3px;">{{ $count }}</div>
+            </div>
+        @empty
+            <div style="font-size:13px;color:#999;">Kosz zadań jest pusty.</div>
+        @endforelse
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="ti ti-trash" style="color:#B91C1C;margin-right:6px;"></i> Usunięte zadania ({{ $trashTasks->count() }})</div>
+        <div class="search-box"><i class="ti ti-search"></i><input type="text" placeholder="Szukaj..." oninput="filterTable('trash-tasks-tbody', this.value, [0,1,2,3])"></div>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="crm-table">
+            <thead><tr><th>Zadanie</th><th>Firma</th><th>Przypisany</th><th>Termin</th><th>Usunięto</th><th>Usunął</th><th>Akcje</th></tr></thead>
+            <tbody id="trash-tasks-tbody">
+                @forelse($trashTasks as $task)
+                    <tr>
+                        <td><div style="font-weight:700;">{{ $task->title }}</div>@if($task->description)<div style="font-size:11px;color:#888;">{{ \Illuminate\Support\Str::limit($task->description, 90) }}</div>@endif</td>
+                        <td style="font-size:12px;color:#666;">{{ $task->company?->name ?? '—' }}</td>
+                        <td style="font-size:12px;">{{ $task->assignedUser?->name ?? 'Nieprzypisane' }}</td>
+                        <td style="font-size:12px;color:#666;">{{ $task->due_date?->format('d.m.Y') ?? '—' }}</td>
+                        <td style="font-size:12px;color:#666;">{{ $task->deleted_at?->format('d.m.Y H:i') ?? '—' }}</td>
+                        <td style="font-size:12px;color:#666;">{{ $task->deletedBy?->name ?? '—' }}</td>
+                        <td>
+                            <form method="POST" action="{{ route('crm.tasks.restore', $task->id) }}">
+                                @csrf @method('PATCH')
+                                <button type="submit" class="btn-secondary" style="padding:5px 9px;"><i class="ti ti-restore"></i> Przywróć</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="7" style="padding:28px;text-align:center;color:#999;">Brak usuniętych zadań.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
+
 @if($auditsEnabled && $currentTab === 'audits')
 <div class="table-card">
     <div class="table-card-header">
