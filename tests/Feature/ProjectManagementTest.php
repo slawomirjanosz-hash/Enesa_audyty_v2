@@ -1,12 +1,15 @@
 <?php
 
 use App\Exports\ProjectGanttExport;
+use App\Exports\ProjectRequirementsListExport;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
 use App\Models\ProjectFinancialEntry;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Spatie\Permission\Models\Role;
@@ -555,6 +558,69 @@ test('requirements excel import recognizes flexible columns matches relations an
         ->and($project->requirements()->count())->toBe(3);
 
     @unlink($path);
+});
+
+test('project requirements can be exported for one supplier and selected statuses', function () {
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+    $client = Company::create(['name' => 'Klient eksportu', 'company_type' => 'client', 'status' => 'active']);
+    $supplier = Company::create(['name' => 'Dostawca Eksportowy', 'company_type' => 'supplier', 'status' => 'active']);
+    $project = Project::create([
+        'number' => 'PRJ/2026/EXPORT', 'name' => 'Eksport materiałów', 'company_id' => $client->id,
+        'manager_id' => $manager->id, 'status' => 'active', 'contract_value' => 10000, 'created_by' => $manager->id,
+    ]);
+    $project->requirements()->create([
+        'type' => 'material', 'name' => 'Pompa do zapytania', 'quantity' => 2, 'unit' => 'szt.',
+        'estimated_cost' => 2400, 'supplier_company_id' => $supplier->id, 'supplier' => $supplier->name,
+        'status' => 'requested', 'created_by' => $manager->id,
+    ]);
+    $project->requirements()->create([
+        'type' => 'material', 'name' => 'Zawór już zamówiony', 'quantity' => 1, 'unit' => 'szt.',
+        'estimated_cost' => 900, 'supplier_company_id' => $supplier->id, 'supplier' => $supplier->name,
+        'status' => 'ordered', 'created_by' => $manager->id,
+    ]);
+    $project->requirements()->create([
+        'type' => 'service', 'name' => 'Usługa innego dostawcy', 'quantity' => 1, 'unit' => 'usł.',
+        'estimated_cost' => 500, 'supplier' => 'Dostawca zewnętrzny', 'status' => 'requested', 'created_by' => $manager->id,
+    ]);
+
+    $this->actingAs($manager)
+        ->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
+        ->assertOk()
+        ->assertSee('Generuj listę Excel')
+        ->assertSee(route('projects.requirements.export', $project), false)
+        ->assertSee('Dostawca Eksportowy');
+
+    Excel::fake();
+    $this->actingAs($manager)->get(route('projects.requirements.export', [
+        'project' => $project,
+        'document_type' => 'inquiry',
+        'supplier_filter' => 'company:'.$supplier->id,
+        'statuses' => ['requested'],
+    ]))->assertOk();
+
+    $filename = implode('_', [
+        'Zapytanie_ofertowe',
+        Str::slug($project->number, '_'),
+        Str::slug($supplier->name, '_'),
+        now()->format('Y-m-d'),
+    ]).'.xlsx';
+    Excel::assertDownloaded($filename, function (ProjectRequirementsListExport $export): bool {
+        $rows = $export->array();
+        $values = collect($rows)->flatten()->filter()->all();
+
+        return in_array('Pompa do zapytania', $values, true)
+            && ! in_array('Zawór już zamówiony', $values, true)
+            && ! in_array('Usługa innego dostawcy', $values, true)
+            && in_array('Cena oferowana netto', $rows[7], true)
+            && str_starts_with((string) $rows[8][11], '=IF(');
+    });
+
+    $this->actingAs($manager)->get(route('projects.requirements.export', [
+        'project' => $project,
+        'document_type' => 'order',
+        'supplier_filter' => 'company:'.$supplier->id,
+    ]))->assertRedirect()->assertSessionHasErrorsIn('requirementsExport', ['statuses']);
 });
 
 test('projects module can be disabled for an application deployment', function () {

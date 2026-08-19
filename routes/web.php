@@ -271,6 +271,7 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::delete('/{project}/finance-groups/{group}', [ProjectController::class, 'destroyFinanceGroup'])->middleware('app.permission:projects.finances.manage')->name('finance-groups.destroy');
     Route::post('/{project}/requirements', [ProjectController::class, 'storeRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.store');
     Route::get('/{project}/requirements/template', [ProjectController::class, 'downloadRequirementsTemplate'])->name('requirements.template');
+    Route::get('/{project}/requirements/export', [ProjectController::class, 'exportRequirements'])->name('requirements.export');
     Route::post('/{project}/requirements/import', [ProjectController::class, 'importRequirements'])->middleware('app.permission:projects.requirements.manage')->name('requirements.import');
     Route::post('/{project}/requirements/bulk', [ProjectController::class, 'bulkUpdateRequirements'])->middleware('app.permission:projects.requirements.manage')->name('requirements.bulk');
     Route::patch('/{project}/requirements/{requirement}/status', [ProjectController::class, 'updateRequirementStatus'])->middleware('app.permission:projects.requirements.manage')->name('requirements.status');

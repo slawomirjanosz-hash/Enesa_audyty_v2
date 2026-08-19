@@ -46,6 +46,18 @@
         ])
         ->sortByDesc('total')
         ->values();
+    $requirementExportSuppliers = $project->requirements
+        ->map(function($requirement) {
+            if ($requirement->supplierCompany) {
+                return ['value' => 'company:'.$requirement->supplierCompany->id, 'label' => $requirement->supplierCompany->name];
+            }
+            $supplier = trim((string) $requirement->supplier);
+            return $supplier !== '' ? ['value' => 'external:'.$supplier, 'label' => $supplier.' (spoza CRM)'] : null;
+        })
+        ->filter()
+        ->unique('value')
+        ->sortBy('label', SORT_NATURAL | SORT_FLAG_CASE)
+        ->values();
     $requirementItems = $project->requirements->map(fn($requirement) => [
         'id' => $requirement->id,
         'type' => $requirement->type,
@@ -72,6 +84,7 @@
     .finance-section{background:#fff;border:1px solid #e5e1d8;border-radius:11px;margin-bottom:14px;overflow:hidden}.finance-section>summary{display:flex;align-items:center;gap:10px;padding:15px 18px;cursor:pointer;font-size:15px;font-weight:800;list-style:none}.finance-section>summary::-webkit-details-marker{display:none}.finance-section>summary:before{content:'›';font-size:22px;line-height:1;transition:transform .18s}.finance-section[open]>summary:before{transform:rotate(90deg)}.finance-section>summary small{margin-left:auto;color:#77827b;font-size:10px;font-weight:700}.finance-section-body{border-top:1px solid #eee;padding:18px}.finance-import-note{font-size:11px;color:#66736b;line-height:1.5;background:#f7f8f5;border-radius:7px;padding:10px;margin-bottom:13px}.import-report{border:1px solid #bae6c6;background:#f0fdf4;border-radius:9px;padding:14px;margin-bottom:14px}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.report-value{background:#fff;border-radius:7px;padding:9px}.report-value small{display:block;color:#66736b;font-size:9px;text-transform:uppercase}.report-value strong{font-size:15px}.finance-groups{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.finance-group-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;background:#f0f5f1;border-radius:999px;font-size:11px}.finance-group-chip form{display:inline}.finance-group-chip button{border:0;background:none;color:#b91c1c;cursor:pointer;padding:0}.finance-table{min-width:1050px}.source-badge{display:inline-block;border-radius:999px;background:#eef2ff;color:#4338ca;padding:3px 6px;font-size:9px;font-weight:800}.finance-edit{position:relative}.finance-edit>summary{list-style:none}.finance-edit-box{position:absolute;right:0;z-index:20;width:min(650px,80vw);background:#fff;border:1px solid #d8d3c8;border-radius:9px;padding:14px;box-shadow:0 12px 35px rgba(0,0,0,.16)}.chart-overview-shell{height:90px;margin-top:8px;position:relative;border-top:1px solid #eee;padding-top:7px}@media(max-width:700px){.report-grid{grid-template-columns:1fr 1fr}.finance-section-body{padding:12px}}
     .requirements-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.requirements-head h2{margin:0}.requirements-head p{margin:4px 0 0;color:#6b776f;font-size:12px}.requirements-head-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.requirement-import{border:1px solid #dfe5df;border-radius:9px;background:#f8faf7;margin-bottom:14px}.requirement-import>summary{list-style:none;cursor:pointer;padding:11px 13px;font-size:12px;font-weight:800;color:var(--green)}.requirement-import>summary::-webkit-details-marker{display:none}.requirement-import>summary:before{content:'›';display:inline-block;margin-right:7px;font-size:18px;vertical-align:-1px;transition:transform .15s}.requirement-import[open]>summary:before{transform:rotate(90deg)}.requirement-import-body{border-top:1px solid #e4e8e3;padding:13px}.requirement-import-form{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.requirement-import-form input{flex:1;min-width:230px;border:1px solid #d8d3c8;border-radius:7px;background:#fff;padding:8px}.requirement-import-help{font-size:11px;line-height:1.55;color:#657169;margin:0 0 11px}.requirement-search{display:flex;align-items:center;gap:9px;margin:0 0 12px;padding:10px 12px;border:1px solid #dfe5df;border-radius:9px;background:#fff}.requirement-search i{color:#66736b;font-size:18px}.requirement-search input{flex:1;min-width:180px;border:0;outline:0;background:transparent;font:inherit}.requirement-search-count{font-size:11px;font-weight:700;color:#66736b;white-space:nowrap}.requirement-search-empty{padding:22px;text-align:center;color:#66736b;background:#f8faf7;border-radius:8px;margin-top:10px}.requirement-search-empty[hidden]{display:none}.requirement-bulk-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px;margin:0 0 12px;border:1px solid #dfe5df;border-radius:9px;background:#f8faf7}.requirement-bulk-toolbar select,.requirement-bulk-toolbar input{min-width:180px;padding:7px 9px;border:1px solid #d8d3c8;border-radius:7px;background:#fff}.requirement-bulk-value[hidden]{display:none}.requirement-selected-count{font-size:11px;font-weight:700;color:#66736b}.requirements-table-wrap{overflow-x:auto}.requirements-table{min-width:850px;table-layout:fixed}.requirements-table th,.requirements-table td{padding:9px 8px;vertical-align:middle}.requirements-table:not(.with-selection) th:nth-child(1){width:29%}.requirements-table:not(.with-selection) th:nth-child(2){width:9%}.requirements-table:not(.with-selection) th:nth-child(3){width:16%}.requirements-table:not(.with-selection) th:nth-child(4){width:15%}.requirements-table:not(.with-selection) th:nth-child(5){width:11%}.requirements-table:not(.with-selection) th:nth-child(6){width:11%}.requirements-table:not(.with-selection) th:nth-child(7){width:9%}.requirements-table.with-selection th:nth-child(1){width:4%}.requirements-table.with-selection th:nth-child(2){width:27%}.requirements-table.with-selection th:nth-child(3){width:9%}.requirements-table.with-selection th:nth-child(4){width:15%}.requirements-table.with-selection th:nth-child(5){width:14%}.requirements-table.with-selection th:nth-child(6){width:11%}.requirements-table.with-selection th:nth-child(7){width:12%}.requirements-table.with-selection th:nth-child(8){width:8%}.requirement-name{display:block;line-height:1.3}.requirement-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;color:#758078}.requirement-type{padding:3px 6px;border-radius:999px;background:#eef4ef;color:#285740;font-size:9px;font-weight:800}.requirement-description{display:block;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.requirement-qty{font-size:13px;font-weight:800;white-space:nowrap}.requirement-cost{font-weight:800;white-space:nowrap}.requirement-status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;font-weight:800;white-space:nowrap}.requirement-status.planned{background:#ede9fe;color:#6d28d9}.requirement-status.requested{background:#f1f5f9;color:#475569}.requirement-status.ordered{background:#fef3c7;color:#92400e}.requirement-status.in_progress{background:#dbeafe;color:#1d4ed8}.requirement-status.purchased{background:#d1fae5;color:#047857}.requirement-status.cancelled{background:#fee2e2;color:#b91c1c}.requirement-actions{display:flex;justify-content:flex-end;gap:5px}.requirement-modal-box{width:min(760px,100%)}@media(max-width:700px){.requirements-head{align-items:flex-start;flex-direction:column}.requirements-table{min-width:820px}.requirement-import-form{align-items:stretch;flex-direction:column}.requirement-import-form input{width:100%;min-width:0}.requirement-bulk-toolbar{align-items:stretch;flex-direction:column}.requirement-bulk-toolbar select,.requirement-bulk-toolbar input,.requirement-bulk-toolbar button{width:100%}}
     .requirements-table.with-selection th:nth-child(1){width:36px!important}.requirements-table.with-selection th:nth-child(2){width:27%!important}.requirements-table.with-selection th:nth-child(3){width:13%!important}.requirements-table.with-selection th:nth-child(4){width:68px!important}.requirements-table.with-selection th:nth-child(5){width:14%!important}.requirements-table.with-selection th:nth-child(6){width:14%!important}.requirements-table.with-selection th:nth-child(7){width:116px!important}.requirements-table.with-selection th:nth-child(8){width:155px!important}.requirements-table.with-selection th:nth-child(9){width:66px!important}.requirements-table:not(.with-selection) th:nth-child(1){width:29%!important}.requirements-table:not(.with-selection) th:nth-child(2){width:14%!important}.requirements-table:not(.with-selection) th:nth-child(3){width:68px!important}.requirements-table:not(.with-selection) th:nth-child(4){width:15%!important}.requirements-table:not(.with-selection) th:nth-child(5){width:15%!important}.requirements-table:not(.with-selection) th:nth-child(6){width:116px!important}.requirements-table:not(.with-selection) th:nth-child(7){width:155px!important}.requirements-table:not(.with-selection) th:nth-child(8){width:24px!important}.requirements-table td:last-child{min-width:66px;padding-left:4px;padding-right:4px}.requirements-table .requirement-actions{min-width:58px;justify-content:flex-end}.requirements-table .requirement-status{width:112px;max-width:112px}.requirements-table .requirement-qty{white-space:nowrap}
+    .requirement-export-statuses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;padding:10px;border:1px solid #d8d3c8;border-radius:8px;background:#fafaf7}.requirement-export-status{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-size:12px!important;font-weight:600!important}.requirement-export-status input{width:16px;height:16px;accent-color:var(--green)}.requirement-export-note{padding:10px 12px;border-radius:8px;background:#f3f7f4;color:#536158;font-size:11px;line-height:1.5}@media(max-width:700px){.requirement-export-statuses{grid-template-columns:1fr}}
 </style>
 
 <div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
@@ -275,7 +288,10 @@
     <div class="card">
         <div class="requirements-head">
             <div><h2>Materiały i usługi</h2><p>Zapotrzebowania, zamówienia i dostawy dla tego projektu.</p></div>
-            @if($canEdit)<div class="requirements-head-actions"><a class="btn btn-soft" href="{{route('projects.requirements.template',$project)}}"><i class="ti ti-download"></i> Pobierz wzór Excel</a><button type="button" class="btn btn-soft" onclick="document.getElementById('requirements-import').open=true;document.getElementById('requirements-excel-input').click()"><i class="ti ti-file-spreadsheet"></i> Import z Excela</button><button type="button" class="btn" onclick="openRequirementModal()"><i class="ti ti-plus"></i> Dodaj pozycję</button></div>@endif
+            <div class="requirements-head-actions">
+                <button type="button" class="btn btn-soft" onclick="openRequirementsExportModal()"><i class="ti ti-file-spreadsheet"></i> Generuj listę Excel</button>
+                @if($canEdit)<a class="btn btn-soft" href="{{route('projects.requirements.template',$project)}}"><i class="ti ti-download"></i> Pobierz wzór Excel</a><button type="button" class="btn btn-soft" onclick="document.getElementById('requirements-import').open=true;document.getElementById('requirements-excel-input').click()"><i class="ti ti-file-spreadsheet"></i> Import z Excela</button><button type="button" class="btn" onclick="openRequirementModal()"><i class="ti ti-plus"></i> Dodaj pozycję</button>@endif
+            </div>
         </div>
         @if($canEdit)
             <details id="requirements-import" class="requirement-import" @if($errors->requirementsImport->any()) open @endif>
@@ -351,6 +367,30 @@
         @endif
     </div>
 </section>
+
+@php($requirementsExportAllStatuses = old('all_statuses', '1') === '1')
+@php($requirementsExportSelectedStatuses = old('statuses', array_keys($requirementStatusLabels)))
+<div id="requirements-export-modal" class="project-modal {{$errors->requirementsExport->any()?'open':''}}">
+    <div class="project-modal-box" style="width:min(680px,100%)">
+        <div class="modal-head"><h2>Generuj listę materiałów i usług</h2><button type="button" class="modal-close" onclick="closeRequirementsExportModal()">×</button></div>
+        <form method="GET" action="{{route('projects.requirements.export',$project)}}" id="requirements-export-form">
+            @if($errors->requirementsExport->any())<div style="padding:9px 11px;background:#fef2f2;color:#991b1b;border-radius:7px;margin-bottom:12px;font-size:12px">{{$errors->requirementsExport->first()}}</div>@endif
+            <div class="grid2">
+                <div class="field"><label>Rodzaj listy *</label><select name="document_type" id="requirements-export-document-type" required><option value="inquiry" {{old('document_type','inquiry')==='inquiry'?'selected':''}}>Zapytanie ofertowe</option><option value="order" {{old('document_type')==='order'?'selected':''}}>Zamówienie</option></select></div>
+                <div class="field"><label>Dostawca</label><select name="supplier_filter"><option value="">Wszyscy dostawcy</option>@foreach($requirementExportSuppliers as $exportSupplier)<option value="{{$exportSupplier['value']}}" {{old('supplier_filter')===$exportSupplier['value']?'selected':''}}>{{$exportSupplier['label']}}</option>@endforeach</select></div>
+                <div class="field full">
+                    <label class="requirement-export-status"><input type="checkbox" name="all_statuses" value="1" id="requirements-export-all-statuses" {{$requirementsExportAllStatuses?'checked':''}}> Wszystkie statusy</label>
+                    <div class="requirement-export-statuses" style="margin-top:7px">
+                        @foreach($requirementStatusLabels as $value=>$label)<label class="requirement-export-status"><input type="checkbox" name="statuses[]" value="{{$value}}" class="requirements-export-status-checkbox" {{in_array($value,$requirementsExportSelectedStatuses,true)?'checked':''}}> {{$label}}</label>@endforeach
+                    </div>
+                </div>
+                <div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_prices" value="1" {{old('include_prices')==='1'?'checked':''}}> Dołącz ceny zapisane w programie</label></div>
+                <div class="requirement-export-note full">Dla zapytania ofertowego możesz pozostawić ceny wyłączone — dostawca otrzyma puste kolumny do wpisania ceny, a Excel automatycznie obliczy wartości pozycji i sumę. Lista „Zamówienie” może zawierać ceny zapisane w systemie.</div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="closeRequirementsExportModal()">Anuluj</button><button class="btn"><i class="ti ti-download"></i> Pobierz Excel</button></div>
+        </form>
+    </div>
+</div>
 
 @if($canEdit)
 <div id="requirement-modal" class="project-modal" onclick="if(event.target===this)closeRequirementModal()">
@@ -431,7 +471,7 @@
 const projectTimelineItems = @json($timelineItems);
 const projectFinanceItems = @json($financeChartData);
 const projectContractValue = @json((float) $project->contract_value);
-const requestedProjectTab = @json(request('tab') ?: ($errors->ganttImport->any() ? 'gantt' : null));
+const requestedProjectTab = @json(request('tab') ?: ($errors->requirementsExport->any() ? 'requirements' : ($errors->ganttImport->any() ? 'gantt' : null)));
 const projectCanEdit = @json($canEdit);
 const projectStartDate = @json($project->start_date?->format('Y-m-d'));
 const projectEndDate = @json($project->end_date?->format('Y-m-d'));
@@ -483,6 +523,20 @@ function openRequirementModal(requirementId = null) {
     modal.classList.add('open');
 }
 function closeRequirementModal(){document.getElementById('requirement-modal')?.classList.remove('open');}
+function openRequirementsExportModal(){document.getElementById('requirements-export-modal')?.classList.add('open');}
+function closeRequirementsExportModal(){document.getElementById('requirements-export-modal')?.classList.remove('open');}
+
+const requirementsExportAllStatuses = document.getElementById('requirements-export-all-statuses');
+const requirementsExportStatusCheckboxes = document.querySelectorAll('.requirements-export-status-checkbox');
+function syncRequirementsExportStatuses() {
+    if (!requirementsExportAllStatuses) return;
+    requirementsExportStatusCheckboxes.forEach(checkbox => {
+        checkbox.disabled = requirementsExportAllStatuses.checked;
+        if (requirementsExportAllStatuses.checked) checkbox.checked = true;
+    });
+}
+requirementsExportAllStatuses?.addEventListener('change', syncRequirementsExportStatuses);
+syncRequirementsExportStatuses();
 function syncRequirementQuantityIncrement() {
     const quantity = document.getElementById('requirement-quantity');
     const unit = document.getElementById('requirement-unit')?.value.toLowerCase().replace(/[.\s]/g, '') || '';

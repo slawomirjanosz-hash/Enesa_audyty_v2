@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ProjectGanttExport;
+use App\Exports\ProjectRequirementsListExport;
 use App\Exports\ProjectRequirementsTemplateExport;
 use App\Models\Company;
 use App\Models\Document;
@@ -561,6 +562,83 @@ class ProjectController extends Controller
         );
     }
 
+    public function exportRequirements(Request $request, Project $project): BinaryFileResponse
+    {
+        $this->authorize('view', $project);
+        $statusLabels = [
+            'planned' => 'Planowane',
+            'requested' => 'Zapotrzebowanie',
+            'ordered' => 'Zamówione',
+            'in_progress' => 'W realizacji',
+            'purchased' => 'Kupione',
+            'cancelled' => 'Anulowane',
+        ];
+        $data = $request->validateWithBag('requirementsExport', [
+            'document_type' => ['required', 'in:inquiry,order'],
+            'supplier_filter' => ['nullable', 'string', 'max:500'],
+            'all_statuses' => ['nullable', 'boolean'],
+            'statuses' => ['nullable', 'array'],
+            'statuses.*' => ['string', Rule::in(array_keys($statusLabels))],
+            'include_prices' => ['nullable', 'boolean'],
+        ]);
+
+        $statuses = $request->boolean('all_statuses')
+            ? array_keys($statusLabels)
+            : array_values(array_unique($data['statuses'] ?? []));
+        if ($statuses === []) {
+            $this->throwRequirementsExportValidation('statuses', 'Wybierz co najmniej jeden status do eksportu.');
+        }
+
+        $query = $project->requirements()
+            ->with(['supplierCompany'])
+            ->whereIn('status', $statuses)
+            ->reorder()
+            ->orderBy('name');
+        $supplierLabel = 'Wszyscy dostawcy';
+        $supplierFilter = (string) ($data['supplier_filter'] ?? '');
+
+        if (str_starts_with($supplierFilter, 'company:')) {
+            $supplierId = (int) Str::after($supplierFilter, 'company:');
+            $supplier = Company::suppliers()->active()->find($supplierId);
+            if (! $supplier) {
+                $this->throwRequirementsExportValidation('supplier_filter', 'Wybrany dostawca nie jest dostępny.');
+            }
+            $query->where('supplier_company_id', $supplier->id);
+            $supplierLabel = $supplier->name;
+        } elseif (str_starts_with($supplierFilter, 'external:')) {
+            $supplierName = trim(Str::after($supplierFilter, 'external:'));
+            if ($supplierName === '') {
+                $this->throwRequirementsExportValidation('supplier_filter', 'Wybierz prawidłowego dostawcę.');
+            }
+            $query->whereNull('supplier_company_id')->where('supplier', $supplierName);
+            $supplierLabel = $supplierName;
+        } elseif ($supplierFilter !== '') {
+            $this->throwRequirementsExportValidation('supplier_filter', 'Wybierz prawidłowego dostawcę.');
+        }
+
+        $requirements = $query->get();
+        if ($requirements->isEmpty()) {
+            $this->throwRequirementsExportValidation('statuses', 'Brak pozycji pasujących do wybranego dostawcy i statusów.');
+        }
+
+        $documentLabel = $data['document_type'] === 'order' ? 'Zamowienie' : 'Zapytanie_ofertowe';
+        $filename = implode('_', array_filter([
+            $documentLabel,
+            Str::slug($project->number, '_'),
+            Str::slug($supplierLabel, '_'),
+            now()->format('Y-m-d'),
+        ])).'.xlsx';
+
+        return Excel::download(new ProjectRequirementsListExport(
+            $project,
+            $requirements,
+            $data['document_type'],
+            $supplierLabel,
+            $statuses,
+            $request->boolean('include_prices'),
+        ), $filename);
+    }
+
     public function importRequirements(Request $request, Project $project, ProjectRequirementsImportService $importer): RedirectResponse
     {
         $this->authorize('update', $project);
@@ -995,6 +1073,14 @@ class ProjectController extends Controller
     private function financeRedirect(Project $project, string $message): RedirectResponse
     {
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'finances'])->with('success', $message);
+    }
+
+    private function throwRequirementsExportValidation(string $field, string $message): never
+    {
+        $exception = ValidationException::withMessages([$field => $message]);
+        $exception->errorBag = 'requirementsExport';
+
+        throw $exception;
     }
 
     private function validateProject(Request $request, ?Project $project = null, ?string $errorBag = null): array
