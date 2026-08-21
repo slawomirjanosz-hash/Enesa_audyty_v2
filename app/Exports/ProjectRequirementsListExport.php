@@ -59,7 +59,7 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
 
         foreach ($this->requirements->values() as $index => $requirement) {
             /** @var ProjectRequirement $requirement */
-            $excelRow = $index + 9;
+            $excelRow = $index + 8;
             $quantity = (float) $requirement->quantity;
             $unitCost = $this->includePrices ? $requirement->unitCost() : null;
             $total = $this->includePrices
@@ -83,7 +83,7 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
             ];
         }
 
-        $firstDataRow = 9;
+        $firstDataRow = 8;
         $lastDataRow = $firstDataRow + $this->requirements->count() - 1;
         $sumFormula = $this->requirements->isEmpty() ? null : sprintf('=SUM(L%d:L%d)', $firstDataRow, $lastDataRow);
         $rows[] = [null, null, null, null, null, null, null, null, null, 'Łącznie netto', null, $sumFormula, null];
@@ -98,7 +98,7 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
 
     public function styles(Worksheet $sheet): array
     {
-        $lastDataRow = 8 + $this->requirements->count();
+        $lastDataRow = 7 + $this->requirements->count();
         $totalRow = $lastDataRow + 1;
 
         $sheet->mergeCells('A1:M1');
@@ -106,9 +106,9 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
             $sheet->mergeCells("B{$row}:M{$row}");
         }
 
-        $sheet->freezePane('A9');
-        if ($lastDataRow >= 9) {
-            $sheet->setAutoFilter("A8:M{$lastDataRow}");
+        $sheet->freezePane('A8');
+        if ($lastDataRow >= 8) {
+            $sheet->setAutoFilter("A7:M{$lastDataRow}");
         }
 
         $sheet->getRowDimension(1)->setRowHeight(34);
@@ -116,17 +116,17 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
         $sheet->getStyle('A1:M1')->getFill()->setFillType('solid')->getStartColor()->setARGB('FF1A4D3A');
         $sheet->getStyle('A1:M1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER)->setVertical(Alignment::VERTICAL_CENTER);
         $sheet->getStyle('A2:A6')->getFont()->setBold(true)->getColor()->setARGB('FF1A4D3A');
-        $sheet->getStyle('A8:M8')->getFont()->setBold(true)->getColor()->setARGB('FFFFFFFF');
-        $sheet->getStyle('A8:M8')->getFill()->setFillType('solid')->getStartColor()->setARGB('FF1A4D3A');
-        $sheet->getStyle('A8:M8')->getAlignment()->setWrapText(true)->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getRowDimension(8)->setRowHeight(34);
+        $sheet->getStyle('A7:M7')->getFont()->setBold(true)->getColor()->setARGB('FFFFFFFF');
+        $sheet->getStyle('A7:M7')->getFill()->setFillType('solid')->getStartColor()->setARGB('FF1A4D3A');
+        $sheet->getStyle('A7:M7')->getAlignment()->setWrapText(true)->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getRowDimension(7)->setRowHeight(34);
 
-        if ($lastDataRow >= 9) {
-            $sheet->getStyle("A9:M{$lastDataRow}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('FFE4E7E2');
-            $sheet->getStyle("C9:E{$lastDataRow}")->getAlignment()->setWrapText(true)->setVertical(Alignment::VERTICAL_TOP);
-            $sheet->getStyle("F9:F{$lastDataRow}")->getNumberFormat()->setFormatCode('#,##0.00');
-            $sheet->getStyle("H9:H{$lastDataRow}")->getNumberFormat()->setFormatCode('yyyy-mm-dd');
-            $sheet->getStyle("K9:L{$lastDataRow}")->getNumberFormat()->setFormatCode('#,##0.00 [$zł-pl-PL]');
+        if ($lastDataRow >= 8) {
+            $sheet->getStyle("A8:M{$lastDataRow}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('FFE4E7E2');
+            $sheet->getStyle("C8:E{$lastDataRow}")->getAlignment()->setWrapText(true)->setVertical(Alignment::VERTICAL_TOP);
+            $sheet->getStyle("F8:F{$lastDataRow}")->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle("H8:H{$lastDataRow}")->getNumberFormat()->setFormatCode('yyyy-mm-dd');
+            $sheet->getStyle("K8:L{$lastDataRow}")->getNumberFormat()->setFormatCode('#,##0.00 [$zł-pl-PL]');
         }
 
         $sheet->getStyle("J{$totalRow}:L{$totalRow}")->getFont()->setBold(true);

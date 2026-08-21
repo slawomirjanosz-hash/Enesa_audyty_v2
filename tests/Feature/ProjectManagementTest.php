@@ -608,12 +608,16 @@ test('project requirements can be exported for one supplier and selected statuse
     Excel::assertDownloaded($filename, function (ProjectRequirementsListExport $export): bool {
         $rows = $export->array();
         $values = collect($rows)->flatten()->filter()->all();
+        $sheet = (new Spreadsheet)->getActiveSheet();
+        $export->styles($sheet);
 
         return in_array('Pompa do zapytania', $values, true)
             && ! in_array('Zawór już zamówiony', $values, true)
             && ! in_array('Usługa innego dostawcy', $values, true)
             && in_array('Cena oferowana netto', $rows[7], true)
-            && str_starts_with((string) $rows[8][11], '=IF(');
+            && str_contains((string) $rows[8][11], 'F8*K8')
+            && $sheet->getFreezePane() === 'A8'
+            && $sheet->getAutoFilter()->getRange() === 'A7:M8';
     });
 
     $this->actingAs($manager)->get(route('projects.requirements.export', [
