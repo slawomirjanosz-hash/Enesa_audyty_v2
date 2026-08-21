@@ -620,6 +620,28 @@ test('project requirements can be exported for one supplier and selected statuse
             && $sheet->getAutoFilter()->getRange() === 'A7:M8';
     });
 
+    Excel::fake();
+    $this->actingAs($manager)->get(route('projects.requirements.export', [
+        'project' => $project,
+        'document_type' => 'order',
+        'supplier_filter' => 'company:'.$supplier->id,
+        'all_statuses' => '1',
+    ]))->assertOk();
+
+    $orderFilename = implode('_', [
+        'Zamowienie',
+        Str::slug($project->number, '_'),
+        Str::slug($supplier->name, '_'),
+        now()->format('Y-m-d'),
+    ]).'.xlsx';
+    Excel::assertDownloaded($orderFilename, function (ProjectRequirementsListExport $export): bool {
+        $rows = $export->array();
+
+        return in_array('Cena jednostkowa netto', $rows[7], true)
+            && (float) $rows[8][10] === 1200.0
+            && (float) $rows[8][11] === 2400.0;
+    });
+
     $this->actingAs($manager)->get(route('projects.requirements.export', [
         'project' => $project,
         'document_type' => 'order',

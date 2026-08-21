@@ -384,8 +384,8 @@
                         @foreach($requirementStatusLabels as $value=>$label)<label class="requirement-export-status"><input type="checkbox" name="statuses[]" value="{{$value}}" class="requirements-export-status-checkbox" {{in_array($value,$requirementsExportSelectedStatuses,true)?'checked':''}}> {{$label}}</label>@endforeach
                     </div>
                 </div>
-                <div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_prices" value="1" {{old('include_prices')==='1'?'checked':''}}> Dołącz ceny zapisane w programie</label></div>
-                <div class="requirement-export-note full">Dla zapytania ofertowego możesz pozostawić ceny wyłączone — dostawca otrzyma puste kolumny do wpisania ceny, a Excel automatycznie obliczy wartości pozycji i sumę. Lista „Zamówienie” może zawierać ceny zapisane w systemie.</div>
+                <div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_prices" value="1" id="requirements-export-include-prices" {{old('include_prices')==='1'?'checked':''}}> Dołącz ceny zapisane w programie</label></div>
+                <div class="requirement-export-note full">Zamówienie zawsze zawiera zapisane ceny jednostkowe i wartości pozycji. W zapytaniu ofertowym ceny są opcjonalne — po ich wyłączeniu dostawca otrzyma puste kolumny do wpisania ceny, a Excel automatycznie obliczy wartości i sumę.</div>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="closeRequirementsExportModal()">Anuluj</button><button class="btn"><i class="ti ti-download"></i> Pobierz Excel</button></div>
         </form>
@@ -528,6 +528,8 @@ function closeRequirementsExportModal(){document.getElementById('requirements-ex
 
 const requirementsExportAllStatuses = document.getElementById('requirements-export-all-statuses');
 const requirementsExportStatusCheckboxes = document.querySelectorAll('.requirements-export-status-checkbox');
+const requirementsExportDocumentType = document.getElementById('requirements-export-document-type');
+const requirementsExportIncludePrices = document.getElementById('requirements-export-include-prices');
 function syncRequirementsExportStatuses() {
     if (!requirementsExportAllStatuses) return;
     requirementsExportStatusCheckboxes.forEach(checkbox => {
@@ -537,6 +539,14 @@ function syncRequirementsExportStatuses() {
 }
 requirementsExportAllStatuses?.addEventListener('change', syncRequirementsExportStatuses);
 syncRequirementsExportStatuses();
+function syncRequirementsExportPrices() {
+    if (!requirementsExportDocumentType || !requirementsExportIncludePrices) return;
+    const isOrder = requirementsExportDocumentType.value === 'order';
+    requirementsExportIncludePrices.disabled = isOrder;
+    if (isOrder) requirementsExportIncludePrices.checked = true;
+}
+requirementsExportDocumentType?.addEventListener('change', syncRequirementsExportPrices);
+syncRequirementsExportPrices();
 function syncRequirementQuantityIncrement() {
     const quantity = document.getElementById('requirement-quantity');
     const unit = document.getElementById('requirement-unit')?.value.toLowerCase().replace(/[.\s]/g, '') || '';

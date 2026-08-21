@@ -622,6 +622,7 @@ class ProjectController extends Controller
         }
 
         $documentLabel = $data['document_type'] === 'order' ? 'Zamowienie' : 'Zapytanie_ofertowe';
+        $includePrices = $data['document_type'] === 'order' || $request->boolean('include_prices');
         $filename = implode('_', array_filter([
             $documentLabel,
             Str::slug($project->number, '_'),
@@ -635,7 +636,7 @@ class ProjectController extends Controller
             $data['document_type'],
             $supplierLabel,
             $statuses,
-            $request->boolean('include_prices'),
+            $includePrices,
         ), $filename);
     }
 
