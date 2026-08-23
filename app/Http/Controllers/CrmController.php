@@ -30,6 +30,7 @@ class CrmController extends Controller
         $authUser = auth()->user();
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
         $canManageCrm = $access->hasFullAccess($authUser);
+        $canViewTeamTasks = $canManageCrm || $authUser->can('calendar.team.view');
         $availableTabs = ['companies', 'suppliers', 'pipeline', 'tasks', 'archive'];
         if ($canManageCrm) {
             $availableTabs[] = 'trash';
@@ -154,7 +155,7 @@ class CrmController extends Controller
             ->get() : collect();
 
         return view('crm.index', compact(
-            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
+            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'canViewTeamTasks', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
         ));
     }
 

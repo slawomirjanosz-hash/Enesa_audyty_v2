@@ -95,7 +95,6 @@
 @section('content')
 @php
     $userId = auth()->id();
-    $isAdmin = auth()->user()->hasRole('admin');
 
     $stageMeta = [
         'new_lead'    => ['label'=>'Nowy lead',   'color'=>'#EDE9FE','text'=>'#5B21B6','border'=>'#C4B5FD','dot'=>'#7C3AED'],
@@ -548,7 +547,7 @@
     </table>
 </div>
 
-@if($isAdmin)
+@if($canViewTeamTasks)
 {{-- Zadania zespołu --}}
 <div class="task-table-wrap team">
     <div class="task-hdr team">

@@ -68,6 +68,26 @@ test('staff with crm view permission sees shared CRM data created by another use
         ->assertSee('Wspólny klient CRM');
 });
 
+test('superadmin sees tasks assigned to other users in the team task table', function () {
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole(Role::findOrCreate('superadmin'));
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    Task::create([
+        'title' => 'Zadanie admina widoczne dla superadmina',
+        'assigned_to' => $admin->id,
+        'created_by' => $superadmin->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+    ]);
+
+    $this->actingAs($superadmin)->get(route('crm.index', ['tab' => 'tasks']))
+        ->assertOk()
+        ->assertSee('Zadania zespołu')
+        ->assertSee('Zadanie admina widoczne dla superadmina');
+});
+
 test('lead can include users without full operational access and be filtered as related to them', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
