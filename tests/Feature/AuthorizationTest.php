@@ -170,7 +170,9 @@ test('superadmin manages system roles and granular custom role access', function
         ->assertSee('Super Admin')
         ->assertSee('Administrator')
         ->assertSee('Audytor')
-        ->assertSee('Zarządzanie finansami projektu');
+        ->assertSee('Zarządzanie finansami projektu')
+        ->assertSee('Podgląd cen materiałów w projekcie')
+        ->assertSee('Podgląd cen usług w projekcie');
 
     $this->actingAs($superadmin)->post('/settings/roles', [
         'name' => 'Kontroler Projektu',

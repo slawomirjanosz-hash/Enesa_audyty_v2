@@ -45,6 +45,8 @@ class RolePermissionCatalog
                 'projects.finances.view' => 'Podgląd finansów projektu',
                 'projects.finances.manage' => 'Zarządzanie finansami projektu',
                 'projects.requirements.view' => 'Podgląd materiałów i usług projektu',
+                'projects.requirements.material_prices.view' => 'Podgląd cen materiałów w projekcie',
+                'projects.requirements.service_prices.view' => 'Podgląd cen usług w projekcie',
                 'projects.requirements.manage' => 'Zarządzanie materiałami i usługami',
                 'projects.documents.view' => 'Podgląd dokumentów projektu',
                 'projects.documents.manage' => 'Zarządzanie dokumentami projektu',

@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
 use App\Models\ProjectFinancialEntry;
+use App\Models\ProjectRequirement;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
@@ -99,6 +100,52 @@ test('external project user sees only assigned projects and permitted project ta
     ])->assertRedirect(route('projects.show', $visible));
 
     expect((float) $visible->refresh()->contract_value)->toBe(50000.0);
+});
+
+test('project role can see material prices without seeing service prices', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $viewer = User::factory()->create();
+    $role = Role::findOrCreate('materialowiec_zewnetrzny');
+    $role->givePermissionTo([
+        Permission::findOrCreate('projects.view'),
+        Permission::findOrCreate('projects.edit'),
+        Permission::findOrCreate('projects.requirements.view'),
+        Permission::findOrCreate('projects.requirements.manage'),
+        Permission::findOrCreate('projects.requirements.material_prices.view'),
+    ]);
+    $viewer->assignRole($role);
+    $project = Project::create([
+        'number' => 'PRJ/CENY/001', 'name' => 'Projekt z oddzielnymi cenami',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 100000,
+        'created_by' => $admin->id,
+    ]);
+    $project->members()->attach([$admin->id, $viewer->id]);
+    ProjectRequirement::create([
+        'project_id' => $project->id, 'type' => 'material', 'name' => 'Materiał z widoczną ceną',
+        'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 1234.56, 'status' => 'planned',
+        'created_by' => $admin->id,
+    ]);
+    $service = ProjectRequirement::create([
+        'project_id' => $project->id, 'type' => 'service', 'name' => 'Usługa z ukrytą ceną',
+        'quantity' => 1, 'unit' => 'usł.', 'estimated_cost' => 9876.54, 'status' => 'planned',
+        'created_by' => $admin->id,
+    ]);
+
+    $this->actingAs($viewer)->get(route('projects.show', $project))
+        ->assertOk()
+        ->assertSee('Materiał z widoczną ceną')
+        ->assertSee('1 234,56 zł')
+        ->assertSee('Usługa z ukrytą ceną')
+        ->assertSee('Brak dostępu')
+        ->assertDontSee('9 876,54 zł');
+
+    $this->actingAs($viewer)->patch(route('projects.requirements.update', [$project, $service]), [
+        'type' => 'service', 'name' => $service->name, 'quantity' => 1, 'unit' => 'usł.',
+        'unit_cost' => 1, 'status' => 'planned',
+    ])->assertRedirect();
+
+    expect((float) $service->refresh()->estimated_cost)->toBe(9876.54);
 });
 
 test('project editor changes an internal project into a client project', function () {

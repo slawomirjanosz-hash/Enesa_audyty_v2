@@ -79,6 +79,8 @@ class ProjectController extends Controller
         $canViewSchedule = $fullAccess || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']);
         $canViewFinances = $fullAccess || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
         $canViewRequirements = $fullAccess || $user->canAny(['projects.requirements.view', 'projects.requirements.manage']);
+        $canViewMaterialPrices = $fullAccess || $user->can('projects.requirements.material_prices.view');
+        $canViewServicePrices = $fullAccess || $user->can('projects.requirements.service_prices.view');
         $canViewDocuments = $fullAccess || $user->canAny(['projects.documents.view', 'projects.documents.manage']);
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
@@ -111,6 +113,8 @@ class ProjectController extends Controller
             'canViewSchedule' => $canViewSchedule,
             'canViewFinances' => $canViewFinances,
             'canViewRequirements' => $canViewRequirements,
+            'canViewMaterialPrices' => $canViewMaterialPrices,
+            'canViewServicePrices' => $canViewServicePrices,
             'canViewDocuments' => $canViewDocuments,
         ]);
     }
@@ -634,6 +638,8 @@ class ProjectController extends Controller
 
         $documentLabel = $data['document_type'] === 'order' ? 'Zamowienie' : 'Zapytanie_ofertowe';
         $includePrices = $data['document_type'] === 'order' || $request->boolean('include_prices');
+        $canViewMaterialPrices = $this->canViewRequirementPrice($request->user(), 'material');
+        $canViewServicePrices = $this->canViewRequirementPrice($request->user(), 'service');
         $filename = implode('_', array_filter([
             $documentLabel,
             Str::slug($project->number, '_'),
@@ -648,6 +654,8 @@ class ProjectController extends Controller
             $supplierLabel,
             $statuses,
             $includePrices,
+            $canViewMaterialPrices,
+            $canViewServicePrices,
         ), $filename);
     }
 
@@ -823,6 +831,9 @@ class ProjectController extends Controller
             $data['estimated_cost'] = $unitCost === null
                 ? null
                 : round((float) $unitCost * (float) $data['quantity'], 2);
+        }
+        if (! $this->canViewRequirementPrice($request->user(), $data['type'])) {
+            unset($data['estimated_cost']);
         }
         unset($data['unit_cost']);
         if (! empty($data['supplier_company_id'])) {
@@ -1131,6 +1142,12 @@ class ProjectController extends Controller
     {
         return app(AuditorAccessService::class)->hasFullAccess($user)
             || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
+    }
+
+    private function canViewRequirementPrice(User $user, string $type): bool
+    {
+        return app(AuditorAccessService::class)->hasFullAccess($user)
+            || $user->can("projects.requirements.{$type}_prices.view");
     }
 
     private function staffUsers()

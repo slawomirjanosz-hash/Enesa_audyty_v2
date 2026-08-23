@@ -35,9 +35,10 @@
         ->whereIn('status', ['ordered', 'in_progress', 'purchased'])
         ->sum(fn($requirement) => (float) $requirement->estimated_cost);
     $activeRequirements = $project->requirements->where('status', '!=', 'cancelled');
-    $requirementsTotal = $activeRequirements->sum(fn($requirement) => (float) ($requirement->estimated_cost ?? 0));
-    $plannedRequirements = $activeRequirements->where('status', 'planned')->sum(fn($requirement) => (float) ($requirement->estimated_cost ?? 0));
-    $requirementsBySupplier = $activeRequirements
+    $requirementsWithVisiblePrices = $activeRequirements->filter(fn($requirement) => $requirement->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices);
+    $requirementsTotal = $requirementsWithVisiblePrices->sum(fn($requirement) => (float) ($requirement->estimated_cost ?? 0));
+    $plannedRequirements = $requirementsWithVisiblePrices->where('status', 'planned')->sum(fn($requirement) => (float) ($requirement->estimated_cost ?? 0));
+    $requirementsBySupplier = $requirementsWithVisiblePrices
         ->groupBy(fn($requirement) => $requirement->supplierCompany?->name ?? ($requirement->supplier ?: 'Bez dostawcy'))
         ->map(fn($items, $supplier) => [
             'supplier' => $supplier,
@@ -66,8 +67,8 @@
         'description' => $requirement->description,
         'quantity' => (float) $requirement->quantity,
         'unit' => $requirement->displayUnit(),
-        'unit_cost' => $requirement->unitCost(),
-        'estimated_cost' => $requirement->estimated_cost !== null ? (float) $requirement->estimated_cost : null,
+        'unit_cost' => ($requirement->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) ? $requirement->unitCost() : null,
+        'estimated_cost' => ($requirement->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) && $requirement->estimated_cost !== null ? (float) $requirement->estimated_cost : null,
         'needed_by' => $requirement->needed_by?->format('Y-m-d'),
         'responsible_id' => $requirement->responsible_id,
         'supplier_company_id' => $requirement->supplier_company_id,
@@ -314,13 +315,13 @@
                 </div>
             </details>
         @endif
-        <div class="finance-summary-grid" style="margin-bottom:14px">
+        @if($canViewMaterialPrices || $canViewServicePrices)<div class="finance-summary-grid" style="margin-bottom:14px">
             <div class="finance-kpi"><small>Łączna wartość zamówienia</small><strong id="requirements-total-value">{{number_format($requirementsTotal,2,',',' ')}} zł</strong></div>
             <div class="finance-kpi"><small>Planowany budżet</small><strong id="requirements-planned-value" style="color:#7c3aed">{{number_format($plannedRequirements,2,',',' ')}} zł</strong></div>
             @foreach($requirementsBySupplier as $supplierSummary)
                 <div class="finance-kpi"><small>{{$supplierSummary['supplier']}} · {{$supplierSummary['count']}} poz.</small><strong>{{number_format($supplierSummary['total'],2,',',' ')}} zł</strong></div>
             @endforeach
-        </div>
+        </div>@endif
         @if($project->requirements->isEmpty())
             <div class="empty">Brak zapotrzebowań.</div>
         @else
@@ -352,14 +353,15 @@
                     <span class="requirement-selected-count" id="requirements-selected-count">Zaznaczono: 0</span>
                 </form>
             @endif
-            <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}" style="min-width:1050px"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th style="width:13%">Technologia</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th><th>Cena / wartość</th><th></th></tr></thead><tbody>
+            <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}" style="min-width:1050px"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th style="width:13%">Technologia</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th>@if($canViewMaterialPrices || $canViewServicePrices)<th>Cena / wartość</th>@endif<th></th></tr></thead><tbody>
             @foreach($project->requirements as $req)
                 <tr class="requirement-data-row" data-requirement-search="{{collect([
                     $req->type === 'material' ? 'Materiał' : 'Usługa', $req->name, $req->technology, $req->description,
                     $req->formattedQuantity(), $req->displayUnit(), $req->needed_by?->format('d.m.Y'), $req->needed_by?->format('Y-m-d'),
                     $req->responsible?->name, $req->supplierCompany?->name ?? $req->supplier, $req->supplierCompany?->nip,
                     $requirementStatusLabels[$req->status] ?? $req->status, $req->status,
-                    $req->unitCost(), $req->estimated_cost,
+                    ($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) ? $req->unitCost() : null,
+                    ($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) ? $req->estimated_cost : null,
                 ])->filter(fn($value) => $value !== null && $value !== '')->implode(' ')}}">
                     @if($canEdit)<td><input type="checkbox" name="requirement_ids[]" value="{{$req->id}}" form="requirements-bulk-form" class="requirement-entry-check" aria-label="Zaznacz {{$req->name}}"></td>@endif
                     <td><strong class="requirement-name">{{$req->name}}</strong><div class="requirement-meta"><span class="requirement-type">{{$req->type==='material'?'Materiał':'Usługa'}}</span>@if($req->description)<span class="requirement-description" title="{{$req->description}}">{{$req->description}}</span>@endif</div></td>
@@ -368,7 +370,7 @@
                     <td>{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
                     <td>@if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}" style="color:var(--green);font-weight:700">{{$req->supplierCompany->name}}</a>@else{{$req->supplier ?: '—'}}@endif</td>
                     <td>@if($canEdit)<select class="status-select requirement-status {{$req->status}} project-async-status" data-kind="requirement" data-id="{{$req->id}}" data-current="{{$req->status}}" data-url="{{route('projects.requirements.status',[$project,$req])}}" aria-label="Status {{$req->name}}">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}" {{$req->status===$value?'selected':''}}>{{$label}}</option>@endforeach</select>@else<span class="requirement-status {{$req->status}}">{{$requirementStatusLabels[$req->status]??$req->status}}</span>@endif</td>
-                    <td>@if($req->unitCost()!==null)<span class="requirement-cost">{{number_format($req->unitCost(),2,',',' ')}} zł / {{$req->displayUnit()}}</span><br><small>Łącznie: {{number_format((float)$req->estimated_cost,2,',',' ')}} zł</small>@else<span class="requirement-cost">—</span>@endif</td>
+                    @if($canViewMaterialPrices || $canViewServicePrices)<td>@if($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) @if($req->unitCost()!==null)<span class="requirement-cost">{{number_format($req->unitCost(),2,',',' ')}} zł / {{$req->displayUnit()}}</span><br><small>Łącznie: {{number_format((float)$req->estimated_cost,2,',',' ')}} zł</small>@else<span class="requirement-cost">—</span>@endif @else<span style="color:#999">Brak dostępu</span>@endif</td>@endif
                     <td>@if($canEdit)<div class="requirement-actions"><button type="button" class="mini-btn edit" title="Edytuj" onclick="openRequirementModal({{$req->id}})">✎</button><form method="POST" action="{{route('projects.requirements.destroy',[$project,$req])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form></div>@endif</td>
                 </tr>
             @endforeach
@@ -394,7 +396,7 @@
                         @foreach($requirementStatusLabels as $value=>$label)<label class="requirement-export-status"><input type="checkbox" name="statuses[]" value="{{$value}}" class="requirements-export-status-checkbox" {{in_array($value,$requirementsExportSelectedStatuses,true)?'checked':''}}> {{$label}}</label>@endforeach
                     </div>
                 </div>
-                <div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_prices" value="1" id="requirements-export-include-prices" {{old('include_prices')==='1'?'checked':''}}> Dołącz ceny zapisane w programie</label></div>
+                @if($canViewMaterialPrices || $canViewServicePrices)<div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_prices" value="1" id="requirements-export-include-prices" {{old('include_prices')==='1'?'checked':''}}> Dołącz dostępne ceny zapisane w programie</label></div>@endif
                 <div class="requirement-export-note full">Zamówienie zawsze zawiera zapisane ceny jednostkowe i wartości pozycji. W zapytaniu ofertowym ceny są opcjonalne — po ich wyłączeniu dostawca otrzyma puste kolumny do wpisania ceny, a Excel automatycznie obliczy wartości i sumę.</div>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="closeRequirementsExportModal()">Anuluj</button><button class="btn"><i class="ti ti-download"></i> Pobierz Excel</button></div>
@@ -413,7 +415,7 @@
                 <div class="field full"><label>Technologia</label><input name="technology" id="requirement-technology" maxlength="255" placeholder="Np. Pomiary, Zawory, Obieg kotłowy lub oznaczenie ze schematu"><small style="color:#718078">Pozwala sprawdzić, czy wszystkie urządzenia technologiczne mają przypisane materiały.</small></div>
                 <div class="field"><label>Ilość *</label><input type="number" step="1" min="1" name="quantity" id="requirement-quantity" value="1" required></div>
                 <div class="field"><label>Jednostka</label><input name="unit" id="requirement-unit" placeholder="np. szt., kg, m, usł."><small style="color:#718078">Gdy pole pozostanie puste, użyjemy „szt.” lub „usł.”.</small></div>
-                <div class="field"><label>Cena za jednostkę</label><input type="number" step="0.01" min="0" name="unit_cost" id="requirement-unit-cost"><small style="color:#718078">Wartość łączna zostanie obliczona jako ilość × cena za jednostkę.</small></div>
+                @if($canViewMaterialPrices || $canViewServicePrices)<div class="field" id="requirement-unit-cost-field"><label>Cena za jednostkę</label><input type="number" step="0.01" min="0" name="unit_cost" id="requirement-unit-cost"><small style="color:#718078">Wartość łączna zostanie obliczona jako ilość × cena za jednostkę.</small></div>@endif
                 <div class="field"><label>Potrzebne do</label><input type="date" name="needed_by" id="requirement-needed-by"></div>
                 <div class="field"><label>Odpowiedzialny</label><select name="responsible_id" id="requirement-responsible"><option value="">Nieprzypisane</option>@foreach($projectTeam as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
                 <div class="field"><label>Status</label><select name="status" id="requirement-status">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></div>
@@ -492,6 +494,8 @@ const projectCsrfToken = document.querySelector('meta[name="csrf-token"]')?.cont
 const ganttBulkDeleteUrl = @json(route('projects.tasks.bulk-destroy', $project));
 const requirementStoreUrl = @json(route('projects.requirements.store', $project));
 const projectRequirementItems = @json($requirementItems);
+const canViewMaterialPrices = @json($canViewMaterialPrices);
+const canViewServicePrices = @json($canViewServicePrices);
 let projectGantt = null;
 let projectCashflowChart = null;
 let projectCashflowOverview = null;
@@ -524,7 +528,7 @@ function openRequirementModal(requirementId = null) {
     document.getElementById('requirement-technology').value=requirement?.technology||'';
     document.getElementById('requirement-quantity').value=requirement?.quantity??1;
     document.getElementById('requirement-unit').value=requirement?.unit||'';
-    document.getElementById('requirement-unit-cost').value=requirement?.unit_cost??'';
+    if(document.getElementById('requirement-unit-cost')) document.getElementById('requirement-unit-cost').value=requirement?.unit_cost??'';
     document.getElementById('requirement-needed-by').value=requirement?.needed_by||'';
     document.getElementById('requirement-responsible').value=requirement?.responsible_id||'';
     document.getElementById('requirement-supplier-company').value=requirement?.supplier_company_id||'';
@@ -532,10 +536,19 @@ function openRequirementModal(requirementId = null) {
     document.getElementById('requirement-status').value=requirement?.status||'requested';
     document.getElementById('requirement-description').value=requirement?.description||'';
     syncRequirementQuantityIncrement();
+    syncRequirementPriceVisibility();
     if(requirement){form.action=requirement.update_url;document.getElementById('requirement-method').value='PATCH';}
     modal.classList.add('open');
 }
 function closeRequirementModal(){document.getElementById('requirement-modal')?.classList.remove('open');}
+function syncRequirementPriceVisibility(){
+    const type=document.getElementById('requirement-type')?.value||'material';
+    const allowed=type==='service'?canViewServicePrices:canViewMaterialPrices;
+    const field=document.getElementById('requirement-unit-cost-field');
+    if(field) field.hidden=!allowed;
+    const input=document.getElementById('requirement-unit-cost');
+    if(input) input.disabled=!allowed;
+}
 function openRequirementsExportModal(){document.getElementById('requirements-export-modal')?.classList.add('open');}
 function closeRequirementsExportModal(){document.getElementById('requirements-export-modal')?.classList.remove('open');}
 
@@ -569,7 +582,7 @@ function syncRequirementQuantityIncrement() {
     quantity.min = requirementQuantityUsesWholePieces ? '1' : '0.01';
 }
 document.getElementById('requirement-unit')?.addEventListener('input', syncRequirementQuantityIncrement);
-document.getElementById('requirement-type')?.addEventListener('change', syncRequirementQuantityIncrement);
+document.getElementById('requirement-type')?.addEventListener('change', () => { syncRequirementQuantityIncrement(); syncRequirementPriceVisibility(); });
 
 function projectMoney(value) {
     return Number(value || 0).toLocaleString('pl-PL', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' zł';

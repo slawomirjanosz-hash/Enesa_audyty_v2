@@ -31,6 +31,8 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
         private readonly string $supplierLabel,
         private readonly array $statuses,
         private readonly bool $includePrices,
+        private readonly bool $canViewMaterialPrices,
+        private readonly bool $canViewServicePrices,
     ) {}
 
     public function array(): array
@@ -61,8 +63,12 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
             /** @var ProjectRequirement $requirement */
             $excelRow = $index + 8;
             $quantity = (float) $requirement->quantity;
-            $unitCost = $this->includePrices ? $requirement->unitCost() : null;
-            $total = $this->includePrices
+            $canViewPrice = $requirement->type === 'service'
+                ? $this->canViewServicePrices
+                : $this->canViewMaterialPrices;
+            $showSavedPrice = $this->includePrices && $canViewPrice;
+            $unitCost = $showSavedPrice ? $requirement->unitCost() : null;
+            $total = $showSavedPrice
                 ? ($requirement->estimated_cost !== null ? (float) $requirement->estimated_cost : null)
                 : sprintf('=IF(OR(F%d="",K%d=""),"",F%d*K%d)', $excelRow, $excelRow, $excelRow, $excelRow);
 
