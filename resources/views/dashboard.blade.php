@@ -501,15 +501,15 @@
     </div>
 
     {{-- Zadania po terminie --}}
-    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card {{ $stats['overdue_tasks'] > 0 ? 'stat-card-alert-red' : '' }}" data-task-alert="{{ $stats['overdue_tasks'] > 0 ? 'red' : 'none' }}">
+    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card {{ $stats['my_overdue_tasks'] > 0 ? 'stat-card-alert-red' : '' }}" data-task-alert="{{ $stats['my_overdue_tasks'] > 0 ? 'red' : 'none' }}">
         <div class="stat-icon stat-icon-red">
             <i class="ti ti-clock"></i>
         </div>
         <div>
             <div class="stat-value">{{ $stats['overdue_tasks'] }}</div>
             <div class="stat-label">Zadania po terminie</div>
-            <div class="stat-sub" @if($stats['overdue_tasks'] > 0) style="color:#C62828;" @endif>
-                {{ $stats['overdue_tasks'] > 0 ? 'Pilne — sprawdź teraz' : 'Wszystko na czas' }}
+            <div class="stat-sub" @if($stats['my_overdue_tasks'] > 0) style="color:#C62828;font-weight:700;" @elseif($stats['overdue_tasks'] > 0) style="color:#C62828;" @endif>
+                {{ $stats['my_overdue_tasks'] > 0 ? 'Twoje zaległe: '.$stats['my_overdue_tasks'] : ($stats['overdue_tasks'] > 0 ? 'Zaległe zadania innych użytkowników' : 'Wszystko na czas') }}
             </div>
         </div>
     </a>

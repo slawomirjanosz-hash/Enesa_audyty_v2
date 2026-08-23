@@ -192,3 +192,29 @@ test('dashboard highlights overdue and newly assigned tasks', function () {
         ->assertDontSee('data-task-alert="green"', false)
         ->assertDontSee('Nowe zadania: 1');
 });
+
+test('dashboard shows another users overdue tasks without flashing red', function () {
+    CompanySettings::create([
+        'name' => 'Firma cudzych zadań',
+        'enabled_modules' => ['dashboard', 'crm'],
+    ]);
+    $viewer = User::factory()->create();
+    $viewer->assignRole('admin');
+    $assignee = User::factory()->create();
+    $assignee->assignRole('admin');
+
+    Task::create([
+        'title' => 'Zaległe zadanie innego użytkownika',
+        'assigned_to' => $assignee->id,
+        'created_by' => $viewer->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+        'due_date' => now()->subDay(),
+    ]);
+
+    $this->actingAs($viewer)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSeeInOrder(['>1</div>', 'Zadania po terminie'], false)
+        ->assertSee('Zaległe zadania innych użytkowników')
+        ->assertDontSee('data-task-alert="red"', false);
+});

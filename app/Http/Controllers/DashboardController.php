@@ -61,6 +61,12 @@ class DashboardController extends Controller
                 ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));
         }
 
+        $visibleOverdueTasksQuery = $access->scopeByCompanyAccess(
+            Task::where('due_date', '<', now())->where('status', '!=', 'done'),
+            $user,
+            'can_view_dashboard'
+        );
+
         $stats = [
             'active_audits' => $auditsEnabled ? $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $user, 'can_view_audits')->count() : 0,
             'active_projects' => $projectsEnabled ? $activeProjectsQuery->count() : 0,
@@ -72,7 +78,8 @@ class DashboardController extends Controller
                 ->where('id', '>', $lastSeenTaskId)
                 ->where(fn ($query) => $query->whereNull('created_by')->orWhere('created_by', '!=', $user->id))
                 ->count(),
-            'overdue_tasks' => $access->scopeByCompanyAccess(Task::where('due_date', '<', now())->where('status', '!=', 'done'), $user, 'can_view_dashboard')->count(),
+            'overdue_tasks' => (clone $visibleOverdueTasksQuery)->count(),
+            'my_overdue_tasks' => (clone $visibleOverdueTasksQuery)->where('assigned_to', $user->id)->count(),
         ];
 
         $latestAssignedTaskId = Task::forUser($user->id)->max('id');
