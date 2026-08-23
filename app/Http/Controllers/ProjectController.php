@@ -53,6 +53,7 @@ class ProjectController extends Controller
             'projects' => $query->paginate(20)->withQueryString(),
             'companies' => Company::clients()->active()->orderBy('name')->get(),
             'users' => $this->staffUsers(),
+            'canViewFinances' => $this->canViewProjectFinances($user),
         ]);
     }
 
@@ -1111,13 +1112,25 @@ class ProjectController extends Controller
             'status' => ['required', 'in:planned,active,on_hold,completed,cancelled'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'contract_value' => ['required', 'numeric', 'min:0'],
+            'contract_value' => [$this->canViewProjectFinances($request->user()) ? 'required' : 'nullable', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
         ];
 
-        return $errorBag
+        $data = $errorBag
             ? $request->validateWithBag($errorBag, $rules)
             : $request->validate($rules);
+
+        if (! $this->canViewProjectFinances($request->user())) {
+            $data['contract_value'] = $project?->contract_value ?? 0;
+        }
+
+        return $data;
+    }
+
+    private function canViewProjectFinances(User $user): bool
+    {
+        return app(AuditorAccessService::class)->hasFullAccess($user)
+            || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
     }
 
     private function staffUsers()

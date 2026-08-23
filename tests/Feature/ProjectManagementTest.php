@@ -56,6 +56,7 @@ test('external project user sees only assigned projects and permitted project ta
     $role = Role::findOrCreate('projektant_zewnetrzny');
     $role->givePermissionTo([
         Permission::findOrCreate('projects.view'),
+        Permission::findOrCreate('projects.edit'),
         Permission::findOrCreate('projects.schedule.view'),
     ]);
     $external->assignRole($role);
@@ -76,7 +77,8 @@ test('external project user sees only assigned projects and permitted project ta
     $this->actingAs($external)->get(route('projects.index'))
         ->assertOk()
         ->assertSee('Projekt dostępny dla projektanta')
-        ->assertDontSee('Projekt ukryty przed projektantem');
+        ->assertDontSee('Projekt ukryty przed projektantem')
+        ->assertDontSee('50 000,00 zł');
 
     $this->actingAs($external)->get(route('projects.show', $visible))
         ->assertOk()
@@ -87,6 +89,16 @@ test('external project user sees only assigned projects and permitted project ta
         ->assertDontSee('50 000,00 zł');
 
     $this->actingAs($external)->get(route('projects.show', $hidden))->assertForbidden();
+
+    $this->actingAs($external)->put(route('projects.update', $visible), [
+        'number' => $visible->number,
+        'name' => 'Projekt dostępny po edycji',
+        'manager_id' => $admin->id,
+        'member_ids' => [$external->id],
+        'status' => 'active',
+    ])->assertRedirect(route('projects.show', $visible));
+
+    expect((float) $visible->refresh()->contract_value)->toBe(50000.0);
 });
 
 test('project editor changes an internal project into a client project', function () {

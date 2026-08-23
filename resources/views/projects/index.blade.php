@@ -37,7 +37,7 @@
             <span><i class="ti ti-users"></i> Zespół: {{ $project->members->count() }}</span>
             <span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span>
         </div>
-        <div class="money">{{ number_format((float)$project->contract_value,2,',',' ') }} zł</div>
+        @if($canViewFinances)<div class="money">{{ number_format((float)$project->contract_value,2,',',' ') }} zł</div>@endif
     </a>
     @endforeach
 </div>
@@ -54,7 +54,7 @@
                 <div class="field"><label>Firma / klient</label><select name="company_id"><option value="">Projekt wewnętrzny</option>@foreach($companies as $company)<option value="{{ $company->id }}">{{ $company->name }}</option>@endforeach</select></div>
                 <div class="field"><label>Kierownik projektu *</label><select name="manager_id" required><option value="">Wybierz</option>@foreach($users as $user)<option value="{{ $user->id }}">{{ $user->name }}</option>@endforeach</select></div>
                 <div class="field"><label>Status</label><select name="status"><option value="planned">Planowany</option><option value="active">Aktywny</option><option value="on_hold">Wstrzymany</option><option value="completed">Zakończony</option></select></div>
-                <div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="0" required></div>
+                @if($canViewFinances)<div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="0" required></div>@endif
                 <div class="field"><label>Data rozpoczęcia</label><input type="date" name="start_date"></div><div class="field"><label>Data zakończenia</label><input type="date" name="end_date"></div>
                 <div class="field half"><label>Kto może widzieć projekt</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ in_array($user->id, old('member_ids', [])) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div><small>Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą tylko projekty, do których zostali tutaj przypisani.</small></div>
                 <div class="field half"><label>Opis</label><textarea name="description" rows="4">{{ old('description') }}</textarea></div>

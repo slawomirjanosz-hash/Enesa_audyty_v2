@@ -983,6 +983,10 @@
     @endif
 
     @if($projectsEnabled)
+    @php
+        $canViewProjectFinances = app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user())
+            || auth()->user()->canAny(['projects.finances.view', 'projects.finances.manage']);
+    @endphp
     <div id="tab-projects" class="tab-panel">
         @if($projects->isEmpty())
             <div class="empty-tab">
@@ -991,7 +995,10 @@
             </div>
         @else
             <table class="data-table">
-                <thead><tr><th>Numer</th><th>Projekt</th><th>Kierownik</th><th>Status</th><th>Termin</th><th>Wartość</th><th></th></tr></thead>
+                <thead><tr><th>Numer</th><th>Projekt</th><th>Kierownik</th><th>Status</th><th>Termin</th>
+                    @if($canViewProjectFinances)<th>Wartość</th>@endif
+                    <th></th>
+                </tr></thead>
                 <tbody>
                     @foreach($projects as $project)
                     <tr>
@@ -1000,7 +1007,9 @@
                         <td>{{ $project->manager?->name ?? '—' }}</td>
                         <td><span class="audit-status {{ $project->status }}">{{ ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'][$project->status] ?? $project->status }}</span></td>
                         <td>{{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</td>
-                        <td style="font-weight:700">{{ number_format((float)$project->contract_value, 2, ',', ' ') }} zł</td>
+                        @if($canViewProjectFinances)
+                            <td style="font-weight:700">{{ number_format((float)$project->contract_value, 2, ',', ' ') }} zł</td>
+                        @endif
                         <td><a href="{{ route('projects.show', $project) }}" class="btn-action btn-secondary-action"><i class="ti ti-eye"></i> Otwórz</a></td>
                     </tr>
                     @endforeach
