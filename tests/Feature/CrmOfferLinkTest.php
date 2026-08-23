@@ -4,6 +4,7 @@ use App\Models\Company;
 use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
 use App\Models\Offer;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
@@ -86,6 +87,36 @@ test('superadmin sees tasks assigned to other users in the team task table', fun
         ->assertOk()
         ->assertSee('Zadania zespołu')
         ->assertSee('Zadanie admina widoczne dla superadmina');
+});
+
+test('crm does not show or manage tasks belonging to projects', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/CRM/001', 'name' => 'Projekt poza CRM',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 0,
+        'created_by' => $admin->id,
+    ]);
+    $project->members()->attach($admin);
+    $projectTask = $project->tasks()->create([
+        'title' => 'Zadanie widoczne wyłącznie w projekcie',
+        'assigned_to' => $admin->id, 'created_by' => $admin->id,
+        'status' => 'todo', 'priority' => 'high',
+    ]);
+    Task::create([
+        'title' => 'Zwykłe zadanie CRM',
+        'assigned_to' => $admin->id, 'created_by' => $admin->id,
+        'status' => 'todo', 'priority' => 'medium',
+    ]);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'tasks']))
+        ->assertOk()
+        ->assertSee('Zwykłe zadanie CRM')
+        ->assertDontSee('Zadanie widoczne wyłącznie w projekcie')
+        ->assertSee('<span class="tab-count">1</span>', false);
+
+    $this->actingAs($admin)->put(route('crm.tasks.update', $projectTask), [])->assertNotFound();
+    $this->actingAs($admin)->delete(route('crm.tasks.destroy', $projectTask))->assertNotFound();
 });
 
 test('task can be linked to an opportunity and remains visible in the CRM task list', function () {

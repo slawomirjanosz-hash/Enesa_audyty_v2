@@ -81,6 +81,11 @@ class Task extends Model
         return $query->where('assigned_to', $userId);
     }
 
+    public function scopeCrm($query)
+    {
+        return $query->whereNull('project_id');
+    }
+
     public function scopeOverdue($query)
     {
         return $query->where('due_date', '<', now())->where('status', '!=', 'done');

@@ -69,7 +69,10 @@ class CrmController extends Controller
             });
         }
         $opportunities = $currentTab === 'pipeline'
-            ? (clone $opportunitiesQuery)->with(['company', 'assignedUser', 'relatedUsers', 'offers', 'tasks.assignedUser'])->get()
+            ? (clone $opportunitiesQuery)->with([
+                'company', 'assignedUser', 'relatedUsers', 'offers',
+                'tasks' => fn ($tasks) => $tasks->crm()->with('assignedUser'),
+            ])->get()
             : collect();
 
         $taskOpportunities = $currentTab === 'tasks'
@@ -82,16 +85,16 @@ class CrmController extends Controller
             'can_view_offers'
         )->get() : collect();
 
-        $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer', 'crmOpportunity'])
+        $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::crm()->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])
             ->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
 
-        $myTasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::forUser(auth()->id())
+        $myTasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::crm()->forUser(auth()->id())
             ->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
 
         $trashTasksQuery = $access->scopeByCompanyAccess(
-            Task::onlyTrashed()->whereNull('project_id'),
+            Task::onlyTrashed()->crm(),
             $authUser,
             'can_view_dashboard'
         );
@@ -126,7 +129,7 @@ class CrmController extends Controller
             )->count(),
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
             'active_opps' => (clone $opportunitiesQuery)->whereNotIn('stage', ['won', 'lost', 'rejected'])->count(),
-            'open_tasks' => $access->scopeByCompanyAccess(Task::where('status', '!=', 'done'), $authUser, 'can_view_dashboard')->count(),
+            'open_tasks' => $access->scopeByCompanyAccess(Task::crm()->where('status', '!=', 'done'), $authUser, 'can_view_dashboard')->count(),
             'active_audits' => $auditsEnabled
                 ? $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $authUser, 'can_view_audits')->count()
                 : 0,
@@ -298,6 +301,7 @@ class CrmController extends Controller
 
     public function updateTask(Request $request, Task $task): RedirectResponse
     {
+        abort_if($task->project_id !== null, 404);
         $this->authorize('update', $task);
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -339,6 +343,7 @@ class CrmController extends Controller
 
     public function destroyTask(Task $task): RedirectResponse
     {
+        abort_if($task->project_id !== null, 404);
         $this->authorize('delete', $task);
         $task->update(['deleted_by' => auth()->id()]);
         $task->delete();
@@ -348,7 +353,7 @@ class CrmController extends Controller
 
     public function restoreTask(Request $request, int $taskId): RedirectResponse
     {
-        $task = Task::onlyTrashed()->findOrFail($taskId);
+        $task = Task::onlyTrashed()->crm()->findOrFail($taskId);
         $this->authorize('update', $task);
         $task->restore();
         $task->update(['deleted_by' => null]);
@@ -359,6 +364,7 @@ class CrmController extends Controller
 
     public function updateTaskStatus(Request $request, Task $task): JsonResponse
     {
+        abort_if($task->project_id !== null, 404);
         $this->authorize('update', $task);
         $data = $request->validate([
             'status' => ['required', 'in:todo,in_progress,done'],
