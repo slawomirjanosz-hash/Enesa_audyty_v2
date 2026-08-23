@@ -49,7 +49,7 @@ Nie należy przechowywać prawdziwych kluczy ani haseł w repozytorium.
 
 ## Railway
 
-Railway korzysta z `railpack.json` i automatycznego dostawcy PHP. Railpack instaluje rozszerzenia wymagane w `composer.json`, zależności PHP i Node, buduje zasoby Vite, optymalizuje Laravel, tworzy dowiązanie storage oraz wykonuje migracje przy starcie.
+Railway korzysta z `railpack.json` i automatycznego dostawcy PHP. Railpack instaluje rozszerzenia wymagane w `composer.json`, zależności PHP i Node oraz buduje zasoby Vite. Przy starcie aplikacja tworzy dowiązanie storage, wykonuje migracje i bezpieczny seeder superadmina.
 
 Przypomnienia o zaległych zadaniach korzystają z harmonogramu Laravel. Na Railway trzeba dodać osobny Cron Job uruchamiany co minutę:
 
