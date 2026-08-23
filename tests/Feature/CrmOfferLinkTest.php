@@ -88,6 +88,48 @@ test('superadmin sees tasks assigned to other users in the team task table', fun
         ->assertSee('Zadanie admina widoczne dla superadmina');
 });
 
+test('task can be linked to an opportunity and remains visible in the CRM task list', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create([
+        'name' => 'Klient z zadaniem w szansie',
+        'company_type' => 'client',
+        'status' => 'active',
+    ]);
+    $opportunity = CrmOpportunity::create([
+        'title' => 'Szansa z podpiętym zadaniem',
+        'company_id' => $company->id,
+        'created_by' => $admin->id,
+        'stage' => 'new_lead',
+    ]);
+
+    $this->actingAs($admin)->post(route('crm.tasks.store'), [
+        'title' => 'Zadanie widoczne w szansie i na liście',
+        'company_id' => $company->id,
+        'crm_opportunity_id' => $opportunity->id,
+        'assigned_to' => $admin->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+        'due_date' => '2026-08-30',
+    ])->assertRedirect()->assertSessionHas('success');
+
+    $this->assertDatabaseHas('tasks', [
+        'title' => 'Zadanie widoczne w szansie i na liście',
+        'crm_opportunity_id' => $opportunity->id,
+    ]);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline']))
+        ->assertOk()
+        ->assertSee('Powiązane zadania')
+        ->assertSee('Zadanie widoczne w szansie', false);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'tasks']))
+        ->assertOk()
+        ->assertSee('Szansa CRM')
+        ->assertSee('Szansa z podpiętym zadaniem')
+        ->assertSee('Zadanie widoczne w szansie');
+});
+
 test('clicking a pipeline opportunity opens details with explicit client and edit actions', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

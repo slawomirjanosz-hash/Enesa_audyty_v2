@@ -349,7 +349,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 @foreach($stageOpps as $opp)
                 <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};cursor:pointer;"
-                    onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()))">
+                    onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
                         <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:var(--green);text-decoration:none;font-weight:600;">
@@ -416,7 +416,7 @@
             </div>
             @foreach($stageOpps as $opp)
             <div class="opp-card" style="border-left:3px solid {{ $meta['dot'] }};margin-bottom:6px;cursor:pointer;"
-                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()))">
+                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                 <div class="opp-card-title">{{ $opp->title }}</div>
                 <div class="opp-card-sub">{{ $opp->company?->name ?? 'bez klienta' }}</div>
             </div>
@@ -462,7 +462,7 @@
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <button class="btn-icon btn-icon-edit" title="Edytuj"
-                                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()))"><i class="ti ti-pencil"></i></button>
+                                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))"><i class="ti ti-pencil"></i></button>
                             @if($canManageCrm)
                                 <form method="POST" action="{{ route('crm.opportunities.duplicate', $opp) }}" onsubmit="return confirm('Utworzyć kopię tej szansy?')" style="display:inline;">
                                     @csrf
@@ -531,7 +531,7 @@
                 <td><span class="badge {{ $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
-                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}')">
+                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Usunąć zadanie?')">
@@ -595,7 +595,7 @@
                 <td><span class="badge {{ $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
-                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}')">
+                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Usunąć zadanie?')">
@@ -962,13 +962,22 @@
                 </div>
                 <div>
                     <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
-                    <select name="company_id" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                    <select name="company_id" id="task-company" onchange="filterTaskOpportunities('task-company', 'task-opportunity')" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— brak —</option>
                         @foreach($companies as $c)
                         <option value="{{ $c->id }}">{{ $c->name }}</option>
                         @endforeach
                     </select>
                 </div>
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Szansa CRM</label>
+                <select name="crm_opportunity_id" id="task-opportunity" onchange="selectTaskOpportunityCompany('task-opportunity', 'task-company')" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                    <option value="">— bez powiązania —</option>
+                    @foreach($taskOpportunities as $opportunity)
+                        <option value="{{ $opportunity->id }}" data-company-id="{{ $opportunity->company_id }}">{{ $opportunity->title }}{{ $opportunity->company ? ' — '.$opportunity->company->name : '' }}</option>
+                    @endforeach
+                </select>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
                 <div>
@@ -1029,13 +1038,22 @@
                 </div>
                 <div>
                     <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
-                    <select name="company_id" id="edit-task-company" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                    <select name="company_id" id="edit-task-company" onchange="filterTaskOpportunities('edit-task-company', 'edit-task-opportunity')" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— brak —</option>
                         @foreach($companies as $c)
                         <option value="{{ $c->id }}">{{ $c->name }}</option>
                         @endforeach
                     </select>
                 </div>
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Szansa CRM</label>
+                <select name="crm_opportunity_id" id="edit-task-opportunity" onchange="selectTaskOpportunityCompany('edit-task-opportunity', 'edit-task-company')" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                    <option value="">— bez powiązania —</option>
+                    @foreach($taskOpportunities as $opportunity)
+                        <option value="{{ $opportunity->id }}" data-company-id="{{ $opportunity->company_id }}">{{ $opportunity->title }}{{ $opportunity->company ? ' — '.$opportunity->company->name : '' }}</option>
+                    @endforeach
+                </select>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
                 <div>
@@ -1180,6 +1198,11 @@
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Notatki</label>
                 <textarea id="edit-opp-notes" name="notes" rows="2"
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
+            </div>
+
+            <div id="opportunity-linked-tasks-section" style="margin-bottom:20px;">
+                <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#555;margin-bottom:7px;">Powiązane zadania <span id="opportunity-linked-tasks-count" style="color:#888;font-weight:400;"></span></div>
+                <div id="opportunity-linked-tasks" style="display:grid;gap:7px;"></div>
             </div>
 
             <div id="opportunity-edit-actions" style="display:none;gap:8px;justify-content:flex-end;">
@@ -1427,7 +1450,7 @@ document.addEventListener('keydown', e => {
     }
 });
 
-function openEditTask(id, title, description, assignedTo, companyId, dueDate, priority, status) {
+function openEditTask(id, title, description, assignedTo, companyId, dueDate, priority, status, opportunityId) {
     const baseUrl = '{{ url('/crm/tasks') }}/';
     document.getElementById('form-task-edit').action = baseUrl + id;
     document.getElementById('edit-task-title').value = title || '';
@@ -1436,6 +1459,8 @@ function openEditTask(id, title, description, assignedTo, companyId, dueDate, pr
     const sel = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
     sel('edit-task-assigned', assignedTo);
     sel('edit-task-company', companyId);
+    filterTaskOpportunities('edit-task-company', 'edit-task-opportunity');
+    sel('edit-task-opportunity', opportunityId);
     sel('edit-task-priority', priority);
     sel('edit-task-status', status);
     document.getElementById('modal-task-edit').style.display = 'flex';
@@ -1471,11 +1496,59 @@ function closeAttachOffer() {
     document.body.style.overflow = '';
 }
 
-function openOpportunity(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, companyUrl, relatedUsers = []) {
+function openOpportunity(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, companyUrl, relatedUsers = [], linkedTasks = []) {
     populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers);
+    renderOpportunityTasks(linkedTasks);
     setOpportunityModalMode(false, companyUrl);
     document.getElementById('modal-edit-opp').style.display = 'flex';
     document.body.style.overflow = 'hidden';
+}
+
+function filterTaskOpportunities(companySelectId, opportunitySelectId) {
+    const companyId = document.getElementById(companySelectId)?.value || '';
+    const opportunitySelect = document.getElementById(opportunitySelectId);
+    if (!opportunitySelect) return;
+    Array.from(opportunitySelect.options).forEach(option => {
+        if (!option.value) return;
+        const visible = !companyId || option.dataset.companyId === companyId;
+        option.hidden = !visible;
+        option.disabled = !visible;
+    });
+    const selected = opportunitySelect.selectedOptions[0];
+    if (selected?.disabled) opportunitySelect.value = '';
+}
+
+function selectTaskOpportunityCompany(opportunitySelectId, companySelectId) {
+    const option = document.getElementById(opportunitySelectId)?.selectedOptions[0];
+    if (!option?.value) return;
+    const companySelect = document.getElementById(companySelectId);
+    if (companySelect) companySelect.value = option.dataset.companyId || '';
+}
+
+function renderOpportunityTasks(tasks = []) {
+    const container = document.getElementById('opportunity-linked-tasks');
+    const count = document.getElementById('opportunity-linked-tasks-count');
+    container.replaceChildren();
+    count.textContent = '(' + tasks.length + ')';
+    if (!tasks.length) {
+        const empty = document.createElement('div');
+        empty.textContent = 'Brak zadań powiązanych z tą szansą.';
+        empty.style.cssText = 'font-size:12px;color:#999;padding:9px 0;';
+        container.appendChild(empty);
+        return;
+    }
+    tasks.forEach(task => {
+        const row = document.createElement('div');
+        row.style.cssText = 'border:1px solid #E5E1D8;border-radius:7px;padding:9px 10px;background:#FAFAF6;';
+        const title = document.createElement('div');
+        title.textContent = task.title;
+        title.style.cssText = 'font-size:12px;font-weight:700;color:#333;';
+        const meta = document.createElement('div');
+        meta.textContent = [task.status, task.assigned, task.due_date].filter(Boolean).join(' · ');
+        meta.style.cssText = 'font-size:11px;color:#777;margin-top:3px;';
+        row.append(title, meta);
+        container.appendChild(row);
+    });
 }
 
 function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {

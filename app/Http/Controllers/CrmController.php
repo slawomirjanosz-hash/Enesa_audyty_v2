@@ -69,7 +69,11 @@ class CrmController extends Controller
             });
         }
         $opportunities = $currentTab === 'pipeline'
-            ? $opportunitiesQuery->with(['company', 'assignedUser', 'relatedUsers', 'offers'])->get()
+            ? (clone $opportunitiesQuery)->with(['company', 'assignedUser', 'relatedUsers', 'offers', 'tasks.assignedUser'])->get()
+            : collect();
+
+        $taskOpportunities = $currentTab === 'tasks'
+            ? (clone $opportunitiesQuery)->with('company')->get()
             : collect();
 
         $unlinkedOffers = $currentTab === 'pipeline' ? $access->scopeByCompanyAccess(
@@ -78,12 +82,12 @@ class CrmController extends Controller
             'can_view_offers'
         )->get() : collect();
 
-        $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer'])
+        $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::with(['assignedUser', 'company', 'offer', 'crmOpportunity'])
             ->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
 
         $myTasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::forUser(auth()->id())
-            ->with(['assignedUser', 'company', 'offer'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
+            ->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
             ->get() : collect();
 
         $trashTasksQuery = $access->scopeByCompanyAccess(
@@ -155,7 +159,7 @@ class CrmController extends Controller
             ->get() : collect();
 
         return view('crm.index', compact(
-            'companies', 'suppliers', 'opportunities', 'unlinkedOffers', 'canManageCrm', 'canViewTeamTasks', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
+            'companies', 'suppliers', 'opportunities', 'taskOpportunities', 'unlinkedOffers', 'canManageCrm', 'canViewTeamTasks', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
         ));
     }
 
