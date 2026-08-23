@@ -48,7 +48,7 @@ Nie należy przechowywać prawdziwych kluczy ani haseł w repozytorium.
 
 ## Railway
 
-Plik `nixpacks.toml` instaluje zależności PHP i Node, buduje zasoby Vite, cache'uje Laravel, tworzy dowiązanie storage oraz wykonuje migracje przy starcie.
+Railway korzysta z `railpack.json` i automatycznego dostawcy PHP. Railpack instaluje rozszerzenia wymagane w `composer.json`, zależności PHP i Node, buduje zasoby Vite, optymalizuje Laravel, tworzy dowiązanie storage oraz wykonuje migracje przy starcie.
 
 Przypomnienia o zaległych zadaniach korzystają z harmonogramu Laravel. Na Railway trzeba dodać osobny Cron Job uruchamiany co minutę:
 

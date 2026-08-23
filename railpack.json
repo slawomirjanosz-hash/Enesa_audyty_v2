@@ -1,19 +1,4 @@
 {
-  "phases": {
-    "install": {
-      "cmds": [
-        "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd"
-      ]
-    },
-    "build": {
-      "cmds": [
-        "php artisan config:cache",
-        "php artisan route:cache",
-        "php artisan view:cache"
-      ]
-    }
-  },
-  "start": {
-    "cmd": "php artisan storage:link --force && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"
-  }
+  "$schema": "https://schema.railpack.com",
+  "provider": "php"
 }
