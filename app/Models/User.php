@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'is_active',
         'last_seen_at',
+        'dashboard_tasks_seen_id',
     ];
 
     /**
@@ -56,6 +57,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'last_seen_at' => 'datetime',
+            'dashboard_tasks_seen_id' => 'integer',
         ];
     }
 

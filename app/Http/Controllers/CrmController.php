@@ -57,10 +57,10 @@ class CrmController extends Controller
             ->get() : collect();
 
         $opportunitiesQuery = CrmOpportunity::query()->whereNull('deleted_at')->orderByDesc('created_at');
-        if ($access->hasFullAccess($authUser)) {
+        if (! $access->isDelegatedAuditor($authUser)) {
             $opportunitiesQuery = $access->scopeByCompanyAccess($opportunitiesQuery, $authUser, 'can_view_dashboard');
         }
-        if (! $access->hasFullAccess($authUser) || request()->boolean('related_to_me')) {
+        if ($access->isDelegatedAuditor($authUser) || request()->boolean('related_to_me')) {
             $opportunitiesQuery->where(function ($query) use ($authUser): void {
                 $query->where('assigned_to', $authUser->id)
                     ->orWhere('created_by', $authUser->id)

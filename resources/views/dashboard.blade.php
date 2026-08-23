@@ -109,6 +109,24 @@
         box-shadow: 0 4px 14px rgba(0,0,0,.10);
         transform: translateY(-1px);
     }
+    .stat-card-alert-red {
+        animation: dashboard-alert-red 1.15s ease-in-out infinite;
+    }
+    .stat-card-alert-green {
+        animation: dashboard-alert-green 1.15s ease-in-out infinite;
+    }
+    @keyframes dashboard-alert-red {
+        0%, 100% { background:#fff; border-color:#E5E1D8; box-shadow:0 0 0 rgba(198,40,40,0); }
+        50% { background:#FFEBEE; border-color:#E53935; box-shadow:0 0 18px rgba(198,40,40,.42); }
+    }
+    @keyframes dashboard-alert-green {
+        0%, 100% { background:#fff; border-color:#E5E1D8; box-shadow:0 0 0 rgba(46,125,50,0); }
+        50% { background:#E8F5E9; border-color:#43A047; box-shadow:0 0 18px rgba(46,125,50,.38); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .stat-card-alert-red { animation:none; background:#FFEBEE; border-color:#E53935; }
+        .stat-card-alert-green { animation:none; background:#E8F5E9; border-color:#43A047; }
+    }
 
     /* ── Clients grid ─────────────────────── */
     .clients-grid {
@@ -483,7 +501,7 @@
     </div>
 
     {{-- Zadania po terminie --}}
-    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card">
+    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card {{ $stats['overdue_tasks'] > 0 ? 'stat-card-alert-red' : '' }}" data-task-alert="{{ $stats['overdue_tasks'] > 0 ? 'red' : 'none' }}">
         <div class="stat-icon stat-icon-red">
             <i class="ti ti-clock"></i>
         </div>
@@ -497,15 +515,15 @@
     </a>
 
     {{-- Zadania aktualnie zalogowanego użytkownika --}}
-    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card" data-dashboard-stat="my-open-tasks">
-        <div class="stat-icon stat-icon-blue">
+    <a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="stat-card {{ $stats['my_new_tasks'] > 0 ? 'stat-card-alert-green' : '' }}" data-dashboard-stat="my-open-tasks" data-task-alert="{{ $stats['my_new_tasks'] > 0 ? 'green' : 'none' }}">
+        <div class="stat-icon {{ $stats['my_new_tasks'] > 0 ? 'stat-icon-green' : 'stat-icon-blue' }}">
             <i class="ti ti-list-check"></i>
         </div>
         <div>
             <div class="stat-value">{{ $stats['my_open_tasks'] }}</div>
             <div class="stat-label">Moje zadania do zrobienia</div>
-            <div class="stat-sub" @if($stats['my_open_tasks'] > 0) style="color:#1565C0;" @endif>
-                {{ $stats['my_open_tasks'] > 0 ? 'Przypisane do Ciebie' : 'Brak otwartych zadań' }}
+            <div class="stat-sub" @if($stats['my_new_tasks'] > 0) style="color:#2E7D32;font-weight:700;" @elseif($stats['my_open_tasks'] > 0) style="color:#1565C0;" @endif>
+                {{ $stats['my_new_tasks'] > 0 ? 'Nowe zadania: '.$stats['my_new_tasks'] : ($stats['my_open_tasks'] > 0 ? 'Przypisane do Ciebie' : 'Brak otwartych zadań') }}
             </div>
         </div>
     </a>

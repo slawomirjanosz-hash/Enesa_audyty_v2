@@ -160,3 +160,35 @@ test('dashboard shows only current user open task count', function () {
         ->assertSee('data-dashboard-stat="my-open-tasks"', false)
         ->assertSeeInOrder(['>2</div>', 'Moje zadania do zrobienia'], false);
 });
+
+test('dashboard highlights overdue and newly assigned tasks', function () {
+    CompanySettings::create([
+        'name' => 'Firma alertów',
+        'enabled_modules' => ['dashboard', 'crm'],
+    ]);
+    $employee = User::factory()->create(['dashboard_tasks_seen_id' => 0]);
+    $employee->assignRole('admin');
+    $manager = User::factory()->create();
+    $manager->assignRole('admin');
+
+    Task::create([
+        'title' => 'Nowe zadanie po terminie',
+        'assigned_to' => $employee->id,
+        'created_by' => $manager->id,
+        'status' => 'todo',
+        'priority' => 'high',
+        'due_date' => now()->subHour(),
+    ]);
+
+    $this->actingAs($employee->refresh())->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('data-task-alert="red"', false)
+        ->assertSee('data-task-alert="green"', false)
+        ->assertSee('Nowe zadania: 1');
+
+    $this->actingAs($employee->refresh())->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('data-task-alert="red"', false)
+        ->assertDontSee('data-task-alert="green"', false)
+        ->assertDontSee('Nowe zadania: 1');
+});

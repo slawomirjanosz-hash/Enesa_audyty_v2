@@ -28,6 +28,46 @@ test('crm companies and pipeline tabs render without loading errors', function (
         ->assertOk()->assertSee('Leady związane ze mną');
 });
 
+test('staff with crm view permission sees shared CRM data created by another user', function () {
+    $admin = User::factory()->create();
+    $employee = User::factory()->create();
+    $role = Role::findOrCreate('Użytkownik_Senior');
+    $role->givePermissionTo([
+        Permission::findOrCreate('dashboard.view'),
+        Permission::findOrCreate('crm.view'),
+        Permission::findOrCreate('crm.companies.manage'),
+        Permission::findOrCreate('crm.leads.manage'),
+        Permission::findOrCreate('crm.tasks.manage'),
+    ]);
+    $employee->assignRole($role);
+
+    $company = Company::create([
+        'name' => 'Wspólny klient CRM',
+        'company_type' => 'client',
+        'status' => 'active',
+        'show_in_dashboard' => true,
+    ]);
+    CrmOpportunity::create([
+        'title' => 'Wspólny lead CRM',
+        'company_id' => $company->id,
+        'stage' => 'new_lead',
+        'created_by' => $admin->id,
+        'assigned_to' => $admin->id,
+    ]);
+
+    $this->actingAs($employee)->get(route('crm.index', ['tab' => 'companies']))
+        ->assertOk()
+        ->assertSee('Wspólny klient CRM');
+
+    $this->actingAs($employee)->get(route('crm.index', ['tab' => 'pipeline']))
+        ->assertOk()
+        ->assertSee('Wspólny lead CRM');
+
+    $this->actingAs($employee)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Wspólny klient CRM');
+});
+
 test('lead can include users without full operational access and be filtered as related to them', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

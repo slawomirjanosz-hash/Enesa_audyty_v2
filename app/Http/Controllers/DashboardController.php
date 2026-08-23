@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -18,6 +19,7 @@ class DashboardController extends Controller
     {
         $access = app(AuditorAccessService::class);
         $user = $request->user();
+        $lastSeenTaskId = $user->dashboard_tasks_seen_id ?? 0;
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
         $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
         $relations = [
@@ -65,8 +67,20 @@ class DashboardController extends Controller
             'pending_offers' => $access->scopeByCompanyAccess(Offer::whereIn('status', ['draft', 'sent']), $user, 'can_view_offers')->count(),
             'new_registrations' => $access->hasFullAccess($user) ? Company::clients()->where('status', 'pending')->count() : 0,
             'my_open_tasks' => Task::forUser($user->id)->where('status', '!=', 'done')->count(),
+            'my_new_tasks' => Task::forUser($user->id)
+                ->where('status', '!=', 'done')
+                ->where('id', '>', $lastSeenTaskId)
+                ->where(fn ($query) => $query->whereNull('created_by')->orWhere('created_by', '!=', $user->id))
+                ->count(),
             'overdue_tasks' => $access->scopeByCompanyAccess(Task::where('due_date', '<', now())->where('status', '!=', 'done'), $user, 'can_view_dashboard')->count(),
         ];
+
+        $latestAssignedTaskId = Task::forUser($user->id)->max('id');
+        if ($latestAssignedTaskId !== null) {
+            DB::table('users')->where('id', $user->id)->update([
+                'dashboard_tasks_seen_id' => $latestAssignedTaskId,
+            ]);
+        }
 
         $newRequests = $access->scopeByCompanyAccess(OfferRequest::with(['offerFormTemplate', 'createdBy'])
             ->where('status', 'nowe')

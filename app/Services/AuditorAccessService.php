@@ -105,6 +105,22 @@ class AuditorAccessService
             return $query;
         }
 
+        $modulePermission = [
+            'can_view_dashboard' => 'crm.view',
+            'can_view_audits' => 'audits.view',
+            'can_view_offer_requests' => 'offers.view',
+            'can_view_offers' => 'offers.view',
+            'can_view_offer_prices' => 'offers.prices.view',
+            'can_view_documents' => 'documents.view',
+            'can_view_chat' => 'client_zone.chat.manage',
+        ][$ability] ?? null;
+
+        // Regular staff permissions grant access to the shared company dataset.
+        // Per-company restrictions apply only to delegated auditors.
+        if (! $this->isDelegatedAuditor($user) && $modulePermission && $user->can($modulePermission)) {
+            return $query;
+        }
+
         return $query->whereIn($companyColumn, $this->accessibleCompanyIds($user, $ability));
     }
 
