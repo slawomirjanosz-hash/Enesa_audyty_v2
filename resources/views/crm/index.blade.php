@@ -415,7 +415,8 @@
                 <span style="font-size:11px;font-weight:600;color:{{ $meta['text'] }};">{{ $stageOpps->count() }}</span>
             </div>
             @foreach($stageOpps as $opp)
-            <div class="opp-card" style="border-left:3px solid {{ $meta['dot'] }};margin-bottom:6px;">
+            <div class="opp-card" style="border-left:3px solid {{ $meta['dot'] }};margin-bottom:6px;cursor:pointer;"
+                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()))">
                 <div class="opp-card-title">{{ $opp->title }}</div>
                 <div class="opp-card-sub">{{ $opp->company?->name ?? 'bez klienta' }}</div>
             </div>
@@ -1100,7 +1101,7 @@
 <div id="modal-edit-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Edytuj szansę</div>
+            <div id="opportunity-modal-title" style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Szczegóły szansy</div>
             <button onclick="closeEditOpp()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
         </div>
         <form id="form-edit-opp" method="POST">
@@ -1181,13 +1182,20 @@
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
 
-            <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <div id="opportunity-edit-actions" style="display:none;gap:8px;justify-content:flex-end;">
                 <button type="button" onclick="closeEditOpp()" class="btn-secondary">Anuluj</button>
                 <button type="submit" class="btn-primary"><i class="ti ti-device-floppy"></i> Zapisz</button>
             </div>
         </form>
 
-        <div style="margin-top:16px;">
+        <div id="opportunity-view-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;">
+            <a id="opportunity-company-link" href="#" class="btn-secondary"><i class="ti ti-building"></i> Przejdź do karty klienta</a>
+            @if($canManageCrm || auth()->user()->can('crm.leads.manage'))
+                <button type="button" onclick="enableOpportunityEdit()" class="btn-primary"><i class="ti ti-pencil"></i> Edytuj szansę</button>
+            @endif
+        </div>
+
+        <div id="opportunity-delete-actions" style="display:none;margin-top:16px;">
             <form method="POST" id="form-delete-opp" style="margin:0;">
                 @csrf
                 @method('DELETE')
@@ -1464,21 +1472,20 @@ function closeAttachOffer() {
 }
 
 function openOpportunity(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, companyUrl, relatedUsers = []) {
-    if (companyUrl) {
-        const goToCompany = confirm(
-            `Szansa „${title}” jest powiązana z klientem.\n\nCzy przejść do jego karty?\n\nOK — karta klienta\nAnuluj — edycja szansy`
-        );
-
-        if (goToCompany) {
-            window.location.href = companyUrl;
-            return;
-        }
-    }
-
-    openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers);
+    populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers);
+    setOpportunityModalMode(false, companyUrl);
+    document.getElementById('modal-edit-opp').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 }
 
 function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {
+    populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers);
+    setOpportunityModalMode(true, null);
+    document.getElementById('modal-edit-opp').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {
     document.getElementById('edit-opp-id').value = id;
     document.getElementById('edit-opp-title').value = title;
     document.getElementById('edit-opp-company').value = companyId || '';
@@ -1494,9 +1501,28 @@ function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, 
 
     document.getElementById('form-edit-opp').action = '/crm/opportunities/' + id;
     document.getElementById('form-delete-opp').action = '/crm/opportunities/' + id;
+}
 
-    document.getElementById('modal-edit-opp').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+function setOpportunityModalMode(editing, companyUrl = null) {
+    const form = document.getElementById('form-edit-opp');
+    form.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(field => {
+        field.disabled = !editing;
+    });
+
+    document.getElementById('opportunity-modal-title').innerHTML = editing
+        ? '<i class="ti ti-pencil" style="color:var(--green);margin-right:8px;"></i>Edytuj szansę'
+        : '<i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Szczegóły szansy';
+    document.getElementById('opportunity-edit-actions').style.display = editing ? 'flex' : 'none';
+    document.getElementById('opportunity-delete-actions').style.display = editing ? 'block' : 'none';
+    document.getElementById('opportunity-view-actions').style.display = editing ? 'none' : 'flex';
+
+    const companyLink = document.getElementById('opportunity-company-link');
+    companyLink.style.display = !editing && companyUrl ? 'inline-flex' : 'none';
+    companyLink.href = companyUrl || '#';
+}
+
+function enableOpportunityEdit() {
+    setOpportunityModalMode(true, null);
 }
 
 function closeEditOpp() {

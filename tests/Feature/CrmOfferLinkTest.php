@@ -88,6 +88,25 @@ test('superadmin sees tasks assigned to other users in the team task table', fun
         ->assertSee('Zadanie admina widoczne dla superadmina');
 });
 
+test('clicking a pipeline opportunity opens details with explicit client and edit actions', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Klient szansy', 'status' => 'active']);
+    CrmOpportunity::create([
+        'title' => 'Szansa otwierana w oknie',
+        'company_id' => $company->id,
+        'stage' => 'contact',
+        'created_by' => $admin->id,
+    ]);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline']))
+        ->assertOk()
+        ->assertSee('Szczegóły szansy')
+        ->assertSee('Przejdź do karty klienta')
+        ->assertSee('Edytuj szansę')
+        ->assertDontSee('Czy przejść do jego karty?');
+});
+
 test('lead can include users without full operational access and be filtered as related to them', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
