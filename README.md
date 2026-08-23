@@ -41,6 +41,7 @@ Najważniejsze zmienne znajdują się w `.env.example`. W produkcji należy usta
 - `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL` i `APP_KEY`
 - połączenie `DB_*`
 - `MAIL_MAILER`, `MAIL_FROM_*`, `ADMIN_EMAIL` i klucz wybranego dostawcy poczty
+- `SUPERADMIN_EMAIL` i tajne `SUPERADMIN_PASSWORD` dla konta tworzonego automatycznie podczas pierwszej migracji; bez ustawionego hasła konto nie jest tworzone
 - `PUBLIC_SURVEY_URL`, jeśli publiczne formularze mają korzystać z innej domeny
 - `APP_TIMEZONE=Europe/Warsaw`
 

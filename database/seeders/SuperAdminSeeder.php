@@ -11,17 +11,27 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $role = Role::firstOrCreate(['name' => 'superadmin']);
+        $role = Role::findOrCreate('superadmin', 'web');
+        $password = (string) config('superadmin.password');
+        $user = User::query()->where('email', (string) config('superadmin.email'))->first();
+
+        if (! $user && $password === '') {
+            $this->command?->warn('Pominięto tworzenie superadmina: ustaw SUPERADMIN_PASSWORD.');
+
+            return;
+        }
 
         $user = User::firstOrCreate(
-            ['email' => 'proximalumine@gmail.com'],
+            ['email' => (string) config('superadmin.email')],
             [
-                'name' => 'Super Admin',
-                'password' => Hash::make('Gwiazda1!'),
+                'name' => (string) config('superadmin.name'),
+                'password' => Hash::make($password),
                 'is_active' => true,
             ]
         );
 
-        $user->assignRole($role);
+        if (! $user->hasRole($role)) {
+            $user->assignRole($role);
+        }
     }
 }
