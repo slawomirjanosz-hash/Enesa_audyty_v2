@@ -10,8 +10,8 @@
     $statusLabels = ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'];
     $requirementStatusLabels = ['planned'=>'Planowane','requested'=>'Zapotrzebowanie','ordered'=>'Zamówione','in_progress'=>'W realizacji','purchased'=>'Kupione','cancelled'=>'Anulowane'];
     $financeStatusLabels = ['planned'=>'Planowana','issued'=>'Wystawiona / zaksięgowana','paid'=>'Opłacona'];
-    $financialEntries = $project->effectiveFinancialEntries();
-    $financeChartData = $financialEntries->sortBy('entry_date')->map(fn($entry) => [
+    $financialEntries = $canViewFinances ? $project->effectiveFinancialEntries() : collect();
+    $financeChartData = $canViewFinances ? $financialEntries->sortBy('entry_date')->map(fn($entry) => [
         'id' => $entry->id,
         'date' => $entry->entry_date->format('Y-m-d'),
         'amount' => (float) $entry->amount,
@@ -30,7 +30,7 @@
             'name' => $requirement->name,
         ]))
         ->sortBy('date')
-        ->values();
+        ->values() : collect();
     $committedRequirements = $project->requirements
         ->whereIn('status', ['ordered', 'in_progress', 'purchased'])
         ->sum(fn($requirement) => (float) $requirement->estimated_cost);
@@ -58,7 +58,7 @@
         ->unique('value')
         ->sortBy('label', SORT_NATURAL | SORT_FLAG_CASE)
         ->values();
-    $requirementItems = $project->requirements->map(fn($requirement) => [
+    $requirementItems = $canViewRequirements ? $project->requirements->map(fn($requirement) => [
         'id' => $requirement->id,
         'type' => $requirement->type,
         'name' => $requirement->name,
@@ -74,7 +74,7 @@
         'supplier' => $requirement->supplier,
         'status' => $requirement->status,
         'update_url' => route('projects.requirements.update', [$project, $requirement]),
-    ])->values();
+    ])->values() : collect();
 @endphp
 <style>
     .p-head{display:flex;justify-content:space-between;gap:20px;margin-bottom:18px}.p-kicker{font-size:12px;font-weight:800;color:var(--green);letter-spacing:.08em}.p-head h1{margin:4px 0 7px;font-size:25px}.p-meta{display:flex;flex-wrap:wrap;gap:9px 18px;color:#66736b;font-size:13px}.badge{padding:5px 10px;border-radius:999px;background:#edf5ef;color:#24543d;font-size:11px;font-weight:800}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.sum{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:16px}.sum small{display:block;color:#77827b;margin-bottom:6px}.sum strong{font-size:20px}.tabs{display:flex;gap:4px;border-bottom:2px solid #e5e1d8;overflow:auto}.tab{border:0;background:none;padding:12px 16px;font-weight:700;color:#66736b;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px}.tab.active{color:var(--green);border-color:var(--green)}.pane{display:none;padding-top:20px}.pane.active{display:block}.card{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:20px;margin-bottom:16px}.card h2{font-size:16px;margin:0 0 15px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:11px;font-weight:800;color:#4b5650}.field input,.field select,.field textarea{border:1px solid #d8d3c8;border-radius:7px;padding:9px 10px;font:inherit}.full{grid-column:1/-1}.member-checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 12px;padding:10px;border:1px solid #d8d3c8;border-radius:8px;background:#fafaf7}.member-check{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-size:12px!important;font-weight:600!important}.member-check input{width:16px;height:16px}.btn{border:0;border-radius:7px;padding:9px 13px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;text-decoration:none}.btn-red{background:#b91c1c}.btn-soft{background:#edf4ef;color:var(--green)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee;font-size:12px}th{font-size:10px;text-transform:uppercase;color:#7b847f;background:#fafaf6}.gantt{overflow-x:auto}.g-row{display:grid;grid-template-columns:220px minmax(700px,1fr);min-height:46px;border-bottom:1px solid #eee;align-items:center}.g-name{padding:8px;font-size:12px}.g-track{height:28px;background:repeating-linear-gradient(90deg,#f7f7f3 0,#f7f7f3 calc(10% - 1px),#e7e4dc calc(10% - 1px),#e7e4dc 10%);position:relative}.g-bar{position:absolute;top:4px;height:20px;border-radius:5px;min-width:4px;color:#fff;font-size:10px;display:flex;align-items:center;padding:0 6px;overflow:hidden}.g-progress{position:absolute;inset:0 auto 0 0;background:rgba(0,0,0,.18)}.legend{display:flex;gap:16px;font-size:11px;color:#66736b;margin:8px 0}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}.finance-chart{width:100%;height:auto;background:#fbfbf8;border-radius:8px}.status-select{padding:6px;border:1px solid #ddd;border-radius:6px}.project-async-status:disabled{opacity:.55;cursor:wait}.empty{padding:28px;text-align:center;color:#888}.team{display:flex;flex-wrap:wrap;gap:8px}.person{padding:7px 10px;border-radius:999px;background:#f0f5f1;font-size:12px}@media(max-width:850px){.summary{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.full{grid-column:auto}.member-checks{grid-template-columns:1fr 1fr}.g-row{grid-template-columns:150px minmax(650px,1fr)}}
@@ -93,10 +93,15 @@
 @if($errors->any())<div style="padding:12px 15px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:15px;">{{ $errors->first() }}</div>@endif
 
 <div class="summary">
-    <div class="sum"><small>Wartość kontraktu</small><strong>{{ number_format((float)$project->contract_value,2,',',' ') }} zł</strong></div>
-    <div class="sum"><small>Wystawione faktury</small><strong>{{ number_format($project->totalInvoiced(),2,',',' ') }} zł</strong></div>
-    <div class="sum"><small>Koszty</small><strong>{{ number_format($project->totalCosts(),2,',',' ') }} zł</strong></div>
-    <div class="sum"><small>Wynik</small><strong style="color:{{ $project->result()>=0?'#15803d':'#b91c1c' }}">{{ number_format($project->result(),2,',',' ') }} zł</strong></div>
+    @if($canViewFinances)
+        <div class="sum"><small>Wartość kontraktu</small><strong>{{ number_format((float)$project->contract_value,2,',',' ') }} zł</strong></div>
+        <div class="sum"><small>Wystawione faktury</small><strong>{{ number_format($project->totalInvoiced(),2,',',' ') }} zł</strong></div>
+        <div class="sum"><small>Koszty</small><strong>{{ number_format($project->totalCosts(),2,',',' ') }} zł</strong></div>
+        <div class="sum"><small>Wynik</small><strong style="color:{{ $project->result()>=0?'#15803d':'#b91c1c' }}">{{ number_format($project->result(),2,',',' ') }} zł</strong></div>
+    @else
+        <div class="sum"><small>Status projektu</small><strong>{{ $statusLabels[$project->status] ?? $project->status }}</strong></div>
+        <div class="sum"><small>Zespół projektu</small><strong>{{ $projectTeam->count() }}</strong></div>
+    @endif
 </div>
 
 @if($canEdit)
@@ -116,7 +121,7 @@
                 <div class="field"><label>Data rozpoczęcia</label><input type="date" name="start_date" value="{{ old('start_date',$project->start_date?->format('Y-m-d')) }}"></div>
                 <div class="field"><label>Data zakończenia</label><input type="date" name="end_date" value="{{ old('end_date',$project->end_date?->format('Y-m-d')) }}"></div>
                 <div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="{{ old('contract_value',$project->contract_value) }}" required></div>
-                <div class="field full"><label>Osoby zaangażowane</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ collect(old('member_ids',$project->members->pluck('id')->all()))->contains(fn($id)=>(int)$id===$user->id) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div></div>
+                <div class="field full"><label>Kto może widzieć projekt</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ collect(old('member_ids',$project->members->pluck('id')->all()))->contains(fn($id)=>(int)$id===$user->id) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div><small style="color:#718078">Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą ten projekt tylko po zaznaczeniu ich na tej liście. Kierownik projektu otrzymuje dostęp automatycznie.</small></div>
                 <div class="field full"><label>Opis</label><textarea name="description" rows="4">{{ old('description',$project->description) }}</textarea></div>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="document.getElementById('project-edit-modal').classList.remove('open')">Anuluj</button><button class="btn">Zapisz zmiany</button></div>
@@ -127,7 +132,7 @@
 @endif
 
 <div class="tabs">
-    @foreach(['overview'=>'Przegląd','gantt'=>'Harmonogram i zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','documents'=>'Dokumenty'] as $id=>$label)
+    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram i zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
     <button class="tab {{ $loop->first?'active':'' }}" onclick="openProjectTab('{{ $id }}',this)">{{ $label }}</button>
     @endforeach
 </div>
@@ -139,6 +144,7 @@
     </div>
 </section>
 
+@if($canViewSchedule)
 <section id="pane-gantt" class="pane">
     @if(session('gantt_import_report'))
         @php($ganttReport = session('gantt_import_report'))
@@ -160,7 +166,9 @@
     </div>
     <div class="card"><h2>Lista zadań i kamieni milowych <small style="font-weight:500;color:#78827b">(kolejność jak na Gantcie)</small></h2><div id="gantt-task-list"></div></div>
 </section>
+@endif
 
+@if($canViewFinances)
 <section id="pane-finances" class="pane">
     @if(session('finance_import_report'))
         @php($report = session('finance_import_report'))
@@ -254,8 +262,9 @@
         </div>
     </details>
 </section>
+@endif
 
-@if(false)
+@if(false && $canViewFinances)
 <section id="pane-finances-legacy" class="pane" style="display:none">
     <div class="card"><h2>Harmonogram finansowy i cash flow</h2>
         <div class="finance-summary-grid">
@@ -280,6 +289,7 @@
 </section>
 
 @endif
+@if($canViewRequirements)
 <section id="pane-requirements" class="pane">
     @if(session('requirements_import_report'))
         @php($requirementsReport = session('requirements_import_report'))
@@ -416,11 +426,14 @@
     </div>
 </div>
 @endif
+@endif
 
+@if($canViewDocuments)
 <section id="pane-documents" class="pane">
     @if($canEdit)<div class="card"><h2>Dodaj dokument projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:center"><input type="file" name="file" required><button class="btn">Wgraj dokument</button></div><small>PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB.</small></form></div>@endif
     <div class="card"><h2>Dokumenty projektu</h2>@if($project->documents->isEmpty())<div class="empty">Brak dokumentów.</div>@else<table><thead><tr><th>Plik</th><th>Rozmiar</th><th>Dodał</th><th>Data</th><th></th></tr></thead><tbody>@foreach($project->documents as $document)<tr><td><a href="{{route('projects.documents.download',[$project,$document])}}"><strong>{{$document->original_filename}}</strong></a></td><td>{{$document->formattedSize()}}</td><td>{{$document->uploader?->name??'System'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td>@if($canEdit)<form method="POST" action="{{route('projects.documents.destroy',[$project,$document])}}">@csrf @method('DELETE')<button class="btn btn-red">Usuń</button></form>@endif</td></tr>@endforeach</tbody></table>@endif</div>
 </section>
+@endif
 
 @if($canEdit)
 <div id="gantt-task-modal" class="project-modal" onclick="if(event.target===this)closeGanttTaskModal()">
@@ -470,7 +483,7 @@
 <script>
 const projectTimelineItems = @json($timelineItems);
 const projectFinanceItems = @json($financeChartData);
-const projectContractValue = @json((float) $project->contract_value);
+const projectContractValue = @json($canViewFinances ? (float) $project->contract_value : 0);
 const requestedProjectTab = @json(request('tab') ?: ($errors->requirementsExport->any() ? 'requirements' : ($errors->ganttImport->any() ? 'gantt' : null)));
 const projectCanEdit = @json($canEdit);
 const projectStartDate = @json($project->start_date?->format('Y-m-d'));

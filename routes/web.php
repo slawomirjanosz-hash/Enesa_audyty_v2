@@ -256,7 +256,7 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/{project}/tasks', [ProjectController::class, 'storeTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.store');
     Route::post('/{project}/tasks/reorder', [ProjectController::class, 'reorderTasks'])->middleware('app.permission:projects.schedule.manage')->name('tasks.reorder');
     Route::delete('/{project}/tasks/bulk', [ProjectController::class, 'bulkDestroyTasks'])->middleware('app.permission:projects.schedule.manage')->name('tasks.bulk-destroy');
-    Route::get('/{project}/gantt/export', [ProjectController::class, 'exportGantt'])->name('gantt.export');
+    Route::get('/{project}/gantt/export', [ProjectController::class, 'exportGantt'])->middleware('app.permission:projects.schedule.view')->name('gantt.export');
     Route::post('/{project}/gantt/import', [ProjectController::class, 'importGantt'])->middleware('app.permission:projects.schedule.manage')->name('gantt.import');
     Route::patch('/{project}/tasks/{task}', [ProjectController::class, 'updateTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.update');
     Route::delete('/{project}/tasks/{task}', [ProjectController::class, 'destroyTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.destroy');
@@ -270,15 +270,15 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/{project}/finance-groups', [ProjectController::class, 'storeFinanceGroup'])->middleware('app.permission:projects.finances.manage')->name('finance-groups.store');
     Route::delete('/{project}/finance-groups/{group}', [ProjectController::class, 'destroyFinanceGroup'])->middleware('app.permission:projects.finances.manage')->name('finance-groups.destroy');
     Route::post('/{project}/requirements', [ProjectController::class, 'storeRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.store');
-    Route::get('/{project}/requirements/template', [ProjectController::class, 'downloadRequirementsTemplate'])->name('requirements.template');
-    Route::get('/{project}/requirements/export', [ProjectController::class, 'exportRequirements'])->name('requirements.export');
+    Route::get('/{project}/requirements/template', [ProjectController::class, 'downloadRequirementsTemplate'])->middleware('app.permission:projects.requirements.view')->name('requirements.template');
+    Route::get('/{project}/requirements/export', [ProjectController::class, 'exportRequirements'])->middleware('app.permission:projects.requirements.view')->name('requirements.export');
     Route::post('/{project}/requirements/import', [ProjectController::class, 'importRequirements'])->middleware('app.permission:projects.requirements.manage')->name('requirements.import');
     Route::post('/{project}/requirements/bulk', [ProjectController::class, 'bulkUpdateRequirements'])->middleware('app.permission:projects.requirements.manage')->name('requirements.bulk');
     Route::patch('/{project}/requirements/{requirement}/status', [ProjectController::class, 'updateRequirementStatus'])->middleware('app.permission:projects.requirements.manage')->name('requirements.status');
     Route::patch('/{project}/requirements/{requirement}', [ProjectController::class, 'updateRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.update');
     Route::delete('/{project}/requirements/{requirement}', [ProjectController::class, 'destroyRequirement'])->middleware('app.permission:projects.requirements.manage')->name('requirements.destroy');
     Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->middleware('app.permission:projects.documents.manage')->name('documents.store');
-    Route::get('/{project}/documents/{document}', [ProjectController::class, 'downloadDocument'])->name('documents.download');
+    Route::get('/{project}/documents/{document}', [ProjectController::class, 'downloadDocument'])->middleware('app.permission:projects.documents.view')->name('documents.download');
     Route::delete('/{project}/documents/{document}', [ProjectController::class, 'destroyDocument'])->middleware('app.permission:projects.documents.manage')->name('documents.destroy');
 });
 

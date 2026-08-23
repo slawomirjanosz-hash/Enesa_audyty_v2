@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
     foreach (['superadmin', 'admin', 'auditor_senior', 'auditor', 'client_admin', 'client_user'] as $role) {
@@ -46,6 +47,46 @@ test('admin creates a project with manager and team', function () {
         ->and($project->members->pluck('id'))->toContain($manager->id, $member->id);
 
     $this->actingAs($member)->get(route('projects.show', $project))->assertOk();
+});
+
+test('external project user sees only assigned projects and permitted project tabs', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $external = User::factory()->create();
+    $role = Role::findOrCreate('projektant_zewnetrzny');
+    $role->givePermissionTo([
+        Permission::findOrCreate('projects.view'),
+        Permission::findOrCreate('projects.schedule.view'),
+    ]);
+    $external->assignRole($role);
+
+    $visible = Project::create([
+        'number' => 'PRJ/EXT/001', 'name' => 'Projekt dostępny dla projektanta',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 50000,
+        'created_by' => $admin->id,
+    ]);
+    $visible->members()->attach([$admin->id, $external->id]);
+    $hidden = Project::create([
+        'number' => 'PRJ/EXT/002', 'name' => 'Projekt ukryty przed projektantem',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 80000,
+        'created_by' => $admin->id,
+    ]);
+    $hidden->members()->attach($admin);
+
+    $this->actingAs($external)->get(route('projects.index'))
+        ->assertOk()
+        ->assertSee('Projekt dostępny dla projektanta')
+        ->assertDontSee('Projekt ukryty przed projektantem');
+
+    $this->actingAs($external)->get(route('projects.show', $visible))
+        ->assertOk()
+        ->assertSee('Harmonogram i zadania')
+        ->assertDontSee('Finanse')
+        ->assertDontSee('Materiały i usługi')
+        ->assertDontSee('Dokumenty projektu')
+        ->assertDontSee('50 000,00 zł');
+
+    $this->actingAs($external)->get(route('projects.show', $hidden))->assertForbidden();
 });
 
 test('project editor changes an internal project into a client project', function () {

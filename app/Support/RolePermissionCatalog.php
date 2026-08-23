@@ -40,9 +40,13 @@ class RolePermissionCatalog
                 'projects.create' => 'Tworzenie projektów',
                 'projects.edit' => 'Edycja danych projektu',
                 'projects.delete' => 'Usuwanie projektów',
+                'projects.schedule.view' => 'Podgląd harmonogramu i zadań projektu',
                 'projects.schedule.manage' => 'Zarządzanie harmonogramem i Ganttem',
+                'projects.finances.view' => 'Podgląd finansów projektu',
                 'projects.finances.manage' => 'Zarządzanie finansami projektu',
+                'projects.requirements.view' => 'Podgląd materiałów i usług projektu',
                 'projects.requirements.manage' => 'Zarządzanie materiałami i usługami',
+                'projects.documents.view' => 'Podgląd dokumentów projektu',
                 'projects.documents.manage' => 'Zarządzanie dokumentami projektu',
             ]],
             'audits' => ['label' => 'Audyty', 'permissions' => [

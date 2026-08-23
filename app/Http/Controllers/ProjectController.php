@@ -73,13 +73,19 @@ class ProjectController extends Controller
     public function show(Project $project): View
     {
         $this->authorize('view', $project);
+        $user = request()->user();
+        $fullAccess = app(AuditorAccessService::class)->hasFullAccess($user);
+        $canViewSchedule = $fullAccess || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']);
+        $canViewFinances = $fullAccess || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
+        $canViewRequirements = $fullAccess || $user->canAny(['projects.requirements.view', 'projects.requirements.manage']);
+        $canViewDocuments = $fullAccess || $user->canAny(['projects.documents.view', 'projects.documents.manage']);
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
             'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financialEntries.projectRequirement', 'financeGroups.entries',
             'requirements.responsible', 'requirements.supplierCompany', 'documents.uploader',
         ]);
 
-        $timelineItems = $project->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
+        $timelineItems = $canViewSchedule ? $project->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
             'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id, 'name' => $task->title,
             'start' => $task->start_date->format('Y-m-d'), 'end' => $task->due_date->format('Y-m-d'),
             'progress' => $task->progress, 'color' => '#7C3AED',
@@ -93,7 +99,7 @@ class ProjectController extends Controller
             'update_url' => route('projects.tasks.update', [$project, $task]),
             'delete_url' => route('projects.tasks.destroy', [$project, $task]),
             'position' => $task->project_position,
-        ])->values();
+        ])->values() : collect();
 
         return view('projects.show', [
             'project' => $project,
@@ -101,6 +107,10 @@ class ProjectController extends Controller
             'companies' => Company::clients()->active()->orderBy('name')->get(),
             'suppliers' => Company::suppliers()->active()->orderBy('name')->get(),
             'timelineItems' => $timelineItems,
+            'canViewSchedule' => $canViewSchedule,
+            'canViewFinances' => $canViewFinances,
+            'canViewRequirements' => $canViewRequirements,
+            'canViewDocuments' => $canViewDocuments,
         ]);
     }
 

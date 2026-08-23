@@ -13,8 +13,7 @@ class ProjectPolicy
         return (app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('projects.view'))
             && (
                 app(AuditorAccessService::class)->hasFullAccess($user)
-                || $user->can('projects.edit')
-            || $project->manager_id === $user->id
+                || $project->manager_id === $user->id
                 || $project->members()->whereKey($user->id)->exists()
             );
     }
@@ -22,8 +21,10 @@ class ProjectPolicy
     public function update(User $user, Project $project): bool
     {
         return app(AuditorAccessService::class)->hasFullAccess($user)
-            || $user->can('projects.edit')
-            || $project->manager_id === $user->id;
+            || ($user->can('projects.edit') && (
+                $project->manager_id === $user->id
+                || $project->members()->whereKey($user->id)->exists()
+            ));
     }
 
     public function delete(User $user, Project $project): bool
