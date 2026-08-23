@@ -148,6 +148,7 @@ test('project role can see material prices without seeing service prices', funct
     $viewer = User::factory()->create();
     $role = Role::findOrCreate('materialowiec_zewnetrzny');
     $role->givePermissionTo([
+        Permission::findOrCreate('system.full_access'),
         Permission::findOrCreate('projects.view'),
         Permission::findOrCreate('projects.edit'),
         Permission::findOrCreate('projects.requirements.view'),
@@ -163,12 +164,12 @@ test('project role can see material prices without seeing service prices', funct
     $project->members()->attach([$admin->id, $viewer->id]);
     ProjectRequirement::create([
         'project_id' => $project->id, 'type' => 'material', 'name' => 'Materiał z widoczną ceną',
-        'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 1234.56, 'status' => 'planned',
+        'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 1234.56, 'supplier' => 'Dostawca materiałów', 'status' => 'planned',
         'created_by' => $admin->id,
     ]);
     $service = ProjectRequirement::create([
         'project_id' => $project->id, 'type' => 'service', 'name' => 'Usługa z ukrytą ceną',
-        'quantity' => 1, 'unit' => 'usł.', 'estimated_cost' => 9876.54, 'status' => 'planned',
+        'quantity' => 1, 'unit' => 'usł.', 'estimated_cost' => 9876.54, 'supplier' => 'Firma usługowa', 'status' => 'planned',
         'created_by' => $admin->id,
     ]);
 
@@ -176,8 +177,11 @@ test('project role can see material prices without seeing service prices', funct
         ->assertOk()
         ->assertSee('Materiał z widoczną ceną')
         ->assertSee('1 234,56 zł')
+        ->assertSee('Dostawca materiałów · 1 poz.')
         ->assertSee('Usługa z ukrytą ceną')
         ->assertSee('Brak dostępu')
+        ->assertSee('Podsumowanie obejmuje wyłącznie ceny materiałów')
+        ->assertDontSee('Firma usługowa · 1 poz.')
         ->assertDontSee('9 876,54 zł');
 
     $this->actingAs($viewer)->patch(route('projects.requirements.update', [$project, $service]), [

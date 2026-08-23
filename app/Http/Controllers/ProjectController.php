@@ -80,8 +80,10 @@ class ProjectController extends Controller
         $canManageSchedule = $fullAccess || $user->can('projects.schedule.manage');
         $canViewFinances = $fullAccess || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
         $canViewRequirements = $fullAccess || $user->canAny(['projects.requirements.view', 'projects.requirements.manage']);
-        $canViewMaterialPrices = $fullAccess || $user->can('projects.requirements.material_prices.view');
-        $canViewServicePrices = $fullAccess || $user->can('projects.requirements.service_prices.view');
+        // Price permissions are deliberately independent from operational full access.
+        // This prevents a broad role from bypassing a disabled material/service price checkbox.
+        $canViewMaterialPrices = $user->hasRole('superadmin') || $user->can('projects.requirements.material_prices.view');
+        $canViewServicePrices = $user->hasRole('superadmin') || $user->can('projects.requirements.service_prices.view');
         $canViewDocuments = $fullAccess || $user->canAny(['projects.documents.view', 'projects.documents.manage']);
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
@@ -1148,7 +1150,7 @@ class ProjectController extends Controller
 
     private function canViewRequirementPrice(User $user, string $type): bool
     {
-        return app(AuditorAccessService::class)->hasFullAccess($user)
+        return $user->hasRole('superadmin')
             || $user->can("projects.requirements.{$type}_prices.view");
     }
 

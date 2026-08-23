@@ -315,13 +315,18 @@
                 </div>
             </details>
         @endif
-        @if($canViewMaterialPrices || $canViewServicePrices)<div class="finance-summary-grid" style="margin-bottom:14px">
+        @if($canViewMaterialPrices || $canViewServicePrices)
+        @if(!$canViewMaterialPrices || !$canViewServicePrices)
+            <p style="margin:0 0 8px;color:#718078;font-size:12px">Podsumowanie obejmuje wyłącznie ceny {{ $canViewMaterialPrices ? 'materiałów' : 'usług' }}, do których masz dostęp.</p>
+        @endif
+        <div class="finance-summary-grid" style="margin-bottom:14px">
             <div class="finance-kpi"><small>Łączna wartość zamówienia</small><strong id="requirements-total-value">{{number_format($requirementsTotal,2,',',' ')}} zł</strong></div>
             <div class="finance-kpi"><small>Planowany budżet</small><strong id="requirements-planned-value" style="color:#7c3aed">{{number_format($plannedRequirements,2,',',' ')}} zł</strong></div>
             @foreach($requirementsBySupplier as $supplierSummary)
                 <div class="finance-kpi"><small>{{$supplierSummary['supplier']}} · {{$supplierSummary['count']}} poz.</small><strong>{{number_format($supplierSummary['total'],2,',',' ')}} zł</strong></div>
             @endforeach
-        </div>@endif
+        </div>
+        @endif
         @if($project->requirements->isEmpty())
             <div class="empty">Brak zapotrzebowań.</div>
         @else
