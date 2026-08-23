@@ -66,6 +66,10 @@ class DashboardController extends Controller
             $user,
             'can_view_dashboard'
         );
+        $canViewTeamTasks = $access->hasFullAccess($user) || $user->can('calendar.team.view');
+        if (! $canViewTeamTasks) {
+            $visibleOverdueTasksQuery->where('assigned_to', $user->id);
+        }
 
         $stats = [
             'active_audits' => $auditsEnabled ? $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $user, 'can_view_audits')->count() : 0,

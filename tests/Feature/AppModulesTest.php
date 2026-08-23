@@ -5,6 +5,7 @@ use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\Task;
 use App\Models\User;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -216,5 +217,37 @@ test('dashboard shows another users overdue tasks without flashing red', functio
         ->assertOk()
         ->assertSeeInOrder(['>1</div>', 'Zadania po terminie'], false)
         ->assertSee('Zaległe zadania innych użytkowników')
+        ->assertDontSee('data-task-alert="red"', false);
+});
+
+test('dashboard does not reveal other users overdue tasks without team calendar access', function () {
+    CompanySettings::create([
+        'name' => 'Firma prywatnych zadań',
+        'enabled_modules' => ['dashboard', 'crm', 'calendar'],
+    ]);
+    $viewer = User::factory()->create();
+    $role = Role::findOrCreate('pracownik_bez_zadan_zespolu');
+    $role->givePermissionTo([
+        Permission::findOrCreate('dashboard.view'),
+        Permission::findOrCreate('crm.view'),
+    ]);
+    $viewer->assignRole($role);
+    $assignee = User::factory()->create();
+    $assignee->assignRole('admin');
+
+    Task::create([
+        'title' => 'Ukryte zaległe zadanie innej osoby',
+        'assigned_to' => $assignee->id,
+        'created_by' => $assignee->id,
+        'status' => 'todo',
+        'priority' => 'medium',
+        'due_date' => now()->subDay(),
+    ]);
+
+    $this->actingAs($viewer)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSeeInOrder(['>0</div>', 'Zadania po terminie'], false)
+        ->assertSee('Wszystko na czas')
+        ->assertDontSee('Zaległe zadania innych użytkowników')
         ->assertDontSee('data-task-alert="red"', false);
 });
