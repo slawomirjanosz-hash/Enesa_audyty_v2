@@ -86,6 +86,7 @@
     .requirements-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.requirements-head h2{margin:0}.requirements-head p{margin:4px 0 0;color:#6b776f;font-size:12px}.requirements-head-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.requirement-import{border:1px solid #dfe5df;border-radius:9px;background:#f8faf7;margin-bottom:14px}.requirement-import>summary{list-style:none;cursor:pointer;padding:11px 13px;font-size:12px;font-weight:800;color:var(--green)}.requirement-import>summary::-webkit-details-marker{display:none}.requirement-import>summary:before{content:'›';display:inline-block;margin-right:7px;font-size:18px;vertical-align:-1px;transition:transform .15s}.requirement-import[open]>summary:before{transform:rotate(90deg)}.requirement-import-body{border-top:1px solid #e4e8e3;padding:13px}.requirement-import-form{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.requirement-import-form input{flex:1;min-width:230px;border:1px solid #d8d3c8;border-radius:7px;background:#fff;padding:8px}.requirement-import-help{font-size:11px;line-height:1.55;color:#657169;margin:0 0 11px}.requirement-search{display:flex;align-items:center;gap:9px;margin:0 0 12px;padding:10px 12px;border:1px solid #dfe5df;border-radius:9px;background:#fff}.requirement-search i{color:#66736b;font-size:18px}.requirement-search input{flex:1;min-width:180px;border:0;outline:0;background:transparent;font:inherit}.requirement-search-count{font-size:11px;font-weight:700;color:#66736b;white-space:nowrap}.requirement-search-empty{padding:22px;text-align:center;color:#66736b;background:#f8faf7;border-radius:8px;margin-top:10px}.requirement-search-empty[hidden]{display:none}.requirement-bulk-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px;margin:0 0 12px;border:1px solid #dfe5df;border-radius:9px;background:#f8faf7}.requirement-bulk-toolbar select,.requirement-bulk-toolbar input{min-width:180px;padding:7px 9px;border:1px solid #d8d3c8;border-radius:7px;background:#fff}.requirement-bulk-value[hidden]{display:none}.requirement-selected-count{font-size:11px;font-weight:700;color:#66736b}.requirements-table-wrap{overflow-x:auto}.requirements-table{min-width:850px;table-layout:fixed}.requirements-table th,.requirements-table td{padding:9px 8px;vertical-align:middle}.requirements-table:not(.with-selection) th:nth-child(1){width:29%}.requirements-table:not(.with-selection) th:nth-child(2){width:9%}.requirements-table:not(.with-selection) th:nth-child(3){width:16%}.requirements-table:not(.with-selection) th:nth-child(4){width:15%}.requirements-table:not(.with-selection) th:nth-child(5){width:11%}.requirements-table:not(.with-selection) th:nth-child(6){width:11%}.requirements-table:not(.with-selection) th:nth-child(7){width:9%}.requirements-table.with-selection th:nth-child(1){width:4%}.requirements-table.with-selection th:nth-child(2){width:27%}.requirements-table.with-selection th:nth-child(3){width:9%}.requirements-table.with-selection th:nth-child(4){width:15%}.requirements-table.with-selection th:nth-child(5){width:14%}.requirements-table.with-selection th:nth-child(6){width:11%}.requirements-table.with-selection th:nth-child(7){width:12%}.requirements-table.with-selection th:nth-child(8){width:8%}.requirement-name{display:block;line-height:1.3}.requirement-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;color:#758078}.requirement-type{padding:3px 6px;border-radius:999px;background:#eef4ef;color:#285740;font-size:9px;font-weight:800}.requirement-description{display:block;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.requirement-qty{font-size:13px;font-weight:800;white-space:nowrap}.requirement-cost{font-weight:800;white-space:nowrap}.requirement-status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;font-weight:800;white-space:nowrap}.requirement-status.planned{background:#ede9fe;color:#6d28d9}.requirement-status.requested{background:#f1f5f9;color:#475569}.requirement-status.ordered{background:#fef3c7;color:#92400e}.requirement-status.in_progress{background:#dbeafe;color:#1d4ed8}.requirement-status.purchased{background:#d1fae5;color:#047857}.requirement-status.cancelled{background:#fee2e2;color:#b91c1c}.requirement-actions{display:flex;justify-content:flex-end;gap:5px}.requirement-modal-box{width:min(760px,100%)}@media(max-width:700px){.requirements-head{align-items:flex-start;flex-direction:column}.requirements-table{min-width:820px}.requirement-import-form{align-items:stretch;flex-direction:column}.requirement-import-form input{width:100%;min-width:0}.requirement-bulk-toolbar{align-items:stretch;flex-direction:column}.requirement-bulk-toolbar select,.requirement-bulk-toolbar input,.requirement-bulk-toolbar button{width:100%}}
     .requirements-table.with-selection th:nth-child(1){width:36px!important}.requirements-table.with-selection th:nth-child(2){width:27%!important}.requirements-table.with-selection th:nth-child(3){width:13%!important}.requirements-table.with-selection th:nth-child(4){width:68px!important}.requirements-table.with-selection th:nth-child(5){width:14%!important}.requirements-table.with-selection th:nth-child(6){width:14%!important}.requirements-table.with-selection th:nth-child(7){width:116px!important}.requirements-table.with-selection th:nth-child(8){width:155px!important}.requirements-table.with-selection th:nth-child(9){width:66px!important}.requirements-table:not(.with-selection) th:nth-child(1){width:29%!important}.requirements-table:not(.with-selection) th:nth-child(2){width:14%!important}.requirements-table:not(.with-selection) th:nth-child(3){width:68px!important}.requirements-table:not(.with-selection) th:nth-child(4){width:15%!important}.requirements-table:not(.with-selection) th:nth-child(5){width:15%!important}.requirements-table:not(.with-selection) th:nth-child(6){width:116px!important}.requirements-table:not(.with-selection) th:nth-child(7){width:155px!important}.requirements-table:not(.with-selection) th:nth-child(8){width:24px!important}.requirements-table td:last-child{min-width:66px;padding-left:4px;padding-right:4px}.requirements-table .requirement-actions{min-width:58px;justify-content:flex-end}.requirements-table .requirement-status{width:112px;max-width:112px}.requirements-table .requirement-qty{white-space:nowrap}
     .requirement-export-statuses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;padding:10px;border:1px solid #d8d3c8;border-radius:8px;background:#fafaf7}.requirement-export-status{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-size:12px!important;font-weight:600!important}.requirement-export-status input{width:16px;height:16px;accent-color:var(--green)}.requirement-export-note{padding:10px 12px;border-radius:8px;background:#f3f7f4;color:#536158;font-size:11px;line-height:1.5}@media(max-width:700px){.requirement-export-statuses{grid-template-columns:1fr}}
+    .requirement-summary-kpi{cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}.requirement-summary-kpi:hover,.requirement-summary-kpi:focus{outline:0;border-color:var(--green);box-shadow:0 4px 14px rgba(26,77,58,.14);transform:translateY(-1px)}.requirement-summary-kpi.active{background:#edf5ef;border-color:var(--green);box-shadow:0 0 0 2px rgba(26,77,58,.12)}.requirement-filter-state{display:flex;align-items:center;gap:8px;margin:-3px 0 10px;padding:8px 10px;border-radius:8px;background:#edf5ef;color:#285740;font-size:11px;font-weight:700}.requirement-filter-state button{margin-left:auto;border:0;background:none;color:#285740;font:inherit;text-decoration:underline;cursor:pointer}
 </style>
 
 <div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
@@ -320,10 +321,10 @@
             <p style="margin:0 0 8px;color:#718078;font-size:12px">Podsumowanie obejmuje wyłącznie ceny {{ $canViewMaterialPrices ? 'materiałów' : 'usług' }}, do których masz dostęp.</p>
         @endif
         <div class="finance-summary-grid" style="margin-bottom:14px">
-            <div class="finance-kpi"><small>Łączna wartość zamówienia</small><strong id="requirements-total-value">{{number_format($requirementsTotal,2,',',' ')}} zł</strong></div>
-            <div class="finance-kpi"><small>Planowany budżet</small><strong id="requirements-planned-value" style="color:#7c3aed">{{number_format($plannedRequirements,2,',',' ')}} zł</strong></div>
+            <div class="finance-kpi requirement-summary-kpi" role="button" tabindex="0" data-requirement-summary="all" data-filter-label="Wszystkie pozycje w podsumowaniu"><small>Łączna wartość zamówienia</small><strong id="requirements-total-value">{{number_format($requirementsTotal,2,',',' ')}} zł</strong></div>
+            <div class="finance-kpi requirement-summary-kpi" role="button" tabindex="0" data-requirement-summary="planned" data-filter-label="Planowany budżet"><small>Planowany budżet</small><strong id="requirements-planned-value" style="color:#7c3aed">{{number_format($plannedRequirements,2,',',' ')}} zł</strong></div>
             @foreach($requirementsBySupplier as $supplierSummary)
-                <div class="finance-kpi"><small>{{$supplierSummary['supplier']}} · {{$supplierSummary['count']}} poz.</small><strong>{{number_format($supplierSummary['total'],2,',',' ')}} zł</strong></div>
+                <div class="finance-kpi requirement-summary-kpi" role="button" tabindex="0" data-requirement-summary="supplier" data-supplier="{{$supplierSummary['supplier']}}" data-filter-label="Dostawca: {{$supplierSummary['supplier']}}"><small>{{$supplierSummary['supplier']}} · {{$supplierSummary['count']}} poz.</small><strong>{{number_format($supplierSummary['total'],2,',',' ')}} zł</strong></div>
             @endforeach
         </div>
         @endif
@@ -335,6 +336,7 @@
                 <input id="requirements-live-search" type="search" autocomplete="off" placeholder="Szukaj po nazwie, technologii, opisie, dostawcy, osobie, statusie, terminie lub cenie…">
                 <span class="requirement-search-count" id="requirements-search-count">{{$project->requirements->count()}} poz.</span>
             </label>
+            <div class="requirement-filter-state" id="requirement-summary-filter-state" hidden><span id="requirement-summary-filter-label"></span><button type="button" id="requirement-summary-filter-clear">Pokaż wszystkie</button></div>
             @if($canEdit)
                 <form id="requirements-bulk-form" class="requirement-bulk-toolbar" method="POST" action="{{route('projects.requirements.bulk',$project)}}">
                     @csrf
@@ -360,7 +362,7 @@
             @endif
             <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}" style="min-width:1050px"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th style="width:13%">Technologia</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th>@if($canViewMaterialPrices || $canViewServicePrices)<th>Cena / wartość</th>@endif<th></th></tr></thead><tbody>
             @foreach($project->requirements as $req)
-                <tr class="requirement-data-row" data-requirement-search="{{collect([
+                <tr class="requirement-data-row" data-requirement-status="{{$req->status}}" data-requirement-supplier="{{$req->supplierCompany?->name ?? ($req->supplier ?: 'Bez dostawcy')}}" data-price-visible="{{($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) ? '1' : '0'}}" data-requirement-search="{{collect([
                     $req->type === 'material' ? 'Materiał' : 'Usługa', $req->name, $req->technology, $req->description,
                     $req->formattedQuantity(), $req->displayUnit(), $req->needed_by?->format('d.m.Y'), $req->needed_by?->format('Y-m-d'),
                     $req->responsible?->name, $req->supplierCompany?->name ?? $req->supplier, $req->supplierCompany?->nip,
@@ -1072,6 +1074,8 @@ const requirementSelectAll = document.getElementById('requirements-select-all');
 const requirementChecks = [...document.querySelectorAll('.requirement-entry-check')];
 const requirementRows = [...document.querySelectorAll('.requirement-data-row')];
 const requirementSearch = document.getElementById('requirements-live-search');
+const requirementSummaryTiles = [...document.querySelectorAll('.requirement-summary-kpi')];
+let activeRequirementSummaryTile = null;
 function normalizeRequirementSearch(value) {
     return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 }
@@ -1102,12 +1106,22 @@ requirementSelectAll?.addEventListener('change', event => {
     syncRequirementSelection();
 });
 requirementChecks.forEach(checkbox => checkbox.addEventListener('change', syncRequirementSelection));
-requirementSearch?.addEventListener('input', event => {
-    const terms = normalizeRequirementSearch(event.currentTarget.value).split(/\s+/).filter(Boolean);
+function applyRequirementFilters() {
+    const terms = normalizeRequirementSearch(requirementSearch?.value).split(/\s+/).filter(Boolean);
     let visible = 0;
     requirementRows.forEach(row => {
         const haystack = normalizeRequirementSearch(row.dataset.requirementSearch);
-        const matches = terms.every(term => haystack.includes(term));
+        const matchesSearch = terms.every(term => haystack.includes(term));
+        let matchesSummary = true;
+        if (activeRequirementSummaryTile) {
+            const summary = activeRequirementSummaryTile.dataset.requirementSummary;
+            const hasVisiblePrice = row.dataset.priceVisible === '1';
+            const isActive = row.dataset.requirementStatus !== 'cancelled';
+            if (summary === 'all') matchesSummary = hasVisiblePrice && isActive;
+            if (summary === 'planned') matchesSummary = hasVisiblePrice && row.dataset.requirementStatus === 'planned';
+            if (summary === 'supplier') matchesSummary = hasVisiblePrice && isActive && row.dataset.requirementSupplier === activeRequirementSummaryTile.dataset.supplier;
+        }
+        const matches = matchesSearch && matchesSummary;
         row.hidden = !matches;
         if (matches) visible++;
         const checkbox = row.querySelector('.requirement-entry-check');
@@ -1118,6 +1132,30 @@ requirementSearch?.addEventListener('input', event => {
     const empty = document.getElementById('requirements-search-empty');
     if (empty) empty.hidden = visible !== 0;
     syncRequirementSelection();
+}
+function setRequirementSummaryFilter(tile) {
+    activeRequirementSummaryTile = tile;
+    requirementSummaryTiles.forEach(item => item.classList.toggle('active', item === tile));
+    const state = document.getElementById('requirement-summary-filter-state');
+    const label = document.getElementById('requirement-summary-filter-label');
+    if (state) state.hidden = !tile;
+    if (label) label.textContent = tile ? 'Aktywny filtr: ' + tile.dataset.filterLabel : '';
+    applyRequirementFilters();
+    document.querySelector('.requirements-table-wrap')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+requirementSearch?.addEventListener('input', applyRequirementFilters);
+requirementSummaryTiles.forEach(tile => {
+    tile.addEventListener('click', () => setRequirementSummaryFilter(activeRequirementSummaryTile === tile ? null : tile));
+    tile.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setRequirementSummaryFilter(activeRequirementSummaryTile === tile ? null : tile);
+        }
+    });
+});
+document.getElementById('requirement-summary-filter-clear')?.addEventListener('click', () => {
+    if (requirementSearch) requirementSearch.value = '';
+    setRequirementSummaryFilter(null);
 });
 requirementBulkForm?.addEventListener('submit', event => {
     const selected = requirementChecks.filter(checkbox => checkbox.checked).length;
