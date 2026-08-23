@@ -153,16 +153,16 @@
     @endif
     <div class="card"><h2>Interaktywny wykres Gantta</h2>
         <div class="gantt-toolbar">
-            @if($canEdit)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button><button type="button" class="tool-btn" id="gantt-add-milestone"><i class="ti ti-diamond"></i> Dodaj kamień milowy</button>@endif
+            @if($canManageSchedule)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button><button type="button" class="tool-btn" id="gantt-add-milestone"><i class="ti ti-diamond"></i> Dodaj kamień milowy</button>@endif
             <a class="tool-btn" style="text-decoration:none" href="{{route('projects.gantt.export',$project)}}"><i class="ti ti-file-spreadsheet"></i> Eksport Excel</a>
-            @if($canEdit)<button type="button" class="tool-btn" onclick="document.getElementById('gantt-import-modal').classList.add('open')"><i class="ti ti-file-upload"></i> Import Excel</button>@endif
-            @if($canEdit)<button type="button" class="tool-btn" id="gantt-share"><i class="ti ti-link"></i> Link dla klienta</button>@endif
+            @if($canManageSchedule)<button type="button" class="tool-btn" onclick="document.getElementById('gantt-import-modal').classList.add('open')"><i class="ti ti-file-upload"></i> Import Excel</button>@endif
+            @if($canManageSchedule)<button type="button" class="tool-btn" id="gantt-share"><i class="ti ti-link"></i> Link dla klienta</button>@endif
             <span class="tool-label">Widok:</span>
             @foreach(['Day'=>'Dzień','Week'=>'Tydzień','Month'=>'Miesiąc'] as $mode=>$label)<button type="button" class="tool-btn gantt-mode {{ $mode==='Week'?'active':'' }}" data-mode="{{ $mode }}">{{ $label }}</button>@endforeach
             <button type="button" class="tool-btn" id="gantt-today"><i class="ti ti-calendar-event"></i> Dzisiaj</button>
             <span class="legend" style="margin:0 0 0 auto"><span><i class="dot" style="background:#7C3AED"></i>Zadania</span><span><i class="dot" style="background:#f59e0b;transform:rotate(45deg);border-radius:1px"></i>Kamienie milowe</span><span>Linie: dziś i koniec projektu {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></span>
         </div>
-        @if($canEdit)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
+        @if($canManageSchedule)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
         <div id="project-frappe-gantt" class="frappe-gantt-wrap"></div>
     </div>
     <div class="card"><h2>Lista zadań i kamieni milowych <small style="font-weight:500;color:#78827b">(kolejność jak na Gantcie)</small></h2><div id="gantt-task-list"></div></div>
@@ -437,7 +437,7 @@
 </section>
 @endif
 
-@if($canEdit)
+@if($canManageSchedule)
 <div id="gantt-task-modal" class="project-modal" onclick="if(event.target===this)closeGanttTaskModal()">
     <div class="project-modal-box">
         <div class="modal-head"><h2 id="gantt-modal-title">Dodaj zadanie</h2><button type="button" class="modal-close" onclick="closeGanttTaskModal()">×</button></div>
@@ -462,7 +462,7 @@
 </div>
 @endif
 
-@if($canEdit)
+@if($canManageSchedule)
 <div id="gantt-import-modal" class="project-modal" onclick="if(event.target===this)this.classList.remove('open')">
     <div class="project-modal-box" style="width:min(620px,100%)">
         <div class="modal-head"><div><h2>Import harmonogramu z Excela</h2><small style="color:#718078">Zadania, kolejność i zależności zostaną przeniesione do tego projektu.</small></div><button type="button" class="modal-close" onclick="document.getElementById('gantt-import-modal').classList.remove('open')">×</button></div>
@@ -487,7 +487,7 @@ const projectTimelineItems = @json($timelineItems);
 const projectFinanceItems = @json($financeChartData);
 const projectContractValue = @json($canViewFinances ? (float) $project->contract_value : 0);
 const requestedProjectTab = @json(request('tab') ?: ($errors->requirementsExport->any() ? 'requirements' : ($errors->ganttImport->any() ? 'gantt' : null)));
-const projectCanEdit = @json($canEdit);
+const projectCanEdit = @json($canManageSchedule);
 const projectStartDate = @json($project->start_date?->format('Y-m-d'));
 const projectEndDate = @json($project->end_date?->format('Y-m-d'));
 const projectCsrfToken = document.querySelector('meta[name="csrf-token"]')?.content || @json(csrf_token());

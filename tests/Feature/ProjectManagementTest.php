@@ -102,6 +102,46 @@ test('external project user sees only assigned projects and permitted project ta
     expect((float) $visible->refresh()->contract_value)->toBe(50000.0);
 });
 
+test('assigned user with schedule management can add gantt tasks without project edit permission', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $scheduler = User::factory()->create();
+    $role = Role::findOrCreate('planista_gantta');
+    $role->givePermissionTo([
+        Permission::findOrCreate('projects.view'),
+        Permission::findOrCreate('projects.schedule.manage'),
+    ]);
+    $scheduler->assignRole($role);
+    $project = Project::create([
+        'number' => 'PRJ/GANTT/ROLE', 'name' => 'Harmonogram planisty',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 0,
+        'created_by' => $admin->id,
+    ]);
+    $project->members()->attach([$admin->id, $scheduler->id]);
+    $foreignProject = Project::create([
+        'number' => 'PRJ/GANTT/FOREIGN', 'name' => 'Obcy harmonogram',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 0,
+        'created_by' => $admin->id,
+    ]);
+    $foreignProject->members()->attach($admin);
+
+    $this->actingAs($scheduler)->get(route('projects.show', $project))
+        ->assertOk()
+        ->assertSee('id="gantt-add-task"', false)
+        ->assertSee('id="gantt-task-modal"', false);
+
+    $taskData = [
+        'title' => 'Zadanie dodane przez planistę', 'start_date' => '2026-08-24',
+        'due_date' => '2026-08-26', 'status' => 'todo', 'priority' => 'medium', 'progress' => 0,
+    ];
+    $this->actingAs($scheduler)->post(route('projects.tasks.store', $project), $taskData)
+        ->assertSessionHas('success');
+    $this->assertDatabaseHas('tasks', ['project_id' => $project->id, 'title' => $taskData['title']]);
+
+    $this->actingAs($scheduler)->post(route('projects.tasks.store', $foreignProject), $taskData)
+        ->assertForbidden();
+});
+
 test('project role can see material prices without seeing service prices', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

@@ -77,6 +77,7 @@ class ProjectController extends Controller
         $user = request()->user();
         $fullAccess = app(AuditorAccessService::class)->hasFullAccess($user);
         $canViewSchedule = $fullAccess || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']);
+        $canManageSchedule = $fullAccess || $user->can('projects.schedule.manage');
         $canViewFinances = $fullAccess || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
         $canViewRequirements = $fullAccess || $user->canAny(['projects.requirements.view', 'projects.requirements.manage']);
         $canViewMaterialPrices = $fullAccess || $user->can('projects.requirements.material_prices.view');
@@ -111,6 +112,7 @@ class ProjectController extends Controller
             'suppliers' => Company::suppliers()->active()->orderBy('name')->get(),
             'timelineItems' => $timelineItems,
             'canViewSchedule' => $canViewSchedule,
+            'canManageSchedule' => $canManageSchedule,
             'canViewFinances' => $canViewFinances,
             'canViewRequirements' => $canViewRequirements,
             'canViewMaterialPrices' => $canViewMaterialPrices,
@@ -145,7 +147,7 @@ class ProjectController extends Controller
 
     public function storeTask(Request $request, Project $project): RedirectResponse|JsonResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -179,7 +181,7 @@ class ProjectController extends Controller
 
     public function updateTask(Request $request, Project $project, Task $task): RedirectResponse|JsonResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         abort_unless($task->project_id === $project->id, 404);
         $data = $request->validate([
             'title' => ['sometimes', 'required', 'string', 'max:255'],
@@ -231,7 +233,7 @@ class ProjectController extends Controller
 
     public function destroyTask(Request $request, Project $project, Task $task): RedirectResponse|JsonResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         abort_unless($task->project_id === $project->id, 404);
         $task->delete();
 
@@ -244,7 +246,7 @@ class ProjectController extends Controller
 
     public function bulkDestroyTasks(Request $request, Project $project): JsonResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         $data = $request->validate([
             'task_ids' => ['required', 'array', 'min:1'],
             'task_ids.*' => ['required', 'integer', 'distinct'],
@@ -271,7 +273,7 @@ class ProjectController extends Controller
 
     public function reorderTasks(Request $request, Project $project): JsonResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         $data = $request->validate([
             'order' => ['required', 'array'],
             'order.*' => ['required', 'integer', 'distinct', 'exists:tasks,id'],
@@ -299,7 +301,7 @@ class ProjectController extends Controller
 
     public function importGantt(Request $request, Project $project, ProjectGanttImportService $importer): RedirectResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         $data = $request->validateWithBag('ganttImport', [
             'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:10240'],
             'new_start_date' => ['nullable', 'date'],
@@ -888,7 +890,7 @@ class ProjectController extends Controller
 
     public function generatePublicGantt(Request $request, Project $project): JsonResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('view', $project);
         if (! $project->public_gantt_token) {
             $project->update(['public_gantt_token' => Str::random(48)]);
         }
