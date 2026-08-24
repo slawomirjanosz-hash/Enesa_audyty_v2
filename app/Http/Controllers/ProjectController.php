@@ -37,7 +37,11 @@ class ProjectController extends Controller
     {
         $user = $request->user();
         $query = Project::with(['company', 'manager', 'members'])
-            ->withCount(['tasks', 'requirements'])
+            ->withCount([
+                'tasks',
+                'requirements',
+                'tasks as overdue_tasks_count' => fn ($tasks) => $tasks->overdue(),
+            ])
             ->orderByDesc('created_at');
 
         if (! app(AuditorAccessService::class)->hasFullAccess($user)) {

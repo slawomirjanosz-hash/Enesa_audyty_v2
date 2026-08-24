@@ -40,7 +40,14 @@ class Document extends Model
 
     public function formattedSize(): string
     {
-        $bytes = $this->size;
+        return self::formatBytes((int) $this->size);
+    }
+
+    public static function formatBytes(int $bytes): string
+    {
+        if ($bytes >= 1073741824) {
+            return round($bytes / 1073741824, 1).' GB';
+        }
         if ($bytes >= 1048576) {
             return round($bytes / 1048576, 1).' MB';
         }

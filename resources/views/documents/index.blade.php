@@ -6,6 +6,7 @@
 <style>
 .page-header { margin-bottom:20px; }
 .page-header h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:700; color:var(--green); margin:0; }
+.documents-total-size { display:inline-flex;align-items:center;margin-left:8px;padding:4px 10px;border-radius:999px;background:#EDF4EF;color:#285740;font:700 12px 'Manrope',sans-serif;vertical-align:middle; }
 .search-box { position:relative; }
 .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:260px; font-family:'Lato',sans-serif; }
 .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
@@ -37,7 +38,7 @@
 @section('content')
 
 <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-    <h1><i class="ti ti-folder" style="margin-right:8px;"></i>Wszystkie dokumenty</h1>
+    <h1><i class="ti ti-folder" style="margin-right:8px;"></i>Wszystkie dokumenty <span class="documents-total-size">{{ $totalSize }}</span></h1>
     <div class="search-box">
         <i class="ti ti-search"></i>
         <input type="text" id="search-docs" placeholder="Szukaj po firmie, nazwie pliku..." oninput="filterFolders(this.value)">
@@ -60,7 +61,7 @@
             <div class="folder-header-left">
                 <i class="ti ti-folder"></i>
                 <span class="folder-name">{{ $companyName }}</span>
-                <span class="folder-count">{{ $companyDocs->count() }} {{ $companyDocs->count() === 1 ? 'dokument' : 'dokumentów' }}</span>
+                <span class="folder-count">{{ $companyDocs->count() }} {{ $companyDocs->count() === 1 ? 'dokument' : 'dokumentów' }} · {{ $folderSizes->get($companyName) }}</span>
             </div>
             <i class="ti ti-chevron-down folder-chevron"></i>
         </div>

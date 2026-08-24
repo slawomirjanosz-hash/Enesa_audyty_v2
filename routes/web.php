@@ -59,6 +59,9 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
     ->name('companies.restore');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
+Route::patch('/dashboard/companies/order', [DashboardController::class, 'reorderCompanies'])
+    ->middleware(['auth', 'staff.role', 'app.module:dashboard', 'app.permission:crm.companies.manage'])
+    ->name('dashboard.companies.order');
 Route::get('/calendar', [CalendarController::class, 'index'])
     ->middleware(['auth', 'staff.role', 'app.module:calendar', 'app.permission:calendar.view'])
     ->name('calendar.index');

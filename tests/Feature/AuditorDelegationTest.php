@@ -46,6 +46,28 @@ test('auditor without assignment sees no companies or documents', function () {
     $this->actingAs($auditor)->get('/crm')->assertOk()->assertDontSee('Niewidoczna firma');
 });
 
+test('document index displays total and per-folder file sizes', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Katalog rozmiarów']);
+    foreach ([1048576, 524288] as $index => $size) {
+        Document::create([
+            'company_id' => $company->id,
+            'type' => 'upload',
+            'original_filename' => 'plik-'.$index.'.pdf',
+            'stored_path' => 'documents/size-'.$index.'.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => $size,
+        ]);
+    }
+
+    $this->actingAs($admin)->get(route('documents.index'))
+        ->assertOk()
+        ->assertSee('Wszystkie dokumenty')
+        ->assertSee('1.5 MB')
+        ->assertSee('2 dokumentów · 1.5 MB');
+});
+
 test('auditor with company document permission can download only that company document', function () {
     $auditor = User::factory()->create();
     $auditor->assignRole('auditor');

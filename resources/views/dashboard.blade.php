@@ -155,6 +155,10 @@
         gap: 6px;
         margin-bottom: 10px;
     }
+    .priority-drag-handle { margin-left:auto;display:inline-flex;align-items:center;gap:5px;border:1px solid #DED9CE;border-radius:999px;background:#FAFAF6;color:#766F62;padding:3px 8px;font:700 10px 'Manrope',sans-serif;cursor:grab;user-select:none; }
+    .priority-drag-handle:active { cursor:grabbing; }
+    .client-tile.dashboard-dragging { opacity:.45;transform:scale(.98); }
+    .client-tile.dashboard-drag-target { box-shadow:0 0 0 2px var(--green); }
     .status-dot-tile {
         width: 7px;
         height: 7px;
@@ -565,12 +569,13 @@
                 $relatedSearchData,
             ]));
         @endphp
-        <div class="client-tile" data-company-search="{{ $searchData }}" style="border-left-color: {{ $borderColor }};">
+        <div class="client-tile" data-company-id="{{ $company->id }}" data-company-search="{{ $searchData }}" style="border-left-color: {{ $borderColor }};">
 
             {{-- Status online --}}
             <div class="tile-status-bar">
                 <span class="status-dot-tile {{ $isOnline ? 'dot-green' : 'dot-gray' }}"></span>
                 <span class="status-label-tile">{{ $isOnline ? 'Online' : 'Offline' }}</span>
+                @if($canPrioritizeCompanies)<span class="priority-drag-handle" title="Przeciągnij, aby ustawić priorytet klienta"><i class="ti ti-grip-vertical"></i> Priorytet</span>@endif
             </div>
 
             {{-- Nazwa + NIP + badge statusu --}}
@@ -605,7 +610,7 @@
                 @if($projectsEnabled)
                 <div class="tile-info-row" data-dashboard-metric="projects">
                     <i class="ti ti-folders"></i>
-                    <span>{{ $company->projects->count() }} {{ $company->projects->count() === 1 ? 'projekt' : ($company->projects->count() < 5 ? 'projekty' : 'projektów') }}</span>
+                    <span>{{ $company->projects->count() }} {{ $company->projects->count() === 1 ? 'projekt' : ($company->projects->count() < 5 ? 'projekty' : 'projektów') }} @if($company->projects->sum('overdue_tasks_count') > 0)<strong style="color:#C62828" title="Zadania projektowe po terminie">! {{ $company->projects->sum('overdue_tasks_count') }}</strong>@endif</span>
                 </div>
                 @endif
                 <div class="tile-info-row">
@@ -892,6 +897,53 @@
 
 @push('scripts')
 <script>
+    @if($canPrioritizeCompanies)
+    const dashboardGrid = document.getElementById('clientsGrid');
+    let draggedCompanyTile = null;
+    dashboardGrid?.querySelectorAll('.client-tile').forEach(tile => {
+        const handle = tile.querySelector('.priority-drag-handle');
+        handle?.addEventListener('pointerdown', () => tile.draggable = true);
+        handle?.addEventListener('pointerup', () => tile.draggable = false);
+        tile.addEventListener('dragstart', event => {
+            if (! tile.draggable) {
+                event.preventDefault();
+                return;
+            }
+            draggedCompanyTile = tile;
+            tile.classList.add('dashboard-dragging');
+            event.dataTransfer.effectAllowed = 'move';
+        });
+        tile.addEventListener('dragend', () => {
+            tile.draggable = false;
+            tile.classList.remove('dashboard-dragging');
+            dashboardGrid.querySelectorAll('.dashboard-drag-target').forEach(item => item.classList.remove('dashboard-drag-target'));
+            draggedCompanyTile = null;
+        });
+    });
+    dashboardGrid?.addEventListener('dragover', event => {
+        if (! draggedCompanyTile) return;
+        event.preventDefault();
+        const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.client-tile');
+        dashboardGrid.querySelectorAll('.dashboard-drag-target').forEach(item => item.classList.remove('dashboard-drag-target'));
+        if (! target || target === draggedCompanyTile) return;
+        target.classList.add('dashboard-drag-target');
+        const bounds = target.getBoundingClientRect();
+        const insertAfter = event.clientY > bounds.top + bounds.height / 2
+            || (Math.abs(event.clientY - (bounds.top + bounds.height / 2)) < bounds.height / 3 && event.clientX > bounds.left + bounds.width / 2);
+        dashboardGrid.insertBefore(draggedCompanyTile, insertAfter ? target.nextSibling : target);
+    });
+    dashboardGrid?.addEventListener('drop', async event => {
+        event.preventDefault();
+        const companyIds = [...dashboardGrid.querySelectorAll('.client-tile')].map(tile => Number(tile.dataset.companyId));
+        const response = await fetch(@json(route('dashboard.companies.order')), {
+            method: 'PATCH',
+            headers: {'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
+            body: JSON.stringify({company_ids: companyIds}),
+        });
+        if (! response.ok) window.location.reload();
+    });
+    @endif
+
     // View toggle functionality
     function switchView(view) {
         const grid = document.getElementById('clientsGrid');

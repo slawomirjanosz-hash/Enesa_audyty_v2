@@ -21,6 +21,7 @@ class Company extends Model
         'status',
         'archived_at',
         'show_in_dashboard',
+        'dashboard_position',
         'is_owner',
         'notes',
         'supplier_capabilities',
@@ -30,6 +31,7 @@ class Company extends Model
 
     protected $casts = [
         'archived_at' => 'datetime',
+        'dashboard_position' => 'integer',
     ];
 
     public static function normalizeNip(mixed $value): ?string

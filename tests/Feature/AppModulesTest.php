@@ -3,6 +3,7 @@
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Offer;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
@@ -250,4 +251,49 @@ test('dashboard does not reveal other users overdue tasks without team calendar 
         ->assertSee('Wszystko na czas')
         ->assertDontSee('Zaległe zadania innych użytkowników')
         ->assertDontSee('data-task-alert="red"', false);
+});
+
+test('dashboard CRM counters exclude project tasks and archived registrations', function () {
+    CompanySettings::create(['name' => 'Firma liczników', 'enabled_modules' => ['dashboard', 'crm', 'projects']]);
+    $admin = User::factory()->create(['dashboard_tasks_seen_id' => 0]);
+    $admin->assignRole('admin');
+    $client = Company::create([
+        'name' => 'Klient projektu', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true,
+    ]);
+    Company::create([
+        'name' => 'Stara rejestracja', 'company_type' => 'client', 'status' => 'pending', 'archived_at' => now(),
+    ]);
+    $project = Project::create([
+        'number' => 'PRJ/DASH/001', 'name' => 'Projekt z zaległością', 'company_id' => $client->id,
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 0, 'created_by' => $admin->id,
+    ]);
+    $project->tasks()->create([
+        'title' => 'Zaległe zadanie projektu', 'assigned_to' => $admin->id, 'created_by' => $admin->id,
+        'status' => 'todo', 'priority' => 'high', 'due_date' => now()->subDay(),
+    ]);
+
+    $this->actingAs($admin)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSeeInOrder(['>0</div>', 'Nowe rejestracje'], false)
+        ->assertSeeInOrder(['>0</div>', 'Zadania po terminie'], false)
+        ->assertSeeInOrder(['>0</div>', 'Moje zadania do zrobienia'], false)
+        ->assertSee('title="Zadania projektowe po terminie">! 1', false);
+});
+
+test('admin saves the priority order of dashboard clients', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $first = Company::create(['name' => 'Pierwszy klient', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true]);
+    $second = Company::create(['name' => 'Drugi klient', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true]);
+
+    $this->actingAs($admin)->patchJson(route('dashboard.companies.order'), [
+        'company_ids' => [$second->id, $first->id],
+    ])->assertOk()->assertJson(['saved' => true]);
+
+    expect($second->refresh()->dashboard_position)->toBe(1)
+        ->and($first->refresh()->dashboard_position)->toBe(2);
+    $this->actingAs($admin)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSeeInOrder(['Drugi klient', 'Pierwszy klient'])
+        ->assertSee('Priorytet');
 });

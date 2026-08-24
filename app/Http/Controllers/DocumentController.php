@@ -39,8 +39,10 @@ class DocumentController extends Controller
         $documents = $docs->groupBy(function ($doc) {
             return $doc->company?->name ?? 'Brak firmy';
         })->sortKeys();
+        $totalSize = Document::formatBytes((int) $docs->sum('size'));
+        $folderSizes = $documents->map(fn ($companyDocs) => Document::formatBytes((int) $companyDocs->sum('size')));
 
-        return view('documents.index', compact('documents'));
+        return view('documents.index', compact('documents', 'totalSize', 'folderSizes'));
     }
 
     public function store(Request $request): RedirectResponse
