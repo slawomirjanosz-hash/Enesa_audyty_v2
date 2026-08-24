@@ -442,6 +442,7 @@
             ->getPermissions()
             ->pluck('name');
         $layoutHasFullAccess = $layoutUser->hasRole('superadmin') || $layoutPermissionNames->contains('system.full_access');
+        $layoutCanAccessCrmTasks = $layoutHasFullAccess || $layoutPermissionNames->intersect(['crm.tasks.own.manage', 'crm.tasks.team.manage'])->isNotEmpty();
         $canAccessModule = fn (string $permission): bool => $layoutAvailablePermissionNames->contains($permission)
             && ($layoutHasFullAccess || $layoutPermissionNames->contains($permission));
     @endphp
@@ -470,16 +471,18 @@
             </li>
             @endif
 
-            @if($appModuleEnabled('crm') && $canAccessModule('crm.view'))
+            @if($appModuleEnabled('crm') && ($canAccessModule('crm.view') || $layoutCanAccessCrmTasks))
             <li class="nav-item nav-group {{ request()->is('crm*', 'suppliers*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
                     <i class="ti ti-users"></i> CRM
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
+                    @if($canAccessModule('crm.view'))
                     <li><a href="{{ route('crm.index') }}" class="nav-link">Firmy</a></li>
                     <li><a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">Dostawcy</a></li>
                     <li><a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="nav-link">Lejek sprzedaży</a></li>
+                    @endif
                     <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link">Zadania</a></li>
                 </ul>
             </li>

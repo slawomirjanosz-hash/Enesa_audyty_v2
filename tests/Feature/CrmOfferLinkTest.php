@@ -119,6 +119,62 @@ test('crm does not show or manage tasks belonging to projects', function () {
     $this->actingAs($admin)->delete(route('crm.tasks.destroy', $projectTask))->assertNotFound();
 });
 
+test('own and team CRM task permissions have separate visibility and management scope', function () {
+    $owner = User::factory()->create(['name' => 'Właściciel zadania']);
+    $other = User::factory()->create(['name' => 'Drugi pracownik']);
+    $ownRole = Role::findOrCreate('zadania_wlasne');
+    $ownRole->givePermissionTo([
+        Permission::findOrCreate('crm.tasks.own.manage'),
+        Permission::findOrCreate('calendar.view'),
+    ]);
+    $owner->assignRole($ownRole);
+    $other->assignRole('auditor');
+
+    $ownTask = Task::create([
+        'title' => 'Moje zadanie do edycji', 'assigned_to' => $owner->id,
+        'created_by' => $other->id, 'status' => 'todo', 'priority' => 'medium',
+    ]);
+    $otherTask = Task::create([
+        'title' => 'Cudze zadanie ukryte', 'assigned_to' => $other->id,
+        'created_by' => $other->id, 'status' => 'todo', 'priority' => 'medium',
+    ]);
+
+    $this->actingAs($owner)->get(route('crm.index', ['tab' => 'tasks']))
+        ->assertOk()
+        ->assertSee('Moje zadanie do edycji')
+        ->assertDontSee('Cudze zadanie ukryte')
+        ->assertDontSee('Zadania zespołu');
+
+    $this->actingAs($owner)->put(route('crm.tasks.update', $ownTask), [
+        'title' => 'Moje zadanie zmienione', 'assigned_to' => $owner->id,
+        'status' => 'in_progress', 'priority' => 'high',
+    ])->assertRedirect();
+    $this->actingAs($owner)->put(route('crm.tasks.update', $otherTask), [
+        'title' => 'Niedozwolona zmiana', 'assigned_to' => $other->id,
+        'status' => 'done', 'priority' => 'low',
+    ])->assertForbidden();
+
+    $this->actingAs($owner)->post(route('crm.tasks.store'), [
+        'title' => 'Próba przypisania innej osobie', 'assigned_to' => $other->id,
+        'status' => 'todo', 'priority' => 'medium',
+    ])->assertRedirect();
+    expect(Task::where('title', 'Próba przypisania innej osobie')->firstOrFail()->assigned_to)->toBe($owner->id);
+
+    $manager = User::factory()->create(['name' => 'Kierownik zadań CRM']);
+    $teamRole = Role::findOrCreate('zadania_zespolu');
+    $teamRole->givePermissionTo(Permission::findOrCreate('crm.tasks.team.manage'));
+    $manager->assignRole($teamRole);
+
+    $this->actingAs($manager)->get(route('crm.index', ['tab' => 'tasks']))
+        ->assertOk()
+        ->assertSee('Zadania zespołu')
+        ->assertSee('Cudze zadanie ukryte');
+    $this->actingAs($manager)->put(route('crm.tasks.update', $otherTask), [
+        'title' => 'Cudze zadanie zmienione przez kierownika', 'assigned_to' => $other->id,
+        'status' => 'in_progress', 'priority' => 'high',
+    ])->assertRedirect();
+});
+
 test('task can be linked to an opportunity and remains visible in the CRM task list', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

@@ -106,6 +106,7 @@ test('assigned user with schedule management can add gantt tasks without project
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $scheduler = User::factory()->create();
+    $outsider = User::factory()->create();
     $role = Role::findOrCreate('planista_gantta');
     $role->givePermissionTo([
         Permission::findOrCreate('projects.view'),
@@ -137,6 +138,12 @@ test('assigned user with schedule management can add gantt tasks without project
     $this->actingAs($scheduler)->post(route('projects.tasks.store', $project), $taskData)
         ->assertSessionHas('success');
     $this->assertDatabaseHas('tasks', ['project_id' => $project->id, 'title' => $taskData['title']]);
+
+    $this->actingAs($scheduler)->post(route('projects.tasks.store', $project), array_merge($taskData, [
+        'title' => 'Zadanie dla osoby spoza projektu',
+        'assigned_to' => $outsider->id,
+    ]))->assertSessionHasErrors('assigned_to');
+    $this->assertDatabaseMissing('tasks', ['project_id' => $project->id, 'title' => 'Zadanie dla osoby spoza projektu']);
 
     $this->actingAs($scheduler)->post(route('projects.tasks.store', $foreignProject), $taskData)
         ->assertForbidden();

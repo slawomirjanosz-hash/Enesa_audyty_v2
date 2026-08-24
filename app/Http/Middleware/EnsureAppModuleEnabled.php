@@ -33,8 +33,13 @@ class EnsureAppModuleEnabled
             ->contains(fn (string $role) => ! in_array($role, ['client_admin', 'client_user'], true));
 
         if ($permission && $isStaff) {
+            $hasModulePermission = $user->can($permission)
+                || ($module === 'crm' && $user->canAny([
+                    'crm.tasks.own.manage',
+                    'crm.tasks.team.manage',
+                ]));
             abort_unless(
-                $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can($permission),
+                $user->hasRole('superadmin') || $user->can('system.full_access') || $hasModulePermission,
                 403,
                 'Twoja rola nie ma dostępu do tej zakładki.'
             );

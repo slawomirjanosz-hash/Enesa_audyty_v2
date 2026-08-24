@@ -237,10 +237,10 @@ Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.modul
     Route::post('/opportunities/{opportunity}/duplicate', [CrmController::class, 'duplicateOpportunity'])->name('opportunities.duplicate');
     Route::post('/opportunities/{opportunity}/attach-offer', [CrmController::class, 'attachOffer'])->name('opportunities.attach-offer');
     Route::delete('/opportunities/{opportunity}', [CrmController::class, 'destroyOpportunity'])->name('opportunities.destroy');
-    Route::post('/tasks', [CrmController::class, 'storeTask'])->middleware('app.permission:crm.tasks.manage')->name('tasks.store');
+    Route::post('/tasks', [CrmController::class, 'storeTask'])->name('tasks.store');
     Route::put('/tasks/{task}', [CrmController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [CrmController::class, 'destroyTask'])->name('tasks.destroy');
-    Route::patch('/tasks/{taskId}/restore', [CrmController::class, 'restoreTask'])->middleware('app.permission:crm.tasks.manage')->name('tasks.restore');
+    Route::patch('/tasks/{taskId}/restore', [CrmController::class, 'restoreTask'])->name('tasks.restore');
     Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
     Route::delete('/orphaned-users/{assignmentId}', [CrmController::class, 'detachOrphanedUser'])->name('detach-orphaned-user');
 });

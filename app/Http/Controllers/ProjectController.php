@@ -165,6 +165,7 @@ class ProjectController extends Controller
         if ($data['is_milestone'] ?? false) {
             $data['due_date'] = $data['start_date'];
         }
+        $this->validateProjectTaskAssignee($project, $data['assigned_to'] ?? null);
         $this->validateTaskDependency($project, null, $data['depends_on_task_id'] ?? null);
         $data['project_position'] = ((int) $project->tasks()->max('project_position')) + 1;
         $task = $project->tasks()->create($data + [
@@ -199,6 +200,9 @@ class ProjectController extends Controller
         ]);
         if (($data['is_milestone'] ?? $task->is_milestone) && isset($data['start_date'])) {
             $data['due_date'] = $data['start_date'];
+        }
+        if (array_key_exists('assigned_to', $data)) {
+            $this->validateProjectTaskAssignee($project, $data['assigned_to']);
         }
         if (array_key_exists('depends_on_task_id', $data)) {
             $this->validateTaskDependency($project, $task, $data['depends_on_task_id']);
@@ -1152,6 +1156,22 @@ class ProjectController extends Controller
     {
         return $user->hasRole('superadmin')
             || $user->can("projects.requirements.{$type}_prices.view");
+    }
+
+    private function validateProjectTaskAssignee(Project $project, ?int $userId): void
+    {
+        if ($userId === null) {
+            return;
+        }
+
+        $belongsToTeam = (int) $project->manager_id === $userId
+            || $project->members()->whereKey($userId)->exists();
+
+        if (! $belongsToTeam) {
+            throw ValidationException::withMessages([
+                'assigned_to' => 'Zadanie można przypisać tylko użytkownikowi należącemu do tego projektu.',
+            ]);
+        }
     }
 
     private function staffUsers()

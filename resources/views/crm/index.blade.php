@@ -135,7 +135,7 @@
             <button onclick="document.getElementById('modal-opp').style.display='flex'" class="btn-primary">
                 <i class="ti ti-plus"></i> Nowa szansa
             </button>
-        @elseif($currentTab === 'tasks')
+        @elseif($currentTab === 'tasks' && $canManageOwnTasks)
             <button onclick="document.getElementById('modal-task').style.display='flex'" class="btn-primary">
                 <i class="ti ti-plus"></i> Nowe zadanie
             </button>
@@ -184,6 +184,7 @@
 
 {{-- TABS --}}
 <div class="crm-tabs">
+    @if($canViewCrmData)
     <a href="{{ route('crm.index', ['tab'=>'companies']) }}" class="crm-tab {{ $currentTab==='companies'?'active':'' }}">
         <i class="ti ti-building"></i> Firmy
         <span class="tab-count">{{ $stats['active_companies'] }}</span>
@@ -196,11 +197,14 @@
         <i class="ti ti-target"></i> Szanse
         <span class="tab-count">{{ $stats['active_opps'] }}</span>
     </a>
+    @endif
+    @if($canManageOwnTasks)
     <a href="{{ route('crm.index', ['tab'=>'tasks']) }}" class="crm-tab {{ $currentTab==='tasks'?'active':'' }}">
         <i class="ti ti-checklist"></i> Zadania
         <span class="tab-count">{{ $stats['open_tasks'] }}</span>
     </a>
-    @if($canManageCrm)
+    @endif
+    @if($canManageTeamTasks)
         <a href="{{ route('crm.index', ['tab'=>'trash']) }}" class="crm-tab {{ $currentTab==='trash'?'active':'' }}">
             <i class="ti ti-trash"></i> Kosz
             <span class="tab-count">{{ $trashTasksCount }}</span>
@@ -212,7 +216,7 @@
             <span class="tab-count">{{ $stats['active_audits'] }}</span>
         </a>
     @endif
-    <a href="{{ route('crm.index', ['tab'=>'archive']) }}" class="crm-tab archive-tab {{ $currentTab==='archive'?'active':'' }}">
+    @if($canViewCrmData)<a href="{{ route('crm.index', ['tab'=>'archive']) }}" class="crm-tab archive-tab {{ $currentTab==='archive'?'active':'' }}">
         <i class="ti ti-archive"></i> Archiwum
         <span class="tab-count">{{ $archivedCompanies->count() }}</span>
     </a>
@@ -321,7 +325,7 @@
     </div>
     <a href="{{ route('crm.index', array_filter(['tab' => 'pipeline', 'related_to_me' => request()->boolean('related_to_me') ? null : 1])) }}" class="{{ request()->boolean('related_to_me') ? 'btn-primary' : 'btn-secondary' }}">
         <i class="ti ti-user-check"></i> Leady związane ze mną
-    </a>
+    </a>@endif
 </div>
 
 {{-- Lejek --}}
@@ -531,13 +535,14 @@
                 <td><span class="badge {{ $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
-                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
+                        @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Usunąć zadanie?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn-icon btn-icon-delete" title="Usuń"><i class="ti ti-trash"></i></button>
                         </form>
+                        @endif
                     </div>
                 </td>
             </tr>
@@ -615,7 +620,7 @@
 @endif
 
 {{-- ═══ TAB: AUDYTY ═══ --}}
-@if($currentTab === 'trash' && $canManageCrm)
+@if($currentTab === 'trash' && $canManageTeamTasks)
 <div class="table-card" style="margin-bottom:16px;">
     <div class="table-card-header">
         <div class="table-card-title"><i class="ti ti-chart-bar" style="color:var(--green);margin-right:6px;"></i> Usunięte zadania według przypisanej osoby</div>
@@ -938,6 +943,7 @@
 </div>
 
 {{-- ═══ MODAL: NOWE ZADANIE ═══ --}}
+@if($canManageOwnTasks)
 <div id="modal-task" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
@@ -1115,6 +1121,7 @@
         </form>
     </div>
 </div>
+@endif
 
 <div id="modal-edit-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;">

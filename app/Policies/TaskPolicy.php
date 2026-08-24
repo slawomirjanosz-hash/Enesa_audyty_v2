@@ -19,11 +19,12 @@ class TaskPolicy
 
     public function update(User $user, Task $task): bool
     {
-        return $this->canModify($user, 'crm.tasks.manage');
+        return $user->can('crm.tasks.team.manage')
+            || ($task->assigned_to === $user->id && $user->can('crm.tasks.own.manage'));
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $this->canModify($user, 'crm.tasks.manage');
+        return $this->update($user, $task);
     }
 }

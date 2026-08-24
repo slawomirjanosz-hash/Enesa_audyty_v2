@@ -30,9 +30,15 @@ class CrmController extends Controller
         $authUser = auth()->user();
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
         $canManageCrm = $access->hasFullAccess($authUser);
-        $canViewTeamTasks = $canManageCrm || $authUser->can('calendar.team.view');
-        $availableTabs = ['companies', 'suppliers', 'pipeline', 'tasks', 'archive'];
-        if ($canManageCrm) {
+        $canManageTeamTasks = $canManageCrm || $authUser->can('crm.tasks.team.manage');
+        $canManageOwnTasks = $canManageTeamTasks || $authUser->can('crm.tasks.own.manage');
+        $canViewTeamTasks = $canManageTeamTasks;
+        $canViewCrmData = $canManageCrm || $authUser->can('crm.view');
+        $availableTabs = $canViewCrmData ? ['companies', 'suppliers', 'pipeline', 'archive'] : [];
+        if ($canManageOwnTasks) {
+            $availableTabs[] = 'tasks';
+        }
+        if ($canManageTeamTasks) {
             $availableTabs[] = 'trash';
         }
         if ($auditsEnabled) {
@@ -40,7 +46,7 @@ class CrmController extends Controller
         }
         $currentTab = in_array(request('tab'), $availableTabs, true)
             ? request('tab')
-            : 'companies';
+            : ($canManageOwnTasks ? 'tasks' : 'companies');
 
         $companyQuery = Company::clients()
             ->where('status', '!=', 'archived')
@@ -85,21 +91,17 @@ class CrmController extends Controller
             'can_view_offers'
         )->get() : collect();
 
-        $tasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::crm()->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])
-            ->orderBy('due_date'), $authUser, 'can_view_dashboard')
+        $tasks = $currentTab === 'tasks' && $canManageTeamTasks ? Task::crm()->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])
+            ->orderBy('due_date')
             ->get() : collect();
 
-        $myTasks = $currentTab === 'tasks' ? $access->scopeByCompanyAccess(Task::crm()->forUser(auth()->id())
-            ->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date'), $authUser, 'can_view_dashboard')
+        $myTasks = $currentTab === 'tasks' && $canManageOwnTasks ? Task::crm()->forUser(auth()->id())
+            ->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date')
             ->get() : collect();
 
-        $trashTasksQuery = $access->scopeByCompanyAccess(
-            Task::onlyTrashed()->crm(),
-            $authUser,
-            'can_view_dashboard'
-        );
-        $trashTasksCount = $canManageCrm ? (clone $trashTasksQuery)->count() : 0;
-        $trashTasks = $currentTab === 'trash' && $canManageCrm
+        $trashTasksQuery = Task::onlyTrashed()->crm();
+        $trashTasksCount = $canManageTeamTasks ? (clone $trashTasksQuery)->count() : 0;
+        $trashTasks = $currentTab === 'trash' && $canManageTeamTasks
             ? $trashTasksQuery->with(['assignedUser', 'company', 'deletedBy'])
                 ->orderByDesc('deleted_at')
                 ->get()
@@ -113,7 +115,7 @@ class CrmController extends Controller
             ? $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')->get()
             : collect();
 
-        $users = $access->hasFullAccess($authUser)
+        $users = $canManageTeamTasks
             ? User::query()->where('is_active', true)
                 ->whereHas('roles', fn ($roles) => $roles->whereNotIn('name', ['client_admin', 'client_user']))
                 ->orderBy('name')->get()
@@ -129,7 +131,11 @@ class CrmController extends Controller
             )->count(),
             'dashboard_companies' => $companies->where('show_in_dashboard', true)->count(),
             'active_opps' => (clone $opportunitiesQuery)->whereNotIn('stage', ['won', 'lost', 'rejected'])->count(),
-            'open_tasks' => $access->scopeByCompanyAccess(Task::crm()->where('status', '!=', 'done'), $authUser, 'can_view_dashboard')->count(),
+            'open_tasks' => $canManageOwnTasks
+                ? Task::crm()->where('status', '!=', 'done')
+                    ->when(! $canManageTeamTasks, fn ($tasks) => $tasks->forUser($authUser->id))
+                    ->count()
+                : 0,
             'active_audits' => $auditsEnabled
                 ? $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $authUser, 'can_view_audits')->count()
                 : 0,
@@ -162,7 +168,7 @@ class CrmController extends Controller
             ->get() : collect();
 
         return view('crm.index', compact(
-            'companies', 'suppliers', 'opportunities', 'taskOpportunities', 'unlinkedOffers', 'canManageCrm', 'canViewTeamTasks', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
+            'companies', 'suppliers', 'opportunities', 'taskOpportunities', 'unlinkedOffers', 'canManageCrm', 'canManageOwnTasks', 'canManageTeamTasks', 'canViewTeamTasks', 'canViewCrmData', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
         ));
     }
 
@@ -251,7 +257,9 @@ class CrmController extends Controller
 
     public function storeTask(Request $request): RedirectResponse
     {
-        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $canManageTeam = app(AuditorAccessService::class)->hasFullAccess($request->user())
+            || $request->user()->can('crm.tasks.team.manage');
+        abort_unless($canManageTeam || $request->user()->can('crm.tasks.own.manage'), 403);
         $data = $request->validateWithBag('taskCreate', [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -267,6 +275,10 @@ class CrmController extends Controller
 
         $companyContextId = $data['company_context_id'] ?? null;
         unset($data['company_context_id']);
+
+        if (! $canManageTeam) {
+            $data['assigned_to'] = $request->user()->id;
+        }
 
         if (! empty($data['crm_opportunity_id'])) {
             $leadBelongsToCompany = CrmOpportunity::query()

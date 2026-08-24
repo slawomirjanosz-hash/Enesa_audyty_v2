@@ -24,7 +24,8 @@ class RolePermissionCatalog
                 'crm.view' => 'Podgląd CRM, klientów i dostawców',
                 'crm.companies.manage' => 'Dodawanie, edycja, archiwizacja i usuwanie firm',
                 'crm.leads.manage' => 'Dodawanie i edycja leadów',
-                'crm.tasks.manage' => 'Dodawanie i edycja zadań CRM',
+                'crm.tasks.own.manage' => 'Zarządzanie własnymi zadaniami CRM',
+                'crm.tasks.team.manage' => 'Zarządzanie zadaniami innych użytkowników CRM',
             ]],
             'offers' => ['label' => 'Oferty', 'permissions' => [
                 'offers.view' => 'Podgląd ofert i zapytań ofertowych',
