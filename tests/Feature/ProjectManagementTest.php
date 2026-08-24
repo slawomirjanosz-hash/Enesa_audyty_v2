@@ -370,9 +370,10 @@ test('client invoices use issued group without supplier and display million amou
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $supplier = Company::create(['name' => 'Dostawca testowy', 'company_type' => 'supplier']);
+    $client = Company::create(['name' => 'Klient wyszukiwarki', 'company_type' => 'client', 'status' => 'active']);
     $project = Project::create([
         'number' => 'PRJ/2026/INVOICE', 'name' => 'Faktury klienta', 'manager_id' => $admin->id,
-        'status' => 'active', 'contract_value' => 5000000, 'created_by' => $admin->id,
+        'company_id' => $client->id, 'status' => 'active', 'contract_value' => 5000000, 'created_by' => $admin->id,
     ]);
     $wrongGroup = $project->financeGroups()->create(['name' => 'Koszty obce']);
 
@@ -398,6 +399,9 @@ test('client invoices use issued group without supplier and display million amou
         ->assertOk()
         ->assertSee('3 120 000,00 zł')
         ->assertSee('finance-amount-column', false)
+        ->assertSee('id="finance-live-search"', false)
+        ->assertSee('data-finance-search="Klient wyszukiwarki', false)
+        ->assertSee('data-finance-status-search="issued Wystawiona / zaksięgowana"', false)
         ->assertSee('data-finance-supplier-field', false)
         ->assertSee('Faktury dla klienta trafią automatycznie do grupy „Wystawione”.');
 });

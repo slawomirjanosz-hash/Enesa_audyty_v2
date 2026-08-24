@@ -264,10 +264,24 @@
             <div class="finance-groups">@foreach($project->financeGroups as $group)<span class="finance-group-chip">{{$group->name}} ({{$group->entries->count()}})<form method="POST" action="{{route('projects.finance-groups.destroy',[$project,$group])}}">@csrf @method('DELETE')<button title="Usuń grupę">×</button></form></span>@endforeach</div>@endif
             @if($project->financialEntries->isEmpty())<div class="empty">Brak pozycji.</div>@else
                 <div class="finance-register-tabs" style="margin-top:12px"><button type="button" class="register-tab active" data-finance-filter="all">Wszystko</button><button type="button" class="register-tab" data-finance-filter="invoice">Faktury dla klienta</button><button type="button" class="register-tab" data-finance-filter="cost">Koszty</button></div>
+                <label class="requirement-search" for="finance-live-search">
+                    <i class="ti ti-search"></i>
+                    <input type="search" id="finance-live-search" autocomplete="off" placeholder="Szukaj po kliencie, nazwie, dokumencie, statusie, kwocie, dostawcy…">
+                    <span class="requirement-search-count" id="finance-search-count">{{$project->financialEntries->count()}} poz.</span>
+                </label>
                 @if($canEdit)<form id="finance-bulk-form" method="POST" action="{{route('projects.finances.bulk',$project)}}" onsubmit="return this.elements.action.value !== 'delete' || confirm('Usunąć zaznaczone pozycje?')">@csrf<div style="display:flex;gap:7px;align-items:center;margin-bottom:10px"><select class="status-select" name="action" required><option value="">Operacja grupowa…</option><option value="planned">Oznacz jako planowane</option><option value="issued">Oznacz jako wystawione / zaksięgowane</option><option value="paid">Oznacz jako opłacone</option><option value="delete">Usuń zaznaczone</option></select><button class="btn btn-soft">Wykonaj</button></div></form>@endif
-                <div style="overflow-x:auto"><table class="finance-table"><thead><tr>@if($canEdit)<th><input type="checkbox" id="finance-select-all" title="Zaznacz wszystko"></th>@endif<th>Data / płatność</th><th>Rodzaj / grupa</th><th class="finance-name-column">Nazwa / dokument</th><th>Dostawca</th><th>Status</th><th class="finance-amount-column">Kwota</th><th>Źródło</th><th></th></tr></thead><tbody>
+                <div style="overflow-x:auto"><table class="finance-table" id="finance-register-table"><thead><tr>@if($canEdit)<th><input type="checkbox" id="finance-select-all" title="Zaznacz wszystko"></th>@endif<th>Data / płatność</th><th>Rodzaj / grupa</th><th class="finance-name-column">Nazwa / dokument</th><th>Dostawca</th><th>Status</th><th class="finance-amount-column">Kwota</th><th>Źródło</th><th></th></tr></thead><tbody>
                 @foreach($project->financialEntries->sortByDesc('entry_date') as $entry)
-                <tr data-finance-type="{{$entry->type}}" data-finance-entry-id="{{$entry->id}}">
+                <tr data-finance-type="{{$entry->type}}" data-finance-entry-id="{{$entry->id}}" data-finance-search="{{collect([
+                        $project->company?->name, $project->name, $project->number,
+                        $entry->name, $entry->document_number, $entry->notes,
+                        $entry->type, $entry->type === 'invoice' ? 'Faktura dla klienta' : 'Koszt',
+                        $entry->financeGroup?->name, $entry->supplierCompany?->name, $entry->supplier,
+                        $entry->amount, number_format((float) $entry->amount, 2, ',', ' '),
+                        $entry->entry_date->format('d.m.Y'), $entry->entry_date->format('Y-m-d'),
+                        $entry->payment_date?->format('d.m.Y'), $entry->payment_date?->format('Y-m-d'),
+                        $entry->source, match($entry->source) {'excel_import'=>'Excel','requirement'=>'Materiały',default=>'Ręcznie'},
+                    ])->filter()->implode(' ')}}" data-finance-status-search="{{$entry->status}} {{$financeStatusLabels[$entry->status] ?? $entry->status}}">
                     @if($canEdit)<td><input type="checkbox" name="entry_ids[]" value="{{$entry->id}}" form="finance-bulk-form" class="finance-entry-check"></td>@endif
                     <td>{{$entry->entry_date->format('d.m.Y')}}<br><small>{{$entry->payment_date?->format('d.m.Y') ?: '—'}}</small></td>
                     <td>{{$entry->type === 'invoice' ? 'Faktura' : 'Koszt'}}<br><small>{{$entry->financeGroup?->name ?: 'Bez grupy'}}</small></td>
@@ -280,6 +294,7 @@
                 </tr>
                 @endforeach
                 </tbody></table></div>
+                <div class="requirement-search-empty" id="finance-search-empty" hidden>Nie znaleziono pasujących pozycji finansowych.</div>
             @endif
         </div>
     </details>
@@ -641,8 +656,11 @@ async function saveProjectStatus(select) {
         if (select.dataset.kind === 'finance') {
             const entry = projectFinanceItems.find(item => Number(item.id) === Number(select.dataset.id));
             if (entry) entry.status = data.status;
+            const row = select.closest('[data-finance-entry-id]');
+            if (row) row.dataset.financeStatusSearch = data.status + ' ' + select.options[select.selectedIndex].text;
             updateFinanceKpis(data.summary);
             renderProjectCashflow();
+            applyFinanceFilters();
         } else {
             const requirement = projectRequirementItems.find(item => Number(item.id) === Number(select.dataset.id));
             if (requirement) requirement.status = data.status;
@@ -1093,12 +1111,38 @@ document.querySelectorAll('.finance-entry-form').forEach(form => {
     syncFinanceEntryForm(form);
     form.querySelector('.finance-entry-type')?.addEventListener('change', () => syncFinanceEntryForm(form));
 });
+const financeSearch = document.getElementById('finance-live-search');
+const financeRows = [...document.querySelectorAll('#finance-register-table [data-finance-type]')];
+let activeFinanceFilter = 'all';
+function normalizeFinanceSearch(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+function applyFinanceFilters() {
+    const query = normalizeFinanceSearch(financeSearch?.value);
+    let visible = 0;
+    financeRows.forEach(row => {
+        const matchesType = activeFinanceFilter === 'all' || row.dataset.financeType === activeFinanceFilter;
+        const searchableText = normalizeFinanceSearch((row.dataset.financeSearch || '') + ' ' + (row.dataset.financeStatusSearch || ''));
+        const matchesSearch = !query || searchableText.includes(query);
+        row.classList.toggle('finance-row-hidden', !matchesType || !matchesSearch);
+        if (matchesType && matchesSearch) visible++;
+    });
+    const counter = document.getElementById('finance-search-count');
+    const empty = document.getElementById('finance-search-empty');
+    if (counter) counter.textContent = visible + ' z ' + financeRows.length + ' poz.';
+    if (empty) empty.hidden = visible !== 0;
+}
 document.querySelectorAll('.register-tab').forEach(button => button.addEventListener('click', () => {
+    activeFinanceFilter = button.dataset.financeFilter;
     document.querySelectorAll('.register-tab').forEach(item => item.classList.toggle('active', item === button));
-    document.querySelectorAll('[data-finance-type]').forEach(row => row.classList.toggle('finance-row-hidden', button.dataset.financeFilter !== 'all' && row.dataset.financeType !== button.dataset.financeFilter));
+    applyFinanceFilters();
 }));
+financeSearch?.addEventListener('input', applyFinanceFilters);
 document.getElementById('finance-select-all')?.addEventListener('change', event => {
-    document.querySelectorAll('.finance-entry-check').forEach(checkbox => checkbox.checked = event.currentTarget.checked);
+    financeRows.filter(row => ! row.classList.contains('finance-row-hidden')).forEach(row => {
+        const checkbox = row.querySelector('.finance-entry-check');
+        if (checkbox) checkbox.checked = event.currentTarget.checked;
+    });
 });
 const requirementBulkAction = document.getElementById('requirements-bulk-action');
 const requirementBulkForm = document.getElementById('requirements-bulk-form');
