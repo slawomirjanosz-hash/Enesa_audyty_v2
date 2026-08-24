@@ -366,6 +366,42 @@ test('project manager manages schedule tasks finances and requirements', functio
     $this->get($publicUrl)->assertOk()->assertSee('Publiczny harmonogram projektu');
 });
 
+test('client invoices use issued group without supplier and display million amounts in one line', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $supplier = Company::create(['name' => 'Dostawca testowy', 'company_type' => 'supplier']);
+    $project = Project::create([
+        'number' => 'PRJ/2026/INVOICE', 'name' => 'Faktury klienta', 'manager_id' => $admin->id,
+        'status' => 'active', 'contract_value' => 5000000, 'created_by' => $admin->id,
+    ]);
+    $wrongGroup = $project->financeGroups()->create(['name' => 'Koszty obce']);
+
+    $this->actingAs($admin)->post(route('projects.finances.store', $project), [
+        'type' => 'invoice',
+        'name' => 'Faktura końcowa',
+        'document_number' => 'FV/2026/99',
+        'supplier' => 'Nie powinien pozostać',
+        'supplier_company_id' => $supplier->id,
+        'finance_group_id' => $wrongGroup->id,
+        'entry_date' => '2026-08-24',
+        'amount' => 3120000,
+        'status' => 'issued',
+    ])->assertSessionHas('success');
+
+    $invoice = $project->financialEntries()->firstOrFail();
+    expect($invoice->supplier)->toBeNull()
+        ->and($invoice->supplier_company_id)->toBeNull()
+        ->and($invoice->financeGroup?->name)->toBe('Wystawione');
+
+    $this->actingAs($admin)
+        ->get(route('projects.show', ['project' => $project, 'tab' => 'finances']))
+        ->assertOk()
+        ->assertSee('3 120 000,00 zł')
+        ->assertSee('finance-amount-column', false)
+        ->assertSee('data-finance-supplier-field', false)
+        ->assertSee('Faktury dla klienta trafią automatycznie do grupy „Wystawione”.');
+});
+
 test('finance and requirement statuses are saved through background endpoints', function () {
     $manager = User::factory()->create();
     $manager->assignRole('admin');

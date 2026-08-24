@@ -340,10 +340,7 @@ class ProjectController extends Controller
             'status' => ['required', 'in:planned,issued,paid'],
             'notes' => ['nullable', 'string'],
         ]);
-        $this->validateFinanceGroup($project, $data['finance_group_id'] ?? null);
-        if (! empty($data['supplier_company_id'])) {
-            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
-        }
+        $data = $this->normalizeFinancialEntryRelations($project, $data);
         $project->financialEntries()->create($data + ['created_by' => $request->user()->id]);
 
         return $this->financeRedirect($project, 'Pozycja finansowa została dodana.');
@@ -369,10 +366,7 @@ class ProjectController extends Controller
             'status' => ['required', 'in:planned,issued,paid'],
             'notes' => ['nullable', 'string'],
         ]);
-        $this->validateFinanceGroup($project, $data['finance_group_id'] ?? null);
-        if (! empty($data['supplier_company_id'])) {
-            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
-        }
+        $data = $this->normalizeFinancialEntryRelations($project, $data);
         $entry->update($data);
 
         return $this->financeRedirect($project, 'Pozycja finansowa została zaktualizowana.');
@@ -408,7 +402,9 @@ class ProjectController extends Controller
             'new_group_name' => ['nullable', 'string', 'max:120'],
         ]);
 
-        $groupId = $this->resolveFinanceGroup($project, $data['finance_group_id'] ?? null, $data['new_group_name'] ?? null);
+        $groupId = $data['type'] === 'invoice'
+            ? $this->issuedFinanceGroup($project)->id
+            : $this->resolveFinanceGroup($project, $data['finance_group_id'] ?? null, $data['new_group_name'] ?? null);
         $sheet = Excel::toCollection(null, $data['file'])->first();
         if (! $sheet || $sheet->isEmpty()) {
             throw ValidationException::withMessages(['file' => 'Plik nie zawiera danych.']);
@@ -481,8 +477,8 @@ class ProjectController extends Controller
                     'type' => $data['type'],
                     'name' => Str::limit($name, 255, ''),
                     'document_number' => $document ? Str::limit($document, 100, '') : null,
-                    'supplier' => $supplier ? Str::limit($supplier, 255, '') : null,
-                    'supplier_company_id' => $supplierCompanyId,
+                    'supplier' => $data['type'] === 'invoice' ? null : ($supplier ? Str::limit($supplier, 255, '') : null),
+                    'supplier_company_id' => $data['type'] === 'invoice' ? null : $supplierCompanyId,
                     'entry_date' => $date,
                     'payment_date' => $paymentDate,
                     'amount' => $amount,
@@ -995,6 +991,29 @@ class ProjectController extends Controller
         if ($groupId && ! $project->financeGroups()->whereKey($groupId)->exists()) {
             throw ValidationException::withMessages(['finance_group_id' => 'Wybrana grupa nie należy do tego projektu.']);
         }
+    }
+
+    private function normalizeFinancialEntryRelations(Project $project, array $data): array
+    {
+        if ($data['type'] === 'invoice') {
+            $data['finance_group_id'] = $this->issuedFinanceGroup($project)->id;
+            $data['supplier'] = null;
+            $data['supplier_company_id'] = null;
+
+            return $data;
+        }
+
+        $this->validateFinanceGroup($project, $data['finance_group_id'] ?? null);
+        if (! empty($data['supplier_company_id'])) {
+            $data['supplier'] = Company::find($data['supplier_company_id'])?->name;
+        }
+
+        return $data;
+    }
+
+    private function issuedFinanceGroup(Project $project): ProjectFinanceGroup
+    {
+        return $project->financeGroups()->firstOrCreate(['name' => 'Wystawione']);
     }
 
     private function resolveFinanceGroup(Project $project, ?int $groupId, ?string $newGroupName): ?int
