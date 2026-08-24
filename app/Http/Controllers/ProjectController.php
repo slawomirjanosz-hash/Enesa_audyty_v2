@@ -859,10 +859,11 @@ class ProjectController extends Controller
         ]);
         $file = $data['file'];
         $originalName = $file->getClientOriginalName();
-        $safeName = now()->format('YmdHis').'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
+        $safeName = now()->format('YmdHis').'_'.Str::random(10).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
         $relativePath = 'projects/'.$project->id.'/'.$safeName;
         Storage::disk('local')->put($relativePath, $file->getContent());
-        $project->documents()->create([
+        Document::create([
+            'project_id' => $project->id,
             'company_id' => $project->company_id,
             'type' => 'upload',
             'original_filename' => $originalName,
@@ -872,7 +873,8 @@ class ProjectController extends Controller
             'uploaded_by' => $request->user()->id,
         ]);
 
-        return redirect()->back()->with('success', 'Dokument projektu został dodany.');
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'documents'])
+            ->with('success', 'Dokument projektu został dodany i zapisany.');
     }
 
     public function downloadDocument(Project $project, Document $document)

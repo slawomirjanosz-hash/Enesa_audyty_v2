@@ -4,11 +4,13 @@ use App\Exports\ProjectGanttExport;
 use App\Exports\ProjectRequirementsListExport;
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\Document;
 use App\Models\Project;
 use App\Models\ProjectFinancialEntry;
 use App\Models\ProjectRequirement;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -48,6 +50,31 @@ test('admin creates a project with manager and team', function () {
         ->and($project->members->pluck('id'))->toContain($manager->id, $member->id);
 
     $this->actingAs($member)->get(route('projects.show', $project))->assertOk();
+});
+
+test('uploaded project document remains visible after reopening the project', function () {
+    Storage::fake('local');
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/DOC/001', 'name' => 'Projekt z dokumentem',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 0,
+        'created_by' => $admin->id,
+    ]);
+    $project->members()->attach($admin);
+
+    $this->actingAs($admin)->post(route('projects.documents.store', $project), [
+        'file' => UploadedFile::fake()->create('instrukcja projektu.pdf', 120, 'application/pdf'),
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'documents']))
+        ->assertSessionHas('success');
+
+    $document = Document::where('project_id', $project->id)->firstOrFail();
+    Storage::disk('local')->assertExists($document->stored_path);
+
+    $this->actingAs($admin)->get(route('projects.show', ['project' => $project, 'tab' => 'documents']))
+        ->assertOk()
+        ->assertSee('instrukcja projektu.pdf')
+        ->assertSee(route('projects.documents.download', [$project, $document]));
 });
 
 test('external project user sees only assigned projects and permitted project tabs', function () {
