@@ -256,7 +256,7 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/', [ProjectController::class, 'store'])->middleware('app.permission:projects.create')->name('store');
     Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
     Route::put('/{project}', [ProjectController::class, 'update'])->middleware('app.permission:projects.edit')->name('update');
-    Route::delete('/{project}', [ProjectController::class, 'destroy'])->middleware('app.permission:projects.delete')->name('destroy');
+    Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
     Route::post('/{project}/tasks', [ProjectController::class, 'storeTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.store');
     Route::post('/{project}/tasks/reorder', [ProjectController::class, 'reorderTasks'])->middleware('app.permission:projects.schedule.manage')->name('tasks.reorder');
     Route::delete('/{project}/tasks/bulk', [ProjectController::class, 'bulkDestroyTasks'])->middleware('app.permission:projects.schedule.manage')->name('tasks.bulk-destroy');

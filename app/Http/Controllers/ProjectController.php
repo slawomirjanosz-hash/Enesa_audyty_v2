@@ -120,6 +120,7 @@ class ProjectController extends Controller
             'canViewMaterialPrices' => $canViewMaterialPrices,
             'canViewServicePrices' => $canViewServicePrices,
             'canViewDocuments' => $canViewDocuments,
+            'canDeleteProject' => $user->hasAnyRole(['admin', 'superadmin']),
         ]);
     }
 
@@ -144,7 +145,7 @@ class ProjectController extends Controller
         $this->authorize('delete', $project);
         $project->delete();
 
-        return redirect()->route('projects.index')->with('success', 'Projekt został zarchiwizowany.');
+        return redirect()->route('projects.index')->with('success', 'Projekt został usunięty z aktywnej listy.');
     }
 
     public function storeTask(Request $request, Project $project): RedirectResponse|JsonResponse

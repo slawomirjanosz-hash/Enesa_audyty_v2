@@ -29,6 +29,6 @@ class ProjectPolicy
 
     public function delete(User $user, Project $project): bool
     {
-        return app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('projects.delete');
+        return $user->hasAnyRole(['admin', 'superadmin']);
     }
 }

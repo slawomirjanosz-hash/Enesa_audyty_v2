@@ -128,6 +128,12 @@
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="document.getElementById('project-edit-modal').classList.remove('open')">Anuluj</button><button class="btn">Zapisz zmiany</button></div>
         </form>
+        @if($canDeleteProject)
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid #fee2e2;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                <div><strong style="display:block;color:#991b1b;font-size:13px">Usunięcie projektu</strong><small style="color:#7f1d1d">Projekt zniknie z aktywnej listy. Tej operacji nie wykonają zwykli użytkownicy.</small></div>
+                <form method="POST" action="{{route('projects.destroy',$project)}}" onsubmit="return confirm('Czy na pewno usunąć ten projekt? Projekt zniknie z aktywnej listy.')">@csrf @method('DELETE')<button class="btn btn-red" type="submit"><i class="ti ti-trash"></i> Usuń projekt</button></form>
+            </div>
+        @endif
     </div>
 </div>
 @if($errors->projectEdit->any())<script>document.addEventListener('DOMContentLoaded',()=>document.getElementById('project-edit-modal')?.classList.add('open'));</script>@endif

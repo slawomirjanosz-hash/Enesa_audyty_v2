@@ -77,6 +77,38 @@ test('uploaded project document remains visible after reopening the project', fu
         ->assertSee(route('projects.documents.download', [$project, $document]));
 });
 
+test('only admin or superadmin can remove a project', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $operator = User::factory()->create();
+    $operatorRole = Role::findOrCreate('operator_z_pelnym_dostepem');
+    $operatorRole->givePermissionTo([
+        Permission::findOrCreate('system.full_access'),
+        Permission::findOrCreate('projects.delete'),
+    ]);
+    $operator->assignRole($operatorRole);
+    $project = Project::create([
+        'number' => 'PRJ/DELETE/001', 'name' => 'Projekt utworzony omyłkowo',
+        'manager_id' => $admin->id, 'status' => 'planned', 'contract_value' => 0,
+        'created_by' => $admin->id,
+    ]);
+    $project->members()->attach([$admin->id, $operator->id]);
+
+    $this->actingAs($operator)->get(route('projects.show', $project))
+        ->assertOk()
+        ->assertDontSee('Usuń projekt');
+    $this->actingAs($operator)->delete(route('projects.destroy', $project))->assertForbidden();
+    $this->assertDatabaseHas('projects', ['id' => $project->id, 'deleted_at' => null]);
+
+    $this->actingAs($admin)->get(route('projects.show', $project))
+        ->assertOk()
+        ->assertSee('Usuń projekt');
+    $this->actingAs($admin)->delete(route('projects.destroy', $project))
+        ->assertRedirect(route('projects.index'))
+        ->assertSessionHas('success');
+    $this->assertSoftDeleted('projects', ['id' => $project->id]);
+});
+
 test('external project user sees only assigned projects and permitted project tabs', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
