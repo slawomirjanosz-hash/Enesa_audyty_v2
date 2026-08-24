@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessSupportController;
 use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CalendarController;
@@ -31,6 +32,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
 Route::get('/branding/logo', [BrandingController::class, 'logo'])->name('branding.logo');
+Route::post('/access-support', AccessSupportController::class)
+    ->middleware(['auth', 'throttle:5,1'])
+    ->name('access-support.store');
 
 Route::get('/rejestracja', [RegistrationController::class, 'showForm'])->name('register.client');
 Route::post('/rejestracja', [RegistrationController::class, 'register'])->middleware('throttle:5,1')->name('register.client.store');

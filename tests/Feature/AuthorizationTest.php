@@ -2,6 +2,7 @@
 
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\Task;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -22,6 +23,34 @@ test('client user cannot access internal staff panels', function () {
     foreach (['/dashboard', '/crm', '/offers', '/documents', '/client-zone'] as $url) {
         $this->actingAs($clientUser)->get($url)->assertForbidden();
     }
+});
+
+test('forbidden page lets a user create one access support task for an administrator', function () {
+    $superadmin = User::factory()->create(['name' => 'Administrator uprawnień']);
+    $superadmin->assignRole('superadmin');
+    $user = User::factory()->create(['name' => 'Użytkownik bez dostępu']);
+    $user->assignRole('client_user');
+    $requestedUrl = url('/dashboard');
+
+    $this->actingAs($user)->get('/dashboard')
+        ->assertForbidden()
+        ->assertSee('Nie masz dostępu do tego zasobu')
+        ->assertSee('Poproś administratora o sprawdzenie');
+
+    $this->actingAs($user)->post(route('access-support.store'), [
+        'requested_url' => $requestedUrl,
+    ])->assertRedirect()->assertSessionHas('access_request_success');
+
+    $task = Task::where('created_by', $user->id)->firstOrFail();
+    expect($task->assigned_to)->toBe($superadmin->id)
+        ->and($task->priority)->toBe('high')
+        ->and($task->description)->toContain($requestedUrl, $user->email);
+
+    $this->actingAs($user)->post(route('access-support.store'), [
+        'requested_url' => $requestedUrl,
+    ])->assertRedirect()->assertSessionHas('access_request_success');
+
+    expect(Task::where('created_by', $user->id)->count())->toBe(1);
 });
 
 test('client user can access the client dashboard and profile', function () {
