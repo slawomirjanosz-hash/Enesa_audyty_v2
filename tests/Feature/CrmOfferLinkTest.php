@@ -86,7 +86,9 @@ test('superadmin sees tasks assigned to other users in the team task table', fun
     $this->actingAs($superadmin)->get(route('crm.index', ['tab' => 'tasks']))
         ->assertOk()
         ->assertSee('Zadania zespołu')
-        ->assertSee('Zadanie admina widoczne dla superadmina');
+        ->assertSee('Zadanie admina widoczne dla superadmina')
+        ->assertDontSee('Wszystkie szanse')
+        ->assertDontSee('Brak szans w tym etapie');
 });
 
 test('crm does not show or manage tasks belonging to projects', function () {

@@ -219,7 +219,7 @@
     @if($canViewCrmData)<a href="{{ route('crm.index', ['tab'=>'archive']) }}" class="crm-tab archive-tab {{ $currentTab==='archive'?'active':'' }}">
         <i class="ti ti-archive"></i> Archiwum
         <span class="tab-count">{{ $archivedCompanies->count() }}</span>
-    </a>
+    </a>@endif
 </div>
 
 {{-- ═══ TAB: FIRMY ═══ --}}
@@ -325,7 +325,7 @@
     </div>
     <a href="{{ route('crm.index', array_filter(['tab' => 'pipeline', 'related_to_me' => request()->boolean('related_to_me') ? null : 1])) }}" class="{{ request()->boolean('related_to_me') ? 'btn-primary' : 'btn-secondary' }}">
         <i class="ti ti-user-check"></i> Leady związane ze mną
-    </a>@endif
+    </a>
 </div>
 
 {{-- Lejek --}}
