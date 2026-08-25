@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccessSupportController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CalendarController;
@@ -65,6 +66,9 @@ Route::patch('/dashboard/companies/order', [DashboardController::class, 'reorder
 Route::get('/calendar', [CalendarController::class, 'index'])
     ->middleware(['auth', 'staff.role', 'app.module:calendar', 'app.permission:calendar.view'])
     ->name('calendar.index');
+Route::get('/lista-zmian', [ActivityLogController::class, 'index'])
+    ->middleware(['auth', 'staff.role', 'app.permission:activity_log.view'])
+    ->name('activity-log.index');
 
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');

@@ -72,6 +72,9 @@ class RolePermissionCatalog
                 'settings.company.manage' => 'Zarządzanie danymi firmy i modułami',
                 'settings.archive.view' => 'Podgląd archiwum',
             ]],
+            'activity_log' => ['label' => 'Lista zmian', 'permissions' => [
+                'activity_log.view' => 'Podgląd historii zmian i logowań użytkowników',
+            ]],
             'advanced' => ['label' => 'Uprawnienia nadrzędne', 'permissions' => [
                 'system.full_access' => 'Pełny dostęp operacyjny (pomija szczegółowe ograniczenia)',
             ]],

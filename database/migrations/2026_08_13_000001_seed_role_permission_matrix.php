@@ -18,7 +18,7 @@ return new class extends Migration
         }
 
         $all = RolePermissionCatalog::names();
-        $staff = collect($all)->reject(fn (string $name) => $name === 'settings.company.manage')->values()->all();
+        $staff = collect($all)->reject(fn (string $name) => in_array($name, ['settings.company.manage', 'activity_log.view'], true))->values()->all();
         $auditor = [
             'dashboard.view', 'crm.view', 'offers.view', 'offers.prices.view',
             'projects.view', 'audits.view', 'documents.view', 'client_zone.view',

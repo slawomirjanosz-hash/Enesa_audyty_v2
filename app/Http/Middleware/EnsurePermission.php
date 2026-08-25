@@ -14,7 +14,7 @@ class EnsurePermission
     {
         $user = $request->user();
 
-        $sensitive = ['settings.company.manage', 'settings.roles.manage', 'settings.users.manage'];
+        $sensitive = ['settings.company.manage', 'settings.roles.manage', 'settings.users.manage', 'activity_log.view'];
         $fullAccessAllowed = count(array_intersect($permissions, $sensitive)) === 0;
         $availablePermissionNames = app(PermissionRegistrar::class)
             ->getPermissions()

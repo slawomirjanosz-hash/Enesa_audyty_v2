@@ -560,6 +560,14 @@
                 </a>
             </li>
             @endif
+
+            @if($layoutUser->hasRole('superadmin') || $layoutPermissionNames->contains('activity_log.view'))
+            <li class="nav-item">
+                <a href="{{ route('activity-log.index') }}" class="nav-link {{ request()->routeIs('activity-log.*') ? 'active' : '' }}">
+                    <i class="ti ti-history"></i> Lista zmian
+                </a>
+            </li>
+            @endif
         </ul>
     </nav>
 
