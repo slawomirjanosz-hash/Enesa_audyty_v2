@@ -3,6 +3,7 @@
 use App\Models\Company;
 use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
+use App\Models\ImportantContact;
 use App\Models\Offer;
 use App\Models\Project;
 use App\Models\Task;
@@ -27,6 +28,70 @@ test('crm companies and pipeline tabs render without loading errors', function (
         ->assertOk()->assertSee('Firma CRM');
     $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline']))
         ->assertOk()->assertSee('Leady związane ze mną');
+});
+
+test('authorized user manages important contacts and CRM places them after suppliers', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('crm.companies.manage'));
+
+    $this->actingAs($admin)->post(route('crm.important-contacts.store'), [
+        'first_name' => 'Anna',
+        'last_name' => 'Projektowa',
+        'company_name' => 'Biuro Konstrukcji',
+        'position' => 'Projektantka',
+        'specialization' => 'Instalacje przemysłowe',
+        'activity_description' => 'Projektuje instalacje dla zakładów produkcyjnych.',
+        'help_description' => 'Może zweryfikować koncepcję i wskazać wykonawców.',
+        'email' => 'anna@example.com',
+    ])->assertRedirect(route('crm.index', ['tab' => 'contacts']));
+
+    $contact = ImportantContact::firstOrFail();
+    expect($contact->created_by)->toBe($admin->id);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'contacts']))
+        ->assertOk()
+        ->assertSeeInOrder(['Zadania', 'Dostawcy', 'Ważne kontakty'])
+        ->assertSee('Anna Projektowa')
+        ->assertSee('Biuro Konstrukcji')
+        ->assertSee('Może zweryfikować koncepcję i wskazać wykonawców.')
+        ->assertSee('Szukaj osoby, firmy, specjalizacji');
+
+    $this->actingAs($admin)->put(route('crm.important-contacts.update', $contact), [
+        'first_name' => 'Anna',
+        'last_name' => 'Projektowa',
+        'company_name' => 'Nowe Biuro',
+        'help_description' => 'Pomaga w odbiorach technicznych.',
+    ])->assertRedirect(route('crm.index', ['tab' => 'contacts']));
+
+    expect($contact->fresh()->company_name)->toBe('Nowe Biuro');
+
+    $this->actingAs($admin)->delete(route('crm.important-contacts.destroy', $contact))
+        ->assertRedirect(route('crm.index', ['tab' => 'contacts']));
+    $this->assertDatabaseMissing('important_contacts', ['id' => $contact->id]);
+});
+
+test('CRM viewer sees important contacts but cannot manage them', function () {
+    $viewer = User::factory()->create();
+    $role = Role::findOrCreate('crm_viewer');
+    $role->givePermissionTo(Permission::findOrCreate('crm.view'));
+    $viewer->assignRole($role);
+    ImportantContact::create([
+        'first_name' => 'Jan',
+        'last_name' => 'Inżynier',
+        'help_description' => 'Pomoc techniczna przy projekcie.',
+    ]);
+
+    $this->actingAs($viewer)->get(route('crm.index', ['tab' => 'contacts']))
+        ->assertOk()
+        ->assertSee('Jan Inżynier')
+        ->assertDontSee('>Nowy ważny kontakt<', false);
+
+    $this->actingAs($viewer)->post(route('crm.important-contacts.store'), [
+        'first_name' => 'Bez',
+        'last_name' => 'Uprawnień',
+        'help_description' => 'Nie powinien zostać zapisany.',
+    ])->assertForbidden();
 });
 
 test('staff with crm view permission sees shared CRM data created by another user', function () {

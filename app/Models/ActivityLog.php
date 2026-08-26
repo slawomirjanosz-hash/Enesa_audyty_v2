@@ -46,6 +46,7 @@ class ActivityLog extends Model
             'ProjectRequirement' => 'Materiały i usługi', 'ProjectFinanceGroup' => 'Grupa finansowa',
             'Document' => 'Dokument', 'Offer' => 'Oferta', 'OfferRequest' => 'Zapytanie ofertowe',
             'Audit' => 'Audyt', 'User' => 'Użytkownik', 'Role' => 'Rola', 'Permission' => 'Uprawnienie',
+            'ImportantContact' => 'CRM / ważny kontakt',
         ][$class] ?? ($class ?: 'System');
     }
 }

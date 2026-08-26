@@ -74,6 +74,7 @@
 .task-hdr.team { background:#F8FAFC; }
 
 .archive-info { background:#FEF3C7; border:1px solid #FCD34D; border-radius:8px; padding:10px 16px; margin-bottom:16px; font-size:13px; color:#92400E; display:flex; align-items:center; gap:8px; }
+.important-contacts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}.important-contact-card{background:#fff;border:1px solid #E5E1D8;border-radius:12px;padding:17px;display:flex;flex-direction:column;gap:11px}.important-contact-head{display:flex;justify-content:space-between;gap:10px}.important-contact-name{font:800 15px 'Manrope',sans-serif;color:#1A1A1A}.important-contact-company{font-size:12px;color:var(--green);font-weight:700;margin-top:3px}.important-contact-role{font-size:11px;color:#758078}.important-contact-help{background:#F0F7F3;border-left:3px solid var(--green);border-radius:7px;padding:10px 11px;font-size:12px;line-height:1.5}.important-contact-help strong{display:block;color:var(--green);font-size:10px;text-transform:uppercase;margin-bottom:3px}.important-contact-activity{font-size:12px;color:#525E57;line-height:1.5}.important-contact-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}.important-contact-links a{font-size:11px;color:#1D4ED8;text-decoration:none}.important-contact-empty{grid-column:1/-1;padding:45px;text-align:center;color:#888;background:#fff;border:1px dashed #D0CCC0;border-radius:12px}.contact-modal-field label{display:block;font:700 11px 'Manrope',sans-serif;color:#555;margin-bottom:4px}.contact-modal-field input,.contact-modal-field textarea{width:100%;box-sizing:border-box;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font:13px 'Lato',sans-serif;outline:none}.contact-modal-field textarea{resize:vertical}
 
 @media(max-width:900px) { .crm-stats { grid-template-columns:repeat(2,1fr); } }
 @media(max-width:640px) {
@@ -139,6 +140,10 @@
             <button onclick="document.getElementById('modal-task').style.display='flex'" class="btn-primary">
                 <i class="ti ti-plus"></i> Nowe zadanie
             </button>
+        @elseif($currentTab === 'contacts' && $canManageContacts)
+            <button type="button" onclick="openImportantContactModal()" class="btn-primary">
+                <i class="ti ti-user-plus"></i> Nowy ważny kontakt
+            </button>
         @else
             <a href="{{ route('dashboard') }}" class="btn-primary">
                 <i class="ti ti-plus"></i> Dodaj firmę
@@ -189,10 +194,6 @@
         <i class="ti ti-building"></i> Firmy
         <span class="tab-count">{{ $stats['active_companies'] }}</span>
     </a>
-    <a href="{{ route('crm.index', ['tab'=>'suppliers']) }}" class="crm-tab {{ $currentTab==='suppliers'?'active':'' }}">
-        <i class="ti ti-truck-delivery"></i> Dostawcy
-        <span class="tab-count">{{ $stats['active_suppliers'] }}</span>
-    </a>
     <a href="{{ route('crm.index', ['tab'=>'pipeline']) }}" class="crm-tab {{ $currentTab==='pipeline'?'active':'' }}">
         <i class="ti ti-target"></i> Szanse
         <span class="tab-count">{{ $stats['active_opps'] }}</span>
@@ -202,6 +203,16 @@
     <a href="{{ route('crm.index', ['tab'=>'tasks']) }}" class="crm-tab {{ $currentTab==='tasks'?'active':'' }}">
         <i class="ti ti-checklist"></i> Zadania
         <span class="tab-count">{{ $stats['open_tasks'] }}</span>
+    </a>
+    @endif
+    @if($canViewCrmData)
+    <a href="{{ route('crm.index', ['tab'=>'suppliers']) }}" class="crm-tab {{ $currentTab==='suppliers'?'active':'' }}">
+        <i class="ti ti-truck-delivery"></i> Dostawcy
+        <span class="tab-count">{{ $stats['active_suppliers'] }}</span>
+    </a>
+    <a href="{{ route('crm.index', ['tab'=>'contacts']) }}" class="crm-tab {{ $currentTab==='contacts'?'active':'' }}">
+        <i class="ti ti-address-book"></i> Ważne kontakty
+        <span class="tab-count">{{ $stats['important_contacts'] }}</span>
     </a>
     @endif
     @if($canManageTeamTasks)
@@ -315,6 +326,33 @@
     <div class="table-card-header"><div class="table-card-title"><i class="ti ti-truck-delivery" style="color:var(--green);margin-right:6px"></i> Dostawcy ({{$suppliers->count()}})</div><div style="display:flex;gap:8px;align-items:center"><div class="search-box"><i class="ti ti-search"></i><input type="text" placeholder="Szukaj dostawcy…" oninput="filterTable('suppliers-tbody',this.value,[0,1,2,3])"></div><a href="{{route('suppliers.index')}}" class="btn-secondary">Pełny widok</a></div></div>
     <div style="overflow-x:auto"><table class="crm-table"><thead><tr><th>Dostawca</th><th>Miasto</th><th>Zakres dostaw</th><th>Materiały</th><th>Projekty</th><th></th></tr></thead><tbody id="suppliers-tbody">@forelse($suppliers as $supplier)<tr><td><a href="{{route('suppliers.show',$supplier)}}" style="font-weight:800;color:var(--green);text-decoration:none">{{$supplier->name}}</a><br><small>NIP {{$supplier->nip ?: '—'}}</small></td><td>{{$supplier->city ?: '—'}}</td><td>{{str($supplier->supplier_capabilities ?: '—')->limit(80)}}</td><td>{{str($supplier->supplier_materials ?: '—')->limit(80)}}</td><td>{{$supplier->supplierRequirements->pluck('project_id')->merge($supplier->supplierFinancialEntries->pluck('project_id'))->filter()->unique()->count()}}</td><td><a class="btn-icon btn-icon-view" href="{{route('suppliers.show',$supplier)}}"><i class="ti ti-eye"></i></a></td></tr>@empty<tr><td colspan="6" style="padding:35px;text-align:center;color:#888">Brak dostawców. Dodając firmę wybierz typ „Dostawca”.</td></tr>@endforelse</tbody></table></div>
 </div>
+@endif
+@if($errors->importantContact->any())
+    <div style="background:#FEF2F2;border:1px solid #FCA5A5;color:#B91C1C;border-radius:8px;padding:11px 16px;margin-bottom:14px;font-size:13px;display:flex;align-items:center;gap:10px;"><i class="ti ti-alert-circle"></i> {{ $errors->importantContact->first() }}</div>
+@endif
+
+{{-- ═══ TAB: WAŻNE KONTAKTY ═══ --}}
+@if($currentTab === 'contacts')
+<div class="table-card-header" style="border:1px solid #E5E1D8;border-radius:12px;margin-bottom:14px">
+    <div><div class="table-card-title"><i class="ti ti-address-book" style="color:var(--green);margin-right:6px"></i> Ważne kontakty ({{$importantContacts->count()}})</div><div style="font-size:11px;color:#758078;margin-top:3px">Osoby, których wiedza, kontakty lub doświadczenie mogą pomóc w realizacji projektów i sprzedaży.</div></div>
+    <div class="search-box"><i class="ti ti-search"></i><input type="search" id="important-contact-search" placeholder="Szukaj osoby, firmy, specjalizacji…"></div>
+</div>
+<div class="important-contacts-grid" id="important-contacts-grid">
+    @forelse($importantContacts as $contact)
+    <article class="important-contact-card" data-important-contact-search="{{collect([$contact->fullName(),$contact->company_name,$contact->position,$contact->specialization,$contact->activity_description,$contact->help_description,$contact->email,$contact->phone,$contact->notes])->filter()->implode(' ')}}">
+        <div class="important-contact-head"><div><div class="important-contact-name">{{$contact->fullName()}}</div><div class="important-contact-company">{{$contact->company_name ?: 'Bez wskazanej firmy'}}</div><div class="important-contact-role">{{collect([$contact->position,$contact->specialization])->filter()->implode(' · ') ?: 'Brak stanowiska i specjalizacji'}}</div></div>
+            @if($canManageContacts)<div style="display:flex;gap:4px"><button type="button" class="btn-icon btn-icon-edit" title="Edytuj" onclick="openImportantContactModal(@js($contact))"><i class="ti ti-pencil"></i></button><form method="POST" action="{{route('crm.important-contacts.destroy',$contact)}}" onsubmit="return confirm('Usunąć ten ważny kontakt?')">@csrf @method('DELETE')<button class="btn-icon btn-icon-delete" title="Usuń"><i class="ti ti-trash"></i></button></form></div>@endif
+        </div>
+        @if($contact->activity_description)<div class="important-contact-activity"><strong>Czym się zajmuje:</strong><br>{{$contact->activity_description}}</div>@endif
+        <div class="important-contact-help"><strong>W czym może pomóc</strong>{{$contact->help_description}}</div>
+        @if($contact->notes)<div class="important-contact-activity"><strong>Notatki:</strong> {{$contact->notes}}</div>@endif
+        <div class="important-contact-links">@if($contact->phone)<a href="tel:{{$contact->phone}}"><i class="ti ti-phone"></i> {{$contact->phone}}</a>@endif @if($contact->email)<a href="mailto:{{$contact->email}}"><i class="ti ti-mail"></i> {{$contact->email}}</a>@endif @if($contact->linkedin_url)<a href="{{$contact->linkedin_url}}" target="_blank" rel="noopener"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>@endif</div>
+    </article>
+    @empty
+    <div class="important-contact-empty"><i class="ti ti-address-book-off" style="font-size:38px"></i><p>Nie dodano jeszcze żadnych ważnych kontaktów.</p></div>
+    @endforelse
+</div>
+<div class="important-contact-empty" id="important-contact-search-empty" hidden>Nie znaleziono pasujących kontaktów.</div>
 @endif
 
 {{-- ═══ TAB: PIPELINE ═══ --}}
@@ -942,6 +980,28 @@
     </div>
 </div>
 
+{{-- ═══ MODAL: WAŻNY KONTAKT ═══ --}}
+@if($canManageContacts)
+<div id="modal-important-contact" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;padding:18px;">
+ <div style="background:#fff;border-radius:14px;padding:26px;width:100%;max-width:760px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px"><div id="important-contact-modal-title" style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700"><i class="ti ti-address-book" style="color:var(--green);margin-right:8px"></i>Nowy ważny kontakt</div><button type="button" onclick="closeImportantContactModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888">×</button></div>
+  <form id="form-important-contact" method="POST" action="{{route('crm.important-contacts.store')}}">@csrf
+   <input id="important-contact-method" type="hidden" name="_method" value="PUT" disabled>
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px">
+    <div class="contact-modal-field"><label>Imię *</label><input id="important-contact-first-name" name="first_name" required maxlength="120"></div><div class="contact-modal-field"><label>Nazwisko *</label><input id="important-contact-last-name" name="last_name" required maxlength="120"></div>
+    <div class="contact-modal-field"><label>Firma</label><input id="important-contact-company-name" name="company_name" maxlength="255"></div><div class="contact-modal-field"><label>Stanowisko</label><input id="important-contact-position" name="position" maxlength="255" placeholder="np. projektant, inżynier, prezes"></div>
+    <div class="contact-modal-field"><label>Specjalizacja</label><input id="important-contact-specialization" name="specialization" maxlength="255"></div><div class="contact-modal-field"><label>Telefon</label><input id="important-contact-phone" name="phone" maxlength="50"></div>
+    <div class="contact-modal-field"><label>E-mail</label><input id="important-contact-email" name="email" type="email" maxlength="255"></div><div class="contact-modal-field"><label>LinkedIn</label><input id="important-contact-linkedin-url" name="linkedin_url" type="url" maxlength="500" placeholder="https://..."></div>
+   </div>
+   <div class="contact-modal-field" style="margin-top:12px"><label>Czym się zajmuje</label><textarea id="important-contact-activity-description" name="activity_description" rows="3" maxlength="3000"></textarea></div>
+   <div class="contact-modal-field" style="margin-top:12px"><label>W czym może pomóc *</label><textarea id="important-contact-help-description" name="help_description" rows="4" maxlength="3000" required placeholder="Opisz wiedzę, kontakty i obszary, w których warto zwrócić się do tej osoby."></textarea></div>
+   <div class="contact-modal-field" style="margin-top:12px"><label>Notatki</label><textarea id="important-contact-notes" name="notes" rows="2" maxlength="3000"></textarea></div>
+   <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" onclick="closeImportantContactModal()" class="btn-secondary">Anuluj</button><button type="submit" class="btn-primary"><i class="ti ti-device-floppy"></i> Zapisz kontakt</button></div>
+  </form>
+ </div>
+</div>
+@endif
+
 {{-- ═══ MODAL: NOWE ZADANIE ═══ --}}
 @if($canManageOwnTasks)
 <div id="modal-task" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
@@ -1451,11 +1511,51 @@ function sortTable(tbodyId, colIdx, numeric = false) {
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-        document.getElementById('modal-opp').style.display = 'none';
-        document.getElementById('modal-task').style.display = 'none';
-        document.getElementById('modal-task-edit').style.display = 'none';
+        ['modal-opp', 'modal-task', 'modal-task-edit', 'modal-important-contact'].forEach(id => {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'none';
+        });
     }
 });
+
+function openImportantContactModal(contact = null) {
+    const modal = document.getElementById('modal-important-contact');
+    if (!modal) return;
+    const form = document.getElementById('form-important-contact');
+    const method = document.getElementById('important-contact-method');
+    const fields = ['first_name', 'last_name', 'company_name', 'position', 'specialization', 'phone', 'email', 'linkedin_url', 'activity_description', 'help_description', 'notes'];
+    form.reset();
+    form.action = contact ? `{{url('/crm/important-contacts')}}/${contact.id}` : @js(route('crm.important-contacts.store'));
+    method.disabled = !contact;
+    document.getElementById('important-contact-modal-title').innerHTML = `<i class="ti ti-address-book" style="color:var(--green);margin-right:8px"></i>${contact ? 'Edytuj ważny kontakt' : 'Nowy ważny kontakt'}`;
+    fields.forEach(field => {
+        const input = document.getElementById(`important-contact-${field.replaceAll('_', '-')}`);
+        if (input) input.value = contact?.[field] ?? '';
+    });
+    modal.style.display = 'flex';
+}
+
+function closeImportantContactModal() {
+    const modal = document.getElementById('modal-important-contact');
+    if (modal) modal.style.display = 'none';
+}
+
+document.getElementById('important-contact-search')?.addEventListener('input', event => {
+    const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const query = normalize(event.target.value);
+    let visible = 0;
+    document.querySelectorAll('.important-contact-card').forEach(card => {
+        const matches = normalize(card.dataset.importantContactSearch || '').includes(query);
+        card.hidden = !matches;
+        if (matches) visible++;
+    });
+    const empty = document.getElementById('important-contact-search-empty');
+    if (empty) empty.hidden = visible > 0 || !query;
+});
+
+@if($errors->importantContact->any())
+document.addEventListener('DOMContentLoaded', () => openImportantContactModal());
+@endif
 
 function openEditTask(id, title, description, assignedTo, companyId, dueDate, priority, status, opportunityId) {
     const baseUrl = '{{ url('/crm/tasks') }}/';

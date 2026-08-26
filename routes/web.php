@@ -19,6 +19,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ImportantContactController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
@@ -254,6 +255,9 @@ Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.modul
     Route::patch('/tasks/{taskId}/restore', [CrmController::class, 'restoreTask'])->name('tasks.restore');
     Route::patch('/tasks/{task}/status', [CrmController::class, 'updateTaskStatus'])->name('tasks.status');
     Route::delete('/orphaned-users/{assignmentId}', [CrmController::class, 'detachOrphanedUser'])->name('detach-orphaned-user');
+    Route::post('/important-contacts', [ImportantContactController::class, 'store'])->middleware('app.permission:crm.companies.manage')->name('important-contacts.store');
+    Route::put('/important-contacts/{importantContact}', [ImportantContactController::class, 'update'])->middleware('app.permission:crm.companies.manage')->name('important-contacts.update');
+    Route::delete('/important-contacts/{importantContact}', [ImportantContactController::class, 'destroy'])->middleware('app.permission:crm.companies.manage')->name('important-contacts.destroy');
 });
 
 Route::get('/public/project-gantt/{token}', [ProjectController::class, 'publicGantt'])->name('projects.public-gantt');

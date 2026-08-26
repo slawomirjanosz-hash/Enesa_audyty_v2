@@ -480,10 +480,13 @@
                 <ul class="nav-sub">
                     @if($canAccessModule('crm.view'))
                     <li><a href="{{ route('crm.index') }}" class="nav-link">Firmy</a></li>
-                    <li><a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">Dostawcy</a></li>
                     <li><a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="nav-link">Lejek sprzedaży</a></li>
                     @endif
                     <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link">Zadania</a></li>
+                    @if($canAccessModule('crm.view'))
+                    <li><a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">Dostawcy</a></li>
+                    <li><a href="{{ route('crm.index', ['tab' => 'contacts']) }}" class="nav-link {{ request()->routeIs('crm.index') && request('tab') === 'contacts' ? 'active' : '' }}">Ważne kontakty</a></li>
+                    @endif
                 </ul>
             </li>
             @endif

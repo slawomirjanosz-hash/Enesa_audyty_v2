@@ -7,6 +7,7 @@ use App\Models\Audit;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\CrmOpportunity;
+use App\Models\ImportantContact;
 use App\Models\Offer;
 use App\Models\Task;
 use App\Models\User;
@@ -34,7 +35,8 @@ class CrmController extends Controller
         $canManageOwnTasks = $canManageTeamTasks || $authUser->can('crm.tasks.own.manage');
         $canViewTeamTasks = $canManageTeamTasks;
         $canViewCrmData = $canManageCrm || $authUser->can('crm.view');
-        $availableTabs = $canViewCrmData ? ['companies', 'suppliers', 'pipeline', 'archive'] : [];
+        $canManageContacts = $canManageCrm || $authUser->can('crm.companies.manage');
+        $availableTabs = $canViewCrmData ? ['companies', 'pipeline', 'suppliers', 'contacts', 'archive'] : [];
         if ($canManageOwnTasks) {
             $availableTabs[] = 'tasks';
         }
@@ -62,6 +64,10 @@ class CrmController extends Controller
             ->where('status', '!=', 'archived')
             ->orderBy('name'), $authUser, 'can_view_dashboard', 'id')
             ->get() : collect();
+
+        $importantContacts = $currentTab === 'contacts'
+            ? ImportantContact::with('creator')->orderBy('last_name')->orderBy('first_name')->get()
+            : collect();
 
         $opportunitiesQuery = CrmOpportunity::query()->whereNull('deleted_at')->orderByDesc('created_at');
         if (! $access->isDelegatedAuditor($authUser)) {
@@ -139,6 +145,7 @@ class CrmController extends Controller
             'active_audits' => $auditsEnabled
                 ? $access->scopeByCompanyAccess(Audit::where('status', 'in_progress'), $authUser, 'can_view_audits')->count()
                 : 0,
+            'important_contacts' => ImportantContact::count(),
         ];
 
         $archivedCompanies = $currentTab === 'archive' ? Company::with(['offers', 'audits'])
@@ -168,7 +175,7 @@ class CrmController extends Controller
             ->get() : collect();
 
         return view('crm.index', compact(
-            'companies', 'suppliers', 'opportunities', 'taskOpportunities', 'unlinkedOffers', 'canManageCrm', 'canManageOwnTasks', 'canManageTeamTasks', 'canViewTeamTasks', 'canViewCrmData', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
+            'companies', 'suppliers', 'importantContacts', 'opportunities', 'taskOpportunities', 'unlinkedOffers', 'canManageCrm', 'canManageContacts', 'canManageOwnTasks', 'canManageTeamTasks', 'canViewTeamTasks', 'canViewCrmData', 'tasks', 'myTasks', 'trashTasks', 'trashTasksCount', 'trashTaskSummary', 'audits', 'users', 'stats', 'archivedCompanies', 'orphanedAssignments', 'currentTab', 'auditsEnabled'
         ));
     }
 
