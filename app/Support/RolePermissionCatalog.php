@@ -24,6 +24,7 @@ class RolePermissionCatalog
                 'hr.delegations.view' => 'Dostęp do własnych delegacji i samochodów',
                 'hr.attendance.view' => 'Dostęp do własnej listy obecności',
                 'hr.team.view' => 'Podgląd i zarządzanie danymi HR innych użytkowników',
+                'hr.vehicles.all.view' => 'Dostęp do wszystkich samochodów pracowników',
             ]],
             'crm' => ['label' => 'CRM i dostawcy', 'permissions' => [
                 'crm.view' => 'Podgląd CRM, klientów i dostawców',

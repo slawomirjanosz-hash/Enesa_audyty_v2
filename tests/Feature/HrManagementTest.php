@@ -24,10 +24,16 @@ test('employee creates own delegation with calculated return and remembered priv
     $this->actingAs($employee)->post(route('hr.delegations.store'), [
         'purpose' => 'Spotkanie z projektantem',
         'departure_at' => '2026-08-26 08:00',
-        'travel_hours' => 3.5,
+        'outbound_arrival_at' => '2026-08-26 11:30',
+        'outbound_travel_hours' => 3.5,
+        'return_departure_at' => '2026-08-26 16:00',
+        'return_at' => '2026-08-26 19:30',
+        'return_travel_hours' => 3.5,
         'origin' => 'Cieszyn',
         'destination' => 'Kraków',
         'distance_km' => 150.4,
+        'km_rate' => 1.15,
+        'diet_rate' => 45,
         'vehicle_type' => 'private',
         'vehicle_name' => 'Moja Skoda',
         'registration_number' => 'SCI 12345',
@@ -37,12 +43,26 @@ test('employee creates own delegation with calculated return and remembered priv
 
     $trip = HrBusinessTrip::firstOrFail();
     expect($trip->user_id)->toBe($employee->id)
-        ->and($trip->return_at?->format('Y-m-d H:i'))->toBe('2026-08-26 11:30')
+        ->and($trip->return_at?->format('Y-m-d H:i'))->toBe('2026-08-26 19:30')
         ->and($trip->days)->toBe(1)
+        ->and((float) $trip->diet_amount)->toBe(22.5)
+        ->and((float) $trip->mileage_amount)->toBe(172.96)
         ->and(HrVehicle::where('registration_number', 'SCI 12345')->where('user_id', $employee->id)->exists())->toBeTrue();
 
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'delegations']))
         ->assertOk()->assertSee('Spotkanie z projektantem')->assertSee('SCI 12345');
+
+    $this->actingAs($employee)->put(route('hr.delegations.update', $trip), [
+        'purpose' => 'Zmieniony cel', 'departure_at' => '2026-08-26 08:00', 'outbound_arrival_at' => '2026-08-26 10:00',
+        'outbound_travel_hours' => 2, 'return_departure_at' => '2026-08-27 17:00', 'return_at' => '2026-08-27 19:00',
+        'return_travel_hours' => 2, 'origin' => 'Cieszyn', 'destination' => 'Kraków', 'distance_km' => 300,
+        'km_rate' => 1, 'diet_rate' => 45, 'vehicle_type' => 'private', 'toll_cost' => 20,
+    ])->assertSessionHas('success');
+    expect((float) $trip->fresh()->diet_amount)->toBe(90.0)
+        ->and((float) $trip->fresh()->total_amount)->toBe(410.0);
+
+    $this->actingAs($employee)->get(route('hr.delegations.pdf', $trip))
+        ->assertOk()->assertHeader('content-type', 'application/pdf');
 });
 
 test('ordinary HR employee cannot see or create records for another employee', function () {
@@ -87,4 +107,21 @@ test('attendance-only role cannot open delegation data', function () {
     $this->actingAs($user)->get(route('hr.index', ['tab' => 'delegations']))
         ->assertOk()->assertSee('Lista obecności')->assertDontSee('Dodaj delegację');
     $this->actingAs($user)->post(route('hr.delegations.store'), [])->assertForbidden();
+});
+
+test('access to other employees cars requires a separate role permission', function () {
+    $owner = User::factory()->create(['name' => 'Właściciel auta']);
+    $viewer = User::factory()->create();
+    $role = Role::findOrCreate('employee_hr');
+    $role->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
+    $viewer->assignRole($role);
+    HrVehicle::create(['user_id' => $owner->id, 'type' => 'private', 'name' => 'Prywatne Audi', 'registration_number' => 'SCI 77777']);
+
+    $this->actingAs($viewer)->get(route('hr.index', ['tab' => 'vehicles']))
+        ->assertOk()->assertDontSee('Prywatne Audi');
+
+    $role->givePermissionTo(Permission::findOrCreate('hr.vehicles.all.view'));
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    $this->actingAs($viewer)->get(route('hr.index', ['tab' => 'vehicles']))
+        ->assertOk()->assertSee('Prywatne Audi')->assertSee('Właściciel auta');
 });
