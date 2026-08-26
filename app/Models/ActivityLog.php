@@ -47,6 +47,8 @@ class ActivityLog extends Model
             'Document' => 'Dokument', 'Offer' => 'Oferta', 'OfferRequest' => 'Zapytanie ofertowe',
             'Audit' => 'Audyt', 'User' => 'Użytkownik', 'Role' => 'Rola', 'Permission' => 'Uprawnienie',
             'ImportantContact' => 'CRM / ważny kontakt',
+            'HrBusinessTrip' => 'HR / delegacja', 'HrAttendance' => 'HR / lista obecności',
+            'HrVehicle' => 'HR / samochód',
         ][$class] ?? ($class ?: 'System');
     }
 }

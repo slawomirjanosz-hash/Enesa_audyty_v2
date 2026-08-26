@@ -11,6 +11,7 @@ class CompanySettings extends Model
     public const APP_MODULES = [
         'dashboard' => 'Dashboard',
         'calendar' => 'Kalendarz',
+        'hr' => 'HR',
         'crm' => 'CRM i firmy',
         'offers' => 'Oferty i zapytania',
         'projects' => 'Projekty',

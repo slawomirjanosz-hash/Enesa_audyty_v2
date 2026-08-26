@@ -1,0 +1,31 @@
+@if($canDelegations)
+<div id="trip-modal" class="hr-modal"><div class="hr-modal-card"><div class="hr-head"><h2 style="margin:0">Nowa delegacja</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('trip-modal')">×</button></div>
+<form method="POST" action="{{route('hr.delegations.store')}}">@csrf<div class="hr-grid">
+ @if($canTeam)<div class="hr-field"><label>Pracownik</label><select name="user_id">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif
+ <div class="hr-field {{$canTeam?'':'hr-full'}}"><label>Cel wyjazdu *</label><input name="purpose" required maxlength="500"></div>
+ <div class="hr-field"><label>Data i godzina wyjazdu *</label><input id="trip-departure" type="datetime-local" name="departure_at" required onchange="calculateTripReturn()"></div><div class="hr-field"><label>Data i godzina przyjazdu</label><input id="trip-return" type="datetime-local" name="return_at"><small>Jeśli pozostawisz puste, zostanie wyliczona z czasu jazdy.</small></div>
+ <div class="hr-field"><label>Liczba godzin jazdy</label><input id="trip-hours" type="number" name="travel_hours" min="0" max="999.99" step="0.25" oninput="calculateTripReturn()"></div><div class="hr-field"><label>Przebieg (km)</label><input type="number" name="distance_km" min="0" step="0.1"><small>Można wpisać ręcznie; integrację map podłączymy po dodaniu klucza API.</small></div>
+ <div class="hr-field"><label>Skąd *</label><input name="origin" required maxlength="255"></div><div class="hr-field"><label>Dokąd *</label><input name="destination" required maxlength="255"></div>
+ <div class="hr-field hr-full"><label>Wybierz zapamiętany samochód</label><select name="vehicle_id" onchange="chooseHrVehicle(this)"><option value="">— wpiszę dane poniżej —</option>@foreach($vehicles as $vehicle)<option value="{{$vehicle->id}}" data-type="{{$vehicle->type}}" data-name="{{$vehicle->name}}" data-registration="{{$vehicle->registration_number}}">{{$vehicle->type==='company'?'Służbowy':'Prywatny'}} · {{$vehicle->name}} · {{$vehicle->registration_number}}</option>@endforeach</select></div>
+ <div class="hr-field"><label>Rodzaj samochodu *</label><select id="trip-vehicle-type" name="vehicle_type" required><option value="private">Prywatny</option><option value="company">Służbowy</option></select></div><div class="hr-field"><label>Nazwa samochodu</label><input id="trip-vehicle-name" name="vehicle_name" maxlength="255"></div>
+ <div class="hr-field"><label>Nr rejestracyjny</label><input id="trip-registration" name="registration_number" maxlength="30"></div><div class="hr-field"><label>Koszty autostradowe (zł)</label><input type="number" name="toll_cost" value="0" min="0" step="0.01"></div>
+ <label class="hr-full" style="font-size:13px"><input type="checkbox" name="remember_vehicle" value="1"> Zapamiętaj ten samochód do następnych delegacji</label>
+ <div class="hr-field hr-full"><label>Notatki</label><textarea name="notes" rows="3" maxlength="3000"></textarea></div>
+</div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('trip-modal')">Anuluj</button><button class="hr-btn">Zapisz delegację</button></div></form></div></div>
+@endif
+
+@if($canAttendance)
+<div id="attendance-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:620px"><div class="hr-head"><h2 style="margin:0">Wpis obecności</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('attendance-modal')">×</button></div><form method="POST" action="{{route('hr.attendance.store')}}">@csrf<div class="hr-grid">
+ @if($canTeam)<div class="hr-field hr-full"><label>Pracownik</label><select name="user_id">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif
+ <div class="hr-field"><label>Data *</label><input type="date" name="work_date" value="{{now()->toDateString()}}" required></div><div class="hr-field"><label>Status *</label><select name="status"><option value="present">Obecny</option><option value="remote">Praca zdalna</option><option value="leave">Urlop</option><option value="sick">Chorobowe</option><option value="absent">Nieobecny</option></select></div>
+ <div class="hr-field"><label>Od godziny</label><input type="time" name="started_at"></div><div class="hr-field"><label>Do godziny</label><input type="time" name="finished_at"></div><div class="hr-field hr-full"><label>Notatki</label><textarea name="notes" rows="3"></textarea></div>
+ </div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('attendance-modal')">Anuluj</button><button class="hr-btn">Zapisz wpis</button></div></form></div></div>
+@endif
+
+@if($canDelegations)
+<div id="vehicle-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:620px"><div class="hr-head"><h2 style="margin:0">Nowy samochód</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">×</button></div><form method="POST" action="{{route('hr.vehicles.store')}}">@csrf<div class="hr-grid">
+ <div class="hr-field"><label>Rodzaj *</label><select name="type"><option value="private">Prywatny</option>@if($canTeam)<option value="company">Służbowy</option>@endif</select></div>
+ @if($canTeam)<div class="hr-field"><label>Właściciel prywatnego auta</label><select name="user_id"><option value="">— ja / samochód firmowy —</option>@foreach($users as $person)<option value="{{$person->id}}">{{$person->name}}</option>@endforeach</select></div>@endif
+ <div class="hr-field"><label>Nazwa *</label><input name="name" required placeholder="np. Auto Sławka"></div><div class="hr-field"><label>Marka i model</label><input name="make_model" placeholder="np. Skoda Octavia"></div><div class="hr-field hr-full"><label>Nr rejestracyjny *</label><input name="registration_number" required maxlength="30"></div>
+ </div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">Anuluj</button><button class="hr-btn">Zapisz samochód</button></div></form></div></div>
+@endif

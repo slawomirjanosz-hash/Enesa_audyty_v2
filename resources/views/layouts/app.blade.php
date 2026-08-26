@@ -555,6 +555,17 @@
             </li>
             @endif
 
+            @if($appModuleEnabled('hr') && ($canAccessModule('hr.delegations.view') || $canAccessModule('hr.attendance.view')))
+            <li class="nav-item nav-group {{ request()->routeIs('hr.*') ? 'open' : '' }}">
+                <span class="nav-link" onclick="toggleGroup(this)"><i class="ti ti-users-group"></i> HR <span class="arrow">▶</span></span>
+                <ul class="nav-sub">
+                    @if($canAccessModule('hr.delegations.view'))<li><a href="{{route('hr.index',['tab'=>'delegations'])}}" class="nav-link">Delegacje</a></li>@endif
+                    @if($canAccessModule('hr.attendance.view'))<li><a href="{{route('hr.index',['tab'=>'attendance'])}}" class="nav-link">Lista obecności</a></li>@endif
+                    @if($canAccessModule('hr.delegations.view'))<li><a href="{{route('hr.index',['tab'=>'vehicles'])}}" class="nav-link">Samochody</a></li>@endif
+                </ul>
+            </li>
+            @endif
+
             @if($appModuleEnabled('calendar') && $canAccessModule('calendar.view'))
             <li class="nav-item">
                 <a href="{{ route('calendar.index') }}"

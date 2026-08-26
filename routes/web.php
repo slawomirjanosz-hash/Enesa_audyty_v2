@@ -19,6 +19,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\HrController;
 use App\Http\Controllers\ImportantContactController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OfferController;
@@ -61,6 +62,15 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
     ->name('companies.restore');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
+Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:hr'])->group(function () {
+    Route::get('/', [HrController::class, 'index'])->middleware('app.permission:hr.delegations.view,hr.attendance.view')->name('index');
+    Route::post('/delegations', [HrController::class, 'storeTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.store');
+    Route::delete('/delegations/{trip}', [HrController::class, 'destroyTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.destroy');
+    Route::post('/attendance', [HrController::class, 'storeAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.store');
+    Route::delete('/attendance/{attendance}', [HrController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');
+    Route::post('/vehicles', [HrController::class, 'storeVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.store');
+    Route::delete('/vehicles/{vehicle}', [HrController::class, 'destroyVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.destroy');
+});
 Route::patch('/dashboard/companies/order', [DashboardController::class, 'reorderCompanies'])
     ->middleware(['auth', 'staff.role', 'app.module:dashboard', 'app.permission:crm.companies.manage'])
     ->name('dashboard.companies.order');

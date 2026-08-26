@@ -20,6 +20,11 @@ class RolePermissionCatalog
                 'calendar.view' => 'Podgląd własnego kalendarza zadań',
                 'calendar.team.view' => 'Podgląd kalendarzy wszystkich użytkowników',
             ]],
+            'hr' => ['label' => 'HR', 'permissions' => [
+                'hr.delegations.view' => 'Dostęp do własnych delegacji i samochodów',
+                'hr.attendance.view' => 'Dostęp do własnej listy obecności',
+                'hr.team.view' => 'Podgląd i zarządzanie danymi HR innych użytkowników',
+            ]],
             'crm' => ['label' => 'CRM i dostawcy', 'permissions' => [
                 'crm.view' => 'Podgląd CRM, klientów i dostawców',
                 'crm.companies.manage' => 'Dodawanie, edycja, archiwizacja i usuwanie firm',
