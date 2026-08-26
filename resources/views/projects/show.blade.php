@@ -327,6 +327,7 @@
 
 @endif
 @if($canViewRequirements)
+<style>.requirements-table.with-selection th:last-child{width:96px!important}.requirements-table .requirement-actions{min-width:88px!important}</style>
 <section id="pane-requirements" class="pane">
     @if(session('requirements_import_report'))
         @php($requirementsReport = session('requirements_import_report'))
@@ -413,7 +414,7 @@
                     <td>@if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}" style="color:var(--green);font-weight:700">{{$req->supplierCompany->name}}</a>@else{{$req->supplier ?: '—'}}@endif</td>
                     <td>@if($canEdit)<select class="status-select requirement-status {{$req->status}} project-async-status" data-kind="requirement" data-id="{{$req->id}}" data-current="{{$req->status}}" data-url="{{route('projects.requirements.status',[$project,$req])}}" aria-label="Status {{$req->name}}">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}" {{$req->status===$value?'selected':''}}>{{$label}}</option>@endforeach</select>@else<span class="requirement-status {{$req->status}}">{{$requirementStatusLabels[$req->status]??$req->status}}</span>@endif</td>
                     @if($canViewMaterialPrices || $canViewServicePrices)<td>@if($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) @if($req->unitCost()!==null)<span class="requirement-cost">{{number_format($req->unitCost(),2,',',' ')}} zł / {{$req->displayUnit()}}</span><br><small>Łącznie: {{number_format((float)$req->estimated_cost,2,',',' ')}} zł</small>@else<span class="requirement-cost">—</span>@endif @else<span style="color:#999">Brak dostępu</span>@endif</td>@endif
-                    <td>@if($canEdit)<div class="requirement-actions"><button type="button" class="mini-btn edit" title="Edytuj" onclick="openRequirementModal({{$req->id}})">✎</button><form method="POST" action="{{route('projects.requirements.destroy',[$project,$req])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form></div>@endif</td>
+                    <td>@if($canEdit)<div class="requirement-actions"><button type="button" class="mini-btn" title="Kopiuj jako nową pozycję" onclick="openRequirementModal({{$req->id}},true)"><i class="ti ti-copy"></i></button><button type="button" class="mini-btn edit" title="Edytuj" onclick="openRequirementModal({{$req->id}})">✎</button><form method="POST" action="{{route('projects.requirements.destroy',[$project,$req])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form></div>@endif</td>
                 </tr>
             @endforeach
             </tbody></table></div>
@@ -560,11 +561,11 @@ function escapeProjectHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[character]));
 }
 
-function openRequirementModal(requirementId = null) {
+function openRequirementModal(requirementId = null, copy = false) {
     const modal=document.getElementById('requirement-modal'),form=document.getElementById('requirement-form');if(!modal||!form)return;
     form.reset();form.action=requirementStoreUrl;document.getElementById('requirement-method').value='POST';
     const requirement=requirementId?projectRequirementItems.find(item=>item.id===Number(requirementId)):null;
-    document.getElementById('requirement-modal-title').textContent=requirement?'Edytuj materiał lub usługę':'Dodaj materiał lub usługę';
+    document.getElementById('requirement-modal-title').textContent=copy?'Kopiuj materiał lub usługę':(requirement?'Edytuj materiał lub usługę':'Dodaj materiał lub usługę');
     document.getElementById('requirement-type').value=requirement?.type||'material';
     document.getElementById('requirement-name').value=requirement?.name||'';
     document.getElementById('requirement-technology').value=requirement?.technology||'';
@@ -579,7 +580,7 @@ function openRequirementModal(requirementId = null) {
     document.getElementById('requirement-description').value=requirement?.description||'';
     syncRequirementQuantityIncrement();
     syncRequirementPriceVisibility();
-    if(requirement){form.action=requirement.update_url;document.getElementById('requirement-method').value='PATCH';}
+    if(requirement&&!copy){form.action=requirement.update_url;document.getElementById('requirement-method').value='PATCH';}
     modal.classList.add('open');
 }
 function closeRequirementModal(){document.getElementById('requirement-modal')?.classList.remove('open');}
