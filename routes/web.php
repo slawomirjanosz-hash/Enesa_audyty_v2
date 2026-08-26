@@ -67,6 +67,8 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::post('/delegations', [HrController::class, 'storeTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.store');
     Route::put('/delegations/{trip}', [HrController::class, 'updateTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.update');
     Route::get('/delegations/{trip}/pdf', [HrController::class, 'tripPdf'])->middleware('app.permission:hr.delegations.view')->name('delegations.pdf');
+    Route::get('/delegations/{trip}/preview', [HrController::class, 'showTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.show');
+    Route::post('/route/calculate', [HrController::class, 'calculateRoute'])->middleware('app.permission:hr.delegations.view')->name('route.calculate');
     Route::delete('/delegations/{trip}', [HrController::class, 'destroyTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.destroy');
     Route::post('/attendance', [HrController::class, 'storeAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.store');
     Route::delete('/attendance/{attendance}', [HrController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');
