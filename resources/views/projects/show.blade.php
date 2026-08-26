@@ -440,6 +440,7 @@
                     </div>
                 </div>
                 @if($canViewMaterialPrices || $canViewServicePrices)<div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_prices" value="1" id="requirements-export-include-prices" {{old('include_prices')==='1'?'checked':''}}> Dołącz dostępne ceny zapisane w programie</label></div>@endif
+                <div class="field full"><label class="requirement-export-status"><input type="checkbox" name="include_project_context" value="1" {{old('include_project_context')==='1'?'checked':''}}> Dołącz nazwę i numer projektu oraz nazwę klienta</label><small style="color:#66736b">Domyślnie dane te są ukryte, aby dostawca nie otrzymał informacji o kliencie ani projekcie.</small></div>
                 <div class="requirement-export-note full">Zamówienie zawsze zawiera zapisane ceny jednostkowe i wartości pozycji. W zapytaniu ofertowym ceny są opcjonalne — po ich wyłączeniu dostawca otrzyma puste kolumny do wpisania ceny, a Excel automatycznie obliczy wartości i sumę.</div>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="closeRequirementsExportModal()">Anuluj</button><button class="btn"><i class="ti ti-download"></i> Pobierz Excel</button></div>

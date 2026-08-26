@@ -844,6 +844,7 @@ test('project requirements can be exported for one supplier and selected statuse
         ->get(route('projects.show', ['project' => $project, 'tab' => 'requirements']))
         ->assertOk()
         ->assertSee('Generuj listę Excel')
+        ->assertSee('Dołącz nazwę i numer projektu oraz nazwę klienta')
         ->assertSee(route('projects.requirements.export', $project), false)
         ->assertSee('Dostawca Eksportowy');
 
@@ -857,7 +858,6 @@ test('project requirements can be exported for one supplier and selected statuse
 
     $filename = implode('_', [
         'Zapytanie_ofertowe',
-        Str::slug($project->number, '_'),
         Str::slug($supplier->name, '_'),
         now()->format('Y-m-d'),
     ]).'.xlsx';
@@ -868,6 +868,9 @@ test('project requirements can be exported for one supplier and selected statuse
         $export->styles($sheet);
 
         return in_array('Pompa do zapytania', $values, true)
+            && ! in_array('Klient eksportu', $values, true)
+            && ! in_array('Eksport materiałów', $values, true)
+            && in_array('Dane nieujawnione', $values, true)
             && ! in_array('Zawór już zamówiony', $values, true)
             && ! in_array('Usługa innego dostawcy', $values, true)
             && in_array('Cena oferowana netto', $rows[7], true)
@@ -886,7 +889,6 @@ test('project requirements can be exported for one supplier and selected statuse
 
     $orderFilename = implode('_', [
         'Zamowienie',
-        Str::slug($project->number, '_'),
         Str::slug($supplier->name, '_'),
         now()->format('Y-m-d'),
     ]).'.xlsx';
@@ -896,6 +898,19 @@ test('project requirements can be exported for one supplier and selected statuse
         return in_array('Cena jednostkowa netto', $rows[7], true)
             && (float) $rows[8][10] === 1200.0
             && (float) $rows[8][11] === 2400.0;
+    });
+
+    Excel::fake();
+    $this->actingAs($manager)->get(route('projects.requirements.export', [
+        'project' => $project, 'document_type' => 'inquiry', 'supplier_filter' => 'company:'.$supplier->id,
+        'statuses' => ['requested'], 'include_project_context' => '1',
+    ]))->assertOk();
+    $contextFilename = implode('_', ['Zapytanie_ofertowe', Str::slug($project->number, '_'), Str::slug($supplier->name, '_'), now()->format('Y-m-d')]).'.xlsx';
+    Excel::assertDownloaded($contextFilename, function (ProjectRequirementsListExport $export) use ($project, $client): bool {
+        $values = collect($export->array())->flatten()->filter()->all();
+
+        return in_array($project->number.' — '.$project->name, $values, true)
+            && in_array($client->name, $values, true);
     });
 
     $this->actingAs($manager)->get(route('projects.requirements.export', [

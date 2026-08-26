@@ -604,6 +604,7 @@ class ProjectController extends Controller
             'statuses' => ['nullable', 'array'],
             'statuses.*' => ['string', Rule::in(array_keys($statusLabels))],
             'include_prices' => ['nullable', 'boolean'],
+            'include_project_context' => ['nullable', 'boolean'],
         ]);
 
         $statuses = $request->boolean('all_statuses')
@@ -647,11 +648,12 @@ class ProjectController extends Controller
 
         $documentLabel = $data['document_type'] === 'order' ? 'Zamowienie' : 'Zapytanie_ofertowe';
         $includePrices = $data['document_type'] === 'order' || $request->boolean('include_prices');
+        $includeProjectContext = $request->boolean('include_project_context');
         $canViewMaterialPrices = $this->canViewRequirementPrice($request->user(), 'material');
         $canViewServicePrices = $this->canViewRequirementPrice($request->user(), 'service');
         $filename = implode('_', array_filter([
             $documentLabel,
-            Str::slug($project->number, '_'),
+            $includeProjectContext ? Str::slug($project->number, '_') : null,
             Str::slug($supplierLabel, '_'),
             now()->format('Y-m-d'),
         ])).'.xlsx';
@@ -663,6 +665,7 @@ class ProjectController extends Controller
             $supplierLabel,
             $statuses,
             $includePrices,
+            $includeProjectContext,
             $canViewMaterialPrices,
             $canViewServicePrices,
         ), $filename);

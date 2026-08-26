@@ -31,6 +31,7 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
         private readonly string $supplierLabel,
         private readonly array $statuses,
         private readonly bool $includePrices,
+        private readonly bool $includeProjectContext,
         private readonly bool $canViewMaterialPrices,
         private readonly bool $canViewServicePrices,
     ) {}
@@ -44,8 +45,8 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
 
         $rows = [
             [$title],
-            ['Projekt', $this->project->number.' — '.$this->project->name],
-            ['Klient', $this->project->company?->name ?? 'Projekt wewnętrzny'],
+            ['Projekt', $this->includeProjectContext ? $this->project->number.' — '.$this->project->name : 'Dane nieujawnione'],
+            ['Klient', $this->includeProjectContext ? ($this->project->company?->name ?? 'Projekt wewnętrzny') : 'Dane nieujawnione'],
             ['Dostawca', $this->supplierLabel],
             ['Wybrane statusy', $statusLabels],
             ['Data wygenerowania', now()->format('d.m.Y H:i')],
