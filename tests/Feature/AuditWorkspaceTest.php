@@ -40,7 +40,8 @@ test('audit is created from company card and opens the dedicated workspace', fun
     $audit = Audit::firstOrFail();
     $this->actingAs($user)->get(route('audits.show', $audit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Finanse')->assertSee('Dokumenty')
-        ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne');
+        ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne')
+        ->assertSee('Edytuj audyt')->assertSee('Osoby przypisane do audytu');
 });
 
 test('audit workspace stores tasks finances surveys passports and documents outside CRM', function () {
@@ -52,6 +53,10 @@ test('audit workspace stores tasks finances surveys passports and documents outs
 
     $this->actingAs($user)->post(route('audits.tasks.store', $audit), ['title' => 'Pomiary', 'assigned_to' => $user->id, 'start_date' => '2026-09-01', 'due_date' => '2026-09-03', 'status' => 'todo', 'priority' => 'high', 'progress' => 0])->assertSessionHas('success');
     $this->actingAs($user)->post(route('audits.finances.store', $audit), ['type' => 'cost', 'name' => 'Pomiary elektryczne', 'entry_date' => '2026-09-01', 'amount' => 1500, 'status' => 'planned'])->assertSessionHas('success');
+    $task = Task::firstOrFail();
+    $this->actingAs($user)->put(route('audits.tasks.update', [$audit, $task]), ['title' => 'Pomiary po zmianie', 'assigned_to' => $user->id, 'start_date' => '2026-09-01', 'due_date' => '2026-09-04', 'status' => 'in_progress', 'priority' => 'medium', 'progress' => 40])->assertSessionHas('success');
+    $finance = AuditFinancialEntry::firstOrFail();
+    $this->actingAs($user)->put(route('audits.finances.update', [$audit, $finance]), ['type' => 'cost', 'name' => 'Pomiary po zmianie', 'entry_date' => '2026-09-01', 'amount' => 1800, 'status' => 'issued'])->assertSessionHas('success');
     $auditType = AuditType::create(['name' => 'Ankieta utrzymania ruchu', 'slug' => 'utrzymanie-ruchu']);
     $this->actingAs($user)->post(route('audits.surveys.store', $audit), ['audit_type_id' => $auditType->id, 'status' => 'draft'])->assertSessionHas('success');
     $template = EnergyPassportTemplate::firstOrFail();
@@ -60,7 +65,9 @@ test('audit workspace stores tasks finances surveys passports and documents outs
 
     expect(Task::firstOrFail()->audit_id)->toBe($audit->id)
         ->and(Task::crm()->count())->toBe(0)
+        ->and($task->fresh()->progress)->toBe(40)
         ->and(AuditFinancialEntry::count())->toBe(1)
+        ->and((float) $finance->fresh()->amount)->toBe(1800.0)
         ->and(AuditSurvey::firstOrFail()->audit_type_id)->toBe($auditType->id)
         ->and(AuditSurvey::firstOrFail()->title)->toBe($auditType->name)
         ->and(EnergyPassport::firstOrFail()->audit_id)->toBe($audit->id)

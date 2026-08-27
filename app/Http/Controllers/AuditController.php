@@ -62,8 +62,12 @@ class AuditController extends Controller
             'manager_id' => ['required', 'exists:users,id'], 'status' => ['required', 'in:draft,in_progress,done,cancelled'],
             'start_date' => ['nullable', 'date'], 'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'contract_value' => ['nullable', 'numeric', 'min:0'], 'description' => ['nullable', 'string'],
+            'member_ids' => ['nullable', 'array'], 'member_ids.*' => ['integer', 'exists:users,id'],
         ]);
+        $members = $data['member_ids'] ?? [];
+        unset($data['member_ids']);
         $audit->update($data);
+        $audit->members()->sync(array_unique([...$members, (int) $audit->manager_id]));
 
         return back()->with('success', 'Dane audytu zostały zapisane.');
     }
@@ -86,6 +90,16 @@ class AuditController extends Controller
         return back()->with('success', 'Zadanie zostało usunięte.');
     }
 
+    public function updateTask(Request $request, Audit $audit, Task $task): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        abort_unless($task->audit_id === $audit->id, 404);
+        $data = $request->validate(['title' => ['required', 'string', 'max:255'], 'description' => ['nullable', 'string'], 'assigned_to' => ['nullable', 'exists:users,id'], 'start_date' => ['required', 'date'], 'due_date' => ['required', 'date', 'after_or_equal:start_date'], 'status' => ['required', 'in:todo,in_progress,done'], 'priority' => ['required', 'in:low,medium,high'], 'progress' => ['required', 'integer', 'between:0,100']]);
+        $task->update($data);
+
+        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'schedule'])->with('success', 'Zadanie zostało zaktualizowane.');
+    }
+
     public function storeFinance(Request $request, Audit $audit): RedirectResponse
     {
         $this->ensureAccess($request, $audit);
@@ -102,6 +116,16 @@ class AuditController extends Controller
         $entry->delete();
 
         return back()->with('success', 'Pozycja finansowa została usunięta.');
+    }
+
+    public function updateFinance(Request $request, Audit $audit, AuditFinancialEntry $entry): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        abort_unless($entry->audit_id === $audit->id, 404);
+        $data = $request->validate(['type' => ['required', 'in:cost,invoice'], 'name' => ['required', 'string', 'max:255'], 'document_number' => ['nullable', 'string', 'max:100'], 'entry_date' => ['required', 'date'], 'amount' => ['required', 'numeric', 'min:0'], 'status' => ['required', 'in:planned,issued,paid'], 'notes' => ['nullable', 'string']]);
+        $entry->update($data);
+
+        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'finances'])->with('success', 'Pozycja finansowa została zaktualizowana.');
     }
 
     public function storeSurvey(Request $request, Audit $audit): RedirectResponse
