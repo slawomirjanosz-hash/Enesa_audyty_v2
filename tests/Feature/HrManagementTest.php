@@ -65,7 +65,7 @@ test('employee creates own delegation with calculated return and remembered priv
         ->and((float) $trip->fresh()->total_amount)->toBe(410.0);
 
     $this->actingAs($employee)->get(route('hr.delegations.show', $trip))
-        ->assertOk()->assertSee('Mapa przejazdu')->assertSee('google.com/maps/embed/v1/directions', false);
+        ->assertOk()->assertSee('Mapa przejazdu')->assertSee('google.com/maps?output=embed', false);
 
     $this->actingAs($employee)->get(route('hr.delegations.pdf', $trip))
         ->assertOk()->assertHeader('content-type', 'application/pdf');
