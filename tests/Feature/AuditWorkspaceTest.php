@@ -41,7 +41,9 @@ test('audit is created from company card and opens the dedicated workspace', fun
     $this->actingAs($user)->get(route('audits.show', $audit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Finanse')->assertSee('Dokumenty')
         ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne')
-        ->assertSee('Edytuj audyt')->assertSee('Osoby przypisane do audytu');
+        ->assertSee('Edytuj audyt')->assertSee('Osoby przypisane do audytu')
+        ->assertSee('id="project-frappe-gantt"', false)->assertSee('Dodaj kamień milowy')
+        ->assertSee('Eksport Excel')->assertSee('Import Excel');
 });
 
 test('audit workspace stores tasks finances surveys passports and documents outside CRM', function () {
@@ -55,6 +57,7 @@ test('audit workspace stores tasks finances surveys passports and documents outs
     $this->actingAs($user)->post(route('audits.finances.store', $audit), ['type' => 'cost', 'name' => 'Pomiary elektryczne', 'entry_date' => '2026-09-01', 'amount' => 1500, 'status' => 'planned'])->assertSessionHas('success');
     $task = Task::firstOrFail();
     $this->actingAs($user)->put(route('audits.tasks.update', [$audit, $task]), ['title' => 'Pomiary po zmianie', 'assigned_to' => $user->id, 'start_date' => '2026-09-01', 'due_date' => '2026-09-04', 'status' => 'in_progress', 'priority' => 'medium', 'progress' => 40])->assertSessionHas('success');
+    $this->actingAs($user)->patchJson(route('audits.tasks.update', [$audit, $task]), ['progress' => 50])->assertOk()->assertJsonPath('progress', 50);
     $finance = AuditFinancialEntry::firstOrFail();
     $this->actingAs($user)->put(route('audits.finances.update', [$audit, $finance]), ['type' => 'cost', 'name' => 'Pomiary po zmianie', 'entry_date' => '2026-09-01', 'amount' => 1800, 'status' => 'issued'])->assertSessionHas('success');
     $auditType = AuditType::create(['name' => 'Ankieta utrzymania ruchu', 'slug' => 'utrzymanie-ruchu']);
@@ -65,7 +68,7 @@ test('audit workspace stores tasks finances surveys passports and documents outs
 
     expect(Task::firstOrFail()->audit_id)->toBe($audit->id)
         ->and(Task::crm()->count())->toBe(0)
-        ->and($task->fresh()->progress)->toBe(40)
+        ->and($task->fresh()->progress)->toBe(50)
         ->and(AuditFinancialEntry::count())->toBe(1)
         ->and((float) $finance->fresh()->amount)->toBe(1800.0)
         ->and(AuditSurvey::firstOrFail()->audit_type_id)->toBe($auditType->id)

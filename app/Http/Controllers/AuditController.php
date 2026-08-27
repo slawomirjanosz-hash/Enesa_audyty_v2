@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProjectGanttExport;
 use App\Models\Audit;
 use App\Models\AuditFinancialEntry;
 use App\Models\AuditSurvey;
@@ -12,11 +13,15 @@ use App\Models\EnergyPassportTemplate;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Services\ProjectGanttImportService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AuditController extends Controller
 {
@@ -44,12 +49,15 @@ class AuditController extends Controller
     {
         $this->ensureAccess($request, $audit);
         $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template']);
+        $timelineItems = $audit->tasks->filter(fn (Task $task) => $task->start_date && $task->due_date)
+            ->map(fn (Task $task) => $this->taskTimelinePayload($audit, $task))->values();
 
         return view('audits.show', [
             'audit' => $audit,
             'users' => User::query()->where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get(),
             'passportTemplates' => EnergyPassportTemplate::query()->orderBy('category')->orderBy('name')->get(),
             'auditTypes' => AuditType::query()->orderBy('name')->get(),
+            'timelineItems' => $timelineItems,
             'canManage' => $this->canManage($request),
         ]);
     }
@@ -72,11 +80,18 @@ class AuditController extends Controller
         return back()->with('success', 'Dane audytu zostały zapisane.');
     }
 
-    public function storeTask(Request $request, Audit $audit): RedirectResponse
+    public function storeTask(Request $request, Audit $audit): RedirectResponse|JsonResponse
     {
         $this->ensureAccess($request, $audit);
-        $data = $request->validate(['title' => ['required', 'string', 'max:255'], 'description' => ['nullable', 'string'], 'assigned_to' => ['nullable', 'exists:users,id'], 'start_date' => ['required', 'date'], 'due_date' => ['required', 'date', 'after_or_equal:start_date'], 'status' => ['required', 'in:todo,in_progress,done'], 'priority' => ['required', 'in:low,medium,high'], 'progress' => ['required', 'integer', 'between:0,100']]);
-        $audit->tasks()->create($data + ['company_id' => $audit->company_id, 'created_by' => $request->user()->id, 'project_position' => ((int) $audit->tasks()->max('project_position')) + 1]);
+        $data = $request->validate(['title' => ['required', 'string', 'max:255'], 'description' => ['nullable', 'string'], 'assigned_to' => ['nullable', 'exists:users,id'], 'depends_on_task_id' => ['nullable', 'integer', 'exists:tasks,id'], 'start_date' => ['required', 'date'], 'due_date' => ['required', 'date', 'after_or_equal:start_date'], 'status' => ['required', 'in:todo,in_progress,done'], 'priority' => ['required', 'in:low,medium,high'], 'progress' => ['required', 'integer', 'between:0,100'], 'is_milestone' => ['sometimes', 'boolean']]);
+        if ($data['is_milestone'] ?? false) {
+            $data['due_date'] = $data['start_date'];
+        }
+        $this->validateAuditTaskRelations($audit, $data['assigned_to'] ?? null, $data['depends_on_task_id'] ?? null);
+        $task = $audit->tasks()->create($data + ['company_id' => $audit->company_id, 'created_by' => $request->user()->id, 'project_position' => ((int) $audit->tasks()->max('project_position')) + 1]);
+        if ($request->expectsJson()) {
+            return response()->json($this->taskTimelinePayload($audit, $task->load('assignedUser')), 201);
+        }
 
         return back()->with('success', 'Zadanie audytowe zostało dodane.');
     }
@@ -90,14 +105,62 @@ class AuditController extends Controller
         return back()->with('success', 'Zadanie zostało usunięte.');
     }
 
-    public function updateTask(Request $request, Audit $audit, Task $task): RedirectResponse
+    public function updateTask(Request $request, Audit $audit, Task $task): RedirectResponse|JsonResponse
     {
         $this->ensureAccess($request, $audit);
         abort_unless($task->audit_id === $audit->id, 404);
-        $data = $request->validate(['title' => ['required', 'string', 'max:255'], 'description' => ['nullable', 'string'], 'assigned_to' => ['nullable', 'exists:users,id'], 'start_date' => ['required', 'date'], 'due_date' => ['required', 'date', 'after_or_equal:start_date'], 'status' => ['required', 'in:todo,in_progress,done'], 'priority' => ['required', 'in:low,medium,high'], 'progress' => ['required', 'integer', 'between:0,100']]);
+        $data = $request->validate(['title' => ['sometimes', 'required', 'string', 'max:255'], 'description' => ['sometimes', 'nullable', 'string'], 'assigned_to' => ['sometimes', 'nullable', 'exists:users,id'], 'depends_on_task_id' => ['sometimes', 'nullable', 'integer', 'exists:tasks,id'], 'start_date' => ['sometimes', 'date'], 'due_date' => ['sometimes', 'date', 'after_or_equal:start_date'], 'status' => ['sometimes', 'in:todo,in_progress,done'], 'priority' => ['sometimes', 'in:low,medium,high'], 'progress' => ['required', 'integer', 'between:0,100'], 'is_milestone' => ['sometimes', 'boolean']]);
+        $this->validateAuditTaskRelations($audit, $data['assigned_to'] ?? $task->assigned_to, $data['depends_on_task_id'] ?? $task->depends_on_task_id, $task);
+        $data['status'] ??= $data['progress'] >= 100 ? 'done' : ($data['progress'] > 0 ? 'in_progress' : 'todo');
+        if (($data['is_milestone'] ?? $task->is_milestone) && isset($data['start_date'])) {
+            $data['due_date'] = $data['start_date'];
+        }
         $task->update($data);
+        if ($request->expectsJson()) {
+            return response()->json($this->taskTimelinePayload($audit, $task->load('assignedUser')));
+        }
 
         return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'schedule'])->with('success', 'Zadanie zostało zaktualizowane.');
+    }
+
+    public function reorderTasks(Request $request, Audit $audit): JsonResponse
+    {
+        $this->ensureAccess($request, $audit);
+        $data = $request->validate(['order' => ['required', 'array'], 'order.*' => ['required', 'integer', 'distinct', 'exists:tasks,id']]);
+        abort_unless($audit->tasks()->whereIn('id', $data['order'])->count() === count($data['order']) && $audit->tasks()->count() === count($data['order']), 422);
+        foreach ($data['order'] as $position => $taskId) {
+            $audit->tasks()->whereKey($taskId)->update(['project_position' => $position]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function bulkDestroyTasks(Request $request, Audit $audit): JsonResponse
+    {
+        $this->ensureAccess($request, $audit);
+        $data = $request->validate(['task_ids' => ['required', 'array', 'min:1'], 'task_ids.*' => ['required', 'integer', 'distinct']]);
+        $tasks = $audit->tasks()->whereKey($data['task_ids']);
+        abort_unless((clone $tasks)->count() === count($data['task_ids']), 422);
+        $count = $tasks->count();
+        $tasks->delete();
+
+        return response()->json(['success' => true, 'deleted' => $count]);
+    }
+
+    public function exportGantt(Request $request, Audit $audit): BinaryFileResponse
+    {
+        $this->ensureAccess($request, $audit);
+
+        return Excel::download(new ProjectGanttExport($audit), 'Harmonogram_'.Str::slug($audit->number ?: $audit->title, '_').'.xlsx');
+    }
+
+    public function importGantt(Request $request, Audit $audit, ProjectGanttImportService $importer): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        $data = $request->validateWithBag('ganttImport', ['file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:10240'], 'new_start_date' => ['nullable', 'date']]);
+        $report = $importer->import($audit, $data['file'], $data['new_start_date'] ?? null, $request->user());
+
+        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'schedule'])->with('success', "Import harmonogramu zakończony: dodano {$report['inserted']} zadań.")->with('gantt_import_report', $report);
     }
 
     public function storeFinance(Request $request, Audit $audit): RedirectResponse
@@ -196,6 +259,29 @@ class AuditController extends Controller
     private function ensureAccess(Request $request, Audit $audit): void
     {
         abort_unless($this->access->canViewCompany($request->user(), $audit->company_id, 'can_view_audits'), 403);
+    }
+
+    private function validateAuditTaskRelations(Audit $audit, ?int $assigneeId, ?int $dependencyId, ?Task $task = null): void
+    {
+        if ($assigneeId && ! $audit->members()->whereKey($assigneeId)->exists() && (int) $audit->manager_id !== $assigneeId) {
+            abort(422, 'Osoba odpowiedzialna musi należeć do zespołu audytu.');
+        }
+        if ($dependencyId && (! $audit->tasks()->whereKey($dependencyId)->exists() || $task?->id === $dependencyId)) {
+            abort(422, 'Zależność musi wskazywać inne zadanie tego audytu.');
+        }
+    }
+
+    private function taskTimelinePayload(Audit $audit, Task $task): array
+    {
+        return [
+            'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id,
+            'name' => $task->title, 'start' => $task->start_date?->format('Y-m-d'), 'end' => $task->due_date?->format('Y-m-d'),
+            'progress' => $task->progress, 'status' => $task->status, 'priority' => $task->priority, 'description' => $task->description,
+            'assigned_to' => $task->assigned_to, 'assignee' => $task->assignedUser?->name, 'is_milestone' => $task->is_milestone,
+            'dependencies' => $task->depends_on_task_id ? 'task-'.$task->depends_on_task_id : '',
+            'update_url' => route('audits.tasks.update', [$audit, $task]), 'delete_url' => route('audits.tasks.destroy', [$audit, $task]),
+            'position' => $task->project_position,
+        ];
     }
 
     private function canManage(Request $request): bool

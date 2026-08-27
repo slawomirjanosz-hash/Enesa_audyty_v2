@@ -152,7 +152,11 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::get('/{audit}', [AuditController::class, 'show'])->name('show');
         Route::put('/{audit}', [AuditController::class, 'update'])->middleware('app.permission:audits.manage')->name('update');
         Route::post('/{audit}/tasks', [AuditController::class, 'storeTask'])->middleware('app.permission:audits.manage')->name('tasks.store');
-        Route::put('/{audit}/tasks/{task}', [AuditController::class, 'updateTask'])->middleware('app.permission:audits.manage')->name('tasks.update');
+        Route::post('/{audit}/tasks/reorder', [AuditController::class, 'reorderTasks'])->middleware('app.permission:audits.manage')->name('tasks.reorder');
+        Route::delete('/{audit}/tasks/bulk', [AuditController::class, 'bulkDestroyTasks'])->middleware('app.permission:audits.manage')->name('tasks.bulk-destroy');
+        Route::get('/{audit}/gantt/export', [AuditController::class, 'exportGantt'])->name('gantt.export');
+        Route::post('/{audit}/gantt/import', [AuditController::class, 'importGantt'])->middleware('app.permission:audits.manage')->name('gantt.import');
+        Route::match(['put', 'patch'], '/{audit}/tasks/{task}', [AuditController::class, 'updateTask'])->middleware('app.permission:audits.manage')->name('tasks.update');
         Route::delete('/{audit}/tasks/{task}', [AuditController::class, 'destroyTask'])->middleware('app.permission:audits.manage')->name('tasks.destroy');
         Route::post('/{audit}/finances', [AuditController::class, 'storeFinance'])->middleware('app.permission:audits.manage')->name('finances.store');
         Route::put('/{audit}/finances/{entry}', [AuditController::class, 'updateFinance'])->middleware('app.permission:audits.manage')->name('finances.update');

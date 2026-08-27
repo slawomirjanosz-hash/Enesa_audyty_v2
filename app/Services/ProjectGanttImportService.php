@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Audit;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -17,7 +18,7 @@ use Throwable;
 
 class ProjectGanttImportService
 {
-    public function import(Project $project, UploadedFile $file, ?string $newStartDate, User $actor): array
+    public function import(Project|Audit $project, UploadedFile $file, ?string $newStartDate, User $actor): array
     {
         try {
             $sheet = Excel::toCollection(null, $file)->first();
@@ -185,7 +186,7 @@ class ProjectGanttImportService
         });
     }
 
-    private function persist(Project $project, Collection $rows, int $invalid, User $actor): array
+    private function persist(Project|Audit $project, Collection $rows, int $invalid, User $actor): array
     {
         $eligibleUserIds = $project->members()->pluck('users.id')->push($project->manager_id)->filter()->unique();
         $staff = User::whereIn('id', $eligibleUserIds)

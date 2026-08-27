@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Audit;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Support\Collection;
@@ -17,7 +18,7 @@ class ProjectGanttExport implements FromArray, ShouldAutoSize, WithHeadings, Wit
 
     private array $externalIds;
 
-    public function __construct(Project $project)
+    public function __construct(Project|Audit $project)
     {
         $this->tasks = $project->tasks()
             ->with(['assignedUser', 'dependency'])
