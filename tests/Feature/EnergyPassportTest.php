@@ -34,7 +34,16 @@ test('authorized user creates edits and deletes an energy passport', function ()
     $template = EnergyPassportTemplate::query()->firstOrFail();
 
     $this->actingAs($user)->get(route('energy-passports.index'))
-        ->assertOk()->assertSee('Paszporty energetyczne')->assertSee($template->name);
+        ->assertOk()
+        ->assertSee('Paszporty energetyczne')
+        ->assertSee($template->name)
+        ->assertSee(route('energy-passports.templates.show', $template), false);
+
+    $this->actingAs($user)->get(route('energy-passports.templates.show', $template))
+        ->assertOk()
+        ->assertSee($template->name)
+        ->assertSee('Utwórz paszport z tego szablonu')
+        ->assertSee('Pytania i parametry');
 
     $this->actingAs($user)->post(route('energy-passports.store'), [
         'template_id' => $template->id,

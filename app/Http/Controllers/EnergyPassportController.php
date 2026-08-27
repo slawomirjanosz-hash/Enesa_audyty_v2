@@ -45,6 +45,16 @@ class EnergyPassportController extends Controller
             ->with('success', 'Paszport energetyczny został utworzony. Możesz teraz uzupełnić dane techniczne.');
     }
 
+    public function showTemplate(Request $request, EnergyPassportTemplate $template): View
+    {
+        $template->loadCount('passports');
+
+        return view('energy-passports.template', [
+            'template' => $template,
+            'canManage' => $this->canManage($request),
+        ]);
+    }
+
     public function edit(Request $request, EnergyPassport $energyPassport): View
     {
         $this->ensurePassportAccess($request, $energyPassport);

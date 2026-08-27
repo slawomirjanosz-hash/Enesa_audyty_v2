@@ -148,6 +148,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');
     Route::prefix('energy-passports')->name('energy-passports.')->middleware(['app.module:audits', 'app.permission:audits.passports.view'])->group(function () {
         Route::get('/', [EnergyPassportController::class, 'index'])->name('index');
+        Route::get('/templates/{template}', [EnergyPassportController::class, 'showTemplate'])->name('templates.show');
         Route::get('/{energyPassport}/edit', [EnergyPassportController::class, 'edit'])->name('edit');
         Route::post('/', [EnergyPassportController::class, 'store'])->middleware('app.permission:audits.passports.manage')->name('store');
         Route::put('/{energyPassport}', [EnergyPassportController::class, 'update'])->middleware('app.permission:audits.passports.manage')->name('update');
