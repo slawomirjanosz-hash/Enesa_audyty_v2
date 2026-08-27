@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Audit;
 use App\Models\AuditFinancialEntry;
 use App\Models\AuditSurvey;
+use App\Models\AuditType;
 use App\Models\Document;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
@@ -42,12 +43,13 @@ class AuditController extends Controller
     public function show(Request $request, Audit $audit): View
     {
         $this->ensureAccess($request, $audit);
-        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys', 'energyPassports.template']);
+        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template']);
 
         return view('audits.show', [
             'audit' => $audit,
             'users' => User::query()->where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get(),
             'passportTemplates' => EnergyPassportTemplate::query()->orderBy('category')->orderBy('name')->get(),
+            'auditTypes' => AuditType::query()->orderBy('name')->get(),
             'canManage' => $this->canManage($request),
         ]);
     }
@@ -105,8 +107,14 @@ class AuditController extends Controller
     public function storeSurvey(Request $request, Audit $audit): RedirectResponse
     {
         $this->ensureAccess($request, $audit);
-        $data = $request->validate(['title' => ['required', 'string', 'max:255'], 'status' => ['required', 'in:draft,ready,completed'], 'notes' => ['nullable', 'string']]);
-        $audit->surveys()->create($data + ['created_by' => $request->user()->id]);
+        $data = $request->validate(['audit_type_id' => ['required', 'exists:audit_types,id'], 'status' => ['required', 'in:draft,ready,completed'], 'notes' => ['nullable', 'string']]);
+        $auditType = AuditType::query()->findOrFail($data['audit_type_id']);
+        $currentVersion = $auditType->currentVersion();
+        $audit->surveys()->create($data + [
+            'title' => $auditType->name,
+            'audit_type_version_id' => $currentVersion?->id,
+            'created_by' => $request->user()->id,
+        ]);
 
         return back()->with('success', 'Ankieta audytowa została dodana.');
     }

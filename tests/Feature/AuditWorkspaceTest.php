@@ -3,6 +3,7 @@
 use App\Models\Audit;
 use App\Models\AuditFinancialEntry;
 use App\Models\AuditSurvey;
+use App\Models\AuditType;
 use App\Models\Company;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
@@ -51,7 +52,8 @@ test('audit workspace stores tasks finances surveys passports and documents outs
 
     $this->actingAs($user)->post(route('audits.tasks.store', $audit), ['title' => 'Pomiary', 'assigned_to' => $user->id, 'start_date' => '2026-09-01', 'due_date' => '2026-09-03', 'status' => 'todo', 'priority' => 'high', 'progress' => 0])->assertSessionHas('success');
     $this->actingAs($user)->post(route('audits.finances.store', $audit), ['type' => 'cost', 'name' => 'Pomiary elektryczne', 'entry_date' => '2026-09-01', 'amount' => 1500, 'status' => 'planned'])->assertSessionHas('success');
-    $this->actingAs($user)->post(route('audits.surveys.store', $audit), ['title' => 'Ankieta utrzymania ruchu', 'status' => 'draft'])->assertSessionHas('success');
+    $auditType = AuditType::create(['name' => 'Ankieta utrzymania ruchu', 'slug' => 'utrzymanie-ruchu']);
+    $this->actingAs($user)->post(route('audits.surveys.store', $audit), ['audit_type_id' => $auditType->id, 'status' => 'draft'])->assertSessionHas('success');
     $template = EnergyPassportTemplate::firstOrFail();
     $this->actingAs($user)->post(route('audits.passports.store', $audit), ['template_id' => $template->id, 'name' => 'Paszport AHU-01', 'asset_identifier' => 'AHU-01'])->assertRedirect();
     $this->actingAs($user)->post(route('audits.documents.store', $audit), ['file' => UploadedFile::fake()->create('protokol.pdf', 20, 'application/pdf')])->assertSessionHas('success');
@@ -59,7 +61,8 @@ test('audit workspace stores tasks finances surveys passports and documents outs
     expect(Task::firstOrFail()->audit_id)->toBe($audit->id)
         ->and(Task::crm()->count())->toBe(0)
         ->and(AuditFinancialEntry::count())->toBe(1)
-        ->and(AuditSurvey::count())->toBe(1)
+        ->and(AuditSurvey::firstOrFail()->audit_type_id)->toBe($auditType->id)
+        ->and(AuditSurvey::firstOrFail()->title)->toBe($auditType->name)
         ->and(EnergyPassport::firstOrFail()->audit_id)->toBe($audit->id)
         ->and($audit->documents()->count())->toBe(1);
 });
