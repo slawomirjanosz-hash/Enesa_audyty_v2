@@ -6,9 +6,30 @@ use App\Models\AuditType;
 use App\Models\AuditTypeVersion;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AuditTypeController extends Controller
 {
+    public function surveys(): View
+    {
+        return view('audit-types.placeholder', [
+            'title' => 'Ankiety HTML',
+            'icon' => 'forms',
+            'description' => 'Tutaj znajdą się narzędzia do tworzenia, publikowania i obsługi ankiet audytowych dostępnych w przeglądarce.',
+            'features' => ['Kreator formularzy audytowych', 'Publikowanie ankiet dla klientów', 'Podgląd odpowiedzi i postępu wypełniania'],
+        ]);
+    }
+
+    public function versioning(): View
+    {
+        return view('audit-types.placeholder', [
+            'title' => 'Wersjonowanie audytów',
+            'icon' => 'versions',
+            'description' => 'Tutaj znajdą się narzędzia do kontroli kolejnych wersji formularzy, zmian oraz aktywnych wariantów audytów.',
+            'features' => ['Historia zmian formularzy', 'Porównywanie wersji', 'Wybór wersji obowiązującej dla nowych audytów'],
+        ]);
+    }
+
     public function index()
     {
         $auditTypes = AuditType::withCount('versions')

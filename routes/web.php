@@ -140,6 +140,8 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware('staff.role')->name('profile.destroy');
 
     Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
+    Route::get('surveys', [AuditTypeController::class, 'surveys'])->middleware('app.module:audits')->name('audits.surveys');
+    Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
     Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.store');
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.set-current');

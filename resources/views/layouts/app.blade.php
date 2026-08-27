@@ -465,8 +465,8 @@
                 </span>
                 <ul class="nav-sub">
                     <li><a href="{{ url('/audit-types') }}" class="nav-link">Typy audytów</a></li>
-                    <li><a href="{{ url('/surveys') }}" class="nav-link">Ankiety HTML</a></li>
-                    <li><a href="{{ url('/versioning') }}" class="nav-link">Wersjonowanie</a></li>
+                    <li><a href="{{ route('audits.surveys') }}" class="nav-link {{ request()->routeIs('audits.surveys') ? 'active' : '' }}">Ankiety HTML</a></li>
+                    <li><a href="{{ route('audits.versioning') }}" class="nav-link {{ request()->routeIs('audits.versioning') ? 'active' : '' }}">Wersjonowanie</a></li>
                 </ul>
             </li>
             @endif

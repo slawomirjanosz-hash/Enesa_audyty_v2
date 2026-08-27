@@ -152,11 +152,15 @@
 
     .empty-state {
         text-align: center;
-        padding: 60px 20px;
-        color: #888;
+        padding: 48px 28px;
+        color: #66736b;
+        background: #fff;
+        border: 1px solid #e5e1d8;
+        border-radius: 14px;
     }
-    .empty-state i { font-size: 48px; color: #C5C0B5; display: block; margin-bottom: 14px; }
-    .empty-state p { font-size: 15px; }
+    .empty-state i { font-size: 48px; color: var(--green); display: block; margin-bottom: 14px; }
+    .empty-state h2 { margin: 0 0 8px; color: var(--green); font-size: 20px; }
+    .empty-state p { font-size: 14px; max-width: 610px; margin: 0 auto; line-height: 1.7; }
 </style>
 @endpush
 
@@ -178,7 +182,8 @@
 @if($auditTypes->isEmpty())
     <div class="empty-state">
         <i class="ti ti-clipboard-list"></i>
-        <p>Brak typów audytów. Dodaj je przez seeder lub panel administracyjny.</p>
+        <h2>Tu znajdą się narzędzia do zarządzania typami audytów</h2>
+        <p>W tym miejscu będzie można definiować rodzaje audytów, zarządzać formularzami oraz wskazywać wersje używane podczas realizacji nowych audytów.</p>
     </div>
 @else
     <div class="audit-types-grid">

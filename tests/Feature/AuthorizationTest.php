@@ -83,6 +83,12 @@ test('admin can access dashboard, CRM and documents', function () {
     $this->actingAs($admin)->get('/dashboard')->assertOk();
     $this->actingAs($admin)->get('/crm')->assertOk();
     $this->actingAs($admin)->get('/documents')->assertOk();
+    $this->actingAs($admin)->get(route('audit-types.index'))
+        ->assertOk()->assertSee('Tu znajdą się narzędzia do zarządzania typami audytów');
+    $this->actingAs($admin)->get(route('audits.surveys'))
+        ->assertOk()->assertSee('Kreator formularzy audytowych')->assertSee('id="sidebar"', false);
+    $this->actingAs($admin)->get(route('audits.versioning'))
+        ->assertOk()->assertSee('Historia zmian formularzy')->assertSee('id="sidebar"', false);
 });
 
 test('only superadmin can access company settings', function () {
