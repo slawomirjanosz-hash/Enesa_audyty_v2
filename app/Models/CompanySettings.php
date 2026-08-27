@@ -37,10 +37,14 @@ class CompanySettings extends Model
         'primary_color',
         'welcome_page_mode',
         'enabled_modules',
+        'hr_km_rate',
+        'hr_diet_rate',
     ];
 
     protected $casts = [
         'enabled_modules' => 'array',
+        'hr_km_rate' => 'decimal:4',
+        'hr_diet_rate' => 'decimal:2',
     ];
 
     public function moduleEnabled(string $module): bool

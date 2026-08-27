@@ -41,12 +41,13 @@ class HrController extends Controller
         $attendances = $canAttendance ? HrAttendance::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('work_date')->get() : collect();
         $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->where(fn ($q) => $q->where('type', 'company')->orWhere('user_id', $user->id)->when($canAllVehicles, fn ($inner) => $inner->orWhereNotNull('user_id')))->orderBy('type')->orderBy('name')->get() : collect();
         $rateOwnerId = $canTeam ? $selectedUserId : $user->id;
-        $lastRates = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->first(['km_rate', 'diet_rate']);
-        $defaultKmRate = (float) ($lastRates?->km_rate ?? 0);
-        $defaultDietRate = (float) ($lastRates?->diet_rate ?? 45);
+        $hrSettings = CompanySettings::query()->first(['hr_km_rate', 'hr_diet_rate']);
+        $defaultKmRate = (float) ($hrSettings?->hr_km_rate ?? 0);
+        $defaultDietRate = (float) ($hrSettings?->hr_diet_rate ?? 45);
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
+        $canManageHrSettings = $user->hasRole(['superadmin', 'admin']);
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin'));
+        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings'));
     }
 
     public function storeTrip(Request $request): RedirectResponse
@@ -143,6 +144,21 @@ class HrController extends Controller
         return response()->json(['suggestions' => $suggestions->take(8)->all()]);
     }
 
+    public function updateSettings(Request $request): RedirectResponse
+    {
+        abort_unless($request->user()->hasRole(['superadmin', 'admin']), 403);
+        $data = $request->validate([
+            'hr_km_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
+            'hr_diet_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
+        ]);
+        CompanySettings::query()->firstOrCreate(
+            ['id' => 1],
+            ['name' => config('app.name', 'Firma')]
+        )->update($data);
+
+        return $this->back('delegations', 'Ustawienia HR zostały zapisane.');
+    }
+
     public function destroyTrip(Request $request, HrBusinessTrip $trip): RedirectResponse
     {
         abort_unless($trip->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
@@ -200,13 +216,15 @@ class HrController extends Controller
 
     private function tripData(Request $request, ?int $forcedUserId = null): array
     {
+        if ($request->input('vehicle_id') === 'manual') {
+            $request->merge(['vehicle_id' => null]);
+        }
         $data = $request->validateWithBag('trip', [
             'user_id' => ['nullable', 'exists:users,id'], 'purpose' => ['required', 'string', 'max:500'],
             'departure_at' => ['required', 'date'], 'outbound_arrival_at' => ['required', 'date', 'after_or_equal:departure_at'],
             'return_departure_at' => ['required', 'date', 'after_or_equal:outbound_arrival_at'], 'return_at' => ['required', 'date', 'after_or_equal:return_departure_at'],
             'outbound_travel_hours' => ['required', 'numeric', 'min:0', 'max:999.99'], 'return_travel_hours' => ['required', 'numeric', 'min:0', 'max:999.99'],
             'origin' => ['required', 'string', 'max:255'], 'destination' => ['required', 'string', 'max:255'], 'distance_km' => ['nullable', 'numeric', 'min:0', 'max:99999999'],
-            'km_rate' => ['required', 'numeric', 'min:0', 'max:9999'], 'diet_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
             'vehicle_id' => ['nullable', 'exists:hr_vehicles,id'], 'vehicle_type' => ['nullable', 'required_without:vehicle_id', 'in:private,company'],
             'vehicle_name' => ['nullable', 'string', 'max:255'], 'registration_number' => ['nullable', 'string', 'max:30'],
             'toll_cost' => ['nullable', 'numeric', 'min:0', 'max:9999999999'], 'accommodation_cost' => ['nullable', 'numeric', 'min:0', 'max:9999999999'], 'other_cost' => ['nullable', 'numeric', 'min:0', 'max:9999999999'], 'notes' => ['nullable', 'string', 'max:3000'], 'remember_vehicle' => ['nullable', 'boolean'],
@@ -222,12 +240,17 @@ class HrController extends Controller
         }
         $departure = Carbon::parse($data['departure_at']);
         $return = Carbon::parse($data['return_at']);
+        $hrSettings = CompanySettings::query()->first(['hr_km_rate', 'hr_diet_rate']);
+        $data['km_rate'] = (float) ($hrSettings?->hr_km_rate ?? 0);
+        $data['diet_rate'] = (float) ($hrSettings?->hr_diet_rate ?? 45);
         $durationMinutes = max(0, $departure->diffInMinutes($return));
         $data['days'] = max(1, (int) ceil($durationMinutes / 1440));
         $data['travel_hours'] = round((float) $data['outbound_travel_hours'] + (float) $data['return_travel_hours'], 2);
         $data['user_id'] = $targetUserId;
         $data['distance_source'] = 'manual';
-        $data['mileage_amount'] = round((float) ($data['distance_km'] ?? 0) * (float) $data['km_rate'], 2);
+        $data['mileage_amount'] = $data['vehicle_type'] === 'private'
+            ? round((float) ($data['distance_km'] ?? 0) * (float) $data['km_rate'], 2)
+            : 0;
         $data['diet_amount'] = $this->dietAmount($durationMinutes, (float) $data['diet_rate']);
         $data['toll_cost'] = (float) ($data['toll_cost'] ?? 0);
         $data['accommodation_cost'] = (float) ($data['accommodation_cost'] ?? 0);

@@ -70,6 +70,7 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::get('/delegations/{trip}/preview', [HrController::class, 'showTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.show');
     Route::post('/route/calculate', [HrController::class, 'calculateRoute'])->middleware('app.permission:hr.delegations.view')->name('route.calculate');
     Route::get('/places/autocomplete', [HrController::class, 'autocompletePlaces'])->middleware(['app.permission:hr.delegations.view', 'throttle:30,1'])->name('places.autocomplete');
+    Route::put('/settings', [HrController::class, 'updateSettings'])->middleware('app.permission:hr.delegations.view')->name('settings.update');
     Route::delete('/delegations/{trip}', [HrController::class, 'destroyTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.destroy');
     Route::post('/attendance', [HrController::class, 'storeAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.store');
     Route::delete('/attendance/{attendance}', [HrController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');

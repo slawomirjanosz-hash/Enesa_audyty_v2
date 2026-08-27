@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CompanySettings;
 use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
 use App\Models\HrVehicle;
@@ -18,6 +19,7 @@ beforeEach(function () {
 
 test('employee creates own delegation with calculated return and remembered private car', function () {
     config(['services.google.maps_key' => 'test-google-maps-key']);
+    CompanySettings::create(['name' => 'Firma testowa', 'hr_km_rate' => 1.15, 'hr_diet_rate' => 45]);
     $employee = User::factory()->create();
     $role = Role::findOrCreate('employee_hr');
     $role->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
@@ -71,13 +73,46 @@ test('employee creates own delegation with calculated return and remembered priv
         'km_rate' => 1, 'diet_rate' => 45, 'vehicle_type' => 'private', 'toll_cost' => 20,
     ])->assertSessionHas('success');
     expect((float) $trip->fresh()->diet_amount)->toBe(90.0)
-        ->and((float) $trip->fresh()->total_amount)->toBe(410.0);
+        ->and((float) $trip->fresh()->total_amount)->toBe(455.0);
 
     $this->actingAs($employee)->get(route('hr.delegations.show', $trip))
         ->assertOk()->assertSee('Mapa przejazdu')->assertSee('google.com/maps?output=embed', false);
 
     $this->actingAs($employee)->get(route('hr.delegations.pdf', $trip))
         ->assertOk()->assertHeader('content-type', 'application/pdf');
+});
+
+test('only administrators change HR rates and company cars do not generate mileage allowance', function () {
+    $admin = User::factory()->create();
+    $employee = User::factory()->create();
+    $admin->assignRole(Role::findOrCreate('admin'));
+    $employeeRole = Role::findOrCreate('employee_hr');
+    $employeeRole->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
+    $employee->assignRole($employeeRole);
+
+    $this->actingAs($admin)->put(route('hr.settings.update'), [
+        'hr_km_rate' => 1.25,
+        'hr_diet_rate' => 50,
+    ])->assertSessionHas('success');
+    expect((float) CompanySettings::firstOrFail()->hr_km_rate)->toBe(1.25)
+        ->and((float) CompanySettings::firstOrFail()->hr_diet_rate)->toBe(50.0);
+
+    $this->actingAs($employee)->put(route('hr.settings.update'), [
+        'hr_km_rate' => 9,
+        'hr_diet_rate' => 9,
+    ])->assertForbidden();
+
+    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto firmowe', 'registration_number' => 'SB 10000']);
+    $this->actingAs($employee)->post(route('hr.delegations.store'), [
+        'purpose' => 'Wyjazd autem firmowym', 'departure_at' => '2026-08-26 08:00',
+        'outbound_arrival_at' => '2026-08-26 10:00', 'outbound_travel_hours' => 2,
+        'return_departure_at' => '2026-08-26 16:00', 'return_at' => '2026-08-26 18:00',
+        'return_travel_hours' => 2, 'origin' => 'Cieszyn', 'destination' => 'Kraków',
+        'distance_km' => 300, 'vehicle_id' => $vehicle->id,
+    ])->assertSessionHas('success');
+
+    expect((float) HrBusinessTrip::firstOrFail()->mileage_amount)->toBe(0.0)
+        ->and((float) HrBusinessTrip::firstOrFail()->km_rate)->toBe(1.25);
 });
 
 test('ordinary HR employee cannot see or create records for another employee', function () {
