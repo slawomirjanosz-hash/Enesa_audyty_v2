@@ -40,6 +40,17 @@
 @endif
 
 @if($canDelegations)
+<div id="leave-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:650px"><div class="hr-head"><div><h2 id="leave-modal-title" style="margin:0">Nowy urlop / L4</h2><small style="color:#6b7280">Zapisz planowaną lub trwającą nieobecność.</small></div><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">×</button></div>
+<form id="leave-form" method="POST" action="{{route('hr.leaves.store')}}">@csrf<input id="leave-method" type="hidden" name="_method" value="PUT" disabled><div class="hr-grid">
+ @if($canTeam)<div class="hr-field hr-full"><label>Pracownik</label><select id="leave-user-id" name="user_id">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif
+ <div class="hr-field hr-full"><label>Rodzaj nieobecności *</label><select id="leave-type" name="type" required>@foreach(\App\Models\HrLeave::TYPES as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></div>
+ <div class="hr-field"><label>Początek *</label><input id="leave-start-date" type="date" name="start_date" required></div><div class="hr-field"><label>Liczba dni *</label><input id="leave-days" type="number" name="days" value="1" min="1" max="730" required></div>
+ <div class="hr-field hr-full"><label>Uwagi</label><textarea id="leave-notes" name="notes" rows="3" maxlength="2000" placeholder="Opcjonalnie: dodatkowe informacje dotyczące nieobecności"></textarea></div>
+ <div class="hr-full hr-rate-info"><i class="ti ti-info-circle"></i> Urlop na żądanie jest częścią urlopu wypoczynkowego. L4 jest rejestrowane oddzielnie jako zwolnienie chorobowe.</div>
+</div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">Anuluj</button><button class="hr-btn">Zapisz nieobecność</button></div></form></div></div>
+@endif
+
+@if($canDelegations)
 <div id="vehicle-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:620px"><div class="hr-head"><h2 style="margin:0">Nowy samochód</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">×</button></div><form method="POST" action="{{route('hr.vehicles.store')}}">@csrf<div class="hr-grid">
  <div class="hr-field"><label>Rodzaj *</label><select name="type"><option value="private">Prywatny</option>@if($canTeam)<option value="company">Służbowy</option>@endif</select></div>
  @if($canTeam)<div class="hr-field"><label>Właściciel prywatnego auta</label><select name="user_id"><option value="">— ja / samochód firmowy —</option>@foreach($users as $person)<option value="{{$person->id}}">{{$person->name}}</option>@endforeach</select></div>@endif

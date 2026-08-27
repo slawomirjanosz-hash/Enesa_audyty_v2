@@ -3,6 +3,7 @@
 use App\Models\CompanySettings;
 use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
+use App\Models\HrLeave;
 use App\Models\HrVehicle;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
@@ -143,6 +144,36 @@ test('ordinary HR employee cannot see or create records for another employee', f
 
     $this->actingAs($employee)->post(route('hr.attendance.store'), ['user_id' => $other->id, 'work_date' => '2026-08-26', 'status' => 'present']);
     expect(HrAttendance::firstOrFail()->user_id)->toBe($employee->id);
+});
+
+test('employee manages own leave and a manager can register leave for another user', function () {
+    $employee = User::factory()->create(['name' => 'Pracownik Urlopowy']);
+    $manager = User::factory()->create();
+    $employeeRole = Role::findOrCreate('employee_hr');
+    $employeeRole->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
+    $employee->assignRole($employeeRole);
+    $managerRole = Role::findOrCreate('manager_hr');
+    $managerRole->givePermissionTo([Permission::findOrCreate('hr.delegations.view'), Permission::findOrCreate('hr.team.view')]);
+    $manager->assignRole($managerRole);
+
+    $this->actingAs($employee)->post(route('hr.leaves.store'), [
+        'type' => 'annual', 'start_date' => '2026-09-07', 'days' => 5, 'notes' => 'Planowany wypoczynek',
+    ])->assertRedirect(route('hr.index', ['tab' => 'leaves']));
+    $leave = HrLeave::firstOrFail();
+    expect($leave->user_id)->toBe($employee->id)->and($leave->end_date->toDateString())->toBe('2026-09-11');
+
+    $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))
+        ->assertOk()->assertSee('Urlopy / L4')->assertSee('Urlop wypoczynkowy')->assertSee('Planowany wypoczynek');
+
+    $this->actingAs($manager)->put(route('hr.leaves.update', $leave), [
+        'type' => 'sick_leave', 'start_date' => '2026-09-08', 'days' => 3, 'notes' => 'Zwolnienie lekarskie',
+    ])->assertSessionHas('success');
+    expect($leave->fresh()->type)->toBe('sick_leave')->and($leave->fresh()->days)->toBe(3);
+
+    $this->actingAs($manager)->post(route('hr.leaves.store'), [
+        'user_id' => $employee->id, 'type' => 'caregiver', 'start_date' => '2026-10-01', 'days' => 1,
+    ])->assertSessionHas('success');
+    expect(HrLeave::where('user_id', $employee->id)->count())->toBe(2);
 });
 
 test('HR team manager filters users and manages attendance and company cars', function () {

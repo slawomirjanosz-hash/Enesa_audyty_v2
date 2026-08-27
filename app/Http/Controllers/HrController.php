@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CompanySettings;
 use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
+use App\Models\HrLeave;
 use App\Models\HrVehicle;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -14,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,7 +25,7 @@ class HrController extends Controller
     {
         $user = $request->user();
         $canTeam = $this->canViewTeam($user);
-        $tab = in_array($request->string('tab')->toString(), ['delegations', 'attendance', 'vehicles'], true)
+        $tab = in_array($request->string('tab')->toString(), ['delegations', 'leaves', 'attendance', 'vehicles'], true)
             ? $request->string('tab')->toString() : 'delegations';
         $canDelegations = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.delegations.view');
         $canAttendance = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.attendance.view');
@@ -38,6 +40,7 @@ class HrController extends Controller
 
         $users = $canTeam ? User::query()->where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get() : collect([$user]);
         $trips = $canDelegations ? HrBusinessTrip::with(['user', 'vehicle'])->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('departure_at')->get() : collect();
+        $leaves = $canDelegations ? HrLeave::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('start_date')->get() : collect();
         $attendances = $canAttendance ? HrAttendance::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('work_date')->get() : collect();
         $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->where(fn ($q) => $q->where('type', 'company')->orWhere('user_id', $user->id)->when($canAllVehicles, fn ($inner) => $inner->orWhereNotNull('user_id')))->orderBy('type')->orderBy('name')->get() : collect();
         $rateOwnerId = $canTeam ? $selectedUserId : $user->id;
@@ -47,7 +50,7 @@ class HrController extends Controller
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
         $canManageHrSettings = $user->hasRole(['superadmin', 'admin']);
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings'));
+        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings'));
     }
 
     public function storeTrip(Request $request): RedirectResponse
@@ -167,6 +170,31 @@ class HrController extends Controller
         return $this->back('delegations', 'Delegacja została usunięta.');
     }
 
+    public function storeLeave(Request $request): RedirectResponse
+    {
+        $data = $this->leaveData($request);
+        $data['created_by'] = $request->user()->id;
+        HrLeave::create($data);
+
+        return $this->back('leaves', 'Nieobecność została dodana.');
+    }
+
+    public function updateLeave(Request $request, HrLeave $leave): RedirectResponse
+    {
+        abort_unless($leave->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
+        $leave->update($this->leaveData($request, $leave->user_id));
+
+        return $this->back('leaves', 'Nieobecność została zaktualizowana.');
+    }
+
+    public function destroyLeave(Request $request, HrLeave $leave): RedirectResponse
+    {
+        abort_unless($leave->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
+        $leave->delete();
+
+        return $this->back('leaves', 'Nieobecność została usunięta.');
+    }
+
     public function storeAttendance(Request $request): RedirectResponse
     {
         $data = $request->validateWithBag('attendance', ['user_id' => ['nullable', 'exists:users,id'], 'work_date' => ['required', 'date'], 'started_at' => ['nullable', 'date_format:H:i'], 'finished_at' => ['nullable', 'date_format:H:i', 'after:started_at'], 'status' => ['required', 'in:present,remote,leave,sick,absent'], 'notes' => ['nullable', 'string', 'max:2000']]);
@@ -271,6 +299,22 @@ class HrController extends Controller
         $multiplier = $fullDays + ($remainder === 0 ? 0 : ($remainder <= 480 ? .5 : 1));
 
         return round($rate * $multiplier, 2);
+    }
+
+    private function leaveData(Request $request, ?int $forcedUserId = null): array
+    {
+        $data = $request->validateWithBag('leave', [
+            'user_id' => ['nullable', 'exists:users,id'],
+            'type' => ['required', 'string', Rule::in(array_keys(HrLeave::TYPES))],
+            'start_date' => ['required', 'date'],
+            'days' => ['required', 'integer', 'min:1', 'max:730'],
+            'notes' => ['nullable', 'string', 'max:2000'],
+        ]);
+        $user = $request->user();
+        $data['user_id'] = $forcedUserId ?? ($this->canViewTeam($user) && ! empty($data['user_id']) ? (int) $data['user_id'] : $user->id);
+        $data['end_date'] = Carbon::parse($data['start_date'])->addDays((int) $data['days'] - 1)->toDateString();
+
+        return $data;
     }
 
     private function back(string $tab, string $message): RedirectResponse
