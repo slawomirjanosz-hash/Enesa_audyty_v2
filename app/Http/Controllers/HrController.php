@@ -46,9 +46,7 @@ class HrController extends Controller
         $defaultDietRate = (float) ($lastRates?->diet_rate ?? 45);
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
 
-        $googleMapsKey = config('services.google.maps_key');
-
-        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'googleMapsKey'));
+        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin'));
     }
 
     public function storeTrip(Request $request): RedirectResponse
@@ -89,10 +87,7 @@ class HrController extends Controller
     {
         abort_unless($trip->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
 
-        return view('hr.trip-show', [
-            'trip' => $trip->load(['user', 'vehicle']),
-            'googleMapsKey' => config('services.google.maps_key'),
-        ]);
+        return view('hr.trip-show', ['trip' => $trip->load(['user', 'vehicle'])]);
     }
 
     public function calculateRoute(Request $request): JsonResponse
@@ -110,6 +105,42 @@ class HrController extends Controller
         $seconds = (float) rtrim((string) $response->json('routes.0.duration', '0s'), 's');
 
         return response()->json(['distance_km' => round(((float) $response->json('routes.0.distanceMeters')) / 1000, 1), 'hours' => round($seconds / 3600, 2)]);
+    }
+
+    public function autocompletePlaces(Request $request): JsonResponse
+    {
+        $data = $request->validate(['q' => ['required', 'string', 'min:3', 'max:150']]);
+        $key = config('services.google.maps_key');
+        if (! $key) {
+            return response()->json(['suggestions' => []]);
+        }
+
+        $response = Http::timeout(8)->withHeaders([
+            'X-Goog-Api-Key' => $key,
+            'X-Goog-FieldMask' => 'suggestions.placePrediction.text.text',
+        ])->post('https://places.googleapis.com/v1/places:autocomplete', [
+            'input' => $data['q'],
+            'includedRegionCodes' => ['pl'],
+            'languageCode' => 'pl',
+        ]);
+
+        $suggestions = $response->successful()
+            ? collect($response->json('suggestions', []))->pluck('placePrediction.text.text')->filter()->values()
+            : collect();
+
+        if ($suggestions->isEmpty()) {
+            $legacyResponse = Http::timeout(8)->get('https://maps.googleapis.com/maps/api/place/autocomplete/json', [
+                'input' => $data['q'],
+                'components' => 'country:pl',
+                'language' => 'pl',
+                'key' => $key,
+            ]);
+            if ($legacyResponse->successful()) {
+                $suggestions = collect($legacyResponse->json('predictions', []))->pluck('description')->filter()->values();
+            }
+        }
+
+        return response()->json(['suggestions' => $suggestions->take(8)->all()]);
     }
 
     public function destroyTrip(Request $request, HrBusinessTrip $trip): RedirectResponse

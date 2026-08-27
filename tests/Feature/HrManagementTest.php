@@ -4,6 +4,7 @@ use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
 use App\Models\HrVehicle;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -52,8 +53,16 @@ test('employee creates own delegation with calculated return and remembered priv
 
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'delegations']))
         ->assertOk()->assertSee('Spotkanie z projektantem')->assertSee('SCI 12345')
-        ->assertSee('trip-route-fields')->assertSee('Zacznij wpisywać adres lub nazwę miejsca')
-        ->assertSee('maps.googleapis.com/maps/api/js', false);
+        ->assertSee('trip-route-fields')->assertSee('Adres lub nazwa miejsca')
+        ->assertSee('Inny samochód — wpiszę dane')->assertSee('trip-departure-time');
+
+    Http::fake([
+        'places.googleapis.com/*' => Http::response(['suggestions' => [
+            ['placePrediction' => ['text' => ['text' => 'Gliwice, Polska']]],
+        ]]),
+    ]);
+    $this->actingAs($employee)->getJson(route('hr.places.autocomplete', ['q' => 'gliw']))
+        ->assertOk()->assertJson(['suggestions' => ['Gliwice, Polska']]);
 
     $this->actingAs($employee)->put(route('hr.delegations.update', $trip), [
         'purpose' => 'Zmieniony cel', 'departure_at' => '2026-08-26 08:00', 'outbound_arrival_at' => '2026-08-26 10:00',
