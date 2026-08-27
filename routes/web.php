@@ -19,6 +19,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EnergyPassportController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\ImportantContactController;
 use App\Http\Controllers\LandingPageController;
@@ -145,6 +146,14 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
     Route::get('surveys', [AuditTypeController::class, 'surveys'])->middleware('app.module:audits')->name('audits.surveys');
     Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');
+    Route::prefix('energy-passports')->name('energy-passports.')->middleware(['app.module:audits', 'app.permission:audits.passports.view'])->group(function () {
+        Route::get('/', [EnergyPassportController::class, 'index'])->name('index');
+        Route::get('/{energyPassport}/edit', [EnergyPassportController::class, 'edit'])->name('edit');
+        Route::post('/', [EnergyPassportController::class, 'store'])->middleware('app.permission:audits.passports.manage')->name('store');
+        Route::put('/{energyPassport}', [EnergyPassportController::class, 'update'])->middleware('app.permission:audits.passports.manage')->name('update');
+        Route::delete('/{energyPassport}', [EnergyPassportController::class, 'destroy'])->middleware('app.permission:audits.passports.manage')->name('destroy');
+        Route::post('/templates/import', [EnergyPassportController::class, 'importTemplate'])->middleware('app.permission:audits.passports.manage')->name('templates.import');
+    });
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
     Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.store');
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.set-current');
