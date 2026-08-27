@@ -63,7 +63,7 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
 Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:hr'])->group(function () {
-    Route::get('/', [HrController::class, 'index'])->middleware('app.permission:hr.delegations.view,hr.attendance.view')->name('index');
+    Route::get('/', [HrController::class, 'index'])->middleware('app.permission:hr.delegations.view,hr.leaves.view,hr.attendance.view')->name('index');
     Route::post('/delegations', [HrController::class, 'storeTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.store');
     Route::put('/delegations/{trip}', [HrController::class, 'updateTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.update');
     Route::get('/delegations/{trip}/pdf', [HrController::class, 'tripPdf'])->middleware('app.permission:hr.delegations.view')->name('delegations.pdf');
@@ -72,9 +72,9 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::get('/places/autocomplete', [HrController::class, 'autocompletePlaces'])->middleware(['app.permission:hr.delegations.view', 'throttle:30,1'])->name('places.autocomplete');
     Route::put('/settings', [HrController::class, 'updateSettings'])->middleware('app.permission:hr.delegations.view')->name('settings.update');
     Route::delete('/delegations/{trip}', [HrController::class, 'destroyTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.destroy');
-    Route::post('/leaves', [HrController::class, 'storeLeave'])->middleware('app.permission:hr.delegations.view')->name('leaves.store');
-    Route::put('/leaves/{leave}', [HrController::class, 'updateLeave'])->middleware('app.permission:hr.delegations.view')->name('leaves.update');
-    Route::delete('/leaves/{leave}', [HrController::class, 'destroyLeave'])->middleware('app.permission:hr.delegations.view')->name('leaves.destroy');
+    Route::post('/leaves', [HrController::class, 'storeLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.store');
+    Route::put('/leaves/{leave}', [HrController::class, 'updateLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.update');
+    Route::delete('/leaves/{leave}', [HrController::class, 'destroyLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.destroy');
     Route::post('/attendance', [HrController::class, 'storeAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.store');
     Route::delete('/attendance/{attendance}', [HrController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');
     Route::post('/vehicles', [HrController::class, 'storeVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.store');

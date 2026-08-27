@@ -15,7 +15,7 @@
 @if($errors->any())<div style="padding:11px 14px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:14px">{{$errors->first()}}</div>@endif
 <div class="hr-tabs">
  @if($canDelegations)<a class="hr-tab {{$tab==='delegations'?'active':''}}" href="{{route('hr.index',['tab'=>'delegations'])}}"><i class="ti ti-map-pin"></i> Delegacje</a>@endif
- @if($canDelegations)<a class="hr-tab {{$tab==='leaves'?'active':''}}" href="{{route('hr.index',['tab'=>'leaves'])}}"><i class="ti ti-calendar-off"></i> Urlopy / L4</a>@endif
+ @if($canLeaves)<a class="hr-tab {{$tab==='leaves'?'active':''}}" href="{{route('hr.index',['tab'=>'leaves'])}}"><i class="ti ti-calendar-off"></i> Urlopy / L4</a>@endif
  @if($canAttendance)<a class="hr-tab {{$tab==='attendance'?'active':''}}" href="{{route('hr.index',['tab'=>'attendance'])}}"><i class="ti ti-calendar-check"></i> Lista obecności</a>@endif
  @if($canDelegations)<a class="hr-tab {{$tab==='vehicles'?'active':''}}" href="{{route('hr.index',['tab'=>'vehicles'])}}"><i class="ti ti-car"></i> Samochody</a>@endif
 </div>

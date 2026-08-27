@@ -39,7 +39,7 @@
  </div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('attendance-modal')">Anuluj</button><button class="hr-btn">Zapisz wpis</button></div></form></div></div>
 @endif
 
-@if($canDelegations)
+@if($canLeaves)
 <div id="leave-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:650px"><div class="hr-head"><div><h2 id="leave-modal-title" style="margin:0">Nowy urlop / L4</h2><small style="color:#6b7280">Zapisz planowaną lub trwającą nieobecność.</small></div><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">×</button></div>
 <form id="leave-form" method="POST" action="{{route('hr.leaves.store')}}">@csrf<input id="leave-method" type="hidden" name="_method" value="PUT" disabled><div class="hr-grid">
  @if($canTeam)<div class="hr-field hr-full"><label>Pracownik</label><select id="leave-user-id" name="user_id">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif

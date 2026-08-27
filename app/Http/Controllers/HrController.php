@@ -28,6 +28,7 @@ class HrController extends Controller
         $tab = in_array($request->string('tab')->toString(), ['delegations', 'leaves', 'attendance', 'vehicles'], true)
             ? $request->string('tab')->toString() : 'delegations';
         $canDelegations = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.delegations.view');
+        $canLeaves = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.leaves.view');
         $canAttendance = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.attendance.view');
         $canAllVehicles = $this->canViewAllVehicles($user);
         if (in_array($tab, ['delegations', 'vehicles'], true) && ! $canDelegations) {
@@ -36,11 +37,14 @@ class HrController extends Controller
         if ($tab === 'attendance' && ! $canAttendance) {
             $tab = 'delegations';
         }
+        if ($tab === 'leaves' && ! $canLeaves) {
+            $tab = $canDelegations ? 'delegations' : 'attendance';
+        }
         $selectedUserId = $canTeam && $request->integer('user_id') ? $request->integer('user_id') : $user->id;
 
         $users = $canTeam ? User::query()->where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get() : collect([$user]);
         $trips = $canDelegations ? HrBusinessTrip::with(['user', 'vehicle'])->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('departure_at')->get() : collect();
-        $leaves = $canDelegations ? HrLeave::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('start_date')->get() : collect();
+        $leaves = $canLeaves ? HrLeave::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('start_date')->get() : collect();
         $attendances = $canAttendance ? HrAttendance::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('work_date')->get() : collect();
         $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->where(fn ($q) => $q->where('type', 'company')->orWhere('user_id', $user->id)->when($canAllVehicles, fn ($inner) => $inner->orWhereNotNull('user_id')))->orderBy('type')->orderBy('name')->get() : collect();
         $rateOwnerId = $canTeam ? $selectedUserId : $user->id;
@@ -50,7 +54,7 @@ class HrController extends Controller
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
         $canManageHrSettings = $user->hasRole(['superadmin', 'admin']);
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings'));
+        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings'));
     }
 
     public function storeTrip(Request $request): RedirectResponse

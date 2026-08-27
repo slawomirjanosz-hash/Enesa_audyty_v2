@@ -150,10 +150,10 @@ test('employee manages own leave and a manager can register leave for another us
     $employee = User::factory()->create(['name' => 'Pracownik Urlopowy']);
     $manager = User::factory()->create();
     $employeeRole = Role::findOrCreate('employee_hr');
-    $employeeRole->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
+    $employeeRole->givePermissionTo(Permission::findOrCreate('hr.leaves.view'));
     $employee->assignRole($employeeRole);
     $managerRole = Role::findOrCreate('manager_hr');
-    $managerRole->givePermissionTo([Permission::findOrCreate('hr.delegations.view'), Permission::findOrCreate('hr.team.view')]);
+    $managerRole->givePermissionTo([Permission::findOrCreate('hr.leaves.view'), Permission::findOrCreate('hr.team.view')]);
     $manager->assignRole($managerRole);
 
     $this->actingAs($employee)->post(route('hr.leaves.store'), [
@@ -203,6 +203,19 @@ test('attendance-only role cannot open delegation data', function () {
     $this->actingAs($user)->get(route('hr.index', ['tab' => 'delegations']))
         ->assertOk()->assertSee('Lista obecności')->assertDontSee('Dodaj delegację');
     $this->actingAs($user)->post(route('hr.delegations.store'), [])->assertForbidden();
+});
+
+test('leave-only role sees the leave tab without delegation access', function () {
+    $user = User::factory()->create();
+    $role = Role::findOrCreate('leave_only');
+    $role->givePermissionTo(Permission::findOrCreate('hr.leaves.view'));
+    $user->assignRole($role);
+
+    $this->actingAs($user)->get(route('hr.index', ['tab' => 'leaves']))
+        ->assertOk()
+        ->assertSee('Urlopy / L4')
+        ->assertSee('Dodaj urlop / L4')
+        ->assertDontSee('Dodaj delegację');
 });
 
 test('access to other employees cars requires a separate role permission', function () {
