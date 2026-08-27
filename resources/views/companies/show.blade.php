@@ -2481,8 +2481,20 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         }
     }
 
-    function openUserModal() {
+    function openUserModal(mode = 'create') {
+        const createForm = document.getElementById('userCreateForm');
+        const editForm = document.getElementById('userEditForm');
+
+        createForm.style.display = mode === 'edit' ? 'none' : 'block';
+        editForm.style.display = mode === 'edit' ? 'block' : 'none';
+        if (mode === 'create') {
+            document.getElementById('userModalTitle').textContent = 'Dodaj użytkownika';
+            document.getElementById('userModalSubtitle').textContent = 'Utwórz nowe konto powiązane z tą firmą.';
+        }
         document.getElementById('userModalOverlay').style.display = 'flex';
+        window.setTimeout(() => (mode === 'edit'
+            ? document.getElementById('edit-user-name')
+            : document.getElementById('user-first-name'))?.focus(), 30);
     }
 
     function closeUserModal() {
@@ -2525,7 +2537,7 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         document.getElementById('userEditForm').action = '/companies/{{ $company->id }}/users/' + userId;
         
         // Open modal
-        openUserModal();
+        openUserModal('edit');
     }
 </script>
 @endpush

@@ -121,7 +121,9 @@ test('client and supplier details expose editing through explicit buttons', func
 
     $this->actingAs($admin)->get(route('companies.show', $client))
         ->assertOk()
-        ->assertSee('Edytuj klienta');
+        ->assertSee('Edytuj klienta')
+        ->assertSee("createForm.style.display = mode === 'edit' ? 'none' : 'block'", false)
+        ->assertSee("openUserModal('edit')", false);
 
     $this->actingAs($admin)->get(route('suppliers.show', $supplier))
         ->assertOk()
