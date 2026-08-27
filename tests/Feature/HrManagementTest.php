@@ -16,6 +16,7 @@ beforeEach(function () {
 });
 
 test('employee creates own delegation with calculated return and remembered private car', function () {
+    config(['services.google.maps_key' => 'test-google-maps-key']);
     $employee = User::factory()->create();
     $role = Role::findOrCreate('employee_hr');
     $role->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
@@ -50,7 +51,9 @@ test('employee creates own delegation with calculated return and remembered priv
         ->and(HrVehicle::where('registration_number', 'SCI 12345')->where('user_id', $employee->id)->exists())->toBeTrue();
 
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'delegations']))
-        ->assertOk()->assertSee('Spotkanie z projektantem')->assertSee('SCI 12345');
+        ->assertOk()->assertSee('Spotkanie z projektantem')->assertSee('SCI 12345')
+        ->assertSee('trip-route-fields')->assertSee('Zacznij wpisywać adres lub nazwę miejsca')
+        ->assertSee('maps.googleapis.com/maps/api/js', false);
 
     $this->actingAs($employee)->put(route('hr.delegations.update', $trip), [
         'purpose' => 'Zmieniony cel', 'departure_at' => '2026-08-26 08:00', 'outbound_arrival_at' => '2026-08-26 10:00',
@@ -60,6 +63,9 @@ test('employee creates own delegation with calculated return and remembered priv
     ])->assertSessionHas('success');
     expect((float) $trip->fresh()->diet_amount)->toBe(90.0)
         ->and((float) $trip->fresh()->total_amount)->toBe(410.0);
+
+    $this->actingAs($employee)->get(route('hr.delegations.show', $trip))
+        ->assertOk()->assertSee('Mapa przejazdu')->assertSee('google.com/maps/embed/v1/directions', false);
 
     $this->actingAs($employee)->get(route('hr.delegations.pdf', $trip))
         ->assertOk()->assertHeader('content-type', 'application/pdf');

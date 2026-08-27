@@ -46,7 +46,9 @@ class HrController extends Controller
         $defaultDietRate = (float) ($lastRates?->diet_rate ?? 45);
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin'));
+        $googleMapsKey = config('services.google.maps_key');
+
+        return view('hr.index', compact('tab', 'users', 'trips', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'googleMapsKey'));
     }
 
     public function storeTrip(Request $request): RedirectResponse
@@ -87,7 +89,10 @@ class HrController extends Controller
     {
         abort_unless($trip->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
 
-        return view('hr.trip-show', ['trip' => $trip->load(['user', 'vehicle'])]);
+        return view('hr.trip-show', [
+            'trip' => $trip->load(['user', 'vehicle']),
+            'googleMapsKey' => config('services.google.maps_key'),
+        ]);
     }
 
     public function calculateRoute(Request $request): JsonResponse
