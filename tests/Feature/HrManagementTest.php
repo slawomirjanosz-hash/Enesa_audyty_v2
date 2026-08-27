@@ -82,7 +82,7 @@ test('employee creates own delegation with calculated return and remembered priv
         ->assertOk()->assertHeader('content-type', 'application/pdf');
 });
 
-test('only administrators change HR rates and company cars do not generate mileage allowance', function () {
+test('HR rates apply to saved and manually entered private cars but not company cars', function () {
     $admin = User::factory()->create();
     $employee = User::factory()->create();
     $admin->assignRole(Role::findOrCreate('admin'));
@@ -102,17 +102,32 @@ test('only administrators change HR rates and company cars do not generate milea
         'hr_diet_rate' => 9,
     ])->assertForbidden();
 
-    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto firmowe', 'registration_number' => 'SB 10000']);
-    $this->actingAs($employee)->post(route('hr.delegations.store'), [
+    $companyVehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto firmowe', 'registration_number' => 'SB 10000']);
+    $tripData = [
         'purpose' => 'Wyjazd autem firmowym', 'departure_at' => '2026-08-26 08:00',
         'outbound_arrival_at' => '2026-08-26 10:00', 'outbound_travel_hours' => 2,
         'return_departure_at' => '2026-08-26 16:00', 'return_at' => '2026-08-26 18:00',
         'return_travel_hours' => 2, 'origin' => 'Cieszyn', 'destination' => 'Kraków',
-        'distance_km' => 300, 'vehicle_id' => $vehicle->id,
-    ])->assertSessionHas('success');
+        'distance_km' => 300,
+    ];
+    $this->actingAs($employee)->post(route('hr.delegations.store'), array_merge($tripData, [
+        'vehicle_id' => $companyVehicle->id,
+    ]))->assertSessionHas('success');
 
     expect((float) HrBusinessTrip::firstOrFail()->mileage_amount)->toBe(0.0)
         ->and((float) HrBusinessTrip::firstOrFail()->km_rate)->toBe(1.25);
+
+    $privateVehicle = HrVehicle::create(['user_id' => $employee->id, 'type' => 'private', 'name' => 'Auto prywatne', 'registration_number' => 'SCI 20000']);
+    $this->actingAs($employee)->post(route('hr.delegations.store'), array_merge($tripData, [
+        'purpose' => 'Wyjazd zapisanym autem prywatnym', 'vehicle_id' => $privateVehicle->id,
+    ]))->assertSessionHas('success');
+    expect((float) HrBusinessTrip::latest('id')->firstOrFail()->mileage_amount)->toBe(375.0);
+
+    $this->actingAs($employee)->post(route('hr.delegations.store'), array_merge($tripData, [
+        'purpose' => 'Wyjazd innym autem prywatnym', 'vehicle_id' => 'manual',
+        'vehicle_type' => 'private', 'vehicle_name' => 'Pożyczone auto', 'registration_number' => 'SCI 30000',
+    ]))->assertSessionHas('success');
+    expect((float) HrBusinessTrip::latest('id')->firstOrFail()->mileage_amount)->toBe(375.0);
 });
 
 test('ordinary HR employee cannot see or create records for another employee', function () {
