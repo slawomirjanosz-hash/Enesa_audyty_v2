@@ -53,6 +53,18 @@ test('forbidden page lets a user create one access support task for an administr
     expect(Task::where('created_by', $user->id)->count())->toBe(1);
 });
 
+test('HTTP errors use friendly application pages instead of raw framework messages', function () {
+    $this->get('/adres-ktory-nie-istnieje')
+        ->assertNotFound()
+        ->assertSee('Nie znaleźliśmy tej zawartości')
+        ->assertSee('Przejdź do strony głównej');
+
+    foreach ([401, 419, 422, 429, 500, 503] as $status) {
+        $html = view('errors.'.$status)->render();
+        expect($html)->toContain('friendly-error-card', 'Przejdź do strony głównej');
+    }
+});
+
 test('client user can access the client dashboard and profile', function () {
     $clientUser = User::factory()->create();
     $clientUser->assignRole('client_user');

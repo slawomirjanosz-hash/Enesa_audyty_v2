@@ -1,0 +1,3 @@
+@extends(auth()->check() ? 'layouts.app' : 'errors.layout')
+@section('title','Nie udało się zakończyć operacji') @section('page-title','Nie udało się zakończyć operacji')
+@section('content') @include('errors.partials.card',['code'=>500,'label'=>'problem techniczny','icon'=>'tool','tone'=>'#fee2e2','iconColor'=>'#991b1b','heading'=>'Nie udało się teraz zakończyć tej operacji','description'=>'Aplikacja napotkała nieoczekiwaną sytuację. Pozostałe zapisane dane nie zostały przez to zmienione.','hint'=>'Wróć do poprzedniego widoku i spróbuj ponownie. Jeśli sytuacja się powtarza, przekaż administratorowi nazwę wykonywanej operacji.']) @endsection

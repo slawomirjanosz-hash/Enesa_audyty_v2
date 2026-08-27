@@ -1,0 +1,3 @@
+@extends(auth()->check() ? 'layouts.app' : 'errors.layout')
+@php($status=$exception->getStatusCode()) @section('title','Chwilowy problem techniczny') @section('page-title','Chwilowy problem techniczny')
+@section('content') @include('errors.partials.card',['code'=>$status,'label'=>'problem techniczny','icon'=>'tool','tone'=>'#fee2e2','iconColor'=>'#991b1b','heading'=>'Aplikacja nie mogła zakończyć operacji','description'=>'Wystąpiła chwilowa trudność techniczna. Zapisane wcześniej dane pozostają bezpieczne.','hint'=>'Spróbuj ponownie. Jeśli problem się powtarza, skontaktuj się z administratorem.']) @endsection

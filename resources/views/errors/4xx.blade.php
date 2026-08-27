@@ -1,0 +1,3 @@
+@extends(auth()->check() ? 'layouts.app' : 'errors.layout')
+@php($status=$exception->getStatusCode()) @section('title','Nie można wykonać tej operacji') @section('page-title','Nie można wykonać tej operacji')
+@section('content') @include('errors.partials.card',['code'=>$status,'label'=>'operacja niedostępna','icon'=>'info-circle','tone'=>'#fef3c7','iconColor'=>'#92400e','heading'=>'Ta operacja nie jest teraz dostępna','description'=>'Żądanie nie może zostać wykonane w tym miejscu lub przy obecnym stanie danych.','hint'=>'Wróć do poprzedniego widoku, odśwież dane i wybierz właściwą dostępną akcję.']) @endsection
