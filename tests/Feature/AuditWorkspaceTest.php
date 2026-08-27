@@ -1,0 +1,65 @@
+<?php
+
+use App\Models\Audit;
+use App\Models\AuditFinancialEntry;
+use App\Models\AuditSurvey;
+use App\Models\Company;
+use App\Models\EnergyPassport;
+use App\Models\EnergyPassportTemplate;
+use App\Models\Task;
+use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
+function auditManager(): User
+{
+    $user = User::factory()->create();
+    $role = Role::findOrCreate('audit_manager');
+    $role->givePermissionTo([Permission::findOrCreate('crm.view'), Permission::findOrCreate('audits.view'), Permission::findOrCreate('audits.manage')]);
+    $user->assignRole($role);
+
+    return $user;
+}
+
+test('audit is created from company card and opens the dedicated workspace', function () {
+    $user = auditManager();
+    $company = Company::create(['name' => 'Fabryka Audytowana', 'company_type' => 'client', 'status' => 'active']);
+
+    $this->actingAs($user)->get(route('companies.show', $company))
+        ->assertOk()->assertSee('Dodaj audyt')->assertSee(route('audits.store'), false);
+
+    $this->actingAs($user)->post(route('audits.store'), [
+        'company_id' => $company->id, 'number' => 'AUD/2026/001', 'title' => 'Audyt energetyczny zakładu',
+        'manager_id' => $user->id, 'member_ids' => [$user->id], 'status' => 'draft',
+        'start_date' => '2026-09-01', 'end_date' => '2026-10-01', 'contract_value' => 25000,
+    ])->assertRedirect();
+
+    $audit = Audit::firstOrFail();
+    $this->actingAs($user)->get(route('audits.show', $audit))->assertOk()
+        ->assertSee('Harmonogram i zadania')->assertSee('Finanse')->assertSee('Dokumenty')
+        ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne');
+});
+
+test('audit workspace stores tasks finances surveys passports and documents outside CRM', function () {
+    Storage::fake('local');
+    $user = auditManager();
+    $company = Company::create(['name' => 'Zakład ISO', 'company_type' => 'client', 'status' => 'active']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'AUD/2026/002', 'title' => 'Audyt ISO', 'manager_id' => $user->id, 'status' => 'in_progress', 'created_by' => $user->id]);
+    $audit->members()->attach($user);
+
+    $this->actingAs($user)->post(route('audits.tasks.store', $audit), ['title' => 'Pomiary', 'assigned_to' => $user->id, 'start_date' => '2026-09-01', 'due_date' => '2026-09-03', 'status' => 'todo', 'priority' => 'high', 'progress' => 0])->assertSessionHas('success');
+    $this->actingAs($user)->post(route('audits.finances.store', $audit), ['type' => 'cost', 'name' => 'Pomiary elektryczne', 'entry_date' => '2026-09-01', 'amount' => 1500, 'status' => 'planned'])->assertSessionHas('success');
+    $this->actingAs($user)->post(route('audits.surveys.store', $audit), ['title' => 'Ankieta utrzymania ruchu', 'status' => 'draft'])->assertSessionHas('success');
+    $template = EnergyPassportTemplate::firstOrFail();
+    $this->actingAs($user)->post(route('audits.passports.store', $audit), ['template_id' => $template->id, 'name' => 'Paszport AHU-01', 'asset_identifier' => 'AHU-01'])->assertRedirect();
+    $this->actingAs($user)->post(route('audits.documents.store', $audit), ['file' => UploadedFile::fake()->create('protokol.pdf', 20, 'application/pdf')])->assertSessionHas('success');
+
+    expect(Task::firstOrFail()->audit_id)->toBe($audit->id)
+        ->and(Task::crm()->count())->toBe(0)
+        ->and(AuditFinancialEntry::count())->toBe(1)
+        ->and(AuditSurvey::count())->toBe(1)
+        ->and(EnergyPassport::firstOrFail()->audit_id)->toBe($audit->id)
+        ->and($audit->documents()->count())->toBe(1);
+});

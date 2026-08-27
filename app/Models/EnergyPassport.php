@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class EnergyPassport extends Model
 {
     protected $fillable = [
-        'template_id', 'company_id', 'name', 'asset_identifier', 'location', 'status', 'notes', 'responses', 'created_by',
+        'template_id', 'company_id', 'audit_id', 'name', 'asset_identifier', 'location', 'status', 'notes', 'responses', 'created_by',
     ];
 
     protected $casts = [

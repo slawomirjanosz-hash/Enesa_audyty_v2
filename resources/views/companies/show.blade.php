@@ -910,7 +910,7 @@
                         <div class="activity-item">
                             <div class="activity-icon"><i class="ti ti-clipboard-list"></i></div>
                             <div class="activity-text">
-                                Audyt <strong>{{ $audit->auditType->name ?? 'bez typu' }}</strong>
+                                Audyt <strong>{{ $audit->title }}</strong>
                                 — status: <strong>{{ $audit->status }}</strong>
                             </div>
                             <div class="activity-time">{{ $audit->created_at->diffForHumans() }}</div>
@@ -941,6 +941,7 @@
     {{-- ═══ ZAKŁADKA: AUDYTY ═══ --}}
     @if($auditsEnabled)
     <div id="tab-audits" class="tab-panel">
+        @if($canManageAudits)<div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button type="button" class="btn-action btn-primary-action" style="border:0;cursor:pointer" onclick="document.getElementById('auditCreateModal').style.display='flex'"><i class="ti ti-plus"></i> Dodaj audyt</button></div>@endif
         @if($company->audits->isEmpty())
             <div class="empty-tab">
                 <i class="ti ti-clipboard-list"></i>
@@ -961,7 +962,7 @@
                     @foreach($company->audits as $audit)
                         <tr>
                             <td style="color:#888;font-size:12px;">{{ $audit->id }}</td>
-                            <td style="font-weight:600;">{{ $audit->auditType->name ?? '—' }}</td>
+                            <td style="font-weight:600;">{{ $audit->number ? $audit->number.' · ' : '' }}{{ $audit->title }}</td>
                             <td>
                                 <span class="audit-status {{ $audit->status }}">{{ $audit->status }}</span>
                             </td>
@@ -973,7 +974,7 @@
                                     <span style="font-size:12px;color:#7a8a80;min-width:32px;">{{ $audit->progress ?? 0 }}%</span>
                                 </div>
                             </td>
-                            <td style="color:#7a8a80;font-size:12px;">{{ $audit->created_at->format('d.m.Y') }}</td>
+                            <td style="color:#7a8a80;font-size:12px;">{{ $audit->created_at->format('d.m.Y') }} <a href="{{route('audits.show',$audit)}}" class="btn-action btn-secondary-action" style="margin-left:8px"><i class="ti ti-eye"></i> Otwórz</a></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -2295,6 +2296,19 @@ function fetchCompanyFromGus() {
 document.addEventListener('DOMContentLoaded', () => openEditModal());
 @endif
 </script>
+@if($auditsEnabled && $canManageAudits)
+<div id="auditCreateModal" class="user-modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="user-modal" style="max-width:920px;max-height:92vh;overflow:auto"><div class="user-modal-header"><div><h2>Nowy audyt</h2><p>Utwórz obszar roboczy audytu dla {{$company->name}}.</p></div><button type="button" class="modal-close-btn" onclick="document.getElementById('auditCreateModal').style.display='none'">×</button></div>
+    <form method="POST" action="{{route('audits.store')}}">@csrf<input type="hidden" name="company_id" value="{{$company->id}}"><div class="modal-grid">
+        <div class="modal-field"><label>Numer audytu *</label><input name="number" value="{{old('number')}}" placeholder="AUD/2026/001" required></div><div class="modal-field"><label>Nazwa audytu *</label><input name="title" value="{{old('title')}}" required></div>
+        <div class="modal-field"><label>Kierownik audytu *</label><select name="manager_id" required><option value="">Wybierz</option>@foreach($auditUsers as $auditUser)<option value="{{$auditUser->id}}" @selected(old('manager_id')==$auditUser->id)>{{$auditUser->name}}</option>@endforeach</select></div><div class="modal-field"><label>Status</label><select name="status"><option value="draft">Roboczy</option><option value="in_progress">W trakcie</option><option value="done">Zakończony</option></select></div>
+        <div class="modal-field"><label>Data rozpoczęcia</label><input type="date" name="start_date" value="{{old('start_date')}}"></div><div class="modal-field"><label>Data zakończenia</label><input type="date" name="end_date" value="{{old('end_date')}}"></div>
+        <div class="modal-field"><label>Wartość audytu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="{{old('contract_value',0)}}"></div><div class="modal-field"><label>Zespół audytu</label><div style="max-height:150px;overflow:auto;border:1px solid #ddd;padding:8px;border-radius:7px">@foreach($auditUsers as $auditUser)<label style="display:block;font-weight:500;margin:4px"><input type="checkbox" name="member_ids[]" value="{{$auditUser->id}}"> {{$auditUser->name}}</label>@endforeach</div></div>
+        <div class="modal-field" style="grid-column:1/-1"><label>Opis</label><textarea name="description">{{old('description')}}</textarea></div>
+    </div><div style="display:flex;justify-content:flex-end;gap:8px"><button type="button" class="btn-action btn-secondary-action" onclick="document.getElementById('auditCreateModal').style.display='none'">Anuluj</button><button class="btn-action btn-primary-action" style="border:0"><i class="ti ti-plus"></i> Utwórz audyt</button></div></form></div>
+</div>
+@if($errors->auditCreate->any())<script>document.addEventListener('DOMContentLoaded',()=>document.getElementById('auditCreateModal').style.display='flex')</script>@endif
+@endif
 @endsection
 
 @push('scripts')

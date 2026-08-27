@@ -20,7 +20,7 @@ class Task extends Model
 
     protected $fillable = [
         'title', 'description', 'assigned_to', 'created_by',
-        'deleted_by', 'company_id', 'crm_opportunity_id', 'offer_id', 'project_id', 'depends_on_task_id', 'status', 'priority', 'start_date', 'due_date', 'progress', 'project_position', 'is_milestone',
+        'deleted_by', 'company_id', 'crm_opportunity_id', 'offer_id', 'project_id', 'audit_id', 'depends_on_task_id', 'status', 'priority', 'start_date', 'due_date', 'progress', 'project_position', 'is_milestone',
     ];
 
     protected $casts = [
@@ -66,6 +66,11 @@ class Task extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function audit(): BelongsTo
+    {
+        return $this->belongsTo(Audit::class);
+    }
+
     public function dependency(): BelongsTo
     {
         return $this->belongsTo(self::class, 'depends_on_task_id');
@@ -83,7 +88,7 @@ class Task extends Model
 
     public function scopeCrm($query)
     {
-        return $query->whereNull('project_id');
+        return $query->whereNull('project_id')->whereNull('audit_id');
     }
 
     public function scopeOverdue($query)

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccessSupportController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CalendarController;
@@ -146,6 +147,21 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
     Route::get('surveys', [AuditTypeController::class, 'surveys'])->middleware('app.module:audits')->name('audits.surveys');
     Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');
+    Route::prefix('audits')->name('audits.')->middleware(['app.module:audits', 'app.permission:audits.view'])->group(function () {
+        Route::post('/', [AuditController::class, 'store'])->middleware('app.permission:audits.manage')->name('store');
+        Route::get('/{audit}', [AuditController::class, 'show'])->name('show');
+        Route::put('/{audit}', [AuditController::class, 'update'])->middleware('app.permission:audits.manage')->name('update');
+        Route::post('/{audit}/tasks', [AuditController::class, 'storeTask'])->middleware('app.permission:audits.manage')->name('tasks.store');
+        Route::delete('/{audit}/tasks/{task}', [AuditController::class, 'destroyTask'])->middleware('app.permission:audits.manage')->name('tasks.destroy');
+        Route::post('/{audit}/finances', [AuditController::class, 'storeFinance'])->middleware('app.permission:audits.manage')->name('finances.store');
+        Route::delete('/{audit}/finances/{entry}', [AuditController::class, 'destroyFinance'])->middleware('app.permission:audits.manage')->name('finances.destroy');
+        Route::post('/{audit}/surveys', [AuditController::class, 'storeSurvey'])->middleware('app.permission:audits.manage')->name('surveys.store');
+        Route::delete('/{audit}/surveys/{survey}', [AuditController::class, 'destroySurvey'])->middleware('app.permission:audits.manage')->name('surveys.destroy');
+        Route::post('/{audit}/passports', [AuditController::class, 'storePassport'])->middleware('app.permission:audits.manage')->name('passports.store');
+        Route::post('/{audit}/documents', [AuditController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
+        Route::get('/{audit}/documents/{document}', [AuditController::class, 'downloadDocument'])->name('documents.download');
+        Route::delete('/{audit}/documents/{document}', [AuditController::class, 'destroyDocument'])->middleware('app.permission:audits.manage')->name('documents.destroy');
+    });
     Route::prefix('energy-passports')->name('energy-passports.')->middleware(['app.module:audits', 'app.permission:audits.passports.view'])->group(function () {
         Route::get('/', [EnergyPassportController::class, 'index'])->name('index');
         Route::get('/templates/{template}', [EnergyPassportController::class, 'showTemplate'])->name('templates.show');

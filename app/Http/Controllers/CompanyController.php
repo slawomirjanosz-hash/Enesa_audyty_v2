@@ -118,6 +118,7 @@ class CompanyController extends Controller
         $access = app(AuditorAccessService::class);
         $user = auth()->user();
         $canManageCrm = $access->hasFullAccess($user);
+        $canManageAudits = $access->hasFullAccess($user) || $user->can('audits.manage');
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
         $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
 
@@ -125,7 +126,7 @@ class CompanyController extends Controller
             'offers',
         ];
         if ($auditsEnabled) {
-            $relations[] = 'audits.auditType';
+            $relations[] = 'audits.manager';
         }
 
         if ($access->hasFullAccess($user)) {
@@ -182,6 +183,7 @@ class CompanyController extends Controller
             Task::with(['assignedUser', 'offer', 'crmOpportunity'])
                 ->where('company_id', $company->id)
                 ->whereNull('project_id')
+                ->whereNull('audit_id')
                 ->orderByRaw("CASE WHEN status = 'done' THEN 1 ELSE 0 END")
                 ->orderBy('due_date')
                 ->orderByDesc('created_at'),
@@ -200,6 +202,9 @@ class CompanyController extends Controller
                 ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))
                 ->orderBy('name')
                 ->get()
+            : collect();
+        $auditUsers = $canManageAudits
+            ? User::where('is_active', true)->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get()
             : collect();
 
         $crmActivitiesQuery = CrmActivity::with(['user', 'crmOpportunity', 'offer'])
@@ -228,7 +233,7 @@ class CompanyController extends Controller
 
         return view('companies.show', compact(
             'company', 'stats', 'crmOpportunities', 'crmTasks', 'crmActivities', 'offerRequests', 'documents',
-            'projects', 'auditsEnabled', 'projectsEnabled', 'canManageCrm', 'crmAssignableUsers'
+            'projects', 'auditsEnabled', 'projectsEnabled', 'canManageCrm', 'crmAssignableUsers', 'canManageAudits', 'auditUsers'
         ));
     }
 

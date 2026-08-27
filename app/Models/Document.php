@@ -28,6 +28,11 @@ class Document extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function audit(): BelongsTo
+    {
+        return $this->belongsTo(Audit::class);
+    }
+
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
