@@ -1,0 +1,13 @@
+@php($statusLabels=['draft'=>'Przygotowywany','in_progress'=>'W trakcie','done'=>'Zakończony','cancelled'=>'Anulowany'])
+<style>
+.client-audit-list{display:grid;gap:13px}.client-audit-card{background:#fff;border:1px solid #e5e1d8;border-radius:12px;padding:19px 21px}.client-audit-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.client-audit-number{font-size:11px;font-weight:800;color:var(--green)}.client-audit-title{font-size:16px;margin:3px 0 7px}.client-audit-meta,.client-audit-stats{display:flex;flex-wrap:wrap;gap:7px 17px;color:#69766e;font-size:12px}.client-audit-status{padding:5px 10px;border-radius:999px;background:#e9f4ed;color:#20583e;font-size:10px;font-weight:800;white-space:nowrap}.client-audit-stats{border-top:1px solid #eee;margin-top:15px;padding-top:12px;font-size:11px}.client-audit-empty{text-align:center;background:#fff;border:1px dashed #d0ccc0;border-radius:12px;padding:55px 20px;color:#78847d}.client-audit-empty i{font-size:42px;display:block;margin-bottom:10px;color:#c8d5cf}@media(max-width:600px){.client-audit-top{flex-direction:column}}
+</style>
+@if($audits->isEmpty())
+<div class="client-audit-empty"><i class="ti ti-clipboard-off"></i>Nie ma jeszcze audytów przypisanych do tej firmy.</div>
+@else
+<div class="client-audit-list">
+@foreach($audits as $audit)
+<article class="client-audit-card"><div class="client-audit-top"><div><span class="client-audit-number">{{$audit->number?:'AUDYT #'.$audit->id}}</span><h2 class="client-audit-title">{{$audit->title}}</h2><div class="client-audit-meta"><span><i class="ti ti-calendar"></i> {{$audit->start_date?->format('d.m.Y')??'Termin nieustalony'}}@if($audit->end_date) – {{$audit->end_date->format('d.m.Y')}}@endif</span><span><i class="ti ti-user"></i> {{$audit->manager?->name??'Zespół audytowy'}}</span></div></div><span class="client-audit-status">{{$statusLabels[$audit->status]??$audit->status}}</span></div>@if($audit->description)<p style="font-size:12px;color:#58665e;line-height:1.55;margin:13px 0 0">{{$audit->description}}</p>@endif<div class="client-audit-stats"><span><i class="ti ti-list-check"></i> Zadania: {{$audit->tasks_count}}</span><span><i class="ti ti-files"></i> Dokumenty: {{$audit->documents_count}}</span><span><i class="ti ti-forms"></i> Ankiety: {{$audit->surveys_count}}</span><span><i class="ti ti-bolt"></i> Paszporty: {{$audit->energy_passports_count}}</span></div></article>
+@endforeach
+</div>
+@endif

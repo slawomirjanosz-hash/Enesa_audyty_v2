@@ -52,8 +52,11 @@ class ClientZoneController extends Controller
     public function audits(): View
     {
         $company = Company::findOrFail(session('client_zone_company_id'));
+        $audits = $company->audits()->with('manager')
+            ->withCount(['tasks', 'documents', 'surveys', 'energyPassports'])
+            ->orderByDesc('created_at')->get();
 
-        return view('client-zone.audits', compact('company'));
+        return view('client-zone.audits', compact('company', 'audits'));
     }
 
     public function offers(): View

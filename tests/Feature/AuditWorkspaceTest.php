@@ -76,3 +76,18 @@ test('audit workspace stores tasks finances surveys passports and documents outs
         ->and(EnergyPassport::firstOrFail()->audit_id)->toBe($audit->id)
         ->and($audit->documents()->count())->toBe(1);
 });
+
+test('client sees audits assigned to their company in the client zone', function () {
+    $company = Company::create(['name' => 'Klient z audytem', 'company_type' => 'client', 'status' => 'active']);
+    $otherCompany = Company::create(['name' => 'Inny klient', 'company_type' => 'client', 'status' => 'active']);
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company, ['is_admin' => false]);
+    Audit::create(['company_id' => $company->id, 'number' => 'AUD/KLIENT/1', 'title' => 'Audyt widoczny dla klienta', 'status' => 'draft']);
+    Audit::create(['company_id' => $otherCompany->id, 'number' => 'AUD/OBCY/1', 'title' => 'Audyt innej firmy', 'status' => 'draft']);
+
+    $this->actingAs($client)->get(route('client.audits'))->assertOk()
+        ->assertSee('Audyt widoczny dla klienta')
+        ->assertSee('AUD/KLIENT/1')
+        ->assertDontSee('Audyt innej firmy');
+});
