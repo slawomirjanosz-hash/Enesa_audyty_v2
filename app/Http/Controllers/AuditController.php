@@ -59,6 +59,8 @@ class AuditController extends Controller
             'auditTypes' => AuditType::query()->orderBy('name')->get(),
             'timelineItems' => $timelineItems,
             'canManage' => $this->canManage($request),
+            'clientView' => false,
+            'canViewFinances' => true,
         ]);
     }
 

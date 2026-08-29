@@ -83,11 +83,19 @@ test('client sees audits assigned to their company in the client zone', function
     $client = User::factory()->create();
     $client->assignRole(Role::findOrCreate('client_user'));
     $client->companies()->attach($company, ['is_admin' => false]);
-    Audit::create(['company_id' => $company->id, 'number' => 'AUD/KLIENT/1', 'title' => 'Audyt widoczny dla klienta', 'status' => 'draft']);
-    Audit::create(['company_id' => $otherCompany->id, 'number' => 'AUD/OBCY/1', 'title' => 'Audyt innej firmy', 'status' => 'draft']);
+    $clientAudit = Audit::create(['company_id' => $company->id, 'number' => 'AUD/KLIENT/1', 'title' => 'Audyt widoczny dla klienta', 'status' => 'draft', 'contract_value' => 987654.32]);
+    $otherAudit = Audit::create(['company_id' => $otherCompany->id, 'number' => 'AUD/OBCY/1', 'title' => 'Audyt innej firmy', 'status' => 'draft']);
 
     $this->actingAs($client)->get(route('client.audits'))->assertOk()
         ->assertSee('Audyt widoczny dla klienta')
         ->assertSee('AUD/KLIENT/1')
         ->assertDontSee('Audyt innej firmy');
+    $this->actingAs($client)->get(route('client.dashboard'))->assertOk()
+        ->assertSee(route('client.audits.show', $clientAudit), false);
+
+    $this->actingAs($client)->get(route('client.audits.show', $clientAudit))->assertOk()
+        ->assertSee('Harmonogram i zadania')->assertSee('Dokumenty')
+        ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne')
+        ->assertDontSee('>Finanse<', false)->assertDontSee('987 654,32');
+    $this->actingAs($client)->get(route('client.audits.show', $otherAudit))->assertNotFound();
 });

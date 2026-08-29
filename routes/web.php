@@ -95,6 +95,9 @@ Route::get('/lista-zmian', [ActivityLogController::class, 'index'])
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
+    Route::get('/audits/{audit}', [ClientAuditController::class, 'show'])->middleware('app.module:audits')->name('audits.show');
+    Route::get('/audits/{audit}/documents/{document}', [ClientAuditController::class, 'downloadDocument'])->middleware('app.module:audits')->name('audits.documents.download');
+    Route::get('/audits/{audit}/gantt/export', [ClientAuditController::class, 'exportGantt'])->middleware('app.module:audits')->name('audits.gantt.export');
     Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('app.module:offers')->name('offers');
     Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->middleware('app.module:offers')->name('offers.show');
     Route::post('/offers/{offer}/accept', [ClientOfferController::class, 'accept'])->middleware('app.module:offers')->name('offers.accept');
