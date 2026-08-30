@@ -42,6 +42,13 @@ class AuditTypeController extends Controller
 
     public function show(AuditType $auditType)
     {
+        if ($auditType->slug === 'iso50001') {
+            return view('audit-types.iso50001', [
+                'auditType' => $auditType,
+                'chapters' => config('iso50001.chapters', []),
+            ]);
+        }
+
         $auditType->load('versions.creator');
 
         return view('audit-types.show', compact('auditType'));
