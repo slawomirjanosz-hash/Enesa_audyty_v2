@@ -107,6 +107,10 @@
         .audit-nav-name { padding: 0 24px 10px; color: #fff; font-size: 13px; font-weight: 800; line-height: 1.4; }
         .nav-link.audit-sub { padding-left: 42px; font-size: 12px; }
         .nav-link.exit-app { margin: 4px 12px 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.3); border-radius: 8px; color: #fff; font-weight: 800; }
+        .audit-nav-group details > summary { list-style: none; grid-template-columns: 18px minmax(0,1fr) 16px; }
+        .audit-nav-group details > summary::-webkit-details-marker { display: none; }
+        .audit-nav-chevron { margin-left: auto; transition: transform .15s; }
+        .audit-nav-group details[open] .audit-nav-chevron { transform: rotate(180deg); }
 
         /* SIDEBAR FOOTER */
         .sidebar-footer {
