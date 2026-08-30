@@ -40,7 +40,7 @@ test('audit is created from company card and opens the dedicated workspace', fun
     $audit = Audit::firstOrFail();
     $this->actingAs($user)->get(route('audits.show', $audit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Finanse')->assertSee('Dokumenty')
-        ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne')
+        ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
         ->assertSee('Edytuj audyt')->assertSee('Osoby przypisane do audytu')
         ->assertSee('id="project-frappe-gantt"', false)->assertSee('Dodaj kamień milowy')
         ->assertSee('Eksport Excel')->assertSee('Import Excel');
@@ -110,8 +110,10 @@ test('client sees audits assigned to their company in the client zone', function
 
     $this->actingAs($client)->get(route('client.audits.show', $clientAudit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Dokumenty')
-        ->assertSee('Ankiety Audytowe')->assertSee('Paszporty Energetyczne')
+        ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
         ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('4.1 – zmiana 2024')
+        ->assertSee('data-client-audit-menu', false)->assertSee('Wyjdź do aplikacji')
+        ->assertSee(route('client.dashboard'), false)->assertDontSee('data-client-standard-menu', false)
         ->assertDontSee('>Finanse<', false)->assertDontSee('987 654,32');
     $this->actingAs($client)->get(route('client.audits.show', $otherAudit))->assertNotFound();
 });

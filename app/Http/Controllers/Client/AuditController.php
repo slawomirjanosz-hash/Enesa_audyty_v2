@@ -32,6 +32,7 @@ class AuditController extends Controller
     {
         $company = $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
         $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'documents.uploader', 'surveys.auditType', 'energyPassports.template']);
+        $isIso50001 = $audit->surveys->contains(fn ($survey) => $survey->auditType?->slug === 'iso50001');
         $timelineItems = $audit->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
             'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id,
             'name' => $task->title, 'start' => $task->start_date->format('Y-m-d'), 'end' => $task->due_date->format('Y-m-d'),
@@ -44,6 +45,8 @@ class AuditController extends Controller
             'audit' => $audit, 'timelineItems' => $timelineItems, 'canManage' => false,
             'clientView' => true, 'canViewFinances' => false, 'users' => collect(),
             'auditTypes' => collect(), 'passportTemplates' => collect(), 'company' => $company,
+            'clientAuditMode' => $isIso50001, 'clientAudit' => $audit,
+            'isoChapters' => config('iso50001.chapters', []),
         ]);
     }
 

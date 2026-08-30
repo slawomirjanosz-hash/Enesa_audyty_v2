@@ -103,6 +103,11 @@
             flex-shrink: 0;
         }
 
+        .audit-nav-title { padding: 14px 24px 8px; color: rgba(255,255,255,.55); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+        .audit-nav-name { padding: 0 24px 10px; color: #fff; font-size: 13px; font-weight: 800; line-height: 1.4; }
+        .nav-link.audit-sub { padding-left: 42px; font-size: 12px; }
+        .nav-link.exit-app { margin: 4px 12px 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.3); border-radius: 8px; color: #fff; font-weight: 800; }
+
         /* SIDEBAR FOOTER */
         .sidebar-footer {
             padding: 16px 24px;
@@ -271,7 +276,10 @@
         </a>
     </div>
 
-    <nav class="sidebar-nav">
+    @if($clientAuditMode ?? false)
+        @include('layouts.partials.client-audit-sidebar', ['audit' => $clientAudit, 'chapters' => $isoChapters])
+    @else
+    <nav class="sidebar-nav" data-client-standard-menu>
         <ul>
             <li class="nav-item">
                 <a href="{{ route('client.dashboard') }}"
@@ -335,6 +343,7 @@
             @endif
         </ul>
     </nav>
+    @endif
 
     @auth
         @php
