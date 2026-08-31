@@ -6,6 +6,7 @@ use App\Exports\ProjectGanttExport;
 use App\Http\Controllers\Controller;
 use App\Models\Audit;
 use App\Models\Document;
+use App\Models\IsoTrainingVideo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -47,6 +48,7 @@ class AuditController extends Controller
             'auditTypes' => collect(), 'passportTemplates' => collect(), 'company' => $company,
             'clientAuditMode' => $isIso50001, 'clientAudit' => $audit,
             'isoChapters' => config('iso50001.chapters', []),
+            'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
         ]);
     }
 

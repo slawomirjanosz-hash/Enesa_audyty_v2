@@ -7,6 +7,7 @@ use App\Models\AuditType;
 use App\Models\Company;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
+use App\Models\IsoTrainingVideo;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -59,6 +60,27 @@ test('ISO 50001 type opens the dedicated modular workspace', function () {
         ->assertDontSee('Wersje formularza');
 });
 
+test('superadmin manages ISO 50001 training videos stored on YouTube', function () {
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole(Role::findOrCreate('superadmin'));
+    $isoType = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+
+    $this->actingAs($superadmin)->post(route('audit-types.training-videos.store', $isoType), [
+        'topic' => 'Wprowadzenie do EnMS',
+        'description' => 'Najważniejsze zasady systemu zarządzania energią.',
+        'youtube_url' => 'https://www.youtube.com/watch?v=example123',
+    ])->assertRedirect();
+
+    $video = IsoTrainingVideo::firstOrFail();
+    $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => 'training']))
+        ->assertOk()->assertSee('Wprowadzenie do EnMS')->assertSee('Szukaj po temacie')
+        ->assertSee('data-iso-video-search', false)->assertSee('iso-nav-group', false);
+
+    $this->actingAs($superadmin)->delete(route('audit-types.training-videos.destroy', [$isoType, $video]))
+        ->assertRedirect();
+    $this->assertDatabaseMissing('iso_training_videos', ['id' => $video->id]);
+});
+
 test('audit workspace stores tasks finances surveys passports and documents outside CRM', function () {
     Storage::fake('local');
     $user = auditManager();
@@ -99,6 +121,7 @@ test('client sees audits assigned to their company in the client zone', function
     $clientAudit = Audit::create(['company_id' => $company->id, 'number' => 'AUD/KLIENT/1', 'title' => 'Audyt widoczny dla klienta', 'status' => 'draft', 'contract_value' => 987654.32]);
     $isoType = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
     $clientAudit->surveys()->create(['audit_type_id' => $isoType->id, 'title' => $isoType->name, 'status' => 'draft']);
+    IsoTrainingVideo::create(['topic' => 'Szkolenie widoczne dla klienta', 'youtube_url' => 'https://youtu.be/example123']);
     $otherAudit = Audit::create(['company_id' => $otherCompany->id, 'number' => 'AUD/OBCY/1', 'title' => 'Audyt innej firmy', 'status' => 'draft']);
 
     $this->actingAs($client)->get(route('client.audits'))->assertOk()
@@ -112,6 +135,7 @@ test('client sees audits assigned to their company in the client zone', function
         ->assertSee('Harmonogram i zadania')->assertSee('Dokumenty')
         ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
         ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('4.1 – zmiana 2024')
+        ->assertSee('Szkolenie widoczne dla klienta')->assertDontSee('Dodaj film')
         ->assertSee('data-client-audit-menu', false)->assertSee('Wyjdź do aplikacji')
         ->assertSee(route('client.dashboard'), false)->assertDontSee('data-client-standard-menu', false)
         ->assertDontSee('>Finanse<', false)->assertDontSee('987 654,32');

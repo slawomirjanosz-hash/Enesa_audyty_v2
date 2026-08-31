@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditType;
 use App\Models\AuditTypeVersion;
+use App\Models\IsoTrainingVideo;
 use App\Services\AuditorAccessService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -46,12 +48,40 @@ class AuditTypeController extends Controller
             return view('audit-types.iso50001', [
                 'auditType' => $auditType,
                 'chapters' => config('iso50001.chapters', []),
+                'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
+                'canManageTraining' => app(AuditorAccessService::class)->hasFullAccess(request()->user()),
             ]);
         }
 
         $auditType->load('versions.creator');
 
         return view('audit-types.show', compact('auditType'));
+    }
+
+    public function storeTrainingVideo(Request $request, AuditType $auditType): RedirectResponse
+    {
+        abort_unless($auditType->slug === 'iso50001', 404);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $data = $request->validate([
+            'topic' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'youtube_url' => ['required', 'url', 'max:500', 'regex:/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i'],
+        ], ['youtube_url.regex' => 'Podaj prawidłowy adres filmu w serwisie YouTube.']);
+
+        IsoTrainingVideo::create($data + ['created_by' => $request->user()->id]);
+
+        return redirect()->route('audit-types.show', ['auditType' => $auditType, 'section' => 'training'])
+            ->with('success', 'Film szkoleniowy został dodany.');
+    }
+
+    public function destroyTrainingVideo(Request $request, AuditType $auditType, IsoTrainingVideo $video): RedirectResponse
+    {
+        abort_unless($auditType->slug === 'iso50001', 404);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $video->delete();
+
+        return redirect()->route('audit-types.show', ['auditType' => $auditType, 'section' => 'training'])
+            ->with('success', 'Film szkoleniowy został usunięty.');
     }
 
     public function storeVersion(Request $request, AuditType $auditType)

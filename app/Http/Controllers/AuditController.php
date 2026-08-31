@@ -10,6 +10,7 @@ use App\Models\AuditType;
 use App\Models\Document;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
+use App\Models\IsoTrainingVideo;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
@@ -61,6 +62,7 @@ class AuditController extends Controller
             'canManage' => $this->canManage($request),
             'clientView' => false,
             'canViewFinances' => true,
+            'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
         ]);
     }
 

@@ -2,7 +2,7 @@
 
 return [
     'chapters' => [
-        ['id' => 'intro', 'number' => '1', 'title' => 'Wstęp o ISO', 'description' => 'Podstawowe informacje o ISO 50001 i systemie zarządzania energią.'],
+        ['id' => 'intro', 'number' => '1', 'title' => 'Wstęp o ISO', 'description' => 'ISO 50001:2018 to międzynarodowa norma określająca ramy tworzenia, wdrażania, utrzymywania i ciągłego doskonalenia systemu zarządzania energią (EnMS). Pomaga organizacji świadomie zarządzać zużyciem energii, wyznaczać cele, podejmować decyzje na podstawie danych i mierzyć poprawę wyniku energetycznego. Norma wykorzystuje cykl PDCA i może być zintegrowana z innymi systemami zarządzania, m.in. ISO 9001 oraz ISO 14001. Jej wdrożenie może ograniczać koszty i zużycie energii oraz wspierać realizację wymagań prawnych i celów środowiskowych.', 'source_url' => 'https://www.iso.org/standard/69426.html', 'source_label' => 'ISO 50001:2018 – informacje o normie'],
         ['id' => 'training', 'number' => '2', 'title' => 'Filmy szkoleniowe', 'description' => 'Materiały szkoleniowe wspierające wdrożenie i prowadzenie EnMS.'],
         ['id' => 'reserve', 'number' => '3', 'title' => 'Rezerwa', 'description' => 'Miejsce przeznaczone na kolejny uzgodniony obszar audytu.'],
         [
