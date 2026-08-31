@@ -188,7 +188,10 @@ test('assigned user with schedule management can add gantt tasks without project
     $this->actingAs($scheduler)->get(route('projects.show', $project))
         ->assertOk()
         ->assertSee('id="gantt-add-task"', false)
-        ->assertSee('id="gantt-task-modal"', false);
+        ->assertSee('id="gantt-task-modal"', false)
+        ->assertSee('progress-11-25', false)->assertSee('progress-26-50', false)
+        ->assertSee('progress-51-75', false)->assertSee('progress-76-99', false)
+        ->assertSee('progress-100', false)->assertSee('overflow-x:hidden', false);
 
     $taskData = [
         'title' => 'Zadanie dodane przez planistę', 'start_date' => '2026-08-24',
