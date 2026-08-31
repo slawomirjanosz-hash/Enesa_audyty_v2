@@ -72,12 +72,18 @@ test('superadmin manages ISO 50001 training videos stored on YouTube', function 
     ])->assertRedirect();
 
     $video = IsoTrainingVideo::firstOrFail();
+    $this->actingAs($superadmin)->put(route('audit-types.training-videos.update', [$isoType, $video]), [
+        'topic' => 'EnMS – szkolenie zaktualizowane',
+        'description' => 'Nowy opis szkolenia.',
+        'youtube_url' => 'https://youtu.be/newVideo456',
+    ])->assertRedirect();
+
     $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => 'training']))
-        ->assertOk()->assertSee('Wprowadzenie do EnMS')->assertSee('Szukaj po temacie')
+        ->assertOk()->assertSee('EnMS – szkolenie zaktualizowane')->assertSee('Nowy opis szkolenia.')->assertSee('Szukaj po temacie')
         ->assertSee('data-iso-video-search', false)->assertSee('iso-nav-group', false)
-        ->assertSee('https://i.ytimg.com/vi/example123/hqdefault.jpg', false)
-        ->assertSee('https://www.youtube-nocookie.com/embed/example123', false)
-        ->assertSee('Otwórz w YouTube');
+        ->assertSee('https://i.ytimg.com/vi/newVideo456/hqdefault.jpg', false)
+        ->assertSee('https://www.youtube-nocookie.com/embed/newVideo456', false)
+        ->assertSee('Otwórz w YouTube')->assertSee('data-video-edit', false);
 
     $this->actingAs($superadmin)->delete(route('audit-types.training-videos.destroy', [$isoType, $video]))
         ->assertRedirect();

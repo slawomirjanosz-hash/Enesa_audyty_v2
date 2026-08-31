@@ -84,6 +84,21 @@ class AuditTypeController extends Controller
             ->with('success', 'Film szkoleniowy został usunięty.');
     }
 
+    public function updateTrainingVideo(Request $request, AuditType $auditType, IsoTrainingVideo $video): RedirectResponse
+    {
+        abort_unless($auditType->slug === 'iso50001', 404);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $data = $request->validate([
+            'topic' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'youtube_url' => ['required', 'url', 'max:500', 'regex:/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i'],
+        ], ['youtube_url.regex' => 'Podaj prawidłowy adres filmu w serwisie YouTube.']);
+        $video->update($data);
+
+        return redirect()->route('audit-types.show', ['auditType' => $auditType, 'section' => 'training'])
+            ->with('success', 'Dane filmu szkoleniowego zostały zmienione.');
+    }
+
     public function storeVersion(Request $request, AuditType $auditType)
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);

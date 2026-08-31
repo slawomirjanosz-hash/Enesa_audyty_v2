@@ -182,6 +182,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     });
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
     Route::post('audit-types/{auditType}/training-videos', [AuditTypeController::class, 'storeTrainingVideo'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.training-videos.store');
+    Route::put('audit-types/{auditType}/training-videos/{video}', [AuditTypeController::class, 'updateTrainingVideo'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.training-videos.update');
     Route::delete('audit-types/{auditType}/training-videos/{video}', [AuditTypeController::class, 'destroyTrainingVideo'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.training-videos.destroy');
     Route::post('audit-types/{auditType}/versions', [AuditTypeController::class, 'storeVersion'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.store');
     Route::post('audit-types/versions/{version}/set-current', [AuditTypeController::class, 'setAsCurrent'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.versions.set-current');

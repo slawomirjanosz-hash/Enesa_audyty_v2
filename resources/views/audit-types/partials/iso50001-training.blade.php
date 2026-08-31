@@ -7,13 +7,14 @@
     @if($canManageTraining ?? false)<button type="button" class="iso-training-add" onclick="document.getElementById('iso-video-form').hidden=false;this.hidden=true"><i class="ti ti-plus"></i> Dodaj film</button>@endif
 </div>
 @if($canManageTraining ?? false)
-<form id="iso-video-form" class="iso-video-form" method="POST" action="{{ route('audit-types.training-videos.store', $auditType) }}" hidden>
+<form id="iso-video-form" class="iso-video-form" method="POST" action="{{ route('audit-types.training-videos.store', $auditType) }}" data-store-action="{{ route('audit-types.training-videos.store', $auditType) }}" hidden>
     @csrf
+    <input type="hidden" name="_method" value="POST" data-video-method>
     <div><label>Temat szkolenia</label><input name="topic" value="{{ old('topic') }}" required maxlength="255"></div>
     <div><label>Krótki opis</label><textarea name="description" rows="2" maxlength="1000">{{ old('description') }}</textarea></div>
     <div><label>Link do filmu na YouTube</label><input name="youtube_url" type="url" value="{{ old('youtube_url') }}" placeholder="https://www.youtube.com/watch?v=…" required></div>
     <small>Najpierw opublikuj film na YouTube, a następnie wklej tutaj jego adres.</small>
-    <div class="iso-video-form-actions"><button type="button" class="iso-training-cancel" onclick="this.closest('form').hidden=true;document.querySelector('.iso-training-add').hidden=false">Anuluj</button><button class="iso-training-add">Zapisz film</button></div>
+    <div class="iso-video-form-actions"><button type="button" class="iso-training-cancel" data-video-form-cancel>Anuluj</button><button class="iso-training-add" data-video-submit>Zapisz film</button></div>
 </form>
 @endif
 <div class="iso-training-table-wrap">
@@ -24,7 +25,7 @@
         <tr data-search="{{ Str::lower($video->topic.' '.$video->description.' '.$video->youtube_url) }}">
             <td>{{ $loop->iteration }}</td><td><strong>{{ $video->topic }}</strong></td><td>{{ $video->description ?: '—' }}</td>
             <td>@if($video->youtubeEmbedUrl())<button type="button" class="iso-video-preview" data-video-preview data-embed="{{ $video->youtubeEmbedUrl() }}" data-youtube="{{ $video->youtube_url }}" data-title="{{ $video->topic }}" aria-label="Odtwórz: {{ $video->topic }}"><img src="{{ $video->youtubeThumbnailUrl() }}" alt="Miniatura filmu: {{ $video->topic }}" loading="lazy"><span><i class="ti ti-player-play-filled"></i></span></button>@endif<a class="iso-video-link" href="{{ $video->youtube_url }}" target="_blank" rel="noopener"><i class="ti ti-brand-youtube"></i> Otwórz w YouTube</a></td>
-            @if($canManageTraining ?? false)<td><form method="POST" action="{{ route('audit-types.training-videos.destroy', [$auditType, $video]) }}" onsubmit="return confirm('Usunąć ten film z listy?')">@csrf @method('DELETE')<button class="iso-video-delete" aria-label="Usuń film"><i class="ti ti-trash"></i></button></form></td>@endif
+            @if($canManageTraining ?? false)<td><div style="display:flex;gap:5px"><button type="button" class="iso-video-delete" style="background:#e8f1ff;color:#1d4ed8" data-video-edit data-action="{{ route('audit-types.training-videos.update', [$auditType, $video]) }}" data-topic="{{ $video->topic }}" data-description="{{ $video->description }}" data-url="{{ $video->youtube_url }}" aria-label="Edytuj film"><i class="ti ti-edit"></i></button><form method="POST" action="{{ route('audit-types.training-videos.destroy', [$auditType, $video]) }}" onsubmit="return confirm('Usunąć ten film z listy?')">@csrf @method('DELETE')<button class="iso-video-delete" aria-label="Usuń film"><i class="ti ti-trash"></i></button></form></div></td>@endif
         </tr>
     @empty
         <tr data-empty-row><td colspan="{{ ($canManageTraining ?? false) ? 5 : 4 }}" class="iso-video-empty">Nie dodano jeszcze żadnych filmów szkoleniowych.</td></tr>
@@ -42,6 +43,28 @@ document.querySelector('[data-iso-video-search]')?.addEventListener('input', eve
     const noResults = document.querySelector('[data-no-video-results]');
     if (noResults) noResults.hidden = rows.length === 0 || rows.some(row => !row.hidden);
 });
+const videoForm = document.getElementById('iso-video-form');
+const resetVideoForm = () => {
+    if (!videoForm) return;
+    videoForm.reset();
+    videoForm.action = videoForm.dataset.storeAction;
+    videoForm.querySelector('[data-video-method]').value = 'POST';
+    videoForm.querySelector('[data-video-submit]').textContent = 'Zapisz film';
+    videoForm.hidden = true;
+    document.querySelector('.iso-training-add')?.removeAttribute('hidden');
+};
+document.querySelectorAll('[data-video-edit]').forEach(button => button.addEventListener('click', () => {
+    videoForm.action = button.dataset.action;
+    videoForm.querySelector('[data-video-method]').value = 'PUT';
+    videoForm.elements.topic.value = button.dataset.topic;
+    videoForm.elements.description.value = button.dataset.description;
+    videoForm.elements.youtube_url.value = button.dataset.url;
+    videoForm.querySelector('[data-video-submit]').textContent = 'Zapisz zmiany';
+    videoForm.hidden = false;
+    document.querySelector('.iso-training-add')?.setAttribute('hidden', '');
+    videoForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}));
+videoForm?.querySelector('[data-video-form-cancel]')?.addEventListener('click', resetVideoForm);
 const videoModal = document.querySelector('[data-iso-video-modal]');
 const closeVideoModal = () => {
     if (!videoModal) return;
