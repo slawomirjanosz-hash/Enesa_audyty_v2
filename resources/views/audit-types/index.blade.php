@@ -111,6 +111,7 @@
 
     .btn-manage {
         display: inline-flex;
+        margin-top: auto;
         align-items: center;
         gap: 8px;
         background: var(--green);
