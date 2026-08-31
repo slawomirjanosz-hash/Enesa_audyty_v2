@@ -15,6 +15,7 @@ class RolePermissionCatalog
         return [
             'dashboard' => ['label' => 'Dashboard', 'permissions' => [
                 'dashboard.view' => 'Wejście do zakładki Dashboard',
+                'dashboard.documents.view' => 'Podgląd dokumentów klientów na Dashboardzie',
             ]],
             'calendar' => ['label' => 'Kalendarz', 'permissions' => [
                 'calendar.view' => 'Podgląd własnego kalendarza zadań',

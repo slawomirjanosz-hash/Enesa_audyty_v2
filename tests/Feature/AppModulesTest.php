@@ -2,6 +2,7 @@
 
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\Document;
 use App\Models\Offer;
 use App\Models\Project;
 use App\Models\Task;
@@ -251,6 +252,28 @@ test('dashboard does not reveal other users overdue tasks without team calendar 
         ->assertSee('Wszystko na czas')
         ->assertDontSee('Zaległe zadania innych użytkowników')
         ->assertDontSee('data-task-alert="red"', false);
+});
+
+test('dashboard document visibility is controlled separately from document module access', function () {
+    CompanySettings::create(['name' => 'Firma dokumentów', 'enabled_modules' => ['dashboard', 'crm', 'documents']]);
+    $company = Company::create(['name' => 'Klient z dokumentem', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true]);
+    Document::create([
+        'company_id' => $company->id, 'type' => 'upload', 'original_filename' => 'instrukcja.pdf',
+        'stored_path' => 'documents/instrukcja.pdf', 'mime_type' => 'application/pdf', 'size' => 100,
+    ]);
+    $user = User::factory()->create();
+    $role = Role::findOrCreate('pracownik_dashboard_dokumenty');
+    $role->givePermissionTo([
+        Permission::findOrCreate('dashboard.view'), Permission::findOrCreate('crm.view'), Permission::findOrCreate('documents.view'),
+    ]);
+    $user->assignRole($role);
+
+    $this->actingAs($user)->get(route('documents.index'))->assertOk()->assertSee('instrukcja.pdf');
+    $this->actingAs($user)->get(route('dashboard'))->assertOk()->assertDontSee('data-dashboard-metric="documents"', false);
+
+    $role->givePermissionTo(Permission::findOrCreate('dashboard.documents.view'));
+    $this->actingAs($user)->get(route('dashboard'))->assertOk()
+        ->assertSee('data-dashboard-metric="documents"', false)->assertSee('1 dokument');
 });
 
 test('dashboard CRM counters exclude project tasks and archived registrations', function () {

@@ -617,6 +617,12 @@
                     <i class="ti ti-file-invoice"></i>
                     <span>{{ $company->offers->count() }} {{ $company->offers->count() === 1 ? 'oferta' : ($company->offers->count() < 5 ? 'oferty' : 'ofert') }}</span>
                 </div>
+                @if($canViewDashboardDocuments)
+                <div class="tile-info-row" data-dashboard-metric="documents">
+                    <i class="ti ti-files"></i>
+                    <span>{{ $company->documents_count }} {{ $company->documents_count === 1 ? 'dokument' : ($company->documents_count < 5 ? 'dokumenty' : 'dokumentów') }}</span>
+                </div>
+                @endif
                 <div class="tile-info-row">
                     <i class="ti ti-message"></i>
                     <span>0 wiadomości</span>
@@ -667,8 +673,9 @@
             @if($auditsEnabled)<th data-dashboard-metric="audits" onclick="sortCompaniesTable(3,true)">Audyty <span class="sort-icon-dash">⇅</span></th>@endif
             @if($projectsEnabled)<th data-dashboard-metric="projects" onclick="sortCompaniesTable({{$auditsEnabled ? 4 : 3}},true)">Projekty <span class="sort-icon-dash">⇅</span></th>@endif
             <th onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Oferty <span class="sort-icon-dash">⇅</span></th>
-            <th onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
-            <th onclick="sortCompaniesTable({{5 + (int)$auditsEnabled + (int)$projectsEnabled}})">Data dodania <span class="sort-icon-dash">⇅</span></th>
+            @if($canViewDashboardDocuments)<th data-dashboard-metric="documents" onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Dokumenty <span class="sort-icon-dash">⇅</span></th>@endif
+            <th onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$canViewDashboardDocuments}},true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable({{5 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$canViewDashboardDocuments}})">Data dodania <span class="sort-icon-dash">⇅</span></th>
             <th style="text-align:right;">Akcje</th>
         </tr>
     </thead>
@@ -723,6 +730,7 @@
                 @if($auditsEnabled)<td data-dashboard-metric="audits" style="text-align:center;">{{ $company->audits->count() }}</td>@endif
                 @if($projectsEnabled)<td data-dashboard-metric="projects" style="text-align:center;">{{ $company->projects->count() }}</td>@endif
                 <td style="text-align:center;">{{ $company->offers->count() }}</td>
+                @if($canViewDashboardDocuments)<td data-dashboard-metric="documents" style="text-align:center;">{{ $company->documents_count }}</td>@endif
                 <td style="text-align:center;">{{ $company->users->count() }}</td>
                 <td data-sort-value="{{ $company->created_at?->format('Y-m-d H:i:s') }}" style="white-space:nowrap;">{{ $company->created_at?->format('d.m.Y H:i') ?? '—' }}</td>
                 <td style="text-align:right;">

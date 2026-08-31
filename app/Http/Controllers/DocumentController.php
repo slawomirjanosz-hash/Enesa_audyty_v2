@@ -17,7 +17,7 @@ class DocumentController extends Controller
         $user = auth()->user();
 
         abort_unless(
-            $user?->hasRole('auditor') || app(AuditorAccessService::class)->hasFullAccess($user),
+            $user?->can('documents.view') || app(AuditorAccessService::class)->hasFullAccess($user),
             403,
             'Brak uprawnień do dokumentów.'
         );

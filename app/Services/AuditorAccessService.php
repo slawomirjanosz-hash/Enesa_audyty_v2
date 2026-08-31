@@ -130,6 +130,10 @@ class AuditorAccessService
             return true;
         }
 
+        if (! $this->isDelegatedAuditor($user) && $user->can('documents.view')) {
+            return true;
+        }
+
         if (! $this->isDelegatedAuditor($user)) {
             return false;
         }
@@ -141,6 +145,10 @@ class AuditorAccessService
     public function scopeDocumentsVisibleTo(Builder $query, User $user): Builder
     {
         if ($this->hasFullAccess($user)) {
+            return $query;
+        }
+
+        if (! $this->isDelegatedAuditor($user) && $user->can('documents.view')) {
             return $query;
         }
 

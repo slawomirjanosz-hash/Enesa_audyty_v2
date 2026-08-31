@@ -63,6 +63,11 @@ class Company extends Model
         return $this->hasMany(Audit::class);
     }
 
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
+
     public function offers(): HasMany
     {
         return $this->hasMany(Offer::class);
