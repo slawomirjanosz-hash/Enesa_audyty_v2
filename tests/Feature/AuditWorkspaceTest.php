@@ -74,7 +74,10 @@ test('superadmin manages ISO 50001 training videos stored on YouTube', function 
     $video = IsoTrainingVideo::firstOrFail();
     $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => 'training']))
         ->assertOk()->assertSee('Wprowadzenie do EnMS')->assertSee('Szukaj po temacie')
-        ->assertSee('data-iso-video-search', false)->assertSee('iso-nav-group', false);
+        ->assertSee('data-iso-video-search', false)->assertSee('iso-nav-group', false)
+        ->assertSee('https://i.ytimg.com/vi/example123/hqdefault.jpg', false)
+        ->assertSee('https://www.youtube-nocookie.com/embed/example123', false)
+        ->assertSee('Otwórz w YouTube');
 
     $this->actingAs($superadmin)->delete(route('audit-types.training-videos.destroy', [$isoType, $video]))
         ->assertRedirect();
