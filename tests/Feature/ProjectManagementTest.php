@@ -191,7 +191,8 @@ test('assigned user with schedule management can add gantt tasks without project
         ->assertSee('id="gantt-task-modal"', false)
         ->assertSee('progress-11-25', false)->assertSee('progress-26-50', false)
         ->assertSee('progress-51-75', false)->assertSee('progress-76-99', false)
-        ->assertSee('progress-100', false)->assertSee('overflow-x:hidden', false);
+        ->assertSee('progress-100', false)->assertSee('overflow-x:hidden', false)
+        ->assertSee('Kolor według postępu')->assertSee('applyGanttProgressColors', false);
 
     $taskData = [
         'title' => 'Zadanie dodane przez planistę', 'start_date' => '2026-08-24',

@@ -91,6 +91,7 @@
     .requirement-summary-kpi{cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}.requirement-summary-kpi:hover,.requirement-summary-kpi:focus{outline:0;border-color:var(--green);box-shadow:0 4px 14px rgba(26,77,58,.14);transform:translateY(-1px)}.requirement-summary-kpi.active{background:#edf5ef;border-color:var(--green);box-shadow:0 0 0 2px rgba(26,77,58,.12)}.requirement-filter-state{display:flex;align-items:center;gap:8px;margin:-3px 0 10px;padding:8px 10px;border-radius:8px;background:#edf5ef;color:#285740;font-size:11px;font-weight:700}.requirement-filter-state button{margin-left:auto;border:0;background:none;color:#285740;font:inherit;text-decoration:underline;cursor:pointer}
 .frappe-gantt-wrap .bar-wrapper.progress-0-10 .bar{fill:#8b5cf6}.frappe-gantt-wrap .bar-wrapper.progress-0-10 .bar-progress{fill:#6d28d9}.frappe-gantt-wrap .bar-wrapper.progress-11-25 .bar{fill:#facc15}.frappe-gantt-wrap .bar-wrapper.progress-11-25 .bar-progress{fill:#eab308}.frappe-gantt-wrap .bar-wrapper.progress-26-50 .bar{fill:#fb923c}.frappe-gantt-wrap .bar-wrapper.progress-26-50 .bar-progress{fill:#ea580c}.frappe-gantt-wrap .bar-wrapper.progress-51-75 .bar{fill:#1d4ed8}.frappe-gantt-wrap .bar-wrapper.progress-51-75 .bar-progress{fill:#1e3a8a}.frappe-gantt-wrap .bar-wrapper.progress-76-99 .bar{fill:#60a5fa}.frappe-gantt-wrap .bar-wrapper.progress-76-99 .bar-progress{fill:#3b82f6}.frappe-gantt-wrap .bar-wrapper.progress-100 .bar{fill:#22c55e}.frappe-gantt-wrap .bar-wrapper.progress-100 .bar-progress{fill:#15803d}
 .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2>.field{min-width:0}.grid2>.field input,.grid2>.field select,.grid2>.field textarea{box-sizing:border-box;max-width:100%;width:100%}#gantt-task-modal .project-modal-box{width:min(820px,calc(100vw - 32px));overflow-x:hidden;overflow-y:auto}@media(max-width:850px){.grid2{grid-template-columns:1fr}}
+.gantt-progress-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px;padding:8px 10px;border-radius:8px;background:#f7f8f5;color:#59675f;font-size:10px;font-weight:700}.gantt-progress-legend strong{color:#34433a}.gantt-progress-legend i{display:inline-block;width:12px;height:8px;border-radius:3px;margin-right:4px}
 </style>
 
 <div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
@@ -173,6 +174,7 @@
             <button type="button" class="tool-btn" id="gantt-today"><i class="ti ti-calendar-event"></i> Dzisiaj</button>
             <span class="legend" style="margin:0 0 0 auto"><span><i class="dot" style="background:#7C3AED"></i>Zadania</span><span><i class="dot" style="background:#f59e0b;transform:rotate(45deg);border-radius:1px"></i>Kamienie milowe</span><span>Linie: dziś i koniec projektu {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></span>
         </div>
+        <div class="gantt-progress-legend"><strong>Kolor według postępu:</strong><span><i style="background:#8b5cf6"></i>0–10%</span><span><i style="background:#facc15"></i>11–25%</span><span><i style="background:#fb923c"></i>26–50%</span><span><i style="background:#1d4ed8"></i>51–75%</span><span><i style="background:#60a5fa"></i>76–99%</span><span><i style="background:#22c55e"></i>100%</span></div>
         @if($canManageSchedule)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
         <div id="project-frappe-gantt" class="frappe-gantt-wrap"></div>
     </div>
@@ -793,9 +795,23 @@ function initProjectGantt() {
             const dates = source?.is_milestone ? localDate(task._start || task.start) : localDate(task._start || task.start) + ' – ' + localDate(task._end || task.end);
             return '<div class="details-container"><strong>' + escapeProjectHtml(task.name) + '</strong><div>' + kind + ' · ' + task.progress + '%</div><div>' + dates + '</div>' + person + (dependency ? '<div>Zależne od: ' + escapeProjectHtml(dependency) + '</div>' : '') + '</div>';
         },
-        on_view_change: () => setTimeout(renderGanttDateMarkers, 0),
+        on_view_change: () => setTimeout(() => { applyGanttProgressColors(); renderGanttDateMarkers(); }, 0),
     });
-    setTimeout(() => { bindGanttTaskEditing(); renderGanttDateMarkers(); }, 50);
+    setTimeout(() => { bindGanttTaskEditing(); applyGanttProgressColors(); renderGanttDateMarkers(); }, 50);
+}
+
+function applyGanttProgressColors() {
+    const colors = {
+        'progress-0-10': ['#8b5cf6', '#6d28d9'], 'progress-11-25': ['#facc15', '#eab308'],
+        'progress-26-50': ['#fb923c', '#ea580c'], 'progress-51-75': ['#1d4ed8', '#1e3a8a'],
+        'progress-76-99': ['#60a5fa', '#3b82f6'], 'progress-100': ['#22c55e', '#15803d'],
+    };
+    document.querySelectorAll('#project-frappe-gantt .bar-wrapper.task-row').forEach(wrapper => {
+        const className = Object.keys(colors).find(name => wrapper.classList.contains(name));
+        if (!className) return;
+        wrapper.querySelector('.bar')?.style.setProperty('fill', colors[className][0], 'important');
+        wrapper.querySelector('.bar-progress')?.style.setProperty('fill', colors[className][1], 'important');
+    });
 }
 
 function ganttMarkerX(date, kind) {
