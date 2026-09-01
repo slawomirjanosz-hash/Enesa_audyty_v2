@@ -94,7 +94,7 @@
 .gantt-progress-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px;padding:8px 10px;border-radius:8px;background:#f7f8f5;color:#59675f;font-size:10px;font-weight:700}.gantt-progress-legend strong{color:#34433a}.gantt-progress-legend i{display:inline-block;width:12px;height:8px;border-radius:3px;margin-right:4px}
 </style>
 
-<div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
+<div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canCopyProject)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-copy-modal').classList.add('open')"><i class="ti ti-copy"></i> Kopiuj projekt</button>@endif @if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
 
 @if(session('success'))<div style="padding:12px 15px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:15px;">{{ session('success') }}</div>@endif
 @if($errors->any())<div style="padding:12px 15px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:15px;">{{ $errors->first() }}</div>@endif
@@ -142,6 +142,24 @@
     </div>
 </div>
 @if($errors->projectEdit->any())<script>document.addEventListener('DOMContentLoaded',()=>document.getElementById('project-edit-modal')?.classList.add('open'));</script>@endif
+@endif
+
+@if($canCopyProject)
+<div id="project-copy-modal" class="project-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="project-modal-box" style="width:min(620px,calc(100vw - 32px))">
+        <div class="modal-head"><div><h2>Kopiuj projekt</h2><small style="color:#718078">Utwórz podobny projekt pod nowym numerem.</small></div><button type="button" class="modal-close" onclick="document.getElementById('project-copy-modal').classList.remove('open')">×</button></div>
+        @if($errors->projectCopy->any())<div style="padding:11px 13px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:14px;">{{ $errors->projectCopy->first() }}</div>@endif
+        <form method="POST" action="{{ route('projects.copy',$project) }}">@csrf
+            <div class="grid2">
+                <div class="field"><label>Nowy numer projektu</label><input name="number" value="{{ old('number') }}" placeholder="np. PRJ/2026/002" required></div>
+                <div class="field"><label>Nazwa nowego projektu</label><input name="name" value="{{ old('name',$project->name.' — kopia') }}" required></div>
+            </div>
+            <div style="margin-top:14px;padding:12px 14px;border-radius:9px;background:#f5f8f6;color:#4b5d53;font-size:12px;line-height:1.55"><strong>Skopiowane zostaną:</strong> dane projektu, zespół, harmonogram i zadania oraz materiały i usługi. Zadania otrzymają postęp 0%, a projekt status „Planowany”. Dokumenty i finanse nie będą kopiowane.</div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="document.getElementById('project-copy-modal').classList.remove('open')">Anuluj</button><button class="btn"><i class="ti ti-copy"></i> Utwórz kopię</button></div>
+        </form>
+    </div>
+</div>
+@if($errors->projectCopy->any())<script>document.addEventListener('DOMContentLoaded',()=>document.getElementById('project-copy-modal')?.classList.add('open'));</script>@endif
 @endif
 
 <div class="tabs">

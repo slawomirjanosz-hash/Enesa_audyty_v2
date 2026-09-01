@@ -8,6 +8,7 @@ use App\Models\Document;
 use App\Models\Project;
 use App\Models\ProjectFinancialEntry;
 use App\Models\ProjectRequirement;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -50,6 +51,57 @@ test('admin creates a project with manager and team', function () {
         ->and($project->members->pluck('id'))->toContain($manager->id, $member->id);
 
     $this->actingAs($member)->get(route('projects.show', $project))->assertOk();
+});
+
+test('admin copies a project structure under a new number without finances and documents', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $member = User::factory()->create();
+    $project = Project::create([
+        'number' => 'PRJ/COPY/001', 'name' => 'Projekt wzorcowy',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 125000,
+        'start_date' => '2026-09-01', 'end_date' => '2026-10-31', 'created_by' => $admin->id,
+    ]);
+    $project->members()->attach([$admin->id, $member->id]);
+    $firstTask = Task::create([
+        'title' => 'Etap pierwszy', 'project_id' => $project->id, 'assigned_to' => $member->id,
+        'created_by' => $admin->id, 'status' => 'done', 'priority' => 'high', 'progress' => 100,
+        'start_date' => '2026-09-01', 'due_date' => '2026-09-05', 'project_position' => 1,
+    ]);
+    Task::create([
+        'title' => 'Etap drugi', 'project_id' => $project->id, 'assigned_to' => $admin->id,
+        'depends_on_task_id' => $firstTask->id, 'created_by' => $admin->id, 'status' => 'in_progress',
+        'priority' => 'medium', 'progress' => 60, 'start_date' => '2026-09-06',
+        'due_date' => '2026-09-10', 'project_position' => 2,
+    ]);
+    ProjectRequirement::create([
+        'project_id' => $project->id, 'type' => 'material', 'name' => 'Centrala',
+        'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 15000, 'status' => 'purchased',
+        'created_by' => $admin->id,
+    ]);
+    ProjectFinancialEntry::create([
+        'project_id' => $project->id, 'type' => 'invoice', 'name' => 'Faktura zaliczkowa',
+        'amount' => 10000, 'status' => 'issued', 'entry_date' => '2026-09-01',
+        'created_by' => $admin->id,
+    ]);
+
+    $response = $this->actingAs($admin)->post(route('projects.copy', $project), [
+        'number' => 'PRJ/COPY/002',
+        'name' => 'Projekt podobny',
+    ]);
+
+    $copy = Project::where('number', 'PRJ/COPY/002')->firstOrFail();
+    $response->assertRedirect(route('projects.show', $copy))->assertSessionHas('success');
+    expect($copy->name)->toBe('Projekt podobny')
+        ->and($copy->status)->toBe('planned')
+        ->and($copy->members->pluck('id'))->toContain($admin->id, $member->id)
+        ->and($copy->tasks)->toHaveCount(2)
+        ->and($copy->tasks->every(fn (Task $task) => $task->status === 'todo' && $task->progress === 0))->toBeTrue()
+        ->and($copy->tasks->last()->depends_on_task_id)->toBe($copy->tasks->first()->id)
+        ->and($copy->requirements)->toHaveCount(1)
+        ->and($copy->requirements->first()->status)->toBe('planned')
+        ->and($copy->financialEntries)->toHaveCount(0)
+        ->and($copy->documents)->toHaveCount(0);
 });
 
 test('uploaded project document remains visible after reopening the project', function () {

@@ -125,6 +125,7 @@ class ProjectController extends Controller
             'canViewServicePrices' => $canViewServicePrices,
             'canViewDocuments' => $canViewDocuments,
             'canDeleteProject' => $user->hasAnyRole(['admin', 'superadmin']),
+            'canCopyProject' => $fullAccess && $user->can('projects.create'),
         ]);
     }
 
@@ -142,6 +143,69 @@ class ProjectController extends Controller
         }
 
         return redirect()->route('projects.show', $project)->with('success', 'Dane projektu zostały zapisane.');
+    }
+
+    public function copy(Request $request, Project $project): RedirectResponse
+    {
+        $this->authorize('view', $project);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
+        $data = $request->validateWithBag('projectCopy', [
+            'number' => ['required', 'string', 'max:100', Rule::unique('projects', 'number')],
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $copy = DB::transaction(function () use ($data, $project, $request): Project {
+            $project->load(['members', 'tasks', 'requirements']);
+
+            $copy = $project->replicate(['public_gantt_token']);
+            $copy->fill([
+                'number' => $data['number'],
+                'name' => $data['name'],
+                'status' => 'planned',
+                'created_by' => $request->user()->id,
+                'public_gantt_token' => null,
+            ]);
+            $copy->save();
+            $copy->members()->sync($project->members->pluck('id')->push($copy->manager_id)->filter()->unique()->all());
+
+            $taskIds = [];
+            foreach ($project->tasks as $task) {
+                $taskCopy = $task->replicate(['depends_on_task_id', 'deleted_by']);
+                $taskCopy->fill([
+                    'project_id' => $copy->id,
+                    'company_id' => $copy->company_id,
+                    'created_by' => $request->user()->id,
+                    'depends_on_task_id' => null,
+                    'status' => 'todo',
+                    'progress' => 0,
+                    'deleted_by' => null,
+                ]);
+                $taskCopy->save();
+                $taskIds[$task->id] = $taskCopy->id;
+            }
+
+            foreach ($project->tasks as $task) {
+                if ($task->depends_on_task_id && isset($taskIds[$task->depends_on_task_id])) {
+                    Task::whereKey($taskIds[$task->id])->update(['depends_on_task_id' => $taskIds[$task->depends_on_task_id]]);
+                }
+            }
+
+            foreach ($project->requirements as $requirement) {
+                $requirementCopy = $requirement->replicate();
+                $requirementCopy->fill([
+                    'project_id' => $copy->id,
+                    'status' => 'planned',
+                    'created_by' => $request->user()->id,
+                ]);
+                $requirementCopy->save();
+            }
+
+            return $copy;
+        });
+
+        return redirect()->route('projects.show', $copy)
+            ->with('success', 'Projekt został skopiowany. Dokumenty i finanse nie zostały przeniesione.');
     }
 
     public function destroy(Project $project): RedirectResponse
