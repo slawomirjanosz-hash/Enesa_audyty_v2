@@ -82,6 +82,27 @@ test('client administrator sees temporary password when email is not sent', func
     Mail::assertSent(NewClientUser::class, fn (NewClientUser $mail) => $mail->hasTo('maria-client@example.test'));
 });
 
+test('client administrator cannot attach an existing account or change its role', function () {
+    $clientAdmin = User::factory()->create();
+    $clientAdmin->assignRole('client_admin');
+    $company = Company::create(['name' => 'Firma klienta', 'status' => 'active']);
+    $company->users()->attach($clientAdmin, ['is_admin' => true]);
+
+    $superadmin = User::factory()->create(['email' => 'owner@example.test']);
+    $superadmin->assignRole('superadmin');
+
+    $this->actingAs($clientAdmin)->from(route('client.users'))->post(route('client.users.store'), [
+        'first_name' => 'Próba',
+        'last_name' => 'Przejęcia',
+        'email' => $superadmin->email,
+        'is_admin' => '1',
+    ])->assertRedirect(route('client.users'))->assertSessionHasErrors('email');
+
+    expect($superadmin->refresh()->hasRole('superadmin'))->toBeTrue()
+        ->and($superadmin->hasAnyRole(['client_admin', 'client_user']))->toBeFalse()
+        ->and($company->users()->whereKey($superadmin->id)->exists())->toBeFalse();
+});
+
 test('crm task assignment mail remains automatic', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

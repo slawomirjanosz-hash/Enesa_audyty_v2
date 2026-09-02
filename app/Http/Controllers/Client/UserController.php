@@ -45,21 +45,10 @@ class UserController extends Controller
         $existingUser = User::where('email', $data['email'])->first();
 
         if ($existingUser) {
-            // Already in this company
-            if ($company->users()->where('users.id', $existingUser->id)->exists()) {
-                return back()->withInput()
-                    ->withErrors(['email' => 'Ten użytkownik jest już przypisany do Twojej firmy.']);
-            }
-
-            // Exists in system but not in company — attach them
-            $roleName = $data['is_admin'] ? 'client_admin' : 'client_user';
-            Role::findOrCreate($roleName);
-            $existingUser->syncRoles([$roleName]);
-
-            $company->users()->attach($existingUser->id, ['is_admin' => (bool) $data['is_admin']]);
-
-            return redirect()->route('client.users')
-                ->with('success', 'Istniejący użytkownik został dodany do Twojej firmy.');
+            return back()->withInput()
+                ->withErrors([
+                    'email' => 'Konto z tym adresem e-mail już istnieje. Poproś administratora systemu o przypisanie go do firmy.',
+                ]);
         }
 
         // New user — create account and send email
