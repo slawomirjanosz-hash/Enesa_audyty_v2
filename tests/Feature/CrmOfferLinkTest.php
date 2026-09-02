@@ -146,12 +146,14 @@ test('superadmin sees tasks assigned to other users in the team task table', fun
         'created_by' => $superadmin->id,
         'status' => 'todo',
         'priority' => 'medium',
+        'due_date' => now()->subDay(),
     ]);
 
     $this->actingAs($superadmin)->get(route('crm.index', ['tab' => 'tasks']))
         ->assertOk()
         ->assertSee('Zadania zespołu')
         ->assertSee('Zadanie admina widoczne dla superadmina')
+        ->assertSee('<span class="badge badge-red">Do zrobienia</span>', false)
         ->assertDontSee('Wszystkie szanse')
         ->assertDontSee('Brak szans w tym etapie');
 });

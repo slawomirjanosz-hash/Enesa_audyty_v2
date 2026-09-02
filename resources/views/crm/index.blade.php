@@ -552,7 +552,7 @@
         <tbody id="my-tasks-tbody">
             @forelse($myTasks as $task)
             @php
-                $overdue = $task->due_date && $task->due_date->isPast() && $task->status !== 'done';
+                $overdue = $task->due_date && $task->due_date->isBefore(today()) && $task->status === 'todo';
             @endphp
             <tr>
                 <td style="font-weight:600;">{{ $task->title }}</td>
@@ -570,7 +570,7 @@
                     @if($overdue)<span style="font-size:10px;margin-left:4px;">⚠</span>@endif
                 </td>
                 <td><span class="badge {{ $priorityMeta[$task->priority]['class'] }}">{{ $priorityMeta[$task->priority]['label'] }}</span></td>
-                <td><span class="badge {{ $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
+                <td><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
                         @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
@@ -618,7 +618,7 @@
         </thead>
         <tbody id="team-tasks-tbody">
             @forelse($otherTasks as $task)
-            @php $overdue = $task->due_date && $task->due_date->isPast() && $task->status !== 'done'; @endphp
+            @php $overdue = $task->due_date && $task->due_date->isBefore(today()) && $task->status === 'todo'; @endphp
             <tr>
                 <td style="font-weight:600;">{{ $task->title }}</td>
                 <td style="color:#888;font-size:12px;">{{ $task->company?->name ?? '—' }}</td>
@@ -635,7 +635,7 @@
                     @if($overdue)<span style="font-size:10px;margin-left:4px;">⚠</span>@endif
                 </td>
                 <td><span class="badge {{ $priorityMeta[$task->priority]['class'] }}">{{ $priorityMeta[$task->priority]['label'] }}</span></td>
-                <td><span class="badge {{ $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
+                <td><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
                         <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">

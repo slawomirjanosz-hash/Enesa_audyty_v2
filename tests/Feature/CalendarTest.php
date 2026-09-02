@@ -49,7 +49,9 @@ test('admin views own and team tasks in the monthly calendar', function () {
         ->assertSee('Moje zadanie CRM')
         ->assertDontSee('Zadanie projektowe pracownika')
         ->assertSee('Cały zespół')
-        ->assertSee('Piotr Pracownik');
+        ->assertSee('Piotr Pracownik')
+        ->assertSee('Numer tygodnia')
+        ->assertSee('Tydz.<br>31', false);
 
     $this->actingAs($admin)
         ->get(route('calendar.index', ['month' => '2026-08', 'scope' => 'team']))

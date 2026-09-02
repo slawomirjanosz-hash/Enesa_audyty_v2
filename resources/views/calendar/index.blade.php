@@ -20,10 +20,11 @@
     .calendar-titlebar { display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;background:#FAFAF7;border-bottom:1px solid #E8E4DB; }
     .calendar-titlebar h2 { margin:0;color:#263a2f;font:700 18px 'Lato',sans-serif;text-transform:capitalize; }
     .calendar-grid-wrap { overflow-x:auto; }
-    .calendar-grid { min-width:980px;display:grid;grid-template-columns:repeat(7,minmax(140px,1fr)); }
+    .calendar-grid { min-width:1040px;display:grid;grid-template-columns:58px repeat(7,minmax(140px,1fr)); }
     .calendar-weekday { padding:9px 10px;background:#F4F5F1;color:#68756e;border-right:1px solid #E8E4DB;border-bottom:1px solid #DED9CF;text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em; }
+    .calendar-week-number { display:flex;align-items:flex-start;justify-content:center;padding-top:13px;background:#F4F5F1;color:#69776f;border-right:1px solid #DED9CF;border-bottom:1px solid #ECE8E0;font-size:10px;font-weight:800;text-align:center;line-height:1.25; }
     .calendar-day { min-height:145px;padding:8px;border-right:1px solid #ECE8E0;border-bottom:1px solid #ECE8E0;background:#fff; }
-    .calendar-day:nth-child(7n) { border-right:0; }
+    .calendar-day.sunday { border-right:0; }
     .calendar-day.outside { background:#FAFAF8; }
     .calendar-day.today { background:#F1F8F4;box-shadow:inset 0 0 0 2px var(--green); }
     .calendar-day-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:7px; }
@@ -98,6 +99,7 @@
 
     <div class="calendar-grid-wrap">
         <div class="calendar-grid">
+            <div class="calendar-weekday">Tydz.</div>
             @foreach(['Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota','Niedziela'] as $weekday)
                 <div class="calendar-weekday">{{ $weekday }}</div>
             @endforeach
@@ -106,7 +108,8 @@
                 @php
                     $dayTasks = $tasksByDate->get($day->format('Y-m-d'), collect());
                 @endphp
-                <div class="calendar-day {{ !$day->isSameMonth($month) ? 'outside' : '' }} {{ $day->isToday() ? 'today' : '' }}">
+                @if($day->isMonday())<div class="calendar-week-number" title="Numer tygodnia">Tydz.<br>{{ $day->isoWeek() }}</div>@endif
+                <div class="calendar-day {{ !$day->isSameMonth($month) ? 'outside' : '' }} {{ $day->isToday() ? 'today' : '' }} {{ $day->isSunday() ? 'sunday' : '' }}">
                     <div class="calendar-day-head">
                         <span class="calendar-day-number">{{ $day->day }}</span>
                         @if($dayTasks->isNotEmpty())<span class="calendar-day-count">{{ $dayTasks->count() }} zadań</span>@endif
