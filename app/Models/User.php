@@ -30,6 +30,7 @@ class User extends Authenticatable
         'avatar_mime',
         'password',
         'is_active',
+        'has_employment_contract',
         'last_seen_at',
         'dashboard_tasks_seen_id',
     ];
@@ -56,6 +57,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'has_employment_contract' => 'boolean',
             'last_seen_at' => 'datetime',
             'dashboard_tasks_seen_id' => 'integer',
         ];
@@ -124,5 +126,41 @@ class User extends Authenticatable
     public function relatedCrmOpportunities(): BelongsToMany
     {
         return $this->belongsToMany(CrmOpportunity::class, 'crm_opportunity_user')->withTimestamps();
+    }
+
+    public function leaveEntitlements(): HasMany
+    {
+        return $this->hasMany(HrLeaveEntitlement::class);
+    }
+
+    public function hrLeaves(): HasMany
+    {
+        return $this->hasMany(HrLeave::class);
+    }
+
+    public function annualLeaveUsedDays(int $year): int
+    {
+        return $this->hrLeaves()->whereIn('type', ['annual', 'on_demand'])
+            ->whereYear('start_date', '<=', $year)->whereYear('end_date', '>=', $year)->get()
+            ->sum(function (HrLeave $leave) use ($year): int {
+                $date = $leave->start_date->copy();
+                $used = 0;
+                while ($date->lte($leave->end_date)) {
+                    if ($date->year === $year && ($leave->include_weekends || $date->isWeekday())) {
+                        $used++;
+                    }
+                    $date->addDay();
+                }
+
+                return $used;
+            });
+    }
+
+    public function annualLeaveBalance(int $year): array
+    {
+        $entitled = (int) ($this->leaveEntitlements()->where('year', $year)->value('entitled_days') ?? 0);
+        $used = $this->annualLeaveUsedDays($year);
+
+        return ['entitled' => $entitled, 'used' => $used, 'remaining' => $entitled - $used];
     }
 }

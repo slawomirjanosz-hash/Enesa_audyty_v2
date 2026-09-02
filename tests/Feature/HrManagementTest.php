@@ -4,6 +4,7 @@ use App\Models\CompanySettings;
 use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
 use App\Models\HrLeave;
+use App\Models\HrLeaveEntitlement;
 use App\Models\HrVehicle;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
@@ -147,7 +148,8 @@ test('ordinary HR employee cannot see or create records for another employee', f
 });
 
 test('employee manages own leave and a manager can register leave for another user', function () {
-    $employee = User::factory()->create(['name' => 'Pracownik Urlopowy']);
+    $employee = User::factory()->create(['name' => 'Pracownik Urlopowy', 'has_employment_contract' => true]);
+    HrLeaveEntitlement::create(['user_id' => $employee->id, 'year' => 2026, 'entitled_days' => 15]);
     $manager = User::factory()->create();
     $employeeRole = Role::findOrCreate('employee_hr');
     $employeeRole->givePermissionTo(Permission::findOrCreate('hr.leaves.view'));
@@ -164,7 +166,8 @@ test('employee manages own leave and a manager can register leave for another us
 
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))
         ->assertOk()->assertSee('Urlopy / L4')->assertSee('Urlop wypoczynkowy')->assertSee('Planowany wypoczynek')
-        ->assertSee('Uwzględnij weekendy w liczbie dni')->assertSee('Pobierz PDF');
+        ->assertSee('Uwzględnij weekendy w liczbie dni')->assertSee('Pobierz PDF')
+        ->assertSee('Pula przyznana')->assertSee('Pozostało')->assertSee('10 dni');
 
     $this->actingAs($employee)->get(route('hr.leaves.pdf', $leave))
         ->assertOk()->assertHeader('content-type', 'application/pdf');

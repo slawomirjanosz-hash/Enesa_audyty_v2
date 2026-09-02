@@ -44,7 +44,7 @@ class UserController extends Controller
             ->values();
 
         // Include every active account, also client accounts without a company.
-        $allUsers = User::with(['roles', 'companies'])
+        $allUsers = User::with(['roles', 'companies', 'leaveEntitlements'])
             ->orderBy('email')
             ->get();
 
@@ -180,6 +180,9 @@ class UserController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
+            'has_employment_contract' => ['nullable', 'boolean'],
+            'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
+            'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
         ], [
             'name.required' => 'Imię i nazwisko jest wymagane.',
             'email.required' => 'Adres e-mail jest wymagany.',
@@ -198,7 +201,15 @@ class UserController extends Controller
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($data['password'] ?? str()->random(16)),
             'is_active' => true,
+            'has_employment_contract' => $request->boolean('has_employment_contract'),
         ]);
+
+        if ($user->has_employment_contract) {
+            $user->leaveEntitlements()->updateOrCreate(
+                ['year' => $data['leave_year']],
+                ['entitled_days' => $data['leave_entitled_days']]
+            );
+        }
 
         $user->assignRole($data['role']);
 
@@ -238,6 +249,9 @@ class UserController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
+            'has_employment_contract' => ['nullable', 'boolean'],
+            'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
+            'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
         ], [
             'name.required' => 'Imię i nazwisko jest wymagane.',
             'email.required' => 'Adres e-mail jest wymagany.',
@@ -253,12 +267,20 @@ class UserController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
+        $user->has_employment_contract = $request->boolean('has_employment_contract');
 
         if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
 
         $user->save();
+
+        if ($user->has_employment_contract) {
+            $user->leaveEntitlements()->updateOrCreate(
+                ['year' => $data['leave_year']],
+                ['entitled_days' => $data['leave_entitled_days']]
+            );
+        }
 
         if (! $user->hasRole('superadmin')) {
             $user->syncRoles([$data['role']]);

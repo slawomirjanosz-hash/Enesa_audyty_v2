@@ -41,6 +41,7 @@ class HrController extends Controller
             $tab = $canDelegations ? 'delegations' : 'attendance';
         }
         $selectedUserId = $canTeam && $request->integer('user_id') ? $request->integer('user_id') : $user->id;
+        $leaveYear = min(2100, max(2020, $request->integer('leave_year', now()->year)));
 
         $users = $canTeam ? User::query()->where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get() : collect([$user]);
         $trips = $canDelegations ? HrBusinessTrip::with(['user', 'vehicle'])->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('departure_at')->get() : collect();
@@ -53,8 +54,12 @@ class HrController extends Controller
         $defaultDietRate = (float) ($hrSettings?->hr_diet_rate ?? 45);
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
         $canManageHrSettings = $user->hasRole(['superadmin', 'admin']);
+        $leaveBalanceUser = $canTeam && ! $request->integer('user_id') ? null : User::find($selectedUserId);
+        $leaveBalance = $leaveBalanceUser?->has_employment_contract
+            ? $leaveBalanceUser->annualLeaveBalance($leaveYear)
+            : null;
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings'));
+        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
     public function storeTrip(Request $request): RedirectResponse

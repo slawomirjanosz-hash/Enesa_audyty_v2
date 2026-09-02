@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Company;
+use App\Models\HrLeave;
+use App\Models\HrLeaveEntitlement;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -67,6 +69,47 @@ test('admin sees every active user and can edit or archive lower ranked accounts
         ->assertRedirect(route('settings.users.index'));
 
     $this->assertSoftDeleted('users', ['id' => $client->id]);
+});
+
+test('admin configures employment contract and yearly leave opening balance', function () {
+    $admin = userWithRole('admin');
+
+    $this->actingAs($admin)->post(route('settings.users.store'), [
+        'name' => 'Pracownik etatowy',
+        'email' => 'etat@example.test',
+        'role' => 'auditor',
+        'password' => 'password123',
+        'has_employment_contract' => 1,
+        'leave_year' => 2026,
+        'leave_entitled_days' => 15,
+    ])->assertRedirect(route('settings.users.index'));
+
+    $employee = User::where('email', 'etat@example.test')->firstOrFail();
+    expect($employee->has_employment_contract)->toBeTrue()
+        ->and(HrLeaveEntitlement::where('user_id', $employee->id)->where('year', 2026)->value('entitled_days'))->toBe(15);
+
+    HrLeave::create([
+        'user_id' => $employee->id, 'type' => 'annual', 'start_date' => '2026-09-07',
+        'end_date' => '2026-09-11', 'days' => 5, 'include_weekends' => false,
+    ]);
+    HrLeave::create([
+        'user_id' => $employee->id, 'type' => 'on_demand', 'start_date' => '2026-09-14',
+        'end_date' => '2026-09-14', 'days' => 1, 'include_weekends' => false,
+    ]);
+    HrLeave::create([
+        'user_id' => $employee->id, 'type' => 'sick_leave', 'start_date' => '2026-09-15',
+        'end_date' => '2026-09-18', 'days' => 4, 'include_weekends' => false,
+    ]);
+
+    expect($employee->annualLeaveBalance(2026))->toBe(['entitled' => 15, 'used' => 6, 'remaining' => 9]);
+
+    $this->actingAs($admin)->put(route('settings.users.update', $employee), [
+        'name' => $employee->name, 'email' => $employee->email, 'role' => 'auditor',
+        'has_employment_contract' => 1, 'leave_year' => 2027, 'leave_entitled_days' => 26,
+    ])->assertRedirect(route('settings.users.index'));
+
+    expect($employee->fresh()->leaveEntitlements()->count())->toBe(2)
+        ->and($employee->fresh()->annualLeaveBalance(2027)['entitled'])->toBe(26);
 });
 
 test('users cannot manage peers or users higher in the hierarchy', function () {

@@ -662,7 +662,10 @@
                                             '{{ e($user->name) }}',
                                             '{{ e($user->email) }}',
                                             '{{ e($user->phone ?? '') }}',
-                                            '{{ $role }}'
+                                            '{{ $role }}',
+                                            {{ $user->has_employment_contract ? 'true' : 'false' }},
+                                            @js($user->leaveEntitlements->pluck('entitled_days', 'year')),
+                                            @js($user->has_employment_contract ? $user->annualLeaveBalance(now()->year) : null)
                                         )">
                                         <i class="ti ti-pencil"></i>
                                     </button>
@@ -745,6 +748,11 @@
                 <label class="mf-label" for="add_password">Hasło (opcjonalnie — auto-generowane jeśli puste)</label>
                 <input id="add_password" type="password" name="password" class="mf-input" placeholder="min. 8 znaków">
             </div>
+            <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="add_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('add')" @checked(old('has_employment_contract'))> Zatrudniony na umowę o pracę</label>
+            <div id="add_leave_fields" class="mf-row" hidden>
+                <div class="mf-group"><label class="mf-label" for="add_leave_year">Rok puli urlopowej</label><input id="add_leave_year" class="mf-input" type="number" name="leave_year" min="2020" max="2100" value="{{old('leave_year',now()->year)}}"></div>
+                <div class="mf-group"><label class="mf-label" for="add_leave_days">Pula startowa w tym roku (dni)</label><input id="add_leave_days" class="mf-input" type="number" name="leave_entitled_days" min="0" max="366" value="{{old('leave_entitled_days',26)}}"><small style="color:#718078">Wpisz liczbę dni, od której pracownik ma rozpocząć pracę w systemie.</small></div>
+            </div>
 
             <button type="submit" class="btn-modal-submit">
                 <i class="ti ti-user-plus" style="margin-right:6px;"></i>Utwórz użytkownika
@@ -791,6 +799,11 @@
                 <label class="mf-label" for="edit_password">Nowe hasło (zostaw puste, by nie zmieniać)</label>
                 <input id="edit_password" type="password" name="password" class="mf-input" placeholder="min. 8 znaków">
             </div>
+            <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="edit_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('edit')"> Zatrudniony na umowę o pracę</label>
+            <div id="edit_leave_fields" class="mf-row" hidden>
+                <div class="mf-group"><label class="mf-label" for="edit_leave_year">Rok puli urlopowej</label><input id="edit_leave_year" class="mf-input" type="number" name="leave_year" min="2020" max="2100" value="{{now()->year}}" onchange="loadEditLeaveEntitlement()"></div>
+                <div class="mf-group"><label class="mf-label" for="edit_leave_days">Pula przyznana w tym roku (dni)</label><input id="edit_leave_days" class="mf-input" type="number" name="leave_entitled_days" min="0" max="366" value="0"><small id="edit_leave_balance" style="color:#718078"></small></div>
+            </div>
 
             <button type="submit" class="btn-modal-submit">
                 <i class="ti ti-device-floppy" style="margin-right:6px;"></i>Zapisz zmiany
@@ -817,7 +830,22 @@
     document.addEventListener('DOMContentLoaded', function() { openAddModal(); });
     @endif
 
-    function openEditModal(id, name, email, phone, role) {
+    let editLeaveEntitlements = {};
+    let editCurrentLeaveBalance = null;
+    function toggleEmploymentFields(prefix) {
+        const checked = document.getElementById(`${prefix}_employment_contract`).checked;
+        document.getElementById(`${prefix}_leave_fields`).hidden = !checked;
+        document.getElementById(`${prefix}_leave_year`).required = checked;
+        document.getElementById(`${prefix}_leave_days`).required = checked;
+    }
+    function loadEditLeaveEntitlement() {
+        const year = document.getElementById('edit_leave_year').value;
+        document.getElementById('edit_leave_days').value = editLeaveEntitlements[year] ?? 0;
+        document.getElementById('edit_leave_balance').textContent = Number(year) === new Date().getFullYear() && editCurrentLeaveBalance
+            ? `Wykorzystano: ${editCurrentLeaveBalance.used} dni · pozostało: ${editCurrentLeaveBalance.remaining} dni`
+            : 'Po zapisaniu ta pula będzie obowiązywać dla wybranego roku.';
+    }
+    function openEditModal(id, name, email, phone, role, employmentContract, entitlements, currentBalance) {
         const form = document.getElementById('editForm');
         form.action = '/settings/users/' + id;
         document.getElementById('edit_name').value  = name;
@@ -825,9 +853,16 @@
         document.getElementById('edit_phone').value = phone;
         document.getElementById('edit_role').value  = role;
         document.getElementById('edit_password').value = '';
+        editLeaveEntitlements = entitlements || {};
+        editCurrentLeaveBalance = currentBalance;
+        document.getElementById('edit_employment_contract').checked = Boolean(employmentContract);
+        document.getElementById('edit_leave_year').value = new Date().getFullYear();
+        loadEditLeaveEntitlement();
+        toggleEmploymentFields('edit');
         document.getElementById('editModal').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
+    document.addEventListener('DOMContentLoaded', function () { toggleEmploymentFields('add'); });
     function closeEditModal() {
         document.getElementById('editModal').classList.remove('open');
         document.body.style.overflow = '';
