@@ -25,7 +25,11 @@ test('crm companies and pipeline tabs render without loading errors', function (
     Company::create(['name' => 'Firma CRM', 'company_type' => 'client', 'status' => 'active']);
 
     $this->actingAs($admin)->get(route('crm.index', ['tab' => 'companies']))
-        ->assertOk()->assertSee('Firma CRM');
+        ->assertOk()
+        ->assertSee('Firma CRM')
+        ->assertSee('href="'.route('crm.index', ['tab' => 'companies']).'"', false)
+        ->assertSee('href="'.route('crm.index', ['tab' => 'pipeline']).'"', false)
+        ->assertSee('href="'.route('crm.index', ['tab' => 'tasks']).'"', false);
     $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline']))
         ->assertOk()->assertSee('Leady związane ze mną');
 });

@@ -92,6 +92,14 @@
             user-select: none;
         }
 
+        button.nav-link {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            font-family: inherit;
+            text-align: left;
+        }
+
         .nav-link:hover,
         .nav-link.active {
             background: rgba(255,255,255,.12);
@@ -476,16 +484,16 @@
 
             @if($appModuleEnabled('crm') && ($canAccessModule('crm.view') || $layoutCanAccessCrmTasks))
             <li class="nav-item nav-group {{ request()->is('crm*', 'suppliers*') ? 'open' : '' }}">
-                <span class="nav-link" onclick="toggleGroup(this)">
+                <button type="button" class="nav-link" onclick="toggleGroup(this)" aria-expanded="{{ request()->is('crm*', 'suppliers*') ? 'true' : 'false' }}">
                     <i class="ti ti-users"></i> CRM
                     <span class="arrow">▶</span>
-                </span>
+                </button>
                 <ul class="nav-sub">
                     @if($canAccessModule('crm.view'))
-                    <li><a href="{{ route('crm.index') }}" class="nav-link">Firmy</a></li>
-                    <li><a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="nav-link">Lejek sprzedaży</a></li>
+                    <li><a href="{{ route('crm.index', ['tab' => 'companies']) }}" class="nav-link {{ request()->routeIs('crm.index') && request('tab', 'companies') === 'companies' ? 'active' : '' }}">Firmy</a></li>
+                    <li><a href="{{ route('crm.index', ['tab' => 'pipeline']) }}" class="nav-link {{ request()->routeIs('crm.index') && request('tab') === 'pipeline' ? 'active' : '' }}">Lejek sprzedaży</a></li>
                     @endif
-                    <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link">Zadania</a></li>
+                    <li><a href="{{ route('crm.index', ['tab' => 'tasks']) }}" class="nav-link {{ request()->routeIs('crm.index') && request('tab') === 'tasks' ? 'active' : '' }}">Zadania</a></li>
                     @if($canAccessModule('crm.view'))
                     <li><a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">Dostawcy</a></li>
                     <li><a href="{{ route('crm.index', ['tab' => 'contacts']) }}" class="nav-link {{ request()->routeIs('crm.index') && request('tab') === 'contacts' ? 'active' : '' }}">Ważne kontakty</a></li>
@@ -659,7 +667,9 @@
     setInterval(updateClock, 1000);
 
     function toggleGroup(el) {
-        el.closest('.nav-group').classList.toggle('open');
+        const group = el.closest('.nav-group');
+        const isOpen = group.classList.toggle('open');
+        el.setAttribute('aria-expanded', String(isOpen));
     }
 
     function toggleOnline() {
