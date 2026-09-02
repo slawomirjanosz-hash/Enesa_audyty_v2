@@ -66,6 +66,28 @@ test('successful login and logout are visible on the login tab', function () {
         ->assertSee('logowania@example.com');
 });
 
+test('login history uses compact polish pagination', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    foreach (range(1, 53) as $number) {
+        ActivityLog::create([
+            'user_id' => $admin->id,
+            'action' => 'login',
+            'auditable_type' => User::class,
+            'auditable_id' => $admin->id,
+            'subject_label' => 'Logowanie '.$number,
+        ]);
+    }
+
+    $this->actingAs($admin)->get(route('activity-log.index', ['tab' => 'logins']))
+        ->assertOk()
+        ->assertSee('Wyświetlanie 1–50 z 53 wyników')
+        ->assertSee('Następna →')
+        ->assertDontSee('pagination.previous')
+        ->assertDontSee('<svg', false);
+});
+
 test('activity log is available only to administrators and explicitly selected roles', function () {
     $auditor = User::factory()->create();
     $auditor->assignRole('auditor');
