@@ -206,7 +206,7 @@ class HrController extends Controller
             'leave' => $leave,
             'company' => $company,
             'logo' => $company?->logoDataUri(),
-        ])->setPaper('a4')->download(
+        ])->setPaper('a5', 'portrait')->download(
             'urlop-'.Str::slug($leave->user?->name ?: 'pracownik').'-'.$leave->start_date->format('Y-m-d').'.pdf'
         );
     }
