@@ -147,3 +147,49 @@ test('empty delegation list is not rebuilt from the legacy delegation', function
         ->assertOk()
         ->assertDontSee('km:       777', false);
 });
+
+test('offer rich text is sanitized before it is stored', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Bezpieczny klient', 'company_type' => 'client', 'status' => 'active']);
+    $offer = Offer::create([
+        'company_id' => $company->id,
+        'offer_number' => 'OF_SAFE_001',
+        'offer_full_number' => 'OF_SAFE_001',
+        'status' => 'w_toku',
+    ]);
+
+    $this->actingAs($admin)->put(route('offers.update', $offer), [
+        'company_id' => $company->id,
+        'offer_number' => $offer->offer_number,
+        'status' => 'w_toku',
+        'content_subject' => '<p onclick="alert(1)">Treść</p><script>alert(2)</script>',
+        'liczba_wyjazdow' => 1,
+        'liczba_noc' => 0,
+        'liczba_osob' => 1,
+        'stawka_noc' => 0,
+    ])->assertRedirect(route('offers.show', $offer));
+
+    expect($offer->refresh()->content_subject)->toBe('<p>Treść</p>alert(2)');
+});
+
+test('legacy offer rich text is sanitized before a client sees it', function () {
+    Role::findOrCreate('client_user');
+    $client = User::factory()->create();
+    $client->assignRole('client_user');
+    $company = Company::create(['name' => 'Klient starej oferty', 'company_type' => 'client', 'status' => 'active']);
+    $company->users()->attach($client);
+    $offer = Offer::create([
+        'company_id' => $company->id,
+        'offer_number' => 'OF_LEGACY_XSS',
+        'offer_full_number' => 'OF_LEGACY_XSS',
+        'status' => 'w_toku',
+        'content_subject' => '<p onclick="alert(1)">Bezpieczna treść</p><script>alert(2)</script>',
+    ]);
+
+    $this->actingAs($client)->get(route('client.offers.show', $offer))
+        ->assertOk()
+        ->assertSee('<p>Bezpieczna treść</p>alert(2)', false)
+        ->assertDontSee('<p onclick=', false)
+        ->assertDontSee('<script>alert(2)</script>', false);
+});

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Offer;
+use App\Services\OfferContentService;
 
 class OfferController extends Controller
 {
@@ -33,6 +34,10 @@ class OfferController extends Controller
         }
 
         $offer->load('company', 'assignedUser', 'offerDelegation');
+        $content = app(OfferContentService::class);
+        foreach (['content_subject', 'content_scope', 'content_deadline', 'content_payment'] as $field) {
+            $offer->setAttribute($field, $content->cleanHtml($offer->getAttribute($field)));
+        }
 
         return view('client.offer-show', compact('offer', 'company'));
     }
