@@ -53,10 +53,16 @@ test('ISO 50001 type opens the dedicated modular workspace', function () {
 
     $this->actingAs($user)->get(route('audit-types.show', $isoType))->assertOk()
         ->assertSee('Wstęp o ISO')->assertSee('Filmy szkoleniowe')->assertSee('Rezerwa')
-        ->assertSee('4.1 – zmiana 2024')->assertSee('Wpływ zmian klimatu')
-        ->assertSee('4.2')->assertSee('Potrzeby stron zainteresowanych')
+        ->assertSee('4.1')->assertSee('Zrozumienie organizacji i jej kontekstu')
+        ->assertSee('4.2')->assertSee('Potrzeby i oczekiwania stron zainteresowanych')
         ->assertSee('4.3')->assertSee('Zakres systemu zarządzania energią')
-        ->assertSee('4.4')->assertSee('System zarządzania energią – EnMS')
+        ->assertSee('4.4')->assertSee('System zarządzania energią')
+        ->assertSee('5.1')->assertSee('Przywództwo i zaangażowanie')
+        ->assertSee('6.3')->assertSee('Przegląd energetyczny')
+        ->assertSee('7.2')->assertSee('Kompetencje')
+        ->assertSee('8.3')->assertSee('Zakupy')
+        ->assertSee('9.3')->assertSee('Przegląd zarządzania')
+        ->assertSee('10.2')->assertSee('Ciągłe doskonalenie')
         ->assertDontSee('Wersje formularza');
 });
 
@@ -143,7 +149,7 @@ test('client sees audits assigned to their company in the client zone', function
     $this->actingAs($client)->get(route('client.audits.show', $clientAudit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Dokumenty')
         ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
-        ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('4.1 – zmiana 2024')
+        ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('4.1')->assertSee('10.2')
         ->assertSee('Szkolenie widoczne dla klienta')->assertDontSee('Dodaj film')
         ->assertSee('data-client-audit-menu', false)->assertSee('Wyjdź do aplikacji')
         ->assertSee(route('client.dashboard'), false)->assertDontSee('data-client-standard-menu', false)
