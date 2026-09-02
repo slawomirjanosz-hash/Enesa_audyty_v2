@@ -27,7 +27,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $profileData = $request->safe()->except(['avatar', 'remove_avatar']);
+        $profileData = $request->safe()->except(['avatar', 'remove_avatar', 'signature', 'remove_signature']);
 
         $user->fill($profileData);
 
@@ -44,6 +44,17 @@ class ProfileController extends Controller
             $avatar = $request->file('avatar');
             $user->avatar_data = base64_encode((string) file_get_contents($avatar->getRealPath()));
             $user->avatar_mime = $avatar->getMimeType() ?: 'image/jpeg';
+        }
+
+        if ($request->boolean('remove_signature') || $request->hasFile('signature')) {
+            $user->signature_data = null;
+            $user->signature_mime = null;
+        }
+
+        if ($request->hasFile('signature')) {
+            $signature = $request->file('signature');
+            $user->signature_data = base64_encode((string) file_get_contents($signature->getRealPath()));
+            $user->signature_mime = $signature->getMimeType() ?: 'image/png';
         }
 
         $user->save();

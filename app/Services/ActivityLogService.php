@@ -12,7 +12,7 @@ class ActivityLogService
 {
     private const HIDDEN_FIELDS = [
         'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes',
-        'avatar_data', 'public_gantt_token', 'token', 'api_token', 'created_at', 'updated_at',
+        'avatar_data', 'signature_data', 'public_gantt_token', 'token', 'api_token', 'created_at', 'updated_at',
     ];
 
     private const VOLATILE_USER_FIELDS = ['last_seen_at', 'dashboard_tasks_seen_id'];

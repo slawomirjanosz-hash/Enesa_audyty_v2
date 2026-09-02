@@ -38,6 +38,27 @@
         </div>
 
         <div>
+            <x-input-label for="signature" value="Podpis do dokumentów HR" />
+            <div class="mt-2 flex items-center gap-4">
+                <div style="width:180px;height:72px;border:1px solid #d1d5db;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;">
+                    @if($user->signatureDataUri())
+                        <img src="{{ $user->signatureDataUri() }}" alt="Podpis użytkownika" style="display:block;max-width:100%;max-height:100%;object-fit:contain;">
+                    @else
+                        <span style="font-size:12px;color:#9ca3af">Brak podpisu</span>
+                    @endif
+                </div>
+                <div class="flex-1">
+                    <input id="signature" name="signature" type="file" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-gray-700 dark:text-gray-300" />
+                    <p class="mt-1 text-xs text-gray-500">Najlepiej PNG z przezroczystym lub białym tłem. Maksymalnie 2 MB.</p>
+                    @if($user->signature_data)
+                        <label class="mt-2 inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300"><input type="checkbox" name="remove_signature" value="1"> Usuń zapisany podpis</label>
+                    @endif
+                </div>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('signature')" />
+        </div>
+
+        <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />

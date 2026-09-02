@@ -68,6 +68,33 @@ test('profile avatar can be uploaded displayed and removed', function () {
         ->and($user->avatar_mime)->toBeNull();
 });
 
+test('profile signature can be uploaded displayed and removed', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->patch('/profile', [
+        'name' => $user->name,
+        'email' => $user->email,
+        'signature' => UploadedFile::fake()->image('signature.png', 400, 120),
+    ])->assertSessionHasNoErrors()->assertRedirect('/profile');
+
+    $user->refresh();
+    expect($user->signature_data)->not->toBeNull()
+        ->and($user->signature_mime)->toBe('image/png');
+
+    $this->actingAs($user->fresh())->get('/profile')
+        ->assertOk()
+        ->assertSee('data:image/png;base64,', false);
+
+    $this->actingAs($user)->patch('/profile', [
+        'name' => $user->name,
+        'email' => $user->email,
+        'remove_signature' => '1',
+    ])->assertSessionHasNoErrors();
+
+    expect($user->refresh()->signature_data)->toBeNull()
+        ->and($user->signature_mime)->toBeNull();
+});
+
 test('email verification status is unchanged when the email address is unchanged', function () {
     $user = User::factory()->create();
 

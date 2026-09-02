@@ -28,6 +28,8 @@ class User extends Authenticatable
         'phone',
         'avatar_data',
         'avatar_mime',
+        'signature_data',
+        'signature_mime',
         'password',
         'is_active',
         'has_employment_contract',
@@ -44,6 +46,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'avatar_data',
+        'signature_data',
     ];
 
     /**
@@ -86,6 +89,13 @@ class User extends Authenticatable
         }
 
         return 'data:'.($this->avatar_mime ?: 'image/jpeg').';base64,'.$this->avatar_data;
+    }
+
+    public function signatureDataUri(): ?string
+    {
+        return $this->signature_data
+            ? 'data:'.($this->signature_mime ?: 'image/png').';base64,'.$this->signature_data
+            : null;
     }
 
     public function companies(): BelongsToMany
