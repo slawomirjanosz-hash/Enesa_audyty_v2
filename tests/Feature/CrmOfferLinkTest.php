@@ -30,6 +30,29 @@ test('crm companies and pipeline tabs render without loading errors', function (
         ->assertOk()->assertSee('Leady związane ze mną');
 });
 
+test('overdue active opportunity has a red background in the sales pipeline', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    CrmOpportunity::create([
+        'title' => 'Przeterminowany lead',
+        'stage' => 'new_lead',
+        'expected_close_date' => today()->subDay(),
+        'created_by' => $admin->id,
+    ]);
+    CrmOpportunity::create([
+        'title' => 'Lead z terminem dzisiaj',
+        'stage' => 'contact',
+        'expected_close_date' => today(),
+        'created_by' => $admin->id,
+    ]);
+
+    $this->actingAs($admin)->get(route('crm.index', ['tab' => 'pipeline']))
+        ->assertOk()
+        ->assertSee('class="opp-card overdue" data-overdue="true"', false)
+        ->assertSee('Termin minął '.today()->subDay()->format('d.m.Y'))
+        ->assertSee('Lead z terminem dzisiaj');
+});
+
 test('authorized user manages important contacts and CRM places them after suppliers', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

@@ -61,6 +61,9 @@
 .funnel-label { width:120px; flex-shrink:0; display:flex; align-items:center; padding-right:12px; }
 .funnel-bar { flex:1; border-radius:8px; padding:10px 12px; min-height:56px; }
 .opp-card { background:#fff; border:1px solid #E5E1D8; border-radius:8px; padding:10px 12px; }
+.opp-card.overdue { background:#FEE2E2; border-color:#FCA5A5; }
+.opp-card.overdue .opp-card-title { color:#991B1B; }
+.opp-card-deadline { display:flex;align-items:center;gap:4px;margin-top:5px;color:#B91C1C;font-size:10px;font-weight:800; }
 .opp-card-title { font-size:12px; font-weight:700; color:#1A1A1A; margin-bottom:2px; font-family:'Manrope',sans-serif; }
 .opp-card-sub { font-size:11px; color:#888; }
 .opp-card-val { font-size:12px; font-weight:700; color:var(--green); margin-top:4px; font-family:'Lato',sans-serif; }
@@ -390,7 +393,8 @@
             @if($stageOpps->count() > 0)
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 @foreach($stageOpps as $opp)
-                <div class="opp-card" style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $meta['dot'] }};cursor:pointer;"
+                @php $isOverdue = $opp->expected_close_date && $opp->expected_close_date->isBefore(today()); @endphp
+                <div class="opp-card {{ $isOverdue ? 'overdue' : '' }}" @if($isOverdue)data-overdue="true"@endif style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $isOverdue ? '#DC2626' : $meta['dot'] }};cursor:pointer;"
                     onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
@@ -400,6 +404,7 @@
                     @else
                         <div class="opp-card-sub">bez klienta</div>
                     @endif
+                    @if($isOverdue)<div class="opp-card-deadline"><i class="ti ti-alert-triangle"></i> Termin minął {{ $opp->expected_close_date->format('d.m.Y') }}</div>@endif
                     @if($opp->offers->isNotEmpty())
                         <div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">
                             @foreach($opp->offers as $offer)
