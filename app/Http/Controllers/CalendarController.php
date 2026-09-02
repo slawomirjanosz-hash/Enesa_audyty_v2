@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanySettings;
+use App\Models\HrBusinessTrip;
+use App\Models\HrLeave;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -62,6 +64,57 @@ class CalendarController extends Controller
 
         $tasks = $tasksQuery->get();
         $tasksByDate = $tasks->groupBy(fn (Task $task) => $task->due_date->format('Y-m-d'));
+        $hrEventsByDate = collect();
+        $hrEnabled = CompanySettings::moduleIsEnabled('hr');
+        $canViewHrTeam = $user->hasRole(['superadmin', 'admin'])
+            || $user->can('system.full_access')
+            || $user->can('hr.team.view');
+        $hrUserId = $scope === 'team' && $canViewHrTeam ? $selectedUserId : $user->id;
+        $addHrEvent = function (CarbonImmutable $date, array $event) use ($hrEventsByDate, $gridStart, $gridEnd): void {
+            if ($date->betweenIncluded($gridStart, $gridEnd)) {
+                $key = $date->toDateString();
+                $hrEventsByDate->put($key, $hrEventsByDate->get($key, collect())->push($event));
+            }
+        };
+
+        if ($hrEnabled && ($user->hasRole('superadmin') || $user->canAny(['system.full_access', 'hr.delegations.view']))) {
+            $trips = HrBusinessTrip::with('user')
+                ->where('departure_at', '<=', $gridEnd->endOfDay())
+                ->where(fn ($query) => $query->whereNull('return_at')->orWhere('return_at', '>=', $gridStart->startOfDay()))
+                ->when($hrUserId, fn ($query) => $query->where('user_id', $hrUserId))->get();
+            foreach ($trips as $trip) {
+                $date = CarbonImmutable::parse($trip->departure_at)->startOfDay();
+                $lastDate = CarbonImmutable::parse($trip->return_at ?? $trip->departure_at)->startOfDay();
+                while ($date->lte($lastDate)) {
+                    $addHrEvent($date, [
+                        'title' => 'Delegacja: '.$trip->purpose,
+                        'meta' => $trip->user?->name.' · '.$trip->origin.' → '.$trip->destination,
+                        'url' => route('hr.delegations.show', $trip),
+                        'class' => 'business-trip',
+                    ]);
+                    $date = $date->addDay();
+                }
+            }
+        }
+
+        if ($hrEnabled && ($user->hasRole('superadmin') || $user->canAny(['system.full_access', 'hr.leaves.view']))) {
+            $leaves = HrLeave::with('user')->whereDate('start_date', '<=', $gridEnd)
+                ->whereDate('end_date', '>=', $gridStart)
+                ->when($hrUserId, fn ($query) => $query->where('user_id', $hrUserId))->get();
+            foreach ($leaves as $leave) {
+                $date = CarbonImmutable::parse($leave->start_date);
+                $lastDate = CarbonImmutable::parse($leave->end_date);
+                while ($date->lte($lastDate)) {
+                    $addHrEvent($date, [
+                        'title' => HrLeave::TYPES[$leave->type] ?? 'Nieobecność',
+                        'meta' => $leave->user?->name,
+                        'url' => route('hr.index', ['tab' => 'leaves', 'user_id' => $canViewHrTeam ? $leave->user_id : null]),
+                        'class' => $leave->type === 'sick_leave' ? 'sick-leave' : 'leave',
+                    ]);
+                    $date = $date->addDay();
+                }
+            }
+        }
         $days = collect(range(0, (int) $gridStart->diffInDays($gridEnd)))
             ->map(fn (int $offset) => $gridStart->addDays($offset));
 
@@ -82,7 +135,7 @@ class CalendarController extends Controller
         ];
 
         return view('calendar.index', compact(
-            'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'users',
+            'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
             'scope', 'selectedUserId', 'canViewTeam', 'stats'
         ));
     }

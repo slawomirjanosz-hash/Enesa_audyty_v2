@@ -163,7 +163,11 @@ test('employee manages own leave and a manager can register leave for another us
     expect($leave->user_id)->toBe($employee->id)->and($leave->end_date->toDateString())->toBe('2026-09-11');
 
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))
-        ->assertOk()->assertSee('Urlopy / L4')->assertSee('Urlop wypoczynkowy')->assertSee('Planowany wypoczynek');
+        ->assertOk()->assertSee('Urlopy / L4')->assertSee('Urlop wypoczynkowy')->assertSee('Planowany wypoczynek')
+        ->assertSee('Uwzględnij weekendy w liczbie dni')->assertSee('Pobierz PDF');
+
+    $this->actingAs($employee)->get(route('hr.leaves.pdf', $leave))
+        ->assertOk()->assertHeader('content-type', 'application/pdf');
 
     $this->actingAs($manager)->put(route('hr.leaves.update', $leave), [
         'type' => 'sick_leave', 'start_date' => '2026-09-08', 'days' => 3, 'notes' => 'Zwolnienie lekarskie',
@@ -171,9 +175,12 @@ test('employee manages own leave and a manager can register leave for another us
     expect($leave->fresh()->type)->toBe('sick_leave')->and($leave->fresh()->days)->toBe(3);
 
     $this->actingAs($manager)->post(route('hr.leaves.store'), [
-        'user_id' => $employee->id, 'type' => 'caregiver', 'start_date' => '2026-10-01', 'days' => 1,
+        'user_id' => $employee->id, 'type' => 'caregiver', 'start_date' => '2026-10-02', 'days' => 3,
+        'include_weekends' => 1,
     ])->assertSessionHas('success');
-    expect(HrLeave::where('user_id', $employee->id)->count())->toBe(2);
+    expect(HrLeave::where('user_id', $employee->id)->count())->toBe(2)
+        ->and(HrLeave::latest('id')->firstOrFail()->end_date->toDateString())->toBe('2026-10-04')
+        ->and(HrLeave::latest('id')->firstOrFail()->include_weekends)->toBeTrue();
 });
 
 test('HR team manager filters users and manages attendance and company cars', function () {

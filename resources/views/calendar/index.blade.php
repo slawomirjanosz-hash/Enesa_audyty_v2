@@ -39,6 +39,9 @@
     .calendar-event.priority-medium { border-left-color:#D97706;background:#FFF8E8; }
     .calendar-event.priority-low { border-left-color:#2563EB;background:#EFF6FF; }
     .calendar-event.done { opacity:.62;border-left-color:#16A34A;background:#F0FDF4; }
+    .calendar-event.business-trip { border-left-color:#7C3AED;background:#F5F3FF; }
+    .calendar-event.leave { border-left-color:#0891B2;background:#ECFEFF; }
+    .calendar-event.sick-leave { border-left-color:#DB2777;background:#FDF2F8; }
     .calendar-event-title { display:block;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .calendar-event-meta { display:block;margin-top:2px;color:#68756e;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .calendar-empty { padding:38px;text-align:center;color:#89958e;font-size:13px; }
@@ -60,7 +63,7 @@
 <div class="calendar-header">
     <div>
         <h1><i class="ti ti-calendar-month"></i> Kalendarz zadań</h1>
-        <p>Zadania CRM i projektowe uporządkowane według terminu wykonania.</p>
+        <p>Zadania CRM i projektowe oraz delegacje i nieobecności HR.</p>
     </div>
     <div class="calendar-actions">
         <a class="calendar-btn {{ $scope === 'mine' ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'mine']) }}"><i class="ti ti-user"></i> Moje zadania</a>
@@ -107,6 +110,7 @@
             @foreach($days as $day)
                 @php
                     $dayTasks = $tasksByDate->get($day->format('Y-m-d'), collect());
+                    $dayHrEvents = $hrEventsByDate->get($day->format('Y-m-d'), collect());
                 @endphp
                 @if($day->isMonday())<div class="calendar-week-number" title="Numer tygodnia">Tydz.<br>{{ $day->isoWeek() }}</div>@endif
                 <div class="calendar-day {{ !$day->isSameMonth($month) ? 'outside' : '' }} {{ $day->isToday() ? 'today' : '' }} {{ $day->isSunday() ? 'sunday' : '' }}">
@@ -125,6 +129,12 @@
                                 <span class="calendar-event-meta">{{ $task->assignedUser?->name ?? 'Nieprzypisane' }} · {{ $context }}</span>
                             </a>
                         @endforeach
+                        @foreach($dayHrEvents as $event)
+                            <a href="{{ $event['url'] }}" class="calendar-event {{ $event['class'] }}" title="{{ $event['title'] }} · {{ $event['meta'] }}">
+                                <span class="calendar-event-title">{{ $event['title'] }}</span>
+                                <span class="calendar-event-meta">{{ $event['meta'] }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
             @endforeach
@@ -136,6 +146,9 @@
         <span><i class="calendar-dot" style="background:#D97706"></i> średni priorytet</span>
         <span><i class="calendar-dot" style="background:#2563EB"></i> niski priorytet</span>
         <span><i class="calendar-dot" style="background:#16A34A"></i> wykonane</span>
+        <span><i class="calendar-dot" style="background:#7C3AED"></i> delegacja</span>
+        <span><i class="calendar-dot" style="background:#0891B2"></i> urlop</span>
+        <span><i class="calendar-dot" style="background:#DB2777"></i> L4</span>
         <span>◆ kamień milowy projektu</span>
     </div>
 </section>

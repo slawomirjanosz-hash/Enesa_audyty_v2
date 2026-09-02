@@ -2,6 +2,8 @@
 
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\HrBusinessTrip;
+use App\Models\HrLeave;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -32,6 +34,15 @@ test('admin views own and team tasks in the monthly calendar', function () {
         'priority' => 'high',
         'due_date' => '2026-08-20',
     ]);
+    HrBusinessTrip::create([
+        'user_id' => $employee->id, 'purpose' => 'Targi energetyczne',
+        'departure_at' => '2026-08-21 08:00', 'return_at' => '2026-08-22 18:00',
+        'origin' => 'Cieszyn', 'destination' => 'Poznań', 'vehicle_type' => 'company',
+    ]);
+    HrLeave::create([
+        'user_id' => $admin->id, 'type' => 'annual', 'start_date' => '2026-08-24',
+        'end_date' => '2026-08-25', 'days' => 2, 'include_weekends' => false,
+    ]);
     Task::create([
         'title' => 'Zadanie projektowe pracownika',
         'company_id' => $company->id,
@@ -48,6 +59,8 @@ test('admin views own and team tasks in the monthly calendar', function () {
         ->assertOk()
         ->assertSee('Moje zadanie CRM')
         ->assertDontSee('Zadanie projektowe pracownika')
+        ->assertSee('Urlop wypoczynkowy')
+        ->assertDontSee('Targi energetyczne')
         ->assertSee('Cały zespół')
         ->assertSee('Piotr Pracownik')
         ->assertSee('Numer tygodnia')
@@ -58,7 +71,9 @@ test('admin views own and team tasks in the monthly calendar', function () {
         ->assertOk()
         ->assertSee('Moje zadanie CRM')
         ->assertSee('Zadanie projektowe pracownika')
-        ->assertSee('Projekt kalendarza');
+        ->assertSee('Projekt kalendarza')
+        ->assertSee('Delegacja: Targi energetyczne')
+        ->assertSee('Urlop wypoczynkowy');
 });
 
 test('staff member without team permission sees only own calendar', function () {

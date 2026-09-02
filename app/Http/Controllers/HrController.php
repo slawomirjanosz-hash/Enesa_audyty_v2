@@ -191,6 +191,21 @@ class HrController extends Controller
         return $this->back('leaves', 'Nieobecność została zaktualizowana.');
     }
 
+    public function leavePdf(Request $request, HrLeave $leave): Response
+    {
+        abort_unless($leave->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
+        $leave->load('user');
+        $company = CompanySettings::query()->first();
+
+        return Pdf::loadView('hr.leave-pdf', [
+            'leave' => $leave,
+            'company' => $company,
+            'logo' => $company?->logoDataUri(),
+        ])->setPaper('a4')->download(
+            'urlop-'.Str::slug($leave->user?->name ?: 'pracownik').'-'.$leave->start_date->format('Y-m-d').'.pdf'
+        );
+    }
+
     public function destroyLeave(Request $request, HrLeave $leave): RedirectResponse
     {
         abort_unless($leave->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
@@ -312,11 +327,28 @@ class HrController extends Controller
             'type' => ['required', 'string', Rule::in(array_keys(HrLeave::TYPES))],
             'start_date' => ['required', 'date'],
             'days' => ['required', 'integer', 'min:1', 'max:730'],
+            'include_weekends' => ['nullable', 'boolean'],
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
         $user = $request->user();
         $data['user_id'] = $forcedUserId ?? ($this->canViewTeam($user) && ! empty($data['user_id']) ? (int) $data['user_id'] : $user->id);
-        $data['end_date'] = Carbon::parse($data['start_date'])->addDays((int) $data['days'] - 1)->toDateString();
+        $data['include_weekends'] = $request->boolean('include_weekends');
+        $endDate = Carbon::parse($data['start_date']);
+        if ($data['include_weekends']) {
+            $endDate->addDays((int) $data['days'] - 1);
+        } else {
+            $daysLeft = (int) $data['days'];
+            while (true) {
+                if ($endDate->isWeekday()) {
+                    $daysLeft--;
+                }
+                if ($daysLeft === 0) {
+                    break;
+                }
+                $endDate->addDay();
+            }
+        }
+        $data['end_date'] = $endDate->toDateString();
 
         return $data;
     }
