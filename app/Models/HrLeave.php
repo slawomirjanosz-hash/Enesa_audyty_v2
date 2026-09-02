@@ -23,9 +23,9 @@ class HrLeave extends Model
         'sick_leave' => 'Zwolnienie chorobowe (L4)',
     ];
 
-    protected $fillable = ['user_id', 'type', 'start_date', 'end_date', 'days', 'include_weekends', 'notes', 'created_by'];
+    protected $fillable = ['user_id', 'type', 'start_date', 'end_date', 'days', 'include_weekends', 'document_date', 'notes', 'created_by'];
 
-    protected $casts = ['start_date' => 'date', 'end_date' => 'date', 'include_weekends' => 'boolean'];
+    protected $casts = ['start_date' => 'date', 'end_date' => 'date', 'document_date' => 'date', 'include_weekends' => 'boolean'];
 
     public function user(): BelongsTo
     {

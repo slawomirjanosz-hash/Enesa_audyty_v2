@@ -159,10 +159,12 @@ test('employee manages own leave and a manager can register leave for another us
     $manager->assignRole($managerRole);
 
     $this->actingAs($employee)->post(route('hr.leaves.store'), [
-        'type' => 'annual', 'start_date' => '2026-09-07', 'days' => 5, 'notes' => 'Planowany wypoczynek',
+        'type' => 'annual', 'document_date' => '2026-08-20', 'start_date' => '2026-09-07', 'days' => 5, 'notes' => 'Planowany wypoczynek',
     ])->assertRedirect(route('hr.index', ['tab' => 'leaves']));
     $leave = HrLeave::firstOrFail();
-    expect($leave->user_id)->toBe($employee->id)->and($leave->end_date->toDateString())->toBe('2026-09-11');
+    expect($leave->user_id)->toBe($employee->id)
+        ->and($leave->document_date->toDateString())->toBe('2026-08-20')
+        ->and($leave->end_date->toDateString())->toBe('2026-09-11');
 
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))
         ->assertOk()->assertSee('Urlopy / L4')->assertSee('Urlop wypoczynkowy')->assertSee('Planowany wypoczynek')
@@ -173,12 +175,12 @@ test('employee manages own leave and a manager can register leave for another us
         ->assertOk()->assertHeader('content-type', 'application/pdf');
 
     $this->actingAs($manager)->put(route('hr.leaves.update', $leave), [
-        'type' => 'sick_leave', 'start_date' => '2026-09-08', 'days' => 3, 'notes' => 'Zwolnienie lekarskie',
+        'type' => 'sick_leave', 'document_date' => '2026-09-01', 'start_date' => '2026-09-08', 'days' => 3, 'notes' => 'Zwolnienie lekarskie',
     ])->assertSessionHas('success');
     expect($leave->fresh()->type)->toBe('sick_leave')->and($leave->fresh()->days)->toBe(3);
 
     $this->actingAs($manager)->post(route('hr.leaves.store'), [
-        'user_id' => $employee->id, 'type' => 'caregiver', 'start_date' => '2026-10-02', 'days' => 3,
+        'user_id' => $employee->id, 'type' => 'caregiver', 'document_date' => '2026-09-15', 'start_date' => '2026-10-02', 'days' => 3,
         'include_weekends' => 1,
     ])->assertSessionHas('success');
     expect(HrLeave::where('user_id', $employee->id)->count())->toBe(2)

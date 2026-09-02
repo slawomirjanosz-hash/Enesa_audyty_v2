@@ -333,6 +333,7 @@ class HrController extends Controller
             'start_date' => ['required', 'date'],
             'days' => ['required', 'integer', 'min:1', 'max:730'],
             'include_weekends' => ['nullable', 'boolean'],
+            'document_date' => ['required', 'date'],
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
         $user = $request->user();
