@@ -52,7 +52,8 @@ test('ISO 50001 type opens the dedicated modular workspace', function () {
     $isoType = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
 
     $this->actingAs($user)->get(route('audit-types.show', $isoType))->assertOk()
-        ->assertSee('Wstęp o ISO')->assertSee('Filmy szkoleniowe')->assertSee('Rezerwa')
+        ->assertSee('Wstęp o ISO')->assertSee('Filmy szkoleniowe')->assertSee('Przygotowanie wdrożenia')
+        ->assertSee('3.1')->assertSee('Decyzja i uzasadnienie biznesowe')
         ->assertSee('4.1')->assertSee('Zrozumienie organizacji i jej kontekstu')
         ->assertSee('4.2')->assertSee('Potrzeby i oczekiwania stron zainteresowanych')
         ->assertSee('4.3')->assertSee('Zakres systemu zarządzania energią')
@@ -63,6 +64,9 @@ test('ISO 50001 type opens the dedicated modular workspace', function () {
         ->assertSee('8.3')->assertSee('Zakupy')
         ->assertSee('9.3')->assertSee('Przegląd zarządzania')
         ->assertSee('10.2')->assertSee('Ciągłe doskonalenie')
+        ->assertSee('11.1')->assertSee('Ocena gotowości')
+        ->assertSee('Co sprawdzić podczas audytu')->assertSee('Oczekiwane dowody i dokumenty')
+        ->assertSee('Zalecany sposób wdrożenia')->assertSee('Typowa pułapka')
         ->assertDontSee('Wersje formularza');
 });
 
@@ -149,7 +153,8 @@ test('client sees audits assigned to their company in the client zone', function
     $this->actingAs($client)->get(route('client.audits.show', $clientAudit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Dokumenty')
         ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
-        ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('4.1')->assertSee('10.2')
+        ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('3.1')->assertSee('4.1')->assertSee('10.2')->assertSee('11.4')
+        ->assertSee('Co sprawdzić podczas audytu')->assertSee('Oczekiwane dowody i dokumenty')
         ->assertSee('Szkolenie widoczne dla klienta')->assertDontSee('Dodaj film')
         ->assertSee('data-client-audit-menu', false)->assertSee('Wyjdź do aplikacji')
         ->assertSee(route('client.dashboard'), false)->assertDontSee('data-client-standard-menu', false)

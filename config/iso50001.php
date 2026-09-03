@@ -4,7 +4,17 @@ return [
     'chapters' => [
         ['id' => 'intro', 'number' => '1', 'title' => 'Wstęp o ISO', 'description' => 'ISO 50001:2018 określa ramy tworzenia, wdrażania, utrzymywania i ciągłego doskonalenia systemu zarządzania energią (EnMS). Pomaga organizacji zarządzać zużyciem energii na podstawie danych, wyznaczać cele i wykazywać poprawę wyniku energetycznego. Norma wykorzystuje cykl PDCA i może być zintegrowana z ISO 9001 oraz ISO 14001.', 'source_url' => 'https://www.iso.org/standard/69426.html', 'source_label' => 'ISO 50001:2018 – informacje o normie'],
         ['id' => 'training', 'number' => '2', 'title' => 'Filmy szkoleniowe', 'description' => 'Materiały szkoleniowe wspierające wdrożenie i prowadzenie EnMS.'],
-        ['id' => 'reserve', 'number' => '3', 'title' => 'Rezerwa', 'description' => 'Miejsce przeznaczone na kolejny uzgodniony obszar audytu.'],
+        [
+            'id' => 'preparation', 'number' => '3', 'title' => 'Przygotowanie wdrożenia',
+            'description' => 'Etap poprzedzający właściwe wymagania normy: uzasadnienie biznesowe, ocena gotowości, zapewnienie zasobów oraz zorganizowanie zespołu. Dobre przygotowanie ogranicza ryzyko stworzenia systemu działającego wyłącznie na papierze.',
+            'items' => [
+                ['id' => '3-1', 'number' => '3.1', 'title' => 'Decyzja i uzasadnienie biznesowe', 'description' => 'Należy określić, dlaczego organizacja wdraża EnMS, jakich korzyści oczekuje, jakie obowiązki i ryzyka uwzględnia oraz jakie koszty poniesie podczas wdrożenia i późniejszego utrzymania systemu.'],
+                ['id' => '3-2', 'number' => '3.2', 'title' => 'Analiza luk i plan wdrożenia', 'description' => 'Ocena stanu wyjściowego powinna wskazać spełnione wymagania, realnie działające procesy, brakujące dane i dokumenty oraz działania niezbędne do przejścia pełnego cyklu PDCA.'],
+                ['id' => '3-3', 'number' => '3.3', 'title' => 'Zespół, role i zasoby', 'description' => 'Wdrożenie wymaga sponsora po stronie zarządu, Energy Managera z odpowiednimi uprawnieniami oraz interdyscyplinarnego zespołu obejmującego obszary mające wpływ na wykorzystanie energii.'],
+                ['id' => '3-4', 'number' => '3.4', 'title' => 'Integracja z innymi systemami', 'description' => 'Jeżeli organizacja posiada ISO 9001, ISO 14001 lub ISO 45001, powinna wykorzystać wspólne mechanizmy zarządzania, pozostawiając specjalistyczne elementy energetyczne takie jak SEU, EnPI, EnB i przegląd energetyczny.'],
+                ['id' => '3-5', 'number' => '3.5', 'title' => 'Ocena gotowości do startu', 'description' => 'Przed rozpoczęciem wdrożenia należy potwierdzić dostępność danych, zakres, zasoby, budżet, harmonogram oraz zdolność organizacji do utrzymania systemu po uzyskaniu certyfikatu.'],
+            ],
+        ],
         [
             'id' => 'context', 'number' => '4', 'title' => 'Kontekst organizacji',
             'description' => 'Organizacja określa otoczenie, strony zainteresowane i granice systemu, aby EnMS odpowiadał jej rzeczywistym uwarunkowaniom oraz obejmował istotne wykorzystanie energii.',
@@ -72,6 +82,16 @@ return [
             'items' => [
                 ['id' => '10-1', 'number' => '10.1', 'title' => 'Niezgodności i działania korygujące', 'description' => 'Po wykryciu niezgodności należy ją opanować, usunąć skutki, ustalić przyczyny i ocenić, czy podobny problem może wystąpić gdzie indziej. Działania powinny być proporcjonalne do skutków, następnie ocenione pod kątem skuteczności, a dokumentacja powinna obejmować charakter niezgodności, podjęte działania i rezultaty.'],
                 ['id' => '10-2', 'number' => '10.2', 'title' => 'Ciągłe doskonalenie', 'description' => 'Organizacja powinna stale doskonalić przydatność, adekwatność i skuteczność EnMS oraz wykazywać ciągłą poprawę wyniku energetycznego za pomocą EnPI, linii bazowych, wyników planów i innych wiarygodnych danych.'],
+            ],
+        ],
+        [
+            'id' => 'certification', 'number' => '11', 'title' => 'Certyfikacja i utrzymanie systemu',
+            'description' => 'Praktyczny etap po wdrożeniu wymagań ISO 50001: ocena gotowości, wybór akredytowanej jednostki, audyt certyfikacyjny oraz utrzymanie żywego systemu między audytami nadzoru i recertyfikacją.',
+            'items' => [
+                ['id' => '11-1', 'number' => '11.1', 'title' => 'Ocena gotowości', 'description' => 'Przed zgłoszeniem do certyfikacji organizacja powinna zakończyć pełny cykl działania EnMS, wykonać audyt wewnętrzny i przegląd zarządzania oraz potwierdzić spójność dokumentacji, danych i praktyki operacyjnej.'],
+                ['id' => '11-2', 'number' => '11.2', 'title' => 'Wybór jednostki certyfikującej', 'description' => 'Jednostkę należy ocenić pod względem akredytacji, doświadczenia branżowego, kompetencji audytorów, zakresu, czasu audytu, zasad nadzoru oraz całkowitych kosztów cyklu certyfikacji.'],
+                ['id' => '11-3', 'number' => '11.3', 'title' => 'Audyt certyfikacyjny', 'description' => 'Etap 1 ocenia gotowość i dokumentację, a etap 2 faktyczne wdrożenie, zgodność i skuteczność systemu. Organizacja powinna zapewnić dostęp do ludzi, procesów, danych i obiektów oraz właściwie reagować na ustalenia.'],
+                ['id' => '11-4', 'number' => '11.4', 'title' => 'Audyty nadzoru i recertyfikacja', 'description' => 'Certyfikat rozpoczyna etap utrzymania. EnMS musi być stale aktualizowany, analizowany i doskonalony, a organizacja powinna utrzymywać gotowość poprzez normalne działanie systemu, nie jednorazowe przygotowania do audytu.'],
             ],
         ],
     ],
