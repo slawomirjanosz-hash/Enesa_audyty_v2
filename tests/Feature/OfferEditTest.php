@@ -193,3 +193,44 @@ test('legacy offer rich text is sanitized before a client sees it', function () 
         ->assertDontSee('<p onclick=', false)
         ->assertDontSee('<script>alert(2)</script>', false);
 });
+
+test('offer editor shows live section totals and pdf can contain section summaries only', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Klient oferty sekcyjnej', 'company_type' => 'client', 'status' => 'active']);
+    $offer = Offer::create([
+        'company_id' => $company->id,
+        'offer_number' => 'OF_SECTIONS_001',
+        'offer_full_number' => 'OF_SECTIONS_001',
+        'status' => 'w_toku',
+        'show_unit_prices' => true,
+        'price_sections' => [[
+            'id' => 'main',
+            'name' => 'Pomiary instalacji',
+            'rows' => [[
+                'opis' => 'Pozycja szczegółowa',
+                'jedn' => 'szt',
+                'ilosc' => 2,
+                'cena_jedn' => 500,
+                'z_narzutem' => 1200,
+            ]],
+        ]],
+    ]);
+
+    $this->actingAs($admin)->get(route('offers.edit', $offer))
+        ->assertOk()
+        ->assertSee('Suma sekcji')
+        ->assertSee('data-section-total', false)
+        ->assertSee(route('offers.pdf', ['offer' => $offer, 'sections_only' => 1]), false);
+
+    $html = view('offers.pdf', [
+        'offer' => $offer->load(['company', 'assignedUser', 'offerDelegation']),
+        'companySettings' => null,
+        'logoBase64' => null,
+        'sectionsOnly' => true,
+    ])->render();
+
+    expect($html)->toContain('Pomiary instalacji')
+        ->toContain('1 200,00 zł')
+        ->not->toContain('Pozycja szczegółowa');
+});

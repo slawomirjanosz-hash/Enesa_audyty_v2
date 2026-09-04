@@ -90,6 +90,9 @@ body {
 .price-tbl td.muted { color: #888; font-size: 8pt; }
 .price-tbl tr:last-child td { border-bottom: none; }
 .section-name-row td { background: #F4F1EA; font-weight: bold; font-size: 8pt; color: #1A4D3A; padding: 5px 8px; }
+.section-summary-row td { padding: 9px 8px; background: #F9F7F4; border-bottom: 1px solid #E5E1D8; }
+.section-summary-row .section-summary-name { font-weight: bold; color: #1A4D3A; }
+.section-summary-row .section-summary-value { text-align: right; font-weight: bold; white-space: nowrap; }
 
 /* DELEGACJE */
 .deleg-outer { border: 1px solid #E5E1D8; background: #F9F7F4; border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
@@ -259,6 +262,7 @@ body {
 
 {{-- TABELA WYCENY (price_sections) --}}
 @php
+    $sectionsOnly = $sectionsOnly ?? false;
     $sections = $offer->price_sections ?? [];
     $multiSection = count($sections) > 1;
     $priceRowCount = 0;
@@ -290,6 +294,12 @@ body {
 
     <table class="price-tbl">
         <thead>
+        @if($sectionsOnly)
+        <tr>
+            <th>Sekcja</th>
+            <th class="r" style="width:24%">Wartość netto</th>
+        </tr>
+        @else
         <tr>
             <th style="width:5%">#</th>
             <th>Opis</th>
@@ -299,9 +309,20 @@ body {
                 <th class="r" style="width:18%">Kwota</th>
             @endif
         </tr>
+        @endif
         </thead>
         <tbody>
         @foreach($sections as $section)
+            @php
+                $sectionTotal = collect($section['rows'] ?? [])
+                    ->sum(fn ($row) => (float) ($row['z_narzutem'] ?? 0));
+            @endphp
+            @if($sectionsOnly)
+            <tr class="section-summary-row">
+                <td class="section-summary-name">{{ $section['name'] }}</td>
+                <td class="section-summary-value">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
+            </tr>
+            @else
             @if($multiSection)
             <tr class="section-name-row">
                 <td colspan="{{ $offer->show_unit_prices ? 5 : 4 }}">{{ $section['name'] }}</td>
@@ -318,6 +339,7 @@ body {
                 @endif
             </tr>
             @endforeach
+            @endif
         @endforeach
         </tbody>
     </table>

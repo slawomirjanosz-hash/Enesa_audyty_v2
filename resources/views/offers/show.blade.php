@@ -224,6 +224,9 @@
         <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->fullNumber() }}')" class="btn-primary">
             <i class="ti ti-file-type-pdf"></i> Podgląd PDF
         </button>
+        <button type="button" onclick="openPdfModal('{{ route('offers.pdf', ['offer' => $offer, 'sections_only' => 1]) }}', 'Oferta {{ $offer->fullNumber() }} — tylko sekcje')" class="btn-primary" style="background:#476A5D;">
+            <i class="ti ti-layout-list"></i> PDF tylko sekcje
+        </button>
         <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;">
             @csrf
             <button type="submit" class="btn-primary" style="background:#2563EB;">

@@ -582,7 +582,11 @@ class OfferController extends Controller
         $this->authorize('view', $offer);
         $this->authorize('viewPrices', $offer);
         try {
-            $mpdf = $this->buildOfferPdf($offer, $request->has('unit') ? $request->boolean('unit') : null);
+            $mpdf = $this->buildOfferPdf(
+                $offer,
+                $request->has('unit') ? $request->boolean('unit') : null,
+                $request->boolean('sections_only'),
+            );
             $filename = $offer->documentFilename('pdf');
 
             return response($mpdf->Output($filename, 'S'), 200, [
@@ -637,7 +641,7 @@ class OfferController extends Controller
         return redirect()->back()->with('success', 'PDF oferty został zapisany w dokumentach firmy.');
     }
 
-    private function buildOfferPdf(Offer $offer, ?bool $forceUnitPrices = null): Mpdf
+    private function buildOfferPdf(Offer $offer, ?bool $forceUnitPrices = null, bool $sectionsOnly = false): Mpdf
     {
         $offer->load(['company', 'assignedUser', 'offerDelegation']);
         $companySettings = CompanySettings::first();
@@ -653,7 +657,7 @@ class OfferController extends Controller
 
         $logoBase64 = $companySettings?->logoDataUri();
 
-        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64'))->render();
+        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64', 'sectionsOnly'))->render();
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',

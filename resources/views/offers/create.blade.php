@@ -90,6 +90,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 .btn-section-action:disabled { opacity:.35; cursor:not-allowed; }
 .btn-section-clear { width:auto; padding:0 9px; gap:4px; color:#8A5A00; border-color:#E8C77B; }
 .section-name-input { flex:1; border:none; outline:none; background:transparent; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A; border-bottom:1px dashed #bbb; padding:2px 4px; }
+.section-price-total { margin-left:auto; padding:5px 10px; border-radius:7px; background:#EAF4EF; color:var(--green); font-size:11px; font-weight:800; white-space:nowrap; }
 .price-table { width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed; }
 .price-table td, .price-table th { overflow:hidden; }
 .price-table th { font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.05em; padding:8px 10px; border-bottom:2px solid #E5E1D8; background:#FAFAF6; white-space:nowrap; text-align:left; }
@@ -374,6 +375,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     <div class="ed-card-header">
         <i class="ti ti-calculator"></i>
         <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
+        <span class="section-price-total">Suma sekcji: <strong data-section-total>0,00 zł</strong></span>
     </div>
     <div style="overflow-x:auto;">
         <table class="price-table" id="table-main">
@@ -649,6 +651,16 @@ function recalcAll() {
         const zNDisplay = tr.querySelector('.z-narzutem-display');
         if (zNDisplay) zNDisplay.textContent = makePl(net * (1 + pct / 100));
     });
+    document.querySelectorAll('.ed-card.type-price').forEach(card => {
+        let sectionTotal = 0;
+        card.querySelectorAll('.price-table tbody tr').forEach(tr => {
+            const quantity = parseValue(tr.querySelector('.ilosc-input')?.value) || 0;
+            const unitPrice = parseValue(tr.querySelector('.cena-input')?.value) || 0;
+            sectionTotal += quantity * unitPrice * (1 + pct / 100);
+        });
+        const total = card.querySelector('[data-section-total]');
+        if (total) total.textContent = makePl(sectionTotal) + ' zł';
+    });
     const delegCost = parsePl(document.getElementById('deleg-result').textContent);
     const markupZl  = sumNetto * (pct / 100);
     document.getElementById('markup-zl').value = markupZl.toFixed(2);
@@ -739,6 +751,7 @@ function addSection(sectionData) {
         <div class="ed-card-header">
             <i class="ti ti-calculator"></i>
             <input type="text" class="section-name-input" value="${escHtml(name)}">
+            <span class="section-price-total">Suma sekcji: <strong data-section-total>0,00 zł</strong></span>
             <button type="button" class="btn-del-section" onclick="removeSection('${sid}')">
                 <i class="ti ti-trash"></i> Usuń sekcję
             </button>

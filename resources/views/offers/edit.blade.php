@@ -173,6 +173,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#1A1A1A;
     border-bottom:1px dashed #bbb; padding:2px 4px;
 }
+.section-price-total { margin-left:auto; padding:5px 10px; border-radius:7px; background:#EAF4EF; color:var(--green); font-size:11px; font-weight:800; white-space:nowrap; }
 .price-table { width:100%; border-collapse:collapse; font-size:13px; }
 .price-table th {
     font-family:'Manrope',sans-serif; font-size:10px; font-weight:700;
@@ -303,6 +304,9 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
             <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-secondary">
                 <i class="ti ti-file-type-pdf"></i> Podgląd PDF
             </button>
+            <button type="button" onclick="openPdfModal('{{ route('offers.pdf', ['offer' => $offer, 'sections_only' => 1]) }}', 'Oferta {{ $offer->offer_full_number }} — tylko sekcje')" class="btn-secondary">
+                <i class="ti ti-layout-list"></i> PDF tylko sekcje
+            </button>
             <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;">
                 @csrf
                 <button type="submit" class="btn-secondary">
@@ -421,6 +425,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     <div class="ed-card-header">
         <i class="ti ti-calculator"></i>
         <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
+        <span class="section-price-total">Suma sekcji: <strong data-section-total>0,00 zł</strong></span>
     </div>
     <div style="overflow-x:auto;">
         <table class="price-table" id="table-main">
@@ -867,13 +872,14 @@ function addSection(sectionData) {
     const container = document.getElementById('dynamic-sections');
 
     const card = document.createElement('div');
-    card.className  = 'ed-card';
+    card.className  = 'ed-card type-price';
     card.id         = 'section-' + sid;
     card.style.marginBottom = '16px';
     card.innerHTML = `
         <div class="ed-card-header">
             <i class="ti ti-calculator"></i>
             <input type="text" class="section-name-input" value="${escHtml(name)}">
+            <span class="section-price-total">Suma sekcji: <strong data-section-total>0,00 zł</strong></span>
             <button type="button" class="btn-del-section" onclick="removeSection('${sid}')">
                 <i class="ti ti-trash"></i> Usuń sekcję
             </button>
@@ -1075,6 +1081,16 @@ function recalcAll() {
         const price = parseFloat(tr.querySelector('.price-input')?.value) || 0;
         const net   = qty * price;
         sumNetto += net;
+    });
+    document.querySelectorAll('.ed-card.type-price').forEach(card => {
+        let sectionTotal = 0;
+        card.querySelectorAll('.price-table tbody tr').forEach(tr => {
+            const quantity = parseValue(tr.querySelector('.qty-input')?.value) || 0;
+            const unitPrice = parseValue(tr.querySelector('.price-input')?.value) || 0;
+            sectionTotal += quantity * unitPrice * (1 + pct / 100);
+        });
+        const total = card.querySelector('[data-section-total]');
+        if (total) total.textContent = makePl(sectionTotal) + ' zł';
     });
     const delegCost = parsePl(document.getElementById('deleg-result').textContent);
     const markupZl  = sumNetto * (pct / 100);
