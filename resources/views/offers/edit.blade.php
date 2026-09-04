@@ -205,6 +205,9 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     display:flex; align-items:center; justify-content:center;
 }
 .btn-del-row:hover { background:#FEE2E2; }
+.row-order-controls { display:flex; align-items:center; justify-content:center; gap:2px; }
+.btn-row-move { width:21px; height:24px; padding:0; border:1px solid #D8D4C8; border-radius:4px; background:#fff; color:var(--green); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+.btn-row-move:hover { background:#EAF4EF; border-color:#94C4B0; }
 .btn-del-section {
     margin-left:auto; background:none; border:1px solid #FCA5A5; color:#B91C1C;
     border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700;
@@ -431,7 +434,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
         <table class="price-table" id="table-main">
             <thead>
                 <tr>
-                    <th style="width:28px;"></th>
+                    <th style="width:52px;"></th>
                     <th style="min-width:160px;">Opis pozycji</th>
                     <th style="width:90px;">Jednostka</th>
                     <th style="width:70px;">Ilość</th>
@@ -758,7 +761,7 @@ function addRow(tbodyId, rowData) {
     tr.id = 'row-' + rid;
     tr.dataset.rid = rid;
     tr.innerHTML = `
-        <td style="text-align:center;color:#ccc;cursor:grab;"><i class="ti ti-grip-vertical"></i></td>
+        <td style="width:52px;"><div class="row-order-controls"><button type="button" class="btn-row-move" onclick="movePriceRow(this, -1)" title="Przesuń wyżej" aria-label="Przesuń pozycję wyżej"><i class="ti ti-chevron-up"></i></button><button type="button" class="btn-row-move" onclick="movePriceRow(this, 1)" title="Przesuń niżej" aria-label="Przesuń pozycję niżej"><i class="ti ti-chevron-down"></i></button></div></td>
         <td><input class="cell-input" type="text" placeholder="Opis pozycji..." value="${escHtml(d.opis)}"></td>
         <td style="width:90px;"><select class="cell-input unit-select" style="width:90px;" data-prev="${escHtml(d.jedn)}" onchange="handleUnitChange(this)">${buildUnitOptions(d.jedn)}</select></td>
         <td style="width:70px;"><input class="cell-input qty-input" type="text" value="${d.ilosc}" placeholder="0" style="width:68px;" oninput="validateDecimal(this); recalcRow('${rid}')" onkeydown="return allowDecimalInput(event)"></td>
@@ -777,6 +780,16 @@ function escHtml(str) {
 
 function removeRow(btn) {
     btn.closest('tr').remove();
+    recalcAll();
+}
+
+function movePriceRow(button, direction) {
+    const row = button.closest('tr');
+    if (!row) return;
+    const sibling = direction < 0 ? row.previousElementSibling : row.nextElementSibling;
+    if (!sibling) return;
+    if (direction < 0) row.parentElement.insertBefore(row, sibling);
+    else row.parentElement.insertBefore(sibling, row);
     recalcAll();
 }
 
@@ -888,7 +901,7 @@ function addSection(sectionData) {
             <table class="price-table" id="table-${sid}">
                 <thead>
                     <tr>
-                        <th style="width:28px;"></th>
+                        <th style="width:52px;"></th>
                         <th>Opis pozycji</th>
                         <th class="unit-col" style="width:70px;">Jedn.</th>
                         <th class="unit-col" style="width:80px;">Ilość</th>
@@ -1369,6 +1382,16 @@ window.recalcAll = function() {
         const price = parseValue(tr.querySelector('.price-input')?.value);
         const net   = qty * price;
         sumNetto += net;
+    });
+    document.querySelectorAll('.ed-card.type-price').forEach(card => {
+        let sectionTotal = 0;
+        card.querySelectorAll('.price-table tbody tr').forEach(tr => {
+            const quantity = parseValue(tr.querySelector('.qty-input')?.value);
+            const unitPrice = parseValue(tr.querySelector('.price-input')?.value);
+            sectionTotal += quantity * unitPrice * (1 + pct / 100);
+        });
+        const total = card.querySelector('[data-section-total]');
+        if (total) total.textContent = makePl(sectionTotal) + ' zł';
     });
     const delegCost = parsePl(document.getElementById('deleg-result').textContent);
     const markupZl  = sumNetto * (pct / 100);

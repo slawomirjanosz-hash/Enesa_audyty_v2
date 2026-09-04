@@ -96,7 +96,10 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 .price-table th { font-family:'Manrope',sans-serif; font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.05em; padding:8px 10px; border-bottom:2px solid #E5E1D8; background:#FAFAF6; white-space:nowrap; text-align:left; }
 .price-table td { padding:6px 6px; border-bottom:1px solid #F0EDE6; vertical-align:middle; }
 .price-table tr:last-child td { border-bottom:none; }
-.col-drag  { width:32px; }
+.col-drag  { width:52px; }
+.row-order-controls { display:flex; align-items:center; justify-content:center; gap:2px; }
+.btn-row-move { width:21px; height:24px; padding:0; border:1px solid #D8D4C8; border-radius:4px; background:#fff; color:var(--green); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+.btn-row-move:hover { background:#EAF4EF; border-color:#94C4B0; }
 .col-opis  { width:auto; min-width:180px; }
 .col-jedn  { width:100px; }
 .col-ilosc { width:80px; }
@@ -578,8 +581,11 @@ function addRow(tbodyId, rowData) {
     const tr = document.createElement('tr');
     tr.id = 'row-' + rid;
     tr.innerHTML = `
-        <td class="col-drag" style="text-align:center;color:#ccc;cursor:grab;">
-            <i class="ti ti-grip-vertical"></i>
+        <td class="col-drag">
+            <div class="row-order-controls">
+                <button type="button" class="btn-row-move" onclick="movePriceRow(this, -1)" title="Przesuń wyżej" aria-label="Przesuń pozycję wyżej"><i class="ti ti-chevron-up"></i></button>
+                <button type="button" class="btn-row-move" onclick="movePriceRow(this, 1)" title="Przesuń niżej" aria-label="Przesuń pozycję niżej"><i class="ti ti-chevron-down"></i></button>
+            </div>
         </td>
         <td class="col-opis">
             <input class="cell-input opis-input" type="text"
@@ -626,6 +632,16 @@ function addRow(tbodyId, rowData) {
 }
 
 function removeRow(btn) { btn.closest('tr').remove(); recalcAll(); }
+
+function movePriceRow(button, direction) {
+    const row = button.closest('tr');
+    if (!row) return;
+    const sibling = direction < 0 ? row.previousElementSibling : row.nextElementSibling;
+    if (!sibling) return;
+    if (direction < 0) row.parentElement.insertBefore(row, sibling);
+    else row.parentElement.insertBefore(sibling, row);
+    recalcAll();
+}
 
 function recalcRow(tr) {
     if (!tr) return;

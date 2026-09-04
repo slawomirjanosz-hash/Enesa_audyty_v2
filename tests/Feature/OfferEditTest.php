@@ -221,6 +221,9 @@ test('offer editor shows live section totals and pdf can contain section summari
         ->assertOk()
         ->assertSee('Suma sekcji')
         ->assertSee('data-section-total', false)
+        ->assertSee('movePriceRow', false)
+        ->assertSee('Przesuń pozycję wyżej')
+        ->assertSee('Przesuń pozycję niżej')
         ->assertSee(route('offers.pdf', ['offer' => $offer, 'sections_only' => 1]), false);
 
     $html = view('offers.pdf', [
