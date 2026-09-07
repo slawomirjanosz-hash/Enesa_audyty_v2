@@ -90,6 +90,7 @@ body {
 .price-tbl td.muted { color: #888; font-size: 8pt; }
 .price-tbl tr:last-child td { border-bottom: none; }
 .section-name-row td { background: #F4F1EA; font-weight: bold; font-size: 8pt; color: #1A4D3A; padding: 5px 8px; }
+.section-name-row .section-name-total { text-align: right; white-space: nowrap; }
 .section-summary-row td { padding: 9px 8px; background: #F9F7F4; border-bottom: 1px solid #E5E1D8; }
 .section-summary-row .section-summary-name { font-weight: bold; color: #1A4D3A; }
 .section-summary-row .section-summary-value { text-align: right; font-weight: bold; white-space: nowrap; }
@@ -323,9 +324,14 @@ body {
                 <td class="section-summary-value">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
             </tr>
             @else
-            @if($multiSection)
+            @if($multiSection || $offer->show_unit_prices)
             <tr class="section-name-row">
-                <td colspan="{{ $offer->show_unit_prices ? 5 : 4 }}">{{ $section['name'] }}</td>
+                @if($offer->show_unit_prices)
+                    <td colspan="4">{{ $section['name'] }}</td>
+                    <td class="section-name-total">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
+                @else
+                    <td colspan="4">{{ $section['name'] }}</td>
+                @endif
             </tr>
             @endif
             @foreach($section['rows'] ?? [] as $i => $row)

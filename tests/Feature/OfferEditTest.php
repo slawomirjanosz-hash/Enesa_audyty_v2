@@ -236,4 +236,26 @@ test('offer editor shows live section totals and pdf can contain section summari
     expect($html)->toContain('Pomiary instalacji')
         ->toContain('1 200,00 zł')
         ->not->toContain('Pozycja szczegółowa');
+
+    $htmlWithPrices = view('offers.pdf', [
+        'offer' => $offer->load(['company', 'assignedUser', 'offerDelegation']),
+        'companySettings' => null,
+        'logoBase64' => null,
+        'sectionsOnly' => false,
+    ])->render();
+
+    expect($htmlWithPrices)->toContain('section-name-total')
+        ->toContain('Pomiary instalacji')
+        ->toContain('1 200,00 zł')
+        ->toContain('Pozycja szczegółowa');
+
+    $offer->show_unit_prices = false;
+    $htmlWithoutPrices = view('offers.pdf', [
+        'offer' => $offer,
+        'companySettings' => null,
+        'logoBase64' => null,
+        'sectionsOnly' => false,
+    ])->render();
+
+    expect($htmlWithoutPrices)->not->toContain('<td class="section-name-total">');
 });
