@@ -249,6 +249,24 @@ test('offer editor shows live section totals and pdf can contain section summari
         ->toContain('1 200,00 zł')
         ->toContain('Pozycja szczegółowa');
 
+    OfferDelegation::create([
+        'offer_id' => $offer->id,
+        'km_do_klienta' => 100,
+        'stawka_km' => 1.10,
+        'liczba_wyjazdow' => 2,
+        'czy_kilkudniowy' => false,
+    ]);
+
+    $this->actingAs($admin)->get(route('offers.show', $offer))
+        ->assertOk()
+        ->assertSee('Zestawienie oferty')
+        ->assertSee('Pomiary instalacji')
+        ->assertSee('Pozycja szczegółowa')
+        ->assertSee('Łączny koszt delegacji uwzględniony w ofercie')
+        ->assertSee('440,00 zł')
+        ->assertDontSee('Odległość do klienta')
+        ->assertDontSee('Liczba wyjazdów');
+
     $offer->show_unit_prices = false;
     $htmlWithoutPrices = view('offers.pdf', [
         'offer' => $offer,

@@ -85,6 +85,18 @@
     .deleg-total-label { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .05em; }
     .deleg-total-value { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 900; color: var(--green); }
 
+    /* ── Offer breakdown ────────────────────────────── */
+    .offer-breakdown { width: 100%; border-collapse: collapse; }
+    .offer-breakdown th { padding: 9px 10px; background: #FAFAF6; border-bottom: 1px solid #E5E1D8; color: #737C76; font: 700 10px 'Manrope', sans-serif; text-align: left; text-transform: uppercase; }
+    .offer-breakdown td { padding: 10px; border-bottom: 1px solid #F0EDE6; font-size: 13px; vertical-align: top; }
+    .offer-breakdown .num { text-align: right; white-space: nowrap; }
+    .offer-breakdown .section-row td { background: #F0F7F3; color: var(--green); font-family: 'Manrope', sans-serif; font-weight: 800; }
+    .offer-breakdown .section-total { text-align: right; white-space: nowrap; }
+    .offer-breakdown-wrap { overflow-x: auto; }
+    .deleg-compact { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 2px 0; }
+    .deleg-compact span { color: #66736B; font: 700 13px 'Manrope', sans-serif; }
+    .deleg-compact strong { color: var(--green); font: 900 18px 'Lato', sans-serif; white-space: nowrap; }
+
     /* ── Messages ───────────────────────────────────── */
     .message-item {
         padding: 12px 0;
@@ -188,6 +200,20 @@
 
 @php
     $d = $offer->offerDelegation;
+    $offerSections = collect($offer->price_sections ?? [])->filter(fn ($section) => !empty($section['rows'] ?? []));
+    $delegationTotal = collect($offer->delegations ?? [])->sum(function ($location) {
+        $km = (float) ($location['km'] ?? 0);
+        $trips = (int) ($location['wyjazdy'] ?? 1);
+        $people = (int) ($location['osoby'] ?? 1);
+        $nights = (int) ($location['noce'] ?? 0);
+        $kmRate = (float) ($location['stawka_km'] ?? 1.10);
+        $nightRate = (float) ($location['stawka_noc'] ?? 200);
+
+        return $km * 2 * $trips * $kmRate + $nights * $people * $nightRate;
+    });
+    if ($delegationTotal <= 0 && $d) {
+        $delegationTotal = $d->kosztDelegacji();
+    }
     $badgeClass = match($offer->status) {
         'w_toku'         => 'badge-blue',
         'wygrana'        => 'badge-green',
@@ -300,58 +326,58 @@
     </div>
 </div>
 
-{{-- Delegacja --}}
+{{-- Zestawienie pozycji oferty --}}
+<div class="show-card">
+    <div class="show-card-header">
+        <i class="ti ti-list-details"></i>
+        <span class="show-card-title">Zestawienie oferty</span>
+    </div>
+    <div class="show-card-body">
+        @if($offerSections->isNotEmpty())
+            <div class="offer-breakdown-wrap">
+                <table class="offer-breakdown">
+                    <thead><tr><th>Materiał / usługa</th><th class="num">Ilość</th><th>Jednostka</th><th class="num">Wartość netto</th></tr></thead>
+                    <tbody>
+                    @foreach($offerSections as $section)
+                        @php
+                            $sectionTotal = collect($section['rows'] ?? [])->sum(fn ($row) => (float) ($row['z_narzutem'] ?? 0));
+                        @endphp
+                        <tr class="section-row">
+                            <td colspan="3">{{ $section['name'] ?? 'Sekcja' }}</td>
+                            <td class="section-total">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
+                        </tr>
+                        @foreach($section['rows'] ?? [] as $row)
+                            <tr>
+                                <td>{{ $row['opis'] ?? '—' }}</td>
+                                <td class="num">{{ number_format((float) ($row['ilosc'] ?? 0), 2, ',', ' ') }}</td>
+                                <td>{{ $row['jedn'] ?? '—' }}</td>
+                                <td class="num"><strong>{{ number_format((float) ($row['z_narzutem'] ?? 0), 2, ',', ' ') }} zł</strong></td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p style="color:#888;font-size:13px;margin:0;">W tej ofercie nie zapisano jeszcze materiałów ani usług.</p>
+        @endif
+    </div>
+</div>
+
+{{-- Delegacje --}}
 <div class="show-card">
     <div class="show-card-header">
         <i class="ti ti-car"></i>
-        <span class="show-card-title">Delegacja</span>
+        <span class="show-card-title">Delegacje</span>
     </div>
     <div class="show-card-body">
-        @if($d)
-            <table class="deleg-table">
-                <tr>
-                    <td>Odległość do klienta</td>
-                    <td>{{ $d->km_do_klienta ?? 0 }} km</td>
-                </tr>
-                <tr>
-                    <td>Szacowany czas dojazdu</td>
-                    <td>{{ $d->czas_dojazdu_min ?? 0 }} min</td>
-                </tr>
-                <tr>
-                    <td>Liczba wyjazdów</td>
-                    <td>{{ $d->liczba_wyjazdow }}</td>
-                </tr>
-                <tr>
-                    <td>Wyjazd wielodniowy</td>
-                    <td>
-                        @if($d->czy_kilkudniowy)
-                            <span class="badge badge-orange">Tak</span>
-                        @else
-                            <span style="color:#888;">Nie</span>
-                        @endif
-                    </td>
-                </tr>
-                @if($d->czy_kilkudniowy)
-                <tr>
-                    <td>Liczba nocy</td>
-                    <td>{{ $d->liczba_noc }}</td>
-                </tr>
-                <tr>
-                    <td>Liczba osób</td>
-                    <td>{{ $d->liczba_osob }}</td>
-                </tr>
-                <tr>
-                    <td>Stawka za dobę</td>
-                    <td>{{ number_format($d->stawka_noc, 2, ',', ' ') }} zł</td>
-                </tr>
-                @endif
-            </table>
-            <div class="deleg-total">
-                <span class="deleg-total-label">Szacowany koszt delegacji</span>
-                <span class="deleg-total-value">{{ number_format($d->kosztDelegacji(), 2, ',', ' ') }} zł</span>
+        @if($delegationTotal > 0)
+            <div class="deleg-compact">
+                <span>Łączny koszt delegacji uwzględniony w ofercie</span>
+                <strong>{{ number_format($delegationTotal, 2, ',', ' ') }} zł</strong>
             </div>
         @else
-            <p style="color:#888;font-size:13px;margin:0;">Brak danych delegacji.</p>
+            <p style="color:#888;font-size:13px;margin:0;">Delegacje nie zostały uwzględnione w tej ofercie.</p>
         @endif
     </div>
 </div>
