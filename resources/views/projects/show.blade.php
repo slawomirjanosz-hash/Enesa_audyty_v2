@@ -92,6 +92,7 @@
 .frappe-gantt-wrap .bar-wrapper.progress-0-10 .bar{fill:#8b5cf6}.frappe-gantt-wrap .bar-wrapper.progress-0-10 .bar-progress{fill:#6d28d9}.frappe-gantt-wrap .bar-wrapper.progress-11-25 .bar{fill:#facc15}.frappe-gantt-wrap .bar-wrapper.progress-11-25 .bar-progress{fill:#eab308}.frappe-gantt-wrap .bar-wrapper.progress-26-50 .bar{fill:#fb923c}.frappe-gantt-wrap .bar-wrapper.progress-26-50 .bar-progress{fill:#ea580c}.frappe-gantt-wrap .bar-wrapper.progress-51-75 .bar{fill:#1d4ed8}.frappe-gantt-wrap .bar-wrapper.progress-51-75 .bar-progress{fill:#1e3a8a}.frappe-gantt-wrap .bar-wrapper.progress-76-99 .bar{fill:#60a5fa}.frappe-gantt-wrap .bar-wrapper.progress-76-99 .bar-progress{fill:#3b82f6}.frappe-gantt-wrap .bar-wrapper.progress-100 .bar{fill:#22c55e}.frappe-gantt-wrap .bar-wrapper.progress-100 .bar-progress{fill:#15803d}
 .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2>.field{min-width:0}.grid2>.field input,.grid2>.field select,.grid2>.field textarea{box-sizing:border-box;max-width:100%;width:100%}#gantt-task-modal .project-modal-box{width:min(820px,calc(100vw - 32px));overflow-x:hidden;overflow-y:auto}@media(max-width:850px){.grid2{grid-template-columns:1fr}}
 .gantt-progress-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px;padding:8px 10px;border-radius:8px;background:#f7f8f5;color:#59675f;font-size:10px;font-weight:700}.gantt-progress-legend strong{color:#34433a}.gantt-progress-legend i{display:inline-block;width:12px;height:8px;border-radius:3px;margin-right:4px}
+.document-sort-button{display:inline-flex;align-items:center;gap:4px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-transform:inherit;text-align:left;cursor:pointer}.document-sort-button:after{content:'↕';font-size:12px;color:#a0a7a2}.document-sort-button[data-direction="asc"]:after{content:'↑';color:var(--green)}.document-sort-button[data-direction="desc"]:after{content:'↓';color:var(--green)}
 </style>
 
 <div class="p-head"><div><div class="p-kicker">{{ $project->number }}</div><h1>{{ $project->name }}</h1><div class="p-meta"><span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span><span><i class="ti ti-user-star"></i> {{ $project->manager?->name }}</span><span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">@if($canCopyProject)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-copy-modal').classList.add('open')"><i class="ti ti-copy"></i> Kopiuj projekt</button>@endif @if($canEdit)<button class="btn btn-soft" type="button" onclick="document.getElementById('project-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj projekt</button>@endif<span class="badge">{{ $statusLabels[$project->status] ?? $project->status }}</span></div></div>
@@ -536,12 +537,22 @@
             @endforeach
         </div>
         @endif
-        @if($folder->documents->isEmpty())<div class="empty">Katalog jest pusty.</div>@else<table><thead><tr><th>Plik</th><th>Rozmiar</th><th>Dodał</th><th>Data</th><th></th></tr></thead><tbody>@foreach($folder->documents as $document)<tr><td><a href="{{route('projects.documents.download',[$project,$document])}}"><strong>{{$document->original_filename}}</strong></a></td><td>{{$document->formattedSize()}}</td><td>{{$document->uploader?->name??'Uczestnik zewnętrzny'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td>@if($canEdit)<form method="POST" action="{{route('projects.documents.destroy',[$project,$document])}}">@csrf @method('DELETE')<button class="btn btn-red">Usuń</button></form>@endif</td></tr>@endforeach</tbody></table>@endif
+        @if($folder->documents->isEmpty())
+            <div class="empty">Katalog jest pusty.</div>
+        @else
+            @include('projects.partials.document-table', ['documents' => $folder->documents, 'fallbackUploader' => 'Uczestnik zewnętrzny'])
+        @endif
     </div>
     @endforeach
 
     @php($rootDocuments = $project->documents->whereNull('project_document_folder_id'))
-    <div class="card"><h2>Dokumenty bez katalogu</h2>@if($rootDocuments->isEmpty())<div class="empty">Brak dokumentów poza katalogami.</div>@else<table><thead><tr><th>Plik</th><th>Rozmiar</th><th>Dodał</th><th>Data</th><th></th></tr></thead><tbody>@foreach($rootDocuments as $document)<tr><td><a href="{{route('projects.documents.download',[$project,$document])}}"><strong>{{$document->original_filename}}</strong></a></td><td>{{$document->formattedSize()}}</td><td>{{$document->uploader?->name??'System'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td>@if($canEdit)<form method="POST" action="{{route('projects.documents.destroy',[$project,$document])}}">@csrf @method('DELETE')<button class="btn btn-red">Usuń</button></form>@endif</td></tr>@endforeach</tbody></table>@endif</div>
+    <div class="card"><h2>Dokumenty bez katalogu</h2>
+        @if($rootDocuments->isEmpty())
+            <div class="empty">Brak dokumentów poza katalogami.</div>
+        @else
+            @include('projects.partials.document-table', ['documents' => $rootDocuments, 'fallbackUploader' => 'System'])
+        @endif
+    </div>
 </section>
 @endif
 
@@ -612,6 +623,24 @@ async function copyShareLink(inputId, button) {
     button.textContent = 'Skopiowano';
     setTimeout(() => button.textContent = oldText, 1600);
 }
+const documentSortCollator = new Intl.Collator('pl', {numeric:true, sensitivity:'base'});
+document.querySelectorAll('.document-sortable-table').forEach(table => {
+    table.querySelectorAll('[data-document-sort]').forEach(button => button.addEventListener('click', () => {
+        const key = button.dataset.documentSort;
+        const direction = button.dataset.direction === 'asc' ? 'desc' : 'asc';
+        const numeric = button.dataset.sortType === 'number';
+        table.querySelectorAll('[data-document-sort]').forEach(item => delete item.dataset.direction);
+        button.dataset.direction = direction;
+        const rows = [...table.querySelectorAll('tbody tr')];
+        rows.sort((left, right) => {
+            const leftValue = left.dataset['document' + key.charAt(0).toUpperCase() + key.slice(1)] || '';
+            const rightValue = right.dataset['document' + key.charAt(0).toUpperCase() + key.slice(1)] || '';
+            const comparison = numeric ? Number(leftValue) - Number(rightValue) : documentSortCollator.compare(leftValue, rightValue);
+            return direction === 'asc' ? comparison : -comparison;
+        });
+        rows.forEach(row => table.tBodies[0].appendChild(row));
+    }));
+});
 const ganttBulkDeleteUrl = @json(route('projects.tasks.bulk-destroy', $project));
 const requirementStoreUrl = @json(route('projects.requirements.store', $project));
 const projectRequirementItems = @json($requirementItems);

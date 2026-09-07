@@ -134,6 +134,10 @@ test('uploaded project document remains visible after reopening the project', fu
         ->assertOk()
         ->assertSee('instrukcja projektu.pdf')
         ->assertSee('schemat projektu.xlsx')
+        ->assertSee('data-document-sort="name"', false)
+        ->assertSee('data-document-sort="size"', false)
+        ->assertSee('data-document-sort="uploader"', false)
+        ->assertSee('data-document-sort="date"', false)
         ->assertSee(route('projects.documents.download', [$project, $document]));
 });
 
@@ -172,6 +176,14 @@ test('project folder can be securely shared for viewing and external uploads', f
     $document = Document::where('project_document_folder_id', $folder->id)->firstOrFail();
     expect($document->uploaded_by)->toBeNull();
     Storage::disk('local')->assertExists($document->stored_path);
+    $this->get($showUrl)
+        ->assertOk()
+        ->assertSee('data-document-sort="name"', false)
+        ->assertSee('data-document-sort="size"', false)
+        ->assertSee('data-document-sort="uploader"', false)
+        ->assertSee('data-document-sort="date"', false)
+        ->assertSee('rysunek.pdf')
+        ->assertSee('obliczenia.xlsx');
     $this->get(URL::signedRoute('public.project-documents.download', [$share, $document]))->assertOk();
     $this->get(route('public.project-documents.show', $share))->assertForbidden();
 
