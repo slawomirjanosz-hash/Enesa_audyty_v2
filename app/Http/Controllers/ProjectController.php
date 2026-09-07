@@ -8,6 +8,7 @@ use App\Exports\ProjectRequirementsTemplateExport;
 use App\Models\Company;
 use App\Models\Document;
 use App\Models\Project;
+use App\Models\ProjectDocumentFolder;
 use App\Models\ProjectFinanceGroup;
 use App\Models\ProjectFinancialEntry;
 use App\Models\ProjectRequirement;
@@ -93,6 +94,7 @@ class ProjectController extends Controller
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
             'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financialEntries.projectRequirement', 'financeGroups.entries',
             'requirements.responsible', 'requirements.supplierCompany', 'documents.uploader',
+            'documentFolders.documents.uploader', 'documentFolders.shares',
         ]);
 
         $timelineItems = $canViewSchedule ? $project->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
@@ -924,7 +926,11 @@ class ProjectController extends Controller
         $this->authorize('update', $project);
         $data = $request->validate([
             'file' => ['required', 'file', 'max:20480', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,zip'],
+            'project_document_folder_id' => ['nullable', 'integer', 'exists:project_document_folders,id'],
         ]);
+        $folder = ! empty($data['project_document_folder_id'])
+            ? ProjectDocumentFolder::where('project_id', $project->id)->findOrFail($data['project_document_folder_id'])
+            : null;
         $file = $data['file'];
         $originalName = $file->getClientOriginalName();
         $safeName = now()->format('YmdHis').'_'.Str::random(10).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
@@ -933,6 +939,7 @@ class ProjectController extends Controller
         Document::create([
             'project_id' => $project->id,
             'company_id' => $project->company_id,
+            'project_document_folder_id' => $folder?->id,
             'type' => 'upload',
             'original_filename' => $originalName,
             'stored_path' => $relativePath,

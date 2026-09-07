@@ -6,12 +6,15 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Document;
 use App\Models\Project;
+use App\Models\ProjectDocumentFolder;
+use App\Models\ProjectDocumentShare;
 use App\Models\ProjectFinancialEntry;
 use App\Models\ProjectRequirement;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -127,6 +130,50 @@ test('uploaded project document remains visible after reopening the project', fu
         ->assertOk()
         ->assertSee('instrukcja projektu.pdf')
         ->assertSee(route('projects.documents.download', [$project, $document]));
+});
+
+test('project folder can be securely shared for viewing and external uploads', function () {
+    Storage::fake('local');
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $project = Project::create([
+        'number' => 'PRJ/SHARE/001', 'name' => 'Projekt udostępniony',
+        'manager_id' => $admin->id, 'status' => 'active', 'contract_value' => 0,
+        'created_by' => $admin->id,
+    ]);
+    $project->members()->attach($admin);
+
+    $this->actingAs($admin)->post(route('projects.document-folders.store', $project), [
+        'name' => 'Dokumentacja projektantów',
+    ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'documents']));
+
+    $folder = ProjectDocumentFolder::firstOrFail();
+    $this->actingAs($admin)->post(route('projects.document-folders.shares.store', [$project, $folder]), [
+        'access_level' => 'upload',
+    ])->assertSessionHas('success');
+    $share = ProjectDocumentShare::firstOrFail();
+
+    $showUrl = URL::signedRoute('public.project-documents.show', $share);
+    $uploadUrl = URL::signedRoute('public.project-documents.upload', $share);
+    $this->get($showUrl)->assertOk()->assertSee('Dokumentacja projektantów')->assertSee('Dodaj plik');
+    $this->post($uploadUrl, [
+        'file' => UploadedFile::fake()->create('rysunek.pdf', 80, 'application/pdf'),
+    ])->assertRedirect($showUrl);
+
+    $document = Document::where('project_document_folder_id', $folder->id)->firstOrFail();
+    expect($document->uploaded_by)->toBeNull();
+    Storage::disk('local')->assertExists($document->stored_path);
+    $this->get(URL::signedRoute('public.project-documents.download', [$share, $document]))->assertOk();
+    $this->get(route('public.project-documents.show', $share))->assertForbidden();
+
+    $share->update(['access_level' => 'view']);
+    $this->post(URL::signedRoute('public.project-documents.upload', $share), [
+        'file' => UploadedFile::fake()->create('niedozwolony.pdf', 10, 'application/pdf'),
+    ])->assertForbidden();
+
+    $this->actingAs($admin)->patch(route('projects.document-folders.shares.revoke', [$project, $folder, $share]))
+        ->assertSessionHas('success');
+    $this->get($showUrl)->assertStatus(410);
 });
 
 test('only admin or superadmin can remove a project', function () {

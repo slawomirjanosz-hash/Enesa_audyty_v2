@@ -30,6 +30,8 @@ use App\Http\Controllers\OfferRequestController;
 use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectDocumentFolderController;
+use App\Http\Controllers\PublicProjectDocumentFolderController;
 use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\Settings;
 use App\Http\Controllers\SupplierController;
@@ -321,6 +323,12 @@ Route::prefix('crm')->name('crm.')->middleware(['auth', 'staff.role', 'app.modul
 });
 
 Route::get('/public/project-gantt/{token}', [ProjectController::class, 'publicGantt'])->name('projects.public-gantt');
+Route::get('/shared/project-folder/{share}', [PublicProjectDocumentFolderController::class, 'show'])
+    ->middleware(['signed', 'throttle:60,1'])->name('public.project-documents.show');
+Route::post('/shared/project-folder/{share}/upload', [PublicProjectDocumentFolderController::class, 'upload'])
+    ->middleware(['signed', 'throttle:10,1'])->name('public.project-documents.upload');
+Route::get('/shared/project-folder/{share}/documents/{document}', [PublicProjectDocumentFolderController::class, 'download'])
+    ->middleware(['signed', 'throttle:60,1'])->name('public.project-documents.download');
 
 Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 'app.module:projects'])->group(function () {
     Route::get('/', [ProjectController::class, 'index'])->name('index');
@@ -356,6 +364,10 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::post('/{project}/documents', [ProjectController::class, 'storeDocument'])->middleware('app.permission:projects.documents.manage')->name('documents.store');
     Route::get('/{project}/documents/{document}', [ProjectController::class, 'downloadDocument'])->middleware('app.permission:projects.documents.view')->name('documents.download');
     Route::delete('/{project}/documents/{document}', [ProjectController::class, 'destroyDocument'])->middleware('app.permission:projects.documents.manage')->name('documents.destroy');
+    Route::post('/{project}/document-folders', [ProjectDocumentFolderController::class, 'store'])->middleware('app.permission:projects.documents.manage')->name('document-folders.store');
+    Route::delete('/{project}/document-folders/{folder}', [ProjectDocumentFolderController::class, 'destroy'])->middleware('app.permission:projects.documents.manage')->name('document-folders.destroy');
+    Route::post('/{project}/document-folders/{folder}/shares', [ProjectDocumentFolderController::class, 'share'])->middleware('app.permission:projects.documents.manage')->name('document-folders.shares.store');
+    Route::patch('/{project}/document-folders/{folder}/shares/{share}/revoke', [ProjectDocumentFolderController::class, 'revoke'])->middleware('app.permission:projects.documents.manage')->name('document-folders.shares.revoke');
 });
 
 Route::prefix('suppliers')->name('suppliers.')->middleware(['auth', 'staff.role', 'app.module:crm'])->group(function () {

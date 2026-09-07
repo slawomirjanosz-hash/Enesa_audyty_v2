@@ -73,6 +73,11 @@ class Project extends Model
         return $this->hasMany(Document::class)->orderByDesc('created_at');
     }
 
+    public function documentFolders(): HasMany
+    {
+        return $this->hasMany(ProjectDocumentFolder::class)->orderBy('name');
+    }
+
     public function totalCosts(): float
     {
         return (float) $this->effectiveFinancialEntries()->where('type', 'cost')->whereIn('status', ['issued', 'paid'])->sum('amount');

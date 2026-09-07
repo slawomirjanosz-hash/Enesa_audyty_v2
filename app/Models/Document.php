@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Document extends Model
 {
     protected $fillable = [
-        'company_id', 'offer_id', 'audit_id', 'project_id', 'type',
+        'company_id', 'offer_id', 'audit_id', 'project_id', 'project_document_folder_id', 'type',
         'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by',
     ];
 
@@ -26,6 +26,11 @@ class Document extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function projectFolder(): BelongsTo
+    {
+        return $this->belongsTo(ProjectDocumentFolder::class, 'project_document_folder_id');
     }
 
     public function audit(): BelongsTo

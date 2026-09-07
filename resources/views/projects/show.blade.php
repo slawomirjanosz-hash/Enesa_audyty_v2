@@ -500,8 +500,48 @@
 
 @if($canViewDocuments)
 <section id="pane-documents" class="pane">
-    @if($canEdit)<div class="card"><h2>Dodaj dokument projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:center"><input type="file" name="file" required><button class="btn">Wgraj dokument</button></div><small>PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB.</small></form></div>@endif
-    <div class="card"><h2>Dokumenty projektu</h2>@if($project->documents->isEmpty())<div class="empty">Brak dokumentów.</div>@else<table><thead><tr><th>Plik</th><th>Rozmiar</th><th>Dodał</th><th>Data</th><th></th></tr></thead><tbody>@foreach($project->documents as $document)<tr><td><a href="{{route('projects.documents.download',[$project,$document])}}"><strong>{{$document->original_filename}}</strong></a></td><td>{{$document->formattedSize()}}</td><td>{{$document->uploader?->name??'System'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td>@if($canEdit)<form method="POST" action="{{route('projects.documents.destroy',[$project,$document])}}">@csrf @method('DELETE')<button class="btn btn-red">Usuń</button></form>@endif</td></tr>@endforeach</tbody></table>@endif</div>
+    @if($canEdit)
+    <div class="card">
+        <h2>Katalogi i udostępnianie</h2>
+        <form method="POST" action="{{route('projects.document-folders.store',$project)}}" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">@csrf
+            <div class="field" style="min-width:260px"><label>Nazwa nowego katalogu</label><input name="name" maxlength="120" required placeholder="np. Dokumentacja od projektantów"></div>
+            <button class="btn"><i class="ti ti-folder-plus"></i> Dodaj katalog</button>
+        </form>
+        <small style="display:block;margin-top:9px;color:#66736b">Dla katalogu możesz utworzyć bezpieczny link dla osoby, która nie ma konta w systemie.</small>
+    </div>
+    <div class="card"><h2>Dodaj dokument projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="field"><label>Plik</label><input type="file" name="file" required></div><div class="field"><label>Katalog</label><select name="project_document_folder_id"><option value="">Dokumenty bez katalogu</option>@foreach($project->documentFolders as $folder)<option value="{{$folder->id}}">{{$folder->name}}</option>@endforeach</select></div><button class="btn">Wgraj dokument</button></div><small>PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB.</small></form></div>
+    @endif
+
+    @foreach($project->documentFolders as $folder)
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap">
+            <div><h2 style="margin-bottom:4px"><i class="ti ti-folder" style="color:var(--green)"></i> {{$folder->name}}</h2><small style="color:#66736b">{{$folder->documents->count()}} plików · {{\App\Models\Document::formatBytes((int)$folder->documents->sum('size'))}}</small></div>
+            @if($canEdit)<form method="POST" action="{{route('projects.document-folders.destroy',[$project,$folder])}}" onsubmit="return confirm('Usunąć pusty katalog i wyłączyć wszystkie jego linki?')">@csrf @method('DELETE')<button class="btn btn-red" @disabled($folder->documents->isNotEmpty()) title="{{$folder->documents->isNotEmpty()?'Najpierw usuń dokumenty z katalogu':'Usuń katalog'}}">Usuń katalog</button></form>@endif
+        </div>
+        @if($canEdit)
+        <div style="margin:14px 0;padding:13px;background:#f6f8f5;border-radius:8px">
+            <form method="POST" action="{{route('projects.document-folders.shares.store',[$project,$folder])}}" style="display:flex;gap:9px;align-items:end;flex-wrap:wrap">@csrf
+                <div class="field"><label>Uprawnienia linku</label><select name="access_level"><option value="view">Tylko przeglądanie</option><option value="upload">Przeglądanie i dodawanie plików</option></select></div>
+                <div class="field"><label>Ważny do (opcjonalnie)</label><input type="datetime-local" name="expires_at" min="{{now()->addMinute()->format('Y-m-d\TH:i')}}"></div>
+                <button class="btn btn-soft"><i class="ti ti-link"></i> Utwórz link</button>
+            </form>
+            @foreach($folder->shares as $share)
+                @php($shareUrl = URL::signedRoute('public.project-documents.show', $share))
+                <div style="display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap;opacity:{{$share->isAvailable()?1:.55}}">
+                    <input id="share-url-{{$share->id}}" value="{{$shareUrl}}" readonly style="flex:1;min-width:260px;border:1px solid #d8d3c8;border-radius:6px;padding:7px">
+                    <span class="badge">{{$share->allowsUpload()?'Może dodawać':'Tylko podgląd'}}</span>
+                    @if($share->expires_at)<small>do {{$share->expires_at->format('d.m.Y H:i')}}</small>@endif
+                    @if($share->isAvailable())<button type="button" class="btn btn-soft" onclick="copyShareLink('share-url-{{$share->id}}',this)">Kopiuj</button><form method="POST" action="{{route('projects.document-folders.shares.revoke',[$project,$folder,$share])}}">@csrf @method('PATCH')<button class="btn btn-red">Wyłącz</button></form>@else<span class="badge badge-red">Nieaktywny</span>@endif
+                </div>
+            @endforeach
+        </div>
+        @endif
+        @if($folder->documents->isEmpty())<div class="empty">Katalog jest pusty.</div>@else<table><thead><tr><th>Plik</th><th>Rozmiar</th><th>Dodał</th><th>Data</th><th></th></tr></thead><tbody>@foreach($folder->documents as $document)<tr><td><a href="{{route('projects.documents.download',[$project,$document])}}"><strong>{{$document->original_filename}}</strong></a></td><td>{{$document->formattedSize()}}</td><td>{{$document->uploader?->name??'Uczestnik zewnętrzny'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td>@if($canEdit)<form method="POST" action="{{route('projects.documents.destroy',[$project,$document])}}">@csrf @method('DELETE')<button class="btn btn-red">Usuń</button></form>@endif</td></tr>@endforeach</tbody></table>@endif
+    </div>
+    @endforeach
+
+    @php($rootDocuments = $project->documents->whereNull('project_document_folder_id'))
+    <div class="card"><h2>Dokumenty bez katalogu</h2>@if($rootDocuments->isEmpty())<div class="empty">Brak dokumentów poza katalogami.</div>@else<table><thead><tr><th>Plik</th><th>Rozmiar</th><th>Dodał</th><th>Data</th><th></th></tr></thead><tbody>@foreach($rootDocuments as $document)<tr><td><a href="{{route('projects.documents.download',[$project,$document])}}"><strong>{{$document->original_filename}}</strong></a></td><td>{{$document->formattedSize()}}</td><td>{{$document->uploader?->name??'System'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td>@if($canEdit)<form method="POST" action="{{route('projects.documents.destroy',[$project,$document])}}">@csrf @method('DELETE')<button class="btn btn-red">Usuń</button></form>@endif</td></tr>@endforeach</tbody></table>@endif</div>
 </section>
 @endif
 
@@ -559,6 +599,19 @@ const projectCanEdit = @json($canManageSchedule);
 const projectStartDate = @json($project->start_date?->format('Y-m-d'));
 const projectEndDate = @json($project->end_date?->format('Y-m-d'));
 const projectCsrfToken = document.querySelector('meta[name="csrf-token"]')?.content || @json(csrf_token());
+async function copyShareLink(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    try {
+        await navigator.clipboard.writeText(input.value);
+    } catch (error) {
+        input.select();
+        document.execCommand('copy');
+    }
+    const oldText = button.textContent;
+    button.textContent = 'Skopiowano';
+    setTimeout(() => button.textContent = oldText, 1600);
+}
 const ganttBulkDeleteUrl = @json(route('projects.tasks.bulk-destroy', $project));
 const requirementStoreUrl = @json(route('projects.requirements.store', $project));
 const projectRequirementItems = @json($requirementItems);
