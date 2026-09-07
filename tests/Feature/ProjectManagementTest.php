@@ -456,6 +456,8 @@ test('client invoices use issued group without supplier and display million amou
         ->assertSee('3 120 000,00 zł')
         ->assertSee('finance-amount-column', false)
         ->assertSee('id="finance-live-search"', false)
+        ->assertSee('id="finance-search-count"', false)
+        ->assertSee('Suma:')
         ->assertSee('data-finance-sort="date"', false)
         ->assertSee('data-finance-sort="amount"', false)
         ->assertSee('data-finance-sort-status="Wystawiona / zaksięgowana"', false)

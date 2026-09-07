@@ -291,7 +291,7 @@
                 <label class="requirement-search" for="finance-live-search">
                     <i class="ti ti-search"></i>
                     <input type="search" id="finance-live-search" autocomplete="off" placeholder="Szukaj po kliencie, nazwie, dokumencie, statusie, kwocie, dostawcy…">
-                    <span class="requirement-search-count" id="finance-search-count">{{$project->financialEntries->count()}} poz.</span>
+                    <span class="requirement-search-count" id="finance-search-count">{{$project->financialEntries->count()}} poz. · Suma: {{number_format((float) $project->financialEntries->sum('amount'), 2, ',', ' ')}} zł</span>
                 </label>
                 @if($canEdit)<form id="finance-bulk-form" method="POST" action="{{route('projects.finances.bulk',$project)}}" onsubmit="return this.elements.action.value !== 'delete' || confirm('Usunąć zaznaczone pozycje?')">@csrf<div style="display:flex;gap:7px;align-items:center;margin-bottom:10px"><select class="status-select" name="action" required><option value="">Operacja grupowa…</option><option value="planned">Oznacz jako planowane</option><option value="issued">Oznacz jako wystawione / zaksięgowane</option><option value="paid">Oznacz jako opłacone</option><option value="delete">Usuń zaznaczone</option></select><button class="btn btn-soft">Wykonaj</button></div></form>@endif
                 <div style="overflow-x:auto"><table class="finance-table" id="finance-register-table"><thead><tr>@if($canEdit)<th><input type="checkbox" id="finance-select-all" title="Zaznacz wszystko"></th>@endif<th><button type="button" class="finance-sort-button" data-finance-sort="date">Data / płatność</button></th><th><button type="button" class="finance-sort-button" data-finance-sort="type">Rodzaj / grupa</button></th><th class="finance-name-column"><button type="button" class="finance-sort-button" data-finance-sort="name">Nazwa / dokument</button></th><th><button type="button" class="finance-sort-button" data-finance-sort="supplier">Dostawca</button></th><th><button type="button" class="finance-sort-button" data-finance-sort="status">Status</button></th><th class="finance-amount-column"><button type="button" class="finance-sort-button r" data-finance-sort="amount" data-finance-sort-type="number">Kwota</button></th><th><button type="button" class="finance-sort-button" data-finance-sort="source">Źródło</button></th><th></th></tr></thead><tbody>
@@ -1191,16 +1191,23 @@ function normalizeFinanceSearch(value) {
 function applyFinanceFilters() {
     const query = normalizeFinanceSearch(financeSearch?.value);
     let visible = 0;
+    let visibleAmount = 0;
     financeRows.forEach(row => {
         const matchesType = activeFinanceFilter === 'all' || row.dataset.financeType === activeFinanceFilter;
         const searchableText = normalizeFinanceSearch((row.dataset.financeSearch || '') + ' ' + (row.dataset.financeStatusSearch || ''));
         const matchesSearch = !query || searchableText.includes(query);
         row.classList.toggle('finance-row-hidden', !matchesType || !matchesSearch);
-        if (matchesType && matchesSearch) visible++;
+        if (matchesType && matchesSearch) {
+            visible++;
+            visibleAmount += Number(row.dataset.financeSortAmount || 0);
+        }
     });
     const counter = document.getElementById('finance-search-count');
     const empty = document.getElementById('finance-search-empty');
-    if (counter) counter.textContent = visible + ' z ' + financeRows.length + ' poz.';
+    if (counter) {
+        const amount = new Intl.NumberFormat('pl-PL', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(visibleAmount);
+        counter.textContent = visible + ' z ' + financeRows.length + ' poz. · Suma: ' + amount + ' zł';
+    }
     if (empty) empty.hidden = visible !== 0;
 }
 document.querySelectorAll('.register-tab').forEach(button => button.addEventListener('click', () => {
