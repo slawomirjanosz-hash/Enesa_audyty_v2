@@ -161,10 +161,18 @@ test('project folder can be securely shared for viewing and external uploads', f
         'access_level' => 'upload',
     ])->assertSessionHas('success');
     $share = ProjectDocumentShare::firstOrFail();
+    CompanySettings::query()->updateOrCreate(['id' => 1], [
+        'name' => 'Firma testowa',
+        'primary_color' => '#24446A',
+    ]);
 
     $showUrl = URL::signedRoute('public.project-documents.show', $share);
     $uploadUrl = URL::signedRoute('public.project-documents.upload', $share);
-    $this->get($showUrl)->assertOk()->assertSee('Dokumentacja projektantów')->assertSee('Dodaj plik');
+    $this->get($showUrl)
+        ->assertOk()
+        ->assertSee('Dokumentacja projektantów')
+        ->assertSee('Dodaj plik')
+        ->assertSee('--brand:#24446A', false);
     $this->post($uploadUrl, [
         'files' => [
             UploadedFile::fake()->create('rysunek.pdf', 80, 'application/pdf'),
