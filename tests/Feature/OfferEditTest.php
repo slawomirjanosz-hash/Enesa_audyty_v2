@@ -242,12 +242,18 @@ test('offer editor shows live section totals and pdf can contain section summari
 
     $htmlWithPrices = view('offers.pdf', [
         'offer' => $offer->load(['company', 'assignedUser', 'offerDelegation']),
-        'companySettings' => null,
+        'companySettings' => CompanySettings::create([
+            'name' => 'Firma właściciela aplikacji',
+            'offer_tagline' => "Własne hasło firmy\nDruga linia hasła",
+        ]),
         'logoBase64' => null,
         'sectionsOnly' => false,
     ])->render();
 
     expect($htmlWithPrices)->toContain('section-name-total')
+        ->toContain('Własne hasło firmy<br')
+        ->toContain('Druga linia hasła')
+        ->not->toContain('Efektywność Energetyczna')
         ->toContain('Pomiary instalacji')
         ->toContain('1 200,00 zł')
         ->toContain('Pozycja szczegółowa');

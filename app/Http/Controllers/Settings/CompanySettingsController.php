@@ -26,6 +26,7 @@ class CompanySettingsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'short_name' => ['nullable', 'string', 'max:20'],
             'tagline' => ['nullable', 'string', 'max:255'],
+            'offer_tagline' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'address' => ['nullable', 'string', 'max:255'],

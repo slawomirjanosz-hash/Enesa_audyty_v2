@@ -139,8 +139,7 @@ body {
         @endif
     </td>
     <td>
-        <div class="brand-sub">Efektywność Energetyczna</div>
-        <div class="brand-sub">Białe Certyfikaty · ISO 50001</div>
+        <div class="brand-sub">{!! nl2br(e($companySettings?->offerTagline() ?? \App\Models\CompanySettings::DEFAULT_OFFER_TAGLINE)) !!}</div>
     </td>
     <td style="text-align:right; white-space:nowrap;">
         <div class="doc-ref-num">OFERTA NR {{ $offer->fullNumber() }}</div>

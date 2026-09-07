@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class CompanySettings extends Model
 {
+    public const DEFAULT_OFFER_TAGLINE = "Efektywność Energetyczna\nBiałe Certyfikaty · ISO 50001";
+
     public const APP_MODULES = [
         'dashboard' => 'Dashboard',
         'calendar' => 'Kalendarz',
@@ -24,6 +26,7 @@ class CompanySettings extends Model
         'name',
         'short_name',
         'tagline',
+        'offer_tagline',
         'email',
         'phone',
         'address',
@@ -68,6 +71,11 @@ class CompanySettings extends Model
     public function offerShortName(): string
     {
         return self::normalizeShortName($this->short_name, $this->name);
+    }
+
+    public function offerTagline(): string
+    {
+        return trim((string) $this->offer_tagline) ?: self::DEFAULT_OFFER_TAGLINE;
     }
 
     public static function moduleIsEnabled(string $module): bool

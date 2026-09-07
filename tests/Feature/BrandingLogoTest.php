@@ -67,3 +67,12 @@ test('offer documents can embed the logo saved in company settings', function ()
     expect($settings->logoDataUri())
         ->toBe('data:image/webp;base64,'.base64_encode('custom-logo-binary'));
 });
+
+test('company can configure a separate tagline for offer documents', function () {
+    $settings = CompanySettings::create([
+        'name' => 'Firma z własnym hasłem',
+        'offer_tagline' => "Pierwsza linia\nDruga linia",
+    ]);
+
+    expect($settings->offerTagline())->toBe("Pierwsza linia\nDruga linia");
+});

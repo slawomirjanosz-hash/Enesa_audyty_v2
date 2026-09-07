@@ -252,6 +252,19 @@
 
             <div class="cf-row-full">
                 <div class="cf-group">
+                    <label class="cf-label" for="offer_tagline">Hasło na ofertach</label>
+                    <textarea id="offer_tagline" name="offer_tagline" rows="2"
+                              class="cf-input @error('offer_tagline') is-invalid @enderror"
+                              placeholder="Hasło wyświetlane obok logo na wydruku oferty">{{ old('offer_tagline', $company?->offerTagline() ?? \App\Models\CompanySettings::DEFAULT_OFFER_TAGLINE) }}</textarea>
+                    <span class="cf-hint">Wyświetlane obok logo w PDF oferty. Możesz wpisać tekst w kilku liniach.</span>
+                    @error('offer_tagline')
+                        <span class="cf-hint" style="color:#b91c1c;">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="cf-row-full">
+                <div class="cf-group">
                     <label class="cf-label" for="welcome_page_mode">Ekran powitalny aplikacji<span>*</span></label>
                     <select id="welcome_page_mode" name="welcome_page_mode" class="cf-input">
                         <option value="audit" {{ old('welcome_page_mode', $company->welcome_page_mode ?? 'audit') === 'audit' ? 'selected' : '' }}>Strona audytowa — obecna strona ENESA</option>
