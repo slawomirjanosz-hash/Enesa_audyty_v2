@@ -26,11 +26,11 @@
         <h2 style="font-size:16px;margin-top:0">Dodaj plik</h2>
         <form class="upload" method="POST" enctype="multipart/form-data" action="{{ URL::signedRoute('public.project-documents.upload', $share) }}">
             @csrf
-            <input type="file" name="file" required accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.zip">
-            <button class="btn">Wgraj plik</button>
+            <input type="file" name="files[]" multiple required accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.zip">
+            <button class="btn">Wgraj pliki</button>
         </form>
         @error('file')<div style="color:#b91c1c;margin-top:8px;font-size:13px">{{ $message }}</div>@enderror
-        <p class="muted">PDF, Word, Excel, obrazy lub ZIP, maksymalnie 20 MB.</p>
+        <p class="muted">Jednorazowo do 20 plików. PDF, Word, Excel, obrazy lub ZIP, maksymalnie 20 MB na plik.</p>
     </section>
     @endif
     <section class="card">

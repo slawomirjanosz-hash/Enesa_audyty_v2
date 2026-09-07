@@ -509,7 +509,7 @@
         </form>
         <small style="display:block;margin-top:9px;color:#66736b">Dla katalogu możesz utworzyć bezpieczny link dla osoby, która nie ma konta w systemie.</small>
     </div>
-    <div class="card"><h2>Dodaj dokument projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="field"><label>Plik</label><input type="file" name="file" required></div><div class="field"><label>Katalog</label><select name="project_document_folder_id"><option value="">Dokumenty bez katalogu</option>@foreach($project->documentFolders as $folder)<option value="{{$folder->id}}">{{$folder->name}}</option>@endforeach</select></div><button class="btn">Wgraj dokument</button></div><small>PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB.</small></form></div>
+    <div class="card"><h2>Dodaj dokumenty projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="field"><label>Pliki</label><input type="file" name="files[]" multiple required></div><div class="field"><label>Katalog</label><select name="project_document_folder_id"><option value="">Dokumenty bez katalogu</option>@foreach($project->documentFolders as $folder)<option value="{{$folder->id}}">{{$folder->name}}</option>@endforeach</select></div><button class="btn">Wgraj dokumenty</button></div><small>Jednorazowo do 20 plików. PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB na plik.</small></form></div>
     @endif
 
     @foreach($project->documentFolders as $folder)

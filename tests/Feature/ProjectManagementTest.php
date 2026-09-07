@@ -119,16 +119,21 @@ test('uploaded project document remains visible after reopening the project', fu
     $project->members()->attach($admin);
 
     $this->actingAs($admin)->post(route('projects.documents.store', $project), [
-        'file' => UploadedFile::fake()->create('instrukcja projektu.pdf', 120, 'application/pdf'),
+        'files' => [
+            UploadedFile::fake()->create('instrukcja projektu.pdf', 120, 'application/pdf'),
+            UploadedFile::fake()->create('schemat projektu.xlsx', 80, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+        ],
     ])->assertRedirect(route('projects.show', ['project' => $project, 'tab' => 'documents']))
         ->assertSessionHas('success');
 
-    $document = Document::where('project_id', $project->id)->firstOrFail();
+    expect(Document::where('project_id', $project->id)->count())->toBe(2);
+    $document = Document::where('project_id', $project->id)->where('original_filename', 'instrukcja projektu.pdf')->firstOrFail();
     Storage::disk('local')->assertExists($document->stored_path);
 
     $this->actingAs($admin)->get(route('projects.show', ['project' => $project, 'tab' => 'documents']))
         ->assertOk()
         ->assertSee('instrukcja projektu.pdf')
+        ->assertSee('schemat projektu.xlsx')
         ->assertSee(route('projects.documents.download', [$project, $document]));
 });
 
@@ -157,9 +162,13 @@ test('project folder can be securely shared for viewing and external uploads', f
     $uploadUrl = URL::signedRoute('public.project-documents.upload', $share);
     $this->get($showUrl)->assertOk()->assertSee('Dokumentacja projektantów')->assertSee('Dodaj plik');
     $this->post($uploadUrl, [
-        'file' => UploadedFile::fake()->create('rysunek.pdf', 80, 'application/pdf'),
+        'files' => [
+            UploadedFile::fake()->create('rysunek.pdf', 80, 'application/pdf'),
+            UploadedFile::fake()->create('obliczenia.xlsx', 60, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+        ],
     ])->assertRedirect($showUrl);
 
+    expect(Document::where('project_document_folder_id', $folder->id)->count())->toBe(2);
     $document = Document::where('project_document_folder_id', $folder->id)->firstOrFail();
     expect($document->uploaded_by)->toBeNull();
     Storage::disk('local')->assertExists($document->stored_path);

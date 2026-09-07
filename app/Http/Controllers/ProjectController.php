@@ -925,31 +925,35 @@ class ProjectController extends Controller
     {
         $this->authorize('update', $project);
         $data = $request->validate([
-            'file' => ['required', 'file', 'max:20480', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,zip'],
+            'file' => ['nullable', 'file', 'max:20480', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,zip', 'required_without:files'],
+            'files' => ['nullable', 'array', 'min:1', 'max:20', 'required_without:file'],
+            'files.*' => ['file', 'max:20480', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,zip'],
             'project_document_folder_id' => ['nullable', 'integer', 'exists:project_document_folders,id'],
         ]);
         $folder = ! empty($data['project_document_folder_id'])
             ? ProjectDocumentFolder::where('project_id', $project->id)->findOrFail($data['project_document_folder_id'])
             : null;
-        $file = $data['file'];
-        $originalName = $file->getClientOriginalName();
-        $safeName = now()->format('YmdHis').'_'.Str::random(10).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
-        $relativePath = 'projects/'.$project->id.'/'.$safeName;
-        Storage::disk('local')->put($relativePath, $file->getContent());
-        Document::create([
-            'project_id' => $project->id,
-            'company_id' => $project->company_id,
-            'project_document_folder_id' => $folder?->id,
-            'type' => 'upload',
-            'original_filename' => $originalName,
-            'stored_path' => $relativePath,
-            'mime_type' => $file->getClientMimeType(),
-            'size' => $file->getSize(),
-            'uploaded_by' => $request->user()->id,
-        ]);
+        $files = $request->hasFile('files') ? $request->file('files') : [$request->file('file')];
+        foreach ($files as $file) {
+            $originalName = $file->getClientOriginalName();
+            $safeName = now()->format('YmdHis').'_'.Str::random(10).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
+            $relativePath = 'projects/'.$project->id.'/'.$safeName;
+            Storage::disk('local')->put($relativePath, $file->getContent());
+            Document::create([
+                'project_id' => $project->id,
+                'company_id' => $project->company_id,
+                'project_document_folder_id' => $folder?->id,
+                'type' => 'upload',
+                'original_filename' => $originalName,
+                'stored_path' => $relativePath,
+                'mime_type' => $file->getClientMimeType(),
+                'size' => $file->getSize(),
+                'uploaded_by' => $request->user()->id,
+            ]);
+        }
 
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'documents'])
-            ->with('success', 'Dokument projektu został dodany i zapisany.');
+            ->with('success', count($files) === 1 ? 'Dokument projektu został dodany i zapisany.' : 'Dodano '.count($files).' dokumentów projektu.');
     }
 
     public function downloadDocument(Project $project, Document $document)
