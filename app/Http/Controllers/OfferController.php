@@ -284,6 +284,7 @@ class OfferController extends Controller
     public function show(Offer $offer): View
     {
         $this->authorize('view', $offer);
+        $companySettings = CompanySettings::first();
         $offer->load([
             'company',
             'assignedUser',
@@ -299,7 +300,7 @@ class OfferController extends Controller
             $this->offerContent->hidePrices($offer);
         }
 
-        return view('offers.show', compact('offer'));
+        return view('offers.show', compact('offer', 'companySettings'));
     }
 
     public function edit(Offer $offer): View
@@ -680,6 +681,8 @@ class OfferController extends Controller
         $this->authorize('view', $offer);
         $this->authorize('viewPrices', $offer);
         $offer->load(['company', 'offerRequest']);
+        $companySettings = CompanySettings::first();
+        $ownerName = $companySettings?->name ?: config('app.name', 'Firma');
 
         $phpWord = new PhpWord;
         $phpWord->getSettings()->setThemeFontLang(new Language('pl-PL'));
@@ -710,7 +713,7 @@ class OfferController extends Controller
         if (file_exists($logoPath)) {
             $logoCell->addImage($logoPath, ['width' => 110, 'height' => 36]);
         } else {
-            $logoCell->addText('ENESA', ['bold' => true, 'size' => 18, 'color' => $green]);
+            $logoCell->addText($ownerName, ['bold' => true, 'size' => 18, 'color' => $green]);
         }
 
         $numCell = $hRow->addCell(Converter::cmToTwip(9), ['borderColor' => 'FFFFFF', 'borderSize' => 0, 'valign' => 'center']);
@@ -740,7 +743,7 @@ class OfferController extends Controller
                 ['alignment' => Jc::CENTER, 'spaceAfter' => Converter::pointToTwip(4)]
             );
             $section->addText(
-                'Oferta handlowa przygotowana przez ENESA Sp. z o.o.',
+                'Oferta handlowa przygotowana przez '.$ownerName,
                 ['size' => 10, 'color' => '888888', 'italic' => true],
                 ['alignment' => Jc::CENTER, 'spaceAfter' => Converter::pointToTwip(14)]
             );
@@ -760,11 +763,19 @@ class OfferController extends Controller
 
         $wCell = $pRow->addCell($halfW, ['bgColor' => $lightGreen, 'valign' => 'top']);
         $wCell->addText('WYSTAWCA OFERTY', ['size' => 8, 'color' => '7A9E90', 'bold' => true]);
-        $wCell->addText('Enesa sp. z o. o.', ['bold' => true, 'size' => 11, 'color' => $green]);
-        $wCell->addText('ul. Konarskiego 18C', ['size' => 10]);
-        $wCell->addText('44-100 Gliwice', ['size' => 10]);
-        $wCell->addText('NIP: 6312741198', ['size' => 10]);
-        $wCell->addText('biuro@enesa.pl', ['size' => 10]);
+        $wCell->addText($ownerName, ['bold' => true, 'size' => 11, 'color' => $green]);
+        if ($companySettings?->address) {
+            $wCell->addText($companySettings->address, ['size' => 10]);
+        }
+        if ($companySettings?->postcode || $companySettings?->city) {
+            $wCell->addText(trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')), ['size' => 10]);
+        }
+        if ($companySettings?->nip) {
+            $wCell->addText('NIP: '.$companySettings->nip, ['size' => 10]);
+        }
+        if ($companySettings?->email) {
+            $wCell->addText($companySettings->email, ['size' => 10]);
+        }
 
         $oCell = $pRow->addCell($halfW, ['bgColor' => $lightGreen, 'valign' => 'top']);
         $oCell->addText('ODBIORCA OFERTY', ['size' => 8, 'color' => '7A9E90', 'bold' => true]);
@@ -998,8 +1009,14 @@ class OfferController extends Controller
 
         // ── STOPKA ───────────────────────────────────────────────────────────
         $footer = $section->addFooter();
+        $footerCompanyData = array_filter([
+            $ownerName,
+            trim(($companySettings?->address ?? '').', '.trim(($companySettings?->postcode ?? '').' '.($companySettings?->city ?? '')), ', '),
+            $companySettings?->nip ? 'NIP: '.$companySettings->nip : null,
+            $companySettings?->email,
+        ]);
         $footer->addText(
-            'Enesa sp. z o. o.  ·  ul. Konarskiego 18C, 44-100 Gliwice  ·  NIP: 6312741198  ·  biuro@enesa.pl',
+            implode('  ·  ', $footerCompanyData),
             ['size' => 8, 'color' => '999999'],
             ['alignment' => Jc::CENTER]
         );

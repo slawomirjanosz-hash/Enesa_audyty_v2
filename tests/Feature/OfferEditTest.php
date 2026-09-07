@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\OfferDelegation;
 use App\Models\User;
@@ -197,6 +198,8 @@ test('legacy offer rich text is sanitized before a client sees it', function () 
 test('offer editor shows live section totals and pdf can contain section summaries only', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
+    CompanySettings::query()->delete();
+    CompanySettings::create(['name' => 'Firma właściciela aplikacji']);
     $company = Company::create(['name' => 'Klient oferty sekcyjnej', 'company_type' => 'client', 'status' => 'active']);
     $offer = Offer::create([
         'company_id' => $company->id,
@@ -264,6 +267,8 @@ test('offer editor shows live section totals and pdf can contain section summari
         ->assertSee('Pozycja szczegółowa')
         ->assertSee('Łączny koszt delegacji uwzględniony w ofercie')
         ->assertSee('440,00 zł')
+        ->assertSee('widoczna tylko dla Firma właściciela aplikacji')
+        ->assertDontSee('widoczna tylko dla ENESA')
         ->assertDontSee('Odległość do klienta')
         ->assertDontSee('Liczba wyjazdów');
 

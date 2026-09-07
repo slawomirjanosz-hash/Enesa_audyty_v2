@@ -200,6 +200,7 @@
 
 @php
     $d = $offer->offerDelegation;
+    $ownerCompanyName = $companySettings?->name ?: config('app.name', 'Firma');
     $offerSections = collect($offer->price_sections ?? [])->filter(fn ($section) => !empty($section['rows'] ?? []));
     $delegationTotal = collect($offer->delegations ?? [])->sum(function ($location) {
         $km = (float) ($location['km'] ?? 0);
@@ -292,7 +293,7 @@
                 <div class="meta-item-value">{{ $offer->company?->name ?? '—' }}</div>
             </div>
             <div>
-                <div class="meta-item-label">Osoba prowadząca (ENESA)</div>
+                <div class="meta-item-label">Osoba prowadząca ({{ $ownerCompanyName }})</div>
                 <div class="meta-item-value">{{ $offer->assignedUser?->name ?? '— nieprzypisana —' }}</div>
             </div>
             <div>
@@ -447,7 +448,7 @@
                         <input type="checkbox" name="is_internal" value="1"
                                {{ old('is_internal') ? 'checked' : '' }}
                                style="width:15px;height:15px;accent-color:var(--green);">
-                        Notatka wewnętrzna (widoczna tylko dla ENESA)
+                        Notatka wewnętrzna (widoczna tylko dla {{ $ownerCompanyName }})
                     </label>
                     <button type="submit" class="btn-primary">
                         <i class="ti ti-send"></i> Wyślij

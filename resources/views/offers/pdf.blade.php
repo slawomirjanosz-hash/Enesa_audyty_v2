@@ -169,7 +169,7 @@ body {
             <td class="party-accent">&nbsp;</td>
             <td class="party-inner">
                 <div class="party-lbl">Wystawca oferty</div>
-                <div class="party-name">{{ $companySettings->name ?? 'ENESA Sp. z o.o.' }}</div>
+                <div class="party-name">{{ $companySettings->name ?? config('app.name', 'Firma') }}</div>
                 <div class="party-det">
                     @if($companySettings?->address){{ $companySettings->address }}<br>@endif
                     @if($companySettings?->postcode || $companySettings?->city)
@@ -521,7 +521,7 @@ body {
 <table class="footer-tbl">
 <tr>
     <td class="footer-info">
-        {{ $companySettings->name ?? 'ENESA Sp. z o.o.' }}
+        {{ $companySettings->name ?? config('app.name', 'Firma') }}
         @if($companySettings?->address) · {{ $companySettings->address }}@endif
         @if($companySettings?->postcode || $companySettings?->city)
             , {{ trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')) }}
@@ -534,7 +534,7 @@ body {
     </td>
     <td class="sign-cell">
         <div class="sign-line-div"></div>
-        <div class="sign-label">{{ $offer->assignedUser->name ?? 'Przedstawiciel ENESA' }}<br>Podpis i pieczęć</div>
+        <div class="sign-label">{{ $offer->assignedUser->name ?? 'Przedstawiciel firmy' }}<br>Podpis i pieczęć</div>
     </td>
 </tr>
 </table>

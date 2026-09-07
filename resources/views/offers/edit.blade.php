@@ -355,7 +355,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     <div class="doc-parties">
         <div class="doc-party">
             <div class="doc-party-label">Wystawca</div>
-            <div class="doc-party-name">{{ $companySettings->name ?? 'ENESA Sp. z o.o.' }}</div>
+            <div class="doc-party-name">{{ $companySettings->name ?? config('app.name', 'Firma') }}</div>
             <div class="doc-party-line">
                 @if($companySettings?->address){{ $companySettings->address }}<br>@endif
                 @if($companySettings?->postcode || $companySettings?->city)
@@ -576,7 +576,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 {{-- Osoba prowadząca + status --}}
 <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end;">
     <div>
-        <label class="field-label">Osoba prowadząca (ENESA)</label>
+        <label class="field-label">Osoba prowadząca ({{ $companySettings->name ?? config('app.name', 'Firma') }})</label>
         <select name="assigned_user_id" class="field-input">
             <option value="">— nieprzypisana —</option>
             @foreach($users as $user)
