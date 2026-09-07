@@ -304,7 +304,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     </div>
 
     {{-- Osoba prowadząca + status --}}
-    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end;">
+    <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:start;">
         <div>
             <label class="field-label">Osoba prowadząca ({{ $companySettings->name ?? config('app.name', 'Firma') }})</label>
             <select name="assigned_user_id" class="field-input">
