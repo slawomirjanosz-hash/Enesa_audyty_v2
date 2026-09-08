@@ -52,4 +52,9 @@ class Audit extends Model
     {
         return $this->hasMany(EnergyPassport::class)->orderByDesc('created_at');
     }
+
+    public function isoSectionDocuments(): HasMany
+    {
+        return $this->hasMany(IsoSectionDocument::class)->orderByDesc('document_year')->orderByDesc('created_at');
+    }
 }

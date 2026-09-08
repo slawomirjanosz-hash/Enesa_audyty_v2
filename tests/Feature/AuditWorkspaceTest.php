@@ -7,6 +7,7 @@ use App\Models\AuditType;
 use App\Models\Company;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
+use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Models\Task;
 use App\Models\User;
@@ -160,4 +161,53 @@ test('client sees audits assigned to their company in the client zone', function
         ->assertSee(route('client.dashboard'), false)->assertDontSee('data-client-standard-menu', false)
         ->assertDontSee('>Finanse<', false)->assertDontSee('987 654,32');
     $this->actingAs($client)->get(route('client.audits.show', $otherAudit))->assertNotFound();
+});
+
+test('ISO clauses keep separate versioned template and client documentation', function () {
+    Storage::fake('local');
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole(Role::findOrCreate('superadmin'));
+    $manager = auditManager();
+    $isoType = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $company = Company::create(['name' => 'Zakład z dokumentacją ISO', 'company_type' => 'client', 'status' => 'active']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'ISO/DOC/1', 'title' => 'Wdrożenie ISO', 'manager_id' => $manager->id, 'status' => 'in_progress']);
+    $audit->members()->attach($manager);
+    $audit->surveys()->create(['audit_type_id' => $isoType->id, 'title' => $isoType->name, 'status' => 'draft']);
+
+    $this->actingAs($superadmin)->post(route('audit-types.iso-documents.store', $isoType), [
+        'section_id' => '4-1', 'document_year' => 2026, 'version_number' => '1.0',
+        'files' => [UploadedFile::fake()->create('wzor-analizy-kontekstu.docx', 20)],
+    ])->assertRedirect(route('audit-types.show', ['auditType' => $isoType, 'section' => '4-1']));
+
+    $this->actingAs($manager)->post(route('audits.iso-documents.store', $audit), [
+        'section_id' => '4-1', 'title' => 'Analiza kontekstu zakładu', 'description' => 'Aktualizacja po przeglądzie rocznym.',
+        'document_year' => 2027, 'version_number' => '2.0',
+        'files' => [UploadedFile::fake()->create('kontekst-klienta.docx', 30)],
+    ])->assertRedirect(route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']));
+
+    $template = IsoSectionDocument::where('scope', 'template')->firstOrFail();
+    $clientDocument = IsoSectionDocument::where('scope', 'client')->firstOrFail();
+    expect($template->audit_id)->toBeNull()
+        ->and($clientDocument->audit_id)->toBe($audit->id)
+        ->and($clientDocument->document_year)->toBe(2027)
+        ->and($clientDocument->version_number)->toBe('2.0');
+    Storage::disk('local')->assertExists($template->stored_path);
+    Storage::disk('local')->assertExists($clientDocument->stored_path);
+
+    $this->actingAs($manager)->get(route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
+        ->assertOk()->assertSee('Dokumentacja wzorcowa')->assertSee('Dokumentacja klienta')
+        ->assertSee('wzor-analizy-kontekstu')->assertSee('Analiza kontekstu zakładu')->assertSee('wersja 2.0');
+
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company, ['is_admin' => false]);
+    $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
+        ->assertOk()->assertSee('wzor-analizy-kontekstu')->assertSee('Analiza kontekstu zakładu')
+        ->assertDontSee('Dodaj dokumentację klienta');
+    $this->actingAs($client)->get(route('client.audits.iso-documents.templates.download', [$audit, $template]))->assertOk();
+    $this->actingAs($client)->get(route('client.audits.iso-documents.download', [$audit, $clientDocument]))->assertOk();
+
+    $otherClient = User::factory()->create();
+    $otherClient->assignRole(Role::findOrCreate('client_user'));
+    $this->actingAs($otherClient)->get(route('client.audits.iso-documents.download', [$audit, $clientDocument]))->assertNotFound();
 });

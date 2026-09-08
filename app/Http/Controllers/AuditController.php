@@ -10,6 +10,7 @@ use App\Models\AuditType;
 use App\Models\Document;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
+use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Models\Task;
 use App\Models\User;
@@ -49,7 +50,7 @@ class AuditController extends Controller
     public function show(Request $request, Audit $audit): View
     {
         $this->ensureAccess($request, $audit);
-        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template']);
+        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader']);
         $timelineItems = $audit->tasks->filter(fn (Task $task) => $task->start_date && $task->due_date)
             ->map(fn (Task $task) => $this->taskTimelinePayload($audit, $task))->values();
 
@@ -63,6 +64,8 @@ class AuditController extends Controller
             'clientView' => false,
             'canViewFinances' => true,
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
+            'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
+            'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
         ]);
     }
 
@@ -258,6 +261,66 @@ class AuditController extends Controller
         $document->delete();
 
         return back()->with('success', 'Dokument został usunięty.');
+    }
+
+    public function storeIsoDocument(Request $request, Audit $audit): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        $this->ensureIsoAudit($audit);
+        abort_unless($this->canManage($request), 403);
+        $data = $request->validate([
+            'section_id' => ['required', 'string', 'max:40'], 'title' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'], 'document_year' => ['nullable', 'integer', 'between:2000,2200'],
+            'version_number' => ['required', 'string', 'max:40'], 'files' => ['required', 'array', 'min:1', 'max:20'],
+            'files.*' => ['file', 'max:30720', 'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,csv,txt,jpg,jpeg,png,zip'],
+        ]);
+        $this->ensureIsoSection($data['section_id']);
+        foreach ($request->file('files') as $file) {
+            $safeName = now()->format('YmdHis').'_'.Str::random(12).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientOriginalName());
+            $path = 'iso50001/client/'.$audit->id.'/'.$data['section_id'].'/'.$safeName;
+            Storage::disk('local')->put($path, $file->getContent());
+            IsoSectionDocument::create([
+                'audit_id' => $audit->id, 'section_id' => $data['section_id'], 'scope' => 'client',
+                'title' => count($request->file('files')) === 1 && filled($data['title'] ?? null) ? $data['title'] : pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                'description' => $data['description'] ?? null, 'document_year' => $data['document_year'] ?? now()->year,
+                'version_number' => $data['version_number'], 'original_filename' => $file->getClientOriginalName(),
+                'stored_path' => $path, 'mime_type' => $file->getClientMimeType(), 'size' => $file->getSize(), 'uploaded_by' => $request->user()->id,
+            ]);
+        }
+
+        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => $data['section_id']])->with('success', 'Dokumentacja klienta została dodana.');
+    }
+
+    public function downloadIsoDocument(Request $request, Audit $audit, IsoSectionDocument $document)
+    {
+        $this->ensureAccess($request, $audit);
+        abort_unless($document->scope === 'client' && $document->audit_id === $audit->id, 404);
+        abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
+
+        return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+    }
+
+    public function destroyIsoDocument(Request $request, Audit $audit, IsoSectionDocument $document): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        abort_unless($this->canManage($request), 403);
+        abort_unless($document->scope === 'client' && $document->audit_id === $audit->id, 404);
+        Storage::disk('local')->delete($document->stored_path);
+        $section = $document->section_id;
+        $document->delete();
+
+        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => $section])->with('success', 'Dokument klienta został usunięty.');
+    }
+
+    private function ensureIsoSection(string $sectionId): void
+    {
+        $ids = collect(config('iso50001.chapters', []))->flatMap(fn (array $chapter) => [$chapter['id'], ...collect($chapter['items'] ?? [])->pluck('id')->all()]);
+        abort_unless($ids->containsStrict($sectionId), 422);
+    }
+
+    private function ensureIsoAudit(Audit $audit): void
+    {
+        abort_unless($audit->surveys()->whereHas('auditType', fn ($types) => $types->where('slug', 'iso50001'))->exists(), 404);
     }
 
     private function ensureAccess(Request $request, Audit $audit): void

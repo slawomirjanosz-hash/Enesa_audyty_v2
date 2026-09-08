@@ -99,6 +99,8 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
     Route::get('/audits/{audit}', [ClientAuditController::class, 'show'])->middleware('app.module:audits')->name('audits.show');
+    Route::get('/audits/{audit}/iso-documents/templates/{document}', [ClientAuditController::class, 'downloadIsoTemplateDocument'])->middleware('app.module:audits')->name('audits.iso-documents.templates.download');
+    Route::get('/audits/{audit}/iso-documents/{document}', [ClientAuditController::class, 'downloadIsoDocument'])->middleware('app.module:audits')->name('audits.iso-documents.download');
     Route::get('/audits/{audit}/documents/{document}', [ClientAuditController::class, 'downloadDocument'])->middleware('app.module:audits')->name('audits.documents.download');
     Route::get('/audits/{audit}/gantt/export', [ClientAuditController::class, 'exportGantt'])->middleware('app.module:audits')->name('audits.gantt.export');
     Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('app.module:offers')->name('offers');
@@ -171,6 +173,9 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::delete('/{audit}/surveys/{survey}', [AuditController::class, 'destroySurvey'])->middleware('app.permission:audits.manage')->name('surveys.destroy');
         Route::post('/{audit}/passports', [AuditController::class, 'storePassport'])->middleware('app.permission:audits.manage')->name('passports.store');
         Route::post('/{audit}/documents', [AuditController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
+        Route::post('/{audit}/iso-documents', [AuditController::class, 'storeIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.store');
+        Route::get('/{audit}/iso-documents/{document}', [AuditController::class, 'downloadIsoDocument'])->name('iso-documents.download');
+        Route::delete('/{audit}/iso-documents/{document}', [AuditController::class, 'destroyIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.destroy');
         Route::get('/{audit}/documents/{document}', [AuditController::class, 'downloadDocument'])->name('documents.download');
         Route::delete('/{audit}/documents/{document}', [AuditController::class, 'destroyDocument'])->middleware('app.permission:audits.manage')->name('documents.destroy');
     });
@@ -184,6 +189,9 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('/templates/import', [EnergyPassportController::class, 'importTemplate'])->middleware('app.permission:audits.passports.manage')->name('templates.import');
     });
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
+    Route::post('audit-types/{auditType}/iso-documents', [AuditTypeController::class, 'storeIsoDocument'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.iso-documents.store');
+    Route::get('audit-types/{auditType}/iso-documents/{document}', [AuditTypeController::class, 'downloadIsoDocument'])->middleware('app.module:audits')->name('audit-types.iso-documents.download');
+    Route::delete('audit-types/{auditType}/iso-documents/{document}', [AuditTypeController::class, 'destroyIsoDocument'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.iso-documents.destroy');
     Route::post('audit-types/{auditType}/training-videos', [AuditTypeController::class, 'storeTrainingVideo'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.training-videos.store');
     Route::put('audit-types/{auditType}/training-videos/{video}', [AuditTypeController::class, 'updateTrainingVideo'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.training-videos.update');
     Route::delete('audit-types/{auditType}/training-videos/{video}', [AuditTypeController::class, 'destroyTrainingVideo'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.training-videos.destroy');

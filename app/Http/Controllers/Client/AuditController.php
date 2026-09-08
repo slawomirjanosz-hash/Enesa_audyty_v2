@@ -6,6 +6,7 @@ use App\Exports\ProjectGanttExport;
 use App\Http\Controllers\Controller;
 use App\Models\Audit;
 use App\Models\Document;
+use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,7 @@ class AuditController extends Controller
     public function show(Request $request, Audit $audit): View
     {
         $company = $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
-        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'documents.uploader', 'surveys.auditType', 'energyPassports.template']);
+        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader']);
         $isIso50001 = $audit->surveys->contains(fn ($survey) => $survey->auditType?->slug === 'iso50001');
         $timelineItems = $audit->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
             'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id,
@@ -49,6 +50,8 @@ class AuditController extends Controller
             'clientAuditMode' => $isIso50001, 'clientAudit' => $audit,
             'isoChapters' => config('iso50001.chapters', []),
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
+            'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
+            'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
         ]);
     }
 
@@ -59,6 +62,31 @@ class AuditController extends Controller
         abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
 
         return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+    }
+
+    public function downloadIsoTemplateDocument(Request $request, Audit $audit, IsoSectionDocument $document)
+    {
+        $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
+        $this->ensureIsoAudit($audit);
+        abort_unless($document->scope === 'template' && $document->audit_id === null, 404);
+        abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
+
+        return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+    }
+
+    public function downloadIsoDocument(Request $request, Audit $audit, IsoSectionDocument $document)
+    {
+        $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
+        $this->ensureIsoAudit($audit);
+        abort_unless($document->scope === 'client' && $document->audit_id === $audit->id, 404);
+        abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
+
+        return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+    }
+
+    private function ensureIsoAudit(Audit $audit): void
+    {
+        abort_unless($audit->surveys()->whereHas('auditType', fn ($types) => $types->where('slug', 'iso50001'))->exists(), 404);
     }
 
     public function exportGantt(Request $request, Audit $audit): BinaryFileResponse

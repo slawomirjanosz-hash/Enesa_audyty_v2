@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\AuditType;
 use App\Models\AuditTypeVersion;
+use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuditTypeController extends Controller
@@ -50,12 +54,76 @@ class AuditTypeController extends Controller
                 'chapters' => config('iso50001.chapters', []),
                 'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
                 'canManageTraining' => app(AuditorAccessService::class)->hasFullAccess(request()->user()),
+                'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             ]);
         }
 
         $auditType->load('versions.creator');
 
         return view('audit-types.show', compact('auditType'));
+    }
+
+    public function storeIsoDocument(Request $request, AuditType $auditType): RedirectResponse
+    {
+        abort_unless($auditType->slug === 'iso50001', 404);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $data = $this->validateIsoDocument($request);
+        $this->ensureIsoSection($data['section_id']);
+        $this->storeIsoFiles($request, $data, null, 'template');
+
+        return redirect()->route('audit-types.show', ['auditType' => $auditType, 'section' => $data['section_id']])
+            ->with('success', 'Dokumentacja wzorcowa została dodana.');
+    }
+
+    public function downloadIsoDocument(AuditType $auditType, IsoSectionDocument $document)
+    {
+        abort_unless($auditType->slug === 'iso50001' && $document->scope === 'template' && $document->audit_id === null, 404);
+        abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
+
+        return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+    }
+
+    public function destroyIsoDocument(Request $request, AuditType $auditType, IsoSectionDocument $document): RedirectResponse
+    {
+        abort_unless($auditType->slug === 'iso50001' && $document->scope === 'template' && $document->audit_id === null, 404);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        Storage::disk('local')->delete($document->stored_path);
+        $section = $document->section_id;
+        $document->delete();
+
+        return redirect()->route('audit-types.show', ['auditType' => $auditType, 'section' => $section])->with('success', 'Dokument wzorcowy został usunięty.');
+    }
+
+    private function validateIsoDocument(Request $request): array
+    {
+        return $request->validate([
+            'section_id' => ['required', 'string', 'max:40'], 'title' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'], 'document_year' => ['nullable', 'integer', 'between:2000,2200'],
+            'version_number' => ['required', 'string', 'max:40'], 'files' => ['required', 'array', 'min:1', 'max:20'],
+            'files.*' => ['file', 'max:30720', 'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,csv,txt,jpg,jpeg,png,zip'],
+        ]);
+    }
+
+    private function ensureIsoSection(string $sectionId): void
+    {
+        $ids = collect(config('iso50001.chapters', []))->flatMap(fn (array $chapter) => [$chapter['id'], ...collect($chapter['items'] ?? [])->pluck('id')->all()]);
+        abort_unless($ids->containsStrict($sectionId), 422);
+    }
+
+    private function storeIsoFiles(Request $request, array $data, ?Audit $audit, string $scope): void
+    {
+        foreach ($request->file('files') as $file) {
+            $safeName = now()->format('YmdHis').'_'.Str::random(12).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientOriginalName());
+            $path = 'iso50001/'.$scope.'/'.($audit?->id ?? 'library').'/'.$data['section_id'].'/'.$safeName;
+            Storage::disk('local')->put($path, $file->getContent());
+            IsoSectionDocument::create([
+                'audit_id' => $audit?->id, 'section_id' => $data['section_id'], 'scope' => $scope,
+                'title' => count($request->file('files')) === 1 && filled($data['title'] ?? null) ? $data['title'] : pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                'description' => $data['description'] ?? null, 'document_year' => $data['document_year'] ?? now()->year,
+                'version_number' => $data['version_number'], 'original_filename' => $file->getClientOriginalName(),
+                'stored_path' => $path, 'mime_type' => $file->getClientMimeType(), 'size' => $file->getSize(), 'uploaded_by' => $request->user()->id,
+            ]);
+        }
     }
 
     public function storeTrainingVideo(Request $request, AuditType $auditType): RedirectResponse
