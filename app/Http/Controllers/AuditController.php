@@ -50,7 +50,7 @@ class AuditController extends Controller
     public function show(Request $request, Audit $audit): View
     {
         $this->ensureAccess($request, $audit);
-        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader']);
+        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader', 'isoImplementationResponses']);
         $timelineItems = $audit->tasks->filter(fn (Task $task) => $task->start_date && $task->due_date)
             ->map(fn (Task $task) => $this->taskTimelinePayload($audit, $task))->values();
 
@@ -66,6 +66,7 @@ class AuditController extends Controller
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
             'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
+            'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy('action_key'),
         ]);
     }
 

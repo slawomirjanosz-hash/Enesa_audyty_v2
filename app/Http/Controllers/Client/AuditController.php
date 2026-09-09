@@ -33,7 +33,7 @@ class AuditController extends Controller
     public function show(Request $request, Audit $audit): View
     {
         $company = $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
-        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader']);
+        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader', 'isoImplementationResponses']);
         $isIso50001 = $audit->surveys->contains(fn ($survey) => $survey->auditType?->slug === 'iso50001');
         $timelineItems = $audit->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
             'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id,
@@ -52,6 +52,7 @@ class AuditController extends Controller
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
             'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
+            'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy('action_key'),
         ]);
     }
 

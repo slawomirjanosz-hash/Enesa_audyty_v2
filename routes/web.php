@@ -23,6 +23,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EnergyPassportController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\ImportantContactController;
+use App\Http\Controllers\IsoImplementationController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
@@ -99,6 +100,8 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
     Route::get('/audits/{audit}', [ClientAuditController::class, 'show'])->middleware('app.module:audits')->name('audits.show');
+    Route::post('/audits/{audit}/iso50001/3-1/{action}', [IsoImplementationController::class, 'storeForClient'])->middleware('app.module:audits')->name('audits.iso50001.responses.store');
+    Route::post('/audits/{audit}/iso50001/3-1/{action}/pdf', [IsoImplementationController::class, 'generateForClient'])->middleware('app.module:audits')->name('audits.iso50001.responses.pdf');
     Route::get('/audits/{audit}/iso-documents/templates/{document}', [ClientAuditController::class, 'downloadIsoTemplateDocument'])->middleware('app.module:audits')->name('audits.iso-documents.templates.download');
     Route::get('/audits/{audit}/iso-documents/{document}', [ClientAuditController::class, 'downloadIsoDocument'])->middleware('app.module:audits')->name('audits.iso-documents.download');
     Route::get('/audits/{audit}/documents/{document}', [ClientAuditController::class, 'downloadDocument'])->middleware('app.module:audits')->name('audits.documents.download');
@@ -174,6 +177,8 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('/{audit}/passports', [AuditController::class, 'storePassport'])->middleware('app.permission:audits.manage')->name('passports.store');
         Route::post('/{audit}/documents', [AuditController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
         Route::post('/{audit}/iso-documents', [AuditController::class, 'storeIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.store');
+        Route::post('/{audit}/iso50001/3-1/{action}', [IsoImplementationController::class, 'store'])->middleware('app.permission:audits.manage')->name('iso50001.responses.store');
+        Route::post('/{audit}/iso50001/3-1/{action}/pdf', [IsoImplementationController::class, 'generate'])->middleware('app.permission:audits.manage')->name('iso50001.responses.pdf');
         Route::get('/{audit}/iso-documents/{document}', [AuditController::class, 'downloadIsoDocument'])->name('iso-documents.download');
         Route::delete('/{audit}/iso-documents/{document}', [AuditController::class, 'destroyIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.destroy');
         Route::get('/{audit}/documents/{document}', [AuditController::class, 'downloadDocument'])->name('documents.download');

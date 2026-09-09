@@ -7,6 +7,7 @@ use App\Models\AuditType;
 use App\Models\Company;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
+use App\Models\IsoImplementationResponse;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Models\Task;
@@ -210,4 +211,45 @@ test('ISO clauses keep separate versioned template and client documentation', fu
     $otherClient = User::factory()->create();
     $otherClient->assignRole(Role::findOrCreate('client_user'));
     $this->actingAs($otherClient)->get(route('client.audits.iso-documents.download', [$audit, $clientDocument]))->assertNotFound();
+});
+
+test('ISO 50001 point 3.1 keeps the template separate and generates client PDF versions', function () {
+    Storage::fake('local');
+    $company = Company::create(['name' => 'Fabryka ISO 50001', 'company_type' => 'client', 'status' => 'active']);
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company, ['is_admin' => false]);
+    $isoType = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'ISO/3.1/1', 'title' => 'Wdrożenie EnMS', 'status' => 'in_progress']);
+    $audit->surveys()->create(['audit_type_id' => $isoType->id, 'title' => $isoType->name, 'status' => 'draft']);
+
+    $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '3-1']))
+        ->assertOk()->assertSee('Dokument przykładowy')->assertSee('Ankieta do wypełnienia')
+        ->assertSee('Bazowy koszt energii i potencjał poprawy')->assertSee('To jest dokument wzorcowy');
+
+    $answers = [
+        'analysis_period' => '01.2025–12.2025', 'electricity_cost' => 120000, 'gas_cost' => 30000,
+        'other_energy_cost' => 5000, 'total_energy_cost' => 155000, 'improvement_potential' => 8,
+        'estimated_savings' => 12400, 'assumptions' => 'Faktury i odczyty liczników.',
+    ];
+    $this->actingAs($client)->post(route('client.audits.iso50001.responses.pdf', [$audit, 'baseline']), ['answers' => $answers])
+        ->assertRedirect(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '3-1']));
+
+    $response = IsoImplementationResponse::firstOrFail();
+    $document = IsoSectionDocument::where('scope', 'client')->firstOrFail();
+    expect($response->audit_id)->toBe($audit->id)
+        ->and($response->answers['total_energy_cost'])->toBe(155000)
+        ->and($response->generated_at)->not->toBeNull()
+        ->and($document->audit_id)->toBe($audit->id)
+        ->and($document->section_id)->toBe('3-1')
+        ->and($document->mime_type)->toBe('application/pdf');
+    Storage::disk('local')->assertExists($document->stored_path);
+
+    $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '3-1']))
+        ->assertOk()->assertSee('Dokument wygenerowany z ankiety klienta.')->assertSee('wersja 1.0');
+
+    $otherClient = User::factory()->create();
+    $otherClient->assignRole(Role::findOrCreate('client_user'));
+    $this->actingAs($otherClient)->post(route('client.audits.iso50001.responses.pdf', [$audit, 'baseline']), ['answers' => $answers])
+        ->assertNotFound();
 });
