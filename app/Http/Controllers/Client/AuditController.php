@@ -50,7 +50,7 @@ class AuditController extends Controller
             'clientAuditMode' => $isIso50001, 'clientAudit' => $audit,
             'isoChapters' => config('iso50001.chapters', []),
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
-            'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
+            'templateDocuments' => IsoSectionDocument::query()->metadata()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
             'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy(fn ($response) => $response->section_id.'|'.$response->action_key),
         ]);

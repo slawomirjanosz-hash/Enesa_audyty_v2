@@ -8,6 +8,7 @@ use App\Services\AuditorAccessService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class DocumentController extends Controller
@@ -28,21 +29,31 @@ class DocumentController extends Controller
         $this->ensureStaffAccess();
         $access = app(AuditorAccessService::class);
 
-        $docs = $access->scopeDocumentsVisibleTo(
-            Document::with(['company', 'offer', 'uploader']),
+        $query = $access->scopeDocumentsVisibleTo(
+            Document::query(),
             $request->user()
-        )
-            ->orderByDesc('updated_at')
-            ->get();
+        );
+        $totalSize = Document::formatBytes((int) (clone $query)->sum('size'));
+        $folderSizes = (clone $query)->selectRaw('company_id, SUM(size) AS total_size')->groupBy('company_id')->with('company')->get()
+            ->groupBy(fn ($doc) => $doc->company?->name ?? 'Brak firmy')
+            ->map(fn ($docs) => Document::formatBytes((int) $docs->sum('total_size')));
+        $search = trim((string) ($request->validate(['q' => ['nullable', 'string', 'max:200']])['q'] ?? ''));
+        if ($search !== '') {
+            $query->where(fn ($q) => $q->where('original_filename', 'like', '%'.$search.'%')
+                ->orWhere('type', 'like', '%'.$search.'%')
+                ->orWhereHas('company', fn ($company) => $company->where('name', 'like', '%'.$search.'%'))
+                ->orWhereHas('offer', fn ($offer) => $offer->where('number', 'like', '%'.$search.'%'))
+                ->orWhereHas('uploader', fn ($user) => $user->where('name', 'like', '%'.$search.'%')));
+        }
+        $documentPage = $query->with(['company', 'offer', 'uploader'])->orderByDesc('updated_at')->orderByDesc('id')->paginate(50)->withQueryString();
+        $docs = $documentPage->getCollection();
 
         // Group documents by company name
         $documents = $docs->groupBy(function ($doc) {
             return $doc->company?->name ?? 'Brak firmy';
         })->sortKeys();
-        $totalSize = Document::formatBytes((int) $docs->sum('size'));
-        $folderSizes = $documents->map(fn ($companyDocs) => Document::formatBytes((int) $companyDocs->sum('size')));
 
-        return view('documents.index', compact('documents', 'totalSize', 'folderSizes'));
+        return view('documents.index', compact('documents', 'totalSize', 'folderSizes', 'documentPage', 'search'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -57,11 +68,11 @@ class DocumentController extends Controller
         $company = Company::findOrFail($data['company_id']);
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $safeName = time().'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
+        $safeName = Str::uuid().'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
         $companyFolder = $company->folderSlug();
         $relativePath = 'documents/'.$companyFolder.'/'.$safeName;
 
-        Storage::disk('local')->put($relativePath, file_get_contents($file->getRealPath()));
+        abort_unless(Storage::disk('local')->put($relativePath, file_get_contents($file->getRealPath())), 500, 'Nie udało się zapisać pliku. Spróbuj ponownie.');
 
         Document::create([
             'company_id' => $company->id,

@@ -18,11 +18,12 @@ class DocumentPolicy
 
     public function update(User $user, Document $document): bool
     {
-        return $this->canModify($user, 'documents.upload');
+        return $this->view($user, $document) && $this->canModify($user, 'documents.upload');
     }
 
     public function delete(User $user, Document $document): bool
     {
-        return $this->canModify($user, 'documents.delete');
+        return $this->view($user, $document) && $this->canModify($user, 'documents.delete')
+            && ($document->project_id === null || ($user->can('update', $document->project) && $user->can('projects.documents.manage')));
     }
 }

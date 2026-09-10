@@ -54,7 +54,7 @@ class AuditTypeController extends Controller
                 'chapters' => config('iso50001.chapters', []),
                 'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
                 'canManageTraining' => app(AuditorAccessService::class)->hasFullAccess(request()->user()),
-                'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
+                'templateDocuments' => IsoSectionDocument::query()->metadata()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             ]);
         }
 

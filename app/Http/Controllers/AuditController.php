@@ -19,6 +19,7 @@ use App\Services\ProjectGanttImportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -64,7 +65,7 @@ class AuditController extends Controller
             'clientView' => false,
             'canViewFinances' => true,
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
-            'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
+            'templateDocuments' => IsoSectionDocument::query()->metadata()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
             'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy(fn ($response) => $response->section_id.'|'.$response->action_key),
         ]);
@@ -137,7 +138,7 @@ class AuditController extends Controller
         $data = $request->validate(['order' => ['required', 'array'], 'order.*' => ['required', 'integer', 'distinct', 'exists:tasks,id']]);
         abort_unless($audit->tasks()->whereIn('id', $data['order'])->count() === count($data['order']) && $audit->tasks()->count() === count($data['order']), 422);
         foreach ($data['order'] as $position => $taskId) {
-            $audit->tasks()->whereKey($taskId)->update(['project_position' => $position]);
+            $audit->tasks()->findOrFail($taskId)->update(['project_position' => $position]);
         }
 
         return response()->json(['success' => true]);
@@ -150,7 +151,7 @@ class AuditController extends Controller
         $tasks = $audit->tasks()->whereKey($data['task_ids']);
         abort_unless((clone $tasks)->count() === count($data['task_ids']), 422);
         $count = $tasks->count();
-        $tasks->delete();
+        DB::transaction(fn () => $tasks->get()->each->delete());
 
         return response()->json(['success' => true, 'deleted' => $count]);
     }

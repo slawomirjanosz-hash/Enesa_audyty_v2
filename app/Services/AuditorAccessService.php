@@ -126,6 +126,10 @@ class AuditorAccessService
 
     public function canViewDocument(User $user, Document $document): bool
     {
+        if ($document->project_id !== null) {
+            return $document->project !== null && $user->can('view', $document->project)
+                && ($this->hasFullAccess($user) || $user->can('projects.documents.view'));
+        }
         if ($this->hasFullAccess($user)) {
             return true;
         }
@@ -144,6 +148,18 @@ class AuditorAccessService
 
     public function scopeDocumentsVisibleTo(Builder $query, User $user): Builder
     {
+        $query->where(function (Builder $documents) use ($user) {
+            $documents->whereNull('project_id')->orWhereHas('project', function (Builder $projects) use ($user) {
+                if (! $this->hasFullAccess($user)) {
+                    if (! $user->can('projects.view') || ! $user->can('projects.documents.view')) {
+                        $projects->whereRaw('1 = 0');
+                    } else {
+                        $projects->where(fn (Builder $members) => $members->where('manager_id', $user->id)
+                            ->orWhereHas('members', fn (Builder $users) => $users->whereKey($user->id)));
+                    }
+                }
+            });
+        });
         if ($this->hasFullAccess($user)) {
             return $query;
         }

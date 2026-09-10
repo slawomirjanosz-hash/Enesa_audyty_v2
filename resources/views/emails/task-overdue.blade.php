@@ -23,17 +23,14 @@
                 <tbody>
                     @foreach($tasks as $task)
                     <tr style="border-bottom:1px solid #F0EDE6;">
-                        <td style="padding:10px; font-weight:600; color:#1A1A1A;">{{ $task->title }}</td>
+                        <td style="padding:10px; font-weight:600; color:#1A1A1A;"><a href="{{ $task->project_id ? route('projects.show', ['project' => $task->project_id, 'tab' => 'schedule']) : ($task->audit_id ? route('audits.show', ['audit' => $task->audit_id, 'tab' => 'schedule']) : route('crm.index', ['tab' => 'tasks'])) }}">{{ $task->title }}</a></td>
                         <td style="padding:10px; color:#B91C1C; font-weight:600;">{{ $task->due_date->format('d.m.Y') }}</td>
                         <td style="padding:10px; color:#555;">{{ $task->company?->name ?? '—' }}</td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-            <a href="{{ route('crm.index', ['tab' => 'tasks']) }}"
-               style="display:inline-block; margin-top:20px; background:#1A4D3A; color:#F5F0E8; text-decoration:none; padding:10px 20px; border-radius:8px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700;">
-                Przejdź do zadań w CRM
-            </a>
+            <p style="margin-top:20px;">Kliknij nazwę zadania, aby otworzyć odpowiedni projekt, audyt lub listę zadań CRM.</p>
         </div>
     </div>
 </body>

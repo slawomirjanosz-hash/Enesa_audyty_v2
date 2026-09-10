@@ -39,10 +39,10 @@
 
 <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
     <h1><i class="ti ti-folder" style="margin-right:8px;"></i>Wszystkie dokumenty <span class="documents-total-size">{{ $totalSize }}</span></h1>
-    <div class="search-box">
+    <form class="search-box" method="GET" action="{{ route('documents.index') }}">
         <i class="ti ti-search"></i>
-        <input type="text" id="search-docs" placeholder="Szukaj po firmie, nazwie pliku..." oninput="filterFolders(this.value)">
-    </div>
+        <input type="text" id="search-docs" name="q" value="{{ $search }}" maxlength="200" placeholder="Szukaj we wszystkich dokumentach..." oninput="clearTimeout(window.docsSearchTimer); window.docsSearchTimer = setTimeout(() => this.form.requestSubmit(), 450)">
+    </form>
 </div>
 
 @if(session('success'))
@@ -65,7 +65,7 @@
             </div>
             <i class="ti ti-chevron-down folder-chevron"></i>
         </div>
-        <div class="folder-body">
+        <div class="folder-body {{ $search !== '' ? 'open' : '' }}">
             <table class="docs-table">
                 <thead>
                     <tr>
@@ -108,6 +108,7 @@
                                 <i class="ti ti-external-link"></i>
                             </a>
                             @endif
+                            @can('delete', $doc)
                             <form method="POST" action="{{ route('documents.destroy', $doc) }}" style="display:inline;" onsubmit="return confirm('Usunąć ten dokument?')">
                                 @csrf
                                 @method('DELETE')
@@ -115,6 +116,7 @@
                                     <i class="ti ti-trash"></i>
                                 </button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -124,6 +126,9 @@
     </div>
     @endforeach
 @endif
+
+<p>Wyświetlono {{ $documentPage->firstItem() ?? 0 }}–{{ $documentPage->lastItem() ?? 0 }} z {{ $documentPage->total() }} dokumentów. Rozmiary katalogów obejmują wszystkie ich dokumenty.</p>
+{{ $documentPage->links() }}
 
 @endsection
 
@@ -136,29 +141,5 @@ function toggleFolder(header) {
     chevron.classList.toggle('open');
 }
 
-function filterFolders(query) {
-    const q = query.toLowerCase();
-    document.querySelectorAll('.folder-card').forEach(card => {
-        const folderName = card.dataset.folderName || '';
-        const rows = card.querySelectorAll('tbody tr');
-        let anyRowMatches = false;
-
-        rows.forEach(row => {
-            const rowText = row.textContent.toLowerCase();
-            const matches = !q || rowText.includes(q) || folderName.includes(q);
-            row.style.display = matches ? '' : 'none';
-            if (matches) anyRowMatches = true;
-        });
-
-        card.style.display = (!q || folderName.includes(q) || anyRowMatches) ? '' : 'none';
-
-        if (q && anyRowMatches) {
-            const body = card.querySelector('.folder-body');
-            const chevron = card.querySelector('.folder-chevron');
-            body.classList.add('open');
-            chevron.classList.add('open');
-        }
-    });
-}
 </script>
 @endpush

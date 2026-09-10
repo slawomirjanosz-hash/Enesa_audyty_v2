@@ -7,6 +7,7 @@ use App\Models\AuditType;
 use App\Models\IsoImplementationResponse;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
+use App\Services\DocumentVersionService;
 use App\Services\IsoContextService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
@@ -243,7 +244,7 @@ class IsoImplementationController extends Controller
 
     private function storeGeneratedContextDocument(Request $request, Audit $audit, string $contents, string $filename, string $mime, string $description): void
     {
-        $version = (string) (IsoSectionDocument::where('audit_id', $audit->id)->where('section_id', '4-1')->where('mime_type', $mime)->count() + 1).'.0';
+        $version = app(DocumentVersionService::class)->next($audit->id, '4-1', 'mime_type', $mime);
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
         $path = 'iso50001/client/'.$audit->id.'/4-1/generated/'.Str::uuid().'.'.$extension;
         Storage::disk('local')->put($path, $contents);
@@ -338,7 +339,7 @@ class IsoImplementationController extends Controller
                 'audit' => $audit->loadMissing('company'), 'workflow' => $workflow, 'section' => $section,
                 'answers' => $response->answers, 'generatedBy' => $request->user(),
             ])->setPaper('a4');
-            $version = (string) (IsoSectionDocument::where('audit_id', $audit->id)->where('section_id', $section)->where('title', $workflow['title'])->count() + 1).'.0';
+            $version = app(DocumentVersionService::class)->next($audit->id, $section, 'title', $workflow['title']);
             $filename = 'ISO50001_'.str_replace('-', '.', $section).'_'.Str::slug($workflow['title'], '_').'_v'.str_replace('.', '_', $version).'.pdf';
             $path = 'iso50001/client/'.$audit->id.'/'.$section.'/generated/'.Str::uuid().'.pdf';
             $pdfContents = $pdf->output();

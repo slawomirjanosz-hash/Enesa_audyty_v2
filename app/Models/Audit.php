@@ -55,7 +55,7 @@ class Audit extends Model
 
     public function isoSectionDocuments(): HasMany
     {
-        return $this->hasMany(IsoSectionDocument::class)->orderByDesc('document_year')->orderByDesc('created_at');
+        return $this->hasMany(IsoSectionDocument::class)->metadata()->orderByDesc('document_year')->orderByDesc('created_at');
     }
 
     public function isoImplementationResponses(): HasMany

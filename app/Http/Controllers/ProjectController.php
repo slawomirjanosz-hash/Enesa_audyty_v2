@@ -142,7 +142,7 @@ class ProjectController extends Controller
         $project->update($data);
         $project->members()->sync(array_unique(array_filter([...$members, $project->manager_id])));
         if ($companyChanged) {
-            $project->tasks()->update(['company_id' => $project->company_id]);
+            $project->tasks()->get()->each->update(['company_id' => $project->company_id]);
         }
 
         return redirect()->route('projects.show', $project)->with('success', 'Dane projektu zostały zapisane.');
@@ -605,10 +605,10 @@ class ProjectController extends Controller
             throw ValidationException::withMessages(['entry_ids' => 'Co najmniej jedna pozycja nie należy do tego projektu.']);
         }
         if ($data['action'] === 'delete') {
-            $entries->delete();
+            DB::transaction(fn () => $entries->get()->each->delete());
             $message = "Usunięto {$count} pozycji finansowych.";
         } else {
-            $entries->update(['status' => $data['action']]);
+            DB::transaction(fn () => $entries->get()->each->update(['status' => $data['action']]));
             $message = "Zmieniono status {$count} pozycji finansowych.";
         }
 
