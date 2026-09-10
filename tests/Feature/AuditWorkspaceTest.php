@@ -12,6 +12,7 @@ use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Models\Task;
 use App\Models\User;
+use App\Services\IsoContextService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -280,10 +281,21 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
     $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => '4-1']))
         ->assertOk()->assertSee('Film szkoleniowy')->assertSee('Jak analizować kontekst EnMS')
         ->assertSee('Ankieta kontekstu organizacji')->assertSee('D-EnMS-KON-01')
-        ->assertSee('To jest podgląd formularza wzorcowego');
+        ->assertSee('Otwórz podgląd formularza wzorcowego');
+
+    $this->actingAs($superadmin)->get(route('audit-types.iso50001.context', $isoType))
+        ->assertOk()->assertSee('Podgląd formularza wzorcowego')->assertSee('Wybór czynników')
+        ->assertSee('KTX-ZT-08')->assertDontSee('data-save', false);
+    $screen = $this->actingAs($client)->get(route('client.audits.iso50001.context.show', $audit))
+        ->assertOk()->assertSee('Utwórz Word')->assertSee('Podgląd PDF')
+        ->assertSee('Dane o zakładzie')->assertSee('Wybór czynników')->assertSee('Uzupełnienie konsultanta');
+    expect(substr_count($screen->getContent(), 'data-fact="'))->toBe(38);
+    expect(substr_count($screen->getContent(), 'data-factor="'))->toBe(59);
 
     $answers = [
         'facts' => ['organization' => 'Zakład kontekstowy', 'scope' => 'Cały zakład', 'metering' => 'brak', 'scada' => 'nie', 'infrastructure_age' => 20, 'compressed_air' => 'tak', 'energy_manager' => 'nieformalnie', 'consumption_tj' => 100, 'customers_co2' => 'tak'],
+        'selected' => ['KTX-WT-01', 'KTX-WT-03', 'KTX-ZT-01'],
+        'edits' => ['KTX-WT-01' => 'Własna treść: pomiar A & B <test>.'],
         'swot' => ['strengths' => 'Doświadczony zespół', 'weaknesses' => 'Brak podliczników', 'opportunities' => 'Odzysk ciepła', 'threats' => 'Wzrost cen'],
         'conclusions' => [
             ['finding' => 'Brak danych dla SEU', 'decision' => 'Rozbudować opomiarowanie', 'document' => 'Plan zbierania danych'],
@@ -294,6 +306,12 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
     ];
     $this->actingAs($client)->post(route('client.audits.iso50001.context.store', $audit), ['answers' => $answers])
         ->assertRedirect(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']));
+    $this->actingAs($client)->postJson(route('client.audits.iso50001.context.store', $audit), ['answers' => $answers])
+        ->assertOk()->assertJsonPath('saved', true);
+    $selected = app(IsoContextService::class)->selected(IsoImplementationResponse::firstOrFail()->answers);
+    expect(array_column($selected, 'id'))->toContain('KTX-WT-01', 'KTX-ZT-01', 'KTX-ZR-01')
+        ->not->toContain('KTX-WT-03', 'KTX-WO-03');
+    expect($selected[0]['text'])->toBe('Własna treść: pomiar A & B <test>.');
     $this->actingAs($client)->post(route('client.audits.iso50001.context.pdf-preview', $audit), ['answers' => $answers])
         ->assertOk()->assertHeader('content-type', 'application/pdf')->assertHeader('content-disposition', 'inline; filename="D-EnMS-KON-01_zaklad_kontekstowy.pdf"');
     expect(IsoSectionDocument::count())->toBe(0);
@@ -309,7 +327,12 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
     $documents->each(fn ($document) => Storage::disk('local')->assertExists($document->stored_path));
 
     $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
-        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('Utwórz Word')->assertSee('Podgląd PDF')
+        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('Otwórz ankietę na pełnym ekranie')
         ->assertSee('Dokument Word wygenerowany z ankiety kontekstu organizacji.')
         ->assertSee('PDF wygenerowany z ankiety kontekstu organizacji.');
+
+    $otherClient = User::factory()->create();
+    $otherClient->assignRole(Role::findOrCreate('client_user'));
+    $this->actingAs($otherClient)->get(route('client.audits.iso50001.context.show', $audit))->assertNotFound();
+    $this->actingAs($otherClient)->postJson(route('client.audits.iso50001.context.store', $audit), ['answers' => $answers])->assertNotFound();
 });

@@ -3,11 +3,22 @@
 </style></head><body>
 <div class="tag">D-EnMS-KON-01</div><h1>Kontekst organizacji i strony zainteresowane</h1><div class="meta">PN-EN ISO 50001:2018 · klauzule 4.1 i 4.2</div>
 <div class="info"><b>Organizacja:</b> {{ data_get($answers, 'facts.organization', $audit->company->name) ?: $audit->company->name }}<br><b>Zakres systemu:</b> {{ data_get($answers, 'facts.scope') ?: 'Do uzupełnienia' }}<br><b>Data opracowania:</b> {{ now()->format('d.m.Y') }}</div>
-<h2>1. Cel dokumentu</h2><p>Dokument identyfikuje czynniki wewnętrzne i zewnętrzne wpływające na zdolność organizacji do osiągania zamierzonych wyników systemu zarządzania energią oraz stanowi wejście do określenia zakresu, ryzyk, szans i celów energetycznych.</p>
-<h2>2. Czynniki kontekstowe</h2><table><thead><tr><th>Obszar</th><th>Zidentyfikowany czynnik</th><th>Wpływ</th><th>Skutek dla systemu</th></tr></thead><tbody>@foreach($factors as $factor)<tr><td>{{ $factor['area'] }}</td><td>{{ $factor['text'] }}</td><td>{{ $factor['impact'] }}</td><td>{{ $factor['effect'] }}</td></tr>@endforeach</tbody></table>
-<h2>3. Synteza — analiza SWOT</h2><table class="swot">@foreach(config('iso50001-context.swot') as $key=>$label)<tr><td>{{ $label }}</td><td>{!! nl2br(e(data_get($answers, 'swot.'.$key) ?: '[do uzupełnienia]')) !!}</td></tr>@endforeach</table>
-<h2>4. Strony zainteresowane</h2><table><tr><th>Strona</th><th>Wymagania i oczekiwania</th><th>Wymóg zgodności</th></tr><tr><td>Zarząd</td><td>Ograniczenie kosztów energii i przewidywalność wydatków</td><td>Nie</td></tr><tr><td>Pracownicy i utrzymanie ruchu</td><td>Jasne zasady eksploatacji, bezpieczna praca i dostęp do danych</td><td>Do oceny</td></tr><tr><td>Organy regulacyjne</td><td>Spełnienie wymagań prawnych efektywności energetycznej</td><td>Tak</td></tr><tr><td>Odbiorcy</td><td>{{ data_get($answers, 'facts.customers_co2') === 'tak' ? 'Informacja o śladzie węglowym i efektywności' : 'Brak zgłoszonych wymagań energetycznych' }}</td><td>Do oceny</td></tr><tr><td>Jednostka certyfikująca</td><td>Kompletność i dostępność zapisów systemowych</td><td>Tak</td></tr></table>
-<h2>5. Wnioski i decyzje projektowe</h2><table><tr><th>Lp.</th><th>Wniosek</th><th>Decyzja projektowa</th><th>Dokument</th></tr>@foreach(data_get($answers, 'conclusions', []) as $index=>$row)<tr><td>{{ $index+1 }}</td><td>{{ $row['finding'] ?: '[do uzupełnienia]' }}</td><td>{{ $row['decision'] ?: '[do uzupełnienia]' }}</td><td>{{ $row['document'] ?: '[do uzupełnienia]' }}</td></tr>@endforeach</table>
-<h2>6. Dokumenty powiązane i aktualizacja</h2><p>D-EnMS-ZAK-01 — Zakres systemu · D-EnMS-RYZ-01 — Rejestr ryzyk i szans · D-EnMS-CEL-01 — Cele energetyczne · Protokół Przeglądu Zarządzania.</p><p>Dokument podlega przeglądowi co najmniej raz w roku oraz przy istotnej zmianie otoczenia organizacji.</p>
+<h2>1. Cel dokumentu</h2><p>Dokument identyfikuje czynniki wewnętrzne i zewnętrzne wpływające na zdolność organizacji do osiągania zamierzonych wyników systemu zarządzania energią oraz strony zainteresowane, których wymagania muszą być uwzględnione. Analiza stanowi podstawę wyznaczenia zakresu systemu, rejestru ryzyk i szans oraz celów energetycznych.</p>
+@foreach(['W'=>'2. Kontekst wewnętrzny (kl. 4.1)','Z'=>'3. Kontekst zewnętrzny (kl. 4.1)'] as $prefix=>$title)
+<h2>{{ $title }}</h2>
+@foreach(config('iso50001-context.dimensions') as $dimension=>$label)
+@php($group = collect($factors)->where('dimension',$dimension))
+@if(str_starts_with($dimension,$prefix) && $group->isNotEmpty())
+<h3>{{ $label }}</h3><table><thead><tr><th>Zidentyfikowany czynnik</th><th>Wpływ</th><th>Skutek dla systemu</th></tr></thead><tbody>@foreach($group as $factor)<tr><td>{{ $factor['text'] }}</td><td>{{ $factor['impact'] }}</td><td>{{ $factor['effect'] }}</td></tr>@endforeach</tbody></table>
+@endif
+@endforeach
+@endforeach
+<h2>4. Synteza — analiza SWOT</h2><table class="swot">@foreach(config('iso50001-context.swot') as $key=>$label)<tr><td>{{ $label }}</td><td>{!! nl2br(e(data_get($answers,'swot.'.$key) ?: '[do uzupełnienia]')) !!}</td></tr>@endforeach</table>
+<h2>5. Strony zainteresowane (kl. 4.2)</h2><table><thead><tr><th>Strona</th><th>Typ</th><th>Wymagania i oczekiwania</th><th>Wymóg zgodności</th></tr></thead><tbody>@foreach(app(\App\Services\IsoContextService::class)->stakeholders($answers) as $row)<tr>@foreach($row as $cell)<td>{{ $cell }}</td>@endforeach</tr>@endforeach</tbody></table>
+<h2>6. Wnioski — jak kontekst ukształtował system</h2><table><thead><tr><th>Lp.</th><th>Wniosek</th><th>Decyzja projektowa</th><th>Dokument</th></tr></thead><tbody>@for($i=0;$i<4;$i++)<tr><td>{{ $i+1 }}</td>@foreach(['finding','decision','document'] as $key)<td>{{ data_get($answers,'conclusions.'.$i.'.'.$key) ?: '[do uzupełnienia]' }}</td>@endforeach</tr>@endfor</tbody></table>
+<h2>7. Dokumenty powiązane i aktualizacja</h2><table><tr><th>Dokument</th><th>Powiązanie</th></tr>@foreach(config('iso50001-context.relatedDocuments') as $row)<tr>@foreach($row as $cell)<td>{{ $cell }}</td>@endforeach</tr>@endforeach</table>
+<p>Dokument podlega przeglądowi co najmniej raz w roku, przed Przeglądem Zarządzania, lub przy istotnej zmianie otoczenia organizacji.</p>
+<p style="margin-top:30px">Opracował (Energy Manager): ...................................... Data: ....................</p>
+<p>Zatwierdził (Zarząd): ...................................... Data: ....................</p>
 <div class="foot">Wygenerowano {{ now()->format('d.m.Y H:i') }} · {{ $generatedBy->name }} · dokument roboczy EnMS</div>
 </body></html>

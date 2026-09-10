@@ -101,6 +101,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
     Route::get('/audits/{audit}', [ClientAuditController::class, 'show'])->middleware('app.module:audits')->name('audits.show');
     Route::post('/audits/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'storeContextForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.store');
+    Route::get('/audits/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'contextScreenForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.show');
     Route::post('/audits/{audit}/iso50001/4-1/context/docx', [IsoImplementationController::class, 'contextDocxForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.docx');
     Route::post('/audits/{audit}/iso50001/4-1/context/pdf', [IsoImplementationController::class, 'contextPdfForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.pdf');
     Route::post('/audits/{audit}/iso50001/4-1/context/pdf-preview', [IsoImplementationController::class, 'contextPdfPreviewForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.pdf-preview');
@@ -160,6 +161,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware('staff.role')->name('profile.destroy');
 
     Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
+    Route::get('audit-types/{auditType}/iso50001/context', [IsoImplementationController::class, 'contextTemplate'])->middleware(['app.module:audits', 'app.permission:audits.view'])->name('audit-types.iso50001.context');
     Route::get('surveys', [AuditTypeController::class, 'surveys'])->middleware('app.module:audits')->name('audits.surveys');
     Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');
     Route::prefix('audits')->name('audits.')->middleware(['app.module:audits', 'app.permission:audits.view'])->group(function () {
@@ -182,6 +184,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('/{audit}/documents', [AuditController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
         Route::post('/{audit}/iso-documents', [AuditController::class, 'storeIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.store');
         Route::post('/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'storeContext'])->middleware('app.permission:audits.manage')->name('iso50001.context.store');
+        Route::get('/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'contextScreen'])->middleware('app.permission:audits.manage')->name('iso50001.context.show');
         Route::post('/{audit}/iso50001/4-1/context/docx', [IsoImplementationController::class, 'contextDocx'])->middleware('app.permission:audits.manage')->name('iso50001.context.docx');
         Route::post('/{audit}/iso50001/4-1/context/pdf', [IsoImplementationController::class, 'contextPdf'])->middleware('app.permission:audits.manage')->name('iso50001.context.pdf');
         Route::post('/{audit}/iso50001/4-1/context/pdf-preview', [IsoImplementationController::class, 'contextPdfPreview'])->middleware('app.permission:audits.manage')->name('iso50001.context.pdf-preview');

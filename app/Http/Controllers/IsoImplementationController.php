@@ -3,21 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit;
+use App\Models\AuditType;
 use App\Models\IsoImplementationResponse;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
+use App\Services\IsoContextService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Settings;
 use Symfony\Component\HttpFoundation\Response;
 
 class IsoImplementationController extends Controller
 {
     public function __construct(private readonly AuditorAccessService $access) {}
+
+    public function contextScreen(Request $request, Audit $audit)
+    {
+        $this->authorizeStaff($request, $audit);
+
+        return $this->contextScreenView($audit, false);
+    }
+
+    public function contextScreenForClient(Request $request, Audit $audit)
+    {
+        $this->authorizeClient($request, $audit);
+
+        return $this->contextScreenView($audit, true);
+    }
+
+    public function contextTemplate(AuditType $auditType)
+    {
+        abort_unless($auditType->slug === 'iso50001', 404);
+
+        return view('audits.iso50001-context-screen', ['answers' => [], 'isTemplatePreview' => true,
+            'backUrl' => route('audit-types.show', ['auditType' => $auditType, 'section' => '4-1']), 'baseRoute' => null]);
+    }
+
+    private function contextScreenView(Audit $audit, bool $client)
+    {
+        $response = $audit->isoImplementationResponses()->where('section_id', '4-1')->where('action_key', 'context_generator')->first();
+
+        return view('audits.iso50001-context-screen', [
+            'audit' => $audit, 'answers' => app(IsoContextService::class)->normalize(old('answers', $response?->answers ?? [])),
+            'isTemplatePreview' => false, 'baseRoute' => $client ? 'client.audits.iso50001.context.' : 'audits.iso50001.context.',
+            'backUrl' => route($client ? 'client.audits.show' : 'audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']),
+        ]);
+    }
 
     public function store(Request $request, Audit $audit, string $section, string $action): RedirectResponse
     {
@@ -47,18 +84,26 @@ class IsoImplementationController extends Controller
         return $this->persist($request, $audit, $section, $action, true, true);
     }
 
-    public function storeContext(Request $request, Audit $audit): RedirectResponse
+    public function storeContext(Request $request, Audit $audit)
     {
         $this->authorizeStaff($request, $audit);
         $this->persistContext($request, $audit);
 
+        if ($request->expectsJson()) {
+            return response()->json(['saved' => true]);
+        }
+
         return $this->contextRedirect($audit, false, 'Ankieta kontekstu została zapisana.');
     }
 
-    public function storeContextForClient(Request $request, Audit $audit): RedirectResponse
+    public function storeContextForClient(Request $request, Audit $audit)
     {
         $this->authorizeClient($request, $audit);
         $this->persistContext($request, $audit);
+
+        if ($request->expectsJson()) {
+            return response()->json(['saved' => true]);
+        }
 
         return $this->contextRedirect($audit, true, 'Ankieta kontekstu została zapisana.');
     }
@@ -122,6 +167,14 @@ class IsoImplementationController extends Controller
         $rules = [];
         foreach (config('iso50001-context.questions') as $key => $question) {
             $rules['answers.facts.'.$key] = ['nullable', $question['type'] === 'number' ? 'numeric' : 'string', $question['type'] === 'number' ? 'min:0' : 'max:1000'];
+            if (isset($question['options'])) {
+                $rules['answers.facts.'.$key][] = Rule::in(array_keys($question['options']));
+            }
+        }
+        $rules['answers.selected'] = ['nullable', 'array', 'max:59'];
+        $rules['answers.selected.*'] = ['string', Rule::in(array_column(config('iso50001-context.factors'), 'id'))];
+        foreach (config('iso50001-context.factors') as $factor) {
+            $rules['answers.edits.'.$factor['id']] = ['nullable', 'string', 'max:5000'];
         }
         foreach (array_keys(config('iso50001-context.swot')) as $key) {
             $rules['answers.swot.'.$key] = ['nullable', 'string', 'max:10000'];
@@ -147,6 +200,10 @@ class IsoImplementationController extends Controller
         $response = $this->persistContext($request, $audit);
         $audit->loadMissing('company');
         $phpWord = new PhpWord;
+        Settings::setOutputEscapingEnabled(true);
+        $phpWord->addTitleStyle(1, ['size' => 18, 'bold' => true, 'color' => '174C38']);
+        $phpWord->addTitleStyle(2, ['size' => 13, 'bold' => true, 'color' => '174C38']);
+        $phpWord->addTitleStyle(3, ['size' => 11, 'bold' => true]);
         $phpWord->setDefaultFontName('Aptos');
         $phpWord->setDefaultFontSize(10);
         $section = $phpWord->addSection(['marginTop' => 900, 'marginRight' => 900, 'marginBottom' => 900, 'marginLeft' => 900]);
@@ -172,7 +229,7 @@ class IsoImplementationController extends Controller
         $response = $this->persistContext($request, $audit);
         $audit->loadMissing('company');
         $pdf = Pdf::loadView('audits.iso50001-context-pdf', [
-            'audit' => $audit, 'answers' => $response->answers, 'factors' => $this->contextFactors($response->answers['facts'] ?? []), 'generatedBy' => $request->user(),
+            'audit' => $audit, 'answers' => $response->answers, 'factors' => app(IsoContextService::class)->selected($response->answers), 'generatedBy' => $request->user(),
         ])->setPaper('a4');
         $contents = $pdf->output();
         $filename = 'D-EnMS-KON-01_'.Str::slug($audit->company->name, '_').'.pdf';
@@ -202,117 +259,63 @@ class IsoImplementationController extends Controller
         return redirect()->route($client ? 'client.audits.show' : 'audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1'])->with('success', $message);
     }
 
-    private function contextFactors(array $facts): array
-    {
-        $yes = fn (string $key): bool => ($facts[$key] ?? null) === 'tak';
-        $factor = fn (string $area, string $impact, string $text, string $effect): array => compact('area', 'impact', 'text', 'effect');
-        $items = [
-            $factor('Wewnętrzne — organizacyjne', 'Ujemny', 'Brak sformalizowanego systemu zarządzania energią i zasad nadzoru nad dokumentacją.', 'Ustanowić strukturę EnMS, odpowiedzialności i zasady nadzoru.'),
-            $factor('Zewnętrzne — regulacyjne', 'Ujemny', 'Otoczenie prawne efektywności energetycznej podlega zmianom.', 'Przeglądać rejestr wymagań prawnych co najmniej raz w roku.'),
-            $factor('Zewnętrzne — rynkowe', 'Ujemny', 'Wahania cen nośników energii zwiększają ryzyko kosztowe.', 'Uwzględnić ryzyko cenowe w rejestrze ryzyk i planowaniu.'),
-            $factor('Zewnętrzne — technologiczne', 'Dodatni', 'Dostępne są technologie monitoringu, sterowania i odzysku energii.', 'Oceniać je jako możliwości poprawy wyniku energetycznego.'),
-        ];
-        if (($facts['metering'] ?? null) === 'brak') {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Ujemny', 'Pomiar energii odbywa się wyłącznie na przyłączu głównym.', 'Rozbudować opomiarowanie i początkowo wyznaczyć linię bazową na poziomie zakładu.');
-        }
-        if (($facts['metering'] ?? null) === 'kompleksowo') {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Dodatni', 'Opomiarowanie umożliwia analizę na poziomie urządzeń.', 'Wyznaczyć EnPI dla obszarów znaczącego zużycia energii.');
-        }
-        if (! $yes('scada')) {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Ujemny', 'Brak systemu nadrzędnego do archiwizacji danych energetycznych.', 'Plan zbierania danych powinien określać odczyty ręczne.');
-        }
-        if ((float) ($facts['infrastructure_age'] ?? 0) > 15) {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Ujemny', 'Główna infrastruktura energetyczna jest eksploatowana ponad 15 lat.', 'Nadać priorytet ocenie sprawności i modernizacji urządzeń.');
-        }
-        if ($yes('compressed_air')) {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Ujemny', 'Sprężone powietrze może stanowić obszar istotnych strat.', 'Zweryfikować SEU, sterowanie sprężarek i program kontroli szczelności.');
-        }
-        if ($yes('pv') && ! $yes('battery')) {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Możliwość', 'Produkcja PV bez magazynu może powodować oddawanie nadwyżek do sieci.', 'Ocenić autokonsumpcję i opłacalność magazynu energii.');
-        }
-        if ($yes('waste_heat')) {
-            $items[] = $factor('Wewnętrzne — techniczne', 'Możliwość', 'W procesie występuje ciepło odpadowe o potencjale odzysku.', 'Ująć odzysk ciepła na liście możliwości poprawy.');
-        }
-        if (($facts['energy_manager'] ?? null) !== 'tak') {
-            $items[] = $factor('Wewnętrzne — organizacyjne', 'Ujemny', 'Odpowiedzialność za gospodarkę energetyczną nie jest formalnie umocowana.', 'Wyznaczyć Energy Managera, zakres obowiązków i uprawnienia.');
-        }
-        if ((int) ($facts['locations'] ?? 1) > 1) {
-            $items[] = $factor('Wewnętrzne — organizacyjne', 'Możliwość', 'System obejmuje wiele lokalizacji.', 'Ujednolicić zasady i definicje EnPI między lokalizacjami.');
-        }
-        if (! $yes('efficiency_budget')) {
-            $items[] = $factor('Wewnętrzne — finansowe', 'Ujemny', 'Nie wyodrębniono budżetu na efektywność energetyczną.', 'Pierwszy plan oprzeć na działaniach bezkosztowych i niskonakładowych oraz przygotować budżet.');
-        }
-        if ((float) ($facts['consumption_tj'] ?? 0) > 85) {
-            $items[] = $factor('Zewnętrzne — regulacyjne', 'Ujemny', 'Roczne zużycie energii przekracza 85 TJ.', 'Zweryfikować obowiązki i podporządkować harmonogram terminom prawnym.');
-        }
-        if ($yes('energy_audit')) {
-            $items[] = $factor('Zewnętrzne — regulacyjne', 'Dodatni', 'Dostępny jest audyt energetyczny przedsiębiorstwa.', 'Wykorzystać wyniki jako wejście do przeglądu energetycznego.');
-        }
-        if ($yes('ets') || $yes('csrd')) {
-            $items[] = $factor('Zewnętrzne — regulacyjne', 'Możliwość', 'Dane energetyczne są powiązane z raportowaniem emisyjnym lub zrównoważonego rozwoju.', 'Ujednolicić EnPI z raportowanymi wskaźnikami.');
-        }
-        if ($yes('customers_co2')) {
-            $items[] = $factor('Zewnętrzne — rynkowe', 'Możliwość', 'Odbiorcy oczekują danych o śladzie węglowym lub efektywności.', 'Rozpoznać wymagania jako potencjalne wymogi zgodności i ustalić sposób raportowania.');
-        }
-        if ($yes('power_limit')) {
-            $items[] = $factor('Zewnętrzne — rynkowe', 'Ujemny', 'Dostępna moc przyłączeniowa ogranicza rozwój.', 'Rozważyć redukcję zapotrzebowania jako alternatywę dla rozbudowy przyłącza.');
-        }
-        if ($yes('seasonality')) {
-            $items[] = $factor('Zewnętrzne — rynkowe', 'Możliwość', 'Sezonowość wpływa na profil zużycia energii.', 'Normalizować EnPI i linię bazową względem zmiennych sezonowych.');
-        }
-
-        return $items;
-    }
-
     private function appendContextDocument($section, Audit $audit, array $answers): void
     {
-        $facts = $answers['facts'] ?? [];
-        $section->addText('Organizacja: '.($facts['organization'] ?? $audit->company->name), ['bold' => true]);
-        $section->addText('Zakres systemu: '.($facts['scope'] ?? 'Do uzupełnienia'));
+        $service = app(IsoContextService::class);
+        $fill = fn ($value) => filled($value) ? $value : '[do uzupełnienia]';
+        $table = function (array $headers, array $rows) use ($section): void {
+            $table = $section->addTable(['borderSize' => 6, 'borderColor' => 'D8E0E6', 'cellMargin' => 90]);
+            $table->addRow(null, ['tblHeader' => true]);
+            foreach ($headers as $header) {
+                $table->addCell(null, ['bgColor' => '174C38'])->addText($header, ['bold' => true, 'color' => 'FFFFFF']);
+            }
+            foreach ($rows as $row) {
+                $table->addRow();
+                foreach ($row as $value) {
+                    $table->addCell()->addText((string) $value);
+                }
+            }
+        };
+        $section->addText('Organizacja: '.(($answers['facts']['organization'] ?? '') ?: $audit->company->name), ['bold' => true]);
+        $section->addText('Zakres systemu: '.$fill($answers['facts']['scope'] ?? null));
         $section->addText('Data opracowania: '.now()->format('d.m.Y'));
         $section->addTitle('1. Cel dokumentu', 2);
-        $section->addText('Dokument identyfikuje czynniki wewnętrzne i zewnętrzne wpływające na zdolność organizacji do osiągania zamierzonych wyników systemu zarządzania energią.');
-        $section->addTitle('2. Czynniki kontekstowe', 2);
-        $table = $section->addTable(['borderSize' => 6, 'borderColor' => 'D8E0E6', 'cellMargin' => 90]);
-        $table->addRow();
-        foreach (['Obszar', 'Zidentyfikowany czynnik', 'Wpływ', 'Skutek dla systemu'] as $heading) {
-            $table->addCell()->addText($heading, ['bold' => true, 'color' => 'FFFFFF'], ['bgColor' => '174C38']);
-        }
-        foreach ($this->contextFactors($facts) as $item) {
-            $table->addRow();
-            foreach (['area', 'text', 'impact', 'effect'] as $key) {
-                $table->addCell()->addText($item[$key]);
+        $section->addText('Dokument identyfikuje czynniki wewnętrzne i zewnętrzne wpływające na zdolność organizacji do osiągania zamierzonych wyników systemu zarządzania energią oraz strony zainteresowane, których wymagania muszą być uwzględnione. Analiza stanowi podstawę wyznaczenia zakresu systemu, rejestru ryzyk i szans oraz celów energetycznych.');
+        $factors = $service->selected($answers);
+        foreach (['W' => '2. Kontekst wewnętrzny (kl. 4.1)', 'Z' => '3. Kontekst zewnętrzny (kl. 4.1)'] as $prefix => $title) {
+            $section->addTitle($title, 2);
+            foreach (config('iso50001-context.dimensions') as $dimension => $label) {
+                if (! str_starts_with($dimension, $prefix)) {
+                    continue;
+                }
+                $items = array_values(array_filter($factors, fn ($factor) => $factor['dimension'] === $dimension));
+                if (! $items) {
+                    continue;
+                }
+                $section->addTitle($label, 3);
+                $table(['Zidentyfikowany czynnik', 'Wpływ', 'Skutek dla systemu'], array_map(fn ($factor) => [$factor['text'], $factor['impact'], $factor['effect']], $items));
             }
         }
-        $section->addTitle('3. Synteza — analiza SWOT', 2);
-        $swot = $answers['swot'] ?? [];
-        $table = $section->addTable(['borderSize' => 6, 'borderColor' => 'D8E0E6', 'cellMargin' => 90]);
+        $section->addTitle('4. Synteza — analiza SWOT', 2);
+        $rows = [];
         foreach (config('iso50001-context.swot') as $key => $label) {
-            $table->addRow();
-            $table->addCell(2400)->addText($label, ['bold' => true]);
-            $table->addCell(6800)->addText($swot[$key] ?? '[do uzupełnienia]');
+            $rows[] = [$label, $fill($answers['swot'][$key] ?? null)];
         }
-        $section->addTitle('4. Strony zainteresowane', 2);
-        foreach (['Zarząd — ograniczenie kosztów i przewidywalność wydatków.', 'Pracownicy i utrzymanie ruchu — jasne zasady eksploatacji i dostęp do danych.', 'Organy regulacyjne — spełnienie wymagań prawnych.', 'Odbiorcy — uzgodnione wymagania energetyczne i emisyjne.', 'Jednostka certyfikująca — kompletność oraz dostępność zapisów systemowych.'] as $line) {
-            $section->addListItem($line);
+        $table(['Obszar', 'Analiza'], $rows);
+        $section->addTitle('5. Strony zainteresowane (kl. 4.2)', 2);
+        $table(['Strona', 'Typ', 'Wymagania i oczekiwania', 'Wymóg zgodności'], $service->stakeholders($answers));
+        $section->addTitle('6. Wnioski — jak kontekst ukształtował system', 2);
+        $rows = [];
+        for ($i = 0; $i < 4; $i++) {
+            $row = $answers['conclusions'][$i] ?? [];
+            $rows[] = [$i + 1, $fill($row['finding'] ?? null), $fill($row['decision'] ?? null), $fill($row['document'] ?? null)];
         }
-        $section->addTitle('5. Wnioski i decyzje projektowe', 2);
-        $table = $section->addTable(['borderSize' => 6, 'borderColor' => 'D8E0E6', 'cellMargin' => 90]);
-        $table->addRow();
-        foreach (['Lp.', 'Wniosek', 'Decyzja projektowa', 'Dokument'] as $heading) {
-            $table->addCell()->addText($heading, ['bold' => true]);
-        }
-        foreach ($answers['conclusions'] ?? [] as $index => $conclusion) {
-            $table->addRow();
-            foreach ([(string) ($index + 1), $conclusion['finding'] ?? '', $conclusion['decision'] ?? '', $conclusion['document'] ?? ''] as $value) {
-                $table->addCell()->addText($value ?: '[do uzupełnienia]');
-            }
-        }
-        $section->addTitle('6. Dokumenty powiązane i aktualizacja', 2);
-        foreach (['D-EnMS-ZAK-01 — Zakres systemu', 'D-EnMS-RYZ-01 — Rejestr ryzyk i szans', 'D-EnMS-CEL-01 — Cele energetyczne', 'Protokół Przeglądu Zarządzania'] as $line) {
-            $section->addListItem($line);
-        }
-        $section->addText('Dokument podlega przeglądowi co najmniej raz w roku oraz przy istotnej zmianie otoczenia organizacji.');
+        $table(['Lp.', 'Wniosek', 'Decyzja projektowa', 'Dokument'], $rows);
+        $section->addTitle('7. Dokumenty powiązane i aktualizacja', 2);
+        $table(['Dokument', 'Powiązanie'], config('iso50001-context.relatedDocuments'));
+        $section->addText('Dokument podlega przeglądowi co najmniej raz w roku, przed Przeglądem Zarządzania, lub przy istotnej zmianie otoczenia organizacji.');
+        $section->addText('Opracował (Energy Manager): ...................................... Data: ....................');
+        $section->addText('Zatwierdził (Zarząd): ...................................... Data: ....................');
     }
 
     private function persist(Request $request, Audit $audit, string $section, string $action, bool $generate, bool $client = false): RedirectResponse
