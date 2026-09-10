@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class IsoTrainingVideo extends Model
 {
-    protected $fillable = ['topic', 'description', 'youtube_url', 'created_by'];
+    protected $fillable = ['section_id', 'topic', 'description', 'youtube_url', 'created_by'];
 
     public function youtubeVideoId(): ?string
     {

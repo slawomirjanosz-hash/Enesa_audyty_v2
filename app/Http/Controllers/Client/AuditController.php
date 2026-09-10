@@ -52,7 +52,7 @@ class AuditController extends Controller
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
             'templateDocuments' => IsoSectionDocument::query()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
-            'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy('action_key'),
+            'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy(fn ($response) => $response->section_id.'|'.$response->action_key),
         ]);
     }
 

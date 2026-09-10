@@ -10,6 +10,7 @@
 <form id="iso-video-form" class="iso-video-form" method="POST" action="{{ route('audit-types.training-videos.store', $auditType) }}" data-store-action="{{ route('audit-types.training-videos.store', $auditType) }}" hidden>
     @csrf
     <input type="hidden" name="_method" value="POST" data-video-method>
+    <input type="hidden" name="section_id" value="">
     <div><label>Temat szkolenia</label><input name="topic" value="{{ old('topic') }}" required maxlength="255"></div>
     <div><label>Krótki opis</label><textarea name="description" rows="2" maxlength="1000">{{ old('description') }}</textarea></div>
     <div><label>Link do filmu na YouTube</label><input name="youtube_url" type="url" value="{{ old('youtube_url') }}" placeholder="https://www.youtube.com/watch?v=…" required></div>
@@ -21,7 +22,7 @@
 <table class="iso-training-table">
     <thead><tr><th>LP.</th><th>Temat szkolenia</th><th>Krótki opis</th><th>Film</th>@if($canManageTraining ?? false)<th>Akcje</th>@endif</tr></thead>
     <tbody data-iso-video-rows>
-    @forelse($trainingVideos as $video)
+    @forelse($trainingVideos->whereNull('section_id') as $video)
         <tr data-search="{{ Str::lower($video->topic.' '.$video->description.' '.$video->youtube_url) }}">
             <td>{{ $loop->iteration }}</td><td><strong>{{ $video->topic }}</strong></td><td>{{ $video->description ?: '—' }}</td>
             <td>@if($video->youtubeEmbedUrl())<button type="button" class="iso-video-preview" data-video-preview data-embed="{{ $video->youtubeEmbedUrl() }}" data-youtube="{{ $video->youtube_url }}" data-title="{{ $video->topic }}" aria-label="Odtwórz: {{ $video->topic }}"><img src="{{ $video->youtubeThumbnailUrl() }}" alt="Miniatura filmu: {{ $video->topic }}" loading="lazy"><span><i class="ti ti-player-play-filled"></i></span></button>@endif<a class="iso-video-link" href="{{ $video->youtube_url }}" target="_blank" rel="noopener"><i class="ti ti-brand-youtube"></i> Otwórz w YouTube</a></td>

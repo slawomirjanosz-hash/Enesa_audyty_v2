@@ -45,4 +45,45 @@ return [
             ],
         ],
     ],
+    '4-1' => [
+        'context_analysis' => [
+            'title' => 'Analiza kontekstu organizacji dla EnMS',
+            'sample' => 'Przykładowy dokument porządkuje czynniki zewnętrzne i wewnętrzne wpływające na wynik energetyczny oraz zdolność organizacji do osiągania celów EnMS. Każdy istotny czynnik ma uzasadnienie, skutek i właściciela.',
+            'sample_data' => ['Czynnik zewnętrzny' => 'Zmiany cen i dostępności energii', 'Czynnik wewnętrzny' => 'Stan techniczny instalacji', 'Wpływ na EnMS' => 'Wysoki', 'Właściciel' => 'Energy Manager', 'Przegląd' => 'Co najmniej raz w roku'],
+            'fields' => [
+                'organization_profile' => ['label' => 'Profil organizacji i działalności objętej EnMS', 'type' => 'textarea'],
+                'external_factors' => ['label' => 'Istotne czynniki zewnętrzne', 'type' => 'textarea'],
+                'internal_factors' => ['label' => 'Istotne czynniki wewnętrzne', 'type' => 'textarea'],
+                'energy_impact' => ['label' => 'Wpływ czynników na wykorzystanie i zużycie energii', 'type' => 'textarea'],
+                'owners' => ['label' => 'Osoby odpowiedzialne za monitorowanie zmian', 'type' => 'textarea'],
+                'review_frequency' => ['label' => 'Częstotliwość przeglądu', 'type' => 'text', 'placeholder' => 'np. raz w roku i po istotnej zmianie'],
+            ],
+        ],
+        'climate_relevance' => [
+            'title' => 'Ocena istotności zmian klimatu',
+            'sample' => 'Przykładowa ocena wskazuje, czy zmiany klimatu są istotne dla EnMS, jakie zjawiska analizowano i jak wpływają one na zapotrzebowanie na energię, infrastrukturę oraz ciągłość dostaw.',
+            'sample_data' => ['Ocena istotności' => 'Istotne', 'Analizowane zjawisko' => 'Wzrost temperatur letnich', 'Możliwy skutek' => 'Większe zapotrzebowanie na chłód', 'Reakcja' => 'Aktualizacja EnPI i planu działań'],
+            'fields' => [
+                'climate_relevant' => ['label' => 'Czy zmiany klimatu są istotne dla EnMS?', 'type' => 'text', 'placeholder' => 'Tak / Nie / Wymaga dalszej analizy'],
+                'climate_factors' => ['label' => 'Rozpatrzone zjawiska i scenariusze klimatyczne', 'type' => 'textarea'],
+                'energy_effects' => ['label' => 'Wpływ na energię, instalacje i ciągłość działania', 'type' => 'textarea'],
+                'evidence_sources' => ['label' => 'Źródła danych i dowody oceny', 'type' => 'textarea'],
+                'planned_actions' => ['label' => 'Wymagane działania lub uzasadnienie braku działań', 'type' => 'textarea'],
+                'assessment_date' => ['label' => 'Data oceny', 'type' => 'date'],
+            ],
+        ],
+        'context_to_risks' => [
+            'title' => 'Powiązanie kontekstu z ryzykami i planowaniem',
+            'sample' => 'Przykładowy rejestr przenosi istotne wnioski z analizy kontekstu do ryzyk, szans, celów energetycznych i planów działania. Pozwala prześledzić, jaka decyzja wynika z każdego czynnika.',
+            'sample_data' => ['Wniosek' => 'Ryzyko przerw w dostawach', 'Klasyfikacja' => 'Ryzyko wysokie', 'Działanie' => 'Plan ciągłości i analiza źródeł rezerwowych', 'Miernik' => 'Liczba i czas przerw', 'Termin' => 'IV kwartał'],
+            'fields' => [
+                'significant_findings' => ['label' => 'Istotne wnioski z analizy kontekstu', 'type' => 'textarea'],
+                'risks_opportunities' => ['label' => 'Powiązane ryzyka i szanse', 'type' => 'textarea'],
+                'objectives_actions' => ['label' => 'Powiązane cele i działania energetyczne', 'type' => 'textarea'],
+                'indicators' => ['label' => 'Mierniki skuteczności', 'type' => 'textarea'],
+                'responsible_people' => ['label' => 'Odpowiedzialni', 'type' => 'textarea'],
+                'review_date' => ['label' => 'Termin następnego przeglądu', 'type' => 'date'],
+            ],
+        ],
+    ],
 ];

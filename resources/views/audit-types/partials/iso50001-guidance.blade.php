@@ -12,11 +12,11 @@
     <section class="iso-guide-card iso-guide-actions">
         <h3><i class="ti ti-list-check"></i> Zalecany sposób wdrożenia</h3>
         <ol class="iso-action-list">@foreach($guidance['actions'] ?? [] as $actionIndex => $line)<li><div class="iso-action-line"><span>{{ $line }}</span>
-            @if($item['id'] === '3-1' && ($workflow = collect(config('iso50001-workflows.3-1'))->values()->get($actionIndex)))
-                @php($actionKey = collect(config('iso50001-workflows.3-1'))->keys()->get($actionIndex))
+            @if(in_array($item['id'], ['3-1', '4-1'], true) && ($workflow = collect(config('iso50001-workflows.'.$item['id']))->values()->get($actionIndex)))
+                @php($actionKey = collect(config('iso50001-workflows.'.$item['id']))->keys()->get($actionIndex))
                 <span class="iso-action-buttons"><button type="button" class="iso-action-btn" data-iso-toggle="sample-{{ $actionKey }}"><i class="ti ti-file-description"></i> Dokument przykładowy</button><button type="button" class="iso-action-btn primary" data-iso-toggle="form-{{ $actionKey }}"><i class="ti ti-clipboard-text"></i> Ankieta do wypełnienia</button></span>
                 <div class="iso-action-panel" id="sample-{{ $actionKey }}"><strong>Wzór: {{ $workflow['title'] }}</strong><p>{{ $workflow['sample'] }}</p><div class="iso-sample-table">@foreach($workflow['sample_data'] ?? [] as $sampleLabel => $sampleValue)<div><span>{{ $sampleLabel }}</span><strong>{{ $sampleValue }}</strong></div>@endforeach</div><div class="iso-sample-note">To jest dokument wzorcowy. Nie zawiera danych żadnego klienta.</div></div>
-                <div class="iso-action-panel" id="form-{{ $actionKey }}">@include('audit-types.partials.iso50001-action-form', ['workflow' => $workflow, 'actionKey' => $actionKey])</div>
+                <div class="iso-action-panel" id="form-{{ $actionKey }}">@include('audit-types.partials.iso50001-action-form', ['workflow' => $workflow, 'actionKey' => $actionKey, 'sectionId' => $item['id']])</div>
             @endif
         </div></li>@endforeach</ol>
     </section>

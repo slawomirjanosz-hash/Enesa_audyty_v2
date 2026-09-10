@@ -1,9 +1,9 @@
 @php
-    $response = isset($audit) ? ($isoImplementationResponses->get($actionKey) ?? null) : null;
+    $response = isset($audit) ? ($isoImplementationResponses->get($sectionId.'|'.$actionKey) ?? null) : null;
     $answers = old('answers', $response?->answers ?? []);
     $isTemplatePreview = !isset($audit);
-    $storeRoute = !$isTemplatePreview ? (($clientView ?? false) ? route('client.audits.iso50001.responses.store', [$audit, $actionKey]) : route('audits.iso50001.responses.store', [$audit, $actionKey])) : null;
-    $pdfRoute = !$isTemplatePreview ? (($clientView ?? false) ? route('client.audits.iso50001.responses.pdf', [$audit, $actionKey]) : route('audits.iso50001.responses.pdf', [$audit, $actionKey])) : null;
+    $storeRoute = !$isTemplatePreview ? (($clientView ?? false) ? route('client.audits.iso50001.responses.store', [$audit, $sectionId, $actionKey]) : route('audits.iso50001.responses.store', [$audit, $sectionId, $actionKey])) : null;
+    $pdfRoute = !$isTemplatePreview ? (($clientView ?? false) ? route('client.audits.iso50001.responses.pdf', [$audit, $sectionId, $actionKey]) : route('audits.iso50001.responses.pdf', [$audit, $sectionId, $actionKey])) : null;
 @endphp
 <strong>{{ $workflow['title'] }}</strong>
 @if($isTemplatePreview)<div class="iso-template-banner">Podgląd wzoru ankiety. Klient otrzyma własny formularz w swoim audycie, a wpisane tutaj dane nie są zapisywane.</div>@endif

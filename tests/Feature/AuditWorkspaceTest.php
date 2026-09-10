@@ -232,7 +232,7 @@ test('ISO 50001 point 3.1 keeps the template separate and generates client PDF v
         'other_energy_cost' => 5000, 'total_energy_cost' => 155000, 'improvement_potential' => 8,
         'estimated_savings' => 12400, 'assumptions' => 'Faktury i odczyty liczników.',
     ];
-    $this->actingAs($client)->post(route('client.audits.iso50001.responses.pdf', [$audit, 'baseline']), ['answers' => $answers])
+    $this->actingAs($client)->post(route('client.audits.iso50001.responses.pdf', [$audit, '3-1', 'baseline']), ['answers' => $answers])
         ->assertRedirect(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '3-1']));
 
     $response = IsoImplementationResponse::firstOrFail();
@@ -250,6 +250,47 @@ test('ISO 50001 point 3.1 keeps the template separate and generates client PDF v
 
     $otherClient = User::factory()->create();
     $otherClient->assignRole(Role::findOrCreate('client_user'));
-    $this->actingAs($otherClient)->post(route('client.audits.iso50001.responses.pdf', [$audit, 'baseline']), ['answers' => $answers])
+    $this->actingAs($otherClient)->post(route('client.audits.iso50001.responses.pdf', [$audit, '3-1', 'baseline']), ['answers' => $answers])
         ->assertNotFound();
+});
+
+test('ISO 50001 point 4.1 provides questionnaires examples and a dedicated training video', function () {
+    Storage::fake('local');
+    $superadmin = User::factory()->create();
+    $superadmin->assignRole(Role::findOrCreate('superadmin'));
+    $company = Company::create(['name' => 'Zakład kontekstowy', 'company_type' => 'client', 'status' => 'active']);
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company, ['is_admin' => false]);
+    $isoType = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'ISO/4.1/1', 'title' => 'Kontekst EnMS', 'status' => 'in_progress']);
+    $audit->surveys()->create(['audit_type_id' => $isoType->id, 'title' => $isoType->name, 'status' => 'draft']);
+
+    $this->actingAs($superadmin)->post(route('audit-types.training-videos.store', $isoType), [
+        'section_id' => '4-1', 'topic' => 'Jak analizować kontekst EnMS',
+        'description' => 'Czynniki wewnętrzne, zewnętrzne i wpływ zmian klimatu.',
+        'youtube_url' => 'https://www.youtube.com/watch?v=context410',
+    ])->assertRedirect(route('audit-types.show', ['auditType' => $isoType, 'section' => '4-1']));
+
+    $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => '4-1']))
+        ->assertOk()->assertSee('Film szkoleniowy')->assertSee('Jak analizować kontekst EnMS')
+        ->assertSee('Dokument przykładowy')->assertSee('Ankieta do wypełnienia')
+        ->assertSee('Analiza kontekstu organizacji dla EnMS')->assertSee('Ocena istotności zmian klimatu');
+
+    $answers = [
+        'organization_profile' => 'Produkcja przemysłowa w jednej lokalizacji.',
+        'external_factors' => 'Ceny energii, przepisy i warunki pogodowe.',
+        'internal_factors' => 'Park maszynowy i kompetencje zespołu.',
+        'energy_impact' => 'Wpływ na zużycie energii elektrycznej i gazu.',
+        'owners' => 'Energy Manager', 'review_frequency' => 'Raz w roku',
+    ];
+    $this->actingAs($client)->post(route('client.audits.iso50001.responses.pdf', [$audit, '4-1', 'context_analysis']), ['answers' => $answers])
+        ->assertRedirect(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']));
+
+    $document = IsoSectionDocument::where('audit_id', $audit->id)->where('section_id', '4-1')->firstOrFail();
+    expect($document->title)->toBe('Analiza kontekstu organizacji dla EnMS');
+    Storage::disk('local')->assertExists($document->stored_path);
+
+    $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
+        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('Dokument wygenerowany z ankiety klienta.');
 });
