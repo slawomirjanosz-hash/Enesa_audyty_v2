@@ -259,7 +259,7 @@ test('ISO 50001 point 3.1 keeps the template separate and generates client PDF v
         ->assertNotFound();
 });
 
-test('ISO 50001 point 4.1 provides questionnaires examples and a dedicated training video', function () {
+test('ISO 50001 point 4.1 provides a context generator with Word and PDF output', function () {
     Storage::fake('local');
     $superadmin = User::factory()->create();
     $superadmin->assignRole(Role::findOrCreate('superadmin'));
@@ -279,23 +279,37 @@ test('ISO 50001 point 4.1 provides questionnaires examples and a dedicated train
 
     $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => '4-1']))
         ->assertOk()->assertSee('Film szkoleniowy')->assertSee('Jak analizować kontekst EnMS')
-        ->assertSee('Dokument przykładowy')->assertSee('Ankieta do wypełnienia')
-        ->assertSee('Analiza kontekstu organizacji dla EnMS')->assertSee('Ocena istotności zmian klimatu');
+        ->assertSee('Ankieta kontekstu organizacji')->assertSee('D-EnMS-KON-01')
+        ->assertSee('To jest podgląd formularza wzorcowego');
 
     $answers = [
-        'organization_profile' => 'Produkcja przemysłowa w jednej lokalizacji.',
-        'external_factors' => 'Ceny energii, przepisy i warunki pogodowe.',
-        'internal_factors' => 'Park maszynowy i kompetencje zespołu.',
-        'energy_impact' => 'Wpływ na zużycie energii elektrycznej i gazu.',
-        'owners' => 'Energy Manager', 'review_frequency' => 'Raz w roku',
+        'facts' => ['organization' => 'Zakład kontekstowy', 'scope' => 'Cały zakład', 'metering' => 'brak', 'scada' => 'nie', 'infrastructure_age' => 20, 'compressed_air' => 'tak', 'energy_manager' => 'nieformalnie', 'consumption_tj' => 100, 'customers_co2' => 'tak'],
+        'swot' => ['strengths' => 'Doświadczony zespół', 'weaknesses' => 'Brak podliczników', 'opportunities' => 'Odzysk ciepła', 'threats' => 'Wzrost cen'],
+        'conclusions' => [
+            ['finding' => 'Brak danych dla SEU', 'decision' => 'Rozbudować opomiarowanie', 'document' => 'Plan zbierania danych'],
+            ['finding' => 'Ryzyko cenowe', 'decision' => 'Monitorować ceny', 'document' => 'Rejestr ryzyk'],
+            ['finding' => 'Brak formalnej roli', 'decision' => 'Powołać Energy Managera', 'document' => 'Zarządzenie'],
+            ['finding' => 'Wymagania klientów', 'decision' => 'Ustalić raportowanie', 'document' => 'Rejestr stron'],
+        ],
     ];
-    $this->actingAs($client)->post(route('client.audits.iso50001.responses.pdf', [$audit, '4-1', 'context_analysis']), ['answers' => $answers])
+    $this->actingAs($client)->post(route('client.audits.iso50001.context.store', $audit), ['answers' => $answers])
         ->assertRedirect(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']));
+    $this->actingAs($client)->post(route('client.audits.iso50001.context.pdf-preview', $audit), ['answers' => $answers])
+        ->assertOk()->assertHeader('content-type', 'application/pdf')->assertHeader('content-disposition', 'inline; filename="D-EnMS-KON-01_zaklad_kontekstowy.pdf"');
+    expect(IsoSectionDocument::count())->toBe(0);
+    $this->actingAs($client)->post(route('client.audits.iso50001.context.docx', $audit), ['answers' => $answers])
+        ->assertOk()->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    $this->actingAs($client)->post(route('client.audits.iso50001.context.pdf', $audit), ['answers' => $answers])
+        ->assertOk()->assertHeader('content-type', 'application/pdf');
 
-    $document = IsoSectionDocument::where('audit_id', $audit->id)->where('section_id', '4-1')->firstOrFail();
-    expect($document->title)->toBe('Analiza kontekstu organizacji dla EnMS');
-    Storage::disk('local')->assertExists($document->stored_path);
+    $documents = IsoSectionDocument::where('audit_id', $audit->id)->where('section_id', '4-1')->get();
+    expect($documents)->toHaveCount(2)
+        ->and($documents->pluck('mime_type'))->toContain('application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        ->and(IsoImplementationResponse::firstOrFail()->answers['facts']['organization'])->toBe('Zakład kontekstowy');
+    $documents->each(fn ($document) => Storage::disk('local')->assertExists($document->stored_path));
 
     $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
-        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('Dokument wygenerowany z ankiety klienta.');
+        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('Utwórz Word')->assertSee('Podgląd PDF')
+        ->assertSee('Dokument Word wygenerowany z ankiety kontekstu organizacji.')
+        ->assertSee('PDF wygenerowany z ankiety kontekstu organizacji.');
 });

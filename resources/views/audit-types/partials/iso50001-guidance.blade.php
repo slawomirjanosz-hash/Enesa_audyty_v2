@@ -12,7 +12,7 @@
     <section class="iso-guide-card iso-guide-actions">
         <h3><i class="ti ti-list-check"></i> Zalecany sposób wdrożenia</h3>
         <ol class="iso-action-list">@foreach($guidance['actions'] ?? [] as $actionIndex => $line)<li><div class="iso-action-line"><span>{{ $line }}</span>
-            @if(in_array($item['id'], ['3-1', '4-1'], true) && ($workflow = collect(config('iso50001-workflows.'.$item['id']))->values()->get($actionIndex)))
+            @if($item['id'] === '3-1' && ($workflow = collect(config('iso50001-workflows.'.$item['id']))->values()->get($actionIndex)))
                 @php($actionKey = collect(config('iso50001-workflows.'.$item['id']))->keys()->get($actionIndex))
                 <span class="iso-action-buttons"><button type="button" class="iso-action-btn" data-iso-toggle="sample-{{ $actionKey }}"><i class="ti ti-file-description"></i> Dokument przykładowy</button><button type="button" class="iso-action-btn primary" data-iso-toggle="form-{{ $actionKey }}"><i class="ti ti-clipboard-text"></i> Ankieta do wypełnienia</button></span>
                 <div class="iso-action-panel" id="sample-{{ $actionKey }}"><strong>Wzór: {{ $workflow['title'] }}</strong><p>{{ $workflow['sample'] }}</p><div class="iso-sample-table">@foreach($workflow['sample_data'] ?? [] as $sampleLabel => $sampleValue)<div><span>{{ $sampleLabel }}</span><strong>{{ $sampleValue }}</strong></div>@endforeach</div><div class="iso-sample-note">To jest dokument wzorcowy. Nie zawiera danych żadnego klienta.</div></div>
@@ -20,7 +20,9 @@
             @endif
         </div></li>@endforeach</ol>
     </section>
-    @if($guidance['pitfall'] ?? false)
+    @if($item['id'] === '4-1')
+        @include('audit-types.partials.iso50001-context-form')
+    @elseif($guidance['pitfall'] ?? false)
     <aside class="iso-guide-warning"><i class="ti ti-alert-triangle"></i><div><strong>Typowa pułapka</strong><p>{{ $guidance['pitfall'] }}</p></div></aside>
     @endif
 </div>
