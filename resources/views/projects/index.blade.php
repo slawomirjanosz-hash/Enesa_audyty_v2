@@ -24,9 +24,10 @@
     </select>
 </form>
 
-@if($projects->isEmpty())
+@if($projects->isEmpty() && $completedProjects->isEmpty())
     <div class="empty"><i class="ti ti-briefcase-off" style="font-size:36px;"></i><p>Nie ma jeszcze żadnych projektów.</p></div>
 @else
+@if($projects->isNotEmpty())
 <div class="project-grid">
     @foreach($projects as $project)
     <a class="project-card" href="{{ route('projects.show',$project) }}">
@@ -44,6 +45,36 @@
 </div>
 <div style="margin-top:20px;">{{ $projects->links() }}</div>
 @endif
+@endif
+
+@if($completedProjects->total() > 0)
+<section class="completed-projects" aria-labelledby="completed-projects-title">
+    <h2 id="completed-projects-title">Projekty zakończone <span>({{ $completedProjects->total() }})</span></h2>
+    <div class="completed-projects-scroll">
+        <table class="completed-projects-table">
+            <thead><tr><th>Numer projektu</th><th>Nazwa projektu</th><th>Firma / klient</th><th>Kierownik</th><th>Zespół</th><th>Termin realizacji</th>@if($canViewFinances)<th>Wartość netto</th>@endif<th>Akcje</th></tr></thead>
+            <tbody>
+            @foreach($completedProjects as $project)
+                <tr>
+                    <td class="nowrap"><a href="{{ route('projects.show', $project) }}">{{ $project->number }}</a></td>
+                    <td><a href="{{ route('projects.show', $project) }}">{{ $project->name }}</a></td>
+                    <td>{{ $project->company?->name ?? 'Projekt wewnętrzny' }}</td>
+                    <td>{{ $project->manager?->name ?? 'Brak kierownika' }}</td>
+                    <td>{{ $project->members->count() }}</td>
+                    <td class="nowrap">{{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</td>
+                    @if($canViewFinances)<td class="nowrap">{{ number_format((float) $project->contract_value, 2, ',', ' ') }} zł</td>@endif
+                    <td><a href="{{ route('projects.show', $project) }}">Otwórz</a></td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top:16px;">{{ $completedProjects->fragment('completed-projects-title')->links() }}</div>
+</section>
+@endif
+<style>
+.completed-projects{margin-top:32px}.completed-projects h2{font-size:19px;margin:0 0 14px}.completed-projects h2 span{font-size:14px;color:#6b7a70;font-weight:500}.completed-projects-scroll{overflow-x:auto;border:1px solid #e5e1d8;border-radius:12px;background:#fff}.completed-projects-table{width:100%;border-collapse:collapse;font-size:13px}.completed-projects-table th,.completed-projects-table td{padding:13px 15px;text-align:left;border-bottom:1px solid #eceeea;vertical-align:middle}.completed-projects-table th{background:#f7f8f5;font-size:12px;color:#59665e;white-space:nowrap}.completed-projects-table tbody tr:last-child td{border-bottom:0}.completed-projects-table a{color:var(--green);text-decoration:none;font-weight:700}.completed-projects-table a:hover{text-decoration:underline}.completed-projects-table .nowrap{white-space:nowrap}
+</style>
 
 <div id="project-modal" class="modal" onclick="if(event.target===this)this.classList.remove('open')">
     <div class="modal-box">

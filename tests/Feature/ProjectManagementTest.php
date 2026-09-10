@@ -28,6 +28,32 @@ beforeEach(function () {
     }
 });
 
+test('completed projects have a separate paginated table with project access and financial permissions preserved', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $member = User::factory()->create();
+    $role = Role::findOrCreate('completed_project_viewer');
+    $role->givePermissionTo(Permission::findOrCreate('projects.view'));
+    $member->assignRole($role);
+    $active = Project::create(['number' => 'ACTIVE/1', 'name' => 'Bieżący projekt', 'status' => 'active', 'manager_id' => $admin->id]);
+    $active->members()->attach($member);
+    for ($i = 1; $i <= 21; $i++) {
+        $project = Project::create(['number' => 'DONE/'.$i, 'name' => 'Zakończony projekt '.$i, 'status' => 'completed', 'manager_id' => $admin->id, 'contract_value' => 987654.32]);
+        $project->members()->attach($member);
+    }
+    Project::create(['number' => 'HIDDEN/1', 'name' => 'Niedostępny zakończony', 'status' => 'completed', 'manager_id' => $admin->id]);
+    $response = $this->actingAs($member)->get(route('projects.index'))->assertOk()
+        ->assertSee('Bieżący projekt')->assertSee('Projekty zakończone')
+        ->assertDontSee('Niedostępny zakończony')->assertDontSee('987 654,32');
+    expect($response->viewData('projects')->total())->toBe(1)
+        ->and($response->viewData('completedProjects')->total())->toBe(21)
+        ->and(substr_count($response->getContent(), 'class="project-card"'))->toBe(1);
+    $page = $this->get(route('projects.index', ['completed_page' => 2]))->assertOk()->assertSee('Bieżący projekt');
+    expect($page->viewData('completedProjects')->count())->toBe(1);
+    $this->get(route('projects.index', ['status' => 'completed']))->assertOk()->assertDontSee('class="project-card"', false);
+    $this->get(route('projects.index', ['status' => 'active']))->assertOk()->assertDontSee('id="completed-projects-title"', false);
+});
+
 test('admin creates a project with manager and team', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

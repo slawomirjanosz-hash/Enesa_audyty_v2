@@ -55,7 +55,8 @@ class ProjectController extends Controller
         }
 
         return view('projects.index', [
-            'projects' => $query->paginate(20)->withQueryString(),
+            'projects' => (clone $query)->where('status', '!=', 'completed')->paginate(20)->withQueryString(),
+            'completedProjects' => (clone $query)->where('status', 'completed')->paginate(20, ['*'], 'completed_page')->withQueryString(),
             'companies' => Company::clients()->active()->orderBy('name')->get(),
             'users' => $this->staffUsers(),
             'canViewFinances' => $this->canViewProjectFinances($user),
