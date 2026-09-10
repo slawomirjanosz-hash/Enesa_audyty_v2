@@ -287,7 +287,7 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
         ->assertOk()->assertSee('Podgląd formularza wzorcowego')->assertSee('Wybór czynników')
         ->assertSee('KTX-ZT-08')->assertDontSee('data-save', false);
     $screen = $this->actingAs($client)->get(route('client.audits.iso50001.context.show', $audit))
-        ->assertOk()->assertSee('Utwórz Word')->assertSee('Podgląd PDF')
+        ->assertOk()->assertSee('Zapisz Word')->assertSee('Zapisz PDF')->assertSee('Podgląd PDF')
         ->assertSee('Dane o zakładzie')->assertSee('Wybór czynników')->assertSee('Uzupełnienie konsultanta');
     expect(substr_count($screen->getContent(), 'data-fact="'))->toBe(38);
     expect(substr_count($screen->getContent(), 'data-factor="'))->toBe(59);

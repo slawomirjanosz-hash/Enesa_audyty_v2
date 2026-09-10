@@ -32,7 +32,18 @@
 @for($i=0;$i<4;$i++)<div class="conclusion" data-conclusion="{{ $i }}"><h3>Wniosek {{ $i+1 }}</h3>@foreach(['finding'=>'Wniosek z analizy kontekstu','decision'=>'Decyzja projektowa w systemie','document'=>'Dokument powiązany'] as $key=>$label)<label class="field"><span>{{ $label }}</span><textarea name="answers[conclusions][{{ $i }}][{{ $key }}]" data-conclusion-field="{{ $key }}">{{ data_get($answers,'conclusions.'.$i.'.'.$key) }}</textarea></label>@endforeach<div class="suggestions" data-suggestions="{{ $i }}"></div></div>@endfor</fieldset>
 </section>
 <section data-panel="3" hidden><h2>Dokument</h2><p class="hint" data-completeness></p><div class="panel" id="context-document-preview"></div>
-@unless($isTemplatePreview)<div class="document-actions"><button type="submit" class="primary" formaction="{{ route($baseRoute.'docx',$audit) }}" data-export>Utwórz Word</button><button type="submit" formaction="{{ route($baseRoute.'pdf-preview',$audit) }}" formtarget="_blank" data-export>Podgląd PDF</button><button type="submit" formaction="{{ route($baseRoute.'pdf',$audit) }}" data-export>Generuj PDF</button></div>@endunless
+@unless($isTemplatePreview)
+<div class="panel">
+    <h3>Zapisz w dokumentacji klienta</h3>
+    <p>Dokument zostanie zapisany w punkcie 4.1 tego audytu. Każdy kolejny zapis utworzy nową wersję.</p>
+    <div class="document-actions">
+        <button type="submit" class="primary" formaction="{{ route($baseRoute.'pdf',$audit) }}" data-export data-save-document="PDF">Zapisz PDF</button>
+        <button type="submit" class="primary" formaction="{{ route($baseRoute.'docx',$audit) }}" data-export data-save-document="Word">Zapisz Word</button>
+        <button type="submit" formaction="{{ route($baseRoute.'pdf-preview',$audit) }}" formtarget="_blank" data-export>Podgląd PDF</button>
+    </div>
+    <p class="hint" data-document-saved role="status" hidden><span></span> <a href="{{ $backUrl }}#iso-documents-4-1" data-leave>Przejdź do dokumentacji klienta →</a></p>
+</div>
+@endunless
 </section>
 <div class="footer"><div><button type="button" data-back>← Wstecz</button><button type="button" class="primary" data-next>Dalej →</button></div><div><span data-status role="status"></span>@unless($isTemplatePreview)<button type="submit" data-save>Zapisz roboczo</button>@endunless</div></div>
 </form>

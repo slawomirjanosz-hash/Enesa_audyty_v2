@@ -104,6 +104,7 @@
         const exporting=event.submitter?.hasAttribute('data-export');
         const button=event.submitter ?? form.querySelector('[data-save]');
         const url=exporting?button.formAction:form.action;
+        const savingDocument=button.dataset.saveDocument;
         const previewing=exporting&&button.formTarget==='_blank';
         const previewWindow=previewing?window.open('about:blank','_blank'):null;
         const revision=new URLSearchParams(new FormData(form)).toString();
@@ -111,7 +112,7 @@
         try {
             const res=await fetch(url,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
             if(!res.ok){const data=await res.json();throw new Error(Object.values(data.errors??{}).flat().join(' ')||'Nie udało się zapisać.');}
-            if(exporting) {
+            if(exporting && !savingDocument) {
                 const blob=await res.blob(), blobUrl=URL.createObjectURL(blob);
                 if(previewWindow)previewWindow.location.href=blobUrl;
                 else {
@@ -122,7 +123,12 @@
                 setTimeout(()=>URL.revokeObjectURL(blobUrl),60000);
             }
             dirty=revision!==new URLSearchParams(new FormData(form)).toString();
-            status.textContent=dirty?'Niezapisane zmiany':exporting?'Dokument gotowy. Dane zapisano.':'Zapisano';
+            if(savingDocument) {
+                const notice=document.querySelector('[data-document-saved]');
+                notice.querySelector('span').textContent='Dokument '+savingDocument+' zapisano w dokumentacji klienta (punkt 4.1).';
+                notice.hidden=false;
+            }
+            status.textContent=dirty?'Niezapisane zmiany':savingDocument?'Dokument '+savingDocument+' zapisano w dokumentacji klienta.':exporting?'Dokument gotowy. Dane zapisano.':'Zapisano';
         } catch(error){previewWindow?.close();status.textContent=error.message;} finally{button.disabled=false;}
     });
     window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
