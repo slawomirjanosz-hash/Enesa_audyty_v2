@@ -109,6 +109,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
     Route::post('/audits/{audit}/iso50001/{section}/{action}/pdf', [IsoImplementationController::class, 'generateForClient'])->middleware('app.module:audits')->name('audits.iso50001.responses.pdf');
     Route::get('/audits/{audit}/iso-documents/templates/{document}', [ClientAuditController::class, 'downloadIsoTemplateDocument'])->middleware('app.module:audits')->name('audits.iso-documents.templates.download');
     Route::get('/audits/{audit}/iso-documents/{document}', [ClientAuditController::class, 'downloadIsoDocument'])->middleware('app.module:audits')->name('audits.iso-documents.download');
+    Route::delete('/audits/{audit}/iso-documents/{document}', [ClientAuditController::class, 'destroyIsoDocument'])->middleware('app.module:audits')->name('audits.iso-documents.destroy');
     Route::get('/audits/{audit}/documents/{document}', [ClientAuditController::class, 'downloadDocument'])->middleware('app.module:audits')->name('audits.documents.download');
     Route::get('/audits/{audit}/gantt/export', [ClientAuditController::class, 'exportGantt'])->middleware('app.module:audits')->name('audits.gantt.export');
     Route::get('/offers', [ClientOfferController::class, 'index'])->middleware('app.module:offers')->name('offers');

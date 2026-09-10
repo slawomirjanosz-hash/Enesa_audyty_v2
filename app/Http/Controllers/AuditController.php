@@ -307,7 +307,7 @@ class AuditController extends Controller
     public function destroyIsoDocument(Request $request, Audit $audit, IsoSectionDocument $document): RedirectResponse
     {
         $this->ensureAccess($request, $audit);
-        abort_unless($this->canManage($request), 403);
+        abort_unless($request->user()->hasAnyRole(['admin', 'superadmin']), 403);
         abort_unless($document->scope === 'client' && $document->audit_id === $audit->id, 404);
         Storage::disk('local')->delete($document->stored_path);
         $section = $document->section_id;

@@ -88,6 +88,20 @@ class AuditController extends Controller
         }, $document->original_filename, ['Content-Type' => $document->mime_type ?: 'application/octet-stream']);
     }
 
+    public function destroyIsoDocument(Request $request, Audit $audit, IsoSectionDocument $document): RedirectResponse
+    {
+        abort_unless($request->user()->hasRole('client_admin'), 403);
+        $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
+        $this->ensureIsoAudit($audit);
+        abort_unless($document->scope === 'client' && $document->audit_id === $audit->id, 404);
+        $section = $document->section_id;
+        Storage::disk('local')->delete($document->stored_path);
+        $document->delete();
+
+        return redirect()->route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => $section])
+            ->with('success', 'Dokument klienta został usunięty.');
+    }
+
     private function ensureIsoAudit(Audit $audit): void
     {
         abort_unless($audit->surveys()->whereHas('auditType', fn ($types) => $types->where('slug', 'iso50001'))->exists(), 404);

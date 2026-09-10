@@ -28,6 +28,58 @@ function auditManager(): User
     return $user;
 }
 
+test('only administrators can delete client ISO documents within their accessible audit', function () {
+    Storage::fake('local');
+    $company = Company::create(['name' => 'Firma z dokumentami', 'company_type' => 'client', 'status' => 'active']);
+    $otherCompany = Company::create(['name' => 'Obca firma', 'company_type' => 'client', 'status' => 'active']);
+    $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $manager = auditManager();
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'ISO/DELETE/1', 'title' => 'Dokumentacja', 'status' => 'draft', 'manager_id' => $manager->id]);
+    $audit->members()->attach($manager);
+    $audit->surveys()->create(['audit_type_id' => $type->id, 'title' => $type->name, 'status' => 'draft']);
+    $makeDocument = function (string $path) use ($audit) {
+        Storage::disk('local')->put($path, 'test');
+
+        return IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => '4-1', 'scope' => 'client',
+            'title' => 'Dokument do usunięcia', 'version_number' => '1.0', 'original_filename' => 'test.pdf',
+            'stored_path' => $path, 'mime_type' => 'application/pdf', 'size' => 4, 'content_base64' => base64_encode('test')]);
+    };
+    $document = $makeDocument('iso-test/delete.pdf');
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company);
+    $clientAdmin = User::factory()->create();
+    $clientAdmin->assignRole(Role::findOrCreate('client_admin'));
+    $clientAdmin->companies()->attach($company, ['is_admin' => true]);
+    $foreignAdmin = User::factory()->create();
+    $foreignAdmin->assignRole(Role::findOrCreate('client_admin'));
+    $foreignAdmin->companies()->attach($otherCompany, ['is_admin' => true]);
+    $clientDeleteUrl = route('client.audits.iso-documents.destroy', [$audit, $document]);
+
+    $this->actingAs($client)->get(route('client.audits.show', $audit))->assertOk()->assertDontSee('Usunąć tę wersję dokumentu?');
+    $this->actingAs($client)->delete($clientDeleteUrl)->assertForbidden();
+    $this->actingAs($manager)->get(route('audits.show', $audit))->assertOk()->assertDontSee('Usunąć tę wersję dokumentu?');
+    $this->actingAs($manager)->delete(route('audits.iso-documents.destroy', [$audit, $document]))->assertForbidden();
+    $this->actingAs($foreignAdmin)->delete($clientDeleteUrl)->assertNotFound();
+    $this->assertDatabaseHas('iso_section_documents', ['id' => $document->id]);
+    Storage::disk('local')->assertExists($document->stored_path);
+
+    $template = $makeDocument('iso-test/template.pdf');
+    $template->update(['scope' => 'template', 'audit_id' => null]);
+    $this->actingAs($clientAdmin)->delete(route('client.audits.iso-documents.destroy', [$audit, $template]))->assertNotFound();
+    $this->actingAs($clientAdmin)->get(route('client.audits.show', $audit))->assertOk()->assertSee('Usunąć tę wersję dokumentu?');
+    $this->actingAs($clientAdmin)->delete($clientDeleteUrl)->assertRedirect();
+    $this->assertDatabaseMissing('iso_section_documents', ['id' => $document->id]);
+    Storage::disk('local')->assertMissing($document->stored_path);
+    foreach (['admin', 'superadmin'] as $role) {
+        $user = User::factory()->create();
+        $user->assignRole(Role::findOrCreate($role));
+        $file = $makeDocument('iso-test/'.$role.'.pdf');
+        $this->actingAs($user)->delete(route('audits.iso-documents.destroy', [$audit, $file]))->assertRedirect();
+        $this->assertDatabaseMissing('iso_section_documents', ['id' => $file->id]);
+    }
+});
+
 test('audit is created from company card and opens the dedicated workspace', function () {
     $user = auditManager();
     $company = Company::create(['name' => 'Fabryka Audytowana', 'company_type' => 'client', 'status' => 'active']);
