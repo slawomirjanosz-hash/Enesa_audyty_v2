@@ -198,7 +198,8 @@ test('ISO clauses keep separate versioned template and client documentation', fu
     $this->actingAs($manager)->get(route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
         ->assertOk()->assertSee('Dokumentacja wzorcowa')->assertSee('Dokumentacja klienta')
         ->assertSee('iso-doc-box-client', false)->assertSee('iso-doc-box-template', false)
-        ->assertSee('wzor-analizy-kontekstu')->assertSee('Analiza kontekstu zakładu')->assertSee('wersja 2.0');
+        ->assertSee('Nazwa dokumentu')->assertSee('Data utworzenia')->assertSee('Osoba')->assertSee('Akcje')
+        ->assertSee('wzor-analizy-kontekstu')->assertSee('Analiza kontekstu zakładu')->assertSee('2.0');
 
     $client = User::factory()->create();
     $client->assignRole(Role::findOrCreate('client_user'));
