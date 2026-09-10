@@ -67,12 +67,14 @@ class IsoImplementationController extends Controller
             $version = (string) (IsoSectionDocument::where('audit_id', $audit->id)->where('section_id', $section)->where('title', $workflow['title'])->count() + 1).'.0';
             $filename = 'ISO50001_'.str_replace('-', '.', $section).'_'.Str::slug($workflow['title'], '_').'_v'.str_replace('.', '_', $version).'.pdf';
             $path = 'iso50001/client/'.$audit->id.'/'.$section.'/generated/'.Str::uuid().'.pdf';
-            Storage::disk('local')->put($path, $pdf->output());
+            $pdfContents = $pdf->output();
+            Storage::disk('local')->put($path, $pdfContents);
             IsoSectionDocument::create([
                 'audit_id' => $audit->id, 'section_id' => $section, 'scope' => 'client',
                 'title' => $workflow['title'], 'description' => 'Dokument wygenerowany z ankiety klienta.',
                 'document_year' => now()->year, 'version_number' => $version, 'original_filename' => $filename,
-                'stored_path' => $path, 'mime_type' => 'application/pdf', 'size' => Storage::disk('local')->size($path),
+                'stored_path' => $path, 'mime_type' => 'application/pdf', 'size' => strlen($pdfContents),
+                'content_base64' => base64_encode($pdfContents),
                 'uploaded_by' => $request->user()->id,
             ]);
             $response->update(['generated_at' => now()]);

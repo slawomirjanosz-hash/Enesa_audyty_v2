@@ -80,9 +80,12 @@ class AuditController extends Controller
         $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
         $this->ensureIsoAudit($audit);
         abort_unless($document->scope === 'client' && $document->audit_id === $audit->id, 404);
-        abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
+        $contents = $document->contents();
+        abort_unless($contents !== null, 404);
 
-        return Storage::disk('local')->download($document->stored_path, $document->original_filename);
+        return response()->streamDownload(static function () use ($contents): void {
+            echo $contents;
+        }, $document->original_filename, ['Content-Type' => $document->mime_type ?: 'application/octet-stream']);
     }
 
     private function ensureIsoAudit(Audit $audit): void

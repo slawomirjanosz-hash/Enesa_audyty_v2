@@ -244,11 +244,14 @@ test('ISO 50001 point 3.1 keeps the template separate and generates client PDF v
         ->and($response->generated_at)->not->toBeNull()
         ->and($document->audit_id)->toBe($audit->id)
         ->and($document->section_id)->toBe('3-1')
-        ->and($document->mime_type)->toBe('application/pdf');
+        ->and($document->mime_type)->toBe('application/pdf')
+        ->and($document->content_base64)->not->toBeNull();
     Storage::disk('local')->assertExists($document->stored_path);
+    Storage::disk('local')->delete($document->stored_path);
+    expect($document->fresh()->contents())->toStartWith('%PDF');
 
     $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '3-1']))
-        ->assertOk()->assertSee('Dokument wygenerowany z ankiety klienta.')->assertSee('wersja 1.0');
+        ->assertOk()->assertSee('Dokument wygenerowany z ankiety klienta.')->assertSee('1.0')->assertSee('Pobierz');
 
     $otherClient = User::factory()->create();
     $otherClient->assignRole(Role::findOrCreate('client_user'));
