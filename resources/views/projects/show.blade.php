@@ -450,9 +450,23 @@
 
 @php($requirementsExportAllStatuses = old('all_statuses', '1') === '1')
 @php($requirementsExportSelectedStatuses = old('statuses', array_keys($requirementStatusLabels)))
-<div id="requirements-export-modal" class="project-modal {{$errors->requirementsExport->any()?'open':''}}">
+<style>
+#requirements-export-modal .project-modal-box{width:min(720px,calc(100vw - 32px))!important;box-sizing:border-box;max-height:calc(100dvh - 32px);overflow-y:auto;overflow-x:hidden}
+#requirements-export-modal .modal-head{align-items:flex-start;gap:16px}
+#requirements-export-modal .modal-head h2{font-size:22px;line-height:1.3;margin:0}
+#requirements-export-modal .modal-close{flex:0 0 auto}
+#requirements-export-modal .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 16px}
+#requirements-export-modal .field.full,#requirements-export-modal .full{grid-column:1/-1}
+#requirements-export-modal label.requirement-export-status{display:flex!important;align-items:flex-start;justify-content:flex-start;gap:10px;margin:0;line-height:1.5;text-align:left;font-size:14px!important;font-weight:500!important;cursor:pointer}
+#requirements-export-modal .requirement-export-status input[type="checkbox"]{flex:0 0 18px;width:18px!important;min-width:18px;max-width:18px;height:18px;margin:2px 0 0;padding:0;accent-color:var(--green)}
+#requirements-export-modal .requirement-export-statuses{gap:12px 20px;padding:14px;margin-top:12px!important}
+#requirements-export-modal .field small{display:block;margin-top:7px;padding-left:28px;line-height:1.5}
+#requirements-export-modal .requirement-export-note{font-size:12px;line-height:1.6}
+@media(max-width:560px){#requirements-export-modal .grid2,#requirements-export-modal .requirement-export-statuses{grid-template-columns:1fr}#requirements-export-modal .modal-head h2{font-size:19px}}
+</style>
+<div id="requirements-export-modal" class="project-modal {{$errors->requirementsExport->any()?'open':''}}" role="dialog" aria-modal="true" aria-labelledby="requirements-export-title">
     <div class="project-modal-box" style="width:min(680px,100%)">
-        <div class="modal-head"><h2>Generuj listę materiałów i usług</h2><button type="button" class="modal-close" onclick="closeRequirementsExportModal()">×</button></div>
+        <div class="modal-head"><h2 id="requirements-export-title">Generuj listę materiałów i usług</h2><button type="button" class="modal-close" aria-label="Zamknij" onclick="closeRequirementsExportModal()">×</button></div>
         <form method="GET" action="{{route('projects.requirements.export',$project)}}" id="requirements-export-form">
             @if($errors->requirementsExport->any())<div style="padding:9px 11px;background:#fef2f2;color:#991b1b;border-radius:7px;margin-bottom:12px;font-size:12px">{{$errors->requirementsExport->first()}}</div>@endif
             <div class="grid2">
