@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\SmsChallengeController;
+use App\Http\Controllers\Auth\TotpChallengeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,11 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('login/authenticator', [TotpChallengeController::class, 'show'])->name('auth.totp');
+    Route::post('login/authenticator/setup', [TotpChallengeController::class, 'begin'])->middleware('throttle:5,1')->name('auth.totp.begin');
+    Route::post('login/authenticator/confirm', [TotpChallengeController::class, 'confirm'])->middleware('throttle:10,1')->name('auth.totp.confirm');
+    Route::post('login/authenticator/verify', [TotpChallengeController::class, 'verify'])->middleware('throttle:10,1')->name('auth.totp.verify');
+    Route::get('login/authenticator/recovery', [TotpChallengeController::class, 'recovery'])->name('auth.totp.recovery');
     Route::get('login/sms', [SmsChallengeController::class, 'show'])->name('auth.sms');
     Route::post('login/sms/send', [SmsChallengeController::class, 'send'])->middleware('throttle:5,1')->name('auth.sms.send');
     Route::post('login/sms/verify', [SmsChallengeController::class, 'verify'])->middleware('throttle:10,1')->name('auth.sms.verify');

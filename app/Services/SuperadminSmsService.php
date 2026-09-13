@@ -15,7 +15,7 @@ class SuperadminSmsService
 {
     public function required(User $user): bool
     {
-        return config('security.sms.enabled') && $user->hasRole('superadmin');
+        return ! config('security.totp.enabled') && config('security.sms.enabled') && $user->hasRole('superadmin');
     }
 
     public function verified(Request $request): bool

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\CompanySettings;
 use App\Services\SuperadminSmsService;
+use App\Services\SuperadminTotpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,10 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = $request->user();
-        $request->session()->forget('sms_verified');
+        $request->session()->forget(['sms_verified', 'totp_verified', 'totp_pending', 'totp_recovery_display']);
+        if (app(SuperadminTotpService::class)->required($user)) {
+            return redirect()->route('auth.totp');
+        }
         $sms = app(SuperadminSmsService::class);
         if ($sms->required($user)) {
             try {

@@ -8,7 +8,17 @@ Konto blokuje brak aktywności przez dwa miesiące kalendarzowe. Blokada prób h
 
 Limit wynosi 200 MiB (w UI MB) na użytkownika: pliki Document i IsoSectionDocument, wraz z ich wersjami, liczone po rozmiarze logicznym, nie po rozmiarze kopii base64. Pliki historyczne powyżej limitu pozostają dostępne. Starsze pliki bez autora są wspólne; nie zgadujemy ich właściciela. Publiczne nowe uploady obciążają twórcę linku. Limit zmienia wyłącznie admin/superadmin. Baza i prywatny dysk nadal wymagają osobnych backupów.
 
-## SMS superadmina — wymaga uruchomienia przez operatora
+## Authenticator superadmina (domyślna metoda)
+
+Po wdrożeniu i migracjach TOTP jest domyślnie wymagane wyłącznie dla roli `superadmin` (`SUPERADMIN_TOTP_ENABLED=true`). Dla adminów, audytorów i klientów logowanie pozostaje bez zmian. Nie są potrzebne zewnętrzne klucze API ani abonament. TOTP ma pierwszeństwo przed skonfigurowanym SMS-em.
+
+Pierwsze wejście, także przez dotychczasową sesję, kieruje do konfiguracji: ponowne podanie hasła, QR (generowany lokalnie, nigdy przez zewnętrzny serwis), kod z telefonu i osiem jednorazowych kodów ratunkowych. Konfiguracja QR wygasa po 10 minutach. Kody ratunkowe pokazywane są tylko raz; zapisać poza telefonem. Sekret w bazie i oczekującej sesji jest zaszyfrowany, kody ratunkowe przechowywane jako skróty. Chronić i zachować APP_KEY przy wdrożeniach oraz backupach.
+
+Logowanie wymaga kodu co nową sesję, także przy „zapamiętaj mnie”. TOTP: 30 sekund, tolerancja jednego kroku czasu, odrzucanie ponownego użycia kodu, maksymalnie 5 prób w 5 minut na konto (niezależnie od IP). Po poprawnym kodzie limiter jest zerowany. Serwer i telefon muszą mieć automatyczną synchronizację czasu. TOTP nie jest odporny na phishing: wpisywać kod wyłącznie na właściwej domenie.
+
+Utrata telefonu: użyć jednego z kodów ratunkowych. Aby ponownie powiązać telefon, uprawniony operator hostingu po niezależnym potwierdzeniu tożsamości może wykonać `php artisan accounts:reset-authenticator EMAIL`. Operacja jest rejestrowana, usuwa stare powiązanie i unieważnia sesje; następne logowanie wymaga konfiguracji nowego telefonu. Zwykły admin nie może resetować 2FA superadmina. Samo odblokowanie konta lub reset hasła nie wyłącza TOTP. Awaryjne `SUPERADMIN_TOTP_ENABLED=false` jest decyzją operatora świadomie wyłączającą ochronę (gdy SMS jest aktywny, ponownie obowiązuje SMS), nie rutynową procedurą odzyskania.
+
+## SMS superadmina — alternatywa, nieużywana przy aktywnym TOTP
 
 Integracja przygotowana dla SMSAPI, bez zakładania konta ani zakupu usługi. W Railway wpisać tajne zmienne (nie w repozytorium):
 

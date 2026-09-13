@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'totp' => ['enabled' => env('SUPERADMIN_TOTP_ENABLED', true)],
     'turnstile' => [
         'enabled' => env('TURNSTILE_ENABLED', false),
         'site_key' => env('TURNSTILE_SITE_KEY'),
