@@ -10,6 +10,8 @@
 </style>
 @endpush
 @section('content')
+@if(session('success'))<div role="status" style="padding:14px 18px;margin-bottom:16px;border:1px solid #b9d7c5;background:#edf8f0;color:#204d36;border-radius:9px">{{session('success')}}</div>@endif
+@if($errors->any())<div role="alert" style="padding:14px 18px;margin-bottom:16px;border:1px solid #edc3be;background:#fff1ef;color:#9e2920;border-radius:9px"><strong>Nie udało się zapisać zmian.</strong><ul style="padding-left:20px;margin:8px 0">@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul><a href="{{route('audit-types.show', ['auditType'=>$auditType,'section'=>old('section_id','4-1')])}}" style="color:inherit">Wróć do wybranego punktu</a></div>@endif
 <a href="{{route('audit-types.index')}}" style="color:var(--green);font-size:12px;font-weight:800;text-decoration:none"><i class="ti ti-arrow-left"></i> Typy audytów</a>
 <div class="iso-builder-head"><div><span class="iso-kicker">MODUŁ AUDYTOWY</span><h1>ISO 50001</h1><p>Tutaj wspólnie budujemy strukturę audytu, którą później zobaczą audytorzy i klienci.</p></div><span style="padding:6px 11px;border-radius:999px;background:#eaf4ef;color:var(--green);font-size:11px;font-weight:800">W budowie</span></div>
 <div class="iso-workspace"><main class="iso-content">

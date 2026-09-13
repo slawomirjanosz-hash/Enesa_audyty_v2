@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Audit;
 use App\Models\AuditType;
 use App\Models\AuditTypeVersion;
+use App\Models\IsoPresentation;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Services\AuditorAccessService;
@@ -53,6 +54,7 @@ class AuditTypeController extends Controller
                 'auditType' => $auditType,
                 'chapters' => config('iso50001.chapters', []),
                 'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
+                'trainingPresentations' => IsoPresentation::query()->latest()->get()->groupBy('section_id'),
                 'canManageTraining' => app(AuditorAccessService::class)->hasFullAccess(request()->user()),
                 'templateDocuments' => IsoSectionDocument::query()->metadata()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             ]);

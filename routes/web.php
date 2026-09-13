@@ -24,6 +24,7 @@ use App\Http\Controllers\EnergyPassportController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\ImportantContactController;
 use App\Http\Controllers\IsoImplementationController;
+use App\Http\Controllers\IsoPresentationController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
@@ -100,6 +101,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
     Route::get('/audits/{audit}', [ClientAuditController::class, 'show'])->middleware('app.module:audits')->name('audits.show');
+    Route::get('/audits/{audit}/presentations/{presentation}/slides/{slide}', [IsoPresentationController::class, 'auditSlide'])->whereNumber('slide')->middleware('app.module:audits')->name('audits.presentations.slide');
     Route::post('/audits/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'storeContextForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.store');
     Route::get('/audits/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'contextScreenForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.show');
     Route::post('/audits/{audit}/iso50001/4-1/context/docx', [IsoImplementationController::class, 'contextDocxForClient'])->middleware('app.module:audits')->name('audits.iso50001.context.docx');
@@ -206,6 +208,11 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('/templates/import', [EnergyPassportController::class, 'importTemplate'])->middleware('app.permission:audits.passports.manage')->name('templates.import');
     });
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
+    Route::post('audit-types/{auditType}/presentations', [IsoPresentationController::class, 'store'])->middleware(['app.module:audits', 'app.permission:audits.types.manage', 'throttle:3,1'])->name('audit-types.presentations.store');
+    Route::put('audit-types/{auditType}/presentations/{presentation}', [IsoPresentationController::class, 'update'])->middleware(['app.module:audits', 'app.permission:audits.types.manage', 'throttle:3,1'])->name('audit-types.presentations.update');
+    Route::delete('audit-types/{auditType}/presentations/{presentation}', [IsoPresentationController::class, 'destroy'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.presentations.destroy');
+    Route::get('audit-types/{auditType}/presentations/{presentation}/slides/{slide}', [IsoPresentationController::class, 'templateSlide'])->whereNumber('slide')->middleware(['app.module:audits', 'app.permission:audits.view'])->name('audit-types.presentations.slide');
+    Route::get('audits/{audit}/presentations/{presentation}/slides/{slide}', [IsoPresentationController::class, 'auditSlide'])->whereNumber('slide')->middleware(['app.module:audits', 'app.permission:audits.view'])->name('audits.presentations.slide');
     Route::post('audit-types/{auditType}/iso-documents', [AuditTypeController::class, 'storeIsoDocument'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.iso-documents.store');
     Route::get('audit-types/{auditType}/iso-documents/{document}', [AuditTypeController::class, 'downloadIsoDocument'])->middleware('app.module:audits')->name('audit-types.iso-documents.download');
     Route::delete('audit-types/{auditType}/iso-documents/{document}', [AuditTypeController::class, 'destroyIsoDocument'])->middleware(['app.module:audits', 'app.permission:audits.types.manage'])->name('audit-types.iso-documents.destroy');

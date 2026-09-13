@@ -1,3 +1,6 @@
+[phases.setup]
+aptPkgs = ['...', 'libreoffice-impress', 'poppler-utils', 'fonts-liberation', 'fonts-crosextra-carlito']
+
 [phases.install]
 cmds = [
   'composer install --no-dev --classmap-authoritative --no-interaction',

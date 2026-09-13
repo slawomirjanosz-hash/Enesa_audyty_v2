@@ -42,6 +42,12 @@ jobs:
       - name: Run tests
         run: composer test
 
+      - name: Install presentation converter
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libreoffice-impress poppler-utils fonts-liberation fonts-crosextra-carlito
+
+      - name: Test real PowerPoint conversion
+        run: php artisan test --filter="real server converter"
+
       - name: Audit dependencies
         run: |
           composer audit --locked

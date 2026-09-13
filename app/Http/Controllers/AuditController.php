@@ -10,6 +10,7 @@ use App\Models\AuditType;
 use App\Models\Document;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
+use App\Models\IsoPresentation;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoTrainingVideo;
 use App\Models\Task;
@@ -65,6 +66,7 @@ class AuditController extends Controller
             'clientView' => false,
             'canViewFinances' => true,
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
+            'trainingPresentations' => IsoPresentation::query()->latest()->get()->groupBy('section_id'),
             'templateDocuments' => IsoSectionDocument::query()->metadata()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
             'clientDocuments' => $audit->isoSectionDocuments->where('scope', 'client')->groupBy('section_id'),
             'isoImplementationResponses' => $audit->isoImplementationResponses->keyBy(fn ($response) => $response->section_id.'|'.$response->action_key),
