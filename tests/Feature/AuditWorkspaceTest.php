@@ -201,6 +201,8 @@ test('client sees audits assigned to their company in the client zone', function
     $this->actingAs($client)->get(route('client.audits'))->assertOk()
         ->assertSee('Audyt widoczny dla klienta')
         ->assertSee('AUD/KLIENT/1')
+        ->assertSee('class="client-audit-open"', false)
+        ->assertSee('aria-label="Otwórz audyt: Audyt widoczny dla klienta"', false)
         ->assertDontSee('Audyt innej firmy');
     $this->actingAs($client)->get(route('client.dashboard'))->assertOk()
         ->assertSee(route('client.audits.show', $clientAudit), false);
