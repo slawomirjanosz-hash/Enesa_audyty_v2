@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\SmsChallengeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('login/sms', [SmsChallengeController::class, 'show'])->name('auth.sms');
+    Route::post('login/sms/send', [SmsChallengeController::class, 'send'])->middleware('throttle:5,1')->name('auth.sms.send');
+    Route::post('login/sms/verify', [SmsChallengeController::class, 'verify'])->middleware('throttle:10,1')->name('auth.sms.verify');
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

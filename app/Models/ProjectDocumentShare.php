@@ -18,7 +18,9 @@ class ProjectDocumentShare extends Model
 
     public function isAvailable(): bool
     {
-        return $this->active && (! $this->expires_at || $this->expires_at->isFuture());
+        return $this->active && (! $this->expires_at || $this->expires_at->isFuture())
+            && $this->folder?->project !== null && $this->created_by !== null
+            && User::whereKey($this->created_by)->exists();
     }
 
     public function allowsUpload(): bool

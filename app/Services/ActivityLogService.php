@@ -109,7 +109,7 @@ class ActivityLogService
 
         return [
             'route_name' => $request->route()?->getName(),
-            'url' => $request->fullUrl(),
+            'url' => $request->root().'/'.($request->route()?->uri() ?? ''),
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ];

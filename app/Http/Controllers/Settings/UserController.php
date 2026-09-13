@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Document;
 use App\Models\User;
+use App\Services\AccountSecurityService;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -274,6 +275,10 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        if (! empty($data['password'])) {
+            app(AccountSecurityService::class)->revoke($user);
+        }
 
         if ($user->has_employment_contract) {
             $user->leaveEntitlements()->updateOrCreate(

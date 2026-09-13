@@ -515,6 +515,7 @@
 
 @if($canViewDocuments)
 <section id="pane-documents" class="pane">
+    @include('documents.quota')
     @if($canEdit)
     <div class="card">
         <h2>Katalogi i udostępnianie</h2>

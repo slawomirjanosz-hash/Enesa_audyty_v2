@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\EnforcesDocumentQuota;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Document extends Model
 {
+    use EnforcesDocumentQuota;
+
     protected $fillable = [
         'company_id', 'offer_id', 'audit_id', 'project_id', 'project_document_folder_id', 'type',
-        'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by',
+        'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by', 'storage_owner_id',
     ];
 
     public function company(): BelongsTo

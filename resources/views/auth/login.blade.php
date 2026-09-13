@@ -124,6 +124,10 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
+            @if(app(\App\Services\LoginBotProtection::class)->required(request()))
+                <div class="cf-turnstile" data-sitekey="{{config('security.turnstile.site_key')}}" data-action="login" data-appearance="interaction-only" style="margin-bottom:14px"></div>
+                <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            @endif
 
             <div class="form-group">
                 <label for="email">Adres e-mail</label>

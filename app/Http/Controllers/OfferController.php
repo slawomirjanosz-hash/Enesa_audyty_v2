@@ -614,7 +614,7 @@ class OfferController extends Controller
 
         $filename = $offer->documentFilename('pdf');
         $companyFolder = $offer->company?->folderSlug() ?? ('firma_'.$offer->company_id);
-        $relativePath = 'documents/'.$companyFolder.'/'.$filename;
+        $relativePath = 'documents/'.$companyFolder.'/'.Str::uuid().'.pdf';
         $existingDocument = Document::query()
             ->where('offer_id', $offer->id)
             ->where('type', 'offer_pdf')

@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\EnforcesDocumentQuota;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class IsoSectionDocument extends Model
 {
+    use EnforcesDocumentQuota;
+
     protected $fillable = [
         'audit_id', 'section_id', 'scope', 'title', 'description', 'document_year',
         'version_number', 'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by',
-        'content_base64',
+        'content_base64', 'storage_owner_id',
     ];
 
     protected $hidden = ['content_base64'];
@@ -20,7 +23,7 @@ class IsoSectionDocument extends Model
 
     public function scopeMetadata($query)
     {
-        return $query->select(['id', 'audit_id', 'section_id', 'scope', 'title', 'description', 'document_year', 'version_number', 'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by', 'created_at', 'updated_at'])
+        return $query->select(['id', 'audit_id', 'section_id', 'scope', 'title', 'description', 'document_year', 'version_number', 'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by', 'storage_owner_id', 'created_at', 'updated_at'])
             ->selectRaw("CASE WHEN content_base64 IS NOT NULL AND content_base64 <> '' THEN 1 ELSE 0 END AS has_content_backup");
     }
 

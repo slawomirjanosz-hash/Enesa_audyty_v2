@@ -204,6 +204,7 @@
 @endpush
 
 @section('content')
+@include('settings.users.security')
 
 {{-- Zakładki --}}
 <div class="settings-tabs">
@@ -641,7 +642,11 @@
                         </td>
                         <td style="color:#888;font-size:13px;">{{ $companyNames }}</td>
                         <td>
-                            @if($isActive)
+                            @if($user->security_block_reason || $user->login_locked_until?->isFuture())
+                                <span style="color:#b91c1c;font-size:13px;">Zablokowany — {{$user->security_block_reason === 'inactivity' ? 'brak aktywności' : 'błędne logowania'}}</span>
+                            @elseif(!$user->is_active)
+                                <span style="color:#b91c1c;font-size:13px;">Nieaktywny</span>
+                            @elseif($isActive)
                                 <span style="color:#166534;font-size:13px;">✓ Aktywny</span>
                             @else
                                 <span style="color:#999;font-size:13px;">✗ Usunięty</span>

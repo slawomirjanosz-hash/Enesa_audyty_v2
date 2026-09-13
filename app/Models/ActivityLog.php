@@ -32,7 +32,9 @@ class ActivityLog extends Model
             'deleted' => 'Usunięto',
             'restored' => 'Przywrócono',
             'login' => 'Logowanie',
+            'login_password' => 'Poprawne hasło — oczekuje na SMS',
             'logout' => 'Wylogowanie',
+            'download' => 'Pobranie / podgląd dokumentu',
         ][$this->action] ?? ucfirst($this->action);
     }
 

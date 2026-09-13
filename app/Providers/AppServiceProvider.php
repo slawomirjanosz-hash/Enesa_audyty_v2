@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\CompanySettings;
 use App\Models\User;
 use App\Services\ActivityLogService;
+use App\Services\SuperadminSmsService;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Pagination\Paginator;
@@ -37,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
         }
         Event::listen(Login::class, function (Login $event): void {
             if ($event->user instanceof User) {
-                app(ActivityLogService::class)->recordAuthentication($event->user, 'login');
+                app(ActivityLogService::class)->recordAuthentication($event->user, app(SuperadminSmsService::class)->required($event->user) ? 'login_password' : 'login');
             }
         });
         Event::listen(Logout::class, function (Logout $event): void {

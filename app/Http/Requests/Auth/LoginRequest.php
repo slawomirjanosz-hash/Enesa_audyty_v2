@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
+use App\Services\AccountSecurityService;
+use App\Services\LoginBotProtection;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -41,8 +44,18 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+        app(LoginBotProtection::class)->verify($this);
+
+        $user = User::where('email', $this->string('email')->trim()->value())->first();
+        if ($user && app(AccountSecurityService::class)->blocked($user)) {
+            RateLimiter::hit($this->throttleKey());
+            throw ValidationException::withMessages(['email' => 'Nie można się zalogować. Sprawdź dane lub skontaktuj się z administratorem.']);
+        }
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            if ($user) {
+                app(AccountSecurityService::class)->failed($user);
+            }
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -51,6 +64,9 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+        $this->session()->forget('bot_required');
+        $this->user()->forceFill(['failed_login_count' => 0, 'failed_login_at' => null, 'login_locked_until' => null, 'security_activity_at' => now(), 'last_seen_at' => now()])->save();
+        $this->session()->put('security_version', (int) $this->user()->session_version);
     }
 
     /**
@@ -81,6 +97,8 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        $version = User::where('email', $this->string('email')->trim()->value())->value('session_version') ?? 0;
+
+        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip().'|'.$version);
     }
 }

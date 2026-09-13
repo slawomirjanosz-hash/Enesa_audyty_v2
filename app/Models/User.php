@@ -62,6 +62,12 @@ class User extends Authenticatable
             'is_active' => 'boolean',
             'has_employment_contract' => 'boolean',
             'last_seen_at' => 'datetime',
+            'security_activity_at' => 'datetime',
+            'security_blocked_at' => 'datetime',
+            'login_locked_until' => 'datetime',
+            'failed_login_at' => 'datetime',
+            'document_limit_bytes' => 'integer',
+            'session_version' => 'integer',
             'dashboard_tasks_seen_id' => 'integer',
         ];
     }

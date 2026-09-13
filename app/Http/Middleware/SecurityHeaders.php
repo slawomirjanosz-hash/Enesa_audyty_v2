@@ -19,17 +19,24 @@ class SecurityHeaders
         $response->headers->set(
             'Content-Security-Policy',
             "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'; "
-            ."script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://www.youtube.com; "
+            ."script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://www.youtube.com https://challenges.cloudflare.com; "
             ."style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.bunny.net; "
             ."font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com https://fonts.bunny.net; "
             ."img-src 'self' data: blob: https://*.googleapis.com https://*.gstatic.com https://*.google.com https://i.ytimg.com; "
-            ."connect-src 'self' https://maps.googleapis.com https://*.googleapis.com; "
-            ."frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com; "
+            ."connect-src 'self' https://maps.googleapis.com https://*.googleapis.com https://challenges.cloudflare.com; "
+            ."frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://challenges.cloudflare.com; "
             ."worker-src 'self' blob: https://cdn.jsdelivr.net"
         );
 
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+        }
+        if ($request->user() || $request->is('shared/*')) {
+            $response->headers->set('Cache-Control', 'private, no-store');
+        }
+        if ($request->is('shared/*')) {
+            $response->headers->set('Referrer-Policy', 'no-referrer');
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
         }
 
         return $response;

@@ -284,6 +284,8 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
             ->middleware(['auth', 'app.permission:settings.users.manage'])
             ->name('users.destroy')
             ->withTrashed();
+        Route::post('users/{user}/unlock', [Settings\AccountSecurityController::class, 'unlock'])->name('users.unlock');
+        Route::patch('users/{user}/document-quota', [Settings\AccountSecurityController::class, 'quota'])->name('users.document-quota');
         Route::post('users/{user}/restore', [Settings\UserController::class, 'restore'])
             ->middleware('app.permission:settings.users.manage')
             ->name('users.restore')

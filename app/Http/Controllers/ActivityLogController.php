@@ -18,8 +18,8 @@ class ActivityLogController extends Controller
             ? $requestedMonth : null;
         $query = ActivityLog::with('user')->orderByDesc('created_at');
         $tab === 'logins'
-            ? $query->whereIn('action', ['login', 'logout'])
-            : $query->whereNotIn('action', ['login', 'logout']);
+            ? $query->whereIn('action', ['login', 'logout', 'login_password'])
+            : $query->whereNotIn('action', ['login', 'logout', 'login_password']);
 
         if ($month) {
             $start = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
@@ -27,8 +27,8 @@ class ActivityLogController extends Controller
         }
 
         $months = ActivityLog::query()
-            ->when($tab === 'logins', fn ($logs) => $logs->whereIn('action', ['login', 'logout']))
-            ->when($tab !== 'logins', fn ($logs) => $logs->whereNotIn('action', ['login', 'logout']))
+            ->when($tab === 'logins', fn ($logs) => $logs->whereIn('action', ['login', 'logout', 'login_password']))
+            ->when($tab !== 'logins', fn ($logs) => $logs->whereNotIn('action', ['login', 'logout', 'login_password']))
             ->orderByDesc('created_at')
             ->pluck('created_at')
             ->map(fn ($date) => Carbon::parse($date)->format('Y-m'))
