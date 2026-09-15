@@ -287,7 +287,7 @@
                 @foreach(\App\Models\CompanySettings::APP_MODULES as $module => $label)
                     <label style="display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid #E5E1D8;border-radius:8px;background:#FAFAF6;cursor:pointer;">
                         <input type="checkbox" name="enabled_modules[]" value="{{ $module }}"
-                               {{ in_array($module, old('enabled_modules', $company?->enabled_modules ?? array_keys(\App\Models\CompanySettings::APP_MODULES)), true) ? 'checked' : '' }}>
+                               {{ in_array($module, old('enabled_modules', $company?->enabled_modules ?? \App\Models\CompanySettings::defaultModules()), true) ? 'checked' : '' }}>
                         <span style="font-size:13px;font-weight:700;">{{ $label }}</span>
                     </label>
                 @endforeach

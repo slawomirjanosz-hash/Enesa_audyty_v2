@@ -334,6 +334,9 @@
                 </a>
             </li>
 
+            @if($appBrand?->moduleEnabled('cylinders') ?? false)
+            <li class="nav-item"><a href="{{ route('client-zone.cylinders.index') }}" class="nav-link {{ request()->routeIs('client-zone.cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Moje butle i przeglądy</a></li>
+            @endif
             @if($appBrand?->moduleEnabled('audits') ?? true)
             <li class="nav-item">
                 <a href="{{ route('client-zone.audits') }}"

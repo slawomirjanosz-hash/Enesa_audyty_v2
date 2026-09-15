@@ -20,7 +20,13 @@ class CompanySettings extends Model
         'audits' => 'Audyty',
         'documents' => 'Dokumenty',
         'client_zone' => 'Strefa klienta',
+        'cylinders' => 'Przeglądy butli',
     ];
+
+    public static function defaultModules(): array
+    {
+        return array_values(array_diff(array_keys(self::APP_MODULES), ['cylinders']));
+    }
 
     protected $fillable = [
         'name',
@@ -52,7 +58,7 @@ class CompanySettings extends Model
 
     public function moduleEnabled(string $module): bool
     {
-        return in_array($module, $this->enabled_modules ?? array_keys(self::APP_MODULES), true);
+        return in_array($module, $this->enabled_modules ?? self::defaultModules(), true);
     }
 
     public static function normalizeShortName(?string $shortName, ?string $companyName = null): string
@@ -80,7 +86,7 @@ class CompanySettings extends Model
 
     public static function moduleIsEnabled(string $module): bool
     {
-        return static::query()->first()?->moduleEnabled($module) ?? true;
+        return static::query()->first()?->moduleEnabled($module) ?? in_array($module, self::defaultModules(), true);
     }
 
     public static function staffLandingRoute(): string
@@ -92,6 +98,7 @@ class CompanySettings extends Model
             'offers' => 'offers.index',
             'projects' => 'projects.index',
             'audits' => 'audit-types.index',
+            'cylinders' => 'cylinders.index',
             'documents' => 'documents.index',
             'client_zone' => 'client-zone.index',
         ];

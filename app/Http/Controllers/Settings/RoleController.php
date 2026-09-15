@@ -146,7 +146,7 @@ class RoleController extends Controller
 
         return collect(RolePermissionCatalog::groups())
             ->filter(fn (array $group, string $key) => in_array($key, ['settings', 'advanced'], true)
-                || ($settings?->moduleEnabled($key) ?? true))
+                || ($settings?->moduleEnabled($key) ?? ($key !== 'cylinders')))
             ->all();
     }
 
