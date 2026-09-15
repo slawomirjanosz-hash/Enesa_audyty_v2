@@ -74,6 +74,8 @@ Route::prefix('cylinders')->name('cylinders.')->middleware(['auth', 'staff.role'
     Route::get('/create', [CylinderController::class, 'create'])->middleware('app.permission:cylinders.manage')->name('create');
     Route::post('/', [CylinderController::class, 'store'])->middleware('app.permission:cylinders.manage')->name('store');
     Route::get('/{cylinder}', [CylinderController::class, 'show'])->name('show');
+    Route::get('/{cylinder}/videos/{video}', [CylinderController::class, 'video'])->name('videos.show');
+    Route::post('/{cylinder}/videos', [CylinderController::class, 'storeVideo'])->middleware(['app.permission:cylinders.manage', 'throttle:10,1'])->name('videos.store');
     Route::get('/{cylinder}/edit', [CylinderController::class, 'edit'])->middleware('app.permission:cylinders.manage')->name('edit');
     Route::put('/{cylinder}', [CylinderController::class, 'update'])->middleware('app.permission:cylinders.manage')->name('update');
     Route::patch('/{cylinder}/archive', [CylinderController::class, 'archive'])->middleware('app.permission:cylinders.manage')->name('archive');
@@ -111,6 +113,7 @@ Route::get('/lista-zmian', [ActivityLogController::class, 'index'])
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
     Route::get('/cylinders', [CylinderController::class, 'index'])->middleware('app.module:cylinders')->name('cylinders.index');
     Route::get('/cylinders/{cylinder}', [CylinderController::class, 'show'])->middleware('app.module:cylinders')->name('cylinders.show');
+    Route::get('/cylinders/{cylinder}/videos/{video}', [CylinderController::class, 'video'])->middleware('app.module:cylinders')->name('cylinders.videos.show');
     Route::get('/dashboard', [ClientDashboardController::class,    'index'])->name('dashboard');
     Route::get('/audits', [ClientAuditController::class, 'index'])->middleware('app.module:audits')->name('audits');
     Route::get('/audits/{audit}', [ClientAuditController::class, 'show'])->middleware('app.module:audits')->name('audits.show');
@@ -149,6 +152,7 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'ap
 Route::prefix('client-zone')->name('client-zone.')->middleware(['auth', 'staff.role', 'full.staff', 'app.module:client_zone'])->group(function () {
     Route::get('/cylinders', [CylinderController::class, 'index'])->middleware(['client.zone.session', 'app.module:cylinders'])->name('cylinders.index');
     Route::get('/cylinders/{cylinder}', [CylinderController::class, 'show'])->middleware(['client.zone.session', 'app.module:cylinders'])->name('cylinders.show');
+    Route::get('/cylinders/{cylinder}/videos/{video}', [CylinderController::class, 'video'])->middleware(['client.zone.session', 'app.module:cylinders'])->name('cylinders.videos.show');
     Route::get('/', [ClientZoneController::class, 'index'])->name('index');
     Route::post('/impersonate/{company}', [ClientZoneController::class, 'impersonate'])->name('impersonate');
     Route::post('/stop', [ClientZoneController::class, 'stopImpersonate'])->name('stop');

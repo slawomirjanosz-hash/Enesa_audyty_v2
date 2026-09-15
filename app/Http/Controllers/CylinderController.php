@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Cylinder;
 use App\Models\CylinderInspection;
+use App\Models\CylinderVideo;
+use App\Models\User;
+use App\Services\DocumentQuotaService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -99,7 +103,8 @@ class CylinderController extends Controller
         $this->query($request)->whereKey($cylinder->id)->firstOrFail();
 
         return view('cylinders.show', $this->viewData($request) + [
-            'cylinder' => $cylinder->load('company'),
+            'cylinder' => $cylinder->load(['company', 'latestInspection']),
+            'videos' => $cylinder->videos()->latest()->paginate(12, ['*'], 'videos_page'),
             'inspections' => $cylinder->inspections()->orderByDesc('inspected_at')->orderByDesc('id')->paginate(20),
             'results' => CylinderInspection::RESULTS,
         ]);
@@ -114,6 +119,51 @@ class CylinderController extends Controller
         });
 
         return redirect()->route('cylinders.show', $cylinder)->with('success', 'Zmieniono status archiwizacji. Historia została zachowana.');
+    }
+
+    public function storeVideo(Request $request, Cylinder $cylinder): RedirectResponse
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:160'],
+            'file' => ['required', 'file', 'max:102400', 'mimetypes:video/mp4,video/webm', 'extensions:mp4,webm'],
+        ]);
+        $file = $request->file('file');
+        $path = null;
+        try {
+            DB::transaction(function () use ($request, $cylinder, $data, $file, &$path): void {
+                $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
+                abort_if($locked->archived_at, 409, 'Przywróć butlę z archiwum przed dodaniem filmu.');
+                User::query()->lockForUpdate()->findOrFail($request->user()->id);
+                app(DocumentQuotaService::class)->assertAdditional($request->user()->id, $file->getSize());
+                $path = $file->store('cylinder-videos/'.$cylinder->id, 'local');
+                abort_unless($path, 500, 'Nie udało się zapisać filmu.');
+                $locked->videos()->create([
+                    'title' => $data['title'], 'stored_path' => $path, 'mime_type' => $file->getMimeType(),
+                    'size' => $file->getSize(), 'storage_owner_id' => $request->user()->id,
+                ]);
+            });
+        } catch (\Throwable $exception) {
+            if ($path) {
+                Storage::disk('local')->delete($path);
+            }
+            throw $exception;
+        }
+
+        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Film został dodany do butli.');
+    }
+
+    public function video(Request $request, Cylinder $cylinder, CylinderVideo $video)
+    {
+        $this->query($request)->whereKey($cylinder->id)->firstOrFail();
+        abort_unless((int) $video->cylinder_id === (int) $cylinder->id, 404);
+        $disk = Storage::disk('local');
+        abort_unless($disk->exists($video->stored_path), 404, 'Plik filmu jest niedostępny.');
+
+        // BinaryFileResponse supports byte ranges for seeking without loading the entire video.
+        return response()->file($disk->path($video->stored_path), [
+            'Content-Type' => $video->mime_type, 'Cache-Control' => 'private, no-store',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 
     public function storeInspection(Request $request, Cylinder $cylinder): RedirectResponse

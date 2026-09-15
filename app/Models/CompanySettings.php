@@ -20,7 +20,7 @@ class CompanySettings extends Model
         'audits' => 'Audyty',
         'documents' => 'Dokumenty',
         'client_zone' => 'Strefa klienta',
-        'cylinders' => 'Przeglądy butli',
+        'cylinders' => 'Inspektor UDT',
     ];
 
     public static function defaultModules(): array

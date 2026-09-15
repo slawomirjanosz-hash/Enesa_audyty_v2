@@ -467,7 +467,7 @@
 
             @if(($appBrand?->moduleEnabled('cylinders') ?? false) && ($layoutHasFullAccess || $canAccessModule('cylinders.view')))
             <li class="nav-item">
-                <a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Przeglądy butli</a>
+                <a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Inspektor UDT</a>
             </li>
             @endif
             @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))

@@ -4,7 +4,11 @@ use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Cylinder;
+use App\Models\CylinderInspection;
 use App\Models\User;
+use App\Services\DocumentQuotaService;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 function cylinderStaff(): User
@@ -37,7 +41,7 @@ test('cylinders are opt in for missing null and existing module settings', funct
     expect($settings->moduleEnabled('cylinders'))->toBeFalse()->and($settings->moduleEnabled('audits'))->toBeTrue();
     $this->get(route('cylinders.create'))->assertForbidden();
     $this->post(route('cylinders.store'), [])->assertForbidden();
-    $this->get(route('settings.company'))->assertOk()->assertSee('Przeglądy butli');
+    $this->get(route('settings.company'))->assertOk()->assertSee('Inspektor UDT');
     $settings->update(['enabled_modules' => ['dashboard', 'audits']]);
     expect($settings->moduleEnabled('cylinders'))->toBeFalse();
 });
@@ -126,4 +130,66 @@ test('backdated inspection does not replace the latest actual inspection date', 
         $this->post(route('cylinders.inspections.store', $cylinder), ['inspected_at' => $date, 'next_due_at' => $due, 'result' => 'further_review', 'observations' => 'Test'])->assertRedirect();
     }
     $this->get(route('cylinders.index'))->assertOk()->assertSee('01.02.2027')->assertDontSee('01.01.2027');
+});
+
+test('cylinder colour priorities and calendar month boundaries are explicit', function () {
+    $this->travelTo(now()->setDate(2026, 1, 31)->startOfDay());
+    $cylinder = new Cylinder;
+    $cylinder->setRelation('latestInspection', null);
+    expect($cylinder->conditionStatus())->toBe('unknown');
+    foreach ([
+        ['defects_found', '2026-01-01', 'problem'],
+        ['further_review', '2027-01-01', 'problem'],
+        ['no_findings', '2026-01-30', 'overdue'],
+        ['no_findings', '2026-01-31', 'soon'],
+        ['no_findings', '2026-02-28', 'soon'],
+        ['no_findings', '2026-03-01', 'ok'],
+        ['no_findings', null, 'unknown'],
+    ] as [$result, $due, $status]) {
+        $cylinder->setRelation('latestInspection', new CylinderInspection(['result' => $result, 'next_due_at' => $due]));
+        expect($cylinder->conditionStatus())->toBe($status);
+    }
+    $cylinder->archived_at = now();
+    expect($cylinder->conditionStatus())->toBe('archived');
+});
+
+test('videos are private scoped to a cylinder and counted against uploader quota', function () {
+    Storage::fake('local');
+    enableCylinders();
+    $cylinder = registeredCylinder('VIDEO-OWN');
+    $other = registeredCylinder('VIDEO-OTHER');
+    $user = cylinderStaff();
+    $this->actingAs($user)->post(route('cylinders.videos.store', $cylinder), [
+        'title' => 'Oględziny', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4'),
+    ])->assertRedirect(route('cylinders.show', $cylinder));
+    $video = $cylinder->videos()->firstOrFail();
+    Storage::disk('local')->assertExists($video->stored_path);
+    expect(app(DocumentQuotaService::class)->used($user->id))->toBe(10240)
+        ->and(app(DocumentQuotaService::class)->usedMany([$user->id])->get($user->id))->toBe(10240);
+    $this->get(route('cylinders.show', $cylinder))->assertOk()->assertSee('Oględziny')->assertSee('<video', false);
+    $this->get(route('cylinders.videos.show', [$cylinder, $video]))->assertOk()->assertHeader('Content-Type', 'video/mp4');
+    $this->get(route('cylinders.videos.show', [$other, $video]))->assertNotFound();
+    Role::findOrCreate('client_user');
+    $client = User::factory()->create();
+    $client->assignRole('client_user');
+    $client->companies()->attach($cylinder->company_id);
+    $this->actingAs($client)->get(route('client.cylinders.videos.show', [$cylinder, $video]))->assertOk();
+    $client->companies()->detach();
+    $client->unsetRelation('companies');
+    $this->get(route('client.cylinders.videos.show', [$cylinder, $video]))->assertNotFound();
+    $this->post(route('cylinders.videos.store', $cylinder), [])->assertForbidden();
+    CompanySettings::first()->update(['enabled_modules' => ['client_zone']]);
+    $this->get(route('client.cylinders.videos.show', [$cylinder, $video]))->assertForbidden();
+    $this->actingAs($user)->get(route('cylinders.videos.show', [$cylinder, $video]))->assertForbidden();
+});
+
+test('invalid video uploads and quota overflow leave no files or rows', function () {
+    Storage::fake('local');
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $user = cylinderStaff();
+    $this->actingAs($user)->post(route('cylinders.videos.store', $cylinder), ['title' => 'Test', 'file' => UploadedFile::fake()->createWithContent('film.mp4', '<html>not video</html>')])->assertSessionHasErrors('file');
+    $user->forceFill(['document_limit_bytes' => 100])->save();
+    $this->post(route('cylinders.videos.store', $cylinder), ['title' => 'Test', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4')])->assertSessionHasErrors('file');
+    expect($cylinder->videos()->count())->toBe(0)->and(Storage::disk('local')->allFiles())->toBe([]);
 });

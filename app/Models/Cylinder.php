@@ -27,4 +27,40 @@ class Cylinder extends Model
     {
         return $this->hasOne(CylinderInspection::class)->ofMany(['inspected_at' => 'max', 'id' => 'max']);
     }
+
+    public function videos(): HasMany
+    {
+        return $this->hasMany(CylinderVideo::class);
+    }
+
+    public function conditionStatus(): string
+    {
+        if ($this->archived_at) {
+            return 'archived';
+        }
+        $inspection = $this->latestInspection;
+        if (! $inspection) {
+            return 'unknown';
+        }
+        if (in_array($inspection->result, ['defects_found', 'further_review'], true)) {
+            return 'problem';
+        }
+        $due = $inspection->next_due_at;
+        if (! $due) {
+            return 'unknown';
+        }
+        if ($due->lt(today())) {
+            return 'overdue';
+        }
+        if ($due->lte(today()->addMonthNoOverflow())) {
+            return 'soon';
+        }
+
+        return $inspection->result === 'no_findings' ? 'ok' : 'unknown';
+    }
+
+    public function conditionLabel(): string
+    {
+        return ['problem' => 'Problemy / wymaga oceny', 'overdue' => 'Po terminie', 'soon' => 'Termin w ciągu miesiąca', 'ok' => 'Bez uwag — termin ważny', 'unknown' => 'Brak oceny lub terminu', 'archived' => 'Archiwum'][$this->conditionStatus()];
+    }
 }

@@ -293,7 +293,7 @@
             </li>
 
             @if($appBrand?->moduleEnabled('cylinders') ?? false)
-            <li class="nav-item"><a href="{{ route('client.cylinders.index') }}" class="nav-link {{ request()->routeIs('client.cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Moje butle i przeglądy</a></li>
+            <li class="nav-item"><a href="{{ route('client.cylinders.index') }}" class="nav-link {{ request()->routeIs('client.cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Inspektor UDT</a></li>
             @endif
             @if($appBrand?->moduleEnabled('audits') ?? true)
             <li class="nav-item">

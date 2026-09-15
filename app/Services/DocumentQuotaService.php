@@ -20,7 +20,7 @@ class DocumentQuotaService
     public function usedMany(array $userIds): Collection
     {
         $totals = collect();
-        foreach (['documents', 'iso_section_documents'] as $table) {
+        foreach (['documents', 'iso_section_documents', 'cylinder_videos'] as $table) {
             foreach (DB::table($table)->whereIn('storage_owner_id', $userIds)->selectRaw('storage_owner_id, SUM(size) AS total')->groupBy('storage_owner_id')->get() as $row) {
                 $totals->put($row->storage_owner_id, (int) $totals->get($row->storage_owner_id, 0) + (int) $row->total);
             }
@@ -32,6 +32,7 @@ class DocumentQuotaService
     public function used(int $userId): int
     {
         return (int) DB::table('documents')->where('storage_owner_id', $userId)->sum('size')
-            + (int) DB::table('iso_section_documents')->where('storage_owner_id', $userId)->sum('size');
+            + (int) DB::table('iso_section_documents')->where('storage_owner_id', $userId)->sum('size')
+            + (int) DB::table('cylinder_videos')->where('storage_owner_id', $userId)->sum('size');
     }
 }
