@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\TaskOverdue;
 use App\Models\Audit;
 use App\Models\AuditFinancialEntry;
 use App\Models\AuditSurvey;
@@ -13,7 +14,9 @@ use App\Models\IsoTrainingVideo;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\IsoContextService;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -184,6 +187,36 @@ test('audit workspace stores tasks finances surveys passports and documents outs
         ->and(AuditSurvey::firstOrFail()->title)->toBe($auditType->name)
         ->and(EnergyPassport::firstOrFail()->audit_id)->toBe($audit->id)
         ->and($audit->documents()->count())->toBe(1);
+});
+
+test('audit tasks without dates remain visible and can be completed without inventing dates', function () {
+    $user = auditManager();
+    $company = Company::create(['name' => 'Missing dates', 'status' => 'active']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'MISSING/1', 'title' => 'Missing dates', 'manager_id' => $user->id, 'status' => 'in_progress']);
+    $audit->members()->attach($user);
+    $tasks = collect([[null, '2026-08-30'], ['2026-08-01', null], [null, null]])->map(fn ($dates) => $audit->tasks()->create([
+        'title' => 'Send questionnaire', 'company_id' => $company->id, 'assigned_to' => $user->id,
+        'start_date' => $dates[0], 'due_date' => $dates[1], 'status' => 'todo', 'progress' => 0,
+    ]));
+    $deleted = $audit->tasks()->create(['title' => 'Deleted task']);
+    $deleted->delete();
+    $this->actingAs($user)->get(route('audits.show', ['audit' => $audit, 'tab' => 'schedule']))->assertOk()
+        ->assertViewHas('timelineItems', fn ($items) => $items->count() === 3 && $items[0]['start'] === null && $items[1]['end'] === null)
+        ->assertSee('Brak pełnych dat');
+    $this->travelTo(Carbon::parse('2026-09-16 12:00:00'));
+    Mail::fake();
+    $this->artisan('tasks:send-overdue-reminders')->assertSuccessful();
+    Mail::assertSent(TaskOverdue::class, 1);
+    $this->patchJson(route('audits.tasks.update', [$audit, $tasks[0]]), ['progress' => 100])->assertOk()->assertJsonPath('status', 'done')->assertJsonPath('start', null);
+    expect($tasks[0]->fresh()->start_date)->toBeNull();
+    Mail::fake();
+    $this->artisan('tasks:send-overdue-reminders')->assertSuccessful();
+    Mail::assertNothingSent();
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company, ['is_admin' => false]);
+    $this->actingAs($client)->get(route('client.audits.show', $audit))->assertOk()
+        ->assertViewHas('timelineItems', fn ($items) => $items->count() === 3 && $items[0]['start'] === null && $items[1]['end'] === null);
 });
 
 test('client sees audits assigned to their company in the client zone', function () {

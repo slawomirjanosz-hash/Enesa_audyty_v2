@@ -35,6 +35,7 @@
         <div class="import-report" style="margin-bottom:16px"><strong>Import harmonogramu zakończony</strong><div class="report-grid" style="margin-top:10px"><div class="report-value"><small>Dodano</small><strong>{{$ganttReport['inserted']}}</strong></div><div class="report-value"><small>Duplikaty</small><strong>{{$ganttReport['duplicates']}}</strong></div><div class="report-value"><small>Błędne wiersze</small><strong>{{$ganttReport['invalid']}}</strong></div><div class="report-value"><small>Bez przypisanej osoby</small><strong>{{$ganttReport['unassigned']}}</strong></div></div></div>
     @endif
     <div class="card"><h2>Interaktywny wykres Gantta</h2>
+        <p>Zadania bez pełnych dat są widoczne w tabeli poniżej. Aby pokazać je na wykresie, uzupełnij datę rozpoczęcia i zakończenia. Postęp można zmienić również bez uzupełniania dat.</p>
         <div class="gantt-toolbar">
             @if($canManage)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button><button type="button" class="tool-btn" id="gantt-add-milestone"><i class="ti ti-diamond"></i> Dodaj kamień milowy</button>@endif
             <a class="tool-btn" style="text-decoration:none" href="{{$clientView?route('client.audits.gantt.export',$audit):route('audits.gantt.export',$audit)}}"><i class="ti ti-file-spreadsheet"></i> Eksport Excel</a>
@@ -116,8 +117,10 @@ async function saveGanttChange(task, start, end, progress) {
     const source = projectTimelineItems.find(item => item.id === task.id);
     if (!source) return;
     const payload = { progress: Math.round(progress ?? task.progress ?? 0) };
-    payload.start_date = localDate(start);
-    payload.due_date = source.is_milestone ? payload.start_date : localDate(end);
+    if (start && end) {
+        payload.start_date = localDate(start);
+        payload.due_date = source.is_milestone ? payload.start_date : localDate(end);
+    }
     const response = await fetch(source.update_url, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': projectCsrfToken},
@@ -128,9 +131,7 @@ async function saveGanttChange(task, start, end, progress) {
         throw new Error(data.message || 'Nie udało się zapisać zmiany harmonogramu.');
     }
     const responseData = await response.json();
-    source.start = payload.start_date;
-    source.end = payload.end_date || payload.due_date;
-    source.progress = payload.progress;
+    if (!Array.isArray(responseData.project_tasks)) Object.assign(source, responseData);
     if (Array.isArray(responseData.project_tasks)) {
         responseData.project_tasks.forEach(updated => {
             const index = projectTimelineItems.findIndex(item => item.id === updated.id);
@@ -161,17 +162,23 @@ function initProjectGantt() {
         return;
     }
     if (!projectCanEdit) container.classList.add('gantt-readonly');
-    const tasks = projectTimelineItems.map(item => ({
+    const datedItems = projectTimelineItems.filter(item => item.start && item.end);
+    if (!datedItems.length) {
+        container.innerHTML = '<div class="gantt-fallback">Zadania są widoczne w tabeli poniżej. Uzupełnij daty, aby pokazać je na wykresie.</div>';
+        return;
+    }
+    const datedIds = new Set(datedItems.map(item => item.id));
+    const tasks = datedItems.map(item => ({
         id: item.id,
         name: item.assignee ? item.name + ' · ' + item.assignee : item.name,
         start: item.start,
         end: item.end,
         progress: item.progress,
-        dependencies: item.dependencies || '',
+        dependencies: datedIds.has(item.dependencies) ? item.dependencies : '',
         custom_class: item.is_milestone ? 'milestone-row' + (Number(item.progress) >= 100 ? ' done-milestone' : '') : 'task-row',
     }));
     if(projectEndDate){
-        const rangeStart=projectStartDate||projectTimelineItems.map(item=>item.start).sort()[0]||projectEndDate;
+        const rangeStart=projectStartDate||datedItems.map(item=>item.start).sort()[0]||projectEndDate;
         const total=Math.max(1,new Date(projectEndDate+'T00:00:00')-new Date(rangeStart+'T00:00:00'));
         const elapsed=Math.max(0,Math.min(100,Math.round((new Date()-new Date(rangeStart+'T00:00:00'))/total*100)));
         tasks.unshift({id:'project-range',name:'Okres projektu',start:rangeStart,end:projectEndDate,progress:elapsed,dependencies:'',custom_class:'project-range-row'});
@@ -269,9 +276,9 @@ function openGanttTaskModal(taskId = null, defaultType = 'task') {
     document.getElementById('gantt-modal-title').textContent = task ? (milestone?'Edytuj kamień milowy':'Edytuj zadanie') : (milestone?'Dodaj kamień milowy':'Dodaj zadanie');
     document.getElementById('gantt-task-type').value = milestone ? 'milestone' : 'task';
     document.getElementById('gantt-task-title').value = task?.name || '';
-    document.getElementById('gantt-task-start').value = task?.start || today;
-    document.getElementById('gantt-task-end').value = task?.end || today;
-    document.getElementById('gantt-task-duration').value = task ? taskDurationDays(task.start, task.end) : 1;
+    document.getElementById('gantt-task-start').value = task ? (task.start || '') : today;
+    document.getElementById('gantt-task-end').value = task ? (task.end || '') : today;
+    document.getElementById('gantt-task-duration').value = task?.start && task?.end ? taskDurationDays(task.start, task.end) : 1;
     document.getElementById('gantt-task-progress').value = task?.progress || 0;
     document.getElementById('gantt-task-dependency').value = task?.dependencies || '';
     document.getElementById('gantt-task-assignee').value = task?.assigned_to || '';
@@ -289,6 +296,7 @@ function bindGanttTaskEditing() {
     });
 }
 function ganttTaskTiming(task) {
+    if (!task.end) return {status:task.status === 'done' || Number(task.progress) >= 100 ? 'done' : 'active',label:task.status === 'done' || Number(task.progress) >= 100 ? '✓ Wykonano' : 'Brak terminu',days:0,daysLabel:'—'};
     const today = new Date(); today.setHours(0,0,0,0);
     const end = new Date(task.end + 'T00:00:00');
     const days = Math.ceil((end - today) / 86400000);
@@ -306,7 +314,7 @@ function renderGanttTaskList() {
         const slider=projectCanEdit ? '<div class="progress-wrap"><input class="list-progress" data-index="'+index+'" type="range" min="0" max="100" value="'+task.progress+'"><strong>'+task.progress+'%</strong></div>' : task.progress+'%';
         const checkbox=projectCanEdit ? '<td class="gantt-select-cell"><input class="gantt-task-check" type="checkbox" value="'+task.db_id+'" aria-label="Zaznacz zadanie '+escapeProjectHtml(task.name)+'"></td>' : '';
         const milestoneBadge=task.is_milestone?'<span class="milestone-badge">◆ Kamień milowy</span>':'';
-        return '<tr class="'+(timing.status==='done'?'done-row':timing.status==='overdue'?'overdue-row':'')+'">'+checkbox+'<td><strong>'+escapeProjectHtml(task.name)+'</strong>'+milestoneBadge+'<br><small>Zależne od: '+escapeProjectHtml(dependency)+'</small></td><td>'+escapeProjectHtml(task.assignee||'—')+'</td><td title="'+escapeProjectHtml(task.description||'')+'">'+escapeProjectHtml(task.description ? (task.description.length>55?task.description.slice(0,55)+'…':task.description) : '—')+'</td><td>'+localDate(task.end)+'</td><td>'+slider+'</td><td><span class="task-status '+timing.status+'">'+timing.label+'</span></td><td><span class="days-value '+(timing.days<0?'late':'ok')+'">'+timing.daysLabel+'</span></td><td>'+actions+'</td></tr>';
+return '<tr class="'+(timing.status==='done'?'done-row':timing.status==='overdue'?'overdue-row':'')+'">'+checkbox+'<td><strong>'+escapeProjectHtml(task.name)+'</strong>'+(!task.start || !task.end ? '<br><small>Brak pełnych dat — uzupełnij w edycji</small>' : '')+milestoneBadge+'<br><small>Zależne od: '+escapeProjectHtml(dependency)+'</small></td><td>'+escapeProjectHtml(task.assignee||'—')+'</td><td title="'+escapeProjectHtml(task.description||'')+'">'+escapeProjectHtml(task.description ? (task.description.length>55?task.description.slice(0,55)+'…':task.description) : '—')+'</td><td>'+(task.end ? localDate(task.end) : '—')+'</td><td>'+slider+'</td><td><span class="task-status '+timing.status+'">'+timing.label+'</span></td><td><span class="days-value '+(timing.days<0?'late':'ok')+'">'+timing.daysLabel+'</span></td><td>'+actions+'</td></tr>';
     }).join('');
     const bulkToolbar=projectCanEdit ? '<div class="gantt-bulk-toolbar"><span class="gantt-bulk-count">Nie zaznaczono zadań</span><button type="button" class="gantt-bulk-delete" disabled><i class="ti ti-trash"></i> Usuń zaznaczone</button></div>' : '';
     const selectAllHeader=projectCanEdit ? '<th class="gantt-select-cell"><input class="gantt-check-all" type="checkbox" aria-label="Zaznacz wszystkie zadania" title="Zaznacz wszystkie"></th>' : '';

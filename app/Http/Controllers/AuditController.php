@@ -53,7 +53,7 @@ class AuditController extends Controller
     {
         $this->ensureAccess($request, $audit);
         $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader', 'isoImplementationResponses']);
-        $timelineItems = $audit->tasks->filter(fn (Task $task) => $task->start_date && $task->due_date)
+        $timelineItems = $audit->tasks
             ->map(fn (Task $task) => $this->taskTimelinePayload($audit, $task))->values();
 
         return view('audits.show', [
