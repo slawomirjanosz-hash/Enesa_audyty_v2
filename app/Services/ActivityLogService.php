@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class ActivityLogService
 {
     private const HIDDEN_FIELDS = [
-        'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes',
+        'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes', 'external_url',
         'avatar_data', 'signature_data', 'public_gantt_token', 'token', 'api_token', 'created_at', 'updated_at',
     ];
 

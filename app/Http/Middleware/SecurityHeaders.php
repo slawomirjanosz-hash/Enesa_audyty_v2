@@ -24,7 +24,7 @@ class SecurityHeaders
             ."font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com https://fonts.bunny.net; "
             ."img-src 'self' data: blob: https://*.googleapis.com https://*.gstatic.com https://*.google.com https://i.ytimg.com; "
             ."connect-src 'self' https://maps.googleapis.com https://*.googleapis.com https://challenges.cloudflare.com; "
-            ."frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://challenges.cloudflare.com; "
+            ."frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://drive.google.com https://www.google.com https://challenges.cloudflare.com; "
             ."worker-src 'self' blob: https://cdn.jsdelivr.net"
         );
 

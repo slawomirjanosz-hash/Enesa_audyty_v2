@@ -20,6 +20,10 @@ Moduł `cylinders` jest domyślnie wyłączony, również przy braku ustawień f
 
 ## Filmy i statusy
 
+Formularz „Dodaj film” przyjmuje plik lub link HTTPS (wzajemnie wykluczające się źródła). YouTube (watch, youtu.be, shorts, live, embed) i Dysk Google (file/d, open?id, uc?id; także resourcekey) mają podgląd osadzony ładowany dopiero po kliknięciu. Pozostałe serwisy, np. Vimeo, OneDrive czy Dropbox, otwierają się w nowej karcie. Dla każdego linku jest awaryjny przycisk otwarcia u źródła. Serwer nie pobiera zewnętrznych adresów; nie przyjmujemy HTML iframe. Linki mają rozmiar 0 i nie obciążają kwoty. URL nie trafia do historii zmian, ponieważ może zawierać token dostępu.
+
+Dostęp do filmu zewnętrznego zależy od dostawcy, logowania odbiorcy i ustawień właściciela. Uprawnienia aplikacji chronią kartę butli, ale nie zastępują ustawień udostępniania filmu. Nagrania poufne najlepiej wgrywać prywatnie do systemu; nie wymuszać ustawienia publicznego tylko po to, by działał iframe.
+
 Inspektor z `cylinders.manage` może dodawać filmy MP4/WebM, po jednym do 100 MB, z odtwarzaniem na karcie butli. Pliki są prywatne, dostępne wyłącznie uprawnionym pracownikom i klientom właściciela butli. Każdy film obciąża limit dokumentów użytkownika, również gdy moduł zostanie wyłączony. Dla zgodności przeglądarek zalecany MP4 H.264/AAC; system nie transkoduje filmów. Nazwa modułu nie oznacza integracji ani afiliacji z urzędem.
 
 Na Railway konieczny jest trwały wolumen obejmujący `storage/app/private` (patrz production-storage-checklist.md). Nie zmieniaj montowania istniejącego wolumenu bez migracji plików. Konfiguracja PHP w deploy/php podnosi limit pojedynczego uploadu do 100 MB; limity konkretnych formularzy i kwoty użytkowników nadal obowiązują.

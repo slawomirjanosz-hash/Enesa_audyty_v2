@@ -8,6 +8,7 @@ use App\Models\CylinderInspection;
 use App\Models\CylinderVideo;
 use App\Models\User;
 use App\Services\DocumentQuotaService;
+use App\Support\CylinderVideoLink;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -125,7 +126,13 @@ class CylinderController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:160'],
-            'file' => ['required', 'file', 'max:102400', 'mimetypes:video/mp4,video/webm', 'extensions:mp4,webm'],
+            'source' => ['nullable', Rule::in(['file', 'link'])],
+            'file' => ['required_without:external_url', 'prohibited_if:source,link', 'prohibits:external_url', 'nullable', 'file', 'max:102400', 'mimetypes:video/mp4,video/webm', 'extensions:mp4,webm'],
+            'external_url' => ['required_if:source,link', 'prohibited_if:source,file', 'prohibits:file', 'nullable', 'string', 'max:2048', function ($attribute, $value, $fail) {
+                if (! CylinderVideoLink::parse($value)) {
+                    $fail('Podaj poprawny link HTTPS do filmu. Dla YouTube wybierz link do konkretnego filmu, a dla Dysku Google — link do pliku (nie folderu).');
+                }
+            }],
         ]);
         $file = $request->file('file');
         $path = null;
@@ -133,6 +140,15 @@ class CylinderController extends Controller
             DB::transaction(function () use ($request, $cylinder, $data, $file, &$path): void {
                 $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
                 abort_if($locked->archived_at, 409, 'Przywróć butlę z archiwum przed dodaniem filmu.');
+                if (! empty($data['external_url'])) {
+                    $locked->videos()->create([
+                        'title' => $data['title'], 'external_url' => $data['external_url'],
+                        'stored_path' => '', 'mime_type' => 'text/uri-list', 'size' => 0,
+                        'storage_owner_id' => $request->user()->id,
+                    ]);
+
+                    return;
+                }
                 User::query()->lockForUpdate()->findOrFail($request->user()->id);
                 app(DocumentQuotaService::class)->assertAdditional($request->user()->id, $file->getSize());
                 $path = $file->store('cylinder-videos/'.$cylinder->id, 'local');
@@ -156,6 +172,7 @@ class CylinderController extends Controller
     {
         $this->query($request)->whereKey($cylinder->id)->firstOrFail();
         abort_unless((int) $video->cylinder_id === (int) $cylinder->id, 404);
+        abort_if($video->external_url || ! $video->stored_path, 404);
         $disk = Storage::disk('local');
         abort_unless($disk->exists($video->stored_path), 404, 'Plik filmu jest niedostępny.');
 

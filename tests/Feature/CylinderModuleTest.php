@@ -7,7 +7,9 @@ use App\Models\Cylinder;
 use App\Models\CylinderInspection;
 use App\Models\User;
 use App\Services\DocumentQuotaService;
+use App\Support\CylinderVideoLink;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
@@ -192,4 +194,56 @@ test('invalid video uploads and quota overflow leave no files or rows', function
     $user->forceFill(['document_limit_bytes' => 100])->save();
     $this->post(route('cylinders.videos.store', $cylinder), ['title' => 'Test', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4')])->assertSessionHasErrors('file');
     expect($cylinder->videos()->count())->toBe(0)->and(Storage::disk('local')->allFiles())->toBe([]);
+});
+
+test('video link parser only embeds trusted providers and keeps other links external', function () {
+    foreach ([
+        'https://youtu.be/abcdefghijk?si=example',
+        'https://www.youtube.com/watch?v=abcdefghijk&t=12',
+        'https://m.youtube.com/shorts/abcdefghijk',
+        'https://www.youtube.com/live/abcdefghijk',
+        'https://www.youtube-nocookie.com/embed/abcdefghijk',
+    ] as $url) {
+        expect(CylinderVideoLink::parse($url))->toBe(['provider' => 'YouTube', 'embed' => 'https://www.youtube-nocookie.com/embed/abcdefghijk']);
+    }
+    foreach (['https://drive.google.com/file/d/exampleFile123/view?usp=sharing', 'https://drive.google.com/open?id=exampleFile123', 'https://drive.google.com/file/d/exampleFile123/preview'] as $url) {
+        expect(CylinderVideoLink::parse($url)['embed'])->toBe('https://drive.google.com/file/d/exampleFile123/preview');
+    }
+    expect(CylinderVideoLink::parse('https://drive.google.com/file/d/exampleFile123/view?resourcekey=0-secretKey')['embed'])
+        ->toBe('https://drive.google.com/file/d/exampleFile123/preview?resourcekey=0-secretKey');
+    expect(CylinderVideoLink::parse('https://vimeo.com/12345678')['embed'])->toBeNull()
+        ->and(CylinderVideoLink::parse('https://www.youtube.com.evil.example/watch?v=abcdefghijk')['embed'])->toBeNull();
+    foreach (['javascript:alert(1)', 'http://youtu.be/abcdefghijk', '//youtube.com/watch?v=abcdefghijk', 'https://user:pass@youtube.com/watch?v=abcdefghijk', 'https://localhost/video', 'https://127.0.0.1/video', 'https://example.com:8080/video', 'https://youtube.com/watch?v[]=abcdefghijk', 'https://youtube.com/channel/123', 'https://drive.google.com/drive/folders/exampleFile123', 'https://drive.google.com/open?id[]=exampleFile123', '<iframe src="https://example.com"></iframe>'] as $url) {
+        expect(CylinderVideoLink::parse($url))->toBeNull();
+    }
+});
+
+test('staff saves external video links without upload quota and no server fetch', function () {
+    Http::fake();
+    Storage::fake('local');
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $user = cylinderStaff();
+    $user->forceFill(['document_limit_bytes' => 0])->save();
+    $url = 'https://drive.google.com/file/d/exampleFile123/view?resourcekey=0-privateKey';
+    $this->actingAs($user)->post(route('cylinders.videos.store', $cylinder), ['source' => 'link', 'title' => 'Film z Google', 'external_url' => $url])->assertRedirect();
+    $video = $cylinder->videos()->firstOrFail();
+    expect($video->external_url)->toBe($url)->and((int) $video->size)->toBe(0)
+        ->and(Storage::disk('local')->allFiles())->toBe([])
+        ->and(app(DocumentQuotaService::class)->used($user->id))->toBe(0)
+        ->and(ActivityLog::all()->toJson())->not->toContain('privateKey');
+    $this->get(route('cylinders.show', $cylinder))->assertOk()->assertSee('Odtwórz tutaj')->assertSee('Otwórz film u źródła')
+        ->assertSee('drive.google.com/file/d/exampleFile123/preview', false);
+    $this->get(route('cylinders.videos.show', [$cylinder, $video]))->assertNotFound();
+    Http::assertNothingSent();
+});
+
+test('video sources are mutually exclusive and external URLs are validated', function () {
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $this->actingAs(cylinderStaff());
+    $this->post(route('cylinders.videos.store', $cylinder), ['source' => 'link', 'title' => 'Test', 'external_url' => 'javascript:alert(1)'])->assertSessionHasErrors('external_url');
+    $this->post(route('cylinders.videos.store', $cylinder), ['source' => 'link', 'title' => 'Test'])->assertSessionHasErrors('external_url');
+    $this->post(route('cylinders.videos.store', $cylinder), ['source' => 'link', 'title' => 'Test', 'external_url' => 'https://youtu.be/abcdefghijk', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4')])->assertSessionHasErrors('file');
+    expect($cylinder->videos()->count())->toBe(0);
 });
