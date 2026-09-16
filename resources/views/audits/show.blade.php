@@ -358,17 +358,30 @@ function updateGanttBulkControls() {
     if(count)count.textContent=selected.length ? 'Zaznaczono: '+selected.length : 'Nie zaznaczono zadań';
     if(selectAll){selectAll.checked=all.length>0&&selected.length===all.length;selectAll.indeterminate=selected.length>0&&selected.length<all.length;}
 }
+async function deleteAuditTasksRequest(url, body) {
+    let response;
+    try {
+        response = await fetch(url, {method:'DELETE', credentials:'same-origin', headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':projectCsrfToken}, ...(body ? {body:JSON.stringify(body)} : {})});
+    } catch (error) { throw new Error('Brak połączenia z serwerem. Sprawdź połączenie i spróbuj ponownie.'); }
+    const data = await response.json().catch(()=>({}));
+    if (response.redirected || response.status === 401 || response.status === 419) throw new Error('Sesja wygasła. Odśwież stronę i zaloguj się ponownie.');
+    if (response.status === 403) throw new Error('Brak uprawnień do usuwania zadań tego audytu.');
+    if (response.status === 404) throw new Error('Nie znaleziono zadania lub adresu usuwania. Odśwież harmonogram.');
+    if (!response.ok) throw new Error(response.status === 422 ? (Object.values(data.errors||{}).flat()[0] || 'Lista zadań zmieniła się. Odśwież harmonogram i zaznacz zadania ponownie.') : 'Błąd serwera podczas usuwania (HTTP '+response.status+').');
+    if (!data.success) throw new Error('Serwer nie potwierdził usunięcia. Odśwież harmonogram.');
+}
 async function deleteSelectedGanttTasks() {
     const selected=selectedGanttTaskIds();if(!selected.length)return;
-    if(!window.confirm('Usunąć zaznaczone zadania ('+selected.length+')? Tej operacji nie można cofnąć.'))return;
+    if(!window.confirm('Usunąć zaznaczone zadania ('+selected.length+')?'))return;
     const button=document.querySelector('#gantt-task-list .gantt-bulk-delete');if(button)button.disabled=true;
-    const response=await fetch(ganttBulkDeleteUrl,{method:'DELETE',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':projectCsrfToken},body:JSON.stringify({task_ids:selected})});
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok){alert(data.message||Object.values(data.errors||{}).flat()[0]||'Nie udało się usunąć zaznaczonych zadań.');updateGanttBulkControls();return;}
-    const deletedIds=new Set(selected.map(id=>'task-'+id));
-    for(let index=projectTimelineItems.length-1;index>=0;index--){if(deletedIds.has(projectTimelineItems[index].id))projectTimelineItems.splice(index,1);}
-    projectTimelineItems.forEach(item=>{if(deletedIds.has(item.dependencies))item.dependencies='';});
-    renderProjectGantt();
+    try {
+        await deleteAuditTasksRequest(ganttBulkDeleteUrl,{task_ids:selected});
+        const deletedIds=new Set(selected.map(id=>'task-'+id));
+        for(let index=projectTimelineItems.length-1;index>=0;index--){if(deletedIds.has(projectTimelineItems[index].id))projectTimelineItems.splice(index,1);}
+        projectTimelineItems.forEach(item=>{if(deletedIds.has(item.dependencies))item.dependencies='';});
+        renderProjectGantt();
+    } catch(error) { alert(error.message); }
+    finally { updateGanttBulkControls(); }
 }
 async function persistGanttOrder() {
     const response=await fetch(@json(route('audits.tasks.reorder',$audit)),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':projectCsrfToken},body:JSON.stringify({order:projectTimelineItems.map(item=>item.db_id)})});
@@ -381,8 +394,7 @@ async function moveGanttTask(index,direction) {
 }
 async function deleteGanttTask(index) {
     const task=projectTimelineItems[index];if(!window.confirm('Usunąć zadanie „'+task.name+'”?'))return;
-    const response=await fetch(task.delete_url,{method:'DELETE',headers:{'Accept':'application/json','X-CSRF-TOKEN':projectCsrfToken}});
-    if(!response.ok){const data=await response.json().catch(()=>({}));alert(data.message||'Nie udało się usunąć zadania.');return;}
+    try { await deleteAuditTasksRequest(task.delete_url); } catch(error) { alert(error.message); return; }
     projectTimelineItems.splice(index,1);projectTimelineItems.forEach(item=>{if(item.dependencies===task.id)item.dependencies='';});renderProjectGantt();
 }
 document.getElementById('gantt-add-task')?.addEventListener('click', () => openGanttTaskModal());

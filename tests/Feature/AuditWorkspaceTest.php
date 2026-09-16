@@ -221,6 +221,20 @@ test('audit tasks without dates remain visible and can be completed without inve
         ->assertViewHas('timelineItems', fn ($items) => $items->count() === 3 && $items[0]['start'] === null && $items[1]['end'] === null);
 });
 
+test('audit manager can remove single and selected tasks', function () {
+    $user = auditManager();
+    $company = Company::create(['name' => 'Delete tasks', 'status' => 'active']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'DEL/1', 'title' => 'Delete tasks', 'manager_id' => $user->id, 'status' => 'in_progress']);
+    $audit->members()->attach($user);
+    $one = $audit->tasks()->create(['title' => 'One']);
+    $two = $audit->tasks()->create(['title' => 'Two', 'depends_on_task_id' => $one->id]);
+    $this->actingAs($user)->deleteJson(route('audits.tasks.bulk-destroy', $audit), ['task_ids' => [$one->id, $two->id]])->assertOk();
+    expect($audit->tasks()->count())->toBe(0);
+    $single = $audit->tasks()->create(['title' => 'Single']);
+    $this->deleteJson(route('audits.tasks.destroy', [$audit, $single]))->assertSuccessful();
+    expect($single->fresh()->trashed())->toBeTrue();
+});
+
 test('client sees audits assigned to their company in the client zone', function () {
     $company = Company::create(['name' => 'Klient z audytem', 'company_type' => 'client', 'status' => 'active']);
     $otherCompany = Company::create(['name' => 'Inny klient', 'company_type' => 'client', 'status' => 'active']);

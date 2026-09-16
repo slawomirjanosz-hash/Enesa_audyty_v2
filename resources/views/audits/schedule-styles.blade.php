@@ -28,3 +28,22 @@
 #aw-schedule .popup-wrapper{position:absolute;top:0;left:0;padding:10px;background:#fff;color:#243f31;border:1px solid #ddd;border-radius:7px;box-shadow:0 3px 12px #0002;z-index:20}
 #aw-schedule .popup-wrapper:empty{display:none}
 </style>
+<style>
+#gantt-task-modal .grid2,#gantt-import-modal .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+#gantt-task-modal .field,#gantt-import-modal .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+#gantt-task-modal .field.full,#gantt-import-modal .field.full{grid-column:1/-1}
+#gantt-task-modal label,#gantt-import-modal label{font-size:13px;font-weight:600;color:#52635b}
+#gantt-task-modal input,#gantt-task-modal select,#gantt-task-modal textarea,#gantt-import-modal input{box-sizing:border-box;width:100%;min-width:0;border:1px solid #d6ded8;border-radius:7px;background:#fff;color:#243f31;padding:10px 12px;font:inherit;font-size:14px}
+#gantt-task-modal textarea{min-height:90px;resize:vertical}
+#gantt-task-modal input:focus,#gantt-task-modal select:focus,#gantt-task-modal textarea:focus{outline:2px solid var(--green);outline-offset:1px}
+#gantt-task-modal .btn,#gantt-import-modal .btn{border:1px solid var(--green);border-radius:7px;background:var(--green);color:#fff;font:inherit;font-size:13px;font-weight:700;padding:10px 16px;cursor:pointer}
+#gantt-task-modal .btn-soft,#gantt-import-modal .btn-soft{background:#fff;color:var(--green)}
+#aw-schedule .gantt-list-table{min-width:850px}
+#aw-schedule .gantt-list-table tr.overdue-row{background:#fff!important}
+#aw-schedule .gantt-list-table .mini-actions{gap:5px}
+#aw-schedule .gantt-list-table .mini-btn{width:32px;height:32px;border-radius:6px}
+#aw-schedule .progress-wrap{min-width:110px;gap:8px}
+#aw-schedule .progress-wrap input[type=range]{width:90px;accent-color:var(--green);cursor:pointer}
+#aw-schedule .gantt-bulk-toolbar{padding:12px 0;align-items:center;flex-wrap:wrap}
+@media(max-width:600px){#gantt-task-modal .grid2,#gantt-import-modal .grid2{grid-template-columns:1fr}#gantt-task-modal .project-modal-box{padding:16px}}
+</style>

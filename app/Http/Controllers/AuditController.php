@@ -107,11 +107,15 @@ class AuditController extends Controller
         return back()->with('success', 'Zadanie audytowe zostało dodane.');
     }
 
-    public function destroyTask(Request $request, Audit $audit, Task $task): RedirectResponse
+    public function destroyTask(Request $request, Audit $audit, Task $task): RedirectResponse|JsonResponse
     {
         $this->ensureAccess($request, $audit);
         abort_unless($task->audit_id === $audit->id, 404);
         $task->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
 
         return back()->with('success', 'Zadanie zostało usunięte.');
     }
