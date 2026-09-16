@@ -200,6 +200,8 @@ test('audit tasks without dates remain visible and can be completed without inve
     ]));
     $deleted = $audit->tasks()->create(['title' => 'Deleted task']);
     $deleted->delete();
+    $mailHtml = (new TaskOverdue($tasks->take(1)))->render();
+    expect(html_entity_decode($mailHtml))->toContain(route('audits.show', ['audit' => $audit, 'tab' => 'schedule', 'task' => $tasks[0]->id]));
     $this->actingAs($user)->get(route('audits.show', ['audit' => $audit, 'tab' => 'schedule']))->assertOk()
         ->assertViewHas('timelineItems', fn ($items) => $items->count() === 3 && $items[0]['start'] === null && $items[1]['end'] === null)
         ->assertSee('Brak pełnych dat');
