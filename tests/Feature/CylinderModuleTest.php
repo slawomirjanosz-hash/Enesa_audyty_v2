@@ -247,3 +247,15 @@ test('video sources are mutually exclusive and external URLs are validated', fun
     $this->post(route('cylinders.videos.store', $cylinder), ['source' => 'link', 'title' => 'Test', 'external_url' => 'https://youtu.be/abcdefghijk', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4')])->assertSessionHasErrors('file');
     expect($cylinder->videos()->count())->toBe(0);
 });
+
+test('register uses compact status badges instead of coloured rows', function () {
+    enableCylinders();
+    $user = cylinderStaff();
+    foreach (['defects_found', 'no_findings', 'further_review'] as $i => $result) {
+        $cylinder = registeredCylinder('BUTLA-2026-00'.$i);
+        $cylinder->inspections()->create(['inspected_at' => today()->subDays(20), 'next_due_at' => today()->addDays(45), 'result' => $result, 'observations' => 'Przegląd', 'inspector_name' => 'Inspektor']);
+    }
+    $response = $this->actingAs($user)->get(route('cylinders.index'));
+    $response->assertOk()->assertSee('cyl-status-chip cyl-status-problem', false)->assertSee('cyl-status-chip cyl-status-ok', false)
+        ->assertDontSee('<tr class="cyl-state-', false)->assertSee('1–3 z 3');
+});
