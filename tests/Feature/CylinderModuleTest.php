@@ -259,3 +259,87 @@ test('register uses compact status badges instead of coloured rows', function ()
     $response->assertOk()->assertSee('cyl-status-chip cyl-status-problem', false)->assertSee('cyl-status-chip cyl-status-ok', false)
         ->assertDontSee('<tr class="cyl-state-', false)->assertSee('1–3 z 3');
 });
+
+test('inspection can be edited with complete history and stale edits cannot overwrite it', function () {
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $other = registeredCylinder('OTHER-EDIT');
+    $user = cylinderStaff();
+    $original = str_repeat('Pierwotna uwaga. ', 80);
+    $entry = $cylinder->inspections()->create(['inspected_at' => '2026-01-01', 'next_due_at' => '2027-01-01', 'result' => 'further_review', 'observations' => $original, 'inspector_name' => 'Pierwotny autor']);
+    $data = ['revision' => 1, 'inspected_at' => '2026-01-01', 'next_due_at' => '2027-02-01', 'result' => 'no_findings', 'observations' => 'Poprawiono'];
+    $this->actingAs($user)->get(route('cylinders.inspections.edit', [$cylinder, $entry]))->assertOk();
+    $this->put(route('cylinders.inspections.update', [$other, $entry]), $data)->assertNotFound();
+    $this->put(route('cylinders.inspections.update', [$cylinder, $entry]), $data + ['inspector_name' => 'Podmieniony'])->assertRedirect();
+    expect($entry->fresh()->revision)->toBe(2)->and($entry->fresh()->inspector_name)->toBe('Pierwotny autor');
+    $log = ActivityLog::where('auditable_type', CylinderInspection::class)->where('action', 'updated')->latest('id')->firstOrFail();
+    expect($log->changes['observations']['old'])->toBe($original)->and($log->user_id)->toBe($user->id);
+    $this->put(route('cylinders.inspections.update', [$cylinder, $entry]), $data)->assertStatus(409);
+    Role::findOrCreate('client_user');
+    $client = User::factory()->create();
+    $client->assignRole('client_user');
+    $this->actingAs($client)->put(route('cylinders.inspections.update', [$cylinder, $entry]), $data)->assertForbidden();
+});
+
+test('video can be attached only to an inspection of the same cylinder', function () {
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $other = registeredCylinder('OTHER-VIDEO');
+    $entry = $cylinder->inspections()->create(['inspected_at' => '2026-01-01', 'result' => 'further_review', 'observations' => 'Test', 'inspector_name' => 'Autor']);
+    $data = ['title' => 'Nagranie wpisu', 'source' => 'link', 'external_url' => 'https://youtu.be/abcdefghijk', 'cylinder_inspection_id' => $entry->id];
+    $this->actingAs(cylinderStaff())->post(route('cylinders.videos.store', $other), $data)->assertSessionHasErrors('cylinder_inspection_id');
+    $this->post(route('cylinders.videos.store', $cylinder), $data)->assertRedirect();
+    expect($entry->videos()->count())->toBe(1);
+    $this->get(route('cylinders.show', ['cylinder' => $cylinder, 'attach' => $entry->id]))->assertOk()->assertSee('value="'.$entry->id.'" selected', false);
+    $this->get(route('cylinders.show', ['cylinder' => $other, 'inspection' => $entry->id]))->assertNotFound();
+});
+
+test('photos are private have real small thumbnails and replacements clean old files', function () {
+    Storage::fake('local');
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $staff = cylinderStaff();
+    $this->actingAs($staff)->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('butla.png', 800, 600)])->assertRedirect();
+    $photo = $cylinder->photo()->firstOrFail();
+    $oldPath = $photo->stored_path;
+    $oldThumb = $photo->thumbnail_path;
+    $dimensions = getimagesizefromstring(Storage::disk('local')->get($oldThumb));
+    expect(max($dimensions[0], $dimensions[1]))->toBe(96)
+        ->and(app(DocumentQuotaService::class)->used($staff->id))->toBe((int) $photo->size);
+    $this->get(route('cylinders.index'))->assertOk()->assertSee('data-cylinder-photo', false);
+    $this->get(route('cylinders.photo', ['cylinder' => $cylinder, 'thumbnail' => 1]))->assertOk()->assertHeader('Content-Type', 'image/jpeg');
+    $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('nowa.jpg', 300, 400)])->assertRedirect();
+    Storage::disk('local')->assertMissing($oldPath);
+    Storage::disk('local')->assertMissing($oldThumb);
+    expect($cylinder->photo()->count())->toBe(1);
+    Role::findOrCreate('client_user');
+    $client = User::factory()->create();
+    $client->assignRole('client_user');
+    $this->actingAs($client)->get(route('client.cylinders.photo', $cylinder))->assertNotFound();
+    $client->companies()->attach($cylinder->company_id);
+    $this->get(route('client.cylinders.photo', $cylinder))->assertOk();
+    $this->post(route('cylinders.photo.store', $cylinder), [])->assertForbidden();
+    CompanySettings::first()->update(['enabled_modules' => ['client_zone']]);
+    $this->get(route('client.cylinders.photo', $cylinder))->assertForbidden();
+});
+
+test('invalid photo and quota rejection preserve the previous photo', function () {
+    Storage::fake('local');
+    enableCylinders();
+    $cylinder = registeredCylinder();
+    $staff = cylinderStaff();
+    $this->actingAs($staff)->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('butla.png')])->assertRedirect();
+    $path = $cylinder->photo()->firstOrFail()->stored_path;
+    $staff->forceFill(['document_limit_bytes' => 0])->save();
+    $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('nowa.png', 200, 200)])->assertSessionHasErrors('file');
+    $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->createWithContent('photo.svg', '<svg></svg>')])->assertSessionHasErrors('photo');
+    expect($cylinder->photo()->firstOrFail()->stored_path)->toBe($path)->and(Storage::disk('local')->allFiles())->toHaveCount(2);
+});
+
+test('due date highlight is independent of the problem status', function () {
+    $cylinder = new Cylinder;
+    $cylinder->setRelation('latestInspection', new CylinderInspection(['result' => 'defects_found', 'next_due_at' => today()->addDays(3)]));
+    expect($cylinder->conditionStatus())->toBe('problem')->and($cylinder->dueStatus())->toBe('soon');
+    $cylinder->latestInspection->next_due_at = today()->subDay();
+    expect($cylinder->dueStatus())->toBe('late');
+});

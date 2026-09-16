@@ -33,6 +33,21 @@ class Cylinder extends Model
         return $this->hasMany(CylinderVideo::class);
     }
 
+    public function photo(): HasOne
+    {
+        return $this->hasOne(CylinderPhoto::class);
+    }
+
+    public function dueStatus(): string
+    {
+        $due = $this->latestInspection?->next_due_at;
+        if (! $due || $this->archived_at) {
+            return 'neutral';
+        }
+
+        return $due->lt(today()) ? 'late' : ($due->lte(today()->addMonthNoOverflow()) ? 'soon' : 'neutral');
+    }
+
     public function conditionStatus(): string
     {
         if ($this->archived_at) {

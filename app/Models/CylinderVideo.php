@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CylinderVideo extends Model
 {
-    protected $fillable = ['title', 'stored_path', 'mime_type', 'size', 'storage_owner_id', 'external_url'];
+    protected $fillable = ['title', 'stored_path', 'mime_type', 'size', 'storage_owner_id', 'external_url', 'cylinder_inspection_id'];
 
     protected $casts = ['external_url' => 'string', 'size' => 'integer'];
 

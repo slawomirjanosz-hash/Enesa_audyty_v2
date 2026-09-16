@@ -27,12 +27,12 @@
                 <tbody>
                 @forelse($cylinders as $cylinder)
                     <tr>
-                        <td><a class="cyl-serial" href="{{ route($routePrefix.'show', $cylinder) }}">{{ $cylinder->serial_number }}</a></td>
+                        <td><div class="cyl-identity">@include('cylinders.photo-thumb')<a class="cyl-serial" href="{{ route($routePrefix.'show', $cylinder) }}">{{ $cylinder->serial_number }}</a></div></td>
                         <td class="cyl-company-cell">{{ $cylinder->company?->name }}</td>
-                        <td>{{ $cylinder->type }}@if($cylinder->manufacturer)<span class="cyl-secondary">{{ $cylinder->manufacturer }}</span>@endif</td>
+                        <td class="cyl-type-inline">{{ $cylinder->type }}@if($cylinder->manufacturer)<span class="cyl-muted"> / {{ $cylinder->manufacturer }}</span>@endif</td>
                         <td><span class="cyl-status-chip cyl-status-{{ $cylinder->conditionStatus() }}"><span class="cyl-status-dot" aria-hidden="true"></span>{{ $cylinder->conditionLabel() }}</span></td>
                         <td class="cyl-date">{{ $cylinder->latestInspection?->inspected_at?->format('d.m.Y') ?? 'Brak wpisu' }}</td>
-                        <td class="cyl-date">{{ $cylinder->latestInspection?->next_due_at?->format('d.m.Y') ?? 'Nie ustalono' }}</td>
+                        <td class="cyl-date"><span class="cyl-due cyl-due-{{ $cylinder->dueStatus() }}">{{ $cylinder->latestInspection?->next_due_at?->format('d.m.Y') ?? 'Nie ustalono' }}</span></td>
                         <td class="cyl-row-action"><a href="{{ route($routePrefix.'show', $cylinder) }}" class="cyl-open" aria-label="Otwórz butlę {{ $cylinder->serial_number }}">Otwórz <span aria-hidden="true">→</span></a></td>
                     </tr>
                 @empty
@@ -44,5 +44,6 @@
         <div class="cyl-register-footer"><span>{{ $cylinders->total() ? $cylinders->firstItem().'–'.$cylinders->lastItem().' z '.$cylinders->total() : '0' }} pozycji</span>{{ $cylinders->links() }}</div>
     </div>
     <p class="cyl-register-help">Status wynika z ostatniego przeglądu. Zgłoszone problemy mają pierwszeństwo przed terminem.</p>
+    @include('cylinders.photo-viewer')
 </div>
 @endsection

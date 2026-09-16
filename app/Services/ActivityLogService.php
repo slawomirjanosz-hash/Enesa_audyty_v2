@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
+use App\Models\CylinderInspection;
 use App\Models\User;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -71,8 +72,8 @@ class ActivityLogService
                 $newValue = $newValue instanceof DateTimeInterface ? $newValue->format('Y-m-d') : (is_string($newValue) ? substr($newValue, 0, 10) : $newValue);
             }
             $result[$field] = [
-                'old' => $this->safeValue($oldValue),
-                'new' => $this->safeValue($newValue),
+                'old' => $model instanceof CylinderInspection && $field === 'observations' ? $oldValue : $this->safeValue($oldValue),
+                'new' => $model instanceof CylinderInspection && $field === 'observations' ? $newValue : $this->safeValue($newValue),
             ];
         }
 

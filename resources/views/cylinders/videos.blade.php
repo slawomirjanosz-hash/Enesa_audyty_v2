@@ -1,9 +1,11 @@
-<section class="cyl-card">
+<section class="cyl-card" id="cylinder-videos">
     <h2>Filmy butli</h2>
+    @if(request('inspection'))<p>Filmy wpisu #{{ request('inspection') }} · <a href="{{ route($routePrefix.'show', $cylinder) }}#cylinder-videos">Pokaż wszystkie</a></p>@endif
     <div class="cyl-videos">
     @forelse($videos as $video)
         <article>
             <h3>{{ $video->title }}</h3>
+            <p class="cyl-muted">{{ $video->cylinder_inspection_id ? 'Wpis #'.$video->cylinder_inspection_id : 'Film ogólny butli' }}</p>
             @if($video->external_url)
                 @php($player = $video->externalPlayer())
                 @if($player)
@@ -29,11 +31,12 @@
     </div>
     {{ $videos->links() }}
     @if($canManage && !$cylinder->archived_at)
-    <details @if($errors->hasAny(['file','external_url','source','title'])) open @endif>
+    <details id="cylinder-video-add" @if($videoInspection || $errors->hasAny(['file','external_url','source','title','cylinder_inspection_id'])) open @endif>
         <summary class="cyl-btn">+ Dodaj film</summary>
         <form id="cylinder-video-form" method="post" enctype="multipart/form-data" action="{{ route('cylinders.videos.store', $cylinder) }}" style="margin-top:16px">
             @csrf
             <div class="cyl-grid">
+                <div class="cyl-wide"><label for="video-inspection">Powiązany wpis przeglądu</label><select id="video-inspection" name="cylinder_inspection_id"><option value="">Film ogólny butli (bez wpisu)</option>@foreach($inspections as $entry)<option value="{{ $entry->id }}" @selected(old('cylinder_inspection_id', $videoInspection?->id) == $entry->id)>Wpis #{{ $entry->id }} · {{ $entry->inspected_at->format('d.m.Y') }} · {{ $entry->inspector_name }}</option>@endforeach @if($videoInspection && !$inspections->getCollection()->contains('id', $videoInspection->id))<option value="{{ $videoInspection->id }}" selected>Wpis #{{ $videoInspection->id }}</option>@endif</select></div>
                 <div><label for="video-title">Tytuł filmu</label><input id="video-title" name="title" maxlength="160" required value="{{ old('title') }}"></div>
                 <div><label for="video-source">Źródło filmu</label><select id="video-source" name="source"><option value="file" @selected(old('source','file') === 'file')>Plik z dysku</option><option value="link" @selected(old('source') === 'link')>Link — YouTube, Dysk Google lub inny serwis</option></select></div>
                 <div class="cyl-wide" data-video-source="file"><label for="video-file">Plik MP4 lub WebM (do 100 MB)</label><input id="video-file" type="file" name="file" accept="video/mp4,video/webm,.mp4,.webm"><p class="cyl-muted">Prywatny plik, dostępny uprawnionym inspektorom i klientowi tej butli. Obciąża Twój limit dokumentów. Zalecany MP4 H.264/AAC.</p></div>

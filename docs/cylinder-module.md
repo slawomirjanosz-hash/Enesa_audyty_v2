@@ -13,12 +13,18 @@ Moduł `cylinders` jest domyślnie wyłączony, również przy braku ustawień f
 
 - Rejestr butli z wyszukiwaniem i stronicowaniem; dane urządzenia, właściciel, edycja i archiwizacja bez usuwania historii.
 - Historia ręcznie wprowadzonych przeglądów: autor ustalany z zalogowanego konta, data badania i zapisu, zakres, wyniki, następny termin.
-- Brak nadpisywania/usuwania wpisów przeglądów. Sprostowanie jako kolejny wpis odnoszący się do numeru poprzedniego.
+- Edycja przeglądów przez użytkownika z `cylinders.manage`; autor pierwotnego wpisu pozostaje bez zmian. Licznik wersji zapobiega nadpisaniu równoległej edycji. Historia zmian przechowuje poprzednie i nowe wartości, w tym pełną treść uwag (do 20 tys. znaków), oraz osobę edytującą. Brak usuwania wpisów.
 - Ostatni przegląd wybierany po dacie badania, nie dacie wprowadzenia. Terminy widoczne w rejestrze; kolory opisane poniżej.
 - Klient i podgląd strefy klienta: tylko odczyt danych wybranej/przypisanej firmy.
 - Zmiany trafiają do istniejącej historii zmian. Wyłączenie blokuje wszystkie trasy, nie usuwa danych.
 
 ## Filmy i statusy
+
+Przycisk „+ Film” przy wpisie wybiera ten wpis w formularzu dodawania filmu. Powiązanie jest sprawdzane po stronie serwera; film nie może wskazywać przeglądu innej butli. Filmy ogólne dodane wcześniej pozostają bez przypisania, bez zgadywania którego wpisu dotyczą. Przycisk „Filmy” filtruje nagrania danego wpisu.
+
+Zdjęcie butli można dodać lub zastąpić na karcie (JPG/PNG/WebP do 8 MB i 12 MP). Aplikacja normalizuje je do JPEG do 1600 px, usuwa metadane i tworzy osobną miniaturkę 96 px, wyświetlaną w rozmiarze 36 px. Oryginał uploadu nie jest przechowywany. Obie wersje są prywatne, wliczane do kwoty autora, a po poprawnym zastąpieniu poprzednie pliki są usuwane. Kliknięcie miniaturki otwiera podgląd; działa również w strefie klienta. Zdjęcia są identyfikacyjne, nie zastępują dokumentacji wad w oryginalnej rozdzielczości.
+
+Na liście typ i producent oraz status są bez zawijania; przy małym ekranie tabela przewija się poziomo. Następny termin ma niezależny od statusu kolor: pomarańczowy w ciągu miesiąca, czerwony po terminie. Dane na karcie są skompresowane, aby historia wpisów była widoczna wyżej.
 
 Formularz „Dodaj film” przyjmuje plik lub link HTTPS (wzajemnie wykluczające się źródła). YouTube (watch, youtu.be, shorts, live, embed) i Dysk Google (file/d, open?id, uc?id; także resourcekey) mają podgląd osadzony ładowany dopiero po kliknięciu. Pozostałe serwisy, np. Vimeo, OneDrive czy Dropbox, otwierają się w nowej karcie. Dla każdego linku jest awaryjny przycisk otwarcia u źródła. Serwer nie pobiera zewnętrznych adresów; nie przyjmujemy HTML iframe. Linki mają rozmiar 0 i nie obciążają kwoty. URL nie trafia do historii zmian, ponieważ może zawierać token dostępu.
 
@@ -32,6 +38,6 @@ Kolory według ostatniego przeglądu: czerwony dla `defects_found` lub `further_
 
 ## Kolejne etapy — jeszcze nie zaimplementowane
 
-Zdjęcia, ustrukturyzowane pomiary, formularze właściwe dla rodzaju butli, harmonogram w kalendarzu i przypomnienia, protokoły PDF, zatwierdzanie, analiza AI i walidacja jej skuteczności. Obecne wpisy nie są urzędowymi protokołami ani automatycznym dopuszczeniem do eksploatacji. Nie ma połączenia z UDT, zewnętrznym modelem AI ani wysyłania danych poza aplikację.
+Pełna dokumentacja fotograficzna wad, ustrukturyzowane pomiary, formularze właściwe dla rodzaju butli, harmonogram w kalendarzu i przypomnienia, protokoły PDF, zatwierdzanie, analiza AI i walidacja jej skuteczności. Obecne wpisy nie są urzędowymi protokołami ani automatycznym dopuszczeniem do eksploatacji. Nie ma połączenia z UDT, zewnętrznym modelem AI ani wysyłania danych poza aplikację.
 
 Wspólny kod nie oznacza wspólnych danych: każde wdrożenie powinno mieć osobną bazę, magazyn plików, klucze i dostęp do kopii zapasowych.
