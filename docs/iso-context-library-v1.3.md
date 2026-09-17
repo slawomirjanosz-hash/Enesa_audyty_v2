@@ -38,6 +38,12 @@ Nie deklarujemy ukończenia specyfikacji audytora ani publikacji dokumentów zgo
 
 ## Test ręczny
 
+Poprawki stabilności: obsługa przecinka dziesiętnego, rozpoznawanie niepełnej sumy nośników,
+nieedytowalne ustalenia AUTO także po stronie serwera, jawnie puste opisy zamiast przywracania
+domyślnego tekstu, unieważnianie oceny zgodności po zmianie wymagań lub źródeł, kompletne dane
+pomocnicze w eksportach. Formularz zachowuje dodatkowe zapisane wiersze oraz pierwotną rewizję
+po błędzie walidacji. Historia na ekranie nie pobiera nieużywanych pełnych migawek odpowiedzi.
+
 1. Utworzyć testowy audyt z przypisanym ISO 50001 i użytkownikiem klienta powiązanym z jego firmą.
 2. W 4.1 lub 4.2 otworzyć ankietę, odpowiedzieć na pytania i zapisać; sprawdzić przeliczenie czynników.
 3. Zmienić dane aktywujące wybrany ręcznie czynnik — sprawdzić zachowanie wyboru i ostrzeżenie.

@@ -157,3 +157,104 @@ test('ISO new library preview is separate from client answers', function () {
         ->assertSee('44 pytania')->assertSee('69 czynników')->assertSee('28 stron')->assertDontSee('name="answers', false);
     expect(IsoContextReview::count())->toBe(0);
 });
+
+test('ISO automatic factors cannot be rewritten and cleared manual text stays empty', function () {
+    $library = app(IsoContextLibrary::class);
+    $rows = collect($library->factors(['facts' => ['FAKT_KLIMAT_ISTOTNY' => 'tak', 'FAKT_SCADA' => 'tak'], 'factors' => [
+        'KTX-ZK-01' => ['selected' => false, 'text' => 'Fałszywe ustalenie'],
+        'KTX-WT-10' => ['selected' => true, 'text' => null],
+    ]]))->keyBy('kod');
+    expect($rows['KTX-ZK-01']['selected'])->toBeTrue()
+        ->and($rows['KTX-ZK-01']['text'])->not->toBe('Fałszywe ustalenie')
+        ->and($rows['KTX-WT-10']['text'])->toBe('');
+    $parties = collect($library->stakeholders(['stakeholders' => ['STK-W-01' => ['selected' => true, 'text' => null]]]))->keyBy('kod');
+    expect($parties['STK-W-01']['text'])->toBe('');
+});
+
+test('ISO accepts Polish decimals and does not report a partial energy sum as complete', function () {
+    [$audit, $client] = isoReviewFixture();
+    $this->actingAs($client)->post(route('client.audits.iso-review.update', $audit), [
+        'year' => 2026, 'revision' => 0, 'operation' => 'save', 'answers' => [
+            'facts' => ['FAKT_UDZIAL_ENERGII' => '12,5'],
+            'energy' => [['name' => 'Prąd', 'tj' => '1,25'], ['name' => 'Gaz', 'tj' => '']],
+        ],
+    ])->assertSessionHasNoErrors()->assertRedirect();
+    $review = IsoContextReview::firstOrFail();
+    expect($review->answers['facts']['FAKT_UDZIAL_ENERGII'])->toBe('12.5')
+        ->and($review->answers['energy'][0]['tj'])->toBe('1.25')
+        ->and($review->answers['facts']['ZUZYCIE_TJ'])->toBe('nie wiem');
+});
+
+test('ISO client changes invalidate previous consultant compliance decision', function () {
+    [$audit, $client] = isoReviewFixture();
+    $previous = ['facts' => [], 'stakeholders' => ['STK-W-01' => ['selected' => true, 'text' => 'Poprzednie wymagania', 'source' => 'Uchwała', 'reason' => 'Uzasadnienie', 'compliance' => 'yes']]];
+    IsoContextReview::create(['audit_id' => $audit->id, 'year' => 2026, 'status' => 'returned', 'revision' => 1, 'answers' => $previous]);
+    $posted = $previous;
+    $posted['stakeholders']['STK-W-01']['text'] = 'Inne wymagania';
+    $this->actingAs($client)->post(route('client.audits.iso-review.update', $audit), ['year' => 2026, 'revision' => 1, 'operation' => 'save', 'answers' => $posted])->assertRedirect();
+    expect(IsoContextReview::first()->answers['stakeholders']['STK-W-01']['compliance'])->toBe('pending');
+});
+
+test('ISO draft Word includes scope climate explanation and energy sources', function () {
+    Storage::fake('local');
+    [$audit, $client] = isoReviewFixture();
+    IsoContextReview::create(['audit_id' => $audit->id, 'year' => 2026, 'revision' => 1, 'answers' => [
+        'scope' => 'Budynek produkcyjny A', 'climate_reason' => 'Wzrost zapotrzebowania na chłód',
+        'energy' => [['name' => 'Gaz ziemny', 'tj' => '1.25', 'source' => 'Faktury roczne 2025']],
+        'base_documents' => 'Procedura Q-01', 'audit_year' => 2024,
+    ]]);
+    $result = $this->actingAs($client)->post(route('client.audits.iso-review.export', $audit), ['year' => 2026, 'format' => 'docx'])->assertOk();
+    $temp = tempnam(sys_get_temp_dir(), 'iso-test-');
+    try {
+        file_put_contents($temp, $result->getContent());
+        $zip = new ZipArchive;
+        $zip->open($temp);
+        $xml = $zip->getFromName('word/document.xml');
+        $zip->close();
+        expect($xml)->toContain('Budynek produkcyjny A', 'Wzrost zapotrzebowania na chłód', 'Faktury roczne 2025', 'Procedura Q-01', '2024', 'Wniosek 4');
+    } finally {
+        unlink($temp);
+    }
+});
+
+test('ISO malformed nested input returns validation errors and the form still renders', function () {
+    [$audit, $client] = isoReviewFixture();
+    $show = route('client.audits.iso-review.show', ['audit' => $audit, 'year' => 2026]);
+    $this->actingAs($client)->from($show)->post(route('client.audits.iso-review.update', $audit), [
+        'year' => 2026, 'revision' => 0, 'operation' => 'save', 'answers' => [
+            'facts' => 'invalid', 'factors' => ['KTX-WT-10' => 'invalid'],
+            'stakeholders' => ['STK-W-01' => ['text' => ['invalid']]],
+            'energy' => ['invalid'], 'scope' => ['invalid'],
+        ],
+    ])->assertSessionHasErrors()->assertRedirect($show);
+    $this->get($show)->assertOk()->assertSee('Nie zapisano zmian:');
+    expect(IsoContextReview::count())->toBe(0);
+});
+
+test('ISO form preserves extra saved rows and the submitted revision after validation', function () {
+    [$audit, $client, $staff] = isoReviewFixture();
+    IsoContextReview::create(['audit_id' => $audit->id, 'year' => 2026, 'revision' => 2, 'answers' => [
+        'energy' => array_fill(0, 7, ['name' => 'Gaz', 'tj' => '1', 'source' => 'Faktura']),
+        'conclusions' => array_fill(0, 5, ['finding' => 'Wniosek', 'decision' => 'Decyzja', 'document' => 'Dokument']),
+    ]]);
+    $this->actingAs($staff)->get(route('audits.iso-review.show', ['audit' => $audit, 'year' => 2026]))->assertOk()
+        ->assertSee('name="answers[energy][6][name]"', false)
+        ->assertSee('name="answers[conclusions][4][finding]"', false);
+    $this->withSession(['_old_input' => ['revision' => 1, 'answers' => ['scope' => 'Starsze dane']]])
+        ->get(route('audits.iso-review.show', ['audit' => $audit, 'year' => 2026]))->assertOk()
+        ->assertSee('name="revision" value="1"', false);
+});
+
+test('ISO submission strips automatic overrides and preserves zero energy', function () {
+    [$audit, $client] = isoReviewFixture();
+    $this->actingAs($client)->post(route('client.audits.iso-review.update', $audit), [
+        'year' => 2026, 'revision' => 0, 'operation' => 'save', 'answers' => [
+            'facts' => ['FAKT_KLIMAT_ISTOTNY' => 'tak'],
+            'energy' => [['name' => 'Gaz', 'tj' => '0']],
+            'factors' => ['KTX-ZK-01' => ['selected' => 0, 'text' => 'Podmieniony automat']],
+        ],
+    ])->assertSessionHasNoErrors();
+    $review = IsoContextReview::firstOrFail();
+    expect($review->answers['facts']['ZUZYCIE_TJ'])->toBe('0')
+        ->and($review->answers['factors'])->not->toHaveKey('KTX-ZK-01');
+});

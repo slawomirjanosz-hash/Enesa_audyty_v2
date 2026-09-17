@@ -78,6 +78,31 @@ class IsoContextLibrary
             && ($facts['FAKT_ZGODA_INTEGRACJA'] ?? '') === 'tak' ? 'nadbudowa' : 'greenfield';
     }
 
+    /** Only repopulate known scalar fields after validation, never malformed nested input. */
+    public function formAnswers(mixed $input): array
+    {
+        if (! is_array($input)) {
+            return [];
+        }
+        $scalars = fn ($row, $keys) => is_array($row)
+            ? array_filter(array_intersect_key($row, array_flip($keys)), fn ($value) => $value === null || is_scalar($value)) : [];
+        $out = $scalars($input, ['scope', 'base_documents', 'climate_reason', 'audit_year', 'csrd_year', 'contract_end', 'energy_unknown']);
+        $out['facts'] = $scalars($input['facts'] ?? [], array_column($this->questions(), 'kod'));
+        $out['swot'] = $scalars($input['swot'] ?? [], ['strengths', 'weaknesses', 'opportunities', 'threats']);
+        foreach (['factors' => 'czynniki_kontekstowe_4_1', 'stakeholders' => 'strony_zainteresowane_4_2'] as $key => $table) {
+            foreach ($this->data()[$table] as $row) {
+                if (is_array($input[$key] ?? null) && isset($input[$key][$row['kod']])) {
+                    $out[$key][$row['kod']] = $scalars($input[$key][$row['kod']], ['selected', 'text', 'reason', ...($key === 'stakeholders' ? ['source', 'compliance'] : [])]);
+                }
+            }
+        }
+        foreach (['energy' => ['name', 'tj', 'source'], 'conclusions' => ['finding', 'decision', 'document']] as $key => $fields) {
+            $out[$key] = array_map(fn ($row) => $scalars($row, $fields), array_values(array_slice(is_array($input[$key] ?? null) ? $input[$key] : [], 0, $key === 'energy' ? 12 : 10)));
+        }
+
+        return $out;
+    }
+
     public function factors(array $answers): array
     {
         $rows = [];
@@ -94,7 +119,7 @@ class IsoContextLibrary
                 : ($choice['selected'] ?? ($matches && $row['rodzaj'] === 'PROPOZYCJA' && ! $pending));
             $rows[] = $row + [
                 'matches' => $matches, 'pending' => $pending, 'selected' => (bool) $selected,
-                'text' => $choice['text'] ?? $row['sformulowanie'],
+                'text' => $row['rodzaj'] === 'AUTO' || ! array_key_exists('text', $choice) ? $row['sformulowanie'] : ($choice['text'] ?? ''),
                 'reason' => $choice['reason'] ?? '', 'stale' => ! $matches && (bool) $selected,
             ];
         }
@@ -121,7 +146,7 @@ class IsoContextLibrary
             }
             $rows[] = $row + ['requirements' => $requirements, 'matches' => $matches,
                 'selected' => (bool) ($choice['selected'] ?? $matches), 'reason' => $choice['reason'] ?? '',
-                'text' => $choice['text'] ?? $row['typowe_wymagania'],
+                'text' => array_key_exists('text', $choice) ? ($choice['text'] ?? '') : $row['typowe_wymagania'],
                 'source' => $choice['source'] ?? '', 'compliance' => $choice['compliance'] ?? 'pending'];
         }
 
@@ -167,6 +192,9 @@ class IsoContextLibrary
             }
         }
         foreach ($this->stakeholders($answers) as $row) {
+            if ($row['selected'] && ! filled($row['text'])) {
+                $errors[] = $row['kod'].': uzupełnij wymagania wybranej strony.';
+            }
             if ((! $row['selected'] || $row['compliance'] !== 'pending') && ! filled($row['reason'])) {
                 $errors[] = $row['kod'].': podaj uzasadnienie decyzji.';
             }

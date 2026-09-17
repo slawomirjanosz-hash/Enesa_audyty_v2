@@ -56,7 +56,7 @@ class IsoContextReviewController extends Controller
         $year = $this->year($request);
         $review = IsoContextReview::where('audit_id', $audit->id)->where('year', $year)->first()
             ?? new IsoContextReview(['year' => $year, 'revision' => 0, 'status' => 'draft', 'answers' => []]);
-        $answers = old('answers', $review->answers ?? []);
+        $answers = $this->library->formAnswers(old('answers', $review->answers ?? []));
 
         return view('audits.iso-context-review', [
             'audit' => $audit, 'client' => $client, 'review' => $review, 'answers' => $answers,
@@ -65,14 +65,33 @@ class IsoContextReviewController extends Controller
             'blockers' => $this->library->blockers($answers),
             'history' => $review->exists ? DB::table('iso_context_revisions')->leftJoin('users', 'users.id', '=', 'iso_context_revisions.user_id')
                 ->where('iso_context_review_id', $review->id)->orderByDesc('iso_context_revisions.id')->limit(30)
-                ->get(['iso_context_revisions.*', 'users.name']) : collect(),
+                ->get(['iso_context_revisions.revision', 'iso_context_revisions.action', 'iso_context_revisions.note', 'iso_context_revisions.created_at', 'users.name']) : collect(),
             'routePrefix' => $client ? 'client.audits.iso-review.' : 'audits.iso-review.',
         ]);
     }
 
     private function answers(Request $request, array $previous, bool $client): array
     {
-        $rules = ['answers' => 'required|array', 'answers.facts' => 'nullable|array'];
+        $input = $request->input('answers');
+        $decimal = fn ($value) => is_string($value) ? str_replace(',', '.', trim($value)) : $value;
+        if (is_array($input)) {
+            foreach ($this->library->questions() as $question) {
+                if ($question['numeric'] && is_array($input['facts'] ?? null) && isset($input['facts'][$question['kod']])) {
+                    $input['facts'][$question['kod']] = $decimal($input['facts'][$question['kod']]);
+                }
+            }
+            if (is_array($input['energy'] ?? null)) {
+                foreach ($input['energy'] as &$energyRow) {
+                    if (is_array($energyRow) && isset($energyRow['tj'])) {
+                        $energyRow['tj'] = $decimal($energyRow['tj']);
+                    }
+                }
+                unset($energyRow);
+            }
+            $request->merge(['answers' => $input]);
+        }
+        $rules = ['answers' => 'required|array', 'answers.facts' => 'nullable|array',
+            'answers.factors' => 'nullable|array', 'answers.stakeholders' => 'nullable|array', 'answers.swot' => 'nullable|array'];
         foreach ($this->library->questions() as $q) {
             $rules['answers.facts.'.$q['kod']] = $q['numeric']
                 ? ['nullable', function ($attribute, $value, $fail) {
@@ -83,12 +102,14 @@ class IsoContextReviewController extends Controller
         }
         foreach ($this->library->data()['czynniki_kontekstowe_4_1'] as $factor) {
             $prefix = 'answers.factors.'.$factor['kod'];
+            $rules[$prefix] = 'nullable|array';
             $rules[$prefix.'.selected'] = 'nullable|boolean';
             $rules[$prefix.'.text'] = 'nullable|string|max:5000';
             $rules[$prefix.'.reason'] = 'nullable|string|max:2000';
         }
         foreach ($this->library->data()['strony_zainteresowane_4_2'] as $party) {
             $prefix = 'answers.stakeholders.'.$party['kod'];
+            $rules[$prefix] = 'nullable|array';
             $rules[$prefix.'.selected'] = 'nullable|boolean';
             foreach (['text', 'source', 'reason'] as $key) {
                 $rules[$prefix.'.'.$key] = 'nullable|string|max:5000';
@@ -105,6 +126,7 @@ class IsoContextReviewController extends Controller
         }
         $rules['answers.contract_end'] = 'nullable|date';
         $rules['answers.energy'] = 'nullable|array|max:12';
+        $rules['answers.energy.*'] = 'array:name,tj,source';
         $rules['answers.energy.*.name'] = 'nullable|string|max:200';
         $rules['answers.energy.*.tj'] = 'nullable|numeric|min:0|max:100000000';
         $rules['answers.energy.*.source'] = 'nullable|string|max:500';
@@ -114,6 +136,7 @@ class IsoContextReviewController extends Controller
                 $rules['answers.swot.'.$key] = 'nullable|string|max:10000';
             }
             $rules['answers.conclusions'] = 'nullable|array|max:10';
+            $rules['answers.conclusions.*'] = 'array:finding,decision,document';
             foreach (['finding', 'decision', 'document'] as $key) {
                 $rules['answers.conclusions.*.'.$key] = 'nullable|string|max:5000';
             }
@@ -135,13 +158,29 @@ class IsoContextReviewController extends Controller
             // Hidden unmatched decisions are retained for explicit re-verification, not silently lost.
             $out[$key] = array_replace($previous[$key] ?? [], $out[$key] ?? []);
         }
+        foreach ($this->library->data()['czynniki_kontekstowe_4_1'] as $factor) {
+            if ($factor['rodzaj'] === 'AUTO' || str_starts_with($factor['kod'], 'KTX-ZR-') || $factor['kod'] === 'KTX-WO-03') {
+                unset($out['factors'][$factor['kod']]);
+            }
+        }
         foreach (['scope', 'base_documents', 'climate_reason', 'audit_year', 'csrd_year', 'contract_end', 'energy', 'energy_unknown'] as $key) {
             $out[$key] = $valid[$key] ?? null;
         }
-        $knownEnergy = array_filter($out['energy'] ?? [], fn ($e) => isset($e['tj']) && $e['tj'] !== '');
-        $out['facts']['ZUZYCIE_TJ'] = ($out['energy_unknown'] ?? false) ? 'nie wiem' : ($knownEnergy ? (string) array_sum(array_column($knownEnergy, 'tj')) : '');
+        $out['energy'] = array_values($out['energy'] ?? []);
+        $activeEnergy = array_filter($out['energy'], fn ($e) => filled($e['name'] ?? null) || filled($e['tj'] ?? null) || filled($e['source'] ?? null));
+        $knownEnergy = array_filter($activeEnergy, fn ($e) => filled($e['tj'] ?? null));
+        $out['facts']['ZUZYCIE_TJ'] = ($out['energy_unknown'] ?? false) || count($knownEnergy) !== count($activeEnergy)
+            ? 'nie wiem' : ($knownEnergy ? (string) array_sum(array_column($knownEnergy, 'tj')) : '');
         foreach (['swot', 'conclusions'] as $key) {
             $out[$key] = $client ? ($previous[$key] ?? []) : ($valid[$key] ?? []);
+        }
+        $out['conclusions'] = array_values($out['conclusions']);
+        $before = collect($this->library->stakeholders($previous))->keyBy('kod');
+        foreach ($this->library->stakeholders($out) as $party) {
+            $keys = array_flip(['selected', 'text', 'source', 'reason', 'requirements', 'matches']);
+            if (isset($before[$party['kod']]) && array_intersect_key($before[$party['kod']], $keys) !== array_intersect_key($party, $keys)) {
+                $out['stakeholders'][$party['kod']]['compliance'] = 'pending';
+            }
         }
 
         return $out;
@@ -223,19 +262,35 @@ class IsoContextReviewController extends Controller
         $data = $request->validate(['format' => ['required', Rule::in(['pdf', 'docx'])], 'preview' => 'nullable|boolean']);
         $review = IsoContextReview::where('audit_id', $audit->id)->where('year', $year)->firstOrFail();
         $rows = [['Organizacja', $audit->company->name], ['Rok / rewizja', $year.' / '.$review->revision], ['Tryb', $this->library->mode($review->answers ?? [])]];
+        foreach (['scope' => 'Zakres systemu', 'climate_reason' => 'Uzasadnienie oceny istotności zmiany klimatu',
+            'base_documents' => 'Dokumenty istniejącego systemu', 'audit_year' => 'Rok wykonania audytu energetycznego',
+            'csrd_year' => 'Rok rozpoczęcia raportowania CSRD', 'contract_end' => 'Data końca umowy na energię'] as $key => $label) {
+            $rows[] = [$label, (string) (($review->answers[$key] ?? '') ?: '[do uzupełnienia]')];
+        }
+        foreach ($review->answers['energy'] ?? [] as $row) {
+            if (filled($row['name'] ?? null) || filled($row['tj'] ?? null) || filled($row['source'] ?? null)) {
+                $rows[] = ['Nośnik energii · '.($year - 1), (($row['name'] ?? '') ?: '[do uzupełnienia]')
+                    ."\nZużycie [TJ]: ".(filled($row['tj'] ?? null) ? $row['tj'] : '[do uzupełnienia]')
+                    ."\nŹródło / przeliczenie: ".(($row['source'] ?? '') ?: '[do uzupełnienia]')];
+            }
+        }
+        if ($blockers = $this->library->blockers($review->answers ?? [])) {
+            $rows[] = ['Uwagi do wersji roboczej — wymagają uzupełnienia lub rozstrzygnięcia', implode("\n", $blockers)];
+        }
         foreach ($this->library->questions() as $q) {
             $value = $review->answers['facts'][$q['kod']] ?? '';
             $rows[] = [$q['pytanie'], $q['options'][$value] ?? (filled($value) ? (string) $value : '[do uzupełnienia]')];
         }
         foreach ($this->library->factors($review->answers ?? []) as $row) {
             if ($row['selected'] && ! $row['pending'] && ! $row['stale']) {
-                $rows[] = [$row['kod'].' · '.$row['wymiar'], $row['text']."\nSkutek: ".$row['skutek_dla_systemu']];
+                $rows[] = [$row['kod'].' · '.$row['wymiar'], ($row['text'] ?: '[do uzupełnienia]')."\nSkutek: ".$row['skutek_dla_systemu']];
             }
         }
         foreach ($this->library->stakeholders($review->answers ?? []) as $row) {
             if ($row['selected']) {
                 $requirements = array_map(fn ($r) => $r['source'].': '.$r['text'], $row['requirements']);
-                $rows[] = [$row['kod'].' · '.$row['strona'], $row['text']."\n".implode("\n", $requirements)
+                $rows[] = [$row['kod'].' · '.$row['strona'], ($row['matches'] ? '' : "UWAGA: wybór nie odpowiada aktualnym danym — do ponownej oceny.\n")
+                    .($row['text'] ?: '[do uzupełnienia]')."\n".implode("\n", $requirements)
                     ."\nŹródło: ".($row['source'] ?: '[do uzupełnienia]')
                     ."\nOcena zgodności: ".(['pending' => 'do rozstrzygnięcia', 'yes' => 'tak', 'no' => 'nie'][$row['compliance']] ?? 'do rozstrzygnięcia')
                     ."\nUzasadnienie: ".($row['reason'] ?: '[do uzupełnienia]')];
@@ -244,7 +299,8 @@ class IsoContextReviewController extends Controller
         foreach (['strengths' => 'Mocne strony', 'weaknesses' => 'Słabe strony', 'opportunities' => 'Szanse', 'threats' => 'Zagrożenia'] as $key => $label) {
             $rows[] = ['SWOT · '.$label, $review->answers['swot'][$key] ?? '[do uzupełnienia]'];
         }
-        foreach ($review->answers['conclusions'] ?? [] as $i => $row) {
+        $conclusions = array_pad(array_values($review->answers['conclusions'] ?? []), 4, []);
+        foreach ($conclusions as $i => $row) {
             $rows[] = ['Wniosek '.($i + 1), implode("\n", array_map(fn ($k) => ($row[$k] ?? '') ?: '[do uzupełnienia]', ['finding', 'decision', 'document']))];
         }
         $warning = 'WERSJA ROBOCZA — podgląd danych 4.1–4.2. Nie jest zatwierdzonym dokumentem normowym. Finalne szablony i treści prawne oczekują na potwierdzenie autora.';
@@ -260,7 +316,8 @@ class IsoContextReviewController extends Controller
             $section->addText($warning, ['bold' => true, 'color' => 'A33A20']);
             foreach ($rows as [$label, $text]) {
                 $section->addText($label, ['bold' => true]);
-                $section->addText($text ?: '[do uzupełnienia]');
+                $text = filled($text) ? $text : '[do uzupełnienia]';
+                $section->addText($text, str_contains($text, '[do uzupełnienia]') ? ['color' => 'B42222'] : []);
             }
             $temp = tempnam(storage_path('framework'), 'iso-review-');
             abort_if($temp === false, 500, 'Nie udało się utworzyć pliku tymczasowego.');
@@ -271,10 +328,14 @@ class IsoContextReviewController extends Controller
                 @unlink($temp);
             }
         }
+        abort_unless(is_string($contents) && $contents !== '', 500, 'Nie udało się wygenerować dokumentu.');
         $filename = 'ISO_4_1_4_2_ROBOCZY_'.$year.'_r'.$review->revision.'.'.$format;
         $path = 'iso50001/client/'.$audit->id.'/4-1/generated/'.Str::uuid().'.'.$format;
         $mime = $format === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
         if ($format === 'pdf' && ($data['preview'] ?? false)) {
+            ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'download', 'auditable_type' => Audit::class,
+                'auditable_id' => $audit->id, 'subject_label' => 'Podgląd: '.$filename, 'route_name' => $request->route()->getName()]);
+
             return response($contents, 200, ['Content-Type' => $mime, 'Content-Disposition' => 'inline; filename="'.$filename.'"']);
         }
         app(DocumentQuotaService::class)->assertAdditional($request->user()->id, strlen($contents));
