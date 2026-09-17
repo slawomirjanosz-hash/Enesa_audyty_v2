@@ -1,0 +1,3 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><style>
+body{font-family:DejaVu Sans,sans-serif;font-size:10px;color:#243c33}h1{font-size:17px}.warning{border:1px solid #b75323;background:#fff4dd;padding:12px;color:#8a341b}table{width:100%;border-collapse:collapse}td{border-bottom:1px solid #ddd;padding:9px;vertical-align:top;white-space:pre-wrap}td:first-child{width:36%;font-weight:bold}.gap{color:#b42222}
+</style></head><body><h1>ISO 50001 · Kontekst i strony zainteresowane</h1><p class="warning">{{ $warning }}</p><table>@foreach($rows as [$label,$text])<tr><td>{{ $label }}</td><td @class(['gap'=>!filled($text)||str_contains($text,'[do uzupełnienia]')])>{{ $text ?: '[do uzupełnienia]' }}</td></tr>@endforeach</table></body></html>

@@ -24,6 +24,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EnergyPassportController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\ImportantContactController;
+use App\Http\Controllers\IsoContextReviewController;
 use App\Http\Controllers\IsoImplementationController;
 use App\Http\Controllers\IsoPresentationController;
 use App\Http\Controllers\LandingPageController;
@@ -41,6 +42,11 @@ use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
+Route::middleware(['auth', 'staff.role', 'app.module:audits', 'app.permission:audits.manage'])->group(function () {
+    Route::get('/audits/{audit}/iso-context-review', [IsoContextReviewController::class, 'show'])->name('audits.iso-review.show');
+    Route::post('/audits/{audit}/iso-context-review', [IsoContextReviewController::class, 'update'])->name('audits.iso-review.update');
+    Route::post('/audits/{audit}/iso-context-review/export', [IsoContextReviewController::class, 'export'])->middleware('throttle:10,1')->name('audits.iso-review.export');
+});
 Route::get('/branding/logo', [BrandingController::class, 'logo'])->name('branding.logo');
 Route::post('/access-support', AccessSupportController::class)
     ->middleware(['auth', 'throttle:5,1'])
@@ -115,6 +121,9 @@ Route::get('/lista-zmian', [ActivityLogController::class, 'index'])
     ->name('activity-log.index');
 
 Route::prefix('client')->name('client.')->middleware(['auth', 'client.role', 'app.module:client_zone'])->group(function () {
+    Route::get('/audits/{audit}/iso-context-review', [IsoContextReviewController::class, 'show'])->middleware('app.module:audits')->name('audits.iso-review.show');
+    Route::post('/audits/{audit}/iso-context-review', [IsoContextReviewController::class, 'update'])->middleware('app.module:audits')->name('audits.iso-review.update');
+    Route::post('/audits/{audit}/iso-context-review/export', [IsoContextReviewController::class, 'export'])->middleware(['app.module:audits', 'throttle:10,1'])->name('audits.iso-review.export');
     Route::get('/cylinders', [CylinderController::class, 'index'])->middleware('app.module:cylinders')->name('cylinders.index');
     Route::get('/cylinders/{cylinder}', [CylinderController::class, 'show'])->middleware('app.module:cylinders')->name('cylinders.show');
     Route::get('/cylinders/{cylinder}/videos/{video}', [CylinderController::class, 'video'])->middleware('app.module:cylinders')->name('cylinders.videos.show');
@@ -189,6 +198,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->withoutMiddleware('staff.role')->name('profile.destroy');
 
     Route::get('audit-types', [AuditTypeController::class, 'index'])->middleware('app.module:audits')->name('audit-types.index');
+    Route::get('audit-types/{auditType}/iso50001/library', [IsoContextReviewController::class, 'template'])->middleware(['app.module:audits', 'app.permission:audits.view'])->name('audit-types.iso50001.library');
     Route::get('audit-types/{auditType}/iso50001/context', [IsoImplementationController::class, 'contextTemplate'])->middleware(['app.module:audits', 'app.permission:audits.view'])->name('audit-types.iso50001.context');
     Route::get('surveys', [AuditTypeController::class, 'surveys'])->middleware('app.module:audits')->name('audits.surveys');
     Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');

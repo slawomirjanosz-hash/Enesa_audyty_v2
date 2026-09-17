@@ -1,11 +1,11 @@
 @php
     $contextUrl = isset($audit)
-        ? route(($clientView ?? false) ? 'client.audits.iso50001.context.show' : 'audits.iso50001.context.show', $audit)
-        : route('audit-types.iso50001.context', $auditType);
+        ? route(($clientView ?? false) ? 'client.audits.iso-review.show' : 'audits.iso-review.show', $audit)
+        : route('audit-types.iso50001.library', $auditType);
 @endphp
 <section style="grid-column:1/-1;padding:20px;border:1px solid #d8e3dc;border-radius:12px;background:#fff">
     <div class="iso-context-launch">
-        <div><h3 style="margin:0">Ankieta kontekstu organizacji</h3><p style="margin:8px 0 0">D-EnMS-KON-01 · Dane o zakładzie → Wybór czynników → Uzupełnienie konsultanta → Dokument</p></div>
+        <div><h3 style="margin:0">Ankieta kontekstu organizacji i stron zainteresowanych</h3><p style="margin:8px 0 0">4.1–4.2 · Biblioteka 1.3 · D-EnMS-KON-01 / D-EnMS-STR-01<br>Dane zakładu → Czynniki → Strony zainteresowane → Konsultant → Dokumenty robocze</p></div>
         <a href="{{ $contextUrl }}" style="display:inline-block;padding:11px 18px;border-radius:7px;background:var(--green);color:#fff;text-decoration:none;font-weight:700;text-align:center">{{ isset($audit) ? 'Otwórz ankietę na pełnym ekranie' : 'Otwórz podgląd formularza wzorcowego' }}</a>
     </div>
 </section>
