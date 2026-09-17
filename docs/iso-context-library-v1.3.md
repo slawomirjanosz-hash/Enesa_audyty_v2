@@ -34,7 +34,7 @@ Nie deklarujemy ukończenia specyfikacji audytora ani publikacji dokumentów zgo
 - Finalne szablony greenfield/nadbudowa i publikacja KON + STR są wstrzymane; eksport jest zestawieniem roboczym danych, nie implementacją czterech finalnych szablonów.
 - Dokumenty bazowe nadbudowy można wskazać opisowo; pliki nadal dodaje się przez dokumentację punktu. Nie ma automatycznego uznawania wdrożenia za zakończone.
 - Nie ustawiono obiecanego klientowi SLA, nie dodano automatycznej wysyłki ani powiadomień.
-- Stary generator pozostaje pod dotychczasowymi adresami dla zgodności, ale nowe odnośniki prowadzą do biblioteki 1.3.
+- Stare adresy ekranów przekierowują do biblioteki 1.3. Dotychczasowe endpointy zapisu/eksportu pozostają dla zgodności ze starszymi, już otwartymi formularzami; dane historyczne nie są usuwane.
 
 ## Test ręczny
 

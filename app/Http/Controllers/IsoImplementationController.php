@@ -28,33 +28,21 @@ class IsoImplementationController extends Controller
     {
         $this->authorizeStaff($request, $audit);
 
-        return $this->contextScreenView($audit, false);
+        return redirect()->route('audits.iso-review.show', $audit);
     }
 
     public function contextScreenForClient(Request $request, Audit $audit)
     {
         $this->authorizeClient($request, $audit);
 
-        return $this->contextScreenView($audit, true);
+        return redirect()->route('client.audits.iso-review.show', $audit);
     }
 
     public function contextTemplate(AuditType $auditType)
     {
         abort_unless($auditType->slug === 'iso50001', 404);
 
-        return view('audits.iso50001-context-screen', ['answers' => [], 'isTemplatePreview' => true,
-            'backUrl' => route('audit-types.show', ['auditType' => $auditType, 'section' => '4-1']), 'baseRoute' => null]);
-    }
-
-    private function contextScreenView(Audit $audit, bool $client)
-    {
-        $response = $audit->isoImplementationResponses()->where('section_id', '4-1')->where('action_key', 'context_generator')->first();
-
-        return view('audits.iso50001-context-screen', [
-            'audit' => $audit, 'answers' => app(IsoContextService::class)->normalize(old('answers', $response?->answers ?? [])),
-            'isTemplatePreview' => false, 'baseRoute' => $client ? 'client.audits.iso50001.context.' : 'audits.iso50001.context.',
-            'backUrl' => route($client ? 'client.audits.show' : 'audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']),
-        ]);
+        return redirect()->route('audit-types.iso50001.library', $auditType);
     }
 
     public function store(Request $request, Audit $audit, string $section, string $action): RedirectResponse

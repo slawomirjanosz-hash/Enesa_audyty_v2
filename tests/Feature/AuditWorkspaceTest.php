@@ -387,13 +387,13 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
         ->assertSee('Otwórz podgląd formularza wzorcowego');
 
     $this->actingAs($superadmin)->get(route('audit-types.iso50001.context', $isoType))
-        ->assertOk()->assertSee('Podgląd formularza wzorcowego')->assertSee('Wybór czynników')
-        ->assertSee('KTX-ZT-08')->assertDontSee('data-save', false);
-    $screen = $this->actingAs($client)->get(route('client.audits.iso50001.context.show', $audit))
-        ->assertOk()->assertSee('Zapisz Word')->assertSee('Zapisz PDF')->assertSee('Podgląd PDF')
-        ->assertSee('Dane o zakładzie')->assertSee('Wybór czynników')->assertSee('Uzupełnienie konsultanta');
-    expect(substr_count($screen->getContent(), 'data-fact="'))->toBe(38);
-    expect(substr_count($screen->getContent(), 'data-factor="'))->toBe(59);
+        ->assertRedirect(route('audit-types.iso50001.library', $isoType));
+    $this->actingAs($superadmin)->get(route('audits.iso50001.context.show', $audit))
+        ->assertRedirect(route('audits.iso-review.show', $audit));
+    $this->actingAs($client)->get(route('client.audits.iso50001.context.show', $audit))
+        ->assertRedirect(route('client.audits.iso-review.show', $audit));
+    $this->get(route('client.audits.iso-review.show', $audit))->assertOk()
+        ->assertSee('Dane o zakładzie')->assertSee('44')->assertSee('Biblioteka 1.3');
 
     $answers = [
         'facts' => ['organization' => 'Zakład kontekstowy', 'scope' => 'Cały zakład', 'metering' => 'brak', 'scada' => 'nie', 'infrastructure_age' => 20, 'compressed_air' => 'tak', 'energy_manager' => 'nieformalnie', 'consumption_tj' => 100, 'customers_co2' => 'tak'],
