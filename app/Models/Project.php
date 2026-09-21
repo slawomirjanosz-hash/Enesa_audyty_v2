@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
@@ -23,6 +24,27 @@ class Project extends Model
         'end_date' => 'date',
         'contract_value' => 'decimal:2',
     ];
+
+    public static function numberPrefix(): string
+    {
+        return (CompanySettings::first()?->offerShortName() ?? 'FI').'_PR_';
+    }
+
+    public static function nextNumberSequence(): int
+    {
+        return (int) (static::withTrashed()->pluck('number')->map(function (string $number): int {
+            return preg_match('/(?:^|[_\/-])(\d{1,7})$/D', $number, $matches) ? (int) $matches[1] : 0;
+        })->max() ?? 0) + 1;
+    }
+
+    public function protocolProjectReference(): string
+    {
+        if (preg_match('/(\d+)$/D', $this->number, $matches)) {
+            return str_pad($matches[1], 3, '0', STR_PAD_LEFT);
+        }
+
+        return Str::slug($this->number) ?: 'PROJEKT';
+    }
 
     public function company(): BelongsTo
     {

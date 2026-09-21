@@ -81,7 +81,7 @@
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;"><h2 style="margin:0;">Nowy projekt</h2><button type="button" onclick="document.getElementById('project-modal').classList.remove('open')" style="border:0;background:none;font-size:24px;cursor:pointer;">×</button></div>
         <form method="POST" action="{{ route('projects.store') }}">@csrf
             <div class="form-grid">
-                <div class="field"><label>Numer projektu *</label><input name="number" value="{{ old('number') }}" required placeholder="PRJ/2026/001"></div>
+                @include('projects._new-number')
                 <div class="field"><label>Nazwa projektu *</label><input name="name" value="{{ old('name') }}" required></div>
                 <div class="field"><label>Firma / klient</label><select name="company_id"><option value="">Projekt wewnętrzny</option>@foreach($companies as $company)<option value="{{ $company->id }}">{{ $company->name }}</option>@endforeach</select></div>
                 <div class="field"><label>Kierownik projektu *</label><select name="manager_id" required><option value="">Wybierz</option>@foreach($users as $user)<option value="{{ $user->id }}">{{ $user->name }}</option>@endforeach</select></div>

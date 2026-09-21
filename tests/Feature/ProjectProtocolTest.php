@@ -21,6 +21,23 @@ beforeEach(function () {
     $this->actingAs($this->admin);
 });
 
+test('protocol number uses project suffix and avoids collisions without renumbering issued protocols', function () {
+    $this->post(route('projects.protocols.store', $this->project), $this->data)->assertSessionHasNoErrors();
+    $first = ProjectProtocol::firstOrFail();
+    expect($first->number)->toBe('PO/014/'.now()->year.'/0001');
+    $other = Project::create(['number' => 'FIRMA_PR_20260921_014', 'name' => 'Inny projekt', 'manager_id' => $this->admin->id, 'status' => 'active']);
+    $this->post(route('projects.protocols.store', $other), $this->data)->assertSessionHasNoErrors();
+    expect(ProjectProtocol::latest('id')->first()->number)->toBe('PO/014/'.now()->year.'/0002');
+    $this->project->update(['number' => 'FIRMA_PR_20260921_004']);
+    $this->post(route('projects.protocols.store', $this->project), $this->data)->assertSessionHasNoErrors();
+    expect(ProjectProtocol::latest('id')->first()->number)->toBe('PO/004/'.now()->year.'/0001')
+        ->and($first->fresh()->number)->toBe('PO/014/'.now()->year.'/0001');
+    $this->put(route('projects.protocols.update', [$this->project, $first]), array_replace($this->data, ['revision' => 1]))->assertSessionHasNoErrors();
+    expect($first->fresh()->number)->toBe('PO/014/'.now()->year.'/0001');
+    $this->project->update(['number' => 'Projekt bez cyfr']);
+    expect($this->project->protocolProjectReference())->toBe('projekt-bez-cyfr');
+});
+
 test('project protocols save totals snapshots and render branded pdf with signatures', function () {
     CompanySettings::first()->update(['logo_data' => base64_encode(file_get_contents(public_path('Logo2.png'))), 'logo_mime' => 'image/png']);
     $this->get(route('projects.protocols.create', $this->project))->assertOk()->assertSee('Przedstawiciel dostawcy');

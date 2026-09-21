@@ -152,7 +152,7 @@
         @if($errors->projectCopy->any())<div style="padding:11px 13px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:14px;">{{ $errors->projectCopy->first() }}</div>@endif
         <form method="POST" action="{{ route('projects.copy',$project) }}">@csrf
             <div class="grid2">
-                <div class="field"><label>Nowy numer projektu</label><input name="number" value="{{ old('number') }}" placeholder="np. PRJ/2026/002" required></div>
+                @include('projects._new-number')
                 <div class="field"><label>Nazwa nowego projektu</label><input name="name" value="{{ old('name',$project->name.' — kopia') }}" required></div>
             </div>
             <div style="margin-top:14px;padding:12px 14px;border-radius:9px;background:#f5f8f6;color:#4b5d53;font-size:12px;line-height:1.55"><strong>Skopiowane zostaną:</strong> dane projektu, zespół, harmonogram i zadania oraz materiały i usługi. Zadania otrzymają postęp 0%, a projekt status „Planowany”. Dokumenty i finanse nie będą kopiowane.</div>

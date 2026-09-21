@@ -80,6 +80,7 @@ class ProjectController extends Controller
     public function store(Request $request): RedirectResponse
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $this->prepareNewProjectNumber($request);
         $data = $this->validateProject($request);
         $members = $data['member_ids'] ?? [];
         unset($data['member_ids']);
@@ -171,6 +172,8 @@ class ProjectController extends Controller
     {
         $this->authorize('view', $project);
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+
+        $this->prepareNewProjectNumber($request, 'projectCopy');
 
         $data = $request->validateWithBag('projectCopy', [
             'number' => ['required', 'string', 'max:100', Rule::unique('projects', 'number')],
@@ -1269,6 +1272,25 @@ class ProjectController extends Controller
         }
 
         return $data;
+    }
+
+    private function prepareNewProjectNumber(Request $request, string $errorBag = 'default'): void
+    {
+        // Existing integrations may still submit a complete number. New forms use explicit components.
+        if (! $request->hasAny(['number_date', 'number_sequence'])) {
+            return;
+        }
+
+        $sequence = $request->input('number_sequence');
+        if (is_string($sequence) && preg_match('/^[0-9]{1,7}$/D', $sequence)) {
+            $request->merge(['number_sequence' => (int) $sequence]);
+        }
+
+        $parts = $request->validateWithBag($errorBag, [
+            'number_date' => ['required', 'date_format:Y-m-d'],
+            'number_sequence' => ['required', 'integer', 'min:1', 'max:9999999'],
+        ]);
+        $request->merge(['number' => Project::numberPrefix().str_replace('-', '', $parts['number_date']).'_'.str_pad((string) (int) $parts['number_sequence'], 3, '0', STR_PAD_LEFT)]);
     }
 
     private function canViewProjectFinances(User $user): bool

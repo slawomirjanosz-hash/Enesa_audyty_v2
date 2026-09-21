@@ -116,6 +116,8 @@ class ProjectProtocolController extends Controller
                 + ['net_cents' => $net, 'vat_cents' => (int) round($net * (is_numeric($row['vat']) ? (int) $row['vat'] : 0) / 100)];
         }, $data['items']);
         DB::transaction(function () use ($project, $protocol, $data, $signature, $revision, $request) {
+            // Serialize numbering across projects that can share a manually entered suffix.
+            $issuer = CompanySettings::query()->lockForUpdate()->first();
             Project::whereKey($project->id)->lockForUpdate()->firstOrFail();
             $existing = $protocol->exists;
             if ($existing) {
@@ -123,7 +125,6 @@ class ProjectProtocolController extends Controller
                 abort_if($protocol->revision !== (int) $revision, 409, 'Protokół zmieniono w innym oknie. Odśwież formularz.');
             }
             $supplier = Company::findOrFail($data['supplier_company_id']);
-            $issuer = CompanySettings::first();
             $snapshot = $existing ? $protocol->issuer_snapshot : [
                 'name' => $issuer?->name ?: config('app.name'), 'address' => $issuer?->address, 'city' => $issuer?->city, 'postcode' => $issuer?->postcode, 'nip' => $issuer?->nip,
                 'logo' => $issuer && ($issuer->logo_data || ($issuer->logo_path && Storage::disk('public')->exists($issuer->logo_path))) ? $issuer->logoDataUri() : null,
@@ -136,8 +137,10 @@ class ProjectProtocolController extends Controller
                 'signature_data' => $signature, 'revision' => $existing ? $protocol->revision + 1 : 1]);
             if (! $existing) {
                 $protocol->created_by = $request->user()->id;
-                $sequence = ProjectProtocol::where('project_id', $project->id)->count() + 1;
-                $protocol->number = 'PO/'.$project->id.'/'.now()->format('Y').'/'.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);
+                $prefix = 'PO/'.$project->protocolProjectReference().'/'.now()->format('Y').'/';
+                $sequence = (int) (ProjectProtocol::where('number', 'like', $prefix.'%')->pluck('number')
+                    ->map(fn (string $number): int => (int) substr($number, strlen($prefix)))->max() ?? 0) + 1;
+                $protocol->number = $prefix.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);
             }
             $protocol->save();
         });
