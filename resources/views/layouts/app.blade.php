@@ -1173,5 +1173,6 @@ document.addEventListener('keydown', function (event) {
 }, true);
 </script>
 
+@include('partials.table-sorting')
 </body>
 </html>

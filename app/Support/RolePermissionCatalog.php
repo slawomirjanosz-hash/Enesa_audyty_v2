@@ -30,6 +30,7 @@ class RolePermissionCatalog
             ]],
             'crm' => ['label' => 'CRM i dostawcy', 'permissions' => [
                 'crm.view' => 'Podgląd CRM, klientów i dostawców',
+                'crm.suppliers.create' => 'Dodawanie dostawców (bez zarządzania klientami)',
                 'crm.companies.manage' => 'Dodawanie, edycja, archiwizacja i usuwanie firm',
                 'crm.leads.manage' => 'Dodawanie i edycja leadów',
                 'crm.tasks.own.manage' => 'Zarządzanie własnymi zadaniami CRM',
@@ -58,6 +59,8 @@ class RolePermissionCatalog
                 'projects.requirements.manage' => 'Zarządzanie materiałami i usługami',
                 'projects.documents.view' => 'Podgląd dokumentów projektu',
                 'projects.documents.manage' => 'Zarządzanie dokumentami projektu',
+                'projects.protocols.view' => 'Podgląd protokołów odbioru dostawców (wraz z cenami)',
+                'projects.protocols.manage' => 'Tworzenie i edycja protokołów odbioru (wraz z cenami)',
             ]],
             'audits' => ['label' => 'Audyty', 'permissions' => [
                 'audits.view' => 'Podgląd modułu audytów',

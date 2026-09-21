@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\ProjectDocumentFolder;
 use App\Models\ProjectFinanceGroup;
 use App\Models\ProjectFinancialEntry;
+use App\Models\ProjectProtocol;
 use App\Models\ProjectRequirement;
 use App\Models\Task;
 use App\Models\User;
@@ -18,6 +19,7 @@ use App\Services\AuditorAccessService;
 use App\Services\DocumentQuotaService;
 use App\Services\ProjectGanttImportService;
 use App\Services\ProjectRequirementsImportService;
+use App\Support\TableSort;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -55,9 +57,20 @@ class ProjectController extends Controller
             $query->where('status', $request->string('status'));
         }
 
+        $completedQuery = (clone $query)->where('status', 'completed')->withCount('members');
+        $sortColumns = [
+            'number' => 'number', 'name' => 'name', 'team' => 'members_count', 'date' => 'start_date',
+            'company' => Company::select('name')->whereColumn('companies.id', 'projects.company_id')->limit(1),
+            'manager' => User::select('name')->whereColumn('users.id', 'projects.manager_id')->limit(1),
+        ];
+        if ($this->canViewProjectFinances($user)) {
+            $sortColumns['amount'] = 'contract_value';
+        }
+        TableSort::apply($completedQuery, $request, $sortColumns, 'completed');
+
         return view('projects.index', [
             'projects' => (clone $query)->where('status', '!=', 'completed')->paginate(20)->withQueryString(),
-            'completedProjects' => (clone $query)->where('status', 'completed')->paginate(20, ['*'], 'completed_page')->withQueryString(),
+            'completedProjects' => $completedQuery->paginate(20, ['*'], 'completed_page')->withQueryString(),
             'companies' => Company::clients()->active()->orderBy('name')->get(),
             'users' => $this->staffUsers(),
             'canViewFinances' => $this->canViewProjectFinances($user),
@@ -92,6 +105,8 @@ class ProjectController extends Controller
         $canViewMaterialPrices = $user->hasRole('superadmin') || $user->can('projects.requirements.material_prices.view');
         $canViewServicePrices = $user->hasRole('superadmin') || $user->can('projects.requirements.service_prices.view');
         $canViewDocuments = $fullAccess || $user->canAny(['projects.documents.view', 'projects.documents.manage']);
+        $canViewProtocols = $fullAccess || $user->canAny(['projects.protocols.view', 'projects.protocols.manage']);
+        $canManageProtocols = $fullAccess || $user->can('projects.protocols.manage');
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
             'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financialEntries.projectRequirement', 'financeGroups.entries',
@@ -128,6 +143,9 @@ class ProjectController extends Controller
             'canViewMaterialPrices' => $canViewMaterialPrices,
             'canViewServicePrices' => $canViewServicePrices,
             'canViewDocuments' => $canViewDocuments,
+            'canViewProtocols' => $canViewProtocols,
+            'canManageProtocols' => $canManageProtocols,
+            'protocols' => $canViewProtocols ? ProjectProtocol::where('project_id', $project->id)->latest()->get(['id', 'project_id', 'number', 'acceptance_date', 'supplier_snapshot', 'kind', 'outcome', 'invoice_decision', 'items', 'revision', 'created_at']) : collect(),
             'canDeleteProject' => $user->hasAnyRole(['admin', 'superadmin']),
             'canCopyProject' => $fullAccess && $user->can('projects.create'),
         ]);

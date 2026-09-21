@@ -35,6 +35,7 @@ use App\Http\Controllers\PriceCatalogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectDocumentFolderController;
+use App\Http\Controllers\ProjectProtocolController;
 use App\Http\Controllers\PublicProjectDocumentFolderController;
 use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\Settings;
@@ -400,6 +401,11 @@ Route::get('/shared/project-folder/{share}/documents/{document}', [PublicProject
     ->middleware(['signed', 'throttle:60,1'])->name('public.project-documents.download');
 
 Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 'app.module:projects'])->group(function () {
+    Route::get('/{project}/protocols/create', [ProjectProtocolController::class, 'create'])->name('protocols.create');
+    Route::post('/{project}/protocols', [ProjectProtocolController::class, 'store'])->name('protocols.store');
+    Route::get('/{project}/protocols/{protocol}/edit', [ProjectProtocolController::class, 'edit'])->name('protocols.edit');
+    Route::put('/{project}/protocols/{protocol}', [ProjectProtocolController::class, 'update'])->name('protocols.update');
+    Route::get('/{project}/protocols/{protocol}/pdf', [ProjectProtocolController::class, 'pdf'])->name('protocols.pdf');
     Route::get('/', [ProjectController::class, 'index'])->name('index');
     Route::post('/', [ProjectController::class, 'store'])->middleware('app.permission:projects.create')->name('store');
     Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
@@ -440,6 +446,7 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
 });
 
 Route::prefix('suppliers')->name('suppliers.')->middleware(['auth', 'staff.role', 'app.module:crm'])->group(function () {
+    Route::post('/', [SupplierController::class, 'store'])->name('store');
     Route::get('/', [SupplierController::class, 'index'])->name('index');
     Route::get('/{supplier}', [SupplierController::class, 'show'])->name('show');
     Route::put('/{supplier}', [SupplierController::class, 'update'])->name('update');

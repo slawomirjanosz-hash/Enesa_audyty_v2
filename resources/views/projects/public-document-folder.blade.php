@@ -76,5 +76,6 @@ document.querySelectorAll('[data-document-sort]').forEach(button => button.addEv
     }).forEach(row => table.tBodies[0].appendChild(row));
 }));
 </script>
+@include('partials.table-sorting')
 </body>
 </html>

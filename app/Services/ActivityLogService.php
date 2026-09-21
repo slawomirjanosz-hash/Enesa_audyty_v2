@@ -58,7 +58,7 @@ class ActivityLogService
         }
 
         $newValues = $action === 'created' ? $model->getAttributes() : $model->getChanges();
-        $excluded = self::HIDDEN_FIELDS;
+        $excluded = [...self::HIDDEN_FIELDS, 'signature_data', 'issuer_snapshot'];
         if ($model instanceof User) {
             $excluded = [...$excluded, ...self::VOLATILE_USER_FIELDS];
         }

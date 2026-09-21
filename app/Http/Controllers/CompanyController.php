@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\ClientAccepted;
 use App\Mail\ClientRegistered;
 use App\Mail\NewClientUser;
+use App\Models\AuditorCompanyAccess;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\CrmActivity;
@@ -434,7 +435,9 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user())
+            || $request->user()->can('crm.companies.manage')
+            || ($request->input('company_type') === 'supplier' && $request->user()->can('crm.suppliers.create')), 403);
 
         $cleanNip = Company::normalizeNip($request->nip);
         $request->merge([
@@ -457,6 +460,13 @@ class CompanyController extends Controller
         $company = Company::create(array_merge($data, [
             'status' => $data['company_type'] === 'supplier' ? 'active' : 'pending',
         ]));
+
+        if ($company->company_type === 'supplier' && $request->user()->hasRole('auditor')) {
+            AuditorCompanyAccess::firstOrCreate(
+                ['auditor_id' => $request->user()->id, 'company_id' => $company->id],
+                ['can_view_dashboard' => true]
+            );
+        }
 
         if ($company->company_type === 'client') {
             Mail::to(config('mail.admin_email'))

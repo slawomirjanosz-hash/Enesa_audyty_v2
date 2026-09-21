@@ -211,14 +211,17 @@
     <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
         <i class="ti ti-users" style="margin-right:6px;"></i>Wszyscy użytkownicy
     </a>
-    @if(auth()->user()->hasAnyRole(['superadmin', 'admin']))
+    @if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.roles.manage'))
     <a href="{{ route('settings.roles.index') }}" class="settings-tab">
-        <i class="ti ti-shield-lock" style="margin-right:6px;"></i>Role
+        <i class="ti ti-shield-lock" style="margin-right:6px;"></i>Role i uprawnienia
     </a>
     @endif
 </div>
 
 {{-- Flash messages --}}
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.roles.manage'))
+    <p style="margin:0 0 20px;color:#6b7a70">Uprawnienia nadajesz przez rolę użytkownika. W zakładce <a href="{{route('settings.roles.index')}}" style="color:var(--green)">Role i uprawnienia</a>, w sekcji „CRM i dostawcy”, możesz włączyć „Dodawanie dostawców”. Zmiana roli dotyczy wszystkich przypisanych do niej osób; dla jednej osoby utwórz osobną rolę.</p>
+@endif
 @if(session('success'))
     <div class="alert alert-success">
         <i class="ti ti-circle-check"></i> {{ session('success') }}

@@ -68,7 +68,7 @@
             <i class="ti ti-chevron-down folder-chevron"></i>
         </div>
         <div class="folder-body {{ $search !== '' ? 'open' : '' }}">
-            <table class="docs-table">
+            <table class="docs-table" data-server-sort="name,type,size,date,uploader">
                 <thead>
                     <tr>
                         <th>Nazwa pliku</th>

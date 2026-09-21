@@ -22,7 +22,7 @@
             </form>
         </div>
         <div class="cyl-table" tabindex="0" role="region" aria-label="Lista butli — przewijana poziomo na małym ekranie">
-            <table class="cyl-register-table">
+            <table class="cyl-register-table" data-server-sort="serial,company,type,status,last,due">
                 <thead><tr><th scope="col">Numer seryjny</th><th scope="col">Firma</th><th scope="col">Typ / producent</th><th scope="col">Status</th><th scope="col">Ostatni przegląd</th><th scope="col">Następny termin</th><th scope="col"><span class="cyl-sr-only">Akcja</span></th></tr></thead>
                 <tbody>
                 @forelse($cylinders as $cylinder)

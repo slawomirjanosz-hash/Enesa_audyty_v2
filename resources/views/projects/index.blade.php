@@ -51,7 +51,7 @@
 <section class="completed-projects" aria-labelledby="completed-projects-title">
     <h2 id="completed-projects-title">Projekty zakończone <span>({{ $completedProjects->total() }})</span></h2>
     <div class="completed-projects-scroll">
-        <table class="completed-projects-table">
+        <table class="completed-projects-table" data-server-sort="number,name,company,manager,team,date{{ $canViewFinances ? ',amount' : '' }}" data-sort-prefix="completed" data-page-parameter="completed_page">
             <thead><tr><th>Numer projektu</th><th>Nazwa projektu</th><th>Firma / klient</th><th>Kierownik</th><th>Zespół</th><th>Termin realizacji</th>@if($canViewFinances)<th>Wartość netto</th>@endif<th>Akcje</th></tr></thead>
             <tbody>
             @foreach($completedProjects as $project)

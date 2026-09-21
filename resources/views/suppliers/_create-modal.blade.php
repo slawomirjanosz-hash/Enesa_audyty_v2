@@ -8,11 +8,13 @@
             <div class="supplier-form-errors"><strong>Popraw błędy:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
         @endif
 
-        <form method="POST" action="{{ route('companies.store') }}">
+        <form method="POST" action="{{ auth()->user()->can('crm.companies.manage') || app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user()) ? route('companies.store') : route('suppliers.store') }}">
             @csrf
             <label>Rodzaj firmy *</label>
             <select id="supplier-company-type" name="company_type" onchange="updateSupplierFields()" required>
-                <option value="client" @selected(old('company_type', 'supplier') === 'client')>Klient</option>
+                @if(auth()->user()->can('crm.companies.manage') || app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user()))
+                    <option value="client" @selected(old('company_type', 'supplier') === 'client')>Klient</option>
+                @endif
                 <option value="supplier" @selected(old('company_type', 'supplier') === 'supplier')>Dostawca</option>
             </select>
 

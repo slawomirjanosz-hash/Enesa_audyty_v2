@@ -45,6 +45,7 @@ class ActivityLog extends Model
         return [
             'Company' => 'CRM / firma', 'CrmOpportunity' => 'CRM / szansa', 'CrmActivity' => 'CRM / aktywność',
             'Task' => 'Zadanie', 'Project' => 'Projekt', 'ProjectFinancialEntry' => 'Finanse projektu',
+            'ProjectProtocol' => 'Protokół odbioru dostawcy',
             'ProjectRequirement' => 'Materiały i usługi', 'ProjectFinanceGroup' => 'Grupa finansowa',
             'Document' => 'Dokument', 'Offer' => 'Oferta', 'OfferRequest' => 'Zapytanie ofertowe',
             'Audit' => 'Audyt', 'User' => 'Użytkownik', 'Role' => 'Rola', 'Permission' => 'Uprawnienie',

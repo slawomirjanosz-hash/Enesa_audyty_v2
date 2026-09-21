@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\CylinderPhotoRenderer;
 use App\Services\DocumentQuotaService;
 use App\Support\CylinderVideoLink;
+use App\Support\TableSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,7 +60,19 @@ class CylinderController extends Controller
             $query->where(fn ($q) => $q->where('serial_number', 'like', '%'.$search.'%')->orWhere('type', 'like', '%'.$search.'%')->orWhereHas('company', fn ($c) => $c->where('name', 'like', '%'.$search.'%')));
         }
 
-        return view('cylinders.index', $this->viewData($request) + ['cylinders' => $query->orderBy('serial_number')->paginate(30)->withQueryString()]);
+        $latest = fn ($column) => CylinderInspection::select($column)->whereColumn('cylinder_id', 'cylinders.id')->orderByDesc('inspected_at')->orderByDesc('id')->limit(1);
+        $query->select('cylinders.*')->selectSub(
+            CylinderInspection::query()->selectRaw("CASE WHEN result IN ('defects_found', 'further_review') THEN 'Problemy / wymaga oceny' WHEN next_due_at IS NULL THEN 'Brak oceny lub terminu' WHEN next_due_at < ? THEN 'Po terminie' WHEN next_due_at <= ? THEN 'Termin w ciągu miesiąca' WHEN result = 'no_findings' THEN 'Bez uwag — termin ważny' ELSE 'Brak oceny lub terminu' END", [today()->toDateString(), today()->addMonthNoOverflow()->toDateString()])
+                ->whereColumn('cylinder_id', 'cylinders.id')->orderByDesc('inspected_at')->orderByDesc('id')->limit(1),
+            'condition_sort'
+        )->orderBy('serial_number');
+        TableSort::apply($query, $request, [
+            'serial' => 'serial_number', 'type' => 'type', 'status' => 'condition_sort',
+            'company' => Company::select('name')->whereColumn('companies.id', 'cylinders.company_id')->limit(1),
+            'last' => $latest('inspected_at'), 'due' => $latest('next_due_at'),
+        ]);
+
+        return view('cylinders.index', $this->viewData($request) + ['cylinders' => $query->paginate(30)->withQueryString()]);
     }
 
     public function create(Request $request): View
@@ -111,10 +124,16 @@ class CylinderController extends Controller
             }
         }
 
+        $inspections = $cylinder->inspections()->withCount('videos')->orderByDesc('inspected_at')->orderByDesc('id');
+        TableSort::apply($inspections->getQuery(), $request, [
+            'date' => 'inspected_at', 'inspector' => 'inspector_name', 'result' => 'result',
+            'notes' => 'observations', 'due' => 'next_due_at',
+        ]);
+
         return view('cylinders.show', $this->viewData($request) + [
             'cylinder' => $cylinder->load(['company', 'latestInspection', 'photo']),
             'videos' => $cylinder->videos()->when($request->filled('inspection'), fn ($q) => $q->where('cylinder_inspection_id', $request->integer('inspection')))->latest()->paginate(12, ['*'], 'videos_page')->withQueryString(),
-            'inspections' => $cylinder->inspections()->withCount('videos')->orderByDesc('inspected_at')->orderByDesc('id')->paginate(20)->withQueryString(),
+            'inspections' => $inspections->paginate(20)->withQueryString(),
             'videoInspection' => $request->filled('attach') ? $cylinder->inspections()->findOrFail($request->integer('attach')) : null,
             'results' => CylinderInspection::RESULTS,
         ]);

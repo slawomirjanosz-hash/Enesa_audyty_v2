@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\Document;
+use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Support\TableSort;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -45,7 +47,12 @@ class DocumentController extends Controller
                 ->orWhereHas('offer', fn ($offer) => $offer->where('number', 'like', '%'.$search.'%'))
                 ->orWhereHas('uploader', fn ($user) => $user->where('name', 'like', '%'.$search.'%')));
         }
-        $documentPage = $query->with(['company', 'offer', 'uploader'])->orderByDesc('updated_at')->orderByDesc('id')->paginate(50)->withQueryString();
+        $query->with(['company', 'offer', 'uploader'])->orderByDesc('updated_at')->orderByDesc('id');
+        TableSort::apply($query, $request, [
+            'name' => 'original_filename', 'type' => 'type', 'size' => 'size', 'date' => 'updated_at',
+            'uploader' => User::select('name')->whereColumn('users.id', 'documents.uploaded_by')->limit(1),
+        ]);
+        $documentPage = $query->paginate(50)->withQueryString();
         $docs = $documentPage->getCollection();
 
         // Group documents by company name

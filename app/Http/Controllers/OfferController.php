@@ -17,11 +17,13 @@ use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
 use App\Services\OfferContentService;
 use App\Services\OfferCrmStageSynchronizer;
+use App\Support\TableSort;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -62,6 +64,21 @@ class OfferController extends Controller
             $query->where('status', $request->status);
         }
 
+        $sortColumns = [
+            'number' => 'offer_full_number', 'title' => 'offer_title',
+            'company' => Company::select('name')->whereColumn('companies.id', 'offers.company_id')->limit(1),
+            'owner' => User::select('name')->whereColumn('users.id', 'offers.assigned_user_id')->limit(1),
+            'status' => 'status', 'date' => 'created_at',
+        ];
+        // Do not expose even the ordering of prices to staff without price access.
+        if ($access->hasFullAccess($user) || (! $access->isDelegatedAuditor($user) && $user->can('offers.prices.view'))) {
+            $sortColumns['amount'] = 'kwota_netto';
+        } else {
+            $sortColumns['amount'] = DB::table('offers as sortable_offers')->select('kwota_netto')
+                ->whereColumn('sortable_offers.id', 'offers.id')
+                ->whereIn('sortable_offers.company_id', $access->accessibleCompanyIds($user, 'can_view_offer_prices'))->limit(1);
+        }
+        TableSort::apply($query, $request, $sortColumns);
         $offers = $query->paginate(20)->withQueryString();
 
         $offers->each(function (Offer $offer) use ($user) {

@@ -164,7 +164,7 @@
 @endif
 
 <div class="tabs">
-    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram i zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
+    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram i zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','protocols'=>'Protokoły','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'protocols'=>$canViewProtocols,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
     <button class="tab {{ $loop->first?'active':'' }}" onclick="openProjectTab('{{ $id }}',this)">{{ $label }}</button>
     @endforeach
 </div>
@@ -176,6 +176,9 @@
     </div>
 </section>
 
+@if($canViewProtocols)
+    @include('projects.protocols.list')
+@endif
 @if($canViewSchedule)
 <section id="pane-gantt" class="pane">
     @if(session('gantt_import_report'))
@@ -434,8 +437,8 @@
                     @if($canEdit)<td><input type="checkbox" name="requirement_ids[]" value="{{$req->id}}" form="requirements-bulk-form" class="requirement-entry-check" aria-label="Zaznacz {{$req->name}}"></td>@endif
                     <td><strong class="requirement-name">{{$req->name}}</strong><div class="requirement-meta"><span class="requirement-type">{{$req->type==='material'?'Materiał':'Usługa'}}</span>@if($req->description)<span class="requirement-description" title="{{$req->description}}">{{$req->description}}</span>@endif</div></td>
                     <td><strong>{{$req->technology ?: '—'}}</strong></td>
-                    <td><span class="requirement-qty">{{$req->formattedQuantity()}} {{$req->displayUnit()}}</span></td>
-                    <td>{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
+                    <td data-sort-value="{{$req->quantity}}"><span class="requirement-qty">{{$req->formattedQuantity()}} {{$req->displayUnit()}}</span></td>
+                    <td data-sort-value="{{$req->needed_by?->format('Y-m-d') ?? ''}} {{$req->responsible?->name}}">{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
                     <td>@if($req->supplierCompany)<a href="{{route('suppliers.show',$req->supplierCompany)}}" style="color:var(--green);font-weight:700">{{$req->supplierCompany->name}}</a>@else{{$req->supplier ?: '—'}}@endif</td>
                     <td>@if($canEdit)<select class="status-select requirement-status {{$req->status}} project-async-status" data-kind="requirement" data-id="{{$req->id}}" data-current="{{$req->status}}" data-url="{{route('projects.requirements.status',[$project,$req])}}" aria-label="Status {{$req->name}}">@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}" {{$req->status===$value?'selected':''}}>{{$label}}</option>@endforeach</select>@else<span class="requirement-status {{$req->status}}">{{$requirementStatusLabels[$req->status]??$req->status}}</span>@endif</td>
                     @if($canViewMaterialPrices || $canViewServicePrices)<td>@if($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) @if($req->unitCost()!==null)<span class="requirement-cost">{{number_format($req->unitCost(),2,',',' ')}} zł / {{$req->displayUnit()}}</span><br><small>Łącznie: {{number_format((float)$req->estimated_cost,2,',',' ')}} zł</small>@else<span class="requirement-cost">—</span>@endif @else<span style="color:#999">Brak dostępu</span>@endif</td>@endif
@@ -1324,6 +1327,48 @@ const requirementBulkForm = document.getElementById('requirements-bulk-form');
 const requirementSelectAll = document.getElementById('requirements-select-all');
 const requirementChecks = [...document.querySelectorAll('.requirement-entry-check')];
 const requirementRows = [...document.querySelectorAll('.requirement-data-row')];
+// Sort existing rows so filtering, selection and status controls keep their state.
+document.querySelectorAll('.requirements-table').forEach(table => {
+    const offset = table.classList.contains('with-selection') ? 1 : 0;
+    const headers = [...table.tHead.rows[0].cells];
+    headers.forEach((header, column) => {
+        if (column < offset || column === headers.length - 1) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'finance-sort-button';
+        button.textContent = header.textContent;
+        header.replaceChildren(button);
+        const value = row => {
+            const cell = row.cells[column];
+            const select = cell.querySelector('select');
+            if (select) return select.selectedOptions[0]?.textContent || '';
+            if (column - offset === 6) {
+                const total = cell.querySelector('small')?.textContent || '';
+                const number = total.replace(/[^0-9,.-]/g, '').replace(',', '.');
+                return number === '' ? null : Number(number);
+            }
+            if (column - offset === 2) return Number(cell.dataset.sortValue);
+            return cell.dataset.sortValue ?? cell.textContent.trim();
+        };
+        button.addEventListener('click', () => {
+            const direction = button.dataset.direction === 'asc' ? 'desc' : 'asc';
+            headers.forEach(item => {
+                item.removeAttribute('aria-sort');
+                item.querySelector('button')?.removeAttribute('data-direction');
+            });
+            button.dataset.direction = direction;
+            header.setAttribute('aria-sort', direction === 'asc' ? 'ascending' : 'descending');
+            const rows = [...table.tBodies[0].rows];
+            rows.sort((a, b) => {
+                const left = value(a), right = value(b);
+                if (left === null || right === null) return left === right ? 0 : left === null ? 1 : -1;
+                const comparison = typeof left === 'number' ? left - right : String(left).localeCompare(String(right), 'pl', {numeric: true, sensitivity: 'base'});
+                return direction === 'asc' ? comparison : -comparison;
+            });
+            table.tBodies[0].append(...rows);
+        });
+    });
+});
 const requirementSearch = document.getElementById('requirements-live-search');
 const requirementSummaryTiles = [...document.querySelectorAll('.requirement-summary-kpi')];
 let activeRequirementSummaryTile = null;

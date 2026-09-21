@@ -481,5 +481,6 @@
         }).catch(function () {});
     }, 60000);
 </script>
+@include('partials.table-sorting')
 </body>
 </html>

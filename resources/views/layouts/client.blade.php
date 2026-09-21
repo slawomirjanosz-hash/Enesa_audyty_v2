@@ -859,5 +859,6 @@
 </script>
 @endunless
 
+@include('partials.table-sorting')
 </body>
 </html>

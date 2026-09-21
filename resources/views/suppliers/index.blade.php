@@ -46,6 +46,21 @@
 @endif
 
 <script>
+document.querySelectorAll('#supplier-list th').forEach((header, index) => {
+    const keys = ['name', 'contact', 'capabilities', 'items', 'projects'];
+    const url = new URL(window.location.href);
+    const selected = url.searchParams.get('sort') === keys[index];
+    const descending = selected && url.searchParams.get('direction') === 'desc';
+    const link = document.createElement('a');
+    link.textContent = header.textContent + (selected ? (descending ? ' ↓' : ' ↑') : ' ↕');
+    link.style.cssText = 'color:inherit;text-decoration:none;display:block';
+    url.searchParams.set('sort', keys[index]);
+    url.searchParams.set('direction', selected && !descending ? 'desc' : 'asc');
+    url.searchParams.delete('page');
+    link.href = url.toString();
+    header.replaceChildren(link);
+    if (selected) header.setAttribute('aria-sort', descending ? 'descending' : 'ascending');
+});
 function setSupplierView(view){const grid=document.getElementById('supplier-grid'),list=document.getElementById('supplier-list');if(!grid||!list)return;grid.style.display=view==='grid'?'grid':'none';list.style.display=view==='list'?'block':'none';document.getElementById('supplier-grid-button').classList.toggle('active',view==='grid');document.getElementById('supplier-list-button').classList.toggle('active',view==='list');localStorage.setItem('supplierView',view)}
 setSupplierView(localStorage.getItem('supplierView')||'grid');
 function openSupplierModal(){const modal=document.getElementById('supplier-create-modal');if(!modal)return;modal.classList.add('open');modal.setAttribute('aria-hidden','false');updateSupplierFields()}

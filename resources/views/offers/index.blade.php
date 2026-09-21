@@ -298,7 +298,7 @@
         </div>
     @else
         <div style="overflow-x:auto;">
-            <table class="offers-table">
+            <table class="offers-table" data-server-sort="number,title,company,owner,amount,status,date">
                 <thead>
                     <tr>
                         <th onclick="sortOffersTable(0)">Numer oferty <span class="sort-icon">⇅</span></th>

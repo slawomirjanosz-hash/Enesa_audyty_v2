@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Project;
 use App\Services\AuditorAccessService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,8 +17,21 @@ class SupplierController extends Controller
             ->suppliers()
             ->active()
             ->withCount(['supplierRequirements', 'supplierFinancialEntries'])
-            ->with(['supplierRequirements.project', 'supplierFinancialEntries.project'])
-            ->orderBy('name');
+            ->with(['supplierRequirements.project', 'supplierFinancialEntries.project']);
+
+        $sortColumns = [
+            'name' => 'name', 'contact' => 'email', 'capabilities' => 'supplier_sort_capabilities',
+            'items' => 'supplier_requirements_count', 'projects' => 'supplier_projects_count',
+        ];
+        $query->selectRaw("companies.*, COALESCE(NULLIF(supplier_capabilities, ''), supplier_materials, '') as supplier_sort_capabilities")
+            ->selectSub(Project::query()->selectRaw('COUNT(*)')->where(function ($projects) {
+                $projects->whereHas('requirements', fn ($requirements) => $requirements->whereColumn('supplier_company_id', 'companies.id'))
+                    ->orWhereHas('financialEntries', fn ($entries) => $entries->whereColumn('supplier_company_id', 'companies.id'));
+            }), 'supplier_projects_count');
+        // Keep counts added by withCount: selectRaw appends rather than replaces columns.
+        $sortKey = $request->input('sort', 'name');
+        $query->orderBy(is_string($sortKey) ? ($sortColumns[$sortKey] ?? 'name') : 'name', $request->input('direction') === 'desc' ? 'desc' : 'asc')
+            ->orderBy('companies.id');
 
         $query = app(AuditorAccessService::class)->scopeByCompanyAccess(
             $query,
@@ -39,7 +53,8 @@ class SupplierController extends Controller
 
         return view('suppliers.index', [
             'suppliers' => $query->paginate(24)->withQueryString(),
-            'canCreateSupplier' => app(AuditorAccessService::class)->hasFullAccess($request->user()),
+            'canCreateSupplier' => app(AuditorAccessService::class)->hasFullAccess($request->user())
+                || $request->user()->can('crm.companies.manage') || $request->user()->can('crm.suppliers.create'),
         ]);
     }
 
@@ -61,6 +76,15 @@ class SupplierController extends Controller
             ->values();
 
         return view('suppliers.show', compact('supplier', 'projects'));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user())
+            || $request->user()->can('crm.companies.manage') || $request->user()->can('crm.suppliers.create'), 403);
+        $request->merge(['company_type' => 'supplier']);
+
+        return app(CompanyController::class)->store($request);
     }
 
     public function update(Request $request, Company $supplier): RedirectResponse

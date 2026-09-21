@@ -14,6 +14,35 @@ beforeEach(function () {
     Mail::fake();
 });
 
+test('delegated auditor can create suppliers with explicit permission but cannot create clients', function () {
+    $auditor = User::factory()->create();
+    $auditor->assignRole('auditor');
+    $this->actingAs($auditor)->post(route('suppliers.store'), ['name' => 'Denied supplier'])->assertForbidden();
+    $auditor->givePermissionTo('crm.suppliers.create');
+    $this->actingAs($auditor)->get(route('suppliers.index'))->assertOk()->assertSee('Dodaj dostawcę');
+    $this->actingAs($auditor)->post(route('suppliers.store'), ['name' => 'Allowed supplier', 'company_type' => 'client'])
+        ->assertRedirect();
+    $supplier = Company::where('name', 'Allowed supplier')->firstOrFail();
+    expect($supplier->company_type)->toBe('supplier');
+    $this->actingAs($auditor)->get(route('suppliers.show', $supplier))->assertOk();
+    $this->actingAs($auditor)->post(route('companies.store'), ['name' => 'Denied client', 'company_type' => 'client'])->assertForbidden();
+    Mail::assertNotSent(ClientRegistered::class);
+});
+
+test('supplier list supports every column and sorts before pagination', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    foreach (range(1, 26) as $number) {
+        Company::create(['company_type' => 'supplier', 'name' => sprintf('Supplier %02d', $number), 'status' => 'active']);
+    }
+    foreach (['name', 'contact', 'capabilities', 'items', 'projects'] as $sort) {
+        $this->actingAs($admin)->get(route('suppliers.index', ['sort' => $sort, 'direction' => 'desc']))->assertOk();
+    }
+    $this->actingAs($admin)->get(route('suppliers.index', ['sort' => 'name', 'direction' => 'desc']))
+        ->assertSeeInOrder(['Supplier 26', 'Supplier 25'])->assertDontSee('Supplier 01');
+    $this->actingAs($admin)->get(route('suppliers.index', ['sort' => 'invalid', 'direction' => 'invalid']))->assertOk();
+});
+
 test('admin creates a supplier instead of a client and sees it in supplier views', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
