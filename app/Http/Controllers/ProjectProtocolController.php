@@ -40,6 +40,20 @@ class ProjectProtocolController extends Controller
         return $this->form($project, $protocol);
     }
 
+    public function copy(Project $project, ProjectProtocol $protocol)
+    {
+        $this->access($project, $protocol, true);
+        $copy = new ProjectProtocol($protocol->only([
+            'supplier_company_id', 'place', 'reference', 'kind', 'outcome', 'description',
+            'remarks', 'invoice_conditions', 'attachments', 'supplier_representative', 'items',
+        ]));
+        $copy->acceptance_date = today();
+        $copy->receiver_name = request()->user()->name;
+        $copy->invoice_decision = 'no';
+
+        return $this->form($project, $copy)->with('copiedFrom', $protocol->number);
+    }
+
     private function form(Project $project, ProjectProtocol $protocol)
     {
         return view('projects.protocols.form', [
@@ -137,7 +151,7 @@ class ProjectProtocolController extends Controller
         ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'download', 'auditable_type' => ProjectProtocol::class,
             'auditable_id' => $protocol->id, 'subject_label' => $protocol->number]);
         $pdf = Pdf::loadView('projects.protocols.pdf', compact('protocol'))->setPaper('a4');
-        $filename = str_replace('/', '-', $protocol->number).'.pdf';
+        $filename = $protocol->pdfFilename();
 
         return $request->boolean('download') ? $pdf->download($filename) : $pdf->stream($filename);
     }

@@ -61,6 +61,7 @@ test('protocol access requires project membership and separate permission and re
     $protocol = ProjectProtocol::firstOrFail();
     $other = Project::create(['number' => 'OTHER', 'name' => 'Other', 'status' => 'active']);
     $this->get(route('projects.protocols.pdf', [$other, $protocol]))->assertNotFound();
+    $this->get(route('projects.protocols.copy', [$other, $protocol]))->assertNotFound();
     $member = User::factory()->create();
     $role = Role::findOrCreate('protocol-reader');
     $role->givePermissionTo('projects.view');
@@ -70,6 +71,43 @@ test('protocol access requires project membership and separate permission and re
     $member->givePermissionTo('projects.protocols.view');
     $this->get(route('projects.protocols.pdf', [$this->project, $protocol]))->assertOk();
     $this->get(route('projects.protocols.edit', [$this->project, $protocol]))->assertForbidden();
+    $this->get(route('projects.protocols.copy', [$this->project, $protocol]))->assertForbidden();
     $member->givePermissionTo('projects.protocols.manage');
     $this->get(route('projects.protocols.create', $other))->assertForbidden();
+});
+
+test('copy opens a new unsigned protocol and saving gives it a separate number', function () {
+    $this->post(route('projects.protocols.store', $this->project), $this->data);
+    $source = ProjectProtocol::firstOrFail();
+    $source->update(['signature_data' => 'old-signature', 'revision' => 4]);
+    $response = $this->get(route('projects.protocols.copy', [$this->project, $source]));
+    $response->assertOk()->assertSee('Kopia protokołu')->assertSee(route('projects.protocols.store', $this->project), false);
+    $copy = $response->viewData('protocol');
+    expect($copy->exists)->toBeFalse()->and($copy->number)->toBeNull()
+        ->and($copy->signature_data)->toBeNull()->and($copy->remedy_deadline)->toBeNull()
+        ->and($copy->invoice_decision)->toBe('no')->and($copy->items)->toBe($source->items)
+        ->and($copy->description)->toBe($source->description)->and(ProjectProtocol::count())->toBe(1);
+    $data = array_replace($this->data, $copy->only(array_keys($this->data)));
+    $data['revision'] = 0;
+    $data['acceptance_date'] = $copy->acceptance_date->toDateString();
+    $this->post(route('projects.protocols.store', $this->project), $data)->assertSessionHasNoErrors()->assertRedirect();
+    $saved = ProjectProtocol::latest('id')->firstOrFail();
+    expect($saved->number)->not->toBe($source->number)->and($saved->revision)->toBe(1)
+        ->and($saved->signature_data)->toBeNull()->and($source->fresh()->signature_data)->toBe('old-signature');
+});
+
+test('pdf filename contains protocol number and safe bounded description for preview and download', function () {
+    $this->post(route('projects.protocols.store', $this->project), $this->data);
+    $protocol = ProjectProtocol::firstOrFail();
+    $protocol->update(['description' => "Odbiór pomp / próba: 2\nNowa linia"]);
+    $filename = $protocol->pdfFilename();
+    expect($filename)->toBe(str_replace('/', '-', $protocol->number).' - Odbior pomp - proba- 2 Nowa linia.pdf');
+    foreach ([0, 1] as $download) {
+        $response = $this->get(route('projects.protocols.pdf', [$this->project, $protocol, 'download' => $download]));
+        $response->assertOk();
+        expect($response->headers->get('Content-Disposition'))->toContain($filename);
+    }
+    $protocol->description = str_repeat('Zażółć / "<>:?*', 1000);
+    expect(strlen($protocol->pdfFilename()))->toBeLessThan(200);
+    expect(preg_match('/[\\\\\/<>:"|?*\r\n]/', $protocol->pdfFilename()))->toBe(0);
 });
