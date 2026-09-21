@@ -28,7 +28,9 @@
 <div><label for="protocol-receiver">Przedstawiciel odbierającego *</label><input id="protocol-receiver" name="receiver_name" value="{{old('receiver_name',$protocol->receiver_name ?? auth()->user()->name)}}" required></div>
 <div><label for="protocol-representative">Przedstawiciel dostawcy *</label><input id="protocol-representative" name="supplier_representative" value="{{old('supplier_representative',$protocol->supplier_representative)}}" required></div>
 </div>
-<p><label><input type="checkbox" name="use_signature" value="1" @checked(old('use_signature'))> Dołącz mój zapisany podpis do pola odbierającego</label></p><p class="protocol-help">Podpis dostawcy pozostaje do złożenia na wydruku. Obraz podpisu nie jest kwalifikowanym podpisem elektronicznym. Po edycji poprzedni podpis odbierającego jest usuwany — dołączenie własnego podpisu wymaga ponownego zaznaczenia. Decyzja o fakturowaniu nie tworzy faktury ani kosztu w rejestrze finansowym.</p>
+<p><label><input type="checkbox" name="use_signature" value="1" @checked(old('use_signature'))> Dołącz mój zapisany podpis do pola odbierającego</label></p>
+<p class="protocol-help"><a href="{{ route('profile.edit') }}#signature" target="_blank" rel="noopener">Dodaj lub zmień podpis w Moim profilu (nowa karta)</a>. Po zapisaniu podpisu możesz wrócić tutaj i zapisać protokół.</p>
+<p class="protocol-help">Podpis dostawcy pozostaje do złożenia na wydruku. Obraz podpisu nie jest kwalifikowanym podpisem elektronicznym. Po edycji poprzedni podpis odbierającego jest usuwany — dołączenie własnego podpisu wymaga ponownego zaznaczenia. Decyzja o fakturowaniu nie tworzy faktury ani kosztu w rejestrze finansowym.</p>
 <div class="protocol-actions"><a href="{{route('projects.show',[$project,'tab'=>'protocols'])}}">Anuluj</a><button>Zapisz protokół</button></div></form></div>
 <template id="protocol-row-template">@include('projects.protocols.item-row',['i'=>'__INDEX__','item'=>['name'=>'','quantity'=>1,'unit'=>'szt.','price'=>0,'vat'=>'23']])</template>
 <script>

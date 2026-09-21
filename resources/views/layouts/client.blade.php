@@ -364,6 +364,7 @@
             </div>
             <div style="flex:1;min-width:0;">
                 <div class="sidebar-user-name">{{ $clientUser->name }}</div>
+                <a href="{{ route('profile.edit') }}" style="display:inline-block;color:#fff;padding:6px 0;text-decoration:underline;">Mój profil</a>
                 @if($clientCompany)
                     <div class="sidebar-user-meta">{{ $clientCompany->name }}</div>
                 @endif

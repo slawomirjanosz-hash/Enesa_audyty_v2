@@ -662,7 +662,9 @@
                                         <i class="ti ti-key"></i> Uprawnienia
                                     </a>
                                 @endif
-                                @if($canDelete)
+                                @if($user->id === $currentUser->id)
+                                    <a href="{{ route('profile.edit') }}" class="btn-action" title="Edytuj mój profil i podpis" style="width:auto;padding:0 10px;gap:5px;"><i class="ti ti-user-circle"></i> Mój profil</a>
+                                @elseif($canDelete)
                                     <button class="btn-action"
                                         title="Edytuj"
                                         onclick="openEditModal(
