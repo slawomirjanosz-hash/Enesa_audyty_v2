@@ -52,6 +52,22 @@ test('plant profile has 65 uniquely named questions and renders client and staff
     $this->actingAs($staff)->get(route('audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertDontSee('Zatwierdź jako klient');
 });
 
+test('answer details stay collapsed even with saved details and sources for client and staff', function () {
+    [$audit, $client, $staff] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $profile->update(['answers' => ['site.name' => ['value' => 'Piła', 'detail' => 'Dodatkowy opis', 'source' => 'Dokument źródłowy']]]);
+    foreach ([[$client, 'client.audits.plant-profile.show'], [$staff, 'audits.plant-profile.show']] as [$user, $route]) {
+        $response = $this->actingAs($user)->get(route($route, [$audit, $profile]))->assertOk()
+            ->assertSee('Dodatkowy opis')->assertSee('Dokument źródłowy');
+        preg_match_all('/<details\b([^>]*)>\s*<summary>Uzupełnienie i źródło odpowiedzi<\/summary>/u', $response->getContent(), $matches);
+        expect($matches[1])->toHaveCount(65);
+        foreach ($matches[1] as $attributes) {
+            expect($attributes)->not->toContain('open');
+        }
+    }
+});
+
 test('plant profile rejects foreign clients audit mismatch and forged approval', function () {
     [$audit, $client, $staff] = plantFixture();
     $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
