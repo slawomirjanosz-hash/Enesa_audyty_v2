@@ -65,6 +65,7 @@ class RolePermissionCatalog
             'audits' => ['label' => 'Audyty', 'permissions' => [
                 'audits.view' => 'Podgląd modułu audytów',
                 'audits.manage' => 'Tworzenie i edycja audytów',
+                'audits.schedule.manage' => 'Zarządzanie harmonogramem i zadaniami audytu (dodawanie, edycja, usuwanie, import)',
                 'audits.types.manage' => 'Zarządzanie typami i wersjami audytów',
                 'audits.passports.view' => 'Podgląd paszportów energetycznych',
                 'audits.passports.manage' => 'Dodawanie, edycja i usuwanie paszportów energetycznych',

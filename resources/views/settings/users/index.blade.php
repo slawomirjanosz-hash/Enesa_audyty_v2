@@ -220,7 +220,7 @@
 
 {{-- Flash messages --}}
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.roles.manage'))
-    <p style="margin:0 0 20px;color:#6b7a70">Uprawnienia nadajesz przez rolę użytkownika. W zakładce <a href="{{route('settings.roles.index')}}" style="color:var(--green)">Role i uprawnienia</a>, w sekcji „CRM i dostawcy”, możesz włączyć „Dodawanie dostawców”. Zmiana roli dotyczy wszystkich przypisanych do niej osób; dla jednej osoby utwórz osobną rolę.</p>
+    <p style="margin:0 0 20px;color:#6b7a70">Uprawnienia nadajesz przez rolę użytkownika. W zakładce <a href="{{route('settings.roles.index')}}" style="color:var(--green)">Role i uprawnienia</a>, w sekcji „CRM i dostawcy”, możesz włączyć „Dodawanie dostawców”. W sekcji „Audyty” włącz „Podgląd modułu audytów” oraz „Zarządzanie harmonogramem i zadaniami audytu”, aby użytkownik mógł dodawać zadania. Audytor musi też mieć dostęp do audytów danej firmy. Zmiana roli dotyczy wszystkich przypisanych do niej osób; dla jednej osoby utwórz osobną rolę.</p>
 @endif
 @if(session('success'))
     <div class="alert alert-success">

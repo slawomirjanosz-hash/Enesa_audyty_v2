@@ -63,6 +63,7 @@ class AuditController extends Controller
             'auditTypes' => AuditType::query()->orderBy('name')->get(),
             'timelineItems' => $timelineItems,
             'canManage' => $this->canManage($request),
+            'canManageSchedule' => $this->canManage($request) || $request->user()->can('audits.schedule.manage'),
             'clientView' => false,
             'canViewFinances' => true,
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
