@@ -85,24 +85,62 @@ test('only administrators can delete client ISO documents within their accessibl
 
 test('audit is created from company card and opens the dedicated workspace', function () {
     $user = auditManager();
+    $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $version = $type->versions()->create(['version_number' => 1, 'html_content' => '<p>Wzór</p>', 'is_current' => true, 'created_by' => $user->id]);
     $company = Company::create(['name' => 'Fabryka Audytowana', 'company_type' => 'client', 'status' => 'active']);
 
     $this->actingAs($user)->get(route('companies.show', $company))
         ->assertOk()->assertSee('Dodaj audyt')->assertSee(route('audits.store'), false);
 
     $this->actingAs($user)->post(route('audits.store'), [
-        'company_id' => $company->id, 'number' => 'AUD/2026/001', 'title' => 'Audyt energetyczny zakładu',
+        'company_id' => $company->id, 'audit_type_id' => $type->id, 'number' => 'AUD/2026/001', 'title' => 'Audyt energetyczny zakładu',
         'manager_id' => $user->id, 'member_ids' => [$user->id], 'status' => 'draft',
         'start_date' => '2026-09-01', 'end_date' => '2026-10-01', 'contract_value' => 25000,
     ])->assertRedirect();
 
     $audit = Audit::firstOrFail();
+    expect($audit->surveys()->count())->toBe(1);
+    expect($audit->surveys()->first()->audit_type_id)->toBe($type->id);
+    expect($audit->surveys()->first()->audit_type_version_id)->toBe($version->id);
     $this->actingAs($user)->get(route('audits.show', $audit))->assertOk()
         ->assertSee('Harmonogram i zadania')->assertSee('Finanse')->assertSee('Dokumenty')
         ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
         ->assertSee('Edytuj audyt')->assertSee('Osoby przypisane do audytu')
         ->assertSee('id="project-frappe-gantt"', false)->assertSee('Dodaj kamień milowy')
-        ->assertSee('Eksport Excel')->assertSee('Import Excel');
+        ->assertSee('Eksport Excel')->assertSee('Import Excel')->assertSee('Otwórz audyt')
+        ->assertDontSee('data-audit-tab="iso50001"', false)->assertSee('Wróć do listy audytów');
+});
+
+test('creating an audit requires an existing type and does not leave an empty workspace', function () {
+    $user = auditManager();
+    $company = Company::create(['name' => 'Fabryka', 'company_type' => 'client', 'status' => 'active']);
+    $data = ['company_id' => $company->id, 'number' => 'AUD/type', 'title' => 'Audyt', 'manager_id' => $user->id, 'status' => 'draft'];
+    $this->actingAs($user)->post(route('audits.store'), $data)->assertSessionHasErrors('audit_type_id', null, 'auditCreate');
+    $this->post(route('audits.store'), $data + ['audit_type_id' => 999999])->assertSessionHasErrors('audit_type_id', null, 'auditCreate');
+    expect(Audit::where('number', 'AUD/type')->exists())->toBeFalse();
+});
+
+test('survey edits stay within their audit and require manage permission', function () {
+    $manager = auditManager();
+    $company = Company::create(['name' => 'Firma', 'company_type' => 'client', 'status' => 'active']);
+    $audit = Audit::create(['company_id' => $company->id, 'number' => 'AUD/edit', 'title' => 'Audyt', 'status' => 'draft', 'manager_id' => $manager->id]);
+    $type = AuditType::firstOrCreate(['slug' => 'other'], ['name' => 'Inny audyt']);
+    $survey = $audit->surveys()->create(['audit_type_id' => $type->id, 'title' => $type->name, 'status' => 'draft']);
+    $url = route('audits.surveys.update', [$audit, $survey]);
+    $this->actingAs($manager)->put($url, ['status' => 'ready', 'notes' => 'Przegląd wykonany'])->assertRedirect();
+    expect($survey->fresh()->notes)->toBe('Przegląd wykonany');
+    $other = $audit->replicate();
+    $other->number = 'AUD/other';
+    $other->save();
+    $this->put(route('audits.surveys.update', [$other, $survey]), ['status' => 'completed'])->assertNotFound();
+    $viewer = User::factory()->create();
+    $viewer->assignRole(Role::findOrCreate('employee'));
+    $viewer->givePermissionTo(Permission::findOrCreate('audits.view'));
+    $this->actingAs($viewer)->put($url, ['status' => 'completed'])->assertForbidden();
+    expect($survey->fresh()->status)->toBe('ready');
+    $viewer->assignRole(Role::findOrCreate('auditor'));
+    $viewer->givePermissionTo(Permission::findOrCreate('audits.manage'));
+    $this->put($url, ['status' => 'completed'])->assertForbidden();
 });
 
 test('ISO 50001 type opens the dedicated modular workspace', function () {

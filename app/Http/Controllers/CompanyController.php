@@ -6,6 +6,7 @@ use App\Mail\ClientAccepted;
 use App\Mail\ClientRegistered;
 use App\Mail\NewClientUser;
 use App\Models\AuditorCompanyAccess;
+use App\Models\AuditType;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\CrmActivity;
@@ -235,7 +236,7 @@ class CompanyController extends Controller
         return view('companies.show', compact(
             'company', 'stats', 'crmOpportunities', 'crmTasks', 'crmActivities', 'offerRequests', 'documents',
             'projects', 'auditsEnabled', 'projectsEnabled', 'canManageCrm', 'crmAssignableUsers', 'canManageAudits', 'auditUsers'
-        ));
+        ))->with('auditTypes', $canManageAudits ? AuditType::orderBy('name')->get() : collect());
     }
 
     public function update(Request $request, Company $company)

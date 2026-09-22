@@ -34,6 +34,7 @@ class AuditController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validateWithBag('auditCreate', [
+            'audit_type_id' => ['required', 'exists:audit_types,id'],
             'company_id' => ['required', 'exists:companies,id'], 'number' => ['required', 'string', 'max:80', 'unique:audits,number'],
             'title' => ['required', 'string', 'max:255'], 'manager_id' => ['required', 'exists:users,id'],
             'status' => ['required', 'in:draft,in_progress,done,cancelled'], 'start_date' => ['nullable', 'date'],
@@ -42,9 +43,18 @@ class AuditController extends Controller
         ]);
         abort_unless($this->access->canViewCompany($request->user(), (int) $data['company_id'], 'can_view_audits'), 403);
         $members = $data['member_ids'] ?? [];
-        unset($data['member_ids']);
-        $audit = Audit::create($data + ['created_by' => $request->user()->id]);
-        $audit->members()->sync(array_unique([...$members, (int) $audit->manager_id]));
+        $auditType = AuditType::findOrFail($data['audit_type_id']);
+        unset($data['member_ids'], $data['audit_type_id']);
+        $audit = DB::transaction(function () use ($data, $members, $auditType, $request) {
+            $audit = Audit::create($data + ['created_by' => $request->user()->id]);
+            $audit->members()->sync(array_unique([...$members, (int) $audit->manager_id]));
+            $audit->surveys()->create([
+                'audit_type_id' => $auditType->id, 'audit_type_version_id' => $auditType->currentVersion()?->id,
+                'title' => $auditType->name, 'status' => 'draft', 'created_by' => $request->user()->id,
+            ]);
+
+            return $audit;
+        });
 
         return redirect()->route('audits.show', $audit)->with('success', 'Audyt został utworzony.');
     }
@@ -229,6 +239,17 @@ class AuditController extends Controller
         $survey->delete();
 
         return back()->with('success', 'Ankieta została usunięta.');
+    }
+
+    public function updateSurvey(Request $request, Audit $audit, AuditSurvey $survey): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        abort_unless($survey->audit_id === $audit->id, 404);
+        $survey->update($request->validate([
+            'status' => ['required', 'in:draft,ready,completed'], 'notes' => ['nullable', 'string', 'max:10000'],
+        ]));
+
+        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'surveys'])->with('success', 'Dane audytu zostały zapisane.');
     }
 
     public function storePassport(Request $request, Audit $audit): RedirectResponse

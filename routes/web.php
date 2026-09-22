@@ -219,6 +219,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::put('/{audit}/finances/{entry}', [AuditController::class, 'updateFinance'])->middleware('app.permission:audits.manage')->name('finances.update');
         Route::delete('/{audit}/finances/{entry}', [AuditController::class, 'destroyFinance'])->middleware('app.permission:audits.manage')->name('finances.destroy');
         Route::post('/{audit}/surveys', [AuditController::class, 'storeSurvey'])->middleware('app.permission:audits.manage')->name('surveys.store');
+        Route::put('/{audit}/surveys/{survey}', [AuditController::class, 'updateSurvey'])->middleware('app.permission:audits.manage')->name('surveys.update');
         Route::delete('/{audit}/surveys/{survey}', [AuditController::class, 'destroySurvey'])->middleware('app.permission:audits.manage')->name('surveys.destroy');
         Route::post('/{audit}/passports', [AuditController::class, 'storePassport'])->middleware('app.permission:audits.manage')->name('passports.store');
         Route::post('/{audit}/documents', [AuditController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
