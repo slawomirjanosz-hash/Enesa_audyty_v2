@@ -12,5 +12,5 @@ class IsoPlantProfile extends Model
 
     protected $casts = ['definition' => 'array', 'answers' => 'array', 'client_approval' => 'array', 'auditor_approval' => 'array', 'issuer' => 'array', 'as_of_date' => 'date', 'revision' => 'integer', 'lock_version' => 'integer'];
 
-    public const STATUSES = ['editing' => 'Wypełnianie', 'submitted' => 'Zatwierdzona przez klienta', 'returned' => 'Do uzupełnienia', 'approved' => 'Zatwierdzona przez audytora'];
+    public const STATUSES = ['editing' => 'Wypełnianie', 'auditor_corrected' => 'Poprawiony przez audytora', 'submitted' => 'Zatwierdzona przez klienta', 'returned' => 'Do uzupełnienia', 'approved' => 'Zatwierdzona przez audytora'];
 }

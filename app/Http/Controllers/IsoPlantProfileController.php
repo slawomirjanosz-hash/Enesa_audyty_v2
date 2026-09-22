@@ -98,6 +98,7 @@ class IsoPlantProfileController extends Controller
             'audit' => $audit, 'profile' => $profile, 'client' => $client, 'prefix' => $this->prefix($client),
             'canWrite' => $client || $request->user()->can('audits.manage'),
             'canClientApprove' => $client && $request->user()->hasRole('client_admin'),
+            'isLatest' => ! IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->where('revision', '>', $profile->revision)->exists(),
             'questionnaire' => $this->questionnaire,
             'events' => DB::table('iso_plant_events')->where('profile_id', $profile->id)->orderByDesc('id')->limit(50)->get(['action', 'user_name', 'created_at']),
         ]);
@@ -124,18 +125,43 @@ class IsoPlantProfileController extends Controller
 
                 return $next;
             }
+            abort_if(IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $current->site_id)->where('revision', '>', $current->revision)->exists(), 409, 'Istnieje nowsza wersja profilu. Otwórz ją przed wprowadzeniem zmian.');
             if (in_array($op, ['save', 'submit'])) {
-                abort_unless(in_array($current->status, ['editing', 'returned']), 409, 'Aby edytować, wycofaj zatwierdzenie lub utwórz nową wersję.');
+                abort_unless(! $client || in_array($current->status, ['editing', 'returned', 'auditor_corrected']), 409, 'Aby edytować, wycofaj zatwierdzenie lub utwórz nową wersję.');
                 if ($op === 'submit') {
                     abort_unless($client && $request->user()->hasRole('client_admin'), 403);
                 }
                 $request->validate(['answers' => 'required|array', 'as_of_date' => 'required|date_format:Y-m-d', 'complete_form' => 'required|accepted'], ['complete_form.required' => 'Nie dotarł cały formularz. Zmniejsz liczbę wierszy i spróbuj ponownie — dotychczasowy zapis pozostał bez zmian.']);
-                $current->answers = $this->questionnaire->normalize($data['answers'], $current->definition, $current->answers, $request->user()->id, $op === 'submit');
+                $answers = $this->questionnaire->normalize($data['answers'], $current->definition, $current->answers, $request->user()->id, $op === 'submit');
+                $changed = $current->as_of_date->format('Y-m-d') !== $data['as_of_date'];
+                foreach ($answers as $key => $answer) {
+                    foreach (['value', 'unknown', 'detail', 'source'] as $field) {
+                        $before = $current->answers[$key][$field] ?? ($field === 'unknown' ? false : null);
+                        $after = $answer[$field] ?? null;
+                        $changed = $changed || ($before === null) !== ($after === null) || $before != $after;
+                    }
+                }
+                if (! $client && ! $changed) {
+                    return $current;
+                }
+                if (! $client && in_array($current->status, ['submitted', 'approved'])) {
+                    $this->record($request, $current, 'before_correction');
+                    if ($current->document_id) {
+                        IsoSectionDocument::whereKey($current->document_id)->update(['description' => 'Wersja historyczna — zastąpiona korektą audytora. Profil #'.$current->id]);
+                    }
+                    $current = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $current->site_id, 'revision' => $current->revision + 1, 'lock_version' => 0, 'status' => 'auditor_corrected', 'as_of_date' => $current->as_of_date, 'definition' => $current->definition, 'answers' => $current->answers]);
+                }
+                $current->answers = $answers;
                 $current->as_of_date = $data['as_of_date'];
-                $current->status = $op === 'submit' ? 'submitted' : 'editing';
+                $current->status = $op === 'submit' ? 'submitted' : (! $client || $current->status === 'auditor_corrected' ? 'auditor_corrected' : 'editing');
                 $current->client_approval = $op === 'submit' ? $this->approval($request) : null;
                 $current->auditor_approval = null;
                 $current->review_note = null;
+                $current->document_id = null;
+                $current->issuer = null;
+                if (! $client) {
+                    $op = 'auditor_correction';
+                }
             } elseif ($op === 'approve') {
                 abort_unless(! $client && $current->status === 'submitted' && $current->client_approval, 403);
                 abort_if(($current->client_approval['user_id'] ?? null) === $request->user()->id, 403, 'Przegląd musi zatwierdzić inna osoba niż przedstawiciel klienta.');

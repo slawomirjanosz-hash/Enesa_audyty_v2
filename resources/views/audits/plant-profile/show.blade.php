@@ -2,12 +2,13 @@
 @section('content')
 @php
     $answers = $questionnaire->formAnswers(old('answers', $profile->answers), $profile->definition);
-    $editable = $canWrite && in_array($profile->status,['editing','returned']);
-    $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję'];
+    $editable = $canWrite && ($isLatest ?? true) && (!$client || in_array($profile->status,['editing','returned','auditor_corrected']));
+    $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję','before_correction'=>'Wersja przed korektą audytora','auditor_correction'=>'Poprawiony przez audytora — wymagane ponowne zatwierdzenie klienta'];
 @endphp
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($profile->definition,$answers), 'progressForm'=>'#plant-form', 'progressMode'=>'plant'])
 <div class="plant-summary"><div><a href="{{ route($prefix.'index',$audit) }}">← Wszystkie profile</a><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2></div><span class="plant-badge">{{ \App\Models\IsoPlantProfile::STATUSES[$profile->status] }} · wersja {{ $profile->revision }}</span></div>
 @if($profile->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{ $profile->review_note }}</p></div>@endif
+@if(!($isLatest ?? true))<div class="plant-notice">To wersja historyczna. <a href="{{route($prefix.'index',$audit)}}">Otwórz najnowszą wersję profilu</a>, aby ją edytować lub zatwierdzić.</div>@elseif($profile->status==='auditor_corrected')<div class="plant-notice">Poprawiony przez audytora. Klient musi ponownie sprawdzić i zatwierdzić odpowiedzi.</div>@elseif(!$client && in_array($profile->status,['submitted','approved']))<div class="plant-notice">Możesz poprawić odpowiedzi. Zapis zmian utworzy nową wersję wymagającą ponownego zatwierdzenia przez klienta.</div>@endif
 <nav class="plant-nav" aria-label="Części profilu">@foreach($profile->definition['groups'] as $group)<a href="#group-{{ $loop->index }}">{{ $group['title'] }}</a>@endforeach<a href="#approvals">Zatwierdzenia i historia</a></nav>
 <form id="plant-form" @if($profile->lock_version > 0) data-highlight-unanswered @endif method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ old('lock_version',$profile->lock_version) }}">
 <fieldset @disabled(!$editable)><section class="plant-card"><label>Stan danych na dzień<input type="date" name="as_of_date" value="{{ old('as_of_date',$profile->as_of_date->format('Y-m-d')) }}" required></label></section>
