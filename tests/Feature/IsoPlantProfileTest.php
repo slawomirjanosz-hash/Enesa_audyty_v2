@@ -138,7 +138,7 @@ test('plant profile approval PDF and new version preserve immutable history', fu
     expect(IsoPlantProfile::count())->toBe(2);
 });
 
-test('auditor corrections preserve approved versions and require renewed client approval', function () {
+test('auditor corrections stay in the same profile and highlight changes until client approval', function () {
     [$audit, $client, $staff] = plantFixture();
     $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
@@ -156,19 +156,48 @@ test('auditor corrections preserve approved versions and require renewed client 
     $payload['answers']['site.name'] = ['value' => 'Poprawiona nazwa zakładu'];
     $this->post($staffUrl, $payload)->assertSessionHasNoErrors()->assertRedirect();
     $next = IsoPlantProfile::orderByDesc('revision')->firstOrFail();
-    expect($next->revision)->toBe(2)->and($next->status)->toBe('auditor_corrected')
+    expect(IsoPlantProfile::count())->toBe(1)->and($next->id)->toBe($profile->id);
+    expect($next->revision)->toBe(1)->and($next->status)->toBe('auditor_corrected')
         ->and($next->client_approval)->toBeNull()->and($next->auditor_approval)->toBeNull()->and($next->document_id)->toBeNull();
-    expect($profile->fresh()->status)->toBe('approved')->and($profile->fresh()->document_id)->toBe($oldDocument);
+    expect($next->auditor_changes['site.name']['before']['value'])->toBe($answers['site.name']['value']);
+    expect($next->auditor_changes['site.name']['after']['value'])->toBe('Poprawiona nazwa zakładu');
     expect(IsoSectionDocument::findOrFail($oldDocument)->description)->toContain('Wersja historyczna');
     $nextStaff = route('audits.plant-profile.update', [$audit, $next]);
-    $this->post($nextStaff, ['lock_version' => 1, 'operation' => 'approve', 'note' => 'OK'])->assertForbidden();
-    $this->post(route('audits.plant-profile.pdf', [$audit, $next]), ['lock_version' => 1])->assertForbidden();
+    $this->post($nextStaff, ['lock_version' => 3, 'operation' => 'approve', 'note' => 'OK'])->assertForbidden();
+    $this->post(route('audits.plant-profile.pdf', [$audit, $next]), ['lock_version' => 3])->assertForbidden();
     $this->post($staffUrl, $payload)->assertStatus(409);
-    $this->get(route('audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('To wersja historyczna')->assertSee('<fieldset disabled', false);
-    $this->actingAs($client)->get(route('client.audits.plant-profile.show', [$audit, $next]))->assertOk()->assertSee('Poprawiony przez audytora')->assertSee('Zatwierdź jako klient');
-    $this->post(route('client.audits.plant-profile.update', [$audit, $next]), array_replace($payload, ['lock_version' => 1, 'operation' => 'submit']))->assertSessionHasNoErrors()->assertRedirect();
-    $this->actingAs($staff)->post($nextStaff, ['lock_version' => 2, 'operation' => 'approve', 'note' => 'Zweryfikowano ponownie.'])->assertRedirect();
+    $this->actingAs($client)->get(route('client.audits.plant-profile.show', [$audit, $next]))->assertOk()->assertSee('Poprawiony przez audytora')->assertSee('Zatwierdź jako klient')->assertSee('data-auditor-change="site.name"', false)->assertSee('Przed zmianą:')->assertSee('Poprawiona nazwa zakładu');
+    $this->post(route('client.audits.plant-profile.update', [$audit, $next]), array_replace($payload, ['lock_version' => 3, 'operation' => 'submit']))->assertSessionHasNoErrors()->assertRedirect();
+    expect($next->fresh()->auditor_changes)->toBeNull();
+    $this->actingAs($staff)->post($nextStaff, ['lock_version' => 4, 'operation' => 'approve', 'note' => 'Zweryfikowano ponownie.'])->assertRedirect();
     expect($next->fresh()->status)->toBe('approved');
+});
+
+test('successive auditor edits accumulate original values and survive client draft saves', function () {
+    [$audit, $client, $staff] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $answers = plantAnswers();
+    $clientUrl = route('client.audits.plant-profile.update', [$audit, $profile]);
+    $staffUrl = route('audits.plant-profile.update', [$audit, $profile]);
+    $payload = ['lock_version' => 0, 'operation' => 'save', 'complete_form' => 1, 'as_of_date' => '2026-09-22', 'answers' => $answers];
+    $this->post($clientUrl, $payload)->assertSessionHasNoErrors();
+    $payload['lock_version'] = 1;
+    $payload['as_of_date'] = '2026-09-23';
+    $payload['answers']['site.name'] = ['value' => 'Pierwsza poprawka', 'source' => 'Dokument A'];
+    $this->actingAs($staff)->post($staffUrl, $payload)->assertSessionHasNoErrors();
+    $payload['lock_version'] = 2;
+    $payload['answers']['site.name']['value'] = 'Druga poprawka';
+    $this->post($staffUrl, $payload)->assertSessionHasNoErrors();
+    $payload['lock_version'] = 3;
+    $this->actingAs($client)->post($clientUrl, $payload)->assertSessionHasNoErrors();
+    $changes = $profile->fresh()->auditor_changes;
+    expect(IsoPlantProfile::count())->toBe(1)->and($profile->fresh()->revision)->toBe(1);
+    expect($changes['site.name']['before']['value'])->toBe($answers['site.name']['value'])
+        ->and($changes['site.name']['after']['value'])->toBe('Druga poprawka')
+        ->and($changes['_as_of_date']['before'])->toBe('2026-09-22')
+        ->and($changes['_as_of_date']['after'])->toBe('2026-09-23');
+    $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('Dokument A')->assertSee('Audytor zmienił datę');
 });
 
 test('returning profile clears approval and requires a fresh client confirmation', function () {

@@ -134,11 +134,20 @@ class IsoPlantProfileController extends Controller
                 $request->validate(['answers' => 'required|array', 'as_of_date' => 'required|date_format:Y-m-d', 'complete_form' => 'required|accepted'], ['complete_form.required' => 'Nie dotarł cały formularz. Zmniejsz liczbę wierszy i spróbuj ponownie — dotychczasowy zapis pozostał bez zmian.']);
                 $answers = $this->questionnaire->normalize($data['answers'], $current->definition, $current->answers, $request->user()->id, $op === 'submit');
                 $changed = $current->as_of_date->format('Y-m-d') !== $data['as_of_date'];
+                $changes = $current->auditor_changes ?? [];
+                if (! $client && $changed) {
+                    $changes['_as_of_date'] = ['before' => $changes['_as_of_date']['before'] ?? $current->as_of_date->format('Y-m-d'), 'after' => $data['as_of_date'], 'by' => $request->user()->name, 'at' => now()->toIso8601String()];
+                }
                 foreach ($answers as $key => $answer) {
+                    $questionChanged = false;
                     foreach (['value', 'unknown', 'detail', 'source'] as $field) {
                         $before = $current->answers[$key][$field] ?? ($field === 'unknown' ? false : null);
                         $after = $answer[$field] ?? null;
-                        $changed = $changed || ($before === null) !== ($after === null) || $before != $after;
+                        $questionChanged = $questionChanged || ($before === null) !== ($after === null) || $before != $after;
+                    }
+                    $changed = $changed || $questionChanged;
+                    if (! $client && $questionChanged) {
+                        $changes[$key] = ['before' => $changes[$key]['before'] ?? ($current->answers[$key] ?? []), 'after' => $answer, 'by' => $request->user()->name, 'at' => now()->toIso8601String()];
                     }
                 }
                 if (! $client && ! $changed) {
@@ -149,8 +158,8 @@ class IsoPlantProfileController extends Controller
                     if ($current->document_id) {
                         IsoSectionDocument::whereKey($current->document_id)->update(['description' => 'Wersja historyczna — zastąpiona korektą audytora. Profil #'.$current->id]);
                     }
-                    $current = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $current->site_id, 'revision' => $current->revision + 1, 'lock_version' => 0, 'status' => 'auditor_corrected', 'as_of_date' => $current->as_of_date, 'definition' => $current->definition, 'answers' => $current->answers]);
                 }
+                $current->auditor_changes = $op === 'submit' ? null : $changes;
                 $current->answers = $answers;
                 $current->as_of_date = $data['as_of_date'];
                 $current->status = $op === 'submit' ? 'submitted' : (! $client || $current->status === 'auditor_corrected' ? 'auditor_corrected' : 'editing');
@@ -199,7 +208,7 @@ class IsoPlantProfileController extends Controller
 
     private function record(Request $request, IsoPlantProfile $profile, string $action): void
     {
-        DB::table('iso_plant_events')->insert(['profile_id' => $profile->id, 'user_id' => $request->user()->id, 'user_name' => $request->user()->name, 'action' => $action, 'snapshot' => json_encode($profile->only(['answers', 'as_of_date', 'revision', 'lock_version', 'status', 'client_approval', 'auditor_approval', 'review_note']), JSON_THROW_ON_ERROR), 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('iso_plant_events')->insert(['profile_id' => $profile->id, 'user_id' => $request->user()->id, 'user_name' => $request->user()->name, 'action' => $action, 'snapshot' => json_encode($profile->only(['answers', 'as_of_date', 'revision', 'lock_version', 'status', 'client_approval', 'auditor_approval', 'review_note', 'auditor_changes']), JSON_THROW_ON_ERROR), 'created_at' => now(), 'updated_at' => now()]);
         ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'update', 'auditable_type' => Audit::class, 'auditable_id' => $profile->audit_id, 'subject_label' => 'Profil zakładu #'.$profile->id.' — '.$action, 'route_name' => $request->route()->getName()]);
     }
 
