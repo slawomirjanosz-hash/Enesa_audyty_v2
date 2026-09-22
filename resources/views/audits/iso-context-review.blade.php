@@ -21,7 +21,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 <form id="review-form" method="post" action="{{ route($routePrefix.'update',$audit) }}">@csrf
 <input type="hidden" name="year" value="{{ $review->year }}"><input type="hidden" name="revision" value="{{ old('revision', $review->revision) }}">
 <fieldset @disabled(!$editable)>
-<section id="facts"><h2>1. Dane o zakładzie</h2><p>Pytania przedstawiono w kolejności biblioteki audytora. Brak odpowiedzi nie jest traktowany jako „nie”. Zapisz dane, aby przeliczyć propozycje poniżej.</p>
+<section id="facts"><h2>1. Dane o zakładzie</h2>
 <h3>Dane do dokumentu</h3>
 <label class="field"><span>Zakres systemu zarządzania energią</span><small>Opisz zakłady, lokalizacje i działalność objęte systemem. To pole uzupełnia nagłówek dokumentu i nie należy do numerowanych pytań biblioteki.</small><textarea name="answers[scope]">{{ $answers['scope']??'' }}</textarea></label>
 <h3>Pytania z biblioteki audytora</h3>

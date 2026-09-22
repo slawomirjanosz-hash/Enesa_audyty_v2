@@ -66,6 +66,7 @@ test('ISO review client and consultant screens render and foreign clients cannot
         ->assertSee('Dane o zakładzie')->assertSee('Strony zainteresowane')
         ->assertSee('Dane do dokumentu')->assertSee('Jak opomiarowana jest energia w zakładzie?')
         ->assertDontSee('Wersja do testów')->assertDontSee('robocz')
+        ->assertDontSee('Pytania przedstawiono w kolejności biblioteki audytora.')
         ->assertSee('class="review-section-nav"', false)
         ->assertSee('scroll-margin-top:var(--review-nav-offset,90px)', false)
         ->assertDontSee('name="answers[swot][strengths]"', false);
