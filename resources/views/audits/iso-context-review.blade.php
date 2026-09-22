@@ -14,6 +14,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 @endphp
 <header><div><h1>4.1–4.2 · Kontekst i strony zainteresowane</h1><div>{{ $audit->company->name }} · {{ $client?'Strefa klienta':'Panel konsultanta' }}</div></div><a href="{{ route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'4-1']) }}">← Wróć do audytu</a></header>
 <main>
+@include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->fields(array_column($questions,'kod'),$answers['facts']??[]), 'progressForm'=>'#review-form', 'progressMode'=>'fields', 'progressFields'=>array_map(fn($q)=>'answers[facts]['.$q['kod'].']',$questions), 'progressLabel'=>'Odpowiedzi na pytania o zakład (4.1–4.2)'])
 @if(session('success'))<p class="success" role="status">{{ session('success') }}</p>@endif
 @if($errors->any())<div class="errors" role="alert"><strong>Nie zapisano zmian:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 <div class="bar"><span class="badge">{{ $statuses[$review->status] }}</span><span>Rewizja {{ $review->revision }} · Biblioteka 1.3 · Tryb: {{ $mode }}</span><form method="get"><label for="review-year">Rok</label><input id="review-year" style="width:105px" type="number" name="year" min="2020" max="2100" value="{{ $review->year }}"><button>Otwórz rok</button></form></div>
@@ -26,7 +27,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 <label class="field"><span>Zakres systemu zarządzania energią</span><small>Opisz zakłady, lokalizacje i działalność objęte systemem. To pole uzupełnia nagłówek dokumentu i nie należy do numerowanych pytań biblioteki.</small><textarea name="answers[scope]">{{ $answers['scope']??'' }}</textarea></label>
 <h3>Pytania z biblioteki audytora</h3>
 @foreach($questions as $q)<label class="field"><span>{{ $loop->iteration }}. {{ $q['pytanie'] }}</span><small>{{ $q['kod'] }}</small>
-@if($q['kod']==='ZUZYCIE_TJ')<input readonly value="{{ data_get($answers,'facts.ZUZYCIE_TJ') }}"><small>Suma z tabeli nośników poniżej; przeliczana przy zapisie. Okres: {{ $review->year-1 }}.</small>
+@if($q['kod']==='ZUZYCIE_TJ')<input readonly data-completion-name="answers[facts][ZUZYCIE_TJ]" value="{{ data_get($answers,'facts.ZUZYCIE_TJ') }}"><small>Suma z tabeli nośników poniżej; przeliczana przy zapisie. Okres: {{ $review->year-1 }}.</small>
 @elseif($q['numeric'])<input type="text" inputmode="decimal" name="answers[facts][{{ $q['kod'] }}]" value="{{ data_get($answers,'facts.'.$q['kod']) }}" placeholder="Liczba (przecinek lub kropka) lub: nie wiem">
 @else<select name="answers[facts][{{ $q['kod'] }}]"><option value="">— wybierz odpowiedź —</option>@foreach($q['options'] as $value=>$label)<option value="{{ $value }}" @selected((string)data_get($answers,'facts.'.$q['kod'])===(string)$value)>{{ $label }}</option>@endforeach</select>@endif</label>@endforeach
 <h3>Nośniki energii — {{ $review->year-1 }}</h3><p>Wpisz zużycie przeliczone na TJ, bez podwójnego liczenia energii produkowanej wewnątrz zakładu. Definicja progów prawnych oczekuje na potwierdzenie i nie jest podstawą automatycznej oceny obowiązków.</p>

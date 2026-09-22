@@ -8,5 +8,8 @@
         <div><h3 style="margin:0">Ankieta kontekstu organizacji i stron zainteresowanych</h3><p style="margin:8px 0 0">4.1–4.2 · Biblioteka 1.3 · D-EnMS-KON-01 / D-EnMS-STR-01<br>Dane zakładu → Czynniki → Strony zainteresowane → Konsultant → Dokumenty</p></div>
         <a href="{{ $contextUrl }}" style="display:inline-block;padding:11px 18px;border-radius:7px;background:var(--green);color:#fff;text-decoration:none;font-weight:700;text-align:center">{{ isset($audit) ? 'Otwórz ankietę na pełnym ekranie' : 'Otwórz podgląd formularza wzorcowego' }}</a>
     </div>
+    @if(isset($audit))
+        @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->audit($audit)['context'], 'progressLabel'=>'Pytania o zakład · '.now()->year])
+    @endif
 </section>
 <style>.iso-context-launch{display:flex;align-items:center;justify-content:space-between;gap:20px}.iso-context-launch>div{min-width:0;flex:1}.iso-context-launch>a{flex-shrink:0;white-space:nowrap}@media(max-width:800px){.iso-context-launch{flex-direction:column;align-items:flex-start}.iso-context-launch>a{white-space:normal;max-width:100%}}</style>

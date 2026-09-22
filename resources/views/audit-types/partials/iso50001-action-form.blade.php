@@ -6,8 +6,11 @@
     $pdfRoute = !$isTemplatePreview ? (($clientView ?? false) ? route('client.audits.iso50001.responses.pdf', [$audit, $sectionId, $actionKey]) : route('audits.iso50001.responses.pdf', [$audit, $sectionId, $actionKey])) : null;
 @endphp
 <strong>{{ $workflow['title'] }}</strong>
+@unless($isTemplatePreview)
+@include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->fields(array_keys($workflow['fields']),$answers), 'progressForm'=>'#iso-action-'.$actionKey, 'progressMode'=>'fields', 'progressFields'=>array_map(fn($key)=>'answers['.$key.']',array_keys($workflow['fields']))])
+@endunless
 @if($isTemplatePreview)<div class="iso-template-banner">Podgląd wzoru ankiety. Klient otrzyma własny formularz w swoim audycie, a wpisane tutaj dane nie są zapisywane.</div>@endif
-<form method="POST" @if($storeRoute) action="{{ $storeRoute }}" @endif>@csrf
+<form id="iso-action-{{ $actionKey }}" method="POST" @if($storeRoute) action="{{ $storeRoute }}" @endif>@csrf
     <div class="iso-response-grid">
         @foreach($workflow['fields'] as $key => $field)<div class="iso-response-field {{ $field['type'] === 'textarea' ? 'full' : '' }}"><label for="iso-{{ $actionKey }}-{{ $key }}">{{ $field['label'] }}</label>
             @if($field['type'] === 'textarea')<textarea id="iso-{{ $actionKey }}-{{ $key }}" name="answers[{{ $key }}]" @disabled($isTemplatePreview)>{{ $answers[$key] ?? '' }}</textarea>@else<input id="iso-{{ $actionKey }}-{{ $key }}" type="{{ $field['type'] }}" name="answers[{{ $key }}]" value="{{ $answers[$key] ?? '' }}" placeholder="{{ $field['placeholder'] ?? '' }}" step="{{ $field['type'] === 'number' ? '0.01' : '' }}" @disabled($isTemplatePreview)>@endif
