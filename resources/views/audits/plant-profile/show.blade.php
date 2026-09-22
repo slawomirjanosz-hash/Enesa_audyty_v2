@@ -9,7 +9,7 @@
 <div class="plant-summary"><div><a href="{{ route($prefix.'index',$audit) }}">← Wszystkie profile</a><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2></div><span class="plant-badge">{{ \App\Models\IsoPlantProfile::STATUSES[$profile->status] }} · wersja {{ $profile->revision }}</span></div>
 @if($profile->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{ $profile->review_note }}</p></div>@endif
 <nav class="plant-nav" aria-label="Części profilu">@foreach($profile->definition['groups'] as $group)<a href="#group-{{ $loop->index }}">{{ $group['title'] }}</a>@endforeach<a href="#approvals">Zatwierdzenia i historia</a></nav>
-<form id="plant-form" method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ old('lock_version',$profile->lock_version) }}">
+<form id="plant-form" @if($profile->lock_version > 0) data-highlight-unanswered @endif method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ old('lock_version',$profile->lock_version) }}">
 <fieldset @disabled(!$editable)><section class="plant-card"><label>Stan danych na dzień<input type="date" name="as_of_date" value="{{ old('as_of_date',$profile->as_of_date->format('Y-m-d')) }}" required></label></section>
 @foreach($profile->definition['groups'] as $group)<section class="plant-card" id="group-{{ $loop->index }}"><h2>{{ $group['title'] }}</h2>
 @foreach($group['questions'] as $q)
@@ -20,6 +20,7 @@
 @endphp
 <div class="plant-question" data-question="{{ $q['key'] }}" @if(isset($q['condition'])) data-condition='@json($q["condition"])' @endif>
 <label for="{{ $id }}" class="question-title">{{ $q['label'] }} @if($q['required'])<span aria-label="wymagane">*</span>@endif</label>
+<span class="plant-unanswered-label">Brak odpowiedzi</span>
 @if($q['type']==='select')<select id="{{ $id }}" name="{{ $name }}[value]"><option value="">Wybierz odpowiedź</option>@foreach($q['options'] as $value=>$label)<option value="{{ $value }}" @selected(($answer['value']??null)===$value)>{{ $label }}</option>@endforeach</select>
 @elseif($q['type']==='multi')<details class="plant-multi"><summary id="{{ $id }}"><span data-selection-label>{{ count($answer['value']??[]) ? $questionnaire->display($q,$answer) : 'Wybierz odpowiedzi' }}</span></summary><div>@foreach($q['options'] as $value=>$label)<label><input type="checkbox" name="{{ $name }}[value][]" value="{{ $value }}" data-label="{{ $label }}" @if(in_array($label,['Nie wiem','Brak','Brak pomiarów','Brak znanych zmian'])) data-exclusive @endif @checked(in_array($value,$answer['value']??[]))> {{ $label }}</label>@endforeach</div></details>
 @elseif($q['type']==='rows')

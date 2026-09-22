@@ -68,6 +68,20 @@ test('answer details stay collapsed even with saved details and sources for clie
     }
 });
 
+test('unanswered highlighting starts after saving and remains on reopening for both roles', function () {
+    [$audit, $client, $staff] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $url = route('client.audits.plant-profile.show', [$audit, $profile]);
+    $this->get($url)->assertOk()->assertDontSee('data-highlight-unanswered');
+    $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), [
+        'lock_version' => 0, 'operation' => 'save', 'complete_form' => 1,
+        'as_of_date' => '2026-09-22', 'answers' => ['site.name' => ['value' => 'Piła']],
+    ])->assertSessionHasNoErrors()->assertRedirect();
+    $this->get($url)->assertOk()->assertSee('data-highlight-unanswered')->assertSee('Brak odpowiedzi');
+    $this->actingAs($staff)->get(route('audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('data-highlight-unanswered');
+});
+
 test('plant profile rejects foreign clients audit mismatch and forged approval', function () {
     [$audit, $client, $staff] = plantFixture();
     $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);

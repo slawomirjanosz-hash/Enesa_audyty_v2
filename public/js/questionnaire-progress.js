@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let answered = 0, total = 0;
             if (indicator.dataset.completionMode === 'plant') {
                 form.querySelectorAll('[data-question]').forEach(question => {
+                    question.classList.remove('plant-unanswered');
                     if (question.dataset.condition) {
                         const condition = JSON.parse(question.dataset.condition);
                         if (!condition.values.includes(form.elements.namedItem(`answers[${condition.key}][value]`)?.value)) return;
@@ -15,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     total++;
                     const unknown = question.querySelector('input[name$="[unknown]"]');
                     const inputs = [...question.querySelectorAll('input,select,textarea')].filter(input => input.name.includes('[value]') && !input.name.endsWith('[id]'));
-                    if (filled(unknown) || inputs.some(filled)) answered++;
+                    const complete = filled(unknown) || inputs.some(filled);
+                    if (complete) answered++;
+                    if (form.hasAttribute('data-highlight-unanswered')) question.classList.toggle('plant-unanswered', !complete);
                 });
             } else {
                 total = names.length;
