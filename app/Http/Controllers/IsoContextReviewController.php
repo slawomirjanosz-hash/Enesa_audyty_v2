@@ -201,10 +201,14 @@ class IsoContextReviewController extends Controller
                 abort_unless(in_array($review->status, $client ? ['draft', 'returned'] : ['draft', 'returned', 'reviewing'], true), 403, 'Ankieta jest zablokowana. Najpierw otwórz ją ponownie.');
                 $review->answers = $this->answers($request, $old, $client);
                 if ($op === 'submit') {
+                    $missing = [];
                     foreach ($this->library->questions() as $question) {
                         if (! filled($review->answers['facts'][$question['kod']] ?? null)) {
-                            throw ValidationException::withMessages(['answers' => 'Odpowiedz na wszystkie pytania. Jeśli nie znasz odpowiedzi, wybierz lub wpisz „nie wiem”.']);
+                            $missing['answers.facts.'.$question['kod']] = 'Odpowiedz na pytanie. Jeśli nie znasz odpowiedzi, wybierz lub wpisz „nie wiem”.';
                         }
+                    }
+                    if ($missing) {
+                        throw ValidationException::withMessages($missing);
                     }
                     $review->status = 'submitted';
                 }

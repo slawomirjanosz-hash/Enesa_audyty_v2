@@ -1177,5 +1177,6 @@ document.addEventListener('keydown', function (event) {
 </script>
 
 @include('partials.table-sorting')
+@include('partials.field-validation')
 </body>
 </html>

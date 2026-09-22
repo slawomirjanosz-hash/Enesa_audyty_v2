@@ -127,6 +127,27 @@ test('ordinary client can fill but cannot approve and sites stay separate', func
     expect(IsoPlantProfile::count())->toBe(2)->and(DB::table('iso_plant_sites')->count())->toBe(2);
 });
 
+test('invalid profile fields retain input and return exact sparse row errors without saving', function () {
+    [$audit, $client] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $show = route('client.audits.plant-profile.show', [$audit, $profile]);
+    $answers = ['energy.records' => ['value' => [7 => ['quantity' => 123, 'period_start' => '2026-12-31', 'period_end' => '2026-01-01']]]];
+    $this->from($show)->post(route('client.audits.plant-profile.update', [$audit, $profile]), [
+        'lock_version' => 0, 'operation' => 'save', 'complete_form' => 1,
+        'as_of_date' => '2026-09-22', 'answers' => $answers,
+    ])->assertSessionHasErrors(['answers.energy.records.value.7.unit', 'answers.energy.records.value.7.period_end']);
+    expect($profile->fresh()->lock_version)->toBe(0);
+    $this->get($show)->assertOk()->assertSee('answers[energy.records][value][7][unit]', false)->assertSee('field-validation.js');
+});
+
+test('malformed old profile input is safe and invalid scalar values are preserved', function () {
+    $service = app(IsoPlantQuestionnaire::class);
+    $answers = $service->formAnswers(['energy.records' => ['value' => [9 => ['quantity' => 'bad-number', 'unit' => ['bad']]]]], $service->definition());
+    expect($answers['energy.records']['value'][9]['quantity'])->toBe('bad-number')
+        ->and($answers['energy.records']['value'][9])->not->toHaveKey('unit');
+});
+
 test('profile energy values need units period and boundary and reject contradictory selections', function () {
     $service = app(IsoPlantQuestionnaire::class);
     $definition = $service->definition();

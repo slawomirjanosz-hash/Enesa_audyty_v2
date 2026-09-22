@@ -29,10 +29,14 @@ class IsoPlantQuestionnaire
     public function normalize(array $input, array $definition, array $previous, int $userId, bool $submit): array
     {
         $answers = [];
+        $errors = [];
         foreach ($this->questions($definition) as $q) {
+            $prefix = 'answers.'.$q['key'];
             $raw = $input[$q['key']] ?? [];
             if (! is_array($raw)) {
-                throw ValidationException::withMessages(['answers' => 'Nieprawidłowa odpowiedź: '.$q['label']]);
+                $errors[$prefix.'.value'][] = 'Nieprawidłowa odpowiedź: '.$q['label'];
+
+                continue;
             }
             $rules = ['unknown' => 'nullable|boolean', 'detail' => 'nullable|string|max:3000', 'source' => 'nullable|string|max:500'];
             $valueRule = match ($q['type']) {
@@ -57,7 +61,15 @@ class IsoPlantQuestionnaire
                     };
                 }
             }
-            $valid = Validator::make($raw, $rules, [], ['value' => $q['label'], 'detail' => 'Uzupełnienie: '.$q['label']])->validate();
+            $validator = Validator::make($raw, $rules, [], ['value' => $q['label'], 'detail' => 'Uzupełnienie: '.$q['label']]);
+            if ($validator->fails()) {
+                foreach ($validator->errors()->messages() as $field => $messages) {
+                    $errors[$prefix.'.'.$field] = $messages;
+                }
+
+                continue;
+            }
+            $valid = $validator->validated();
             $value = $valid['value'] ?? null;
             $unknown = (bool) ($valid['unknown'] ?? false);
             if (in_array($q['type'], ['select', 'multi'])) {
@@ -66,28 +78,33 @@ class IsoPlantQuestionnaire
             if ($q['type'] === 'multi' && is_array($value)) {
                 $exclusive = array_keys(array_filter($q['options'], fn ($label) => in_array($label, ['Nie wiem', 'Brak', 'Brak pomiarów', 'Brak znanych zmian'])));
                 if (count($value) > 1 && array_intersect($value, $exclusive)) {
-                    throw ValidationException::withMessages(['answers' => $q['label'].' — „Brak” lub „Nie wiem” wybierz osobno.']);
+                    $errors[$prefix.'.value'][] = $q['label'].' — „Brak” lub „Nie wiem” wybierz osobno.';
                 }
             }
             if ($q['type'] === 'rows') {
-                $value = array_values(array_filter($value ?? [], fn ($row) => collect($row)->except('id')->contains(fn ($v) => filled($v))));
-                foreach ($value as &$row) {
+                $value = array_filter($value ?? [], fn ($row) => collect($row)->except('id')->contains(fn ($v) => filled($v)));
+                foreach ($value as $rowIndex => &$row) {
                     $row['id'] = $row['id'] ?? (string) Str::uuid();
                     if ($q['key'] === 'energy.records' && filled($row['period_start'] ?? null) && filled($row['period_end'] ?? null) && $row['period_end'] < $row['period_start']) {
-                        throw ValidationException::withMessages(['answers' => 'Koniec okresu zużycia nie może poprzedzać początku.']);
+                        $errors[$prefix.'.value.'.$rowIndex.'.period_end'][] = 'Koniec okresu zużycia nie może poprzedzać początku.';
                     }
                     if ($q['key'] === 'energy.records' && filled($row['quantity'] ?? null)) {
                         foreach (['unit', 'carrier', 'period_start', 'period_end', 'boundary', 'flow_type', 'quality'] as $field) {
                             if (blank($row[$field] ?? null)) {
-                                throw ValidationException::withMessages(['answers' => 'Uzupełnij jednostkę, nośnik, okres, obszar, przepływ i źródło wartości zużycia.']);
+                                $errors[$prefix.'.value.'.$rowIndex.'.'.$field][] = 'Uzupełnij pole „'.$q['fields'][$field]['label'].'” dla wpisanego zużycia.';
                             }
                         }
                     }
                     if (filled($row['cost'] ?? null) && (blank($row['currency'] ?? null) || blank($row['cost_basis'] ?? null))) {
-                        throw ValidationException::withMessages(['answers' => 'Dla kosztu wybierz walutę i netto/brutto.']);
+                        foreach (['currency', 'cost_basis'] as $field) {
+                            if (blank($row[$field] ?? null)) {
+                                $errors[$prefix.'.value.'.$rowIndex.'.'.$field][] = 'Dla kosztu wybierz walutę i netto/brutto.';
+                            }
+                        }
                     }
                 }
                 unset($row);
+                $value = array_values($value);
             }
             if ($unknown) {
                 $value = null;
@@ -99,11 +116,46 @@ class IsoPlantQuestionnaire
         }
         if ($submit) {
             foreach ($this->questions($definition) as $q) {
+                if (! isset($answers[$q['key']])) {
+                    continue;
+                }
                 $answer = $answers[$q['key']];
                 if ($this->visible($q, $answers) && (blank($answer['value']) && (! $answer['unknown'] || $q['required']))) {
-                    throw ValidationException::withMessages(['answers' => 'Uzupełnij odpowiedź: '.$q['label']]);
+                    $errors['answers.'.$q['key'].'.value'][] = 'Uzupełnij odpowiedź: '.$q['label'];
                 }
             }
+        }
+
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
+
+        return $answers;
+    }
+
+    /** Preserve scalar user input after errors, but never render malformed nested values. */
+    public function formAnswers(mixed $input, array $definition): array
+    {
+        $input = is_array($input) ? $input : [];
+        $answers = [];
+        foreach ($this->questions($definition) as $q) {
+            $raw = is_array($input[$q['key']] ?? null) ? $input[$q['key']] : [];
+            $answer = ['unknown' => ($raw['unknown'] ?? false) === true || ($raw['unknown'] ?? null) === '1' || ($raw['unknown'] ?? null) === 1];
+            foreach (['value', 'detail', 'source'] as $field) {
+                $answer[$field] = is_scalar($raw[$field] ?? null) ? $raw[$field] : null;
+            }
+            if ($q['type'] === 'multi') {
+                $answer['value'] = is_array($raw['value'] ?? null) ? array_values(array_filter($raw['value'], 'is_scalar')) : [];
+            }
+            if ($q['type'] === 'rows') {
+                $answer['value'] = [];
+                foreach (is_array($raw['value'] ?? null) ? $raw['value'] : [] as $index => $row) {
+                    if (ctype_digit((string) $index) && is_array($row)) {
+                        $answer['value'][$index] = array_filter(array_intersect_key($row, array_flip(['id', ...array_keys($q['fields'])])), fn ($value) => is_scalar($value) || $value === null);
+                    }
+                }
+            }
+            $answers[$q['key']] = $answer;
         }
 
         return $answers;

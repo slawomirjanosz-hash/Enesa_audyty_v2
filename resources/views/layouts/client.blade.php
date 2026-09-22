@@ -861,5 +861,6 @@
 @endunless
 
 @include('partials.table-sorting')
+@include('partials.field-validation')
 </body>
 </html>

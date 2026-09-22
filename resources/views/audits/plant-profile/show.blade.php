@@ -1,7 +1,7 @@
 @extends('audits.plant-profile.layout')
 @section('content')
 @php
-    $answers = old('answers', $profile->answers);
+    $answers = $questionnaire->formAnswers(old('answers', $profile->answers), $profile->definition);
     $editable = $canWrite && in_array($profile->status,['editing','returned']);
     $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję'];
 @endphp
@@ -23,12 +23,12 @@
 @if($q['type']==='select')<select id="{{ $id }}" name="{{ $name }}[value]"><option value="">Wybierz odpowiedź</option>@foreach($q['options'] as $value=>$label)<option value="{{ $value }}" @selected(($answer['value']??null)===$value)>{{ $label }}</option>@endforeach</select>
 @elseif($q['type']==='multi')<details class="plant-multi"><summary id="{{ $id }}"><span data-selection-label>{{ count($answer['value']??[]) ? $questionnaire->display($q,$answer) : 'Wybierz odpowiedzi' }}</span></summary><div>@foreach($q['options'] as $value=>$label)<label><input type="checkbox" name="{{ $name }}[value][]" value="{{ $value }}" data-label="{{ $label }}" @if(in_array($label,['Nie wiem','Brak','Brak pomiarów','Brak znanych zmian'])) data-exclusive @endif @checked(in_array($value,$answer['value']??[]))> {{ $label }}</label>@endforeach</div></details>
 @elseif($q['type']==='rows')
-<div data-repeat data-next="{{ count($answer['value'] ?? []) }}">
-<div data-rows>@foreach($answer['value'] ?? [] as $row)@include('audits.plant-profile.row',['rowIndex'=>$loop->index])@endforeach</div>
+<div data-repeat data-next="{{ empty($answer['value']) ? 0 : max(array_keys($answer['value']))+1 }}">
+<div data-rows>@foreach($answer['value'] ?? [] as $rowIndex=>$row)@include('audits.plant-profile.row',['rowIndex'=>$rowIndex])@endforeach</div>
 <template>@include('audits.plant-profile.row',['rowIndex'=>'__INDEX__','row'=>[]])</template>
 <button type="button" data-add-row>+ Dodaj {{ $q['key']==='site.buildings'?'budynek':'dane nośnika' }}</button>
 </div>
-@else<input id="{{ $id }}" type="{{ $q['type']==='number'?'number':'text' }}" @if($q['type']==='number') min="0" step="1" @else maxlength="2000" @endif name="{{ $name }}[value]" value="{{ $answer['value']??'' }}">@endif
+@else<input id="{{ $id }}" type="{{ $q['type']==='number' && !$errors->has('answers.'.$q['key'].'.value')?'number':'text' }}" @if($q['type']==='number') inputmode="decimal" min="0" step="1" @else maxlength="2000" @endif name="{{ $name }}[value]" value="{{ $answer['value']??'' }}">@endif
 @if(!in_array($q['type'],['select','multi']) && !$q['required'])<label class="plant-check"><input type="checkbox" name="{{ $name }}[unknown]" value="1" @checked($answer['unknown']??false)> Nie wiem / dane niedostępne</label>@endif
 <details @if(filled($answer['detail']??null)||filled($answer['source']??null)) open @endif><summary>Uzupełnienie i źródło odpowiedzi</summary><p class="plant-help">{{ $q['hint'] }}</p><label for="{{ $id }}-detail">Szczegóły / wyjaśnienie<textarea id="{{ $id }}-detail" name="{{ $name }}[detail]" maxlength="3000" rows="2">{{ $answer['detail']??'' }}</textarea></label><label for="{{ $id }}-source">Źródło / nazwa dokumentu<input id="{{ $id }}-source" name="{{ $name }}[source]" maxlength="500" value="{{ $answer['source']??'' }}"></label></details>
 </div>@endforeach</section>@endforeach</fieldset>
