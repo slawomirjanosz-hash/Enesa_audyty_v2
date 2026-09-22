@@ -5,6 +5,8 @@
 <tr><td><strong>{{$survey->title}}</strong></td><td>{{$survey->auditType?->name ?? '—'}}</td><td>{{['draft'=>'Robocza','ready'=>'Gotowa','completed'=>'Wypełniona'][$survey->status]??$survey->status}}</td><td>{{$survey->notes}}</td><td><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
 @if($survey->auditType?->slug==='iso50001')
 <a class="aw-btn" href="{{route($clientView ? 'client.audits.show' : 'audits.show',['audit'=>$audit,'tab'=>'iso50001'])}}" onclick="event.preventDefault();showAuditTab('iso50001')">Otwórz audyt</a>
+@elseif($survey->auditType?->slug==='energy-passports')
+<a class="aw-btn" href="{{route($clientView ? 'client.audits.show' : 'audits.show',['audit'=>$audit,'tab'=>'passports'])}}" onclick="event.preventDefault();showAuditTab('passports')">Otwórz audyt</a>
 @else
 <button type="button" class="aw-btn" onclick="openAwModal('survey-view-{{$survey->id}}')">Otwórz audyt</button>
 @endif

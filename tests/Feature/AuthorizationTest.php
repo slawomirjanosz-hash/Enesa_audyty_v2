@@ -84,7 +84,7 @@ test('admin can access dashboard, CRM and documents', function () {
     $this->actingAs($admin)->get('/crm')->assertOk();
     $this->actingAs($admin)->get('/documents')->assertOk();
     $this->actingAs($admin)->get(route('audit-types.index'))
-        ->assertOk()->assertSee('Tu znajdą się narzędzia do zarządzania typami audytów');
+        ->assertOk()->assertSee('Paszporty energetyczne');
     $this->actingAs($admin)->get(route('audits.surveys'))
         ->assertOk()->assertSee('Kreator formularzy audytowych')->assertSee('id="sidebar"', false);
     $this->actingAs($admin)->get(route('audits.versioning'))

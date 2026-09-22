@@ -49,6 +49,10 @@ class AuditTypeController extends Controller
 
     public function show(AuditType $auditType)
     {
+        if ($auditType->slug === 'energy-passports') {
+            return redirect()->route('energy-passports.index');
+        }
+
         if ($auditType->slug === 'iso50001') {
             return view('audit-types.iso50001', [
                 'auditType' => $auditType,

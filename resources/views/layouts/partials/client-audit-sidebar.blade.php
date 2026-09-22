@@ -12,6 +12,9 @@
     <div class="audit-nav-title">Audyt ISO 50001</div>
     <div class="audit-nav-name">{{ $audit->title }}</div>
     <ul>
+        @foreach(['overview'=>['Podgląd','ti ti-layout-dashboard'],'schedule'=>['Harmonogram i zadania','ti ti-calendar'],'documents'=>['Dokumenty','ti ti-files']] as $tab=>$item)
+            <li class="nav-item"><a href="{{ $auditRoute($tab) }}" class="nav-link {{ $activeTab === $tab ? 'active' : '' }}"><i class="{{ $item[1] }}"></i> {{ $item[0] }}</a></li>
+        @endforeach
         @foreach($chapters as $chapter)
             @php($chapterItems = $chapter['items'] ?? [])
             @php($chapterOpen = $activeTab === 'iso50001' && ($activeSection === $chapter['id'] || collect($chapterItems)->contains('id', $activeSection)))
@@ -19,9 +22,9 @@
                 <li class="nav-item audit-nav-group">
                     <details @if($chapterOpen) open @endif>
                         <summary class="nav-link {{ $chapterOpen ? 'active' : '' }}"><i class="ti ti-folder"></i><span>{{ $chapter['number'] }}. {{ $chapter['title'] }}</span><i class="ti ti-chevron-down audit-nav-chevron"></i></summary>
-                        <a href="{{ $auditRoute('iso50001', $chapter['id']) }}" class="nav-link audit-sub {{ $activeSection === $chapter['id'] ? 'active' : '' }}">Wprowadzenie</a>
+                        <a href="{{ $auditRoute('iso50001', $chapter['id']) }}" class="nav-link audit-sub {{ $activeTab === 'iso50001' && $activeSection === $chapter['id'] ? 'active' : '' }}">Wprowadzenie</a>
                         @foreach($chapterItems as $item)
-                            <a href="{{ $auditRoute('iso50001', $item['id']) }}" class="nav-link audit-sub {{ $activeSection === $item['id'] ? 'active' : '' }}">{{ $item['number'] }} {{ $item['title'] }}</a>
+                            <a href="{{ $auditRoute('iso50001', $item['id']) }}" class="nav-link audit-sub {{ $activeTab === 'iso50001' && $activeSection === $item['id'] ? 'active' : '' }}">{{ $item['number'] }} {{ $item['title'] }}</a>
                         @endforeach
                     </details>
                 </li>
