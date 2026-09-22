@@ -26,8 +26,10 @@
                     <a href="{{ route(($clientView ?? false)?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$plant['id']]) }}" style="text-decoration:none">
                         @include('partials.questionnaire-progress', ['progress'=>$plant['progress'], 'progressLabel'=>$plant['name']])
                     </a>
+                    @include('audits.plant-profile.status', ['profile'=>$plant['profile']])
                 @empty
                     @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant(app(\App\Services\IsoPlantQuestionnaire::class)->definition(),[]), 'progressLabel'=>'Profil zakładu'])
+                    @include('audits.plant-profile.status', ['profile'=>new \App\Models\IsoPlantProfile])
                 @endforelse
             </div>
         </div>
@@ -53,8 +55,8 @@
         @if($isAuditContext)
         <details class="iso-doc-box iso-doc-box-client" open><summary>Dokumentacja klienta <span class="iso-doc-count">{{ $sectionClientDocuments->count() }}</span></summary><div class="iso-doc-body">
             @if($sectionClientDocuments->isNotEmpty())
-            <div class="iso-client-doc-table-wrap"><table class="iso-client-doc-table"><thead><tr><th>Nazwa dokumentu</th><th>Opis</th><th>Rok</th><th>Wersja</th><th>Rozmiar</th><th>Osoba</th><th>Data utworzenia</th><th>Akcje</th></tr></thead><tbody>
-                @foreach($sectionClientDocuments as $document)<tr><td class="doc-name">{{ $document->title }}</td><td class="doc-description">{{ $document->description ?: '—' }}</td><td class="doc-compact">{{ $document->document_year ?? '—' }}</td><td class="doc-compact">{{ $document->version_number }}</td><td class="doc-compact">{{ $document->formattedSize() }}</td><td class="doc-compact">{{ $document->uploader?->name ?? 'System' }}</td><td class="doc-compact">{{ $document->created_at->format('d.m.Y H:i') }}</td><td><div class="iso-doc-actions">@if($document->isAvailable())<a class="iso-doc-btn" href="{{ $clientView ? route('client.audits.iso-documents.download', [$audit, $document]) : route('audits.iso-documents.download', [$audit, $document]) }}"><i class="ti ti-download"></i> Pobierz</a>@else<span class="iso-doc-unavailable" title="Plik został utracony przed uruchomieniem trwałej kopii. Wygeneruj dokument ponownie z ankiety."><i class="ti ti-alert-triangle"></i> Wygeneruj ponownie</span>@endif @if($canDeleteClientDocument)<form method="POST" action="{{ route(($clientView ?? false) ? 'client.audits.iso-documents.destroy' : 'audits.iso-documents.destroy', [$audit, $document]) }}">@csrf @method('DELETE')<button class="iso-doc-btn danger" onclick="return confirm('Usunąć tę wersję dokumentu?')"><i class="ti ti-trash"></i> Usuń</button></form>@endif</div></td></tr>@endforeach
+            <div class="iso-client-doc-table-wrap"><table class="iso-client-doc-table"><thead><tr><th>Nazwa dokumentu</th><th>Opis</th><th>Rok</th><th>Wersja</th><th>Rozmiar</th><th>Osoba</th><th>Data utworzenia</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
+                @foreach($sectionClientDocuments as $document)@include('audit-types.partials.iso-client-document-row')@endforeach
             </tbody></table></div>
             @else<div class="iso-doc-empty">Nie dodano jeszcze dokumentacji klienta.</div>@endif
             @if($canUpload)

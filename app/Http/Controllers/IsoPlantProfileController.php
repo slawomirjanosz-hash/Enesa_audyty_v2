@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class IsoPlantProfileController extends Controller
 {
@@ -187,12 +188,12 @@ class IsoPlantProfileController extends Controller
             abort_unless($current->status === 'approved' && $current->client_approval && $current->auditor_approval, 403, 'PDF wymaga zatwierdzenia przez klienta i audytora.');
             $document = $current->document_id ? IsoSectionDocument::find($current->document_id) : null;
             $contents = $document?->contents();
-            $filename = 'Profil_zakladu_'.Str::slug($current->answers['site.name']['value'] ?? 'zaklad').'_'.$current->as_of_date->format('Y').'_v'.$current->revision.'.pdf';
+            $filename = IsoPlantProfile::DOCUMENT_TITLE.'.pdf';
             if (! $contents) {
                 $contents = Pdf::loadView('audits.plant-profile.pdf', ['profile' => $current, 'questionnaire' => $this->questionnaire])->setPaper('a4')->output();
             }
             if (! ($data['preview'] ?? false) && ! $document) {
-                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => 'intro', 'scope' => 'client', 'title' => 'Profil zakładu — '.($current->answers['site.name']['value'] ?? ''), 'description' => 'Zatwierdzony przez klienta i audytora. Profil #'.$current->id, 'document_year' => $current->as_of_date->year, 'version_number' => $current->revision.'.0', 'original_filename' => $filename, 'stored_path' => 'iso50001/client/'.$audit->id.'/intro/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
+                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => 'intro', 'scope' => 'client', 'title' => IsoPlantProfile::DOCUMENT_TITLE, 'description' => 'Zakład: '.($current->answers['site.name']['value'] ?? '').'. Zatwierdzony przez klienta i audytora. Profil #'.$current->id, 'document_year' => $current->as_of_date->year, 'version_number' => $current->revision.'.0', 'original_filename' => $filename, 'stored_path' => 'iso50001/client/'.$audit->id.'/intro/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
                 $current->document_id = $document->id;
                 $current->save();
             }
@@ -201,7 +202,7 @@ class IsoPlantProfileController extends Controller
             return [$contents, $filename];
         });
         if ($data['preview'] ?? false) {
-            return response($result[0], 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="'.$result[1].'"', 'Cache-Control' => 'private, no-store']);
+            return response($result[0], 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => HeaderUtils::makeDisposition('inline', $result[1], Str::ascii($result[1])), 'Cache-Control' => 'private, no-store']);
         }
 
         return redirect()->route($this->prefix($client).'show', [$audit, $profile])->with('success', 'PDF zapisano w dokumentacji klienta we Wstępie do ISO.');

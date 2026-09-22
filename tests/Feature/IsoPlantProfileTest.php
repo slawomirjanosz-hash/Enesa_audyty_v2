@@ -126,6 +126,9 @@ test('plant profile approval PDF and new version preserve immutable history', fu
     $this->post($pdfUrl, ['lock_version' => 2])->assertRedirect();
     $this->post($pdfUrl, ['lock_version' => 2])->assertRedirect();
     $doc = IsoSectionDocument::firstOrFail();
+    expect($doc->original_filename)->toBe('1 Wstęp ISO Profil zakładu.pdf')->and($doc->title)->toBe('1 Wstęp ISO Profil zakładu');
+    $this->get(route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()
+        ->assertSee('✓ Wygenerowano dokument')->assertSee('Kopiuj do Dokumentów')->assertSee($doc->title);
     expect(IsoSectionDocument::count())->toBe(1)->and($doc->section_id)->toBe('intro')->and($doc->scope)->toBe('client')->and(substr($doc->contents(), 0, 4))->toBe('%PDF');
     $this->post($staffUrl, ['lock_version' => 2, 'operation' => 'revise'])->assertRedirect();
     $next = IsoPlantProfile::orderByDesc('id')->firstOrFail();

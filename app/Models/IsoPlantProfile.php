@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class IsoPlantProfile extends Model
 {
+    public const DOCUMENT_TITLE = '1 Wstęp ISO Profil zakładu';
+
     protected $guarded = ['id'];
 
     protected $casts = ['definition' => 'array', 'answers' => 'array', 'client_approval' => 'array', 'auditor_approval' => 'array', 'issuer' => 'array', 'as_of_date' => 'date', 'revision' => 'integer', 'lock_version' => 'integer'];
