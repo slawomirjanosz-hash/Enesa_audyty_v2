@@ -2,6 +2,10 @@
 <html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ISO 50001 · 4.1–4.2</title>
 <style>
 :root{--brand:{{ $appBrand?->primaryColor() ?: '#1a4d3a' }}}*{box-sizing:border-box}body{margin:0;background:#f5f3ee;color:#203930;font:15px/1.6 Arial,sans-serif}header{background:var(--brand);color:white;padding:20px 3vw;display:flex;justify-content:space-between;align-items:center;gap:16px}header a{color:white}h1{font-size:24px;margin:0}h2{font-size:21px}h3{font-size:17px}main{padding:24px 3vw 80px}section,.card{background:white;border:1px solid #dce3df;border-radius:12px;padding:22px;margin-bottom:20px}nav{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}nav a,button,.button{display:inline-block;font:inherit;border:1px solid #cbd7cf;border-radius:7px;padding:9px 15px;background:white;color:var(--brand);text-decoration:none;cursor:pointer}button.primary{background:var(--brand);color:white}button:disabled{opacity:.5;cursor:default}label.field{display:block;padding:15px 0;border-bottom:1px solid #eee}label.field>span{display:block;font-weight:bold;margin-bottom:7px}input:not([type=checkbox]),select,textarea{font:inherit;border:1px solid #bfccc3;border-radius:6px;padding:10px;width:100%;color:inherit;background:white}textarea{min-height:85px;resize:vertical}input[type=checkbox]{width:19px;height:19px;vertical-align:middle}small{color:#67786e}.notice{background:#fff3d9;padding:14px;border-radius:8px}.success{background:#e7f4e9;padding:14px}.errors{background:#ffe9e6;padding:16px}.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.bar form{display:flex;align-items:center;gap:8px}.badge{padding:4px 10px;border-radius:30px;background:#edf3ef;font-size:13px}.factor{border-top:1px solid #ddd;padding:18px 0}.factor>label{display:flex;gap:12px;font-weight:bold}.factor small{display:block}.pending{border-left:4px solid #d39d36;padding-left:16px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%}th,td{padding:10px;text-align:left;border-bottom:1px solid #ddd;vertical-align:top}th{background:#f2f6f3}.sticky{position:sticky;bottom:0;background:#fff;padding:14px;border:1px solid #ddd;border-radius:10px;z-index:2}.readonly{background:#f6f8f6;padding:12px;white-space:pre-wrap}fieldset{border:0;padding:0;margin:0}fieldset:disabled input,fieldset:disabled textarea,fieldset:disabled select{background:#f6f8f6}summary{cursor:pointer;font-weight:bold}.error-note{color:#a33020}section{scroll-margin-top:16px}@media(max-width:650px){header{display:block}main{padding:15px}section{padding:15px}.sticky{position:static}}
+.review-section-nav{position:sticky;top:0;z-index:10;padding:12px 0;background:#f5f3ee;border-bottom:1px solid #dce3df;box-shadow:0 5px 8px -8px #20393080}
+.review-section-nav a:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+section{scroll-margin-top:var(--review-nav-offset,90px)}
+@media(max-width:650px){.review-section-nav{gap:6px;padding:8px 0}.review-section-nav a{padding:7px 10px;font-size:13px}}
 </style></head><body>
 @php
     $statuses=['draft'=>'Wersja robocza','submitted'=>'Przekazana konsultantowi','reviewing'=>'W weryfikacji','returned'=>'Do uzupełnienia','approved'=>'Dane zatwierdzone'];
@@ -14,7 +18,7 @@
 @if($errors->any())<div class="errors" role="alert"><strong>Nie zapisano zmian:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 <div class="bar"><span class="badge">{{ $statuses[$review->status] }}</span><span>Rewizja {{ $review->revision }} · Biblioteka 1.3 · Tryb: {{ $mode }}</span><form method="get"><label for="review-year">Rok</label><input id="review-year" style="width:105px" type="number" name="year" min="2020" max="2100" value="{{ $review->year }}"><button>Otwórz rok</button></form></div>
 <p class="notice">Wersja do testów z udziałem klienta. Finalny podział sekcji i szablony dokumentów oczekują na uzupełnienie przez audytora. Zatwierdzenie danych nie oznacza publikacji ani zakończenia wdrożenia. Eksporty są robocze.</p>
-<nav aria-label="Części ankiety"><a href="#facts">1. Dane zakładu (44)</a><a href="#factors">2. Czynniki 4.1</a><a href="#parties">3. Strony 4.2</a><a href="#consultant">4. Konsultant</a><a href="#documents">5. Dokumenty i historia</a></nav>
+<nav class="review-section-nav" aria-label="Części ankiety"><a href="#facts">1. Dane zakładu (44)</a><a href="#factors">2. Czynniki 4.1</a><a href="#parties">3. Strony 4.2</a><a href="#consultant">4. Konsultant</a><a href="#documents">5. Dokumenty i historia</a></nav>
 <form id="review-form" method="post" action="{{ route($routePrefix.'update',$audit) }}">@csrf
 <input type="hidden" name="year" value="{{ $review->year }}"><input type="hidden" name="revision" value="{{ old('revision', $review->revision) }}">
 <fieldset @disabled(!$editable)>
@@ -70,6 +74,12 @@
 </main>
 <script>
 (() => {
+    const navigation = document.querySelector('.review-section-nav');
+    const updateNavigationOffset = () => document.documentElement.style.setProperty(
+        '--review-nav-offset', `${Math.ceil(navigation.getBoundingClientRect().height) + 16}px`
+    );
+    updateNavigationOffset();
+    new ResizeObserver(updateNavigationOffset).observe(navigation);
     const form = document.getElementById('review-form');
     let dirty = false;
     form.addEventListener('input', event => {

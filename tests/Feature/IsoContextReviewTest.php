@@ -64,8 +64,11 @@ test('ISO review client and consultant screens render and foreign clients cannot
     [$audit, $client, $staff] = isoReviewFixture();
     $this->actingAs($client)->get(route('client.audits.iso-review.show', $audit))->assertOk()
         ->assertSee('Dane o zakładzie')->assertSee('Strony zainteresowane')
+        ->assertSee('class="review-section-nav"', false)
+        ->assertSee('scroll-margin-top:var(--review-nav-offset,90px)', false)
         ->assertDontSee('name="answers[swot][strengths]"', false);
     $this->actingAs($staff)->get(route('audits.iso-review.show', $audit))->assertOk()
+        ->assertSee('class="review-section-nav"', false)
         ->assertSee('name="answers[swot][strengths]"', false);
     $other = User::factory()->create();
     $other->assignRole(Role::findOrCreate('client_user'));
