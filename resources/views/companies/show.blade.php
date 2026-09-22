@@ -956,6 +956,7 @@
                         <th>Status</th>
                         <th>Postęp</th>
                         <th>Data</th>
+                        <th data-sortable="false">Akcje</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -974,7 +975,10 @@
                                     <span style="font-size:12px;color:#7a8a80;min-width:32px;">{{ $audit->progress ?? 0 }}%</span>
                                 </div>
                             </td>
-                            <td style="color:#7a8a80;font-size:12px;">{{ $audit->created_at->format('d.m.Y') }} <a href="{{route('audits.show',$audit)}}" class="btn-action btn-secondary-action" style="margin-left:8px"><i class="ti ti-eye"></i> Otwórz</a></td>
+                            <td data-sort-value="{{$audit->created_at->toIso8601String()}}" style="color:#7a8a80;font-size:12px;">{{ $audit->created_at->format('d.m.Y') }}</td>
+                            <td><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a href="{{route('audits.show',$audit)}}" class="btn-action btn-secondary-action"><i class="ti ti-eye"></i> Otwórz</a>
+                            @if(auth()->user()->hasAnyRole(['admin','superadmin']))<form method="POST" action="{{route('audits.destroy',$audit)}}" onsubmit="return confirm('Usunąć ten audyt z aktywnej listy? Jego zadania przestaną być aktywne. Dane i pliki zostaną zachowane.')">@csrf @method('DELETE')<input type="hidden" name="confirm_delete" value="1"><button type="submit" class="btn-action btn-secondary-action" style="color:#b42318;border-color:#efb8b4;cursor:pointer"><i class="ti ti-trash"></i> Usuń audyt</button></form>@endif
+                            </div></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -2313,6 +2317,7 @@ document.addEventListener('DOMContentLoaded', () => openEditModal());
 @endsection
 
 @push('scripts')
+<script>document.addEventListener('DOMContentLoaded',()=>{if(new URLSearchParams(location.search).get('tab')==='audits'){document.getElementById('tab-btn-audits')?.click()}});</script>
 @if($errors->any())
 <script>
 document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });

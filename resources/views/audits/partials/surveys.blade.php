@@ -1,5 +1,5 @@
 @if($canManage)<div class="aw-actions"><button class="aw-btn" onclick="openAwModal('survey-modal')"><i class="ti ti-plus"></i> Dodaj audyt</button></div>@endif
-<div class="aw-card"><h2>Audyty</h2>
+<div class="aw-card"><h2>Audyt</h2>
 <div style="overflow-x:auto"><table class="aw-table"><thead><tr><th>Nazwa</th><th>Rodzaj audytu</th><th>Status</th><th>Notatki</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($audit->surveys as $survey)
 <tr><td><strong>{{$survey->title}}</strong></td><td>{{$survey->auditType?->name ?? '—'}}</td><td>{{['draft'=>'Robocza','ready'=>'Gotowa','completed'=>'Wypełniona'][$survey->status]??$survey->status}}</td><td>{{$survey->notes}}</td><td><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">

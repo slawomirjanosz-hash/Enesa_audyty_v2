@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Audit extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['company_id', 'number', 'title', 'status', 'manager_id', 'start_date', 'end_date', 'contract_value', 'description', 'created_by'];
 
     protected $casts = ['start_date' => 'date', 'end_date' => 'date', 'contract_value' => 'decimal:2'];

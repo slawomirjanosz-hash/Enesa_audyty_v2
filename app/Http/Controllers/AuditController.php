@@ -59,6 +59,23 @@ class AuditController extends Controller
         return redirect()->route('audits.show', $audit)->with('success', 'Audyt został utworzony.');
     }
 
+    public function destroy(Request $request, Audit $audit): RedirectResponse
+    {
+        abort_unless($request->user()->hasAnyRole(['admin', 'superadmin']), 403);
+        $this->ensureAccess($request, $audit);
+        $request->validate(['confirm_delete' => ['required', 'accepted']]);
+        DB::transaction(function () use ($audit, $request) {
+            $audit->tasks()->get()->each(function (Task $task) use ($request) {
+                $task->update(['deleted_by' => $request->user()->id]);
+                $task->delete();
+            });
+            $audit->delete();
+        });
+
+        return redirect()->route('companies.show', ['company' => $audit->company_id, 'tab' => 'audits'])
+            ->with('success', 'Audyt usunięto z aktywnej listy. Dane i pliki zostały zachowane.');
+    }
+
     public function show(Request $request, Audit $audit): View
     {
         $this->ensureAccess($request, $audit);

@@ -207,6 +207,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::prefix('audits')->name('audits.')->middleware(['app.module:audits', 'app.permission:audits.view'])->group(function () {
         Route::post('/', [AuditController::class, 'store'])->middleware('app.permission:audits.manage')->name('store');
         Route::get('/{audit}', [AuditController::class, 'show'])->name('show');
+        Route::delete('/{audit}', [AuditController::class, 'destroy'])->name('destroy');
         Route::put('/{audit}', [AuditController::class, 'update'])->middleware('app.permission:audits.manage')->name('update');
         Route::post('/{audit}/tasks', [AuditController::class, 'storeTask'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('tasks.store');
         Route::post('/{audit}/tasks/reorder', [AuditController::class, 'reorderTasks'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('tasks.reorder');
