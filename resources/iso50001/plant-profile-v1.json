@@ -1,0 +1,1006 @@
+{
+  "version": "1.0",
+  "groups": [
+    {
+      "title": "A. Identyfikacja zakładu i organizacji",
+      "questions": [
+        {
+          "key": "organization.name",
+          "label": "Jaka jest pełna nazwa organizacji?",
+          "hint": "Z karty klienta, potwierdzenie lub zgłoszenie korekty",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "organization.tax_id",
+          "label": "Jaki jest NIP lub inny identyfikator organizacji?",
+          "hint": "Z karty klienta; kraj i rodzaj identyfikatora",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "site.name",
+          "label": "Jak nazywa się zakład objęty profilem?",
+          "hint": "Tekst",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "site.address",
+          "label": "Gdzie znajduje się zakład?",
+          "hint": "Uporządkowane pola adresu",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "site.activity_types",
+          "label": "Jaki rodzaj działalności prowadzi zakład?",
+          "hint": "Lista wielu: produkcja, magazynowanie, usługi, biura, działalność komunalna, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Produkcja",
+            "v2": "Magazynowanie",
+            "v3": "Usługi",
+            "v4": "Biura",
+            "v5": "Działalność komunalna",
+            "v6": "Inne",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "site.industry",
+          "label": "Do jakiej branży należy zakład?",
+          "hint": "Lista branż / inna",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Metalowa",
+            "v2": "Motoryzacyjna",
+            "v3": "Spożywcza",
+            "v4": "Chemiczna",
+            "v5": "Tworzywa sztuczne",
+            "v6": "Drzewna i meblarska",
+            "v7": "Papiernicza",
+            "v8": "Budowlana",
+            "v9": "Energetyka i ciepłownictwo",
+            "v10": "Usługowa",
+            "v11": "Inna",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "site.products_services",
+          "label": "Jakie są główne produkty lub usługi zakładu?",
+          "hint": "Krótki opis",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "site.operating_status",
+          "label": "Czy zakład już działa?",
+          "hint": "Działający / rozbudowywany / uruchamiany / planowany / czasowo nieczynny",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Działający",
+            "v2": "Rozbudowywany",
+            "v3": "Uruchamiany",
+            "v4": "Planowany",
+            "v5": "Czasowo nieczynny",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "organization.site_structure",
+          "label": "Czy organizacja ma inne lokalizacje?",
+          "hint": "Jedna lokalizacja / kilka lokalizacji / nie wiem; przy kilku — lista lokalizacji",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Jedna lokalizacja",
+            "v2": "Kilka lokalizacji",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "profile.contact_person",
+          "label": "Kto po stronie zakładu koordynuje uzupełnienie profilu?",
+          "hint": "Wybór osoby lub kontakt spoza listy użytkowników",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "title": "B. Obiekty i organizacja pracy",
+      "questions": [
+        {
+          "key": "site.ownership",
+          "label": "Na jakiej zasadzie zakład korzysta z obiektów?",
+          "hint": "Własność / najem / mieszane / inne",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Własność",
+            "v2": "Najem",
+            "v3": "Mieszane",
+            "v4": "Inne",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "site.energy_control",
+          "label": "Kto decyduje o eksploatacji instalacji i zakupie energii?",
+          "hint": "Zakład / centrala / właściciel obiektu / podział odpowiedzialności / nie wiem; wskazanie zakresów",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Zakład",
+            "v2": "Centrala",
+            "v3": "Właściciel obiektu",
+            "v4": "Podział odpowiedzialności",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "site.object_types",
+          "label": "Jakie obiekty znajdują się na terenie zakładu?",
+          "hint": "Lista wielu: hale, magazyny, biura, obiekty socjalne, obiekty technologiczne, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Hale",
+            "v2": "Magazyny",
+            "v3": "Biura",
+            "v4": "Obiekty socjalne",
+            "v5": "Obiekty technologiczne",
+            "v6": "Inne",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "site.buildings",
+          "label": "Jakie budynki należą do zakładu?",
+          "hint": "Powtarzalny wpis: nazwa, funkcja, powierzchnia m², ogrzewany T/N, chłodzony T/N; nieznana powierzchnia dopuszczalna",
+          "type": "rows",
+          "required": false,
+          "fields": {
+            "name": {
+              "label": "Nazwa",
+              "type": "text"
+            },
+            "function": {
+              "label": "Funkcja",
+              "type": "text"
+            },
+            "area": {
+              "label": "Powierzchnia (m²)",
+              "type": "number"
+            },
+            "heated": {
+              "label": "Ogrzewany",
+              "type": "select",
+              "options": {
+                "yes": "Tak",
+                "no": "Nie",
+                "unknown": "Nie wiem"
+              }
+            },
+            "cooled": {
+              "label": "Chłodzony",
+              "type": "select",
+              "options": {
+                "yes": "Tak",
+                "no": "Nie",
+                "unknown": "Nie wiem"
+              }
+            }
+          }
+        },
+        {
+          "key": "operations.shift_pattern",
+          "label": "W jakim systemie pracuje zakład?",
+          "hint": "Jedna / dwie / trzy zmiany / ruch ciągły / zmienny / inny",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Jedna zmiana",
+            "v2": "Dwie zmiany",
+            "v3": "Trzy zmiany",
+            "v4": "Ruch ciągły",
+            "v5": "Zmienny",
+            "v6": "Inny",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "operations.working_days",
+          "label": "W jakie dni zwykle działa zakład?",
+          "hint": "Wybór dni tygodnia / kalendarz zmienny",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Poniedziałek",
+            "v2": "Wtorek",
+            "v3": "Środa",
+            "v4": "Czwartek",
+            "v5": "Piątek",
+            "v6": "Sobota",
+            "v7": "Niedziela",
+            "v8": "Kalendarz zmienny",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "operations.seasonality",
+          "label": "Czy intensywność pracy zależy od sezonu?",
+          "hint": "T/N; jeśli tak — wybór miesięcy i rodzaju sezonowości",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "operations.shutdowns",
+          "label": "Czy występują planowane postoje?",
+          "hint": "T/N; jeśli tak — częstotliwość i miesiące",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "operations.headcount",
+          "label": "Ile osób zwykle pracuje w zakładzie?",
+          "hint": "Liczba / nie wiem; informacja, czy uwzględniono pracowników zewnętrznych",
+          "type": "number",
+          "required": false
+        },
+        {
+          "key": "operations.external_operators",
+          "label": "Czy częścią instalacji lub procesów zarządzają firmy zewnętrzne?",
+          "hint": "T/N; jeśli tak — obszary i podział odpowiedzialności",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        }
+      ]
+    },
+    {
+      "title": "C. Energia i jej pochodzenie",
+      "questions": [
+        {
+          "key": "energy.carriers",
+          "label": "Z jakich rodzajów energii i paliw korzysta zakład?",
+          "hint": "Lista wielu: energia elektryczna, gaz ziemny, ciepło sieciowe, para kupowana, LPG, olej opałowy, olej napędowy, benzyna, węgiel, biomasa, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Energia elektryczna",
+            "v2": "Gaz ziemny",
+            "v3": "Ciepło sieciowe",
+            "v4": "Para kupowana",
+            "v5": "LPG",
+            "v6": "Olej opałowy",
+            "v7": "Olej napędowy",
+            "v8": "Benzyna",
+            "v9": "Węgiel",
+            "v10": "Biomasa",
+            "v11": "Inne",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.own_generation",
+          "label": "Czy zakład wytwarza energię na miejscu?",
+          "hint": "T/N; jeśli tak — PV, kogeneracja, kotłownia, agregaty, inne; nośnik wejściowy i energia wyjściowa",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.storage_types",
+          "label": "Czy są magazyny energii?",
+          "hint": "Brak / elektryczne / cieplne / inne / nie wiem; lista wielu",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Brak",
+            "v2": "Elektryczne",
+            "v3": "Cieplne",
+            "v4": "Inne",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.exports",
+          "label": "Czy energia jest oddawana do sieci lub innym odbiorcom?",
+          "hint": "T/N; jeśli tak — rodzaj i sposób pomiaru",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.shared_supply",
+          "label": "Czy zasilanie lub liczniki są współdzielone z innymi podmiotami?",
+          "hint": "T/N; jeśli tak — sposób rozdziału zużycia",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.transport_present",
+          "label": "Czy zakład eksploatuje pojazdy lub transport wewnętrzny?",
+          "hint": "T/N; jeśli tak — rodzaje napędu i dostępność danych paliwowych",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.supply_incidents",
+          "label": "Czy występowały przerwy lub ograniczenia dostaw wpływające na pracę zakładu?",
+          "hint": "T/N; jeśli tak — nośniki, okres i krótki opis",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "energy.records",
+          "label": "Jakie dane o zużyciu i kosztach można przekazać?",
+          "hint": "Powtarzalne rekordy według nośnika, okresu i granicy pomiaru: wartość, jednostka, koszt, waluta, źródło lub status „brak danych”",
+          "type": "rows",
+          "required": false,
+          "fields": {
+            "carrier": {
+              "label": "Nośnik energii",
+              "type": "text"
+            },
+            "period_start": {
+              "label": "Okres od",
+              "type": "date"
+            },
+            "period_end": {
+              "label": "Okres do",
+              "type": "date"
+            },
+            "quantity": {
+              "label": "Ilość",
+              "type": "number"
+            },
+            "unit": {
+              "label": "Jednostka",
+              "type": "select",
+              "options": {
+                "kWh": "kWh",
+                "MWh": "MWh",
+                "GJ": "GJ",
+                "TJ": "TJ",
+                "m3": "m³",
+                "Nm3": "Nm³",
+                "l": "l",
+                "kg": "kg",
+                "t": "t"
+              }
+            },
+            "cost": {
+              "label": "Koszt",
+              "type": "number"
+            },
+            "currency": {
+              "label": "Waluta",
+              "type": "select",
+              "options": {
+                "PLN": "PLN",
+                "EUR": "EUR",
+                "USD": "USD"
+              }
+            },
+            "cost_basis": {
+              "label": "Koszt netto/brutto",
+              "type": "select",
+              "options": {
+                "net": "Netto",
+                "gross": "Brutto"
+              }
+            },
+            "boundary": {
+              "label": "Obszar / granica pomiaru",
+              "type": "text"
+            },
+            "flow_type": {
+              "label": "Rodzaj przepływu",
+              "type": "select",
+              "options": {
+                "purchase": "Zakup",
+                "generation": "Wytworzenie",
+                "consumption": "Zużycie",
+                "export": "Oddanie"
+              }
+            },
+            "quality": {
+              "label": "Jakość danych",
+              "type": "select",
+              "options": {
+                "invoice": "Faktura",
+                "measurement": "Pomiar",
+                "estimate": "Oszacowanie",
+                "unknown": "Nie wiem"
+              }
+            },
+            "source": {
+              "label": "Źródło / numer dokumentu",
+              "type": "text"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "D. Procesy i instalacje",
+      "questions": [
+        {
+          "key": "processes.types",
+          "label": "Jakie procesy są prowadzone?",
+          "hint": "Lista wielu: obróbka mechaniczna, obróbka cieplna, suszenie, topienie, chłodzenie, mieszanie, mycie, transport, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Obróbka mechaniczna",
+            "v2": "Obróbka cieplna",
+            "v3": "Suszenie",
+            "v4": "Topienie",
+            "v5": "Chłodzenie",
+            "v6": "Mieszanie",
+            "v7": "Mycie",
+            "v8": "Transport",
+            "v9": "Inne",
+            "v10": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "systems.types",
+          "label": "Jakie instalacje pracują w zakładzie?",
+          "hint": "Lista wielu: ogrzewanie, wentylacja, klimatyzacja, chłodnictwo, sprężone powietrze, para, pompy, napędy, oświetlenie, IT, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Ogrzewanie",
+            "v2": "Wentylacja",
+            "v3": "Klimatyzacja",
+            "v4": "Chłodnictwo",
+            "v5": "Sprężone powietrze",
+            "v6": "Para",
+            "v7": "Pompy",
+            "v8": "Napędy",
+            "v9": "Oświetlenie",
+            "v10": "IT",
+            "v11": "Inne",
+            "v12": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "systems.main_consumers_known",
+          "label": "Czy zakład potrafi wskazać głównych odbiorców energii?",
+          "hint": "Tak — na podstawie pomiarów / tak — szacunkowo / nie",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "Tak — na podstawie pomiarów",
+            "v2": "Tak — szacunkowo",
+            "v3": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "systems.main_consumers",
+          "label": "Które urządzenia lub obszary zużywają najwięcej energii według obecnej wiedzy?",
+          "hint": "Wybór z procesów i instalacji + własne pozycje; źródło oceny",
+          "type": "text",
+          "required": false,
+          "condition": {
+            "key": "systems.main_consumers_known",
+            "values": [
+              "v1",
+              "v2"
+            ]
+          }
+        },
+        {
+          "key": "systems.idle_operation",
+          "label": "Czy instalacje pracują również podczas postoju produkcji lub poza godzinami pracy?",
+          "hint": "T/N; jeśli tak — wybór instalacji i przyczyny",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "systems.heat_recovery",
+          "label": "Czy odzyskiwane jest ciepło z procesów lub urządzeń?",
+          "hint": "T/N; jeśli tak — wybór źródła i zastosowania",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "maintenance.planned",
+          "label": "Czy główne instalacje mają plan przeglądów i konserwacji?",
+          "hint": "Tak / częściowo / nie / nie wiem",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "partial": "Częściowo"
+          }
+        },
+        {
+          "key": "systems.planned_changes",
+          "label": "Czy planowana jest zmiana budynków, technologii lub urządzeń?",
+          "hint": "T/N; jeśli tak — rodzaj, przewidywana data i obszar",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        }
+      ]
+    },
+    {
+      "title": "E. Pomiary i dostępność danych",
+      "questions": [
+        {
+          "key": "data.history_coverage",
+          "label": "Za jaki okres dostępne są dane o energii?",
+          "hint": "Osobno dla każdego nośnika: daty od–do / brak / nie wiem",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "data.sources",
+          "label": "Gdzie są przechowywane dane?",
+          "hint": "Lista wielu: faktury, arkusze, odczyty ręczne, BMS, SCADA, system energetyczny, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Faktury",
+            "v2": "Arkusze",
+            "v3": "Odczyty ręczne",
+            "v4": "BMS",
+            "v5": "SCADA",
+            "v6": "System energetyczny",
+            "v7": "Inne",
+            "v8": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "metering.coverage",
+          "label": "Na jakim poziomie mierzone jest zużycie?",
+          "hint": "Lista wielu: cały zakład, budynki, linie, urządzenia, brak pomiarów, nie wiem",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Cały zakład",
+            "v2": "Budynki",
+            "v3": "Linie",
+            "v4": "Urządzenia",
+            "v5": "Brak pomiarów",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "metering.frequency",
+          "label": "Jak często dostępne są odczyty?",
+          "hint": "Według nośnika/obszaru: 15-minutowe, godzinowe, dobowe, tygodniowe, miesięczne, nieregularne, inne",
+          "type": "select",
+          "required": false,
+          "options": {
+            "v1": "15-minutowe",
+            "v2": "Godzinowe",
+            "v3": "Dobowe",
+            "v4": "Tygodniowe",
+            "v5": "Miesięczne",
+            "v6": "Nieregularne",
+            "v7": "Inne",
+            "v8": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "metering.reliability_checks",
+          "label": "Czy sprawdzana jest poprawność pomiarów?",
+          "hint": "Tak / częściowo / nie / nie wiem; metoda i dokument, jeśli dostępne",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "partial": "Częściowo"
+          }
+        },
+        {
+          "key": "data.production_available",
+          "label": "Czy dostępne są dane o wielkości produkcji lub wykonanych usługach?",
+          "hint": "T/N; jeśli tak — miara, jednostka, okres i częstotliwość",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "data.operating_hours_available",
+          "label": "Czy rejestrowane są godziny pracy instalacji?",
+          "hint": "T/N; jeśli tak — wybór instalacji i źródła",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "data.weather_available",
+          "label": "Czy dostępne są dane o temperaturze lub pogodzie dla zakładu?",
+          "hint": "T/N; jeśli tak — źródło i okres",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "data.other_drivers",
+          "label": "Jakie inne dane opisujące pracę zakładu są dostępne?",
+          "hint": "Lista wielu: asortyment, obłożenie, masa surowca, parametry procesu, inne, brak, nie wiem",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Asortyment",
+            "v2": "Obłożenie",
+            "v3": "Masa surowca",
+            "v4": "Parametry procesu",
+            "v5": "Inne",
+            "v6": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "data.owners",
+          "label": "Kto może udostępnić dane energetyczne, produkcyjne i techniczne?",
+          "hint": "Przypisanie osób do kategorii danych",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "F. Organizacja zarządzania",
+      "questions": [
+        {
+          "key": "management.existing_systems",
+          "label": "Jakie systemy zarządzania już funkcjonują?",
+          "hint": "Lista wielu: ISO 9001, ISO 14001, ISO 45001, ISO 50001, inne, brak, nie wiem; osobno status certyfikacji",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "ISO 9001",
+            "v2": "ISO 14001",
+            "v3": "ISO 45001",
+            "v4": "ISO 50001",
+            "v5": "Inne",
+            "v6": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "management.sponsor_assigned",
+          "label": "Czy wskazano osobę z kierownictwa odpowiedzialną za wdrożenie?",
+          "hint": "T/N; jeśli tak — osoba i funkcja",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "management.coordinator_assigned",
+          "label": "Czy wyznaczono koordynatora zarządzania energią?",
+          "hint": "T/N; jeśli tak — osoba i funkcja",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "management.energy_team",
+          "label": "Czy działa zespół ds. zarządzania energią?",
+          "hint": "Tak / w trakcie tworzenia / nie / nie wiem; członkowie i role",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "planned": "W przygotowaniu"
+          }
+        },
+        {
+          "key": "management.energy_policy",
+          "label": "Czy jest przyjęta polityka energetyczna?",
+          "hint": "Tak / w przygotowaniu / nie / nie wiem; dokument",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "planned": "W przygotowaniu"
+          }
+        },
+        {
+          "key": "management.resources",
+          "label": "Czy przewidziano czas pracowników i środki na wdrożenie?",
+          "hint": "Tak / częściowo / nie / nie wiem; osobno czas i środki",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "partial": "Częściowo"
+          }
+        },
+        {
+          "key": "management.training",
+          "label": "Czy pracownicy byli szkoleni z gospodarowania energią?",
+          "hint": "Tak / częściowo / nie / nie wiem; grupy i daty",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "partial": "Częściowo"
+          }
+        },
+        {
+          "key": "management.document_control",
+          "label": "Czy dokumenty mają ustalone wersje, właścicieli i zasady zatwierdzania?",
+          "hint": "Tak / częściowo / nie / nie wiem",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "partial": "Częściowo"
+          }
+        }
+      ]
+    },
+    {
+      "title": "G. Dostępna dokumentacja i otoczenie zakładu",
+      "questions": [
+        {
+          "key": "documents.available_types",
+          "label": "Jakie dokumenty zakład może udostępnić?",
+          "hint": "Lista wielu: plan zakładu, schematy instalacji, wykaz urządzeń, faktury, umowy energetyczne, audyty, przeglądy, instrukcje, certyfikaty, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Plan zakładu",
+            "v2": "Schematy instalacji",
+            "v3": "Wykaz urządzeń",
+            "v4": "Faktury",
+            "v5": "Umowy energetyczne",
+            "v6": "Audyty",
+            "v7": "Przeglądy",
+            "v8": "Instrukcje",
+            "v9": "Certyfikaty",
+            "v10": "Inne",
+            "v11": "Brak",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "requirements.customer_energy",
+          "label": "Czy klienci zgłaszają wymagania dotyczące energii, emisji lub ISO 50001?",
+          "hint": "T/N; jeśli tak — rodzaj wymagania i źródło",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "requirements.register_available",
+          "label": "Czy istnieje rejestr wymagań prawnych i innych dotyczących energii?",
+          "hint": "Tak / częściowo / nie / nie wiem; dokument i osoba odpowiedzialna",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem",
+            "partial": "Częściowo"
+          }
+        },
+        {
+          "key": "climate.observed_impacts",
+          "label": "Czy upały, mrozy, susza, zalania lub inne zjawiska pogodowe wpływały na pracę zakładu albo zużycie energii?",
+          "hint": "Tak / nie zaobserwowano / nie wiem; rodzaje i opis zdarzeń",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie zaobserwowano",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "context.expected_changes",
+          "label": "Jakie istotne zmiany działalności są przewidywane?",
+          "hint": "Lista wielu: wzrost/spadek produkcji, nowy asortyment, rozbudowa, reorganizacja, zmiana dostawcy energii, inne, brak znanych zmian, nie wiem",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Wzrost produkcji",
+            "v2": "Spadek produkcji",
+            "v3": "Nowy asortyment",
+            "v4": "Rozbudowa",
+            "v5": "Reorganizacja",
+            "v6": "Zmiana dostawcy energii",
+            "v7": "Inne",
+            "v8": "Brak znanych zmian",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "context.external_dependencies",
+          "label": "Od jakich zewnętrznych podmiotów zależy gospodarowanie energią w zakładzie?",
+          "hint": "Lista wielu: centrala, właściciel obiektu, dostawcy mediów, serwis, operator zewnętrzny, inne; konkretne podmioty w razie potrzeby",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Centrala",
+            "v2": "Właściciel obiektu",
+            "v3": "Dostawcy mediów",
+            "v4": "Serwis",
+            "v5": "Operator zewnętrzny",
+            "v6": "Inne",
+            "v7": "Brak",
+            "unknown": "Nie wiem"
+          }
+        }
+      ]
+    },
+    {
+      "title": "H. Dotychczasowe działania i potrzeby",
+      "questions": [
+        {
+          "key": "improvement.previous_reviews",
+          "label": "Czy wykonywano już audyt lub przegląd energetyczny?",
+          "hint": "T/N; jeśli tak — rodzaj, rok i dokument",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "improvement.existing_indicators",
+          "label": "Czy używane są wskaźniki zużycia lub efektywności energetycznej?",
+          "hint": "T/N; jeśli tak — nazwy, wzory, jednostki i okresy",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "improvement.completed_actions",
+          "label": "Czy realizowano działania ograniczające zużycie energii?",
+          "hint": "T/N; jeśli tak — rodzaj, data i dostępne wyniki",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "improvement.known_opportunities",
+          "label": "Czy są już zgłoszone pomysły na poprawę gospodarowania energią?",
+          "hint": "T/N; jeśli tak — wybór obszaru i krótki opis",
+          "type": "select",
+          "required": false,
+          "options": {
+            "yes": "Tak",
+            "no": "Nie",
+            "unknown": "Nie wiem"
+          }
+        },
+        {
+          "key": "improvement.priorities",
+          "label": "Jakie są główne oczekiwania wobec wdrożenia?",
+          "hint": "Lista wielu: lepsze dane, poprawa wyniku energetycznego, koszty, wymagania odbiorców, organizacja pracy, certyfikacja, inne",
+          "type": "multi",
+          "required": false,
+          "options": {
+            "v1": "Lepsze dane",
+            "v2": "Poprawa wyniku energetycznego",
+            "v3": "Koszty",
+            "v4": "Wymagania odbiorców",
+            "v5": "Organizacja pracy",
+            "v6": "Certyfikacja",
+            "v7": "Inne",
+            "unknown": "Nie wiem"
+          }
+        }
+      ]
+    }
+  ]
+}
