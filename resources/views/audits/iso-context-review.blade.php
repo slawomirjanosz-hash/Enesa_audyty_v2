@@ -8,7 +8,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 @media(max-width:650px){.review-section-nav{gap:6px;padding:8px 0}.review-section-nav a{padding:7px 10px;font-size:13px}}
 </style></head><body>
 @php
-    $statuses=['draft'=>'Wersja robocza','submitted'=>'Przekazana konsultantowi','reviewing'=>'W weryfikacji','returned'=>'Do uzupełnienia','approved'=>'Dane zatwierdzone'];
+    $statuses=['draft'=>'W trakcie uzupełniania','submitted'=>'Przekazana konsultantowi','reviewing'=>'W weryfikacji','returned'=>'Do uzupełnienia','approved'=>'Dane zatwierdzone'];
     $editable=in_array($review->status,$client?['draft','returned']:['draft','returned','reviewing']);
     $actions=['save'=>'Zapisz i przelicz propozycje','submit'=>'Przekaż do weryfikacji','withdraw'=>'Wycofaj do edycji','review'=>'Rozpocznij weryfikację','return'=>'Zwróć do uzupełnienia','approve'=>'Zatwierdź dane','reopen'=>'Otwórz ponownie','request_reopen'=>'Poproś o ponowne otwarcie','copy'=>'Skopiuj poprzedni rok'];
 @endphp
@@ -17,13 +17,14 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 @if(session('success'))<p class="success" role="status">{{ session('success') }}</p>@endif
 @if($errors->any())<div class="errors" role="alert"><strong>Nie zapisano zmian:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 <div class="bar"><span class="badge">{{ $statuses[$review->status] }}</span><span>Rewizja {{ $review->revision }} · Biblioteka 1.3 · Tryb: {{ $mode }}</span><form method="get"><label for="review-year">Rok</label><input id="review-year" style="width:105px" type="number" name="year" min="2020" max="2100" value="{{ $review->year }}"><button>Otwórz rok</button></form></div>
-<p class="notice">Wersja do testów z udziałem klienta. Finalny podział sekcji i szablony dokumentów oczekują na uzupełnienie przez audytora. Zatwierdzenie danych nie oznacza publikacji ani zakończenia wdrożenia. Eksporty są robocze.</p>
 <nav class="review-section-nav" aria-label="Części ankiety"><a href="#facts">1. Dane zakładu (44)</a><a href="#factors">2. Czynniki 4.1</a><a href="#parties">3. Strony 4.2</a><a href="#consultant">4. Konsultant</a><a href="#documents">5. Dokumenty i historia</a></nav>
 <form id="review-form" method="post" action="{{ route($routePrefix.'update',$audit) }}">@csrf
 <input type="hidden" name="year" value="{{ $review->year }}"><input type="hidden" name="revision" value="{{ old('revision', $review->revision) }}">
 <fieldset @disabled(!$editable)>
 <section id="facts"><h2>1. Dane o zakładzie</h2><p>Pytania przedstawiono w kolejności biblioteki audytora. Brak odpowiedzi nie jest traktowany jako „nie”. Zapisz dane, aby przeliczyć propozycje poniżej.</p>
-<label class="field"><span>Zakres systemu zarządzania energią</span><textarea name="answers[scope]">{{ $answers['scope']??'' }}</textarea></label>
+<h3>Dane do dokumentu</h3>
+<label class="field"><span>Zakres systemu zarządzania energią</span><small>Opisz zakłady, lokalizacje i działalność objęte systemem. To pole uzupełnia nagłówek dokumentu i nie należy do numerowanych pytań biblioteki.</small><textarea name="answers[scope]">{{ $answers['scope']??'' }}</textarea></label>
+<h3>Pytania z biblioteki audytora</h3>
 @foreach($questions as $q)<label class="field"><span>{{ $loop->iteration }}. {{ $q['pytanie'] }}</span><small>{{ $q['kod'] }}</small>
 @if($q['kod']==='ZUZYCIE_TJ')<input readonly value="{{ data_get($answers,'facts.ZUZYCIE_TJ') }}"><small>Suma z tabeli nośników poniżej; przeliczana przy zapisie. Okres: {{ $review->year-1 }}.</small>
 @elseif($q['numeric'])<input type="text" inputmode="decimal" name="answers[facts][{{ $q['kod'] }}]" value="{{ data_get($answers,'facts.'.$q['kod']) }}" placeholder="Liczba (przecinek lub kropka) lub: nie wiem">
@@ -37,7 +38,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 </section>
 <section id="factors"><h2>2. Czynniki kontekstowe · 4.1</h2><p>AUTO wynika z danych. PROPOZYCJA jest wstępnie zaznaczona — potwierdź jej prawdziwość. OCENA wymaga świadomego wyboru. Zmiana danych nie usuwa ręcznych wyborów; nieaktualne pozycje wymagają rozstrzygnięcia.</p>
 @forelse($factors as $f)<article @class(['factor','pending'=>$f['pending']||$f['stale']])><small>{{ $f['kod'] }} · {{ $f['wymiar'] }} · {{ $f['rodzaj'] }}</small>
-@if($f['pending'])<p class="notice">Pozycja oczekuje na korektę lub potwierdzenie treści przez autora. Nie trafia do dokumentu roboczego jako ustalenie.</p>@unless($client)<details><summary>Treść źródłowa do konsultacji</summary><p>{{ $f['sformulowanie'] }}</p><p>{{ $f['warunek'] }}</p></details>@endunless
+@if($f['pending'])<p class="notice">Pozycja wymaga potwierdzenia treści. Do tego czasu nie jest uwzględniana w dokumencie jako ustalenie.</p>@unless($client)<details><summary>Treść źródłowa do konsultacji</summary><p>{{ $f['sformulowanie'] }}</p><p>{{ $f['warunek'] }}</p></details>@endunless
 @else
 @if($f['stale'])<p class="error-note">Zmieniły się dane — ten wybór nie spełnia już warunku. Odznacz go lub skoryguj odpowiedzi.</p>@endif
 @if($f['rodzaj']==='AUTO')<p><strong>{{ $f['text'] }}</strong></p><small>Ustalone z aktualnych danych; poprzedni wynik pozostaje w historii.</small>
@@ -65,10 +66,9 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 @if($review->revision===0)<button name="operation" value="copy">Skopiuj poprzedni rok</button>@endif</div><label class="field"><span>Komentarz / powód zwrotu lub ponownego otwarcia</span><input name="note" maxlength="4000" value="{{ old('note') }}"></label></div>
 </form>
 <section id="documents"><h2>5. Dokumenty i historia</h2><p>Eksport obejmuje ostatnie zapisane dane. Najpierw zapisz zmiany w formularzu. Plik zostanie również dodany do dokumentacji klienta w punkcie 4.1.</p>
-@if($review->exists)<form data-export method="post" action="{{ route($routePrefix.'export',$audit) }}">@csrf<input type="hidden" name="year" value="{{ $review->year }}"><div class="bar"><button name="format" value="pdf">Zapisz roboczy PDF</button><button name="format" value="docx">Zapisz roboczy Word</button></div></form>
+@if($review->exists)<form data-export method="post" action="{{ route($routePrefix.'export',$audit) }}">@csrf<input type="hidden" name="year" value="{{ $review->year }}"><div class="bar"><button name="format" value="pdf">Zapisz PDF</button><button name="format" value="docx">Zapisz Word</button></div></form>
 <form data-export method="post" target="_blank" action="{{ route($routePrefix.'export',$audit) }}">@csrf<input type="hidden" name="year" value="{{ $review->year }}"><input type="hidden" name="format" value="pdf"><input type="hidden" name="preview" value="1"><button>Podgląd PDF (bez zapisu)</button></form>@endif
 <details><summary>Do zatwierdzenia danych: {{ count($blockers) }} uwag</summary><ul>@foreach($blockers as $blocker)<li>{{ $blocker }}</li>@endforeach</ul></details>
-<p class="notice">Publikacja finalnego kompletu 4.1 + 4.2 pozostaje zablokowana do uzupełnienia specyfikacji. Można testować cały obieg danych i eksport roboczy.</p>
 <h3>Historia zmian — rok {{ $review->year }}</h3><div class="scroll"><table><thead><tr><th>Rewizja</th><th>Data</th><th>Osoba</th><th>Operacja</th><th>Komentarz</th></tr></thead><tbody>@forelse($history as $event)<tr><td>{{ $event->revision }}</td><td>{{ $event->created_at }}</td><td>{{ $event->name??'—' }}</td><td>{{ $actions[$event->action]??$event->action }}</td><td>{{ $event->note }}</td></tr>@empty<tr><td colspan="5">Brak zapisanych zmian.</td></tr>@endforelse</tbody></table></div>
 </section>
 </main>

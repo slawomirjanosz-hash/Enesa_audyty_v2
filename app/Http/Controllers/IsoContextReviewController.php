@@ -275,7 +275,7 @@ class IsoContextReviewController extends Controller
             }
         }
         if ($blockers = $this->library->blockers($review->answers ?? [])) {
-            $rows[] = ['Uwagi do wersji roboczej — wymagają uzupełnienia lub rozstrzygnięcia', implode("\n", $blockers)];
+            $rows[] = ['Uwagi wymagające uzupełnienia lub rozstrzygnięcia', implode("\n", $blockers)];
         }
         foreach ($this->library->questions() as $q) {
             $value = $review->answers['facts'][$q['kod']] ?? '';
@@ -303,17 +303,16 @@ class IsoContextReviewController extends Controller
         foreach ($conclusions as $i => $row) {
             $rows[] = ['Wniosek '.($i + 1), implode("\n", array_map(fn ($k) => ($row[$k] ?? '') ?: '[do uzupełnienia]', ['finding', 'decision', 'document']))];
         }
-        $warning = 'WERSJA ROBOCZA — podgląd danych 4.1–4.2. Nie jest zatwierdzonym dokumentem normowym. Finalne szablony i treści prawne oczekują na potwierdzenie autora.';
         $format = $data['format'];
         if ($format === 'pdf') {
-            $contents = Pdf::loadView('audits.iso-context-review-pdf', compact('rows', 'warning'))->setPaper('a4')->output();
+            $contents = Pdf::loadView('audits.iso-context-review-pdf', compact('rows'))->setPaper('a4')->output();
         } else {
             Settings::setOutputEscapingEnabled(true);
             $word = new PhpWord;
             $word->setDefaultFontName('Arial');
             $word->setDefaultFontSize(10);
             $section = $word->addSection();
-            $section->addText($warning, ['bold' => true, 'color' => 'A33A20']);
+            $section->addText('ISO 50001 · Kontekst i strony zainteresowane', ['bold' => true]);
             foreach ($rows as [$label, $text]) {
                 $section->addText($label, ['bold' => true]);
                 $text = filled($text) ? $text : '[do uzupełnienia]';
@@ -329,7 +328,7 @@ class IsoContextReviewController extends Controller
             }
         }
         abort_unless(is_string($contents) && $contents !== '', 500, 'Nie udało się wygenerować dokumentu.');
-        $filename = 'ISO_4_1_4_2_ROBOCZY_'.$year.'_r'.$review->revision.'.'.$format;
+        $filename = 'ISO_4_1_4_2_'.$year.'_r'.$review->revision.'.'.$format;
         $path = 'iso50001/client/'.$audit->id.'/4-1/generated/'.Str::uuid().'.'.$format;
         $mime = $format === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
         if ($format === 'pdf' && ($data['preview'] ?? false)) {
@@ -341,7 +340,7 @@ class IsoContextReviewController extends Controller
         app(DocumentQuotaService::class)->assertAdditional($request->user()->id, strlen($contents));
         abort_unless(Storage::disk('local')->put($path, $contents), 500);
         IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => '4-1', 'scope' => 'client',
-            'title' => 'ROBOCZY — Kontekst i strony zainteresowane (4.1–4.2)', 'description' => $warning,
+            'title' => 'Kontekst i strony zainteresowane (4.1–4.2)', 'description' => 'Dokument wygenerowany z zapisanych odpowiedzi ankiety.',
             'document_year' => $year, 'version_number' => $review->revision.'.0', 'original_filename' => $filename,
             'stored_path' => $path, 'mime_type' => $mime, 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
 

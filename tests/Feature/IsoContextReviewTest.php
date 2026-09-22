@@ -64,6 +64,8 @@ test('ISO review client and consultant screens render and foreign clients cannot
     [$audit, $client, $staff] = isoReviewFixture();
     $this->actingAs($client)->get(route('client.audits.iso-review.show', $audit))->assertOk()
         ->assertSee('Dane o zakładzie')->assertSee('Strony zainteresowane')
+        ->assertSee('Dane do dokumentu')->assertSee('Jak opomiarowana jest energia w zakładzie?')
+        ->assertDontSee('Wersja do testów')->assertDontSee('robocz')
         ->assertSee('class="review-section-nav"', false)
         ->assertSee('scroll-margin-top:var(--review-nav-offset,90px)', false)
         ->assertDontSee('name="answers[swot][strengths]"', false);
@@ -122,14 +124,14 @@ test('ISO review draft PDF and true DOCX are saved in client documentation', fun
     [$audit, $client] = isoReviewFixture();
     IsoContextReview::create(['audit_id' => $audit->id, 'year' => 2026, 'revision' => 1, 'answers' => ['facts' => ['FAKT_SCADA' => 'tak']]]);
     $this->actingAs($client)->post(route('client.audits.iso-review.export', $audit), ['year' => 2026, 'format' => 'pdf', 'preview' => 1])
-        ->assertOk()->assertHeader('Content-Disposition', 'inline; filename="ISO_4_1_4_2_ROBOCZY_2026_r1.pdf"');
+        ->assertOk()->assertHeader('Content-Disposition', 'inline; filename="ISO_4_1_4_2_2026_r1.pdf"');
     expect(IsoSectionDocument::count())->toBe(0);
     foreach (['pdf', 'docx'] as $format) {
         $response = $this->actingAs($client)->post(route('client.audits.iso-review.export', $audit), ['year' => 2026, 'format' => $format])->assertOk();
         expect(substr($response->getContent(), 0, $format === 'pdf' ? 4 : 2))->toBe($format === 'pdf' ? '%PDF' : 'PK');
     }
     expect(IsoSectionDocument::where('audit_id', $audit->id)->count())->toBe(2);
-    expect(IsoSectionDocument::first()->title)->toStartWith('ROBOCZY');
+    expect(IsoSectionDocument::first()->title)->toBe('Kontekst i strony zainteresowane (4.1–4.2)');
 });
 
 test('ISO consultant can approve complete data and reopen it without allowing client approval', function () {
