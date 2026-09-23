@@ -42,6 +42,32 @@ function plantAnswers(): array
     return $answers;
 }
 
+test('progress selects only latest profiles per audit and site without sorting JSON in SQL', function () {
+    [$audit, $client] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Pierwszy']);
+    $first = IsoPlantProfile::firstOrFail();
+    $latest = $first->replicate();
+    $latest->revision = 3;
+    $latest->save();
+    $older = $first->replicate();
+    $older->revision = 2;
+    $older->save();
+    $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Drugi']);
+    $second = IsoPlantProfile::orderByDesc('id')->firstOrFail();
+    $query = IsoPlantProfile::where('audit_id', $audit->id)->latestPerSite();
+    expect(strtolower($query->toSql()))->not->toContain('order by');
+    expect($query->pluck('id')->sort()->values()->all())->toBe(collect([$latest->id, $second->id])->sort()->values()->all());
+    DB::enableQueryLog();
+    app(QuestionnaireCompletion::class)->auditCards(Audit::whereKey($audit->id)->get());
+    app(QuestionnaireCompletion::class)->audit($audit);
+    $queries = collect(DB::getQueryLog())->pluck('query')->filter(fn ($sql) => str_contains($sql, 'iso_plant_profiles'));
+    DB::disableQueryLog();
+    expect($queries)->toHaveCount(2);
+    foreach ($queries as $sql) {
+        expect(strtolower($sql))->not->toContain('order by')->not->toContain('select *');
+    }
+});
+
 test('review exchange highlights client corrections until both approve the same content', function () {
     [$audit, $client, $staff] = plantFixture();
     $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);

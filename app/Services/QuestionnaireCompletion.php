@@ -18,7 +18,7 @@ class QuestionnaireCompletion
         }
         $audits->loadMissing(['manager', 'surveys.auditType']);
         $ids = $audits->modelKeys();
-        $profiles = IsoPlantProfile::whereIn('audit_id', $ids)->orderByDesc('revision')->orderByDesc('id')->get()->groupBy('audit_id');
+        $profiles = IsoPlantProfile::whereIn('audit_id', $ids)->latestPerSite()->get(['id', 'audit_id', 'site_id', 'definition', 'answers'])->groupBy('audit_id');
         $reviews = IsoContextReview::whereIn('audit_id', $ids)->where('year', now()->year)->get(['audit_id', 'answers'])->keyBy('audit_id');
         $responses = IsoImplementationResponse::whereIn('audit_id', $ids)->get()->groupBy('audit_id');
         $results = [];
@@ -98,7 +98,7 @@ class QuestionnaireCompletion
         if (request()->attributes->has($cacheKey)) {
             return request()->attributes->get($cacheKey);
         }
-        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->orderByDesc('revision')->orderByDesc('id')->get(['id', 'site_id', 'revision', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'client_changes'])->unique('site_id');
+        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->latestPerSite()->get(['id', 'site_id', 'revision', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'client_changes']);
         $plants = $profiles->map(fn ($profile) => ['id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $this->plant($profile->definition, $profile->answers), 'profile' => $profile]);
         $review = IsoContextReview::where('audit_id', $audit->id)->where('year', now()->year)->first(['answers']);
         $result = ['plants' => $plants, 'context' => $this->fields(array_column(app(IsoContextLibrary::class)->questions(), 'kod'), $review?->answers['facts'] ?? [])];
