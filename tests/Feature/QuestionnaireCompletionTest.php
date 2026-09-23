@@ -35,7 +35,7 @@ test('audit and profile screens display saved completion and only latest site re
     $next->revision = 2;
     $next->answers = $profile->answers + ['operations.headcount' => ['value' => 0]];
     $next->save();
-    $this->get(route('client.audits.show', $audit))->assertOk()->assertSee('3/64 pytań · 4%')->assertSee('0/44 pytań · 0%')->assertDontSee('2/64 pytań · 3%');
+    $this->get(route('client.audits.show', $audit))->assertOk()->assertSee('3/64 pytań · 4%')->assertSee('Otwórz ankietę 4.1')->assertSee('Oczekuje na zatwierdzenie profilu')->assertDontSee('2/64 pytań · 3%');
     [$otherAudit, $otherClient] = plantFixture();
     $this->actingAs($otherClient)->get(route('client.audits.show', $audit))->assertNotFound();
 });

@@ -1,3 +1,6 @@
+@if(isset($audit) && $sectionId==='context')
+@include('audits.factors.launch')
+@endif
 @php
     $guidance = config('iso50001-guidance.'.$sectionId, []);
     $suggestedDocuments = $guidance['evidence'] ?? [];

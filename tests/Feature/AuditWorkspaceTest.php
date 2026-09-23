@@ -468,7 +468,7 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
     $documents->each(fn ($document) => Storage::disk('local')->assertExists($document->stored_path));
 
     $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
-        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('Otwórz ankietę na pełnym ekranie')
+        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('4.1 Ankieta czynników kontekstowych')
         ->assertSee('Dokument Word wygenerowany z ankiety kontekstu organizacji.')
         ->assertSee('PDF wygenerowany z ankiety kontekstu organizacji.');
 

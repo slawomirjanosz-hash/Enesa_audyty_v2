@@ -1,3 +1,6 @@
+@if(isset($audit))
+@include('audits.factors.launch')
+@else
 @php
     $contextUrl = isset($audit)
         ? route(($clientView ?? false) ? 'client.audits.iso-review.show' : 'audits.iso-review.show', $audit)
@@ -13,3 +16,4 @@
     @endif
 </section>
 <style>.iso-context-launch{display:flex;align-items:center;justify-content:space-between;gap:20px}.iso-context-launch>div{min-width:0;flex:1}.iso-context-launch>a{flex-shrink:0;white-space:nowrap}@media(max-width:800px){.iso-context-launch{flex-direction:column;align-items:flex-start}.iso-context-launch>a{white-space:normal;max-width:100%}}</style>
+@endif
