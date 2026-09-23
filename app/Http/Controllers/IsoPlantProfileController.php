@@ -54,7 +54,7 @@ class IsoPlantProfileController extends Controller
             'audit' => $audit, 'client' => $client, 'prefix' => $this->prefix($client),
             'canWrite' => $client || $request->user()->can('audits.manage'),
             'sites' => DB::table('iso_plant_sites')->where('company_id', $audit->company_id)->orderBy('name')->get(),
-            'profiles' => IsoPlantProfile::where('audit_id', $audit->id)->orderByDesc('id')->get(),
+            'profiles' => IsoPlantProfile::where('audit_id', $audit->id)->get()->sortByDesc('id'),
         ]);
     }
 
@@ -67,7 +67,7 @@ class IsoPlantProfileController extends Controller
             if (! empty($data['site_id'])) {
                 $site = DB::table('iso_plant_sites')->where('company_id', $audit->company_id)->where('id', $data['site_id'])->first();
                 abort_unless($site, 404);
-                $existing = IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $site->id)->orderByDesc('revision')->first();
+                $existing = IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $site->id)->latestPerSite()->first();
                 if ($existing) {
                     return $existing;
                 }
@@ -80,7 +80,11 @@ class IsoPlantProfileController extends Controller
                 $answers[$key] = ['value' => $value, 'unknown' => false, 'detail' => null, 'source' => 'Karta klienta / nazwa zakładu', 'updated_by' => $request->user()->id, 'updated_at' => now()->toIso8601String()];
             }
             $previous = ($data['copy_latest'] ?? false) ? IsoPlantProfile::where('site_id', $site->id)->where('status', 'approved')->orderByDesc('id')->first() : null;
-            $profile = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $site->id, 'revision' => 1, 'lock_version' => 0, 'status' => 'editing', 'as_of_date' => $previous?->as_of_date ?? today(), 'definition' => $previous?->definition ?? $this->questionnaire->definition(), 'answers' => $previous?->answers ?? $answers]);
+            $definition = $this->questionnaire->definition();
+            if ($previous && ($previous->definition['version'] ?? null) !== $definition['version']) {
+                $definition['legacy_groups'] = $previous->definition['groups'];
+            }
+            $profile = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $site->id, 'revision' => 1, 'lock_version' => 0, 'status' => 'editing', 'as_of_date' => $previous?->as_of_date ?? today(), 'definition' => $definition, 'answers' => $previous?->answers ?? $answers]);
             $this->record($request, $profile, 'create');
 
             return $profile;
@@ -116,7 +120,7 @@ class IsoPlantProfileController extends Controller
             $op = $data['operation'];
             if ($op === 'revise') {
                 abort_unless($current->status === 'approved', 409);
-                $latest = IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $current->site_id)->orderByDesc('revision')->firstOrFail();
+                $latest = IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $current->site_id)->latestPerSite()->firstOrFail();
                 if ($latest->id !== $current->id) {
                     return $latest;
                 }

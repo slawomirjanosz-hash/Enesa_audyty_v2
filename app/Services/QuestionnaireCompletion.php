@@ -70,7 +70,7 @@ class QuestionnaireCompletion
         $service = app(IsoPlantQuestionnaire::class);
         $answered = $total = 0;
         foreach ($service->questions($definition) as $question) {
-            if (! $service->visible($question, $answers)) {
+            if ($question['type'] === 'auto' || ! $service->visible($question, $answers)) {
                 continue;
             }
             $total++;

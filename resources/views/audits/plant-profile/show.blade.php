@@ -4,6 +4,7 @@
     $answers = $questionnaire->formAnswers(old('answers', $profile->answers), $profile->definition);
     $editable = $canWrite && ($isLatest ?? true) && (!$client || in_array($profile->status,['editing','returned','auditor_corrected']));
     $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję','before_correction'=>'Wersja przed korektą audytora','auditor_correction'=>'Poprawiony przez audytora — wymagane ponowne zatwierdzenie klienta'];
+    $operations['schema_upgrade'] = 'Rozszerzono profil według ankiety audytorów — odpowiedzi zachowane';
 @endphp
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($profile->definition,$answers), 'progressForm'=>'#plant-form', 'progressMode'=>'plant'])
 <div class="plant-summary"><div><a href="{{ route($prefix.'index',$audit) }}">← Wszystkie profile</a><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2></div><span class="plant-badge">{{ \App\Models\IsoPlantProfile::STATUSES[$profile->status] }} · wersja {{ $profile->revision }}</span></div>
@@ -14,16 +15,18 @@
 @if(isset($profile->auditor_changes['_as_of_date']))<div class="plant-correction"><strong>Audytor zmienił datę „Stan danych na dzień”</strong><p>Przed: {{$profile->auditor_changes['_as_of_date']['before']}} → Po korekcie: {{$profile->auditor_changes['_as_of_date']['after']}}</p></div>@endif
 <nav class="plant-nav" aria-label="Części profilu">@foreach($profile->definition['groups'] as $group)<a href="#group-{{ $loop->index }}">{{ $group['title'] }}</a>@endforeach<a href="#approvals">Zatwierdzenia i historia</a></nav>
 <form id="plant-form" @if($profile->lock_version > 0) data-highlight-unanswered @endif method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ old('lock_version',$profile->lock_version) }}">
+<script type="application/json" id="plant-energy-factors">@json(\App\Services\IsoPlantCalculations::FACTORS)</script>
 <fieldset @disabled(!$editable)><section class="plant-card"><label>Stan danych na dzień<input type="date" name="as_of_date" value="{{ old('as_of_date',$profile->as_of_date->format('Y-m-d')) }}" required></label></section>
-@foreach($profile->definition['groups'] as $group)<section class="plant-card" id="group-{{ $loop->index }}"><h2>{{ $group['title'] }}</h2>
+@foreach($profile->definition['groups'] as $group)<section class="plant-card" id="group-{{ $loop->index }}"><h2>{{ $group['title'] }}</h2>@if(isset($group['owner']))<p class="plant-help">Dział / osoba wspierająca wypełnienie: {{$group['owner']}}</p>@endif
 @foreach($group['questions'] as $q)
 @php
     $answer = $answers[$q['key']] ?? [];
     $name = 'answers['.$q['key'].']';
     $id = 'q-'.str_replace('.','-',$q['key']);
 @endphp
-<div class="plant-question" data-question="{{ $q['key'] }}" @if(isset($q['condition'])) data-condition='@json($q["condition"])' @endif>
+<div class="plant-question" data-question="{{ $q['key'] }}" @if($q['type']==='auto') data-calculated @endif @if(isset($q['condition'])) data-condition='@json($q["condition"])' @endif>
 <label for="{{ $id }}" class="question-title">{{ $q['label'] }} @if($q['required'])<span aria-label="wymagane">*</span>@endif</label>
+<small class="plant-help" style="display:block">{{$q['key']}}@if(!empty($q['unit'])) · {{$q['unit']}}@endif</small>
 <span class="plant-unanswered-label">Brak odpowiedzi</span>
 @foreach(['auditor_changes'=>'audytora','client_changes'=>'klienta'] as $changeField=>$changeAuthor)
 @if(isset($profile->$changeField[$q['key']]))
@@ -34,20 +37,28 @@
 </div>
 @endif
 @endforeach
-@if($q['type']==='select')<select id="{{ $id }}" name="{{ $name }}[value]"><option value="">Wybierz odpowiedź</option>@foreach($q['options'] as $value=>$label)<option value="{{ $value }}" @selected(($answer['value']??null)===$value)>{{ $label }}</option>@endforeach</select>
+@if($q['type']==='auto')<output id="{{$id}}" data-auto-value="{{$q['key']}}">{{$questionnaire->display($q,$answer)}}</output><p class="plant-help" data-auto-help="{{$q['key']}}">{{$answer['detail']??$q['hint']}}</p>
+@elseif($q['type']==='select')<select id="{{ $id }}" name="{{ $name }}[value]"><option value="">Wybierz odpowiedź</option>@foreach($q['options'] as $value=>$label)<option value="{{ $value }}" @selected((string)($answer['value']??'')===(string)$value)>{{ $label }}</option>@endforeach</select>
 @elseif($q['type']==='multi')<details class="plant-multi"><summary id="{{ $id }}"><span data-selection-label>{{ count($answer['value']??[]) ? $questionnaire->display($q,$answer) : 'Wybierz odpowiedzi' }}</span></summary><div>@foreach($q['options'] as $value=>$label)<label><input type="checkbox" name="{{ $name }}[value][]" value="{{ $value }}" data-label="{{ $label }}" @if(in_array($label,['Nie wiem','Brak','Brak pomiarów','Brak znanych zmian'])) data-exclusive @endif @checked(in_array($value,$answer['value']??[]))> {{ $label }}</label>@endforeach</div></details>
 @elseif($q['type']==='rows')
 <div data-repeat data-next="{{ empty($answer['value']) ? 0 : max(array_keys($answer['value']))+1 }}">
 <div data-rows>@foreach($answer['value'] ?? [] as $rowIndex=>$row)@include('audits.plant-profile.row',['rowIndex'=>$rowIndex])@endforeach</div>
 <template>@include('audits.plant-profile.row',['rowIndex'=>'__INDEX__','row'=>[]])</template>
-<button type="button" data-add-row>+ Dodaj {{ $q['key']==='site.buildings'?'budynek':'dane nośnika' }}</button>
+<button type="button" data-add-row>+ Dodaj {{ $q['key']==='site.buildings'?'budynek':($q['key']==='FAKT_LOKALIZACJE_LISTA'?'lokalizację':'dane nośnika') }}</button>
 </div>
-@else<input id="{{ $id }}" type="{{ $q['type']==='number' && !$errors->has('answers.'.$q['key'].'.value')?'number':'text' }}" @if($q['type']==='number') inputmode="decimal" min="0" step="1" @else maxlength="2000" @endif name="{{ $name }}[value]" value="{{ $answer['value']??'' }}">@endif
-@if(!in_array($q['type'],['select','multi']) && !$q['required'])<label class="plant-check"><input type="checkbox" name="{{ $name }}[unknown]" value="1" @checked($answer['unknown']??false)> Nie wiem / dane niedostępne</label>@endif
+@else<input id="{{ $id }}" type="{{ in_array($q['type'],['number','date']) && !$errors->has('answers.'.$q['key'].'.value')?$q['type']:'text' }}" @if($q['type']==='number') inputmode="decimal" min="{{$q['min']??0}}" @if(isset($q['max'])) max="{{$q['max']}}" @endif step="{{($q['integer']??false)?'1':'any'}}" @else maxlength="2000" @endif name="{{ $name }}[value]" value="{{ $answer['value']??'' }}">@endif
+@if(!in_array($q['type'],['select','multi','auto']) && !$q['required'])<label class="plant-check"><input type="checkbox" name="{{ $name }}[unknown]" value="1" @checked($answer['unknown']??false)> Nie wiem / dane niedostępne</label>@endif
+@if($q['type']!=='auto')
 <details><summary>Uzupełnienie i źródło odpowiedzi</summary><p class="plant-help">{{ $q['hint'] }}</p><label for="{{ $id }}-detail">Szczegóły / wyjaśnienie<textarea id="{{ $id }}-detail" name="{{ $name }}[detail]" maxlength="3000" rows="2">{{ $answer['detail']??'' }}</textarea></label><label for="{{ $id }}-source">Źródło / nazwa dokumentu<input id="{{ $id }}-source" name="{{ $name }}[source]" maxlength="500" value="{{ $answer['source']??'' }}"></label></details>
+@endif
 </div>@endforeach</section>@endforeach</fieldset>
 @if($editable)<div class="plant-actions"><span id="plant-save-state" role="status">Zapisz odpowiedzi przed wyjściem.</span><button name="operation" value="save" class="primary">Zapisz</button>@if($canClientApprove)<button name="operation" value="submit" data-confirm="Potwierdzasz dane tej wersji profilu i przekazujesz je do przeglądu audytora?">Zatwierdź jako klient</button>@elseif($client)<small>Zatwierdza administrator klienta.</small>@endif</div>@endif
 <input type="hidden" name="complete_form" value="1"></form>
+@if(!empty($profile->definition['legacy_groups']))
+<details class="plant-card"><summary>Odpowiedzi zachowane z poprzedniego profilu</summary><p>Pozostają pod dotychczasowymi nazwami zmiennych. Pytania o innym znaczeniu wymagają potwierdzenia w nowej ankiecie.</p>
+@foreach($profile->definition['legacy_groups'] as $oldGroup)<h3>{{$oldGroup['title']}}</h3>@foreach($oldGroup['questions'] as $oldQuestion)@if(isset($profile->answers[$oldQuestion['key']]))<p><strong>{{$oldQuestion['label']}}</strong><br><small>{{$oldQuestion['key']}}</small><br>{{ $questionnaire->display($oldQuestion,$profile->answers[$oldQuestion['key']]) }}</p>@endif @endforeach @endforeach
+</details>
+@endif
 <section id="approvals" class="plant-card"><h2>Zatwierdzenia</h2>
 @include('audits.plant-profile.status')
 @foreach(['client_approval'=>'Klient','auditor_approval'=>'Audytor'] as $field=>$label)<p><strong>{{ $label }}:</strong> @if($profile->$field){{ $profile->$field['name'] }} · {{ \Carbon\Carbon::parse($profile->$field['at'])->format('d.m.Y H:i') }}@else Oczekuje na zatwierdzenie @endif</p>@endforeach

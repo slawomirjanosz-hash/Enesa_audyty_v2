@@ -11,7 +11,7 @@ class IsoPlantQuestionnaire
 {
     public function definition(): array
     {
-        return json_decode(file_get_contents(resource_path('iso50001/plant-profile-v1.json')), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode(file_get_contents(resource_path('iso50001/plant-profile-v2.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function questions(array $definition): array
@@ -19,18 +19,49 @@ class IsoPlantQuestionnaire
         return array_merge(...array_column($definition['groups'], 'questions'));
     }
 
+    /** Stable identifiers for later questionnaires; inactive/unknown values are never facts. */
+    public function facts(array $definition, array $answers): array
+    {
+        $answers = app(IsoPlantCalculations::class)->apply($definition, $answers);
+        $facts = [];
+        foreach ($this->questions($definition) as $q) {
+            $answer = $answers[$q['key']] ?? [];
+            $value = $answer['value'] ?? null;
+            $facts[$q['key']] = ! $this->visible($q, $answers) || ($answer['unknown'] ?? false) || in_array($value, ['unknown', 'nie wiem', 'do potwierdzenia'], true) ? null : $value;
+        }
+
+        return $facts;
+    }
+
     public function visible(array $question, array $answers): bool
     {
         $condition = $question['condition'] ?? null;
 
-        return ! $condition || in_array($answers[$condition['key']]['value'] ?? null, $condition['values'], true);
+        if (! $condition) {
+            return true;
+        }
+        $answer = $answers[$condition['key']] ?? [];
+        $value = $answer['value'] ?? null;
+        if (($answer['unknown'] ?? false) || $value === null || $value === '' || in_array($value, ['unknown', 'nie wiem'], true)) {
+            return false;
+        }
+
+        return match ($condition['operator'] ?? 'in') {
+            '>' => is_numeric($value) && (float) $value > (float) $condition['values'][0],
+            '!=' => ! in_array((string) $value, $condition['values'], true),
+            default => in_array((string) $value, $condition['values'], true),
+        };
     }
 
     public function normalize(array $input, array $definition, array $previous, int $userId, bool $submit): array
     {
-        $answers = [];
+        // Retain retired identifiers for future references and the previous-answer panel.
+        $answers = array_diff_key($previous, array_flip(array_column($this->questions($definition), 'key')));
         $errors = [];
         foreach ($this->questions($definition) as $q) {
+            if ($q['type'] === 'auto') {
+                continue;
+            }
             $prefix = 'answers.'.$q['key'];
             $raw = $input[$q['key']] ?? [];
             if (! is_array($raw)) {
@@ -41,8 +72,9 @@ class IsoPlantQuestionnaire
             $rules = ['unknown' => 'nullable|boolean', 'detail' => 'nullable|string|max:3000', 'source' => 'nullable|string|max:500'];
             $valueRule = match ($q['type']) {
                 'select' => ['nullable', Rule::in(array_keys($q['options']))],
-                'multi', 'rows' => ['nullable', 'array', 'max:50'],
-                'number' => ['nullable', 'numeric', 'min:0', 'max:1000000000000'],
+                'multi', 'rows' => ['nullable', 'array', 'max:'.($q['max_items'] ?? 50)],
+                'number' => ['nullable', ($q['integer'] ?? false) ? 'integer' : 'numeric', 'min:'.($q['min'] ?? 0), 'max:'.($q['max'] ?? 1000000000000)],
+                'date' => ['nullable', 'date_format:Y-m-d'],
                 default => ['nullable', 'string', 'max:2000'],
             };
             $rules['value'] = $valueRule;
@@ -85,6 +117,14 @@ class IsoPlantQuestionnaire
                 $value = array_filter($value ?? [], fn ($row) => collect($row)->except('id')->contains(fn ($v) => filled($v)));
                 foreach ($value as $rowIndex => &$row) {
                     $row['id'] = $row['id'] ?? (string) Str::uuid();
+                    if (in_array($q['key'], ['FAKT_NOSNIKI', 'FAKT_LOKALIZACJE_LISTA'])) {
+                        $requiredFields = $q['key'] === 'FAKT_NOSNIKI' ? ['c0', 'c1', 'c2'] : ['c0', 'c1', 'c2', 'c3'];
+                        foreach ($requiredFields as $field) {
+                            if (blank($row[$field] ?? null)) {
+                                $errors[$prefix.'.value.'.$rowIndex.'.'.$field][] = 'Uzupełnij pole „'.$q['fields'][$field]['label'].'” w tym wierszu.';
+                            }
+                        }
+                    }
                     if ($q['key'] === 'energy.records' && filled($row['period_start'] ?? null) && filled($row['period_end'] ?? null) && $row['period_end'] < $row['period_start']) {
                         $errors[$prefix.'.value.'.$rowIndex.'.period_end'][] = 'Koniec okresu zużycia nie może poprzedzać początku.';
                     }
@@ -116,7 +156,7 @@ class IsoPlantQuestionnaire
         }
         if ($submit) {
             foreach ($this->questions($definition) as $q) {
-                if (! isset($answers[$q['key']])) {
+                if ($q['type'] === 'auto' || ! isset($answers[$q['key']])) {
                     continue;
                 }
                 $answer = $answers[$q['key']];
@@ -130,7 +170,7 @@ class IsoPlantQuestionnaire
             throw ValidationException::withMessages($errors);
         }
 
-        return $answers;
+        return app(IsoPlantCalculations::class)->apply($definition, $answers);
     }
 
     /** Preserve scalar user input after errors, but never render malformed nested values. */

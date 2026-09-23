@@ -4,6 +4,16 @@ use App\Models\IsoPlantProfile;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\QuestionnaireCompletion;
 
+beforeEach(function () {
+    app()->instance(IsoPlantQuestionnaire::class, new class extends IsoPlantQuestionnaire
+    {
+        public function definition(): array
+        {
+            return json_decode(file_get_contents(resource_path('iso50001/plant-profile-v1.json')), true, 512, JSON_THROW_ON_ERROR);
+        }
+    });
+});
+
 test('completion counts zero no and unknown but excludes unanswered and conditional questions', function () {
     $counter = app(QuestionnaireCompletion::class);
     $schema = app(IsoPlantQuestionnaire::class)->definition();

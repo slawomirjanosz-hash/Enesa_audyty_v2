@@ -13,6 +13,17 @@ use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+// Regression suite for profiles saved with the original definition.
+beforeEach(function () {
+    app()->instance(IsoPlantQuestionnaire::class, new class extends IsoPlantQuestionnaire
+    {
+        public function definition(): array
+        {
+            return json_decode(file_get_contents(resource_path('iso50001/plant-profile-v1.json')), true, 512, JSON_THROW_ON_ERROR);
+        }
+    });
+});
+
 function plantFixture(): array
 {
     $company = Company::create(['name' => 'Zakłady testowe', 'company_type' => 'client', 'status' => 'active']);

@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (indicator.dataset.completionMode === 'plant') {
                 form.querySelectorAll('[data-question]').forEach(question => {
                     question.classList.remove('plant-unanswered');
+                    if (question.hasAttribute('data-calculated')) return;
                     if (question.dataset.condition) {
                         const condition = JSON.parse(question.dataset.condition);
-                        if (!condition.values.includes(form.elements.namedItem(`answers[${condition.key}][value]`)?.value)) return;
+                        if (window.plantConditionVisible ? !window.plantConditionVisible(condition, form) : !condition.values.includes(form.elements.namedItem(`answers[${condition.key}][value]`)?.value)) return;
                     }
                     total++;
                     const unknown = question.querySelector('input[name$="[unknown]"]');
