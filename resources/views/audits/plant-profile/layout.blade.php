@@ -8,4 +8,5 @@
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź formularz:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 @yield('content')
 @include('partials.field-validation')
+@include('partials.questionnaire-navigation')
 </main><script type="module" src="{{ asset('js/table-sort.js') }}"></script><script src="{{ asset('js/iso-plant-profile.js') }}" defer></script></body></html>

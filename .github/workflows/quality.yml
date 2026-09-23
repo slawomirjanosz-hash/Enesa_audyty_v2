@@ -36,6 +36,9 @@ jobs:
       - name: Test table sorting
         run: npm run test:tables
 
+      - name: Test questionnaire navigation
+        run: npm run test:questionnaires
+
       - name: Check PHP code style
         run: composer format:test
 

@@ -54,4 +54,5 @@
 @if($review->document_id)<p><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'4-1'])}}#iso-documents-4-1">Otwórz PDF w Dokumentacji punktu 4.1 →</a></p>@endif
 <h3>Historia</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{$operations[$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div></section>
 @include('partials.field-validation')
+@include('partials.questionnaire-navigation')
 </main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}" defer></script></body></html>

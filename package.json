@@ -4,6 +4,7 @@
     "type": "module",
     "scripts": {
         "test:tables": "node --test tests/js/table-sort.test.mjs",
+        "test:questionnaires": "node --test tests/js/questionnaire-navigation.test.mjs",
         "build": "vite build",
         "dev": "vite"
     },
