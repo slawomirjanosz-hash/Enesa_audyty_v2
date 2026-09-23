@@ -7,6 +7,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\User;
 use App\Services\IsoPlantQuestionnaire;
+use App\Services\QuestionnaireCompletion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
@@ -40,6 +41,67 @@ function plantAnswers(): array
 
     return $answers;
 }
+
+test('review exchange highlights client corrections until both approve the same content', function () {
+    [$audit, $client, $staff] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $clientUrl = route('client.audits.plant-profile.update', [$audit, $profile]);
+    $staffUrl = route('audits.plant-profile.update', [$audit, $profile]);
+    $payload = ['operation' => 'save', 'complete_form' => 1, 'lock_version' => 0, 'as_of_date' => '2026-09-23', 'answers' => plantAnswers()];
+    $this->post($clientUrl, $payload)->assertSessionHasNoErrors();
+    expect($profile->fresh()->client_changes)->toBeNull()->and($profile->fresh()->status)->toBe('editing');
+    $this->actingAs($staff)->get(route('audits.plant-profile.show', [$audit, $profile]))->assertDontSee('data-client-change=');
+    $payload['lock_version'] = 1;
+    $payload['answers']['site.name'] = ['value' => 'Audytor A'];
+    $this->post($staffUrl, $payload)->assertSessionHasNoErrors();
+    $payload['lock_version'] = 2;
+    $payload['answers']['site.name'] = ['value' => 'Klient B'];
+    $this->actingAs($client)->post($clientUrl, $payload)->assertSessionHasNoErrors();
+    expect($profile->fresh()->client_changes['site.name']['before']['value'])->toBe('Audytor A');
+    $payload['lock_version'] = 3;
+    $payload['operation'] = 'submit';
+    $this->post($clientUrl, $payload)->assertSessionHasNoErrors();
+    $this->actingAs($staff)->get(route('audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('data-client-change="site.name"', false)->assertSee('Klient B');
+    // An unchanged save must not remove the client's approval or the highlighted edits.
+    $payload['lock_version'] = 4;
+    $payload['operation'] = 'save';
+    $this->post($staffUrl, $payload)->assertSessionHasNoErrors();
+    expect($profile->fresh()->lock_version)->toBe(4)->and($profile->fresh()->client_approval)->not->toBeNull();
+    $payload['answers']['organization.name'] = ['value' => 'Inna poprawka audytora'];
+    $this->post($staffUrl, $payload)->assertSessionHasNoErrors();
+    expect($profile->fresh()->client_approval)->toBeNull()->and($profile->fresh()->client_changes)->not->toBeNull();
+    $this->post($staffUrl, ['lock_version' => 5, 'operation' => 'approve', 'note' => 'OK'])->assertForbidden();
+    $this->post(route('audits.plant-profile.pdf', [$audit, $profile]), ['lock_version' => 5])->assertForbidden();
+    $payload['lock_version'] = 5;
+    $payload['operation'] = 'submit';
+    $this->actingAs($client)->post($clientUrl, $payload)->assertSessionHasNoErrors();
+    $this->actingAs($staff)->post($staffUrl, ['lock_version' => 6, 'operation' => 'approve', 'note' => 'Bez dalszych zmian.'])->assertRedirect();
+    expect($profile->fresh()->status)->toBe('approved')->and($profile->fresh()->client_approval)->not->toBeNull()
+        ->and($profile->fresh()->auditor_approval)->not->toBeNull()->and($profile->fresh()->client_changes)->toBeNull()
+        ->and(IsoPlantProfile::count())->toBe(1);
+});
+
+test('client dashboard and audit list share dates manager status and aggregate progress', function () {
+    [$audit, $client, $staff] = plantFixture();
+    $audit->update(['manager_id' => $staff->id, 'start_date' => '2026-09-01', 'end_date' => '2026-12-31']);
+    $this->actingAs($client);
+    foreach (['client.dashboard', 'client.audits'] as $route) {
+        $this->get(route($route))->assertOk()->assertSee('Przygotowywany')->assertDontSee('>draft<', false)
+            ->assertSee('01.09.2026')->assertSee('31.12.2026')->assertSee($staff->name)
+            ->assertSee('Wypełnienie audytu: 0%')->assertSee('Rodzaj audytu: ISO 50001');
+    }
+    $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['operation' => 'save', 'lock_version' => 0, 'complete_form' => 1, 'as_of_date' => '2026-09-23', 'answers' => plantAnswers()])->assertSessionHasNoErrors();
+    $progress = app(QuestionnaireCompletion::class)->auditCards(Audit::whereKey($audit->id)->get())[$audit->id];
+    expect($progress['percent'])->toBeGreaterThan(0)->toBeLessThan(100);
+    // A full plant profile alone must not make the whole ISO audit 100% complete.
+    $other = User::factory()->create();
+    $other->assignRole(Role::findOrCreate('client_admin'));
+    $other->companies()->attach(Company::create(['name' => 'Obcy klient', 'company_type' => 'client', 'status' => 'active']));
+    $this->actingAs($other)->get(route('client.audits'))->assertOk()->assertDontSee($audit->number);
+});
 
 test('plant profile has 65 uniquely named questions and renders client and staff screens', function () {
     [$audit, $client, $staff] = plantFixture();

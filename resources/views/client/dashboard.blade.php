@@ -393,24 +393,7 @@
 
     {{-- AUDITS TAB --}}
     <div id="audits" class="tab-pane {{ $firstDashboardModule === 'audits' ? 'active' : '' }}">
-        @if($audits->isEmpty())
-            <div class="empty-state">
-                <i class="ti ti-clipboard-x"></i>
-                <p>Brak audytów.</p>
-            </div>
-        @else
-            @foreach($audits as $audit)
-            <a class="item-row" href="{{route('client.audits.show',$audit)}}" style="text-decoration:none;color:inherit">
-                <div class="item-left">
-                    <div class="item-title">{{ $audit->title ?? 'Audyt #' . $audit->id }}</div>
-                    <div class="item-meta">{{ $audit->created_at->format('d.m.Y H:i') }}</div>
-                </div>
-                <div class="item-right">
-                    <span class="badge badge-w-toku">{{ $audit->status ?? 'Aktywny' }}</span>
-                </div>
-            </a>
-            @endforeach
-        @endif
+        @include('client.partials.audits-list')
     </div>
 
     {{-- DOCUMENTS TAB --}}

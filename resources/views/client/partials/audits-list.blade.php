@@ -1,5 +1,6 @@
 @php
     $statusLabels = ['draft'=>'Przygotowywany','in_progress'=>'W trakcie','done'=>'Zakończony','cancelled'=>'Anulowany'];
+    $auditProgress = app(\App\Services\QuestionnaireCompletion::class)->auditCards($audits);
     $auditBrandColor = $appBrand?->primaryColor() ?: '#1A4D3A';
     $auditChannels = array_map(function ($offset) use ($auditBrandColor) {
         $value = hexdec(substr(ltrim($auditBrandColor, '#'), $offset, 2)) / 255;
@@ -20,7 +21,26 @@
 @else
 <div class="client-audit-list">
 @foreach($audits as $audit)
-<article class="client-audit-card"><div class="client-audit-top"><div><span class="client-audit-number">{{$audit->number?:'AUDYT #'.$audit->id}}</span><h2 class="client-audit-title">{{$audit->title}}</h2><div class="client-audit-meta"><span><i class="ti ti-calendar"></i> {{$audit->start_date?->format('d.m.Y')??'Termin nieustalony'}}@if($audit->end_date) – {{$audit->end_date->format('d.m.Y')}}@endif</span><span><i class="ti ti-user"></i> {{$audit->manager?->name??'Zespół audytowy'}}</span></div></div><span class="client-audit-status">{{$statusLabels[$audit->status]??$audit->status}}</span></div>@if($audit->description)<p style="font-size:12px;color:#58665e;line-height:1.55;margin:13px 0 0">{{$audit->description}}</p>@endif<div class="client-audit-stats"><span><i class="ti ti-list-check"></i> Zadania: {{$audit->tasks_count}}</span><span><i class="ti ti-files"></i> Dokumenty: {{$audit->documents_count}}</span><span><i class="ti ti-forms"></i> Ankiety: {{$audit->surveys_count}}</span><span><i class="ti ti-bolt"></i> Paszporty: {{$audit->energy_passports_count}}</span>@if(request()->routeIs('client.*'))<a href="{{route('client.audits.show',$audit)}}" class="client-audit-open" aria-label="Otwórz audyt: {{$audit->title}}">Otwórz audyt <i class="ti ti-arrow-right" aria-hidden="true"></i></a>@endif</div></article>
+<article class="client-audit-card">
+    <div class="client-audit-top"><div>
+        <span class="client-audit-number">{{$audit->number?:'AUDYT #'.$audit->id}}</span>
+        <h2 class="client-audit-title">{{$audit->title}}</h2>
+        <p style="margin:0 0 12px;font-size:13px">Rodzaj audytu: {{$audit->surveys->map(fn($survey)=>$survey->auditType?->name)->filter()->unique()->implode(', ') ?: 'Nie określono'}}</p>
+        <div class="client-audit-meta">
+            <span>Rozpoczęcie: {{$audit->start_date?->format('d.m.Y')??'Nie ustalono'}}</span>
+            <span>Planowane zakończenie: {{$audit->end_date?->format('d.m.Y')??'Nie ustalono'}}</span>
+            <span>Opiekun: {{$audit->manager?->name??'Nie przypisano'}}</span>
+        </div>
+    </div><span class="client-audit-status">{{$statusLabels[$audit->status]??'Nie określono'}}</span></div>
+    @if($audit->description)<p style="font-size:13px;color:#58665e;line-height:1.55">{{$audit->description}}</p>@endif
+    <div class="client-audit-stats">
+        <div style="flex:1;min-width:180px" title="Wypełnienie dostępnych ankiet audytu, niezależnie od ich zatwierdzenia">
+            <strong>Wypełnienie audytu: {{$auditProgress[$audit->id]['percent']}}%</strong>
+            <progress aria-label="Wypełnienie audytu {{$audit->title}}" max="100" value="{{$auditProgress[$audit->id]['percent']}}" style="display:block;width:100%;max-width:420px;height:10px;margin-top:8px;accent-color:var(--green)"></progress>
+        </div>
+        @if(request()->routeIs('client.*'))<a href="{{route('client.audits.show',$audit)}}" class="client-audit-open" aria-label="Otwórz audyt: {{$audit->title}}">Otwórz audyt <i class="ti ti-arrow-right" aria-hidden="true"></i></a>@endif
+    </div>
+</article>
 @endforeach
 </div>
 @endif

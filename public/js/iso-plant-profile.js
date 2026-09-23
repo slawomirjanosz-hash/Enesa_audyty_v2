@@ -47,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     form?.addEventListener('submit', () => { dirty = false; });
+    document.querySelectorAll('#approvals form').forEach(approvalForm => approvalForm.addEventListener('submit', event => {
+        if (!dirty) return;
+        event.preventDefault();
+        window.alert('Najpierw zapisz zmienione odpowiedzi. Zatwierdzenie musi dotyczyć zapisanej treści ankiety.');
+        document.getElementById('plant-save-state')?.scrollIntoView({block: 'center', behavior: 'smooth'});
+    }));
     window.addEventListener('beforeunload', event => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
     conditions();
 });

@@ -134,8 +134,11 @@ class IsoPlantProfileController extends Controller
                 $request->validate(['answers' => 'required|array', 'as_of_date' => 'required|date_format:Y-m-d', 'complete_form' => 'required|accepted'], ['complete_form.required' => 'Nie dotarł cały formularz. Zmniejsz liczbę wierszy i spróbuj ponownie — dotychczasowy zapis pozostał bez zmian.']);
                 $answers = $this->questionnaire->normalize($data['answers'], $current->definition, $current->answers, $request->user()->id, $op === 'submit');
                 $changed = $current->as_of_date->format('Y-m-d') !== $data['as_of_date'];
-                $changes = $current->auditor_changes ?? [];
-                if (! $client && $changed) {
+                $changeField = $client ? 'client_changes' : 'auditor_changes';
+                $changes = $current->$changeField ?? [];
+                // Initial client input is not a correction. Track only the review exchange.
+                $trackChanges = ! $client || $current->auditor_changes || $current->client_changes || in_array($current->status, ['auditor_corrected', 'returned']);
+                if ($trackChanges && $changed) {
                     $changes['_as_of_date'] = ['before' => $changes['_as_of_date']['before'] ?? $current->as_of_date->format('Y-m-d'), 'after' => $data['as_of_date'], 'by' => $request->user()->name, 'at' => now()->toIso8601String()];
                 }
                 foreach ($answers as $key => $answer) {
@@ -146,7 +149,7 @@ class IsoPlantProfileController extends Controller
                         $questionChanged = $questionChanged || ($before === null) !== ($after === null) || $before != $after;
                     }
                     $changed = $changed || $questionChanged;
-                    if (! $client && $questionChanged) {
+                    if ($trackChanges && $questionChanged) {
                         $changes[$key] = ['before' => $changes[$key]['before'] ?? ($current->answers[$key] ?? []), 'after' => $answer, 'by' => $request->user()->name, 'at' => now()->toIso8601String()];
                     }
                 }
@@ -159,7 +162,10 @@ class IsoPlantProfileController extends Controller
                         IsoSectionDocument::whereKey($current->document_id)->update(['description' => 'Wersja historyczna — zastąpiona korektą audytora. Profil #'.$current->id]);
                     }
                 }
-                $current->auditor_changes = $op === 'submit' ? null : $changes;
+                $current->$changeField = $changes ?: null;
+                if ($op === 'submit') {
+                    $current->auditor_changes = null;
+                }
                 $current->answers = $answers;
                 $current->as_of_date = $data['as_of_date'];
                 $current->status = $op === 'submit' ? 'submitted' : (! $client || $current->status === 'auditor_corrected' ? 'auditor_corrected' : 'editing');
@@ -176,6 +182,8 @@ class IsoPlantProfileController extends Controller
                 abort_if(($current->client_approval['user_id'] ?? null) === $request->user()->id, 403, 'Przegląd musi zatwierdzić inna osoba niż przedstawiciel klienta.');
                 $request->validate(['note' => 'required|string|max:3000']);
                 $current->status = 'approved';
+                $current->client_changes = null;
+                $current->auditor_changes = null;
                 $current->auditor_approval = $this->approval($request);
                 $current->review_note = $data['note'];
                 $issuer = CompanySettings::first();
@@ -208,7 +216,7 @@ class IsoPlantProfileController extends Controller
 
     private function record(Request $request, IsoPlantProfile $profile, string $action): void
     {
-        DB::table('iso_plant_events')->insert(['profile_id' => $profile->id, 'user_id' => $request->user()->id, 'user_name' => $request->user()->name, 'action' => $action, 'snapshot' => json_encode($profile->only(['answers', 'as_of_date', 'revision', 'lock_version', 'status', 'client_approval', 'auditor_approval', 'review_note', 'auditor_changes']), JSON_THROW_ON_ERROR), 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('iso_plant_events')->insert(['profile_id' => $profile->id, 'user_id' => $request->user()->id, 'user_name' => $request->user()->name, 'action' => $action, 'snapshot' => json_encode($profile->only(['answers', 'as_of_date', 'revision', 'lock_version', 'status', 'client_approval', 'auditor_approval', 'review_note', 'auditor_changes', 'client_changes']), JSON_THROW_ON_ERROR), 'created_at' => now(), 'updated_at' => now()]);
         ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'update', 'auditable_type' => Audit::class, 'auditable_id' => $profile->audit_id, 'subject_label' => 'Profil zakładu #'.$profile->id.' — '.$action, 'route_name' => $request->route()->getName()]);
     }
 

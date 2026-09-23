@@ -10,7 +10,7 @@ class IsoPlantProfile extends Model
 
     protected $guarded = ['id'];
 
-    protected $casts = ['definition' => 'array', 'answers' => 'array', 'auditor_changes' => 'array', 'client_approval' => 'array', 'auditor_approval' => 'array', 'issuer' => 'array', 'as_of_date' => 'date', 'revision' => 'integer', 'lock_version' => 'integer'];
+    protected $casts = ['definition' => 'array', 'answers' => 'array', 'auditor_changes' => 'array', 'client_changes' => 'array', 'client_approval' => 'array', 'auditor_approval' => 'array', 'issuer' => 'array', 'as_of_date' => 'date', 'revision' => 'integer', 'lock_version' => 'integer'];
 
     public const STATUSES = ['editing' => 'Wypełnianie', 'auditor_corrected' => 'Poprawiony przez audytora', 'submitted' => 'Zatwierdzona przez klienta', 'returned' => 'Do uzupełnienia', 'approved' => 'Zatwierdzona przez audytora'];
 }
