@@ -238,7 +238,7 @@ class ProjectController extends Controller
         $this->authorize('delete', $project);
         $project->delete();
 
-        return redirect()->route('projects.index')->with('success', 'Projekt został usunięty z aktywnej listy.');
+        return redirect()->route('projects.index')->with('success', 'Projekt został usunięty z listy. Powiązane dane i pliki zachowano — nie zostały trwale skasowane.');
     }
 
     public function storeTask(Request $request, Project $project): RedirectResponse|JsonResponse

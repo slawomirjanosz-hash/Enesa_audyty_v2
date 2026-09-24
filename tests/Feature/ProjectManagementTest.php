@@ -248,6 +248,9 @@ test('only admin or superadmin can remove a project', function () {
     ]);
     $project->members()->attach([$admin->id, $operator->id]);
 
+    $this->actingAs($operator)->get(route('projects.index'))->assertOk()->assertDontSee('project-delete-button');
+    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertSee('project-delete-button')->assertSee(route('projects.destroy', $project), false);
+
     $this->actingAs($operator)->get(route('projects.show', $project))
         ->assertOk()
         ->assertDontSee('Usuń projekt');
@@ -261,6 +264,40 @@ test('only admin or superadmin can remove a project', function () {
         ->assertRedirect(route('projects.index'))
         ->assertSessionHas('success');
     $this->assertSoftDeleted('projects', ['id' => $project->id]);
+    $this->get(route('projects.index'))->assertOk()->assertDontSee('Projekt utworzony omyłkowo');
+    $this->get(route('projects.show', $project))->assertNotFound();
+});
+
+test('completed project deletion button is visible only to administrators and preserves related tasks', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $project = Project::create(['number' => 'DONE/DELETE/1', 'name' => 'Zduplikowany zakończony', 'status' => 'completed', 'manager_id' => $admin->id]);
+    $project->members()->attach($admin);
+    $task = Task::create(['project_id' => $project->id, 'title' => 'Zachowane zadanie', 'status' => 'pending', 'priority' => 'medium', 'assigned_to' => $admin->id]);
+    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertSee('project-row-actions')->assertSee(route('projects.destroy', $project), false);
+    $this->delete(route('projects.destroy', $project))->assertRedirect(route('projects.index'));
+    $this->assertSoftDeleted($project);
+    $this->assertDatabaseHas('tasks', ['id' => $task->id, 'project_id' => $project->id]);
+    expect(Project::withTrashed()->findOrFail($project->id)->members()->count())->toBe(1);
+});
+
+test('project removal forms are outside navigation links and visible before the edit dialog', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $project = Project::create(['number' => 'DELETE/UI/1', 'name' => 'Duplikat "test"', 'status' => 'planned', 'manager_id' => $admin->id]);
+    $html = $this->actingAs($admin)->get(route('projects.index'))->assertOk()->getContent();
+    $dom = new DOMDocument;
+    $previous = libxml_use_internal_errors(true);
+    $dom->loadHTML($html);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//form[@class="project-delete-form"]/ancestor::a')->length)->toBe(0)
+        ->and($xpath->query('//form[@class="project-delete-form"]')->length)->toBe(1);
+    $form = $xpath->query('//form[@class="project-delete-form"]')->item(0);
+    expect($form->getAttribute('data-confirm'))->toContain('DELETE/UI/1', 'Duplikat "test"');
+    $html = $this->get(route('projects.show', $project))->assertOk()->getContent();
+    expect(strpos($html, 'class="project-delete-form"'))->toBeLessThan(strpos($html, 'id="project-edit-modal"'));
 });
 
 test('external project user sees only assigned projects and permitted project tabs', function () {
