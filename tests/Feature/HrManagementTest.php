@@ -99,6 +99,20 @@ test('employee creates own delegation with calculated return and remembered priv
 
     $this->actingAs($employee)->get(route('hr.delegations.pdf', $trip))
         ->assertOk()->assertHeader('content-type', 'application/pdf');
+
+    $print = view('hr.trip-pdf', ['trip' => $trip->fresh()->load('user'), 'company' => null, 'logo' => null])->render();
+    expect($print)->toContain('Samochód prywatny', '1,15 zł/km')
+        ->not->toContain('(stawka', '1,1500 zł/km');
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="utf-8" ?>'.$print);
+    $xpath = new DOMXPath($dom);
+    $rows = $xpath->query('//table[@class="journey"]/tbody/tr');
+    expect($rows->length)->toBe(2);
+    expect($rows->item(0)->textContent)->toContain('Do celu', '26.08.2026 08:00', '26.08.2026 10:00', '2,00 godz.');
+    expect($rows->item(1)->textContent)->toContain('Powrót', '27.08.2026 17:00', '27.08.2026 19:00', '2,00 godz.');
+    $trip->vehicle_type = 'company';
+    expect(view('hr.trip-pdf', ['trip' => $trip, 'company' => null, 'logo' => null])->render())
+        ->toContain('Samochód służbowy')->not->toContain('Samochód prywatny');
 });
 
 test('HR rates apply to saved and manually entered private cars but not company cars', function () {
