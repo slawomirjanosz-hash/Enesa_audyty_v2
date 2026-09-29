@@ -1,5 +1,6 @@
 @if($canDelegations)
 <div id="trip-modal" class="hr-modal"><div class="hr-modal-card"><div class="hr-head"><h2 id="trip-modal-title" style="margin:0">Nowa delegacja</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('trip-modal')">×</button></div>
+<p id="trip-copy-notice" class="hr-rate-info" hidden>Sprawdź daty, pracownika i koszty. Zapis utworzy nową delegację, bez zmiany oryginału. Rozliczenie zostanie przeliczone według aktualnych stawek HR.</p>
 <form id="trip-form" method="POST" action="{{route('hr.delegations.store')}}">@csrf<input id="trip-method" type="hidden" name="_method" value="PUT" disabled><div class="hr-grid">
  @if($canTeam)<div class="hr-field"><label>Pracownik</label><select id="trip-user-id" name="user_id">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif
  <div class="hr-field {{$canTeam?'':'hr-full'}}"><label>Cel wyjazdu *</label><input id="trip-purpose" name="purpose" required maxlength="500"></div>

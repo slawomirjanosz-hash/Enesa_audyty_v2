@@ -58,7 +58,24 @@ test('employee creates own delegation with calculated return and remembered priv
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'delegations']))
         ->assertOk()->assertSee('Spotkanie z projektantem')->assertSee('SCI 12345')
         ->assertSee('trip-route-fields')->assertSee('Adres lub nazwa miejsca')
-        ->assertSee('Inny samochód — wpiszę dane')->assertSee('trip-departure-time');
+        ->assertSee('Inny samochód — wpiszę dane')->assertSee('trip-departure-time')
+        ->assertSee('Kopiuj delegację')->assertSee('trip-copy-notice');
+
+    $original = $trip->getAttributes();
+    $copyData = $trip->only(['purpose', 'origin', 'destination', 'distance_km', 'vehicle_type', 'vehicle_name', 'registration_number', 'outbound_travel_hours', 'return_travel_hours', 'toll_cost']);
+    foreach (['departure_at', 'outbound_arrival_at', 'return_departure_at', 'return_at'] as $field) {
+        $copyData[$field] = $trip->{$field}->copy()->addDay()->format('Y-m-d H:i');
+    }
+    $copyData['accommodation_cost'] = 150;
+    $copyData['other_cost'] = 25;
+    $copyData['user_id'] = User::factory()->create()->id;
+    $this->post(route('hr.delegations.store'), $copyData)->assertSessionHas('success');
+    $copy = HrBusinessTrip::latest('id')->firstOrFail();
+    expect($copy->id)->not->toBe($trip->id)
+        ->and($copy->user_id)->toBe($employee->id)
+        ->and((float) $copy->accommodation_cost)->toBe(150.0)
+        ->and((float) $copy->other_cost)->toBe(25.0)
+        ->and($trip->fresh()->getAttributes())->toBe($original);
 
     Http::fake([
         'places.googleapis.com/*' => Http::response(['suggestions' => [
