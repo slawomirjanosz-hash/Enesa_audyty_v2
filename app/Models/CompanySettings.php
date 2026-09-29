@@ -21,11 +21,12 @@ class CompanySettings extends Model
         'documents' => 'Dokumenty',
         'client_zone' => 'Strefa klienta',
         'cylinders' => 'Inspektor UDT',
+        'warehouse' => 'Magazyn',
     ];
 
     public static function defaultModules(): array
     {
-        return array_values(array_diff(array_keys(self::APP_MODULES), ['cylinders']));
+        return array_values(array_diff(array_keys(self::APP_MODULES), ['cylinders', 'warehouse']));
     }
 
     protected $fillable = [
@@ -99,6 +100,7 @@ class CompanySettings extends Model
             'projects' => 'projects.index',
             'audits' => 'audit-types.index',
             'cylinders' => 'cylinders.index',
+            'warehouse' => 'warehouse.index',
             'documents' => 'documents.index',
             'client_zone' => 'client-zone.index',
         ];

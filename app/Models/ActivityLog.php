@@ -52,6 +52,9 @@ class ActivityLog extends Model
             'ImportantContact' => 'CRM / ważny kontakt',
             'HrBusinessTrip' => 'HR / delegacja', 'HrAttendance' => 'HR / lista obecności',
             'HrVehicle' => 'HR / samochód',
+            'WarehouseItem' => 'Magazyn / pozycja',
+            'WarehouseDocument' => 'Magazyn / dokument',
+            'WarehouseDocumentLine' => 'Magazyn / ruch',
         ][$class] ?? ($class ?: 'System');
     }
 }

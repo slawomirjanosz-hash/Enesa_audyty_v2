@@ -26,6 +26,7 @@ class EnsureAppModuleEnabled
             'projects' => 'projects.view',
             'audits' => 'audits.view',
             'cylinders' => 'cylinders.view',
+            'warehouse' => 'warehouse.view',
             'documents' => 'documents.view',
             'client_zone' => 'client_zone.view',
         ][$module] ?? null;

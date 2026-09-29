@@ -1,0 +1,9 @@
+@extends('layouts.app')
+@section('page-title','Magazyn — dokumenty')
+@section('content')
+@include('warehouse._layout')
+<form class="wh-filters" method="GET">@if(request('item'))<input type="hidden" name="item" value="{{request('item')}}">@endif<div class="wh-field"><label for="wh-q">Numer, odniesienie, projekt, dostawca</label><input id="wh-q" name="q" value="{{request('q')}}" maxlength="200"></div><div class="wh-field"><label for="wh-type">Rodzaj dokumentu</label><select id="wh-type" name="type"><option value="">Wszystkie</option>@foreach(\App\Models\WarehouseDocument::TYPES as $key=>$label)<option value="{{$key}}" @selected(request('type')===$key)>{{$label}}</option>@endforeach</select></div><button class="wh-btn primary">Filtruj</button><a class="wh-btn" href="{{route('warehouse.documents.index')}}">Wyczyść</a></form>
+<div class="wh-table-wrap"><table class="wh-table" data-server-sort="number,type,document_date,author_name,project_label,supplier_name,reference,created_at"><thead><tr><th>Numer</th><th>Rodzaj</th><th>Data dokumentu</th><th>Osoba</th><th>Projekt</th><th>Dostawca</th><th>Odniesienie</th><th>Zapisano</th><th>Akcje</th></tr></thead><tbody>
+@forelse($documents as $document)<tr><td><a href="{{route('warehouse.documents.show',$document)}}">{{$document->number}}</a></td><td>{{\App\Models\WarehouseDocument::TYPES[$document->type]}}</td><td>{{$document->document_date->format('d.m.Y')}}</td><td>{{$document->author_name}}</td><td>{{$document->project_label ?: '—'}}</td><td>{{$document->supplier_name ?: '—'}}</td><td>{{$document->reference ?: '—'}}</td><td>{{$document->created_at->format('d.m.Y H:i')}}</td><td><a class="wh-btn" href="{{route('warehouse.documents.show',$document)}}">Otwórz</a></td></tr>@empty<tr><td class="wh-empty" colspan="9">Brak dokumentów.</td></tr>@endforelse
+</tbody></table></div>{{$documents->links()}}
+@endsection

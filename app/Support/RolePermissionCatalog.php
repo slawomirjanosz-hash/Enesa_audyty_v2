@@ -79,6 +79,13 @@ class RolePermissionCatalog
                 'documents.upload' => 'Dodawanie dokumentów',
                 'documents.delete' => 'Usuwanie dokumentów',
             ]],
+            'warehouse' => ['label' => 'Magazyn', 'permissions' => [
+                'warehouse.view' => 'Podgląd całego magazynu, cen i historii dokumentów firmy',
+                'warehouse.manage' => 'Dodawanie, edycja i archiwizacja katalogu magazynu',
+                'warehouse.receive' => 'Przyjmowanie towarów do magazynu (PZ)',
+                'warehouse.issue' => 'Wydawanie towarów z magazynu (WZ)',
+                'warehouse.adjust' => 'Inwentaryzacja i korekty stanu magazynu (KOR)',
+            ]],
             'client_zone' => ['label' => 'Strefa klienta', 'permissions' => [
                 'client_zone.view' => 'Podgląd i przełączanie na strefę klienta',
                 'client_zone.chat.manage' => 'Obsługa wiadomości klientów',

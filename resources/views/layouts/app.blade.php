@@ -470,6 +470,11 @@
                 <a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Inspektor UDT</a>
             </li>
             @endif
+            @if(($appBrand?->moduleEnabled('warehouse') ?? false) && ($layoutHasFullAccess || $canAccessModule('warehouse.view')))
+            <li class="nav-item">
+                <a href="{{ route('warehouse.index') }}" class="nav-link {{ request()->routeIs('warehouse.*') ? 'active' : '' }}"><i class="ti ti-building-warehouse"></i> Magazyn</a>
+            </li>
+            @endif
             @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
             <li class="nav-item nav-group {{ request()->is('audit*', 'energy-passports*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">
