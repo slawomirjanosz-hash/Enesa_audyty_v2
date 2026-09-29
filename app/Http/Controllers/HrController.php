@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -88,11 +89,22 @@ class HrController extends Controller
     public function tripPdf(Request $request, HrBusinessTrip $trip): Response
     {
         abort_unless($trip->user_id === $request->user()->id || $this->canViewTeam($request->user()), 403);
+        $request->validate(['use_signature' => ['nullable', 'boolean']]);
+        $employeeSignature = null;
+        if ($request->boolean('use_signature')) {
+            abort_unless($trip->user_id === $request->user()->id, 403);
+            $employeeSignature = $request->user()->signatureDataUri();
+            if (! $employeeSignature) {
+                throw ValidationException::withMessages([
+                    'use_signature' => 'Najpierw dodaj podpis w sekcji Mój profil.',
+                ]);
+            }
+        }
         $trip->load(['user', 'vehicle']);
 
         $company = CompanySettings::query()->first();
 
-        return Pdf::loadView('hr.trip-pdf', ['trip' => $trip, 'company' => $company, 'logo' => $company?->logoDataUri()])->setPaper('a4')
+        return Pdf::loadView('hr.trip-pdf', ['trip' => $trip, 'company' => $company, 'logo' => $company?->logoDataUri(), 'employeeSignature' => $employeeSignature])->setPaper('a4')
             ->download('delegacja-'.Str::slug($trip->user?->name ?: 'pracownik').'-'.$trip->departure_at->format('Y-m-d').'.pdf');
     }
 
