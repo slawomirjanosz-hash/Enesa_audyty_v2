@@ -106,6 +106,8 @@ test('employee creates own delegation with calculated return and remembered priv
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="utf-8" ?>'.$print);
     $xpath = new DOMXPath($dom);
+    expect($xpath->query('//div[@class="muted"]')->item(0)->textContent)
+        ->toBe('Polecenie wyjazdu nr HR/'.$trip->id.'/2026');
     $rows = $xpath->query('//table[@class="journey"]/tbody/tr');
     expect($rows->length)->toBe(2);
     expect($rows->item(0)->textContent)->toContain('Do celu', '26.08.2026 08:00', '26.08.2026 10:00', '2,00 godz.');
