@@ -30,6 +30,58 @@ function warehousePayload(string $type, WarehouseItem $item, string $quantity, a
     ], $extra);
 }
 
+test('document picker includes full active catalogue and restores last purchase rather than average price', function () {
+    for ($i = 0; $i < 30; $i++) {
+        WarehouseItem::create(['sku' => 'PICK-'.$i, 'name' => 'Towar '.$i, 'unit' => 'szt.']);
+    }
+    $archived = WarehouseItem::create(['sku' => 'ARCHIVED-PICK', 'name' => 'Archiwum', 'unit' => 'szt.']);
+    $archived->is_active = false;
+    $archived->save();
+    $supplier = Company::create(['name' => 'Dostawca ostatni', 'company_type' => 'supplier']);
+    $this->post(route('warehouse.documents.store'), warehousePayload('receipt', $this->item, '10'))->assertRedirect();
+    $data = warehousePayload('receipt', $this->item, '10');
+    $data['lines'][0]['unit_cost'] = '20.00';
+    $data['lines'][0]['supplier_id'] = $supplier->id;
+    $this->post(route('warehouse.documents.store'), $data)->assertRedirect();
+    $this->post(route('warehouse.documents.store'), warehousePayload('issue', $this->item, '1'))->assertRedirect();
+    $response = $this->get(route('warehouse.documents.create', 'receipt'))->assertOk()
+        ->assertSee('wh-live-search')->assertSee('PICK-29')->assertDontSee('ARCHIVED-PICK')->assertDontSee('wh-find');
+    expect($response->viewData('catalogItems'))->toHaveCount(31);
+    expect($response->viewData('defaults')->get($this->item->id))
+        ->toMatchArray(['unit_cost' => '20.00', 'supplier_id' => $supplier->id]);
+});
+
+test('receipt keeps independent immutable suppliers on document lines and rejects changed replay', function () {
+    $a = Company::create(['name' => 'Dostawca A', 'company_type' => 'supplier']);
+    $b = Company::create(['name' => 'Dostawca B', 'company_type' => 'supplier']);
+    $second = WarehouseItem::create(['sku' => 'SECOND', 'name' => 'Druga pozycja', 'unit' => 'kg']);
+    $data = warehousePayload('receipt', $this->item, '2');
+    $data['lines'][0]['supplier_id'] = $a->id;
+    $data['lines'][] = ['item_id' => $second->id, 'quantity' => '3', 'unit_cost' => '25', 'supplier_id' => $b->id];
+    $this->post(route('warehouse.documents.store'), $data)->assertRedirect();
+    $doc = WarehouseDocument::firstOrFail();
+    expect($doc->lines->pluck('supplier_name')->all())->toBe(['Dostawca A', 'Dostawca B']);
+    $a->update(['name' => 'Zmieniona nazwa']);
+    $this->get(route('warehouse.documents.show', $doc))->assertOk()->assertSee('Dostawca A')->assertSee('Dostawca B');
+    $data['lines'][0]['supplier_id'] = $b->id;
+    $this->post(route('warehouse.documents.store'), $data)->assertSessionHasErrors('submission_token');
+    expect($this->item->fresh()->quantity)->toBe('2.000');
+});
+
+test('line suppliers obey company access and invalid selection never changes stock', function () {
+    $supplier = Company::create(['name' => 'Chroniony dostawca', 'company_type' => 'supplier']);
+    $worker = User::factory()->create();
+    $role = Role::findOrCreate('picker_worker');
+    $role->givePermissionTo(['warehouse.view', 'warehouse.receive']);
+    $worker->assignRole($role);
+    $this->actingAs($worker);
+    $this->get(route('warehouse.documents.create', 'receipt'))->assertOk()->assertDontSee('Chroniony dostawca');
+    $data = warehousePayload('receipt', $this->item, '2');
+    $data['lines'][0]['supplier_id'] = $supplier->id;
+    $this->post(route('warehouse.documents.store'), $data)->assertSessionHasErrors('lines.0.supplier_id');
+    expect(WarehouseDocument::count())->toBe(0)->and($this->item->fresh()->quantity)->toBe('0.000');
+});
+
 test('warehouse is opt in and clients or unprivileged staff cannot enter', function () {
     expect(CompanySettings::defaultModules())->not->toContain('warehouse');
     CompanySettings::first()->update(['enabled_modules' => CompanySettings::defaultModules()]);

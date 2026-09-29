@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class WarehouseItem extends Model
 {
@@ -14,5 +15,13 @@ class WarehouseItem extends Model
     public function lines(): HasMany
     {
         return $this->hasMany(WarehouseDocumentLine::class);
+    }
+
+    public function latestReceiptLine(): HasOne
+    {
+        return $this->hasOne(WarehouseDocumentLine::class)->ofMany(
+            ['id' => 'max'],
+            fn ($query) => $query->whereHas('document', fn ($documents) => $documents->where('type', 'receipt'))
+        );
     }
 }

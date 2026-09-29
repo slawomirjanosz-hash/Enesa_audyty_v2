@@ -18,9 +18,9 @@ class WarehouseService
         return (int) round((float) $value * (10 ** $places));
     }
 
-    public function post(array $data, User $user, ?Project $project, ?Company $supplier): WarehouseDocument
+    public function post(array $data, User $user, ?Project $project, ?Company $supplier, array $lineSuppliers = []): WarehouseDocument
     {
-        return DB::transaction(function () use ($data, $user, $project, $supplier) {
+        return DB::transaction(function () use ($data, $user, $project, $supplier, $lineSuppliers) {
             // Serializes double submissions for this operator; item locks serialize all operators.
             User::whereKey($user->id)->lockForUpdate()->firstOrFail();
             $hash = hash('sha256', json_encode($data, JSON_THROW_ON_ERROR));
@@ -68,7 +68,9 @@ class WarehouseService
                     $cost = self::scaled($line['unit_cost'], 2);
                     $item->unit_cost = round(($before * self::scaled($item->unit_cost, 2) + $amount * $cost) / $after) / 100;
                 }
+                $lineSupplier = array_key_exists('supplier_id', $line) ? ($lineSuppliers[$index] ?? null) : $supplier;
                 $document->lines()->create([
+                    'supplier_id' => $lineSupplier?->id, 'supplier_name' => $lineSupplier?->name,
                     'warehouse_item_id' => $item->id, 'sku' => $item->sku, 'name' => $item->name, 'unit' => $item->unit,
                     'quantity_before' => $before / 1000, 'quantity_change' => $change / 1000, 'quantity_after' => $after / 1000, 'unit_cost' => $cost / 100,
                 ]);

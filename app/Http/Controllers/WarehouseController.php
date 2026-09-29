@@ -189,22 +189,34 @@ class WarehouseController extends Controller
         $item = $request->integer('item') ? WarehouseItem::where('is_active', true)->findOrFail($request->integer('item')) : null;
         $oldLines = old('lines');
         $formLines = is_array($oldLines) ? collect($oldLines)->filter(fn ($line) => is_array($line))->take(50)->map(function ($line) {
-            return collect($line)->only(['item_id', 'quantity', 'unit_cost', 'revision'])->map(fn ($value) => is_scalar($value) ? $value : '')->all();
+            return collect($line)->only(['item_id', 'quantity', 'unit_cost', 'revision', 'supplier_id'])->map(fn ($value) => is_scalar($value) ? $value : '')->all();
         })->values()->all() : [];
         if ($formLines === []) {
-            $formLines = [['item_id' => $item?->id, 'quantity' => '', 'unit_cost' => '', 'revision' => $item?->revision]];
+            $formLines = $item ? [['item_id' => $item->id, 'quantity' => '', 'revision' => $item->revision]] : [];
         }
         $ids = collect($formLines)->pluck('item_id')->filter(fn ($id) => is_scalar($id) && ctype_digit((string) $id))->all();
         if ($item) {
             $ids[] = $item->id;
         }
 
+        $suppliers = $type === 'receipt' ? $this->suppliers($request)->orderBy('name')->get(['id', 'name']) : collect();
+        $catalogItems = WarehouseItem::where('is_active', true)->with('latestReceiptLine.document')->orderBy('name')->get();
+        $defaults = $catalogItems->mapWithKeys(function ($catalogItem) use ($suppliers) {
+            $last = $catalogItem->latestReceiptLine;
+            $supplierId = $last?->supplier_id ?? $last?->document?->supplier_id;
+
+            return [$catalogItem->id => [
+                'unit_cost' => $last?->unit_cost ?? $catalogItem->unit_cost,
+                'supplier_id' => $suppliers->contains('id', $supplierId) ? $supplierId : null,
+            ]];
+        });
+
         return view('warehouse.document-form', [
             'type' => $type, 'item' => $item, 'selectedItems' => WarehouseItem::whereIn('id', $ids)->get()->keyBy('id'),
             'formLines' => $formLines,
             'token' => (string) Str::uuid(),
             'projects' => $type === 'issue' ? $this->projects($request)->orderBy('number')->get(['id', 'number', 'name']) : collect(),
-            'suppliers' => $type === 'receipt' ? $this->suppliers($request)->orderBy('name')->get(['id', 'name']) : collect(),
+            'suppliers' => $suppliers, 'catalogItems' => $catalogItems, 'defaults' => $defaults,
         ]);
     }
 
@@ -224,10 +236,20 @@ class WarehouseController extends Controller
             'lines.*.quantity' => ['required', 'numeric', $type === 'adjustment' ? 'min:0' : 'min:0.001', 'max:1000000', 'decimal:0,3'],
             'lines.*.unit_cost' => [$type === 'receipt' ? 'required' : 'exclude', 'numeric', 'min:0', 'max:1000000', 'decimal:0,2'],
             'lines.*.revision' => [$type === 'adjustment' ? 'required' : 'exclude', 'integer', 'min:1'],
+            'lines.*.supplier_id' => [$type === 'receipt' ? 'nullable' : 'prohibited', 'integer'],
         ]);
         $project = ! empty($data['project_id']) ? $this->projects($request)->findOrFail($data['project_id']) : null;
         $supplier = ! empty($data['supplier_id']) ? $this->suppliers($request)->findOrFail($data['supplier_id']) : null;
-        $document = $service->post($data, $request->user(), $project, $supplier);
+        $lineSuppliers = [];
+        foreach ($data['lines'] as $index => $line) {
+            if (! empty($line['supplier_id'])) {
+                $lineSuppliers[$index] = $this->suppliers($request)->find($line['supplier_id']);
+                if (! $lineSuppliers[$index]) {
+                    throw ValidationException::withMessages(["lines.$index.supplier_id" => 'Dostawca nie jest dostępny. Wybierz dostawcę z listy.']);
+                }
+            }
+        }
+        $document = $service->post($data, $request->user(), $project, $supplier, $lineSuppliers);
 
         return redirect()->route('warehouse.documents.show', $document)->with('success', 'Dokument zapisany. Stany magazynowe zostały rozliczone.');
     }

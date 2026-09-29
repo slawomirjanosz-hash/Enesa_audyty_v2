@@ -4,17 +4,31 @@
 @include('warehouse._layout')
 <div class="wh-card"><h2>{{\App\Models\WarehouseDocument::TYPES[$type]}}</h2><form id="wh-document" method="POST" action="{{route('warehouse.documents.store')}}" data-lookup="{{route('warehouse.lookup')}}" data-type="{{$type}}">@csrf<input type="hidden" name="type" value="{{$type}}"><input type="hidden" name="submission_token" value="{{old('submission_token',$token)}}">
 <div class="wh-grid"><div class="wh-field"><label for="wh-date">Data dokumentu *</label><input id="wh-date" type="date" name="document_date" required max="{{now()->toDateString()}}" value="{{old('document_date',now()->toDateString())}}" aria-invalid="{{$errors->has('document_date')?'true':'false'}}"></div><div class="wh-field"><label for="wh-reference">Odniesienie / numer faktury / dokument źródłowy</label><input id="wh-reference" name="reference" maxlength="200" value="{{old('reference')}}"></div>
-@if($type==='receipt')<div class="wh-field wh-wide"><label for="wh-supplier">Dostawca (opcjonalnie)</label><select id="wh-supplier" name="supplier_id"><option value="">Bez przypisania</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}" @selected(old('supplier_id')==$supplier->id)>{{$supplier->name}}</option>@endforeach</select><small class="wh-muted">Lista uwzględnia dostęp do dostawców w CRM.</small></div>@endif
 @if($type==='issue')<div class="wh-field wh-wide"><label for="wh-project">Projekt (opcjonalnie)</label><select id="wh-project" name="project_id"><option value="">Bez przypisania — wpisz cel poniżej</option>@foreach($projects as $project)<option value="{{$project->id}}" @selected(old('project_id')==$project->id)>{{$project->number}} — {{$project->name}}</option>@endforeach</select><small class="wh-muted">Widoczne są tylko projekty, do których masz dostęp. Wydanie nie księguje kosztu automatycznie.</small></div>@endif
 <div class="wh-field wh-wide"><label for="wh-notes">{{$type==='adjustment'?'Przyczyna korekty / opis spisu *':'Opis / cel operacji *'}}</label><textarea id="wh-notes" name="notes" rows="2" required maxlength="3000" aria-invalid="{{$errors->has('notes')?'true':'false'}}">{{old('notes')}}</textarea></div></div>
 <div class="wh-info">@if($type==='adjustment')Wpisz rzeczywistą ilość po przeliczeniu towaru, nie różnicę. System zapisze różnicę jako korektę. Jeśli stan zmieni się w czasie spisu, zapis zostanie zatrzymany.@else Wpisz ilość {{$type==='receipt'?'przyjmowaną':'wydawaną'}}. Cały dokument zapisuje się razem — błąd jednej pozycji nie zmieni żadnego stanu.@endif Wszystkie ceny netto w PLN. Maksymalnie 50 pozycji. Zapisane dokumenty pozostają w historii.</div>
-<div id="wh-lines">
+<section aria-labelledby="wh-catalog-title">
+<h2 id="wh-catalog-title">Wybierz towary z magazynu</h2>
+<div class="wh-field"><label for="wh-live-search">Szukaj po kodzie lub nazwie</label><input id="wh-live-search" type="search" maxlength="200" placeholder="Zacznij pisać — tabela filtruje się automatycznie" autocomplete="off"></div>
+<p id="wh-picker-status" role="status" aria-live="polite" class="wh-muted"></p>
+<p class="wh-muted">Wszystkie aktywne towary. Uzupełnij ilość@if($type==='receipt'), cenę i dostawcę (podpowiedź z ostatniego przyjęcia)@endif, następnie kliknij „Dodaj”.</p>
+<div class="wh-table-wrap wh-picker-scroll"><table id="wh-catalog" class="wh-table wh-picker-table"><thead><tr><th data-sort-type="text">Kod</th><th>Nazwa</th><th>Jednostka</th><th>Stan</th><th>{{$type==='adjustment'?'Ilość rzeczywista':'Ilość'}}</th>@if($type==='receipt')<th>Cena netto PLN</th><th>Dostawca</th>@endif<th>Akcje</th></tr></thead><tbody>
+@foreach($catalogItems as $rowItem)
+@include('warehouse._document-row', ['rowItem'=>$rowItem,'chosen'=>false,'line'=>[],'index'=>$loop->index])
+@endforeach
+</tbody></table></div>
+<p id="wh-no-results" class="wh-muted" @if($catalogItems->isNotEmpty()) hidden @endif>Brak aktywnych towarów pasujących do wyszukiwania.</p>
+</section>
+<section aria-labelledby="wh-chosen-title">
+<h2 id="wh-chosen-title">Pozycje dokumentu (<span id="wh-chosen-count">{{count($formLines)}}</span>/50)</h2>
+<p class="wh-muted">Możesz jeszcze zmienić dane lub usunąć wybrane pozycje. Stan magazynu zmieni się po zapisaniu dokumentu.</p>
+<div class="wh-table-wrap"><table id="wh-chosen" class="wh-table wh-picker-table"><thead><tr><th data-sort-type="text">Kod</th><th>Nazwa</th><th>Jednostka</th><th>Stan przy wyborze</th><th>{{$type==='adjustment'?'Ilość rzeczywista':'Ilość'}}</th>@if($type==='receipt')<th>Cena netto PLN</th><th>Dostawca</th>@endif<th>Akcje</th></tr></thead><tbody id="wh-lines">
 @foreach($formLines as $index=>$line)
-@php($selected = $selectedItems->get($line['item_id'] ?? null))
-<div class="wh-line" data-index="{{$index}}"><fieldset><label for="wh-search-{{$index}}">Pozycja — kod lub nazwa</label><div class="wh-search-row"><input id="wh-search-{{$index}}" class="wh-search" type="search" placeholder="Wpisz lub zeskanuj kod" maxlength="200"><button class="wh-btn wh-find" type="button">Szukaj</button></div><label class="wh-muted" for="wh-item-{{$index}}">Wybierz towar *</label><select id="wh-item-{{$index}}" class="wh-item" name="lines[{{$index}}][item_id]" required aria-invalid="{{$errors->has('lines.'.$index.'.item_id')?'true':'false'}}"><option value="">Wyszukaj i wybierz pozycję</option>@if($selected)<option value="{{$selected->id}}" selected data-revision="{{$selected->revision}}" data-quantity="{{$selected->quantity}}" data-unit="{{$selected->unit}}">{{$selected->sku}} — {{$selected->name}}</option>@endif</select><small class="wh-stock">{{$selected ? 'Stan: '.$selected->quantity.' '.$selected->unit : ''}}</small><span class="wh-search-status" role="status"></span><input class="wh-revision" type="hidden" name="lines[{{$index}}][revision]" value="{{$selected?->revision}}"></fieldset>
-<fieldset><label for="wh-qty-{{$index}}">{{$type==='adjustment'?'Ilość rzeczywista *':'Ilość *'}}</label><input id="wh-qty-{{$index}}" class="wh-quantity" type="number" name="lines[{{$index}}][quantity]" min="{{$type==='adjustment'?0:0.001}}" max="1000000" step="0.001" required value="{{$line['quantity'] ?? ''}}" aria-invalid="{{$errors->has('lines.'.$index.'.quantity')?'true':'false'}}"></fieldset>
-@if($type==='receipt')<fieldset><label for="wh-cost-{{$index}}">Cena jednostkowa netto PLN *</label><input id="wh-cost-{{$index}}" type="number" name="lines[{{$index}}][unit_cost]" min="0" max="1000000" step="0.01" required value="{{$line['unit_cost'] ?? ''}}" aria-invalid="{{$errors->has('lines.'.$index.'.unit_cost')?'true':'false'}}"></fieldset>@else<div></div>@endif
-<button type="button" class="wh-btn danger wh-remove" aria-label="Usuń pozycję z formularza">Usuń</button></div>@endforeach
-</div><button id="wh-add-line" class="wh-btn" type="button" style="margin-top:14px">+ Dodaj pozycję</button><div class="wh-actions wh-sticky"><a class="wh-btn" href="{{route('warehouse.index')}}">Anuluj</a><button class="wh-btn primary" type="submit">Zapisz dokument i rozlicz stan</button></div>
-</form></div><script src="{{asset('js/warehouse.js')}}" defer></script>
+@include('warehouse._document-row', ['rowItem'=>$selectedItems->get($line['item_id'] ?? null),'chosen'=>true,'line'=>$line,'index'=>$index])
+@endforeach
+</tbody></table></div>
+<p id="wh-none-selected" class="wh-muted" @if(count($formLines)) hidden @endif>Wybierz towary z tabeli powyżej.</p>
+</section>
+<div class="wh-actions wh-sticky"><a class="wh-btn" href="{{route('warehouse.index')}}">Anuluj</a><button class="wh-btn primary" type="submit">Zapisz dokument i rozlicz stan</button></div>
+</form></div><script src="{{asset('js/warehouse.js')}}?v=2" defer></script>
 @endsection
