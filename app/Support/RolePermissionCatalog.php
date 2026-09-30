@@ -49,6 +49,7 @@ class RolePermissionCatalog
                 'projects.view' => 'Podgląd zakładki i projektów',
                 'projects.create' => 'Tworzenie projektów',
                 'projects.edit' => 'Edycja danych projektu',
+                'projects.delete' => 'Usuwanie projektów, do których użytkownik ma dostęp',
                 'projects.schedule.view' => 'Podgląd harmonogramu i zadań projektu',
                 'projects.schedule.manage' => 'Zarządzanie harmonogramem i Ganttem',
                 'projects.finances.view' => 'Podgląd finansów projektu',

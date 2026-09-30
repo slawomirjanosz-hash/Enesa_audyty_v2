@@ -29,6 +29,7 @@ class ProjectPolicy
 
     public function delete(User $user, Project $project): bool
     {
-        return $user->hasAnyRole(['admin', 'superadmin']);
+        return $user->hasRole('superadmin')
+            || ($user->can('projects.delete') && $this->view($user, $project));
     }
 }

@@ -231,14 +231,13 @@ test('project folder can be securely shared for viewing and external uploads', f
     $this->get($showUrl)->assertStatus(410);
 });
 
-test('only admin or superadmin can remove a project', function () {
+test('project removal requires explicit permission even with operational full access', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $operator = User::factory()->create();
     $operatorRole = Role::findOrCreate('operator_z_pelnym_dostepem');
     $operatorRole->givePermissionTo([
         Permission::findOrCreate('system.full_access'),
-        Permission::findOrCreate('projects.delete'),
     ]);
     $operator->assignRole($operatorRole);
     $project = Project::create([
@@ -249,13 +248,16 @@ test('only admin or superadmin can remove a project', function () {
     $project->members()->attach([$admin->id, $operator->id]);
 
     $this->actingAs($operator)->get(route('projects.index'))->assertOk()->assertDontSee('project-delete-button');
-    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertSee('project-delete-button')->assertSee(route('projects.destroy', $project), false);
+    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertDontSee('project-delete-button');
 
     $this->actingAs($operator)->get(route('projects.show', $project))
         ->assertOk()
         ->assertDontSee('Usuń projekt');
     $this->actingAs($operator)->delete(route('projects.destroy', $project))->assertForbidden();
     $this->assertDatabaseHas('projects', ['id' => $project->id, 'deleted_at' => null]);
+
+    $operatorRole->givePermissionTo(Permission::findOrCreate('projects.delete'));
+    $this->actingAs($operator->fresh())->get(route('projects.show', $project))->assertOk()->assertSee('Usuń projekt');
 
     $this->actingAs($admin)->get(route('projects.show', $project))
         ->assertOk()
@@ -268,13 +270,14 @@ test('only admin or superadmin can remove a project', function () {
     $this->get(route('projects.show', $project))->assertNotFound();
 });
 
-test('completed project deletion button is visible only to administrators and preserves related tasks', function () {
+test('completed project deletion is available inside project only and preserves related tasks', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $project = Project::create(['number' => 'DONE/DELETE/1', 'name' => 'Zduplikowany zakończony', 'status' => 'completed', 'manager_id' => $admin->id]);
     $project->members()->attach($admin);
     $task = Task::create(['project_id' => $project->id, 'title' => 'Zachowane zadanie', 'status' => 'pending', 'priority' => 'medium', 'assigned_to' => $admin->id]);
-    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertSee('project-row-actions')->assertSee(route('projects.destroy', $project), false);
+    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertSee('project-row-actions')->assertDontSee('project-delete-button');
+    $this->get(route('projects.show', $project))->assertOk()->assertSee('project-delete-button');
     $this->delete(route('projects.destroy', $project))->assertRedirect(route('projects.index'));
     $this->assertSoftDeleted($project);
     $this->assertDatabaseHas('tasks', ['id' => $task->id, 'project_id' => $project->id]);
@@ -285,7 +288,8 @@ test('project removal forms are outside navigation links and visible before the 
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $project = Project::create(['number' => 'DELETE/UI/1', 'name' => 'Duplikat "test"', 'status' => 'planned', 'manager_id' => $admin->id]);
-    $html = $this->actingAs($admin)->get(route('projects.index'))->assertOk()->getContent();
+    $this->actingAs($admin)->get(route('projects.index'))->assertOk()->assertDontSee('project-delete-form');
+    $html = $this->get(route('projects.show', $project))->assertOk()->getContent();
     $dom = new DOMDocument;
     $previous = libxml_use_internal_errors(true);
     $dom->loadHTML($html);
@@ -298,6 +302,29 @@ test('project removal forms are outside navigation links and visible before the 
     expect($form->getAttribute('data-confirm'))->toContain('DELETE/UI/1', 'Duplikat "test"');
     $html = $this->get(route('projects.show', $project))->assertOk()->getContent();
     expect(strpos($html, 'class="project-delete-form"'))->toBeLessThan(strpos($html, 'id="project-edit-modal"'));
+});
+
+test('role granted project removal cannot bypass project membership and can be revoked from admin', function () {
+    $manager = User::factory()->create();
+    $member = User::factory()->create();
+    $role = Role::findOrCreate('project_remover');
+    $role->givePermissionTo(['projects.view', 'projects.delete']);
+    $member->assignRole($role);
+    $own = Project::create(['number' => 'REMOVE/OWN', 'name' => 'Dostępny', 'status' => 'active', 'manager_id' => $manager->id]);
+    $other = Project::create(['number' => 'REMOVE/OTHER', 'name' => 'Niedostępny', 'status' => 'active', 'manager_id' => $manager->id]);
+    $own->members()->attach($member);
+    $this->actingAs($member)->get(route('projects.show', $own))->assertOk()->assertSee('project-delete-button');
+    $this->delete(route('projects.destroy', $other))->assertForbidden();
+    $this->assertNotSoftDeleted($other);
+    $this->delete(route('projects.destroy', $own))->assertRedirect(route('projects.index'));
+    $this->assertSoftDeleted($own);
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    Role::findByName('admin')->revokePermissionTo('projects.delete');
+    $this->actingAs($admin->fresh())->get(route('projects.show', $other))->assertOk()->assertDontSee('project-delete-button');
+    $this->delete(route('projects.destroy', $other))->assertForbidden();
+    expect(Role::findByName('auditor_senior')->hasPermissionTo('projects.delete'))->toBeFalse();
 });
 
 test('external project user sees only assigned projects and permitted project tabs', function () {

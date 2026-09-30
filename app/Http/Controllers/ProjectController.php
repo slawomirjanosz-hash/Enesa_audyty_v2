@@ -127,7 +127,6 @@ class ProjectController extends Controller
             'canViewProtocols' => $canViewProtocols,
             'canManageProtocols' => $canManageProtocols,
             'protocols' => $canViewProtocols ? ProjectProtocol::where('project_id', $project->id)->latest()->get(['id', 'project_id', 'number', 'acceptance_date', 'supplier_snapshot', 'kind', 'outcome', 'invoice_decision', 'items', 'revision', 'created_at']) : collect(),
-            'canDeleteProject' => $user->hasAnyRole(['admin', 'superadmin']),
             'canCopyProject' => $fullAccess && $user->can('projects.create'),
         ]);
     }

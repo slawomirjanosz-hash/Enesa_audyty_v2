@@ -43,7 +43,6 @@
         </div>
         @if($canViewFinances)<div class="money">{{ number_format((float)$project->contract_value,2,',',' ') }} zł</div>@endif
     </a>
-    @can('delete',$project)<div class="project-card-actions">@include('projects._delete-button')</div>@endcan
     </article>
     @endforeach
 </div>
@@ -67,7 +66,7 @@
                     <td>{{ $project->members->count() }}</td>
                     <td class="nowrap">{{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</td>
                     @if($canViewFinances)<td class="nowrap">{{ number_format((float) $project->contract_value, 2, ',', ' ') }} zł</td>@endif
-                    <td><div class="project-row-actions"><a href="{{ route('projects.show', $project) }}">Otwórz</a>@include('projects._delete-button')</div></td>
+                    <td><div class="project-row-actions"><a href="{{ route('projects.show', $project) }}">Otwórz</a></div></td>
                 </tr>
             @endforeach
             </tbody>
