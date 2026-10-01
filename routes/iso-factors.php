@@ -9,6 +9,8 @@ foreach ([false, true] as $client) {
         ->middleware($client ? ['auth', 'client.role', 'app.module:client_zone', 'app.module:audits'] : ['auth', 'staff.role', 'app.module:audits', 'app.permission:audits.view'])
         ->group(function () {
             Route::get('/', [IsoFactorReviewController::class, 'show'])->name('show');
+            Route::get('/excel', [IsoFactorReviewController::class, 'excel'])->middleware('throttle:10,1')->name('excel');
+            Route::post('/excel', [IsoFactorReviewController::class, 'importExcel'])->middleware('throttle:10,1')->name('excel-import');
             Route::post('/', [IsoFactorReviewController::class, 'update'])->name('update');
             Route::post('/pdf', [IsoFactorReviewController::class, 'pdf'])->middleware('throttle:10,1')->name('pdf');
         });

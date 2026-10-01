@@ -9,6 +9,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\IsoPlantQuestionnaire;
+use App\Services\IsoQuestionnaireWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -211,6 +212,25 @@ class IsoPlantProfileController extends Controller
         });
 
         return redirect()->route($this->prefix($client).'show', [$audit, $profile])->with('success', 'Zapisano profil zakładu.');
+    }
+
+    public function excel(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit);
+        $this->checkProfile($audit, $profile);
+
+        return app(IsoQuestionnaireWorkbook::class)->download($profile, 'plant');
+    }
+
+    public function importExcel(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit, true);
+        $this->checkProfile($audit, $profile);
+        $request->validate(['excel' => 'required|file|mimes:xlsx|max:10240']);
+        $data = app(IsoQuestionnaireWorkbook::class)->read($request->file('excel')->getRealPath(), $profile, 'plant');
+        $request->replace($data + ['operation' => 'save', 'complete_form' => '1']);
+
+        return $this->update($request, $audit, $profile)->with('success', 'Zaimportowano odpowiedzi z Excela. Sprawdź dane przed zatwierdzeniem ankiety.');
     }
 
     private function approval(Request $request): array

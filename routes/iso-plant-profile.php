@@ -11,6 +11,8 @@ foreach ([false, true] as $client) {
             Route::get('/', [IsoPlantProfileController::class, 'index'])->name('index');
             Route::post('/', [IsoPlantProfileController::class, 'create'])->name('create');
             Route::get('/{profile}', [IsoPlantProfileController::class, 'show'])->name('show');
+            Route::get('/{profile}/excel', [IsoPlantProfileController::class, 'excel'])->middleware('throttle:10,1')->name('excel');
+            Route::post('/{profile}/excel', [IsoPlantProfileController::class, 'importExcel'])->middleware('throttle:10,1')->name('excel-import');
             Route::post('/{profile}', [IsoPlantProfileController::class, 'update'])->name('update');
             Route::post('/{profile}/pdf', [IsoPlantProfileController::class, 'pdf'])->middleware('throttle:10,1')->name('pdf');
         });

@@ -10,6 +10,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\IsoFactorQuestionnaire;
+use App\Services\IsoQuestionnaireWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -162,6 +163,26 @@ class IsoFactorReviewController extends Controller
     private function approval(Request $request): array
     {
         return ['user_id' => $request->user()->id, 'name' => $request->user()->name, 'at' => now()->toIso8601String()];
+    }
+
+    public function excel(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit, $profile);
+        abort_unless($profile->status === 'approved' && $profile->client_approval && $profile->auditor_approval, 409, 'Najpierw zatwierdź profil zakładu.');
+        $review = IsoFactorReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->first();
+
+        return app(IsoQuestionnaireWorkbook::class)->download($profile, 'factors', $review);
+    }
+
+    public function importExcel(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit, $profile, true);
+        $request->validate(['excel' => 'required|file|mimes:xlsx|max:10240']);
+        $review = IsoFactorReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->first();
+        $data = app(IsoQuestionnaireWorkbook::class)->read($request->file('excel')->getRealPath(), $profile, 'factors', $review);
+        $request->replace($data + ['operation' => 'save', 'complete_form' => '1']);
+
+        return $this->update($request, $audit, $profile)->with('success', 'Zaimportowano odpowiedzi z Excela. Sprawdź czynniki i decyzje przed zatwierdzeniem ankiety.');
     }
 
     public function pdf(Request $request, Audit $audit, IsoPlantProfile $profile)
