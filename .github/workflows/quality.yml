@@ -39,6 +39,9 @@ jobs:
       - name: Test questionnaire navigation
         run: npm run test:questionnaires
 
+      - name: Test questionnaire example filling
+        run: node --test tests/js/questionnaire-example.test.mjs
+
       - name: Test delegation copying
         run: node --test tests/js/hr-trip-copy.test.mjs
 

@@ -14,6 +14,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 @endphp
 <header><div><h1>4.1–4.2 · Kontekst i strony zainteresowane</h1><div>{{ $audit->company->name }} · {{ $client?'Strefa klienta':'Panel konsultanta' }}</div></div><a href="{{ route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'4-1']) }}">← Wróć do audytu</a></header>
 <main>
+@include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'review-form', 'exampleScope'=>'#facts, #factors, #parties'])
 @include('partials.field-validation')
 @include('partials.questionnaire-navigation')
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->fields(array_column($questions,'kod'),$answers['facts']??[]), 'progressForm'=>'#review-form', 'progressMode'=>'fields', 'progressFields'=>array_map(fn($q)=>'answers[facts]['.$q['kod'].']',$questions), 'progressLabel'=>'Odpowiedzi na pytania o zakład (4.1–4.2)'])

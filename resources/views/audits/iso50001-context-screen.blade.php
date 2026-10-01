@@ -12,6 +12,7 @@
 @if($isTemplatePreview)<p class="hint">Podgląd formularza wzorcowego. Możesz przetestować wszystkie etapy; wpisy nie są zapisywane jako dokumentacja klienta.</p>@endif
 <nav class="steps" aria-label="Etapy ankiety">@foreach(['Dane o zakładzie','Wybór czynników','Uzupełnienie konsultanta','Dokument'] as $i=>$label)<button type="button" data-step="{{ $i }}">{{ $i+1 }}. {{ $label }}</button>@endforeach</nav>
 <form id="context-form" method="POST" @unless($isTemplatePreview) action="{{ route($baseRoute.'store', $audit) }}" @endunless>@csrf
+@include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$isTemplatePreview && !request()->routeIs('client.*'), 'exampleForm'=>'context-form', 'exampleScope'=>'[data-panel="0"], [data-panel="1"]'])
 <section data-panel="0" class="facts"><h2>Dane o zakładzie</h2><p>Odpowiedzi dopasowują czynniki w kolejnym etapie. Puste odpowiedzi nie są traktowane jako „nie”.</p>
 @foreach(collect(config('iso50001-context.questions'))->groupBy('group', true) as $group=>$questions)<fieldset><legend>{{ $group }}</legend>
 @foreach($questions as $key=>$question)<label class="question"><span>{{ $question['label'] }}</span>

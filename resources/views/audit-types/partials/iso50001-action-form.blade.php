@@ -7,6 +7,7 @@
 @endphp
 <strong>{{ $workflow['title'] }}</strong>
 @unless($isTemplatePreview)
+@include('audits.partials.questionnaire-example', ['exampleAllowed'=>!($clientView ?? false), 'exampleForm'=>'iso-action-'.$actionKey])
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->fields(array_keys($workflow['fields']),$answers), 'progressForm'=>'#iso-action-'.$actionKey, 'progressMode'=>'fields', 'progressFields'=>array_map(fn($key)=>'answers['.$key.']',array_keys($workflow['fields']))])
 @endunless
 @if($isTemplatePreview)<div class="iso-template-banner">Podgląd wzoru ankiety. Klient otrzyma własny formularz w swoim audycie, a wpisane tutaj dane nie są zapisywane.</div>@endif
