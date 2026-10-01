@@ -16,6 +16,43 @@ function factorFixture(): array
     return [$audit, $client, $staff, $profile];
 }
 
+function factorSwot(): array
+{
+    return ['strengths' => 'Kompetentny zespół energetyczny', 'weaknesses' => 'Brak podliczników', 'opportunities' => 'Dofinansowanie modernizacji', 'threats' => 'Wzrost cen energii', 'conclusions' => 'Kierownik techniczny przygotuje plan opomiarowania.'];
+}
+
+test('SWOT is written only by staff after client approval and included in document', function () {
+    [$audit, $client, $staff, $profile] = factorFixture();
+    $url = route('audits.factors.update', [$audit, $profile]);
+    $input = factorInput($profile);
+    $payload = ['operation' => 'save_swot', 'lock_version' => 0, 'source_hash' => $input['source_hash'], 'swot' => factorSwot()];
+    $this->actingAs($staff)->post($url, $payload)->assertForbidden();
+    $this->actingAs($client)->post(route('client.audits.factors.update', [$audit, $profile]), $input)->assertSessionHasNoErrors();
+    $payload['lock_version'] = 1;
+    $this->post(route('client.audits.factors.update', [$audit, $profile]), $payload)->assertForbidden();
+    $this->actingAs($staff)->post($url, array_replace($payload, ['operation' => 'approve', 'swot' => ['strengths' => 'Tylko jedna część'], 'note' => 'Sprawdzono']))->assertSessionHasErrors('swot.weaknesses');
+    $this->post($url, $payload)->assertSessionHasNoErrors();
+    $review = IsoFactorReview::firstOrFail();
+    expect($review->status)->toBe('submitted')->and($review->client_approval)->not->toBeNull()->and($review->swot['author']['user_id'])->toBe($staff->id);
+    $this->post($url, $payload)->assertStatus(409);
+    $this->actingAs($client)->get(route('client.audits.factors.show', [$audit, $profile]))->assertOk()->assertSee('Kompetentny zespół energetyczny')->assertDontSee('data-swot-form', false);
+    $payload['lock_version'] = 2;
+    $this->actingAs($staff)->post($url, array_replace($payload, ['operation' => 'approve', 'note' => 'Sprawdzono analizę']))->assertSessionHasNoErrors();
+    $review->refresh();
+    $html = view('audits.factors.pdf', ['review' => $review, 'profile' => $profile, 'questionnaire' => app(IsoFactorQuestionnaire::class), 'facts' => app(IsoFactorQuestionnaire::class)->facts($profile)])->render();
+    foreach (factorSwot() as $text) {
+        expect($html)->toContain($text);
+    }
+    $this->post(route('audits.factors.pdf', [$audit, $profile]), ['lock_version' => 3])->assertRedirect();
+    $document = IsoSectionDocument::findOrFail($review->fresh()->document_id);
+    $payload['lock_version'] = 3;
+    $payload['swot']['threats'] = 'Przerwy w dostawach energii';
+    $this->post($url, $payload)->assertSessionHasNoErrors();
+    expect($review->fresh()->document_id)->toBeNull()->and($review->fresh()->auditor_approval)->toBeNull()->and($review->fresh()->client_approval)->not->toBeNull()->and($document->fresh()->description)->toContain('historyczny');
+    $this->post(route('audits.factors.pdf', [$audit, $profile]), ['lock_version' => 4])->assertForbidden();
+    expect(DB::table('iso_factor_events')->where('action', 'save_swot')->count())->toBe(2);
+});
+
 function factorInput(IsoPlantProfile $profile): array
 {
     $service = app(IsoFactorQuestionnaire::class);
@@ -46,7 +83,7 @@ test('factor review completes two approvals PDF and same record correction excha
     $this->post($route(true), $input)->assertSessionHasNoErrors()->assertRedirect();
     $review = IsoFactorReview::firstOrFail();
     expect($review->status)->toBe('submitted')->and($review->client_changes)->toBeNull();
-    $this->actingAs($staff)->post($route(false), ['operation' => 'approve', 'lock_version' => 1, 'source_hash' => $input['source_hash'], 'note' => 'Zweryfikowano czynniki oraz nieznane warunki.'])->assertRedirect();
+    $this->actingAs($staff)->post($route(false), ['swot' => factorSwot(), 'operation' => 'approve', 'lock_version' => 1, 'source_hash' => $input['source_hash'], 'note' => 'Zweryfikowano czynniki oraz nieznane warunki.'])->assertRedirect();
     expect($review->fresh()->status)->toBe('approved');
     $this->post($route(false, 'pdf'), ['lock_version' => 2])->assertRedirect();
     expect(IsoSectionDocument::firstOrFail()->section_id)->toBe('4-1');
@@ -65,7 +102,7 @@ test('factor review completes two approvals PDF and same record correction excha
     $input['lock_version'] = 4;
     $this->actingAs($staff)->post($route(false), $input)->assertRedirect();
     expect($review->fresh()->lock_version)->toBe(4)->and($review->fresh()->status)->toBe('submitted');
-    $this->post($route(false), ['operation' => 'approve', 'lock_version' => 4, 'source_hash' => $input['source_hash'], 'note' => 'Zaakceptowano poprawki klienta.'])->assertRedirect();
+    $this->post($route(false), ['swot' => factorSwot(), 'operation' => 'approve', 'lock_version' => 4, 'source_hash' => $input['source_hash'], 'note' => 'Zaakceptowano poprawki klienta.'])->assertRedirect();
     expect($review->fresh()->status)->toBe('approved')->and($review->fresh()->client_changes)->toBeNull()->and(IsoFactorReview::count())->toBe(1);
 });
 

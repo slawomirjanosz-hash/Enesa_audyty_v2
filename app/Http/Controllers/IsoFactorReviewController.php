@@ -65,7 +65,7 @@ class IsoFactorReviewController extends Controller
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile)
     {
         $client = $this->access($request, $audit, $profile, true);
-        $data = $request->validate(['lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['save', 'submit', 'approve', 'return', 'withdraw'])], 'answers' => 'nullable|array', 'note' => 'nullable|string|max:3000']);
+        $data = $request->validate(['lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['save', 'submit', 'approve', 'save_swot', 'return', 'withdraw'])], 'answers' => 'nullable|array', 'note' => 'nullable|string|max:3000']);
         DB::transaction(function () use ($request, $audit, $profile, $client, $data) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
@@ -79,6 +79,17 @@ class IsoFactorReviewController extends Controller
             $stale = $review->exists && $review->source_hash !== $hash;
             abort_if($stale && ! in_array($op, ['save', 'submit']), 409, 'Zapisz ponownie ankietę po aktualizacji profilu zakładu.');
             $facts = $this->questionnaire->facts($profile);
+            if (in_array($op, ['save_swot', 'approve'])) {
+                abort_unless(! $client && $review->client_approval && in_array($review->status, ['submitted', 'approved']), 403);
+                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions'];
+                $labels = [];
+                foreach (IsoFactorReview::SWOT_FIELDS as $key => $label) {
+                    $rules['swot.'.$key] = ($op === 'approve' ? 'required' : 'nullable').'|string|max:10000';
+                    $labels['swot.'.$key] = $label;
+                }
+                $validated = $request->validate($rules, [], $labels);
+                $review->swot = $validated['swot'] + ['author' => $this->approval($request)];
+            }
             if (in_array($op, ['save', 'submit'])) {
                 abort_unless(! $client || $stale || in_array($review->status, ['editing', 'returned', 'auditor_corrected']), 409);
                 abort_if($op === 'submit' && (! $client || ! $request->user()->hasRole('client_admin')), 403);
@@ -127,6 +138,13 @@ class IsoFactorReviewController extends Controller
                 $review->document_id = null;
                 $review->issuer = null;
                 $review->review_note = null;
+            } elseif ($op === 'save_swot') {
+                if ($review->document_id) {
+                    IsoSectionDocument::whereKey($review->document_id)->update(['description' => 'Dokument historyczny — analiza SWOT została zmieniona.']);
+                }
+                $review->document_id = null;
+                $review->auditor_approval = null;
+                $review->status = 'submitted';
             } elseif ($op === 'approve') {
                 abort_unless(! $client && $review->status === 'submitted' && $review->client_approval, 403);
                 abort_if(($review->client_approval['user_id'] ?? null) === $request->user()->id, 403);
@@ -153,7 +171,7 @@ class IsoFactorReviewController extends Controller
             $review->source_hash = $hash;
             $review->lock_version++;
             $review->save();
-            DB::table('iso_factor_events')->insert(['review_id' => $review->id, 'user_name' => $request->user()->name, 'action' => $op, 'snapshot' => json_encode($review->only(['answers', 'basis', 'source_profile_id', 'source_hash', 'status', 'client_approval', 'auditor_approval', 'auditor_changes', 'client_changes', 'review_note']), JSON_THROW_ON_ERROR), 'created_at' => now()]);
+            DB::table('iso_factor_events')->insert(['review_id' => $review->id, 'user_name' => $request->user()->name, 'action' => $op, 'snapshot' => json_encode($review->only(['swot', 'answers', 'basis', 'source_profile_id', 'source_hash', 'status', 'client_approval', 'auditor_approval', 'auditor_changes', 'client_changes', 'review_note']), JSON_THROW_ON_ERROR), 'created_at' => now()]);
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'update', 'auditable_type' => Audit::class, 'auditable_id' => $audit->id, 'subject_label' => 'Ankieta czynników 4.1 — '.$op, 'route_name' => $request->route()->getName()]);
         });
 
