@@ -360,7 +360,7 @@ test('external project user sees only assigned projects and permitted project ta
 
     $this->actingAs($external)->get(route('projects.show', $visible))
         ->assertOk()
-        ->assertSee('Harmonogram i zadania')
+        ->assertSee('Harmonogram')
         ->assertDontSee('Finanse')
         ->assertDontSee('Materiały i usługi')
         ->assertDontSee('Dokumenty projektu')

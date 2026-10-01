@@ -104,7 +104,7 @@ test('audit is created from company card and opens the dedicated workspace', fun
     expect($audit->surveys()->first()->audit_type_id)->toBe($type->id);
     expect($audit->surveys()->first()->audit_type_version_id)->toBe($version->id);
     $this->actingAs($user)->get(route('audits.show', $audit))->assertOk()
-        ->assertSee('Harmonogram i zadania')->assertSee('Finanse')->assertSee('Dokumenty')
+        ->assertSee('Harmonogram')->assertSee('Finanse')->assertSee('Dokumenty')
         ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
         ->assertSee('Edytuj audyt')->assertSee('Osoby przypisane do audytu')
         ->assertSee('id="project-frappe-gantt"', false)->assertSee('Dodaj kamień milowy')
@@ -328,7 +328,7 @@ test('client sees audits assigned to their company in the client zone', function
         ->assertSee(route('client.audits.show', $clientAudit), false);
 
     $this->actingAs($client)->get(route('client.audits.show', $clientAudit))->assertOk()
-        ->assertSee('Harmonogram i zadania')->assertSee('Dokumenty')
+        ->assertSee('Harmonogram')->assertSee('Dokumenty')
         ->assertSee('Audyty')->assertSee('Paszporty Energetyczne')
         ->assertSee('ISO 50001')->assertSee('Wstęp o ISO')->assertSee('3.1')->assertSee('4.1')->assertSee('10.2')->assertSee('11.4')
         ->assertSee('Co sprawdzić podczas audytu')->assertSee('Oczekiwane dowody i dokumenty')

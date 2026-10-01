@@ -456,6 +456,9 @@
     @endphp
     <nav class="sidebar-nav">
         <ul>
+            @if($appModuleEnabled('projects') || $appModuleEnabled('audits'))
+            <li class="nav-item"><a href="{{route('board.mine')}}" class="nav-link {{request()->routeIs('board.mine')?'active':''}}"><i class="ti ti-layout-kanban"></i> Moja tablica</a></li>
+            @endif
             @if($appModuleEnabled('dashboard') && $canAccessModule('dashboard.view'))
             <li class="nav-item">
                 <a href="{{ url('/dashboard') }}"

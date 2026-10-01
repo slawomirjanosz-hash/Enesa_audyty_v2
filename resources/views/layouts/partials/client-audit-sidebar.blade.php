@@ -12,7 +12,7 @@
     <div class="audit-nav-title">Audyt ISO 50001</div>
     <div class="audit-nav-name">{{ $audit->title }}</div>
     <ul>
-        @foreach(['overview'=>['Podgląd','ti ti-layout-dashboard'],'schedule'=>['Harmonogram i zadania','ti ti-calendar'],'documents'=>['Dokumenty','ti ti-files']] as $tab=>$item)
+        @foreach(['overview'=>['Podgląd','ti ti-layout-dashboard'],'schedule'=>['Harmonogram','ti ti-calendar'],'tasks'=>['Zadania','ti ti-layout-kanban'],'documents'=>['Dokumenty','ti ti-files']] as $tab=>$item)
             <li class="nav-item"><a href="{{ $auditRoute($tab) }}" class="nav-link {{ $activeTab === $tab ? 'active' : '' }}"><i class="{{ $item[1] }}"></i> {{ $item[0] }}</a></li>
         @endforeach
         @foreach($chapters as $chapter)

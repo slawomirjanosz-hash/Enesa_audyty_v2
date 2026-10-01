@@ -158,7 +158,7 @@
 @endif
 
 <div class="tabs">
-    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram i zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','protocols'=>'Protokoły','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'protocols'=>$canViewProtocols,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
+    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram','tasks'=>'Zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','protocols'=>'Protokoły','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt','tasks'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'protocols'=>$canViewProtocols,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
     <button class="tab {{ $loop->first?'active':'' }}" onclick="openProjectTab('{{ $id }}',this)">{{ $label }}</button>
     @endforeach
 </div>
@@ -174,6 +174,7 @@
     @include('projects.protocols.list')
 @endif
 @if($canViewSchedule)
+<section id="pane-tasks" class="pane">@include('boards.owner',['boardOwner'=>$project])</section>
 <section id="pane-gantt" class="pane">
     @if(session('gantt_import_report'))
         @php($ganttReport = session('gantt_import_report'))

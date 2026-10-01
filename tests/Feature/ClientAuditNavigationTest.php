@@ -16,7 +16,7 @@ test('client ISO sidebar puts workspace links before chapters without duplicate 
     $audit->surveys()->create(['audit_type_id' => $type->id, 'title' => $type->name, 'status' => 'draft']);
     foreach (['overview', 'schedule', 'documents', 'iso50001'] as $tab) {
         $response = $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => $tab]))->assertOk();
-        $response->assertSeeInOrder(['Podgląd', 'Harmonogram i zadania', 'Dokumenty', '1. Wstęp']);
+        $response->assertSeeInOrder(['Podgląd', 'Harmonogram', 'Dokumenty', '1. Wstęp']);
         $response->assertDontSee('<nav class="aw-tabs"', false)->assertSee('data-client-audit-menu', false);
         $html = $response->getContent();
         preg_match('/<nav class="sidebar-nav" data-client-audit-menu>(.*?)<\/nav>/s', $html, $matches);

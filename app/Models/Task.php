@@ -2,18 +2,27 @@
 
 namespace App\Models;
 
+use App\Services\BoardTaskService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Task extends Model
 {
     use SoftDeletes;
 
+    public function save(array $options = [])
+    {
+        return DB::transaction(fn () => parent::save($options));
+    }
+
     protected static function booted(): void
     {
+        static::updated(fn (Task $task) => app(BoardTaskService::class)->stageUpdated($task));
         static::deleting(function (Task $task): void {
+            BoardTask::where('stage_task_id', $task->id)->update(['stage_task_id' => null, 'stage_offset_days' => null, 'revision' => DB::raw('revision + 1')]);
             $task->dependents()->update(['depends_on_task_id' => null]);
         });
     }
