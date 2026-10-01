@@ -60,6 +60,12 @@ class IsoQuestionnaireWorkbook
         $this->listRanges = [];
         $intro = $this->sheet('Instrukcja', ['Informacja', 'Wartość']);
         $rows = [['Ankieta', $kind === 'plant' ? '1 Wstęp ISO — Profil zakładu' : '4.1 Czynniki kontekstowe'], ['Audyt', (string) $profile->audit_id], ['Zakład', $profile->answers['site.name']['value'] ?? ''], ['Sposób wypełnienia', 'Wypełnij jasnoniebieskie pola. Korzystaj z list rozwijanych. Nie zmieniaj kodów pytań ani nazw arkuszy.'], ['Import', 'Import zastępuje odpowiedzi zawartością tego pliku, również pustymi polami. Przed importem zapisz plik jako XLSX.'], ['Zatwierdzenie', 'Import nie zatwierdza ankiety. Po imporcie sprawdź dane w systemie.'], ['Aktualność', 'Jeśli dane w systemie zmieniły się po eksporcie, pobierz nowy plik.'], ['Pytania warunkowe', 'W pliku są również pytania warunkowe. Warunki opisano w kolumnie Wskazówki. System ponownie oceni je po imporcie.'], ['Obliczenia', 'Pola obliczane są informacyjne; system przeliczy je po imporcie. Nie wpisuj formuł.'], ['Daty', 'Wpisuj daty w formacie RRRR-MM-DD lub jako datę Excela.'], ['Wiele odpowiedzi', 'W arkuszu Wybory zaznacz Tak przy wybranych odpowiedziach.'], ['Dane tabelaryczne', 'W arkuszach T01, T02 itd. uzupełniaj przygotowane puste wiersze. Nie usuwaj wierszy ani kolumn.']];
+        $rows[1][1] = Audit::whereKey($profile->audit_id)->value('number') ?? (string) $profile->audit_id;
+        if ($kind === 'factors') {
+            $rows[7] = ['Czynniki warunkowe', 'Kolumna Zastosowanie / warunek wskazuje, które czynniki dotyczą zakładu według profilu. System ponownie sprawdzi ich zastosowanie po imporcie.'];
+            $rows[10] = ['Własne czynniki', 'Dodatkowe czynniki wpisuj w arkuszu Własne czynniki. Uzupełnij treść i wybierz wpływ. Nie usuwaj wierszy.'];
+            $rows[11] = ['Profil źródłowy', 'Arkusz Profil źródłowy pokazuje dane zakładu, na których oparto ankietę 4.1. Jest tylko do odczytu.'];
+        }
         foreach ($rows as $i => $row) {
             $this->row($intro, $i + 2, $row);
         }
@@ -269,6 +275,9 @@ class IsoQuestionnaireWorkbook
         $reader->setReadDataOnly(true);
         try {
             $info = $reader->listWorksheetInfo($path);
+            if (array_sum(array_map(fn ($sheet) => $sheet['totalRows'] * $sheet['totalColumns'], $info)) > 20000) {
+                $this->fail('Plik zawiera zbyt dużo komórek. Użyj szablonu pobranego z ankiety.');
+            }
             if (count($info) > 30) {
                 $this->fail('Za dużo arkuszy.');
             }
@@ -483,7 +492,7 @@ class IsoQuestionnaireWorkbook
             }for ($i = 0; $i < $zip->numFiles; $i++) {
                 $entry = $zip->statIndex($i);
                 $size += $entry['size'];
-                if ($size > 60000000 || preg_match('~vbaProject|externalLinks/|embeddings/~i', $entry['name'])) {
+                if ($size > 20000000 || preg_match('~vbaProject|externalLinks/|embeddings/~i', $entry['name'])) {
                     $this->fail('Plik zawiera niedozwolone elementy lub jest zbyt duży.');
                 }
             }

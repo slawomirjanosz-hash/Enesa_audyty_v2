@@ -111,6 +111,8 @@ test('factor workbook imports decisions and custom factors with existing workflo
     [$audit,$profile,$client,$staff] = workbookFixture();
     $profile->update(['status' => 'approved', 'client_approval' => ['user_id' => $client->id], 'auditor_approval' => ['user_id' => $staff->id]]);
     $book = app(IsoQuestionnaireWorkbook::class)->export($profile, 'factors');
+    expect($book->getSheetByName('Instrukcja')->getCell('B3')->getValue())->toBe('EX/1');
+    expect($book->getSheetByName('Instrukcja')->getCell('A12')->getValue())->toBe('Własne czynniki');
     $book->getSheetByName('Klimat')->setCellValue('C2', 'tak')->setCellValue('C3', 'Wpływ temperatur na zużycie energii.');
     $factor = collect(app(IsoFactorQuestionnaire::class)->factors([], []))->first(fn ($f) => $f['rodzaj'] !== 'AUTO' && ! str_contains($f['pokaz_gdy'], 'FAKT_KLIMAT_ISTOTNY'));
     $row = workbookRow($book->getSheetByName('Czynniki'), $factor['kod']);
