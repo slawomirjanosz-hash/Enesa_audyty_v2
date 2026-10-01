@@ -46,6 +46,7 @@ class IsoQuestionnaireWorkbook
     private function context(IsoPlantProfile $profile, string $kind, ?IsoFactorReview $review): array
     {
         return ['format' => 1, 'kind' => $kind, 'audit' => $profile->audit_id, 'profile' => $profile->id,
+            'deployment' => implode('|', [config('app.url'), getenv('RAILWAY_PROJECT_ID') ?: '', getenv('RAILWAY_SERVICE_ID') ?: '', getenv('RAILWAY_ENVIRONMENT_ID') ?: '']),
             'lock_version' => $kind === 'plant' ? $profile->lock_version : ($review?->lock_version ?? 0),
             'schema' => hash('sha256', json_encode($kind === 'plant' ? $profile->definition : app(IsoFactorQuestionnaire::class)->schema(), JSON_THROW_ON_ERROR)),
             'source_hash' => $kind === 'factors' ? app(IsoFactorQuestionnaire::class)->hash($profile) : null];

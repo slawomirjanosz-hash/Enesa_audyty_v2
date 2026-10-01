@@ -11,6 +11,7 @@ use App\Services\IsoPlantQuestionnaire;
 use App\Services\IsoQuestionnaireWorkbook;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Spatie\Permission\Models\Role;
@@ -182,5 +183,15 @@ test('workbooks preserve original questionnaire definitions and label options', 
         $data = app(IsoQuestionnaireWorkbook::class)->read($path, $profile, 'plant');
         expect($data['as_of_date'])->toBe('2026-10-01');
         expect(app(IsoPlantQuestionnaire::class)->normalize($data['answers'], $profile->definition, [], 1, false))->toBeArray();
+    });
+});
+
+test('workbooks cannot be imported into another installation even with a shared encryption key', function () {
+    [, $profile] = workbookFixture();
+    $book = app(IsoQuestionnaireWorkbook::class)->export($profile, 'plant');
+    config(['app.url' => 'https://other-installation.example']);
+    workbookUpload($book, function ($file, $path) use ($profile) {
+        expect(fn () => app(IsoQuestionnaireWorkbook::class)->read($path, $profile, 'plant'))
+            ->toThrow(ValidationException::class);
     });
 });
