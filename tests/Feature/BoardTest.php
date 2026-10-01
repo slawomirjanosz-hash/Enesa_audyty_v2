@@ -20,6 +20,40 @@ function boardFixture(): array
     return [$user, $project, $audit];
 }
 
+test('owner boards filter schedule stages before pagination and reject foreign stages', function () {
+    [$user, $project, $audit] = boardFixture();
+    $this->actingAs($user);
+    foreach (['project' => $project, 'audit' => $audit] as $type => $owner) {
+        $first = $owner->tasks()->create(['title' => 'Pierwszy etap', 'project_position' => 1]);
+        $empty = $owner->tasks()->create(['title' => 'Pusty etap', 'project_position' => 2]);
+        $foreign = ($type === 'project' ? $audit : $project)->tasks()->create(['title' => 'Obcy etap']);
+        for ($i = 0; $i < 91; $i++) {
+            BoardTask::create([$type.'_id' => $owner->id, 'stage_task_id' => $first->id, 'title' => 'Filtrowana karta '.$i, 'status' => 'todo']);
+        }
+        BoardTask::create([$type.'_id' => $owner->id, 'title' => 'Karta bez etapu', 'status' => 'todo']);
+        $url = route($type === 'project' ? 'projects.show' : 'audits.show', $owner);
+        $response = $this->get($url.'?tab=tasks&board_stage='.$first->id)->assertOk()->assertSee('Filtrowana karta 0')->assertDontSee('Karta bez etapu')->assertSee('board_stage='.$first->id.'&amp;board_page=2', false)->assertSee('data-default-stage="'.$first->id.'"', false);
+        expect(substr_count($response->getContent(), 'data-card="'))->toBe(90);
+        $this->get($url.'?tab=tasks&board_stage='.$first->id.'&board_page=2')->assertOk()->assertSee('Filtrowana karta 90')->assertDontSee('Karta bez etapu');
+        $this->get($url.'?tab=tasks&board_stage='.$empty->id)->assertOk()->assertSee('Brak zadań przypisanych do tego etapu.')->assertDontSee('Filtrowana karta');
+        $this->get($url.'?tab=tasks&board_page=2')->assertOk()->assertSee('Karta bez etapu');
+        $this->get($url.'?tab=tasks&board_stage='.$foreign->id)->assertNotFound();
+        $this->get($url.'?tab=tasks&board_stage[]=1')->assertNotFound();
+    }
+});
+
+test('clients can filter their audit stages without gaining editing permissions', function () {
+    [$admin, $project, $audit] = boardFixture();
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($audit->company_id);
+    $stage = $audit->tasks()->create(['title' => 'Etap klienta']);
+    BoardTask::create(['audit_id' => $audit->id, 'stage_task_id' => $stage->id, 'title' => 'Karta etapu klienta', 'status' => 'todo']);
+    $this->actingAs($client)->get(route('client.audits.show', [$audit, 'tab' => 'tasks', 'board_stage' => $stage->id]))->assertOk()->assertSee('Karta etapu klienta')->assertDontSee('data-board-new', false)->assertDontSee('data-card-status', false);
+    $client->companies()->detach($audit->company_id);
+    $this->get(route('client.audits.show', [$audit, 'tab' => 'tasks', 'board_stage' => $stage->id]))->assertNotFound();
+});
+
 test('boards create edit move and delete cards for both owner types with isolated stages', function () {
     [$user,$project,$audit] = boardFixture();
     $this->actingAs($user);

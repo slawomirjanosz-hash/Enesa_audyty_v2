@@ -1,6 +1,6 @@
 @once
-@push('styles')<link rel="stylesheet" href="{{asset('css/board.css')}}">@endpush
-@push('scripts')<script src="{{asset('js/board.js')}}" defer></script>@endpush
+@push('styles')<link rel="stylesheet" href="{{asset('css/board.css')}}"><link rel="stylesheet" href="{{asset('css/board-stages.css')}}">@endpush
+@push('scripts')<script src="{{asset('js/board.js')}}?v=stages-1" defer></script>@endpush
 @endonce
 @php
     $boardAccess = app(\App\Services\BoardAccessService::class);
