@@ -12,7 +12,7 @@ class Document extends Model
     use EnforcesDocumentQuota;
 
     protected $fillable = [
-        'company_id', 'offer_id', 'audit_id', 'project_id', 'project_document_folder_id', 'type',
+        'company_id', 'offer_id', 'audit_id', 'project_id', 'project_document_folder_id', 'audit_document_folder_id', 'type',
         'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by', 'storage_owner_id',
     ];
 

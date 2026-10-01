@@ -3,6 +3,9 @@
 use App\Http\Controllers\AccessSupportController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\AuditDocumentController;
+use App\Http\Controllers\AuditFinanceController;
+use App\Http\Controllers\AuditGanttShareController;
 use App\Http\Controllers\AuditTypeController;
 use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CalendarController;
@@ -21,6 +24,7 @@ use App\Http\Controllers\CrmController;
 use App\Http\Controllers\CylinderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentLinkController;
 use App\Http\Controllers\EnergyPassportController;
 use App\Http\Controllers\HrAttendanceController;
 use App\Http\Controllers\HrController;
@@ -229,14 +233,26 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('/{audit}/gantt/import', [AuditController::class, 'importGantt'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('gantt.import');
         Route::match(['put', 'patch'], '/{audit}/tasks/{task}', [AuditController::class, 'updateTask'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('tasks.update');
         Route::delete('/{audit}/tasks/{task}', [AuditController::class, 'destroyTask'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('tasks.destroy');
-        Route::post('/{audit}/finances', [AuditController::class, 'storeFinance'])->middleware('app.permission:audits.manage')->name('finances.store');
-        Route::put('/{audit}/finances/{entry}', [AuditController::class, 'updateFinance'])->middleware('app.permission:audits.manage')->name('finances.update');
-        Route::delete('/{audit}/finances/{entry}', [AuditController::class, 'destroyFinance'])->middleware('app.permission:audits.manage')->name('finances.destroy');
+        Route::post('/{audit}/finances/import', [AuditFinanceController::class, 'importFinancialEntries'])->middleware('app.permission:audits.manage')->name('finances.import');
+        Route::post('/{audit}/finances/bulk', [AuditFinanceController::class, 'bulkUpdateFinancialEntries'])->middleware('app.permission:audits.manage')->name('finances.bulk');
+        Route::patch('/{audit}/finances/{entry}/status', [AuditFinanceController::class, 'updateFinancialEntryStatus'])->middleware('app.permission:audits.manage')->name('finances.status');
+        Route::post('/{audit}/finance-groups', [AuditFinanceController::class, 'storeFinanceGroup'])->middleware('app.permission:audits.manage')->name('finance-groups.store');
+        Route::delete('/{audit}/finance-groups/{group}', [AuditFinanceController::class, 'destroyFinanceGroup'])->middleware('app.permission:audits.manage')->name('finance-groups.destroy');
+        Route::post('/{audit}/document-folders', [AuditDocumentController::class, 'storeFolder'])->middleware('app.permission:audits.manage')->name('document-folders.store');
+        Route::delete('/{audit}/document-folders/{folder}', [AuditDocumentController::class, 'destroyFolder'])->middleware('app.permission:audits.manage')->name('document-folders.destroy');
+        Route::patch('/{audit}/documents/{document}/folder', [AuditDocumentController::class, 'move'])->middleware('app.permission:audits.manage')->name('documents.move');
+        Route::post('/{audit}/document-links', [DocumentLinkController::class, 'storeAudit'])->middleware('app.permission:audits.manage')->name('document-links.store');
+        Route::delete('/{audit}/document-links/{link}', [DocumentLinkController::class, 'destroyAudit'])->middleware('app.permission:audits.manage')->name('document-links.destroy');
+        Route::post('/{audit}/public-gantt', [AuditGanttShareController::class, 'store'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('public-gantt.generate');
+        Route::delete('/{audit}/public-gantt', [AuditGanttShareController::class, 'destroy'])->middleware('app.permission:audits.manage,audits.schedule.manage')->name('public-gantt.destroy');
+        Route::post('/{audit}/finances', [AuditFinanceController::class, 'storeFinancialEntry'])->middleware('app.permission:audits.manage')->name('finances.store');
+        Route::match(['put', 'patch'], '/{audit}/finances/{entry}', [AuditFinanceController::class, 'updateFinancialEntry'])->middleware('app.permission:audits.manage')->name('finances.update');
+        Route::delete('/{audit}/finances/{entry}', [AuditFinanceController::class, 'destroyFinancialEntry'])->middleware('app.permission:audits.manage')->name('finances.destroy');
         Route::post('/{audit}/surveys', [AuditController::class, 'storeSurvey'])->middleware('app.permission:audits.manage')->name('surveys.store');
         Route::put('/{audit}/surveys/{survey}', [AuditController::class, 'updateSurvey'])->middleware('app.permission:audits.manage')->name('surveys.update');
         Route::delete('/{audit}/surveys/{survey}', [AuditController::class, 'destroySurvey'])->middleware('app.permission:audits.manage')->name('surveys.destroy');
         Route::post('/{audit}/passports', [AuditController::class, 'storePassport'])->middleware('app.permission:audits.manage')->name('passports.store');
-        Route::post('/{audit}/documents', [AuditController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
+        Route::post('/{audit}/documents', [AuditDocumentController::class, 'storeDocument'])->middleware('app.permission:audits.manage')->name('documents.store');
         Route::post('/{audit}/iso-documents', [AuditController::class, 'storeIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.store');
         Route::post('/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'storeContext'])->middleware('app.permission:audits.manage')->name('iso50001.context.store');
         Route::get('/{audit}/iso50001/4-1/context', [IsoImplementationController::class, 'contextScreen'])->middleware('app.permission:audits.manage')->name('iso50001.context.show');
@@ -249,7 +265,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::delete('/{audit}/iso-documents/{document}', [AuditController::class, 'destroyIsoDocument'])->middleware('app.permission:audits.manage')->name('iso-documents.destroy');
         Route::post('/{audit}/iso-documents/{document}/copy', [IsoDocumentCopyController::class, 'store'])->middleware('app.permission:audits.manage')->name('iso-documents.copy');
         Route::get('/{audit}/documents/{document}', [AuditController::class, 'downloadDocument'])->name('documents.download');
-        Route::delete('/{audit}/documents/{document}', [AuditController::class, 'destroyDocument'])->middleware('app.permission:audits.manage')->name('documents.destroy');
+        Route::delete('/{audit}/documents/{document}', [AuditDocumentController::class, 'destroyDocument'])->middleware('app.permission:audits.manage')->name('documents.destroy');
     });
     Route::prefix('energy-passports')->name('energy-passports.')->middleware(['app.module:audits', 'app.permission:audits.passports.view'])->group(function () {
         Route::get('/', [EnergyPassportController::class, 'index'])->name('index');
@@ -417,6 +433,7 @@ Route::post('/shared/project-folder/{share}/upload', [PublicProjectDocumentFolde
 Route::get('/shared/project-folder/{share}/documents/{document}', [PublicProjectDocumentFolderController::class, 'download'])
     ->middleware(['signed', 'throttle:60,1'])->name('public.project-documents.download');
 
+Route::get('/public/audit-gantt/{token}', [AuditGanttShareController::class, 'show'])->middleware(['app.module:audits', 'throttle:60,1'])->name('audits.public-gantt');
 Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 'app.module:projects'])->group(function () {
     Route::get('/{project}/protocols/create', [ProjectProtocolController::class, 'create'])->name('protocols.create');
     Route::post('/{project}/protocols', [ProjectProtocolController::class, 'store'])->name('protocols.store');
@@ -438,6 +455,8 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::patch('/{project}/tasks/{task}', [ProjectScheduleController::class, 'updateTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.update');
     Route::delete('/{project}/tasks/{task}', [ProjectScheduleController::class, 'destroyTask'])->middleware('app.permission:projects.schedule.manage')->name('tasks.destroy');
     Route::post('/{project}/public-gantt', [ProjectScheduleController::class, 'generatePublicGantt'])->middleware('app.permission:projects.schedule.manage')->name('public-gantt.generate');
+    Route::post('/{project}/document-links', [DocumentLinkController::class, 'storeProject'])->middleware('app.permission:projects.documents.manage')->name('document-links.store');
+    Route::delete('/{project}/document-links/{link}', [DocumentLinkController::class, 'destroyProject'])->middleware('app.permission:projects.documents.manage')->name('document-links.destroy');
     Route::post('/{project}/finances', [ProjectFinanceController::class, 'storeFinancialEntry'])->middleware('app.permission:projects.finances.manage')->name('finances.store');
     Route::post('/{project}/finances/import', [ProjectFinanceController::class, 'importFinancialEntries'])->middleware('app.permission:projects.finances.manage')->name('finances.import');
     Route::post('/{project}/finances/bulk', [ProjectFinanceController::class, 'bulkUpdateFinancialEntries'])->middleware('app.permission:projects.finances.manage')->name('finances.bulk');

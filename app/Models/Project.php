@@ -123,6 +123,11 @@ class Project extends Model
         return (float) $this->effectiveFinancialEntries()->where('type', 'invoice')->where('status', 'planned')->sum('amount');
     }
 
+    public function documentLinks(): HasMany
+    {
+        return $this->hasMany(DocumentLink::class)->orderBy('name');
+    }
+
     public function effectiveFinancialEntries(): Collection
     {
         return $this->financialEntries->filter(fn (ProjectFinancialEntry $entry) => $entry->source !== 'requirement'

@@ -15,4 +15,9 @@ class AuditPolicy
     {
         return app(AuditorAccessService::class)->canViewCompany($user, $audit->company_id, 'can_view_audits');
     }
+
+    public function update(User $user, Audit $audit): bool
+    {
+        return $this->view($user, $audit) && (app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('audits.manage'));
+    }
 }

@@ -12,7 +12,47 @@ class Audit extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['company_id', 'number', 'title', 'status', 'manager_id', 'start_date', 'end_date', 'contract_value', 'description', 'created_by'];
+    protected $fillable = ['company_id', 'number', 'title', 'status', 'manager_id', 'start_date', 'end_date', 'contract_value', 'description', 'created_by', 'public_gantt_token'];
+
+    public function financeGroups(): HasMany
+    {
+        return $this->hasMany(AuditFinanceGroup::class)->orderBy('name');
+    }
+
+    public function documentFolders(): HasMany
+    {
+        return $this->hasMany(AuditDocumentFolder::class)->orderBy('name');
+    }
+
+    public function documentLinks(): HasMany
+    {
+        return $this->hasMany(DocumentLink::class)->orderBy('name');
+    }
+
+    public function totalInvoiced(): float
+    {
+        return (float) $this->financialEntries->where('type', 'invoice')->whereIn('status', ['issued', 'paid'])->sum('amount');
+    }
+
+    public function plannedInvoiced(): float
+    {
+        return (float) $this->financialEntries->where('type', 'invoice')->where('status', 'planned')->sum('amount');
+    }
+
+    public function totalCosts(): float
+    {
+        return (float) $this->financialEntries->where('type', 'cost')->whereIn('status', ['issued', 'paid'])->sum('amount');
+    }
+
+    public function plannedCosts(): float
+    {
+        return (float) $this->financialEntries->where('type', 'cost')->where('status', 'planned')->sum('amount');
+    }
+
+    public function result(): float
+    {
+        return $this->totalInvoiced() - $this->totalCosts();
+    }
 
     protected $casts = ['start_date' => 'date', 'end_date' => 'date', 'contract_value' => 'decimal:2'];
 

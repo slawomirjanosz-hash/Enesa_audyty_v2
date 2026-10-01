@@ -35,6 +35,7 @@ class AuditController extends Controller
     {
         $company = $request->user()->companies()->whereKey($audit->company_id)->firstOrFail();
         $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader', 'isoImplementationResponses']);
+        $audit->load(['documentFolders.documents.uploader', 'documentLinks']);
         $isIso50001 = $audit->surveys->contains(fn ($survey) => $survey->auditType?->slug === 'iso50001');
         $timelineItems = $audit->tasks->map(fn ($task) => [
             'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id,

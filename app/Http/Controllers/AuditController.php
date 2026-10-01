@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exports\ProjectGanttExport;
 use App\Models\Audit;
-use App\Models\AuditFinancialEntry;
 use App\Models\AuditSurvey;
 use App\Models\AuditType;
+use App\Models\Company;
 use App\Models\Document;
 use App\Models\EnergyPassport;
 use App\Models\EnergyPassportTemplate;
@@ -80,6 +80,7 @@ class AuditController extends Controller
     {
         $this->ensureAccess($request, $audit);
         $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader', 'isoImplementationResponses']);
+        $audit->load(['financeGroups.entries', 'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'documentFolders.documents.uploader', 'documentLinks']);
         $timelineItems = $audit->tasks
             ->map(fn (Task $task) => $this->taskTimelinePayload($audit, $task))->values();
 
@@ -93,6 +94,7 @@ class AuditController extends Controller
             'canManageSchedule' => $this->canManage($request) || $request->user()->can('audits.schedule.manage'),
             'clientView' => false,
             'canViewFinances' => true,
+            'suppliers' => Company::suppliers()->whereNull('archived_at')->orderBy('name')->get(),
             'trainingVideos' => IsoTrainingVideo::query()->latest()->get(),
             'trainingPresentations' => IsoPresentation::query()->latest()->get()->groupBy('section_id'),
             'templateDocuments' => IsoSectionDocument::query()->metadata()->where('scope', 'template')->with('uploader')->get()->groupBy('section_id'),
@@ -206,34 +208,6 @@ class AuditController extends Controller
         return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'schedule'])->with('success', "Import harmonogramu zakończony: dodano {$report['inserted']} zadań.")->with('gantt_import_report', $report);
     }
 
-    public function storeFinance(Request $request, Audit $audit): RedirectResponse
-    {
-        $this->ensureAccess($request, $audit);
-        $data = $request->validate(['type' => ['required', 'in:cost,invoice'], 'name' => ['required', 'string', 'max:255'], 'document_number' => ['nullable', 'string', 'max:100'], 'entry_date' => ['required', 'date'], 'amount' => ['required', 'numeric', 'min:0'], 'status' => ['required', 'in:planned,issued,paid'], 'notes' => ['nullable', 'string']]);
-        $audit->financialEntries()->create($data + ['created_by' => $request->user()->id]);
-
-        return back()->with('success', 'Pozycja finansowa została dodana.');
-    }
-
-    public function destroyFinance(Request $request, Audit $audit, AuditFinancialEntry $entry): RedirectResponse
-    {
-        $this->ensureAccess($request, $audit);
-        abort_unless($entry->audit_id === $audit->id, 404);
-        $entry->delete();
-
-        return back()->with('success', 'Pozycja finansowa została usunięta.');
-    }
-
-    public function updateFinance(Request $request, Audit $audit, AuditFinancialEntry $entry): RedirectResponse
-    {
-        $this->ensureAccess($request, $audit);
-        abort_unless($entry->audit_id === $audit->id, 404);
-        $data = $request->validate(['type' => ['required', 'in:cost,invoice'], 'name' => ['required', 'string', 'max:255'], 'document_number' => ['nullable', 'string', 'max:100'], 'entry_date' => ['required', 'date'], 'amount' => ['required', 'numeric', 'min:0'], 'status' => ['required', 'in:planned,issued,paid'], 'notes' => ['nullable', 'string']]);
-        $entry->update($data);
-
-        return redirect()->route('audits.show', ['audit' => $audit, 'tab' => 'finances'])->with('success', 'Pozycja finansowa została zaktualizowana.');
-    }
-
     public function storeSurvey(Request $request, Audit $audit): RedirectResponse
     {
         $this->ensureAccess($request, $audit);
@@ -278,19 +252,6 @@ class AuditController extends Controller
         return redirect()->route('energy-passports.edit', $passport)->with('success', 'Paszport został dodany do audytu.');
     }
 
-    public function storeDocument(Request $request, Audit $audit): RedirectResponse
-    {
-        $this->ensureAccess($request, $audit);
-        $data = $request->validate(['file' => ['required', 'file', 'max:20480', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,zip']]);
-        $file = $data['file'];
-        $name = now()->format('YmdHis').'_'.Str::random(10).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientOriginalName());
-        $path = 'audits/'.$audit->id.'/'.$name;
-        Storage::disk('local')->put($path, $file->getContent());
-        Document::create(['audit_id' => $audit->id, 'company_id' => $audit->company_id, 'type' => 'upload', 'original_filename' => $file->getClientOriginalName(), 'stored_path' => $path, 'mime_type' => $file->getClientMimeType(), 'size' => $file->getSize(), 'uploaded_by' => $request->user()->id]);
-
-        return back()->with('success', 'Dokument audytu został dodany.');
-    }
-
     public function downloadDocument(Request $request, Audit $audit, Document $document)
     {
         $this->ensureAccess($request, $audit);
@@ -298,16 +259,6 @@ class AuditController extends Controller
         abort_unless(Storage::disk('local')->exists($document->stored_path), 404);
 
         return Storage::disk('local')->download($document->stored_path, $document->original_filename);
-    }
-
-    public function destroyDocument(Request $request, Audit $audit, Document $document): RedirectResponse
-    {
-        $this->ensureAccess($request, $audit);
-        abort_unless($document->audit_id === $audit->id, 404);
-        Storage::disk('local')->delete($document->stored_path);
-        $document->delete();
-
-        return back()->with('success', 'Dokument został usunięty.');
     }
 
     public function storeIsoDocument(Request $request, Audit $audit): RedirectResponse

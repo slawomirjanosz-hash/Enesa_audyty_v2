@@ -512,6 +512,7 @@
 
 @if($canViewDocuments)
 <section id="pane-documents" class="pane">
+    @include('documents.external-links',['owner'=>$project,'canManageLinks'=>$canEdit])
     @include('documents.quota')
     @if($canEdit)
     <div class="card">
