@@ -10,6 +10,7 @@ class AuditTypesSeeder extends Seeder
     public function run(): void
     {
         $types = [
+            ['name' => 'Audyt Inny', 'slug' => 'audyt-inny'],
             ['name' => 'Paszporty energetyczne', 'slug' => 'energy-passports'],
             ['name' => 'Audyt Energetyczny Przedsiębiorstwa', 'slug' => 'aep'],
             ['name' => 'ISO 50001',                           'slug' => 'iso50001'],

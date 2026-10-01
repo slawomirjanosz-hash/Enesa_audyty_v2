@@ -15,6 +15,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\IsoContextService;
 use Carbon\Carbon;
+use Database\Seeders\AuditTypesSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -109,6 +110,38 @@ test('audit is created from company card and opens the dedicated workspace', fun
         ->assertSee('id="project-frappe-gantt"', false)->assertSee('Dodaj kamień milowy')
         ->assertSee('Eksport Excel')->assertSee('Import Excel')->assertSee('Otwórz audyt')
         ->assertDontSee('data-audit-tab="iso50001"', false)->assertSee('Wróć do listy audytów');
+});
+
+test('other audits are available for analyses without an ISO template and remain scoped to the client', function () {
+    $type = AuditType::where('slug', 'audyt-inny')->firstOrFail();
+    $this->seed(AuditTypesSeeder::class);
+    $this->seed(AuditTypesSeeder::class);
+    expect(AuditType::where('slug', 'audyt-inny')->count())->toBe(1);
+    $user = auditManager();
+    $company = Company::create(['name' => 'Klient analiz', 'company_type' => 'client', 'status' => 'active']);
+    $this->actingAs($user)->get(route('companies.show', $company))->assertOk()->assertSee('Audyt Inny');
+    $this->post(route('audits.store'), [
+        'company_id' => $company->id, 'audit_type_id' => $type->id, 'number' => 'OTHER/1',
+        'title' => 'Analiza instalacji', 'manager_id' => $user->id, 'status' => 'draft',
+    ])->assertRedirect();
+    $audit = Audit::where('number', 'OTHER/1')->firstOrFail();
+    $survey = $audit->surveys()->sole();
+    expect($survey->audit_type_id)->toBe($type->id);
+    expect($survey->audit_type_version_id)->toBeNull();
+    $this->get(route('audits.show', $audit))->assertOk()->assertSee('Audyt Inny');
+
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($company);
+    $this->actingAs($client)->get(route('client.audits.show', $audit))->assertOk()->assertSee('Analiza instalacji');
+    $outsider = User::factory()->create();
+    $outsider->assignRole(Role::findOrCreate('client_user'));
+    $this->actingAs($outsider)->get(route('client.audits.show', $audit))->assertNotFound();
+
+    $admin = User::factory()->create();
+    $admin->assignRole(Role::findOrCreate('superadmin'));
+    $this->actingAs($admin)->get(route('audit-types.index'))->assertOk()->assertSee('Audyt Inny');
+    $this->get(route('audit-types.show', $type))->assertOk()->assertSee('Audyt Inny');
 });
 
 test('creating an audit requires an existing type and does not leave an empty workspace', function () {
