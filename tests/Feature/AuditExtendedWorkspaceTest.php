@@ -107,6 +107,6 @@ test('audit gantt link is read only revocable and excludes financial and private
     $url = $response->json('url');
     auth()->forgetGuards();
     $this->get($url)->assertOk()->assertSee('Widoczne zadanie')->assertDontSee('SECRET FINANCE')->assertDontSee('SECRET NOTE')->assertDontSee('987654');
-    $this->actingAs($user)->delete(route('audits.public-gantt.destroy',$audit))->assertRedirect();
+    $this->actingAs($user)->delete(route('audits.public-gantt.destroy', $audit))->assertRedirect();
     $this->get($url)->assertNotFound();
 });
