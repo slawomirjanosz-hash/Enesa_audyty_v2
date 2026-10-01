@@ -1,0 +1,446 @@
+{
+  "strony": [
+    {
+      "kod": "STK-W-01",
+      "nazwa": "Zarząd / najwyższe kierownictwo",
+      "typ": "wewnętrzna",
+      "wymagania": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów",
+      "zgodnosc": "nie",
+      "jak": "Polityka energetyczna, cele energetyczne, Przegląd Zarządzania (kl. 9.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-02",
+      "nazwa": "Właściciel / grupa kapitałowa",
+      "typ": "wewnętrzna",
+      "wymagania": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny",
+      "zgodnosc": "KANDYDAT",
+      "jak": "Wskaźniki EnPI definiowane spójnie z wytycznymi grupy",
+      "warunek": "FAKT_GRUPA_KAPITALOWA = tak"
+    },
+    {
+      "kod": "STK-W-03",
+      "nazwa": "Pracownicy",
+      "typ": "wewnętrzna",
+      "wymagania": "Jasne zasady eksploatacji urządzeń; komfort warunków pracy; zrozumienie własnego wpływu na zużycie",
+      "zgodnosc": "nie",
+      "jak": "Szkolenia świadomościowe (kl. 7.3), kanał zgłaszania usprawnień",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-04",
+      "nazwa": "Służby utrzymania ruchu",
+      "typ": "wewnętrzna",
+      "wymagania": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji",
+      "zgodnosc": "nie",
+      "jak": "Nadzór operacyjny nad SEU (kl. 8.1), plan zbierania danych (kl. 6.6)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-05",
+      "nazwa": "Dział produkcji",
+      "typ": "wewnętrzna",
+      "wymagania": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach",
+      "zgodnosc": "nie",
+      "jak": "Zmienne istotne w przeglądzie energetycznym (kl. 6.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-06",
+      "nazwa": "Dział zakupów",
+      "typ": "wewnętrzna",
+      "wymagania": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert",
+      "zgodnosc": "nie",
+      "jak": "Kryteria energetyczne w zakupach (kl. 8.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-07",
+      "nazwa": "Kontroling / finanse",
+      "typ": "wewnętrzna",
+      "wymagania": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć",
+      "zgodnosc": "nie",
+      "jak": "Ocena możliwości poprawy z okresem zwrotu (kl. 6.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-08",
+      "nazwa": "Dział BHP i ochrony środowiska",
+      "typ": "wewnętrzna",
+      "wymagania": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów",
+      "zgodnosc": "nie",
+      "jak": "Integracja rejestru wymagań prawnych",
+      "warunek": "FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)"
+    },
+    {
+      "kod": "STK-W-09",
+      "nazwa": "Energy Manager / zespół ds. energii",
+      "typ": "wewnętrzna",
+      "wymagania": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu",
+      "zgodnosc": "nie",
+      "jak": "Zarządzenie o powołaniu zespołu, przypisanie ról (kl. 5.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-W-10",
+      "nazwa": "Rada pracowników / związki zawodowe",
+      "typ": "wewnętrzna",
+      "wymagania": "Informacja o zmianach organizacyjnych wynikających z wdrożenia; brak pogorszenia warunków pracy",
+      "zgodnosc": "nie",
+      "jak": "Plan komunikacji wewnętrznej (kl. 7.4)",
+      "warunek": "FAKT_ZWIAZKI = tak"
+    },
+    {
+      "kod": "STK-Z-01",
+      "nazwa": "Prezes URE",
+      "typ": "zewnętrzna",
+      "wymagania": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania",
+      "zgodnosc": "TAK",
+      "jak": "Rejestr wymagań prawnych, ocena zgodności (kl. 9.1.2)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-02",
+      "nazwa": "Organ właściwy ds. EED / minister",
+      "typ": "zewnętrzna",
+      "wymagania": "Posiadanie systemu zarządzania energią zgodnie z art. 11 dyrektywy 2023/1791 w terminie do 11.10.2027",
+      "zgodnosc": "TAK",
+      "jak": "Certyfikacja systemu w wyznaczonym terminie",
+      "warunek": "ZUZYCIE_TJ > 85"
+    },
+    {
+      "kod": "STK-Z-03",
+      "nazwa": "Urząd Dozoru Technicznego",
+      "typ": "zewnętrzna",
+      "wymagania": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja",
+      "zgodnosc": "TAK",
+      "jak": "Harmonogram przeglądów UDT w rejestrze wymagań",
+      "warunek": "FAKT_UDT = tak"
+    },
+    {
+      "kod": "STK-Z-04",
+      "nazwa": "Organy ochrony środowiska / KOBiZE",
+      "typ": "zewnętrzna",
+      "wymagania": "Monitorowanie i raportowanie emisji; obowiązki wynikające z pozwoleń",
+      "zgodnosc": "TAK",
+      "jak": "Powiązanie celów energetycznych z emisyjnymi",
+      "warunek": "FAKT_ETS = tak"
+    },
+    {
+      "kod": "STK-Z-05",
+      "nazwa": "Organ prowadzący rejestr f-gazów",
+      "typ": "zewnętrzna",
+      "wymagania": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO",
+      "zgodnosc": "TAK",
+      "jak": "Rejestr F-gaz włączony do wymagań prawnych",
+      "warunek": "FAKT_FGAZ = tak"
+    },
+    {
+      "kod": "STK-Z-06",
+      "nazwa": "Operator systemu świadectw efektywności",
+      "typ": "zewnętrzna",
+      "wymagania": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa",
+      "zgodnosc": "nie",
+      "jak": "Dokumentacja efektów w planach działań (kl. 6.2)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-07",
+      "nazwa": "Zamawiający publiczni",
+      "typ": "zewnętrzna",
+      "wymagania": "Posiadanie certyfikowanego systemu jako warunek lub kryterium oceny ofert",
+      "zgodnosc": "KANDYDAT",
+      "jak": "Termin certyfikacji podporządkowany kalendarzowi postępowań",
+      "warunek": "FAKT_PRZETARGI = tak"
+    },
+    {
+      "kod": "STK-Z-08",
+      "nazwa": "Operator systemu dystrybucyjnego",
+      "typ": "zewnętrzna",
+      "wymagania": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji",
+      "zgodnosc": "TAK",
+      "jak": "Monitorowanie mocy szczytowej (kl. 9.1), warunki przyłączeniowe w rejestrze",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-09",
+      "nazwa": "Sprzedawca energii elektrycznej",
+      "typ": "zewnętrzna",
+      "wymagania": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży",
+      "zgodnosc": "nie",
+      "jak": "Analiza profilu poboru jako możliwość poprawy (kl. 6.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-10",
+      "nazwa": "Dostawca gazu lub ciepła sieciowego",
+      "typ": "zewnętrzna",
+      "wymagania": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy",
+      "zgodnosc": "nie",
+      "jak": "Gospodarka cieplna w przeglądzie energetycznym",
+      "warunek": "FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny"
+    },
+    {
+      "kod": "STK-Z-11",
+      "nazwa": "Dostawcy paliw transportowych",
+      "typ": "zewnętrzna",
+      "wymagania": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń",
+      "zgodnosc": "nie",
+      "jak": "Flota jako odrębny obszar monitorowania",
+      "warunek": "FAKT_FLOTA = tak"
+    },
+    {
+      "kod": "STK-Z-12",
+      "nazwa": "Odbiorcy / klienci",
+      "typ": "zewnętrzna",
+      "wymagania": "Informacja o śladzie węglowym wyrobu; potwierdzenie efektywności energetycznej procesu; odpowiedzi na ankiety zrównoważonego rozwoju",
+      "zgodnosc": "KANDYDAT",
+      "jak": "Wskaźnik raportowany w łańcuchu dostaw; decyzja o uznaniu za wymóg zgodności",
+      "warunek": "FAKT_ODBIORCY_CO2 = tak"
+    },
+    {
+      "kod": "STK-Z-13",
+      "nazwa": "Dostawcy urządzeń i usług",
+      "typ": "zewnętrzna",
+      "wymagania": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry",
+      "zgodnosc": "nie",
+      "jak": "Wymagania dla dostawców (kl. 8.3)",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-14",
+      "nazwa": "Wykonawcy i podwykonawcy na terenie zakładu",
+      "typ": "zewnętrzna",
+      "wymagania": "Znajomość zasad eksploatacji obowiązujących na terenie; instruktaż przed rozpoczęciem prac",
+      "zgodnosc": "nie",
+      "jak": "Nadzór operacyjny rozciągnięty na wykonawców (kl. 8.1)",
+      "warunek": "FAKT_UR_WLASNE IN (zewnetrzne, mieszane)"
+    },
+    {
+      "kod": "STK-Z-15",
+      "nazwa": "Instytucje finansujące / banki",
+      "typ": "zewnętrzna",
+      "wymagania": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych",
+      "zgodnosc": "KANDYDAT",
+      "jak": "Dokumentacja efektów do wniosków kredytowych",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-16",
+      "nazwa": "Inwestorzy / podmiot raportujący ESG",
+      "typ": "zewnętrzna",
+      "wymagania": "Dane o zużyciu i intensywności energetycznej do sprawozdawczości zrównoważonego rozwoju",
+      "zgodnosc": "TAK",
+      "jak": "Wskaźniki EnPI spójne z wymaganiami sprawozdawczymi",
+      "warunek": "FAKT_CSRD = tak"
+    },
+    {
+      "kod": "STK-Z-17",
+      "nazwa": "Ubezpieczyciel",
+      "typ": "zewnętrzna",
+      "wymagania": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności",
+      "zgodnosc": "nie",
+      "jak": "Kryteria eksploatacji SEU, harmonogram przeglądów",
+      "warunek": "ZAWSZE"
+    },
+    {
+      "kod": "STK-Z-18",
+      "nazwa": "Jednostka certyfikująca",
+      "typ": "zewnętrzna",
+      "wymagania": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres",
+      "zgodnosc": "TAK",
+      "jak": "Nadzór nad dokumentacją (kl. 7.5), zapisy z audytu i przeglądu",
+      "warunek": "ZAWSZE"
+    }
+  ],
+  "mapowanie": [
+    {
+      "czynnik": "KTX-ZR-01",
+      "strona": "STK-Z-02",
+      "wymaganie": "Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-03",
+      "strona": "STK-Z-01",
+      "wymaganie": "Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-04",
+      "strona": "STK-Z-04",
+      "wymaganie": "Monitorowanie i raportowanie emisji, umorzenie uprawnień",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-05",
+      "strona": "STK-Z-16",
+      "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdania",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-06",
+      "strona": "STK-Z-03",
+      "wymaganie": "Terminowe badania i przeglądy, aktualna dokumentacja",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-07",
+      "strona": "STK-Z-05",
+      "wymaganie": "Kontrole szczelności i karty urządzeń w CRO",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-08",
+      "strona": "STK-Z-06",
+      "wymaganie": "Poprawna dokumentacja przedsięwzięć i oszczędności",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-ZR-10",
+      "strona": "STK-Z-07",
+      "wymaganie": "Certyfikat jako warunek lub kryterium w postępowaniach",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZM-02",
+      "strona": "STK-Z-09",
+      "wymaganie": "Zgodność profilu poboru z warunkami nowej umowy",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-ZM-03",
+      "strona": "STK-Z-12",
+      "wymaganie": "Informacja o śladzie węglowym i efektywności wyrobu",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZM-05",
+      "strona": "STK-Z-08",
+      "wymaganie": "Nieprzekraczanie mocy umownej, warunki przyłączenia",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZM-07",
+      "strona": "STK-Z-07",
+      "wymaganie": "Posiadanie certyfikatu w terminie postępowań",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-WT-07",
+      "strona": "STK-Z-08",
+      "wymaganie": "Warunki przyłączenia źródła, zgłaszanie zmian w instalacji",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-WT-09",
+      "strona": "STK-Z-01",
+      "wymaganie": "Obowiązki koncesyjne i sprawozdawcze dla wytwarzania",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-WT-13",
+      "strona": "STK-Z-11",
+      "wymaganie": "Warunki umów flotowych i dane o zużyciu paliw",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WO-01",
+      "strona": "STK-W-01",
+      "wymaganie": "Oczekiwanie powołania Energy Managera i przypisania uprawnień",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WO-09",
+      "strona": "STK-W-05",
+      "wymaganie": "Brak ograniczeń dla ciągłości produkcji przy pomiarach",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WO-11",
+      "strona": "STK-W-04",
+      "wymaganie": "Dostęp do danych i wpływ na decyzje eksploatacyjne",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WF-06",
+      "strona": "STK-Z-15",
+      "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZK-08",
+      "strona": "STK-Z-12",
+      "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZK-08",
+      "strona": "STK-Z-16",
+      "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+      "zgodnosc": "KANDYDAT"
+    }
+  ],
+  "grupy": [
+    {
+      "id": "wewn",
+      "krotka": "Strony wewnętrzne",
+      "nazwa": "Strony wewnętrzne",
+      "opis": "Komórki i role wewnątrz organizacji. Norma wymaga ich uwzględnienia tak samo jak stron zewnętrznych.",
+      "kody": [
+        "STK-W-01",
+        "STK-W-02",
+        "STK-W-03",
+        "STK-W-04",
+        "STK-W-05",
+        "STK-W-06",
+        "STK-W-07",
+        "STK-W-08",
+        "STK-W-09",
+        "STK-W-10"
+      ]
+    },
+    {
+      "id": "organy",
+      "krotka": "Organy i regulatorzy",
+      "nazwa": "Organy, regulatorzy i zamawiający publiczni",
+      "opis": "Tu rodzą się wymagania zgodności — te pozycje przechodzą do rejestru wymagań prawnych.",
+      "kody": [
+        "STK-Z-01",
+        "STK-Z-02",
+        "STK-Z-03",
+        "STK-Z-04",
+        "STK-Z-05",
+        "STK-Z-06",
+        "STK-Z-07"
+      ]
+    },
+    {
+      "id": "rynek",
+      "krotka": "Rynek i dostawcy",
+      "nazwa": "Rynek, dostawcy i odbiorcy",
+      "opis": "Strony umowne. Ich wymagania wynikają z kontraktów, nie z przepisów.",
+      "kody": [
+        "STK-Z-08",
+        "STK-Z-09",
+        "STK-Z-10",
+        "STK-Z-11",
+        "STK-Z-12",
+        "STK-Z-13",
+        "STK-Z-14"
+      ]
+    },
+    {
+      "id": "finanse",
+      "krotka": "Finansowanie i nadzór",
+      "nazwa": "Finansowanie, ubezpieczenie i certyfikacja",
+      "opis": "Strony, które oceniają organizację z zewnątrz i wymagają udokumentowanych efektów.",
+      "kody": [
+        "STK-Z-15",
+        "STK-Z-16",
+        "STK-Z-17",
+        "STK-Z-18"
+      ]
+    }
+  ]
+}

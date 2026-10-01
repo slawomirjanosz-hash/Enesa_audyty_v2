@@ -60,6 +60,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
 require __DIR__.'/iso-plant-profile.php';
 require __DIR__.'/iso-factors.php';
+require __DIR__.'/iso-stakeholders.php';
 require __DIR__.'/warehouse.php';
 Route::middleware(['auth', 'staff.role', 'app.module:audits', 'app.permission:audits.manage'])->group(function () {
     Route::get('/audits/{audit}/iso-context-review', [IsoContextReviewController::class, 'show'])->name('audits.iso-review.show');

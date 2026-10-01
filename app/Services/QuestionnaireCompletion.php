@@ -7,6 +7,7 @@ use App\Models\IsoContextReview;
 use App\Models\IsoFactorReview;
 use App\Models\IsoImplementationResponse;
 use App\Models\IsoPlantProfile;
+use App\Models\IsoStakeholderReview;
 use Illuminate\Support\Collection;
 
 class QuestionnaireCompletion
@@ -19,8 +20,10 @@ class QuestionnaireCompletion
         }
         $audits->loadMissing(['manager', 'surveys.auditType']);
         $ids = $audits->modelKeys();
-        $profiles = IsoPlantProfile::whereIn('audit_id', $ids)->latestPerSite()->get(['id', 'audit_id', 'site_id', 'definition', 'answers'])->groupBy('audit_id');
-        $factorReviews = IsoFactorReview::whereIn('audit_id', $ids)->get(['audit_id', 'site_id', 'answers', 'basis'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
+        $profiles = IsoPlantProfile::whereIn('audit_id', $ids)->latestPerSite()->get(['id', 'audit_id', 'site_id', 'definition', 'answers', 'status', 'lock_version', 'client_approval', 'auditor_approval'])->groupBy('audit_id');
+        $factorReviews = IsoFactorReview::whereIn('audit_id', $ids)->get(['id', 'audit_id', 'site_id', 'answers', 'basis', 'status', 'client_approval', 'source_hash', 'lock_version'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
+        $stakeholderReviews = IsoStakeholderReview::whereIn('audit_id', $ids)->get(['audit_id', 'site_id', 'answers', 'basis', 'consultant'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
+        $stakeholders = app(IsoStakeholderQuestionnaire::class);
         $responses = IsoImplementationResponse::whereIn('audit_id', $ids)->get()->groupBy('audit_id');
         $factors = app(IsoFactorQuestionnaire::class);
         $results = [];
@@ -33,14 +36,18 @@ class QuestionnaireCompletion
                     $facts = $factors->facts($profile);
                     $review = $factorReviews->get($audit->id.':'.$profile->site_id);
                     $parts[] = $factors->progress($facts, $factors->currentAnswers($review?->answers ?? [], $review?->basis ?? [], $facts));
+                    $partyReview = $stakeholderReviews->get($audit->id.':'.$profile->site_id);
+                    $parties = $stakeholders->parties($profile, $review);
+                    $parts[] = $stakeholders->progress($stakeholders->currentAnswers($partyReview?->answers ?? [], $partyReview?->basis ?? [], $parties), $parties, $partyReview?->consultant ?? []);
                 }
                 if ($plants->isEmpty()) {
                     $parts[] = $this->plant(app(IsoPlantQuestionnaire::class)->definition(), []);
                     $parts[] = $factors->progress([], []);
+                    $parts[] = $stakeholders->progress([], $stakeholders->parties(new IsoPlantProfile(['definition' => app(IsoPlantQuestionnaire::class)->definition(), 'answers' => []]), null));
                 }
                 foreach (config('iso50001-workflows', []) as $section => $actions) {
                     // 4.1 is now covered by the context questionnaire, not the legacy form.
-                    if ($section === '4-1') {
+                    if (in_array($section, ['4-1', '4-2'])) {
                         continue;
                     }
                     foreach ($actions as $key => $workflow) {
@@ -116,6 +123,17 @@ class QuestionnaireCompletion
             $status = $profile->status !== 'approved' ? 'Oczekuje na zatwierdzenie profilu' : ($review && $review->source_hash !== $factorService->hash($profile) ? 'Profil zmieniony — sprawdź czynniki' : IsoPlantProfile::STATUSES[$review?->status ?? 'editing']);
 
             return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $factorService->progress($facts, $answers), 'status' => $status];
+        });
+        $stakeholderReviews = IsoStakeholderReview::where('audit_id', $audit->id)->get()->keyBy('site_id');
+        $stakeholderService = app(IsoStakeholderQuestionnaire::class);
+        $result['stakeholders'] = $profiles->map(function ($profile) use ($factorReviews, $stakeholderReviews, $stakeholderService) {
+            $factors = $factorReviews->get($profile->site_id);
+            $review = $stakeholderReviews->get($profile->site_id);
+            $parties = $stakeholderService->parties($profile, $factors);
+            $answers = $stakeholderService->currentAnswers($review?->answers ?? [], $review?->basis ?? [], $parties);
+            $status = ! $stakeholderService->ready($profile, $factors) ? 'Oczekuje na profil i zatwierdzenie 4.1 przez klienta' : ($review && $review->source_hash !== $stakeholderService->hash($profile, $factors) ? 'Źródła zmienione — sprawdź rejestr' : IsoPlantProfile::STATUSES[$review?->status ?? 'editing']);
+
+            return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $stakeholderService->progress($answers, $parties, $review?->consultant ?? []), 'status' => $status];
         });
         request()->attributes->set($cacheKey, $result);
 
