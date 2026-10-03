@@ -6,12 +6,13 @@
 @if($trip->user_id === auth()->id())
 @if(auth()->user()->signature_data)
 <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="use_signature" value="1"> Dołącz mój podpis z profilu</label>
+<small>Podpis zostanie umieszczony tylko przy potwierdzeniu odbycia wyjazdu, nie przy zleceniu ani odbiorze środków.</small>
 @else
 <small>Aby dołączyć podpis, dodaj go w <a href="{{route('profile.edit')}}">Moim profilu</a>.</small>
 @endif
 @endif
 @error('use_signature')<small role="alert" style="color:#b91c1c">{{$message}}</small>@enderror
-<button type="submit" class="preview-btn" style="border:0;cursor:pointer;font:inherit"><i class="ti ti-file-type-pdf"></i> Pobierz PDF</button>
+<button type="submit" class="preview-btn" style="border:0;cursor:pointer;font:inherit"><i class="ti ti-file-type-pdf"></i> Polecenie wyjazdu - PDF</button>
 </form></div>
 <div class="explain-grid"><div class="explain-box"><small>Czas całej delegacji</small><strong>{{number_format($trip->departure_at->diffInMinutes($trip->return_at)/60,2,',',' ')}} godz.</strong><small>{{$trip->departure_at->format('d.m.Y H:i')}} – {{$trip->return_at->format('d.m.Y H:i')}}</small></div><div class="explain-box"><small>Dieta</small><strong>{{number_format((float)$trip->diet_amount,2,',',' ')}} zł</strong><small>Pełna stawka: {{number_format((float)$trip->diet_rate,2,',',' ')}} zł</small></div><div class="explain-box"><small>Kilometrówka</small><strong>{{number_format((float)$trip->mileage_amount,2,',',' ')}} zł</strong><small>{{number_format((float)$trip->distance_km,1,',',' ')}} km × {{number_format((float)$trip->km_rate,4,',',' ')}} zł</small></div><div class="explain-box"><small>Pozostałe koszty</small><strong>{{number_format((float)$trip->toll_cost+(float)$trip->accommodation_cost+(float)$trip->other_cost,2,',',' ')}} zł</strong><small>Autostrady + noclegi + inne</small></div></div>
 <div class="formula"><strong>Skąd wynika dieta?</strong><br>Do 8 godzin dieta nie przysługuje; od 8 do 12 godzin wynosi 50% stawki; ponad 12 godzin pełną stawkę. Przy podróży dłuższej niż doba każda pełna doba daje pełną dietę, a rozpoczęta kolejna doba: do 8 godzin 50%, ponad 8 godzin 100%.<br><strong>Łączne rozliczenie:</strong> {{number_format((float)$trip->mileage_amount,2,',',' ')}} zł kilometrówki + {{number_format((float)$trip->diet_amount,2,',',' ')}} zł diety + {{number_format((float)$trip->toll_cost,2,',',' ')}} zł autostrad + {{number_format((float)$trip->accommodation_cost,2,',',' ')}} zł noclegów + {{number_format((float)$trip->other_cost,2,',',' ')}} zł innych kosztów = <strong>{{number_format((float)$trip->total_amount,2,',',' ')}} zł</strong>.</div>

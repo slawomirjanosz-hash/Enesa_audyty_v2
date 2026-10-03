@@ -104,6 +104,8 @@ test('employee creates own delegation with calculated return and remembered priv
     $print = view('hr.trip-pdf', ['trip' => $trip->fresh()->load('user'), 'company' => null, 'logo' => null])->render();
     expect($print)->toContain('Samochód prywatny', '1,15 zł/km')
         ->not->toContain('(stawka', '1,1500 zł/km');
+    expect($print)->toContain('Polecenie wyjazdu służbowego', 'Podpis osoby zlecającej wyjazd', 'Podpis delegowanego - potwierdzenie odbycia wyjazdu', 'Podpis zatwierdzającego rozliczenie', 'Pobrana zaliczka:', 'Potwierdzenie odbioru środków')
+        ->not->toContain('Rozliczenie delegacji krajowej', 'Data wystawienia', 'Dokument wygenerowany');
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="utf-8" ?>'.$print);
     $xpath = new DOMXPath($dom);
