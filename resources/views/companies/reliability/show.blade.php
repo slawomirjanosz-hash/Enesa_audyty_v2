@@ -15,15 +15,21 @@
 @if(session('success'))<div class="rel-card" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="rel-errors" role="alert"><strong>Popraw dane przed zapisaniem:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'create', $company))
-<section class="rel-card"><h2>1. Sprawdź rejestry online</h2>
-<p>KRS i wykaz VAT: automatyczne sprawdzenie po NIP. Numer KRS możesz uzupełnić, gdy wykaz VAT go nie zwróci. </p>
+<section class="rel-card"><h2>1. Dane rejestrowe i sprawozdania</h2>
+@if($autoLookup && !$errors->any())
+<div id="rel-auto-lookup" data-url="{{route('companies.reliability.lookup',$company)}}" data-token="{{csrf_token()}}" data-krs="{{data_get($lookup,'krs.number')}}" role="status">Pobieranie danych KRS i VAT…</div>
+<noscript><p>Włącz JavaScript, aby dane rejestrowe pobierały się automatycznie.</p></noscript>
+@endif
+@if($lookup && data_get($lookup,'krs.state')!=='checked')
 <form class="rel-lookup" method="POST" action="{{route('companies.reliability.lookup',$company)}}">@csrf
 <label for="krs">Numer KRS (opcjonalnie, 10 cyfr)</label><input id="krs" name="krs" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" style="max-width:280px" value="{{old('krs',data_get($lookup,'krs.number'))}}">
-<button type="submit">Sprawdź KRS i VAT</button></form>
+<button type="submit">Uzupełnij numer KRS</button></form>
+@endif
 <div class="rel-import">
+<div class="rel-rdf-heading">
 <a class="rel-link" href="https://rdf-przegladarka.ms.gov.pl/" target="_blank" rel="noopener noreferrer">Pobierz sprawozdanie z RDF ↗</a>
 @if(data_get($lookup,'krs.number'))<p>Numer KRS do wyszukania: <strong>{{data_get($lookup,'krs.number')}}</strong></p>@endif
-
+</div>
 <form class="rel-upload" method="POST" enctype="multipart/form-data" action="{{route('companies.reliability.files.store',$company)}}">@csrf
 <label for="rdf-file">Sprawozdanie z RDF — XML, PDF lub XHTML (maks. 20 MB)</label>
 <input id="rdf-file" type="file" name="file" accept=".xml,.pdf,.xhtml" required aria-invalid="{{$errors->has('file')?'true':'false'}}">
@@ -87,4 +93,5 @@
 </div>
 <script type="module" src="{{asset('js/financial-amount.js')}}"></script>
 <script type="module" src="{{asset('js/financial-health.js')}}"></script>
+<script src="{{asset('js/reliability-lookup.js')}}" defer></script>
 @endsection

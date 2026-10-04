@@ -36,6 +36,7 @@ class CompanyReliabilityController extends Controller
         if ($lookup && data_get($lookup, 'nip') !== Company::normalizeNip($company->nip)) {
             $lookup = null;
         }
+        $autoLookup = ! $lookup || abs(now()->diffInMinutes(Carbon::parse($lookup['checked_at']))) >= 15;
         $finances = [];
         foreach (CompanyReliabilityFile::where('company_id', $company->id)->whereNotNull('parsed_finances')->latest('updated_at')->latest('id')->cursor() as $file) {
             if (data_get($file->parsed_finances, 'nip') !== Company::normalizeNip($company->nip)) {
@@ -49,7 +50,7 @@ class CompanyReliabilityController extends Controller
         $finances = array_slice(array_values($finances), 0, 3);
         $automatic = app(CompanyReliabilityAssessment::class)->assess($lookup, $finances);
 
-        return response()->view('companies.reliability.show', compact('company', 'reports', 'lookup', 'finances', 'automatic'))
+        return response()->view('companies.reliability.show', compact('company', 'reports', 'lookup', 'finances', 'automatic', 'autoLookup'))
             ->header('Cache-Control', 'private, no-store');
     }
 
@@ -58,6 +59,10 @@ class CompanyReliabilityController extends Controller
         $this->check($company, 'create');
         $data = $request->validate(['krs' => ['nullable', 'regex:/^\d{10}$/']]);
         $request->session()->put('reliability.'.$company->id, $service->lookup($company, $data['krs'] ?? null));
+
+        if ($request->expectsJson()) {
+            return response()->json(['checked' => true])->header('Cache-Control', 'private, no-store');
+        }
 
         return redirect()->route('companies.reliability.show', $company)->with('success', 'Sprawdzenie zakończone. Sprawdź wyniki i uzupełnij ocenę. Niedostępne źródło nie oznacza braku problemów.');
     }

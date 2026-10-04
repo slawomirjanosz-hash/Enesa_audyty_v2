@@ -12,6 +12,16 @@ class CompanyRegistryLookup
     public function lookup(Company $company, ?string $krs): array
     {
         $nip = Company::normalizeNip($company->nip);
+        $knownKey = 'reliability:krs:'.$company->id.':'.$nip;
+        if (! $krs) {
+            $krs = Cache::get($knownKey);
+            if (! $krs) {
+                $snapshot = $company->reliabilityReports()->latest('id')->value('snapshot');
+                if (data_get($snapshot, 'registry.nip') === $nip) {
+                    $krs = data_get($snapshot, 'registry.krs.number');
+                }
+            }
+        }
         $result = ['checked_at' => now()->toIso8601String(), 'nip' => $nip,
             'vat' => ['state' => 'unavailable'], 'krs' => ['state' => 'unavailable']];
         if (preg_match('/^\d{10}$/', (string) $nip)) {
@@ -28,6 +38,7 @@ class CompanyRegistryLookup
             $data = $this->fetch('https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/'.$krs, ['rejestr' => 'P', 'format' => 'json']);
             $registeredNip = Company::normalizeNip(data_get($data, 'odpis.dane.dzial1.danePodmiotu.identyfikatory.nip'));
             if ($registeredNip && $registeredNip === $nip) {
+                Cache::forever($knownKey, $krs);
                 $result['krs'] = ['state' => 'checked', 'number' => $krs,
                     'registered_on' => $this->registrationDate(data_get($data, 'odpis.naglowekA.dataRejestracjiWKRS')),
                     'name' => data_get($data, 'odpis.dane.dzial1.danePodmiotu.nazwa'),

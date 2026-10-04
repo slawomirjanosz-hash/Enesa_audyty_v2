@@ -198,6 +198,25 @@ test('reliability layout keeps registration rows periods and compact sortable do
     }
 });
 
+test('opening reliability triggers automatic lookup once and reuses verified KRS', function () {
+    Http::fake([
+        'wl-api.mf.gov.pl/*' => Http::response(['result' => ['subject' => ['nip' => $this->company->nip, 'name' => 'Test', 'statusVat' => 'Czynny', 'krs' => '0000123456']]]),
+        'api-krs.ms.gov.pl/*' => Http::response(['odpis' => ['dane' => ['dzial1' => ['danePodmiotu' => ['identyfikatory' => ['nip' => $this->company->nip], 'nazwa' => 'Test']], 'dzial6' => []]]]),
+    ]);
+    $this->actingAs($this->admin)->get(route('companies.reliability.show', $this->company))->assertOk()->assertSee('id="rel-auto-lookup"', false)->assertDontSee('>Sprawdź KRS i VAT<', false);
+    Http::assertNothingSent();
+    $this->postJson(route('companies.reliability.lookup', $this->company), [])->assertOk()->assertJsonPath('checked', true);
+    $this->get(route('companies.reliability.show', $this->company))->assertSee('0000123456')->assertDontSee('id="rel-auto-lookup"', false)->assertSee('rel-rdf-heading');
+    $this->postJson(route('companies.reliability.lookup', $this->company), [])->assertOk();
+    Http::assertSentCount(2);
+    $this->travel(16)->minutes();
+    $this->get(route('companies.reliability.show', $this->company))->assertSee('id="rel-auto-lookup"', false);
+    Http::fake(['wl-api.mf.gov.pl/*' => Http::response([], 503), 'api-krs.ms.gov.pl/*' => Http::response(['odpis' => ['dane' => ['dzial1' => ['danePodmiotu' => ['identyfikatory' => ['nip' => $this->company->nip]]]]]])]);
+    $this->postJson(route('companies.reliability.lookup', $this->company), [])->assertOk();
+    expect(session('reliability.'.$this->company->id.'.krs.number'))->toBe('0000123456');
+    $this->travelBack();
+});
+
 test('registries check identity cache results and handle outages without a safe rating', function () {
     Http::fake([
         'wl-api.mf.gov.pl/*' => Http::response(['result' => ['subject' => ['nip' => $this->company->nip, 'name' => 'Test', 'statusVat' => 'Czynny', 'krs' => '0000123456'], 'requestId' => 'test-123']]),
