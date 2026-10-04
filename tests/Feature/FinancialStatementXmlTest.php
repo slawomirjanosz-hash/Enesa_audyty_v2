@@ -48,7 +48,7 @@ test('XML upload fills report defaults and existing files can be imported with p
     $this->actingAs($admin)->post(route('companies.reliability.files.store', $company), ['file' => UploadedFile::fake()->createWithContent('sample.xml', financialXmlFixture())])->assertSessionHasNoErrors();
     $file = CompanyReliabilityFile::firstOrFail();
     expect($file->parsed_finances['rows'][0]['revenue'])->toBe('1000.45');
-    $this->get(route('companies.reliability.show', $company))->assertOk()->assertSee('value="1000.45"', false)->assertSee('value="-10.05"', false);
+    $this->get(route('companies.reliability.show', $company))->assertOk()->assertSee('value="1 000,45 zł"', false)->assertSee('value="-10,05 zł"', false);
     $file->update(['parsed_finances' => null]);
     $this->post(route('companies.reliability.files.import', [$company, $file]))->assertSessionHasNoErrors()->assertRedirect();
     expect($file->fresh()->parsed_finances)->not->toBeNull();
@@ -58,6 +58,6 @@ test('XML upload fills report defaults and existing files can be imported with p
     $client->assignRole('client_admin');
     $this->actingAs($client)->post(route('companies.reliability.files.import', [$company, $file]))->assertForbidden();
     $company->update(['nip' => '5260250274']);
-    $this->actingAs($admin)->get(route('companies.reliability.show', $company))->assertDontSee('value="1000.45"', false);
+    $this->actingAs($admin)->get(route('companies.reliability.show', $company))->assertDontSee('value="1 000,45 zł"', false);
     $this->post(route('companies.reliability.files.import', [$company, $file]))->assertSessionHasErrors('file');
 });

@@ -9,6 +9,7 @@ use App\Models\CompanyReliabilityReport;
 use App\Models\CompanySettings;
 use App\Services\CompanyRegistryLookup;
 use App\Services\CompanyReliabilityAccess;
+use App\Support\FinancialAmount;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -58,6 +59,20 @@ class CompanyReliabilityController extends Controller
     public function store(Company $company, Request $request)
     {
         $this->check($company, 'create');
+        $finances = $request->input('finances');
+        if (is_array($finances)) {
+            foreach ($finances as &$row) {
+                if (is_array($row)) {
+                    foreach (['revenue', 'profit', 'equity', 'liabilities'] as $field) {
+                        if (array_key_exists($field, $row)) {
+                            $row[$field] = FinancialAmount::normalize($row[$field]);
+                        }
+                    }
+                }
+            }
+            unset($row);
+            $request->merge(['finances' => $finances]);
+        }
         $data = $request->validate([
             'status' => ['required', Rule::in(['unassessed', 'green', 'yellow', 'red'])],
             'legal' => ['required', Rule::in(['unknown', 'clear', 'risk'])],

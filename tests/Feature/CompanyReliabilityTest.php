@@ -7,6 +7,7 @@ use App\Models\CompanyReliabilityReport;
 use App\Models\User;
 use App\Services\CompanyRegistryLookup;
 use App\Services\DocumentQuotaService;
+use App\Support\FinancialAmount;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -26,6 +27,22 @@ beforeEach(function () {
     $this->payload = ['status' => 'unassessed', 'legal' => 'unknown', 'krz' => 'unknown', 'debt' => 'unknown',
         'notes' => 'Poufne zalecenia: wymagana dalsza weryfikacja.', 'verified_on' => now()->format('Y-m-d')];
 });
+
+test('financial fields accept Polish formatted money and store canonical amounts', function () {
+    $payload = array_replace($this->payload, ['finances' => [['year' => 2025, 'revenue' => '141 337 288,45 zł', 'profit' => '-9 871,86 zł', 'equity' => '0,00 zł', 'liabilities' => '', 'source' => 'Test XML']]]);
+    $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), $payload)->assertSessionHasNoErrors();
+    expect(CompanyReliabilityReport::firstOrFail()->snapshot['assessment']['finances'][0])->toMatchArray(['revenue' => '141337288.45', 'profit' => '-9871.86', 'equity' => '0.00', 'liabilities' => null]);
+    expect(FinancialAmount::display('141337288.45'))->toBe('141 337 288,45 zł');
+    expect(FinancialAmount::display(null))->toBe('');
+    $payload['finances'][0]['revenue'] = 'niepoprawna kwota';
+    $this->post(route('companies.reliability.store', $this->company), $payload)->assertSessionHasErrors('finances.0.revenue');
+});
+
+test('KRS registration date is read from the header and invalid dates remain unknown', function ($raw, $expected) {
+    Http::fake(['wl-api.mf.gov.pl/*' => Http::response([], 503), 'api-krs.ms.gov.pl/*' => Http::response(['odpis' => ['naglowekA' => ['dataRejestracjiWKRS' => $raw], 'dane' => ['dzial1' => ['danePodmiotu' => ['identyfikatory' => ['nip' => $this->company->nip]]]]]])]);
+    $lookup = app(CompanyRegistryLookup::class)->lookup($this->company, '0000123456');
+    expect($lookup['krs']['registered_on'])->toBe($expected);
+})->with([['21.08.2002', '2002-08-21'], ['31.02.2002', null]]);
 
 test('source files are private downloadable attachments with physical deletion and sortable listing', function () {
     $upload = UploadedFile::fake()->createWithContent('sprawozdanie.xml', '<?xml version="1.0"?><Sprawozdanie/>');

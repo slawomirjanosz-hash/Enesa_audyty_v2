@@ -29,6 +29,7 @@ class CompanyRegistryLookup
             $registeredNip = Company::normalizeNip(data_get($data, 'odpis.dane.dzial1.danePodmiotu.identyfikatory.nip'));
             if ($registeredNip && $registeredNip === $nip) {
                 $result['krs'] = ['state' => 'checked', 'number' => $krs,
+                    'registered_on' => $this->registrationDate(data_get($data, 'odpis.naglowekA.dataRejestracjiWKRS')),
                     'name' => data_get($data, 'odpis.dane.dzial1.danePodmiotu.nazwa'),
                     'section6' => data_get($data, 'odpis.dane.dzial6', []),
                     'source' => 'https://prs.ms.gov.pl/krs'];
@@ -38,6 +39,16 @@ class CompanyRegistryLookup
         }
 
         return $result;
+    }
+
+    private function registrationDate(mixed $value): ?string
+    {
+        if (! is_string($value) || ! preg_match('/^(\d{2})\.(\d{2})\.(\d{4})$/', $value, $parts)
+            || ! checkdate((int) $parts[2], (int) $parts[1], (int) $parts[3])) {
+            return null;
+        }
+
+        return $parts[3].'-'.$parts[2].'-'.$parts[1];
     }
 
     private function fetch(string $url, array $query): ?array

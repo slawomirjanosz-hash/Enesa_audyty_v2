@@ -32,6 +32,7 @@
 @if($lookup)<p>Sprawdzono: {{\Carbon\Carbon::parse($lookup['checked_at'])->format('d.m.Y H:i')}}. Wynik można wykorzystać do zapisu przez 30 minut.</p>
 <div class="rel-grid"><div><h3>Wykaz VAT</h3>@if(data_get($lookup,'vat.state')==='checked')<p>{{data_get($lookup,'vat.name')}}</p><strong>{{data_get($lookup,'vat.status')}}</strong><p class="rel-muted">Identyfikator: {{data_get($lookup,'vat.request_id')}}</p>@else<p>Brak potwierdzonego wyniku — rejestr niedostępny, brak wpisu lub niepoprawny NIP.</p>@endif</div>
 <div><h3>KRS</h3>@if(data_get($lookup,'krs.state')==='checked')<p>{{data_get($lookup,'krs.name')}} · {{data_get($lookup,'krs.number')}}</p><details><summary>Dział 6 — informacje do oceny</summary><pre>{{json_encode(data_get($lookup,'krs.section6'), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)}}</pre></details>@else<p>{{data_get($lookup,'krs.state')==='identity_mismatch' ? 'NIP z KRS nie zgadza się z firmą — nie użyto danych.' : 'Brak potwierdzonego wyniku KRS. Sprawdź numer i rejestr.'}}</p>@endif</div></div>
+@if(data_get($lookup,'krs.registered_on'))<p><strong>Rok rejestracji w KRS: {{substr(data_get($lookup,'krs.registered_on'),0,4)}}</strong> · {{\Carbon\Carbon::parse(data_get($lookup,'krs.registered_on'))->format('d.m.Y')}}</p><p class="rel-muted">Data rejestracji w KRS nie musi być datą powstania firmy.</p>@endif
 @endif</section>
 <form method="POST" action="{{route('companies.reliability.store',$company)}}">@csrf
 <section class="rel-card"><h2>2. Weryfikacja i źródła</h2>
@@ -45,7 +46,8 @@
 <section class="rel-card"><h2>3. Dane ze sprawozdań finansowych</h2><p>Wpisz kwoty w PLN (przelicz dane podane w tysiącach). Puste pole oznacza brak danych, a nie zero. Zobowiązania bilansowe nie oznaczają zaległych płatności.</p>
 @for($i=0;$i<3;$i++)<fieldset><legend>Okres {{$i+1}} (opcjonalny)</legend><div class="rel-grid">
 @foreach(['year'=>'Rok obrotowy','revenue'=>'Przychody PLN','profit'=>'Wynik netto PLN','equity'=>'Kapitał własny PLN','liabilities'=>'Zobowiązania PLN'] as $field=>$label)
-<div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" type="number" step="{{$field==='year'?'1':'0.01'}}" name="finances[{{$i}}][{{$field}}]" value="{{old('finances.'.$i.'.'.$field, data_get($finances ?? [], $i.'.'.$field))}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
+@php($amountValue = old('finances.'.$i.'.'.$field, data_get($finances ?? [], $i.'.'.$field)))
+<div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" type="{{$field==='year'?'number':'text'}}" @if($field!=='year') data-financial-amount inputmode="decimal" @endif name="finances[{{$i}}][{{$field}}]" value="{{$field==='year'?$amountValue:\App\Support\FinancialAmount::display($amountValue)}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
 <div><label for="source-{{$i}}">Źródło / dokument i okres sprawozdawczy</label><input id="source-{{$i}}" name="finances[{{$i}}][source]" maxlength="1000" value="{{old('finances.'.$i.'.source', data_get($finances ?? [], $i.'.source'))}}"></div></div></fieldset>@endfor
 </section>
 <section class="rel-card"><h2>4. Ocena i zapis raportu</h2><label for="status">Ocena upoważnionego pracownika</label><select id="status" name="status" aria-invalid="{{$errors->has('status')?'true':'false'}}">@foreach(\App\Models\CompanyReliabilityReport::LABELS as $value=>$label)<option value="{{$value}}" @selected(old('status','unassessed')===$value)>{{$label}}</option>@endforeach</select>
@@ -56,4 +58,5 @@
 @endif
 @include('companies.reliability.list')
 </div>
+<script type="module" src="{{asset('js/financial-amount.js')}}"></script>
 @endsection
