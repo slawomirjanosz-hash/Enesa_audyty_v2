@@ -28,6 +28,17 @@ beforeEach(function () {
         'notes' => 'Poufne zalecenia: wymagana dalsza weryfikacja.', 'verified_on' => now()->format('Y-m-d')];
 });
 
+test('automatic reports save without manual declarations and preserve unverified coverage', function () {
+    $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), ['status' => 'auto'])->assertSessionHasNoErrors()->assertRedirect();
+    $report = CompanyReliabilityReport::firstOrFail();
+    expect($report->status)->toBe('yellow');
+    expect($report->snapshot['assessment_mode'])->toBe('automatic');
+    expect($report->snapshot['assessment']['krz'])->toBe('unknown');
+    expect($report->snapshot['automatic']['checks'][3]['state'])->toBe('unknown');
+    $this->post(route('companies.reliability.store', $this->company), ['status' => 'auto', 'krz' => 'risk'])->assertSessionHasNoErrors();
+    expect(CompanyReliabilityReport::latest('id')->first()->status)->toBe('red');
+});
+
 test('financial fields accept Polish formatted money and store canonical amounts', function () {
     $payload = array_replace($this->payload, ['finances' => [['year' => 2025, 'revenue' => '141 337 288,45 zł', 'profit' => '-9 871,86 zł', 'equity' => '0,00 zł', 'liabilities' => '', 'source' => 'Test XML']]]);
     $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), $payload)->assertSessionHasNoErrors();

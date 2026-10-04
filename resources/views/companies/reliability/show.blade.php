@@ -35,13 +35,23 @@
 @if(data_get($lookup,'krs.registered_on'))<p><strong>Rok rejestracji w KRS: {{substr(data_get($lookup,'krs.registered_on'),0,4)}}</strong> · {{\Carbon\Carbon::parse(data_get($lookup,'krs.registered_on'))->format('d.m.Y')}}</p><p class="rel-muted">Data rejestracji w KRS nie musi być datą powstania firmy.</p>@endif
 @endif</section>
 <form method="POST" action="{{route('companies.reliability.store',$company)}}">@csrf
-<section class="rel-card"><h2>2. Weryfikacja i źródła</h2>
-<p>Te kontrole wykonuje upoważniony pracownik. Nie pobieramy automatycznie KRZ, raportów BIG/KRD ani sprawozdań RDF. Brak wpisu nie dowodzi braku wszystkich długów.</p>
+<section class="rel-card"><h2>2. Automatyczna weryfikacja i zakres sprawdzenia</h2>
+@if(isset($automatic))
+<p><strong>{{$automatic['summary']}}</strong></p>
+<p class="rel-muted">Podgląd dotyczy ostatniego sprawdzenia i danych z zaimportowanych plików. Przy zapisie wynik zostanie przeliczony z kwot formularza.</p>
+@foreach($automatic['checks'] as $check)
+<div style="padding:12px;margin:8px 0;border-left:4px solid {{['clear'=>'#21845b','warning'=>'#bd7b10','risk'=>'#b42318','unknown'=>'#7b8580'][$check['state']]}};background:#f6f8f7">
+<strong>{{$check['label']}} — {{['clear'=>'Brak ostrzeżeń w sprawdzonym zakresie','warning'=>'Wymaga uwagi','risk'=>'Sygnał zagrożenia','unknown'=>'Nie potwierdzono'][$check['state']]}}</strong><br>{{$check['message']}}
+</div>@endforeach
+@endif
+<p>Nie musisz pobierać odpisu KRS ani ręcznie potwierdzać braku długów, aby zapisać raport automatyczny. KRS nie zastępuje KRZ. Plik sprawozdania uzupełnia finanse, a nie rejestry zadłużenia.</p>
+<details><summary>Dodatkowa ocena pracownika (opcjonalna, tylko dla trybu ręcznego)</summary>
 <p><a href="https://prs.ms.gov.pl/krs" target="_blank" rel="noopener noreferrer">KRS i dokumenty finansowe</a> · <a href="https://krz.ms.gov.pl/" target="_blank" rel="noopener noreferrer">Krajowy Rejestr Zadłużonych</a></p>
 <div class="rel-grid">@foreach(['legal'=>'Status prawny / likwidacja', 'krz'=>'KRZ — upadłość i restrukturyzacja', 'debt'=>'Zaległe płatności (w sprawdzonych źródłach)'] as $field=>$label)
 <div><label for="{{$field}}">{{$label}}</label><select id="{{$field}}" name="{{$field}}">@foreach(['unknown'=>'Nie sprawdzono / brak danych','clear'=>'Sprawdzono — nie stwierdzono zagrożeń','risk'=>'Wykryto zagrożenie'] as $value=>$text)<option value="{{$value}}" @selected(old($field,'unknown')===$value)>{{$text}}</option>@endforeach</select></div>@endforeach</div>
 <p><label for="verified_on">Data weryfikacji źródeł</label><input type="date" id="verified_on" name="verified_on" required max="{{now()->format('Y-m-d')}}" value="{{old('verified_on',now()->format('Y-m-d'))}}" aria-invalid="{{$errors->has('verified_on')?'true':'false'}}"></p>
 <label for="evidence">Źródła i dowody sprawdzeń</label><textarea id="evidence" name="evidence" placeholder="Dla każdej kontroli podaj rejestr, identyfikator sprawdzenia lub dokumentu, datę i wynik. Nie wklejaj tajnych linków dostępowych." aria-invalid="{{$errors->has('evidence')?'true':'false'}}">{{old('evidence')}}</textarea>
+</details>
 </section>
 <section class="rel-card"><h2>3. Dane ze sprawozdań finansowych</h2><p>Wpisz kwoty w PLN (przelicz dane podane w tysiącach). Puste pole oznacza brak danych, a nie zero. Zobowiązania bilansowe nie oznaczają zaległych płatności.</p>
 @for($i=0;$i<3;$i++)<fieldset><legend>Okres {{$i+1}} (opcjonalny)</legend><div class="rel-grid">
@@ -50,9 +60,10 @@
 <div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" type="{{$field==='year'?'number':'text'}}" @if($field!=='year') data-financial-amount inputmode="decimal" @endif name="finances[{{$i}}][{{$field}}]" value="{{$field==='year'?$amountValue:\App\Support\FinancialAmount::display($amountValue)}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
 <div><label for="source-{{$i}}">Źródło / dokument i okres sprawozdawczy</label><input id="source-{{$i}}" name="finances[{{$i}}][source]" maxlength="1000" value="{{old('finances.'.$i.'.source', data_get($finances ?? [], $i.'.source'))}}"></div></div></fieldset>@endfor
 </section>
-<section class="rel-card"><h2>4. Ocena i zapis raportu</h2><label for="status">Ocena upoważnionego pracownika</label><select id="status" name="status" aria-invalid="{{$errors->has('status')?'true':'false'}}">@foreach(\App\Models\CompanyReliabilityReport::LABELS as $value=>$label)<option value="{{$value}}" @selected(old('status','unassessed')===$value)>{{$label}}</option>@endforeach</select>
+<section class="rel-card"><h2>4. Ocena i zapis raportu</h2><label for="status">Sposób oceny</label><select id="status" name="status" aria-invalid="{{$errors->has('status')?'true':'false'}}"><option value="auto" @selected(old('status','auto')==='auto')>Automatyczna — na podstawie sprawdzonych źródeł</option>@foreach(\App\Models\CompanyReliabilityReport::LABELS as $value=>$label)<option value="{{$value}}" @selected(old('status','auto')===$value)>Ręczna: {{$label}}</option>@endforeach</select>
 <p class="rel-muted">Zielony: komplet sprawdzeń i pozytywna ocena. Żółty: ostrożność, wątpliwości lub ograniczone dane. Czerwony: wykryte zagrożenie. Szary: brak oceny. System nie wydaje decyzji kredytowej.</p>
-<label for="notes">Uzasadnienie oceny i zalecenia *</label><textarea id="notes" name="notes" required maxlength="6000" aria-invalid="{{$errors->has('notes')?'true':'false'}}">{{old('notes')}}</textarea>
+<p>Tryb automatyczny nie wymaga ręcznych potwierdzeń. Niepełny zakres daje ocenę ostrożną, nie potwierdzenie braku długów.</p>
+<label for="notes">Dodatkowe uwagi (opcjonalne w trybie automatycznym)</label><textarea id="notes" name="notes" maxlength="6000" aria-invalid="{{$errors->has('notes')?'true':'false'}}">{{old('notes')}}</textarea>
 <p><button type="submit">Stwórz raport i zapisz PDF w dokumentach firmy</button></p></section>
 </form>
 @endif

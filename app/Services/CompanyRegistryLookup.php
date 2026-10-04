@@ -31,7 +31,8 @@ class CompanyRegistryLookup
                 $result['krs'] = ['state' => 'checked', 'number' => $krs,
                     'registered_on' => $this->registrationDate(data_get($data, 'odpis.naglowekA.dataRejestracjiWKRS')),
                     'name' => data_get($data, 'odpis.dane.dzial1.danePodmiotu.nazwa'),
-                    'section6' => data_get($data, 'odpis.dane.dzial6', []),
+                    'section4' => data_get($data, 'odpis.dane.dzial4'),
+                    'section6' => data_get($data, 'odpis.dane.dzial6'),
                     'source' => 'https://prs.ms.gov.pl/krs'];
             } elseif ($registeredNip) {
                 $result['krs'] = ['state' => 'identity_mismatch'];

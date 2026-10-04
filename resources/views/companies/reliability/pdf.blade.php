@@ -7,16 +7,24 @@
 @if($s['issuer'] ?? null)<p>{{$s['issuer']}}</p>@endif
 <h1>Raport wiarygodności firmy</h1><p><strong>{{$s['company']['name']}}</strong><br>NIP: {{$s['company']['nip']}}<br>Data raportu: {{$s['generated_at']}} · Opracował(a): {{$s['author']}}</p>
 <div class="badge">Ocena: {{\App\Models\CompanyReliabilityReport::LABELS[$report->status]}}</div>
-<p>Ocena pracownika na podstawie wskazanych źródeł. Nie stanowi gwarancji wypłacalności ani decyzji kredytowej. Brak wpisów nie oznacza braku wszystkich długów. Ocena wymaga odświeżenia najpóźniej po 30 dniach.</p>
+<p>{{($s['assessment_mode'] ?? 'manual') === 'automatic' ? 'Ocena automatyczna dostępnych danych, zatwierdzona do zapisu przez pracownika.' : 'Ocena pracownika na podstawie wskazanych źródeł.'}} Nie stanowi gwarancji wypłacalności ani decyzji kredytowej. Brak wpisów nie oznacza braku wszystkich długów. Ocena wymaga odświeżenia najpóźniej po 30 dniach.</p>
 <h2>Weryfikacja rejestrów online</h2>
 <p>Data sprawdzenia: {{data_get($s,'registry.checked_at','Nie wykonano aktualnego sprawdzenia')}}<br>VAT: {{data_get($s,'registry.vat.status','Brak potwierdzonego wyniku')}}<br>Identyfikator VAT: {{data_get($s,'registry.vat.request_id','-')}}<br>KRS: {{data_get($s,'registry.krs.number','Brak potwierdzonego wyniku')}}</p>
 <p class="muted">Źródła online: wl-api.mf.gov.pl (wykaz VAT), api-krs.ms.gov.pl (odpis aktualny KRS). Niedostępność źródła nie jest pozytywnym wynikiem kontroli.</p>
 @if(data_get($s,'registry.krs.registered_on'))<p>Rok rejestracji w KRS: <strong>{{substr(data_get($s,'registry.krs.registered_on'),0,4)}}</strong> · Data: {{\Carbon\Carbon::parse(data_get($s,'registry.krs.registered_on'))->format('d.m.Y')}}<br><span class="muted">Data rejestracji w KRS nie musi być datą powstania firmy.</span></p>@endif
+@if(isset($s['automatic']))
+<h2>Automatyczna analiza dostępnych źródeł</h2><p>{{$s['automatic']['summary']}}</p>
+<table><thead><tr><th>Zakres</th><th>Wynik i ograniczenia</th></tr></thead><tbody>
+@foreach($s['automatic']['checks'] as $check)<tr><td>{{$check['label']}}</td><td><strong>{{['clear'=>'Brak ostrzeżeń w sprawdzonym zakresie','warning'=>'Wymaga uwagi','risk'=>'Sygnał zagrożenia','unknown'=>'Nie potwierdzono'][$check['state']]}}</strong><br>{{$check['message']}}</td></tr>@endforeach
+</tbody></table>
+@endif
+@if(($s['assessment_mode'] ?? 'manual') !== 'automatic')
 <h2>Kontrole pracownika</h2><table><tr><th>Zakres</th><th>Wynik</th></tr>
 @foreach(['legal'=>'Status prawny / likwidacja','krz'=>'Upadłość i restrukturyzacja (KRZ)','debt'=>'Zaległe płatności'] as $field=>$label)<tr><td>{{$label}}</td><td>{{['unknown'=>'Nie sprawdzono / brak danych','clear'=>'Nie stwierdzono zagrożeń w sprawdzonych źródłach','risk'=>'Wykryto zagrożenie'][$s['assessment'][$field]]}}</td></tr>@endforeach</table>
 <p>Data weryfikacji: {{$s['assessment']['verified_on']}}</p>
 <p class="copy">{{$s['assessment']['evidence'] ?: 'Nie wskazano źródeł.'}}</p>
-<h2>Dane finansowe (PLN)</h2><p>Zobowiązania bilansowe nie oznaczają przeterminowanych długów. Dane historyczne nie określają dzisiejszego salda rachunków.</p>
+@endif
+<h2 @if(isset($s['automatic'])) style="page-break-before:always" @endif>Dane finansowe (PLN)</h2><p>Zobowiązania bilansowe nie oznaczają przeterminowanych długów. Dane historyczne nie określają dzisiejszego salda rachunków.</p>
 @if(empty($s['assessment']['finances']))<p>Brak danych finansowych.</p>@else
 <table><thead><tr><th>Rok</th><th>Przychody</th><th>Wynik netto</th><th>Kapitał własny</th><th>Zobowiązania</th></tr></thead><tbody>
 @foreach($s['assessment']['finances'] as $row)<tr><td>{{$row['year']}}</td>@foreach(['revenue','profit','equity','liabilities'] as $key)<td>{{isset($row[$key]) ? \App\Support\FinancialAmount::display($row[$key]) : 'Brak danych'}}</td>@endforeach</tr>@endforeach
