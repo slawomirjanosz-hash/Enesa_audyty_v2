@@ -28,6 +28,17 @@ beforeEach(function () {
         'notes' => 'Poufne zalecenia: wymagana dalsza weryfikacja.', 'verified_on' => now()->format('Y-m-d')];
 });
 
+test('bankruptcy lookup displays a prominent alert and saves a red automatic report', function () {
+    Http::fake(['wl-api.mf.gov.pl/*' => Http::response([], 503), 'api-krs.ms.gov.pl/*' => Http::response(['odpis' => ['dane' => [
+        'dzial1' => ['danePodmiotu' => ['identyfikatory' => ['nip' => $this->company->nip], 'nazwa' => 'TEST W UPADŁOŚCI']],
+        'dzial6' => ['postepowanieUpadlosciowe' => [['informacjaOOgloszeniuUpadlosci' => ['data' => '20.03.2026'], 'opisZakonczeniaProcesuUpadlosci' => []]]],
+    ]]])]);
+    $this->actingAs($this->admin)->post(route('companies.reliability.lookup', $this->company), ['krs' => '0000530156'])->assertSessionHasNoErrors();
+    $this->get(route('companies.reliability.show', $this->company))->assertOk()->assertSee('ZAGROŻENIE — Upadłość — KRS')->assertSee('20.03.2026');
+    $this->post(route('companies.reliability.store', $this->company), ['status' => 'auto'])->assertSessionHasNoErrors();
+    expect(CompanyReliabilityReport::firstOrFail()->status)->toBe('red');
+});
+
 test('financial preview uses current formatted fields with access restrictions and no writes', function () {
     $payload = ['finances' => [['year' => now()->year - 1, 'revenue' => '1 000,00 zł', 'profit' => '-20,00 zł', 'equity' => '-10,00 zł', 'liabilities' => '100,00 zł']]];
     $this->actingAs($this->admin)->postJson(route('companies.reliability.financial-preview', $this->company), $payload)->assertOk()->assertJsonPath('health.state', 'risk')->assertJsonPath('health.periods.0.fields.equity', 'risk');

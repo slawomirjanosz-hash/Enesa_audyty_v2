@@ -9,6 +9,11 @@
 <a href="{{$company->company_type === 'supplier' ? route('suppliers.show',$company) : route('companies.show',$company)}}">← Karta firmy</a>
 <h1>Raport wiarygodności firmy</h1><h2>{{$company->name}} <small class="rel-muted">NIP {{$company->nip ?: 'brak'}}</small></h2>
 @include('companies.reliability.badge', ['report'=>$reports->first()])
+@foreach(($automatic['checks'] ?? []) as $check)
+@if($check['state'] === 'risk')
+<div role="alert" style="margin:16px 0;padding:18px;border:2px solid #b42318;border-radius:9px;background:#fde7e7;color:#851b15"><strong>ZAGROŻENIE — {{$check['label']}}</strong><br>{{$check['message']}}<br><small>Wynik bieżącego sprawdzenia. Zapisz nowy raport, aby zaktualizować ocenę na dashboardzie.</small></div>
+@endif
+@endforeach
 <p class="rel-muted">Ocena wewnętrzna, nie gwarancja wypłacalności. Zielona ocena starsza niż 30 dni zmienia się na ostrzeżenie o potrzebie aktualizacji.</p>
 @if(session('success'))<div class="rel-card" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="rel-errors" role="alert"><strong>Popraw dane przed zapisaniem:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif

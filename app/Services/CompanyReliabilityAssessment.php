@@ -22,6 +22,30 @@ class CompanyReliabilityAssessment
         if (data_get($lookup, 'krs.state') === 'identity_mismatch') {
             $checks[] = ['label' => 'Tożsamość firmy', 'state' => 'warning', 'message' => 'NIP odpisu KRS jest niezgodny z firmą. Nie użyto tego odpisu.'];
         }
+        if (data_get($lookup, 'krs.state') === 'checked') {
+            $bankruptcy = [];
+            foreach ((array) data_get($lookup, 'krs.section6.postepowanieUpadlosciowe', []) as $proceeding) {
+                if (! is_array($proceeding)) {
+                    continue;
+                }
+                $announcement = $proceeding['informacjaOOgloszeniuUpadlosci'] ?? [];
+                $ended = $proceeding['opisZakonczeniaProcesuUpadlosci'] ?? [];
+                if (is_array($announcement) && $this->hasContent($announcement)
+                    && ! (is_array($ended) ? $this->hasContent($ended) : filled($ended))) {
+                    $bankruptcy[] = 'KRS wskazuje ogłoszenie upadłości'
+                        .(filled($announcement['data'] ?? null) ? ' z dnia '.$announcement['data'] : '')
+                        .(filled($announcement['sygnatura'] ?? null) ? ', sygnatura '.$announcement['sygnatura'] : '')
+                        .'. W odpisie nie wskazano zakończenia tego postępowania.';
+                }
+            }
+            if (preg_match('/\bW\s+UPADŁOŚCI\b/iu', (string) data_get($lookup, 'krs.name'))) {
+                $bankruptcy[] = 'Aktualna nazwa z KRS zawiera oznaczenie „w upadłości”.';
+            }
+            if ($bankruptcy) {
+                $checks[] = ['label' => 'Upadłość — KRS', 'state' => 'risk', 'message' => implode(' ', $bankruptcy)
+                    .(! $fresh ? ' Wynik sprawdzenia jest starszy niż 30 minut — odśwież KRS; wcześniejsze ostrzeżenie pozostaje widoczne.' : '')];
+            }
+        }
         $checks[] = ['label' => 'KRZ — upadłość i restrukturyzacja', 'state' => 'unknown', 'message' => 'Brak automatycznej weryfikacji KRZ. Sprawdzenie KRS nie zastępuje KRZ.'];
         $checks[] = ['label' => 'Prywatne zobowiązania handlowe (BIG/KRD/ERIF)', 'state' => 'unknown', 'message' => 'Nie sprawdzono. Bilans nie potwierdza braku zaległych płatności.'];
         if (! $finances) {
@@ -34,7 +58,7 @@ class CompanyReliabilityAssessment
         $status = in_array('risk', array_column($checks, 'state'), true) ? 'red' : 'yellow';
 
         return ['status' => $status, 'checks' => $checks, 'financial' => $financial, 'summary' => $status === 'red'
-            ? 'Wykryto sygnał zagrożenia finansowego. Pozostałe ograniczenia sprawdzenia opisano poniżej.'
+            ? 'Wykryto zagrożenie w danych rejestrowych lub finansowych. Sprawdź czerwone ostrzeżenia poniżej przed współpracą.'
             : 'Ocena ostrożna: sprawdzono dostępne źródła, ale zakres jest niepełny. Nie potwierdzono pełnej wiarygodności ani braku wszystkich długów.'];
     }
 
