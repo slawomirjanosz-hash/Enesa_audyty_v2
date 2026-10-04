@@ -17,3 +17,4 @@
         </tr>@endforeach</tbody>
     </table></div>@endif
 </section>
+@include('companies.reliability.source-files')

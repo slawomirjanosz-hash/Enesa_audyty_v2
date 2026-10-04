@@ -2,9 +2,12 @@
 
 use App\Models\ActivityLog;
 use App\Models\Company;
+use App\Models\CompanyReliabilityFile;
 use App\Models\CompanyReliabilityReport;
 use App\Models\User;
 use App\Services\CompanyRegistryLookup;
+use App\Services\DocumentQuotaService;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +25,54 @@ beforeEach(function () {
     $this->admin->assignRole('admin');
     $this->payload = ['status' => 'unassessed', 'legal' => 'unknown', 'krz' => 'unknown', 'debt' => 'unknown',
         'notes' => 'Poufne zalecenia: wymagana dalsza weryfikacja.', 'verified_on' => now()->format('Y-m-d')];
+});
+
+test('source files are private downloadable attachments with physical deletion and sortable listing', function () {
+    $upload = UploadedFile::fake()->createWithContent('sprawozdanie.xml', '<?xml version="1.0"?><Sprawozdanie/>');
+    $this->actingAs($this->admin)->post(route('companies.reliability.files.store', $this->company), ['file' => $upload])->assertSessionHasNoErrors()->assertRedirect();
+    $file = CompanyReliabilityFile::firstOrFail();
+    Storage::disk('local')->assertExists($file->stored_path);
+    expect($file->storage_owner_id)->toBe($this->admin->id);
+    expect(app(DocumentQuotaService::class)->used($this->admin->id))->toBe($file->size);
+    $this->get(route('companies.reliability.show', $this->company))->assertOk()->assertSee('https://rdf-przegladarka.ms.gov.pl/')->assertSee('sprawozdanie.xml')->assertSee('data-sort-value', false);
+    $this->get(route('companies.reliability.files.download', [$this->company, $file]))->assertDownload('sprawozdanie.xml')->assertHeader('Content-Type', 'application/octet-stream');
+    $other = Company::create(['name' => 'Inna firma', 'status' => 'active']);
+    $this->get(route('companies.reliability.files.download', [$other, $file]))->assertNotFound();
+    $this->delete(route('companies.reliability.files.destroy', [$other, $file]))->assertNotFound();
+    $client = User::factory()->create();
+    $client->assignRole('client_admin');
+    $client->givePermissionTo('company_reliability.view', 'company_reliability.create', 'company_reliability.delete');
+    $this->actingAs($client)->get(route('companies.reliability.files.download', [$this->company, $file]))->assertForbidden();
+    $this->delete(route('companies.reliability.files.destroy', [$this->company, $file]))->assertForbidden();
+    $this->post(route('companies.reliability.files.store', $this->company), ['file' => $upload])->assertForbidden();
+    $reader = User::factory()->create();
+    $reader->assignRole('auditor_senior');
+    $reader->givePermissionTo('company_reliability.view');
+    $this->actingAs($reader)->get(route('companies.reliability.files.download', [$this->company, $file]))->assertOk();
+    $this->delete(route('companies.reliability.files.destroy', [$this->company, $file]))->assertForbidden();
+    $this->actingAs($this->admin)->delete(route('companies.reliability.files.destroy', [$this->company, $file]))->assertRedirect();
+    Storage::disk('local')->assertMissing($file->stored_path);
+    expect(CompanyReliabilityFile::count())->toBe(0);
+});
+
+test('deleting a company removes its private source files', function () {
+    $this->actingAs($this->admin)->post(route('companies.reliability.files.store', $this->company), ['file' => UploadedFile::fake()->createWithContent('data.xml', '<Data/>')])->assertSessionHasNoErrors();
+    $file = CompanyReliabilityFile::firstOrFail();
+    $this->company->delete();
+    Storage::disk('local')->assertMissing($file->stored_path);
+    expect(CompanyReliabilityFile::count())->toBe(0);
+});
+
+test('source file uploads enforce quota type and reader permissions', function () {
+    $reader = User::factory()->create();
+    $reader->assignRole('auditor_senior');
+    $reader->givePermissionTo('company_reliability.view');
+    $this->actingAs($reader)->post(route('companies.reliability.files.store', $this->company))->assertForbidden();
+    $this->actingAs($this->admin)->post(route('companies.reliability.files.store', $this->company), ['file' => UploadedFile::fake()->createWithContent('evil.php', '<?php echo 1;')])->assertSessionHasErrors('file');
+    $this->admin->forceFill(['document_limit_bytes' => 1])->save();
+    $this->post(route('companies.reliability.files.store', $this->company), ['file' => UploadedFile::fake()->createWithContent('data.xml', '<Data>test</Data>')])->assertSessionHasErrors('file');
+    expect(CompanyReliabilityFile::count())->toBe(0);
+    expect(Storage::disk('local')->allFiles('private-reliability-sources'))->toBe([]);
 });
 
 test('only opted in staff can access reliability even with broad document or system rights', function () {

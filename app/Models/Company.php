@@ -13,6 +13,11 @@ class Company extends Model
     protected static function booted(): void
     {
         static::deleting(function (Company $company) {
+            foreach (CompanyReliabilityFile::where('company_id', $company->id)->cursor() as $file) {
+                if (Storage::disk('local')->exists($file->stored_path) && ! Storage::disk('local')->delete($file->stored_path)) {
+                    throw new \RuntimeException('Nie udało się usunąć dokumentu źródłowego firmy.');
+                }
+            }
             // Database cascades do not remove private files.
             foreach ($company->reliabilityReports()->cursor() as $report) {
                 if (Storage::disk('local')->exists($report->stored_path) && ! Storage::disk('local')->delete($report->stored_path)) {

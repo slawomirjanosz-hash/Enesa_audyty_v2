@@ -18,6 +18,17 @@
 <form method="POST" action="{{route('companies.reliability.lookup',$company)}}">@csrf
 <label for="krs">Numer KRS (opcjonalnie, 10 cyfr)</label><input id="krs" name="krs" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" style="max-width:280px" value="{{old('krs',data_get($lookup,'krs.number'))}}">
 <button type="submit">Sprawdź KRS i VAT</button></form>
+<div style="margin-top:16px;padding:16px;background:#f4f7f5;border-radius:8px">
+<a class="rel-link" href="https://rdf-przegladarka.ms.gov.pl/" target="_blank" rel="noopener noreferrer">Pobierz sprawozdanie z RDF ↗</a>
+@if(data_get($lookup,'krs.number'))<p>Numer KRS do wyszukania: <strong>{{data_get($lookup,'krs.number')}}</strong></p>@endif
+<p class="rel-muted">1. Otwórz RDF, przejdź zabezpieczenie i pobierz dokument na komputer. 2. Wybierz pobrany plik poniżej i zapisz go w aplikacji. Portal RDF nie przekazuje plików bezpośrednio do naszej aplikacji.</p>
+<form method="POST" enctype="multipart/form-data" action="{{route('companies.reliability.files.store',$company)}}">@csrf
+<label for="rdf-file">Sprawozdanie z RDF — XML, PDF lub XHTML (maks. 20 MB)</label>
+<input id="rdf-file" type="file" name="file" accept=".xml,.pdf,.xhtml" required aria-invalid="{{$errors->has('file')?'true':'false'}}">
+<p><button type="submit">Zapisz plik w aplikacji</button></p>
+</form>
+<p class="rel-muted">Plik zostanie zapisany jako poufny dokument firmy. Wgranie pliku nie uzupełnia automatycznie kwot ani oceny raportu.</p>
+</div>
 @if($lookup)<p>Sprawdzono: {{\Carbon\Carbon::parse($lookup['checked_at'])->format('d.m.Y H:i')}}. Wynik można wykorzystać do zapisu przez 30 minut.</p>
 <div class="rel-grid"><div><h3>Wykaz VAT</h3>@if(data_get($lookup,'vat.state')==='checked')<p>{{data_get($lookup,'vat.name')}}</p><strong>{{data_get($lookup,'vat.status')}}</strong><p class="rel-muted">Identyfikator: {{data_get($lookup,'vat.request_id')}}</p>@else<p>Brak potwierdzonego wyniku — rejestr niedostępny, brak wpisu lub niepoprawny NIP.</p>@endif</div>
 <div><h3>KRS</h3>@if(data_get($lookup,'krs.state')==='checked')<p>{{data_get($lookup,'krs.name')}} · {{data_get($lookup,'krs.number')}}</p><details><summary>Dział 6 — informacje do oceny</summary><pre>{{json_encode(data_get($lookup,'krs.section6'), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)}}</pre></details>@else<p>{{data_get($lookup,'krs.state')==='identity_mismatch' ? 'NIP z KRS nie zgadza się z firmą — nie użyto danych.' : 'Brak potwierdzonego wyniku KRS. Sprawdź numer i rejestr.'}}</p>@endif</div></div>
