@@ -27,7 +27,7 @@
 <input id="rdf-file" type="file" name="file" accept=".xml,.pdf,.xhtml" required aria-invalid="{{$errors->has('file')?'true':'false'}}">
 <p><button type="submit">Zapisz plik w aplikacji</button></p>
 </form>
-<p class="rel-muted">XML JednostkaInna automatycznie uzupełni kwoty w sekcji 3 po sprawdzeniu NIP. PDF i XHTML zostaną zapisane jako załączniki. Import nie zmienia oceny firmy. Przed importem zapisz rozpoczęty raport — formularz zostanie ponownie otwarty.</p>
+<p class="rel-muted">XML JednostkaInna lub JednostkaMała automatycznie uzupełni kwoty w sekcji 3 po sprawdzeniu NIP. PDF i XHTML zostaną zapisane jako załączniki. Import nie zmienia oceny firmy. Przed importem zapisz rozpoczęty raport — formularz zostanie ponownie otwarty.</p>
 </div>
 @if($lookup)<p>Sprawdzono: {{\Carbon\Carbon::parse($lookup['checked_at'])->format('d.m.Y H:i')}}. Wynik można wykorzystać do zapisu przez 30 minut.</p>
 <div class="rel-grid"><div><h3>Wykaz VAT</h3>@if(data_get($lookup,'vat.state')==='checked')<p>{{data_get($lookup,'vat.name')}}</p><strong>{{data_get($lookup,'vat.status')}}</strong><p class="rel-muted">Identyfikator: {{data_get($lookup,'vat.request_id')}}</p>@else<p>Brak potwierdzonego wyniku — rejestr niedostępny, brak wpisu lub niepoprawny NIP.</p>@endif</div>

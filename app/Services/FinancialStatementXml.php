@@ -25,25 +25,36 @@ class FinancialStatementXml
             libxml_use_internal_errors($previous);
         }
         $xpath = new DOMXPath($doc);
-        $roots = $xpath->query('//*[local-name()="JednostkaInna"]');
+        $roots = $xpath->query('//*[local-name()="JednostkaInna" or local-name()="JednostkaMala"]');
         if ($roots->length !== 1) {
-            $this->fail('Automatyczny odczyt obsługuje sprawozdania XML JednostkaInna. Inne formaty pozostają załącznikami.');
+            $this->fail('Automatyczny odczyt wymaga jednego sprawozdania XML JednostkaInna lub JednostkaMala. Inne formaty pozostają załącznikami.');
         }
         $root = $roots->item(0);
+        $small = $root->localName === 'JednostkaMala';
         $read = function (string $path) use ($xpath, $root): ?string {
             $query = './'.implode('/', array_map(fn ($part) => '*[local-name()="'.$part.'"]', explode('/', $path)));
             $nodes = $xpath->query($query, $root);
 
             return $nodes->length === 1 ? trim($nodes->item(0)->textContent) : null;
         };
-        $fileNip = Company::normalizeNip($read('WprowadzenieDoSprawozdaniaFinansowego/P_1/P_1D'));
+        $introduction = 'WprowadzenieDoSprawozdaniaFinansowego';
+        if ($small) {
+            $introductions = $xpath->query('./*[local-name()="WprowadzenieDoSprawozdaniaFinansowegoJednostkaMala" or local-name()="WprowadzenieDoSprawozdaniaFinansowegoJednostkaInna"]', $root);
+            if ($introductions->length !== 1) {
+                $this->fail('Brak jednoznacznego wprowadzenia do sprawozdania.');
+            }
+            $introduction = $introductions->item(0)->localName;
+        }
+        $nipField = $introduction === 'WprowadzenieDoSprawozdaniaFinansowegoJednostkaMala' ? 'P_1C' : 'P_1D';
+        $fileNip = Company::normalizeNip($read($introduction.'/P_1/'.$nipField));
         if (! preg_match('/^\d{10}$/', $nip) || $fileNip !== $nip) {
             $this->fail('NIP w sprawozdaniu nie zgadza się z NIP firmy. Nie uzupełniono pól.');
         }
         $unit = $read('Naglowek/KodSprawozdania');
+        $unitPrefix = $small ? 'SprFinJednostkaMala' : 'SprFinJednostkaInna';
         $scale = match ($unit) {
-            'SprFinJednostkaInnaWZlotych' => 1,
-            'SprFinJednostkaInnaWTysiacach' => 1000,
+            $unitPrefix.'WZlotych' => 1,
+            $unitPrefix.'WTysiacach' => 1000,
             default => null,
         };
         if ($scale === null) {
@@ -59,18 +70,26 @@ class FinancialStatementXml
         if ($start > $end || (int) substr($end, 0, 4) < 2000 || (int) substr($end, 0, 4) > now()->year) {
             $this->fail('Niepoprawny okres sprawozdawczy.');
         }
-        $variants = $xpath->query('./*[local-name()="RZiS"]/*', $root);
+        $balanceNodes = $xpath->query($small ? './*[local-name()="BilansJednostkaMala" or local-name()="BilansJednostkaInna"]' : './*[local-name()="Bilans"]', $root);
+        $incomeNodes = $xpath->query($small ? './*[local-name()="RZiSJednostkaMala" or local-name()="RZiSJednostkaInna"]' : './*[local-name()="RZiS"]', $root);
+        if ($balanceNodes->length !== 1 || $incomeNodes->length !== 1) {
+            $this->fail('Brak jednoznacznego bilansu lub rachunku zysków i strat.');
+        }
+        $balance = $balanceNodes->item(0)->localName;
+        $income = $incomeNodes->item(0)->localName;
+        $simplified = $income === 'RZiSJednostkaMala';
+        $variants = $xpath->query('./*', $incomeNodes->item(0));
         $variant = $variants->length === 1 ? $variants->item(0)->localName : null;
         $profit = match ($variant) {
-            'RZiSKalk' => 'O',
-            'RZiSPor' => 'L',
+            'RZiSKalk' => $simplified ? 'L' : 'O',
+            'RZiSPor' => $simplified ? 'J' : 'L',
             default => null,
         };
         if (! $profit) {
             $this->fail('Nieobsługiwany wariant rachunku zysków i strat.');
         }
-        $paths = ['revenue' => 'RZiS/'.$variant.'/A', 'profit' => 'RZiS/'.$variant.'/'.$profit,
-            'equity' => 'Bilans/Pasywa/Pasywa_A', 'liabilities' => 'Bilans/Pasywa/Pasywa_B'];
+        $paths = ['revenue' => $income.'/'.$variant.'/A', 'profit' => $income.'/'.$variant.'/'.$profit,
+            'equity' => $balance.'/Pasywa/Pasywa_A', 'liabilities' => $balance.'/Pasywa/Pasywa_B'];
         $rows = [];
         foreach (['KwotaA', 'KwotaB'] as $index => $column) {
             // For a non-calendar period we cannot safely infer the comparative year.

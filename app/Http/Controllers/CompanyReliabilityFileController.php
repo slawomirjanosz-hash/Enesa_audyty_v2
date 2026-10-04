@@ -49,7 +49,7 @@ class CompanyReliabilityFileController extends Controller
 
         return redirect()->route('companies.reliability.show', $company)->with('success', $parsed
             ? 'Zapisano XML i uzupełniono pola finansowe. Sprawdź kwoty i lata (w tym rok danych porównawczych), następnie zapisz raport. Ocena firmy nie została zmieniona.'
-            : 'Zapisano załącznik bez uzupełnienia pól. '.($warning ?? 'Automatyczny odczyt dotyczy XML JednostkaInna, nie PDF ani XHTML.'));
+            : 'Zapisano załącznik bez uzupełnienia pól. '.($warning ?? 'Automatyczny odczyt dotyczy XML JednostkaInna i JednostkaMala, nie PDF ani XHTML.'));
     }
 
     public function import(Company $company, CompanyReliabilityFile $file)
