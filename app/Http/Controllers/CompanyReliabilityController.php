@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\ActivityLog;
+use App\Models\Company;
+use App\Models\CompanyReliabilityReport;
+use App\Models\CompanySettings;
+use App\Services\CompanyRegistryLookup;
+use App\Services\CompanyReliabilityAccess;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+
+class CompanyReliabilityController extends Controller
+{
+    private function check(Company $company, string $action = 'view'): void
+    {
+        abort_unless(app(CompanyReliabilityAccess::class)->allows(auth()->user(), $action, $company), 403);
+    }
+
+    public function show(Company $company, Request $request)
+    {
+        $this->check($company);
+        $reports = $company->reliabilityReports()->with('author')->latest('id')->get();
+        $lookup = $request->session()->get('reliability.'.$company->id);
+
+        return response()->view('companies.reliability.show', compact('company', 'reports', 'lookup'))
+            ->header('Cache-Control', 'private, no-store');
+    }
+
+    public function lookup(Company $company, Request $request, CompanyRegistryLookup $service)
+    {
+        $this->check($company, 'create');
+        $data = $request->validate(['krs' => ['nullable', 'regex:/^\d{10}$/']]);
+        $request->session()->put('reliability.'.$company->id, $service->lookup($company, $data['krs'] ?? null));
+
+        return redirect()->route('companies.reliability.show', $company)->with('success', 'Sprawdzenie zakończone. Sprawdź wyniki i uzupełnij ocenę. Niedostępne źródło nie oznacza braku problemów.');
+    }
+
+    public function store(Company $company, Request $request)
+    {
+        $this->check($company, 'create');
+        $data = $request->validate([
+            'status' => ['required', Rule::in(['unassessed', 'green', 'yellow', 'red'])],
+            'legal' => ['required', Rule::in(['unknown', 'clear', 'risk'])],
+            'krz' => ['required', Rule::in(['unknown', 'clear', 'risk'])],
+            'debt' => ['required', Rule::in(['unknown', 'clear', 'risk'])],
+            'evidence' => ['nullable', 'string', 'max:6000'],
+            'notes' => ['required', 'string', 'max:6000'],
+            'verified_on' => ['required', 'date_format:Y-m-d', 'before_or_equal:today', 'after_or_equal:'.now()->subDays(30)->format('Y-m-d')],
+            'finances' => ['nullable', 'array', 'max:3'],
+            'finances.*.year' => ['nullable', 'integer', 'min:2000', 'max:'.now()->year],
+            'finances.*.revenue' => ['nullable', 'numeric', 'min:0', 'max:999999999999999'],
+            'finances.*.profit' => ['nullable', 'numeric', 'between:-999999999999999,999999999999999'],
+            'finances.*.equity' => ['nullable', 'numeric', 'between:-999999999999999,999999999999999'],
+            'finances.*.liabilities' => ['nullable', 'numeric', 'min:0', 'max:999999999999999'],
+            'finances.*.source' => ['nullable', 'string', 'max:1000'],
+        ]);
+        $data['evidence'] = $data['evidence'] ?? null;
+        $data['finances'] = array_values(array_filter($data['finances'] ?? [], fn ($row) => count(array_filter($row, fn ($v) => $v !== null && $v !== '')) > 0));
+        foreach ($data['finances'] as $row) {
+            if (empty($row['year']) || empty($row['source'])) {
+                throw ValidationException::withMessages(['finances' => 'Każdy okres finansowy wymaga roku i źródła danych.']);
+            }
+        }
+        $lookup = $request->session()->get('reliability.'.$company->id);
+        if ($lookup && (now()->diffInMinutes(Carbon::parse($lookup['checked_at']), true) > 30 || $lookup['nip'] !== Company::normalizeNip($company->nip))) {
+            $lookup = null;
+        }
+        $risks = in_array('risk', [$data['legal'], $data['krz'], $data['debt']], true);
+        if ($risks && $data['status'] !== 'red') {
+            throw ValidationException::withMessages(['status' => 'Wykryte zagrożenie prawne lub zaległości wymagają czerwonego statusu.']);
+        }
+        if ($data['status'] === 'green') {
+            $complete = $data['legal'] === 'clear' && $data['krz'] === 'clear' && $data['debt'] === 'clear'
+                && filled($data['evidence']) && data_get($lookup, 'vat.state') === 'checked'
+                && in_array(data_get($lookup, 'vat.status'), ['Czynny', 'Zwolniony'], true)
+                && data_get($lookup, 'krs.state') !== 'identity_mismatch'
+                && (empty(data_get($lookup, 'vat.krs')) || data_get($lookup, 'krs.state') === 'checked')
+                && count($data['finances']) > 0;
+            foreach ($data['finances'] as $row) {
+                $complete = $complete && isset($row['revenue'], $row['profit'], $row['equity'], $row['liabilities'])
+                    && (float) $row['equity'] >= 0 && (float) $row['profit'] >= 0;
+            }
+            $complete = $complete && collect($data['finances'])->max('year') >= now()->year - 2;
+            if (! $complete) {
+                throw ValidationException::withMessages(['status' => 'Zielona ocena wymaga aktualnego sprawdzenia VAT, potwierdzenia trzech kontroli, źródeł i pełnych danych finansowych bez straty ani ujemnego kapitału. Przy niepełnych danych wybierz „Nie oceniono” lub ostrożność.']);
+            }
+        }
+        if (in_array('clear', [$data['legal'], $data['krz'], $data['debt']], true) && blank($data['evidence'])) {
+            throw ValidationException::withMessages(['evidence' => 'Podaj źródła potwierdzające wykonane sprawdzenia.']);
+        }
+        $snapshot = ['company' => ['name' => $company->name, 'nip' => $company->nip], 'assessment' => $data,
+            'registry' => $lookup, 'author' => $request->user()->name, 'generated_at' => now()->format('d.m.Y H:i'),
+            'issuer' => CompanySettings::first()?->name];
+        $report = new CompanyReliabilityReport(['company_id' => $company->id, 'created_by' => $request->user()->id,
+            'status' => $data['status'], 'snapshot' => $snapshot, 'stored_path' => 'private-reliability/'.Str::uuid().'.pdf']);
+        $pdf = Pdf::loadView('companies.reliability.pdf', ['report' => $report, 'logo' => CompanySettings::first()?->logoDataUri()])
+            ->setPaper('a4')->setOption('isRemoteEnabled', false)->output();
+        abort_unless(Storage::disk('local')->put($report->stored_path, $pdf), 500, 'Nie udało się zapisać PDF.');
+        $report->size = strlen($pdf);
+        try {
+            DB::transaction(fn () => $report->save());
+        } catch (\Throwable $e) {
+            Storage::disk('local')->delete($report->stored_path);
+            throw $e;
+        }
+
+        return redirect()->route('companies.reliability.show', $company)->with('success', 'Raport PDF zapisany w chronionych dokumentach firmy.');
+    }
+
+    public function download(Company $company, CompanyReliabilityReport $report)
+    {
+        $this->check($company);
+        abort_unless($report->company_id === $company->id, 404);
+        abort_unless(Storage::disk('local')->exists($report->stored_path), 404);
+        ActivityLog::create(['user_id' => auth()->id(), 'action' => 'download', 'auditable_type' => CompanyReliabilityReport::class,
+            'auditable_id' => $report->id, 'subject_label' => 'Poufny raport #'.$report->id]);
+
+        return Storage::disk('local')->download($report->stored_path, $report->filename(), ['Cache-Control' => 'private, no-store']);
+    }
+
+    public function destroy(Company $company, CompanyReliabilityReport $report)
+    {
+        $this->check($company, 'delete');
+        abort_unless($report->company_id === $company->id, 404);
+        if (Storage::disk('local')->exists($report->stored_path)) {
+            abort_unless(Storage::disk('local')->delete($report->stored_path), 500, 'Nie udało się usunąć PDF.');
+        }
+        $report->delete();
+
+        return redirect()->route('companies.reliability.show', $company)->with('success', 'Raport i plik PDF usunięte. Status wynika teraz z ostatniego pozostałego raportu.');
+    }
+}

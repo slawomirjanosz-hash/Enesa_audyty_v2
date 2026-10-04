@@ -11,6 +11,9 @@
 <div class="s-head"><div><a class="back" href="{{route('suppliers.index')}}">← Wszyscy dostawcy</a><div class="s-kicker" style="margin-top:12px">Dostawca</div><h1>{{$supplier->name}}</h1><div class="s-contact"><span><i class="ti ti-map-pin"></i> {{$supplier->address}} {{$supplier->city}}</span><span><i class="ti ti-mail"></i> {{$supplier->email ?: '—'}}</span><span><i class="ti ti-phone"></i> {{$supplier->phone ?: '—'}}</span><span>NIP {{$supplier->nip ?: '—'}}</span></div></div>@if($canEdit)<button type="button" class="btn" onclick="document.getElementById('supplier-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj dostawcę</button>@endif</div>
 @if(session('success'))<div style="padding:11px 14px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:14px">{{session('success')}}</div>@endif
 
+@if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $supplier))
+<p><a class="btn" href="{{route('companies.reliability.show',$supplier)}}"><i class="ti ti-shield-check"></i> Raport wiarygodności firmy</a></p>
+@endif
 <div class="s-grid">
     <div class="s-card"><h2>Zakres dostaw i usług</h2><div class="s-copy">{{$supplier->supplier_capabilities ?: 'Brak informacji. Uzupełnij profil dostawcy.'}}</div></div>
     <div class="s-card"><h2>Materiały i asortyment</h2><div class="s-tags">@forelse(collect(preg_split('/[,;\r\n]+/', $supplier->supplier_materials ?? '', -1, PREG_SPLIT_NO_EMPTY))->map(fn($item)=>trim($item))->filter() as $material)<span class="s-tag">{{$material}}</span>@empty<span class="s-copy">Brak zapisanych materiałów.</span>@endforelse</div></div>

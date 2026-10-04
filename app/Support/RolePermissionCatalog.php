@@ -16,6 +16,9 @@ class RolePermissionCatalog
             'dashboard' => ['label' => 'Dashboard', 'permissions' => [
                 'dashboard.view' => 'Wejście do zakładki Dashboard',
                 'dashboard.documents.view' => 'Podgląd dokumentów klientów na Dashboardzie',
+                'company_reliability.view' => 'Raport wiarygodności firmy — podgląd raportów i statusów (poufne)',
+                'company_reliability.create' => 'Raport wiarygodności firmy — sprawdzanie i tworzenie raportów',
+                'company_reliability.delete' => 'Raport wiarygodności firmy — trwałe usuwanie raportów',
             ]],
             'calendar' => ['label' => 'Kalendarz', 'permissions' => [
                 'calendar.view' => 'Podgląd własnego kalendarza zadań',

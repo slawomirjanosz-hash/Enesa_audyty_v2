@@ -582,6 +582,11 @@
             <div class="tile-main">
                 <div>
                     <div class="tile-name">{{ $company->name }}</div>
+                    @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $company))
+                        <a href="{{route('companies.reliability.show',$company)}}" onclick="event.stopPropagation()" style="display:inline-block;margin-top:7px;text-decoration:none" aria-label="Raport wiarygodności firmy {{$company->name}}">
+                            @include('companies.reliability.badge', ['report'=>$company->latestReliabilityReport])
+                        </a>
+                    @endif
                     @if($company->nip)
                         <div class="tile-nip">NIP: {{ $company->nip }}</div>
                     @endif

@@ -10,6 +10,7 @@ use App\Models\OfferRequest;
 use App\Models\Project;
 use App\Models\Task;
 use App\Services\AuditorAccessService;
+use App\Services\CompanyReliabilityAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,12 @@ class DashboardController extends Controller
             };
         }
         $companiesQuery = Company::clients()->active()->where('show_in_dashboard', true)->with($relations);
+        if (app(CompanyReliabilityAccess::class)->allows($user)) {
+            $companiesQuery->with(['latestReliabilityReport' => fn ($query) => $query->select([
+                'company_reliability_reports.id', 'company_reliability_reports.company_id',
+                'company_reliability_reports.status', 'company_reliability_reports.created_at',
+            ])]);
+        }
         if ($canViewDashboardDocuments) {
             $companiesQuery->withCount('documents');
         }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
+use App\Models\CompanyReliabilityReport;
 use App\Models\CylinderInspection;
 use App\Models\User;
 use DateTimeInterface;
@@ -53,6 +54,10 @@ class ActivityLogService
 
     private function modelChanges(Model $model, string $action): array
     {
+        if ($model instanceof CompanyReliabilityReport) {
+            // The general change log must not disclose the confidential report or its rating.
+            return [];
+        }
         if ($action === 'deleted' || $action === 'restored') {
             return [];
         }

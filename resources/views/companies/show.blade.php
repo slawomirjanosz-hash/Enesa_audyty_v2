@@ -838,6 +838,9 @@
         <button class="tab-btn" onclick="switchTab('documents', this)">
             <i class="ti ti-paperclip"></i> Dokumenty
         </button>
+        @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $company))
+            <a class="tab-btn" href="{{route('companies.reliability.show',$company)}}" style="text-decoration:none"><i class="ti ti-shield-check"></i> Raport wiarygodności firmy</a>
+        @endif
     </div>
 
     {{-- ═══ ZAKŁADKA: PRZEGLĄD ═══ --}}
@@ -1709,6 +1712,9 @@
 
     {{-- ═══ ZAKŁADKA: DOKUMENTY ═══ --}}
     <div id="tab-documents" class="tab-panel">
+        @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $company))
+            @include('companies.reliability.list', ['reports'=>$company->reliabilityReports()->with('author')->latest('id')->get()])
+        @endif
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
             <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#7a8a80;">
                 Dokumenty firmy — oferty PDF, audyty i pliki wgrane ręcznie.

@@ -5,10 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
+    protected static function booted(): void
+    {
+        static::deleting(function (Company $company) {
+            // Database cascades do not remove private files.
+            foreach ($company->reliabilityReports()->cursor() as $report) {
+                if (Storage::disk('local')->exists($report->stored_path) && ! Storage::disk('local')->delete($report->stored_path)) {
+                    throw new \RuntimeException('Nie udało się usunąć poufnego raportu firmy.');
+                }
+            }
+        });
+    }
+
     protected $fillable = [
         'name',
         'company_type',
@@ -66,6 +79,16 @@ class Company extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function reliabilityReports(): HasMany
+    {
+        return $this->hasMany(CompanyReliabilityReport::class);
+    }
+
+    public function latestReliabilityReport(): HasOne
+    {
+        return $this->hasOne(CompanyReliabilityReport::class)->latestOfMany();
     }
 
     public function offers(): HasMany
