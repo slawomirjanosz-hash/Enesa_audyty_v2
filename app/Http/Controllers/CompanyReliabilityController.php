@@ -10,6 +10,7 @@ use App\Models\CompanySettings;
 use App\Services\CompanyRegistryLookup;
 use App\Services\CompanyReliabilityAccess;
 use App\Services\CompanyReliabilityAssessment;
+use App\Services\FinancialHealthAssessment;
 use App\Support\FinancialAmount;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -59,6 +60,35 @@ class CompanyReliabilityController extends Controller
         $request->session()->put('reliability.'.$company->id, $service->lookup($company, $data['krs'] ?? null));
 
         return redirect()->route('companies.reliability.show', $company)->with('success', 'Sprawdzenie zakończone. Sprawdź wyniki i uzupełnij ocenę. Niedostępne źródło nie oznacza braku problemów.');
+    }
+
+    public function financialPreview(Company $company, Request $request)
+    {
+        $this->check($company, 'create');
+        $rows = $request->input('finances', []);
+        if (is_array($rows)) {
+            foreach ($rows as &$row) {
+                if (is_array($row)) {
+                    foreach (['revenue', 'profit', 'equity', 'liabilities'] as $key) {
+                        $row[$key] = FinancialAmount::normalize($row[$key] ?? null);
+                    }
+                }
+            }
+            unset($row);
+            $request->merge(['finances' => $rows]);
+        }
+        $data = $request->validate([
+            'finances' => ['array', 'max:3'], 'finances.*' => ['array'],
+            'finances.*.year' => ['nullable', 'integer', 'min:2000', 'max:'.now()->year],
+            'finances.*.revenue' => ['nullable', 'numeric', 'min:0', 'max:999999999999999'],
+            'finances.*.profit' => ['nullable', 'numeric', 'between:-999999999999999,999999999999999'],
+            'finances.*.equity' => ['nullable', 'numeric', 'between:-999999999999999,999999999999999'],
+            'finances.*.liabilities' => ['nullable', 'numeric', 'min:0', 'max:999999999999999'],
+        ]);
+        $rows = array_filter($data['finances'] ?? [], fn ($row) => count(array_filter($row, fn ($value) => $value !== null && $value !== '')) > 0);
+        $health = app(FinancialHealthAssessment::class)->assess($rows);
+
+        return response()->json(['health' => $health, 'html' => view('companies.reliability.financial-health', compact('health'))->render()])->header('Cache-Control', 'private, no-store');
     }
 
     public function store(Company $company, Request $request)

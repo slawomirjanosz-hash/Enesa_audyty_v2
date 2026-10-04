@@ -54,10 +54,14 @@
 </details>
 </section>
 <section class="rel-card"><h2>3. Dane ze sprawozdań finansowych</h2><p>Wpisz kwoty w PLN (przelicz dane podane w tysiącach). Puste pole oznacza brak danych, a nie zero. Zobowiązania bilansowe nie oznaczają zaległych płatności.</p>
+<style>[data-financial-state="warning"]{background:#fff4d6!important;border-color:#b77c08!important}[data-financial-state="risk"]{background:#fde7e7!important;border-color:#b42318!important}</style>
+<div id="financial-health" data-preview-url="{{route('companies.reliability.financial-preview',$company)}}" aria-live="polite">
+@include('companies.reliability.financial-health', ['health' => $automatic['financial']])
+</div>
 @for($i=0;$i<3;$i++)<fieldset><legend>Okres {{$i+1}} (opcjonalny)</legend><div class="rel-grid">
 @foreach(['year'=>'Rok obrotowy','revenue'=>'Przychody PLN','profit'=>'Wynik netto PLN','equity'=>'Kapitał własny PLN','liabilities'=>'Zobowiązania PLN'] as $field=>$label)
 @php($amountValue = old('finances.'.$i.'.'.$field, data_get($finances ?? [], $i.'.'.$field)))
-<div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" type="{{$field==='year'?'number':'text'}}" @if($field!=='year') data-financial-amount inputmode="decimal" @endif name="finances[{{$i}}][{{$field}}]" value="{{$field==='year'?$amountValue:\App\Support\FinancialAmount::display($amountValue)}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
+<div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" data-financial-state="{{data_get($automatic,'financial.periods.'.$i.'.fields.'.$field,'clear')}}" type="{{$field==='year'?'number':'text'}}" @if($field!=='year') data-financial-amount inputmode="decimal" @endif name="finances[{{$i}}][{{$field}}]" value="{{$field==='year'?$amountValue:\App\Support\FinancialAmount::display($amountValue)}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
 <div><label for="source-{{$i}}">Źródło / dokument i okres sprawozdawczy</label><input id="source-{{$i}}" name="finances[{{$i}}][source]" maxlength="1000" value="{{old('finances.'.$i.'.source', data_get($finances ?? [], $i.'.source'))}}"></div></div></fieldset>@endfor
 </section>
 <section class="rel-card"><h2>4. Ocena i zapis raportu</h2><label for="status">Sposób oceny</label><select id="status" name="status" aria-invalid="{{$errors->has('status')?'true':'false'}}"><option value="auto" @selected(old('status','auto')==='auto')>Automatyczna — na podstawie sprawdzonych źródeł</option>@foreach(\App\Models\CompanyReliabilityReport::LABELS as $value=>$label)<option value="{{$value}}" @selected(old('status','auto')===$value)>Ręczna: {{$label}}</option>@endforeach</select>
@@ -70,4 +74,5 @@
 @include('companies.reliability.list')
 </div>
 <script type="module" src="{{asset('js/financial-amount.js')}}"></script>
+<script type="module" src="{{asset('js/financial-health.js')}}"></script>
 @endsection

@@ -28,6 +28,17 @@ beforeEach(function () {
         'notes' => 'Poufne zalecenia: wymagana dalsza weryfikacja.', 'verified_on' => now()->format('Y-m-d')];
 });
 
+test('financial preview uses current formatted fields with access restrictions and no writes', function () {
+    $payload = ['finances' => [['year' => now()->year - 1, 'revenue' => '1 000,00 zł', 'profit' => '-20,00 zł', 'equity' => '-10,00 zł', 'liabilities' => '100,00 zł']]];
+    $this->actingAs($this->admin)->postJson(route('companies.reliability.financial-preview', $this->company), $payload)->assertOk()->assertJsonPath('health.state', 'risk')->assertJsonPath('health.periods.0.fields.equity', 'risk');
+    expect(CompanyReliabilityReport::count())->toBe(0);
+    $payload['finances'][0]['profit'] = 'invalid';
+    $this->postJson(route('companies.reliability.financial-preview', $this->company), $payload)->assertUnprocessable();
+    $client = User::factory()->create();
+    $client->assignRole('client_admin');
+    $this->actingAs($client)->postJson(route('companies.reliability.financial-preview', $this->company), [])->assertForbidden();
+});
+
 test('automatic reports save without manual declarations and preserve unverified coverage', function () {
     $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), ['status' => 'auto'])->assertSessionHasNoErrors()->assertRedirect();
     $report = CompanyReliabilityReport::firstOrFail();

@@ -27,24 +27,13 @@ class CompanyReliabilityAssessment
         if (! $finances) {
             $checks[] = ['label' => 'Finanse', 'state' => 'unknown', 'message' => 'Brak danych. Wgraj sprawozdanie XML lub uzupełnij kwoty.'];
         }
-        foreach ($finances as $row) {
-            $missing = array_filter(['revenue', 'profit', 'equity', 'liabilities'], fn ($key) => ! isset($row[$key]) || $row[$key] === '');
-            $negativeEquity = isset($row['equity']) && (float) $row['equity'] < 0;
-            $loss = isset($row['profit']) && (float) $row['profit'] < 0;
-            $stale = ($row['year'] ?? 0) < now()->year - 2;
-            $state = $negativeEquity ? 'risk' : ($loss ? 'warning' : (($missing || $stale) ? 'unknown' : 'clear'));
-            $message = $negativeEquity ? 'Ujemny kapitał własny — sygnał zagrożenia finansowego, nie stwierdzenie upadłości.' : ($loss ? 'Wykazano stratę netto.' : 'Nie stwierdzono straty netto ani ujemnego kapitału w podanych danych.');
-            if ($missing) {
-                $message .= ' Niepełne kwoty — ocena ograniczona.';
-            }
-            if ($stale) {
-                $message .= ' Dane historyczne wymagają aktualizacji.';
-            }
-            $checks[] = ['label' => 'Finanse '.($row['year'] ?? ''), 'state' => $state, 'message' => $message];
+        $financial = app(FinancialHealthAssessment::class)->assess($finances);
+        foreach ($financial['periods'] as $period) {
+            $checks[] = ['label' => 'Finanse '.($period['year'] ?? ''), 'state' => $period['state'], 'message' => $period['label'].'. Szczegóły i progi w sekcji danych finansowych.'];
         }
         $status = in_array('risk', array_column($checks, 'state'), true) ? 'red' : 'yellow';
 
-        return ['status' => $status, 'checks' => $checks, 'summary' => $status === 'red'
+        return ['status' => $status, 'checks' => $checks, 'financial' => $financial, 'summary' => $status === 'red'
             ? 'Wykryto sygnał zagrożenia finansowego. Pozostałe ograniczenia sprawdzenia opisano poniżej.'
             : 'Ocena ostrożna: sprawdzono dostępne źródła, ale zakres jest niepełny. Nie potwierdzono pełnej wiarygodności ani braku wszystkich długów.'];
     }

@@ -52,7 +52,7 @@ jobs:
         run: node --test tests/js/hr-trip-copy.test.mjs
 
       - name: Test financial amount formatting
-        run: node --test tests/js/financial-amount.test.mjs
+        run: node --test tests/js/financial-amount.test.mjs tests/js/financial-health.test.mjs
 
       - name: Check PHP code style
         run: composer format:test

@@ -6,7 +6,7 @@
 <p class="muted">DOKUMENT POUFNY - WYŁĄCZNIE DO UŻYTKU WEWNĘTRZNEGO</p>
 @if($s['issuer'] ?? null)<p>{{$s['issuer']}}</p>@endif
 <h1>Raport wiarygodności firmy</h1><p><strong>{{$s['company']['name']}}</strong><br>NIP: {{$s['company']['nip']}}<br>Data raportu: {{$s['generated_at']}} · Opracował(a): {{$s['author']}}</p>
-<div class="badge">Ocena: {{\App\Models\CompanyReliabilityReport::LABELS[$report->status]}}</div>
+<div class="badge" style="background:{{['red'=>'#fde7e7','yellow'=>'#fff4d6','green'=>'#e8f5ec'][$report->status] ?? '#eef0f2'}}">Ocena: {{\App\Models\CompanyReliabilityReport::LABELS[$report->status]}}</div>
 <p>{{($s['assessment_mode'] ?? 'manual') === 'automatic' ? 'Ocena automatyczna dostępnych danych, zatwierdzona do zapisu przez pracownika.' : 'Ocena pracownika na podstawie wskazanych źródeł.'}} Nie stanowi gwarancji wypłacalności ani decyzji kredytowej. Brak wpisów nie oznacza braku wszystkich długów. Ocena wymaga odświeżenia najpóźniej po 30 dniach.</p>
 <h2>Weryfikacja rejestrów online</h2>
 <p>Data sprawdzenia: {{data_get($s,'registry.checked_at','Nie wykonano aktualnego sprawdzenia')}}<br>VAT: {{data_get($s,'registry.vat.status','Brak potwierdzonego wyniku')}}<br>Identyfikator VAT: {{data_get($s,'registry.vat.request_id','-')}}<br>KRS: {{data_get($s,'registry.krs.number','Brak potwierdzonego wyniku')}}</p>
@@ -15,7 +15,7 @@
 @if(isset($s['automatic']))
 <h2>Automatyczna analiza dostępnych źródeł</h2><p>{{$s['automatic']['summary']}}</p>
 <table><thead><tr><th>Zakres</th><th>Wynik i ograniczenia</th></tr></thead><tbody>
-@foreach($s['automatic']['checks'] as $check)<tr><td>{{$check['label']}}</td><td><strong>{{['clear'=>'Brak ostrzeżeń w sprawdzonym zakresie','warning'=>'Wymaga uwagi','risk'=>'Sygnał zagrożenia','unknown'=>'Nie potwierdzono'][$check['state']]}}</strong><br>{{$check['message']}}</td></tr>@endforeach
+@foreach($s['automatic']['checks'] as $check)<tr><td>{{$check['label']}}</td><td style="background:{{['risk'=>'#fde7e7','warning'=>'#fff4d6'][$check['state']] ?? '#ffffff'}}"><strong>{{['clear'=>'Brak ostrzeżeń w sprawdzonym zakresie','warning'=>'Wymaga uwagi','risk'=>'Sygnał zagrożenia','unknown'=>'Nie potwierdzono'][$check['state']]}}</strong><br>{{$check['message']}}</td></tr>@endforeach
 </tbody></table>
 @endif
 @if(($s['assessment_mode'] ?? 'manual') !== 'automatic')
@@ -25,9 +25,12 @@
 <p class="copy">{{$s['assessment']['evidence'] ?: 'Nie wskazano źródeł.'}}</p>
 @endif
 <h2 @if(isset($s['automatic'])) style="page-break-before:always" @endif>Dane finansowe (PLN)</h2><p>Zobowiązania bilansowe nie oznaczają przeterminowanych długów. Dane historyczne nie określają dzisiejszego salda rachunków.</p>
+@if(isset($s['automatic']['financial']))
+@include('companies.reliability.financial-health', ['health' => $s['automatic']['financial']])
+@endif
 @if(empty($s['assessment']['finances']))<p>Brak danych finansowych.</p>@else
 <table><thead><tr><th>Rok</th><th>Przychody</th><th>Wynik netto</th><th>Kapitał własny</th><th>Zobowiązania</th></tr></thead><tbody>
-@foreach($s['assessment']['finances'] as $row)<tr><td>{{$row['year']}}</td>@foreach(['revenue','profit','equity','liabilities'] as $key)<td>{{isset($row[$key]) ? \App\Support\FinancialAmount::display($row[$key]) : 'Brak danych'}}</td>@endforeach</tr>@endforeach
+@foreach($s['assessment']['finances'] as $rowIndex=>$row)<tr><td>{{$row['year']}}</td>@foreach(['revenue','profit','equity','liabilities'] as $key)<td style="background:{{['warning'=>'#fff4d6','risk'=>'#fde7e7'][data_get($s,'automatic.financial.periods.'.$rowIndex.'.fields.'.$key)] ?? '#ffffff'}}">{{isset($row[$key]) ? \App\Support\FinancialAmount::display($row[$key]) : 'Brak danych'}}</td>@endforeach</tr>@endforeach
 </tbody></table>@foreach($s['assessment']['finances'] as $row)<p class="copy">Źródło {{$row['year']}}: {{$row['source']}}</p>@endforeach
 @endif
 <h2>Uzasadnienie i zalecenia</h2><p class="copy">{{$s['assessment']['notes']}}</p>
