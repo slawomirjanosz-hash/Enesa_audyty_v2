@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Company;
+use App\Models\CompanyReliabilityFile;
 use App\Models\CompanyReliabilityReport;
 use App\Models\CompanySettings;
 use App\Services\CompanyRegistryLookup;
@@ -29,8 +30,19 @@ class CompanyReliabilityController extends Controller
         $this->check($company);
         $reports = $company->reliabilityReports()->with('author')->latest('id')->get();
         $lookup = $request->session()->get('reliability.'.$company->id);
+        $finances = [];
+        foreach (CompanyReliabilityFile::where('company_id', $company->id)->whereNotNull('parsed_finances')->latest('updated_at')->latest('id')->cursor() as $file) {
+            if (data_get($file->parsed_finances, 'nip') !== Company::normalizeNip($company->nip)) {
+                continue;
+            }
+            foreach ($file->parsed_finances['rows'] as $row) {
+                $finances[$row['year']] ??= $row;
+            }
+        }
+        krsort($finances);
+        $finances = array_slice(array_values($finances), 0, 3);
 
-        return response()->view('companies.reliability.show', compact('company', 'reports', 'lookup'))
+        return response()->view('companies.reliability.show', compact('company', 'reports', 'lookup', 'finances'))
             ->header('Cache-Control', 'private, no-store');
     }
 

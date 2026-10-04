@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanyReliabilityFile;
 use App\Services\CompanyReliabilityAccess;
+use App\Services\FinancialStatementXml;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -29,15 +30,46 @@ class CompanyReliabilityFileController extends Controller
         }
         $name = Str::limit(preg_replace('/[\x00-\x1F\x7F\/\\\\]/u', '_', $upload->getClientOriginalName()), 200, '');
         $path = 'private-reliability-sources/'.Str::uuid().'.'.$extension;
+        $parsed = null;
+        $warning = null;
+        if ($extension === 'xml') {
+            try {
+                $parsed = $this->extract($company, $upload->getContent(), $name);
+            } catch (ValidationException $exception) {
+                $warning = collect($exception->errors())->flatten()->implode(' ');
+            }
+        }
         abort_unless(Storage::disk('local')->put($path, $upload->getContent()), 500);
         try {
-            CompanyReliabilityFile::create(['company_id' => $company->id, 'name' => $name, 'stored_path' => $path, 'size' => $upload->getSize()]);
+            CompanyReliabilityFile::create(['company_id' => $company->id, 'name' => $name, 'stored_path' => $path, 'size' => $upload->getSize(), 'parsed_finances' => $parsed]);
         } catch (\Throwable $exception) {
             Storage::disk('local')->delete($path);
             throw $exception;
         }
 
-        return back()->with('success', 'Dokument źródłowy zapisany w chronionych dokumentach firmy. Sam zapis pliku nie uzupełnia oceny ani kwot raportu.');
+        return redirect()->route('companies.reliability.show', $company)->with('success', $parsed
+            ? 'Zapisano XML i uzupełniono pola finansowe. Sprawdź kwoty i lata (w tym rok danych porównawczych), następnie zapisz raport. Ocena firmy nie została zmieniona.'
+            : 'Zapisano załącznik bez uzupełnienia pól. '.($warning ?? 'Automatyczny odczyt dotyczy XML JednostkaInna, nie PDF ani XHTML.'));
+    }
+
+    public function import(Company $company, CompanyReliabilityFile $file)
+    {
+        $this->check($company, 'create');
+        abort_unless($file->company_id === $company->id, 404);
+        abort_unless(strtolower(pathinfo($file->stored_path, PATHINFO_EXTENSION)) === 'xml', 422);
+        abort_unless(Storage::disk('local')->exists($file->stored_path), 404);
+        $file->parsed_finances = $this->extract($company, Storage::disk('local')->get($file->stored_path), $file->name);
+        $file->updated_at = now();
+        $file->save();
+
+        return redirect()->route('companies.reliability.show', $company)->with('success', 'Uzupełniono pola z zapisanego XML. Sprawdź kwoty i rok porównawczy, następnie zapisz raport.');
+    }
+
+    private function extract(Company $company, string $xml, string $name): array
+    {
+        $nip = (string) Company::normalizeNip($company->nip);
+
+        return ['nip' => $nip, 'rows' => app(FinancialStatementXml::class)->parse($xml, $nip, $name)];
     }
 
     public function download(Company $company, CompanyReliabilityFile $file)

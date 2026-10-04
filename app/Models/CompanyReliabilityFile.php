@@ -10,4 +10,6 @@ class CompanyReliabilityFile extends Model
     use EnforcesDocumentQuota;
 
     protected $guarded = ['id'];
+
+    protected $casts = ['parsed_finances' => 'array'];
 }

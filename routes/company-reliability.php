@@ -8,6 +8,7 @@ Route::prefix('companies/{company}/reliability')->name('companies.reliability.')
     Route::get('/', [CompanyReliabilityController::class, 'show'])->name('show');
     Route::post('/files', [CompanyReliabilityFileController::class, 'store'])->middleware('throttle:10,1')->name('files.store');
     Route::get('/files/{file}', [CompanyReliabilityFileController::class, 'download'])->name('files.download');
+    Route::post('/files/{file}/import', [CompanyReliabilityFileController::class, 'import'])->middleware('throttle:10,1')->name('files.import');
     Route::delete('/files/{file}', [CompanyReliabilityFileController::class, 'destroy'])->name('files.destroy');
     Route::post('/lookup', [CompanyReliabilityController::class, 'lookup'])->middleware('throttle:5,1')->name('lookup');
     Route::post('/', [CompanyReliabilityController::class, 'store'])->middleware('throttle:5,1')->name('store');

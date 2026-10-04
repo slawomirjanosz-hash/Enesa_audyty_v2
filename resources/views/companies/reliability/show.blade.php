@@ -27,7 +27,7 @@
 <input id="rdf-file" type="file" name="file" accept=".xml,.pdf,.xhtml" required aria-invalid="{{$errors->has('file')?'true':'false'}}">
 <p><button type="submit">Zapisz plik w aplikacji</button></p>
 </form>
-<p class="rel-muted">Plik zostanie zapisany jako poufny dokument firmy. Wgranie pliku nie uzupełnia automatycznie kwot ani oceny raportu.</p>
+<p class="rel-muted">XML JednostkaInna automatycznie uzupełni kwoty w sekcji 3 po sprawdzeniu NIP. PDF i XHTML zostaną zapisane jako załączniki. Import nie zmienia oceny firmy. Przed importem zapisz rozpoczęty raport — formularz zostanie ponownie otwarty.</p>
 </div>
 @if($lookup)<p>Sprawdzono: {{\Carbon\Carbon::parse($lookup['checked_at'])->format('d.m.Y H:i')}}. Wynik można wykorzystać do zapisu przez 30 minut.</p>
 <div class="rel-grid"><div><h3>Wykaz VAT</h3>@if(data_get($lookup,'vat.state')==='checked')<p>{{data_get($lookup,'vat.name')}}</p><strong>{{data_get($lookup,'vat.status')}}</strong><p class="rel-muted">Identyfikator: {{data_get($lookup,'vat.request_id')}}</p>@else<p>Brak potwierdzonego wyniku — rejestr niedostępny, brak wpisu lub niepoprawny NIP.</p>@endif</div>
@@ -45,8 +45,8 @@
 <section class="rel-card"><h2>3. Dane ze sprawozdań finansowych</h2><p>Wpisz kwoty w PLN (przelicz dane podane w tysiącach). Puste pole oznacza brak danych, a nie zero. Zobowiązania bilansowe nie oznaczają zaległych płatności.</p>
 @for($i=0;$i<3;$i++)<fieldset><legend>Okres {{$i+1}} (opcjonalny)</legend><div class="rel-grid">
 @foreach(['year'=>'Rok obrotowy','revenue'=>'Przychody PLN','profit'=>'Wynik netto PLN','equity'=>'Kapitał własny PLN','liabilities'=>'Zobowiązania PLN'] as $field=>$label)
-<div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" type="number" step="{{$field==='year'?'1':'0.01'}}" name="finances[{{$i}}][{{$field}}]" value="{{old('finances.'.$i.'.'.$field)}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
-<div><label for="source-{{$i}}">Źródło / dokument i okres sprawozdawczy</label><input id="source-{{$i}}" name="finances[{{$i}}][source]" maxlength="1000" value="{{old('finances.'.$i.'.source')}}"></div></div></fieldset>@endfor
+<div><label for="f-{{$i}}-{{$field}}">{{$label}}</label><input id="f-{{$i}}-{{$field}}" type="number" step="{{$field==='year'?'1':'0.01'}}" name="finances[{{$i}}][{{$field}}]" value="{{old('finances.'.$i.'.'.$field, data_get($finances ?? [], $i.'.'.$field))}}" aria-invalid="{{$errors->has('finances.'.$i.'.'.$field)?'true':'false'}}"></div>@endforeach
+<div><label for="source-{{$i}}">Źródło / dokument i okres sprawozdawczy</label><input id="source-{{$i}}" name="finances[{{$i}}][source]" maxlength="1000" value="{{old('finances.'.$i.'.source', data_get($finances ?? [], $i.'.source'))}}"></div></div></fieldset>@endfor
 </section>
 <section class="rel-card"><h2>4. Ocena i zapis raportu</h2><label for="status">Ocena upoważnionego pracownika</label><select id="status" name="status" aria-invalid="{{$errors->has('status')?'true':'false'}}">@foreach(\App\Models\CompanyReliabilityReport::LABELS as $value=>$label)<option value="{{$value}}" @selected(old('status','unassessed')===$value)>{{$label}}</option>@endforeach</select>
 <p class="rel-muted">Zielony: komplet sprawdzeń i pozytywna ocena. Żółty: ostrożność, wątpliwości lub ograniczone dane. Czerwony: wykryte zagrożenie. Szary: brak oceny. System nie wydaje decyzji kredytowej.</p>
