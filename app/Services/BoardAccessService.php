@@ -40,14 +40,19 @@ class BoardAccessService
         $owner = $card->project ?? $card->audit;
 
         return $owner && ! $user->hasAnyRole(['client_admin', 'client_user']) && $this->view($user, $owner)
-            && ($card->assigned_to === $user->id || $this->manage($user, $owner));
+            && ($card->assignedToUser($user->id) || $this->manage($user, $owner));
     }
 
     public function mine(User $user): Builder
     {
+        return $this->visible($user)->where(fn ($q) => $q->where('assigned_to', $user->id)->orWhereHas('participants', fn ($p) => $p->whereKey($user->id)));
+    }
+
+    public function visible(User $user): Builder
+    {
         $full = app(AuditorAccessService::class)->hasFullAccess($user);
 
-        return BoardTask::query()->where('assigned_to', $user->id)->where(function ($q) use ($user, $full) {
+        return BoardTask::query()->where(function ($q) use ($user, $full) {
             $q->whereRaw('1=0');
             if (CompanySettings::moduleIsEnabled('projects') && ($full || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']))) {
                 $q->orWhereHas('project', function ($projects) use ($user, $full) {

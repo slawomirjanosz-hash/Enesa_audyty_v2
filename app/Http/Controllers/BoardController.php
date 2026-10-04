@@ -7,6 +7,7 @@ use App\Models\BoardTask;
 use App\Models\Project;
 use App\Services\BoardAccessService;
 use App\Services\BoardTaskService;
+use App\Services\PersonalBoardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -15,16 +16,7 @@ class BoardController extends Controller
 {
     public function index(Request $request, BoardAccessService $access)
     {
-        $query = $access->mine($request->user());
-        $groups = (clone $query)->selectRaw('project_id, audit_id, COUNT(*) AS card_count')->groupBy('project_id', 'audit_id')->with(['project:id,name,number', 'audit:id,title,number'])->get()->keyBy(fn ($c) => $c->project_id ? 'project-'.$c->project_id : 'audit-'.$c->audit_id);
-        if ($request->filled('group')) {
-            abort_unless($groups->has($request->string('group')->toString()), 404);
-            $first = $groups[$request->string('group')->toString()];
-            $query->where($first->project_id ? 'project_id' : 'audit_id', $first->project_id ?? $first->audit_id);
-        }
-        $cards = $query->with(['project', 'audit', 'stage', 'assignee'])->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('id')->paginate(90)->withQueryString();
-
-        return view('boards.mine', compact('cards', 'groups'));
+        return view('boards.mine', app(PersonalBoardService::class)->data($request));
     }
 
     public function store(Request $request, string $type, int $id, BoardAccessService $access, BoardTaskService $service)

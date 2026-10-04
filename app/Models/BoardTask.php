@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BoardTask extends Model
@@ -32,6 +33,16 @@ class BoardTask extends Model
     public function assignee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function participants(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'board_task_participants');
+    }
+
+    public function assignedToUser(int $id): bool
+    {
+        return $this->assigned_to === $id || $this->participants->contains('id', $id);
     }
 
     public function color(): string

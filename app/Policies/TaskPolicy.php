@@ -20,7 +20,7 @@ class TaskPolicy
     public function update(User $user, Task $task): bool
     {
         return $user->can('crm.tasks.team.manage')
-            || ($task->assigned_to === $user->id && $user->can('crm.tasks.own.manage'));
+            || (((int) $task->assigned_to === $user->id || $task->participants->contains('id', $user->id)) && $user->can('crm.tasks.own.manage'));
     }
 
     public function delete(User $user, Task $task): bool

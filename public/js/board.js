@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.board-filter').forEach(filter => {
+        const all=filter.querySelector('[data-filter-all]');
+        const boxes=[...filter.querySelectorAll('input[type=checkbox]:not([data-filter-all])')];
+        filter.addEventListener('change', event => {
+            if(event.target===all) boxes.forEach(box=>box.checked=all.checked);
+            const count=boxes.filter(box=>box.checked).length;
+            all.checked=count===boxes.length && count>0;
+            all.indeterminate=count>0 && count<boxes.length;
+            filter.querySelector('[data-filter-count]').textContent=all.checked?'Wszystkie':`${count} wybr.`;
+        });
+        filter.addEventListener('keydown',event=>{if(event.key==='Escape') {filter.open=false;filter.querySelector('summary').focus();}});
+    });
     const board = document.querySelector('[data-board]');
     if (!board) return;
     const dialog = document.querySelector('#board-editor');
@@ -26,6 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(error) { select.value = card.dataset.status; report(message,error.message); }
         finally { delete card.dataset.busy; select.disabled = false; }
     }
+    board.addEventListener('submit',async event=>{
+        const people=event.target.closest('[data-participants]');
+        if(!people) return;
+        event.preventDefault();
+        const button=people.querySelector('button');button.disabled=true;
+        try {await request(people.action,'PUT',{participants:[...people.querySelectorAll('input:checked')].map(el=>Number(el.value)),revision:Number(people.closest('[data-card]').dataset.revision)});location.reload();}
+        catch(error){report(message,error.message);button.disabled=false;}
+    });
     board.addEventListener('change', event => { if(event.target.matches('[data-card-status]')) status(event.target.closest('[data-card]'),event.target.value); });
     board.addEventListener('dragstart', event => { dragged = event.target.closest('[data-card][draggable="true"]'); if(!dragged) return; event.dataTransfer.setData('text/plain', dragged.dataset.card); event.dataTransfer.effectAllowed = 'move'; });
     board.addEventListener('dragend', () => { dragged = null; board.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over')); });

@@ -7,6 +7,7 @@ use App\Http\Controllers\AuditDocumentController;
 use App\Http\Controllers\AuditFinanceController;
 use App\Http\Controllers\AuditGanttShareController;
 use App\Http\Controllers\AuditTypeController;
+use App\Http\Controllers\BoardCollaborationController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CalendarController;
@@ -502,6 +503,8 @@ require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('/my-board', [BoardController::class, 'index'])->name('board.mine');
+    Route::put('/my-board/{kind}/{id}/participants', [BoardCollaborationController::class, 'participants'])->name('board.participants');
+    Route::patch('/my-board/crm/{task}/status', [BoardCollaborationController::class, 'crmStatus'])->name('board.crm.status');
     Route::post('/boards/{type}/{id}', [BoardController::class, 'store'])->name('board.store');
     Route::put('/board-tasks/{card}', [BoardController::class, 'update'])->name('board.update');
     Route::patch('/board-tasks/{card}/status', [BoardController::class, 'status'])->name('board.status');

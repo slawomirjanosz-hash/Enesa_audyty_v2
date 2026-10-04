@@ -24,6 +24,9 @@ class RolePermissionCatalog
                 'calendar.view' => 'Podgląd własnego kalendarza zadań',
                 'calendar.team.view' => 'Podgląd kalendarzy wszystkich użytkowników',
             ]],
+            'board' => ['label' => 'Moja tablica', 'permissions' => [
+                'board.team.view' => 'Podgląd zadań innych użytkowników w dostępnych modułach i projektach (bez prawa edycji)',
+            ]],
             'hr' => ['label' => 'HR', 'permissions' => [
                 'hr.delegations.view' => 'Dostęp do własnych delegacji i samochodów',
                 'hr.leaves.view' => 'Dostęp do własnych urlopów i zwolnień L4',

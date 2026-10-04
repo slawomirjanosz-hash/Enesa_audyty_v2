@@ -7,7 +7,7 @@
     abort_if($boardStageId !== null && (!is_string($boardStageId) || !ctype_digit($boardStageId)), 404);
     $boardStage = $boardStageId !== null ? $boardStages->firstWhere('id', (int) $boardStageId) : null;
     abort_if($boardStageId !== null && !$boardStage, 404);
-    $cards = \App\Models\BoardTask::where($boardType.'_id', $boardOwner->id)->when($boardStage, fn ($query) => $query->where('stage_task_id', $boardStage->id))->with(['assignee','stage','project','audit'])->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('id')->paginate(90, ['*'], 'board_page')->appends(array_filter(['tab'=>'tasks', 'board_stage'=>$boardStage?->id]));
+    $cards = \App\Models\BoardTask::where($boardType.'_id', $boardOwner->id)->when($boardStage, fn ($query) => $query->where('stage_task_id', $boardStage->id))->with(['assignee','participants','stage','project','audit'])->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('id')->paginate(90, ['*'], 'board_page')->appends(array_filter(['tab'=>'tasks', 'board_stage'=>$boardStage?->id]));
 @endphp
 <div class="board-owner-layout">
 <nav class="board-stages" aria-label="Etapy harmonogramu">
