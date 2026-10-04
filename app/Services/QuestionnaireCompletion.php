@@ -8,6 +8,7 @@ use App\Models\IsoFactorReview;
 use App\Models\IsoImplementationResponse;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoStakeholderReview;
+use App\Models\IsoSystemReview;
 use Illuminate\Support\Collection;
 
 class QuestionnaireCompletion
@@ -23,6 +24,7 @@ class QuestionnaireCompletion
         $profiles = IsoPlantProfile::whereIn('audit_id', $ids)->latestPerSite()->get(['id', 'audit_id', 'site_id', 'definition', 'answers', 'status', 'lock_version', 'client_approval', 'auditor_approval'])->groupBy('audit_id');
         $factorReviews = IsoFactorReview::whereIn('audit_id', $ids)->get(['id', 'audit_id', 'site_id', 'answers', 'basis', 'status', 'client_approval', 'source_hash', 'lock_version'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
         $stakeholderReviews = IsoStakeholderReview::whereIn('audit_id', $ids)->get(['audit_id', 'site_id', 'answers', 'basis', 'consultant'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
+        $systemReviews = IsoSystemReview::whereIn('audit_id', $ids)->get(['audit_id', 'site_id', 'section', 'answers', 'source_snapshot'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id.':'.$row->section);
         $stakeholders = app(IsoStakeholderQuestionnaire::class);
         $responses = IsoImplementationResponse::whereIn('audit_id', $ids)->get()->groupBy('audit_id');
         $factors = app(IsoFactorQuestionnaire::class);
@@ -39,6 +41,10 @@ class QuestionnaireCompletion
                     $partyReview = $stakeholderReviews->get($audit->id.':'.$profile->site_id);
                     $parties = $stakeholders->parties($profile, $review);
                     $parts[] = $stakeholders->progress($stakeholders->currentAnswers($partyReview?->answers ?? [], $partyReview?->basis ?? [], $parties), $parties, $partyReview?->consultant ?? []);
+                    foreach (['4-3', '4-4'] as $systemSection) {
+                        $systemReview = $systemReviews->get($audit->id.':'.$profile->site_id.':'.$systemSection);
+                        $parts[] = app(IsoSystemQuestionnaire::class)->progress($systemSection, $systemReview?->answers ?? [], $systemReview?->source_snapshot ?? ['facts' => $facts]);
+                    }
                 }
                 if ($plants->isEmpty()) {
                     $parts[] = $this->plant(app(IsoPlantQuestionnaire::class)->definition(), []);
@@ -47,7 +53,7 @@ class QuestionnaireCompletion
                 }
                 foreach (config('iso50001-workflows', []) as $section => $actions) {
                     // 4.1 is now covered by the context questionnaire, not the legacy form.
-                    if (in_array($section, ['4-1', '4-2'])) {
+                    if (in_array($section, ['4-1', '4-2', '4-3', '4-4'])) {
                         continue;
                     }
                     foreach ($actions as $key => $workflow) {
@@ -135,6 +141,23 @@ class QuestionnaireCompletion
 
             return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $stakeholderService->progress($answers, $parties, $review?->consultant ?? []), 'status' => $status];
         });
+        $systems = IsoSystemReview::where('audit_id', $audit->id)->get()->keyBy(fn ($row) => $row->site_id.':'.$row->section);
+        foreach (['4-3', '4-4'] as $section) {
+            $result[$section] = $profiles->map(function ($profile) use ($audit, $systems, $section) {
+                $profile->audit_id = $audit->id;
+                $service = app(IsoSystemQuestionnaire::class);
+                $sources = $service->sources($profile, $section);
+                $review = $systems->get($profile->site_id.':'.$section);
+                $status = $review && $review->source_hash !== $sources['hash'] ? 'Źródła zmienione — wymagany przegląd' : IsoPlantProfile::STATUSES[$review?->status ?? 'editing'];
+                if ($review?->status === 'submitted') {
+                    $status .= ' — działanie audytora';
+                } elseif (in_array($review?->status, ['returned', 'auditor_corrected'])) {
+                    $status .= ' — działanie klienta';
+                }
+
+                return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $service->progress($section, $review?->answers ?? $service->seed($section, $sources), $sources), 'status' => $status];
+            });
+        }
         request()->attributes->set($cacheKey, $result);
 
         return $result;

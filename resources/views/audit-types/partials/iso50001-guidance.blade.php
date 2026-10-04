@@ -25,6 +25,8 @@
     </section>
     @if(in_array($item['id'], ['4-1', '4-2']))
         @include('audit-types.partials.iso50001-context-form')
+    @elseif(in_array($item['id'], ['4-3', '4-4']))
+        @include('audits.system.launch')
     @elseif($guidance['pitfall'] ?? false)
     <aside class="iso-guide-warning"><i class="ti ti-alert-triangle"></i><div><strong>Typowa pułapka</strong><p>{{ $guidance['pitfall'] }}</p></div></aside>
     @endif

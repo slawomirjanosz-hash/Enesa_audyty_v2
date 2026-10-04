@@ -1,0 +1,686 @@
+{
+  "pytania": [
+    {
+      "kod": "SYS-01",
+      "norma": false,
+      "pytanie": "W jakiej formie dokumentujecie system zarządzania energią?",
+      "pomoc": "Norma nie narzuca formy. Decyzja wpływa na to, ile dokumentów powstanie w kolejnych punktach.",
+      "opcje": [
+        [
+          "procedury",
+          "Zestaw procedur systemowych (P-EnMS-01 … P-EnMS-07)"
+        ],
+        [
+          "jeden",
+          "Jeden dokument opisujący cały system"
+        ],
+        [
+          "nadbudowa",
+          "Rozszerzenie dokumentacji istniejącego ISO 14001 / 9001"
+        ]
+      ],
+      "skutek": "Wybór „nadbudowa” zdejmuje z listy 4 procesy, które opisuje już dokumentacja ISO 14001 lub 9001."
+    },
+    {
+      "kod": "SYS-02",
+      "norma": true,
+      "pytanie": "Czy system obejmuje cały zakres i granice ustalone w punkcie 4.3?",
+      "pomoc": "Jeśli nie, zakres w 4.3 jest nieaktualny i trzeba go poprawić tam, nie tutaj.",
+      "opcje": [
+        [
+          "tak",
+          "Tak — system obejmuje cały zakres z 4.3"
+        ],
+        [
+          "nie",
+          "Nie — zakres wymaga korekty w punkcie 4.3"
+        ]
+      ],
+      "skutek": "Odpowiedź „nie” blokuje przekazanie i odsyła do punktu 4.3."
+    },
+    {
+      "kod": "SYS-05",
+      "norma": false,
+      "pytanie": "Kto odpowiada za system jako całość?",
+      "pomoc": "Stanowisko, nie imię. To nie to samo co właściciel pojedynczego procesu. Jeśli odpowiedź brzmi „koordynator i tylko koordynator”, test ciągłości w zakładce 4 pokaże, co się stanie.",
+      "rows": 1,
+      "placeholder": "np. Energy Manager / Pełnomocnik ds. systemów zarządzania",
+      "skutek": "Wchodzi do sekcji 1 dokumentu i do odpowiedzialności w P-EnMS-01."
+    },
+    {
+      "kod": "SYS-06",
+      "norma": false,
+      "pytanie": "Kto zastępuje tę osobę podczas nieobecności?",
+      "pomoc": "Punkt 4.4 wymaga systemu, który działa bez konkretnego człowieka. Zastępstwo dla osoby odpowiedzialnej za całość jest pierwszym warunkiem ciągłości.",
+      "rows": 1,
+      "placeholder": "np. Kierownik Utrzymania Ruchu — pełnomocnictwo stałe",
+      "skutek": "Pozycja listy kontrolnej III-07: „kluczowe role mają zastępców”."
+    },
+    {
+      "kod": "SYS-07",
+      "norma": false,
+      "pytanie": "Czy w systemie odróżniacie odchylenie od niezgodności?",
+      "pomoc": "Na każde niekorzystne odchylenie trzeba zareagować. Działanie korygujące (10.2) podejmujecie dopiero wtedy, gdy nie spełniono wymagania. Mylenie obu pojęć zamienia rejestr niezgodności w listę wahań wskaźnika.",
+      "opcje": [
+        [
+          "tak",
+          "Tak — mamy to zapisane i rozróżniamy w praktyce"
+        ],
+        [
+          "czesciowo",
+          "Częściowo — rozróżniamy w praktyce, ale nie jest to nigdzie zapisane"
+        ],
+        [
+          "nie",
+          "Nie — każde odchylenie trafia do rejestru niezgodności"
+        ]
+      ],
+      "skutek": "Odpowiedź inna niż „tak” dopisuje uwagę do analizy konsultanta."
+    }
+  ],
+  "czasowniki": [
+    {
+      "kod": "CZ-01",
+      "slowo": "USTANOWIĆ",
+      "pytanie": "Czy system jest zaprojektowany?",
+      "opis": "Świadomie ustalony sposób zarządzania: procesy, odpowiedzialności, cele, zasady.",
+      "dowod": [
+        "polityka powiązana ze strategią",
+        "przypisane role",
+        "opis procesów i ich powiązań"
+      ],
+      "placeholder": "np. Polityka energetyczna zatwierdzona 12.02.2026, powiązana z celem redukcji kosztów energii w strategii 2026–2028; role przypisane zarządzeniem 3/2026; procesy opisane w P-EnMS-01…07."
+    },
+    {
+      "kod": "CZ-02",
+      "slowo": "WDROŻYĆ",
+      "pytanie": "Czy działa w praktyce?",
+      "opis": "Dane są zbierane, wskaźniki liczone, działania realizowane.",
+      "dowod": [
+        "pracownicy znają swoje role",
+        "są zapisy z działania"
+      ],
+      "placeholder": "np. Odczyty liczników co tydzień w arkuszu EnPI; raport miesięczny za wrzesień; protokoły z trzech działań z planu 2026; lista obecności ze szkolenia 05.2026."
+    },
+    {
+      "kod": "CZ-03",
+      "slowo": "UTRZYMYWAĆ",
+      "pytanie": "Czy działa stale?",
+      "opis": "Nie tylko „na start” — i nie zależy od jednej osoby.",
+      "dowod": [
+        "regularne analizy i przeglądy",
+        "aktualne dane",
+        "zastępstwa"
+      ],
+      "placeholder": "np. Analiza danych co miesiąc (ostatnia 30.09.2026); przegląd zarządzania 18.06.2026; zastępstwa opisane w zarządzeniu; dane w systemie nadzoru (SCADA) aktualizowane automatycznie."
+    },
+    {
+      "kod": "CZ-04",
+      "slowo": "DOSKONALIĆ",
+      "pytanie": "Czy jest coraz lepiej?",
+      "opis": "Usprawniasz system i poprawiasz wynik energetyczny.",
+      "dowod": [
+        "porównanie „rok temu — dziś — plan”",
+        "poprawa wykazana na wskaźnikach"
+      ],
+      "placeholder": "np. Usprawnienia systemu: skrócony obieg danych z 14 do 3 dni, progi alarmowe na sprężarkowni od 03.2026.",
+      "wskazniki": true
+    }
+  ],
+  "obieg": [
+    {
+      "kod": "OB-1",
+      "ogniwo": "Sytuacja",
+      "pyt": "Kto zauważa, że wskaźnik przekroczył próg?",
+      "przyklad": "monitoring pokazuje, że wskaźnik sprężarkowni wzrósł z ok. 0,125 do 0,135 kWh/Nm³ i przekroczył ustalony próg",
+      "kiedy": "Jak często patrzy i skąd bierze dane"
+    },
+    {
+      "kod": "OB-2",
+      "ogniwo": "Znaczenie",
+      "pyt": "Kto ustala przyczynę?",
+      "przyklad": "utrzymanie ruchu sprawdza przyczynę i znajduje nieszczelność w sieci",
+      "kiedy": "W jakim czasie od sygnału"
+    },
+    {
+      "kod": "OB-3",
+      "ogniwo": "Decyzja",
+      "pyt": "Kto decyduje, co z tym zrobić?",
+      "przyklad": "kierownik utrzymania ruchu zleca naprawę i zmienia częstotliwość kontroli szczelności",
+      "kiedy": "Na jakiej podstawie i w jakim trybie"
+    },
+    {
+      "kod": "OB-4",
+      "ogniwo": "Działanie",
+      "pyt": "Kto wykonuje i gdzie to zapisuje?",
+      "przyklad": "naprawa wykonana, nowy harmonogram kontroli wpisany do planu przeglądów",
+      "kiedy": "Gdzie powstaje zapis"
+    },
+    {
+      "kod": "OB-5",
+      "ogniwo": "Sprawdzenie",
+      "pyt": "Kto sprawdza efekt i komu przekazuje wniosek?",
+      "przyklad": "po miesiącu Energy Manager porównuje wskaźnik — wrócił do ok. 0,126 kWh/Nm³ — i przekazuje wnioski na przegląd zarządzania",
+      "kiedy": "Po jakim czasie i na jakie forum trafia wniosek"
+    }
+  ],
+  "progi": [
+    {
+      "kod": "PG-01",
+      "etykieta": "Jak często analizujecie dane energetyczne dla całego zakładu?",
+      "opcje": [
+        [
+          "tydzien",
+          "Co tydzień"
+        ],
+        [
+          "miesiac",
+          "Co miesiąc"
+        ],
+        [
+          "kwartal",
+          "Co kwartał"
+        ],
+        [
+          "rzadziej",
+          "Rzadziej niż co kwartał"
+        ]
+      ],
+      "rada": "rzadziej",
+      "radatekst": "Rada autora: analizuj dane dla zakładu co najmniej raz w miesiącu. To zalecenie, nie wymaganie normy."
+    },
+    {
+      "kod": "PG-02",
+      "etykieta": "Jak często analizujecie dane dla znaczących użyć energii (SEU)?",
+      "opcje": [
+        [
+          "ciagle",
+          "Na bieżąco — system nadzoru z alarmem"
+        ],
+        [
+          "tydzien",
+          "Co tydzień"
+        ],
+        [
+          "miesiac",
+          "Co miesiąc"
+        ],
+        [
+          "tak_samo",
+          "Tak samo jak dla całego zakładu"
+        ]
+      ],
+      "rada": "tak_samo",
+      "radatekst": "Rada autora: dla znaczących użyć energii analizuj częściej niż dla zakładu — z progami alarmowymi."
+    },
+    {
+      "kod": "PG-03",
+      "etykieta": "Jakie progi uruchamiają reakcję?",
+      "rows": 2,
+      "placeholder": "np. sprężarkownia: wzrost kWh/Nm³ o ponad 5% wobec średniej z 4 tygodni; chłodnictwo: wzrost kWh/t o ponad 8%; zakład: odchylenie EnPI o ponad 10% wobec linii bazowej"
+    },
+    {
+      "kod": "PG-04",
+      "etykieta": "W jakim czasie ktoś ma zareagować po przekroczeniu progu?",
+      "rows": 1,
+      "placeholder": "np. sygnał tego samego dnia roboczego, ustalenie przyczyny w ciągu 5 dni roboczych, decyzja na najbliższym spotkaniu produkcyjnym"
+    }
+  ],
+  "test": [
+    {
+      "kod": "T-1",
+      "pyt": "Kto zauważy, że wskaźnik sprężarkowni przekroczył próg — i kto zdecyduje, co z tym zrobić?"
+    },
+    {
+      "kod": "T-2",
+      "pyt": "Kto zwoła przegląd zarządzania i przygotuje dane?"
+    },
+    {
+      "kod": "T-3",
+      "pyt": "Kto zaproponuje cele na kolejny rok?"
+    },
+    {
+      "kod": "T-4",
+      "pyt": "Czy pracownicy wiedzą, gdzie jest polityka i co z niej wynika dla ich pracy — i kto za to odpowiada?"
+    },
+    {
+      "kod": "T-5",
+      "pyt": "Czy zapisane zasady pozwalają zastępcy działać bez zgadywania — i kto je utrzymuje?"
+    }
+  ],
+  "procesy": [
+    {
+      "kod": "PR-01",
+      "nazwa": "Określanie kontekstu i zakresu EnMS",
+      "klauzula": "4.1–4.3",
+      "klauzulaKod": "4.3",
+      "ksiazka": "P-EnMS-01",
+      "wynik": "D-EnMS-KON-01, D-EnMS-STR-01, D-EnMS-ZAK-01",
+      "sugestia": "Energy Manager",
+      "kluczowy": true,
+      "trafia": "6.1, 6.2–6.3, 4.3, 9.3"
+    },
+    {
+      "kod": "PR-02",
+      "nazwa": "Przywództwo, polityka energetyczna i role",
+      "klauzula": "5",
+      "klauzulaKod": "5",
+      "uzgodnic": true,
+      "wynik": "Polityka energetyczna, zarządzenie o rolach",
+      "sugestia": "Najwyższe kierownictwo",
+      "trafia": "7.3 świadomość, 7.4 komunikacja"
+    },
+    {
+      "kod": "PR-03",
+      "nazwa": "Ryzyka i szanse",
+      "klauzula": "6.1",
+      "klauzulaKod": "6.1",
+      "ksiazka": "P-EnMS-03",
+      "wynik": "D-EnMS-RYZ-01 Rejestr ryzyk i szans",
+      "sugestia": "Energy Manager",
+      "kluczowy": true,
+      "trafia": "6.2 cele, 8.1 nadzór operacyjny"
+    },
+    {
+      "kod": "PR-04",
+      "nazwa": "Przegląd energetyczny, cele, EnPI i plany działań",
+      "klauzula": "6.2–6.5",
+      "klauzulaKod": "6.3",
+      "ksiazka": "P-EnMS-04",
+      "wynik": "Przegląd energetyczny, linia bazowa, EnPI, plany działań",
+      "sugestia": "Energy Manager",
+      "kluczowy": true,
+      "trafia": "9.1 monitorowanie, 9.3 przegląd zarządzania"
+    },
+    {
+      "kod": "PR-05",
+      "nazwa": "Kompetencje, świadomość i komunikacja",
+      "klauzula": "7.1–7.4",
+      "klauzulaKod": "7.2",
+      "uzgodnic": true,
+      "wynik": "Plan szkoleń, zapisy kompetencji",
+      "sugestia": "Dział kadr / Energy Manager",
+      "pokrywaIso": true,
+      "trafia": "8.1 nadzór operacyjny"
+    },
+    {
+      "kod": "PR-06",
+      "nazwa": "Nadzór nad udokumentowaną informacją",
+      "klauzula": "7.5",
+      "klauzulaKod": "7.5",
+      "uzgodnic": true,
+      "wynik": "Wykaz dokumentów, zasady wersjonowania",
+      "sugestia": "Pełnomocnik ds. systemów zarządzania",
+      "pokrywaIso": true,
+      "trafia": "wszystkie procesy"
+    },
+    {
+      "kod": "PR-07",
+      "nazwa": "Nadzór operacyjny, projektowanie i zakupy",
+      "klauzula": "8.1–8.3",
+      "klauzulaKod": "8.1",
+      "uzgodnic": true,
+      "wynik": "Kryteria eksploatacyjne dla SEU, kryteria zakupowe",
+      "sugestia": "Utrzymanie ruchu / Zakupy",
+      "kluczowy": true,
+      "trafia": "9.1 monitorowanie"
+    },
+    {
+      "kod": "PR-08",
+      "nazwa": "Monitorowanie, pomiary i ocena zgodności",
+      "klauzula": "9.1",
+      "klauzulaKod": "9.1",
+      "uzgodnic": true,
+      "wynik": "Plan zbierania danych, ocena zgodności z D-EnMS-PRAW-01",
+      "sugestia": "Energy Manager",
+      "kluczowy": true,
+      "trafia": "9.3 przegląd zarządzania, 10.1 odchylenia i niezgodności"
+    },
+    {
+      "kod": "PR-09",
+      "nazwa": "Audit wewnętrzny",
+      "klauzula": "9.2",
+      "klauzulaKod": "9.2",
+      "uzgodnic": true,
+      "wynik": "Program auditów, raporty",
+      "sugestia": "Auditor wewnętrzny",
+      "pokrywaIso": true,
+      "trafia": "9.3, 10.2"
+    },
+    {
+      "kod": "PR-10",
+      "nazwa": "Przegląd zarządzania",
+      "klauzula": "9.3",
+      "klauzulaKod": "9.3",
+      "ksiazka": "P-EnMS-07",
+      "wynik": "Protokół przeglądu zarządzania",
+      "sugestia": "Najwyższe kierownictwo",
+      "kluczowy": true,
+      "trafia": "6.2 cele na kolejny rok, 4.1 aktualizacja kontekstu"
+    },
+    {
+      "kod": "PR-11",
+      "nazwa": "Niezgodności i działania korygujące",
+      "klauzula": "10.1–10.2",
+      "klauzulaKod": "10.2",
+      "uzgodnic": true,
+      "wynik": "Rejestr niezgodności i działań",
+      "sugestia": "Energy Manager",
+      "pokrywaIso": true,
+      "trafia": "9.3 przegląd zarządzania"
+    }
+  ],
+  "powiazania": [
+    {
+      "z": "4.1",
+      "do": "6.1",
+      "wynik": "Czynniki istotne i wnioski",
+      "sposob": "Słabości i zagrożenia → ryzyka; mocne strony i szanse → szanse",
+      "zrodlo": "P-EnMS-01 §8"
+    },
+    {
+      "z": "4.1",
+      "do": "6.2–6.3",
+      "wynik": "Wnioski z analizy kontekstu",
+      "sposob": "Decyzje z tabeli wniosków trafiają do przeglądu energetycznego, celów i planów działań",
+      "zrodlo": "P-EnMS-01 §8"
+    },
+    {
+      "z": "4.1",
+      "do": "6.1, 6.3–6.4, 8.2–8.3",
+      "wynik": "Rozstrzygnięcie w sprawie zmiany klimatu",
+      "sposob": "Przy odpowiedzi „tak” konsekwencje przechodzą do analizy ryzyk, wskaźników i nadzoru operacyjnego",
+      "zrodlo": "P-EnMS-01 §8"
+    },
+    {
+      "z": "4.2",
+      "do": "9.1.2",
+      "wynik": "Wymagania zgodności",
+      "sposob": "Przeniesienie z rejestru stron do rejestru wymagań prawnych i innych",
+      "zrodlo": "P-EnMS-01 §8"
+    },
+    {
+      "z": "4.1, 4.2",
+      "do": "4.3",
+      "wynik": "Czynniki i wymagania stron",
+      "sposob": "Uwzględnienie przy ustalaniu zakresu i granic",
+      "zrodlo": "P-EnMS-01 §8"
+    },
+    {
+      "z": "4.1",
+      "do": "9.3",
+      "wynik": "Zmiany czynników kontekstowych",
+      "sposob": "Punkt agendy przeglądu zarządzania",
+      "zrodlo": "P-EnMS-01 §8"
+    },
+    {
+      "z": "4.3",
+      "do": "4.4",
+      "wynik": "Zakres i granice systemu",
+      "sposob": "System obejmuje dokładnie tę działalność i te granice — bez powielania opisu",
+      "propozycja": true
+    },
+    {
+      "z": "4.4",
+      "do": "7.5",
+      "wynik": "Lista procesów i ich właścicieli",
+      "sposob": "Wykaz udokumentowanej informacji wymaganej przez system",
+      "propozycja": true
+    },
+    {
+      "z": "4.4",
+      "do": "9.2",
+      "wynik": "Mapa procesów",
+      "sposob": "Program auditu wewnętrznego układany według procesów, nie według punktów normy",
+      "propozycja": true
+    }
+  ],
+  "lista_kontrolna": [
+    {
+      "punkt": "4.1",
+      "tekst": "Zebrano dane wejściowe: faktury (12–36 mies.), umowy, wymagania klientów, audyt, strategię, dane pogodowe",
+      "podstawa": "M",
+      "auto": null
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Określono istotne czynniki zewnętrzne",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Określono istotne czynniki wewnętrzne",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Czynniki uporządkowano w wymiarach (model 4 + 3)",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Analizę skonsultowano z produkcją, utrzymaniem ruchu, zakupami i finansami",
+      "podstawa": "M",
+      "auto": null
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Dla każdego czynnika zapisano fakty, wpływ i skutek dla systemu",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Rozstrzygnięto, czy zmiana klimatu jest istotną kwestią (Amd 1:2024)",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Rozstrzygnięcie ma zapisane uzasadnienie i podstawę",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Każdy istotny czynnik ma wniosek: konsekwencja → decyzja → gdzie dalej",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Czynniki i wnioski uwzględniono przy planowaniu ryzyk i szans (6.1) oraz celów (6.2)",
+      "podstawa": "N",
+      "auto": null
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Ustalono stan prawny i zapisano, na jaki dzień",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Analizę przedstawiono zarządowi i zatwierdzono",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.1"
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Zmiany czynników są punktem agendy przeglądu zarządzania (9.3)",
+      "podstawa": "N",
+      "auto": null
+    },
+    {
+      "punkt": "4.1",
+      "tekst": "Zaplanowano przegląd analizy: przy istotnej zmianie i co najmniej raz w roku",
+      "podstawa": "M",
+      "auto": null
+    },
+    {
+      "punkt": "4.2",
+      "tekst": "Określono strony zainteresowane istotne dla wyniku energetycznego i EnMS",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.2"
+    },
+    {
+      "punkt": "4.2",
+      "tekst": "Określono istotne wymagania tych stron",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.2"
+    },
+    {
+      "punkt": "4.2",
+      "tekst": "Ustalono, które wymagania organizacja spełnia w ramach EnMS (wymagania zgodności)",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.2"
+    },
+    {
+      "punkt": "4.2",
+      "tekst": "Wskazano źródło każdego wymagania (przepis, umowa, deklaracja)",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.2"
+    },
+    {
+      "punkt": "4.2",
+      "tekst": "Rozważono wymagania stron związane ze zmianą klimatu",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.2"
+    },
+    {
+      "punkt": "4.2",
+      "tekst": "Wymagania zgodności przeniesiono do rejestru wymagań prawnych i innych (9.1.2)",
+      "podstawa": "M",
+      "auto": null
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Przy ustalaniu zakresu uwzględniono czynniki z 4.1 i wymagania z 4.2",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Określono działalność objętą systemem (zakres)",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Wyznaczono granice fizyczne i organizacyjne",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Organizacja ma uprawnienia do sterowania efektywnością, wykorzystaniem i zużyciem energii w zakresie i granicach",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Sprawdzono uprawnienia w obiektach wynajmowanych, przy wspólnych instalacjach i usługach zleconych",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Uwzględniono wszystkie rodzaje energii wykorzystywane w granicach — żadnego nie wyłączono",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Odróżniono rodzaj energii, który nie występuje, od działalności poza granicami",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Działalność poza granicami opisano: przynależność, uprawnienia, przepływy energii (nie sam procent udziału)",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Zakres i granice są utrzymywane jako udokumentowana informacja",
+      "podstawa": "N",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.3",
+      "tekst": "Zakres zatwierdzono i udostępniono",
+      "podstawa": "M",
+      "auto": "klauzula",
+      "klauzula": "4.3"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Ustanowiono, wdrożono, utrzymuje się i doskonali EnMS, w tym potrzebne procesy i ich wzajemne oddziaływania",
+      "podstawa": "N",
+      "auto": "czasowniki"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Ciągle doskonali się wynik energetyczny — poprawa wykazana na wskaźnikach wobec linii bazowej",
+      "podstawa": "N",
+      "auto": "wskazniki"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Każdy proces ma właściciela; kluczowe role mają zastępców",
+      "podstawa": "M",
+      "auto": "procesy"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Wiadomo, kto przekazuje komu wyniki monitoringu i analiz (tabela lub schemat przepływu informacji)",
+      "podstawa": "M",
+      "auto": "obieg"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Ustalono, kto reaguje na niekorzystne odchylenie i jak szybko (progi, częstotliwość analiz)",
+      "podstawa": "M",
+      "auto": "progi"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Po każdym działaniu sprawdza się jego skuteczność, a wnioski trafiają do systemu",
+      "podstawa": "M",
+      "auto": "sprawdzenie"
+    },
+    {
+      "punkt": "4.4",
+      "tekst": "Test ciągłości: system działa podczas nieobecności koordynatora",
+      "podstawa": "M",
+      "auto": "test"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "konsekwencje_reguly": [
+    {
+      "zrodlo": "D-EnMS-STR-01, STK-Z-12",
+      "punkt": "4.2",
+      "gdy": {
+        "FAKT_ODBIORCY_CO2": "tak"
+      },
+      "podstawa": "Odbiorcy pytają o ślad węglowy wyrobu i efektywność energetyczną produkcji.",
+      "konsekwencja": "Zakres musi obejmować produkcję wyrobów dostarczanych tym odbiorcom — system ograniczony do biura nie odpowie na to wymaganie."
+    },
+    {
+      "zrodlo": "D-EnMS-STR-01, STK-Z-07",
+      "punkt": "4.2",
+      "gdy": {
+        "FAKT_PRZETARGI": "tak"
+      },
+      "podstawa": "Organizacja startuje w postępowaniach, w których certyfikat bywa warunkiem lub kryterium.",
+      "konsekwencja": "Certyfikat musi obejmować jednostkę, która składa oferty — sprawdź, czy to ta sama jednostka co zakład produkcyjny."
+    },
+    {
+      "zrodlo": "D-EnMS-STR-01, STK-Z-02",
+      "punkt": "4.2",
+      "gdy": {
+        "_TJ_powyzej": 85
+      },
+      "podstawa": "Zużycie przekracza próg z dyrektywy EED — obowiązek wdrożenia systemu zarządzania energią.",
+      "konsekwencja": "Zakres ma odpowiadać obowiązkowi dla przedsiębiorstwa, a nie dla wybranej części. Sprawdź, czy system obejmujący jedną lokalizację wystarcza w świetle aktualnych przepisów."
+    },
+    {
+      "zrodlo": "D-EnMS-STR-01, STK-Z-01",
+      "punkt": "4.2",
+      "gdy": {
+        "FAKT_AUDYT_ENERG": "tak"
+      },
+      "podstawa": "Wykonano audyt energetyczny przedsiębiorstwa zgłaszany do URE.",
+      "konsekwencja": "Granice EnMS warto zestawić z zakresem audytu — rozjazd między nimi audytor zauważy i o niego zapyta."
+    },
+    {
+      "zrodlo": "D-EnMS-KON-01, KTX-WO-03",
+      "punkt": "4.1",
+      "gdy": {
+        "FAKT_SYSTEM_BAZOWY": [
+          "iso_14001",
+          "oba"
+        ]
+      },
+      "podstawa": "Organizacja ma certyfikowany system ISO 14001.",
+      "konsekwencja": "Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic."
+    },
+    {
+      "zrodlo": "Profil zakładu, FAKT_LOKALIZACJE",
+      "punkt": "3.6",
+      "gdy": {
+        "_lokalizacji_wiecej_niz": 1
+      },
+      "podstawa": "Organizacja ma więcej niż jedną lokalizację.",
+      "konsekwencja": "Rozstrzygnij, czy system obejmuje wszystkie lokalizacje, czy zaczynacie od jednej. Wybór musi odpowiadać wymaganiom z zakładki powyżej."
+    },
+    {
+      "zrodlo": "D-EnMS-KON-01, KTX-WT-12",
+      "punkt": "4.1",
+      "gdy": {
+        "FAKT_KOTLOWNIA": [
+          "wlasne",
+          "oba"
+        ]
+      },
+      "podstawa": "Zapotrzebowanie na ciepło pokrywane jest z własnego źródła.",
+      "konsekwencja": "Kotłownia leży w granicach i podlega systemowi. Wyłączenie jej jako „trudnego obszaru” jest typową niezgodnością."
+    },
+    {
+      "zrodlo": "D-EnMS-KON-01, KTX-WO-11",
+      "punkt": "4.1",
+      "gdy": {
+        "FAKT_UR_WLASNE": [
+          "zewnetrzne",
+          "mieszane"
+        ]
+      },
+      "podstawa": "Część utrzymania ruchu prowadzi firma zewnętrzna.",
+      "konsekwencja": "Samo zlecenie usługi nie wyprowadza jej poza system. Oceń związek pracy serwisu z działalnością objętą systemem i ustal wymagany nadzór (kl. 8.1)."
+    },
+    {
+      "zrodlo": "Profil zakładu, FAKT_FLOTA",
+      "punkt": "3.6",
+      "gdy": {
+        "FAKT_FLOTA": "tak"
+      },
+      "podstawa": "W zakresie działalności są pojazdy należące do organizacji.",
+      "konsekwencja": "Paliwo tych pojazdów jest uwzględnione w rodzajach energii — niezależnie od udziału w zużyciu."
+    }
+  ]
+}

@@ -61,6 +61,7 @@ Route::get('/', [LandingPageController::class, 'show'])->name('home');
 require __DIR__.'/iso-plant-profile.php';
 require __DIR__.'/iso-factors.php';
 require __DIR__.'/iso-stakeholders.php';
+require __DIR__.'/iso-system.php';
 require __DIR__.'/warehouse.php';
 require __DIR__.'/company-reliability.php';
 Route::middleware(['auth', 'staff.role', 'app.module:audits', 'app.permission:audits.manage'])->group(function () {
