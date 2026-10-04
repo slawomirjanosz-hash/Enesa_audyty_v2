@@ -181,8 +181,21 @@ test('deleting a report removes disk file and restores previous rating', functio
 test('missing data and negative checks cannot produce a green rating', function () {
     $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), array_replace($this->payload, ['status' => 'green']))->assertSessionHasErrors('status');
     $this->post(route('companies.reliability.store', $this->company), array_replace($this->payload, ['status' => 'yellow', 'debt' => 'risk']))->assertSessionHasErrors('status');
-    $this->post(route('companies.reliability.store', $this->company), array_replace($this->payload, ['legal' => 'clear']))->assertSessionHasErrors('evidence');
+    $this->post(route('companies.reliability.store', $this->company), array_replace($this->payload, ['legal' => 'clear', 'notes' => '']))->assertSessionHasErrors('notes');
     expect(CompanyReliabilityReport::count())->toBe(0);
+});
+
+test('reliability layout keeps registration rows periods and compact sortable document tables', function () {
+    $notes = 'KRZ: sprawdzono rejestr dzisiaj, brak wpisu w sprawdzonym zakresie.';
+    $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), array_replace($this->payload, ['legal' => 'clear', 'notes' => $notes]))->assertSessionHasNoErrors();
+    expect(CompanyReliabilityReport::sole()->snapshot['assessment']['evidence'])->toBe($notes);
+    $lookup = ['nip' => $this->company->nip, 'checked_at' => now()->toIso8601String(), 'vat' => ['state' => 'checked', 'status' => 'Czynny'], 'krs' => ['state' => 'checked', 'number' => '0000123456', 'name' => $this->company->name, 'registered_on' => '2002-05-21', 'section4' => [], 'section6' => []]];
+    $response = $this->withSession(['reliability.'.$this->company->id => $lookup])->get(route('companies.reliability.show', $this->company));
+    $response->assertOk()->assertSee('21.05.2002')->assertSee('rel-facts')->assertSee('rel-periods')->assertSee('rel-doc-actions')->assertDontSee('name="evidence"', false)->assertDontSee('<details>', false)->assertDontSee('Nie musisz pobierać');
+    expect(substr_count($response->getContent(), 'class="rel-period"'))->toBe(3);
+    if (getenv('RELIABILITY_LAYOUT_QA')) {
+        file_put_contents(base_path('tmp/reliability-layout.html'), $response->getContent());
+    }
 });
 
 test('registries check identity cache results and handle outages without a safe rating', function () {

@@ -3,10 +3,12 @@
 <strong>Ocena finansowa{{$health['year'] ? ' za '.$health['year'].' r.' : ''}}: {{$health['label']}}</strong>
 <p style="margin:5px 0">Dotyczy sprawozdania, nie wyniku KRZ ani wszystkich długów. OK oznacza brak sygnałów według poniższych reguł, a nie gwarancję wypłacalności.</p>
 </div>
+<div class="rel-health-periods">
 @foreach($health['periods'] as $period)
 <div style="padding:10px;margin:8px 0;background:{{$tones[$period['state']]}};page-break-inside:avoid">
 <strong>{{$period['year']}} — {{$period['label']}}</strong>
 <ul style="margin:5px 0;padding-left:18px">@foreach($period['findings'] as $finding)<li>{{$finding['message']}}</li>@endforeach</ul>
 </div>
 @endforeach
+</div>
 <p class="rel-muted muted" style="font-size:0.9em">{{$health['rules']}}</p>

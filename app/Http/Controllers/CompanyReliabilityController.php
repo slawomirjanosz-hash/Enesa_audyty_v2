@@ -129,7 +129,8 @@ class CompanyReliabilityController extends Controller
             'finances.*.liabilities' => ['nullable', 'numeric', 'min:0', 'max:999999999999999'],
             'finances.*.source' => ['nullable', 'string', 'max:1000'],
         ]);
-        $data['evidence'] = $data['evidence'] ?? null;
+        // One visible justification field; retain the evidence snapshot for older reports/API clients.
+        $data['evidence'] = $data['evidence'] ?? ($auto ? null : ($data['notes'] ?? null));
         $data['finances'] = array_values(array_filter($data['finances'] ?? [], fn ($row) => count(array_filter($row, fn ($v) => $v !== null && $v !== '')) > 0));
         foreach ($data['finances'] as $row) {
             if (empty($row['year']) || empty($row['source'])) {
@@ -176,7 +177,7 @@ class CompanyReliabilityController extends Controller
             }
         }
         if (in_array('clear', [$data['legal'], $data['krz'], $data['debt']], true) && blank($data['evidence'])) {
-            throw ValidationException::withMessages(['evidence' => 'Podaj źródła potwierdzające wykonane sprawdzenia.']);
+            throw ValidationException::withMessages(['notes' => 'W uwagach podaj podstawę ręcznej oceny: rejestr lub dokument, datę i wynik sprawdzenia.']);
         }
         $snapshot = ['company' => ['name' => $company->name, 'nip' => $company->nip], 'assessment' => $data,
             'automatic' => $automatic, 'assessment_mode' => $auto ? 'automatic' : 'manual',
