@@ -220,7 +220,7 @@
     @endif
     @if($canManageTeamTasks)
         <a href="{{ route('crm.index', ['tab'=>'trash']) }}" class="crm-tab {{ $currentTab==='trash'?'active':'' }}">
-            <i class="ti ti-trash"></i> Kosz
+            <i class="ti ti-archive"></i> Archiwum zadań
             <span class="tab-count">{{ $trashTasksCount }}</span>
         </a>
     @endif
@@ -395,7 +395,7 @@
                 @foreach($stageOpps as $opp)
                 @php $isOverdue = $opp->expected_close_date && $opp->expected_close_date->isBefore(today()); @endphp
                 <div class="opp-card {{ $isOverdue ? 'overdue' : '' }}" @if($isOverdue)data-overdue="true"@endif style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $isOverdue ? '#DC2626' : $meta['dot'] }};cursor:pointer;"
-                    onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
+                    onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['archived' => $task->trashed(), 'title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
                         <a href="{{ route('companies.show', $opp->company) }}" class="opp-card-sub" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;color:var(--green);text-decoration:none;font-weight:600;">
@@ -463,7 +463,7 @@
             </div>
             @foreach($stageOpps as $opp)
             <div class="opp-card" style="border-left:3px solid {{ $meta['dot'] }};margin-bottom:6px;cursor:pointer;"
-                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
+                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['archived' => $task->trashed(), 'title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                 <div class="opp-card-title">{{ $opp->title }}</div>
                 <div class="opp-card-sub">{{ $opp->company?->name ?? 'bez klienta' }}</div>
             </div>
@@ -509,7 +509,7 @@
                     <td style="text-align:center;">
                         <div style="display:flex;gap:4px;justify-content:center;">
                             <button class="btn-icon btn-icon-edit" title="Edytuj"
-                                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))"><i class="ti ti-pencil"></i></button>
+                                onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['archived' => $task->trashed(), 'title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))"><i class="ti ti-pencil"></i></button>
                             @if($canManageCrm)
                                 <form method="POST" action="{{ route('crm.opportunities.duplicate', $opp) }}" onsubmit="return confirm('Utworzyć kopię tej szansy?')" style="display:inline;">
                                     @csrf
@@ -581,9 +581,9 @@
                         @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
-                        <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Usunąć zadanie?')">
+                        <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Zarchiwizować zadanie?')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn-icon btn-icon-delete" title="Usuń"><i class="ti ti-trash"></i></button>
+                            <button type="submit" class="btn-secondary" title="Archiwizuj zadanie"><i class="ti ti-archive"></i> Archiwizuj</button>
                         </form>
                         @endif
                     </div>
@@ -646,9 +646,9 @@
                         <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
-                        <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Usunąć zadanie?')">
+                        <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Zarchiwizować zadanie?')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn-icon btn-icon-delete" title="Usuń"><i class="ti ti-trash"></i></button>
+                            <button type="submit" class="btn-secondary" title="Archiwizuj zadanie"><i class="ti ti-archive"></i> Archiwizuj</button>
                         </form>
                     </div>
                 </td>
@@ -664,9 +664,20 @@
 
 {{-- ═══ TAB: AUDYTY ═══ --}}
 @if($currentTab === 'trash' && $canManageTeamTasks)
+<p><a href="{{route('board.mine',['archive'=>1])}}">Archiwum na Mojej tablicy — filtry źródeł i użytkowników</a></p>
+@php
+    $archiveQuery = app(\App\Services\BoardAccessService::class)->visible(auth()->user())->onlyTrashed();
+    if (!auth()->user()->can('board.team.view') && !app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user())) {
+        $archiveQuery->where(fn($q) => $q->where('assigned_to',auth()->id())->orWhereHas('participants',fn($p)=>$p->whereKey(auth()->id())));
+    }
+    $archiveCards = $archiveQuery->with(['project','audit','stage','assignee','participants'])->orderByDesc('deleted_at')->orderByDesc('id')->paginate(90,['*'],'archive_page')->appends(['tab'=>'trash']);
+@endphp
+@include('boards.cards',['cards'=>$archiveCards,'archivedBoard'=>true,'boardManage'=>false,'personalBoard'=>true])
+{{$archiveCards->links()}}
+<h2>Archiwum zadań CRM</h2>
 <div class="table-card" style="margin-bottom:16px;">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-chart-bar" style="color:var(--green);margin-right:6px;"></i> Usunięte zadania według przypisanej osoby</div>
+        <div class="table-card-title"><i class="ti ti-chart-bar" style="color:var(--green);margin-right:6px;"></i> Zarchiwizowane zadania według przypisanej osoby</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;padding:16px;">
         @forelse($trashTaskSummary as $person => $count)
@@ -675,27 +686,27 @@
                 <div style="font-size:20px;font-weight:800;color:var(--green);margin-top:3px;">{{ $count }}</div>
             </div>
         @empty
-            <div style="font-size:13px;color:#999;">Kosz zadań jest pusty.</div>
+            <div style="font-size:13px;color:#999;">Brak zarchiwizowanych zadań CRM.</div>
         @endforelse
     </div>
 </div>
 
 <div class="table-card">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-trash" style="color:#B91C1C;margin-right:6px;"></i> Usunięte zadania ({{ $trashTasks->count() }})</div>
+        <div class="table-card-title"><i class="ti ti-trash" style="color:#B91C1C;margin-right:6px;"></i> Zarchiwizowane zadania ({{ $trashTasks->count() }})</div>
         <div class="search-box"><i class="ti ti-search"></i><input type="text" placeholder="Szukaj..." oninput="filterTable('trash-tasks-tbody', this.value, [0,1,2,3])"></div>
     </div>
     <div style="overflow-x:auto;">
         <table class="crm-table">
-            <thead><tr><th>Zadanie</th><th>Firma</th><th>Przypisany</th><th>Termin</th><th>Usunięto</th><th>Usunął</th><th>Akcje</th></tr></thead>
+            <thead><tr><th>Zadanie</th><th>Firma</th><th>Przypisany</th><th>Termin</th><th>Zarchiwizowano</th><th>Zarchiwizował</th><th>Akcje</th></tr></thead>
             <tbody id="trash-tasks-tbody">
                 @forelse($trashTasks as $task)
                     <tr>
                         <td><div style="font-weight:700;">{{ $task->title }}</div>@if($task->description)<div style="font-size:11px;color:#888;">{{ \Illuminate\Support\Str::limit($task->description, 90) }}</div>@endif</td>
                         <td style="font-size:12px;color:#666;">{{ $task->company?->name ?? '—' }}</td>
                         <td style="font-size:12px;">{{ $task->assignedUser?->name ?? 'Nieprzypisane' }}</td>
-                        <td style="font-size:12px;color:#666;">{{ $task->due_date?->format('d.m.Y') ?? '—' }}</td>
-                        <td style="font-size:12px;color:#666;">{{ $task->deleted_at?->format('d.m.Y H:i') ?? '—' }}</td>
+                        <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:#666;">{{ $task->due_date?->format('d.m.Y') ?? '—' }}</td>
+                        <td data-sort-value="{{ $task->deleted_at?->timestamp }}" style="font-size:12px;color:#666;">{{ $task->deleted_at?->format('d.m.Y H:i') ?? '—' }}</td>
                         <td style="font-size:12px;color:#666;">{{ $task->deletedBy?->name ?? '—' }}</td>
                         <td>
                             <form method="POST" action="{{ route('crm.tasks.restore', $task->id) }}">
@@ -705,7 +716,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7" style="padding:28px;text-align:center;color:#999;">Brak usuniętych zadań.</td></tr>
+                    <tr><td colspan="7" style="padding:28px;text-align:center;color:#999;">Brak zarchiwizowanych zadań CRM.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -1649,6 +1660,10 @@ function renderOpportunityTasks(tasks = []) {
         container.appendChild(empty);
         return;
     }
+    const archive = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Zarchiwizowane zadania (' + tasks.filter(task=>task.archived).length + ')';
+    archive.appendChild(summary);
     tasks.forEach(task => {
         const row = document.createElement('div');
         row.style.cssText = 'border:1px solid #E5E1D8;border-radius:7px;padding:9px 10px;background:#FAFAF6;';
@@ -1659,8 +1674,9 @@ function renderOpportunityTasks(tasks = []) {
         meta.textContent = [task.status, task.assigned, task.due_date].filter(Boolean).join(' · ');
         meta.style.cssText = 'font-size:11px;color:#777;margin-top:3px;';
         row.append(title, meta);
-        container.appendChild(row);
+        (task.archived ? archive : container).appendChild(row);
     });
+    if(tasks.some(task=>task.archived)) container.appendChild(archive);
 }
 
 function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {

@@ -36,6 +36,11 @@ class PersonalBoardService
         $team = $user->can('board.team.view');
         $base = app(BoardAccessService::class)->visible($user);
         $crmBase = $this->crm($user);
+        $archivedBoard = $request->boolean('archive');
+        if ($archivedBoard) {
+            $base->onlyTrashed();
+            $crmBase->onlyTrashed();
+        }
         $modules = collect(['projects' => 'Projekty', 'audits' => 'Audyty', 'crm' => 'CRM'])->filter(fn ($label, $key) => CompanySettings::moduleIsEnabled($key))->all();
         $options = [];
         foreach (['projects' => 'project', 'audits' => 'audit'] as $key => $relation) {
@@ -80,8 +85,8 @@ class PersonalBoardService
         // Union identifiers first: filters and access restrictions apply before shared pagination.
         $union = $base->selectRaw("id, due_date, 'board' AS kind")->toBase()->unionAll($crmBase->selectRaw("id, due_date, 'crm' AS kind")->toBase());
         $cards = DB::query()->fromSub($union, 'board_rows')->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('kind')->orderBy('id')->paginate(90)->withQueryString();
-        $boardRows = BoardTask::with(['project', 'audit', 'stage', 'assignee', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'board')->pluck('id'))->get()->keyBy('id');
-        $crmRows = Task::with(['company', 'crmOpportunity', 'assignedUser', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'crm')->pluck('id'))->get()->keyBy('id');
+        $boardRows = BoardTask::withTrashed()->with(['project', 'audit', 'stage', 'assignee', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'board')->pluck('id'))->get()->keyBy('id');
+        $crmRows = Task::withTrashed()->with(['company', 'crmOpportunity', 'assignedUser', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'crm')->pluck('id'))->get()->keyBy('id');
         $cards->setCollection($cards->getCollection()->map(function ($row) use ($boardRows, $crmRows) {
             if ($row->kind === 'board') {
                 return $boardRows[$row->id];
@@ -90,6 +95,7 @@ class PersonalBoardService
             $card = new BoardTask($task->only(['title', 'description', 'assigned_to', 'status', 'due_date']));
             $card->id = $task->id;
             $card->revision = $task->board_revision;
+            $card->deleted_at = $task->deleted_at;
             foreach (['project' => null, 'audit' => null, 'stage' => null, 'assignee' => $task->assignedUser, 'participants' => $task->participants, 'crmTask' => $task] as $key => $value) {
                 $card->setRelation($key, $value);
             }
@@ -97,6 +103,6 @@ class PersonalBoardService
             return $card;
         }));
 
-        return compact('cards', 'modules', 'options', 'selected', 'team');
+        return compact('cards', 'modules', 'options', 'selected', 'team', 'archivedBoard');
     }
 }

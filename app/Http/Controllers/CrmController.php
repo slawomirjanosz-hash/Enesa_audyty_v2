@@ -83,7 +83,7 @@ class CrmController extends Controller
         $opportunities = $currentTab === 'pipeline'
             ? (clone $opportunitiesQuery)->with([
                 'company', 'assignedUser', 'relatedUsers', 'offers',
-                'tasks' => fn ($tasks) => $tasks->crm()->with('assignedUser'),
+                'tasks' => fn ($tasks) => $tasks->crm()->withTrashed()->with('assignedUser'),
             ])->get()
             : collect();
 
@@ -320,7 +320,7 @@ class CrmController extends Controller
 
     public function updateTask(Request $request, Task $task): RedirectResponse
     {
-        abort_if($task->project_id !== null, 404);
+        abort_if($task->project_id !== null || $task->audit_id !== null, 404);
         $this->authorize('update', $task);
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -362,12 +362,12 @@ class CrmController extends Controller
 
     public function destroyTask(Task $task): RedirectResponse
     {
-        abort_if($task->project_id !== null, 404);
+        abort_if($task->project_id !== null || $task->audit_id !== null, 404);
         $this->authorize('delete', $task);
         $task->update(['deleted_by' => auth()->id()]);
         $task->delete();
 
-        return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało przeniesione do kosza.');
+        return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało zarchiwizowane.');
     }
 
     public function restoreTask(Request $request, int $taskId): RedirectResponse
@@ -383,7 +383,7 @@ class CrmController extends Controller
 
     public function updateTaskStatus(Request $request, Task $task): JsonResponse
     {
-        abort_if($task->project_id !== null, 404);
+        abort_if($task->project_id !== null || $task->audit_id !== null, 404);
         $this->authorize('update', $task);
         $data = $request->validate([
             'status' => ['required', 'in:todo,in_progress,done'],

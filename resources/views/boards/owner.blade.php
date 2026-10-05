@@ -2,31 +2,33 @@
     $boardAccess = app(\App\Services\BoardAccessService::class);
     $boardManage = $boardAccess->manage(auth()->user(), $boardOwner);
     $boardType = $boardOwner instanceof \App\Models\Project ? 'project' : 'audit';
+    $archivedBoard = request()->boolean('board_archive');
     $boardStages = $boardOwner->tasks;
     $boardStageId = request()->query('board_stage');
     abort_if($boardStageId !== null && (!is_string($boardStageId) || !ctype_digit($boardStageId)), 404);
     $boardStage = $boardStageId !== null ? $boardStages->firstWhere('id', (int) $boardStageId) : null;
     abort_if($boardStageId !== null && !$boardStage, 404);
-    $cards = \App\Models\BoardTask::where($boardType.'_id', $boardOwner->id)->when($boardStage, fn ($query) => $query->where('stage_task_id', $boardStage->id))->with(['assignee','participants','stage','project','audit'])->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('id')->paginate(90, ['*'], 'board_page')->appends(array_filter(['tab'=>'tasks', 'board_stage'=>$boardStage?->id]));
+    $cards = \App\Models\BoardTask::where($boardType.'_id', $boardOwner->id)->when($archivedBoard, fn ($query) => $query->onlyTrashed())->when($boardStage, fn ($query) => $query->where('stage_task_id', $boardStage->id))->with(['assignee','participants','stage','project','audit'])->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('id')->paginate(90, ['*'], 'board_page')->appends(array_filter(['tab'=>'tasks', 'board_stage'=>$boardStage?->id, 'board_archive'=>$archivedBoard ? 1 : null]));
 @endphp
 <div class="board-owner-layout">
 <nav class="board-stages" aria-label="Etapy harmonogramu">
     <h3>Etapy harmonogramu</h3>
     @forelse($boardStages as $stage)
-        <a href="{{request()->url().'?'.http_build_query(['tab'=>'tasks', 'board_stage'=>$stage->id])}}" @if($boardStage?->id === $stage->id) aria-current="page" @endif>{{$stage->title}}</a>
+        <a href="{{request()->url().'?'.http_build_query(['tab'=>'tasks', 'board_stage'=>$stage->id, 'board_archive'=>$archivedBoard ? 1 : null])}}" @if($boardStage?->id === $stage->id) aria-current="page" @endif>{{$stage->title}}</a>
     @empty
         <p>Brak etapów w harmonogramie.</p>
     @endforelse
-    <a class="board-stages-all" href="{{request()->url().'?tab=tasks'}}" @if(!$boardStage) aria-current="page" @endif>Pokaż wszystkie zadania</a>
+    <a class="board-stages-all" href="{{request()->url().'?tab=tasks'.($archivedBoard ? '&board_archive=1' : '')}}" @if(!$boardStage) aria-current="page" @endif>Pokaż wszystkie zadania</a>
 </nav>
 <div class="board-owner-content">
+<nav class="board-tabs" aria-label="Widok zadań"><a href="{{request()->url()}}?tab=tasks" @if(!$archivedBoard) aria-current="page" @endif>Aktywne zadania</a><a href="{{request()->url()}}?tab=tasks&amp;board_archive=1" @if($archivedBoard) aria-current="page" @endif>Zarchiwizowane</a></nav>
 @if($boardStage)<p class="board-stage-heading">Etap: <strong>{{$boardStage->title}}</strong></p>@endif
 @include('boards.cards')
 @if($cards->isEmpty())<p class="board-empty">{{$boardStage ? 'Brak zadań przypisanych do tego etapu.' : 'Brak zadań na tablicy.'}}</p>@endif
 @if($cards->hasPages())<p>Na tej stronie {{$cards->count()}} z {{$cards->total()}} zadań. Liczniki kolumn dotyczą tej strony.</p>{{$cards->links()}}@endif
 </div>
 </div>
-@if($boardManage)
+@if($boardManage && !$archivedBoard)
 <dialog id="board-editor" class="board-dialog">
     <form data-board-form data-default-stage="{{$boardStage?->id}}" action="{{route('board.store', [$boardType, $boardOwner->id])}}">
         @csrf
