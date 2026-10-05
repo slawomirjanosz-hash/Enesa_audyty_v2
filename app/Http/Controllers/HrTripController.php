@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,18 +42,8 @@ class HrTripController extends Controller
     public function tripPdf(Request $request, HrBusinessTrip $trip): Response
     {
         abort_unless($trip->user_id === $request->user()->id || HrAccess::canViewTeam($request->user()), 403);
-        $request->validate(['use_signature' => ['nullable', 'boolean']]);
-        $employeeSignature = null;
-        if ($request->boolean('use_signature')) {
-            abort_unless($trip->user_id === $request->user()->id, 403);
-            $employeeSignature = $request->user()->signatureDataUri();
-            if (! $employeeSignature) {
-                throw ValidationException::withMessages([
-                    'use_signature' => 'Najpierw dodaj podpis w sekcji Mój profil.',
-                ]);
-            }
-        }
         $trip->load(['user', 'vehicle']);
+        $employeeSignature = $trip->user?->signatureDataUri();
 
         $company = CompanySettings::query()->first();
 

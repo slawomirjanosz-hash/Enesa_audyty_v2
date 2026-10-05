@@ -3,15 +3,11 @@
 @section('content')
 <style>.explain{background:#fff;border:1px solid #e5e1d8;border-radius:12px;padding:22px;max-width:1000px}.explain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.explain-box{background:#f7faf8;border-radius:9px;padding:14px}.explain-box small{display:block;color:#6b7280}.explain-box strong{font-size:18px;color:var(--green)}.formula{margin-top:16px;padding:15px;border-left:4px solid var(--green);background:#eef6f1;line-height:1.6}.preview-btn{display:inline-block;background:var(--green);color:#fff;padding:10px 14px;border-radius:7px;text-decoration:none}.trip-map{margin-top:18px}.trip-map h2{font-size:16px;margin-bottom:9px}.trip-map iframe{display:block;width:100%;height:420px;border:0;border-radius:10px;background:#f3f4f6}</style>
 <div class="explain"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h1 style="margin:0;color:var(--green)">{{$trip->purpose}}</h1><p>{{$trip->user?->name}} · {{$trip->origin}} → {{$trip->destination}} → {{$trip->origin}}</p></div><form method="GET" action="{{route('hr.delegations.pdf',$trip)}}" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:320px">
-@if($trip->user_id === auth()->id())
-@if(auth()->user()->signature_data)
-<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="use_signature" value="1"> Dołącz mój podpis z profilu</label>
-<small>Podpis zostanie umieszczony tylko przy potwierdzeniu odbycia wyjazdu, nie przy zleceniu ani odbiorze środków.</small>
-@else
+@if($trip->user?->signatureDataUri())
+<small>Podpis osoby wyjeżdżającej z jej profilu zostanie automatycznie umieszczony przy potwierdzeniu odbycia wyjazdu.</small>
+@elseif($trip->user_id === auth()->id())
 <small>Aby dołączyć podpis, dodaj go w <a href="{{route('profile.edit')}}">Moim profilu</a>.</small>
 @endif
-@endif
-@error('use_signature')<small role="alert" style="color:#b91c1c">{{$message}}</small>@enderror
 <button type="submit" class="preview-btn" style="border:0;cursor:pointer;font:inherit"><i class="ti ti-file-type-pdf"></i> Polecenie wyjazdu - PDF</button>
 </form></div>
 <div class="explain-grid"><div class="explain-box"><small>Czas całej delegacji</small><strong>{{number_format($trip->departure_at->diffInMinutes($trip->return_at)/60,2,',',' ')}} godz.</strong><small>{{$trip->departure_at->format('d.m.Y H:i')}} – {{$trip->return_at->format('d.m.Y H:i')}}</small></div><div class="explain-box"><small>Dieta</small><strong>{{number_format((float)$trip->diet_amount,2,',',' ')}} zł</strong><small>Pełna stawka: {{number_format((float)$trip->diet_rate,2,',',' ')}} zł</small></div><div class="explain-box"><small>Kilometrówka</small><strong>{{number_format((float)$trip->mileage_amount,2,',',' ')}} zł</strong><small>{{number_format((float)$trip->distance_km,1,',',' ')}} km × {{number_format((float)$trip->km_rate,4,',',' ')}} zł</small></div><div class="explain-box"><small>Pozostałe koszty</small><strong>{{number_format((float)$trip->toll_cost+(float)$trip->accommodation_cost+(float)$trip->other_cost,2,',',' ')}} zł</strong><small>Autostrady + noclegi + inne</small></div></div>

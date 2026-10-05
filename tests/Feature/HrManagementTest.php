@@ -120,7 +120,7 @@ test('employee creates own delegation with calculated return and remembered priv
         ->toContain('Samochód służbowy')->not->toContain('Samochód prywatny');
 });
 
-test('employee can explicitly include only their own profile signature in a trip pdf', function () {
+test('trip pdf automatically includes the traveller signature for authorised viewers only', function () {
     $employee = User::factory()->create();
     $role = Role::findOrCreate('employee_hr');
     $role->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
@@ -132,31 +132,34 @@ test('employee can explicitly include only their own profile signature in a trip
     ]);
     $this->actingAs($employee)->get(route('hr.delegations.show', $trip))
         ->assertOk()->assertSee('Moim profilu')->assertDontSee('name="use_signature"', false);
-    $this->getJson(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))
-        ->assertUnprocessable()->assertJsonValidationErrors('use_signature');
+    $unsigned = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
+    expect($unsigned->getContent())->not->toContain('/Subtype /Image');
 
     $image = UploadedFile::fake()->image('signature.png', 300, 80);
     $employee->forceFill(['signature_data' => base64_encode(file_get_contents($image->getRealPath())), 'signature_mime' => 'image/png'])->save();
-    $this->get(route('hr.delegations.show', $trip))->assertOk()->assertSee('Dołącz mój podpis z profilu')
+    $this->get(route('hr.delegations.show', $trip))->assertOk()->assertSee('Podpis osoby wyjeżdżającej')
         ->assertDontSee($employee->signature_data, false);
-    $unsigned = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
-    expect($unsigned->getContent())->not->toContain('/Subtype /Image');
-    $signed = $this->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))
+    $signed = $this->get(route('hr.delegations.pdf', $trip))
         ->assertOk()->assertHeader('content-type', 'application/pdf');
     expect($signed->getContent())->toContain('/Subtype /Image');
-    $this->getJson(route('hr.delegations.pdf', [$trip, 'use_signature' => 'invalid']))
-        ->assertUnprocessable()->assertJsonValidationErrors('use_signature');
 
     $admin = User::factory()->create();
     $admin->assignRole('superadmin');
     $this->actingAs($admin)->get(route('hr.delegations.show', $trip))
         ->assertOk()->assertDontSee('name="use_signature"', false);
-    $this->get(route('hr.delegations.pdf', $trip))->assertOk();
-    $this->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))->assertForbidden();
+    $adminPrint = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
+    expect($adminPrint->getContent())->toContain('/Subtype /Image');
+
+    // The printer's signature must never replace a missing traveller signature.
+    $admin->forceFill(['signature_data' => $employee->signature_data, 'signature_mime' => 'image/png'])->save();
+    $employee->forceFill(['signature_data' => null, 'signature_mime' => null])->save();
+    $withoutTravellerSignature = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
+    expect($withoutTravellerSignature->getContent())->not->toContain('/Subtype /Image');
 
     $other = User::factory()->create();
     $other->assignRole($role);
     $this->actingAs($other)->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))->assertForbidden();
+    $this->get(route('hr.delegations.pdf', $trip))->assertForbidden();
 });
 
 test('HR rates apply to saved and manually entered private cars but not company cars', function () {
