@@ -42,4 +42,7 @@ return [
     'anthropic' => [
         'key' => env('ANTHROPIC_API_KEY'),
     ],
+    'financial_pdf' => [
+        'pdftotext' => env('PDFTOTEXT_BINARY', 'pdftotext'),
+    ],
 ];

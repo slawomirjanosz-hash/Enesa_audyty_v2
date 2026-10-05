@@ -35,7 +35,7 @@
 <input id="rdf-file" type="file" name="file" accept=".xml,.pdf,.xhtml" required aria-invalid="{{$errors->has('file')?'true':'false'}}">
 <button type="submit">Zapisz plik w aplikacji</button>
 </form>
-<p class="rel-muted">XML JednostkaInna lub JednostkaMała automatycznie uzupełni kwoty w sekcji 3 po sprawdzeniu NIP. PDF i XHTML zostaną zapisane jako załączniki. Import nie zmienia oceny firmy. Przed importem zapisz rozpoczęty raport — formularz zostanie ponownie otwarty.</p>
+<p class="rel-muted">XML uzupełnia kwoty automatycznie. Dla PDF z tekstem AI analizuje tylko wybrane fragmenty (maks. 32 tys. znaków, jedno zapytanie na plik, 20 nowych analiz dziennie). Fragmenty są przekazywane do Anthropic. Kwoty PDF wymagają potwierdzenia przy dokumencie źródłowym. Skany i XHTML pozostają załącznikami. Przed importem zapisz rozpoczęty raport.</p>
 </div>
 @if($lookup)<p>Sprawdzono: {{\Carbon\Carbon::parse($lookup['checked_at'])->format('d.m.Y H:i')}}. Wynik można wykorzystać do zapisu przez 30 minut.</p>
 <h3>Dane rejestrowe firmy</h3>
