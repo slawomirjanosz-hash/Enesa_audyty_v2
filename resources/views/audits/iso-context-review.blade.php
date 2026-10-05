@@ -22,7 +22,7 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
 @if($errors->any())<div class="errors" role="alert"><strong>Nie zapisano zmian:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 <div class="bar"><span class="badge">{{ $statuses[$review->status] }}</span><span>Rewizja {{ $review->revision }} · Biblioteka 1.3 · Tryb: {{ $mode }}</span><form method="get"><label for="review-year">Rok</label><input id="review-year" style="width:105px" type="number" name="year" min="2020" max="2100" value="{{ $review->year }}"><button>Otwórz rok</button></form></div>
 <nav class="review-section-nav" aria-label="Części ankiety"><a href="#facts">1. Dane zakładu (44)</a><a href="#factors">2. Czynniki 4.1</a><a href="#parties">3. Strony 4.2</a><a href="#consultant">4. Konsultant</a><a href="#documents">5. Dokumenty i historia</a></nav>
-<form id="review-form" method="post" action="{{ route($routePrefix.'update',$audit) }}">@csrf
+<form @if($editable) data-autosave @endif id="review-form" method="post" action="{{ route($routePrefix.'update',$audit) }}">@csrf
 <input type="hidden" name="year" value="{{ $review->year }}"><input type="hidden" name="revision" value="{{ old('revision', $review->revision) }}">
 <fieldset @disabled(!$editable)>
 <section id="facts"><h2>1. Dane o zakładzie</h2>
@@ -104,7 +104,9 @@ section{scroll-margin-top:var(--review-nav-offset,90px)}
         }
     }));
     window.addEventListener('beforeunload', event => {
+        if(window.formDraftLeaving)return;
         if (dirty) { event.preventDefault(); event.returnValue = ''; }
     });
 })();
-</script></body></html>
+</script>@include('partials.form-drafts')
+</body></html>

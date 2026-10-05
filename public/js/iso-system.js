@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('input', () => { dirty = true; });
     form.addEventListener('change', () => { dirty = true; });
     form.addEventListener('submit', () => { dirty = false; });
-    window.addEventListener('beforeunload', event => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
+    window.addEventListener('beforeunload', event => { if (window.formDraftLeaving) return; if (dirty) { event.preventDefault(); event.returnValue = ''; } });
     document.querySelectorAll('[data-review-action]').forEach(action => action.addEventListener('submit', event => {
         if (dirty) { event.preventDefault(); alert('Najpierw zapisz zmienione odpowiedzi.'); }
     }));
@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('input', update);
     form.addEventListener('change', update);
     let next = Math.max(0, ...[...form.querySelectorAll('[data-key]')].map(el => Number(el.dataset.key.split('.')[1]) || 0)) + 1;
+    form.addEventListener('draft:discarded', () => { dirty = false; });
+    form.addEventListener('draft:restored', () => { next=Math.max(0,...[...form.querySelectorAll('[data-key]')].map(el=>Number(el.dataset.key.split('.')[1])||0))+1; update(); });
     form.addEventListener('click', event => {
         const add = event.target.closest('[data-add-row]');
         if (add) {

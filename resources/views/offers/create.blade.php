@@ -245,7 +245,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @endif
 
 {{-- ═══ FORM ═══ --}}
-<form id="offer-form" method="POST" action="{{ route('offers.store') }}" @if($offerRequest) style="display:none;" @endif>
+<form data-autosave data-draft-exit="{{route('offers.index')}}" id="offer-form" method="POST" action="{{ route('offers.store') }}" @if($offerRequest) style="display:none;" @endif>
 @csrf
 
 {{-- ── SEKCJA A: NAGŁÓWEK DOKUMENTU ─────────── --}}
@@ -527,6 +527,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @endsection
 
 @push('scripts')
+<script src="{{asset('js/offer-drafts.js')}}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
 let priceSections = null;

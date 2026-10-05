@@ -119,7 +119,7 @@
         @if($errors->projectEdit->any())
             <div style="padding:11px 13px;background:#fef2f2;color:#991b1b;border-radius:8px;margin-bottom:14px;">{{ $errors->projectEdit->first() }}</div>
         @endif
-        <form method="POST" action="{{ route('projects.update',$project) }}">@csrf @method('PUT')
+        <form data-autosave method="POST" action="{{ route('projects.update',$project) }}">@csrf @method('PUT')
             <div class="grid2">
                 <div class="field"><label>Numer projektu</label><input name="number" value="{{ old('number',$project->number) }}" required></div>
                 <div class="field"><label>Nazwa projektu</label><input name="name" value="{{ old('name',$project->name) }}" required></div>

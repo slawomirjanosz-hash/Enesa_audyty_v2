@@ -23,7 +23,7 @@
 @if(!$client && $review->status==='submitted')<div class="plant-notice">Do wykonania: przegląd i zatwierdzenie rejestru przez audytora.</div>@endif
 @if($review->review_note)<div class="plant-notice">Uwagi audytora: {{$review->review_note}}</div>@endif
 <nav class="plant-nav" aria-label="Działy ankiety"><a href="#climate">Wymagania klimatyczne</a>@foreach($questionnaire->schema()['grupy'] as $group)<a href="#group-{{$group['id']}}">{{$group['krotka']}}</a>@endforeach<a href="#custom">Własne strony</a><a href="#consultant">Ocena konsultanta</a><a href="#approvals">Zatwierdzenia i dokument</a></nav>
-<form id="stakeholder-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf
+<form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="stakeholder-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf
 <input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$hash}}"><input type="hidden" name="complete_form" value="1">
 <fieldset @disabled(!$editable)>
 <section id="climate" class="plant-card @if($changed('FAKT_KLIMAT_STRONY')||$changed('climate_reason')) stakeholder-change @endif @if($review->exists && empty($answers['FAKT_KLIMAT_STRONY'])) stakeholder-empty @endif"><h2>Wymagania klimatyczne stron</h2><label>Czy którakolwiek ze stron stawia wymagania związane ze zmianą klimatu?<select name="answers[FAKT_KLIMAT_STRONY]"><option value="">Wybierz</option>@foreach(['tak'=>'Tak','nie'=>'Nie'] as $key=>$label)<option value="{{$key}}" @selected($value('FAKT_KLIMAT_STRONY')===$key)>{{$label}}</option>@endforeach</select></label><small class="plant-help">FAKT_KLIMAT_STRONY</small><label>Wskaż strony i wymagania lub uzasadnij ich brak<textarea name="answers[climate_reason]" maxlength="3000">{{$value('climate_reason')}}</textarea></label></section>
@@ -58,4 +58,5 @@
 <h3>Historia zmian</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{$operations[$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div>
 </section>
 @include('partials.field-validation') @include('partials.questionnaire-navigation')
-</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-stakeholders.js')}}" defer></script></body></html>
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-stakeholders.js')}}" defer></script>@include('partials.form-drafts')
+</body></html>

@@ -14,7 +14,7 @@
 @if($section==='4-4')<p><strong>Zakres z 4.3:</strong> {{data_get($sources,'scope.ZAKRES.opis')?:'Jeszcze nie określono'}}</p>@endif
 @foreach($service->warnings($section,$answers,$sources) as $warning)<div class="plant-notice">{{$warning}}</div>@endforeach</section>
 @php($editable=$canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected'])))
-<form id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
+<form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
 <fieldset @disabled(!$editable)>
 @if(!$client && $editable)<button type="button" id="system-example">Wypełnij przykładowo puste odpowiedzi klienta</button><small class="plant-help">Dane testowe pojawią się w formularzu. Nie są zapisywane ani zatwierdzane automatycznie.</small>@endif
 @foreach($sections as $id=>$group)
@@ -45,4 +45,5 @@
 <p><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>$section])}}#iso-documents-{{$section}}">Dokumentacja punktu — pliki, kopiowanie i usuwanie zgodnie z uprawnieniami →</a></p>
 <h3>Historia zmian</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{['save'=>'Zapisano','submit'=>'Klient zatwierdził','approve'=>'Audytor zatwierdził','return'=>'Zwrócono do poprawy','withdraw'=>'Wycofano zatwierdzenie'][$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div></section>
 @include('partials.field-validation') @include('partials.questionnaire-navigation')
-</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-system.js')}}" defer></script></body></html>
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-system.js')}}" defer></script>@include('partials.form-drafts')
+</body></html>

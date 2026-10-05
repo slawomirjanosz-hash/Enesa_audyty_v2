@@ -82,7 +82,7 @@
 <div id="project-modal" class="modal" onclick="if(event.target===this)this.classList.remove('open')">
     <div class="modal-box">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;"><h2 style="margin:0;">Nowy projekt</h2><button type="button" onclick="document.getElementById('project-modal').classList.remove('open')" style="border:0;background:none;font-size:24px;cursor:pointer;">×</button></div>
-        <form method="POST" action="{{ route('projects.store') }}">@csrf
+        <form data-autosave method="POST" action="{{ route('projects.store') }}">@csrf
             <div class="form-grid">
                 @include('projects._new-number')
                 <div class="field"><label>Nazwa projektu *</label><input name="name" value="{{ old('name') }}" required></div>

@@ -3,7 +3,7 @@
 @php($swotEditable = !$client && $canWrite && $ready && !$stale && $review->client_approval && in_array($review->status, ['submitted','approved']))
 @if($swotEditable)
 <p>Podsumuj zatwierdzone czynniki i profil zakładu. Wskaż ich wpływ na zużycie energii oraz wynik energetyczny. Jeśli nie stwierdzono elementów w danej części, wpisz uzasadnienie.</p>
-<form method="post" data-swot-form data-review-action action="{{route($prefix.'update',[$audit,$profile])}}">
+<form data-autosave data-draft-name="swot" data-draft-operation="save_swot" data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" method="post" data-swot-form data-review-action action="{{route($prefix.'update',[$audit,$profile])}}">
 @csrf
 <input type="hidden" name="lock_version" value="{{$review->lock_version}}">
 <input type="hidden" name="source_hash" value="{{$questionnaire->hash($profile)}}">

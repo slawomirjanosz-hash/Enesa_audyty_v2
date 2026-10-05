@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckAccountSecurity;
+use App\Http\Middleware\CommitFormDraft;
 use App\Http\Middleware\EnsureAppModuleEnabled;
 use App\Http\Middleware\EnsureClientAdmin;
 use App\Http\Middleware\EnsureClientRole;
@@ -25,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
         $middleware->append(SecurityHeaders::class);
-        $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class]);
+        $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class, CommitFormDraft::class]);
 
         $middleware->alias([
             'auth' => Authenticate::class,

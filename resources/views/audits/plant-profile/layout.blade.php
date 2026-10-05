@@ -9,4 +9,5 @@
 @yield('content')
 @include('partials.field-validation')
 @include('partials.questionnaire-navigation')
-</main><script type="module" src="{{ asset('js/table-sort.js') }}"></script><script src="{{ asset('js/iso-plant-profile.js') }}" defer></script></body></html>
+</main><script type="module" src="{{ asset('js/table-sort.js') }}"></script><script src="{{ asset('js/iso-plant-profile.js') }}" defer></script>@include('partials.form-drafts')
+</body></html>

@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const dirty = new Set();
     const forms = [...document.querySelectorAll('[data-questionnaire-form]')];
     forms.forEach(form => {
+        form.addEventListener('draft:discarded', () => dirty.delete(form));
+        form.addEventListener('draft:restored', () => { index = Math.max(-1,...[...form.querySelectorAll('#stakeholder-custom [name]')].map(el=>Number(el.name.match(/\[(\d+)\]/)?.[1]??-1)))+1; });
         form.addEventListener('input', () => dirty.add(form));
         form.addEventListener('change', () => dirty.add(form));
         form.addEventListener('submit', event => {
@@ -12,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-review-action]').forEach(form => form.addEventListener('submit', event => {
         if (dirty.size) { event.preventDefault(); alert('Najpierw zapisz zmiany w ankiecie lub ocenie konsultanta.'); }
     }));
-    window.addEventListener('beforeunload', event => { if (dirty.size) { event.preventDefault(); event.returnValue = ''; } });
+    window.addEventListener('beforeunload', event => { if (window.formDraftLeaving) return; if (dirty.size) { event.preventDefault(); event.returnValue = ''; } });
     let index = document.querySelectorAll('[data-custom-party]').length;
     document.getElementById('stakeholder-add')?.addEventListener('click', () => {
         const rows = document.getElementById('stakeholder-custom');

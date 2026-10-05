@@ -16,7 +16,7 @@
 </tbody></table></div></div>
 @foreach($audit->surveys->filter(fn($survey)=>$survey->auditType?->slug!=='iso50001') as $survey)
 <div id="survey-view-{{$survey->id}}" class="aw-modal"><div class="aw-modal-box"><h2>{{$survey->title}}</h2><p>{{$survey->auditType?->name}}</p>
-@if($canManage)<form method="POST" action="{{route('audits.surveys.update',[$audit,$survey])}}">@csrf @method('PUT')<div class="aw-field"><label>Status</label><select class="aw-input" name="status">@foreach(['draft'=>'Robocza','ready'=>'Gotowa','completed'=>'Wypełniona'] as $value=>$label)<option value="{{$value}}" @selected($survey->status===$value)>{{$label}}</option>@endforeach</select></div><div class="aw-field"><label>Notatki z audytu</label><textarea class="aw-input" name="notes" maxlength="10000" rows="8">{{$survey->notes}}</textarea></div><button class="aw-btn">Zapisz</button></form>
+@if($canManage)<form method="POST" action="{{route('audits.surveys.update',[$audit,$survey])}}" data-autosave>@csrf @method('PUT')<div class="aw-field"><label>Status</label><select class="aw-input" name="status">@foreach(['draft'=>'Robocza','ready'=>'Gotowa','completed'=>'Wypełniona'] as $value=>$label)<option value="{{$value}}" @selected($survey->status===$value)>{{$label}}</option>@endforeach</select></div><div class="aw-field"><label>Notatki z audytu</label><textarea class="aw-input" name="notes" maxlength="10000" rows="8">{{$survey->notes}}</textarea></div><button class="aw-btn">Zapisz</button></form>
 @else<p style="white-space:pre-wrap">{{$survey->notes ?: 'Brak notatek.'}}</p>@endif
 <button type="button" class="aw-btn soft" onclick="closeAwModal('survey-view-{{$survey->id}}')">Zamknij</button></div></div>
 @endforeach

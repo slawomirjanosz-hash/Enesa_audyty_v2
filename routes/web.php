@@ -28,6 +28,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentLinkController;
 use App\Http\Controllers\EnergyPassportController;
+use App\Http\Controllers\FormDraftController;
 use App\Http\Controllers\HrAttendanceController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\HrLeaveController;
@@ -60,6 +61,10 @@ use App\Http\Controllers\TaskArchiveController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
+Route::middleware(['auth', 'throttle:60,1'])->prefix('form-drafts')->group(function () {
+    Route::get('/{key}', [FormDraftController::class, 'show'])->where('key', '[a-f0-9]{64}')->name('form-drafts.show');
+    Route::put('/{key}', [FormDraftController::class, 'update'])->where('key', '[a-f0-9]{64}')->name('form-drafts.update');
+});
 require __DIR__.'/iso-plant-profile.php';
 require __DIR__.'/iso-factors.php';
 require __DIR__.'/iso-stakeholders.php';

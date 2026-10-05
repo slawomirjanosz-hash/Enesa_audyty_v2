@@ -88,6 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.alert('Najpierw zapisz zmienione odpowiedzi. Zatwierdzenie musi dotyczyć zapisanej treści ankiety.');
         document.getElementById('plant-save-state')?.scrollIntoView({block: 'center', behavior: 'smooth'});
     }));
-    window.addEventListener('beforeunload', event => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
+    window.addEventListener('beforeunload', event => { if (window.formDraftLeaving) return; if (dirty) { event.preventDefault(); event.returnValue = ''; } });
+    form?.addEventListener('draft:discarded', () => { dirty = false; });
+    form?.addEventListener('draft:restored', () => {
+        document.querySelectorAll('.plant-multi').forEach(multi => {multi.querySelector('[data-selection-label]').textContent=[...multi.querySelectorAll('input:checked')].map(input=>input.dataset.label).join(', ') || 'Wybierz odpowiedzi';});
+        conditions(); calculate();
+    });
     conditions(); calculate();
 });

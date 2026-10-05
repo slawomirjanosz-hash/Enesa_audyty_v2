@@ -1,6 +1,6 @@
 <section id="consultant" class="plant-card @if(isset($changes['consultant'])||isset($changes['analysis'])) stakeholder-change @endif"><h2>Ocena konsultanta i rejestr</h2>
 <p>„Tak” w bibliotece oznacza wymóg zgodności po potwierdzeniu, że strona i wymaganie rzeczywiście dotyczą organizacji. Konsultant weryfikuje konkretną podstawę prawną lub umowną. Nierozstrzygnięty kandydat blokuje zatwierdzenie klienta.</p>
-@if($consultantEditable)<form method="post" data-questionnaire-form action="{{route($prefix.'update',[$audit,$profile])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$hash}}"><input type="hidden" name="operation" value="consultant">@endif
+@if($consultantEditable)<form data-autosave data-draft-name="consultant" data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" method="post" data-questionnaire-form action="{{route($prefix.'update',[$audit,$profile])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$hash}}"><input type="hidden" name="operation" value="consultant">@endif
 @forelse($register as $row)
 @php($code=$row['kod'])
 <article class="plant-question"><h3>{{$code}} · {{$row['nazwa']}}</h3><p class="stakeholder-read">{{$row['wymagania']}}</p>

@@ -20,7 +20,7 @@
 @if($review->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{$review->review_note}}</p></div>@endif
 @if($review->status==='auditor_corrected')<div class="plant-notice">Sprawdź oznaczone na niebiesko korekty audytora i ponownie zatwierdź ankietę.</div>@elseif(!$client && $review->status==='submitted')<div class="plant-notice">Ankieta oczekuje na Twój przegląd. Zapisanie zmian wymaga ponownego zatwierdzenia przez klienta.</div>@endif
 <nav class="plant-nav" aria-label="Działy ankiety"><a href="#climate">Ocena klimatu</a>@foreach($questionnaire->schema()['sekcje'] as $section)<a href="#section-{{$loop->index}}">{{$section['nazwa']}}</a>@endforeach<a href="#custom">Własne czynniki</a><a href="#swot">Analiza SWOT</a><a href="#approvals">Zatwierdzenia</a></nav>
-<form id="factor-form" method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf
+<form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="factor-form" method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf
 <input type="hidden" name="lock_version" value="{{old('lock_version',$review->lock_version)}}"><input type="hidden" name="source_hash" value="{{old('source_hash',$questionnaire->hash($profile))}}">
 <fieldset @disabled(!$editable)>
 <section id="climate" class="plant-card"><h2>Istotność zmiany klimatu</h2>
@@ -58,4 +58,5 @@
 <h3>Historia</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{$operations[$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div></section>
 @include('partials.field-validation')
 @include('partials.questionnaire-navigation')
-</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}?v=swot-1" defer></script></body></html>
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}?v=swot-1" defer></script>@include('partials.form-drafts')
+</body></html>

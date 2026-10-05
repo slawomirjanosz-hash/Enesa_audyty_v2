@@ -5,7 +5,11 @@
     let swotDirty = false;
     const swotForm = document.querySelector('[data-swot-form]');
     swotForm?.addEventListener('input', () => { swotDirty = true; });
+    swotForm?.addEventListener('draft:restored', () => { swotDirty = true; });
     let index = document.querySelectorAll('[data-custom-row]').length;
+    form.addEventListener('draft:restored', () => { index = Math.max(-1,...[...form.querySelectorAll('#custom-rows [name]')].map(el=>Number(el.name.match(/\[(\d+)\]/)?.[1]??-1)))+1; });
+    form.addEventListener('draft:discarded', () => { dirty = false; });
+    swotForm?.addEventListener('draft:discarded', () => { swotDirty = false; });
     function update() {
         let done = form.querySelector('[name="answers[FAKT_KLIMAT_ISTOTNY]"]').value && form.querySelector('[name="answers[climate_reason]"]').value.trim() ? 1 : 0;
         const decisions = form.querySelectorAll('[data-decision]');
@@ -24,7 +28,7 @@
         if (swotDirty && !confirm('Niezapisane zmiany SWOT zostaną utracone. Zapisać tylko odpowiedzi ankiety?')) { event.preventDefault(); return; }
         dirty = false; swotDirty = false;
     });
-    window.addEventListener('beforeunload', event => { if (dirty || swotDirty) { event.preventDefault(); event.returnValue = ''; } });
+    window.addEventListener('beforeunload', event => { if (window.formDraftLeaving) return; if (dirty || swotDirty) { event.preventDefault(); event.returnValue = ''; } });
     document.querySelectorAll('[data-review-action]').forEach(action => action.addEventListener('submit', event => {
         if (dirty) { event.preventDefault(); alert('Najpierw zapisz zmiany w ankiecie.'); }
         else if (swotDirty && action !== swotForm) { event.preventDefault(); alert('Najpierw zapisz analizę SWOT.'); }
