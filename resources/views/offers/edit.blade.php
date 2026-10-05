@@ -427,7 +427,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 <div class="ed-card type-price" id="section-main">
     <div class="ed-card-header">
         <i class="ti ti-calculator"></i>
-        <input type="text" class="section-name-input" id="section-main-name" value="Wycena ogólna">
+        <input type="text" class="section-name-input" id="section-main-name" value="{{ is_string($editorPriceSections[0]['name'] ?? null) ? $editorPriceSections[0]['name'] : 'Wycena ogólna' }}">
         <span class="section-price-total">Suma sekcji: <strong data-section-total>0,00 zł</strong></span>
     </div>
     <div style="overflow-x:auto;">

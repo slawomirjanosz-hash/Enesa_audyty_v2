@@ -10,6 +10,22 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
+test('main price section keeps its custom name through reopening and repeated saves', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Klient nazwy wyceny', 'company_type' => 'client', 'status' => 'active']);
+    $offer = Offer::create(['company_id' => $company->id, 'offer_number' => 'OF_NAME_001', 'offer_full_number' => 'OF_NAME_001', 'status' => 'w_toku']);
+    $this->actingAs($admin)->get(route('offers.edit', $offer))->assertOk()->assertSee('id="section-main-name" value="Wycena ogólna"', false);
+    $name = 'Pomiary "A&B" — etap 1';
+    $sections = [['id' => 'main', 'name' => $name, 'rows' => []], ['id' => 'extra', 'name' => 'Drugi etap', 'rows' => []]];
+    for ($i = 0; $i < 2; $i++) {
+        $this->put(route('offers.update', $offer), ['company_id' => $company->id, 'offer_number' => $offer->offer_number, 'status' => 'w_toku', 'price_sections' => json_encode($sections), 'delegations' => '[]', 'liczba_wyjazdow' => 1, 'liczba_noc' => 0, 'liczba_osob' => 1, 'stawka_noc' => 0])
+            ->assertSessionHasNoErrors()->assertRedirect();
+        expect($offer->fresh()->price_sections[0]['name'])->toBe($name);
+        $this->get(route('offers.edit', $offer))->assertOk()->assertSee('id="section-main-name" value="'.e($name).'"', false);
+    }
+});
+
 test('admin can edit a legacy offer with optional fields left empty', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
