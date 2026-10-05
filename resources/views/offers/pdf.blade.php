@@ -297,7 +297,9 @@ body {
         @if($sectionsOnly)
         <tr>
             <th>Sekcja</th>
+            @if($offer->show_unit_prices)
             <th class="r" style="width:24%">Wartość netto</th>
+            @endif
         </tr>
         @else
         <tr>
@@ -320,7 +322,9 @@ body {
             @if($sectionsOnly)
             <tr class="section-summary-row">
                 <td class="section-summary-name">{{ $section['name'] }}</td>
+                @if($offer->show_unit_prices)
                 <td class="section-summary-value">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
+                @endif
             </tr>
             @else
             @if($multiSection || $offer->show_unit_prices)
