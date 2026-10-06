@@ -119,15 +119,11 @@ class Offer extends Model
         $now = now();
         $prefix = $isTemplate ? 'SZ' : 'OF';
         $companyShortName = CompanySettings::query()->first()?->offerShortName() ?? 'FI';
-        $monthPrefix = $prefix.'_'.$companyShortName.'_'.$now->format('Ym');
-
         $maxSeq = static::withTrashed()
-            ->where('offer_number', 'like', $monthPrefix.'%')
+            ->where('is_template', $isTemplate)
             ->pluck('offer_number')
             ->map(function (string $num): int {
-                $parts = explode('_', $num);
-
-                return (int) end($parts);
+                return preg_match('/_(\d{1,9})$/D', $num, $match) ? (int) $match[1] : 0;
             })
             ->max() ?? 0;
 

@@ -7,6 +7,7 @@ use App\Models\Offer;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use Carbon\Carbon;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -99,6 +100,29 @@ test('offer numbers use the editable company short name', function () {
 
     expect($firstNumber)->toBe('OF_PRINZ_'.now()->format('Ymd').'_001')
         ->and(Offer::generateNumber())->toBe('OF_PRINZ_'.now()->format('Ymd').'_002');
+});
+
+test('offer sequence continues across months branding changes deleted offers and manual numbers', function () {
+    $this->travelTo(Carbon::parse('2026-10-06'));
+    CompanySettings::create(['name' => 'Nowa firma', 'short_name' => 'NOWA']);
+    foreach (['OF_STARA_20260930_009', 'WŁASNA_014', 'OF_STARA_20260801_003', 'OF_STARA_20260930_999abc', 'bez_numeru'] as $number) {
+        $offer = Offer::create(['offer_number' => $number, 'offer_full_number' => $number, 'status' => 'w_toku']);
+        if ($number === 'WŁASNA_014') {
+            $offer->delete();
+        }
+    }
+    Offer::create(['offer_number' => 'SZ_STARA_20260901_099', 'offer_full_number' => 'SZ_STARA_20260901_099', 'is_template' => true, 'status' => 'w_toku']);
+    expect(Offer::generateNumber())->toBe('OF_NOWA_20261006_015')
+        ->and(Offer::generateNumber(true))->toBe('SZ_NOWA_20261006_100');
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $html = $this->actingAs($admin)->get(route('offers.create'))->assertOk()->getContent();
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $input = (new DOMXPath($dom))->query('//input[@name="offer_number"]')->item(0);
+    expect($input->getAttribute('value'))->toBe('OF_NOWA_20261006_015')
+        ->and($input->hasAttribute('readonly'))->toBeFalse()
+        ->and($input->hasAttribute('disabled'))->toBeFalse();
 });
 
 test('staff login redirects to the first enabled module', function () {
