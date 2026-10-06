@@ -107,11 +107,21 @@
         toolbar.querySelector('.draft-discard').addEventListener('click',()=>discard(false));
         const saveButton=()=>[...document.querySelectorAll('button')].filter(b=>b.form===form).find(b=>!toolbar.contains(b)&&b.type==='submit'&&(b.value===form.dataset.draftOperation||b.value==='save'||(!b.name&&/zapisz|utwórz|dodaj audyt|dodaj projekt/i.test(b.textContent))));
         toolbar.querySelector('.draft-save').addEventListener('click',()=>{const button=saveButton();if(button)form.requestSubmit(button);else report('Użyj przycisku zapisu na dole formularza.',true);});
-        let submitting=false;
+        let submitting=false, waitingToSubmit=false;
         form.addEventListener('submit',async event=>{
             if(submitting)return;
-            event.preventDefault();event.stopImmediatePropagation();state.stop=true;await state.pending;
-            submitting=true;form.requestSubmit(event.submitter||saveButton());submitting=false;state.stop=false;
+            event.preventDefault();event.stopImmediatePropagation();
+            if(waitingToSubmit)return;
+            waitingToSubmit=true;state.stop=true;
+            const submitter=event.submitter||saveButton();
+            try {
+                await state.pending;
+                // Native click submission is still active during microtasks. Replay in
+                // a new task, otherwise requestSubmit silently does nothing in browsers.
+                await new Promise(resolve=>setTimeout(resolve,0));
+                if(!form.isConnected)return;
+                submitting=true;form.requestSubmit(submitter||undefined);
+            } finally {submitting=false;waitingToSubmit=false;state.stop=false;}
         },true);
         // Preserve native validation and existing business submit handlers.
         form.addEventListener('submit',event=>queueMicrotask(()=>{if(!event.defaultPrevented)window.formDraftLeaving=true;}));

@@ -54,6 +54,9 @@ jobs:
       - name: Test financial amount formatting
         run: node --test tests/js/financial-amount.test.mjs tests/js/financial-health.test.mjs
 
+      - name: Test autosave form submission
+        run: node --test tests/js/form-draft-submit.test.mjs
+
       - name: Check PHP code style
         run: composer format:test
 
