@@ -661,6 +661,7 @@ const projectRequirementItems = @json($requirementItems);
 const canViewMaterialPrices = @json($canViewMaterialPrices);
 const canViewServicePrices = @json($canViewServicePrices);
 let projectGantt = null;
+let projectGanttScrollLeft = null;
 let projectCashflowChart = null;
 let projectCashflowOverview = null;
 let projectGanttMode = 'Week';
@@ -853,9 +854,29 @@ async function saveGanttChange(task, start, end, progress) {
     }
 }
 
+function captureProjectGanttScroll() {
+    const container = document.getElementById('project-frappe-gantt');
+    if (container?.clientWidth && container.querySelector('svg.gantt')) projectGanttScrollLeft = container.scrollLeft;
+}
+function restoreProjectGanttScroll() {
+    const container = document.getElementById('project-frappe-gantt');
+    if (!container?.clientWidth || !container.querySelector('svg.gantt')) return;
+    if (projectGanttScrollLeft === null) {
+        const starts = [...container.querySelectorAll('.bar-wrapper.task-row .bar, .bar-wrapper.milestone-row .bar')]
+            .map(bar => Number(bar.getAttribute('x'))).filter(Number.isFinite);
+        if (!starts.length) return;
+        projectGanttScrollLeft = Math.max(0, Math.min(...starts) - 16);
+    }
+    // The outer wrapper is the actual scroll area; the library's inner one is overflow:visible.
+    const inner = container.querySelector('.gantt-container');
+    if (inner) inner.scrollLeft = 0;
+    container.scrollLeft = projectGanttScrollLeft;
+    projectGanttScrollLeft = container.scrollLeft;
+}
 function renderProjectGantt() {
     const container = document.getElementById('project-frappe-gantt');
     if (!container) return;
+    captureProjectGanttScroll();
     container.innerHTML = '';
     projectGantt = null;
     initProjectGantt();
@@ -915,6 +936,7 @@ function initProjectGantt() {
         },
         on_view_change: () => setTimeout(() => { applyGanttProgressColors(); renderGanttDateMarkers(); }, 0),
     });
+    restoreProjectGanttScroll();
     setTimeout(() => { bindGanttTaskEditing(); applyGanttProgressColors(); renderGanttDateMarkers(); }, 50);
 }
 
@@ -963,14 +985,16 @@ document.querySelectorAll('.gantt-mode').forEach(button => button.addEventListen
     initProjectGantt();
     if (!projectGantt) return;
     projectGanttMode = button.dataset.mode;
+    captureProjectGanttScroll();
     projectGantt.change_view_mode(projectGanttMode);
+    restoreProjectGanttScroll();
     setTimeout(renderGanttDateMarkers, 0);
     document.querySelectorAll('.gantt-mode').forEach(item => item.classList.toggle('active', item === button));
 }));
 document.getElementById('gantt-today')?.addEventListener('click', () => {
     initProjectGantt();
     const highlight = document.querySelector('#project-frappe-gantt .today-highlight');
-    const scroller = document.querySelector('#project-frappe-gantt .gantt-container') || document.getElementById('project-frappe-gantt');
+    const scroller = document.getElementById('project-frappe-gantt');
     if (highlight && scroller) scroller.scrollLeft = Math.max(0, parseFloat(highlight.getAttribute('x') || 0) - scroller.clientWidth / 2);
 });
 
