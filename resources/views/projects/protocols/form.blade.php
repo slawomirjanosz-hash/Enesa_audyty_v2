@@ -16,12 +16,17 @@
 @foreach(['kind'=>['Rodzaj odbioru',\App\Models\ProjectProtocol::KINDS],'outcome'=>['Wynik odbioru',\App\Models\ProjectProtocol::OUTCOMES],'invoice_decision'=>['Czy dostawca może wystawić fakturę?',\App\Models\ProjectProtocol::INVOICES]] as $key=>[$label,$options])<div><label for="protocol-{{$key}}">{{$label}} *</label><select id="protocol-{{$key}}" name="{{$key}}" required>@foreach($options as $value=>$text)<option value="{{$value}}" @selected(old($key,$protocol->$key ?? ($key==='invoice_decision'?'no':array_key_first($options)))===$value)>{{$text}}</option>@endforeach</select></div>@endforeach
 <div class="protocol-full"><label for="protocol-description">Przedmiot i zakres odbioru *</label><textarea id="protocol-description" name="description" required>{{old('description',$protocol->description)}}</textarea></div>
 </div>
-<h2>Odbierane materiały i usługi</h2><p class="protocol-help">Wpisz ilości faktycznie odebrane. Wszystkie kwoty w PLN. Suma jest obliczana i zapisywana przez system.</p>
+<h2>Odbierane materiały i usługi</h2>
+<label for="protocol-items-mode">Sposób opisu odbioru</label>
+<select id="protocol-items-mode" name="items_mode"><option value="detailed" @selected(old('items_mode',$protocol->items_mode ?? 'detailed')==='detailed')>Lista pozycji z ilościami i cenami</option><option value="manual" @selected(old('items_mode',$protocol->items_mode)==='manual')>Opis ręczny — bez pozycji i cen</option></select>
+<div id="protocol-manual-items"><label for="protocol-manual-description">Opis odbieranych materiałów i usług *</label><textarea id="protocol-manual-description" name="manual_items_description" maxlength="15000" placeholder="Np. odbiór materiałów i usług zgodnie z umową nr…">{{old('manual_items_description',$protocol->manual_items_description)}}</textarea><p class="protocol-help">Na wydruku pojawi się wyłącznie ten opis, bez tabeli i podsumowania kwot. Zapis w tym trybie usuwa dotychczasowe pozycje z protokołu; nie zmienia kosztów projektu.</p></div>
+<fieldset id="protocol-detailed-items" style="border:0;padding:0;margin:0;min-width:0"><p class="protocol-help">Wpisz ilości faktycznie odebrane. Wszystkie kwoty w PLN. Suma jest obliczana i zapisywana przez system.</p>
 <div style="overflow:auto"><table id="protocol-items"><thead><tr><th>Nazwa / opis</th><th>Ilość</th><th>Jednostka</th><th>Cena netto</th><th>VAT</th><th>Akcje</th></tr></thead><tbody>
 @foreach(old('items',$protocol->items ?? [['name'=>'','quantity'=>1,'unit'=>'szt.','price'=>0,'vat'=>'23']]) as $i=>$item)
 @include('projects.protocols.item-row')
 @endforeach
 </tbody></table></div><p><button type="button" id="protocol-add-item">+ Dodaj pozycję</button></p><p id="protocol-totals" aria-live="polite" style="padding:12px;background:#f6f7f5;border-radius:7px"></p>
+</fieldset>
 <div class="protocol-grid">
 @foreach(['remarks'=>'Uwagi, usterki i zastrzeżenia','invoice_conditions'=>'Warunki fakturowania / uzgodnienia rozliczeniowe','attachments'=>'Wykaz załączników (np. dokumentacja, atesty, wyniki prób)'] as $key=>$label)<div class="protocol-full"><label for="protocol-{{$key}}">{{$label}}</label><textarea id="protocol-{{$key}}" name="{{$key}}">{{old($key,$protocol->$key)}}</textarea></div>@endforeach
 <div><label for="protocol-remedy">Termin usunięcia usterek</label><input id="protocol-remedy" type="date" name="remedy_deadline" value="{{old('remedy_deadline',$protocol->remedy_deadline?->toDateString())}}"></div>
@@ -34,6 +39,9 @@
 <div class="protocol-actions"><a href="{{route('projects.show',[$project,'tab'=>'protocols'])}}">Anuluj</a><button>Zapisz protokół</button></div></form></div>
 <template id="protocol-row-template">@include('projects.protocols.item-row',['i'=>'__INDEX__','item'=>['name'=>'','quantity'=>1,'unit'=>'szt.','price'=>0,'vat'=>'23']])</template>
 <script>
+function updateProtocolMode(){const manual=document.getElementById('protocol-items-mode').value==='manual';const detailed=document.getElementById('protocol-detailed-items');detailed.hidden=manual;detailed.disabled=manual;document.getElementById('protocol-manual-items').hidden=!manual;const description=document.getElementById('protocol-manual-description');description.disabled=!manual;description.required=manual;}
+document.getElementById('protocol-items-mode').addEventListener('change',updateProtocolMode);
+updateProtocolMode();
 let protocolItemIndex = Math.max(-1,...Array.from(document.querySelectorAll('#protocol-items input[name]'),el=>Number(el.name.match(/^items\[(\d+)\]/)?.[1] ?? -1)))+1;
 document.getElementById('protocol-add-item').addEventListener('click',()=>{if(document.querySelectorAll('#protocol-items tbody tr').length>=100)return;document.querySelector('#protocol-items tbody').insertAdjacentHTML('beforeend',document.getElementById('protocol-row-template').innerHTML.replaceAll('__INDEX__',protocolItemIndex++));});
 document.getElementById('protocol-items').addEventListener('click',event=>{if(event.target.closest('[data-remove-protocol-item]'))event.target.closest('tr').remove();});

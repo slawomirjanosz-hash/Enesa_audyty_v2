@@ -21,6 +21,27 @@ beforeEach(function () {
     $this->actingAs($this->admin);
 });
 
+test('manual protocol scope removes prices and survives editing copying and PDF rendering', function () {
+    $data = array_replace($this->data, ['items_mode' => 'manual', 'manual_items_description' => 'Odbiór zgodnie z umową ZAM/2026/128.']);
+    $this->post(route('projects.protocols.store', $this->project), $data)->assertRedirect()->assertSessionHasNoErrors();
+    $protocol = ProjectProtocol::firstOrFail();
+    expect($protocol->items)->toBe([])->and($protocol->items_mode)->toBe('manual');
+    $html = view('projects.protocols.pdf', compact('protocol'))->render();
+    expect($html)->toContain($data['manual_items_description'])->not->toContain('Cena netto')->not->toContain('Brutto:')->not->toContain($this->data['items'][0]['name']);
+    $this->get(route('projects.protocols.edit', [$this->project, $protocol]))->assertOk()->assertSee($data['manual_items_description']);
+    $this->get(route('projects.protocols.copy', [$this->project, $protocol]))->assertOk()->assertSee($data['manual_items_description']);
+    $pdf = $this->get(route('projects.protocols.pdf', [$this->project, $protocol]));
+    $pdf->assertOk()->assertHeader('content-type', 'application/pdf');
+    if ($path = getenv('MANUAL_PROTOCOL_PDF_QA')) {
+        file_put_contents($path, $pdf->getContent());
+    }
+    $this->post(route('projects.protocols.store', $this->project), array_replace($data, ['manual_items_description' => '']))->assertSessionHasErrors('manual_items_description');
+    $this->put(route('projects.protocols.update', [$this->project, $protocol]), array_replace($this->data, ['revision' => 1, 'items_mode' => 'detailed']))->assertSessionHasNoErrors();
+    expect($protocol->fresh()->manual_items_description)->toBeNull()->and($protocol->fresh()->items)->toHaveCount(1);
+    $this->put(route('projects.protocols.update', [$this->project, $protocol]), array_replace($data, ['revision' => 2]))->assertSessionHasNoErrors();
+    expect($protocol->fresh()->items)->toBe([]);
+});
+
 test('protocol number uses project suffix and avoids collisions without renumbering issued protocols', function () {
     $this->post(route('projects.protocols.store', $this->project), $this->data)->assertSessionHasNoErrors();
     $first = ProjectProtocol::firstOrFail();

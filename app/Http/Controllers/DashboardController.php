@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Services\AuditorAccessService;
 use App\Services\CompanyReliabilityAccess;
+use App\Services\QuestionnairePendingActions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,13 @@ class DashboardController extends Controller
         }
         if (! $projectsEnabled) {
             $companies->each(fn (Company $company) => $company->setRelation('projects', collect()));
+        }
+
+        $pendingQuestionnaires = app(QuestionnairePendingActions::class)->forAudits($companies->flatMap->audits);
+        foreach ($companies as $company) {
+            $company->setAttribute('pending_questionnaires', $company->audits->flatMap(function ($audit) use ($pendingQuestionnaires) {
+                return collect($pendingQuestionnaires[$audit->id] ?? [])->map(fn ($action) => $action + ['audit_title' => $audit->title]);
+            })->all());
         }
 
         $activeProjectsQuery = Project::where('status', 'active');

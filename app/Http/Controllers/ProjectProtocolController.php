@@ -46,6 +46,7 @@ class ProjectProtocolController extends Controller
         $copy = new ProjectProtocol($protocol->only([
             'supplier_company_id', 'place', 'reference', 'kind', 'outcome', 'description',
             'remarks', 'invoice_conditions', 'attachments', 'supplier_representative', 'items',
+            'items_mode', 'manual_items_description',
         ]));
         $copy->acceptance_date = today();
         $copy->receiver_name = request()->user()->name;
@@ -75,7 +76,14 @@ class ProjectProtocolController extends Controller
     private function save(Request $request, Project $project, ProjectProtocol $protocol)
     {
         $this->access($project, $protocol->exists ? $protocol : null, true);
+        $manual = $request->input('items_mode', 'detailed') === 'manual';
+        // Never retain hidden prices, even if a crafted request includes them.
+        if ($manual) {
+            $request->merge(['items' => []]);
+        }
         $data = $request->validate([
+            'items_mode' => ['sometimes', 'required', Rule::in(['detailed', 'manual'])],
+            'manual_items_description' => ['exclude_unless:items_mode,manual', 'required', 'string', 'max:15000'],
             'revision' => ['required', 'integer', 'min:0'],
             'supplier_company_id' => ['required', Rule::exists('companies', 'id')->where('company_type', 'supplier')],
             'acceptance_date' => ['required', 'date_format:Y-m-d'],
@@ -90,7 +98,7 @@ class ProjectProtocolController extends Controller
             'attachments' => ['nullable', 'string', 'max:5000'],
             'receiver_name' => ['required', 'string', 'max:255'], 'supplier_representative' => ['required', 'string', 'max:255'],
             'use_signature' => ['nullable', 'boolean'],
-            'items' => ['required', 'array', 'min:1', 'max:100'],
+            'items' => [$manual ? 'present' : 'required', 'array', $manual ? 'max:0' : 'min:1', 'max:100'],
             'items.*.name' => ['required', 'string', 'max:500'],
             'items.*.quantity' => ['required', 'numeric', 'decimal:0,2', 'gt:0', 'max:100000'],
             'items.*.unit' => ['required', 'string', 'max:30'],
@@ -108,6 +116,8 @@ class ProjectProtocolController extends Controller
             throw ValidationException::withMessages(['use_signature' => 'Możesz dołączyć wyłącznie własny zapisany podpis, ze swoim imieniem i nazwiskiem odbierającego.']);
         }
         $revision = $data['revision'];
+        $data['items_mode'] = $manual ? 'manual' : 'detailed';
+        $data['manual_items_description'] = $manual ? $data['manual_items_description'] : null;
         unset($data['revision'], $data['use_signature']);
         $data['items'] = array_map(function ($row) {
             $net = (int) round(round((float) $row['quantity'] * 100) * round((float) $row['price'] * 100) / 100);

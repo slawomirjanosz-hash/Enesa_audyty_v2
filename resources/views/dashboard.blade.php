@@ -4,6 +4,11 @@
 
 @push('styles')
 <style>
+    .questionnaire-attention { animation: questionnaire-pulse 2.8s ease-in-out infinite; }
+    .questionnaire-pending { padding:12px 16px;background:#fff3cd;color:#664d03;border-radius:9px;margin:12px; }
+    .questionnaire-pending a { display:block;margin-top:6px;color:inherit;text-decoration:underline; }
+    @keyframes questionnaire-pulse { 0%,100% { box-shadow:0 0 0 1px #e5bd58; } 50% { box-shadow:0 0 0 4px #e5bd5880,0 4px 18px #e5bd5830; } }
+    @media (prefers-reduced-motion:reduce) { .questionnaire-attention { animation:none;outline:2px solid #e5bd58; } }
     /* ── Page header ──────────────────────── */
     .page-header {
         display: flex;
@@ -569,7 +574,12 @@
                 $relatedSearchData,
             ]));
         @endphp
-        <div class="client-tile" data-company-id="{{ $company->id }}" data-company-search="{{ $searchData }}" style="border-left-color: {{ $borderColor }};">
+        <div class="client-tile {{ $company->pending_questionnaires ? 'questionnaire-attention' : '' }}" data-company-id="{{ $company->id }}" data-company-search="{{ $searchData }}" style="border-left-color: {{ $borderColor }};">
+            @if($company->pending_questionnaires)
+            <div class="questionnaire-pending" role="status"><strong>Do wykonania: przegląd ankiety po zatwierdzeniu klienta</strong>
+                @foreach($company->pending_questionnaires as $action)<a href="{{$action['url']}}">{{$action['audit_title']}} · punkt {{$action['section']}} →</a>@endforeach
+            </div>
+            @endif
 
             {{-- Status online --}}
             <div class="tile-status-bar">
@@ -716,6 +726,9 @@
             <tr data-company-search="{{ $searchData }}">
                 <td>
                     <strong>{{ $company->name }}</strong>
+                    @if($company->pending_questionnaires)<div class="questionnaire-pending">Do wykonania: przegląd ankiety
+                    @foreach($company->pending_questionnaires as $action)<a href="{{$action['url']}}">{{$action['audit_title']}} · punkt {{$action['section']}} →</a>@endforeach
+                    </div>@endif
                 </td>
                 <td style="font-family:monospace;font-size:12px;">{{ $company->nip ?? '—' }}</td>
                 <td>

@@ -9,6 +9,7 @@
 @include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'plant-form'])
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($profile->definition,$answers), 'progressForm'=>'#plant-form', 'progressMode'=>'plant'])
+@include('audits.plant-profile.status')
 <div class="plant-summary"><div><a href="{{ route($prefix.'index',$audit) }}">← Wszystkie profile</a><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2></div><span class="plant-badge">{{ \App\Models\IsoPlantProfile::STATUSES[$profile->status] }} · wersja {{ $profile->revision }}</span></div>
 @if($profile->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{ $profile->review_note }}</p></div>@endif
 @if(!($isLatest ?? true))<div class="plant-notice">To wersja historyczna. <a href="{{route($prefix.'index',$audit)}}">Otwórz najnowszą wersję profilu</a>, aby ją edytować lub zatwierdzić.</div>@elseif($profile->status==='auditor_corrected')<div class="plant-notice">Poprawiony przez audytora. Zmienione odpowiedzi oznaczono na niebiesko. Sprawdź je i ponownie zatwierdź ankietę.</div>@elseif(!$client && in_array($profile->status,['submitted','approved']))<div class="plant-notice">Zapis korekty oznaczy zmienione odpowiedzi w tej samej ankiecie i będzie wymagał ponownego zatwierdzenia przez klienta.</div>@endif

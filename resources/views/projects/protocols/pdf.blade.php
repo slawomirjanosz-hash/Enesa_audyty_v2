@@ -6,10 +6,14 @@
 <table class="parties"><tr><td><div class="muted">ODBIERAJĄCY</div><strong>{{$protocol->issuer_snapshot['name']}}</strong><br>{{$protocol->issuer_snapshot['address']}}<br>{{$protocol->issuer_snapshot['postcode'] ?? ''}} {{$protocol->issuer_snapshot['city']}}<br>NIP: {{$protocol->issuer_snapshot['nip'] ?: '—'}}</td><td><div class="muted">DOSTAWCA / WYKONAWCA</div><strong>{{$protocol->supplier_snapshot['name']}}</strong><br>{{$protocol->supplier_snapshot['address']}}<br>{{$protocol->supplier_snapshot['city']}}<br>NIP: {{$protocol->supplier_snapshot['nip'] ?: '—'}}</td></tr></table>
 <strong>Projekt:</strong> {{$protocol->issuer_snapshot['project_number']}} · {{$protocol->issuer_snapshot['project_name']}}<br><strong>Zamówienie / umowa:</strong> {{$protocol->reference ?: 'Nie wskazano'}}
 <h2>Przedmiot i zakres odbioru</h2><div class="text">{{$protocol->description}}</div>
+@if($protocol->items_mode === 'manual')
+<h2>Odbierane materiały i usługi</h2><div class="text">{{$protocol->manual_items_description}}</div>
+@else
 <h2>Zestawienie odebranych pozycji (PLN)</h2>
 <table class="items"><thead><tr><th style="width:32%">Nazwa / opis</th><th style="width:10%">Ilość</th><th style="width:8%">J.m.</th><th style="width:17%">Cena netto</th><th style="width:8%">VAT</th><th style="width:25%">Wartość netto</th></tr></thead><tbody>@foreach($protocol->items as $item)<tr><td>{{$item['name']}}</td><td>{{number_format((float)$item['quantity'],2,',',' ')}}</td><td>{{$item['unit']}}</td><td>{{number_format((float)$item['price'],2,',',' ')}}</td><td>{{$item['vat']}}{{is_numeric($item['vat'])?'%':''}}</td><td>{{number_format($item['net_cents']/100,2,',',' ')}}</td></tr>@endforeach</tbody></table>
 <div class="totals">Netto: <strong>{{number_format($protocol->totals()['net']/100,2,',',' ')}} zł</strong> &nbsp; VAT: {{number_format($protocol->totals()['vat']/100,2,',',' ')}} zł<br>Brutto: <strong>{{number_format($protocol->totals()['gross']/100,2,',',' ')}} zł</strong></div>
-<div class="box"><strong>Wynik odbioru:</strong> {{\App\Models\ProjectProtocol::OUTCOMES[$protocol->outcome]}}<br><strong>Fakturowanie:</strong> {{\App\Models\ProjectProtocol::INVOICES[$protocol->invoice_decision]}}<br><span class="muted">Decyzja dotyczy pozycji i kwot ujętych w tym protokole.</span></div>
+@endif
+<div class="box"><strong>Wynik odbioru:</strong> {{\App\Models\ProjectProtocol::OUTCOMES[$protocol->outcome]}}<br><strong>Fakturowanie:</strong> {{\App\Models\ProjectProtocol::INVOICES[$protocol->invoice_decision]}}<br><span class="muted">Decyzja dotyczy zakresu odbioru opisanego w tym protokole.</span></div>
 <h2>Uwagi i zastrzeżenia</h2><div class="text">{{$protocol->remarks ?: 'Brak uwag.'}}</div>@if($protocol->remedy_deadline)<p><strong>Termin usunięcia usterek:</strong> {{$protocol->remedy_deadline->format('d.m.Y')}}</p>@endif
 @if($protocol->invoice_conditions)<h2>Warunki fakturowania i uzgodnienia</h2><div class="text">{{$protocol->invoice_conditions}}</div>@endif
 @if($protocol->attachments)<h2>Wykaz załączników</h2><div class="text">{{$protocol->attachments}}</div>@endif

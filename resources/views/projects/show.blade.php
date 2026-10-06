@@ -129,7 +129,7 @@
                 <div class="field"><label>Data rozpoczęcia</label><input type="date" name="start_date" value="{{ old('start_date',$project->start_date?->format('Y-m-d')) }}"></div>
                 <div class="field"><label>Data zakończenia</label><input type="date" name="end_date" value="{{ old('end_date',$project->end_date?->format('Y-m-d')) }}"></div>
                 @if($canViewFinances)<div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="{{ old('contract_value',$project->contract_value) }}" required></div>@endif
-                <div class="field full"><label>Kto może widzieć projekt</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ collect(old('member_ids',$project->members->pluck('id')->all()))->contains(fn($id)=>(int)$id===$user->id) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div><small style="color:#718078">Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą ten projekt tylko po zaznaczeniu ich na tej liście. Kierownik projektu otrzymuje dostęp automatycznie.</small></div>
+                <div class="field full">@include('projects.partials.member-picker', ['selectedMembers'=>old('member_ids', $project->members->pluck('id')->all())])<small style="color:#718078">Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą ten projekt tylko po zaznaczeniu ich na tej liście. Kierownik projektu otrzymuje dostęp automatycznie.</small></div>
                 <div class="field full"><label>Opis</label><textarea name="description" rows="4">{{ old('description',$project->description) }}</textarea></div>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn btn-soft" onclick="document.getElementById('project-edit-modal').classList.remove('open')">Anuluj</button><button class="btn">Zapisz zmiany</button></div>
@@ -1097,6 +1097,14 @@ async function deleteGanttTask(index) {
 document.getElementById('gantt-add-task')?.addEventListener('click', () => openGanttTaskModal());
 document.getElementById('gantt-add-milestone')?.addEventListener('click', () => openGanttTaskModal(null,'milestone'));
 document.getElementById('gantt-task-type')?.addEventListener('change',toggleGanttMilestoneFields);
+document.getElementById('gantt-task-dependency')?.addEventListener('change', event => {
+    const predecessor = projectTimelineItems.find(item => item.id === event.target.value);
+    if (!predecessor?.end || !/^\d{4}-\d{2}-\d{2}$/.test(predecessor.end)) return;
+    const start = document.getElementById('gantt-task-start');
+    start.value = predecessor.end;
+    // Reuse the date calculation so duration and milestones remain consistent.
+    start.dispatchEvent(new Event('change', {bubbles:true}));
+});
 document.getElementById('gantt-task-start')?.addEventListener('change', event => {
     if(document.getElementById('gantt-task-type').value==='milestone'){document.getElementById('gantt-task-end').value=event.target.value;return;}
     const duration = Number(document.getElementById('gantt-task-duration').value || 1);

@@ -91,7 +91,7 @@
                 <div class="field"><label>Status</label><select name="status"><option value="planned">Planowany</option><option value="active">Aktywny</option><option value="on_hold">Wstrzymany</option><option value="completed">Zakończony</option></select></div>
                 @if($canViewFinances)<div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="0" required></div>@endif
                 <div class="field"><label>Data rozpoczęcia</label><input type="date" name="start_date"></div><div class="field"><label>Data zakończenia</label><input type="date" name="end_date"></div>
-                <div class="field half"><label>Kto może widzieć projekt</label><div class="member-checks">@foreach($users as $user)<label class="member-check"><input type="checkbox" name="member_ids[]" value="{{ $user->id }}" {{ in_array($user->id, old('member_ids', [])) ? 'checked' : '' }}><span>{{ $user->name }}</span></label>@endforeach</div><small>Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą tylko projekty, do których zostali tutaj przypisani.</small></div>
+                <div class="field half">@include('projects.partials.member-picker', ['selectedMembers'=>old('member_ids', [])])<small>Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą tylko projekty, do których zostali tutaj przypisani.</small></div>
                 <div class="field half"><label>Opis</label><textarea name="description" rows="4">{{ old('description') }}</textarea></div>
             </div>
             <div style="margin-top:18px;text-align:right;"><button class="btn">Utwórz projekt</button></div>

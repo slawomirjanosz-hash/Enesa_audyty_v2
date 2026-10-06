@@ -19,6 +19,7 @@
 @if(!$ready)<div class="plant-notice">Najpierw zatwierdź profil zakładu przez klienta i audytora oraz ankietę 4.1 jako klient. <a href="{{route($client?'client.audits.factors.show':'audits.factors.show',[$audit,$profile])}}">Otwórz punkt 4.1 →</a></div>@endif
 @if($stale)<div class="plant-notice">Profil zakładu lub punkt 4.1 zmienił się. Sprawdź zależne decyzje i zapisz ponownie ankietę. Dotychczasowe zatwierdzenia są nieaktualne.</div>@endif
 <div class="plant-summary"><strong>Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong><span>{{\App\Models\IsoPlantProfile::STATUSES[$stale?'editing':$review->status]}}</span></div>
+@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @if($changes)<div class="plant-notice">{{$client?'Audytor zmienił dane — sprawdź oznaczone pola i ponownie zatwierdź rejestr.':'Klient zmienił dane — sprawdź oznaczone pola przed zatwierdzeniem.'}}</div>@endif
 @if(!$client && $review->status==='submitted')<div class="plant-notice">Do wykonania: przegląd i zatwierdzenie rejestru przez audytora.</div>@endif
 @if($review->review_note)<div class="plant-notice">Uwagi audytora: {{$review->review_note}}</div>@endif
@@ -48,7 +49,7 @@
 </form>
 @include('audits.stakeholders.consultant')
 <section id="approvals" class="plant-card"><h2>Zatwierdzenia i dokument</h2>
-<p>{{$review->client_approval&&!$stale?'✓':'○'}} Zaakceptowane przez klienta · {{$review->auditor_approval&&!$stale?'✓':'○'}} Zaakceptowane przez audytora · {{$review->document_id&&!$stale?'✓':'○'}} Wygenerowano dokument</p>
+@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @foreach(['client_approval'=>'Klient','auditor_approval'=>'Audytor'] as $field=>$label)@if($review->$field)<p>{{$label}}: {{$review->$field['name']}} · {{\Carbon\Carbon::parse($review->$field['at'])->format('d.m.Y H:i')}}</p>@endif @endforeach
 @if($ready && !$stale && $canWrite && $review->status==='submitted')<form data-review-action method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$hash}}">@if(!$client)<button name="operation" value="approve" class="primary">Zatwierdź jako audytor</button><label>Powód zwrotu<textarea name="note" maxlength="3000"></textarea></label><button name="operation" value="return">Zwróć do uzupełnienia</button>@elseif($canClientApprove)<button name="operation" value="withdraw">Wycofaj zatwierdzenie</button>@endif</form>@endif
 @if($ready && !$stale && $review->status==='approved')

@@ -128,7 +128,7 @@ class QuestionnaireCompletion
             $answers = $factorService->currentAnswers($review?->answers ?? [], $review?->basis ?? [], $facts);
             $status = $profile->status !== 'approved' ? 'Oczekuje na zatwierdzenie profilu' : ($review && $review->source_hash !== $factorService->hash($profile) ? 'Profil zmieniony — sprawdź czynniki' : IsoPlantProfile::STATUSES[$review?->status ?? 'editing']);
 
-            return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $factorService->progress($facts, $answers), 'status' => $status];
+            return ['review' => $review, 'stale' => $profile->status !== 'approved' || ($review && $review->source_hash !== $factorService->hash($profile)), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $factorService->progress($facts, $answers), 'status' => $status];
         });
         $stakeholderReviews = IsoStakeholderReview::where('audit_id', $audit->id)->get()->keyBy('site_id');
         $stakeholderService = app(IsoStakeholderQuestionnaire::class);
@@ -139,7 +139,7 @@ class QuestionnaireCompletion
             $answers = $stakeholderService->currentAnswers($review?->answers ?? [], $review?->basis ?? [], $parties);
             $status = ! $stakeholderService->ready($profile, $factors) ? 'Oczekuje na profil i zatwierdzenie 4.1 przez klienta' : ($review && $review->source_hash !== $stakeholderService->hash($profile, $factors) ? 'Źródła zmienione — sprawdź rejestr' : IsoPlantProfile::STATUSES[$review?->status ?? 'editing']);
 
-            return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $stakeholderService->progress($answers, $parties, $review?->consultant ?? []), 'status' => $status];
+            return ['review' => $review, 'stale' => ! $stakeholderService->ready($profile, $factors) || ($review && $review->source_hash !== $stakeholderService->hash($profile, $factors)), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $stakeholderService->progress($answers, $parties, $review?->consultant ?? []), 'status' => $status];
         });
         $systems = IsoSystemReview::where('audit_id', $audit->id)->get()->keyBy(fn ($row) => $row->site_id.':'.$row->section);
         foreach (['4-3', '4-4'] as $section) {
@@ -155,7 +155,7 @@ class QuestionnaireCompletion
                     $status .= ' — działanie klienta';
                 }
 
-                return ['profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $service->progress($section, $review?->answers ?? $service->seed($section, $sources), $sources), 'status' => $status];
+                return ['review' => $review, 'stale' => ! $sources['ready'] || ($review && $review->source_hash !== $sources['hash']), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $service->progress($section, $review?->answers ?? $service->seed($section, $sources), $sources), 'status' => $status];
             });
         }
         request()->attributes->set($cacheKey, $result);

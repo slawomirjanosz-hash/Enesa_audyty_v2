@@ -88,6 +88,9 @@ class IsoFactorReviewController extends Controller
                     $labels['swot.'.$key] = $label;
                 }
                 $validated = $request->validate($rules, [], $labels);
+                if ($op === 'save_swot' && $validated['swot'] === array_intersect_key($review->swot ?? [], IsoFactorReview::SWOT_FIELDS)) {
+                    return;
+                }
                 $review->swot = $validated['swot'] + ['author' => $this->approval($request)];
             }
             if (in_array($op, ['save', 'submit'])) {
@@ -139,12 +142,16 @@ class IsoFactorReviewController extends Controller
                 $review->issuer = null;
                 $review->review_note = null;
             } elseif ($op === 'save_swot') {
+                $wasApproved = $review->status === 'approved';
                 if ($review->document_id) {
                     IsoSectionDocument::whereKey($review->document_id)->update(['description' => 'Dokument historyczny — analiza SWOT została zmieniona.']);
                 }
                 $review->document_id = null;
                 $review->auditor_approval = null;
-                $review->status = 'submitted';
+                $review->status = $wasApproved ? 'auditor_corrected' : 'submitted';
+                if ($wasApproved) {
+                    $review->client_approval = null;
+                }
             } elseif ($op === 'approve') {
                 abort_unless(! $client && $review->status === 'submitted' && $review->client_approval, 403);
                 abort_if(($review->client_approval['user_id'] ?? null) === $request->user()->id, 403);
