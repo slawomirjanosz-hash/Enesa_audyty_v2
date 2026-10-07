@@ -585,7 +585,11 @@ test('project manager manages schedule tasks finances and requirements', functio
     $publicUrl = $this->actingAs($manager)->postJson(route('projects.public-gantt.generate', $project))
         ->assertOk()->json('url');
     auth()->logout();
-    $this->get($publicUrl)->assertOk()->assertSee('Publiczny harmonogram projektu');
+    $this->get($publicUrl)->assertOk()->assertSee('Publiczny harmonogram projektu')
+        ->assertSee('js/project-gantt-colors.js', false)
+        ->assertSee('ProjectGanttColors.progressClass', false)
+        ->assertSee('ProjectGanttColors.apply', false)
+        ->assertSee('readonly:true', false);
 });
 
 test('client invoices use issued group without supplier and display million amounts in one line', function () {

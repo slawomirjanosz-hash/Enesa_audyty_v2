@@ -58,7 +58,7 @@ jobs:
         run: node --test tests/js/form-draft-submit.test.mjs
 
       - name: Test project Gantt dependency dates
-        run: node --test tests/js/project-gantt-dependency.test.mjs tests/js/project-gantt-scroll.test.mjs
+        run: node --test tests/js/project-gantt-dependency.test.mjs tests/js/project-gantt-scroll.test.mjs tests/js/project-gantt-colors.test.mjs
 
       - name: Check PHP code style
         run: composer format:test

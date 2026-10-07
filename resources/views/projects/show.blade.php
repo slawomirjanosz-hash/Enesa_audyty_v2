@@ -614,6 +614,7 @@
 @endif
 
 <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.0/dist/frappe-gantt.min.js"></script>
+<script src="{{asset('js/project-gantt-colors.js')}}?v=1"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const projectTimelineItems = @json($timelineItems);
@@ -895,15 +896,7 @@ function initProjectGantt() {
         return;
     }
     if (!projectCanEdit) container.classList.add('gantt-readonly');
-    const ganttProgressClass = progress => {
-        const value = Number(progress || 0);
-        if (value >= 100) return 'progress-100';
-        if (value >= 76) return 'progress-76-99';
-        if (value >= 51) return 'progress-51-75';
-        if (value >= 26) return 'progress-26-50';
-        if (value >= 11) return 'progress-11-25';
-        return 'progress-0-10';
-    };
+    const ganttProgressClass = progress => ProjectGanttColors.progressClass(progress);
     const tasks = projectTimelineItems.map(item => ({
         id: item.id,
         name: item.assignee ? item.name + ' · ' + item.assignee : item.name,
@@ -941,17 +934,7 @@ function initProjectGantt() {
 }
 
 function applyGanttProgressColors() {
-    const colors = {
-        'progress-0-10': ['#8b5cf6', '#6d28d9'], 'progress-11-25': ['#facc15', '#eab308'],
-        'progress-26-50': ['#fb923c', '#ea580c'], 'progress-51-75': ['#1d4ed8', '#1e3a8a'],
-        'progress-76-99': ['#60a5fa', '#3b82f6'], 'progress-100': ['#22c55e', '#15803d'],
-    };
-    document.querySelectorAll('#project-frappe-gantt .bar-wrapper.task-row').forEach(wrapper => {
-        const className = Object.keys(colors).find(name => wrapper.classList.contains(name));
-        if (!className) return;
-        wrapper.querySelector('.bar')?.style.setProperty('fill', colors[className][0], 'important');
-        wrapper.querySelector('.bar-progress')?.style.setProperty('fill', colors[className][1], 'important');
-    });
+    ProjectGanttColors.apply(document.getElementById('project-frappe-gantt'));
 }
 
 function ganttMarkerX(date, kind) {

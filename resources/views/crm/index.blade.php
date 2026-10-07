@@ -583,7 +583,7 @@
                         </button>
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Zarchiwizować zadanie?')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn-secondary" title="Archiwizuj zadanie"><i class="ti ti-archive"></i> Archiwizuj</button>
+                            <button type="submit" class="btn-icon btn-icon-archive" title="Archiwizuj zadanie" aria-label="Archiwizuj zadanie"><i class="ti ti-archive" aria-hidden="true"></i></button>
                         </form>
                         @endif
                     </div>
@@ -648,7 +648,7 @@
                         </button>
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Zarchiwizować zadanie?')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn-secondary" title="Archiwizuj zadanie"><i class="ti ti-archive"></i> Archiwizuj</button>
+                            <button type="submit" class="btn-icon btn-icon-archive" title="Archiwizuj zadanie" aria-label="Archiwizuj zadanie"><i class="ti ti-archive" aria-hidden="true"></i></button>
                         </form>
                     </div>
                 </td>
