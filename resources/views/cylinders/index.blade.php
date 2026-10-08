@@ -1,6 +1,6 @@
 @extends($layout)
-@section('title', 'Inspektor UDT')
-@section('page-title', 'Inspektor UDT')
+@section('title', 'Przeglądy urządzeń')
+@section('page-title', 'Przeglądy urządzeń')
 @section('content')
 <div class="cyl-module cyl-register">
     @include('cylinders.style')

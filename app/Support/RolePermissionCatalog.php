@@ -77,7 +77,7 @@ class RolePermissionCatalog
                 'audits.passports.view' => 'Podgląd paszportów energetycznych',
                 'audits.passports.manage' => 'Dodawanie, edycja i usuwanie paszportów energetycznych',
             ]],
-            'cylinders' => ['label' => 'Inspektor UDT', 'permissions' => [
+            'cylinders' => ['label' => 'Przeglądy urządzeń', 'permissions' => [
                 'cylinders.view' => 'Podgląd rejestru butli i przeglądów wszystkich klientów wdrożenia',
                 'cylinders.manage' => 'Dodawanie i edycja butli oraz zapisywanie przeglądów',
             ]],

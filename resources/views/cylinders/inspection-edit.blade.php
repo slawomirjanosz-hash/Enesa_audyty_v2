@@ -1,6 +1,6 @@
 @extends($layout)
 @section('title', 'Edycja przeglądu')
-@section('page-title', 'Inspektor UDT — edycja wpisu')
+@section('page-title', 'Przeglądy urządzeń — edycja wpisu')
 @section('content')
 <div class="cyl-module">@include('cylinders.style')
 <div class="cyl-head"><h1>Edytuj wpis #{{ $inspection->id }} · {{ $cylinder->serial_number }}</h1><a class="cyl-btn" href="{{ route('cylinders.show', $cylinder) }}">Anuluj</a></div>

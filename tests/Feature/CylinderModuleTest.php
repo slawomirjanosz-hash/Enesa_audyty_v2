@@ -43,7 +43,7 @@ test('cylinders are opt in for missing null and existing module settings', funct
     expect($settings->moduleEnabled('cylinders'))->toBeFalse()->and($settings->moduleEnabled('audits'))->toBeTrue();
     $this->get(route('cylinders.create'))->assertForbidden();
     $this->post(route('cylinders.store'), [])->assertForbidden();
-    $this->get(route('settings.company'))->assertOk()->assertSee('Inspektor UDT');
+    $this->get(route('settings.company'))->assertOk()->assertSee('Przeglądy urządzeń')->assertDontSee('Inspektor UDT');
     $settings->update(['enabled_modules' => ['dashboard', 'audits']]);
     expect($settings->moduleEnabled('cylinders'))->toBeFalse();
 });
@@ -53,7 +53,7 @@ test('superadmin can explicitly enable cylinders in company settings and disable
         'name' => 'Firma przeglądów', 'primary_color' => '#123456', 'welcome_page_mode' => 'general', 'enabled_modules' => ['cylinders'],
     ])->assertRedirect();
     expect(CompanySettings::moduleIsEnabled('cylinders'))->toBeTrue();
-    $this->get(route('cylinders.index'))->assertOk()->assertSee('Rejestr butli');
+    $this->get(route('cylinders.index'))->assertOk()->assertSee('Rejestr butli')->assertSee('Przeglądy urządzeń')->assertDontSee('Inspektor UDT');
     CompanySettings::first()->update(['enabled_modules' => []]);
     $this->get(route('cylinders.index'))->assertForbidden();
 });

@@ -470,7 +470,7 @@
 
             @if(($appBrand?->moduleEnabled('cylinders') ?? false) && ($layoutHasFullAccess || $canAccessModule('cylinders.view')))
             <li class="nav-item">
-                <a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Inspektor UDT</a>
+                <a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Przeglądy urządzeń</a>
             </li>
             @endif
             @if(($appBrand?->moduleEnabled('warehouse') ?? false) && ($layoutHasFullAccess || $canAccessModule('warehouse.view')))
