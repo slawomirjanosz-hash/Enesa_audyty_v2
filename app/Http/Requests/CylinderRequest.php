@@ -32,7 +32,7 @@ class CylinderRequest extends FormRequest
     {
         $cylinder = $this->route('cylinder');
         $rules = [
-            'company_id' => $cylinder ? ['prohibited'] : ['required', 'integer', Rule::exists('companies', 'id')->where('company_type', 'client')->where('status', 'active')->whereNull('archived_at')],
+            'company_id' => $cylinder ? ['prohibited'] : ['nullable', 'integer', Rule::exists('companies', 'id')->where('company_type', 'client')->whereNull('archived_at')],
             'name' => ['required', 'string', 'max:160'],
             'manufacturer_mark' => ['required', 'string', 'max:160'],
             'serial_number' => ['required', 'string', 'max:100', Rule::unique('cylinders')->where('manufacturer_mark', $this->input('manufacturer_mark'))->ignore($cylinder?->id)],

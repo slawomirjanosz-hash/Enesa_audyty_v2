@@ -12,9 +12,9 @@
 <div class="cyl-grid">
 <div class="cyl-wide">
 @if($cylinder->exists)
-<label>Klient</label><p>{{ $cylinder->company->name }}</p><small class="cyl-muted">Historia urządzenia pozostaje przypisana do tego klienta.</small>
+<label>Klient</label><p>{{ $cylinder->company?->name ?? 'Bez przypisanego klienta' }}</p>@if($cylinder->company_id)<small class="cyl-muted">Historia urządzenia pozostaje przypisana do tego klienta.</small>@endif
 @else
-<label for="company_id">Klient *</label><select id="company_id" name="company_id" required @if($errors->has('company_id')) aria-invalid="true" @endif><option value="">Wybierz klienta</option>@foreach($companies as $company)<option value="{{ $company->id }}" @selected(old('company_id') == $company->id)>{{ $company->name }}</option>@endforeach</select>
+<label for="company_id">Klient (opcjonalnie)</label><select id="company_id" name="company_id" @if($errors->has('company_id')) aria-invalid="true" @endif><option value="">Bez przypisanego klienta</option>@foreach($companies as $company)<option value="{{ $company->id }}" @selected(old('company_id') == $company->id)>{{ $company->name }}</option>@endforeach</select>
 @error('company_id')<small class="cyl-field-error">{{ $message }}</small>@enderror
 @endif
 </div>

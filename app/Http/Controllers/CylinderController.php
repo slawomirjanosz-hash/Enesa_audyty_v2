@@ -33,7 +33,7 @@ class CylinderController extends Controller
         if ($request->routeIs('client.cylinders.*')) {
             $query->whereIn('company_id', $request->user()->companies()->select('companies.id'));
         } elseif ($request->routeIs('client-zone.cylinders.*')) {
-            $query->where('company_id', $request->session()->get('client_zone_company_id'));
+            $query->whereNotNull('company_id')->where('company_id', $request->session()->get('client_zone_company_id'));
         }
 
         return $query;

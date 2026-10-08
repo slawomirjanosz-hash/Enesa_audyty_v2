@@ -40,6 +40,30 @@ test('cylinder registration saves fixed parameters without a type selector', fun
     expect($cylinder->fresh()->notes)->toBe('Aktualizacja');
 });
 
+test('cylinders can be registered without a client and remain hidden from clients', function () {
+    $this->actingAs($this->inspector)->post(route('cylinders.store'), array_replace($this->payload, ['company_id' => '']))->assertSessionHasNoErrors();
+    $cylinder = Cylinder::sole();
+    expect($cylinder->company_id)->toBeNull();
+    $this->get(route('cylinders.edit', $cylinder))->assertOk()->assertSee('Bez przypisanego klienta');
+    $this->get(route('cylinders.show', $cylinder))->assertOk();
+    $this->get(route('cylinders.index'))->assertOk()->assertSee('SN-001');
+    $client = User::factory()->create();
+    $client->assignRole(Role::findOrCreate('client_user'));
+    $client->companies()->attach($this->clientCompany);
+    $this->actingAs($client)->get(route('client.cylinders.index'))->assertOk()->assertDontSee('SN-001');
+    $this->get(route('client.cylinders.show', $cylinder))->assertNotFound();
+});
+
+test('every selectable client can be used without a tax number regardless of business status', function () {
+    $this->clientCompany->update(['name' => 'TPED', 'status' => 'pending', 'nip' => null]);
+    $this->actingAs($this->inspector)->get(route('cylinders.create'))->assertOk()->assertSee('TPED');
+    $this->post(route('cylinders.store'), $this->payload)->assertSessionHasNoErrors();
+    expect(Cylinder::sole()->company_id)->toBe($this->clientCompany->id);
+    $this->clientCompany->update(['archived_at' => now()]);
+    $this->post(route('cylinders.store'), array_replace($this->payload, ['serial_number' => 'NEW']))->assertSessionHasErrors('company_id');
+    $this->post(route('cylinders.store'), array_replace($this->payload, ['company_id' => 999999, 'serial_number' => 'NEW']))->assertSessionHasErrors('company_id');
+});
+
 test('manufacturer mark and serial are unique globally while another mark may reuse serial', function () {
     $this->actingAs($this->inspector)->post(route('cylinders.store'), $this->payload)->assertSessionHasNoErrors();
     $this->post(route('cylinders.store'), array_replace($this->payload, ['company_id' => $this->otherCompany->id, 'manufacturer_mark' => 'acme']))->assertSessionHasErrors('serial_number');
