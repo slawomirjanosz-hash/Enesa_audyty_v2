@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\CompanySettings;
 use App\Models\Document;
 use App\Models\ProjectDocumentShare;
-use App\Services\DocumentQuotaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +34,6 @@ class PublicProjectDocumentFolderController extends Controller
             'files.*' => ['file', 'max:20480', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,zip'],
         ]);
         $files = $request->hasFile('files') ? $request->file('files') : [$request->file('file')];
-        app(DocumentQuotaService::class)->assertAdditional($share->created_by, array_sum(array_map(fn ($file) => $file->getSize(), $files)));
         foreach ($files as $file) {
             $originalName = $file->getClientOriginalName();
             $safeName = now()->format('YmdHis').'_'.Str::random(16).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);

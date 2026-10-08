@@ -204,7 +204,9 @@
 @endpush
 
 @section('content')
-@include('settings.users.security')
+@php
+    $storageUsage = app(\App\Services\DocumentQuotaService::class)->usedMany($allUsers->modelKeys());
+@endphp
 
 {{-- Zakładki --}}
 <div class="settings-tabs">
@@ -590,15 +592,18 @@
             Brak użytkowników w systemie
         </div>
     @else
+        <div style="overflow-x:auto">
         <table class="users-table" id="usersTable">
             <thead>
                 <tr>
-                    <th style="cursor:pointer;" onclick="sortTable(0)">Użytkownik <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortTable(1)">Email <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortTable(2)">Role <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortTable(3)">Firma <span class="sort-indicator"></span></th>
-                    <th style="cursor:pointer;" onclick="sortTable(4)">Status <span class="sort-indicator"></span></th>
-                    <th style="text-align:right;">Akcje</th>
+                    <th>Użytkownik</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Firma</th>
+                    <th>Status</th>
+                    <th>Dane na serwerze</th>
+                    <th>Ostatnia aktywność</th>
+                    <th data-sortable="false" style="text-align:right;">Akcje</th>
                 </tr>
             </thead>
             <tbody>
@@ -655,8 +660,13 @@
                                 <span style="color:#999;font-size:13px;">✗ Usunięty</span>
                             @endif
                         </td>
+                        <td data-sort-value="{{(int)$storageUsage->get($user->id, 0)}}" style="white-space:nowrap">{{\App\Models\Document::formatBytes((int)$storageUsage->get($user->id, 0))}}</td>
+                        <td data-sort-value="{{$user->security_activity_at?->toIso8601String() ?? ''}}" style="white-space:nowrap">{{$user->security_activity_at?->format('d.m.Y H:i') ?? 'Brak'}}</td>
                         <td>
                             <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                @if($currentUser->hasAnyRole(['admin','superadmin']) && (!$user->hasRole('superadmin') || $currentUser->hasRole('superadmin')) && (!$user->is_active || $user->security_block_reason || $user->login_locked_until?->isFuture()))
+                                    <form method="POST" action="{{route('settings.users.unlock', $user)}}">@csrf<button class="btn-action success" title="Odblokuj konto" aria-label="Odblokuj konto: {{$user->name}}"><i class="ti ti-lock-open" aria-hidden="true"></i></button></form>
+                                @endif
                                 @if($role === 'auditor' && $currentUser->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
                                     <a href="{{ route('settings.users.auditor-access', $user) }}" class="btn-action" title="Uprawnienia" style="width:auto;padding:0 10px;gap:5px;">
                                         <i class="ti ti-key"></i> Uprawnienia
@@ -696,7 +706,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="text-align:center; padding:40px; color:#888;">
+                        <td colspan="8" style="text-align:center; padding:40px; color:#888;">
                             <i class="ti ti-users" style="font-size:32px; display:block; margin-bottom:8px;"></i>
                             Brak użytkowników
                         </td>
@@ -704,6 +714,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     @endif
 </div>
 
@@ -929,46 +940,7 @@
         }
     });
 
-    // Sorting for users table
-    let sortState = { column: null, ascending: true };
-    
-    function sortTable(columnIndex) {
-        const table = document.getElementById('usersTable');
-        const tbody = table.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr[data-user-id]'));
-        
-        const sortKeys = ['data-sort-name', 'data-sort-email', 'data-sort-role', 'data-sort-company', 'data-sort-status'];
-        const key = sortKeys[columnIndex];
-        
-        // Toggle sort direction if same column clicked
-        if (sortState.column === columnIndex) {
-            sortState.ascending = !sortState.ascending;
-        } else {
-            sortState.column = columnIndex;
-            sortState.ascending = true;
-        }
-        
-        // Sort rows
-        rows.sort((a, b) => {
-            const aVal = a.getAttribute(key) || '';
-            const bVal = b.getAttribute(key) || '';
-            const comparison = aVal.localeCompare(bVal, 'pl');
-            return sortState.ascending ? comparison : -comparison;
-        });
-        
-        // Update sort indicators
-        table.querySelectorAll('th .sort-indicator').forEach(el => el.textContent = '');
-        const th = table.querySelectorAll('th')[columnIndex];
-        if (th) {
-            const indicator = th.querySelector('.sort-indicator');
-            if (indicator) {
-                indicator.textContent = sortState.ascending ? ' ▲' : ' ▼';
-            }
-        }
-        
-        // Reorder rows in tbody
-        rows.forEach(row => tbody.appendChild(row));
-    }
+    // Active users use the shared table-sort.js controls, including storage and activity.
 
     // Sorting for archived tables
     let archivedSortState = {};

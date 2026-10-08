@@ -113,16 +113,16 @@ test('deleting a company removes its private source files', function () {
     expect(CompanyReliabilityFile::count())->toBe(0);
 });
 
-test('source file uploads enforce quota type and reader permissions', function () {
+test('source file uploads enforce type and reader permissions but ignore legacy quota', function () {
     $reader = User::factory()->create();
     $reader->assignRole('auditor_senior');
     $reader->givePermissionTo('company_reliability.view');
     $this->actingAs($reader)->post(route('companies.reliability.files.store', $this->company))->assertForbidden();
     $this->actingAs($this->admin)->post(route('companies.reliability.files.store', $this->company), ['file' => UploadedFile::fake()->createWithContent('evil.php', '<?php echo 1;')])->assertSessionHasErrors('file');
     $this->admin->forceFill(['document_limit_bytes' => 1])->save();
-    $this->post(route('companies.reliability.files.store', $this->company), ['file' => UploadedFile::fake()->createWithContent('data.xml', '<Data>test</Data>')])->assertSessionHasErrors('file');
-    expect(CompanyReliabilityFile::count())->toBe(0);
-    expect(Storage::disk('local')->allFiles('private-reliability-sources'))->toBe([]);
+    $this->post(route('companies.reliability.files.store', $this->company), ['file' => UploadedFile::fake()->createWithContent('data.xml', '<Data>test</Data>')])->assertRedirect()->assertSessionHasNoErrors();
+    expect(CompanyReliabilityFile::count())->toBe(1);
+    Storage::disk('local')->assertExists(CompanyReliabilityFile::first()->stored_path);
 });
 
 test('only opted in staff can access reliability even with broad document or system rights', function () {
@@ -273,11 +273,11 @@ test('lookup does not accept a different company nip from KRS', function () {
     $this->get(route('companies.reliability.show', $this->company))->assertOk()->assertSee('NIP z KRS nie zgadza');
 });
 
-test('reports count toward storage quota and rejected creation leaves no file', function () {
+test('reports are generated without a per user storage limit', function () {
     $this->admin->forceFill(['document_limit_bytes' => 1])->save();
-    $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), $this->payload)->assertSessionHasErrors('file');
-    expect(CompanyReliabilityReport::count())->toBe(0);
-    expect(Storage::disk('local')->allFiles('private-reliability'))->toBe([]);
+    $this->actingAs($this->admin)->post(route('companies.reliability.store', $this->company), $this->payload)->assertRedirect()->assertSessionHasNoErrors();
+    expect(CompanyReliabilityReport::count())->toBe(1);
+    Storage::disk('local')->assertExists(CompanyReliabilityReport::first()->stored_path);
 });
 
 test('report list has sortable data headings and non sortable actions', function () {

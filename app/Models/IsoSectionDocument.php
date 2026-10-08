@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\EnforcesDocumentQuota;
+use App\Models\Concerns\TracksDocumentStorage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class IsoSectionDocument extends Model
 {
-    use EnforcesDocumentQuota;
+    use TracksDocumentStorage;
 
     protected $fillable = [
         'audit_id', 'section_id', 'scope', 'title', 'description', 'document_year',

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\Project;
 use App\Models\ProjectDocumentFolder;
-use App\Services\DocumentQuotaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,6 @@ class ProjectDocumentController extends Controller
             ? ProjectDocumentFolder::where('project_id', $project->id)->findOrFail($data['project_document_folder_id'])
             : null;
         $files = $request->hasFile('files') ? $request->file('files') : [$request->file('file')];
-        app(DocumentQuotaService::class)->assertAdditional($request->user()->id, array_sum(array_map(fn ($file) => $file->getSize(), $files)));
         foreach ($files as $file) {
             $originalName = $file->getClientOriginalName();
             $safeName = now()->format('YmdHis').'_'.Str::random(10).'_'.preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);

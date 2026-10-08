@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\EnforcesDocumentQuota;
+use App\Models\Concerns\TracksDocumentStorage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CompanyReliabilityReport extends Model
 {
-    use EnforcesDocumentQuota;
+    use TracksDocumentStorage;
 
     protected $guarded = ['id'];
 

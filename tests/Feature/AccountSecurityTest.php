@@ -8,7 +8,7 @@ use App\Services\AccountSecurityService;
 use App\Services\DocumentQuotaService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 function securedUser(string $role = 'admin'): User
@@ -30,12 +30,12 @@ test('inactive and dormant accounts cannot log in and admin can unlock', functio
     expect($user->fresh()->security_block_reason)->toBeNull()->and($user->fresh()->security_activity_at->isToday())->toBeTrue();
 });
 
-test('admin cannot unlock superadmin or client elevate limits', function () {
+test('admin cannot unlock superadmin and removed quota endpoint cannot change limits', function () {
     $super = securedUser('superadmin');
     $admin = securedUser();
     $this->actingAs($admin)->post(route('settings.users.unlock', $super))->assertForbidden();
     $client = securedUser('client_user');
-    $this->actingAs($client)->patch(route('settings.users.document-quota', $client), ['limit_mb' => 500])->assertForbidden();
+    $this->actingAs($client)->patch('/settings/users/'.$client->id.'/document-quota', ['limit_mb' => 500])->assertNotFound();
 });
 
 test('failed attempts from different addresses lock account and unlock revokes sessions', function () {
@@ -56,20 +56,22 @@ test('account activity is updated without blocking active users', function () {
     expect($user->fresh()->security_activity_at->isToday())->toBeTrue();
 });
 
-test('document limit is enforced across saves and owner can see usage', function () {
+test('legacy document limit no longer restricts saves and usage follows retained files', function () {
     Storage::fake('local');
     $user = securedUser();
     $user->forceFill(['document_limit_bytes' => 10])->save();
     $company = Company::create(['name' => 'Quota']);
     $make = fn ($size, $path) => Document::create(['company_id' => $company->id, 'uploaded_by' => $user->id, 'original_filename' => $path, 'stored_path' => $path, 'type' => 'upload', 'size' => $size]);
     $doc = $make(8, 'one.pdf');
-    expect(fn () => $make(3, 'two.pdf'))->toThrow(ValidationException::class);
-    expect(app(DocumentQuotaService::class)->used($user->id))->toBe(8);
+    $make(3, 'two.pdf');
+    expect(app(DocumentQuotaService::class)->used($user->id))->toBe(11);
     $doc->delete();
-    expect(app(DocumentQuotaService::class)->used($user->id))->toBe(0);
-    $this->actingAs($user)->get('/documents')->assertOk()->assertSee('Twoje miejsce na dokumenty');
-    $this->patch(route('settings.users.document-quota', $user), ['limit_mb' => 300])->assertRedirect();
-    expect($user->fresh()->document_limit_bytes)->toBe(300 * 1048576);
+    expect(app(DocumentQuotaService::class)->used($user->id))->toBe(3);
+    $this->actingAs($user)->get('/documents')->assertOk()->assertSee('Twoje pliki:')->assertDontSee('Twoje miejsce na dokumenty')->assertDontSee('Zapisz limit');
+    $this->get(route('settings.users.index'))->assertOk()
+        ->assertSee('Dane na serwerze')->assertSee('Ostatnia aktywność')
+        ->assertSee('data-sort-value="3"', false)->assertSee('table-sort.js')
+        ->assertDontSee('Miejsce / limit')->assertDontSee('Zapisz limit');
 });
 
 test('download history records successful downloads without query secrets', function () {
@@ -81,6 +83,43 @@ test('download history records successful downloads without query secrets', func
     $this->actingAs($user)->get(route('documents.download', $doc).'?token=TOPSECRET')->assertOk();
     $log = ActivityLog::where('action', 'download')->firstOrFail();
     expect($log->user_id)->toBe($user->id)->and($log->url)->not->toContain('TOPSECRET');
+});
+
+test('usage and activity are visible in users table but client sidebar only shows own usage', function () {
+    $admin = securedUser();
+    $client = securedUser('client_admin');
+    $client->forceFill(['security_activity_at' => now()->subDay()])->save();
+    $company = Company::create(['name' => 'Storage client', 'company_type' => 'client', 'status' => 'active']);
+    $client->companies()->attach($company);
+    foreach ([[$admin, 4096], [$client, 2048]] as [$owner, $size]) {
+        Document::create(['company_id' => $company->id, 'uploaded_by' => $owner->id, 'original_filename' => 'file.pdf', 'stored_path' => 'file-'.$owner->id.'.pdf', 'type' => 'upload', 'size' => $size]);
+    }
+    $usage = app(DocumentQuotaService::class)->usedMany([$admin->id, $client->id]);
+    expect($usage->get($admin->id))->toBe(4096)->and($usage->get($client->id))->toBe(2048);
+    $this->actingAs($admin)->get(route('settings.users.index'))->assertOk()
+        ->assertSee('data-sort-value="4096"', false)->assertSee('data-sort-value="2048"', false)
+        ->assertSee($client->security_activity_at->format('d.m.Y H:i'))
+        ->assertDontSee('Limit domyślny')->assertDontSee('Zapisz limit');
+    $response = $this->actingAs($client)->get(route('client.dashboard'))->assertOk();
+    preg_match('/class="user-storage-usage"[^>]*>(.*?)<\/div>/s', $response->getContent(), $matches);
+    expect($matches[1] ?? '')->toContain(Document::formatBytes(2048))->not->toContain(Document::formatBytes(4096));
+    $this->get(route('settings.users.index'))->assertForbidden();
+});
+
+test('unlock action in users table preserves administrative permission boundary', function () {
+    $admin = securedUser();
+    $blocked = securedUser('auditor');
+    $blocked->forceFill(['is_active' => false])->save();
+    $super = securedUser('superadmin');
+    $super->forceFill(['is_active' => false])->save();
+    $this->actingAs($admin)->get(route('settings.users.index'))->assertOk()
+        ->assertSee('aria-label="Odblokuj konto: '.$blocked->name.'"', false)
+        ->assertDontSee('aria-label="Odblokuj konto: '.$super->name.'"', false);
+    $reader = securedUser('auditor');
+    Permission::findOrCreate('settings.users.view');
+    $reader->givePermissionTo('settings.users.view');
+    $this->actingAs($reader)->get(route('settings.users.index'))->assertOk()->assertDontSee('Odblokuj konto');
+    $this->post(route('settings.users.unlock', $blocked))->assertForbidden();
 });
 
 test('superadmin requires SMS when enabled and a code is single use', function () {

@@ -185,15 +185,16 @@ test('videos are private scoped to a cylinder and counted against uploader quota
     $this->actingAs($user)->get(route('cylinders.videos.show', [$cylinder, $video]))->assertForbidden();
 });
 
-test('invalid video uploads and quota overflow leave no files or rows', function () {
+test('invalid video uploads are rejected but legacy quota no longer blocks valid files', function () {
     Storage::fake('local');
     enableCylinders();
     $cylinder = registeredCylinder();
     $user = cylinderStaff();
     $this->actingAs($user)->post(route('cylinders.videos.store', $cylinder), ['title' => 'Test', 'file' => UploadedFile::fake()->createWithContent('film.mp4', '<html>not video</html>')])->assertSessionHasErrors('file');
     $user->forceFill(['document_limit_bytes' => 100])->save();
-    $this->post(route('cylinders.videos.store', $cylinder), ['title' => 'Test', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4')])->assertSessionHasErrors('file');
     expect($cylinder->videos()->count())->toBe(0)->and(Storage::disk('local')->allFiles())->toBe([]);
+    $this->post(route('cylinders.videos.store', $cylinder), ['title' => 'Test', 'file' => UploadedFile::fake()->create('film.mp4', 10, 'video/mp4')])->assertRedirect()->assertSessionHasNoErrors();
+    expect($cylinder->videos()->count())->toBe(1);
 });
 
 test('video link parser only embeds trusted providers and keeps other links external', function () {
@@ -323,7 +324,7 @@ test('photos are private have real small thumbnails and replacements clean old f
     $this->get(route('client.cylinders.photo', $cylinder))->assertForbidden();
 });
 
-test('invalid photo and quota rejection preserve the previous photo', function () {
+test('photo replacement ignores legacy quota while invalid photos preserve the saved image', function () {
     Storage::fake('local');
     enableCylinders();
     $cylinder = registeredCylinder();
@@ -331,9 +332,12 @@ test('invalid photo and quota rejection preserve the previous photo', function (
     $this->actingAs($staff)->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('butla.png')])->assertRedirect();
     $path = $cylinder->photo()->firstOrFail()->stored_path;
     $staff->forceFill(['document_limit_bytes' => 0])->save();
-    $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('nowa.png', 200, 200)])->assertSessionHasErrors('file');
+    $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('nowa.png', 200, 200)])->assertRedirect()->assertSessionHasNoErrors();
+    $newPath = $cylinder->photo()->firstOrFail()->stored_path;
+    expect($newPath)->not->toBe($path);
+    Storage::disk('local')->assertMissing($path);
     $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->createWithContent('photo.svg', '<svg></svg>')])->assertSessionHasErrors('photo');
-    expect($cylinder->photo()->firstOrFail()->stored_path)->toBe($path)->and(Storage::disk('local')->allFiles())->toHaveCount(2);
+    expect($cylinder->photo()->firstOrFail()->stored_path)->toBe($newPath)->and(Storage::disk('local')->allFiles())->toHaveCount(2);
 });
 
 test('due date highlight is independent of the problem status', function () {

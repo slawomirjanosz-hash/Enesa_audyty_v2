@@ -27,11 +27,12 @@ test('client admin copies ISO document once without losing original and other cl
     expect($copy->fresh())->not->toBeNull();
 });
 
-test('copying a document enforces quota and leaves no failed copy on disk', function () {
+test('copying a document ignores legacy user quota and retains attribution', function () {
     Storage::fake('local');
     [$audit, $client] = plantFixture();
     $source = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => 'intro', 'scope' => 'client', 'title' => 'Profil', 'version_number' => '1.0', 'original_filename' => 'profil.pdf', 'stored_path' => 'iso/source.pdf', 'mime_type' => 'application/pdf', 'size' => 8, 'content_base64' => base64_encode('%PDF demo'), 'uploaded_by' => $client->id]);
     $client->forceFill(['document_limit_bytes' => 8])->save();
-    $this->actingAs($client)->post(route('client.audits.iso-documents.copy', [$audit, $source]))->assertSessionHasErrors('file');
-    expect(Document::count())->toBe(0)->and(Storage::disk('local')->allFiles())->toBe([]);
+    $this->actingAs($client)->post(route('client.audits.iso-documents.copy', [$audit, $source]))->assertRedirect()->assertSessionHasNoErrors();
+    expect(Document::count())->toBe(1)->and(Document::first()->storage_owner_id)->toBe($client->id);
+    Storage::disk('local')->assertExists(Document::first()->stored_path);
 });

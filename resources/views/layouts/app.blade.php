@@ -620,6 +620,7 @@
             </div>
             <div style="flex:1;min-width:0;">
                 <span class="sidebar-user-name">{{ Auth::user()->name }}</span>
+                <x-user-storage-usage />
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);font-size:12px;padding:4px 0;display:flex;align-items:center;gap:6px;">

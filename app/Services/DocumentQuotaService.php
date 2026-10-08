@@ -2,40 +2,29 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class DocumentQuotaService
 {
-    public function assertAdditional(int $userId, int $bytes): void
-    {
-        $user = User::whereKey($userId)->firstOrFail();
-        if ($this->used($userId) + $bytes > $user->document_limit_bytes) {
-            throw ValidationException::withMessages(['file' => 'Wybrane pliki przekraczają dostępne miejsce. Wybierz mniej plików lub poproś administratora o zwiększenie limitu.']);
-        }
-    }
-
     public function usedMany(array $userIds): Collection
     {
-        $totals = collect();
-        foreach (['documents', 'iso_section_documents', 'cylinder_videos', 'cylinder_photos', 'company_reliability_reports', 'company_reliability_files'] as $table) {
-            foreach (DB::table($table)->whereIn('storage_owner_id', $userIds)->selectRaw('storage_owner_id, SUM(size) AS total')->groupBy('storage_owner_id')->get() as $row) {
-                $totals->put($row->storage_owner_id, (int) $totals->get($row->storage_owner_id, 0) + (int) $row->total);
-            }
+        if ($userIds === []) {
+            return collect();
+        }
+        $query = DB::table('documents')->whereIn('storage_owner_id', $userIds)->select('storage_owner_id', 'size');
+        foreach (['iso_section_documents', 'cylinder_videos', 'cylinder_photos', 'company_reliability_reports', 'company_reliability_files'] as $table) {
+            $query->unionAll(DB::table($table)->whereIn('storage_owner_id', $userIds)->select('storage_owner_id', 'size'));
         }
 
-        return $totals;
+        return DB::query()->fromSub($query, 'stored_files')
+            ->selectRaw('storage_owner_id, SUM(size) AS total')
+            ->groupBy('storage_owner_id')->pluck('total', 'storage_owner_id')
+            ->map(fn ($bytes) => (int) $bytes);
     }
 
     public function used(int $userId): int
     {
-        return (int) DB::table('documents')->where('storage_owner_id', $userId)->sum('size')
-            + (int) DB::table('iso_section_documents')->where('storage_owner_id', $userId)->sum('size')
-            + (int) DB::table('cylinder_videos')->where('storage_owner_id', $userId)->sum('size')
-            + (int) DB::table('cylinder_photos')->where('storage_owner_id', $userId)->sum('size')
-            + (int) DB::table('company_reliability_reports')->where('storage_owner_id', $userId)->sum('size')
-            + (int) DB::table('company_reliability_files')->where('storage_owner_id', $userId)->sum('size');
+        return (int) $this->usedMany([$userId])->get($userId, 0);
     }
 }

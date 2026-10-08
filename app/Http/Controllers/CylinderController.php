@@ -8,7 +8,6 @@ use App\Models\CylinderInspection;
 use App\Models\CylinderVideo;
 use App\Models\User;
 use App\Services\CylinderPhotoRenderer;
-use App\Services\DocumentQuotaService;
 use App\Support\CylinderVideoLink;
 use App\Support\TableSort;
 use Illuminate\Database\Eloquent\Builder;
@@ -180,7 +179,6 @@ class CylinderController extends Controller
                     return;
                 }
                 User::query()->lockForUpdate()->findOrFail($request->user()->id);
-                app(DocumentQuotaService::class)->assertAdditional($request->user()->id, $file->getSize());
                 $path = $file->store('cylinder-videos/'.$cylinder->id, 'local');
                 abort_unless($path, 500, 'Nie udało się zapisać filmu.');
                 $locked->videos()->create([
@@ -275,8 +273,6 @@ class CylinderController extends Controller
                 User::query()->lockForUpdate()->findOrFail($request->user()->id);
                 $photo = $locked->photo;
                 $size = strlen($images['image']) + strlen($images['thumbnail']);
-                $credit = $photo && (int) $photo->storage_owner_id === $request->user()->id ? (int) $photo->size : 0;
-                app(DocumentQuotaService::class)->assertAdditional($request->user()->id, $size - $credit);
                 $base = 'cylinder-photos/'.$locked->id.'/'.Str::uuid();
                 $paths = [$base.'.jpg', $base.'-thumb.jpg'];
                 foreach (array_values($images) as $i => $bytes) {

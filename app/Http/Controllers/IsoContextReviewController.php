@@ -8,7 +8,6 @@ use App\Models\AuditType;
 use App\Models\IsoContextReview;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
-use App\Services\DocumentQuotaService;
 use App\Services\IsoContextLibrary;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -341,7 +340,6 @@ class IsoContextReviewController extends Controller
 
             return response($contents, 200, ['Content-Type' => $mime, 'Content-Disposition' => 'inline; filename="'.$filename.'"']);
         }
-        app(DocumentQuotaService::class)->assertAdditional($request->user()->id, strlen($contents));
         abort_unless(Storage::disk('local')->put($path, $contents), 500);
         IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => '4-1', 'scope' => 'client',
             'title' => 'Kontekst i strony zainteresowane (4.1–4.2)', 'description' => 'Dokument wygenerowany z zapisanych odpowiedzi ankiety.',

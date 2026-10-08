@@ -6,7 +6,6 @@ use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanyReliabilityFile;
 use App\Services\CompanyReliabilityAccess;
-use App\Services\DocumentQuotaService;
 use App\Services\FinancialStatementPdf;
 use App\Services\FinancialStatementXml;
 use Illuminate\Http\Request;
@@ -30,7 +29,6 @@ class CompanyReliabilityFileController extends Controller
         if (! in_array($extension, ['pdf', 'xml', 'xhtml'], true)) {
             throw ValidationException::withMessages(['file' => 'Dozwolone pliki: PDF, XML, XHTML.']);
         }
-        app(DocumentQuotaService::class)->assertAdditional($request->user()->id, $upload->getSize());
         $name = Str::limit(preg_replace('/[\x00-\x1F\x7F\/\\\\]/u', '_', $upload->getClientOriginalName()), 200, '');
         $path = 'private-reliability-sources/'.Str::uuid().'.'.$extension;
         $parsed = null;
