@@ -5,7 +5,9 @@ use App\Models\CompanySettings;
 use App\Models\Cylinder;
 use App\Models\User;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -89,4 +91,20 @@ test('parameter migration preserves legacy ownership description and inspection 
         ->and($cylinder->manufacturer_mark)->toBeNull()->and($cylinder->manufacturer)->toBe('Dawny producent')
         ->and($cylinder->company_id)->toBe($this->clientCompany->id)
         ->and($cylinder->latestInspection->observations)->toBe('Zachować');
+});
+
+test('parameter migration resumes partial mysql ddl and preserves edited names on retry', function () {
+    $migration = require database_path('migrations/2026_10_08_120000_extend_cylinder_parameters.php');
+    $migration->down();
+    Schema::table('cylinders', function (Blueprint $table) {
+        $table->string('device_type', 30)->default('butla');
+        $table->string('name', 160)->nullable();
+    });
+    $id = DB::table('cylinders')->insertGetId(['company_id' => $this->clientCompany->id, 'serial_number' => 'RETRY', 'type' => 'Old description', 'name' => 'Edited name']);
+    $migration->up();
+    $migration->up();
+    expect(Schema::hasIndex('cylinders', 'cylinders_company_lookup_index'))->toBeTrue()
+        ->and(Schema::hasIndex('cylinders', 'cylinders_mark_serial_unique'))->toBeTrue()
+        ->and(Schema::hasIndex('cylinders', 'cylinders_company_id_serial_number_unique'))->toBeFalse()
+        ->and(Cylinder::findOrFail($id)->name)->toBe('Edited name');
 });

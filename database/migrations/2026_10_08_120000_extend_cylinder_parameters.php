@@ -9,7 +9,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('cylinders', function (Blueprint $table) {
+        $existingColumns = Schema::getColumnListing('cylinders');
+        Schema::table('cylinders', function (Blueprint $table) use ($existingColumns) {
             $table->string('device_type', 30)->default('butla');
             $table->string('name', 160)->nullable();
             // Legacy manufacturer names are not necessarily manufacturer marks.
@@ -25,10 +26,24 @@ return new class extends Migration
             $table->string('filling_mass_symbol', 160)->nullable();
             $table->string('equipment_type', 160)->nullable();
             $table->string('equipment_mark', 160)->nullable();
-            $table->unique(['manufacturer_mark', 'serial_number'], 'cylinders_mark_serial_unique');
-            $table->dropUnique(['company_id', 'serial_number']);
+            // MySQL DDL is not transactional: resume after a partially applied migration.
+            foreach ($table->getColumns() as $column) {
+                if (in_array($column->name, $existingColumns, true)) {
+                    $table->removeColumn($column->name);
+                }
+            }
         });
-        DB::table('cylinders')->update(['name' => DB::raw('type')]);
+        // The old composite unique index can also support the company foreign key.
+        if (! Schema::hasIndex('cylinders', 'cylinders_company_lookup_index')) {
+            Schema::table('cylinders', fn (Blueprint $table) => $table->index('company_id', 'cylinders_company_lookup_index'));
+        }
+        if (! Schema::hasIndex('cylinders', 'cylinders_mark_serial_unique')) {
+            Schema::table('cylinders', fn (Blueprint $table) => $table->unique(['manufacturer_mark', 'serial_number'], 'cylinders_mark_serial_unique'));
+        }
+        if (Schema::hasIndex('cylinders', 'cylinders_company_id_serial_number_unique')) {
+            Schema::table('cylinders', fn (Blueprint $table) => $table->dropUnique(['company_id', 'serial_number']));
+        }
+        DB::table('cylinders')->whereNull('name')->update(['name' => DB::raw('type')]);
     }
 
     public function down(): void
@@ -39,6 +54,7 @@ return new class extends Migration
         }
         Schema::table('cylinders', function (Blueprint $table) {
             $table->unique(['company_id', 'serial_number']);
+            $table->dropIndex('cylinders_company_lookup_index');
             $table->dropUnique('cylinders_mark_serial_unique');
             $table->dropColumn(['device_type', 'name', 'manufacturer_mark', 'inventory_number', 'working_medium', 'temperature_min_c', 'temperature_max_c', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg', 'filling_mass_symbol', 'equipment_type', 'equipment_mark']);
         });
