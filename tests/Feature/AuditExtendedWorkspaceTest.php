@@ -92,7 +92,20 @@ test('external drive links are https only scoped and never expose credentials', 
     $this->get(route('audits.show', $audit))->assertOk()->assertSee('Dysk klienta')->assertSee('rel="noopener noreferrer"', false);
     $project = Project::create(['number' => 'P/LINK', 'name' => 'Projekt', 'status' => 'active', 'manager_id' => $user->id]);
     $this->post(route('projects.document-links.store', $project), ['name' => 'OneDrive', 'url' => 'https://onedrive.live.com/'])->assertRedirect();
-    $this->get(route('projects.show', $project))->assertOk()->assertSee('OneDrive');
+    $this->get(route('projects.show', $project))->assertOk()->assertSee('OneDrive')
+        ->assertSee('class="drive-name" href="https://onedrive.live.com/"', false)
+        ->assertSee('class="drive-url" href="https://onedrive.live.com/"', false)
+        ->assertSee('aria-label="Usuń link: OneDrive"', false)
+        ->assertSee('data-sortable="false"', false)
+        ->assertDontSee('Otwórz dysk');
+    Storage::fake('local');
+    $this->post(route('projects.documents.store', $project), [
+        'files' => [UploadedFile::fake()->create('specyfikacja.pdf', 1, 'application/pdf')],
+    ])->assertRedirect();
+    $this->get(route('projects.show', $project))->assertOk()
+        ->assertSee('class="project-documents-table"', false)
+        ->assertSee('aria-label="Usuń dokument: specyfikacja.pdf"', false)
+        ->assertSee('data-sort-value="1024"', false);
     $this->delete(route('projects.document-links.destroy', [$project, $audit->documentLinks()->sole()]))->assertNotFound();
     $this->delete(route('audits.document-links.destroy', [$audit, $audit->documentLinks()->sole()]))->assertRedirect();
 });
