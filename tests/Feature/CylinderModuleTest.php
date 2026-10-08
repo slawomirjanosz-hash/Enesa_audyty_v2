@@ -53,7 +53,7 @@ test('superadmin can explicitly enable cylinders in company settings and disable
         'name' => 'Firma przeglądów', 'primary_color' => '#123456', 'welcome_page_mode' => 'general', 'enabled_modules' => ['cylinders'],
     ])->assertRedirect();
     expect(CompanySettings::moduleIsEnabled('cylinders'))->toBeTrue();
-    $this->get(route('cylinders.index'))->assertOk()->assertSee('Rejestr butli')->assertSee('Przeglądy urządzeń')->assertDontSee('Inspektor UDT');
+    $this->get(route('cylinders.index'))->assertOk()->assertSee('Rejestr urządzeń')->assertSee('Przeglądy urządzeń')->assertDontSee('Inspektor UDT');
     CompanySettings::first()->update(['enabled_modules' => []]);
     $this->get(route('cylinders.index'))->assertForbidden();
 });

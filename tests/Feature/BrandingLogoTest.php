@@ -5,6 +5,34 @@ use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Spatie\Permission\Models\Role;
 
+test('disabling client zone updates the active settings record and removes navigation even for superadmin', function () {
+    Role::findOrCreate('superadmin');
+    $user = User::factory()->create();
+    $user->assignRole('superadmin');
+    $settings = new CompanySettings([
+        'name' => 'Firma', 'primary_color' => '#123456', 'welcome_page_mode' => 'general',
+        'enabled_modules' => ['dashboard', 'client_zone', 'cylinders'],
+    ]);
+    $settings->id = 7;
+    $settings->save();
+    $this->actingAs($user)->get(route('cylinders.index'))
+        ->assertOk()->assertSee('href="'.url('/client-zone').'"', false);
+    $this->post(route('settings.company.update'), [
+        'name' => 'Firma', 'primary_color' => '#123456', 'welcome_page_mode' => 'general',
+        'enabled_modules' => ['dashboard', 'cylinders'],
+    ])->assertSessionHasNoErrors()->assertRedirect(route('settings.company'));
+    expect(CompanySettings::count())->toBe(1)
+        ->and($settings->fresh()->moduleEnabled('client_zone'))->toBeFalse();
+    $this->get(route('settings.company'))->assertOk()->assertDontSee('href="'.url('/client-zone').'"', false);
+    $this->get(route('cylinders.index'))->assertOk()->assertDontSee('href="'.url('/client-zone').'"', false);
+    $this->get(route('client-zone.index'))->assertForbidden();
+    $this->post(route('settings.company.update'), [
+        'name' => 'Firma', 'primary_color' => '#123456', 'welcome_page_mode' => 'general',
+        'enabled_modules' => ['dashboard', 'client_zone', 'cylinders'],
+    ])->assertSessionHasNoErrors();
+    $this->get(route('cylinders.index'))->assertOk()->assertSee('href="'.url('/client-zone').'"', false);
+});
+
 test('uploaded application logo is persisted in database and served publicly', function () {
     Role::findOrCreate('superadmin');
     $superadmin = User::factory()->create();

@@ -46,7 +46,9 @@ class CompanySettingsController extends Controller
         $data['short_name'] = CompanySettings::normalizeShortName($data['short_name'] ?? null, $data['name']);
         $data['enabled_modules'] = array_values($data['enabled_modules'] ?? []);
 
-        $settings = CompanySettings::updateOrCreate(['id' => 1], $data);
+        // Update the same settings record used by navigation and module middleware.
+        $settings = CompanySettings::firstOrNew();
+        $settings->fill($data)->save();
 
         if ($logo) {
             if ($settings->logo_path) {
@@ -62,6 +64,9 @@ class CompanySettingsController extends Controller
 
         // Keep the owner Company record in sync
         $this->syncOwnerCompany();
+
+        $request->attributes->remove('app_brand');
+        $request->attributes->remove('app_brand_loaded');
 
         return redirect()->route('settings.company')
             ->with('success', 'Dane firmy zostały zapisane.');

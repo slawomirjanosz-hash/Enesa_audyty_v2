@@ -104,14 +104,14 @@ class CylinderController extends Controller
     {
         $cylinder = Cylinder::create($this->validated($request));
 
-        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Butla została dodana.');
+        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Urządzenie zostało dodane.');
     }
 
     public function update(Request $request, Cylinder $cylinder): RedirectResponse
     {
         $cylinder->update($this->validated($request, $cylinder));
 
-        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Dane butli zostały zapisane.');
+        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Dane urządzenia zostały zapisane.');
     }
 
     public function show(Request $request, Cylinder $cylinder): View
@@ -168,7 +168,7 @@ class CylinderController extends Controller
         try {
             DB::transaction(function () use ($request, $cylinder, $data, $file, &$path): void {
                 $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
-                abort_if($locked->archived_at, 409, 'Przywróć butlę z archiwum przed dodaniem filmu.');
+                abort_if($locked->archived_at, 409, 'Przywróć urządzenie z archiwum przed dodaniem filmu.');
                 if (! empty($data['external_url'])) {
                     $locked->videos()->create([
                         'title' => $data['title'], 'external_url' => $data['external_url'],
@@ -196,7 +196,7 @@ class CylinderController extends Controller
             throw $exception;
         }
 
-        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Film został dodany do butli.');
+        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Film został dodany do urządzenia.');
     }
 
     public function video(Request $request, Cylinder $cylinder, CylinderVideo $video)
@@ -219,7 +219,7 @@ class CylinderController extends Controller
         $data = $this->inspectionData($request);
         DB::transaction(function () use ($request, $cylinder, $data): void {
             $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
-            abort_if($locked->archived_at, 409, 'Przywróć butlę z archiwum przed zapisaniem przeglądu.');
+            abort_if($locked->archived_at, 409, 'Przywróć urządzenie z archiwum przed zapisaniem przeglądu.');
             $locked->inspections()->create($data + ['inspector_id' => $request->user()->id, 'inspector_name' => $request->user()->name]);
         });
 
@@ -239,7 +239,7 @@ class CylinderController extends Controller
     public function editInspection(Request $request, Cylinder $cylinder, CylinderInspection $inspection): View
     {
         abort_unless((int) $inspection->cylinder_id === (int) $cylinder->id, 404);
-        abort_if($cylinder->archived_at, 409, 'Przywróć butlę z archiwum przed edycją.');
+        abort_if($cylinder->archived_at, 409, 'Przywróć urządzenie z archiwum przed edycją.');
 
         return view('cylinders.inspection-edit', $this->viewData($request) + ['cylinder' => $cylinder, 'inspection' => $inspection, 'results' => CylinderInspection::RESULTS]);
     }
@@ -251,7 +251,7 @@ class CylinderController extends Controller
         $version = $request->validate(['revision' => ['required', 'integer', 'min:1']]);
         DB::transaction(function () use ($cylinder, $inspection, $data, $version): void {
             $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
-            abort_if($locked->archived_at, 409, 'Przywróć butlę z archiwum przed edycją.');
+            abort_if($locked->archived_at, 409, 'Przywróć urządzenie z archiwum przed edycją.');
             $entry = $locked->inspections()->lockForUpdate()->findOrFail($inspection->id);
             abort_unless($entry->revision === (int) $version['revision'], 409, 'Wpis został zmieniony przez inną osobę. Otwórz edycję ponownie.');
             $entry->fill($data);
@@ -271,7 +271,7 @@ class CylinderController extends Controller
         try {
             DB::transaction(function () use ($request, $cylinder, $images, &$paths, &$oldPaths): void {
                 $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
-                abort_if($locked->archived_at, 409, 'Przywróć butlę z archiwum przed zmianą zdjęcia.');
+                abort_if($locked->archived_at, 409, 'Przywróć urządzenie z archiwum przed zmianą zdjęcia.');
                 User::query()->lockForUpdate()->findOrFail($request->user()->id);
                 $photo = $locked->photo;
                 $size = strlen($images['image']) + strlen($images['thumbnail']);
@@ -291,7 +291,7 @@ class CylinderController extends Controller
         }
         Storage::disk('local')->delete($oldPaths);
 
-        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Zdjęcie butli zostało zapisane.');
+        return redirect()->route('cylinders.show', $cylinder)->with('success', 'Zdjęcie urządzenia zostało zapisane.');
     }
 
     public function photo(Request $request, Cylinder $cylinder)

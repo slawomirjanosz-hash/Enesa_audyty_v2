@@ -1,4 +1,4 @@
-<dialog id="cylinder-photo-viewer" aria-label="Zdjęcie butli"><div class="cyl-photo-toolbar"><strong>Zdjęcie butli</strong><button type="button" class="cyl-btn" data-close-photo>Zamknij ×</button></div><img alt="Powiększone zdjęcie butli"><p data-photo-error hidden>Nie można wczytać zdjęcia. Spróbuj ponownie.</p></dialog>
+<dialog id="cylinder-photo-viewer" aria-label="Zdjęcie urządzenia"><div class="cyl-photo-toolbar"><strong>Zdjęcie urządzenia</strong><button type="button" class="cyl-btn" data-close-photo>Zamknij ×</button></div><img alt="Powiększone zdjęcie urządzenia"><p data-photo-error hidden>Nie można wczytać zdjęcia. Spróbuj ponownie.</p></dialog>
 <style>#cylinder-photo-viewer>[hidden]{display:none}</style>
 <script>
 (() => {
