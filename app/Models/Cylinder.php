@@ -9,7 +9,37 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Cylinder extends Model
 {
-    protected $fillable = ['company_id', 'serial_number', 'manufacturer', 'type', 'manufactured_year', 'capacity_litres', 'working_pressure_bar', 'notes', 'archived_at'];
+    public const PARAMETER_LABELS = [
+        'name' => 'Nazwa urządzenia',
+        'manufacturer_mark' => 'Znak wytwórczy',
+        'manufactured_year' => 'Rok produkcji',
+        'serial_number' => 'Numer fabryczny',
+        'inventory_number' => 'Numer ewidencyjny u eksploatującego',
+        'working_medium' => 'Czynnik roboczy',
+        'temperature_min_c' => 'Temperatura dopuszczalna min. [°C]',
+        'temperature_max_c' => 'Temperatura dopuszczalna max. [°C]',
+        'capacity_litres' => 'Pojemność [dm³]',
+        'working_pressure_bar' => 'Ciśnienie robocze [bar]',
+        'test_pressure_bar' => 'Ciśnienie próbne [bar]',
+        'tare_or_gross_mass_kg' => 'Tara lub masa brutto [kg]',
+        'net_mass_kg' => 'Masa netto [kg]',
+        'stamped_empty_mass_kg' => 'Masa butli bez osprzętu — wybita [kg]',
+        'filling_mass_symbol' => 'Symbol masy przewożonej / dopuszczalnej',
+        'equipment_type' => 'Osprzęt — typ',
+        'equipment_mark' => 'Osprzęt — znak Π lub CE',
+        'manufacturer' => 'Producent (informacja dodatkowa)',
+    ];
+
+    public const DECIMAL_PARAMETERS = ['temperature_min_c', 'temperature_max_c', 'capacity_litres', 'working_pressure_bar', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg'];
+
+    protected $fillable = ['company_id', 'name', 'device_type', 'manufacturer_mark', 'inventory_number', 'working_medium', 'temperature_min_c', 'temperature_max_c', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg', 'filling_mass_symbol', 'equipment_type', 'equipment_mark', 'serial_number', 'manufacturer', 'type', 'manufactured_year', 'capacity_litres', 'working_pressure_bar', 'notes', 'archived_at'];
+
+    protected $attributes = ['device_type' => 'butla'];
+
+    public function getNameAttribute($value): ?string
+    {
+        return $value ?? $this->attributes['type'] ?? null;
+    }
 
     protected $casts = ['archived_at' => 'datetime'];
 

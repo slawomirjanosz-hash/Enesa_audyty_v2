@@ -63,10 +63,10 @@ test('staff registers edits archives a cylinder and keeps immutable inspection h
     $staff = cylinderStaff();
     $company = Company::create(['name' => 'Zakład', 'company_type' => 'client', 'status' => 'active']);
     $this->actingAs($staff)->get(route('cylinders.create'))->assertOk();
-    $this->post(route('cylinders.store'), ['company_id' => $company->id, 'serial_number' => 'SN-55', 'type' => 'Test'])->assertRedirect();
+    $this->post(route('cylinders.store'), ['company_id' => $company->id, 'serial_number' => 'SN-55', 'name' => 'Test', 'manufacturer_mark' => 'TEST'])->assertRedirect();
     $cylinder = Cylinder::firstOrFail();
     $this->get(route('cylinders.edit', $cylinder))->assertOk();
-    $this->put(route('cylinders.update', $cylinder), ['serial_number' => 'SN-55', 'type' => 'Nowy opis'])->assertRedirect();
+    $this->put(route('cylinders.update', $cylinder), ['serial_number' => 'SN-55', 'name' => 'Nowy opis', 'manufacturer_mark' => 'TEST'])->assertRedirect();
     $payload = ['inspected_at' => '2026-01-02', 'next_due_at' => '2027-01-02', 'result' => 'further_review', 'observations' => 'Oględziny — uwaga do sprawdzenia'];
     $this->post(route('cylinders.inspections.store', $cylinder), $payload + ['inspector_id' => 999, 'inspector_name' => 'Fałszywy'])->assertRedirect();
     expect($cylinder->inspections()->first()->inspector_id)->toBe($staff->id)
@@ -118,8 +118,9 @@ test('cylinder permissions distinguish read access from inspector write access',
 test('validation prevents moving history and invalid inspection dates', function () {
     enableCylinders();
     $cylinder = registeredCylinder();
-    $this->actingAs(cylinderStaff())->put(route('cylinders.update', $cylinder), ['company_id' => 999, 'serial_number' => 'ABC', 'type' => 'Test'])->assertSessionHasErrors('company_id');
-    $this->post(route('cylinders.store'), ['company_id' => $cylinder->company_id, 'serial_number' => 'ABC-123', 'type' => 'Test'])->assertSessionHasErrors('serial_number');
+    $this->actingAs(cylinderStaff())->put(route('cylinders.update', $cylinder), ['company_id' => 999, 'serial_number' => 'ABC', 'name' => 'Test', 'manufacturer_mark' => 'TEST'])->assertSessionHasErrors('company_id');
+    $cylinder->update(['manufacturer_mark' => 'TEST']);
+    $this->post(route('cylinders.store'), ['company_id' => $cylinder->company_id, 'serial_number' => 'ABC-123', 'name' => 'Test', 'manufacturer_mark' => 'TEST'])->assertSessionHasErrors('serial_number');
     $this->post(route('cylinders.inspections.store', $cylinder), ['inspected_at' => '2026-01-01', 'next_due_at' => '2025-01-01', 'result' => 'automatic_approval', 'observations' => 'Test'])->assertSessionHasErrors(['next_due_at', 'result']);
     expect($cylinder->inspections()->count())->toBe(0);
 });
@@ -307,7 +308,7 @@ test('photos are private have real small thumbnails and replacements clean old f
     $dimensions = getimagesizefromstring(Storage::disk('local')->get($oldThumb));
     expect(max($dimensions[0], $dimensions[1]))->toBe(96)
         ->and(app(DocumentQuotaService::class)->used($staff->id))->toBe((int) $photo->size);
-    $this->get(route('cylinders.index'))->assertOk()->assertSee('data-cylinder-photo', false);
+    $this->get(route('cylinders.show', $cylinder))->assertOk()->assertSee('data-cylinder-photo', false);
     $this->get(route('cylinders.photo', ['cylinder' => $cylinder, 'thumbnail' => 1]))->assertOk()->assertHeader('Content-Type', 'image/jpeg');
     $this->post(route('cylinders.photo.store', $cylinder), ['photo' => UploadedFile::fake()->image('nowa.jpg', 300, 400)])->assertRedirect();
     Storage::disk('local')->assertMissing($oldPath);

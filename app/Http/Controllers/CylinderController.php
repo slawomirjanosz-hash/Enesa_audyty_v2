@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CylinderRequest;
 use App\Models\Company;
 use App\Models\Cylinder;
 use App\Models\CylinderInspection;
@@ -52,26 +53,25 @@ class CylinderController extends Controller
 
     public function index(Request $request): View
     {
-        $data = $request->validate(['q' => ['nullable', 'string', 'max:100'], 'archived' => ['nullable', 'in:1']]);
-        $query = $this->query($request)->with(['company', 'latestInspection', 'photo']);
+        $data = $request->validate(['q' => ['nullable', 'string', 'max:100'], 'archived' => ['nullable', 'in:1'], 'company_id' => ['nullable', 'integer']]);
+        $scope = $this->query($request);
+        $companies = Company::whereIn('id', (clone $scope)->select('company_id'))->orderBy('name')->get(['id', 'name']);
+        $query = $scope->with(['company', 'latestInspection' => fn ($q) => $q->withCount('videos')]);
         $query->when($request->boolean('archived'), fn ($q) => $q->whereNotNull('archived_at'), fn ($q) => $q->whereNull('archived_at'));
-        if ($search = trim($data['q'] ?? '')) {
-            $query->where(fn ($q) => $q->where('serial_number', 'like', '%'.$search.'%')->orWhere('type', 'like', '%'.$search.'%')->orWhereHas('company', fn ($c) => $c->where('name', 'like', '%'.$search.'%')));
+        if ($request->filled('company_id')) {
+            $query->where('company_id', $data['company_id']);
         }
-
-        $latest = fn ($column) => CylinderInspection::select($column)->whereColumn('cylinder_id', 'cylinders.id')->orderByDesc('inspected_at')->orderByDesc('id')->limit(1);
-        $query->select('cylinders.*')->selectSub(
-            CylinderInspection::query()->selectRaw("CASE WHEN result IN ('defects_found', 'further_review') THEN 'Problemy / wymaga oceny' WHEN next_due_at IS NULL THEN 'Brak oceny lub terminu' WHEN next_due_at < ? THEN 'Po terminie' WHEN next_due_at <= ? THEN 'Termin w ciągu miesiąca' WHEN result = 'no_findings' THEN 'Bez uwag — termin ważny' ELSE 'Brak oceny lub terminu' END", [today()->toDateString(), today()->addMonthNoOverflow()->toDateString()])
-                ->whereColumn('cylinder_id', 'cylinders.id')->orderByDesc('inspected_at')->orderByDesc('id')->limit(1),
-            'condition_sort'
-        )->orderBy('serial_number');
+        if ($search = trim($data['q'] ?? '')) {
+            $query->where(fn ($q) => $q->where('serial_number', 'like', '%'.$search.'%')->orWhere('name', 'like', '%'.$search.'%')->orWhere('type', 'like', '%'.$search.'%'));
+        }
+        $latest = CylinderInspection::select('inspected_at')->whereColumn('cylinder_id', 'cylinders.id')->orderByDesc('inspected_at')->orderByDesc('id')->limit(1);
+        $query->select('cylinders.*')->orderBy('name')->orderBy('id');
         TableSort::apply($query, $request, [
-            'serial' => 'serial_number', 'type' => 'type', 'status' => 'condition_sort',
-            'company' => Company::select('name')->whereColumn('companies.id', 'cylinders.company_id')->limit(1),
-            'last' => $latest('inspected_at'), 'due' => $latest('next_due_at'),
+            'name' => 'name', 'manufacturer' => 'manufacturer_mark', 'year' => 'manufactured_year',
+            'serial' => 'serial_number', 'last' => $latest,
         ]);
 
-        return view('cylinders.index', $this->viewData($request) + ['cylinders' => $query->paginate(30)->withQueryString()]);
+        return view('cylinders.index', $this->viewData($request) + ['cylinders' => $query->paginate(30)->withQueryString(), 'companies' => $companies]);
     }
 
     public function create(Request $request): View
@@ -84,31 +84,18 @@ class CylinderController extends Controller
         return view('cylinders.form', $this->viewData($request) + ['cylinder' => $cylinder->load('company'), 'companies' => collect()]);
     }
 
-    private function validated(Request $request, ?Cylinder $cylinder = null): array
+    public function store(CylinderRequest $request): RedirectResponse
     {
-        return $request->validate([
-            // Owner cannot be changed after creation: history must not move between clients.
-            'company_id' => $cylinder ? ['prohibited'] : ['required', 'integer', Rule::exists('companies', 'id')->where('company_type', 'client')->whereNull('archived_at')],
-            'serial_number' => ['required', 'string', 'max:100', Rule::unique('cylinders')->where('company_id', $cylinder?->company_id ?? $request->input('company_id'))->ignore($cylinder?->id)],
-            'manufacturer' => ['nullable', 'string', 'max:160'],
-            'type' => ['required', 'string', 'max:160'],
-            'manufactured_year' => ['nullable', 'integer', 'between:1900,'.now()->year],
-            'capacity_litres' => ['nullable', 'numeric', 'gt:0', 'max:9999999'],
-            'working_pressure_bar' => ['nullable', 'numeric', 'gt:0', 'max:9999999'],
-            'notes' => ['nullable', 'string', 'max:10000'],
-        ]);
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $cylinder = Cylinder::create($this->validated($request));
+        $data = $request->validated();
+        $cylinder = Cylinder::create($data + ['device_type' => 'butla', 'type' => $data['name']]);
 
         return redirect()->route('cylinders.show', $cylinder)->with('success', 'Urządzenie zostało dodane.');
     }
 
-    public function update(Request $request, Cylinder $cylinder): RedirectResponse
+    public function update(CylinderRequest $request, Cylinder $cylinder): RedirectResponse
     {
-        $cylinder->update($this->validated($request, $cylinder));
+        $data = $request->validated();
+        $cylinder->update($data + ['device_type' => 'butla', 'type' => $data['name']]);
 
         return redirect()->route('cylinders.show', $cylinder)->with('success', 'Dane urządzenia zostały zapisane.');
     }
