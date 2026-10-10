@@ -65,7 +65,7 @@ class Cylinder extends Model
 
     public function photo(): HasOne
     {
-        return $this->hasOne(CylinderPhoto::class);
+        return $this->hasOne(CylinderPhoto::class)->whereNull('cylinder_inspection_id');
     }
 
     public function dueStatus(): string

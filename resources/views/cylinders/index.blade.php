@@ -44,13 +44,17 @@
 @if($cylinder->latestInspection?->next_due_at)<span class="cyl-secondary">Termin: <span class="cyl-due cyl-due-{{ $cylinder->dueStatus() }}">{{ $cylinder->latestInspection->next_due_at->format('d.m.Y') }}</span></span>@endif
 <span class="cyl-secondary"><span class="cyl-status-chip cyl-status-{{ $cylinder->conditionStatus() }}">{{ $cylinder->conditionLabel() }}</span></span>
 </td>
-<td>@if($cylinder->latestInspection?->videos_count)<a class="cyl-media-icon" href="{{ route($routePrefix.'show', ['cylinder'=>$cylinder, 'inspection'=>$cylinder->latestInspection->id]) }}#cylinder-videos" title="Filmy z ostatniego przeglądu" aria-label="Filmy z ostatniego przeglądu {{ $cylinder->serial_number }}"><i class="ti ti-video" aria-hidden="true"></i></a>@else<span class="cyl-media-icon is-empty" title="Brak filmu z ostatniego przeglądu" aria-label="Brak filmu" aria-disabled="true"><i class="ti ti-video" aria-hidden="true"></i></span>@endif</td>
-<td><span class="cyl-media-icon is-empty" title="Brak zdjęć przypisanych do ostatniego przeglądu" aria-label="Brak zdjęć przeglądu" aria-disabled="true"><i class="ti ti-photo" aria-hidden="true"></i></span></td>
-<td><span class="cyl-media-icon is-empty" title="Brak protokołu przeglądu" aria-label="Brak protokołu" aria-disabled="true"><i class="ti ti-file-type-pdf" aria-hidden="true"></i></span></td>
+@foreach(['videos'=>'video', 'photos'=>'photo'] as $relation=>$icon)
+<td>@if($cylinder->latestInspection && $cylinder->latestInspection->{$relation.'_count'})
+<a class="cyl-media-icon" href="{{ route($routePrefix.'inspections.media', [$cylinder, $cylinder->latestInspection]) }}" data-inspection-media aria-label="{{ $relation === 'videos' ? 'Film ostatniego przeglądu' : 'Zdjęcia ostatniego przeglądu' }}"><i class="ti ti-{{ $icon }}" aria-hidden="true"></i></a>
+@else<span class="cyl-media-icon is-empty" aria-disabled="true" title="Brak załącznika"><i class="ti ti-{{ $icon }}" aria-hidden="true"></i></span>@endif</td>
+@endforeach
+<td><span class="cyl-media-icon is-empty" aria-disabled="true" title="Protokół PDF — dostępny w kolejnym etapie"><i class="ti ti-file-type-pdf" aria-hidden="true"></i></span></td>
 </tr>
 @empty<tr><td colspan="9" class="cyl-empty">Brak urządzeń spełniających wybrane kryteria.</td></tr>@endforelse
 </tbody></table></div>
 <div class="cyl-register-footer"><span>{{ $cylinders->total() ? $cylinders->firstItem().'–'.$cylinders->lastItem().' z '.$cylinders->total() : '0' }} pozycji</span>{{ $cylinders->links() }}</div>
 </div></div>
 <script src="{{ asset('js/cylinder-register.js') }}" defer></script>
+@include('cylinders.media-dialog')
 @endsection

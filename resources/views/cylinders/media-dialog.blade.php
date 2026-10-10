@@ -1,0 +1,3 @@
+<dialog id="cylinder-media-dialog" aria-labelledby="cylinder-media-title"><div class="cyl-photo-toolbar"><strong id="cylinder-media-title">Załączniki przeglądu</strong><button type="button" class="cyl-btn" data-inspection-close aria-label="Zamknij podgląd">Zamknij ×</button></div><div data-inspection-content></div></dialog>
+<script src="{{ asset('js/cylinder-inspection-media.js') }}" defer></script>
+<style>#cylinder-media-dialog{border:0;border-radius:12px;width:min(900px,90vw);max-height:90vh;padding:20px}#cylinder-media-dialog::backdrop{background:#102030aa}.cyl-inspection-gallery{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px}.cyl-inspection-gallery img{object-fit:contain;border:1px solid #ddd;border-radius:6px}</style>
