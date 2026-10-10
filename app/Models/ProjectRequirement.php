@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class ProjectRequirement extends Model
 {
     protected $fillable = [
-        'project_id', 'type', 'name', 'technology', 'description', 'quantity', 'unit',
+        'project_id', 'type', 'name', 'group_name', 'technology', 'description', 'quantity', 'unit',
         'estimated_cost', 'supplier', 'supplier_company_id', 'status', 'needed_by', 'responsible_id', 'created_by',
     ];
 

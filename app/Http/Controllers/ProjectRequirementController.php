@@ -199,7 +199,7 @@ class ProjectRequirementController extends Controller
         $data = $request->validate([
             'requirement_ids' => ['required', 'array', 'min:1'],
             'requirement_ids.*' => ['required', 'integer', 'distinct'],
-            'action' => ['required', 'in:delete,set_status,set_supplier,set_responsible,set_needed_by,set_type,set_technology'],
+            'action' => ['required', 'in:delete,set_status,set_supplier,set_responsible,set_needed_by,set_type,set_technology,set_group'],
             'status' => ['nullable', 'required_if:action,set_status', 'in:planned,requested,ordered,in_progress,purchased,cancelled'],
             'supplier_company_id' => [
                 'nullable', 'integer',
@@ -209,6 +209,7 @@ class ProjectRequirementController extends Controller
             'needed_by' => ['nullable', 'date'],
             'type' => ['nullable', 'required_if:action,set_type', 'in:material,service'],
             'technology' => ['nullable', 'string', 'max:255'],
+            'group_name' => ['nullable', 'string', 'max:120'],
         ]);
 
         $requirements = $project->requirements()->whereKey($data['requirement_ids'])->get();
@@ -240,6 +241,7 @@ class ProjectRequirementController extends Controller
                     'set_needed_by' => $requirement->update(['needed_by' => $data['needed_by'] ?? null]),
                     'set_type' => $requirement->update(['type' => $data['type']]),
                     'set_technology' => $requirement->update(['technology' => $data['technology'] ?? null]),
+                    'set_group' => $requirement->update(['group_name' => trim($data['group_name'] ?? '') ?: null]),
                 };
             }
         });
@@ -252,6 +254,7 @@ class ProjectRequirementController extends Controller
             'set_needed_by' => 'Zmieniono termin zaznaczonych pozycji.',
             'set_type' => 'Zmieniono rodzaj zaznaczonych pozycji.',
             'set_technology' => 'Zmieniono technologię zaznaczonych pozycji.',
+            'set_group' => 'Zmieniono grupę zaznaczonych pozycji.',
         ];
 
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'requirements'])
@@ -274,6 +277,7 @@ class ProjectRequirementController extends Controller
             'type' => ['required', 'in:material,service'],
             'name' => ['required', 'string', 'max:255'],
             'technology' => ['nullable', 'string', 'max:255'],
+            'group_name' => ['nullable', 'string', 'max:120'],
             'description' => ['nullable', 'string'],
             'quantity' => ['required', 'numeric', 'min:0.01'],
             'unit' => ['nullable', 'string', 'max:30'],
@@ -288,6 +292,9 @@ class ProjectRequirementController extends Controller
             'needed_by' => ['nullable', 'date'],
             'responsible_id' => ['nullable', 'exists:users,id'],
         ]);
+        if ($request->exists('group_name')) {
+            $data['group_name'] = trim($data['group_name'] ?? '') ?: null;
+        }
         $unit = trim((string) ($data['unit'] ?? ''));
         if ($unit === '' || is_numeric(str_replace(',', '.', $unit))) {
             $unit = $data['type'] === 'material' ? 'szt.' : 'usł.';

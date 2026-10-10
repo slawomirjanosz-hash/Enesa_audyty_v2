@@ -64,6 +64,7 @@
         'type' => $requirement->type,
         'name' => $requirement->name,
         'technology' => $requirement->technology,
+        'group_name' => $requirement->group_name,
         'description' => $requirement->description,
         'quantity' => (float) $requirement->quantity,
         'unit' => $requirement->displayUnit(),
@@ -390,9 +391,10 @@
         @if($project->requirements->isEmpty())
             <div class="empty">Brak zapotrzebowań.</div>
         @else
+            <div class="field" style="max-width:300px;margin-bottom:12px"><label for="requirements-group-filter">Grupa</label><select id="requirements-group-filter"><option value="">Wszystkie grupy</option><option value="__ungrouped">Bez grupy</option>@foreach($project->requirements->pluck('group_name')->filter()->unique()->sort() as $groupName)<option value="group:{{$groupName}}">{{$groupName}}</option>@endforeach</select></div>
             <label class="requirement-search" for="requirements-live-search">
                 <i class="ti ti-search"></i>
-                <input id="requirements-live-search" type="search" autocomplete="off" placeholder="Szukaj po nazwie, technologii, opisie, dostawcy, osobie, statusie, terminie lub cenie…">
+                <input id="requirements-live-search" type="search" autocomplete="off" placeholder="Szukaj po nazwie, grupie, technologii, opisie, dostawcy, osobie, statusie, terminie lub cenie…">
                 <span class="requirement-search-count" id="requirements-search-count">{{$project->requirements->count()}} poz.</span>
             </label>
             <div class="requirement-filter-state" id="requirement-summary-filter-state" hidden><span id="requirement-summary-filter-label"></span><button type="button" id="requirement-summary-filter-clear">Pokaż wszystkie</button></div>
@@ -407,6 +409,7 @@
                         <option value="set_needed_by">Zmień termin</option>
                         <option value="set_type">Zmień rodzaj</option>
                         <option value="set_technology">Zmień technologię</option>
+                        <option value="set_group">Przypisz / usuń grupę</option>
                         <option value="delete">Usuń zaznaczone</option>
                     </select>
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_status" hidden><select name="status" disabled>@foreach($requirementStatusLabels as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></span>
@@ -415,14 +418,15 @@
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_needed_by" hidden><input type="date" name="needed_by" disabled title="Pozostaw puste, aby usunąć termin"></span>
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_type" hidden><select name="type" disabled><option value="material">Materiał</option><option value="service">Usługa</option></select></span>
                     <span class="requirement-bulk-value" data-requirement-bulk-field="set_technology" hidden><input name="technology" disabled maxlength="255" placeholder="Np. Pomiary, Zawory; puste usuwa przypisanie"></span>
+                    <span class="requirement-bulk-value" data-requirement-bulk-field="set_group" hidden><input name="group_name" list="requirement-groups" disabled maxlength="120" placeholder="Nazwa grupy; puste usuwa przypisanie"></span>
                     <button class="btn btn-soft" type="submit">Wykonaj</button>
                     <span class="requirement-selected-count" id="requirements-selected-count">Zaznaczono: 0</span>
                 </form>
             @endif
-            <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}" style="min-width:1050px"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th style="width:13%">Technologia</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th>@if($canViewMaterialPrices || $canViewServicePrices)<th>Cena / wartość</th>@endif<th></th></tr></thead><tbody>
+            <div class="requirements-table-wrap"><table class="requirements-table {{$canEdit?'with-selection':''}}" style="min-width:1050px"><thead><tr>@if($canEdit)<th><input type="checkbox" id="requirements-select-all" title="Zaznacz wszystkie"></th>@endif<th>Pozycja</th><th>Grupa</th><th style="width:13%">Technologia</th><th>Ilość</th><th>Termin / osoba</th><th>Dostawca</th><th>Status</th>@if($canViewMaterialPrices || $canViewServicePrices)<th>Cena / wartość</th>@endif<th></th></tr></thead><tbody>
             @foreach($project->requirements as $req)
-                <tr class="requirement-data-row" data-requirement-status="{{$req->status}}" data-requirement-supplier="{{$req->supplierCompany?->name ?? ($req->supplier ?: 'Bez dostawcy')}}" data-price-visible="{{($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) ? '1' : '0'}}" data-requirement-search="{{collect([
-                    $req->type === 'material' ? 'Materiał' : 'Usługa', $req->name, $req->technology, $req->description,
+                <tr class="requirement-data-row" data-requirement-group="{{$req->group_name}}" data-requirement-status="{{$req->status}}" data-requirement-supplier="{{$req->supplierCompany?->name ?? ($req->supplier ?: 'Bez dostawcy')}}" data-price-visible="{{($req->type === 'service' ? $canViewServicePrices : $canViewMaterialPrices) ? '1' : '0'}}" data-requirement-search="{{collect([
+                    $req->type === 'material' ? 'Materiał' : 'Usługa', $req->name, $req->group_name, $req->technology, $req->description,
                     $req->formattedQuantity(), $req->displayUnit(), $req->needed_by?->format('d.m.Y'), $req->needed_by?->format('Y-m-d'),
                     $req->responsible?->name, $req->supplierCompany?->name ?? $req->supplier, $req->supplierCompany?->nip,
                     $requirementStatusLabels[$req->status] ?? $req->status, $req->status,
@@ -431,6 +435,7 @@
                 ])->filter(fn($value) => $value !== null && $value !== '')->implode(' ')}}">
                     @if($canEdit)<td><input type="checkbox" name="requirement_ids[]" value="{{$req->id}}" form="requirements-bulk-form" class="requirement-entry-check" aria-label="Zaznacz {{$req->name}}"></td>@endif
                     <td><strong class="requirement-name">{{$req->name}}</strong><div class="requirement-meta"><span class="requirement-type">{{$req->type==='material'?'Materiał':'Usługa'}}</span>@if($req->description)<span class="requirement-description" title="{{$req->description}}">{{$req->description}}</span>@endif</div></td>
+                    <td data-sort-value="{{$req->group_name}}">{{$req->group_name ?: 'Bez grupy'}}</td>
                     <td><strong>{{$req->technology ?: '—'}}</strong></td>
                     <td data-sort-value="{{$req->quantity}}"><span class="requirement-qty">{{$req->formattedQuantity()}} {{$req->displayUnit()}}</span></td>
                     <td data-sort-value="{{$req->needed_by?->format('Y-m-d') ?? ''}} {{$req->responsible?->name}}">{{$req->needed_by?->format('d.m.Y')??'—'}}<br><small>{{$req->responsible?->name??'Nieprzypisane'}}</small></td>
@@ -493,6 +498,7 @@
             <div class="grid2">
                 <div class="field"><label>Rodzaj *</label><select name="type" id="requirement-type"><option value="material">Materiał</option><option value="service">Usługa</option></select></div>
                 <div class="field"><label>Nazwa *</label><input name="name" id="requirement-name" required></div>
+                <div class="field full"><label for="requirement-group">Grupa (opcjonalnie)</label><input id="requirement-group" name="group_name" maxlength="120" list="requirement-groups" placeholder="Wybierz istniejącą lub wpisz nową grupę"><datalist id="requirement-groups">@foreach($project->requirements->pluck('group_name')->filter()->unique()->sort() as $groupName)<option value="{{$groupName}}"></option>@endforeach</datalist></div>
                 <div class="field full"><label>Technologia</label><input name="technology" id="requirement-technology" maxlength="255" placeholder="Np. Pomiary, Zawory, Obieg kotłowy lub oznaczenie ze schematu"><small style="color:#718078">Pozwala sprawdzić, czy wszystkie urządzenia technologiczne mają przypisane materiały.</small></div>
                 <div class="field"><label>Ilość *</label><input type="number" step="1" min="1" name="quantity" id="requirement-quantity" value="1" required></div>
                 <div class="field"><label>Jednostka</label><input name="unit" id="requirement-unit" placeholder="np. szt., kg, m, usł."><small style="color:#718078">Gdy pole pozostanie puste, użyjemy „szt.” lub „usł.”.</small></div>
@@ -692,6 +698,7 @@ function openRequirementModal(requirementId = null, copy = false) {
     document.getElementById('requirement-type').value=requirement?.type||'material';
     document.getElementById('requirement-name').value=requirement?.name||'';
     document.getElementById('requirement-technology').value=requirement?.technology||'';
+    document.getElementById('requirement-group').value=requirement?.group_name||'';
     document.getElementById('requirement-quantity').value=requirement?.quantity??1;
     document.getElementById('requirement-unit').value=requirement?.unit||'';
     if(document.getElementById('requirement-unit-cost')) document.getElementById('requirement-unit-cost').value=requirement?.unit_cost??'';
@@ -1413,6 +1420,7 @@ requirementSelectAll?.addEventListener('change', event => {
     syncRequirementSelection();
 });
 requirementChecks.forEach(checkbox => checkbox.addEventListener('change', syncRequirementSelection));
+document.getElementById('requirements-group-filter')?.addEventListener('change', applyRequirementFilters);
 function applyRequirementFilters() {
     const terms = normalizeRequirementSearch(requirementSearch?.value).split(/\s+/).filter(Boolean);
     let visible = 0;
@@ -1428,7 +1436,9 @@ function applyRequirementFilters() {
             if (summary === 'planned') matchesSummary = hasVisiblePrice && row.dataset.requirementStatus === 'planned';
             if (summary === 'supplier') matchesSummary = hasVisiblePrice && isActive && row.dataset.requirementSupplier === activeRequirementSummaryTile.dataset.supplier;
         }
-        const matches = matchesSearch && matchesSummary;
+        const groupFilter = document.getElementById('requirements-group-filter')?.value || '';
+        const matchesGroup = !groupFilter || (groupFilter === '__ungrouped' ? !row.dataset.requirementGroup : 'group:' + row.dataset.requirementGroup === groupFilter);
+        const matches = matchesSearch && matchesSummary && matchesGroup;
         row.hidden = !matches;
         if (matches) visible++;
         const checkbox = row.querySelector('.requirement-entry-check');
