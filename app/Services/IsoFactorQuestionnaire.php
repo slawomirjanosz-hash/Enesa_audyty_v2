@@ -13,7 +13,7 @@ class IsoFactorQuestionnaire
 
     public function schema(): array
     {
-        return $this->schema ??= json_decode(file_get_contents(resource_path('iso50001/factors-v1.4.json')), true, 512, JSON_THROW_ON_ERROR);
+        return $this->schema ??= json_decode(file_get_contents(resource_path('iso50001/factors-v2.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function facts(IsoPlantProfile $profile): array
@@ -23,7 +23,7 @@ class IsoFactorQuestionnaire
 
     public function hash(IsoPlantProfile $profile): string
     {
-        return hash('sha256', json_encode([$profile->id, $profile->lock_version, $profile->status, $this->facts($profile)], JSON_THROW_ON_ERROR));
+        return hash('sha256', json_encode([$profile->id, $profile->lock_version, $profile->status, $this->facts($profile), $this->schema()], JSON_THROW_ON_ERROR));
     }
 
     public function factors(array $facts, array $answers): array
@@ -68,18 +68,28 @@ class IsoFactorQuestionnaire
         $data = Validator::make($input, [
             'FAKT_KLIMAT_ISTOTNY' => ['nullable', Rule::in(['tak', 'nie'])],
             'climate_reason' => 'nullable|string|max:3000',
+            'PRAWO.data' => ($complete ? 'required' : 'nullable').'|date_format:Y-m-d|before_or_equal:today',
+            'PRAWO.notatka' => 'nullable|string|max:5000',
             'factors' => 'nullable|array|max:69',
             'factors.*' => 'array',
             'factors.*.decyzja' => ['nullable', Rule::in(['potwierdzony', 'odrzucony'])],
             'factors.*.tresc' => 'nullable|string|max:5000',
             'factors.*.powod' => 'nullable|string|max:3000',
+            'factors.*.istotnosc' => ['nullable', Rule::in(['W', 'S', 'N'])],
+            'factors.*.znaczenie' => 'nullable|string|max:5000',
+            'factors.*.decyzja_w' => 'nullable|string|max:5000',
+            'factors.*.dzialanie' => 'nullable|string|max:5000',
+            'factors.*.sprawdzenie' => 'nullable|string|max:5000',
             'custom' => 'nullable|array|max:20',
             'custom.*.id' => 'required|uuid|distinct',
             'custom.*.tresc' => 'required|string|max:5000',
             'custom.*.wplyw' => ['required', Rule::in(['+', '−', '○'])],
+            'custom.*.wymiar' => [$complete ? 'required' : 'nullable', Rule::in(array_column($this->schema()['sekcje'], 'id'))],
+            'custom.*.skutek' => ($complete ? 'required' : 'nullable').'|string|max:5000',
         ])->validate();
         $out = ['FAKT_KLIMAT_ISTOTNY' => $data['FAKT_KLIMAT_ISTOTNY'] ?? null, 'climate_reason' => $data['climate_reason'] ?? null, 'factors' => [], 'custom' => array_values($data['custom'] ?? [])];
         $errors = [];
+        $out['PRAWO'] = $data['PRAWO'] ?? [];
         if ($complete && (! $out['FAKT_KLIMAT_ISTOTNY'] || ! filled($out['climate_reason']))) {
             $errors['climate_reason'] = 'Oceń istotność zmiany klimatu i podaj uzasadnienie.';
         }
@@ -90,6 +100,12 @@ class IsoFactorQuestionnaire
             }
             $row = $data['factors'][$key] ?? [];
             $out['factors'][$key] = ['decyzja' => $row['decyzja'] ?? null, 'tresc' => $row['tresc'] ?? $factor['tresc'], 'powod' => $row['powod'] ?? null];
+            foreach (['istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'] as $field) {
+                $out['factors'][$key][$field] = $row[$field] ?? null;
+                if ($complete && $factor['visible'] && ($row['decyzja'] ?? '') === 'potwierdzony' && ($field === 'istotnosc' || ($row['istotnosc'] ?? '') === 'W') && ! filled($row[$field] ?? null)) {
+                    $errors["factors.$key.$field"] = "$key: określ istotność, a przy wysokiej istotności uzupełnij cały wniosek i sposób sprawdzenia.";
+                }
+            }
             if (! $factor['visible']) {
                 continue;
             }
@@ -112,15 +128,21 @@ class IsoFactorQuestionnaire
 
     public function progress(array $facts, array $answers): array
     {
-        $total = 1;
+        $total = 2;
         $done = ! empty($answers['FAKT_KLIMAT_ISTOTNY']) && filled($answers['climate_reason'] ?? null) ? 1 : 0;
+        $done += filled(data_get($answers, 'PRAWO.data')) ? 1 : 0;
+        foreach ($answers['custom'] ?? [] as $row) {
+            $total++;
+            $done += collect(['tresc', 'wplyw', 'wymiar', 'skutek'])->every(fn ($key) => filled($row[$key] ?? null)) ? 1 : 0;
+        }
         foreach ($this->factors($facts, $answers) as $factor) {
             if (! $factor['visible'] || $factor['rodzaj'] === 'AUTO') {
                 continue;
             }
             $total++;
             $row = $answers['factors'][$factor['kod']] ?? [];
-            $done += (($row['decyzja'] ?? '') === 'potwierdzony' && filled($row['tresc'] ?? null)) || (($row['decyzja'] ?? '') === 'odrzucony' && filled($row['powod'] ?? null)) ? 1 : 0;
+            $conclusion = ($row['istotnosc'] ?? '') !== 'W' || collect(['znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'])->every(fn ($key) => filled($row[$key] ?? null));
+            $done += (($row['decyzja'] ?? '') === 'potwierdzony' && filled($row['tresc'] ?? null) && filled($row['istotnosc'] ?? null) && $conclusion) || (($row['decyzja'] ?? '') === 'odrzucony' && filled($row['powod'] ?? null)) ? 1 : 0;
         }
 
         return app(QuestionnaireCompletion::class)->result($done, $total);
@@ -133,9 +155,10 @@ class IsoFactorQuestionnaire
         }
         $text = fn ($value) => is_scalar($value) ? (string) $value : '';
         $out = ['FAKT_KLIMAT_ISTOTNY' => $text($input['FAKT_KLIMAT_ISTOTNY'] ?? null), 'climate_reason' => $text($input['climate_reason'] ?? null), 'factors' => [], 'custom' => []];
+        $out['PRAWO'] = ['data' => $text(data_get($input, 'PRAWO.data')), 'notatka' => $text(data_get($input, 'PRAWO.notatka'))];
         foreach ($this->schema()['czynniki'] as $factor) {
             $row = $input['factors'][$factor['kod']] ?? [];
-            foreach (['decyzja', 'tresc', 'powod'] as $field) {
+            foreach (['decyzja', 'tresc', 'powod', 'istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'] as $field) {
                 if (is_array($row) && array_key_exists($field, $row)) {
                     $out['factors'][$factor['kod']][$field] = $text($row[$field]);
                 }
@@ -143,7 +166,7 @@ class IsoFactorQuestionnaire
         }
         foreach (array_slice(is_array($input['custom'] ?? null) ? $input['custom'] : [], 0, 20) as $row) {
             if (is_array($row)) {
-                $out['custom'][] = array_map($text, array_intersect_key($row, array_flip(['id', 'tresc', 'wplyw'])));
+                $out['custom'][] = array_map($text, array_intersect_key($row, array_flip(['id', 'tresc', 'wplyw', 'wymiar', 'skutek'])));
             }
         }
 

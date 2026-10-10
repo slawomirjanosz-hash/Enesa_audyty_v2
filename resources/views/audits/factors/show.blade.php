@@ -24,6 +24,7 @@
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="factor-form" method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf
 <input type="hidden" name="lock_version" value="{{old('lock_version',$review->lock_version)}}"><input type="hidden" name="source_hash" value="{{old('source_hash',$questionnaire->hash($profile))}}">
 <fieldset @disabled(!$editable)>
+<section class="plant-card"><h2>Stan prawny</h2><label>Na jaki dzień sprawdzono przepisy?<input type="date" name="answers[PRAWO][data]" value="{{$display['PRAWO']['data']??''}}"></label><label>Źródła i uwagi z weryfikacji<textarea name="answers[PRAWO][notatka]" maxlength="5000">{{$display['PRAWO']['notatka']??''}}</textarea></label><p class="plant-help">Propozycje biblioteki nie zastępują sprawdzenia aktualnych przepisów i ich zastosowania do przedsiębiorstwa.</p></section>
 <section id="climate" class="plant-card"><h2>Istotność zmiany klimatu</h2>
 @include('audits.factors.changes',['changeKey'=>'FAKT_KLIMAT_ISTOTNY'])
 <label for="climate-choice">Czy zmiana klimatu jest istotna dla zdolności systemu zarządzania energią do osiągania zamierzonych wyników?</label><small class="plant-help">FAKT_KLIMAT_ISTOTNY · ocena w punkcie 4.1</small>
@@ -41,6 +42,10 @@
 <label>Decyzja<select name="answers[factors][{{$factor['kod']}}][decyzja]" data-decision><option value="">Wybierz decyzję</option><option value="potwierdzony" @selected(($row['decyzja']??'')==='potwierdzony')>Potwierdzam — uwzględnij</option><option value="odrzucony" @selected(($row['decyzja']??'')==='odrzucony')>Odrzucam — nie dotyczy</option></select></label>
 <label data-reason>Powód odrzucenia<textarea name="answers[factors][{{$factor['kod']}}][powod]" maxlength="3000">{{$row['powod']??''}}</textarea></label>
 <details><summary>Treść do dokumentu — uzupełnij lub zmień</summary><textarea name="answers[factors][{{$factor['kod']}}][tresc]" maxlength="5000">{{$row['tresc']??$factor['tresc']}}</textarea></details>
+<div data-significance>
+<label>Istotność<select name="answers[factors][{{$factor['kod']}}][istotnosc]" data-importance><option value="">Wybierz</option>@foreach(['W'=>'Wysoka','S'=>'Średnia','N'=>'Niska'] as $key=>$label)<option value="{{$key}}" @selected(($row['istotnosc']??'')===$key)>{{$label}}</option>@endforeach</select></label>
+@foreach(['znaczenie'=>'Co to znaczy dla systemu?','decyzja_w'=>'Co postanawiamy?','dzialanie'=>'Co konkretnie robimy?','sprawdzenie'=>'Po czym poznamy, że zadziałało?'] as $key=>$label)<label>{{$label}}<textarea data-conclusion name="answers[factors][{{$factor['kod']}}][{{$key}}]" maxlength="5000">{{$row[$key]??''}}</textarea></label>@endforeach
+<p class="plant-help">Przy wysokiej istotności wszystkie cztery części wniosku są wymagane.</p></div>
 @endif
 @if($factor['dependencies'])<details class="factor-source"><summary>Źródło — odpowiedzi z profilu zakładu</summary>@foreach($factor['dependencies'] as $key=>$value)<p><strong>{{$key}}</strong>: {{is_array($value)?implode(', ',$value):($value??'Brak danych')}}</p>@endforeach</details>@endif
 </div>@endif @endforeach
@@ -59,5 +64,5 @@
 <h3>Historia</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{$operations[$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div></section>
 @include('partials.field-validation')
 @include('partials.questionnaire-navigation')
-</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}?v=swot-1" defer></script>@include('partials.form-drafts')
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}?v=guidelines-2" defer></script>@include('partials.form-drafts')
 </body></html>

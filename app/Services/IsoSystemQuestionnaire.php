@@ -51,7 +51,7 @@ class IsoSystemQuestionnaire
         }
         $parties = $partyReady ? $p->register($party->answers ?? [], $p->parties($profile, $factor), $party->consultant ?? []) : [];
         $snapshot = ['profile' => $profile->id, 'profile_hash' => $f->hash($profile), 'facts' => $facts, 'approved' => $approved, 'published' => $published,
-            'factors' => $confirmed, 'parties' => $parties, 'factor_analysis' => $factor?->analysis, 'scope' => $scope?->answers,
+            'factors' => $confirmed, 'parties' => $parties, 'factor_analysis' => $factor?->swot, 'scope' => $scope?->answers,
             'versions' => collect($rows)->map(fn ($row) => $row?->only(['id', 'lock_version', 'status', 'source_hash', 'document_id']))->all()];
 
         return $snapshot + ['hash' => hash('sha256', json_encode([$snapshot, $this->schema($section)], JSON_THROW_ON_ERROR)), 'ready' => $section === '4-3' ? (bool) $partyReady : ! in_array(false, $published, true)];
@@ -74,7 +74,7 @@ class IsoSystemQuestionnaire
                 $matches = $matches && in_array($match[0], $sources['factors'] ?? [], true);
             }
             if (preg_match('/STK-[A-Z]-\d+/', $rule['zrodlo'], $match)) {
-                $matches = $matches && in_array($match[0], array_column($sources['parties'] ?? [], 'kod'), true);
+                $matches = $matches && in_array($match[0], array_map(fn ($row) => $row['strona_kod'] ?? $row['kod'], $sources['parties'] ?? []), true);
             }
             if ($matches) {
                 // Stable index from versioned source, never from the filtered list.

@@ -18,7 +18,7 @@ function factorFixture(): array
 
 function factorSwot(): array
 {
-    return ['strengths' => 'Kompetentny zespół energetyczny', 'weaknesses' => 'Brak podliczników', 'opportunities' => 'Dofinansowanie modernizacji', 'threats' => 'Wzrost cen energii', 'conclusions' => 'Kierownik techniczny przygotuje plan opomiarowania.'];
+    return ['strengths' => 'Kompetentny zespół energetyczny', 'weaknesses' => 'Brak podliczników', 'opportunities' => 'Dofinansowanie modernizacji', 'threats' => 'Wzrost cen energii', 'conclusions' => 'Kierownik techniczny przygotuje plan opomiarowania.', 'wnioski' => [['czynnik' => 'KTX-WT-01', 'znaczenie' => 'Brak pomiarów', 'decyzja' => 'Opomiarować', 'dzialanie' => 'Zamontować podliczniki', 'sprawdzenie' => 'Raport miesięczny']]];
 }
 
 test('SWOT is written only by staff after client approval and included in document', function () {
@@ -40,7 +40,7 @@ test('SWOT is written only by staff after client approval and included in docume
     $this->actingAs($staff)->post($url, array_replace($payload, ['operation' => 'approve', 'note' => 'Sprawdzono analizę']))->assertSessionHasNoErrors();
     $review->refresh();
     $html = view('audits.factors.pdf', ['review' => $review, 'profile' => $profile, 'questionnaire' => app(IsoFactorQuestionnaire::class), 'facts' => app(IsoFactorQuestionnaire::class)->facts($profile)])->render();
-    foreach (factorSwot() as $text) {
+    foreach (array_filter(factorSwot(), 'is_string') as $text) {
         expect($html)->toContain($text);
     }
     $this->post(route('audits.factors.pdf', [$audit, $profile]), ['lock_version' => 3])->assertRedirect();
@@ -57,9 +57,10 @@ function factorInput(IsoPlantProfile $profile): array
 {
     $service = app(IsoFactorQuestionnaire::class);
     $answers = ['FAKT_KLIMAT_ISTOTNY' => 'nie', 'climate_reason' => 'Przeprowadzono ocenę warunków zakładu.'];
+    $answers['PRAWO'] = ['data' => today()->toDateString()];
     foreach ($service->factors($service->facts($profile), $answers) as $factor) {
         if ($factor['visible'] && $factor['rodzaj'] !== 'AUTO') {
-            $answers['factors'][$factor['kod']] = ['decyzja' => 'potwierdzony', 'tresc' => $factor['tresc']];
+            $answers['factors'][$factor['kod']] = ['decyzja' => 'potwierdzony', 'tresc' => $factor['tresc'], 'istotnosc' => 'S'];
         }
     }
 

@@ -19,6 +19,11 @@
 <textarea id="swot-{{$key}}" name="swot[{{$key}}]" maxlength="10000" rows="5" @if($errors->has('swot.'.$key)) aria-invalid="true" style="border:2px solid #b91c1c;background:#fff0f0" @endif>{{old('swot.'.$key,$review->swot[$key]??'')}}</textarea>
 @endforeach
 <button name="operation" value="save_swot">Zapisz analizę SWOT</button>
+<h3>Wnioski: znaczenie → decyzja → działanie → sprawdzenie</h3>
+@php($conclusionRows=old('swot.wnioski',$review->swot['wnioski']??[[]]))
+<div id="swot-conclusions" data-repeater="swot-conclusions">@foreach(is_array($conclusionRows)?array_slice($conclusionRows,0,20,true):[[]] as $index=>$conclusion)@include('audits.factors.conclusion-row')@endforeach</div>
+<template id="template-swot-conclusions">@include('audits.factors.conclusion-row',['index'=>'__INDEX__','conclusion'=>[]])</template>
+<button type="button" id="add-swot-conclusion">+ Dodaj wniosek</button>
 @if($review->status==='submitted')
 <label>Wynik przeglądu / uwagi<textarea name="note" maxlength="3000">{{old('note',$review->review_note)}}</textarea></label>
 <button class="primary" name="operation" value="approve">Zatwierdź jako audytor — z analizą SWOT</button>
@@ -27,6 +32,7 @@
 @endif
 </form>
 @elseif($review->swot)
+@foreach($review->swot['wnioski']??[] as $conclusion)<h3>Wniosek {{$loop->iteration}} · {{$conclusion['czynnik']??''}}</h3>@foreach(['znaczenie'=>'Znaczenie','decyzja'=>'Decyzja','dzialanie'=>'Działanie','sprawdzenie'=>'Sprawdzenie'] as $key=>$label)<p><strong>{{$label}}:</strong> {{$conclusion[$key]??'Do uzupełnienia'}}</p>@endforeach @endforeach
 @if($stale || !$review->client_approval)<p class="plant-notice">Analiza wymaga ponownego przeglądu po zatwierdzeniu aktualnych odpowiedzi klienta.</p>@endif
 @foreach(\App\Models\IsoFactorReview::SWOT_FIELDS as $key=>$label)
 <h3>{{$label}}</h3><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{$review->swot[$key]??'Do uzupełnienia przez audytora'}}</p>

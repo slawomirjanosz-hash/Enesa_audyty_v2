@@ -103,6 +103,9 @@ class IsoStakeholderReviewController extends Controller
                 $input['parties'] = array_replace($previous['parties'] ?? [], is_array($input['parties'] ?? null) ? $input['parties'] : []);
                 try {
                     $answers = $this->questionnaire->normalize($input, $parties, $op === 'submit', $review->consultant ?? []);
+                    if (isset($previous['legacy_parties'])) {
+                        $answers['legacy_parties'] = $previous['legacy_parties'];
+                    }
                 } catch (ValidationException $error) {
                     throw ValidationException::withMessages(collect($error->errors())->mapWithKeys(fn ($messages, $key) => ['answers.'.$key => $messages])->all());
                 }
@@ -130,6 +133,9 @@ class IsoStakeholderReviewController extends Controller
                 ]);
                 $decisions = $review->consultant ?? [];
                 foreach ($this->questionnaire->register($review->answers ?? [], $parties, $decisions) as $row) {
+                    if (isset($row['strona_kod'])) {
+                        continue; // Requirement classification and evidence are edited in the shared questionnaire.
+                    }
                     $code = $row['kod'];
                     $decision = array_intersect_key($validated['consultant'][$code] ?? [], array_flip(['zgodnosc', 'reason', 'legal_basis', 'owner', 'deadline']));
                     $decision['zgodnosc'] = $row['classification'] === 'TAK' ? 'tak' : ($row['classification'] === 'nie' ? 'nie' : ($decision['zgodnosc'] ?? 'pending'));
@@ -162,7 +168,7 @@ class IsoStakeholderReviewController extends Controller
                     }
                 }
                 foreach ($register as $row) {
-                    if (! filled($row['jak'] ?? null) || ($row['zgodnosc'] === 'tak' && (! filled($row['consultant']['legal_basis'] ?? null) || ! filled($row['consultant']['owner'] ?? null)))) {
+                    if ($row['zgodnosc'] === 'tak' && (! filled($row['jak'] ?? null) || ! filled($row['consultant']['legal_basis'] ?? null) || ! filled($row['consultant']['owner'] ?? null))) {
                         throw ValidationException::withMessages(['consultant' => $row['kod'].': uzupełnij sposób uwzględnienia w systemie, a dla wymogu zgodności również aktualną podstawę prawną/umowną i odpowiedzialnego.']);
                     }
                 }

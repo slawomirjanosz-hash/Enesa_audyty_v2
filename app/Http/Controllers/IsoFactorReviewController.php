@@ -81,14 +81,22 @@ class IsoFactorReviewController extends Controller
             $facts = $this->questionnaire->facts($profile);
             if (in_array($op, ['save_swot', 'approve'])) {
                 abort_unless(! $client && $review->client_approval && in_array($review->status, ['submitted', 'approved']), 403);
-                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions'];
+                $confirmedCodes = array_column(array_filter($this->questionnaire->factors($facts, $review->answers ?? []), fn ($factor) => $factor['visible'] && ($factor['rodzaj'] === 'AUTO' || data_get($review->answers, 'factors.'.$factor['kod'].'.decyzja') === 'potwierdzony')), 'kod');
+                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions,wnioski',
+                    'swot.wnioski' => ($op === 'approve' ? 'required' : 'nullable').'|array|min:1|max:20',
+                    'swot.wnioski.*' => 'array',
+                    'swot.wnioski.*.czynnik' => ['nullable', Rule::in($confirmedCodes)],
+                ];
+                foreach (['znaczenie', 'decyzja', 'dzialanie', 'sprawdzenie'] as $key) {
+                    $rules['swot.wnioski.*.'.$key] = ($op === 'approve' ? 'required' : 'nullable').'|string|max:5000';
+                }
                 $labels = [];
                 foreach (IsoFactorReview::SWOT_FIELDS as $key => $label) {
                     $rules['swot.'.$key] = ($op === 'approve' ? 'required' : 'nullable').'|string|max:10000';
                     $labels['swot.'.$key] = $label;
                 }
                 $validated = $request->validate($rules, [], $labels);
-                if ($op === 'save_swot' && $validated['swot'] === array_intersect_key($review->swot ?? [], IsoFactorReview::SWOT_FIELDS)) {
+                if ($op === 'save_swot' && $validated['swot'] === array_intersect_key($review->swot ?? [], IsoFactorReview::SWOT_FIELDS + ['wnioski' => 'Wnioski'])) {
                     return;
                 }
                 $review->swot = $validated['swot'] + ['author' => $this->approval($request)];
@@ -121,6 +129,8 @@ class IsoFactorReviewController extends Controller
                 $track = ! $client || $review->auditor_changes || $review->client_changes || in_array($review->status, ['returned', 'auditor_corrected']);
                 $before = ($review->answers['factors'] ?? []) + ['FAKT_KLIMAT_ISTOTNY' => [$review->answers['FAKT_KLIMAT_ISTOTNY'] ?? null, $review->answers['climate_reason'] ?? null], 'custom' => $review->answers['custom'] ?? []];
                 $after = $answers['factors'] + ['FAKT_KLIMAT_ISTOTNY' => [$answers['FAKT_KLIMAT_ISTOTNY'], $answers['climate_reason']], 'custom' => $answers['custom']];
+                $before['PRAWO'] = $review->answers['PRAWO'] ?? [];
+                $after['PRAWO'] = $answers['PRAWO'] ?? [];
                 foreach ($after as $key => $value) {
                     if ($track && ($before[$key] ?? null) !== $value) {
                         $changes[$key] = ['before' => $changes[$key]['before'] ?? ($before[$key] ?? null), 'after' => $value, 'by' => $request->user()->name];
