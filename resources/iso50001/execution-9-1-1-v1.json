@@ -1,0 +1,496 @@
+{
+  "version": 1,
+  "section": "9-1-1",
+  "source_file": "ENESA_9.1.1_Monitorowanie_platforma.html",
+  "source_sha256": "549f5c3934dc5afe21b7f8c52d7a0046dbe2beedc4db77625b0c083eab24849f",
+  "definitions": {
+    "CHARAKTERYSTYKI": [
+      {
+        "kod": "plany",
+        "nazwa": "Skuteczność planów działań w osiąganiu celów i zadań",
+        "pomoc": "Nie „czy działanie wykonano”, ale czy przynosi zakładany efekt.",
+        "ph": "np. Czy działania z planu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — przepływ w postoju 9 → 6 Nm³/min",
+        "phZ": "np. Plan działań III-24; protokoły testów weekendowych",
+        "phM": "np. Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach jak w teście bazowym; porównanie z wartością bazową 9 Nm³/min",
+        "phCz": "np. co kwartał",
+        "phP": "np. brak postępu między dwoma kolejnymi testami"
+      },
+      {
+        "kod": "enpi",
+        "nazwa": "Wskaźniki wyniku energetycznego (EnPI)",
+        "ph": "np. O-1 zakład, P-1 prasy, L-1 lakiernia, S-1 sprężarkownia, K-1 kotłownia, OŚ-1 oświetlenie",
+        "phZ": "np. Podliczniki obszarowe, przepływomierz sprężarkowni, faktury, raporty produkcyjne",
+        "phM": "np. Karty wskaźników z punktu 6.4; każdy EnPI liczony metodą z karty i porównywany z odpowiadającą mu EnB w porównywalnych warunkach",
+        "phCz": "np. co miesiąc; S-1 co tydzień",
+        "phP": "np. 3% wobec średniej z ostatnich okresów; S-1 — 3% tygodniowo"
+      },
+      {
+        "kod": "seu",
+        "nazwa": "Działanie znaczących użyć energii",
+        "pomoc": "Czy SEU pracują według kryteriów ustalonych w punkcie 8.1.",
+        "ph": "np. Czy sprężarkownia utrzymuje ciśnienie ≤ 6,3 bar i czy tryby postoju są stosowane",
+        "phZ": "np. Trend ciśnienia ze sterownika; zapisy obchodów; protokoły serwisu",
+        "phM": "np. Odczyt trendu ciśnienia z rejestratora sterownika i przegląd zapisów obchodów; przy każdej usłudze serwisowej — protokół z nastawami przed i po",
+        "phCz": "np. na bieżąco (sterownik, obchody)",
+        "phP": "np. każde przekroczenie 6,3 bar dłuższe niż 4 h"
+      },
+      {
+        "kod": "rzeczOcz",
+        "nazwa": "Zużycie rzeczywiste w porównaniu z oczekiwanym",
+        "ph": "np. Model zakładu: 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu",
+        "phZ": "np. Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny; stopniodni z danych meteorologicznych",
+        "phM": "np. Zużycie oczekiwane z modelu regresji (III-22) przy rzeczywistej produkcji i stopniodniach; iloraz rzeczywistego i oczekiwanego jako wskaźnik O-1",
+        "phCz": "np. co miesiąc",
+        "phP": "np. iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca"
+      }
+    ],
+    "LISTA_911": [
+      {
+        "tekst": "Ustalono, co monitorować i mierzyć — co najmniej: skuteczność planów działań, EnPI, działanie SEU, zużycie rzeczywiste wobec oczekiwanego.",
+        "podstawa": "N",
+        "auto": "co"
+      },
+      {
+        "tekst": "Ustalono metody monitorowania, pomiaru, analizy i oceny zapewniające wiarygodne wyniki.",
+        "podstawa": "N",
+        "auto": "metody"
+      },
+      {
+        "tekst": "Ustalono, kiedy prowadzi się pomiary i kiedy analizuje i ocenia wyniki.",
+        "podstawa": "N",
+        "auto": "kiedy"
+      },
+      {
+        "tekst": "Oceniany jest wynik energetyczny — EnPI wobec odpowiadających im EnB.",
+        "podstawa": "N",
+        "auto": "enpiEnb"
+      },
+      {
+        "tekst": "Oceniana jest skuteczność systemu.",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "tekst": "Znaczące odchylenia są badane, a reakcje — zapisane.",
+        "podstawa": "N",
+        "auto": "odchylenia"
+      },
+      {
+        "tekst": "Zachowano zapisy wyników monitorowania i pomiarów.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Ustalono i stosuje się kryteria identyfikowania znaczących odchyleń.",
+        "podstawa": "N",
+        "auto": "progi"
+      },
+      {
+        "tekst": "Raport z monitorowania zawiera wnioski i rekomendacje (III-41).",
+        "podstawa": "M",
+        "auto": "wnioski"
+      }
+    ]
+  },
+  "tree": {
+    "USTALENIA": {
+      "type": "list",
+      "label": "Co, jak i kiedy monitorować",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "co": {
+          "type": "textarea",
+          "label": "Co monitorujemy",
+          "required": true,
+          "options": {}
+        },
+        "zrodlo": {
+          "type": "textarea",
+          "label": "Źródło",
+          "required": true,
+          "options": {}
+        },
+        "metoda": {
+          "type": "textarea",
+          "label": "Metoda",
+          "required": true,
+          "options": {}
+        },
+        "ktoMierzy": {
+          "type": "textarea",
+          "label": "Kto mierzy",
+          "required": true,
+          "options": {}
+        },
+        "czestoscPomiar": {
+          "type": "textarea",
+          "label": "Częstotliwość pomiarów",
+          "required": true,
+          "options": {}
+        },
+        "ktoAnalizuje": {
+          "type": "textarea",
+          "label": "Kto analizuje",
+          "required": true,
+          "options": {}
+        },
+        "czestoscAnaliza": {
+          "type": "textarea",
+          "label": "Częstotliwość analizy",
+          "required": true,
+          "options": {}
+        },
+        "prog": {
+          "type": "textarea",
+          "label": "Próg",
+          "required": true,
+          "options": {}
+        }
+      },
+      "codes": {
+        "plany": "Skuteczność planów działań w osiąganiu celów i zadań",
+        "enpi": "Wskaźniki wyniku energetycznego (EnPI)",
+        "seu": "Działanie znaczących użyć energii",
+        "rzeczOcz": "Zużycie rzeczywiste w porównaniu z oczekiwanym"
+      }
+    },
+    "MODEL": {
+      "type": "object",
+      "label": "Model zużycia oczekiwanego",
+      "children": {
+        "a": {
+          "type": "number",
+          "label": "Współczynnik a",
+          "required": true,
+          "options": {}
+        },
+        "opisA": {
+          "type": "textarea",
+          "label": "Zmienna x1 i jednostka",
+          "required": true,
+          "options": {}
+        },
+        "b": {
+          "type": "number",
+          "label": "Współczynnik b",
+          "required": true,
+          "options": {}
+        },
+        "opisB": {
+          "type": "textarea",
+          "label": "Zmienna x2 i jednostka",
+          "required": true,
+          "options": {}
+        },
+        "c": {
+          "type": "number",
+          "label": "Wyraz wolny c",
+          "required": true,
+          "options": {}
+        },
+        "zrodlo": {
+          "type": "textarea",
+          "label": "Źródło",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "OKRESY": {
+      "type": "list",
+      "label": "Zużycie rzeczywiste i oczekiwane",
+      "min": 0,
+      "children": {
+        "okres": {
+          "type": "textarea",
+          "label": "Okres",
+          "required": true,
+          "options": {}
+        },
+        "x1": {
+          "type": "number",
+          "label": "Wartość zmiennej x1",
+          "required": true,
+          "options": {}
+        },
+        "x2": {
+          "type": "number",
+          "label": "Wartość zmiennej x2",
+          "required": true,
+          "options": {}
+        },
+        "rzeczywiste": {
+          "type": "number",
+          "label": "Zużycie rzeczywiste (MWh)",
+          "required": true,
+          "options": {}
+        },
+        "rozbicie": {
+          "type": "textarea",
+          "label": "Rozbicie na nośniki / źródła",
+          "required": false,
+          "options": {}
+        },
+        "komentarz": {
+          "type": "textarea",
+          "label": "Komentarz",
+          "required": false,
+          "options": {}
+        }
+      }
+    },
+    "WSKAZNIKI": {
+      "type": "list",
+      "label": "Wyniki wskaźników EnPI",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "nazwa": {
+          "type": "textarea",
+          "label": "Nazwa",
+          "required": true,
+          "options": {}
+        },
+        "kierunek": {
+          "type": "select",
+          "label": "Kierunek poprawy",
+          "required": true,
+          "options": {
+            "nizej": "Niższy wynik jest lepszy",
+            "wyzej": "Wyższy wynik jest lepszy"
+          }
+        },
+        "enb": {
+          "type": "number",
+          "label": "Wartość linii bazowej EnB",
+          "required": true,
+          "options": {}
+        },
+        "enbOkres": {
+          "type": "textarea",
+          "label": "Okres linii bazowej",
+          "required": true,
+          "options": {}
+        },
+        "biez": {
+          "type": "number",
+          "label": "Wartość w okresie",
+          "required": true,
+          "options": {}
+        },
+        "biezOkres": {
+          "type": "textarea",
+          "label": "Okres bieżący",
+          "required": true,
+          "options": {}
+        },
+        "cel": {
+          "type": "textarea",
+          "label": "Cel",
+          "required": true,
+          "options": {}
+        },
+        "celTermin": {
+          "type": "textarea",
+          "label": "Termin celu",
+          "required": true,
+          "options": {}
+        },
+        "prog": {
+          "type": "textarea",
+          "label": "Próg",
+          "required": true,
+          "options": {}
+        },
+        "ocena": {
+          "type": "textarea",
+          "label": "Ocena",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "SEU": {
+      "type": "list",
+      "label": "Nadzór nad znaczącymi użyciami energii",
+      "min": 0,
+      "children": {
+        "obszar": {
+          "type": "textarea",
+          "label": "Obszar",
+          "required": true,
+          "options": {}
+        },
+        "kryterium": {
+          "type": "textarea",
+          "label": "Kryterium",
+          "required": true,
+          "options": {}
+        },
+        "stan": {
+          "type": "select",
+          "label": "Stan",
+          "required": true,
+          "options": {
+            "spelnione": "Spełnione",
+            "niespelnione": "Niespełnione",
+            "brak": "Brak danych"
+          }
+        },
+        "uwagi": {
+          "type": "textarea",
+          "label": "Uwagi",
+          "required": false,
+          "options": {}
+        }
+      }
+    },
+    "ODCH": {
+      "type": "list",
+      "label": "Odchylenia i reakcje",
+      "min": 0,
+      "children": {
+        "co": {
+          "type": "textarea",
+          "label": "Co monitorujemy",
+          "required": true,
+          "options": {}
+        },
+        "kiedy": {
+          "type": "textarea",
+          "label": "Kiedy stwierdzono",
+          "required": true,
+          "options": {}
+        },
+        "wartosc": {
+          "type": "textarea",
+          "label": "Wartość",
+          "required": true,
+          "options": {}
+        },
+        "prog": {
+          "type": "textarea",
+          "label": "Próg",
+          "required": true,
+          "options": {}
+        },
+        "przyczyna": {
+          "type": "textarea",
+          "label": "Przyczyna",
+          "required": true,
+          "options": {}
+        },
+        "reakcja": {
+          "type": "textarea",
+          "label": "Reakcja / korekcja",
+          "required": true,
+          "options": {}
+        },
+        "niezgodnosc": {
+          "type": "select",
+          "label": "Czy odchylenie stanowi niezgodność",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "dzialanie": {
+          "type": "textarea",
+          "label": "Działanie",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "OCENA_E": {
+      "type": "object",
+      "label": "Ocena i rekomendacje",
+      "children": {
+        "wynik": {
+          "type": "textarea",
+          "label": "Wynik",
+          "required": true,
+          "options": {}
+        },
+        "system": {
+          "type": "textarea",
+          "label": "Ocena skuteczności systemu",
+          "required": true,
+          "options": {}
+        },
+        "rekomendacje": {
+          "type": "textarea",
+          "label": "Rekomendacje",
+          "required": true,
+          "options": {}
+        },
+        "rytmSystem": {
+          "type": "textarea",
+          "label": "Rytm oceny skuteczności systemu",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "okres": {
+          "type": "textarea",
+          "label": "Okres",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "sporzadzil": {
+          "type": "textarea",
+          "label": "Sporządził",
+          "required": true,
+          "options": {}
+        },
+        "odbiorcy": {
+          "type": "textarea",
+          "label": "Odbiorcy raportu",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "dataZatw": {
+          "type": "date",
+          "label": "Data zatwierdzenia",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

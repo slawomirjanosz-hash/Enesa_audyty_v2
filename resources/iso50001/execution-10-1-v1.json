@@ -1,0 +1,325 @@
+{
+  "version": 1,
+  "section": "10-1",
+  "source_file": "ENESA_10.1_Niezgodnosci_platforma.html",
+  "source_sha256": "fdb2910fc92a2768c1dc34d807d68f2849d77f6896ecf2af7184fbc9ee2b374f",
+  "definitions": {
+    "LISTA_101": [
+      {
+        "tekst": "Na niezgodności reaguje się: opanowanie, korekcja, zajęcie się konsekwencjami.",
+        "podstawa": "N",
+        "auto": "reakcja"
+      },
+      {
+        "tekst": "Ocenia się potrzebę działania korygującego: przegląd niezgodności, przyczyny, podobne przypadki gdzie indziej.",
+        "podstawa": "N",
+        "auto": "ocenaPotrzeby"
+      },
+      {
+        "tekst": "Potrzebne działania są wdrażane i adekwatne do skutków niezgodności.",
+        "podstawa": "N",
+        "auto": "wdrozenie"
+      },
+      {
+        "tekst": "Przegląda się skuteczność działań korygujących.",
+        "podstawa": "N",
+        "auto": "przegladSkutecznosci"
+      },
+      {
+        "tekst": "W razie potrzeby wprowadza się zmiany w systemie.",
+        "podstawa": "N",
+        "auto": "zmianySystemu"
+      },
+      {
+        "tekst": "Zachowano zapisy o charakterze niezgodności, działaniach i wynikach działań korygujących.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Przy podjętym działaniu korygującym niezgodność zamyka się na dowodzie skuteczności, nie na wykonaniu działania.",
+        "podstawa": "M",
+        "auto": "zamkniecie"
+      },
+      {
+        "tekst": "Prowadzony jest rejestr (F-EnMS-22) i karty (F-EnMS-21); stosowana jest metoda analizy przyczyn.",
+        "podstawa": "M",
+        "auto": "narzedzia"
+      }
+    ]
+  },
+  "tree": {
+    "KARTY": {
+      "type": "list",
+      "label": "Karty",
+      "min": 0,
+      "children": {
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "dataWykrycia": {
+          "type": "date",
+          "label": "Data wykrycia",
+          "required": true,
+          "options": {}
+        },
+        "ponownieOtwarta": {
+          "type": "date",
+          "label": "Data ponownego otwarcia",
+          "required": false,
+          "options": {}
+        },
+        "zrodlo": {
+          "type": "select",
+          "label": "Źródło",
+          "required": true,
+          "options": {
+            "monitorowanie": "Monitorowanie",
+            "zgodnosc": "Ocena zgodności",
+            "audyt": "Audyt wewnętrzny",
+            "zgloszenie": "Zgłoszenie",
+            "inne": "Inne"
+          }
+        },
+        "wymaganie": {
+          "type": "textarea",
+          "label": "Wymaganie",
+          "required": true,
+          "options": {}
+        },
+        "opis": {
+          "type": "textarea",
+          "label": "Opis",
+          "required": true,
+          "options": {}
+        },
+        "dowod": {
+          "type": "textarea",
+          "label": "Dowód / dokument źródłowy",
+          "required": true,
+          "options": {}
+        },
+        "klasyfikacja": {
+          "type": "textarea",
+          "label": "Klasyfikacja organizacji (opcjonalnie)",
+          "required": false,
+          "options": {}
+        },
+        "korekcja": {
+          "type": "textarea",
+          "label": "Korekcja i opanowanie niezgodności",
+          "required": true,
+          "options": {}
+        },
+        "korekcjaKto": {
+          "type": "textarea",
+          "label": "Kto i kiedy wykonał korekcję",
+          "required": true,
+          "options": {}
+        },
+        "konsekwencje": {
+          "type": "textarea",
+          "label": "Konsekwencje",
+          "required": true,
+          "options": {}
+        },
+        "nadwyzkaMWh": {
+          "type": "number",
+          "label": "Nadwyżka zużycia (MWh)",
+          "required": false,
+          "options": {}
+        },
+        "skalaSkutkow": {
+          "type": "select",
+          "label": "Skala skutków",
+          "required": true,
+          "options": {
+            "male": "Małe",
+            "srednie": "Średnie",
+            "duze": "Duże"
+          }
+        },
+        "metoda": {
+          "type": "select",
+          "label": "Metoda",
+          "required": true,
+          "options": {
+            "jedno": "Jedno dlaczego",
+            "5x": "5 × dlaczego",
+            "ishikawa": "Ishikawa",
+            "inna": "Inna"
+          }
+        },
+        "przebieg": {
+          "type": "textarea",
+          "label": "Przebieg analizy przyczyny",
+          "required": true,
+          "options": {}
+        },
+        "przyczyna": {
+          "type": "textarea",
+          "label": "Przyczyna",
+          "required": true,
+          "options": {}
+        },
+        "podobneSprawdzono": {
+          "type": "textarea",
+          "label": "Gdzie jeszcze sprawdzono podobne przypadki",
+          "required": true,
+          "options": {}
+        },
+        "podobneZnalezione": {
+          "type": "select",
+          "label": "Znaleziono podobne przypadki",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "uzasadnienieZakres": {
+          "type": "textarea",
+          "label": "Uzasadnienie zakresu działań",
+          "required": true,
+          "options": {}
+        },
+        "zakresDzialania": {
+          "type": "select",
+          "label": "Zakres działania",
+          "required": true,
+          "options": {
+            "miejsce": "Miejsce wykrycia",
+            "szerszy": "Szerszy zakres"
+          }
+        },
+        "dzialania": {
+          "type": "list",
+          "label": "Działania korygujące",
+          "min": 0,
+          "children": {
+            "tresc": {
+              "type": "textarea",
+              "label": "Treść",
+              "required": true,
+              "options": {}
+            },
+            "odp": {
+              "type": "textarea",
+              "label": "Odpowiedzialny i termin",
+              "required": true,
+              "options": {}
+            },
+            "data": {
+              "type": "textarea",
+              "label": "Data",
+              "required": true,
+              "options": {}
+            },
+            "wykonano": {
+              "type": "textarea",
+              "label": "Stan wykonania / data",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "zmianaSystemu": {
+          "type": "select",
+          "label": "Czy potrzebna jest zmiana systemu",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "zmianaOpis": {
+          "type": "textarea",
+          "label": "Opis zmiany systemu",
+          "required": true,
+          "options": {}
+        },
+        "dowodPlanowany": {
+          "type": "textarea",
+          "label": "Planowany dowód skuteczności",
+          "required": true,
+          "options": {}
+        },
+        "terminDowodu": {
+          "type": "date",
+          "label": "Najwcześniejszy termin uzyskania dowodu",
+          "required": true,
+          "options": {}
+        },
+        "dataSprawdzenia": {
+          "type": "date",
+          "label": "Data sprawdzenia skuteczności",
+          "required": true,
+          "options": {}
+        },
+        "wynikSprawdzenia": {
+          "type": "textarea",
+          "label": "Wynik sprawdzenia skuteczności",
+          "required": true,
+          "options": {}
+        },
+        "decyzja": {
+          "type": "select",
+          "label": "Decyzja",
+          "required": true,
+          "options": {
+            "kontynuowac": "Kontynuować",
+            "zamknac": "Zamknąć po ocenie skuteczności",
+            "bez": "Zamknąć bez działania — uzasadnij"
+          }
+        },
+        "sprawdzil": {
+          "type": "textarea",
+          "label": "Sprawdził",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "cenaEnergii": {
+          "type": "number",
+          "label": "Cena energii (zł/MWh)",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "dataZatw": {
+          "type": "date",
+          "label": "Data zatwierdzenia",
+          "required": true,
+          "options": {}
+        },
+        "brakZdarzen": {
+          "type": "select",
+          "label": "Nie wystąpiły zdarzenia w tym okresie",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "uzasadnienieBraku": {
+          "type": "textarea",
+          "label": "Uzasadnienie braku zdarzeń i zakres sprawdzenia",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

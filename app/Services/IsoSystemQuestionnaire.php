@@ -16,6 +16,9 @@ class IsoSystemQuestionnaire
 {
     public function schema(string $section): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->schema($section);
+        }
         if (str_starts_with($section, '7-')) {
             return app(IsoSupportQuestionnaire::class)->schema($section);
         }
@@ -31,6 +34,9 @@ class IsoSystemQuestionnaire
 
     public function sources(IsoPlantProfile $profile, string $section): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->sources($profile, $section);
+        }
         if (str_starts_with($section, '7-')) {
             return app(IsoSupportQuestionnaire::class)->sources($profile, $section);
         }
@@ -106,6 +112,9 @@ class IsoSystemQuestionnaire
 
     public function seed(string $section, array $sources): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->seed($section, $sources);
+        }
         if (str_starts_with($section, '7-')) {
             return app(IsoSupportQuestionnaire::class)->seed($section, $sources);
         }
@@ -157,6 +166,9 @@ class IsoSystemQuestionnaire
 
     public function sections(string $section, array $answers, array $sources): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->sections($section, $answers, $sources);
+        }
         if (str_starts_with($section, '7-')) {
             return app(IsoSupportQuestionnaire::class)->sections($section, $answers, $sources);
         }
@@ -289,6 +301,9 @@ class IsoSystemQuestionnaire
 
     public function normalize(string $section, array $input, array $sources, bool $complete): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->normalize($section, $input, $sources, $complete);
+        }
         if (str_starts_with($section, '7-')) {
             app(IsoSupportQuestionnaire::class)->validateRows($section, $input);
         }
@@ -386,6 +401,9 @@ class IsoSystemQuestionnaire
 
     public function progress(string $section, array $answers, array $sources): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->progress($section, $answers, $sources);
+        }
         $done = $total = 0;
         if (str_starts_with($section, '7-')) {
             foreach (IsoSupportQuestionnaire::MINIMUM[$section] as $root) {
@@ -455,6 +473,9 @@ class IsoSystemQuestionnaire
 
     public function warnings(string $section, array $answers, array $sources): array
     {
+        if (IsoExecutionQuestionnaire::handles($section)) {
+            return app(IsoExecutionQuestionnaire::class)->warnings($section, $answers, $sources);
+        }
         if (str_starts_with($section, '7-')) {
             return app(IsoSupportQuestionnaire::class)->warnings($section, $answers, $sources);
         }

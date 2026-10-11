@@ -1,0 +1,663 @@
+{
+  "version": 1,
+  "section": "8-3",
+  "source_file": "ENESA_8.3_Zakupy_platforma.html",
+  "source_sha256": "cc7052139eb082406f82094ec5dd9f64381c90e73dbb61b775e2888fb4078533",
+  "definitions": {
+    "PYT_ZA": [
+      {
+        "kod": "seu",
+        "podstawa": "M",
+        "tekst": "Dotyczy znaczącego użycia energii albo urządzenia w jego obrębie",
+        "ph": "np. Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"
+      },
+      {
+        "kod": "nastawy",
+        "podstawa": "M",
+        "tekst": "Zmienia nastawy, sterowanie albo sposób regulacji",
+        "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"
+      },
+      {
+        "kod": "godziny",
+        "podstawa": "M",
+        "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+        "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+      },
+      {
+        "kod": "usluga",
+        "podstawa": "M",
+        "tekst": "To usługa wpływająca na pracę urządzeń — serwis, projekt, wykonawstwo",
+        "ph": "np. Serwis sprężarek ustawia ciśnienia i wymienia filtry — to on decyduje o części wyniku",
+        "pomoc": "To nie tylko urządzenia. Serwis, który zmienia nastawy, bywa dla energii istotniejszy od urządzenia kupionego raz na dziesięć lat."
+      },
+      {
+        "kod": "energia",
+        "podstawa": "M",
+        "tekst": "To zakup energii — prądu, gazu, paliwa, ciepła",
+        "ph": "np. Umowa na energię elektryczną na 2027 r., ok. 12 000 MWh",
+        "pomoc": "Norma wymaga specyfikacji także przy zakupie energii — tam, gdzie to właściwe: struktura cen, profil poboru, ciągłość dostaw, pochodzenie."
+      },
+      {
+        "kod": "prog",
+        "podstawa": "M",
+        "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+        "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł",
+        "pomoc": "★ Próg kwotowy nie może być jedynym kryterium. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura."
+      }
+    ],
+    "PYT_ZC": [
+      {
+        "kod": "informacja",
+        "podstawa": "N",
+        "tekst": "Dostawcy zostali poinformowani, że wynik energetyczny jest jednym z kryteriów oceny",
+        "ph": "np. Zdanie w punkcie 4 zapytania ofertowego z 12.10.2026, powtórzone w specyfikacji",
+        "pomoc": "Wymaganie normy przy zakupach wpływających na znaczące użycia energii. W praktyce jedno zdanie — ale musi być w zapytaniu, nie w notatce wewnętrznej."
+      },
+      {
+        "kod": "specyfikacja",
+        "podstawa": "N",
+        "tekst": "Określono specyfikację dotyczącą wyniku energetycznego — tam, gdzie to właściwe",
+        "ph": "np. Wymagania minimalne: dwie nastawy ciśnienia, zapis danych pracy, dwa przetworniki u odbiorców, przyłącza pod odzysk ciepła",
+        "pomoc": "Dotyczy zakupu energii, produktów i usług mających wpływ na znaczące użycia energii."
+      },
+      {
+        "kod": "dane",
+        "podstawa": "M",
+        "tekst": "Wskazano, jakich danych o zużyciu oczekujecie — i w jakich warunkach",
+        "ph": "np. Zużycie [MWh/rok] i kWh/Nm³ przy profilu pracy z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń"
+      },
+      {
+        "kod": "kryterium",
+        "podstawa": "M",
+        "tekst": "Podano, jak oferty będą porównywane",
+        "ph": "np. Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh"
+      }
+    ],
+    "LISTA_83": [
+      {
+        "tekst": "Dla zakupów o znaczącym wpływie ustalono kryteria oceny wyniku energetycznego w okresie użytkowania.",
+        "podstawa": "N",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Dostawcy są informowani, że wynik energetyczny jest jednym z kryteriów oceny.",
+        "podstawa": "N",
+        "auto": "informuje"
+      },
+      {
+        "tekst": "Przy zakupie energii, produktów i usług mających wpływ na znaczące użycia energii określono specyfikacje.",
+        "podstawa": "N",
+        "auto": "specyfikacje"
+      },
+      {
+        "tekst": "Ocena wpływu obejmuje także usługi i zakup energii, a próg kwotowy jest tylko sygnałem pomocniczym.",
+        "podstawa": "M",
+        "auto": "wplyw"
+      },
+      {
+        "tekst": "Oferty porównuje się na danych dla profilu pracy zakładu, nie na mocy znamionowej.",
+        "podstawa": "M",
+        "auto": "profil"
+      },
+      {
+        "tekst": "Założenia porównania — okres, cena energii, profil — są zapisane.",
+        "podstawa": "M",
+        "auto": "zalozenia"
+      },
+      {
+        "tekst": "Deklaracje dostawcy są sprawdzane przy odbiorze, a kryteria obsługi przekazywane do nadzoru operacyjnego.",
+        "podstawa": "M",
+        "auto": "odbior"
+      }
+    ]
+  },
+  "tree": {
+    "ZAKUPY": {
+      "type": "list",
+      "label": "Oceny zakupów",
+      "min": 0,
+      "children": {
+        "przedmiot": {
+          "type": "textarea",
+          "label": "Przedmiot zakupu",
+          "required": true,
+          "options": {}
+        },
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "zrodloWymagan": {
+          "type": "textarea",
+          "label": "Źródło wymagań",
+          "required": true,
+          "options": {}
+        },
+        "status": {
+          "type": "textarea",
+          "label": "Status",
+          "required": true,
+          "options": {}
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "A": {
+          "type": "object",
+          "label": "Rozpoznanie wpływu",
+          "children": {
+            "seu": {
+              "type": "object",
+              "label": "Dotyczy znaczącego użycia energii albo urządzenia w jego obrębie",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "nastawy": {
+              "type": "object",
+              "label": "Zmienia nastawy, sterowanie albo sposób regulacji",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "godziny": {
+              "type": "object",
+              "label": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "usluga": {
+              "type": "object",
+              "label": "To usługa wpływająca na pracę urządzeń — serwis, projekt, wykonawstwo",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": "To nie tylko urządzenia. Serwis, który zmienia nastawy, bywa dla energii istotniejszy od urządzenia kupionego raz na dziesięć lat."
+            },
+            "energia": {
+              "type": "object",
+              "label": "To zakup energii — prądu, gazu, paliwa, ciepła",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": "Norma wymaga specyfikacji także przy zakupie energii — tam, gdzie to właściwe: struktura cen, profil poboru, ciągłość dostaw, pochodzenie."
+            },
+            "prog": {
+              "type": "object",
+              "label": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": "★ Próg kwotowy nie może być jedynym kryterium. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura."
+            }
+          }
+        },
+        "uzasadnienieA": {
+          "type": "textarea",
+          "label": "Uzasadnienie zakończenia oceny na etapie A",
+          "required": true,
+          "options": {}
+        },
+        "wymagania": {
+          "type": "list",
+          "label": "Wymagania minimalne",
+          "min": 0,
+          "children": {
+            "tresc": {
+              "type": "textarea",
+              "label": "Treść",
+              "required": true,
+              "options": {}
+            },
+            "skad": {
+              "type": "textarea",
+              "label": "Źródło wymagania",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "C": {
+          "type": "object",
+          "label": "Nadzór operacyjny / wymagania dla dostawców",
+          "children": {
+            "informacja": {
+              "type": "object",
+              "label": "Dostawcy zostali poinformowani, że wynik energetyczny jest jednym z kryteriów oceny",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": "Wymaganie normy przy zakupach wpływających na znaczące użycia energii. W praktyce jedno zdanie — ale musi być w zapytaniu, nie w notatce wewnętrznej."
+            },
+            "specyfikacja": {
+              "type": "object",
+              "label": "Określono specyfikację dotyczącą wyniku energetycznego — tam, gdzie to właściwe",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": "Dotyczy zakupu energii, produktów i usług mających wpływ na znaczące użycia energii."
+            },
+            "dane": {
+              "type": "object",
+              "label": "Wskazano, jakich danych o zużyciu oczekujecie — i w jakich warunkach",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "kryterium": {
+              "type": "object",
+              "label": "Podano, jak oferty będą porównywane",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            }
+          }
+        },
+        "informacja": {
+          "type": "textarea",
+          "label": "Informacja dla dostawców o kryterium energetycznym",
+          "required": true,
+          "options": {}
+        },
+        "kryteriumWyboru": {
+          "type": "textarea",
+          "label": "Kryterium wyboru oferty",
+          "required": true,
+          "options": {}
+        },
+        "lata": {
+          "type": "number",
+          "label": "Okres użytkowania (lata)",
+          "required": true,
+          "options": {}
+        },
+        "cenaEnergii": {
+          "type": "number",
+          "label": "Cena energii (zł/MWh)",
+          "required": true,
+          "options": {}
+        },
+        "zalozenia": {
+          "type": "textarea",
+          "label": "Założenia porównania",
+          "required": true,
+          "options": {}
+        },
+        "oferty": {
+          "type": "list",
+          "label": "Porównywane oferty",
+          "min": 0,
+          "children": {
+            "nazwa": {
+              "type": "textarea",
+              "label": "Nazwa",
+              "required": true,
+              "options": {}
+            },
+            "minimalne": {
+              "type": "select",
+              "label": "Spełnia wymagania minimalne",
+              "required": true,
+              "options": {
+                "tak": "Tak",
+                "nie": "Nie"
+              }
+            },
+            "cena": {
+              "type": "number",
+              "label": "Cena zakupu (zł)",
+              "required": true,
+              "options": {}
+            },
+            "tryb": {
+              "type": "select",
+              "label": "Tryb",
+              "required": true,
+              "options": {
+                "roczne": "Roczne zużycie MWh",
+                "moc": "Średnia moc × godziny",
+                "jednostkowy": "kWh/jednostkę × ilość"
+              }
+            },
+            "roczne": {
+              "type": "number",
+              "label": "Zużycie roczne (MWh)",
+              "required": true,
+              "options": {}
+            },
+            "zrodloDanych": {
+              "type": "textarea",
+              "label": "Źródło danych o zużyciu i profil pracy",
+              "required": true,
+              "options": {}
+            },
+            "inne": {
+              "type": "number",
+              "label": "Inne koszty w całym okresie (zł)",
+              "required": true,
+              "options": {}
+            },
+            "moc": {
+              "type": "number",
+              "label": "Średnia moc (kW)",
+              "required": true,
+              "options": {}
+            },
+            "godziny": {
+              "type": "number",
+              "label": "Czas pracy (h/rok)",
+              "required": true,
+              "options": {}
+            },
+            "jednostkowe": {
+              "type": "number",
+              "label": "Zużycie jednostkowe (kWh/jednostkę)",
+              "required": true,
+              "options": {}
+            },
+            "ilosc": {
+              "type": "number",
+              "label": "Roczna liczba jednostek",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "rekomendacja": {
+          "type": "textarea",
+          "label": "Rekomendacja",
+          "required": true,
+          "options": {}
+        },
+        "porownanieNd": {
+          "type": "select",
+          "label": "Porównanie kosztu energii nie dotyczy",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "porownanieNdPowod": {
+          "type": "textarea",
+          "label": "Uzasadnienie odstąpienia od porównania",
+          "required": true,
+          "options": {}
+        },
+        "E": {
+          "type": "object",
+          "label": "Odbiór i sprawdzenie po uruchomieniu",
+          "children": {
+            "deklaracje": {
+              "type": "textarea",
+              "label": "Sprawdzenie deklaracji przy odbiorze",
+              "required": true,
+              "options": {}
+            },
+            "kryteria": {
+              "type": "textarea",
+              "label": "Kryteria",
+              "required": true,
+              "options": {}
+            },
+            "wynik": {
+              "type": "textarea",
+              "label": "Wynik",
+              "required": true,
+              "options": {}
+            }
+          }
+        }
+      }
+    },
+    "KATEGORIE": {
+      "type": "list",
+      "label": "Kryteria kategorii zakupowych",
+      "min": 0,
+      "children": {
+        "kategoria": {
+          "type": "textarea",
+          "label": "Kategoria",
+          "required": true,
+          "options": {}
+        },
+        "kryterium": {
+          "type": "textarea",
+          "label": "Kryterium",
+          "required": true,
+          "options": {}
+        },
+        "minimum": {
+          "type": "textarea",
+          "label": "Wymaganie minimalne",
+          "required": true,
+          "options": {}
+        },
+        "dane": {
+          "type": "textarea",
+          "label": "Dane wymagane od dostawcy",
+          "required": true,
+          "options": {}
+        },
+        "podstawa": {
+          "type": "textarea",
+          "label": "Podstawa ustalenia kryterium",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "prog": {
+          "type": "textarea",
+          "label": "Próg",
+          "required": true,
+          "options": {}
+        },
+        "cenaEnergii": {
+          "type": "number",
+          "label": "Cena energii (zł/MWh)",
+          "required": true,
+          "options": {}
+        },
+        "brakZdarzen": {
+          "type": "select",
+          "label": "Nie wystąpiły zdarzenia w tym okresie",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "uzasadnienieBraku": {
+          "type": "textarea",
+          "label": "Uzasadnienie braku zdarzeń i zakres sprawdzenia",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

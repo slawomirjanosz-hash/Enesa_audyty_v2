@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "section": "9-1-2",
+  "source_file": "ENESA_9.1.2_Ocena_zgodnosci_platforma.html",
+  "source_sha256": "7693b5159c54817bef25e0178d70ed15be068a84ea3497314e9f8d11d66b123f",
+  "definitions": {
+    "LISTA_912": [
+      {
+        "tekst": "W zaplanowanych odstępach oceniana jest zgodność z wymaganiami prawnymi i innymi dotyczącymi energii i systemu.",
+        "podstawa": "N",
+        "auto": "oceniana"
+      },
+      {
+        "tekst": "Zachowano wyniki oceny i zapis podjętych działań.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Przy ocenie zapisano datę stanu prawnego; przy braku zgodności przeanalizowano przyczynę.",
+        "podstawa": "M",
+        "auto": "stanIPrzyczyna"
+      }
+    ]
+  },
+  "tree": {
+    "WYM": {
+      "type": "list",
+      "label": "Ocena wymagań z punktu 4.2",
+      "min": 0,
+      "children": {
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "strona": {
+          "type": "textarea",
+          "label": "Strona zainteresowana",
+          "required": true,
+          "options": {}
+        },
+        "wymaganie": {
+          "type": "textarea",
+          "label": "Wymaganie",
+          "required": true,
+          "options": {}
+        },
+        "zrodlo": {
+          "type": "textarea",
+          "label": "Źródło",
+          "required": true,
+          "options": {}
+        },
+        "kwalifikacja": {
+          "type": "textarea",
+          "label": "Kwalifikacja wymagania",
+          "required": true,
+          "options": {}
+        },
+        "jak": {
+          "type": "textarea",
+          "label": "Sposób wykonania / sprawdzenia",
+          "required": true,
+          "options": {}
+        },
+        "dowod": {
+          "type": "textarea",
+          "label": "Dowód / dokument źródłowy",
+          "required": true,
+          "options": {}
+        },
+        "wynik": {
+          "type": "select",
+          "label": "Wynik",
+          "required": true,
+          "options": {
+            "zgodne": "Zgodne",
+            "wtoku": "W toku zgodnie z planem",
+            "douzupelnienia": "Do uzupełnienia dowodem",
+            "niezgodne": "Niezgodne"
+          }
+        },
+        "przyczyna": {
+          "type": "textarea",
+          "label": "Przyczyna",
+          "required": true,
+          "options": {}
+        },
+        "dzialanie": {
+          "type": "textarea",
+          "label": "Działanie",
+          "required": true,
+          "options": {}
+        },
+        "karta10": {
+          "type": "textarea",
+          "label": "Numer karty niezgodności (10.1)",
+          "required": true,
+          "options": {}
+        },
+        "odp": {
+          "type": "textarea",
+          "label": "Odpowiedzialny i termin",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "OCENA": {
+      "type": "object",
+      "label": "Wnioski z oceny zgodności",
+      "children": {
+        "naPrzeglad": {
+          "type": "textarea",
+          "label": "Wnioski na przegląd zarządzania",
+          "required": true,
+          "options": {}
+        },
+        "przegladStanu": {
+          "type": "textarea",
+          "label": "Sposób śledzenia zmian stanu prawnego",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "dataOceny": {
+          "type": "date",
+          "label": "Data oceny",
+          "required": true,
+          "options": {}
+        },
+        "stanPrawny": {
+          "type": "date",
+          "label": "Stan prawny na dzień",
+          "required": true,
+          "options": {}
+        },
+        "oceniajacy": {
+          "type": "textarea",
+          "label": "Oceniający",
+          "required": true,
+          "options": {}
+        },
+        "rytmBaza": {
+          "type": "select",
+          "label": "Częstotliwość podstawowa",
+          "required": true,
+          "options": {
+            "czesciej": "Częściej niż raz w roku",
+            "rocznie": "Raz w roku",
+            "rzadziej": "Rzadziej niż raz w roku"
+          }
+        },
+        "rytm": {
+          "type": "textarea",
+          "label": "Opis rytmu i dodatkowych ocen",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "dataZatw": {
+          "type": "date",
+          "label": "Data zatwierdzenia",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

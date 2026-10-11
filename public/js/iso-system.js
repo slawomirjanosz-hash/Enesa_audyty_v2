@@ -41,6 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = form.querySelector(`[data-repeater="${root}"]`);
             if (container) total += Math.max(0, min-container.querySelectorAll('.system-row').length);
         });
+        form.querySelectorAll('[data-exec-list]').forEach(host => {
+            const noEvents = values('META.brakZdarzen')[0] === 'tak' && ['PROJEKTY','ZAKUPY','KARTY'].includes(host.dataset.execList);
+            if (!noEvents) total += Math.max(0, Number(host.dataset.min || 0) - [...host.children].filter(el => el.hasAttribute('data-exec-row')).length);
+        });
         if (section === '5-3') {
             for (let i=1;i<=18;i++) {
                 const code = 'MAT-'+String(i).padStart(2,'0');
@@ -79,12 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('system-example')?.addEventListener('click', () => {
         if (!confirm('Uzupełnić puste pola klienta przykładowymi danymi? Sprawdź je przed zapisaniem.')) return;
+        form.dispatchEvent(new Event('system:before-example'));
         for (let round = 0; round < 2; round++) {
             form.querySelectorAll('[data-system-field]').forEach(field => {
                 if (field.hidden || values(field.dataset.key).length || field.dataset.key.includes('.MAT.')) return;
                 field.querySelectorAll('input:not([type=hidden]),select,textarea').forEach(el => {
                     if (el.readOnly || el.disabled || el.closest('[data-history-row]')) return;
                     if (el.type === 'checkbox') el.checked = true;
+                    else if (el.tagName === 'SELECT' && /\.(brakZdarzen|wlasnaPraca|porownanieNd)$/.test(field.dataset.key)) el.value = 'nie';
                     else if (el.tagName === 'SELECT' && field.dataset.key.startsWith('MAC.')) el.value = '3';
                     else if (el.tagName === 'SELECT') el.selectedIndex = Math.min(1, el.options.length - 1);
                     else if (el.type === 'date') el.value = new Date().toISOString().slice(0, 10);

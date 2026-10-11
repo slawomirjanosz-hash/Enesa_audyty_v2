@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "section": "10-2",
+  "source_file": "ENESA_10.2_Ciagle_doskonalenie_platforma.html",
+  "source_sha256": "56fb3939f1a454c8e11c9007b0cad7f737254501a0b76d2d50ceb8b67c6db42d",
+  "definitions": {
+    "ZRODLA_DEF": [
+      {
+        "kod": "przeglad",
+        "punkt": "6.3",
+        "nazwa": "Przegląd energetyczny — lista możliwości poprawy",
+        "ph": "np. Siedem możliwości, razem około 1 375 MWh rocznie. Zrealizowane: usunięcie nieszczelności i obniżenie ciśnienia. Pozostałe: sterownik i napęd sprężarkowni, LED w halach, odzysk ciepła ze sprężarek."
+      },
+      {
+        "kod": "monitorowanie",
+        "punkt": "9.1.1",
+        "nazwa": "Dane z monitorowania",
+        "ph": "np. K-1 o 1% powyżej linii bazowej w I półroczu — stąd pozycja 5 planu. S-1 pokazuje, że samo ciśnienie nie dowiezie celu Z1.1."
+      },
+      {
+        "kod": "audyty",
+        "punkt": "9.2",
+        "nazwa": "Ustalenia z audytów wewnętrznych",
+        "ph": "np. Audyt A-01/2026: jedna niezgodność i dwie możliwości doskonalenia — wzór protokołu dla wykonawców i luka kompetencyjna w zakupach. Obie w planie (pozycje 1 i 4)."
+      },
+      {
+        "kod": "przeglad_zarz",
+        "punkt": "9.3",
+        "nazwa": "Decyzje z przeglądu zarządzania",
+        "ph": "np. Przegląd 29.09.2026: pytania o energię w procedurze inwestycyjnej, warsztat dla zakupów, analiza K-1 przed sezonem. Cały plan zatwierdzono na tym przeglądzie."
+      },
+      {
+        "kod": "zgloszenia",
+        "punkt": "7.4",
+        "nazwa": "Zgłoszenia pracowników",
+        "ph": "np. Zgłoszenie 2026/08: jeden wyłącznik na całą halę B — weszło do zakresu projektu LED jako podział na trzy strefy."
+      },
+      {
+        "kod": "niezgodnosci",
+        "punkt": "10.1",
+        "nazwa": "Analiza niezgodności",
+        "ph": "np. NK-2026-01 — brak zasad odbioru usług przy SEU (pozycja 1 planu). NK-2026-02 — terminy obowiązków poza kalendarzem (pozycja 3)."
+      }
+    ],
+    "LISTA_102": [
+      {
+        "tekst": "Doskonali się przydatność, adekwatność i skuteczność systemu.",
+        "podstawa": "N",
+        "auto": "doskonalenieSystemu"
+      },
+      {
+        "tekst": "Wykazano ciągłą poprawę wyniku energetycznego — EnPI wobec EnB, w porównywalnych warunkach.",
+        "podstawa": "N",
+        "auto": "poprawaWyniku"
+      },
+      {
+        "tekst": "Możliwości poprawy mają stałe źródła i są oceniane (potencjał, koszt, prosty okres zwrotu, ryzyko).",
+        "podstawa": "M",
+        "auto": "zrodlaIOcena"
+      },
+      {
+        "tekst": "Prowadzony jest plan doskonalenia z oczekiwanym i osiągniętym efektem (F-EnMS-23).",
+        "podstawa": "M",
+        "auto": "plan"
+      }
+    ]
+  },
+  "tree": {
+    "POZYCJE": {
+      "type": "list",
+      "label": "Plan doskonalenia",
+      "min": 0,
+      "children": {
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "dzialanie": {
+          "type": "textarea",
+          "label": "Działanie",
+          "required": true,
+          "options": {}
+        },
+        "obszar": {
+          "type": "select",
+          "label": "Obszar",
+          "required": true,
+          "options": {
+            "S": "System",
+            "W": "Wynik energetyczny"
+          }
+        },
+        "zrodlo": {
+          "type": "textarea",
+          "label": "Źródło",
+          "required": true,
+          "options": {}
+        },
+        "efekt": {
+          "type": "textarea",
+          "label": "Oczekiwany efekt i stan wyjściowy",
+          "required": true,
+          "options": {}
+        },
+        "weryfikacja": {
+          "type": "textarea",
+          "label": "Sposób weryfikacji efektu",
+          "required": true,
+          "options": {}
+        },
+        "odp": {
+          "type": "textarea",
+          "label": "Odpowiedzialny i termin",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "textarea",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "stan": {
+          "type": "select",
+          "label": "Stan",
+          "required": true,
+          "options": {
+            "P": "Planowane",
+            "W": "W toku",
+            "Z": "Zakończone",
+            "A": "Anulowane"
+          }
+        },
+        "osiagniety": {
+          "type": "textarea",
+          "label": "Osiągnięty efekt / powód anulowania",
+          "required": true,
+          "options": {}
+        },
+        "dowod": {
+          "type": "textarea",
+          "label": "Dowód / dokument źródłowy",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "ZRODLA": {
+      "type": "list",
+      "label": "Źródła możliwości poprawy",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "coWplynelo": {
+          "type": "textarea",
+          "label": "Co wpłynęło do planu",
+          "required": true,
+          "options": {}
+        }
+      },
+      "codes": {
+        "przeglad": "Przegląd energetyczny — lista możliwości poprawy",
+        "monitorowanie": "Dane z monitorowania",
+        "audyty": "Ustalenia z audytów wewnętrznych",
+        "przeglad_zarz": "Decyzje z przeglądu zarządzania",
+        "zgloszenia": "Zgłoszenia pracowników",
+        "niezgodnosci": "Analiza niezgodności"
+      }
+    },
+    "MOZLIWOSCI": {
+      "type": "list",
+      "label": "Ocena możliwości poprawy",
+      "min": 0,
+      "children": {
+        "nazwa": {
+          "type": "textarea",
+          "label": "Nazwa",
+          "required": true,
+          "options": {}
+        },
+        "potencjalMWh": {
+          "type": "number",
+          "label": "Potencjał oszczędności (MWh/rok)",
+          "required": true,
+          "options": {}
+        },
+        "nosnik": {
+          "type": "select",
+          "label": "Nośnik energii",
+          "required": true,
+          "options": {
+            "el": "Energia elektryczna",
+            "gaz": "Gaz",
+            "inne": "Inny"
+          }
+        },
+        "koszt": {
+          "type": "number",
+          "label": "Koszt inwestycji (zł)",
+          "required": false,
+          "options": {}
+        },
+        "jakWykazac": {
+          "type": "textarea",
+          "label": "Jak wykazać efekt",
+          "required": true,
+          "options": {}
+        },
+        "ryzyko": {
+          "type": "textarea",
+          "label": "Ryzyko",
+          "required": true,
+          "options": {}
+        },
+        "decyzja": {
+          "type": "select",
+          "label": "Decyzja",
+          "required": true,
+          "options": {
+            "plan_dzialan": "Plan działań 6.2",
+            "plan_dosk": "Plan doskonalenia",
+            "odlozona": "Odłożona",
+            "odrzucona": "Odrzucona"
+          }
+        },
+        "powod": {
+          "type": "textarea",
+          "label": "Uzasadnienie decyzji",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "POPRAWA": {
+      "type": "list",
+      "label": "Wykazanie poprawy wyniku",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "nazwa": {
+          "type": "textarea",
+          "label": "Nazwa",
+          "required": true,
+          "options": {}
+        },
+        "kierunek": {
+          "type": "select",
+          "label": "Kierunek poprawy",
+          "required": true,
+          "options": {
+            "nizej": "Niższy wynik jest lepszy",
+            "wyzej": "Wyższy wynik jest lepszy"
+          }
+        },
+        "enb": {
+          "type": "number",
+          "label": "Wartość linii bazowej EnB",
+          "required": true,
+          "options": {}
+        },
+        "enbOkres": {
+          "type": "textarea",
+          "label": "Okres linii bazowej",
+          "required": true,
+          "options": {}
+        },
+        "biez": {
+          "type": "number",
+          "label": "Wartość w okresie",
+          "required": true,
+          "options": {}
+        },
+        "powodBraku": {
+          "type": "textarea",
+          "label": "Powód braku wartości",
+          "required": true,
+          "options": {}
+        },
+        "warunki": {
+          "type": "textarea",
+          "label": "Warunki porównania",
+          "required": true,
+          "options": {}
+        },
+        "wyjasnienie": {
+          "type": "textarea",
+          "label": "Wyjaśnienie pogorszenia",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "okres": {
+          "type": "textarea",
+          "label": "Okres",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "dataZatw": {
+          "type": "date",
+          "label": "Data zatwierdzenia",
+          "required": true,
+          "options": {}
+        },
+        "cenaEl": {
+          "type": "number",
+          "label": "Cena energii elektrycznej (zł/MWh)",
+          "required": true,
+          "options": {}
+        },
+        "cenaGaz": {
+          "type": "number",
+          "label": "Cena gazu (zł/MWh)",
+          "required": true,
+          "options": {}
+        },
+        "potencjalRazem": {
+          "type": "number",
+          "label": "Całkowity potencjał z przeglądu (MWh/rok)",
+          "required": false,
+          "options": {}
+        }
+      }
+    }
+  }
+}

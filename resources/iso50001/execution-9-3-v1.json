@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "section": "9-3",
+  "source_file": "ENESA_9.3_Przeglad_zarzadzania_platforma.html",
+  "source_sha256": "6054d68020648c7a3f9ce8d63412ae2cea5b2fd4bca8b19ad060294c3417f30b",
+  "definitions": {
+    "WEJSCIA_DEF": [
+      {
+        "kod": "status",
+        "litera": "a",
+        "nazwa": "Status działań z poprzednich przeglądów",
+        "ph": "np. Pierwszy przegląd systemu. Decyzje Zarządu z 03.2026 — polityka energetyczna, budżet 300 tys. zł, certyfikacja do XII 2026 — realizowane zgodnie z harmonogramem.",
+        "phR": "np. Przyjąć zasadę, że następny przegląd zaczyna się od tabeli statusu decyzji z dzisiejszego."
+      },
+      {
+        "kod": "zmiany",
+        "litera": "b",
+        "nazwa": "Zmiany kwestii zewnętrznych i wewnętrznych oraz związanych z nimi ryzyk i szans",
+        "pomoc": "Pierwsze z czterech pytań kierownictwa: co się zmieniło wokół nas i w nas.",
+        "ph": "np. Cena stała energii elektrycznej do 31.12.2026, od 2027 nowa umowa — każde 100 zł/MWh to około 850 tys. zł rocznie. Projekt nowelizacji UC77 nieuchwalony (stan na 29.09.2026). Ryzyko R5 — wiedza o nastawach tylko u serwisu — obniżone, technicy przeszkoleni.",
+        "phR": "np. Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację przed negocjacjami."
+      },
+      {
+        "kod": "funkcjonowanie",
+        "litera": "c",
+        "nazwa": "Funkcjonowanie systemu — trendy: niezgodności i działania korygujące, wyniki monitorowania i pomiarów, wyniki audytów, wyniki oceny zgodności",
+        "pomoc": "Trzecie pytanie kierownictwa: czy system działa. Cztery źródła w jednej pozycji — i wszystkie cztery norma wymienia osobno.",
+        "ph": "np. Niezgodności: 06.2026 nastawa po serwisie (działanie wdrożone, skuteczność niepotwierdzona — audyt A-01/2026); 09.2026 raport dla banku (działanie w toku). Audyt 15–17.09: 1 niezgodność (protokół serwisu bez nastaw), 2 możliwości doskonalenia. Monitorowanie: O-1 0,97 (I półrocze), 0,965 (VIII). Ocena zgodności: 7 wymagań ocenianych, 1 niezgodne; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Trendy — pierwszy rok, za mało danych.",
+        "phR": "np. Przyjąć działanie dla raportu bankowego; wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi."
+      },
+      {
+        "kod": "doskonalenie",
+        "litera": "d",
+        "nazwa": "Możliwości ciągłego doskonalenia, w tym kompetencji",
+        "pomoc": "Czwarte pytanie: gdzie możemy być lepsi — wyniku, systemu, a także kompetencji ludzi.",
+        "ph": "np. Odzysk ciepła ze sprężarek — do rozważenia po ocenie pracy po modernizacji. LED w halach (zadanie Z2.1, 2027). Zakupy — luka w porównywaniu kosztu zakupu i energii (matryca III-28, ustalenie D-2 z audytu).",
+        "phR": "np. Warsztat dla działu zakupów w 11.2026; odzysk ciepła wrócić do planu po roku danych z nowego sterownika."
+      },
+      {
+        "kod": "polityka",
+        "litera": "e",
+        "nazwa": "Polityka energetyczna",
+        "ph": "np. Polityka z 03.2026 zgodna z kierunkiem firmy — wymaganie klienta i strategia 2026–2028.",
+        "phR": "np. Rekomendacja: bez zmian."
+      },
+      {
+        "kod": "wynik",
+        "litera": "",
+        "nazwa": "Wynik energetyczny: stopień osiągnięcia celów i zadań, EnPI i ich poprawa, status planów działań",
+        "pomoc": "Drugie pytanie kierownictwa: jak idzie wynik energetyczny. Norma wymienia tę pozycję osobno od danych a–e.",
+        "ph": "np. O-1 0,965 wobec EnB 1,000 (cel ≤ 0,95 za rok 2027). S-1 0,119 za okres VII–18.IX wobec EnB 0,125 — cel 0,110, brakuje 0,009; samo ciśnienie więcej nie da. S-2 6 Nm³/min (cel pośredni osiągnięty, cel końcowy 4). Plan C1: pozycje 1–3 wykonane, pozycja 4 zatwierdzona, pozycja 5 planowana.",
+        "phR": "np. Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie 2027 — cel Z1.1 nie jest osiągalny bez inwestycji. Diagnostyki wycieków nie rozszerzać."
+      }
+    ],
+    "OBSZARY_DEF": [
+      {
+        "kod": "poprawa",
+        "nazwa": "Możliwości poprawy wyniku energetycznego",
+        "ph": "np. Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.",
+        "phU": "np. Cel Z1.1 nie jest osiągalny bez inwestycji — samo ciśnienie więcej nie da"
+      },
+      {
+        "kod": "polityka",
+        "nazwa": "Polityka energetyczna",
+        "ph": "np. Bez zmian",
+        "phU": "np. Zgodna z kierunkiem firmy i wymaganiami klienta"
+      },
+      {
+        "kod": "enpi",
+        "nazwa": "EnPI lub EnB",
+        "ph": "np. Bez zmian; K-1 — analiza przyczyn przed sezonem grzewczym",
+        "phU": "np. Brak przesłanek do rewizji (6.5); K-1 = 1,01"
+      },
+      {
+        "kod": "cele",
+        "nazwa": "Cele, zadania, plany działań — i działania, gdy nie są osiągane",
+        "pomoc": "Obszar szerszy niż jeden wiersz: norma mówi o celach, zadaniach, planach działań <b>lub innych elementach systemu</b>. Decyzje w pozostałych sprawach zapiszcie poniżej, w części „decyzje w innych sprawach”.",
+        "ph": "np. Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać",
+        "phU": "np. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min"
+      },
+      {
+        "kod": "integracja",
+        "nazwa": "Integracja z procesami biznesowymi",
+        "ph": "np. Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy",
+        "phU": "np. Uwagi do koncepcji modernizacji zgłoszone za późno — trzy tygodnie decyzji i miesiąc przetargu"
+      },
+      {
+        "kod": "zasoby",
+        "nazwa": "Przydział zasobów",
+        "ph": "np. Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.",
+        "phU": "np. Obciążenie z punktu 7.1 mieści się w marginesie; inwestycja wymaga osobnej pozycji budżetowej"
+      },
+      {
+        "kod": "kompetencje",
+        "nazwa": "Kompetencje, świadomość, komunikacja",
+        "ph": "np. Warsztat dla działu zakupów: porównanie kosztu zakupu i energii",
+        "phU": "np. Luka w matrycy III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026"
+      }
+    ],
+    "LISTA_93": [
+      {
+        "tekst": "Najwyższe kierownictwo przegląda system w zaplanowanych odstępach.",
+        "podstawa": "N",
+        "auto": "kierownictwo"
+      },
+      {
+        "tekst": "Rozważono wszystkie wymagane dane wejściowe (a–e i wynik energetyczny).",
+        "podstawa": "N",
+        "auto": "wejscia"
+      },
+      {
+        "tekst": "Wyniki obejmują decyzje dotyczące doskonalenia i zmian w systemie (wszystkie obszary wyjść).",
+        "podstawa": "N",
+        "auto": "wyjscia"
+      },
+      {
+        "tekst": "Zachowano zapis wyników przeglądu.",
+        "podstawa": "N",
+        "auto": "zapis"
+      },
+      {
+        "tekst": "Decyzje mają właścicieli i terminy; status sprawdzany na następnym przeglądzie.",
+        "podstawa": "M",
+        "auto": "wlasciciele"
+      }
+    ]
+  },
+  "tree": {
+    "WEJSCIA": {
+      "type": "list",
+      "label": "Dane wejściowe przeglądu",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "podsumowanie": {
+          "type": "textarea",
+          "label": "Podsumowanie danych wejściowych",
+          "required": true,
+          "options": {}
+        },
+        "rekomendacja": {
+          "type": "textarea",
+          "label": "Rekomendacja",
+          "required": true,
+          "options": {}
+        }
+      },
+      "codes": {
+        "status": "Status działań z poprzednich przeglądów",
+        "zmiany": "Zmiany kwestii zewnętrznych i wewnętrznych oraz związanych z nimi ryzyk i szans",
+        "funkcjonowanie": "Funkcjonowanie systemu — trendy: niezgodności i działania korygujące, wyniki monitorowania i pomiarów, wyniki audytów, wyniki oceny zgodności",
+        "doskonalenie": "Możliwości ciągłego doskonalenia, w tym kompetencji",
+        "polityka": "Polityka energetyczna",
+        "wynik": "Wynik energetyczny: stopień osiągnięcia celów i zadań, EnPI i ich poprawa, status planów działań"
+      }
+    },
+    "DECYZJE": {
+      "type": "list",
+      "label": "Decyzje kierownictwa",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "decyzja": {
+          "type": "textarea",
+          "label": "Decyzja",
+          "required": true,
+          "options": {}
+        },
+        "uzasadnienie": {
+          "type": "textarea",
+          "label": "Uzasadnienie",
+          "required": true,
+          "options": {}
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "termin": {
+          "type": "textarea",
+          "label": "Termin i odpowiedzialny",
+          "required": true,
+          "options": {}
+        },
+        "wlasna": {
+          "type": "textarea",
+          "label": "wlasna",
+          "required": true,
+          "options": {}
+        },
+        "nazwa": {
+          "type": "textarea",
+          "label": "Nazwa",
+          "required": true,
+          "options": {}
+        }
+      },
+      "codes": {
+        "poprawa": "Możliwości poprawy wyniku energetycznego",
+        "polityka": "Polityka energetyczna",
+        "enpi": "EnPI lub EnB",
+        "cele": "Cele, zadania, plany działań — i działania, gdy nie są osiągane",
+        "integracja": "Integracja z procesami biznesowymi",
+        "zasoby": "Przydział zasobów",
+        "kompetencje": "Kompetencje, świadomość, komunikacja"
+      }
+    },
+    "OCENA_C": {
+      "type": "object",
+      "label": "Ocena ogólna systemu",
+      "children": {
+        "przydatnosc": {
+          "type": "textarea",
+          "label": "Ocena przydatności, adekwatności i skuteczności systemu",
+          "required": true,
+          "options": {}
+        },
+        "kierunek": {
+          "type": "textarea",
+          "label": "Kierunek poprawy",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "forma": {
+          "type": "textarea",
+          "label": "Forma przeglądu",
+          "required": true,
+          "options": {}
+        },
+        "uczestnicy": {
+          "type": "textarea",
+          "label": "Uczestnicy",
+          "required": true,
+          "options": {}
+        },
+        "najwyzszeKier": {
+          "type": "select",
+          "label": "Udział najwyższego kierownictwa",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "przygotowal": {
+          "type": "textarea",
+          "label": "Przygotował",
+          "required": true,
+          "options": {}
+        },
+        "terminBudzetu": {
+          "type": "date",
+          "label": "Termin zamknięcia budżetu",
+          "required": true,
+          "options": {}
+        },
+        "statusDecyzji": {
+          "type": "textarea",
+          "label": "Sposób sprawdzania realizacji decyzji",
+          "required": true,
+          "options": {}
+        },
+        "nastepnyPrzeglad": {
+          "type": "textarea",
+          "label": "Termin następnego przeglądu",
+          "required": true,
+          "options": {}
+        },
+        "pierwszy": {
+          "type": "select",
+          "label": "Czy to pierwszy przegląd",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "podpis": {
+          "type": "textarea",
+          "label": "Osoba zatwierdzająca protokół",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

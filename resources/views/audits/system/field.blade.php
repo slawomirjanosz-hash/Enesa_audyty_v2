@@ -4,7 +4,9 @@
 @endphp
 <div class="plant-question @if($review->exists && $visible && $field['required'] && !filled($value)) plant-unanswered @endif @if(isset($fieldChanges[$key])) system-changed @endif" data-system-field data-key="{{$key}}" data-required="{{$field['required']?1:0}}" data-when='@json($field["when"])' @if(!$visible) hidden @endif>
 <label><strong>{{$field['label']}}</strong>@if($field['required']) <span aria-label="wymagane">*</span>@endif
-@if($field['type']==='multi')
+@if($field['readonly']??false)
+<input type="text" readonly value="{{is_scalar($value)?$value:''}}" aria-label="{{$field['label']}}">
+@elseif($field['type']==='multi')
 <input type="hidden" name="{{$name}}" value="">
 @foreach($field['options'] as $val=>$label)<label class="plant-check"><input type="checkbox" name="{{$name}}[]" value="{{$val}}" @checked(in_array($val,is_array($value)?$value:[],true))> {{$label}}</label>@endforeach
 @elseif($field['options'] || $field['type']==='select')
@@ -12,7 +14,7 @@
 @elseif($field['type']==='textarea')
 <textarea name="{{$name}}" @if(isset($field['example'])) data-example="{{$field['example']}}" @endif maxlength="10000" rows="3">{{is_scalar($value)?$value:''}}</textarea>
 @else
-<input type="{{$field['type']==='date'?'date':'text'}}" name="{{$name}}" value="{{is_scalar($value)?$value:''}}" maxlength="10000">
+<input type="{{$field['type']==='date'?'date':'text'}}" name="{{$name}}" value="{{is_scalar($value)?$value:''}}" @if($field['example']??null) data-example="{{$field['example']}}" @endif @if($field['numeric']??false) inputmode="decimal" @endif maxlength="10000">
 @endif</label>
 <small class="plant-help">{{$key}}</small>
 @if($field['help'])<details><summary>Uzupełnienie i źródło odpowiedzi</summary><p>{{$field['help']}}</p></details>@endif

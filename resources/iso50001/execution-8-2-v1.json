@@ -1,0 +1,743 @@
+{
+  "version": 1,
+  "section": "8-2",
+  "source_file": "ENESA_8.2_Projektowanie_platforma.html",
+  "source_sha256": "7384e1e45140f9ad8b5bc82953cb5ee8dd61687db7e77c456a3c418524e40019",
+  "definitions": {
+    "PYT_A": [
+      {
+        "kod": "seu",
+        "podstawa": "M",
+        "tekst": "Dotyczy znaczącego użycia energii albo tworzy nowe",
+        "ph": "np. Dotyczy SEU sprężarkownia — 17,5% zużycia zakładu"
+      },
+      {
+        "kod": "sterowanie",
+        "podstawa": "M",
+        "tekst": "Zmienia sposób sterowania lub nastawy",
+        "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"
+      },
+      {
+        "kod": "godziny",
+        "podstawa": "M",
+        "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+        "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+      },
+      {
+        "kod": "prog",
+        "podstawa": "M",
+        "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+        "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł",
+        "pomoc": "Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym. Przebudowa sterowania za kilkanaście tysięcy może zmienić zużycie bardziej niż remont biurowca za kilka milionów."
+      }
+    ],
+    "PYT_B": [
+      {
+        "kod": "mozliwosci",
+        "podstawa": "N",
+        "tekst": "Rozważono możliwości poprawy wyniku energetycznego w okresie eksploatacji",
+        "ph": "np. Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy, odzysk ciepła ze sprężarek, wymianę wszystkich czterech sprężarek"
+      },
+      {
+        "kod": "oszacowano",
+        "podstawa": "M",
+        "tekst": "Oszacowano przewidywane zużycie energii w okresie eksploatacji",
+        "ph": "np. Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh po obniżeniu ciśnienia i usunięciu wycieków"
+      },
+      {
+        "kod": "potrzeby",
+        "podstawa": "M",
+        "tekst": "Rozwiązanie dobrano do rzeczywistych potrzeb — bez nadmiernego zapasu",
+        "ph": "np. Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia wymaga regulacji tylko jednej jednostki"
+      },
+      {
+        "kod": "warianty",
+        "podstawa": "M",
+        "tekst": "Rozważono warianty o niższym zużyciu",
+        "ph": "np. Porównano: sam sterownik, sterownik z jednym napędem, wymiana wszystkich sprężarek"
+      },
+      {
+        "kod": "cieplo",
+        "podstawa": "M",
+        "tekst": "Sprawdzono możliwość wykorzystania ciepła odpadowego lub innej odzyskiwalnej energii",
+        "ph": "np. Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, ale projekt zostawia miejsce i przyłącza"
+      },
+      {
+        "kod": "tco",
+        "podstawa": "M",
+        "tekst": "Porównano koszt zakupu i energii wariantów — uproszczone TCO",
+        "ph": "np. Porównanie w 15 lat przy cenie 890 zł/MWh — część D formularza zakupowego F-EnMS-16"
+      }
+    ],
+    "PYT_C": [
+      {
+        "kod": "nadzor",
+        "podstawa": "N",
+        "tekst": "Rozważono nadzór operacyjny w okresie eksploatacji",
+        "ph": "np. Sprawdzono, czy kryteria z karty sprężarkowni (8.1) da się stosować po modernizacji"
+      },
+      {
+        "kod": "wylaczanie",
+        "podstawa": "M",
+        "tekst": "Można wyłączyć to, co w danej chwili niepotrzebne",
+        "ph": "np. Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy odbiorze"
+      },
+      {
+        "kod": "regulacja",
+        "podstawa": "M",
+        "tekst": "Układ ma regulację do rzeczywistego zapotrzebowania, także poza produkcją",
+        "ph": "np. Dwie nastawy ciśnienia: produkcja i postój — wymaganie minimalne w specyfikacji"
+      },
+      {
+        "kod": "pomiar",
+        "podstawa": "M",
+        "tekst": "Przewidziano pomiar, z którego da się policzyć wskaźnik",
+        "ph": "np. Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do monitoringu; dwa przetworniki ciśnienia u odbiorców"
+      },
+      {
+        "kod": "ktoObsluga",
+        "podstawa": "M",
+        "tekst": "Wiadomo, kto będzie obsługiwał instalację i według jakich kryteriów (8.1)",
+        "ph": "np. Technicy UR według karty kryteriów F-EnMS-14 zaktualizowanej przed uruchomieniem; serwis według zlecenia"
+      }
+    ],
+    "PYT_D": [
+      {
+        "kod": "wprowadzono",
+        "podstawa": "N",
+        "tekst": "Wyniki rozważań wprowadzono do specyfikacji, projektu i zakupów",
+        "ph": "np. Cztery wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"
+      },
+      {
+        "kod": "zachowano",
+        "podstawa": "N",
+        "tekst": "Zachowano informacje o działaniach projektowych — ta lista albo notatka",
+        "ph": "np. Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 w teczce projektu"
+      }
+    ],
+    "LISTA_82": [
+      {
+        "tekst": "Rozpoznawane są projekty mogące znacząco wpłynąć na wynik energetyczny.",
+        "podstawa": "N",
+        "auto": "rozpoznanie"
+      },
+      {
+        "tekst": "W tych projektach rozważa się możliwości poprawy i nadzór operacyjny w okresie eksploatacji.",
+        "podstawa": "N",
+        "auto": "rozwaza"
+      },
+      {
+        "tekst": "Wyniki rozważań są w specyfikacjach, projekcie i zakupach (w stosownych przypadkach).",
+        "podstawa": "N",
+        "auto": "wyniki"
+      },
+      {
+        "tekst": "Zachowano udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Pytania o energię padają na etapie założeń; stosowana jest lista kontrolna projektu.",
+        "podstawa": "M",
+        "auto": "zalozenia"
+      },
+      {
+        "tekst": "Po uruchomieniu wynik porównuje się w porównywalnych warunkach.",
+        "podstawa": "M",
+        "auto": "poUruchomieniu"
+      }
+    ]
+  },
+  "tree": {
+    "PROJEKTY": {
+      "type": "list",
+      "label": "Analizy projektów",
+      "min": 0,
+      "children": {
+        "nazwa": {
+          "type": "textarea",
+          "label": "Nazwa",
+          "required": true,
+          "options": {}
+        },
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "kierownik": {
+          "type": "textarea",
+          "label": "Kierownik projektu",
+          "required": true,
+          "options": {}
+        },
+        "etap": {
+          "type": "select",
+          "label": "Etap projektu",
+          "required": true,
+          "options": {
+            "zalozenia": "Założenia",
+            "koncepcja": "Koncepcja",
+            "zatwierdzenie": "Zatwierdzenie",
+            "realizacja": "Realizacja",
+            "uruchomione": "Uruchomiono"
+          }
+        },
+        "etapAnalizy": {
+          "type": "select",
+          "label": "Etap przeprowadzenia analizy",
+          "required": true,
+          "options": {
+            "zalozenia": "Założenia",
+            "koncepcja": "Koncepcja",
+            "zatwierdzenie": "Zatwierdzenie",
+            "realizacja": "Realizacja"
+          }
+        },
+        "ktoAnaliza": {
+          "type": "textarea",
+          "label": "Osoba przeprowadzająca analizę",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "wartosc": {
+          "type": "textarea",
+          "label": "Wartość",
+          "required": true,
+          "options": {}
+        },
+        "A": {
+          "type": "object",
+          "label": "Rozpoznanie wpływu",
+          "children": {
+            "seu": {
+              "type": "object",
+              "label": "Dotyczy znaczącego użycia energii albo tworzy nowe",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "sterowanie": {
+              "type": "object",
+              "label": "Zmienia sposób sterowania lub nastawy",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "godziny": {
+              "type": "object",
+              "label": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "prog": {
+              "type": "object",
+              "label": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": "Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym. Przebudowa sterowania za kilkanaście tysięcy może zmienić zużycie bardziej niż remont biurowca za kilka milionów."
+            }
+          }
+        },
+        "B": {
+          "type": "object",
+          "label": "Możliwości poprawy i ocena",
+          "children": {
+            "mozliwosci": {
+              "type": "object",
+              "label": "Rozważono możliwości poprawy wyniku energetycznego w okresie eksploatacji",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "oszacowano": {
+              "type": "object",
+              "label": "Oszacowano przewidywane zużycie energii w okresie eksploatacji",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "potrzeby": {
+              "type": "object",
+              "label": "Rozwiązanie dobrano do rzeczywistych potrzeb — bez nadmiernego zapasu",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "warianty": {
+              "type": "object",
+              "label": "Rozważono warianty o niższym zużyciu",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "cieplo": {
+              "type": "object",
+              "label": "Sprawdzono możliwość wykorzystania ciepła odpadowego lub innej odzyskiwalnej energii",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "tco": {
+              "type": "object",
+              "label": "Porównano koszt zakupu i energii wariantów — uproszczone TCO",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            }
+          }
+        },
+        "C": {
+          "type": "object",
+          "label": "Nadzór operacyjny / wymagania dla dostawców",
+          "children": {
+            "nadzor": {
+              "type": "object",
+              "label": "Rozważono nadzór operacyjny w okresie eksploatacji",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "wylaczanie": {
+              "type": "object",
+              "label": "Można wyłączyć to, co w danej chwili niepotrzebne",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "regulacja": {
+              "type": "object",
+              "label": "Układ ma regulację do rzeczywistego zapotrzebowania, także poza produkcją",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "pomiar": {
+              "type": "object",
+              "label": "Przewidziano pomiar, z którego da się policzyć wskaźnik",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "ktoObsluga": {
+              "type": "object",
+              "label": "Wiadomo, kto będzie obsługiwał instalację i według jakich kryteriów (8.1)",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            }
+          }
+        },
+        "D": {
+          "type": "object",
+          "label": "Wprowadzenie wyników do projektu",
+          "children": {
+            "wprowadzono": {
+              "type": "object",
+              "label": "Wyniki rozważań wprowadzono do specyfikacji, projektu i zakupów",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            },
+            "zachowano": {
+              "type": "object",
+              "label": "Zachowano informacje o działaniach projektowych — ta lista albo notatka",
+              "children": {
+                "o": {
+                  "type": "select",
+                  "label": "Odpowiedź",
+                  "required": true,
+                  "options": {
+                    "tak": "Tak",
+                    "nie": "Nie",
+                    "nd": "Nie dotyczy"
+                  }
+                },
+                "u": {
+                  "type": "textarea",
+                  "label": "Uzasadnienie / dowód",
+                  "required": true,
+                  "options": {}
+                }
+              },
+              "help": ""
+            }
+          }
+        },
+        "uzasadnienieA": {
+          "type": "textarea",
+          "label": "Uzasadnienie zakończenia oceny na etapie A",
+          "required": true,
+          "options": {}
+        },
+        "wnioski": {
+          "type": "list",
+          "label": "Wnioski projektowe",
+          "min": 0,
+          "children": {
+            "tresc": {
+              "type": "textarea",
+              "label": "Treść",
+              "required": true,
+              "options": {}
+            },
+            "decyzja": {
+              "type": "select",
+              "label": "Decyzja",
+              "required": true,
+              "options": {
+                "przyjety": "Przyjęty",
+                "odrzucony": "Odrzucony"
+              }
+            },
+            "dlaczego": {
+              "type": "textarea",
+              "label": "Uzasadnienie",
+              "required": true,
+              "options": {}
+            },
+            "gdzie": {
+              "type": "textarea",
+              "label": "Miejsce wprowadzenia do projektu / specyfikacji",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "E": {
+          "type": "object",
+          "label": "Odbiór i sprawdzenie po uruchomieniu",
+          "children": {
+            "ktoAktualizuje": {
+              "type": "textarea",
+              "label": "Kto i kiedy aktualizuje kryteria operacyjne",
+              "required": true,
+              "options": {}
+            },
+            "wskaznik": {
+              "type": "textarea",
+              "label": "Wskaźnik i wartość odniesienia",
+              "required": true,
+              "options": {}
+            },
+            "warunki": {
+              "type": "textarea",
+              "label": "Warunki porównania",
+              "required": true,
+              "options": {}
+            },
+            "termin": {
+              "type": "textarea",
+              "label": "Termin i odpowiedzialny",
+              "required": true,
+              "options": {}
+            }
+          }
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "sygnaly": {
+          "type": "textarea",
+          "label": "Sygnały wymagające reakcji",
+          "required": true,
+          "options": {}
+        },
+        "brakZdarzen": {
+          "type": "select",
+          "label": "Nie wystąpiły zdarzenia w tym okresie",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "uzasadnienieBraku": {
+          "type": "textarea",
+          "label": "Uzasadnienie braku zdarzeń i zakres sprawdzenia",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

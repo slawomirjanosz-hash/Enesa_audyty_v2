@@ -1,10 +1,11 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{$title}}</title><link rel="stylesheet" href="{{asset('css/iso-plant-profile.css')}}"><style>:root{--brand:{{$appBrand?->primaryColor()?:'#1a4d3a'}}}.system-changed{background:#eaf2ff;border-left:4px solid #4575bb;padding:14px}.system-row{border:1px solid #dce4df;border-radius:9px;padding:16px;margin:16px 0}.system-status{padding:12px;background:#edf3ef;border-radius:8px}</style></head><body>
 <header class="plant-header"><div><h1>{{$title}}</h1><span>{{$audit->company->name}} · {{$profile->answers['site.name']['value']??'Zakład'}} · {{$client?'Strefa klienta':'Panel audytora'}}</span></div><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>$section])}}">← Wróć do audytu</a></header>
 <main class="plant-main">
+@if(\App\Services\IsoExecutionQuestionnaire::handles($section))<style>.system-row .plant-help{overflow-wrap:anywhere}.system-row{min-width:0}.system-row input[readonly]{background:#f2f5f3;color:#52665c}@media(max-width:600px){.system-row{padding:10px;margin:10px 0}.system-row .system-row{padding:8px}}</style>@endif
 @if(session('success'))<div class="plant-notice success">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź oznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if($stale)<div class="plant-notice">Dane źródłowe zmieniły się. Sprawdź ankietę i zatwierdź ją ponownie. Dotychczasowe zatwierdzenia nie są aktualne.</div>@endif
-@if(!$sources['ready'])<div class="plant-notice">Możesz zapisywać odpowiedzi. Przed zatwierdzeniem {{preg_match('/^[567]-/',$section)?'zatwierdź aktualne punkty źródłowe wskazane poniżej.':($section==='4-4'?'zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.':'zatwierdź profil zakładu oraz punkty 4.1 i 4.2.')}}</div>@endif
+@if(!$sources['ready'])<div class="plant-notice">Możesz zapisywać odpowiedzi. Przed zatwierdzeniem {{preg_match('/^(?:[5-9]|10)-/',$section)?'zatwierdź aktualne punkty źródłowe wskazane poniżej.':($section==='4-4'?'zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.':'zatwierdź profil zakładu oraz punkty 4.1 i 4.2.')}}</div>@endif
 <div class="plant-summary"><strong data-system-progress>Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong><span>{{\App\Models\IsoPlantProfile::STATUSES[$stale?'editing':$review->status]}}</span></div>
 @include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @if(($client && in_array($review->status,['returned','auditor_corrected'])) || (!$client && $review->status==='submitted'))<div class="plant-notice">Do wykonania: {{$client?'sprawdź poprawki audytora i zatwierdź ankietę.':'sprawdź odpowiedzi klienta i zatwierdź ankietę.'}}</div>@endif
@@ -13,6 +14,7 @@
 <section class="plant-card"><h2>Dane powiązane</h2><a href="{{route($client?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$profile])}}">Profil zakładu</a>
 @foreach($sources['approved'] as $key=>$approved)<p>{{$key}}: {{$approved?'zatwierdzony':'wymaga zatwierdzenia'}} · {{$sources['published'][$key]?'dokument wygenerowany':'bez aktualnego dokumentu'}}</p>@endforeach
 @if($section==='4-4')<p><strong>Zakres z 4.3:</strong> {{data_get($sources,'scope.ZAKRES.opis')?:'Jeszcze nie określono'}}</p>@endif
+@if(\App\Services\IsoExecutionQuestionnaire::handles($section)) @include('audits.system.execution-sources') @endif
 @if(str_starts_with($section,'5-'))
 <p><strong>Zakres z 4.3:</strong> {{data_get($sources,'scope.ZAKRES.opis')?:'Jeszcze nie określono'}}</p>
 @if($section==='5-3')<p><strong>Powołanie zespołu z 5.1:</strong> {{data_get($sources,'upstream.5-1.ZESP.dokument')?:'Nie podano'}} · {{data_get($sources,'upstream.5-1.ZESP.data')}}</p>
@@ -21,13 +23,16 @@
 @foreach($service->warnings($section,$answers,$sources) as $warning)<div class="plant-notice">{{$warning}}</div>@endforeach</section>
 @if(str_starts_with($section,'6-')) @include('audits.system.planning-summary') @endif
 @if(str_starts_with($section,'7-')) @include('audits.system.support-summary') @endif
+@if(\App\Services\IsoExecutionQuestionnaire::handles($section)) @include('audits.system.execution-summary') @endif
 @php($editable=$canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected'])))
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
 <fieldset @disabled(!$editable)>
 @if(!$client && $editable)<button type="button" id="system-example">Wypełnij przykładowo puste odpowiedzi klienta</button><small class="plant-help">Dane testowe pojawią się w formularzu. Nie są zapisywane ani zatwierdzane automatycznie.</small>@endif
 @foreach($sections as $id=>$group)
 <section id="{{$id}}" class="plant-card"><h2>{{$group['title']}}</h2>
-@if(isset($group['repeater']))
+@if(isset($group['tree']))
+@include('audits.system.execution-tree', ['node'=>$group['tree'], 'path'=>$group['root'], 'depth'=>0])
+@elseif(isset($group['repeater']))
 @php($root=$group['repeater'])
 @if($section==='5-3' && $root==='ROLE')<h3>Podgląd zapisanej matrycy</h3>@include('audits.system.matrix')<p class="plant-help">Poniżej edytuj role i ich udział w zadaniach. Podgląd tabeli odświeża się po zapisie.</p>@endif
 @error('answers.'.$root)<p class="plant-notice error">{{$message}}</p>@enderror
@@ -52,7 +57,7 @@
 </form>
 @if(str_starts_with($section,'5-'))<section class="plant-card">@include('audits.system.chapter-five-checklist')</section>@endif
 @if($section==='5-2')<section class="plant-card"><h2>Podgląd zapisanej polityki</h2><p class="plant-help">Podgląd odświeża się po zapisaniu odpowiedzi.</p>@include('audits.system.policy')</section>@endif
-@if(!$client && preg_match('/^[567]-/',$section))
+@if(!$client && preg_match('/^(?:[5-9]|10)-/',$section))
 <section class="plant-card" id="consultant"><h2>Analiza konsultanta — wewnętrzna</h2><p>Wnioski nie są udostępniane klientowi ani dołączane do jego PDF-u.</p>
 @if($canWrite && !$stale && $review->status==='submitted')
 <form method="post" data-review-action action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf
@@ -69,5 +74,6 @@
 <h3>Historia zmian</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{['save'=>'Zapisano','submit'=>'Klient zatwierdził','approve'=>'Audytor zatwierdził','return'=>'Zwrócono do poprawy','withdraw'=>'Wycofano zatwierdzenie'][$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div></section>
 @include('partials.field-validation') @include('partials.questionnaire-navigation')
 @if(str_starts_with($section,'7-'))<script src="{{asset('js/iso-support.js')}}" defer></script>@endif
+@if(\App\Services\IsoExecutionQuestionnaire::handles($section))<script src="{{asset('js/iso-execution.js')}}" defer></script>@endif
 </main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-system.js')}}" defer></script>@include('partials.form-drafts')
 </body></html>

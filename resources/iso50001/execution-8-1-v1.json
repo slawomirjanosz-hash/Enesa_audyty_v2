@@ -1,0 +1,358 @@
+{
+  "version": 1,
+  "section": "8-1",
+  "source_file": "ENESA_8.1_Nadzor_operacyjny_platforma.html",
+  "source_sha256": "dec1fc6e22ab6a02ef1aeba65723d598368a669f84457a72f650a6b61da08df6",
+  "definitions": {
+    "LISTA_81": [
+      {
+        "tekst": "Określono procesy związane ze znaczącymi użyciami energii i działaniami z planów, które wymagają kryteriów.",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "tekst": "Ustalono kryteria tam, gdzie ich brak może prowadzić do znaczącego odchylenia — w tym dla eksploatacji i utrzymania.",
+        "podstawa": "N",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Kryteria przekazano osobom, które ich używają, także wykonawcom.",
+        "podstawa": "N",
+        "auto": "przekazano"
+      },
+      {
+        "tekst": "Procesy prowadzi się zgodnie z kryteriami — opisano tryby pracy i sposób sterowania.",
+        "podstawa": "N",
+        "auto": "zgodnie"
+      },
+      {
+        "tekst": "Zachowano zapisy w zakresie potrzebnym do pewności, że procesy przebiegały zgodnie z planem.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Nadzorowane są zmiany planowane; skutki zmian niezamierzonych są przeglądane i ograniczane.",
+        "podstawa": "N",
+        "auto": "zmiany"
+      },
+      {
+        "tekst": "Nadzorowane są zlecone na zewnątrz znaczące użycia energii i procesy z nimi związane (np. serwis).",
+        "podstawa": "N",
+        "auto": "zlecone"
+      },
+      {
+        "tekst": "Kryteria wyprowadzono z potrzeb procesu i pomiarów.",
+        "podstawa": "M",
+        "auto": "zPotrzeb"
+      },
+      {
+        "tekst": "Odchylenie widać w ciągu dni; wiadomo, kto reaguje i w jakiej kolejności sprawdza.",
+        "podstawa": "M",
+        "auto": "reakcja"
+      }
+    ]
+  },
+  "tree": {
+    "KARTY": {
+      "type": "list",
+      "label": "Karty",
+      "min": 0,
+      "children": {
+        "seu": {
+          "type": "textarea",
+          "label": "Znaczące użycie energii / proces",
+          "required": true,
+          "options": {}
+        },
+        "lokalizacja": {
+          "type": "textarea",
+          "label": "Lokalizacja",
+          "required": true,
+          "options": {}
+        },
+        "zuzycie": {
+          "type": "textarea",
+          "label": "Zużycie i udział w zużyciu zakładu",
+          "required": true,
+          "options": {}
+        },
+        "osoby": {
+          "type": "textarea",
+          "label": "Osoby wpływające na wynik energetyczny",
+          "required": true,
+          "options": {}
+        },
+        "wskaznik": {
+          "type": "textarea",
+          "label": "Wskaźnik i wartość odniesienia",
+          "required": true,
+          "options": {}
+        },
+        "utworzono": {
+          "type": "date",
+          "label": "Data utworzenia",
+          "required": true,
+          "options": {}
+        },
+        "aktualizacja": {
+          "type": "date",
+          "label": "Data aktualizacji",
+          "required": true,
+          "options": {}
+        },
+        "opracowal": {
+          "type": "textarea",
+          "label": "Opracował",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "kryteria": {
+          "type": "list",
+          "label": "Kryteria",
+          "min": 0,
+          "children": {
+            "parametr": {
+              "type": "textarea",
+              "label": "Parametr",
+              "required": true,
+              "options": {}
+            },
+            "potrzeba": {
+              "type": "textarea",
+              "label": "Potrzeba procesu",
+              "required": true,
+              "options": {}
+            },
+            "straty": {
+              "type": "textarea",
+              "label": "Straty i zapas",
+              "required": true,
+              "options": {}
+            },
+            "kryterium": {
+              "type": "textarea",
+              "label": "Kryterium",
+              "required": true,
+              "options": {}
+            },
+            "kontrola": {
+              "type": "textarea",
+              "label": "Sposób kontroli",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "tryby": {
+          "type": "list",
+          "label": "Tryby pracy",
+          "min": 0,
+          "children": {
+            "tryb": {
+              "type": "select",
+              "label": "Tryb",
+              "required": true,
+              "options": {
+                "roczne": "Roczne zużycie MWh",
+                "moc": "Średnia moc × godziny",
+                "jednostkowy": "kWh/jednostkę × ilość"
+              }
+            },
+            "jak": {
+              "type": "textarea",
+              "label": "Sposób wykonania / sprawdzenia",
+              "required": true,
+              "options": {}
+            },
+            "uwagi": {
+              "type": "textarea",
+              "label": "Uwagi",
+              "required": false,
+              "options": {}
+            }
+          }
+        },
+        "zmiany": {
+          "type": "object",
+          "label": "Nadzór nad zmianami i wykonawcami",
+          "children": {
+            "ktoZmienia": {
+              "type": "textarea",
+              "label": "Kto może zmieniać nastawy i za czyją zgodą",
+              "required": true,
+              "options": {}
+            },
+            "wykonawcy": {
+              "type": "textarea",
+              "label": "Wymagania wobec wykonawców",
+              "required": true,
+              "options": {}
+            },
+            "planowane": {
+              "type": "textarea",
+              "label": "Nadzór nad zmianami planowanymi",
+              "required": true,
+              "options": {}
+            },
+            "niezamierzone": {
+              "type": "textarea",
+              "label": "Przegląd i ograniczenie skutków zmian niezamierzonych",
+              "required": true,
+              "options": {}
+            },
+            "zapisZmian": {
+              "type": "textarea",
+              "label": "Miejsce zapisu zmian",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "sygnaly": {
+          "type": "list",
+          "label": "Sygnały wymagające reakcji",
+          "min": 0,
+          "children": {
+            "sygnal": {
+              "type": "textarea",
+              "label": "Sygnał",
+              "required": true,
+              "options": {}
+            },
+            "prog": {
+              "type": "textarea",
+              "label": "Próg",
+              "required": true,
+              "options": {}
+            },
+            "kolejnosc": {
+              "type": "textarea",
+              "label": "Kolejność sprawdzeń",
+              "required": true,
+              "options": {}
+            },
+            "kto": {
+              "type": "textarea",
+              "label": "Osoba odpowiedzialna",
+              "required": true,
+              "options": {}
+            },
+            "zglasza": {
+              "type": "textarea",
+              "label": "Komu i kiedy zgłosić",
+              "required": true,
+              "options": {}
+            },
+            "zapis": {
+              "type": "textarea",
+              "label": "Miejsce zapisu / dowód",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "utrzymanie": {
+          "type": "list",
+          "label": "Utrzymanie ruchu",
+          "min": 0,
+          "children": {
+            "czynnosc": {
+              "type": "textarea",
+              "label": "Czynność",
+              "required": true,
+              "options": {}
+            },
+            "czestotliwosc": {
+              "type": "textarea",
+              "label": "Częstotliwość / warunek",
+              "required": true,
+              "options": {}
+            },
+            "wykonuje": {
+              "type": "textarea",
+              "label": "Wykonuje",
+              "required": true,
+              "options": {}
+            },
+            "zapis": {
+              "type": "textarea",
+              "label": "Miejsce zapisu / dowód",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "przekazanie": {
+          "type": "list",
+          "label": "Przekazanie kryteriów",
+          "min": 0,
+          "children": {
+            "komu": {
+              "type": "textarea",
+              "label": "Odbiorca",
+              "required": true,
+              "options": {}
+            },
+            "wykonawca": {
+              "type": "select",
+              "label": "Wykonawca zewnętrzny",
+              "required": true,
+              "options": {
+                "tak": "Tak",
+                "nie": "Nie"
+              }
+            },
+            "jak": {
+              "type": "textarea",
+              "label": "Sposób wykonania / sprawdzenia",
+              "required": true,
+              "options": {}
+            },
+            "data": {
+              "type": "date",
+              "label": "Data",
+              "required": true,
+              "options": {}
+            },
+            "sprawdzenie": {
+              "type": "textarea",
+              "label": "Sprawdzenie zrozumienia / skuteczności",
+              "required": true,
+              "options": {}
+            }
+          }
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "przeglad": {
+          "type": "textarea",
+          "label": "Termin lub rytm przeglądu",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

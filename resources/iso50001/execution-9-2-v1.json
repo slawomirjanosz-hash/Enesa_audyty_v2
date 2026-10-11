@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "section": "9-2",
+  "source_file": "ENESA_9.2_Audyt_wewnetrzny_platforma.html",
+  "source_sha256": "bb84af3cb08cd9eaa0fbaf06a0b30452d2607c9b43ee1255655969f2fc0c82e8",
+  "definitions": {
+    "PYT_B9": [
+      {
+        "kod": "poprawa",
+        "tekst": "Czy system poprawia wynik energetyczny?",
+        "ph": "np. Tak. O-1 0,965 wobec EnB 1,000 (VIII 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0. Poprawa wykazana pomiarem i modelem, nie samym spadkiem zużycia. K-1 wymaga analizy przed sezonem grzewczym.",
+        "pomoc": "Pytanie a) z punktu 9.2. Odpowiedź opiera się na wynikach monitorowania (9.1.1), nie na przekonaniu."
+      },
+      {
+        "kod": "zgodnosc",
+        "tekst": "Czy system jest zgodny z wymaganiami organizacji, polityką, celami i zadaniami oraz z wymaganiami normy?",
+        "ph": "np. W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (8.1, nadzór nad procesem zleconym): protokół serwisu bez nastaw, protokołu nie sprawdzano przy odbiorze. Polityka, cele i zadania spójne z planami działań; wymagania normy dla punktów 4–8 spełnione.",
+        "pomoc": "Pytanie b). Dotyczy zgodności z tym, co organizacja sama ustaliła — <b>i</b> z normą."
+      },
+      {
+        "kod": "wdrozenie",
+        "tekst": "Czy system jest skutecznie wdrożony i utrzymywany?",
+        "ph": "np. Tak, z zastrzeżeniem. Kryteria sprężarkowni są stosowane — potwierdzone trendem ciśnienia i rozmową z technikami. Słabe miejsce: nadzór nad wykonawcami — wymaganie ustalone po czerwcowym zdarzeniu działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma).",
+        "pomoc": "Pytanie c) — czyli czy ustalenia żyją na hali, a nie tylko w dokumentach."
+      }
+    ],
+    "LISTA_92": [
+      {
+        "tekst": "Audyty w zaplanowanych odstępach odpowiadają na pytania: poprawa wyniku, zgodność, skuteczne wdrożenie.",
+        "podstawa": "N",
+        "auto": "trzyPytania"
+      },
+      {
+        "tekst": "Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów.",
+        "podstawa": "N",
+        "auto": "program"
+      },
+      {
+        "tekst": "Dla każdego audytu określono zakres i kryteria.",
+        "podstawa": "N",
+        "auto": "zakresKryteria"
+      },
+      {
+        "tekst": "Audytorzy zapewniają obiektywność i bezstronność.",
+        "podstawa": "N",
+        "auto": "bezstronnosc"
+      },
+      {
+        "tekst": "Wyniki przekazano odpowiedniemu kierownictwu; podjęto odpowiednie działania.",
+        "podstawa": "N",
+        "auto": "przekazanie"
+      },
+      {
+        "tekst": "Zachowano dowody realizacji programu i wyniki audytów.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Ustalenia opierają się na dowodach z praktyki; audytu nie ocenia się liczbą niezgodności.",
+        "podstawa": "M",
+        "auto": "dowody"
+      }
+    ]
+  },
+  "tree": {
+    "PROGRAM": {
+      "type": "list",
+      "label": "Program audytów",
+      "min": 0,
+      "children": {
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "obszar": {
+          "type": "textarea",
+          "label": "Obszar",
+          "required": true,
+          "options": {}
+        },
+        "punkty": {
+          "type": "textarea",
+          "label": "Punkty normy",
+          "required": true,
+          "options": {}
+        },
+        "dlaczego": {
+          "type": "textarea",
+          "label": "Uzasadnienie",
+          "required": true,
+          "options": {}
+        },
+        "termin": {
+          "type": "textarea",
+          "label": "Termin i odpowiedzialny",
+          "required": true,
+          "options": {}
+        },
+        "audytor": {
+          "type": "textarea",
+          "label": "Audytor wewnętrzny",
+          "required": true,
+          "options": {}
+        },
+        "status": {
+          "type": "select",
+          "label": "Status",
+          "required": true,
+          "options": {
+            "planowany": "Planowany",
+            "wtoku": "W toku",
+            "wykonany": "Wykonany",
+            "odwolany": "Odwołany"
+          }
+        },
+        "uwagi": {
+          "type": "textarea",
+          "label": "Uwagi",
+          "required": false,
+          "options": {}
+        }
+      }
+    },
+    "RAPORTY": {
+      "type": "list",
+      "label": "Raporty audytów wewnętrznych",
+      "min": 0,
+      "children": {
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "pozycja": {
+          "type": "textarea",
+          "label": "Numer pozycji programu",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "daty": {
+          "type": "textarea",
+          "label": "Terminy prowadzenia audytu",
+          "required": true,
+          "options": {}
+        },
+        "zakres": {
+          "type": "textarea",
+          "label": "Zakres audytu",
+          "required": true,
+          "options": {}
+        },
+        "kryteria": {
+          "type": "textarea",
+          "label": "Kryteria",
+          "required": true,
+          "options": {}
+        },
+        "audytor": {
+          "type": "textarea",
+          "label": "Audytor wewnętrzny",
+          "required": true,
+          "options": {}
+        },
+        "wlasnaPraca": {
+          "type": "select",
+          "label": "Czy audytor ocenia własną pracę",
+          "required": true,
+          "options": {
+            "tak": "Tak",
+            "nie": "Nie"
+          }
+        },
+        "bezstronnosc": {
+          "type": "textarea",
+          "label": "Zapewnienie bezstronności",
+          "required": true,
+          "options": {}
+        },
+        "audytowani": {
+          "type": "textarea",
+          "label": "Audytowane osoby / funkcje",
+          "required": true,
+          "options": {}
+        },
+        "rozdzielnik": {
+          "type": "textarea",
+          "label": "Przekazanie wyników kierownictwu",
+          "required": true,
+          "options": {}
+        },
+        "ustalenia": {
+          "type": "list",
+          "label": "Ustalenia z audytu",
+          "min": 0,
+          "children": {
+            "nr": {
+              "type": "textarea",
+              "label": "Stały numer / identyfikator",
+              "required": true,
+              "options": {}
+            },
+            "rodzaj": {
+              "type": "select",
+              "label": "Rodzaj ustalenia",
+              "required": true,
+              "options": {
+                "N": "Niezgodność",
+                "D": "Możliwość doskonalenia",
+                "P": "Pozytywne ustalenie"
+              }
+            },
+            "opis": {
+              "type": "textarea",
+              "label": "Opis",
+              "required": true,
+              "options": {}
+            },
+            "dowod": {
+              "type": "textarea",
+              "label": "Dowód / dokument źródłowy",
+              "required": true,
+              "options": {}
+            },
+            "zrodlo": {
+              "type": "select",
+              "label": "Źródło",
+              "required": true,
+              "options": {
+                "dokument": "Dokument",
+                "rozmowa": "Rozmowa",
+                "obserwacja": "Obserwacja",
+                "pomiar": "Pomiar"
+              }
+            },
+            "wymaganie": {
+              "type": "textarea",
+              "label": "Wymaganie",
+              "required": true,
+              "options": {}
+            },
+            "dzialanie": {
+              "type": "textarea",
+              "label": "Działanie",
+              "required": true,
+              "options": {}
+            },
+            "odp": {
+              "type": "textarea",
+              "label": "Odpowiedzialny i termin",
+              "required": true,
+              "options": {}
+            },
+            "karta10": {
+              "type": "textarea",
+              "label": "Numer karty niezgodności (10.1)",
+              "required": true,
+              "options": {}
+            }
+          }
+        },
+        "B": {
+          "type": "object",
+          "label": "Możliwości poprawy i ocena",
+          "children": {
+            "poprawa": {
+              "type": "textarea",
+              "label": "Czy system poprawia wynik energetyczny?",
+              "required": true,
+              "options": {},
+              "help": "Pytanie a) z punktu 9.2. Odpowiedź opiera się na wynikach monitorowania (9.1.1), nie na przekonaniu."
+            },
+            "zgodnosc": {
+              "type": "textarea",
+              "label": "Czy system jest zgodny z wymaganiami organizacji, polityką, celami i zadaniami oraz z wymaganiami normy?",
+              "required": true,
+              "options": {},
+              "help": "Pytanie b). Dotyczy zgodności z tym, co organizacja sama ustaliła — <b>i</b> z normą."
+            },
+            "wdrozenie": {
+              "type": "textarea",
+              "label": "Czy system jest skutecznie wdrożony i utrzymywany?",
+              "required": true,
+              "options": {},
+              "help": "Pytanie c) — czyli czy ustalenia żyją na hali, a nie tylko w dokumentach."
+            }
+          }
+        },
+        "uwagiProgram": {
+          "type": "textarea",
+          "label": "Wnioski do kolejnego programu audytów",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "organizacja": {
+          "type": "textarea",
+          "label": "Organizacja i zakres programu",
+          "required": true,
+          "options": {}
+        },
+        "organizuje": {
+          "type": "textarea",
+          "label": "Organizuje",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "dataZatw": {
+          "type": "date",
+          "label": "Data zatwierdzenia",
+          "required": true,
+          "options": {}
+        },
+        "kryteria": {
+          "type": "textarea",
+          "label": "Kryteria",
+          "required": true,
+          "options": {}
+        },
+        "planAudytu": {
+          "type": "textarea",
+          "label": "Planowanie i przekazywanie planu audytu",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

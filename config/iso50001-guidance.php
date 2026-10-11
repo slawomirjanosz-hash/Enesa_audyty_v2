@@ -163,6 +163,11 @@ return [
         'actions' => ['Ustal progi alarmowe i regularny rytm analizy.', 'Normalizuj wynik, gdy zmienne istotne wpływają na porównanie.', 'Prezentuj zarządowi wnioski i decyzje, nie tylko surowe liczby.'],
         'pitfall' => 'Zbieranie odczytów i faktur bez analizy przyczyn odchyleń oraz bez podejmowania decyzji.',
     ],
+    '9-1-1' => [
+        'verify' => ['Czy określono metody, częstotliwość i odpowiedzialność za monitorowanie?', 'Czy porównanie EnPI i EnB uwzględnia warunki i zmienne istotne?'],
+        'evidence' => ['Raport monitorowania, dane pomiarowe i obliczenia', 'Analizy odchyleń oraz podjęte działania'],
+        'actions' => ['Uzupełnij ankietę monitorowania na podstawie kart EnPI i planu danych.', 'Zbadaj istotne odchylenia i oceń skuteczność systemu.'],
+    ],
     '9-1-2' => [
         'verify' => ['Czy zidentyfikowano wszystkie obowiązujące wymagania?', 'Czy zgodność jest oceniana w zaplanowanych odstępach?', 'Czy niezgodności prawne są usuwane i raportowane?'],
         'evidence' => ['Aktualny rejestr wymagań', 'Okresowe oceny zgodności z dowodami', 'Działania po stwierdzonych brakach'],
