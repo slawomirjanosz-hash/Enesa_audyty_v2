@@ -8,6 +8,7 @@ use App\Models\CompanySettings;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
+use App\Services\IsoPlantElaboration;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\IsoQuestionnaireWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -178,6 +179,10 @@ class IsoPlantProfileController extends Controller
                 $current->auditor_approval = null;
                 $current->review_note = null;
                 $current->document_id = null;
+                if ($current->elaboration_document_id) {
+                    IsoSectionDocument::whereKey($current->elaboration_document_id)->update(['description' => 'Opracowanie historyczne - dane profilu zostały zmienione. Profil #'.$current->id]);
+                    $current->elaboration_document_id = null;
+                }
                 $current->issuer = null;
                 if (! $client) {
                     $op = 'auditor_correction';
@@ -192,7 +197,7 @@ class IsoPlantProfileController extends Controller
                 $current->auditor_approval = $this->approval($request);
                 $current->review_note = $data['note'];
                 $issuer = CompanySettings::first();
-                $current->issuer = ['name' => $issuer?->name, 'logo' => $issuer?->logoDataUri()];
+                $current->issuer = ['name' => $issuer?->name, 'logo' => $issuer?->logoDataUri(), 'color' => $issuer?->primaryColor()];
             } elseif ($op === 'return') {
                 abort_unless(! $client && $current->status === 'submitted', 403);
                 $request->validate(['note' => 'required|string|max:3000']);
@@ -248,21 +253,35 @@ class IsoPlantProfileController extends Controller
     {
         $client = $this->access($request, $audit);
         $this->checkProfile($audit, $profile);
-        $data = $request->validate(['lock_version' => 'required|integer|min:0', 'preview' => 'nullable|boolean']);
-        $result = DB::transaction(function () use ($request, $audit, $profile, $data) {
+        $data = $request->validate(['lock_version' => 'required|integer|min:0', 'preview' => 'nullable|boolean', 'kind' => ['nullable', Rule::in(['questionnaire', 'elaboration'])]]);
+        $elaboration = ($data['kind'] ?? 'questionnaire') === 'elaboration';
+        if ($elaboration) {
+            abort_unless(! $client && $request->user()->can('audits.manage'), 403);
+        }
+        $result = DB::transaction(function () use ($request, $audit, $profile, $data, $elaboration) {
             $current = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             abort_unless($current->lock_version === (int) $data['lock_version'], 409);
             abort_unless($current->status === 'approved' && $current->client_approval && $current->auditor_approval, 403, 'PDF wymaga zatwierdzenia przez klienta i audytora.');
-            $document = $current->document_id ? IsoSectionDocument::find($current->document_id) : null;
+            if ($elaboration) {
+                abort_if(IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $current->site_id)->where('revision', '>', $current->revision)->exists(), 409, 'Otwórz aktualną wersję profilu.');
+            }
+            $documentField = $elaboration ? 'elaboration_document_id' : 'document_id';
+            $document = $current->$documentField ? IsoSectionDocument::where('audit_id', $audit->id)->find($current->$documentField) : null;
             $contents = $document?->contents();
-            $filename = IsoPlantProfile::DOCUMENT_TITLE.'.pdf';
+            $title = $elaboration ? IsoPlantProfile::ELABORATION_TITLE : IsoPlantProfile::DOCUMENT_TITLE;
+            $filename = $title.'.pdf';
             if (! $contents) {
-                $contents = Pdf::loadView('audits.plant-profile.pdf', ['profile' => $current, 'questionnaire' => $this->questionnaire])->setPaper('a4')->output();
+                $contents = $elaboration
+                    ? Pdf::loadView('audits.plant-profile.elaboration-pdf', ['profile' => $current, 'report' => app(IsoPlantElaboration::class)->build($current), 'author' => $request->user()->name, 'generatedAt' => now(), 'audit' => $audit])->setPaper('a4')->output()
+                    : Pdf::loadView('audits.plant-profile.pdf', ['profile' => $current, 'questionnaire' => $this->questionnaire])->setPaper('a4')->output();
             }
             if (! ($data['preview'] ?? false) && ! $document) {
-                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => 'intro', 'scope' => 'client', 'title' => IsoPlantProfile::DOCUMENT_TITLE, 'description' => 'Zakład: '.($current->answers['site.name']['value'] ?? '').'. Zatwierdzony przez klienta i audytora. Profil #'.$current->id, 'document_year' => $current->as_of_date->year, 'version_number' => $current->revision.'.0', 'original_filename' => $filename, 'stored_path' => 'iso50001/client/'.$audit->id.'/intro/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
-                $current->document_id = $document->id;
+                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => 'intro', 'scope' => 'client', 'title' => $title, 'description' => ($elaboration ? 'Opracowanie opisowe. ' : '').'Zakład: '.($current->answers['site.name']['value'] ?? '').'. Dane zatwierdzone przez klienta i audytora. Profil #'.$current->id.', zapis '.$current->lock_version, 'document_year' => $current->as_of_date->year, 'version_number' => $current->revision.'.0', 'original_filename' => $filename, 'stored_path' => 'iso50001/client/'.$audit->id.'/intro/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
+                $current->$documentField = $document->id;
                 $current->save();
+                if ($elaboration) {
+                    $this->record($request, $current, 'elaborate');
+                }
             }
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'download', 'auditable_type' => Audit::class, 'auditable_id' => $audit->id, 'subject_label' => $filename, 'route_name' => $request->route()->getName()]);
 

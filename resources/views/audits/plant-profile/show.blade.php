@@ -5,6 +5,7 @@
     $editable = $canWrite && ($isLatest ?? true) && (!$client || in_array($profile->status,['editing','returned','auditor_corrected']));
     $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję','before_correction'=>'Wersja przed korektą audytora','auditor_correction'=>'Poprawiony przez audytora — wymagane ponowne zatwierdzenie klienta'];
     $operations['schema_upgrade'] = 'Rozszerzono profil według ankiety audytorów — odpowiedzi zachowane';
+    $operations['elaborate'] = 'Opracowano charakterystykę zakładu i podstawy wdrożenia EnMS';
 @endphp
 @include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'plant-form'])
@@ -71,8 +72,13 @@
 @if($profile->status==='approved')
 <div class="plant-inline"><form method="post" action="{{ route($prefix.'pdf',[$audit,$profile]) }}" target="_blank">@csrf<input type="hidden" name="lock_version" value="{{ $profile->lock_version }}"><input type="hidden" name="preview" value="1"><button>Podgląd PDF ↗</button></form>
 <form method="post" action="{{ route($prefix.'pdf',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ $profile->lock_version }}"><button class="primary">Generuj i zapisz PDF</button></form>
+@if(!$client && $canWrite && ($isLatest ?? true))
+<form method="post" action="{{ route($prefix.'pdf',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ $profile->lock_version }}"><input type="hidden" name="kind" value="elaboration"><button class="primary" title="Utwórz opisową charakterystykę zakładu na podstawie zatwierdzonych danych">Opracuj ankietę</button></form>
+<form method="post" action="{{ route($prefix.'pdf',[$audit,$profile]) }}" target="_blank">@csrf<input type="hidden" name="lock_version" value="{{ $profile->lock_version }}"><input type="hidden" name="kind" value="elaboration"><input type="hidden" name="preview" value="1"><button>Podgląd opracowania ↗</button></form>
+@endif
 @if($canWrite)<form method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ $profile->lock_version }}"><button name="operation" value="revise">Utwórz nową wersję do edycji</button></form>@endif</div>
 @if($profile->document_id)<p><a href="{{route($client ? 'client.audits.show' : 'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'intro'])}}#iso-documents-intro">PDF zapisany — przejdź do Dokumentacji punktu we „Wstępie do ISO” →</a></p>@endif
+@if($profile->elaboration_document_id)<p><a href="{{route($client ? 'client.audits.show' : 'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'intro'])}}#iso-documents-intro">Opracowanie zapisane — otwórz Dokumentację punktu →</a></p>@endif
 @endif
 <h3>Historia</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{ $event->created_at }}">{{ \Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i:s') }}</td><td>{{ $event->user_name }}</td><td>{{ $operations[$event->action]??$event->action }}</td></tr>@endforeach</tbody></table></div></section>
 @endsection

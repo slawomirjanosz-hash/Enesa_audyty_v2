@@ -2,7 +2,7 @@
     $statusCurrent = !($statusStale ?? false);
     $clientAccepted = $statusCurrent && (bool) $statusRecord?->client_approval;
     $auditorAccepted = $clientAccepted && (bool) $statusRecord?->auditor_approval;
-    $documentCurrent = $auditorAccepted && (bool) $statusRecord?->document_id;
+    $documentCurrent = $auditorAccepted && (bool) ($statusRecord?->document_id || ($statusRecord instanceof \App\Models\IsoPlantProfile && $statusRecord->elaboration_document_id));
 @endphp
 <div aria-label="Status ankiety" style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px">
 @foreach(['W trakcie opracowania'=>!$clientAccepted, 'Zaakceptowane przez klienta'=>$clientAccepted, 'Zaakceptowane przez audytora'=>$auditorAccepted, 'Wygenerowano dokument'=>$documentCurrent] as $label=>$reached)

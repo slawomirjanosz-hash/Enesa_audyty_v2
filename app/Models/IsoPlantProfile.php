@@ -26,6 +26,8 @@ class IsoPlantProfile extends Model
 
     public const DOCUMENT_TITLE = '1 Wstęp ISO Profil zakładu';
 
+    public const ELABORATION_TITLE = '1 Wstęp ISO Charakterystyka zakładu i podstawy wdrożenia EnMS';
+
     protected $guarded = ['id'];
 
     protected $casts = ['definition' => 'array', 'answers' => 'array', 'auditor_changes' => 'array', 'client_changes' => 'array', 'client_approval' => 'array', 'auditor_approval' => 'array', 'issuer' => 'array', 'as_of_date' => 'date', 'revision' => 'integer', 'lock_version' => 'integer'];

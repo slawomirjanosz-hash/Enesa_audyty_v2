@@ -116,7 +116,7 @@ class QuestionnaireCompletion
         if (request()->attributes->has($cacheKey)) {
             return request()->attributes->get($cacheKey);
         }
-        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->latestPerSite()->get(['id', 'site_id', 'revision', 'lock_version', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'client_changes']);
+        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->latestPerSite()->get(['id', 'site_id', 'revision', 'lock_version', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'elaboration_document_id', 'client_changes']);
         $plants = $profiles->map(fn ($profile) => ['id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $this->plant($profile->definition, $profile->answers), 'profile' => $profile]);
         $review = IsoContextReview::where('audit_id', $audit->id)->where('year', now()->year)->first(['answers']);
         $result = ['plants' => $plants, 'context' => $this->fields(array_column(app(IsoContextLibrary::class)->questions(), 'kod'), $review?->answers['facts'] ?? [])];
