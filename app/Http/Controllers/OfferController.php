@@ -895,9 +895,9 @@ class OfferController extends Controller
                     ['Jedn.',           $colW[3]],
                     ['Cena jedn. (zł)', $colW[4]],
                     ['Razem (zł)',      $colW[5]],
-                ] as [$h, $w]) {
+                ] as $column => [$h, $w]) {
                     $th->addCell($w, ['bgColor' => $lightGreen])
-                        ->addText($h, ['bold' => true, 'size' => 9, 'color' => '1A1A1A']);
+                        ->addText($h, ['bold' => true, 'size' => 9, 'color' => '1A1A1A'], ['alignment' => $column >= 4 ? Jc::RIGHT : (in_array($column, [2, 3], true) ? Jc::CENTER : Jc::LEFT)]);
                 }
 
                 $rows = $ps['rows'] ?? [];
@@ -910,11 +910,11 @@ class OfferController extends Controller
                     $dr = $priceTable->addRow();
                     $dr->addCell($colW[0])->addText($i + 1, ['size' => 10]);
                     $dr->addCell($colW[1])->addText($row['opis'] ?? '—', ['size' => 10]);
-                    $dr->addCell($colW[2])->addText($row['ilosc'] ?? '', ['size' => 10]);
-                    $dr->addCell($colW[3])->addText($row['jedn'] ?? '', ['size' => 10]);
-                    $dr->addCell($colW[4])->addText(number_format((float) ($row['cena_jedn'] ?? 0), 2, ',', ' '), ['size' => 10]);
+                    $dr->addCell($colW[2])->addText($row['ilosc'] ?? '', ['size' => 10], ['alignment' => Jc::CENTER]);
+                    $dr->addCell($colW[3])->addText($row['jedn'] ?? '', ['size' => 10], ['alignment' => Jc::CENTER]);
+                    $dr->addCell($colW[4])->addText(number_format((float) ($row['cena_jedn'] ?? 0), 2, ',', ' '), ['size' => 10], ['alignment' => Jc::RIGHT]);
                     $dr->addCell($colW[5], ['bgColor' => 'F5F5F5'])
-                        ->addText(number_format($znarzutem, 2, ',', ' '), ['bold' => true, 'size' => 10]);
+                        ->addText(number_format($znarzutem, 2, ',', ' '), ['bold' => true, 'size' => 10], ['alignment' => Jc::RIGHT]);
                 }
 
                 $section->addTextBreak(1);
@@ -975,9 +975,9 @@ class OfferController extends Controller
                 ['Osoby',       $dColW[4]],
                 ['Noclegi',     $dColW[5]],
                 ['Koszt',       $dColW[6]],
-            ] as [$h, $w]) {
+            ] as $column => [$h, $w]) {
                 $dh->addCell($w, ['bgColor' => $lightGreen])
-                    ->addText($h, ['bold' => true, 'size' => 9, 'color' => '1A1A1A']);
+                    ->addText($h, ['bold' => true, 'size' => 9, 'color' => '1A1A1A'], ['alignment' => $column === 6 ? Jc::RIGHT : ($column >= 2 ? Jc::CENTER : Jc::LEFT)]);
             }
 
             $delegTotal = 0;
@@ -994,12 +994,12 @@ class OfferController extends Controller
                 $dr = $dTable->addRow();
                 $dr->addCell($dColW[0])->addText($del['nazwa'] ?? '—', ['size' => 9]);
                 $dr->addCell($dColW[1])->addText($del['adres'] ?? '—', ['size' => 9]);
-                $dr->addCell($dColW[2])->addText($km.' km', ['size' => 9]);
-                $dr->addCell($dColW[3])->addText((string) $wyj, ['size' => 9]);
-                $dr->addCell($dColW[4])->addText((string) $os, ['size' => 9]);
-                $dr->addCell($dColW[5])->addText((string) $noc, ['size' => 9]);
+                $dr->addCell($dColW[2])->addText($km.' km', ['size' => 9], ['alignment' => Jc::CENTER]);
+                $dr->addCell($dColW[3])->addText((string) $wyj, ['size' => 9], ['alignment' => Jc::CENTER]);
+                $dr->addCell($dColW[4])->addText((string) $os, ['size' => 9], ['alignment' => Jc::CENTER]);
+                $dr->addCell($dColW[5])->addText((string) $noc, ['size' => 9], ['alignment' => Jc::CENTER]);
                 $dr->addCell($dColW[6], ['bgColor' => 'F5F5F5'])
-                    ->addText(number_format($koszt, 2, ',', ' ').' zł', ['bold' => true, 'size' => 9]);
+                    ->addText(number_format($koszt, 2, ',', ' ').' zł', ['bold' => true, 'size' => 9], ['alignment' => Jc::RIGHT]);
             }
 
             $section->addTextBreak(1);

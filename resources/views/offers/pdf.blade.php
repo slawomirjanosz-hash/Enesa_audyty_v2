@@ -92,6 +92,7 @@ th, td { margin: 0; }
     background: {{ $headerColor }}; border-bottom: 1.5px solid #E5E1D8;
 }
 .price-tbl th.r { text-align: right; }
+.price-tbl th.c, .price-tbl td.c { text-align: center; }
 .price-tbl td { padding: 7px 8px; font-size: 9pt; border-bottom: 1px solid #F0EDE6; color: #1A1A1A; vertical-align: middle; }
 .price-tbl td.r { text-align: right; }
 .price-tbl td.muted { color: #888; font-size: 8pt; }
@@ -312,8 +313,8 @@ th, td { margin: 0; }
         <tr>
             <th style="width:5%">#</th>
             <th>Opis</th>
-            <th class="r" style="width:10%">Ilość</th>
-            <th class="r" style="width:12%">Jedn.</th>
+            <th class="c" style="width:10%">Ilość</th>
+            <th class="c" style="width:12%">Jedn.</th>
             @if($offer->show_unit_prices)
                 <th class="r" style="width:18%">Kwota</th>
             @endif
@@ -348,8 +349,8 @@ th, td { margin: 0; }
             <tr>
                 <td class="muted">{{ $i + 1 }}</td>
                 <td>{{ $row['opis'] }}</td>
-                <td class="r">{{ $row['ilosc'] }}</td>
-                <td class="r">{{ $row['jedn'] }}</td>
+                <td class="c">{{ $row['ilosc'] }}</td>
+                <td class="c">{{ $row['jedn'] }}</td>
                 @if($offer->show_unit_prices)
                     <td class="r"><strong>{{ number_format((float)($row['z_narzutem'] ?? 0), 2, ',', ' ') }} zł</strong></td>
                 @endif

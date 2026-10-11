@@ -20,6 +20,7 @@ test('offer exports use a half strength company color and natural Polish heading
     $html = view('offers.pdf', ['offer' => $offer->load(['company', 'assignedUser', 'offerDelegation']), 'companySettings' => $settings, 'logoBase64' => null, 'sectionsOnly' => false])->render();
     expect($html)->toContain('background: #90A0B0;', 'border-spacing: 0;', 'Termin ważności oferty')
         ->not->toContain('text-transform: uppercase', 'border-collapse:separate', '#1A4D3A');
+    expect($html)->toContain('<th class="c" style="width:10%">Ilość</th>', '<th class="c" style="width:12%">Jedn.</th>', '<td class="c">1</td>', '<td class="c">szt.</td>', '<td class="r"><strong>100,00 zł</strong></td>');
     $response = $this->actingAs($admin)->get(route('offers.download-word', $offer))->assertOk();
     $zip = new ZipArchive;
     expect($zip->open($response->baseResponse->getFile()->getPathname()))->toBeTrue();
@@ -27,4 +28,15 @@ test('offer exports use a half strength company color and natural Polish heading
     $zip->close();
     expect($xml)->toContain('w:fill="90A0B0"', 'Termin ważności oferty', 'w:tblCellSpacing w:w="0"')
         ->not->toContain('TERMIN WAżNOśCI', 'w:fill="1A4D3A"');
+    $document = new DOMDocument;
+    $document->loadXML($xml);
+    $xpath = new DOMXPath($document);
+    $xpath->registerNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+    foreach (['Ilość' => 'center', 'Jedn.' => 'center', 'szt.' => 'center', 'Cena jedn. (zł)' => 'right', 'Razem (zł)' => 'right', '100,00' => 'right'] as $text => $alignment) {
+        $paragraphs = $xpath->query('//w:p[w:r/w:t="'.$text.'"]');
+        expect($paragraphs->length)->toBeGreaterThan(0);
+        foreach ($paragraphs as $paragraph) {
+            expect($xpath->evaluate('string(w:pPr/w:jc/@w:val)', $paragraph))->toBe($alignment);
+        }
+    }
 });
