@@ -1,0 +1,24 @@
+/* Shared table actions. Hidden controls and original forms retain their behavior. */
+td.app-table-action-cell{white-space:nowrap!important;vertical-align:middle}
+.app-table-action-cell .app-table-action-group{display:inline-flex;align-items:center;flex-flow:row nowrap!important;gap:6px!important;margin:0;vertical-align:middle}
+.app-table-action-cell .app-table-action{
+    display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+    box-sizing:border-box!important;width:32px!important;min-width:32px!important;max-width:32px!important;
+    height:32px!important;min-height:32px!important;max-height:32px!important;flex:0 0 32px!important;
+    padding:0!important;font-size:0!important;line-height:1!important;gap:0!important;
+    border:1px solid #cfd8d2!important;border-radius:6px!important;background:#fff!important;
+    color:var(--green,var(--brand,#1a4d3a))!important;text-decoration:none!important;cursor:pointer;
+}
+.app-table-action-cell>.app-table-action+.app-table-action,
+.app-table-action-cell>.app-table-action-group+.app-table-action-group{margin-left:6px}
+.app-table-action-cell .app-table-action>*:not(.app-table-action-glyph){display:none!important}
+.app-table-action-cell .app-table-action>.app-table-action-glyph{display:block!important;width:17px!important;height:17px!important;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.app-table-action-cell .app-table-action:hover{background:#edf3ef!important}
+.app-table-action-cell .app-table-action-danger{color:#b91c1c!important;border-color:#fecaca!important}
+.app-table-action-cell .app-table-action-danger:hover{background:#fff0ee!important}
+.app-table-action-cell .app-table-action:focus-visible{outline:2px solid var(--green,#1a4d3a);outline-offset:2px}
+.app-table-action-cell .app-table-action:disabled,.app-table-action-cell .app-table-action[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.app-table-action-cell [hidden]{display:none!important}
+.app-table-action-cell .hidden,.app-table-action-cell .d-none,
+.app-table-action-cell .app-table-action[aria-hidden="true"],.app-table-action-cell .app-table-action-group[aria-hidden="true"]{display:none!important}
+@media print{.app-table-action-cell .app-table-action{display:none!important}}

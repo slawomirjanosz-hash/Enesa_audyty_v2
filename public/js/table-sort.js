@@ -1,3 +1,5 @@
+import './table-actions.js?v=1';
+
 const collator = new Intl.Collator('pl', {numeric: true, sensitivity: 'base'});
 
 export function sortValue(raw) {
