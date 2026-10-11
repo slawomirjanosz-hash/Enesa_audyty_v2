@@ -121,6 +121,17 @@ class CompanySettings extends Model
             : '#1A4D3A';
     }
 
+    /** Equivalent of 50% brand-color opacity over white, supported by PDF and Word. */
+    public function documentHeaderColor(): string
+    {
+        $rgb = str_split(substr($this->primaryColor(), 1), 2);
+
+        return '#'.implode('', array_map(
+            fn (string $channel): string => sprintf('%02X', (int) round((hexdec($channel) + 255) / 2)),
+            $rgb
+        ));
+    }
+
     public function logoUrl(): string
     {
         if ($this->logo_data) {

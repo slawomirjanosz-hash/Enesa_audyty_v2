@@ -706,8 +706,8 @@ class OfferController extends Controller
         $phpWord->setDefaultFontName('Calibri');
         $phpWord->setDefaultFontSize(11);
 
-        $green = '1A4D3A';
-        $lightGreen = 'F0F7F4';
+        $green = ltrim(($companySettings ?? new CompanySettings)->primaryColor(), '#');
+        $lightGreen = ltrim(($companySettings ?? new CompanySettings)->documentHeaderColor(), '#');
         $borderColor = 'D8D8D8';
         $pageW = Converter::cmToTwip(17); // 21 - 2 - 2
 
@@ -768,7 +768,7 @@ class OfferController extends Controller
         $pTable = $section->addTable([
             'borderSize' => 6,
             'borderColor' => $borderColor,
-            'cellMargin' => 120,
+            'cellMargin' => 120, 'cellSpacing' => 0,
             'width' => $pageW,
             'unit' => TblWidth::TWIP,
         ]);
@@ -812,7 +812,7 @@ class OfferController extends Controller
 
         // ── HELPER: nagłówek sekcji ───────────────────────────────────────────
         $addSectionHeader = function (string $label) use ($section, $green) {
-            $section->addText(strtoupper($label), ['size' => 9, 'color' => $green, 'bold' => true], [
+            $section->addText($label, ['size' => 9, 'color' => $green, 'bold' => true], [
                 'spaceAfter' => Converter::pointToTwip(6),
             ]);
         };
@@ -881,7 +881,7 @@ class OfferController extends Controller
                 $priceTable = $section->addTable([
                     'borderSize' => 4,
                     'borderColor' => 'E0E0E0',
-                    'cellMargin' => 80,
+                    'cellMargin' => 80, 'cellSpacing' => 0,
                     'width' => $pageW,
                     'unit' => TblWidth::TWIP,
                     'columnWidths' => $colW,
@@ -896,8 +896,8 @@ class OfferController extends Controller
                     ['Cena jedn. (zł)', $colW[4]],
                     ['Razem (zł)',      $colW[5]],
                 ] as [$h, $w]) {
-                    $th->addCell($w, ['bgColor' => $green])
-                        ->addText($h, ['bold' => true, 'size' => 9, 'color' => 'FFFFFF']);
+                    $th->addCell($w, ['bgColor' => $lightGreen])
+                        ->addText($h, ['bold' => true, 'size' => 9, 'color' => '1A1A1A']);
                 }
 
                 $rows = $ps['rows'] ?? [];
@@ -913,7 +913,7 @@ class OfferController extends Controller
                     $dr->addCell($colW[2])->addText($row['ilosc'] ?? '', ['size' => 10]);
                     $dr->addCell($colW[3])->addText($row['jedn'] ?? '', ['size' => 10]);
                     $dr->addCell($colW[4])->addText(number_format((float) ($row['cena_jedn'] ?? 0), 2, ',', ' '), ['size' => 10]);
-                    $dr->addCell($colW[5], ['bgColor' => 'F5FAF7'])
+                    $dr->addCell($colW[5], ['bgColor' => 'F5F5F5'])
                         ->addText(number_format($znarzutem, 2, ',', ' '), ['bold' => true, 'size' => 10]);
                 }
 
@@ -924,17 +924,17 @@ class OfferController extends Controller
             $totalTable = $section->addTable([
                 'borderSize' => 0,
                 'borderColor' => 'FFFFFF',
-                'cellMargin' => 100,
+                'cellMargin' => 100, 'cellSpacing' => 0,
                 'width' => $pageW,
                 'unit' => TblWidth::TWIP,
             ]);
             $tRow = $totalTable->addRow(Converter::cmToTwip(1.2));
-            $tRow->addCell(Converter::cmToTwip(13), ['bgColor' => $green])
-                ->addText('Łącznie netto', ['bold' => true, 'size' => 13, 'color' => 'FFFFFF']);
-            $tRow->addCell(Converter::cmToTwip(4), ['bgColor' => $green])
+            $tRow->addCell(Converter::cmToTwip(13), ['bgColor' => $lightGreen])
+                ->addText('Łącznie netto', ['bold' => true, 'size' => 13, 'color' => '1A1A1A']);
+            $tRow->addCell(Converter::cmToTwip(4), ['bgColor' => $lightGreen])
                 ->addText(
                     number_format($grandTotal, 2, ',', ' ').' zł',
-                    ['bold' => true, 'size' => 13, 'color' => 'FFFFFF'],
+                    ['bold' => true, 'size' => 13, 'color' => '1A1A1A'],
                     ['alignment' => Jc::RIGHT]
                 );
 
@@ -960,7 +960,7 @@ class OfferController extends Controller
             $dTable = $section->addTable([
                 'borderSize' => 4,
                 'borderColor' => 'E0E0E0',
-                'cellMargin' => 80,
+                'cellMargin' => 80, 'cellSpacing' => 0,
                 'width' => $pageW,
                 'unit' => TblWidth::TWIP,
                 'columnWidths' => $dColW,
@@ -976,8 +976,8 @@ class OfferController extends Controller
                 ['Noclegi',     $dColW[5]],
                 ['Koszt',       $dColW[6]],
             ] as [$h, $w]) {
-                $dh->addCell($w, ['bgColor' => $green])
-                    ->addText($h, ['bold' => true, 'size' => 9, 'color' => 'FFFFFF']);
+                $dh->addCell($w, ['bgColor' => $lightGreen])
+                    ->addText($h, ['bold' => true, 'size' => 9, 'color' => '1A1A1A']);
             }
 
             $delegTotal = 0;
@@ -998,7 +998,7 @@ class OfferController extends Controller
                 $dr->addCell($dColW[3])->addText((string) $wyj, ['size' => 9]);
                 $dr->addCell($dColW[4])->addText((string) $os, ['size' => 9]);
                 $dr->addCell($dColW[5])->addText((string) $noc, ['size' => 9]);
-                $dr->addCell($dColW[6], ['bgColor' => 'F5FAF7'])
+                $dr->addCell($dColW[6], ['bgColor' => 'F5F5F5'])
                     ->addText(number_format($koszt, 2, ',', ' ').' zł', ['bold' => true, 'size' => 9]);
             }
 

@@ -1,3 +1,8 @@
+@php
+    $printBrand = $companySettings ?? new \App\Models\CompanySettings;
+    $brandColor = $printBrand->primaryColor();
+    $headerColor = $printBrand->documentHeaderColor();
+@endphp
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -14,12 +19,14 @@ body {
 }
 
 /* NAGŁÓWEK */
+table { border-collapse: collapse; border-spacing: 0; }
+th, td { margin: 0; }
 .hdr-tbl { width: 100%; border-collapse: collapse; }
 .hdr-tbl td { vertical-align: middle; }
 
 .logo-sq {
     width: 48px; height: 48px;
-    background: #1A4D3A;
+    background: {{ $brandColor }};
     border-radius: 6px;
     color: #F5F0E8;
     font-size: 9pt;
@@ -29,10 +36,10 @@ body {
     padding-top: 11px;
     letter-spacing: .5px;
 }
-.brand-name { font-size: 16pt; font-weight: bold; color: #1A4D3A; line-height: 1; }
+.brand-name { font-size: 16pt; font-weight: bold; color: {{ $brandColor }}; line-height: 1; }
 .brand-sub  { font-size: 7.5pt; color: #888; margin-top: 3px; }
 
-.doc-ref-num   { font-size: 9pt; font-weight: bold; color: #1A4D3A; text-align: right; }
+.doc-ref-num   { font-size: 9pt; font-weight: bold; color: {{ $brandColor }}; text-align: right; }
 .doc-ref-dates { font-size: 8pt; color: #888; text-align: right; line-height: 1.9; margin-top: 3px; }
 
 /* LINIA */
@@ -44,7 +51,7 @@ body {
 .offer-title-sub  { font-size: 8.5pt; color: #888; margin-top: 4px; }
 
 /* STRONY */
-.party-accent { width: 5px; background: #1A4D3A; padding: 0; }
+.party-accent { width: 5px; background: {{ $brandColor }}; padding: 0; }
 .party-inner {
     background: #F9F7F4;
     border-top: 1px solid #E5E1D8;
@@ -53,15 +60,15 @@ body {
     padding: 11px 13px;
     vertical-align: top;
 }
-.party-lbl  { font-size: 7.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: .1em; color: #888; margin-bottom: 5px; }
+.party-lbl  { font-size: 7.5pt; font-weight: bold; text-transform: none; color: #1A1A1A; margin-bottom: 5px; }
 .party-name { font-size: 11pt; font-weight: bold; color: #1A1A1A; margin-bottom: 3px; line-height: 1.3; }
 .party-det  { font-size: 8.5pt; color: #555; line-height: 1.75; }
 
 /* SEKCJA LABEL */
 .sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
 .sec-lbl-text {
-    font-size: 10pt; font-weight: bold; text-transform: uppercase;
-    letter-spacing: .07em; color: #1A4D3A; white-space: normal; line-height: 1.3;
+    font-size: 10pt; font-weight: bold; text-transform: none;
+     color: {{ $brandColor }}; white-space: normal; line-height: 1.3;
     padding: 0 0 3px 0; width: 100%;
 }
 .sec-lbl-line { width: 0; padding: 0; }
@@ -71,28 +78,28 @@ body {
 .sec-content { font-size: 9.5pt; line-height: 1.8; color: #1A1A1A; }
 .sec-content ol, .sec-content ul { padding-left: 18px; }
 .sec-content li { margin-bottom: 2px; }
-.sec-content h2 { font-size: 12pt; line-height: 1.3; margin: 12px 0 6px; color: #1A4D3A; }
+.sec-content h2 { font-size: 12pt; line-height: 1.3; margin: 12px 0 6px; color: {{ $brandColor }}; }
 .sec-content h3 { font-size: 10.5pt; line-height: 1.35; margin: 10px 0 5px; color: #1A1A1A; }
 .sec-content table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 8.8pt; page-break-inside: avoid; }
-.sec-content th { padding: 6px 7px; text-align: left; font-size: 8pt; color: #1A4D3A; background: #F4F1EA; border: 1px solid #E5E1D8; }
+.sec-content th { padding: 6px 7px; text-align: left; font-size: 8pt; color: #1A1A1A; background: {{ $headerColor }}; border: 1px solid #E5E1D8; }
 .sec-content td { padding: 6px 7px; vertical-align: top; border: 1px solid #E5E1D8; }
 
 /* TABELA WYCENY */
 .price-tbl { width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 9pt; }
 .price-tbl th {
     padding: 6px 8px; text-align: left; font-size: 7.5pt; font-weight: bold;
-    text-transform: uppercase; letter-spacing: .06em; color: #888;
-    background: #F4F1EA; border-bottom: 1.5px solid #E5E1D8;
+    text-transform: none; color: #1A1A1A;
+    background: {{ $headerColor }}; border-bottom: 1.5px solid #E5E1D8;
 }
 .price-tbl th.r { text-align: right; }
 .price-tbl td { padding: 7px 8px; font-size: 9pt; border-bottom: 1px solid #F0EDE6; color: #1A1A1A; vertical-align: middle; }
 .price-tbl td.r { text-align: right; }
 .price-tbl td.muted { color: #888; font-size: 8pt; }
 .price-tbl tr:last-child td { border-bottom: none; }
-.section-name-row td { background: #F4F1EA; font-weight: bold; font-size: 8pt; color: #1A4D3A; padding: 5px 8px; }
+.section-name-row td { background: {{ $headerColor }}; font-weight: bold; font-size: 8pt; color: #1A1A1A; padding: 5px 8px; }
 .section-name-row .section-name-total { text-align: right; white-space: nowrap; }
 .section-summary-row td { padding: 9px 8px; background: #F9F7F4; border-bottom: 1px solid #E5E1D8; }
-.section-summary-row .section-summary-name { font-weight: bold; color: #1A4D3A; }
+.section-summary-row .section-summary-name { font-weight: bold; color: {{ $brandColor }}; }
 .section-summary-row .section-summary-value { text-align: right; font-weight: bold; white-space: nowrap; }
 
 /* DELEGACJE */
@@ -108,7 +115,7 @@ body {
 .sum-tbl td.r { text-align: right; font-weight: 600; }
 .sum-tbl td.muted { color: #555; }
 .sum-total td {
-    background: #1A4D3A; color: #fff !important; font-size: 10pt;
+    background: {{ $headerColor }}; color: #1A1A1A !important; font-size: 10pt;
     font-weight: bold; padding: 10px 11px; border-bottom: none;
 }
 .sum-total td.r { text-align: right; font-size: 11pt; font-weight: bold; }
@@ -159,7 +166,7 @@ body {
 </div>
 
 {{-- WYSTAWCA / ODBIORCA --}}
-<table style="width:100%; border-collapse:separate; border-spacing:12px 0; margin-bottom:22px;">
+<table style="width:100%; border-collapse:collapse; border-spacing:0; margin-bottom:22px;">
 <tr>
     {{-- Wystawca --}}
     <td style="width:50%; padding:0; vertical-align:top;">
