@@ -7,6 +7,9 @@
 @endphp
 <strong>{{ $workflow['title'] }}</strong>
 @unless($isTemplatePreview)
+@if($sectionId === '3-1')
+@include('audits.partials.questionnaire-excel', ['prefix'=>($clientView ?? false)?'client.audits.implementation.':'audits.implementation.', 'excelParameters'=>[$audit,$actionKey], 'editable'=>($clientView ?? false) || auth()->user()->can('audits.manage')])
+@endif
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!($clientView ?? false), 'exampleForm'=>'iso-action-'.$actionKey])
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->fields(array_keys($workflow['fields']),$answers), 'progressForm'=>'#iso-action-'.$actionKey, 'progressMode'=>'fields', 'progressFields'=>array_map(fn($key)=>'answers['.$key.']',array_keys($workflow['fields']))])
 @endunless

@@ -10,6 +10,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoStakeholderReview;
 use App\Services\AuditorAccessService;
+use App\Services\IsoSectionWorkbook;
 use App\Services\IsoStakeholderQuestionnaire;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -61,6 +62,23 @@ class IsoStakeholderReviewController extends Controller
             'register' => $this->questionnaire->register($answers, $parties, $review->consultant ?? []),
             'events' => $review->exists ? DB::table('iso_stakeholder_events')->where('review_id', $review->id)->orderByDesc('id')->limit(50)->get(['action', 'user_name', 'created_at']) : collect(),
         ]);
+    }
+
+    public function excel(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit, $profile);
+
+        return app(IsoSectionWorkbook::class)->sectionDownload($profile, '4-2');
+    }
+
+    public function importExcel(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit, $profile, true);
+        $request->validate(['excel' => 'required|file|mimes:xlsx|max:10240']);
+        $data = app(IsoSectionWorkbook::class)->sectionRead($request->file('excel')->getRealPath(), $profile, '4-2');
+        $request->replace($data + ['operation' => 'save', 'complete_form' => '1']);
+
+        return $this->update($request, $audit, $profile)->with('success', 'Zaimportowano odpowiedzi z Excela. Sprawdź wymagania przed zatwierdzeniem ankiety.');
     }
 
     private function approval(Request $request): array

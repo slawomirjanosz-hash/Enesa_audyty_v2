@@ -23,11 +23,11 @@ use ZipArchive;
 
 class IsoQuestionnaireWorkbook
 {
-    private Spreadsheet $book;
+    protected Spreadsheet $book;
 
-    private int $listColumn = 0;
+    protected int $listColumn = 0;
 
-    private array $listRanges = [];
+    protected array $listRanges = [];
 
     public function download(IsoPlantProfile $profile, string $kind, ?IsoFactorReview $review = null)
     {
@@ -105,7 +105,7 @@ class IsoQuestionnaireWorkbook
         return $this->book;
     }
 
-    private function sheet(string $title, array $headers): Worksheet
+    protected function sheet(string $title, array $headers): Worksheet
     {
         $sheet = $this->book->createSheet()->setTitle($title);
         $this->row($sheet, 1, $headers);
@@ -117,7 +117,7 @@ class IsoQuestionnaireWorkbook
         return $sheet;
     }
 
-    private function row(Worksheet $sheet, int $row, array $values): void
+    protected function row(Worksheet $sheet, int $row, array $values): void
     {
         foreach (array_values($values) as $i => $value) {
             $sheet->setCellValueExplicit([$i + 1, $row], $value ?? '', is_int($value) || is_float($value) ? DataType::TYPE_NUMERIC : DataType::TYPE_STRING);
@@ -125,7 +125,7 @@ class IsoQuestionnaireWorkbook
         $sheet->setAutoFilter('A1:'.$sheet->getHighestDataColumn().$row);
     }
 
-    private function editable(Worksheet $sheet, string $cell, array $options = []): void
+    protected function editable(Worksheet $sheet, string $cell, array $options = []): void
     {
         $sheet->getStyle($cell)->getNumberFormat()->setFormatCode('@');
         $sheet->getStyle($cell)->getProtection()->setLocked(Protection::PROTECTION_UNPROTECTED);
@@ -146,7 +146,7 @@ class IsoQuestionnaireWorkbook
         $sheet->getCell($cell)->getDataValidation()->setType(DataValidation::TYPE_LIST)->setErrorStyle(DataValidation::STYLE_STOP)->setAllowBlank(true)->setShowDropDown(true)->setShowErrorMessage(true)->setErrorTitle('Wybierz z listy')->setError('Wybierz jedną z dostępnych odpowiedzi.')->setFormula1('ENESA_LIST_'.$column);
     }
 
-    private function inputFormat(Worksheet $sheet, string $cell, array $field): void
+    protected function inputFormat(Worksheet $sheet, string $cell, array $field): void
     {
         $value = $sheet->getCell($cell)->getValue();
         if (($field['type'] ?? '') === 'number') {
@@ -335,7 +335,7 @@ class IsoQuestionnaireWorkbook
         }
     }
 
-    private function indexed(Spreadsheet $book, string $name): array
+    protected function indexed(Spreadsheet $book, string $name): array
     {
         $sheet = $book->getSheetByName($name);
         if (! $sheet) {
@@ -352,7 +352,7 @@ class IsoQuestionnaireWorkbook
         return $rows;
     }
 
-    private function exact(array $actual, array $expected, string $sheet): void
+    protected function exact(array $actual, array $expected, string $sheet): void
     {
         sort($actual);
         sort($expected);
@@ -361,7 +361,7 @@ class IsoQuestionnaireWorkbook
         }
     }
 
-    private function value(Worksheet $sheet, string $cell, array $field = []): mixed
+    protected function value(Worksheet $sheet, string $cell, array $field = []): mixed
     {
         $value = $sheet->getCell($cell)->getValue();
         if ($value === null || $value === '') {
@@ -385,7 +385,7 @@ class IsoQuestionnaireWorkbook
         return ($field['type'] ?? '') === 'number' ? $value : trim((string) $value);
     }
 
-    private function yes(Worksheet $sheet, string $cell): bool
+    protected function yes(Worksheet $sheet, string $cell): bool
     {
         $value = $this->value($sheet, $cell);
         if (! in_array($value, [null, 'Tak', 'Nie'], true)) {
@@ -497,7 +497,7 @@ class IsoQuestionnaireWorkbook
         return ['lock_version' => $context['lock_version'], 'source_hash' => $context['source_hash'], 'answers' => $answers];
     }
 
-    private function guardZip(string $path): void
+    protected function guardZip(string $path): void
     {
         $zip = new ZipArchive;
         if ($zip->open($path) !== true) {
@@ -519,7 +519,7 @@ class IsoQuestionnaireWorkbook
         }
     }
 
-    private function fail(string $message): never
+    protected function fail(string $message): never
     {
         throw ValidationException::withMessages(['excel' => $message]);
     }

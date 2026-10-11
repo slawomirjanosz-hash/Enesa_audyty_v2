@@ -9,6 +9,7 @@ use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\DocumentVersionService;
 use App\Services\IsoContextService;
+use App\Services\IsoSectionWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,6 +44,25 @@ class IsoImplementationController extends Controller
         abort_unless($auditType->slug === 'iso50001', 404);
 
         return redirect()->route('audit-types.iso50001.library', $auditType);
+    }
+
+    public function excel(Request $request, Audit $audit, string $action)
+    {
+        $request->routeIs('client.*') ? $this->authorizeClient($request, $audit) : $this->authorizeStaff($request, $audit);
+
+        return app(IsoSectionWorkbook::class)->implementationDownload($audit, $action);
+    }
+
+    public function importExcel(Request $request, Audit $audit, string $action)
+    {
+        $client = $request->routeIs('client.*');
+        $client ? $this->authorizeClient($request, $audit) : $this->authorizeStaff($request, $audit);
+        abort_if(! $client && ! $request->user()->can('audits.manage'), 403);
+        $request->validate(['excel' => 'required|file|mimes:xlsx|max:10240']);
+        $data = app(IsoSectionWorkbook::class)->implementationRead($request->file('excel')->getRealPath(), $audit, $action);
+        $request->replace(['answers' => $data['answers']]);
+
+        return $this->persist($request, $audit, '3-1', $action, false, $client)->with('success', 'Zaimportowano odpowiedzi z Excela.');
     }
 
     public function store(Request $request, Audit $audit, string $section, string $action): RedirectResponse

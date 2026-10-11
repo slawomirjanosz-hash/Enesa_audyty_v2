@@ -13,6 +13,7 @@
  $changed=fn($path)=>isset($changes['answers']) && data_get($changes['answers']['before'],$path)!==data_get($changes['answers']['after'],$path);
  $operations=['save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','consultant'=>'Zapisano ocenę konsultanta','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie'];
 @endphp
+@include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'stakeholder-form'])
 @if(session('success'))<div class="plant-notice success" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź zaznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif

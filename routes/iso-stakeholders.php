@@ -10,6 +10,8 @@ foreach ([false, true] as $client) {
         ->group(function () {
             Route::get('/', [IsoStakeholderReviewController::class, 'show'])->name('show');
             Route::post('/', [IsoStakeholderReviewController::class, 'update'])->name('update');
+            Route::get('/excel', [IsoStakeholderReviewController::class, 'excel'])->middleware('throttle:10,1')->name('excel');
+            Route::post('/excel', [IsoStakeholderReviewController::class, 'importExcel'])->middleware('throttle:10,1')->name('excel-import');
             Route::post('/pdf', [IsoStakeholderReviewController::class, 'pdf'])->middleware('throttle:10,1')->name('pdf');
         });
 }

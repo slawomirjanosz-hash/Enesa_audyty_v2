@@ -11,6 +11,7 @@ use App\Models\IsoSystemReview;
 use App\Services\AuditorAccessService;
 use App\Services\IsoExecutionQuestionnaire;
 use App\Services\IsoPlanningQuestionnaire;
+use App\Services\IsoSectionWorkbook;
 use App\Services\IsoSupportQuestionnaire;
 use App\Services\IsoSystemQuestionnaire;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -70,6 +71,23 @@ class IsoSystemReviewController extends Controller
             'sections' => $this->questionnaire->sections($section, $answers, $sources), 'progress' => $this->questionnaire->progress($section, $answers, $sources),
             'canWrite' => $client || $request->user()->can('audits.manage'), 'canClientApprove' => $client && $request->user()->hasRole('client_admin'),
             'events' => $review->exists ? DB::table('iso_system_events')->where('review_id', $review->id)->orderByDesc('id')->limit(50)->get() : collect()]);
+    }
+
+    public function excel(Request $request, Audit $audit, IsoPlantProfile $profile, string $section)
+    {
+        $this->access($request, $audit, $profile, $section);
+
+        return app(IsoSectionWorkbook::class)->sectionDownload($profile, $section);
+    }
+
+    public function importExcel(Request $request, Audit $audit, IsoPlantProfile $profile, string $section)
+    {
+        $this->access($request, $audit, $profile, $section, true);
+        $request->validate(['excel' => 'required|file|mimes:xlsx|max:10240']);
+        $data = app(IsoSectionWorkbook::class)->sectionRead($request->file('excel')->getRealPath(), $profile, $section);
+        $request->replace($data + ['operation' => 'save', 'complete_form' => '1']);
+
+        return $this->update($request, $audit, $profile, $section)->with('success', 'Zaimportowano odpowiedzi z Excela. Sprawdź je przed zatwierdzeniem ankiety.');
     }
 
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile, string $section)

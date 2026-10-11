@@ -25,6 +25,7 @@
 @if(str_starts_with($section,'7-')) @include('audits.system.support-summary') @endif
 @if(\App\Services\IsoExecutionQuestionnaire::handles($section)) @include('audits.system.execution-summary') @endif
 @php($editable=$canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected'])))
+@include('audits.partials.questionnaire-excel', ['excelParameters'=>[$audit,$profile,$section]])
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
 <fieldset @disabled(!$editable)>
 @if(!$client && $editable)<button type="button" id="system-example">Wypełnij przykładowo puste odpowiedzi klienta</button><small class="plant-help">Dane testowe pojawią się w formularzu. Nie są zapisywane ani zatwierdzane automatycznie.</small>@endif
