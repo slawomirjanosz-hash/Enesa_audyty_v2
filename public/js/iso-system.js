@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', event => {
+        if (event.target.closest('[data-add-conclusion]')) {
+            const host = document.querySelector('[data-conclusions]');
+            if (host.children.length >= 20) return;
+            const row = host.firstElementChild.cloneNode(true);
+            const indices = [...host.querySelectorAll('textarea')].map(el=>Number(el.name.match(/\[(\d+)\]/)?.[1]||0));
+            const next = Math.max(0,...indices)+1;
+            row.querySelectorAll('textarea').forEach(el=>{el.name=el.name.replace(/\[\d+\]/,'['+next+']');el.value='';});
+            host.appendChild(row);
+        }
+        const remove=event.target.closest('[data-remove-conclusion]');
+        if (remove && remove.closest('[data-conclusions]').children.length>1) remove.closest('.system-row').remove();
+    });
     const form = document.getElementById('system-form');
     if (!form) return;
     let dirty = false;
@@ -22,10 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (values(el.dataset.key).length) done++;
             }
         });
-        ['GRANICE', 'UPRAW'].forEach(root => {
+        const section = window.location.pathname.split('/').filter(Boolean).pop();
+        const minimum = section === '5-1' ? {CZLON:1,DECYZJE:3} : section === '5-2' ? {PRZEGLADY:1} : section === '5-3' ? {ROLE:1,UPR:1} : {GRANICE:1,UPRAW:1};
+        Object.entries(minimum).forEach(([root,min]) => {
             const container = form.querySelector(`[data-repeater="${root}"]`);
-            if (container && !container.querySelector('.system-row')) total++;
+            if (container) total += Math.max(0, min-container.querySelectorAll('.system-row').length);
         });
+        if (section === '5-3') {
+            for (let i=1;i<=18;i++) {
+                const code = 'MAT-'+String(i).padStart(2,'0');
+                const owners = [...form.querySelectorAll('[data-system-field]')].filter(el=>el.dataset.key.endsWith('.MAT.'+code) && values(el.dataset.key)[0]==='O').length;
+                total++;
+                if (owners===1 || (owners>1 && values('UWAGI.'+code).length)) done++;
+            }
+        }
         const indicator = document.querySelector('[data-system-progress]');
         indicator.textContent = `Wypełnienie: ${total ? Math.floor(100 * done / total) : 0}% · ${done} / ${total}`;
         const energy = form.querySelector('[data-energy-fields]');
@@ -57,16 +80,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!confirm('Uzupełnić puste pola klienta przykładowymi danymi? Sprawdź je przed zapisaniem.')) return;
         for (let round = 0; round < 2; round++) {
             form.querySelectorAll('[data-system-field]').forEach(field => {
-                if (field.hidden || values(field.dataset.key).length) return;
+                if (field.hidden || values(field.dataset.key).length || field.dataset.key.includes('.MAT.')) return;
                 field.querySelectorAll('input:not([type=hidden]),select,textarea').forEach(el => {
                     if (el.type === 'checkbox') el.checked = true;
                     else if (el.tagName === 'SELECT') el.selectedIndex = Math.min(1, el.options.length - 1);
                     else if (el.type === 'date') el.value = new Date().toISOString().slice(0, 10);
+                    else if (el.dataset.example) el.value = el.dataset.example;
+                    else if (field.dataset.key==='POL.wstep') el.value = 'Zobowiązujemy się do realizacji następujących zasad.';
+                    else if (/^ROLE\.\d+\.id$/.test(field.dataset.key)) el.value = 'R' + field.dataset.key.split('.')[1];
                     else el.value = 'PRZYKŁAD — do weryfikacji: ' + field.querySelector('strong').textContent;
                 });
             });
             update();
         }
+        const roleRows = [...form.querySelectorAll('[data-repeater="ROLE"] .system-row')];
+        roleRows.forEach((row,index)=>row.querySelectorAll('[data-system-field]').forEach(field=>{
+            if(field.dataset.key.includes('.MAT.')) {
+                const select=field.querySelector('select');
+                if(!select.value) select.value=index===0?'O':'I';
+            }
+        }));
         form.dispatchEvent(new Event('input', {bubbles:true}));
     });
     update();

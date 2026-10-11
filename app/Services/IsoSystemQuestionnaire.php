@@ -16,11 +16,18 @@ class IsoSystemQuestionnaire
 {
     public function schema(string $section): array
     {
-        return json_decode(file_get_contents(resource_path('iso50001/'.($section === '4-3' ? 'scope' : 'system').'-v1.json')), true, 512, JSON_THROW_ON_ERROR);
+        $name = match ($section) {
+            '4-3' => 'scope', '4-4' => 'system', '5-1' => 'leadership', '5-2' => 'policy', '5-3' => 'roles'
+        };
+
+        return json_decode(file_get_contents(resource_path('iso50001/'.$name.'-v1.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function sources(IsoPlantProfile $profile, string $section): array
     {
+        if (str_starts_with($section, '5-')) {
+            return app(IsoLeadershipQuestionnaire::class)->sources($profile, $section);
+        }
         $factor = IsoFactorReview::where('audit_id', $profile->audit_id)->where('site_id', $profile->site_id)->first();
         $party = IsoStakeholderReview::where('audit_id', $profile->audit_id)->where('site_id', $profile->site_id)->first();
         $scope = $section === '4-4' ? IsoSystemReview::where('audit_id', $profile->audit_id)->where('site_id', $profile->site_id)->where('section', '4-3')->first() : null;
@@ -87,6 +94,9 @@ class IsoSystemQuestionnaire
 
     public function seed(string $section, array $sources): array
     {
+        if (str_starts_with($section, '5-')) {
+            return app(IsoLeadershipQuestionnaire::class)->seed($section, $sources);
+        }
         if ($section === '4-4') {
             return [];
         }
@@ -129,6 +139,9 @@ class IsoSystemQuestionnaire
 
     public function sections(string $section, array $answers, array $sources): array
     {
+        if (str_starts_with($section, '5-')) {
+            return app(IsoLeadershipQuestionnaire::class)->sections($section, $answers, $sources);
+        }
         $f = fn ($key, $label, $options = [], $required = true, $when = null, $type = 'text', $help = '') => $this->field($key, $label, $options, $required, $when, $type, $help);
         $yes = ['tak' => 'Tak', 'nie' => 'Nie'];
         $groups = [];
@@ -219,6 +232,9 @@ class IsoSystemQuestionnaire
 
     public function rowFields(string $root, string $i): array
     {
+        if (in_array($root, IsoLeadershipQuestionnaire::REPEATERS)) {
+            return app(IsoLeadershipQuestionnaire::class)->rowFields($root, $i);
+        }
         $labels = match ($root) {
             'GRANICE' => ['nazwa' => 'Lokalizacja / obiekt', 'adres' => 'Adres', 'fizyczna' => 'Granica fizyczna — budynki i teren', 'jednostki' => 'Jednostki organizacyjne'],
             'UPRAW' => ['obiekt' => 'Obiekt / instalacja / usługa', 'kto' => 'Kto decyduje o energii', 'podstawa' => 'Podstawa uprawnień', 'brakUprawnien' => 'Czy brakuje uprawnień?', 'dzialanie' => 'Co robicie, aby uzyskać uprawnienia?', 'usluga' => 'Usługa zlecona na terenie zakładu?', 'nadzor' => 'Nadzór nad usługą (8.1)', 'uwagi' => 'Uwagi'],
@@ -243,6 +259,9 @@ class IsoSystemQuestionnaire
 
     public function normalize(string $section, array $input, array $sources, bool $complete): array
     {
+        if (str_starts_with($section, '5-')) {
+            app(IsoLeadershipQuestionnaire::class)->validateRows($section, $input, $complete);
+        }
         Validator::make($input, ['GRANICE' => 'sometimes|array|max:20', 'UPRAW' => 'sometimes|array|max:20', 'POZA' => 'sometimes|array|max:20', 'GRANICE.*' => 'array', 'UPRAW.*' => 'array', 'POZA.*' => 'array'])->validate();
         foreach (['GRANICE', 'UPRAW', 'POZA'] as $root) {
             foreach (array_keys($input[$root] ?? []) as $index) {
@@ -267,7 +286,9 @@ class IsoSystemQuestionnaire
                     }
                     if ($field['type'] === 'date') {
                         $rules[$key][] = 'date_format:Y-m-d';
-                        $rules[$key][] = 'before_or_equal:today';
+                        if ($section !== '5-2' || $key !== 'ZATW.od') {
+                            $rules[$key][] = 'before_or_equal:today';
+                        }
                     }
                 }
             }
@@ -287,14 +308,27 @@ class IsoSystemQuestionnaire
                         $errors[$root] = 'Dodaj przynajmniej jedną pozycję: '.$root;
                     }
                 }
-            } elseif (data_get($out, 'ODP.SYS-02') !== 'tak') {
+            } elseif ($section === '4-4' && data_get($out, 'ODP.SYS-02') !== 'tak') {
                 $errors['ODP.SYS-02'] = 'Popraw zakres w punkcie 4.3 przed zatwierdzeniem 4.4.';
             }
             if (! $sources['ready']) {
-                $errors['sources'] = $section === '4-3' ? 'Najpierw zatwierdź profil, 4.1 i 4.2.' : 'Najpierw zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.';
+                $errors['sources'] = str_starts_with($section, '5-') ? 'Najpierw zatwierdź aktualne punkty źródłowe wskazane nad ankietą.' : ($section === '4-3' ? 'Najpierw zatwierdź profil, 4.1 i 4.2.' : 'Najpierw zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.');
             }
             if ($errors) {
                 throw ValidationException::withMessages($errors);
+            }
+        }
+        if (str_starts_with($section, '5-')) {
+            app(IsoLeadershipQuestionnaire::class)->validateContent($section, $out, $complete);
+            if ($section === '5-3') {
+                $out['MAT'] = [];
+                foreach ($out['ROLE'] ?? [] as $role) {
+                    foreach ($role['MAT'] ?? [] as $code => $value) {
+                        if (filled($role['id'] ?? null)) {
+                            $out['MAT'][$code.'|'.$role['id']] = $value;
+                        }
+                    }
+                }
             }
         }
         if ($section === '4-3') {
@@ -325,6 +359,22 @@ class IsoSystemQuestionnaire
             }
         }
 
+        if (str_starts_with($section, '5-')) {
+            $minimum = match ($section) {
+                '5-1' => ['CZLON' => 1, 'DECYZJE' => 3], '5-2' => ['PRZEGLADY' => 1], '5-3' => ['ROLE' => 1, 'UPR' => 1]
+            };
+            foreach ($minimum as $root => $count) {
+                $total += max(0, $count - count($answers[$root] ?? []));
+            }
+            if ($section === '5-3') {
+                foreach ($this->schema($section)['MAT_ZADANIA'] as $task) {
+                    $total++;
+                    $owners = collect($answers['ROLE'] ?? [])->filter(fn ($r) => ($r['MAT'][$task['kod']] ?? '') === 'O')->count();
+                    $done += ($owners === 1 || ($owners > 1 && filled(data_get($answers, 'UWAGI.'.$task['kod'])))) ? 1 : 0;
+                }
+            }
+        }
+
         return app(QuestionnaireCompletion::class)->result($done, $total);
     }
 
@@ -348,6 +398,23 @@ class IsoSystemQuestionnaire
     public function warnings(string $section, array $answers, array $sources): array
     {
         $out = [];
+        if ($section === '5-1') {
+            foreach ($answers['INT'] ?? [] as $code => $row) {
+                if (($row['stan'] ?? '') === 'zapis') {
+                    $out[] = $code.': integracja na papierze — wskaż rzeczywistą decyzję uwzględniającą energię.';
+                }
+            }
+        }
+        if ($section === '5-3') {
+            if (empty($answers['SEU'])) {
+                $out[] = 'Brak właścicieli SEU. Uzupełnij po wyznaczeniu znaczących użyć energii w punkcie 6.3.';
+            }
+            foreach ($answers['ROLE'] ?? [] as $role) {
+                if (($role['MAT']['MAT-14'] ?? '') === 'O' && ($role['MAT']['MAT-15'] ?? '') === 'O') {
+                    $out[] = ($role['nazwa'] ?? 'Rola').': organizacja i przeprowadzenie audytów przypisane tej samej roli — sprawdź bezstronność audytora.';
+                }
+            }
+        }
         if ($section === '4-3') {
             foreach ($this->energy($sources) as $code => $item) {
                 if ($item['suggested'] && data_get($answers, "ENERGIA.$code.status") === 'nie') {

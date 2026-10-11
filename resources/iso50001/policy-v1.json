@@ -1,0 +1,277 @@
+{
+  "ELEMENTY": [
+    {
+      "kod": "a",
+      "litera": "a",
+      "nazwa": "Cel i kontekst organizacji",
+      "min": 80,
+      "musi": "odniesienie do celu organizacji — dlaczego zarządzanie energią jest dla Was ważne",
+      "mozna": "kim jesteście, wnioski z analizy kontekstu (4.1) i wymagania stron (4.2)",
+      "przyklad": "np. Jako dostawca komponentów dla motoryzacji zużywamy rocznie ok. 12 GWh energii — głównie elektrycznej na prasy i sprężone powietrze oraz gazu w lakierni. Energia to ok. 2,5% kosztów operacyjnych, a odbiorcy oczekują danych o zużyciu i emisjach.",
+      "ostrzega": [
+        [
+          "^(?!.*\\d)(?=.*(zrównoważon|dbałość o środowisko|troska o środowisko)).*$",
+          "Treść brzmi jak deklaracja ogólna, bez faktów o Waszej firmie. To typowa „polityka do ramki”. Dopiszcie, ile energii zużywacie, na co i dlaczego to dla Was ważne."
+        ]
+      ],
+      "przykladPelny": "Jako dostawca Tier 1 dla producentów samochodów zużywamy rocznie ok. 12 GWh energii — głównie energii elektrycznej na prasy i sprężone powietrze oraz gazu ziemnego w lakierni i kotłowni. Energia to ok. 2,5% naszych kosztów operacyjnych, a odbiorcy oczekują od nas danych o zużyciu energii i emisjach. Zarządzanie energią jest częścią strategii zakładu na lata 2026–2028."
+    },
+    {
+      "kod": "b",
+      "litera": "b",
+      "nazwa": "Ramy dla celów i zadań energetycznych",
+      "min": 70,
+      "musi": "zobowiązanie do ustalania i przeglądu celów oraz zadań energetycznych",
+      "mozna": "kto ustala cele, na jakiej podstawie i kiedy się je przegląda. Konkretne wartości zwykle należą do celów (6.2)",
+      "wymaga": [
+        [
+          "cel",
+          "Brakuje odniesienia do celów energetycznych."
+        ],
+        [
+          "(przegląd|przeglądamy|weryfik|aktualizuj)",
+          "Element b) wymaga nie tylko ustalania celów, ale i ich przeglądu. Dopiszcie, kiedy i gdzie je przeglądacie."
+        ]
+      ],
+      "przyklad": "np. Ustalamy cele i zadania energetyczne — w pierwszej kolejności dla znaczących użyć energii — na podstawie przeglądu energetycznego. Cele zatwierdza Zarząd, a ich realizację i aktualność przeglądamy w ramach przeglądu zarządzania.",
+      "przykladPelny": "Ustalamy cele i zadania energetyczne — w pierwszej kolejności dla znaczących użyć energii: pras, sprężarkowni i lakierni — na podstawie przeglądu energetycznego. Cele zatwierdza Zarząd, a ich realizację i aktualność przeglądamy w ramach przeglądu zarządzania."
+    },
+    {
+      "kod": "c",
+      "litera": "c",
+      "nazwa": "Informacje i zasoby",
+      "min": 70,
+      "zobowiazanie": true,
+      "musi": "zobowiązanie do zapewnienia dostępności informacji (np. danych pomiarowych, wyników analiz) i zasobów potrzebnych do osiągnięcia celów. Oba słowa mają być w treści — nagłówek nie wystarczy",
+      "wymaga": [
+        [
+          "informacj|dan(e|ych)|wynik",
+          "Brakuje informacji. „Zapewniamy zasoby” pomija połowę wymagania — dopiszcie dane pomiarowe, wyniki analiz, wiedzę o urządzeniach."
+        ],
+        [
+          "zasob|ludzi|środk|czas|budżet",
+          "Brakuje zasobów. Dopiszcie ludzi, czas i środki finansowe."
+        ]
+      ],
+      "przyklad": "np. Zapewniamy informacje potrzebne do zarządzania energią — dane z liczników i pomiarów, wyniki analiz i wskaźników — oraz ludzi, czas i środki finansowe niezbędne do osiągnięcia celów i zadań.",
+      "przykladPelny": "Zapewniamy informacje potrzebne do zarządzania energią — dane z liczników i pomiarów, wyniki analiz i wskaźników, wiedzę o urządzeniach — oraz ludzi, czas i środki finansowe niezbędne do osiągnięcia celów i zadań energetycznych."
+    },
+    {
+      "kod": "d",
+      "litera": "d",
+      "nazwa": "Wymagania prawne i inne",
+      "min": 70,
+      "zobowiazanie": true,
+      "musi": "zobowiązanie do spełniania mających zastosowanie wymagań prawnych i innych wymagań, które organizacja przyjęła, dotyczących efektywności energetycznej, wykorzystania i zużycia energii",
+      "mozna": "przykłady wymagań — bez mieszania rodzajów: prawne / umowne / przyjęte dobrowolnie (kwalifikacja z punktu 4.2)",
+      "wymaga": [
+        [
+          "prawn|ustaw|przepis",
+          "Brakuje wymagań prawnych."
+        ],
+        [
+          "(inne wymagan|innych wymagan|przyjęl|przyjmujemy|umown|odbiorc|klient|strategi)",
+          "„Przestrzegamy przepisów” gubi inne wymagania — choćby wymagania klientów. Dopiszcie wymagania, które przyjęliście dobrowolnie albo umownie."
+        ]
+      ],
+      "ostrzega": [
+        [
+          "^(?!.*efektywn)",
+          "W treści nie ma słowa „efektywność”. Norma wymienia trzy obszary: efektywność energetyczną, wykorzystanie i zużycie energii."
+        ],
+        [
+          "^(?!.*(wykorzystan|zużyci))",
+          "W treści brakuje wykorzystania albo zużycia energii. Norma wymienia wszystkie trzy obszary."
+        ]
+      ],
+      "przyklad": "np. Spełniamy mające zastosowanie wymagania prawne dotyczące efektywności energetycznej, wykorzystania i zużycia energii. Spełniamy również inne wymagania, które przyjęliśmy: wymagania odbiorców dotyczące danych o energii i emisjach oraz zobowiązania ze strategii zakładu.",
+      "przykladPelny": "Spełniamy mające zastosowanie wymagania prawne dotyczące efektywności energetycznej, wykorzystania i zużycia energii — obecnie przede wszystkim ustawę o efektywności energetycznej, a po wejściu w życie także przepisy wdrażające dyrektywę (UE) 2023/1791. Spełniamy również inne wymagania, które przyjęliśmy: wymagania naszych odbiorców dotyczące danych o energii i emisjach oraz certyfikacji systemu zarządzania energią, a także zobowiązania ze strategii zakładu."
+    },
+    {
+      "kod": "e",
+      "litera": "e",
+      "nazwa": "Ciągłe doskonalenie",
+      "min": 50,
+      "zobowiazanie": true,
+      "musi": "zobowiązanie do ciągłego doskonalenia wyniku energetycznego i systemu zarządzania energią — obu",
+      "mozna": "sposób doskonalenia: monitorowanie, analiza, usprawnienia",
+      "wymaga": [
+        [
+          "wynik",
+          "Brakuje wyniku energetycznego."
+        ],
+        [
+          "system",
+          "„Doskonalimy wynik” bez „i system” to tylko pół zobowiązania. Dopiszcie system zarządzania energią."
+        ],
+        [
+          "doskonal|popraw",
+          "Brakuje słowa o doskonaleniu albo poprawie."
+        ]
+      ],
+      "przyklad": "np. Ciągle doskonalimy nasz wynik energetyczny i system zarządzania energią — przez monitorowanie, analizę danych, reagowanie na odchylenia i wdrażanie usprawnień.",
+      "przykladPelny": "Ciągle doskonalimy nasz wynik energetyczny i system zarządzania energią — przez monitorowanie, analizę danych, reagowanie na odchylenia i wdrażanie usprawnień."
+    },
+    {
+      "kod": "f",
+      "litera": "f",
+      "nazwa": "Zakupy",
+      "min": 60,
+      "musi": "wsparcie zakupu efektywnych energetycznie produktów i usług, które wpływają na wynik energetyczny — nie tylko urządzeń",
+      "mozna": "jak to wsparcie działa, np. analiza kosztów w cyklu życia",
+      "wymaga": [
+        [
+          "zakup|nabywan|kupuj",
+          "Brakuje odniesienia do zakupów."
+        ],
+        [
+          "usług",
+          "„Kupujemy efektywne urządzenia” zapomina o usługach — na przykład serwisie sprężarek. Element f) obejmuje produkty i usługi."
+        ]
+      ],
+      "przyklad": "np. Przy zakupie maszyn, urządzeń i usług, które wpływają na nasz wynik energetyczny — w tym serwisu sprężarek i instalacji — uwzględniamy efektywność energetyczną jako kryterium wyboru.",
+      "przykladPelny": "Przy zakupie maszyn, urządzeń i usług, które wpływają na nasz wynik energetyczny — w tym serwisu sprężarek i instalacji — uwzględniamy efektywność energetyczną jako kryterium wyboru, a przy większych zakupach oceniamy koszty energii w całym cyklu życia."
+    },
+    {
+      "kod": "g",
+      "litera": "g",
+      "nazwa": "Projektowanie",
+      "min": 50,
+      "musi": "wsparcie działań projektowych uwzględniających poprawę wyniku energetycznego",
+      "mozna": "jakich projektów dotyczy: nowe instalacje, modernizacje, zmiany procesów",
+      "wymaga": [
+        [
+          "projekt",
+          "Brakuje odniesienia do projektowania."
+        ],
+        [
+          "(wynik|efektywn|zużyci|energ)",
+          "Dopiszcie, czego dotyczy uwzględnienie — poprawy wyniku energetycznego."
+        ]
+      ],
+      "przyklad": "np. Przy projektowaniu nowych procesów, modernizacji linii i zmian w budynkach uwzględniamy poprawę wyniku energetycznego już na etapie koncepcji.",
+      "przykladPelny": "Przy projektowaniu nowych procesów, modernizacji linii i zmian w budynkach uwzględniamy poprawę wyniku energetycznego już na etapie koncepcji."
+    }
+  ],
+  "UTRZYMANIE": [
+    {
+      "kod": "gdzie",
+      "etykieta": "Gdzie jest przechowywana",
+      "podstawa": "N",
+      "pomoc": "Polityka ma być dostępna jako udokumentowana informacja. To jedyny dokument rozdziału 5 wymagany wprost przez normę.",
+      "przyklad": "np. system dokumentacji, dokument nr D-EnMS-POL-01, wersja 1.0"
+    },
+    {
+      "kod": "komunikacja",
+      "etykieta": "Jak jest komunikowana w organizacji",
+      "podstawa": "N",
+      "pomoc": "Pracownik nie musi recytować tekstu, ale powinien wiedzieć, o czym mówi i gdzie go znaleźć.",
+      "przyklad": "np. tablice informacyjne przy linii, intranet, szkolenie wstępne, omówienie na spotkaniu zmianowym"
+    },
+    {
+      "kod": "udostepnianie",
+      "etykieta": "Jak jest udostępniana stronom zainteresowanym",
+      "podstawa": "N",
+      "pomoc": "Stosownie do potrzeb — nie trzeba jej publikować, jeśli nikt o nią nie pyta.",
+      "przyklad": "np. na stronie internetowej firmy oraz na prośbę klienta lub banku"
+    },
+    {
+      "kod": "kiedy",
+      "etykieta": "Kiedy jest przeglądana",
+      "podstawa": "N",
+      "pomoc": "Norma mówi „okresowo” i „aktualizowana w razie potrzeby”, bez częstotliwości. ★ Rada z książki: przy każdym przeglądzie zarządzania i przy każdej istotnej zmianie strategii, zakresu albo kontekstu.",
+      "przyklad": "np. podczas każdego przeglądu zarządzania oraz przy istotnej zmianie strategii, zakresu lub kontekstu"
+    },
+    {
+      "kod": "zapis",
+      "etykieta": "Gdzie zapisuje się wynik przeglądu",
+      "podstawa": "M",
+      "pomoc": "Przegląd może potwierdzić, że zmiana nie jest potrzebna. Zapisany wynik „bez zmian” sprawia, że starsza data na dokumencie nikogo nie zaniepokoi.",
+      "przyklad": "np. protokół przeglądu zarządzania, punkt „przegląd polityki energetycznej”"
+    }
+  ],
+  "LISTA_52": [
+    {
+      "tekst": "Polityka jest odpowiednia do celu organizacji (a)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "a"
+    },
+    {
+      "tekst": "…zapewnia ramy do ustalania i przeglądu celów oraz zadań energetycznych (b)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "b"
+    },
+    {
+      "tekst": "…zawiera zobowiązanie: dostępność informacji i zasobów — oba w treści (c)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "c"
+    },
+    {
+      "tekst": "…zawiera zobowiązanie: wymagania prawne i inne wymagania dotyczące efektywności, wykorzystania i zużycia energii (d)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "d"
+    },
+    {
+      "tekst": "…zawiera zobowiązanie: ciągłe doskonalenie wyniku energetycznego i systemu (e)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "e"
+    },
+    {
+      "tekst": "…wspiera zakup efektywnych produktów i usług wpływających na wynik (f)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "f"
+    },
+    {
+      "tekst": "…wspiera projektowanie uwzględniające poprawę wyniku (g)",
+      "podstawa": "N",
+      "auto": "elem",
+      "elem": "g"
+    },
+    {
+      "tekst": "W elemencie d) nie mieszano rodzajów wymagań (prawne / umowne / przyjęte dobrowolnie)",
+      "podstawa": "M",
+      "auto": "rodzaje_d"
+    },
+    {
+      "tekst": "Zobowiązania liczbowe (jeśli są) mają wskaźnik, kierunek poprawy i warunki porównania",
+      "podstawa": "M",
+      "auto": "liczbowe"
+    },
+    {
+      "tekst": "Polityka jest dostępna jako udokumentowana informacja",
+      "podstawa": "N",
+      "auto": "udokumentowana"
+    },
+    {
+      "tekst": "Zatwierdzenie da się wykazać (podpis i data, uchwała, obieg elektroniczny)",
+      "podstawa": "M",
+      "auto": "zatwierdzenie"
+    },
+    {
+      "tekst": "Polityka jest zakomunikowana w organizacji",
+      "podstawa": "N",
+      "auto": "komunikacja"
+    },
+    {
+      "tekst": "Polityka jest dostępna dla stron zainteresowanych stosownie do potrzeb",
+      "podstawa": "N",
+      "auto": "udostepnianie"
+    },
+    {
+      "tekst": "Polityka jest okresowo przeglądana i aktualizowana w razie potrzeby",
+      "podstawa": "N",
+      "auto": "przeglad"
+    },
+    {
+      "tekst": "Wynik ostatniego przeglądu polityki jest zapisany (także „bez zmian”)",
+      "podstawa": "M",
+      "auto": "wynik_przegladu"
+    }
+  ]
+}

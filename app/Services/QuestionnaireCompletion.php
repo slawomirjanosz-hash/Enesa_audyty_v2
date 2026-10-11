@@ -41,7 +41,7 @@ class QuestionnaireCompletion
                     $partyReview = $stakeholderReviews->get($audit->id.':'.$profile->site_id);
                     $parties = $stakeholders->parties($profile, $review);
                     $parts[] = $stakeholders->progress($stakeholders->currentAnswers($partyReview?->answers ?? [], $partyReview?->basis ?? [], $parties), $parties, $partyReview?->consultant ?? []);
-                    foreach (['4-3', '4-4'] as $systemSection) {
+                    foreach (array_keys(IsoSystemReview::TITLES) as $systemSection) {
                         $systemReview = $systemReviews->get($audit->id.':'.$profile->site_id.':'.$systemSection);
                         $parts[] = app(IsoSystemQuestionnaire::class)->progress($systemSection, $systemReview?->answers ?? [], $systemReview?->source_snapshot ?? ['facts' => $facts]);
                     }
@@ -53,7 +53,7 @@ class QuestionnaireCompletion
                 }
                 foreach (config('iso50001-workflows', []) as $section => $actions) {
                     // 4.1 is now covered by the context questionnaire, not the legacy form.
-                    if (in_array($section, ['4-1', '4-2', '4-3', '4-4'])) {
+                    if (in_array($section, ['4-1', '4-2']) || isset(IsoSystemReview::TITLES[$section])) {
                         continue;
                     }
                     foreach ($actions as $key => $workflow) {
@@ -142,7 +142,7 @@ class QuestionnaireCompletion
             return ['review' => $review, 'stale' => ! $stakeholderService->ready($profile, $factors) || ($review && $review->source_hash !== $stakeholderService->hash($profile, $factors)), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $stakeholderService->progress($answers, $parties, $review?->consultant ?? []), 'status' => $status];
         });
         $systems = IsoSystemReview::where('audit_id', $audit->id)->get()->keyBy(fn ($row) => $row->site_id.':'.$row->section);
-        foreach (['4-3', '4-4'] as $section) {
+        foreach (array_keys(IsoSystemReview::TITLES) as $section) {
             $result[$section] = $profiles->map(function ($profile) use ($audit, $systems, $section) {
                 $profile->audit_id = $audit->id;
                 $service = app(IsoSystemQuestionnaire::class);

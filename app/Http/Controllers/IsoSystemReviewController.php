@@ -66,7 +66,7 @@ class IsoSystemReviewController extends Controller
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile, string $section)
     {
         $client = $this->access($request, $audit, $profile, $section, true);
-        $data = $request->validate(['operation' => ['required', Rule::in(['save', 'submit', 'approve', 'return', 'withdraw'])], 'lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'note' => 'nullable|string|max:3000']);
+        $data = $request->validate(['operation' => ['required', Rule::in(['save', 'submit', 'approve', 'return', 'withdraw', 'consultant'])], 'lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'note' => 'nullable|string|max:3000']);
         DB::transaction(function () use ($request, $audit, $profile, $section, $client, $data) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
@@ -125,9 +125,16 @@ class IsoSystemReviewController extends Controller
                 }
             } else {
                 abort_if($stale, 409, 'Źródła zmieniły się. Zapisz ankietę i zatwierdź ponownie.');
-                if ($op === 'approve') {
+                if ($op === 'consultant') {
+                    abort_unless(! $client && str_starts_with($section, '5-') && $review->status === 'submitted', 403);
+                    $notes = $request->validate(['consultant.WNIOSKI' => 'required|array|min:1|max:20', 'consultant.WNIOSKI.*' => 'array', 'consultant.WNIOSKI.*.znaczenie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.decyzja' => 'required|string|max:3000', 'consultant.WNIOSKI.*.dzialanie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.sprawdzenie' => 'required|string|max:3000']);
+                    $review->consultant = $notes['consultant'] + ['answers_hash' => hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR))];
+                } elseif ($op === 'approve') {
                     abort_unless(! $client && $review->status === 'submitted' && $review->client_approval && $review->client_approval['user_id'] !== $request->user()->id, 403);
                     $this->questionnaire->normalize($section, $review->answers, $sources, true);
+                    if (str_starts_with($section, '5-') && (empty($review->consultant['WNIOSKI']) || ($review->consultant['answers_hash'] ?? '') !== hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR)))) {
+                        throw ValidationException::withMessages(['consultant' => 'Zapisz przynajmniej jeden pełny wniosek konsultanta przed zatwierdzeniem.']);
+                    }
                     if ($section === '4-4') {
                         foreach ($this->questionnaire->schema($section)['lista_kontrolna'] as $i => $item) {
                             if ($item['auto'] === null && ! filled(data_get($review->answers, "CHECK.$i.stan"))) {
@@ -155,7 +162,7 @@ class IsoSystemReviewController extends Controller
             $review->source_snapshot = $sources;
             $review->lock_version++;
             $review->save();
-            DB::table('iso_system_events')->insert(['review_id' => $review->id, 'user_name' => $request->user()->name, 'action' => $op, 'snapshot' => json_encode($review->only(['answers', 'status', 'source_hash', 'lock_version', 'client_approval', 'auditor_approval', 'review_note']), JSON_THROW_ON_ERROR), 'created_at' => now()]);
+            DB::table('iso_system_events')->insert(['review_id' => $review->id, 'user_name' => $request->user()->name, 'action' => $op, 'snapshot' => json_encode($review->only(['answers', 'consultant', 'status', 'source_hash', 'lock_version', 'client_approval', 'auditor_approval', 'review_note']), JSON_THROW_ON_ERROR), 'created_at' => now()]);
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'update', 'auditable_type' => Audit::class, 'auditable_id' => $audit->id, 'subject_label' => 'Ankieta '.$section.' — '.$op, 'route_name' => $request->route()->getName()]);
         });
 

@@ -4,7 +4,7 @@
 @if(session('success'))<div class="plant-notice success">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź oznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if($stale)<div class="plant-notice">Dane źródłowe zmieniły się. Sprawdź ankietę i zatwierdź ją ponownie. Dotychczasowe zatwierdzenia nie są aktualne.</div>@endif
-@if(!$sources['ready'])<div class="plant-notice">Możesz zapisywać odpowiedzi. Przed zatwierdzeniem {{$section==='4-4'?'zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.':'zatwierdź profil zakładu oraz punkty 4.1 i 4.2.'}}</div>@endif
+@if(!$sources['ready'])<div class="plant-notice">Możesz zapisywać odpowiedzi. Przed zatwierdzeniem {{str_starts_with($section,'5-')?'zatwierdź aktualne punkty źródłowe wskazane poniżej.':($section==='4-4'?'zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.':'zatwierdź profil zakładu oraz punkty 4.1 i 4.2.')}}</div>@endif
 <div class="plant-summary"><strong data-system-progress>Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong><span>{{\App\Models\IsoPlantProfile::STATUSES[$stale?'editing':$review->status]}}</span></div>
 @include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @if(($client && in_array($review->status,['returned','auditor_corrected'])) || (!$client && $review->status==='submitted'))<div class="plant-notice">Do wykonania: {{$client?'sprawdź poprawki audytora i zatwierdź ankietę.':'sprawdź odpowiedzi klienta i zatwierdź ankietę.'}}</div>@endif
@@ -13,6 +13,11 @@
 <section class="plant-card"><h2>Dane powiązane</h2><a href="{{route($client?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$profile])}}">Profil zakładu</a>
 @foreach($sources['approved'] as $key=>$approved)<p>{{$key}}: {{$approved?'zatwierdzony':'wymaga zatwierdzenia'}} · {{$sources['published'][$key]?'dokument wygenerowany':'bez aktualnego dokumentu'}}</p>@endforeach
 @if($section==='4-4')<p><strong>Zakres z 4.3:</strong> {{data_get($sources,'scope.ZAKRES.opis')?:'Jeszcze nie określono'}}</p>@endif
+@if(str_starts_with($section,'5-'))
+<p><strong>Zakres z 4.3:</strong> {{data_get($sources,'scope.ZAKRES.opis')?:'Jeszcze nie określono'}}</p>
+@if($section==='5-3')<p><strong>Powołanie zespołu z 5.1:</strong> {{data_get($sources,'upstream.5-1.ZESP.dokument')?:'Nie podano'}} · {{data_get($sources,'upstream.5-1.ZESP.data')}}</p>
+@foreach(data_get($sources,'upstream.5-1.CZLON',[]) as $member)<p>{{$member['osoba']??''}} · {{$member['rola']??''}} · {{$member['obszar']??''}}</p>@endforeach @endif
+@endif
 @foreach($service->warnings($section,$answers,$sources) as $warning)<div class="plant-notice">{{$warning}}</div>@endforeach</section>
 @php($editable=$canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected'])))
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
@@ -22,7 +27,10 @@
 <section id="{{$id}}" class="plant-card"><h2>{{$group['title']}}</h2>
 @if(isset($group['repeater']))
 @php($root=$group['repeater'])
-<div data-repeater="{{$root}}">@foreach(($answers[$root]??($root==='POZA'?[]:[[]])) as $i=>$row)<div class="system-row">@foreach($service->rowFields($root,(string)$i) as $field)@include('audits.system.field')@endforeach<button type="button" data-remove-row>Usuń pozycję</button></div>@endforeach</div>
+@if($root==='ROLE')<h3>Podgląd zapisanej matrycy</h3>@include('audits.system.matrix')<p class="plant-help">Poniżej edytuj role i ich udział w zadaniach. Podgląd tabeli odświeża się po zapisie.</p>@endif
+@error('answers.'.$root)<p class="plant-notice error">{{$message}}</p>@enderror
+@if($root==='ROLE')<p class="plant-help">Z — zatwierdza · O — odpowiada · W — współpracuje · I — informowany. Każde zadanie wymaga O; przy kilku O wyjaśnij podział w kolejnej sekcji.</p>@endif
+<div data-repeater="{{$root}}">@foreach(($answers[$root]??(in_array($root,['GRANICE','UPRAW'])?[[]]:[])) as $i=>$row)<div class="system-row">@foreach($service->rowFields($root,(string)$i) as $field)@include('audits.system.field')@endforeach<button type="button" data-remove-row>Usuń pozycję</button></div>@endforeach</div>
 <template id="template-{{$root}}"><div class="system-row">@foreach($service->rowFields($root,'__INDEX__') as $field)@include('audits.system.field')@endforeach<button type="button" data-remove-row>Usuń pozycję</button></div></template><button type="button" data-add-row="{{$root}}">+ Dodaj pozycję</button>
 @if($root==='POZA')<p class="plant-help">Brak pozycji oznacza, że nie wskazano działalności poza granicami. Udział procentowy nie zastępuje uzasadnienia.</p>@endif
 @else
@@ -40,6 +48,18 @@
 </fieldset><input type="hidden" name="complete_form" value="1">
 @if($editable)<div class="plant-actions"><button class="primary" name="operation" value="save">Zapisz</button>@if($canClientApprove)<button name="operation" value="submit">Zatwierdź jako klient</button>@endif</div>@endif
 </form>
+@if(str_starts_with($section,'5-'))<section class="plant-card">@include('audits.system.chapter-five-checklist')</section>@endif
+@if($section==='5-2')<section class="plant-card"><h2>Podgląd zapisanej polityki</h2><p class="plant-help">Podgląd odświeża się po zapisaniu odpowiedzi.</p>@include('audits.system.policy')</section>@endif
+@if(!$client && str_starts_with($section,'5-'))
+<section class="plant-card" id="consultant"><h2>Analiza konsultanta — wewnętrzna</h2><p>Wnioski nie są udostępniane klientowi ani dołączane do jego PDF-u.</p>
+@if($canWrite && !$stale && $review->status==='submitted')
+<form method="post" data-review-action action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf
+<input type="hidden" name="operation" value="consultant"><input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
+<div data-conclusions>@foreach(old('consultant.WNIOSKI',$review->consultant['WNIOSKI']??[[]]) as $i=>$conclusion)<div class="system-row">
+@foreach(['znaczenie'=>'Co z tego wynika?', 'decyzja'=>'Co wybieramy?', 'dzialanie'=>'Co konkretnie robimy?', 'sprawdzenie'=>'Po czym poznamy, że zadziałało?'] as $key=>$label)<label>{{$label}}<textarea name="consultant[WNIOSKI][{{$i}}][{{$key}}]" maxlength="3000" required>{{$conclusion[$key]??''}}</textarea></label>@endforeach
+<button type="button" data-remove-conclusion>Usuń wniosek</button></div>@endforeach</div><button type="button" data-add-conclusion>+ Dodaj wniosek</button><button class="primary">Zapisz analizę konsultanta</button></form>
+@else @foreach($review->consultant['WNIOSKI']??[] as $conclusion)@foreach($conclusion as $text)<p>{{$text}}</p>@endforeach @endforeach<p>Analizę można zapisać po zatwierdzeniu ankiety przez klienta.</p>@endif
+</section>@endif
 <section id="approvals" class="plant-card"><h2>Zatwierdzenia i dokument</h2>@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @if($canWrite && !$stale && $review->status==='submitted')<form method="post" data-review-action action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">@if(!$client)<button class="primary" name="operation" value="approve">Zatwierdź jako audytor</button><label>Powód zwrotu<textarea name="note"></textarea></label><button name="operation" value="return">Zwróć do uzupełnienia</button>@elseif($canClientApprove)<button name="operation" value="withdraw">Wycofaj zatwierdzenie</button>@endif</form>@endif
 @if(!$stale && $sources['ready'] && $review->status==='approved')<div class="plant-inline">@foreach($canWrite?[true,false]:[true] as $preview)<form method="post" data-review-action action="{{route($prefix.'pdf',[$audit,$profile,$section])}}" @if($preview) target="_blank" @endif>@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="preview" value="{{$preview?1:0}}"><button>{{$preview?'Podgląd PDF':'Generuj i zapisz PDF'}}</button></form>@endforeach</div>@endif

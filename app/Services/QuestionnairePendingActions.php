@@ -36,7 +36,7 @@ class QuestionnairePendingActions
                     default => 'audits.system.show',
                 };
                 $params = [$row->audit_id, $profile->id];
-                if (in_array($point, ['4-3', '4-4'])) {
+                if (isset(IsoSystemReview::TITLES[$point])) {
                     $params[] = $point;
                 }
                 $actions[$row->audit_id][] = ['section' => str_replace('-', '.', $point), 'url' => route($route, $params)];

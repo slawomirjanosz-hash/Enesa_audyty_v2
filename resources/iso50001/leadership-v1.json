@@ -1,0 +1,392 @@
+{
+  "PYTANIA_4": [
+    {
+      "id": "P1",
+      "nazwa": "1. Czy wiemy, dokąd idziemy?",
+      "opis": "Zakres i granice systemu są ustalone. Polityka, cele i zadania energetyczne pasują do strategii firmy. Wskaźniki uczciwie pokazują wynik.",
+      "dowod": "zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach"
+    },
+    {
+      "id": "P2",
+      "nazwa": "2. Czy energia jest w naszych decyzjach?",
+      "opis": "Wymagania systemu są wbudowane w procesy firmy. Plany działań są zatwierdzane i realizowane. Są zasoby. Jest zespół ds. zarządzania energią.",
+      "dowod": "energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu"
+    },
+    {
+      "id": "P3",
+      "nazwa": "3. Czy ludzie wiedzą, że to ważne?",
+      "opis": "Kierownictwo mówi o znaczeniu zarządzania energią i przestrzegania zasad systemu. Kieruje ludźmi i ich wspiera. Wspiera też innych kierowników w ich obszarach.",
+      "dowod": "komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety"
+    },
+    {
+      "id": "P4",
+      "nazwa": "4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?",
+      "opis": "System osiąga zamierzone wyniki. Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu. Zmiany — nowa linia, nowy klient, nowa umowa na energię — trafiają do zespołu przed decyzją, nie po.",
+      "dowod": "przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu"
+    }
+  ],
+  "ZOBOWIAZANIA": [
+    {
+      "kod": "PRZ-00",
+      "pytanie": "P1",
+      "podstawa": "M",
+      "tresc": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+      "pomoc": "Chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu — zarząd spółki, dyrektor zakładu albo osoba przez nich upoważniona. Bez tego ustalenia pozostałe pozycje nie mają adresata.",
+      "dowod": "np. Zarząd spółki; w jego imieniu Dyrektor Zakładu Piotr Nowak — upoważnienie z 20.02.2026"
+    },
+    {
+      "kod": "PRZ-01",
+      "pytanie": "P1",
+      "podstawa": "N",
+      "klauzula": "4.3",
+      "tresc": "Ustalono zakres i granice systemu",
+      "pomoc": "Wynik punktu 4.3. Tutaj pytamy, czy kierownictwo je zatwierdziło.",
+      "dowod": "np. D-EnMS-ZAK-01 wersja 1.0, zatwierdzony uchwałą Zarządu z 20.02.2026"
+    },
+    {
+      "kod": "PRZ-02",
+      "pytanie": "P1",
+      "podstawa": "N",
+      "klauzula": "5.2, 6.2",
+      "tresc": "Ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+      "pomoc": "„Zgodne z kierunkiem strategicznym” znaczy, że cele energetyczne nie stoją obok planu firmy, tylko są jego częścią.",
+      "dowod": "np. Polityka energetyczna wersja 1.0 (uchwała Zarządu 3/2026); cele Z1.1 i Z1.2 w planie operacyjnym na 2026/2027"
+    },
+    {
+      "kod": "PRZ-03",
+      "pytanie": "P1",
+      "podstawa": "N",
+      "klauzula": "6.4",
+      "tresc": "Wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+      "pomoc": "Kierownictwo nie musi liczyć wskaźników, ale musi zatwierdzić, że mierzą to, co trzeba. Wskaźnik, który nie reaguje na zmiany w zakładzie, jest bezużyteczny.",
+      "dowod": "np. decyzja o zestawie EnPI z przeglądu zarządzania 18.06.2026, z uzasadnieniem doboru"
+    },
+    {
+      "kod": "PRZ-04",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "8.1–8.3",
+      "tresc": "Wymagania systemu włączono do procesów biznesowych",
+      "pomoc": "Inwestycje, zakupy, planowanie produkcji. Szczegóły wypełniacie w zakładce 2 — tutaj wpisujecie dowód zbiorczy.",
+      "profil": "FAKT_ZAKUPY_KRYTERIA",
+      "profilUwaga": "Jeśli przy zakupach decyduje cena nabycia, integracja z tym procesem jeszcze nie działa.",
+      "dowod": "np. Procedura zakupowa P-ZAK-02 pkt 4.3 (kryteria energetyczne) i Procedura inwestycyjna P-INW-01 pkt 5.2, obie od 01.04.2026"
+    },
+    {
+      "kod": "PRZ-05",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "6.2",
+      "tresc": "Plany działań są zatwierdzane i realizowane",
+      "pomoc": "Dwa warunki naraz: zatwierdzenie i realizacja. Zatwierdzony plan, którego nikt nie wykonuje, nie spełnia tej pozycji.",
+      "dowod": "np. Plan działań 2026 zatwierdzony 20.03.2026; stan realizacji na 30.09.2026: 4 z 6 działań zakończone"
+    },
+    {
+      "kod": "PRZ-06",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "7.1",
+      "tresc": "Potrzebne zasoby są dostępne — ludzie, czas, budżet, narzędzia, dane",
+      "pomoc": "Szczegóły wypełniacie w zakładce 4. Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza.",
+      "profil": "FAKT_BUDZET",
+      "dowod": "np. 0,3 etatu Energy Managera, 40 tys. zł w budżecie utrzymania ruchu na 2026, dostęp do danych z liczników głównych"
+    },
+    {
+      "kod": "PRZ-07",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "5.3",
+      "tresc": "Powołano zespół ds. zarządzania energią",
+      "pomoc": "Szczegóły w zakładce 3. Norma wymaga zespołu, nie stanowiska Energy Managera.",
+      "profil": "FAKT_ENERGY_MANAGER",
+      "dowod": "np. Decyzja Zarządu nr 7/2026 z 20.02.2026 o powołaniu Zespołu ds. Zarządzania Energią — 5 osób"
+    },
+    {
+      "kod": "PRZ-08",
+      "pytanie": "P3",
+      "podstawa": "N",
+      "klauzula": "7.4",
+      "tresc": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+      "pomoc": "Nie chodzi o jedno przemówienie przy podpisywaniu polityki, tylko o regularność. Krótko, ale stale.",
+      "dowod": "np. stały punkt „energia” na poniedziałkowej odprawie kierowników od 03.2026; komunikat Prezesa z 15.03.2026 na tablicach"
+    },
+    {
+      "kod": "PRZ-09",
+      "pytanie": "P3",
+      "podstawa": "N",
+      "klauzula": "7.2, 7.3",
+      "tresc": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+      "pomoc": "Najmocniejszy dowód: sytuacja, w której zespół trafił na opór, a kierownictwo rozstrzygnęło spór, zamiast powiedzieć „dogadajcie się”.",
+      "dowod": "np. rozstrzygnięcie sporu o postój lakierni na rzecz przeglądu szczelności — decyzja Dyrektora z 12.05.2026"
+    },
+    {
+      "kod": "PRZ-10",
+      "pytanie": "P3",
+      "podstawa": "N",
+      "tresc": "Kierownictwo wspiera inne role kierownicze w ich obszarach odpowiedzialności",
+      "pomoc": "Przywództwo w punkcie 5.1 nie kończy się na zarządzie. Kierownik produkcji też ma w swoim obszarze pokazywać, że energia ma znaczenie — i potrzebuje do tego wsparcia z góry.",
+      "dowod": "np. wskaźniki energetyczne w rocznych celach kierowników produkcji i utrzymania ruchu od 2026 r."
+    },
+    {
+      "kod": "PRZ-11",
+      "pytanie": "P4",
+      "podstawa": "N",
+      "klauzula": "9.3",
+      "tresc": "System osiąga zamierzone wyniki",
+      "pomoc": "Dowodem są decyzje z przeglądu zarządzania — nie sam fakt, że przegląd się odbył.",
+      "dowod": "np. protokół przeglądu zarządzania 1/2026 z 18.06.2026: trzy decyzje, w tym przesunięcie środków na sterowanie sprężarek"
+    },
+    {
+      "kod": "PRZ-12",
+      "pytanie": "P4",
+      "podstawa": "N",
+      "klauzula": "10.2",
+      "tresc": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+      "pomoc": "Obu naraz: wyniku i systemu. Usprawnianie procedur bez poprawy wyniku to połowa wymagania.",
+      "dowod": "np. porównanie „rok temu — dziś — plan” omówione na przeglądzie; docenienie wyniku sprężarkowni na odprawie 22.06.2026"
+    },
+    {
+      "kod": "PRZ-13",
+      "pytanie": "P4",
+      "podstawa": "N",
+      "klauzula": "6.1",
+      "tresc": "Istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+      "pomoc": "Nowa linia, nowy klient, nowa umowa na energię — zmiana ma trafić do zespołu przed decyzją, nie po niej.",
+      "profil": "FAKT_INWESTYCJE",
+      "profilUwaga": "Planowane inwestycje to pierwszy test tego procesu: czy zespół dowiaduje się o nich na etapie założeń, czy po podpisaniu umowy?",
+      "dowod": "np. zapis w procedurze inwestycyjnej: opinia Energy Managera przed decyzją o zakupie urządzenia powyżej 50 kW"
+    },
+    {
+      "kod": "PRZ-14",
+      "pytanie": "P4",
+      "podstawa": "M",
+      "tresc": "Zaplanowano „punkty styku” kierownictwa z systemem — przegląd, raporty, komunikaty",
+      "pomoc": "Pozycja metodyczna. Zaangażowanie łatwiej utrzymać, gdy ma stały rytm, a nie zależy od pamięci koordynatora. Szczegóły w zakładce 5.",
+      "dowod": "np. przegląd zarządzania 2 razy w roku, raport miesięczny do Dyrektora, kwartalny komunikat na tablicach"
+    }
+  ],
+  "PROCESY_BIZ": [
+    {
+      "kod": "INT-ZAK",
+      "nazwa": "Zakupy",
+      "klauzula": "8.3",
+      "pytanie": "Czy przy zakupie urządzeń i usług wpływających na zużycie energii bierzecie pod uwagę efektywność, a nie samą cenę nabycia?",
+      "profil": "FAKT_ZAKUPY_KRYTERIA",
+      "placeholder": "np. dla urządzeń powyżej 10 kW porównanie kosztu w cyklu życia; Energy Manager może wstrzymać zamówienie do 5 dni roboczych na ocenę"
+    },
+    {
+      "kod": "INT-INW",
+      "nazwa": "Inwestycje i modernizacje",
+      "klauzula": "8.2",
+      "pytanie": "Czy wniosek inwestycyjny zawiera ocenę wpływu na zużycie energii?",
+      "profil": "FAKT_INWESTYCJE",
+      "placeholder": "np. rubryka „wpływ na zużycie energii i koszt eksploatacji” we wniosku inwestycyjnym; opinia Energy Managera przed decyzją"
+    },
+    {
+      "kod": "INT-PROD",
+      "nazwa": "Planowanie produkcji",
+      "klauzula": "8.1",
+      "pytanie": "Czy planując produkcję, bierzecie pod uwagę zużycie energii — kolejność uruchomień, postoje, praca w weekendy?",
+      "placeholder": "np. harmonogram uruchamiania pras uwzględnia szczyt energetyczny; wyłączenie sprężarkowni na weekend ujęte w planie"
+    },
+    {
+      "kod": "INT-UR",
+      "nazwa": "Utrzymanie ruchu i remonty",
+      "klauzula": "8.1",
+      "pytanie": "Czy plan przeglądów i remontów uwzględnia stan energetyczny urządzeń?",
+      "profil": "FAKT_INSTRUKCJE_EKSPL",
+      "placeholder": "np. kwartalny przegląd szczelności sieci sprężonego powietrza w planie przeglądów od 03.2026"
+    },
+    {
+      "kod": "INT-BUD",
+      "nazwa": "Budżetowanie",
+      "klauzula": "7.1",
+      "pytanie": "Czy przy planowaniu budżetu rozmawia się o kosztach energii i o środkach na ich obniżenie?",
+      "profil": "FAKT_BUDZET",
+      "placeholder": "np. koszt energii i lista działań z przeglądu energetycznego omawiane na budżecie wrześniowym"
+    },
+    {
+      "kod": "INT-RAP",
+      "nazwa": "Raportowanie zarządcze",
+      "klauzula": "9.1",
+      "pytanie": "Czy wskaźniki energetyczne są w zwykłych raportach firmy — tam, gdzie sprzedaż i jakość?",
+      "placeholder": "np. kWh/t i koszt energii w miesięcznym raporcie operacyjnym od 04.2026"
+    },
+    {
+      "kod": "INT-ZMI",
+      "nazwa": "Zarządzanie zmianą",
+      "klauzula": "6.1",
+      "pytanie": "Czy nowa linia, nowy klient albo nowa umowa na energię trafiają do zespołu przed decyzją?",
+      "placeholder": "np. zespół opiniuje każdą zmianę technologiczną na etapie założeń; nowa umowa na energię konsultowana przed podpisaniem"
+    }
+  ],
+  "ZASOBY": [
+    {
+      "kod": "ZAS-LUD",
+      "nazwa": "Ludzie",
+      "podstawa": "N",
+      "pomoc": "Kto realnie zajmuje się systemem. Nie musi to być osobny etat.",
+      "placeholder": "np. Energy Manager 0,3 etatu; czterech członków zespołu po ok. 8 godzin miesięcznie"
+    },
+    {
+      "kod": "ZAS-CZAS",
+      "nazwa": "Czas",
+      "podstawa": "N",
+      "pomoc": "III-13: „Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań”. To najczęściej brakujący zasób — i najrzadziej zapisany.",
+      "placeholder": "np. 4 godziny miesięcznie technika UR na przeglądy szczelności, ujęte w grafiku"
+    },
+    {
+      "kod": "ZAS-BUD",
+      "nazwa": "Budżet",
+      "podstawa": "N",
+      "pomoc": "Skąd biorą się pieniądze na działania. Osobna pozycja w budżecie nie jest wymagana.",
+      "placeholder": "np. 40 tys. zł rocznie w budżecie utrzymania ruchu; większe inwestycje z wniosku inwestycyjnego"
+    },
+    {
+      "kod": "ZAS-NARZ",
+      "nazwa": "Narzędzia i opomiarowanie",
+      "podstawa": "N",
+      "pomoc": "Liczniki, analizatory, arkusze, oprogramowanie. Bez danych system nie ma z czego liczyć wskaźników.",
+      "placeholder": "np. dwa liczniki główne, analizator przenośny wypożyczany kwartalnie, arkusz EnPI"
+    },
+    {
+      "kod": "ZAS-DANE",
+      "nazwa": "Dostęp do danych",
+      "podstawa": "N",
+      "pomoc": "Zasobem jest także dostęp: do faktur, do danych produkcyjnych, do systemu nadzoru.",
+      "placeholder": "np. Energy Manager ma dostęp do faktur za energię, danych z liczników i planów produkcji"
+    },
+    {
+      "kod": "ZAS-KOMP",
+      "nazwa": "Kompetencje i szkolenia",
+      "podstawa": "M",
+      "pomoc": "Punkt 7.2 opisuje to szczegółowo. Tutaj chodzi o to, czy kierownictwo zapewniło na nie środki.",
+      "placeholder": "np. szkolenie wewnętrzne dla zespołu 05.2026; udział Energy Managera w kursie audytora wewnętrznego"
+    }
+  ],
+  "NAWYKI": [
+    {
+      "kod": "NAW-1",
+      "nazwa": "Daje zasoby, nie tylko budżet na certyfikat",
+      "opis": "Ludzi, czas, narzędzia pomiarowe, dostęp do danych. Ile? Tyle, żeby system działał.",
+      "placeholder": "np. przydział czasu technika zapisany w grafiku, nie „jak znajdzie chwilę”"
+    },
+    {
+      "kod": "NAW-2",
+      "nazwa": "Myśli energią przy każdej dużej decyzji",
+      "opis": "Zakup maszyny, inwestycja, plan produkcji — za każdym razem pada pytanie: a ile to będzie zużywać?",
+      "placeholder": "np. pytanie o zużycie przy każdym wniosku inwestycyjnym powyżej 50 tys. zł"
+    },
+    {
+      "kod": "NAW-3",
+      "nazwa": "Mówi o energii",
+      "opis": "Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.",
+      "placeholder": "np. stałe pytanie o zużycie na poniedziałkowej odprawie"
+    },
+    {
+      "kod": "NAW-4",
+      "nazwa": "Jest widoczne",
+      "opis": "Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.",
+      "placeholder": "np. przegląd zarządzania prowadzi Dyrektor Zakładu, nie jego zastępca"
+    },
+    {
+      "kod": "NAW-5",
+      "nazwa": "Staje za zespołem",
+      "opis": "Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.",
+      "placeholder": "np. rozstrzygnięcie konfliktu między terminem dostawy a postojem na przegląd"
+    }
+  ],
+  "LISTA_51": [
+    {
+      "tekst": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+      "podstawa": "M",
+      "auto": "zob",
+      "zob": "PRZ-00"
+    },
+    {
+      "tekst": "…ustalono zakres i granice systemu",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-01"
+    },
+    {
+      "tekst": "…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-02"
+    },
+    {
+      "tekst": "…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)",
+      "podstawa": "N",
+      "auto": "integracja"
+    },
+    {
+      "tekst": "…plany działań są zatwierdzane i realizowane",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-05"
+    },
+    {
+      "tekst": "…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)",
+      "podstawa": "N",
+      "auto": "zasoby"
+    },
+    {
+      "tekst": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-08"
+    },
+    {
+      "tekst": "…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-11"
+    },
+    {
+      "tekst": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-12"
+    },
+    {
+      "tekst": "…powołano zespół ds. zarządzania energią",
+      "podstawa": "N",
+      "auto": "zespol"
+    },
+    {
+      "tekst": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-09"
+    },
+    {
+      "tekst": "Kierownictwo wspiera inne role kierownicze w ich obszarach",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-10"
+    },
+    {
+      "tekst": "…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-03"
+    },
+    {
+      "tekst": "…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-13"
+    },
+    {
+      "tekst": "Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)",
+      "podstawa": "M",
+      "auto": "styk"
+    },
+    {
+      "tekst": "Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami",
+      "podstawa": "M",
+      "auto": "decyzje"
+    }
+  ]
+}

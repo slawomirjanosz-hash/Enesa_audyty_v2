@@ -10,7 +10,7 @@
 @elseif($field['options'])
 <select name="{{$name}}"><option value="">Wybierz</option>@foreach($field['options'] as $val=>$label)<option value="{{$val}}" @selected($value===$val)>{{$label}}</option>@endforeach</select>
 @elseif($field['type']==='textarea')
-<textarea name="{{$name}}" maxlength="10000" rows="3">{{is_scalar($value)?$value:''}}</textarea>
+<textarea name="{{$name}}" @if(isset($field['example'])) data-example="{{$field['example']}}" @endif maxlength="10000" rows="3">{{is_scalar($value)?$value:''}}</textarea>
 @else
 <input type="{{$field['type']==='date'?'date':'text'}}" name="{{$name}}" value="{{is_scalar($value)?$value:''}}" maxlength="10000">
 @endif</label>
