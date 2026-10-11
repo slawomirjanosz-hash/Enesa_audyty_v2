@@ -7,7 +7,7 @@
   h1 { font-size:16px; margin:0 0 2px; }
   .sub { color:#666; font-size:11px; margin:0 0 14px; }
   .meta { font-size:11px; color:#444; margin-bottom:16px; line-height:1.5; }
-  .qa { margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #e5e1d8; }
+  .qa { margin-bottom:10px; padding-bottom:8px; }
   .q { font-weight:bold; font-size:11px; color:#333; }
   .a { font-size:13px; margin-top:2px; }
   .empty { color:#999; font-style:italic; font-size:12px; }

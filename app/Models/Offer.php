@@ -111,7 +111,7 @@ class Offer extends Model
         ), '_');
         $safeTitle = Str::limit($safeTitle, 100, '');
 
-        return 'oferta_'.$safeNumber.'_'.$safeTitle.'.'.ltrim($extension, '.');
+        return 'Oferta_'.$safeNumber.'_'.$safeTitle.'.'.ltrim($extension, '.');
     }
 
     public static function generateNumber(bool $isTemplate = false): string

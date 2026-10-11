@@ -745,10 +745,8 @@ class OfferController extends Controller
             ['alignment' => Jc::RIGHT]
         );
 
-        // Linia pod headerem
+        // Odstęp pod nagłówkiem, bez dekoracyjnego separatora.
         $section->addText('', [], [
-            'borderBottomColor' => $green,
-            'borderBottomSize' => 8,
             'spaceAfter' => Converter::pointToTwip(12),
         ]);
 
@@ -815,8 +813,6 @@ class OfferController extends Controller
         // ── HELPER: nagłówek sekcji ───────────────────────────────────────────
         $addSectionHeader = function (string $label) use ($section, $green) {
             $section->addText(strtoupper($label), ['size' => 9, 'color' => $green, 'bold' => true], [
-                'borderBottomColor' => 'D0D0D0',
-                'borderBottomSize' => 4,
                 'spaceAfter' => Converter::pointToTwip(6),
             ]);
         };

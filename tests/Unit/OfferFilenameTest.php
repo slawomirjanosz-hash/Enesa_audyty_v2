@@ -11,7 +11,9 @@ test('offer document filename contains its number and title', function () {
     ]);
 
     expect($offer->documentFilename('pdf'))
-        ->toBe('oferta_OF_INTROL_2026_086_Odzysk_Ciepla_ze_spalin.pdf');
+        ->toBe('Oferta_OF_INTROL_2026_086_Odzysk_Ciepla_ze_spalin.pdf');
+    expect($offer->documentFilename('docx'))
+        ->toBe('Oferta_OF_INTROL_2026_086_Odzysk_Ciepla_ze_spalin.docx');
 
     $document = new Document([
         'type' => 'offer_pdf',
@@ -20,5 +22,5 @@ test('offer document filename contains its number and title', function () {
     $document->setRelation('offer', $offer);
 
     expect($document->displayFilename())
-        ->toBe('oferta_OF_INTROL_2026_086_Odzysk_Ciepla_ze_spalin.pdf');
+        ->toBe('Oferta_OF_INTROL_2026_086_Odzysk_Ciepla_ze_spalin.pdf');
 });

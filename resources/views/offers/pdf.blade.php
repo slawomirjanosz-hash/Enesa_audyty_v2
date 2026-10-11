@@ -36,7 +36,7 @@ body {
 .doc-ref-dates { font-size: 8pt; color: #888; text-align: right; line-height: 1.9; margin-top: 3px; }
 
 /* LINIA */
-.header-line { height: 3px; background: #1A4D3A; margin: 10px 0 20px 0; border: none; display: block; }
+.header-spacing { height: 0; margin: 10px 0 20px; }
 
 /* TYTUŁ */
 .offer-title     { text-align: center; margin-bottom: 20px; }
@@ -58,7 +58,7 @@ body {
 .party-det  { font-size: 8.5pt; color: #555; line-height: 1.75; }
 
 /* SEKCJA LABEL */
-.sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; border-bottom: 1px solid #E5E1D8; }
+.sec-hdr-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
 .sec-lbl-text {
     font-size: 10pt; font-weight: bold; text-transform: uppercase;
     letter-spacing: .07em; color: #1A4D3A; white-space: normal; line-height: 1.3;
@@ -120,7 +120,7 @@ body {
 .terms-cell-r { padding-left: 10px; }
 
 /* FOOTER */
-.footer-sep { height: 1px; background: #E5E1D8; margin: 28px 0 14px 0; border: none; display: block; }
+.footer-spacing { height: 0; margin: 28px 0 14px; }
 .footer-tbl { width: 100%; border-collapse: collapse; }
 .footer-info { font-size: 8pt; color: #aaa; line-height: 1.8; vertical-align: bottom; }
 .sign-cell { text-align: right; vertical-align: bottom; }
@@ -150,7 +150,7 @@ body {
 </tr>
 </table>
 
-<div class="header-line"></div>
+<div class="header-spacing"></div>
 
 {{-- TYTUŁ --}}
 <div class="offer-title">
@@ -520,7 +520,7 @@ body {
 @endif
 
 {{-- FOOTER --}}
-<div class="footer-sep"></div>
+<div class="footer-spacing"></div>
 <table class="footer-tbl">
 <tr>
     <td class="footer-info">
