@@ -1,4 +1,4 @@
-import './table-actions.js?v=1';
+import {isActionHeading} from './table-actions.js?v=1';
 
 const collator = new Intl.Collator('pl', {numeric: true, sensitivity: 'base'});
 
@@ -64,7 +64,7 @@ export function enhanceTable(table) {
         if (initialized.has(header)) return;
         initialized.add(header);
         const label = header.textContent.replace(/[⇅↕↑↓]/g, '').trim();
-        if (!label || /^(akcj[ae]|filmy i akcje|lp\.?|#|wybierz|zaznacz)$/i.test(label) || header.querySelector('input') || header.dataset.sortable === 'false') return;
+        if (!label || isActionHeading(label) || /^(lp\.?|#|wybierz|zaznacz)$/i.test(label) || header.querySelector('input') || header.dataset.sortable === 'false') return;
         const keys = table.dataset.serverSort?.split(',');
         // Preserve dedicated sort controls; supplement only missing columns.
         if (!keys && header.querySelector('button,a')) return;
