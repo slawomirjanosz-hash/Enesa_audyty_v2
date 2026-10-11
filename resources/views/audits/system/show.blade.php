@@ -4,7 +4,7 @@
 @if(session('success'))<div class="plant-notice success">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź oznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if($stale)<div class="plant-notice">Dane źródłowe zmieniły się. Sprawdź ankietę i zatwierdź ją ponownie. Dotychczasowe zatwierdzenia nie są aktualne.</div>@endif
-@if(!$sources['ready'])<div class="plant-notice">Możesz zapisywać odpowiedzi. Przed zatwierdzeniem {{str_starts_with($section,'5-')?'zatwierdź aktualne punkty źródłowe wskazane poniżej.':($section==='4-4'?'zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.':'zatwierdź profil zakładu oraz punkty 4.1 i 4.2.')}}</div>@endif
+@if(!$sources['ready'])<div class="plant-notice">Możesz zapisywać odpowiedzi. Przed zatwierdzeniem {{preg_match('/^[56]-/',$section)?'zatwierdź aktualne punkty źródłowe wskazane poniżej.':($section==='4-4'?'zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.':'zatwierdź profil zakładu oraz punkty 4.1 i 4.2.')}}</div>@endif
 <div class="plant-summary"><strong data-system-progress>Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong><span>{{\App\Models\IsoPlantProfile::STATUSES[$stale?'editing':$review->status]}}</span></div>
 @include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @if(($client && in_array($review->status,['returned','auditor_corrected'])) || (!$client && $review->status==='submitted'))<div class="plant-notice">Do wykonania: {{$client?'sprawdź poprawki audytora i zatwierdź ankietę.':'sprawdź odpowiedzi klienta i zatwierdź ankietę.'}}</div>@endif
@@ -19,6 +19,7 @@
 @foreach(data_get($sources,'upstream.5-1.CZLON',[]) as $member)<p>{{$member['osoba']??''}} · {{$member['rola']??''}} · {{$member['obszar']??''}}</p>@endforeach @endif
 @endif
 @foreach($service->warnings($section,$answers,$sources) as $warning)<div class="plant-notice">{{$warning}}</div>@endforeach</section>
+@if(str_starts_with($section,'6-')) @include('audits.system.planning-summary') @endif
 @php($editable=$canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected'])))
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
 <fieldset @disabled(!$editable)>
@@ -30,8 +31,8 @@
 @if($root==='ROLE')<h3>Podgląd zapisanej matrycy</h3>@include('audits.system.matrix')<p class="plant-help">Poniżej edytuj role i ich udział w zadaniach. Podgląd tabeli odświeża się po zapisie.</p>@endif
 @error('answers.'.$root)<p class="plant-notice error">{{$message}}</p>@enderror
 @if($root==='ROLE')<p class="plant-help">Z — zatwierdza · O — odpowiada · W — współpracuje · I — informowany. Każde zadanie wymaga O; przy kilku O wyjaśnij podział w kolejnej sekcji.</p>@endif
-<div data-repeater="{{$root}}">@foreach(($answers[$root]??(in_array($root,['GRANICE','UPRAW'])?[[]]:[])) as $i=>$row)<div class="system-row">@foreach($service->rowFields($root,(string)$i) as $field)@include('audits.system.field')@endforeach<button type="button" data-remove-row>Usuń pozycję</button></div>@endforeach</div>
-<template id="template-{{$root}}"><div class="system-row">@foreach($service->rowFields($root,'__INDEX__') as $field)@include('audits.system.field')@endforeach<button type="button" data-remove-row>Usuń pozycję</button></div></template><button type="button" data-add-row="{{$root}}">+ Dodaj pozycję</button>
+<div data-repeater="{{$root}}">@foreach(($answers[$root]??(in_array($root,['GRANICE','UPRAW'])?[[]]:[])) as $i=>$row)<div class="system-row">@foreach($service->rowFields($root,(string)$i,$section,$answers,$sources) as $field)@include('audits.system.field')@endforeach<button type="button" @disabled($section==='6-5' && $root==='KARTY') data-remove-row>Usuń pozycję</button></div>@endforeach</div>
+<template id="template-{{$root}}"><div class="system-row">@foreach($service->rowFields($root,'__INDEX__',$section,$answers,$sources) as $field)@include('audits.system.field')@endforeach<button type="button" @disabled($section==='6-5' && $root==='KARTY') data-remove-row>Usuń pozycję</button></div></template><button type="button" @disabled($section==='6-5' && $root==='KARTY') data-add-row="{{$root}}">+ Dodaj pozycję</button>
 @if($root==='POZA')<p class="plant-help">Brak pozycji oznacza, że nie wskazano działalności poza granicami. Udział procentowy nie zastępuje uzasadnienia.</p>@endif
 @else
 @if($id==='energia')<div data-energy-locked class="plant-notice" hidden>Najpierw opisz przynajmniej jedną lokalizację, adres i granicę fizyczną w sekcji 3.</div><div data-energy-fields>@endif
@@ -50,7 +51,7 @@
 </form>
 @if(str_starts_with($section,'5-'))<section class="plant-card">@include('audits.system.chapter-five-checklist')</section>@endif
 @if($section==='5-2')<section class="plant-card"><h2>Podgląd zapisanej polityki</h2><p class="plant-help">Podgląd odświeża się po zapisaniu odpowiedzi.</p>@include('audits.system.policy')</section>@endif
-@if(!$client && str_starts_with($section,'5-'))
+@if(!$client && preg_match('/^[56]-/',$section))
 <section class="plant-card" id="consultant"><h2>Analiza konsultanta — wewnętrzna</h2><p>Wnioski nie są udostępniane klientowi ani dołączane do jego PDF-u.</p>
 @if($canWrite && !$stale && $review->status==='submitted')
 <form method="post" data-review-action action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf

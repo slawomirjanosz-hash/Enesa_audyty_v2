@@ -1,0 +1,175 @@
+{
+  "POLA_WER": [
+    {
+      "kod": "enpi_enb",
+      "nazwa": "Wskaźnik EnPI i linia bazowa EnB",
+      "wymagane": true,
+      "pomoc": "Który wskaźnik z punktu 6.4 i która linia bazowa z punktu 6.5. Bez tej pary nie ma czego porównywać.",
+      "przyklad": "np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (średnia 12 miesięcy 2025)"
+    },
+    {
+      "kod": "okres",
+      "nazwa": "Okres porównania",
+      "wymagane": true,
+      "pomoc": "Jaki okres po działaniu porównujecie z jakim okresem linii bazowej. Tyle samo miesięcy po obu stronach.",
+      "przyklad": "np. 12 miesięcy po zakończeniu działań (I–XII 2028) wobec 12 miesięcy EnB (2025)"
+    },
+    {
+      "kod": "dane",
+      "nazwa": "Dane i ich źródło",
+      "wymagane": true,
+      "pomoc": "Skąd wezmą się liczby — licznik, podlicznik, faktura, ERP, protokół pomiaru. Kto je odczytuje i gdzie zapisuje.",
+      "przyklad": "np. Podlicznik sprężarkowni (odczyt miesięczny) i przepływomierz na kolektorze; arkusz EnMS, zakładka S-1"
+    },
+    {
+      "kod": "warunki",
+      "nazwa": "Warunki porównania",
+      "wymagane": true,
+      "pomoc": "Przy jakich warunkach pomiar jest porównywalny i co go unieważnia. To tutaj zapisuje się wyłączenia.",
+      "przyklad": "np. Pełne miesiące pracy dwuzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane"
+    },
+    {
+      "kod": "zmienne",
+      "nazwa": "Uwzględnienie istotnych zmiennych — normalizacja",
+      "wymagane": true,
+      "pomoc": "Jak porównanie radzi sobie ze zmianą produkcji, pogody i czasu pracy. Jeśli wskaźnik jest ilorazem, napiszcie to wprost.",
+      "przyklad": "np. Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem ilości powietrza. Dodatkowo odnotowuje się temperaturę w sprężarkowni — różnica powyżej 5 °C wymaga adnotacji."
+    },
+    {
+      "kod": "obliczenie",
+      "nazwa": "Sposób obliczenia poprawy",
+      "wymagane": true,
+      "pomoc": "Wzór i próg uznania poprawy. Konkretny, nie „porównamy wyniki”.",
+      "przyklad": "np. (EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy wskaźnik ≤ 0,110 kWh/Nm³ w średniej 12 miesięcy."
+    },
+    {
+      "kod": "kto",
+      "nazwa": "Kto weryfikuje",
+      "wymagane": true,
+      "pomoc": "Osoba albo funkcja, która wykonuje obliczenie, i ta, która przyjmuje wynik.",
+      "przyklad": "np. Pełnomocnik EnMS; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania"
+    },
+    {
+      "kod": "wynik",
+      "nazwa": "Wynik weryfikacji",
+      "wymagane": false,
+      "pomoc": "Wypełniane po terminie zadania — wartość osiągnięta, data i decyzja (poprawa uznana / nieuznana / zadanie przedłużone).",
+      "przyklad": "np. 0,119 kWh/Nm³ (średnia I–XII 2027) — cel nieosiągnięty, zadanie przedłużone do 30.06.2028"
+    }
+  ],
+  "LISTA_62": [
+    {
+      "tekst": "Ustanowiono cele energetyczne na odpowiednich funkcjach i szczeblach organizacji.",
+      "podstawa": "N",
+      "auto": "ustanowiono"
+    },
+    {
+      "tekst": "Cele są spójne z polityką energetyczną i uwzględniają wymagania, znaczące użycia energii oraz możliwości poprawy wyniku energetycznego.",
+      "podstawa": "N",
+      "auto": "spojne"
+    },
+    {
+      "tekst": "Cele i zadania energetyczne są mierzalne, monitorowane, komunikowane i aktualizowane, gdy to właściwe.",
+      "podstawa": "N",
+      "auto": "mierzalne"
+    },
+    {
+      "tekst": "Dla celów i zadań zaplanowano: co będzie zrobione, jakie będą potrzebne zasoby, kto odpowiada i kiedy to się zakończy.",
+      "podstawa": "N",
+      "auto": "plany"
+    },
+    {
+      "tekst": "Plany określają, w jaki sposób zostaną ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego.",
+      "podstawa": "N",
+      "auto": "weryfikacja"
+    },
+    {
+      "tekst": "Metoda weryfikacji poprawy wskazuje wskaźnik i linię bazową, okres porównania, dane i ich źródło, warunki porównania, uwzględnienie istotnych zmiennych, sposób obliczenia i osobę weryfikującą.",
+      "podstawa": "M",
+      "auto": "metoda_pelna"
+    },
+    {
+      "tekst": "Rozważono, w jaki sposób włączyć działania w procesy biznesowe organizacji.",
+      "podstawa": "N",
+      "auto": "procesy"
+    },
+    {
+      "tekst": "Cele, zadania energetyczne i plany działań są utrzymywane jako udokumentowana informacja.",
+      "podstawa": "N",
+      "auto": "udokumentowane"
+    }
+  ],
+  "form": {
+    "groups": [
+      {
+        "title": "Zatwierdzenie i aktualność",
+        "fields": [
+          {
+            "key": "META.zatwierdzil",
+            "label": "Zatwierdzenie kierownictwa",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.data",
+            "label": "Data zatwierdzenia",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.stan",
+            "label": "Stan na dzień",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "CELE": [
+        "Cele energetyczne",
+        {
+          "nr": "Identyfikator celu",
+          "tresc": "Cel",
+          "rodzaj": "Rodzaj celu",
+          "powiazanie": "Polityka, ryzyka, wymagania lub możliwości poprawy",
+          "termin": "Termin",
+          "odp": "Odpowiedzialny",
+          "status": "Status"
+        }
+      ],
+      "ZADANIA": [
+        "Zadania i weryfikacja poprawy",
+        {
+          "nr": "Identyfikator zadania",
+          "doCelu": "Identyfikator celu",
+          "enpi": "Identyfikator karty EnPI / EnB",
+          "cel": "Docelowa wartość wraz z jednostką",
+          "termin": "Termin",
+          "postep": "Bieżący wynik i postęp"
+        }
+      ],
+      "DZIAL": [
+        "Plany działań",
+        {
+          "doCelu": "Identyfikator celu",
+          "tresc": "Co będzie zrobione",
+          "zasoby": "Zasoby i budżet",
+          "odp": "Odpowiedzialny",
+          "termin": "Termin",
+          "proces": "Włączenie w procesy biznesowe",
+          "status": "Status"
+        }
+      ]
+    }
+  }
+}

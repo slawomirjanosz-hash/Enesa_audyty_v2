@@ -1,0 +1,309 @@
+{
+  "METODY": [
+    {
+      "kod": "MET-ZR",
+      "podstawa": "N",
+      "nazwa": "Źródła danych",
+      "pomoc": "Faktury, liczniki, system produkcyjny, dane pogodowe, pomiary. Z jakiego okresu.",
+      "przyklad": "np. Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem"
+    },
+    {
+      "kod": "MET-POD",
+      "podstawa": "N",
+      "nazwa": "Metody podziału zużycia na obszary",
+      "pomoc": "Dla każdego obszaru: pomiar, obliczenie czy oszacowanie — i na jakiej podstawie.",
+      "przyklad": "np. Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie"
+    },
+    {
+      "kod": "MET-PRZ",
+      "podstawa": "N",
+      "nazwa": "Przeliczniki na wspólną jednostkę i ich źródło",
+      "pomoc": "Jedna podstawa dla całego bilansu: ciepło spalania albo wartość opałowa. Zapiszcie, którą wybraliście i skąd pochodzą liczby.",
+      "przyklad": "np. Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ"
+    },
+    {
+      "kod": "MET-SEU",
+      "podstawa": "N",
+      "nazwa": "Kryteria wyboru znaczących użyć energii",
+      "pomoc": "Z podstawą procentów: od czego liczycie udział. ★ Progi możecie przyjąć własne — ważne, żeby stosować jedne kryteria i uzasadnić każdy wybór.",
+      "przyklad": "np. A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej"
+    },
+    {
+      "kod": "MET-SZE",
+      "podstawa": "N",
+      "nazwa": "Kryteria szeregowania możliwości poprawy",
+      "pomoc": "Na przykład oszczędność i prosty okres zwrotu nakładów.",
+      "przyklad": "np. Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno"
+    },
+    {
+      "kod": "MET-PRO",
+      "podstawa": "N",
+      "nazwa": "Metoda prognozy",
+      "pomoc": "Jak oszacujecie przyszłe zużycie: model, ekstrapolacja, plan produkcji.",
+      "przyklad": "np. Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"
+    }
+  ],
+  "LISTA_63": [
+    {
+      "tekst": "Metody i kryteria przeglądu są udokumentowane",
+      "podstawa": "N",
+      "auto": "metody"
+    },
+    {
+      "tekst": "Określono rodzaje energii",
+      "podstawa": "N",
+      "auto": "rodzaje"
+    },
+    {
+      "tekst": "Oceniono przeszłe i bieżące wykorzystanie i zużycie energii",
+      "podstawa": "N",
+      "auto": "przeszle"
+    },
+    {
+      "tekst": "Bilans zamyka się na licznikach głównych; zapisano, skąd pochodzi każda liczba",
+      "podstawa": "M",
+      "auto": "bilans"
+    },
+    {
+      "tekst": "Nie liczy się podwójnie energii z wytwarzania własnego",
+      "podstawa": "M",
+      "auto": "podwojne"
+    },
+    {
+      "tekst": "Zidentyfikowano znaczące użycia energii na podstawie analizy",
+      "podstawa": "N",
+      "auto": "seu"
+    },
+    {
+      "tekst": "Kryteria SEU są jednakowe w przeglądzie, procedurze i formularzu; każde SEU ma podstawę wyboru",
+      "podstawa": "M",
+      "auto": "kryteria"
+    },
+    {
+      "tekst": "Dla każdego SEU określono istotne zmienne",
+      "podstawa": "N",
+      "auto": "zmienne"
+    },
+    {
+      "tekst": "Dla każdego SEU określono bieżący wynik energetyczny",
+      "podstawa": "N",
+      "auto": "wynik"
+    },
+    {
+      "tekst": "Dla każdego SEU określono osoby, które na nie wpływają",
+      "podstawa": "N",
+      "auto": "osoby"
+    },
+    {
+      "tekst": "Odróżniono zmienne od czynników statycznych",
+      "podstawa": "M",
+      "auto": "statyczne"
+    },
+    {
+      "tekst": "Określono i uszeregowano możliwości poprawy",
+      "podstawa": "N",
+      "auto": "mozliwosci"
+    },
+    {
+      "tekst": "Oszacowano przyszłe wykorzystanie i zużycie energii",
+      "podstawa": "N",
+      "auto": "prognoza"
+    },
+    {
+      "tekst": "Wyniki przeglądu zachowano jako udokumentowaną informację",
+      "podstawa": "N",
+      "auto": "zachowano"
+    },
+    {
+      "tekst": "Ustalono odstępy i powody aktualizacji przeglądu",
+      "podstawa": "N",
+      "auto": "aktualizacja"
+    }
+  ],
+  "form": {
+    "groups": [
+      {
+        "title": "Okresy i metryka",
+        "fields": [
+          {
+            "key": "META.okres",
+            "label": "Okres bieżący",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.porownawczy",
+            "label": "Okres porównawczy",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.opracowal",
+            "label": "Opracował",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.zatwierdzil",
+            "label": "Zatwierdzenie kierownictwa",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.data",
+            "label": "Data",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      },
+      {
+        "title": "Trendy i wytwarzanie własne",
+        "fields": [
+          {
+            "key": "TREND.opis",
+            "label": "Ocena przeszłego i bieżącego zużycia",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "TREND.wlasne",
+            "label": "Wytwarzanie własne i zapobieganie podwójnemu liczeniu",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      },
+      {
+        "title": "Prognoza i aktualizacja",
+        "fields": [
+          {
+            "key": "PROG.bez",
+            "label": "Prognoza bez działań [MWh]",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "PROG.zalozeniaBez",
+            "label": "Założenia prognozy bez działań",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "PROG.zDzial",
+            "label": "Prognoza z działaniami [MWh]",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "PROG.zalozeniaZ",
+            "label": "Założenia prognozy z działaniami",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "AKTUAL.odstep",
+            "label": "Odstępy przeglądu",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "AKTUAL.zmiany",
+            "label": "Zmiany uruchamiające aktualizację",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "NOSNIKI": [
+        "Bilans nośników",
+        {
+          "nazwa": "Nośnik energii",
+          "jednostka": "Jednostka",
+          "poprzedni": "Zużycie w okresie porównawczym",
+          "biezacy": "Zużycie w okresie bieżącym",
+          "przelicznik": "Przelicznik kWh / jednostkę",
+          "zrodlo": "Źródło przelicznika i danych"
+        }
+      ],
+      "OBSZARY": [
+        "Obszary i bilans",
+        {
+          "nr": "Identyfikator obszaru",
+          "nazwa": "Obszar / instalacja",
+          "rodzaj": "Rodzaj energii",
+          "mwh": "Zużycie [MWh]",
+          "metoda": "Sposób ustalenia",
+          "grupa": "Identyfikator grupy SEU (wspólny dla kilku nośników)",
+          "uzasadnienieNie": "Uzasadnienie nieuznania za SEU"
+        }
+      ],
+      "SEU": [
+        "Znaczące użycia energii",
+        {
+          "nr": "Identyfikator SEU / grupy",
+          "nazwa": "Nazwa SEU",
+          "kryterium": "Kryterium wyboru",
+          "uzasadnienie": "Uzasadnienie wyboru",
+          "brakZmiennych": "Brak istotnych zmiennych?",
+          "zmienne": "Istotne zmienne i uzasadnienie",
+          "statyczne": "Czynniki statyczne",
+          "wynik": "Bieżący wynik energetyczny",
+          "osoby": "Osoby wpływające na wynik"
+        }
+      ],
+      "MOZL": [
+        "Możliwości poprawy",
+        {
+          "nr": "Identyfikator możliwości",
+          "nazwa": "Możliwość poprawy",
+          "seu": "Identyfikator SEU",
+          "mwh": "Oszczędność [MWh/rok]",
+          "zl": "Oszczędność [zł/rok]",
+          "capex": "Nakłady [zł]"
+        }
+      ]
+    }
+  }
+}

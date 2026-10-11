@@ -1,0 +1,165 @@
+{
+  "LISTA_64": [
+    {
+      "tekst": "EnPI są odpowiednie do mierzenia i monitorowania wyniku energetycznego i umożliwiają wykazanie jego poprawy.",
+      "podstawa": "N",
+      "auto": "odpowiednie"
+    },
+    {
+      "tekst": "Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, uwzględniono je przy ustalaniu EnPI.",
+      "podstawa": "N",
+      "auto": "zmienne"
+    },
+    {
+      "tekst": "Postać EnPI (bezwzględna / jednostkowa / model) ma uzasadnienie.",
+      "podstawa": "M",
+      "auto": "postac"
+    },
+    {
+      "tekst": "Model oceniono nie tylko po R² — z uzasadnieniem zmiennych, zakresem danych, błędem i wartościami odstającymi.",
+      "podstawa": "M",
+      "auto": "modelocena"
+    },
+    {
+      "tekst": "Metoda określania i aktualizowania EnPI jest utrzymywana jako udokumentowana informacja.",
+      "podstawa": "N",
+      "auto": "metoda"
+    },
+    {
+      "tekst": "Wartości EnPI są zachowane jako udokumentowana informacja i porównywane z odpowiadającymi im liniami bazowymi.",
+      "podstawa": "N",
+      "auto": "wartosci"
+    }
+  ],
+  "form": {
+    "groups": [
+      {
+        "title": "Metoda i zapisy",
+        "fields": [
+          {
+            "key": "METODA.dobor",
+            "label": "Dobór wskaźników",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "METODA.model",
+            "label": "Ocena modeli",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "METODA.obliczanie",
+            "label": "Obliczanie i porównywanie z EnB",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "METODA.aktualizacja",
+            "label": "Aktualizacja wskaźników",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "METODA.zapisy",
+            "label": "Przechowywanie zapisów",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "METODA.komunikacja",
+            "label": "Komunikacja wyników",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.zatwierdzil",
+            "label": "Zatwierdzenie kierownictwa",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.data",
+            "label": "Data",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.stan",
+            "label": "Stan na dzień",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.stale",
+            "label": "Szacowany udział zużycia stałego [%]",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "KARTY": [
+        "Karty EnPI — wspólne z 6.5",
+        {
+          "nr": "Stały identyfikator karty",
+          "nazwa": "Nazwa wskaźnika",
+          "obszar": "Obszar wskaźnika",
+          "obszarNazwa": "Nazwa obszaru",
+          "seu": "Identyfikator SEU",
+          "postac": "Postać wskaźnika",
+          "uzasadnieniePostaci": "Uzasadnienie postaci",
+          "wzor": "Wzór / model i jednostka",
+          "zmienne": "Istotne zmienne i sens techniczny",
+          "statyczne": "Stan czynników statycznych",
+          "zrodla": "Źródła danych",
+          "plan": "Identyfikatory pozycji planu 6.6 (rozdziel przecinkami)",
+          "ocenaModelu": "Ocena modelu: zakres, błędy, R², reszty i odstające wartości",
+          "czestotliwosc": "Częstotliwość obliczeń",
+          "odp": "Odpowiedzialny",
+          "przegladMetody": "Przegląd metody"
+        }
+      ],
+      "WARTOSCI": [
+        "Wartości wskaźników",
+        {
+          "enpi": "Identyfikator karty EnPI",
+          "okres": "Okres",
+          "wartosc": "Wartość",
+          "adnotacja": "Warunki i adnotacje"
+        }
+      ]
+    }
+  }
+}

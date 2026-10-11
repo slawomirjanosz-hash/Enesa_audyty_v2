@@ -8,7 +8,7 @@
 <input type="hidden" name="{{$name}}" value="">
 @foreach($field['options'] as $val=>$label)<label class="plant-check"><input type="checkbox" name="{{$name}}[]" value="{{$val}}" @checked(in_array($val,is_array($value)?$value:[],true))> {{$label}}</label>@endforeach
 @elseif($field['options'])
-<select name="{{$name}}"><option value="">Wybierz</option>@foreach($field['options'] as $val=>$label)<option value="{{$val}}" @selected($value===$val)>{{$label}}</option>@endforeach</select>
+<select name="{{$name}}"><option value="">Wybierz</option>@foreach($field['options'] as $val=>$label)<option value="{{$val}}" @selected((string)$value===(string)$val)>{{$label}}</option>@endforeach</select>
 @elseif($field['type']==='textarea')
 <textarea name="{{$name}}" @if(isset($field['example'])) data-example="{{$field['example']}}" @endif maxlength="10000" rows="3">{{is_scalar($value)?$value:''}}</textarea>
 @else

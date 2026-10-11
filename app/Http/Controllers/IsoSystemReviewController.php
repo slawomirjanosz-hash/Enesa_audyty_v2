@@ -9,6 +9,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoSystemReview;
 use App\Services\AuditorAccessService;
+use App\Services\IsoPlanningQuestionnaire;
 use App\Services\IsoSystemQuestionnaire;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -51,6 +52,9 @@ class IsoSystemReviewController extends Controller
         $sources = $this->questionnaire->sources($profile, $section);
         $review = IsoSystemReview::firstOrNew(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'section' => $section], ['status' => 'editing', 'lock_version' => 0]);
         $answers = old('answers', $review->answers ?? $this->questionnaire->seed($section, $sources));
+        if (str_starts_with($section, '6-') && ! session()->hasOldInput('answers')) {
+            $answers = app(IsoPlanningQuestionnaire::class)->projectCards($section, $answers, $sources);
+        }
         if (! is_array($answers)) {
             $answers = [];
         }
@@ -119,6 +123,10 @@ class IsoSystemReviewController extends Controller
                     $review->status = $client ? 'editing' : 'auditor_corrected';
                 }
                 $review->answers = $answers;
+                if (str_starts_with($section, '6-')) {
+                    app(IsoPlanningQuestionnaire::class)->saveCards($profile, $section, $answers);
+                    $sources = $this->questionnaire->sources($profile, $section);
+                }
                 if ($op === 'submit') {
                     $review->status = 'submitted';
                     $review->client_approval = $approval;
@@ -126,13 +134,13 @@ class IsoSystemReviewController extends Controller
             } else {
                 abort_if($stale, 409, 'Źródła zmieniły się. Zapisz ankietę i zatwierdź ponownie.');
                 if ($op === 'consultant') {
-                    abort_unless(! $client && str_starts_with($section, '5-') && $review->status === 'submitted', 403);
+                    abort_unless(! $client && preg_match('/^[56]-/', $section) && $review->status === 'submitted', 403);
                     $notes = $request->validate(['consultant.WNIOSKI' => 'required|array|min:1|max:20', 'consultant.WNIOSKI.*' => 'array', 'consultant.WNIOSKI.*.znaczenie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.decyzja' => 'required|string|max:3000', 'consultant.WNIOSKI.*.dzialanie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.sprawdzenie' => 'required|string|max:3000']);
                     $review->consultant = $notes['consultant'] + ['answers_hash' => hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR))];
                 } elseif ($op === 'approve') {
                     abort_unless(! $client && $review->status === 'submitted' && $review->client_approval && $review->client_approval['user_id'] !== $request->user()->id, 403);
                     $this->questionnaire->normalize($section, $review->answers, $sources, true);
-                    if (str_starts_with($section, '5-') && (empty($review->consultant['WNIOSKI']) || ($review->consultant['answers_hash'] ?? '') !== hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR)))) {
+                    if (preg_match('/^[56]-/', $section) && (empty($review->consultant['WNIOSKI']) || ($review->consultant['answers_hash'] ?? '') !== hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR)))) {
                         throw ValidationException::withMessages(['consultant' => 'Zapisz przynajmniej jeden pełny wniosek konsultanta przed zatwierdzeniem.']);
                     }
                     if ($section === '4-4') {

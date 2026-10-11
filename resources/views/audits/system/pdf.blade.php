@@ -2,6 +2,13 @@
 <div class="footer">{{str_replace('-','.',$section)}} ISO 50001 · <span class="page"></span></div>
 <div class="header">@if($review->issuer['logo']??null)<img src="{{$review->issuer['logo']}}" alt="Logo">@else<strong>{{$review->issuer['name']??''}}</strong>@endif<h1>{{$title}}</h1><p>{{$profile->answers['organization.name']['value']??''}} · {{$profile->answers['site.name']['value']??''}}<br>{{$profile->answers['site.address']['value']??''}}</p></div>
 @if($section==='4-4')<h2>Zakres systemu - odwołanie do 4.3</h2><p>{{data_get($sources,'scope.ZAKRES.opis')}}</p>@endif
+@if($section==='6-1')<h2>Priorytety ryzyk i szans</h2>
+@foreach(['RYZYKA','SZANSE'] as $root)@foreach($review->answers[$root]??[] as $row)<p>{{$row['nr']??''}} · {{$row['opis']??''}} · P × W = {{(int)($row['P']??0)*(int)($row['W']??0)}}</p>@endforeach @endforeach @endif
+@if($section==='6-3')
+@php($totals=app(\App\Services\IsoPlanningQuestionnaire::class)->calculations($section,$review->answers))
+<h2>Bilans energii</h2><p>Nośniki: {{number_format($totals['energy'],3,',',' ')}} MWh · Obszary: {{number_format($totals['areas'],3,',',' ')}} MWh · Różnica: {{number_format($totals['difference'],2,',',' ')}}%.</p>
+<h2>Prosty okres zwrotu</h2>@foreach($review->answers['MOZL']??[] as $row)<p>{{$row['nr']??''}} · {{$row['nazwa']??''}} — SPBT: {{(float)($row['zl']??0)>0?number_format((float)($row['capex']??0)/(float)$row['zl'],2,',',' ').' lat':'nie można obliczyć (brak dodatniej oszczędności finansowej)'}}</p>@endforeach
+@endif
 @if($section==='5-2')
 @include('audits.system.policy', ['answers'=>$review->answers])
 @else

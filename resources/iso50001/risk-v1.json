@@ -1,0 +1,279 @@
+{
+  "DANE_WEJ": [
+    {
+      "kod": "WEJ-41",
+      "podstawa": "N",
+      "klauzula": "4.1",
+      "tresc": "Uwzględniono czynniki zewnętrzne i wewnętrzne",
+      "pomoc": "Ceny energii, przepisy, technologia, klimat, stan maszyn, budżet. Platforma ma je w dokumencie D-EnMS-KON-01.",
+      "przyklad": "np. D-EnMS-KON-01 wersja 1.0 — 23 potwierdzone czynniki przejrzane na spotkaniu zespołu 06.03.2026"
+    },
+    {
+      "kod": "WEJ-42",
+      "podstawa": "N",
+      "klauzula": "4.2",
+      "tresc": "Uwzględniono wymagania stron zainteresowanych",
+      "pomoc": "Wymagania klientów, banków, właścicieli — z rejestru D-EnMS-STR-01.",
+      "przyklad": "np. D-EnMS-STR-01 — wymagania odbiorcy OEM i banku przejrzane 06.03.2026"
+    },
+    {
+      "kod": "WEJ-PROC",
+      "podstawa": "N",
+      "tresc": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny",
+      "pomoc": "Trzecie źródło: awaria sprężarki, nowa linia, wiedza zamknięta w głowie jednej osoby. Listę wypełniacie niżej.",
+      "przyklad": "np. przegląd 7 procesów na spotkaniu zespołu 06.03.2026 — notatka w rejestrze"
+    },
+    {
+      "kod": "WEJ-43",
+      "podstawa": "M",
+      "klauzula": "4.3",
+      "tresc": "Uwzględniono zakres i granice systemu",
+      "pomoc": "Ryzyko dotyczące działalności spoza granic systemu nie powinno trafiać do tego rejestru.",
+      "przyklad": "np. D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu"
+    },
+    {
+      "kod": "WEJ-POL",
+      "podstawa": "N",
+      "klauzula": "5.2",
+      "tresc": "Planowanie jest spójne z polityką energetyczną",
+      "pomoc": "Jeśli polityka zobowiązuje do uwzględniania efektywności przy zakupach, w rejestrze powinno to mieć odbicie.",
+      "przyklad": "np. element f) polityki przełożony na ryzyko R1 i zasadę w procedurze zakupowej"
+    }
+  ],
+  "LISTA_61": [
+    {
+      "grupa": "DANE WEJŚCIOWE",
+      "tekst": "Uwzględniono czynniki zewnętrzne i wewnętrzne (4.1)",
+      "podstawa": "N",
+      "auto": "wej",
+      "wej": "WEJ-41"
+    },
+    {
+      "grupa": "DANE WEJŚCIOWE",
+      "tekst": "Uwzględniono wymagania stron zainteresowanych (4.2)",
+      "podstawa": "N",
+      "auto": "wej",
+      "wej": "WEJ-42"
+    },
+    {
+      "grupa": "DANE WEJŚCIOWE",
+      "tekst": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny",
+      "podstawa": "N",
+      "auto": "procesy"
+    },
+    {
+      "grupa": "DANE WEJŚCIOWE",
+      "tekst": "Uwzględniono zakres i granice systemu (4.3)",
+      "podstawa": "M",
+      "auto": "wej",
+      "wej": "WEJ-43"
+    },
+    {
+      "grupa": "DANE WEJŚCIOWE",
+      "tekst": "Planowanie jest spójne z polityką energetyczną",
+      "podstawa": "N",
+      "auto": "wej",
+      "wej": "WEJ-POL"
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Określono ryzyka i szanse istotne dla zamierzonych wyników systemu i poprawy wyniku energetycznego",
+      "podstawa": "N",
+      "auto": "sa_pozycje"
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Określono ryzyka i szanse związane z zapobieganiem niepożądanym skutkom",
+      "podstawa": "N",
+      "auto": null
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Określono ryzyka i szanse związane z ciągłym doskonaleniem systemu i wyniku",
+      "podstawa": "N",
+      "auto": null
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Każda pozycja ma źródło (4.1, 4.2, proces)",
+      "podstawa": "M",
+      "auto": "zrodla"
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Przyjęto i zapisano metodę oceny (P × W, skala 1–3)",
+      "podstawa": "M",
+      "auto": "metoda"
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Przy szansach P oznacza prawdopodobieństwo uzyskania korzyści",
+      "podstawa": "M",
+      "auto": "metoda"
+    },
+    {
+      "grupa": "IDENTYFIKACJA I OCENA",
+      "tekst": "Oceniono każdą pozycję",
+      "podstawa": "M",
+      "auto": "ocenione"
+    },
+    {
+      "grupa": "DZIAŁANIA",
+      "tekst": "Zaplanowano działania odnoszące się do ryzyk i szans",
+      "podstawa": "N",
+      "auto": "dzialania"
+    },
+    {
+      "grupa": "DZIAŁANIA",
+      "tekst": "Zastosowano progi: działania od poziomu 3, zatwierdzenie kierownictwa od poziomu 6",
+      "podstawa": "M",
+      "auto": "progi"
+    },
+    {
+      "grupa": "DZIAŁANIA",
+      "tekst": "Dla działań określono zasoby, odpowiedzialnych i terminy",
+      "podstawa": "M",
+      "auto": "zasoby"
+    },
+    {
+      "grupa": "DZIAŁANIA",
+      "tekst": "Zaplanowano włączenie działań w procesy systemu i procesy związane z wynikiem energetycznym",
+      "podstawa": "N",
+      "auto": "procesy_wl"
+    },
+    {
+      "grupa": "DZIAŁANIA",
+      "tekst": "Zaplanowano sposób oceny skuteczności działań",
+      "podstawa": "N",
+      "auto": "skutecznosc"
+    },
+    {
+      "grupa": "DZIAŁANIA",
+      "tekst": "Zapisano termin i wynik oceny skuteczności",
+      "podstawa": "M",
+      "auto": "wynik_oceny"
+    },
+    {
+      "grupa": "PRZEGLĄD",
+      "tekst": "Rejestr przegląda się przy istotnych zmianach i okresowo (np. co kwartał w pierwszym roku)",
+      "podstawa": "M",
+      "auto": "przeglad"
+    },
+    {
+      "grupa": "PRZEGLĄD",
+      "tekst": "Wnioski z ryzyk i szans przekazano do celów i planów działań (6.2)",
+      "podstawa": "M",
+      "auto": "do_celow"
+    }
+  ],
+  "form": {
+    "groups": [
+      {
+        "title": "Przegląd i odpowiedzialność",
+        "fields": [
+          {
+            "key": "PRZEGLAD.kiedy",
+            "label": "Kiedy przeglądacie ryzyka i szanse",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "PRZEGLAD.ostatni",
+            "label": "Data ostatniego przeglądu",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "PRZEGLAD.doCelow",
+            "label": "Co przekazano do celów w 6.2",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.opracowal",
+            "label": "Opracował",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.zatwierdzil",
+            "label": "Zatwierdzenie kierownictwa",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.utworzony",
+            "label": "Data opracowania",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "PROCESY": [
+        "Procesy",
+        {
+          "nazwa": "Proces",
+          "wplyw": "Wpływ na wynik energetyczny"
+        }
+      ],
+      "RYZYKA": [
+        "Ryzyka",
+        {
+          "nr": "Identyfikator ryzyka",
+          "zrodlo": "Źródło",
+          "opis": "Opis ryzyka",
+          "P": "Prawdopodobieństwo (1–3)",
+          "W": "Wpływ (1–3)",
+          "dzialanie": "Działanie",
+          "zasoby": "Zasoby",
+          "odp": "Odpowiedzialny",
+          "termin": "Termin działania",
+          "powiazanie": "Powiązanie z procesami",
+          "ocena": "Metoda oceny skuteczności",
+          "terminOceny": "Termin oceny",
+          "wynikOceny": "Wynik oceny",
+          "zatwierdzil": "Zatwierdzenie kierownictwa"
+        }
+      ],
+      "SZANSE": [
+        "Szanse",
+        {
+          "nr": "Identyfikator szansy",
+          "zrodlo": "Źródło",
+          "opis": "Opis szansy",
+          "P": "Prawdopodobieństwo (1–3)",
+          "W": "Wpływ (1–3)",
+          "dzialanie": "Działanie",
+          "zasoby": "Zasoby",
+          "odp": "Odpowiedzialny",
+          "termin": "Termin działania",
+          "powiazanie": "Powiązanie z procesami",
+          "ocena": "Metoda oceny skuteczności",
+          "terminOceny": "Termin oceny",
+          "wynikOceny": "Wynik oceny",
+          "zatwierdzil": "Zatwierdzenie kierownictwa"
+        }
+      ]
+    }
+  }
+}

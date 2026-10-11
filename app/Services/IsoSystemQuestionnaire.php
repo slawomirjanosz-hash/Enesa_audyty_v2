@@ -16,6 +16,9 @@ class IsoSystemQuestionnaire
 {
     public function schema(string $section): array
     {
+        if (str_starts_with($section, '6-')) {
+            return app(IsoPlanningQuestionnaire::class)->schema($section);
+        }
         $name = match ($section) {
             '4-3' => 'scope', '4-4' => 'system', '5-1' => 'leadership', '5-2' => 'policy', '5-3' => 'roles'
         };
@@ -25,6 +28,9 @@ class IsoSystemQuestionnaire
 
     public function sources(IsoPlantProfile $profile, string $section): array
     {
+        if (str_starts_with($section, '6-')) {
+            return app(IsoPlanningQuestionnaire::class)->sources($profile, $section);
+        }
         if (str_starts_with($section, '5-')) {
             return app(IsoLeadershipQuestionnaire::class)->sources($profile, $section);
         }
@@ -94,6 +100,9 @@ class IsoSystemQuestionnaire
 
     public function seed(string $section, array $sources): array
     {
+        if (str_starts_with($section, '6-')) {
+            return app(IsoPlanningQuestionnaire::class)->seed($section, $sources);
+        }
         if (str_starts_with($section, '5-')) {
             return app(IsoLeadershipQuestionnaire::class)->seed($section, $sources);
         }
@@ -139,6 +148,9 @@ class IsoSystemQuestionnaire
 
     public function sections(string $section, array $answers, array $sources): array
     {
+        if (str_starts_with($section, '6-')) {
+            return app(IsoPlanningQuestionnaire::class)->sections($section, $answers, $sources);
+        }
         if (str_starts_with($section, '5-')) {
             return app(IsoLeadershipQuestionnaire::class)->sections($section, $answers, $sources);
         }
@@ -230,8 +242,11 @@ class IsoSystemQuestionnaire
         return $groups;
     }
 
-    public function rowFields(string $root, string $i): array
+    public function rowFields(string $root, string $i, string $section = '', array $answers = [], array $sources = []): array
     {
+        if (str_starts_with($section, '6-')) {
+            return app(IsoPlanningQuestionnaire::class)->rowFields($section, $root, $i, $answers, $sources);
+        }
         if (in_array($root, IsoLeadershipQuestionnaire::REPEATERS)) {
             return app(IsoLeadershipQuestionnaire::class)->rowFields($root, $i);
         }
@@ -259,6 +274,9 @@ class IsoSystemQuestionnaire
 
     public function normalize(string $section, array $input, array $sources, bool $complete): array
     {
+        if (str_starts_with($section, '6-')) {
+            app(IsoPlanningQuestionnaire::class)->validateRows($section, $input);
+        }
         if (str_starts_with($section, '5-')) {
             app(IsoLeadershipQuestionnaire::class)->validateRows($section, $input, $complete);
         }
@@ -286,7 +304,7 @@ class IsoSystemQuestionnaire
                     }
                     if ($field['type'] === 'date') {
                         $rules[$key][] = 'date_format:Y-m-d';
-                        if ($section !== '5-2' || $key !== 'ZATW.od') {
+                        if (! str_starts_with($section, '6-') && ($section !== '5-2' || $key !== 'ZATW.od')) {
                             $rules[$key][] = 'before_or_equal:today';
                         }
                     }
@@ -337,6 +355,10 @@ class IsoSystemQuestionnaire
             }
         }
 
+        if (str_starts_with($section, '6-')) {
+            app(IsoPlanningQuestionnaire::class)->validateContent($section, $out, $sources, $complete);
+        }
+
         return $out;
     }
 
@@ -348,6 +370,13 @@ class IsoSystemQuestionnaire
                 if ($field['required'] && $this->visible($field, $answers)) {
                     $total++;
                     $done += filled(data_get($answers, $field['key'])) ? 1 : 0;
+                }
+            }
+        }
+        if (str_starts_with($section, '6-')) {
+            foreach ($this->schema($section)['form']['rows'] as $root => $definition) {
+                if ($root !== 'REWIZJE' && empty($answers[$root])) {
+                    $total++;
                 }
             }
         }
@@ -398,6 +427,20 @@ class IsoSystemQuestionnaire
     public function warnings(string $section, array $answers, array $sources): array
     {
         $out = [];
+        if (in_array($section, ['6-4', '6-5'])) {
+            foreach ($sources['cards'] ?? [] as $card) {
+                if (preg_match('/przych[oó]d|obrot|zł|PLN/iu', $card['wzor'] ?? '')) {
+                    $out[] = ($card['nr'] ?? 'Karta').': wskaźnik finansowy może zależeć od cen. Sprawdź, czy rzeczywiście mierzy wynik energetyczny.';
+                }
+            }
+            if ($section === '6-4') {
+                foreach ($sources['upstream']['6-3']['SEU'] ?? [] as $seu) {
+                    if (! in_array($seu['nr'] ?? '', array_column($answers['KARTY'] ?? [], 'seu'), true)) {
+                        $out[] = 'SEU '.($seu['nr'] ?? '').' nie ma przypisanego wskaźnika. Uzupełnij kartę lub uzasadnij metodę oceny wyniku.';
+                    }
+                }
+            }
+        }
         if ($section === '5-1') {
             foreach ($answers['INT'] ?? [] as $code => $row) {
                 if (($row['stan'] ?? '') === 'zapis') {

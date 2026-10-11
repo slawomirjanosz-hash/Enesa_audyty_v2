@@ -1,0 +1,140 @@
+{
+  "LISTA_65": [
+    {
+      "tekst": "Ustanowiono energetyczne linie bazowe na podstawie informacji z przeglądu energetycznego, z uwzględnieniem odpowiedniego okresu.",
+      "podstawa": "N",
+      "auto": "ustanowiono"
+    },
+    {
+      "tekst": "Okres bazowy ma uzasadnienie (zwykle 12 miesięcy; krótszy — z wyjaśnieniem, co pomija).",
+      "podstawa": "M",
+      "auto": "uzasadnienie"
+    },
+    {
+      "tekst": "Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, EnPI i odpowiadające im EnB są normalizowane.",
+      "podstawa": "N",
+      "auto": "normalizacja"
+    },
+    {
+      "tekst": "Warunki rewizji EnB odpowiadają przesłankom a)–c) normy; poprawa wyniku nie jest powodem rewizji.",
+      "podstawa": "N",
+      "auto": "rewizje"
+    },
+    {
+      "tekst": "Zachowano linie bazowe, dane o istotnych zmiennych oraz zmiany EnB jako udokumentowaną informację.",
+      "podstawa": "N",
+      "auto": "zachowano"
+    },
+    {
+      "tekst": "Przy rewizji zapisano poprawę osiągniętą do dnia rewizji.",
+      "podstawa": "M",
+      "auto": "poprawaPrzyRewizji"
+    }
+  ],
+  "form": {
+    "groups": [
+      {
+        "title": "Zasady linii bazowej",
+        "fields": [
+          {
+            "key": "ZASADY.kto",
+            "label": "Kto decyduje o rewizji",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "ZASADY.zapisy",
+            "label": "Przechowywanie zapisów i danych zmiennych",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "ZASADY.przeglad",
+            "label": "Kiedy przeglądacie EnB",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "ZASADY.poprawa",
+            "label": "Jak zachowujecie poprawę przed rewizją",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.zatwierdzil",
+            "label": "Zatwierdzenie kierownictwa",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.data",
+            "label": "Data",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.stan",
+            "label": "Stan na dzień",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "KARTY": [
+        "Linie bazowe kart utworzonych w 6.4",
+        {
+          "nr": "Identyfikator istniejącej karty EnPI",
+          "okresBazowy": "Okres bazowy",
+          "uzasadnienieOkresu": "Uzasadnienie okresu i ograniczenia",
+          "wartoscEnB": "Wartość EnB wraz z jednostką",
+          "modelBazowy": "Model bazowy",
+          "statyczne": "Stan czynników statycznych",
+          "daneZmiennych": "Dane zmiennych z okresu bazowego",
+          "normalizacja": "Normalizacja",
+          "przykladObliczenia": "Przykład obliczenia",
+          "warunkiPorownania": "Warunki porównania",
+          "rewizjaA": "Rewizja a) — wskaźnik nie odzwierciedla wyniku",
+          "rewizjaB": "Rewizja b) — zmiana czynników statycznych",
+          "rewizjaC": "Rewizja c) — metoda ustalona z góry",
+          "nieRewizja": "Co NIE jest powodem rewizji"
+        }
+      ],
+      "REWIZJE": [
+        "Historia rewizji EnB",
+        {
+          "enpi": "Identyfikator karty",
+          "data": "Data rewizji",
+          "powod": "Przesłanka rewizji (a/b/c)",
+          "opis": "Uzasadnienie",
+          "stara": "Poprzednia EnB",
+          "nowa": "Nowa EnB",
+          "poprawa": "Poprawa osiągnięta przed rewizją",
+          "zatwierdzil": "Zatwierdził"
+        }
+      ]
+    }
+  }
+}

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         const section = window.location.pathname.split('/').filter(Boolean).pop();
-        const minimum = section === '5-1' ? {CZLON:1,DECYZJE:3} : section === '5-2' ? {PRZEGLADY:1} : section === '5-3' ? {ROLE:1,UPR:1} : {GRANICE:1,UPRAW:1};
+        const minimum = section.startsWith('6-') ? Object.fromEntries([...form.querySelectorAll('[data-repeater]')].filter(el=>el.dataset.repeater!=='REWIZJE').map(el=>[el.dataset.repeater,1])) : section === '5-1' ? {CZLON:1,DECYZJE:3} : section === '5-2' ? {PRZEGLADY:1} : section === '5-3' ? {ROLE:1,UPR:1} : {GRANICE:1,UPRAW:1};
         Object.entries(minimum).forEach(([root,min]) => {
             const container = form.querySelector(`[data-repeater="${root}"]`);
             if (container) total += Math.max(0, min-container.querySelectorAll('.system-row').length);

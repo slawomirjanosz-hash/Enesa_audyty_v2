@@ -1,0 +1,212 @@
+{
+  "KATEGORIE": [
+    [
+      "a",
+      "Istotne zmienne dla znaczących użyć energii"
+    ],
+    [
+      "b",
+      "Zużycie energii — znaczących użyć i organizacji"
+    ],
+    [
+      "c",
+      "Kryteria eksploatacji znaczących użyć energii"
+    ],
+    [
+      "d",
+      "Czynniki statyczne, jeśli dotyczy"
+    ],
+    [
+      "e",
+      "Dane określone w planach działań"
+    ]
+  ],
+  "CZESTOTLIWOSCI": [
+    [
+      "Zużycie — liczniki główne",
+      "Miesięcznie (z faktur)",
+      "Codziennie lub co 15 min"
+    ],
+    [
+      "Zużycie znaczących użyć energii",
+      "Miesięcznie",
+      "Codziennie"
+    ],
+    [
+      "Zmienne (produkcja, pogoda)",
+      "Miesięcznie",
+      "Tygodniowo lub codziennie"
+    ],
+    [
+      "Kryteria eksploatacji",
+      "Przy każdej zmianie parametrów pracy",
+      "Ciągle, z alarmem"
+    ],
+    [
+      "EnPI i porównanie z EnB",
+      "Miesięcznie lub kwartalnie",
+      "Miesięcznie"
+    ]
+  ],
+  "LISTA_66": [
+    {
+      "tekst": "Plan jest odpowiedni do wielkości, złożoności, zasobów i wyposażenia pomiarowego organizacji.",
+      "podstawa": "N",
+      "auto": "odpowiedni"
+    },
+    {
+      "tekst": "Plan obejmuje: a) istotne zmienne dla SEU; b) zużycie energii SEU i organizacji; c) kryteria eksploatacji SEU; d) czynniki statyczne; e) dane z planów działań.",
+      "podstawa": "N",
+      "auto": "kategorie"
+    },
+    {
+      "tekst": "Plan określa, jak i jak często dane są zbierane oraz przechowywane.",
+      "podstawa": "N",
+      "auto": "jak"
+    },
+    {
+      "tekst": "Dane są zachowane jako udokumentowana informacja.",
+      "podstawa": "N",
+      "auto": "zachowane"
+    },
+    {
+      "tekst": "Pomiar kluczowych charakterystyk daje dane dokładne i powtarzalne; zachowano na to dowody.",
+      "podstawa": "N",
+      "auto": "dokladnosc"
+    },
+    {
+      "tekst": "Określono zasady jakości danych i postępowania z brakami.",
+      "podstawa": "M",
+      "auto": "jakosc"
+    },
+    {
+      "tekst": "Plan przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb.",
+      "podstawa": "N",
+      "auto": "przeglad"
+    }
+  ],
+  "POLA_ZASAD": [
+    {
+      "kod": "zapisy",
+      "nazwa": "Gdzie i jak długo przechowujecie dane",
+      "podstawa": "N",
+      "rows": 2,
+      "ph": "np. Arkusz EnMS na serwerze, kopia tygodniowa; dane z systemu monitoringu 30 dni w sterowniku, dalej eksport miesięczny do arkusza; faktury w księgowości 5 lat.",
+      "pomoc": "Norma wymaga, żeby plan określał, jak dane będą przechowywane, i żeby dane były zachowane jako udokumentowana informacja."
+    },
+    {
+      "kod": "dowody",
+      "nazwa": "Jak zapewniacie dokładność i powtarzalność — zasada ogólna",
+      "podstawa": "N",
+      "rows": 3,
+      "ph": "np. Liczniki rozliczeniowe — legalizacja przez OSD. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy z licznikiem głównym (różnica ≤ 5%). Analizator i detektor — świadectwo wzorcowania. Czujniki temperatury i ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.",
+      "pomoc": "Organizacja zachowuje udokumentowaną informację o sposobach zapewnienia dokładności i powtarzalności pomiarów kluczowych charakterystyk."
+    },
+    {
+      "kod": "jakosc",
+      "nazwa": "Zasady jakości danych i postępowania z brakami",
+      "podstawa": "M",
+      "rows": 3,
+      "ph": "np. Każda wartość oszacowana jest oznaczona w arkuszu i opisana. Luka dłuższa niż miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji w porównaniu.",
+      "pomoc": "Wymaganie metodyki ENESA. Norma mówi o dokładności pomiaru, ale nie o postępowaniu z lukami — a luki są nieuniknione."
+    },
+    {
+      "kod": "przeglad",
+      "nazwa": "Kto i kiedy przegląda plan",
+      "podstawa": "N",
+      "rows": 2,
+      "ph": "np. Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny.",
+      "pomoc": "Plan, który się zestarzał, jest gorszy od żadnego — bo wygląda na obowiązujący."
+    },
+    {
+      "kod": "droga",
+      "nazwa": "Droga danych od licznika do wskaźnika",
+      "podstawa": "M",
+      "rows": 3,
+      "ph": "np. Podlicznik → eksport z systemu monitoringu (Kier. UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika (Energy Manager, do 10 dnia) → raport na odprawę kierownictwa. Punkty zależne od pamięci jednej osoby: eksport ręczny z systemu monitoringu — wpisany zastępca.",
+      "pomoc": "Zadanie z książki: wybierzcie jeden wskaźnik i przejdźcie drogę jego danych od licznika do raportu. Zapiszcie każde miejsce, w którym ta droga zależy od pamięci jednej osoby."
+    }
+  ],
+  "form": {
+    "groups": [
+      {
+        "title": "Metryka planu",
+        "fields": [
+          {
+            "key": "META.wersja",
+            "label": "Wersja planu",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.data",
+            "label": "Data",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.przeglad",
+            "label": "Przegląd planu",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.opracowal",
+            "label": "Opracował",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "META.zatwierdzil",
+            "label": "Zatwierdzenie kierownictwa",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          },
+          {
+            "key": "NIE_DOTYCZY",
+            "label": "Kategorie a–e, które nie dotyczą zakładu — uzasadnienie dla każdej",
+            "type": "textarea",
+            "required": true,
+            "options": {},
+            "when": null,
+            "help": ""
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "POZYCJE": [
+        "Plan zbierania danych",
+        {
+          "nr": "Stały identyfikator pozycji",
+          "parametr": "Parametr",
+          "kat": "Kategorie danych",
+          "jednostka": "Jednostka",
+          "zrodlo": "Źródło / sposób zbierania",
+          "czestotliwosc": "Częstotliwość",
+          "odp": "Odpowiedzialny",
+          "przechowywanie": "Miejsce przechowywania",
+          "kluczowa": "Kluczowa charakterystyka?",
+          "kontrola": "Dokładność, powtarzalność i dowody",
+          "braki": "Postępowanie z brakami danych",
+          "zastepca": "Zastępca"
+        }
+      ]
+    }
+  }
+}
