@@ -52,7 +52,7 @@ test('chapter five retains source identifiers and validates evidence policy and 
 });
 
 test('chapter five workflow protects consultant notes and publishes current documents only', function () {
-    [$audit,$client,$staff,$profile] = systemFixture();
+    [$audit, $client, $staff, $profile] = systemFixture();
     $service = app(IsoSystemQuestionnaire::class);
     foreach (['4-3', '4-4'] as $section) {
         $sources = $service->sources($profile, $section);
@@ -84,6 +84,6 @@ test('chapter five workflow protects consultant notes and publishes current docu
     $review = IsoSystemReview::where('section', '5-2')->sole();
     $this->post(route('audits.system.pdf', [$audit, $profile, '5-2']), ['lock_version' => $review->lock_version])->assertStatus(409);
     $other = User::factory()->create();
-    $other->assignRole(Role::findOrCreate('client_admin','web'));
-    $this->actingAs($other)->get(route('client.audits.system.show',[$audit, $profile, '5-1']))->assertNotFound();
+    $other->assignRole(Role::findOrCreate('client_admin', 'web'));
+    $this->actingAs($other)->get(route('client.audits.system.show', [$audit, $profile, '5-1']))->assertNotFound();
 });
