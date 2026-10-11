@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         const section = window.location.pathname.split('/').filter(Boolean).pop();
-        const minimum = section.startsWith('6-') ? Object.fromEntries([...form.querySelectorAll('[data-repeater]')].filter(el=>el.dataset.repeater!=='REWIZJE').map(el=>[el.dataset.repeater,1])) : section === '5-1' ? {CZLON:1,DECYZJE:3} : section === '5-2' ? {PRZEGLADY:1} : section === '5-3' ? {ROLE:1,UPR:1} : {GRANICE:1,UPRAW:1};
+        const minimum = section.startsWith('7-') ? ({'7-1':{OSOBY:1,ZADANIA:1,DECYZJE:1},'7-2':{ROLE:1,KOMPETENCJE:1,PLAN:1},'7-3':{GRUPY:1,KANALY:1,SPRAWDZENIA:1}}[section] || {}) : section.startsWith('6-') ? Object.fromEntries([...form.querySelectorAll('[data-repeater]')].filter(el=>el.dataset.repeater!=='REWIZJE').map(el=>[el.dataset.repeater,1])) : section === '5-1' ? {CZLON:1,DECYZJE:3} : section === '5-2' ? {PRZEGLADY:1} : section === '5-3' ? {ROLE:1,UPR:1} : {GRANICE:1,UPRAW:1};
         Object.entries(minimum).forEach(([root,min]) => {
             const container = form.querySelector(`[data-repeater="${root}"]`);
             if (container) total += Math.max(0, min-container.querySelectorAll('.system-row').length);
@@ -71,10 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (host.children.length >= 20) { alert('Maksymalnie 20 pozycji.'); return; }
             host.insertAdjacentHTML('beforeend', document.getElementById('template-' + root).innerHTML.replaceAll('__INDEX__', String(next++)));
             dirty = true;
+            form.dispatchEvent(new Event('system:rows-changed'));
             update();
         }
         const remove = event.target.closest('[data-remove-row]');
-        if (remove && confirm('Usunąć tę pozycję z formularza? Zmiana zostanie utrwalona po zapisaniu.')) { remove.closest('.system-row').remove(); dirty = true; update(); }
+        if (remove && confirm('Usunąć tę pozycję z formularza? Zmiana zostanie utrwalona po zapisaniu.')) { remove.closest('.system-row').remove(); dirty = true; form.dispatchEvent(new Event('system:rows-changed')); update(); }
     });
     document.getElementById('system-example')?.addEventListener('click', () => {
         if (!confirm('Uzupełnić puste pola klienta przykładowymi danymi? Sprawdź je przed zapisaniem.')) return;
@@ -82,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
             form.querySelectorAll('[data-system-field]').forEach(field => {
                 if (field.hidden || values(field.dataset.key).length || field.dataset.key.includes('.MAT.')) return;
                 field.querySelectorAll('input:not([type=hidden]),select,textarea').forEach(el => {
+                    if (el.readOnly || el.disabled || el.closest('[data-history-row]')) return;
                     if (el.type === 'checkbox') el.checked = true;
+                    else if (el.tagName === 'SELECT' && field.dataset.key.startsWith('MAC.')) el.value = '3';
                     else if (el.tagName === 'SELECT') el.selectedIndex = Math.min(1, el.options.length - 1);
                     else if (el.type === 'date') el.value = new Date().toISOString().slice(0, 10);
                     else if (el.dataset.example) el.value = el.dataset.example;

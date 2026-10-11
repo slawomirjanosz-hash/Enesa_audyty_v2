@@ -16,6 +16,9 @@ class IsoSystemQuestionnaire
 {
     public function schema(string $section): array
     {
+        if (str_starts_with($section, '7-')) {
+            return app(IsoSupportQuestionnaire::class)->schema($section);
+        }
         if (str_starts_with($section, '6-')) {
             return app(IsoPlanningQuestionnaire::class)->schema($section);
         }
@@ -28,6 +31,9 @@ class IsoSystemQuestionnaire
 
     public function sources(IsoPlantProfile $profile, string $section): array
     {
+        if (str_starts_with($section, '7-')) {
+            return app(IsoSupportQuestionnaire::class)->sources($profile, $section);
+        }
         if (str_starts_with($section, '6-')) {
             return app(IsoPlanningQuestionnaire::class)->sources($profile, $section);
         }
@@ -100,6 +106,9 @@ class IsoSystemQuestionnaire
 
     public function seed(string $section, array $sources): array
     {
+        if (str_starts_with($section, '7-')) {
+            return app(IsoSupportQuestionnaire::class)->seed($section, $sources);
+        }
         if (str_starts_with($section, '6-')) {
             return app(IsoPlanningQuestionnaire::class)->seed($section, $sources);
         }
@@ -148,6 +157,9 @@ class IsoSystemQuestionnaire
 
     public function sections(string $section, array $answers, array $sources): array
     {
+        if (str_starts_with($section, '7-')) {
+            return app(IsoSupportQuestionnaire::class)->sections($section, $answers, $sources);
+        }
         if (str_starts_with($section, '6-')) {
             return app(IsoPlanningQuestionnaire::class)->sections($section, $answers, $sources);
         }
@@ -244,6 +256,9 @@ class IsoSystemQuestionnaire
 
     public function rowFields(string $root, string $i, string $section = '', array $answers = [], array $sources = []): array
     {
+        if (str_starts_with($section, '7-')) {
+            return app(IsoSupportQuestionnaire::class)->rowFields($section, $root, $i, $answers, $sources);
+        }
         if (str_starts_with($section, '6-')) {
             return app(IsoPlanningQuestionnaire::class)->rowFields($section, $root, $i, $answers, $sources);
         }
@@ -274,6 +289,9 @@ class IsoSystemQuestionnaire
 
     public function normalize(string $section, array $input, array $sources, bool $complete): array
     {
+        if (str_starts_with($section, '7-')) {
+            app(IsoSupportQuestionnaire::class)->validateRows($section, $input);
+        }
         if (str_starts_with($section, '6-')) {
             app(IsoPlanningQuestionnaire::class)->validateRows($section, $input);
         }
@@ -304,7 +322,7 @@ class IsoSystemQuestionnaire
                     }
                     if ($field['type'] === 'date') {
                         $rules[$key][] = 'date_format:Y-m-d';
-                        if (! str_starts_with($section, '6-') && ($section !== '5-2' || $key !== 'ZATW.od')) {
+                        if (! str_starts_with($section, '6-') && ! (str_starts_with($section, '7-') && str_ends_with($key, '.termin')) && ($section !== '5-2' || $key !== 'ZATW.od')) {
                             $rules[$key][] = 'before_or_equal:today';
                         }
                     }
@@ -330,7 +348,7 @@ class IsoSystemQuestionnaire
                 $errors['ODP.SYS-02'] = 'Popraw zakres w punkcie 4.3 przed zatwierdzeniem 4.4.';
             }
             if (! $sources['ready']) {
-                $errors['sources'] = str_starts_with($section, '5-') ? 'Najpierw zatwierdź aktualne punkty źródłowe wskazane nad ankietą.' : ($section === '4-3' ? 'Najpierw zatwierdź profil, 4.1 i 4.2.' : 'Najpierw zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.');
+                $errors['sources'] = preg_match('/^[567]-/', $section) ? 'Najpierw zatwierdź aktualne punkty źródłowe wskazane nad ankietą.' : ($section === '4-3' ? 'Najpierw zatwierdź profil, 4.1 i 4.2.' : 'Najpierw zatwierdź i wygeneruj aktualne dokumenty 4.1, 4.2 i 4.3.');
             }
             if ($errors) {
                 throw ValidationException::withMessages($errors);
@@ -359,12 +377,23 @@ class IsoSystemQuestionnaire
             app(IsoPlanningQuestionnaire::class)->validateContent($section, $out, $sources, $complete);
         }
 
+        if (str_starts_with($section, '7-')) {
+            app(IsoSupportQuestionnaire::class)->validateContent($section, $out, $complete);
+        }
+
         return $out;
     }
 
     public function progress(string $section, array $answers, array $sources): array
     {
         $done = $total = 0;
+        if (str_starts_with($section, '7-')) {
+            foreach (IsoSupportQuestionnaire::MINIMUM[$section] as $root) {
+                if (empty($answers[$root])) {
+                    $total++;
+                }
+            }
+        }
         foreach ($this->sections($section, $answers, $sources) as $group) {
             foreach ($group['fields'] as $field) {
                 if ($field['required'] && $this->visible($field, $answers)) {
@@ -426,6 +455,9 @@ class IsoSystemQuestionnaire
 
     public function warnings(string $section, array $answers, array $sources): array
     {
+        if (str_starts_with($section, '7-')) {
+            return app(IsoSupportQuestionnaire::class)->warnings($section, $answers, $sources);
+        }
         $out = [];
         if (in_array($section, ['6-4', '6-5'])) {
             foreach ($sources['cards'] ?? [] as $card) {

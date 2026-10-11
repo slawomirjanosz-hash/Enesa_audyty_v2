@@ -9,6 +9,7 @@
 <h2>Bilans energii</h2><p>Nośniki: {{number_format($totals['energy'],3,',',' ')}} MWh · Obszary: {{number_format($totals['areas'],3,',',' ')}} MWh · Różnica: {{number_format($totals['difference'],2,',',' ')}}%.</p>
 <h2>Prosty okres zwrotu</h2>@foreach($review->answers['MOZL']??[] as $row)<p>{{$row['nr']??''}} · {{$row['nazwa']??''}} — SPBT: {{(float)($row['zl']??0)>0?number_format((float)($row['capex']??0)/(float)$row['zl'],2,',',' ').' lat':'nie można obliczyć (brak dodatniej oszczędności finansowej)'}}</p>@endforeach
 @endif
+@if(str_starts_with($section,'7-')) @include('audits.system.support-summary', ['answers'=>$review->answers, 'pdf'=>true]) @endif
 @if($section==='5-2')
 @include('audits.system.policy', ['answers'=>$review->answers])
 @else

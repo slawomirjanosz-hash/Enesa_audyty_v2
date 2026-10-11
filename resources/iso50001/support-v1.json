@@ -1,0 +1,88 @@
+{
+  "7-2": [
+    {
+      "tekst": "Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.",
+      "podstawa": "N",
+      "auto": "ustalono"
+    },
+    {
+      "tekst": "Kompetencje zapewniono na podstawie wykształcenia, szkolenia, umiejętności lub doświadczenia.",
+      "podstawa": "N",
+      "auto": "zapewniono"
+    },
+    {
+      "tekst": "Podjęto działania uzupełniające luki (w stosownych przypadkach).",
+      "podstawa": "N",
+      "auto": "dzialania"
+    },
+    {
+      "tekst": "Oceniono skuteczność działań — sprawdzenie umiejętności, nie tylko obecności.",
+      "podstawa": "N",
+      "auto": "skutecznosc"
+    },
+    {
+      "tekst": "Zachowano dowody kompetencji.",
+      "podstawa": "N",
+      "auto": "dowody"
+    },
+    {
+      "tekst": "Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).",
+      "podstawa": "M",
+      "auto": "narzedzia"
+    }
+  ],
+  "7-1": [
+    {
+      "tekst": "Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.",
+      "podstawa": "N",
+      "auto": "okreslono"
+    },
+    {
+      "tekst": "Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.",
+      "podstawa": "N",
+      "auto": "zapewniono"
+    },
+    {
+      "tekst": "Zasoby powiązano z planami działań (6.2).",
+      "podstawa": "M",
+      "auto": "powiazano"
+    },
+    {
+      "tekst": "Zadania systemu spisano z osobami i szacunkiem czasu.",
+      "podstawa": "M",
+      "auto": "spisano"
+    },
+    {
+      "tekst": "Wystarczalność zasobów oceniono na przeglądzie zarządzania.",
+      "podstawa": "M",
+      "auto": "wystarczalnosc"
+    }
+  ],
+  "7-3": [
+    {
+      "tekst": "Osoby pracujące pod nadzorem organizacji znają politykę energetyczną.",
+      "podstawa": "N",
+      "auto": "polityka"
+    },
+    {
+      "tekst": "Rozumieją swój wkład w system, w tym korzyści z poprawy wyniku energetycznego i osiąganie celów.",
+      "podstawa": "N",
+      "auto": "wklad"
+    },
+    {
+      "tekst": "Znają wpływ swoich działań lub zachowań na wynik energetyczny.",
+      "podstawa": "N",
+      "auto": "wplyw"
+    },
+    {
+      "tekst": "Znają konsekwencje niespełnienia wymagań systemu.",
+      "podstawa": "N",
+      "auto": "konsekwencje"
+    },
+    {
+      "tekst": "Świadomość jest sprawdzana rozmową (np. kwartalnie), a zgłoszone przeszkody są usuwane.",
+      "podstawa": "M",
+      "auto": "sprawdzanie"
+    }
+  ]
+}
