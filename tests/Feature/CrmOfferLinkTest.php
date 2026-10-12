@@ -19,6 +19,29 @@ beforeEach(function () {
     }
 });
 
+test('CRM delete actions respect permissions and deleting a lead preserves linked records', function () {
+    $manager = User::factory()->create();
+    $role = Role::findOrCreate('CRM editor');
+    $role->givePermissionTo([Permission::findOrCreate('crm.view'), Permission::findOrCreate('crm.leads.manage')]);
+    $manager->assignRole($role);
+    $viewer = User::factory()->create();
+    $viewerRole = Role::findOrCreate('CRM viewer');
+    $viewerRole->givePermissionTo(Permission::findOrCreate('crm.view'));
+    $viewer->assignRole($viewerRole);
+    $lead = CrmOpportunity::create(['title' => 'Lead do usunięcia', 'stage' => 'new_lead', 'created_by' => $manager->id]);
+    $task = Task::create(['title' => 'Zadanie zachowane', 'crm_opportunity_id' => $lead->id, 'assigned_to' => $manager->id, 'created_by' => $manager->id, 'status' => 'todo']);
+    $this->actingAs($viewer)->get(route('crm.index', ['tab' => 'pipeline']))->assertOk()->assertDontSee('title="Usuń szansę"', false)->assertDontSee('id="form-delete-opp"', false);
+    $this->delete(route('crm.opportunities.destroy', $lead))->assertForbidden();
+    $response = $this->actingAs($manager)->get(route('crm.index', ['tab' => 'pipeline']))->assertOk()->assertSee('title="Usuń szansę"', false)->assertSee('id="form-delete-opp"', false);
+    if (getenv('CRM_QA')) {
+        file_put_contents(base_path('tmp/crm-delete.html'), $response->getContent());
+    }
+    $this->delete(route('crm.opportunities.destroy', $lead))->assertRedirect(route('crm.index', ['tab' => 'pipeline']));
+    $this->assertSoftDeleted('crm_opportunities', ['id' => $lead->id]);
+    expect(Task::find($task->id))->not->toBeNull();
+    $this->get(route('crm.index', ['tab' => 'pipeline']))->assertOk()->assertDontSee('Lead do usunięcia');
+});
+
 test('crm companies and pipeline tabs render without loading errors', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');

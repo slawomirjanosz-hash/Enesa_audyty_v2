@@ -414,8 +414,9 @@
                             @endforeach
                         </div>
                     @endif
-                    @if($canManageCrm)
+                    @if($canManageCrm || auth()->user()->can('crm.leads.manage'))
                         <div style="display:flex;gap:5px;margin-top:8px;" onclick="event.stopPropagation()">
+                            @if($canManageCrm)
                             @if($opp->company_id)
                             <button type="button" onclick="openAttachOffer({{ $opp->id }}, {{ $opp->company_id }}, '{{ addslashes($opp->title) }}')" style="background:#fff;color:var(--green);border:1px solid #94C4B0;border-radius:5px;padding:4px 6px;font-size:11px;cursor:pointer;" title="Przypnij istniejącą ofertę">
                                 <i class="ti ti-link"></i>
@@ -427,6 +428,8 @@
                                     <i class="ti ti-copy"></i>
                                 </button>
                             </form>
+                            @endif
+                            @include('crm.delete-opportunity')
                         </div>
                     @endif
                     @if($opp->value)
@@ -516,6 +519,7 @@
                                     <button type="submit" class="btn-icon" title="Kopiuj szansę"><i class="ti ti-copy"></i></button>
                                 </form>
                             @endif
+                            @include('crm.delete-opportunity')
                         </div>
                     </td>
                 </tr>
@@ -1302,14 +1306,16 @@
         </div>
 
         <div id="opportunity-delete-actions" style="display:none;margin-top:16px;">
+            @can('delete', new \App\Models\CrmOpportunity)
             <form method="POST" id="form-delete-opp" style="margin:0;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" onclick="return confirm('Usunąć tę szansę?')"
+                <button type="submit" onclick="return confirm('Usunąć tę szansę z CRM? Powiązane oferty i zadania pozostaną zachowane.')"
                     style="display:inline-flex;align-items:center;gap:6px;background:#FEE2E2;color:#B91C1C;border:none;border-radius:7px;padding:8px 14px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
                     <i class="ti ti-trash"></i> Usuń szansę
                 </button>
             </form>
+            @endcan
         </div>
     </div>
 </div>
@@ -1701,7 +1707,8 @@ function populateOpportunityModal(id, title, companyId, stage, value, closeDate,
     });
 
     document.getElementById('form-edit-opp').action = '/crm/opportunities/' + id;
-    document.getElementById('form-delete-opp').action = '/crm/opportunities/' + id;
+    const deleteForm = document.getElementById('form-delete-opp');
+    if (deleteForm) deleteForm.action = '/crm/opportunities/' + id;
 }
 
 function setOpportunityModalMode(editing, companyUrl = null) {
@@ -1714,7 +1721,7 @@ function setOpportunityModalMode(editing, companyUrl = null) {
         ? '<i class="ti ti-pencil" style="color:var(--green);margin-right:8px;"></i>Edytuj szansę'
         : '<i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Szczegóły szansy';
     document.getElementById('opportunity-edit-actions').style.display = editing ? 'flex' : 'none';
-    document.getElementById('opportunity-delete-actions').style.display = editing ? 'block' : 'none';
+    document.getElementById('opportunity-delete-actions').style.display = document.getElementById('form-delete-opp') ? 'block' : 'none';
     document.getElementById('opportunity-view-actions').style.display = editing ? 'none' : 'flex';
 
     const companyLink = document.getElementById('opportunity-company-link');
