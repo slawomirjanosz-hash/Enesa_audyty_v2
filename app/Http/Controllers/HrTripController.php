@@ -43,7 +43,7 @@ class HrTripController extends Controller
     {
         abort_unless($trip->user_id === $request->user()->id || HrAccess::canViewTeam($request->user()), 403);
         $trip->load(['user', 'vehicle']);
-        $employeeSignature = $trip->user?->signatureDataUri();
+        $employeeSignature = $request->boolean('use_signature') ? $trip->user?->signatureDataUri() : null;
 
         $company = CompanySettings::query()->first();
 

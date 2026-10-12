@@ -23,7 +23,7 @@ td,th{padding:3px 7px}h2{padding:4px 8px}.section{margin-top:7px}.title{padding:
 <section class="section keep"><h2>IV. Kontrola i zatwierdzenie rozliczenia</h2><div class="confirmation">Rachunek sprawdzono pod względem formalnym i rachunkowym.
 <table class="signatures"><tr><td><div class="signature-space"></div><div class="signature-line">Podpis osoby sprawdzającej</div></td><td><div class="signature-space"></div><div class="signature-line">Podpis zatwierdzającego rozliczenie</div></td></tr></table></div></section>
 <section class="section keep"><h2>V. Potwierdzenie odbioru środków (jeżeli dotyczy)</h2><div class="confirmation">Kwota otrzymana: <span class="blank"></span> zł &nbsp; Data odbioru: <span class="blank"></span><br>Słownie: ...................................................................................................................................................
-<table class="signatures"><tr><td></td><td><div class="signature-space" style="height:24px"></div><div class="signature-line">Podpis delegowanego - odbiór środków</div></td></tr></table></div></section>
+<table class="signatures"><tr><td></td><td><div class="signature-space">@if($employeeSignature ?? null)<img src="{{$employeeSignature}}" alt="Podpis pracownika">@endif</div><div class="signature-line">Podpis delegowanego - odbiór środków</div></td></tr></table></div></section>
 @if($trip->notes)<section class="section"><h2>Uwagi / załączniki</h2><p class="note">{{$trip->notes}}</p></section>@endif
 <div class="footer">{{$company?->name}} · HR/{{$trip->id}}/{{$trip->departure_at->format('Y')}}</div>
 </body></html>

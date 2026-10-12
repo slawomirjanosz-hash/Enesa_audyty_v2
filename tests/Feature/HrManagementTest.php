@@ -120,7 +120,7 @@ test('employee creates own delegation with calculated return and remembered priv
         ->toContain('Samochód służbowy')->not->toContain('Samochód prywatny');
 });
 
-test('trip pdf automatically includes the traveller signature for authorised viewers only', function () {
+test('trip pdf includes the traveller signature only when selected by an authorised viewer', function () {
     $employee = User::factory()->create();
     $role = Role::findOrCreate('employee_hr');
     $role->givePermissionTo(Permission::findOrCreate('hr.delegations.view'));
@@ -137,23 +137,27 @@ test('trip pdf automatically includes the traveller signature for authorised vie
 
     $image = UploadedFile::fake()->image('signature.png', 300, 80);
     $employee->forceFill(['signature_data' => base64_encode(file_get_contents($image->getRealPath())), 'signature_mime' => 'image/png'])->save();
-    $this->get(route('hr.delegations.show', $trip))->assertOk()->assertSee('Podpis osoby wyjeżdżającej')
+    $this->get(route('hr.delegations.show', $trip))->assertOk()->assertSee('Dołącz podpis delegowanego')->assertSee('name="use_signature"', false)
         ->assertDontSee($employee->signature_data, false);
-    $signed = $this->get(route('hr.delegations.pdf', $trip))
+    $withoutSelection = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
+    expect($withoutSelection->getContent())->not->toContain('/Subtype /Image');
+    $disabled = $this->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 0]))->assertOk();
+    expect($disabled->getContent())->not->toContain('/Subtype /Image');
+    $signed = $this->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))
         ->assertOk()->assertHeader('content-type', 'application/pdf');
     expect($signed->getContent())->toContain('/Subtype /Image');
 
     $admin = User::factory()->create();
     $admin->assignRole('superadmin');
     $this->actingAs($admin)->get(route('hr.delegations.show', $trip))
-        ->assertOk()->assertDontSee('name="use_signature"', false);
-    $adminPrint = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
+        ->assertOk()->assertSee('name="use_signature"', false);
+    $adminPrint = $this->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))->assertOk();
     expect($adminPrint->getContent())->toContain('/Subtype /Image');
 
     // The printer's signature must never replace a missing traveller signature.
     $admin->forceFill(['signature_data' => $employee->signature_data, 'signature_mime' => 'image/png'])->save();
     $employee->forceFill(['signature_data' => null, 'signature_mime' => null])->save();
-    $withoutTravellerSignature = $this->get(route('hr.delegations.pdf', $trip))->assertOk();
+    $withoutTravellerSignature = $this->get(route('hr.delegations.pdf', [$trip, 'use_signature' => 1]))->assertOk();
     expect($withoutTravellerSignature->getContent())->not->toContain('/Subtype /Image');
 
     $other = User::factory()->create();

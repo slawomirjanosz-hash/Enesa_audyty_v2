@@ -4,9 +4,12 @@
 <style>.explain{background:#fff;border:1px solid #e5e1d8;border-radius:12px;padding:22px;max-width:1000px}.explain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.explain-box{background:#f7faf8;border-radius:9px;padding:14px}.explain-box small{display:block;color:#6b7280}.explain-box strong{font-size:18px;color:var(--green)}.formula{margin-top:16px;padding:15px;border-left:4px solid var(--green);background:#eef6f1;line-height:1.6}.preview-btn{display:inline-block;background:var(--green);color:#fff;padding:10px 14px;border-radius:7px;text-decoration:none}.trip-map{margin-top:18px}.trip-map h2{font-size:16px;margin-bottom:9px}.trip-map iframe{display:block;width:100%;height:420px;border:0;border-radius:10px;background:#f3f4f6}</style>
 <div class="explain"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h1 style="margin:0;color:var(--green)">{{$trip->purpose}}</h1><p>{{$trip->user?->name}} · {{$trip->origin}} → {{$trip->destination}} → {{$trip->origin}}</p></div><form method="GET" action="{{route('hr.delegations.pdf',$trip)}}" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:320px">
 @if($trip->user?->signatureDataUri())
-<small>Podpis osoby wyjeżdżającej z jej profilu zostanie automatycznie umieszczony przy potwierdzeniu odbycia wyjazdu.</small>
+<label id="trip-print-options" style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer"><input type="checkbox" name="use_signature" value="1" style="width:16px;height:16px;flex-shrink:0;accent-color:var(--green)"> Dołącz podpis delegowanego</label>
+<small>Zaznaczenie wstawia podpis z profilu w obu miejscach: potwierdzenie odbycia wyjazdu oraz odbiór środków. Zaznacz tylko, jeśli oba potwierdzenia są właściwe.</small>
 @elseif($trip->user_id === auth()->id())
 <small>Aby dołączyć podpis, dodaj go w <a href="{{route('profile.edit')}}">Moim profilu</a>.</small>
+@else
+<small>Delegowany nie ma podpisu w swoim profilu. Na wydruku pozostaną miejsca do podpisania ręcznego.</small>
 @endif
 <button type="submit" class="preview-btn" style="border:0;cursor:pointer;font:inherit"><i class="ti ti-file-type-pdf"></i> Polecenie wyjazdu - PDF</button>
 </form></div>
