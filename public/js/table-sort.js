@@ -74,7 +74,8 @@ export function enhanceTable(table) {
         button.type = 'button';
         button.className = 'app-table-sort';
         button.textContent = label;
-        button.title = `Sortuj: ${label}`;
+        button.title = `Sortuj: ${header.dataset.sortLabel || label}`;
+        button.setAttribute('aria-label', button.title);
         const marker = document.createElement('span');
         marker.className = 'app-table-sort-marker';
         marker.setAttribute('aria-hidden', 'true');

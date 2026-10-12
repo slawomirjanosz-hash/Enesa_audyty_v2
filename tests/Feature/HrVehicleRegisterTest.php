@@ -58,3 +58,20 @@ test('vehicle column preferences are per user allowlisted and keep vehicle ident
     $this->put(route('hr.vehicles.columns'), ['columns' => ['password']])->assertSessionHasErrors('columns.0');
     $this->post(route('hr.vehicles.store'), ['type' => 'company', 'name' => 'Forbidden', 'registration_number' => 'ABC'])->assertForbidden();
 });
+
+test('vehicle choices reuse inactive values without leaking other private vehicles', function () {
+    $owner = vehicleRegisterUser(true);
+    $other = vehicleRegisterUser();
+    HrVehicle::create(['type' => 'private', 'user_id' => $other->id, 'created_by' => $other->id, 'name' => 'Secret', 'registration_number' => 'SECRET', 'usage_location' => 'Hidden location', 'fuel_card_number' => '000987654321', 'insurer' => 'Hidden insurer']);
+    HrVehicle::create(['type' => 'company', 'name' => 'Old company car', 'registration_number' => 'OLD', 'is_active' => false, 'usage_location' => 'Baza Knurów', 'fuel_card_number' => '001234567890123456789', 'insurer' => 'Warta']);
+    $this->actingAs($owner)->post(route('hr.vehicles.store'), ['type' => 'private', 'name' => 'New', 'registration_number' => 'NEW', 'usage_location' => 'Baza Knurów', 'fuel_card_number' => '001234567890123456789', 'insurer' => 'Warta', 'registration_document_present' => '0', 'registration_document' => 'Oryginał w biurze'])->assertSessionHas('success');
+    $vehicle = HrVehicle::where('registration_number', 'NEW')->firstOrFail();
+    expect($vehicle->registration_document_present)->toBeFalse()->and($vehicle->registration_document)->toBe('Oryginał w biurze');
+    $choices = HrVehicle::choicesFor($owner);
+    expect($choices['fuel_card_number'])->toBe(['001234567890123456789'])->and($choices['usage_location'])->toBe(['Baza Knurów'])->and($choices['insurer'])->toBe(['Warta']);
+    $this->get(route('hr.vehicles.edit', $vehicle))->assertOk()->assertSee('Baza Knurów')->assertSee('001234567890123456789')->assertDontSee('Hidden location')->assertDontSee('Hidden insurer')->assertDontSee('000987654321');
+    $this->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertSee('data-sort-label="Nr rejestracyjny"', false)->assertSee('Nr rej.')->assertSee('Osoba odp.')->assertSee('Koniec ubezp.');
+    $this->put(route('hr.vehicles.update', $vehicle), ['name' => 'New', 'registration_number' => 'NEW', 'registration_document_present' => 'maybe'])->assertSessionHasErrorsIn('vehicle', ['registration_document_present']);
+    $this->put(route('hr.vehicles.update', $vehicle), ['name' => 'New', 'registration_number' => 'NEW', 'registration_document_present' => '1'])->assertSessionHas('success');
+    expect($vehicle->fresh()->registration_document_present)->toBeTrue()->and($vehicle->fresh()->registration_document)->toBe('Oryginał w biurze');
+});

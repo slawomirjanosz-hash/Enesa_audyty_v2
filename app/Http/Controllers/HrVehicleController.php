@@ -82,6 +82,7 @@ class HrVehicleController extends Controller
             'service_book_status' => ['nullable', Rule::in(['available', 'missing'])],
             'inspection_due_at' => ['nullable', 'date_format:Y-m-d'],
             'registration_document' => ['nullable', 'string', 'max:255'],
+            'registration_document_present' => ['nullable', 'boolean'],
         ]);
     }
 }

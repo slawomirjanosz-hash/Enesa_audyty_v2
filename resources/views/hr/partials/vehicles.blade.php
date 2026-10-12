@@ -19,7 +19,7 @@
 <button class="hr-btn" type="button" onclick="openHrModal('vehicle-modal')"><i class="ti ti-plus"></i> Dodaj auto</button></div></div>
 <div class="vehicle-legend">Terminy ubezpieczenia i przeglądu: żółty — do 14 dni, czerwony — do 7 dni (także dzisiaj), czerwony wiersz — po terminie. Prywatne auta są widoczne tylko dla autora.</div>
 <div class="vehicle-table-wrap"><table class="hr-table vehicle-table" style="--columns:{{count($visibleColumns)+2}}"><thead><tr><th>Lp.</th>
-@foreach($visibleColumns as $key=>$label)<th @if(in_array($key,['registration_number','fuel_card_number'])) data-sort-type="text" @endif>{{$label}}</th>@endforeach<th data-sortable="false">Akcje</th></tr></thead><tbody>
+@foreach($visibleColumns as $key=>$label)<th title="{{$label}}" data-sort-label="{{$label}}" @if(in_array($key,['registration_number','fuel_card_number'])) data-sort-type="text" @endif>{{\App\Models\HrVehicle::SHORT_COLUMNS[$key] ?? $label}}</th>@endforeach<th data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($vehicles as $vehicle)
 @php
     $insuranceState = $vehicle->deadlineState('insurance_expires_at');
@@ -36,6 +36,7 @@
     $dateField = in_array($key,['insurance_expires_at','inspection_due_at','logbook_entry_at','service_book_entry_at']);
     $boolField = in_array($key,['vat_26','gps']);
     $display = match(true){
+        $key==='registration_document' && $vehicle->registration_document_present!==null=>$vehicle->registration_document_present?'Tak':'Nie',
         $key==='type'=>$value==='private'?'Prywatny':'Służbowy',
         $key==='service_book_entry_at' && $vehicle->service_book_status==='missing'=>'Brak książki',
         $dateField=>$value?->format('d.m.Y') ?? '—',
@@ -44,9 +45,11 @@
         default=>$value ?: '—',
     };
     $sortValue = $dateField ? $value?->format('Y-m-d') : ($boolField ? ($value===null?'':(int)$value) : $value);
+    if($key==='registration_document') $sortValue = $display;
 @endphp
 <td class="{{$deadline?'deadline-'.$deadline:''}}" data-sort-value="{{$key==='type'?$display:$sortValue}}" @if($deadline) title="{{$label}}: {{ match($deadline) { 'overdue'=>'termin minął', 'urgent'=>'do 7 dni', default=>'do 14 dni' } }}" @endif>
 @if($key==='name' && $editable)<a href="{{route('hr.vehicles.edit',$vehicle)}}">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
+@if($key==='registration_document' && $vehicle->registration_document_present!==null && $value)<small style="display:block" title="{{$value}}">{{$value}}</small>@endif
 </td>
 @endforeach
 <td>@if($editable)<div class="vehicle-actions"><a class="hr-btn" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj auto" aria-label="Edytuj auto"><i class="ti ti-pencil"></i></a><form method="POST" action="{{route('hr.vehicles.destroy',$vehicle)}}" onsubmit="return confirm('Usunąć samochód z aktywnej listy?')">@csrf @method('DELETE')<button class="hr-btn danger" title="Usuń auto" aria-label="Usuń auto"><i class="ti ti-trash"></i></button></form></div>@endif</td>

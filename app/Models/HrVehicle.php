@@ -9,9 +9,32 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HrVehicle extends Model
 {
-    protected $fillable = ['user_id', 'created_by', 'type', 'name', 'registration_number', 'make_model', 'is_active', 'fuel_card_number', 'responsible_person', 'usage_location', 'vat_percent', 'insurer', 'insurance_expires_at', 'vat_26', 'cit_percent', 'gps', 'logbook_entry_at', 'service_book_entry_at', 'service_book_status', 'inspection_due_at', 'registration_document'];
+    protected $fillable = ['user_id', 'created_by', 'type', 'name', 'registration_number', 'make_model', 'is_active', 'fuel_card_number', 'responsible_person', 'usage_location', 'vat_percent', 'insurer', 'insurance_expires_at', 'vat_26', 'cit_percent', 'gps', 'logbook_entry_at', 'service_book_entry_at', 'service_book_status', 'inspection_due_at', 'registration_document', 'registration_document_present'];
 
-    protected $casts = ['is_active' => 'boolean', 'created_by' => 'integer', 'user_id' => 'integer', 'vat_26' => 'boolean', 'gps' => 'boolean', 'insurance_expires_at' => 'date', 'inspection_due_at' => 'date', 'logbook_entry_at' => 'date', 'service_book_entry_at' => 'date'];
+    protected $casts = ['is_active' => 'boolean', 'created_by' => 'integer', 'user_id' => 'integer', 'vat_26' => 'boolean', 'gps' => 'boolean', 'registration_document_present' => 'boolean', 'insurance_expires_at' => 'date', 'inspection_due_at' => 'date', 'logbook_entry_at' => 'date', 'service_book_entry_at' => 'date'];
+
+    public const SHORT_COLUMNS = [
+        'registration_number' => 'Nr rej.', 'fuel_card_number' => 'Karta Orlen',
+        'responsible_person' => 'Osoba odp.', 'usage_location' => 'Lokalizacja',
+        'insurer' => 'Ubezp.', 'insurance_expires_at' => 'Koniec ubezp.',
+        'logbook_entry_at' => 'Książka ewid. — ost. wpis',
+        'service_book_entry_at' => 'Książka serw. — ost. wpis',
+        'inspection_due_at' => 'Nast. przegląd', 'registration_document' => 'Dowód rej.',
+    ];
+
+    public const CHOICE_FIELDS = ['usage_location', 'fuel_card_number', 'insurer'];
+
+    public static function choicesFor(User $user): array
+    {
+        // Include inactive vehicles so a card/location can be reused, never expose other private cars.
+        $vehicles = static::visibleTo($user)->get(static::CHOICE_FIELDS);
+        $choices = [];
+        foreach (static::CHOICE_FIELDS as $field) {
+            $choices[$field] = $vehicles->pluck($field)->filter(fn ($value) => $value !== null && $value !== '')->unique()->sort(SORT_NATURAL | SORT_FLAG_CASE)->values()->all();
+        }
+
+        return $choices;
+    }
 
     public const COLUMNS = [
         'type' => 'Typ', 'name' => 'Nazwa', 'registration_number' => 'Nr rejestracyjny',
