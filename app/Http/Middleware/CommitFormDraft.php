@@ -22,6 +22,7 @@ class CommitFormDraft
             && ! in_array('errors', $request->session()->get('_flash.new', []), true)) {
             FormDraft::where('user_id', $request->user()->id)->where('form_key', $key)->where('revision', (int) $revision)
                 ->update(['payload' => null, 'revision' => DB::raw('revision + 1'), 'updated_at' => now()]);
+            $request->session()->flash('cleared_form_draft', $key);
         }
 
         return $response;

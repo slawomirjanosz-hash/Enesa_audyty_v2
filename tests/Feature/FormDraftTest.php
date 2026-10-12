@@ -30,14 +30,14 @@ test('failed manual saves preserve a draft and successful business saves consume
     [$admin, $project] = boardFixture();
     $key = hash('sha256', 'manual-project');
     $draft = FormDraft::create(['user_id' => $admin->id, 'form_key' => $key, 'revision' => 1, 'payload' => ['snapshot' => 'working']]);
-    $this->actingAs($admin)->put(route('projects.update', $project), ['_draft_key' => $key, '_draft_revision' => 1, 'name' => ''])->assertSessionHasErrors();
+    $this->actingAs($admin)->put(route('projects.update', $project), ['_draft_key' => $key, '_draft_revision' => 1, 'name' => ''])->assertSessionHasErrors()->assertSessionMissing('cleared_form_draft');
     expect($draft->fresh()->payload)->not->toBeNull();
     $data = $project->only(['number', 'name', 'company_id', 'manager_id', 'status']);
     $data['contract_value'] = 0;
     $data['name'] = 'Zapis ręczny';
     $this->put(route('projects.update', $project), $data + ['_draft_key' => $key, '_draft_revision' => 0])->assertSessionHas('success');
     expect($draft->fresh()->payload)->not->toBeNull();
-    $this->put(route('projects.update', $project), $data + ['_draft_key' => $key, '_draft_revision' => 1])->assertSessionHas('success');
+    $this->put(route('projects.update', $project), $data + ['_draft_key' => $key, '_draft_revision' => 1])->assertSessionHas('success')->assertSessionHas('cleared_form_draft', $key);
     expect($draft->fresh()->payload)->toBeNull();
     expect($project->fresh()->name)->toBe('Zapis ręczny');
 });
@@ -46,7 +46,7 @@ test('editable offer project audit and ISO forms expose draft controls without e
     [$admin, $project, $audit] = boardFixture();
     $this->actingAs($admin)->get(route('projects.show', $project))->assertOk()->assertSee('data-autosave', false)->assertSee('form-drafts.js');
     $this->get(route('audits.show', $audit))->assertOk()->assertSee('data-autosave', false);
-    $offerPage = $this->get(route('offers.create'))->assertOk()->assertSee('data-autosave', false)->assertSee('offer-drafts.js');
+    $offerPage = $this->get(route('offers.create'))->assertOk()->assertSee('data-autosave', false)->assertSee('offer-drafts.js')->assertSee('data-draft-user="'.$admin->id.'"', false);
     [$isoAudit, $client] = plantFixture();
     $this->actingAs($client)->post(route('client.audits.plant-profile.create', $isoAudit), ['name' => 'Autozapis']);
     $profile = IsoPlantProfile::firstOrFail();

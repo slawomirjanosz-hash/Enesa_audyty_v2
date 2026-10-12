@@ -741,6 +741,7 @@
         }).then(function (data) {
             if (!data.authenticated && !_sessionExpired) {
                 _sessionExpired = true;
+                window.dispatchEvent(new Event('session:expired'));
                 clearInterval(_sessionCheckInterval);
                 document.getElementById('session-expired-modal').style.display = 'flex';
                 document.title = '\u26A0 Sesja wygasła   ENESA';

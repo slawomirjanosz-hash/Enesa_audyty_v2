@@ -3,6 +3,15 @@
     const skip = /^(?:_token|_method|_draft_.*)$/;
     const guard = /^(?:lock_version|source_hash|revision)$/;
     const states = [];
+    // Per-tab emergency copies never cross accounts, and expire after one day.
+    const localPrefix = 'offer-emergency:'+script?.dataset.draftUser+':';
+    try {
+        if(script?.dataset.draftCleared)sessionStorage.removeItem(localPrefix+script.dataset.draftCleared);
+        Object.keys(sessionStorage).filter(key=>key.startsWith('offer-emergency:')).forEach(key=>{
+            const data=JSON.parse(sessionStorage.getItem(key));
+            if(!data?.savedAt||Date.now()-data.savedAt>86400000)sessionStorage.removeItem(key);
+        });
+    }catch(_) { /* Storage can be blocked by browser privacy settings. */ }
     const digest = async value => [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(v=>v.toString(16).padStart(2,'0')).join('');
     const controls = form => [...form.querySelectorAll('input[name],select[name],textarea[name]')].filter(el=>!skip.test(el.name)&&!['file','password','submit','button'].includes(el.type));
     const fields = form => controls(form).map(el=>({name:el.name,value:el.value,checked:el.checked,values:el.multiple?[...el.selectedOptions].map(o=>o.value):undefined}));
@@ -40,6 +49,7 @@
     async function mount(form) {
         const initial=snapshot(form),base=await digest(JSON.stringify(initial));
         const key=await digest(location.pathname+'|'+form.action+'|'+(form.dataset.draftName||form.id||'main'));
+        const isOffer=form.id==='offer-form',localKey=localPrefix+key;
         const toolbar=document.createElement('div');toolbar.className='draft-toolbar';
         toolbar.innerHTML='<span class="draft-state" role="status" aria-live="polite">Łączenie z autozapisem…</span><label class="draft-switch"><input type="checkbox" role="switch" checked aria-label="Autozapis"><span>Autozapis</span></label><button type="button" class="draft-save">Zapisz</button><button type="button" class="draft-exit">Wyjdź bez zapisywania</button><div class="draft-recovery" hidden><span>Znaleziono kopię roboczą.</span><button type="button" class="draft-restore">Przywróć kopię</button><button type="button" class="draft-discard">Odrzuć kopię</button></div>';
         form.prepend(toolbar);
@@ -55,34 +65,72 @@
         const revInput=document.createElement('input');revInput.type='hidden';revInput.name='_draft_revision';revInput.value='0';form.append(revInput);
         const state={form,toggle,revision:0,ready:false,pending:null,stop:false,last:JSON.stringify(initial),initial,base};states.push(state);
         const report=(text,error=false)=>{label.textContent=text;label.dataset.error=String(error);};
+        const removeLocal=()=>{try{sessionStorage.removeItem(localKey);}catch(_) {}};
+        const readLocal=()=>{try{return JSON.parse(sessionStorage.getItem(localKey));}catch(_){return null;}};
+        state.backup=()=>{
+            if(!isOffer||!script.dataset.draftUser||state.stop||!toggle.checked||!recovery.hidden||!form.getClientRects().length)return;
+            const current=snapshot(form);
+            if(JSON.stringify(current)===JSON.stringify(initial))return;
+            try{sessionStorage.setItem(localKey,JSON.stringify({payload:{base,snapshot:current},revision:state.revision,savedAt:Date.now()}));}
+            catch(_){report('Nie można zapisać kopii awaryjnej w przeglądarce. Użyj Zapisz.',true);}
+        };
         async function api(method,payload) {
-            const response=await fetch(script.dataset.draftEndpoint+'/'+key,{method,headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':script.dataset.csrf},...(method==='GET'?{}:{body:JSON.stringify({revision:state.revision,payload})})});
+            const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),10000);
+            let response;
+            try{response=await fetch(script.dataset.draftEndpoint+'/'+key,{method,signal:controller.signal,headers:{'Accept':'application/json','Content-Type':'application/json','X-CSRF-TOKEN':script.dataset.csrf},...(method==='GET'?{}:{body:JSON.stringify({revision:state.revision,payload})})});}
+            finally{clearTimeout(timeout);}
             const data=await response.json().catch(()=>({}));
+            if(response.status===401||response.status===419||response.redirected){
+                state.backup();
+                throw Error('Sesja wygasła. Zaloguj się ponownie i wróć do formularza, aby przywrócić kopię.');
+            }
             if(!response.ok)throw Error(data.message||'Autozapis niedostępny. Użyj przycisku Zapisz.');
             state.revision=data.revision;revInput.value=String(data.revision);return data;
         }
-        try {
+        const idleLabel=isOffer?'Autozapis oferty · kopia co 30 s':'Autozapis co 5 min · kopia robocza';
+        async function connect(recoverLocal=true) {
             const data=await api('GET');state.ready=true;
-            if(data.payload){
-                state.saved=data.payload;recovery.hidden=false;
-                const compatible=data.payload.base===base;
+            const local=isOffer&&recoverLocal?readLocal():null;
+            // A confirmed manual save/discard wins. Otherwise retain unsent local
+            // edits even if a previous in-flight autosave reached the server.
+            const consumed=local&&data.revision>local.revision&&!data.payload;
+            const payload=local&&!consumed?local.payload:data.payload;
+            if(consumed)removeLocal();
+            if(payload){
+                state.saved=payload;recovery.hidden=false;
+                const compatible=payload.base===base;
                 toolbar.querySelector('.draft-restore').disabled=!compatible;
-                report(compatible?'Masz kopię roboczą — przywróć ją albo odrzuć.':'Dane formularza zmieniły się od autozapisu. Kopia nie zostanie nałożona na nowsze dane.',!compatible);
-            }else report('Autozapis co 5 min · kopia robocza');
-        }catch(error){report(error.message,true);}
+                report(compatible?(local&&!consumed?'Masz awaryjną kopię z tej karty — przywróć ją albo odrzuć.':'Masz kopię roboczą — przywróć ją albo odrzuć.'):'Dane formularza zmieniły się od autozapisu. Kopia nie zostanie nałożona na nowsze dane.',!compatible);
+            }else report(idleLabel);
+        }
+        try {await connect();}catch(error){report(error.message,true);}
         state.save=async()=>{
-            if(!state.ready||state.stop||state.pending||!toggle.checked||!recovery.hidden)return;
+            state.backup();
+            if(state.stop||!toggle.checked||!recovery.hidden)return;
+            if(state.pending){await state.pending;return state.save();}
             if(!form.getClientRects().length)return;
             const current=snapshot(form),serialized=JSON.stringify(current);
             if(serialized===state.last)return;
             report('Zapisywanie kopii roboczej…');
-            state.pending=api('PUT',{base,snapshot:current}).then(data=>{state.last=serialized;report('Autozapis: '+new Date(data.saved_at).toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'}));}).catch(error=>{report(error.message,true);}).finally(()=>state.pending=null);
+            state.pending=(async()=>{
+                if(!state.ready){await connect(false);if(!recovery.hidden)return;}
+                const data=await api('PUT',{base,snapshot:current});
+                state.last=serialized;
+                if(isOffer&&JSON.stringify(snapshot(form))===serialized)removeLocal();
+                report('Autozapis: '+new Date(data.saved_at).toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'}));
+            })().catch(error=>{report(error.message,true);}).finally(()=>state.pending=null);
             await state.pending;
         };
-        setInterval(()=>state.save(),300000);
-        toggle.addEventListener('change',()=>report(toggle.checked?'Autozapis włączony · co 5 min':'Autozapis wyłączony — użyj Zapisz'));
+        setInterval(()=>state.save(),isOffer?30000:300000);
+        if(isOffer){
+            // Also covers programmatic rich-text and price-row changes.
+            setInterval(()=>state.backup(),5000);
+            form.addEventListener('input',()=>state.backup());
+            form.addEventListener('change',()=>state.backup());
+        }
+        toggle.addEventListener('change',()=>report(toggle.checked?idleLabel:'Autozapis wyłączony — użyj Zapisz'));
         toolbar.querySelector('.draft-restore').addEventListener('click',()=>{
-            try {restore(form,state.saved.snapshot);state.last=JSON.stringify(snapshot(form));recovery.hidden=true;report('Przywrócono kopię roboczą. Zapisz, aby zatwierdzić.');}
+            try {restore(form,state.saved.snapshot);recovery.hidden=true;state.backup();report('Przywrócono kopię roboczą. Zapisz, aby zatwierdzić.');}
             catch(error){report('Nie udało się przywrócić kopii: '+error.message,true);}
         });
         async function discard(exit) {
@@ -90,6 +138,7 @@
             state.stop=true;await state.pending;
             try {
                 await api('PUT',null);state.ready=true;recovery.hidden=true;state.saved=null;
+                removeLocal();
                 if(exit){
                     restore(form,initial);state.last=JSON.stringify(snapshot(form));
                     form.dispatchEvent(new Event('draft:discarded',{bubbles:true}));
@@ -100,7 +149,7 @@
                         window.formDraftLeaving=true;
                         location.assign(form.dataset.draftExit||location.pathname);
                     }
-                }else {state.last=JSON.stringify(initial);state.stop=false;report('Kopia odrzucona · autozapis co 5 min');}
+                }else {state.last=JSON.stringify(initial);state.stop=false;report('Kopia odrzucona · '+idleLabel);}
             }catch(error){state.stop=false;report('Nie udało się odrzucić kopii. '+error.message,true);}
         }
         toolbar.querySelector('.draft-exit').addEventListener('click',()=>discard(true));
@@ -127,9 +176,27 @@
         form.addEventListener('submit',event=>queueMicrotask(()=>{if(!event.defaultPrevented)window.formDraftLeaving=true;}));
     }
     window.addEventListener('beforeunload',event=>{
+        states.forEach(state=>state.backup());
         if(window.formDraftLeaving)return;
         if(states.some(s=>JSON.stringify(snapshot(s.form))!==JSON.stringify(s.initial))){event.preventDefault();event.returnValue='';}
     });
     window.addEventListener('pageshow',()=>{window.formDraftLeaving=false;states.forEach(state=>state.toggle.checked=true);});
+    window.addEventListener('pagehide',()=>states.forEach(state=>state.backup()));
+    window.addEventListener('session:expired',()=>states.forEach(state=>state.backup()));
+    document.addEventListener('visibilitychange',()=>{
+        if(document.visibilityState==='hidden')states.filter(state=>state.form.id==='offer-form').forEach(state=>{state.backup();state.save?.();});
+    });
+    let leavingForLogout=false;
+    document.addEventListener('submit',async event=>{
+        const form=event.target;
+        if(leavingForLogout||!(form instanceof HTMLFormElement)||new URL(form.action).pathname!=='/logout')return;
+        const offers=states.filter(state=>state.form.id==='offer-form');
+        if(!offers.length)return;
+        event.preventDefault();
+        offers.forEach(state=>state.backup());
+        // Never prolong authentication indefinitely if the network is unavailable.
+        await Promise.race([Promise.all(offers.map(state=>state.save?.())),new Promise(resolve=>setTimeout(resolve,11000))]);
+        leavingForLogout=true;window.formDraftLeaving=true;form.requestSubmit(event.submitter||undefined);
+    },true);
     document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>document.querySelectorAll('form[data-autosave]').forEach(form=>mount(form).catch(error=>console.error('Autozapis:',error))),0));
 })();
