@@ -24,7 +24,7 @@ class HrTripController extends Controller
         HrBusinessTrip::create($data);
 
         if ($request->boolean('remember_vehicle') && ! $vehicle && ! empty($data['registration_number'])) {
-            HrVehicle::firstOrCreate(['registration_number' => $data['registration_number'], 'user_id' => $data['vehicle_type'] === 'private' ? $data['user_id'] : null], ['type' => $data['vehicle_type'], 'name' => $data['vehicle_name'] ?: $data['registration_number']]);
+            HrVehicle::firstOrCreate(['registration_number' => $data['registration_number'], 'user_id' => $data['vehicle_type'] === 'private' ? $user->id : null], ['created_by' => $user->id, 'type' => $data['vehicle_type'], 'name' => $data['vehicle_name'] ?: $data['registration_number']]);
         }
 
         return redirect()->route('hr.index', ['tab' => 'delegations'])->with('success', 'Delegacja została dodana.');
@@ -85,7 +85,7 @@ class HrTripController extends Controller
         $targetUserId = $forcedUserId ?? (HrAccess::canViewTeam($user) && ! empty($data['user_id']) ? (int) $data['user_id'] : $user->id);
         $vehicle = ! empty($data['vehicle_id']) ? HrVehicle::find($data['vehicle_id']) : null;
         if ($vehicle) {
-            abort_unless($vehicle->type === 'company' || $vehicle->user_id === $user->id || HrAccess::canViewAllVehicles($user), 403);
+            abort_unless($vehicle->is_active && HrVehicle::visibleTo($user)->whereKey($vehicle->id)->exists(), 403);
             $data['vehicle_type'] = $vehicle->type;
             $data['vehicle_name'] = $vehicle->name;
             $data['registration_number'] = $vehicle->registration_number;

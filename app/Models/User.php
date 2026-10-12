@@ -75,6 +75,7 @@ class User extends Authenticatable
             'document_limit_bytes' => 'integer',
             'session_version' => 'integer',
             'dashboard_tasks_seen_id' => 'integer',
+            'hr_vehicle_columns' => 'array',
         ];
     }
 

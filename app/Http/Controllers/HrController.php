@@ -24,7 +24,6 @@ class HrController extends Controller
         $canDelegations = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.delegations.view');
         $canLeaves = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.leaves.view');
         $canAttendance = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.attendance.view');
-        $canAllVehicles = HrAccess::canViewAllVehicles($user);
         if (in_array($tab, ['delegations', 'vehicles'], true) && ! $canDelegations) {
             $tab = 'attendance';
         }
@@ -41,7 +40,7 @@ class HrController extends Controller
         $trips = $canDelegations ? HrBusinessTrip::with(['user', 'vehicle'])->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('departure_at')->get() : collect();
         $leaves = $canLeaves ? HrLeave::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('start_date')->get() : collect();
         $attendances = $canAttendance ? HrAttendance::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('work_date')->get() : collect();
-        $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->where(fn ($q) => $q->where('type', 'company')->orWhere('user_id', $user->id)->when($canAllVehicles, fn ($inner) => $inner->orWhereNotNull('user_id')))->orderBy('type')->orderBy('name')->get() : collect();
+        $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->visibleTo($user)->orderBy('type')->orderBy('name')->get() : collect();
         $rateOwnerId = $canTeam ? $selectedUserId : $user->id;
         $hrSettings = CompanySettings::query()->first(['hr_km_rate', 'hr_diet_rate']);
         $defaultKmRate = (float) ($hrSettings?->hr_km_rate ?? 0);
@@ -53,7 +52,7 @@ class HrController extends Controller
             ? $leaveBalanceUser->annualLeaveBalance($leaveYear)
             : null;
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'canAllVehicles', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
+        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
     public function updateSettings(Request $request): RedirectResponse

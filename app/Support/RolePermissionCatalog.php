@@ -32,7 +32,6 @@ class RolePermissionCatalog
                 'hr.leaves.view' => 'Dostęp do własnych urlopów i zwolnień L4',
                 'hr.attendance.view' => 'Dostęp do własnej listy obecności',
                 'hr.team.view' => 'Podgląd i zarządzanie danymi HR innych użytkowników',
-                'hr.vehicles.all.view' => 'Dostęp do wszystkich samochodów pracowników',
             ]],
             'crm' => ['label' => 'CRM i dostawcy', 'permissions' => [
                 'crm.view' => 'Podgląd CRM, klientów i dostawców',

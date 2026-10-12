@@ -312,7 +312,7 @@ test('leave-only role sees the leave tab without delegation access', function ()
         ->assertDontSee('Dodaj delegację');
 });
 
-test('access to other employees cars requires a separate role permission', function () {
+test('legacy all vehicles permission does not expose another employees private car', function () {
     $owner = User::factory()->create(['name' => 'Właściciel auta']);
     $viewer = User::factory()->create();
     $role = Role::findOrCreate('employee_hr');
@@ -326,5 +326,5 @@ test('access to other employees cars requires a separate role permission', funct
     $role->givePermissionTo(Permission::findOrCreate('hr.vehicles.all.view'));
     app(PermissionRegistrar::class)->forgetCachedPermissions();
     $this->actingAs($viewer)->get(route('hr.index', ['tab' => 'vehicles']))
-        ->assertOk()->assertSee('Prywatne Audi')->assertSee('Właściciel auta');
+        ->assertOk()->assertDontSee('Prywatne Audi')->assertDontSee('Właściciel auta');
 });

@@ -55,9 +55,7 @@
 @endif
 
 @if($canDelegations)
-<div id="vehicle-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:620px"><div class="hr-head"><h2 style="margin:0">Nowy samochód</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">×</button></div><form method="POST" action="{{route('hr.vehicles.store')}}">@csrf<div class="hr-grid">
- <div class="hr-field"><label>Rodzaj *</label><select name="type"><option value="private">Prywatny</option>@if($canTeam)<option value="company">Służbowy</option>@endif</select></div>
- @if($canTeam)<div class="hr-field"><label>Właściciel prywatnego auta</label><select name="user_id"><option value="">— ja / samochód firmowy —</option>@foreach($users as $person)<option value="{{$person->id}}">{{$person->name}}</option>@endforeach</select></div>@endif
- <div class="hr-field"><label>Nazwa *</label><input name="name" required placeholder="np. Auto Sławka"></div><div class="hr-field"><label>Marka i model</label><input name="make_model" placeholder="np. Skoda Octavia"></div><div class="hr-field hr-full"><label>Nr rejestracyjny *</label><input name="registration_number" required maxlength="30"></div>
- </div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">Anuluj</button><button class="hr-btn">Zapisz samochód</button></div></form></div></div>
+<div id="vehicle-modal" class="hr-modal {{$errors->getBag('vehicle')->any()?'open':''}}"><div class="hr-modal-card"><div class="hr-head"><h2 style="margin:0">Nowy samochód</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">×</button></div><form method="POST" action="{{route('hr.vehicles.store')}}">@csrf
+@include('hr.partials.vehicle-fields', ['vehicle'=>new \App\Models\HrVehicle])
+<div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('vehicle-modal')">Anuluj</button><button class="hr-btn">Zapisz samochód</button></div></form></div></div>
 @endif

@@ -139,6 +139,9 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::post('/attendance', [HrAttendanceController::class, 'storeAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.store');
     Route::delete('/attendance/{attendance}', [HrAttendanceController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');
     Route::post('/vehicles', [HrVehicleController::class, 'storeVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.store');
+    Route::put('/vehicles/columns', [HrVehicleController::class, 'columns'])->middleware('app.permission:hr.delegations.view')->name('vehicles.columns');
+    Route::get('/vehicles/{vehicle}/edit', [HrVehicleController::class, 'edit'])->middleware('app.permission:hr.delegations.view')->name('vehicles.edit');
+    Route::put('/vehicles/{vehicle}', [HrVehicleController::class, 'update'])->middleware('app.permission:hr.delegations.view')->name('vehicles.update');
     Route::delete('/vehicles/{vehicle}', [HrVehicleController::class, 'destroyVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.destroy');
 });
 Route::patch('/dashboard/companies/order', [DashboardController::class, 'reorderCompanies'])
