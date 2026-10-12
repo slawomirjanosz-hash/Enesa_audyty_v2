@@ -1,3 +1,6 @@
+@if(!isset($audit) && ($auditType->slug ?? '') === 'iso50001' && (in_array($sectionId,['intro','4-1','4-2']) || isset(\App\Models\IsoSystemReview::TITLES[$sectionId])))
+<div style="margin:20px 0;padding:18px;border:1px solid #dce5df;border-radius:10px;background:#f5f9f6"><a class="btn" style="display:inline-flex;background:var(--green);color:white;padding:10px 16px;border-radius:8px;text-decoration:none" href="{{route('audit-types.questionnaire-preview',[$auditType,$sectionId])}}">Podgląd ankiety — widok klienta</a><p style="margin:8px 0 0;font-size:13px">Sprawdź pytania i pola bez tworzenia klienta ani audytu.</p></div>
+@endif
 @if(isset($audit) && $sectionId==='context')
 @include('audits.factors.launch')
 @endif

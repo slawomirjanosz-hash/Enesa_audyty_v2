@@ -40,6 +40,7 @@ use App\Http\Controllers\IsoContextReviewController;
 use App\Http\Controllers\IsoDocumentCopyController;
 use App\Http\Controllers\IsoImplementationController;
 use App\Http\Controllers\IsoPresentationController;
+use App\Http\Controllers\IsoQuestionnairePreviewController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferFormTemplateController;
@@ -296,6 +297,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::delete('/{energyPassport}', [EnergyPassportController::class, 'destroy'])->middleware('app.permission:audits.passports.manage')->name('destroy');
         Route::post('/templates/import', [EnergyPassportController::class, 'importTemplate'])->middleware('app.permission:audits.passports.manage')->name('templates.import');
     });
+    Route::get('audit-types/{auditType}/questionnaires/{section}', [IsoQuestionnairePreviewController::class, 'show'])->middleware(['app.module:audits', 'app.permission:audits.view'])->name('audit-types.questionnaire-preview');
     Route::get('audit-types/{auditType}', [AuditTypeController::class, 'show'])->middleware('app.module:audits')->name('audit-types.show');
     Route::post('audit-types/{auditType}/presentations', [IsoPresentationController::class, 'store'])->middleware(['app.module:audits', 'app.permission:audits.types.manage', 'throttle:3,1'])->name('audit-types.presentations.store');
     Route::put('audit-types/{auditType}/presentations/{presentation}', [IsoPresentationController::class, 'update'])->middleware(['app.module:audits', 'app.permission:audits.types.manage', 'throttle:3,1'])->name('audit-types.presentations.update');
