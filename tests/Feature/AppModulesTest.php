@@ -164,6 +164,9 @@ test('dashboard shows company creation date in table and last change on card', f
         ->assertSee('Data dodania')
         ->assertSee('01.07.2026 08:15')
         ->assertSee('Ostatnia zmiana: 12.08.2026 16:40')
+        ->assertSee('aria-label="Otwórz kartę klienta Klient datowany"', false)
+        ->assertSee('.client-tile .tile-btn-primary::after', false)
+        ->assertSee(route('companies.show', $company), false)
         ->assertSee('data-sort-value="2026-07-01 08:15:00"', false);
 });
 

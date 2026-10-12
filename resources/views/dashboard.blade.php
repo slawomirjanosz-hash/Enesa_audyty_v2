@@ -154,6 +154,22 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0,0,0,0.09);
     }
+    /* Stretch the native card link, keeping secondary actions and drag handles above it. */
+    .client-tile .tile-btn-primary::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        z-index: 1;
+    }
+    .client-tile .tile-btn-primary:focus-visible::after {
+        outline: 2px solid var(--green);
+        outline-offset: 3px;
+    }
+    .client-tile a:not(.tile-btn-primary), .client-tile .priority-drag-handle {
+        position: relative;
+        z-index: 2;
+    }
     .tile-status-bar {
         display: flex;
         align-items: center;
@@ -661,7 +677,7 @@
 
             {{-- Przyciski --}}
             <div class="tile-footer">
-                <a href="{{ route('companies.show', $company) }}" class="tile-btn-primary">
+                <a href="{{ route('companies.show', $company) }}" class="tile-btn-primary" aria-label="Otwórz kartę klienta {{ $company->name }}">
                     <i class="ti ti-layout-2"></i>Otwórz kartę
                 </a>
                 <a href="#" class="tile-btn-secondary">
