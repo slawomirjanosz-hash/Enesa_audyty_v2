@@ -6,6 +6,7 @@
 <style>
 .vehicles-card{container-type:inline-size}.vehicles-tools{display:flex;gap:10px;align-items:center}.vehicle-columns{position:relative}.vehicle-columns summary{cursor:pointer;padding:9px;border:1px solid #cad6d0;border-radius:7px;font-size:12px}.vehicle-columns form{position:absolute;right:0;top:100%;z-index:50;background:#fff;border:1px solid #cad6d0;border-radius:9px;padding:16px;width:300px;max-height:65vh;overflow:auto;box-shadow:0 8px 24px #0002}.vehicle-columns label{display:flex;gap:8px;align-items:center;font-size:12px;margin-bottom:9px}.vehicle-columns input{width:15px;height:15px;accent-color:var(--green)}.vehicle-legend{font-size:12px;padding:12px 18px;color:#64746d}.vehicle-table-wrap{overflow-x:auto}.hr-table.vehicle-table{table-layout:fixed;width:100%;min-width:calc(var(--columns)*60px);font-size:clamp(10px,.85cqi,13px)}.vehicle-table th,.vehicle-table td{padding:9px 5px;overflow-wrap:anywhere;vertical-align:middle}.vehicle-table th{font-size:clamp(9px,.72cqi,11px);text-transform:none}.vehicle-table th:first-child{width:30px}.vehicle-table th:last-child{width:80px}.vehicle-table td a{color:var(--green);font-weight:700;text-decoration:none}.vehicle-table tr[data-vehicle-edit]{cursor:pointer}.vehicle-table tr[data-vehicle-edit]:hover{box-shadow:inset 0 0 0 2px #9caeaa}.vehicle-table tr:focus-visible{outline:2px solid var(--green);outline-offset:-2px}.vehicle-table tr.vehicle-overdue>td{background:#fee2e2;color:#991b1b}.vehicle-table .deadline-soon{background:#fef3c7;color:#854d0e;font-weight:700}.vehicle-table .deadline-urgent,.vehicle-table .deadline-overdue{background:#fecaca;color:#991b1b;font-weight:700}.vehicle-table time{white-space:nowrap}.vehicle-table .app-table-sort{max-width:100%;gap:2px}.vehicle-actions{display:flex;gap:4px;align-items:center}.vehicle-error{color:#b91c1c}
 .hr-table.vehicle-table{min-width:calc(var(--columns)*58px)}
+.vehicle-table th:last-child,.vehicle-table td:last-child{position:sticky;right:0;z-index:2;background:#fff;box-shadow:-2px 0 4px #0001}.vehicle-table th:last-child{background:#fafaf6}.vehicle-table .vehicle-actions{justify-content:center}.vehicle-table td a.vehicle-name-link{text-decoration:underline;text-underline-offset:3px}
 </style>
 <div class="hr-card vehicles-card" style="overflow:visible">
 <div class="hr-card-head"><strong>Auta — służbowe i prywatne</strong><div class="vehicles-tools">
@@ -27,7 +28,7 @@
     $overdue = in_array('overdue',[$insuranceState,$inspectionState]);
     $editable = $vehicle->canEdit(auth()->user());
 @endphp
-<tr class="{{$overdue?'vehicle-overdue':''}}" @if($editable) data-vehicle-edit="{{route('hr.vehicles.edit',$vehicle)}}" tabindex="0" aria-label="Edytuj auto {{$vehicle->name}}" @endif>
+<tr class="{{$overdue?'vehicle-overdue':''}}" @if($editable) data-vehicle-edit="{{route('hr.vehicles.edit',$vehicle)}}" tabindex="0" aria-label="Edytuj auto {{$vehicle->name}}" title="Kliknij, aby edytować samochód" @endif>
 <td>{{$loop->iteration}}</td>
 @foreach($visibleColumns as $key=>$label)
 @php
@@ -48,7 +49,7 @@
     if($key==='registration_document') $sortValue = $display;
 @endphp
 <td class="{{$deadline?'deadline-'.$deadline:''}}" data-sort-value="{{$key==='type'?$display:$sortValue}}" @if($deadline) title="{{$label}}: {{ match($deadline) { 'overdue'=>'termin minął', 'urgent'=>'do 7 dni', default=>'do 14 dni' } }}" @endif>
-@if($key==='name' && $editable)<a href="{{route('hr.vehicles.edit',$vehicle)}}">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
+@if($key==='name' && $editable)<a class="vehicle-name-link" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj samochód">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
 @if($key==='registration_document' && $vehicle->registration_document_present!==null && $value)<small style="display:block" title="{{$value}}">{{$value}}</small>@endif
 </td>
 @endforeach
@@ -57,11 +58,15 @@
 @empty<tr data-sort-fixed><td colspan="{{count($visibleColumns)+2}}" class="hr-empty">Brak samochodów.</td></tr>@endforelse
 </tbody></table></div></div>
 <script>
-document.querySelector('.vehicle-table')?.addEventListener('click',event=>{
-    if(event.target.closest('a,button,input,select,form')||window.getSelection()?.toString())return;
-    const row=event.target.closest('[data-vehicle-edit]');if(row)location.assign(row.dataset.vehicleEdit);
-});
-document.querySelector('.vehicle-table')?.addEventListener('keydown',event=>{
-    if(event.key==='Enter'&&event.target.matches('[data-vehicle-edit]'))location.assign(event.target.dataset.vehicleEdit);
-});
+if(!window.hrVehicleNavigationReady){
+    window.hrVehicleNavigationReady=true;
+    document.addEventListener('click',event=>{
+        if(event.target.closest('a,button,input,select,form'))return;
+        const row=event.target.closest('.vehicle-table [data-vehicle-edit]');
+        if(row)location.assign(row.dataset.vehicleEdit);
+    });
+    document.addEventListener('keydown',event=>{
+        if(event.key==='Enter'&&event.target.matches('.vehicle-table [data-vehicle-edit]'))location.assign(event.target.dataset.vehicleEdit);
+    });
+}
 </script>

@@ -75,3 +75,18 @@ test('vehicle choices reuse inactive values without leaking other private vehicl
     $this->put(route('hr.vehicles.update', $vehicle), ['name' => 'New', 'registration_number' => 'NEW', 'registration_document_present' => '1'])->assertSessionHas('success');
     expect($vehicle->fresh()->registration_document_present)->toBeTrue()->and($vehicle->fresh()->registration_document)->toBe('Oryginał w biurze');
 });
+
+test('company vehicle can be opened and removed by HR manager but not a reader', function () {
+    $manager = vehicleRegisterUser(true);
+    $reader = vehicleRegisterUser();
+    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Służbowy do edycji', 'registration_number' => 'TEST123']);
+    $this->actingAs($reader)->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertSee('Służbowy do edycji')->assertDontSee('data-vehicle-edit=', false);
+    $this->get(route('hr.vehicles.edit', $vehicle))->assertForbidden();
+    $this->delete(route('hr.vehicles.destroy', $vehicle))->assertForbidden();
+    $this->actingAs($manager)->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertSee('data-vehicle-edit="'.route('hr.vehicles.edit', $vehicle).'"', false)->assertSee('title="Usuń auto"', false);
+    $this->get(route('hr.vehicles.edit', $vehicle))->assertOk()->assertSee('Usuń samochód')->assertSee('Zapisz samochód');
+    $this->delete(route('hr.vehicles.destroy', $vehicle))->assertSessionHas('success');
+    expect($vehicle->fresh()->is_active)->toBeFalse();
+    $this->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertDontSee('Służbowy do edycji');
+    $this->get(route('hr.vehicles.edit', $vehicle))->assertNotFound();
+});
