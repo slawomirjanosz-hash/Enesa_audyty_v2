@@ -4,9 +4,10 @@
 @section('content')
 <div class="cyl-module cyl-register">
 @include('cylinders.style')
+<style>.cyl-selection-summary:not([hidden]){flex-wrap:wrap}.cyl-selection-summary form{margin-left:auto}.cyl-register .cyl-table{position:relative}</style>
 <div class="cyl-head">
 <div><h1>{{ $clientView ? 'Moje urządzenia i przeglądy' : 'Rejestr urządzeń' }}</h1><p class="cyl-muted">Butle — identyfikacja i ostatni przegląd.</p></div>
-@if($canManage)<a class="cyl-btn cyl-btn-primary" href="{{ route('cylinders.create') }}">+ Dodaj urządzenie</a>@endif
+@if($canManage)<div class="cyl-actions"><a class="cyl-btn" href="{{ route('cylinders.series.index') }}">Serie przeglądów</a><a class="cyl-btn cyl-btn-primary" href="{{ route('cylinders.create') }}">+ Dodaj urządzenie</a></div>@endif
 </div>
 <div class="cyl-card cyl-register-card">
 <div class="cyl-register-toolbar">
@@ -23,7 +24,7 @@
 <button class="cyl-btn" type="submit">Szukaj</button>
 </form>
 </div>
-@if($canManage)<div class="cyl-selection-summary" data-cylinder-selection hidden role="status" aria-live="polite">Wybrano butle: <strong data-cylinder-count>0</strong><button type="button" class="cyl-btn" data-cylinder-clear>Wyczyść zaznaczenie</button></div>@endif
+@if($canManage)<div class="cyl-selection-summary" data-cylinder-selection hidden role="status" aria-live="polite">Wybrano urządzenia: <strong data-cylinder-count>0</strong><button type="button" class="cyl-btn" data-cylinder-clear>Wyczyść zaznaczenie</button>@if(!request('archived'))<form method="get" action="{{ route('cylinders.series.create') }}" data-cylinder-series><span data-cylinder-series-inputs></span><button class="cyl-btn cyl-btn-primary">Utwórz serię przeglądów</button></form>@endif</div>@endif
 <div class="cyl-table" tabindex="0" role="region" aria-label="Lista urządzeń — przewijana poziomo na małym ekranie">
 <table class="cyl-register-table" data-cylinder-register data-server-sort=",name,manufacturer,year,serial,last,,,">
 <thead><tr>

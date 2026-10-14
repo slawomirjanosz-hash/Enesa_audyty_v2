@@ -2,6 +2,19 @@ document.querySelectorAll('[data-cylinder-register]').forEach(table => {
     const rows = () => [...table.querySelectorAll('[data-cylinder-select]')];
     const all = table.querySelector('[data-cylinder-select-all]');
     const summary = document.querySelector('[data-cylinder-selection]');
+    const seriesForm = document.querySelector('[data-cylinder-series]');
+    seriesForm?.addEventListener('submit', event => {
+        const selected = rows().filter(input => input.checked);
+        if (!selected.length) { event.preventDefault(); return; }
+        const container = seriesForm.querySelector('[data-cylinder-series-inputs]');
+        container.replaceChildren(...selected.map(input => {
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'cylinder_ids[]';
+            hidden.value = input.value;
+            return hidden;
+        }));
+    });
     const update = () => {
         const inputs = rows();
         const count = inputs.filter(input => input.checked).length;

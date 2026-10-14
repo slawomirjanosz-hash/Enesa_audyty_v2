@@ -6,6 +6,8 @@ use App\Http\Requests\CylinderRequest;
 use App\Models\Company;
 use App\Models\Cylinder;
 use App\Models\CylinderInspection;
+use App\Models\CylinderInspectionSeries;
+use App\Models\CylinderInspectionSeriesItem;
 use App\Models\CylinderPhoto;
 use App\Models\CylinderVideo;
 use App\Models\User;
@@ -213,6 +215,17 @@ class CylinderController extends Controller
         return redirect()->route('cylinders.show', $cylinder)->with('success', 'Zapisano przegląd.');
     }
 
+    public function storeSeriesInspection(Request $request, CylinderInspectionSeries $series, CylinderInspectionSeriesItem $item): RedirectResponse
+    {
+        abort_unless((int) $item->series_id === (int) $series->id, 404);
+        $data = $this->inspectionData($request);
+        $this->saveInspection($request, $item->cylinder, $data, seriesItem: $item);
+        $next = $series->items()->whereNull('inspection_id')->whereHas('cylinder', fn ($q) => $q->whereNull('archived_at'))->orderBy('id')->first();
+
+        return redirect()->route($next ? 'cylinders.series.inspect' : 'cylinders.series.show', $next ? [$series, $next] : [$series])
+            ->with('success', $next ? 'Zapisano przegląd. Możesz przejść do kolejnego urządzenia lub wrócić do serii później.' : 'Zapisano przegląd. Sprawdź postęp w serii.');
+    }
+
     private function inspectionData(Request $request): array
     {
         app(CylinderInspectionMedia::class)->validate($request);
@@ -250,11 +263,16 @@ class CylinderController extends Controller
         return redirect()->route('cylinders.show', $cylinder)->with('success', 'Zapisano zmiany wpisu. Poprzednie wartości odnotowano w historii zmian.');
     }
 
-    private function saveInspection(Request $request, Cylinder $cylinder, array $data, ?CylinderInspection $inspection = null, ?int $revision = null): void
+    private function saveInspection(Request $request, Cylinder $cylinder, array $data, ?CylinderInspection $inspection = null, ?int $revision = null, ?CylinderInspectionSeriesItem $seriesItem = null): void
     {
         $paths = [];
         try {
-            DB::transaction(function () use ($request, $cylinder, $inspection, $data, $revision, &$paths): void {
+            DB::transaction(function () use ($request, $cylinder, $inspection, $data, $revision, $seriesItem, &$paths): void {
+                if ($seriesItem) {
+                    $series = CylinderInspectionSeries::lockForUpdate()->findOrFail($seriesItem->series_id);
+                    $seriesItem = $series->items()->lockForUpdate()->findOrFail($seriesItem->id);
+                    abort_if($series->status === 'completed' || $seriesItem->inspection_id, 409, 'Przegląd został już zapisany lub seria jest zakończona. Odśwież serię.');
+                }
                 $locked = Cylinder::query()->lockForUpdate()->findOrFail($cylinder->id);
                 abort_if($locked->archived_at, 409, 'Przywróć urządzenie z archiwum przed edycją.');
                 if ($inspection) {
@@ -267,6 +285,10 @@ class CylinderController extends Controller
                     $entry = $locked->inspections()->create($data + ['inspector_id' => $request->user()->id, 'inspector_name' => $request->user()->name]);
                 }
                 app(CylinderInspectionMedia::class)->store($request, $entry, $paths);
+                if ($seriesItem) {
+                    $seriesItem->update(['inspection_id' => $entry->id]);
+                    $series->update(['status' => 'in_progress']);
+                }
             });
         } catch (\Throwable $exception) {
             Storage::disk('local')->delete($paths);
