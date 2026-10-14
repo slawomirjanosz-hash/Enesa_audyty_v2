@@ -410,6 +410,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
             ->name('users.auditor-documents');
         Route::middleware('app.permission:settings.company.manage')->group(function () {
             Route::get('company', [Settings\CompanySettingsController::class, 'index'])->name('company');
+            Route::post('company/test-mail', Settings\TestMailController::class)->middleware('throttle:1,1')->name('company.test-mail');
             Route::post('company', [Settings\CompanySettingsController::class, 'update'])->name('company.update');
             Route::post('company/sync-owner', [Settings\CompanySettingsController::class, 'syncOwner'])->name('company.sync-owner');
         });

@@ -464,7 +464,43 @@
     </div>
 </div>
 
+@if(auth()->user()->hasAnyRole(['superadmin', 'admin']))
+<section class="card" style="margin-top:24px;padding:24px">
+    <h2 class="card-header-title">Test wysyłania poczty</h2>
+    <p class="card-header-sub">Wyślij wiadomość na swój adres: {{ auth()->user()->email }}. Maksymalnie jeden test na minutę.</p>
+    <button type="button" class="btn-save" id="test-company-mail">Wyślij wiadomość testową</button>
+    <p id="test-company-mail-result" role="status" aria-live="polite" style="margin-top:12px"></p>
+</section>
+@endif
 @endsection
+
+@push('scripts')
+<script>
+document.getElementById('test-company-mail')?.addEventListener('click', async function () {
+    const button = this;
+    const result = document.getElementById('test-company-mail-result');
+    button.disabled = true;
+    result.style.color = 'inherit';
+    result.textContent = 'Wysyłanie wiadomości testowej…';
+    try {
+        const response = await fetch(@json(route('settings.company.test-mail')), {
+            method: 'POST',
+            headers: {'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content},
+        });
+        const data = await response.json().catch(() => ({}));
+        result.style.color = response.ok ? '#166534' : '#b91c1c';
+        result.textContent = response.status === 429 ? 'Odczekaj minutę przed kolejnym testem.'
+            : response.status === 419 || response.status === 401 ? 'Sesja wygasła. Zaloguj się ponownie.'
+            : data.message || 'Nie udało się wykonać testu. Sprawdź połączenie i uprawnienia.';
+    } catch (error) {
+        result.style.color = '#b91c1c';
+        result.textContent = 'Nie otrzymano potwierdzenia. Sprawdź skrzynkę przed ponowieniem testu.';
+    } finally {
+        button.disabled = false;
+    }
+});
+</script>
+@endpush
 
 @push('scripts')
 <script>
