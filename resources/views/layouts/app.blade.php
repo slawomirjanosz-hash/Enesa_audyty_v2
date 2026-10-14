@@ -469,8 +469,17 @@
             @endif
 
             @if(($appBrand?->moduleEnabled('cylinders') ?? false) && ($layoutHasFullAccess || $canAccessModule('cylinders.view')))
-            <li class="nav-item">
-                <a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}"><i class="ti ti-clipboard-check"></i> Przeglądy urządzeń</a>
+            <li class="nav-item nav-group {{ request()->routeIs('cylinders.*') ? 'open' : '' }}">
+                <button type="button" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}" onclick="toggleGroup(this)" aria-expanded="{{ request()->routeIs('cylinders.*') ? 'true' : 'false' }}" aria-controls="cylinders-navigation">
+                    <i class="ti ti-clipboard-check"></i> Przeglądy urządzeń
+                    <span class="arrow" aria-hidden="true">▶</span>
+                </button>
+                <ul class="nav-sub" id="cylinders-navigation">
+                    <li><a href="{{ route('cylinders.index') }}" class="nav-link {{ request()->routeIs('cylinders.*') && !request()->routeIs('cylinders.series.*') ? 'active' : '' }}" @if(request()->routeIs('cylinders.*') && !request()->routeIs('cylinders.series.*')) aria-current="page" @endif>Urządzenia</a></li>
+                    @if($layoutHasFullAccess || $canAccessModule('cylinders.manage'))
+                    <li><a href="{{ route('cylinders.series.index') }}" class="nav-link {{ request()->routeIs('cylinders.series.*') ? 'active' : '' }}" @if(request()->routeIs('cylinders.series.*')) aria-current="page" @endif>Serie urządzeń</a></li>
+                    @endif
+                </ul>
             </li>
             @endif
             @if(($appBrand?->moduleEnabled('warehouse') ?? false) && ($layoutHasFullAccess || $canAccessModule('warehouse.view')))
