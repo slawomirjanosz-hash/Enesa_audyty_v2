@@ -33,6 +33,9 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
+      - name: Test reminder worker startup
+        run: bash tests/deploy/task-reminders.sh
+
       - name: Install frontend dependencies
         run: npm ci
 

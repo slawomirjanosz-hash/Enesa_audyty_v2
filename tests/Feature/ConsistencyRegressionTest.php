@@ -73,6 +73,7 @@ test('document version counter never reuses a reserved version', function () {
 });
 
 test('overdue reminders exclude removed projects and revoked access', function () {
+    config(['mail.default' => 'smtp', 'mail.from.address' => 'reminders@test.invalid']);
     Mail::fake();
     $user = consistencyUser(['projects.view', 'projects.schedule.view']);
     $company = Company::create(['name' => 'Tasks']);

@@ -6,10 +6,14 @@ test('deployment starts concurrent workers without reload and warms runtime cach
     $nixpacks = file_get_contents($root.'/nixpacks.toml');
     preg_match('/^cmd = \'(.*)\'$/m', $nixpacks, $matches);
     foreach ([$railpack['deploy']['startCommand'], $matches[1]] as $command) {
-        expect($command)->toContain('PHP_CLI_SERVER_WORKERS=${PHP_CLI_SERVER_WORKERS:-2}')
-            ->toContain('php artisan serve --no-reload')
-            ->toContain('php artisan config:cache && php artisan route:cache && php artisan view:cache')
-            ->toContain('PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-}:/app/deploy/php"')
-            ->toContain('--port=${PORT:-8000}');
+        expect($command)->toBe('bash deploy/start.sh');
     }
+    $script = file_get_contents($root.'/deploy/start.sh');
+    expect($script)->toContain('PHP_CLI_SERVER_WORKERS="${PHP_CLI_SERVER_WORKERS:-2}"')
+        ->toContain('php artisan serve --no-reload')
+        ->toContain('php artisan config:cache', 'php artisan route:cache', 'php artisan view:cache')
+        ->toContain('PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-}:/app/deploy/php"')
+        ->toContain('--port="${PORT:-8000}"')
+        ->toContain('bash deploy/task-reminder-worker.sh', 'wait -n', 'trap stop TERM INT EXIT');
+    expect(strpos($script, 'php artisan migrate --force'))->toBeLessThan(strpos($script, 'bash deploy/task-reminder-worker.sh'));
 });

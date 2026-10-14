@@ -22,10 +22,15 @@
                 </thead>
                 <tbody>
                     @foreach($tasks as $task)
+                    @php
+                        $isBoard = $task instanceof \App\Models\BoardTask;
+                        $taskTab = $isBoard ? 'tasks' : 'schedule';
+                        $taskCompany = $isBoard ? ($task->project?->company ?? $task->audit?->company) : $task->company;
+                    @endphp
                     <tr style="border-bottom:1px solid #F0EDE6;">
-                        <td style="padding:10px; font-weight:600; color:#1A1A1A;"><a href="{{ $task->project_id ? route('projects.show', ['project' => $task->project_id, 'tab' => 'schedule']) : ($task->audit_id ? route('audits.show', ['audit' => $task->audit_id, 'tab' => 'schedule', 'task' => $task->id]) : route('crm.index', ['tab' => 'tasks'])) }}">{{ $task->title }}</a></td>
+                        <td style="padding:10px; font-weight:600; color:#1A1A1A;"><a href="{{ $task->project_id ? route('projects.show', ['project' => $task->project_id, 'tab' => $taskTab]) : ($task->audit_id ? route('audits.show', ['audit' => $task->audit_id, 'tab' => $taskTab, 'task' => $task->id]) : route('crm.index', ['tab' => 'tasks'])) }}">{{ $task->title }}</a></td>
                         <td style="padding:10px; color:#B91C1C; font-weight:600;">{{ $task->due_date->format('d.m.Y') }}</td>
-                        <td style="padding:10px; color:#555;">{{ $task->company?->name ?? '—' }}</td>
+                        <td style="padding:10px; color:#555;">{{ $taskCompany?->name ?? '—' }}</td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -3,62 +3,80 @@
 namespace App\Console\Commands;
 
 use App\Mail\TaskOverdue;
-use App\Models\CompanySettings;
-use App\Models\Task;
-use App\Services\AuditorAccessService;
+use App\Models\BoardTask;
+use App\Services\TaskReminderMailConfiguration;
+use App\Services\TaskReminderSelection;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class SendOverdueTaskReminders extends Command
 {
-    protected $signature = 'tasks:send-overdue-reminders';
+    protected $signature = 'tasks:send-overdue-reminders {--dry-run : Sprawdź bez wysyłania i bez zapisu} {--scheduled : Uruchom wyłącznie w godzinie 08:00–08:59 Europe/Warsaw}';
 
-    protected $description = 'Wysyła codzienne przypomnienia mailowe o zaległych zadaniach do przypisanych użytkowników';
+    protected $description = 'Codzienne przypomnienia o zaległych zadaniach CRM, harmonogramu i tablicy';
 
-    public function handle(): int
+    public function handle(TaskReminderSelection $selection, TaskReminderMailConfiguration $configuration): int
     {
-        $settings = CompanySettings::first();
-        $enabled = collect(['projects', 'audits', 'crm'])->mapWithKeys(fn ($module) => [$module => $settings?->moduleEnabled($module) ?? true]);
-        $overdueTasks = Task::with(['company', 'assignedUser', 'project.members', 'audit'])
-            ->overdue()
-            ->whereNotNull('assigned_to')
-            ->where(fn ($q) => $q->whereNull('project_id')->orWhereHas('project', fn ($p) => $p->where('status', '!=', 'completed')))
-            ->where(fn ($q) => $q->whereNull('audit_id')->orWhereHas('audit', fn ($a) => $a->whereNotIn('status', ['done', 'cancelled'])))
-            ->get()->filter(function (Task $task) use ($enabled) {
-                $user = $task->assignedUser;
-                if (! $user || ! $user->is_active || ! $user->getRoleNames()->contains(fn ($role) => ! in_array($role, ['client_admin', 'client_user'], true))) {
-                    return false;
-                }
-                $full = app(AuditorAccessService::class)->hasFullAccess($user);
-                if ($task->project_id !== null) {
-                    return $enabled['projects'] && $task->project && $user->can('view', $task->project)
-                        && ($full || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']));
-                }
-                if ($task->audit_id !== null) {
-                    return $enabled['audits'] && $task->audit && $user->can('view', $task->audit);
-                }
-
-                return $enabled['crm'] && ($full || $user->can('crm.tasks.own.manage') || $user->can('crm.tasks.team.manage'));
-            });
-
-        if ($overdueTasks->isEmpty()) {
-            $this->info('Brak zaległych zadań.');
+        if ($this->option('scheduled') && now('Europe/Warsaw')->hour !== 8) {
+            return self::SUCCESS;
+        }
+        $problem = $configuration->problem();
+        if ($this->option('dry-run')) {
+            $groups = $selection->groups();
+            $this->info('Bez wysyłki: '.$groups->sum(fn ($tasks) => $tasks->count()).' zadań, '.$groups->count().' odbiorców.');
+            $this->line($problem ?? 'Transport skonfigurowany. Dostarczenie wymaga osobnego testu wysyłki.');
 
             return self::SUCCESS;
         }
+        if ($problem) {
+            $this->warn($problem);
+            Log::warning('task_reminders.configuration_missing', ['mailer' => config('mail.default')]);
 
-        $grouped = $overdueTasks->groupBy('assigned_to');
+            return self::FAILURE;
+        }
+        $mailer = config('mail.default');
+        $transport = config('mail.mailers.'.$mailer.'.transport');
+        if ($transport === 'smtp' && ! config('mail.mailers.'.$mailer.'.timeout')) {
+            config(['mail.mailers.'.$mailer.'.timeout' => 30]);
+        }
+        $date = now('Europe/Warsaw')->toDateString();
+        $sent = $failed = $skipped = 0;
+        foreach ($selection->groups() as $userId => $tasks) {
+            // Atomic daily claim shared by replicas/redeploys. Ambiguous provider
+            // failures are not retried blindly: the email might be accepted.
+            $claimed = DB::table('task_reminder_deliveries')->insertOrIgnore([
+                'reminder_date' => $date, 'user_id' => $userId, 'status' => 'sending',
+                'mailer' => config('mail.default'), 'task_count' => $tasks->count(),
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+            if (! $claimed) {
+                $skipped++;
 
-        foreach ($grouped as $userId => $tasks) {
-            $user = $tasks->first()->assignedUser;
-            if ($user && $user->email) {
+                continue;
+            }
+            $record = DB::table('task_reminder_deliveries')->where('reminder_date', $date)->where('user_id', $userId);
+            try {
+                $task = $tasks->first();
+                $user = $task instanceof BoardTask ? $task->assignee : $task->assignedUser;
                 Mail::to($user->email)->send(new TaskOverdue($tasks));
-                $this->line("Wysłano przypomnienie do {$user->email} ({$tasks->count()} zadań).");
+                $record->update(['status' => 'accepted', 'accepted_at' => now(), 'updated_at' => now()]);
+                $sent++;
+                Log::info('task_reminders.accepted', ['user_id' => $userId, 'tasks' => $tasks->count(), 'date' => $date]);
+            } catch (Throwable $error) {
+                $failed++;
+                $record->update(['status' => 'failed', 'error_type' => get_class($error), 'updated_at' => now()]);
+                Log::error('task_reminders.failed', ['user_id' => $userId, 'date' => $date, 'error_type' => get_class($error)]);
+            }
+            if ($transport === 'resend') {
+                // Avoid sending an unbounded burst to the external API.
+                usleep(1000000);
             }
         }
+        $this->info("Przekazano do transportu: {$sent}; błędy: {$failed}; już obsłużone dzisiaj: {$skipped}.");
 
-        $this->info('Zakończono. Wysłano przypomnienia do '.$grouped->count().' użytkowników.');
-
-        return self::SUCCESS;
+        return $failed ? self::FAILURE : self::SUCCESS;
     }
 }

@@ -261,6 +261,7 @@ test('audit workspace stores tasks finances surveys passports and documents outs
 });
 
 test('audit tasks without dates remain visible and can be completed without inventing dates', function () {
+    config(['mail.default' => 'smtp', 'mail.from.address' => 'reminders@test.invalid']);
     $user = auditManager();
     $company = Company::create(['name' => 'Missing dates', 'status' => 'active']);
     $audit = Audit::create(['company_id' => $company->id, 'number' => 'MISSING/1', 'title' => 'Missing dates', 'manager_id' => $user->id, 'status' => 'in_progress']);
