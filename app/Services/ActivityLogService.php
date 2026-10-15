@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ActivityLog;
 use App\Models\CompanyReliabilityReport;
+use App\Models\CylinderImport;
 use App\Models\CylinderInspection;
 use App\Models\CylinderProtocol;
 use App\Models\User;
@@ -67,6 +68,9 @@ class ActivityLogService
         $excluded = [...self::HIDDEN_FIELDS, 'signature_data', 'issuer_snapshot'];
         if ($model instanceof CylinderProtocol) {
             $excluded = [...$excluded, 'snapshot'];
+        }
+        if ($model instanceof CylinderImport) {
+            $excluded = [...$excluded, 'rows'];
         }
         if ($model instanceof User) {
             $excluded = [...$excluded, ...self::VOLATILE_USER_FIELDS];

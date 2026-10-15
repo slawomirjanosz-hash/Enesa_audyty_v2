@@ -24,6 +24,7 @@ use App\Http\Controllers\ClientZoneController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\CylinderController;
+use App\Http\Controllers\CylinderImportController;
 use App\Http\Controllers\CylinderInspectionSeriesController;
 use App\Http\Controllers\CylinderProtocolController;
 use App\Http\Controllers\DashboardController;
@@ -110,6 +111,13 @@ Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'staff.role', 'app.module:dashboard'])->name('dashboard');
 Route::prefix('cylinders')->name('cylinders.')->middleware(['auth', 'staff.role', 'app.module:cylinders'])->group(function () {
     Route::get('/', [CylinderController::class, 'index'])->name('index');
+    Route::prefix('import')->name('import.')->middleware('app.permission:cylinders.manage')->group(function () {
+        Route::get('/', [CylinderImportController::class, 'create'])->name('create');
+        Route::get('/template', [CylinderImportController::class, 'template'])->name('template');
+        Route::post('/preview', [CylinderImportController::class, 'preview'])->name('preview');
+        Route::get('/{token}', [CylinderImportController::class, 'show'])->name('show');
+        Route::post('/{token}', [CylinderImportController::class, 'store'])->name('store');
+    });
     Route::prefix('series')->name('series.')->middleware('app.permission:cylinders.manage')->group(function () {
         Route::get('/', [CylinderInspectionSeriesController::class, 'index'])->name('index');
         Route::get('/create', [CylinderInspectionSeriesController::class, 'create'])->name('create');

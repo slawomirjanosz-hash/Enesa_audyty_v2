@@ -7,7 +7,7 @@
 <style>.cyl-selection-summary:not([hidden]){flex-wrap:wrap}.cyl-selection-summary form{margin-left:auto}.cyl-register .cyl-table{position:relative}</style>
 <div class="cyl-head">
 <div><h1>{{ $clientView ? 'Moje urządzenia i przeglądy' : 'Rejestr urządzeń' }}</h1><p class="cyl-muted">Butle — identyfikacja i ostatni przegląd.</p></div>
-@if($canManage)<div class="cyl-actions"><a class="cyl-btn" href="{{ route('cylinders.series.index') }}">Serie przeglądów</a><a class="cyl-btn cyl-btn-primary" href="{{ route('cylinders.create') }}">+ Dodaj urządzenie</a></div>@endif
+@if($canManage)<div class="cyl-actions"><a class="cyl-btn" href="{{ route('cylinders.import.create') }}">Import z Excela</a><a class="cyl-btn" href="{{ route('cylinders.series.index') }}">Serie przeglądów</a><a class="cyl-btn cyl-btn-primary" href="{{ route('cylinders.create') }}">+ Dodaj urządzenie</a></div>@endif
 </div>
 <div class="cyl-card cyl-register-card">
 <div class="cyl-register-toolbar">
