@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\HrVehicle;
+use App\Models\HrVehicleLocation;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -25,6 +26,7 @@ test('private vehicle ownership cannot be forged and even admin cannot read edit
         $this->actingAs($other)->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertDontSee('Prywatny sekret')->assertDontSee('001234567890123456789');
         $this->get(route('hr.vehicles.edit', $vehicle))->assertForbidden();
         $this->put(route('hr.vehicles.update', $vehicle), ['name' => 'Hacked'])->assertForbidden();
+        $this->patch(route('hr.vehicles.location', $vehicle), ['usage_location' => null])->assertForbidden();
         $this->delete(route('hr.vehicles.destroy', $vehicle))->assertForbidden();
         $this->post(route('hr.delegations.store'), ['vehicle_id' => $vehicle->id, 'purpose' => 'Test', 'origin' => 'A', 'destination' => 'B', 'departure_at' => '2026-10-12 08:00', 'outbound_arrival_at' => '2026-10-12 09:00', 'return_departure_at' => '2026-10-12 16:00', 'return_at' => '2026-10-12 17:00', 'outbound_travel_hours' => 1, 'return_travel_hours' => 1])->assertForbidden();
     }
@@ -60,6 +62,7 @@ test('vehicle column preferences are per user allowlisted and keep vehicle ident
 });
 
 test('vehicle choices reuse inactive values without leaking other private vehicles', function () {
+    HrVehicleLocation::create(['name' => 'Baza Knurów']);
     $owner = vehicleRegisterUser(true);
     $other = vehicleRegisterUser();
     HrVehicle::create(['type' => 'private', 'user_id' => $other->id, 'created_by' => $other->id, 'name' => 'Secret', 'registration_number' => 'SECRET', 'usage_location' => 'Hidden location', 'fuel_card_number' => '000987654321', 'insurer' => 'Hidden insurer']);

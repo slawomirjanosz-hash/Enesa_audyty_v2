@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HrVehicle;
+use App\Models\User;
 use App\Support\HrAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,16 @@ use Illuminate\View\View;
 
 class HrVehicleController extends Controller
 {
+    public function location(Request $request, HrVehicle $vehicle): RedirectResponse
+    {
+        abort_unless($vehicle->canEdit($request->user()), 403);
+        abort_unless($vehicle->is_active, 404);
+        $data = $request->validate(['usage_location' => ['nullable', 'string', 'exists:hr_vehicle_locations,name']]);
+        $vehicle->update(['usage_location' => $data['usage_location'] ?? null]);
+
+        return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Lokalizacja samochodu została zapisana.');
+    }
+
     public function storeVehicle(Request $request): RedirectResponse
     {
         $data = $this->vehicleData($request);
@@ -18,7 +29,11 @@ class HrVehicleController extends Controller
         abort_if($data['type'] === 'company' && ! $canTeam, 403);
         $data['user_id'] = $data['type'] === 'company' ? null : $request->user()->id;
         $data['created_by'] = $request->user()->id;
-        HrVehicle::create($data);
+        $responsibleUserId = $data['responsible_user_id'] ?? null;
+        unset($data['responsible_user_id']);
+        $vehicle = new HrVehicle($data);
+        $vehicle->responsible_user_id = $responsibleUserId;
+        $vehicle->save();
 
         return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Samochód został dodany.');
     }
@@ -46,6 +61,10 @@ class HrVehicleController extends Controller
         $data = $this->vehicleData($request, $vehicle);
         // Changing ownership/type of an existing record could expose private data.
         unset($data['type']);
+        if (array_key_exists('responsible_user_id', $data)) {
+            $vehicle->responsible_user_id = $data['responsible_user_id'];
+            unset($data['responsible_user_id']);
+        }
         $vehicle->update($data);
 
         return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Dane samochodu zostały zapisane.');
@@ -63,13 +82,14 @@ class HrVehicleController extends Controller
     {
         $owner = $vehicle?->user_id ?? $request->user()->id;
 
-        return $request->validateWithBag('vehicle', [
+        $data = $request->validateWithBag('vehicle', [
             'type' => [$vehicle ? 'sometimes' : 'required', Rule::in(['private', 'company'])],
             'name' => ['required', 'string', 'max:255'],
             'registration_number' => ['required', 'string', 'max:30', Rule::unique('hr_vehicles')->where(fn ($q) => $q->where('user_id', ($vehicle?->type ?? $request->input('type')) === 'company' ? null : $owner))->ignore($vehicle)],
             'make_model' => ['nullable', 'string', 'max:255'],
             'fuel_card_number' => ['nullable', 'string', 'max:50'],
             'responsible_person' => ['nullable', 'string', 'max:255'],
+            'responsible_user_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where(fn ($q) => $q->whereIn('id', HrVehicle::eligibleResponsibleUsers()->select('users.id')))],
             'usage_location' => ['nullable', 'string', 'max:255'],
             'vat_percent' => ['nullable', Rule::in([50, 100])],
             'insurer' => ['nullable', 'string', 'max:150'],
@@ -84,5 +104,16 @@ class HrVehicleController extends Controller
             'registration_document' => ['nullable', 'string', 'max:255'],
             'registration_document_present' => ['nullable', 'boolean'],
         ]);
+        if (! empty($data['usage_location']) && $data['usage_location'] !== $vehicle?->usage_location) {
+            validator($data, ['usage_location' => ['exists:hr_vehicle_locations,name']])->validateWithBag('vehicle');
+        }
+        if (($vehicle?->type ?? ($data['type'] ?? null)) === 'private' && ! empty($data['responsible_user_id'])) {
+            abort_unless((int) $data['responsible_user_id'] === $request->user()->id, 403);
+        }
+        if (! empty($data['responsible_user_id'])) {
+            $data['responsible_person'] = User::findOrFail($data['responsible_user_id'])->name;
+        }
+
+        return $data;
     }
 }

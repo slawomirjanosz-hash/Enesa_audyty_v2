@@ -1,0 +1,15 @@
+# Samochody: lokalizacje i powiadomienia
+
+Administratorzy zarządzają lokalizacjami i listą opiekunów floty w Ustawieniach HR. Zmiana nazwy lokalizacji aktualizuje przypisania aut; usunięcie używanej lokalizacji jest blokowane. Kolumna Lokalizacja pozwala wybrać pozycję słownika bez otwierania edycji auta, z zachowaniem uprawnień edycji i sortowania.
+
+Migracja `2026_10_15_160000_add_hr_fleet_settings` uzupełnia słownik z istniejących lokalizacji aut służbowych wyłącznie wtedy, gdy nazwa firmy zawiera PRINŻ/PRINZ. Nie importuje prywatnych lokalizacji ani nie zmienia danych innych instalacji. Polecenie `php artisan hr:import-prinz-vehicle-locations --dry-run` pozwala sprawdzić liczbę lokalizacji; bez flagi uzupełnia słownik idempotentnie i również sprawdza nazwę instalacji. Ręczne usunięcie pozycji słownika nie jest cofane przy kolejnych uruchomieniach aplikacji.
+
+Opiekunowie floty otrzymują informacje o aktywnych autach służbowych. Dodatkowym odbiorcą jest aktywny pracownik wskazany w polu Osoba odpowiedzialna — użytkownik. Pole ręczne zachowano dla osób spoza bazy; nie dopasowujemy adresów na podstawie nazwiska. Przy aucie prywatnym można wskazać tylko autora i tylko on otrzymuje jego informacje. Klienci, konta usunięte/nieaktywne i adresy niepoprawne są pomijane. Nie nadajemy odbiorcom dodatkowych uprawnień do HR.
+
+Terminy ubezpieczenia i przeglądu: jedno ostrzeżenie w przedziale 8–14 dni, kolejne w przedziale 0–7 dni, po terminie codziennie do aktualizacji daty lub dezaktywacji auta. Nowo przypisany odbiorca otrzymuje aktualne ostrzeżenie. Poniedziałkowy raport wymienia puste pola rejestru, niezależnie od widoczności kolumn użytkownika. Wartości Nie i 0 są wypełnionymi polami. Data wpisu książki serwisowej nie jest wymagana przy statusie Brak książki. Powiązany użytkownik zastępuje ręczny wpis osoby odpowiedzialnej. Uwagi do dowodu rejestracyjnego są uwzględniane w kompletności danych.
+
+Wysyłka następuje o 08:00 Europe/Warsaw przez `hr:send-vehicle-reminders --scheduled`. Polecenie jest uruchamiane przez istniejący proces `deploy/task-reminder-worker.sh` i zarejestrowane także w schedulerze Laravel. Wspólny rejestr `hr_vehicle_reminder_deliveries` zapobiega powtórzeniom między procesami, replikami i wdrożeniami. Przy braku zdarzeń nic nie jest wysyłane. Przy wyłączonym module HR powiadomienia nie są wysyłane.
+
+`php artisan hr:send-vehicle-reminders --dry-run` nie wysyła maili i nie zapisuje rezerwacji wysyłki. Pokazuje liczbę potencjalnych zdarzeń przed odfiltrowaniem już obsłużonych i sprawdza konfigurację transportu. Nie potwierdza dostarczenia wiadomości do skrzynki.
+
+Status accepted oznacza przyjęcie przez transport. Status failed/sending nie jest automatycznie ponawiany dla tego samego zdarzenia, ponieważ przy błędzie sieci dostawca mógł już przyjąć wiadomość. Należy sprawdzić logi `hr_vehicle_reminders.failed` i status dostawcy przed ręcznym ponowieniem. Przekroczony termin tworzy nowe zdarzenie kolejnego dnia; brakujące dane w następny poniedziałek. Bez wybranych opiekunów oraz bez użytkowników przypisanych do aut nie ma odbiorców.

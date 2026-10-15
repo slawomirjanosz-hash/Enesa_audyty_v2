@@ -49,7 +49,13 @@
     if($key==='registration_document') $sortValue = $display;
 @endphp
 <td class="{{$deadline?'deadline-'.$deadline:''}}" data-sort-value="{{$key==='type'?$display:$sortValue}}" @if($deadline) title="{{$label}}: {{ match($deadline) { 'overdue'=>'termin minął', 'urgent'=>'do 7 dni', default=>'do 14 dni' } }}" @endif>
-@if($key==='name' && $editable)<a class="vehicle-name-link" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj samochód">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
+@if($key==='usage_location' && $editable)
+<form method="POST" action="{{route('hr.vehicles.location',$vehicle)}}">@csrf @method('PATCH')
+<select name="usage_location" aria-label="Lokalizacja {{$vehicle->name}}" onchange="this.form.submit()" style="width:100%;font:inherit"><option value="">Nie podano</option>
+@foreach($vehicleLocations as $location)<option value="{{$location->name}}" @selected($value===$location->name)>{{$location->name}}</option>@endforeach
+@if($value && !$vehicleLocations->contains('name',$value))<option value="{{$value}}" selected>{{$value}} (dotychczasowa)</option>@endif
+</select><noscript><button type="submit">Zapisz</button></noscript></form>
+@elseif($key==='name' && $editable)<a class="vehicle-name-link" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj samochód">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
 @if($key==='registration_document' && $vehicle->registration_document_present!==null && $value)<small style="display:block" title="{{$value}}">{{$value}}</small>@endif
 </td>
 @endforeach

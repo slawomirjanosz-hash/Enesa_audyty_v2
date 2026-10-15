@@ -9,9 +9,40 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HrVehicle extends Model
 {
+    public function responsibleUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'responsible_user_id');
+    }
+
+    public function missingFields(): array
+    {
+        $fields = self::COLUMNS;
+        unset($fields['type']);
+        $fields['registration_document_present'] = 'Dowód rejestracyjny — dostępny';
+        $fields['service_book_status'] = 'Książka serwisowa — status';
+        if ($this->service_book_status === 'missing') {
+            unset($fields['service_book_entry_at']);
+        }
+
+        return array_filter($fields, function ($label, $field) {
+            if ($field === 'responsible_person' && $this->responsibleUser) {
+                return false;
+            }
+            $value = $this->getAttribute($field);
+
+            return $value === null || (is_string($value) && trim($value) === '');
+        }, ARRAY_FILTER_USE_BOTH);
+    }
+
+    public static function eligibleResponsibleUsers()
+    {
+        return User::query()->where('is_active', true)
+            ->whereHas('roles')->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']));
+    }
+
     protected $fillable = ['user_id', 'created_by', 'type', 'name', 'registration_number', 'make_model', 'is_active', 'fuel_card_number', 'responsible_person', 'usage_location', 'vat_percent', 'insurer', 'insurance_expires_at', 'vat_26', 'cit_percent', 'gps', 'logbook_entry_at', 'service_book_entry_at', 'service_book_status', 'inspection_due_at', 'registration_document', 'registration_document_present'];
 
-    protected $casts = ['is_active' => 'boolean', 'created_by' => 'integer', 'user_id' => 'integer', 'vat_26' => 'boolean', 'gps' => 'boolean', 'registration_document_present' => 'boolean', 'insurance_expires_at' => 'date', 'inspection_due_at' => 'date', 'logbook_entry_at' => 'date', 'service_book_entry_at' => 'date'];
+    protected $casts = ['is_active' => 'boolean', 'created_by' => 'integer', 'responsible_user_id' => 'integer', 'user_id' => 'integer', 'vat_26' => 'boolean', 'gps' => 'boolean', 'registration_document_present' => 'boolean', 'insurance_expires_at' => 'date', 'inspection_due_at' => 'date', 'logbook_entry_at' => 'date', 'service_book_entry_at' => 'date'];
 
     public const SHORT_COLUMNS = [
         'registration_number' => 'Nr rej.', 'fuel_card_number' => 'Karta Orlen',

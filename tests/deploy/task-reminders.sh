@@ -25,7 +25,7 @@ bash deploy/start.sh &
 start_pid=$!
 ready=false
 for ((i=0;i<100;i++)); do
-    if [[ -f "$REMINDER_TEST_PID" ]] && grep -q 'tasks:send-overdue-reminders --scheduled' "$REMINDER_TEST_LOG"; then ready=true; break; fi
+    if [[ -f "$REMINDER_TEST_PID" ]] && grep -q 'tasks:send-overdue-reminders --scheduled' "$REMINDER_TEST_LOG" && grep -q 'hr:send-vehicle-reminders --scheduled' "$REMINDER_TEST_LOG"; then ready=true; break; fi
     sleep 0.1
 done
 [[ "$ready" == true ]]

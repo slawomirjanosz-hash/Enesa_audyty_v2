@@ -49,12 +49,14 @@ class CompanySettings extends Model
         'enabled_modules',
         'hr_km_rate',
         'hr_diet_rate',
+        'hr_vehicle_manager_ids',
     ];
 
     protected $casts = [
         'enabled_modules' => 'array',
         'hr_km_rate' => 'decimal:4',
         'hr_diet_rate' => 'decimal:2',
+        'hr_vehicle_manager_ids' => 'array',
     ];
 
     public function moduleEnabled(string $module): bool

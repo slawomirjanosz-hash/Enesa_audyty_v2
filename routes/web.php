@@ -37,6 +37,7 @@ use App\Http\Controllers\HrLeaveController;
 use App\Http\Controllers\HrRouteController;
 use App\Http\Controllers\HrTripController;
 use App\Http\Controllers\HrVehicleController;
+use App\Http\Controllers\HrVehicleLocationController;
 use App\Http\Controllers\ImportantContactController;
 use App\Http\Controllers\IsoContextReviewController;
 use App\Http\Controllers\IsoDocumentCopyController;
@@ -146,6 +147,9 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::get('/delegations/{trip}/preview', [HrTripController::class, 'showTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.show');
     Route::post('/route/calculate', [HrRouteController::class, 'calculateRoute'])->middleware('app.permission:hr.delegations.view')->name('route.calculate');
     Route::get('/places/autocomplete', [HrRouteController::class, 'autocompletePlaces'])->middleware(['app.permission:hr.delegations.view', 'throttle:30,1'])->name('places.autocomplete');
+    Route::post('/vehicle-locations', [HrVehicleLocationController::class, 'store'])->middleware('app.permission:hr.delegations.view')->name('vehicle-locations.store');
+    Route::put('/vehicle-locations/{location}', [HrVehicleLocationController::class, 'update'])->middleware('app.permission:hr.delegations.view')->name('vehicle-locations.update');
+    Route::delete('/vehicle-locations/{location}', [HrVehicleLocationController::class, 'destroy'])->middleware('app.permission:hr.delegations.view')->name('vehicle-locations.destroy');
     Route::put('/settings', [HrController::class, 'updateSettings'])->middleware('app.permission:hr.delegations.view')->name('settings.update');
     Route::delete('/delegations/{trip}', [HrTripController::class, 'destroyTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.destroy');
     Route::post('/leaves', [HrLeaveController::class, 'storeLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.store');
@@ -156,6 +160,7 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::delete('/attendance/{attendance}', [HrAttendanceController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');
     Route::post('/vehicles', [HrVehicleController::class, 'storeVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.store');
     Route::put('/vehicles/columns', [HrVehicleController::class, 'columns'])->middleware('app.permission:hr.delegations.view')->name('vehicles.columns');
+    Route::patch('/vehicles/{vehicle}/location', [HrVehicleController::class, 'location'])->middleware('app.permission:hr.delegations.view')->name('vehicles.location');
     Route::get('/vehicles/{vehicle}/edit', [HrVehicleController::class, 'edit'])->middleware('app.permission:hr.delegations.view')->name('vehicles.edit');
     Route::put('/vehicles/{vehicle}', [HrVehicleController::class, 'update'])->middleware('app.permission:hr.delegations.view')->name('vehicles.update');
     Route::delete('/vehicles/{vehicle}', [HrVehicleController::class, 'destroyVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.destroy');

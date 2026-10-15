@@ -7,10 +7,12 @@ use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
 use App\Models\HrLeave;
 use App\Models\HrVehicle;
+use App\Models\HrVehicleLocation;
 use App\Models\User;
 use App\Support\HrAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class HrController extends Controller
@@ -47,12 +49,15 @@ class HrController extends Controller
         $defaultDietRate = (float) ($hrSettings?->hr_diet_rate ?? 45);
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
         $canManageHrSettings = $user->hasRole(['superadmin', 'admin']);
+        $vehicleLocations = HrVehicleLocation::orderBy('name')->get();
+        $vehicleResponsibleUsers = HrVehicle::eligibleResponsibleUsers()->orderBy('name')->get(['id', 'name', 'email']);
+        $vehicleManagerIds = CompanySettings::query()->first()?->hr_vehicle_manager_ids ?? [];
         $leaveBalanceUser = $canTeam && ! $request->integer('user_id') ? null : User::find($selectedUserId);
         $leaveBalance = $leaveBalanceUser?->has_employment_contract
             ? $leaveBalanceUser->annualLeaveBalance($leaveYear)
             : null;
 
-        return view('hr.index', compact('tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
+        return view('hr.index', compact('vehicleLocations', 'vehicleResponsibleUsers', 'vehicleManagerIds', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
     public function updateSettings(Request $request): RedirectResponse
@@ -61,7 +66,10 @@ class HrController extends Controller
         $data = $request->validate([
             'hr_km_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
             'hr_diet_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
+            'hr_vehicle_manager_ids' => ['nullable', 'array'],
+            'hr_vehicle_manager_ids.*' => ['required', 'integer', 'distinct', Rule::exists('users', 'id')->where(fn ($q) => $q->whereIn('id', HrVehicle::eligibleResponsibleUsers()->select('users.id')))],
         ]);
+        $data['hr_vehicle_manager_ids'] = array_map('intval', $data['hr_vehicle_manager_ids'] ?? []);
         CompanySettings::query()->firstOrCreate(
             ['id' => 1],
             ['name' => config('app.name', 'Firma')]
