@@ -54,6 +54,6 @@ class HrVehicleLocationController extends Controller
 
     private function back(): RedirectResponse
     {
-        return redirect()->route('hr.index', ['tab' => 'vehicles', 'settings' => 1])->with('success', 'Słownik lokalizacji został zapisany.');
+        return redirect()->route('hr.settings', ['section' => 'vehicles'])->with('success', 'Słownik lokalizacji został zapisany.');
     }
 }

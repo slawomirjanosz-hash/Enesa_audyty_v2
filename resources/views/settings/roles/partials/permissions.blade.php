@@ -4,10 +4,10 @@
             <h4>{{ $group['label'] }}</h4>
             @foreach($group['permissions'] as $permission => $label)
                 <label class="permission">
-                    <input type="checkbox" name="permissions[]" value="{{ $permission }}" {{ in_array($permission, $selectedPermissions, true) ? 'checked' : '' }} {{ ($locked ?? false) ? 'disabled' : '' }}>
+                    <input type="checkbox" name="permissions[]" value="{{ $permission }}" {{ in_array($permission, $selectedPermissions, true) ? 'checked' : '' }} {{ ($locked ?? false) && $permission !== 'hr.vehicles.responsible' ? 'disabled' : '' }}>
                     <span>{{ $label }}</span>
                 </label>
-                @if(($locked ?? false) && in_array($permission, $selectedPermissions, true))
+                @if(($locked ?? false) && $permission !== 'hr.vehicles.responsible' && in_array($permission, $selectedPermissions, true))
                     <input type="hidden" name="permissions[]" value="{{ $permission }}">
                 @endif
             @endforeach

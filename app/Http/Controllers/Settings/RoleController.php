@@ -59,7 +59,11 @@ class RoleController extends Controller
         $role->update(['display_name' => $data['display_name']]);
 
         if ($role->name === 'superadmin') {
-            $this->syncPermissions($role, RolePermissionCatalog::names());
+            $permissions = array_diff(RolePermissionCatalog::names(), ['hr.vehicles.responsible']);
+            if (in_array('hr.vehicles.responsible', $data['permissions'] ?? [], true)) {
+                $permissions[] = 'hr.vehicles.responsible';
+            }
+            $this->syncPermissions($role, $permissions);
         } elseif (! in_array($role->name, ['client_admin', 'client_user'], true)) {
             $visibleNames = $this->visiblePermissionNames();
             $hiddenExistingNames = $role->permissions->pluck('name')->diff($visibleNames)->all();

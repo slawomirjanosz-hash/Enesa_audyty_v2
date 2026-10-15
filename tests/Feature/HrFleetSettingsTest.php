@@ -22,6 +22,13 @@ function fleetUser(string $role = 'fleet_employee'): User
     return $user;
 }
 
+function fleetResponsibility(User $user): void
+{
+    $role = Role::findOrCreate('fleet_responsible');
+    $role->givePermissionTo(Permission::findOrCreate('hr.vehicles.responsible'));
+    $user->assignRole($role);
+}
+
 function fleetVehicle(array $attributes = []): HrVehicle
 {
     return HrVehicle::create($attributes + ['type' => 'company', 'name' => 'Auto testowe', 'registration_number' => fake()->unique()->bothify('TEST###')]);
@@ -57,7 +64,8 @@ test('operational and HR team managers see settings and can manage settings and 
     $manager = fleetUser();
     $manager->givePermissionTo(Permission::findOrCreate($permission));
     $this->actingAs($manager)->get(route('hr.index', ['tab' => 'vehicles']))
-        ->assertOk()->assertSee('Ustawienia HR')->assertSee('Opiekunowie floty');
+        ->assertOk()->assertSee('Ustawienia HR');
+    $this->get(route('hr.settings', ['section' => 'vehicles']))->assertOk()->assertSee('Odpowiedzialność za samochody')->assertSee('Lokalizacje samochodów');
     $this->put(route('hr.settings.update'), ['hr_km_rate' => 1.15, 'hr_diet_rate' => 45, 'hr_vehicle_manager_ids' => [$manager->id]])->assertSessionHas('success');
     $this->post(route('hr.vehicle-locations.store'), ['name' => 'Biuro'])->assertSessionHas('success');
     $location = HrVehicleLocation::firstOrFail();
@@ -68,22 +76,18 @@ test('operational and HR team managers see settings and can manage settings and 
 test('ordinary HR reader does not see settings button or settings dialog', function () {
     $reader = fleetUser();
     $this->actingAs($reader)->get(route('hr.index', ['tab' => 'vehicles', 'settings' => 1]))
-        ->assertOk()->assertDontSee('Ustawienia HR')->assertDontSee('Opiekunowie floty');
+        ->assertOk()->assertDontSee('Ustawienia HR');
+    $this->get(route('hr.settings'))->assertForbidden();
 });
 
-test('settings save multiple eligible managers and allow removing all', function () {
+test('delegation settings do not change notification recipients', function () {
     $admin = fleetUser('admin');
-    $one = fleetUser();
-    $two = fleetUser();
-    $client = fleetUser('client_user');
-    $data = ['hr_km_rate' => 1.15, 'hr_diet_rate' => 45, 'hr_vehicle_manager_ids' => [$one->id, $two->id]];
-    $this->actingAs($one)->put(route('hr.settings.update'), $data)->assertForbidden();
-    $this->actingAs($admin)->put(route('hr.settings.update'), $data)->assertSessionHas('success');
-    expect(CompanySettings::first()->hr_vehicle_manager_ids)->toBe([$one->id, $two->id]);
-    $this->put(route('hr.settings.update'), array_replace($data, ['hr_vehicle_manager_ids' => [$client->id]]))->assertSessionHasErrors('hr_vehicle_manager_ids.0');
-    unset($data['hr_vehicle_manager_ids']);
-    $this->put(route('hr.settings.update'), $data)->assertSessionHas('success');
-    expect(CompanySettings::first()->hr_vehicle_manager_ids)->toBe([]);
+    $person = fleetUser();
+    $data = ['hr_km_rate' => 1.15, 'hr_diet_rate' => 45, 'hr_vehicle_manager_ids' => [$person->id]];
+    $this->actingAs($person)->put(route('hr.settings.update'), $data)->assertForbidden();
+    $this->actingAs($admin)->put(route('hr.settings.update'), $data)->assertRedirect(route('hr.settings', ['section' => 'delegations']));
+    expect(CompanySettings::first()->hr_vehicle_manager_ids)->toBeNull();
+    expect(app(HrVehicleReminderSelection::class)->groups())->toBeEmpty();
 });
 
 test('vehicle accepts dictionary locations and either linked or manual responsible person', function () {
@@ -98,8 +102,8 @@ test('vehicle accepts dictionary locations and either linked or manual responsib
     $this->put(route('hr.vehicles.update', $vehicle), array_replace($data, ['responsible_user_id' => null, 'responsible_person' => 'Osoba zewnętrzna']))->assertSessionHas('success');
     expect($vehicle->fresh()->responsible_user_id)->toBeNull()->and($vehicle->fresh()->responsible_person)->toBe('Osoba zewnętrzna');
     $this->post(route('hr.vehicles.store'), array_replace($data, ['type' => 'private', 'registration_number' => 'PRIV123']))->assertForbidden();
-    $html = $this->get(route('hr.index', ['tab' => 'vehicles', 'settings' => 1]))->assertOk()->getContent();
-    expect($html)->toContain('data-sort-value="Cieszyn"', 'Opiekunowie floty', 'id="vehicle-usage_location"');
+    $html = $this->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->getContent();
+    expect($html)->toContain('data-sort-value="Cieszyn"', 'id="vehicle-usage_location"');
 });
 
 test('location import is restricted to PRINZ and does not publish private locations', function () {
@@ -130,7 +134,9 @@ test('reminders go to managers and linked owners without leaking private cars or
     $manager = fleetUser('admin');
     $owner = fleetUser();
     $outsider = fleetUser();
-    CompanySettings::create(['name' => 'Fleet', 'hr_vehicle_manager_ids' => [$manager->id, $owner->id]]);
+    CompanySettings::create(['name' => 'Fleet']);
+    fleetResponsibility($manager);
+    fleetResponsibility($owner);
     $companyCar = fleetVehicle(['inspection_due_at' => today()->subDay()]);
     $companyCar->forceFill(['responsible_user_id' => $owner->id])->save();
     $private = fleetVehicle(['type' => 'private', 'created_by' => $outsider->id, 'user_id' => $outsider->id, 'insurance_expires_at' => today()->subDay(), 'responsible_person' => 'Sekret']);
@@ -148,7 +154,8 @@ test('reminders go to managers and linked owners without leaking private cars or
 
 test('approaching deadlines send once per stage overdue daily and missing fields only Mondays', function () {
     $manager = fleetUser('admin');
-    CompanySettings::create(['name' => 'Fleet', 'hr_vehicle_manager_ids' => [$manager->id]]);
+    CompanySettings::create(['name' => 'Fleet']);
+    fleetResponsibility($manager);
     $this->travelTo(Carbon::parse('2026-10-20 08:00', 'Europe/Warsaw'));
     $car = fleetVehicle(['insurance_expires_at' => '2026-11-03']);
     expect(app(HrVehicleReminderSelection::class)->groups()->count())->toBe(1);
@@ -184,9 +191,75 @@ test('false and zero are complete values and missing service book does not requi
     expect(array_keys($car->missingFields()))->not->toContain('vat_percent', 'cit_percent', 'vat_26', 'gps', 'registration_document_present', 'service_book_entry_at');
 });
 
+test('settings are separate pages with four sections and no recipient picker', function () {
+    $admin = fleetUser('admin');
+    $this->actingAs($admin)->get(route('hr.index', ['tab' => 'vehicles', 'settings' => 1]))->assertRedirect(route('hr.settings', ['section' => 'vehicles']));
+    foreach (['delegations', 'leaves', 'attendance', 'vehicles'] as $section) {
+        $response = $this->actingAs($admin)->get(route('hr.settings', ['section' => $section]))->assertOk();
+        $response->assertSee('Sekcje ustawień HR')->assertSee('Delegacje')->assertSee('Urlopy')->assertSee('Lista obecności')->assertSee('Samochody');
+        $response->assertDontSee('name="hr_vehicle_manager_ids[]"', false)->assertDontSee('id="hr-settings-modal"', false);
+        if ($section === 'vehicles') {
+            $response->assertSee('Lokalizacje samochodów')->assertSee('Odpowiedzialność za samochody');
+        } else {
+            $response->assertDontSee('Nowa lokalizacja');
+        }
+    }
+});
+
+test('role responsibility controls recipients without implicit admin or full access subscriptions', function () {
+    $admin = fleetUser('admin');
+    $admin->givePermissionTo(Permission::findOrCreate('system.full_access'));
+    $person = fleetUser();
+    $client = fleetUser('client_user');
+    fleetResponsibility($person);
+    fleetResponsibility($client);
+    $inactive = fleetUser();
+    fleetResponsibility($inactive);
+    $inactive->update(['is_active' => false]);
+    CompanySettings::create(['name' => 'Fleet', 'hr_vehicle_manager_ids' => [$admin->id]]);
+    fleetVehicle(['insurance_expires_at' => '2026-10-01']);
+    expect(app(HrVehicleReminderSelection::class)->groups()->keys()->all())->toBe([$person->id]);
+    $person->removeRole('fleet_responsible');
+    expect(app(HrVehicleReminderSelection::class)->groups())->toBeEmpty();
+});
+
+test('migration preserves selected recipients without changing their shared roles', function () {
+    $one = fleetUser();
+    $other = fleetUser();
+    CompanySettings::create(['name' => 'Fleet', 'hr_vehicle_manager_ids' => [$one->id]]);
+    $migration = require database_path('migrations/2026_10_15_180000_add_hr_vehicle_responsibility_permission.php');
+    $migration->up();
+    $migration->up();
+    expect($one->fresh()->hasRole('hr_vehicle_responsible'))->toBeTrue();
+    expect($other->fresh()->hasRole('hr_vehicle_responsible'))->toBeFalse();
+});
+
+test('responsibility is configurable in role settings under HR', function () {
+    $admin = fleetUser('superadmin');
+    CompanySettings::create(['name' => 'Fleet']);
+    $role = Role::findOrCreate('car_caretakers');
+    $person = fleetUser();
+    $person->assignRole($role);
+    $this->actingAs($admin)->get(route('settings.roles.index'))->assertOk()->assertSee('Odpowiedzialność za samochody');
+    $this->put(route('settings.roles.update', $role), ['name' => $role->name, 'display_name' => 'Opiekunowie aut', 'permissions' => ['hr.delegations.view', 'hr.vehicles.responsible']])->assertSessionHas('success');
+    fleetVehicle(['insurance_expires_at' => '2026-10-01']);
+    expect(app(HrVehicleReminderSelection::class)->groups()->keys()->all())->toBe([$person->id]);
+});
+
+test('superadmin responsibility can be selected independently of protected access permissions', function () {
+    $admin = fleetUser('superadmin');
+    $role = $admin->roles->first();
+    $this->actingAs($admin)->put(route('settings.roles.update', $role), ['name' => 'superadmin', 'display_name' => 'Super Admin', 'permissions' => ['hr.vehicles.responsible']])->assertSessionHas('success');
+    expect($role->fresh()->hasPermissionTo('hr.vehicles.responsible'))->toBeTrue();
+    $this->put(route('settings.roles.update', $role), ['name' => 'superadmin', 'display_name' => 'Super Admin', 'permissions' => []])->assertSessionHas('success');
+    expect($role->fresh()->hasPermissionTo('hr.vehicles.responsible'))->toBeFalse();
+    expect($role->fresh()->hasPermissionTo('settings.roles.manage'))->toBeTrue();
+});
+
 test('scheduled guard dry run module switch and failed deliveries do not send duplicates', function () {
     $manager = fleetUser('admin');
-    $settings = CompanySettings::create(['name' => 'Fleet', 'hr_vehicle_manager_ids' => [$manager->id]]);
+    $settings = CompanySettings::create(['name' => 'Fleet']);
+    fleetResponsibility($manager);
     fleetVehicle(['insurance_expires_at' => '2026-10-01']);
     $this->artisan('hr:send-vehicle-reminders --dry-run')->assertSuccessful();
     $this->assertDatabaseCount('hr_vehicle_reminder_deliveries', 0);

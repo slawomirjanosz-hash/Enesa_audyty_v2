@@ -18,9 +18,10 @@ class HrVehicleReminderSelection
         }
         $today = now('Europe/Warsaw')->startOfDay();
         $users = HrVehicle::eligibleResponsibleUsers()->get()->keyBy('id');
-        $managers = $users->only(CompanySettings::first()?->hr_vehicle_manager_ids ?? []);
+        // Responsibility is an explicit role assignment, not an implicit full-access grant.
+        $managerIds = HrVehicle::eligibleResponsibleUsers()->whereHas('roles.permissions', fn ($q) => $q->where('name', 'hr.vehicles.responsible'))->pluck('users.id');
         foreach (HrVehicle::with('responsibleUser')->where('is_active', true)->get() as $vehicle) {
-            $recipients = $vehicle->type === 'company' ? $managers->modelKeys() : [];
+            $recipients = $vehicle->type === 'company' ? $managerIds->all() : [];
             if ($vehicle->type === 'company' && $vehicle->responsible_user_id) {
                 $recipients[] = $vehicle->responsible_user_id;
             }

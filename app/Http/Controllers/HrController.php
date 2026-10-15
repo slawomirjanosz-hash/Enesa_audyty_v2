@@ -12,12 +12,11 @@ use App\Models\User;
 use App\Support\HrAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class HrController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $user = $request->user();
         $canTeam = HrAccess::canViewTeam($user);
@@ -35,6 +34,9 @@ class HrController extends Controller
         if ($tab === 'leaves' && ! $canLeaves) {
             $tab = $canDelegations ? 'delegations' : 'attendance';
         }
+        if ($request->boolean('settings') && HrAccess::canManageSettings($user)) {
+            return redirect()->route('hr.settings', ['section' => $tab]);
+        }
         $selectedUserId = $canTeam && $request->integer('user_id') ? $request->integer('user_id') : $user->id;
         $leaveYear = min(2100, max(2020, $request->integer('leave_year', now()->year)));
 
@@ -50,14 +52,23 @@ class HrController extends Controller
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
         $canManageHrSettings = HrAccess::canManageSettings($user);
         $vehicleLocations = HrVehicleLocation::orderBy('name')->get();
-        $vehicleResponsibleUsers = HrVehicle::eligibleResponsibleUsers()->orderBy('name')->get(['id', 'name', 'email']);
-        $vehicleManagerIds = CompanySettings::query()->first()?->hr_vehicle_manager_ids ?? [];
         $leaveBalanceUser = $canTeam && ! $request->integer('user_id') ? null : User::find($selectedUserId);
         $leaveBalance = $leaveBalanceUser?->has_employment_contract
             ? $leaveBalanceUser->annualLeaveBalance($leaveYear)
             : null;
 
-        return view('hr.index', compact('vehicleLocations', 'vehicleResponsibleUsers', 'vehicleManagerIds', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
+        return view('hr.index', compact('vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
+    }
+
+    public function settings(Request $request): View
+    {
+        abort_unless(HrAccess::canManageSettings($request->user()), 403);
+        $sections = ['delegations' => 'Delegacje', 'leaves' => 'Urlopy', 'attendance' => 'Lista obecności', 'vehicles' => 'Samochody'];
+        $section = array_key_exists($request->string('section')->toString(), $sections) ? $request->string('section')->toString() : 'delegations';
+        $settings = CompanySettings::first();
+        $vehicleLocations = HrVehicleLocation::orderBy('name')->get();
+
+        return view('hr.settings', compact('sections', 'section', 'settings', 'vehicleLocations'));
     }
 
     public function updateSettings(Request $request): RedirectResponse
@@ -66,15 +77,12 @@ class HrController extends Controller
         $data = $request->validate([
             'hr_km_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
             'hr_diet_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
-            'hr_vehicle_manager_ids' => ['nullable', 'array'],
-            'hr_vehicle_manager_ids.*' => ['required', 'integer', 'distinct', Rule::exists('users', 'id')->where(fn ($q) => $q->whereIn('id', HrVehicle::eligibleResponsibleUsers()->select('users.id')))],
         ]);
-        $data['hr_vehicle_manager_ids'] = array_map('intval', $data['hr_vehicle_manager_ids'] ?? []);
         CompanySettings::query()->firstOrCreate(
             ['id' => 1],
             ['name' => config('app.name', 'Firma')]
         )->update($data);
 
-        return redirect()->route('hr.index', ['tab' => 'delegations'])->with('success', 'Ustawienia HR zostały zapisane.');
+        return redirect()->route('hr.settings', ['section' => 'delegations'])->with('success', 'Ustawienia HR zostały zapisane.');
     }
 }

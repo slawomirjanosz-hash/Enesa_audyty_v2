@@ -150,6 +150,7 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::post('/vehicle-locations', [HrVehicleLocationController::class, 'store'])->middleware('app.permission:hr.delegations.view')->name('vehicle-locations.store');
     Route::put('/vehicle-locations/{location}', [HrVehicleLocationController::class, 'update'])->middleware('app.permission:hr.delegations.view')->name('vehicle-locations.update');
     Route::delete('/vehicle-locations/{location}', [HrVehicleLocationController::class, 'destroy'])->middleware('app.permission:hr.delegations.view')->name('vehicle-locations.destroy');
+    Route::get('/settings', [HrController::class, 'settings'])->middleware('app.permission:hr.delegations.view,hr.leaves.view,hr.attendance.view')->name('settings');
     Route::put('/settings', [HrController::class, 'updateSettings'])->middleware('app.permission:hr.delegations.view')->name('settings.update');
     Route::delete('/delegations/{trip}', [HrTripController::class, 'destroyTrip'])->middleware('app.permission:hr.delegations.view')->name('delegations.destroy');
     Route::post('/leaves', [HrLeaveController::class, 'storeLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.store');

@@ -27,15 +27,7 @@
 </div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('trip-modal')">Anuluj</button><button class="hr-btn">Zapisz delegację</button></div></form></div></div>
 @endif
 
-@if($canManageHrSettings)
-<div id="hr-settings-modal" class="hr-modal {{request()->boolean('settings')?'open':''}}"><div class="hr-modal-card" style="max-width:560px"><div class="hr-head"><h2 style="margin:0">Ustawienia HR</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('hr-settings-modal')">×</button></div>
-<form method="POST" action="{{route('hr.settings.update')}}">@csrf @method('PUT')<div class="hr-grid"><div class="hr-field"><label>Stawka za km dla auta prywatnego (zł)</label><input type="number" name="hr_km_rate" value="{{$defaultKmRate}}" min="0" max="9999" step="0.0001" required></div><div class="hr-field"><label>Stawka pełnej diety (zł)</label><input type="number" name="hr_diet_rate" value="{{$defaultDietRate}}" min="0" max="9999" step="0.01" required></div>
-<div class="hr-field hr-full"><label>Opiekunowie floty — odbiorcy powiadomień</label>
-@foreach($vehicleResponsibleUsers as $person)<label style="display:flex;align-items:center;gap:8px;font-weight:400"><input type="checkbox" style="width:auto" name="hr_vehicle_manager_ids[]" value="{{$person->id}}" @checked(in_array($person->id,old('hr_vehicle_manager_ids',$vehicleManagerIds)))>{{$person->name}} ({{$person->email}})</label>@endforeach
-<small>Auta służbowe: ostrzeżenie do 14 i do 7 dni, po terminie codziennie o 8:00. Brakujące pola: poniedziałek o 8:00 (czas polski). Osoby przypisane do aut otrzymują te same informacje o swoich samochodach.</small></div></div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('hr-settings-modal')">Anuluj</button><button class="hr-btn">Zapisz ustawienia</button></div></form>
-@include('hr.partials.location-settings')
-</div></div>
-@endif
+
 
 @if($canAttendance)
 <div id="attendance-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:620px"><div class="hr-head"><h2 style="margin:0">Wpis obecności</h2><button type="button" class="hr-btn danger" onclick="closeHrModal('attendance-modal')">×</button></div><form method="POST" action="{{route('hr.attendance.store')}}">@csrf<div class="hr-grid">

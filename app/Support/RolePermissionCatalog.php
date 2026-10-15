@@ -31,6 +31,7 @@ class RolePermissionCatalog
                 'hr.delegations.view' => 'Dostęp do własnych delegacji i samochodów',
                 'hr.leaves.view' => 'Dostęp do własnych urlopów i zwolnień L4',
                 'hr.attendance.view' => 'Dostęp do własnej listy obecności',
+                'hr.vehicles.responsible' => 'Odpowiedzialność za samochody — powiadomienia o terminach i brakujących danych',
                 'hr.team.view' => 'Podgląd i zarządzanie danymi HR innych użytkowników',
             ]],
             'crm' => ['label' => 'CRM i dostawcy', 'permissions' => [
