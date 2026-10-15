@@ -1,6 +1,6 @@
 # Samochody: lokalizacje i powiadomienia
 
-Administratorzy zarządzają lokalizacjami i listą opiekunów floty w Ustawieniach HR. Zmiana nazwy lokalizacji aktualizuje przypisania aut; usunięcie używanej lokalizacji jest blokowane. Kolumna Lokalizacja pozwala wybrać pozycję słownika bez otwierania edycji auta, z zachowaniem uprawnień edycji i sortowania.
+Administratorzy oraz użytkownicy z uprawnieniem `system.full_access` lub `hr.team.view` zarządzają lokalizacjami i listą opiekunów floty w Ustawieniach HR. Ten sam warunek kontroluje przycisk, formularz i zapis ustawień/słownika. Zmiana nazwy lokalizacji aktualizuje przypisania aut; usunięcie używanej lokalizacji jest blokowane. Kolumna Lokalizacja pozwala wybrać pozycję słownika bez otwierania edycji auta, z zachowaniem uprawnień edycji i sortowania.
 
 Migracja `2026_10_15_160000_add_hr_fleet_settings` uzupełnia słownik z istniejących lokalizacji aut służbowych wyłącznie wtedy, gdy nazwa firmy zawiera PRINŻ/PRINZ. Nie importuje prywatnych lokalizacji ani nie zmienia danych innych instalacji. Polecenie `php artisan hr:import-prinz-vehicle-locations --dry-run` pozwala sprawdzić liczbę lokalizacji; bez flagi uzupełnia słownik idempotentnie i również sprawdza nazwę instalacji. Ręczne usunięcie pozycji słownika nie jest cofane przy kolejnych uruchomieniach aplikacji.
 

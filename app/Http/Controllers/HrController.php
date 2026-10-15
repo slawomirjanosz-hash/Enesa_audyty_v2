@@ -48,7 +48,7 @@ class HrController extends Controller
         $defaultKmRate = (float) ($hrSettings?->hr_km_rate ?? 0);
         $defaultDietRate = (float) ($hrSettings?->hr_diet_rate ?? 45);
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
-        $canManageHrSettings = $user->hasRole(['superadmin', 'admin']);
+        $canManageHrSettings = HrAccess::canManageSettings($user);
         $vehicleLocations = HrVehicleLocation::orderBy('name')->get();
         $vehicleResponsibleUsers = HrVehicle::eligibleResponsibleUsers()->orderBy('name')->get(['id', 'name', 'email']);
         $vehicleManagerIds = CompanySettings::query()->first()?->hr_vehicle_manager_ids ?? [];
@@ -62,7 +62,7 @@ class HrController extends Controller
 
     public function updateSettings(Request $request): RedirectResponse
     {
-        abort_unless($request->user()->hasRole(['superadmin', 'admin']), 403);
+        abort_unless(HrAccess::canManageSettings($request->user()), 403);
         $data = $request->validate([
             'hr_km_rate' => ['required', 'numeric', 'min:0', 'max:9999'],
             'hr_diet_rate' => ['required', 'numeric', 'min:0', 'max:9999'],

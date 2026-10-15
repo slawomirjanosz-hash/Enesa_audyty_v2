@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HrVehicleLocation;
+use App\Support\HrAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,7 @@ class HrVehicleLocationController extends Controller
 
     private function authorizeSettings(Request $request): void
     {
-        abort_unless($request->user()->hasRole(['superadmin', 'admin']), 403);
+        abort_unless(HrAccess::canManageSettings($request->user()), 403);
     }
 
     private function back(): RedirectResponse

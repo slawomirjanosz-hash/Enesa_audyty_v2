@@ -33,7 +33,7 @@ beforeEach(function () {
     Mail::fake();
 });
 
-test('only admins manage location dictionary and renaming preserves assignments', function () {
+test('readers cannot manage location dictionary and renaming preserves assignments', function () {
     $admin = fleetUser('admin');
     $reader = fleetUser();
     $this->actingAs($reader)->post(route('hr.vehicle-locations.store'), ['name' => 'Biuro'])->assertForbidden();
@@ -51,6 +51,24 @@ test('only admins manage location dictionary and renaming preserves assignments'
     $vehicle->update(['usage_location' => null]);
     $this->delete(route('hr.vehicle-locations.destroy', $location))->assertSessionHas('success');
     $this->assertDatabaseCount('hr_vehicle_locations', 0);
+});
+
+test('operational and HR team managers see settings and can manage settings and locations', function (string $permission) {
+    $manager = fleetUser();
+    $manager->givePermissionTo(Permission::findOrCreate($permission));
+    $this->actingAs($manager)->get(route('hr.index', ['tab' => 'vehicles']))
+        ->assertOk()->assertSee('Ustawienia HR')->assertSee('Opiekunowie floty');
+    $this->put(route('hr.settings.update'), ['hr_km_rate' => 1.15, 'hr_diet_rate' => 45, 'hr_vehicle_manager_ids' => [$manager->id]])->assertSessionHas('success');
+    $this->post(route('hr.vehicle-locations.store'), ['name' => 'Biuro'])->assertSessionHas('success');
+    $location = HrVehicleLocation::firstOrFail();
+    $this->put(route('hr.vehicle-locations.update', $location), ['name' => 'Hala'])->assertSessionHas('success');
+    $this->delete(route('hr.vehicle-locations.destroy', $location))->assertSessionHas('success');
+})->with(['system.full_access', 'hr.team.view']);
+
+test('ordinary HR reader does not see settings button or settings dialog', function () {
+    $reader = fleetUser();
+    $this->actingAs($reader)->get(route('hr.index', ['tab' => 'vehicles', 'settings' => 1]))
+        ->assertOk()->assertDontSee('Ustawienia HR')->assertDontSee('Opiekunowie floty');
 });
 
 test('settings save multiple eligible managers and allow removing all', function () {
