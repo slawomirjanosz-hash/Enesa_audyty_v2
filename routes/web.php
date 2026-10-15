@@ -25,6 +25,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\CylinderController;
 use App\Http\Controllers\CylinderInspectionSeriesController;
+use App\Http\Controllers\CylinderProtocolController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentLinkController;
@@ -113,6 +114,10 @@ Route::prefix('cylinders')->name('cylinders.')->middleware(['auth', 'staff.role'
         Route::get('/create', [CylinderInspectionSeriesController::class, 'create'])->name('create');
         Route::post('/', [CylinderInspectionSeriesController::class, 'store'])->name('store');
         Route::get('/{series}', [CylinderInspectionSeriesController::class, 'show'])->name('show');
+        Route::get('/{series}/protocol/preview', [CylinderProtocolController::class, 'preview'])->name('protocol.preview');
+        Route::get('/{series}/protocol/draft', [CylinderProtocolController::class, 'draft'])->name('protocol.draft');
+        Route::post('/{series}/protocol', [CylinderProtocolController::class, 'issue'])->name('protocol.issue');
+        Route::get('/{series}/protocol/pdf', [CylinderProtocolController::class, 'download'])->name('protocol.download');
         Route::get('/{series}/items/{item}', [CylinderInspectionSeriesController::class, 'inspect'])->name('inspect');
         Route::post('/{series}/items/{item}', [CylinderController::class, 'storeSeriesInspection'])->name('inspections.store');
         Route::patch('/{series}/complete', [CylinderInspectionSeriesController::class, 'complete'])->name('complete');

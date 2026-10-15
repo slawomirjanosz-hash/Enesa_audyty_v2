@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CylinderInspectionSeries extends Model
 {
@@ -21,6 +22,11 @@ class CylinderInspectionSeries extends Model
     public function items(): HasMany
     {
         return $this->hasMany(CylinderInspectionSeriesItem::class, 'series_id');
+    }
+
+    public function protocol(): HasOne
+    {
+        return $this->hasOne(CylinderProtocol::class, 'series_id');
     }
 
     public function company(): BelongsTo

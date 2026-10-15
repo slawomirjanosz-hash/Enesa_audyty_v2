@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ActivityLog;
 use App\Models\CompanyReliabilityReport;
 use App\Models\CylinderInspection;
+use App\Models\CylinderProtocol;
 use App\Models\User;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -64,6 +65,9 @@ class ActivityLogService
 
         $newValues = $action === 'created' ? $model->getAttributes() : $model->getChanges();
         $excluded = [...self::HIDDEN_FIELDS, 'signature_data', 'issuer_snapshot'];
+        if ($model instanceof CylinderProtocol) {
+            $excluded = [...$excluded, 'snapshot'];
+        }
         if ($model instanceof User) {
             $excluded = [...$excluded, ...self::VOLATILE_USER_FIELDS];
         }

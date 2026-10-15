@@ -14,6 +14,10 @@
 @else<p>Przywróć pozostałe urządzenia z archiwum, aby dokończyć serię.</p>@endif
 @else<p>Zakończono: {{ $series->completed_at?->format('d.m.Y H:i') }}</p>@endif
 </div>
+<div class="cyl-card"><h2>Protokół PDF</h2>
+@if($series->protocol)<p>{{ $series->protocol->number }} · Wydano {{ $series->protocol->issued_at->format('d.m.Y H:i') }}. Dokument zachowuje stan z chwili wydania.</p><a class="cyl-btn cyl-btn-primary" target="_blank" rel="noopener" href="{{ route('cylinders.series.protocol.download', $series) }}">Otwórz zapisany PDF</a>
+@else<p>Sprawdź podgląd dokumentu. Wydanie protokołu będzie możliwe po zakończeniu serii.</p><a class="cyl-btn" href="{{ route('cylinders.series.protocol.preview', $series) }}">Podgląd protokołu</a>@endif
+</div>
 <div class="cyl-card"><div class="cyl-table"><table data-server-sort="name,mark,serial,status,date,"><thead><tr><th>Urządzenie</th><th>Znak wytwórczy</th><th>Numer fabryczny</th><th>Postęp</th><th>Data przeglądu</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
 @foreach($items as $item)<tr><td><a href="{{ route('cylinders.show', $item->cylinder) }}">{{ $item->cylinder->name }}</a>@if($item->cylinder->archived_at)<span class="cyl-secondary">Urządzenie zarchiwizowane</span>@endif</td><td>{{ $item->cylinder->manufacturer_mark }}</td><td>{{ $item->cylinder->serial_number }}</td><td>{{ $item->inspection_id ? 'Przegląd zapisany' : 'Do wykonania' }}</td><td>{{ $item->inspection?->inspected_at->format('d.m.Y') ?? '—' }}</td><td>
 @if($item->inspection_id)<a class="cyl-btn" href="{{ route('cylinders.show', $item->cylinder) }}">Historia urządzenia</a>
