@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserAccountCreated;
 use App\Models\AuditorCompanyAccess;
 use App\Models\AuditorDocumentAccess;
 use App\Models\Company;
@@ -11,10 +12,14 @@ use App\Models\Document;
 use App\Models\User;
 use App\Services\AccountSecurityService;
 use App\Services\AuditorAccessService;
+use App\Services\TaskReminderMailConfiguration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -181,6 +186,7 @@ class UserController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
+            'send_email' => ['nullable', 'boolean'],
             'has_employment_contract' => ['nullable', 'boolean'],
             'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
             'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
@@ -196,11 +202,13 @@ class UserController extends Controller
 
         $this->ensureCanAssignRole($request->user(), $data['role']);
 
+        $generatedPassword = empty($data['password']);
+        $temporaryPassword = $data['password'] ?? str()->random(16);
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
-            'password' => Hash::make($data['password'] ?? str()->random(16)),
+            'password' => Hash::make($temporaryPassword),
             'is_active' => true,
             'has_employment_contract' => $request->boolean('has_employment_contract'),
         ]);
@@ -222,8 +230,38 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('settings.users.index')
-            ->with('success', 'Użytkownik został utworzony.');
+        $response = redirect()->route('settings.users.index')
+            ->with('success', 'Użytkownik został utworzony. Wiadomość e-mail nie została wysłana.');
+        $mailSent = false;
+        if ($request->boolean('send_email')) {
+            $problem = app(TaskReminderMailConfiguration::class)->problem();
+            if ($problem) {
+                $response->with('error', 'Konto zostało utworzone, ale wiadomość nie została wysłana. Sprawdź konfigurację poczty.');
+            } else {
+                try {
+                    $driver = config('mail.default');
+                    if (config('mail.mailers.'.$driver.'.transport') === 'smtp' && ! config('mail.mailers.'.$driver.'.timeout')) {
+                        config(['mail.mailers.'.$driver.'.timeout' => 30]);
+                    }
+                    Mail::to($user->email)->send(new UserAccountCreated(
+                        $user->name, $user->email, $temporaryPassword,
+                        CompanySettings::first()?->name ?? config('app.name'), route('login'),
+                    ));
+                    $mailSent = true;
+                    $response->with('success', 'Użytkownik został utworzony. Wiadomość z danymi logowania została przekazana do wysyłki.');
+                } catch (Throwable $error) {
+                    // Provider errors may contain the message, including its password.
+                    Log::warning('user_account_created.mail_failed', ['user_id' => $user->id, 'error_type' => get_class($error)]);
+                    $response->with('success', 'Użytkownik został utworzony.')
+                        ->with('error', 'Nie udało się potwierdzić wysyłki danych logowania. Sprawdź pocztę u dostawcy przed ponowieniem.');
+                }
+            }
+        }
+        if ($generatedPassword && ! $mailSent) {
+            $response->with('new_user_credentials', ['login' => $user->email, 'password' => $temporaryPassword]);
+        }
+
+        return $response;
     }
 
     public function show(string $id)

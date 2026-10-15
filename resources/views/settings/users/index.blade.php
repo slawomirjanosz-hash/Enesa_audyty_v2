@@ -221,9 +221,6 @@
 </div>
 
 {{-- Flash messages --}}
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.roles.manage'))
-    <p style="margin:0 0 20px;color:#6b7a70">Uprawnienia nadajesz przez rolę użytkownika. W zakładce <a href="{{route('settings.roles.index')}}" style="color:var(--green)">Role i uprawnienia</a>, w sekcji „CRM i dostawcy”, możesz włączyć „Dodawanie dostawców”. W sekcji „Audyty” włącz „Podgląd modułu audytów” oraz „Zarządzanie harmonogramem i zadaniami audytu”, aby użytkownik mógł dodawać zadania. Audytor musi też mieć dostęp do audytów danej firmy. Zmiana roli dotyczy wszystkich przypisanych do niej osób; dla jednej osoby utwórz osobną rolę.</p>
-@endif
 @if(session('success'))
     <div class="alert alert-success">
         <i class="ti ti-circle-check"></i> {{ session('success') }}
@@ -233,6 +230,11 @@
     <div class="alert alert-error">
         <i class="ti ti-alert-circle"></i> {{ session('error') }}
     </div>
+@endif
+
+@if(session('new_user_credentials'))
+<div class="alert alert-success"><div><strong>Dane nowego konta — zapisz je teraz:</strong><br>
+Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-space:pre-wrap">{{session('new_user_credentials.password')}}</code></div></div>
 @endif
 
 @if(request('tab') === 'firmy')
@@ -725,7 +727,7 @@
     <div class="modal-box">
         <button class="modal-close-btn" onclick="closeAddModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-user-plus" style="margin-right:8px;"></i>Nowy użytkownik</div>
-        <div class="modal-subtitle">Wypełnij dane — hasło zostanie wygenerowane automatycznie.</div>
+        <div class="modal-subtitle">Wypełnij dane. Jeśli nie podasz hasła, zostanie wygenerowane automatycznie.</div>
 
         @if($errors->any())
         <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#b91c1c;">
@@ -738,7 +740,8 @@
         </div>
         @endif
 
-        <form method="POST" action="{{ route('settings.users.store') }}">
+        <form id="create-user-form" method="POST" action="{{ route('settings.users.store') }}">
+            <input type="hidden" id="create-user-send-email" name="send_email" value="0">
             @csrf
             <div class="mf-row">
                 <div class="mf-group">
@@ -781,6 +784,15 @@
         </form>
     </div>
 </div>
+
+<dialog id="create-user-mail-dialog" aria-labelledby="create-user-mail-title" style="border:0;border-radius:14px;padding:28px;max-width:480px;width:calc(100% - 48px);box-sizing:border-box;color:inherit">
+<h2 id="create-user-mail-title" style="margin-top:0">Wysłać dane logowania?</h2>
+<p>Po utworzeniu konta wysłać na adres <strong id="create-user-mail-recipient"></strong> wiadomość z informacją o nowym koncie, loginem i hasłem?</p>
+<div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
+<button type="button" class="btn-primary" data-create-user-mail="1">Utwórz i wyślij dane</button>
+<button type="button" class="btn-primary" data-create-user-mail="0">Utwórz bez maila</button>
+<button type="button" class="btn-sm" id="create-user-mail-cancel">Wróć do formularza</button>
+</div></dialog>
 
 {{-- ══════ MODAL EDYTUJ ══════ --}}
 <div id="editModal" class="modal-overlay-edit">
@@ -836,6 +848,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{asset('js/user-create-mail.js')}}?v=1" defer></script>
 <script>
     function openAddModal() {
         document.getElementById('addModal').classList.add('open');
@@ -933,6 +946,7 @@
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
+            if (document.getElementById('create-user-mail-dialog').open) return;
             closeAddModal();
             closeEditModal();
             closeAssignCompanyModal();
