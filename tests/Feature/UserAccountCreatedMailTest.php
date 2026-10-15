@@ -4,10 +4,14 @@ use App\Mail\UserAccountCreated;
 use App\Models\ActivityLog;
 use App\Models\CompanySettings;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Mail\MailManager;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
+use Symfony\Component\Mime\Email;
 
 beforeEach(function () {
     Role::findOrCreate('admin');
@@ -97,4 +101,38 @@ test('user page removes role instructions and includes creation mail choice only
     $this->get(route('settings.users.index'))->assertOk()->assertDontSee('Uprawnienia nadajesz przez rolę użytkownika')
         ->assertSee('id="create-user-form"', false)->assertSee('id="create-user-mail-dialog"', false)
         ->assertSee('Utwórz i wyślij dane')->assertSee('Utwórz bez maila')->assertSee('Wróć do formularza');
+});
+
+test('account mail greets according to Warsaw time including the evening boundary', function (string $utc, string $greeting) {
+    $this->travelTo(Carbon::parse($utc, 'UTC'));
+    $mail = new UserAccountCreated('Test', 'test@example.test', 'FakeTest123!', 'Firma testowa', 'https://example.test/login');
+    expect($mail->render())->toContain($greeting.',')->not->toContain('Witaj');
+})->with([
+    ['2026-10-15 16:59:00', 'Dzień dobry'],
+    ['2026-10-15 17:00:00', 'Dobry wieczór'],
+    ['2026-10-15 21:59:00', 'Dobry wieczór'],
+    ['2026-10-15 22:00:00', 'Dzień dobry'],
+    ['2026-12-15 17:59:00', 'Dzień dobry'],
+    ['2026-12-15 18:00:00', 'Dobry wieczór'],
+]);
+
+test('account mail embeds company logo uses brand colour and aligns credentials in separate cells', function () {
+    $logo = UploadedFile::fake()->image('company.png', 180, 60);
+    CompanySettings::first()->update(['primary_color' => '#214568', 'logo_data' => base64_encode(file_get_contents($logo->getRealPath())), 'logo_mime' => 'image/png']);
+    $mail = new UserAccountCreated('Test', 'test@example.test', 'Fake<&>123!', 'Firma testowa', 'https://example.test/login');
+    $html = $mail->render();
+    expect($html)->toContain('Logo Firma testowa', '#214568', 'Życzymy miłego użytkowania!', 'skontaktuj się z administratorem systemu.', 'Fake&lt;&amp;&gt;123!');
+    // Laravel renders embedded images as data URIs for previews, but real mail
+    // must contain a CID attachment for compatibility with desktop mail clients.
+    $mail->withSymfonyMessage(function (Email $message) {
+        expect($message->getHtmlBody())->toContain('cid:')->not->toContain('src="data:');
+        expect($message->getAttachments())->toHaveCount(1);
+        expect($message->getAttachments()[0]->getDisposition())->toBe('inline');
+    });
+    (new MailManager(app()))->mailer('array')->send($mail->to('test@example.test'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="utf-8" ?>'.$html);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//td[normalize-space(text())="Login"]/following-sibling::td')->length)->toBe(1);
+    expect($xpath->query('//td[normalize-space(text())="Hasło"]/following-sibling::td')->length)->toBe(1);
 });
