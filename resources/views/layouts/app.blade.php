@@ -741,6 +741,7 @@
 <script>
     // Session expiry check   every 60 seconds
     let _sessionExpired = false;
+    const _sessionOriginalTitle = document.title;
     let _sessionCheckInterval = setInterval(function () {
         fetch('/session-check', {
             headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
@@ -753,7 +754,7 @@
                 window.dispatchEvent(new Event('session:expired'));
                 clearInterval(_sessionCheckInterval);
                 document.getElementById('session-expired-modal').style.display = 'flex';
-                document.title = '\u26A0 Sesja wygasła   ENESA';
+                document.title = {{ Illuminate\Support\Js::from('⚠ Sesja wygasła — '.$brandName) }};
             }
         }).catch(function () { /* network error – ignore */ });
     }, 60000);
@@ -779,7 +780,7 @@
             if (res.ok || res.redirected) {
                 _sessionExpired = false;
                 document.getElementById('session-expired-modal').style.display = 'none';
-                document.title = document.title.replace('\u26A0 Sesja wygasła   ', '');
+                document.title = _sessionOriginalTitle;
                 // restart check
                 _sessionCheckInterval = setInterval(arguments.callee.caller, 60000);
                 location.reload();

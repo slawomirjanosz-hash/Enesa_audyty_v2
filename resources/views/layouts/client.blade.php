@@ -456,7 +456,7 @@
                 _sessionExpired = true;
                 clearInterval(_sessionCheckInterval);
                 document.getElementById('session-expired-modal').style.display = 'flex';
-                document.title = '\u26A0 Sesja wygasła — {{ $brandName }}';
+                document.title = {{ Illuminate\Support\Js::from('⚠ Sesja wygasła — '.$brandName) }};
             }
         }).catch(function () { /* network error – ignore */ });
     }, 60000);

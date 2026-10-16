@@ -478,7 +478,7 @@
                 _sessionExpired = true;
                 clearInterval(_sessionCheckInterval);
                 document.getElementById('session-expired-modal').style.display = 'flex';
-                document.title = '\u26A0 Sesja wygasła   ENESA';
+                document.title = {{ Illuminate\Support\Js::from('⚠ Sesja wygasła — '.$brandName) }};
             }
         }).catch(function () {});
     }, 60000);
