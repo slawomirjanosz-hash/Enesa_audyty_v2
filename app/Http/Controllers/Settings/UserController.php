@@ -290,6 +290,7 @@ class UserController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
+            'send_email' => ['nullable', 'boolean'],
             'has_employment_contract' => ['nullable', 'boolean'],
             'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
             'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
@@ -331,8 +332,30 @@ class UserController extends Controller
             $user->syncRoles([$data['role']]);
         }
 
-        return redirect()->route('settings.users.index')
+        $response = redirect()->route('settings.users.index')
             ->with('success', 'Dane użytkownika zaktualizowane.');
+        if (! empty($data['password']) && $request->boolean('send_email')) {
+            try {
+                if (app(TaskReminderMailConfiguration::class)->problem()) {
+                    $response->with('error', 'Hasło zostało zmienione, ale wiadomość nie została wysłana. Sprawdź konfigurację poczty.');
+                } else {
+                    $driver = config('mail.default');
+                    if (config('mail.mailers.'.$driver.'.transport') === 'smtp' && ! config('mail.mailers.'.$driver.'.timeout')) {
+                        config(['mail.mailers.'.$driver.'.timeout' => 30]);
+                    }
+                    Mail::to($user->email)->send(new UserAccountCreated(
+                        $user->name, $user->email, $data['password'],
+                        CompanySettings::first()?->name ?? config('app.name'), route('login'), true,
+                    ));
+                    $response->with('success', 'Dane użytkownika zaktualizowane. Wiadomość z nowym hasłem została przekazana do wysyłki.');
+                }
+            } catch (Throwable $error) {
+                Log::warning('user_password_changed.mail_failed', ['user_id' => $user->id, 'error_type' => get_class($error)]);
+                $response->with('error', 'Hasło zostało zmienione. Nie udało się potwierdzić wysyłki — sprawdź pocztę u dostawcy przed ponowieniem.');
+            }
+        }
+
+        return $response;
     }
 
     public function destroy(User $user)

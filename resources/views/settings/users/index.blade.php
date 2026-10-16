@@ -771,6 +771,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
             <div class="mf-group">
                 <label class="mf-label" for="add_password">Hasło (opcjonalnie — auto-generowane jeśli puste)</label>
                 <input id="add_password" type="password" name="password" class="mf-input" placeholder="min. 8 znaków">
+                <button type="button" class="btn-sm" data-generate-password="add_password">Generuj hasło</button>
             </div>
             <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="add_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('add')" @checked(old('has_employment_contract'))> Zatrudniony na umowę o pracę</label>
             <div id="add_leave_fields" class="mf-row" hidden>
@@ -802,6 +803,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
         <div class="modal-subtitle">Zmień dane — hasło zostaw puste jeśli nie chcesz go zmieniać.</div>
 
         <form method="POST" id="editForm" action="">
+            <input type="hidden" id="edit-user-send-email" name="send_email" value="0">
             @csrf
             @method('PUT')
             <div class="mf-row">
@@ -831,6 +833,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
             <div class="mf-group">
                 <label class="mf-label" for="edit_password">Nowe hasło (zostaw puste, by nie zmieniać)</label>
                 <input id="edit_password" type="password" name="password" class="mf-input" placeholder="min. 8 znaków">
+                <button type="button" class="btn-sm" data-generate-password="edit_password">Generuj nowe hasło</button>
+                <small style="display:block;margin-top:6px">Hasło zmieni się po zapisaniu. Przed zapisem wybierzesz, czy wysłać je e-mailem.</small>
             </div>
             <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="edit_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('edit')"> Zatrudniony na umowę o pracę</label>
             <div id="edit_leave_fields" class="mf-row" hidden>
@@ -848,6 +852,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
 @endsection
 
 @push('scripts')
+<script src="{{asset('js/user-password.js')}}?v=1" defer></script>
 <script src="{{asset('js/user-create-mail.js')}}?v=1" defer></script>
 <script>
     function openAddModal() {
@@ -887,6 +892,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
         document.getElementById('edit_phone').value = phone;
         document.getElementById('edit_role').value  = role;
         document.getElementById('edit_password').value = '';
+        document.getElementById('edit_password').type = 'password';
+        document.getElementById('edit-user-send-email').value = '0';
         editLeaveEntitlements = entitlements || {};
         editCurrentLeaveBalance = currentBalance;
         document.getElementById('edit_employment_contract').checked = Boolean(employmentContract);

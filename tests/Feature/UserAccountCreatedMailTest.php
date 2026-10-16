@@ -103,6 +103,58 @@ test('user page removes role instructions and includes creation mail choice only
         ->assertSee('Utwórz i wyślij dane')->assertSee('Utwórz bez maila')->assertSee('Wróć do formularza');
 });
 
+test('existing password change emails only with consent and matches saved hash', function ($choice) {
+    $user = User::factory()->create();
+    $user->assignRole('auditor');
+    $version = $user->session_version;
+    $this->put(route('settings.users.update', $user), newStaffAccount(['email' => $user->email, 'send_email' => $choice]))->assertSessionHas('success')->assertSessionHasNoErrors();
+    expect(Hash::check('TestoweHaslo123!', $user->fresh()->password))->toBeTrue();
+    expect($user->fresh()->session_version)->toBe($version + 1);
+    if ($choice === '1') {
+        Mail::assertSent(UserAccountCreated::class, function ($mail) use ($user) {
+            expect($mail->passwordChanged)->toBeTrue();
+            expect($mail->render())->toContain('Twoje hasło zostało zmienione', 'TestoweHaslo123!', $user->email)->not->toContain('Twoje konto zostało utworzone');
+
+            return $mail->hasTo($user->email) && Hash::check($mail->temporaryPassword, $user->fresh()->password);
+        });
+    } else {
+        Mail::assertNothingSent();
+    }
+    expect(json_encode(ActivityLog::get()->toArray()))->not->toContain('TestoweHaslo123!');
+})->with(['0', '1']);
+
+test('unchanged password does not send credentials even with mail flag', function () {
+    $user = User::factory()->create();
+    $user->assignRole('auditor');
+    $hash = $user->password;
+    $this->put(route('settings.users.update', $user), newStaffAccount(['email' => $user->email, 'password' => '', 'send_email' => '1']))->assertSessionHasNoErrors();
+    expect($user->fresh()->password)->toBe($hash);
+    Mail::assertNothingSent();
+});
+
+test('password update respects hierarchy and validates mail choice', function () {
+    $user = User::factory()->create();
+    $user->assignRole('auditor');
+    $hash = $user->password;
+    $this->put(route('settings.users.update', $user), newStaffAccount(['email' => $user->email, 'send_email' => 'invalid']))->assertSessionHasErrors('send_email');
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $this->put(route('settings.users.update', $admin), newStaffAccount(['email' => $admin->email, 'send_email' => '1']))->assertForbidden();
+    expect($user->fresh()->password)->toBe($hash);
+    Mail::assertNothingSent();
+});
+
+test('password mail failure keeps new password without logging credentials', function () {
+    $user = User::factory()->create();
+    $user->assignRole('auditor');
+    Log::spy();
+    Mail::shouldReceive('to')->once()->andThrow(new RuntimeException('secret password provider contents'));
+    $this->put(route('settings.users.update', $user), newStaffAccount(['email' => $user->email, 'send_email' => '1']))->assertSessionHas('error');
+    expect(Hash::check('TestoweHaslo123!', $user->fresh()->password))->toBeTrue();
+    expect(session('error'))->not->toContain('secret password provider contents');
+    Log::shouldHaveReceived('warning')->once()->with('user_password_changed.mail_failed', Mockery::on(fn ($data) => array_keys($data) === ['user_id', 'error_type']));
+});
+
 test('account mail greets according to Warsaw time including the evening boundary', function (string $utc, string $greeting) {
     $this->travelTo(Carbon::parse($utc, 'UTC'));
     $mail = new UserAccountCreated('Test', 'test@example.test', 'FakeTest123!', 'Firma testowa', 'https://example.test/login');

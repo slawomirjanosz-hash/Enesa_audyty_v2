@@ -13,6 +13,7 @@ class UserAccountCreated extends Mailable
         public string $temporaryPassword,
         public string $companyName,
         public string $loginUrl,
+        public bool $passwordChanged = false,
     ) {}
 
     public function build()
@@ -25,7 +26,7 @@ class UserAccountCreated extends Mailable
             $logoMime = $logo[1];
         }
 
-        return $this->subject('Utworzono konto — '.$this->companyName)
+        return $this->subject(($this->passwordChanged ? 'Zmieniono hasło — ' : 'Utworzono konto — ').$this->companyName)
             ->view('emails.user-account-created')->with([
                 'brandColor' => $company?->primaryColor() ?? '#1A4D3A',
                 'brandTint' => $company?->documentHeaderColor() ?? '#8DA69D',
