@@ -8,7 +8,7 @@
 <div class="cyl-card cyl-facts">
 @include('cylinders.photo-thumb')
 <span class="cyl-status-chip cyl-status-{{ $cylinder->conditionStatus() }}">{{ $cylinder->conditionLabel() }}</span>
-@foreach(['manufacturer_mark'=>'Znak wytwórczy', 'manufactured_year'=>'Rok', 'capacity_litres'=>'Poj. [dm³]', 'working_pressure_bar'=>'Ciśnienie [bar]'] as $field=>$label)<span class="cyl-fact"><span class="cyl-muted">{{ $label }}:</span><strong>{{ $cylinder->$field ?? '—' }}</strong></span>@endforeach
+@foreach(['manufacturer_mark'=>'Nazwa lub znak wytwórcy', 'manufactured_year'=>'Rok', 'capacity_litres'=>'Poj. [dm³]', 'working_pressure_bar'=>'Ciśnienie [bar]'] as $field=>$label)<span class="cyl-fact"><span class="cyl-muted">{{ $label }}:</span><strong>{{ $cylinder->$field ?? '—' }}</strong></span>@endforeach
 </div>
 <details class="cyl-card"><summary>Parametry stałe urządzenia</summary><div class="cyl-table"><table><thead><tr><th>Parametr</th><th>Wartość</th></tr></thead><tbody>
 @foreach(\App\Models\Cylinder::PARAMETER_LABELS as $field=>$label)<tr><td>{{ $label }}</td><td>{{ $cylinder->$field ?? '—' }}</td></tr>@endforeach

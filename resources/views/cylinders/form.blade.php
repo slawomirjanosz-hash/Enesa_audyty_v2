@@ -22,7 +22,7 @@
 @foreach([
     'Identyfikacja' => ['name','manufacturer_mark','serial_number','manufactured_year','inventory_number','manufacturer'],
     'Parametry techniczne' => ['working_medium','temperature_min_c','temperature_max_c','capacity_litres','working_pressure_bar','test_pressure_bar'],
-    'Masy znamionowe i osprzęt' => ['tare_or_gross_mass_kg','net_mass_kg','stamped_empty_mass_kg','filling_mass_symbol','equipment_type','equipment_mark'],
+    'Masy i osprzęt' => ['tare_or_gross_mass_kg','net_mass_kg','stamped_empty_mass_kg','weighed_empty_mass_kg','mass_loss_kg','filling_mass_symbol','equipment_type','equipment_mark'],
 ] as $group => $fields)
 <fieldset class="cyl-parameter-group"><legend>{{ $group }}</legend><div class="cyl-grid">
 @foreach($fields as $field)

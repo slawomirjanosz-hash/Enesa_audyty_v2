@@ -13,7 +13,7 @@
 </div>
 <h2>Wybrane urządzenia ({{ $cylinders->count() }})</h2>
 @error('cylinder_ids')<p class="cyl-field-error">{{ $message }}</p>@enderror
-<div class="cyl-table"><table><thead><tr><th>Nazwa</th><th>Znak wytwórczy</th><th>Numer fabryczny</th><th>Klient</th></tr></thead><tbody>
+<div class="cyl-table"><table><thead><tr><th>Nazwa</th><th>Nazwa lub znak wytwórcy</th><th>Numer fabryczny</th><th>Klient</th></tr></thead><tbody>
 @foreach($cylinders as $cylinder)<tr><td>{{ $cylinder->name }}<input type="hidden" name="cylinder_ids[]" value="{{ $cylinder->id }}"></td><td>{{ $cylinder->manufacturer_mark }}</td><td>{{ $cylinder->serial_number }}</td><td>{{ $cylinder->company?->name ?? 'Bez klienta' }}</td></tr>@endforeach
 </tbody></table></div><p><button class="cyl-btn cyl-btn-primary">Zapisz serię roboczą</button></p>
 </form></div>

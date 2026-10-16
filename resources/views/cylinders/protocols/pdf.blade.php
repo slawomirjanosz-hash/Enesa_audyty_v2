@@ -31,7 +31,7 @@
 <div class="device">
 <div class="eyebrow">Urządzenie {{ $loop->iteration }} z {{ count($snapshot['items']) }} · ID {{ $item['device_id'] }}</div>
 <h2>{{ $display($item['parameters']['name']) }}</h2>
-<p>Znak wytwórczy: <strong>{{ $display($item['parameters']['manufacturer_mark']) }}</strong> · Numer fabryczny: <strong>{{ $display($item['parameters']['serial_number']) }}</strong></p>
+<p>Nazwa lub znak wytwórcy: <strong>{{ $display($item['parameters']['manufacturer_mark']) }}</strong> · Numer fabryczny: <strong>{{ $display($item['parameters']['serial_number']) }}</strong></p>
 <p class="muted">Klient urządzenia: {{ $display($item['client']['name'] ?? 'Bez przypisanego klienta') }}</p>
 <h3>Parametry techniczne</h3>
 <table class="parameters"><tbody>@foreach(\App\Models\Cylinder::PARAMETER_LABELS as $field=>$label)<tr><td>{{ str_replace(chr(226).chr(128).chr(148), '-', $label) }}</td><td>{{ $display($item['parameters'][$field] ?? null) }}</td></tr>@endforeach</tbody></table>

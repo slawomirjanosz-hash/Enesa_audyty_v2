@@ -78,6 +78,10 @@ class CylinderImportService
                 $aliases[$this->normalize($field)] = $field;
                 $aliases[$this->normalize($label)] = $field;
             }
+            // Keep previously downloaded templates compatible after label changes.
+            foreach (['Znak wytwórczy' => 'manufacturer_mark', 'Symbol masy przewożonej / dopuszczalnej' => 'filling_mass_symbol', 'Osprzęt — znak Π lub CE' => 'equipment_mark'] as $label => $field) {
+                $aliases[$this->normalize($label)] = $field;
+            }
             $columns = [];
             for ($column = 1; $column <= $sheetInfo['totalColumns']; $column++) {
                 $cell = $sheet->getCell([$column, 1]);

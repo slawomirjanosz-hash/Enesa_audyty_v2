@@ -11,7 +11,7 @@ class Cylinder extends Model
 {
     public const PARAMETER_LABELS = [
         'name' => 'Nazwa urządzenia',
-        'manufacturer_mark' => 'Znak wytwórczy',
+        'manufacturer_mark' => 'Nazwa lub znak wytwórcy',
         'manufactured_year' => 'Rok produkcji',
         'serial_number' => 'Numer fabryczny',
         'inventory_number' => 'Numer ewidencyjny u eksploatującego',
@@ -24,15 +24,17 @@ class Cylinder extends Model
         'tare_or_gross_mass_kg' => 'Tara lub masa brutto [kg]',
         'net_mass_kg' => 'Masa netto [kg]',
         'stamped_empty_mass_kg' => 'Masa butli bez osprzętu — wybita [kg]',
-        'filling_mass_symbol' => 'Symbol masy przewożonej / dopuszczalnej',
+        'weighed_empty_mass_kg' => 'Masa butli bez osprzętu — według ważenia [kg]',
+        'mass_loss_kg' => 'Masa butli bez osprzętu — ubytek [kg]',
+        'filling_mass_symbol' => 'Symbol masy prowizorycznej / rozpuszczalnika',
         'equipment_type' => 'Osprzęt — typ',
-        'equipment_mark' => 'Osprzęt — znak Π lub CE',
+        'equipment_mark' => 'Osprzęt — znak II lub CE',
         'manufacturer' => 'Producent (informacja dodatkowa)',
     ];
 
-    public const DECIMAL_PARAMETERS = ['temperature_min_c', 'temperature_max_c', 'capacity_litres', 'working_pressure_bar', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg'];
+    public const DECIMAL_PARAMETERS = ['temperature_min_c', 'temperature_max_c', 'capacity_litres', 'working_pressure_bar', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg', 'weighed_empty_mass_kg', 'mass_loss_kg'];
 
-    protected $fillable = ['company_id', 'name', 'device_type', 'manufacturer_mark', 'inventory_number', 'working_medium', 'temperature_min_c', 'temperature_max_c', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg', 'filling_mass_symbol', 'equipment_type', 'equipment_mark', 'serial_number', 'manufacturer', 'type', 'manufactured_year', 'capacity_litres', 'working_pressure_bar', 'notes', 'archived_at'];
+    protected $fillable = ['company_id', 'name', 'device_type', 'manufacturer_mark', 'inventory_number', 'working_medium', 'temperature_min_c', 'temperature_max_c', 'test_pressure_bar', 'tare_or_gross_mass_kg', 'net_mass_kg', 'stamped_empty_mass_kg', 'weighed_empty_mass_kg', 'mass_loss_kg', 'filling_mass_symbol', 'equipment_type', 'equipment_mark', 'serial_number', 'manufacturer', 'type', 'manufactured_year', 'capacity_litres', 'working_pressure_bar', 'notes', 'archived_at'];
 
     protected $attributes = ['device_type' => 'butla'];
 

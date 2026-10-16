@@ -121,7 +121,7 @@ test('template has fixed headers and text identifiers while xls and missing opti
     $this->get(route('cylinders.import.template'))->assertOk()->assertDownload('szablon-urzadzen.xlsx');
     $book = IOFactory::load(resource_path('templates/cylinder-import.xlsx'));
     $sheet = $book->getSheetByName('Urządzenia');
-    expect($sheet->rangeToArray('A1:S1')[0])->toBe(array_values(app(CylinderImportService::class)->columns()))
+    expect($sheet->rangeToArray('A1:U1')[0])->toBe(array_values(app(CylinderImportService::class)->columns()))
         ->and($sheet->getStyle('D2')->getNumberFormat()->getFormatCode())->toBe('@');
     $book->disconnectWorksheets();
     $this->post(route('cylinders.import.preview'), ['file' => cylinderImportFile([['Nowa', 'ACME', 'SN1']], ['name', 'manufacturer_mark', 'serial_number'], 'Xls')])->assertSessionHasNoErrors();
@@ -136,12 +136,16 @@ test('downloaded template roundtrips identifiers with leading zeros and numeric 
     $sheet->setCellValue('B2', 'ACME');
     $sheet->setCellValue('D2', '000123');
     $sheet->setCellValue('G2', 0);
+    $sheet->setCellValue('O2', '44,125');
+    $sheet->setCellValue('P2', 0);
     $path = tempnam(sys_get_temp_dir(), 'cylinder-template-');
     IOFactory::createWriter($book, 'Xlsx')->save($path);
     $book->disconnectWorksheets();
     $this->post(route('cylinders.import.preview'), ['file' => new UploadedFile($path, 'filled.xlsx', null, null, true)])->assertSessionHasNoErrors();
     $this->post(route('cylinders.import.store', CylinderImport::sole()))->assertSessionHasNoErrors();
-    expect(Cylinder::sole()->serial_number)->toBe('000123')->and((float) Cylinder::sole()->temperature_min_c)->toBe(0.0);
+    expect(Cylinder::sole()->serial_number)->toBe('000123')->and((float) Cylinder::sole()->temperature_min_c)->toBe(0.0)
+        ->and((float) Cylinder::sole()->weighed_empty_mass_kg)->toBe(44.125)
+        ->and((float) Cylinder::sole()->mass_loss_kg)->toBe(0.0);
 });
 
 test('import rejects missing duplicate unknown headers oversized sheets and empty workbooks', function () {

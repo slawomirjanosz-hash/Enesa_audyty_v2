@@ -27,7 +27,7 @@ test('cylinder registration saves fixed parameters without a type selector', fun
         'inventory_number' => 'EW-01', 'working_medium' => 'Azot', 'temperature_min_c' => '-20,5',
         'temperature_max_c' => '65', 'capacity_litres' => '40', 'working_pressure_bar' => '200',
         'test_pressure_bar' => '300', 'tare_or_gross_mass_kg' => '55,125', 'net_mass_kg' => '10',
-        'stamped_empty_mass_kg' => '45', 'filling_mass_symbol' => 'N2', 'equipment_type' => 'Zawór',
+        'stamped_empty_mass_kg' => '45', 'weighed_empty_mass_kg' => '44,125', 'mass_loss_kg' => '0,875', 'filling_mass_symbol' => 'N2', 'equipment_type' => 'Zawór',
         'equipment_mark' => 'CE 1234', 'manufactured_year' => '2020',
     ])->assertRedirect()->assertSessionHasNoErrors();
     $cylinder = Cylinder::sole();
@@ -35,7 +35,11 @@ test('cylinder registration saves fixed parameters without a type selector', fun
         ->and($cylinder->manufacturer_mark)->toBe('ACME')->and($cylinder->name)->toBe('Butla azotowa')
         ->and((float) $cylinder->temperature_min_c)->toBe(-20.5)
         ->and((float) $cylinder->tare_or_gross_mass_kg)->toBe(55.125)
-        ->and($cylinder->equipment_mark)->toBe('CE 1234');
+        ->and($cylinder->equipment_mark)->toBe('CE 1234')
+        ->and((float) $cylinder->weighed_empty_mass_kg)->toBe(44.125)
+        ->and((float) $cylinder->mass_loss_kg)->toBe(0.875);
+    $this->get(route('cylinders.show', $cylinder))->assertOk()->assertSee('Masa butli bez osprzętu — według ważenia');
+    $this->put(route('cylinders.update', $cylinder), array_diff_key($this->payload, ['company_id' => true]) + ['weighed_empty_mass_kg' => '-1', 'mass_loss_kg' => '1.2345'])->assertSessionHasErrors(['weighed_empty_mass_kg', 'mass_loss_kg']);
     $this->put(route('cylinders.update', $cylinder), array_diff_key($this->payload, ['company_id' => true]) + ['notes' => 'Aktualizacja'])->assertSessionHasNoErrors();
     expect($cylinder->fresh()->notes)->toBe('Aktualizacja');
 });

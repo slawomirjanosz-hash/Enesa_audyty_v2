@@ -29,7 +29,7 @@
 <table class="cyl-register-table" data-cylinder-register data-server-sort=",name,manufacturer,year,serial,last,,,">
 <thead><tr>
 <th data-sortable="false">@if($canManage)<input type="checkbox" data-cylinder-select-all aria-label="Zaznacz wszystkie widoczne butle">@endif</th>
-<th>Nazwa</th><th>Znak wytwórczy</th><th>Rok produkcji</th><th>Nr fabryczny</th><th>Data ostatniego przeglądu</th>
+<th>Nazwa</th><th>Nazwa lub znak wytwórcy</th><th>Rok produkcji</th><th>Nr fabryczny</th><th>Data ostatniego przeglądu</th>
 <th data-sortable="false"><span class="cyl-sr-only">Film</span><i class="ti ti-video" aria-hidden="true"></i></th>
 <th data-sortable="false"><span class="cyl-sr-only">Zdjęcia</span><i class="ti ti-photo" aria-hidden="true"></i></th>
 <th data-sortable="false"><span class="cyl-sr-only">Protokół</span><i class="ti ti-file-type-pdf" aria-hidden="true"></i></th>

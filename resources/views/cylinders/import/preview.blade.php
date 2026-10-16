@@ -13,7 +13,7 @@
 @elseif($invalid)<p class="cyl-field-error">Popraw błędne wiersze w Excelu i wczytaj plik ponownie. Niczego nie zapisano w rejestrze.</p>
 @else<form method="post" action="{{ route('cylinders.import.store', $import) }}">@csrf<button class="cyl-btn cyl-btn-primary">Zatwierdź import{{ $import->create_series ? ' i utwórz serię' : '' }}</button></form>@endif
 </div>
-<div class="cyl-card"><div class="cyl-table"><table><thead><tr><th>Wiersz</th><th>Nazwa z pliku</th><th data-sort-type="text">Znak wytwórczy</th><th>Numer fabryczny</th><th>Operacja</th><th data-sort-type="text">Uwagi / parametry</th></tr></thead><tbody>
+<div class="cyl-card"><div class="cyl-table"><table><thead><tr><th>Wiersz</th><th>Nazwa z pliku</th><th data-sort-type="text">Nazwa lub znak wytwórcy</th><th>Numer fabryczny</th><th>Operacja</th><th data-sort-type="text">Uwagi / parametry</th></tr></thead><tbody>
 @foreach($import->rows as $row)<tr><td data-sort-value="{{ $row['line'] }}">{{ $row['line'] }}</td><td>{{ $row['data']['name'] ?? 'Brak nazwy' }}</td><td>{{ $row['data']['manufacturer_mark'] }}</td><td>{{ $row['data']['serial_number'] }}</td><td>{{ $row['errors'] ? 'Błąd' : ($row['existing_id'] ? 'Wykorzystaj istniejące' : 'Dodaj nowe') }}</td><td data-sort-value="{{ implode(' ', $row['errors']).' '.implode(' ', array_values($row['data'])) }}">
 @foreach($row['errors'] as $error)<p class="cyl-field-error">{{ $error }}</p>@endforeach
 @if($row['existing_id'])<p>Urządzenie #{{ $row['existing_id'] }}: zachowamy dane z rejestru. @if(!$row['errors'])<a href="{{ route('cylinders.show', $row['existing_id']) }}" target="_blank" rel="noopener">Porównaj kartotekę</a>@endif</p>@endif
