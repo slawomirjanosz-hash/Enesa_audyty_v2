@@ -43,6 +43,9 @@ class ActivityLog extends Model
         $class = class_basename((string) $this->auditable_type);
 
         return [
+            'CompanySettings' => 'Ustawienia firmy', 'BoardTask' => 'Zadanie na tablicy',
+            'HrLeave' => 'HR / nieobecność', 'Cylinder' => 'Rejestr urządzeń / butla',
+            'CylinderInspection' => 'Przegląd urządzenia', 'CylinderProtocol' => 'Protokół przeglądu',
             'Company' => 'CRM / firma', 'CrmOpportunity' => 'CRM / szansa', 'CrmActivity' => 'CRM / aktywność',
             'Task' => 'Zadanie', 'Project' => 'Projekt', 'ProjectFinancialEntry' => 'Finanse projektu',
             'ProjectProtocol' => 'Protokół odbioru dostawcy',

@@ -4,12 +4,7 @@
 
 @section('content')
 @php
-    $formatLogValue = function ($value): string {
-        if ($value === null || $value === '') return '—';
-        if (is_bool($value)) return $value ? 'Tak' : 'Nie';
-        if (is_array($value)) return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        return (string) $value;
-    };
+    $presentation = app(\App\Support\ActivityLogPresentation::class);
 @endphp
 <style>
     .log-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}.log-head h1{margin:0 0 5px;font-size:24px}.log-head p{margin:0;color:#6b776f;font-size:13px}.log-tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid #ddd8cd}.log-tab{padding:10px 14px;text-decoration:none;color:#66736b;font-weight:800;font-size:12px;border-bottom:3px solid transparent}.log-tab.active{color:var(--green);border-color:var(--green)}.month-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}.month-chip{padding:6px 10px;border:1px solid #ddd8cd;border-radius:999px;background:#fff;color:#536158;text-decoration:none;font-size:11px;font-weight:700}.month-chip.active{background:var(--green);border-color:var(--green);color:#fff}.log-list{display:grid;gap:10px}.log-card{background:#fff;border:1px solid #e5e1d8;border-radius:11px;padding:14px 16px}.log-card-top{display:grid;grid-template-columns:155px minmax(130px,180px) 110px 1fr;gap:12px;align-items:center}.log-time{font-size:11px;color:#66736b;white-space:nowrap}.log-user{font-weight:800;font-size:12px}.log-action{display:inline-flex;width:max-content;padding:4px 8px;border-radius:999px;background:#eef4ef;color:#285740;font-size:10px;font-weight:800}.log-action.deleted{background:#fee2e2;color:#b91c1c}.log-action.login{background:#dbeafe;color:#1d4ed8}.log-subject strong{font-size:12px}.log-subject small{display:block;color:#738078;margin-top:3px}.log-details{margin-top:11px;border-top:1px solid #eee;padding-top:10px}.log-details summary{cursor:pointer;color:var(--green);font-size:11px;font-weight:800}.change-grid{display:grid;grid-template-columns:minmax(110px,180px) 1fr 22px 1fr;gap:6px 10px;margin-top:9px;font-size:11px;align-items:start}.change-field{font-weight:800;color:#4d5a52}.change-value{overflow-wrap:anywhere;background:#fafaf6;border-radius:5px;padding:5px 7px}.change-arrow{text-align:center;color:#999;padding-top:5px}.log-meta{margin-top:9px;color:#7b847f;font-size:10px;overflow-wrap:anywhere}.log-empty{padding:50px;text-align:center;background:#fff;border:1px dashed #ccc;border-radius:12px;color:#777}.compact-pagination{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.compact-pagination-summary{font-size:11px;color:#68746d}.compact-pagination-links{display:flex;gap:5px;align-items:center;flex-wrap:wrap}.compact-page{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:6px 10px;border:1px solid #ddd8cd;border-radius:7px;background:#fff;color:#405047;text-decoration:none;font-size:11px;font-weight:800}.compact-page:hover{border-color:var(--green);color:var(--green)}.compact-page.active{background:var(--green);border-color:var(--green);color:#fff}.compact-page.disabled{color:#a1aaa5;background:#f5f4f0;cursor:default}@media(max-width:800px){.log-card-top{grid-template-columns:1fr 1fr}.log-subject{grid-column:1/-1}.change-grid{grid-template-columns:1fr}.change-arrow{display:none}}
@@ -37,25 +32,32 @@
             <div class="log-time">{{$log->created_at->format('d.m.Y H:i:s')}}</div>
             <div class="log-user">{{$log->user?->name ?? 'System / usunięty użytkownik'}}</div>
             <span class="log-action {{$log->action}}">{{$log->actionLabel()}}</span>
-            <div class="log-subject"><strong>{{$log->areaLabel()}}: {{$log->subject_label ?: '—'}}</strong><small>{{$log->route_name ?: 'Brak nazwy trasy'}}</small></div>
+            <div class="log-subject"><strong>{{$log->areaLabel()}}: {{$log->subject_label ?: '—'}}</strong><small>{{$presentation->context($log)}}</small></div>
         </div>
         @if($tab === 'changes' && !empty($log->changes))
-        <details class="log-details">
+        <details class="log-details" open>
             <summary>Pokaż zmienione pola ({{count($log->changes)}})</summary>
             <div class="change-grid">
                 @foreach($log->changes as $field => $change)
-                    <div class="change-field">{{str_replace('_',' ',$field)}}</div>
-                    <div class="change-value">{{$formatLogValue($change['old'] ?? null)}}</div>
+                    <div class="change-field" title="{{$field}}">{{$presentation->fieldLabel($field)}}</div>
+                    <div class="change-value"><small>Przed zmianą</small>{{$presentation->value($field, $change['old'] ?? null)}}</div>
                     <div class="change-arrow">→</div>
-                    <div class="change-value">{{$formatLogValue($change['new'] ?? null)}}</div>
+                    <div class="change-value"><small>Po zmianie</small>{{$presentation->value($field, $change['new'] ?? null)}}</div>
                 @endforeach
             </div>
         </details>
         @endif
-        <div class="log-meta">IP: {{$log->ip_address ?: '—'}} · {{$log->url ?: '—'}} @if($tab === 'logins')<br>{{$log->user_agent ?: 'Nieznane urządzenie'}}@endif</div>
+        <details class="log-meta"><summary>Informacje techniczne</summary>IP: {{$log->ip_address ?: '—'}} · {{$log->url ?: '—'}}<br>Operacja: {{$log->route_name ?: 'Brak nazwy trasy'}} @if($tab === 'logins')<br>{{$log->user_agent ?: 'Nieznane urządzenie'}}@endif</details>
     </article>
     @endforeach
 </div>
 {{ $logs->onEachSide(1)->links('pagination.compact') }}
 @endif
+<style>
+    .change-grid{font-size:13px;grid-template-columns:minmax(160px,240px) minmax(0,1fr) 22px minmax(0,1fr);gap:10px;align-items:center}
+    .change-value{white-space:pre-wrap;padding:9px 12px;background:#f5f7f5}
+    .change-value small{display:block;font-size:10px;color:#65736b;margin-bottom:3px;white-space:normal}
+    .change-field{font-size:12px}.log-meta summary{cursor:pointer}
+    @media(max-width:800px){.change-grid{grid-template-columns:1fr}.change-field{margin-top:8px}}
+</style>
 @endsection
