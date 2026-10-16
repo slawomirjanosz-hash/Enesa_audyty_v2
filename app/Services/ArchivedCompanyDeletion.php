@@ -31,11 +31,11 @@ class ArchivedCompanyDeletion
 
     private function purgeHistory(Company $company): void
     {
-        $projectIds = DB::table('projects')->where('company_id', $company->id)->pluck('id');
-        $auditIds = DB::table('audits')->where('company_id', $company->id)->pluck('id');
-        $offerIds = DB::table('offers')->where('company_id', $company->id)->pluck('id');
-        $cylinderIds = DB::table('cylinders')->where('company_id', $company->id)->pluck('id');
-        $seriesIds = DB::table('cylinder_inspection_series')->where('company_id', $company->id)->pluck('id');
+        $projectIds = DB::table('projects')->where('company_id', $company->id)->lockForUpdate()->pluck('id');
+        $auditIds = DB::table('audits')->where('company_id', $company->id)->lockForUpdate()->pluck('id');
+        $offerIds = DB::table('offers')->where('company_id', $company->id)->lockForUpdate()->pluck('id');
+        $cylinderIds = DB::table('cylinders')->where('company_id', $company->id)->lockForUpdate()->pluck('id');
+        $seriesIds = DB::table('cylinder_inspection_series')->where('company_id', $company->id)->lockForUpdate()->pluck('id');
         // Do not remove records belonging to a different company just because
         // this company is its supplier or a device was assigned inconsistently.
         if (DB::table('project_protocols')->where('supplier_company_id', $company->id)->whereNotIn('project_id', $projectIds)->exists()
@@ -55,7 +55,7 @@ class ArchivedCompanyDeletion
             'companies' => DB::table('companies')->where('id', $company->id),
         ];
         foreach ($sources as $table => $query) {
-            foreach ($query->get(self::FILE_COLUMNS[$table]) as $row) {
+            foreach ($query->lockForUpdate()->get(self::FILE_COLUMNS[$table]) as $row) {
                 foreach (self::FILE_COLUMNS[$table] as $column) {
                     if ($row->$column) {
                         $files->push($row->$column);
