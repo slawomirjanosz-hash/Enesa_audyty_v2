@@ -13,7 +13,9 @@ use App\Models\User;
 use App\Services\AccountSecurityService;
 use App\Services\AuditorAccessService;
 use App\Services\TaskReminderMailConfiguration;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -374,7 +376,7 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Użytkownik został przywrócony.');
     }
 
-    public function forceDestroy(User $user)
+    public function forceDestroy(Request $request, User $user)
     {
         $currentUser = auth()->user();
         $targetRole = $user->roles->first()?->name ?? 'none';
@@ -400,16 +402,35 @@ class UserController extends Controller
                 ->with('error', 'Nie masz uprawnień do usunięcia użytkowników.');
         }
 
-        // Check if user is assigned to an active (non-archived) company
-        if ($this->hasBlockingActiveCompanyAssignment($user)) {
-            return redirect()->route('settings.users.index')
-                ->with('error', 'Nie można trwale usunąć użytkownika przypisanego do aktywnej firmy.');
+        $name = $user->name;
+        $request->validate(['confirm_delete' => ['required', 'accepted']]);
+        try {
+            DB::transaction(function () use ($user) {
+                $user = User::withTrashed()->lockForUpdate()->findOrFail($user->id);
+                abort_unless($user->trashed(), 422, 'Najpierw przenieś konto użytkownika do archiwum.');
+                abort_unless($this->canForceDestroy(auth()->user(), $user), 403);
+                DB::table('sessions')->where('user_id', $user->id)->delete();
+                DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+                DB::table('hr_vehicles')->where('type', 'private')->where(fn ($query) => $query->where('created_by', $user->id)->orWhere(fn ($legacy) => $legacy->whereNull('created_by')->where('user_id', $user->id)))->delete();
+                $user->forceDelete();
+            });
+        } catch (QueryException $error) {
+            if (! in_array((string) $error->getCode(), ['23000', '23503'], true)) {
+                throw $error;
+            }
+
+            return redirect()->back()->with('error', 'Nie można usunąć konta powiązanego z chronionymi dokumentami, np. wystawionymi protokołami. Konto i jego e-mail zostały zachowane.');
         }
 
-        $name = $user->name;
-        $user->forceDelete();
+        return redirect()->back()->with('success', "Użytkownik $name został trwale usunięty. Jego adres e-mail można ponownie wykorzystać.");
+    }
 
-        return redirect()->back()->with('success', "Użytkownik $name został trwale usunięty.");
+    public function canForceDestroy(User $manager, User $target): bool
+    {
+        return $target->trashed() && ! $target->hasRole('superadmin')
+            && ($manager->hasRole('superadmin') || $manager->can('settings.users.manage'))
+            && $manager->hasAnyRole(['superadmin', 'admin', 'auditor_senior'])
+            && $this->roleRank($manager) > $this->roleRank($target);
     }
 
     public function assignToCompany(Request $request, User $user)
@@ -518,17 +539,6 @@ class UserController extends Controller
         return collect($user->getRoleNames())
             ->map(fn (string $role) => self::ROLE_RANKS[$role] ?? 35)
             ->max() ?? 0;
-    }
-
-    private function hasBlockingActiveCompanyAssignment(User $user): bool
-    {
-        $companies = $user->companies()->whereNull('companies.archived_at');
-
-        if ($user->getRoleNames()->contains(fn (string $role) => $this->isStaffRole($role))) {
-            return $companies->where('companies.is_owner', false)->exists();
-        }
-
-        return $companies->exists();
     }
 
     private function isStaffRole(string $role): bool

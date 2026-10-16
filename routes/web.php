@@ -402,6 +402,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::prefix('settings')->name('settings.')->middleware('full.staff')->group(function () {
         Route::get('/', fn () => redirect()->route('settings.users.index'))->name('index');
         Route::get('archive', [Settings\ArchiveController::class, 'index'])->middleware('app.permission:settings.archive.view')->name('archive.index');
+        Route::delete('archive/companies/{company}', [Settings\ArchiveController::class, 'destroyCompany'])->middleware('app.permission:settings.archive.view')->name('archive.companies.destroy');
         Route::get('roles', [Settings\RoleController::class, 'index'])->middleware('app.permission:settings.roles.manage')->name('roles.index');
         Route::post('roles', [Settings\RoleController::class, 'store'])->middleware('app.permission:settings.roles.manage')->name('roles.store');
         Route::put('roles/{role}', [Settings\RoleController::class, 'update'])->middleware('app.permission:settings.roles.manage')->name('roles.update');
