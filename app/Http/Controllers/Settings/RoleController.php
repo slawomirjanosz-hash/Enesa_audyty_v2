@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\CompanySettings;
+use App\Services\UserPermissions;
 use App\Support\RolePermissionCatalog;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -53,6 +54,9 @@ class RoleController extends Controller
         $isSystemRole = in_array($role->name, RolePermissionCatalog::SYSTEM_ROLES, true);
         $data = $this->validateRole($request, $role, $isSystemRole);
 
+        // Freeze legacy accounts before changing their role template.
+        $role->users()->where('individual_permissions', false)->each(fn ($user) => app(UserPermissions::class)->initialize($user));
+
         if (! $isSystemRole) {
             $role->update(['name' => $data['name']]);
         }
@@ -71,7 +75,7 @@ class RoleController extends Controller
             $this->syncPermissions($role, array_merge($hiddenExistingNames, $selectedVisibleNames));
         }
 
-        return redirect()->route('settings.roles.index')->with('success', 'Nazwa i uprawnienia roli zostały zapisane.');
+        return redirect()->route('settings.roles.index')->with('success', 'Szablon roli został zapisany. Uprawnienia istniejących użytkowników pozostają bez zmian.');
     }
 
     public function destroy(Role $role)

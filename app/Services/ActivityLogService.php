@@ -54,6 +54,23 @@ class ActivityLogService
         ]);
     }
 
+    public function recordUserPermissions(User $user, array $before, array $after): void
+    {
+        sort($before);
+        sort($after);
+        if ($before === $after || ! app()->bound('request') || ! request()->route()) {
+            return;
+        }
+        ActivityLog::create($this->requestMetadata() + [
+            'user_id' => auth()->id(),
+            'action' => 'permissions_updated',
+            'auditable_type' => User::class,
+            'auditable_id' => $user->id,
+            'subject_label' => $user->name.' ('.$user->email.')',
+            'changes' => ['permissions' => ['old' => $before, 'new' => $after]],
+        ]);
+    }
+
     private function modelChanges(Model $model, string $action): array
     {
         if ($model instanceof CompanyReliabilityReport) {

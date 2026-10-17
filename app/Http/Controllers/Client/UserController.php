@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Mail\NewClientUser;
 use App\Models\User;
+use App\Services\UserPermissions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +66,8 @@ class UserController extends Controller
         $roleName = $data['is_admin'] ? 'client_admin' : 'client_user';
         Role::findOrCreate($roleName);
         $user->assignRole($roleName);
+        $user->syncPermissions([]);
+        app(UserPermissions::class)->initialize($user);
 
         $company->users()->attach($user->id, ['is_admin' => (bool) $data['is_admin']]);
 

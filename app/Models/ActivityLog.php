@@ -29,6 +29,7 @@ class ActivityLog extends Model
         return [
             'created' => 'Utworzono',
             'updated' => 'Zmieniono',
+            'permissions_updated' => 'Zmieniono uprawnienia',
             'deleted' => 'Usunięto',
             'restored' => 'Przywrócono',
             'login' => 'Logowanie',

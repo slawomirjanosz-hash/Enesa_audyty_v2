@@ -13,6 +13,8 @@ use App\Models\User;
 use App\Services\AccountSecurityService;
 use App\Services\AuditorAccessService;
 use App\Services\TaskReminderMailConfiguration;
+use App\Services\UserPermissions;
+use App\Support\RolePermissionCatalog;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,12 +49,12 @@ class UserController extends Controller
         }
 
         $roles = Role::query()
-            ->get()
+            ->with('permissions')->get()
             ->filter(fn (Role $role) => $this->canAssignRole(auth()->user(), $role->name))
             ->values();
 
         // Include every active account, also client accounts without a company.
-        $allUsers = User::with(['roles', 'companies', 'leaveEntitlements'])
+        $allUsers = User::with(['roles.permissions', 'permissions', 'companies', 'leaveEntitlements'])
             ->orderBy('email')
             ->get();
 
@@ -75,7 +77,18 @@ class UserController extends Controller
         $companies = Company::clients()->active()->orderBy('name')->get();
         $archivedCompanies = Company::archived()->orderBy('name')->get();
 
-        return view('settings.users.index', compact('roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers'));
+        $manager = auth()->user();
+        $permissionGroups = ($manager->hasRole('superadmin') || $manager->can('settings.users.manage'))
+            ? app(UserPermissions::class)->groups($manager) : [];
+        $rolePermissionSets = $roles->mapWithKeys(fn ($role) => [$role->name => $role->permissions->pluck('name')->all()]);
+        $permissionSources = $allUsers->filter(fn ($user) => $this->roleRank($manager) > $this->roleRank($user)
+            && ! $user->hasAnyRole(['client_admin', 'client_user']));
+        $userPermissionSets = $permissionGroups === [] ? collect() : $permissionSources
+            ->mapWithKeys(fn ($user) => [$user->id => $user->getAllPermissions()->pluck('name')->all()]);
+        $manageableUserIds = $allUsers->filter(fn ($user) => ($manager->hasRole('superadmin') || $manager->can('settings.users.manage'))
+            && $this->roleRank($manager) > $this->roleRank($user))->pluck('id')->all();
+
+        return view('settings.users.index', compact('roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers', 'permissionGroups', 'rolePermissionSets', 'permissionSources', 'userPermissionSets', 'manageableUserIds'));
     }
 
     public function showAuditorAccess(User $user)
@@ -189,6 +202,9 @@ class UserController extends Controller
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
             'send_email' => ['nullable', 'boolean'],
+            'permissions_present' => ['sometimes', 'accepted'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string', Rule::in(RolePermissionCatalog::names())],
             'has_employment_contract' => ['nullable', 'boolean'],
             'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
             'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
@@ -203,34 +219,45 @@ class UserController extends Controller
         ]);
 
         $this->ensureCanAssignRole($request->user(), $data['role']);
+        if ($request->has('permissions_present')) {
+            app(UserPermissions::class)->validateSelection($request->user(), $data['permissions'] ?? [], in_array($data['role'], ['client_admin', 'client_user'], true));
+        }
 
         $generatedPassword = empty($data['password']);
         $temporaryPassword = $data['password'] ?? str()->random(16);
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'password' => Hash::make($temporaryPassword),
-            'is_active' => true,
-            'has_employment_contract' => $request->boolean('has_employment_contract'),
-        ]);
+        $user = DB::transaction(function () use ($data, $request, $temporaryPassword): User {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'password' => Hash::make($temporaryPassword),
+                'is_active' => true,
+                'has_employment_contract' => $request->boolean('has_employment_contract'),
+            ]);
 
-        if ($user->has_employment_contract) {
-            $user->leaveEntitlements()->updateOrCreate(
-                ['year' => $data['leave_year']],
-                ['entitled_days' => $data['leave_entitled_days']]
-            );
-        }
-
-        $user->assignRole($data['role']);
-
-        // Auto-assign owner (Enesa) company for all staff roles
-        if ($this->isStaffRole($data['role'])) {
-            $ownerCompany = Company::owner()->first() ?? $this->ensureOwnerCompany();
-            if ($ownerCompany && ! $user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
-                $user->companies()->attach($ownerCompany->id);
+            if ($user->has_employment_contract) {
+                $user->leaveEntitlements()->updateOrCreate(
+                    ['year' => $data['leave_year']],
+                    ['entitled_days' => $data['leave_entitled_days']]
+                );
             }
-        }
+
+            $user->assignRole($data['role']);
+            app(UserPermissions::class)->initialize($user);
+            if ($request->has('permissions_present')) {
+                app(UserPermissions::class)->apply($user, $request->user(), $data['permissions'] ?? []);
+            }
+
+            // Auto-assign owner (Enesa) company for all staff roles
+            if ($this->isStaffRole($data['role'])) {
+                $ownerCompany = Company::owner()->first() ?? $this->ensureOwnerCompany();
+                if ($ownerCompany && ! $user->companies()->where('companies.id', $ownerCompany->id)->exists()) {
+                    $user->companies()->attach($ownerCompany->id);
+                }
+            }
+
+            return $user;
+        });
 
         $response = redirect()->route('settings.users.index')
             ->with('success', 'Użytkownik został utworzony. Wiadomość e-mail nie została wysłana.');
@@ -291,6 +318,9 @@ class UserController extends Controller
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'string', 'min:8'],
             'send_email' => ['nullable', 'boolean'],
+            'permissions_present' => ['sometimes', 'accepted'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string', Rule::in(RolePermissionCatalog::names())],
             'has_employment_contract' => ['nullable', 'boolean'],
             'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
             'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
@@ -306,31 +336,44 @@ class UserController extends Controller
 
         $this->ensureCanAssignRole($request->user(), $data['role']);
 
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->phone = $data['phone'] ?? null;
-        $user->has_employment_contract = $request->boolean('has_employment_contract');
-
-        if (! empty($data['password'])) {
-            $user->password = Hash::make($data['password']);
+        if ($request->has('permissions_present')) {
+            app(UserPermissions::class)->validateSelection($request->user(), $data['permissions'] ?? [], in_array($data['role'], ['client_admin', 'client_user'], true));
         }
+        app(UserPermissions::class)->initialize($user);
 
-        $user->save();
+        DB::transaction(function () use ($user, $data, $request): void {
 
-        if (! empty($data['password'])) {
-            app(AccountSecurityService::class)->revoke($user);
-        }
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            $user->phone = $data['phone'] ?? null;
+            $user->has_employment_contract = $request->boolean('has_employment_contract');
 
-        if ($user->has_employment_contract) {
-            $user->leaveEntitlements()->updateOrCreate(
-                ['year' => $data['leave_year']],
-                ['entitled_days' => $data['leave_entitled_days']]
-            );
-        }
+            if (! empty($data['password'])) {
+                $user->password = Hash::make($data['password']);
+            }
 
-        if (! $user->hasRole('superadmin')) {
-            $user->syncRoles([$data['role']]);
-        }
+            $user->save();
+
+            if (! empty($data['password'])) {
+                app(AccountSecurityService::class)->revoke($user);
+            }
+
+            if ($user->has_employment_contract) {
+                $user->leaveEntitlements()->updateOrCreate(
+                    ['year' => $data['leave_year']],
+                    ['entitled_days' => $data['leave_entitled_days']]
+                );
+            }
+
+            if (! $user->hasRole('superadmin')) {
+                $user->syncRoles([$data['role']]);
+            }
+            if ($user->hasAnyRole(['client_admin', 'client_user'])) {
+                $user->syncPermissions([]);
+            } elseif ($request->has('permissions_present')) {
+                app(UserPermissions::class)->apply($user, $request->user(), $data['permissions'] ?? []);
+            }
+        });
 
         $response = redirect()->route('settings.users.index')
             ->with('success', 'Dane użytkownika zaktualizowane.');
@@ -473,6 +516,8 @@ class UserController extends Controller
 
         Role::findOrCreate($data['role']);
         $user->syncRoles([$data['role']]);
+        $user->syncPermissions([]);
+        app(UserPermissions::class)->initialize($user);
 
         $company->users()->syncWithoutDetaching([
             $user->id => [
@@ -496,6 +541,8 @@ class UserController extends Controller
         if (! $user->hasAnyRole(['client_admin', 'client_user'])) {
             Role::findOrCreate('client_user');
             $user->assignRole('client_user');
+            $user->syncPermissions([]);
+            app(UserPermissions::class)->initialize($user);
         }
 
         $company->users()->syncWithoutDetaching([

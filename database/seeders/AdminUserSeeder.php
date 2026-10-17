@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Services\UserPermissions;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,5 +20,6 @@ class AdminUserSeeder extends Seeder
         );
 
         $user->assignRole('admin');
+        app(UserPermissions::class)->initialize($user);
     }
 }

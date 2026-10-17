@@ -17,8 +17,8 @@
 <div class="hr-settings-fields"><div class="hr-settings-field"><label for="hr-km-rate">Stawka za km dla auta prywatnego (zł)</label><input class="hr-input" id="hr-km-rate" name="hr_km_rate" type="number" min="0" max="9999" step="0.0001" value="{{old('hr_km_rate',$settings?->hr_km_rate ?? 0)}}" required></div>
 <div class="hr-settings-field"><label for="hr-diet-rate">Stawka pełnej diety (zł)</label><input class="hr-input" id="hr-diet-rate" name="hr_diet_rate" type="number" min="0" max="9999" step="0.01" value="{{old('hr_diet_rate',$settings?->hr_diet_rate ?? 45)}}" required></div></div><button class="hr-btn">Zapisz ustawienia delegacji</button></form>
 @elseif($section==='vehicles')
-<div class="hr-settings-note"><h3 style="margin-top:0">Odpowiedzialność za samochody</h3><p>Odbiorców powiadomień określa opcja <strong>Odpowiedzialność za samochody</strong> w sekcji HR ustawień roli użytkownika. Każdy aktywny użytkownik z taką rolą otrzymuje informacje o autach służbowych.</p>
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.roles.manage'))<a class="hr-btn" href="{{route('settings.roles.index')}}">Przejdź do ustawień ról</a>@endif
+<div class="hr-settings-note"><h3 style="margin-top:0">Odpowiedzialność za samochody</h3><p>Odbiorców powiadomień określa indywidualna opcja <strong>Odpowiedzialność za samochody</strong> w edycji użytkownika, w sekcji Uprawnienia i odpowiedzialności → HR. Każdy aktywny użytkownik z tą opcją otrzymuje informacje o autach służbowych.</p>
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.users.manage'))<a class="hr-btn" href="{{route('settings.users.index')}}">Przejdź do użytkowników</a>@endif
 <p>Ostrzeżenia o ubezpieczeniu i przeglądzie: do 14 i do 7 dni przed terminem. Po terminie: codziennie o 8:00. Brakujące dane: w poniedziałki o 8:00 (czas polski). Użytkownik przypisany do konkretnego auta otrzymuje także informacje o swoim samochodzie. Wpis ręczny osoby spoza bazy nie powoduje wysyłki do tej osoby.</p></div>
 @include('hr.partials.location-settings')
 @elseif($section==='leaves')

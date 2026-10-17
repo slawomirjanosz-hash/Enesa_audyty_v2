@@ -17,6 +17,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Services\UserPermissions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -322,6 +323,8 @@ class CompanyController extends Controller
                 DB::transaction(function () use ($existing, $data, $company) {
                     $existing->restore();
                     $existing->syncRoles([$data['role']]);
+                    $existing->syncPermissions([]);
+                    app(UserPermissions::class)->initialize($existing);
                     if (! $company->users()->where('user_id', $existing->id)->exists()) {
                         $company->users()->attach($existing->id, [
                             'is_admin' => $data['role'] === 'client_admin',
@@ -352,6 +355,10 @@ class CompanyController extends Controller
             ]);
 
             $user->assignRole($data['role']);
+
+            $user->syncPermissions([]);
+
+            app(UserPermissions::class)->initialize($user);
 
             $company->users()->attach($user->id, [
                 'is_admin' => $data['role'] === 'client_admin',
@@ -424,6 +431,8 @@ class CompanyController extends Controller
 
         // Sync role
         $user->syncRoles([$data['role']]);
+        $user->syncPermissions([]);
+        app(UserPermissions::class)->initialize($user);
 
         // Update company relationship is_admin flag
         $company->users()->updateExistingPivot($user->id, [

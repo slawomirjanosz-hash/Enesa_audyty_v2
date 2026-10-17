@@ -10,12 +10,30 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes {
+        HasRoles::hasPermissionTo as protected inheritedHasPermissionTo;
+        HasRoles::getPermissionsViaRoles as protected inheritedPermissionsViaRoles;
+    }
+
+    public function hasPermissionTo($permission, $guardName = null): bool
+    {
+        // Migrated accounts use only their own grants; legacy/bootstrap records
+        // retain compatibility until UserPermissions initializes their snapshot.
+        return $this->individual_permissions
+            ? $this->hasDirectPermission($this->filterPermission($permission, $guardName))
+            : $this->inheritedHasPermissionTo($permission, $guardName);
+    }
+
+    public function getPermissionsViaRoles(): Collection
+    {
+        return $this->individual_permissions ? collect() : $this->inheritedPermissionsViaRoles();
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -66,6 +84,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'individual_permissions' => 'boolean',
             'has_employment_contract' => 'boolean',
             'last_seen_at' => 'datetime',
             'security_activity_at' => 'datetime',

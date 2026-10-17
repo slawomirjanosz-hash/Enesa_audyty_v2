@@ -56,6 +56,8 @@ jobs:
 
       - name: Test account creation mail choice
         run: node --test tests/js/user-create-mail.test.mjs
+      - name: Test individual user permission editor
+        run: node --test tests/js/user-permissions.test.mjs
 
       - name: Test financial amount formatting
         run: node --test tests/js/financial-amount.test.mjs tests/js/financial-health.test.mjs

@@ -6,6 +6,7 @@ use App\Models\HrVehicle;
 use App\Models\HrVehicleLocation;
 use App\Models\User;
 use App\Services\HrVehicleReminderSelection;
+use App\Services\UserPermissions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -234,7 +235,7 @@ test('migration preserves selected recipients without changing their shared role
     expect($other->fresh()->hasRole('hr_vehicle_responsible'))->toBeFalse();
 });
 
-test('responsibility is configurable in role settings under HR', function () {
+test('role responsibility is a template for new users without subscribing existing role members', function () {
     $admin = fleetUser('superadmin');
     CompanySettings::create(['name' => 'Fleet']);
     $role = Role::findOrCreate('car_caretakers');
@@ -243,7 +244,11 @@ test('responsibility is configurable in role settings under HR', function () {
     $this->actingAs($admin)->get(route('settings.roles.index'))->assertOk()->assertSee('Odpowiedzialność za samochody');
     $this->put(route('settings.roles.update', $role), ['name' => $role->name, 'display_name' => 'Opiekunowie aut', 'permissions' => ['hr.delegations.view', 'hr.vehicles.responsible']])->assertSessionHas('success');
     fleetVehicle(['insurance_expires_at' => '2026-10-01']);
-    expect(app(HrVehicleReminderSelection::class)->groups()->keys()->all())->toBe([$person->id]);
+    expect(app(HrVehicleReminderSelection::class)->groups())->toBeEmpty();
+    $newPerson = fleetUser();
+    $newPerson->assignRole($role);
+    app(UserPermissions::class)->initialize($newPerson);
+    expect(app(HrVehicleReminderSelection::class)->groups()->keys()->all())->toBe([$newPerson->id]);
 });
 
 test('superadmin responsibility can be selected independently of protected access permissions', function () {

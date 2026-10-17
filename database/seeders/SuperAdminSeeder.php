@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Services\UserPermissions;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -33,5 +34,6 @@ class SuperAdminSeeder extends Seeder
         if (! $user->hasRole($role)) {
             $user->assignRole($role);
         }
+        app(UserPermissions::class)->initialize($user);
     }
 }

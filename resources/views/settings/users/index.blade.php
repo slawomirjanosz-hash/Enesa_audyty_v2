@@ -670,13 +670,13 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                                     <form method="POST" action="{{route('settings.users.unlock', $user)}}">@csrf<button class="btn-action success" title="Odblokuj konto" aria-label="Odblokuj konto: {{$user->name}}"><i class="ti ti-lock-open" aria-hidden="true"></i></button></form>
                                 @endif
                                 @if($role === 'auditor' && $currentUser->hasAnyRole(['superadmin', 'admin', 'auditor_senior']))
-                                    <a href="{{ route('settings.users.auditor-access', $user) }}" class="btn-action" title="Uprawnienia" style="width:auto;padding:0 10px;gap:5px;">
-                                        <i class="ti ti-key"></i> Uprawnienia
+                                    <a href="{{ route('settings.users.auditor-access', $user) }}" class="btn-action" title="Dostępy do konkretnych firm i audytów" style="width:auto;padding:0 10px;gap:5px;">
+                                        <i class="ti ti-key"></i> Dostępy do firm
                                     </a>
                                 @endif
                                 @if($user->id === $currentUser->id)
                                     <a href="{{ route('profile.edit') }}" class="btn-action" title="Edytuj mój profil i podpis" style="width:auto;padding:0 10px;gap:5px;"><i class="ti ti-user-circle"></i> Mój profil</a>
-                                @elseif($canDelete)
+                                @elseif(in_array($user->id, $manageableUserIds, true))
                                     <button class="btn-action"
                                         title="Edytuj"
                                         onclick="openEditModal(
@@ -691,6 +691,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                                         )">
                                         <i class="ti ti-pencil"></i>
                                     </button>
+                                    @if($canDelete)
                                     <form method="POST"
                                         action="{{ route('settings.users.destroy', $user) }}"
                                         onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ e($user->name) }}?')">
@@ -700,6 +701,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                                             <i class="ti ti-trash"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 @else
                                     <span style="font-size:11px;color:#A8D5B5;padding:0 4px;">chroniony</span>
                                 @endif
@@ -779,6 +781,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                 <div class="mf-group"><label class="mf-label" for="add_leave_days">Pula startowa w tym roku (dni)</label><input id="add_leave_days" class="mf-input" type="number" name="leave_entitled_days" min="0" max="366" value="{{old('leave_entitled_days',26)}}"><small style="color:#718078">Wpisz liczbę dni, od której pracownik ma rozpocząć pracę w systemie.</small></div>
             </div>
 
+            @include('settings.users.permissions', ['prefix' => 'add'])
             <button type="submit" class="btn-modal-submit">
                 <i class="ti ti-user-plus" style="margin-right:6px;"></i>Utwórz użytkownika
             </button>
@@ -801,8 +804,14 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
         <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
         <div class="modal-title"><i class="ti ti-pencil" style="margin-right:8px;"></i>Edytuj użytkownika</div>
         <div class="modal-subtitle">Zmień dane — hasło zostaw puste jeśli nie chcesz go zmieniać.</div>
+        @if($errors->any() && old('editing_user_id'))
+        <div role="alert" style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:16px;color:#b91c1c">
+            @foreach($errors->all() as $error)<p style="margin:4px 0">{{$error}}</p>@endforeach
+        </div>
+        @endif
 
         <form method="POST" id="editForm" action="">
+            <input type="hidden" id="editing_user_id" name="editing_user_id">
             <input type="hidden" id="edit-user-send-email" name="send_email" value="0">
             @csrf
             @method('PUT')
@@ -842,6 +851,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                 <div class="mf-group"><label class="mf-label" for="edit_leave_days">Pula przyznana w tym roku (dni)</label><input id="edit_leave_days" class="mf-input" type="number" name="leave_entitled_days" min="0" max="366" value="0"><small id="edit_leave_balance" style="color:#718078"></small></div>
             </div>
 
+            @include('settings.users.permissions', ['prefix' => 'edit'])
             <button type="submit" class="btn-modal-submit">
                 <i class="ti ti-device-floppy" style="margin-right:6px;"></i>Zapisz zmiany
             </button>
@@ -852,6 +862,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
 @endsection
 
 @push('scripts')
+<script id="user-permission-data" type="application/json">{!! json_encode(['roles' => $rolePermissionSets, 'users' => $userPermissionSets], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+<script src="{{asset('js/user-permissions.js')}}?v=1" defer></script>
 <script src="{{asset('js/user-password.js')}}?v=1" defer></script>
 <script src="{{asset('js/user-create-mail.js')}}?v=1" defer></script>
 <script>
@@ -865,7 +877,15 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
     }
 
     // Auto-open add modal if there were validation errors
-    @if($errors->any() && old('name') !== null)
+    @if($errors->any() && old('editing_user_id') && in_array((int) old('editing_user_id'), $manageableUserIds, true))
+    document.addEventListener('DOMContentLoaded', function() {
+        openEditModal(@js((int) old('editing_user_id')), @js(old('name')), @js(old('email')), @js(old('phone')), @js(old('role')), @js((bool) old('has_employment_contract')), {}, null);
+        document.getElementById('edit_leave_year').value = @js(old('leave_year', now()->year));
+        document.getElementById('edit_leave_days').value = @js(old('leave_entitled_days', 0));
+        const selected = new Set(@js((array) old('permissions', [])));
+        document.querySelectorAll('#edit_permissions_panel [name="permissions[]"]').forEach(input => input.checked = selected.has(input.value));
+    });
+    @elseif($errors->any() && old('name') !== null)
     document.addEventListener('DOMContentLoaded', function() { openAddModal(); });
     @endif
 
@@ -886,6 +906,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
     }
     function openEditModal(id, name, email, phone, role, employmentContract, entitlements, currentBalance) {
         const form = document.getElementById('editForm');
+        document.getElementById('editing_user_id').value = id;
         form.action = '/settings/users/' + id;
         document.getElementById('edit_name').value  = name;
         document.getElementById('edit_email').value = email;
@@ -894,6 +915,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
         document.getElementById('edit_password').value = '';
         document.getElementById('edit_password').type = 'password';
         document.getElementById('edit-user-send-email').value = '0';
+        window.loadIndividualPermissions?.(id);
         editLeaveEntitlements = entitlements || {};
         editCurrentLeaveBalance = currentBalance;
         document.getElementById('edit_employment_contract').checked = Boolean(employmentContract);

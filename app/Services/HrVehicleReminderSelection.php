@@ -18,8 +18,8 @@ class HrVehicleReminderSelection
         }
         $today = now('Europe/Warsaw')->startOfDay();
         $users = HrVehicle::eligibleResponsibleUsers()->get()->keyBy('id');
-        // Responsibility is an explicit role assignment, not an implicit full-access grant.
-        $managerIds = HrVehicle::eligibleResponsibleUsers()->whereHas('roles.permissions', fn ($q) => $q->where('name', 'hr.vehicles.responsible'))->pluck('users.id');
+        // Fleet responsibility is explicit; operational full access does not subscribe a user.
+        $managerIds = $users->filter(fn (User $user) => $user->checkPermissionTo('hr.vehicles.responsible'))->keys();
         foreach (HrVehicle::with('responsibleUser')->where('is_active', true)->get() as $vehicle) {
             $recipients = $vehicle->type === 'company' ? $managerIds->all() : [];
             if ($vehicle->type === 'company' && $vehicle->responsible_user_id) {

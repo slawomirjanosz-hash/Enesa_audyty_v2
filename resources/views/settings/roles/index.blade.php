@@ -16,6 +16,7 @@
 </div>
 
 @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
+<p class="muted">Role są szablonami startowymi. Zmiany szablonu dotyczą przyszłego wczytania roli i nie zmieniają uprawnień istniejących użytkowników. Indywidualne uprawnienia i odpowiedzialności ustawisz w edycji użytkownika.</p>
 @if(session('error')) <div class="alert alert-error">{{ session('error') }}</div> @endif
 
 <div class="roles-heading">
