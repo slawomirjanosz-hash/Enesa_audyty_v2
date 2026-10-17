@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -21,7 +22,7 @@ class ClientRegistered extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'ENESA - Nowa rejestracja klienta');
+        return new Envelope(subject: 'Nowa rejestracja klienta — '.(CompanySettings::first()?->name ?? config('app.name')));
     }
 
     public function content(): Content

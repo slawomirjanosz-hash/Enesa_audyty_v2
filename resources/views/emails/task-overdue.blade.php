@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="font-family: 'Lato', Arial, sans-serif; background:#F4F1EA; margin:0; padding:30px;">
-    <div style="max-width:560px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden;">
-        <div style="background:#B91C1C; padding:20px 28px;">
-            <span style="color:#fff; font-family:'Manrope',sans-serif; font-size:18px; font-weight:700;">
-                ⚠ Zaległe zadania ({{ $tasks->count() }})
-            </span>
-        </div>
-        <div style="padding:28px;">
+@extends('emails.layout')
+@section('mail-title', 'Zaległe zadania ('.$tasks->count().')')
+@section('mail-content')
             <p style="color:#555; font-size:14px; margin:0 0 18px;">
                 Poniższe zadania mają termin wykonania w przeszłości i wciąż nie są oznaczone jako zakończone:
             </p>
@@ -36,7 +28,5 @@
                 </tbody>
             </table>
             <p style="margin-top:20px;">Kliknij nazwę zadania, aby otworzyć odpowiedni projekt, audyt lub listę zadań CRM.</p>
-        </div>
-    </div>
-</body>
-</html>
+
+@endsection

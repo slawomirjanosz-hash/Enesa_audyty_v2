@@ -55,6 +55,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'canonical_url' => env('APP_CANONICAL_URL'),
 
     /*
     |--------------------------------------------------------------------------

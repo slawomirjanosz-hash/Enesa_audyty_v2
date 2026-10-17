@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -22,7 +23,7 @@ class NewClientUser extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'ENESA - Dostęp do systemu');
+        return new Envelope(subject: 'Dostęp do systemu — '.(CompanySettings::first()?->name ?? config('app.name')));
     }
 
     public function content(): Content

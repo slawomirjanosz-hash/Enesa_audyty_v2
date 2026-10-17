@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="font-family: 'Lato', Arial, sans-serif; background:#F4F1EA; margin:0; padding:30px;">
-    <div style="max-width:520px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden;">
-        <div style="background:#1A4D3A; padding:20px 28px;">
-            <span style="color:#F5F0E8; font-family:'Manrope',sans-serif; font-size:18px; font-weight:700;">
-                Nowe zadanie w ENESA CRM
-            </span>
-        </div>
-        <div style="padding:28px;">
+@extends('emails.layout')
+@section('mail-title', 'Nowe zadanie')
+@section('mail-content')
             <h2 style="font-family:'Manrope',sans-serif; color:#1A1A1A; font-size:17px; margin:0 0 12px;">
                 {{ $task->title }}
             </h2>
@@ -30,10 +22,8 @@
                 @endif
             </table>
             <a href="{{ route('crm.index', ['tab' => 'tasks']) }}"
-               style="display:inline-block; margin-top:20px; background:#1A4D3A; color:#F5F0E8; text-decoration:none; padding:10px 20px; border-radius:8px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700;">
+               style="display:inline-block; margin-top:20px; background:{{$brandColor}}; color:#ffffff; text-decoration:none; padding:10px 20px; border-radius:8px; font-family:'Manrope',sans-serif; font-size:13px; font-weight:700;">
                 Zobacz zadanie w CRM
             </a>
-        </div>
-    </div>
-</body>
-</html>
+
+@endsection

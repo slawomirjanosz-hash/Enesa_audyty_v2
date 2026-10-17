@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Company;
+use App\Models\CompanySettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -17,7 +18,7 @@ class ClientAccepted extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'ENESA - Twoje konto zostało zaakceptowane');
+        return new Envelope(subject: 'Twoje konto zostało zaakceptowane — '.(CompanySettings::first()?->name ?? config('app.name')));
     }
 
     public function content(): Content
