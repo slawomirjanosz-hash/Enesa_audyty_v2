@@ -24,6 +24,9 @@ obliczeniowych działa w adapterze, przy zachowaniu źródłowych zakładek i p�
   oznaczone jako nieznane nie są potwierdzeniem braku paliw kopalnych.
 - Excel eksportuje wynik obliczony z bieżących odpowiedzi, na kopii modelu, bez zapisu
   do bazy. Import zachowuje mapowanie i przelicza dane zwykłą normalizacją.
+- Renderery 4.1 i 4.2 ponownie liczyły częściową sumę nośników do 2 miejsc,
+  zastępując aktualny wynik profilu. Warunki w rzeczywistym audycie korzystają teraz
+  z faktów backendu, również gdy wynik jest null. Podgląd używa wspólnego kalkulatora.
 - 4.1 wskazuje, których czynników nie można ocenić wskutek brakujących zależności.
   Warunki prawne/merytoryczne biblioteki nie zostały zmienione. KTX-ZR-01: >85 TJ;
   KTX-ZR-02: >=10 i <=85 TJ; KTX-ZR-03–07 mają niezależne odpowiedzi profilu.

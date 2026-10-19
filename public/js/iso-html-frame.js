@@ -71,6 +71,16 @@
         };
         document.addEventListener('input', event => { if (event.target.closest('#q_FAKT_NOSNIKI')) odswiez(); });
     }
+    if (['4-1','4-2'].includes(config.section)) {
+        const calculateSources = window.przeliczWyl;
+        window.przeliczWyl = () => {
+            calculateSources();
+            // Original renderers recompute a partial, two-decimal fuel sum here.
+            // Production conditions must use the authoritative current profile facts.
+            const facts = config.preview ? ODP : (config.context.ODP || {});
+            Object.assign(WYL, EnesaPlantEnergy.sourceFacts(facts, config.energyFactors, !config.preview));
+        };
+    }
     const initial = capture();
     // The supplied examples declare the renderer's types (in particular boolean
     // switches). Platform form strings must not turn "nie" into a truthy flag.

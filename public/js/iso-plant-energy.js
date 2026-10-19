@@ -33,5 +33,9 @@
         if (heat === 'oba') return 'do potwierdzenia';
         return Array.isArray(fuels) && fuels.length && !unknown ? 'nie' : null;
     };
-    root.EnesaPlantEnergy = {number, calculate, fossil};
+    const sourceFacts = (facts, factors, authoritative = false) => ({
+        ZUZYCIE_TJ: authoritative ? (facts.ZUZYCIE_TJ ?? null) : Array.isArray(facts.FAKT_NOSNIKI) ? calculate(facts.FAKT_NOSNIKI, factors).value : number(facts.ZUZYCIE_TJ),
+        FAKT_CIEPLO_PALIWA: authoritative ? (facts.FAKT_CIEPLO_PALIWA ?? null) : fossil(facts.FAKT_KOTLOWNIA, facts.FAKT_CIEPLO_PALIWO),
+    });
+    root.EnesaPlantEnergy = {number, calculate, fossil, sourceFacts};
 })(typeof window === 'undefined' ? globalThis : window);

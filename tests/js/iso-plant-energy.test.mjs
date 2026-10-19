@@ -6,6 +6,15 @@ const context = {}; vm.createContext(context); vm.runInContext(readFileSync(new 
 const {calculate, number, fossil} = context.EnesaPlantEnergy;
 const factors = {LPG: {kWh: .0036, MWh: 3.6, GJ: 1, l: .0246, t: 46}, węgiel: {kWh: .0036, MWh: 3.6, GJ: 1, t: 23}};
 const row = (c1, c2 = 'MWh', c0 = 'LPG') => ({c0, c1, c2});
+test('4.1 and 4.2 derived facts keep backend values including null over stale or partial rows', () => {
+ const {sourceFacts} = context.EnesaPlantEnergy;
+ const facts = {ZUZYCIE_TJ:72, FAKT_CIEPLO_PALIWA:null, FAKT_NOSNIKI:[row(1000),row(1,'l','węgiel')], FAKT_KOTLOWNIA:'siec', FAKT_CIEPLO_PALIWO:['gaz ziemny']};
+ assert.equal(sourceFacts(facts,factors,true).ZUZYCIE_TJ,72);
+ assert.equal(sourceFacts({...facts,ZUZYCIE_TJ:null,FAKT_NOSNIKI:[row(20000)]},factors,true).ZUZYCIE_TJ,null);
+ assert.equal(sourceFacts(facts,factors,true).FAKT_CIEPLO_PALIWA,null);
+ assert.equal(sourceFacts(facts,factors,false).ZUZYCIE_TJ,null);
+ assert.equal(sourceFacts({...facts,FAKT_NOSNIKI:[row(20000)]},factors,false).ZUZYCIE_TJ,72);
+});
 test('LPG energy units and thresholds match backend precision', () => {
  for (const [quantity, unit, expected] of [[20000,'MWh',72],[1000000,'MWh',3600],[10000,'GJ',10],[85000,'GJ',85],['85000,001','GJ',85.000001],['85000,0001','GJ',85.0000001]]) assert.equal(calculate([row(quantity,unit)],factors).value,expected);
 });
