@@ -134,8 +134,13 @@
     <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:var(--green);margin:0;">
         <i class="ti ti-users"></i> CRM
     </h1>
-    <div style="display:flex;gap:8px;">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
         @if($currentTab === 'pipeline')
+            <div class="pipeline-search-box">
+                <i class="ti ti-search" aria-hidden="true"></i>
+                <input type="search" id="pipeline-search" autocomplete="off" aria-label="Szukaj w lejku sprzedaży" placeholder="Szukaj: szansa, firma, oferta, osoba…">
+                <div id="pipeline-search-result" class="pipeline-search-result" aria-live="polite"></div>
+            </div>
             <button onclick="document.getElementById('modal-opp').style.display='flex'" class="btn-primary">
                 <i class="ti ti-plus"></i> Nowa szansa
             </button>
@@ -360,9 +365,13 @@
 
 {{-- ═══ TAB: PIPELINE ═══ --}}
 @if($currentTab === 'pipeline')
+<style>
+.pipeline-search-box{position:relative}.pipeline-search-box input{box-sizing:border-box;font-size:13px;padding:8px 12px 8px 34px;border-radius:7px;border:1px solid #D0CCC0;outline:none;width:300px;font-family:'Lato',sans-serif}.pipeline-search-box input:focus{border-color:var(--green)}.pipeline-search-box i{position:absolute;left:10px;top:16px;color:#aaa;font-size:16px}.pipeline-search-result{min-height:15px;margin-top:4px;color:#777;font-size:11px}@media(max-width:700px){.pipeline-search-box,.pipeline-search-box input{width:100%}}
+</style>
+<script type="module" src="{{ asset('js/crm-pipeline-search.js') }}?v=1"></script>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
     <div style="font-size:13px;color:#888;">
-        Pipeline: <strong style="color:var(--green);">{{ number_format($opportunities->whereNotIn('stage',['won','lost','rejected'])->sum('value'), 2, ',', ' ') }} zł</strong>
+        Pipeline: <strong data-pipeline-total style="color:var(--green);">{{ number_format($opportunities->whereNotIn('stage',['won','lost','rejected'])->sum('value'), 2, ',', ' ') }} zł</strong>
     </div>
     <a href="{{ route('crm.index', array_filter(['tab' => 'pipeline', 'related_to_me' => request()->boolean('related_to_me') ? null : 1])) }}" class="{{ request()->boolean('related_to_me') ? 'btn-primary' : 'btn-secondary' }}">
         <i class="ti ti-user-check"></i> Leady związane ze mną
@@ -387,14 +396,14 @@
         </div>
         <div class="funnel-bar" style="background:{{ $meta['color'] }};border:1px solid {{ $meta['border'] }};">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:{{ $stageOpps->count() > 0 ? '8px' : '0' }};">
-                <span style="font-size:11px;font-weight:600;color:{{ $meta['text'] }};">{{ $stageOpps->count() }} szans · {{ $pct }}%</span>
-                <span style="font-size:11px;font-weight:700;color:{{ $meta['text'] }};">{{ number_format($stageOpps->sum('value'), 2, ',', ' ') }} zł</span>
+                <span data-pipeline-summary="{{ $stageKey }}" style="font-size:11px;font-weight:600;color:{{ $meta['text'] }};">{{ $stageOpps->count() }} szans · {{ $pct }}%</span>
+                <span data-pipeline-sum="{{ $stageKey }}" style="font-size:11px;font-weight:700;color:{{ $meta['text'] }};">{{ number_format($stageOpps->sum('value'), 2, ',', ' ') }} zł</span>
             </div>
             @if($stageOpps->count() > 0)
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 @foreach($stageOpps as $opp)
                 @php $isOverdue = $opp->expected_close_date && $opp->expected_close_date->isBefore(today()); @endphp
-                <div class="opp-card {{ $isOverdue ? 'overdue' : '' }}" @if($isOverdue)data-overdue="true"@endif style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $isOverdue ? '#DC2626' : $meta['dot'] }};cursor:pointer;"
+                <div data-pipeline-card="{{ $opp->id }}" class="opp-card {{ $isOverdue ? 'overdue' : '' }}" @if($isOverdue)data-overdue="true"@endif style="width:calc(33.33% - 6px);min-width:160px;max-width:240px;border-left:3px solid {{ $isOverdue ? '#DC2626' : $meta['dot'] }};cursor:pointer;"
                     onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['archived' => $task->trashed(), 'title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                     <div class="opp-card-title">{{ $opp->title }}</div>
                     @if($opp->company)
@@ -462,10 +471,10 @@
                     <div style="width:8px;height:8px;border-radius:50%;background:{{ $meta['dot'] }};"></div>
                     <span style="font-size:12px;font-weight:700;color:{{ $meta['text'] }};font-family:'Manrope',sans-serif;">{{ $meta['label'] }}</span>
                 </div>
-                <span style="font-size:11px;font-weight:600;color:{{ $meta['text'] }};">{{ $stageOpps->count() }}</span>
+                <span data-pipeline-count="{{ $stageKey }}" style="font-size:11px;font-weight:600;color:{{ $meta['text'] }};">{{ $stageOpps->count() }}</span>
             </div>
             @foreach($stageOpps as $opp)
-            <div class="opp-card" style="border-left:3px solid {{ $meta['dot'] }};margin-bottom:6px;cursor:pointer;"
+            <div data-pipeline-card="{{ $opp->id }}" class="opp-card" style="border-left:3px solid {{ $meta['dot'] }};margin-bottom:6px;cursor:pointer;"
                 onclick="openOpportunity({{ $opp->id }}, @js($opp->title), {{ $opp->company_id ?? 'null' }}, '{{ $opp->stage }}', {{ $opp->value ?? 'null' }}, '{{ $opp->expected_close_date?->format('Y-m-d') ?? '' }}', {{ $opp->assigned_to ?? 'null' }}, @js($opp->description ?? ''), @js($opp->notes ?? ''), @js($opp->company ? route('companies.show', $opp->company) : null), @js($opp->relatedUsers->pluck('id')->values()), @js($opp->tasks->map(fn($task) => ['archived' => $task->trashed(), 'title' => $task->title, 'assigned' => $task->assignedUser?->name, 'due_date' => $task->due_date?->format('d.m.Y'), 'status' => $statusMeta[$task->status]['label'] ?? $task->status])))">
                 <div class="opp-card-title">{{ $opp->title }}</div>
                 <div class="opp-card-sub">{{ $opp->company?->name ?? 'bez klienta' }}</div>
@@ -480,11 +489,7 @@
 {{-- Tabela szans --}}
 <div class="table-card">
     <div class="table-card-header">
-        <div class="table-card-title"><i class="ti ti-target" style="color:var(--green);margin-right:6px;"></i> Wszystkie szanse ({{ $opportunities->count() }})</div>
-        <div class="search-box">
-            <i class="ti ti-search"></i>
-            <input type="text" placeholder="Szukaj szans..." oninput="filterTable('opps-tbody', this.value, [0,1])">
-        </div>
+        <div class="table-card-title"><i class="ti ti-target" style="color:var(--green);margin-right:6px;"></i> Wszystkie szanse (<span data-pipeline-matches>{{ $opportunities->count() }}</span>)</div>
     </div>
     <div style="overflow-x:auto;">
         <table class="crm-table">
@@ -501,7 +506,7 @@
             <tbody id="opps-tbody">
                 @foreach($opportunities as $opp)
                 @php $meta = $stageMeta[$opp->stage] ?? $stageMeta['new_lead']; @endphp
-                <tr>
+                <tr data-pipeline-id="{{ $opp->id }}" data-pipeline-stage="{{ $opp->stage }}" data-pipeline-value="{{ $opp->value ?? 0 }}" data-pipeline-search="{{ collect([$opp->title, $opp->company?->name, $opp->company?->nip, $opp->assignedUser?->name, $opp->relatedUsers->pluck('name')->join(' '), $opp->offers->map(fn($offer) => $offer->fullNumber())->join(' ')])->filter()->join(' ') }}">
                     <td style="font-weight:600;">{{ $opp->title }}</td>
                     <td style="color:#888;font-size:12px;">{{ $opp->company?->name ?? '—' }}</td>
                     <td>
