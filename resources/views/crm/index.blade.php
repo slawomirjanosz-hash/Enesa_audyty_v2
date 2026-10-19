@@ -4,6 +4,7 @@
 
 @push('styles')
 @include('partials.header-search-styles')
+<style>.table-card-header .search-box,.important-contact-tools .search-box{display:none}</style>
 <style>
 .crm-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
 .crm-stat { background:#fff; border:1px solid #E5E1D8; border-radius:12px; padding:18px 20px; }
@@ -136,6 +137,9 @@
         <i class="ti ti-users"></i> CRM
     </h1>
     <div class="app-search-toolbar">
+        @if($currentTab !== 'pipeline')
+            @include('partials.list-search', ['searchId' => 'crm-list-search', 'searchTargets' => '.table-card tbody tr, .important-contact-card', 'searchPlaceholder' => 'Szukaj: firma, osoba, zadanie…'])
+        @endif
         @if($currentTab === 'pipeline')
             <div class="app-header-search">
                 <i class="ti ti-search" aria-hidden="true"></i>
@@ -1502,7 +1506,7 @@ function filterDashboard() {
     document.querySelectorAll('#companies-tbody tr').forEach(row => {
         const dashMatch = val === 'all' || row.dataset.dashboard === val;
         const text = row.textContent.toLowerCase();
-        const searchMatch = !search || text.includes(search);
+        const searchMatch = window.appListMatches ? window.appListMatches(text, search) : (!search || text.includes(search));
         row.style.display = dashMatch && searchMatch ? '' : 'none';
     });
 }

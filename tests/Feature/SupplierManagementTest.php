@@ -143,7 +143,7 @@ test('admin creates a supplier instead of a client and sees it in supplier views
     $this->actingAs($admin)->get(route('suppliers.index', ['q' => 'Pompy']))
         ->assertOk()
         ->assertSee('Hydro Dostawy')
-        ->assertSee('Kafelki');
+        ->assertSee('Widok kafelków');
 
     $this->actingAs($admin)->get(route('crm.index', ['tab' => 'suppliers']))
         ->assertOk()

@@ -74,11 +74,14 @@
 
 @section('content')
 
-<div class="page-header">
+@include('partials.header-search-styles')
+<div class="app-search-header">
     <h1 class="page-title"><i class="ti ti-clipboard-list" style="margin-right:8px;"></i>Formularze zapytań</h1>
+    <div class="app-search-toolbar">@include('partials.list-search', ['searchTargets' => '.table-card .crm-table tbody tr', 'searchPlaceholder' => 'Szukaj formularza zapytania…'])
     <button class="btn-primary" onclick="openModal()">
         <i class="ti ti-plus"></i> Nowy formularz
     </button>
+    </div>
 </div>
 
 @if(session('success'))

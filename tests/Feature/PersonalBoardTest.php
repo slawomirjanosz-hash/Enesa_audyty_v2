@@ -23,6 +23,10 @@ test('personal board combines CRM and cards with multi source and user filters w
     $crm = Task::create(['company_id' => $project->company_id, 'title' => 'CRM własny', 'assigned_to' => $worker->id, 'status' => 'todo']);
     $foreign = Task::create(['company_id' => $project->company_id, 'title' => 'CRM zespołu', 'assigned_to' => $admin->id, 'status' => 'todo']);
     $this->actingAs($worker)->get(route('board.mine'))->assertOk()->assertSee('Projekt własny')->assertSee('CRM własny')->assertDontSee('CRM zespołu')->assertDontSee('name="users[]"', false);
+    $this->get(route('board.mine', ['q' => 'Projekt własny']))->assertOk()
+        ->assertViewHas('cards', fn ($cards) => $cards->total() === 1 && $cards->first()->title === 'Projekt własny');
+    $this->get(route('board.mine', ['q' => 'CRM zespołu']))->assertOk()
+        ->assertViewHas('cards', fn ($cards) => $cards->total() === 0);
     $this->get(route('board.mine', ['users' => [$admin->id]]))->assertForbidden();
     $worker->givePermissionTo('board.team.view');
     $this->get(route('board.mine'))->assertSee('name="users[]"', false)->assertDontSee('CRM zespołu');

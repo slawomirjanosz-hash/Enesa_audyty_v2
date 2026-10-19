@@ -17,6 +17,7 @@ use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
 use App\Services\OfferContentService;
 use App\Services\OfferCrmStageSynchronizer;
+use App\Support\ListSearch;
 use App\Support\TableSort;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -64,6 +65,7 @@ class OfferController extends Controller
             $query->where('status', $request->status);
         }
 
+        ListSearch::apply($query, $request, ['offer_full_number', 'offer_number', 'offer_title'], ['company' => ['name', 'nip'], 'assignedUser' => ['name']]);
         $sortColumns = [
             'number' => 'offer_full_number', 'title' => 'offer_title',
             'company' => Company::select('name')->whereColumn('companies.id', 'offers.company_id')->limit(1),

@@ -10,15 +10,18 @@
 </style>
 
 @if(session('success'))<div role="status" style="padding:12px;margin-bottom:16px;background:#ecfdf5;color:#166534;border-radius:8px">{{ session('success') }}</div>@endif
-<div class="sup-head">
+@include('partials.header-search-styles')
+<div class="app-search-header">
     <div><h1>Dostawcy</h1><p>Firmy dostarczające materiały i usługi do realizowanych projektów.</p></div>
-    <div class="sup-tools">
+    <div class="app-search-toolbar">
+        <div class="app-view-toggle" aria-label="Widok dostawców">
+            <button class="active" id="supplier-grid-button" type="button" onclick="setSupplierView('grid')" title="Widok kafelków" aria-label="Widok kafelków"><i class="ti ti-layout-grid"></i></button>
+            <button id="supplier-list-button" type="button" onclick="setSupplierView('list')" title="Widok tabeli" aria-label="Widok tabeli"><i class="ti ti-table"></i></button>
+        </div>
+        @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: dostawca, NIP, miasto, materiał…'])
         @if($canCreateSupplier)
             <button class="supplier-add" type="button" onclick="openSupplierModal()"><i class="ti ti-plus"></i> Dodaj dostawcę</button>
         @endif
-        <form class="sup-search" method="GET"><input name="q" value="{{request('q')}}" placeholder="Szukaj nazwy, miasta, materiału…"><button><i class="ti ti-search"></i></button></form>
-        <button class="view-button active" id="supplier-grid-button" type="button" onclick="setSupplierView('grid')" title="Kafelki"><i class="ti ti-layout-grid"></i></button>
-        <button class="view-button" id="supplier-list-button" type="button" onclick="setSupplierView('list')" title="Lista"><i class="ti ti-list"></i></button>
     </div>
 </div>
 

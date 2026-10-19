@@ -5,9 +5,11 @@
 <div class="cyl-module cyl-register">
 @include('cylinders.style')
 <style>.cyl-selection-summary:not([hidden]){flex-wrap:wrap}.cyl-selection-summary form{margin-left:auto}.cyl-register .cyl-table{position:relative}</style>
-<div class="cyl-head">
+@include('partials.header-search-styles')
+<div class="app-search-header">
 <div><h1>{{ $clientView ? 'Moje urządzenia i przeglądy' : 'Rejestr urządzeń' }}</h1><p class="cyl-muted">Butle — identyfikacja i ostatni przegląd.</p></div>
-@if($canManage)<div class="cyl-actions"><a class="cyl-btn" href="{{ route('cylinders.import.create') }}">Import z Excela</a><a class="cyl-btn" href="{{ route('cylinders.series.index') }}">Serie przeglądów</a><a class="cyl-btn cyl-btn-primary" href="{{ route('cylinders.create') }}">+ Dodaj urządzenie</a></div>@endif
+<div class="app-search-toolbar">@include('partials.list-search', ['serverSearch' => true, 'searchId' => 'cyl-search', 'searchMaxLength' => 100, 'searchPlaceholder' => 'Szukaj: nazwa, numer fabryczny…'])
+@if($canManage)<div class="cyl-actions"><a class="cyl-btn" href="{{ route('cylinders.import.create') }}">Import z Excela</a><a class="cyl-btn" href="{{ route('cylinders.series.index') }}">Serie przeglądów</a><a class="cyl-btn cyl-btn-primary" href="{{ route('cylinders.create') }}">+ Dodaj urządzenie</a></div>@endif</div>
 </div>
 <div class="cyl-card cyl-register-card">
 <div class="cyl-register-toolbar">
@@ -18,10 +20,9 @@
 <form method="get" class="cyl-register-search cyl-register-filters" role="search">
 <label for="cyl-company" class="cyl-sr-only">Klient</label>
 <select id="cyl-company" name="company_id"><option value="">Wszyscy dostępni klienci</option>@foreach($companies as $company)<option value="{{ $company->id }}" @selected(request('company_id') == $company->id)>{{ $company->name }}</option>@endforeach</select>
-<label for="cyl-search" class="cyl-sr-only">Szukaj nazwy lub numeru fabrycznego</label>
-<input id="cyl-search" type="search" name="q" value="{{ request('q') }}" maxlength="100" placeholder="Nazwa lub numer fabryczny…">
+<input type="hidden" name="q" value="{{ request('q') }}">
 @if(request('archived'))<input type="hidden" name="archived" value="1">@endif
-<button class="cyl-btn" type="submit">Szukaj</button>
+<button class="cyl-btn" type="submit">Filtruj</button>
 </form>
 </div>
 @if($canManage)<div class="cyl-selection-summary" data-cylinder-selection hidden role="status" aria-live="polite">Wybrano urządzenia: <strong data-cylinder-count>0</strong><button type="button" class="cyl-btn" data-cylinder-clear>Wyczyść zaznaczenie</button>@if(!request('archived'))<form method="get" action="{{ route('cylinders.series.create') }}" data-cylinder-series><span data-cylinder-series-inputs></span><button class="cyl-btn cyl-btn-primary">Utwórz serię przeglądów</button></form>@endif</div>@endif

@@ -39,12 +39,10 @@
 @include('documents.quota')
 @include('settings.users.security')
 
-<div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+@include('partials.header-search-styles')
+<div class="app-search-header">
     <h1><i class="ti ti-folder" style="margin-right:8px;"></i>Wszystkie dokumenty <span class="documents-total-size">{{ $totalSize }}</span></h1>
-    <form class="search-box" method="GET" action="{{ route('documents.index') }}">
-        <i class="ti ti-search"></i>
-        <input type="text" id="search-docs" name="q" value="{{ $search }}" maxlength="200" placeholder="Szukaj we wszystkich dokumentach..." oninput="clearTimeout(window.docsSearchTimer); window.docsSearchTimer = setTimeout(() => this.form.requestSubmit(), 450)">
-    </form>
+    <div class="app-search-toolbar">@include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj we wszystkich dokumentach…'])</div>
 </div>
 
 @if(session('success'))

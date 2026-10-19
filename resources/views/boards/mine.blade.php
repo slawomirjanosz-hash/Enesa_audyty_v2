@@ -1,10 +1,12 @@
 @extends('layouts.app')
 @section('page-title','Moja tablica')
 @section('content')
-<h1>{{$archivedBoard ? 'Archiwum zadań' : 'Moja tablica'}}</h1>
+@include('partials.header-search-styles')
+<div class="app-search-header"><h1>{{$archivedBoard ? 'Archiwum zadań' : 'Moja tablica'}}</h1><div class="app-search-toolbar">@include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: zadanie, projekt, audyt, osoba…'])</div></div>
 <nav class="board-tabs" aria-label="Widok zadań"><a href="{{route('board.mine')}}" @if(!$archivedBoard) aria-current="page" @endif>Aktywne zadania</a><a href="{{route('board.mine',['archive'=>1])}}" @if($archivedBoard) aria-current="page" @endif>Zarchiwizowane</a></nav>
 <p>Zadania z dostępnych modułów w jednym miejscu. Domyślnie pokazujemy zadania przypisane do Ciebie.</p>
 <form class="board-filters" method="get" action="{{route('board.mine')}}" aria-label="Filtry zadań">
+<input type="hidden" name="q" value="{{ is_string(request('q')) ? request('q') : '' }}">
 @if($archivedBoard)<input type="hidden" name="archive" value="1">@endif
 @foreach($options as $key=>$choices)
 <details class="board-filter"><summary>{{$key==='users'?'Użytkownicy':$modules[$key]}} <span data-filter-count>{{count($selected[$key])===count($choices)&&$key!=='users'?'Wszystkie':count($selected[$key]).' wybr.'}}</span></summary>

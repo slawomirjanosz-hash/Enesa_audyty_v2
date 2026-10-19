@@ -6,6 +6,7 @@ use App\Models\BoardTask;
 use App\Models\CompanySettings;
 use App\Models\Task;
 use App\Models\User;
+use App\Support\ListSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -83,6 +84,8 @@ class PersonalBoardService
         $base->where($assigned)->where(fn ($q) => $q->whereIn('project_id', $selected['projects'] ?? [])->orWhereIn('audit_id', $selected['audits'] ?? []));
         $crmBase->where($assigned)->when(! in_array('tasks', $selected['crm'] ?? []), fn ($q) => $q->whereRaw('1=0'));
         // Union identifiers first: filters and access restrictions apply before shared pagination.
+        ListSearch::apply($base, $request, ['title', 'description'], ['project' => ['number', 'name'], 'audit' => ['number', 'title'], 'assignee' => ['name']]);
+        ListSearch::apply($crmBase, $request, ['title', 'description'], ['company' => ['name'], 'crmOpportunity' => ['title'], 'assignedUser' => ['name']]);
         $union = $base->selectRaw("id, due_date, 'board' AS kind")->toBase()->unionAll($crmBase->selectRaw("id, due_date, 'crm' AS kind")->toBase());
         $cards = DB::query()->fromSub($union, 'board_rows')->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('kind')->orderBy('id')->paginate(90)->withQueryString();
         $boardRows = BoardTask::withTrashed()->with(['project', 'audit', 'stage', 'assignee', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'board')->pluck('id'))->get()->keyBy('id');

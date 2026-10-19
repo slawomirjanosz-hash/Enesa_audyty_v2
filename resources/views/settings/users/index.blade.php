@@ -209,6 +209,11 @@
 @endphp
 
 {{-- Zakładki --}}
+@include('partials.header-search-styles')
+<div class="app-search-header">
+    <h1 style="margin:0;font-size:22px;color:var(--green)">Użytkownicy</h1>
+    <div class="app-search-toolbar">@include('partials.list-search', ['searchTargets' => '.users-table tbody tr', 'searchPlaceholder' => 'Szukaj: imię, nazwisko, e-mail, rola…'])</div>
+</div>
 <div class="settings-tabs">
     <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
         <i class="ti ti-users" style="margin-right:6px;"></i>Wszyscy użytkownicy

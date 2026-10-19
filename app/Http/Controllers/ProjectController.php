@@ -8,6 +8,7 @@ use App\Models\ProjectProtocol;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Support\ListSearch;
 use App\Support\TableSort;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class ProjectController extends Controller
             $query->where('status', $request->string('status'));
         }
 
+        ListSearch::apply($query, $request, ['number', 'name'], ['company' => ['name', 'nip'], 'manager' => ['name']]);
         $completedQuery = (clone $query)->where('status', 'completed')->withCount('members');
         $sortColumns = [
             'number' => 'number', 'name' => 'name', 'team' => 'members_count', 'date' => 'start_date',

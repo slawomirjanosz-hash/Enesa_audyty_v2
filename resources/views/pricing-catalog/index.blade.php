@@ -29,9 +29,11 @@
 @endpush
 
 @section('content')
-<div style="margin-bottom:20px;">
+@include('partials.header-search-styles')
+<div class="app-search-header"><div>
     <h1 style="margin:0;color:var(--green);font:700 22px 'Manrope',sans-serif;"><i class="ti ti-currency-zloty" style="margin-right:8px;"></i>Cennik usług</h1>
     <p style="margin:6px 0 0;color:#777;font-size:13px;">Wewnętrzne ceny netto używane do tworzenia wstępnej wyceny z ankiety. Klient ich nie widzi.</p>
+</div><div class="app-search-toolbar">@include('partials.list-search', ['searchTargets' => '.catalog-table tbody tr:not(.edit-row)', 'searchPlaceholder' => 'Szukaj: nazwa usługi, kod…'])</div>
 </div>
 
 @if(session('success'))

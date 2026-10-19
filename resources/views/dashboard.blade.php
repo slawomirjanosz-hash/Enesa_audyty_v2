@@ -436,7 +436,7 @@
         <h1 class="page-title">Klienci wymagający uwagi</h1>
     </div>
     <div class="app-search-toolbar">
-        <div class="view-toggle">
+        <div class="app-view-toggle" aria-label="Widok firm">
             <button class="view-toggle-btn active" id="viewTilesBtn" onclick="switchView('tiles')" title="Widok kafelków">
                 <i class="ti ti-layout-grid"></i>
             </button>

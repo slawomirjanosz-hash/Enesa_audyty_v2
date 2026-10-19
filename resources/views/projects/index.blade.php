@@ -9,14 +9,19 @@
     .project-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}.btn{border:0;border-radius:8px;padding:10px 16px;background:var(--green);color:#fff;font-weight:700;cursor:pointer;text-decoration:none}.filters{display:flex;gap:10px;margin-bottom:18px}.filters select{padding:9px 12px;border:1px solid #d8d4ca;border-radius:8px;background:#fff}.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}.project-card{background:#fff;border:1px solid #e5e1d8;border-radius:12px;padding:20px;text-decoration:none;color:inherit;transition:.15s}.project-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,45,35,.08)}.project-number{font-size:11px;color:#6b7a70;font-weight:800;letter-spacing:.08em}.project-card h2{font-size:17px;margin:7px 0 12px}.meta{display:grid;gap:7px;font-size:13px;color:#59665e}.status{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800;background:#eef4ef;color:#24543d}.money{font-size:16px;font-weight:800;color:var(--green);margin-top:14px}.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.46);z-index:2000;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.modal-box{background:#fff;border-radius:14px;padding:20px;width:min(1120px,100%);max-height:calc(100vh - 32px);overflow:auto}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 14px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field.half{grid-column:span 2}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:800}.field input,.field select,.field textarea{width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #d5d0c5;border-radius:7px;font:inherit}.member-checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 12px;padding:10px;border:1px solid #d5d0c5;border-radius:8px;background:#fafaf7}.member-check{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;min-width:0}.member-check input{width:16px;height:16px;flex:0 0 auto}.member-check span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.empty{padding:45px;text-align:center;background:#fff;border:1px dashed #ccc;border-radius:12px;color:#777}@media(max-width:900px){.form-grid{grid-template-columns:1fr 1fr}.field.half{grid-column:span 1}.member-checks{grid-template-columns:1fr 1fr}}@media(max-width:650px){.form-grid{grid-template-columns:1fr}.field.half,.field.full{grid-column:auto}.member-checks{grid-template-columns:1fr}}
 </style>
 
-<div class="project-head">
+@include('partials.header-search-styles')
+<div class="app-search-header">
     <div><h1 style="margin:0 0 5px;">Projekty</h1><p style="margin:0;color:#6b7a70;">Harmonogramy, finanse, zadania, zakupy i dokumenty w jednym miejscu.</p></div>
-    @can('projects.create')<button class="btn" type="button" onclick="document.getElementById('project-modal').classList.add('open')"><i class="ti ti-plus"></i> Nowy projekt</button>@endcan
+    <div class="app-search-toolbar">
+        @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: projekt, numer, firma, kierownik…'])
+        @can('projects.create')<button class="btn" type="button" onclick="document.getElementById('project-modal').classList.add('open')"><i class="ti ti-plus"></i> Nowy projekt</button>@endcan
+    </div>
 </div>
 
 @if(session('success'))<div style="padding:12px 15px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:16px;">{{ session('success') }}</div>@endif
 
 <form class="filters" method="GET">
+    <input type="hidden" name="q" value="{{ is_string(request('q')) ? request('q') : '' }}">
     <select name="status" onchange="this.form.submit()">
         <option value="">Wszystkie statusy</option>
         @foreach(['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'] as $value=>$label)

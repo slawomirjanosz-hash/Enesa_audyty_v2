@@ -166,11 +166,13 @@
 @endpush
 
 @section('content')
-<div class="page-header">
+@include('partials.header-search-styles')
+<div class="app-search-header">
     <div>
         <div class="page-header-title">Typy audytów</div>
         <div class="page-header-sub">Zarządzaj typami audytów i wersjami formularzy HTML</div>
     </div>
+    <div class="app-search-toolbar">@include('partials.list-search', ['searchTargets' => '.audit-type-card', 'searchPlaceholder' => 'Szukaj typu audytu…'])</div>
 </div>
 
 @if(session('success'))

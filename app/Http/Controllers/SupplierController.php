@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Project;
 use App\Services\AuditorAccessService;
+use App\Support\ListSearch;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -40,16 +41,7 @@ class SupplierController extends Controller
             'id'
         );
 
-        if ($request->filled('q')) {
-            $term = '%'.trim($request->string('q')->toString()).'%';
-            $query->where(function ($builder) use ($term) {
-                $builder->where('name', 'like', $term)
-                    ->orWhere('nip', 'like', $term)
-                    ->orWhere('city', 'like', $term)
-                    ->orWhere('supplier_capabilities', 'like', $term)
-                    ->orWhere('supplier_materials', 'like', $term);
-            });
-        }
+        ListSearch::apply($query, $request, ['name', 'nip', 'city', 'email', 'phone', 'supplier_capabilities', 'supplier_materials']);
 
         return view('suppliers.index', [
             'suppliers' => $query->paginate(24)->withQueryString(),

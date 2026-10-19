@@ -210,7 +210,8 @@
 @endphp
 
 {{-- Nagłówek strony --}}
-<div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+@include('partials.header-search-styles')
+<div class="app-search-header">
     <div>
         <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:var(--green);margin:0;">
             <i class="ti ti-file-invoice" style="margin-right:8px;"></i>Oferty
@@ -224,9 +225,12 @@
             </div>
         @endif
     </div>
+    <div class="app-search-toolbar">
+    @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: numer, oferta, klient, osoba…'])
     <a href="{{ route('offers.create') }}" class="btn-primary">
         <i class="ti ti-plus"></i> Nowa oferta
     </a>
+    </div>
 </div>
 
 @if(session('success'))
@@ -279,10 +283,6 @@
                 Wszystkie oferty
                 <span style="font-weight:400;color:#888;">({{ $offers->total() }})</span>
             @endif
-        </div>
-        <div class="search-box">
-            <i class="ti ti-search"></i>
-            <input type="text" id="search-offers" placeholder="Szukaj po numerze, tytule, kliencie..." oninput="filterOffersTable(this.value)">
         </div>
     </div>
 

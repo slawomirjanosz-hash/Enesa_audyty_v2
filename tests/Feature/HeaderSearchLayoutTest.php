@@ -12,7 +12,7 @@ test('dashboard and CRM render the same search header and toolbar', function () 
         $response = $this->actingAs($user)->get($url)->assertOk();
         $response->assertSeeInOrder(['class="app-search-header"', 'class="app-search-toolbar"', 'class="app-header-search"', 'id="'.$input.'"'], false)
             ->assertSee('class="app-header-search-result"', false)
-            ->assertSee('.app-header-search input{box-sizing:border-box;width:100%;height:38px;', false)
+            ->assertSee('.app-header-search input[type=search]{box-sizing:border-box;width:100%;height:38px;', false)
             ->assertSee('aria-live="polite"', false);
     }
 });

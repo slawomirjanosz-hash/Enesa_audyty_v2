@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="{{asset('css/warehouse.css')}}">
 @php($warehouseFull = auth()->user()->hasRole('superadmin') || auth()->user()->can('system.full_access'))
-<div class="wh-head"><div><span class="wh-eyebrow">EWIDENCJA MATERIAŁÓW</span><h1>Magazyn</h1><p>Katalog, przyjęcia, wydania i pełna historia stanów.</p></div><nav class="wh-actions" aria-label="Magazyn">
+@if(request()->routeIs('warehouse.index')) @include('partials.header-search-styles') @endif
+<div class="{{ request()->routeIs('warehouse.index') ? 'app-search-header' : 'wh-head' }}"><div><span class="wh-eyebrow">EWIDENCJA MATERIAŁÓW</span><h1>Magazyn</h1><p>Katalog, przyjęcia, wydania i pełna historia stanów.</p></div><nav class="{{ request()->routeIs('warehouse.index') ? 'app-search-toolbar' : 'wh-actions' }}" aria-label="Magazyn">
+@if(request()->routeIs('warehouse.index')) @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: kod, nazwa, lokalizacja…']) @endif
 <a class="wh-btn" href="{{route('warehouse.index')}}">Katalog i stany</a>
 <a class="wh-btn" href="{{route('warehouse.documents.index')}}">Dokumenty i historia</a>
 @foreach(['receipt'=>'receive','issue'=>'issue','adjustment'=>'adjust'] as $whType=>$ability)

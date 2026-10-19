@@ -4,7 +4,8 @@
 <style>
 .archive-card{background:#fff;border:1px solid #e5e1d8;border-radius:12px;overflow:hidden;margin-bottom:20px}.archive-card h2{margin:0;padding:18px 22px;font-size:16px;border-bottom:1px solid #f0ede6}.archive-scroll{overflow-x:auto}.archive-table{width:100%;border-collapse:collapse}.archive-table th,.archive-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #f0ede6;font-size:13px}.archive-table th{color:#777;background:#fafaf6;font-size:11px;text-transform:uppercase}.archive-table tr:last-child td{border:0}.empty{padding:28px;color:#888;font-size:14px}.archive-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.archive-actions form{margin:0}.restore,.archive-delete{display:inline-block;border:1px solid #b9d8c4;color:var(--green);background:#f0fbf3;border-radius:7px;padding:7px 10px;cursor:pointer;font-weight:700;text-decoration:none}.archive-delete{border-color:#fecaca;background:#fef2f2;color:#991b1b}.archive-flash{padding:14px 18px;border-radius:8px;margin-bottom:18px;background:#ecfdf5;color:#166534}.archive-flash.error{background:#fef2f2;color:#991b1b}
 </style>
-<h1 style="margin:0 0 8px">Archiwum</h1>
+@include('partials.header-search-styles')
+<div class="app-search-header"><h1 style="margin:0">Archiwum</h1><div class="app-search-toolbar">@include('partials.list-search', ['searchTargets' => '.archive-table tbody tr', 'searchPlaceholder' => 'Szukaj: firma, osoba, e-mail…'])</div></div>
 <p style="margin:0 0 24px;color:#6b7a70">Zarchiwizowane firmy i konta użytkowników możesz przywrócić lub trwale usunąć. Usunięcie konta zwalnia jego adres e-mail. Trwałego usunięcia nie można cofnąć.</p>
 @if(session('success'))<div class="archive-flash" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="archive-flash error" role="alert">{{$errors->first()}}</div>@endif
