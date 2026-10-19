@@ -1,0 +1,142 @@
+[
+  {
+    "section": "10-1",
+    "source_file": "ENESA_10.1_Niezgodnosci_platforma.html",
+    "source_sha256": "84ec214ea236a12a4c0c1a67db00f07a0beeb009b4b5d1745fbdece202770e91"
+  },
+  {
+    "section": "10-2",
+    "source_file": "ENESA_10.2_Ciagle_doskonalenie_platforma.html",
+    "source_sha256": "7746e2a04e11d8f59c9f3c1b7549c8a6b9a142dfa3882254e7565b17cde9cd36"
+  },
+  {
+    "section": "4-1",
+    "source_file": "ENESA_4.1_Kontekst_platforma.html",
+    "source_sha256": "3fff714372cf80efb44c2ebbbf64be520cc4577557cff6f8177f1470be7fe457"
+  },
+  {
+    "section": "4-2",
+    "source_file": "ENESA_4.2_Strony_zainteresowane_platforma.html",
+    "source_sha256": "00cc1c27b51badb2d82bd261f1352a5c95a33e754fcaa7c90f7974135fcf7532"
+  },
+  {
+    "section": "4-3",
+    "source_file": "ENESA_4.3_Zakres_systemu_platforma.html",
+    "source_sha256": "40ea421b699e36067349d0854236a11548a4e34d1b1539fb7e6f7794e250b755"
+  },
+  {
+    "section": "4-4",
+    "source_file": "ENESA_4.4_System_zarzadzania_energia_platforma.html",
+    "source_sha256": "aec6f6c250d6cd651ab6373270105d560e056bdf039aed742d67bd77e96e6805"
+  },
+  {
+    "section": "5-1",
+    "source_file": "ENESA_5.1_Przywodztwo_platforma.html",
+    "source_sha256": "ede5471120082c7390dc4a329c3a2707a6bcdbe640304bdef86091d10c464148"
+  },
+  {
+    "section": "5-2",
+    "source_file": "ENESA_5.2_Polityka_energetyczna_platforma.html",
+    "source_sha256": "c9f7343dbaa51172f4ae9c61dc815ca5254c82212d800a8171ffe840783817af"
+  },
+  {
+    "section": "5-3",
+    "source_file": "ENESA_5.3_Role_i_uprawnienia_platforma.html",
+    "source_sha256": "a3b22ca085000fd5ff1862361b1e3f868e0e460b6eea732aaad78a5487a86b8d"
+  },
+  {
+    "section": "6-1",
+    "source_file": "ENESA_6.1_Ryzyka_i_szanse_platforma.html",
+    "source_sha256": "fdd6f1323562f3272bfb7b0d59fde21e943ee88900f1daae509e1f4a81dc7c17"
+  },
+  {
+    "section": "6-2",
+    "source_file": "ENESA_6.2_Cele_i_plany_dzialan_platforma.html",
+    "source_sha256": "6e9cd2b853df0389b51612b00afb84fe748ca70dda3fbe158520f732c66d81b3"
+  },
+  {
+    "section": "6-3",
+    "source_file": "ENESA_6.3_Przeglad_energetyczny_platforma.html",
+    "source_sha256": "cb29a45f06ff05d4abeeb3a6c6961cbf4f4fc7531756f82c61aa7e9ccb0430b1"
+  },
+  {
+    "section": "6-4",
+    "source_file": "ENESA_6.4_Wskazniki_EnPI_platforma.html",
+    "source_sha256": "cd782620d5688f192f27327e0b56c6f1258a5be412010f37d441d4fea906c032"
+  },
+  {
+    "section": "6-5",
+    "source_file": "ENESA_6.5_Linia_bazowa_EnB_platforma.html",
+    "source_sha256": "0581ec4fb87934577b482462a844718c78a1d704cbdecebbd09785c385f00295"
+  },
+  {
+    "section": "6-6",
+    "source_file": "ENESA_6.6_Plan_zbierania_danych_platforma.html",
+    "source_sha256": "cbb0264c1feec3d86f9a71961d69882a9c49760fadf7802e61b3a7bb7d5f498f"
+  },
+  {
+    "section": "7-1",
+    "source_file": "ENESA_7.1_Zasoby_platforma.html",
+    "source_sha256": "d23e9c0bc5a1a10a4bd5268f64ef136ee37709ff3a683b56e7d173e30b8d0c9b"
+  },
+  {
+    "section": "7-2",
+    "source_file": "ENESA_7.2_Kompetencje_platforma.html",
+    "source_sha256": "ebcefcc3d4959ea7bf96acf521b843170716e82977819bba96d217385dcb3f54"
+  },
+  {
+    "section": "7-3",
+    "source_file": "ENESA_7.3_Swiadomosc_platforma.html",
+    "source_sha256": "5b86b32d3ff435de8609801c7606f0633f62d394651612502445798304b199cc"
+  },
+  {
+    "section": "7-4",
+    "source_file": "ENESA_7.4_Komunikacja_platforma.html",
+    "source_sha256": "fa4828663ebed7934fab0c81703ad5b406b83e2095c7b4d36b460032f97f2e40"
+  },
+  {
+    "section": "7-5",
+    "source_file": "ENESA_7.5_Udokumentowane_informacje_platforma.html",
+    "source_sha256": "99db43e309ae6e018e09fed88c671db244f06ef848d4ef1e5418782061d4b8b0"
+  },
+  {
+    "section": "8-1",
+    "source_file": "ENESA_8.1_Nadzor_operacyjny_platforma.html",
+    "source_sha256": "4dfd822f77110242990ffa34a0b4c6b1a6dcd0bfff96590d98366716b8444038"
+  },
+  {
+    "section": "8-2",
+    "source_file": "ENESA_8.2_Projektowanie_platforma.html",
+    "source_sha256": "65cbd8dbca12252e4fda0062b032123e709b7bdb09203b838f564870ec0bfb66"
+  },
+  {
+    "section": "8-3",
+    "source_file": "ENESA_8.3_Zakupy_platforma.html",
+    "source_sha256": "13cdba271bed1582ff3bcadbc8f1e9e1cf550200b159964bd797300abcba642f"
+  },
+  {
+    "section": "9-1-1",
+    "source_file": "ENESA_9.1.1_Monitorowanie_platforma.html",
+    "source_sha256": "5eb4a341dcba9906f6a46df1d9f2cc4bb62e46471e854fee1bd41f216590c02c"
+  },
+  {
+    "section": "9-1-2",
+    "source_file": "ENESA_9.1.2_Ocena_zgodnosci_platforma.html",
+    "source_sha256": "816e4ee0e8cecc048a84df4ed6a891ef9917f6891bc8eee2a72f8d30413b272c"
+  },
+  {
+    "section": "9-2",
+    "source_file": "ENESA_9.2_Audyt_wewnetrzny_platforma.html",
+    "source_sha256": "1d1ed63aad8b265f80957920ccbee44933ad2d1c5ec0ea760e4502bc9137aaf1"
+  },
+  {
+    "section": "9-3",
+    "source_file": "ENESA_9.3_Przeglad_zarzadzania_platforma.html",
+    "source_sha256": "749732f3a0dd5274712de251cffbb4cfc6e6f25f73f047ba4549d0f021108014"
+  },
+  {
+    "section": "intro",
+    "source_file": "ENESA_Profil_zakladu_ankieta.html",
+    "source_sha256": "6790206584b00b077f6796685fc382c7c434ff1d15ec21624adac94f350a1a5a"
+  }
+]

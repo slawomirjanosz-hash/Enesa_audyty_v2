@@ -10,6 +10,8 @@
 <div class="plant-notice"><strong>Podgląd bez danych klienta.</strong> Możesz sprawdzać pola i listy wyboru. Odpowiedzi nie są zapisywane, nie ma autozapisu ani rzeczywistych zatwierdzeń. Dane z wcześniejszych punktów pozostają puste; pokazujemy także warianty warunkowe, które u klienta zależą od jego odpowiedzi.</div>
 <section class="plant-card preview-tools"><label>Punkt ankiety<select id="preview-section">@foreach($titles as $key=>$label)<option value="{{ route('audit-types.questionnaire-preview', [$auditType,$key]) }}" @selected($section===$key)>{{ $label }}</option>@endforeach</select></label><label class="plant-check"><input id="preview-conditions" type="checkbox" checked>Pokaż także pola warunkowe</label><button type="button" id="preview-reset">Wyczyść podgląd</button></section>
 <nav class="plant-nav" aria-label="Działy ankiety" id="preview-nav"></nav>
+<p><a class="plant-button" href="{{request()->fullUrlWithQuery(['source_example'=>1])}}">Wypełnij przykładem AutoParts — 18.10.2026</a></p>
+@if(request()->boolean('source_example'))<div class="plant-notice">Przykład AutoParts z materiałów źródłowych. Dane demonstracyjne; bez zapisu i rzeczywistych zatwierdzeń.</div>@endif
 <div class="plant-summary"><strong data-system-progress id="factor-progress">Podgląd pól ankiety</strong></div>
 @include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>false])
 <form id="{{ $formId }}" data-questionnaire-form data-preview-form onsubmit="return false">

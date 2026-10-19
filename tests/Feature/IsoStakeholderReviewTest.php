@@ -37,11 +37,11 @@ function stakeholderConsultantPayload($review, $profile, $factors): array
     return ['operation' => 'consultant', 'lock_version' => $review->lock_version, 'source_hash' => $service->hash($profile, $factors), 'consultant' => $decisions, 'analysis' => ['summary' => 'Wymagania uwzględniono w planie działań i rejestrze ryzyk.', 'owner' => 'Pełnomocnik EnMS', 'reviewed_on' => '2026-10-01', 'next_review' => '2027-10-01']];
 }
 
-test('stakeholder library contains 30 requirements for 28 parties with 21 proposal rules', function () {
+test('stakeholder library contains 31 requirements for 28 parties with 21 proposal rules', function () {
     $schema = app(IsoStakeholderQuestionnaire::class)->schema();
-    expect($schema['strony'])->toHaveCount(30)->and($schema['mapowanie'])->toHaveCount(21)->and($schema['grupy'])->toHaveCount(4);
+    expect($schema['strony'])->toHaveCount(31)->and($schema['mapowanie'])->toHaveCount(21)->and($schema['grupy'])->toHaveCount(4);
     expect(array_unique(array_column($schema['strony'], 'strona_kod')))->toHaveCount(28);
-    expect(collect($schema['strony'])->where('zgodnosc', 'KANDYDAT'))->toHaveCount(30);
+    expect(collect($schema['strony'])->where('zgodnosc', 'KANDYDAT'))->toHaveCount(31);
     $codes = array_column(app(IsoFactorQuestionnaire::class)->schema()['czynniki'], 'kod');
     foreach ($schema['mapowanie'] as $mapping) {
         expect($codes)->toContain($mapping['czynnik']);

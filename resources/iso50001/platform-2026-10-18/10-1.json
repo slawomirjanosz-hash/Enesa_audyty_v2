@@ -1,0 +1,432 @@
+{
+  "source_file": "ENESA_10.1_Niezgodnosci_platforma.html",
+  "source_sha256": "84ec214ea236a12a4c0c1a67db00f07a0beeb009b4b5d1745fbdece202770e91",
+  "section": "10-1",
+  "data": {
+    "LISTA_101": [
+      {
+        "tekst": "Na niezgodności reaguje się: opanowanie, korekcja, zajęcie się konsekwencjami.",
+        "podstawa": "N",
+        "auto": "reakcja"
+      },
+      {
+        "tekst": "Ocenia się potrzebę działania korygującego: przegląd niezgodności, przyczyny, podobne przypadki gdzie indziej.",
+        "podstawa": "N",
+        "auto": "ocenaPotrzeby"
+      },
+      {
+        "tekst": "Potrzebne działania są wdrażane i adekwatne do skutków niezgodności.",
+        "podstawa": "N",
+        "auto": "wdrozenie"
+      },
+      {
+        "tekst": "Przegląda się skuteczność działań korygujących.",
+        "podstawa": "N",
+        "auto": "przegladSkutecznosci"
+      },
+      {
+        "tekst": "W razie potrzeby wprowadza się zmiany w systemie.",
+        "podstawa": "N",
+        "auto": "zmianySystemu"
+      },
+      {
+        "tekst": "Zachowano zapisy o charakterze niezgodności, działaniach i wynikach działań korygujących.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Przy podjętym działaniu korygującym niezgodność zamyka się na dowodzie skuteczności, nie na wykonaniu działania.",
+        "podstawa": "M",
+        "auto": "zamkniecie"
+      },
+      {
+        "tekst": "Prowadzony jest rejestr (F-EnMS-22) i karty (F-EnMS-21); stosowana jest metoda analizy przyczyn.",
+        "podstawa": "M",
+        "auto": "narzedzia"
+      }
+    ],
+    "przyklad": {
+      "KARTY": [
+        {
+          "nr": "NK-2026-01",
+          "dataWykrycia": "2026-06-22",
+          "ponownieOtwarta": "2026-09-18",
+          "zrodlo": "monitorowanie",
+          "wymaganie": "Wymaganie organizacji — kryterium sprężarkowni: ciśnienie w sieci nie wyżej niż 6,3 bar, zmiany nastaw tylko za zgodą kierownika utrzymania ruchu (III-35, punkt 8.1). Od 07.2026 także: protokół serwisu z nastawami przed i po.",
+          "opis": "Serwis po przeglądzie sprężarki z 15.06.2026 przywrócił nastawę fabryczną 7,0 bar zamiast kryterialnych 6,3 bar. We wrześniu 2026 r. audyt wewnętrzny wykazał, że protokół z kolejnego przeglądu sprężarki jest na wzorze serwisu — bez nastaw przed i po — i że nikt nie sprawdza protokołu przy odbiorze usługi.",
+          "dowod": "S-1 około 0,120 → około 0,125 kWh/Nm³ w tygodniu przeglądu, przy produkcji i temperaturze jak tydzień wcześniej; nastawa 7,0 bar odczytana ze sterownika; protokół serwisu z 15.06.2026. We wrześniu: protokół z przeglądu sprężarki na wzorze serwisu, bez nastaw (audyt A-01/2026, ustalenie N-1).",
+          "klasyfikacja": "Niestosowana — AutoParts nie dzieli niezgodności na duże i małe w audytach wewnętrznych",
+          "korekcja": "Przywrócenie nastawy 6,3 bar w dniu wykrycia; wpis w rejestrze zmian nastaw sprężarkowni.",
+          "korekcjaKto": "Kierownik utrzymania ruchu, 22.06.2026",
+          "konsekwencje": "Około tygodnia pracy sprężarkowni przy 7,0 bar zamiast 6,3 bar. Nadwyżka zużycia ponad wartość oczekiwaną przy spełnionym kryterium — poniżej. Bez skutków dla produkcji i bez skutków dla zgodności z wymaganiami prawnymi; wpływ na wskaźnik S-1 odnotowany w raporcie monitorowania.",
+          "nadwyzkaMWh": "1,6",
+          "skalaSkutkow": "srednie",
+          "metoda": "5x",
+          "przebieg": "Analiza 1 (07.2026): Dlaczego 7 bar? Serwis przywrócił nastawy fabryczne. Dlaczego? Nie wiedział, że 6,3 bar to kryterium. Dlaczego? Zlecenie serwisowe nie zawierało kryteriów ani zasad zmiany nastaw.\nAnaliza 2 (09.2026): Dlaczego protokół bez nastaw? Serwis używa własnego wzoru. Dlaczego nikt tego nie zauważył? Odbiór usługi nie obejmował sprawdzenia protokołu. Dlaczego? Procedura P-EnMS-06 nie określała, jak odbiera się usługi przy znaczących użyciach energii.",
+          "przyczyna": "Brak zasad odbioru usług wykonawców przy znaczących użyciach energii — samo zlecenie nie wystarcza, jeśli nikt nie sprawdza jego wykonania.",
+          "podobneSprawdzono": "Przejrzano zlecenia wszystkich wykonawców pracujących przy znaczących użyciach energii: serwis kotłowni — brak jakichkolwiek wymagań co do nastaw (wskaźnik K-1 = 1,01 w I półroczu, czyli 1% powyżej linii bazowej); automatyka lakierni — brak wymagań; serwis sprężarek — wymagania są, wprowadzone w 07.2026.",
+          "podobneZnalezione": "tak",
+          "uzasadnienieZakres": "Przyczyna jest systemowa i dotyczy wszystkich wykonawców przy znaczących użyciach energii, nie tylko serwisu sprężarek. Skutki jednostkowego zdarzenia są umiarkowane (około 1 400 zł), ale ryzyko powtórzenia występuje przy każdym przeglądzie u trzech wykonawców, a przy kotłowni wskaźnik już jest powyżej linii bazowej. Działanie obejmuje wszystkich trzech wykonawców oraz zmianę procedury odbioru usług.",
+          "zakresDzialania": "szerszy",
+          "dzialania": [
+            {
+              "tresc": "Trzy zdania w zleceniu dla serwisu sprężarek: zgoda kierownika UR na zmianę nastaw, protokół z nastawami przed i po, zgłaszanie wykrytych wycieków.",
+              "odp": "Kierownik utrzymania ruchu",
+              "data": "07.2026",
+              "wykonano": "10.07.2026"
+            },
+            {
+              "tresc": "Wzór protokołu z nastawami przed i po dla wykonawców przy wszystkich znaczących użyciach energii: sprężarki, kotłownia, automatyka lakierni.",
+              "odp": "Kierownik utrzymania ruchu",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            },
+            {
+              "tresc": "Sprawdzanie protokołu przy odbiorze usługi przy znaczącym użyciu energii — zmiana procedury P-EnMS-06, punkt 4.2.",
+              "odp": "Jan Kowalski — Energy Manager",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            }
+          ],
+          "zmianaSystemu": "tak",
+          "zmianaOpis": "Procedura P-EnMS-06 — zasady odbioru usług przy znaczących użyciach energii; wzór protokołu z nastawami dla wykonawców (załącznik do zlecenia).",
+          "dowodPlanowany": "Protokoły z nastawami przed i po, podpisane przy odbiorze przez kierownika utrzymania ruchu, z trzech przeglądów: kotłownia przed rozpoczęciem sezonu grzewczego (plan: 10.2026), następny przegląd sprężarek (11.2026) oraz najbliższy serwis automatyki lakierni (termin do ustalenia przez kierownika UR). Dodatkowo wskaźnik S-1 oceniony w porównywalnych warunkach w tygodniach przeglądów.",
+          "terminDowodu": "2026-10-31",
+          "dataSprawdzenia": "",
+          "wynikSprawdzenia": "",
+          "decyzja": "kontynuowac",
+          "sprawdzil": "Jan Kowalski — Energy Manager"
+        },
+        {
+          "nr": "NK-2026-02",
+          "dataWykrycia": "2026-09-18",
+          "ponownieOtwarta": "",
+          "zrodlo": "zgodnosc",
+          "wymaganie": "Wymaganie umowne — coroczne wskaźniki zużycia energii zakładu dla banku finansującego modernizację, termin 30 czerwca (rejestr III-04, wiersz 9; umowa kredytowa, załącznik ESG).",
+          "opis": "Raport z wskaźnikami zużycia energii za 2025 r. wysłano do banku 12.08.2026, czyli po terminie umownym 30.06.2026 — i dopiero po przypomnieniu ze strony banku.",
+          "dowod": "E-mail z raportem z 12.08.2026; brak korespondencji przed terminem; przypomnienie z banku z 05.08.2026. Ustalenie z oceny zgodności z 18.09.2026 (stan prawny na 15.09.2026).",
+          "klasyfikacja": "Niestosowana",
+          "korekcja": "Raport wysłany 12.08.2026 — obowiązek wykonany, z opóźnieniem. Bank potwierdził przyjęcie bez konsekwencji umownych.",
+          "korekcjaKto": "Kontroler finansowy, 12.08.2026",
+          "konsekwencje": "Bez skutków energetycznych i bez naruszenia warunków finansowania. Skutek reputacyjny: obowiązek wykonany po przypomnieniu strony zainteresowanej, nie z własnego kalendarza.",
+          "nadwyzkaMWh": "0",
+          "skalaSkutkow": "male",
+          "metoda": "jedno",
+          "przebieg": "Dlaczego raport wyszedł po terminie? Termin 30 czerwca nie był zapisany w kalendarzu żadnej osoby. Rejestr wymagań wskazywał wymaganie, źródło i właściciela — ale nie datę, a sam rejestr przeglądany jest raz w roku.",
+          "przyczyna": "Terminy obowiązków z rejestru wymagań prawnych i innych nie są przeniesione do kalendarza osób odpowiedzialnych — rejestr wskazuje właściciela, nie moment wykonania.",
+          "podobneSprawdzono": "Przejrzano wszystkie wiersze rejestru III-04 pod kątem terminów. Terminy mają: wiersz 1 (dane dla klienta do 31 marca), wiersz 7 (zawiadomienie URE w 30 dni od zakończenia audytu), wiersz 8 (miesięczne prognozy dla dostawcy) i wiersz 9 (raport dla banku do 30 czerwca). Żaden z nich nie był wpisany do kalendarza kontrolingu; wiersze 1 i 8 wykonano w terminie, ale bez mechanizmu, który to zapewniał.",
+          "podobneZnalezione": "tak",
+          "uzasadnienieZakres": "Skutki jednostkowe niewielkie, ale przyczyna dotyczy czterech obowiązków z terminem, z czego dwa wykonano w terminie przypadkiem. Działanie obejmuje wszystkie terminy z rejestru, nie tylko raport dla banku.",
+          "zakresDzialania": "szerszy",
+          "dzialania": [
+            {
+              "tresc": "Wszystkie terminy obowiązków z rejestru III-04 wpisane do kalendarza kontrolingu jako zadania cykliczne, z właścicielem przy każdym.",
+              "odp": "Kontroler finansowy",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            },
+            {
+              "tresc": "Przypomnienie od Energy Managera do właściciela obowiązku 14 dni przed każdym terminem.",
+              "odp": "Jan Kowalski — Energy Manager",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            }
+          ],
+          "zmianaSystemu": "tak",
+          "zmianaOpis": "Kalendarz terminów obowiązków z rejestru wymagań jako stały element pracy kontrolingu; rejestr III-04 uzupełniony kolumną terminu przy wierszach 1, 7, 8 i 9.",
+          "dowodPlanowany": "Raport dla banku za 2026 r. wysłany do 30.06.2027 bez przypomnienia ze strony banku; dane dla klienta do 31.03.2027; potwierdzenie wpisów w kalendarzu kontrolingu z właścicielami. Sprawdzenie w ocenie zgodności 09.2027.",
+          "terminDowodu": "2027-06-30",
+          "dataSprawdzenia": "",
+          "wynikSprawdzenia": "",
+          "decyzja": "kontynuowac",
+          "sprawdzil": "Jan Kowalski — Energy Manager"
+        }
+      ],
+      "META": {
+        "cenaEnergii": "890",
+        "zatwierdzil": "Jan Kowalski — Energy Manager",
+        "dataZatw": "2026-09-30"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_101": [
+      {
+        "tekst": "Na niezgodności reaguje się: opanowanie, korekcja, zajęcie się konsekwencjami.",
+        "podstawa": "N",
+        "auto": "reakcja"
+      },
+      {
+        "tekst": "Ocenia się potrzebę działania korygującego: przegląd niezgodności, przyczyny, podobne przypadki gdzie indziej.",
+        "podstawa": "N",
+        "auto": "ocenaPotrzeby"
+      },
+      {
+        "tekst": "Potrzebne działania są wdrażane i adekwatne do skutków niezgodności.",
+        "podstawa": "N",
+        "auto": "wdrozenie"
+      },
+      {
+        "tekst": "Przegląda się skuteczność działań korygujących.",
+        "podstawa": "N",
+        "auto": "przegladSkutecznosci"
+      },
+      {
+        "tekst": "W razie potrzeby wprowadza się zmiany w systemie.",
+        "podstawa": "N",
+        "auto": "zmianySystemu"
+      },
+      {
+        "tekst": "Zachowano zapisy o charakterze niezgodności, działaniach i wynikach działań korygujących.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Przy podjętym działaniu korygującym niezgodność zamyka się na dowodzie skuteczności, nie na wykonaniu działania.",
+        "podstawa": "M",
+        "auto": "zamkniecie"
+      },
+      {
+        "tekst": "Prowadzony jest rejestr (F-EnMS-22) i karty (F-EnMS-21); stosowana jest metoda analizy przyczyn.",
+        "podstawa": "M",
+        "auto": "narzedzia"
+      }
+    ],
+    "PRZYKLAD": {
+      "KARTY": [
+        {
+          "nr": "NK-2026-01",
+          "dataWykrycia": "2026-06-22",
+          "ponownieOtwarta": "2026-09-18",
+          "zrodlo": "monitorowanie",
+          "wymaganie": "Wymaganie organizacji — kryterium sprężarkowni: ciśnienie w sieci nie wyżej niż 6,3 bar, zmiany nastaw tylko za zgodą kierownika utrzymania ruchu (III-35, punkt 8.1). Od 07.2026 także: protokół serwisu z nastawami przed i po.",
+          "opis": "Serwis po przeglądzie sprężarki z 15.06.2026 przywrócił nastawę fabryczną 7,0 bar zamiast kryterialnych 6,3 bar. We wrześniu 2026 r. audyt wewnętrzny wykazał, że protokół z kolejnego przeglądu sprężarki jest na wzorze serwisu — bez nastaw przed i po — i że nikt nie sprawdza protokołu przy odbiorze usługi.",
+          "dowod": "S-1 około 0,120 → około 0,125 kWh/Nm³ w tygodniu przeglądu, przy produkcji i temperaturze jak tydzień wcześniej; nastawa 7,0 bar odczytana ze sterownika; protokół serwisu z 15.06.2026. We wrześniu: protokół z przeglądu sprężarki na wzorze serwisu, bez nastaw (audyt A-01/2026, ustalenie N-1).",
+          "klasyfikacja": "Niestosowana — AutoParts nie dzieli niezgodności na duże i małe w audytach wewnętrznych",
+          "korekcja": "Przywrócenie nastawy 6,3 bar w dniu wykrycia; wpis w rejestrze zmian nastaw sprężarkowni.",
+          "korekcjaKto": "Kierownik utrzymania ruchu, 22.06.2026",
+          "konsekwencje": "Około tygodnia pracy sprężarkowni przy 7,0 bar zamiast 6,3 bar. Nadwyżka zużycia ponad wartość oczekiwaną przy spełnionym kryterium — poniżej. Bez skutków dla produkcji i bez skutków dla zgodności z wymaganiami prawnymi; wpływ na wskaźnik S-1 odnotowany w raporcie monitorowania.",
+          "nadwyzkaMWh": "1,6",
+          "skalaSkutkow": "srednie",
+          "metoda": "5x",
+          "przebieg": "Analiza 1 (07.2026): Dlaczego 7 bar? Serwis przywrócił nastawy fabryczne. Dlaczego? Nie wiedział, że 6,3 bar to kryterium. Dlaczego? Zlecenie serwisowe nie zawierało kryteriów ani zasad zmiany nastaw.\nAnaliza 2 (09.2026): Dlaczego protokół bez nastaw? Serwis używa własnego wzoru. Dlaczego nikt tego nie zauważył? Odbiór usługi nie obejmował sprawdzenia protokołu. Dlaczego? Procedura P-EnMS-06 nie określała, jak odbiera się usługi przy znaczących użyciach energii.",
+          "przyczyna": "Brak zasad odbioru usług wykonawców przy znaczących użyciach energii — samo zlecenie nie wystarcza, jeśli nikt nie sprawdza jego wykonania.",
+          "podobneSprawdzono": "Przejrzano zlecenia wszystkich wykonawców pracujących przy znaczących użyciach energii: serwis kotłowni — brak jakichkolwiek wymagań co do nastaw (wskaźnik K-1 = 1,01 w I półroczu, czyli 1% powyżej linii bazowej); automatyka lakierni — brak wymagań; serwis sprężarek — wymagania są, wprowadzone w 07.2026.",
+          "podobneZnalezione": "tak",
+          "uzasadnienieZakres": "Przyczyna jest systemowa i dotyczy wszystkich wykonawców przy znaczących użyciach energii, nie tylko serwisu sprężarek. Skutki jednostkowego zdarzenia są umiarkowane (około 1 400 zł), ale ryzyko powtórzenia występuje przy każdym przeglądzie u trzech wykonawców, a przy kotłowni wskaźnik już jest powyżej linii bazowej. Działanie obejmuje wszystkich trzech wykonawców oraz zmianę procedury odbioru usług.",
+          "zakresDzialania": "szerszy",
+          "dzialania": [
+            {
+              "tresc": "Trzy zdania w zleceniu dla serwisu sprężarek: zgoda kierownika UR na zmianę nastaw, protokół z nastawami przed i po, zgłaszanie wykrytych wycieków.",
+              "odp": "Kierownik utrzymania ruchu",
+              "data": "07.2026",
+              "wykonano": "10.07.2026"
+            },
+            {
+              "tresc": "Wzór protokołu z nastawami przed i po dla wykonawców przy wszystkich znaczących użyciach energii: sprężarki, kotłownia, automatyka lakierni.",
+              "odp": "Kierownik utrzymania ruchu",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            },
+            {
+              "tresc": "Sprawdzanie protokołu przy odbiorze usługi przy znaczącym użyciu energii — zmiana procedury P-EnMS-06, punkt 4.2.",
+              "odp": "Jan Kowalski — Energy Manager",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            }
+          ],
+          "zmianaSystemu": "tak",
+          "zmianaOpis": "Procedura P-EnMS-06 — zasady odbioru usług przy znaczących użyciach energii; wzór protokołu z nastawami dla wykonawców (załącznik do zlecenia).",
+          "dowodPlanowany": "Protokoły z nastawami przed i po, podpisane przy odbiorze przez kierownika utrzymania ruchu, z trzech przeglądów: kotłownia przed rozpoczęciem sezonu grzewczego (plan: 10.2026), następny przegląd sprężarek (11.2026) oraz najbliższy serwis automatyki lakierni (termin do ustalenia przez kierownika UR). Dodatkowo wskaźnik S-1 oceniony w porównywalnych warunkach w tygodniach przeglądów.",
+          "terminDowodu": "2026-10-31",
+          "dataSprawdzenia": "",
+          "wynikSprawdzenia": "",
+          "decyzja": "kontynuowac",
+          "sprawdzil": "Jan Kowalski — Energy Manager"
+        },
+        {
+          "nr": "NK-2026-02",
+          "dataWykrycia": "2026-09-18",
+          "ponownieOtwarta": "",
+          "zrodlo": "zgodnosc",
+          "wymaganie": "Wymaganie umowne — coroczne wskaźniki zużycia energii zakładu dla banku finansującego modernizację, termin 30 czerwca (rejestr III-04, wiersz 9; umowa kredytowa, załącznik ESG).",
+          "opis": "Raport z wskaźnikami zużycia energii za 2025 r. wysłano do banku 12.08.2026, czyli po terminie umownym 30.06.2026 — i dopiero po przypomnieniu ze strony banku.",
+          "dowod": "E-mail z raportem z 12.08.2026; brak korespondencji przed terminem; przypomnienie z banku z 05.08.2026. Ustalenie z oceny zgodności z 18.09.2026 (stan prawny na 15.09.2026).",
+          "klasyfikacja": "Niestosowana",
+          "korekcja": "Raport wysłany 12.08.2026 — obowiązek wykonany, z opóźnieniem. Bank potwierdził przyjęcie bez konsekwencji umownych.",
+          "korekcjaKto": "Kontroler finansowy, 12.08.2026",
+          "konsekwencje": "Bez skutków energetycznych i bez naruszenia warunków finansowania. Skutek reputacyjny: obowiązek wykonany po przypomnieniu strony zainteresowanej, nie z własnego kalendarza.",
+          "nadwyzkaMWh": "0",
+          "skalaSkutkow": "male",
+          "metoda": "jedno",
+          "przebieg": "Dlaczego raport wyszedł po terminie? Termin 30 czerwca nie był zapisany w kalendarzu żadnej osoby. Rejestr wymagań wskazywał wymaganie, źródło i właściciela — ale nie datę, a sam rejestr przeglądany jest raz w roku.",
+          "przyczyna": "Terminy obowiązków z rejestru wymagań prawnych i innych nie są przeniesione do kalendarza osób odpowiedzialnych — rejestr wskazuje właściciela, nie moment wykonania.",
+          "podobneSprawdzono": "Przejrzano wszystkie wiersze rejestru III-04 pod kątem terminów. Terminy mają: wiersz 1 (dane dla klienta do 31 marca), wiersz 7 (zawiadomienie URE w 30 dni od zakończenia audytu), wiersz 8 (miesięczne prognozy dla dostawcy) i wiersz 9 (raport dla banku do 30 czerwca). Żaden z nich nie był wpisany do kalendarza kontrolingu; wiersze 1 i 8 wykonano w terminie, ale bez mechanizmu, który to zapewniał.",
+          "podobneZnalezione": "tak",
+          "uzasadnienieZakres": "Skutki jednostkowe niewielkie, ale przyczyna dotyczy czterech obowiązków z terminem, z czego dwa wykonano w terminie przypadkiem. Działanie obejmuje wszystkie terminy z rejestru, nie tylko raport dla banku.",
+          "zakresDzialania": "szerszy",
+          "dzialania": [
+            {
+              "tresc": "Wszystkie terminy obowiązków z rejestru III-04 wpisane do kalendarza kontrolingu jako zadania cykliczne, z właścicielem przy każdym.",
+              "odp": "Kontroler finansowy",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            },
+            {
+              "tresc": "Przypomnienie od Energy Managera do właściciela obowiązku 14 dni przed każdym terminem.",
+              "odp": "Jan Kowalski — Energy Manager",
+              "data": "10.2026",
+              "wykonano": "W toku"
+            }
+          ],
+          "zmianaSystemu": "tak",
+          "zmianaOpis": "Kalendarz terminów obowiązków z rejestru wymagań jako stały element pracy kontrolingu; rejestr III-04 uzupełniony kolumną terminu przy wierszach 1, 7, 8 i 9.",
+          "dowodPlanowany": "Raport dla banku za 2026 r. wysłany do 30.06.2027 bez przypomnienia ze strony banku; dane dla klienta do 31.03.2027; potwierdzenie wpisów w kalendarzu kontrolingu z właścicielami. Sprawdzenie w ocenie zgodności 09.2027.",
+          "terminDowodu": "2027-06-30",
+          "dataSprawdzenia": "",
+          "wynikSprawdzenia": "",
+          "decyzja": "kontynuowac",
+          "sprawdzil": "Jan Kowalski — Energy Manager"
+        }
+      ],
+      "META": {
+        "cenaEnergii": "890",
+        "zatwierdzil": "Jan Kowalski — Energy Manager",
+        "dataZatw": "2026-09-30"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Karta zamknięta na wykonaniu działania nie dowodzi, że niezgodność nie wróci.",
+        "decyzja": "Kartę zamykamy na dowodzie skuteczności, nie na wykonaniu działania.",
+        "dzialanie": "NK-2026-01: przyczyna dociekana do braku kryterium, a nie do „błędu ludzkiego”; termin dowodu wyznaczony przed zamknięciem karty.",
+        "sprawdzenie": "Data sprawdzenia nie jest wcześniejsza niż termin, w którym dowód skuteczności mógł powstać."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "KARTY": [],
+    "WNIOSKI": [],
+    "ZRODLA_NK": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "audyt_w",
+        "Audyt wewnętrzny (9.2)"
+      ],
+      [
+        "audyt_z",
+        "Audyt zewnętrzny"
+      ],
+      [
+        "monitorowanie",
+        "Monitorowanie (9.1.1)"
+      ],
+      [
+        "zgodnosc",
+        "Ocena zgodności (9.1.2)"
+      ],
+      [
+        "zgloszenie",
+        "Zgłoszenie (7.4)"
+      ],
+      [
+        "inne",
+        "Inne"
+      ]
+    ],
+    "METODY": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "jedno",
+        "Jedno „dlaczego” — przy prostej sprawie"
+      ],
+      [
+        "5x",
+        "5 × Dlaczego"
+      ],
+      [
+        "ishikawa",
+        "Diagram Ishikawy"
+      ]
+    ],
+    "SKALE": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "male",
+        "Małe"
+      ],
+      [
+        "srednie",
+        "Średnie"
+      ],
+      [
+        "duze",
+        "Duże"
+      ]
+    ],
+    "ZAKRESY": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "tylko_tu",
+        "Tylko w miejscu wykrycia"
+      ],
+      [
+        "szerszy",
+        "Szerszy — obejmuje podobne przypadki"
+      ]
+    ],
+    "DECYZJE_F": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "zamknac",
+        "Zamknąć — dowody potwierdzają skuteczność"
+      ],
+      [
+        "zamknacBez",
+        "Zamknąć bez działania korygującego — korekcja i konsekwencje sprawdzone"
+      ],
+      [
+        "kontynuowac",
+        "Kontynuować — problem wrócił lub dowody niewystarczające"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

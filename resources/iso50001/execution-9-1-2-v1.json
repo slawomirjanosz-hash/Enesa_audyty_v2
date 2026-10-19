@@ -2,7 +2,7 @@
   "version": 1,
   "section": "9-1-2",
   "source_file": "ENESA_9.1.2_Ocena_zgodnosci_platforma.html",
-  "source_sha256": "7693b5159c54817bef25e0178d70ed15be068a84ea3497314e9f8d11d66b123f",
+  "source_sha256": "816e4ee0e8cecc048a84df4ed6a891ef9917f6891bc8eee2a72f8d30413b272c",
   "definitions": {
     "LISTA_912": [
       {
@@ -31,6 +31,12 @@
         "nr": {
           "type": "textarea",
           "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "wym42": {
+          "type": "textarea",
+          "label": "wym42",
           "required": true,
           "options": {}
         },

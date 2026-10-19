@@ -1,0 +1,320 @@
+{
+  "version": 1,
+  "section": "7-5",
+  "source_file": "ENESA_7.5_Udokumentowane_informacje_platforma.html",
+  "source_sha256": "99db43e309ae6e018e09fed88c671db244f06ef848d4ef1e5418782061d4b8b0",
+  "definitions": {
+    "WYMAGANIA_N": [
+      {
+        "punkt": "4.3",
+        "co": "Zakres i granice systemu",
+        "modul": "1"
+      },
+      {
+        "punkt": "5.2",
+        "co": "Polityka energetyczna",
+        "modul": "2"
+      },
+      {
+        "punkt": "6.2",
+        "co": "Cele, zadania energetyczne i plany działań",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.3",
+        "co": "Metody i kryteria przeglądu energetycznego oraz jego wyniki",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.4",
+        "co": "Metoda określania i aktualizowania EnPI oraz wartości wskaźników",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.5",
+        "co": "Linie bazowe, dane o istotnych zmiennych i zmiany EnB",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.6",
+        "co": "Plan zbierania danych, dane a–e oraz dowody dokładności pomiarów",
+        "modul": "4"
+      },
+      {
+        "punkt": "7.2",
+        "co": "Dowody kompetencji osób wpływających na wynik energetyczny",
+        "modul": "5"
+      },
+      {
+        "punkt": "8.1",
+        "co": "Kryteria eksploatacji i zapisy potwierdzające przebieg procesów",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "8.2",
+        "co": "Wyniki działań projektowych związanych z wynikiem energetycznym",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "8.3",
+        "co": "Kryteria oceny wyniku energetycznego dla znaczących zakupów i specyfikacje",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.1",
+        "co": "Wyniki monitorowania, pomiarów i oceny wyniku energetycznego",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.2",
+        "co": "Program audytów i wyniki audytów wewnętrznych",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.3",
+        "co": "Wyniki przeglądów zarządzania",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "10.2",
+        "co": "Niezgodności, podjęte działania i ich skuteczność",
+        "modul": "8",
+        "pozniej": true
+      }
+    ],
+    "LISTA_75": [
+      {
+        "tekst": "System zawiera udokumentowane informacje wymagane przez normę.",
+        "podstawa": "N",
+        "auto": "wymagane"
+      },
+      {
+        "tekst": "System zawiera informacje uznane przez organizację za niezbędne dla jego skuteczności.",
+        "podstawa": "N",
+        "auto": "wlasne"
+      },
+      {
+        "tekst": "Zapewniono identyfikację, opis, format i nośnik oraz przegląd i zatwierdzenie.",
+        "podstawa": "N",
+        "auto": "identyfikacja"
+      },
+      {
+        "tekst": "Dokumenty są dostępne i przydatne tam, gdzie są potrzebne, oraz odpowiednio chronione.",
+        "podstawa": "N",
+        "auto": "dostepnosc"
+      },
+      {
+        "tekst": "Nadzorowane są zmiany; stare wersje są wycofane z miejsc użycia.",
+        "podstawa": "N",
+        "auto": "zmiany"
+      },
+      {
+        "tekst": "Ustalono okresy przechowywania i usuwania — z uzasadnieniem.",
+        "podstawa": "N",
+        "auto": "okresy"
+      },
+      {
+        "tekst": "Nadzorowane są dokumenty pochodzenia zewnętrznego.",
+        "podstawa": "N",
+        "auto": "zewnetrzne"
+      }
+    ]
+  },
+  "tree": {
+    "WYKAZ": {
+      "type": "list",
+      "label": "Wykaz dokumentów i zapisów",
+      "min": 0,
+      "children": {
+        "kod": {
+          "type": "textarea",
+          "label": "Identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "tytul": {
+          "type": "textarea",
+          "label": "Tytuł dokumentu",
+          "required": true,
+          "options": {}
+        },
+        "rodzaj": {
+          "type": "select",
+          "label": "Rodzaj ustalenia",
+          "required": true,
+          "options": {
+            "D": "Dokument",
+            "Z": "Zapis",
+            "DZ": "Dokument i zapis"
+          }
+        },
+        "podstawa": {
+          "type": "select",
+          "label": "Podstawa ustalenia kryterium",
+          "required": true,
+          "options": {
+            "N": "Wymaganie normy",
+            "M": "Potrzeba organizacji"
+          }
+        },
+        "punkt": {
+          "type": "textarea",
+          "label": "Punkt normy",
+          "required": false,
+          "options": {}
+        },
+        "wersja": {
+          "type": "textarea",
+          "label": "Wersja",
+          "required": false,
+          "options": {}
+        },
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "miejsce": {
+          "type": "textarea",
+          "label": "Miejsce przechowywania",
+          "required": true,
+          "options": {}
+        },
+        "okres": {
+          "type": "textarea",
+          "label": "Okres",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "ZASADY": {
+      "type": "object",
+      "label": "Zasady nadzoru nad dokumentacją",
+      "children": {
+        "identyfikacja": {
+          "type": "textarea",
+          "label": "Identyfikacja i opis dokumentów",
+          "required": true,
+          "options": {}
+        },
+        "zatwierdzanie": {
+          "type": "textarea",
+          "label": "Przegląd i zatwierdzanie",
+          "required": true,
+          "options": {}
+        },
+        "dostepnosc": {
+          "type": "textarea",
+          "label": "Dostępność i dystrybucja",
+          "required": true,
+          "options": {}
+        },
+        "ochrona": {
+          "type": "textarea",
+          "label": "Ochrona dokumentów i zapisów",
+          "required": true,
+          "options": {}
+        },
+        "zmiany": {
+          "type": "textarea",
+          "label": "Nadzór nad zmianami i wykonawcami",
+          "required": true,
+          "options": {}
+        },
+        "przechowywanie": {
+          "type": "textarea",
+          "label": "Przechowywanie i usuwanie",
+          "required": true,
+          "options": {}
+        },
+        "zewnetrzne": {
+          "type": "textarea",
+          "label": "Nadzór nad dokumentami zewnętrznymi",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "ZEWN": {
+      "type": "list",
+      "label": "Dokumenty zewnętrzne",
+      "min": 0,
+      "children": {
+        "tytul": {
+          "type": "textarea",
+          "label": "Tytuł dokumentu",
+          "required": true,
+          "options": {}
+        },
+        "zrodlo": {
+          "type": "textarea",
+          "label": "Źródło",
+          "required": true,
+          "options": {}
+        },
+        "dotyczy": {
+          "type": "textarea",
+          "label": "Zastosowanie dokumentu",
+          "required": true,
+          "options": {}
+        },
+        "miejsce": {
+          "type": "textarea",
+          "label": "Miejsce przechowywania",
+          "required": true,
+          "options": {}
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "sprawdzono": {
+          "type": "date",
+          "label": "Data sprawdzenia aktualności",
+          "required": true,
+          "options": {}
+        },
+        "wynik": {
+          "type": "textarea",
+          "label": "Wynik",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "przeglad": {
+          "type": "textarea",
+          "label": "Termin lub rytm przeglądu",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

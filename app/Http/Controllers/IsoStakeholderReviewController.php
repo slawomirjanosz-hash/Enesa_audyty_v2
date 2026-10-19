@@ -10,6 +10,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoStakeholderReview;
 use App\Services\AuditorAccessService;
+use App\Services\IsoPlatformRelease;
 use App\Services\IsoSectionWorkbook;
 use App\Services\IsoStakeholderQuestionnaire;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -52,6 +53,10 @@ class IsoStakeholderReviewController extends Controller
         $review = IsoStakeholderReview::firstOrNew(['audit_id' => $audit->id, 'site_id' => $profile->site_id], ['status' => 'editing', 'lock_version' => 0]);
         $parties = $this->questionnaire->parties($profile, $factors);
         $answers = $this->questionnaire->currentAnswers($review->answers ?? [], $review->basis ?? [], $parties);
+        if ($request->boolean('source_example')) {
+            abort_unless(! $client && $request->user()->can('audits.manage'), 403);
+            $answers = app(IsoPlatformRelease::class)->answers('4-2');
+        }
         $hash = $this->questionnaire->hash($profile, $factors);
 
         return view('audits.stakeholders.show', [

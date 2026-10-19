@@ -1,7 +1,7 @@
 {
   "meta": {
     "nazwa": "Czynniki kontekstowe",
-    "wersja": "2.0 — jeden plik w formacie stron 4.2–4.4",
+    "wersja": "2.1 — przykład AutoParts wypełniony w całości",
     "miejsce_na_platformie": "4.1 — blok 2 strony punktu normy",
     "zrodlo_danych": "Profil zakładu (3.6) — czytany, nie kopiowany",
     "zasady": {
@@ -388,6 +388,19 @@
       "wplyw": "+",
       "skutek": "Nadzór operacyjny oparty na własnych służbach, bez kosztu zewnętrznego.",
       "pokaz_gdy": "FAKT_UR_WLASNE = wlasne",
+      "rodzaj": "PROPOZYCJA",
+      "tagi": "uniwersalne"
+    },
+    {
+      "kod": "KTX-WO-12",
+      "poprawka": null,
+      "wymiar": "wewn. organizacyjny",
+      "wymiar_nazwa": "Organizacyjne",
+      "typ": "wewnętrzny",
+      "tresc": "Organizacja ma wdrożony i certyfikowany system zarządzania; działają w nim nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania.",
+      "wplyw": "+",
+      "skutek": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań — wspólne procesy i dokumenty zamiast równoległych (4.3, 4.4).",
+      "pokaz_gdy": "FAKT_SYSTEM_BAZOWY != brak AND FAKT_ZGODA_INTEGRACJA = tak",
       "rodzaj": "PROPOZYCJA",
       "tagi": "uniwersalne"
     },

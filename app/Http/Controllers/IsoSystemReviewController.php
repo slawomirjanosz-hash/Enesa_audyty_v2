@@ -11,6 +11,7 @@ use App\Models\IsoSystemReview;
 use App\Services\AuditorAccessService;
 use App\Services\IsoExecutionQuestionnaire;
 use App\Services\IsoPlanningQuestionnaire;
+use App\Services\IsoPlatformRelease;
 use App\Services\IsoSectionWorkbook;
 use App\Services\IsoSupportQuestionnaire;
 use App\Services\IsoSystemQuestionnaire;
@@ -55,6 +56,10 @@ class IsoSystemReviewController extends Controller
         $sources = $this->questionnaire->sources($profile, $section);
         $review = IsoSystemReview::firstOrNew(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'section' => $section], ['status' => 'editing', 'lock_version' => 0]);
         $answers = old('answers', $review->answers ?? $this->questionnaire->seed($section, $sources));
+        if ($request->boolean('source_example')) {
+            abort_unless(! $client && $request->user()->can('audits.manage'), 403);
+            $answers = app(IsoPlatformRelease::class)->answers($section, $sources);
+        }
         if (str_starts_with($section, '6-') && ! session()->hasOldInput('answers')) {
             $answers = app(IsoPlanningQuestionnaire::class)->projectCards($section, $answers, $sources);
         }
@@ -70,6 +75,7 @@ class IsoSystemReviewController extends Controller
             'title' => IsoSystemReview::TITLES[$section], 'prefix' => $this->prefix($client), 'service' => $this->questionnaire,
             'sections' => $this->questionnaire->sections($section, $answers, $sources), 'progress' => $this->questionnaire->progress($section, $answers, $sources),
             'canWrite' => $client || $request->user()->can('audits.manage'), 'canClientApprove' => $client && $request->user()->hasRole('client_admin'),
+            'exampleConsultant' => ! $client && $request->boolean('source_example') ? app(IsoPlatformRelease::class)->consultant($section) : null,
             'events' => $review->exists ? DB::table('iso_system_events')->where('review_id', $review->id)->orderByDesc('id')->limit(50)->get() : collect()]);
     }
 

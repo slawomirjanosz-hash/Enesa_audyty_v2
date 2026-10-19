@@ -1,0 +1,351 @@
+{
+  "source_file": "ENESA_4.3_Zakres_systemu_platforma.html",
+  "source_sha256": "40ea421b699e36067349d0854236a11548a4e34d1b1539fb7e6f7794e250b755",
+  "section": "4-3",
+  "data": {
+    "konsekwencje_reguly": [
+      {
+        "zrodlo": "D-EnMS-STR-01, STK-Z-12",
+        "punkt": "4.2",
+        "gdy": {
+          "FAKT_ODBIORCY_CO2": "tak"
+        },
+        "podstawa": "Odbiorcy pytają o ślad węglowy wyrobu i efektywność energetyczną produkcji.",
+        "konsekwencja": "Zakres musi obejmować produkcję wyrobów dostarczanych tym odbiorcom — system ograniczony do biura nie odpowie na to wymaganie."
+      },
+      {
+        "zrodlo": "D-EnMS-STR-01, STK-Z-07",
+        "punkt": "4.2",
+        "gdy": {
+          "FAKT_PRZETARGI": "tak"
+        },
+        "podstawa": "Organizacja startuje w postępowaniach, w których certyfikat bywa warunkiem lub kryterium.",
+        "konsekwencja": "Certyfikat musi obejmować jednostkę, która składa oferty — sprawdź, czy to ta sama jednostka co zakład produkcyjny."
+      },
+      {
+        "zrodlo": "D-EnMS-STR-01, STK-Z-02",
+        "punkt": "4.2",
+        "gdy": {
+          "_TJ_powyzej": 85
+        },
+        "podstawa": "Zużycie przekracza próg z dyrektywy EED — obowiązek wdrożenia systemu zarządzania energią.",
+        "konsekwencja": "Zakres ma odpowiadać obowiązkowi dla przedsiębiorstwa, a nie dla wybranej części. Sprawdź, czy system obejmujący jedną lokalizację wystarcza w świetle aktualnych przepisów."
+      },
+      {
+        "zrodlo": "D-EnMS-STR-01, STK-Z-01",
+        "punkt": "4.2",
+        "gdy": {
+          "FAKT_AUDYT_ENERG": "tak"
+        },
+        "podstawa": "Wykonano audyt energetyczny przedsiębiorstwa zgłaszany do URE.",
+        "konsekwencja": "Granice EnMS warto zestawić z zakresem audytu — rozjazd między nimi audytor zauważy i o niego zapyta."
+      },
+      {
+        "zrodlo": "D-EnMS-KON-01, KTX-WO-03",
+        "punkt": "4.1",
+        "gdy": {
+          "FAKT_SYSTEM_BAZOWY": [
+            "iso_14001",
+            "oba"
+          ]
+        },
+        "podstawa": "Organizacja ma certyfikowany system ISO 14001.",
+        "konsekwencja": "Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic."
+      },
+      {
+        "zrodlo": "Profil zakładu, FAKT_LOKALIZACJE",
+        "punkt": "3.6",
+        "gdy": {
+          "_lokalizacji_wiecej_niz": 1
+        },
+        "podstawa": "Organizacja ma więcej niż jedną lokalizację.",
+        "konsekwencja": "Rozstrzygnij, czy system obejmuje wszystkie lokalizacje, czy zaczynacie od jednej. Wybór musi odpowiadać wymaganiom z zakładki powyżej."
+      },
+      {
+        "zrodlo": "D-EnMS-KON-01, KTX-WT-12",
+        "punkt": "4.1",
+        "gdy": {
+          "FAKT_KOTLOWNIA": [
+            "wlasne",
+            "oba"
+          ]
+        },
+        "podstawa": "Zapotrzebowanie na ciepło pokrywane jest z własnego źródła.",
+        "konsekwencja": "Kotłownia leży w granicach i podlega systemowi. Wyłączenie jej jako „trudnego obszaru” jest typową niezgodnością."
+      },
+      {
+        "zrodlo": "D-EnMS-KON-01, KTX-WO-11",
+        "punkt": "4.1",
+        "gdy": {
+          "FAKT_UR_WLASNE": [
+            "zewnetrzne",
+            "mieszane"
+          ]
+        },
+        "podstawa": "Część utrzymania ruchu prowadzi firma zewnętrzna.",
+        "konsekwencja": "Samo zlecenie usługi nie wyprowadza jej poza system. Oceń związek pracy serwisu z działalnością objętą systemem i ustal wymagany nadzór (kl. 8.1)."
+      },
+      {
+        "zrodlo": "Profil zakładu, FAKT_FLOTA",
+        "punkt": "3.6",
+        "gdy": {
+          "FAKT_FLOTA": "tak"
+        },
+        "podstawa": "W zakresie działalności są pojazdy należące do organizacji.",
+        "konsekwencja": "Paliwo tych pojazdów jest uwzględnione w rodzajach energii — niezależnie od udziału w zużyciu."
+      }
+    ]
+  },
+  "variables": {
+    "PROFIL": {
+      "FAKT_LOKALIZACJE": "2",
+      "FAKT_LOKALIZACJE_LISTA": [
+        {
+          "c0": "Zakład produkcyjny",
+          "c1": "ul. Przemysłowa 12, Katowice",
+          "c2": "produkcja",
+          "c3": "tak"
+        },
+        {
+          "c0": "Magazyn wyrobów gotowych",
+          "c1": "ul. Składowa 11, Katowice",
+          "c2": "magazyn",
+          "c3": "tak"
+        }
+      ],
+      "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+      "FAKT_PRACOWNICY": "850",
+      "FAKT_ZMIANY": "3",
+      "FAKT_SEZONOWOSC": "nie",
+      "FAKT_PODMIOT": "prywatny",
+      "FAKT_GRUPA_KAPITALOWA": "tak",
+      "FAKT_ZWIAZKI": "nie",
+      "FAKT_SYSTEM_BAZOWY": "iso_14001",
+      "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+      "FAKT_ZGODA_INTEGRACJA": "tak",
+      "FAKT_ENERGY_MANAGER": "nieformalnie",
+      "FAKT_UR_WLASNE": "wlasne",
+      "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+      "FAKT_ZAKUPY_KRYTERIA": "czasami",
+      "FAKT_ROTACJA": "srednia",
+      "FAKT_NOSNIKI": [
+        {
+          "c0": "energia elektryczna",
+          "c1": "8500",
+          "c2": "MWh",
+          "c3": "7565000"
+        },
+        {
+          "c0": "gaz ziemny",
+          "c1": "350000",
+          "c2": "m³",
+          "c3": "875000"
+        },
+        {
+          "c0": "LPG",
+          "c1": "18000",
+          "c2": "l",
+          "c3": "54000"
+        }
+      ],
+      "FAKT_ROK_ODNIESIENIA": "2025",
+      "FAKT_UDZIAL_ENERGII": "2,5",
+      "FAKT_MOC_UMOWNA": "1400",
+      "FAKT_SPREZONE": "tak",
+      "FAKT_CA_LICZBA": "4",
+      "FAKT_CA_MOC": "440",
+      "FAKT_CA_VSD": "0",
+      "FAKT_CA_STEROWNIK": "nie",
+      "FAKT_CA_SZCZELNOSC": "nie",
+      "FAKT_CA_ODZYSK": "nie",
+      "FAKT_CA_GODZINY": "6000",
+      "FAKT_KOTLOWNIA": "wlasne",
+      "FAKT_CIEPLO_PALIWO": [
+        "gaz ziemny"
+      ],
+      "FAKT_KOTLOWNIA_MOC": "1200",
+      "FAKT_KOTLOWNIA_WIEK": "18",
+      "FAKT_PODLICZNIKI": "czesciowo",
+      "FAKT_ODCZYT": "mieszane",
+      "FAKT_FLOTA": "tak",
+      "FAKT_UDT": "tak",
+      "FAKT_ODBIORCY_CO2": "tak",
+      "FAKT_PRZETARGI": "nie",
+      "FAKT_CSRD": "nie",
+      "FAKT_AUDYT_ENERG": "tak"
+    },
+    "KONSEKWENCJE": [
+      {
+        "zrodlo": "D-EnMS-STR-01, STK-Z-12",
+        "punkt": "4.2",
+        "podstawa": "Odbiorcy pytają o ślad węglowy wyrobu i efektywność energetyczną produkcji.",
+        "konsekwencja": "Zakres musi obejmować produkcję wyrobów dostarczanych tym odbiorcom — system ograniczony do biura nie odpowie na to wymaganie."
+      },
+      {
+        "zrodlo": "D-EnMS-STR-01, STK-Z-01",
+        "punkt": "4.2",
+        "podstawa": "Wykonano audyt energetyczny przedsiębiorstwa zgłaszany do URE.",
+        "konsekwencja": "Granice EnMS warto zestawić z zakresem audytu — rozjazd między nimi audytor zauważy i o niego zapyta."
+      },
+      {
+        "zrodlo": "D-EnMS-KON-01, KTX-WO-03",
+        "punkt": "4.1",
+        "podstawa": "Organizacja ma certyfikowany system ISO 14001.",
+        "konsekwencja": "Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic."
+      },
+      {
+        "zrodlo": "Profil zakładu, FAKT_LOKALIZACJE",
+        "punkt": "3.6",
+        "podstawa": "Organizacja ma więcej niż jedną lokalizację.",
+        "konsekwencja": "Rozstrzygnij, czy system obejmuje wszystkie lokalizacje, czy zaczynacie od jednej. Wybór musi odpowiadać wymaganiom z zakładki powyżej."
+      },
+      {
+        "zrodlo": "D-EnMS-KON-01, KTX-WT-12",
+        "punkt": "4.1",
+        "podstawa": "Zapotrzebowanie na ciepło pokrywane jest z własnego źródła.",
+        "konsekwencja": "Kotłownia leży w granicach i podlega systemowi. Wyłączenie jej jako „trudnego obszaru” jest typową niezgodnością."
+      },
+      {
+        "zrodlo": "Profil zakładu, FAKT_FLOTA",
+        "punkt": "3.6",
+        "podstawa": "W zakresie działalności są pojazdy należące do organizacji.",
+        "konsekwencja": "Paliwo tych pojazdów jest uwzględnione w rodzajach energii — niezależnie od udziału w zużyciu."
+      }
+    ],
+    "PRZYKLAD_43": {
+      "kon": {
+        "Profil zakładu, FAKT_LOKALIZACJE": "System obejmuje obie lokalizacje w Katowicach — zakład produkcyjny i magazyn wyrobów gotowych. Zakresu nie dzielimy: magazyn obsługuje wyłącznie wyroby tego zakładu.",
+        "D-EnMS-KON-01, KTX-WO-03": "Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic (wniosek 4 z F-EnMS-01)."
+      },
+      "zakres": {
+        "opis": "Produkcja komponentów do samochodów osobowych (tłoczenie, montaż, lakierowanie) wraz z procesami pomocniczymi: utrzymanie ruchu, sprężarkownia, kotłownia, magazynowanie, transport wewnętrzny i biuro zakładu. Zakład w Katowicach jest jedynym miejscem działalności przedsiębiorstwa.",
+        "dzialania": [
+          "produkcja",
+          "utrzymanie ruchu",
+          "magazynowanie",
+          "transport wewnętrzny",
+          "biura"
+        ]
+      },
+      "granice": [
+        {
+          "nazwa": "Zakład produkcyjny",
+          "adres": "Katowice, ul. Przemysłowa 12",
+          "fizyczna": "Teren w ogrodzeniu: hale A, B, C (produkcja), lakiernia, kotłownia, sprężarkownia, budynek biurowy — z wyjątkiem stacji transformatorowej SN/nN operatora, opisanej w zakładce 6. Granica zaznaczona na planie sytuacyjnym.",
+          "jednostki": "Wszystkie działy zakładu"
+        },
+        {
+          "nazwa": "Magazyn wyrobów gotowych",
+          "adres": "Katowice, ul. Składowa 11",
+          "fizyczna": "Hala magazynowa z rampą załadunkową i teren utwardzony w ogrodzeniu.",
+          "jednostki": "Logistyka wewnętrzna"
+        }
+      ],
+      "upraw": [
+        {
+          "obiekt": "Hale, lakiernia, kotłownia, sprężarkownia, biuro",
+          "kto": "Dyrektor Zakładu, Kierownik Utrzymania Ruchu",
+          "podstawa": "wlasnosc",
+          "brakUprawnien": "nie",
+          "usluga": "nie",
+          "uwagi": "—"
+        },
+        {
+          "obiekt": "Stacja transformatorowa SN/nN na terenie zakładu",
+          "kto": "Operator sieci (stacja); AutoParts — sieć i odbiory po stronie nN",
+          "podstawa": "umowa",
+          "brakUprawnien": "tak",
+          "dzialanie": "Granica własności i eksploatacji opisana w umowie dystrybucyjnej (zaciski nN transformatora) i zaznaczona na planie razem z punktem pomiaru. Po stronie nN decydujemy my — tam prowadzimy nadzór operacyjny.",
+          "usluga": "nie",
+          "uwagi": "Punkt pomiaru: licznik główny"
+        },
+        {
+          "obiekt": "Wózki widłowe — 12 elektrycznych, 4 na LPG",
+          "kto": "Kierownik Logistyki Wewnętrznej",
+          "podstawa": "leasing",
+          "brakUprawnien": "nie",
+          "usluga": "nie",
+          "uwagi": "Eksploatacja po stronie AutoParts — w granicach systemu"
+        },
+        {
+          "obiekt": "Serwis klimatyzacji budynku biurowego i przeglądy sprężarkowni",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "podstawa": "umowa",
+          "brakUprawnien": "nie",
+          "usluga": "tak",
+          "nadzor": "Wymagania energetyczne dopisane do umowy serwisowej (kl. 8.1): parametry nastaw po przeglądzie, raport z przeglądu sprężarkowni, instruktaż przed rozpoczęciem prac.",
+          "uwagi": "Firma zewnętrzna pracuje na terenie zakładu"
+        }
+      ],
+      "energia": {
+        "EE": {
+          "status": "wystepuje",
+          "pochodzenie": "zakup",
+          "gdzie": "Produkcja, sprężarkownia, oświetlenie, wózki elektryczne, biuro — 8 500 MWh/rok. PV w analizie (F-EnMS-01, czynniki technologiczne).",
+          "zrodlo": "Faktury, licznik główny"
+        },
+        "GAZ": {
+          "status": "wystepuje",
+          "pochodzenie": "zakup",
+          "gdzie": "Lakiernia (piece suszące), kotłownia — 350 000 m³/rok",
+          "zrodlo": "Faktury, licznik główny"
+        },
+        "CIEPLO": {
+          "status": "wystepuje",
+          "pochodzenie": "wlasne",
+          "gdzie": "Ogrzewanie hal; w bilansie ujęte przez gaz kotłowni. Ciepło sieciowe nie występuje.",
+          "zrodlo": "Licznik ciepła kotłowni (do montażu), do tego czasu szacunek"
+        },
+        "OLEJ": {
+          "status": "nie",
+          "pochodzenie": "",
+          "gdzie": "",
+          "zrodlo": ""
+        },
+        "LPG": {
+          "status": "wystepuje",
+          "pochodzenie": "zakup",
+          "gdzie": "4 wózki widłowe — ok. 18 000 l/rok, czyli ok. 120 MWh (ok. 1% zużycia zakładu)",
+          "zrodlo": "Faktury dostawcy LPG, ewidencja butli"
+        },
+        "PALIWA": {
+          "status": "nie",
+          "pochodzenie": "",
+          "gdzie": "Zakład nie eksploatuje własnych pojazdów drogowych; transport wyrobów opisany w zakładce 6.",
+          "zrodlo": ""
+        }
+      },
+      "poza": [
+        {
+          "co": "Transport wyrobów do klientów",
+          "przynaleznosc": "Usługa zlecona przewoźnikowi, wykonywana jego pojazdami poza zakładem; pojazdy i paliwo należą do przewoźnika.",
+          "uprawnienia": "Nie decydujemy o doborze pojazdów ani o sposobie ich eksploatacji.",
+          "przeplywy": "Energia nie przepływa przez granicę systemu — paliwo tankowane jest poza zakładem.",
+          "dlaczego": "",
+          "relacja": "Przy wyborze przewoźnika można uwzględniać kryteria efektywności (8.3) — decyzja zarządu przy odnowieniu umowy."
+        },
+        {
+          "co": "Stacja transformatorowa SN/nN i sieć SN operatora na terenie zakładu",
+          "przynaleznosc": "Własność i eksploatacja operatora sieci — wyjątek od granicy „teren w ogrodzeniu”.",
+          "uprawnienia": "Po stronie SN nie mamy uprawnień; po stronie nN decydujemy my.",
+          "przeplywy": "Energia dostarczana do zakładu mierzona licznikiem głównym na granicy własności.",
+          "dlaczego": "",
+          "relacja": "Granica własności i eksploatacji według umowy dystrybucyjnej; obie granice zaznaczone na planie sytuacyjnym."
+        }
+      ],
+      "sprawdzone": {
+        "data": "2026-02-18",
+        "czym": "Faktury 2025 za energię elektryczną i gaz, ewidencja zakupu LPG, zestawienie z kontrolingiem"
+      }
+    },
+    "KON": {},
+    "GRANICE": [],
+    "UPRAW": [],
+    "ENERGIA": {},
+    "POZA": []
+  },
+  "example_literals": {
+    "KON": {},
+    "ENERGIA": {}
+  }
+}

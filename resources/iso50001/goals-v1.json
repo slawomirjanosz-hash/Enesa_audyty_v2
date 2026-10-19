@@ -5,7 +5,7 @@
       "nazwa": "Wskaźnik EnPI i linia bazowa EnB",
       "wymagane": true,
       "pomoc": "Który wskaźnik z punktu 6.4 i która linia bazowa z punktu 6.5. Bez tej pary nie ma czego porównywać.",
-      "przyklad": "np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (średnia 12 miesięcy 2025)"
+      "przyklad": "np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)"
     },
     {
       "kod": "okres",
@@ -26,7 +26,7 @@
       "nazwa": "Warunki porównania",
       "wymagane": true,
       "pomoc": "Przy jakich warunkach pomiar jest porównywalny i co go unieważnia. To tutaj zapisuje się wyłączenia.",
-      "przyklad": "np. Pełne miesiące pracy dwuzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane"
+      "przyklad": "np. Pełne miesiące pracy trzyzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane"
     },
     {
       "kod": "zmienne",
@@ -47,7 +47,7 @@
       "nazwa": "Kto weryfikuje",
       "wymagane": true,
       "pomoc": "Osoba albo funkcja, która wykonuje obliczenie, i ta, która przyjmuje wynik.",
-      "przyklad": "np. Pełnomocnik EnMS; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania"
+      "przyklad": "np. Energy Manager; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania"
     },
     {
       "kod": "wynik",

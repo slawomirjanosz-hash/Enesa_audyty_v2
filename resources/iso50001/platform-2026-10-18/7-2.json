@@ -1,0 +1,780 @@
+{
+  "source_file": "ENESA_7.2_Kompetencje_platforma.html",
+  "source_sha256": "ebcefcc3d4959ea7bf96acf521b843170716e82977819bba96d217385dcb3f54",
+  "section": "7-2",
+  "data": {
+    "LISTA_72": [
+      {
+        "tekst": "Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.",
+        "podstawa": "N",
+        "auto": "ustalono"
+      },
+      {
+        "tekst": "Kompetencje zapewniono na podstawie wykształcenia, szkolenia, umiejętności lub doświadczenia.",
+        "podstawa": "N",
+        "auto": "zapewniono"
+      },
+      {
+        "tekst": "Podjęto działania uzupełniające luki (w stosownych przypadkach).",
+        "podstawa": "N",
+        "auto": "dzialania"
+      },
+      {
+        "tekst": "Oceniono skuteczność działań — sprawdzenie umiejętności, nie tylko obecności.",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "tekst": "Zachowano dowody kompetencji.",
+        "podstawa": "N",
+        "auto": "dowody"
+      },
+      {
+        "tekst": "Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).",
+        "podstawa": "M",
+        "auto": "narzedzia"
+      }
+    ],
+    "przyklad": {
+      "KOMPETENCJE": [
+        {
+          "nazwa": "Zna wymagania systemu w swoim zakresie",
+          "jakSprawdzamy": "Rozmowa; dla audytora wewnętrznego — zaświadczenie"
+        },
+        {
+          "nazwa": "Zbiera i sprawdza dane energetyczne",
+          "jakSprawdzamy": "Obserwacja odczytu i zamknięcia bilansu miesięcznego"
+        },
+        {
+          "nazwa": "Analizuje wskaźniki i odchylenia",
+          "jakSprawdzamy": "Omówienie raportu miesięcznego"
+        },
+        {
+          "nazwa": "Stosuje nastawy sprężarkowni (6,3 bar)",
+          "jakSprawdzamy": "Obserwacja przy sprężarkowni"
+        },
+        {
+          "nazwa": "Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić",
+          "jakSprawdzamy": "„Pokaż — rozpoznaj — powiedz” przy maszynie"
+        },
+        {
+          "nazwa": "Stosuje kryteria energetyczne przy zakupach",
+          "jakSprawdzamy": "Przegląd ostatniego zamówienia urządzenia energochłonnego"
+        },
+        {
+          "nazwa": "Przeprowadza audyt wewnętrzny",
+          "jakSprawdzamy": "Zaświadczenie oraz audyt pod obserwacją"
+        }
+      ],
+      "ROLE": [
+        {
+          "nazwa": "Energy Manager",
+          "opis": "Jan Kowalski — koordynator zespołu, 25% etatu",
+          "wykonawca": false
+        },
+        {
+          "nazwa": "Kier. UR",
+          "opis": "Kierownik Utrzymania Ruchu — właściciel SEU sprężarkownia, lakiernia, prasy",
+          "wykonawca": false
+        },
+        {
+          "nazwa": "Technicy UR",
+          "opis": "Dwóch techników utrzymania ruchu — sprężarkownia i lakiernia",
+          "wykonawca": false
+        },
+        {
+          "nazwa": "Operatorzy SEU",
+          "opis": "Operatorzy pras i lakierni — 24 osoby",
+          "wykonawca": false
+        },
+        {
+          "nazwa": "Zakupy",
+          "opis": "Kierownik Zakupów i specjalista ds. zakupów — 2 osoby",
+          "wykonawca": false
+        },
+        {
+          "nazwa": "Audytor wewn.",
+          "opis": "Specjalista ds. środowiska — audytor ISO 14001, audyty wspólne (szansa S4)",
+          "wykonawca": false
+        },
+        {
+          "nazwa": "Wykonawca (serwis)",
+          "opis": "Serwis sprężarek — zmienia nastawy w zakładzie, więc pracuje pod nadzorem organizacji",
+          "wykonawca": true
+        }
+      ],
+      "MAC": {
+        "0|0": "4/3",
+        "0|1": "2/2",
+        "0|2": "1/1",
+        "0|3": "1/1",
+        "0|4": "1/1",
+        "0|5": "3/3",
+        "0|6": "1/0",
+        "1|0": "3/3",
+        "1|1": "2/2",
+        "1|2": "2/1",
+        "1|3": "0",
+        "1|4": "0",
+        "1|5": "1/1",
+        "1|6": "0",
+        "2|0": "3/3",
+        "2|1": "2/1",
+        "2|2": "1/1",
+        "2|3": "0",
+        "2|4": "0",
+        "2|5": "2/2",
+        "2|6": "0",
+        "3|0": "1/1",
+        "3|1": "3/3",
+        "3|2": "3/1",
+        "3|3": "0",
+        "3|4": "0",
+        "3|5": "0",
+        "3|6": "3/3",
+        "4|0": "1/1",
+        "4|1": "3/3",
+        "4|2": "3/1",
+        "4|3": "3/2",
+        "4|4": "0",
+        "4|5": "0",
+        "4|6": "3/3",
+        "5|0": "2/2",
+        "5|1": "2/1",
+        "5|2": "0",
+        "5|3": "0",
+        "5|4": "3/1",
+        "5|5": "1/1",
+        "5|6": "0",
+        "6|0": "2/2",
+        "6|1": "0",
+        "6|2": "0",
+        "6|3": "0",
+        "6|4": "0",
+        "6|5": "3/3",
+        "6|6": "0"
+      },
+      "LUKI": [
+        {
+          "dotyczy": "Technicy UR — Stosuje nastawy sprężarkowni (6,3 bar)",
+          "osoba": "Technicy UR — 2 osoby (Marek Z., Adam P.)",
+          "luka": "Nastawy sprężarkowni — wykonują pod nadzorem, mają wykonywać samodzielnie",
+          "dzialanie": "Szkolenie z serwisem sprężarek (4 tys. zł) oraz dwa tygodnie pracy z kierownikiem UR przy nastawach.",
+          "forma": "szkolenie_zewn",
+          "termin": "2026-06-30",
+          "ocena": "Kierownik UR: „pokaż — rozpoznaj — powiedz” przy sprężarkowni. Po kwartale drugie sprawdzenie: czy zgłoszenia o nieprawidłowej pracy sprężarek rzeczywiście się pojawiają.",
+          "wynik": "1 osoba zaliczyła w czerwcu; 1 osoba — ponowne sprawdzenie 07.2026: zaliczone. W III kwartale 3 zgłoszenia o nieprawidłowej pracy.",
+          "status": "zaliczone",
+          "dowod": "Karty techników (HR), protokół sprawdzenia"
+        },
+        {
+          "dotyczy": "Technicy UR — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić",
+          "osoba": "Technicy UR — 2 osoby",
+          "luka": "Rozpoznawanie nieprawidłowej pracy sprężarek — wykonują pod nadzorem",
+          "dzialanie": "Ta sama ścieżka co przy nastawach: szkolenie z serwisem i praca z kierownikiem UR; dodatkowo instrukcja z objawami nieprawidłowej pracy przy sprężarkowni.",
+          "forma": "mentoring",
+          "termin": "2026-06-30",
+          "ocena": "„Pokaż — rozpoznaj — powiedz”; po kwartale liczba i trafność zgłoszeń.",
+          "wynik": "Zaliczone przez obie osoby; zgłoszenia pojawiają się i są trafne.",
+          "status": "zaliczone",
+          "dowod": "Karty techników (HR)"
+        },
+        {
+          "dotyczy": "Operatorzy SEU — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić",
+          "osoba": "Operatorzy pras i lakierni — 24 osoby",
+          "luka": "Rozpoznawanie nieprawidłowej pracy i zgłaszanie — brakuje jednego poziomu",
+          "dzialanie": "Instruktaż na stanowisku, 1 h, plus instrukcja przy maszynie: po czym poznać nieprawidłową pracę i komu ją zgłosić.",
+          "forma": "instruktaz",
+          "termin": "2026-09-30",
+          "ocena": "Obserwacja 5 losowo wybranych operatorów przy pracy — sprawdzenie, czy potrafią wskazać objawy i podać drogę zgłoszenia.",
+          "wynik": "W toku — instruktaż przeprowadzony dla 18 z 24 osób, obserwacja zaplanowana na 10.2026.",
+          "status": "wtoku",
+          "dowod": "Protokół obserwacji; karty operatorów"
+        },
+        {
+          "dotyczy": "Kier. UR — Analizuje wskaźniki i odchylenia",
+          "osoba": "Kierownik Utrzymania Ruchu",
+          "luka": "Analiza wskaźników — wykonuje pod nadzorem Energy Managera",
+          "dzialanie": "Mentoring Energy Managera: wspólne przygotowanie raportów miesięcznych przez kwartał, potem raport samodzielny.",
+          "forma": "mentoring",
+          "termin": "2026-09-30",
+          "ocena": "Samodzielnie przygotowany raport za wrzesień, omówiony z Energy Managerem.",
+          "wynik": "Zaliczone — raport za wrzesień przygotowany samodzielnie, z poprawną normalizacją.",
+          "status": "zaliczone",
+          "dowod": "Raport wrześniowy, notatka Energy Managera"
+        },
+        {
+          "dotyczy": "Zakupy — Stosuje kryteria energetyczne przy zakupach",
+          "osoba": "Kierownik Zakupów i specjalista ds. zakupów — 2 osoby",
+          "luka": "Kryteria energetyczne i koszt cyklu życia — mają stosować samodzielnie, wiedzą tylko, gdzie szukać",
+          "dzialanie": "Warsztat 2 h z Energy Managerem oraz lista kontrolna zakupów urządzeń energochłonnych dopisana do procedury P-ZAK-01.",
+          "forma": "warsztat",
+          "termin": "2026-05-31",
+          "ocena": "Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW — czy kryterium energetyczne znalazło się w specyfikacji i czy porównano koszt cyklu życia.",
+          "wynik": "Zaliczone — w zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14) kryterium zastosowane, porównano oferty kosztem zakupu i energii w 15 lat.",
+          "status": "zaliczone",
+          "dowod": "Notatka z przeglądu zamówień; specyfikacja zamówienia INW/2026/07"
+        },
+        {
+          "dotyczy": "Wykonawca (serwis) — Zna wymagania systemu w swoim zakresie",
+          "osoba": "Serwis sprężarek — firma zewnętrzna, 2 serwisanci",
+          "luka": "Nie zna wymagań systemu — nastawy zmieniał bez zgłaszania (ryzyko R5)",
+          "dzialanie": "Wymagania wpisane do umowy serwisowej (aneks 04.2026): obowiązek zgłaszania każdej zmiany nastaw kierownikowi UR oraz przekazywania raportu serwisowego z wartościami nastaw. Wprowadzenie 15 min przy pierwszej wizycie po aneksie.",
+          "forma": "umowa",
+          "termin": "2026-04-28",
+          "ocena": "Sprawdzenie raportów serwisowych z trzech kolejnych wizyt — czy nastawy są podane i czy zmiany były zgłaszane.",
+          "wynik": "Zgodne — trzy raporty z wartościami nastaw, jedna zmiana ciśnienia zgłoszona kierownikowi UR przed wykonaniem.",
+          "status": "zaliczone",
+          "dowod": "Aneks do umowy serwisowej; raporty serwisowe w teczce EnMS"
+        }
+      ],
+      "PLAN": [
+        {
+          "nr": "1",
+          "temat": "Wprowadzenie: polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi",
+          "punkty": [
+            "7.3"
+          ],
+          "grupa": "Nowi pracownicy oraz wykonawcy pracujący na terenie zakładu",
+          "forma": "spotkanie",
+          "prowadzacy": "Energy Manager (dla wykonawców — kierownik zlecający)",
+          "czas": "15–30 min",
+          "termin": "2026-05-04",
+          "ocena": "Rozmowa kontrolna po miesiącu — trzy pytania o politykę, wpływ własnej pracy i drogę zgłoszenia",
+          "status": "wtoku"
+        },
+        {
+          "nr": "2",
+          "temat": "Nastawy i rozpoznawanie nieprawidłowej pracy znaczących użyć energii",
+          "punkty": [
+            "7.2"
+          ],
+          "grupa": "Operatorzy pras i lakierni, technicy UR",
+          "forma": "instruktaz",
+          "prowadzacy": "Kierownik UR, przy sprężarkowni — z serwisem",
+          "czas": "1–2 h",
+          "termin": "2026-09-30",
+          "ocena": "„Pokaż — rozpoznaj — powiedz” przy maszynie; obserwacja 5 losowych osób",
+          "status": "wtoku"
+        },
+        {
+          "nr": "3",
+          "temat": "Wymagania systemu dla kierownictwa: wynik energetyczny, cele, decyzje wpływające na energię",
+          "punkty": [
+            "7.2",
+            "7.3"
+          ],
+          "grupa": "Kierownicy działów i zarząd",
+          "forma": "spotkanie",
+          "prowadzacy": "Energy Manager z konsultantem",
+          "czas": "1–2 h",
+          "termin": "2026-06-15",
+          "ocena": "Omówienie wyników na przeglądzie zarządzania — czy decyzje uwzględniają wynik energetyczny",
+          "status": "zaliczone"
+        },
+        {
+          "nr": "4",
+          "temat": "Kryteria energetyczne i koszt cyklu życia w zakupach",
+          "punkty": [
+            "7.2"
+          ],
+          "grupa": "Zakupy — 2 osoby",
+          "forma": "warsztat",
+          "prowadzacy": "Energy Manager",
+          "czas": "2 h",
+          "termin": "2026-05-31",
+          "ocena": "Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW",
+          "status": "zaliczone"
+        },
+        {
+          "nr": "5",
+          "temat": "Audytor wewnętrzny systemu zarządzania energią",
+          "punkty": [
+            "7.2"
+          ],
+          "grupa": "Specjalista ds. środowiska (audytor ISO 14001)",
+          "forma": "szkolenie_zewn",
+          "prowadzacy": "Jednostka szkoleniowa",
+          "czas": "1–2 dni",
+          "termin": "2026-08-31",
+          "ocena": "Audyt pod obserwacją Energy Managera i konsultanta",
+          "status": "zaliczone"
+        },
+        {
+          "nr": "6",
+          "temat": "Krótka informacja na początku zmiany — jeden temat tygodniowo (np. „w tym tygodniu: ciśnienie w sieci”)",
+          "punkty": [
+            "7.3"
+          ],
+          "grupa": "Wszyscy pracownicy produkcji",
+          "forma": "spotkanie",
+          "prowadzacy": "Liderzy zmian",
+          "czas": "10 min tygodniowo",
+          "termin": "2026-05-11",
+          "ocena": "Kwartalna rozmowa Energy Managera z trzema losowo wybranymi osobami",
+          "status": "wtoku"
+        }
+      ],
+      "META": {
+        "utworzono": "2026-04-20",
+        "aktualizacja": "2026-09-30",
+        "opracowal": "Jan Kowalski — Energy Manager, z HR",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "przeglad": "Przy zmianie urządzeń, nastaw i ról, przy każdej nowej osobie oraz raz w roku przed audytem wewnętrznym"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_72": [
+      {
+        "tekst": "Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.",
+        "podstawa": "N",
+        "auto": "ustalono"
+      },
+      {
+        "tekst": "Kompetencje zapewniono na podstawie wykształcenia, szkolenia, umiejętności lub doświadczenia.",
+        "podstawa": "N",
+        "auto": "zapewniono"
+      },
+      {
+        "tekst": "Podjęto działania uzupełniające luki (w stosownych przypadkach).",
+        "podstawa": "N",
+        "auto": "dzialania"
+      },
+      {
+        "tekst": "Oceniono skuteczność działań — sprawdzenie umiejętności, nie tylko obecności.",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "tekst": "Zachowano dowody kompetencji.",
+        "podstawa": "N",
+        "auto": "dowody"
+      },
+      {
+        "tekst": "Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).",
+        "podstawa": "M",
+        "auto": "narzedzia"
+      }
+    ],
+    "P_KOMPETENCJE": [
+      {
+        "nazwa": "Zna wymagania systemu w swoim zakresie",
+        "jakSprawdzamy": "Rozmowa; dla audytora wewnętrznego — zaświadczenie"
+      },
+      {
+        "nazwa": "Zbiera i sprawdza dane energetyczne",
+        "jakSprawdzamy": "Obserwacja odczytu i zamknięcia bilansu miesięcznego"
+      },
+      {
+        "nazwa": "Analizuje wskaźniki i odchylenia",
+        "jakSprawdzamy": "Omówienie raportu miesięcznego"
+      },
+      {
+        "nazwa": "Stosuje nastawy sprężarkowni (6,3 bar)",
+        "jakSprawdzamy": "Obserwacja przy sprężarkowni"
+      },
+      {
+        "nazwa": "Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić",
+        "jakSprawdzamy": "„Pokaż — rozpoznaj — powiedz” przy maszynie"
+      },
+      {
+        "nazwa": "Stosuje kryteria energetyczne przy zakupach",
+        "jakSprawdzamy": "Przegląd ostatniego zamówienia urządzenia energochłonnego"
+      },
+      {
+        "nazwa": "Przeprowadza audyt wewnętrzny",
+        "jakSprawdzamy": "Zaświadczenie oraz audyt pod obserwacją"
+      }
+    ],
+    "P_ROLE": [
+      {
+        "nazwa": "Energy Manager",
+        "opis": "Jan Kowalski — koordynator zespołu, 25% etatu",
+        "wykonawca": false
+      },
+      {
+        "nazwa": "Kier. UR",
+        "opis": "Kierownik Utrzymania Ruchu — właściciel SEU sprężarkownia, lakiernia, prasy",
+        "wykonawca": false
+      },
+      {
+        "nazwa": "Technicy UR",
+        "opis": "Dwóch techników utrzymania ruchu — sprężarkownia i lakiernia",
+        "wykonawca": false
+      },
+      {
+        "nazwa": "Operatorzy SEU",
+        "opis": "Operatorzy pras i lakierni — 24 osoby",
+        "wykonawca": false
+      },
+      {
+        "nazwa": "Zakupy",
+        "opis": "Kierownik Zakupów i specjalista ds. zakupów — 2 osoby",
+        "wykonawca": false
+      },
+      {
+        "nazwa": "Audytor wewn.",
+        "opis": "Specjalista ds. środowiska — audytor ISO 14001, audyty wspólne (szansa S4)",
+        "wykonawca": false
+      },
+      {
+        "nazwa": "Wykonawca (serwis)",
+        "opis": "Serwis sprężarek — zmienia nastawy w zakładzie, więc pracuje pod nadzorem organizacji",
+        "wykonawca": true
+      }
+    ],
+    "P_MAC": {
+      "0|0": "4/3",
+      "0|1": "2/2",
+      "0|2": "1/1",
+      "0|3": "1/1",
+      "0|4": "1/1",
+      "0|5": "3/3",
+      "0|6": "1/0",
+      "1|0": "3/3",
+      "1|1": "2/2",
+      "1|2": "2/1",
+      "1|3": "0",
+      "1|4": "0",
+      "1|5": "1/1",
+      "1|6": "0",
+      "2|0": "3/3",
+      "2|1": "2/1",
+      "2|2": "1/1",
+      "2|3": "0",
+      "2|4": "0",
+      "2|5": "2/2",
+      "2|6": "0",
+      "3|0": "1/1",
+      "3|1": "3/3",
+      "3|2": "3/1",
+      "3|3": "0",
+      "3|4": "0",
+      "3|5": "0",
+      "3|6": "3/3",
+      "4|0": "1/1",
+      "4|1": "3/3",
+      "4|2": "3/1",
+      "4|3": "3/2",
+      "4|4": "0",
+      "4|5": "0",
+      "4|6": "3/3",
+      "5|0": "2/2",
+      "5|1": "2/1",
+      "5|2": "0",
+      "5|3": "0",
+      "5|4": "3/1",
+      "5|5": "1/1",
+      "5|6": "0",
+      "6|0": "2/2",
+      "6|1": "0",
+      "6|2": "0",
+      "6|3": "0",
+      "6|4": "0",
+      "6|5": "3/3",
+      "6|6": "0"
+    },
+    "P_LUKI": [
+      {
+        "dotyczy": "Technicy UR — Stosuje nastawy sprężarkowni (6,3 bar)",
+        "osoba": "Technicy UR — 2 osoby (Marek Z., Adam P.)",
+        "luka": "Nastawy sprężarkowni — wykonują pod nadzorem, mają wykonywać samodzielnie",
+        "dzialanie": "Szkolenie z serwisem sprężarek (4 tys. zł) oraz dwa tygodnie pracy z kierownikiem UR przy nastawach.",
+        "forma": "szkolenie_zewn",
+        "termin": "2026-06-30",
+        "ocena": "Kierownik UR: „pokaż — rozpoznaj — powiedz” przy sprężarkowni. Po kwartale drugie sprawdzenie: czy zgłoszenia o nieprawidłowej pracy sprężarek rzeczywiście się pojawiają.",
+        "wynik": "1 osoba zaliczyła w czerwcu; 1 osoba — ponowne sprawdzenie 07.2026: zaliczone. W III kwartale 3 zgłoszenia o nieprawidłowej pracy.",
+        "status": "zaliczone",
+        "dowod": "Karty techników (HR), protokół sprawdzenia"
+      },
+      {
+        "dotyczy": "Technicy UR — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić",
+        "osoba": "Technicy UR — 2 osoby",
+        "luka": "Rozpoznawanie nieprawidłowej pracy sprężarek — wykonują pod nadzorem",
+        "dzialanie": "Ta sama ścieżka co przy nastawach: szkolenie z serwisem i praca z kierownikiem UR; dodatkowo instrukcja z objawami nieprawidłowej pracy przy sprężarkowni.",
+        "forma": "mentoring",
+        "termin": "2026-06-30",
+        "ocena": "„Pokaż — rozpoznaj — powiedz”; po kwartale liczba i trafność zgłoszeń.",
+        "wynik": "Zaliczone przez obie osoby; zgłoszenia pojawiają się i są trafne.",
+        "status": "zaliczone",
+        "dowod": "Karty techników (HR)"
+      },
+      {
+        "dotyczy": "Operatorzy SEU — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić",
+        "osoba": "Operatorzy pras i lakierni — 24 osoby",
+        "luka": "Rozpoznawanie nieprawidłowej pracy i zgłaszanie — brakuje jednego poziomu",
+        "dzialanie": "Instruktaż na stanowisku, 1 h, plus instrukcja przy maszynie: po czym poznać nieprawidłową pracę i komu ją zgłosić.",
+        "forma": "instruktaz",
+        "termin": "2026-09-30",
+        "ocena": "Obserwacja 5 losowo wybranych operatorów przy pracy — sprawdzenie, czy potrafią wskazać objawy i podać drogę zgłoszenia.",
+        "wynik": "W toku — instruktaż przeprowadzony dla 18 z 24 osób, obserwacja zaplanowana na 10.2026.",
+        "status": "wtoku",
+        "dowod": "Protokół obserwacji; karty operatorów"
+      },
+      {
+        "dotyczy": "Kier. UR — Analizuje wskaźniki i odchylenia",
+        "osoba": "Kierownik Utrzymania Ruchu",
+        "luka": "Analiza wskaźników — wykonuje pod nadzorem Energy Managera",
+        "dzialanie": "Mentoring Energy Managera: wspólne przygotowanie raportów miesięcznych przez kwartał, potem raport samodzielny.",
+        "forma": "mentoring",
+        "termin": "2026-09-30",
+        "ocena": "Samodzielnie przygotowany raport za wrzesień, omówiony z Energy Managerem.",
+        "wynik": "Zaliczone — raport za wrzesień przygotowany samodzielnie, z poprawną normalizacją.",
+        "status": "zaliczone",
+        "dowod": "Raport wrześniowy, notatka Energy Managera"
+      },
+      {
+        "dotyczy": "Zakupy — Stosuje kryteria energetyczne przy zakupach",
+        "osoba": "Kierownik Zakupów i specjalista ds. zakupów — 2 osoby",
+        "luka": "Kryteria energetyczne i koszt cyklu życia — mają stosować samodzielnie, wiedzą tylko, gdzie szukać",
+        "dzialanie": "Warsztat 2 h z Energy Managerem oraz lista kontrolna zakupów urządzeń energochłonnych dopisana do procedury P-ZAK-01.",
+        "forma": "warsztat",
+        "termin": "2026-05-31",
+        "ocena": "Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW — czy kryterium energetyczne znalazło się w specyfikacji i czy porównano koszt cyklu życia.",
+        "wynik": "Zaliczone — w zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14) kryterium zastosowane, porównano oferty kosztem zakupu i energii w 15 lat.",
+        "status": "zaliczone",
+        "dowod": "Notatka z przeglądu zamówień; specyfikacja zamówienia INW/2026/07"
+      },
+      {
+        "dotyczy": "Wykonawca (serwis) — Zna wymagania systemu w swoim zakresie",
+        "osoba": "Serwis sprężarek — firma zewnętrzna, 2 serwisanci",
+        "luka": "Nie zna wymagań systemu — nastawy zmieniał bez zgłaszania (ryzyko R5)",
+        "dzialanie": "Wymagania wpisane do umowy serwisowej (aneks 04.2026): obowiązek zgłaszania każdej zmiany nastaw kierownikowi UR oraz przekazywania raportu serwisowego z wartościami nastaw. Wprowadzenie 15 min przy pierwszej wizycie po aneksie.",
+        "forma": "umowa",
+        "termin": "2026-04-28",
+        "ocena": "Sprawdzenie raportów serwisowych z trzech kolejnych wizyt — czy nastawy są podane i czy zmiany były zgłaszane.",
+        "wynik": "Zgodne — trzy raporty z wartościami nastaw, jedna zmiana ciśnienia zgłoszona kierownikowi UR przed wykonaniem.",
+        "status": "zaliczone",
+        "dowod": "Aneks do umowy serwisowej; raporty serwisowe w teczce EnMS"
+      }
+    ],
+    "P_PLAN": [
+      {
+        "nr": "1",
+        "temat": "Wprowadzenie: polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi",
+        "punkty": [
+          "7.3"
+        ],
+        "grupa": "Nowi pracownicy oraz wykonawcy pracujący na terenie zakładu",
+        "forma": "spotkanie",
+        "prowadzacy": "Energy Manager (dla wykonawców — kierownik zlecający)",
+        "czas": "15–30 min",
+        "termin": "2026-05-04",
+        "ocena": "Rozmowa kontrolna po miesiącu — trzy pytania o politykę, wpływ własnej pracy i drogę zgłoszenia",
+        "status": "wtoku"
+      },
+      {
+        "nr": "2",
+        "temat": "Nastawy i rozpoznawanie nieprawidłowej pracy znaczących użyć energii",
+        "punkty": [
+          "7.2"
+        ],
+        "grupa": "Operatorzy pras i lakierni, technicy UR",
+        "forma": "instruktaz",
+        "prowadzacy": "Kierownik UR, przy sprężarkowni — z serwisem",
+        "czas": "1–2 h",
+        "termin": "2026-09-30",
+        "ocena": "„Pokaż — rozpoznaj — powiedz” przy maszynie; obserwacja 5 losowych osób",
+        "status": "wtoku"
+      },
+      {
+        "nr": "3",
+        "temat": "Wymagania systemu dla kierownictwa: wynik energetyczny, cele, decyzje wpływające na energię",
+        "punkty": [
+          "7.2",
+          "7.3"
+        ],
+        "grupa": "Kierownicy działów i zarząd",
+        "forma": "spotkanie",
+        "prowadzacy": "Energy Manager z konsultantem",
+        "czas": "1–2 h",
+        "termin": "2026-06-15",
+        "ocena": "Omówienie wyników na przeglądzie zarządzania — czy decyzje uwzględniają wynik energetyczny",
+        "status": "zaliczone"
+      },
+      {
+        "nr": "4",
+        "temat": "Kryteria energetyczne i koszt cyklu życia w zakupach",
+        "punkty": [
+          "7.2"
+        ],
+        "grupa": "Zakupy — 2 osoby",
+        "forma": "warsztat",
+        "prowadzacy": "Energy Manager",
+        "czas": "2 h",
+        "termin": "2026-05-31",
+        "ocena": "Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW",
+        "status": "zaliczone"
+      },
+      {
+        "nr": "5",
+        "temat": "Audytor wewnętrzny systemu zarządzania energią",
+        "punkty": [
+          "7.2"
+        ],
+        "grupa": "Specjalista ds. środowiska (audytor ISO 14001)",
+        "forma": "szkolenie_zewn",
+        "prowadzacy": "Jednostka szkoleniowa",
+        "czas": "1–2 dni",
+        "termin": "2026-08-31",
+        "ocena": "Audyt pod obserwacją Energy Managera i konsultanta",
+        "status": "zaliczone"
+      },
+      {
+        "nr": "6",
+        "temat": "Krótka informacja na początku zmiany — jeden temat tygodniowo (np. „w tym tygodniu: ciśnienie w sieci”)",
+        "punkty": [
+          "7.3"
+        ],
+        "grupa": "Wszyscy pracownicy produkcji",
+        "forma": "spotkanie",
+        "prowadzacy": "Liderzy zmian",
+        "czas": "10 min tygodniowo",
+        "termin": "2026-05-11",
+        "ocena": "Kwartalna rozmowa Energy Managera z trzema losowo wybranymi osobami",
+        "status": "wtoku"
+      }
+    ],
+    "P_META": {
+      "utworzono": "2026-04-20",
+      "aktualizacja": "2026-09-30",
+      "opracowal": "Jan Kowalski — Energy Manager, z HR",
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+      "przeglad": "Przy zmianie urządzeń, nastaw i ról, przy każdej nowej osobie oraz raz w roku przed audytem wewnętrznym"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Kryteria eksploatacji działają tylko wtedy, gdy obsługa wie, co ustawia i dlaczego.",
+        "decyzja": "Wymagane kompetencje opisane dla ról związanych ze znaczącymi użyciami; luki zamykane szkoleniem z terminem.",
+        "dzialanie": "Matryca kompetencji; szkolenie operatorów sprężarkowni w maju 2026 r.; instruktaż dla serwisu zewnętrznego przed rozpoczęciem prac.",
+        "sprawdzenie": "Sprawdzian po szkoleniu i obserwacja nastaw na stanowisku; wynik zapisany w karcie kompetencji."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "KOMPETENCJE": [],
+    "ROLE": [],
+    "MAC": {},
+    "LUKI": [],
+    "PLAN": [],
+    "WNIOSKI": [],
+    "SKALA": [
+      [
+        0,
+        "nie dotyczy"
+      ],
+      [
+        1,
+        "wie, gdzie szukać"
+      ],
+      [
+        2,
+        "wykonuje pod nadzorem"
+      ],
+      [
+        3,
+        "wykonuje samodzielnie"
+      ],
+      [
+        4,
+        "uczy innych"
+      ]
+    ],
+    "FORMY": [
+      [
+        "",
+        "Wybierz formę"
+      ],
+      [
+        "spotkanie",
+        "Spotkanie"
+      ],
+      [
+        "instruktaz",
+        "Instruktaż na stanowisku"
+      ],
+      [
+        "mentoring",
+        "Mentoring — praca pod okiem"
+      ],
+      [
+        "warsztat",
+        "Warsztat"
+      ],
+      [
+        "szkolenie_zewn",
+        "Szkolenie zewnętrzne"
+      ],
+      [
+        "szkolenie_wewn",
+        "Szkolenie wewnętrzne"
+      ],
+      [
+        "zmiana",
+        "Zmiana przydziału zadań"
+      ],
+      [
+        "zatrudnienie",
+        "Zatrudnienie"
+      ],
+      [
+        "zlecenie",
+        "Zlecenie pracy kompetentnej firmie"
+      ],
+      [
+        "umowa",
+        "Wymagania w umowie z wykonawcą"
+      ]
+    ],
+    "STATUSY": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "planowane",
+        "Planowane"
+      ],
+      [
+        "wtoku",
+        "W toku"
+      ],
+      [
+        "zaliczone",
+        "Zaliczone"
+      ],
+      [
+        "niezaliczone",
+        "Niezaliczone — powtórka"
+      ],
+      [
+        "odwolane",
+        "Odwołane"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

@@ -1,7 +1,7 @@
 @extends('audits.plant-profile.layout')
 @section('content')
 @php
-    $answers = $questionnaire->formAnswers(old('answers', $profile->answers), $profile->definition);
+    $answers = $questionnaire->formAnswers(old('answers', $exampleAnswers ?? $profile->answers), $profile->definition);
     $editable = $canWrite && ($isLatest ?? true) && (!$client || in_array($profile->status,['editing','returned','auditor_corrected']));
     $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję','before_correction'=>'Wersja przed korektą audytora','auditor_correction'=>'Poprawiony przez audytora — wymagane ponowne zatwierdzenie klienta'];
     $operations['schema_upgrade'] = 'Rozszerzono profil według ankiety audytorów — odpowiedzi zachowane';
@@ -9,6 +9,7 @@
 @endphp
 @include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'plant-form'])
+@include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
 @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($profile->definition,$answers), 'progressForm'=>'#plant-form', 'progressMode'=>'plant'])
 @include('audits.plant-profile.status')
 <div class="plant-summary"><div><a href="{{ route($prefix.'index',$audit) }}">← Wszystkie profile</a><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2></div><span class="plant-badge">{{ \App\Models\IsoPlantProfile::STATUSES[$profile->status] }} · wersja {{ $profile->revision }}</span></div>

@@ -251,6 +251,37 @@ brakZdarzen=Nie wystąpiły zdarzenia w tym okresie
 uzasadnienieBraku=Uzasadnienie braku zdarzeń i zakres sprawdzenia'''.splitlines())
 NUMBERS=set('lata cenaEnergii cena roczne moc godziny jednostkowe ilosc inne a b c x1 x2 rzeczywiste enb biez nadwyzkaMWh potencjalMWh koszt cenaEl cenaGaz potencjalRazem'.split())
 OPTIONAL=set('uwagi komentarz rozbicie ponownieOtwarta klasyfikacja nadwyzkaMWh koszt potencjalRazem'.split())
+LABELS.update(dict(line.split('=', 1) for line in '''WEW=Komunikacja wewnętrzna
+ZEW=Komunikacja zewnętrzna
+PROCES=Zgłaszanie uwag i propozycji
+ZGLOSZENIA=Rejestr zgłoszeń
+WYKAZ=Wykaz dokumentów i zapisów
+ZASADY=Zasady nadzoru nad dokumentacją
+ZEWN=Dokumenty zewnętrzne
+ktoMoze=Kto może zgłaszać uwagi i propozycje
+kanaly=Kanały zgłaszania
+potwierdzenie=Potwierdzenie przyjęcia zgłoszenia
+dni=Termin potwierdzenia w dniach roboczych
+rozpatrzenie=Rozpatrywanie zgłoszeń
+zwrotna=Informacja zwrotna
+rejestr=Miejsce zapisu zgłoszeń
+zglaszajacy=Zgłaszająca osoba lub funkcja
+kanal=Kanał zgłoszenia
+odpowiedz=Data odpowiedzi
+odpowiedzTresc=Treść odpowiedzi
+tytul=Tytuł dokumentu
+punkt=Punkt normy
+wersja=Wersja
+miejsce=Miejsce przechowywania
+identyfikacja=Identyfikacja i opis dokumentów
+zatwierdzanie=Przegląd i zatwierdzanie
+dostepnosc=Dostępność i dystrybucja
+ochrona=Ochrona dokumentów i zapisów
+przechowywanie=Przechowywanie i usuwanie
+zewnetrzne=Nadzór nad dokumentami zewnętrznymi
+dotyczy=Zastosowanie dokumentu
+sprawdzono=Data sprawdzenia aktualności'''.splitlines()))
+NUMBERS.add('dni')
 YES={'tak':'Tak','nie':'Nie'}
 OPTIONS={'o':dict(YES,nd='Nie dotyczy'), 'wykonawca':YES,'porownanieNd':YES,'niezgodnosc':YES,'wlasnaPraca':YES,'najwyzszeKier':YES,'pierwszy':YES,'podobneZnalezione':YES,'zmianaSystemu':YES,'minimalne':YES,'brakZdarzen':YES,
  'kierunek':{'nizej':'Niższy wynik jest lepszy','wyzej':'Wyższy wynik jest lepszy'},'etap':{'zalozenia':'Założenia','koncepcja':'Koncepcja','zatwierdzenie':'Zatwierdzenie','realizacja':'Realizacja','uruchomione':'Uruchomiono'},'etapAnalizy':{'zalozenia':'Założenia','koncepcja':'Koncepcja','zatwierdzenie':'Zatwierdzenie','realizacja':'Realizacja'},'skalaSkutkow':{'male':'Małe','srednie':'Średnie','duze':'Duże'},'zakresDzialania':{'miejsce':'Miejsce wykrycia','szerszy':'Szerszy zakres'},'nosnik':{'el':'Energia elektryczna','gaz':'Gaz','inne':'Inny'},'rytmBaza':{'czesciej':'Częściej niż raz w roku','rocznie':'Raz w roku','rzadziej':'Rzadziej niż raz w roku'}}
@@ -263,7 +294,7 @@ def merge(a,b):
 
 unknown=set()
 for f in sorted(SOURCE.glob('ENESA_*.html')):
-    m=re.match(r'ENESA_((?:8|9|10)\.[\d.]+)_',f.name)
+    m=re.match(r'ENESA_((?:(?:8|9|10)\.[\d.]+|7\.[45]))_',f.name)
     if not m: continue
     section=m[1].replace('.','-'); raw=f.read_text(encoding='utf-8'); block=re.search(r'<pre id=[\'"]js[\'"]>(.*?)</pre>',raw,re.S)
     if not block: raise ValueError(f)
@@ -282,7 +313,7 @@ for f in sorted(SOURCE.glob('ENESA_*.html')):
         typ='number' if k in NUMBERS else ('date' if re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(v)) or k in ['dataSprawdzenia','terminDowodu','ponownieOtwarta'] else 'textarea')
         opts=OPTIONS.get(k,{})
         if k=='kierunek' and section=='9-3': opts={}
-        if k=='tryb': opts={'roczne':'Roczne zużycie MWh','moc':'Średnia moc × godziny','jednostkowy':'kWh/jednostkę × ilość'}
+        if k=='tryb' and section=='8-3': opts={'roczne':'Roczne zużycie MWh','moc':'Średnia moc × godziny','jednostkowy':'kWh/jednostkę × ilość'}
         if path.endswith('.wnioski.*.decyzja'): opts={'przyjety':'Przyjęty','odrzucony':'Odrzucony'}
         if section=='9-1-2' and k=='wynik': opts={'zgodne':'Zgodne','wtoku':'W toku zgodnie z planem','douzupelnienia':'Do uzupełnienia dowodem','niezgodne':'Niezgodne'}
         if section=='9-2' and k=='rodzaj': opts={'N':'Niezgodność','D':'Możliwość doskonalenia','P':'Pozytywne ustalenie'}
@@ -294,8 +325,18 @@ for f in sorted(SOURCE.glob('ENESA_*.html')):
         if section=='10-2' and k=='obszar': opts={'S':'System','W':'Wynik energetyczny'}
         if section=='10-2' and k=='stan': opts={'P':'Planowane','W':'W toku','Z':'Zakończone','A':'Anulowane'}
         if section=='10-2' and k=='decyzja': opts={'plan_dzialan':'Plan działań 6.2','plan_dosk':'Plan doskonalenia','odlozona':'Odłożona','odrzucona':'Odrzucona'}
-        if section=='9-1-1' and k=='stan': opts={'spelnione':'Spełnione','niespelnione':'Niespełnione','brak':'Brak danych'}
-        return {'type':'select' if opts else typ,'label':label,'required':k not in OPTIONAL,'options':opts}
+        if section=='9-1-1' and k=='stan': opts={'spelnione':'Spełnione','czesciowo':'Częściowo spełnione','poza':'Poza zakresem oceny w okresie','niespelnione':'Niespełnione','brak':'Brak danych'}
+        if section in ['7-4','7-5']:
+            opts={}
+            if section=='7-4' and k=='rodzaj': opts={'obowiazek':'Obowiązek — przepis lub umowa','polityka':'Polityka energetyczna','dobrowolna':'Komunikacja dobrowolna'}
+            if section=='7-4' and k=='decyzja': opts={'wdrozone':'Wdrożone','odroczone':'Odroczone','odmowa':'Uzasadniona odmowa','wtoku':'W toku'}
+            if section=='7-5' and k=='rodzaj': opts={'D':'Dokument','Z':'Zapis','DZ':'Dokument i zapis'}
+            if section=='7-5' and k=='podstawa': opts={'N':'Wymaganie normy','M':'Potrzeba organizacji'}
+            if k in ['sprawdzono','odpowiedz'] or (section=='7-4' and k=='potwierdzenie' and path.startswith('ZGLOSZENIA.')): typ='date'
+        required=k not in OPTIONAL
+        if section=='7-4' and k in ['podstawa','efekt']: required=False
+        if section=='7-5' and k in ['wersja','punkt']: required=False
+        return {'type':'select' if opts else typ,'label':label,'required':required,'options':opts}
     tree={k:node(v,k,k) for k,v in example.items()}
     for k in ['wRejestrze','nieprzyjete']: tree.get('META',{}).get('children',{}).pop(k,None)
     if section=='8-3':

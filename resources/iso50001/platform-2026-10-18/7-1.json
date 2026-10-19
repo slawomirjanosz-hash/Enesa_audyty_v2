@@ -1,0 +1,629 @@
+{
+  "source_file": "ENESA_7.1_Zasoby_platforma.html",
+  "source_sha256": "d23e9c0bc5a1a10a4bd5268f64ef136ee37709ff3a683b56e7d173e30b8d0c9b",
+  "section": "7-1",
+  "data": {
+    "KATEGORIE_Z": [
+      {
+        "kod": "ludzie",
+        "nazwa": "Ludzie i ich czas",
+        "opis": "Godziny Energy Managera, członków zespołu, techników, liderów zmian. Nie „w miarę możliwości”, tylko w planie pracy.",
+        "ph1": "np. Energy Manager 25% etatu; 2 h tygodniowo dla każdego lidera zmiany; technik UR na kwartalne przeglądy szczelności",
+        "ph2": "np. Aneksy do zakresów obowiązków z 15.04.2026; decyzja dyrektora zakładu o przydziale 2 h tygodniowo liderom"
+      },
+      {
+        "kod": "pieniadze",
+        "nazwa": "Pieniądze",
+        "opis": "Na działania z planów, szkolenia, pomiary, oprogramowanie.",
+        "ph1": "np. 65 tys. zł na podliczniki (INW/2026/11); 12 tys. zł na szkolenia; 10 tys. zł na usuwanie nieszczelności",
+        "ph2": "np. Budżet inwestycji 2026 zatwierdzony uchwałą zarządu nr 4/2026; budżet szkoleń w planie HR"
+      },
+      {
+        "kod": "infra",
+        "nazwa": "Infrastruktura i narzędzia",
+        "opis": "Liczniki, systemy monitoringu, przyrządy pomiarowe.",
+        "ph1": "np. 6 podliczników, przepływomierz, dostęp do systemu monitoringu, detektor ultradźwiękowy do przeglądów szczelności",
+        "ph2": "np. Podliczniki i przepływomierz uruchomione 06.2026; detektor wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu"
+      },
+      {
+        "kod": "zewn",
+        "nazwa": "Wiedza z zewnątrz",
+        "opis": "Konsultant, audytor energetyczny, serwis producenta — tam, gdzie własnych kompetencji brakuje.",
+        "ph1": "np. Konsultant ENESA do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw i szkolenia techników",
+        "ph2": "np. Umowa z ENESA z 02.2026; umowa serwisowa z wymaganiami kompetencyjnymi (aneks 04.2026)"
+      }
+    ],
+    "LISTA_71": [
+      {
+        "tekst": "Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.",
+        "podstawa": "N",
+        "auto": "okreslono"
+      },
+      {
+        "tekst": "Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.",
+        "podstawa": "N",
+        "auto": "zapewniono"
+      },
+      {
+        "tekst": "Zasoby powiązano z planami działań (6.2).",
+        "podstawa": "M",
+        "auto": "powiazano"
+      },
+      {
+        "tekst": "Zadania systemu spisano z osobami i szacunkiem czasu.",
+        "podstawa": "M",
+        "auto": "spisano"
+      },
+      {
+        "tekst": "Wystarczalność zasobów oceniono na przeglądzie zarządzania.",
+        "podstawa": "M",
+        "auto": "wystarczalnosc"
+      }
+    ],
+    "przyklad": {
+      "ZADANIA": [
+        {
+          "nazwa": "Odczyt podliczników i zestawienie miesięczne",
+          "rodzaj": "stale",
+          "osoba": "Kierownik Utrzymania Ruchu",
+          "godziny": "6",
+          "zrodlo": "Plan zbierania danych, poz. 4, 5, 8",
+          "zdjete": "Nic — zadanie w ramach obecnych obowiązków"
+        },
+        {
+          "nazwa": "Obliczenie wskaźników EnPI i porównanie z liniami bazowymi",
+          "rodzaj": "stale",
+          "osoba": "Energy Manager",
+          "godziny": "12",
+          "zrodlo": "Karty EnPI F-EnMS-09, metoda EnPI (6.4)",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Odczyt liczników głównych i uzgodnienie z fakturami",
+          "rodzaj": "stale",
+          "osoba": "Energy Manager",
+          "godziny": "3",
+          "zrodlo": "Plan zbierania danych, poz. 1–3",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Przekazanie danych o produkcji i lakierowanej powierzchni",
+          "rodzaj": "stale",
+          "osoba": "Kierownik Produkcji",
+          "godziny": "3",
+          "zrodlo": "Plan zbierania danych, poz. 9, 11",
+          "zdjete": "Nic — dane pochodzą z ERP, który i tak prowadzi"
+        },
+        {
+          "nazwa": "Kwartalny przegląd wskaźników na naradzie produkcyjnej",
+          "rodzaj": "stale",
+          "osoba": "Energy Manager",
+          "godziny": "4",
+          "zrodlo": "Cel C3, działanie 2 — stały punkt agendy",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Prowadzenie rejestru zgłoszeń i odpowiadanie na nie",
+          "rodzaj": "stale",
+          "osoba": "Energy Manager",
+          "godziny": "6",
+          "zrodlo": "Proces zgłaszania uwag (7.4)",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Pomiar energii pras analizatorem — 2 tygodnie",
+          "rodzaj": "stale",
+          "osoba": "Kierownik Utrzymania Ruchu",
+          "godziny": "10",
+          "zrodlo": "Plan zbierania danych, poz. 12",
+          "zdjete": "Pomiar wykonuje technik UR pod nadzorem kierownika"
+        },
+        {
+          "nazwa": "Kwartalny przegląd szczelności detektorem ultradźwiękowym",
+          "rodzaj": "plan",
+          "osoba": "Technik UR",
+          "godziny": "8",
+          "zrodlo": "Cel C1, działanie 2",
+          "zdjete": "Przegląd filtrów w hali B przeniesiony na drugiego technika"
+        },
+        {
+          "nazwa": "Nadzór nad montażem czujników obecności w magazynie",
+          "rodzaj": "plan",
+          "osoba": "Kierownik Utrzymania Ruchu",
+          "godziny": "6",
+          "zrodlo": "Cel C2, działanie 2",
+          "zdjete": "Nic — brak możliwości zdjęcia, zadanie dodane"
+        },
+        {
+          "nazwa": "Konfiguracja miesięcznego raportu z podliczników",
+          "rodzaj": "plan",
+          "osoba": "Energy Manager",
+          "godziny": "10",
+          "zrodlo": "Cel C4, działanie 2",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Test weekendowy przepływu w czasie postoju",
+          "rodzaj": "plan",
+          "osoba": "Technik UR",
+          "godziny": "4",
+          "zrodlo": "Zadanie Z1.2; plan zbierania danych, poz. 7",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Przygotowanie przeglądu zarządzania",
+          "rodzaj": "wdrozenie",
+          "osoba": "Energy Manager",
+          "godziny": "12",
+          "zrodlo": "Punkt 9.3 — przegląd planowany na 12.2026",
+          "zdjete": "—"
+        },
+        {
+          "nazwa": "Audyt wewnętrzny systemu",
+          "rodzaj": "wdrozenie",
+          "osoba": "Audytor wewnętrzny",
+          "godziny": "16",
+          "zrodlo": "Punkt 9.2 — audyt przed certyfikacją",
+          "zdjete": "Audyt ISO 14001 łączony z audytem EnMS (szansa S4)"
+        },
+        {
+          "nazwa": "Instruktaż operatorów pras i lakierni",
+          "rodzaj": "wdrozenie",
+          "osoba": "Kierownik Utrzymania Ruchu",
+          "godziny": "8",
+          "zrodlo": "Plan F-EnMS-12, poz. 2",
+          "zdjete": "Nic — brak możliwości zdjęcia, zadanie dodane"
+        }
+      ],
+      "OSOBY": [
+        {
+          "nazwa": "Energy Manager",
+          "rola": "Koordynator zespołu: dane, wskaźniki, karty EnPI, plan komunikacji, rejestr zgłoszeń",
+          "dostepne": "130",
+          "podstawa": "25% etatu — aneks do zakresu obowiązków z 15.04.2026"
+        },
+        {
+          "nazwa": "Kierownik Utrzymania Ruchu",
+          "rola": "Właściciel SEU sprężarkownia, lakiernia, prasy; odczyty podliczników",
+          "dostepne": "30",
+          "podstawa": "Zakres obowiązków, aneks z 15.04.2026 — 2 h tygodniowo; od 06.2026 zwiększone do 2,5 h tygodniowo decyzją Dyrektora Zakładu po przeglądzie obciążeń"
+        },
+        {
+          "nazwa": "Technik UR",
+          "rola": "Przeglądy szczelności, testy przepływu, pomiary analizatorem",
+          "dostepne": "16",
+          "podstawa": "Harmonogram przeglądów okresowych; decyzja kierownika UR"
+        },
+        {
+          "nazwa": "Kierownik Produkcji",
+          "rola": "Dane o produkcji i lakierowanej powierzchni; czynniki statyczne",
+          "dostepne": "8",
+          "podstawa": "Zakres obowiązków — dane z ERP, bez dodatkowych odczytów"
+        },
+        {
+          "nazwa": "Audytor wewnętrzny",
+          "rola": "Specjalista ds. środowiska, audytor ISO 14001 — audyty wspólne",
+          "dostepne": "16",
+          "podstawa": "Plan audytów 2026 zatwierdzony przez dyrektora zakładu"
+        }
+      ],
+      "ZASOBY": {
+        "ludzie": {
+          "potrzeba": "Energy Manager 25% etatu; 2 h tygodniowo dla kierownika UR; technik UR na kwartalne przeglądy szczelności i testy przepływu; kierownik produkcji na przekazywanie danych; specjalista ds. środowiska na audyty wewnętrzne.",
+          "decyzja": "Aneksy do zakresów obowiązków z 15 kwietnia 2026 r. (Energy Manager, kierownik UR). Przydział czasu technikowi UR — decyzja kierownika UR w harmonogramie przeglądów. Audyty w planie audytów 2026, łączone z ISO 14001.",
+          "luka": "Kierownikowi UR brakuje około 6 h na kwartał — do rozstrzygnięcia na przeglądzie zarządzania w grudniu: albo zwiększenie przydziału do 2,5 h tygodniowo, albo przeniesienie nadzoru nad montażem czujników na technika UR."
+        },
+        "pieniadze": {
+          "potrzeba": "65 tys. zł na 6 podliczników (INW/2026/11); 10 tys. zł na usuwanie nieszczelności; 12 tys. zł na podlicznik gazu i przepływomierz; 8 tys. zł na konfigurację raportu; szkolenia: 4 tys. zł (technicy UR z serwisem) i warsztat zakupów.",
+          "decyzja": "Budżet inwestycji 2026 — uchwała zarządu nr 4/2026 z 15 kwietnia 2026 r. Budżet szkoleń w planie HR na 2026 r. Wymiana opraw na LED (240 tys. zł) w budżecie 2027 oraz sterownik nadrzędny sprężarkowni z napędem o zmiennej prędkości (380 tys. zł) w projekcie budżetu na 2027 r.",
+          "luka": "Brak środków na drugi podlicznik gazu dla kotłowni — zużycie wyznaczane różnicą, co powiększa niepewność modelu K-1. Wniosek do budżetu 2027, decyzja w listopadzie."
+        },
+        "infra": {
+          "potrzeba": "6 podliczników energii elektrycznej, podlicznik gazu pieca lakierni, przepływomierz na kolektorze sprężonego powietrza, dostęp do systemu monitoringu, analizator sieci, detektor ultradźwiękowy, arkusz EnMS na serwerze z kopią tygodniową.",
+          "decyzja": "Podliczniki i przepływomierz uruchomione w czerwcu 2026 r. Analizator sieci — własny, ze świadectwem wzorcowania. Detektor ultradźwiękowy wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu (koszt wypożyczenia niższy od amortyzacji przy czterech użyciach w roku).",
+          "luka": "Oświetlenie hal H1 i H2 bez podlicznika — zużycie liczone z inwentaryzacji opraw i czasu pracy. Podlicznik zaplanowany razem z wymianą opraw na LED w III kwartale 2027 r."
+        },
+        "zewn": {
+          "potrzeba": "Konsultant do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw, szkolenia techników i zgłaszania zmian nastaw; jednostka certyfikująca.",
+          "decyzja": "Umowa z konsultantem z lutego 2026 r. Umowa serwisowa sprężarek rozszerzona aneksem z kwietnia 2026 r. o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw kierownikowi UR (ryzyko R5 — wiedza o nastawach tylko u serwisanta).",
+          "luka": "Brak własnych kompetencji do budowy modeli regresji — modele zbudowane z konsultantem. Do rozstrzygnięcia przed odejściem konsultanta: czy Energy Manager przejmuje przeliczanie modeli, czy zostaje to przy wsparciu zewnętrznym."
+        }
+      },
+      "DECYZJE": [
+        {
+          "tresc": "Przydział 25% etatu na funkcję Energy Managera oraz 2 h tygodniowo kierownikowi Utrzymania Ruchu na sprawy systemu.",
+          "rodzaj": "czas",
+          "kto": "Zarząd — w jego imieniu dyrektor zakładu",
+          "data": "2026-04-15",
+          "gdzie": "Aneksy do zakresów obowiązków; protokół przeglądu zarządzania z 15.04.2026",
+          "powiazanie": "Wszystkie cele C1–C4 oraz codzienne działanie systemu"
+        },
+        {
+          "tresc": "Przydział technikowi Utrzymania Ruchu czasu na kwartalny przegląd szczelności i bieżące naprawy nieszczelności.",
+          "rodzaj": "czas",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "data": "2026-04-20",
+          "gdzie": "Harmonogram przeglądów okresowych; zadanie UR/2026/18",
+          "powiazanie": "Cel C1, zadanie Z1.2 — wycieki sprężonego powietrza"
+        },
+        {
+          "tresc": "Zgoda na kwartalne wypożyczanie detektora ultradźwiękowego zamiast jego zakupu.",
+          "rodzaj": "sprzet",
+          "kto": "Dyrektor zakładu",
+          "data": "2026-04-20",
+          "gdzie": "Notatka z decyzji; faktury za wypożyczenie",
+          "powiazanie": "Cel C1, działanie 2 — kwartalny przegląd szczelności"
+        },
+        {
+          "tresc": "Budżet inwestycji 2026: 65 tys. zł na podliczniki, 12 tys. zł na podlicznik gazu i przepływomierz. Projekt budżetu 2027: 380 tys. zł na modernizację sprężarkowni.",
+          "rodzaj": "budzet",
+          "kto": "Zarząd, uchwała nr 4/2026",
+          "data": "2026-04-15",
+          "gdzie": "Budżet inwestycji 2026, pozycje INW/2026/07 i INW/2026/11",
+          "powiazanie": "Cele C1 i C4 — opomiarowanie i modernizacja sprężarkowni"
+        },
+        {
+          "tresc": "Rozszerzenie umowy serwisowej sprężarek o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw.",
+          "rodzaj": "zewn",
+          "kto": "Dyrektor zakładu i kierownik Zakupów",
+          "data": "2026-04-28",
+          "gdzie": "Aneks do umowy serwisowej",
+          "powiazanie": "Ryzyko R5 — wiedza o nastawach tylko u serwisanta; kryteria eksploatacji sprężarkowni"
+        },
+        {
+          "tresc": "Zatwierdzenie szkolenia techników UR z serwisem sprężarek (4 tys. zł) i dwóch tygodni pracy pod okiem kierownika UR.",
+          "rodzaj": "budzet",
+          "kto": "Dyrektor zakładu, na wniosek kierownika UR",
+          "data": "2026-05-04",
+          "gdzie": "Plan szkoleń F-EnMS-12, poz. 2; budżet szkoleń HR 2026",
+          "powiazanie": "Luka kompetencyjna: nastawy sprężarkowni (matryca F-EnMS-24)"
+        }
+      ],
+      "META": {
+        "okres": "IV kwartał 2026",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu — w imieniu zarządu",
+        "data": "2026-04-15",
+        "przeglad": "Na każdym przeglądzie zarządzania (dwa razy w roku) oraz przy zatwierdzaniu każdego nowego celu energetycznego"
+      }
+    }
+  },
+  "variables": {
+    "KATEGORIE_Z": [
+      {
+        "kod": "ludzie",
+        "nazwa": "Ludzie i ich czas",
+        "opis": "Godziny Energy Managera, członków zespołu, techników, liderów zmian. Nie „w miarę możliwości”, tylko w planie pracy.",
+        "ph1": "np. Energy Manager 25% etatu; 2 h tygodniowo dla każdego lidera zmiany; technik UR na kwartalne przeglądy szczelności",
+        "ph2": "np. Aneksy do zakresów obowiązków z 15.04.2026; decyzja dyrektora zakładu o przydziale 2 h tygodniowo liderom"
+      },
+      {
+        "kod": "pieniadze",
+        "nazwa": "Pieniądze",
+        "opis": "Na działania z planów, szkolenia, pomiary, oprogramowanie.",
+        "ph1": "np. 65 tys. zł na podliczniki (INW/2026/11); 12 tys. zł na szkolenia; 10 tys. zł na usuwanie nieszczelności",
+        "ph2": "np. Budżet inwestycji 2026 zatwierdzony uchwałą zarządu nr 4/2026; budżet szkoleń w planie HR"
+      },
+      {
+        "kod": "infra",
+        "nazwa": "Infrastruktura i narzędzia",
+        "opis": "Liczniki, systemy monitoringu, przyrządy pomiarowe.",
+        "ph1": "np. 6 podliczników, przepływomierz, dostęp do systemu monitoringu, detektor ultradźwiękowy do przeglądów szczelności",
+        "ph2": "np. Podliczniki i przepływomierz uruchomione 06.2026; detektor wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu"
+      },
+      {
+        "kod": "zewn",
+        "nazwa": "Wiedza z zewnątrz",
+        "opis": "Konsultant, audytor energetyczny, serwis producenta — tam, gdzie własnych kompetencji brakuje.",
+        "ph1": "np. Konsultant ENESA do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw i szkolenia techników",
+        "ph2": "np. Umowa z ENESA z 02.2026; umowa serwisowa z wymaganiami kompetencyjnymi (aneks 04.2026)"
+      }
+    ],
+    "LISTA_71": [
+      {
+        "tekst": "Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.",
+        "podstawa": "N",
+        "auto": "okreslono"
+      },
+      {
+        "tekst": "Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.",
+        "podstawa": "N",
+        "auto": "zapewniono"
+      },
+      {
+        "tekst": "Zasoby powiązano z planami działań (6.2).",
+        "podstawa": "M",
+        "auto": "powiazano"
+      },
+      {
+        "tekst": "Zadania systemu spisano z osobami i szacunkiem czasu.",
+        "podstawa": "M",
+        "auto": "spisano"
+      },
+      {
+        "tekst": "Wystarczalność zasobów oceniono na przeglądzie zarządzania.",
+        "podstawa": "M",
+        "auto": "wystarczalnosc"
+      }
+    ],
+    "P_ZADANIA": [
+      {
+        "nazwa": "Odczyt podliczników i zestawienie miesięczne",
+        "rodzaj": "stale",
+        "osoba": "Kierownik Utrzymania Ruchu",
+        "godziny": "6",
+        "zrodlo": "Plan zbierania danych, poz. 4, 5, 8",
+        "zdjete": "Nic — zadanie w ramach obecnych obowiązków"
+      },
+      {
+        "nazwa": "Obliczenie wskaźników EnPI i porównanie z liniami bazowymi",
+        "rodzaj": "stale",
+        "osoba": "Energy Manager",
+        "godziny": "12",
+        "zrodlo": "Karty EnPI F-EnMS-09, metoda EnPI (6.4)",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Odczyt liczników głównych i uzgodnienie z fakturami",
+        "rodzaj": "stale",
+        "osoba": "Energy Manager",
+        "godziny": "3",
+        "zrodlo": "Plan zbierania danych, poz. 1–3",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Przekazanie danych o produkcji i lakierowanej powierzchni",
+        "rodzaj": "stale",
+        "osoba": "Kierownik Produkcji",
+        "godziny": "3",
+        "zrodlo": "Plan zbierania danych, poz. 9, 11",
+        "zdjete": "Nic — dane pochodzą z ERP, który i tak prowadzi"
+      },
+      {
+        "nazwa": "Kwartalny przegląd wskaźników na naradzie produkcyjnej",
+        "rodzaj": "stale",
+        "osoba": "Energy Manager",
+        "godziny": "4",
+        "zrodlo": "Cel C3, działanie 2 — stały punkt agendy",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Prowadzenie rejestru zgłoszeń i odpowiadanie na nie",
+        "rodzaj": "stale",
+        "osoba": "Energy Manager",
+        "godziny": "6",
+        "zrodlo": "Proces zgłaszania uwag (7.4)",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Pomiar energii pras analizatorem — 2 tygodnie",
+        "rodzaj": "stale",
+        "osoba": "Kierownik Utrzymania Ruchu",
+        "godziny": "10",
+        "zrodlo": "Plan zbierania danych, poz. 12",
+        "zdjete": "Pomiar wykonuje technik UR pod nadzorem kierownika"
+      },
+      {
+        "nazwa": "Kwartalny przegląd szczelności detektorem ultradźwiękowym",
+        "rodzaj": "plan",
+        "osoba": "Technik UR",
+        "godziny": "8",
+        "zrodlo": "Cel C1, działanie 2",
+        "zdjete": "Przegląd filtrów w hali B przeniesiony na drugiego technika"
+      },
+      {
+        "nazwa": "Nadzór nad montażem czujników obecności w magazynie",
+        "rodzaj": "plan",
+        "osoba": "Kierownik Utrzymania Ruchu",
+        "godziny": "6",
+        "zrodlo": "Cel C2, działanie 2",
+        "zdjete": "Nic — brak możliwości zdjęcia, zadanie dodane"
+      },
+      {
+        "nazwa": "Konfiguracja miesięcznego raportu z podliczników",
+        "rodzaj": "plan",
+        "osoba": "Energy Manager",
+        "godziny": "10",
+        "zrodlo": "Cel C4, działanie 2",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Test weekendowy przepływu w czasie postoju",
+        "rodzaj": "plan",
+        "osoba": "Technik UR",
+        "godziny": "4",
+        "zrodlo": "Zadanie Z1.2; plan zbierania danych, poz. 7",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Przygotowanie przeglądu zarządzania",
+        "rodzaj": "wdrozenie",
+        "osoba": "Energy Manager",
+        "godziny": "12",
+        "zrodlo": "Punkt 9.3 — przegląd planowany na 12.2026",
+        "zdjete": "—"
+      },
+      {
+        "nazwa": "Audyt wewnętrzny systemu",
+        "rodzaj": "wdrozenie",
+        "osoba": "Audytor wewnętrzny",
+        "godziny": "16",
+        "zrodlo": "Punkt 9.2 — audyt przed certyfikacją",
+        "zdjete": "Audyt ISO 14001 łączony z audytem EnMS (szansa S4)"
+      },
+      {
+        "nazwa": "Instruktaż operatorów pras i lakierni",
+        "rodzaj": "wdrozenie",
+        "osoba": "Kierownik Utrzymania Ruchu",
+        "godziny": "8",
+        "zrodlo": "Plan F-EnMS-12, poz. 2",
+        "zdjete": "Nic — brak możliwości zdjęcia, zadanie dodane"
+      }
+    ],
+    "P_OSOBY": [
+      {
+        "nazwa": "Energy Manager",
+        "rola": "Koordynator zespołu: dane, wskaźniki, karty EnPI, plan komunikacji, rejestr zgłoszeń",
+        "dostepne": "130",
+        "podstawa": "25% etatu — aneks do zakresu obowiązków z 15.04.2026"
+      },
+      {
+        "nazwa": "Kierownik Utrzymania Ruchu",
+        "rola": "Właściciel SEU sprężarkownia, lakiernia, prasy; odczyty podliczników",
+        "dostepne": "30",
+        "podstawa": "Zakres obowiązków, aneks z 15.04.2026 — 2 h tygodniowo; od 06.2026 zwiększone do 2,5 h tygodniowo decyzją Dyrektora Zakładu po przeglądzie obciążeń"
+      },
+      {
+        "nazwa": "Technik UR",
+        "rola": "Przeglądy szczelności, testy przepływu, pomiary analizatorem",
+        "dostepne": "16",
+        "podstawa": "Harmonogram przeglądów okresowych; decyzja kierownika UR"
+      },
+      {
+        "nazwa": "Kierownik Produkcji",
+        "rola": "Dane o produkcji i lakierowanej powierzchni; czynniki statyczne",
+        "dostepne": "8",
+        "podstawa": "Zakres obowiązków — dane z ERP, bez dodatkowych odczytów"
+      },
+      {
+        "nazwa": "Audytor wewnętrzny",
+        "rola": "Specjalista ds. środowiska, audytor ISO 14001 — audyty wspólne",
+        "dostepne": "16",
+        "podstawa": "Plan audytów 2026 zatwierdzony przez dyrektora zakładu"
+      }
+    ],
+    "P_ZASOBY": {
+      "ludzie": {
+        "potrzeba": "Energy Manager 25% etatu; 2 h tygodniowo dla kierownika UR; technik UR na kwartalne przeglądy szczelności i testy przepływu; kierownik produkcji na przekazywanie danych; specjalista ds. środowiska na audyty wewnętrzne.",
+        "decyzja": "Aneksy do zakresów obowiązków z 15 kwietnia 2026 r. (Energy Manager, kierownik UR). Przydział czasu technikowi UR — decyzja kierownika UR w harmonogramie przeglądów. Audyty w planie audytów 2026, łączone z ISO 14001.",
+        "luka": "Kierownikowi UR brakuje około 6 h na kwartał — do rozstrzygnięcia na przeglądzie zarządzania w grudniu: albo zwiększenie przydziału do 2,5 h tygodniowo, albo przeniesienie nadzoru nad montażem czujników na technika UR."
+      },
+      "pieniadze": {
+        "potrzeba": "65 tys. zł na 6 podliczników (INW/2026/11); 10 tys. zł na usuwanie nieszczelności; 12 tys. zł na podlicznik gazu i przepływomierz; 8 tys. zł na konfigurację raportu; szkolenia: 4 tys. zł (technicy UR z serwisem) i warsztat zakupów.",
+        "decyzja": "Budżet inwestycji 2026 — uchwała zarządu nr 4/2026 z 15 kwietnia 2026 r. Budżet szkoleń w planie HR na 2026 r. Wymiana opraw na LED (240 tys. zł) w budżecie 2027 oraz sterownik nadrzędny sprężarkowni z napędem o zmiennej prędkości (380 tys. zł) w projekcie budżetu na 2027 r.",
+        "luka": "Brak środków na drugi podlicznik gazu dla kotłowni — zużycie wyznaczane różnicą, co powiększa niepewność modelu K-1. Wniosek do budżetu 2027, decyzja w listopadzie."
+      },
+      "infra": {
+        "potrzeba": "6 podliczników energii elektrycznej, podlicznik gazu pieca lakierni, przepływomierz na kolektorze sprężonego powietrza, dostęp do systemu monitoringu, analizator sieci, detektor ultradźwiękowy, arkusz EnMS na serwerze z kopią tygodniową.",
+        "decyzja": "Podliczniki i przepływomierz uruchomione w czerwcu 2026 r. Analizator sieci — własny, ze świadectwem wzorcowania. Detektor ultradźwiękowy wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu (koszt wypożyczenia niższy od amortyzacji przy czterech użyciach w roku).",
+        "luka": "Oświetlenie hal H1 i H2 bez podlicznika — zużycie liczone z inwentaryzacji opraw i czasu pracy. Podlicznik zaplanowany razem z wymianą opraw na LED w III kwartale 2027 r."
+      },
+      "zewn": {
+        "potrzeba": "Konsultant do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw, szkolenia techników i zgłaszania zmian nastaw; jednostka certyfikująca.",
+        "decyzja": "Umowa z konsultantem z lutego 2026 r. Umowa serwisowa sprężarek rozszerzona aneksem z kwietnia 2026 r. o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw kierownikowi UR (ryzyko R5 — wiedza o nastawach tylko u serwisanta).",
+        "luka": "Brak własnych kompetencji do budowy modeli regresji — modele zbudowane z konsultantem. Do rozstrzygnięcia przed odejściem konsultanta: czy Energy Manager przejmuje przeliczanie modeli, czy zostaje to przy wsparciu zewnętrznym."
+      }
+    },
+    "P_DECYZJE": [
+      {
+        "tresc": "Przydział 25% etatu na funkcję Energy Managera oraz 2 h tygodniowo kierownikowi Utrzymania Ruchu na sprawy systemu.",
+        "rodzaj": "czas",
+        "kto": "Zarząd — w jego imieniu dyrektor zakładu",
+        "data": "2026-04-15",
+        "gdzie": "Aneksy do zakresów obowiązków; protokół przeglądu zarządzania z 15.04.2026",
+        "powiazanie": "Wszystkie cele C1–C4 oraz codzienne działanie systemu"
+      },
+      {
+        "tresc": "Przydział technikowi Utrzymania Ruchu czasu na kwartalny przegląd szczelności i bieżące naprawy nieszczelności.",
+        "rodzaj": "czas",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "data": "2026-04-20",
+        "gdzie": "Harmonogram przeglądów okresowych; zadanie UR/2026/18",
+        "powiazanie": "Cel C1, zadanie Z1.2 — wycieki sprężonego powietrza"
+      },
+      {
+        "tresc": "Zgoda na kwartalne wypożyczanie detektora ultradźwiękowego zamiast jego zakupu.",
+        "rodzaj": "sprzet",
+        "kto": "Dyrektor zakładu",
+        "data": "2026-04-20",
+        "gdzie": "Notatka z decyzji; faktury za wypożyczenie",
+        "powiazanie": "Cel C1, działanie 2 — kwartalny przegląd szczelności"
+      },
+      {
+        "tresc": "Budżet inwestycji 2026: 65 tys. zł na podliczniki, 12 tys. zł na podlicznik gazu i przepływomierz. Projekt budżetu 2027: 380 tys. zł na modernizację sprężarkowni.",
+        "rodzaj": "budzet",
+        "kto": "Zarząd, uchwała nr 4/2026",
+        "data": "2026-04-15",
+        "gdzie": "Budżet inwestycji 2026, pozycje INW/2026/07 i INW/2026/11",
+        "powiazanie": "Cele C1 i C4 — opomiarowanie i modernizacja sprężarkowni"
+      },
+      {
+        "tresc": "Rozszerzenie umowy serwisowej sprężarek o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw.",
+        "rodzaj": "zewn",
+        "kto": "Dyrektor zakładu i kierownik Zakupów",
+        "data": "2026-04-28",
+        "gdzie": "Aneks do umowy serwisowej",
+        "powiazanie": "Ryzyko R5 — wiedza o nastawach tylko u serwisanta; kryteria eksploatacji sprężarkowni"
+      },
+      {
+        "tresc": "Zatwierdzenie szkolenia techników UR z serwisem sprężarek (4 tys. zł) i dwóch tygodni pracy pod okiem kierownika UR.",
+        "rodzaj": "budzet",
+        "kto": "Dyrektor zakładu, na wniosek kierownika UR",
+        "data": "2026-05-04",
+        "gdzie": "Plan szkoleń F-EnMS-12, poz. 2; budżet szkoleń HR 2026",
+        "powiazanie": "Luka kompetencyjna: nastawy sprężarkowni (matryca F-EnMS-24)"
+      }
+    ],
+    "P_META": {
+      "okres": "IV kwartał 2026",
+      "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu — w imieniu zarządu",
+      "data": "2026-04-15",
+      "przeglad": "Na każdym przeglądzie zarządzania (dwa razy w roku) oraz przy zatwierdzaniu każdego nowego celu energetycznego"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "System bez przypisanego czasu ludzi i budżetu zatrzymuje się po pierwszym kwartale.",
+        "decyzja": "Czas Energy Managera i budżet 500 tys. zł na 2026 r. przypisane w planie zasobów, a nie dopisane do istniejących obowiązków.",
+        "dzialanie": "Zadania rozpisane na role; przekroczenie czasu Kierownika Utrzymania Ruchu rozwiązane przeniesieniem przeglądów szczelności do serwisu zewnętrznego.",
+        "sprawdzenie": "Na przeglądzie zarządzania (9.3) zestawienie zadań z czasem oraz wykonanie budżetu."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "ZADANIA": [],
+    "OSOBY": [],
+    "ZASOBY": {},
+    "DECYZJE": [],
+    "WNIOSKI": [],
+    "RODZAJE_ZADAN": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "stale",
+        "Zadanie stałe — codzienne działanie systemu"
+      ],
+      [
+        "plan",
+        "Zadanie z planu działań (6.2)"
+      ],
+      [
+        "wdrozenie",
+        "Zadanie wdrożeniowe albo certyfikacyjne"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

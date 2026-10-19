@@ -14,6 +14,10 @@ use Illuminate\Validation\ValidationException;
 
 class IsoSystemQuestionnaire
 {
+    private static int $sourceDepth = 0;
+
+    private static array $sourceCache = [];
+
     public function schema(string $section): array
     {
         if (IsoExecutionQuestionnaire::handles($section)) {
@@ -33,6 +37,24 @@ class IsoSystemQuestionnaire
     }
 
     public function sources(IsoPlantProfile $profile, string $section): array
+    {
+        if (self::$sourceDepth === 0) {
+            self::$sourceCache = [];
+        }
+        self::$sourceDepth++;
+        try {
+            $key = $profile->audit_id.':'.$profile->site_id.':'.$profile->id.':'.$profile->lock_version.':'.$section;
+
+            return self::$sourceCache[$key] ??= $this->resolveSources($profile, $section);
+        } finally {
+            self::$sourceDepth--;
+            if (self::$sourceDepth === 0) {
+                self::$sourceCache = [];
+            }
+        }
+    }
+
+    private function resolveSources(IsoPlantProfile $profile, string $section): array
     {
         if (IsoExecutionQuestionnaire::handles($section)) {
             return app(IsoExecutionQuestionnaire::class)->sources($profile, $section);

@@ -3,12 +3,17 @@
 use App\Models\IsoSystemReview;
 use App\Models\User;
 use App\Services\IsoExecutionQuestionnaire;
+use App\Services\IsoPlatformRelease;
 use App\Services\IsoSystemQuestionnaire;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 
 function executionAnswers(string $section, array $sources): array
 {
+    if (in_array($section, ['7-4', '7-5'])) {
+        return app(IsoPlatformRelease::class)->answers($section, $sources);
+    }
     $service = app(IsoExecutionQuestionnaire::class);
     $build = function ($node) use (&$build) {
         if ($node['type'] === 'list') {
@@ -95,6 +100,7 @@ test('execution nonconformity closure and audit impartiality require evidence', 
 });
 
 test('execution nine questionnaires follow existing approval PDF and correction workflow', function () {
+    $this->withoutMiddleware(ThrottleRequests::class);
     [$audit, $client, $staff, $profile] = systemFixture();
     $sources = ['hash' => str_repeat('e', 64), 'ready' => true, 'approved' => [], 'published' => [], 'upstream' => [], 'cards' => [['nr' => 'E1', 'nazwa' => 'EnPI', 'wartoscEnB' => '5', 'okresBazowy' => '2025', 'warunkiPorownania' => 'Porównywalne']]];
     $service = Mockery::mock(IsoSystemQuestionnaire::class)->makePartial();
@@ -112,7 +118,7 @@ test('execution nine questionnaires follow existing approval PDF and correction 
         $notes = ['WNIOSKI' => [['znaczenie' => 'WEWNETRZNY SEKRET', 'decyzja' => 'Decyzja', 'dzialanie' => 'Działanie', 'sprawdzenie' => 'Sprawdzenie']]];
         $this->post($staffUrl, ['operation' => 'consultant', 'lock_version' => 1, 'source_hash' => $sources['hash'], 'consultant' => $notes])->assertSessionHasNoErrors();
         $this->post($staffUrl, ['operation' => 'approve', 'lock_version' => 2, 'source_hash' => $sources['hash']])->assertSessionHasNoErrors();
-        $this->post(route('audits.system.pdf', [$audit, $profile, $section]), ['lock_version' => 3])->assertSessionHasNoErrors();
+        $this->post(route('audits.system.pdf', [$audit, $profile, $section]), ['lock_version' => 3])->assertRedirect()->assertSessionHasNoErrors();
         expect($review->fresh()->document_id)->not->toBeNull();
         $this->actingAs($client)->get(route('client.audits.system.show', [$audit, $profile, $section]))->assertOk()->assertDontSee('WEWNETRZNY SEKRET')->assertDontSee('id="system-example"', false);
         $changed = $answers;

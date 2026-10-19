@@ -1,0 +1,972 @@
+{
+  "source_file": "ENESA_8.2_Projektowanie_platforma.html",
+  "source_sha256": "65cbd8dbca12252e4fda0062b032123e709b7bdb09203b838f564870ec0bfb66",
+  "section": "8-2",
+  "data": {
+    "PYT_A": [
+      {
+        "kod": "seu",
+        "podstawa": "M",
+        "tekst": "Dotyczy znaczącego użycia energii albo tworzy nowe",
+        "ph": "np. Dotyczy SEU sprężarkownia — 17,5% zużycia zakładu"
+      },
+      {
+        "kod": "sterowanie",
+        "podstawa": "M",
+        "tekst": "Zmienia sposób sterowania lub nastawy",
+        "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"
+      },
+      {
+        "kod": "godziny",
+        "podstawa": "M",
+        "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+        "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+      },
+      {
+        "kod": "prog",
+        "podstawa": "M",
+        "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+        "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł",
+        "pomoc": "Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym. Przebudowa sterowania za kilkanaście tysięcy może zmienić zużycie bardziej niż remont biurowca za kilka milionów."
+      }
+    ],
+    "PYT_B": [
+      {
+        "kod": "mozliwosci",
+        "podstawa": "N",
+        "tekst": "Rozważono możliwości poprawy wyniku energetycznego w okresie eksploatacji",
+        "ph": "np. Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy, odzysk ciepła ze sprężarek, wymianę wszystkich czterech sprężarek"
+      },
+      {
+        "kod": "oszacowano",
+        "podstawa": "M",
+        "tekst": "Oszacowano przewidywane zużycie energii w okresie eksploatacji",
+        "ph": "np. Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh po obniżeniu ciśnienia i usunięciu wycieków"
+      },
+      {
+        "kod": "potrzeby",
+        "podstawa": "M",
+        "tekst": "Rozwiązanie dobrano do rzeczywistych potrzeb — bez nadmiernego zapasu",
+        "ph": "np. Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia wymaga regulacji tylko jednej jednostki"
+      },
+      {
+        "kod": "warianty",
+        "podstawa": "M",
+        "tekst": "Rozważono warianty o niższym zużyciu",
+        "ph": "np. Porównano: sam sterownik, sterownik z jednym napędem, wymiana wszystkich sprężarek"
+      },
+      {
+        "kod": "cieplo",
+        "podstawa": "M",
+        "tekst": "Sprawdzono możliwość wykorzystania ciepła odpadowego lub innej odzyskiwalnej energii",
+        "ph": "np. Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, ale projekt zostawia miejsce i przyłącza"
+      },
+      {
+        "kod": "tco",
+        "podstawa": "M",
+        "tekst": "Porównano koszt zakupu i energii wariantów — uproszczone TCO",
+        "ph": "np. Porównanie w 15 lat przy cenie 890 zł/MWh — część D formularza zakupowego F-EnMS-16"
+      }
+    ],
+    "PYT_C": [
+      {
+        "kod": "nadzor",
+        "podstawa": "N",
+        "tekst": "Rozważono nadzór operacyjny w okresie eksploatacji",
+        "ph": "np. Sprawdzono, czy kryteria z karty sprężarkowni (8.1) da się stosować po modernizacji"
+      },
+      {
+        "kod": "wylaczanie",
+        "podstawa": "M",
+        "tekst": "Można wyłączyć to, co w danej chwili niepotrzebne",
+        "ph": "np. Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy odbiorze"
+      },
+      {
+        "kod": "regulacja",
+        "podstawa": "M",
+        "tekst": "Układ ma regulację do rzeczywistego zapotrzebowania, także poza produkcją",
+        "ph": "np. Dwie nastawy ciśnienia: produkcja i postój — wymaganie minimalne w specyfikacji"
+      },
+      {
+        "kod": "pomiar",
+        "podstawa": "M",
+        "tekst": "Przewidziano pomiar, z którego da się policzyć wskaźnik",
+        "ph": "np. Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do monitoringu; dwa przetworniki ciśnienia u odbiorców"
+      },
+      {
+        "kod": "ktoObsluga",
+        "podstawa": "M",
+        "tekst": "Wiadomo, kto będzie obsługiwał instalację i według jakich kryteriów (8.1)",
+        "ph": "np. Technicy UR według karty kryteriów F-EnMS-14 zaktualizowanej przed uruchomieniem; serwis według zlecenia"
+      }
+    ],
+    "PYT_D": [
+      {
+        "kod": "wprowadzono",
+        "podstawa": "N",
+        "tekst": "Wyniki rozważań wprowadzono do specyfikacji, projektu i zakupów",
+        "ph": "np. Cztery wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"
+      },
+      {
+        "kod": "zachowano",
+        "podstawa": "N",
+        "tekst": "Zachowano informacje o działaniach projektowych — ta lista albo notatka",
+        "ph": "np. Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 w teczce projektu"
+      }
+    ],
+    "LISTA_82": [
+      {
+        "tekst": "Rozpoznawane są projekty mogące znacząco wpłynąć na wynik energetyczny.",
+        "podstawa": "N",
+        "auto": "rozpoznanie"
+      },
+      {
+        "tekst": "W tych projektach rozważa się możliwości poprawy i nadzór operacyjny w okresie eksploatacji.",
+        "podstawa": "N",
+        "auto": "rozwaza"
+      },
+      {
+        "tekst": "Wyniki rozważań są w specyfikacjach, projekcie i zakupach (w stosownych przypadkach).",
+        "podstawa": "N",
+        "auto": "wyniki"
+      },
+      {
+        "tekst": "Zachowano udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Pytania o energię padają na etapie założeń; stosowana jest lista kontrolna projektu.",
+        "podstawa": "M",
+        "auto": "zalozenia"
+      },
+      {
+        "tekst": "Po uruchomieniu wynik porównuje się w porównywalnych warunkach.",
+        "podstawa": "M",
+        "auto": "poUruchomieniu"
+      }
+    ],
+    "przyklad": {
+      "PROJEKTY": [
+        {
+          "nazwa": "Modernizacja sprężarkowni — sterownik nadrzędny i napęd o zmiennej prędkości",
+          "nr": "INW/2027/04",
+          "kierownik": "Dyrektor Techniczny",
+          "etap": "zatwierdzenie",
+          "etapAnalizy": "koncepcja",
+          "ktoAnaliza": "Kierownik projektu z Janem Kowalskim (Energy Manager)",
+          "data": "2026-09-08",
+          "wartosc": "380 000 zł, uruchomienie 06.2027 (inwestycja nr 4 w III-24)",
+          "A": {
+            "seu": {
+              "o": "tak",
+              "u": "Dotyczy SEU sprężarkownia — 2 125 MWh, 17,5% zużycia zakładu"
+            },
+            "sterowanie": {
+              "o": "tak",
+              "u": "Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji"
+            },
+            "godziny": {
+              "o": "tak",
+              "u": "Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+            },
+            "prog": {
+              "o": "tak",
+              "u": "380 tys. zł wobec progu 100 tys. zł w firmie — sygnał dodatkowy, nie decydujący"
+            }
+          },
+          "B": {
+            "mozliwosci": {
+              "o": "tak",
+              "u": "Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy dla jednej sprężarki, wymianę wszystkich czterech sprężarek, odzysk ciepła ze sprężarek, pomiar ciśnienia u odbiorców"
+            },
+            "oszacowano": {
+              "o": "tak",
+              "u": "Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh/rok po obniżeniu ciśnienia i usunięciu wycieków — oszczędność ok. 230 MWh/rok, zgodna z przeglądem energetycznym"
+            },
+            "potrzeby": {
+              "o": "tak",
+              "u": "Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka, a pozostałe pracują w trybie włącz–wyłącz"
+            },
+            "warianty": {
+              "o": "tak",
+              "u": "Trzy warianty: sam sterownik (mniejszy efekt, 180 tys. zł), sterownik z jednym napędem (wybrany), wymiana wszystkich sprężarek (poza budżetem, ok. 1,2 mln zł)"
+            },
+            "cieplo": {
+              "o": "tak",
+              "u": "Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, bo zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek. Projekt zostawia miejsce i przyłącza pod wymiennik"
+            },
+            "tco": {
+              "o": "tak",
+              "u": "Porównanie kosztu zakupu i energii w 15 lat przy cenie 890 zł/MWh — wykonane w części D formularza zakupowego F-EnMS-16 (III-38)"
+            }
+          },
+          "C": {
+            "nadzor": {
+              "o": "tak",
+              "u": "Sprawdzono, czy kryteria z karty sprężarkowni (F-EnMS-14) da się stosować po modernizacji. Pierwotna koncepcja utrzymywała jedno stałe ciśnienie — kryterium trybu postoju nie dałoby się wtedy wprowadzić"
+            },
+            "wylaczanie": {
+              "o": "tak",
+              "u": "Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy faktycznym odbiorze"
+            },
+            "regulacja": {
+              "o": "tak",
+              "u": "Dwie nastawy ciśnienia — produkcja i postój — jako wymaganie minimalne specyfikacji. Tego nie było w pierwotnej koncepcji"
+            },
+            "pomiar": {
+              "o": "tak",
+              "u": "Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu oraz dwa przetworniki ciśnienia u odbiorców: w lakierni i w najdalszym punkcie sieci. Tego też nie było w pierwotnej koncepcji"
+            },
+            "ktoObsluga": {
+              "o": "tak",
+              "u": "Technicy UR według karty kryteriów zaktualizowanej przed uruchomieniem (kierownik UR, do 05.2027); serwis według zlecenia z wymaganiami z sekcji C karty"
+            }
+          },
+          "D": {
+            "wprowadzono": {
+              "o": "tak",
+              "u": "Cztery przyjęte wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"
+            },
+            "zachowano": {
+              "o": "tak",
+              "u": "Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 — teczka projektu INW/2027/04"
+            }
+          },
+          "uzasadnienieA": "",
+          "wnioski": [
+            {
+              "tresc": "Sterownik ma umożliwiać obniżanie ciśnienia poza produkcją — dwie nastawy, produkcja i postój",
+              "decyzja": "przyjety",
+              "dlaczego": "Bez dwóch nastaw kryterium trybu postoju z karty sprężarkowni (8.1) nie da się stosować. Pierwotna koncepcja przewidywała jedno stałe ciśnienie",
+              "gdzie": "Specyfikacja zakupowa, część A — wymagania minimalne; zapytanie ofertowe 10.2026"
+            },
+            {
+              "tresc": "Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika",
+              "decyzja": "przyjety",
+              "dlaczego": "Bez pomiaru u odbiorcy nie da się sprawdzić, czy 6,3 bar to wciąż nie za dużo. Kryterium wyprowadzono z pomiaru z kampanii, a po modernizacji trzeba je móc zweryfikować",
+              "gdzie": "Specyfikacja zakupowa, część A; plan zbierania danych (6.6) — nowe pozycje dla przetworników"
+            },
+            {
+              "tresc": "Zapis danych pracy sprężarek (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu",
+              "decyzja": "przyjety",
+              "dlaczego": "Bez tych danych nie da się policzyć wskaźnika S-1 po modernizacji ani porównać wyniku z wartością sprzed zmiany",
+              "gdzie": "Specyfikacja zakupowa, część A; plan zbierania danych (6.6), pozycje 4 i 5"
+            },
+            {
+              "tresc": "Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek",
+              "decyzja": "przyjety",
+              "dlaczego": "Odzysk nie wchodzi do tej inwestycji, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia i postoju sprężarkowni. Zostawienie przyłączy kosztuje teraz niewiele",
+              "gdzie": "Specyfikacja zakupowa, część A — wymagania minimalne"
+            },
+            {
+              "tresc": "Odzysk ciepła ze sprężarek jako część tej inwestycji",
+              "decyzja": "odrzucony",
+              "dlaczego": "Zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek po modernizacji — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna. Decyzja do ponownego rozważenia po roku danych z nowego sterownika; miejsce i przyłącza zostają",
+              "gdzie": ""
+            },
+            {
+              "tresc": "Wymiana wszystkich czterech sprężarek na jednostki falownikowe",
+              "decyzja": "odrzucony",
+              "dlaczego": "Koszt ok. 1,2 mln zł, poza budżetem inwestycji. Profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka — sterownik nadrzędny z jednym napędem daje większość efektu przy 380 tys. zł",
+              "gdzie": ""
+            }
+          ],
+          "E": {
+            "ktoAktualizuje": "Kierownik UR aktualizuje kartę kryteriów sprężarkowni (F-EnMS-14) przed uruchomieniem — termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana przed uruchomieniem, po sprawdzeniu odbiorników w podtrzymaniu",
+            "wskaznik": "S-1 kWh/Nm³. Wartość sprzed modernizacji: 0,119 (VII–18.IX 2026, po obniżeniu ciśnienia i usunięciu nieszczelności) — z nią porównujemy wynik po uruchomieniu. Linia bazowa EnB: 0,125 (kampania pomiarowa 02–03.2026) — wobec niej liczona jest poprawa wyniku wykazywana w 10.2. Cel Z1.1: 0,110 do 12.2027",
+            "warunki": "Pełne miesiące pracy trzyzmianowej; ciśnienie 6,3 bar w trybie produkcji; temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją. Warunki jak w części D formularza celów (III-24)",
+            "termin": "Cztery tygodnie po odbiorze oraz po zamknięciu roku 2027 — Energy Manager. Wynik wchodzi do oceny celu Z1.1 i jest porównywany z deklaracją z wybranej oferty"
+          }
+        },
+        {
+          "nazwa": "Wymiana opraw oświetleniowych na LED w halach H1 i H2",
+          "nr": "INW/2027/03",
+          "kierownik": "Dyrektor Techniczny",
+          "etap": "koncepcja",
+          "etapAnalizy": "zalozenia",
+          "ktoAnaliza": "Kierownik projektu z Energy Managerem",
+          "data": "2026-08-18",
+          "wartosc": "240 000 zł, uruchomienie III kw. 2027 (cel C2)",
+          "A": {
+            "seu": {
+              "o": "tak",
+              "u": "Dotyczy SEU oświetlenie — 680 MWh/rok, 5,6% zużycia, wskazane kryterium B (potencjał poprawy)"
+            },
+            "sterowanie": {
+              "o": "tak",
+              "u": "Projekt wprowadza podział na strefy i czujniki obecności — dziś jeden wyłącznik na całą halę"
+            },
+            "godziny": {
+              "o": "tak",
+              "u": "Oświetlenie hal pracuje na trzech zmianach przez cały rok; oprawy LED przez kilkanaście lat"
+            },
+            "prog": {
+              "o": "tak",
+              "u": "240 tys. zł wobec progu 100 tys. zł"
+            }
+          },
+          "B": {
+            "mozliwosci": {
+              "o": "tak",
+              "u": "Rozważono: wymianę opraw na LED, podział na trzy strefy w hali B, czujniki obecności w magazynie i strefach socjalnych, obniżenie poziomu natężenia w strefach przejściowych do wartości normowej"
+            },
+            "oszacowano": {
+              "o": "tak",
+              "u": "Po wymianie ok. 410 MWh/rok wobec 680 MWh — oszczędność ok. 270 MWh/rok (cel C2, zadanie Z2.1)"
+            },
+            "potrzeby": {
+              "o": "tak",
+              "u": "Poziomy natężenia dobrane do wymagań stanowisk, nie jednolicie dla całej hali — strefy przejściowe mają niższe wymaganie niż stanowiska montażowe"
+            },
+            "warianty": {
+              "o": "tak",
+              "u": "Porównano wymianę samych źródeł (tańsza, bez możliwości sterowania) z wymianą opraw ze sterowaniem — wybrano drugą"
+            },
+            "cieplo": {
+              "o": "nd",
+              "u": "Oświetlenie LED nie wytwarza użytecznego ciepła odpadowego; zmniejszenie zysków ciepła z opraw świetlówkowych uwzględnione jako pomijalne w bilansie ogrzewania hal"
+            },
+            "tco": {
+              "o": "tak",
+              "u": "Porównanie kosztu zakupu i energii w 12 lat przy cenie 890 zł/MWh — w zapytaniu ofertowym"
+            }
+          },
+          "C": {
+            "nadzor": {
+              "o": "tak",
+              "u": "Rozważono: po wymianie kryteria oświetlenia (czas świecenia, strefy) wchodzą do karty kryteriów jako nowy wiersz"
+            },
+            "wylaczanie": {
+              "o": "tak",
+              "u": "Podział na trzy strefy w hali B i czujniki obecności w magazynie oraz strefach socjalnych — dziś nie da się zgasić nieużywanej części hali (zgłoszenie 2026/08)"
+            },
+            "regulacja": {
+              "o": "tak",
+              "u": "Sterowanie strefowe z harmonogramem; ściemnianie w strefach z dostępem światła dziennego"
+            },
+            "pomiar": {
+              "o": "tak",
+              "u": "Podlicznik oświetlenia dla hal H1 i H2 — pozwoli policzyć OŚ-1 z pomiaru, a nie z inwentaryzacji opraw"
+            },
+            "ktoObsluga": {
+              "o": "tak",
+              "u": "Utrzymanie ruchu według nowego wiersza karty kryteriów; harmonogram stref ustala kierownik produkcji"
+            }
+          },
+          "D": {
+            "wprowadzono": {
+              "o": "tak",
+              "u": "Wnioski weszły do zakresu projektu i do zapytania ofertowego planowanego na I kw. 2027"
+            },
+            "zachowano": {
+              "o": "tak",
+              "u": "Wypełniona lista F-EnMS-15 w teczce projektu INW/2027/03"
+            }
+          },
+          "uzasadnienieA": "",
+          "wnioski": [
+            {
+              "tresc": "Podział oświetlenia hali B na trzy strefy",
+              "decyzja": "przyjety",
+              "dlaczego": "Dziś jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części (zgłoszenie 2026/08 z rejestru 7.4). Osobne przerabianie instalacji po wymianie opraw kosztowałoby drugie tyle",
+              "gdzie": "Zakres projektu; zapytanie ofertowe I kw. 2027"
+            },
+            {
+              "tresc": "Czujniki obecności w magazynie i strefach socjalnych",
+              "decyzja": "przyjety",
+              "dlaczego": "Strefy używane nieregularnie; czujniki już zamontowane w ramach celu C2 jako działanie wcześniejsze — projekt obejmuje ich włączenie do sterowania strefowego",
+              "gdzie": "Zakres projektu"
+            },
+            {
+              "tresc": "Podlicznik oświetlenia dla hal H1 i H2",
+              "decyzja": "przyjety",
+              "dlaczego": "Dziś OŚ-1 liczony z inwentaryzacji opraw i czasu pracy. Bez podlicznika nie da się wykazać poprawy pomiarem, a cel C2 zakłada zejście z 680 do 410 MWh",
+              "gdzie": "Zakres projektu; plan zbierania danych (6.6) — pozycja 14 do aktualizacji"
+            },
+            {
+              "tresc": "Wymiana samych źródeł światła bez wymiany opraw",
+              "decyzja": "odrzucony",
+              "dlaczego": "Tańsza o ok. 90 tys. zł, ale uniemożliwia sterowanie strefowe i ściemnianie — czyli większość efektu poza samą sprawnością źródła. Przy 680 MWh rocznie różnica w oszczędności przewyższa różnicę kosztu w pierwszych czterech latach",
+              "gdzie": ""
+            }
+          ],
+          "E": {
+            "ktoAktualizuje": "Kierownik UR dopisuje wiersz oświetlenia do karty kryteriów (F-EnMS-14) przed uruchomieniem; harmonogram stref ustala kierownik produkcji",
+            "wskaznik": "OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; wartość odniesienia 680 MWh (2025). Cel Z2.1: 410 MWh",
+            "warunki": "Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu. Po uruchomieniu podlicznika porównanie prowadzone na danych pomiarowych, z adnotacją o zmianie źródła danych",
+            "termin": "Po pełnym roku od uruchomienia (2028) — Energy Manager; pierwsze sprawdzenie cztery tygodnie po odbiorze na danych z podlicznika"
+          }
+        },
+        {
+          "nazwa": "Remont posadzki w hali B",
+          "nr": "REM/2026/11",
+          "kierownik": "Kierownik Utrzymania Ruchu",
+          "etap": "realizacja",
+          "etapAnalizy": "zalozenia",
+          "ktoAnaliza": "Kierownik Utrzymania Ruchu z listą kontrolną F-EnMS-15",
+          "data": "2026-07-06",
+          "wartosc": "95 000 zł",
+          "A": {
+            "seu": {
+              "o": "nie",
+              "u": "Remont posadzki nie dotyczy żadnego znaczącego użycia energii i nie wprowadza urządzeń zużywających energię"
+            },
+            "sterowanie": {
+              "o": "nie",
+              "u": "Nie zmienia sterowania ani nastaw żadnej instalacji"
+            },
+            "godziny": {
+              "o": "nie",
+              "u": "Nie dotyczy urządzeń — zakres obejmuje wyłącznie warstwy posadzki"
+            },
+            "prog": {
+              "o": "nie",
+              "u": "95 tys. zł, poniżej progu 100 tys. zł"
+            }
+          },
+          "B": {},
+          "C": {},
+          "D": {},
+          "uzasadnienieA": "Remont posadzki nie dotyczy znaczącego użycia energii, nie zmienia sterowania ani nastaw i nie wprowadza urządzeń zużywających energię. Sprawdzono również, czy prace nie wymuszą zmiany pracy instalacji w hali — postoje są planowane w weekendy, bez pracy sprężarkowni poza podtrzymaniem. Analiza zakończona na etapie A; kierownik projektu z listą kontrolną, 06.07.2026.",
+          "wnioski": [],
+          "E": {}
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "data": "2026-09-29",
+        "sygnaly": "Analizę energetyczną projektu uruchamia każdy z sygnałów: projekt dotyczy znaczącego użycia energii albo tworzy nowe; zmienia sposób sterowania lub nastawy; dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata; wartość powyżej 100 tys. zł — jako sygnał dodatkowy, nie warunek. Koncepcje projektów dotyczących SEU trafiają do Energy Managera na etapie założeń (zasada wprowadzona po przeglądzie koncepcji modernizacji sprężarkowni we wrześniu 2026 r.)."
+      }
+    }
+  },
+  "variables": {
+    "PYT_A": [
+      {
+        "kod": "seu",
+        "podstawa": "M",
+        "tekst": "Dotyczy znaczącego użycia energii albo tworzy nowe",
+        "ph": "np. Dotyczy SEU sprężarkownia — 17,5% zużycia zakładu"
+      },
+      {
+        "kod": "sterowanie",
+        "podstawa": "M",
+        "tekst": "Zmienia sposób sterowania lub nastawy",
+        "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"
+      },
+      {
+        "kod": "godziny",
+        "podstawa": "M",
+        "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+        "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+      },
+      {
+        "kod": "prog",
+        "podstawa": "M",
+        "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+        "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł",
+        "pomoc": "Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym. Przebudowa sterowania za kilkanaście tysięcy może zmienić zużycie bardziej niż remont biurowca za kilka milionów."
+      }
+    ],
+    "PYT_B": [
+      {
+        "kod": "mozliwosci",
+        "podstawa": "N",
+        "tekst": "Rozważono możliwości poprawy wyniku energetycznego w okresie eksploatacji",
+        "ph": "np. Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy, odzysk ciepła ze sprężarek, wymianę wszystkich czterech sprężarek"
+      },
+      {
+        "kod": "oszacowano",
+        "podstawa": "M",
+        "tekst": "Oszacowano przewidywane zużycie energii w okresie eksploatacji",
+        "ph": "np. Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh po obniżeniu ciśnienia i usunięciu wycieków"
+      },
+      {
+        "kod": "potrzeby",
+        "podstawa": "M",
+        "tekst": "Rozwiązanie dobrano do rzeczywistych potrzeb — bez nadmiernego zapasu",
+        "ph": "np. Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia wymaga regulacji tylko jednej jednostki"
+      },
+      {
+        "kod": "warianty",
+        "podstawa": "M",
+        "tekst": "Rozważono warianty o niższym zużyciu",
+        "ph": "np. Porównano: sam sterownik, sterownik z jednym napędem, wymiana wszystkich sprężarek"
+      },
+      {
+        "kod": "cieplo",
+        "podstawa": "M",
+        "tekst": "Sprawdzono możliwość wykorzystania ciepła odpadowego lub innej odzyskiwalnej energii",
+        "ph": "np. Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, ale projekt zostawia miejsce i przyłącza"
+      },
+      {
+        "kod": "tco",
+        "podstawa": "M",
+        "tekst": "Porównano koszt zakupu i energii wariantów — uproszczone TCO",
+        "ph": "np. Porównanie w 15 lat przy cenie 890 zł/MWh — część D formularza zakupowego F-EnMS-16"
+      }
+    ],
+    "PYT_C": [
+      {
+        "kod": "nadzor",
+        "podstawa": "N",
+        "tekst": "Rozważono nadzór operacyjny w okresie eksploatacji",
+        "ph": "np. Sprawdzono, czy kryteria z karty sprężarkowni (8.1) da się stosować po modernizacji"
+      },
+      {
+        "kod": "wylaczanie",
+        "podstawa": "M",
+        "tekst": "Można wyłączyć to, co w danej chwili niepotrzebne",
+        "ph": "np. Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy odbiorze"
+      },
+      {
+        "kod": "regulacja",
+        "podstawa": "M",
+        "tekst": "Układ ma regulację do rzeczywistego zapotrzebowania, także poza produkcją",
+        "ph": "np. Dwie nastawy ciśnienia: produkcja i postój — wymaganie minimalne w specyfikacji"
+      },
+      {
+        "kod": "pomiar",
+        "podstawa": "M",
+        "tekst": "Przewidziano pomiar, z którego da się policzyć wskaźnik",
+        "ph": "np. Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do monitoringu; dwa przetworniki ciśnienia u odbiorców"
+      },
+      {
+        "kod": "ktoObsluga",
+        "podstawa": "M",
+        "tekst": "Wiadomo, kto będzie obsługiwał instalację i według jakich kryteriów (8.1)",
+        "ph": "np. Technicy UR według karty kryteriów F-EnMS-14 zaktualizowanej przed uruchomieniem; serwis według zlecenia"
+      }
+    ],
+    "PYT_D": [
+      {
+        "kod": "wprowadzono",
+        "podstawa": "N",
+        "tekst": "Wyniki rozważań wprowadzono do specyfikacji, projektu i zakupów",
+        "ph": "np. Cztery wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"
+      },
+      {
+        "kod": "zachowano",
+        "podstawa": "N",
+        "tekst": "Zachowano informacje o działaniach projektowych — ta lista albo notatka",
+        "ph": "np. Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 w teczce projektu"
+      }
+    ],
+    "LISTA_82": [
+      {
+        "tekst": "Rozpoznawane są projekty mogące znacząco wpłynąć na wynik energetyczny.",
+        "podstawa": "N",
+        "auto": "rozpoznanie"
+      },
+      {
+        "tekst": "W tych projektach rozważa się możliwości poprawy i nadzór operacyjny w okresie eksploatacji.",
+        "podstawa": "N",
+        "auto": "rozwaza"
+      },
+      {
+        "tekst": "Wyniki rozważań są w specyfikacjach, projekcie i zakupach (w stosownych przypadkach).",
+        "podstawa": "N",
+        "auto": "wyniki"
+      },
+      {
+        "tekst": "Zachowano udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Pytania o energię padają na etapie założeń; stosowana jest lista kontrolna projektu.",
+        "podstawa": "M",
+        "auto": "zalozenia"
+      },
+      {
+        "tekst": "Po uruchomieniu wynik porównuje się w porównywalnych warunkach.",
+        "podstawa": "M",
+        "auto": "poUruchomieniu"
+      }
+    ],
+    "P_PROJEKTY": [
+      {
+        "nazwa": "Modernizacja sprężarkowni — sterownik nadrzędny i napęd o zmiennej prędkości",
+        "nr": "INW/2027/04",
+        "kierownik": "Dyrektor Techniczny",
+        "etap": "zatwierdzenie",
+        "etapAnalizy": "koncepcja",
+        "ktoAnaliza": "Kierownik projektu z Janem Kowalskim (Energy Manager)",
+        "data": "2026-09-08",
+        "wartosc": "380 000 zł, uruchomienie 06.2027 (inwestycja nr 4 w III-24)",
+        "A": {
+          "seu": {
+            "o": "tak",
+            "u": "Dotyczy SEU sprężarkownia — 2 125 MWh, 17,5% zużycia zakładu"
+          },
+          "sterowanie": {
+            "o": "tak",
+            "u": "Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji"
+          },
+          "godziny": {
+            "o": "tak",
+            "u": "Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+          },
+          "prog": {
+            "o": "tak",
+            "u": "380 tys. zł wobec progu 100 tys. zł w firmie — sygnał dodatkowy, nie decydujący"
+          }
+        },
+        "B": {
+          "mozliwosci": {
+            "o": "tak",
+            "u": "Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy dla jednej sprężarki, wymianę wszystkich czterech sprężarek, odzysk ciepła ze sprężarek, pomiar ciśnienia u odbiorców"
+          },
+          "oszacowano": {
+            "o": "tak",
+            "u": "Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh/rok po obniżeniu ciśnienia i usunięciu wycieków — oszczędność ok. 230 MWh/rok, zgodna z przeglądem energetycznym"
+          },
+          "potrzeby": {
+            "o": "tak",
+            "u": "Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka, a pozostałe pracują w trybie włącz–wyłącz"
+          },
+          "warianty": {
+            "o": "tak",
+            "u": "Trzy warianty: sam sterownik (mniejszy efekt, 180 tys. zł), sterownik z jednym napędem (wybrany), wymiana wszystkich sprężarek (poza budżetem, ok. 1,2 mln zł)"
+          },
+          "cieplo": {
+            "o": "tak",
+            "u": "Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, bo zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek. Projekt zostawia miejsce i przyłącza pod wymiennik"
+          },
+          "tco": {
+            "o": "tak",
+            "u": "Porównanie kosztu zakupu i energii w 15 lat przy cenie 890 zł/MWh — wykonane w części D formularza zakupowego F-EnMS-16 (III-38)"
+          }
+        },
+        "C": {
+          "nadzor": {
+            "o": "tak",
+            "u": "Sprawdzono, czy kryteria z karty sprężarkowni (F-EnMS-14) da się stosować po modernizacji. Pierwotna koncepcja utrzymywała jedno stałe ciśnienie — kryterium trybu postoju nie dałoby się wtedy wprowadzić"
+          },
+          "wylaczanie": {
+            "o": "tak",
+            "u": "Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy faktycznym odbiorze"
+          },
+          "regulacja": {
+            "o": "tak",
+            "u": "Dwie nastawy ciśnienia — produkcja i postój — jako wymaganie minimalne specyfikacji. Tego nie było w pierwotnej koncepcji"
+          },
+          "pomiar": {
+            "o": "tak",
+            "u": "Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu oraz dwa przetworniki ciśnienia u odbiorców: w lakierni i w najdalszym punkcie sieci. Tego też nie było w pierwotnej koncepcji"
+          },
+          "ktoObsluga": {
+            "o": "tak",
+            "u": "Technicy UR według karty kryteriów zaktualizowanej przed uruchomieniem (kierownik UR, do 05.2027); serwis według zlecenia z wymaganiami z sekcji C karty"
+          }
+        },
+        "D": {
+          "wprowadzono": {
+            "o": "tak",
+            "u": "Cztery przyjęte wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"
+          },
+          "zachowano": {
+            "o": "tak",
+            "u": "Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 — teczka projektu INW/2027/04"
+          }
+        },
+        "uzasadnienieA": "",
+        "wnioski": [
+          {
+            "tresc": "Sterownik ma umożliwiać obniżanie ciśnienia poza produkcją — dwie nastawy, produkcja i postój",
+            "decyzja": "przyjety",
+            "dlaczego": "Bez dwóch nastaw kryterium trybu postoju z karty sprężarkowni (8.1) nie da się stosować. Pierwotna koncepcja przewidywała jedno stałe ciśnienie",
+            "gdzie": "Specyfikacja zakupowa, część A — wymagania minimalne; zapytanie ofertowe 10.2026"
+          },
+          {
+            "tresc": "Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika",
+            "decyzja": "przyjety",
+            "dlaczego": "Bez pomiaru u odbiorcy nie da się sprawdzić, czy 6,3 bar to wciąż nie za dużo. Kryterium wyprowadzono z pomiaru z kampanii, a po modernizacji trzeba je móc zweryfikować",
+            "gdzie": "Specyfikacja zakupowa, część A; plan zbierania danych (6.6) — nowe pozycje dla przetworników"
+          },
+          {
+            "tresc": "Zapis danych pracy sprężarek (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu",
+            "decyzja": "przyjety",
+            "dlaczego": "Bez tych danych nie da się policzyć wskaźnika S-1 po modernizacji ani porównać wyniku z wartością sprzed zmiany",
+            "gdzie": "Specyfikacja zakupowa, część A; plan zbierania danych (6.6), pozycje 4 i 5"
+          },
+          {
+            "tresc": "Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek",
+            "decyzja": "przyjety",
+            "dlaczego": "Odzysk nie wchodzi do tej inwestycji, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia i postoju sprężarkowni. Zostawienie przyłączy kosztuje teraz niewiele",
+            "gdzie": "Specyfikacja zakupowa, część A — wymagania minimalne"
+          },
+          {
+            "tresc": "Odzysk ciepła ze sprężarek jako część tej inwestycji",
+            "decyzja": "odrzucony",
+            "dlaczego": "Zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek po modernizacji — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna. Decyzja do ponownego rozważenia po roku danych z nowego sterownika; miejsce i przyłącza zostają",
+            "gdzie": ""
+          },
+          {
+            "tresc": "Wymiana wszystkich czterech sprężarek na jednostki falownikowe",
+            "decyzja": "odrzucony",
+            "dlaczego": "Koszt ok. 1,2 mln zł, poza budżetem inwestycji. Profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka — sterownik nadrzędny z jednym napędem daje większość efektu przy 380 tys. zł",
+            "gdzie": ""
+          }
+        ],
+        "E": {
+          "ktoAktualizuje": "Kierownik UR aktualizuje kartę kryteriów sprężarkowni (F-EnMS-14) przed uruchomieniem — termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana przed uruchomieniem, po sprawdzeniu odbiorników w podtrzymaniu",
+          "wskaznik": "S-1 kWh/Nm³. Wartość sprzed modernizacji: 0,119 (VII–18.IX 2026, po obniżeniu ciśnienia i usunięciu nieszczelności) — z nią porównujemy wynik po uruchomieniu. Linia bazowa EnB: 0,125 (kampania pomiarowa 02–03.2026) — wobec niej liczona jest poprawa wyniku wykazywana w 10.2. Cel Z1.1: 0,110 do 12.2027",
+          "warunki": "Pełne miesiące pracy trzyzmianowej; ciśnienie 6,3 bar w trybie produkcji; temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją. Warunki jak w części D formularza celów (III-24)",
+          "termin": "Cztery tygodnie po odbiorze oraz po zamknięciu roku 2027 — Energy Manager. Wynik wchodzi do oceny celu Z1.1 i jest porównywany z deklaracją z wybranej oferty"
+        }
+      },
+      {
+        "nazwa": "Wymiana opraw oświetleniowych na LED w halach H1 i H2",
+        "nr": "INW/2027/03",
+        "kierownik": "Dyrektor Techniczny",
+        "etap": "koncepcja",
+        "etapAnalizy": "zalozenia",
+        "ktoAnaliza": "Kierownik projektu z Energy Managerem",
+        "data": "2026-08-18",
+        "wartosc": "240 000 zł, uruchomienie III kw. 2027 (cel C2)",
+        "A": {
+          "seu": {
+            "o": "tak",
+            "u": "Dotyczy SEU oświetlenie — 680 MWh/rok, 5,6% zużycia, wskazane kryterium B (potencjał poprawy)"
+          },
+          "sterowanie": {
+            "o": "tak",
+            "u": "Projekt wprowadza podział na strefy i czujniki obecności — dziś jeden wyłącznik na całą halę"
+          },
+          "godziny": {
+            "o": "tak",
+            "u": "Oświetlenie hal pracuje na trzech zmianach przez cały rok; oprawy LED przez kilkanaście lat"
+          },
+          "prog": {
+            "o": "tak",
+            "u": "240 tys. zł wobec progu 100 tys. zł"
+          }
+        },
+        "B": {
+          "mozliwosci": {
+            "o": "tak",
+            "u": "Rozważono: wymianę opraw na LED, podział na trzy strefy w hali B, czujniki obecności w magazynie i strefach socjalnych, obniżenie poziomu natężenia w strefach przejściowych do wartości normowej"
+          },
+          "oszacowano": {
+            "o": "tak",
+            "u": "Po wymianie ok. 410 MWh/rok wobec 680 MWh — oszczędność ok. 270 MWh/rok (cel C2, zadanie Z2.1)"
+          },
+          "potrzeby": {
+            "o": "tak",
+            "u": "Poziomy natężenia dobrane do wymagań stanowisk, nie jednolicie dla całej hali — strefy przejściowe mają niższe wymaganie niż stanowiska montażowe"
+          },
+          "warianty": {
+            "o": "tak",
+            "u": "Porównano wymianę samych źródeł (tańsza, bez możliwości sterowania) z wymianą opraw ze sterowaniem — wybrano drugą"
+          },
+          "cieplo": {
+            "o": "nd",
+            "u": "Oświetlenie LED nie wytwarza użytecznego ciepła odpadowego; zmniejszenie zysków ciepła z opraw świetlówkowych uwzględnione jako pomijalne w bilansie ogrzewania hal"
+          },
+          "tco": {
+            "o": "tak",
+            "u": "Porównanie kosztu zakupu i energii w 12 lat przy cenie 890 zł/MWh — w zapytaniu ofertowym"
+          }
+        },
+        "C": {
+          "nadzor": {
+            "o": "tak",
+            "u": "Rozważono: po wymianie kryteria oświetlenia (czas świecenia, strefy) wchodzą do karty kryteriów jako nowy wiersz"
+          },
+          "wylaczanie": {
+            "o": "tak",
+            "u": "Podział na trzy strefy w hali B i czujniki obecności w magazynie oraz strefach socjalnych — dziś nie da się zgasić nieużywanej części hali (zgłoszenie 2026/08)"
+          },
+          "regulacja": {
+            "o": "tak",
+            "u": "Sterowanie strefowe z harmonogramem; ściemnianie w strefach z dostępem światła dziennego"
+          },
+          "pomiar": {
+            "o": "tak",
+            "u": "Podlicznik oświetlenia dla hal H1 i H2 — pozwoli policzyć OŚ-1 z pomiaru, a nie z inwentaryzacji opraw"
+          },
+          "ktoObsluga": {
+            "o": "tak",
+            "u": "Utrzymanie ruchu według nowego wiersza karty kryteriów; harmonogram stref ustala kierownik produkcji"
+          }
+        },
+        "D": {
+          "wprowadzono": {
+            "o": "tak",
+            "u": "Wnioski weszły do zakresu projektu i do zapytania ofertowego planowanego na I kw. 2027"
+          },
+          "zachowano": {
+            "o": "tak",
+            "u": "Wypełniona lista F-EnMS-15 w teczce projektu INW/2027/03"
+          }
+        },
+        "uzasadnienieA": "",
+        "wnioski": [
+          {
+            "tresc": "Podział oświetlenia hali B na trzy strefy",
+            "decyzja": "przyjety",
+            "dlaczego": "Dziś jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części (zgłoszenie 2026/08 z rejestru 7.4). Osobne przerabianie instalacji po wymianie opraw kosztowałoby drugie tyle",
+            "gdzie": "Zakres projektu; zapytanie ofertowe I kw. 2027"
+          },
+          {
+            "tresc": "Czujniki obecności w magazynie i strefach socjalnych",
+            "decyzja": "przyjety",
+            "dlaczego": "Strefy używane nieregularnie; czujniki już zamontowane w ramach celu C2 jako działanie wcześniejsze — projekt obejmuje ich włączenie do sterowania strefowego",
+            "gdzie": "Zakres projektu"
+          },
+          {
+            "tresc": "Podlicznik oświetlenia dla hal H1 i H2",
+            "decyzja": "przyjety",
+            "dlaczego": "Dziś OŚ-1 liczony z inwentaryzacji opraw i czasu pracy. Bez podlicznika nie da się wykazać poprawy pomiarem, a cel C2 zakłada zejście z 680 do 410 MWh",
+            "gdzie": "Zakres projektu; plan zbierania danych (6.6) — pozycja 14 do aktualizacji"
+          },
+          {
+            "tresc": "Wymiana samych źródeł światła bez wymiany opraw",
+            "decyzja": "odrzucony",
+            "dlaczego": "Tańsza o ok. 90 tys. zł, ale uniemożliwia sterowanie strefowe i ściemnianie — czyli większość efektu poza samą sprawnością źródła. Przy 680 MWh rocznie różnica w oszczędności przewyższa różnicę kosztu w pierwszych czterech latach",
+            "gdzie": ""
+          }
+        ],
+        "E": {
+          "ktoAktualizuje": "Kierownik UR dopisuje wiersz oświetlenia do karty kryteriów (F-EnMS-14) przed uruchomieniem; harmonogram stref ustala kierownik produkcji",
+          "wskaznik": "OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; wartość odniesienia 680 MWh (2025). Cel Z2.1: 410 MWh",
+          "warunki": "Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu. Po uruchomieniu podlicznika porównanie prowadzone na danych pomiarowych, z adnotacją o zmianie źródła danych",
+          "termin": "Po pełnym roku od uruchomienia (2028) — Energy Manager; pierwsze sprawdzenie cztery tygodnie po odbiorze na danych z podlicznika"
+        }
+      },
+      {
+        "nazwa": "Remont posadzki w hali B",
+        "nr": "REM/2026/11",
+        "kierownik": "Kierownik Utrzymania Ruchu",
+        "etap": "realizacja",
+        "etapAnalizy": "zalozenia",
+        "ktoAnaliza": "Kierownik Utrzymania Ruchu z listą kontrolną F-EnMS-15",
+        "data": "2026-07-06",
+        "wartosc": "95 000 zł",
+        "A": {
+          "seu": {
+            "o": "nie",
+            "u": "Remont posadzki nie dotyczy żadnego znaczącego użycia energii i nie wprowadza urządzeń zużywających energię"
+          },
+          "sterowanie": {
+            "o": "nie",
+            "u": "Nie zmienia sterowania ani nastaw żadnej instalacji"
+          },
+          "godziny": {
+            "o": "nie",
+            "u": "Nie dotyczy urządzeń — zakres obejmuje wyłącznie warstwy posadzki"
+          },
+          "prog": {
+            "o": "nie",
+            "u": "95 tys. zł, poniżej progu 100 tys. zł"
+          }
+        },
+        "B": {},
+        "C": {},
+        "D": {},
+        "uzasadnienieA": "Remont posadzki nie dotyczy znaczącego użycia energii, nie zmienia sterowania ani nastaw i nie wprowadza urządzeń zużywających energię. Sprawdzono również, czy prace nie wymuszą zmiany pracy instalacji w hali — postoje są planowane w weekendy, bez pracy sprężarkowni poza podtrzymaniem. Analiza zakończona na etapie A; kierownik projektu z listą kontrolną, 06.07.2026.",
+        "wnioski": [],
+        "E": {}
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+      "data": "2026-09-29",
+      "sygnaly": "Analizę energetyczną projektu uruchamia każdy z sygnałów: projekt dotyczy znaczącego użycia energii albo tworzy nowe; zmienia sposób sterowania lub nastawy; dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata; wartość powyżej 100 tys. zł — jako sygnał dodatkowy, nie warunek. Koncepcje projektów dotyczących SEU trafiają do Energy Managera na etapie założeń (zasada wprowadzona po przeglądzie koncepcji modernizacji sprężarkowni we wrześniu 2026 r.)."
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Decyzja projektowa przesądza o zużyciu na lata, a zapada w kilka tygodni.",
+        "decyzja": "Przy modernizacji uwzględniamy wynik energetyczny w zakresie, w jakim mamy na niego wpływ.",
+        "dzialanie": "Wymiana oświetlenia hali B na LED z kryterium mocy jednostkowej; wartość sprzed modernizacji 0,119 kWh/Nm³ zapisana osobno od linii bazowej 0,125 kWh/Nm³.",
+        "sprawdzenie": "Pomiar po modernizacji wobec wartości sprzed modernizacji; wynik wchodzi do raportu monitorowania (9.1.1)."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "PROJEKTY": [],
+    "WNIOSKI": [],
+    "ETAPY": [
+      [
+        "",
+        "Wybierz etap"
+      ],
+      [
+        "zalozenia",
+        "Założenia"
+      ],
+      [
+        "koncepcja",
+        "Koncepcja"
+      ],
+      [
+        "zatwierdzenie",
+        "Zatwierdzenie"
+      ],
+      [
+        "realizacja",
+        "Realizacja"
+      ],
+      [
+        "uruchomione",
+        "Uruchomione"
+      ]
+    ],
+    "ODP": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "tak",
+        "Tak"
+      ],
+      [
+        "nie",
+        "Nie"
+      ],
+      [
+        "nd",
+        "N.d."
+      ]
+    ],
+    "DECYZJE_W": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "przyjety",
+        "Przyjęty"
+      ],
+      [
+        "odrzucony",
+        "Odrzucony"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

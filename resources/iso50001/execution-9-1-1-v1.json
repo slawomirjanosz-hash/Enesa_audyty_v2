@@ -2,7 +2,7 @@
   "version": 1,
   "section": "9-1-1",
   "source_file": "ENESA_9.1.1_Monitorowanie_platforma.html",
-  "source_sha256": "549f5c3934dc5afe21b7f8c52d7a0046dbe2beedc4db77625b0c083eab24849f",
+  "source_sha256": "5eb4a341dcba9906f6a46df1d9f2cc4bb62e46471e854fee1bd41f216590c02c",
   "definitions": {
     "CHARAKTERYSTYKI": [
       {
@@ -344,6 +344,8 @@
           "required": true,
           "options": {
             "spelnione": "Spełnione",
+            "czesciowo": "Częściowo spełnione",
+            "poza": "Poza zakresem oceny w okresie",
             "niespelnione": "Niespełnione",
             "brak": "Brak danych"
           }

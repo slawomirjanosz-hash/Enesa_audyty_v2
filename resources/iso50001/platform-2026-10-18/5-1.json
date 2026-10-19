@@ -1,0 +1,2037 @@
+{
+  "source_file": "ENESA_5.1_Przywodztwo_platforma.html",
+  "source_sha256": "ede5471120082c7390dc4a329c3a2707a6bcdbe640304bdef86091d10c464148",
+  "section": "5-1",
+  "data": {
+    "pytania_4": [
+      {
+        "id": "P1",
+        "nazwa": "1. Czy wiemy, dokąd idziemy?",
+        "opis": "Zakres i granice systemu są ustalone. Polityka, cele i zadania energetyczne pasują do strategii firmy. Wskaźniki uczciwie pokazują wynik.",
+        "dowod": "zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach"
+      },
+      {
+        "id": "P2",
+        "nazwa": "2. Czy energia jest w naszych decyzjach?",
+        "opis": "Wymagania systemu są wbudowane w procesy firmy. Plany działań są zatwierdzane i realizowane. Są zasoby. Jest zespół ds. zarządzania energią.",
+        "dowod": "energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu"
+      },
+      {
+        "id": "P3",
+        "nazwa": "3. Czy ludzie wiedzą, że to ważne?",
+        "opis": "Kierownictwo mówi o znaczeniu zarządzania energią i przestrzegania zasad systemu. Kieruje ludźmi i ich wspiera. Wspiera też innych kierowników w ich obszarach.",
+        "dowod": "komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety"
+      },
+      {
+        "id": "P4",
+        "nazwa": "4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?",
+        "opis": "System osiąga zamierzone wyniki. Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu. Zmiany — nowa linia, nowy klient, nowa umowa na energię — trafiają do zespołu przed decyzją, nie po.",
+        "dowod": "przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu"
+      }
+    ],
+    "zobowiazania": [
+      {
+        "kod": "PRZ-00",
+        "pytanie": "P1",
+        "podstawa": "M",
+        "tresc": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+        "pomoc": "Chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu — zarząd spółki, dyrektor zakładu albo osoba przez nich upoważniona. Bez tego ustalenia pozostałe pozycje nie mają adresata.",
+        "dowod": "np. Zarząd spółki; w jego imieniu Dyrektor Zakładu Piotr Nowak — upoważnienie z 20.02.2026"
+      },
+      {
+        "kod": "PRZ-01",
+        "pytanie": "P1",
+        "podstawa": "N",
+        "klauzula": "4.3",
+        "tresc": "Ustalono zakres i granice systemu",
+        "pomoc": "Wynik punktu 4.3. Tutaj pytamy, czy kierownictwo je zatwierdziło.",
+        "dowod": "np. D-EnMS-ZAK-01 wersja 1.0, zatwierdzony uchwałą Zarządu z 20.02.2026"
+      },
+      {
+        "kod": "PRZ-02",
+        "pytanie": "P1",
+        "podstawa": "N",
+        "klauzula": "5.2, 6.2",
+        "tresc": "Ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+        "pomoc": "„Zgodne z kierunkiem strategicznym” znaczy, że cele energetyczne nie stoją obok planu firmy, tylko są jego częścią.",
+        "dowod": "np. Polityka energetyczna wersja 1.0 (uchwała Zarządu 3/2026); cele Z1.1 i Z1.2 w planie operacyjnym na 2026/2027"
+      },
+      {
+        "kod": "PRZ-03",
+        "pytanie": "P1",
+        "podstawa": "N",
+        "klauzula": "6.4",
+        "tresc": "Wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+        "pomoc": "Kierownictwo nie musi liczyć wskaźników, ale musi zatwierdzić, że mierzą to, co trzeba. Wskaźnik, który nie reaguje na zmiany w zakładzie, jest bezużyteczny.",
+        "dowod": "np. decyzja o zestawie EnPI z przeglądu zarządzania 18.06.2026, z uzasadnieniem doboru"
+      },
+      {
+        "kod": "PRZ-04",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "8.1–8.3",
+        "tresc": "Wymagania systemu włączono do procesów biznesowych",
+        "pomoc": "Inwestycje, zakupy, planowanie produkcji. Szczegóły wypełniacie w zakładce 2 — tutaj wpisujecie dowód zbiorczy.",
+        "profil": "FAKT_ZAKUPY_KRYTERIA",
+        "profilUwaga": "Jeśli przy zakupach decyduje cena nabycia, integracja z tym procesem jeszcze nie działa.",
+        "dowod": "np. Procedura zakupowa P-ZAK-02 pkt 4.3 (kryteria energetyczne) i Procedura inwestycyjna P-INW-01 pkt 5.2, obie od 01.04.2026"
+      },
+      {
+        "kod": "PRZ-05",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "6.2",
+        "tresc": "Plany działań są zatwierdzane i realizowane",
+        "pomoc": "Dwa warunki naraz: zatwierdzenie i realizacja. Zatwierdzony plan, którego nikt nie wykonuje, nie spełnia tej pozycji.",
+        "dowod": "np. Plan działań 2026 zatwierdzony 20.03.2026; stan realizacji na 30.09.2026: 4 z 6 działań zakończone"
+      },
+      {
+        "kod": "PRZ-06",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "7.1",
+        "tresc": "Potrzebne zasoby są dostępne — ludzie, czas, budżet, narzędzia, dane",
+        "pomoc": "Szczegóły wypełniacie w zakładce 4. Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza.",
+        "profil": "FAKT_BUDZET",
+        "dowod": "np. 0,3 etatu Energy Managera, 40 tys. zł w budżecie utrzymania ruchu na 2026, dostęp do danych z liczników głównych"
+      },
+      {
+        "kod": "PRZ-07",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "5.3",
+        "tresc": "Powołano zespół ds. zarządzania energią",
+        "pomoc": "Szczegóły w zakładce 3. Norma wymaga zespołu, nie stanowiska Energy Managera.",
+        "profil": "FAKT_ENERGY_MANAGER",
+        "dowod": "np. Decyzja Zarządu nr 7/2026 z 20.02.2026 o powołaniu Zespołu ds. Zarządzania Energią — 5 osób"
+      },
+      {
+        "kod": "PRZ-08",
+        "pytanie": "P3",
+        "podstawa": "N",
+        "klauzula": "7.4",
+        "tresc": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+        "pomoc": "Nie chodzi o jedno przemówienie przy podpisywaniu polityki, tylko o regularność. Krótko, ale stale.",
+        "dowod": "np. stały punkt „energia” na poniedziałkowej odprawie kierowników od 03.2026; komunikat Prezesa z 15.03.2026 na tablicach"
+      },
+      {
+        "kod": "PRZ-09",
+        "pytanie": "P3",
+        "podstawa": "N",
+        "klauzula": "7.2, 7.3",
+        "tresc": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+        "pomoc": "Najmocniejszy dowód: sytuacja, w której zespół trafił na opór, a kierownictwo rozstrzygnęło spór, zamiast powiedzieć „dogadajcie się”.",
+        "dowod": "np. rozstrzygnięcie sporu o postój lakierni na rzecz przeglądu szczelności — decyzja Dyrektora z 12.05.2026"
+      },
+      {
+        "kod": "PRZ-10",
+        "pytanie": "P3",
+        "podstawa": "N",
+        "tresc": "Kierownictwo wspiera inne role kierownicze w ich obszarach odpowiedzialności",
+        "pomoc": "Przywództwo w punkcie 5.1 nie kończy się na zarządzie. Kierownik produkcji też ma w swoim obszarze pokazywać, że energia ma znaczenie — i potrzebuje do tego wsparcia z góry.",
+        "dowod": "np. wskaźniki energetyczne w rocznych celach kierowników produkcji i utrzymania ruchu od 2026 r."
+      },
+      {
+        "kod": "PRZ-11",
+        "pytanie": "P4",
+        "podstawa": "N",
+        "klauzula": "9.3",
+        "tresc": "System osiąga zamierzone wyniki",
+        "pomoc": "Dowodem są decyzje z przeglądu zarządzania — nie sam fakt, że przegląd się odbył.",
+        "dowod": "np. protokół przeglądu zarządzania 1/2026 z 18.06.2026: trzy decyzje, w tym przesunięcie środków na sterowanie sprężarek"
+      },
+      {
+        "kod": "PRZ-12",
+        "pytanie": "P4",
+        "podstawa": "N",
+        "klauzula": "10.2",
+        "tresc": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+        "pomoc": "Obu naraz: wyniku i systemu. Usprawnianie procedur bez poprawy wyniku to połowa wymagania.",
+        "dowod": "np. porównanie „rok temu — dziś — plan” omówione na przeglądzie; docenienie wyniku sprężarkowni na odprawie 22.06.2026"
+      },
+      {
+        "kod": "PRZ-13",
+        "pytanie": "P4",
+        "podstawa": "N",
+        "klauzula": "6.1",
+        "tresc": "Istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+        "pomoc": "Nowa linia, nowy klient, nowa umowa na energię — zmiana ma trafić do zespołu przed decyzją, nie po niej.",
+        "profil": "FAKT_INWESTYCJE",
+        "profilUwaga": "Planowane inwestycje to pierwszy test tego procesu: czy zespół dowiaduje się o nich na etapie założeń, czy po podpisaniu umowy?",
+        "dowod": "np. zapis w procedurze inwestycyjnej: opinia Energy Managera przed decyzją o zakupie urządzenia powyżej 50 kW"
+      },
+      {
+        "kod": "PRZ-14",
+        "pytanie": "P4",
+        "podstawa": "M",
+        "tresc": "Zaplanowano „punkty styku” kierownictwa z systemem — przegląd, raporty, komunikaty",
+        "pomoc": "Pozycja metodyczna. Zaangażowanie łatwiej utrzymać, gdy ma stały rytm, a nie zależy od pamięci koordynatora. Szczegóły w zakładce 5.",
+        "dowod": "np. przegląd zarządzania 2 razy w roku, raport miesięczny do Dyrektora, kwartalny komunikat na tablicach"
+      }
+    ],
+    "procesy_biz": [
+      {
+        "kod": "INT-ZAK",
+        "nazwa": "Zakupy",
+        "klauzula": "8.3",
+        "pytanie": "Czy przy zakupie urządzeń i usług wpływających na zużycie energii bierzecie pod uwagę efektywność, a nie samą cenę nabycia?",
+        "profil": "FAKT_ZAKUPY_KRYTERIA",
+        "placeholder": "np. dla urządzeń powyżej 10 kW porównanie kosztu w cyklu życia; Energy Manager może wstrzymać zamówienie do 5 dni roboczych na ocenę"
+      },
+      {
+        "kod": "INT-INW",
+        "nazwa": "Inwestycje i modernizacje",
+        "klauzula": "8.2",
+        "pytanie": "Czy wniosek inwestycyjny zawiera ocenę wpływu na zużycie energii?",
+        "profil": "FAKT_INWESTYCJE",
+        "placeholder": "np. rubryka „wpływ na zużycie energii i koszt eksploatacji” we wniosku inwestycyjnym; opinia Energy Managera przed decyzją"
+      },
+      {
+        "kod": "INT-PROD",
+        "nazwa": "Planowanie produkcji",
+        "klauzula": "8.1",
+        "pytanie": "Czy planując produkcję, bierzecie pod uwagę zużycie energii — kolejność uruchomień, postoje, praca w weekendy?",
+        "placeholder": "np. harmonogram uruchamiania pras uwzględnia szczyt energetyczny; wyłączenie sprężarkowni na weekend ujęte w planie"
+      },
+      {
+        "kod": "INT-UR",
+        "nazwa": "Utrzymanie ruchu i remonty",
+        "klauzula": "8.1",
+        "pytanie": "Czy plan przeglądów i remontów uwzględnia stan energetyczny urządzeń?",
+        "profil": "FAKT_INSTRUKCJE_EKSPL",
+        "placeholder": "np. kwartalny przegląd szczelności sieci sprężonego powietrza w planie przeglądów od 03.2026"
+      },
+      {
+        "kod": "INT-BUD",
+        "nazwa": "Budżetowanie",
+        "klauzula": "7.1",
+        "pytanie": "Czy przy planowaniu budżetu rozmawia się o kosztach energii i o środkach na ich obniżenie?",
+        "profil": "FAKT_BUDZET",
+        "placeholder": "np. koszt energii i lista działań z przeglądu energetycznego omawiane na budżecie wrześniowym"
+      },
+      {
+        "kod": "INT-RAP",
+        "nazwa": "Raportowanie zarządcze",
+        "klauzula": "9.1",
+        "pytanie": "Czy wskaźniki energetyczne są w zwykłych raportach firmy — tam, gdzie sprzedaż i jakość?",
+        "placeholder": "np. kWh/t i koszt energii w miesięcznym raporcie operacyjnym od 04.2026"
+      },
+      {
+        "kod": "INT-ZMI",
+        "nazwa": "Zarządzanie zmianą",
+        "klauzula": "6.1",
+        "pytanie": "Czy nowa linia, nowy klient albo nowa umowa na energię trafiają do zespołu przed decyzją?",
+        "placeholder": "np. zespół opiniuje każdą zmianę technologiczną na etapie założeń; nowa umowa na energię konsultowana przed podpisaniem"
+      }
+    ],
+    "zasoby": [
+      {
+        "kod": "ZAS-LUD",
+        "nazwa": "Ludzie",
+        "podstawa": "N",
+        "pomoc": "Kto realnie zajmuje się systemem. Nie musi to być osobny etat.",
+        "placeholder": "np. Energy Manager 0,3 etatu; czterech członków zespołu po ok. 8 godzin miesięcznie"
+      },
+      {
+        "kod": "ZAS-CZAS",
+        "nazwa": "Czas",
+        "podstawa": "N",
+        "pomoc": "III-13: „Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań”. To najczęściej brakujący zasób — i najrzadziej zapisany.",
+        "placeholder": "np. 4 godziny miesięcznie technika UR na przeglądy szczelności, ujęte w grafiku"
+      },
+      {
+        "kod": "ZAS-BUD",
+        "nazwa": "Budżet",
+        "podstawa": "N",
+        "pomoc": "Skąd biorą się pieniądze na działania. Osobna pozycja w budżecie nie jest wymagana.",
+        "placeholder": "np. 40 tys. zł rocznie w budżecie utrzymania ruchu; większe inwestycje z wniosku inwestycyjnego"
+      },
+      {
+        "kod": "ZAS-NARZ",
+        "nazwa": "Narzędzia i opomiarowanie",
+        "podstawa": "N",
+        "pomoc": "Liczniki, analizatory, arkusze, oprogramowanie. Bez danych system nie ma z czego liczyć wskaźników.",
+        "placeholder": "np. dwa liczniki główne, analizator przenośny wypożyczany kwartalnie, arkusz EnPI"
+      },
+      {
+        "kod": "ZAS-DANE",
+        "nazwa": "Dostęp do danych",
+        "podstawa": "N",
+        "pomoc": "Zasobem jest także dostęp: do faktur, do danych produkcyjnych, do systemu nadzoru.",
+        "placeholder": "np. Energy Manager ma dostęp do faktur za energię, danych z liczników i planów produkcji"
+      },
+      {
+        "kod": "ZAS-KOMP",
+        "nazwa": "Kompetencje i szkolenia",
+        "podstawa": "M",
+        "pomoc": "Punkt 7.2 opisuje to szczegółowo. Tutaj chodzi o to, czy kierownictwo zapewniło na nie środki.",
+        "placeholder": "np. szkolenie wewnętrzne dla zespołu 05.2026; udział Energy Managera w kursie audytora wewnętrznego"
+      }
+    ],
+    "nawyki": [
+      {
+        "kod": "NAW-1",
+        "nazwa": "Daje zasoby, nie tylko budżet na certyfikat",
+        "opis": "Ludzi, czas, narzędzia pomiarowe, dostęp do danych. Ile? Tyle, żeby system działał.",
+        "placeholder": "np. przydział czasu technika zapisany w grafiku, nie „jak znajdzie chwilę”"
+      },
+      {
+        "kod": "NAW-2",
+        "nazwa": "Myśli energią przy każdej dużej decyzji",
+        "opis": "Zakup maszyny, inwestycja, plan produkcji — za każdym razem pada pytanie: a ile to będzie zużywać?",
+        "placeholder": "np. pytanie o zużycie przy każdym wniosku inwestycyjnym powyżej 50 tys. zł"
+      },
+      {
+        "kod": "NAW-3",
+        "nazwa": "Mówi o energii",
+        "opis": "Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.",
+        "placeholder": "np. stałe pytanie o zużycie na poniedziałkowej odprawie"
+      },
+      {
+        "kod": "NAW-4",
+        "nazwa": "Jest widoczne",
+        "opis": "Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.",
+        "placeholder": "np. przegląd zarządzania prowadzi Dyrektor Zakładu, nie jego zastępca"
+      },
+      {
+        "kod": "NAW-5",
+        "nazwa": "Staje za zespołem",
+        "opis": "Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.",
+        "placeholder": "np. rozstrzygnięcie konfliktu między terminem dostawy a postojem na przegląd"
+      }
+    ],
+    "lista_51": [
+      {
+        "tekst": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+        "podstawa": "M",
+        "auto": "zob",
+        "zob": "PRZ-00"
+      },
+      {
+        "tekst": "…ustalono zakres i granice systemu",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-01"
+      },
+      {
+        "tekst": "…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-02"
+      },
+      {
+        "tekst": "…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)",
+        "podstawa": "N",
+        "auto": "integracja"
+      },
+      {
+        "tekst": "…plany działań są zatwierdzane i realizowane",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-05"
+      },
+      {
+        "tekst": "…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)",
+        "podstawa": "N",
+        "auto": "zasoby"
+      },
+      {
+        "tekst": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-08"
+      },
+      {
+        "tekst": "…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-11"
+      },
+      {
+        "tekst": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-12"
+      },
+      {
+        "tekst": "…powołano zespół ds. zarządzania energią",
+        "podstawa": "N",
+        "auto": "zespol"
+      },
+      {
+        "tekst": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-09"
+      },
+      {
+        "tekst": "Kierownictwo wspiera inne role kierownicze w ich obszarach",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-10"
+      },
+      {
+        "tekst": "…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-03"
+      },
+      {
+        "tekst": "…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-13"
+      },
+      {
+        "tekst": "Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)",
+        "podstawa": "M",
+        "auto": "styk"
+      },
+      {
+        "tekst": "Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami",
+        "podstawa": "M",
+        "auto": "decyzje"
+      }
+    ]
+  },
+  "variables": {
+    "PYTANIA_4": [
+      {
+        "id": "P1",
+        "nazwa": "1. Czy wiemy, dokąd idziemy?",
+        "opis": "Zakres i granice systemu są ustalone. Polityka, cele i zadania energetyczne pasują do strategii firmy. Wskaźniki uczciwie pokazują wynik.",
+        "dowod": "zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach"
+      },
+      {
+        "id": "P2",
+        "nazwa": "2. Czy energia jest w naszych decyzjach?",
+        "opis": "Wymagania systemu są wbudowane w procesy firmy. Plany działań są zatwierdzane i realizowane. Są zasoby. Jest zespół ds. zarządzania energią.",
+        "dowod": "energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu"
+      },
+      {
+        "id": "P3",
+        "nazwa": "3. Czy ludzie wiedzą, że to ważne?",
+        "opis": "Kierownictwo mówi o znaczeniu zarządzania energią i przestrzegania zasad systemu. Kieruje ludźmi i ich wspiera. Wspiera też innych kierowników w ich obszarach.",
+        "dowod": "komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety"
+      },
+      {
+        "id": "P4",
+        "nazwa": "4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?",
+        "opis": "System osiąga zamierzone wyniki. Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu. Zmiany — nowa linia, nowy klient, nowa umowa na energię — trafiają do zespołu przed decyzją, nie po.",
+        "dowod": "przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu"
+      }
+    ],
+    "ZOBOWIAZANIA": [
+      {
+        "kod": "PRZ-00",
+        "pytanie": "P1",
+        "podstawa": "M",
+        "tresc": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+        "pomoc": "Chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu — zarząd spółki, dyrektor zakładu albo osoba przez nich upoważniona. Bez tego ustalenia pozostałe pozycje nie mają adresata.",
+        "dowod": "np. Zarząd spółki; w jego imieniu Dyrektor Zakładu Piotr Nowak — upoważnienie z 20.02.2026"
+      },
+      {
+        "kod": "PRZ-01",
+        "pytanie": "P1",
+        "podstawa": "N",
+        "klauzula": "4.3",
+        "tresc": "Ustalono zakres i granice systemu",
+        "pomoc": "Wynik punktu 4.3. Tutaj pytamy, czy kierownictwo je zatwierdziło.",
+        "dowod": "np. D-EnMS-ZAK-01 wersja 1.0, zatwierdzony uchwałą Zarządu z 20.02.2026"
+      },
+      {
+        "kod": "PRZ-02",
+        "pytanie": "P1",
+        "podstawa": "N",
+        "klauzula": "5.2, 6.2",
+        "tresc": "Ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+        "pomoc": "„Zgodne z kierunkiem strategicznym” znaczy, że cele energetyczne nie stoją obok planu firmy, tylko są jego częścią.",
+        "dowod": "np. Polityka energetyczna wersja 1.0 (uchwała Zarządu 3/2026); cele Z1.1 i Z1.2 w planie operacyjnym na 2026/2027"
+      },
+      {
+        "kod": "PRZ-03",
+        "pytanie": "P1",
+        "podstawa": "N",
+        "klauzula": "6.4",
+        "tresc": "Wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+        "pomoc": "Kierownictwo nie musi liczyć wskaźników, ale musi zatwierdzić, że mierzą to, co trzeba. Wskaźnik, który nie reaguje na zmiany w zakładzie, jest bezużyteczny.",
+        "dowod": "np. decyzja o zestawie EnPI z przeglądu zarządzania 18.06.2026, z uzasadnieniem doboru"
+      },
+      {
+        "kod": "PRZ-04",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "8.1–8.3",
+        "tresc": "Wymagania systemu włączono do procesów biznesowych",
+        "pomoc": "Inwestycje, zakupy, planowanie produkcji. Szczegóły wypełniacie w zakładce 2 — tutaj wpisujecie dowód zbiorczy.",
+        "profil": "FAKT_ZAKUPY_KRYTERIA",
+        "profilUwaga": "Jeśli przy zakupach decyduje cena nabycia, integracja z tym procesem jeszcze nie działa.",
+        "dowod": "np. Procedura zakupowa P-ZAK-02 pkt 4.3 (kryteria energetyczne) i Procedura inwestycyjna P-INW-01 pkt 5.2, obie od 01.04.2026"
+      },
+      {
+        "kod": "PRZ-05",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "6.2",
+        "tresc": "Plany działań są zatwierdzane i realizowane",
+        "pomoc": "Dwa warunki naraz: zatwierdzenie i realizacja. Zatwierdzony plan, którego nikt nie wykonuje, nie spełnia tej pozycji.",
+        "dowod": "np. Plan działań 2026 zatwierdzony 20.03.2026; stan realizacji na 30.09.2026: 4 z 6 działań zakończone"
+      },
+      {
+        "kod": "PRZ-06",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "7.1",
+        "tresc": "Potrzebne zasoby są dostępne — ludzie, czas, budżet, narzędzia, dane",
+        "pomoc": "Szczegóły wypełniacie w zakładce 4. Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza.",
+        "profil": "FAKT_BUDZET",
+        "dowod": "np. 0,3 etatu Energy Managera, 40 tys. zł w budżecie utrzymania ruchu na 2026, dostęp do danych z liczników głównych"
+      },
+      {
+        "kod": "PRZ-07",
+        "pytanie": "P2",
+        "podstawa": "N",
+        "klauzula": "5.3",
+        "tresc": "Powołano zespół ds. zarządzania energią",
+        "pomoc": "Szczegóły w zakładce 3. Norma wymaga zespołu, nie stanowiska Energy Managera.",
+        "profil": "FAKT_ENERGY_MANAGER",
+        "dowod": "np. Decyzja Zarządu nr 7/2026 z 20.02.2026 o powołaniu Zespołu ds. Zarządzania Energią — 5 osób"
+      },
+      {
+        "kod": "PRZ-08",
+        "pytanie": "P3",
+        "podstawa": "N",
+        "klauzula": "7.4",
+        "tresc": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+        "pomoc": "Nie chodzi o jedno przemówienie przy podpisywaniu polityki, tylko o regularność. Krótko, ale stale.",
+        "dowod": "np. stały punkt „energia” na poniedziałkowej odprawie kierowników od 03.2026; komunikat Prezesa z 15.03.2026 na tablicach"
+      },
+      {
+        "kod": "PRZ-09",
+        "pytanie": "P3",
+        "podstawa": "N",
+        "klauzula": "7.2, 7.3",
+        "tresc": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+        "pomoc": "Najmocniejszy dowód: sytuacja, w której zespół trafił na opór, a kierownictwo rozstrzygnęło spór, zamiast powiedzieć „dogadajcie się”.",
+        "dowod": "np. rozstrzygnięcie sporu o postój lakierni na rzecz przeglądu szczelności — decyzja Dyrektora z 12.05.2026"
+      },
+      {
+        "kod": "PRZ-10",
+        "pytanie": "P3",
+        "podstawa": "N",
+        "tresc": "Kierownictwo wspiera inne role kierownicze w ich obszarach odpowiedzialności",
+        "pomoc": "Przywództwo w punkcie 5.1 nie kończy się na zarządzie. Kierownik produkcji też ma w swoim obszarze pokazywać, że energia ma znaczenie — i potrzebuje do tego wsparcia z góry.",
+        "dowod": "np. wskaźniki energetyczne w rocznych celach kierowników produkcji i utrzymania ruchu od 2026 r."
+      },
+      {
+        "kod": "PRZ-11",
+        "pytanie": "P4",
+        "podstawa": "N",
+        "klauzula": "9.3",
+        "tresc": "System osiąga zamierzone wyniki",
+        "pomoc": "Dowodem są decyzje z przeglądu zarządzania — nie sam fakt, że przegląd się odbył.",
+        "dowod": "np. protokół przeglądu zarządzania 1/2026 z 18.06.2026: trzy decyzje, w tym przesunięcie środków na sterowanie sprężarek"
+      },
+      {
+        "kod": "PRZ-12",
+        "pytanie": "P4",
+        "podstawa": "N",
+        "klauzula": "10.2",
+        "tresc": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+        "pomoc": "Obu naraz: wyniku i systemu. Usprawnianie procedur bez poprawy wyniku to połowa wymagania.",
+        "dowod": "np. porównanie „rok temu — dziś — plan” omówione na przeglądzie; docenienie wyniku sprężarkowni na odprawie 22.06.2026"
+      },
+      {
+        "kod": "PRZ-13",
+        "pytanie": "P4",
+        "podstawa": "N",
+        "klauzula": "6.1",
+        "tresc": "Istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+        "pomoc": "Nowa linia, nowy klient, nowa umowa na energię — zmiana ma trafić do zespołu przed decyzją, nie po niej.",
+        "profil": "FAKT_INWESTYCJE",
+        "profilUwaga": "Planowane inwestycje to pierwszy test tego procesu: czy zespół dowiaduje się o nich na etapie założeń, czy po podpisaniu umowy?",
+        "dowod": "np. zapis w procedurze inwestycyjnej: opinia Energy Managera przed decyzją o zakupie urządzenia powyżej 50 kW"
+      },
+      {
+        "kod": "PRZ-14",
+        "pytanie": "P4",
+        "podstawa": "M",
+        "tresc": "Zaplanowano „punkty styku” kierownictwa z systemem — przegląd, raporty, komunikaty",
+        "pomoc": "Pozycja metodyczna. Zaangażowanie łatwiej utrzymać, gdy ma stały rytm, a nie zależy od pamięci koordynatora. Szczegóły w zakładce 5.",
+        "dowod": "np. przegląd zarządzania 2 razy w roku, raport miesięczny do Dyrektora, kwartalny komunikat na tablicach"
+      }
+    ],
+    "PROCESY_BIZ": [
+      {
+        "kod": "INT-ZAK",
+        "nazwa": "Zakupy",
+        "klauzula": "8.3",
+        "pytanie": "Czy przy zakupie urządzeń i usług wpływających na zużycie energii bierzecie pod uwagę efektywność, a nie samą cenę nabycia?",
+        "profil": "FAKT_ZAKUPY_KRYTERIA",
+        "placeholder": "np. dla urządzeń powyżej 10 kW porównanie kosztu w cyklu życia; Energy Manager może wstrzymać zamówienie do 5 dni roboczych na ocenę"
+      },
+      {
+        "kod": "INT-INW",
+        "nazwa": "Inwestycje i modernizacje",
+        "klauzula": "8.2",
+        "pytanie": "Czy wniosek inwestycyjny zawiera ocenę wpływu na zużycie energii?",
+        "profil": "FAKT_INWESTYCJE",
+        "placeholder": "np. rubryka „wpływ na zużycie energii i koszt eksploatacji” we wniosku inwestycyjnym; opinia Energy Managera przed decyzją"
+      },
+      {
+        "kod": "INT-PROD",
+        "nazwa": "Planowanie produkcji",
+        "klauzula": "8.1",
+        "pytanie": "Czy planując produkcję, bierzecie pod uwagę zużycie energii — kolejność uruchomień, postoje, praca w weekendy?",
+        "placeholder": "np. harmonogram uruchamiania pras uwzględnia szczyt energetyczny; wyłączenie sprężarkowni na weekend ujęte w planie"
+      },
+      {
+        "kod": "INT-UR",
+        "nazwa": "Utrzymanie ruchu i remonty",
+        "klauzula": "8.1",
+        "pytanie": "Czy plan przeglądów i remontów uwzględnia stan energetyczny urządzeń?",
+        "profil": "FAKT_INSTRUKCJE_EKSPL",
+        "placeholder": "np. kwartalny przegląd szczelności sieci sprężonego powietrza w planie przeglądów od 03.2026"
+      },
+      {
+        "kod": "INT-BUD",
+        "nazwa": "Budżetowanie",
+        "klauzula": "7.1",
+        "pytanie": "Czy przy planowaniu budżetu rozmawia się o kosztach energii i o środkach na ich obniżenie?",
+        "profil": "FAKT_BUDZET",
+        "placeholder": "np. koszt energii i lista działań z przeglądu energetycznego omawiane na budżecie wrześniowym"
+      },
+      {
+        "kod": "INT-RAP",
+        "nazwa": "Raportowanie zarządcze",
+        "klauzula": "9.1",
+        "pytanie": "Czy wskaźniki energetyczne są w zwykłych raportach firmy — tam, gdzie sprzedaż i jakość?",
+        "placeholder": "np. kWh/t i koszt energii w miesięcznym raporcie operacyjnym od 04.2026"
+      },
+      {
+        "kod": "INT-ZMI",
+        "nazwa": "Zarządzanie zmianą",
+        "klauzula": "6.1",
+        "pytanie": "Czy nowa linia, nowy klient albo nowa umowa na energię trafiają do zespołu przed decyzją?",
+        "placeholder": "np. zespół opiniuje każdą zmianę technologiczną na etapie założeń; nowa umowa na energię konsultowana przed podpisaniem"
+      }
+    ],
+    "ZASOBY": [
+      {
+        "kod": "ZAS-LUD",
+        "nazwa": "Ludzie",
+        "podstawa": "N",
+        "pomoc": "Kto realnie zajmuje się systemem. Nie musi to być osobny etat.",
+        "placeholder": "np. Energy Manager 0,3 etatu; czterech członków zespołu po ok. 8 godzin miesięcznie"
+      },
+      {
+        "kod": "ZAS-CZAS",
+        "nazwa": "Czas",
+        "podstawa": "N",
+        "pomoc": "III-13: „Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań”. To najczęściej brakujący zasób — i najrzadziej zapisany.",
+        "placeholder": "np. 4 godziny miesięcznie technika UR na przeglądy szczelności, ujęte w grafiku"
+      },
+      {
+        "kod": "ZAS-BUD",
+        "nazwa": "Budżet",
+        "podstawa": "N",
+        "pomoc": "Skąd biorą się pieniądze na działania. Osobna pozycja w budżecie nie jest wymagana.",
+        "placeholder": "np. 40 tys. zł rocznie w budżecie utrzymania ruchu; większe inwestycje z wniosku inwestycyjnego"
+      },
+      {
+        "kod": "ZAS-NARZ",
+        "nazwa": "Narzędzia i opomiarowanie",
+        "podstawa": "N",
+        "pomoc": "Liczniki, analizatory, arkusze, oprogramowanie. Bez danych system nie ma z czego liczyć wskaźników.",
+        "placeholder": "np. dwa liczniki główne, analizator przenośny wypożyczany kwartalnie, arkusz EnPI"
+      },
+      {
+        "kod": "ZAS-DANE",
+        "nazwa": "Dostęp do danych",
+        "podstawa": "N",
+        "pomoc": "Zasobem jest także dostęp: do faktur, do danych produkcyjnych, do systemu nadzoru.",
+        "placeholder": "np. Energy Manager ma dostęp do faktur za energię, danych z liczników i planów produkcji"
+      },
+      {
+        "kod": "ZAS-KOMP",
+        "nazwa": "Kompetencje i szkolenia",
+        "podstawa": "M",
+        "pomoc": "Punkt 7.2 opisuje to szczegółowo. Tutaj chodzi o to, czy kierownictwo zapewniło na nie środki.",
+        "placeholder": "np. szkolenie wewnętrzne dla zespołu 05.2026; udział Energy Managera w kursie audytora wewnętrznego"
+      }
+    ],
+    "NAWYKI": [
+      {
+        "kod": "NAW-1",
+        "nazwa": "Daje zasoby, nie tylko budżet na certyfikat",
+        "opis": "Ludzi, czas, narzędzia pomiarowe, dostęp do danych. Ile? Tyle, żeby system działał.",
+        "placeholder": "np. przydział czasu technika zapisany w grafiku, nie „jak znajdzie chwilę”"
+      },
+      {
+        "kod": "NAW-2",
+        "nazwa": "Myśli energią przy każdej dużej decyzji",
+        "opis": "Zakup maszyny, inwestycja, plan produkcji — za każdym razem pada pytanie: a ile to będzie zużywać?",
+        "placeholder": "np. pytanie o zużycie przy każdym wniosku inwestycyjnym powyżej 50 tys. zł"
+      },
+      {
+        "kod": "NAW-3",
+        "nazwa": "Mówi o energii",
+        "opis": "Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.",
+        "placeholder": "np. stałe pytanie o zużycie na poniedziałkowej odprawie"
+      },
+      {
+        "kod": "NAW-4",
+        "nazwa": "Jest widoczne",
+        "opis": "Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.",
+        "placeholder": "np. przegląd zarządzania prowadzi Dyrektor Zakładu, nie jego zastępca"
+      },
+      {
+        "kod": "NAW-5",
+        "nazwa": "Staje za zespołem",
+        "opis": "Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.",
+        "placeholder": "np. rozstrzygnięcie konfliktu między terminem dostawy a postojem na przegląd"
+      }
+    ],
+    "LISTA_51": [
+      {
+        "tekst": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+        "podstawa": "M",
+        "auto": "zob",
+        "zob": "PRZ-00"
+      },
+      {
+        "tekst": "…ustalono zakres i granice systemu",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-01"
+      },
+      {
+        "tekst": "…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-02"
+      },
+      {
+        "tekst": "…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)",
+        "podstawa": "N",
+        "auto": "integracja"
+      },
+      {
+        "tekst": "…plany działań są zatwierdzane i realizowane",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-05"
+      },
+      {
+        "tekst": "…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)",
+        "podstawa": "N",
+        "auto": "zasoby"
+      },
+      {
+        "tekst": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-08"
+      },
+      {
+        "tekst": "…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-11"
+      },
+      {
+        "tekst": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-12"
+      },
+      {
+        "tekst": "…powołano zespół ds. zarządzania energią",
+        "podstawa": "N",
+        "auto": "zespol"
+      },
+      {
+        "tekst": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-09"
+      },
+      {
+        "tekst": "Kierownictwo wspiera inne role kierownicze w ich obszarach",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-10"
+      },
+      {
+        "tekst": "…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-03"
+      },
+      {
+        "tekst": "…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+        "podstawa": "N",
+        "auto": "zob",
+        "zob": "PRZ-13"
+      },
+      {
+        "tekst": "Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)",
+        "podstawa": "M",
+        "auto": "styk"
+      },
+      {
+        "tekst": "Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami",
+        "podstawa": "M",
+        "auto": "decyzje"
+      }
+    ],
+    "PROFIL": {
+      "FAKT_LOKALIZACJE": "2",
+      "FAKT_LOKALIZACJE_LISTA": [
+        {
+          "c0": "Zakład produkcyjny",
+          "c1": "ul. Przemysłowa 12, Katowice",
+          "c2": "produkcja",
+          "c3": "tak"
+        },
+        {
+          "c0": "Magazyn wyrobów gotowych",
+          "c1": "ul. Składowa 11, Katowice",
+          "c2": "magazyn",
+          "c3": "tak"
+        }
+      ],
+      "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+      "FAKT_PRACOWNICY": "850",
+      "FAKT_ZMIANY": "3",
+      "FAKT_SEZONOWOSC": "nie",
+      "FAKT_PODMIOT": "prywatny",
+      "FAKT_GRUPA_KAPITALOWA": "tak",
+      "FAKT_ZWIAZKI": "nie",
+      "FAKT_SYSTEM_BAZOWY": "iso_14001",
+      "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+      "FAKT_ZGODA_INTEGRACJA": "tak",
+      "FAKT_ENERGY_MANAGER": "nieformalnie",
+      "FAKT_UR_WLASNE": "wlasne",
+      "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+      "FAKT_ZAKUPY_KRYTERIA": "czasami",
+      "FAKT_ROTACJA": "srednia",
+      "FAKT_NOSNIKI": [
+        {
+          "c0": "energia elektryczna",
+          "c1": "8500",
+          "c2": "MWh",
+          "c3": "7565000"
+        },
+        {
+          "c0": "gaz ziemny",
+          "c1": "350000",
+          "c2": "m³",
+          "c3": "875000"
+        },
+        {
+          "c0": "LPG",
+          "c1": "18000",
+          "c2": "l",
+          "c3": "54000"
+        }
+      ],
+      "FAKT_ROK_ODNIESIENIA": "2025",
+      "FAKT_UDZIAL_ENERGII": "2,5",
+      "FAKT_MOC_UMOWNA": "1400",
+      "FAKT_SPREZONE": "tak",
+      "FAKT_CA_LICZBA": "4",
+      "FAKT_CA_MOC": "440",
+      "FAKT_CA_VSD": "0",
+      "FAKT_CA_STEROWNIK": "nie",
+      "FAKT_CA_SZCZELNOSC": "nie",
+      "FAKT_CA_ODZYSK": "nie",
+      "FAKT_CA_GODZINY": "6000",
+      "FAKT_KOTLOWNIA": "wlasne",
+      "FAKT_CIEPLO_PALIWO": [
+        "gaz ziemny"
+      ],
+      "FAKT_KOTLOWNIA_MOC": "1200",
+      "FAKT_KOTLOWNIA_WIEK": "18",
+      "FAKT_PODLICZNIKI": "czesciowo",
+      "FAKT_ODCZYT": "mieszane",
+      "FAKT_PRODUKCJA_JEDN": "t",
+      "FAKT_PRODUKCJA": "24000",
+      "FAKT_PRODUKCJA_POPRZ": "23500",
+      "FAKT_HDD": "3600",
+      "FAKT_HDD_POPRZ": "3450",
+      "FAKT_PRZYCHOD": "380",
+      "FAKT_SCADA": "nie",
+      "FAKT_MES": "nie",
+      "FAKT_ANALIZA_DANYCH": "arkusz",
+      "FAKT_AUDYT_ENERG": "tak",
+      "FAKT_ETS": "nie",
+      "FAKT_CSRD": "nie",
+      "FAKT_PRZETARGI": "nie",
+      "FAKT_ODBIORCY_CO2": "tak",
+      "FAKT_MOC_OGRANICZONA": "nie",
+      "FAKT_UMOWA_WYGASA": "tak",
+      "FAKT_BUDZET": "nie",
+      "FAKT_PBT_PROG": "3",
+      "FAKT_INWESTYCJE": "tak",
+      "FAKT_BIALE_MOZLIWE": "nie",
+      "FAKT_CHLODZENIE": "tak",
+      "FAKT_CHLODZENIE_WODNE": "nie",
+      "FAKT_FGAZ": "tak",
+      "FAKT_UDT": "tak",
+      "FAKT_WIEK_INFRA": "22",
+      "FAKT_LED_UDZIAL": "35",
+      "FAKT_OSW_STEROWANIE": "recznie",
+      "FAKT_NAPEDY_VSD": "czesc",
+      "FAKT_WENT": "tak",
+      "FAKT_WENT_LICZBA": "6",
+      "FAKT_WENT_ODZYSK": "czesc",
+      "FAKT_WENT_HARMONOGRAM": "nie",
+      "FAKT_CIEPLO_ODPADOWE": "tak",
+      "FAKT_ODZYSK_CIEPLA": "nie",
+      "FAKT_PROCES_BEZ_ALTERNATYWY": "tak",
+      "FAKT_PROCESY": [
+        "piece i nagrzewnice",
+        "pompy procesowe"
+      ],
+      "FAKT_PV": "nie",
+      "FAKT_BESS": "nie",
+      "FAKT_CHP": "nie",
+      "FAKT_FLOTA": "tak",
+      "FAKT_FLOTA_LICZBA": "4",
+      "FAKT_PRZERWY_POGODA": "nie"
+    },
+    "PYT": {
+      "FAKT_LOKALIZACJE": {
+        "pytanie": "Ile lokalizacji obejmie system zarządzania energią?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_LOKALIZACJE_LISTA": {
+        "pytanie": "Wymień lokalizacje",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_BRANZA": {
+        "pytanie": "Główna działalność zakładu",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_PRACOWNICY": {
+        "pytanie": "Liczba pracowników",
+        "typ": "number",
+        "jednostka": "osób",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZMIANY": {
+        "pytanie": "Ile zmian pracuje zakład?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SEZONOWOSC": {
+        "pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_PODMIOT": {
+        "pytanie": "Typ organizacji",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "prywatny": "prywatny",
+          "komunalny": "komunalny",
+          "publiczny": "publiczny"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_GRUPA_KAPITALOWA": {
+        "pytanie": "Czy organizacja należy do grupy kapitałowej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZWIAZKI": {
+        "pytanie": "Czy działają związki zawodowe lub rada pracowników?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY": {
+        "pytanie": "Czy organizacja ma wdrożony system zarządzania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Brak certyfikowanego systemu",
+          "iso_9001": "ISO 9001",
+          "iso_14001": "ISO 14001",
+          "oba": "ISO 9001 i ISO 14001",
+          "inny": "Inny system certyfikowany"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY_ROK": {
+        "pytanie": "Od którego roku system jest certyfikowany?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZGODA_INTEGRACJA": {
+        "pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak — rozszerzamy istniejącą dokumentację",
+          "nie": "Nie — tworzymy odrębny system",
+          "brak decyzji": "Decyzja jeszcze nie zapadła"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ENERGY_MANAGER": {
+        "pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "Nie wyznaczono nikogo",
+          "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków",
+          "tak": "Tak, z pisemnym zakresem obowiązków"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_UR_WLASNE": {
+        "pytanie": "Kto prowadzi utrzymanie ruchu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Własne służby utrzymania ruchu",
+          "zewnetrzne": "Firma zewnętrzna",
+          "mieszane": "Częściowo własne służby, część prac zlecana"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_INSTRUKCJE_EKSPL": {
+        "pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, dla wszystkich głównych urządzeń",
+          "czesciowo": "Dla części urządzeń",
+          "nie": "Nie ma"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZAKUPY_KRYTERIA": {
+        "pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "zawsze": "Zawsze — to stałe kryterium zakupowe",
+          "czasami": "Czasami, przy większych zakupach",
+          "nie": "Nie — decyduje cena zakupu"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROTACJA": {
+        "pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "niska": "Niska — poniżej 5% rocznie",
+          "srednia": "Średnia — od 5 do 15% rocznie",
+          "wysoka": "Wysoka — powyżej 15% rocznie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROK_ODNIESIENIA": {
+        "pytanie": "Za który rok podajesz dane?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_NOSNIKI": {
+        "pytanie": "Zużycie nośników energii w roku odniesienia",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "ZUZYCIE_TJ": {
+        "pytanie": "Roczne zużycie energii",
+        "typ": "auto",
+        "jednostka": "TJ",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_JEDN": {
+        "pytanie": "W czym mierzycie wielkość produkcji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "t": "tony wyrobu",
+          "szt": "sztuki wyrobu",
+          "m2": "metry kwadratowe",
+          "m3": "metry sześcienne",
+          "mwh": "MWh wyrobu (ciepło, chłód)",
+          "inna": "Inna jednostka"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_INNA": {
+        "pytanie": "Jaka jednostka?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA": {
+        "pytanie": "Wielkość produkcji w roku odniesienia",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_POPRZ": {
+        "pytanie": "Wielkość produkcji w roku poprzednim",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD": {
+        "pytanie": "Stopniodni grzania (HDD) w roku odniesienia",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD_POPRZ": {
+        "pytanie": "Stopniodni grzania w roku poprzednim",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRZYCHOD": {
+        "pytanie": "Przychód ze sprzedaży w roku odniesienia",
+        "typ": "number",
+        "jednostka": "mln zł",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_UDZIAL_ENERGII": {
+        "pytanie": "Jaki procent kosztów operacyjnych stanowi energia?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_UMOWNA": {
+        "pytanie": "Moc umowna energii elektrycznej",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_OGRANICZONA": {
+        "pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_WYGASA": {
+        "pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_DATA": {
+        "pytanie": "Data wygaśnięcia umowy",
+        "typ": "date",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BUDZET": {
+        "pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PBT_PROG": {
+        "pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE": {
+        "pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE_OPIS": {
+        "pytanie": "Jakie?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BIALE_MOZLIWE": {
+        "pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_SPREZONE": {
+        "pytanie": "Czy zakład ma instalację sprężonego powietrza?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_LICZBA": {
+        "pytanie": "Ile jest sprężarek?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_MOC": {
+        "pytanie": "Łączna moc znamionowa sprężarek",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_VSD": {
+        "pytanie": "Ile sprężarek ma regulację obrotów (falownik)?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_STEROWNIK": {
+        "pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_SZCZELNOSC": {
+        "pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_ODZYSK": {
+        "pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_GODZINY": {
+        "pytanie": "Ile godzin w roku pracuje sprężarkownia?",
+        "typ": "number",
+        "jednostka": "h/rok",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT": {
+        "pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_LICZBA": {
+        "pytanie": "Ile jest central?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_ODZYSK": {
+        "pytanie": "Czy centrale mają odzysk ciepła?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wszystkie": "Wszystkie centrale mają odzysk",
+          "czesc": "Część central ma odzysk",
+          "zadna": "Żadna nie ma odzysku",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_HARMONOGRAM": {
+        "pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, wszystkie",
+          "czesciowo": "Część central",
+          "nie": "Nie — pracują tak samo cały czas"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE": {
+        "pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_MOC": {
+        "pytanie": "Łączna moc chłodnicza",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_WODNE": {
+        "pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_FGAZ": {
+        "pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_NAPEDY_VSD": {
+        "pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Żaden albo pojedyncze",
+          "czesc": "Mniej więcej połowa",
+          "wiekszosc": "Większość",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_LED_UDZIAL": {
+        "pytanie": "Jaki procent oświetlenia stanowią źródła LED?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_OSW_STEROWANIE": {
+        "pytanie": "Jak sterowane jest oświetlenie hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "czujniki": "Czujniki ruchu albo natężenia światła",
+          "harmonogram": "Automatyczny harmonogram",
+          "recznie": "Ręcznie — włącznikiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WIEK_INFRA": {
+        "pytanie": "Ile lat ma większość głównych urządzeń energetycznych?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_UDT": {
+        "pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_KOTLOWNIA": {
+        "pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)",
+          "siec": "Wyłącznie z sieci ciepłowniczej",
+          "oba": "Z własnego źródła i z sieci ciepłowniczej",
+          "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWO": {
+        "pytanie": "Czym zasilane jest własne źródło ciepła?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "gaz ziemny": "gaz ziemny",
+          "olej": "olej",
+          "węgiel": "węgiel",
+          "biomasa": "biomasa",
+          "biogaz": "biogaz",
+          "pompa ciepła": "pompa ciepła",
+          "energia elektryczna": "energia elektryczna"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWA": {
+        "pytanie": "Czy ciepło pochodzi z paliw kopalnych?",
+        "typ": "auto",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_MOC": {
+        "pytanie": "Moc zainstalowana źródeł ciepła",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_WIEK": {
+        "pytanie": "Wiek najstarszego czynnego kotła",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_MOC_ZAMOWIONA": {
+        "pytanie": "Zamówiona moc cieplna z sieci",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PROCESY": {
+        "pytanie": "Które procesy zużywają najwięcej energii?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "piece i nagrzewnice": "piece i nagrzewnice",
+          "suszarnie": "suszarnie",
+          "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki",
+          "prasy": "prasy",
+          "malarnia": "malarnia",
+          "galwanizernia": "galwanizernia",
+          "pompy procesowe": "pompy procesowe",
+          "chłodzenie procesu": "chłodzenie procesu",
+          "inne": "inne"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_ODPADOWE": {
+        "pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_ODZYSK_CIEPLA": {
+        "pytanie": "Czy to ciepło jest odzyskiwane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, w całości albo prawie w całości",
+          "czesciowo": "Częściowo",
+          "nie": "Nie jest odzyskiwane"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PROCES_BEZ_ALTERNATYWY": {
+        "pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV": {
+        "pytanie": "Czy zakład ma instalację fotowoltaiczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, działa",
+          "nie": "Nie",
+          "w planach": "W planach albo w budowie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV_MOC": {
+        "pytanie": "Moc instalacji fotowoltaicznej",
+        "typ": "number",
+        "jednostka": "kWp",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_BESS": {
+        "pytanie": "Czy zakład ma magazyn energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_BESS_POJ": {
+        "pytanie": "Pojemność magazynu",
+        "typ": "number",
+        "jednostka": "kWh",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CHP": {
+        "pytanie": "Czy zakład ma kogenerację?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CHP_MOC": {
+        "pytanie": "Moc elektryczna kogeneracji",
+        "typ": "number",
+        "jednostka": "kWe",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA": {
+        "pytanie": "Czy w zakresie systemu jest flota pojazdów?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA_LICZBA": {
+        "pytanie": "Liczba pojazdów",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PODLICZNIKI": {
+        "pytanie": "Jak opomiarowana jest energia elektryczna?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Tylko licznik główny",
+          "czesciowo": "Podliczniki na części obiektów lub wydziałów",
+          "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_PODLICZNIKI_LICZBA": {
+        "pytanie": "Ile jest podliczników?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_ODCZYT": {
+        "pytanie": "Jak odczytywane są liczniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "recznie": "Ręcznie, spisywane z liczników",
+          "zdalnie": "Zdalnie, automatycznie do systemu",
+          "mieszane": "Część ręcznie, część zdalnie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA": {
+        "pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA_ZAKRES": {
+        "pytanie": "Jaki procent zużycia energii obejmuje?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_DANE_HISTORIA": {
+        "pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?",
+        "typ": "number",
+        "jednostka": "mies.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_MES": {
+        "pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_ANALIZA_DANYCH": {
+        "pytanie": "Czy dane o zużyciu energii są analizowane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "nie",
+          "okresowo": "okresowo",
+          "systematycznie": "systematycznie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_AUDYT_ENERG": {
+        "pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_AUDYT_ROK": {
+        "pytanie": "W którym roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ETS": {
+        "pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD": {
+        "pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD_ROK": {
+        "pytanie": "Od którego roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ODBIORCY_CO2": {
+        "pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZETARGI": {
+        "pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZERWY_POGODA": {
+        "pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Kierownictwo, które daje budżet na certyfikat, ale nie daje czasu ludzi, dostaje system na papierze — i dowiaduje się o tym na audicie.",
+        "decyzja": "Zasoby przyznane przed wdrożeniem, nie po pierwszym audicie: czas Energy Managera, czas utrzymania ruchu i wyodrębniony budżet.",
+        "dzialanie": "Zarządzenie 3/2026 z zespołem i rolami; plan zasobów (7.1); budżet 500 tys. zł na 2026 r. i 380 tys. zł w projekcie budżetu na 2027 r.",
+        "sprawdzenie": "Na przeglądzie zarządzania zestawiamy zadania z dostępnym czasem i budżet z wykonaniem; przekroczenie obciążenia kończy się decyzją o zasobie, a nie przesunięciem terminu."
+      }
+    ],
+    "ZOB": {},
+    "CZLON": [],
+    "ZAS": {},
+    "INT": {},
+    "STYK": {},
+    "DECYZJE": [],
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "STANY3": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "jest",
+        "Jest — potrafimy to pokazać"
+      ],
+      [
+        "czesciowo",
+        "Częściowo — część dowodów istnieje"
+      ],
+      [
+        "nie",
+        "Nie — jeszcze tego nie ma"
+      ]
+    ]
+  },
+  "example_literals": {
+    "ZOB": {
+      "PRZ-00": {
+        "stan": "jest",
+        "dowod": "Zarządzenie 3/2026 z 12.02.2026 r.: najwyższym kierownictwem dla systemu jest Dyrektor Zakładu, a w sprawach nakładów powyżej budżetu rocznego — zarząd spółki.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-01": {
+        "stan": "jest",
+        "dowod": "D-EnMS-ZAK-01 — zakres i granice zatwierdzone 20.02.2026 r.; obie lokalizacje w Katowicach w systemie.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-02": {
+        "stan": "jest",
+        "dowod": "Polityka energetyczna z 12.02.2026 r. powiązana z celem obniżenia kosztów energii o 8% do 2028 r. ze strategii 2026–2028; cele Z1–Z3 w planie działań (6.2).",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-03": {
+        "stan": "czesciowo",
+        "dowod": "Karty wskaźników dla zakładu, pras i sprężarkowni (6.4). Dla sprężarkowni wskaźnik liczony dziś z szacunku — podlicznik i przepływomierz w planie C4, termin 30.06.2027 r.",
+        "kto": "Energy Manager",
+        "plan": ""
+      },
+      "PRZ-04": {
+        "stan": "czesciowo",
+        "dowod": "Kryteria energetyczne w procedurze zakupowej od 03.2026 r.; planowanie produkcji i budżetowanie uwzględniają energię od II półrocza 2026 r. Zarządzanie zmianą jeszcze bez punktu o energii.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-05": {
+        "stan": "jest",
+        "dowod": "Plany działań C1–C4 zatwierdzone 12.02.2026 r.; trzy działania planu C1 wykonane do 09.2026 r., protokoły w rejestrze.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-06": {
+        "stan": "jest",
+        "dowod": "Plan zasobów (7.1): 25% etatu Energy Managera, 2,5 h tygodniowo Kierownika Utrzymania Ruchu, budżet 500 tys. zł na 2026 r.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-07": {
+        "stan": "jest",
+        "dowod": "Zarządzenie 3/2026 — zespół ds. zarządzania energią w pięcioosobowym składzie; skład w zakładce 2.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-08": {
+        "stan": "jest",
+        "dowod": "Spotkanie kierownictwa 12.02.2026 r. i instruktaże stanowiskowe; polityka w intranecie i na tablicy przy portierni; wynik S-1 ogłaszany co miesiąc.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-09": {
+        "stan": "czesciowo",
+        "dowod": "Szkolenie operatorów sprężarkowni 05.2026 r.; rejestr zgłoszeń uwag działa od 04.2026 r. Program świadomości dla pozostałych wydziałów w przygotowaniu (7.3).",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-10": {
+        "stan": "jest",
+        "dowod": "Kierownik Produkcji i Kierownik Utrzymania Ruchu mają przypisane znaczące użycia energii i uprawnienia opisane w punkcie 5.3.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-11": {
+        "stan": "czesciowo",
+        "dowod": "Wynik roku: S-1 z 0,125 na 0,119 kWh/Nm³ (VII–IX 2026) wobec celu 0,110 do 31.12.2027 r. Cel kosztowy rozliczany po zamknięciu roku.",
+        "kto": "Energy Manager",
+        "plan": ""
+      },
+      "PRZ-12": {
+        "stan": "jest",
+        "dowod": "Plan doskonalenia (10.2) z pozycjami na 2027 r.; decyzja o projekcie budżetu 380 tys. zł na sterownik i napęd — INW/2027/04.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-13": {
+        "stan": "czesciowo",
+        "dowod": "Przegląd stanu prawnego co kwartał; ocena zgodności raz w roku (9.1.2); zmiany czynników kontekstowych jako punkt agendy przeglądu zarządzania. Zgłaszanie zmian technicznych przed uruchomieniem — do wprowadzenia.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      },
+      "PRZ-14": {
+        "stan": "jest",
+        "dowod": "Raport miesięczny do Dyrektora Zakładu, kwartalny punkt na naradzie produkcyjnej, roczny przegląd zarządzania — ostatni 18.06.2026 r.",
+        "kto": "Dyrektor Zakładu",
+        "plan": ""
+      }
+    },
+    "INT": {
+      "INT-ZAK": {
+        "stan": "jest",
+        "jak": "Kryteria energetyczne w zapytaniach ofertowych i w karcie oceny ofert; przy zakupach o istotnym zużyciu liczony koszt w cyklu życia.",
+        "gdzie": "Procedura zakupowa, wersja 1.0 (8.3)"
+      },
+      "INT-INW": {
+        "stan": "jest",
+        "jak": "Wniosek inwestycyjny zawiera szacunek zużycia i SPBT; próg 3 lata przyjęty przez zarząd.",
+        "gdzie": "Wniosek INW/2027/04"
+      },
+      "INT-PROD": {
+        "stan": "czesciowo",
+        "jak": "Plan produkcji przekazywany do prognoz zużycia; wyłączenia instalacji w przerwach uzgadniane z utrzymaniem ruchu. Energia nie jest jeszcze kryterium przy układaniu kolejności zleceń.",
+        "gdzie": "Narada produkcyjna, zapis w notatce"
+      },
+      "INT-UR": {
+        "stan": "jest",
+        "jak": "Kryteria eksploatacji znaczących użyć w planie przeglądów; kwartalny przegląd szczelności jako zadanie cykliczne.",
+        "gdzie": "Plan przeglądów 2026 (8.1)"
+      },
+      "INT-BUD": {
+        "stan": "jest",
+        "jak": "Budżet na efektywność energetyczną wyodrębniony na 2026 r. (500 tys. zł) i w projekcie na 2027 r. (380 tys. zł).",
+        "gdzie": "Budżet zakładu, pozycja „efektywność energetyczna”"
+      },
+      "INT-RAP": {
+        "stan": "jest",
+        "jak": "Wynik energetyczny i postęp planów w miesięcznym raporcie zarządczym obok kosztów i produkcji.",
+        "gdzie": "Raport miesięczny dla Dyrektora Zakładu"
+      },
+      "INT-ZMI": {
+        "stan": "nie",
+        "jak": "",
+        "gdzie": ""
+      }
+    },
+    "ZESP": {
+      "dokument": "Zarządzenie 3/2026 Dyrektora Zakładu o powołaniu zespołu ds. zarządzania energią",
+      "data": "2026-02-12",
+      "organ": "Dyrektor Zakładu"
+    },
+    "CZLON": [
+      {
+        "osoba": "Energy Manager",
+        "rola": "kierujacy",
+        "wie": "tak"
+      },
+      {
+        "osoba": "Dyrektor Zakładu",
+        "rola": "sponsor",
+        "wie": "tak"
+      },
+      {
+        "osoba": "Kierownik Utrzymania Ruchu",
+        "rola": "czlonek",
+        "wie": "tak"
+      },
+      {
+        "osoba": "Kierownik Produkcji",
+        "rola": "czlonek",
+        "wie": "tak"
+      },
+      {
+        "osoba": "Kontroling",
+        "rola": "czlonek",
+        "wie": "tak"
+      },
+      {
+        "osoba": "Konsultant ENESA",
+        "rola": "wsparcie",
+        "wie": "tak"
+      }
+    ],
+    "ZAS": {
+      "ZAS-LUD": {
+        "stan": "jest",
+        "opis": "Energy Manager w 25% etatu, zespół pięcioosobowy, auditor wewnętrzny z ISO 14001 przeszkolony z ISO 50001."
+      },
+      "ZAS-CZAS": {
+        "stan": "jest",
+        "opis": "Czas przypisany w planie zasobów (7.1): 130 h Energy Managera, 30 h Kierownika Utrzymania Ruchu, 16 h technika w kwartale."
+      },
+      "ZAS-BUD": {
+        "stan": "jest",
+        "opis": "500 tys. zł na 2026 r. na działania nisko- i średniokosztowe; 380 tys. zł w projekcie budżetu 2027 r. na sterownik nadrzędny i napęd."
+      },
+      "ZAS-NARZ": {
+        "stan": "czesciowo",
+        "opis": "Liczniki główne energii elektrycznej i gazu, analizator przenośny, detektor ultradźwiękowy. Brakuje podlicznika sprężarkowni i przepływomierza — plan C4, termin 30.06.2027 r."
+      },
+      "ZAS-DANE": {
+        "stan": "czesciowo",
+        "opis": "Faktury, odczyty tygodniowe, dane o produkcji z ERP, stopniodnie z najbliższej stacji IMGW-PIB. Odczyty nadal ręczne — bez systemu nadzoru."
+      },
+      "ZAS-KOMP": {
+        "stan": "czesciowo",
+        "opis": "Szkolenie operatorów sprężarkowni 05.2026 r., kurs ISO 50001 dla Energy Managera. Matryca kompetencji (7.2) wskazuje dwie luki do zamknięcia do 12.2026 r."
+      }
+    },
+    "STYK": {
+      "NAW-1": {
+        "stan": "jest",
+        "jak": "Poza budżetem na certyfikat przyznano czas ludzi i budżet na działania — decyzja z 12.02.2026 r., plan zasobów (7.1)."
+      },
+      "NAW-2": {
+        "stan": "czesciowo",
+        "jak": "Energia jest kryterium przy zakupach i inwestycjach; przy planowaniu produkcji jeszcze nie."
+      },
+      "NAW-3": {
+        "stan": "jest",
+        "jak": "Wynik S-1 ogłaszany co miesiąc na tablicy; punkt o energii na kwartalnej naradzie produkcyjnej."
+      },
+      "NAW-4": {
+        "stan": "jest",
+        "jak": "Dyrektor Zakładu prowadził spotkanie otwierające 12.02.2026 r. i przegląd zarządzania 18.06.2026 r."
+      },
+      "NAW-5": {
+        "stan": "jest",
+        "jak": "Przy sporze o wyłączenia pras w przerwach kierownictwo poparło kryterium eksploatacji — zapis w protokole narady z 09.2026 r."
+      }
+    },
+    "DECYZJE": [
+      {
+        "data": "2026-02-12",
+        "czego": "Powołanie zespołu, zatwierdzenie polityki energetycznej i celów Z1–Z3",
+        "kto": "Dyrektor Zakładu",
+        "skutek": "Zarządzenie 3/2026; polityka w wersji 1.0; plany działań C1–C4 z budżetem 500 tys. zł"
+      },
+      {
+        "data": "2026-06-18",
+        "czego": "Przegląd zarządzania: rewizja linii bazowej po modernizacji sprężarkowni i projekt budżetu na 2027 r.",
+        "kto": "Dyrektor Zakładu",
+        "skutek": "Protokół przeglądu; wniosek INW/2027/04 na 380 tys. zł skierowany do projektu budżetu"
+      },
+      {
+        "data": "2026-09-14",
+        "czego": "Zwiększenie czasu Kierownika Utrzymania Ruchu z 2 do 2,5 h tygodniowo po przeglądzie obciążeń",
+        "kto": "Dyrektor Zakładu",
+        "skutek": "Aneks do zakresu obowiązków; zadania z planu C1 wykonane w terminie"
+      }
+    ]
+  }
+}

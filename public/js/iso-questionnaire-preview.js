@@ -14,7 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.append(link);
     });
     document.getElementById('preview-section').addEventListener('change', event => { location.href = event.target.value; });
-    document.getElementById('preview-reset').addEventListener('click', () => location.reload());
+    document.getElementById('preview-reset').addEventListener('click', () => {
+        const url = new URL(location.href);
+        url.searchParams.delete('source_example');
+        location.href = url.href;
+    });
     document.getElementById('preview-conditions').addEventListener('change', event => document.body.classList.toggle('preview-all', event.target.checked));
     function explainConditions() {
         form.querySelectorAll('[data-condition],[data-when]').forEach(field => {

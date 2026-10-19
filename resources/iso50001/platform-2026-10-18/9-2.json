@@ -1,0 +1,464 @@
+{
+  "source_file": "ENESA_9.2_Audyt_wewnetrzny_platforma.html",
+  "source_sha256": "1d1ed63aad8b265f80957920ccbee44933ad2d1c5ec0ea760e4502bc9137aaf1",
+  "section": "9-2",
+  "data": {
+    "PYT_B9": [
+      {
+        "kod": "poprawa",
+        "tekst": "Czy system poprawia wynik energetyczny?",
+        "ph": "np. Tak. O-1 0,965 wobec EnB 1,000 (VIII 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0. Poprawa wykazana pomiarem i modelem, nie samym spadkiem zużycia. K-1 wymaga analizy przed sezonem grzewczym.",
+        "pomoc": "Pytanie a) z punktu 9.2. Odpowiedź opiera się na wynikach monitorowania (9.1.1), nie na przekonaniu."
+      },
+      {
+        "kod": "zgodnosc",
+        "tekst": "Czy system jest zgodny z wymaganiami organizacji, polityką, celami i zadaniami oraz z wymaganiami normy?",
+        "ph": "np. W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (8.1, nadzór nad procesem zleconym): protokół serwisu bez nastaw, protokołu nie sprawdzano przy odbiorze. Polityka, cele i zadania spójne z planami działań; wymagania normy dla punktów 4–8 spełnione.",
+        "pomoc": "Pytanie b). Dotyczy zgodności z tym, co organizacja sama ustaliła — <b>i</b> z normą."
+      },
+      {
+        "kod": "wdrozenie",
+        "tekst": "Czy system jest skutecznie wdrożony i utrzymywany?",
+        "ph": "np. Tak, z zastrzeżeniem. Kryteria sprężarkowni są stosowane — potwierdzone trendem ciśnienia i rozmową z technikami. Słabe miejsce: nadzór nad wykonawcami — wymaganie ustalone po czerwcowym zdarzeniu działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma).",
+        "pomoc": "Pytanie c) — czyli czy ustalenia żyją na hali, a nie tylko w dokumentach."
+      }
+    ],
+    "LISTA_92": [
+      {
+        "tekst": "Audyty w zaplanowanych odstępach odpowiadają na pytania: poprawa wyniku, zgodność, skuteczne wdrożenie.",
+        "podstawa": "N",
+        "auto": "trzyPytania"
+      },
+      {
+        "tekst": "Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów.",
+        "podstawa": "N",
+        "auto": "program"
+      },
+      {
+        "tekst": "Dla każdego audytu określono zakres i kryteria.",
+        "podstawa": "N",
+        "auto": "zakresKryteria"
+      },
+      {
+        "tekst": "Audytorzy zapewniają obiektywność i bezstronność.",
+        "podstawa": "N",
+        "auto": "bezstronnosc"
+      },
+      {
+        "tekst": "Wyniki przekazano odpowiedniemu kierownictwu; podjęto odpowiednie działania.",
+        "podstawa": "N",
+        "auto": "przekazanie"
+      },
+      {
+        "tekst": "Zachowano dowody realizacji programu i wyniki audytów.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Ustalenia opierają się na dowodach z praktyki; audytu nie ocenia się liczbą niezgodności.",
+        "podstawa": "M",
+        "auto": "dowody"
+      }
+    ],
+    "przyklad": {
+      "PROGRAM": [
+        {
+          "nr": "1",
+          "obszar": "Cały system — przed audytem certyfikującym",
+          "punkty": "4–10",
+          "dlaczego": "Pierwszy audyt systemu; wszystkie wymagania do sprawdzenia przed certyfikacją (audyt certyfikujący XI–XII 2026)",
+          "termin": "15–17.09.2026",
+          "audytor": "Audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001, spoza audytowanych obszarów; obszar Energy Managera — inny audytor ISO 14001 z kompetencjami ISO 50001",
+          "status": "wykonany",
+          "uwagi": "Wykonany; raport A-01/2026"
+        },
+        {
+          "nr": "2",
+          "obszar": "Zakupy i projekty związane ze znaczącymi użyciami energii",
+          "punkty": "8.2, 8.3",
+          "dlaczego": "Zakup sterownika i napędu sprężarkowni (380 tys. zł, uruchomienie 06.2027); luka kompetencyjna w zakupach wykryta w audycie 1 — porównywanie kosztu zakupu i energii",
+          "termin": "II kw. 2027",
+          "audytor": "Audytorka ISO 14001 z kompetencjami ISO 50001",
+          "status": "planowany",
+          "uwagi": "Zmiana terminu i zakresu wprowadzona 29.09.2026 po przeglądzie zarządzania"
+        },
+        {
+          "nr": "3",
+          "obszar": "Sprężarkownia i nadzór nad serwisem",
+          "punkty": "8.1, 9.1.1",
+          "dlaczego": "SEU 17,5% zużycia zakładu; znaczące odchylenie 06.2026; niezgodność z audytu 1 (protokół serwisu bez nastaw); modernizacja uruchamiana 06.2027 — kryteria do sprawdzenia po zmianie",
+          "termin": "III kw. 2027 (po uruchomieniu)",
+          "audytor": "Audytor ISO 14001 z kompetencjami ISO 50001, spoza utrzymania ruchu",
+          "status": "planowany",
+          "uwagi": "Zmiana wprowadzona 29.09.2026 — termin przesunięty za uruchomienie modernizacji"
+        },
+        {
+          "nr": "4",
+          "obszar": "Cały system",
+          "punkty": "4–10",
+          "dlaczego": "Rytm roczny AutoParts (★ wybór organizacji); przegląd wszystkich wymagań po pierwszym pełnym roku działania systemu i po modernizacji sprężarkowni",
+          "termin": "09.2027",
+          "audytor": "Według dostępności, z rotacją audytorów między obszarami",
+          "status": "planowany",
+          "uwagi": "—"
+        }
+      ],
+      "RAPORTY": [
+        {
+          "nr": "A-01/2026",
+          "pozycja": "1",
+          "data": "2026-09-17",
+          "daty": "15–17.09.2026",
+          "zakres": "Cały system zarządzania energią, punkty 4–10 normy. Obszary: Energy Manager, utrzymanie ruchu (sprężarkownia, kotłownia, oświetlenie), produkcja, zakupy, kontroling. Audyt przed pierwszym audytem certyfikującym.",
+          "kryteria": "ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04); polityka energetyczna z 03.2026; cele i plany działań (III-24).",
+          "audytor": "Specjalistka ds. środowiska — audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001. Obszar Energy Managera audytował inny audytor ISO 14001 z kompetencjami ISO 50001.",
+          "wlasnaPraca": "nie",
+          "bezstronnosc": "Audytorka nie odpowiada za żaden z audytowanych obszarów. Energy Manager organizuje program, ale nie audytuje systemu, który sam zbudował — jego obszar audytowała inna osoba. Kompetencje obu audytorów potwierdzone w matrycy III-12.",
+          "audytowani": "Jan Kowalski — Energy Manager; kierownik utrzymania ruchu; dwóch techników sprężarkowni; kierownik produkcji; dział zakupów; kontroler finansowy",
+          "rozdzielnik": "Piotr Nowak — Dyrektor Zakładu; kierownik utrzymania ruchu; Jan Kowalski — Energy Manager",
+          "ustalenia": [
+            {
+              "nr": "N-1",
+              "rodzaj": "N",
+              "opis": "Protokół z przeglądu sprężarki z września 2026 r. jest na wzorze serwisu i nie zawiera nastaw ciśnienia przed i po. Protokołu nie sprawdzano przy odbiorze usługi. Wymaganie wprowadzone przez organizację po zdarzeniu z czerwca 2026 r. działa więc tylko w połowie: zlecenie z wymaganiami jest, kontroli odbioru nie ma.",
+              "dowod": "Zlecenie serwisowe z 07.2026 — zawiera trzy zdania o zakazie zmiany nastaw bez zgłoszenia. Protokół serwisu z 09.2026 na wzorze wykonawcy, bez nastaw przed i po. Rozmowa z kierownikiem utrzymania ruchu: protokół nie jest sprawdzany przy odbiorze usługi.",
+              "zrodlo": "rozmowa",
+              "wymaganie": "Wymaganie organizacji z punktu 8.1 — nadzór nad procesami zleconymi: przekazanie wykonawcy kryteriów eksploatacji i sprawdzenie ich zastosowania. Zapisane w karcie kryteriów sprężarkowni F-EnMS-14, sekcja C, po zdarzeniu z 06.2026.",
+              "dzialanie": "Sprawdzanie protokołu przy odbiorze usługi wprowadzone do obiegu zleceń serwisowych. Przekazanie serwisowi wzoru protokołu z nastawami przed i po. Aktualizacja procedury P-EnMS-06.",
+              "odp": "Kierownik utrzymania ruchu — wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU",
+              "karta10": "tak"
+            },
+            {
+              "nr": "D-1",
+              "rodzaj": "D",
+              "opis": "Wzór protokołu z nastawami przed i po jest przekazywany wykonawcy sprężarkowni. Warto rozciągnąć go na wykonawców wszystkich znaczących użyć energii — serwis kotłowni i lakierni pracuje dziś na własnych wzorach, bez pola na nastawy.",
+              "dowod": "Przegląd trzech ostatnich protokołów serwisowych kotłowni i lakierni — żaden nie zawiera pola na nastawy. Rozmowa z kierownikiem utrzymania ruchu: wzory pochodzą od wykonawców.",
+              "zrodlo": "dokument",
+              "wymaganie": "",
+              "dzialanie": "Jeden wzór protokołu z nastawami dla wykonawców przy wszystkich SEU, dołączany do zlecenia jako załącznik.",
+              "odp": "Kierownik utrzymania ruchu — 10.2026",
+              "karta10": ""
+            },
+            {
+              "nr": "D-2",
+              "rodzaj": "D",
+              "opis": "Dział zakupów ocenia oferty na urządzenia pracujące wiele godzin w roku głównie ceną zakupu. Przy zakupie sterownika i napędu sprężarkowni porównanie kosztu zakupu i energii wykonał Energy Manager, nie dział zakupów. Przy kolejnych zakupach bez jego udziału porównanie może nie powstać.",
+              "dowod": "Rozmowa z działem zakupów — porównanie kosztu zakupu i energii nie jest częścią rutyny działu. Matryca kompetencji III-28 wskazuje lukę w tym obszarze. Specyfikacja ZAP/2026/14 zawiera porównanie przygotowane przez Energy Managera.",
+              "zrodlo": "rozmowa",
+              "wymaganie": "",
+              "dzialanie": "Warsztat dla działu zakupów z porównywania kosztu zakupu i energii w okresie użytkowania; wzór porównania dołączony do procedury zakupowej.",
+              "odp": "Energy Manager — 11.2026",
+              "karta10": ""
+            },
+            {
+              "nr": "P-1",
+              "rodzaj": "P",
+              "opis": "Kryterium ciśnienia w sieci sprężonego powietrza nie wyżej niż 6,3 bar jest stosowane i rozumiane przez obsługę. Technicy wiedzą, jakie ciśnienie ma być ustawione i skąd to wiedzą.",
+              "dowod": "Trend ciśnienia z rejestratora sterownika za okres VII–IX 2026 — bez przekroczeń. Instrukcja przy panelu sterowania z aktualną wartością. Rozmowa z dwoma technikami: obaj podali 6,3 bar i wskazali instrukcję jako źródło.",
+              "zrodlo": "pomiar",
+              "wymaganie": "",
+              "dzialanie": "",
+              "odp": "",
+              "karta10": ""
+            }
+          ],
+          "B": {
+            "poprawa": "Tak. O-1 0,965 wobec EnB 1,000 (sierpień 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0 kWh/t. Poprawa wykazana modelem zużycia i pomiarem, nie samym spadkiem zużycia — zestawienia uwzględniają produkcję i stopniodni. K-1 (kotłownia) o 1% powyżej EnB w I półroczu, analiza przyczyn przed sezonem grzewczym. OŚ-1 bez zmian do wymiany opraw na LED.",
+            "zgodnosc": "W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (punkt 8.1, nadzór nad procesami zleconymi) — ustalenie N-1. Polityka energetyczna z 03.2026 spójna z kierunkiem firmy; cele i zadania powiązane z planami działań i rozliczane w raportach miesięcznych. Wymagania normy dla punktów 4–8 spełnione; ocena zgodności (9.1.2) przeprowadzona we wrześniu, z jedną niezgodnością po stronie terminu raportu dla banku.",
+            "wdrozenie": "Tak, z jednym zastrzeżeniem. Kryteria sprężarkowni są stosowane i rozumiane przez obsługę — potwierdzone trendem ciśnienia i rozmowami z technikami (ustalenie P-1). Znaczące odchylenie z czerwca zostało zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Słabe miejsce: nadzór nad wykonawcami. Wymaganie wprowadzone po czerwcowym zdarzeniu działa tylko w połowie — zlecenie zawiera kryteria, ale protokołu nikt nie sprawdza przy odbiorze."
+          },
+          "uwagiProgram": "Sprężarkownię i nadzór nad serwisem audytować po uruchomieniu modernizacji (III kw. 2027), z naciskiem na protokoły odbioru usług i skuteczność działania z ustalenia N-1. Zakupy i projekty — po warsztacie z porównywania kosztu zakupu i energii (II kw. 2027). Kolejny audyt całego systemu we wrześniu 2027 r., z rotacją audytorów między obszarami."
+        }
+      ],
+      "META": {
+        "organizacja": "AutoParts Polska Sp. z o.o. — program wspólny z ISO 14001",
+        "organizuje": "Jan Kowalski — Energy Manager",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "dataZatw": "2026-06-30",
+        "kryteria": "ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04).",
+        "planAudytu": "Plan każdego audytu — zakres, kryteria, harmonogram — przekazywany audytowanym ★ dwa tygodnie przed audytem. Metody: przegląd dokumentów i zapisów, rozmowy z ludźmi przy pracy, obserwacja na hali. Raport na formularzu F-EnMS-19 (III-44) w ciągu dwóch tygodni po audycie. Zmiana programu z 29.09.2026 dotyczy pozycji 2 i 3 (terminy i zakres po przeglądzie zarządzania)."
+      }
+    }
+  },
+  "variables": {
+    "PYT_B9": [
+      {
+        "kod": "poprawa",
+        "tekst": "Czy system poprawia wynik energetyczny?",
+        "ph": "np. Tak. O-1 0,965 wobec EnB 1,000 (VIII 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0. Poprawa wykazana pomiarem i modelem, nie samym spadkiem zużycia. K-1 wymaga analizy przed sezonem grzewczym.",
+        "pomoc": "Pytanie a) z punktu 9.2. Odpowiedź opiera się na wynikach monitorowania (9.1.1), nie na przekonaniu."
+      },
+      {
+        "kod": "zgodnosc",
+        "tekst": "Czy system jest zgodny z wymaganiami organizacji, polityką, celami i zadaniami oraz z wymaganiami normy?",
+        "ph": "np. W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (8.1, nadzór nad procesem zleconym): protokół serwisu bez nastaw, protokołu nie sprawdzano przy odbiorze. Polityka, cele i zadania spójne z planami działań; wymagania normy dla punktów 4–8 spełnione.",
+        "pomoc": "Pytanie b). Dotyczy zgodności z tym, co organizacja sama ustaliła — <b>i</b> z normą."
+      },
+      {
+        "kod": "wdrozenie",
+        "tekst": "Czy system jest skutecznie wdrożony i utrzymywany?",
+        "ph": "np. Tak, z zastrzeżeniem. Kryteria sprężarkowni są stosowane — potwierdzone trendem ciśnienia i rozmową z technikami. Słabe miejsce: nadzór nad wykonawcami — wymaganie ustalone po czerwcowym zdarzeniu działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma).",
+        "pomoc": "Pytanie c) — czyli czy ustalenia żyją na hali, a nie tylko w dokumentach."
+      }
+    ],
+    "LISTA_92": [
+      {
+        "tekst": "Audyty w zaplanowanych odstępach odpowiadają na pytania: poprawa wyniku, zgodność, skuteczne wdrożenie.",
+        "podstawa": "N",
+        "auto": "trzyPytania"
+      },
+      {
+        "tekst": "Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów.",
+        "podstawa": "N",
+        "auto": "program"
+      },
+      {
+        "tekst": "Dla każdego audytu określono zakres i kryteria.",
+        "podstawa": "N",
+        "auto": "zakresKryteria"
+      },
+      {
+        "tekst": "Audytorzy zapewniają obiektywność i bezstronność.",
+        "podstawa": "N",
+        "auto": "bezstronnosc"
+      },
+      {
+        "tekst": "Wyniki przekazano odpowiedniemu kierownictwu; podjęto odpowiednie działania.",
+        "podstawa": "N",
+        "auto": "przekazanie"
+      },
+      {
+        "tekst": "Zachowano dowody realizacji programu i wyniki audytów.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Ustalenia opierają się na dowodach z praktyki; audytu nie ocenia się liczbą niezgodności.",
+        "podstawa": "M",
+        "auto": "dowody"
+      }
+    ],
+    "PRZYKLAD": {
+      "PROGRAM": [
+        {
+          "nr": "1",
+          "obszar": "Cały system — przed audytem certyfikującym",
+          "punkty": "4–10",
+          "dlaczego": "Pierwszy audyt systemu; wszystkie wymagania do sprawdzenia przed certyfikacją (audyt certyfikujący XI–XII 2026)",
+          "termin": "15–17.09.2026",
+          "audytor": "Audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001, spoza audytowanych obszarów; obszar Energy Managera — inny audytor ISO 14001 z kompetencjami ISO 50001",
+          "status": "wykonany",
+          "uwagi": "Wykonany; raport A-01/2026"
+        },
+        {
+          "nr": "2",
+          "obszar": "Zakupy i projekty związane ze znaczącymi użyciami energii",
+          "punkty": "8.2, 8.3",
+          "dlaczego": "Zakup sterownika i napędu sprężarkowni (380 tys. zł, uruchomienie 06.2027); luka kompetencyjna w zakupach wykryta w audycie 1 — porównywanie kosztu zakupu i energii",
+          "termin": "II kw. 2027",
+          "audytor": "Audytorka ISO 14001 z kompetencjami ISO 50001",
+          "status": "planowany",
+          "uwagi": "Zmiana terminu i zakresu wprowadzona 29.09.2026 po przeglądzie zarządzania"
+        },
+        {
+          "nr": "3",
+          "obszar": "Sprężarkownia i nadzór nad serwisem",
+          "punkty": "8.1, 9.1.1",
+          "dlaczego": "SEU 17,5% zużycia zakładu; znaczące odchylenie 06.2026; niezgodność z audytu 1 (protokół serwisu bez nastaw); modernizacja uruchamiana 06.2027 — kryteria do sprawdzenia po zmianie",
+          "termin": "III kw. 2027 (po uruchomieniu)",
+          "audytor": "Audytor ISO 14001 z kompetencjami ISO 50001, spoza utrzymania ruchu",
+          "status": "planowany",
+          "uwagi": "Zmiana wprowadzona 29.09.2026 — termin przesunięty za uruchomienie modernizacji"
+        },
+        {
+          "nr": "4",
+          "obszar": "Cały system",
+          "punkty": "4–10",
+          "dlaczego": "Rytm roczny AutoParts (★ wybór organizacji); przegląd wszystkich wymagań po pierwszym pełnym roku działania systemu i po modernizacji sprężarkowni",
+          "termin": "09.2027",
+          "audytor": "Według dostępności, z rotacją audytorów między obszarami",
+          "status": "planowany",
+          "uwagi": "—"
+        }
+      ],
+      "RAPORTY": [
+        {
+          "nr": "A-01/2026",
+          "pozycja": "1",
+          "data": "2026-09-17",
+          "daty": "15–17.09.2026",
+          "zakres": "Cały system zarządzania energią, punkty 4–10 normy. Obszary: Energy Manager, utrzymanie ruchu (sprężarkownia, kotłownia, oświetlenie), produkcja, zakupy, kontroling. Audyt przed pierwszym audytem certyfikującym.",
+          "kryteria": "ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04); polityka energetyczna z 03.2026; cele i plany działań (III-24).",
+          "audytor": "Specjalistka ds. środowiska — audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001. Obszar Energy Managera audytował inny audytor ISO 14001 z kompetencjami ISO 50001.",
+          "wlasnaPraca": "nie",
+          "bezstronnosc": "Audytorka nie odpowiada za żaden z audytowanych obszarów. Energy Manager organizuje program, ale nie audytuje systemu, który sam zbudował — jego obszar audytowała inna osoba. Kompetencje obu audytorów potwierdzone w matrycy III-12.",
+          "audytowani": "Jan Kowalski — Energy Manager; kierownik utrzymania ruchu; dwóch techników sprężarkowni; kierownik produkcji; dział zakupów; kontroler finansowy",
+          "rozdzielnik": "Piotr Nowak — Dyrektor Zakładu; kierownik utrzymania ruchu; Jan Kowalski — Energy Manager",
+          "ustalenia": [
+            {
+              "nr": "N-1",
+              "rodzaj": "N",
+              "opis": "Protokół z przeglądu sprężarki z września 2026 r. jest na wzorze serwisu i nie zawiera nastaw ciśnienia przed i po. Protokołu nie sprawdzano przy odbiorze usługi. Wymaganie wprowadzone przez organizację po zdarzeniu z czerwca 2026 r. działa więc tylko w połowie: zlecenie z wymaganiami jest, kontroli odbioru nie ma.",
+              "dowod": "Zlecenie serwisowe z 07.2026 — zawiera trzy zdania o zakazie zmiany nastaw bez zgłoszenia. Protokół serwisu z 09.2026 na wzorze wykonawcy, bez nastaw przed i po. Rozmowa z kierownikiem utrzymania ruchu: protokół nie jest sprawdzany przy odbiorze usługi.",
+              "zrodlo": "rozmowa",
+              "wymaganie": "Wymaganie organizacji z punktu 8.1 — nadzór nad procesami zleconymi: przekazanie wykonawcy kryteriów eksploatacji i sprawdzenie ich zastosowania. Zapisane w karcie kryteriów sprężarkowni F-EnMS-14, sekcja C, po zdarzeniu z 06.2026.",
+              "dzialanie": "Sprawdzanie protokołu przy odbiorze usługi wprowadzone do obiegu zleceń serwisowych. Przekazanie serwisowi wzoru protokołu z nastawami przed i po. Aktualizacja procedury P-EnMS-06.",
+              "odp": "Kierownik utrzymania ruchu — wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU",
+              "karta10": "tak"
+            },
+            {
+              "nr": "D-1",
+              "rodzaj": "D",
+              "opis": "Wzór protokołu z nastawami przed i po jest przekazywany wykonawcy sprężarkowni. Warto rozciągnąć go na wykonawców wszystkich znaczących użyć energii — serwis kotłowni i lakierni pracuje dziś na własnych wzorach, bez pola na nastawy.",
+              "dowod": "Przegląd trzech ostatnich protokołów serwisowych kotłowni i lakierni — żaden nie zawiera pola na nastawy. Rozmowa z kierownikiem utrzymania ruchu: wzory pochodzą od wykonawców.",
+              "zrodlo": "dokument",
+              "wymaganie": "",
+              "dzialanie": "Jeden wzór protokołu z nastawami dla wykonawców przy wszystkich SEU, dołączany do zlecenia jako załącznik.",
+              "odp": "Kierownik utrzymania ruchu — 10.2026",
+              "karta10": ""
+            },
+            {
+              "nr": "D-2",
+              "rodzaj": "D",
+              "opis": "Dział zakupów ocenia oferty na urządzenia pracujące wiele godzin w roku głównie ceną zakupu. Przy zakupie sterownika i napędu sprężarkowni porównanie kosztu zakupu i energii wykonał Energy Manager, nie dział zakupów. Przy kolejnych zakupach bez jego udziału porównanie może nie powstać.",
+              "dowod": "Rozmowa z działem zakupów — porównanie kosztu zakupu i energii nie jest częścią rutyny działu. Matryca kompetencji III-28 wskazuje lukę w tym obszarze. Specyfikacja ZAP/2026/14 zawiera porównanie przygotowane przez Energy Managera.",
+              "zrodlo": "rozmowa",
+              "wymaganie": "",
+              "dzialanie": "Warsztat dla działu zakupów z porównywania kosztu zakupu i energii w okresie użytkowania; wzór porównania dołączony do procedury zakupowej.",
+              "odp": "Energy Manager — 11.2026",
+              "karta10": ""
+            },
+            {
+              "nr": "P-1",
+              "rodzaj": "P",
+              "opis": "Kryterium ciśnienia w sieci sprężonego powietrza nie wyżej niż 6,3 bar jest stosowane i rozumiane przez obsługę. Technicy wiedzą, jakie ciśnienie ma być ustawione i skąd to wiedzą.",
+              "dowod": "Trend ciśnienia z rejestratora sterownika za okres VII–IX 2026 — bez przekroczeń. Instrukcja przy panelu sterowania z aktualną wartością. Rozmowa z dwoma technikami: obaj podali 6,3 bar i wskazali instrukcję jako źródło.",
+              "zrodlo": "pomiar",
+              "wymaganie": "",
+              "dzialanie": "",
+              "odp": "",
+              "karta10": ""
+            }
+          ],
+          "B": {
+            "poprawa": "Tak. O-1 0,965 wobec EnB 1,000 (sierpień 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0 kWh/t. Poprawa wykazana modelem zużycia i pomiarem, nie samym spadkiem zużycia — zestawienia uwzględniają produkcję i stopniodni. K-1 (kotłownia) o 1% powyżej EnB w I półroczu, analiza przyczyn przed sezonem grzewczym. OŚ-1 bez zmian do wymiany opraw na LED.",
+            "zgodnosc": "W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (punkt 8.1, nadzór nad procesami zleconymi) — ustalenie N-1. Polityka energetyczna z 03.2026 spójna z kierunkiem firmy; cele i zadania powiązane z planami działań i rozliczane w raportach miesięcznych. Wymagania normy dla punktów 4–8 spełnione; ocena zgodności (9.1.2) przeprowadzona we wrześniu, z jedną niezgodnością po stronie terminu raportu dla banku.",
+            "wdrozenie": "Tak, z jednym zastrzeżeniem. Kryteria sprężarkowni są stosowane i rozumiane przez obsługę — potwierdzone trendem ciśnienia i rozmowami z technikami (ustalenie P-1). Znaczące odchylenie z czerwca zostało zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Słabe miejsce: nadzór nad wykonawcami. Wymaganie wprowadzone po czerwcowym zdarzeniu działa tylko w połowie — zlecenie zawiera kryteria, ale protokołu nikt nie sprawdza przy odbiorze."
+          },
+          "uwagiProgram": "Sprężarkownię i nadzór nad serwisem audytować po uruchomieniu modernizacji (III kw. 2027), z naciskiem na protokoły odbioru usług i skuteczność działania z ustalenia N-1. Zakupy i projekty — po warsztacie z porównywania kosztu zakupu i energii (II kw. 2027). Kolejny audyt całego systemu we wrześniu 2027 r., z rotacją audytorów między obszarami."
+        }
+      ],
+      "META": {
+        "organizacja": "AutoParts Polska Sp. z o.o. — program wspólny z ISO 14001",
+        "organizuje": "Jan Kowalski — Energy Manager",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "dataZatw": "2026-06-30",
+        "kryteria": "ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04).",
+        "planAudytu": "Plan każdego audytu — zakres, kryteria, harmonogram — przekazywany audytowanym ★ dwa tygodnie przed audytem. Metody: przegląd dokumentów i zapisów, rozmowy z ludźmi przy pracy, obserwacja na hali. Raport na formularzu F-EnMS-19 (III-44) w ciągu dwóch tygodni po audycie. Zmiana programu z 29.09.2026 dotyczy pozycji 2 i 3 (terminy i zakres po przeglądzie zarządzania)."
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Audit prowadzony tylko na dokumentach potwierdza, że dokumenty istnieją.",
+        "decyzja": "Program auditów układany według procesów, z przewagą ustaleń opartych na praktyce nad ustaleniami z samych dokumentów.",
+        "dzialanie": "Audit z września 2026 r.: rozmowy na stanowiskach, obserwacja nastaw i pomiar kontrolny obok przeglądu dokumentacji.",
+        "sprawdzenie": "Udział ustaleń opartych na dokumencie podany w raporcie; niezgodności zamykane na dowodzie skuteczności (10.1)."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "PROGRAM": [],
+    "RAPORTY": [],
+    "WNIOSKI": [],
+    "STATUSY": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "planowany",
+        "Planowany"
+      ],
+      [
+        "wtoku",
+        "W toku"
+      ],
+      [
+        "wykonany",
+        "Wykonany"
+      ],
+      [
+        "odwolany",
+        "Odwołany — z uzasadnieniem"
+      ]
+    ],
+    "RODZAJE": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "N",
+        "N — niezgodność (niespełnienie wymagania)"
+      ],
+      [
+        "D",
+        "D — możliwość doskonalenia"
+      ],
+      [
+        "P",
+        "P — potwierdzenie zgodności"
+      ]
+    ],
+    "ZRODLA": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "dokument",
+        "Dokument albo zapis w systemie"
+      ],
+      [
+        "rozmowa",
+        "Rozmowa z ludźmi przy pracy"
+      ],
+      [
+        "obserwacja",
+        "Obserwacja na hali"
+      ],
+      [
+        "pomiar",
+        "Zapis pomiarowy albo trend"
+      ]
+    ],
+    "ZRODLA_PRAKTYKA": [
+      "rozmowa",
+      "obserwacja",
+      "pomiar"
+    ]
+  },
+  "example_literals": {}
+}

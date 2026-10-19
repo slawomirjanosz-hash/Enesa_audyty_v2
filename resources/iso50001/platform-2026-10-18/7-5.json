@@ -1,0 +1,888 @@
+{
+  "source_file": "ENESA_7.5_Udokumentowane_informacje_platforma.html",
+  "source_sha256": "99db43e309ae6e018e09fed88c671db244f06ef848d4ef1e5418782061d4b8b0",
+  "section": "7-5",
+  "data": {
+    "WYMAGANIA_N": [
+      {
+        "punkt": "4.3",
+        "co": "Zakres i granice systemu",
+        "modul": "1"
+      },
+      {
+        "punkt": "5.2",
+        "co": "Polityka energetyczna",
+        "modul": "2"
+      },
+      {
+        "punkt": "6.2",
+        "co": "Cele, zadania energetyczne i plany działań",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.3",
+        "co": "Metody i kryteria przeglądu energetycznego oraz jego wyniki",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.4",
+        "co": "Metoda określania i aktualizowania EnPI oraz wartości wskaźników",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.5",
+        "co": "Linie bazowe, dane o istotnych zmiennych i zmiany EnB",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.6",
+        "co": "Plan zbierania danych, dane a–e oraz dowody dokładności pomiarów",
+        "modul": "4"
+      },
+      {
+        "punkt": "7.2",
+        "co": "Dowody kompetencji osób wpływających na wynik energetyczny",
+        "modul": "5"
+      },
+      {
+        "punkt": "8.1",
+        "co": "Kryteria eksploatacji i zapisy potwierdzające przebieg procesów",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "8.2",
+        "co": "Wyniki działań projektowych związanych z wynikiem energetycznym",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "8.3",
+        "co": "Kryteria oceny wyniku energetycznego dla znaczących zakupów i specyfikacje",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.1",
+        "co": "Wyniki monitorowania, pomiarów i oceny wyniku energetycznego",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.2",
+        "co": "Program audytów i wyniki audytów wewnętrznych",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.3",
+        "co": "Wyniki przeglądów zarządzania",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "10.2",
+        "co": "Niezgodności, podjęte działania i ich skuteczność",
+        "modul": "8",
+        "pozniej": true
+      }
+    ],
+    "LISTA_75": [
+      {
+        "tekst": "System zawiera udokumentowane informacje wymagane przez normę.",
+        "podstawa": "N",
+        "auto": "wymagane"
+      },
+      {
+        "tekst": "System zawiera informacje uznane przez organizację za niezbędne dla jego skuteczności.",
+        "podstawa": "N",
+        "auto": "wlasne"
+      },
+      {
+        "tekst": "Zapewniono identyfikację, opis, format i nośnik oraz przegląd i zatwierdzenie.",
+        "podstawa": "N",
+        "auto": "identyfikacja"
+      },
+      {
+        "tekst": "Dokumenty są dostępne i przydatne tam, gdzie są potrzebne, oraz odpowiednio chronione.",
+        "podstawa": "N",
+        "auto": "dostepnosc"
+      },
+      {
+        "tekst": "Nadzorowane są zmiany; stare wersje są wycofane z miejsc użycia.",
+        "podstawa": "N",
+        "auto": "zmiany"
+      },
+      {
+        "tekst": "Ustalono okresy przechowywania i usuwania — z uzasadnieniem.",
+        "podstawa": "N",
+        "auto": "okresy"
+      },
+      {
+        "tekst": "Nadzorowane są dokumenty pochodzenia zewnętrznego.",
+        "podstawa": "N",
+        "auto": "zewnetrzne"
+      }
+    ],
+    "przyklad": {
+      "WYKAZ": [
+        {
+          "kod": "D-EnMS-KON-01",
+          "tytul": "Kontekst organizacji — czynniki zewnętrzne i wewnętrzne",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "4.1",
+          "wersja": "2.1",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Do następnej aktualizacji kontekstu i jeden cykl certyfikacji wstecz — poprzednia wersja pokazuje, co się zmieniło i dlaczego"
+        },
+        {
+          "kod": "D-EnMS-STR-01",
+          "tytul": "Strony zainteresowane i ich wymagania",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "4.2",
+          "wersja": "2.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Jak wyżej — wykaz wymagań prawnych i umownych musi dać się odtworzyć dla okresu, w którym obowiązywał"
+        },
+        {
+          "kod": "F-EnMS-03",
+          "tytul": "Zakres i granice systemu zarządzania energią",
+          "rodzaj": "D",
+          "podstawa": "N",
+          "punkt": "4.3",
+          "wersja": "1.0",
+          "zatwierdzil": "Zarząd, uchwała nr 2/2026 z 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciąg na tablicy przy wejściu",
+          "okres": "Bez ograniczenia, dopóki system działa; każda zmiana zakresu zachowywana jako osobna wersja, bo unieważnia porównania z linią bazową"
+        },
+        {
+          "kod": "D-EnMS-SYS-01",
+          "tytul": "System zarządzania energią — struktura i powiązania procesów",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "4.4",
+          "wersja": "1.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Do następnej wersji; starsze wersje przez jeden cykl certyfikacji"
+        },
+        {
+          "kod": "D-EnMS-PRZ-01",
+          "tytul": "Przywództwo i zaangażowanie najwyższego kierownictwa",
+          "rodzaj": "D / Z",
+          "podstawa": "M",
+          "punkt": "5.1",
+          "wersja": "1.0",
+          "zatwierdzil": "Zarząd, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Zapisy z decyzji kierownictwa — Pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"
+        },
+        {
+          "kod": "F-EnMS-04",
+          "tytul": "Polityka energetyczna",
+          "rodzaj": "D",
+          "podstawa": "N",
+          "punkt": "5.2",
+          "wersja": "1.1",
+          "zatwierdzil": "Zarząd, uchwała nr 3/2026 z 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); tablica przy wejściu do hali A; intranet; strona internetowa",
+          "okres": "Bez ograniczenia, dopóki obowiązuje; wersje poprzednie bez ograniczenia — polityka jest dowodem zobowiązania kierownictwa w danym okresie"
+        },
+        {
+          "kod": "D-EnMS-ROL-01",
+          "tytul": "Role, odpowiedzialności i uprawnienia w systemie",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "5.3",
+          "wersja": "1.2",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 30.09.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciągi w zakresach obowiązków",
+          "okres": "Do następnej wersji; starsze przez okres zatrudnienia osób, których dotyczyły, i jeden cykl certyfikacji"
+        },
+        {
+          "kod": "F-EnMS-07",
+          "tytul": "Rejestr ryzyk i szans",
+          "rodzaj": "D / Z",
+          "podstawa": "M",
+          "punkt": "6.1",
+          "wersja": "1.1",
+          "zatwierdzil": "Jan Kowalski, Energy Manager, 30.09.2026; przyjęte przez zarząd 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Bez ograniczenia, dopóki pozycja jest otwarta; pozycje zamknięte przez pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"
+        },
+        {
+          "kod": "F-EnMS-10",
+          "tytul": "Cele, zadania energetyczne i plany działań",
+          "rodzaj": "D",
+          "podstawa": "N",
+          "punkt": "6.2",
+          "wersja": "1.0",
+          "zatwierdzil": "Zarząd, uchwała nr 4/2026 z 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); statusy zadań w arkuszu EnMS",
+          "okres": "Bez ograniczenia, dopóki cel obowiązuje; po jego zamknięciu — do końca cyklu certyfikacji, w którym poprawę wykazano"
+        },
+        {
+          "kod": "F-EnMS-08",
+          "tytul": "Przegląd energetyczny — metody, kryteria i wyniki",
+          "rodzaj": "D / Z",
+          "podstawa": "N",
+          "punkt": "6.3",
+          "wersja": "2.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny, 31.03.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Wszystkie wersje bez ograniczenia — każda jest podstawą SEU i możliwości poprawy dla swojego okresu, a kolejne przeglądy porównuje się z poprzednimi"
+        },
+        {
+          "kod": "F-EnMS-09",
+          "tytul": "Karty EnPI i EnB; wartości wskaźników",
+          "rodzaj": "D / Z",
+          "podstawa": "N",
+          "punkt": "6.4, 6.5",
+          "wersja": "1.2",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny (karty); zarząd (linie bazowe), 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wartości w arkuszu EnMS, zakładka „EnPI”",
+          "okres": "Bez ograniczenia, dopóki linia bazowa 2025 obowiązuje — dane z roku bazowego są potrzebne do każdego porównania; po rewizji EnB stare dane jeszcze przez jeden cykl certyfikacji"
+        },
+        {
+          "kod": "F-EnMS-11",
+          "tytul": "Plan zbierania danych; dane a–e; dowody dokładności pomiarów",
+          "rodzaj": "D / Z",
+          "podstawa": "N",
+          "punkt": "6.6",
+          "wersja": "1.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); dane w arkuszu EnMS i systemie monitoringu",
+          "okres": "Plan — do następnej wersji. Dane o zużyciu i zmiennych — minimum 5 lat, bo linia bazowa i porównania wieloletnie tego wymagają. Świadectwa wzorcowania — do kolejnego wzorcowania i jeden rok po"
+        },
+        {
+          "kod": "D-EnMS-ZAS-01",
+          "tytul": "Zasoby systemu — zadania, obciążenie osób, decyzje",
+          "rodzaj": "D / Z",
+          "podstawa": "M",
+          "punkt": "7.1",
+          "wersja": "1.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Spis zadań — do końca okresu, którego dotyczy, plus rok. Decyzje o zasobach — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"
+        },
+        {
+          "kod": "F-EnMS-24",
+          "tytul": "Matryca kompetencji oraz dowody kompetencji — zapisy z oceny",
+          "rodzaj": "Z",
+          "podstawa": "N",
+          "punkt": "7.2",
+          "wersja": "",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 30.09.2026",
+          "miejsce": "Matryca: teczka EnMS. Dowody kompetencji: akta osobowe (HR)",
+          "okres": "Przez czas zatrudnienia osoby i 3 lata po jego zakończeniu — audytor może pytać o kompetencje osoby, która już nie pracuje. Dla wykonawców: czas obowiązywania umowy i 3 lata po"
+        },
+        {
+          "kod": "D-EnMS-SWI-01",
+          "tytul": "Świadomość — grupy, kanały, sprawdzenia i rejestr przeszkód",
+          "rodzaj": "D / Z",
+          "podstawa": "M",
+          "punkt": "7.3",
+          "wersja": "1.0",
+          "zatwierdzil": "Jan Kowalski, Energy Manager, 30.09.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Zapisy ze sprawdzeń świadomości — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; są jedynym dowodem rytmu sprawdzeń"
+        },
+        {
+          "kod": "F-EnMS-13",
+          "tytul": "Plan komunikacji i rejestr zgłoszeń",
+          "rodzaj": "D / Z",
+          "podstawa": "M",
+          "punkt": "7.4",
+          "wersja": "1.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); rejestr w arkuszu EnMS, zakładka „zgłoszenia”",
+          "okres": "Plan — do następnej wersji. Rejestr zgłoszeń — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; służy wykazaniu, że proces zgłaszania naprawdę działa"
+        },
+        {
+          "kod": "D-EnMS-DOK-01",
+          "tytul": "Wykaz udokumentowanych informacji systemu",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "7.5",
+          "wersja": "1.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Do następnej wersji; starsze przez jeden cykl certyfikacji — pokazują, jak dokumentacja systemu rosła"
+        },
+        {
+          "kod": "P-EnMS-01…05",
+          "tytul": "Procedury systemu — Moduły 1–5",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "",
+          "wersja": "2.0",
+          "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+          "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+          "okres": "Do następnej wersji; starsze wersje przez jeden cykl certyfikacji, bo audyt może dotyczyć okresu, w którym obowiązywały"
+        },
+        {
+          "kod": "I-SP-02",
+          "tytul": "Instrukcja eksploatacji sprężarkowni — nastawy i kryteria",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "8.1",
+          "wersja": "3.0",
+          "zatwierdzil": "Kierownik Utrzymania Ruchu, 05.08.2026",
+          "miejsce": "Wydruk w koszulce przy sprężarkowni; teczka techniczna UR",
+          "okres": "Do następnej wersji. Wersje poprzednie przez jeden rok — przy sporze o wynik trzeba wiedzieć, jakie kryterium obowiązywało w danym okresie"
+        },
+        {
+          "kod": "I-LAK-01",
+          "tytul": "Instrukcja eksploatacji pieca lakierni — temperatury i harmonogram",
+          "rodzaj": "D",
+          "podstawa": "M",
+          "punkt": "8.1",
+          "wersja": "2.0",
+          "zatwierdzil": "Technolog lakierni, 20.06.2026",
+          "miejsce": "Wydruk przy kabinie; teczka techniczna UR",
+          "okres": "Jak przy I-SP-02"
+        }
+      ],
+      "ZASADY": {
+        "identyfikacja": "Każdy dokument ma w stopce tytuł, kod, numer wersji i datę zatwierdzenia. Kody: D-EnMS-… dokumenty systemu, F-EnMS-… formularze z Toolkitu, P-EnMS-… procedury, I-… instrukcje stanowiskowe. Zapisy nazywane według wzoru: kod formularza, obszar, okres (np. F-EnMS-09_S-1_2026-09).",
+        "zatwierdzanie": "Politykę i linie bazowe zatwierdza zarząd. Dokumenty systemu i karty EnPI — Dyrektor Techniczny po sprawdzeniu przez Energy Managera. Instrukcje stanowiskowe — kierownik obszaru. Zatwierdzenie zawsze przed wydaniem do użycia; podpis i data w stopce.",
+        "dostepnosc": "Instrukcje z nastawami — wydruk w koszulce przy urządzeniu, zawsze aktualna wersja i tylko ona. Dokumenty systemu — serwer, folder EnMS, dostęp dla kierowników i zespołu EnMS. Wykonawcy dostają wyciąg z instrukcji razem ze zleceniem. Polityka — tablica przy wejściu, intranet, strona internetowa.",
+        "ochrona": "Folder EnMS tylko do odczytu dla większości; prawa zapisu ma Energy Manager i kierownicy w swoim zakresie. Kopia zapasowa serwera co tydzień, przechowywana poza zakładem. Arkusz z danymi energetycznymi dodatkowo kopiowany po każdym zamknięciu miesiąca. Dowody kompetencji w aktach osobowych, dostęp HR i przełożony.",
+        "zmiany": "Zmianę wprowadza się przez nową wersję z opisem zmiany w historii dokumentu. Wydając nową wersję, autor fizycznie zdejmuje starą z tablic i z miejsc przy urządzeniach i potwierdza to wpisem w rejestrze zmian. Przegląd instrukcji przy wszystkich SEU po każdej zmianie kryteriów eksploatacji.",
+        "przechowywanie": "Okresy ustalone w wykazie, przy każdej pozycji z uzasadnieniem. Przegląd okresów raz w roku przy przeglądzie wykazu. Usunięcie zapisów po upływie okresu potwierdza Energy Manager notatką — żeby dało się wykazać, że zapisy nie zniknęły przypadkiem.",
+        "zewnetrzne": "Rejestr dokumentów zewnętrznych prowadzi Energy Manager. Aktualność dokumentacji urządzeń sprawdza Kierownik UR raz w roku; przepisy — Energy Manager przy każdej informacji o zmianie, nie rzadziej niż raz w roku; specyfikacje klientów — dział sprzedaży przy odnowieniu umowy."
+      },
+      "ZEWN": [
+        {
+          "tytul": "DTR czterech sprężarek śrubowych — instrukcje eksploatacji producenta",
+          "zrodlo": "Producent sprężarek, wydanie 4/2023",
+          "dotyczy": "Kryteria eksploatacji sprężarkowni (8.1), dopuszczalne nastawy ciśnienia, warunki gwarancji",
+          "miejsce": "Teczka techniczna UR; kopia przy sprężarkowni",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "sprawdzono": "2026-04-20",
+          "wynik": "Aktualna — producent nie wydał nowszej wersji. Dopuszczalny zakres ciśnienia 5,5–8,0 bar, nastawa 6,3 bar mieści się w zakresie"
+        },
+        {
+          "tytul": "DTR pieca lakierni i kabin",
+          "zrodlo": "Producent linii lakierniczej, wydanie 2/2019",
+          "dotyczy": "Kryteria eksploatacji lakierni (8.1), profile temperaturowe, czasy nagrzewania",
+          "miejsce": "Teczka techniczna UR",
+          "kto": "Technolog lakierni",
+          "sprawdzono": "2026-06-20",
+          "wynik": "Aktualna. Przy okazji ustalono, że harmonogram pieca może startować 20 minut później niż dotychczas — zgłoszone jako możliwość poprawy"
+        },
+        {
+          "tytul": "Ustawa o efektywności energetycznej i przepisy wykonawcze",
+          "zrodlo": "Dziennik Ustaw; monitorowane przez Energy Managera",
+          "dotyczy": "Obowiązek audytu energetycznego przedsiębiorstwa (4.2), zawiadomienie do Prezesa URE (7.4)",
+          "miejsce": "Intranet, folder „wymagania prawne”; wykaz wymagań w D-EnMS-STR-01",
+          "kto": "Energy Manager",
+          "sprawdzono": "2026-09-01",
+          "wynik": "Sprawdzono stan prac nad nowelizacją (UC77) — obowiązek posiadania certyfikowanego systemu nie wszedł jeszcze w życie; pozycja do ponownego sprawdzenia po publikacji"
+        },
+        {
+          "tytul": "Specyfikacja klienta OEM — wymagania raportowania energii i emisji",
+          "zrodlo": "Klient OEM, załącznik nr 7 do umowy ramowej, wersja 3",
+          "dotyczy": "Komunikacja zewnętrzna obowiązkowa (7.4), metoda przeliczania emisji, termin raportu",
+          "miejsce": "Dokumentacja umowy (dział sprzedaży); kopia w teczce EnMS",
+          "kto": "Dział sprzedaży wspólnie z Energy Managerem",
+          "sprawdzono": "2026-08-12",
+          "wynik": "Wersja 3 obowiązuje od 01.2026 — zmieniony współczynnik emisyjności dla energii elektrycznej. Raport za 2026 r. liczony już według nowej wersji"
+        },
+        {
+          "tytul": "PN-EN ISO 50001:2018 wraz ze zmianą Amd 1:2024",
+          "zrodlo": "Polski Komitet Normalizacyjny",
+          "dotyczy": "Cały system; zmiana Amd 1:2024 wprowadza kwestię zmiany klimatu do punktów 4.1 i 4.2",
+          "miejsce": "Teczka EnMS (egzemplarz licencjonowany), dostęp u Energy Managera",
+          "kto": "Energy Manager",
+          "sprawdzono": "2026-03-31",
+          "wynik": "Aktualna wersja z Amd 1:2024 — istotność zmiany klimatu rozpatrzona i udokumentowana w D-EnMS-KON-01 i D-EnMS-STR-01"
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "data": "2026-09-30",
+        "przeglad": "Raz w roku przed audytem wewnętrznym oraz przy każdym nowym dokumencie systemu i przy każdej zmianie zakresu systemu"
+      }
+    }
+  },
+  "variables": {
+    "WYMAGANIA_N": [
+      {
+        "punkt": "4.3",
+        "co": "Zakres i granice systemu",
+        "modul": "1"
+      },
+      {
+        "punkt": "5.2",
+        "co": "Polityka energetyczna",
+        "modul": "2"
+      },
+      {
+        "punkt": "6.2",
+        "co": "Cele, zadania energetyczne i plany działań",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.3",
+        "co": "Metody i kryteria przeglądu energetycznego oraz jego wyniki",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.4",
+        "co": "Metoda określania i aktualizowania EnPI oraz wartości wskaźników",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.5",
+        "co": "Linie bazowe, dane o istotnych zmiennych i zmiany EnB",
+        "modul": "4"
+      },
+      {
+        "punkt": "6.6",
+        "co": "Plan zbierania danych, dane a–e oraz dowody dokładności pomiarów",
+        "modul": "4"
+      },
+      {
+        "punkt": "7.2",
+        "co": "Dowody kompetencji osób wpływających na wynik energetyczny",
+        "modul": "5"
+      },
+      {
+        "punkt": "8.1",
+        "co": "Kryteria eksploatacji i zapisy potwierdzające przebieg procesów",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "8.2",
+        "co": "Wyniki działań projektowych związanych z wynikiem energetycznym",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "8.3",
+        "co": "Kryteria oceny wyniku energetycznego dla znaczących zakupów i specyfikacje",
+        "modul": "6",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.1",
+        "co": "Wyniki monitorowania, pomiarów i oceny wyniku energetycznego",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.2",
+        "co": "Program audytów i wyniki audytów wewnętrznych",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "9.3",
+        "co": "Wyniki przeglądów zarządzania",
+        "modul": "7",
+        "pozniej": true
+      },
+      {
+        "punkt": "10.2",
+        "co": "Niezgodności, podjęte działania i ich skuteczność",
+        "modul": "8",
+        "pozniej": true
+      }
+    ],
+    "LISTA_75": [
+      {
+        "tekst": "System zawiera udokumentowane informacje wymagane przez normę.",
+        "podstawa": "N",
+        "auto": "wymagane"
+      },
+      {
+        "tekst": "System zawiera informacje uznane przez organizację za niezbędne dla jego skuteczności.",
+        "podstawa": "N",
+        "auto": "wlasne"
+      },
+      {
+        "tekst": "Zapewniono identyfikację, opis, format i nośnik oraz przegląd i zatwierdzenie.",
+        "podstawa": "N",
+        "auto": "identyfikacja"
+      },
+      {
+        "tekst": "Dokumenty są dostępne i przydatne tam, gdzie są potrzebne, oraz odpowiednio chronione.",
+        "podstawa": "N",
+        "auto": "dostepnosc"
+      },
+      {
+        "tekst": "Nadzorowane są zmiany; stare wersje są wycofane z miejsc użycia.",
+        "podstawa": "N",
+        "auto": "zmiany"
+      },
+      {
+        "tekst": "Ustalono okresy przechowywania i usuwania — z uzasadnieniem.",
+        "podstawa": "N",
+        "auto": "okresy"
+      },
+      {
+        "tekst": "Nadzorowane są dokumenty pochodzenia zewnętrznego.",
+        "podstawa": "N",
+        "auto": "zewnetrzne"
+      }
+    ],
+    "P_WYKAZ": [
+      {
+        "kod": "D-EnMS-KON-01",
+        "tytul": "Kontekst organizacji — czynniki zewnętrzne i wewnętrzne",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "4.1",
+        "wersja": "2.1",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Do następnej aktualizacji kontekstu i jeden cykl certyfikacji wstecz — poprzednia wersja pokazuje, co się zmieniło i dlaczego"
+      },
+      {
+        "kod": "D-EnMS-STR-01",
+        "tytul": "Strony zainteresowane i ich wymagania",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "4.2",
+        "wersja": "2.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Jak wyżej — wykaz wymagań prawnych i umownych musi dać się odtworzyć dla okresu, w którym obowiązywał"
+      },
+      {
+        "kod": "F-EnMS-03",
+        "tytul": "Zakres i granice systemu zarządzania energią",
+        "rodzaj": "D",
+        "podstawa": "N",
+        "punkt": "4.3",
+        "wersja": "1.0",
+        "zatwierdzil": "Zarząd, uchwała nr 2/2026 z 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciąg na tablicy przy wejściu",
+        "okres": "Bez ograniczenia, dopóki system działa; każda zmiana zakresu zachowywana jako osobna wersja, bo unieważnia porównania z linią bazową"
+      },
+      {
+        "kod": "D-EnMS-SYS-01",
+        "tytul": "System zarządzania energią — struktura i powiązania procesów",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "4.4",
+        "wersja": "1.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Do następnej wersji; starsze wersje przez jeden cykl certyfikacji"
+      },
+      {
+        "kod": "D-EnMS-PRZ-01",
+        "tytul": "Przywództwo i zaangażowanie najwyższego kierownictwa",
+        "rodzaj": "D / Z",
+        "podstawa": "M",
+        "punkt": "5.1",
+        "wersja": "1.0",
+        "zatwierdzil": "Zarząd, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Zapisy z decyzji kierownictwa — Pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"
+      },
+      {
+        "kod": "F-EnMS-04",
+        "tytul": "Polityka energetyczna",
+        "rodzaj": "D",
+        "podstawa": "N",
+        "punkt": "5.2",
+        "wersja": "1.1",
+        "zatwierdzil": "Zarząd, uchwała nr 3/2026 z 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); tablica przy wejściu do hali A; intranet; strona internetowa",
+        "okres": "Bez ograniczenia, dopóki obowiązuje; wersje poprzednie bez ograniczenia — polityka jest dowodem zobowiązania kierownictwa w danym okresie"
+      },
+      {
+        "kod": "D-EnMS-ROL-01",
+        "tytul": "Role, odpowiedzialności i uprawnienia w systemie",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "5.3",
+        "wersja": "1.2",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 30.09.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciągi w zakresach obowiązków",
+        "okres": "Do następnej wersji; starsze przez okres zatrudnienia osób, których dotyczyły, i jeden cykl certyfikacji"
+      },
+      {
+        "kod": "F-EnMS-07",
+        "tytul": "Rejestr ryzyk i szans",
+        "rodzaj": "D / Z",
+        "podstawa": "M",
+        "punkt": "6.1",
+        "wersja": "1.1",
+        "zatwierdzil": "Jan Kowalski, Energy Manager, 30.09.2026; przyjęte przez zarząd 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Bez ograniczenia, dopóki pozycja jest otwarta; pozycje zamknięte przez pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"
+      },
+      {
+        "kod": "F-EnMS-10",
+        "tytul": "Cele, zadania energetyczne i plany działań",
+        "rodzaj": "D",
+        "podstawa": "N",
+        "punkt": "6.2",
+        "wersja": "1.0",
+        "zatwierdzil": "Zarząd, uchwała nr 4/2026 z 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); statusy zadań w arkuszu EnMS",
+        "okres": "Bez ograniczenia, dopóki cel obowiązuje; po jego zamknięciu — do końca cyklu certyfikacji, w którym poprawę wykazano"
+      },
+      {
+        "kod": "F-EnMS-08",
+        "tytul": "Przegląd energetyczny — metody, kryteria i wyniki",
+        "rodzaj": "D / Z",
+        "podstawa": "N",
+        "punkt": "6.3",
+        "wersja": "2.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny, 31.03.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Wszystkie wersje bez ograniczenia — każda jest podstawą SEU i możliwości poprawy dla swojego okresu, a kolejne przeglądy porównuje się z poprzednimi"
+      },
+      {
+        "kod": "F-EnMS-09",
+        "tytul": "Karty EnPI i EnB; wartości wskaźników",
+        "rodzaj": "D / Z",
+        "podstawa": "N",
+        "punkt": "6.4, 6.5",
+        "wersja": "1.2",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny (karty); zarząd (linie bazowe), 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wartości w arkuszu EnMS, zakładka „EnPI”",
+        "okres": "Bez ograniczenia, dopóki linia bazowa 2025 obowiązuje — dane z roku bazowego są potrzebne do każdego porównania; po rewizji EnB stare dane jeszcze przez jeden cykl certyfikacji"
+      },
+      {
+        "kod": "F-EnMS-11",
+        "tytul": "Plan zbierania danych; dane a–e; dowody dokładności pomiarów",
+        "rodzaj": "D / Z",
+        "podstawa": "N",
+        "punkt": "6.6",
+        "wersja": "1.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); dane w arkuszu EnMS i systemie monitoringu",
+        "okres": "Plan — do następnej wersji. Dane o zużyciu i zmiennych — minimum 5 lat, bo linia bazowa i porównania wieloletnie tego wymagają. Świadectwa wzorcowania — do kolejnego wzorcowania i jeden rok po"
+      },
+      {
+        "kod": "D-EnMS-ZAS-01",
+        "tytul": "Zasoby systemu — zadania, obciążenie osób, decyzje",
+        "rodzaj": "D / Z",
+        "podstawa": "M",
+        "punkt": "7.1",
+        "wersja": "1.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Spis zadań — do końca okresu, którego dotyczy, plus rok. Decyzje o zasobach — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"
+      },
+      {
+        "kod": "F-EnMS-24",
+        "tytul": "Matryca kompetencji oraz dowody kompetencji — zapisy z oceny",
+        "rodzaj": "Z",
+        "podstawa": "N",
+        "punkt": "7.2",
+        "wersja": "",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 30.09.2026",
+        "miejsce": "Matryca: teczka EnMS. Dowody kompetencji: akta osobowe (HR)",
+        "okres": "Przez czas zatrudnienia osoby i 3 lata po jego zakończeniu — audytor może pytać o kompetencje osoby, która już nie pracuje. Dla wykonawców: czas obowiązywania umowy i 3 lata po"
+      },
+      {
+        "kod": "D-EnMS-SWI-01",
+        "tytul": "Świadomość — grupy, kanały, sprawdzenia i rejestr przeszkód",
+        "rodzaj": "D / Z",
+        "podstawa": "M",
+        "punkt": "7.3",
+        "wersja": "1.0",
+        "zatwierdzil": "Jan Kowalski, Energy Manager, 30.09.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Zapisy ze sprawdzeń świadomości — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; są jedynym dowodem rytmu sprawdzeń"
+      },
+      {
+        "kod": "F-EnMS-13",
+        "tytul": "Plan komunikacji i rejestr zgłoszeń",
+        "rodzaj": "D / Z",
+        "podstawa": "M",
+        "punkt": "7.4",
+        "wersja": "1.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); rejestr w arkuszu EnMS, zakładka „zgłoszenia”",
+        "okres": "Plan — do następnej wersji. Rejestr zgłoszeń — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; służy wykazaniu, że proces zgłaszania naprawdę działa"
+      },
+      {
+        "kod": "D-EnMS-DOK-01",
+        "tytul": "Wykaz udokumentowanych informacji systemu",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "7.5",
+        "wersja": "1.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Do następnej wersji; starsze przez jeden cykl certyfikacji — pokazują, jak dokumentacja systemu rosła"
+      },
+      {
+        "kod": "P-EnMS-01…05",
+        "tytul": "Procedury systemu — Moduły 1–5",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "",
+        "wersja": "2.0",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026",
+        "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)",
+        "okres": "Do następnej wersji; starsze wersje przez jeden cykl certyfikacji, bo audyt może dotyczyć okresu, w którym obowiązywały"
+      },
+      {
+        "kod": "I-SP-02",
+        "tytul": "Instrukcja eksploatacji sprężarkowni — nastawy i kryteria",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "8.1",
+        "wersja": "3.0",
+        "zatwierdzil": "Kierownik Utrzymania Ruchu, 05.08.2026",
+        "miejsce": "Wydruk w koszulce przy sprężarkowni; teczka techniczna UR",
+        "okres": "Do następnej wersji. Wersje poprzednie przez jeden rok — przy sporze o wynik trzeba wiedzieć, jakie kryterium obowiązywało w danym okresie"
+      },
+      {
+        "kod": "I-LAK-01",
+        "tytul": "Instrukcja eksploatacji pieca lakierni — temperatury i harmonogram",
+        "rodzaj": "D",
+        "podstawa": "M",
+        "punkt": "8.1",
+        "wersja": "2.0",
+        "zatwierdzil": "Technolog lakierni, 20.06.2026",
+        "miejsce": "Wydruk przy kabinie; teczka techniczna UR",
+        "okres": "Jak przy I-SP-02"
+      }
+    ],
+    "P_ZASADY": {
+      "identyfikacja": "Każdy dokument ma w stopce tytuł, kod, numer wersji i datę zatwierdzenia. Kody: D-EnMS-… dokumenty systemu, F-EnMS-… formularze z Toolkitu, P-EnMS-… procedury, I-… instrukcje stanowiskowe. Zapisy nazywane według wzoru: kod formularza, obszar, okres (np. F-EnMS-09_S-1_2026-09).",
+      "zatwierdzanie": "Politykę i linie bazowe zatwierdza zarząd. Dokumenty systemu i karty EnPI — Dyrektor Techniczny po sprawdzeniu przez Energy Managera. Instrukcje stanowiskowe — kierownik obszaru. Zatwierdzenie zawsze przed wydaniem do użycia; podpis i data w stopce.",
+      "dostepnosc": "Instrukcje z nastawami — wydruk w koszulce przy urządzeniu, zawsze aktualna wersja i tylko ona. Dokumenty systemu — serwer, folder EnMS, dostęp dla kierowników i zespołu EnMS. Wykonawcy dostają wyciąg z instrukcji razem ze zleceniem. Polityka — tablica przy wejściu, intranet, strona internetowa.",
+      "ochrona": "Folder EnMS tylko do odczytu dla większości; prawa zapisu ma Energy Manager i kierownicy w swoim zakresie. Kopia zapasowa serwera co tydzień, przechowywana poza zakładem. Arkusz z danymi energetycznymi dodatkowo kopiowany po każdym zamknięciu miesiąca. Dowody kompetencji w aktach osobowych, dostęp HR i przełożony.",
+      "zmiany": "Zmianę wprowadza się przez nową wersję z opisem zmiany w historii dokumentu. Wydając nową wersję, autor fizycznie zdejmuje starą z tablic i z miejsc przy urządzeniach i potwierdza to wpisem w rejestrze zmian. Przegląd instrukcji przy wszystkich SEU po każdej zmianie kryteriów eksploatacji.",
+      "przechowywanie": "Okresy ustalone w wykazie, przy każdej pozycji z uzasadnieniem. Przegląd okresów raz w roku przy przeglądzie wykazu. Usunięcie zapisów po upływie okresu potwierdza Energy Manager notatką — żeby dało się wykazać, że zapisy nie zniknęły przypadkiem.",
+      "zewnetrzne": "Rejestr dokumentów zewnętrznych prowadzi Energy Manager. Aktualność dokumentacji urządzeń sprawdza Kierownik UR raz w roku; przepisy — Energy Manager przy każdej informacji o zmianie, nie rzadziej niż raz w roku; specyfikacje klientów — dział sprzedaży przy odnowieniu umowy."
+    },
+    "P_ZEWN": [
+      {
+        "tytul": "DTR czterech sprężarek śrubowych — instrukcje eksploatacji producenta",
+        "zrodlo": "Producent sprężarek, wydanie 4/2023",
+        "dotyczy": "Kryteria eksploatacji sprężarkowni (8.1), dopuszczalne nastawy ciśnienia, warunki gwarancji",
+        "miejsce": "Teczka techniczna UR; kopia przy sprężarkowni",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "sprawdzono": "2026-04-20",
+        "wynik": "Aktualna — producent nie wydał nowszej wersji. Dopuszczalny zakres ciśnienia 5,5–8,0 bar, nastawa 6,3 bar mieści się w zakresie"
+      },
+      {
+        "tytul": "DTR pieca lakierni i kabin",
+        "zrodlo": "Producent linii lakierniczej, wydanie 2/2019",
+        "dotyczy": "Kryteria eksploatacji lakierni (8.1), profile temperaturowe, czasy nagrzewania",
+        "miejsce": "Teczka techniczna UR",
+        "kto": "Technolog lakierni",
+        "sprawdzono": "2026-06-20",
+        "wynik": "Aktualna. Przy okazji ustalono, że harmonogram pieca może startować 20 minut później niż dotychczas — zgłoszone jako możliwość poprawy"
+      },
+      {
+        "tytul": "Ustawa o efektywności energetycznej i przepisy wykonawcze",
+        "zrodlo": "Dziennik Ustaw; monitorowane przez Energy Managera",
+        "dotyczy": "Obowiązek audytu energetycznego przedsiębiorstwa (4.2), zawiadomienie do Prezesa URE (7.4)",
+        "miejsce": "Intranet, folder „wymagania prawne”; wykaz wymagań w D-EnMS-STR-01",
+        "kto": "Energy Manager",
+        "sprawdzono": "2026-09-01",
+        "wynik": "Sprawdzono stan prac nad nowelizacją (UC77) — obowiązek posiadania certyfikowanego systemu nie wszedł jeszcze w życie; pozycja do ponownego sprawdzenia po publikacji"
+      },
+      {
+        "tytul": "Specyfikacja klienta OEM — wymagania raportowania energii i emisji",
+        "zrodlo": "Klient OEM, załącznik nr 7 do umowy ramowej, wersja 3",
+        "dotyczy": "Komunikacja zewnętrzna obowiązkowa (7.4), metoda przeliczania emisji, termin raportu",
+        "miejsce": "Dokumentacja umowy (dział sprzedaży); kopia w teczce EnMS",
+        "kto": "Dział sprzedaży wspólnie z Energy Managerem",
+        "sprawdzono": "2026-08-12",
+        "wynik": "Wersja 3 obowiązuje od 01.2026 — zmieniony współczynnik emisyjności dla energii elektrycznej. Raport za 2026 r. liczony już według nowej wersji"
+      },
+      {
+        "tytul": "PN-EN ISO 50001:2018 wraz ze zmianą Amd 1:2024",
+        "zrodlo": "Polski Komitet Normalizacyjny",
+        "dotyczy": "Cały system; zmiana Amd 1:2024 wprowadza kwestię zmiany klimatu do punktów 4.1 i 4.2",
+        "miejsce": "Teczka EnMS (egzemplarz licencjonowany), dostęp u Energy Managera",
+        "kto": "Energy Manager",
+        "sprawdzono": "2026-03-31",
+        "wynik": "Aktualna wersja z Amd 1:2024 — istotność zmiany klimatu rozpatrzona i udokumentowana w D-EnMS-KON-01 i D-EnMS-STR-01"
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+      "data": "2026-09-30",
+      "przeglad": "Raz w roku przed audytem wewnętrznym oraz przy każdym nowym dokumencie systemu i przy każdej zmianie zakresu systemu"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Dokument bez wersji i właściciela przestaje być dowodem w dniu pierwszej zmiany.",
+        "decyzja": "Wykaz udokumentowanej informacji prowadzony jako rozszerzenie nadzoru działającego w ISO 14001, bez drugiego równoległego systemu.",
+        "dzialanie": "Wykaz z wersją, właścicielem i miejscem przechowywania; DTR czterech sprężarek śrubowych i karty wskaźników objęte nadzorem.",
+        "sprawdzenie": "Audit wewnętrzny (9.2) sprawdza, czy dokumenty używane na stanowiskach są w wersji z wykazu."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "WYKAZ": [],
+    "ZASADY": {},
+    "ZEWN": [],
+    "WNIOSKI": [],
+    "RODZAJE": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "D",
+        "D — dokument: jak pracować; aktualizuje się"
+      ],
+      [
+        "Z",
+        "Z — zapis: co wykonano i z jakim wynikiem; przechowuje się"
+      ],
+      [
+        "DZ",
+        "D / Z — jedno i drugie"
+      ]
+    ],
+    "PODSTAWY": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "N",
+        "N — wymaga norma"
+      ],
+      [
+        "M",
+        "M — organizacja uznała za potrzebne"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

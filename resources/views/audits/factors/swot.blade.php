@@ -2,7 +2,7 @@
 <h2>Analiza SWOT — zarządzanie energią</h2>
 @php($swotEditable = !$client && $canWrite && $ready && !$stale && $review->client_approval && in_array($review->status, ['submitted','approved']))
 @if($swotEditable)
-<p>Podsumuj zatwierdzone czynniki i profil zakładu. Wskaż ich wpływ na zużycie energii oraz wynik energetyczny. Jeśli nie stwierdzono elementów w danej części, wpisz uzasadnienie.</p>
+<p>Podsumuj zatwierdzone czynniki i profil zakładu. SWOT jest opcjonalnym narzędziem analizy. Przed zatwierdzeniem zapisz przynajmniej jeden pełny wniosek: znaczenie → decyzja → działanie → sprawdzenie.</p>
 <form data-autosave data-draft-name="swot" data-draft-operation="save_swot" data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" method="post" data-swot-form data-review-action action="{{route($prefix.'update',[$audit,$profile])}}">
 @csrf
 <input type="hidden" name="lock_version" value="{{$review->lock_version}}">
@@ -16,11 +16,11 @@
  'threats'=>'Ryzyka zewnętrzne: np. zmienność cen, dostępność energii, skutki zmiany klimatu.',
  'conclusions'=>'Określ najważniejsze priorytety, proponowane działania, odpowiedzialność i sposób sprawdzenia efektu.'
 ][$key]}}</p>
-<textarea id="swot-{{$key}}" name="swot[{{$key}}]" maxlength="10000" rows="5" @if($errors->has('swot.'.$key)) aria-invalid="true" style="border:2px solid #b91c1c;background:#fff0f0" @endif>{{old('swot.'.$key,$review->swot[$key]??'')}}</textarea>
+<textarea id="swot-{{$key}}" name="swot[{{$key}}]" maxlength="10000" rows="5" @if($errors->has('swot.'.$key)) aria-invalid="true" style="border:2px solid #b91c1c;background:#fff0f0" @endif>{{old('swot.'.$key,$exampleSwot[$key]??$review->swot[$key]??'')}}</textarea>
 @endforeach
 <button name="operation" value="save_swot">Zapisz analizę SWOT</button>
 <h3>Wnioski: znaczenie → decyzja → działanie → sprawdzenie</h3>
-@php($conclusionRows=old('swot.wnioski',$review->swot['wnioski']??[[]]))
+@php($conclusionRows=old('swot.wnioski',$exampleSwot['wnioski']??$review->swot['wnioski']??[[]]))
 <div id="swot-conclusions" data-repeater="swot-conclusions">@foreach(is_array($conclusionRows)?array_slice($conclusionRows,0,20,true):[[]] as $index=>$conclusion)@include('audits.factors.conclusion-row')@endforeach</div>
 <template id="template-swot-conclusions">@include('audits.factors.conclusion-row',['index'=>'__INDEX__','conclusion'=>[]])</template>
 <button type="button" id="add-swot-conclusion">+ Dodaj wniosek</button>

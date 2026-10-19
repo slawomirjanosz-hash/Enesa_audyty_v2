@@ -1,0 +1,2469 @@
+{
+  "source_file": "ENESA_4.2_Strony_zainteresowane_platforma.html",
+  "source_sha256": "00cc1c27b51badb2d82bd261f1352a5c95a33e754fcaa7c90f7974135fcf7532",
+  "section": "4-2",
+  "data": {
+    "wymagania": [
+      {
+        "id": "WYM-01",
+        "strona_kod": "STK-W-01",
+        "strona": "Zarząd / najwyższe kierownictwo",
+        "typ": "wew.",
+        "wymaganie": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów",
+        "kwal_sug": "",
+        "sposob_sug": "Polityka energetyczna, cele energetyczne, Przegląd Zarządzania (kl. 9.3)",
+        "wlasciciel_sug": "Dyrektor Zakładu",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-02",
+        "strona_kod": "STK-W-02",
+        "strona": "Właściciel / grupa kapitałowa",
+        "typ": "wew.",
+        "wymaganie": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny",
+        "kwal_sug": "",
+        "sposob_sug": "Wskaźniki EnPI definiowane spójnie z wytycznymi grupy",
+        "wlasciciel_sug": "Dyrektor Zakładu",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_GRUPA_KAPITALOWA = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-03",
+        "strona_kod": "STK-W-03",
+        "strona": "Pracownicy",
+        "typ": "wew.",
+        "wymaganie": "Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Kryteria eksploatacji wentylacji, klimatyzacji i oświetlenia (8.1); pomiary okresowe",
+        "wlasciciel_sug": "Kierownik UR, specjalista BHP",
+        "sprawdzanie_sug": "Pomiary okresowe oświetlenia i mikroklimatu; kontrole BHP",
+        "zrodlo_podp": "Przepisy BHP — rozporządzenie o ogólnych przepisach bhp, normy oświetlenia stanowisk",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": true,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-04",
+        "strona_kod": "STK-W-03",
+        "strona": "Pracownicy",
+        "typ": "wew.",
+        "wymaganie": "Preferencja: niższa temperatura w halach w czasie upałów",
+        "kwal_sug": "",
+        "sposob_sug": "",
+        "wlasciciel_sug": "Kierownik UR, specjalista BHP",
+        "sprawdzanie_sug": "Ankieta roczna; decyzja przy planowaniu budżetu",
+        "zrodlo_podp": "Ankieta pracownicza, zgłoszenia do działu BHP",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": true,
+        "slad": false
+      },
+      {
+        "id": "WYM-05",
+        "strona_kod": "STK-W-04",
+        "strona": "Służby utrzymania ruchu",
+        "typ": "wew.",
+        "wymaganie": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji",
+        "kwal_sug": "",
+        "sposob_sug": "Nadzór operacyjny nad SEU (kl. 8.1), plan zbierania danych (kl. 6.6)",
+        "wlasciciel_sug": "Kierownik Utrzymania Ruchu",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-06",
+        "strona_kod": "STK-W-05",
+        "strona": "Dział produkcji",
+        "typ": "wew.",
+        "wymaganie": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach",
+        "kwal_sug": "",
+        "sposob_sug": "Zmienne istotne w przeglądzie energetycznym (kl. 6.3)",
+        "wlasciciel_sug": "Kierownik Produkcji",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-07",
+        "strona_kod": "STK-W-06",
+        "strona": "Dział zakupów",
+        "typ": "wew.",
+        "wymaganie": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert",
+        "kwal_sug": "",
+        "sposob_sug": "Kryteria energetyczne w zakupach (kl. 8.3)",
+        "wlasciciel_sug": "Dział Zakupów",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-08",
+        "strona_kod": "STK-W-07",
+        "strona": "Kontroling / finanse",
+        "typ": "wew.",
+        "wymaganie": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć",
+        "kwal_sug": "",
+        "sposob_sug": "Ocena możliwości poprawy z okresem zwrotu (kl. 6.3)",
+        "wlasciciel_sug": "Kontroling",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-09",
+        "strona_kod": "STK-W-08",
+        "strona": "Dział BHP i ochrony środowiska",
+        "typ": "wew.",
+        "wymaganie": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów",
+        "kwal_sug": "",
+        "sposob_sug": "Integracja rejestru wymagań prawnych",
+        "wlasciciel_sug": "Specjalista ds. środowiska",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-10",
+        "strona_kod": "STK-W-09",
+        "strona": "Energy Manager / zespół ds. energii",
+        "typ": "wew.",
+        "wymaganie": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu",
+        "kwal_sug": "",
+        "sposob_sug": "Zarządzenie o powołaniu zespołu, przypisanie ról (kl. 5.3)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-11",
+        "strona_kod": "STK-W-10",
+        "strona": "Rada pracowników / związki zawodowe",
+        "typ": "wew.",
+        "wymaganie": "Informacja o zmianach organizacyjnych wynikających z wdrożenia; brak pogorszenia warunków pracy",
+        "kwal_sug": "",
+        "sposob_sug": "Plan komunikacji wewnętrznej (kl. 7.4)",
+        "wlasciciel_sug": "Dział Kadr",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_ZWIAZKI = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-12",
+        "strona_kod": "STK-Z-01",
+        "strona": "Prezes URE",
+        "typ": "zew.",
+        "wymaganie": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Rejestr wymagań prawnych, ocena zgodności (kl. 9.1.2)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-13",
+        "strona_kod": "STK-Z-02",
+        "strona": "Organ właściwy ds. EED / minister",
+        "typ": "zew.",
+        "wymaganie": "Obowiązek posiadania certyfikowanego systemu zarządzania energią — wprowadzany projektem nowelizacji ustawy o efektywności energetycznej (UC77), wdrażającym art. 11 dyrektywy (UE) 2023/1791",
+        "kwal_sug": "",
+        "sposob_sug": "Rejestr wymagań prawnych i innych; harmonogram wdrożenia i certyfikacji dostosowany do terminu wynikającego z ustawy po jej uchwaleniu",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji",
+        "zrodlo_podp": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77 (legislacja.rcl.gov.pl) — zapisz, na jaki dzień ustalono brzmienie",
+        "pokaz_gdy": "ZUZYCIE_TJ > 85",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false,
+        "uwaga_prawna": true
+      },
+      {
+        "id": "WYM-14",
+        "strona_kod": "STK-Z-03",
+        "strona": "Urząd Dozoru Technicznego",
+        "typ": "zew.",
+        "wymaganie": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Harmonogram przeglądów UDT w rejestrze wymagań",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_UDT = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-15",
+        "strona_kod": "STK-Z-04",
+        "strona": "Organy ochrony środowiska / KOBiZE",
+        "typ": "zew.",
+        "wymaganie": "Monitorowanie i raportowanie emisji; obowiązki wynikające z pozwoleń",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Powiązanie celów energetycznych z emisyjnymi",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_ETS = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-16",
+        "strona_kod": "STK-Z-05",
+        "strona": "Organ prowadzący rejestr f-gazów",
+        "typ": "zew.",
+        "wymaganie": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Rejestr F-gaz włączony do wymagań prawnych",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_FGAZ = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-17",
+        "strona_kod": "STK-Z-06",
+        "strona": "Operator systemu świadectw efektywności",
+        "typ": "zew.",
+        "wymaganie": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa",
+        "kwal_sug": "",
+        "sposob_sug": "Dokumentacja efektów w planach działań (kl. 6.2)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-18",
+        "strona_kod": "STK-Z-07",
+        "strona": "Zamawiający publiczni",
+        "typ": "zew.",
+        "wymaganie": "Posiadanie certyfikowanego systemu jako warunek lub kryterium oceny ofert",
+        "kwal_sug": "",
+        "sposob_sug": "Termin certyfikacji podporządkowany kalendarzowi postępowań",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_PRZETARGI = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-19",
+        "strona_kod": "STK-Z-08",
+        "strona": "Operator systemu dystrybucyjnego",
+        "typ": "zew.",
+        "wymaganie": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Monitorowanie mocy szczytowej (kl. 9.1), warunki przyłączeniowe w rejestrze",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-20",
+        "strona_kod": "STK-Z-09",
+        "strona": "Sprzedawca energii elektrycznej",
+        "typ": "zew.",
+        "wymaganie": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży",
+        "kwal_sug": "",
+        "sposob_sug": "Analiza profilu poboru jako możliwość poprawy (kl. 6.3)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-21",
+        "strona_kod": "STK-Z-10",
+        "strona": "Dostawca gazu lub ciepła sieciowego",
+        "typ": "zew.",
+        "wymaganie": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy",
+        "kwal_sug": "",
+        "sposob_sug": "Gospodarka cieplna w przeglądzie energetycznym",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-22",
+        "strona_kod": "STK-Z-11",
+        "strona": "Dostawcy paliw transportowych",
+        "typ": "zew.",
+        "wymaganie": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń",
+        "kwal_sug": "",
+        "sposob_sug": "Flota jako odrębny obszar monitorowania",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_FLOTA = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-23",
+        "strona_kod": "STK-Z-12",
+        "strona": "Odbiorcy / klienci",
+        "typ": "zew.",
+        "wymaganie": "Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku",
+        "kwal_sug": "umowne",
+        "sposob_sug": "Plan zbierania danych (6.6): przypisanie zużycia do linii produkcyjnych",
+        "wlasciciel_sug": "",
+        "sprawdzanie_sug": "Potwierdzenie odbioru raportu; ocena zgodności raz w roku",
+        "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-24",
+        "strona_kod": "STK-Z-12",
+        "strona": "Odbiorcy / klienci",
+        "typ": "zew.",
+        "wymaganie": "Informacja o śladzie węglowym wyrobu",
+        "kwal_sug": "",
+        "sposob_sug": "",
+        "wlasciciel_sug": "",
+        "sprawdzanie_sug": "Ponowna decyzja przy odnowieniu umowy",
+        "zrodlo_podp": "Specyfikacja dla dostawców albo pismo działu zakupów klienta z datą",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": true
+      },
+      {
+        "id": "WYM-25",
+        "strona_kod": "STK-Z-12",
+        "strona": "Odbiorcy / klienci",
+        "typ": "zew.",
+        "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+        "kwal_sug": "umowne",
+        "sposob_sug": "Wdrożenie i certyfikacja zgodnie z harmonogramem wdrożenia",
+        "wlasciciel_sug": "",
+        "sprawdzanie_sug": "Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc",
+        "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-26",
+        "strona_kod": "STK-Z-13",
+        "strona": "Dostawcy urządzeń i usług",
+        "typ": "zew.",
+        "wymaganie": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry",
+        "kwal_sug": "",
+        "sposob_sug": "Wymagania dla dostawców (kl. 8.3)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-27",
+        "strona_kod": "STK-Z-14",
+        "strona": "Wykonawcy i podwykonawcy na terenie zakładu",
+        "typ": "zew.",
+        "wymaganie": "Znajomość zasad eksploatacji obowiązujących na terenie; instruktaż przed rozpoczęciem prac",
+        "kwal_sug": "",
+        "sposob_sug": "Nadzór operacyjny rozciągnięty na wykonawców (kl. 8.1)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_UR_WLASNE IN (zewnetrzne, mieszane)",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-28",
+        "strona_kod": "STK-Z-15",
+        "strona": "Instytucje finansujące / banki",
+        "typ": "zew.",
+        "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”",
+        "kwal_sug": "",
+        "sposob_sug": "Dokumentacja efektów do wniosków kredytowych",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-29",
+        "strona_kod": "STK-Z-16",
+        "strona": "Inwestorzy / podmiot raportujący ESG",
+        "typ": "zew.",
+        "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdawczości zrównoważonego rozwoju",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Wskaźniki EnPI spójne z wymaganiami sprawozdawczymi",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_CSRD = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-30",
+        "strona_kod": "STK-Z-17",
+        "strona": "Ubezpieczyciel",
+        "typ": "zew.",
+        "wymaganie": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności",
+        "kwal_sug": "",
+        "sposob_sug": "Kryteria eksploatacji SEU, harmonogram przeglądów",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-31",
+        "strona_kod": "STK-Z-18",
+        "strona": "Jednostka certyfikująca",
+        "typ": "zew.",
+        "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres",
+        "kwal_sug": "umowne",
+        "sposob_sug": "Nadzór nad dokumentacją (kl. 7.5), zapisy z audytu i przeglądu",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Audit certyfikacyjny; audity wewnętrzne (9.2)",
+        "zrodlo_podp": "Umowa o certyfikację i wymagania jednostki certyfikującej — punkt i wersja dokumentu",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      }
+    ],
+    "grupy": [
+      {
+        "id": "wewn",
+        "krotka": "Strony wewnętrzne",
+        "nazwa": "Strony wewnętrzne",
+        "opis": "Komórki i role wewnątrz organizacji. Norma wymaga ich uwzględnienia tak samo jak stron zewnętrznych.",
+        "strony": [
+          "STK-W-01",
+          "STK-W-02",
+          "STK-W-03",
+          "STK-W-04",
+          "STK-W-05",
+          "STK-W-06",
+          "STK-W-07",
+          "STK-W-08",
+          "STK-W-09",
+          "STK-W-10"
+        ]
+      },
+      {
+        "id": "organy",
+        "krotka": "Organy i regulatorzy",
+        "nazwa": "Organy, regulatorzy i zamawiający publiczni",
+        "opis": "Tu rodzą się wymagania prawne. Przy każdym zapisz, na jaki dzień ustalono brzmienie przepisu.",
+        "strony": [
+          "STK-Z-01",
+          "STK-Z-02",
+          "STK-Z-03",
+          "STK-Z-04",
+          "STK-Z-05",
+          "STK-Z-06",
+          "STK-Z-07"
+        ]
+      },
+      {
+        "id": "rynek",
+        "krotka": "Rynek i dostawcy",
+        "nazwa": "Rynek, dostawcy i odbiorcy",
+        "opis": "Wymagania umowne. Źródłem jest paragraf umowy albo specyfikacja z numerem wersji.",
+        "strony": [
+          "STK-Z-08",
+          "STK-Z-09",
+          "STK-Z-10",
+          "STK-Z-11",
+          "STK-Z-12",
+          "STK-Z-13",
+          "STK-Z-14"
+        ]
+      },
+      {
+        "id": "finanse",
+        "krotka": "Finansowanie i nadzór",
+        "nazwa": "Finansowanie, ubezpieczenie i certyfikacja",
+        "opis": "Strony oceniające organizację z zewnątrz, zwykle na podstawie udokumentowanych efektów.",
+        "strony": [
+          "STK-Z-15",
+          "STK-Z-16",
+          "STK-Z-17",
+          "STK-Z-18"
+        ]
+      }
+    ],
+    "kwalifikacje": [
+      [
+        "prawne",
+        "prawne — wynika z przepisu"
+      ],
+      [
+        "umowne",
+        "umowne — wynika z umowy albo specyfikacji"
+      ],
+      [
+        "przyjete",
+        "przyjęte zobowiązanie — firma zobowiązała się dobrowolnie"
+      ],
+      [
+        "oczekiwanie_nieprzyjete",
+        "oczekiwanie nieprzyjęte — nie przyjmujemy go jako obowiązku"
+      ]
+    ],
+    "mapowanie": [
+      {
+        "czynnik": "KTX-ZR-01",
+        "strona": "STK-Z-02",
+        "wymaganie": "Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-03",
+        "strona": "STK-Z-01",
+        "wymaganie": "Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-04",
+        "strona": "STK-Z-04",
+        "wymaganie": "Monitorowanie i raportowanie emisji, umorzenie uprawnień",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-05",
+        "strona": "STK-Z-16",
+        "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdania",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-06",
+        "strona": "STK-Z-03",
+        "wymaganie": "Terminowe badania i przeglądy, aktualna dokumentacja",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-07",
+        "strona": "STK-Z-05",
+        "wymaganie": "Kontrole szczelności i karty urządzeń w CRO",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-08",
+        "strona": "STK-Z-06",
+        "wymaganie": "Poprawna dokumentacja przedsięwzięć i oszczędności",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-ZR-10",
+        "strona": "STK-Z-07",
+        "wymaganie": "Certyfikat jako warunek lub kryterium w postępowaniach",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZM-02",
+        "strona": "STK-Z-09",
+        "wymaganie": "Zgodność profilu poboru z warunkami nowej umowy",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-ZM-03",
+        "strona": "STK-Z-12",
+        "wymaganie": "Informacja o śladzie węglowym i efektywności wyrobu",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZM-05",
+        "strona": "STK-Z-08",
+        "wymaganie": "Nieprzekraczanie mocy umownej, warunki przyłączenia",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZM-07",
+        "strona": "STK-Z-07",
+        "wymaganie": "Posiadanie certyfikatu w terminie postępowań",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-WT-07",
+        "strona": "STK-Z-08",
+        "wymaganie": "Warunki przyłączenia źródła, zgłaszanie zmian w instalacji",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-WT-09",
+        "strona": "STK-Z-01",
+        "wymaganie": "Obowiązki koncesyjne i sprawozdawcze dla wytwarzania",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-WT-13",
+        "strona": "STK-Z-11",
+        "wymaganie": "Warunki umów flotowych i dane o zużyciu paliw",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WO-01",
+        "strona": "STK-W-01",
+        "wymaganie": "Oczekiwanie powołania Energy Managera i przypisania uprawnień",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WO-09",
+        "strona": "STK-W-05",
+        "wymaganie": "Brak ograniczeń dla ciągłości produkcji przy pomiarach",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WO-11",
+        "strona": "STK-W-04",
+        "wymaganie": "Dostęp do danych i wpływ na decyzje eksploatacyjne",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WF-06",
+        "strona": "STK-Z-15",
+        "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZK-08",
+        "strona": "STK-Z-12",
+        "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZK-08",
+        "strona": "STK-Z-16",
+        "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+        "zgodnosc": "KANDYDAT"
+      }
+    ]
+  },
+  "variables": {
+    "PYT": {
+      "FAKT_LOKALIZACJE": {
+        "pytanie": "Ile lokalizacji obejmie system zarządzania energią?",
+        "jednostka": "szt.",
+        "etykiety": {}
+      },
+      "FAKT_LOKALIZACJE_LISTA": {
+        "pytanie": "Wymień lokalizacje",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_BRANZA": {
+        "pytanie": "Główna działalność zakładu",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_PRACOWNICY": {
+        "pytanie": "Liczba pracowników",
+        "jednostka": "osób",
+        "etykiety": {}
+      },
+      "FAKT_ZMIANY": {
+        "pytanie": "Ile zmian pracuje zakład?",
+        "jednostka": "",
+        "etykiety": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4"
+        }
+      },
+      "FAKT_SEZONOWOSC": {
+        "pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_PODMIOT": {
+        "pytanie": "Typ organizacji",
+        "jednostka": "",
+        "etykiety": {
+          "prywatny": "prywatny",
+          "komunalny": "komunalny",
+          "publiczny": "publiczny"
+        }
+      },
+      "FAKT_GRUPA_KAPITALOWA": {
+        "pytanie": "Czy organizacja należy do grupy kapitałowej?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_ZWIAZKI": {
+        "pytanie": "Czy działają związki zawodowe lub rada pracowników?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_SYSTEM_BAZOWY": {
+        "pytanie": "Czy organizacja ma wdrożony system zarządzania?",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Brak certyfikowanego systemu",
+          "iso_9001": "ISO 9001",
+          "iso_14001": "ISO 14001",
+          "oba": "ISO 9001 i ISO 14001",
+          "inny": "Inny system certyfikowany"
+        }
+      },
+      "FAKT_SYSTEM_BAZOWY_ROK": {
+        "pytanie": "Od którego roku system jest certyfikowany?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_ZGODA_INTEGRACJA": {
+        "pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak — rozszerzamy istniejącą dokumentację",
+          "nie": "Nie — tworzymy odrębny system",
+          "brak decyzji": "Decyzja jeszcze nie zapadła"
+        }
+      },
+      "FAKT_ENERGY_MANAGER": {
+        "pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "Nie wyznaczono nikogo",
+          "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków",
+          "tak": "Tak, z pisemnym zakresem obowiązków"
+        }
+      },
+      "FAKT_UR_WLASNE": {
+        "pytanie": "Kto prowadzi utrzymanie ruchu?",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Własne służby utrzymania ruchu",
+          "zewnetrzne": "Firma zewnętrzna",
+          "mieszane": "Częściowo własne służby, część prac zlecana"
+        }
+      },
+      "FAKT_INSTRUKCJE_EKSPL": {
+        "pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, dla wszystkich głównych urządzeń",
+          "czesciowo": "Dla części urządzeń",
+          "nie": "Nie ma"
+        }
+      },
+      "FAKT_ZAKUPY_KRYTERIA": {
+        "pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?",
+        "jednostka": "",
+        "etykiety": {
+          "zawsze": "Zawsze — to stałe kryterium zakupowe",
+          "czasami": "Czasami, przy większych zakupach",
+          "nie": "Nie — decyduje cena zakupu"
+        }
+      },
+      "FAKT_ROTACJA": {
+        "pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku",
+        "jednostka": "",
+        "etykiety": {
+          "niska": "Niska — poniżej 5% rocznie",
+          "srednia": "Średnia — od 5 do 15% rocznie",
+          "wysoka": "Wysoka — powyżej 15% rocznie"
+        }
+      },
+      "FAKT_ROK_ODNIESIENIA": {
+        "pytanie": "Za który rok podajesz dane?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_NOSNIKI": {
+        "pytanie": "Zużycie nośników energii w roku odniesienia",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "ZUZYCIE_TJ": {
+        "pytanie": "Roczne zużycie energii",
+        "jednostka": "TJ",
+        "etykiety": {}
+      },
+      "FAKT_PRODUKCJA_JEDN": {
+        "pytanie": "W czym mierzycie wielkość produkcji?",
+        "jednostka": "",
+        "etykiety": {
+          "t": "tony wyrobu",
+          "szt": "sztuki wyrobu",
+          "m2": "metry kwadratowe",
+          "m3": "metry sześcienne",
+          "mwh": "MWh wyrobu (ciepło, chłód)",
+          "inna": "Inna jednostka"
+        }
+      },
+      "FAKT_PRODUKCJA_INNA": {
+        "pytanie": "Jaka jednostka?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_PRODUKCJA": {
+        "pytanie": "Wielkość produkcji w roku odniesienia",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_PRODUKCJA_POPRZ": {
+        "pytanie": "Wielkość produkcji w roku poprzednim",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_HDD": {
+        "pytanie": "Stopniodni grzania (HDD) w roku odniesienia",
+        "jednostka": "°C·dzień",
+        "etykiety": {}
+      },
+      "FAKT_HDD_POPRZ": {
+        "pytanie": "Stopniodni grzania w roku poprzednim",
+        "jednostka": "°C·dzień",
+        "etykiety": {}
+      },
+      "FAKT_PRZYCHOD": {
+        "pytanie": "Przychód ze sprzedaży w roku odniesienia",
+        "jednostka": "mln zł",
+        "etykiety": {}
+      },
+      "FAKT_UDZIAL_ENERGII": {
+        "pytanie": "Jaki procent kosztów operacyjnych stanowi energia?",
+        "jednostka": "%",
+        "etykiety": {}
+      },
+      "FAKT_MOC_UMOWNA": {
+        "pytanie": "Moc umowna energii elektrycznej",
+        "jednostka": "kW",
+        "etykiety": {}
+      },
+      "FAKT_MOC_OGRANICZONA": {
+        "pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_UMOWA_WYGASA": {
+        "pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_UMOWA_DATA": {
+        "pytanie": "Data wygaśnięcia umowy",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_BUDZET": {
+        "pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_PBT_PROG": {
+        "pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?",
+        "jednostka": "lat",
+        "etykiety": {}
+      },
+      "FAKT_INWESTYCJE": {
+        "pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_INWESTYCJE_OPIS": {
+        "pytanie": "Jakie?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_BIALE_MOZLIWE": {
+        "pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_SPREZONE": {
+        "pytanie": "Czy zakład ma instalację sprężonego powietrza?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_CA_LICZBA": {
+        "pytanie": "Ile jest sprężarek?",
+        "jednostka": "szt.",
+        "etykiety": {}
+      },
+      "FAKT_CA_MOC": {
+        "pytanie": "Łączna moc znamionowa sprężarek",
+        "jednostka": "kW",
+        "etykiety": {}
+      },
+      "FAKT_CA_VSD": {
+        "pytanie": "Ile sprężarek ma regulację obrotów (falownik)?",
+        "jednostka": "szt.",
+        "etykiety": {}
+      },
+      "FAKT_CA_STEROWNIK": {
+        "pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_CA_SZCZELNOSC": {
+        "pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_CA_ODZYSK": {
+        "pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_CA_GODZINY": {
+        "pytanie": "Ile godzin w roku pracuje sprężarkownia?",
+        "jednostka": "h/rok",
+        "etykiety": {}
+      },
+      "FAKT_WENT": {
+        "pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_WENT_LICZBA": {
+        "pytanie": "Ile jest central?",
+        "jednostka": "szt.",
+        "etykiety": {}
+      },
+      "FAKT_WENT_ODZYSK": {
+        "pytanie": "Czy centrale mają odzysk ciepła?",
+        "jednostka": "",
+        "etykiety": {
+          "wszystkie": "Wszystkie centrale mają odzysk",
+          "czesc": "Część central ma odzysk",
+          "zadna": "Żadna nie ma odzysku",
+          "nie wiem": "Nie wiem"
+        }
+      },
+      "FAKT_WENT_HARMONOGRAM": {
+        "pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, wszystkie",
+          "czesciowo": "Część central",
+          "nie": "Nie — pracują tak samo cały czas"
+        }
+      },
+      "FAKT_CHLODZENIE": {
+        "pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_CHLODZENIE_MOC": {
+        "pytanie": "Łączna moc chłodnicza",
+        "jednostka": "kW",
+        "etykiety": {}
+      },
+      "FAKT_CHLODZENIE_WODNE": {
+        "pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_FGAZ": {
+        "pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_NAPEDY_VSD": {
+        "pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Żaden albo pojedyncze",
+          "czesc": "Mniej więcej połowa",
+          "wiekszosc": "Większość",
+          "nie wiem": "Nie wiem"
+        }
+      },
+      "FAKT_LED_UDZIAL": {
+        "pytanie": "Jaki procent oświetlenia stanowią źródła LED?",
+        "jednostka": "%",
+        "etykiety": {}
+      },
+      "FAKT_OSW_STEROWANIE": {
+        "pytanie": "Jak sterowane jest oświetlenie hal?",
+        "jednostka": "",
+        "etykiety": {
+          "czujniki": "Czujniki ruchu albo natężenia światła",
+          "harmonogram": "Automatyczny harmonogram",
+          "recznie": "Ręcznie — włącznikiem"
+        }
+      },
+      "FAKT_WIEK_INFRA": {
+        "pytanie": "Ile lat ma większość głównych urządzeń energetycznych?",
+        "jednostka": "lat",
+        "etykiety": {}
+      },
+      "FAKT_UDT": {
+        "pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_KOTLOWNIA": {
+        "pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)",
+          "siec": "Wyłącznie z sieci ciepłowniczej",
+          "oba": "Z własnego źródła i z sieci ciepłowniczej",
+          "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"
+        }
+      },
+      "FAKT_CIEPLO_PALIWO": {
+        "pytanie": "Czym zasilane jest własne źródło ciepła?",
+        "jednostka": "",
+        "etykiety": {
+          "gaz ziemny": "gaz ziemny",
+          "olej": "olej",
+          "węgiel": "węgiel",
+          "biomasa": "biomasa",
+          "biogaz": "biogaz",
+          "pompa ciepła": "pompa ciepła",
+          "energia elektryczna": "energia elektryczna"
+        }
+      },
+      "FAKT_CIEPLO_PALIWA": {
+        "pytanie": "Czy ciepło wytwarzane jest z paliw kopalnych?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_KOTLOWNIA_MOC": {
+        "pytanie": "Moc zainstalowana źródeł ciepła",
+        "jednostka": "kW",
+        "etykiety": {}
+      },
+      "FAKT_KOTLOWNIA_WIEK": {
+        "pytanie": "Wiek najstarszego czynnego kotła",
+        "jednostka": "lat",
+        "etykiety": {}
+      },
+      "FAKT_CIEPLO_MOC_ZAMOWIONA": {
+        "pytanie": "Zamówiona moc cieplna z sieci",
+        "jednostka": "kW",
+        "etykiety": {}
+      },
+      "FAKT_PROCESY": {
+        "pytanie": "Które procesy zużywają najwięcej energii?",
+        "jednostka": "",
+        "etykiety": {
+          "piece i nagrzewnice": "piece i nagrzewnice",
+          "suszarnie": "suszarnie",
+          "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki",
+          "prasy": "prasy",
+          "malarnia": "malarnia",
+          "galwanizernia": "galwanizernia",
+          "pompy procesowe": "pompy procesowe",
+          "chłodzenie procesu": "chłodzenie procesu",
+          "inne": "inne"
+        }
+      },
+      "FAKT_CIEPLO_ODPADOWE": {
+        "pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_ODZYSK_CIEPLA": {
+        "pytanie": "Czy to ciepło jest odzyskiwane?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, w całości albo prawie w całości",
+          "czesciowo": "Częściowo",
+          "nie": "Nie jest odzyskiwane"
+        }
+      },
+      "FAKT_PROCES_BEZ_ALTERNATYWY": {
+        "pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_PV": {
+        "pytanie": "Czy zakład ma instalację fotowoltaiczną?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, działa",
+          "nie": "Nie",
+          "w planach": "W planach albo w budowie"
+        }
+      },
+      "FAKT_PV_MOC": {
+        "pytanie": "Moc instalacji fotowoltaicznej",
+        "jednostka": "kWp",
+        "etykiety": {}
+      },
+      "FAKT_BESS": {
+        "pytanie": "Czy zakład ma magazyn energii?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_BESS_POJ": {
+        "pytanie": "Pojemność magazynu",
+        "jednostka": "kWh",
+        "etykiety": {}
+      },
+      "FAKT_CHP": {
+        "pytanie": "Czy zakład ma kogenerację?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_CHP_MOC": {
+        "pytanie": "Moc elektryczna kogeneracji",
+        "jednostka": "kWe",
+        "etykiety": {}
+      },
+      "FAKT_FLOTA": {
+        "pytanie": "Czy w zakresie systemu jest flota pojazdów?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_FLOTA_LICZBA": {
+        "pytanie": "Liczba pojazdów",
+        "jednostka": "szt.",
+        "etykiety": {}
+      },
+      "FAKT_PODLICZNIKI": {
+        "pytanie": "Jak opomiarowana jest energia elektryczna?",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Tylko licznik główny",
+          "czesciowo": "Podliczniki na części obiektów lub wydziałów",
+          "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"
+        }
+      },
+      "FAKT_PODLICZNIKI_LICZBA": {
+        "pytanie": "Ile jest podliczników?",
+        "jednostka": "szt.",
+        "etykiety": {}
+      },
+      "FAKT_ODCZYT": {
+        "pytanie": "Jak odczytywane są liczniki?",
+        "jednostka": "",
+        "etykiety": {
+          "recznie": "Ręcznie, spisywane z liczników",
+          "zdalnie": "Zdalnie, automatycznie do systemu",
+          "mieszane": "Część ręcznie, część zdalnie"
+        }
+      },
+      "FAKT_SCADA": {
+        "pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_SCADA_ZAKRES": {
+        "pytanie": "Jaki procent zużycia energii obejmuje?",
+        "jednostka": "%",
+        "etykiety": {}
+      },
+      "FAKT_DANE_HISTORIA": {
+        "pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?",
+        "jednostka": "mies.",
+        "etykiety": {}
+      },
+      "FAKT_MES": {
+        "pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_ANALIZA_DANYCH": {
+        "pytanie": "Czy dane o zużyciu energii są analizowane?",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "nie",
+          "okresowo": "okresowo",
+          "systematycznie": "systematycznie"
+        }
+      },
+      "FAKT_AUDYT_ENERG": {
+        "pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_AUDYT_ROK": {
+        "pytanie": "W którym roku?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_ETS": {
+        "pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_CSRD": {
+        "pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        }
+      },
+      "FAKT_CSRD_ROK": {
+        "pytanie": "Od którego roku?",
+        "jednostka": "",
+        "etykiety": {}
+      },
+      "FAKT_ODBIORCY_CO2": {
+        "pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_PRZETARGI": {
+        "pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      },
+      "FAKT_PRZERWY_POGODA": {
+        "pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        }
+      }
+    },
+    "WYMAGANIA": [
+      {
+        "id": "WYM-01",
+        "strona_kod": "STK-W-01",
+        "strona": "Zarząd / najwyższe kierownictwo",
+        "typ": "wew.",
+        "wymaganie": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów",
+        "kwal_sug": "",
+        "sposob_sug": "Polityka energetyczna, cele energetyczne, Przegląd Zarządzania (kl. 9.3)",
+        "wlasciciel_sug": "Dyrektor Zakładu",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-02",
+        "strona_kod": "STK-W-02",
+        "strona": "Właściciel / grupa kapitałowa",
+        "typ": "wew.",
+        "wymaganie": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny",
+        "kwal_sug": "",
+        "sposob_sug": "Wskaźniki EnPI definiowane spójnie z wytycznymi grupy",
+        "wlasciciel_sug": "Dyrektor Zakładu",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_GRUPA_KAPITALOWA = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-03",
+        "strona_kod": "STK-W-03",
+        "strona": "Pracownicy",
+        "typ": "wew.",
+        "wymaganie": "Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Kryteria eksploatacji wentylacji, klimatyzacji i oświetlenia (8.1); pomiary okresowe",
+        "wlasciciel_sug": "Kierownik UR, specjalista BHP",
+        "sprawdzanie_sug": "Pomiary okresowe oświetlenia i mikroklimatu; kontrole BHP",
+        "zrodlo_podp": "Przepisy BHP — rozporządzenie o ogólnych przepisach bhp, normy oświetlenia stanowisk",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": true,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-04",
+        "strona_kod": "STK-W-03",
+        "strona": "Pracownicy",
+        "typ": "wew.",
+        "wymaganie": "Preferencja: niższa temperatura w halach w czasie upałów",
+        "kwal_sug": "",
+        "sposob_sug": "",
+        "wlasciciel_sug": "Kierownik UR, specjalista BHP",
+        "sprawdzanie_sug": "Ankieta roczna; decyzja przy planowaniu budżetu",
+        "zrodlo_podp": "Ankieta pracownicza, zgłoszenia do działu BHP",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": true,
+        "slad": false
+      },
+      {
+        "id": "WYM-05",
+        "strona_kod": "STK-W-04",
+        "strona": "Służby utrzymania ruchu",
+        "typ": "wew.",
+        "wymaganie": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji",
+        "kwal_sug": "",
+        "sposob_sug": "Nadzór operacyjny nad SEU (kl. 8.1), plan zbierania danych (kl. 6.6)",
+        "wlasciciel_sug": "Kierownik Utrzymania Ruchu",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-06",
+        "strona_kod": "STK-W-05",
+        "strona": "Dział produkcji",
+        "typ": "wew.",
+        "wymaganie": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach",
+        "kwal_sug": "",
+        "sposob_sug": "Zmienne istotne w przeglądzie energetycznym (kl. 6.3)",
+        "wlasciciel_sug": "Kierownik Produkcji",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-07",
+        "strona_kod": "STK-W-06",
+        "strona": "Dział zakupów",
+        "typ": "wew.",
+        "wymaganie": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert",
+        "kwal_sug": "",
+        "sposob_sug": "Kryteria energetyczne w zakupach (kl. 8.3)",
+        "wlasciciel_sug": "Dział Zakupów",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-08",
+        "strona_kod": "STK-W-07",
+        "strona": "Kontroling / finanse",
+        "typ": "wew.",
+        "wymaganie": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć",
+        "kwal_sug": "",
+        "sposob_sug": "Ocena możliwości poprawy z okresem zwrotu (kl. 6.3)",
+        "wlasciciel_sug": "Kontroling",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-09",
+        "strona_kod": "STK-W-08",
+        "strona": "Dział BHP i ochrony środowiska",
+        "typ": "wew.",
+        "wymaganie": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów",
+        "kwal_sug": "",
+        "sposob_sug": "Integracja rejestru wymagań prawnych",
+        "wlasciciel_sug": "Specjalista ds. środowiska",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-10",
+        "strona_kod": "STK-W-09",
+        "strona": "Energy Manager / zespół ds. energii",
+        "typ": "wew.",
+        "wymaganie": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu",
+        "kwal_sug": "",
+        "sposob_sug": "Zarządzenie o powołaniu zespołu, przypisanie ról (kl. 5.3)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-11",
+        "strona_kod": "STK-W-10",
+        "strona": "Rada pracowników / związki zawodowe",
+        "typ": "wew.",
+        "wymaganie": "Informacja o zmianach organizacyjnych wynikających z wdrożenia; brak pogorszenia warunków pracy",
+        "kwal_sug": "",
+        "sposob_sug": "Plan komunikacji wewnętrznej (kl. 7.4)",
+        "wlasciciel_sug": "Dział Kadr",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_ZWIAZKI = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-12",
+        "strona_kod": "STK-Z-01",
+        "strona": "Prezes URE",
+        "typ": "zew.",
+        "wymaganie": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Rejestr wymagań prawnych, ocena zgodności (kl. 9.1.2)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-13",
+        "strona_kod": "STK-Z-02",
+        "strona": "Organ właściwy ds. EED / minister",
+        "typ": "zew.",
+        "wymaganie": "Obowiązek posiadania certyfikowanego systemu zarządzania energią — wprowadzany projektem nowelizacji ustawy o efektywności energetycznej (UC77), wdrażającym art. 11 dyrektywy (UE) 2023/1791",
+        "kwal_sug": "",
+        "sposob_sug": "Rejestr wymagań prawnych i innych; harmonogram wdrożenia i certyfikacji dostosowany do terminu wynikającego z ustawy po jej uchwaleniu",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji",
+        "zrodlo_podp": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77 (legislacja.rcl.gov.pl) — zapisz, na jaki dzień ustalono brzmienie",
+        "pokaz_gdy": "ZUZYCIE_TJ > 85",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false,
+        "uwaga_prawna": true
+      },
+      {
+        "id": "WYM-14",
+        "strona_kod": "STK-Z-03",
+        "strona": "Urząd Dozoru Technicznego",
+        "typ": "zew.",
+        "wymaganie": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Harmonogram przeglądów UDT w rejestrze wymagań",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_UDT = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-15",
+        "strona_kod": "STK-Z-04",
+        "strona": "Organy ochrony środowiska / KOBiZE",
+        "typ": "zew.",
+        "wymaganie": "Monitorowanie i raportowanie emisji; obowiązki wynikające z pozwoleń",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Powiązanie celów energetycznych z emisyjnymi",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_ETS = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-16",
+        "strona_kod": "STK-Z-05",
+        "strona": "Organ prowadzący rejestr f-gazów",
+        "typ": "zew.",
+        "wymaganie": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Rejestr F-gaz włączony do wymagań prawnych",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_FGAZ = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-17",
+        "strona_kod": "STK-Z-06",
+        "strona": "Operator systemu świadectw efektywności",
+        "typ": "zew.",
+        "wymaganie": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa",
+        "kwal_sug": "",
+        "sposob_sug": "Dokumentacja efektów w planach działań (kl. 6.2)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-18",
+        "strona_kod": "STK-Z-07",
+        "strona": "Zamawiający publiczni",
+        "typ": "zew.",
+        "wymaganie": "Posiadanie certyfikowanego systemu jako warunek lub kryterium oceny ofert",
+        "kwal_sug": "",
+        "sposob_sug": "Termin certyfikacji podporządkowany kalendarzowi postępowań",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_PRZETARGI = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-19",
+        "strona_kod": "STK-Z-08",
+        "strona": "Operator systemu dystrybucyjnego",
+        "typ": "zew.",
+        "wymaganie": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Monitorowanie mocy szczytowej (kl. 9.1), warunki przyłączeniowe w rejestrze",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-20",
+        "strona_kod": "STK-Z-09",
+        "strona": "Sprzedawca energii elektrycznej",
+        "typ": "zew.",
+        "wymaganie": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży",
+        "kwal_sug": "",
+        "sposob_sug": "Analiza profilu poboru jako możliwość poprawy (kl. 6.3)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-21",
+        "strona_kod": "STK-Z-10",
+        "strona": "Dostawca gazu lub ciepła sieciowego",
+        "typ": "zew.",
+        "wymaganie": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy",
+        "kwal_sug": "",
+        "sposob_sug": "Gospodarka cieplna w przeglądzie energetycznym",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-22",
+        "strona_kod": "STK-Z-11",
+        "strona": "Dostawcy paliw transportowych",
+        "typ": "zew.",
+        "wymaganie": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń",
+        "kwal_sug": "",
+        "sposob_sug": "Flota jako odrębny obszar monitorowania",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_FLOTA = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-23",
+        "strona_kod": "STK-Z-12",
+        "strona": "Odbiorcy / klienci",
+        "typ": "zew.",
+        "wymaganie": "Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku",
+        "kwal_sug": "umowne",
+        "sposob_sug": "Plan zbierania danych (6.6): przypisanie zużycia do linii produkcyjnych",
+        "wlasciciel_sug": "",
+        "sprawdzanie_sug": "Potwierdzenie odbioru raportu; ocena zgodności raz w roku",
+        "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-24",
+        "strona_kod": "STK-Z-12",
+        "strona": "Odbiorcy / klienci",
+        "typ": "zew.",
+        "wymaganie": "Informacja o śladzie węglowym wyrobu",
+        "kwal_sug": "",
+        "sposob_sug": "",
+        "wlasciciel_sug": "",
+        "sprawdzanie_sug": "Ponowna decyzja przy odnowieniu umowy",
+        "zrodlo_podp": "Specyfikacja dla dostawców albo pismo działu zakupów klienta z datą",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": true
+      },
+      {
+        "id": "WYM-25",
+        "strona_kod": "STK-Z-12",
+        "strona": "Odbiorcy / klienci",
+        "typ": "zew.",
+        "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+        "kwal_sug": "umowne",
+        "sposob_sug": "Wdrożenie i certyfikacja zgodnie z harmonogramem wdrożenia",
+        "wlasciciel_sug": "",
+        "sprawdzanie_sug": "Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc",
+        "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-26",
+        "strona_kod": "STK-Z-13",
+        "strona": "Dostawcy urządzeń i usług",
+        "typ": "zew.",
+        "wymaganie": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry",
+        "kwal_sug": "",
+        "sposob_sug": "Wymagania dla dostawców (kl. 8.3)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-27",
+        "strona_kod": "STK-Z-14",
+        "strona": "Wykonawcy i podwykonawcy na terenie zakładu",
+        "typ": "zew.",
+        "wymaganie": "Znajomość zasad eksploatacji obowiązujących na terenie; instruktaż przed rozpoczęciem prac",
+        "kwal_sug": "",
+        "sposob_sug": "Nadzór operacyjny rozciągnięty na wykonawców (kl. 8.1)",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "FAKT_UR_WLASNE IN (zewnetrzne, mieszane)",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-28",
+        "strona_kod": "STK-Z-15",
+        "strona": "Instytucje finansujące / banki",
+        "typ": "zew.",
+        "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”",
+        "kwal_sug": "",
+        "sposob_sug": "Dokumentacja efektów do wniosków kredytowych",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-29",
+        "strona_kod": "STK-Z-16",
+        "strona": "Inwestorzy / podmiot raportujący ESG",
+        "typ": "zew.",
+        "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdawczości zrównoważonego rozwoju",
+        "kwal_sug": "prawne",
+        "sposob_sug": "Wskaźniki EnPI spójne z wymaganiami sprawozdawczymi",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
+        "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+        "pokaz_gdy": "FAKT_CSRD = tak",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-30",
+        "strona_kod": "STK-Z-17",
+        "strona": "Ubezpieczyciel",
+        "typ": "zew.",
+        "wymaganie": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności",
+        "kwal_sug": "",
+        "sposob_sug": "Kryteria eksploatacji SEU, harmonogram przeglądów",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Przegląd rejestru raz w roku",
+        "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      },
+      {
+        "id": "WYM-31",
+        "strona_kod": "STK-Z-18",
+        "strona": "Jednostka certyfikująca",
+        "typ": "zew.",
+        "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres",
+        "kwal_sug": "umowne",
+        "sposob_sug": "Nadzór nad dokumentacją (kl. 7.5), zapisy z audytu i przeglądu",
+        "wlasciciel_sug": "Energy Manager",
+        "sprawdzanie_sug": "Audit certyfikacyjny; audity wewnętrzne (9.2)",
+        "zrodlo_podp": "Umowa o certyfikację i wymagania jednostki certyfikującej — punkt i wersja dokumentu",
+        "pokaz_gdy": "ZAWSZE",
+        "bhp": false,
+        "preferencja": false,
+        "slad": false
+      }
+    ],
+    "GRUPY": [
+      {
+        "id": "wewn",
+        "krotka": "Strony wewnętrzne",
+        "nazwa": "Strony wewnętrzne",
+        "opis": "Komórki i role wewnątrz organizacji. Norma wymaga ich uwzględnienia tak samo jak stron zewnętrznych.",
+        "strony": [
+          "STK-W-01",
+          "STK-W-02",
+          "STK-W-03",
+          "STK-W-04",
+          "STK-W-05",
+          "STK-W-06",
+          "STK-W-07",
+          "STK-W-08",
+          "STK-W-09",
+          "STK-W-10"
+        ]
+      },
+      {
+        "id": "organy",
+        "krotka": "Organy i regulatorzy",
+        "nazwa": "Organy, regulatorzy i zamawiający publiczni",
+        "opis": "Tu rodzą się wymagania prawne. Przy każdym zapisz, na jaki dzień ustalono brzmienie przepisu.",
+        "strony": [
+          "STK-Z-01",
+          "STK-Z-02",
+          "STK-Z-03",
+          "STK-Z-04",
+          "STK-Z-05",
+          "STK-Z-06",
+          "STK-Z-07"
+        ]
+      },
+      {
+        "id": "rynek",
+        "krotka": "Rynek i dostawcy",
+        "nazwa": "Rynek, dostawcy i odbiorcy",
+        "opis": "Wymagania umowne. Źródłem jest paragraf umowy albo specyfikacja z numerem wersji.",
+        "strony": [
+          "STK-Z-08",
+          "STK-Z-09",
+          "STK-Z-10",
+          "STK-Z-11",
+          "STK-Z-12",
+          "STK-Z-13",
+          "STK-Z-14"
+        ]
+      },
+      {
+        "id": "finanse",
+        "krotka": "Finansowanie i nadzór",
+        "nazwa": "Finansowanie, ubezpieczenie i certyfikacja",
+        "opis": "Strony oceniające organizację z zewnątrz, zwykle na podstawie udokumentowanych efektów.",
+        "strony": [
+          "STK-Z-15",
+          "STK-Z-16",
+          "STK-Z-17",
+          "STK-Z-18"
+        ]
+      }
+    ],
+    "KWALIFIKACJE": [
+      [
+        "prawne",
+        "prawne — wynika z przepisu"
+      ],
+      [
+        "umowne",
+        "umowne — wynika z umowy albo specyfikacji"
+      ],
+      [
+        "przyjete",
+        "przyjęte zobowiązanie — firma zobowiązała się dobrowolnie"
+      ],
+      [
+        "oczekiwanie_nieprzyjete",
+        "oczekiwanie nieprzyjęte — nie przyjmujemy go jako obowiązku"
+      ]
+    ],
+    "MAPOWANIE": [
+      {
+        "czynnik": "KTX-ZR-01",
+        "strona": "STK-Z-02",
+        "wymaganie": "Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-03",
+        "strona": "STK-Z-01",
+        "wymaganie": "Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-04",
+        "strona": "STK-Z-04",
+        "wymaganie": "Monitorowanie i raportowanie emisji, umorzenie uprawnień",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-05",
+        "strona": "STK-Z-16",
+        "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdania",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-06",
+        "strona": "STK-Z-03",
+        "wymaganie": "Terminowe badania i przeglądy, aktualna dokumentacja",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-07",
+        "strona": "STK-Z-05",
+        "wymaganie": "Kontrole szczelności i karty urządzeń w CRO",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZR-08",
+        "strona": "STK-Z-06",
+        "wymaganie": "Poprawna dokumentacja przedsięwzięć i oszczędności",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-ZR-10",
+        "strona": "STK-Z-07",
+        "wymaganie": "Certyfikat jako warunek lub kryterium w postępowaniach",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZM-02",
+        "strona": "STK-Z-09",
+        "wymaganie": "Zgodność profilu poboru z warunkami nowej umowy",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-ZM-03",
+        "strona": "STK-Z-12",
+        "wymaganie": "Informacja o śladzie węglowym i efektywności wyrobu",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZM-05",
+        "strona": "STK-Z-08",
+        "wymaganie": "Nieprzekraczanie mocy umownej, warunki przyłączenia",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-ZM-07",
+        "strona": "STK-Z-07",
+        "wymaganie": "Posiadanie certyfikatu w terminie postępowań",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-WT-07",
+        "strona": "STK-Z-08",
+        "wymaganie": "Warunki przyłączenia źródła, zgłaszanie zmian w instalacji",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-WT-09",
+        "strona": "STK-Z-01",
+        "wymaganie": "Obowiązki koncesyjne i sprawozdawcze dla wytwarzania",
+        "zgodnosc": "TAK"
+      },
+      {
+        "czynnik": "KTX-WT-13",
+        "strona": "STK-Z-11",
+        "wymaganie": "Warunki umów flotowych i dane o zużyciu paliw",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WO-01",
+        "strona": "STK-W-01",
+        "wymaganie": "Oczekiwanie powołania Energy Managera i przypisania uprawnień",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WO-09",
+        "strona": "STK-W-05",
+        "wymaganie": "Brak ograniczeń dla ciągłości produkcji przy pomiarach",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WO-11",
+        "strona": "STK-W-04",
+        "wymaganie": "Dostęp do danych i wpływ na decyzje eksploatacyjne",
+        "zgodnosc": "nie"
+      },
+      {
+        "czynnik": "KTX-WF-06",
+        "strona": "STK-Z-15",
+        "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZK-08",
+        "strona": "STK-Z-12",
+        "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+        "zgodnosc": "KANDYDAT"
+      },
+      {
+        "czynnik": "KTX-ZK-08",
+        "strona": "STK-Z-16",
+        "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+        "zgodnosc": "KANDYDAT"
+      }
+    ],
+    "PROFIL": {
+      "FAKT_LOKALIZACJE": "2",
+      "FAKT_LOKALIZACJE_LISTA": [
+        {
+          "c0": "Zakład produkcyjny",
+          "c1": "ul. Przemysłowa 12, Katowice",
+          "c2": "produkcja",
+          "c3": "tak"
+        },
+        {
+          "c0": "Magazyn wyrobów gotowych",
+          "c1": "ul. Składowa 11, Katowice",
+          "c2": "magazyn",
+          "c3": "tak"
+        }
+      ],
+      "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+      "FAKT_PRACOWNICY": "850",
+      "FAKT_ZMIANY": "3",
+      "FAKT_SEZONOWOSC": "nie",
+      "FAKT_PODMIOT": "prywatny",
+      "FAKT_GRUPA_KAPITALOWA": "tak",
+      "FAKT_ZWIAZKI": "nie",
+      "FAKT_SYSTEM_BAZOWY": "iso_14001",
+      "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+      "FAKT_ZGODA_INTEGRACJA": "tak",
+      "FAKT_ENERGY_MANAGER": "nieformalnie",
+      "FAKT_UR_WLASNE": "wlasne",
+      "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+      "FAKT_ZAKUPY_KRYTERIA": "czasami",
+      "FAKT_ROTACJA": "srednia",
+      "FAKT_NOSNIKI": [
+        {
+          "c0": "energia elektryczna",
+          "c1": "8500",
+          "c2": "MWh",
+          "c3": "7565000"
+        },
+        {
+          "c0": "gaz ziemny",
+          "c1": "350000",
+          "c2": "m³",
+          "c3": "875000"
+        },
+        {
+          "c0": "LPG",
+          "c1": "18000",
+          "c2": "l",
+          "c3": "54000"
+        }
+      ],
+      "FAKT_ROK_ODNIESIENIA": "2025",
+      "FAKT_UDZIAL_ENERGII": "2,5",
+      "FAKT_MOC_UMOWNA": "1400",
+      "FAKT_SPREZONE": "tak",
+      "FAKT_CA_LICZBA": "4",
+      "FAKT_CA_MOC": "440",
+      "FAKT_CA_VSD": "0",
+      "FAKT_CA_STEROWNIK": "nie",
+      "FAKT_CA_SZCZELNOSC": "nie",
+      "FAKT_CA_ODZYSK": "nie",
+      "FAKT_CA_GODZINY": "6000",
+      "FAKT_KOTLOWNIA": "wlasne",
+      "FAKT_CIEPLO_PALIWO": [
+        "gaz ziemny"
+      ],
+      "FAKT_KOTLOWNIA_MOC": "1200",
+      "FAKT_KOTLOWNIA_WIEK": "18",
+      "FAKT_PODLICZNIKI": "czesciowo",
+      "FAKT_ODCZYT": "mieszane",
+      "FAKT_UDT": "tak",
+      "FAKT_ETS": "nie",
+      "FAKT_CSRD": "nie",
+      "FAKT_FGAZ": "tak",
+      "FAKT_PRZETARGI": "nie",
+      "FAKT_ODBIORCY_CO2": "tak",
+      "FAKT_FLOTA": "tak",
+      "FAKT_AUDYT_ENERG": "tak",
+      "FAKT_UMOWA_WYGASA": "tak",
+      "FAKT_MOC_OGRANICZONA": "nie",
+      "FAKT_PV": "nie",
+      "FAKT_CHP": "nie",
+      "FAKT_CIEPLO_ODPADOWE": "tak"
+    },
+    "POTWIERDZONE": [
+      "KTX-ZR-03",
+      "KTX-ZR-06",
+      "KTX-ZR-07",
+      "KTX-ZM-02",
+      "KTX-ZM-03",
+      "KTX-WT-13",
+      "KTX-WO-01",
+      "KTX-WO-11",
+      "KTX-WF-06"
+    ],
+    "PRZYKLAD_42": {
+      "klimat": {
+        "odp": "tak",
+        "lista": "Trzy strony: główny klient — dane o zużyciu i emisjach przypadających na dostarczane wyroby; drugi klient (Tier 1) — deklaracja redukcji śladu węglowego dostaw, przyjęta jako oczekiwanie nieprzyjęte; bank finansujący modernizację — wskaźniki w załączniku ESG do umowy kredytowej.",
+        "odstep": "rok_umowy"
+      },
+      "wym": {
+        "WYM-01": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Strategia zakładu 2026–2028",
+          "zr_ozn": "cel: obniżenie kosztów energii o 8% do 2028 r.",
+          "zr_data": "2026-01-15",
+          "sposob": "Cele energetyczne i plany działań (6.2); roczny raport kosztów energii na przeglądzie zarządzania",
+          "wlasciciel": "Dyrektor Zakładu",
+          "sprawdzanie": "Przegląd zarządzania (9.3) — raz w roku"
+        },
+        "WYM-02": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Polityka klimatyczna grupy kapitałowej",
+          "zr_ozn": "wersja 2025, rozdz. 3 — wskaźniki raportowane rocznie",
+          "zr_data": "2025-06-30",
+          "sposob": "Wskaźniki EnPI liczone jednolicie dla obu lokalizacji (6.4); raport roczny do spółki matki",
+          "wlasciciel": "Dyrektor Zakładu",
+          "sprawdzanie": "Raport roczny do grupy; przegląd zarządzania (9.3)"
+        },
+        "WYM-03": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "prawne",
+          "zr_dok": "Rozporządzenie o ogólnych przepisach bhp; PN-EN 12464-1",
+          "zr_ozn": "wymagania dla mikroklimatu i oświetlenia stanowisk — stan na 10.02.2026 r.",
+          "zr_data": "2026-02-10",
+          "sposob": "Kryteria eksploatacji wentylacji, klimatyzacji i oświetlenia (8.1); uwzględnienie przy wymianie oświetlenia na LED w hali B (8.2)",
+          "wlasciciel": "Kierownik Utrzymania Ruchu, specjalista BHP",
+          "sprawdzanie": "Pomiary okresowe oświetlenia i mikroklimatu; kontrole BHP",
+          "data_brzmienia": "2026-02-10"
+        },
+        "WYM-04": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "oczekiwanie_nieprzyjete",
+          "zr_dok": "Ankieta BHP",
+          "zr_ozn": "ankieta pracownicza 2025, pytanie 7",
+          "zr_data": "2025-10-20",
+          "sposob": "",
+          "wlasciciel": "Specjalista BHP",
+          "sprawdzanie": "Ankieta roczna; ponowna decyzja przy planowaniu budżetu na 2027 r.",
+          "powod": "Preferencja wykracza poza wymagania przepisów i wymaga analizy kosztów chłodzenia hal montażowych. Rozważane w planie działań na 2027 r."
+        },
+        "WYM-05": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Zarządzenie 3/2026 o rolach w systemie zarządzania energią",
+          "zr_ozn": "§ 4 — uprawnienia utrzymania ruchu",
+          "zr_data": "2026-02-12",
+          "sposob": "Dostęp do arkusza EnPI i raportów miesięcznych; kryteria eksploatacji uzgadniane z utrzymaniem ruchu (8.1)",
+          "wlasciciel": "Kierownik Utrzymania Ruchu",
+          "sprawdzanie": "Przegląd rejestru raz w roku"
+        },
+        "WYM-06": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Zarządzenie 3/2026",
+          "zr_ozn": "§ 5 — pomiary bez wpływu na ciągłość produkcji",
+          "zr_data": "2026-02-12",
+          "sposob": "Pomiary okresowe planowane w oknach postojowych; harmonogram uzgadniany z Kierownikiem Produkcji",
+          "wlasciciel": "Kierownik Produkcji",
+          "sprawdzanie": "Przegląd rejestru raz w roku"
+        },
+        "WYM-07": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Zarządzenie 3/2026",
+          "zr_ozn": "§ 6 — kryteria energetyczne w zakupach",
+          "zr_data": "2026-02-12",
+          "sposob": "Kryteria energetyczne w zapytaniach ofertowych (8.3); wsparcie Energy Managera przy ocenie ofert",
+          "wlasciciel": "Dział Zakupów",
+          "sprawdzanie": "Przegląd rejestru raz w roku"
+        },
+        "WYM-08": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Zarządzenie 3/2026",
+          "zr_ozn": "§ 7 — dane kosztowe dla systemu",
+          "zr_data": "2026-02-12",
+          "sposob": "Miesięczne zestawienie kosztów energii z faktur; SPBT liczony jednolicie, próg 3 lata",
+          "wlasciciel": "Kontroling",
+          "sprawdzanie": "Przegląd rejestru raz w roku"
+        },
+        "WYM-09": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Dokumentacja ISO 14001 — rejestr aspektów i wymagań prawnych",
+          "zr_ozn": "wersja 6; zasada „jeden proces — jeden dokument”",
+          "zr_data": "2025-11-30",
+          "sposob": "Wspólny rejestr wymagań prawnych z systemem środowiskowym, bez dublowania (4.4)",
+          "wlasciciel": "Specjalista ds. środowiska",
+          "sprawdzanie": "Przegląd rejestru raz w roku"
+        },
+        "WYM-10": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Zarządzenie 3/2026",
+          "zr_ozn": "§ 2 — zakres obowiązków i uprawnień Energy Managera",
+          "zr_data": "2026-02-12",
+          "sposob": "Uprawnienia decyzyjne przypisane w zarządzeniu; czas pracy i zasoby w planie na 2026 r. (7.1)",
+          "wlasciciel": "Dyrektor Zakładu",
+          "sprawdzanie": "Przegląd zarządzania (9.3)"
+        },
+        "WYM-12": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "prawne",
+          "zr_dok": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77",
+          "zr_ozn": "obowiązek audytu energetycznego albo systemu zarządzania — stan na 10.02.2026 r.",
+          "zr_data": "2026-02-10",
+          "sposob": "Rejestr wymagań prawnych i innych; certyfikat ISO 50001 albo audyt energetyczny przedsiębiorstwa",
+          "wlasciciel": "Energy Manager",
+          "sprawdzanie": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji; ocena zgodności (9.1.2)",
+          "data_brzmienia": "2026-02-10"
+        },
+        "WYM-14": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "prawne",
+          "zr_dok": "Ustawa o dozorze technicznym",
+          "zr_ozn": "badania okresowe urządzeń podlegających dozorowi — stan na 10.02.2026 r.",
+          "zr_data": "2026-02-10",
+          "sposob": "Harmonogram badań UDT powiązany z planem przeglądów; terminy uwzględniane przy planowaniu pomiarów",
+          "wlasciciel": "Kierownik Utrzymania Ruchu",
+          "sprawdzanie": "Przegląd stanu prawnego co kwartał; ocena zgodności (9.1.2)",
+          "data_brzmienia": "2026-02-10"
+        },
+        "WYM-16": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "prawne",
+          "zr_dok": "Ustawa o substancjach zubożających warstwę ozonową i o f-gazach; rozporządzenie (UE) 2024/573",
+          "zr_ozn": "kontrole szczelności i karty urządzeń w CRO — stan na 10.02.2026 r.",
+          "zr_data": "2026-02-10",
+          "sposob": "Kontrole szczelności instalacji chłodniczych w wymaganych terminach; karty urządzeń prowadzone w CRO",
+          "wlasciciel": "Kierownik Utrzymania Ruchu",
+          "sprawdzanie": "Przegląd stanu prawnego co kwartał; ocena zgodności (9.1.2)",
+          "data_brzmienia": "2026-02-10"
+        },
+        "WYM-17": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Ustawa o efektywności energetycznej — system świadectw",
+          "zr_ozn": "dokumentacja przedsięwzięcia i audyt efektywności energetycznej",
+          "zr_data": "2026-02-10",
+          "sposob": "Przy sterowniku sprężarkowni (INW/2027/04) sprawdzenie progu oszczędności i przygotowanie dokumentacji",
+          "wlasciciel": "Energy Manager",
+          "sprawdzanie": "Decyzja przy przygotowaniu inwestycji na 2027 r."
+        },
+        "WYM-19": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "prawne",
+          "zr_dok": "Umowa o świadczenie usług dystrybucji; Prawo energetyczne",
+          "zr_ozn": "moc umowna 1 400 kW, warunki przyłączenia — stan na 10.02.2026 r.",
+          "zr_data": "2026-02-10",
+          "sposob": "Kontrola mocy piętnastominutowej w arkuszu EnPI; zgłaszanie zmian w instalacji przed uruchomieniem",
+          "wlasciciel": "Energy Manager",
+          "sprawdzanie": "Rozliczenie mocy na fakturze — co miesiąc; ocena zgodności (9.1.2)",
+          "data_brzmienia": "2026-02-10"
+        },
+        "WYM-20": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Umowa sprzedaży energii elektrycznej",
+          "zr_ozn": "§ 7 — miesięczne prognozy zużycia; cena stała do 31.12.2026 r.",
+          "zr_data": "2024-12-18",
+          "sposob": "Prognoza przygotowywana z planu produkcji; analiza profilu zużycia przed negocjacjami na 2027 r.",
+          "wlasciciel": "Dział Zakupów",
+          "sprawdzanie": "Rozliczenie odchyleń na fakturze — co miesiąc"
+        },
+        "WYM-21": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Umowa kompleksowa na dostawę gazu ziemnego",
+          "zr_ozn": "§ 4 — moc zamówiona i warunki odbioru; umowa do 30.09.2027 r.",
+          "zr_data": "2024-09-30",
+          "sposob": "Kontrola mocy zamówionej kotłowni; zgłaszanie zmian zapotrzebowania",
+          "wlasciciel": "Dział Zakupów",
+          "sprawdzanie": "Rozliczenie na fakturze — co miesiąc"
+        },
+        "WYM-22": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Umowa na dostawę LPG do wózków widłowych",
+          "zr_ozn": "§ 3 — ewidencja wydań butli",
+          "zr_data": "2025-03-10",
+          "sposob": "Ewidencja zużycia LPG; dane do bilansu nośników (6.3)",
+          "wlasciciel": "Kierownik Logistyki Wewnętrznej",
+          "sprawdzanie": "Zestawienie z fakturami — co kwartał"
+        },
+        "WYM-23": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Wymagania dla dostawców, wersja 2025",
+          "zr_ozn": "rozdz. 4, załącznik do umowy ramowej — raport co roku do 31 marca",
+          "zr_data": "2025-10-01",
+          "sposob": "Plan zbierania danych (6.6): przypisanie zużycia do linii klienta z liczników głównych i pomiarów okresowych; raport roczny",
+          "wlasciciel": "Energy Manager",
+          "sprawdzanie": "Potwierdzenie odbioru raportu; ocena zgodności raz w roku (9.1.2)"
+        },
+        "WYM-24": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "oczekiwanie_nieprzyjete",
+          "zr_dok": "E-mail działu zakupów klienta (dostawca systemów, Tier 1)",
+          "zr_ozn": "korespondencja z 14.11.2025 r.",
+          "zr_data": "2025-11-14",
+          "sposob": "",
+          "wlasciciel": "Dział Sprzedaży",
+          "sprawdzanie": "Ponowna decyzja przy odnowieniu umowy — I kwartał 2027 r.",
+          "powod": "Plan działań energetycznych obejmuje emisje z energii, a ślad węglowy wyrobu także materiały i transport. Decyzja po analizie pełnego śladu."
+        },
+        "WYM-25": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Wymagania dla dostawców, wersja 2025",
+          "zr_ozn": "rozdz. 2 — certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+          "zr_data": "2025-10-01",
+          "sposob": "Wdrożenie i certyfikacja do XII 2026 r. zgodnie z harmonogramem wdrożenia",
+          "wlasciciel": "Dyrektor Zakładu",
+          "sprawdzanie": "Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc"
+        },
+        "WYM-26": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "przyjete",
+          "zr_dok": "Procedura zakupowa z kryteriami energetycznymi",
+          "zr_ozn": "wersja 1.0 — kryteria podawane w zapytaniach ofertowych",
+          "zr_data": "2026-03-02",
+          "sposob": "Wymagania energetyczne w zapytaniach ofertowych (8.3); kryteria oceny znane oferentom z góry",
+          "wlasciciel": "Dział Zakupów",
+          "sprawdzanie": "Przegląd rejestru raz w roku"
+        },
+        "WYM-28": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Umowa kredytowa na modernizację",
+          "zr_ozn": "załącznik ESG — coroczne wskaźniki zużycia energii zakładu",
+          "zr_data": "2025-12-05",
+          "sposob": "Raport roczny z danych EnPI (6.4)",
+          "wlasciciel": "Kontroling",
+          "sprawdzanie": "Potwierdzenie przyjęcia raportu przez bank"
+        },
+        "WYM-30": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Polisa ubezpieczenia mienia i przerw w działalności",
+          "zr_ozn": "§ 9 — wymogi utrzymania instalacji",
+          "zr_data": "2025-12-31",
+          "sposob": "Plan przeglądów instalacji; przeglądy sprężarkowni i kotłowni w terminach",
+          "wlasciciel": "Kierownik Utrzymania Ruchu",
+          "sprawdzanie": "Przegląd polisy raz w roku"
+        },
+        "WYM-31": {
+          "decyzja": "dotyczy",
+          "kwalifikacja": "umowne",
+          "zr_dok": "Umowa o certyfikację ISO 50001 i wymagania jednostki certyfikującej",
+          "zr_ozn": "pkt 4 — zakres i dostępność udokumentowanej informacji, wymagany okres dowodów",
+          "zr_data": "2026-04-15",
+          "sposob": "Nadzór nad udokumentowaną informacją (7.5); dowody działania systemu zbierane od marca 2026 r.",
+          "wlasciciel": "Pełnomocnik ds. systemów zarządzania",
+          "sprawdzanie": "Audit certyfikacyjny; audity wewnętrzne (9.2)"
+        }
+      }
+    },
+    "W": {},
+    "WLASNE": [],
+    "WYL": {},
+    "OBOW": [
+      "prawne",
+      "umowne",
+      "przyjete"
+    ]
+  },
+  "example_literals": {
+    "W": {},
+    "WLASNE": []
+  }
+}

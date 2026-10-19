@@ -1,0 +1,523 @@
+{
+  "source_file": "ENESA_7.4_Komunikacja_platforma.html",
+  "source_sha256": "fa4828663ebed7934fab0c81703ad5b406b83e2095c7b4d36b460032f97f2e40",
+  "section": "7-4",
+  "data": {
+    "LISTA_74": [
+      {
+        "tekst": "Ustalono komunikację wewnętrzną i zewnętrzną: o czym, kiedy, z kim, w jaki sposób i kto przekazuje.",
+        "podstawa": "N",
+        "auto": "ustalono"
+      },
+      {
+        "tekst": "Przekazywane informacje są wiarygodne i zgodne z informacjami wytworzonymi w systemie.",
+        "podstawa": "N",
+        "auto": "wiarygodne"
+      },
+      {
+        "tekst": "Działa proces, w którym każda osoba pracująca pod nadzorem organizacji może zgłaszać uwagi i propozycje doskonalenia.",
+        "podstawa": "N",
+        "auto": "proces"
+      },
+      {
+        "tekst": "Rozważono zachowanie zapisów zgłoszonych propozycji (rejestr zgłoszeń).",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Każde zgłoszenie dostaje odpowiedź — także wtedy, gdy jest nią uzasadniona odmowa.",
+        "podstawa": "M",
+        "auto": "odpowiedzi"
+      }
+    ],
+    "przyklad": {
+      "WEW": [
+        {
+          "co": "Polityka energetyczna",
+          "kiedy": "Po zatwierdzeniu i przy każdej zmianie",
+          "komu": "Wszyscy pracownicy oraz wykonawcy pracujący na terenie zakładu",
+          "jak": "Wprowadzenie, tablica przy wejściu do hali A, intranet",
+          "kto": "Energy Manager",
+          "podstawa": ""
+        },
+        {
+          "co": "Cele energetyczne i postęp ich realizacji",
+          "kiedy": "Co kwartał",
+          "komu": "Wszyscy pracownicy",
+          "jak": "Tablica przy stołówce, intranet",
+          "kto": "Energy Manager",
+          "podstawa": "F-EnMS-10 — cele, zadania i plany działań; statusy z części C"
+        },
+        {
+          "co": "Wyniki EnPI — wskaźnik ogólny zakładu wobec linii bazowej",
+          "kiedy": "Co miesiąc",
+          "komu": "Kierownicy działów i zarząd",
+          "jak": "Odprawa kierownictwa",
+          "kto": "Energy Manager",
+          "podstawa": "Karta EnPI O-1 (F-EnMS-09), model znormalizowany na produkcję i stopniodni; linia bazowa 2025"
+        },
+        {
+          "co": "Wskaźnik sprężarkowni i przepływ w czasie postoju",
+          "kiedy": "Co miesiąc",
+          "komu": "Utrzymanie ruchu, liderzy zmian",
+          "jak": "Odprawa UR, tablica przy sprężarkowni",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "podstawa": "Karty S-1 i S-2 (F-EnMS-09); podlicznik sprężarkowni i przepływomierz, poz. 4, 5 i 7 planu danych"
+        },
+        {
+          "co": "Jeden temat tygodniowo — co w mojej pracy zmienia zużycie energii i ile to kosztuje",
+          "kiedy": "Raz w tygodniu, 10 minut",
+          "komu": "Operatorzy pras i lakierni, magazyn",
+          "jak": "Krótkie spotkanie na początku zmiany",
+          "kto": "Liderzy zmian",
+          "podstawa": "Liczby przeliczone z kart EnPI i cen energii: 890 zł/MWh, 250 zł/MWh gaz (ceny z 2025 r.)"
+        },
+        {
+          "co": "Wyniki audytów wewnętrznych i przeglądu zarządzania",
+          "kiedy": "Po każdym audycie i przeglądzie",
+          "komu": "Kierownicy działów, zespół EnMS",
+          "jak": "Protokół w intranecie i omówienie na odprawie",
+          "kto": "Energy Manager",
+          "podstawa": ""
+        },
+        {
+          "co": "Zmiany w instrukcjach i procedurach",
+          "kiedy": "Przy każdej zmianie, przed wejściem w życie",
+          "komu": "Osoby używające danej instrukcji",
+          "jak": "Informacja na spotkaniu zmiany i wymiana wersji na tablicy przy urządzeniu",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "podstawa": ""
+        }
+      ],
+      "ZEW": [
+        {
+          "co": "Dane o energii i emisjach dla klienta",
+          "rodzaj": "obowiazek",
+          "komu": "Klient OEM — dział zrównoważonego rozwoju",
+          "kiedy": "Raz w roku do 31 stycznia, zgodnie z umową",
+          "jak": "Raport według metody wskazanej przez klienta",
+          "kto": "Energy Manager wspólnie z działem sprzedaży",
+          "podstawa": "Bilans z przeglądu energetycznego (F-EnMS-08), przeliczniki jak w F-EnMS-08; karty EnPI"
+        },
+        {
+          "co": "Zawiadomienie o przeprowadzeniu audytu energetycznego przedsiębiorstwa",
+          "rodzaj": "obowiazek",
+          "komu": "Prezes URE",
+          "kiedy": "W terminie wynikającym z przepisów, jeśli obowiązek dotyczy zakładu",
+          "jak": "Formularz zawiadomienia",
+          "kto": "Energy Manager",
+          "podstawa": "Wyniki audytu energetycznego; zużycie z F-EnMS-08"
+        },
+        {
+          "co": "Polityka energetyczna",
+          "rodzaj": "polityka",
+          "komu": "Strony zainteresowane — klienci, banki, kandydaci do pracy, lokalna społeczność",
+          "kiedy": "Stosownie do potrzeb; aktualna wersja stale dostępna",
+          "jak": "Strona internetowa zakładu; na prośbę przesyłana w pliku PDF",
+          "kto": "Energy Manager",
+          "podstawa": ""
+        },
+        {
+          "co": "Certyfikat ISO 50001 i osiągnięta poprawa wyniku energetycznego",
+          "rodzaj": "dobrowolna",
+          "komu": "Klienci, kandydaci do pracy, lokalna społeczność",
+          "kiedy": "Po certyfikacji, potem raz w roku z wynikiem rocznym",
+          "jak": "Strona internetowa, materiały handlowe, komunikat prasowy",
+          "kto": "Dział sprzedaży wspólnie z Energy Managerem",
+          "podstawa": "Wskaźnik O-1 wobec linii bazowej 2025, znormalizowany na produkcję i stopniodni; podstawa porównania podawana w każdym komunikacie"
+        }
+      ],
+      "PROCES": {
+        "ktoMoze": "Każda osoba pracująca pod nadzorem organizacji — pracownicy wszystkich działów oraz wykonawcy na terenie zakładu (serwis, firma sprzątająca, ekipy remontowe).",
+        "kanaly": "Formularz w intranecie; skrzynka przy stołówce (zgłoszenia także anonimowe); punkt „energia” na spotkaniu zmiany; bezpośrednio do lidera zmiany albo do Energy Managera. Wykonawcy — przez kierownika zlecającego.",
+        "potwierdzenie": "W ciągu 5 dni roboczych zgłaszający dostaje informację, że zgłoszenie przyjęto, pod jakim numerem i kto się nim zajmie. Przy zgłoszeniu anonimowym potwierdzenie trafia na tablicę razem z numerem.",
+        "dni": "5",
+        "rozpatrzenie": "Energy Manager z kierownikiem obszaru, którego zgłoszenie dotyczy. Możliwe decyzje: wdrożenie, odroczenie z terminem albo uzasadniona odmowa. Sprawy wymagające powyżej 10 tys. zł trafiają na najbliższy przegląd zarządzania.",
+        "zwrotna": "Zgłaszający i jego zmiana dowiadują się na spotkaniu zmiany, co zrobiono i ile to dało. Przy odmowie podaje się powód i, jeśli to możliwe, warunek, przy którym sprawa wróci. Zgłoszenia anonimowe — odpowiedź na tablicy przy numerze zgłoszenia.",
+        "rejestr": "Arkusz EnMS, zakładka „zgłoszenia”: numer, data, kanał, treść, data potwierdzenia, osoba prowadząca, decyzja, data i treść odpowiedzi, efekt. Podsumowanie kwartalne na tablicy: ile przyszło, ile wdrożono."
+      },
+      "ZGLOSZENIA": [
+        {
+          "nr": "2026/03",
+          "data": "2026-05-12",
+          "zglaszajacy": "Operator prasy nr 3, II zmiana",
+          "kanal": "Punkt „energia” na spotkaniu zmiany",
+          "tresc": "Syczenie przy złączce na kolektorze sprężonego powietrza przy prasie nr 3 — słychać przez całą zmianę.",
+          "potwierdzenie": "2026-05-14",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "decyzja": "wdrozone",
+          "odpowiedz": "2026-05-26",
+          "odpowiedzTresc": "Nieszczelność usunięta 20 maja przy okazji przeglądu szczelności. Pomiar przepływu w postoju spadł z 7,1 do 6,8 Nm³/min — około 1,8 zł na każdej godzinie postoju. Dziękujemy, to było jedno z większych pojedynczych nieszczelności w tym przeglądzie.",
+          "efekt": "Punkt dopisany do stałej listy kontrolnej kwartalnego przeglądu szczelności"
+        },
+        {
+          "nr": "2026/05",
+          "data": "2026-06-08",
+          "zglaszajacy": "Operator prasy nr 2, I zmiana",
+          "kanal": "Formularz w intranecie",
+          "tresc": "Nie da się zamknąć zaworu odcinającego powietrze na przerwie — zawór jest na klucz, a klucz ma tylko utrzymanie ruchu.",
+          "potwierdzenie": "2026-06-10",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "decyzja": "wdrozone",
+          "odpowiedz": "2026-09-29",
+          "odpowiedzTresc": "Zawory przy czterech prasach wymienione na dźwigniowe (3 tys. zł), wykonane do 30 września. Po wymianie i po usunięciu nieszczelności przepływ w postoju spadł z 6,5 do 5,8 Nm³/min. Zgłoszenie zmieniło sposób pracy na wszystkich zmianach.",
+          "efekt": "Zamykanie zaworów wpisane do instrukcji stanowiskowej; temat tygodnia w 09.2026"
+        },
+        {
+          "nr": "2026/06",
+          "data": "2026-06-19",
+          "zglaszajacy": "Anonimowo, skrzynka przy stołówce",
+          "kanal": "Skrzynka przy stołówce",
+          "tresc": "Proponuję wyłączać linię pras na każdą przerwę, a nie tylko na przerwę obiadową.",
+          "potwierdzenie": "2026-06-23",
+          "kto": "Energy Manager z kierownikiem produkcji",
+          "decyzja": "odmowa",
+          "odpowiedz": "2026-07-03",
+          "odpowiedzTresc": "Wyłączanie linii na krótkie przerwy wydłuża jej rozruch o około 40 minut i zużywa więcej energii, niż oszczędza — sprawdziliśmy to pomiarem na linii nr 2 w czerwcu. Zostajemy przy obecnym sposobie: wyłączanie na przerwę obiadową i na postoje dłuższe niż 45 minut. Dziękujemy — przy okazji sprawdzamy, czy da się skrócić rozruch; jeśli tak, wrócimy do tej propozycji.",
+          "efekt": "Zlecono serwisowi analizę skrócenia rozruchu; wynik na przegląd zarządzania 12.2026"
+        },
+        {
+          "nr": "2026/08",
+          "data": "2026-07-21",
+          "zglaszajacy": "Magazynier",
+          "kanal": "Formularz w intranecie",
+          "tresc": "Oświetlenie hali B ma jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części.",
+          "potwierdzenie": "2026-07-24",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "decyzja": "odroczone",
+          "odpowiedz": "2026-08-05",
+          "odpowiedzTresc": "Podział oświetlenia hali B na trzy strefy zrobimy razem z wymianą opraw na LED (cel C2, III kwartał 2027) — osobne przerabianie instalacji teraz kosztowałoby drugie tyle. Do tego czasu zmieniliśmy harmonogram sprzątania tak, żeby hale były sprzątane w jednym bloku: około 4 MWh rocznie mniej. Wrócimy do tego przy projekcie LED.",
+          "efekt": "Podział na strefy wpisany do zakresu projektu LED; harmonogram sprzątania zmieniony od 09.2026"
+        },
+        {
+          "nr": "2026/09",
+          "data": "2026-07-28",
+          "zglaszajacy": "Technik UR",
+          "kanal": "Bezpośrednio do Energy Managera",
+          "tresc": "Instrukcja przy sprężarkowni podaje 7,0 bar, a od marca obowiązuje 6,3 bar. Nie wiem, która wartość jest właściwa.",
+          "potwierdzenie": "2026-07-29",
+          "kto": "Energy Manager",
+          "decyzja": "wdrozone",
+          "odpowiedz": "2026-08-07",
+          "odpowiedzTresc": "Masz rację — przy sprężarkowni wisiała nieaktualna wersja. Instrukcja I-SP-02 zaktualizowana i zatwierdzona 5 sierpnia, stara wersja zdjęta. Przy okazji przeszliśmy po hali A i znaleźliśmy jeszcze dwie nieaktualne instrukcje — też wycofane. To zgłoszenie uruchomiło przegląd całej dokumentacji przy maszynach.",
+          "efekt": "Przegląd instrukcji przy wszystkich SEU; sprawa dopisana do wykazu udokumentowanych informacji (7.5)"
+        },
+        {
+          "nr": "2026/11",
+          "data": "2026-09-15",
+          "zglaszajacy": "Specjalista ds. zakupów",
+          "kanal": "Formularz w intranecie",
+          "tresc": "Przy zapytaniach na urządzenia nie mamy jednego wzoru na koszt cyklu życia — każdy liczy inaczej.",
+          "potwierdzenie": "2026-09-17",
+          "kto": "Energy Manager",
+          "decyzja": "wdrozone",
+          "odpowiedz": "2026-09-30",
+          "odpowiedzTresc": "Dodaliśmy jednostronicowy arkusz z wzorem i cenami energii do procedury zakupowej P-ZAK-01. Arkusz liczy koszt zakupu plus energia przez 10 lat przy cenach z roku bazowego. Zastosowany po raz pierwszy przy zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14).",
+          "efekt": "Arkusz w procedurze P-ZAK-01; wzór ten sam co w kolumnie SPBT w przeglądzie energetycznym"
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "data": "2026-04-15",
+        "przeglad": "Raz w roku przed przeglądem zarządzania oraz przy zmianie celów, polityki albo wymagań klienta wobec raportowania"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_74": [
+      {
+        "tekst": "Ustalono komunikację wewnętrzną i zewnętrzną: o czym, kiedy, z kim, w jaki sposób i kto przekazuje.",
+        "podstawa": "N",
+        "auto": "ustalono"
+      },
+      {
+        "tekst": "Przekazywane informacje są wiarygodne i zgodne z informacjami wytworzonymi w systemie.",
+        "podstawa": "N",
+        "auto": "wiarygodne"
+      },
+      {
+        "tekst": "Działa proces, w którym każda osoba pracująca pod nadzorem organizacji może zgłaszać uwagi i propozycje doskonalenia.",
+        "podstawa": "N",
+        "auto": "proces"
+      },
+      {
+        "tekst": "Rozważono zachowanie zapisów zgłoszonych propozycji (rejestr zgłoszeń).",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Każde zgłoszenie dostaje odpowiedź — także wtedy, gdy jest nią uzasadniona odmowa.",
+        "podstawa": "M",
+        "auto": "odpowiedzi"
+      }
+    ],
+    "P_WEW": [
+      {
+        "co": "Polityka energetyczna",
+        "kiedy": "Po zatwierdzeniu i przy każdej zmianie",
+        "komu": "Wszyscy pracownicy oraz wykonawcy pracujący na terenie zakładu",
+        "jak": "Wprowadzenie, tablica przy wejściu do hali A, intranet",
+        "kto": "Energy Manager",
+        "podstawa": ""
+      },
+      {
+        "co": "Cele energetyczne i postęp ich realizacji",
+        "kiedy": "Co kwartał",
+        "komu": "Wszyscy pracownicy",
+        "jak": "Tablica przy stołówce, intranet",
+        "kto": "Energy Manager",
+        "podstawa": "F-EnMS-10 — cele, zadania i plany działań; statusy z części C"
+      },
+      {
+        "co": "Wyniki EnPI — wskaźnik ogólny zakładu wobec linii bazowej",
+        "kiedy": "Co miesiąc",
+        "komu": "Kierownicy działów i zarząd",
+        "jak": "Odprawa kierownictwa",
+        "kto": "Energy Manager",
+        "podstawa": "Karta EnPI O-1 (F-EnMS-09), model znormalizowany na produkcję i stopniodni; linia bazowa 2025"
+      },
+      {
+        "co": "Wskaźnik sprężarkowni i przepływ w czasie postoju",
+        "kiedy": "Co miesiąc",
+        "komu": "Utrzymanie ruchu, liderzy zmian",
+        "jak": "Odprawa UR, tablica przy sprężarkowni",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "podstawa": "Karty S-1 i S-2 (F-EnMS-09); podlicznik sprężarkowni i przepływomierz, poz. 4, 5 i 7 planu danych"
+      },
+      {
+        "co": "Jeden temat tygodniowo — co w mojej pracy zmienia zużycie energii i ile to kosztuje",
+        "kiedy": "Raz w tygodniu, 10 minut",
+        "komu": "Operatorzy pras i lakierni, magazyn",
+        "jak": "Krótkie spotkanie na początku zmiany",
+        "kto": "Liderzy zmian",
+        "podstawa": "Liczby przeliczone z kart EnPI i cen energii: 890 zł/MWh, 250 zł/MWh gaz (ceny z 2025 r.)"
+      },
+      {
+        "co": "Wyniki audytów wewnętrznych i przeglądu zarządzania",
+        "kiedy": "Po każdym audycie i przeglądzie",
+        "komu": "Kierownicy działów, zespół EnMS",
+        "jak": "Protokół w intranecie i omówienie na odprawie",
+        "kto": "Energy Manager",
+        "podstawa": ""
+      },
+      {
+        "co": "Zmiany w instrukcjach i procedurach",
+        "kiedy": "Przy każdej zmianie, przed wejściem w życie",
+        "komu": "Osoby używające danej instrukcji",
+        "jak": "Informacja na spotkaniu zmiany i wymiana wersji na tablicy przy urządzeniu",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "podstawa": ""
+      }
+    ],
+    "P_ZEW": [
+      {
+        "co": "Dane o energii i emisjach dla klienta",
+        "rodzaj": "obowiazek",
+        "komu": "Klient OEM — dział zrównoważonego rozwoju",
+        "kiedy": "Raz w roku do 31 stycznia, zgodnie z umową",
+        "jak": "Raport według metody wskazanej przez klienta",
+        "kto": "Energy Manager wspólnie z działem sprzedaży",
+        "podstawa": "Bilans z przeglądu energetycznego (F-EnMS-08), przeliczniki jak w F-EnMS-08; karty EnPI"
+      },
+      {
+        "co": "Zawiadomienie o przeprowadzeniu audytu energetycznego przedsiębiorstwa",
+        "rodzaj": "obowiazek",
+        "komu": "Prezes URE",
+        "kiedy": "W terminie wynikającym z przepisów, jeśli obowiązek dotyczy zakładu",
+        "jak": "Formularz zawiadomienia",
+        "kto": "Energy Manager",
+        "podstawa": "Wyniki audytu energetycznego; zużycie z F-EnMS-08"
+      },
+      {
+        "co": "Polityka energetyczna",
+        "rodzaj": "polityka",
+        "komu": "Strony zainteresowane — klienci, banki, kandydaci do pracy, lokalna społeczność",
+        "kiedy": "Stosownie do potrzeb; aktualna wersja stale dostępna",
+        "jak": "Strona internetowa zakładu; na prośbę przesyłana w pliku PDF",
+        "kto": "Energy Manager",
+        "podstawa": ""
+      },
+      {
+        "co": "Certyfikat ISO 50001 i osiągnięta poprawa wyniku energetycznego",
+        "rodzaj": "dobrowolna",
+        "komu": "Klienci, kandydaci do pracy, lokalna społeczność",
+        "kiedy": "Po certyfikacji, potem raz w roku z wynikiem rocznym",
+        "jak": "Strona internetowa, materiały handlowe, komunikat prasowy",
+        "kto": "Dział sprzedaży wspólnie z Energy Managerem",
+        "podstawa": "Wskaźnik O-1 wobec linii bazowej 2025, znormalizowany na produkcję i stopniodni; podstawa porównania podawana w każdym komunikacie"
+      }
+    ],
+    "P_PROCES": {
+      "ktoMoze": "Każda osoba pracująca pod nadzorem organizacji — pracownicy wszystkich działów oraz wykonawcy na terenie zakładu (serwis, firma sprzątająca, ekipy remontowe).",
+      "kanaly": "Formularz w intranecie; skrzynka przy stołówce (zgłoszenia także anonimowe); punkt „energia” na spotkaniu zmiany; bezpośrednio do lidera zmiany albo do Energy Managera. Wykonawcy — przez kierownika zlecającego.",
+      "potwierdzenie": "W ciągu 5 dni roboczych zgłaszający dostaje informację, że zgłoszenie przyjęto, pod jakim numerem i kto się nim zajmie. Przy zgłoszeniu anonimowym potwierdzenie trafia na tablicę razem z numerem.",
+      "dni": "5",
+      "rozpatrzenie": "Energy Manager z kierownikiem obszaru, którego zgłoszenie dotyczy. Możliwe decyzje: wdrożenie, odroczenie z terminem albo uzasadniona odmowa. Sprawy wymagające powyżej 10 tys. zł trafiają na najbliższy przegląd zarządzania.",
+      "zwrotna": "Zgłaszający i jego zmiana dowiadują się na spotkaniu zmiany, co zrobiono i ile to dało. Przy odmowie podaje się powód i, jeśli to możliwe, warunek, przy którym sprawa wróci. Zgłoszenia anonimowe — odpowiedź na tablicy przy numerze zgłoszenia.",
+      "rejestr": "Arkusz EnMS, zakładka „zgłoszenia”: numer, data, kanał, treść, data potwierdzenia, osoba prowadząca, decyzja, data i treść odpowiedzi, efekt. Podsumowanie kwartalne na tablicy: ile przyszło, ile wdrożono."
+    },
+    "P_ZGLOSZENIA": [
+      {
+        "nr": "2026/03",
+        "data": "2026-05-12",
+        "zglaszajacy": "Operator prasy nr 3, II zmiana",
+        "kanal": "Punkt „energia” na spotkaniu zmiany",
+        "tresc": "Syczenie przy złączce na kolektorze sprężonego powietrza przy prasie nr 3 — słychać przez całą zmianę.",
+        "potwierdzenie": "2026-05-14",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "decyzja": "wdrozone",
+        "odpowiedz": "2026-05-26",
+        "odpowiedzTresc": "Nieszczelność usunięta 20 maja przy okazji przeglądu szczelności. Pomiar przepływu w postoju spadł z 7,1 do 6,8 Nm³/min — około 1,8 zł na każdej godzinie postoju. Dziękujemy, to było jedno z większych pojedynczych nieszczelności w tym przeglądzie.",
+        "efekt": "Punkt dopisany do stałej listy kontrolnej kwartalnego przeglądu szczelności"
+      },
+      {
+        "nr": "2026/05",
+        "data": "2026-06-08",
+        "zglaszajacy": "Operator prasy nr 2, I zmiana",
+        "kanal": "Formularz w intranecie",
+        "tresc": "Nie da się zamknąć zaworu odcinającego powietrze na przerwie — zawór jest na klucz, a klucz ma tylko utrzymanie ruchu.",
+        "potwierdzenie": "2026-06-10",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "decyzja": "wdrozone",
+        "odpowiedz": "2026-09-29",
+        "odpowiedzTresc": "Zawory przy czterech prasach wymienione na dźwigniowe (3 tys. zł), wykonane do 30 września. Po wymianie i po usunięciu nieszczelności przepływ w postoju spadł z 6,5 do 5,8 Nm³/min. Zgłoszenie zmieniło sposób pracy na wszystkich zmianach.",
+        "efekt": "Zamykanie zaworów wpisane do instrukcji stanowiskowej; temat tygodnia w 09.2026"
+      },
+      {
+        "nr": "2026/06",
+        "data": "2026-06-19",
+        "zglaszajacy": "Anonimowo, skrzynka przy stołówce",
+        "kanal": "Skrzynka przy stołówce",
+        "tresc": "Proponuję wyłączać linię pras na każdą przerwę, a nie tylko na przerwę obiadową.",
+        "potwierdzenie": "2026-06-23",
+        "kto": "Energy Manager z kierownikiem produkcji",
+        "decyzja": "odmowa",
+        "odpowiedz": "2026-07-03",
+        "odpowiedzTresc": "Wyłączanie linii na krótkie przerwy wydłuża jej rozruch o około 40 minut i zużywa więcej energii, niż oszczędza — sprawdziliśmy to pomiarem na linii nr 2 w czerwcu. Zostajemy przy obecnym sposobie: wyłączanie na przerwę obiadową i na postoje dłuższe niż 45 minut. Dziękujemy — przy okazji sprawdzamy, czy da się skrócić rozruch; jeśli tak, wrócimy do tej propozycji.",
+        "efekt": "Zlecono serwisowi analizę skrócenia rozruchu; wynik na przegląd zarządzania 12.2026"
+      },
+      {
+        "nr": "2026/08",
+        "data": "2026-07-21",
+        "zglaszajacy": "Magazynier",
+        "kanal": "Formularz w intranecie",
+        "tresc": "Oświetlenie hali B ma jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części.",
+        "potwierdzenie": "2026-07-24",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "decyzja": "odroczone",
+        "odpowiedz": "2026-08-05",
+        "odpowiedzTresc": "Podział oświetlenia hali B na trzy strefy zrobimy razem z wymianą opraw na LED (cel C2, III kwartał 2027) — osobne przerabianie instalacji teraz kosztowałoby drugie tyle. Do tego czasu zmieniliśmy harmonogram sprzątania tak, żeby hale były sprzątane w jednym bloku: około 4 MWh rocznie mniej. Wrócimy do tego przy projekcie LED.",
+        "efekt": "Podział na strefy wpisany do zakresu projektu LED; harmonogram sprzątania zmieniony od 09.2026"
+      },
+      {
+        "nr": "2026/09",
+        "data": "2026-07-28",
+        "zglaszajacy": "Technik UR",
+        "kanal": "Bezpośrednio do Energy Managera",
+        "tresc": "Instrukcja przy sprężarkowni podaje 7,0 bar, a od marca obowiązuje 6,3 bar. Nie wiem, która wartość jest właściwa.",
+        "potwierdzenie": "2026-07-29",
+        "kto": "Energy Manager",
+        "decyzja": "wdrozone",
+        "odpowiedz": "2026-08-07",
+        "odpowiedzTresc": "Masz rację — przy sprężarkowni wisiała nieaktualna wersja. Instrukcja I-SP-02 zaktualizowana i zatwierdzona 5 sierpnia, stara wersja zdjęta. Przy okazji przeszliśmy po hali A i znaleźliśmy jeszcze dwie nieaktualne instrukcje — też wycofane. To zgłoszenie uruchomiło przegląd całej dokumentacji przy maszynach.",
+        "efekt": "Przegląd instrukcji przy wszystkich SEU; sprawa dopisana do wykazu udokumentowanych informacji (7.5)"
+      },
+      {
+        "nr": "2026/11",
+        "data": "2026-09-15",
+        "zglaszajacy": "Specjalista ds. zakupów",
+        "kanal": "Formularz w intranecie",
+        "tresc": "Przy zapytaniach na urządzenia nie mamy jednego wzoru na koszt cyklu życia — każdy liczy inaczej.",
+        "potwierdzenie": "2026-09-17",
+        "kto": "Energy Manager",
+        "decyzja": "wdrozone",
+        "odpowiedz": "2026-09-30",
+        "odpowiedzTresc": "Dodaliśmy jednostronicowy arkusz z wzorem i cenami energii do procedury zakupowej P-ZAK-01. Arkusz liczy koszt zakupu plus energia przez 10 lat przy cenach z roku bazowego. Zastosowany po raz pierwszy przy zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14).",
+        "efekt": "Arkusz w procedurze P-ZAK-01; wzór ten sam co w kolumnie SPBT w przeglądzie energetycznym"
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+      "data": "2026-04-15",
+      "przeglad": "Raz w roku przed przeglądem zarządzania oraz przy zmianie celów, polityki albo wymagań klienta wobec raportowania"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Wynik energetyczny, o którym nikt nie mówi, nie wywołuje żadnej decyzji.",
+        "decyzja": "Ustalono, co, komu i jak często komunikujemy — wewnątrz zakładu i na zewnątrz.",
+        "dzialanie": "Raport miesięczny do kierownictwa, wynik S-1 na tablicy, roczny raport dla klienta i dla banku; wymagania energetyczne w zapytaniu ZAP/2026/14.",
+        "sprawdzenie": "Potwierdzenia odbioru raportów zewnętrznych; punkt o energii obecny w agendzie spotkań produkcyjnych."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "WEW": [],
+    "ZEW": [],
+    "PROCES": {},
+    "ZGLOSZENIA": [],
+    "WNIOSKI": [],
+    "RODZAJE_ZEW": [
+      [
+        "",
+        "Wybierz rodzaj"
+      ],
+      [
+        "obowiazek",
+        "Obowiązek — przepis albo umowa"
+      ],
+      [
+        "polityka",
+        "Polityka energetyczna — dostępność dla stron (5.2)"
+      ],
+      [
+        "dobrowolna",
+        "Dobrowolna — wyniki, którymi chcecie się pochwalić"
+      ]
+    ],
+    "DECYZJE_Z": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "wdrozone",
+        "Wdrożone"
+      ],
+      [
+        "odroczone",
+        "Odroczone"
+      ],
+      [
+        "odmowa",
+        "Uzasadniona odmowa"
+      ],
+      [
+        "wtoku",
+        "W rozpatrywaniu"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

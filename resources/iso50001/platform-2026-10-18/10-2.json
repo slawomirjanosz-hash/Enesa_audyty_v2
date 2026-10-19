@@ -1,0 +1,685 @@
+{
+  "source_file": "ENESA_10.2_Ciagle_doskonalenie_platforma.html",
+  "source_sha256": "7746e2a04e11d8f59c9f3c1b7549c8a6b9a142dfa3882254e7565b17cde9cd36",
+  "section": "10-2",
+  "data": {
+    "ZRODLA_DEF": [
+      {
+        "kod": "przeglad",
+        "punkt": "6.3",
+        "nazwa": "Przegląd energetyczny — lista możliwości poprawy",
+        "ph": "np. Siedem możliwości, razem około 1 375 MWh rocznie. Zrealizowane: usunięcie nieszczelności i obniżenie ciśnienia. Pozostałe: sterownik i napęd sprężarkowni, LED w halach, odzysk ciepła ze sprężarek."
+      },
+      {
+        "kod": "monitorowanie",
+        "punkt": "9.1.1",
+        "nazwa": "Dane z monitorowania",
+        "ph": "np. K-1 o 1% powyżej linii bazowej w I półroczu — stąd pozycja 5 planu. S-1 pokazuje, że samo ciśnienie nie dowiezie celu Z1.1."
+      },
+      {
+        "kod": "audyty",
+        "punkt": "9.2",
+        "nazwa": "Ustalenia z audytów wewnętrznych",
+        "ph": "np. Audyt A-01/2026: jedna niezgodność i dwie możliwości doskonalenia — wzór protokołu dla wykonawców i luka kompetencyjna w zakupach. Obie w planie (pozycje 1 i 4)."
+      },
+      {
+        "kod": "przeglad_zarz",
+        "punkt": "9.3",
+        "nazwa": "Decyzje z przeglądu zarządzania",
+        "ph": "np. Przegląd 29.09.2026: pytania o energię w procedurze inwestycyjnej, warsztat dla zakupów, analiza K-1 przed sezonem. Cały plan zatwierdzono na tym przeglądzie."
+      },
+      {
+        "kod": "zgloszenia",
+        "punkt": "7.4",
+        "nazwa": "Zgłoszenia pracowników",
+        "ph": "np. Zgłoszenie 2026/08: jeden wyłącznik na całą halę B — weszło do zakresu projektu LED jako podział na trzy strefy."
+      },
+      {
+        "kod": "niezgodnosci",
+        "punkt": "10.1",
+        "nazwa": "Analiza niezgodności",
+        "ph": "np. NK-2026-01 — brak zasad odbioru usług przy SEU (pozycja 1 planu). NK-2026-02 — terminy obowiązków poza kalendarzem (pozycja 3)."
+      }
+    ],
+    "LISTA_102": [
+      {
+        "tekst": "Doskonali się przydatność, adekwatność i skuteczność systemu.",
+        "podstawa": "N",
+        "auto": "doskonalenieSystemu"
+      },
+      {
+        "tekst": "Wykazano ciągłą poprawę wyniku energetycznego — EnPI wobec EnB, w porównywalnych warunkach.",
+        "podstawa": "N",
+        "auto": "poprawaWyniku"
+      },
+      {
+        "tekst": "Możliwości poprawy mają stałe źródła i są oceniane (potencjał, koszt, prosty okres zwrotu, ryzyko).",
+        "podstawa": "M",
+        "auto": "zrodlaIOcena"
+      },
+      {
+        "tekst": "Prowadzony jest plan doskonalenia z oczekiwanym i osiągniętym efektem (F-EnMS-23).",
+        "podstawa": "M",
+        "auto": "plan"
+      }
+    ],
+    "przyklad": {
+      "POZYCJE": [
+        {
+          "nr": "1",
+          "dzialanie": "Wzór protokołu z nastawami i odbiór usług przy znaczących użyciach energii",
+          "obszar": "S",
+          "zrodlo": "NK-2026-01; audyt A-01/2026",
+          "efekt": "Protokół z nastawami przed i po przy każdej usłudze przy SEU (dziś: 1 z 3 wykonawców ma wymagania w zleceniu)",
+          "weryfikacja": "Po wdrożeniu: protokoły z przeglądów kotłowni, sprężarek i automatyki lakierni; sprawdzenie, czy odbiór usługi obejmuje kontrolę protokołu (terminy w karcie NK-2026-01)",
+          "odp": "Kierownik utrzymania ruchu",
+          "data": "10.2026",
+          "stan": "W",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "2",
+          "dzialanie": "Pytania o energię na etapie założeń w procedurze inwestycyjnej firmy",
+          "obszar": "S",
+          "zrodlo": "Przegląd zarządzania 09.2026; koncepcja modernizacji sprężarkowni (8.2)",
+          "efekt": "Każda koncepcja dotycząca SEU przechodzi listę kontrolną III-36 na etapie założeń (dziś: koncepcja modernizacji sprężarkowni trafiła do oceny dopiero przed zatwierdzeniem)",
+          "weryfikacja": "Audyt wewnętrzny II kw. 2027 — pozycja 2 programu, zakupy i projekty",
+          "odp": "Dyrektor Zakładu",
+          "data": "12.2026",
+          "stan": "P",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "3",
+          "dzialanie": "Terminy obowiązków z rejestru wymagań w kalendarzu kontrolingu",
+          "obszar": "S",
+          "zrodlo": "NK-2026-02",
+          "efekt": "Wszystkie terminy z rejestru III-04 w kalendarzu z właścicielem; raport dla banku za 2026 r. wysłany do 30.06.2027 (dziś: 0 z 4 terminów w kalendarzu)",
+          "weryfikacja": "Kontrola wysyłki do 30.06.2027; ocena zgodności 09.2027",
+          "odp": "Kontroler finansowy",
+          "data": "10.2026",
+          "stan": "W",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "4",
+          "dzialanie": "Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania",
+          "obszar": "S",
+          "zrodlo": "Luka w matrycy kompetencji III-28; przegląd zarządzania 09.2026; ustalenie D-2 audytu A-01/2026",
+          "efekt": "Trzy kolejne zamówienia przy SEU z porównaniem kosztu zakupu i energii wykonanym przez dział zakupów (dziś: 1, i to przygotowane przez Energy Managera)",
+          "weryfikacja": "Przegląd zamówień przy SEU przez Energy Managera; wzór porównania dołączony do procedury zakupowej",
+          "odp": "Jan Kowalski — Energy Manager",
+          "data": "11.2026",
+          "stan": "P",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "5",
+          "dzialanie": "Analiza przyczyn K-1 = 1,01 przed sezonem grzewczym",
+          "obszar": "W",
+          "zrodlo": "Raport z monitorowania III-42; przegląd zarządzania 09.2026",
+          "efekt": "Przyczyna ustalona; propozycja do zatwierdzenia po analizie: K-1 za sezon 2026/27 nie wyżej niż 1,00 wobec EnB",
+          "weryfikacja": "Model kotłowni ze stopniodniami (HDD) dla sezonu 2026/27, w porównywalnych warunkach; ocena 05.2027",
+          "odp": "Kierownik utrzymania ruchu",
+          "data": "Przed sezonem (plan: 10.2026); ocena 05.2027",
+          "stan": "W",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "6",
+          "dzialanie": "Odzysk ciepła ze sprężarek — analiza po modernizacji",
+          "obszar": "W",
+          "zrodlo": "Przegląd energetyczny, możliwość 7; analiza projektu III-36 (wniosek odrzucony z zostawieniem przyłączy)",
+          "efekt": "Decyzja inwestycyjna na podstawie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027 (potencjał z przeglądu: około 250 MWh gazu rocznie)",
+          "weryfikacja": "Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni z uwzględnieniem stopniodni",
+          "odp": "Jan Kowalski — Energy Manager",
+          "data": "12.2027",
+          "stan": "P",
+          "osiagniety": "",
+          "dowod": ""
+        }
+      ],
+      "ZRODLA": [
+        {
+          "kod": "przeglad",
+          "coWplynelo": "Siedem możliwości poprawy, razem około 1 375 MWh rocznie. Zrealizowane w 2026 r.: usunięcie 35 nieszczelności i obniżenie ciśnienia sieci z 7,0 do 6,3 bar. Pozostałe skierowane do oceny: sterownik i napęd sprężarkowni, LED w halach H1 i H2, odzysk ciepła ze sprężarek."
+        },
+        {
+          "kod": "monitorowanie",
+          "coWplynelo": "K-1 o 1% powyżej linii bazowej w I półroczu 2026 r. — stąd pozycja 5 planu. S-1 za okres VII–IX pokazuje, że do celu Z1.1 brakuje więcej, niż osiągnięto samym ciśnieniem — stąd utrzymanie modernizacji w budżecie 2027."
+        },
+        {
+          "kod": "audyty",
+          "coWplynelo": "Audyt A-01/2026: jedna niezgodność (protokół serwisu bez nastaw) i dwie możliwości doskonalenia — jeden wzór protokołu dla wykonawców przy wszystkich SEU oraz luka kompetencyjna w zakupach. Obie weszły do planu jako pozycje 1 i 4."
+        },
+        {
+          "kod": "przeglad_zarz",
+          "coWplynelo": "Przegląd z 29.09.2026: pytania o energię w procedurze inwestycyjnej firmy, warsztat dla zakupów, analiza przyczyn K-1 przed sezonem grzewczym. Na tym przeglądzie zatwierdzono cały plan doskonalenia."
+        },
+        {
+          "kod": "zgloszenia",
+          "coWplynelo": "Zgłoszenie 2026/08 z rejestru komunikacji: jeden wyłącznik na całą halę B, nie da się zgasić nieużywanej części. Weszło do zakresu projektu LED jako podział hali na trzy strefy — projekt prowadzony w planie działań celu C2."
+        },
+        {
+          "kod": "niezgodnosci",
+          "coWplynelo": "NK-2026-01 — brak zasad odbioru usług wykonawców przy SEU; przyczyna systemowa, stąd pozycja 1 planu. NK-2026-02 — terminy obowiązków z rejestru poza kalendarzem osób odpowiedzialnych; stąd pozycja 3."
+        }
+      ],
+      "MOZLIWOSCI": [
+        {
+          "nazwa": "Sterownik nadrzędny i napęd o zmiennej prędkości w sprężarkowni",
+          "potencjalMWh": "230",
+          "nosnik": "el",
+          "koszt": "380000",
+          "jakWykazac": "kWh/Nm³ cztery tygodnie po odbiorze i za rok 2027, w warunkach z części D formularza celów: ciśnienie 6,3 bar, obciążenie 60–90%, trzy zmiany",
+          "ryzyko": "Efekt zależny od profilu obciążenia — przy niższej produkcji oszczędność mniejsza. Deklaracja oferty 1 600 MWh/rok do sprawdzenia po uruchomieniu.",
+          "decyzja": "plan_dzialan",
+          "powod": ""
+        },
+        {
+          "nazwa": "Wymiana opraw na LED ze sterowaniem strefowym w halach H1 i H2",
+          "potencjalMWh": "270",
+          "nosnik": "el",
+          "koszt": "240000",
+          "jakWykazac": "OŚ-1 z podlicznika oświetlenia, 12 miesięcy po wymianie wobec 680 MWh/rok; przy zmianie liczby zmian przeliczenie na godzinę pracy zakładu",
+          "ryzyko": "Efekt sterowania strefowego zależy od dyscypliny harmonogramów; bez podlicznika poprawy nie da się wykazać pomiarem.",
+          "decyzja": "plan_dzialan",
+          "powod": ""
+        },
+        {
+          "nazwa": "Odzysk ciepła ze sprężarek na potrzeby ciepłej wody i ogrzewania",
+          "potencjalMWh": "250",
+          "nosnik": "gaz",
+          "koszt": "",
+          "jakWykazac": "Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni ze stopniodniami",
+          "ryzyko": "Ilość ciepła odpadowego zmieni się po modernizacji sprężarkowni — przy innym profilu obciążenia potencjał może być niższy. Koszt nieustalony do czasu analizy.",
+          "decyzja": "plan_dosk",
+          "powod": "Decyzja po ocenie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027. Projekt modernizacji zostawia miejsce i przyłącza pod wymiennik, więc odłożenie nie zamyka drogi."
+        }
+      ],
+      "POPRAWA": [
+        {
+          "kod": "O-1",
+          "nazwa": "zakład — rzeczywiste / oczekiwane",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,965",
+          "powodBraku": "",
+          "warunki": "Model zużycia zakładu z przeglądu energetycznego przy rzeczywistej produkcji i rzeczywistych stopniodniach — wskaźnik normalizuje produkcję i pogodę. Sierpień 2026; I półrocze 0,97.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "P-1",
+          "nazwa": "prasy [kWh/t]",
+          "kierunek": "nizej",
+          "enb": "124,0",
+          "enbOkres": "2025",
+          "biez": "121,5",
+          "powodBraku": "",
+          "warunki": "Ten sam asortyment i ta sama liczba zmian; wskaźnik jednostkowy normalizuje tonaż. Sierpień 2026.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "L-1",
+          "nazwa": "lakiernia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,99",
+          "powodBraku": "",
+          "warunki": "Model lakierni z punktu 6.6, powierzchnia malowana jako zmienna istotna. Sierpień 2026; zmiana w granicach progu 2%.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "S-1",
+          "nazwa": "sprężarkownia [kWh/Nm³]",
+          "kierunek": "nizej",
+          "enb": "0,125",
+          "enbOkres": "02–03.2026",
+          "biez": "0,118",
+          "powodBraku": "",
+          "warunki": "Pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar, obciążenie 60–90%. Wskaźnik jednostkowy normalizuje objętość powietrza. Temperatura zasysania różna o więcej niż 10 °C wymaga adnotacji. Sierpień 2026; okres VII–18.IX: 0,119.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "OŚ-1",
+          "nazwa": "oświetlenie [MWh/miesiąc]",
+          "kierunek": "nizej",
+          "enb": "56,7",
+          "enbOkres": "680 MWh/rok 2025, czyli 56,7 MWh/mies.",
+          "biez": "55,8",
+          "powodBraku": "",
+          "warunki": "Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych; bez zmiany powierzchni oświetlanej. Sierpień 2026.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "K-1",
+          "nazwa": "kotłownia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "1,01",
+          "powodBraku": "",
+          "warunki": "Model kotłowni ze stopniodniami grzania; porównanie za I półrocze 2026 wobec tego samego okresu roku bazowego.",
+          "wyjasnienie": "Pogorszenie o 1% wobec linii bazowej w I półroczu. Przyczyna nieustalona — analiza przed rozpoczęciem sezonu grzewczego (pozycja 5 planu doskonalenia, kierownik UR, plan 10.2026). Ocena sezonu 2026/27 w 05.2027; wynik na zebraniu Zarządu w IV kwartale 2026 r. Pogorszenie jednego wskaźnika nie unieważnia poprawy w pozostałych pięciu, ale wymaga decyzji."
+        }
+      ],
+      "META": {
+        "okres": "10.2026 – 12.2027. Działania celów C1–C3 prowadzone w planie działań (III-24) i nie powtarzane w tym planie.",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu; przegląd zarządzania 29.09.2026",
+        "dataZatw": "2026-09-29",
+        "cenaEl": "890",
+        "cenaGaz": "250",
+        "potencjalRazem": "1375"
+      }
+    }
+  },
+  "variables": {
+    "ZRODLA_DEF": [
+      {
+        "kod": "przeglad",
+        "punkt": "6.3",
+        "nazwa": "Przegląd energetyczny — lista możliwości poprawy",
+        "ph": "np. Siedem możliwości, razem około 1 375 MWh rocznie. Zrealizowane: usunięcie nieszczelności i obniżenie ciśnienia. Pozostałe: sterownik i napęd sprężarkowni, LED w halach, odzysk ciepła ze sprężarek."
+      },
+      {
+        "kod": "monitorowanie",
+        "punkt": "9.1.1",
+        "nazwa": "Dane z monitorowania",
+        "ph": "np. K-1 o 1% powyżej linii bazowej w I półroczu — stąd pozycja 5 planu. S-1 pokazuje, że samo ciśnienie nie dowiezie celu Z1.1."
+      },
+      {
+        "kod": "audyty",
+        "punkt": "9.2",
+        "nazwa": "Ustalenia z audytów wewnętrznych",
+        "ph": "np. Audyt A-01/2026: jedna niezgodność i dwie możliwości doskonalenia — wzór protokołu dla wykonawców i luka kompetencyjna w zakupach. Obie w planie (pozycje 1 i 4)."
+      },
+      {
+        "kod": "przeglad_zarz",
+        "punkt": "9.3",
+        "nazwa": "Decyzje z przeglądu zarządzania",
+        "ph": "np. Przegląd 29.09.2026: pytania o energię w procedurze inwestycyjnej, warsztat dla zakupów, analiza K-1 przed sezonem. Cały plan zatwierdzono na tym przeglądzie."
+      },
+      {
+        "kod": "zgloszenia",
+        "punkt": "7.4",
+        "nazwa": "Zgłoszenia pracowników",
+        "ph": "np. Zgłoszenie 2026/08: jeden wyłącznik na całą halę B — weszło do zakresu projektu LED jako podział na trzy strefy."
+      },
+      {
+        "kod": "niezgodnosci",
+        "punkt": "10.1",
+        "nazwa": "Analiza niezgodności",
+        "ph": "np. NK-2026-01 — brak zasad odbioru usług przy SEU (pozycja 1 planu). NK-2026-02 — terminy obowiązków poza kalendarzem (pozycja 3)."
+      }
+    ],
+    "LISTA_102": [
+      {
+        "tekst": "Doskonali się przydatność, adekwatność i skuteczność systemu.",
+        "podstawa": "N",
+        "auto": "doskonalenieSystemu"
+      },
+      {
+        "tekst": "Wykazano ciągłą poprawę wyniku energetycznego — EnPI wobec EnB, w porównywalnych warunkach.",
+        "podstawa": "N",
+        "auto": "poprawaWyniku"
+      },
+      {
+        "tekst": "Możliwości poprawy mają stałe źródła i są oceniane (potencjał, koszt, prosty okres zwrotu, ryzyko).",
+        "podstawa": "M",
+        "auto": "zrodlaIOcena"
+      },
+      {
+        "tekst": "Prowadzony jest plan doskonalenia z oczekiwanym i osiągniętym efektem (F-EnMS-23).",
+        "podstawa": "M",
+        "auto": "plan"
+      }
+    ],
+    "PRZYKLAD": {
+      "POZYCJE": [
+        {
+          "nr": "1",
+          "dzialanie": "Wzór protokołu z nastawami i odbiór usług przy znaczących użyciach energii",
+          "obszar": "S",
+          "zrodlo": "NK-2026-01; audyt A-01/2026",
+          "efekt": "Protokół z nastawami przed i po przy każdej usłudze przy SEU (dziś: 1 z 3 wykonawców ma wymagania w zleceniu)",
+          "weryfikacja": "Po wdrożeniu: protokoły z przeglądów kotłowni, sprężarek i automatyki lakierni; sprawdzenie, czy odbiór usługi obejmuje kontrolę protokołu (terminy w karcie NK-2026-01)",
+          "odp": "Kierownik utrzymania ruchu",
+          "data": "10.2026",
+          "stan": "W",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "2",
+          "dzialanie": "Pytania o energię na etapie założeń w procedurze inwestycyjnej firmy",
+          "obszar": "S",
+          "zrodlo": "Przegląd zarządzania 09.2026; koncepcja modernizacji sprężarkowni (8.2)",
+          "efekt": "Każda koncepcja dotycząca SEU przechodzi listę kontrolną III-36 na etapie założeń (dziś: koncepcja modernizacji sprężarkowni trafiła do oceny dopiero przed zatwierdzeniem)",
+          "weryfikacja": "Audyt wewnętrzny II kw. 2027 — pozycja 2 programu, zakupy i projekty",
+          "odp": "Dyrektor Zakładu",
+          "data": "12.2026",
+          "stan": "P",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "3",
+          "dzialanie": "Terminy obowiązków z rejestru wymagań w kalendarzu kontrolingu",
+          "obszar": "S",
+          "zrodlo": "NK-2026-02",
+          "efekt": "Wszystkie terminy z rejestru III-04 w kalendarzu z właścicielem; raport dla banku za 2026 r. wysłany do 30.06.2027 (dziś: 0 z 4 terminów w kalendarzu)",
+          "weryfikacja": "Kontrola wysyłki do 30.06.2027; ocena zgodności 09.2027",
+          "odp": "Kontroler finansowy",
+          "data": "10.2026",
+          "stan": "W",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "4",
+          "dzialanie": "Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania",
+          "obszar": "S",
+          "zrodlo": "Luka w matrycy kompetencji III-28; przegląd zarządzania 09.2026; ustalenie D-2 audytu A-01/2026",
+          "efekt": "Trzy kolejne zamówienia przy SEU z porównaniem kosztu zakupu i energii wykonanym przez dział zakupów (dziś: 1, i to przygotowane przez Energy Managera)",
+          "weryfikacja": "Przegląd zamówień przy SEU przez Energy Managera; wzór porównania dołączony do procedury zakupowej",
+          "odp": "Jan Kowalski — Energy Manager",
+          "data": "11.2026",
+          "stan": "P",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "5",
+          "dzialanie": "Analiza przyczyn K-1 = 1,01 przed sezonem grzewczym",
+          "obszar": "W",
+          "zrodlo": "Raport z monitorowania III-42; przegląd zarządzania 09.2026",
+          "efekt": "Przyczyna ustalona; propozycja do zatwierdzenia po analizie: K-1 za sezon 2026/27 nie wyżej niż 1,00 wobec EnB",
+          "weryfikacja": "Model kotłowni ze stopniodniami (HDD) dla sezonu 2026/27, w porównywalnych warunkach; ocena 05.2027",
+          "odp": "Kierownik utrzymania ruchu",
+          "data": "Przed sezonem (plan: 10.2026); ocena 05.2027",
+          "stan": "W",
+          "osiagniety": "",
+          "dowod": ""
+        },
+        {
+          "nr": "6",
+          "dzialanie": "Odzysk ciepła ze sprężarek — analiza po modernizacji",
+          "obszar": "W",
+          "zrodlo": "Przegląd energetyczny, możliwość 7; analiza projektu III-36 (wniosek odrzucony z zostawieniem przyłączy)",
+          "efekt": "Decyzja inwestycyjna na podstawie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027 (potencjał z przeglądu: około 250 MWh gazu rocznie)",
+          "weryfikacja": "Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni z uwzględnieniem stopniodni",
+          "odp": "Jan Kowalski — Energy Manager",
+          "data": "12.2027",
+          "stan": "P",
+          "osiagniety": "",
+          "dowod": ""
+        }
+      ],
+      "ZRODLA": [
+        {
+          "kod": "przeglad",
+          "coWplynelo": "Siedem możliwości poprawy, razem około 1 375 MWh rocznie. Zrealizowane w 2026 r.: usunięcie 35 nieszczelności i obniżenie ciśnienia sieci z 7,0 do 6,3 bar. Pozostałe skierowane do oceny: sterownik i napęd sprężarkowni, LED w halach H1 i H2, odzysk ciepła ze sprężarek."
+        },
+        {
+          "kod": "monitorowanie",
+          "coWplynelo": "K-1 o 1% powyżej linii bazowej w I półroczu 2026 r. — stąd pozycja 5 planu. S-1 za okres VII–IX pokazuje, że do celu Z1.1 brakuje więcej, niż osiągnięto samym ciśnieniem — stąd utrzymanie modernizacji w budżecie 2027."
+        },
+        {
+          "kod": "audyty",
+          "coWplynelo": "Audyt A-01/2026: jedna niezgodność (protokół serwisu bez nastaw) i dwie możliwości doskonalenia — jeden wzór protokołu dla wykonawców przy wszystkich SEU oraz luka kompetencyjna w zakupach. Obie weszły do planu jako pozycje 1 i 4."
+        },
+        {
+          "kod": "przeglad_zarz",
+          "coWplynelo": "Przegląd z 29.09.2026: pytania o energię w procedurze inwestycyjnej firmy, warsztat dla zakupów, analiza przyczyn K-1 przed sezonem grzewczym. Na tym przeglądzie zatwierdzono cały plan doskonalenia."
+        },
+        {
+          "kod": "zgloszenia",
+          "coWplynelo": "Zgłoszenie 2026/08 z rejestru komunikacji: jeden wyłącznik na całą halę B, nie da się zgasić nieużywanej części. Weszło do zakresu projektu LED jako podział hali na trzy strefy — projekt prowadzony w planie działań celu C2."
+        },
+        {
+          "kod": "niezgodnosci",
+          "coWplynelo": "NK-2026-01 — brak zasad odbioru usług wykonawców przy SEU; przyczyna systemowa, stąd pozycja 1 planu. NK-2026-02 — terminy obowiązków z rejestru poza kalendarzem osób odpowiedzialnych; stąd pozycja 3."
+        }
+      ],
+      "MOZLIWOSCI": [
+        {
+          "nazwa": "Sterownik nadrzędny i napęd o zmiennej prędkości w sprężarkowni",
+          "potencjalMWh": "230",
+          "nosnik": "el",
+          "koszt": "380000",
+          "jakWykazac": "kWh/Nm³ cztery tygodnie po odbiorze i za rok 2027, w warunkach z części D formularza celów: ciśnienie 6,3 bar, obciążenie 60–90%, trzy zmiany",
+          "ryzyko": "Efekt zależny od profilu obciążenia — przy niższej produkcji oszczędność mniejsza. Deklaracja oferty 1 600 MWh/rok do sprawdzenia po uruchomieniu.",
+          "decyzja": "plan_dzialan",
+          "powod": ""
+        },
+        {
+          "nazwa": "Wymiana opraw na LED ze sterowaniem strefowym w halach H1 i H2",
+          "potencjalMWh": "270",
+          "nosnik": "el",
+          "koszt": "240000",
+          "jakWykazac": "OŚ-1 z podlicznika oświetlenia, 12 miesięcy po wymianie wobec 680 MWh/rok; przy zmianie liczby zmian przeliczenie na godzinę pracy zakładu",
+          "ryzyko": "Efekt sterowania strefowego zależy od dyscypliny harmonogramów; bez podlicznika poprawy nie da się wykazać pomiarem.",
+          "decyzja": "plan_dzialan",
+          "powod": ""
+        },
+        {
+          "nazwa": "Odzysk ciepła ze sprężarek na potrzeby ciepłej wody i ogrzewania",
+          "potencjalMWh": "250",
+          "nosnik": "gaz",
+          "koszt": "",
+          "jakWykazac": "Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni ze stopniodniami",
+          "ryzyko": "Ilość ciepła odpadowego zmieni się po modernizacji sprężarkowni — przy innym profilu obciążenia potencjał może być niższy. Koszt nieustalony do czasu analizy.",
+          "decyzja": "plan_dosk",
+          "powod": "Decyzja po ocenie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027. Projekt modernizacji zostawia miejsce i przyłącza pod wymiennik, więc odłożenie nie zamyka drogi."
+        }
+      ],
+      "POPRAWA": [
+        {
+          "kod": "O-1",
+          "nazwa": "zakład — rzeczywiste / oczekiwane",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,965",
+          "powodBraku": "",
+          "warunki": "Model zużycia zakładu z przeglądu energetycznego przy rzeczywistej produkcji i rzeczywistych stopniodniach — wskaźnik normalizuje produkcję i pogodę. Sierpień 2026; I półrocze 0,97.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "P-1",
+          "nazwa": "prasy [kWh/t]",
+          "kierunek": "nizej",
+          "enb": "124,0",
+          "enbOkres": "2025",
+          "biez": "121,5",
+          "powodBraku": "",
+          "warunki": "Ten sam asortyment i ta sama liczba zmian; wskaźnik jednostkowy normalizuje tonaż. Sierpień 2026.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "L-1",
+          "nazwa": "lakiernia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,99",
+          "powodBraku": "",
+          "warunki": "Model lakierni z punktu 6.6, powierzchnia malowana jako zmienna istotna. Sierpień 2026; zmiana w granicach progu 2%.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "S-1",
+          "nazwa": "sprężarkownia [kWh/Nm³]",
+          "kierunek": "nizej",
+          "enb": "0,125",
+          "enbOkres": "02–03.2026",
+          "biez": "0,118",
+          "powodBraku": "",
+          "warunki": "Pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar, obciążenie 60–90%. Wskaźnik jednostkowy normalizuje objętość powietrza. Temperatura zasysania różna o więcej niż 10 °C wymaga adnotacji. Sierpień 2026; okres VII–18.IX: 0,119.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "OŚ-1",
+          "nazwa": "oświetlenie [MWh/miesiąc]",
+          "kierunek": "nizej",
+          "enb": "56,7",
+          "enbOkres": "680 MWh/rok 2025, czyli 56,7 MWh/mies.",
+          "biez": "55,8",
+          "powodBraku": "",
+          "warunki": "Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych; bez zmiany powierzchni oświetlanej. Sierpień 2026.",
+          "wyjasnienie": ""
+        },
+        {
+          "kod": "K-1",
+          "nazwa": "kotłownia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "1,01",
+          "powodBraku": "",
+          "warunki": "Model kotłowni ze stopniodniami grzania; porównanie za I półrocze 2026 wobec tego samego okresu roku bazowego.",
+          "wyjasnienie": "Pogorszenie o 1% wobec linii bazowej w I półroczu. Przyczyna nieustalona — analiza przed rozpoczęciem sezonu grzewczego (pozycja 5 planu doskonalenia, kierownik UR, plan 10.2026). Ocena sezonu 2026/27 w 05.2027; wynik na zebraniu Zarządu w IV kwartale 2026 r. Pogorszenie jednego wskaźnika nie unieważnia poprawy w pozostałych pięciu, ale wymaga decyzji."
+        }
+      ],
+      "META": {
+        "okres": "10.2026 – 12.2027. Działania celów C1–C3 prowadzone w planie działań (III-24) i nie powtarzane w tym planie.",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu; przegląd zarządzania 29.09.2026",
+        "dataZatw": "2026-09-29",
+        "cenaEl": "890",
+        "cenaGaz": "250",
+        "potencjalRazem": "1375"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Doskonalenie pokazane jako lista działań nie mówi, czy wynik energetyczny się poprawił.",
+        "decyzja": "Poprawę wykazujemy na wskaźnikach i zawsze w odniesieniu do stanu sprzed zmiany.",
+        "dzialanie": "Plan doskonalenia z pozycjami rozpisanymi na źródła i okresy; 1 375 MWh oszczędności przypisane do konkretnych działań.",
+        "sprawdzenie": "Każda pozycja planu podaje efekt z odniesieniem: wartość przed, wartość po i okres porównania."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "POZYCJE": [],
+    "ZRODLA": [],
+    "MOZLIWOSCI": [],
+    "POPRAWA": [],
+    "WNIOSKI": [],
+    "OBSZARY": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "S",
+        "S — system zarządzania energią"
+      ],
+      [
+        "W",
+        "W — wynik energetyczny"
+      ]
+    ],
+    "STANY_P": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "P",
+        "P — planowane"
+      ],
+      [
+        "W",
+        "W — w toku"
+      ],
+      [
+        "Z",
+        "Z — zakończone"
+      ],
+      [
+        "A",
+        "A — anulowane"
+      ]
+    ],
+    "KIERUNKI": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "nizej",
+        "Niżej znaczy lepiej"
+      ],
+      [
+        "wyzej",
+        "Wyżej znaczy lepiej"
+      ]
+    ],
+    "NOSNIKI": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "el",
+        "Energia elektryczna"
+      ],
+      [
+        "gaz",
+        "Gaz"
+      ]
+    ],
+    "DECYZJE_M": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "plan_dzialan",
+        "Do planów działań (6.2)"
+      ],
+      [
+        "plan_dosk",
+        "Do planu doskonalenia (10.2)"
+      ],
+      [
+        "odlozona",
+        "Odłożona — z powodem"
+      ],
+      [
+        "odrzucona",
+        "Odrzucona — z powodem"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

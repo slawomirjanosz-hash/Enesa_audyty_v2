@@ -14,7 +14,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-01"
     },
     {
       "id": "WYM-02",
@@ -30,7 +31,8 @@
       "pokaz_gdy": "FAKT_GRUPA_KAPITALOWA = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-02"
     },
     {
       "id": "WYM-03",
@@ -46,7 +48,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": true,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-03"
     },
     {
       "id": "WYM-04",
@@ -62,7 +65,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": true,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-04"
     },
     {
       "id": "WYM-05",
@@ -78,7 +82,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-05"
     },
     {
       "id": "WYM-06",
@@ -94,7 +99,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-06"
     },
     {
       "id": "WYM-07",
@@ -110,7 +116,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-07"
     },
     {
       "id": "WYM-08",
@@ -126,7 +133,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-08"
     },
     {
       "id": "WYM-09",
@@ -142,7 +150,8 @@
       "pokaz_gdy": "FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-09"
     },
     {
       "id": "WYM-10",
@@ -158,7 +167,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-10"
     },
     {
       "id": "WYM-11",
@@ -174,7 +184,8 @@
       "pokaz_gdy": "FAKT_ZWIAZKI = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-11"
     },
     {
       "id": "WYM-12",
@@ -190,7 +201,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-12"
     },
     {
       "id": "WYM-13",
@@ -207,7 +219,8 @@
       "bhp": false,
       "preferencja": false,
       "slad": false,
-      "uwaga_prawna": true
+      "uwaga_prawna": true,
+      "source_id": "WYM-13"
     },
     {
       "id": "WYM-14",
@@ -223,7 +236,8 @@
       "pokaz_gdy": "FAKT_UDT = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-14"
     },
     {
       "id": "WYM-15",
@@ -239,7 +253,8 @@
       "pokaz_gdy": "FAKT_ETS = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-15"
     },
     {
       "id": "WYM-16",
@@ -255,7 +270,8 @@
       "pokaz_gdy": "FAKT_FGAZ = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-16"
     },
     {
       "id": "WYM-17",
@@ -271,7 +287,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-17"
     },
     {
       "id": "WYM-18",
@@ -287,7 +304,8 @@
       "pokaz_gdy": "FAKT_PRZETARGI = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-18"
     },
     {
       "id": "WYM-19",
@@ -303,7 +321,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-19"
     },
     {
       "id": "WYM-20",
@@ -319,7 +338,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-20"
     },
     {
       "id": "WYM-21",
@@ -335,7 +355,8 @@
       "pokaz_gdy": "FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-21"
     },
     {
       "id": "WYM-22",
@@ -351,7 +372,8 @@
       "pokaz_gdy": "FAKT_FLOTA = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-22"
     },
     {
       "id": "WYM-23",
@@ -367,7 +389,8 @@
       "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-23"
     },
     {
       "id": "WYM-24",
@@ -383,7 +406,25 @@
       "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": true
+      "slad": true,
+      "source_id": "WYM-24"
+    },
+    {
+      "id": "WYM-31",
+      "strona_kod": "STK-Z-12",
+      "strona": "Odbiorcy / klienci",
+      "typ": "zew.",
+      "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+      "kwal_sug": "umowne",
+      "sposob_sug": "Wdrożenie i certyfikacja zgodnie z harmonogramem wdrożenia",
+      "wlasciciel_sug": "",
+      "sprawdzanie_sug": "Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc",
+      "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data",
+      "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+      "bhp": false,
+      "preferencja": false,
+      "slad": false,
+      "source_id": "WYM-25"
     },
     {
       "id": "WYM-25",
@@ -399,7 +440,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-26"
     },
     {
       "id": "WYM-26",
@@ -415,14 +457,15 @@
       "pokaz_gdy": "FAKT_UR_WLASNE IN (zewnetrzne, mieszane)",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-27"
     },
     {
       "id": "WYM-27",
       "strona_kod": "STK-Z-15",
       "strona": "Instytucje finansujące / banki",
       "typ": "zew.",
-      "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych",
+      "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”",
       "kwal_sug": "",
       "sposob_sug": "Dokumentacja efektów do wniosków kredytowych",
       "wlasciciel_sug": "Energy Manager",
@@ -431,7 +474,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-28"
     },
     {
       "id": "WYM-28",
@@ -447,7 +491,8 @@
       "pokaz_gdy": "FAKT_CSRD = tak",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-29"
     },
     {
       "id": "WYM-29",
@@ -463,7 +508,8 @@
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-30"
     },
     {
       "id": "WYM-30",
@@ -471,15 +517,16 @@
       "strona": "Jednostka certyfikująca",
       "typ": "zew.",
       "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres",
-      "kwal_sug": "prawne",
+      "kwal_sug": "umowne",
       "sposob_sug": "Nadzór nad dokumentacją (kl. 7.5), zapisy z audytu i przeglądu",
       "wlasciciel_sug": "Energy Manager",
-      "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)",
-      "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień",
+      "sprawdzanie_sug": "Audit certyfikacyjny; audity wewnętrzne (9.2)",
+      "zrodlo_podp": "Umowa o certyfikację i wymagania jednostki certyfikującej — punkt i wersja dokumentu",
       "pokaz_gdy": "ZAWSZE",
       "bhp": false,
       "preferencja": false,
-      "slad": false
+      "slad": false,
+      "source_id": "WYM-31"
     }
   ],
   "grupy": [
@@ -561,5 +608,133 @@
       "oczekiwanie_nieprzyjete",
       "oczekiwanie nieprzyjęte — nie przyjmujemy go jako obowiązku"
     ]
+  ],
+  "mapowanie": [
+    {
+      "czynnik": "KTX-ZR-01",
+      "strona": "STK-Z-02",
+      "wymaganie": "Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-03",
+      "strona": "STK-Z-01",
+      "wymaganie": "Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-04",
+      "strona": "STK-Z-04",
+      "wymaganie": "Monitorowanie i raportowanie emisji, umorzenie uprawnień",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-05",
+      "strona": "STK-Z-16",
+      "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdania",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-06",
+      "strona": "STK-Z-03",
+      "wymaganie": "Terminowe badania i przeglądy, aktualna dokumentacja",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-07",
+      "strona": "STK-Z-05",
+      "wymaganie": "Kontrole szczelności i karty urządzeń w CRO",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZR-08",
+      "strona": "STK-Z-06",
+      "wymaganie": "Poprawna dokumentacja przedsięwzięć i oszczędności",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-ZR-10",
+      "strona": "STK-Z-07",
+      "wymaganie": "Certyfikat jako warunek lub kryterium w postępowaniach",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZM-02",
+      "strona": "STK-Z-09",
+      "wymaganie": "Zgodność profilu poboru z warunkami nowej umowy",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-ZM-03",
+      "strona": "STK-Z-12",
+      "wymaganie": "Informacja o śladzie węglowym i efektywności wyrobu",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZM-05",
+      "strona": "STK-Z-08",
+      "wymaganie": "Nieprzekraczanie mocy umownej, warunki przyłączenia",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-ZM-07",
+      "strona": "STK-Z-07",
+      "wymaganie": "Posiadanie certyfikatu w terminie postępowań",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-WT-07",
+      "strona": "STK-Z-08",
+      "wymaganie": "Warunki przyłączenia źródła, zgłaszanie zmian w instalacji",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-WT-09",
+      "strona": "STK-Z-01",
+      "wymaganie": "Obowiązki koncesyjne i sprawozdawcze dla wytwarzania",
+      "zgodnosc": "TAK"
+    },
+    {
+      "czynnik": "KTX-WT-13",
+      "strona": "STK-Z-11",
+      "wymaganie": "Warunki umów flotowych i dane o zużyciu paliw",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WO-01",
+      "strona": "STK-W-01",
+      "wymaganie": "Oczekiwanie powołania Energy Managera i przypisania uprawnień",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WO-09",
+      "strona": "STK-W-05",
+      "wymaganie": "Brak ograniczeń dla ciągłości produkcji przy pomiarach",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WO-11",
+      "strona": "STK-W-04",
+      "wymaganie": "Dostęp do danych i wpływ na decyzje eksploatacyjne",
+      "zgodnosc": "nie"
+    },
+    {
+      "czynnik": "KTX-WF-06",
+      "strona": "STK-Z-15",
+      "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZK-08",
+      "strona": "STK-Z-12",
+      "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+      "zgodnosc": "KANDYDAT"
+    },
+    {
+      "czynnik": "KTX-ZK-08",
+      "strona": "STK-Z-16",
+      "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji",
+      "zgodnosc": "KANDYDAT"
+    }
   ]
 }

@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 class IsoExecutionQuestionnaire
 {
     public const TITLES = [
+        '7-4' => '7.4 Komunikacja D-EnMS-KOM-01', '7-5' => '7.5 Udokumentowane informacje D-EnMS-DOK-01',
         '8-1' => '8.1 Nadzór operacyjny D-EnMS-OPE-01', '8-2' => '8.2 Projektowanie D-EnMS-PRO-01', '8-3' => '8.3 Zakupy D-EnMS-ZKP-01',
         '9-1-1' => '9.1.1 Monitorowanie D-EnMS-MON-01', '9-1-2' => '9.1.2 Ocena zgodności D-EnMS-ZGD-01', '9-2' => '9.2 Audyt wewnętrzny D-EnMS-AUD-01', '9-3' => '9.3 Przegląd zarządzania D-EnMS-PZR-01',
         '10-1' => '10.1 Niezgodności D-EnMS-NKR-01', '10-2' => '10.2 Ciągłe doskonalenie D-EnMS-DOS-01',
@@ -49,13 +50,14 @@ class IsoExecutionQuestionnaire
         $cache['rows'] ??= IsoSystemReview::where('audit_id', $profile->audit_id)->where('site_id', $profile->site_id)->get()->keyBy('section');
         $base = $cache['base'];
         $dependencies = match ($section) {
+            '7-4' => ['5-2', '5-3', '6-2', '7-3'], '7-5' => ['5-3', '7-2', '7-4'],
             '8-1' => ['6-2', '6-3', '6-4', '6-6'], '8-2' => ['6-2', '8-1'], '8-3' => ['8-1', '8-2'],
             '9-1-1' => ['6-2', '6-3', '6-4', '6-5', '6-6', '8-1'], '9-1-2' => [],
             '9-2' => ['9-1-1', '9-1-2'], '9-3' => ['9-1-1', '9-1-2', '9-2'],
             '10-1' => ['9-1-1', '9-1-2', '9-2'], '10-2' => ['6-3', '9-1-1', '9-2', '9-3', '10-1'],
         };
         $required = match ($section) {
-            '8-1' => ['6-3'], '8-2', '8-3' => ['8-1'], '9-1-1' => ['6-4', '6-5'],
+            '7-4', '7-5' => [], '8-1' => ['6-3'], '8-2', '8-3' => ['8-1'], '9-1-1' => ['6-4', '6-5'],
             '9-3' => ['9-1-1', '9-1-2', '9-2'], '10-2' => ['9-1-1'], default => [],
         };
         $base['upstream'] = [];
@@ -89,7 +91,7 @@ class IsoExecutionQuestionnaire
         // A register may truthfully contain no projects, purchases or nonconformities.
         foreach ($tree as $root => &$node) {
             if ($node['type'] === 'list') {
-                $node['min'] = in_array($root, ['ODCH', 'RAPORTY', 'MOZLIWOSCI']) ? 0 : 1;
+                $node['min'] = in_array($root, ['ODCH', 'RAPORTY', 'MOZLIWOSCI', 'ZGLOSZENIA']) ? 0 : 1;
             }
         }
         unset($node);
@@ -144,7 +146,7 @@ class IsoExecutionQuestionnaire
                 $code = $row['kod'];
                 $answers['WYM'][$code] = array_replace($old[$code] ?? [], ['nr' => $code, 'strona' => $row['nazwa'] ?? $row['strona'] ?? $code,
                     'wymaganie' => $row['wymaganie'] ?? $row['wymagania'] ?? $row['oczekiwanie'] ?? '',
-                    'zrodlo' => $row['consultant']['legal_basis'] ?? '', 'kwalifikacja' => $row['kwalifikacja'] ?? 'Wymaganie zgodności z 4.2']);
+                    'zrodlo' => $row['consultant']['legal_basis'] ?? '', 'kwalifikacja' => $row['kwalifikacja'] ?? 'Wymaganie zgodności z 4.2', 'wym42' => $code]);
             }
         }
         if (in_array($section, ['9-1-1', '10-2'])) {
@@ -160,6 +162,9 @@ class IsoExecutionQuestionnaire
                     $monitor = data_get($sources, 'upstream.9-1-1.WSKAZNIKI.'.$index, []);
                     $row['biez'] = $monitor['biez'] ?? '';
                     $row['kierunek'] = $monitor['kierunek'] ?? '';
+                    if (! filled($row['biez']) && ! filled($row['powodBraku'] ?? null)) {
+                        $row['powodBraku'] = $monitor['ocena'] ?? '';
+                    }
                 }
                 $answers[$root][$index] = $row;
             }
@@ -212,11 +217,24 @@ class IsoExecutionQuestionnaire
         $parts = explode('.', $path);
         $rowPath = implode('.', array_slice($parts, 0, 2));
         $row = data_get($answers, $rowPath, []);
-        $readonly = ($section === '9-1-2' && $parts[0] === 'WYM' && in_array($leaf, ['nr', 'strona', 'wymaganie', 'zrodlo', 'kwalifikacja']))
+        $readonly = ($section === '9-1-2' && $parts[0] === 'WYM' && in_array($leaf, ['nr', 'strona', 'wymaganie', 'zrodlo', 'kwalifikacja', 'wym42']))
             || (in_array($parts[0], ['WSKAZNIKI', 'POPRAWA']) && in_array($leaf, ['kod', 'nazwa', 'enb', 'enbOkres', 'warunki']))
             || ($parts[0] === 'POPRAWA' && in_array($leaf, ['biez', 'kierunek']));
         if ($parts[0] === 'POPRAWA' && $leaf === 'powodBraku') {
             $required = ! filled($row['biez'] ?? null);
+        }
+        if ($parts[0] === 'POPRAWA' && $leaf === 'wyjasnienie') {
+            $base = self::number($row['enb'] ?? null);
+            $current = self::number($row['biez'] ?? null);
+            $required = $base !== null && $current !== null && (($row['kierunek'] ?? '') === 'wyzej' ? $current < $base : $current > $base);
+        }
+        if ($section === '9-1-1' && $parts[0] === 'WSKAZNIKI') {
+            if ($leaf === 'celTermin') {
+                $required = ! in_array(trim($row['cel'] ?? ''), ['', '—', 'monitorowanie'], true);
+            }
+            if ($leaf === 'biez') {
+                $required = ! filled($row['ocena'] ?? null);
+            }
         }
         if ($leaf === 'wlasna') {
             $required = false;
@@ -295,9 +313,27 @@ class IsoExecutionQuestionnaire
         if ($section === '9-3' && $parts[0] === 'DECYZJE' && in_array($leaf, ['kto', 'termin']) && preg_match('/bez zmian|utrzymujemy|nie zmieniamy|bez rewizji/iu', $row['decyzja'] ?? '')) {
             $required = false;
         }
+        if ($section === '9-3' && $parts[0] === 'DECYZJE' && $leaf === 'nazwa') {
+            $required = false;
+        }
+        if ($section === '7-5' && $parts[0] === 'WYKAZ') {
+            if ($leaf === 'punkt') {
+                $required = true;
+                $when = [$rowPath.'.podstawa', ['N']];
+            }
+            if ($leaf === 'wersja') {
+                $required = true;
+                $when = [$rowPath.'.rodzaj', ['D', 'DZ']];
+            }
+        }
         $options = $node['options'] ?? [];
         if ($leaf === 'kod') {
             $options = $this->tree($section)[$parts[0]]['codes'] ?? $options;
+            if ($section === '9-3' && $parts[0] === 'DECYZJE') {
+                if (preg_match('/^inne_[a-z_]+$/', $row['kod'] ?? '') && filled($row['wlasna'] ?? null)) {
+                    $options[$row['kod']] = $row['wlasna'];
+                }
+            }
         }
 
         return ['key' => $path, 'label' => $leaf === 'wlasna' ? 'Nazwa dodatkowego obszaru decyzji' : $node['label'], 'type' => $readonly ? 'text' : ($node['type'] === 'number' ? 'text' : $node['type']), 'numeric' => $node['type'] === 'number' && ! $readonly, 'readonly' => $readonly, 'required' => $required && ! $readonly, 'options' => $readonly ? [] : $options, 'when' => $when, 'help' => $readonly ? 'Wartość z powiązanego punktu. Zmieniaj ją w źródłowej ankiecie.' : ($node['help'] ?? ''), 'example' => $node['type'] === 'number' ? '1' : null];
@@ -342,6 +378,12 @@ class IsoExecutionQuestionnaire
         foreach ($this->tree($section) as $root => $node) {
             $out[$root] = $this->shape($node, $input[$root] ?? [], $root, $leaves);
         }
+        // HTTP forms and empty XLSX cells share the same canonical blank value.
+        array_walk_recursive($out, function (&$value) {
+            if ($value === '') {
+                $value = null;
+            }
+        });
         $out = $this->project($section, $out, $sources);
         $rules = [];
         foreach ($this->sections($section, $out, $sources) as $group) {
@@ -424,6 +466,30 @@ class IsoExecutionQuestionnaire
             foreach ($out['PROGRAM'] ?? [] as $i => $row) {
                 if (($row['status'] ?? '') === 'wykonany' && ! in_array($row['nr'], array_column($out['RAPORTY'] ?? [], 'pozycja'), true)) {
                     $errors["PROGRAM.$i.status"] = 'Wykonany audyt wymaga raportu.';
+                }
+            }
+        }
+        if ($complete && $section === '7-5') {
+            foreach ($this->schema($section)['definitions']['WYMAGANIA_N'] as $requirement) {
+                if ($requirement['pozniej'] ?? false) {
+                    continue;
+                }
+                $covered = collect($out['WYKAZ'] ?? [])->contains(fn ($row) => ($row['podstawa'] ?? '') === 'N' && preg_match('/(?<![\d.])'.preg_quote($requirement['punkt'], '/').'(?![\d.])/', $row['punkt'] ?? ''));
+                if (! $covered) {
+                    $errors['WYKAZ'] = 'Uzupełnij wykaz dokumentacji wymaganej w punkcie '.$requirement['punkt'].': '.$requirement['co'];
+                }
+            }
+            $titles = [];
+            foreach ($out['WYKAZ'] ?? [] as $i => $row) {
+                $title = mb_strtolower(preg_replace('/\s+/u', ' ', trim($row['tytul'] ?? '')));
+                if (in_array($title, $titles, true)) {
+                    $errors['WYKAZ.'.$i.'.tytul'] = 'Powtórzony tytuł — sprawdź, czy w obiegu nie ma dwóch wersji.';
+                }
+                $titles[] = $title;
+            }
+            foreach ($out['ZEWN'] ?? [] as $i => $row) {
+                if (($row['sprawdzono'] ?? '') < today()->subYear()->toDateString()) {
+                    $errors['ZEWN.'.$i.'.sprawdzono'] = 'Sprawdź aktualność dokumentu zewnętrznego — ostatni przegląd jest starszy niż rok.';
                 }
             }
         }

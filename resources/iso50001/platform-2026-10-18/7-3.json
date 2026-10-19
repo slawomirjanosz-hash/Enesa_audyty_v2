@@ -1,0 +1,543 @@
+{
+  "source_file": "ENESA_7.3_Swiadomosc_platforma.html",
+  "source_sha256": "5b86b32d3ff435de8609801c7606f0633f62d394651612502445798304b199cc",
+  "section": "7-3",
+  "data": {
+    "LISTA_73": [
+      {
+        "tekst": "Osoby pracujące pod nadzorem organizacji znają politykę energetyczną.",
+        "podstawa": "N",
+        "auto": "polityka"
+      },
+      {
+        "tekst": "Rozumieją swój wkład w system, w tym korzyści z poprawy wyniku energetycznego i osiąganie celów.",
+        "podstawa": "N",
+        "auto": "wklad"
+      },
+      {
+        "tekst": "Znają wpływ swoich działań lub zachowań na wynik energetyczny.",
+        "podstawa": "N",
+        "auto": "wplyw"
+      },
+      {
+        "tekst": "Znają konsekwencje niespełnienia wymagań systemu.",
+        "podstawa": "N",
+        "auto": "konsekwencje"
+      },
+      {
+        "tekst": "Świadomość jest sprawdzana rozmową (np. kwartalnie), a zgłoszone przeszkody są usuwane.",
+        "podstawa": "M",
+        "auto": "sprawdzanie"
+      }
+    ],
+    "przyklad": {
+      "GRUPY": [
+        {
+          "nazwa": "Operatorzy pras i lakierni",
+          "osoby": "24 osoby na trzech zmianach",
+          "wykonawca": false,
+          "polityka": "Omawiana na wprowadzeniu (15 min) i raz w roku na spotkaniu zmiany. Wywieszona przy wejściu do hali A i w intranecie.",
+          "wklad": "Cel C1 — ograniczenie zużycia na sprężone powietrze — zależy wprost od tego, czy zgłaszają syczenie przy złączkach i zamykają zawory odcinające. Niższy koszt energii na tonę to argument w rozmowach z klientem OEM, a stabilniejsze ciśnienie to mniej przestojów na ich własnych liniach.",
+          "wplyw": "Zamykanie zaworów odcinających przy prasach na przerwach i postojach; zgłaszanie nieszczelności; przestrzeganie harmonogramu pieca lakierni; niewyłączanie wentylacji kabin przed końcem cyklu.",
+          "konsekwencje": "Jeden otwarty zawór przez weekend to około 2 900 zł. Nieszczelności na poziomie 9 Nm³/min kosztują około 60 zł za każdą godzinę postoju. Niedotrzymanie celu C1 oznacza brak poprawy wobec linii bazowej i uwagę w audycie wewnętrznym."
+        },
+        {
+          "nazwa": "Technicy i kierownik Utrzymania Ruchu",
+          "osoby": "3 osoby",
+          "wykonawca": false,
+          "polityka": "Omawiana przy przyjęciu i na spotkaniu kierownictwa; dostępna w intranecie.",
+          "wklad": "Odpowiadają za trzy z pięciu znaczących użyć energii. Od ich przeglądów szczelności i nastaw zależą cele C1 i C4 oraz wiarygodność danych w planie zbierania danych.",
+          "wplyw": "Nastawa ciśnienia sieci (6,3 bar); kwartalne przeglądy szczelności; harmonogram i temperatura pieca lakierni; terminowość odczytów podliczników; jakość pomiarów analizatorem.",
+          "konsekwencje": "Podniesienie ciśnienia o 0,5 bar to około 3% zużycia sprężarkowni. Luka w odczytach uniemożliwia policzenie wskaźnika za dany miesiąc — i tym samym wykazanie poprawy."
+        },
+        {
+          "nazwa": "Zakupy",
+          "osoby": "Kierownik Zakupów i specjalista — 2 osoby",
+          "wykonawca": false,
+          "polityka": "Omawiana na warsztacie z kryteriów energetycznych; polityka przywołana w procedurze zakupowej P-ZAK-01.",
+          "wklad": "Decydują o energochłonności urządzeń na kolejne 10–15 lat. Zastosowanie kryterium energetycznego przy jednym zamówieniu sprężarki daje więcej niż rok oszczędności eksploatacyjnych.",
+          "wplyw": "Kryteria energetyczne w specyfikacjach urządzeń powyżej 10 kW; porównanie ofert kosztem cyklu życia, nie ceną zakupu; wymagania kompetencyjne i energetyczne w umowach z wykonawcami.",
+          "konsekwencje": "Zakup urządzenia bez kryterium energetycznego zamyka możliwość poprawy na całe jego życie. Brak wymagań w umowie serwisowej doprowadził już do ryzyka R5 — zmian nastaw bez zgłaszania."
+        },
+        {
+          "nazwa": "Kierownicy działów i zarząd",
+          "osoby": "6 osób",
+          "wykonawca": false,
+          "polityka": "Zatwierdzili ją i podpisali; omawiana na każdym przeglądzie zarządzania.",
+          "wklad": "Zapewniają zasoby i podejmują decyzje, które przesądzają o wyniku energetycznym — asortyment, liczba zmian, inwestycje, budżet szkoleń.",
+          "wplyw": "Decyzje o asortymencie (zmieniają energochłonność tony i mogą unieważnić linię bazową); liczba zmian; zatwierdzanie inwestycji z kryterium energetycznym; przydział czasu ludziom na zadania systemu.",
+          "konsekwencje": "Decyzja sprzeczna z celami energetycznymi unieważnia plany działań. Nieprzydzielenie czasu oznacza, że zadania systemu nie zostaną wykonane — i to jest realny powód, dla którego systemy się rozpadają."
+        },
+        {
+          "nazwa": "Pracownicy biura i magazynu",
+          "osoby": "18 osób",
+          "wykonawca": false,
+          "polityka": "Wprowadzenie przy przyjęciu; polityka w intranecie i na tablicy przy stołówce.",
+          "wklad": "Oświetlenie i urządzenia biurowe to część zużycia niezależnego od produkcji, które stanowi około 40% całości — czyli dokładnie ta część, której nie poprawi żadna modernizacja produkcji.",
+          "wplyw": "Wyłączanie oświetlenia strefowego i komputerów; zamykanie drzwi magazynu przy rozładunku; zgłaszanie świecących się opraw w nieużywanych pomieszczeniach.",
+          "konsekwencje": "Oświetlenie hal to 680 MWh rocznie — około 600 tys. zł. Cel C2 zakłada zejście do 410 MWh, co bez dyscypliny po wymianie opraw na LED się nie utrzyma."
+        },
+        {
+          "nazwa": "Wykonawcy na terenie zakładu",
+          "osoby": "Serwis sprężarek (2 serwisanci), firma sprzątająca (4 osoby), ekipy remontowe",
+          "wykonawca": true,
+          "polityka": "Wprowadzenie 15 min przy pierwszej wizycie, prowadzone przez kierownika zlecającego; jednostronicowa informacja przekazywana z zamówieniem.",
+          "wklad": "Serwis sprężarek decyduje o nastawach, od których zależy cel C1. Firma sprzątająca pracuje po godzinach, gdy nikt inny nie gasi świateł.",
+          "wplyw": "Serwis: nastawy ciśnienia i zgłaszanie ich zmian kierownikowi UR. Firma sprzątająca: wyłączanie oświetlenia hal i biur po zakończeniu pracy. Ekipy remontowe: niezastawianie czujników obecności i niewyłączanie wentylacji.",
+          "konsekwencje": "Zmiana nastawy bez zgłoszenia unieważnia porównanie z linią bazową i może zniweczyć poprawę wykazaną przez cały rok. Oświetlenie hali zostawione na noc to około 190 zł za jedną noc."
+        }
+      ],
+      "KANALY": [
+        {
+          "nazwa": "Wprowadzenie dla nowych osób i wykonawców",
+          "tresc": "Polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi i pomysły.",
+          "rytm": "Przy przyjęciu; dla wykonawców przy pierwszej wizycie po zawarciu umowy",
+          "kto": "Energy Manager; dla wykonawców — kierownik zlecający",
+          "grupy": "Wszyscy nowi pracownicy i wykonawcy",
+          "elementy": [
+            "polityka",
+            "wklad",
+            "wplyw",
+            "konsekwencje"
+          ]
+        },
+        {
+          "nazwa": "Krótkie spotkanie na początku zmiany",
+          "tresc": "Jeden temat tygodniowo, na przykład „w tym tygodniu: zawory odcinające na przerwach”. Konkret, nie ogólniki.",
+          "rytm": "Raz w tygodniu, 10 minut",
+          "kto": "Liderzy zmian",
+          "grupy": "Operatorzy pras i lakierni, magazyn",
+          "elementy": [
+            "wplyw",
+            "konsekwencje"
+          ]
+        },
+        {
+          "nazwa": "Liczby, które coś mówią",
+          "tresc": "Przeliczenie zachowania na złotówki: nieszczelności 9 Nm³/min przy 0,125 kWh/Nm³ i cenie 890 zł/MWh to około 60 zł za godzinę postoju, czyli blisko 2 900 zł za weekend. Oświetlenie hali zostawione na noc — około 190 zł.",
+          "rytm": "Przy każdym temacie tygodnia; aktualizacja liczb co kwartał",
+          "kto": "Energy Manager przygotowuje, liderzy zmian przekazują",
+          "grupy": "Produkcja, magazyn, wykonawcy",
+          "elementy": [
+            "konsekwencje",
+            "wplyw"
+          ]
+        },
+        {
+          "nazwa": "Tablica wyników przy stołówce",
+          "tresc": "Wskaźnik ogólny zakładu wobec linii bazowej, postęp celów C1–C4, liczba zgłoszeń z hali i co z nich wyszło.",
+          "rytm": "Aktualizacja raz w miesiącu",
+          "kto": "Energy Manager",
+          "grupy": "Wszyscy pracownicy",
+          "elementy": [
+            "wklad",
+            "polityka"
+          ]
+        },
+        {
+          "nazwa": "Tablica przy sprężarkowni",
+          "tresc": "Wskaźnik S-1 (kWh/Nm³), przepływ w czasie postoju, cel 0,110 kWh/Nm³ i aktualna wartość.",
+          "rytm": "Aktualizacja raz w miesiącu",
+          "kto": "Kierownik Utrzymania Ruchu",
+          "grupy": "Technicy UR, operatorzy pras",
+          "elementy": [
+            "wklad",
+            "wplyw"
+          ]
+        },
+        {
+          "nazwa": "Odprawa kierownictwa",
+          "tresc": "Trend wskaźników EnPI wobec linii bazowych, postęp celów, decyzje wymagające zasobów.",
+          "rytm": "Raz w miesiącu",
+          "kto": "Energy Manager",
+          "grupy": "Kierownicy działów i zarząd",
+          "elementy": [
+            "wklad",
+            "konsekwencje"
+          ]
+        },
+        {
+          "nazwa": "Intranet",
+          "tresc": "Polityka energetyczna, cele, wyniki kwartalne, formularz zgłaszania uwag.",
+          "rytm": "Stale dostępne; wyniki co kwartał",
+          "kto": "Energy Manager",
+          "grupy": "Pracownicy z dostępem do komputera",
+          "elementy": [
+            "polityka",
+            "wklad"
+          ]
+        }
+      ],
+      "SPRAWDZENIA": [
+        {
+          "data": "2026-06-26",
+          "kto": "Jan Kowalski — Energy Manager",
+          "osoby": "Trzy osoby losowo: operator prasy (II zmiana), magazynier, specjalista ds. zakupów",
+          "wynik": "Politykę kojarzą wszyscy troje — operator wskazał tablicę przy wejściu. Operator i magazynier trafnie opisali swój wpływ (zawory odcinające, drzwi magazynu). Specjalista ds. zakupów znał kryteria energetyczne, ale nie potrafił podać, gdzie zgłosić uwagę.",
+          "luki": "Droga zgłaszania uwag znana tylko na produkcji — w biurze nie, bo komunikat szedł kanałem spotkań zmianowych.",
+          "dzialanie": "Formularz zgłaszania uwag dodany do intranetu i przypomniany na odprawie kierownictwa; informacja dopisana do wprowadzenia dla biura."
+        },
+        {
+          "data": "2026-09-25",
+          "kto": "Jan Kowalski — Energy Manager",
+          "osoby": "Trzy osoby losowo: operator lakierni (III zmiana), technik UR, serwisant sprężarek (wykonawca)",
+          "wynik": "Operator lakierni i technik UR odpowiedzieli poprawnie na wszystkie trzy pytania; technik sam podał koszt godziny nieszczelności. Serwisant znał obowiązek zgłaszania zmian nastaw, ale nie wiedział, że zakład ma cel na sprężonym powietrzu ani jaka jest jego wartość.",
+          "luki": "Wykonawcy nie znają celów energetycznych — wprowadzenie dla serwisu odbyło się w kwietniu, przed zatwierdzeniem celów (uchwała z 15.04.2026).",
+          "dzialanie": "Cele dopisane do jednostronicowej informacji dla wykonawców; serwis dostał ją przy wizycie 10.2026. Wprowadzenie dla wykonawców zaktualizowane w planie F-EnMS-12, poz. 1."
+        }
+      ],
+      "PRZESZKODY": [
+        {
+          "opis": "Zaworów odcinających przy prasach nie da się zamknąć bez klucza, a klucz ma tylko utrzymanie ruchu. Operator, który chce odciąć powietrze na przerwie, musiałby po niego iść.",
+          "grupa": "Operatorzy pras",
+          "zglosil": "Operator prasy nr 2 na spotkaniu zmiany, 06.2026",
+          "decyzja": "Wymiana zaworów na dźwigniowe przy czterech prasach — 3 tys. zł, utrzymanie ruchu, do 30.09.2026. Zatwierdził kierownik UR.",
+          "stan": "usunieta",
+          "efekt": "Zawory wymienione we wrześniu. Przepływ w czasie postoju spadł z 6,5 do 5,8 Nm³/min — część poprawy przypisana zamykaniu zaworów, część usunięciu nieszczelności."
+        },
+        {
+          "opis": "Oświetlenie hali B ma jeden wyłącznik na całą halę. Nie da się zgasić nieużywanej części, więc świeci się wszystko albo nic.",
+          "grupa": "Operatorzy, magazyn, firma sprzątająca",
+          "zglosil": "Magazynier przez formularz w intranecie, 08.2026",
+          "decyzja": "Podział oświetlenia hali B na trzy strefy zostanie wykonany razem z wymianą opraw na LED (cel C2, III kwartał 2027). Do tego czasu firma sprzątająca pracuje w halach w jednym bloku czasowym, żeby nie świecić dwa razy.",
+          "stan": "wtoku",
+          "efekt": "Zmiana harmonogramu sprzątania wprowadzona od 09.2026 — oszacowana oszczędność około 4 MWh rocznie."
+        },
+        {
+          "opis": "Instrukcja przy sprężarkowni podaje ciśnienie 7,0 bar, choć od marca obowiązuje 6,3 bar. Technicy pytają, która wartość jest właściwa.",
+          "grupa": "Technicy UR, serwis sprężarek",
+          "zglosil": "Technik UR, 07.2026",
+          "decyzja": "Instrukcja I-SP-02 zaktualizowana i zatwierdzona; stara wersja zdjęta z tablicy. Sprawa dopisana do wykazu udokumentowanych informacji (7.5) jako przypadek dwóch wersji w obiegu.",
+          "stan": "usunieta",
+          "efekt": "Jedna zatwierdzona wersja przy sprężarkowni. Przy przeglądzie dokumentacji znaleziono jeszcze dwie nieaktualne instrukcje w hali A — też wycofane."
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Jan Kowalski — Energy Manager",
+        "data": "2026-09-30",
+        "rytmSprawdzen": "Raz na kwartał, trzy losowo wybrane osoby z różnych grup — w tym co drugi raz wykonawca"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_73": [
+      {
+        "tekst": "Osoby pracujące pod nadzorem organizacji znają politykę energetyczną.",
+        "podstawa": "N",
+        "auto": "polityka"
+      },
+      {
+        "tekst": "Rozumieją swój wkład w system, w tym korzyści z poprawy wyniku energetycznego i osiąganie celów.",
+        "podstawa": "N",
+        "auto": "wklad"
+      },
+      {
+        "tekst": "Znają wpływ swoich działań lub zachowań na wynik energetyczny.",
+        "podstawa": "N",
+        "auto": "wplyw"
+      },
+      {
+        "tekst": "Znają konsekwencje niespełnienia wymagań systemu.",
+        "podstawa": "N",
+        "auto": "konsekwencje"
+      },
+      {
+        "tekst": "Świadomość jest sprawdzana rozmową (np. kwartalnie), a zgłoszone przeszkody są usuwane.",
+        "podstawa": "M",
+        "auto": "sprawdzanie"
+      }
+    ],
+    "P_GRUPY": [
+      {
+        "nazwa": "Operatorzy pras i lakierni",
+        "osoby": "24 osoby na trzech zmianach",
+        "wykonawca": false,
+        "polityka": "Omawiana na wprowadzeniu (15 min) i raz w roku na spotkaniu zmiany. Wywieszona przy wejściu do hali A i w intranecie.",
+        "wklad": "Cel C1 — ograniczenie zużycia na sprężone powietrze — zależy wprost od tego, czy zgłaszają syczenie przy złączkach i zamykają zawory odcinające. Niższy koszt energii na tonę to argument w rozmowach z klientem OEM, a stabilniejsze ciśnienie to mniej przestojów na ich własnych liniach.",
+        "wplyw": "Zamykanie zaworów odcinających przy prasach na przerwach i postojach; zgłaszanie nieszczelności; przestrzeganie harmonogramu pieca lakierni; niewyłączanie wentylacji kabin przed końcem cyklu.",
+        "konsekwencje": "Jeden otwarty zawór przez weekend to około 2 900 zł. Nieszczelności na poziomie 9 Nm³/min kosztują około 60 zł za każdą godzinę postoju. Niedotrzymanie celu C1 oznacza brak poprawy wobec linii bazowej i uwagę w audycie wewnętrznym."
+      },
+      {
+        "nazwa": "Technicy i kierownik Utrzymania Ruchu",
+        "osoby": "3 osoby",
+        "wykonawca": false,
+        "polityka": "Omawiana przy przyjęciu i na spotkaniu kierownictwa; dostępna w intranecie.",
+        "wklad": "Odpowiadają za trzy z pięciu znaczących użyć energii. Od ich przeglądów szczelności i nastaw zależą cele C1 i C4 oraz wiarygodność danych w planie zbierania danych.",
+        "wplyw": "Nastawa ciśnienia sieci (6,3 bar); kwartalne przeglądy szczelności; harmonogram i temperatura pieca lakierni; terminowość odczytów podliczników; jakość pomiarów analizatorem.",
+        "konsekwencje": "Podniesienie ciśnienia o 0,5 bar to około 3% zużycia sprężarkowni. Luka w odczytach uniemożliwia policzenie wskaźnika za dany miesiąc — i tym samym wykazanie poprawy."
+      },
+      {
+        "nazwa": "Zakupy",
+        "osoby": "Kierownik Zakupów i specjalista — 2 osoby",
+        "wykonawca": false,
+        "polityka": "Omawiana na warsztacie z kryteriów energetycznych; polityka przywołana w procedurze zakupowej P-ZAK-01.",
+        "wklad": "Decydują o energochłonności urządzeń na kolejne 10–15 lat. Zastosowanie kryterium energetycznego przy jednym zamówieniu sprężarki daje więcej niż rok oszczędności eksploatacyjnych.",
+        "wplyw": "Kryteria energetyczne w specyfikacjach urządzeń powyżej 10 kW; porównanie ofert kosztem cyklu życia, nie ceną zakupu; wymagania kompetencyjne i energetyczne w umowach z wykonawcami.",
+        "konsekwencje": "Zakup urządzenia bez kryterium energetycznego zamyka możliwość poprawy na całe jego życie. Brak wymagań w umowie serwisowej doprowadził już do ryzyka R5 — zmian nastaw bez zgłaszania."
+      },
+      {
+        "nazwa": "Kierownicy działów i zarząd",
+        "osoby": "6 osób",
+        "wykonawca": false,
+        "polityka": "Zatwierdzili ją i podpisali; omawiana na każdym przeglądzie zarządzania.",
+        "wklad": "Zapewniają zasoby i podejmują decyzje, które przesądzają o wyniku energetycznym — asortyment, liczba zmian, inwestycje, budżet szkoleń.",
+        "wplyw": "Decyzje o asortymencie (zmieniają energochłonność tony i mogą unieważnić linię bazową); liczba zmian; zatwierdzanie inwestycji z kryterium energetycznym; przydział czasu ludziom na zadania systemu.",
+        "konsekwencje": "Decyzja sprzeczna z celami energetycznymi unieważnia plany działań. Nieprzydzielenie czasu oznacza, że zadania systemu nie zostaną wykonane — i to jest realny powód, dla którego systemy się rozpadają."
+      },
+      {
+        "nazwa": "Pracownicy biura i magazynu",
+        "osoby": "18 osób",
+        "wykonawca": false,
+        "polityka": "Wprowadzenie przy przyjęciu; polityka w intranecie i na tablicy przy stołówce.",
+        "wklad": "Oświetlenie i urządzenia biurowe to część zużycia niezależnego od produkcji, które stanowi około 40% całości — czyli dokładnie ta część, której nie poprawi żadna modernizacja produkcji.",
+        "wplyw": "Wyłączanie oświetlenia strefowego i komputerów; zamykanie drzwi magazynu przy rozładunku; zgłaszanie świecących się opraw w nieużywanych pomieszczeniach.",
+        "konsekwencje": "Oświetlenie hal to 680 MWh rocznie — około 600 tys. zł. Cel C2 zakłada zejście do 410 MWh, co bez dyscypliny po wymianie opraw na LED się nie utrzyma."
+      },
+      {
+        "nazwa": "Wykonawcy na terenie zakładu",
+        "osoby": "Serwis sprężarek (2 serwisanci), firma sprzątająca (4 osoby), ekipy remontowe",
+        "wykonawca": true,
+        "polityka": "Wprowadzenie 15 min przy pierwszej wizycie, prowadzone przez kierownika zlecającego; jednostronicowa informacja przekazywana z zamówieniem.",
+        "wklad": "Serwis sprężarek decyduje o nastawach, od których zależy cel C1. Firma sprzątająca pracuje po godzinach, gdy nikt inny nie gasi świateł.",
+        "wplyw": "Serwis: nastawy ciśnienia i zgłaszanie ich zmian kierownikowi UR. Firma sprzątająca: wyłączanie oświetlenia hal i biur po zakończeniu pracy. Ekipy remontowe: niezastawianie czujników obecności i niewyłączanie wentylacji.",
+        "konsekwencje": "Zmiana nastawy bez zgłoszenia unieważnia porównanie z linią bazową i może zniweczyć poprawę wykazaną przez cały rok. Oświetlenie hali zostawione na noc to około 190 zł za jedną noc."
+      }
+    ],
+    "P_KANALY": [
+      {
+        "nazwa": "Wprowadzenie dla nowych osób i wykonawców",
+        "tresc": "Polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi i pomysły.",
+        "rytm": "Przy przyjęciu; dla wykonawców przy pierwszej wizycie po zawarciu umowy",
+        "kto": "Energy Manager; dla wykonawców — kierownik zlecający",
+        "grupy": "Wszyscy nowi pracownicy i wykonawcy",
+        "elementy": [
+          "polityka",
+          "wklad",
+          "wplyw",
+          "konsekwencje"
+        ]
+      },
+      {
+        "nazwa": "Krótkie spotkanie na początku zmiany",
+        "tresc": "Jeden temat tygodniowo, na przykład „w tym tygodniu: zawory odcinające na przerwach”. Konkret, nie ogólniki.",
+        "rytm": "Raz w tygodniu, 10 minut",
+        "kto": "Liderzy zmian",
+        "grupy": "Operatorzy pras i lakierni, magazyn",
+        "elementy": [
+          "wplyw",
+          "konsekwencje"
+        ]
+      },
+      {
+        "nazwa": "Liczby, które coś mówią",
+        "tresc": "Przeliczenie zachowania na złotówki: nieszczelności 9 Nm³/min przy 0,125 kWh/Nm³ i cenie 890 zł/MWh to około 60 zł za godzinę postoju, czyli blisko 2 900 zł za weekend. Oświetlenie hali zostawione na noc — około 190 zł.",
+        "rytm": "Przy każdym temacie tygodnia; aktualizacja liczb co kwartał",
+        "kto": "Energy Manager przygotowuje, liderzy zmian przekazują",
+        "grupy": "Produkcja, magazyn, wykonawcy",
+        "elementy": [
+          "konsekwencje",
+          "wplyw"
+        ]
+      },
+      {
+        "nazwa": "Tablica wyników przy stołówce",
+        "tresc": "Wskaźnik ogólny zakładu wobec linii bazowej, postęp celów C1–C4, liczba zgłoszeń z hali i co z nich wyszło.",
+        "rytm": "Aktualizacja raz w miesiącu",
+        "kto": "Energy Manager",
+        "grupy": "Wszyscy pracownicy",
+        "elementy": [
+          "wklad",
+          "polityka"
+        ]
+      },
+      {
+        "nazwa": "Tablica przy sprężarkowni",
+        "tresc": "Wskaźnik S-1 (kWh/Nm³), przepływ w czasie postoju, cel 0,110 kWh/Nm³ i aktualna wartość.",
+        "rytm": "Aktualizacja raz w miesiącu",
+        "kto": "Kierownik Utrzymania Ruchu",
+        "grupy": "Technicy UR, operatorzy pras",
+        "elementy": [
+          "wklad",
+          "wplyw"
+        ]
+      },
+      {
+        "nazwa": "Odprawa kierownictwa",
+        "tresc": "Trend wskaźników EnPI wobec linii bazowych, postęp celów, decyzje wymagające zasobów.",
+        "rytm": "Raz w miesiącu",
+        "kto": "Energy Manager",
+        "grupy": "Kierownicy działów i zarząd",
+        "elementy": [
+          "wklad",
+          "konsekwencje"
+        ]
+      },
+      {
+        "nazwa": "Intranet",
+        "tresc": "Polityka energetyczna, cele, wyniki kwartalne, formularz zgłaszania uwag.",
+        "rytm": "Stale dostępne; wyniki co kwartał",
+        "kto": "Energy Manager",
+        "grupy": "Pracownicy z dostępem do komputera",
+        "elementy": [
+          "polityka",
+          "wklad"
+        ]
+      }
+    ],
+    "P_SPRAWDZENIA": [
+      {
+        "data": "2026-06-26",
+        "kto": "Jan Kowalski — Energy Manager",
+        "osoby": "Trzy osoby losowo: operator prasy (II zmiana), magazynier, specjalista ds. zakupów",
+        "wynik": "Politykę kojarzą wszyscy troje — operator wskazał tablicę przy wejściu. Operator i magazynier trafnie opisali swój wpływ (zawory odcinające, drzwi magazynu). Specjalista ds. zakupów znał kryteria energetyczne, ale nie potrafił podać, gdzie zgłosić uwagę.",
+        "luki": "Droga zgłaszania uwag znana tylko na produkcji — w biurze nie, bo komunikat szedł kanałem spotkań zmianowych.",
+        "dzialanie": "Formularz zgłaszania uwag dodany do intranetu i przypomniany na odprawie kierownictwa; informacja dopisana do wprowadzenia dla biura."
+      },
+      {
+        "data": "2026-09-25",
+        "kto": "Jan Kowalski — Energy Manager",
+        "osoby": "Trzy osoby losowo: operator lakierni (III zmiana), technik UR, serwisant sprężarek (wykonawca)",
+        "wynik": "Operator lakierni i technik UR odpowiedzieli poprawnie na wszystkie trzy pytania; technik sam podał koszt godziny nieszczelności. Serwisant znał obowiązek zgłaszania zmian nastaw, ale nie wiedział, że zakład ma cel na sprężonym powietrzu ani jaka jest jego wartość.",
+        "luki": "Wykonawcy nie znają celów energetycznych — wprowadzenie dla serwisu odbyło się w kwietniu, przed zatwierdzeniem celów (uchwała z 15.04.2026).",
+        "dzialanie": "Cele dopisane do jednostronicowej informacji dla wykonawców; serwis dostał ją przy wizycie 10.2026. Wprowadzenie dla wykonawców zaktualizowane w planie F-EnMS-12, poz. 1."
+      }
+    ],
+    "P_PRZESZKODY": [
+      {
+        "opis": "Zaworów odcinających przy prasach nie da się zamknąć bez klucza, a klucz ma tylko utrzymanie ruchu. Operator, który chce odciąć powietrze na przerwie, musiałby po niego iść.",
+        "grupa": "Operatorzy pras",
+        "zglosil": "Operator prasy nr 2 na spotkaniu zmiany, 06.2026",
+        "decyzja": "Wymiana zaworów na dźwigniowe przy czterech prasach — 3 tys. zł, utrzymanie ruchu, do 30.09.2026. Zatwierdził kierownik UR.",
+        "stan": "usunieta",
+        "efekt": "Zawory wymienione we wrześniu. Przepływ w czasie postoju spadł z 6,5 do 5,8 Nm³/min — część poprawy przypisana zamykaniu zaworów, część usunięciu nieszczelności."
+      },
+      {
+        "opis": "Oświetlenie hali B ma jeden wyłącznik na całą halę. Nie da się zgasić nieużywanej części, więc świeci się wszystko albo nic.",
+        "grupa": "Operatorzy, magazyn, firma sprzątająca",
+        "zglosil": "Magazynier przez formularz w intranecie, 08.2026",
+        "decyzja": "Podział oświetlenia hali B na trzy strefy zostanie wykonany razem z wymianą opraw na LED (cel C2, III kwartał 2027). Do tego czasu firma sprzątająca pracuje w halach w jednym bloku czasowym, żeby nie świecić dwa razy.",
+        "stan": "wtoku",
+        "efekt": "Zmiana harmonogramu sprzątania wprowadzona od 09.2026 — oszacowana oszczędność około 4 MWh rocznie."
+      },
+      {
+        "opis": "Instrukcja przy sprężarkowni podaje ciśnienie 7,0 bar, choć od marca obowiązuje 6,3 bar. Technicy pytają, która wartość jest właściwa.",
+        "grupa": "Technicy UR, serwis sprężarek",
+        "zglosil": "Technik UR, 07.2026",
+        "decyzja": "Instrukcja I-SP-02 zaktualizowana i zatwierdzona; stara wersja zdjęta z tablicy. Sprawa dopisana do wykazu udokumentowanych informacji (7.5) jako przypadek dwóch wersji w obiegu.",
+        "stan": "usunieta",
+        "efekt": "Jedna zatwierdzona wersja przy sprężarkowni. Przy przeglądzie dokumentacji znaleziono jeszcze dwie nieaktualne instrukcje w hali A — też wycofane."
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Jan Kowalski — Energy Manager",
+      "data": "2026-09-30",
+      "rytmSprawdzen": "Raz na kwartał, trzy losowo wybrane osoby z różnych grup — w tym co drugi raz wykonawca"
+    },
+    "P_PLAN_PODGLAD": [
+      {
+        "nr": "1",
+        "temat": "Wprowadzenie: polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi",
+        "punkty": [
+          "7.3"
+        ],
+        "grupa": "Nowi pracownicy oraz wykonawcy pracujący na terenie zakładu",
+        "forma": "spotkanie",
+        "prowadzacy": "Energy Manager (dla wykonawców — kierownik zlecający)",
+        "czas": "15–30 min",
+        "termin": "2026-05-04",
+        "ocena": "Rozmowa kontrolna po miesiącu — trzy pytania o politykę, wpływ własnej pracy i drogę zgłoszenia",
+        "status": "wtoku"
+      },
+      {
+        "nr": "3",
+        "temat": "Wymagania systemu dla kierownictwa: wynik energetyczny, cele, decyzje wpływające na energię",
+        "punkty": [
+          "7.2",
+          "7.3"
+        ],
+        "grupa": "Kierownicy działów i zarząd",
+        "forma": "spotkanie",
+        "prowadzacy": "Energy Manager z konsultantem",
+        "czas": "1–2 h",
+        "termin": "2026-06-15",
+        "ocena": "Omówienie wyników na przeglądzie zarządzania — czy decyzje uwzględniają wynik energetyczny",
+        "status": "zaliczone"
+      },
+      {
+        "nr": "6",
+        "temat": "Krótka informacja na początku zmiany — jeden temat tygodniowo",
+        "punkty": [
+          "7.3"
+        ],
+        "grupa": "Wszyscy pracownicy produkcji",
+        "forma": "spotkanie",
+        "prowadzacy": "Liderzy zmian",
+        "czas": "10 min tygodniowo",
+        "termin": "2026-05-11",
+        "ocena": "Kwartalna rozmowa Energy Managera z trzema losowo wybranymi osobami",
+        "status": "wtoku"
+      }
+    ],
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Pracownik, który nie wie, jak jego praca wpływa na zużycie, nie zmieni zachowania.",
+        "decyzja": "Program świadomości powiązany z konkretnymi zachowaniami przy znaczących użyciach, nie z ogólną kampanią oszczędzania.",
+        "dzialanie": "Instruktaż stanowiskowy o ciśnieniu roboczym i nieszczelnościach; wynik S-1 na tablicy co miesiąc.",
+        "sprawdzenie": "Liczba nieszczelności zgłoszonych przez obsługę i trend przepływu w czasie postoju."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "GRUPY": [],
+    "KANALY": [],
+    "SPRAWDZENIA": [],
+    "PRZESZKODY": [],
+    "PLAN": [],
+    "WNIOSKI": [],
+    "STANY_P": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "zgloszona",
+        "Zgłoszona"
+      ],
+      [
+        "wtoku",
+        "W toku"
+      ],
+      [
+        "usunieta",
+        "Usunięta"
+      ],
+      [
+        "odrzucona",
+        "Odrzucona — z uzasadnieniem"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

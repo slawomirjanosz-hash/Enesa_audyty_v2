@@ -1,0 +1,523 @@
+{
+  "source_file": "ENESA_9.3_Przeglad_zarzadzania_platforma.html",
+  "source_sha256": "749732f3a0dd5274712de251cffbb4cfc6e6f25f73f047ba4549d0f021108014",
+  "section": "9-3",
+  "data": {
+    "WEJSCIA_DEF": [
+      {
+        "kod": "status",
+        "litera": "a",
+        "nazwa": "Status działań z poprzednich przeglądów",
+        "ph": "np. Pierwszy przegląd systemu. Decyzje Zarządu z 03.2026 — polityka energetyczna, budżet 300 tys. zł, certyfikacja do XII 2026 — realizowane zgodnie z harmonogramem.",
+        "phR": "np. Przyjąć zasadę, że następny przegląd zaczyna się od tabeli statusu decyzji z dzisiejszego."
+      },
+      {
+        "kod": "zmiany",
+        "litera": "b",
+        "nazwa": "Zmiany kwestii zewnętrznych i wewnętrznych oraz związanych z nimi ryzyk i szans",
+        "pomoc": "Pierwsze z czterech pytań kierownictwa: co się zmieniło wokół nas i w nas.",
+        "ph": "np. Cena stała energii elektrycznej do 31.12.2026, od 2027 nowa umowa — każde 100 zł/MWh to około 850 tys. zł rocznie. Projekt nowelizacji UC77 nieuchwalony (stan na 29.09.2026). Ryzyko R5 — wiedza o nastawach tylko u serwisu — obniżone, technicy przeszkoleni.",
+        "phR": "np. Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację przed negocjacjami."
+      },
+      {
+        "kod": "funkcjonowanie",
+        "litera": "c",
+        "nazwa": "Funkcjonowanie systemu — trendy: niezgodności i działania korygujące, wyniki monitorowania i pomiarów, wyniki audytów, wyniki oceny zgodności",
+        "pomoc": "Trzecie pytanie kierownictwa: czy system działa. Cztery źródła w jednej pozycji — i wszystkie cztery norma wymienia osobno.",
+        "ph": "np. Niezgodności: 06.2026 nastawa po serwisie (działanie wdrożone, skuteczność niepotwierdzona — audyt A-01/2026); 09.2026 raport dla banku (działanie w toku). Audyt 15–17.09: 1 niezgodność (protokół serwisu bez nastaw), 2 możliwości doskonalenia. Monitorowanie: O-1 0,97 (I półrocze), 0,965 (VIII). Ocena zgodności: 7 wymagań ocenianych, 1 niezgodne; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Trendy — pierwszy rok, za mało danych.",
+        "phR": "np. Przyjąć działanie dla raportu bankowego; wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi."
+      },
+      {
+        "kod": "doskonalenie",
+        "litera": "d",
+        "nazwa": "Możliwości ciągłego doskonalenia, w tym kompetencji",
+        "pomoc": "Czwarte pytanie: gdzie możemy być lepsi — wyniku, systemu, a także kompetencji ludzi.",
+        "ph": "np. Odzysk ciepła ze sprężarek — do rozważenia po ocenie pracy po modernizacji. LED w halach (zadanie Z2.1, 2027). Zakupy — luka w porównywaniu kosztu zakupu i energii (matryca III-28, ustalenie D-2 z audytu).",
+        "phR": "np. Warsztat dla działu zakupów w 11.2026; odzysk ciepła wrócić do planu po roku danych z nowego sterownika."
+      },
+      {
+        "kod": "polityka",
+        "litera": "e",
+        "nazwa": "Polityka energetyczna",
+        "ph": "np. Polityka z 03.2026 zgodna z kierunkiem firmy — wymaganie klienta i strategia 2026–2028.",
+        "phR": "np. Rekomendacja: bez zmian."
+      },
+      {
+        "kod": "wynik",
+        "litera": "",
+        "nazwa": "Wynik energetyczny: stopień osiągnięcia celów i zadań, EnPI i ich poprawa, status planów działań",
+        "pomoc": "Drugie pytanie kierownictwa: jak idzie wynik energetyczny. Norma wymienia tę pozycję osobno od danych a–e.",
+        "ph": "np. O-1 0,965 wobec EnB 1,000 (cel ≤ 0,95 za rok 2027). S-1 0,119 za okres VII–18.IX wobec EnB 0,125 — cel 0,110, brakuje 0,009; samo ciśnienie więcej nie da. S-2 6 Nm³/min (cel pośredni osiągnięty, cel końcowy 4). Plan C1: pozycje 1–3 wykonane, pozycja 4 zatwierdzona, pozycja 5 planowana.",
+        "phR": "np. Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie 2027 — cel Z1.1 nie jest osiągalny bez inwestycji. Diagnostyki wycieków nie rozszerzać."
+      }
+    ],
+    "OBSZARY_DEF": [
+      {
+        "kod": "poprawa",
+        "nazwa": "Możliwości poprawy wyniku energetycznego",
+        "ph": "np. Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.",
+        "phU": "np. Cel Z1.1 nie jest osiągalny bez inwestycji — samo ciśnienie więcej nie da"
+      },
+      {
+        "kod": "polityka",
+        "nazwa": "Polityka energetyczna",
+        "ph": "np. Bez zmian",
+        "phU": "np. Zgodna z kierunkiem firmy i wymaganiami klienta"
+      },
+      {
+        "kod": "enpi",
+        "nazwa": "EnPI lub EnB",
+        "ph": "np. Bez zmian; K-1 — analiza przyczyn przed sezonem grzewczym",
+        "phU": "np. Brak przesłanek do rewizji (6.5); K-1 = 1,01"
+      },
+      {
+        "kod": "cele",
+        "nazwa": "Cele, zadania, plany działań — i działania, gdy nie są osiągane",
+        "pomoc": "Obszar szerszy niż jeden wiersz: norma mówi o celach, zadaniach, planach działań <b>lub innych elementach systemu</b>. Decyzje w pozostałych sprawach zapiszcie poniżej, w części „decyzje w innych sprawach”.",
+        "ph": "np. Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać",
+        "phU": "np. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min"
+      },
+      {
+        "kod": "integracja",
+        "nazwa": "Integracja z procesami biznesowymi",
+        "ph": "np. Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy",
+        "phU": "np. Uwagi do koncepcji modernizacji zgłoszone za późno — trzy tygodnie decyzji i miesiąc przetargu"
+      },
+      {
+        "kod": "zasoby",
+        "nazwa": "Przydział zasobów",
+        "ph": "np. Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.",
+        "phU": "np. Obciążenie z punktu 7.1 mieści się w marginesie; inwestycja wymaga osobnej pozycji budżetowej"
+      },
+      {
+        "kod": "kompetencje",
+        "nazwa": "Kompetencje, świadomość, komunikacja",
+        "ph": "np. Warsztat dla działu zakupów: porównanie kosztu zakupu i energii",
+        "phU": "np. Luka w matrycy III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026"
+      }
+    ],
+    "LISTA_93": [
+      {
+        "tekst": "Najwyższe kierownictwo przegląda system w zaplanowanych odstępach.",
+        "podstawa": "N",
+        "auto": "kierownictwo"
+      },
+      {
+        "tekst": "Rozważono wszystkie wymagane dane wejściowe (a–e i wynik energetyczny).",
+        "podstawa": "N",
+        "auto": "wejscia"
+      },
+      {
+        "tekst": "Wyniki obejmują decyzje dotyczące doskonalenia i zmian w systemie (wszystkie obszary wyjść).",
+        "podstawa": "N",
+        "auto": "wyjscia"
+      },
+      {
+        "tekst": "Zachowano zapis wyników przeglądu.",
+        "podstawa": "N",
+        "auto": "zapis"
+      },
+      {
+        "tekst": "Decyzje mają właścicieli i terminy; status sprawdzany na następnym przeglądzie.",
+        "podstawa": "M",
+        "auto": "wlasciciele"
+      }
+    ],
+    "przyklad": {
+      "WEJSCIA": [
+        {
+          "kod": "status",
+          "podsumowanie": "Pierwszy przegląd systemu zarządzania energią. Decyzje Zarządu z marca 2026 r. — przyjęcie polityki energetycznej, budżet wdrożenia 300 tys. zł, certyfikacja do grudnia 2026 r. — realizowane zgodnie z harmonogramem.",
+          "rekomendacja": "Przyjąć zasadę, że każdy następny przegląd zaczyna się od tabeli statusu decyzji z poprzedniego. Status decyzji z dzisiejszego przeglądu na zebraniu Zarządu w IV kwartale 2026 r."
+        },
+        {
+          "kod": "zmiany",
+          "podsumowanie": "Cena stała energii elektrycznej obowiązuje do 31.12.2026; od 2027 r. nowa umowa — każde 100 zł/MWh różnicy to około 850 tys. zł rocznie przy obecnym zużyciu. Projekt nowelizacji ustawy o efektywności energetycznej (UC77) pozostaje nieuchwalony — stan na 29.09.2026. Ryzyko R5 z rejestru (wiedza o nastawach sprężarkowni tylko u serwisu) obniżone — technicy utrzymania ruchu przeszkoleni.",
+          "rekomendacja": "Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację — profil poboru, struktura cen, dane pomiarowe — przed negocjacjami. Śledzenie nowelizacji co kwartał."
+        },
+        {
+          "kod": "funkcjonowanie",
+          "podsumowanie": "Niezgodności: czerwiec 2026 — nastawa ciśnienia po przeglądzie serwisowym (działanie wdrożone, skuteczność niepotwierdzona — wykazał to audyt A-01/2026); wrzesień 2026 — raport dla banku po terminie (działanie w toku). Audyt wewnętrzny 15–17.09.2026: jedna niezgodność (protokół serwisu bez nastaw przed i po), dwie możliwości doskonalenia, jedno potwierdzenie zgodności. Monitorowanie: O-1 0,97 w I półroczu, 0,965 w sierpniu; poprawa także w P-1 i S-1. Ocena zgodności (09.2026): siedem wymagań ocenianych, jedno niezgodne, jedno z dowodem do uzupełnienia datami (zawiadomienie URE). Trendy — pierwszy rok systemu, za mało danych na wnioski o kierunku.",
+          "rekomendacja": "Przyjąć działanie dla raportu bankowego (termin w kalendarzu kontrolingu). Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii. Skuteczność działania z czerwca zweryfikować w audycie sprężarkowni po uruchomieniu modernizacji."
+        },
+        {
+          "kod": "doskonalenie",
+          "podsumowanie": "Odzysk ciepła ze sprężarek — rozważony w analizie projektu, przesunięty poza inwestycję; projekt zostawia miejsce i przyłącza. Wymiana opraw na LED w halach H1 i H2 (zadanie Z2.1, 2027). Kompetencje: luka w dziale zakupów w porównywaniu kosztu zakupu i energii — matryca III-28, potwierdzona ustaleniem D-2 z audytu.",
+          "rekomendacja": "Warsztat dla działu zakupów w listopadzie 2026 r. Odzysk ciepła wrócić do planu działań po roku danych z nowego sterownika — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna."
+        },
+        {
+          "kod": "polityka",
+          "podsumowanie": "Polityka energetyczna przyjęta w marcu 2026 r. pozostaje zgodna z kierunkiem firmy: wymaganiem głównego klienta (certyfikat od 2027 r.) i strategią kosztową 2026–2028.",
+          "rekomendacja": "Bez zmian. Przy odnowieniu umowy z drugim klientem sprawdzić, czy oczekiwanie dotyczące śladu węglowego nie wymaga rozszerzenia zakresu zobowiązań."
+        },
+        {
+          "kod": "wynik",
+          "podsumowanie": "O-1 0,965 wobec EnB 1,000 — cel ≤ 0,95 za rok 2027. S-1 0,119 za okres VII–18.IX wobec EnB 0,125; cel 0,110, brakuje 0,009 — czyli więcej, niż już osiągnięto. S-2 6 Nm³/min — cel pośredni osiągnięty, cel końcowy 4 Nm³/min do 06.2027. Plan działań C1: pozycje 1–3 wykonane, pozycja 4 (sterownik i napęd) zatwierdzona, pozycja 5 (weryfikacja Z1.1 i Z1.2) planowana. K-1 o 1% powyżej EnB w I półroczu.",
+          "rekomendacja": "Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie na 2027 r. — cel Z1.1 nie jest osiągalny bez inwestycji, samo ciśnienie więcej nie da. Diagnostyki wycieków nie rozszerzać: kwartalny przegląd szczelności działa, przepływ w postoju spadł z 9 do 6 Nm³/min. K-1 — analiza przyczyn przed rozpoczęciem sezonu grzewczego."
+        }
+      ],
+      "DECYZJE": [
+        {
+          "kod": "poprawa",
+          "decyzja": "Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.",
+          "uzasadnienie": "Cel Z1.1 (0,110 kWh/Nm³) nie jest osiągalny bez inwestycji — do celu brakuje więcej, niż osiągnięto obniżeniem ciśnienia i usunięciem nieszczelności.",
+          "kto": "Energy Manager, kierownik utrzymania ruchu",
+          "termin": "Projekt budżetu, 10.2026"
+        },
+        {
+          "kod": "polityka",
+          "decyzja": "Bez zmian",
+          "uzasadnienie": "Polityka zgodna z kierunkiem firmy i wymaganiami głównego klienta; brak zmian w zakresie systemu i w kwestiach zewnętrznych, które wymagałyby jej korekty.",
+          "kto": "",
+          "termin": ""
+        },
+        {
+          "kod": "enpi",
+          "decyzja": "Bez zmian w EnPI i liniach bazowych. K-1 — analiza przyczyn przed sezonem grzewczym.",
+          "uzasadnienie": "Brak przesłanek rewizji z punktu 6.5: nie zmieniły się metody liczenia, czynniki statyczne ani zakres. K-1 = 1,01 w I półroczu — to pytanie o przyczynę, nie o linię bazową.",
+          "kto": "Kierownik utrzymania ruchu",
+          "termin": "Przed rozpoczęciem sezonu (plan: 10.2026); wynik na zebraniu Zarządu w IV kw."
+        },
+        {
+          "kod": "cele",
+          "decyzja": "Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać.",
+          "uzasadnienie": "Kwartalny przegląd szczelności działa — przepływ w postoju spadł z 9 do 6 Nm³/min. Rozszerzanie diagnostyki nie przyniesie proporcjonalnego efektu, a cel końcowy 4 Nm³/min jest osiągalny w obecnym rytmie.",
+          "kto": "",
+          "termin": ""
+        },
+        {
+          "kod": "integracja",
+          "decyzja": "Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy.",
+          "uzasadnienie": "Uwagi do koncepcji modernizacji sprężarkowni zgłoszono dzień przed zatwierdzeniem — kosztowało to trzy tygodnie decyzji i miesiąc przetargu. Tę samą rozmowę można było odbyć na etapie założeń, w godzinę.",
+          "kto": "Dyrektor Zakładu",
+          "termin": "12.2026"
+        },
+        {
+          "kod": "zasoby",
+          "decyzja": "Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.",
+          "uzasadnienie": "Obciążenie osób z punktu 7.1 mieści się w zadeklarowanym czasie; inwestycja wymaga osobnej pozycji budżetowej, nie dodatkowych etatów.",
+          "kto": "Dyrektor Zakładu, kontroler finansowy",
+          "termin": "Projekt budżetu, 10.2026"
+        },
+        {
+          "kod": "kompetencje",
+          "decyzja": "Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania.",
+          "uzasadnienie": "Luka w matrycy kompetencji III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026 — porównanie przy zakupie sterownika wykonał Energy Manager, nie dział zakupów.",
+          "kto": "Energy Manager",
+          "termin": "11.2026"
+        },
+        {
+          "kod": "inne_serwis",
+          "wlasna": true,
+          "nazwa": "Nadzór nad serwisem",
+          "decyzja": "Sprawdzanie protokołu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii; aktualizacja procedury P-EnMS-06.",
+          "uzasadnienie": "Niezgodność z audytu A-01/2026 — wymaganie wprowadzone po zdarzeniu z czerwca działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma). Karta NK-2026-01 otwarta ponownie 18.09.2026.",
+          "kto": "Kierownik utrzymania ruchu",
+          "termin": "Wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU"
+        },
+        {
+          "kod": "inne_zgodnosc",
+          "wlasna": true,
+          "nazwa": "Ocena zgodności — raport dla banku",
+          "decyzja": "Działanie korygujące przyjęte: termin 30 czerwca wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem od Energy Managera 14 dni wcześniej.",
+          "uzasadnienie": "Przyczyna niezgodności: termin umowny nie był w kalendarzu żadnej osoby — rejestr wskazywał wymaganie i właściciela, nie datę.",
+          "kto": "Kontroler finansowy",
+          "termin": "10.2026"
+        }
+      ],
+      "OCENA_C": {
+        "przydatnosc": "System jest przydatny i adekwatny do skali zakładu; skuteczny — poprawa wykazana w O-1, P-1 i S-1 w porównywalnych warunkach, znaczące odchylenia zbadane, ustalenia z audytu i oceny zgodności wdrażane. Słabym miejscem jest nadzór nad wykonawcami: wymaganie wprowadzone po czerwcowym zdarzeniu okazało się wdrożone połowicznie.",
+        "kierunek": "System zgodny z kierunkiem strategicznym organizacji — certyfikat ISO 50001 jest warunkiem kontraktu z głównym klientem (45% przychodów), a obniżenie kosztów energii elementem strategii kosztowej 2026–2028."
+      },
+      "META": {
+        "data": "2026-09-29",
+        "forma": "Przegląd wspólny z ISO 14001 — część energetyczna 2 godziny. Dodatkowo krótki punkt o energii co kwartał na zebraniu Zarządu.",
+        "uczestnicy": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu (przewodniczy, w imieniu Zarządu); Jan Kowalski — Energy Manager; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy; specjalistka ds. środowiska",
+        "najwyzszeKier": "tak",
+        "przygotowal": "Jan Kowalski — Energy Manager: raport z monitorowania i oceny (III-42), raport z audytu A-01/2026, rejestry III-04 i III-16",
+        "terminBudzetu": "2026-10-31",
+        "statusDecyzji": "Status decyzji sprawdzany na zebraniu Zarządu w IV kwartale 2026 r. oraz jako pierwsza pozycja danych wejściowych następnego przeglądu.",
+        "nastepnyPrzeglad": "Pełny przegląd: wrzesień 2027 r. Punkt o energii na każdym kwartalnym zebraniu Zarządu.",
+        "pierwszy": "tak",
+        "podpis": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu"
+      }
+    }
+  },
+  "variables": {
+    "WEJSCIA_DEF": [
+      {
+        "kod": "status",
+        "litera": "a",
+        "nazwa": "Status działań z poprzednich przeglądów",
+        "ph": "np. Pierwszy przegląd systemu. Decyzje Zarządu z 03.2026 — polityka energetyczna, budżet 300 tys. zł, certyfikacja do XII 2026 — realizowane zgodnie z harmonogramem.",
+        "phR": "np. Przyjąć zasadę, że następny przegląd zaczyna się od tabeli statusu decyzji z dzisiejszego."
+      },
+      {
+        "kod": "zmiany",
+        "litera": "b",
+        "nazwa": "Zmiany kwestii zewnętrznych i wewnętrznych oraz związanych z nimi ryzyk i szans",
+        "pomoc": "Pierwsze z czterech pytań kierownictwa: co się zmieniło wokół nas i w nas.",
+        "ph": "np. Cena stała energii elektrycznej do 31.12.2026, od 2027 nowa umowa — każde 100 zł/MWh to około 850 tys. zł rocznie. Projekt nowelizacji UC77 nieuchwalony (stan na 29.09.2026). Ryzyko R5 — wiedza o nastawach tylko u serwisu — obniżone, technicy przeszkoleni.",
+        "phR": "np. Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację przed negocjacjami."
+      },
+      {
+        "kod": "funkcjonowanie",
+        "litera": "c",
+        "nazwa": "Funkcjonowanie systemu — trendy: niezgodności i działania korygujące, wyniki monitorowania i pomiarów, wyniki audytów, wyniki oceny zgodności",
+        "pomoc": "Trzecie pytanie kierownictwa: czy system działa. Cztery źródła w jednej pozycji — i wszystkie cztery norma wymienia osobno.",
+        "ph": "np. Niezgodności: 06.2026 nastawa po serwisie (działanie wdrożone, skuteczność niepotwierdzona — audyt A-01/2026); 09.2026 raport dla banku (działanie w toku). Audyt 15–17.09: 1 niezgodność (protokół serwisu bez nastaw), 2 możliwości doskonalenia. Monitorowanie: O-1 0,97 (I półrocze), 0,965 (VIII). Ocena zgodności: 7 wymagań ocenianych, 1 niezgodne; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Trendy — pierwszy rok, za mało danych.",
+        "phR": "np. Przyjąć działanie dla raportu bankowego; wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi."
+      },
+      {
+        "kod": "doskonalenie",
+        "litera": "d",
+        "nazwa": "Możliwości ciągłego doskonalenia, w tym kompetencji",
+        "pomoc": "Czwarte pytanie: gdzie możemy być lepsi — wyniku, systemu, a także kompetencji ludzi.",
+        "ph": "np. Odzysk ciepła ze sprężarek — do rozważenia po ocenie pracy po modernizacji. LED w halach (zadanie Z2.1, 2027). Zakupy — luka w porównywaniu kosztu zakupu i energii (matryca III-28, ustalenie D-2 z audytu).",
+        "phR": "np. Warsztat dla działu zakupów w 11.2026; odzysk ciepła wrócić do planu po roku danych z nowego sterownika."
+      },
+      {
+        "kod": "polityka",
+        "litera": "e",
+        "nazwa": "Polityka energetyczna",
+        "ph": "np. Polityka z 03.2026 zgodna z kierunkiem firmy — wymaganie klienta i strategia 2026–2028.",
+        "phR": "np. Rekomendacja: bez zmian."
+      },
+      {
+        "kod": "wynik",
+        "litera": "",
+        "nazwa": "Wynik energetyczny: stopień osiągnięcia celów i zadań, EnPI i ich poprawa, status planów działań",
+        "pomoc": "Drugie pytanie kierownictwa: jak idzie wynik energetyczny. Norma wymienia tę pozycję osobno od danych a–e.",
+        "ph": "np. O-1 0,965 wobec EnB 1,000 (cel ≤ 0,95 za rok 2027). S-1 0,119 za okres VII–18.IX wobec EnB 0,125 — cel 0,110, brakuje 0,009; samo ciśnienie więcej nie da. S-2 6 Nm³/min (cel pośredni osiągnięty, cel końcowy 4). Plan C1: pozycje 1–3 wykonane, pozycja 4 zatwierdzona, pozycja 5 planowana.",
+        "phR": "np. Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie 2027 — cel Z1.1 nie jest osiągalny bez inwestycji. Diagnostyki wycieków nie rozszerzać."
+      }
+    ],
+    "OBSZARY_DEF": [
+      {
+        "kod": "poprawa",
+        "nazwa": "Możliwości poprawy wyniku energetycznego",
+        "ph": "np. Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.",
+        "phU": "np. Cel Z1.1 nie jest osiągalny bez inwestycji — samo ciśnienie więcej nie da"
+      },
+      {
+        "kod": "polityka",
+        "nazwa": "Polityka energetyczna",
+        "ph": "np. Bez zmian",
+        "phU": "np. Zgodna z kierunkiem firmy i wymaganiami klienta"
+      },
+      {
+        "kod": "enpi",
+        "nazwa": "EnPI lub EnB",
+        "ph": "np. Bez zmian; K-1 — analiza przyczyn przed sezonem grzewczym",
+        "phU": "np. Brak przesłanek do rewizji (6.5); K-1 = 1,01"
+      },
+      {
+        "kod": "cele",
+        "nazwa": "Cele, zadania, plany działań — i działania, gdy nie są osiągane",
+        "pomoc": "Obszar szerszy niż jeden wiersz: norma mówi o celach, zadaniach, planach działań <b>lub innych elementach systemu</b>. Decyzje w pozostałych sprawach zapiszcie poniżej, w części „decyzje w innych sprawach”.",
+        "ph": "np. Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać",
+        "phU": "np. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min"
+      },
+      {
+        "kod": "integracja",
+        "nazwa": "Integracja z procesami biznesowymi",
+        "ph": "np. Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy",
+        "phU": "np. Uwagi do koncepcji modernizacji zgłoszone za późno — trzy tygodnie decyzji i miesiąc przetargu"
+      },
+      {
+        "kod": "zasoby",
+        "nazwa": "Przydział zasobów",
+        "ph": "np. Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.",
+        "phU": "np. Obciążenie z punktu 7.1 mieści się w marginesie; inwestycja wymaga osobnej pozycji budżetowej"
+      },
+      {
+        "kod": "kompetencje",
+        "nazwa": "Kompetencje, świadomość, komunikacja",
+        "ph": "np. Warsztat dla działu zakupów: porównanie kosztu zakupu i energii",
+        "phU": "np. Luka w matrycy III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026"
+      }
+    ],
+    "LISTA_93": [
+      {
+        "tekst": "Najwyższe kierownictwo przegląda system w zaplanowanych odstępach.",
+        "podstawa": "N",
+        "auto": "kierownictwo"
+      },
+      {
+        "tekst": "Rozważono wszystkie wymagane dane wejściowe (a–e i wynik energetyczny).",
+        "podstawa": "N",
+        "auto": "wejscia"
+      },
+      {
+        "tekst": "Wyniki obejmują decyzje dotyczące doskonalenia i zmian w systemie (wszystkie obszary wyjść).",
+        "podstawa": "N",
+        "auto": "wyjscia"
+      },
+      {
+        "tekst": "Zachowano zapis wyników przeglądu.",
+        "podstawa": "N",
+        "auto": "zapis"
+      },
+      {
+        "tekst": "Decyzje mają właścicieli i terminy; status sprawdzany na następnym przeglądzie.",
+        "podstawa": "M",
+        "auto": "wlasciciele"
+      }
+    ],
+    "PRZYKLAD": {
+      "WEJSCIA": [
+        {
+          "kod": "status",
+          "podsumowanie": "Pierwszy przegląd systemu zarządzania energią. Decyzje Zarządu z marca 2026 r. — przyjęcie polityki energetycznej, budżet wdrożenia 300 tys. zł, certyfikacja do grudnia 2026 r. — realizowane zgodnie z harmonogramem.",
+          "rekomendacja": "Przyjąć zasadę, że każdy następny przegląd zaczyna się od tabeli statusu decyzji z poprzedniego. Status decyzji z dzisiejszego przeglądu na zebraniu Zarządu w IV kwartale 2026 r."
+        },
+        {
+          "kod": "zmiany",
+          "podsumowanie": "Cena stała energii elektrycznej obowiązuje do 31.12.2026; od 2027 r. nowa umowa — każde 100 zł/MWh różnicy to około 850 tys. zł rocznie przy obecnym zużyciu. Projekt nowelizacji ustawy o efektywności energetycznej (UC77) pozostaje nieuchwalony — stan na 29.09.2026. Ryzyko R5 z rejestru (wiedza o nastawach sprężarkowni tylko u serwisu) obniżone — technicy utrzymania ruchu przeszkoleni.",
+          "rekomendacja": "Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację — profil poboru, struktura cen, dane pomiarowe — przed negocjacjami. Śledzenie nowelizacji co kwartał."
+        },
+        {
+          "kod": "funkcjonowanie",
+          "podsumowanie": "Niezgodności: czerwiec 2026 — nastawa ciśnienia po przeglądzie serwisowym (działanie wdrożone, skuteczność niepotwierdzona — wykazał to audyt A-01/2026); wrzesień 2026 — raport dla banku po terminie (działanie w toku). Audyt wewnętrzny 15–17.09.2026: jedna niezgodność (protokół serwisu bez nastaw przed i po), dwie możliwości doskonalenia, jedno potwierdzenie zgodności. Monitorowanie: O-1 0,97 w I półroczu, 0,965 w sierpniu; poprawa także w P-1 i S-1. Ocena zgodności (09.2026): siedem wymagań ocenianych, jedno niezgodne, jedno z dowodem do uzupełnienia datami (zawiadomienie URE). Trendy — pierwszy rok systemu, za mało danych na wnioski o kierunku.",
+          "rekomendacja": "Przyjąć działanie dla raportu bankowego (termin w kalendarzu kontrolingu). Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii. Skuteczność działania z czerwca zweryfikować w audycie sprężarkowni po uruchomieniu modernizacji."
+        },
+        {
+          "kod": "doskonalenie",
+          "podsumowanie": "Odzysk ciepła ze sprężarek — rozważony w analizie projektu, przesunięty poza inwestycję; projekt zostawia miejsce i przyłącza. Wymiana opraw na LED w halach H1 i H2 (zadanie Z2.1, 2027). Kompetencje: luka w dziale zakupów w porównywaniu kosztu zakupu i energii — matryca III-28, potwierdzona ustaleniem D-2 z audytu.",
+          "rekomendacja": "Warsztat dla działu zakupów w listopadzie 2026 r. Odzysk ciepła wrócić do planu działań po roku danych z nowego sterownika — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna."
+        },
+        {
+          "kod": "polityka",
+          "podsumowanie": "Polityka energetyczna przyjęta w marcu 2026 r. pozostaje zgodna z kierunkiem firmy: wymaganiem głównego klienta (certyfikat od 2027 r.) i strategią kosztową 2026–2028.",
+          "rekomendacja": "Bez zmian. Przy odnowieniu umowy z drugim klientem sprawdzić, czy oczekiwanie dotyczące śladu węglowego nie wymaga rozszerzenia zakresu zobowiązań."
+        },
+        {
+          "kod": "wynik",
+          "podsumowanie": "O-1 0,965 wobec EnB 1,000 — cel ≤ 0,95 za rok 2027. S-1 0,119 za okres VII–18.IX wobec EnB 0,125; cel 0,110, brakuje 0,009 — czyli więcej, niż już osiągnięto. S-2 6 Nm³/min — cel pośredni osiągnięty, cel końcowy 4 Nm³/min do 06.2027. Plan działań C1: pozycje 1–3 wykonane, pozycja 4 (sterownik i napęd) zatwierdzona, pozycja 5 (weryfikacja Z1.1 i Z1.2) planowana. K-1 o 1% powyżej EnB w I półroczu.",
+          "rekomendacja": "Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie na 2027 r. — cel Z1.1 nie jest osiągalny bez inwestycji, samo ciśnienie więcej nie da. Diagnostyki wycieków nie rozszerzać: kwartalny przegląd szczelności działa, przepływ w postoju spadł z 9 do 6 Nm³/min. K-1 — analiza przyczyn przed rozpoczęciem sezonu grzewczego."
+        }
+      ],
+      "DECYZJE": [
+        {
+          "kod": "poprawa",
+          "decyzja": "Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.",
+          "uzasadnienie": "Cel Z1.1 (0,110 kWh/Nm³) nie jest osiągalny bez inwestycji — do celu brakuje więcej, niż osiągnięto obniżeniem ciśnienia i usunięciem nieszczelności.",
+          "kto": "Energy Manager, kierownik utrzymania ruchu",
+          "termin": "Projekt budżetu, 10.2026"
+        },
+        {
+          "kod": "polityka",
+          "decyzja": "Bez zmian",
+          "uzasadnienie": "Polityka zgodna z kierunkiem firmy i wymaganiami głównego klienta; brak zmian w zakresie systemu i w kwestiach zewnętrznych, które wymagałyby jej korekty.",
+          "kto": "",
+          "termin": ""
+        },
+        {
+          "kod": "enpi",
+          "decyzja": "Bez zmian w EnPI i liniach bazowych. K-1 — analiza przyczyn przed sezonem grzewczym.",
+          "uzasadnienie": "Brak przesłanek rewizji z punktu 6.5: nie zmieniły się metody liczenia, czynniki statyczne ani zakres. K-1 = 1,01 w I półroczu — to pytanie o przyczynę, nie o linię bazową.",
+          "kto": "Kierownik utrzymania ruchu",
+          "termin": "Przed rozpoczęciem sezonu (plan: 10.2026); wynik na zebraniu Zarządu w IV kw."
+        },
+        {
+          "kod": "cele",
+          "decyzja": "Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać.",
+          "uzasadnienie": "Kwartalny przegląd szczelności działa — przepływ w postoju spadł z 9 do 6 Nm³/min. Rozszerzanie diagnostyki nie przyniesie proporcjonalnego efektu, a cel końcowy 4 Nm³/min jest osiągalny w obecnym rytmie.",
+          "kto": "",
+          "termin": ""
+        },
+        {
+          "kod": "integracja",
+          "decyzja": "Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy.",
+          "uzasadnienie": "Uwagi do koncepcji modernizacji sprężarkowni zgłoszono dzień przed zatwierdzeniem — kosztowało to trzy tygodnie decyzji i miesiąc przetargu. Tę samą rozmowę można było odbyć na etapie założeń, w godzinę.",
+          "kto": "Dyrektor Zakładu",
+          "termin": "12.2026"
+        },
+        {
+          "kod": "zasoby",
+          "decyzja": "Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.",
+          "uzasadnienie": "Obciążenie osób z punktu 7.1 mieści się w zadeklarowanym czasie; inwestycja wymaga osobnej pozycji budżetowej, nie dodatkowych etatów.",
+          "kto": "Dyrektor Zakładu, kontroler finansowy",
+          "termin": "Projekt budżetu, 10.2026"
+        },
+        {
+          "kod": "kompetencje",
+          "decyzja": "Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania.",
+          "uzasadnienie": "Luka w matrycy kompetencji III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026 — porównanie przy zakupie sterownika wykonał Energy Manager, nie dział zakupów.",
+          "kto": "Energy Manager",
+          "termin": "11.2026"
+        },
+        {
+          "kod": "inne_serwis",
+          "wlasna": true,
+          "nazwa": "Nadzór nad serwisem",
+          "decyzja": "Sprawdzanie protokołu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii; aktualizacja procedury P-EnMS-06.",
+          "uzasadnienie": "Niezgodność z audytu A-01/2026 — wymaganie wprowadzone po zdarzeniu z czerwca działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma). Karta NK-2026-01 otwarta ponownie 18.09.2026.",
+          "kto": "Kierownik utrzymania ruchu",
+          "termin": "Wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU"
+        },
+        {
+          "kod": "inne_zgodnosc",
+          "wlasna": true,
+          "nazwa": "Ocena zgodności — raport dla banku",
+          "decyzja": "Działanie korygujące przyjęte: termin 30 czerwca wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem od Energy Managera 14 dni wcześniej.",
+          "uzasadnienie": "Przyczyna niezgodności: termin umowny nie był w kalendarzu żadnej osoby — rejestr wskazywał wymaganie i właściciela, nie datę.",
+          "kto": "Kontroler finansowy",
+          "termin": "10.2026"
+        }
+      ],
+      "OCENA_C": {
+        "przydatnosc": "System jest przydatny i adekwatny do skali zakładu; skuteczny — poprawa wykazana w O-1, P-1 i S-1 w porównywalnych warunkach, znaczące odchylenia zbadane, ustalenia z audytu i oceny zgodności wdrażane. Słabym miejscem jest nadzór nad wykonawcami: wymaganie wprowadzone po czerwcowym zdarzeniu okazało się wdrożone połowicznie.",
+        "kierunek": "System zgodny z kierunkiem strategicznym organizacji — certyfikat ISO 50001 jest warunkiem kontraktu z głównym klientem (45% przychodów), a obniżenie kosztów energii elementem strategii kosztowej 2026–2028."
+      },
+      "META": {
+        "data": "2026-09-29",
+        "forma": "Przegląd wspólny z ISO 14001 — część energetyczna 2 godziny. Dodatkowo krótki punkt o energii co kwartał na zebraniu Zarządu.",
+        "uczestnicy": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu (przewodniczy, w imieniu Zarządu); Jan Kowalski — Energy Manager; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy; specjalistka ds. środowiska",
+        "najwyzszeKier": "tak",
+        "przygotowal": "Jan Kowalski — Energy Manager: raport z monitorowania i oceny (III-42), raport z audytu A-01/2026, rejestry III-04 i III-16",
+        "terminBudzetu": "2026-10-31",
+        "statusDecyzji": "Status decyzji sprawdzany na zebraniu Zarządu w IV kwartale 2026 r. oraz jako pierwsza pozycja danych wejściowych następnego przeglądu.",
+        "nastepnyPrzeglad": "Pełny przegląd: wrzesień 2027 r. Punkt o energii na każdym kwartalnym zebraniu Zarządu.",
+        "pierwszy": "tak",
+        "podpis": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Przegląd bez decyzji z właścicielem i terminem jest spotkaniem sprawozdawczym.",
+        "decyzja": "Każdy wymagany wkład omawiany, a wynik zapisywany jako decyzja z właścicielem i terminem — także wtedy, gdy decyzją jest utrzymanie obecnego rozwiązania.",
+        "dzialanie": "Protokół z 18.06.2026: siedem obszarów, decyzje o projekcie budżetu na 2027 r. i o rewizji linii bazowej po modernizacji sprężarkowni.",
+        "sprawdzenie": "Na kolejnym przeglądzie sprawdzamy wykonanie decyzji poprzedniego; termin przeglądu wyprzedza termin prac nad budżetem."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "WEJSCIA": [],
+    "DECYZJE": [],
+    "WNIOSKI": []
+  },
+  "example_literals": {}
+}

@@ -37,6 +37,10 @@ class IsoFactorQuestionnaire
             $factor['dependencies'] = array_replace($factor['dependencies'], $dependencies);
             $factor['basis'] = hash('sha256', json_encode($factor['dependencies'], JSON_THROW_ON_ERROR));
             $factor['visible'] = app(IsoContextLibrary::class)->matches($factor['pokaz_gdy'], $facts);
+            if ($factor['kod'] === 'KTX-WO-12') {
+                $factor['rodzaj'] = 'PROPOZYCJA';
+                $factor['verification'] = 'Nowa propozycja z wydania 18.10.2026 — wymaga zatwierdzenia merytorycznego przez audytora.';
+            }
             // A consumption threshold alone does not establish a legal obligation.
             // Likewise absence of certification is not absence of management processes.
             if ($factor['rodzaj'] === 'AUTO' && (str_starts_with($factor['kod'], 'KTX-ZR-') || $factor['kod'] === 'KTX-WO-03')) {
@@ -70,7 +74,7 @@ class IsoFactorQuestionnaire
             'climate_reason' => 'nullable|string|max:3000',
             'PRAWO.data' => ($complete ? 'required' : 'nullable').'|date_format:Y-m-d|before_or_equal:today',
             'PRAWO.notatka' => 'nullable|string|max:5000',
-            'factors' => 'nullable|array|max:69',
+            'factors' => 'nullable|array|max:100',
             'factors.*' => 'array',
             'factors.*.decyzja' => ['nullable', Rule::in(['potwierdzony', 'odrzucony'])],
             'factors.*.tresc' => 'nullable|string|max:5000',

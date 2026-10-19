@@ -1,0 +1,773 @@
+{
+  "source_file": "ENESA_6.4_Wskazniki_EnPI_platforma.html",
+  "source_sha256": "cd782620d5688f192f27327e0b56c6f1258a5be412010f37d441d4fea906c032",
+  "section": "6-4",
+  "data": {
+    "LISTA_64": [
+      {
+        "tekst": "EnPI są odpowiednie do mierzenia i monitorowania wyniku energetycznego i umożliwiają wykazanie jego poprawy.",
+        "podstawa": "N",
+        "auto": "odpowiednie"
+      },
+      {
+        "tekst": "Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, uwzględniono je przy ustalaniu EnPI.",
+        "podstawa": "N",
+        "auto": "zmienne"
+      },
+      {
+        "tekst": "Postać EnPI (bezwzględna / jednostkowa / model) ma uzasadnienie.",
+        "podstawa": "M",
+        "auto": "postac"
+      },
+      {
+        "tekst": "Model oceniono nie tylko po R² — z uzasadnieniem zmiennych, zakresem danych, błędem i wartościami odstającymi.",
+        "podstawa": "M",
+        "auto": "modelocena"
+      },
+      {
+        "tekst": "Metoda określania i aktualizowania EnPI jest utrzymywana jako udokumentowana informacja.",
+        "podstawa": "N",
+        "auto": "metoda"
+      },
+      {
+        "tekst": "Wartości EnPI są zachowane jako udokumentowana informacja i porównywane z odpowiadającymi im liniami bazowymi.",
+        "podstawa": "N",
+        "auto": "wartosci"
+      }
+    ],
+    "przyklad": {
+      "KARTY": [
+        {
+          "nr": "O-1",
+          "nazwa": "Zużycie rzeczywiste / zużycie oczekiwane według modelu bazowego",
+          "obszar": "organizacja",
+          "obszarNazwa": "Cała organizacja, wszystkie rodzaje energii (MWh)",
+          "postac": "model",
+          "uzasadnieniePostaci": "Model — na zużycie wpływa kilka zmiennych naraz, a zużycie stałe jest duże: oświetlenie, wentylacja, biuro i czuwanie maszyn to około 40% całości. Wskaźnik kWh/t rósłby przy spadku produkcji, choć nikt niczego nie zepsuł.",
+          "wzor": "E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]",
+          "zmienne": "Masa przetworzonej stali [t] — napędza prasy, lakiernię i zużycie sprężonego powietrza. Stopniodni grzania HDD (baza 18 °C) — ogrzewanie hal i nagrzewnice lakierni.",
+          "statyczne": "3 zmiany, 3 linie pras, hale A–D, asortyment — stan na 2025 r.",
+          "zrodla": "Poz. 1–3, 11, 13 planu zbierania danych F-EnMS-11",
+          "ocenaModelu": "12 miesięcy 2025 r. (zakres danych: 1 750–2 150 t/mies., 0–650 HDD/mies.); R² = 0,86; CV(RMSE) 2,8%. Obie zmienne mają sens techniczny. Sierpień (postój 2 tygodnie) sprawdzony jako wartość odstająca i pozostawiony — reszta mieści się w ±2 błędach standardowych.",
+          "czestotliwosc": "Miesięcznie, do 10 dnia następnego miesiąca",
+          "odp": "Energy Manager",
+          "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca)",
+          "okresBazowy": "2025",
+          "uzasadnienieOkresu": "Pierwszy pełny rok z danymi produkcyjnymi i pogodowymi, bez dużych przestojów. Dwanaście miesięcy obejmuje pełny cykl pór roku.",
+          "wartoscEnB": "1,000",
+          "modelBazowy": "E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; w 2025 r. 12 120 MWh",
+          "normalizacja": "Zużycie oczekiwane liczone z modelu bazowego dla faktycznej produkcji i faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Model bazowy pozostaje bez zmian — normalizacja koryguje porównanie, nie linię bazową.",
+          "warunkiPorownania": "Miesiące pełnej pracy. Miesiąc z postojem dłuższym niż 10 dni roboczych porównywany z adnotacją, bo model był dopasowany do normalnego trybu pracy.",
+          "rewizjaA": "Zmiana asortymentu zmieniająca energochłonność wyrobu — wtedy wskaźnik przestaje pokazywać wynik gospodarowania energią.",
+          "rewizjaB": "Nowa linia produkcyjna, zmiana liczby zmian, zmiana powierzchni ogrzewanej, zmiana zakresu systemu, sprzedaż części zakładu.",
+          "rewizjaC": "Po 24 miesiącach danych — ponowne dopasowanie modelu bez zmiany okresu bazowego.",
+          "nieRewizja": "Sama poprawa wyniku energetycznego. Zmiana EnB po modernizacji wymazałaby z historii osiągniętą poprawę.",
+          "historia": [],
+          "daneZmiennych": "Produkcja 24 000 t stali (1 750–2 150 t/mies.); stopniodni 3 600 HDD, baza 18 °C (0–650/mies.); zużycie całkowite 12 120 MWh; 250 dni roboczych na 3 zmiany.",
+          "przykladObliczenia": "Miesiąc z 2 200 t i 500 HDD: E_ocz = 0,23·2 200 + 0,48·500 + 406 = 1 152 MWh. E_rzecz = 1 082 MWh. EnPI = 1 082 / 1 152 = 0,939 → poprawa 70 MWh, czyli 6,1%."
+        },
+        {
+          "nr": "P-1",
+          "nazwa": "Energia jednostkowa pras — kWh na tonę przetworzonej stali",
+          "obszar": "seu",
+          "obszarNazwa": "Prasy — trzy linie, 24,5% zużycia zakładu",
+          "postac": "jednostkowy",
+          "uzasadnieniePostaci": "Wskaźnik jednostkowy — zużycie pras rośnie i spada razem z masą przetworzonej stali, a zużycie niezależne od produkcji (czuwanie, hydraulika w gotowości) to kilka procent zużycia obszaru.",
+          "wzor": "P-1 = energia pras [kWh] / masa przetworzonej stali [t]",
+          "zmienne": "Masa przetworzonej stali [t] — bezpośrednio określa liczbę i czas cykli prasowania.",
+          "statyczne": "3 linie pras, 3 zmiany, asortyment — stan na 2025 r.",
+          "zrodla": "Poz. 11 (masa stali) i poz. 12 (energia pras) planu F-EnMS-11",
+          "ocenaModelu": "",
+          "czestotliwosc": "Kwartalnie — zgodnie z rytmem pomiarów analizatorem",
+          "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager",
+          "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego oraz po uruchomieniu podlicznika pras",
+          "okresBazowy": "2025",
+          "uzasadnienieOkresu": "Rok spójny z linią bazową organizacji; energia pras wyznaczona z pomiarów okresowych i obliczeń, bez podlicznika.",
+          "wartoscEnB": "124,0",
+          "modelBazowy": "124,0 kWh/t (2 970 MWh / 24 000 t, 2025 r.)",
+          "normalizacja": "Wskaźnik jest ilorazem energii i masy, więc normalizuje się względem produkcji. Dodatkowej korekty nie stosuje się — zużycie niezależne od produkcji w tym obszarze jest niewielkie.",
+          "warunkiPorownania": "Ten sam asortyment i ta sama liczba pracujących linii. Kwartał z wyłączoną linią porównywany z adnotacją.",
+          "rewizjaA": "Trwała zmiana asortymentu (inna grubość blachy, inny wyrób) — zmienia energochłonność tony.",
+          "rewizjaB": "Dodanie lub likwidacja linii pras, zmiana liczby zmian.",
+          "rewizjaC": "Po 12 miesiącach danych z podlicznika pras — przeliczenie EnB na danych pomiarowych zamiast obliczeniowych.",
+          "nieRewizja": "Poprawa kWh/t po zmianie parametrów pracy.",
+          "historia": [],
+          "daneZmiennych": "Masa przetworzonej stali 24 000 t (2025); energia pras 2 970 MWh, czyli 24,5% zużycia zakładu.",
+          "przykladObliczenia": "I półrocze 2026: 1 465 MWh / 12 000 t = 122,1 kWh/t wobec EnB 124,0 kWh/t → poprawa 1,5%. Ten sam asortyment, trzy linie czynne."
+        },
+        {
+          "nr": "L-1",
+          "nazwa": "Zużycie rzeczywiste / oczekiwane — lakiernia",
+          "obszar": "seu",
+          "obszarNazwa": "Lakiernia — piec gazowy i dwie kabiny, 20,0% zużycia zakładu",
+          "postac": "model",
+          "uzasadnieniePostaci": "Model — na zużycie wpływa lakierowana powierzchnia i pogoda (nagrzewnice), a piec utrzymuje temperaturę także między zleceniami, więc zużycie stałe jest znaczne.",
+          "wzor": "E_ocz = a·m² + b·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]. Wskaźnik pomocniczy: 8,08 kWh/m² (2 425 MWh / 300 000 m², 2025 r.)",
+          "zmienne": "Lakierowana powierzchnia [m²] — określa liczbę cykli pieca. Stopniodni HDD — nagrzewnice i podgrzewanie powietrza kabin.",
+          "statyczne": "Jeden piec gazowy, dwie kabiny, technologia lakierowania — stan na 2025 r.",
+          "zrodla": "Poz. 8 (gaz pieca), poz. 9 (lakierowana powierzchnia), poz. 13 (HDD) planu F-EnMS-11",
+          "ocenaModelu": "12 miesięcy 2025 r. (18 000–29 000 m²/mies.); R² = 0,81; CV(RMSE) 4,1%. Zmienne mają sens techniczny. Dwa miesiące z przestojem kabiny sprawdzone i opisane — pozostawione, reszty w granicach ±2 błędów standardowych. Model do przeliczenia po 12 miesiącach danych z podlicznika gazu.",
+          "czestotliwosc": "Miesięcznie",
+          "odp": "Technolog lakierni; liczy Energy Manager",
+          "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego",
+          "okresBazowy": "2025",
+          "uzasadnienieOkresu": "Rok spójny z linią bazową organizacji; obejmuje pełny cykl pogodowy, który dla lakierni jest istotny.",
+          "wartoscEnB": "1,000",
+          "modelBazowy": "Model jak wyżej; w 2025 r. 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh)",
+          "normalizacja": "Zużycie oczekiwane z modelu bazowego dla faktycznej powierzchni i stopniodni; EnPI = E_rzecz / E_ocz.",
+          "warunkiPorownania": "Obie kabiny czynne. Miesiąc z wyłączoną kabiną porównywany z adnotacją.",
+          "rewizjaA": "Zmiana technologii lakierowania albo rodzaju lakieru zmieniająca profil temperatur pieca.",
+          "rewizjaB": "Dodanie kabiny, wymiana pieca, zmiana powierzchni lakierni.",
+          "rewizjaC": "Po 12 miesiącach danych z podlicznika gazu pieca (07.2027) — przeliczenie modelu na danych pomiarowych.",
+          "nieRewizja": "Poprawa wskaźnika po regulacji harmonogramu pieca.",
+          "historia": [],
+          "daneZmiennych": "Lakierowana powierzchnia 300 000 m² (18 000–29 000 m²/mies.); stopniodni 3 600 HDD; zużycie lakierni 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh).",
+          "przykladObliczenia": "Miesiąc z 25 000 m² i 420 HDD: E_ocz z modelu bazowego 215 MWh; E_rzecz 211 MWh; EnPI = 0,98 → poprawa 4 MWh, czyli 2,0%."
+        },
+        {
+          "nr": "S-1",
+          "nazwa": "Energia jednostkowa sprężarkowni — kWh na Nm³ sprężonego powietrza",
+          "obszar": "seu",
+          "obszarNazwa": "Sprężarkownia — cztery sprężarki śrubowe, kolektor główny, 17,5% zużycia zakładu",
+          "postac": "jednostkowy",
+          "uzasadnieniePostaci": "Wskaźnik jednostkowy kWh/Nm³ — zużycie zależy od objętości wytworzonego powietrza, a zużycie stałe w tym obszarze jest niewielkie.",
+          "wzor": "S-1 = energia sprężarkowni [kWh] / objętość sprężonego powietrza [Nm³]",
+          "zmienne": "Objętość wytworzonego powietrza [Nm³] — bezpośrednio określa pracę sprężarek. Temperatura powietrza zasysanego — wpływ drugorzędny, odnotowywany przy porównaniu.",
+          "statyczne": "Cztery sprężarki śrubowe pracujące w układzie włącz–wyłącz, układ sieci, ciśnienie nastawy — stan w okresie bazowym: 7,0 bar.",
+          "zrodla": "Poz. 4 (energia sprężarkowni), poz. 5 (wolumen powietrza), poz. 6 (ciśnienie sieci) planu F-EnMS-11",
+          "ocenaModelu": "",
+          "czestotliwosc": "Miesięcznie (od 06.2026 dane 15-minutowe z podlicznika i przepływomierza)",
+          "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager",
+          "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego oraz po 12 miesiącach danych z podlicznika",
+          "okresBazowy": "02–03.2026 (kampania pomiarowa, 4 tygodnie)",
+          "uzasadnienieOkresu": "Profil obciążenia jest podobny przez cały rok, a podliczników jeszcze nie było — krótszy okres jest uzasadniony. Kampania zimowa nie obejmuje jednak wpływu letnich upałów na sprężarki, dlatego z góry zapisano rewizję c) po 12 miesiącach danych z podlicznika.",
+          "wartoscEnB": "0,125",
+          "modelBazowy": "0,125 kWh/Nm³ przy ciśnieniu 7 bar",
+          "normalizacja": "Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem wolumenu. Porównanie przy innym ciśnieniu sieci nie jest uczciwe — ciśnienie jest kryterium eksploatacji, nie zmienną.",
+          "warunkiPorownania": "Ciśnienie i obciążenie porównywalne. Temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją.",
+          "rewizjaA": "Zmiana charakteru odbioru powietrza (nowe odbiorniki o innym profilu), po której kWh/Nm³ przestaje pokazywać wynik.",
+          "rewizjaB": "Wymiana sprężarki, dodanie sterownika nadrzędnego albo napędu o zmiennej prędkości, zmiana układu sieci, trwała zmiana ciśnienia nastawy.",
+          "rewizjaC": "Po 12 miesiącach danych z podlicznika i przepływomierza (07.2027) EnB zostanie przeliczona dla tych samych warunków; poprawa wykazana do tego dnia zostaje zapisana.",
+          "nieRewizja": "Poprawa kWh/Nm³ po obniżeniu ciśnienia i usunięciu nieszczelności.",
+          "historia": [],
+          "daneZmiennych": "Kampania 02–03.2026: energia sprężarkowni i wolumen powietrza mierzone przez 4 tygodnie; w ujęciu rocznym sprężarkownia to 2 121 MWh, czyli 17,5% zużycia zakładu. Ciśnienie w okresie bazowym 7,0 bar.",
+          "przykladObliczenia": "VII–IX 2026: 530 MWh / 4 454 000 Nm³ = 0,119 kWh/Nm³ wobec EnB 0,125 → poprawa 4,8%. Adnotacja: EnB pochodzi z kampanii zimowej, wynik z lata, a latem sprężarki pracują w trudniejszych warunkach — różnica raczej nie zawyża poprawy."
+        },
+        {
+          "nr": "S-2",
+          "nazwa": "Przepływ sprężonego powietrza w czasie postoju",
+          "obszar": "seu",
+          "obszarNazwa": "Sprężarkownia — sieć sprężonego powietrza (nieszczelności)",
+          "postac": "bezwzgledny",
+          "uzasadnieniePostaci": "Wartość bezwzględna — przepływ w czasie postoju produkcji nie zależy ani od produkcji, ani od pogody. Mierzy wyłącznie nieszczelności. Osobny wskaźnik, bo usunięcie wycieków zmniejsza zużycie energii, ale nie musi poprawić kWh/Nm³.",
+          "wzor": "S-2 = przepływ na kolektorze głównym w czasie postoju [Nm³/min]",
+          "zmienne": "",
+          "statyczne": "Układ i długość sieci, liczba punktów odbioru, ciśnienie testu — stan w okresie bazowym.",
+          "zrodla": "Poz. 7 (przepływ w postoju) planu F-EnMS-11",
+          "ocenaModelu": "",
+          "czestotliwosc": "Co kwartał, test weekendowy",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego",
+          "okresBazowy": "03.2026 (pomiar pojedynczy)",
+          "uzasadnienieOkresu": "Przepływ w postoju nie podlega sezonowości, więc jeden pomiar w ustalonych warunkach wystarcza jako punkt startu. Warunkiem jest powtarzalna procedura testu.",
+          "wartoscEnB": "9",
+          "modelBazowy": "9 Nm³/min (test weekendowy 12.01.2026 przy 6,3 bar)",
+          "normalizacja": "Normalizacja nie jest potrzebna — wskaźnik nie zależy od istotnych zmiennych. Warunkiem porównywalności jest ta sama procedura testu i to samo ciśnienie.",
+          "warunkiPorownania": "Postój całej produkcji, sieć pod ciśnieniem 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu powtarza się.",
+          "rewizjaA": "Zmiana sposobu odcinania odbiorników, po której test przestaje mierzyć same nieszczelności.",
+          "rewizjaB": "Rozbudowa sieci, nowa hala, zmiana liczby punktów odbioru.",
+          "rewizjaC": "Brak reguły ustalonej z góry — wskaźnik ma charakter jednorazowego testu, EnB pozostaje do zmiany czynników statycznych.",
+          "nieRewizja": "Spadek przepływu po usunięciu nieszczelności — to właśnie wynik, który ma być widoczny.",
+          "historia": [],
+          "daneZmiennych": "Nie dotyczy — wskaźnik nie zależy od istotnych zmiennych. Warunki pomiaru bazowego: postój weekendowy 12.01.2026, ciśnienie 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02.",
+          "przykladObliczenia": "Test 06.2026: 6 Nm³/min wobec 9 Nm³/min z pomiaru bazowego → spadek 3 Nm³/min, czyli 33%. Ta sama procedura testu i to samo ciśnienie."
+        },
+        {
+          "nr": "K-1",
+          "nazwa": "Zużycie rzeczywiste / oczekiwane — kotłownia",
+          "obszar": "seu",
+          "obszarNazwa": "Kotłownia — ogrzewanie hal, 12,4% zużycia zakładu",
+          "postac": "model",
+          "uzasadnieniePostaci": "Model — zużycie zależy niemal wyłącznie od pogody, a wskaźnik jednostkowy na tonę produkcji byłby bezsensowny. Model na stopniodniach jest tu najprostszą uczciwą postacią.",
+          "wzor": "E_ocz = a·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]",
+          "zmienne": "Stopniodni grzania HDD (baza 18 °C) — bezpośrednio określają zapotrzebowanie na ciepło.",
+          "statyczne": "Powierzchnia ogrzewana hal A–D, nastawy temperatury, izolacja — stan na 2025 r.",
+          "zrodla": "Poz. 2 (gaz — organizacja, po odjęciu pieca lakierni) i poz. 13 (HDD) planu F-EnMS-11",
+          "ocenaModelu": "12 miesięcy 2025 r. (0–650 HDD/mies.); R² = 0,92; CV(RMSE) 5,6%. Miesiące letnie (HDD = 0) pokazują zużycie stałe na ciepłą wodę — zgodne z oczekiwaniem technicznym. Zużycie kotłowni wyznaczone jako różnica licznika gazu i pieca lakierni, co powiększa niepewność — po uruchomieniu podlicznika pieca model zostanie przeliczony.",
+          "czestotliwosc": "Miesięcznie",
+          "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager",
+          "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego",
+          "okresBazowy": "2025",
+          "uzasadnienieOkresu": "Pełny rok jest konieczny, bo zużycie kotłowni jest sezonowe — krótszy okres nie objąłby ani zimy, ani lata.",
+          "wartoscEnB": "1,000",
+          "modelBazowy": "Model jak wyżej; w 2025 r. 1 500 MWh",
+          "normalizacja": "Zużycie oczekiwane z modelu bazowego dla faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Stacja pogodowa i baza stopniodni muszą być te same co w okresie bazowym.",
+          "warunkiPorownania": "Te same nastawy temperatury w halach. Zmiana nastaw jest zmianą kryterium eksploatacji i wymaga adnotacji.",
+          "rewizjaA": "Zmiana sposobu ogrzewania części hal (np. nagrzewnice elektryczne) — wtedy gaz przestaje opisywać całe ogrzewanie.",
+          "rewizjaB": "Nowa hala, docieplenie, zmiana powierzchni ogrzewanej, wymiana kotła.",
+          "rewizjaC": "Po 12 miesiącach danych z podlicznika gazu pieca lakierni — przeliczenie modelu na danych pomiarowych, bez zmiany okresu bazowego.",
+          "nieRewizja": "Poprawa wskaźnika po regulacji automatyki pogodowej.",
+          "historia": [],
+          "daneZmiennych": "Stopniodni 3 600 HDD, baza 18 °C, stacja Katowice (0–650/mies.); zużycie kotłowni 1 500 MWh, czyli 12,4% zużycia zakładu; nastawy temperatury w halach bez zmian.",
+          "przykladObliczenia": "I półrocze 2026: 2 600 HDD → E_ocz z modelu bazowego 1 085 MWh; E_rzecz 1 096 MWh; EnPI = 1,01 → brak poprawy, 11 MWh powyżej oczekiwania. Do sprawdzenia automatyka pogodowa."
+        },
+        {
+          "nr": "OŚ-1",
+          "nazwa": "Roczne zużycie energii na oświetlenie",
+          "obszar": "seu",
+          "obszarNazwa": "Oświetlenie hal H1 i H2 — 5,6% zużycia, SEU z kryterium B (potencjał poprawy)",
+          "postac": "bezwzgledny",
+          "uzasadnieniePostaci": "Wartość bezwzględna — hale pracują na trzy zmiany przez cały rok, więc czas świecenia jest w praktyce stały i nic istotnie nie zmienia zużycia. MWh na rok jest tu uczciwym wskaźnikiem; kWh na tonę produkcji wprowadzałoby w błąd.",
+          "wzor": "OŚ-1 = roczne zużycie energii na oświetlenie [MWh/rok]; do 06.2026 obliczane jako moc opraw × czas pracy z harmonogramu zmian",
+          "zmienne": "",
+          "statyczne": "Liczba i moc opraw (420 szt.), powierzchnia hal H1 i H2, wymagane poziomy natężenia, 3 zmiany — stan na 2025 r.",
+          "zrodla": "Poz. 14 (oświetlenie) i poz. 15 (czynniki statyczne) planu F-EnMS-11",
+          "ocenaModelu": "",
+          "czestotliwosc": "Miesięcznie (zestawienie), rozliczenie roczne",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przegladMetody": "Po wymianie opraw na LED — sprawdzenie, czy postać bezwzględna nadal jest właściwa",
+          "okresBazowy": "2025",
+          "uzasadnienieOkresu": "Pełny rok, żeby objąć zmienność czasu pracy zakładu i urlopów; wartość wyznaczona z inwentaryzacji opraw i harmonogramu zmian.",
+          "wartoscEnB": "680",
+          "modelBazowy": "680 MWh/rok (2025 r., inwentaryzacja 420 opraw × czas pracy)",
+          "normalizacja": "Normalizacja nie jest potrzebna przy stałym czasie pracy. Gdyby liczba zmian się zmieniła, porównanie prowadzi się na MWh na godzinę pracy zakładu — i wtedy postać wskaźnika wymaga przeglądu.",
+          "warunkiPorownania": "Te same trzy zmiany i ten sam kalendarz pracy (250 dni). Zmiana liczby zmian wymaga przeliczenia.",
+          "rewizjaA": "Zmiana trybu pracy hal, po której roczne MWh przestaje odzwierciedlać gospodarowanie energią.",
+          "rewizjaB": "Zmiana powierzchni hal, liczby zmian albo wymaganych poziomów natężenia oświetlenia.",
+          "rewizjaC": "Po wymianie opraw na LED i 12 miesiącach danych z podlicznika — przeliczenie EnB na danych pomiarowych, z zapisaniem poprawy osiągniętej do dnia rewizji.",
+          "nieRewizja": "Spadek zużycia po wymianie opraw — to jest wynik celu C2, nie powód rewizji.",
+          "historia": [],
+          "daneZmiennych": "Nie dotyczy — czas świecenia jest w praktyce stały. Stan bazowy: 420 opraw, 3 zmiany, 250 dni roboczych, zużycie 680 MWh w 2025 r.",
+          "przykladObliczenia": "I półrocze 2026: 339 MWh w sześciu miesiącach, czyli 678 MWh w przeliczeniu rocznym, wobec EnB 680 MWh → 0,3% poniżej linii bazowej, w granicach dokładności obliczenia z inwentaryzacji opraw."
+        }
+      ],
+      "METODA": {
+        "dobor": "Dla organizacji i każdego znaczącego użycia energii szacujemy udział zużycia niezależnego od produkcji. Powyżej 15% wybieramy model; poniżej — wskaźnik jednostkowy. Gdy zużycie nie zależy ani od produkcji, ani od pogody (oświetlenie przy stałym czasie pracy, przepływ w postoju) — wartość bezwzględna. Wybór i jego uzasadnienie zapisujemy w karcie F-EnMS-09.",
+        "model": "Regresja liniowa na danych miesięcznych z 12 miesięcy okresu bazowego. Ocena modelu obejmuje: techniczny sens każdej zmiennej, zakres danych wejściowych, R², CV(RMSE), analizę reszt i wartości odstających. Miesiące odstające sprawdzamy indywidualnie i zapisujemy decyzję o pozostawieniu albo wyłączeniu wraz z powodem. Samo R² nie jest kryterium przyjęcia modelu.",
+        "obliczanie": "Energy Manager liczy wszystkie wskaźniki miesięcznie, do 10 dnia następnego miesiąca, w arkuszu EnMS. Przy każdym obliczeniu wskaźnik jest porównywany z odpowiadającą mu linią bazową, a warunki porównania sprawdzane według karty. Wartości i adnotacje zapisywane są w zakładce „EnPI”.",
+        "aktualizacja": "Przegląd wszystkich kart przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wyposażenia, asortymentu albo zakresu systemu. Zmianę postaci wskaźnika lub modelu zatwierdza Dyrektor Techniczny; zmianę linii bazowej — Zarząd.",
+        "zapisy": "Karty F-EnMS-09 w teczce EnMS, wersjonowane (data, autor, opis zmiany). Wartości wskaźników w arkuszu EnMS, kopia tygodniowa na serwerze. Dane o istotnych zmiennych przechowywane razem z wartościami wskaźników.",
+        "komunikacja": "Trend wskaźnika organizacji na comiesięcznej odprawie kierownictwa. Wskaźniki znaczących użyć energii na tablicach wydziałowych. Wskaźnik zarządczy 114,8 GJ/mln zł przychodu pokazywany zarządowi, ale w każdym zestawieniu oznaczony jako wskaźnik zarządczy, nie EnPI — zależy od cen i asortymentu."
+      },
+      "WARTOSCI": [
+        {
+          "enpi": "O-1",
+          "okres": "2025 (rok bazowy)",
+          "wartosc": "1,000",
+          "adnotacja": "Wartość definicyjna linii bazowej."
+        },
+        {
+          "enpi": "O-1",
+          "okres": "I półrocze 2026",
+          "wartosc": "0,97",
+          "adnotacja": "Produkcja i stopniodni uwzględnione modelem. Kierunek dobry, do celu Z3.1 (≤ 0,95) brakuje dwóch setnych."
+        },
+        {
+          "enpi": "O-1",
+          "okres": "Miesiąc przykładowy: 2 200 t, 500 HDD",
+          "wartosc": "0,939",
+          "adnotacja": "E_ocz = 1 152 MWh, E_rzecz = 1 082 MWh — poprawa 70 MWh (6,1%). Jeden dobry miesiąc to jeszcze nie wynik roku."
+        },
+        {
+          "enpi": "P-1",
+          "okres": "2025 (rok bazowy)",
+          "wartosc": "124,0",
+          "adnotacja": "Z pomiarów okresowych i obliczeń, bez podlicznika."
+        },
+        {
+          "enpi": "P-1",
+          "okres": "I półrocze 2026",
+          "wartosc": "122,1",
+          "adnotacja": "Ten sam asortyment, trzy linie czynne. Monitorowanie — bez zadania energetycznego."
+        },
+        {
+          "enpi": "L-1",
+          "okres": "2025 (rok bazowy)",
+          "wartosc": "1,000",
+          "adnotacja": "Wartość definicyjna; 2 425 MWh, 300 000 m²."
+        },
+        {
+          "enpi": "L-1",
+          "okres": "I półrocze 2026",
+          "wartosc": "0,98",
+          "adnotacja": "Obie kabiny czynne. Zużycie pieca wyznaczone jako różnica — niepewność do zmniejszenia po uruchomieniu podlicznika."
+        },
+        {
+          "enpi": "S-1",
+          "okres": "02–03.2026 (kampania bazowa)",
+          "wartosc": "0,125",
+          "adnotacja": "Przy ciśnieniu 7,0 bar, temperatura zasysania zimowa."
+        },
+        {
+          "enpi": "S-1",
+          "okres": "VII–IX 2026",
+          "wartosc": "0,119",
+          "adnotacja": "Poprawa 4,8% po obniżeniu ciśnienia do 6,3 bar. EnB pochodzi z zimy, wynik z lata — latem sprężarki pracują w trudniejszych warunkach, więc ta różnica raczej nie zawyża poprawy. Do celu 0,110 zostało 0,009 kWh/Nm³, czyli około 7,6% obecnej wartości."
+        },
+        {
+          "enpi": "S-2",
+          "okres": "03.2026 (pomiar bazowy)",
+          "wartosc": "9",
+          "adnotacja": "Test weekendowy 12.01.2026 przy 6,3 bar."
+        },
+        {
+          "enpi": "S-2",
+          "okres": "06.2026",
+          "wartosc": "6",
+          "adnotacja": "Ta sama procedura testu. Usunięto 21 z 35 nieszczelności."
+        },
+        {
+          "enpi": "K-1",
+          "okres": "2025 (rok bazowy)",
+          "wartosc": "1,000",
+          "adnotacja": "Wartość definicyjna; 1 500 MWh."
+        },
+        {
+          "enpi": "K-1",
+          "okres": "I półrocze 2026",
+          "wartosc": "1,01",
+          "adnotacja": "Nieznacznie powyżej linii bazowej. Nastawy bez zmian — do sprawdzenia automatyka pogodowa."
+        },
+        {
+          "enpi": "OŚ-1",
+          "okres": "2025 (rok bazowy)",
+          "wartosc": "680",
+          "adnotacja": "Z inwentaryzacji 420 opraw i harmonogramu zmian."
+        },
+        {
+          "enpi": "OŚ-1",
+          "okres": "I półrocze 2026, w przeliczeniu rocznym",
+          "wartosc": "678",
+          "adnotacja": "Zmierzone 339 MWh w sześciu miesiącach, czyli 56,5 MWh/miesiąc — przeliczone na rok, żeby okres był porównywalny z linią bazową roczną. W tempie roku bazowego; wymiana opraw na LED zaplanowana na III kwartał 2027."
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny (karty i metoda EnPI); Zarząd — linie bazowe",
+        "data": "2026-04-15",
+        "stan": "2026-09-30",
+        "stale": "40"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_64": [
+      {
+        "tekst": "EnPI są odpowiednie do mierzenia i monitorowania wyniku energetycznego i umożliwiają wykazanie jego poprawy.",
+        "podstawa": "N",
+        "auto": "odpowiednie"
+      },
+      {
+        "tekst": "Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, uwzględniono je przy ustalaniu EnPI.",
+        "podstawa": "N",
+        "auto": "zmienne"
+      },
+      {
+        "tekst": "Postać EnPI (bezwzględna / jednostkowa / model) ma uzasadnienie.",
+        "podstawa": "M",
+        "auto": "postac"
+      },
+      {
+        "tekst": "Model oceniono nie tylko po R² — z uzasadnieniem zmiennych, zakresem danych, błędem i wartościami odstającymi.",
+        "podstawa": "M",
+        "auto": "modelocena"
+      },
+      {
+        "tekst": "Metoda określania i aktualizowania EnPI jest utrzymywana jako udokumentowana informacja.",
+        "podstawa": "N",
+        "auto": "metoda"
+      },
+      {
+        "tekst": "Wartości EnPI są zachowane jako udokumentowana informacja i porównywane z odpowiadającymi im liniami bazowymi.",
+        "podstawa": "N",
+        "auto": "wartosci"
+      }
+    ],
+    "P_KARTY": [
+      {
+        "nr": "O-1",
+        "nazwa": "Zużycie rzeczywiste / zużycie oczekiwane według modelu bazowego",
+        "obszar": "organizacja",
+        "obszarNazwa": "Cała organizacja, wszystkie rodzaje energii (MWh)",
+        "postac": "model",
+        "uzasadnieniePostaci": "Model — na zużycie wpływa kilka zmiennych naraz, a zużycie stałe jest duże: oświetlenie, wentylacja, biuro i czuwanie maszyn to około 40% całości. Wskaźnik kWh/t rósłby przy spadku produkcji, choć nikt niczego nie zepsuł.",
+        "wzor": "E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]",
+        "zmienne": "Masa przetworzonej stali [t] — napędza prasy, lakiernię i zużycie sprężonego powietrza. Stopniodni grzania HDD (baza 18 °C) — ogrzewanie hal i nagrzewnice lakierni.",
+        "statyczne": "3 zmiany, 3 linie pras, hale A–D, asortyment — stan na 2025 r.",
+        "zrodla": "Poz. 1–3, 11, 13 planu zbierania danych F-EnMS-11",
+        "ocenaModelu": "12 miesięcy 2025 r. (zakres danych: 1 750–2 150 t/mies., 0–650 HDD/mies.); R² = 0,86; CV(RMSE) 2,8%. Obie zmienne mają sens techniczny. Sierpień (postój 2 tygodnie) sprawdzony jako wartość odstająca i pozostawiony — reszta mieści się w ±2 błędach standardowych.",
+        "czestotliwosc": "Miesięcznie, do 10 dnia następnego miesiąca",
+        "odp": "Energy Manager",
+        "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca)",
+        "okresBazowy": "2025",
+        "uzasadnienieOkresu": "Pierwszy pełny rok z danymi produkcyjnymi i pogodowymi, bez dużych przestojów. Dwanaście miesięcy obejmuje pełny cykl pór roku.",
+        "wartoscEnB": "1,000",
+        "modelBazowy": "E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; w 2025 r. 12 120 MWh",
+        "normalizacja": "Zużycie oczekiwane liczone z modelu bazowego dla faktycznej produkcji i faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Model bazowy pozostaje bez zmian — normalizacja koryguje porównanie, nie linię bazową.",
+        "warunkiPorownania": "Miesiące pełnej pracy. Miesiąc z postojem dłuższym niż 10 dni roboczych porównywany z adnotacją, bo model był dopasowany do normalnego trybu pracy.",
+        "rewizjaA": "Zmiana asortymentu zmieniająca energochłonność wyrobu — wtedy wskaźnik przestaje pokazywać wynik gospodarowania energią.",
+        "rewizjaB": "Nowa linia produkcyjna, zmiana liczby zmian, zmiana powierzchni ogrzewanej, zmiana zakresu systemu, sprzedaż części zakładu.",
+        "rewizjaC": "Po 24 miesiącach danych — ponowne dopasowanie modelu bez zmiany okresu bazowego.",
+        "nieRewizja": "Sama poprawa wyniku energetycznego. Zmiana EnB po modernizacji wymazałaby z historii osiągniętą poprawę.",
+        "historia": [],
+        "daneZmiennych": "Produkcja 24 000 t stali (1 750–2 150 t/mies.); stopniodni 3 600 HDD, baza 18 °C (0–650/mies.); zużycie całkowite 12 120 MWh; 250 dni roboczych na 3 zmiany.",
+        "przykladObliczenia": "Miesiąc z 2 200 t i 500 HDD: E_ocz = 0,23·2 200 + 0,48·500 + 406 = 1 152 MWh. E_rzecz = 1 082 MWh. EnPI = 1 082 / 1 152 = 0,939 → poprawa 70 MWh, czyli 6,1%."
+      },
+      {
+        "nr": "P-1",
+        "nazwa": "Energia jednostkowa pras — kWh na tonę przetworzonej stali",
+        "obszar": "seu",
+        "obszarNazwa": "Prasy — trzy linie, 24,5% zużycia zakładu",
+        "postac": "jednostkowy",
+        "uzasadnieniePostaci": "Wskaźnik jednostkowy — zużycie pras rośnie i spada razem z masą przetworzonej stali, a zużycie niezależne od produkcji (czuwanie, hydraulika w gotowości) to kilka procent zużycia obszaru.",
+        "wzor": "P-1 = energia pras [kWh] / masa przetworzonej stali [t]",
+        "zmienne": "Masa przetworzonej stali [t] — bezpośrednio określa liczbę i czas cykli prasowania.",
+        "statyczne": "3 linie pras, 3 zmiany, asortyment — stan na 2025 r.",
+        "zrodla": "Poz. 11 (masa stali) i poz. 12 (energia pras) planu F-EnMS-11",
+        "ocenaModelu": "",
+        "czestotliwosc": "Kwartalnie — zgodnie z rytmem pomiarów analizatorem",
+        "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager",
+        "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego oraz po uruchomieniu podlicznika pras",
+        "okresBazowy": "2025",
+        "uzasadnienieOkresu": "Rok spójny z linią bazową organizacji; energia pras wyznaczona z pomiarów okresowych i obliczeń, bez podlicznika.",
+        "wartoscEnB": "124,0",
+        "modelBazowy": "124,0 kWh/t (2 970 MWh / 24 000 t, 2025 r.)",
+        "normalizacja": "Wskaźnik jest ilorazem energii i masy, więc normalizuje się względem produkcji. Dodatkowej korekty nie stosuje się — zużycie niezależne od produkcji w tym obszarze jest niewielkie.",
+        "warunkiPorownania": "Ten sam asortyment i ta sama liczba pracujących linii. Kwartał z wyłączoną linią porównywany z adnotacją.",
+        "rewizjaA": "Trwała zmiana asortymentu (inna grubość blachy, inny wyrób) — zmienia energochłonność tony.",
+        "rewizjaB": "Dodanie lub likwidacja linii pras, zmiana liczby zmian.",
+        "rewizjaC": "Po 12 miesiącach danych z podlicznika pras — przeliczenie EnB na danych pomiarowych zamiast obliczeniowych.",
+        "nieRewizja": "Poprawa kWh/t po zmianie parametrów pracy.",
+        "historia": [],
+        "daneZmiennych": "Masa przetworzonej stali 24 000 t (2025); energia pras 2 970 MWh, czyli 24,5% zużycia zakładu.",
+        "przykladObliczenia": "I półrocze 2026: 1 465 MWh / 12 000 t = 122,1 kWh/t wobec EnB 124,0 kWh/t → poprawa 1,5%. Ten sam asortyment, trzy linie czynne."
+      },
+      {
+        "nr": "L-1",
+        "nazwa": "Zużycie rzeczywiste / oczekiwane — lakiernia",
+        "obszar": "seu",
+        "obszarNazwa": "Lakiernia — piec gazowy i dwie kabiny, 20,0% zużycia zakładu",
+        "postac": "model",
+        "uzasadnieniePostaci": "Model — na zużycie wpływa lakierowana powierzchnia i pogoda (nagrzewnice), a piec utrzymuje temperaturę także między zleceniami, więc zużycie stałe jest znaczne.",
+        "wzor": "E_ocz = a·m² + b·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]. Wskaźnik pomocniczy: 8,08 kWh/m² (2 425 MWh / 300 000 m², 2025 r.)",
+        "zmienne": "Lakierowana powierzchnia [m²] — określa liczbę cykli pieca. Stopniodni HDD — nagrzewnice i podgrzewanie powietrza kabin.",
+        "statyczne": "Jeden piec gazowy, dwie kabiny, technologia lakierowania — stan na 2025 r.",
+        "zrodla": "Poz. 8 (gaz pieca), poz. 9 (lakierowana powierzchnia), poz. 13 (HDD) planu F-EnMS-11",
+        "ocenaModelu": "12 miesięcy 2025 r. (18 000–29 000 m²/mies.); R² = 0,81; CV(RMSE) 4,1%. Zmienne mają sens techniczny. Dwa miesiące z przestojem kabiny sprawdzone i opisane — pozostawione, reszty w granicach ±2 błędów standardowych. Model do przeliczenia po 12 miesiącach danych z podlicznika gazu.",
+        "czestotliwosc": "Miesięcznie",
+        "odp": "Technolog lakierni; liczy Energy Manager",
+        "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego",
+        "okresBazowy": "2025",
+        "uzasadnienieOkresu": "Rok spójny z linią bazową organizacji; obejmuje pełny cykl pogodowy, który dla lakierni jest istotny.",
+        "wartoscEnB": "1,000",
+        "modelBazowy": "Model jak wyżej; w 2025 r. 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh)",
+        "normalizacja": "Zużycie oczekiwane z modelu bazowego dla faktycznej powierzchni i stopniodni; EnPI = E_rzecz / E_ocz.",
+        "warunkiPorownania": "Obie kabiny czynne. Miesiąc z wyłączoną kabiną porównywany z adnotacją.",
+        "rewizjaA": "Zmiana technologii lakierowania albo rodzaju lakieru zmieniająca profil temperatur pieca.",
+        "rewizjaB": "Dodanie kabiny, wymiana pieca, zmiana powierzchni lakierni.",
+        "rewizjaC": "Po 12 miesiącach danych z podlicznika gazu pieca (07.2027) — przeliczenie modelu na danych pomiarowych.",
+        "nieRewizja": "Poprawa wskaźnika po regulacji harmonogramu pieca.",
+        "historia": [],
+        "daneZmiennych": "Lakierowana powierzchnia 300 000 m² (18 000–29 000 m²/mies.); stopniodni 3 600 HDD; zużycie lakierni 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh).",
+        "przykladObliczenia": "Miesiąc z 25 000 m² i 420 HDD: E_ocz z modelu bazowego 215 MWh; E_rzecz 211 MWh; EnPI = 0,98 → poprawa 4 MWh, czyli 2,0%."
+      },
+      {
+        "nr": "S-1",
+        "nazwa": "Energia jednostkowa sprężarkowni — kWh na Nm³ sprężonego powietrza",
+        "obszar": "seu",
+        "obszarNazwa": "Sprężarkownia — cztery sprężarki śrubowe, kolektor główny, 17,5% zużycia zakładu",
+        "postac": "jednostkowy",
+        "uzasadnieniePostaci": "Wskaźnik jednostkowy kWh/Nm³ — zużycie zależy od objętości wytworzonego powietrza, a zużycie stałe w tym obszarze jest niewielkie.",
+        "wzor": "S-1 = energia sprężarkowni [kWh] / objętość sprężonego powietrza [Nm³]",
+        "zmienne": "Objętość wytworzonego powietrza [Nm³] — bezpośrednio określa pracę sprężarek. Temperatura powietrza zasysanego — wpływ drugorzędny, odnotowywany przy porównaniu.",
+        "statyczne": "Cztery sprężarki śrubowe pracujące w układzie włącz–wyłącz, układ sieci, ciśnienie nastawy — stan w okresie bazowym: 7,0 bar.",
+        "zrodla": "Poz. 4 (energia sprężarkowni), poz. 5 (wolumen powietrza), poz. 6 (ciśnienie sieci) planu F-EnMS-11",
+        "ocenaModelu": "",
+        "czestotliwosc": "Miesięcznie (od 06.2026 dane 15-minutowe z podlicznika i przepływomierza)",
+        "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager",
+        "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego oraz po 12 miesiącach danych z podlicznika",
+        "okresBazowy": "02–03.2026 (kampania pomiarowa, 4 tygodnie)",
+        "uzasadnienieOkresu": "Profil obciążenia jest podobny przez cały rok, a podliczników jeszcze nie było — krótszy okres jest uzasadniony. Kampania zimowa nie obejmuje jednak wpływu letnich upałów na sprężarki, dlatego z góry zapisano rewizję c) po 12 miesiącach danych z podlicznika.",
+        "wartoscEnB": "0,125",
+        "modelBazowy": "0,125 kWh/Nm³ przy ciśnieniu 7 bar",
+        "normalizacja": "Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem wolumenu. Porównanie przy innym ciśnieniu sieci nie jest uczciwe — ciśnienie jest kryterium eksploatacji, nie zmienną.",
+        "warunkiPorownania": "Ciśnienie i obciążenie porównywalne. Temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją.",
+        "rewizjaA": "Zmiana charakteru odbioru powietrza (nowe odbiorniki o innym profilu), po której kWh/Nm³ przestaje pokazywać wynik.",
+        "rewizjaB": "Wymiana sprężarki, dodanie sterownika nadrzędnego albo napędu o zmiennej prędkości, zmiana układu sieci, trwała zmiana ciśnienia nastawy.",
+        "rewizjaC": "Po 12 miesiącach danych z podlicznika i przepływomierza (07.2027) EnB zostanie przeliczona dla tych samych warunków; poprawa wykazana do tego dnia zostaje zapisana.",
+        "nieRewizja": "Poprawa kWh/Nm³ po obniżeniu ciśnienia i usunięciu nieszczelności.",
+        "historia": [],
+        "daneZmiennych": "Kampania 02–03.2026: energia sprężarkowni i wolumen powietrza mierzone przez 4 tygodnie; w ujęciu rocznym sprężarkownia to 2 121 MWh, czyli 17,5% zużycia zakładu. Ciśnienie w okresie bazowym 7,0 bar.",
+        "przykladObliczenia": "VII–IX 2026: 530 MWh / 4 454 000 Nm³ = 0,119 kWh/Nm³ wobec EnB 0,125 → poprawa 4,8%. Adnotacja: EnB pochodzi z kampanii zimowej, wynik z lata, a latem sprężarki pracują w trudniejszych warunkach — różnica raczej nie zawyża poprawy."
+      },
+      {
+        "nr": "S-2",
+        "nazwa": "Przepływ sprężonego powietrza w czasie postoju",
+        "obszar": "seu",
+        "obszarNazwa": "Sprężarkownia — sieć sprężonego powietrza (nieszczelności)",
+        "postac": "bezwzgledny",
+        "uzasadnieniePostaci": "Wartość bezwzględna — przepływ w czasie postoju produkcji nie zależy ani od produkcji, ani od pogody. Mierzy wyłącznie nieszczelności. Osobny wskaźnik, bo usunięcie wycieków zmniejsza zużycie energii, ale nie musi poprawić kWh/Nm³.",
+        "wzor": "S-2 = przepływ na kolektorze głównym w czasie postoju [Nm³/min]",
+        "zmienne": "",
+        "statyczne": "Układ i długość sieci, liczba punktów odbioru, ciśnienie testu — stan w okresie bazowym.",
+        "zrodla": "Poz. 7 (przepływ w postoju) planu F-EnMS-11",
+        "ocenaModelu": "",
+        "czestotliwosc": "Co kwartał, test weekendowy",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego",
+        "okresBazowy": "03.2026 (pomiar pojedynczy)",
+        "uzasadnienieOkresu": "Przepływ w postoju nie podlega sezonowości, więc jeden pomiar w ustalonych warunkach wystarcza jako punkt startu. Warunkiem jest powtarzalna procedura testu.",
+        "wartoscEnB": "9",
+        "modelBazowy": "9 Nm³/min (test weekendowy 12.01.2026 przy 6,3 bar)",
+        "normalizacja": "Normalizacja nie jest potrzebna — wskaźnik nie zależy od istotnych zmiennych. Warunkiem porównywalności jest ta sama procedura testu i to samo ciśnienie.",
+        "warunkiPorownania": "Postój całej produkcji, sieć pod ciśnieniem 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu powtarza się.",
+        "rewizjaA": "Zmiana sposobu odcinania odbiorników, po której test przestaje mierzyć same nieszczelności.",
+        "rewizjaB": "Rozbudowa sieci, nowa hala, zmiana liczby punktów odbioru.",
+        "rewizjaC": "Brak reguły ustalonej z góry — wskaźnik ma charakter jednorazowego testu, EnB pozostaje do zmiany czynników statycznych.",
+        "nieRewizja": "Spadek przepływu po usunięciu nieszczelności — to właśnie wynik, który ma być widoczny.",
+        "historia": [],
+        "daneZmiennych": "Nie dotyczy — wskaźnik nie zależy od istotnych zmiennych. Warunki pomiaru bazowego: postój weekendowy 12.01.2026, ciśnienie 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02.",
+        "przykladObliczenia": "Test 06.2026: 6 Nm³/min wobec 9 Nm³/min z pomiaru bazowego → spadek 3 Nm³/min, czyli 33%. Ta sama procedura testu i to samo ciśnienie."
+      },
+      {
+        "nr": "K-1",
+        "nazwa": "Zużycie rzeczywiste / oczekiwane — kotłownia",
+        "obszar": "seu",
+        "obszarNazwa": "Kotłownia — ogrzewanie hal, 12,4% zużycia zakładu",
+        "postac": "model",
+        "uzasadnieniePostaci": "Model — zużycie zależy niemal wyłącznie od pogody, a wskaźnik jednostkowy na tonę produkcji byłby bezsensowny. Model na stopniodniach jest tu najprostszą uczciwą postacią.",
+        "wzor": "E_ocz = a·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]",
+        "zmienne": "Stopniodni grzania HDD (baza 18 °C) — bezpośrednio określają zapotrzebowanie na ciepło.",
+        "statyczne": "Powierzchnia ogrzewana hal A–D, nastawy temperatury, izolacja — stan na 2025 r.",
+        "zrodla": "Poz. 2 (gaz — organizacja, po odjęciu pieca lakierni) i poz. 13 (HDD) planu F-EnMS-11",
+        "ocenaModelu": "12 miesięcy 2025 r. (0–650 HDD/mies.); R² = 0,92; CV(RMSE) 5,6%. Miesiące letnie (HDD = 0) pokazują zużycie stałe na ciepłą wodę — zgodne z oczekiwaniem technicznym. Zużycie kotłowni wyznaczone jako różnica licznika gazu i pieca lakierni, co powiększa niepewność — po uruchomieniu podlicznika pieca model zostanie przeliczony.",
+        "czestotliwosc": "Miesięcznie",
+        "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager",
+        "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego",
+        "okresBazowy": "2025",
+        "uzasadnienieOkresu": "Pełny rok jest konieczny, bo zużycie kotłowni jest sezonowe — krótszy okres nie objąłby ani zimy, ani lata.",
+        "wartoscEnB": "1,000",
+        "modelBazowy": "Model jak wyżej; w 2025 r. 1 500 MWh",
+        "normalizacja": "Zużycie oczekiwane z modelu bazowego dla faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Stacja pogodowa i baza stopniodni muszą być te same co w okresie bazowym.",
+        "warunkiPorownania": "Te same nastawy temperatury w halach. Zmiana nastaw jest zmianą kryterium eksploatacji i wymaga adnotacji.",
+        "rewizjaA": "Zmiana sposobu ogrzewania części hal (np. nagrzewnice elektryczne) — wtedy gaz przestaje opisywać całe ogrzewanie.",
+        "rewizjaB": "Nowa hala, docieplenie, zmiana powierzchni ogrzewanej, wymiana kotła.",
+        "rewizjaC": "Po 12 miesiącach danych z podlicznika gazu pieca lakierni — przeliczenie modelu na danych pomiarowych, bez zmiany okresu bazowego.",
+        "nieRewizja": "Poprawa wskaźnika po regulacji automatyki pogodowej.",
+        "historia": [],
+        "daneZmiennych": "Stopniodni 3 600 HDD, baza 18 °C, stacja Katowice (0–650/mies.); zużycie kotłowni 1 500 MWh, czyli 12,4% zużycia zakładu; nastawy temperatury w halach bez zmian.",
+        "przykladObliczenia": "I półrocze 2026: 2 600 HDD → E_ocz z modelu bazowego 1 085 MWh; E_rzecz 1 096 MWh; EnPI = 1,01 → brak poprawy, 11 MWh powyżej oczekiwania. Do sprawdzenia automatyka pogodowa."
+      },
+      {
+        "nr": "OŚ-1",
+        "nazwa": "Roczne zużycie energii na oświetlenie",
+        "obszar": "seu",
+        "obszarNazwa": "Oświetlenie hal H1 i H2 — 5,6% zużycia, SEU z kryterium B (potencjał poprawy)",
+        "postac": "bezwzgledny",
+        "uzasadnieniePostaci": "Wartość bezwzględna — hale pracują na trzy zmiany przez cały rok, więc czas świecenia jest w praktyce stały i nic istotnie nie zmienia zużycia. MWh na rok jest tu uczciwym wskaźnikiem; kWh na tonę produkcji wprowadzałoby w błąd.",
+        "wzor": "OŚ-1 = roczne zużycie energii na oświetlenie [MWh/rok]; do 06.2026 obliczane jako moc opraw × czas pracy z harmonogramu zmian",
+        "zmienne": "",
+        "statyczne": "Liczba i moc opraw (420 szt.), powierzchnia hal H1 i H2, wymagane poziomy natężenia, 3 zmiany — stan na 2025 r.",
+        "zrodla": "Poz. 14 (oświetlenie) i poz. 15 (czynniki statyczne) planu F-EnMS-11",
+        "ocenaModelu": "",
+        "czestotliwosc": "Miesięcznie (zestawienie), rozliczenie roczne",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przegladMetody": "Po wymianie opraw na LED — sprawdzenie, czy postać bezwzględna nadal jest właściwa",
+        "okresBazowy": "2025",
+        "uzasadnienieOkresu": "Pełny rok, żeby objąć zmienność czasu pracy zakładu i urlopów; wartość wyznaczona z inwentaryzacji opraw i harmonogramu zmian.",
+        "wartoscEnB": "680",
+        "modelBazowy": "680 MWh/rok (2025 r., inwentaryzacja 420 opraw × czas pracy)",
+        "normalizacja": "Normalizacja nie jest potrzebna przy stałym czasie pracy. Gdyby liczba zmian się zmieniła, porównanie prowadzi się na MWh na godzinę pracy zakładu — i wtedy postać wskaźnika wymaga przeglądu.",
+        "warunkiPorownania": "Te same trzy zmiany i ten sam kalendarz pracy (250 dni). Zmiana liczby zmian wymaga przeliczenia.",
+        "rewizjaA": "Zmiana trybu pracy hal, po której roczne MWh przestaje odzwierciedlać gospodarowanie energią.",
+        "rewizjaB": "Zmiana powierzchni hal, liczby zmian albo wymaganych poziomów natężenia oświetlenia.",
+        "rewizjaC": "Po wymianie opraw na LED i 12 miesiącach danych z podlicznika — przeliczenie EnB na danych pomiarowych, z zapisaniem poprawy osiągniętej do dnia rewizji.",
+        "nieRewizja": "Spadek zużycia po wymianie opraw — to jest wynik celu C2, nie powód rewizji.",
+        "historia": [],
+        "daneZmiennych": "Nie dotyczy — czas świecenia jest w praktyce stały. Stan bazowy: 420 opraw, 3 zmiany, 250 dni roboczych, zużycie 680 MWh w 2025 r.",
+        "przykladObliczenia": "I półrocze 2026: 339 MWh w sześciu miesiącach, czyli 678 MWh w przeliczeniu rocznym, wobec EnB 680 MWh → 0,3% poniżej linii bazowej, w granicach dokładności obliczenia z inwentaryzacji opraw."
+      }
+    ],
+    "P_METODA": {
+      "dobor": "Dla organizacji i każdego znaczącego użycia energii szacujemy udział zużycia niezależnego od produkcji. Powyżej 15% wybieramy model; poniżej — wskaźnik jednostkowy. Gdy zużycie nie zależy ani od produkcji, ani od pogody (oświetlenie przy stałym czasie pracy, przepływ w postoju) — wartość bezwzględna. Wybór i jego uzasadnienie zapisujemy w karcie F-EnMS-09.",
+      "model": "Regresja liniowa na danych miesięcznych z 12 miesięcy okresu bazowego. Ocena modelu obejmuje: techniczny sens każdej zmiennej, zakres danych wejściowych, R², CV(RMSE), analizę reszt i wartości odstających. Miesiące odstające sprawdzamy indywidualnie i zapisujemy decyzję o pozostawieniu albo wyłączeniu wraz z powodem. Samo R² nie jest kryterium przyjęcia modelu.",
+      "obliczanie": "Energy Manager liczy wszystkie wskaźniki miesięcznie, do 10 dnia następnego miesiąca, w arkuszu EnMS. Przy każdym obliczeniu wskaźnik jest porównywany z odpowiadającą mu linią bazową, a warunki porównania sprawdzane według karty. Wartości i adnotacje zapisywane są w zakładce „EnPI”.",
+      "aktualizacja": "Przegląd wszystkich kart przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wyposażenia, asortymentu albo zakresu systemu. Zmianę postaci wskaźnika lub modelu zatwierdza Dyrektor Techniczny; zmianę linii bazowej — Zarząd.",
+      "zapisy": "Karty F-EnMS-09 w teczce EnMS, wersjonowane (data, autor, opis zmiany). Wartości wskaźników w arkuszu EnMS, kopia tygodniowa na serwerze. Dane o istotnych zmiennych przechowywane razem z wartościami wskaźników.",
+      "komunikacja": "Trend wskaźnika organizacji na comiesięcznej odprawie kierownictwa. Wskaźniki znaczących użyć energii na tablicach wydziałowych. Wskaźnik zarządczy 114,8 GJ/mln zł przychodu pokazywany zarządowi, ale w każdym zestawieniu oznaczony jako wskaźnik zarządczy, nie EnPI — zależy od cen i asortymentu."
+    },
+    "P_WARTOSCI": [
+      {
+        "enpi": "O-1",
+        "okres": "2025 (rok bazowy)",
+        "wartosc": "1,000",
+        "adnotacja": "Wartość definicyjna linii bazowej."
+      },
+      {
+        "enpi": "O-1",
+        "okres": "I półrocze 2026",
+        "wartosc": "0,97",
+        "adnotacja": "Produkcja i stopniodni uwzględnione modelem. Kierunek dobry, do celu Z3.1 (≤ 0,95) brakuje dwóch setnych."
+      },
+      {
+        "enpi": "O-1",
+        "okres": "Miesiąc przykładowy: 2 200 t, 500 HDD",
+        "wartosc": "0,939",
+        "adnotacja": "E_ocz = 1 152 MWh, E_rzecz = 1 082 MWh — poprawa 70 MWh (6,1%). Jeden dobry miesiąc to jeszcze nie wynik roku."
+      },
+      {
+        "enpi": "P-1",
+        "okres": "2025 (rok bazowy)",
+        "wartosc": "124,0",
+        "adnotacja": "Z pomiarów okresowych i obliczeń, bez podlicznika."
+      },
+      {
+        "enpi": "P-1",
+        "okres": "I półrocze 2026",
+        "wartosc": "122,1",
+        "adnotacja": "Ten sam asortyment, trzy linie czynne. Monitorowanie — bez zadania energetycznego."
+      },
+      {
+        "enpi": "L-1",
+        "okres": "2025 (rok bazowy)",
+        "wartosc": "1,000",
+        "adnotacja": "Wartość definicyjna; 2 425 MWh, 300 000 m²."
+      },
+      {
+        "enpi": "L-1",
+        "okres": "I półrocze 2026",
+        "wartosc": "0,98",
+        "adnotacja": "Obie kabiny czynne. Zużycie pieca wyznaczone jako różnica — niepewność do zmniejszenia po uruchomieniu podlicznika."
+      },
+      {
+        "enpi": "S-1",
+        "okres": "02–03.2026 (kampania bazowa)",
+        "wartosc": "0,125",
+        "adnotacja": "Przy ciśnieniu 7,0 bar, temperatura zasysania zimowa."
+      },
+      {
+        "enpi": "S-1",
+        "okres": "VII–IX 2026",
+        "wartosc": "0,119",
+        "adnotacja": "Poprawa 4,8% po obniżeniu ciśnienia do 6,3 bar. EnB pochodzi z zimy, wynik z lata — latem sprężarki pracują w trudniejszych warunkach, więc ta różnica raczej nie zawyża poprawy. Do celu 0,110 zostało 0,009 kWh/Nm³, czyli około 7,6% obecnej wartości."
+      },
+      {
+        "enpi": "S-2",
+        "okres": "03.2026 (pomiar bazowy)",
+        "wartosc": "9",
+        "adnotacja": "Test weekendowy 12.01.2026 przy 6,3 bar."
+      },
+      {
+        "enpi": "S-2",
+        "okres": "06.2026",
+        "wartosc": "6",
+        "adnotacja": "Ta sama procedura testu. Usunięto 21 z 35 nieszczelności."
+      },
+      {
+        "enpi": "K-1",
+        "okres": "2025 (rok bazowy)",
+        "wartosc": "1,000",
+        "adnotacja": "Wartość definicyjna; 1 500 MWh."
+      },
+      {
+        "enpi": "K-1",
+        "okres": "I półrocze 2026",
+        "wartosc": "1,01",
+        "adnotacja": "Nieznacznie powyżej linii bazowej. Nastawy bez zmian — do sprawdzenia automatyka pogodowa."
+      },
+      {
+        "enpi": "OŚ-1",
+        "okres": "2025 (rok bazowy)",
+        "wartosc": "680",
+        "adnotacja": "Z inwentaryzacji 420 opraw i harmonogramu zmian."
+      },
+      {
+        "enpi": "OŚ-1",
+        "okres": "I półrocze 2026, w przeliczeniu rocznym",
+        "wartosc": "678",
+        "adnotacja": "Zmierzone 339 MWh w sześciu miesiącach, czyli 56,5 MWh/miesiąc — przeliczone na rok, żeby okres był porównywalny z linią bazową roczną. W tempie roku bazowego; wymiana opraw na LED zaplanowana na III kwartał 2027."
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny (karty i metoda EnPI); Zarząd — linie bazowe",
+      "data": "2026-04-15",
+      "stan": "2026-09-30",
+      "stale": "40"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Wskaźnik bez zmiennych istotnych pokazuje pogodę i wielkość produkcji, nie zarządzanie energią.",
+        "decyzja": "Model bazowy E_ocz = 0,23·t + 0,48·HDD + 406 MWh/miesiąc; EnPI jako iloraz zużycia rzeczywistego do oczekiwanego.",
+        "dzialanie": "Karty wskaźników dla zakładu, pras i sprężarkowni; dla S-1 zmienną jest objętość powietrza, czynnikiem statycznym — cztery sprężarki śrubowe.",
+        "sprawdzenie": "Raport miesięczny (9.1.1) podaje produkcję i stopniodnie obok zużycia; różnica temperatury powyżej 5 °C między okresami wymaga adnotacji."
+      }
+    ],
+    "KARTY": [],
+    "METODA": {},
+    "WARTOSCI": [],
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "POSTACIE": [
+      [
+        "",
+        "Wybierz postać"
+      ],
+      [
+        "bezwzgledny",
+        "Wartość bezwzględna — „ile zużyliśmy”"
+      ],
+      [
+        "jednostkowy",
+        "Wskaźnik jednostkowy — „ile na tonę, sztukę, m³”"
+      ],
+      [
+        "model",
+        "Model — „ile powinniśmy byli zużyć”"
+      ]
+    ],
+    "OBSZARY": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "organizacja",
+        "Cała organizacja"
+      ],
+      [
+        "seu",
+        "Znaczące użycie energii (SEU)"
+      ],
+      [
+        "inny",
+        "Inny obszar"
+      ]
+    ],
+    "POLA_64": [
+      "nr",
+      "nazwa",
+      "obszar",
+      "postac",
+      "uzasadnieniePostaci",
+      "wzor",
+      "zrodla",
+      "czestotliwosc",
+      "odp"
+    ],
+    "POLA_65": [
+      "okresBazowy",
+      "uzasadnienieOkresu",
+      "wartoscEnB",
+      "normalizacja",
+      "warunkiPorownania",
+      "rewizjaA",
+      "rewizjaB",
+      "rewizjaC"
+    ]
+  },
+  "example_literals": {}
+}

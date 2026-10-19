@@ -1,0 +1,931 @@
+{
+  "source_file": "ENESA_8.3_Zakupy_platforma.html",
+  "source_sha256": "13cdba271bed1582ff3bcadbc8f1e9e1cf550200b159964bd797300abcba642f",
+  "section": "8-3",
+  "data": {
+    "PYT_ZA": [
+      {
+        "kod": "seu",
+        "podstawa": "M",
+        "tekst": "Dotyczy znaczącego użycia energii albo urządzenia w jego obrębie",
+        "ph": "np. Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"
+      },
+      {
+        "kod": "nastawy",
+        "podstawa": "M",
+        "tekst": "Zmienia nastawy, sterowanie albo sposób regulacji",
+        "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"
+      },
+      {
+        "kod": "godziny",
+        "podstawa": "M",
+        "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+        "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+      },
+      {
+        "kod": "usluga",
+        "podstawa": "M",
+        "tekst": "To usługa wpływająca na pracę urządzeń — serwis, projekt, wykonawstwo",
+        "ph": "np. Serwis sprężarek ustawia ciśnienia i wymienia filtry — to on decyduje o części wyniku",
+        "pomoc": "To nie tylko urządzenia. Serwis, który zmienia nastawy, bywa dla energii istotniejszy od urządzenia kupionego raz na dziesięć lat."
+      },
+      {
+        "kod": "energia",
+        "podstawa": "M",
+        "tekst": "To zakup energii — prądu, gazu, paliwa, ciepła",
+        "ph": "np. Umowa na energię elektryczną na 2027 r., ok. 12 000 MWh",
+        "pomoc": "Norma wymaga specyfikacji także przy zakupie energii — tam, gdzie to właściwe: struktura cen, profil poboru, ciągłość dostaw, pochodzenie."
+      },
+      {
+        "kod": "prog",
+        "podstawa": "M",
+        "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+        "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł",
+        "pomoc": "★ Próg kwotowy nie może być jedynym kryterium. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura."
+      }
+    ],
+    "PYT_ZC": [
+      {
+        "kod": "informacja",
+        "podstawa": "N",
+        "tekst": "Dostawcy zostali poinformowani, że wynik energetyczny jest jednym z kryteriów oceny",
+        "ph": "np. Zdanie w punkcie 4 zapytania ofertowego z 12.10.2026, powtórzone w specyfikacji",
+        "pomoc": "Wymaganie normy przy zakupach wpływających na znaczące użycia energii. W praktyce jedno zdanie — ale musi być w zapytaniu, nie w notatce wewnętrznej."
+      },
+      {
+        "kod": "specyfikacja",
+        "podstawa": "N",
+        "tekst": "Określono specyfikację dotyczącą wyniku energetycznego — tam, gdzie to właściwe",
+        "ph": "np. Wymagania minimalne: dwie nastawy ciśnienia, zapis danych pracy, dwa przetworniki u odbiorców, przyłącza pod odzysk ciepła",
+        "pomoc": "Dotyczy zakupu energii, produktów i usług mających wpływ na znaczące użycia energii."
+      },
+      {
+        "kod": "dane",
+        "podstawa": "M",
+        "tekst": "Wskazano, jakich danych o zużyciu oczekujecie — i w jakich warunkach",
+        "ph": "np. Zużycie [MWh/rok] i kWh/Nm³ przy profilu pracy z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń"
+      },
+      {
+        "kod": "kryterium",
+        "podstawa": "M",
+        "tekst": "Podano, jak oferty będą porównywane",
+        "ph": "np. Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh"
+      }
+    ],
+    "LISTA_83": [
+      {
+        "tekst": "Dla zakupów o znaczącym wpływie ustalono kryteria oceny wyniku energetycznego w okresie użytkowania.",
+        "podstawa": "N",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Dostawcy są informowani, że wynik energetyczny jest jednym z kryteriów oceny.",
+        "podstawa": "N",
+        "auto": "informuje"
+      },
+      {
+        "tekst": "Przy zakupie energii, produktów i usług mających wpływ na znaczące użycia energii określono specyfikacje.",
+        "podstawa": "N",
+        "auto": "specyfikacje"
+      },
+      {
+        "tekst": "Ocena wpływu obejmuje także usługi i zakup energii, a próg kwotowy jest tylko sygnałem pomocniczym.",
+        "podstawa": "M",
+        "auto": "wplyw"
+      },
+      {
+        "tekst": "Oferty porównuje się na danych dla profilu pracy zakładu, nie na mocy znamionowej.",
+        "podstawa": "M",
+        "auto": "profil"
+      },
+      {
+        "tekst": "Założenia porównania — okres, cena energii, profil — są zapisane.",
+        "podstawa": "M",
+        "auto": "zalozenia"
+      },
+      {
+        "tekst": "Deklaracje dostawcy są sprawdzane przy odbiorze, a kryteria obsługi przekazywane do nadzoru operacyjnego.",
+        "podstawa": "M",
+        "auto": "odbior"
+      }
+    ],
+    "przyklad": {
+      "ZAKUPY": [
+        {
+          "przedmiot": "Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej sprężarki",
+          "nr": "ZAP/2026/14",
+          "zrodloWymagan": "Cztery przyjęte wnioski z analizy projektu INW/2027/04 (F-EnMS-15, część D); karta kryteriów sprężarkowni F-EnMS-14, części A i B",
+          "status": "Specyfikacja 10.2026; zapytanie wysłane 12.10.2026; porównanie ofert 11.2026; odbiór planowany 06.2027",
+          "kto": "Dział zakupów z Janem Kowalskim (Energy Manager) i kierownikiem projektu",
+          "data": "2026-10-05",
+          "A": {
+            "seu": {
+              "o": "tak",
+              "u": "Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"
+            },
+            "nastawy": {
+              "o": "tak",
+              "u": "Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji jednej jednostki"
+            },
+            "godziny": {
+              "o": "tak",
+              "u": "Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+            },
+            "usluga": {
+              "o": "nie",
+              "u": "Zakres obejmuje dostawę, montaż i uruchomienie; serwis objęty osobną umową (ZAP/2026/19)"
+            },
+            "energia": {
+              "o": "nie",
+              "u": "Zakup urządzeń, nie nośnika energii"
+            },
+            "prog": {
+              "o": "tak",
+              "u": "380 tys. zł wobec progu 100 tys. zł — sygnał dodatkowy, nie decydujący"
+            }
+          },
+          "uzasadnienieA": "",
+          "wymagania": [
+            {
+              "tresc": "Dwie nastawy ciśnienia — produkcja i postój; możliwość obniżenia ciśnienia poza produkcją",
+              "skad": "Wniosek 1 z analizy projektu (F-EnMS-15); kryterium trybu postoju z karty F-EnMS-14 sekcja B"
+            },
+            {
+              "tresc": "Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika",
+              "skad": "Wniosek 2 z analizy projektu; plan zbierania danych (6.6) — nowe pozycje"
+            },
+            {
+              "tresc": "Zapis danych pracy sprężarek — obciążenie, ciśnienie, godziny — z eksportem do systemu monitoringu",
+              "skad": "Wniosek 3 z analizy projektu; plan zbierania danych (6.6), pozycje 4 i 5 — bez tego nie policzycie S-1"
+            },
+            {
+              "tresc": "Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek",
+              "skad": "Wniosek 4 z analizy projektu — odzysk poza tą inwestycją, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia"
+            }
+          ],
+          "C": {
+            "informacja": {
+              "o": "tak",
+              "u": "Punkt 4 zapytania ofertowego z 12.10.2026, powtórzony we wstępie specyfikacji"
+            },
+            "specyfikacja": {
+              "o": "tak",
+              "u": "Cztery wymagania minimalne powyżej plus warunki pracy: profil obciążenia z kampanii 02–03.2026, ciśnienie sieci 6,3 bar"
+            },
+            "dane": {
+              "o": "tak",
+              "u": "Zużycie [MWh/rok] i kWh/Nm³ przy profilu z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń; zużycie na biegu jałowym osobno"
+            },
+            "kryterium": {
+              "o": "tak",
+              "u": "Najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh, spośród ofert spełniających wymagania minimalne"
+            }
+          },
+          "informacja": "Wynik energetyczny jest jednym z kryteriów oceny ofert. Prosimy o podanie przewidywanego zużycia energii (MWh/rok) oraz wskaźnika kWh/Nm³ przy profilu pracy z załącznika nr 2 i ciśnieniu sieci 6,3 bar, wraz z metodą obliczeń. Prosimy osobno podać zużycie na biegu jałowym. Oferentów, którzy podadzą tylko moc znamionową, poprosimy o uzupełnienie danych.",
+          "kryteriumWyboru": "Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat, przy porównywalnych warunkach serwisu i gwarancji.",
+          "lata": "15",
+          "cenaEnergii": "",
+          "zalozenia": "Stała cena energii elektrycznej 890 zł/MWh (ceny 2025, bez indeksacji). Okres 15 lat — przewidywany czas pracy sterownika i napędu. Profil pracy i ilość sprężonego powietrza jak w kampanii pomiarowej 02–03.2026, ciśnienie 6,3 bar. Warunki serwisu i gwarancji w obu ofertach porównywalne. Pominięte: zmiany cen energii, wartość pieniądza w czasie, koszty przestojów. Przy innej cenie energii różnica zmienia się proporcjonalnie.",
+          "oferty": [
+            {
+              "nazwa": "Oferta A",
+              "minimalne": "tak",
+              "cena": "330000",
+              "tryb": "roczne",
+              "roczne": "1660",
+              "zrodloDanych": "Dane dostawcy dla profilu pracy z załącznika nr 2 (kampania 02–03.2026), z podaną metodą obliczeń; uzupełnione po pierwszym zapytaniu",
+              "inne": "0"
+            },
+            {
+              "nazwa": "Oferta B",
+              "minimalne": "tak",
+              "cena": "375000",
+              "tryb": "roczne",
+              "roczne": "1600",
+              "zrodloDanych": "Dane dostawcy dla profilu pracy z załącznika nr 2, z podaną metodą obliczeń i wykresem zużycia w funkcji obciążenia",
+              "inne": "0"
+            }
+          ],
+          "rekomendacja": "Przy przyjętych założeniach oferta B ma niższy koszt zakupu i energii — różnica 756 000 zł w 15 lat, mimo ceny wyższej o 45 000 zł. Oszczędność 60 MWh/rok wobec oferty A jest spójna z oszczędnością ok. 230 MWh/rok wyliczoną w przeglądzie energetycznym dla całej modernizacji. Przed decyzją: sprawdzić wymagania procesu dla trybu postoju i warunki serwisu w obu ofertach. Uzasadnienie wyboru zapisane w teczce ZAP/2026/14.",
+          "porownanieNd": false,
+          "porownanieNdPowod": "",
+          "E": {
+            "deklaracje": "Przy odbiorze sprawdzane: dwie nastawy ciśnienia działają i dają się zmienić z panelu; oba przetworniki u odbiorców podłączone i wskazują; dane pracy eksportowane do systemu monitoringu w uzgodnionym formacie; przyłącza pod wymiennik wykonane i zaślepione. Sprawdza kierownik UR z Energy Managerem, protokół odbioru.",
+            "kryteria": "Karta kryteriów sprężarkowni F-EnMS-14 aktualizowana przed uruchomieniem — kierownik UR, termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana po sprawdzeniu odbiorników w podtrzymaniu. Do planu zbierania danych (6.6) wchodzą dwie pozycje dla przetworników.",
+            "wynik": "kWh/Nm³ (wskaźnik S-1) cztery tygodnie po odbiorze i po zamknięciu roku 2027 — Energy Manager. Warunki porównania jak w części D formularza celów: pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar w trybie produkcji. Wynik porównywany z deklaracją oferty B (1 600 MWh/rok) i z wartością odniesienia 0,119 kWh/Nm³; wchodzi do oceny celu Z1.1."
+          }
+        },
+        {
+          "przedmiot": "Umowa serwisowa na sprężarkownię — 2027",
+          "nr": "ZAP/2026/19",
+          "zrodloWymagan": "Karta kryteriów sprężarkowni F-EnMS-14, sekcja C — przekazanie wymagań wykonawcom; trzy zdania ze zlecenia dla serwisu",
+          "status": "Zapytanie 11.2026; umowa od 01.2027",
+          "kto": "Kierownik Utrzymania Ruchu z działem zakupów",
+          "data": "2026-10-09",
+          "A": {
+            "seu": {
+              "o": "tak",
+              "u": "Serwis obsługuje sprężarkownię — znaczące użycie energii"
+            },
+            "nastawy": {
+              "o": "tak",
+              "u": "Serwis ustawia ciśnienia robocze i progi załączania; to on w praktyce decyduje o części wyniku energetycznego"
+            },
+            "godziny": {
+              "o": "nie",
+              "u": "Usługa nie wnosi urządzenia zużywającego energię"
+            },
+            "usluga": {
+              "o": "tak",
+              "u": "Serwis, przeglądy okresowe, wymiana filtrów i osuszaczy"
+            },
+            "energia": {
+              "o": "nie",
+              "u": "Usługa, nie nośnik energii"
+            },
+            "prog": {
+              "o": "nie",
+              "u": "28 tys. zł rocznie, poniżej progu 100 tys. zł — zakup jest istotny z innego powodu"
+            }
+          },
+          "uzasadnienieA": "",
+          "wymagania": [
+            {
+              "tresc": "Każda zmiana nastawy ciśnienia zgłaszana pisemnie przed wykonaniem; protokół z wartościami przed i po",
+              "skad": "Karta kryteriów F-EnMS-14 sekcja C; przypadek z 2025 r., gdy serwis podniósł ciśnienie o 0,5 bar bez zgłoszenia"
+            },
+            {
+              "tresc": "Utrzymanie ciśnienia w sieci na poziomie nie wyższym niż 6,3 bar w trybie produkcji; nastawy trybu postoju bez zmian",
+              "skad": "Karta kryteriów F-EnMS-14 sekcja A, kryterium 1"
+            },
+            {
+              "tresc": "Raport z przeglądu zawiera zmierzone zużycie jednostkowe i spadek ciśnienia na osuszaczu i filtrach",
+              "skad": "Plan zbierania danych (6.6), pozycja 5; bez tego nie da się odróżnić pogorszenia wyniku od zmiany profilu pracy"
+            }
+          ],
+          "C": {
+            "informacja": {
+              "o": "tak",
+              "u": "Zdanie w zapytaniu: utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty i podstawą rozliczenia"
+            },
+            "specyfikacja": {
+              "o": "tak",
+              "u": "Trzy wymagania minimalne powyżej; zakres czynności z wykazem nastaw podlegających zmianie"
+            },
+            "dane": {
+              "o": "tak",
+              "u": "Wzór raportu z przeglądu: zmierzone kWh/Nm³, spadki ciśnienia, lista zmienionych nastaw"
+            },
+            "kryterium": {
+              "o": "tak",
+              "u": "Zakres i warunki, gotowość do pracy w weekendowym postoju, kwalifikacje osób; cena przy równych zakresach"
+            }
+          },
+          "informacja": "Utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty. Prosimy o potwierdzenie, że każda zmiana nastawy ciśnienia będzie zgłaszana pisemnie przed wykonaniem i że raport z przeglądu obejmie zmierzone zużycie jednostkowe oraz spadki ciśnienia na osuszaczu i filtrach. Trzy zdania ze zlecenia serwisowego są częścią umowy.",
+          "kryteriumWyboru": "Zakres czynności i warunki reakcji przy równoważnych kwalifikacjach; cena przy porównywalnym zakresie. Zużycie energii samej usługi nie jest kryterium.",
+          "lata": "",
+          "cenaEnergii": "",
+          "zalozenia": "",
+          "oferty": [],
+          "rekomendacja": "",
+          "porownanieNd": true,
+          "porownanieNdPowod": "Zakup usługi — usługa nie zużywa energii, więc porównanie kosztu zakupu i energii nie ma tu sensu. Kryterium oceny wyniku energetycznego dotyczy wpływu serwisu na pracę nadzorowanych urządzeń: trybu zgłaszania zmian nastaw, zawartości raportu i przestrzegania kryteriów z karty F-EnMS-14. Oferty porównywane według zakresu, warunków reakcji i kwalifikacji, przy cenie jako kryterium końcowym.",
+          "E": {
+            "deklaracje": "Po pierwszym przeglądzie sprawdzane: czy raport zawiera zmierzone kWh/Nm³ i spadki ciśnienia, czy zmiany nastaw zostały zgłoszone przed wykonaniem i czy ciśnienie po przeglądzie mieści się w kryterium. Sprawdza kierownik UR; wynik wchodzi do oceny dostawcy.",
+            "kryteria": "Wymagania z karty F-EnMS-14 sekcja C są załącznikiem do umowy. Zmiana kryteriów w karcie — na przykład nowa nastawa trybu postoju po modernizacji w 06.2027 — wymaga aneksu albo pisemnego przekazania wykonawcy; odpowiada kierownik UR.",
+            "wynik": "kWh/Nm³ po każdym przeglądzie, w porównaniu z wartością z miesiąca poprzedzającego — Energy Manager, w rytmie monitorowania z 9.1. Wzrost zużycia jednostkowego po przeglądzie o więcej niż 3% jest sygnałem z karty kryteriów i uruchamia rozmowę z serwisem."
+          }
+        },
+        {
+          "przedmiot": "Zakup energii elektrycznej na 2027 r.",
+          "nr": "ZAP/2026/22",
+          "zrodloWymagan": "Plan zbierania danych (6.6), pozycje 1 i 2 — wymagania co do danych pomiarowych od sprzedawcy; profil poboru godzinowego za 2025 r.",
+          "status": "Zapytanie 10.2026; wybór sprzedawcy 11.2026; umowa od 01.2027",
+          "kto": "Dyrektor Finansowy z Energy Managerem",
+          "data": "2026-10-02",
+          "A": {
+            "seu": {
+              "o": "nd",
+              "u": "Zakup energii dotyczy wszystkich użyć w zakładzie, nie jednego znaczącego użycia — stąd „nie dotyczy” zamiast „tak”"
+            },
+            "nastawy": {
+              "o": "nie",
+              "u": "Wybór sprzedawcy nie zmienia nastaw ani sterowania żadnej instalacji"
+            },
+            "godziny": {
+              "o": "nd",
+              "u": "Nie dotyczy urządzenia — przedmiotem zakupu jest nośnik energii"
+            },
+            "usluga": {
+              "o": "nie",
+              "u": "Dostawa energii, nie usługa wpływająca na pracę urządzeń"
+            },
+            "energia": {
+              "o": "tak",
+              "u": "Energia elektryczna, ok. 12 000 MWh na 2027 r."
+            },
+            "prog": {
+              "o": "tak",
+              "u": "Ok. 10,8 mln zł wobec progu 100 tys. zł"
+            }
+          },
+          "uzasadnienieA": "",
+          "wymagania": [
+            {
+              "tresc": "Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu, do 10. dnia następnego miesiąca",
+              "skad": "Plan zbierania danych (6.6), pozycje 1 i 2 — dziś dane z faktury przychodzą raz w miesiącu bez profilu godzinowego"
+            },
+            {
+              "tresc": "Gwarancja ceny na cały okres umowy; struktura cenowa wyliczona dla profilu poboru z 2025 r., nie dla profilu standardowego",
+              "skad": "Profil poboru godzinowego za 2025 r. — załącznik do zapytania"
+            },
+            {
+              "tresc": "Gwarancje pochodzenia wyceniane w osobnej pozycji oferty i raportowane osobno",
+              "skad": "Ustalenie z przeglądu zarządzania: pochodzenie energii nie wchodzi do wskaźników wyniku energetycznego ani do oceny celów"
+            }
+          ],
+          "C": {
+            "informacja": {
+              "o": "tak",
+              "u": "Zapytanie informuje, że dostępność danych pomiarowych i dopasowanie struktury cen do profilu są kryteriami oceny obok ceny"
+            },
+            "specyfikacja": {
+              "o": "tak",
+              "u": "Trzy wymagania minimalne powyżej; profil poboru godzinowego za 2025 r. jako załącznik — specyfikacja dotycząca zakupu energii, wymagana przez normę"
+            },
+            "dane": {
+              "o": "tak",
+              "u": "Struktura cenowa dla załączonego profilu, rozbicie na opłaty stałe i zmienne, format i częstotliwość udostępniania danych pomiarowych"
+            },
+            "kryterium": {
+              "o": "tak",
+              "u": "Koszt energii wyliczony dla profilu z 2025 r., nie cena jednostkowa z taryfy; dostępność danych i ciągłość dostaw jako warunki"
+            }
+          },
+          "informacja": "Dopasowanie struktury cenowej do załączonego profilu poboru oraz dostępność danych pomiarowych są — obok ceny — kryteriami oceny ofert. Prosimy o wyliczenie kosztu energii dla profilu godzinowego z załącznika nr 1, z rozbiciem na opłaty stałe i zmienne, oraz o wskazanie formatu i terminu udostępniania danych pomiarowych. Gwarancje pochodzenia prosimy wycenić w osobnej pozycji.",
+          "kryteriumWyboru": "Najniższy koszt energii wyliczony dla profilu poboru z 2025 r., przy gwarancji ceny na okres umowy, wymaganym formacie danych pomiarowych i potwierdzonej ciągłości dostaw. Gwarancje pochodzenia wyceniane w osobnej pozycji i rozliczane poza tym kryterium.",
+          "lata": "",
+          "cenaEnergii": "",
+          "zalozenia": "",
+          "oferty": [],
+          "rekomendacja": "",
+          "porownanieNd": true,
+          "porownanieNdPowod": "Wybór sprzedawcy nie zmienia zużycia energii w zakładzie — sprężarkownia zużyje tyle samo kWh na Nm³ powietrza niezależnie od tego, od kogo kupiono prąd. Porównanie prowadzone według kosztu energii wyliczonego dla profilu poboru z 2025 r., struktury taryfy i warunków udostępniania danych, a nie według kosztu zakupu i energii urządzenia. Pochodzenie energii wyceniane i raportowane osobno.",
+          "E": {
+            "deklaracje": "Po pierwszym miesiącu rozliczenia sprawdzane: czy dane godzinowe przychodzą w uzgodnionym formacie i terminie, czy pozycje faktury odpowiadają strukturze z oferty i czy koszt zgadza się z wyliczeniem dla rzeczywistego profilu. Sprawdza Energy Manager z działem księgowości.",
+            "kryteria": "Dane godzinowe od sprzedawcy wchodzą do planu zbierania danych (6.6) jako nowe źródło pozycji 1 — zastępują odczyt z faktury. Zmiana źródła danych wymaga adnotacji w kartach wskaźników (6.4) i sprawdzenia porównywalności z linią bazową.",
+            "wynik": "Po pierwszym kwartale 2027 r. Energy Manager porównuje rzeczywisty koszt energii z wyliczeniem z oferty dla tego samego profilu. Rozbieżność powyżej 3% jest sygnałem do sprawdzenia, czy profil poboru się zmienił, czy rozliczenie odbiega od umowy. Wynik nie wchodzi do oceny wskaźników energetycznych — to kontrola kosztu, nie wyniku energetycznego."
+          }
+        }
+      ],
+      "KATEGORIE": [
+        {
+          "kategoria": "Silniki elektryczne",
+          "kryterium": "Sprawność w rzeczywistym punkcie pracy, nie moc znamionowa",
+          "minimum": "Klasa IE4 dla pracy powyżej 2 000 h/rok; dobór mocy do zmierzonego obciążenia, bez zapasu powyżej 15%",
+          "dane": "Sprawność przy 50%, 75% i 100% obciążenia; moc zmierzona lub wyliczona dla aplikacji",
+          "podstawa": "Przegląd energetyczny 2026 — silniki w napędach pras i wentylatorów"
+        },
+        {
+          "kategoria": "Sprężarki, pompy, wentylatory, napędy",
+          "kryterium": "Zużycie energii przy profilu pracy zakładu i zakres regulacji",
+          "minimum": "Regulacja w zakresie co najmniej 30–100% wydajności; zużycie nie wyższe niż obecne przy tym samym profilu; możliwość dwóch nastaw",
+          "dane": "Zużycie [MWh/rok] i wskaźnik jednostkowy dla profilu z załącznika, z metodą obliczeń; zużycie na biegu jałowym",
+          "podstawa": "Karta kryteriów sprężarkowni F-EnMS-14; profil z kampanii pomiarowej 02–03.2026"
+        },
+        {
+          "kategoria": "Oświetlenie",
+          "kryterium": "Moc zainstalowana na wymagane natężenie i możliwość sterowania",
+          "minimum": "Skuteczność źródła co najmniej 140 lm/W; sterowanie strefowe i ściemnianie; natężenie zgodne z wymaganiem stanowiska, bez zawyżania",
+          "dane": "Moc oprawy, skuteczność, obliczenia natężenia dla układu stref, zakres sterowania",
+          "podstawa": "Cel C2 i zadanie Z2.1; zgłoszenie 2026/08 o jednym wyłączniku na halę"
+        },
+        {
+          "kategoria": "Urządzenia produkcyjne",
+          "kryterium": "Zużycie energii na jednostkę produktu w przewidywanym trybie pracy",
+          "minimum": "Zużycie jednostkowe nie wyższe niż w urządzeniu zastępowanym; tryb czuwania poniżej 5% mocy pracy; licznik energii na urządzeniu",
+          "dane": "Zużycie jednostkowe [kWh/szt.] dla zadanej wydajności, zużycie w czuwaniu, obecność licznika",
+          "podstawa": "Plan zbierania danych (6.6) — nowe urządzenie wymaga pozycji w planie"
+        },
+        {
+          "kategoria": "Usługi — serwis, projekt, wykonawstwo",
+          "kryterium": "Wpływ usługi na nastawy i sprawność nadzorowanych urządzeń",
+          "minimum": "Pisemne zgłoszenie każdej zmiany nastawy; protokół z wartościami przed i po; przestrzeganie kryteriów z karty F-EnMS-14",
+          "dane": "Zakres czynności, lista nastaw podlegających zmianie, wzór protokołu, kwalifikacje osób",
+          "podstawa": "Karta kryteriów sprężarkowni F-EnMS-14 sekcja C — przekazanie wymagań wykonawcom"
+        },
+        {
+          "kategoria": "Energia elektryczna i gaz",
+          "kryterium": "Koszt energii przy rzeczywistym profilu poboru oraz dostępność danych pomiarowych",
+          "minimum": "Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu; gwarancja ceny na okres umowy; ciągłość dostaw",
+          "dane": "Struktura cenowa dla profilu z 2025 r., opłaty stałe i zmienne, format i częstotliwość udostępniania danych",
+          "podstawa": "Plan zbierania danych (6.6), pozycje 1 i 2; pochodzenie energii raportowane osobno, poza kryterium wyniku energetycznego"
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "data": "2026-10-09",
+        "prog": "100 000",
+        "cenaEnergii": "890"
+      }
+    }
+  },
+  "variables": {
+    "PYT_ZA": [
+      {
+        "kod": "seu",
+        "podstawa": "M",
+        "tekst": "Dotyczy znaczącego użycia energii albo urządzenia w jego obrębie",
+        "ph": "np. Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"
+      },
+      {
+        "kod": "nastawy",
+        "podstawa": "M",
+        "tekst": "Zmienia nastawy, sterowanie albo sposób regulacji",
+        "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"
+      },
+      {
+        "kod": "godziny",
+        "podstawa": "M",
+        "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata",
+        "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+      },
+      {
+        "kod": "usluga",
+        "podstawa": "M",
+        "tekst": "To usługa wpływająca na pracę urządzeń — serwis, projekt, wykonawstwo",
+        "ph": "np. Serwis sprężarek ustawia ciśnienia i wymienia filtry — to on decyduje o części wyniku",
+        "pomoc": "To nie tylko urządzenia. Serwis, który zmienia nastawy, bywa dla energii istotniejszy od urządzenia kupionego raz na dziesięć lat."
+      },
+      {
+        "kod": "energia",
+        "podstawa": "M",
+        "tekst": "To zakup energii — prądu, gazu, paliwa, ciepła",
+        "ph": "np. Umowa na energię elektryczną na 2027 r., ok. 12 000 MWh",
+        "pomoc": "Norma wymaga specyfikacji także przy zakupie energii — tam, gdzie to właściwe: struktura cen, profil poboru, ciągłość dostaw, pochodzenie."
+      },
+      {
+        "kod": "prog",
+        "podstawa": "M",
+        "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy",
+        "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł",
+        "pomoc": "★ Próg kwotowy nie może być jedynym kryterium. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura."
+      }
+    ],
+    "PYT_ZC": [
+      {
+        "kod": "informacja",
+        "podstawa": "N",
+        "tekst": "Dostawcy zostali poinformowani, że wynik energetyczny jest jednym z kryteriów oceny",
+        "ph": "np. Zdanie w punkcie 4 zapytania ofertowego z 12.10.2026, powtórzone w specyfikacji",
+        "pomoc": "Wymaganie normy przy zakupach wpływających na znaczące użycia energii. W praktyce jedno zdanie — ale musi być w zapytaniu, nie w notatce wewnętrznej."
+      },
+      {
+        "kod": "specyfikacja",
+        "podstawa": "N",
+        "tekst": "Określono specyfikację dotyczącą wyniku energetycznego — tam, gdzie to właściwe",
+        "ph": "np. Wymagania minimalne: dwie nastawy ciśnienia, zapis danych pracy, dwa przetworniki u odbiorców, przyłącza pod odzysk ciepła",
+        "pomoc": "Dotyczy zakupu energii, produktów i usług mających wpływ na znaczące użycia energii."
+      },
+      {
+        "kod": "dane",
+        "podstawa": "M",
+        "tekst": "Wskazano, jakich danych o zużyciu oczekujecie — i w jakich warunkach",
+        "ph": "np. Zużycie [MWh/rok] i kWh/Nm³ przy profilu pracy z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń"
+      },
+      {
+        "kod": "kryterium",
+        "podstawa": "M",
+        "tekst": "Podano, jak oferty będą porównywane",
+        "ph": "np. Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh"
+      }
+    ],
+    "LISTA_83": [
+      {
+        "tekst": "Dla zakupów o znaczącym wpływie ustalono kryteria oceny wyniku energetycznego w okresie użytkowania.",
+        "podstawa": "N",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Dostawcy są informowani, że wynik energetyczny jest jednym z kryteriów oceny.",
+        "podstawa": "N",
+        "auto": "informuje"
+      },
+      {
+        "tekst": "Przy zakupie energii, produktów i usług mających wpływ na znaczące użycia energii określono specyfikacje.",
+        "podstawa": "N",
+        "auto": "specyfikacje"
+      },
+      {
+        "tekst": "Ocena wpływu obejmuje także usługi i zakup energii, a próg kwotowy jest tylko sygnałem pomocniczym.",
+        "podstawa": "M",
+        "auto": "wplyw"
+      },
+      {
+        "tekst": "Oferty porównuje się na danych dla profilu pracy zakładu, nie na mocy znamionowej.",
+        "podstawa": "M",
+        "auto": "profil"
+      },
+      {
+        "tekst": "Założenia porównania — okres, cena energii, profil — są zapisane.",
+        "podstawa": "M",
+        "auto": "zalozenia"
+      },
+      {
+        "tekst": "Deklaracje dostawcy są sprawdzane przy odbiorze, a kryteria obsługi przekazywane do nadzoru operacyjnego.",
+        "podstawa": "M",
+        "auto": "odbior"
+      }
+    ],
+    "P_ZAKUPY": [
+      {
+        "przedmiot": "Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej sprężarki",
+        "nr": "ZAP/2026/14",
+        "zrodloWymagan": "Cztery przyjęte wnioski z analizy projektu INW/2027/04 (F-EnMS-15, część D); karta kryteriów sprężarkowni F-EnMS-14, części A i B",
+        "status": "Specyfikacja 10.2026; zapytanie wysłane 12.10.2026; porównanie ofert 11.2026; odbiór planowany 06.2027",
+        "kto": "Dział zakupów z Janem Kowalskim (Energy Manager) i kierownikiem projektu",
+        "data": "2026-10-05",
+        "A": {
+          "seu": {
+            "o": "tak",
+            "u": "Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"
+          },
+          "nastawy": {
+            "o": "tak",
+            "u": "Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji jednej jednostki"
+          },
+          "godziny": {
+            "o": "tak",
+            "u": "Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"
+          },
+          "usluga": {
+            "o": "nie",
+            "u": "Zakres obejmuje dostawę, montaż i uruchomienie; serwis objęty osobną umową (ZAP/2026/19)"
+          },
+          "energia": {
+            "o": "nie",
+            "u": "Zakup urządzeń, nie nośnika energii"
+          },
+          "prog": {
+            "o": "tak",
+            "u": "380 tys. zł wobec progu 100 tys. zł — sygnał dodatkowy, nie decydujący"
+          }
+        },
+        "uzasadnienieA": "",
+        "wymagania": [
+          {
+            "tresc": "Dwie nastawy ciśnienia — produkcja i postój; możliwość obniżenia ciśnienia poza produkcją",
+            "skad": "Wniosek 1 z analizy projektu (F-EnMS-15); kryterium trybu postoju z karty F-EnMS-14 sekcja B"
+          },
+          {
+            "tresc": "Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika",
+            "skad": "Wniosek 2 z analizy projektu; plan zbierania danych (6.6) — nowe pozycje"
+          },
+          {
+            "tresc": "Zapis danych pracy sprężarek — obciążenie, ciśnienie, godziny — z eksportem do systemu monitoringu",
+            "skad": "Wniosek 3 z analizy projektu; plan zbierania danych (6.6), pozycje 4 i 5 — bez tego nie policzycie S-1"
+          },
+          {
+            "tresc": "Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek",
+            "skad": "Wniosek 4 z analizy projektu — odzysk poza tą inwestycją, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia"
+          }
+        ],
+        "C": {
+          "informacja": {
+            "o": "tak",
+            "u": "Punkt 4 zapytania ofertowego z 12.10.2026, powtórzony we wstępie specyfikacji"
+          },
+          "specyfikacja": {
+            "o": "tak",
+            "u": "Cztery wymagania minimalne powyżej plus warunki pracy: profil obciążenia z kampanii 02–03.2026, ciśnienie sieci 6,3 bar"
+          },
+          "dane": {
+            "o": "tak",
+            "u": "Zużycie [MWh/rok] i kWh/Nm³ przy profilu z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń; zużycie na biegu jałowym osobno"
+          },
+          "kryterium": {
+            "o": "tak",
+            "u": "Najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh, spośród ofert spełniających wymagania minimalne"
+          }
+        },
+        "informacja": "Wynik energetyczny jest jednym z kryteriów oceny ofert. Prosimy o podanie przewidywanego zużycia energii (MWh/rok) oraz wskaźnika kWh/Nm³ przy profilu pracy z załącznika nr 2 i ciśnieniu sieci 6,3 bar, wraz z metodą obliczeń. Prosimy osobno podać zużycie na biegu jałowym. Oferentów, którzy podadzą tylko moc znamionową, poprosimy o uzupełnienie danych.",
+        "kryteriumWyboru": "Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat, przy porównywalnych warunkach serwisu i gwarancji.",
+        "lata": "15",
+        "cenaEnergii": "",
+        "zalozenia": "Stała cena energii elektrycznej 890 zł/MWh (ceny 2025, bez indeksacji). Okres 15 lat — przewidywany czas pracy sterownika i napędu. Profil pracy i ilość sprężonego powietrza jak w kampanii pomiarowej 02–03.2026, ciśnienie 6,3 bar. Warunki serwisu i gwarancji w obu ofertach porównywalne. Pominięte: zmiany cen energii, wartość pieniądza w czasie, koszty przestojów. Przy innej cenie energii różnica zmienia się proporcjonalnie.",
+        "oferty": [
+          {
+            "nazwa": "Oferta A",
+            "minimalne": "tak",
+            "cena": "330000",
+            "tryb": "roczne",
+            "roczne": "1660",
+            "zrodloDanych": "Dane dostawcy dla profilu pracy z załącznika nr 2 (kampania 02–03.2026), z podaną metodą obliczeń; uzupełnione po pierwszym zapytaniu",
+            "inne": "0"
+          },
+          {
+            "nazwa": "Oferta B",
+            "minimalne": "tak",
+            "cena": "375000",
+            "tryb": "roczne",
+            "roczne": "1600",
+            "zrodloDanych": "Dane dostawcy dla profilu pracy z załącznika nr 2, z podaną metodą obliczeń i wykresem zużycia w funkcji obciążenia",
+            "inne": "0"
+          }
+        ],
+        "rekomendacja": "Przy przyjętych założeniach oferta B ma niższy koszt zakupu i energii — różnica 756 000 zł w 15 lat, mimo ceny wyższej o 45 000 zł. Oszczędność 60 MWh/rok wobec oferty A jest spójna z oszczędnością ok. 230 MWh/rok wyliczoną w przeglądzie energetycznym dla całej modernizacji. Przed decyzją: sprawdzić wymagania procesu dla trybu postoju i warunki serwisu w obu ofertach. Uzasadnienie wyboru zapisane w teczce ZAP/2026/14.",
+        "porownanieNd": false,
+        "porownanieNdPowod": "",
+        "E": {
+          "deklaracje": "Przy odbiorze sprawdzane: dwie nastawy ciśnienia działają i dają się zmienić z panelu; oba przetworniki u odbiorców podłączone i wskazują; dane pracy eksportowane do systemu monitoringu w uzgodnionym formacie; przyłącza pod wymiennik wykonane i zaślepione. Sprawdza kierownik UR z Energy Managerem, protokół odbioru.",
+          "kryteria": "Karta kryteriów sprężarkowni F-EnMS-14 aktualizowana przed uruchomieniem — kierownik UR, termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana po sprawdzeniu odbiorników w podtrzymaniu. Do planu zbierania danych (6.6) wchodzą dwie pozycje dla przetworników.",
+          "wynik": "kWh/Nm³ (wskaźnik S-1) cztery tygodnie po odbiorze i po zamknięciu roku 2027 — Energy Manager. Warunki porównania jak w części D formularza celów: pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar w trybie produkcji. Wynik porównywany z deklaracją oferty B (1 600 MWh/rok) i z wartością odniesienia 0,119 kWh/Nm³; wchodzi do oceny celu Z1.1."
+        }
+      },
+      {
+        "przedmiot": "Umowa serwisowa na sprężarkownię — 2027",
+        "nr": "ZAP/2026/19",
+        "zrodloWymagan": "Karta kryteriów sprężarkowni F-EnMS-14, sekcja C — przekazanie wymagań wykonawcom; trzy zdania ze zlecenia dla serwisu",
+        "status": "Zapytanie 11.2026; umowa od 01.2027",
+        "kto": "Kierownik Utrzymania Ruchu z działem zakupów",
+        "data": "2026-10-09",
+        "A": {
+          "seu": {
+            "o": "tak",
+            "u": "Serwis obsługuje sprężarkownię — znaczące użycie energii"
+          },
+          "nastawy": {
+            "o": "tak",
+            "u": "Serwis ustawia ciśnienia robocze i progi załączania; to on w praktyce decyduje o części wyniku energetycznego"
+          },
+          "godziny": {
+            "o": "nie",
+            "u": "Usługa nie wnosi urządzenia zużywającego energię"
+          },
+          "usluga": {
+            "o": "tak",
+            "u": "Serwis, przeglądy okresowe, wymiana filtrów i osuszaczy"
+          },
+          "energia": {
+            "o": "nie",
+            "u": "Usługa, nie nośnik energii"
+          },
+          "prog": {
+            "o": "nie",
+            "u": "28 tys. zł rocznie, poniżej progu 100 tys. zł — zakup jest istotny z innego powodu"
+          }
+        },
+        "uzasadnienieA": "",
+        "wymagania": [
+          {
+            "tresc": "Każda zmiana nastawy ciśnienia zgłaszana pisemnie przed wykonaniem; protokół z wartościami przed i po",
+            "skad": "Karta kryteriów F-EnMS-14 sekcja C; przypadek z 2025 r., gdy serwis podniósł ciśnienie o 0,5 bar bez zgłoszenia"
+          },
+          {
+            "tresc": "Utrzymanie ciśnienia w sieci na poziomie nie wyższym niż 6,3 bar w trybie produkcji; nastawy trybu postoju bez zmian",
+            "skad": "Karta kryteriów F-EnMS-14 sekcja A, kryterium 1"
+          },
+          {
+            "tresc": "Raport z przeglądu zawiera zmierzone zużycie jednostkowe i spadek ciśnienia na osuszaczu i filtrach",
+            "skad": "Plan zbierania danych (6.6), pozycja 5; bez tego nie da się odróżnić pogorszenia wyniku od zmiany profilu pracy"
+          }
+        ],
+        "C": {
+          "informacja": {
+            "o": "tak",
+            "u": "Zdanie w zapytaniu: utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty i podstawą rozliczenia"
+          },
+          "specyfikacja": {
+            "o": "tak",
+            "u": "Trzy wymagania minimalne powyżej; zakres czynności z wykazem nastaw podlegających zmianie"
+          },
+          "dane": {
+            "o": "tak",
+            "u": "Wzór raportu z przeglądu: zmierzone kWh/Nm³, spadki ciśnienia, lista zmienionych nastaw"
+          },
+          "kryterium": {
+            "o": "tak",
+            "u": "Zakres i warunki, gotowość do pracy w weekendowym postoju, kwalifikacje osób; cena przy równych zakresach"
+          }
+        },
+        "informacja": "Utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty. Prosimy o potwierdzenie, że każda zmiana nastawy ciśnienia będzie zgłaszana pisemnie przed wykonaniem i że raport z przeglądu obejmie zmierzone zużycie jednostkowe oraz spadki ciśnienia na osuszaczu i filtrach. Trzy zdania ze zlecenia serwisowego są częścią umowy.",
+        "kryteriumWyboru": "Zakres czynności i warunki reakcji przy równoważnych kwalifikacjach; cena przy porównywalnym zakresie. Zużycie energii samej usługi nie jest kryterium.",
+        "lata": "",
+        "cenaEnergii": "",
+        "zalozenia": "",
+        "oferty": [],
+        "rekomendacja": "",
+        "porownanieNd": true,
+        "porownanieNdPowod": "Zakup usługi — usługa nie zużywa energii, więc porównanie kosztu zakupu i energii nie ma tu sensu. Kryterium oceny wyniku energetycznego dotyczy wpływu serwisu na pracę nadzorowanych urządzeń: trybu zgłaszania zmian nastaw, zawartości raportu i przestrzegania kryteriów z karty F-EnMS-14. Oferty porównywane według zakresu, warunków reakcji i kwalifikacji, przy cenie jako kryterium końcowym.",
+        "E": {
+          "deklaracje": "Po pierwszym przeglądzie sprawdzane: czy raport zawiera zmierzone kWh/Nm³ i spadki ciśnienia, czy zmiany nastaw zostały zgłoszone przed wykonaniem i czy ciśnienie po przeglądzie mieści się w kryterium. Sprawdza kierownik UR; wynik wchodzi do oceny dostawcy.",
+          "kryteria": "Wymagania z karty F-EnMS-14 sekcja C są załącznikiem do umowy. Zmiana kryteriów w karcie — na przykład nowa nastawa trybu postoju po modernizacji w 06.2027 — wymaga aneksu albo pisemnego przekazania wykonawcy; odpowiada kierownik UR.",
+          "wynik": "kWh/Nm³ po każdym przeglądzie, w porównaniu z wartością z miesiąca poprzedzającego — Energy Manager, w rytmie monitorowania z 9.1. Wzrost zużycia jednostkowego po przeglądzie o więcej niż 3% jest sygnałem z karty kryteriów i uruchamia rozmowę z serwisem."
+        }
+      },
+      {
+        "przedmiot": "Zakup energii elektrycznej na 2027 r.",
+        "nr": "ZAP/2026/22",
+        "zrodloWymagan": "Plan zbierania danych (6.6), pozycje 1 i 2 — wymagania co do danych pomiarowych od sprzedawcy; profil poboru godzinowego za 2025 r.",
+        "status": "Zapytanie 10.2026; wybór sprzedawcy 11.2026; umowa od 01.2027",
+        "kto": "Dyrektor Finansowy z Energy Managerem",
+        "data": "2026-10-02",
+        "A": {
+          "seu": {
+            "o": "nd",
+            "u": "Zakup energii dotyczy wszystkich użyć w zakładzie, nie jednego znaczącego użycia — stąd „nie dotyczy” zamiast „tak”"
+          },
+          "nastawy": {
+            "o": "nie",
+            "u": "Wybór sprzedawcy nie zmienia nastaw ani sterowania żadnej instalacji"
+          },
+          "godziny": {
+            "o": "nd",
+            "u": "Nie dotyczy urządzenia — przedmiotem zakupu jest nośnik energii"
+          },
+          "usluga": {
+            "o": "nie",
+            "u": "Dostawa energii, nie usługa wpływająca na pracę urządzeń"
+          },
+          "energia": {
+            "o": "tak",
+            "u": "Energia elektryczna, ok. 12 000 MWh na 2027 r."
+          },
+          "prog": {
+            "o": "tak",
+            "u": "Ok. 10,8 mln zł wobec progu 100 tys. zł"
+          }
+        },
+        "uzasadnienieA": "",
+        "wymagania": [
+          {
+            "tresc": "Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu, do 10. dnia następnego miesiąca",
+            "skad": "Plan zbierania danych (6.6), pozycje 1 i 2 — dziś dane z faktury przychodzą raz w miesiącu bez profilu godzinowego"
+          },
+          {
+            "tresc": "Gwarancja ceny na cały okres umowy; struktura cenowa wyliczona dla profilu poboru z 2025 r., nie dla profilu standardowego",
+            "skad": "Profil poboru godzinowego za 2025 r. — załącznik do zapytania"
+          },
+          {
+            "tresc": "Gwarancje pochodzenia wyceniane w osobnej pozycji oferty i raportowane osobno",
+            "skad": "Ustalenie z przeglądu zarządzania: pochodzenie energii nie wchodzi do wskaźników wyniku energetycznego ani do oceny celów"
+          }
+        ],
+        "C": {
+          "informacja": {
+            "o": "tak",
+            "u": "Zapytanie informuje, że dostępność danych pomiarowych i dopasowanie struktury cen do profilu są kryteriami oceny obok ceny"
+          },
+          "specyfikacja": {
+            "o": "tak",
+            "u": "Trzy wymagania minimalne powyżej; profil poboru godzinowego za 2025 r. jako załącznik — specyfikacja dotycząca zakupu energii, wymagana przez normę"
+          },
+          "dane": {
+            "o": "tak",
+            "u": "Struktura cenowa dla załączonego profilu, rozbicie na opłaty stałe i zmienne, format i częstotliwość udostępniania danych pomiarowych"
+          },
+          "kryterium": {
+            "o": "tak",
+            "u": "Koszt energii wyliczony dla profilu z 2025 r., nie cena jednostkowa z taryfy; dostępność danych i ciągłość dostaw jako warunki"
+          }
+        },
+        "informacja": "Dopasowanie struktury cenowej do załączonego profilu poboru oraz dostępność danych pomiarowych są — obok ceny — kryteriami oceny ofert. Prosimy o wyliczenie kosztu energii dla profilu godzinowego z załącznika nr 1, z rozbiciem na opłaty stałe i zmienne, oraz o wskazanie formatu i terminu udostępniania danych pomiarowych. Gwarancje pochodzenia prosimy wycenić w osobnej pozycji.",
+        "kryteriumWyboru": "Najniższy koszt energii wyliczony dla profilu poboru z 2025 r., przy gwarancji ceny na okres umowy, wymaganym formacie danych pomiarowych i potwierdzonej ciągłości dostaw. Gwarancje pochodzenia wyceniane w osobnej pozycji i rozliczane poza tym kryterium.",
+        "lata": "",
+        "cenaEnergii": "",
+        "zalozenia": "",
+        "oferty": [],
+        "rekomendacja": "",
+        "porownanieNd": true,
+        "porownanieNdPowod": "Wybór sprzedawcy nie zmienia zużycia energii w zakładzie — sprężarkownia zużyje tyle samo kWh na Nm³ powietrza niezależnie od tego, od kogo kupiono prąd. Porównanie prowadzone według kosztu energii wyliczonego dla profilu poboru z 2025 r., struktury taryfy i warunków udostępniania danych, a nie według kosztu zakupu i energii urządzenia. Pochodzenie energii wyceniane i raportowane osobno.",
+        "E": {
+          "deklaracje": "Po pierwszym miesiącu rozliczenia sprawdzane: czy dane godzinowe przychodzą w uzgodnionym formacie i terminie, czy pozycje faktury odpowiadają strukturze z oferty i czy koszt zgadza się z wyliczeniem dla rzeczywistego profilu. Sprawdza Energy Manager z działem księgowości.",
+          "kryteria": "Dane godzinowe od sprzedawcy wchodzą do planu zbierania danych (6.6) jako nowe źródło pozycji 1 — zastępują odczyt z faktury. Zmiana źródła danych wymaga adnotacji w kartach wskaźników (6.4) i sprawdzenia porównywalności z linią bazową.",
+          "wynik": "Po pierwszym kwartale 2027 r. Energy Manager porównuje rzeczywisty koszt energii z wyliczeniem z oferty dla tego samego profilu. Rozbieżność powyżej 3% jest sygnałem do sprawdzenia, czy profil poboru się zmienił, czy rozliczenie odbiega od umowy. Wynik nie wchodzi do oceny wskaźników energetycznych — to kontrola kosztu, nie wyniku energetycznego."
+        }
+      }
+    ],
+    "P_KATEGORIE": [
+      {
+        "kategoria": "Silniki elektryczne",
+        "kryterium": "Sprawność w rzeczywistym punkcie pracy, nie moc znamionowa",
+        "minimum": "Klasa IE4 dla pracy powyżej 2 000 h/rok; dobór mocy do zmierzonego obciążenia, bez zapasu powyżej 15%",
+        "dane": "Sprawność przy 50%, 75% i 100% obciążenia; moc zmierzona lub wyliczona dla aplikacji",
+        "podstawa": "Przegląd energetyczny 2026 — silniki w napędach pras i wentylatorów"
+      },
+      {
+        "kategoria": "Sprężarki, pompy, wentylatory, napędy",
+        "kryterium": "Zużycie energii przy profilu pracy zakładu i zakres regulacji",
+        "minimum": "Regulacja w zakresie co najmniej 30–100% wydajności; zużycie nie wyższe niż obecne przy tym samym profilu; możliwość dwóch nastaw",
+        "dane": "Zużycie [MWh/rok] i wskaźnik jednostkowy dla profilu z załącznika, z metodą obliczeń; zużycie na biegu jałowym",
+        "podstawa": "Karta kryteriów sprężarkowni F-EnMS-14; profil z kampanii pomiarowej 02–03.2026"
+      },
+      {
+        "kategoria": "Oświetlenie",
+        "kryterium": "Moc zainstalowana na wymagane natężenie i możliwość sterowania",
+        "minimum": "Skuteczność źródła co najmniej 140 lm/W; sterowanie strefowe i ściemnianie; natężenie zgodne z wymaganiem stanowiska, bez zawyżania",
+        "dane": "Moc oprawy, skuteczność, obliczenia natężenia dla układu stref, zakres sterowania",
+        "podstawa": "Cel C2 i zadanie Z2.1; zgłoszenie 2026/08 o jednym wyłączniku na halę"
+      },
+      {
+        "kategoria": "Urządzenia produkcyjne",
+        "kryterium": "Zużycie energii na jednostkę produktu w przewidywanym trybie pracy",
+        "minimum": "Zużycie jednostkowe nie wyższe niż w urządzeniu zastępowanym; tryb czuwania poniżej 5% mocy pracy; licznik energii na urządzeniu",
+        "dane": "Zużycie jednostkowe [kWh/szt.] dla zadanej wydajności, zużycie w czuwaniu, obecność licznika",
+        "podstawa": "Plan zbierania danych (6.6) — nowe urządzenie wymaga pozycji w planie"
+      },
+      {
+        "kategoria": "Usługi — serwis, projekt, wykonawstwo",
+        "kryterium": "Wpływ usługi na nastawy i sprawność nadzorowanych urządzeń",
+        "minimum": "Pisemne zgłoszenie każdej zmiany nastawy; protokół z wartościami przed i po; przestrzeganie kryteriów z karty F-EnMS-14",
+        "dane": "Zakres czynności, lista nastaw podlegających zmianie, wzór protokołu, kwalifikacje osób",
+        "podstawa": "Karta kryteriów sprężarkowni F-EnMS-14 sekcja C — przekazanie wymagań wykonawcom"
+      },
+      {
+        "kategoria": "Energia elektryczna i gaz",
+        "kryterium": "Koszt energii przy rzeczywistym profilu poboru oraz dostępność danych pomiarowych",
+        "minimum": "Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu; gwarancja ceny na okres umowy; ciągłość dostaw",
+        "dane": "Struktura cenowa dla profilu z 2025 r., opłaty stałe i zmienne, format i częstotliwość udostępniania danych",
+        "podstawa": "Plan zbierania danych (6.6), pozycje 1 i 2; pochodzenie energii raportowane osobno, poza kryterium wyniku energetycznego"
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+      "data": "2026-10-09",
+      "prog": "100 000",
+      "cenaEnergii": "890"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Najtańsza oferta bywa najdroższa w eksploatacji — i nikt tego nie liczy po fakcie.",
+        "decyzja": "Kryteria energetyczne w zapytaniach i ocena kosztu w cyklu życia przy zakupach o istotnym zużyciu energii.",
+        "dzialanie": "Zapytanie ZAP/2026/14 z wymaganiami energetycznymi; porównanie ofert A i B w pełnym koszcie — różnica 756 000 zł na korzyść oferty B.",
+        "sprawdzenie": "Zużycie zakupionego urządzenia po roku pracy wobec wartości deklarowanej przez dostawcę."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "ZAKUPY": [],
+    "KATEGORIE": [],
+    "WNIOSKI": [],
+    "ODP": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "tak",
+        "Tak"
+      ],
+      [
+        "nie",
+        "Nie"
+      ],
+      [
+        "nd",
+        "N.d."
+      ]
+    ],
+    "TRYBY": [
+      [
+        "",
+        "Wybierz sposób"
+      ],
+      [
+        "roczne",
+        "Zużycie roczne podane przez dostawcę"
+      ],
+      [
+        "moc",
+        "Średni pobór mocy × godziny pracy"
+      ],
+      [
+        "jednostkowy",
+        "Zużycie jednostkowe × ilość produktu w roku"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

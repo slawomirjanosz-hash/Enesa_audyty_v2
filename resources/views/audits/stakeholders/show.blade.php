@@ -15,6 +15,7 @@
 @endphp
 @include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'stakeholder-form'])
+@include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
 @if(session('success'))<div class="plant-notice success" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź zaznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if(!$ready)<div class="plant-notice">Najpierw zatwierdź profil zakładu przez klienta i audytora oraz ankietę 4.1 jako klient. <a href="{{route($client?'client.audits.factors.show':'audits.factors.show',[$audit,$profile])}}">Otwórz punkt 4.1 →</a></div>@endif

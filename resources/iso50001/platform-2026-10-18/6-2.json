@@ -1,0 +1,705 @@
+{
+  "source_file": "ENESA_6.2_Cele_i_plany_dzialan_platforma.html",
+  "source_sha256": "6e9cd2b853df0389b51612b00afb84fe748ca70dda3fbe158520f732c66d81b3",
+  "section": "6-2",
+  "data": {
+    "POLA_WER": [
+      {
+        "kod": "enpi_enb",
+        "nazwa": "Wskaźnik EnPI i linia bazowa EnB",
+        "wymagane": true,
+        "pomoc": "Który wskaźnik z punktu 6.4 i która linia bazowa z punktu 6.5. Bez tej pary nie ma czego porównywać.",
+        "przyklad": "np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)"
+      },
+      {
+        "kod": "okres",
+        "nazwa": "Okres porównania",
+        "wymagane": true,
+        "pomoc": "Jaki okres po działaniu porównujecie z jakim okresem linii bazowej. Tyle samo miesięcy po obu stronach.",
+        "przyklad": "np. 12 miesięcy po zakończeniu działań (I–XII 2028) wobec 12 miesięcy EnB (2025)"
+      },
+      {
+        "kod": "dane",
+        "nazwa": "Dane i ich źródło",
+        "wymagane": true,
+        "pomoc": "Skąd wezmą się liczby — licznik, podlicznik, faktura, ERP, protokół pomiaru. Kto je odczytuje i gdzie zapisuje.",
+        "przyklad": "np. Podlicznik sprężarkowni (odczyt miesięczny) i przepływomierz na kolektorze; arkusz EnMS, zakładka S-1"
+      },
+      {
+        "kod": "warunki",
+        "nazwa": "Warunki porównania",
+        "wymagane": true,
+        "pomoc": "Przy jakich warunkach pomiar jest porównywalny i co go unieważnia. To tutaj zapisuje się wyłączenia.",
+        "przyklad": "np. Pełne miesiące pracy trzyzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane"
+      },
+      {
+        "kod": "zmienne",
+        "nazwa": "Uwzględnienie istotnych zmiennych — normalizacja",
+        "wymagane": true,
+        "pomoc": "Jak porównanie radzi sobie ze zmianą produkcji, pogody i czasu pracy. Jeśli wskaźnik jest ilorazem, napiszcie to wprost.",
+        "przyklad": "np. Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem ilości powietrza. Dodatkowo odnotowuje się temperaturę w sprężarkowni — różnica powyżej 5 °C wymaga adnotacji."
+      },
+      {
+        "kod": "obliczenie",
+        "nazwa": "Sposób obliczenia poprawy",
+        "wymagane": true,
+        "pomoc": "Wzór i próg uznania poprawy. Konkretny, nie „porównamy wyniki”.",
+        "przyklad": "np. (EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy wskaźnik ≤ 0,110 kWh/Nm³ w średniej 12 miesięcy."
+      },
+      {
+        "kod": "kto",
+        "nazwa": "Kto weryfikuje",
+        "wymagane": true,
+        "pomoc": "Osoba albo funkcja, która wykonuje obliczenie, i ta, która przyjmuje wynik.",
+        "przyklad": "np. Energy Manager; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania"
+      },
+      {
+        "kod": "wynik",
+        "nazwa": "Wynik weryfikacji",
+        "wymagane": false,
+        "pomoc": "Wypełniane po terminie zadania — wartość osiągnięta, data i decyzja (poprawa uznana / nieuznana / zadanie przedłużone).",
+        "przyklad": "np. 0,119 kWh/Nm³ (średnia I–XII 2027) — cel nieosiągnięty, zadanie przedłużone do 30.06.2028"
+      }
+    ],
+    "LISTA_62": [
+      {
+        "tekst": "Ustanowiono cele energetyczne na odpowiednich funkcjach i szczeblach organizacji.",
+        "podstawa": "N",
+        "auto": "ustanowiono"
+      },
+      {
+        "tekst": "Cele są spójne z polityką energetyczną i uwzględniają wymagania, znaczące użycia energii oraz możliwości poprawy wyniku energetycznego.",
+        "podstawa": "N",
+        "auto": "spojne"
+      },
+      {
+        "tekst": "Cele i zadania energetyczne są mierzalne, monitorowane, komunikowane i aktualizowane, gdy to właściwe.",
+        "podstawa": "N",
+        "auto": "mierzalne"
+      },
+      {
+        "tekst": "Dla celów i zadań zaplanowano: co będzie zrobione, jakie będą potrzebne zasoby, kto odpowiada i kiedy to się zakończy.",
+        "podstawa": "N",
+        "auto": "plany"
+      },
+      {
+        "tekst": "Plany określają, w jaki sposób zostaną ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego.",
+        "podstawa": "N",
+        "auto": "weryfikacja"
+      },
+      {
+        "tekst": "Metoda weryfikacji poprawy wskazuje wskaźnik i linię bazową, okres porównania, dane i ich źródło, warunki porównania, uwzględnienie istotnych zmiennych, sposób obliczenia i osobę weryfikującą.",
+        "podstawa": "M",
+        "auto": "metoda_pelna"
+      },
+      {
+        "tekst": "Rozważono, w jaki sposób włączyć działania w procesy biznesowe organizacji.",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "tekst": "Cele, zadania energetyczne i plany działań są utrzymywane jako udokumentowana informacja.",
+        "podstawa": "N",
+        "auto": "udokumentowane"
+      }
+    ],
+    "przyklad": {
+      "CELE": [
+        {
+          "nr": "C1",
+          "tresc": "Ograniczyć zużycie energii na wytwarzanie sprężonego powietrza.",
+          "rodzaj": "wynik",
+          "powiazanie": "SEU sprężarkownia (17,5% zużycia); możliwości M-1 (nieszczelności) i M-3 (ciśnienie sieci) z przeglądu energetycznego; polityka pkt 2",
+          "termin": "2027-12-31",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "status": "wtoku"
+        },
+        {
+          "nr": "C2",
+          "tresc": "Zmniejszyć zużycie energii na oświetlenie hal produkcyjnych H1 i H2.",
+          "rodzaj": "wynik",
+          "powiazanie": "SEU oświetlenie (5,6%, kryterium B — możliwość poprawy); możliwość M-5 (LED) z przeglądu energetycznego",
+          "termin": "2027-12-31",
+          "odp": "Dyrektor Techniczny",
+          "status": "zatwierdzone"
+        },
+        {
+          "nr": "C3",
+          "tresc": "Utrzymać poprawę wyniku energetycznego zakładu wobec roku bazowego 2025.",
+          "rodzaj": "wynik",
+          "powiazanie": "Polityka energetyczna pkt 1 (ciągłe doskonalenie wyniku); wskaźnik ogólny O-1 z punktu 6.4",
+          "termin": "2027-12-31",
+          "odp": "Energy Manager",
+          "status": "wtoku"
+        },
+        {
+          "nr": "C4",
+          "tresc": "Wdrożyć opomiarowanie znaczących użyć energii i zebrać 12 miesięcy danych z podliczników.",
+          "rodzaj": "system",
+          "powiazanie": "Przegląd energetyczny — 4 z 5 SEU oszacowane, nie zmierzone; plan zbierania danych (6.6); wymaganie normy 6.6 i 9.1",
+          "termin": "2027-06-30",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "status": "wtoku"
+        }
+      ],
+      "ZADANIA": [
+        {
+          "nr": "Z1.1",
+          "doCelu": "C1",
+          "enpi": "S-1 — energia jednostkowa sprężarkowni, kWh/Nm³",
+          "enb": "0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)",
+          "cel": "0,110 kWh/Nm³ (−12%)",
+          "termin": "2027-12-31",
+          "postep": "0,119 kWh/Nm³ (VII–18.IX 2026), poprawa 4,8% — po obniżeniu ciśnienia i usunięciu nieszczelności, przed modernizacją sprężarkowni"
+        },
+        {
+          "nr": "Z1.2",
+          "doCelu": "C1",
+          "enpi": "S-2 — przepływ sprężonego powietrza w czasie postoju, Nm³/min",
+          "enb": "9 Nm³/min (pomiar 12.01.2026, postój weekendowy)",
+          "cel": "4 Nm³/min",
+          "termin": "2027-06-30",
+          "postep": "6 Nm³/min (pomiar 06.2026) — usunięto wszystkie 35 nieszczelności; następny test kwartalny 09.2026"
+        },
+        {
+          "nr": "Z2.1",
+          "doCelu": "C2",
+          "enpi": "OŚ-1 — roczne zużycie energii na oświetlenie, MWh/rok",
+          "enb": "680 MWh (2025, inwentaryzacja opraw × czas pracy)",
+          "cel": "410 MWh (−39,7%)",
+          "termin": "2027-12-31",
+          "postep": "Bez zmian — wymiana opraw zaplanowana na III kwartał 2027"
+        },
+        {
+          "nr": "Z3.1",
+          "doCelu": "C3",
+          "enpi": "O-1 — wskaźnik ogólny zakładu, indeks znormalizowany",
+          "enb": "1,000 (rok bazowy 2025)",
+          "cel": "≤ 0,950",
+          "termin": "2027-12-31",
+          "postep": "0,97 (I półrocze 2026) i 0,965 (sierpień 2026) — znormalizowane produkcją i stopniodniami"
+        }
+      ],
+      "DZIAL": [
+        {
+          "doCelu": "C1",
+          "tresc": "Kampania pomiarowa i lokalizacja nieszczelności w sieci sprężonego powietrza.",
+          "zasoby": "15 000 zł (usługa zewnętrzna)",
+          "odp": "Energy Manager",
+          "termin": "2026-03-31",
+          "proces": "Przegląd energetyczny — kampania 02–03.2026; linia bazowa S-1",
+          "status": "wykonane"
+        },
+        {
+          "doCelu": "C1",
+          "tresc": "Usunięcie 35 nieszczelności i wprowadzenie kwartalnego przeglądu szczelności detektorem ultradźwiękowym.",
+          "zasoby": "10 000 zł (uszczelnienia, złączki) i czas pracy UR; detektor wypożyczany",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "termin": "2026-06-30",
+          "proces": "Plan utrzymania ruchu — zadanie UR/2026/18; harmonogram przeglądów okresowych (cyklicznie, od III kw. 2026)",
+          "status": "wykonane"
+        },
+        {
+          "doCelu": "C1",
+          "tresc": "Obniżenie ciśnienia sieci z 7,0 do 6,3 bar po sprawdzeniu wymagań odbiorników.",
+          "zasoby": "5 000 zł i czas inżyniera procesu oraz UR",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "termin": "2026-06-30",
+          "proces": "Instrukcja eksploatacji sprężarkowni I-SP-02 (zmiana kryterium eksploatacji); kryteria SEU w punkcie 8.1",
+          "status": "wykonane"
+        },
+        {
+          "doCelu": "C1",
+          "tresc": "Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej z czterech sprężarek.",
+          "zasoby": "380 000 zł",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "termin": "2027-06-30",
+          "proces": "Budżet inwestycji 2027, pozycja INW/2027/04; specyfikacja zakupowa z kryterium energetycznym (punkt 8.3)",
+          "status": "zatwierdzone"
+        },
+        {
+          "doCelu": "C1",
+          "tresc": "Weryfikacja zadań Z1.1 i Z1.2 po uruchomieniu modernizacji.",
+          "zasoby": "Czas Energy Managera",
+          "odp": "Energy Manager",
+          "termin": "2027-07-31",
+          "proces": "Przegląd zarządzania (punkt 9.3); kolejna ocena po zamknięciu roku 2027 — 01.2028",
+          "status": "planowane"
+        },
+        {
+          "doCelu": "C2",
+          "tresc": "Wymiana 420 opraw świetlówkowych na LED w halach H1 i H2.",
+          "zasoby": "240 000 zł",
+          "odp": "Dyrektor Techniczny",
+          "termin": "2027-09-30",
+          "proces": "Budżet inwestycji 2027, pozycja INW/2027/03",
+          "status": "planowane"
+        },
+        {
+          "doCelu": "C2",
+          "tresc": "Montaż czujników obecności w magazynie wyrobów i strefach socjalnych.",
+          "zasoby": "18 000 zł",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "termin": "2026-12-31",
+          "proces": "Plan utrzymania ruchu — zadanie UR/2026/31",
+          "status": "wtoku"
+        },
+        {
+          "doCelu": "C3",
+          "tresc": "Włączenie kryteriów efektywności energetycznej do procedury zakupowej dla urządzeń powyżej 10 kW.",
+          "zasoby": "Czas Kierownika Zakupów i Energy Managera",
+          "odp": "Kierownik Zakupów",
+          "termin": "2026-06-30",
+          "proces": "Procedura zakupowa P-ZAK-01, par. 4 (zmiana wprowadzona)",
+          "status": "wykonane"
+        },
+        {
+          "doCelu": "C3",
+          "tresc": "Kwartalny przegląd wskaźników EnPI jako stały punkt narady produkcyjnej.",
+          "zasoby": "1 h zespołu kwartalnie",
+          "odp": "Energy Manager",
+          "termin": "2026-03-31",
+          "proces": "Narada produkcyjna — stały punkt agendy (cyklicznie)",
+          "status": "wykonane"
+        },
+        {
+          "doCelu": "C4",
+          "tresc": "Montaż 6 podliczników energii (prasy, lakiernia, sprężarkownia, kotłownia, oświetlenie H1, oświetlenie H2) i przepływomierza na kolektorze głównym sprężonego powietrza.",
+          "zasoby": "77 000 zł",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "termin": "2026-06-30",
+          "proces": "Budżet inwestycji 2026, pozycja INW/2026/11",
+          "status": "wtoku"
+        },
+        {
+          "doCelu": "C4",
+          "tresc": "Konfiguracja zbierania odczytów do arkusza EnMS i comiesięczny raport zużycia po obszarach.",
+          "zasoby": "8 000 zł (konfiguracja) i 2 h miesięcznie",
+          "odp": "Energy Manager",
+          "termin": "2026-07-31",
+          "proces": "Plan zbierania danych (punkt 6.6); miesięczny raport produkcyjny",
+          "status": "planowane"
+        }
+      ],
+      "WER": {
+        "Z1.1": {
+          "enpi_enb": "S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ — kampania pomiarowa 02–03.2026 (4 tygodnie pomiaru, uzasadnienie okresu w karcie EnB)",
+          "okres": "Cztery tygodnie po odbiorze modernizacji oraz rok 2027 — wobec linii bazowej z kampanii pomiarowej 02–03.2026",
+          "dane": "Podlicznik energii sprężarkowni — odczyt miesięczny; przepływomierz na kolektorze głównym — rejestracja ciągła. Arkusz EnMS, zakładka S-1. Odczytuje UR, sprawdza Energy Manager.",
+          "warunki": "Pełne miesiące pracy trzyzmianowej, ciśnienie sieci 6,3 bar, obciążenie sprężarek 60–90%. Miesiące z postojem dłuższym niż 5 dni roboczych wyłączone z porównania i opisane w adnotacji.",
+          "zmienne": "Wskaźnik jest ilorazem energii i objętości sprężonego powietrza, więc normalizuje się względem ilości powietrza — zmiana produkcji nie zaburza porównania. Dodatkowo odnotowuje się średnią temperaturę w sprężarkowni; różnica powyżej 5 °C między okresami wymaga adnotacji. Czynnik statyczny: liczba i typ sprężarek — cztery sprężarki śrubowe; dodanie sterownika nadrzędnego i napędu o zmiennej prędkości wymaga adnotacji przy EnB.",
+          "obliczenie": "(EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy średnia 12 miesięcy wynosi ≤ 0,110 kWh/Nm³.",
+          "kto": "Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny na przeglądzie zarządzania.",
+          "wynik": ""
+        },
+        "Z1.2": {
+          "enpi_enb": "S-2 przepływ w czasie postoju, Nm³/min; EnB 9 Nm³/min — pomiar 12.01.2026, postój weekendowy",
+          "okres": "Pomiar kontrolny po zakończeniu usuwania nieszczelności (VII 2027) wobec pomiaru bazowego 12.01.2026",
+          "dane": "Przepływomierz na kolektorze głównym; pomiar w czasie minimum 2 h postoju produkcji. Protokół pomiaru w teczce EnMS.",
+          "warunki": "Postój całej produkcji, sieć pod ciśnieniem roboczym 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu nie jest porównywalny — powtarza się go.",
+          "zmienne": "Przepływ w czasie postoju nie zależy od produkcji ani od pogody, więc normalizacja nie jest potrzebna. Warunkiem porównywalności jest to samo ciśnienie sieci i ta sama konfiguracja odcięć.",
+          "obliczenie": "Spadek przepływu w Nm³/min i w procentach wobec 9 Nm³/min. Cel: ≤ 4 Nm³/min.",
+          "kto": "Mierzy i liczy Kierownik Utrzymania Ruchu; sprawdza Energy Manager.",
+          "wynik": "Pomiar 06.2026: 6 Nm³/min — poprawa 33,3%, cel pośredni osiągnięty; następny test kwartalny 09.2026, cel końcowy 4 Nm³/min do 06.2027."
+        },
+        "Z2.1": {
+          "enpi_enb": "OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; EnB 680 MWh (2025)",
+          "okres": "Rok 2028 wobec roku bazowego 2025",
+          "dane": "Podliczniki oświetlenia H1 i H2 (od VII 2026) — odczyt miesięczny. Za rok 2025: inwentaryzacja opraw × czas pracy według harmonogramu zmian; arkusz EnMS, zakładka OŚ-1.",
+          "warunki": "Ten sam czas pracy zakładu — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu.",
+          "zmienne": "Zużycie oświetlenia zależy od czasu świecenia, nie od wielkości produkcji — porównanie prowadzi się na godzinach pracy zakładu. Powierzchnia hal i wymagane poziomy natężenia są czynnikami statycznymi; ich zmiana unieważnia EnB.",
+          "obliczenie": "(680 − zużycie 2028) ÷ 680 × 100%. Cel: ≤ 410 MWh, czyli poprawa co najmniej 39,7%.",
+          "kto": "Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny.",
+          "wynik": ""
+        },
+        "Z3.1": {
+          "enpi_enb": "O-1 wskaźnik ogólny zakładu; EnB = indeks 1,000 dla roku 2025 (model: energia = f(produkcja, stopniodni))",
+          "okres": "Rok kalendarzowy wobec roku bazowego 2025",
+          "dane": "Dwa liczniki główne (energia elektryczna, gaz) i faktury LPG; ERP — masa stali w wyrobach; IMGW — stopniodni dla bazy 18 °C. Arkusz EnMS, zakładka O-1.",
+          "warunki": "Rok pełnej pracy zakładu. Zmiana asortymentu powyżej 20% masy wymaga sprawdzenia aktualności modelu regresji.",
+          "zmienne": "Normalizacja modelem regresji wielorakiej na produkcji (t) i stopniodniach — zużycie oczekiwane liczone z modelu, wskaźnik to iloraz zużycia rzeczywistego i oczekiwanego. Czynniki statyczne: powierzchnia hal, liczba zmian, linia technologiczna.",
+          "obliczenie": "Indeks = zużycie rzeczywiste ÷ zużycie oczekiwane z modelu. Cel: ≤ 0,950.",
+          "kto": "Liczy Energy Manager; wynik przyjmuje Zarząd na przeglądzie zarządzania.",
+          "wynik": "I–IX 2026: 0,978 — poprawa 2,2%, cel nieosiągnięty, zadanie w toku."
+        }
+      },
+      "META": {
+        "zatwierdzil": "Zarząd AutoParts Polska sp. z o.o., uchwała nr 4/2026 z 15 kwietnia 2026 r.",
+        "data": "2026-04-15",
+        "stan": "2026-09-30"
+      }
+    }
+  },
+  "variables": {
+    "POLA_WER": [
+      {
+        "kod": "enpi_enb",
+        "nazwa": "Wskaźnik EnPI i linia bazowa EnB",
+        "wymagane": true,
+        "pomoc": "Który wskaźnik z punktu 6.4 i która linia bazowa z punktu 6.5. Bez tej pary nie ma czego porównywać.",
+        "przyklad": "np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)"
+      },
+      {
+        "kod": "okres",
+        "nazwa": "Okres porównania",
+        "wymagane": true,
+        "pomoc": "Jaki okres po działaniu porównujecie z jakim okresem linii bazowej. Tyle samo miesięcy po obu stronach.",
+        "przyklad": "np. 12 miesięcy po zakończeniu działań (I–XII 2028) wobec 12 miesięcy EnB (2025)"
+      },
+      {
+        "kod": "dane",
+        "nazwa": "Dane i ich źródło",
+        "wymagane": true,
+        "pomoc": "Skąd wezmą się liczby — licznik, podlicznik, faktura, ERP, protokół pomiaru. Kto je odczytuje i gdzie zapisuje.",
+        "przyklad": "np. Podlicznik sprężarkowni (odczyt miesięczny) i przepływomierz na kolektorze; arkusz EnMS, zakładka S-1"
+      },
+      {
+        "kod": "warunki",
+        "nazwa": "Warunki porównania",
+        "wymagane": true,
+        "pomoc": "Przy jakich warunkach pomiar jest porównywalny i co go unieważnia. To tutaj zapisuje się wyłączenia.",
+        "przyklad": "np. Pełne miesiące pracy trzyzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane"
+      },
+      {
+        "kod": "zmienne",
+        "nazwa": "Uwzględnienie istotnych zmiennych — normalizacja",
+        "wymagane": true,
+        "pomoc": "Jak porównanie radzi sobie ze zmianą produkcji, pogody i czasu pracy. Jeśli wskaźnik jest ilorazem, napiszcie to wprost.",
+        "przyklad": "np. Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem ilości powietrza. Dodatkowo odnotowuje się temperaturę w sprężarkowni — różnica powyżej 5 °C wymaga adnotacji."
+      },
+      {
+        "kod": "obliczenie",
+        "nazwa": "Sposób obliczenia poprawy",
+        "wymagane": true,
+        "pomoc": "Wzór i próg uznania poprawy. Konkretny, nie „porównamy wyniki”.",
+        "przyklad": "np. (EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy wskaźnik ≤ 0,110 kWh/Nm³ w średniej 12 miesięcy."
+      },
+      {
+        "kod": "kto",
+        "nazwa": "Kto weryfikuje",
+        "wymagane": true,
+        "pomoc": "Osoba albo funkcja, która wykonuje obliczenie, i ta, która przyjmuje wynik.",
+        "przyklad": "np. Energy Manager; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania"
+      },
+      {
+        "kod": "wynik",
+        "nazwa": "Wynik weryfikacji",
+        "wymagane": false,
+        "pomoc": "Wypełniane po terminie zadania — wartość osiągnięta, data i decyzja (poprawa uznana / nieuznana / zadanie przedłużone).",
+        "przyklad": "np. 0,119 kWh/Nm³ (średnia I–XII 2027) — cel nieosiągnięty, zadanie przedłużone do 30.06.2028"
+      }
+    ],
+    "LISTA_62": [
+      {
+        "tekst": "Ustanowiono cele energetyczne na odpowiednich funkcjach i szczeblach organizacji.",
+        "podstawa": "N",
+        "auto": "ustanowiono"
+      },
+      {
+        "tekst": "Cele są spójne z polityką energetyczną i uwzględniają wymagania, znaczące użycia energii oraz możliwości poprawy wyniku energetycznego.",
+        "podstawa": "N",
+        "auto": "spojne"
+      },
+      {
+        "tekst": "Cele i zadania energetyczne są mierzalne, monitorowane, komunikowane i aktualizowane, gdy to właściwe.",
+        "podstawa": "N",
+        "auto": "mierzalne"
+      },
+      {
+        "tekst": "Dla celów i zadań zaplanowano: co będzie zrobione, jakie będą potrzebne zasoby, kto odpowiada i kiedy to się zakończy.",
+        "podstawa": "N",
+        "auto": "plany"
+      },
+      {
+        "tekst": "Plany określają, w jaki sposób zostaną ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego.",
+        "podstawa": "N",
+        "auto": "weryfikacja"
+      },
+      {
+        "tekst": "Metoda weryfikacji poprawy wskazuje wskaźnik i linię bazową, okres porównania, dane i ich źródło, warunki porównania, uwzględnienie istotnych zmiennych, sposób obliczenia i osobę weryfikującą.",
+        "podstawa": "M",
+        "auto": "metoda_pelna"
+      },
+      {
+        "tekst": "Rozważono, w jaki sposób włączyć działania w procesy biznesowe organizacji.",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "tekst": "Cele, zadania energetyczne i plany działań są utrzymywane jako udokumentowana informacja.",
+        "podstawa": "N",
+        "auto": "udokumentowane"
+      }
+    ],
+    "P_CELE": [
+      {
+        "nr": "C1",
+        "tresc": "Ograniczyć zużycie energii na wytwarzanie sprężonego powietrza.",
+        "rodzaj": "wynik",
+        "powiazanie": "SEU sprężarkownia (17,5% zużycia); możliwości M-1 (nieszczelności) i M-3 (ciśnienie sieci) z przeglądu energetycznego; polityka pkt 2",
+        "termin": "2027-12-31",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "status": "wtoku"
+      },
+      {
+        "nr": "C2",
+        "tresc": "Zmniejszyć zużycie energii na oświetlenie hal produkcyjnych H1 i H2.",
+        "rodzaj": "wynik",
+        "powiazanie": "SEU oświetlenie (5,6%, kryterium B — możliwość poprawy); możliwość M-5 (LED) z przeglądu energetycznego",
+        "termin": "2027-12-31",
+        "odp": "Dyrektor Techniczny",
+        "status": "zatwierdzone"
+      },
+      {
+        "nr": "C3",
+        "tresc": "Utrzymać poprawę wyniku energetycznego zakładu wobec roku bazowego 2025.",
+        "rodzaj": "wynik",
+        "powiazanie": "Polityka energetyczna pkt 1 (ciągłe doskonalenie wyniku); wskaźnik ogólny O-1 z punktu 6.4",
+        "termin": "2027-12-31",
+        "odp": "Energy Manager",
+        "status": "wtoku"
+      },
+      {
+        "nr": "C4",
+        "tresc": "Wdrożyć opomiarowanie znaczących użyć energii i zebrać 12 miesięcy danych z podliczników.",
+        "rodzaj": "system",
+        "powiazanie": "Przegląd energetyczny — 4 z 5 SEU oszacowane, nie zmierzone; plan zbierania danych (6.6); wymaganie normy 6.6 i 9.1",
+        "termin": "2027-06-30",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "status": "wtoku"
+      }
+    ],
+    "P_ZADANIA": [
+      {
+        "nr": "Z1.1",
+        "doCelu": "C1",
+        "enpi": "S-1 — energia jednostkowa sprężarkowni, kWh/Nm³",
+        "enb": "0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)",
+        "cel": "0,110 kWh/Nm³ (−12%)",
+        "termin": "2027-12-31",
+        "postep": "0,119 kWh/Nm³ (VII–18.IX 2026), poprawa 4,8% — po obniżeniu ciśnienia i usunięciu nieszczelności, przed modernizacją sprężarkowni"
+      },
+      {
+        "nr": "Z1.2",
+        "doCelu": "C1",
+        "enpi": "S-2 — przepływ sprężonego powietrza w czasie postoju, Nm³/min",
+        "enb": "9 Nm³/min (pomiar 12.01.2026, postój weekendowy)",
+        "cel": "4 Nm³/min",
+        "termin": "2027-06-30",
+        "postep": "6 Nm³/min (pomiar 06.2026) — usunięto wszystkie 35 nieszczelności; następny test kwartalny 09.2026"
+      },
+      {
+        "nr": "Z2.1",
+        "doCelu": "C2",
+        "enpi": "OŚ-1 — roczne zużycie energii na oświetlenie, MWh/rok",
+        "enb": "680 MWh (2025, inwentaryzacja opraw × czas pracy)",
+        "cel": "410 MWh (−39,7%)",
+        "termin": "2027-12-31",
+        "postep": "Bez zmian — wymiana opraw zaplanowana na III kwartał 2027"
+      },
+      {
+        "nr": "Z3.1",
+        "doCelu": "C3",
+        "enpi": "O-1 — wskaźnik ogólny zakładu, indeks znormalizowany",
+        "enb": "1,000 (rok bazowy 2025)",
+        "cel": "≤ 0,950",
+        "termin": "2027-12-31",
+        "postep": "0,97 (I półrocze 2026) i 0,965 (sierpień 2026) — znormalizowane produkcją i stopniodniami"
+      }
+    ],
+    "P_DZIAL": [
+      {
+        "doCelu": "C1",
+        "tresc": "Kampania pomiarowa i lokalizacja nieszczelności w sieci sprężonego powietrza.",
+        "zasoby": "15 000 zł (usługa zewnętrzna)",
+        "odp": "Energy Manager",
+        "termin": "2026-03-31",
+        "proces": "Przegląd energetyczny — kampania 02–03.2026; linia bazowa S-1",
+        "status": "wykonane"
+      },
+      {
+        "doCelu": "C1",
+        "tresc": "Usunięcie 35 nieszczelności i wprowadzenie kwartalnego przeglądu szczelności detektorem ultradźwiękowym.",
+        "zasoby": "10 000 zł (uszczelnienia, złączki) i czas pracy UR; detektor wypożyczany",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "proces": "Plan utrzymania ruchu — zadanie UR/2026/18; harmonogram przeglądów okresowych (cyklicznie, od III kw. 2026)",
+        "status": "wykonane"
+      },
+      {
+        "doCelu": "C1",
+        "tresc": "Obniżenie ciśnienia sieci z 7,0 do 6,3 bar po sprawdzeniu wymagań odbiorników.",
+        "zasoby": "5 000 zł i czas inżyniera procesu oraz UR",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "proces": "Instrukcja eksploatacji sprężarkowni I-SP-02 (zmiana kryterium eksploatacji); kryteria SEU w punkcie 8.1",
+        "status": "wykonane"
+      },
+      {
+        "doCelu": "C1",
+        "tresc": "Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej z czterech sprężarek.",
+        "zasoby": "380 000 zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2027-06-30",
+        "proces": "Budżet inwestycji 2027, pozycja INW/2027/04; specyfikacja zakupowa z kryterium energetycznym (punkt 8.3)",
+        "status": "zatwierdzone"
+      },
+      {
+        "doCelu": "C1",
+        "tresc": "Weryfikacja zadań Z1.1 i Z1.2 po uruchomieniu modernizacji.",
+        "zasoby": "Czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2027-07-31",
+        "proces": "Przegląd zarządzania (punkt 9.3); kolejna ocena po zamknięciu roku 2027 — 01.2028",
+        "status": "planowane"
+      },
+      {
+        "doCelu": "C2",
+        "tresc": "Wymiana 420 opraw świetlówkowych na LED w halach H1 i H2.",
+        "zasoby": "240 000 zł",
+        "odp": "Dyrektor Techniczny",
+        "termin": "2027-09-30",
+        "proces": "Budżet inwestycji 2027, pozycja INW/2027/03",
+        "status": "planowane"
+      },
+      {
+        "doCelu": "C2",
+        "tresc": "Montaż czujników obecności w magazynie wyrobów i strefach socjalnych.",
+        "zasoby": "18 000 zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-12-31",
+        "proces": "Plan utrzymania ruchu — zadanie UR/2026/31",
+        "status": "wtoku"
+      },
+      {
+        "doCelu": "C3",
+        "tresc": "Włączenie kryteriów efektywności energetycznej do procedury zakupowej dla urządzeń powyżej 10 kW.",
+        "zasoby": "Czas Kierownika Zakupów i Energy Managera",
+        "odp": "Kierownik Zakupów",
+        "termin": "2026-06-30",
+        "proces": "Procedura zakupowa P-ZAK-01, par. 4 (zmiana wprowadzona)",
+        "status": "wykonane"
+      },
+      {
+        "doCelu": "C3",
+        "tresc": "Kwartalny przegląd wskaźników EnPI jako stały punkt narady produkcyjnej.",
+        "zasoby": "1 h zespołu kwartalnie",
+        "odp": "Energy Manager",
+        "termin": "2026-03-31",
+        "proces": "Narada produkcyjna — stały punkt agendy (cyklicznie)",
+        "status": "wykonane"
+      },
+      {
+        "doCelu": "C4",
+        "tresc": "Montaż 6 podliczników energii (prasy, lakiernia, sprężarkownia, kotłownia, oświetlenie H1, oświetlenie H2) i przepływomierza na kolektorze głównym sprężonego powietrza.",
+        "zasoby": "77 000 zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "proces": "Budżet inwestycji 2026, pozycja INW/2026/11",
+        "status": "wtoku"
+      },
+      {
+        "doCelu": "C4",
+        "tresc": "Konfiguracja zbierania odczytów do arkusza EnMS i comiesięczny raport zużycia po obszarach.",
+        "zasoby": "8 000 zł (konfiguracja) i 2 h miesięcznie",
+        "odp": "Energy Manager",
+        "termin": "2026-07-31",
+        "proces": "Plan zbierania danych (punkt 6.6); miesięczny raport produkcyjny",
+        "status": "planowane"
+      }
+    ],
+    "P_WER": {
+      "Z1.1": {
+        "enpi_enb": "S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ — kampania pomiarowa 02–03.2026 (4 tygodnie pomiaru, uzasadnienie okresu w karcie EnB)",
+        "okres": "Cztery tygodnie po odbiorze modernizacji oraz rok 2027 — wobec linii bazowej z kampanii pomiarowej 02–03.2026",
+        "dane": "Podlicznik energii sprężarkowni — odczyt miesięczny; przepływomierz na kolektorze głównym — rejestracja ciągła. Arkusz EnMS, zakładka S-1. Odczytuje UR, sprawdza Energy Manager.",
+        "warunki": "Pełne miesiące pracy trzyzmianowej, ciśnienie sieci 6,3 bar, obciążenie sprężarek 60–90%. Miesiące z postojem dłuższym niż 5 dni roboczych wyłączone z porównania i opisane w adnotacji.",
+        "zmienne": "Wskaźnik jest ilorazem energii i objętości sprężonego powietrza, więc normalizuje się względem ilości powietrza — zmiana produkcji nie zaburza porównania. Dodatkowo odnotowuje się średnią temperaturę w sprężarkowni; różnica powyżej 5 °C między okresami wymaga adnotacji. Czynnik statyczny: liczba i typ sprężarek — cztery sprężarki śrubowe; dodanie sterownika nadrzędnego i napędu o zmiennej prędkości wymaga adnotacji przy EnB.",
+        "obliczenie": "(EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy średnia 12 miesięcy wynosi ≤ 0,110 kWh/Nm³.",
+        "kto": "Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny na przeglądzie zarządzania.",
+        "wynik": ""
+      },
+      "Z1.2": {
+        "enpi_enb": "S-2 przepływ w czasie postoju, Nm³/min; EnB 9 Nm³/min — pomiar 12.01.2026, postój weekendowy",
+        "okres": "Pomiar kontrolny po zakończeniu usuwania nieszczelności (VII 2027) wobec pomiaru bazowego 12.01.2026",
+        "dane": "Przepływomierz na kolektorze głównym; pomiar w czasie minimum 2 h postoju produkcji. Protokół pomiaru w teczce EnMS.",
+        "warunki": "Postój całej produkcji, sieć pod ciśnieniem roboczym 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu nie jest porównywalny — powtarza się go.",
+        "zmienne": "Przepływ w czasie postoju nie zależy od produkcji ani od pogody, więc normalizacja nie jest potrzebna. Warunkiem porównywalności jest to samo ciśnienie sieci i ta sama konfiguracja odcięć.",
+        "obliczenie": "Spadek przepływu w Nm³/min i w procentach wobec 9 Nm³/min. Cel: ≤ 4 Nm³/min.",
+        "kto": "Mierzy i liczy Kierownik Utrzymania Ruchu; sprawdza Energy Manager.",
+        "wynik": "Pomiar 06.2026: 6 Nm³/min — poprawa 33,3%, cel pośredni osiągnięty; następny test kwartalny 09.2026, cel końcowy 4 Nm³/min do 06.2027."
+      },
+      "Z2.1": {
+        "enpi_enb": "OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; EnB 680 MWh (2025)",
+        "okres": "Rok 2028 wobec roku bazowego 2025",
+        "dane": "Podliczniki oświetlenia H1 i H2 (od VII 2026) — odczyt miesięczny. Za rok 2025: inwentaryzacja opraw × czas pracy według harmonogramu zmian; arkusz EnMS, zakładka OŚ-1.",
+        "warunki": "Ten sam czas pracy zakładu — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu.",
+        "zmienne": "Zużycie oświetlenia zależy od czasu świecenia, nie od wielkości produkcji — porównanie prowadzi się na godzinach pracy zakładu. Powierzchnia hal i wymagane poziomy natężenia są czynnikami statycznymi; ich zmiana unieważnia EnB.",
+        "obliczenie": "(680 − zużycie 2028) ÷ 680 × 100%. Cel: ≤ 410 MWh, czyli poprawa co najmniej 39,7%.",
+        "kto": "Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny.",
+        "wynik": ""
+      },
+      "Z3.1": {
+        "enpi_enb": "O-1 wskaźnik ogólny zakładu; EnB = indeks 1,000 dla roku 2025 (model: energia = f(produkcja, stopniodni))",
+        "okres": "Rok kalendarzowy wobec roku bazowego 2025",
+        "dane": "Dwa liczniki główne (energia elektryczna, gaz) i faktury LPG; ERP — masa stali w wyrobach; IMGW — stopniodni dla bazy 18 °C. Arkusz EnMS, zakładka O-1.",
+        "warunki": "Rok pełnej pracy zakładu. Zmiana asortymentu powyżej 20% masy wymaga sprawdzenia aktualności modelu regresji.",
+        "zmienne": "Normalizacja modelem regresji wielorakiej na produkcji (t) i stopniodniach — zużycie oczekiwane liczone z modelu, wskaźnik to iloraz zużycia rzeczywistego i oczekiwanego. Czynniki statyczne: powierzchnia hal, liczba zmian, linia technologiczna.",
+        "obliczenie": "Indeks = zużycie rzeczywiste ÷ zużycie oczekiwane z modelu. Cel: ≤ 0,950.",
+        "kto": "Liczy Energy Manager; wynik przyjmuje Zarząd na przeglądzie zarządzania.",
+        "wynik": "I–IX 2026: 0,978 — poprawa 2,2%, cel nieosiągnięty, zadanie w toku."
+      }
+    },
+    "P_META": {
+      "zatwierdzil": "Zarząd AutoParts Polska sp. z o.o., uchwała nr 4/2026 z 15 kwietnia 2026 r.",
+      "data": "2026-04-15",
+      "stan": "2026-09-30"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Cel bez planu działań i bez wskaźnika zostaje deklaracją na przeglądzie.",
+        "decyzja": "Z1.1 — wskaźnik S-1 z 0,125 na 0,110 kWh/Nm³ do 31.12.2027 r., z planem C1 i przypisanym budżetem.",
+        "dzialanie": "Plan C1: kampania pomiarowa, usunięcie 35 nieszczelności z kwartalnym przeglądem, obniżenie ciśnienia, sterownik nadrzędny z napędem — INW/2027/04, 380 tys. zł.",
+        "sprawdzenie": "Średnia z dwunastu miesięcy po odbiorze instalacji wobec linii bazowej 0,125 kWh/Nm³."
+      }
+    ],
+    "CELE": [],
+    "ZADANIA": [],
+    "DZIAL": [],
+    "WER": {},
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "STATUSY": [
+      [
+        "",
+        "Wybierz"
+      ],
+      [
+        "planowane",
+        "Planowane"
+      ],
+      [
+        "zatwierdzone",
+        "Zatwierdzone"
+      ],
+      [
+        "wtoku",
+        "W toku"
+      ],
+      [
+        "wykonane",
+        "Wykonane"
+      ],
+      [
+        "wstrzymane",
+        "Wstrzymane"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

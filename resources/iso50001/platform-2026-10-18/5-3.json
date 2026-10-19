@@ -1,0 +1,743 @@
+{
+  "source_file": "ENESA_5.3_Role_i_uprawnienia_platforma.html",
+  "source_sha256": "a3b22ca085000fd5ff1862361b1e3f868e0e460b6eea732aaad78a5487a86b8d",
+  "section": "5-3",
+  "data": {
+    "zadania": [
+      {
+        "kod": "ZAD-A",
+        "litera": "a",
+        "tresc": "Zapewnienie, że system zarządzania energią jest ustanowiony, wdrożony, utrzymywany i ciągle doskonalony",
+        "poludzku": "Zbudować system i utrzymać go przy życiu. Te same cztery czasowniki co w punkcie 4.4.",
+        "klauzula": "4.4",
+        "sugestia": "np. Energy Manager z zespołem",
+        "placeholder": "np. zespół spotyka się raz w miesiącu w okresie wdrożenia; Energy Manager prowadzi rejestr zadań i pilnuje terminów"
+      },
+      {
+        "kod": "ZAD-B",
+        "litera": "b",
+        "tresc": "Zapewnienie, że system jest zgodny z wymaganiami normy",
+        "poludzku": "Pilnować zgodności — sprawdzać, czy system spełnia wymagania, a nie tylko czy działa.",
+        "klauzula": "9.2",
+        "sugestia": "np. Energy Manager / pełnomocnik systemów zarządzania",
+        "placeholder": "np. lista kontrolna przed każdym audytem wewnętrznym; przegląd zgodności przy każdej zmianie w systemie"
+      },
+      {
+        "kod": "ZAD-C",
+        "litera": "c",
+        "tresc": "Zapewnienie realizacji planów działań służących ciągłemu doskonaleniu wyniku energetycznego",
+        "poludzku": "Doprowadzić plany działań do końca. Zespół nie musi sam wymieniać silników — zapewnia realizację i nadzoruje postęp, a działania wykonują właściciele wskazani w planie.",
+        "klauzula": "6.2",
+        "sugestia": "np. Energy Manager koordynuje, właściciele działań wykonują",
+        "placeholder": "np. miesięczny przegląd postępu działań z planu; właściciel każdego działania wskazany w planie; eskalacja do Dyrektora przy zagrożeniu terminu"
+      },
+      {
+        "kod": "ZAD-D",
+        "litera": "d",
+        "tresc": "Raportowanie najwyższemu kierownictwu o funkcjonowaniu systemu i poprawie wyniku energetycznego, w ustalonych odstępach czasu",
+        "poludzku": "Raportować kierownictwu: jak działa system i jak poprawia się wynik energetyczny.",
+        "klauzula": "9.3",
+        "sugestia": "np. Energy Manager",
+        "placeholder": "np. raport miesięczny do Dyrektora Zakładu: wskaźniki, odchylenia, postęp działań; pełne sprawozdanie na przegląd zarządzania",
+        "rytm": "np. raport miesięczny i pełne sprawozdanie dwa razy w roku"
+      },
+      {
+        "kod": "ZAD-E",
+        "litera": "e",
+        "tresc": "Ustalenie kryteriów i metod potrzebnych do zapewnienia skutecznego działania i nadzorowania systemu",
+        "poludzku": "Ustalić zasady gry — kryteria i metody, dzięki którym system działa i da się go nadzorować.",
+        "klauzula": "8.1, 9.1",
+        "sugestia": "np. Energy Manager z Kierownikiem UR",
+        "placeholder": "np. kryteria eksploatacji dla sprężarkowni i kotłowni; progi alarmowe; metoda liczenia wskaźników i zasady porównań"
+      }
+    ],
+    "role_domyslne": [
+      {
+        "id": "zarzad",
+        "skrot": "Zarząd",
+        "nazwa": "Najwyższe kierownictwo",
+        "staly": true
+      },
+      {
+        "id": "em",
+        "skrot": "EM",
+        "nazwa": "Energy Manager (koordynator zespołu)",
+        "staly": true
+      },
+      {
+        "id": "prod",
+        "skrot": "Prod.",
+        "nazwa": "Kierownik Produkcji",
+        "staly": true
+      },
+      {
+        "id": "ur",
+        "skrot": "UR",
+        "nazwa": "Kierownik Utrzymania Ruchu",
+        "staly": true
+      },
+      {
+        "id": "zak",
+        "skrot": "Zak.",
+        "nazwa": "Zakupy",
+        "staly": true
+      },
+      {
+        "id": "fin",
+        "skrot": "Fin.",
+        "nazwa": "Finanse",
+        "staly": true
+      }
+    ],
+    "mat_zadania": [
+      {
+        "kod": "MAT-01",
+        "nazwa": "Powołanie zespołu, przypisanie ról",
+        "klauzula": "5.3"
+      },
+      {
+        "kod": "MAT-02",
+        "nazwa": "Zakres i granice systemu",
+        "klauzula": "4.3"
+      },
+      {
+        "kod": "MAT-03",
+        "nazwa": "Polityka energetyczna",
+        "klauzula": "5.2"
+      },
+      {
+        "kod": "MAT-04",
+        "nazwa": "Cele, zadania i plany działań",
+        "klauzula": "6.2"
+      },
+      {
+        "kod": "MAT-05",
+        "nazwa": "Przegląd energetyczny, SEU",
+        "klauzula": "6.3"
+      },
+      {
+        "kod": "MAT-06",
+        "nazwa": "Wskaźniki EnPI i linie bazowe",
+        "klauzula": "6.4, 6.5"
+      },
+      {
+        "kod": "MAT-07",
+        "nazwa": "Plan zbierania danych, monitoring",
+        "klauzula": "6.6, 9.1"
+      },
+      {
+        "kod": "MAT-08",
+        "nazwa": "Realizacja planów działań",
+        "klauzula": "6.2"
+      },
+      {
+        "kod": "MAT-09",
+        "nazwa": "Sterowanie operacyjne SEU",
+        "klauzula": "8.1"
+      },
+      {
+        "kod": "MAT-10",
+        "nazwa": "Kryteria w projektowaniu i zakupach",
+        "klauzula": "8.2, 8.3"
+      },
+      {
+        "kod": "MAT-11",
+        "nazwa": "Kompetencje i świadomość",
+        "klauzula": "7.2, 7.3"
+      },
+      {
+        "kod": "MAT-12",
+        "nazwa": "Komunikacja",
+        "klauzula": "7.4"
+      },
+      {
+        "kod": "MAT-13",
+        "nazwa": "Budżet systemu i inwestycje energetyczne",
+        "klauzula": "7.1"
+      },
+      {
+        "kod": "MAT-14",
+        "nazwa": "Organizacja programu audytów wewnętrznych",
+        "klauzula": "9.2"
+      },
+      {
+        "kod": "MAT-15",
+        "nazwa": "Przeprowadzenie audytów wewnętrznych",
+        "klauzula": "9.2"
+      },
+      {
+        "kod": "MAT-16",
+        "nazwa": "Raportowanie kierownictwu o systemie i wyniku",
+        "klauzula": "5.3 d"
+      },
+      {
+        "kod": "MAT-17",
+        "nazwa": "Przegląd zarządzania",
+        "klauzula": "9.3"
+      },
+      {
+        "kod": "MAT-18",
+        "nazwa": "Niezgodności i działania korygujące",
+        "klauzula": "10.1"
+      }
+    ],
+    "lista_53": [
+      {
+        "tekst": "Odpowiedzialności i uprawnienia dla odpowiednich ról są przypisane",
+        "podstawa": "N",
+        "auto": "przypisane"
+      },
+      {
+        "tekst": "…i zakomunikowane w organizacji",
+        "podstawa": "N",
+        "auto": "zakomunikowane"
+      },
+      {
+        "tekst": "Powołano zespół ds. zarządzania energią",
+        "podstawa": "N",
+        "auto": null
+      },
+      {
+        "tekst": "Zespołowi przypisano: ustanowienie, wdrożenie, utrzymanie i doskonalenie systemu (a)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-A"
+      },
+      {
+        "tekst": "…zapewnienie zgodności systemu z wymaganiami normy (b)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-B"
+      },
+      {
+        "tekst": "…realizację planów działań (c)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-C"
+      },
+      {
+        "tekst": "…raportowanie najwyższemu kierownictwu o systemie i poprawie wyniku, w ustalonych odstępach (d)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-D"
+      },
+      {
+        "tekst": "…ustalenie kryteriów i metod skutecznego działania i nadzorowania systemu (e)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-E"
+      },
+      {
+        "tekst": "Wyznaczono koordynatora zespołu (Energy Managera)",
+        "podstawa": "M",
+        "auto": "koordynator"
+      },
+      {
+        "tekst": "Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań",
+        "podstawa": "N",
+        "auto": "zasoby"
+      },
+      {
+        "tekst": "Ustalono i zapisano sposób przydziału czasu i zasobów (np. udział etatu, budżet)",
+        "podstawa": "M",
+        "auto": "przydzial"
+      },
+      {
+        "tekst": "Uprawnienia kluczowych ról są zapisane (decyzje, dostęp do danych, przekazywanie spraw wyżej)",
+        "podstawa": "M",
+        "auto": "uprawnienia"
+      },
+      {
+        "tekst": "Każde SEU ma właściciela",
+        "podstawa": "M",
+        "auto": "seu"
+      },
+      {
+        "tekst": "Organizacja audytów wewnętrznych jest oddzielona od ich przeprowadzania",
+        "podstawa": "M",
+        "auto": "audyty"
+      }
+    ]
+  },
+  "variables": {
+    "ZADANIA": [
+      {
+        "kod": "ZAD-A",
+        "litera": "a",
+        "tresc": "Zapewnienie, że system zarządzania energią jest ustanowiony, wdrożony, utrzymywany i ciągle doskonalony",
+        "poludzku": "Zbudować system i utrzymać go przy życiu. Te same cztery czasowniki co w punkcie 4.4.",
+        "klauzula": "4.4",
+        "sugestia": "np. Energy Manager z zespołem",
+        "placeholder": "np. zespół spotyka się raz w miesiącu w okresie wdrożenia; Energy Manager prowadzi rejestr zadań i pilnuje terminów"
+      },
+      {
+        "kod": "ZAD-B",
+        "litera": "b",
+        "tresc": "Zapewnienie, że system jest zgodny z wymaganiami normy",
+        "poludzku": "Pilnować zgodności — sprawdzać, czy system spełnia wymagania, a nie tylko czy działa.",
+        "klauzula": "9.2",
+        "sugestia": "np. Energy Manager / pełnomocnik systemów zarządzania",
+        "placeholder": "np. lista kontrolna przed każdym audytem wewnętrznym; przegląd zgodności przy każdej zmianie w systemie"
+      },
+      {
+        "kod": "ZAD-C",
+        "litera": "c",
+        "tresc": "Zapewnienie realizacji planów działań służących ciągłemu doskonaleniu wyniku energetycznego",
+        "poludzku": "Doprowadzić plany działań do końca. Zespół nie musi sam wymieniać silników — zapewnia realizację i nadzoruje postęp, a działania wykonują właściciele wskazani w planie.",
+        "klauzula": "6.2",
+        "sugestia": "np. Energy Manager koordynuje, właściciele działań wykonują",
+        "placeholder": "np. miesięczny przegląd postępu działań z planu; właściciel każdego działania wskazany w planie; eskalacja do Dyrektora przy zagrożeniu terminu"
+      },
+      {
+        "kod": "ZAD-D",
+        "litera": "d",
+        "tresc": "Raportowanie najwyższemu kierownictwu o funkcjonowaniu systemu i poprawie wyniku energetycznego, w ustalonych odstępach czasu",
+        "poludzku": "Raportować kierownictwu: jak działa system i jak poprawia się wynik energetyczny.",
+        "klauzula": "9.3",
+        "sugestia": "np. Energy Manager",
+        "placeholder": "np. raport miesięczny do Dyrektora Zakładu: wskaźniki, odchylenia, postęp działań; pełne sprawozdanie na przegląd zarządzania",
+        "rytm": "np. raport miesięczny i pełne sprawozdanie dwa razy w roku"
+      },
+      {
+        "kod": "ZAD-E",
+        "litera": "e",
+        "tresc": "Ustalenie kryteriów i metod potrzebnych do zapewnienia skutecznego działania i nadzorowania systemu",
+        "poludzku": "Ustalić zasady gry — kryteria i metody, dzięki którym system działa i da się go nadzorować.",
+        "klauzula": "8.1, 9.1",
+        "sugestia": "np. Energy Manager z Kierownikiem UR",
+        "placeholder": "np. kryteria eksploatacji dla sprężarkowni i kotłowni; progi alarmowe; metoda liczenia wskaźników i zasady porównań"
+      }
+    ],
+    "ROLE_DOM": [
+      {
+        "id": "zarzad",
+        "skrot": "Zarząd",
+        "nazwa": "Najwyższe kierownictwo",
+        "staly": true
+      },
+      {
+        "id": "em",
+        "skrot": "EM",
+        "nazwa": "Energy Manager (koordynator zespołu)",
+        "staly": true
+      },
+      {
+        "id": "prod",
+        "skrot": "Prod.",
+        "nazwa": "Kierownik Produkcji",
+        "staly": true
+      },
+      {
+        "id": "ur",
+        "skrot": "UR",
+        "nazwa": "Kierownik Utrzymania Ruchu",
+        "staly": true
+      },
+      {
+        "id": "zak",
+        "skrot": "Zak.",
+        "nazwa": "Zakupy",
+        "staly": true
+      },
+      {
+        "id": "fin",
+        "skrot": "Fin.",
+        "nazwa": "Finanse",
+        "staly": true
+      }
+    ],
+    "MAT_ZADANIA": [
+      {
+        "kod": "MAT-01",
+        "nazwa": "Powołanie zespołu, przypisanie ról",
+        "klauzula": "5.3"
+      },
+      {
+        "kod": "MAT-02",
+        "nazwa": "Zakres i granice systemu",
+        "klauzula": "4.3"
+      },
+      {
+        "kod": "MAT-03",
+        "nazwa": "Polityka energetyczna",
+        "klauzula": "5.2"
+      },
+      {
+        "kod": "MAT-04",
+        "nazwa": "Cele, zadania i plany działań",
+        "klauzula": "6.2"
+      },
+      {
+        "kod": "MAT-05",
+        "nazwa": "Przegląd energetyczny, SEU",
+        "klauzula": "6.3"
+      },
+      {
+        "kod": "MAT-06",
+        "nazwa": "Wskaźniki EnPI i linie bazowe",
+        "klauzula": "6.4, 6.5"
+      },
+      {
+        "kod": "MAT-07",
+        "nazwa": "Plan zbierania danych, monitoring",
+        "klauzula": "6.6, 9.1"
+      },
+      {
+        "kod": "MAT-08",
+        "nazwa": "Realizacja planów działań",
+        "klauzula": "6.2"
+      },
+      {
+        "kod": "MAT-09",
+        "nazwa": "Sterowanie operacyjne SEU",
+        "klauzula": "8.1"
+      },
+      {
+        "kod": "MAT-10",
+        "nazwa": "Kryteria w projektowaniu i zakupach",
+        "klauzula": "8.2, 8.3"
+      },
+      {
+        "kod": "MAT-11",
+        "nazwa": "Kompetencje i świadomość",
+        "klauzula": "7.2, 7.3"
+      },
+      {
+        "kod": "MAT-12",
+        "nazwa": "Komunikacja",
+        "klauzula": "7.4"
+      },
+      {
+        "kod": "MAT-13",
+        "nazwa": "Budżet systemu i inwestycje energetyczne",
+        "klauzula": "7.1"
+      },
+      {
+        "kod": "MAT-14",
+        "nazwa": "Organizacja programu audytów wewnętrznych",
+        "klauzula": "9.2"
+      },
+      {
+        "kod": "MAT-15",
+        "nazwa": "Przeprowadzenie audytów wewnętrznych",
+        "klauzula": "9.2"
+      },
+      {
+        "kod": "MAT-16",
+        "nazwa": "Raportowanie kierownictwu o systemie i wyniku",
+        "klauzula": "5.3 d"
+      },
+      {
+        "kod": "MAT-17",
+        "nazwa": "Przegląd zarządzania",
+        "klauzula": "9.3"
+      },
+      {
+        "kod": "MAT-18",
+        "nazwa": "Niezgodności i działania korygujące",
+        "klauzula": "10.1"
+      }
+    ],
+    "MAT_PRZYKLAD": {
+      "MAT-01|zarzad": "Z",
+      "MAT-01|em": "O",
+      "MAT-01|prod": "W",
+      "MAT-01|ur": "W",
+      "MAT-01|zak": "I",
+      "MAT-01|fin": "I",
+      "MAT-02|zarzad": "Z",
+      "MAT-02|em": "O",
+      "MAT-02|prod": "W",
+      "MAT-02|ur": "W",
+      "MAT-02|zak": "I",
+      "MAT-02|fin": "I",
+      "MAT-03|zarzad": "Z",
+      "MAT-03|em": "O",
+      "MAT-03|prod": "W",
+      "MAT-03|ur": "W",
+      "MAT-03|zak": "W",
+      "MAT-03|fin": "W",
+      "MAT-04|zarzad": "Z",
+      "MAT-04|em": "O",
+      "MAT-04|prod": "W",
+      "MAT-04|ur": "W",
+      "MAT-04|zak": "I",
+      "MAT-04|fin": "W",
+      "MAT-05|zarzad": "I",
+      "MAT-05|em": "O",
+      "MAT-05|prod": "W",
+      "MAT-05|ur": "W",
+      "MAT-05|zak": "I",
+      "MAT-05|fin": "W",
+      "MAT-06|zarzad": "Z",
+      "MAT-06|em": "O",
+      "MAT-06|prod": "W",
+      "MAT-06|ur": "W",
+      "MAT-06|fin": "I",
+      "MAT-07|zarzad": "I",
+      "MAT-07|em": "O",
+      "MAT-07|prod": "W",
+      "MAT-07|ur": "W",
+      "MAT-07|fin": "I",
+      "MAT-08|zarzad": "I",
+      "MAT-08|em": "W",
+      "MAT-08|prod": "O",
+      "MAT-08|ur": "O",
+      "MAT-08|zak": "W",
+      "MAT-08|fin": "I",
+      "MAT-09|em": "W",
+      "MAT-09|prod": "O",
+      "MAT-09|ur": "O",
+      "MAT-09|zak": "I",
+      "MAT-10|zarzad": "Z",
+      "MAT-10|em": "W",
+      "MAT-10|prod": "W",
+      "MAT-10|ur": "W",
+      "MAT-10|zak": "O",
+      "MAT-10|fin": "W",
+      "MAT-11|zarzad": "I",
+      "MAT-11|em": "O",
+      "MAT-11|prod": "W",
+      "MAT-11|ur": "W",
+      "MAT-11|zak": "I",
+      "MAT-11|fin": "I",
+      "MAT-12|zarzad": "W",
+      "MAT-12|em": "O",
+      "MAT-12|prod": "W",
+      "MAT-12|ur": "W",
+      "MAT-12|zak": "I",
+      "MAT-12|fin": "I",
+      "MAT-13|zarzad": "Z",
+      "MAT-13|em": "W",
+      "MAT-13|prod": "W",
+      "MAT-13|ur": "W",
+      "MAT-13|zak": "I",
+      "MAT-13|fin": "O",
+      "MAT-14|zarzad": "I",
+      "MAT-14|em": "O",
+      "MAT-14|prod": "W",
+      "MAT-14|ur": "W",
+      "MAT-14|zak": "W",
+      "MAT-14|fin": "I",
+      "MAT-15|zarzad": "I",
+      "MAT-15|em": "W",
+      "MAT-15|prod": "W",
+      "MAT-15|ur": "W",
+      "MAT-15|zak": "W",
+      "MAT-15|fin": "I",
+      "MAT-16|zarzad": "I",
+      "MAT-16|em": "O",
+      "MAT-16|prod": "W",
+      "MAT-16|ur": "W",
+      "MAT-16|fin": "W",
+      "MAT-17|zarzad": "Z",
+      "MAT-17|em": "O",
+      "MAT-17|prod": "W",
+      "MAT-17|ur": "W",
+      "MAT-17|zak": "W",
+      "MAT-17|fin": "W",
+      "MAT-18|zarzad": "I",
+      "MAT-18|em": "O",
+      "MAT-18|prod": "W",
+      "MAT-18|ur": "W",
+      "MAT-18|zak": "W"
+    },
+    "LISTA_53": [
+      {
+        "tekst": "Odpowiedzialności i uprawnienia dla odpowiednich ról są przypisane",
+        "podstawa": "N",
+        "auto": "przypisane"
+      },
+      {
+        "tekst": "…i zakomunikowane w organizacji",
+        "podstawa": "N",
+        "auto": "zakomunikowane"
+      },
+      {
+        "tekst": "Powołano zespół ds. zarządzania energią",
+        "podstawa": "N",
+        "auto": null
+      },
+      {
+        "tekst": "Zespołowi przypisano: ustanowienie, wdrożenie, utrzymanie i doskonalenie systemu (a)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-A"
+      },
+      {
+        "tekst": "…zapewnienie zgodności systemu z wymaganiami normy (b)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-B"
+      },
+      {
+        "tekst": "…realizację planów działań (c)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-C"
+      },
+      {
+        "tekst": "…raportowanie najwyższemu kierownictwu o systemie i poprawie wyniku, w ustalonych odstępach (d)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-D"
+      },
+      {
+        "tekst": "…ustalenie kryteriów i metod skutecznego działania i nadzorowania systemu (e)",
+        "podstawa": "N",
+        "auto": "zad",
+        "zad": "ZAD-E"
+      },
+      {
+        "tekst": "Wyznaczono koordynatora zespołu (Energy Managera)",
+        "podstawa": "M",
+        "auto": "koordynator"
+      },
+      {
+        "tekst": "Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań",
+        "podstawa": "N",
+        "auto": "zasoby"
+      },
+      {
+        "tekst": "Ustalono i zapisano sposób przydziału czasu i zasobów (np. udział etatu, budżet)",
+        "podstawa": "M",
+        "auto": "przydzial"
+      },
+      {
+        "tekst": "Uprawnienia kluczowych ról są zapisane (decyzje, dostęp do danych, przekazywanie spraw wyżej)",
+        "podstawa": "M",
+        "auto": "uprawnienia"
+      },
+      {
+        "tekst": "Każde SEU ma właściciela",
+        "podstawa": "M",
+        "auto": "seu"
+      },
+      {
+        "tekst": "Organizacja audytów wewnętrznych jest oddzielona od ich przeprowadzania",
+        "podstawa": "M",
+        "auto": "audyty"
+      }
+    ],
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Energy Manager bez uprawnień decyzyjnych może raportować, ale nie zmienić sposobu eksploatacji instalacji.",
+        "decyzja": "Zakres obowiązków i uprawnień Energy Managera oraz jego stałego zastępcy sformalizowany zarządzeniem, nie ustaleniem ustnym.",
+        "dzialanie": "Zarządzenie 3/2026 z 12.02.2026: uprawnienie do wstrzymania pracy instalacji poza kryteriami eksploatacji, stałe zastępstwo Kierownika Utrzymania Ruchu.",
+        "sprawdzenie": "Test ciągłości w punkcie 4.4 — na cztery z pięciu pytań jest wskazana osoba, piąte ma termin naprawy 30.11.2026 r."
+      }
+    ],
+    "ZAD": {},
+    "ROLE": [],
+    "MAT": {},
+    "UWAGI": {},
+    "UPR": [],
+    "SEU": [],
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OZN": [
+      [
+        "",
+        "–"
+      ],
+      [
+        "Z",
+        "Z"
+      ],
+      [
+        "O",
+        "O"
+      ],
+      [
+        "W",
+        "W"
+      ],
+      [
+        "I",
+        "I"
+      ]
+    ]
+  },
+  "example_literals": {
+    "MAT": {},
+    "ZAD": {
+      "ZAD-A": {
+        "kto": "Energy Manager z zespołem: Kierownik Produkcji, Kierownik Utrzymania Ruchu, Zakupy, Finanse",
+        "jak": "Zespół spotyka się raz w miesiącu w okresie wdrożenia; Energy Manager prowadzi rejestr zadań z terminami i raportuje postęp na spotkaniu produkcyjnym.",
+        "rytm": "miesiac"
+      },
+      "ZAD-B": {
+        "kto": "Pełnomocnik ds. systemów zarządzania",
+        "jak": "Zgodność sprawdzana listą kontrolną przy każdym punkcie normy i auditem wewnętrznym przed certyfikacją; rozbieżności trafiają do rejestru niezgodności (10.1).",
+        "rytm": "kwartal"
+      },
+      "ZAD-C": {
+        "kto": "Dyrektor Zakładu",
+        "jak": "Zasoby zatwierdzane w planie zasobów (7.1) i w budżecie rocznym; zmiany obciążeń przeglądane przy przeglądzie zarządzania.",
+        "rytm": "rok"
+      },
+      "ZAD-D": {
+        "kto": "Energy Manager",
+        "jak": "Raport miesięczny o wyniku energetycznym i postępie planów działań dla Dyrektora Zakładu; raz na kwartał punkt na naradzie produkcyjnej; raz w roku na przeglądzie zarządzania.",
+        "rytm": "miesiac"
+      },
+      "ZAD-E": {
+        "kto": "Dyrektor Zakładu wspólnie z Energy Managerem",
+        "jak": "Decyzje o celach i inwestycjach energetycznych podejmowane na przeglądzie zarządzania i zapisywane w protokole z właścicielem i terminem.",
+        "rytm": "rok"
+      }
+    },
+    "UWAGI": {
+      "MAT-08": "Energy Manager odpowiada za plan i rozliczenie działań, Kierownik Utrzymania Ruchu — za ich wykonanie na instalacjach. Granica: wszystko, co wymaga wejścia na instalację, należy do UR.",
+      "MAT-09": "Kierownik Utrzymania Ruchu odpowiada za sprężarkownię i kotłownię, Kierownik Produkcji za prasy i lakiernię. Kryteria ustala Energy Manager wspólnie z właścicielem instalacji."
+    },
+    "UPR": [
+      {
+        "rola": "Energy Manager",
+        "decyzje": "Zwołuje zespół; zleca analizy i pomiary okresowe; wstrzymuje zakup urządzenia energochłonnego do czasu oceny energetycznej — najdłużej na 5 dni roboczych; dysponuje kwotą do 20 tys. zł rocznie na drobne usprawnienia.",
+        "dane": "Faktury za energię, odczyty liczników i pomiarów, plany produkcji, dane kadrowe o obsadzie zmian.",
+        "eskalacja": "Do Dyrektora Zakładu, gdy niekorzystne odchylenie na znaczącym użyciu utrzymuje się dłużej niż dwa tygodnie albo działanie z planu jest zagrożone."
+      },
+      {
+        "rola": "Kierownik Utrzymania Ruchu",
+        "decyzje": "Ustala nastawy w granicach kryteriów eksploatacji; zleca przeglądy i naprawy do 15 tys. zł; wstrzymuje pracę instalacji poza kryteriami.",
+        "dane": "Dane z liczników i pomiarów na instalacjach, plan przeglądów, dokumentacja techniczna (DTR).",
+        "eskalacja": "Do Energy Managera przy odchyleniu przekraczającym próg; do Dyrektora Zakładu przy przekroczeniu kwoty albo przy postoju produkcji."
+      },
+      {
+        "rola": "Dyrektor Zakładu",
+        "decyzje": "Zatwierdza politykę, cele, plany działań i budżet; rozstrzyga konflikt między wynikiem energetycznym a planem produkcji.",
+        "dane": "Raport miesięczny o wyniku, dane kosztowe z kontrolingu, wyniki auditów.",
+        "eskalacja": "Do zarządu spółki przy nakładzie przekraczającym budżet roczny albo przy ryzyku utraty kluczowego klienta."
+      }
+    ],
+    "SEU": [
+      {
+        "nazwa": "Sprężarkownia — cztery sprężarki śrubowe, 17,5% zużycia zakładu",
+        "wlasciciel": "Kierownik Utrzymania Ruchu",
+        "zakres": "Kryteria eksploatacji, przeglądy szczelności, nastawy ciśnienia, wskaźnik S-1"
+      },
+      {
+        "nazwa": "Linie pras — 24,5% zużycia zakładu",
+        "wlasciciel": "Kierownik Produkcji",
+        "zakres": "Harmonogram pracy, wyłączenia w przerwach, wskaźnik kWh/t"
+      },
+      {
+        "nazwa": "Lakiernia — piece suszące zasilane gazem",
+        "wlasciciel": "Kierownik Produkcji",
+        "zakres": "Temperatury i czasy suszenia, wyłączenia poza produkcją"
+      }
+    ],
+    "KOM": {
+      "sposob": "Zarządzenie 3/2026 ogłoszone na spotkaniu kierownictwa, wywieszone na tablicy przy portierni i opublikowane w intranecie; zakresy obowiązków zaktualizowane aneksami.",
+      "data": "2026-02-12",
+      "koordynator": "Energy Manager — Jan Kowalski; zastępstwo stałe: Kierownik Utrzymania Ruchu",
+      "bezKoordynatora": ""
+    }
+  }
+}

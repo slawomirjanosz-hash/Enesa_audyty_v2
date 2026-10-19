@@ -10,6 +10,7 @@ use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\IsoPlantElaboration;
 use App\Services\IsoPlantQuestionnaire;
+use App\Services\IsoPlatformRelease;
 use App\Services\IsoQuestionnaireWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -99,6 +100,9 @@ class IsoPlantProfileController extends Controller
     {
         $client = $this->access($request, $audit);
         $this->checkProfile($audit, $profile);
+        if ($request->boolean('source_example')) {
+            abort_unless(! $client && $request->user()->can('audits.manage'), 403);
+        }
 
         return view('audits.plant-profile.show', [
             'audit' => $audit, 'profile' => $profile, 'client' => $client, 'prefix' => $this->prefix($client),
@@ -106,6 +110,7 @@ class IsoPlantProfileController extends Controller
             'canClientApprove' => $client && $request->user()->hasRole('client_admin'),
             'isLatest' => ! IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->where('revision', '>', $profile->revision)->exists(),
             'questionnaire' => $this->questionnaire,
+            'exampleAnswers' => $request->boolean('source_example') ? app(IsoPlatformRelease::class)->answers('intro') : null,
             'events' => DB::table('iso_plant_events')->where('profile_id', $profile->id)->orderByDesc('id')->limit(50)->get(['action', 'user_name', 'created_at']),
         ]);
     }

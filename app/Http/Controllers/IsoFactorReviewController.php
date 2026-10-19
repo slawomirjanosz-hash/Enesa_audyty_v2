@@ -10,6 +10,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\IsoFactorQuestionnaire;
+use App\Services\IsoPlatformRelease;
 use App\Services\IsoQuestionnaireWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -50,10 +51,15 @@ class IsoFactorReviewController extends Controller
         $review = IsoFactorReview::firstOrNew(['audit_id' => $audit->id, 'site_id' => $profile->site_id], ['status' => 'editing', 'lock_version' => 0, 'answers' => [], 'basis' => []]);
         $facts = $this->questionnaire->facts($profile);
         $answers = $this->questionnaire->currentAnswers($review->answers ?? [], $review->basis ?? [], $facts);
+        if ($request->boolean('source_example')) {
+            abort_unless(! $client && $request->user()->can('audits.manage'), 403);
+            $answers = app(IsoPlatformRelease::class)->answers('4-1', ['facts' => $facts]);
+        }
 
         return view('audits.factors.show', [
             'audit' => $audit, 'profile' => $profile, 'review' => $review, 'client' => $client,
             'prefix' => $this->prefix($client), 'questionnaire' => $this->questionnaire, 'facts' => $facts, 'answers' => $answers,
+            'exampleSwot' => ! $client && $request->boolean('source_example') ? app(IsoPlatformRelease::class)->swot() : null,
             'ready' => $profile->status === 'approved' && $profile->client_approval && $profile->auditor_approval,
             'stale' => $review->exists && $review->source_hash !== $this->questionnaire->hash($profile),
             'canWrite' => $client || $request->user()->can('audits.manage'),
@@ -92,7 +98,7 @@ class IsoFactorReviewController extends Controller
                 }
                 $labels = [];
                 foreach (IsoFactorReview::SWOT_FIELDS as $key => $label) {
-                    $rules['swot.'.$key] = ($op === 'approve' ? 'required' : 'nullable').'|string|max:10000';
+                    $rules['swot.'.$key] = 'nullable|string|max:10000';
                     $labels['swot.'.$key] = $label;
                 }
                 $validated = $request->validate($rules, [], $labels);

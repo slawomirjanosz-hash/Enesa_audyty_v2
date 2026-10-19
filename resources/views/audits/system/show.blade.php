@@ -22,9 +22,10 @@
 @endif
 @foreach($service->warnings($section,$answers,$sources) as $warning)<div class="plant-notice">{{$warning}}</div>@endforeach</section>
 @if(str_starts_with($section,'6-')) @include('audits.system.planning-summary') @endif
-@if(str_starts_with($section,'7-')) @include('audits.system.support-summary') @endif
+@if(in_array($section,['7-1','7-2','7-3'])) @include('audits.system.support-summary') @endif
 @if(\App\Services\IsoExecutionQuestionnaire::handles($section)) @include('audits.system.execution-summary') @endif
 @php($editable=$canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected'])))
+@include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
 @include('audits.partials.questionnaire-excel', ['excelParameters'=>[$audit,$profile,$section]])
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="system-form" data-questionnaire-form method="post" action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
 @include('audits.system.fields')<input type="hidden" name="complete_form" value="1">
@@ -37,7 +38,7 @@
 @if($canWrite && !$stale && $review->status==='submitted')
 <form method="post" data-review-action action="{{route($prefix.'update',[$audit,$profile,$section])}}">@csrf
 <input type="hidden" name="operation" value="consultant"><input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$sources['hash']}}">
-<div data-conclusions>@foreach(old('consultant.WNIOSKI',$review->consultant['WNIOSKI']??[[]]) as $i=>$conclusion)<div class="system-row">
+<div data-conclusions>@foreach(old('consultant.WNIOSKI',$exampleConsultant['WNIOSKI']??$review->consultant['WNIOSKI']??[[]]) as $i=>$conclusion)<div class="system-row">
 @foreach(['znaczenie'=>'Co z tego wynika?', 'decyzja'=>'Co wybieramy?', 'dzialanie'=>'Co konkretnie robimy?', 'sprawdzenie'=>'Po czym poznamy, że zadziałało?'] as $key=>$label)<label>{{$label}}<textarea name="consultant[WNIOSKI][{{$i}}][{{$key}}]" maxlength="3000" required>{{$conclusion[$key]??''}}</textarea></label>@endforeach
 <button type="button" data-remove-conclusion>Usuń wniosek</button></div>@endforeach</div><button type="button" data-add-conclusion>+ Dodaj wniosek</button><button class="primary">Zapisz analizę konsultanta</button></form>
 @else @foreach($review->consultant['WNIOSKI']??[] as $conclusion)@foreach($conclusion as $text)<p>{{$text}}</p>@endforeach @endforeach<p>Analizę można zapisać po zatwierdzeniu ankiety przez klienta.</p>@endif

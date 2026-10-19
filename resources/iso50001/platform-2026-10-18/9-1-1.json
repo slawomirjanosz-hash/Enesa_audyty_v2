@@ -1,0 +1,701 @@
+{
+  "source_file": "ENESA_9.1.1_Monitorowanie_platforma.html",
+  "source_sha256": "5eb4a341dcba9906f6a46df1d9f2cc4bb62e46471e854fee1bd41f216590c02c",
+  "section": "9-1-1",
+  "data": {
+    "CHARAKTERYSTYKI": [
+      {
+        "kod": "plany",
+        "nazwa": "Skuteczność planów działań w osiąganiu celów i zadań",
+        "pomoc": "Nie „czy działanie wykonano”, ale czy przynosi zakładany efekt.",
+        "ph": "np. Czy działania z planu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — przepływ w postoju 9 → 6 Nm³/min",
+        "phZ": "np. Plan działań III-24; protokoły testów weekendowych",
+        "phM": "np. Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach jak w teście bazowym; porównanie z wartością bazową 9 Nm³/min",
+        "phCz": "np. co kwartał",
+        "phP": "np. brak postępu między dwoma kolejnymi testami"
+      },
+      {
+        "kod": "enpi",
+        "nazwa": "Wskaźniki wyniku energetycznego (EnPI)",
+        "ph": "np. O-1 zakład, P-1 prasy, L-1 lakiernia, S-1 sprężarkownia, K-1 kotłownia, OŚ-1 oświetlenie",
+        "phZ": "np. Podliczniki obszarowe, przepływomierz sprężarkowni, faktury, raporty produkcyjne",
+        "phM": "np. Karty wskaźników z punktu 6.4; każdy EnPI liczony metodą z karty i porównywany z odpowiadającą mu EnB w porównywalnych warunkach",
+        "phCz": "np. co miesiąc; S-1 co tydzień",
+        "phP": "np. 3% wobec średniej z ostatnich okresów; S-1 — 3% tygodniowo"
+      },
+      {
+        "kod": "seu",
+        "nazwa": "Działanie znaczących użyć energii",
+        "pomoc": "Czy SEU pracują według kryteriów ustalonych w punkcie 8.1.",
+        "ph": "np. Czy sprężarkownia utrzymuje ciśnienie ≤ 6,3 bar i czy tryby postoju są stosowane",
+        "phZ": "np. Trend ciśnienia ze sterownika; zapisy obchodów; protokoły serwisu",
+        "phM": "np. Odczyt trendu ciśnienia z rejestratora sterownika i przegląd zapisów obchodów; przy każdej usłudze serwisowej — protokół z nastawami przed i po",
+        "phCz": "np. na bieżąco (sterownik, obchody)",
+        "phP": "np. każde przekroczenie 6,3 bar dłuższe niż 4 h"
+      },
+      {
+        "kod": "rzeczOcz",
+        "nazwa": "Zużycie rzeczywiste w porównaniu z oczekiwanym",
+        "ph": "np. Model zakładu: 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu",
+        "phZ": "np. Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny; stopniodni z danych meteorologicznych",
+        "phM": "np. Zużycie oczekiwane z modelu regresji (III-22) przy rzeczywistej produkcji i stopniodniach; iloraz rzeczywistego i oczekiwanego jako wskaźnik O-1",
+        "phCz": "np. co miesiąc",
+        "phP": "np. iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca"
+      }
+    ],
+    "LISTA_911": [
+      {
+        "tekst": "Ustalono, co monitorować i mierzyć — co najmniej: skuteczność planów działań, EnPI, działanie SEU, zużycie rzeczywiste wobec oczekiwanego.",
+        "podstawa": "N",
+        "auto": "co"
+      },
+      {
+        "tekst": "Ustalono metody monitorowania, pomiaru, analizy i oceny zapewniające wiarygodne wyniki.",
+        "podstawa": "N",
+        "auto": "metody"
+      },
+      {
+        "tekst": "Ustalono, kiedy prowadzi się pomiary i kiedy analizuje i ocenia wyniki.",
+        "podstawa": "N",
+        "auto": "kiedy"
+      },
+      {
+        "tekst": "Oceniany jest wynik energetyczny — EnPI wobec odpowiadających im EnB.",
+        "podstawa": "N",
+        "auto": "enpiEnb"
+      },
+      {
+        "tekst": "Oceniana jest skuteczność systemu.",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "tekst": "Znaczące odchylenia są badane, a reakcje — zapisane.",
+        "podstawa": "N",
+        "auto": "odchylenia"
+      },
+      {
+        "tekst": "Zachowano zapisy wyników monitorowania i pomiarów.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Ustalono i stosuje się kryteria identyfikowania znaczących odchyleń.",
+        "podstawa": "N",
+        "auto": "progi"
+      },
+      {
+        "tekst": "Raport z monitorowania zawiera wnioski i rekomendacje (III-41).",
+        "podstawa": "M",
+        "auto": "wnioski"
+      }
+    ],
+    "przyklad": {
+      "USTALENIA": [
+        {
+          "kod": "plany",
+          "co": "Czy działania z planu działań celu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — w szczególności przepływ sprężonego powietrza w postoju (zadanie Z1.2, 9 → 4 Nm³/min).",
+          "zrodlo": "Plan działań III-24; protokoły testów weekendowych; zadania UR w planie utrzymania ruchu",
+          "metoda": "Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach ustawionych jak w teście bazowym; wynik porównywany z wartością bazową 9 Nm³/min z 01.2026. Status działań odczytywany z planu III-24.",
+          "ktoMierzy": "Kierownik Utrzymania Ruchu",
+          "czestoscPomiar": "Co kwartał (test), status działań — na bieżąco",
+          "ktoAnalizuje": "Jan Kowalski — Energy Manager",
+          "czestoscAnaliza": "Co kwartał, w ocenie skuteczności systemu",
+          "prog": "Brak postępu między dwoma kolejnymi testami kwartalnymi albo opóźnienie działania powyżej jednego kwartału"
+        },
+        {
+          "kod": "enpi",
+          "co": "Sześć wskaźników: O-1 zakład (rzeczywiste / oczekiwane), P-1 prasy [kWh/t], L-1 lakiernia, S-1 sprężarkownia [kWh/Nm³], K-1 kotłownia, OŚ-1 oświetlenie [MWh].",
+          "zrodlo": "Podliczniki obszarowe (6 szt.), przepływomierz na kolektorze głównym, faktury za energię elektryczną, gaz i LPG, raport produkcyjny, stopniodni z danych meteorologicznych",
+          "metoda": "Każdy wskaźnik liczony metodą z własnej karty (6.4) i porównywany z odpowiadającą mu EnB w warunkach zapisanych w karcie. Luki w danych uzupełniane sposobem z planu zbierania danych (6.6); każde uzupełnienie oznaczane adnotacją.",
+          "ktoMierzy": "Utrzymanie ruchu — odczyty podliczników; kontroling — faktury",
+          "czestoscPomiar": "Co miesiąc; S-1 co tydzień",
+          "ktoAnalizuje": "Jan Kowalski — Energy Manager",
+          "czestoscAnaliza": "Co miesiąc, do 10. dnia po zamknięciu miesiąca; S-1 w zestawieniu tygodniowym",
+          "prog": "3% wobec średniej z trzech poprzednich okresów; S-1 — 3% wobec średniej z ostatnich tygodni; L-1 — 2%"
+        },
+        {
+          "kod": "seu",
+          "co": "Czy pięć znaczących użyć energii pracuje według kryteriów z punktu 8.1 — w sprężarkowni ciśnienie ≤ 6,3 bar i stosowanie trybu postoju.",
+          "zrodlo": "Trend ciśnienia z rejestratora sterownika sprężarkowni; zapisy obchodów; protokoły serwisu; karta kryteriów F-EnMS-14",
+          "metoda": "Odczyt trendu ciśnienia z rejestratora i przegląd zapisów obchodów. Przy każdej usłudze serwisowej przy SEU — protokół z nastawami przed i po, sprawdzany przy odbiorze usługi. Brak wpisów o zmianach nastaw nie jest traktowany jako dowód spełnienia kryterium.",
+          "ktoMierzy": "Technicy UR — obchody; sterownik — rejestracja ciągła",
+          "czestoscPomiar": "Na bieżąco (sterownik, obchody na każdej zmianie)",
+          "ktoAnalizuje": "Kierownik Utrzymania Ruchu",
+          "czestoscAnaliza": "Co tydzień wraz z wskaźnikiem S-1; przegląd zapisów co miesiąc",
+          "prog": "Każde przekroczenie 6,3 bar utrzymujące się dłużej niż 4 godziny; każda zmiana nastawy bez wpisu"
+        },
+        {
+          "kod": "rzeczOcz",
+          "co": "Zużycie rzeczywiste zakładu wobec zużycia oczekiwanego z modelu, przy rzeczywistej produkcji i rzeczywistych stopniodniach.",
+          "zrodlo": "Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny (tony stali); stopniodni grzania z danych meteorologicznych dla lokalizacji zakładu",
+          "metoda": "Zużycie oczekiwane z modelu regresji z przeglądu energetycznego (III-22): 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu. Iloraz rzeczywistego i oczekiwanego jest wskaźnikiem O-1. Suma nośników sprawdzana z licznikami głównymi.",
+          "ktoMierzy": "Kontroling — odczyt liczników głównych i faktur",
+          "czestoscPomiar": "Co miesiąc, po zamknięciu miesiąca",
+          "ktoAnalizuje": "Jan Kowalski — Energy Manager",
+          "czestoscAnaliza": "Co miesiąc, do 10. dnia po zamknięciu miesiąca",
+          "prog": "Iloraz powyżej 1,03 albo wzrost ilorazu o 3 punkty procentowe wobec poprzedniego miesiąca"
+        }
+      ],
+      "MODEL": {
+        "a": "0,23",
+        "opisA": "produkcja [t stali]",
+        "b": "0,48",
+        "opisB": "stopniodni grzania [HDD]",
+        "c": "406",
+        "zrodlo": "Model zużycia zakładu z przeglądu energetycznego (III-22), regresja wieloraka na 24 miesiącach 2024–2025; R² = 0,94. Sprawdzenie na roku bazowym: 0,23·24 000 t + 0,48·3 600 HDD + 406·12 = 12 120 MWh — tyle, ile zakład zużył w 2025 r."
+      },
+      "OKRESY": [
+        {
+          "okres": "Marzec 2026",
+          "x1": "2100",
+          "x2": "350",
+          "rzeczywiste": "1030",
+          "rozbicie": "",
+          "komentarz": "Pełna produkcja, ogrzewanie hal przez cały miesiąc. Iloraz 0,974."
+        },
+        {
+          "okres": "Lipiec 2026",
+          "x1": "1800",
+          "x2": "0",
+          "rzeczywiste": "795",
+          "rozbicie": "",
+          "komentarz": "Zużycie o prawie 23% niższe niż w marcu, ale wynik energetyczny praktycznie się nie zmienił — spadek zrobiły lato i plan produkcji. Część załogi na urlopach, ani jednego dnia grzania."
+        },
+        {
+          "okres": "Sierpień 2026",
+          "x1": "2050",
+          "x2": "10",
+          "rzeczywiste": "851",
+          "rozbicie": "en. el. 690; gaz 150; LPG 11",
+          "komentarz": "Poprawa wobec EnB 1,000; lipiec 0,970."
+        }
+      ],
+      "WSKAZNIKI": [
+        {
+          "kod": "O-1",
+          "nazwa": "zakład — rzeczywiste / oczekiwane",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,965",
+          "biezOkres": "VIII 2026",
+          "cel": "≤ 0,95",
+          "celTermin": "za rok 2027",
+          "prog": "Iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca",
+          "ocena": "Poprawa. I półrocze 2026: 0,97."
+        },
+        {
+          "kod": "P-1",
+          "nazwa": "prasy [kWh/t]",
+          "kierunek": "nizej",
+          "enb": "124,0",
+          "enbOkres": "2025",
+          "biez": "121,5",
+          "biezOkres": "VIII 2026",
+          "cel": "monitorowanie",
+          "celTermin": "",
+          "prog": "3% wobec średniej z trzech poprzednich miesięcy",
+          "ocena": "Poprawa."
+        },
+        {
+          "kod": "L-1",
+          "nazwa": "lakiernia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,99",
+          "biezOkres": "VIII 2026",
+          "cel": "—",
+          "celTermin": "",
+          "prog": "2% wobec średniej z trzech poprzednich miesięcy",
+          "ocena": "W granicach progu. Wzrost z 0,98 do 0,99 — poniżej progu; obserwacja w kolejnym miesiącu."
+        },
+        {
+          "kod": "S-1",
+          "nazwa": "sprężarkownia [kWh/Nm³]",
+          "kierunek": "nizej",
+          "enb": "0,125",
+          "enbOkres": "02–03.2026",
+          "biez": "0,118",
+          "biezOkres": "VIII 2026; VII–18.IX: 0,119",
+          "cel": "0,110",
+          "celTermin": "12.2027",
+          "prog": "3% wobec średniej z ostatnich tygodni — wskaźnik liczony tygodniowo",
+          "ocena": "Poprawa; cel w toku. Do celu brakuje więcej, niż już osiągnięto — samo ciśnienie więcej nie da."
+        },
+        {
+          "kod": "K-1",
+          "nazwa": "kotłownia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "",
+          "biezOkres": "poza sezonem grzewczym",
+          "cel": "—",
+          "celTermin": "",
+          "prog": "3% wobec tego samego okresu sezonu grzewczego",
+          "ocena": "Analiza przed sezonem. I półrocze: +1% wobec EnB — przyczyny do ustalenia przed rozpoczęciem sezonu."
+        },
+        {
+          "kod": "OŚ-1",
+          "nazwa": "oświetlenie [MWh/miesiąc]",
+          "kierunek": "nizej",
+          "enb": "56,7",
+          "enbOkres": "680 MWh/rok 2025, czyli 56,7 MWh/mies.",
+          "biez": "55,8",
+          "biezOkres": "VIII 2026",
+          "cel": "410 MWh/rok",
+          "celTermin": "2027",
+          "prog": "5% wobec tego samego miesiąca poprzedniego roku",
+          "ocena": "Bez istotnej zmiany do wymiany opraw na LED (zadanie Z2.1)."
+        }
+      ],
+      "SEU": [
+        {
+          "obszar": "Sprężarkownia",
+          "kryterium": "Ciśnienie ≤ 6,3 bar (III-35)",
+          "stan": "spelnione",
+          "uwagi": "Potwierdzone trendem ciśnienia z rejestratora sterownika za cały miesiąc oraz zapisami obchodów. Uwaga metodyczna: brak wpisów o zmianach nastaw sam nie dowodziłby spełnienia kryterium."
+        },
+        {
+          "obszar": "Z1.2 — przepływ sprężonego powietrza w postoju",
+          "kryterium": "6 Nm³/min (06.2026) → 4 Nm³/min (06.2027)",
+          "stan": "czesciowo",
+          "uwagi": "Następny test weekendowy zaplanowany na 09.2026. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min."
+        },
+        {
+          "obszar": "Z1.1 — modernizacja sprężarkowni",
+          "kryterium": "Uruchomienie 06.2027",
+          "stan": "czesciowo",
+          "uwagi": "Koncepcja w przeglądzie (09.2026) — patrz analiza projektu III-36 i specyfikacja zakupowa III-38. Zapis postępu w planie działań III-24, pozycja 4."
+        },
+        {
+          "obszar": "Lakiernia",
+          "kryterium": "Temperatura i czas suszenia zgodnie z instrukcją I-LK-03",
+          "stan": "spelnione",
+          "uwagi": "Zapisy ze sterownika pieca i protokoły zmianowe za cały miesiąc."
+        },
+        {
+          "obszar": "Kotłownia",
+          "kryterium": "Krzywa grzewcza i nastawy wg instrukcji I-KT-01",
+          "stan": "poza",
+          "uwagi": "Poza sezonem grzewczym — ocena przed rozpoczęciem sezonu, razem z analizą K-1."
+        }
+      ],
+      "ODCH": [
+        {
+          "co": "S-1 wzrósł z około 0,120 do około 0,125 kWh/Nm³ w jednym tygodniu, przy produkcji i temperaturze takich jak tydzień wcześniej.",
+          "kiedy": "Czerwiec 2026",
+          "wartosc": "4,2",
+          "prog": "3",
+          "przyczyna": "Serwis po przeglądzie przywrócił ciśnienie 7 bar — kryterium 6,3 bar z karty sprężarkowni nie zostało zastosowane. Kierownik UR sprawdził kolejno nastawę, pracę sprężarek, filtry i wycieki, w kolejności z kryteriów 8.1.",
+          "reakcja": "Powrót do 6,3 bar tego samego dnia.",
+          "niezgodnosc": "tak",
+          "kto": "Kierownik Utrzymania Ruchu — zbadane w ciągu tygodnia",
+          "dzialanie": "Działanie korygujące (10.1): trzy zdania w zleceniu serwisowym o zakazie zmiany nastaw bez zgłoszenia. W kolejnych tygodniach wskaźnik wrócił do około 0,120. Przy następnym przeglądzie kierownik UR miał sprawdzić protokół z nastawami — wrześniowy audyt wewnętrzny pokazał, że tego zabrakło (karta niezgodności NK-2026-01, ponowne otwarcie 18.09.2026)."
+        }
+      ],
+      "OCENA_E": {
+        "wynik": "Poprawa wobec EnB w O-1 (0,965 wobec 1,000), P-1 (121,5 wobec 124,0) i S-1 (0,118 wobec 0,125). L-1 w granicach progu. OŚ-1 bez istotnej zmiany do wymiany opraw. K-1 do analizy przed sezonem grzewczym — w I półroczu 1% powyżej EnB.",
+        "system": "Działania 1–3 planu C1 wykonane w terminie, pozycja 4 zatwierdzona w budżecie 2027. Jedno znaczące odchylenie (06.2026) zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Stosowanie kryteriów sprężarkowni potwierdzone trendem ciśnienia i zapisami obchodów. Ocena zgodności (09.2026): 7 wymagań ocenianych, 1 niezgodne — działanie w toku; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Słabe miejsce: sprawdzanie protokołów serwisu przy odbiorze usługi — ustalenie z czerwca działa tylko w połowie.",
+        "rekomendacje": "Utrzymać modernizację sprężarkowni (380 000 zł) w budżecie 2027 — cel Z1.1 nie jest osiągalny samym ciśnieniem. Przyjąć działanie dla raportu bankowego. Przeprowadzić analizę przyczyn K-1 przed rozpoczęciem sezonu grzewczego. Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi.",
+        "rytmSystem": "Raz na kwartał, w kilku zdaniach raportu dla dyrektora zakładu: ile działań z planu wykonano w terminie, ile znaczących odchyleń wykryto, ile z nich zbadano i jak szybko, co zmieniono po analizach. Raport miesięczny części A–C do 10. dnia po zamknięciu miesiąca."
+      },
+      "META": {
+        "okres": "Sierpień 2026 (części A–C, E)",
+        "data": "2026-09-07",
+        "sporzadzil": "Jan Kowalski — Energy Manager",
+        "odbiorcy": "Piotr Nowak — Dyrektor Zakładu; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "dataZatw": "2026-09-18"
+      }
+    }
+  },
+  "variables": {
+    "CHARAKTERYSTYKI": [
+      {
+        "kod": "plany",
+        "nazwa": "Skuteczność planów działań w osiąganiu celów i zadań",
+        "pomoc": "Nie „czy działanie wykonano”, ale czy przynosi zakładany efekt.",
+        "ph": "np. Czy działania z planu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — przepływ w postoju 9 → 6 Nm³/min",
+        "phZ": "np. Plan działań III-24; protokoły testów weekendowych",
+        "phM": "np. Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach jak w teście bazowym; porównanie z wartością bazową 9 Nm³/min",
+        "phCz": "np. co kwartał",
+        "phP": "np. brak postępu między dwoma kolejnymi testami"
+      },
+      {
+        "kod": "enpi",
+        "nazwa": "Wskaźniki wyniku energetycznego (EnPI)",
+        "ph": "np. O-1 zakład, P-1 prasy, L-1 lakiernia, S-1 sprężarkownia, K-1 kotłownia, OŚ-1 oświetlenie",
+        "phZ": "np. Podliczniki obszarowe, przepływomierz sprężarkowni, faktury, raporty produkcyjne",
+        "phM": "np. Karty wskaźników z punktu 6.4; każdy EnPI liczony metodą z karty i porównywany z odpowiadającą mu EnB w porównywalnych warunkach",
+        "phCz": "np. co miesiąc; S-1 co tydzień",
+        "phP": "np. 3% wobec średniej z ostatnich okresów; S-1 — 3% tygodniowo"
+      },
+      {
+        "kod": "seu",
+        "nazwa": "Działanie znaczących użyć energii",
+        "pomoc": "Czy SEU pracują według kryteriów ustalonych w punkcie 8.1.",
+        "ph": "np. Czy sprężarkownia utrzymuje ciśnienie ≤ 6,3 bar i czy tryby postoju są stosowane",
+        "phZ": "np. Trend ciśnienia ze sterownika; zapisy obchodów; protokoły serwisu",
+        "phM": "np. Odczyt trendu ciśnienia z rejestratora sterownika i przegląd zapisów obchodów; przy każdej usłudze serwisowej — protokół z nastawami przed i po",
+        "phCz": "np. na bieżąco (sterownik, obchody)",
+        "phP": "np. każde przekroczenie 6,3 bar dłuższe niż 4 h"
+      },
+      {
+        "kod": "rzeczOcz",
+        "nazwa": "Zużycie rzeczywiste w porównaniu z oczekiwanym",
+        "ph": "np. Model zakładu: 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu",
+        "phZ": "np. Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny; stopniodni z danych meteorologicznych",
+        "phM": "np. Zużycie oczekiwane z modelu regresji (III-22) przy rzeczywistej produkcji i stopniodniach; iloraz rzeczywistego i oczekiwanego jako wskaźnik O-1",
+        "phCz": "np. co miesiąc",
+        "phP": "np. iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca"
+      }
+    ],
+    "LISTA_911": [
+      {
+        "tekst": "Ustalono, co monitorować i mierzyć — co najmniej: skuteczność planów działań, EnPI, działanie SEU, zużycie rzeczywiste wobec oczekiwanego.",
+        "podstawa": "N",
+        "auto": "co"
+      },
+      {
+        "tekst": "Ustalono metody monitorowania, pomiaru, analizy i oceny zapewniające wiarygodne wyniki.",
+        "podstawa": "N",
+        "auto": "metody"
+      },
+      {
+        "tekst": "Ustalono, kiedy prowadzi się pomiary i kiedy analizuje i ocenia wyniki.",
+        "podstawa": "N",
+        "auto": "kiedy"
+      },
+      {
+        "tekst": "Oceniany jest wynik energetyczny — EnPI wobec odpowiadających im EnB.",
+        "podstawa": "N",
+        "auto": "enpiEnb"
+      },
+      {
+        "tekst": "Oceniana jest skuteczność systemu.",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "tekst": "Znaczące odchylenia są badane, a reakcje — zapisane.",
+        "podstawa": "N",
+        "auto": "odchylenia"
+      },
+      {
+        "tekst": "Zachowano zapisy wyników monitorowania i pomiarów.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Ustalono i stosuje się kryteria identyfikowania znaczących odchyleń.",
+        "podstawa": "N",
+        "auto": "progi"
+      },
+      {
+        "tekst": "Raport z monitorowania zawiera wnioski i rekomendacje (III-41).",
+        "podstawa": "M",
+        "auto": "wnioski"
+      }
+    ],
+    "PRZYKLAD": {
+      "USTALENIA": [
+        {
+          "kod": "plany",
+          "co": "Czy działania z planu działań celu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — w szczególności przepływ sprężonego powietrza w postoju (zadanie Z1.2, 9 → 4 Nm³/min).",
+          "zrodlo": "Plan działań III-24; protokoły testów weekendowych; zadania UR w planie utrzymania ruchu",
+          "metoda": "Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach ustawionych jak w teście bazowym; wynik porównywany z wartością bazową 9 Nm³/min z 01.2026. Status działań odczytywany z planu III-24.",
+          "ktoMierzy": "Kierownik Utrzymania Ruchu",
+          "czestoscPomiar": "Co kwartał (test), status działań — na bieżąco",
+          "ktoAnalizuje": "Jan Kowalski — Energy Manager",
+          "czestoscAnaliza": "Co kwartał, w ocenie skuteczności systemu",
+          "prog": "Brak postępu między dwoma kolejnymi testami kwartalnymi albo opóźnienie działania powyżej jednego kwartału"
+        },
+        {
+          "kod": "enpi",
+          "co": "Sześć wskaźników: O-1 zakład (rzeczywiste / oczekiwane), P-1 prasy [kWh/t], L-1 lakiernia, S-1 sprężarkownia [kWh/Nm³], K-1 kotłownia, OŚ-1 oświetlenie [MWh].",
+          "zrodlo": "Podliczniki obszarowe (6 szt.), przepływomierz na kolektorze głównym, faktury za energię elektryczną, gaz i LPG, raport produkcyjny, stopniodni z danych meteorologicznych",
+          "metoda": "Każdy wskaźnik liczony metodą z własnej karty (6.4) i porównywany z odpowiadającą mu EnB w warunkach zapisanych w karcie. Luki w danych uzupełniane sposobem z planu zbierania danych (6.6); każde uzupełnienie oznaczane adnotacją.",
+          "ktoMierzy": "Utrzymanie ruchu — odczyty podliczników; kontroling — faktury",
+          "czestoscPomiar": "Co miesiąc; S-1 co tydzień",
+          "ktoAnalizuje": "Jan Kowalski — Energy Manager",
+          "czestoscAnaliza": "Co miesiąc, do 10. dnia po zamknięciu miesiąca; S-1 w zestawieniu tygodniowym",
+          "prog": "3% wobec średniej z trzech poprzednich okresów; S-1 — 3% wobec średniej z ostatnich tygodni; L-1 — 2%"
+        },
+        {
+          "kod": "seu",
+          "co": "Czy pięć znaczących użyć energii pracuje według kryteriów z punktu 8.1 — w sprężarkowni ciśnienie ≤ 6,3 bar i stosowanie trybu postoju.",
+          "zrodlo": "Trend ciśnienia z rejestratora sterownika sprężarkowni; zapisy obchodów; protokoły serwisu; karta kryteriów F-EnMS-14",
+          "metoda": "Odczyt trendu ciśnienia z rejestratora i przegląd zapisów obchodów. Przy każdej usłudze serwisowej przy SEU — protokół z nastawami przed i po, sprawdzany przy odbiorze usługi. Brak wpisów o zmianach nastaw nie jest traktowany jako dowód spełnienia kryterium.",
+          "ktoMierzy": "Technicy UR — obchody; sterownik — rejestracja ciągła",
+          "czestoscPomiar": "Na bieżąco (sterownik, obchody na każdej zmianie)",
+          "ktoAnalizuje": "Kierownik Utrzymania Ruchu",
+          "czestoscAnaliza": "Co tydzień wraz z wskaźnikiem S-1; przegląd zapisów co miesiąc",
+          "prog": "Każde przekroczenie 6,3 bar utrzymujące się dłużej niż 4 godziny; każda zmiana nastawy bez wpisu"
+        },
+        {
+          "kod": "rzeczOcz",
+          "co": "Zużycie rzeczywiste zakładu wobec zużycia oczekiwanego z modelu, przy rzeczywistej produkcji i rzeczywistych stopniodniach.",
+          "zrodlo": "Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny (tony stali); stopniodni grzania z danych meteorologicznych dla lokalizacji zakładu",
+          "metoda": "Zużycie oczekiwane z modelu regresji z przeglądu energetycznego (III-22): 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu. Iloraz rzeczywistego i oczekiwanego jest wskaźnikiem O-1. Suma nośników sprawdzana z licznikami głównymi.",
+          "ktoMierzy": "Kontroling — odczyt liczników głównych i faktur",
+          "czestoscPomiar": "Co miesiąc, po zamknięciu miesiąca",
+          "ktoAnalizuje": "Jan Kowalski — Energy Manager",
+          "czestoscAnaliza": "Co miesiąc, do 10. dnia po zamknięciu miesiąca",
+          "prog": "Iloraz powyżej 1,03 albo wzrost ilorazu o 3 punkty procentowe wobec poprzedniego miesiąca"
+        }
+      ],
+      "MODEL": {
+        "a": "0,23",
+        "opisA": "produkcja [t stali]",
+        "b": "0,48",
+        "opisB": "stopniodni grzania [HDD]",
+        "c": "406",
+        "zrodlo": "Model zużycia zakładu z przeglądu energetycznego (III-22), regresja wieloraka na 24 miesiącach 2024–2025; R² = 0,94. Sprawdzenie na roku bazowym: 0,23·24 000 t + 0,48·3 600 HDD + 406·12 = 12 120 MWh — tyle, ile zakład zużył w 2025 r."
+      },
+      "OKRESY": [
+        {
+          "okres": "Marzec 2026",
+          "x1": "2100",
+          "x2": "350",
+          "rzeczywiste": "1030",
+          "rozbicie": "",
+          "komentarz": "Pełna produkcja, ogrzewanie hal przez cały miesiąc. Iloraz 0,974."
+        },
+        {
+          "okres": "Lipiec 2026",
+          "x1": "1800",
+          "x2": "0",
+          "rzeczywiste": "795",
+          "rozbicie": "",
+          "komentarz": "Zużycie o prawie 23% niższe niż w marcu, ale wynik energetyczny praktycznie się nie zmienił — spadek zrobiły lato i plan produkcji. Część załogi na urlopach, ani jednego dnia grzania."
+        },
+        {
+          "okres": "Sierpień 2026",
+          "x1": "2050",
+          "x2": "10",
+          "rzeczywiste": "851",
+          "rozbicie": "en. el. 690; gaz 150; LPG 11",
+          "komentarz": "Poprawa wobec EnB 1,000; lipiec 0,970."
+        }
+      ],
+      "WSKAZNIKI": [
+        {
+          "kod": "O-1",
+          "nazwa": "zakład — rzeczywiste / oczekiwane",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,965",
+          "biezOkres": "VIII 2026",
+          "cel": "≤ 0,95",
+          "celTermin": "za rok 2027",
+          "prog": "Iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca",
+          "ocena": "Poprawa. I półrocze 2026: 0,97."
+        },
+        {
+          "kod": "P-1",
+          "nazwa": "prasy [kWh/t]",
+          "kierunek": "nizej",
+          "enb": "124,0",
+          "enbOkres": "2025",
+          "biez": "121,5",
+          "biezOkres": "VIII 2026",
+          "cel": "monitorowanie",
+          "celTermin": "",
+          "prog": "3% wobec średniej z trzech poprzednich miesięcy",
+          "ocena": "Poprawa."
+        },
+        {
+          "kod": "L-1",
+          "nazwa": "lakiernia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "0,99",
+          "biezOkres": "VIII 2026",
+          "cel": "—",
+          "celTermin": "",
+          "prog": "2% wobec średniej z trzech poprzednich miesięcy",
+          "ocena": "W granicach progu. Wzrost z 0,98 do 0,99 — poniżej progu; obserwacja w kolejnym miesiącu."
+        },
+        {
+          "kod": "S-1",
+          "nazwa": "sprężarkownia [kWh/Nm³]",
+          "kierunek": "nizej",
+          "enb": "0,125",
+          "enbOkres": "02–03.2026",
+          "biez": "0,118",
+          "biezOkres": "VIII 2026; VII–18.IX: 0,119",
+          "cel": "0,110",
+          "celTermin": "12.2027",
+          "prog": "3% wobec średniej z ostatnich tygodni — wskaźnik liczony tygodniowo",
+          "ocena": "Poprawa; cel w toku. Do celu brakuje więcej, niż już osiągnięto — samo ciśnienie więcej nie da."
+        },
+        {
+          "kod": "K-1",
+          "nazwa": "kotłownia — indeks znormalizowany",
+          "kierunek": "nizej",
+          "enb": "1,000",
+          "enbOkres": "2025",
+          "biez": "",
+          "biezOkres": "poza sezonem grzewczym",
+          "cel": "—",
+          "celTermin": "",
+          "prog": "3% wobec tego samego okresu sezonu grzewczego",
+          "ocena": "Analiza przed sezonem. I półrocze: +1% wobec EnB — przyczyny do ustalenia przed rozpoczęciem sezonu."
+        },
+        {
+          "kod": "OŚ-1",
+          "nazwa": "oświetlenie [MWh/miesiąc]",
+          "kierunek": "nizej",
+          "enb": "56,7",
+          "enbOkres": "680 MWh/rok 2025, czyli 56,7 MWh/mies.",
+          "biez": "55,8",
+          "biezOkres": "VIII 2026",
+          "cel": "410 MWh/rok",
+          "celTermin": "2027",
+          "prog": "5% wobec tego samego miesiąca poprzedniego roku",
+          "ocena": "Bez istotnej zmiany do wymiany opraw na LED (zadanie Z2.1)."
+        }
+      ],
+      "SEU": [
+        {
+          "obszar": "Sprężarkownia",
+          "kryterium": "Ciśnienie ≤ 6,3 bar (III-35)",
+          "stan": "spelnione",
+          "uwagi": "Potwierdzone trendem ciśnienia z rejestratora sterownika za cały miesiąc oraz zapisami obchodów. Uwaga metodyczna: brak wpisów o zmianach nastaw sam nie dowodziłby spełnienia kryterium."
+        },
+        {
+          "obszar": "Z1.2 — przepływ sprężonego powietrza w postoju",
+          "kryterium": "6 Nm³/min (06.2026) → 4 Nm³/min (06.2027)",
+          "stan": "czesciowo",
+          "uwagi": "Następny test weekendowy zaplanowany na 09.2026. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min."
+        },
+        {
+          "obszar": "Z1.1 — modernizacja sprężarkowni",
+          "kryterium": "Uruchomienie 06.2027",
+          "stan": "czesciowo",
+          "uwagi": "Koncepcja w przeglądzie (09.2026) — patrz analiza projektu III-36 i specyfikacja zakupowa III-38. Zapis postępu w planie działań III-24, pozycja 4."
+        },
+        {
+          "obszar": "Lakiernia",
+          "kryterium": "Temperatura i czas suszenia zgodnie z instrukcją I-LK-03",
+          "stan": "spelnione",
+          "uwagi": "Zapisy ze sterownika pieca i protokoły zmianowe za cały miesiąc."
+        },
+        {
+          "obszar": "Kotłownia",
+          "kryterium": "Krzywa grzewcza i nastawy wg instrukcji I-KT-01",
+          "stan": "poza",
+          "uwagi": "Poza sezonem grzewczym — ocena przed rozpoczęciem sezonu, razem z analizą K-1."
+        }
+      ],
+      "ODCH": [
+        {
+          "co": "S-1 wzrósł z około 0,120 do około 0,125 kWh/Nm³ w jednym tygodniu, przy produkcji i temperaturze takich jak tydzień wcześniej.",
+          "kiedy": "Czerwiec 2026",
+          "wartosc": "4,2",
+          "prog": "3",
+          "przyczyna": "Serwis po przeglądzie przywrócił ciśnienie 7 bar — kryterium 6,3 bar z karty sprężarkowni nie zostało zastosowane. Kierownik UR sprawdził kolejno nastawę, pracę sprężarek, filtry i wycieki, w kolejności z kryteriów 8.1.",
+          "reakcja": "Powrót do 6,3 bar tego samego dnia.",
+          "niezgodnosc": "tak",
+          "kto": "Kierownik Utrzymania Ruchu — zbadane w ciągu tygodnia",
+          "dzialanie": "Działanie korygujące (10.1): trzy zdania w zleceniu serwisowym o zakazie zmiany nastaw bez zgłoszenia. W kolejnych tygodniach wskaźnik wrócił do około 0,120. Przy następnym przeglądzie kierownik UR miał sprawdzić protokół z nastawami — wrześniowy audyt wewnętrzny pokazał, że tego zabrakło (karta niezgodności NK-2026-01, ponowne otwarcie 18.09.2026)."
+        }
+      ],
+      "OCENA_E": {
+        "wynik": "Poprawa wobec EnB w O-1 (0,965 wobec 1,000), P-1 (121,5 wobec 124,0) i S-1 (0,118 wobec 0,125). L-1 w granicach progu. OŚ-1 bez istotnej zmiany do wymiany opraw. K-1 do analizy przed sezonem grzewczym — w I półroczu 1% powyżej EnB.",
+        "system": "Działania 1–3 planu C1 wykonane w terminie, pozycja 4 zatwierdzona w budżecie 2027. Jedno znaczące odchylenie (06.2026) zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Stosowanie kryteriów sprężarkowni potwierdzone trendem ciśnienia i zapisami obchodów. Ocena zgodności (09.2026): 7 wymagań ocenianych, 1 niezgodne — działanie w toku; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Słabe miejsce: sprawdzanie protokołów serwisu przy odbiorze usługi — ustalenie z czerwca działa tylko w połowie.",
+        "rekomendacje": "Utrzymać modernizację sprężarkowni (380 000 zł) w budżecie 2027 — cel Z1.1 nie jest osiągalny samym ciśnieniem. Przyjąć działanie dla raportu bankowego. Przeprowadzić analizę przyczyn K-1 przed rozpoczęciem sezonu grzewczego. Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi.",
+        "rytmSystem": "Raz na kwartał, w kilku zdaniach raportu dla dyrektora zakładu: ile działań z planu wykonano w terminie, ile znaczących odchyleń wykryto, ile z nich zbadano i jak szybko, co zmieniono po analizach. Raport miesięczny części A–C do 10. dnia po zamknięciu miesiąca."
+      },
+      "META": {
+        "okres": "Sierpień 2026 (części A–C, E)",
+        "data": "2026-09-07",
+        "sporzadzil": "Jan Kowalski — Energy Manager",
+        "odbiorcy": "Piotr Nowak — Dyrektor Zakładu; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "dataZatw": "2026-09-18"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Spadek zużycia przy mniejszej produkcji nie jest poprawą, a bywa tak raportowany.",
+        "decyzja": "Wynik liczymy wobec modelu ze zmiennymi istotnymi, nie wobec zużycia z poprzedniego okresu.",
+        "dzialanie": "Raport miesięczny podaje produkcję, stopniodnie i zużycie; model podstawiony liczbami wprost w raporcie.",
+        "sprawdzenie": "Rozbieżność większa niż 5 punktów procentowych między spadkiem zużycia a poprawą wskaźnika wymaga adnotacji w raporcie."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "USTALENIA": [],
+    "MODEL": {},
+    "OKRESY": [],
+    "WSKAZNIKI": [],
+    "SEU": [],
+    "ODCH": [],
+    "WNIOSKI": [],
+    "KIERUNKI": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "nizej",
+        "Niżej znaczy lepiej"
+      ],
+      [
+        "wyzej",
+        "Wyżej znaczy lepiej"
+      ]
+    ],
+    "STANY": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "spelnione",
+        "Spełnione"
+      ],
+      [
+        "czesciowo",
+        "Spełnione częściowo"
+      ],
+      [
+        "niespelnione",
+        "Niespełnione"
+      ],
+      [
+        "poza",
+        "Poza okresem oceny"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

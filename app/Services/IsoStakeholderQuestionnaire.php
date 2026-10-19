@@ -23,6 +23,7 @@ class IsoStakeholderQuestionnaire
         }
         $old = json_decode(file_get_contents(resource_path('iso50001/stakeholders-v1.json')), true, 512, JSON_THROW_ON_ERROR);
         $new = json_decode(file_get_contents(resource_path('iso50001/requirements-v2.json')), true, 512, JSON_THROW_ON_ERROR);
+        $old['mapowanie'] = $new['mapowanie'];
         $old['strony'] = array_map(fn ($row) => [
             'kod' => $row['id'], 'strona_kod' => $row['strona_kod'], 'nazwa' => $row['strona'],
             'typ' => $row['typ'] === 'wew.' ? 'wewnętrzna' : 'zewnętrzna',
@@ -120,7 +121,7 @@ class IsoStakeholderQuestionnaire
         $data = Validator::make($input, [
             'FAKT_KLIMAT_STRONY' => ['nullable', Rule::in(['tak', 'nie'])], 'climate_reason' => 'nullable|string|max:3000',
             'review_interval' => [$complete ? 'required' : 'nullable', Rule::in(['kwartal', 'polrocze', 'rok', 'rok_umowy'])],
-            'parties' => 'nullable|array|max:30', 'parties.*' => 'array',
+            'parties' => 'nullable|array|max:100', 'parties.*' => 'array',
             'parties.*.kwalifikacja' => ['nullable', Rule::in(array_keys(self::QUALIFICATIONS))],
             'parties.*.zr_dok' => 'nullable|string|max:5000', 'parties.*.zr_ozn' => 'nullable|string|max:5000',
             'parties.*.zr_data' => 'nullable|date_format:Y-m-d|before_or_equal:today',

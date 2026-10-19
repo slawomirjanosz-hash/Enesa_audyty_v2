@@ -1,4 +1,31 @@
 {
+  "7-1": [
+    {
+      "tekst": "Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.",
+      "podstawa": "N",
+      "auto": "okreslono"
+    },
+    {
+      "tekst": "Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.",
+      "podstawa": "N",
+      "auto": "zapewniono"
+    },
+    {
+      "tekst": "Zasoby powiązano z planami działań (6.2).",
+      "podstawa": "M",
+      "auto": "powiazano"
+    },
+    {
+      "tekst": "Zadania systemu spisano z osobami i szacunkiem czasu.",
+      "podstawa": "M",
+      "auto": "spisano"
+    },
+    {
+      "tekst": "Wystarczalność zasobów oceniono na przeglądzie zarządzania.",
+      "podstawa": "M",
+      "auto": "wystarczalnosc"
+    }
+  ],
   "7-2": [
     {
       "tekst": "Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.",
@@ -29,33 +56,6 @@
       "tekst": "Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).",
       "podstawa": "M",
       "auto": "narzedzia"
-    }
-  ],
-  "7-1": [
-    {
-      "tekst": "Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.",
-      "podstawa": "N",
-      "auto": "okreslono"
-    },
-    {
-      "tekst": "Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.",
-      "podstawa": "N",
-      "auto": "zapewniono"
-    },
-    {
-      "tekst": "Zasoby powiązano z planami działań (6.2).",
-      "podstawa": "M",
-      "auto": "powiazano"
-    },
-    {
-      "tekst": "Zadania systemu spisano z osobami i szacunkiem czasu.",
-      "podstawa": "M",
-      "auto": "spisano"
-    },
-    {
-      "tekst": "Wystarczalność zasobów oceniono na przeglądzie zarządzania.",
-      "podstawa": "M",
-      "auto": "wystarczalnosc"
     }
   ],
   "7-3": [

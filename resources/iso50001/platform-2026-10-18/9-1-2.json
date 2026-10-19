@@ -1,0 +1,928 @@
+{
+  "source_file": "ENESA_9.1.2_Ocena_zgodnosci_platforma.html",
+  "source_sha256": "816e4ee0e8cecc048a84df4ed6a891ef9917f6891bc8eee2a72f8d30413b272c",
+  "section": "9-1-2",
+  "data": {
+    "LISTA_912": [
+      {
+        "tekst": "W zaplanowanych odstępach oceniana jest zgodność z wymaganiami prawnymi i innymi dotyczącymi energii i systemu.",
+        "podstawa": "N",
+        "auto": "oceniana"
+      },
+      {
+        "tekst": "Zachowano wyniki oceny i zapis podjętych działań.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Przy ocenie zapisano datę stanu prawnego; przy braku zgodności przeanalizowano przyczynę.",
+        "podstawa": "M",
+        "auto": "stanIPrzyczyna"
+      }
+    ],
+    "przyklad": {
+      "WYM": [
+        {
+          "nr": "1",
+          "wym42": "WYM-01",
+          "strona": "Zarząd / najwyższe kierownictwo",
+          "wymaganie": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów",
+          "zrodlo": "Strategia zakładu 2026–2028, cel: obniżenie kosztów energii o 8% do 2028 r.",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Postęp celu Z3.1 i trend kosztów energii wobec roku bazowego — na dzień oceny",
+          "dowod": "Raport z monitorowania i oceny (III-42); budżet",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Zobowiązanie realizowane przez cele energetyczne (6.2); status na przeglądzie zarządzania raz w roku",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "2",
+          "wym42": "WYM-02",
+          "strona": "Właściciel / grupa kapitałowa",
+          "wymaganie": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny",
+          "zrodlo": "Polityka klimatyczna grupy kapitałowej, wersja 2025, rozdz. 3 — wskaźniki raportowane rocznie",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Porównanie definicji wskaźników z metodyką grupy; data wysyłki raportu rocznego",
+          "dowod": "Raport roczny za 2025 r. przyjęty przez spółkę matkę 28.02.2026",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "3",
+          "wym42": "WYM-03",
+          "strona": "Pracownicy",
+          "wymaganie": "Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP",
+          "zrodlo": "Rozporządzenie o ogólnych przepisach bhp; PN-EN 12464-1, wymagania dla mikroklimatu i oświetlenia stanowisk — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Przegląd ostatnich pomiarów okresowych i dat ich wykonania",
+          "dowod": "Protokoły pomiarów oświetlenia i mikroklimatu",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "4",
+          "wym42": "WYM-04",
+          "strona": "Pracownicy",
+          "wymaganie": "Preferencja: niższa temperatura w halach w czasie upałów",
+          "zrodlo": "Ankieta BHP, ankieta pracownicza 2025, pytanie 7",
+          "kwalifikacja": "nieprzyjete",
+          "jak": "",
+          "dowod": "",
+          "wynik": "",
+          "przyczyna": "",
+          "dzialanie": "Powód nieprzyjęcia: wymaga analizy kosztów chłodzenia. Rozważane w planie działań na 2027 r.; decyzja przy planowaniu, Specjalista BHP.",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "5",
+          "wym42": "WYM-05",
+          "strona": "Służby utrzymania ruchu",
+          "wymaganie": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji",
+          "zrodlo": "Zarządzenie 3/2026 o rolach w systemie zarządzania energią, § 4 — uprawnienia utrzymania ruchu",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy utrzymanie ruchu ma dostęp do danych i czy kryteria były z nim uzgadniane",
+          "dowod": "Uprawnienia do arkusza EnPI nadane 03.2026; protokół uzgodnienia kryteriów sprężarkowni z 15.05.2026",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "6",
+          "wym42": "WYM-06",
+          "strona": "Dział produkcji",
+          "wymaganie": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach",
+          "zrodlo": "Zarządzenie 3/2026, § 5 — pomiary bez wpływu na ciągłość produkcji",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Przegląd terminów pomiarów wobec planu produkcji",
+          "dowod": "Protokół z kampanii pomiarowej 02–03.2026 — pomiary w oknach postojowych, bez przestojów produkcji",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "7",
+          "wym42": "WYM-07",
+          "strona": "Dział zakupów",
+          "wymaganie": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert",
+          "zrodlo": "Zarządzenie 3/2026, § 6 — kryteria energetyczne w zakupach",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy kryteria energetyczne znalazły się w zapytaniach ofertowych 2026 r.",
+          "dowod": "Procedura zakupowa z kryteriami obowiązuje od 03.2026; dwa z trzech postępowań zawierały kryteria",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Uzupełnienie kryteriów w pozostałych kategoriach zakupowych — Dział Zakupów, 12.2026",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "8",
+          "wym42": "WYM-08",
+          "strona": "Kontroling / finanse",
+          "wymaganie": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć",
+          "zrodlo": "Zarządzenie 3/2026, § 7 — dane kosztowe dla systemu",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Zestawienie kosztów energii z faktur na dzień oceny",
+          "dowod": "Zestawienie kosztów energii I–VIII 2026 w arkuszu EnMS, uzgodnione z fakturami",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "9",
+          "wym42": "WYM-09",
+          "strona": "Dział BHP i ochrony środowiska",
+          "wymaganie": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów",
+          "zrodlo": "Dokumentacja ISO 14001 — rejestr aspektów i wymagań prawnych, wersja 6; zasada „jeden proces — jeden dokument”",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy rejestr wymagań prawnych jest jeden dla obu systemów",
+          "dowod": "Wspólny rejestr wymagań prawnych, wersja 6 z 11.2025, rozszerzony o wymagania energetyczne",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "10",
+          "wym42": "WYM-10",
+          "strona": "Energy Manager / zespół ds. energii",
+          "wymaganie": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu",
+          "zrodlo": "Zarządzenie 3/2026, § 2 — zakres obowiązków i uprawnień Energy Managera",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Porównanie zakresu uprawnień w zarządzeniu z zadaniami przypisanymi w systemie",
+          "dowod": "Zarządzenie 3/2026 § 2 z 12.02.2026; plan zasobów na 2026 r. (7.1)",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "11",
+          "wym42": "WYM-12",
+          "strona": "Prezes URE",
+          "wymaganie": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania",
+          "zrodlo": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77, obowiązek audytu energetycznego albo systemu zarządzania — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Zestawienie daty zakończenia audytu z datą zawiadomienia; sprawdzenie terminu kolejnego audytu",
+          "dowod": "Raport z audytu 2024 i kopia zawiadomienia. Do oceny dotrzymania terminu 30 dni brakuje w dowodzie dwóch dat: zakończenia audytu i wysłania zawiadomienia.",
+          "wynik": "douzupelnienia",
+          "przyczyna": "Dowód zawiera dokumenty, ale nie zawiera dat, na podstawie których można ocenić dotrzymanie 30-dniowego terminu. Przy pierwszej ocenie zgodności nikt nie wypisał dat z dokumentów.",
+          "dzialanie": "Uzupełnić dowód datami zakończenia audytu i wysłania zawiadomienia — Energy Manager, 10.2026. Termin kolejnego audytu wpisany do kalendarza. Śledzenie nowelizacji UC77 co kwartał do jej wejścia w życie.",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "12",
+          "wym42": "WYM-14",
+          "strona": "Urząd Dozoru Technicznego",
+          "wymaganie": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja",
+          "zrodlo": "Ustawa o dozorze technicznym, badania okresowe urządzeń podlegających dozorowi — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Zestawienie terminów badań UDT z datami ostatnich protokołów",
+          "dowod": "Protokoły badań kotła i zbiorników sprężonego powietrza — wszystkie ważne, najbliższy termin 04.2027",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "13",
+          "wym42": "WYM-16",
+          "strona": "Organ prowadzący rejestr f-gazów",
+          "wymaganie": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO",
+          "zrodlo": "Ustawa o substancjach zubożających warstwę ozonową i o f-gazach; rozporządzenie (UE) 2024/573, kontrole szczelności i karty urządzeń w CRO — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Sprawdzenie terminów kontroli szczelności i kompletności kart urządzeń w CRO",
+          "dowod": "Protokoły kontroli szczelności z 05.2026; karty urządzeń prowadzone w CRO",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "14",
+          "wym42": "WYM-17",
+          "strona": "Operator systemu świadectw efektywności",
+          "wymaganie": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa",
+          "zrodlo": "Ustawa o efektywności energetycznej — system świadectw, dokumentacja przedsięwzięcia i audyt efektywności energetycznej",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy przy planowanych przedsięwzięciach oceniono możliwość uzyskania świadectw",
+          "dowod": "Notatka z oceny przy planie C1 z 20.05.2026 — próg oszczędności niespełniony; ponowna ocena przy INW/2027/04",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "15",
+          "wym42": "WYM-19",
+          "strona": "Operator systemu dystrybucyjnego",
+          "wymaganie": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji",
+          "zrodlo": "Umowa o świadczenie usług dystrybucji; Prawo energetyczne, moc umowna 1 400 kW, warunki przyłączenia — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Przegląd rozliczeń mocy piętnastominutowej za I–VIII 2026",
+          "dowod": "Faktury dystrybucyjne — brak przekroczeń mocy umownej 1 400 kW",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "16",
+          "wym42": "WYM-20",
+          "strona": "Sprzedawca energii elektrycznej",
+          "wymaganie": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży",
+          "zrodlo": "Umowa sprzedaży energii elektrycznej, § 7 — miesięczne prognozy zużycia; cena stała do 31.12.2026 r.",
+          "kwalifikacja": "umowne",
+          "jak": "Sprawdzenie dat wysyłek prognoz za miesiące I–VIII 2026",
+          "dowod": "E-maile do dostawcy — osiem wysyłek, wszystkie przed terminem umownym",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "17",
+          "wym42": "WYM-21",
+          "strona": "Dostawca gazu lub ciepła sieciowego",
+          "wymaganie": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy",
+          "zrodlo": "Umowa kompleksowa na dostawę gazu ziemnego, § 4 — moc zamówiona i warunki odbioru; umowa do 30.09.2027 r.",
+          "kwalifikacja": "umowne",
+          "jak": "Przegląd rozliczeń mocy zamówionej kotłowni",
+          "dowod": "Faktury za gaz I–VIII 2026 — bez przekroczeń",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "18",
+          "wym42": "WYM-22",
+          "strona": "Dostawcy paliw transportowych",
+          "wymaganie": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń",
+          "zrodlo": "Umowa na dostawę LPG do wózków widłowych, § 3 — ewidencja wydań butli",
+          "kwalifikacja": "umowne",
+          "jak": "Zestawienie ewidencji wydań butli z fakturami dostawcy",
+          "dowod": "Zestawienie ewidencji wydań butli z fakturami dostawcy za II kw. 2026 — zgodne co do ilości",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "19",
+          "wym42": "WYM-23",
+          "strona": "Odbiorcy / klienci",
+          "wymaganie": "Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku",
+          "zrodlo": "Wymagania dla dostawców, wersja 2025, rozdz. 4, załącznik do umowy ramowej — raport co roku do 31 marca",
+          "kwalifikacja": "umowne",
+          "jak": "Data wysyłki raportu i potwierdzenie odbioru przez klienta",
+          "dowod": "Potwierdzenie klienta z 24.03.2026",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "20",
+          "wym42": "WYM-24",
+          "strona": "Odbiorcy / klienci",
+          "wymaganie": "Informacja o śladzie węglowym wyrobu",
+          "zrodlo": "E-mail działu zakupów klienta (dostawca systemów, Tier 1), korespondencja z 14.11.2025 r.",
+          "kwalifikacja": "nieprzyjete",
+          "jak": "",
+          "dowod": "",
+          "wynik": "",
+          "przyczyna": "",
+          "dzialanie": "Powód nieprzyjęcia: plan działań energetycznych obejmuje tylko emisje z energii, a ślad węglowy także materiały i transport. Ponowna decyzja przy odnowieniu umowy — I kw. 2027 r., Dział Sprzedaży.",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "21",
+          "wym42": "WYM-25",
+          "strona": "Odbiorcy / klienci",
+          "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+          "zrodlo": "Wymagania dla dostawców, wersja 2025, rozdz. 2 — certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+          "kwalifikacja": "umowne",
+          "jak": "Porównanie harmonogramu wdrożenia z terminem wymagania",
+          "dowod": "Umowa z jednostką certyfikującą; audyt certyfikujący zaplanowany na XI–XII 2026",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Utrzymanie harmonogramu wdrożenia — przegląd co miesiąc, Dyrektor Zakładu",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "22",
+          "wym42": "WYM-26",
+          "strona": "Dostawcy urządzeń i usług",
+          "wymaganie": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry",
+          "zrodlo": "Procedura zakupowa z kryteriami energetycznymi, wersja 1.0 — kryteria podawane w zapytaniach ofertowych",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy kryteria oceny były podane oferentom z góry",
+          "dowod": "Zapytanie ofertowe i karta oceny ofert na wymianę oświetlenia hali B z 08.06.2026 — kryteria energetyczne podane z góry",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "23",
+          "wym42": "WYM-28",
+          "strona": "Instytucje finansujące / banki",
+          "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”",
+          "zrodlo": "Umowa kredytowa na modernizację, załącznik ESG — coroczne wskaźniki zużycia energii zakładu",
+          "kwalifikacja": "umowne",
+          "jak": "Data wysyłki raportu wobec terminu umownego",
+          "dowod": "E-mail z 12.08.2026 — po przypomnieniu z banku",
+          "wynik": "niezgodne",
+          "przyczyna": "Termin 30 czerwca nie był w kalendarzu żadnej osoby. Rejestr wskazywał wymaganie, źródło i właściciela, ale nikt nie miał tej daty u siebie — i nikt nie sprawdzał, czy obowiązek wykonano w terminie.",
+          "dzialanie": "Termin wpisany do kalendarza kontrolingu jako zadanie cykliczne; przypomnienie od Energy Managera 14 dni przed terminem. Karta niezgodności założona (10.1).",
+          "karta10": "tak",
+          "odp": "Kontroler finansowy — wdrożenie do 10.2026"
+        },
+        {
+          "nr": "24",
+          "wym42": "WYM-30",
+          "strona": "Ubezpieczyciel",
+          "wymaganie": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności",
+          "zrodlo": "Polisa ubezpieczenia mienia i przerw w działalności, § 9 — wymogi utrzymania instalacji",
+          "kwalifikacja": "umowne",
+          "jak": "Sprawdzenie realizacji planu przeglądów instalacji",
+          "dowod": "Plan przeglądów 2026 r. wykonany w terminach; protokoły przeglądu sprężarkowni i kotłowni",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "25",
+          "wym42": "WYM-31",
+          "strona": "Jednostka certyfikująca",
+          "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres",
+          "zrodlo": "Umowa o certyfikację ISO 50001 i wymagania jednostki certyfikującej, pkt 4 — zakres i dostępność udokumentowanej informacji, wymagany okres dowodów",
+          "kwalifikacja": "umowne",
+          "jak": "Porównanie kompletności dokumentacji z wymaganiami jednostki i wymaganym okresem dowodów",
+          "dowod": "Umowa o certyfikację z 15.04.2026; dowody działania systemu zbierane od 03.2026",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Uzupełnienie dowodów do audytu certyfikującego XI–XII 2026 — Pełnomocnik ds. systemów zarządzania",
+          "karta10": "",
+          "odp": ""
+        }
+      ],
+      "OCENA": {
+        "naPrzeglad": "23 wymagań ocenianych z 25 w rejestrze punktu 4.2; 2 pozycje to oczekiwania nieprzyjęte i zostają poza oceną zgodności — ich wiersze pokazują powód i termin powrotu do decyzji. Wynik: 17 zgodnych, 4 w toku zgodnie z planem, 1 do uzupełnienia dowodem, 1 niezgodne. Niezgodność dotyczy raportu dla banku: wysłany 12.08.2026 wobec terminu umownego 30 czerwca — założono kartę niezgodności (10.1), działanie przyjęte, w toku. Przy obowiązku z ustawy o efektywności energetycznej dowód wymaga uzupełnienia datami zakończenia audytu i zawiadomienia URE; samo zawiadomienie i raport są w dokumentacji. Cztery pozycje w toku to wdrożenie i certyfikacja (termin klienta: 2027 r.), zobowiązanie zarządu rozliczane celami, kryteria energetyczne w pozostałych kategoriach zakupowych i komplet dowodów przed auditem certyfikującym. Rekomendacja: przyjąć działanie dla raportu bankowego i wyznaczyć termin uzupełnienia dowodu URE.",
+        "przegladStanu": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji ustawy o efektywności energetycznej — projekt UC77 pozostaje nieuchwalony, stan na 15.09.2026. Odpowiada Energy Manager; wynik przeglądu zapisywany z datą. Dodatkowa ocena zgodności przy każdej nowej umowie z klientem albo instytucją finansującą."
+      },
+      "META": {
+        "dataOceny": "2026-09-18",
+        "stanPrawny": "2026-09-15",
+        "oceniajacy": "Jan Kowalski — Energy Manager",
+        "rytmBaza": "rocznie",
+        "rytm": "Raz w roku, we wrześniu, przed przeglądem zarządzania. Dodatkowo przy każdej zmianie przepisu i przy nowej umowie. Wymaganie z terminem rocznym oceniane po tym terminie; obowiązek raz na cztery lata — w roku, w którym przypada; zmiana przepisu — gdy wejdzie w życie.",
+        "wRejestrze": "25",
+        "nieprzyjete": "2",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "dataZatw": "2026-09-29"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_912": [
+      {
+        "tekst": "W zaplanowanych odstępach oceniana jest zgodność z wymaganiami prawnymi i innymi dotyczącymi energii i systemu.",
+        "podstawa": "N",
+        "auto": "oceniana"
+      },
+      {
+        "tekst": "Zachowano wyniki oceny i zapis podjętych działań.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Przy ocenie zapisano datę stanu prawnego; przy braku zgodności przeanalizowano przyczynę.",
+        "podstawa": "M",
+        "auto": "stanIPrzyczyna"
+      }
+    ],
+    "PRZYKLAD": {
+      "WYM": [
+        {
+          "nr": "1",
+          "wym42": "WYM-01",
+          "strona": "Zarząd / najwyższe kierownictwo",
+          "wymaganie": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów",
+          "zrodlo": "Strategia zakładu 2026–2028, cel: obniżenie kosztów energii o 8% do 2028 r.",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Postęp celu Z3.1 i trend kosztów energii wobec roku bazowego — na dzień oceny",
+          "dowod": "Raport z monitorowania i oceny (III-42); budżet",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Zobowiązanie realizowane przez cele energetyczne (6.2); status na przeglądzie zarządzania raz w roku",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "2",
+          "wym42": "WYM-02",
+          "strona": "Właściciel / grupa kapitałowa",
+          "wymaganie": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny",
+          "zrodlo": "Polityka klimatyczna grupy kapitałowej, wersja 2025, rozdz. 3 — wskaźniki raportowane rocznie",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Porównanie definicji wskaźników z metodyką grupy; data wysyłki raportu rocznego",
+          "dowod": "Raport roczny za 2025 r. przyjęty przez spółkę matkę 28.02.2026",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "3",
+          "wym42": "WYM-03",
+          "strona": "Pracownicy",
+          "wymaganie": "Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP",
+          "zrodlo": "Rozporządzenie o ogólnych przepisach bhp; PN-EN 12464-1, wymagania dla mikroklimatu i oświetlenia stanowisk — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Przegląd ostatnich pomiarów okresowych i dat ich wykonania",
+          "dowod": "Protokoły pomiarów oświetlenia i mikroklimatu",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "4",
+          "wym42": "WYM-04",
+          "strona": "Pracownicy",
+          "wymaganie": "Preferencja: niższa temperatura w halach w czasie upałów",
+          "zrodlo": "Ankieta BHP, ankieta pracownicza 2025, pytanie 7",
+          "kwalifikacja": "nieprzyjete",
+          "jak": "",
+          "dowod": "",
+          "wynik": "",
+          "przyczyna": "",
+          "dzialanie": "Powód nieprzyjęcia: wymaga analizy kosztów chłodzenia. Rozważane w planie działań na 2027 r.; decyzja przy planowaniu, Specjalista BHP.",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "5",
+          "wym42": "WYM-05",
+          "strona": "Służby utrzymania ruchu",
+          "wymaganie": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji",
+          "zrodlo": "Zarządzenie 3/2026 o rolach w systemie zarządzania energią, § 4 — uprawnienia utrzymania ruchu",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy utrzymanie ruchu ma dostęp do danych i czy kryteria były z nim uzgadniane",
+          "dowod": "Uprawnienia do arkusza EnPI nadane 03.2026; protokół uzgodnienia kryteriów sprężarkowni z 15.05.2026",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "6",
+          "wym42": "WYM-06",
+          "strona": "Dział produkcji",
+          "wymaganie": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach",
+          "zrodlo": "Zarządzenie 3/2026, § 5 — pomiary bez wpływu na ciągłość produkcji",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Przegląd terminów pomiarów wobec planu produkcji",
+          "dowod": "Protokół z kampanii pomiarowej 02–03.2026 — pomiary w oknach postojowych, bez przestojów produkcji",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "7",
+          "wym42": "WYM-07",
+          "strona": "Dział zakupów",
+          "wymaganie": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert",
+          "zrodlo": "Zarządzenie 3/2026, § 6 — kryteria energetyczne w zakupach",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy kryteria energetyczne znalazły się w zapytaniach ofertowych 2026 r.",
+          "dowod": "Procedura zakupowa z kryteriami obowiązuje od 03.2026; dwa z trzech postępowań zawierały kryteria",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Uzupełnienie kryteriów w pozostałych kategoriach zakupowych — Dział Zakupów, 12.2026",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "8",
+          "wym42": "WYM-08",
+          "strona": "Kontroling / finanse",
+          "wymaganie": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć",
+          "zrodlo": "Zarządzenie 3/2026, § 7 — dane kosztowe dla systemu",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Zestawienie kosztów energii z faktur na dzień oceny",
+          "dowod": "Zestawienie kosztów energii I–VIII 2026 w arkuszu EnMS, uzgodnione z fakturami",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "9",
+          "wym42": "WYM-09",
+          "strona": "Dział BHP i ochrony środowiska",
+          "wymaganie": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów",
+          "zrodlo": "Dokumentacja ISO 14001 — rejestr aspektów i wymagań prawnych, wersja 6; zasada „jeden proces — jeden dokument”",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy rejestr wymagań prawnych jest jeden dla obu systemów",
+          "dowod": "Wspólny rejestr wymagań prawnych, wersja 6 z 11.2025, rozszerzony o wymagania energetyczne",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "10",
+          "wym42": "WYM-10",
+          "strona": "Energy Manager / zespół ds. energii",
+          "wymaganie": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu",
+          "zrodlo": "Zarządzenie 3/2026, § 2 — zakres obowiązków i uprawnień Energy Managera",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Porównanie zakresu uprawnień w zarządzeniu z zadaniami przypisanymi w systemie",
+          "dowod": "Zarządzenie 3/2026 § 2 z 12.02.2026; plan zasobów na 2026 r. (7.1)",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "11",
+          "wym42": "WYM-12",
+          "strona": "Prezes URE",
+          "wymaganie": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania",
+          "zrodlo": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77, obowiązek audytu energetycznego albo systemu zarządzania — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Zestawienie daty zakończenia audytu z datą zawiadomienia; sprawdzenie terminu kolejnego audytu",
+          "dowod": "Raport z audytu 2024 i kopia zawiadomienia. Do oceny dotrzymania terminu 30 dni brakuje w dowodzie dwóch dat: zakończenia audytu i wysłania zawiadomienia.",
+          "wynik": "douzupelnienia",
+          "przyczyna": "Dowód zawiera dokumenty, ale nie zawiera dat, na podstawie których można ocenić dotrzymanie 30-dniowego terminu. Przy pierwszej ocenie zgodności nikt nie wypisał dat z dokumentów.",
+          "dzialanie": "Uzupełnić dowód datami zakończenia audytu i wysłania zawiadomienia — Energy Manager, 10.2026. Termin kolejnego audytu wpisany do kalendarza. Śledzenie nowelizacji UC77 co kwartał do jej wejścia w życie.",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "12",
+          "wym42": "WYM-14",
+          "strona": "Urząd Dozoru Technicznego",
+          "wymaganie": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja",
+          "zrodlo": "Ustawa o dozorze technicznym, badania okresowe urządzeń podlegających dozorowi — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Zestawienie terminów badań UDT z datami ostatnich protokołów",
+          "dowod": "Protokoły badań kotła i zbiorników sprężonego powietrza — wszystkie ważne, najbliższy termin 04.2027",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "13",
+          "wym42": "WYM-16",
+          "strona": "Organ prowadzący rejestr f-gazów",
+          "wymaganie": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO",
+          "zrodlo": "Ustawa o substancjach zubożających warstwę ozonową i o f-gazach; rozporządzenie (UE) 2024/573, kontrole szczelności i karty urządzeń w CRO — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Sprawdzenie terminów kontroli szczelności i kompletności kart urządzeń w CRO",
+          "dowod": "Protokoły kontroli szczelności z 05.2026; karty urządzeń prowadzone w CRO",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "14",
+          "wym42": "WYM-17",
+          "strona": "Operator systemu świadectw efektywności",
+          "wymaganie": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa",
+          "zrodlo": "Ustawa o efektywności energetycznej — system świadectw, dokumentacja przedsięwzięcia i audyt efektywności energetycznej",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy przy planowanych przedsięwzięciach oceniono możliwość uzyskania świadectw",
+          "dowod": "Notatka z oceny przy planie C1 z 20.05.2026 — próg oszczędności niespełniony; ponowna ocena przy INW/2027/04",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "15",
+          "wym42": "WYM-19",
+          "strona": "Operator systemu dystrybucyjnego",
+          "wymaganie": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji",
+          "zrodlo": "Umowa o świadczenie usług dystrybucji; Prawo energetyczne, moc umowna 1 400 kW, warunki przyłączenia — stan na 10.02.2026 r.",
+          "kwalifikacja": "prawne",
+          "jak": "Przegląd rozliczeń mocy piętnastominutowej za I–VIII 2026",
+          "dowod": "Faktury dystrybucyjne — brak przekroczeń mocy umownej 1 400 kW",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "16",
+          "wym42": "WYM-20",
+          "strona": "Sprzedawca energii elektrycznej",
+          "wymaganie": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży",
+          "zrodlo": "Umowa sprzedaży energii elektrycznej, § 7 — miesięczne prognozy zużycia; cena stała do 31.12.2026 r.",
+          "kwalifikacja": "umowne",
+          "jak": "Sprawdzenie dat wysyłek prognoz za miesiące I–VIII 2026",
+          "dowod": "E-maile do dostawcy — osiem wysyłek, wszystkie przed terminem umownym",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "17",
+          "wym42": "WYM-21",
+          "strona": "Dostawca gazu lub ciepła sieciowego",
+          "wymaganie": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy",
+          "zrodlo": "Umowa kompleksowa na dostawę gazu ziemnego, § 4 — moc zamówiona i warunki odbioru; umowa do 30.09.2027 r.",
+          "kwalifikacja": "umowne",
+          "jak": "Przegląd rozliczeń mocy zamówionej kotłowni",
+          "dowod": "Faktury za gaz I–VIII 2026 — bez przekroczeń",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "18",
+          "wym42": "WYM-22",
+          "strona": "Dostawcy paliw transportowych",
+          "wymaganie": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń",
+          "zrodlo": "Umowa na dostawę LPG do wózków widłowych, § 3 — ewidencja wydań butli",
+          "kwalifikacja": "umowne",
+          "jak": "Zestawienie ewidencji wydań butli z fakturami dostawcy",
+          "dowod": "Zestawienie ewidencji wydań butli z fakturami dostawcy za II kw. 2026 — zgodne co do ilości",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "19",
+          "wym42": "WYM-23",
+          "strona": "Odbiorcy / klienci",
+          "wymaganie": "Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku",
+          "zrodlo": "Wymagania dla dostawców, wersja 2025, rozdz. 4, załącznik do umowy ramowej — raport co roku do 31 marca",
+          "kwalifikacja": "umowne",
+          "jak": "Data wysyłki raportu i potwierdzenie odbioru przez klienta",
+          "dowod": "Potwierdzenie klienta z 24.03.2026",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "20",
+          "wym42": "WYM-24",
+          "strona": "Odbiorcy / klienci",
+          "wymaganie": "Informacja o śladzie węglowym wyrobu",
+          "zrodlo": "E-mail działu zakupów klienta (dostawca systemów, Tier 1), korespondencja z 14.11.2025 r.",
+          "kwalifikacja": "nieprzyjete",
+          "jak": "",
+          "dowod": "",
+          "wynik": "",
+          "przyczyna": "",
+          "dzialanie": "Powód nieprzyjęcia: plan działań energetycznych obejmuje tylko emisje z energii, a ślad węglowy także materiały i transport. Ponowna decyzja przy odnowieniu umowy — I kw. 2027 r., Dział Sprzedaży.",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "21",
+          "wym42": "WYM-25",
+          "strona": "Odbiorcy / klienci",
+          "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+          "zrodlo": "Wymagania dla dostawców, wersja 2025, rozdz. 2 — certyfikat ISO 50001 dla nowych kontraktów od 2027 r.",
+          "kwalifikacja": "umowne",
+          "jak": "Porównanie harmonogramu wdrożenia z terminem wymagania",
+          "dowod": "Umowa z jednostką certyfikującą; audyt certyfikujący zaplanowany na XI–XII 2026",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Utrzymanie harmonogramu wdrożenia — przegląd co miesiąc, Dyrektor Zakładu",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "22",
+          "wym42": "WYM-26",
+          "strona": "Dostawcy urządzeń i usług",
+          "wymaganie": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry",
+          "zrodlo": "Procedura zakupowa z kryteriami energetycznymi, wersja 1.0 — kryteria podawane w zapytaniach ofertowych",
+          "kwalifikacja": "zobowiazanie",
+          "jak": "Sprawdzenie, czy kryteria oceny były podane oferentom z góry",
+          "dowod": "Zapytanie ofertowe i karta oceny ofert na wymianę oświetlenia hali B z 08.06.2026 — kryteria energetyczne podane z góry",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "23",
+          "wym42": "WYM-28",
+          "strona": "Instytucje finansujące / banki",
+          "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”",
+          "zrodlo": "Umowa kredytowa na modernizację, załącznik ESG — coroczne wskaźniki zużycia energii zakładu",
+          "kwalifikacja": "umowne",
+          "jak": "Data wysyłki raportu wobec terminu umownego",
+          "dowod": "E-mail z 12.08.2026 — po przypomnieniu z banku",
+          "wynik": "niezgodne",
+          "przyczyna": "Termin 30 czerwca nie był w kalendarzu żadnej osoby. Rejestr wskazywał wymaganie, źródło i właściciela, ale nikt nie miał tej daty u siebie — i nikt nie sprawdzał, czy obowiązek wykonano w terminie.",
+          "dzialanie": "Termin wpisany do kalendarza kontrolingu jako zadanie cykliczne; przypomnienie od Energy Managera 14 dni przed terminem. Karta niezgodności założona (10.1).",
+          "karta10": "tak",
+          "odp": "Kontroler finansowy — wdrożenie do 10.2026"
+        },
+        {
+          "nr": "24",
+          "wym42": "WYM-30",
+          "strona": "Ubezpieczyciel",
+          "wymaganie": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności",
+          "zrodlo": "Polisa ubezpieczenia mienia i przerw w działalności, § 9 — wymogi utrzymania instalacji",
+          "kwalifikacja": "umowne",
+          "jak": "Sprawdzenie realizacji planu przeglądów instalacji",
+          "dowod": "Plan przeglądów 2026 r. wykonany w terminach; protokoły przeglądu sprężarkowni i kotłowni",
+          "wynik": "zgodne",
+          "przyczyna": "",
+          "dzialanie": "—",
+          "karta10": "",
+          "odp": ""
+        },
+        {
+          "nr": "25",
+          "wym42": "WYM-31",
+          "strona": "Jednostka certyfikująca",
+          "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres",
+          "zrodlo": "Umowa o certyfikację ISO 50001 i wymagania jednostki certyfikującej, pkt 4 — zakres i dostępność udokumentowanej informacji, wymagany okres dowodów",
+          "kwalifikacja": "umowne",
+          "jak": "Porównanie kompletności dokumentacji z wymaganiami jednostki i wymaganym okresem dowodów",
+          "dowod": "Umowa o certyfikację z 15.04.2026; dowody działania systemu zbierane od 03.2026",
+          "wynik": "wtoku",
+          "przyczyna": "",
+          "dzialanie": "Uzupełnienie dowodów do audytu certyfikującego XI–XII 2026 — Pełnomocnik ds. systemów zarządzania",
+          "karta10": "",
+          "odp": ""
+        }
+      ],
+      "OCENA": {
+        "naPrzeglad": "23 wymagań ocenianych z 25 w rejestrze punktu 4.2; 2 pozycje to oczekiwania nieprzyjęte i zostają poza oceną zgodności — ich wiersze pokazują powód i termin powrotu do decyzji. Wynik: 17 zgodnych, 4 w toku zgodnie z planem, 1 do uzupełnienia dowodem, 1 niezgodne. Niezgodność dotyczy raportu dla banku: wysłany 12.08.2026 wobec terminu umownego 30 czerwca — założono kartę niezgodności (10.1), działanie przyjęte, w toku. Przy obowiązku z ustawy o efektywności energetycznej dowód wymaga uzupełnienia datami zakończenia audytu i zawiadomienia URE; samo zawiadomienie i raport są w dokumentacji. Cztery pozycje w toku to wdrożenie i certyfikacja (termin klienta: 2027 r.), zobowiązanie zarządu rozliczane celami, kryteria energetyczne w pozostałych kategoriach zakupowych i komplet dowodów przed auditem certyfikującym. Rekomendacja: przyjąć działanie dla raportu bankowego i wyznaczyć termin uzupełnienia dowodu URE.",
+        "przegladStanu": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji ustawy o efektywności energetycznej — projekt UC77 pozostaje nieuchwalony, stan na 15.09.2026. Odpowiada Energy Manager; wynik przeglądu zapisywany z datą. Dodatkowa ocena zgodności przy każdej nowej umowie z klientem albo instytucją finansującą."
+      },
+      "META": {
+        "dataOceny": "2026-09-18",
+        "stanPrawny": "2026-09-15",
+        "oceniajacy": "Jan Kowalski — Energy Manager",
+        "rytmBaza": "rocznie",
+        "rytm": "Raz w roku, we wrześniu, przed przeglądem zarządzania. Dodatkowo przy każdej zmianie przepisu i przy nowej umowie. Wymaganie z terminem rocznym oceniane po tym terminie; obowiązek raz na cztery lata — w roku, w którym przypada; zmiana przepisu — gdy wejdzie w życie.",
+        "wRejestrze": "25",
+        "nieprzyjete": "2",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "dataZatw": "2026-09-29"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Rejestr z punktu 4.2 wskazywał wymaganie, źródło i właściciela, ale nie niósł terminu — i obowiązek wobec banku wykonano sześć tygodni po czasie.",
+        "decyzja": "Przy wymaganiach z terminem rejestr ma nieść datę i powtarzalność, nie tylko właściciela.",
+        "dzialanie": "Termin 30 czerwca wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem Energy Managera czternaście dni wcześniej; karta niezgodności w 10.1.",
+        "sprawdzenie": "Kolejna ocena zgodności we wrześniu 2027 r. zestawia daty wysyłek z terminami umownymi — bez przekroczeń."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "WYM": [],
+    "WNIOSKI": [],
+    "KWALIFIKACJE": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "prawne",
+        "Prawne — wynika z przepisu"
+      ],
+      [
+        "umowne",
+        "Umowne — z umowy lub specyfikacji"
+      ],
+      [
+        "zobowiazanie",
+        "Przyjęte zobowiązanie"
+      ],
+      [
+        "nieprzyjete",
+        "Oczekiwanie nieprzyjęte"
+      ]
+    ],
+    "WYNIKI": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "zgodne",
+        "Zgodne"
+      ],
+      [
+        "wtoku",
+        "W toku, zgodnie z planem"
+      ],
+      [
+        "douzupelnienia",
+        "Ocena do uzupełnienia dowodem"
+      ],
+      [
+        "niezgodne",
+        "Niezgodne"
+      ]
+    ],
+    "RYTMY": [
+      [
+        "",
+        "—"
+      ],
+      [
+        "czesciej",
+        "Częściej niż raz w roku"
+      ],
+      [
+        "rocznie",
+        "Raz w roku"
+      ],
+      [
+        "rzadziej",
+        "Rzadziej niż raz w roku"
+      ]
+    ]
+  },
+  "example_literals": {}
+}

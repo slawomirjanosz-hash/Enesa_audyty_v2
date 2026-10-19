@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "section": "7-4",
+  "source_file": "ENESA_7.4_Komunikacja_platforma.html",
+  "source_sha256": "fa4828663ebed7934fab0c81703ad5b406b83e2095c7b4d36b460032f97f2e40",
+  "definitions": {
+    "LISTA_74": [
+      {
+        "tekst": "Ustalono komunikację wewnętrzną i zewnętrzną: o czym, kiedy, z kim, w jaki sposób i kto przekazuje.",
+        "podstawa": "N",
+        "auto": "ustalono"
+      },
+      {
+        "tekst": "Przekazywane informacje są wiarygodne i zgodne z informacjami wytworzonymi w systemie.",
+        "podstawa": "N",
+        "auto": "wiarygodne"
+      },
+      {
+        "tekst": "Działa proces, w którym każda osoba pracująca pod nadzorem organizacji może zgłaszać uwagi i propozycje doskonalenia.",
+        "podstawa": "N",
+        "auto": "proces"
+      },
+      {
+        "tekst": "Rozważono zachowanie zapisów zgłoszonych propozycji (rejestr zgłoszeń).",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Każde zgłoszenie dostaje odpowiedź — także wtedy, gdy jest nią uzasadniona odmowa.",
+        "podstawa": "M",
+        "auto": "odpowiedzi"
+      }
+    ]
+  },
+  "tree": {
+    "WEW": {
+      "type": "list",
+      "label": "Komunikacja wewnętrzna",
+      "min": 0,
+      "children": {
+        "co": {
+          "type": "textarea",
+          "label": "Co monitorujemy",
+          "required": true,
+          "options": {}
+        },
+        "kiedy": {
+          "type": "textarea",
+          "label": "Kiedy stwierdzono",
+          "required": true,
+          "options": {}
+        },
+        "komu": {
+          "type": "textarea",
+          "label": "Odbiorca",
+          "required": true,
+          "options": {}
+        },
+        "jak": {
+          "type": "textarea",
+          "label": "Sposób wykonania / sprawdzenia",
+          "required": true,
+          "options": {}
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "podstawa": {
+          "type": "textarea",
+          "label": "Podstawa ustalenia kryterium",
+          "required": false,
+          "options": {}
+        }
+      }
+    },
+    "ZEW": {
+      "type": "list",
+      "label": "Komunikacja zewnętrzna",
+      "min": 0,
+      "children": {
+        "co": {
+          "type": "textarea",
+          "label": "Co monitorujemy",
+          "required": true,
+          "options": {}
+        },
+        "rodzaj": {
+          "type": "select",
+          "label": "Rodzaj ustalenia",
+          "required": true,
+          "options": {
+            "obowiazek": "Obowiązek — przepis lub umowa",
+            "polityka": "Polityka energetyczna",
+            "dobrowolna": "Komunikacja dobrowolna"
+          }
+        },
+        "komu": {
+          "type": "textarea",
+          "label": "Odbiorca",
+          "required": true,
+          "options": {}
+        },
+        "kiedy": {
+          "type": "textarea",
+          "label": "Kiedy stwierdzono",
+          "required": true,
+          "options": {}
+        },
+        "jak": {
+          "type": "textarea",
+          "label": "Sposób wykonania / sprawdzenia",
+          "required": true,
+          "options": {}
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "podstawa": {
+          "type": "textarea",
+          "label": "Podstawa ustalenia kryterium",
+          "required": false,
+          "options": {}
+        }
+      }
+    },
+    "PROCES": {
+      "type": "object",
+      "label": "Zgłaszanie uwag i propozycji",
+      "children": {
+        "ktoMoze": {
+          "type": "textarea",
+          "label": "Kto może zgłaszać uwagi i propozycje",
+          "required": true,
+          "options": {}
+        },
+        "kanaly": {
+          "type": "textarea",
+          "label": "Kanały zgłaszania",
+          "required": true,
+          "options": {}
+        },
+        "potwierdzenie": {
+          "type": "textarea",
+          "label": "Potwierdzenie przyjęcia zgłoszenia",
+          "required": true,
+          "options": {}
+        },
+        "dni": {
+          "type": "number",
+          "label": "Termin potwierdzenia w dniach roboczych",
+          "required": true,
+          "options": {}
+        },
+        "rozpatrzenie": {
+          "type": "textarea",
+          "label": "Rozpatrywanie zgłoszeń",
+          "required": true,
+          "options": {}
+        },
+        "zwrotna": {
+          "type": "textarea",
+          "label": "Informacja zwrotna",
+          "required": true,
+          "options": {}
+        },
+        "rejestr": {
+          "type": "textarea",
+          "label": "Miejsce zapisu zgłoszeń",
+          "required": true,
+          "options": {}
+        }
+      }
+    },
+    "ZGLOSZENIA": {
+      "type": "list",
+      "label": "Rejestr zgłoszeń",
+      "min": 0,
+      "children": {
+        "nr": {
+          "type": "textarea",
+          "label": "Stały numer / identyfikator",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "zglaszajacy": {
+          "type": "textarea",
+          "label": "Zgłaszająca osoba lub funkcja",
+          "required": true,
+          "options": {}
+        },
+        "kanal": {
+          "type": "textarea",
+          "label": "Kanał zgłoszenia",
+          "required": true,
+          "options": {}
+        },
+        "tresc": {
+          "type": "textarea",
+          "label": "Treść",
+          "required": true,
+          "options": {}
+        },
+        "potwierdzenie": {
+          "type": "date",
+          "label": "Potwierdzenie przyjęcia zgłoszenia",
+          "required": true,
+          "options": {}
+        },
+        "kto": {
+          "type": "textarea",
+          "label": "Osoba odpowiedzialna",
+          "required": true,
+          "options": {}
+        },
+        "decyzja": {
+          "type": "select",
+          "label": "Decyzja",
+          "required": true,
+          "options": {
+            "wdrozone": "Wdrożone",
+            "odroczone": "Odroczone",
+            "odmowa": "Uzasadniona odmowa",
+            "wtoku": "W toku"
+          }
+        },
+        "odpowiedz": {
+          "type": "date",
+          "label": "Data odpowiedzi",
+          "required": true,
+          "options": {}
+        },
+        "odpowiedzTresc": {
+          "type": "textarea",
+          "label": "Treść odpowiedzi",
+          "required": true,
+          "options": {}
+        },
+        "efekt": {
+          "type": "textarea",
+          "label": "Oczekiwany efekt i stan wyjściowy",
+          "required": false,
+          "options": {}
+        }
+      }
+    },
+    "META": {
+      "type": "object",
+      "label": "Metryka i zasady",
+      "children": {
+        "zatwierdzil": {
+          "type": "textarea",
+          "label": "Zatwierdził",
+          "required": true,
+          "options": {}
+        },
+        "data": {
+          "type": "date",
+          "label": "Data",
+          "required": true,
+          "options": {}
+        },
+        "przeglad": {
+          "type": "textarea",
+          "label": "Termin lub rytm przeglądu",
+          "required": true,
+          "options": {}
+        }
+      }
+    }
+  }
+}

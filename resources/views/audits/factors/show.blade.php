@@ -12,6 +12,7 @@
 @endphp
 @include('audits.partials.questionnaire-excel',['excelReady'=>$ready])
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'factor-form'])
+@include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
 @if(session('success'))<div class="plant-notice success" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź zaznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if(!$ready)<div class="plant-notice">Ankieta korzysta z zatwierdzonego profilu zakładu. Najpierw zatwierdź profil jako klient i audytor. <a href="{{route($client?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$profile])}}">Otwórz profil zakładu →</a></div>@endif
@@ -20,14 +21,14 @@
 @include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @if($review->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{$review->review_note}}</p></div>@endif
 @if($review->status==='auditor_corrected')<div class="plant-notice">Sprawdź oznaczone na niebiesko korekty audytora i ponownie zatwierdź ankietę.</div>@elseif(!$client && $review->status==='submitted')<div class="plant-notice">Ankieta oczekuje na Twój przegląd. Zapisanie zmian wymaga ponownego zatwierdzenia przez klienta.</div>@endif
-<nav class="plant-nav" aria-label="Działy ankiety"><a href="#climate">Ocena klimatu</a>@foreach($questionnaire->schema()['sekcje'] as $section)<a href="#section-{{$loop->index}}">{{$section['nazwa']}}</a>@endforeach<a href="#custom">Własne czynniki</a><a href="#swot">Analiza SWOT</a><a href="#approvals">Zatwierdzenia</a></nav>
+<nav class="plant-nav" aria-label="Działy ankiety"><a href="#climate">Ocena klimatu</a>@foreach($questionnaire->schema()['sekcje'] as $section)<a href="#section-{{$loop->index}}">{{$section['nazwa']}}</a>@endforeach<a href="#custom">Własne czynniki</a>@unless($client)<a href="#swot">Analiza SWOT</a>@endunless<a href="#approvals">Zatwierdzenia</a></nav>
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="factor-form" method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf
 <input type="hidden" name="lock_version" value="{{old('lock_version',$review->lock_version)}}"><input type="hidden" name="source_hash" value="{{old('source_hash',$questionnaire->hash($profile))}}">
 @include('audits.factors.fields')
 <details class="plant-card"><summary>Czynniki niewynikające z aktualnych odpowiedzi</summary>@foreach($factors as $factor)@if(!$factor['visible'])<p><strong>{{$factor['kod']}}</strong> · {{$factor['tresc']}}<br><small>Warunek: {{$factor['pokaz_gdy']}}@if(in_array(null,$factor['dependencies'],true)) · Brak danych do oceny warunku — nie oznacza „nie dotyczy”.@endif</small></p>@endif @endforeach</details>
 @if($editable)<div class="plant-actions"><span id="factor-save-state">Zapisz odpowiedzi przed wyjściem.</span><button name="operation" value="save" class="primary">Zapisz</button>@if($canClientApprove)<button name="operation" value="submit">Zatwierdź jako klient</button>@endif</div>@endif
 <input type="hidden" name="complete_form" value="1"></form>
-@include('audits.factors.swot')
+@unless($client) @include('audits.factors.swot') @endunless
 <section id="approvals" class="plant-card"><h2>Zatwierdzenia i dokument</h2>@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
 @foreach(['client_approval'=>'Klient','auditor_approval'=>'Audytor'] as $field=>$label)@if($review->$field)<p>{{$label}}: {{$review->$field['name']}} · {{\Carbon\Carbon::parse($review->$field['at'])->format('d.m.Y H:i')}} @if($stale) (zatwierdzenie nieaktualne) @endif</p>@endif @endforeach
 @if($ready && !$stale && $canWrite && $review->status==='submitted')<form method="post" data-review-action action="{{route($prefix.'update',[$audit,$profile])}}">@csrf<input type="hidden" name="lock_version" value="{{$review->lock_version}}"><input type="hidden" name="source_hash" value="{{$questionnaire->hash($profile)}}">@if(!$client)<label>Wynik przeglądu / uwagi<textarea name="note" required maxlength="3000"></textarea></label><button name="operation" value="return">Zwróć do uzupełnienia</button>@elseif($canClientApprove)<button name="operation" value="withdraw">Wycofaj zatwierdzenie</button>@endif</form>@endif

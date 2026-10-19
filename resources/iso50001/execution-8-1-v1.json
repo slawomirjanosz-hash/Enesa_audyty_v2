@@ -2,7 +2,7 @@
   "version": 1,
   "section": "8-1",
   "source_file": "ENESA_8.1_Nadzor_operacyjny_platforma.html",
-  "source_sha256": "dec1fc6e22ab6a02ef1aeba65723d598368a669f84457a72f650a6b61da08df6",
+  "source_sha256": "4dfd822f77110242990ffa34a0b4c6b1a6dcd0bfff96590d98366716b8444038",
   "definitions": {
     "LISTA_81": [
       {
@@ -155,14 +155,10 @@
           "min": 0,
           "children": {
             "tryb": {
-              "type": "select",
+              "type": "textarea",
               "label": "Tryb",
               "required": true,
-              "options": {
-                "roczne": "Roczne zużycie MWh",
-                "moc": "Średnia moc × godziny",
-                "jednostkowy": "kWh/jednostkę × ilość"
-              }
+              "options": {}
             },
             "jak": {
               "type": "textarea",

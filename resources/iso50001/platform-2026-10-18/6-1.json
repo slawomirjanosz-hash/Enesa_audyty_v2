@@ -1,0 +1,1709 @@
+{
+  "source_file": "ENESA_6.1_Ryzyka_i_szanse_platforma.html",
+  "source_sha256": "fdd6f1323562f3272bfb7b0d59fde21e943ee88900f1daae509e1f4a81dc7c17",
+  "section": "6-1",
+  "data": {
+    "dane_wejsciowe": [
+      {
+        "kod": "WEJ-41",
+        "podstawa": "N",
+        "klauzula": "4.1",
+        "tresc": "Uwzględniono czynniki zewnętrzne i wewnętrzne",
+        "pomoc": "Ceny energii, przepisy, technologia, klimat, stan maszyn, budżet. Platforma ma je w dokumencie D-EnMS-KON-01.",
+        "przyklad": "np. D-EnMS-KON-01 wersja 1.0 — 23 potwierdzone czynniki przejrzane na spotkaniu zespołu 06.03.2026"
+      },
+      {
+        "kod": "WEJ-42",
+        "podstawa": "N",
+        "klauzula": "4.2",
+        "tresc": "Uwzględniono wymagania stron zainteresowanych",
+        "pomoc": "Wymagania klientów, banków, właścicieli — z rejestru D-EnMS-STR-01.",
+        "przyklad": "np. D-EnMS-STR-01 — wymagania odbiorcy OEM i banku przejrzane 06.03.2026"
+      },
+      {
+        "kod": "WEJ-PROC",
+        "podstawa": "N",
+        "tresc": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny",
+        "pomoc": "Trzecie źródło: awaria sprężarki, nowa linia, wiedza zamknięta w głowie jednej osoby. Listę wypełniacie niżej.",
+        "przyklad": "np. przegląd 7 procesów na spotkaniu zespołu 06.03.2026 — notatka w rejestrze"
+      },
+      {
+        "kod": "WEJ-43",
+        "podstawa": "M",
+        "klauzula": "4.3",
+        "tresc": "Uwzględniono zakres i granice systemu",
+        "pomoc": "Ryzyko dotyczące działalności spoza granic systemu nie powinno trafiać do tego rejestru.",
+        "przyklad": "np. D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu"
+      },
+      {
+        "kod": "WEJ-POL",
+        "podstawa": "N",
+        "klauzula": "5.2",
+        "tresc": "Planowanie jest spójne z polityką energetyczną",
+        "pomoc": "Jeśli polityka zobowiązuje do uwzględniania efektywności przy zakupach, w rejestrze powinno to mieć odbicie.",
+        "przyklad": "np. element f) polityki przełożony na ryzyko R1 i zasadę w procedurze zakupowej"
+      }
+    ],
+    "lista_61": [
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Uwzględniono czynniki zewnętrzne i wewnętrzne (4.1)",
+        "podstawa": "N",
+        "auto": "wej",
+        "wej": "WEJ-41"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Uwzględniono wymagania stron zainteresowanych (4.2)",
+        "podstawa": "N",
+        "auto": "wej",
+        "wej": "WEJ-42"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Uwzględniono zakres i granice systemu (4.3)",
+        "podstawa": "M",
+        "auto": "wej",
+        "wej": "WEJ-43"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Planowanie jest spójne z polityką energetyczną",
+        "podstawa": "N",
+        "auto": "wej",
+        "wej": "WEJ-POL"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Określono ryzyka i szanse istotne dla zamierzonych wyników systemu i poprawy wyniku energetycznego",
+        "podstawa": "N",
+        "auto": "sa_pozycje"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Określono ryzyka i szanse związane z zapobieganiem niepożądanym skutkom",
+        "podstawa": "N",
+        "auto": null
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Określono ryzyka i szanse związane z ciągłym doskonaleniem systemu i wyniku",
+        "podstawa": "N",
+        "auto": null
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Każda pozycja ma źródło (4.1, 4.2, proces)",
+        "podstawa": "M",
+        "auto": "zrodla"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Przyjęto i zapisano metodę oceny (P × W, skala 1–3)",
+        "podstawa": "M",
+        "auto": "metoda"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Przy szansach P oznacza prawdopodobieństwo uzyskania korzyści",
+        "podstawa": "M",
+        "auto": "metoda"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Oceniono każdą pozycję",
+        "podstawa": "M",
+        "auto": "ocenione"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zaplanowano działania odnoszące się do ryzyk i szans",
+        "podstawa": "N",
+        "auto": "dzialania"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zastosowano progi: działania od poziomu 3, zatwierdzenie kierownictwa od poziomu 6",
+        "podstawa": "M",
+        "auto": "progi"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Dla działań określono zasoby, odpowiedzialnych i terminy",
+        "podstawa": "M",
+        "auto": "zasoby"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zaplanowano włączenie działań w procesy systemu i procesy związane z wynikiem energetycznym",
+        "podstawa": "N",
+        "auto": "procesy_wl"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zaplanowano sposób oceny skuteczności działań",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zapisano termin i wynik oceny skuteczności",
+        "podstawa": "M",
+        "auto": "wynik_oceny"
+      },
+      {
+        "grupa": "PRZEGLĄD",
+        "tekst": "Rejestr przegląda się przy istotnych zmianach i okresowo (np. co kwartał w pierwszym roku)",
+        "podstawa": "M",
+        "auto": "przeglad"
+      },
+      {
+        "grupa": "PRZEGLĄD",
+        "tekst": "Wnioski z ryzyk i szans przekazano do celów i planów działań (6.2)",
+        "podstawa": "M",
+        "auto": "do_celow"
+      }
+    ],
+    "przyklad_ryzyka": [
+      {
+        "zrodlo": "4.1",
+        "opis": "Wzrost cen energii elektrycznej o ok. 20% w 2027 r. — ok. +1,5 mln zł kosztów rocznie",
+        "P": "3",
+        "W": "3",
+        "dzialanie": "Przyspieszenie działań nisko- i bezkosztowych (C1, C2); analiza umowy z ceną stałą na 2027 r.",
+        "zasoby": "Czas zespołu; doradca zakupowy 15 tys. zł",
+        "odp": "Kierownik Zakupów / Energy Manager",
+        "termin": "2026-09-30",
+        "powiazanie": "Plan działań C1–C2; budżet 2027",
+        "ocena": "Koszt jednostkowy energii elektrycznej wobec budżetu; udział wolumenu z ceną stałą",
+        "terminOceny": "2027-03-31",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu"
+      },
+      {
+        "zrodlo": "4.2",
+        "opis": "Niespełnienie wymagań odbiorcy: dane o energii i CO₂ od 2026 r., certyfikat ISO 50001 od 2027 r. — utrata części zamówień (45% przychodu)",
+        "P": "2",
+        "W": "3",
+        "dzialanie": "Harmonogram certyfikacji; kwartalny raport danych dla odbiorcy",
+        "zasoby": "Jednostka certyfikująca ok. 40 tys. zł; czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2026-12-31",
+        "powiazanie": "Harmonogram wdrożenia",
+        "ocena": "Terminowość raportów; certyfikat do 31.12.2026",
+        "terminOceny": "2026-12-31",
+        "wynikOceny": "Raport za I kw. 2026 przekazany terminowo",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Tylko dwa liczniki główne — nie da się wykazać poprawy na znaczących użyciach energii",
+        "P": "3",
+        "W": "2",
+        "dzialanie": "Podlicznik i przepływomierz w sprężarkowni, podlicznik gazu pieca lakierni; pomiary okresowe pras",
+        "zasoby": "ok. 60 tys. zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "powiazanie": "Cel C4; plan zbierania danych F-EnMS-11",
+        "ocena": "Kompletność danych dla znaczących użyć energii co najmniej 95% miesięcy",
+        "terminOceny": "2026-12-31",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "proces",
+        "opis": "Obciążenie koordynatora zadaniami systemu i utrzymania ruchu w roku wdrożenia — opóźnienia",
+        "P": "2",
+        "W": "2",
+        "dzialanie": "Zastępca koordynatora; podział zadań według matrycy odpowiedzialności",
+        "zasoby": "Czas specjalisty ds. środowiska",
+        "odp": "Dyrektor Zakładu",
+        "termin": "2026-03-31",
+        "powiazanie": "Matryca odpowiedzialności (5.3)",
+        "ocena": "Opóźnienie harmonogramu nie większe niż 1 miesiąc",
+        "terminOceny": "2026-09-30"
+      },
+      {
+        "zrodlo": "proces",
+        "opis": "Wiedza o nastawach sprężarek tylko u serwisanta zewnętrznego",
+        "P": "2",
+        "W": "2",
+        "dzialanie": "Kryteria eksploatacji w instrukcji; szkolenie dwóch techników utrzymania ruchu",
+        "zasoby": "Szkolenie 4 tys. zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "powiazanie": "Sterowanie operacyjne (8.1)",
+        "ocena": "Technicy samodzielnie zmieniają nastawy według instrukcji",
+        "terminOceny": "2026-07-31"
+      },
+      {
+        "zrodlo": "proces",
+        "opis": "Wzrost produkcji o ok. 8% w 2027 r. zaburzy porównania zużycia",
+        "P": "3",
+        "W": "1",
+        "dzialanie": "Wskaźniki z normalizacją — model organizacji, kWh na tonę",
+        "zasoby": "Czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2026-04-30",
+        "powiazanie": "Karty EnPI (6.4)",
+        "ocena": "Porównania 2027 oparte na modelu",
+        "terminOceny": "2027-03-31"
+      }
+    ],
+    "przyklad_szanse": [
+      {
+        "zrodlo": "przeglad",
+        "opis": "Nieszczelności i zbyt wysokie ciśnienie sprężonego powietrza — ok. 295 MWh rocznie",
+        "P": "3",
+        "W": "2",
+        "dzialanie": "Usunięcie nieszczelności, obniżenie ciśnienia (cel C1)",
+        "zasoby": "ok. 30 tys. zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "powiazanie": "Plan działań C1; plan utrzymania ruchu",
+        "ocena": "Przepływ w czasie postoju; wskaźnik kWh/Nm³",
+        "terminOceny": "2026-07-31",
+        "wynikOceny": "Przepływ 9 → 6 Nm³/min (06.2026)",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Fotowoltaika na dachu hali D, ok. 1,5 MWp — mniejszy zakup energii o ok. 1 400 MWh rocznie (nie zmienia zużycia)",
+        "P": "2",
+        "W": "3",
+        "dzialanie": "Analiza przyłączeniowa i opłacalności; decyzja Zarządu",
+        "zasoby": "Analiza 20 tys. zł",
+        "odp": "Energy Manager",
+        "termin": "2026-12-31",
+        "powiazanie": "Plan inwestycji 2027",
+        "ocena": "Decyzja Zarządu na podstawie analizy",
+        "terminOceny": "2027-01-31",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Program wsparcia efektywności energetycznej — dofinansowanie części inwestycji; dostępność naboru do sprawdzenia",
+        "P": "1",
+        "W": "3",
+        "dzialanie": "Monitorowanie naborów; dokumentacja projektów „z półki” (napędy o zmiennej prędkości, LED)",
+        "zasoby": "Czas kontrolera finansowego",
+        "odp": "Kontroler finansowy",
+        "termin": "2026-12-31",
+        "powiazanie": "Budżet inwestycji",
+        "ocena": "Wniosek złożony, gdy nabór ogłoszony",
+        "terminOceny": "2026-12-31"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Wspólne audyty i przegląd zarządzania z ISO 14001",
+        "P": "3",
+        "W": "1",
+        "dzialanie": "Wspólny program audytów i agenda przeglądu",
+        "zasoby": "—",
+        "odp": "Specjalista ds. środowiska",
+        "termin": "2026-06-30",
+        "powiazanie": "Program audytów (9.2)",
+        "ocena": "Czas audytów wobec planu",
+        "terminOceny": "2026-12-31"
+      },
+      {
+        "zrodlo": "4.2",
+        "opis": "Dane o energii na wyrób jako atut w przetargu na nowy projekt",
+        "P": "2",
+        "W": "2",
+        "dzialanie": "Raport energii na wyrób dla trzech głównych wyrobów",
+        "zasoby": "Czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2026-10-31",
+        "powiazanie": "Ofertowanie — dział sprzedaży",
+        "ocena": "Raport dołączony do oferty",
+        "terminOceny": "2026-11-30"
+      }
+    ]
+  },
+  "variables": {
+    "DANE_WEJ": [
+      {
+        "kod": "WEJ-41",
+        "podstawa": "N",
+        "klauzula": "4.1",
+        "tresc": "Uwzględniono czynniki zewnętrzne i wewnętrzne",
+        "pomoc": "Ceny energii, przepisy, technologia, klimat, stan maszyn, budżet. Platforma ma je w dokumencie D-EnMS-KON-01.",
+        "przyklad": "np. D-EnMS-KON-01 wersja 1.0 — 23 potwierdzone czynniki przejrzane na spotkaniu zespołu 06.03.2026"
+      },
+      {
+        "kod": "WEJ-42",
+        "podstawa": "N",
+        "klauzula": "4.2",
+        "tresc": "Uwzględniono wymagania stron zainteresowanych",
+        "pomoc": "Wymagania klientów, banków, właścicieli — z rejestru D-EnMS-STR-01.",
+        "przyklad": "np. D-EnMS-STR-01 — wymagania odbiorcy OEM i banku przejrzane 06.03.2026"
+      },
+      {
+        "kod": "WEJ-PROC",
+        "podstawa": "N",
+        "tresc": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny",
+        "pomoc": "Trzecie źródło: awaria sprężarki, nowa linia, wiedza zamknięta w głowie jednej osoby. Listę wypełniacie niżej.",
+        "przyklad": "np. przegląd 7 procesów na spotkaniu zespołu 06.03.2026 — notatka w rejestrze"
+      },
+      {
+        "kod": "WEJ-43",
+        "podstawa": "M",
+        "klauzula": "4.3",
+        "tresc": "Uwzględniono zakres i granice systemu",
+        "pomoc": "Ryzyko dotyczące działalności spoza granic systemu nie powinno trafiać do tego rejestru.",
+        "przyklad": "np. D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu"
+      },
+      {
+        "kod": "WEJ-POL",
+        "podstawa": "N",
+        "klauzula": "5.2",
+        "tresc": "Planowanie jest spójne z polityką energetyczną",
+        "pomoc": "Jeśli polityka zobowiązuje do uwzględniania efektywności przy zakupach, w rejestrze powinno to mieć odbicie.",
+        "przyklad": "np. element f) polityki przełożony na ryzyko R1 i zasadę w procedurze zakupowej"
+      }
+    ],
+    "LISTA_61": [
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Uwzględniono czynniki zewnętrzne i wewnętrzne (4.1)",
+        "podstawa": "N",
+        "auto": "wej",
+        "wej": "WEJ-41"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Uwzględniono wymagania stron zainteresowanych (4.2)",
+        "podstawa": "N",
+        "auto": "wej",
+        "wej": "WEJ-42"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Uwzględniono zakres i granice systemu (4.3)",
+        "podstawa": "M",
+        "auto": "wej",
+        "wej": "WEJ-43"
+      },
+      {
+        "grupa": "DANE WEJŚCIOWE",
+        "tekst": "Planowanie jest spójne z polityką energetyczną",
+        "podstawa": "N",
+        "auto": "wej",
+        "wej": "WEJ-POL"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Określono ryzyka i szanse istotne dla zamierzonych wyników systemu i poprawy wyniku energetycznego",
+        "podstawa": "N",
+        "auto": "sa_pozycje"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Określono ryzyka i szanse związane z zapobieganiem niepożądanym skutkom",
+        "podstawa": "N",
+        "auto": null
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Określono ryzyka i szanse związane z ciągłym doskonaleniem systemu i wyniku",
+        "podstawa": "N",
+        "auto": null
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Każda pozycja ma źródło (4.1, 4.2, proces)",
+        "podstawa": "M",
+        "auto": "zrodla"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Przyjęto i zapisano metodę oceny (P × W, skala 1–3)",
+        "podstawa": "M",
+        "auto": "metoda"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Przy szansach P oznacza prawdopodobieństwo uzyskania korzyści",
+        "podstawa": "M",
+        "auto": "metoda"
+      },
+      {
+        "grupa": "IDENTYFIKACJA I OCENA",
+        "tekst": "Oceniono każdą pozycję",
+        "podstawa": "M",
+        "auto": "ocenione"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zaplanowano działania odnoszące się do ryzyk i szans",
+        "podstawa": "N",
+        "auto": "dzialania"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zastosowano progi: działania od poziomu 3, zatwierdzenie kierownictwa od poziomu 6",
+        "podstawa": "M",
+        "auto": "progi"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Dla działań określono zasoby, odpowiedzialnych i terminy",
+        "podstawa": "M",
+        "auto": "zasoby"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zaplanowano włączenie działań w procesy systemu i procesy związane z wynikiem energetycznym",
+        "podstawa": "N",
+        "auto": "procesy_wl"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zaplanowano sposób oceny skuteczności działań",
+        "podstawa": "N",
+        "auto": "skutecznosc"
+      },
+      {
+        "grupa": "DZIAŁANIA",
+        "tekst": "Zapisano termin i wynik oceny skuteczności",
+        "podstawa": "M",
+        "auto": "wynik_oceny"
+      },
+      {
+        "grupa": "PRZEGLĄD",
+        "tekst": "Rejestr przegląda się przy istotnych zmianach i okresowo (np. co kwartał w pierwszym roku)",
+        "podstawa": "M",
+        "auto": "przeglad"
+      },
+      {
+        "grupa": "PRZEGLĄD",
+        "tekst": "Wnioski z ryzyk i szans przekazano do celów i planów działań (6.2)",
+        "podstawa": "M",
+        "auto": "do_celow"
+      }
+    ],
+    "PRZYKLAD_R": [
+      {
+        "zrodlo": "4.1",
+        "opis": "Wzrost cen energii elektrycznej o ok. 20% w 2027 r. — ok. +1,5 mln zł kosztów rocznie",
+        "P": "3",
+        "W": "3",
+        "dzialanie": "Przyspieszenie działań nisko- i bezkosztowych (C1, C2); analiza umowy z ceną stałą na 2027 r.",
+        "zasoby": "Czas zespołu; doradca zakupowy 15 tys. zł",
+        "odp": "Kierownik Zakupów / Energy Manager",
+        "termin": "2026-09-30",
+        "powiazanie": "Plan działań C1–C2; budżet 2027",
+        "ocena": "Koszt jednostkowy energii elektrycznej wobec budżetu; udział wolumenu z ceną stałą",
+        "terminOceny": "2027-03-31",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu"
+      },
+      {
+        "zrodlo": "4.2",
+        "opis": "Niespełnienie wymagań odbiorcy: dane o energii i CO₂ od 2026 r., certyfikat ISO 50001 od 2027 r. — utrata części zamówień (45% przychodu)",
+        "P": "2",
+        "W": "3",
+        "dzialanie": "Harmonogram certyfikacji; kwartalny raport danych dla odbiorcy",
+        "zasoby": "Jednostka certyfikująca ok. 40 tys. zł; czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2026-12-31",
+        "powiazanie": "Harmonogram wdrożenia",
+        "ocena": "Terminowość raportów; certyfikat do 31.12.2026",
+        "terminOceny": "2026-12-31",
+        "wynikOceny": "Raport za I kw. 2026 przekazany terminowo",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Tylko dwa liczniki główne — nie da się wykazać poprawy na znaczących użyciach energii",
+        "P": "3",
+        "W": "2",
+        "dzialanie": "Podlicznik i przepływomierz w sprężarkowni, podlicznik gazu pieca lakierni; pomiary okresowe pras",
+        "zasoby": "ok. 60 tys. zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "powiazanie": "Cel C4; plan zbierania danych F-EnMS-11",
+        "ocena": "Kompletność danych dla znaczących użyć energii co najmniej 95% miesięcy",
+        "terminOceny": "2026-12-31",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "proces",
+        "opis": "Obciążenie koordynatora zadaniami systemu i utrzymania ruchu w roku wdrożenia — opóźnienia",
+        "P": "2",
+        "W": "2",
+        "dzialanie": "Zastępca koordynatora; podział zadań według matrycy odpowiedzialności",
+        "zasoby": "Czas specjalisty ds. środowiska",
+        "odp": "Dyrektor Zakładu",
+        "termin": "2026-03-31",
+        "powiazanie": "Matryca odpowiedzialności (5.3)",
+        "ocena": "Opóźnienie harmonogramu nie większe niż 1 miesiąc",
+        "terminOceny": "2026-09-30"
+      },
+      {
+        "zrodlo": "proces",
+        "opis": "Wiedza o nastawach sprężarek tylko u serwisanta zewnętrznego",
+        "P": "2",
+        "W": "2",
+        "dzialanie": "Kryteria eksploatacji w instrukcji; szkolenie dwóch techników utrzymania ruchu",
+        "zasoby": "Szkolenie 4 tys. zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "powiazanie": "Sterowanie operacyjne (8.1)",
+        "ocena": "Technicy samodzielnie zmieniają nastawy według instrukcji",
+        "terminOceny": "2026-07-31"
+      },
+      {
+        "zrodlo": "proces",
+        "opis": "Wzrost produkcji o ok. 8% w 2027 r. zaburzy porównania zużycia",
+        "P": "3",
+        "W": "1",
+        "dzialanie": "Wskaźniki z normalizacją — model organizacji, kWh na tonę",
+        "zasoby": "Czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2026-04-30",
+        "powiazanie": "Karty EnPI (6.4)",
+        "ocena": "Porównania 2027 oparte na modelu",
+        "terminOceny": "2027-03-31"
+      }
+    ],
+    "PRZYKLAD_S": [
+      {
+        "zrodlo": "przeglad",
+        "opis": "Nieszczelności i zbyt wysokie ciśnienie sprężonego powietrza — ok. 295 MWh rocznie",
+        "P": "3",
+        "W": "2",
+        "dzialanie": "Usunięcie nieszczelności, obniżenie ciśnienia (cel C1)",
+        "zasoby": "ok. 30 tys. zł",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "termin": "2026-06-30",
+        "powiazanie": "Plan działań C1; plan utrzymania ruchu",
+        "ocena": "Przepływ w czasie postoju; wskaźnik kWh/Nm³",
+        "terminOceny": "2026-07-31",
+        "wynikOceny": "Przepływ 9 → 6 Nm³/min (06.2026)",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Fotowoltaika na dachu hali D, ok. 1,5 MWp — mniejszy zakup energii o ok. 1 400 MWh rocznie (nie zmienia zużycia)",
+        "P": "2",
+        "W": "3",
+        "dzialanie": "Analiza przyłączeniowa i opłacalności; decyzja Zarządu",
+        "zasoby": "Analiza 20 tys. zł",
+        "odp": "Energy Manager",
+        "termin": "2026-12-31",
+        "powiazanie": "Plan inwestycji 2027",
+        "ocena": "Decyzja Zarządu na podstawie analizy",
+        "terminOceny": "2027-01-31",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Program wsparcia efektywności energetycznej — dofinansowanie części inwestycji; dostępność naboru do sprawdzenia",
+        "P": "1",
+        "W": "3",
+        "dzialanie": "Monitorowanie naborów; dokumentacja projektów „z półki” (napędy o zmiennej prędkości, LED)",
+        "zasoby": "Czas kontrolera finansowego",
+        "odp": "Kontroler finansowy",
+        "termin": "2026-12-31",
+        "powiazanie": "Budżet inwestycji",
+        "ocena": "Wniosek złożony, gdy nabór ogłoszony",
+        "terminOceny": "2026-12-31"
+      },
+      {
+        "zrodlo": "4.1",
+        "opis": "Wspólne audyty i przegląd zarządzania z ISO 14001",
+        "P": "3",
+        "W": "1",
+        "dzialanie": "Wspólny program audytów i agenda przeglądu",
+        "zasoby": "—",
+        "odp": "Specjalista ds. środowiska",
+        "termin": "2026-06-30",
+        "powiazanie": "Program audytów (9.2)",
+        "ocena": "Czas audytów wobec planu",
+        "terminOceny": "2026-12-31"
+      },
+      {
+        "zrodlo": "4.2",
+        "opis": "Dane o energii na wyrób jako atut w przetargu na nowy projekt",
+        "P": "2",
+        "W": "2",
+        "dzialanie": "Raport energii na wyrób dla trzech głównych wyrobów",
+        "zasoby": "Czas Energy Managera",
+        "odp": "Energy Manager",
+        "termin": "2026-10-31",
+        "powiazanie": "Ofertowanie — dział sprzedaży",
+        "ocena": "Raport dołączony do oferty",
+        "terminOceny": "2026-11-30"
+      }
+    ],
+    "PROFIL": {
+      "FAKT_LOKALIZACJE": "2",
+      "FAKT_LOKALIZACJE_LISTA": [
+        {
+          "c0": "Zakład produkcyjny",
+          "c1": "ul. Przemysłowa 12, Katowice",
+          "c2": "produkcja",
+          "c3": "tak"
+        },
+        {
+          "c0": "Magazyn wyrobów gotowych",
+          "c1": "ul. Składowa 11, Katowice",
+          "c2": "magazyn",
+          "c3": "tak"
+        }
+      ],
+      "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+      "FAKT_PRACOWNICY": "850",
+      "FAKT_ZMIANY": "3",
+      "FAKT_SEZONOWOSC": "nie",
+      "FAKT_PODMIOT": "prywatny",
+      "FAKT_GRUPA_KAPITALOWA": "tak",
+      "FAKT_ZWIAZKI": "nie",
+      "FAKT_SYSTEM_BAZOWY": "iso_14001",
+      "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+      "FAKT_ZGODA_INTEGRACJA": "tak",
+      "FAKT_ENERGY_MANAGER": "nieformalnie",
+      "FAKT_UR_WLASNE": "wlasne",
+      "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+      "FAKT_ZAKUPY_KRYTERIA": "czasami",
+      "FAKT_ROTACJA": "srednia",
+      "FAKT_NOSNIKI": [
+        {
+          "c0": "energia elektryczna",
+          "c1": "8500",
+          "c2": "MWh",
+          "c3": "7565000"
+        },
+        {
+          "c0": "gaz ziemny",
+          "c1": "350000",
+          "c2": "m³",
+          "c3": "875000"
+        },
+        {
+          "c0": "LPG",
+          "c1": "18000",
+          "c2": "l",
+          "c3": "54000"
+        }
+      ],
+      "FAKT_ROK_ODNIESIENIA": "2025",
+      "FAKT_UDZIAL_ENERGII": "2,5",
+      "FAKT_MOC_UMOWNA": "1400",
+      "FAKT_SPREZONE": "tak",
+      "FAKT_CA_LICZBA": "4",
+      "FAKT_CA_MOC": "440",
+      "FAKT_CA_VSD": "0",
+      "FAKT_CA_STEROWNIK": "nie",
+      "FAKT_CA_SZCZELNOSC": "nie",
+      "FAKT_CA_ODZYSK": "nie",
+      "FAKT_CA_GODZINY": "6000",
+      "FAKT_KOTLOWNIA": "wlasne",
+      "FAKT_CIEPLO_PALIWO": [
+        "gaz ziemny"
+      ],
+      "FAKT_KOTLOWNIA_MOC": "1200",
+      "FAKT_KOTLOWNIA_WIEK": "18",
+      "FAKT_PODLICZNIKI": "czesciowo",
+      "FAKT_ODCZYT": "mieszane",
+      "FAKT_PRODUKCJA_JEDN": "t",
+      "FAKT_PRODUKCJA": "24000",
+      "FAKT_PRODUKCJA_POPRZ": "23500",
+      "FAKT_HDD": "3600",
+      "FAKT_HDD_POPRZ": "3450",
+      "FAKT_PRZYCHOD": "380",
+      "FAKT_SCADA": "nie",
+      "FAKT_MES": "nie",
+      "FAKT_ANALIZA_DANYCH": "arkusz",
+      "FAKT_AUDYT_ENERG": "tak",
+      "FAKT_ETS": "nie",
+      "FAKT_CSRD": "nie",
+      "FAKT_PRZETARGI": "nie",
+      "FAKT_ODBIORCY_CO2": "tak",
+      "FAKT_MOC_OGRANICZONA": "nie",
+      "FAKT_UMOWA_WYGASA": "tak",
+      "FAKT_BUDZET": "nie",
+      "FAKT_PBT_PROG": "3",
+      "FAKT_INWESTYCJE": "tak",
+      "FAKT_BIALE_MOZLIWE": "nie",
+      "FAKT_CHLODZENIE": "tak",
+      "FAKT_CHLODZENIE_WODNE": "nie",
+      "FAKT_FGAZ": "tak",
+      "FAKT_UDT": "tak",
+      "FAKT_WIEK_INFRA": "22",
+      "FAKT_LED_UDZIAL": "35",
+      "FAKT_OSW_STEROWANIE": "recznie",
+      "FAKT_NAPEDY_VSD": "czesc",
+      "FAKT_WENT": "tak",
+      "FAKT_WENT_LICZBA": "6",
+      "FAKT_WENT_ODZYSK": "czesc",
+      "FAKT_WENT_HARMONOGRAM": "nie",
+      "FAKT_CIEPLO_ODPADOWE": "tak",
+      "FAKT_ODZYSK_CIEPLA": "nie",
+      "FAKT_PROCES_BEZ_ALTERNATYWY": "tak",
+      "FAKT_PROCESY": [
+        "piece i nagrzewnice",
+        "pompy procesowe"
+      ],
+      "FAKT_PV": "nie",
+      "FAKT_BESS": "nie",
+      "FAKT_CHP": "nie",
+      "FAKT_FLOTA": "tak",
+      "FAKT_FLOTA_LICZBA": "4",
+      "FAKT_PRZERWY_POGODA": "nie"
+    },
+    "PYT": {
+      "FAKT_LOKALIZACJE": {
+        "pytanie": "Ile lokalizacji obejmie system zarządzania energią?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_LOKALIZACJE_LISTA": {
+        "pytanie": "Wymień lokalizacje",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_BRANZA": {
+        "pytanie": "Główna działalność zakładu",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_PRACOWNICY": {
+        "pytanie": "Liczba pracowników",
+        "typ": "number",
+        "jednostka": "osób",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZMIANY": {
+        "pytanie": "Ile zmian pracuje zakład?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SEZONOWOSC": {
+        "pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_PODMIOT": {
+        "pytanie": "Typ organizacji",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "prywatny": "prywatny",
+          "komunalny": "komunalny",
+          "publiczny": "publiczny"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_GRUPA_KAPITALOWA": {
+        "pytanie": "Czy organizacja należy do grupy kapitałowej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZWIAZKI": {
+        "pytanie": "Czy działają związki zawodowe lub rada pracowników?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY": {
+        "pytanie": "Czy organizacja ma wdrożony system zarządzania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Brak certyfikowanego systemu",
+          "iso_9001": "ISO 9001",
+          "iso_14001": "ISO 14001",
+          "oba": "ISO 9001 i ISO 14001",
+          "inny": "Inny system certyfikowany"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY_ROK": {
+        "pytanie": "Od którego roku system jest certyfikowany?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZGODA_INTEGRACJA": {
+        "pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak — rozszerzamy istniejącą dokumentację",
+          "nie": "Nie — tworzymy odrębny system",
+          "brak decyzji": "Decyzja jeszcze nie zapadła"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ENERGY_MANAGER": {
+        "pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "Nie wyznaczono nikogo",
+          "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków",
+          "tak": "Tak, z pisemnym zakresem obowiązków"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_UR_WLASNE": {
+        "pytanie": "Kto prowadzi utrzymanie ruchu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Własne służby utrzymania ruchu",
+          "zewnetrzne": "Firma zewnętrzna",
+          "mieszane": "Częściowo własne służby, część prac zlecana"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_INSTRUKCJE_EKSPL": {
+        "pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, dla wszystkich głównych urządzeń",
+          "czesciowo": "Dla części urządzeń",
+          "nie": "Nie ma"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZAKUPY_KRYTERIA": {
+        "pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "zawsze": "Zawsze — to stałe kryterium zakupowe",
+          "czasami": "Czasami, przy większych zakupach",
+          "nie": "Nie — decyduje cena zakupu"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROTACJA": {
+        "pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "niska": "Niska — poniżej 5% rocznie",
+          "srednia": "Średnia — od 5 do 15% rocznie",
+          "wysoka": "Wysoka — powyżej 15% rocznie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROK_ODNIESIENIA": {
+        "pytanie": "Za który rok podajesz dane?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_NOSNIKI": {
+        "pytanie": "Zużycie nośników energii w roku odniesienia",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "ZUZYCIE_TJ": {
+        "pytanie": "Roczne zużycie energii",
+        "typ": "auto",
+        "jednostka": "TJ",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_JEDN": {
+        "pytanie": "W czym mierzycie wielkość produkcji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "t": "tony wyrobu",
+          "szt": "sztuki wyrobu",
+          "m2": "metry kwadratowe",
+          "m3": "metry sześcienne",
+          "mwh": "MWh wyrobu (ciepło, chłód)",
+          "inna": "Inna jednostka"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_INNA": {
+        "pytanie": "Jaka jednostka?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA": {
+        "pytanie": "Wielkość produkcji w roku odniesienia",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_POPRZ": {
+        "pytanie": "Wielkość produkcji w roku poprzednim",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD": {
+        "pytanie": "Stopniodni grzania (HDD) w roku odniesienia",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD_POPRZ": {
+        "pytanie": "Stopniodni grzania w roku poprzednim",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRZYCHOD": {
+        "pytanie": "Przychód ze sprzedaży w roku odniesienia",
+        "typ": "number",
+        "jednostka": "mln zł",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_UDZIAL_ENERGII": {
+        "pytanie": "Jaki procent kosztów operacyjnych stanowi energia?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_UMOWNA": {
+        "pytanie": "Moc umowna energii elektrycznej",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_OGRANICZONA": {
+        "pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_WYGASA": {
+        "pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_DATA": {
+        "pytanie": "Data wygaśnięcia umowy",
+        "typ": "date",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BUDZET": {
+        "pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PBT_PROG": {
+        "pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE": {
+        "pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE_OPIS": {
+        "pytanie": "Jakie?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BIALE_MOZLIWE": {
+        "pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_SPREZONE": {
+        "pytanie": "Czy zakład ma instalację sprężonego powietrza?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_LICZBA": {
+        "pytanie": "Ile jest sprężarek?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_MOC": {
+        "pytanie": "Łączna moc znamionowa sprężarek",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_VSD": {
+        "pytanie": "Ile sprężarek ma regulację obrotów (falownik)?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_STEROWNIK": {
+        "pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_SZCZELNOSC": {
+        "pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_ODZYSK": {
+        "pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_GODZINY": {
+        "pytanie": "Ile godzin w roku pracuje sprężarkownia?",
+        "typ": "number",
+        "jednostka": "h/rok",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT": {
+        "pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_LICZBA": {
+        "pytanie": "Ile jest central?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_ODZYSK": {
+        "pytanie": "Czy centrale mają odzysk ciepła?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wszystkie": "Wszystkie centrale mają odzysk",
+          "czesc": "Część central ma odzysk",
+          "zadna": "Żadna nie ma odzysku",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_HARMONOGRAM": {
+        "pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, wszystkie",
+          "czesciowo": "Część central",
+          "nie": "Nie — pracują tak samo cały czas"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE": {
+        "pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_MOC": {
+        "pytanie": "Łączna moc chłodnicza",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_WODNE": {
+        "pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_FGAZ": {
+        "pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_NAPEDY_VSD": {
+        "pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Żaden albo pojedyncze",
+          "czesc": "Mniej więcej połowa",
+          "wiekszosc": "Większość",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_LED_UDZIAL": {
+        "pytanie": "Jaki procent oświetlenia stanowią źródła LED?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_OSW_STEROWANIE": {
+        "pytanie": "Jak sterowane jest oświetlenie hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "czujniki": "Czujniki ruchu albo natężenia światła",
+          "harmonogram": "Automatyczny harmonogram",
+          "recznie": "Ręcznie — włącznikiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WIEK_INFRA": {
+        "pytanie": "Ile lat ma większość głównych urządzeń energetycznych?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_UDT": {
+        "pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_KOTLOWNIA": {
+        "pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)",
+          "siec": "Wyłącznie z sieci ciepłowniczej",
+          "oba": "Z własnego źródła i z sieci ciepłowniczej",
+          "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWO": {
+        "pytanie": "Czym zasilane jest własne źródło ciepła?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "gaz ziemny": "gaz ziemny",
+          "olej": "olej",
+          "węgiel": "węgiel",
+          "biomasa": "biomasa",
+          "biogaz": "biogaz",
+          "pompa ciepła": "pompa ciepła",
+          "energia elektryczna": "energia elektryczna"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWA": {
+        "pytanie": "Czy ciepło pochodzi z paliw kopalnych?",
+        "typ": "auto",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_MOC": {
+        "pytanie": "Moc zainstalowana źródeł ciepła",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_WIEK": {
+        "pytanie": "Wiek najstarszego czynnego kotła",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_MOC_ZAMOWIONA": {
+        "pytanie": "Zamówiona moc cieplna z sieci",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PROCESY": {
+        "pytanie": "Które procesy zużywają najwięcej energii?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "piece i nagrzewnice": "piece i nagrzewnice",
+          "suszarnie": "suszarnie",
+          "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki",
+          "prasy": "prasy",
+          "malarnia": "malarnia",
+          "galwanizernia": "galwanizernia",
+          "pompy procesowe": "pompy procesowe",
+          "chłodzenie procesu": "chłodzenie procesu",
+          "inne": "inne"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_ODPADOWE": {
+        "pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_ODZYSK_CIEPLA": {
+        "pytanie": "Czy to ciepło jest odzyskiwane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, w całości albo prawie w całości",
+          "czesciowo": "Częściowo",
+          "nie": "Nie jest odzyskiwane"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PROCES_BEZ_ALTERNATYWY": {
+        "pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV": {
+        "pytanie": "Czy zakład ma instalację fotowoltaiczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, działa",
+          "nie": "Nie",
+          "w planach": "W planach albo w budowie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV_MOC": {
+        "pytanie": "Moc instalacji fotowoltaicznej",
+        "typ": "number",
+        "jednostka": "kWp",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_BESS": {
+        "pytanie": "Czy zakład ma magazyn energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_BESS_POJ": {
+        "pytanie": "Pojemność magazynu",
+        "typ": "number",
+        "jednostka": "kWh",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CHP": {
+        "pytanie": "Czy zakład ma kogenerację?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CHP_MOC": {
+        "pytanie": "Moc elektryczna kogeneracji",
+        "typ": "number",
+        "jednostka": "kWe",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA": {
+        "pytanie": "Czy w zakresie systemu jest flota pojazdów?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA_LICZBA": {
+        "pytanie": "Liczba pojazdów",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PODLICZNIKI": {
+        "pytanie": "Jak opomiarowana jest energia elektryczna?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Tylko licznik główny",
+          "czesciowo": "Podliczniki na części obiektów lub wydziałów",
+          "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_PODLICZNIKI_LICZBA": {
+        "pytanie": "Ile jest podliczników?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_ODCZYT": {
+        "pytanie": "Jak odczytywane są liczniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "recznie": "Ręcznie, spisywane z liczników",
+          "zdalnie": "Zdalnie, automatycznie do systemu",
+          "mieszane": "Część ręcznie, część zdalnie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA": {
+        "pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA_ZAKRES": {
+        "pytanie": "Jaki procent zużycia energii obejmuje?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_DANE_HISTORIA": {
+        "pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?",
+        "typ": "number",
+        "jednostka": "mies.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_MES": {
+        "pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_ANALIZA_DANYCH": {
+        "pytanie": "Czy dane o zużyciu energii są analizowane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "nie",
+          "okresowo": "okresowo",
+          "systematycznie": "systematycznie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_AUDYT_ENERG": {
+        "pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_AUDYT_ROK": {
+        "pytanie": "W którym roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ETS": {
+        "pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD": {
+        "pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD_ROK": {
+        "pytanie": "Od którego roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ODBIORCY_CO2": {
+        "pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZETARGI": {
+        "pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZERWY_POGODA": {
+        "pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Słabość z analizy kontekstu staje się ryzykiem dopiero wtedy, gdy ktoś ją wyceni i weźmie za nią odpowiedzialność.",
+        "decyzja": "Przegrzewanie sprężarkowni w upały wpisane do rejestru ryzyk z właścicielem i terminem.",
+        "dzialanie": "Rejestr F-EnMS-07; działania: kryterium temperaturowe przy zakupie sprężarki (8.3) i sprawdzenie wpływu temperatury na zużycie (6.3, 6.4).",
+        "sprawdzenie": "W kolejnym lecie brak wyłączeń sprężarek z przegrzania; temperatura obecna w modelu zużycia jako zmienna."
+      }
+    ],
+    "WEJ": {},
+    "PROCESY": [],
+    "RYZYKA": [],
+    "SZANSE": [],
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ]
+  },
+  "example_literals": {
+    "WEJ": {
+      "WEJ-41": {
+        "stan": "tak",
+        "dowod": "D-EnMS-KON-01 wersja 1.0 — czynniki potwierdzone w punkcie 4.1 przejrzane na spotkaniu zespołu 06.03.2026 r.; słabości i zagrożenia przeniesione do rejestru ryzyk, mocne strony i szanse — do szans."
+      },
+      "WEJ-42": {
+        "stan": "tak",
+        "dowod": "D-EnMS-STR-01 — wymagania głównego klienta (certyfikat od 2027 r., dane o energii) i banku (wskaźniki EnPI w załączniku ESG) przejrzane 06.03.2026 r."
+      },
+      "WEJ-PROC": {
+        "stan": "tak",
+        "dowod": "Przegląd siedmiu działań i procesów na spotkaniu zespołu 06.03.2026 r. — notatka w rejestrze; lista w zakładce poniżej."
+      },
+      "WEJ-43": {
+        "stan": "tak",
+        "dowod": "D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu; transport wyrobów opisany jako działalność poza granicami i nie trafia do rejestru ryzyk."
+      },
+      "WEJ-POL": {
+        "stan": "tak",
+        "dowod": "Element polityki o uwzględnianiu efektywności przy zakupach przełożony na kryteria w procedurze zakupowej (8.3) i na ryzyko kosztowe nowej umowy na energię."
+      }
+    },
+    "PROCESY": [
+      {
+        "nazwa": "Sprężarkownia — nastawy, szczelność i konserwacja",
+        "wplyw": "duzy",
+        "uwaga": "Wiedzę o nastawach ma dziś głównie serwis zewnętrzny; brak sterownika nadrzędnego."
+      },
+      {
+        "nazwa": "Linie pras — harmonogram pracy i wyłączenia w przerwach",
+        "wplyw": "duzy",
+        "uwaga": "Przy zmianie planu produkcji prasy bywają utrzymywane w gotowości bez potrzeby."
+      },
+      {
+        "nazwa": "Lakiernia — piece suszące, temperatury i czasy",
+        "wplyw": "duzy",
+        "uwaga": "Parametry suszenia dobierane doświadczeniem; brak zapisanych kryteriów."
+      },
+      {
+        "nazwa": "Kotłownia gazowa — ogrzewanie hal",
+        "wplyw": "sredni",
+        "uwaga": "Kocioł ma 18 lat; brak licznika ciepła, zużycie ujęte tylko przez gaz."
+      },
+      {
+        "nazwa": "Oświetlenie hal — sterowanie ręczne",
+        "wplyw": "sredni",
+        "uwaga": "Hala B oświetlona oprawami świetlówkowymi; światło bywa włączone przez całą zmianę."
+      },
+      {
+        "nazwa": "Zakupy urządzeń i usług",
+        "wplyw": "sredni",
+        "uwaga": "Szansa: kryteria energetyczne w zapytaniach zmieniają koszt eksploatacji na lata."
+      },
+      {
+        "nazwa": "Transport wewnętrzny — wózki widłowe",
+        "wplyw": "maly",
+        "uwaga": "LPG to ok. 1% zużycia; ładowanie wózków elektrycznych w szczycie poboru mocy."
+      }
+    ],
+    "PRZEGLAD": {
+      "kiedy": "Raz w roku przed przeglądem zarządzania oraz po każdej istotnej zmianie: nowa umowa na energię, nowy kluczowy klient, nowa instalacja, zmiana przepisu.",
+      "ostatni": "2026-06-18",
+      "doCelow": "Pozycje o poziomie 6 i wyżej wchodzą do planu działań (6.2) jako zadania energetyczne z właścicielem i terminem; pozostałe wracają na kolejny przegląd. Szanse o tym samym poziomie trafiają do przeglądu energetycznego (6.3) jako możliwości poprawy."
+    }
+  }
+}

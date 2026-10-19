@@ -30,12 +30,12 @@ test('SWOT is written only by staff after client approval and included in docume
     $this->actingAs($client)->post(route('client.audits.factors.update', [$audit, $profile]), $input)->assertSessionHasNoErrors();
     $payload['lock_version'] = 1;
     $this->post(route('client.audits.factors.update', [$audit, $profile]), $payload)->assertForbidden();
-    $this->actingAs($staff)->post($url, array_replace($payload, ['operation' => 'approve', 'swot' => ['strengths' => 'Tylko jedna część'], 'note' => 'Sprawdzono']))->assertSessionHasErrors('swot.weaknesses');
+    $this->actingAs($staff)->post($url, array_replace($payload, ['operation' => 'approve', 'swot' => ['strengths' => 'Tylko jedna część'], 'note' => 'Sprawdzono']))->assertSessionHasErrors('swot.wnioski');
     $this->post($url, $payload)->assertSessionHasNoErrors();
     $review = IsoFactorReview::firstOrFail();
     expect($review->status)->toBe('submitted')->and($review->client_approval)->not->toBeNull()->and($review->swot['author']['user_id'])->toBe($staff->id);
     $this->post($url, $payload)->assertStatus(409);
-    $this->actingAs($client)->get(route('client.audits.factors.show', [$audit, $profile]))->assertOk()->assertSee('Kompetentny zespół energetyczny')->assertDontSee('data-swot-form', false);
+    $this->actingAs($client)->get(route('client.audits.factors.show', [$audit, $profile]))->assertOk()->assertDontSee('Kompetentny zespół energetyczny')->assertDontSee('data-swot-form', false);
     $payload['lock_version'] = 2;
     $this->actingAs($staff)->post($url, array_replace($payload, ['operation' => 'approve', 'note' => 'Sprawdzono analizę']))->assertSessionHasNoErrors();
     $review->refresh();
@@ -67,9 +67,9 @@ function factorInput(IsoPlantProfile $profile): array
     return ['lock_version' => 0, 'source_hash' => $service->hash($profile), 'operation' => 'submit', 'complete_form' => 1, 'answers' => $answers];
 }
 
-test('factor schema preserves 69 codes seven groups and references plant facts safely', function () {
+test('factor schema preserves 70 codes seven groups and references plant facts safely', function () {
     $s = app(IsoFactorQuestionnaire::class);
-    expect($s->schema()['czynniki'])->toHaveCount(69)->and($s->schema()['sekcje'])->toHaveCount(7);
+    expect($s->schema()['czynniki'])->toHaveCount(70)->and($s->schema()['sekcje'])->toHaveCount(7);
     $factors = collect($s->factors(['FAKT_PODLICZNIKI' => 'brak'], []))->keyBy('kod');
     expect($factors['KTX-WT-01']['visible'])->toBeTrue()->and($factors['KTX-WT-02']['visible'])->toBeFalse();
     expect(collect($s->factors([], []))->where('visible', true)->where('kod', 'KTX-WT-01'))->toHaveCount(0);

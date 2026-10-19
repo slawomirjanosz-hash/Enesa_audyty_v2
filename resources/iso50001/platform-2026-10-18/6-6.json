@@ -1,0 +1,817 @@
+{
+  "source_file": "ENESA_6.6_Plan_zbierania_danych_platforma.html",
+  "source_sha256": "cbb0264c1feec3d86f9a71961d69882a9c49760fadf7802e61b3a7bb7d5f498f",
+  "section": "6-6",
+  "data": {
+    "KATEGORIE": [
+      [
+        "a",
+        "Istotne zmienne dla znaczących użyć energii"
+      ],
+      [
+        "b",
+        "Zużycie energii — znaczących użyć i organizacji"
+      ],
+      [
+        "c",
+        "Kryteria eksploatacji znaczących użyć energii"
+      ],
+      [
+        "d",
+        "Czynniki statyczne, jeśli dotyczy"
+      ],
+      [
+        "e",
+        "Dane określone w planach działań"
+      ]
+    ],
+    "LISTA_66": [
+      {
+        "tekst": "Plan jest odpowiedni do wielkości, złożoności, zasobów i wyposażenia pomiarowego organizacji.",
+        "podstawa": "N",
+        "auto": "odpowiedni"
+      },
+      {
+        "tekst": "Plan obejmuje: a) istotne zmienne dla SEU; b) zużycie energii SEU i organizacji; c) kryteria eksploatacji SEU; d) czynniki statyczne; e) dane z planów działań.",
+        "podstawa": "N",
+        "auto": "kategorie"
+      },
+      {
+        "tekst": "Plan określa, jak i jak często dane są zbierane oraz przechowywane.",
+        "podstawa": "N",
+        "auto": "jak"
+      },
+      {
+        "tekst": "Dane są zachowane jako udokumentowana informacja.",
+        "podstawa": "N",
+        "auto": "zachowane"
+      },
+      {
+        "tekst": "Pomiar kluczowych charakterystyk daje dane dokładne i powtarzalne; zachowano na to dowody.",
+        "podstawa": "N",
+        "auto": "dokladnosc"
+      },
+      {
+        "tekst": "Określono zasady jakości danych i postępowania z brakami.",
+        "podstawa": "M",
+        "auto": "jakosc"
+      },
+      {
+        "tekst": "Plan przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb.",
+        "podstawa": "N",
+        "auto": "przeglad"
+      }
+    ],
+    "POLA_ZASAD": [
+      {
+        "kod": "zapisy",
+        "nazwa": "Gdzie i jak długo przechowujecie dane",
+        "podstawa": "N",
+        "rows": 2,
+        "ph": "np. Arkusz EnMS na serwerze, kopia tygodniowa; dane z systemu monitoringu 30 dni w sterowniku, dalej eksport miesięczny do arkusza; faktury w księgowości 5 lat.",
+        "pomoc": "Norma wymaga, żeby plan określał, jak dane będą przechowywane, i żeby dane były zachowane jako udokumentowana informacja."
+      },
+      {
+        "kod": "dowody",
+        "nazwa": "Jak zapewniacie dokładność i powtarzalność — zasada ogólna",
+        "podstawa": "N",
+        "rows": 3,
+        "ph": "np. Liczniki rozliczeniowe — legalizacja przez OSD. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy z licznikiem głównym (różnica ≤ 5%). Analizator i detektor — świadectwo wzorcowania. Czujniki temperatury i ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.",
+        "pomoc": "Organizacja zachowuje udokumentowaną informację o sposobach zapewnienia dokładności i powtarzalności pomiarów kluczowych charakterystyk."
+      },
+      {
+        "kod": "jakosc",
+        "nazwa": "Zasady jakości danych i postępowania z brakami",
+        "podstawa": "M",
+        "rows": 3,
+        "ph": "np. Każda wartość oszacowana jest oznaczona w arkuszu i opisana. Luka dłuższa niż miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji w porównaniu.",
+        "pomoc": "Wymaganie metodyki ENESA. Norma mówi o dokładności pomiaru, ale nie o postępowaniu z lukami — a luki są nieuniknione."
+      },
+      {
+        "kod": "przeglad",
+        "nazwa": "Kto i kiedy przegląda plan",
+        "podstawa": "N",
+        "rows": 2,
+        "ph": "np. Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny.",
+        "pomoc": "Plan, który się zestarzał, jest gorszy od żadnego — bo wygląda na obowiązujący."
+      },
+      {
+        "kod": "droga",
+        "nazwa": "Droga danych od licznika do wskaźnika",
+        "podstawa": "M",
+        "rows": 3,
+        "ph": "np. Podlicznik → eksport z systemu monitoringu (Kier. UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika (Energy Manager, do 10 dnia) → raport na odprawę kierownictwa. Punkty zależne od pamięci jednej osoby: eksport ręczny z systemu monitoringu — wpisany zastępca.",
+        "pomoc": "Zadanie z książki: wybierzcie jeden wskaźnik i przejdźcie drogę jego danych od licznika do raportu. Zapiszcie każde miejsce, w którym ta droga zależy od pamięci jednej osoby."
+      }
+    ],
+    "przyklad": {
+      "POZYCJE": [
+        {
+          "parametr": "Energia elektryczna — organizacja",
+          "kat": [
+            "b"
+          ],
+          "jednostka": "MWh",
+          "zrodlo": "Licznik główny rozliczeniowy (OSD), faktura; profil 15-minutowy z OSD",
+          "czestotliwosc": "Miesięcznie",
+          "odp": "Energy Manager",
+          "przechowywanie": "Arkusz EnMS; faktury w księgowości",
+          "kontrola": "Porównanie z fakturą; licznik legalizowany przez OSD",
+          "braki": "Korekta z faktury korygującej",
+          "kluczowa": true,
+          "zastepca": "Kierownik Utrzymania Ruchu"
+        },
+        {
+          "parametr": "Gaz — organizacja",
+          "kat": [
+            "b"
+          ],
+          "jednostka": "m³, kWh",
+          "zrodlo": "Licznik główny, faktura",
+          "czestotliwosc": "Miesięcznie",
+          "odp": "Energy Manager",
+          "przechowywanie": "Arkusz EnMS",
+          "kontrola": "Porównanie z fakturą; jedna podstawa przeliczenia dla całego bilansu",
+          "braki": "Korekta z faktury korygującej",
+          "kluczowa": true,
+          "zastepca": "Kierownik Utrzymania Ruchu"
+        },
+        {
+          "parametr": "LPG — wózki widłowe",
+          "kat": [
+            "b"
+          ],
+          "jednostka": "l",
+          "zrodlo": "Faktury dostaw, stan zbiornika",
+          "czestotliwosc": "Miesięcznie",
+          "odp": "Kierownik Zakupów",
+          "przechowywanie": "Arkusz EnMS",
+          "kontrola": "Dostawy zestawione ze stanem zbiornika",
+          "braki": "Oszacowanie z liczby motogodzin, wartość oznaczona",
+          "kluczowa": false,
+          "zastepca": "Specjalista ds. zakupów"
+        },
+        {
+          "parametr": "Energia elektryczna — sprężarkownia",
+          "kat": [
+            "b"
+          ],
+          "jednostka": "kWh",
+          "zrodlo": "Podlicznik klasy 1 (od 06.2026)",
+          "czestotliwosc": "15 min; zestawienie miesięczne",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "System monitoringu, kopia co tydzień",
+          "kontrola": "Suma podliczników wobec licznika głównego (różnica ≤ 5%); sprawdzenie po montażu",
+          "braki": "Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona",
+          "kluczowa": true,
+          "zastepca": "Technik UR"
+        },
+        {
+          "parametr": "Wolumen sprężonego powietrza",
+          "kat": [
+            "a"
+          ],
+          "jednostka": "Nm³",
+          "zrodlo": "Przepływomierz na kolektorze głównym (od 06.2026)",
+          "czestotliwosc": "15 min",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "System monitoringu",
+          "kontrola": "Sprawdzenie po montażu; porównanie z wydajnością katalogową sprężarek",
+          "braki": "Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona",
+          "kluczowa": true,
+          "zastepca": "Technik UR"
+        },
+        {
+          "parametr": "Ciśnienie w sieci sprężonego powietrza",
+          "kat": [
+            "c"
+          ],
+          "jednostka": "bar",
+          "zrodlo": "Przetwornik ciśnienia w sterowniku sprężarkowni",
+          "czestotliwosc": "Ciągle; alarm powyżej 6,5 bar",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "Sterownik (30 dni), eksport miesięczny",
+          "kontrola": "Sprawdzenie przetwornika raz w roku",
+          "braki": "—",
+          "kluczowa": true,
+          "zastepca": "Technik UR"
+        },
+        {
+          "parametr": "Przepływ powietrza w czasie postoju",
+          "kat": [
+            "e"
+          ],
+          "jednostka": "Nm³/min",
+          "zrodlo": "Test weekendowy przepływomierzem, procedura I-SP-02",
+          "czestotliwosc": "Co kwartał",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "Protokół testu w teczce EnMS",
+          "kontrola": "Ta sama procedura testu i to samo ciśnienie przy każdym pomiarze",
+          "braki": "Powtórzenie testu w kolejny weekend",
+          "kluczowa": true,
+          "zastepca": "Technik UR"
+        },
+        {
+          "parametr": "Gaz — piec lakierni",
+          "kat": [
+            "b"
+          ],
+          "jednostka": "m³",
+          "zrodlo": "Podlicznik gazu (od 06.2026)",
+          "czestotliwosc": "Dziennie; zestawienie miesięczne",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "Arkusz EnMS",
+          "kontrola": "Porównanie z licznikiem głównym w miesiącach letnich (kotłownia wyłączona)",
+          "braki": "Oszacowanie z czasu pracy palników, wartość oznaczona",
+          "kluczowa": true,
+          "zastepca": "Technolog lakierni"
+        },
+        {
+          "parametr": "Lakierowana powierzchnia",
+          "kat": [
+            "a"
+          ],
+          "jednostka": "m²",
+          "zrodlo": "System MES — karta zlecenia",
+          "czestotliwosc": "Dziennie",
+          "odp": "Kierownik Produkcji",
+          "przechowywanie": "ERP",
+          "kontrola": "Miesięczne uzgodnienie z planem produkcji",
+          "braki": "Wartość z planu produkcji, oznaczona",
+          "kluczowa": false,
+          "zastepca": "Planista produkcji"
+        },
+        {
+          "parametr": "Temperatura i harmonogram pracy pieca",
+          "kat": [
+            "c"
+          ],
+          "jednostka": "°C, h",
+          "zrodlo": "Sterownik pieca lakierni",
+          "czestotliwosc": "Ciągle",
+          "odp": "Technolog lakierni",
+          "przechowywanie": "Sterownik, raport tygodniowy",
+          "kontrola": "Sprawdzenie czujnika raz w roku",
+          "braki": "—",
+          "kluczowa": true,
+          "zastepca": "Kierownik Utrzymania Ruchu"
+        },
+        {
+          "parametr": "Masa przetworzonej stali",
+          "kat": [
+            "a"
+          ],
+          "jednostka": "t",
+          "zrodlo": "ERP — zużycie blachy",
+          "czestotliwosc": "Dziennie",
+          "odp": "Kierownik Produkcji",
+          "przechowywanie": "ERP",
+          "kontrola": "Inwentaryzacja miesięczna",
+          "braki": "Wartość z wydań magazynowych",
+          "kluczowa": false,
+          "zastepca": "Planista produkcji"
+        },
+        {
+          "parametr": "Energia elektryczna — prasy",
+          "kat": [
+            "b"
+          ],
+          "jednostka": "kWh",
+          "zrodlo": "Pomiar analizatorem 2 tygodnie co kwartał i obliczenie z czasu pracy linii",
+          "czestotliwosc": "Kwartalnie",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "Protokoły pomiarów w teczce EnMS",
+          "kontrola": "Analizator ze świadectwem wzorcowania; porównanie z bilansem licznika głównego",
+          "braki": "Powtórzenie pomiaru w kolejnym kwartale, wartość oznaczona",
+          "kluczowa": true,
+          "zastepca": "Technik UR"
+        },
+        {
+          "parametr": "Stopniodni grzania",
+          "kat": [
+            "a"
+          ],
+          "jednostka": "HDD",
+          "zrodlo": "IMGW, stacja Katowice, baza 18 °C",
+          "czestotliwosc": "Miesięcznie",
+          "odp": "Energy Manager",
+          "przechowywanie": "Arkusz EnMS",
+          "kontrola": "Jedno źródło i jedna baza przez cały okres porównania",
+          "braki": "Stacja zastępcza (Gliwice), wartość oznaczona",
+          "kluczowa": false,
+          "zastepca": "Specjalista ds. EnMS"
+        },
+        {
+          "parametr": "Oświetlenie hal H1 i H2",
+          "kat": [
+            "b",
+            "e"
+          ],
+          "jednostka": "kW, h",
+          "zrodlo": "Pomiar mocy na rozdzielnicach przed i po wymianie na LED; czas pracy z planu zmian",
+          "czestotliwosc": "Przed i po wdrożeniu, potem raz w roku",
+          "odp": "Kierownik Utrzymania Ruchu",
+          "przechowywanie": "Protokoły pomiarów w teczce EnMS",
+          "kontrola": "Ten sam analizator i te same punkty pomiarowe",
+          "braki": "—",
+          "kluczowa": true,
+          "zastepca": "Technik UR"
+        },
+        {
+          "parametr": "Czynniki statyczne zakładu",
+          "kat": [
+            "d"
+          ],
+          "jednostka": "—",
+          "zrodlo": "Plan produkcji i karta zakładu: liczba zmian, liczba linii, powierzchnia ogrzewana",
+          "czestotliwosc": "Przy każdej zmianie",
+          "odp": "Kierownik Produkcji i Energy Manager",
+          "przechowywanie": "Rejestr zmian w teczce EnMS",
+          "kontrola": "—",
+          "braki": "—",
+          "kluczowa": false,
+          "zastepca": "Specjalista ds. EnMS"
+        },
+        {
+          "parametr": "Dane z planów działań",
+          "kat": [
+            "e"
+          ],
+          "jednostka": "—",
+          "zrodlo": "Protokoły odbioru, daty wdrożeń, pomiary przed i po modernizacji",
+          "czestotliwosc": "Przy każdym działaniu",
+          "odp": "Właściciel działania",
+          "przechowywanie": "F-EnMS-10, część D (metoda weryfikacji)",
+          "kontrola": "Warunki porównania zgodne z częścią D formularza celów",
+          "braki": "Brak pomiaru „przed” uniemożliwia weryfikację — działanie wstrzymuje się do wykonania pomiaru",
+          "kluczowa": false,
+          "zastepca": "Energy Manager"
+        }
+      ],
+      "ZASADY": {
+        "zapisy": "Arkusz EnMS na serwerze firmowym, kopia tygodniowa. Dane z systemu monitoringu: 30 dni w sterowniku, dalej eksport miesięczny do arkusza. Protokoły pomiarów i świadectwa wzorcowania w teczce EnMS. Faktury w księgowości, zgodnie z obowiązującym okresem przechowywania.",
+        "dowody": "Liczniki rozliczeniowe energii elektrycznej i gazu — legalizacja po stronie OSD, potwierdzenie na fakturze. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy podliczników z licznikiem głównym; dopuszczalna różnica bilansowa 5%. Przepływomierz — sprawdzenie po montażu i porównanie z wydajnością katalogową sprężarek. Analizator sieci i detektor ultradźwiękowy — świadectwa wzorcowania, odnawiane zgodnie z zaleceniem producenta. Czujniki temperatury i przetworniki ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.",
+        "jakosc": "Każda wartość oszacowana jest oznaczona w arkuszu i opisana (metoda i powód). Luka dłuższa niż jeden miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji przy porównaniu. Różnica bilansowa powyżej 5% uruchamia sprawdzenie podziału zużycia na obszary.",
+        "przeglad": "Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny; wersja planu rośnie przy każdej zmianie zakresu danych.",
+        "droga": "Dla wskaźnika S-1: podlicznik sprężarkowni i przepływomierz → eksport z systemu monitoringu (Kierownik UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika i porównanie z EnB (Energy Manager, do 10 dnia) → trend na odprawie kierownictwa. Miejsca zależne od pamięci jednej osoby: ręczny eksport z systemu monitoringu i kwartalny test weekendowy — przy obu wpisany zastępca (Technik UR)."
+      },
+      "META": {
+        "wersja": "1.0",
+        "data": "2026-04-15",
+        "przeglad": "Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego lub planów działań",
+        "opracowal": "Jan Kowalski, Energy Manager",
+        "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny"
+      }
+    }
+  },
+  "variables": {
+    "KATEGORIE": [
+      [
+        "a",
+        "Istotne zmienne dla znaczących użyć energii"
+      ],
+      [
+        "b",
+        "Zużycie energii — znaczących użyć i organizacji"
+      ],
+      [
+        "c",
+        "Kryteria eksploatacji znaczących użyć energii"
+      ],
+      [
+        "d",
+        "Czynniki statyczne, jeśli dotyczy"
+      ],
+      [
+        "e",
+        "Dane określone w planach działań"
+      ]
+    ],
+    "CZESTOTLIWOSCI": [
+      [
+        "Zużycie — liczniki główne",
+        "Miesięcznie (z faktur)",
+        "Codziennie lub co 15 min"
+      ],
+      [
+        "Zużycie znaczących użyć energii",
+        "Miesięcznie",
+        "Codziennie"
+      ],
+      [
+        "Zmienne (produkcja, pogoda)",
+        "Miesięcznie",
+        "Tygodniowo lub codziennie"
+      ],
+      [
+        "Kryteria eksploatacji",
+        "Przy każdej zmianie parametrów pracy",
+        "Ciągle, z alarmem"
+      ],
+      [
+        "EnPI i porównanie z EnB",
+        "Miesięcznie lub kwartalnie",
+        "Miesięcznie"
+      ]
+    ],
+    "LISTA_66": [
+      {
+        "tekst": "Plan jest odpowiedni do wielkości, złożoności, zasobów i wyposażenia pomiarowego organizacji.",
+        "podstawa": "N",
+        "auto": "odpowiedni"
+      },
+      {
+        "tekst": "Plan obejmuje: a) istotne zmienne dla SEU; b) zużycie energii SEU i organizacji; c) kryteria eksploatacji SEU; d) czynniki statyczne; e) dane z planów działań.",
+        "podstawa": "N",
+        "auto": "kategorie"
+      },
+      {
+        "tekst": "Plan określa, jak i jak często dane są zbierane oraz przechowywane.",
+        "podstawa": "N",
+        "auto": "jak"
+      },
+      {
+        "tekst": "Dane są zachowane jako udokumentowana informacja.",
+        "podstawa": "N",
+        "auto": "zachowane"
+      },
+      {
+        "tekst": "Pomiar kluczowych charakterystyk daje dane dokładne i powtarzalne; zachowano na to dowody.",
+        "podstawa": "N",
+        "auto": "dokladnosc"
+      },
+      {
+        "tekst": "Określono zasady jakości danych i postępowania z brakami.",
+        "podstawa": "M",
+        "auto": "jakosc"
+      },
+      {
+        "tekst": "Plan przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb.",
+        "podstawa": "N",
+        "auto": "przeglad"
+      }
+    ],
+    "POLA_ZASAD": [
+      {
+        "kod": "zapisy",
+        "nazwa": "Gdzie i jak długo przechowujecie dane",
+        "podstawa": "N",
+        "rows": 2,
+        "ph": "np. Arkusz EnMS na serwerze, kopia tygodniowa; dane z systemu monitoringu 30 dni w sterowniku, dalej eksport miesięczny do arkusza; faktury w księgowości 5 lat.",
+        "pomoc": "Norma wymaga, żeby plan określał, jak dane będą przechowywane, i żeby dane były zachowane jako udokumentowana informacja."
+      },
+      {
+        "kod": "dowody",
+        "nazwa": "Jak zapewniacie dokładność i powtarzalność — zasada ogólna",
+        "podstawa": "N",
+        "rows": 3,
+        "ph": "np. Liczniki rozliczeniowe — legalizacja przez OSD. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy z licznikiem głównym (różnica ≤ 5%). Analizator i detektor — świadectwo wzorcowania. Czujniki temperatury i ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.",
+        "pomoc": "Organizacja zachowuje udokumentowaną informację o sposobach zapewnienia dokładności i powtarzalności pomiarów kluczowych charakterystyk."
+      },
+      {
+        "kod": "jakosc",
+        "nazwa": "Zasady jakości danych i postępowania z brakami",
+        "podstawa": "M",
+        "rows": 3,
+        "ph": "np. Każda wartość oszacowana jest oznaczona w arkuszu i opisana. Luka dłuższa niż miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji w porównaniu.",
+        "pomoc": "Wymaganie metodyki ENESA. Norma mówi o dokładności pomiaru, ale nie o postępowaniu z lukami — a luki są nieuniknione."
+      },
+      {
+        "kod": "przeglad",
+        "nazwa": "Kto i kiedy przegląda plan",
+        "podstawa": "N",
+        "rows": 2,
+        "ph": "np. Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny.",
+        "pomoc": "Plan, który się zestarzał, jest gorszy od żadnego — bo wygląda na obowiązujący."
+      },
+      {
+        "kod": "droga",
+        "nazwa": "Droga danych od licznika do wskaźnika",
+        "podstawa": "M",
+        "rows": 3,
+        "ph": "np. Podlicznik → eksport z systemu monitoringu (Kier. UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika (Energy Manager, do 10 dnia) → raport na odprawę kierownictwa. Punkty zależne od pamięci jednej osoby: eksport ręczny z systemu monitoringu — wpisany zastępca.",
+        "pomoc": "Zadanie z książki: wybierzcie jeden wskaźnik i przejdźcie drogę jego danych od licznika do raportu. Zapiszcie każde miejsce, w którym ta droga zależy od pamięci jednej osoby."
+      }
+    ],
+    "P_POZYCJE": [
+      {
+        "parametr": "Energia elektryczna — organizacja",
+        "kat": [
+          "b"
+        ],
+        "jednostka": "MWh",
+        "zrodlo": "Licznik główny rozliczeniowy (OSD), faktura; profil 15-minutowy z OSD",
+        "czestotliwosc": "Miesięcznie",
+        "odp": "Energy Manager",
+        "przechowywanie": "Arkusz EnMS; faktury w księgowości",
+        "kontrola": "Porównanie z fakturą; licznik legalizowany przez OSD",
+        "braki": "Korekta z faktury korygującej",
+        "kluczowa": true,
+        "zastepca": "Kierownik Utrzymania Ruchu"
+      },
+      {
+        "parametr": "Gaz — organizacja",
+        "kat": [
+          "b"
+        ],
+        "jednostka": "m³, kWh",
+        "zrodlo": "Licznik główny, faktura",
+        "czestotliwosc": "Miesięcznie",
+        "odp": "Energy Manager",
+        "przechowywanie": "Arkusz EnMS",
+        "kontrola": "Porównanie z fakturą; jedna podstawa przeliczenia dla całego bilansu",
+        "braki": "Korekta z faktury korygującej",
+        "kluczowa": true,
+        "zastepca": "Kierownik Utrzymania Ruchu"
+      },
+      {
+        "parametr": "LPG — wózki widłowe",
+        "kat": [
+          "b"
+        ],
+        "jednostka": "l",
+        "zrodlo": "Faktury dostaw, stan zbiornika",
+        "czestotliwosc": "Miesięcznie",
+        "odp": "Kierownik Zakupów",
+        "przechowywanie": "Arkusz EnMS",
+        "kontrola": "Dostawy zestawione ze stanem zbiornika",
+        "braki": "Oszacowanie z liczby motogodzin, wartość oznaczona",
+        "kluczowa": false,
+        "zastepca": "Specjalista ds. zakupów"
+      },
+      {
+        "parametr": "Energia elektryczna — sprężarkownia",
+        "kat": [
+          "b"
+        ],
+        "jednostka": "kWh",
+        "zrodlo": "Podlicznik klasy 1 (od 06.2026)",
+        "czestotliwosc": "15 min; zestawienie miesięczne",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "System monitoringu, kopia co tydzień",
+        "kontrola": "Suma podliczników wobec licznika głównego (różnica ≤ 5%); sprawdzenie po montażu",
+        "braki": "Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona",
+        "kluczowa": true,
+        "zastepca": "Technik UR"
+      },
+      {
+        "parametr": "Wolumen sprężonego powietrza",
+        "kat": [
+          "a"
+        ],
+        "jednostka": "Nm³",
+        "zrodlo": "Przepływomierz na kolektorze głównym (od 06.2026)",
+        "czestotliwosc": "15 min",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "System monitoringu",
+        "kontrola": "Sprawdzenie po montażu; porównanie z wydajnością katalogową sprężarek",
+        "braki": "Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona",
+        "kluczowa": true,
+        "zastepca": "Technik UR"
+      },
+      {
+        "parametr": "Ciśnienie w sieci sprężonego powietrza",
+        "kat": [
+          "c"
+        ],
+        "jednostka": "bar",
+        "zrodlo": "Przetwornik ciśnienia w sterowniku sprężarkowni",
+        "czestotliwosc": "Ciągle; alarm powyżej 6,5 bar",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "Sterownik (30 dni), eksport miesięczny",
+        "kontrola": "Sprawdzenie przetwornika raz w roku",
+        "braki": "—",
+        "kluczowa": true,
+        "zastepca": "Technik UR"
+      },
+      {
+        "parametr": "Przepływ powietrza w czasie postoju",
+        "kat": [
+          "e"
+        ],
+        "jednostka": "Nm³/min",
+        "zrodlo": "Test weekendowy przepływomierzem, procedura I-SP-02",
+        "czestotliwosc": "Co kwartał",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "Protokół testu w teczce EnMS",
+        "kontrola": "Ta sama procedura testu i to samo ciśnienie przy każdym pomiarze",
+        "braki": "Powtórzenie testu w kolejny weekend",
+        "kluczowa": true,
+        "zastepca": "Technik UR"
+      },
+      {
+        "parametr": "Gaz — piec lakierni",
+        "kat": [
+          "b"
+        ],
+        "jednostka": "m³",
+        "zrodlo": "Podlicznik gazu (od 06.2026)",
+        "czestotliwosc": "Dziennie; zestawienie miesięczne",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "Arkusz EnMS",
+        "kontrola": "Porównanie z licznikiem głównym w miesiącach letnich (kotłownia wyłączona)",
+        "braki": "Oszacowanie z czasu pracy palników, wartość oznaczona",
+        "kluczowa": true,
+        "zastepca": "Technolog lakierni"
+      },
+      {
+        "parametr": "Lakierowana powierzchnia",
+        "kat": [
+          "a"
+        ],
+        "jednostka": "m²",
+        "zrodlo": "System MES — karta zlecenia",
+        "czestotliwosc": "Dziennie",
+        "odp": "Kierownik Produkcji",
+        "przechowywanie": "ERP",
+        "kontrola": "Miesięczne uzgodnienie z planem produkcji",
+        "braki": "Wartość z planu produkcji, oznaczona",
+        "kluczowa": false,
+        "zastepca": "Planista produkcji"
+      },
+      {
+        "parametr": "Temperatura i harmonogram pracy pieca",
+        "kat": [
+          "c"
+        ],
+        "jednostka": "°C, h",
+        "zrodlo": "Sterownik pieca lakierni",
+        "czestotliwosc": "Ciągle",
+        "odp": "Technolog lakierni",
+        "przechowywanie": "Sterownik, raport tygodniowy",
+        "kontrola": "Sprawdzenie czujnika raz w roku",
+        "braki": "—",
+        "kluczowa": true,
+        "zastepca": "Kierownik Utrzymania Ruchu"
+      },
+      {
+        "parametr": "Masa przetworzonej stali",
+        "kat": [
+          "a"
+        ],
+        "jednostka": "t",
+        "zrodlo": "ERP — zużycie blachy",
+        "czestotliwosc": "Dziennie",
+        "odp": "Kierownik Produkcji",
+        "przechowywanie": "ERP",
+        "kontrola": "Inwentaryzacja miesięczna",
+        "braki": "Wartość z wydań magazynowych",
+        "kluczowa": false,
+        "zastepca": "Planista produkcji"
+      },
+      {
+        "parametr": "Energia elektryczna — prasy",
+        "kat": [
+          "b"
+        ],
+        "jednostka": "kWh",
+        "zrodlo": "Pomiar analizatorem 2 tygodnie co kwartał i obliczenie z czasu pracy linii",
+        "czestotliwosc": "Kwartalnie",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "Protokoły pomiarów w teczce EnMS",
+        "kontrola": "Analizator ze świadectwem wzorcowania; porównanie z bilansem licznika głównego",
+        "braki": "Powtórzenie pomiaru w kolejnym kwartale, wartość oznaczona",
+        "kluczowa": true,
+        "zastepca": "Technik UR"
+      },
+      {
+        "parametr": "Stopniodni grzania",
+        "kat": [
+          "a"
+        ],
+        "jednostka": "HDD",
+        "zrodlo": "IMGW, stacja Katowice, baza 18 °C",
+        "czestotliwosc": "Miesięcznie",
+        "odp": "Energy Manager",
+        "przechowywanie": "Arkusz EnMS",
+        "kontrola": "Jedno źródło i jedna baza przez cały okres porównania",
+        "braki": "Stacja zastępcza (Gliwice), wartość oznaczona",
+        "kluczowa": false,
+        "zastepca": "Specjalista ds. EnMS"
+      },
+      {
+        "parametr": "Oświetlenie hal H1 i H2",
+        "kat": [
+          "b",
+          "e"
+        ],
+        "jednostka": "kW, h",
+        "zrodlo": "Pomiar mocy na rozdzielnicach przed i po wymianie na LED; czas pracy z planu zmian",
+        "czestotliwosc": "Przed i po wdrożeniu, potem raz w roku",
+        "odp": "Kierownik Utrzymania Ruchu",
+        "przechowywanie": "Protokoły pomiarów w teczce EnMS",
+        "kontrola": "Ten sam analizator i te same punkty pomiarowe",
+        "braki": "—",
+        "kluczowa": true,
+        "zastepca": "Technik UR"
+      },
+      {
+        "parametr": "Czynniki statyczne zakładu",
+        "kat": [
+          "d"
+        ],
+        "jednostka": "—",
+        "zrodlo": "Plan produkcji i karta zakładu: liczba zmian, liczba linii, powierzchnia ogrzewana",
+        "czestotliwosc": "Przy każdej zmianie",
+        "odp": "Kierownik Produkcji i Energy Manager",
+        "przechowywanie": "Rejestr zmian w teczce EnMS",
+        "kontrola": "—",
+        "braki": "—",
+        "kluczowa": false,
+        "zastepca": "Specjalista ds. EnMS"
+      },
+      {
+        "parametr": "Dane z planów działań",
+        "kat": [
+          "e"
+        ],
+        "jednostka": "—",
+        "zrodlo": "Protokoły odbioru, daty wdrożeń, pomiary przed i po modernizacji",
+        "czestotliwosc": "Przy każdym działaniu",
+        "odp": "Właściciel działania",
+        "przechowywanie": "F-EnMS-10, część D (metoda weryfikacji)",
+        "kontrola": "Warunki porównania zgodne z częścią D formularza celów",
+        "braki": "Brak pomiaru „przed” uniemożliwia weryfikację — działanie wstrzymuje się do wykonania pomiaru",
+        "kluczowa": false,
+        "zastepca": "Energy Manager"
+      }
+    ],
+    "P_ZASADY_66": {
+      "zapisy": "Arkusz EnMS na serwerze firmowym, kopia tygodniowa. Dane z systemu monitoringu: 30 dni w sterowniku, dalej eksport miesięczny do arkusza. Protokoły pomiarów i świadectwa wzorcowania w teczce EnMS. Faktury w księgowości, zgodnie z obowiązującym okresem przechowywania.",
+      "dowody": "Liczniki rozliczeniowe energii elektrycznej i gazu — legalizacja po stronie OSD, potwierdzenie na fakturze. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy podliczników z licznikiem głównym; dopuszczalna różnica bilansowa 5%. Przepływomierz — sprawdzenie po montażu i porównanie z wydajnością katalogową sprężarek. Analizator sieci i detektor ultradźwiękowy — świadectwa wzorcowania, odnawiane zgodnie z zaleceniem producenta. Czujniki temperatury i przetworniki ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.",
+      "jakosc": "Każda wartość oszacowana jest oznaczona w arkuszu i opisana (metoda i powód). Luka dłuższa niż jeden miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji przy porównaniu. Różnica bilansowa powyżej 5% uruchamia sprawdzenie podziału zużycia na obszary.",
+      "przeglad": "Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny; wersja planu rośnie przy każdej zmianie zakresu danych.",
+      "droga": "Dla wskaźnika S-1: podlicznik sprężarkowni i przepływomierz → eksport z systemu monitoringu (Kierownik UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika i porównanie z EnB (Energy Manager, do 10 dnia) → trend na odprawie kierownictwa. Miejsca zależne od pamięci jednej osoby: ręczny eksport z systemu monitoringu i kwartalny test weekendowy — przy obu wpisany zastępca (Technik UR)."
+    },
+    "P_META_66": {
+      "wersja": "1.0",
+      "data": "2026-04-15",
+      "przeglad": "Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego lub planów działań",
+      "opracowal": "Jan Kowalski, Energy Manager",
+      "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny"
+    },
+    "P_KARTY_PODGLAD": [
+      {
+        "nr": "O-1",
+        "nazwa": "Zużycie rzeczywiste / zużycie oczekiwane według modelu bazowego",
+        "obszar": "organizacja",
+        "zrodla": "Poz. 1–3, 11, 13 planu zbierania danych F-EnMS-11"
+      },
+      {
+        "nr": "P-1",
+        "nazwa": "Energia jednostkowa pras — kWh na tonę przetworzonej stali",
+        "obszar": "seu",
+        "zrodla": "Poz. 11 (masa stali) i poz. 12 (energia pras) planu F-EnMS-11"
+      },
+      {
+        "nr": "L-1",
+        "nazwa": "Zużycie rzeczywiste / oczekiwane — lakiernia",
+        "obszar": "seu",
+        "zrodla": "Poz. 8 (gaz pieca), poz. 9 (lakierowana powierzchnia), poz. 13 (HDD) planu F-EnMS-11"
+      },
+      {
+        "nr": "S-1",
+        "nazwa": "Energia jednostkowa sprężarkowni — kWh na Nm³ sprężonego powietrza",
+        "obszar": "seu",
+        "zrodla": "Poz. 4 (energia sprężarkowni), poz. 5 (wolumen powietrza), poz. 6 (ciśnienie sieci) planu F-EnMS-11"
+      },
+      {
+        "nr": "S-2",
+        "nazwa": "Przepływ sprężonego powietrza w czasie postoju",
+        "obszar": "seu",
+        "zrodla": "Poz. 7 (przepływ w postoju) planu F-EnMS-11"
+      },
+      {
+        "nr": "K-1",
+        "nazwa": "Zużycie rzeczywiste / oczekiwane — kotłownia",
+        "obszar": "seu",
+        "zrodla": "Poz. 2 (gaz — organizacja, po odjęciu pieca lakierni) i poz. 13 (HDD) planu F-EnMS-11"
+      },
+      {
+        "nr": "OŚ-1",
+        "nazwa": "Roczne zużycie energii na oświetlenie",
+        "obszar": "seu",
+        "zrodla": "Poz. 14 (oświetlenie) i poz. 15 (czynniki statyczne) planu F-EnMS-11"
+      }
+    ],
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Dane zbierane bez planu okazują się niepełne akurat tam, gdzie są potrzebne do rozliczenia celu.",
+        "decyzja": "Plan zbierania danych obejmuje wszystkie znaczące użycia, zmienne istotne i dane wymagane przez klienta.",
+        "dzialanie": "Odczyty tygodniowe liczników głównych; podlicznik sprężarkowni i przepływomierz w planie C4; stopniodnie z najbliższej stacji IMGW-PIB.",
+        "sprawdzenie": "Ocena zgodności (9.1.2) i roczny raport dla klienta powstają bez uzupełniania danych wstecz."
+      }
+    ],
+    "POZYCJE": [],
+    "ZASADY": {},
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "KARTY": []
+  },
+  "example_literals": {}
+}

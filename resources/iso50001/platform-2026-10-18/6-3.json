@@ -1,0 +1,1797 @@
+{
+  "source_file": "ENESA_6.3_Przeglad_energetyczny_platforma.html",
+  "source_sha256": "cb29a45f06ff05d4abeeb3a6c6961cbf4f4fc7531756f82c61aa7e9ccb0430b1",
+  "section": "6-3",
+  "data": {
+    "metody": [
+      {
+        "kod": "MET-ZR",
+        "podstawa": "N",
+        "nazwa": "Źródła danych",
+        "pomoc": "Faktury, liczniki, system produkcyjny, dane pogodowe, pomiary. Z jakiego okresu.",
+        "przyklad": "np. Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem"
+      },
+      {
+        "kod": "MET-POD",
+        "podstawa": "N",
+        "nazwa": "Metody podziału zużycia na obszary",
+        "pomoc": "Dla każdego obszaru: pomiar, obliczenie czy oszacowanie — i na jakiej podstawie.",
+        "przyklad": "np. Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie"
+      },
+      {
+        "kod": "MET-PRZ",
+        "podstawa": "N",
+        "nazwa": "Przeliczniki na wspólną jednostkę i ich źródło",
+        "pomoc": "Jedna podstawa dla całego bilansu: ciepło spalania albo wartość opałowa. Zapiszcie, którą wybraliście i skąd pochodzą liczby.",
+        "przyklad": "np. Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ"
+      },
+      {
+        "kod": "MET-SEU",
+        "podstawa": "N",
+        "nazwa": "Kryteria wyboru znaczących użyć energii",
+        "pomoc": "Z podstawą procentów: od czego liczycie udział. ★ Progi możecie przyjąć własne — ważne, żeby stosować jedne kryteria i uzasadnić każdy wybór.",
+        "przyklad": "np. A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej"
+      },
+      {
+        "kod": "MET-SZE",
+        "podstawa": "N",
+        "nazwa": "Kryteria szeregowania możliwości poprawy",
+        "pomoc": "Na przykład oszczędność i prosty okres zwrotu nakładów.",
+        "przyklad": "np. Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno"
+      },
+      {
+        "kod": "MET-PRO",
+        "podstawa": "N",
+        "nazwa": "Metoda prognozy",
+        "pomoc": "Jak oszacujecie przyszłe zużycie: model, ekstrapolacja, plan produkcji.",
+        "przyklad": "np. Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"
+      }
+    ],
+    "lista_63": [
+      {
+        "tekst": "Metody i kryteria przeglądu są udokumentowane",
+        "podstawa": "N",
+        "auto": "metody"
+      },
+      {
+        "tekst": "Określono rodzaje energii",
+        "podstawa": "N",
+        "auto": "rodzaje"
+      },
+      {
+        "tekst": "Oceniono przeszłe i bieżące wykorzystanie i zużycie energii",
+        "podstawa": "N",
+        "auto": "przeszle"
+      },
+      {
+        "tekst": "Bilans zamyka się na licznikach głównych; zapisano, skąd pochodzi każda liczba",
+        "podstawa": "M",
+        "auto": "bilans"
+      },
+      {
+        "tekst": "Nie liczy się podwójnie energii z wytwarzania własnego",
+        "podstawa": "M",
+        "auto": "podwojne"
+      },
+      {
+        "tekst": "Zidentyfikowano znaczące użycia energii na podstawie analizy",
+        "podstawa": "N",
+        "auto": "seu"
+      },
+      {
+        "tekst": "Kryteria SEU są jednakowe w przeglądzie, procedurze i formularzu; każde SEU ma podstawę wyboru",
+        "podstawa": "M",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Dla każdego SEU określono istotne zmienne",
+        "podstawa": "N",
+        "auto": "zmienne"
+      },
+      {
+        "tekst": "Dla każdego SEU określono bieżący wynik energetyczny",
+        "podstawa": "N",
+        "auto": "wynik"
+      },
+      {
+        "tekst": "Dla każdego SEU określono osoby, które na nie wpływają",
+        "podstawa": "N",
+        "auto": "osoby"
+      },
+      {
+        "tekst": "Odróżniono zmienne od czynników statycznych",
+        "podstawa": "M",
+        "auto": "statyczne"
+      },
+      {
+        "tekst": "Określono i uszeregowano możliwości poprawy",
+        "podstawa": "N",
+        "auto": "mozliwosci"
+      },
+      {
+        "tekst": "Oszacowano przyszłe wykorzystanie i zużycie energii",
+        "podstawa": "N",
+        "auto": "prognoza"
+      },
+      {
+        "tekst": "Wyniki przeglądu zachowano jako udokumentowaną informację",
+        "podstawa": "N",
+        "auto": "zachowano"
+      },
+      {
+        "tekst": "Ustalono odstępy i powody aktualizacji przeglądu",
+        "podstawa": "N",
+        "auto": "aktualizacja"
+      }
+    ],
+    "przeliczniki": {
+      "energia elektryczna": {
+        "kWh": 1,
+        "MWh": 1000,
+        "GJ": 277.8
+      },
+      "gaz ziemny": {
+        "m³": 10,
+        "kWh": 1,
+        "MWh": 1000,
+        "GJ": 277.8
+      },
+      "ciepło sieciowe": {
+        "GJ": 277.8,
+        "MWh": 1000,
+        "kWh": 1
+      },
+      "olej opałowy": {
+        "l": 10.75,
+        "t": 11280
+      },
+      "LPG": {
+        "l": 6.67,
+        "t": 12780
+      },
+      "węgiel": {
+        "t": 6390
+      },
+      "biomasa": {
+        "t": 4170
+      },
+      "biogaz": {
+        "m³": 6.39,
+        "GJ": 277.8
+      },
+      "olej napędowy": {
+        "l": 10.72,
+        "t": 11940
+      },
+      "benzyna": {
+        "l": 9.14,
+        "t": 12310
+      },
+      "CNG": {
+        "m³": 10.97,
+        "t": 13330
+      },
+      "inny": {
+        "GJ": 277.8,
+        "MWh": 1000,
+        "kWh": 1
+      }
+    },
+    "przyklad": {
+      "metody": {
+        "MET-ZR": "Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem",
+        "MET-POD": "Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie",
+        "MET-PRZ": "Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ",
+        "MET-SEU": "A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej",
+        "MET-SZE": "Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno",
+        "MET-PRO": "Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"
+      },
+      "nosniki": [
+        {
+          "nazwa": "Energia elektryczna",
+          "jednostka": "MWh",
+          "poprzedni": "8700",
+          "biezacy": "8500",
+          "przelicznik": "1000"
+        },
+        {
+          "nazwa": "Gaz ziemny",
+          "jednostka": "m³",
+          "poprzedni": "365000",
+          "biezacy": "350000",
+          "przelicznik": "10"
+        },
+        {
+          "nazwa": "LPG (wózki widłowe)",
+          "jednostka": "l",
+          "poprzedni": "18800",
+          "biezacy": "18000",
+          "przelicznik": "6.67"
+        }
+      ],
+      "trend": {
+        "opis": "2024: 12 475 MWh przy 23 500 t stali i 3 450 HDD; 2025: 12 120 MWh przy 24 000 t i 3 600 HDD. Zużycie −2,8% przy produkcji +2,1% i chłodniejszym roku — według modelu wynik 2025 jest o ok. 4% lepszy niż 2024, głównie dzięki nowym harmonogramom kotłowni.",
+        "wlasne": "Brak. Fotowoltaika jest szansą S2 w rejestrze 6.1 — analiza w 2026 r."
+      },
+      "obszary": [
+        {
+          "nazwa": "Prasy (3 linie tłoczenia)",
+          "rodzaj": "en. el.",
+          "mwh": "2975",
+          "metoda": "P"
+        },
+        {
+          "nazwa": "Lakiernia — piec i nagrzewnice",
+          "rodzaj": "gaz",
+          "mwh": "2000",
+          "metoda": "O",
+          "grupa": "Lakiernia"
+        },
+        {
+          "nazwa": "Lakiernia — wentylatory, kabiny",
+          "rodzaj": "en. el.",
+          "mwh": "425",
+          "metoda": "O",
+          "grupa": "Lakiernia"
+        },
+        {
+          "nazwa": "Sprężarkownia (4 sprężarki)",
+          "rodzaj": "en. el.",
+          "mwh": "2125",
+          "metoda": "P"
+        },
+        {
+          "nazwa": "Kotłownia — ogrzewanie hal, CWU",
+          "rodzaj": "gaz",
+          "mwh": "1500",
+          "metoda": "O"
+        },
+        {
+          "nazwa": "Oświetlenie hal A–D",
+          "rodzaj": "en. el.",
+          "mwh": "680",
+          "metoda": "O"
+        },
+        {
+          "nazwa": "Wentylacja i klimatyzacja",
+          "rodzaj": "en. el.",
+          "mwh": "765",
+          "metoda": "Sz",
+          "uzasadnienieNie": "Potencjał poniżej 100 MWh rocznie (ocena 2026); ponowna ocena przy aktualizacji"
+        },
+        {
+          "nazwa": "Montaż, spawanie, pozostałe (z różnicą bilansową)",
+          "rodzaj": "en. el.",
+          "mwh": "1105",
+          "metoda": "Sz",
+          "uzasadnienieNie": "Wiele małych odbiorników; potencjał poniżej 100 MWh rocznie"
+        },
+        {
+          "nazwa": "Biuro, IT, socjal",
+          "rodzaj": "en. el.",
+          "mwh": "425",
+          "metoda": "Sz",
+          "uzasadnienieNie": "Mały udział i potencjał"
+        },
+        {
+          "nazwa": "Wózki widłowe",
+          "rodzaj": "LPG",
+          "mwh": "120",
+          "metoda": "P",
+          "uzasadnienieNie": "Mały udział; w zakresie systemu, monitorowane z faktur"
+        }
+      ],
+      "seu": {
+        "0": {
+          "kryterium": "A",
+          "uzasadnienie": "Udział 24,5% — powyżej progu 10% z kryterium A",
+          "zmienne": "Masa przetworzonej stali [t]",
+          "statyczne": "3 linie, 3 zmiany, asortyment",
+          "wynik": "124,0 kWh/t",
+          "osoby": "Operatorzy, ustawiacze, Kierownik Produkcji"
+        },
+        "G:Lakiernia": {
+          "kryterium": "A",
+          "uzasadnienie": "Lakiernia łącznie — gaz i energia elektryczna — udział 20,0%, kryterium A",
+          "zmienne": "Lakierowana powierzchnia [m²], stopniodni [HDD]",
+          "statyczne": "Piec gazowy, 2 kabiny",
+          "wynik": "8,08 kWh/m² (2 425 MWh / 300 000 m²)",
+          "osoby": "Operatorzy, technolog, utrzymanie ruchu"
+        },
+        "3": {
+          "kryterium": "A",
+          "uzasadnienie": "Udział 17,5% — kryterium A",
+          "zmienne": "Wolumen sprężonego powietrza [Nm³]",
+          "statyczne": "4 sprężarki, sieć 7 bar",
+          "wynik": "0,125 kWh/Nm³ (kampania 02–03.2026); przepływ w postoju 9 Nm³/min",
+          "osoby": "Kierownik UR, serwis zewnętrzny, operatorzy"
+        },
+        "4": {
+          "kryterium": "A",
+          "uzasadnienie": "Udział 12,4% — kryterium A",
+          "zmienne": "Stopniodni [HDD]",
+          "statyczne": "Kubatura i izolacja hal A–D",
+          "wynik": "Model: 0,36 MWh/HDD + 17 MWh miesięcznie",
+          "osoby": "Kierownik UR, konserwator, użytkownicy hal"
+        },
+        "5": {
+          "kryterium": "B",
+          "uzasadnienie": "Udział 5,6%, ale potencjał poprawy ok. 270 MWh rocznie (LED ze sterowaniem) — kryterium B",
+          "brakZmiennych": true,
+          "zmienne": "",
+          "statyczne": "Powierzchnia, rodzaj opraw, 3 zmiany",
+          "wynik": "680 MWh rocznie",
+          "osoby": "Kierownik UR, brygadziści"
+        }
+      },
+      "mozliwosci": [
+        {
+          "nazwa": "Obniżenie ciśnienia 7 → 6,3 bar",
+          "seu": "Sprężarkownia (4 sprężarki)",
+          "mwh": "85",
+          "zl": "75650",
+          "capex": "5000"
+        },
+        {
+          "nazwa": "Usunięcie nieszczelności i kwartalny przegląd",
+          "seu": "Sprężarkownia (4 sprężarki)",
+          "mwh": "210",
+          "zl": "186900",
+          "capex": "25000"
+        },
+        {
+          "nazwa": "Harmonogram pieca — rozgrzewanie, postoje",
+          "seu": "Lakiernia — piec i nagrzewnice",
+          "mwh": "180",
+          "zl": "45000",
+          "capex": "10000"
+        },
+        {
+          "nazwa": "Tryb czuwania pras, wyłączanie hydrauliki",
+          "seu": "Prasy (3 linie tłoczenia)",
+          "mwh": "150",
+          "zl": "133500",
+          "capex": "60000"
+        },
+        {
+          "nazwa": "Sterownik nadrzędny i napęd o zmiennej prędkości na jednej sprężarce",
+          "seu": "Sprężarkownia (4 sprężarki)",
+          "mwh": "230",
+          "zl": "204700",
+          "capex": "380000"
+        },
+        {
+          "nazwa": "LED w halach A–D ze sterowaniem",
+          "seu": "Oświetlenie hal A–D",
+          "mwh": "270",
+          "zl": "240300",
+          "capex": "520000"
+        },
+        {
+          "nazwa": "Odzysk ciepła ze sprężarek",
+          "seu": "Sprężarkownia (4 sprężarki)",
+          "mwh": "250",
+          "zl": "62500",
+          "capex": "140000"
+        },
+        {
+          "nazwa": "Fotowoltaika 1,5 MWp — mniejszy zakup, nie zużycie",
+          "seu": "",
+          "mwh": "1400",
+          "zl": "1246000",
+          "capex": "4500000",
+          "zakup": true
+        }
+      ],
+      "prognoza": {
+        "bez": "12550",
+        "zalozeniaBez": "Nowy projekt dla odbiorcy: produkcja +8% (ok. 25 900 t), średnie stopniodni; model organizacji",
+        "zDzial": "11600",
+        "zalozeniaZ": "Oszczędność ok. 975 MWh rocznie z pozycji 1, 2, 3, 5 i 6"
+      },
+      "aktualizacja": {
+        "odstep": "Co roku do 31 marca, przed przeglądem zarządzania",
+        "zmiany": "Nowa linia lub wycofanie linii, zmiana liczby zmian, nowy rodzaj energii, zmiana zakresu, uruchomienie fotowoltaiki"
+      },
+      "meta": {
+        "okres": "rok 2025",
+        "porownawczy": "rok 2024",
+        "data": "2026-03-31",
+        "opracowal": "Jan Kowalski — Energy Manager",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+      }
+    }
+  },
+  "variables": {
+    "METODY": [
+      {
+        "kod": "MET-ZR",
+        "podstawa": "N",
+        "nazwa": "Źródła danych",
+        "pomoc": "Faktury, liczniki, system produkcyjny, dane pogodowe, pomiary. Z jakiego okresu.",
+        "przyklad": "np. Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem"
+      },
+      {
+        "kod": "MET-POD",
+        "podstawa": "N",
+        "nazwa": "Metody podziału zużycia na obszary",
+        "pomoc": "Dla każdego obszaru: pomiar, obliczenie czy oszacowanie — i na jakiej podstawie.",
+        "przyklad": "np. Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie"
+      },
+      {
+        "kod": "MET-PRZ",
+        "podstawa": "N",
+        "nazwa": "Przeliczniki na wspólną jednostkę i ich źródło",
+        "pomoc": "Jedna podstawa dla całego bilansu: ciepło spalania albo wartość opałowa. Zapiszcie, którą wybraliście i skąd pochodzą liczby.",
+        "przyklad": "np. Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ"
+      },
+      {
+        "kod": "MET-SEU",
+        "podstawa": "N",
+        "nazwa": "Kryteria wyboru znaczących użyć energii",
+        "pomoc": "Z podstawą procentów: od czego liczycie udział. ★ Progi możecie przyjąć własne — ważne, żeby stosować jedne kryteria i uzasadnić każdy wybór.",
+        "przyklad": "np. A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej"
+      },
+      {
+        "kod": "MET-SZE",
+        "podstawa": "N",
+        "nazwa": "Kryteria szeregowania możliwości poprawy",
+        "pomoc": "Na przykład oszczędność i prosty okres zwrotu nakładów.",
+        "przyklad": "np. Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno"
+      },
+      {
+        "kod": "MET-PRO",
+        "podstawa": "N",
+        "nazwa": "Metoda prognozy",
+        "pomoc": "Jak oszacujecie przyszłe zużycie: model, ekstrapolacja, plan produkcji.",
+        "przyklad": "np. Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"
+      }
+    ],
+    "LISTA_63": [
+      {
+        "tekst": "Metody i kryteria przeglądu są udokumentowane",
+        "podstawa": "N",
+        "auto": "metody"
+      },
+      {
+        "tekst": "Określono rodzaje energii",
+        "podstawa": "N",
+        "auto": "rodzaje"
+      },
+      {
+        "tekst": "Oceniono przeszłe i bieżące wykorzystanie i zużycie energii",
+        "podstawa": "N",
+        "auto": "przeszle"
+      },
+      {
+        "tekst": "Bilans zamyka się na licznikach głównych; zapisano, skąd pochodzi każda liczba",
+        "podstawa": "M",
+        "auto": "bilans"
+      },
+      {
+        "tekst": "Nie liczy się podwójnie energii z wytwarzania własnego",
+        "podstawa": "M",
+        "auto": "podwojne"
+      },
+      {
+        "tekst": "Zidentyfikowano znaczące użycia energii na podstawie analizy",
+        "podstawa": "N",
+        "auto": "seu"
+      },
+      {
+        "tekst": "Kryteria SEU są jednakowe w przeglądzie, procedurze i formularzu; każde SEU ma podstawę wyboru",
+        "podstawa": "M",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Dla każdego SEU określono istotne zmienne",
+        "podstawa": "N",
+        "auto": "zmienne"
+      },
+      {
+        "tekst": "Dla każdego SEU określono bieżący wynik energetyczny",
+        "podstawa": "N",
+        "auto": "wynik"
+      },
+      {
+        "tekst": "Dla każdego SEU określono osoby, które na nie wpływają",
+        "podstawa": "N",
+        "auto": "osoby"
+      },
+      {
+        "tekst": "Odróżniono zmienne od czynników statycznych",
+        "podstawa": "M",
+        "auto": "statyczne"
+      },
+      {
+        "tekst": "Określono i uszeregowano możliwości poprawy",
+        "podstawa": "N",
+        "auto": "mozliwosci"
+      },
+      {
+        "tekst": "Oszacowano przyszłe wykorzystanie i zużycie energii",
+        "podstawa": "N",
+        "auto": "prognoza"
+      },
+      {
+        "tekst": "Wyniki przeglądu zachowano jako udokumentowaną informację",
+        "podstawa": "N",
+        "auto": "zachowano"
+      },
+      {
+        "tekst": "Ustalono odstępy i powody aktualizacji przeglądu",
+        "podstawa": "N",
+        "auto": "aktualizacja"
+      }
+    ],
+    "PRZELICZNIKI": {
+      "energia elektryczna": {
+        "kWh": 1,
+        "MWh": 1000,
+        "GJ": 277.8
+      },
+      "gaz ziemny": {
+        "m³": 10,
+        "kWh": 1,
+        "MWh": 1000,
+        "GJ": 277.8
+      },
+      "ciepło sieciowe": {
+        "GJ": 277.8,
+        "MWh": 1000,
+        "kWh": 1
+      },
+      "olej opałowy": {
+        "l": 10.75,
+        "t": 11280
+      },
+      "LPG": {
+        "l": 6.67,
+        "t": 12780
+      },
+      "węgiel": {
+        "t": 6390
+      },
+      "biomasa": {
+        "t": 4170
+      },
+      "biogaz": {
+        "m³": 6.39,
+        "GJ": 277.8
+      },
+      "olej napędowy": {
+        "l": 10.72,
+        "t": 11940
+      },
+      "benzyna": {
+        "l": 9.14,
+        "t": 12310
+      },
+      "CNG": {
+        "m³": 10.97,
+        "t": 13330
+      },
+      "inny": {
+        "GJ": 277.8,
+        "MWh": 1000,
+        "kWh": 1
+      }
+    },
+    "P_MET": {
+      "MET-ZR": "Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem",
+      "MET-POD": "Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie",
+      "MET-PRZ": "Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ",
+      "MET-SEU": "A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej",
+      "MET-SZE": "Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno",
+      "MET-PRO": "Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"
+    },
+    "P_NOSNIKI": [
+      {
+        "nazwa": "Energia elektryczna",
+        "jednostka": "MWh",
+        "poprzedni": "8700",
+        "biezacy": "8500",
+        "przelicznik": "1000"
+      },
+      {
+        "nazwa": "Gaz ziemny",
+        "jednostka": "m³",
+        "poprzedni": "365000",
+        "biezacy": "350000",
+        "przelicznik": "10"
+      },
+      {
+        "nazwa": "LPG (wózki widłowe)",
+        "jednostka": "l",
+        "poprzedni": "18800",
+        "biezacy": "18000",
+        "przelicznik": "6.67"
+      }
+    ],
+    "P_TREND": {
+      "opis": "2024: 12 475 MWh przy 23 500 t stali i 3 450 HDD; 2025: 12 120 MWh przy 24 000 t i 3 600 HDD. Zużycie −2,8% przy produkcji +2,1% i chłodniejszym roku — według modelu wynik 2025 jest o ok. 4% lepszy niż 2024, głównie dzięki nowym harmonogramom kotłowni.",
+      "wlasne": "Brak. Fotowoltaika jest szansą S2 w rejestrze 6.1 — analiza w 2026 r."
+    },
+    "P_OBSZARY": [
+      {
+        "nazwa": "Prasy (3 linie tłoczenia)",
+        "rodzaj": "en. el.",
+        "mwh": "2975",
+        "metoda": "P"
+      },
+      {
+        "nazwa": "Lakiernia — piec i nagrzewnice",
+        "rodzaj": "gaz",
+        "mwh": "2000",
+        "metoda": "O",
+        "grupa": "Lakiernia"
+      },
+      {
+        "nazwa": "Lakiernia — wentylatory, kabiny",
+        "rodzaj": "en. el.",
+        "mwh": "425",
+        "metoda": "O",
+        "grupa": "Lakiernia"
+      },
+      {
+        "nazwa": "Sprężarkownia (4 sprężarki)",
+        "rodzaj": "en. el.",
+        "mwh": "2125",
+        "metoda": "P"
+      },
+      {
+        "nazwa": "Kotłownia — ogrzewanie hal, CWU",
+        "rodzaj": "gaz",
+        "mwh": "1500",
+        "metoda": "O"
+      },
+      {
+        "nazwa": "Oświetlenie hal A–D",
+        "rodzaj": "en. el.",
+        "mwh": "680",
+        "metoda": "O"
+      },
+      {
+        "nazwa": "Wentylacja i klimatyzacja",
+        "rodzaj": "en. el.",
+        "mwh": "765",
+        "metoda": "Sz",
+        "uzasadnienieNie": "Potencjał poniżej 100 MWh rocznie (ocena 2026); ponowna ocena przy aktualizacji"
+      },
+      {
+        "nazwa": "Montaż, spawanie, pozostałe (z różnicą bilansową)",
+        "rodzaj": "en. el.",
+        "mwh": "1105",
+        "metoda": "Sz",
+        "uzasadnienieNie": "Wiele małych odbiorników; potencjał poniżej 100 MWh rocznie"
+      },
+      {
+        "nazwa": "Biuro, IT, socjal",
+        "rodzaj": "en. el.",
+        "mwh": "425",
+        "metoda": "Sz",
+        "uzasadnienieNie": "Mały udział i potencjał"
+      },
+      {
+        "nazwa": "Wózki widłowe",
+        "rodzaj": "LPG",
+        "mwh": "120",
+        "metoda": "P",
+        "uzasadnienieNie": "Mały udział; w zakresie systemu, monitorowane z faktur"
+      }
+    ],
+    "P_SEU": {
+      "0": {
+        "kryterium": "A",
+        "uzasadnienie": "Udział 24,5% — powyżej progu 10% z kryterium A",
+        "zmienne": "Masa przetworzonej stali [t]",
+        "statyczne": "3 linie, 3 zmiany, asortyment",
+        "wynik": "124,0 kWh/t",
+        "osoby": "Operatorzy, ustawiacze, Kierownik Produkcji"
+      },
+      "G:Lakiernia": {
+        "kryterium": "A",
+        "uzasadnienie": "Lakiernia łącznie — gaz i energia elektryczna — udział 20,0%, kryterium A",
+        "zmienne": "Lakierowana powierzchnia [m²], stopniodni [HDD]",
+        "statyczne": "Piec gazowy, 2 kabiny",
+        "wynik": "8,08 kWh/m² (2 425 MWh / 300 000 m²)",
+        "osoby": "Operatorzy, technolog, utrzymanie ruchu"
+      },
+      "3": {
+        "kryterium": "A",
+        "uzasadnienie": "Udział 17,5% — kryterium A",
+        "zmienne": "Wolumen sprężonego powietrza [Nm³]",
+        "statyczne": "4 sprężarki, sieć 7 bar",
+        "wynik": "0,125 kWh/Nm³ (kampania 02–03.2026); przepływ w postoju 9 Nm³/min",
+        "osoby": "Kierownik UR, serwis zewnętrzny, operatorzy"
+      },
+      "4": {
+        "kryterium": "A",
+        "uzasadnienie": "Udział 12,4% — kryterium A",
+        "zmienne": "Stopniodni [HDD]",
+        "statyczne": "Kubatura i izolacja hal A–D",
+        "wynik": "Model: 0,36 MWh/HDD + 17 MWh miesięcznie",
+        "osoby": "Kierownik UR, konserwator, użytkownicy hal"
+      },
+      "5": {
+        "kryterium": "B",
+        "uzasadnienie": "Udział 5,6%, ale potencjał poprawy ok. 270 MWh rocznie (LED ze sterowaniem) — kryterium B",
+        "brakZmiennych": true,
+        "zmienne": "",
+        "statyczne": "Powierzchnia, rodzaj opraw, 3 zmiany",
+        "wynik": "680 MWh rocznie",
+        "osoby": "Kierownik UR, brygadziści"
+      }
+    },
+    "P_MOZL": [
+      {
+        "nazwa": "Obniżenie ciśnienia 7 → 6,3 bar",
+        "seu": "Sprężarkownia (4 sprężarki)",
+        "mwh": "85",
+        "zl": "75650",
+        "capex": "5000"
+      },
+      {
+        "nazwa": "Usunięcie nieszczelności i kwartalny przegląd",
+        "seu": "Sprężarkownia (4 sprężarki)",
+        "mwh": "210",
+        "zl": "186900",
+        "capex": "25000"
+      },
+      {
+        "nazwa": "Harmonogram pieca — rozgrzewanie, postoje",
+        "seu": "Lakiernia — piec i nagrzewnice",
+        "mwh": "180",
+        "zl": "45000",
+        "capex": "10000"
+      },
+      {
+        "nazwa": "Tryb czuwania pras, wyłączanie hydrauliki",
+        "seu": "Prasy (3 linie tłoczenia)",
+        "mwh": "150",
+        "zl": "133500",
+        "capex": "60000"
+      },
+      {
+        "nazwa": "Sterownik nadrzędny i napęd o zmiennej prędkości na jednej sprężarce",
+        "seu": "Sprężarkownia (4 sprężarki)",
+        "mwh": "230",
+        "zl": "204700",
+        "capex": "380000"
+      },
+      {
+        "nazwa": "LED w halach A–D ze sterowaniem",
+        "seu": "Oświetlenie hal A–D",
+        "mwh": "270",
+        "zl": "240300",
+        "capex": "520000"
+      },
+      {
+        "nazwa": "Odzysk ciepła ze sprężarek",
+        "seu": "Sprężarkownia (4 sprężarki)",
+        "mwh": "250",
+        "zl": "62500",
+        "capex": "140000"
+      },
+      {
+        "nazwa": "Fotowoltaika 1,5 MWp — mniejszy zakup, nie zużycie",
+        "seu": "",
+        "mwh": "1400",
+        "zl": "1246000",
+        "capex": "4500000",
+        "zakup": true
+      }
+    ],
+    "P_PROG": {
+      "bez": "12550",
+      "zalozeniaBez": "Nowy projekt dla odbiorcy: produkcja +8% (ok. 25 900 t), średnie stopniodni; model organizacji",
+      "zDzial": "11600",
+      "zalozeniaZ": "Oszczędność ok. 975 MWh rocznie z pozycji 1, 2, 3, 5 i 6"
+    },
+    "P_AKTUAL": {
+      "odstep": "Co roku do 31 marca, przed przeglądem zarządzania",
+      "zmiany": "Nowa linia lub wycofanie linii, zmiana liczby zmian, nowy rodzaj energii, zmiana zakresu, uruchomienie fotowoltaiki"
+    },
+    "P_META": {
+      "okres": "rok 2025",
+      "porownawczy": "rok 2024",
+      "data": "2026-03-31",
+      "opracowal": "Jan Kowalski — Energy Manager",
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"
+    },
+    "PROFIL": {
+      "FAKT_LOKALIZACJE": "2",
+      "FAKT_LOKALIZACJE_LISTA": [
+        {
+          "c0": "Zakład produkcyjny",
+          "c1": "ul. Przemysłowa 12, Katowice",
+          "c2": "produkcja",
+          "c3": "tak"
+        },
+        {
+          "c0": "Magazyn wyrobów gotowych",
+          "c1": "ul. Składowa 11, Katowice",
+          "c2": "magazyn",
+          "c3": "tak"
+        }
+      ],
+      "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+      "FAKT_PRACOWNICY": "850",
+      "FAKT_ZMIANY": "3",
+      "FAKT_SEZONOWOSC": "nie",
+      "FAKT_PODMIOT": "prywatny",
+      "FAKT_GRUPA_KAPITALOWA": "tak",
+      "FAKT_ZWIAZKI": "nie",
+      "FAKT_SYSTEM_BAZOWY": "iso_14001",
+      "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+      "FAKT_ZGODA_INTEGRACJA": "tak",
+      "FAKT_ENERGY_MANAGER": "nieformalnie",
+      "FAKT_UR_WLASNE": "wlasne",
+      "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+      "FAKT_ZAKUPY_KRYTERIA": "czasami",
+      "FAKT_ROTACJA": "srednia",
+      "FAKT_NOSNIKI": [
+        {
+          "c0": "energia elektryczna",
+          "c1": "8500",
+          "c2": "MWh",
+          "c3": "7565000"
+        },
+        {
+          "c0": "gaz ziemny",
+          "c1": "350000",
+          "c2": "m³",
+          "c3": "875000"
+        },
+        {
+          "c0": "LPG",
+          "c1": "18000",
+          "c2": "l",
+          "c3": "54000"
+        }
+      ],
+      "FAKT_ROK_ODNIESIENIA": "2025",
+      "FAKT_UDZIAL_ENERGII": "2,5",
+      "FAKT_MOC_UMOWNA": "1400",
+      "FAKT_SPREZONE": "tak",
+      "FAKT_CA_LICZBA": "4",
+      "FAKT_CA_MOC": "440",
+      "FAKT_CA_VSD": "0",
+      "FAKT_CA_STEROWNIK": "nie",
+      "FAKT_CA_SZCZELNOSC": "nie",
+      "FAKT_CA_ODZYSK": "nie",
+      "FAKT_CA_GODZINY": "6000",
+      "FAKT_KOTLOWNIA": "wlasne",
+      "FAKT_CIEPLO_PALIWO": [
+        "gaz ziemny"
+      ],
+      "FAKT_KOTLOWNIA_MOC": "1200",
+      "FAKT_KOTLOWNIA_WIEK": "18",
+      "FAKT_PODLICZNIKI": "czesciowo",
+      "FAKT_ODCZYT": "mieszane",
+      "FAKT_PRODUKCJA_JEDN": "t",
+      "FAKT_PRODUKCJA": "24000",
+      "FAKT_PRODUKCJA_POPRZ": "23500",
+      "FAKT_HDD": "3600",
+      "FAKT_HDD_POPRZ": "3450",
+      "FAKT_PRZYCHOD": "380",
+      "FAKT_SCADA": "nie",
+      "FAKT_MES": "nie",
+      "FAKT_ANALIZA_DANYCH": "arkusz",
+      "FAKT_AUDYT_ENERG": "tak",
+      "FAKT_ETS": "nie",
+      "FAKT_CSRD": "nie",
+      "FAKT_PRZETARGI": "nie",
+      "FAKT_ODBIORCY_CO2": "tak",
+      "FAKT_MOC_OGRANICZONA": "nie",
+      "FAKT_UMOWA_WYGASA": "tak",
+      "FAKT_BUDZET": "nie",
+      "FAKT_PBT_PROG": "3",
+      "FAKT_INWESTYCJE": "tak",
+      "FAKT_BIALE_MOZLIWE": "nie",
+      "FAKT_CHLODZENIE": "tak",
+      "FAKT_CHLODZENIE_WODNE": "nie",
+      "FAKT_FGAZ": "tak",
+      "FAKT_UDT": "tak",
+      "FAKT_WIEK_INFRA": "22",
+      "FAKT_LED_UDZIAL": "35",
+      "FAKT_OSW_STEROWANIE": "recznie",
+      "FAKT_NAPEDY_VSD": "czesc",
+      "FAKT_WENT": "tak",
+      "FAKT_WENT_LICZBA": "6",
+      "FAKT_WENT_ODZYSK": "czesc",
+      "FAKT_WENT_HARMONOGRAM": "nie",
+      "FAKT_CIEPLO_ODPADOWE": "tak",
+      "FAKT_ODZYSK_CIEPLA": "nie",
+      "FAKT_PROCES_BEZ_ALTERNATYWY": "tak",
+      "FAKT_PROCESY": [
+        "piece i nagrzewnice",
+        "pompy procesowe"
+      ],
+      "FAKT_PV": "nie",
+      "FAKT_BESS": "nie",
+      "FAKT_CHP": "nie",
+      "FAKT_FLOTA": "tak",
+      "FAKT_FLOTA_LICZBA": "4",
+      "FAKT_PRZERWY_POGODA": "nie"
+    },
+    "PYT": {
+      "FAKT_LOKALIZACJE": {
+        "pytanie": "Ile lokalizacji obejmie system zarządzania energią?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_LOKALIZACJE_LISTA": {
+        "pytanie": "Wymień lokalizacje",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_BRANZA": {
+        "pytanie": "Główna działalność zakładu",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_PRACOWNICY": {
+        "pytanie": "Liczba pracowników",
+        "typ": "number",
+        "jednostka": "osób",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZMIANY": {
+        "pytanie": "Ile zmian pracuje zakład?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SEZONOWOSC": {
+        "pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_PODMIOT": {
+        "pytanie": "Typ organizacji",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "prywatny": "prywatny",
+          "komunalny": "komunalny",
+          "publiczny": "publiczny"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_GRUPA_KAPITALOWA": {
+        "pytanie": "Czy organizacja należy do grupy kapitałowej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZWIAZKI": {
+        "pytanie": "Czy działają związki zawodowe lub rada pracowników?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY": {
+        "pytanie": "Czy organizacja ma wdrożony system zarządzania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Brak certyfikowanego systemu",
+          "iso_9001": "ISO 9001",
+          "iso_14001": "ISO 14001",
+          "oba": "ISO 9001 i ISO 14001",
+          "inny": "Inny system certyfikowany"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY_ROK": {
+        "pytanie": "Od którego roku system jest certyfikowany?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZGODA_INTEGRACJA": {
+        "pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak — rozszerzamy istniejącą dokumentację",
+          "nie": "Nie — tworzymy odrębny system",
+          "brak decyzji": "Decyzja jeszcze nie zapadła"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ENERGY_MANAGER": {
+        "pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "Nie wyznaczono nikogo",
+          "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków",
+          "tak": "Tak, z pisemnym zakresem obowiązków"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_UR_WLASNE": {
+        "pytanie": "Kto prowadzi utrzymanie ruchu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Własne służby utrzymania ruchu",
+          "zewnetrzne": "Firma zewnętrzna",
+          "mieszane": "Częściowo własne służby, część prac zlecana"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_INSTRUKCJE_EKSPL": {
+        "pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, dla wszystkich głównych urządzeń",
+          "czesciowo": "Dla części urządzeń",
+          "nie": "Nie ma"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZAKUPY_KRYTERIA": {
+        "pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "zawsze": "Zawsze — to stałe kryterium zakupowe",
+          "czasami": "Czasami, przy większych zakupach",
+          "nie": "Nie — decyduje cena zakupu"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROTACJA": {
+        "pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "niska": "Niska — poniżej 5% rocznie",
+          "srednia": "Średnia — od 5 do 15% rocznie",
+          "wysoka": "Wysoka — powyżej 15% rocznie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROK_ODNIESIENIA": {
+        "pytanie": "Za który rok podajesz dane?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_NOSNIKI": {
+        "pytanie": "Zużycie nośników energii w roku odniesienia",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "ZUZYCIE_TJ": {
+        "pytanie": "Roczne zużycie energii",
+        "typ": "auto",
+        "jednostka": "TJ",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_JEDN": {
+        "pytanie": "W czym mierzycie wielkość produkcji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "t": "tony wyrobu",
+          "szt": "sztuki wyrobu",
+          "m2": "metry kwadratowe",
+          "m3": "metry sześcienne",
+          "mwh": "MWh wyrobu (ciepło, chłód)",
+          "inna": "Inna jednostka"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_INNA": {
+        "pytanie": "Jaka jednostka?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA": {
+        "pytanie": "Wielkość produkcji w roku odniesienia",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_POPRZ": {
+        "pytanie": "Wielkość produkcji w roku poprzednim",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD": {
+        "pytanie": "Stopniodni grzania (HDD) w roku odniesienia",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD_POPRZ": {
+        "pytanie": "Stopniodni grzania w roku poprzednim",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRZYCHOD": {
+        "pytanie": "Przychód ze sprzedaży w roku odniesienia",
+        "typ": "number",
+        "jednostka": "mln zł",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_UDZIAL_ENERGII": {
+        "pytanie": "Jaki procent kosztów operacyjnych stanowi energia?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_UMOWNA": {
+        "pytanie": "Moc umowna energii elektrycznej",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_OGRANICZONA": {
+        "pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_WYGASA": {
+        "pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_DATA": {
+        "pytanie": "Data wygaśnięcia umowy",
+        "typ": "date",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BUDZET": {
+        "pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PBT_PROG": {
+        "pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE": {
+        "pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE_OPIS": {
+        "pytanie": "Jakie?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BIALE_MOZLIWE": {
+        "pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_SPREZONE": {
+        "pytanie": "Czy zakład ma instalację sprężonego powietrza?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_LICZBA": {
+        "pytanie": "Ile jest sprężarek?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_MOC": {
+        "pytanie": "Łączna moc znamionowa sprężarek",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_VSD": {
+        "pytanie": "Ile sprężarek ma regulację obrotów (falownik)?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_STEROWNIK": {
+        "pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_SZCZELNOSC": {
+        "pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_ODZYSK": {
+        "pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_GODZINY": {
+        "pytanie": "Ile godzin w roku pracuje sprężarkownia?",
+        "typ": "number",
+        "jednostka": "h/rok",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT": {
+        "pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_LICZBA": {
+        "pytanie": "Ile jest central?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_ODZYSK": {
+        "pytanie": "Czy centrale mają odzysk ciepła?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wszystkie": "Wszystkie centrale mają odzysk",
+          "czesc": "Część central ma odzysk",
+          "zadna": "Żadna nie ma odzysku",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_HARMONOGRAM": {
+        "pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, wszystkie",
+          "czesciowo": "Część central",
+          "nie": "Nie — pracują tak samo cały czas"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE": {
+        "pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_MOC": {
+        "pytanie": "Łączna moc chłodnicza",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_WODNE": {
+        "pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_FGAZ": {
+        "pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_NAPEDY_VSD": {
+        "pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Żaden albo pojedyncze",
+          "czesc": "Mniej więcej połowa",
+          "wiekszosc": "Większość",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_LED_UDZIAL": {
+        "pytanie": "Jaki procent oświetlenia stanowią źródła LED?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_OSW_STEROWANIE": {
+        "pytanie": "Jak sterowane jest oświetlenie hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "czujniki": "Czujniki ruchu albo natężenia światła",
+          "harmonogram": "Automatyczny harmonogram",
+          "recznie": "Ręcznie — włącznikiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WIEK_INFRA": {
+        "pytanie": "Ile lat ma większość głównych urządzeń energetycznych?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_UDT": {
+        "pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_KOTLOWNIA": {
+        "pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)",
+          "siec": "Wyłącznie z sieci ciepłowniczej",
+          "oba": "Z własnego źródła i z sieci ciepłowniczej",
+          "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWO": {
+        "pytanie": "Czym zasilane jest własne źródło ciepła?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "gaz ziemny": "gaz ziemny",
+          "olej": "olej",
+          "węgiel": "węgiel",
+          "biomasa": "biomasa",
+          "biogaz": "biogaz",
+          "pompa ciepła": "pompa ciepła",
+          "energia elektryczna": "energia elektryczna"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWA": {
+        "pytanie": "Czy ciepło pochodzi z paliw kopalnych?",
+        "typ": "auto",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_MOC": {
+        "pytanie": "Moc zainstalowana źródeł ciepła",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_WIEK": {
+        "pytanie": "Wiek najstarszego czynnego kotła",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_MOC_ZAMOWIONA": {
+        "pytanie": "Zamówiona moc cieplna z sieci",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PROCESY": {
+        "pytanie": "Które procesy zużywają najwięcej energii?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "piece i nagrzewnice": "piece i nagrzewnice",
+          "suszarnie": "suszarnie",
+          "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki",
+          "prasy": "prasy",
+          "malarnia": "malarnia",
+          "galwanizernia": "galwanizernia",
+          "pompy procesowe": "pompy procesowe",
+          "chłodzenie procesu": "chłodzenie procesu",
+          "inne": "inne"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_ODPADOWE": {
+        "pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_ODZYSK_CIEPLA": {
+        "pytanie": "Czy to ciepło jest odzyskiwane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, w całości albo prawie w całości",
+          "czesciowo": "Częściowo",
+          "nie": "Nie jest odzyskiwane"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PROCES_BEZ_ALTERNATYWY": {
+        "pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV": {
+        "pytanie": "Czy zakład ma instalację fotowoltaiczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, działa",
+          "nie": "Nie",
+          "w planach": "W planach albo w budowie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV_MOC": {
+        "pytanie": "Moc instalacji fotowoltaicznej",
+        "typ": "number",
+        "jednostka": "kWp",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_BESS": {
+        "pytanie": "Czy zakład ma magazyn energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_BESS_POJ": {
+        "pytanie": "Pojemność magazynu",
+        "typ": "number",
+        "jednostka": "kWh",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CHP": {
+        "pytanie": "Czy zakład ma kogenerację?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CHP_MOC": {
+        "pytanie": "Moc elektryczna kogeneracji",
+        "typ": "number",
+        "jednostka": "kWe",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA": {
+        "pytanie": "Czy w zakresie systemu jest flota pojazdów?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA_LICZBA": {
+        "pytanie": "Liczba pojazdów",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PODLICZNIKI": {
+        "pytanie": "Jak opomiarowana jest energia elektryczna?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Tylko licznik główny",
+          "czesciowo": "Podliczniki na części obiektów lub wydziałów",
+          "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_PODLICZNIKI_LICZBA": {
+        "pytanie": "Ile jest podliczników?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_ODCZYT": {
+        "pytanie": "Jak odczytywane są liczniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "recznie": "Ręcznie, spisywane z liczników",
+          "zdalnie": "Zdalnie, automatycznie do systemu",
+          "mieszane": "Część ręcznie, część zdalnie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA": {
+        "pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA_ZAKRES": {
+        "pytanie": "Jaki procent zużycia energii obejmuje?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_DANE_HISTORIA": {
+        "pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?",
+        "typ": "number",
+        "jednostka": "mies.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_MES": {
+        "pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_ANALIZA_DANYCH": {
+        "pytanie": "Czy dane o zużyciu energii są analizowane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "nie",
+          "okresowo": "okresowo",
+          "systematycznie": "systematycznie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_AUDYT_ENERG": {
+        "pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_AUDYT_ROK": {
+        "pytanie": "W którym roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ETS": {
+        "pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD": {
+        "pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD_ROK": {
+        "pytanie": "Od którego roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ODBIORCY_CO2": {
+        "pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZETARGI": {
+        "pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZERWY_POGODA": {
+        "pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      }
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Bez pomiaru na poziomie obszarów znaczące użycia wskazuje się z szacunku, a poprawy nie da się rozliczyć.",
+        "decyzja": "Sprężarkownia i lakiernia uznane za znaczące użycia energii; dla sprężarkowni podlicznik i przepływomierz w planie C4.",
+        "dzialanie": "Kampania pomiarowa 02–03.2026; kryteria A i B zastosowane do dziesięciu obszarów; możliwości poprawy wycenione prostym okresem zwrotu.",
+        "sprawdzenie": "Każde znaczące użycie ma w planie zbierania danych (6.6) przypisane źródło danych i częstotliwość odczytu."
+      }
+    ],
+    "MET": {},
+    "NOSNIKI": [],
+    "OBSZARY": [],
+    "SEU": {},
+    "MOZL": [],
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ]
+  },
+  "example_literals": {}
+}

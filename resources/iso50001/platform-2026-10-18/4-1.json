@@ -1,0 +1,3475 @@
+{
+  "source_file": "ENESA_4.1_Kontekst_platforma.html",
+  "source_sha256": "3fff714372cf80efb44c2ebbbf64be520cc4577557cff6f8177f1470be7fe457",
+  "section": "4-1",
+  "data": {
+    "meta": {
+      "nazwa": "Czynniki kontekstowe",
+      "wersja": "2.1 — przykład AutoParts wypełniony w całości",
+      "miejsce_na_platformie": "4.1 — blok 2 strony punktu normy",
+      "zrodlo_danych": "Profil zakładu (3.6) — czytany, nie kopiowany",
+      "zasady": {
+        "zaleznosc": "Ankieta nie ma treści bez zatwierdzonego profilu. Lista pozycji powstaje z warunków na odpowiedziach profilu.",
+        "propozycja": "Spełniony warunek daje PROPOZYCJĘ, nie rozstrzygnięcie. Klient potwierdza albo odrzuca z uzasadnieniem.",
+        "ocena": "Rodzaj OCENA oznacza pozycję, której nie da się wyprowadzić z żadnego faktu — system pyta wprost.",
+        "auto": "Rodzaj AUTO wchodzi do dokumentu bez decyzji klienta i nie jest edytowalny.",
+        "odrzucenie": "Odrzucenie bez uzasadnienia blokuje przekazanie sekcji.",
+        "tresc": "Klient może poprawić brzmienie zdania; do dokumentu idzie jego wersja.",
+        "zmiana_profilu": "Zmiana odpowiedzi w profilu unieważnia decyzje o czynnikach, które z tej odpowiedzi wynikały — punktowo, nie hurtem."
+      }
+    },
+    "sekcje": [
+      {
+        "id": "zewn. regulacyjny",
+        "slug": "zewn_regulacyjny",
+        "nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "opis": "Audyt energetyczny lub system zarządzania energią, białe certyfikaty, pozwolenia, sprawozdawczość"
+      },
+      {
+        "id": "zewn. rynkowy",
+        "slug": "zewn_rynkowy",
+        "nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "opis": "Ceny i dostępność energii, warunki umów, wymagania klientów, konkurencja"
+      },
+      {
+        "id": "zewn. technologiczny",
+        "slug": "zewn_technologiczny",
+        "nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "opis": "Odzysk ciepła, fotowoltaika, pompy ciepła, napędy o zmiennej prędkości"
+      },
+      {
+        "id": "zewn. klimatyczny",
+        "slug": "zewn_klimatyczny",
+        "nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "opis": "Pogoda, upały, susza, gwałtowne zjawiska oraz rozstrzygnięcie w sprawie zmiany klimatu"
+      },
+      {
+        "id": "wewn. techniczny",
+        "slug": "wewn_techniczny",
+        "nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "opis": "Wiek i stan budynków, maszyn i instalacji, opomiarowanie"
+      },
+      {
+        "id": "wewn. organizacyjny",
+        "slug": "wewn_organizacyjny",
+        "nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "opis": "Strategia, priorytety zarządu, kompetencje i czas ludzi, działające systemy (ISO 9001, ISO 14001)"
+      },
+      {
+        "id": "wewn. finansowy",
+        "slug": "wewn_finansowy",
+        "nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "opis": "Budżet, akceptowany SPBT, dostęp do dofinansowania"
+      }
+    ],
+    "czynniki": [
+      {
+        "kod": "KTX-WT-01",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Pomiar energii realizowany wyłącznie na przyłączu głównym; zużycie nie jest przypisane do poszczególnych procesów ani obszarów.",
+        "wplyw": "−",
+        "skutek": "Linia bazowa wyznaczona na poziomie zakładu, nie SEU. Plan zbierania danych przewiduje rozbudowę opomiarowania.",
+        "pokaz_gdy": "FAKT_PODLICZNIKI = brak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-02",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Opomiarowanie obejmuje główne rozdzielnie i wybrane obszary, brak pomiaru na poziomie pojedynczych urządzeń.",
+        "wplyw": "−",
+        "skutek": "Wskaźniki EnPI budowane na poziomie obszarów; doprecyzowanie w kolejnym cyklu.",
+        "pokaz_gdy": "FAKT_PODLICZNIKI = czesciowo",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-03",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Opomiarowanie rozbudowane, z odczytem zdalnym; dane dostępne w systemie nadrzędnym.",
+        "wplyw": "+",
+        "skutek": "Możliwe wyznaczenie EnPI na poziomie SEU już w pierwszym cyklu.",
+        "pokaz_gdy": "FAKT_PODLICZNIKI = kompleksowo",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-04",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Istotna część infrastruktury energetycznej eksploatowana jest ponad projektowany okres użytkowania, co obniża sprawność i zwiększa awaryjność.",
+        "wplyw": "−",
+        "skutek": "Priorytet działań modernizacyjnych w pierwszym planie działań.",
+        "pokaz_gdy": "FAKT_WIEK_INFRA > 15",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-05",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Instalacja sprężonego powietrza pracuje bez sterowania nadrzędnego; sprężarki sterowane lokalnie, bez optymalizacji doboru do obciążenia.",
+        "wplyw": "−",
+        "skutek": "Sprężone powietrze wskazane jako kandydat na SEU; działanie w planie na pierwszy rok.",
+        "pokaz_gdy": "FAKT_CA_STEROWNIK = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; spożywcza; metalowa; tworzywa"
+      },
+      {
+        "kod": "KTX-WT-06",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Nie prowadzi się systematycznej kontroli szczelności instalacji sprężonego powietrza.",
+        "wplyw": "−",
+        "skutek": "Wprowadzenie kryteriów eksploatacyjnych dla SEU (kl. 8.1).",
+        "pokaz_gdy": "FAKT_CA_SZCZELNOSC = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; spożywcza; metalowa"
+      },
+      {
+        "kod": "KTX-WT-07",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Organizacja eksploatuje instalację fotowoltaiczną, której produkcja pokrywa część zapotrzebowania na energię elektryczną.",
+        "wplyw": "+",
+        "skutek": "Bilans energii obejmuje produkcję własną; wpływ na definicję linii bazowej.",
+        "pokaz_gdy": "FAKT_PV = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-08",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Brak magazynu energii powoduje, że nadwyżki produkcji własnej są oddawane do sieci na warunkach mniej korzystnych niż autokonsumpcja.",
+        "wplyw": "○",
+        "skutek": "Analiza opłacalności magazynu jako możliwość poprawy (kl. 6.3).",
+        "pokaz_gdy": "FAKT_PV = tak AND FAKT_BESS = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-09",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Organizacja eksploatuje układ kogeneracyjny — bilans energetyczny obejmuje zarówno zużycie, jak i produkcję nośników.",
+        "wplyw": "○",
+        "skutek": "Odrębna metodyka wyznaczania linii bazowej i wskaźników dla źródła.",
+        "pokaz_gdy": "FAKT_CHP = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "wod-kan; spożywcza; chemiczna"
+      },
+      {
+        "kod": "KTX-WT-10",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Funkcjonuje system nadrzędny (SCADA/BMS) obejmujący część instalacji, stanowiący potencjalne źródło danych o pracy urządzeń.",
+        "wplyw": "+",
+        "skutek": "Dane do przeglądu energetycznego pozyskiwane z systemu zamiast obchodem.",
+        "pokaz_gdy": "FAKT_SCADA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-11",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Brak systemu nadrzędnego; dane o pracy urządzeń pozyskiwane są ręcznie i nie są archiwizowane.",
+        "wplyw": "−",
+        "skutek": "Plan zbierania danych musi określić sposób i częstotliwość odczytów ręcznych.",
+        "pokaz_gdy": "FAKT_SCADA = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-12",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Zapotrzebowanie na ciepło pokrywane jest z własnego źródła; gospodarka cieplna stanowi odrębny obszar analizy.",
+        "wplyw": "○",
+        "skutek": "Ciepło ujęte jako odrębny nośnik w przeglądzie energetycznym.",
+        "pokaz_gdy": "FAKT_KOTLOWNIA IN (wlasne, oba)",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WT-13",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Organizacja dysponuje flotą pojazdów, której zużycie paliw stanowi wyodrębniony obszar zużycia energii.",
+        "wplyw": "○",
+        "skutek": "Flota ujęta w granicach systemu; odrębny wskaźnik EnPI.",
+        "pokaz_gdy": "FAKT_FLOTA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "wod-kan; handel; budownictwo; transport"
+      },
+      {
+        "kod": "KTX-WT-14",
+        "poprawka": null,
+        "wymiar": "wewn. techniczny",
+        "wymiar_nazwa": "Techniczne",
+        "typ": "wewnętrzny",
+        "tresc": "Nie realizuje się odzysku ciepła odpadowego, mimo występowania źródeł o parametrach umożliwiających odzysk.",
+        "wplyw": "−",
+        "skutek": "Odzysk ciepła wpisany na listę możliwości poprawy (kl. 6.3).",
+        "pokaz_gdy": "FAKT_CIEPLO_ODPADOWE = tak AND FAKT_ODZYSK_CIEPLA = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; spożywcza; metalowa; chemiczna"
+      },
+      {
+        "kod": "KTX-WO-01",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Nie wyznaczono osoby odpowiedzialnej za gospodarkę energetyczną; obowiązki rozproszone są między służby utrzymania ruchu a dział techniczny.",
+        "wplyw": "−",
+        "skutek": "Powołanie Energy Managera i formalne przypisanie ról (kl. 5.3).",
+        "pokaz_gdy": "FAKT_ENERGY_MANAGER = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-02",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Osoba zajmująca się energią została wyznaczona, jednak bez formalnego zakresu obowiązków i uprawnień decyzyjnych.",
+        "wplyw": "−",
+        "skutek": "Formalizacja zakresu obowiązków w zarządzeniu o powołaniu zespołu.",
+        "pokaz_gdy": "FAKT_ENERGY_MANAGER = nieformalnie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-03",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Organizacja nie posiada wdrożonego systemu zarządzania; struktura systemowa, procedury i zasady nadzoru nad dokumentacją budowane są od podstaw.",
+        "wplyw": "−",
+        "skutek": "Pełny zakres prac dokumentacyjnych; brak możliwości reużycia istniejących procedur.",
+        "pokaz_gdy": "FAKT_SYSTEM_BAZOWY = brak",
+        "rodzaj": "AUTO",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-04",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Decyzje o zakupie urządzeń podejmowane są na podstawie ceny nabycia, bez analizy kosztu cyklu życia i kosztu energii.",
+        "wplyw": "−",
+        "skutek": "Wprowadzenie kryteriów energetycznych w zakupach (kl. 8.3).",
+        "pokaz_gdy": "FAKT_ZAKUPY_KRYTERIA IN (nie, czasami)",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-05",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Wiedza o zasadach eksploatacji instalacji skupiona jest w wąskiej grupie pracowników; brak udokumentowanych instrukcji eksploatacyjnych.",
+        "wplyw": "−",
+        "skutek": "Opracowanie kryteriów i instrukcji eksploatacji SEU (kl. 8.1).",
+        "pokaz_gdy": "FAKT_INSTRUKCJE_EKSPL IN (nie, czesciowo)",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-06",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Dane o zużyciu energii nie są systematycznie analizowane; faktury służą wyłącznie do rozliczeń finansowych.",
+        "wplyw": "−",
+        "skutek": "Ustanowienie procesu monitorowania i analizy (kl. 9.1).",
+        "pokaz_gdy": "FAKT_ANALIZA_DANYCH = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-07",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Energia postrzegana jest w organizacji jako koszt stały, pozostający poza wpływem służb operacyjnych.",
+        "wplyw": "−",
+        "skutek": "Rozszerzony program działań świadomościowych (kl. 7.3).",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-08",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Struktura wielozakładowa wymaga ujednolicenia zasad zarządzania energią oraz porównywalności wskaźników między lokalizacjami.",
+        "wplyw": "○",
+        "skutek": "Wskaźniki definiowane jednolicie dla wszystkich lokalizacji.",
+        "pokaz_gdy": "FAKT_LOKALIZACJE > 1",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-09",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Praca w ruchu ciągłym ogranicza możliwość wyłączeń instalacji na potrzeby pomiarów diagnostycznych.",
+        "wplyw": "−",
+        "skutek": "Metodyka przeglądu oparta na pomiarach w ruchu i danych historycznych.",
+        "pokaz_gdy": "FAKT_ZMIANY = 4",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; chemiczna; wod-kan; metalowa"
+      },
+      {
+        "kod": "KTX-WO-10",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Rotacja personelu operacyjnego wpływa na trwałość efektów szkoleń i wymaga cyklicznego powtarzania działań.",
+        "wplyw": "−",
+        "skutek": "Szkolenia wpisane w cykl roczny, nie jednorazowy (kl. 7.2).",
+        "pokaz_gdy": "FAKT_ROTACJA = wysoka",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-11",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Utrzymanie ruchu realizowane jest siłami własnymi, co ułatwia wdrożenie nadzoru operacyjnego nad obszarami znaczącego zużycia.",
+        "wplyw": "+",
+        "skutek": "Nadzór operacyjny oparty na własnych służbach, bez kosztu zewnętrznego.",
+        "pokaz_gdy": "FAKT_UR_WLASNE = wlasne",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WO-12",
+        "poprawka": null,
+        "wymiar": "wewn. organizacyjny",
+        "wymiar_nazwa": "Organizacyjne",
+        "typ": "wewnętrzny",
+        "tresc": "Organizacja ma wdrożony i certyfikowany system zarządzania; działają w nim nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania.",
+        "wplyw": "+",
+        "skutek": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań — wspólne procesy i dokumenty zamiast równoległych (4.3, 4.4).",
+        "pokaz_gdy": "FAKT_SYSTEM_BAZOWY != brak AND FAKT_ZGODA_INTEGRACJA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-01",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "Koszty energii stanowią istotną pozycję kosztów operacyjnych, co uzasadnia priorytet działań w zakresie efektywności energetycznej.",
+        "wplyw": "○",
+        "skutek": "Wysoki poziom ambicji celów energetycznych (kl. 6.2).",
+        "pokaz_gdy": "FAKT_UDZIAL_ENERGII >= 5",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-02",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "Udział kosztów energii w kosztach operacyjnych jest umiarkowany, co ogranicza presję ekonomiczną na szybkie działania inwestycyjne.",
+        "wplyw": "○",
+        "skutek": "Cele oparte w większym stopniu na działaniach organizacyjnych niż inwestycyjnych.",
+        "pokaz_gdy": "FAKT_UDZIAL_ENERGII < 5",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-03",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "Nie wyodrębniono budżetu na przedsięwzięcia służące poprawie efektywności energetycznej.",
+        "wplyw": "−",
+        "skutek": "Plany działań ograniczone do przedsięwzięć bezkosztowych i niskonakładowych w pierwszym cyklu.",
+        "pokaz_gdy": "FAKT_BUDZET = nie",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-04",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "Organizacja stosuje krótki wymagany okres zwrotu inwestycji, co ogranicza zakres przedsięwzięć możliwych do realizacji.",
+        "wplyw": "−",
+        "skutek": "Kryterium oceny możliwości poprawy uwzględnia próg zwrotu przyjęty przez organizację.",
+        "pokaz_gdy": "FAKT_PBT_PROG <= 3",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-05",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "Planowane przedsięwzięcia mogą kwalifikować się do wsparcia w systemie białych certyfikatów.",
+        "wplyw": "+",
+        "skutek": "Analiza kwalifikowalności ujęta w planach działań (kl. 6.2).",
+        "pokaz_gdy": "FAKT_BIALE_MOZLIWE != tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-06",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "Dla przedsięwzięć o wyższym nakładzie dostępne jest finansowanie w formule ESCO lub umowy o efekt energetyczny.",
+        "wplyw": "+",
+        "skutek": "Rozszerzenie katalogu możliwych działań o przedsięwzięcia kapitałochłonne.",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-WF-07",
+        "poprawka": null,
+        "wymiar": "wewn. finansowy",
+        "wymiar_nazwa": "Finansowe",
+        "typ": "wewnętrzny",
+        "tresc": "W horyzoncie funkcjonowania systemu planowane są inwestycje zmieniające profil zużycia energii.",
+        "wplyw": "○",
+        "skutek": "Linia bazowa wymaga normalizacji po zakończeniu inwestycji (kl. 6.5).",
+        "pokaz_gdy": "FAKT_INWESTYCJE = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-01",
+        "poprawka": "Dyrektywa wiąże państwo członkowskie, nie przedsiębiorstwo; ustawa wdrażająca (UC77) nie weszła jeszcze w życie. Brzmienie uzgodnione z poprawką STK-Z-02 w punkcie 4.2.",
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Roczne zużycie energii przekracza próg 85 TJ. Obowiązek posiadania certyfikowanego systemu zarządzania energią wprowadza projekt nowelizacji ustawy o efektywności energetycznej (UC77), wdrażający art. 11 dyrektywy (UE) 2023/1791; dyrektywa wyznacza państwu członkowskiemu termin 11 października 2027 r. Na dzień sporządzenia analizy nowelizacja nie weszła w życie.",
+        "wplyw": "−",
+        "skutek": "Wdrożenie planowane jako obowiązkowe; harmonogram podporządkowany terminowi, który ustali nowelizacja — do potwierdzenia po jej ogłoszeniu. Stan prawny sprawdzany co kwartał do czasu wejścia w życie.",
+        "pokaz_gdy": "ZUZYCIE_TJ > 85",
+        "rodzaj": "AUTO",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-02",
+        "poprawka": "Próg 10 TJ pochodzi z dyrektywy, nie z obowiązującej ustawy. Poprzednie brzmienie przedstawiało obowiązek audytu jako już wiążący dla tego przedziału zużycia.",
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Roczne zużycie energii mieści się w przedziale od 10 do 85 TJ. W modelu dyrektywy (UE) 2023/1791 oznacza to obowiązek audytu energetycznego, a nie certyfikowanego systemu zarządzania energią; szczegóły — terminy, zakres i sankcje — określi polska ustawa. Wdrożenie systemu zarządzania energią pozostaje na tym etapie decyzją dobrowolną organizacji albo wynika z wymagania klienta.",
+        "wplyw": "○",
+        "skutek": "Zakres i tempo wdrożenia ustalane według priorytetów organizacji i wymagań klientów, nie według terminu ustawowego. Obowiązek audytu ustalany według przepisów obowiązujących w dniu analizy; ponowna ocena po uchwaleniu nowelizacji (kl. 9.1.2).",
+        "pokaz_gdy": "ZUZYCIE_TJ >= 10 AND ZUZYCIE_TJ <= 85",
+        "rodzaj": "AUTO",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-03",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Organizacja przeprowadziła audyt energetyczny przedsiębiorstwa, którego wyniki stanowią materiał wejściowy do przeglądu energetycznego.",
+        "wplyw": "+",
+        "skutek": "Przegląd energetyczny prowadzony jako aktualizacja, nie od podstaw (kl. 6.3).",
+        "pokaz_gdy": "FAKT_AUDYT_ENERG = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-04",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Instalacja objęta jest systemem handlu uprawnieniami do emisji; działania w obszarze energii przekładają się bezpośrednio na koszt uprawnień.",
+        "wplyw": "○",
+        "skutek": "Powiązanie celów energetycznych z celami emisyjnymi.",
+        "pokaz_gdy": "FAKT_ETS = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "chemiczna; metalowa; cementowa; papiernicza; szklarska"
+      },
+      {
+        "kod": "KTX-ZR-05",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Organizacja podlega obowiązkowi sprawozdawczości zrównoważonego rozwoju; wskaźniki zużycia i intensywności energetycznej podlegają raportowaniu zewnętrznemu.",
+        "wplyw": "○",
+        "skutek": "Wskaźniki EnPI definiowane spójnie z wymaganiami sprawozdawczymi.",
+        "pokaz_gdy": "FAKT_CSRD = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-06",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Eksploatowane urządzenia podlegają dozorowi technicznemu, co narzuca harmonogram przeglądów i ogranicza swobodę planowania wyłączeń.",
+        "wplyw": "○",
+        "skutek": "Harmonogram audytów i pomiarów skoordynowany z terminami dozorowymi.",
+        "pokaz_gdy": "FAKT_UDT = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-07",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Instalacje chłodnicze zawierają fluorowane gazy cieplarniane, co wiąże się z obowiązkami kontroli szczelności i prowadzenia dokumentacji.",
+        "wplyw": "○",
+        "skutek": "Rejestr F-gaz włączony do rejestru wymagań prawnych.",
+        "pokaz_gdy": "FAKT_FGAZ = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "spożywcza; handel; chemiczna; logistyka"
+      },
+      {
+        "kod": "KTX-ZR-08",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "System świadectw efektywności energetycznej umożliwia uzyskanie wsparcia finansowego dla przedsięwzięć służących poprawie efektywności.",
+        "wplyw": "+",
+        "skutek": "Kwalifikowalność przedsięwzięć oceniana na etapie planowania działań.",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-09",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Otoczenie regulacyjne w obszarze efektywności energetycznej podlega częstym zmianom, co wymaga cyklicznej aktualizacji rejestru wymagań prawnych.",
+        "wplyw": "−",
+        "skutek": "Przegląd rejestru wymagań co najmniej raz w roku (kl. 9.1.2).",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZR-10",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Organizacja jest podmiotem zobowiązanym do stosowania procedur zamówień publicznych, co wydłuża proces realizacji przedsięwzięć inwestycyjnych.",
+        "wplyw": "−",
+        "skutek": "Harmonogram planów działań uwzględnia czas procedur zakupowych.",
+        "pokaz_gdy": "FAKT_PODMIOT = publiczny",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "wod-kan; ciepłownictwo; sektor publiczny"
+      },
+      {
+        "kod": "KTX-ZM-01",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Ceny nośników energii podlegają istotnym wahaniom, co zwiększa ryzyko kosztowe i uzasadnia działania ograniczające zużycie.",
+        "wplyw": "−",
+        "skutek": "Ryzyko cenowe wpisane do rejestru ryzyk (kl. 6.1).",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZM-02",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Umowa na dostawę energii wygasa w horyzoncie funkcjonowania systemu, co stanowi okazję do renegocjacji profilu zakupowego.",
+        "wplyw": "+",
+        "skutek": "Optymalizacja umowy ujęta jako możliwość poprawy (kl. 6.3).",
+        "pokaz_gdy": "FAKT_UMOWA_WYGASA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZM-03",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Odbiorcy zgłaszają wymagania dotyczące śladu węglowego lub efektywności energetycznej wyrobów.",
+        "wplyw": "○",
+        "skutek": "Wymaganie rozważane jako wymóg zgodności (kl. 4.2); wskaźnik raportowany zewnętrznie.",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; spożywcza; motoryzacyjna; tworzywa"
+      },
+      {
+        "kod": "KTX-ZM-04",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Odbiorcy nie zgłaszają obecnie wymagań energetycznych, jednak tendencja rynkowa wskazuje na ich pojawienie się w horyzoncie kilku lat.",
+        "wplyw": "○",
+        "skutek": "Monitorowanie zmian wymagań odbiorców w cyklu przeglądu kontekstu.",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = nie",
+        "rodzaj": "OCENA",
+        "tagi": "produkcja; spożywcza; tworzywa"
+      },
+      {
+        "kod": "KTX-ZM-05",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Ograniczona dostępność mocy przyłączeniowej stanowi barierę rozwoju i podnosi znaczenie działań po stronie efektywności.",
+        "wplyw": "−",
+        "skutek": "Redukcja zapotrzebowania jako alternatywa dla rozbudowy przyłącza.",
+        "pokaz_gdy": "FAKT_MOC_OGRANICZONA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZM-06",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Podmioty konkurencyjne posiadają certyfikowane systemy zarządzania energią, w związku z czym certyfikat ma znaczenie w budowaniu pozycji rynkowej.",
+        "wplyw": "+",
+        "skutek": "Cel certyfikacji równorzędny z celem oszczędnościowym.",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZM-07",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Posiadanie certyfikowanego systemu zarządzania energią jest wymagane lub premiowane w postępowaniach przetargowych, w których organizacja uczestniczy.",
+        "wplyw": "+",
+        "skutek": "Termin certyfikacji podporządkowany kalendarzowi postępowań.",
+        "pokaz_gdy": "FAKT_PRZETARGI = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZM-08",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Dostępne dane branżowe umożliwiają odniesienie wskaźników wyniku energetycznego do wartości referencyjnych.",
+        "wplyw": "+",
+        "skutek": "Wskaźniki EnPI kalibrowane wobec benchmarku branżowego.",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZM-09",
+        "poprawka": null,
+        "wymiar": "zewn. rynkowy",
+        "wymiar_nazwa": "Rynkowe",
+        "typ": "zewnętrzny",
+        "tresc": "Sezonowość działalności istotnie wpływa na profil zużycia energii i wymaga normalizacji wskaźników względem zmiennych istotnych.",
+        "wplyw": "○",
+        "skutek": "Metodyka normalizacji linii bazowej uwzględnia sezonowość (kl. 6.5).",
+        "pokaz_gdy": "FAKT_SEZONOWOSC = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "spożywcza; budownictwo; handel; wod-kan"
+      },
+      {
+        "kod": "KTX-ZK-01",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Organizacja dokonała oceny istotności zmiany klimatu dla systemu zarządzania energią i uznała ją za czynnik istotny.",
+        "wplyw": "○",
+        "skutek": "Zmiana klimatu ujęta w rejestrze ryzyk i szans oraz w normalizacji wskaźników.",
+        "pokaz_gdy": "FAKT_KLIMAT_ISTOTNY = tak",
+        "rodzaj": "AUTO",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-02",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Organizacja dokonała oceny istotności zmiany klimatu dla systemu zarządzania energią i uznała, że nie stanowi ona czynnika istotnego. Uzasadnienie: profil zużycia nie wykazuje wrażliwości na warunki atmosferyczne, a procesy prowadzone są w warunkach kontrolowanych niezależnych od otoczenia.",
+        "wplyw": "○",
+        "skutek": "Ocena udokumentowana; podlega ponownej weryfikacji przy corocznym przeglądzie kontekstu.",
+        "pokaz_gdy": "FAKT_KLIMAT_ISTOTNY = nie",
+        "rodzaj": "AUTO",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-03",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Rosnąca liczba dni z wysoką temperaturą zwiększa zapotrzebowanie na chłodzenie technologiczne i klimatyzację, podnosząc szczytowe zapotrzebowanie na moc w okresie letnim.",
+        "wplyw": "−",
+        "skutek": "Chłodzenie wskazane jako kandydat na SEU; wskaźnik normalizowany stopniodniami chłodzenia.",
+        "pokaz_gdy": "FAKT_CHLODZENIE = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-04",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Łagodniejsze zimy obniżają zapotrzebowanie na ciepło, co zaburza porównywalność zużycia między latami.",
+        "wplyw": "○",
+        "skutek": "Linia bazowa normalizowana stopniodniami grzania; trend klimatyczny uwzględniony przy wyborze okresu bazowego (kl. 6.5).",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-05",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Ekstremalne zjawiska pogodowe zwiększają ryzyko przerw w dostawie energii oraz nieplanowanych postojów instalacji.",
+        "wplyw": "−",
+        "skutek": "Ryzyko ciągłości zasilania wpisane do rejestru ryzyk (kl. 6.1); rozważenie zasilania rezerwowego.",
+        "pokaz_gdy": "FAKT_PRZERWY_POGODA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-06",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Ograniczenia w dostępności wody, w tym okresowe susze, wpływają na pracę układów chłodzenia wykorzystujących wodę.",
+        "wplyw": "−",
+        "skutek": "Alternatywne rozwiązania chłodzenia jako możliwość poprawy (kl. 6.3).",
+        "pokaz_gdy": "FAKT_CHLODZENIE_WODNE = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; chemiczna; metalowa; energetyka; spożywcza"
+      },
+      {
+        "kod": "KTX-ZK-07",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Rosnący udział źródeł odnawialnych w krajowym systemie elektroenergetycznym zwiększa zmienność cen w cyklu dobowym, tworząc szansę na przesunięcie poboru w czasie.",
+        "wplyw": "+",
+        "skutek": "Analiza przesunięcia poboru i elastyczności jako możliwość poprawy (kl. 6.3).",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-08",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Strony zainteresowane zgłaszają wymagania związane ze zmianą klimatu — dotyczące śladu węglowego, odporności łańcucha dostaw lub raportowania emisji.",
+        "wplyw": "○",
+        "skutek": "Wymagania klimatyczne rozważane jako wymagania zgodności (kl. 4.2); powiązanie celów energetycznych z emisyjnymi.",
+        "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak OR FAKT_CSRD = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZK-09",
+        "poprawka": null,
+        "wymiar": "zewn. klimatyczny",
+        "wymiar_nazwa": "Środowiskowe i klimatyczne",
+        "typ": "zewnętrzny",
+        "tresc": "Zmienność warunków atmosferycznych między latami wymaga normalizacji wskaźników wyniku energetycznego, aby poprawa nie była mylona z łagodniejszą pogodą.",
+        "wplyw": "○",
+        "skutek": "Metodyka normalizacji EnPI oparta na stopniodniach jako zmiennej istotnej (kl. 6.4).",
+        "pokaz_gdy": "FAKT_KLIMAT_ISTOTNY = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZT-01",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Dostępne są technologie o potwierdzonej skuteczności — falowniki, sterowanie nadrzędne, odzysk ciepła — możliwe do zastosowania bez ingerencji w proces technologiczny.",
+        "wplyw": "+",
+        "skutek": "Zasilenie listy możliwości poprawy niskiego ryzyka (kl. 6.3).",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZT-02",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Spadek kosztu instalacji fotowoltaicznych i magazynów energii zmienia opłacalność produkcji własnej w stosunku do lat ubiegłych.",
+        "wplyw": "+",
+        "skutek": "Ponowna analiza opłacalności OZE w planach działań.",
+        "pokaz_gdy": "ZAWSZE",
+        "rodzaj": "OCENA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZT-03",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Rozwiązania monitoringu energii dostępne są w cenie umożliwiającej opomiarowanie na poziomie pojedynczych urządzeń.",
+        "wplyw": "+",
+        "skutek": "Rozbudowa opomiarowania ujęta w planie zbierania danych (kl. 6.6).",
+        "pokaz_gdy": "FAKT_PODLICZNIKI != kompleksowo",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZT-04",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Modernizacja oświetlenia z zastosowaniem źródeł LED może być prowadzona etapowo, bez przerywania działalności.",
+        "wplyw": "+",
+        "skutek": "Działanie o niskim ryzyku wdrożeniowym w pierwszym planie działań.",
+        "pokaz_gdy": "FAKT_LED_UDZIAL < 70",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZT-05",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Technologie pomp ciepła umożliwiają zastąpienie części zapotrzebowania na ciepło wytwarzane z paliw kopalnych.",
+        "wplyw": "+",
+        "skutek": "Kierunek dekarbonizacji ujęty w celach długoterminowych.",
+        "pokaz_gdy": "FAKT_CIEPLO_PALIWA = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "uniwersalne"
+      },
+      {
+        "kod": "KTX-ZT-06",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Dla kluczowego procesu technologicznego nie są dostępne dojrzałe rozwiązania alternatywne, co ogranicza potencjał poprawy w tym obszarze.",
+        "wplyw": "−",
+        "skutek": "Cele koncentrowane na procesach pomocniczych, nie na procesie głównym.",
+        "pokaz_gdy": "FAKT_PROCES_BEZ_ALTERNATYWY = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "chemiczna; metalowa; szklarska; cementowa"
+      },
+      {
+        "kod": "KTX-ZT-07",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Integracja danych energetycznych z systemami produkcyjnymi umożliwia budowę wskaźników odnoszących zużycie do wielkości produkcji.",
+        "wplyw": "+",
+        "skutek": "EnPI definiowane jako zużycie na jednostkę produkcji (kl. 6.4).",
+        "pokaz_gdy": "FAKT_MES = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "produkcja; spożywcza; tworzywa; metalowa"
+      },
+      {
+        "kod": "KTX-ZT-08",
+        "poprawka": null,
+        "wymiar": "zewn. technologiczny",
+        "wymiar_nazwa": "Technologiczne",
+        "typ": "zewnętrzny",
+        "tresc": "Dostępne są rozwiązania odzysku ciepła odpadowego z procesów wysokotemperaturowych o akceptowalnym okresie zwrotu.",
+        "wplyw": "+",
+        "skutek": "Odzysk ciepła jako priorytetowa możliwość poprawy.",
+        "pokaz_gdy": "FAKT_CIEPLO_ODPADOWE = tak",
+        "rodzaj": "PROPOZYCJA",
+        "tagi": "metalowa; szklarska; ceramiczna; spożywcza"
+      },
+      {
+        "kod": "KTX-ZR-11",
+        "poprawka": null,
+        "wymiar": "zewn. regulacyjny",
+        "wymiar_nazwa": "Regulacyjne",
+        "typ": "zewnętrzny",
+        "tresc": "Roczne zużycie energii nie przekracza 10 TJ, w związku z czym organizacja nie podlega obowiązkowi audytu energetycznego przedsiębiorstwa ani obowiązkowi posiadania systemu zarządzania energią. Wdrożenie stanowi w całości decyzję dobrowolną.",
+        "wplyw": "○",
+        "skutek": "Zakres i tempo wdrożenia ustalane wyłącznie wg priorytetów organizacji.",
+        "pokaz_gdy": "ZUZYCIE_TJ < 10",
+        "rodzaj": "AUTO",
+        "tagi": "uniwersalne"
+      }
+    ],
+    "przyklad": {
+      "FAKT_LOKALIZACJE": "2",
+      "FAKT_LOKALIZACJE_LISTA": [
+        {
+          "c0": "Zakład produkcyjny",
+          "c1": "ul. Przemysłowa 12, Katowice",
+          "c2": "produkcja",
+          "c3": "tak"
+        },
+        {
+          "c0": "Magazyn wyrobów gotowych",
+          "c1": "ul. Składowa 11, Katowice",
+          "c2": "magazyn",
+          "c3": "tak"
+        }
+      ],
+      "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+      "FAKT_PRACOWNICY": "850",
+      "FAKT_ZMIANY": "3",
+      "FAKT_SEZONOWOSC": "nie",
+      "FAKT_PODMIOT": "prywatny",
+      "FAKT_GRUPA_KAPITALOWA": "tak",
+      "FAKT_ZWIAZKI": "nie",
+      "FAKT_SYSTEM_BAZOWY": "iso_14001",
+      "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+      "FAKT_ZGODA_INTEGRACJA": "tak",
+      "FAKT_ENERGY_MANAGER": "nieformalnie",
+      "FAKT_UR_WLASNE": "wlasne",
+      "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+      "FAKT_ZAKUPY_KRYTERIA": "czasami",
+      "FAKT_ROTACJA": "srednia",
+      "FAKT_NOSNIKI": [
+        {
+          "c0": "energia elektryczna",
+          "c1": "8500",
+          "c2": "MWh",
+          "c3": "7565000"
+        },
+        {
+          "c0": "gaz ziemny",
+          "c1": "350000",
+          "c2": "m³",
+          "c3": "875000"
+        },
+        {
+          "c0": "LPG",
+          "c1": "18000",
+          "c2": "l",
+          "c3": "54000"
+        }
+      ],
+      "FAKT_ROK_ODNIESIENIA": "2025",
+      "FAKT_UDZIAL_ENERGII": "2,5",
+      "FAKT_MOC_UMOWNA": "1400",
+      "FAKT_SPREZONE": "tak",
+      "FAKT_CA_LICZBA": "4",
+      "FAKT_CA_MOC": "440",
+      "FAKT_CA_VSD": "0",
+      "FAKT_CA_STEROWNIK": "nie",
+      "FAKT_CA_SZCZELNOSC": "nie",
+      "FAKT_CA_ODZYSK": "nie",
+      "FAKT_CA_GODZINY": "6000",
+      "FAKT_KOTLOWNIA": "wlasne",
+      "FAKT_CIEPLO_PALIWO": [
+        "gaz ziemny"
+      ],
+      "FAKT_KOTLOWNIA_MOC": "1200",
+      "FAKT_KOTLOWNIA_WIEK": "18",
+      "FAKT_PODLICZNIKI": "czesciowo",
+      "FAKT_ODCZYT": "mieszane",
+      "FAKT_PRODUKCJA_JEDN": "t",
+      "FAKT_PRODUKCJA": "24000",
+      "FAKT_PRODUKCJA_POPRZ": "23500",
+      "FAKT_HDD": "3600",
+      "FAKT_HDD_POPRZ": "3450",
+      "FAKT_PRZYCHOD": "380",
+      "FAKT_SCADA": "nie",
+      "FAKT_MES": "nie",
+      "FAKT_ANALIZA_DANYCH": "arkusz",
+      "FAKT_AUDYT_ENERG": "tak",
+      "FAKT_ETS": "nie",
+      "FAKT_CSRD": "nie",
+      "FAKT_PRZETARGI": "nie",
+      "FAKT_ODBIORCY_CO2": "tak",
+      "FAKT_MOC_OGRANICZONA": "nie",
+      "FAKT_UMOWA_WYGASA": "tak",
+      "FAKT_BUDZET": "nie",
+      "FAKT_PBT_PROG": "3",
+      "FAKT_INWESTYCJE": "tak",
+      "FAKT_BIALE_MOZLIWE": "nie",
+      "FAKT_CHLODZENIE": "tak",
+      "FAKT_CHLODZENIE_WODNE": "nie",
+      "FAKT_FGAZ": "tak",
+      "FAKT_UDT": "tak",
+      "FAKT_WIEK_INFRA": "22",
+      "FAKT_LED_UDZIAL": "35",
+      "FAKT_OSW_STEROWANIE": "recznie",
+      "FAKT_NAPEDY_VSD": "czesc",
+      "FAKT_WENT": "tak",
+      "FAKT_WENT_LICZBA": "6",
+      "FAKT_WENT_ODZYSK": "czesc",
+      "FAKT_WENT_HARMONOGRAM": "nie",
+      "FAKT_CIEPLO_ODPADOWE": "tak",
+      "FAKT_ODZYSK_CIEPLA": "nie",
+      "FAKT_PROCES_BEZ_ALTERNATYWY": "tak",
+      "FAKT_PROCESY": [
+        "piece i nagrzewnice",
+        "pompy procesowe"
+      ],
+      "FAKT_PV": "nie",
+      "FAKT_BESS": "nie",
+      "FAKT_CHP": "nie",
+      "FAKT_FLOTA": "tak",
+      "FAKT_FLOTA_LICZBA": "4",
+      "FAKT_PRZERWY_POGODA": "nie"
+    },
+    "przyklad_41": {
+      "profilNazwa": "AutoParts Polska Sp. z o.o.",
+      "istotnoscDomyslna": "S",
+      "dec": {
+        "KTX-WT-02": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Bez pomiaru na poziomie obszarów nie wskażemy SEU ani nie rozliczymy poprawy — zużycie znamy z dwóch liczników głównych.",
+          "decyzja_w": "Ocenić, czy obliczenia i pomiary okresowe wystarczą do wskazania SEU; podliczniki tylko tam, gdzie nie wystarczą — wstępnie sprężarkownia i lakiernia.",
+          "dzialanie": "Przegląd energetyczny (6.3) z kampanią pomiarową 02–03.2026; plan zbierania danych (6.6); przepływomierz sprężonego powietrza w planie C4.",
+          "sprawdzenie": "Każdy obszar uznany za SEU ma w planie zbierania danych przypisane źródło danych, a wskaźnik S-1 liczy się z pomiaru, nie z szacunku."
+        },
+        "KTX-WT-05": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Sprężarkownia to 17,5% zużycia zakładu, a cztery sprężarki sterowane lokalnie pracują bez doboru do obciążenia.",
+          "decyzja_w": "Sprężarkownia pierwsza w kolejności działań; sterownik nadrzędny i napęd o zmiennej prędkości jako inwestycja na 2027 r.",
+          "dzialanie": "Cel Z1.1 i plan C1 (6.2): kampania pomiarowa, obniżenie ciśnienia, sterownik nadrzędny z napędem — INW/2027/04, 380 tys. zł.",
+          "sprawdzenie": "Wskaźnik S-1 z 0,125 na 0,110 kWh/Nm³ do 31.12.2027; dodanie sterownika i napędu opisane jako adnotacja przy linii bazowej."
+        },
+        "KTX-WT-06": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Przepływ w czasie postoju 9 Nm³/min to straty, których nikt nie mierzy ani nie rozlicza.",
+          "decyzja_w": "Wprowadzić kwartalny przegląd szczelności jako element kryteriów eksploatacji (8.1).",
+          "dzialanie": "Plan C1 (6.2): kampania pomiarowa z lokalizacją nieszczelności, usunięcie 35 nieszczelności, kwartalny przegląd — razem 25 tys. zł.",
+          "sprawdzenie": "Cel Z1.2: przepływ w czasie postoju z 9 na 4 Nm³/min do 30.06.2027, mierzony przy wyłączonej produkcji."
+        },
+        "KTX-WF-02": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "2,5% kosztów operacyjnych przy marży branżowej rzędu kilku procent znaczy więcej niż sam procent.",
+          "decyzja_w": "Cele energetyczne mają wysoki priorytet w planie na 2026 r.",
+          "dzialanie": "Cel nadrzędny: obniżenie kosztów energii o 8% do 2028 r. (6.2), rozpisany na cele Z1–Z3.",
+          "sprawdzenie": "Roczne zestawienie kosztów energii wobec 2025 r. (8,5 mln zł) na przeglądzie zarządzania (9.3).",
+          "tresc": "Koszty energii ok. 8,5 mln zł rocznie — ok. 2,5% kosztów operacyjnych; przy marży branżowej rzędu kilku procent to pozycja istotna."
+        },
+        "KTX-WF-03": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Bez wyodrębnionego budżetu działania energetyczne konkurują z inwestycjami produkcyjnymi i przepadają.",
+          "decyzja_w": "Budżet na efektywność w 2026 r. do 500 tys. zł; kolejność działań według SPBT przy progu 3 lat.",
+          "dzialanie": "W 2026 r. działania nisko- i średniokosztowe: szczelność, ciśnienie, LED w hali B; sterownik i PV do projektu budżetu na 2027 r.",
+          "sprawdzenie": "Wykonanie budżetu i SPBT osiągnięty wobec założonego — pozycja w planach działań (6.2) i na przeglądzie zarządzania (9.3)."
+        },
+        "KTX-ZM-02": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Cena stała obowiązuje do 31.12.2026; każde 100 zł/MWh na nowej umowie to ok. 850 tys. zł rocznie.",
+          "decyzja_w": "Ryzyko kosztowe do rejestru (6.1); profil zużycia przeanalizowany przed negocjacjami.",
+          "dzialanie": "Dział Zakupów przygotowuje analizę profilu do IX 2026 r.; wynik wchodzi do postępowania na 2027 r.",
+          "sprawdzenie": "Analiza profilu załączona do postępowania; cena z nowej umowy zestawiona z założeniem budżetowym."
+        },
+        "KTX-ZM-03": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Główny klient daje 45% przychodów i od 2026 r. żąda danych o energii i śladzie węglowym, a od 2027 r. certyfikatu ISO 50001.",
+          "decyzja_w": "Wdrożenie i certyfikacja do XII 2026 r.; zakres danych dobrany do brzmienia wymagania klienta, nie szerzej.",
+          "dzialanie": "Harmonogram wdrożenia; wpis do rejestru stron (F-EnMS-02, punkt 4.2) i do planu zbierania danych (6.6).",
+          "sprawdzenie": "Certyfikat wydany do XII 2026 r.; pierwszy roczny zestaw danych przyjęty przez klienta bez uwag."
+        },
+        "KTX-ZK-03": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "W lipcu 2025 r. przy temperaturze powyżej 32 °C dwie sprężarki wyłączały się z przegrzania, a klimatyzacja hal pracowała bez przerwy.",
+          "decyzja_w": "Temperatura jako zmienna istotna do sprawdzenia; ryzyko przegrzewania sprężarkowni do rejestru; kryterium temperaturowe przy zakupie sprężarki.",
+          "dzialanie": "Rejestr ryzyk F-EnMS-07 (6.1); sprawdzenie zmiennych w 6.3 i 6.4; kryterium w wymaganiach zakupowych (8.3).",
+          "sprawdzenie": "Model zużycia uwzględnia temperaturę — różnica powyżej 5 °C między okresami wymaga adnotacji; w kolejnym lecie brak wyłączeń sprężarek."
+        },
+        "KTX-WO-12": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "ISO 14001 działa od 2015 r. — nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania już funkcjonują.",
+          "decyzja_w": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań, zamiast budowania drugiego systemu obok.",
+          "dzialanie": "Granice EnMS takie same jak granice systemu środowiskowego (4.3); procesy opisane jako rozszerzenie procedur ISO 14001 (4.4, odpowiedź SYS-01 „nadbudowa”).",
+          "sprawdzenie": "W wykazie dokumentów (7.5) nie ma dwóch procedur na ten sam proces; audit wewnętrzny prowadzony jednym programem dla obu systemów (9.2)."
+        },
+        "KTX-ZK-09": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "W",
+          "znaczenie": "Łagodna zima albo chłodne lato zmieniają zużycie bez żadnej poprawy — porównanie samych MWh wprowadza w błąd.",
+          "decyzja_w": "Wskaźniki liczone wobec modelu ze stopniodniami i produkcją, nie wobec zużycia z poprzedniego roku.",
+          "dzialanie": "Model bazowy E_ocz = 0,23·t + 0,48·HDD + 406 MWh/miesiąc przyjęty w 6.4; okresy porównywalne opisane w 6.5.",
+          "sprawdzenie": "Każdy raport monitorowania (9.1.1) podaje produkcję i stopniodnie obok zużycia; EnPI = E_rzecz / E_ocz."
+        },
+        "KTX-WT-13": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "N"
+        },
+        "KTX-ZT-05": {
+          "decyzja": "odrzucony",
+          "powod": "Ciepło pochodzi z własnej kotłowni gazowej 1 200 kW, wiek 18 lat. Wymiana źródła nie mieści się w progu SPBT 3 lat przyjętym przez zarząd — do ponownej oceny po 2027 r., razem z decyzją o PV."
+        },
+        "KTX-ZR-06": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "N"
+        },
+        "KTX-ZR-07": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "N"
+        },
+        "KTX-ZM-08": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "N"
+        },
+        "KTX-ZK-07": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "N"
+        },
+        "KTX-ZT-06": {
+          "decyzja": "potwierdzony",
+          "istotnosc": "N"
+        }
+      },
+      "klimat": {
+        "odp": "tak",
+        "uzas": "Upały wpływają na pracę i zużycie sprężarkowni oraz klimatyzacji hal, a trend utrzyma się w kolejnych latach; główny klient wymaga danych o śladzie węglowym dostaw. Podstawa: zużycie energii i temperatury 2023–2025, raport utrzymania ruchu o wyłączeniach sprężarek z lipca 2025 r., wymagania klienta dla dostawców. Ponowna ocena: luty 2027 r. lub wcześniej przy istotnej zmianie."
+      },
+      "prawo": {
+        "data": "2026-02-10",
+        "notatka": "Projekt nowelizacji ustawy o efektywności energetycznej (UC77) nadal w Radzie Ministrów — sprawdzone 10.02.2026 r. Obowiązki i warunki zwolnienia z audytu ustalać według przepisów obowiązujących w dniu analizy."
+      },
+      "swot": {
+        "S": "ISO 14001 od 2015 r. z działającym nadzorem nad dokumentami, audytami wewnętrznymi i przeglądem zarządzania · własne służby utrzymania ruchu · opomiarowanie głównych rozdzielni",
+        "W": "Tylko dwa liczniki główne · sprężarkownia bez sterowania nadrzędnego i bez kontroli szczelności · brak szkoleń energetycznych operatorów · brak wyodrębnionego budżetu",
+        "O": "PV na dachu hal — ok. 15 000 m², wstępnie do 1,5 MWp · odzysk ciepła ze sprężarek do ogrzewania hali A · nowa umowa na energię od 2027 r. · białe certyfikaty",
+        "T": "Utrata głównego klienta bez certyfikatu od 2027 r. · wzrost cen energii po wygaśnięciu umowy · upały a praca sprężarkowni · wiek infrastruktury"
+      },
+      "wnioski": [
+        {
+          "czynnik": "KTX-WT-02",
+          "znaczenie": "Bez pomiaru na poziomie obszarów nie wskażemy SEU ani nie rozliczymy poprawy — zużycie znamy z dwóch liczników głównych.",
+          "decyzja": "Ocenić, czy obliczenia i pomiary okresowe wystarczą do wskazania SEU; podliczniki tylko tam, gdzie nie wystarczą — wstępnie sprężarkownia i lakiernia.",
+          "dzialanie": "Przegląd energetyczny (6.3) z kampanią pomiarową 02–03.2026; plan zbierania danych (6.6); przepływomierz sprężonego powietrza w planie C4.",
+          "sprawdzenie": "Każdy obszar uznany za SEU ma w planie zbierania danych przypisane źródło danych, a wskaźnik S-1 liczy się z pomiaru, nie z szacunku."
+        },
+        {
+          "czynnik": "KTX-WT-05",
+          "znaczenie": "Sprężarkownia to 17,5% zużycia zakładu, a cztery sprężarki sterowane lokalnie pracują bez doboru do obciążenia.",
+          "decyzja": "Sprężarkownia pierwsza w kolejności działań; sterownik nadrzędny i napęd o zmiennej prędkości jako inwestycja na 2027 r.",
+          "dzialanie": "Cel Z1.1 i plan C1 (6.2): kampania pomiarowa, obniżenie ciśnienia, sterownik nadrzędny z napędem — INW/2027/04, 380 tys. zł.",
+          "sprawdzenie": "Wskaźnik S-1 z 0,125 na 0,110 kWh/Nm³ do 31.12.2027; dodanie sterownika i napędu opisane jako adnotacja przy linii bazowej."
+        },
+        {
+          "czynnik": "KTX-WT-06",
+          "znaczenie": "Przepływ w czasie postoju 9 Nm³/min to straty, których nikt nie mierzy ani nie rozlicza.",
+          "decyzja": "Wprowadzić kwartalny przegląd szczelności jako element kryteriów eksploatacji (8.1).",
+          "dzialanie": "Plan C1 (6.2): kampania pomiarowa z lokalizacją nieszczelności, usunięcie 35 nieszczelności, kwartalny przegląd — razem 25 tys. zł.",
+          "sprawdzenie": "Cel Z1.2: przepływ w czasie postoju z 9 na 4 Nm³/min do 30.06.2027, mierzony przy wyłączonej produkcji."
+        },
+        {
+          "czynnik": "KTX-WF-02",
+          "znaczenie": "2,5% kosztów operacyjnych przy marży branżowej rzędu kilku procent znaczy więcej niż sam procent.",
+          "decyzja": "Cele energetyczne mają wysoki priorytet w planie na 2026 r.",
+          "dzialanie": "Cel nadrzędny: obniżenie kosztów energii o 8% do 2028 r. (6.2), rozpisany na cele Z1–Z3.",
+          "sprawdzenie": "Roczne zestawienie kosztów energii wobec 2025 r. (8,5 mln zł) na przeglądzie zarządzania (9.3)."
+        },
+        {
+          "czynnik": "KTX-WF-03",
+          "znaczenie": "Bez wyodrębnionego budżetu działania energetyczne konkurują z inwestycjami produkcyjnymi i przepadają.",
+          "decyzja": "Budżet na efektywność w 2026 r. do 500 tys. zł; kolejność działań według SPBT przy progu 3 lat.",
+          "dzialanie": "W 2026 r. działania nisko- i średniokosztowe: szczelność, ciśnienie, LED w hali B; sterownik i PV do projektu budżetu na 2027 r.",
+          "sprawdzenie": "Wykonanie budżetu i SPBT osiągnięty wobec założonego — pozycja w planach działań (6.2) i na przeglądzie zarządzania (9.3)."
+        },
+        {
+          "czynnik": "KTX-ZM-02",
+          "znaczenie": "Cena stała obowiązuje do 31.12.2026; każde 100 zł/MWh na nowej umowie to ok. 850 tys. zł rocznie.",
+          "decyzja": "Ryzyko kosztowe do rejestru (6.1); profil zużycia przeanalizowany przed negocjacjami.",
+          "dzialanie": "Dział Zakupów przygotowuje analizę profilu do IX 2026 r.; wynik wchodzi do postępowania na 2027 r.",
+          "sprawdzenie": "Analiza profilu załączona do postępowania; cena z nowej umowy zestawiona z założeniem budżetowym."
+        },
+        {
+          "czynnik": "KTX-ZM-03",
+          "znaczenie": "Główny klient daje 45% przychodów i od 2026 r. żąda danych o energii i śladzie węglowym, a od 2027 r. certyfikatu ISO 50001.",
+          "decyzja": "Wdrożenie i certyfikacja do XII 2026 r.; zakres danych dobrany do brzmienia wymagania klienta, nie szerzej.",
+          "dzialanie": "Harmonogram wdrożenia; wpis do rejestru stron (F-EnMS-02, punkt 4.2) i do planu zbierania danych (6.6).",
+          "sprawdzenie": "Certyfikat wydany do XII 2026 r.; pierwszy roczny zestaw danych przyjęty przez klienta bez uwag."
+        },
+        {
+          "czynnik": "KTX-ZK-03",
+          "znaczenie": "W lipcu 2025 r. przy temperaturze powyżej 32 °C dwie sprężarki wyłączały się z przegrzania, a klimatyzacja hal pracowała bez przerwy.",
+          "decyzja": "Temperatura jako zmienna istotna do sprawdzenia; ryzyko przegrzewania sprężarkowni do rejestru; kryterium temperaturowe przy zakupie sprężarki.",
+          "dzialanie": "Rejestr ryzyk F-EnMS-07 (6.1); sprawdzenie zmiennych w 6.3 i 6.4; kryterium w wymaganiach zakupowych (8.3).",
+          "sprawdzenie": "Model zużycia uwzględnia temperaturę — różnica powyżej 5 °C między okresami wymaga adnotacji; w kolejnym lecie brak wyłączeń sprężarek."
+        },
+        {
+          "czynnik": "KTX-WO-12",
+          "znaczenie": "ISO 14001 działa od 2015 r. — nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania już funkcjonują.",
+          "decyzja": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań, zamiast budowania drugiego systemu obok.",
+          "dzialanie": "Granice EnMS takie same jak granice systemu środowiskowego (4.3); procesy opisane jako rozszerzenie procedur ISO 14001 (4.4, odpowiedź SYS-01 „nadbudowa”).",
+          "sprawdzenie": "W wykazie dokumentów (7.5) nie ma dwóch procedur na ten sam proces; audit wewnętrzny prowadzony jednym programem dla obu systemów (9.2)."
+        },
+        {
+          "czynnik": "KTX-ZK-09",
+          "znaczenie": "Łagodna zima albo chłodne lato zmieniają zużycie bez żadnej poprawy — porównanie samych MWh wprowadza w błąd.",
+          "decyzja": "Wskaźniki liczone wobec modelu ze stopniodniami i produkcją, nie wobec zużycia z poprzedniego roku.",
+          "dzialanie": "Model bazowy E_ocz = 0,23·t + 0,48·HDD + 406 MWh/miesiąc przyjęty w 6.4; okresy porównywalne opisane w 6.5.",
+          "sprawdzenie": "Każdy raport monitorowania (9.1.1) podaje produkcję i stopniodnie obok zużycia; EnPI = E_rzecz / E_ocz."
+        }
+      ]
+    }
+  },
+  "variables": {
+    "SCHEMA": {
+      "meta": {
+        "nazwa": "Czynniki kontekstowe",
+        "wersja": "2.1 — przykład AutoParts wypełniony w całości",
+        "miejsce_na_platformie": "4.1 — blok 2 strony punktu normy",
+        "zrodlo_danych": "Profil zakładu (3.6) — czytany, nie kopiowany",
+        "zasady": {
+          "zaleznosc": "Ankieta nie ma treści bez zatwierdzonego profilu. Lista pozycji powstaje z warunków na odpowiedziach profilu.",
+          "propozycja": "Spełniony warunek daje PROPOZYCJĘ, nie rozstrzygnięcie. Klient potwierdza albo odrzuca z uzasadnieniem.",
+          "ocena": "Rodzaj OCENA oznacza pozycję, której nie da się wyprowadzić z żadnego faktu — system pyta wprost.",
+          "auto": "Rodzaj AUTO wchodzi do dokumentu bez decyzji klienta i nie jest edytowalny.",
+          "odrzucenie": "Odrzucenie bez uzasadnienia blokuje przekazanie sekcji.",
+          "tresc": "Klient może poprawić brzmienie zdania; do dokumentu idzie jego wersja.",
+          "zmiana_profilu": "Zmiana odpowiedzi w profilu unieważnia decyzje o czynnikach, które z tej odpowiedzi wynikały — punktowo, nie hurtem."
+        }
+      },
+      "sekcje": [
+        {
+          "id": "zewn. regulacyjny",
+          "slug": "zewn_regulacyjny",
+          "nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "opis": "Audyt energetyczny lub system zarządzania energią, białe certyfikaty, pozwolenia, sprawozdawczość"
+        },
+        {
+          "id": "zewn. rynkowy",
+          "slug": "zewn_rynkowy",
+          "nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "opis": "Ceny i dostępność energii, warunki umów, wymagania klientów, konkurencja"
+        },
+        {
+          "id": "zewn. technologiczny",
+          "slug": "zewn_technologiczny",
+          "nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "opis": "Odzysk ciepła, fotowoltaika, pompy ciepła, napędy o zmiennej prędkości"
+        },
+        {
+          "id": "zewn. klimatyczny",
+          "slug": "zewn_klimatyczny",
+          "nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "opis": "Pogoda, upały, susza, gwałtowne zjawiska oraz rozstrzygnięcie w sprawie zmiany klimatu"
+        },
+        {
+          "id": "wewn. techniczny",
+          "slug": "wewn_techniczny",
+          "nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "opis": "Wiek i stan budynków, maszyn i instalacji, opomiarowanie"
+        },
+        {
+          "id": "wewn. organizacyjny",
+          "slug": "wewn_organizacyjny",
+          "nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "opis": "Strategia, priorytety zarządu, kompetencje i czas ludzi, działające systemy (ISO 9001, ISO 14001)"
+        },
+        {
+          "id": "wewn. finansowy",
+          "slug": "wewn_finansowy",
+          "nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "opis": "Budżet, akceptowany SPBT, dostęp do dofinansowania"
+        }
+      ],
+      "czynniki": [
+        {
+          "kod": "KTX-WT-01",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Pomiar energii realizowany wyłącznie na przyłączu głównym; zużycie nie jest przypisane do poszczególnych procesów ani obszarów.",
+          "wplyw": "−",
+          "skutek": "Linia bazowa wyznaczona na poziomie zakładu, nie SEU. Plan zbierania danych przewiduje rozbudowę opomiarowania.",
+          "pokaz_gdy": "FAKT_PODLICZNIKI = brak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-02",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Opomiarowanie obejmuje główne rozdzielnie i wybrane obszary, brak pomiaru na poziomie pojedynczych urządzeń.",
+          "wplyw": "−",
+          "skutek": "Wskaźniki EnPI budowane na poziomie obszarów; doprecyzowanie w kolejnym cyklu.",
+          "pokaz_gdy": "FAKT_PODLICZNIKI = czesciowo",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-03",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Opomiarowanie rozbudowane, z odczytem zdalnym; dane dostępne w systemie nadrzędnym.",
+          "wplyw": "+",
+          "skutek": "Możliwe wyznaczenie EnPI na poziomie SEU już w pierwszym cyklu.",
+          "pokaz_gdy": "FAKT_PODLICZNIKI = kompleksowo",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-04",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Istotna część infrastruktury energetycznej eksploatowana jest ponad projektowany okres użytkowania, co obniża sprawność i zwiększa awaryjność.",
+          "wplyw": "−",
+          "skutek": "Priorytet działań modernizacyjnych w pierwszym planie działań.",
+          "pokaz_gdy": "FAKT_WIEK_INFRA > 15",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-05",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Instalacja sprężonego powietrza pracuje bez sterowania nadrzędnego; sprężarki sterowane lokalnie, bez optymalizacji doboru do obciążenia.",
+          "wplyw": "−",
+          "skutek": "Sprężone powietrze wskazane jako kandydat na SEU; działanie w planie na pierwszy rok.",
+          "pokaz_gdy": "FAKT_CA_STEROWNIK = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; spożywcza; metalowa; tworzywa"
+        },
+        {
+          "kod": "KTX-WT-06",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Nie prowadzi się systematycznej kontroli szczelności instalacji sprężonego powietrza.",
+          "wplyw": "−",
+          "skutek": "Wprowadzenie kryteriów eksploatacyjnych dla SEU (kl. 8.1).",
+          "pokaz_gdy": "FAKT_CA_SZCZELNOSC = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; spożywcza; metalowa"
+        },
+        {
+          "kod": "KTX-WT-07",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Organizacja eksploatuje instalację fotowoltaiczną, której produkcja pokrywa część zapotrzebowania na energię elektryczną.",
+          "wplyw": "+",
+          "skutek": "Bilans energii obejmuje produkcję własną; wpływ na definicję linii bazowej.",
+          "pokaz_gdy": "FAKT_PV = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-08",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Brak magazynu energii powoduje, że nadwyżki produkcji własnej są oddawane do sieci na warunkach mniej korzystnych niż autokonsumpcja.",
+          "wplyw": "○",
+          "skutek": "Analiza opłacalności magazynu jako możliwość poprawy (kl. 6.3).",
+          "pokaz_gdy": "FAKT_PV = tak AND FAKT_BESS = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-09",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Organizacja eksploatuje układ kogeneracyjny — bilans energetyczny obejmuje zarówno zużycie, jak i produkcję nośników.",
+          "wplyw": "○",
+          "skutek": "Odrębna metodyka wyznaczania linii bazowej i wskaźników dla źródła.",
+          "pokaz_gdy": "FAKT_CHP = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "wod-kan; spożywcza; chemiczna"
+        },
+        {
+          "kod": "KTX-WT-10",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Funkcjonuje system nadrzędny (SCADA/BMS) obejmujący część instalacji, stanowiący potencjalne źródło danych o pracy urządzeń.",
+          "wplyw": "+",
+          "skutek": "Dane do przeglądu energetycznego pozyskiwane z systemu zamiast obchodem.",
+          "pokaz_gdy": "FAKT_SCADA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-11",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Brak systemu nadrzędnego; dane o pracy urządzeń pozyskiwane są ręcznie i nie są archiwizowane.",
+          "wplyw": "−",
+          "skutek": "Plan zbierania danych musi określić sposób i częstotliwość odczytów ręcznych.",
+          "pokaz_gdy": "FAKT_SCADA = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-12",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Zapotrzebowanie na ciepło pokrywane jest z własnego źródła; gospodarka cieplna stanowi odrębny obszar analizy.",
+          "wplyw": "○",
+          "skutek": "Ciepło ujęte jako odrębny nośnik w przeglądzie energetycznym.",
+          "pokaz_gdy": "FAKT_KOTLOWNIA IN (wlasne, oba)",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WT-13",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Organizacja dysponuje flotą pojazdów, której zużycie paliw stanowi wyodrębniony obszar zużycia energii.",
+          "wplyw": "○",
+          "skutek": "Flota ujęta w granicach systemu; odrębny wskaźnik EnPI.",
+          "pokaz_gdy": "FAKT_FLOTA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "wod-kan; handel; budownictwo; transport"
+        },
+        {
+          "kod": "KTX-WT-14",
+          "poprawka": null,
+          "wymiar": "wewn. techniczny",
+          "wymiar_nazwa": "Techniczne",
+          "typ": "wewnętrzny",
+          "tresc": "Nie realizuje się odzysku ciepła odpadowego, mimo występowania źródeł o parametrach umożliwiających odzysk.",
+          "wplyw": "−",
+          "skutek": "Odzysk ciepła wpisany na listę możliwości poprawy (kl. 6.3).",
+          "pokaz_gdy": "FAKT_CIEPLO_ODPADOWE = tak AND FAKT_ODZYSK_CIEPLA = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; spożywcza; metalowa; chemiczna"
+        },
+        {
+          "kod": "KTX-WO-01",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Nie wyznaczono osoby odpowiedzialnej za gospodarkę energetyczną; obowiązki rozproszone są między służby utrzymania ruchu a dział techniczny.",
+          "wplyw": "−",
+          "skutek": "Powołanie Energy Managera i formalne przypisanie ról (kl. 5.3).",
+          "pokaz_gdy": "FAKT_ENERGY_MANAGER = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-02",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Osoba zajmująca się energią została wyznaczona, jednak bez formalnego zakresu obowiązków i uprawnień decyzyjnych.",
+          "wplyw": "−",
+          "skutek": "Formalizacja zakresu obowiązków w zarządzeniu o powołaniu zespołu.",
+          "pokaz_gdy": "FAKT_ENERGY_MANAGER = nieformalnie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-03",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Organizacja nie posiada wdrożonego systemu zarządzania; struktura systemowa, procedury i zasady nadzoru nad dokumentacją budowane są od podstaw.",
+          "wplyw": "−",
+          "skutek": "Pełny zakres prac dokumentacyjnych; brak możliwości reużycia istniejących procedur.",
+          "pokaz_gdy": "FAKT_SYSTEM_BAZOWY = brak",
+          "rodzaj": "AUTO",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-04",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Decyzje o zakupie urządzeń podejmowane są na podstawie ceny nabycia, bez analizy kosztu cyklu życia i kosztu energii.",
+          "wplyw": "−",
+          "skutek": "Wprowadzenie kryteriów energetycznych w zakupach (kl. 8.3).",
+          "pokaz_gdy": "FAKT_ZAKUPY_KRYTERIA IN (nie, czasami)",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-05",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Wiedza o zasadach eksploatacji instalacji skupiona jest w wąskiej grupie pracowników; brak udokumentowanych instrukcji eksploatacyjnych.",
+          "wplyw": "−",
+          "skutek": "Opracowanie kryteriów i instrukcji eksploatacji SEU (kl. 8.1).",
+          "pokaz_gdy": "FAKT_INSTRUKCJE_EKSPL IN (nie, czesciowo)",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-06",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Dane o zużyciu energii nie są systematycznie analizowane; faktury służą wyłącznie do rozliczeń finansowych.",
+          "wplyw": "−",
+          "skutek": "Ustanowienie procesu monitorowania i analizy (kl. 9.1).",
+          "pokaz_gdy": "FAKT_ANALIZA_DANYCH = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-07",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Energia postrzegana jest w organizacji jako koszt stały, pozostający poza wpływem służb operacyjnych.",
+          "wplyw": "−",
+          "skutek": "Rozszerzony program działań świadomościowych (kl. 7.3).",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-08",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Struktura wielozakładowa wymaga ujednolicenia zasad zarządzania energią oraz porównywalności wskaźników między lokalizacjami.",
+          "wplyw": "○",
+          "skutek": "Wskaźniki definiowane jednolicie dla wszystkich lokalizacji.",
+          "pokaz_gdy": "FAKT_LOKALIZACJE > 1",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-09",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Praca w ruchu ciągłym ogranicza możliwość wyłączeń instalacji na potrzeby pomiarów diagnostycznych.",
+          "wplyw": "−",
+          "skutek": "Metodyka przeglądu oparta na pomiarach w ruchu i danych historycznych.",
+          "pokaz_gdy": "FAKT_ZMIANY = 4",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; chemiczna; wod-kan; metalowa"
+        },
+        {
+          "kod": "KTX-WO-10",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Rotacja personelu operacyjnego wpływa na trwałość efektów szkoleń i wymaga cyklicznego powtarzania działań.",
+          "wplyw": "−",
+          "skutek": "Szkolenia wpisane w cykl roczny, nie jednorazowy (kl. 7.2).",
+          "pokaz_gdy": "FAKT_ROTACJA = wysoka",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-11",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Utrzymanie ruchu realizowane jest siłami własnymi, co ułatwia wdrożenie nadzoru operacyjnego nad obszarami znaczącego zużycia.",
+          "wplyw": "+",
+          "skutek": "Nadzór operacyjny oparty na własnych służbach, bez kosztu zewnętrznego.",
+          "pokaz_gdy": "FAKT_UR_WLASNE = wlasne",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WO-12",
+          "poprawka": null,
+          "wymiar": "wewn. organizacyjny",
+          "wymiar_nazwa": "Organizacyjne",
+          "typ": "wewnętrzny",
+          "tresc": "Organizacja ma wdrożony i certyfikowany system zarządzania; działają w nim nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania.",
+          "wplyw": "+",
+          "skutek": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań — wspólne procesy i dokumenty zamiast równoległych (4.3, 4.4).",
+          "pokaz_gdy": "FAKT_SYSTEM_BAZOWY != brak AND FAKT_ZGODA_INTEGRACJA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-01",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "Koszty energii stanowią istotną pozycję kosztów operacyjnych, co uzasadnia priorytet działań w zakresie efektywności energetycznej.",
+          "wplyw": "○",
+          "skutek": "Wysoki poziom ambicji celów energetycznych (kl. 6.2).",
+          "pokaz_gdy": "FAKT_UDZIAL_ENERGII >= 5",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-02",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "Udział kosztów energii w kosztach operacyjnych jest umiarkowany, co ogranicza presję ekonomiczną na szybkie działania inwestycyjne.",
+          "wplyw": "○",
+          "skutek": "Cele oparte w większym stopniu na działaniach organizacyjnych niż inwestycyjnych.",
+          "pokaz_gdy": "FAKT_UDZIAL_ENERGII < 5",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-03",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "Nie wyodrębniono budżetu na przedsięwzięcia służące poprawie efektywności energetycznej.",
+          "wplyw": "−",
+          "skutek": "Plany działań ograniczone do przedsięwzięć bezkosztowych i niskonakładowych w pierwszym cyklu.",
+          "pokaz_gdy": "FAKT_BUDZET = nie",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-04",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "Organizacja stosuje krótki wymagany okres zwrotu inwestycji, co ogranicza zakres przedsięwzięć możliwych do realizacji.",
+          "wplyw": "−",
+          "skutek": "Kryterium oceny możliwości poprawy uwzględnia próg zwrotu przyjęty przez organizację.",
+          "pokaz_gdy": "FAKT_PBT_PROG <= 3",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-05",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "Planowane przedsięwzięcia mogą kwalifikować się do wsparcia w systemie białych certyfikatów.",
+          "wplyw": "+",
+          "skutek": "Analiza kwalifikowalności ujęta w planach działań (kl. 6.2).",
+          "pokaz_gdy": "FAKT_BIALE_MOZLIWE != tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-06",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "Dla przedsięwzięć o wyższym nakładzie dostępne jest finansowanie w formule ESCO lub umowy o efekt energetyczny.",
+          "wplyw": "+",
+          "skutek": "Rozszerzenie katalogu możliwych działań o przedsięwzięcia kapitałochłonne.",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-WF-07",
+          "poprawka": null,
+          "wymiar": "wewn. finansowy",
+          "wymiar_nazwa": "Finansowe",
+          "typ": "wewnętrzny",
+          "tresc": "W horyzoncie funkcjonowania systemu planowane są inwestycje zmieniające profil zużycia energii.",
+          "wplyw": "○",
+          "skutek": "Linia bazowa wymaga normalizacji po zakończeniu inwestycji (kl. 6.5).",
+          "pokaz_gdy": "FAKT_INWESTYCJE = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-01",
+          "poprawka": "Dyrektywa wiąże państwo członkowskie, nie przedsiębiorstwo; ustawa wdrażająca (UC77) nie weszła jeszcze w życie. Brzmienie uzgodnione z poprawką STK-Z-02 w punkcie 4.2.",
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Roczne zużycie energii przekracza próg 85 TJ. Obowiązek posiadania certyfikowanego systemu zarządzania energią wprowadza projekt nowelizacji ustawy o efektywności energetycznej (UC77), wdrażający art. 11 dyrektywy (UE) 2023/1791; dyrektywa wyznacza państwu członkowskiemu termin 11 października 2027 r. Na dzień sporządzenia analizy nowelizacja nie weszła w życie.",
+          "wplyw": "−",
+          "skutek": "Wdrożenie planowane jako obowiązkowe; harmonogram podporządkowany terminowi, który ustali nowelizacja — do potwierdzenia po jej ogłoszeniu. Stan prawny sprawdzany co kwartał do czasu wejścia w życie.",
+          "pokaz_gdy": "ZUZYCIE_TJ > 85",
+          "rodzaj": "AUTO",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-02",
+          "poprawka": "Próg 10 TJ pochodzi z dyrektywy, nie z obowiązującej ustawy. Poprzednie brzmienie przedstawiało obowiązek audytu jako już wiążący dla tego przedziału zużycia.",
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Roczne zużycie energii mieści się w przedziale od 10 do 85 TJ. W modelu dyrektywy (UE) 2023/1791 oznacza to obowiązek audytu energetycznego, a nie certyfikowanego systemu zarządzania energią; szczegóły — terminy, zakres i sankcje — określi polska ustawa. Wdrożenie systemu zarządzania energią pozostaje na tym etapie decyzją dobrowolną organizacji albo wynika z wymagania klienta.",
+          "wplyw": "○",
+          "skutek": "Zakres i tempo wdrożenia ustalane według priorytetów organizacji i wymagań klientów, nie według terminu ustawowego. Obowiązek audytu ustalany według przepisów obowiązujących w dniu analizy; ponowna ocena po uchwaleniu nowelizacji (kl. 9.1.2).",
+          "pokaz_gdy": "ZUZYCIE_TJ >= 10 AND ZUZYCIE_TJ <= 85",
+          "rodzaj": "AUTO",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-03",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Organizacja przeprowadziła audyt energetyczny przedsiębiorstwa, którego wyniki stanowią materiał wejściowy do przeglądu energetycznego.",
+          "wplyw": "+",
+          "skutek": "Przegląd energetyczny prowadzony jako aktualizacja, nie od podstaw (kl. 6.3).",
+          "pokaz_gdy": "FAKT_AUDYT_ENERG = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-04",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Instalacja objęta jest systemem handlu uprawnieniami do emisji; działania w obszarze energii przekładają się bezpośrednio na koszt uprawnień.",
+          "wplyw": "○",
+          "skutek": "Powiązanie celów energetycznych z celami emisyjnymi.",
+          "pokaz_gdy": "FAKT_ETS = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "chemiczna; metalowa; cementowa; papiernicza; szklarska"
+        },
+        {
+          "kod": "KTX-ZR-05",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Organizacja podlega obowiązkowi sprawozdawczości zrównoważonego rozwoju; wskaźniki zużycia i intensywności energetycznej podlegają raportowaniu zewnętrznemu.",
+          "wplyw": "○",
+          "skutek": "Wskaźniki EnPI definiowane spójnie z wymaganiami sprawozdawczymi.",
+          "pokaz_gdy": "FAKT_CSRD = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-06",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Eksploatowane urządzenia podlegają dozorowi technicznemu, co narzuca harmonogram przeglądów i ogranicza swobodę planowania wyłączeń.",
+          "wplyw": "○",
+          "skutek": "Harmonogram audytów i pomiarów skoordynowany z terminami dozorowymi.",
+          "pokaz_gdy": "FAKT_UDT = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-07",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Instalacje chłodnicze zawierają fluorowane gazy cieplarniane, co wiąże się z obowiązkami kontroli szczelności i prowadzenia dokumentacji.",
+          "wplyw": "○",
+          "skutek": "Rejestr F-gaz włączony do rejestru wymagań prawnych.",
+          "pokaz_gdy": "FAKT_FGAZ = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "spożywcza; handel; chemiczna; logistyka"
+        },
+        {
+          "kod": "KTX-ZR-08",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "System świadectw efektywności energetycznej umożliwia uzyskanie wsparcia finansowego dla przedsięwzięć służących poprawie efektywności.",
+          "wplyw": "+",
+          "skutek": "Kwalifikowalność przedsięwzięć oceniana na etapie planowania działań.",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-09",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Otoczenie regulacyjne w obszarze efektywności energetycznej podlega częstym zmianom, co wymaga cyklicznej aktualizacji rejestru wymagań prawnych.",
+          "wplyw": "−",
+          "skutek": "Przegląd rejestru wymagań co najmniej raz w roku (kl. 9.1.2).",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZR-10",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Organizacja jest podmiotem zobowiązanym do stosowania procedur zamówień publicznych, co wydłuża proces realizacji przedsięwzięć inwestycyjnych.",
+          "wplyw": "−",
+          "skutek": "Harmonogram planów działań uwzględnia czas procedur zakupowych.",
+          "pokaz_gdy": "FAKT_PODMIOT = publiczny",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "wod-kan; ciepłownictwo; sektor publiczny"
+        },
+        {
+          "kod": "KTX-ZM-01",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Ceny nośników energii podlegają istotnym wahaniom, co zwiększa ryzyko kosztowe i uzasadnia działania ograniczające zużycie.",
+          "wplyw": "−",
+          "skutek": "Ryzyko cenowe wpisane do rejestru ryzyk (kl. 6.1).",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZM-02",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Umowa na dostawę energii wygasa w horyzoncie funkcjonowania systemu, co stanowi okazję do renegocjacji profilu zakupowego.",
+          "wplyw": "+",
+          "skutek": "Optymalizacja umowy ujęta jako możliwość poprawy (kl. 6.3).",
+          "pokaz_gdy": "FAKT_UMOWA_WYGASA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZM-03",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Odbiorcy zgłaszają wymagania dotyczące śladu węglowego lub efektywności energetycznej wyrobów.",
+          "wplyw": "○",
+          "skutek": "Wymaganie rozważane jako wymóg zgodności (kl. 4.2); wskaźnik raportowany zewnętrznie.",
+          "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; spożywcza; motoryzacyjna; tworzywa"
+        },
+        {
+          "kod": "KTX-ZM-04",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Odbiorcy nie zgłaszają obecnie wymagań energetycznych, jednak tendencja rynkowa wskazuje na ich pojawienie się w horyzoncie kilku lat.",
+          "wplyw": "○",
+          "skutek": "Monitorowanie zmian wymagań odbiorców w cyklu przeglądu kontekstu.",
+          "pokaz_gdy": "FAKT_ODBIORCY_CO2 = nie",
+          "rodzaj": "OCENA",
+          "tagi": "produkcja; spożywcza; tworzywa"
+        },
+        {
+          "kod": "KTX-ZM-05",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Ograniczona dostępność mocy przyłączeniowej stanowi barierę rozwoju i podnosi znaczenie działań po stronie efektywności.",
+          "wplyw": "−",
+          "skutek": "Redukcja zapotrzebowania jako alternatywa dla rozbudowy przyłącza.",
+          "pokaz_gdy": "FAKT_MOC_OGRANICZONA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZM-06",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Podmioty konkurencyjne posiadają certyfikowane systemy zarządzania energią, w związku z czym certyfikat ma znaczenie w budowaniu pozycji rynkowej.",
+          "wplyw": "+",
+          "skutek": "Cel certyfikacji równorzędny z celem oszczędnościowym.",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZM-07",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Posiadanie certyfikowanego systemu zarządzania energią jest wymagane lub premiowane w postępowaniach przetargowych, w których organizacja uczestniczy.",
+          "wplyw": "+",
+          "skutek": "Termin certyfikacji podporządkowany kalendarzowi postępowań.",
+          "pokaz_gdy": "FAKT_PRZETARGI = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZM-08",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Dostępne dane branżowe umożliwiają odniesienie wskaźników wyniku energetycznego do wartości referencyjnych.",
+          "wplyw": "+",
+          "skutek": "Wskaźniki EnPI kalibrowane wobec benchmarku branżowego.",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZM-09",
+          "poprawka": null,
+          "wymiar": "zewn. rynkowy",
+          "wymiar_nazwa": "Rynkowe",
+          "typ": "zewnętrzny",
+          "tresc": "Sezonowość działalności istotnie wpływa na profil zużycia energii i wymaga normalizacji wskaźników względem zmiennych istotnych.",
+          "wplyw": "○",
+          "skutek": "Metodyka normalizacji linii bazowej uwzględnia sezonowość (kl. 6.5).",
+          "pokaz_gdy": "FAKT_SEZONOWOSC = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "spożywcza; budownictwo; handel; wod-kan"
+        },
+        {
+          "kod": "KTX-ZK-01",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Organizacja dokonała oceny istotności zmiany klimatu dla systemu zarządzania energią i uznała ją za czynnik istotny.",
+          "wplyw": "○",
+          "skutek": "Zmiana klimatu ujęta w rejestrze ryzyk i szans oraz w normalizacji wskaźników.",
+          "pokaz_gdy": "FAKT_KLIMAT_ISTOTNY = tak",
+          "rodzaj": "AUTO",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-02",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Organizacja dokonała oceny istotności zmiany klimatu dla systemu zarządzania energią i uznała, że nie stanowi ona czynnika istotnego. Uzasadnienie: profil zużycia nie wykazuje wrażliwości na warunki atmosferyczne, a procesy prowadzone są w warunkach kontrolowanych niezależnych od otoczenia.",
+          "wplyw": "○",
+          "skutek": "Ocena udokumentowana; podlega ponownej weryfikacji przy corocznym przeglądzie kontekstu.",
+          "pokaz_gdy": "FAKT_KLIMAT_ISTOTNY = nie",
+          "rodzaj": "AUTO",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-03",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Rosnąca liczba dni z wysoką temperaturą zwiększa zapotrzebowanie na chłodzenie technologiczne i klimatyzację, podnosząc szczytowe zapotrzebowanie na moc w okresie letnim.",
+          "wplyw": "−",
+          "skutek": "Chłodzenie wskazane jako kandydat na SEU; wskaźnik normalizowany stopniodniami chłodzenia.",
+          "pokaz_gdy": "FAKT_CHLODZENIE = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-04",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Łagodniejsze zimy obniżają zapotrzebowanie na ciepło, co zaburza porównywalność zużycia między latami.",
+          "wplyw": "○",
+          "skutek": "Linia bazowa normalizowana stopniodniami grzania; trend klimatyczny uwzględniony przy wyborze okresu bazowego (kl. 6.5).",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-05",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Ekstremalne zjawiska pogodowe zwiększają ryzyko przerw w dostawie energii oraz nieplanowanych postojów instalacji.",
+          "wplyw": "−",
+          "skutek": "Ryzyko ciągłości zasilania wpisane do rejestru ryzyk (kl. 6.1); rozważenie zasilania rezerwowego.",
+          "pokaz_gdy": "FAKT_PRZERWY_POGODA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-06",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Ograniczenia w dostępności wody, w tym okresowe susze, wpływają na pracę układów chłodzenia wykorzystujących wodę.",
+          "wplyw": "−",
+          "skutek": "Alternatywne rozwiązania chłodzenia jako możliwość poprawy (kl. 6.3).",
+          "pokaz_gdy": "FAKT_CHLODZENIE_WODNE = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; chemiczna; metalowa; energetyka; spożywcza"
+        },
+        {
+          "kod": "KTX-ZK-07",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Rosnący udział źródeł odnawialnych w krajowym systemie elektroenergetycznym zwiększa zmienność cen w cyklu dobowym, tworząc szansę na przesunięcie poboru w czasie.",
+          "wplyw": "+",
+          "skutek": "Analiza przesunięcia poboru i elastyczności jako możliwość poprawy (kl. 6.3).",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-08",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Strony zainteresowane zgłaszają wymagania związane ze zmianą klimatu — dotyczące śladu węglowego, odporności łańcucha dostaw lub raportowania emisji.",
+          "wplyw": "○",
+          "skutek": "Wymagania klimatyczne rozważane jako wymagania zgodności (kl. 4.2); powiązanie celów energetycznych z emisyjnymi.",
+          "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak OR FAKT_CSRD = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZK-09",
+          "poprawka": null,
+          "wymiar": "zewn. klimatyczny",
+          "wymiar_nazwa": "Środowiskowe i klimatyczne",
+          "typ": "zewnętrzny",
+          "tresc": "Zmienność warunków atmosferycznych między latami wymaga normalizacji wskaźników wyniku energetycznego, aby poprawa nie była mylona z łagodniejszą pogodą.",
+          "wplyw": "○",
+          "skutek": "Metodyka normalizacji EnPI oparta na stopniodniach jako zmiennej istotnej (kl. 6.4).",
+          "pokaz_gdy": "FAKT_KLIMAT_ISTOTNY = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZT-01",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Dostępne są technologie o potwierdzonej skuteczności — falowniki, sterowanie nadrzędne, odzysk ciepła — możliwe do zastosowania bez ingerencji w proces technologiczny.",
+          "wplyw": "+",
+          "skutek": "Zasilenie listy możliwości poprawy niskiego ryzyka (kl. 6.3).",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZT-02",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Spadek kosztu instalacji fotowoltaicznych i magazynów energii zmienia opłacalność produkcji własnej w stosunku do lat ubiegłych.",
+          "wplyw": "+",
+          "skutek": "Ponowna analiza opłacalności OZE w planach działań.",
+          "pokaz_gdy": "ZAWSZE",
+          "rodzaj": "OCENA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZT-03",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Rozwiązania monitoringu energii dostępne są w cenie umożliwiającej opomiarowanie na poziomie pojedynczych urządzeń.",
+          "wplyw": "+",
+          "skutek": "Rozbudowa opomiarowania ujęta w planie zbierania danych (kl. 6.6).",
+          "pokaz_gdy": "FAKT_PODLICZNIKI != kompleksowo",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZT-04",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Modernizacja oświetlenia z zastosowaniem źródeł LED może być prowadzona etapowo, bez przerywania działalności.",
+          "wplyw": "+",
+          "skutek": "Działanie o niskim ryzyku wdrożeniowym w pierwszym planie działań.",
+          "pokaz_gdy": "FAKT_LED_UDZIAL < 70",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZT-05",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Technologie pomp ciepła umożliwiają zastąpienie części zapotrzebowania na ciepło wytwarzane z paliw kopalnych.",
+          "wplyw": "+",
+          "skutek": "Kierunek dekarbonizacji ujęty w celach długoterminowych.",
+          "pokaz_gdy": "FAKT_CIEPLO_PALIWA = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "uniwersalne"
+        },
+        {
+          "kod": "KTX-ZT-06",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Dla kluczowego procesu technologicznego nie są dostępne dojrzałe rozwiązania alternatywne, co ogranicza potencjał poprawy w tym obszarze.",
+          "wplyw": "−",
+          "skutek": "Cele koncentrowane na procesach pomocniczych, nie na procesie głównym.",
+          "pokaz_gdy": "FAKT_PROCES_BEZ_ALTERNATYWY = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "chemiczna; metalowa; szklarska; cementowa"
+        },
+        {
+          "kod": "KTX-ZT-07",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Integracja danych energetycznych z systemami produkcyjnymi umożliwia budowę wskaźników odnoszących zużycie do wielkości produkcji.",
+          "wplyw": "+",
+          "skutek": "EnPI definiowane jako zużycie na jednostkę produkcji (kl. 6.4).",
+          "pokaz_gdy": "FAKT_MES = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "produkcja; spożywcza; tworzywa; metalowa"
+        },
+        {
+          "kod": "KTX-ZT-08",
+          "poprawka": null,
+          "wymiar": "zewn. technologiczny",
+          "wymiar_nazwa": "Technologiczne",
+          "typ": "zewnętrzny",
+          "tresc": "Dostępne są rozwiązania odzysku ciepła odpadowego z procesów wysokotemperaturowych o akceptowalnym okresie zwrotu.",
+          "wplyw": "+",
+          "skutek": "Odzysk ciepła jako priorytetowa możliwość poprawy.",
+          "pokaz_gdy": "FAKT_CIEPLO_ODPADOWE = tak",
+          "rodzaj": "PROPOZYCJA",
+          "tagi": "metalowa; szklarska; ceramiczna; spożywcza"
+        },
+        {
+          "kod": "KTX-ZR-11",
+          "poprawka": null,
+          "wymiar": "zewn. regulacyjny",
+          "wymiar_nazwa": "Regulacyjne",
+          "typ": "zewnętrzny",
+          "tresc": "Roczne zużycie energii nie przekracza 10 TJ, w związku z czym organizacja nie podlega obowiązkowi audytu energetycznego przedsiębiorstwa ani obowiązkowi posiadania systemu zarządzania energią. Wdrożenie stanowi w całości decyzję dobrowolną.",
+          "wplyw": "○",
+          "skutek": "Zakres i tempo wdrożenia ustalane wyłącznie wg priorytetów organizacji.",
+          "pokaz_gdy": "ZUZYCIE_TJ < 10",
+          "rodzaj": "AUTO",
+          "tagi": "uniwersalne"
+        }
+      ],
+      "przyklad": {
+        "FAKT_LOKALIZACJE": "2",
+        "FAKT_LOKALIZACJE_LISTA": [
+          {
+            "c0": "Zakład produkcyjny",
+            "c1": "ul. Przemysłowa 12, Katowice",
+            "c2": "produkcja",
+            "c3": "tak"
+          },
+          {
+            "c0": "Magazyn wyrobów gotowych",
+            "c1": "ul. Składowa 11, Katowice",
+            "c2": "magazyn",
+            "c3": "tak"
+          }
+        ],
+        "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)",
+        "FAKT_PRACOWNICY": "850",
+        "FAKT_ZMIANY": "3",
+        "FAKT_SEZONOWOSC": "nie",
+        "FAKT_PODMIOT": "prywatny",
+        "FAKT_GRUPA_KAPITALOWA": "tak",
+        "FAKT_ZWIAZKI": "nie",
+        "FAKT_SYSTEM_BAZOWY": "iso_14001",
+        "FAKT_SYSTEM_BAZOWY_ROK": "2019",
+        "FAKT_ZGODA_INTEGRACJA": "tak",
+        "FAKT_ENERGY_MANAGER": "nieformalnie",
+        "FAKT_UR_WLASNE": "wlasne",
+        "FAKT_INSTRUKCJE_EKSPL": "czesciowo",
+        "FAKT_ZAKUPY_KRYTERIA": "czasami",
+        "FAKT_ROTACJA": "srednia",
+        "FAKT_NOSNIKI": [
+          {
+            "c0": "energia elektryczna",
+            "c1": "8500",
+            "c2": "MWh",
+            "c3": "7565000"
+          },
+          {
+            "c0": "gaz ziemny",
+            "c1": "350000",
+            "c2": "m³",
+            "c3": "875000"
+          },
+          {
+            "c0": "LPG",
+            "c1": "18000",
+            "c2": "l",
+            "c3": "54000"
+          }
+        ],
+        "FAKT_ROK_ODNIESIENIA": "2025",
+        "FAKT_UDZIAL_ENERGII": "2,5",
+        "FAKT_MOC_UMOWNA": "1400",
+        "FAKT_SPREZONE": "tak",
+        "FAKT_CA_LICZBA": "4",
+        "FAKT_CA_MOC": "440",
+        "FAKT_CA_VSD": "0",
+        "FAKT_CA_STEROWNIK": "nie",
+        "FAKT_CA_SZCZELNOSC": "nie",
+        "FAKT_CA_ODZYSK": "nie",
+        "FAKT_CA_GODZINY": "6000",
+        "FAKT_KOTLOWNIA": "wlasne",
+        "FAKT_CIEPLO_PALIWO": [
+          "gaz ziemny"
+        ],
+        "FAKT_KOTLOWNIA_MOC": "1200",
+        "FAKT_KOTLOWNIA_WIEK": "18",
+        "FAKT_PODLICZNIKI": "czesciowo",
+        "FAKT_ODCZYT": "mieszane",
+        "FAKT_PRODUKCJA_JEDN": "t",
+        "FAKT_PRODUKCJA": "24000",
+        "FAKT_PRODUKCJA_POPRZ": "23500",
+        "FAKT_HDD": "3600",
+        "FAKT_HDD_POPRZ": "3450",
+        "FAKT_PRZYCHOD": "380",
+        "FAKT_SCADA": "nie",
+        "FAKT_MES": "nie",
+        "FAKT_ANALIZA_DANYCH": "arkusz",
+        "FAKT_AUDYT_ENERG": "tak",
+        "FAKT_ETS": "nie",
+        "FAKT_CSRD": "nie",
+        "FAKT_PRZETARGI": "nie",
+        "FAKT_ODBIORCY_CO2": "tak",
+        "FAKT_MOC_OGRANICZONA": "nie",
+        "FAKT_UMOWA_WYGASA": "tak",
+        "FAKT_BUDZET": "nie",
+        "FAKT_PBT_PROG": "3",
+        "FAKT_INWESTYCJE": "tak",
+        "FAKT_BIALE_MOZLIWE": "nie",
+        "FAKT_CHLODZENIE": "tak",
+        "FAKT_CHLODZENIE_WODNE": "nie",
+        "FAKT_FGAZ": "tak",
+        "FAKT_UDT": "tak",
+        "FAKT_WIEK_INFRA": "22",
+        "FAKT_LED_UDZIAL": "35",
+        "FAKT_OSW_STEROWANIE": "recznie",
+        "FAKT_NAPEDY_VSD": "czesc",
+        "FAKT_WENT": "tak",
+        "FAKT_WENT_LICZBA": "6",
+        "FAKT_WENT_ODZYSK": "czesc",
+        "FAKT_WENT_HARMONOGRAM": "nie",
+        "FAKT_CIEPLO_ODPADOWE": "tak",
+        "FAKT_ODZYSK_CIEPLA": "nie",
+        "FAKT_PROCES_BEZ_ALTERNATYWY": "tak",
+        "FAKT_PROCESY": [
+          "piece i nagrzewnice",
+          "pompy procesowe"
+        ],
+        "FAKT_PV": "nie",
+        "FAKT_BESS": "nie",
+        "FAKT_CHP": "nie",
+        "FAKT_FLOTA": "tak",
+        "FAKT_FLOTA_LICZBA": "4",
+        "FAKT_PRZERWY_POGODA": "nie"
+      },
+      "przyklad_41": {
+        "profilNazwa": "AutoParts Polska Sp. z o.o.",
+        "istotnoscDomyslna": "S",
+        "dec": {
+          "KTX-WT-02": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Bez pomiaru na poziomie obszarów nie wskażemy SEU ani nie rozliczymy poprawy — zużycie znamy z dwóch liczników głównych.",
+            "decyzja_w": "Ocenić, czy obliczenia i pomiary okresowe wystarczą do wskazania SEU; podliczniki tylko tam, gdzie nie wystarczą — wstępnie sprężarkownia i lakiernia.",
+            "dzialanie": "Przegląd energetyczny (6.3) z kampanią pomiarową 02–03.2026; plan zbierania danych (6.6); przepływomierz sprężonego powietrza w planie C4.",
+            "sprawdzenie": "Każdy obszar uznany za SEU ma w planie zbierania danych przypisane źródło danych, a wskaźnik S-1 liczy się z pomiaru, nie z szacunku."
+          },
+          "KTX-WT-05": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Sprężarkownia to 17,5% zużycia zakładu, a cztery sprężarki sterowane lokalnie pracują bez doboru do obciążenia.",
+            "decyzja_w": "Sprężarkownia pierwsza w kolejności działań; sterownik nadrzędny i napęd o zmiennej prędkości jako inwestycja na 2027 r.",
+            "dzialanie": "Cel Z1.1 i plan C1 (6.2): kampania pomiarowa, obniżenie ciśnienia, sterownik nadrzędny z napędem — INW/2027/04, 380 tys. zł.",
+            "sprawdzenie": "Wskaźnik S-1 z 0,125 na 0,110 kWh/Nm³ do 31.12.2027; dodanie sterownika i napędu opisane jako adnotacja przy linii bazowej."
+          },
+          "KTX-WT-06": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Przepływ w czasie postoju 9 Nm³/min to straty, których nikt nie mierzy ani nie rozlicza.",
+            "decyzja_w": "Wprowadzić kwartalny przegląd szczelności jako element kryteriów eksploatacji (8.1).",
+            "dzialanie": "Plan C1 (6.2): kampania pomiarowa z lokalizacją nieszczelności, usunięcie 35 nieszczelności, kwartalny przegląd — razem 25 tys. zł.",
+            "sprawdzenie": "Cel Z1.2: przepływ w czasie postoju z 9 na 4 Nm³/min do 30.06.2027, mierzony przy wyłączonej produkcji."
+          },
+          "KTX-WF-02": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "2,5% kosztów operacyjnych przy marży branżowej rzędu kilku procent znaczy więcej niż sam procent.",
+            "decyzja_w": "Cele energetyczne mają wysoki priorytet w planie na 2026 r.",
+            "dzialanie": "Cel nadrzędny: obniżenie kosztów energii o 8% do 2028 r. (6.2), rozpisany na cele Z1–Z3.",
+            "sprawdzenie": "Roczne zestawienie kosztów energii wobec 2025 r. (8,5 mln zł) na przeglądzie zarządzania (9.3).",
+            "tresc": "Koszty energii ok. 8,5 mln zł rocznie — ok. 2,5% kosztów operacyjnych; przy marży branżowej rzędu kilku procent to pozycja istotna."
+          },
+          "KTX-WF-03": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Bez wyodrębnionego budżetu działania energetyczne konkurują z inwestycjami produkcyjnymi i przepadają.",
+            "decyzja_w": "Budżet na efektywność w 2026 r. do 500 tys. zł; kolejność działań według SPBT przy progu 3 lat.",
+            "dzialanie": "W 2026 r. działania nisko- i średniokosztowe: szczelność, ciśnienie, LED w hali B; sterownik i PV do projektu budżetu na 2027 r.",
+            "sprawdzenie": "Wykonanie budżetu i SPBT osiągnięty wobec założonego — pozycja w planach działań (6.2) i na przeglądzie zarządzania (9.3)."
+          },
+          "KTX-ZM-02": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Cena stała obowiązuje do 31.12.2026; każde 100 zł/MWh na nowej umowie to ok. 850 tys. zł rocznie.",
+            "decyzja_w": "Ryzyko kosztowe do rejestru (6.1); profil zużycia przeanalizowany przed negocjacjami.",
+            "dzialanie": "Dział Zakupów przygotowuje analizę profilu do IX 2026 r.; wynik wchodzi do postępowania na 2027 r.",
+            "sprawdzenie": "Analiza profilu załączona do postępowania; cena z nowej umowy zestawiona z założeniem budżetowym."
+          },
+          "KTX-ZM-03": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Główny klient daje 45% przychodów i od 2026 r. żąda danych o energii i śladzie węglowym, a od 2027 r. certyfikatu ISO 50001.",
+            "decyzja_w": "Wdrożenie i certyfikacja do XII 2026 r.; zakres danych dobrany do brzmienia wymagania klienta, nie szerzej.",
+            "dzialanie": "Harmonogram wdrożenia; wpis do rejestru stron (F-EnMS-02, punkt 4.2) i do planu zbierania danych (6.6).",
+            "sprawdzenie": "Certyfikat wydany do XII 2026 r.; pierwszy roczny zestaw danych przyjęty przez klienta bez uwag."
+          },
+          "KTX-ZK-03": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "W lipcu 2025 r. przy temperaturze powyżej 32 °C dwie sprężarki wyłączały się z przegrzania, a klimatyzacja hal pracowała bez przerwy.",
+            "decyzja_w": "Temperatura jako zmienna istotna do sprawdzenia; ryzyko przegrzewania sprężarkowni do rejestru; kryterium temperaturowe przy zakupie sprężarki.",
+            "dzialanie": "Rejestr ryzyk F-EnMS-07 (6.1); sprawdzenie zmiennych w 6.3 i 6.4; kryterium w wymaganiach zakupowych (8.3).",
+            "sprawdzenie": "Model zużycia uwzględnia temperaturę — różnica powyżej 5 °C między okresami wymaga adnotacji; w kolejnym lecie brak wyłączeń sprężarek."
+          },
+          "KTX-WO-12": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "ISO 14001 działa od 2015 r. — nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania już funkcjonują.",
+            "decyzja_w": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań, zamiast budowania drugiego systemu obok.",
+            "dzialanie": "Granice EnMS takie same jak granice systemu środowiskowego (4.3); procesy opisane jako rozszerzenie procedur ISO 14001 (4.4, odpowiedź SYS-01 „nadbudowa”).",
+            "sprawdzenie": "W wykazie dokumentów (7.5) nie ma dwóch procedur na ten sam proces; audit wewnętrzny prowadzony jednym programem dla obu systemów (9.2)."
+          },
+          "KTX-ZK-09": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "W",
+            "znaczenie": "Łagodna zima albo chłodne lato zmieniają zużycie bez żadnej poprawy — porównanie samych MWh wprowadza w błąd.",
+            "decyzja_w": "Wskaźniki liczone wobec modelu ze stopniodniami i produkcją, nie wobec zużycia z poprzedniego roku.",
+            "dzialanie": "Model bazowy E_ocz = 0,23·t + 0,48·HDD + 406 MWh/miesiąc przyjęty w 6.4; okresy porównywalne opisane w 6.5.",
+            "sprawdzenie": "Każdy raport monitorowania (9.1.1) podaje produkcję i stopniodnie obok zużycia; EnPI = E_rzecz / E_ocz."
+          },
+          "KTX-WT-13": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "N"
+          },
+          "KTX-ZT-05": {
+            "decyzja": "odrzucony",
+            "powod": "Ciepło pochodzi z własnej kotłowni gazowej 1 200 kW, wiek 18 lat. Wymiana źródła nie mieści się w progu SPBT 3 lat przyjętym przez zarząd — do ponownej oceny po 2027 r., razem z decyzją o PV."
+          },
+          "KTX-ZR-06": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "N"
+          },
+          "KTX-ZR-07": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "N"
+          },
+          "KTX-ZM-08": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "N"
+          },
+          "KTX-ZK-07": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "N"
+          },
+          "KTX-ZT-06": {
+            "decyzja": "potwierdzony",
+            "istotnosc": "N"
+          }
+        },
+        "klimat": {
+          "odp": "tak",
+          "uzas": "Upały wpływają na pracę i zużycie sprężarkowni oraz klimatyzacji hal, a trend utrzyma się w kolejnych latach; główny klient wymaga danych o śladzie węglowym dostaw. Podstawa: zużycie energii i temperatury 2023–2025, raport utrzymania ruchu o wyłączeniach sprężarek z lipca 2025 r., wymagania klienta dla dostawców. Ponowna ocena: luty 2027 r. lub wcześniej przy istotnej zmianie."
+        },
+        "prawo": {
+          "data": "2026-02-10",
+          "notatka": "Projekt nowelizacji ustawy o efektywności energetycznej (UC77) nadal w Radzie Ministrów — sprawdzone 10.02.2026 r. Obowiązki i warunki zwolnienia z audytu ustalać według przepisów obowiązujących w dniu analizy."
+        },
+        "swot": {
+          "S": "ISO 14001 od 2015 r. z działającym nadzorem nad dokumentami, audytami wewnętrznymi i przeglądem zarządzania · własne służby utrzymania ruchu · opomiarowanie głównych rozdzielni",
+          "W": "Tylko dwa liczniki główne · sprężarkownia bez sterowania nadrzędnego i bez kontroli szczelności · brak szkoleń energetycznych operatorów · brak wyodrębnionego budżetu",
+          "O": "PV na dachu hal — ok. 15 000 m², wstępnie do 1,5 MWp · odzysk ciepła ze sprężarek do ogrzewania hali A · nowa umowa na energię od 2027 r. · białe certyfikaty",
+          "T": "Utrata głównego klienta bez certyfikatu od 2027 r. · wzrost cen energii po wygaśnięciu umowy · upały a praca sprężarkowni · wiek infrastruktury"
+        },
+        "wnioski": [
+          {
+            "czynnik": "KTX-WT-02",
+            "znaczenie": "Bez pomiaru na poziomie obszarów nie wskażemy SEU ani nie rozliczymy poprawy — zużycie znamy z dwóch liczników głównych.",
+            "decyzja": "Ocenić, czy obliczenia i pomiary okresowe wystarczą do wskazania SEU; podliczniki tylko tam, gdzie nie wystarczą — wstępnie sprężarkownia i lakiernia.",
+            "dzialanie": "Przegląd energetyczny (6.3) z kampanią pomiarową 02–03.2026; plan zbierania danych (6.6); przepływomierz sprężonego powietrza w planie C4.",
+            "sprawdzenie": "Każdy obszar uznany za SEU ma w planie zbierania danych przypisane źródło danych, a wskaźnik S-1 liczy się z pomiaru, nie z szacunku."
+          },
+          {
+            "czynnik": "KTX-WT-05",
+            "znaczenie": "Sprężarkownia to 17,5% zużycia zakładu, a cztery sprężarki sterowane lokalnie pracują bez doboru do obciążenia.",
+            "decyzja": "Sprężarkownia pierwsza w kolejności działań; sterownik nadrzędny i napęd o zmiennej prędkości jako inwestycja na 2027 r.",
+            "dzialanie": "Cel Z1.1 i plan C1 (6.2): kampania pomiarowa, obniżenie ciśnienia, sterownik nadrzędny z napędem — INW/2027/04, 380 tys. zł.",
+            "sprawdzenie": "Wskaźnik S-1 z 0,125 na 0,110 kWh/Nm³ do 31.12.2027; dodanie sterownika i napędu opisane jako adnotacja przy linii bazowej."
+          },
+          {
+            "czynnik": "KTX-WT-06",
+            "znaczenie": "Przepływ w czasie postoju 9 Nm³/min to straty, których nikt nie mierzy ani nie rozlicza.",
+            "decyzja": "Wprowadzić kwartalny przegląd szczelności jako element kryteriów eksploatacji (8.1).",
+            "dzialanie": "Plan C1 (6.2): kampania pomiarowa z lokalizacją nieszczelności, usunięcie 35 nieszczelności, kwartalny przegląd — razem 25 tys. zł.",
+            "sprawdzenie": "Cel Z1.2: przepływ w czasie postoju z 9 na 4 Nm³/min do 30.06.2027, mierzony przy wyłączonej produkcji."
+          },
+          {
+            "czynnik": "KTX-WF-02",
+            "znaczenie": "2,5% kosztów operacyjnych przy marży branżowej rzędu kilku procent znaczy więcej niż sam procent.",
+            "decyzja": "Cele energetyczne mają wysoki priorytet w planie na 2026 r.",
+            "dzialanie": "Cel nadrzędny: obniżenie kosztów energii o 8% do 2028 r. (6.2), rozpisany na cele Z1–Z3.",
+            "sprawdzenie": "Roczne zestawienie kosztów energii wobec 2025 r. (8,5 mln zł) na przeglądzie zarządzania (9.3)."
+          },
+          {
+            "czynnik": "KTX-WF-03",
+            "znaczenie": "Bez wyodrębnionego budżetu działania energetyczne konkurują z inwestycjami produkcyjnymi i przepadają.",
+            "decyzja": "Budżet na efektywność w 2026 r. do 500 tys. zł; kolejność działań według SPBT przy progu 3 lat.",
+            "dzialanie": "W 2026 r. działania nisko- i średniokosztowe: szczelność, ciśnienie, LED w hali B; sterownik i PV do projektu budżetu na 2027 r.",
+            "sprawdzenie": "Wykonanie budżetu i SPBT osiągnięty wobec założonego — pozycja w planach działań (6.2) i na przeglądzie zarządzania (9.3)."
+          },
+          {
+            "czynnik": "KTX-ZM-02",
+            "znaczenie": "Cena stała obowiązuje do 31.12.2026; każde 100 zł/MWh na nowej umowie to ok. 850 tys. zł rocznie.",
+            "decyzja": "Ryzyko kosztowe do rejestru (6.1); profil zużycia przeanalizowany przed negocjacjami.",
+            "dzialanie": "Dział Zakupów przygotowuje analizę profilu do IX 2026 r.; wynik wchodzi do postępowania na 2027 r.",
+            "sprawdzenie": "Analiza profilu załączona do postępowania; cena z nowej umowy zestawiona z założeniem budżetowym."
+          },
+          {
+            "czynnik": "KTX-ZM-03",
+            "znaczenie": "Główny klient daje 45% przychodów i od 2026 r. żąda danych o energii i śladzie węglowym, a od 2027 r. certyfikatu ISO 50001.",
+            "decyzja": "Wdrożenie i certyfikacja do XII 2026 r.; zakres danych dobrany do brzmienia wymagania klienta, nie szerzej.",
+            "dzialanie": "Harmonogram wdrożenia; wpis do rejestru stron (F-EnMS-02, punkt 4.2) i do planu zbierania danych (6.6).",
+            "sprawdzenie": "Certyfikat wydany do XII 2026 r.; pierwszy roczny zestaw danych przyjęty przez klienta bez uwag."
+          },
+          {
+            "czynnik": "KTX-ZK-03",
+            "znaczenie": "W lipcu 2025 r. przy temperaturze powyżej 32 °C dwie sprężarki wyłączały się z przegrzania, a klimatyzacja hal pracowała bez przerwy.",
+            "decyzja": "Temperatura jako zmienna istotna do sprawdzenia; ryzyko przegrzewania sprężarkowni do rejestru; kryterium temperaturowe przy zakupie sprężarki.",
+            "dzialanie": "Rejestr ryzyk F-EnMS-07 (6.1); sprawdzenie zmiennych w 6.3 i 6.4; kryterium w wymaganiach zakupowych (8.3).",
+            "sprawdzenie": "Model zużycia uwzględnia temperaturę — różnica powyżej 5 °C między okresami wymaga adnotacji; w kolejnym lecie brak wyłączeń sprężarek."
+          },
+          {
+            "czynnik": "KTX-WO-12",
+            "znaczenie": "ISO 14001 działa od 2015 r. — nadzór nad dokumentami, audity wewnętrzne i przegląd zarządzania już funkcjonują.",
+            "decyzja": "Rozbudowa istniejącego systemu z wykorzystaniem działających rozwiązań, zamiast budowania drugiego systemu obok.",
+            "dzialanie": "Granice EnMS takie same jak granice systemu środowiskowego (4.3); procesy opisane jako rozszerzenie procedur ISO 14001 (4.4, odpowiedź SYS-01 „nadbudowa”).",
+            "sprawdzenie": "W wykazie dokumentów (7.5) nie ma dwóch procedur na ten sam proces; audit wewnętrzny prowadzony jednym programem dla obu systemów (9.2)."
+          },
+          {
+            "czynnik": "KTX-ZK-09",
+            "znaczenie": "Łagodna zima albo chłodne lato zmieniają zużycie bez żadnej poprawy — porównanie samych MWh wprowadza w błąd.",
+            "decyzja": "Wskaźniki liczone wobec modelu ze stopniodniami i produkcją, nie wobec zużycia z poprzedniego roku.",
+            "dzialanie": "Model bazowy E_ocz = 0,23·t + 0,48·HDD + 406 MWh/miesiąc przyjęty w 6.4; okresy porównywalne opisane w 6.5.",
+            "sprawdzenie": "Każdy raport monitorowania (9.1.1) podaje produkcję i stopniodnie obok zużycia; EnPI = E_rzecz / E_ocz."
+          }
+        ]
+      }
+    },
+    "PYT": {
+      "FAKT_LOKALIZACJE": {
+        "pytanie": "Ile lokalizacji obejmie system zarządzania energią?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_LOKALIZACJE_LISTA": {
+        "pytanie": "Wymień lokalizacje",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_BRANZA": {
+        "pytanie": "Główna działalność zakładu",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_PRACOWNICY": {
+        "pytanie": "Liczba pracowników",
+        "typ": "number",
+        "jednostka": "osób",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZMIANY": {
+        "pytanie": "Ile zmian pracuje zakład?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SEZONOWOSC": {
+        "pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_PODMIOT": {
+        "pytanie": "Typ organizacji",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "prywatny": "prywatny",
+          "komunalny": "komunalny",
+          "publiczny": "publiczny"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_GRUPA_KAPITALOWA": {
+        "pytanie": "Czy organizacja należy do grupy kapitałowej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZWIAZKI": {
+        "pytanie": "Czy działają związki zawodowe lub rada pracowników?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY": {
+        "pytanie": "Czy organizacja ma wdrożony system zarządzania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Brak certyfikowanego systemu",
+          "iso_9001": "ISO 9001",
+          "iso_14001": "ISO 14001",
+          "oba": "ISO 9001 i ISO 14001",
+          "inny": "Inny system certyfikowany"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_SYSTEM_BAZOWY_ROK": {
+        "pytanie": "Od którego roku system jest certyfikowany?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S1"
+      },
+      "FAKT_ZGODA_INTEGRACJA": {
+        "pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak — rozszerzamy istniejącą dokumentację",
+          "nie": "Nie — tworzymy odrębny system",
+          "brak decyzji": "Decyzja jeszcze nie zapadła"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ENERGY_MANAGER": {
+        "pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "Nie wyznaczono nikogo",
+          "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków",
+          "tak": "Tak, z pisemnym zakresem obowiązków"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_UR_WLASNE": {
+        "pytanie": "Kto prowadzi utrzymanie ruchu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Własne służby utrzymania ruchu",
+          "zewnetrzne": "Firma zewnętrzna",
+          "mieszane": "Częściowo własne służby, część prac zlecana"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_INSTRUKCJE_EKSPL": {
+        "pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, dla wszystkich głównych urządzeń",
+          "czesciowo": "Dla części urządzeń",
+          "nie": "Nie ma"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ZAKUPY_KRYTERIA": {
+        "pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "zawsze": "Zawsze — to stałe kryterium zakupowe",
+          "czasami": "Czasami, przy większych zakupach",
+          "nie": "Nie — decyduje cena zakupu"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROTACJA": {
+        "pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "niska": "Niska — poniżej 5% rocznie",
+          "srednia": "Średnia — od 5 do 15% rocznie",
+          "wysoka": "Wysoka — powyżej 15% rocznie"
+        },
+        "sekcja": "S1"
+      },
+      "FAKT_ROK_ODNIESIENIA": {
+        "pytanie": "Za który rok podajesz dane?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_NOSNIKI": {
+        "pytanie": "Zużycie nośników energii w roku odniesienia",
+        "typ": "repeater",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "ZUZYCIE_TJ": {
+        "pytanie": "Roczne zużycie energii",
+        "typ": "auto",
+        "jednostka": "TJ",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_JEDN": {
+        "pytanie": "W czym mierzycie wielkość produkcji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "t": "tony wyrobu",
+          "szt": "sztuki wyrobu",
+          "m2": "metry kwadratowe",
+          "m3": "metry sześcienne",
+          "mwh": "MWh wyrobu (ciepło, chłód)",
+          "inna": "Inna jednostka"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_INNA": {
+        "pytanie": "Jaka jednostka?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA": {
+        "pytanie": "Wielkość produkcji w roku odniesienia",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRODUKCJA_POPRZ": {
+        "pytanie": "Wielkość produkcji w roku poprzednim",
+        "typ": "number",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD": {
+        "pytanie": "Stopniodni grzania (HDD) w roku odniesienia",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_HDD_POPRZ": {
+        "pytanie": "Stopniodni grzania w roku poprzednim",
+        "typ": "number",
+        "jednostka": "°C·dzień",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_PRZYCHOD": {
+        "pytanie": "Przychód ze sprzedaży w roku odniesienia",
+        "typ": "number",
+        "jednostka": "mln zł",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_UDZIAL_ENERGII": {
+        "pytanie": "Jaki procent kosztów operacyjnych stanowi energia?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_UMOWNA": {
+        "pytanie": "Moc umowna energii elektrycznej",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_MOC_OGRANICZONA": {
+        "pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_WYGASA": {
+        "pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_UMOWA_DATA": {
+        "pytanie": "Data wygaśnięcia umowy",
+        "typ": "date",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BUDZET": {
+        "pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_PBT_PROG": {
+        "pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE": {
+        "pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_INWESTYCJE_OPIS": {
+        "pytanie": "Jakie?",
+        "typ": "text",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S2"
+      },
+      "FAKT_BIALE_MOZLIWE": {
+        "pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S2"
+      },
+      "FAKT_SPREZONE": {
+        "pytanie": "Czy zakład ma instalację sprężonego powietrza?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_LICZBA": {
+        "pytanie": "Ile jest sprężarek?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_MOC": {
+        "pytanie": "Łączna moc znamionowa sprężarek",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_VSD": {
+        "pytanie": "Ile sprężarek ma regulację obrotów (falownik)?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CA_STEROWNIK": {
+        "pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_SZCZELNOSC": {
+        "pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_ODZYSK": {
+        "pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CA_GODZINY": {
+        "pytanie": "Ile godzin w roku pracuje sprężarkownia?",
+        "typ": "number",
+        "jednostka": "h/rok",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT": {
+        "pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_LICZBA": {
+        "pytanie": "Ile jest central?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_ODZYSK": {
+        "pytanie": "Czy centrale mają odzysk ciepła?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wszystkie": "Wszystkie centrale mają odzysk",
+          "czesc": "Część central ma odzysk",
+          "zadna": "Żadna nie ma odzysku",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WENT_HARMONOGRAM": {
+        "pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, wszystkie",
+          "czesciowo": "Część central",
+          "nie": "Nie — pracują tak samo cały czas"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE": {
+        "pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_MOC": {
+        "pytanie": "Łączna moc chłodnicza",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_CHLODZENIE_WODNE": {
+        "pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_FGAZ": {
+        "pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_NAPEDY_VSD": {
+        "pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Żaden albo pojedyncze",
+          "czesc": "Mniej więcej połowa",
+          "wiekszosc": "Większość",
+          "nie wiem": "Nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_LED_UDZIAL": {
+        "pytanie": "Jaki procent oświetlenia stanowią źródła LED?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_OSW_STEROWANIE": {
+        "pytanie": "Jak sterowane jest oświetlenie hal?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "czujniki": "Czujniki ruchu albo natężenia światła",
+          "harmonogram": "Automatyczny harmonogram",
+          "recznie": "Ręcznie — włącznikiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_WIEK_INFRA": {
+        "pytanie": "Ile lat ma większość głównych urządzeń energetycznych?",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S3"
+      },
+      "FAKT_UDT": {
+        "pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S3"
+      },
+      "FAKT_KOTLOWNIA": {
+        "pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)",
+          "siec": "Wyłącznie z sieci ciepłowniczej",
+          "oba": "Z własnego źródła i z sieci ciepłowniczej",
+          "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWO": {
+        "pytanie": "Czym zasilane jest własne źródło ciepła?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "gaz ziemny": "gaz ziemny",
+          "olej": "olej",
+          "węgiel": "węgiel",
+          "biomasa": "biomasa",
+          "biogaz": "biogaz",
+          "pompa ciepła": "pompa ciepła",
+          "energia elektryczna": "energia elektryczna"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_PALIWA": {
+        "pytanie": "Czy ciepło pochodzi z paliw kopalnych?",
+        "typ": "auto",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_MOC": {
+        "pytanie": "Moc zainstalowana źródeł ciepła",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_KOTLOWNIA_WIEK": {
+        "pytanie": "Wiek najstarszego czynnego kotła",
+        "typ": "number",
+        "jednostka": "lat",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_MOC_ZAMOWIONA": {
+        "pytanie": "Zamówiona moc cieplna z sieci",
+        "typ": "number",
+        "jednostka": "kW",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PROCESY": {
+        "pytanie": "Które procesy zużywają najwięcej energii?",
+        "typ": "multi",
+        "jednostka": "",
+        "etykiety": {
+          "piece i nagrzewnice": "piece i nagrzewnice",
+          "suszarnie": "suszarnie",
+          "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki",
+          "prasy": "prasy",
+          "malarnia": "malarnia",
+          "galwanizernia": "galwanizernia",
+          "pompy procesowe": "pompy procesowe",
+          "chłodzenie procesu": "chłodzenie procesu",
+          "inne": "inne"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CIEPLO_ODPADOWE": {
+        "pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_ODZYSK_CIEPLA": {
+        "pytanie": "Czy to ciepło jest odzyskiwane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, w całości albo prawie w całości",
+          "czesciowo": "Częściowo",
+          "nie": "Nie jest odzyskiwane"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PROCES_BEZ_ALTERNATYWY": {
+        "pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV": {
+        "pytanie": "Czy zakład ma instalację fotowoltaiczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "Tak, działa",
+          "nie": "Nie",
+          "w planach": "W planach albo w budowie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_PV_MOC": {
+        "pytanie": "Moc instalacji fotowoltaicznej",
+        "typ": "number",
+        "jednostka": "kWp",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_BESS": {
+        "pytanie": "Czy zakład ma magazyn energii?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_BESS_POJ": {
+        "pytanie": "Pojemność magazynu",
+        "typ": "number",
+        "jednostka": "kWh",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_CHP": {
+        "pytanie": "Czy zakład ma kogenerację?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_CHP_MOC": {
+        "pytanie": "Moc elektryczna kogeneracji",
+        "typ": "number",
+        "jednostka": "kWe",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA": {
+        "pytanie": "Czy w zakresie systemu jest flota pojazdów?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S4"
+      },
+      "FAKT_FLOTA_LICZBA": {
+        "pytanie": "Liczba pojazdów",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S4"
+      },
+      "FAKT_PODLICZNIKI": {
+        "pytanie": "Jak opomiarowana jest energia elektryczna?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "brak": "Tylko licznik główny",
+          "czesciowo": "Podliczniki na części obiektów lub wydziałów",
+          "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_PODLICZNIKI_LICZBA": {
+        "pytanie": "Ile jest podliczników?",
+        "typ": "number",
+        "jednostka": "szt.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_ODCZYT": {
+        "pytanie": "Jak odczytywane są liczniki?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "recznie": "Ręcznie, spisywane z liczników",
+          "zdalnie": "Zdalnie, automatycznie do systemu",
+          "mieszane": "Część ręcznie, część zdalnie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA": {
+        "pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_SCADA_ZAKRES": {
+        "pytanie": "Jaki procent zużycia energii obejmuje?",
+        "typ": "number",
+        "jednostka": "%",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_DANE_HISTORIA": {
+        "pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?",
+        "typ": "number",
+        "jednostka": "mies.",
+        "etykiety": {},
+        "sekcja": "S5"
+      },
+      "FAKT_MES": {
+        "pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_ANALIZA_DANYCH": {
+        "pytanie": "Czy dane o zużyciu energii są analizowane?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "nie": "nie",
+          "okresowo": "okresowo",
+          "systematycznie": "systematycznie"
+        },
+        "sekcja": "S5"
+      },
+      "FAKT_AUDYT_ENERG": {
+        "pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_AUDYT_ROK": {
+        "pytanie": "W którym roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ETS": {
+        "pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD": {
+        "pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie",
+          "nie wiem": "nie wiem"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_CSRD_ROK": {
+        "pytanie": "Od którego roku?",
+        "typ": "year",
+        "jednostka": "",
+        "etykiety": {},
+        "sekcja": "S6"
+      },
+      "FAKT_ODBIORCY_CO2": {
+        "pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZETARGI": {
+        "pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      },
+      "FAKT_PRZERWY_POGODA": {
+        "pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?",
+        "typ": "select",
+        "jednostka": "",
+        "etykiety": {
+          "tak": "tak",
+          "nie": "nie"
+        },
+        "sekcja": "S6"
+      }
+    },
+    "ODP": {},
+    "DEC": {},
+    "WLASNE": [],
+    "STAN": {},
+    "WID": {},
+    "WYL": {},
+    "WNIOSKI": [],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ]
+  },
+  "example_literals": {
+    "WLASNE": [],
+    "DEC": {}
+  }
+}

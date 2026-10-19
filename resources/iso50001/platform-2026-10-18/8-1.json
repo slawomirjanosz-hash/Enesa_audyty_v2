@@ -1,0 +1,658 @@
+{
+  "source_file": "ENESA_8.1_Nadzor_operacyjny_platforma.html",
+  "source_sha256": "4dfd822f77110242990ffa34a0b4c6b1a6dcd0bfff96590d98366716b8444038",
+  "section": "8-1",
+  "data": {
+    "LISTA_81": [
+      {
+        "tekst": "Określono procesy związane ze znaczącymi użyciami energii i działaniami z planów, które wymagają kryteriów.",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "tekst": "Ustalono kryteria tam, gdzie ich brak może prowadzić do znaczącego odchylenia — w tym dla eksploatacji i utrzymania.",
+        "podstawa": "N",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Kryteria przekazano osobom, które ich używają, także wykonawcom.",
+        "podstawa": "N",
+        "auto": "przekazano"
+      },
+      {
+        "tekst": "Procesy prowadzi się zgodnie z kryteriami — opisano tryby pracy i sposób sterowania.",
+        "podstawa": "N",
+        "auto": "zgodnie"
+      },
+      {
+        "tekst": "Zachowano zapisy w zakresie potrzebnym do pewności, że procesy przebiegały zgodnie z planem.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Nadzorowane są zmiany planowane; skutki zmian niezamierzonych są przeglądane i ograniczane.",
+        "podstawa": "N",
+        "auto": "zmiany"
+      },
+      {
+        "tekst": "Nadzorowane są zlecone na zewnątrz znaczące użycia energii i procesy z nimi związane (np. serwis).",
+        "podstawa": "N",
+        "auto": "zlecone"
+      },
+      {
+        "tekst": "Kryteria wyprowadzono z potrzeb procesu i pomiarów.",
+        "podstawa": "M",
+        "auto": "zPotrzeb"
+      },
+      {
+        "tekst": "Odchylenie widać w ciągu dni; wiadomo, kto reaguje i w jakiej kolejności sprawdza.",
+        "podstawa": "M",
+        "auto": "reakcja"
+      }
+    ],
+    "przyklad": {
+      "KARTY": [
+        {
+          "seu": "Sprężarkownia — 4 sprężarki śrubowe, sterownik, osuszacz, sieć do hal i lakierni",
+          "lokalizacja": "Hala A, pomieszczenie A-05",
+          "zuzycie": "2 125 MWh (2025), 17,5% zużycia zakładu (III-20)",
+          "osoby": "Technicy UR (3 zmiany), kierownik UR, serwis zewnętrzny (przeglądy), Energy Manager",
+          "wskaznik": "S-1 kWh/Nm³: 0,125 → 0,110 do 12.2027 (Z1.1); S-2 przepływ w postoju: 9 → 4 Nm³/min do 06.2027 (Z1.2)",
+          "utworzono": "2026-06-15",
+          "aktualizacja": "2026-07-20",
+          "opracowal": "Kierownik UR z Janem Kowalskim (Energy Manager)",
+          "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+          "kryteria": [
+            {
+              "parametr": "Ciśnienie w sieci",
+              "potrzeba": "Najbardziej wymagające urządzenia lakierni: ok. 5,8 bar u odbiorcy (pomiar 02–03.2026)",
+              "straty": "Spadek w sieci w szczycie ok. 0,4 bar; zapas regulacji 0,1 bar",
+              "kryterium": "≤ 6,3 bar na wyjściu ze sprężarkowni",
+              "kontrola": "Ciągle — sterownik; tygodniowo — zestawienie"
+            },
+            {
+              "parametr": "Punkt rosy",
+              "potrzeba": "Wymaganie procesu lakierni — wg specyfikacji linii lakierniczej (DTR, wydanie 2/2019)",
+              "straty": "—",
+              "kryterium": "Wg wymagania lakierni — nie niżej, niż potrzeba",
+              "kontrola": "Odczyt osuszacza, tygodniowo"
+            },
+            {
+              "parametr": "Spadek ciśnienia na filtrach",
+              "potrzeba": "Wartość graniczna z dokumentacji producenta sprężarek — wymaganie techniczne, nie wybór zakładu",
+              "straty": "Rosnący spadek na filtrze podnosi ciśnienie wyjściowe potrzebne do utrzymania 5,8 bar u odbiorcy",
+              "kryterium": "Wymiana filtra po przekroczeniu wartości producenta",
+              "kontrola": "Odczyt przy obchodzie, tygodniowo"
+            },
+            {
+              "parametr": "Przepływ w postoju",
+              "potrzeba": "Brak odbioru w czasie postoju — każdy przepływ to wycieki (test weekendowy 12.01.2026)",
+              "straty": "—",
+              "kryterium": "≤ 6 Nm³/min (stan 06.2026); cel 4 Nm³/min (06.2027)",
+              "kontrola": "Test weekendowy, kwartalnie"
+            }
+          ],
+          "tryby": [
+            {
+              "tryb": "Produkcja (pon.–pt., 3 zmiany)",
+              "jak": "Sprężarki według kolejności ustalonej w sterowniku; ciśnienie ≤ 6,3 bar",
+              "uwagi": "Zmiana kolejności — tylko kierownik UR"
+            },
+            {
+              "tryb": "Postój (weekend, święta)",
+              "jak": "Jedna sprężarka tylko wtedy, gdy potrzebują jej odbiorcy w podtrzymaniu; w przeciwnym razie wyłączone",
+              "uwagi": "Decyzję o pracy w postoju zapisuje kierownik zmiany"
+            },
+            {
+              "tryb": "Po modernizacji (06.2027)",
+              "jak": "Obniżanie ciśnienia poza produkcją — wartość ustalona przed uruchomieniem",
+              "uwagi": "Aktualizacja kryteriów: kierownik UR, do 05.2027"
+            }
+          ],
+          "zmiany": {
+            "ktoZmienia": "Kierownik UR po uzgodnieniu z Energy Managerem; technik — tylko w trybie awaryjnym, z wpisem do rejestru i zgłoszeniem w ciągu zmiany.",
+            "wykonawcy": "Nastawy ciśnienia i kolejności pracy sprężarek zmienia się tylko za zgodą kierownika UR; protokół z przeglądu podaje nastawy przed i po; wykryte wycieki serwis zgłasza w protokole. Wprowadzone po zdarzeniu z czerwca 2026 r. — przywróceniu nastaw fabrycznych 7 bar po planowym przeglądzie.",
+            "planowane": "Modernizacja (sterownik nadrzędny i napęd o zmiennej prędkości, uruchomienie 06.2027) — kryteria aktualizowane przed uruchomieniem, odpowiada kierownik UR, termin 05.2027. Nowe odbiorniki — sprawdzenie potrzeby ciśnienia przed podłączeniem.",
+            "niezamierzone": "Zmiana wykryta w tygodniowym zestawieniu wskaźnika: przegląd skutków (o ile wzrosło zużycie i za jaki okres), przywrócenie kryterium w ciągu zmiany, usunięcie przyczyny. W czerwcu 2026 r. skutkiem był wzrost kWh/Nm³ widoczny w zestawieniu tygodniowym; przyczynę usunięto aneksem do zlecenia serwisowego.",
+            "zapisZmian": "Rejestr zmian nastaw przy panelu sprężarkowni: data, kto, z czego na co, dlaczego, zgoda."
+          },
+          "sygnaly": [
+            {
+              "sygnal": "Tygodniowy kWh/Nm³ (S-1)",
+              "prog": "> 0,122 (ok. 2,5% powyżej średniej 07–09.2026)",
+              "kolejnosc": "1) nastawa i rejestr zmian nastaw, 2) kolejność pracy sprężarek w sterowniku, 3) filtry i osuszacz, 4) wycieki — detektor ultradźwiękowy, 5) zmiana zapotrzebowania w produkcji",
+              "kto": "Technik UR",
+              "zglasza": "Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 5 dni roboczych",
+              "zapis": "Zestawienie tygodniowe z adnotacją"
+            },
+            {
+              "sygnal": "Ciśnienie w sieci",
+              "prog": "> 6,3 bar dłużej niż 1 h",
+              "kolejnosc": "1) nastawa w sterowniku i rejestr zmian, 2) praca sterownika i kolejność sprężarek",
+              "kto": "Technik UR",
+              "zglasza": "Kierownik UR",
+              "zapis": "Rejestr zmian nastaw"
+            },
+            {
+              "sygnal": "Przepływ w postoju (S-2)",
+              "prog": "> 6 Nm³/min",
+              "kolejnosc": "1) lokalizacja wycieków detektorem w obiegu hal, 2) złączki i szybkozłącza przy prasach, 3) zawory odcinające i ich stan, 4) osuszacz i odwodnienia",
+              "kto": "Utrzymanie ruchu",
+              "zglasza": "Kierownik UR; wynik do Energy Managera",
+              "zapis": "Protokół testu weekendowego, lista wycieków"
+            }
+          ],
+          "utrzymanie": [
+            {
+              "czynnosc": "Przegląd szczelności sieci — test w postoju i detektor ultradźwiękowy",
+              "czestotliwosc": "Kwartalnie (III-24, działanie 2 celu C1)",
+              "wykonuje": "Utrzymanie ruchu",
+              "zapis": "Protokół testu, lista wycieków"
+            },
+            {
+              "czynnosc": "Wymiana filtrów",
+              "czestotliwosc": "Po przekroczeniu spadku ciśnienia wg producenta albo według harmonogramu producenta — co nastąpi pierwsze",
+              "wykonuje": "Serwis zewnętrzny",
+              "zapis": "Protokół serwisu z nastawami przed i po"
+            },
+            {
+              "czynnosc": "Przegląd sprężarek",
+              "czestotliwosc": "Wg dokumentacji producenta (motogodziny)",
+              "wykonuje": "Serwis zewnętrzny",
+              "zapis": "Protokół serwisu z nastawami przed i po"
+            },
+            {
+              "czynnosc": "Czyszczenie chłodnic",
+              "czestotliwosc": "Wg instrukcji producenta i stanu — częściej latem",
+              "wykonuje": "Utrzymanie ruchu",
+              "zapis": "Karta obchodu"
+            }
+          ],
+          "przekazanie": [
+            {
+              "komu": "Technicy UR (3 zmiany)",
+              "wykonawca": false,
+              "jak": "Instrukcja I-SP-02 w koszulce przy panelu; szkolenie z serwisem",
+              "data": "2026-06-30",
+              "sprawdzenie": "„Pokaż — rozpoznaj — powiedz” przy sprężarkowni (III-28)"
+            },
+            {
+              "komu": "Kierownicy zmian produkcji",
+              "wykonawca": false,
+              "jak": "Informacja o trybie postoju na odprawie",
+              "data": "2026-06-30",
+              "sprawdzenie": "Rozmowa przy obchodzie"
+            },
+            {
+              "komu": "Serwis sprężarek",
+              "wykonawca": true,
+              "jak": "Zlecenie serwisowe — sekcja C (aneks do umowy z 28.04.2026)",
+              "data": "2026-07-20",
+              "sprawdzenie": "Protokół z nastawami przy kolejnym przeglądzie"
+            }
+          ]
+        },
+        {
+          "seu": "Lakiernia — piec gazowy i dwie kabiny",
+          "lokalizacja": "Hala C",
+          "zuzycie": "2 425 MWh (2025), 20,0% zużycia zakładu — gaz 2 000 MWh i energia elektryczna 425 MWh",
+          "osoby": "Operatorzy lakierni (3 zmiany), technolog lakierni, kierownik UR, serwis linii lakierniczej",
+          "wskaznik": "L-1 zużycie rzeczywiste / oczekiwane (model na powierzchni i stopniodniach): 1,000 → monitorowanie",
+          "utworzono": "2026-06-20",
+          "aktualizacja": "2026-09-30",
+          "opracowal": "Technolog lakierni z Energy Managerem",
+          "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+          "kryteria": [
+            {
+              "parametr": "Temperatura pieca",
+              "potrzeba": "Wymaganie technologii lakierowania dla stosowanego lakieru proszkowego — profil wygrzewania z karty technicznej lakieru",
+              "straty": "Straty przez otwarcia i wentylację — uwzględnione w profilu nagrzewania",
+              "kryterium": "Wg profilu z instrukcji I-LAK-01; bez podnoszenia nastawy „na zapas”",
+              "kontrola": "Ciągle — sterownik pieca; raport tygodniowy"
+            },
+            {
+              "parametr": "Harmonogram pracy pieca",
+              "potrzeba": "Piec musi być w temperaturze na początek zmiany; nagrzewanie trwa ok. 70 minut (pomiar 06.2026)",
+              "straty": "Nagrzewanie wcześniejsze niż potrzebne to zużycie bez produkcji",
+              "kryterium": "Start nagrzewania 70 minut przed pierwszym zleceniem zmiany, nie wcześniej; wyłączenie po ostatnim zleceniu",
+              "kontrola": "Harmonogram w sterowniku; sprawdzenie przy obchodzie"
+            },
+            {
+              "parametr": "Wentylacja kabin",
+              "potrzeba": "Wymaganie bezpieczeństwa i jakości powłoki w czasie natrysku i odparowania",
+              "straty": "Praca wentylacji po zakończeniu cyklu to zużycie bez efektu",
+              "kryterium": "Wentylacja pracuje w czasie cyklu i przez czas odparowania wg I-LAK-01; nie dłużej",
+              "kontrola": "Sterownik kabiny; obchód"
+            }
+          ],
+          "tryby": [
+            {
+              "tryb": "Produkcja (3 zmiany)",
+              "jak": "Piec w temperaturze wg profilu; kabiny według zleceń",
+              "uwagi": "Zmianę profilu uzgadnia technolog z Energy Managerem"
+            },
+            {
+              "tryb": "Przerwa między zleceniami dłuższa niż 2 h",
+              "jak": "Piec w trybie obniżonym wg I-LAK-01; wentylacja kabin wyłączona",
+              "uwagi": "Decyzję podejmuje operator, zapisuje w karcie zmiany"
+            },
+            {
+              "tryb": "Postój (weekend)",
+              "jak": "Piec i kabiny wyłączone",
+              "uwagi": "Ponowne nagrzewanie planowane na koniec postoju, nie na jego początek"
+            }
+          ],
+          "zmiany": {
+            "ktoZmienia": "Profil temperatur i harmonogram — technolog lakierni po uzgodnieniu z Energy Managerem. Operator nie zmienia nastaw; w razie problemu zgłasza technologowi.",
+            "wykonawcy": "Serwis linii lakierniczej: zmiana profilu albo parametrów sterownika tylko za zgodą technologa; protokół serwisu podaje parametry przed i po; wykryte nieszczelności komory i nieprawidłowości wentylacji serwis zgłasza w protokole.",
+            "planowane": "Zmiana lakieru albo asortymentu — technolog sprawdza, czy profil wygrzewania pozostaje właściwy, przed pierwszym zleceniem w nowej technologii. Montaż podlicznika gazu pieca (06.2026) — kryteria uzupełnione o kontrolę zużycia dziennego.",
+            "niezamierzone": "Odchylenie wskaźnika L-1: przegląd skutków w raporcie miesięcznym, sprawdzenie profilu w sterowniku wobec I-LAK-01, przywrócenie profilu i zapis przyczyny w karcie zmiany.",
+            "zapisZmian": "Rejestr zmian parametrów w karcie pieca (teczka techniczna UR) oraz adnotacja w raporcie tygodniowym."
+          },
+          "sygnaly": [
+            {
+              "sygnal": "Miesięczny wskaźnik L-1",
+              "prog": "> 1,03 (3% powyżej zużycia oczekiwanego z modelu)",
+              "kolejnosc": "1) profil temperatur w sterowniku wobec I-LAK-01, 2) harmonogram startu nagrzewania, 3) czas pracy wentylacji kabin, 4) szczelność komory i stan uszczelek, 5) zmiana asortymentu albo lakieru",
+              "kto": "Technolog lakierni",
+              "zglasza": "Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 10 dni",
+              "zapis": "Raport miesięczny z adnotacją"
+            },
+            {
+              "sygnal": "Dzienne zużycie gazu pieca",
+              "prog": "> 15% powyżej średniej dla porównywalnej liczby zleceń",
+              "kolejnosc": "1) godzina startu nagrzewania w sterowniku, 2) tryb obniżony w przerwach, 3) liczba i czas otwarć komory",
+              "kto": "Operator zgłasza, sprawdza technolog",
+              "zglasza": "Technolog; wynik do Energy Managera w raporcie miesięcznym",
+              "zapis": "Odczyt podlicznika w arkuszu EnMS"
+            }
+          ],
+          "utrzymanie": [
+            {
+              "czynnosc": "Sprawdzenie szczelności komory i stanu uszczelek",
+              "czestotliwosc": "Kwartalnie",
+              "wykonuje": "Utrzymanie ruchu",
+              "zapis": "Karta obchodu"
+            },
+            {
+              "czynnosc": "Sprawdzenie czujnika temperatury pieca",
+              "czestotliwosc": "Raz w roku",
+              "wykonuje": "Serwis linii lakierniczej",
+              "zapis": "Protokół serwisu z parametrami"
+            },
+            {
+              "czynnosc": "Czyszczenie filtrów wentylacji kabin",
+              "czestotliwosc": "Wg instrukcji producenta i wskazania spadku ciśnienia",
+              "wykonuje": "Utrzymanie ruchu",
+              "zapis": "Karta obchodu"
+            }
+          ],
+          "przekazanie": [
+            {
+              "komu": "Operatorzy lakierni (3 zmiany)",
+              "wykonawca": false,
+              "jak": "Instrukcja I-LAK-01 przy kabinie; instruktaż na stanowisku (plan F-EnMS-12, poz. 2)",
+              "data": "2026-09-30",
+              "sprawdzenie": "Obserwacja przy pracy — start nagrzewania i wyłączanie wentylacji"
+            },
+            {
+              "komu": "Serwis linii lakierniczej",
+              "wykonawca": true,
+              "jak": "Zlecenie serwisowe — wymagania jak w sekcji C",
+              "data": "2026-08-10",
+              "sprawdzenie": "Protokół z parametrami przy kolejnym przeglądzie"
+            }
+          ]
+        }
+      ],
+      "META": {
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "data": "2026-07-20",
+        "przeglad": "Przed każdą planowaną zmianą instalacji, przy podłączeniu nowego odbiornika, przy corocznej aktualizacji przeglądu energetycznego oraz po każdym odchyleniu nieusuniętym w terminie z części D"
+      }
+    }
+  },
+  "variables": {
+    "LISTA_81": [
+      {
+        "tekst": "Określono procesy związane ze znaczącymi użyciami energii i działaniami z planów, które wymagają kryteriów.",
+        "podstawa": "N",
+        "auto": "procesy"
+      },
+      {
+        "tekst": "Ustalono kryteria tam, gdzie ich brak może prowadzić do znaczącego odchylenia — w tym dla eksploatacji i utrzymania.",
+        "podstawa": "N",
+        "auto": "kryteria"
+      },
+      {
+        "tekst": "Kryteria przekazano osobom, które ich używają, także wykonawcom.",
+        "podstawa": "N",
+        "auto": "przekazano"
+      },
+      {
+        "tekst": "Procesy prowadzi się zgodnie z kryteriami — opisano tryby pracy i sposób sterowania.",
+        "podstawa": "N",
+        "auto": "zgodnie"
+      },
+      {
+        "tekst": "Zachowano zapisy w zakresie potrzebnym do pewności, że procesy przebiegały zgodnie z planem.",
+        "podstawa": "N",
+        "auto": "zapisy"
+      },
+      {
+        "tekst": "Nadzorowane są zmiany planowane; skutki zmian niezamierzonych są przeglądane i ograniczane.",
+        "podstawa": "N",
+        "auto": "zmiany"
+      },
+      {
+        "tekst": "Nadzorowane są zlecone na zewnątrz znaczące użycia energii i procesy z nimi związane (np. serwis).",
+        "podstawa": "N",
+        "auto": "zlecone"
+      },
+      {
+        "tekst": "Kryteria wyprowadzono z potrzeb procesu i pomiarów.",
+        "podstawa": "M",
+        "auto": "zPotrzeb"
+      },
+      {
+        "tekst": "Odchylenie widać w ciągu dni; wiadomo, kto reaguje i w jakiej kolejności sprawdza.",
+        "podstawa": "M",
+        "auto": "reakcja"
+      }
+    ],
+    "P_KARTY": [
+      {
+        "seu": "Sprężarkownia — 4 sprężarki śrubowe, sterownik, osuszacz, sieć do hal i lakierni",
+        "lokalizacja": "Hala A, pomieszczenie A-05",
+        "zuzycie": "2 125 MWh (2025), 17,5% zużycia zakładu (III-20)",
+        "osoby": "Technicy UR (3 zmiany), kierownik UR, serwis zewnętrzny (przeglądy), Energy Manager",
+        "wskaznik": "S-1 kWh/Nm³: 0,125 → 0,110 do 12.2027 (Z1.1); S-2 przepływ w postoju: 9 → 4 Nm³/min do 06.2027 (Z1.2)",
+        "utworzono": "2026-06-15",
+        "aktualizacja": "2026-07-20",
+        "opracowal": "Kierownik UR z Janem Kowalskim (Energy Manager)",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "kryteria": [
+          {
+            "parametr": "Ciśnienie w sieci",
+            "potrzeba": "Najbardziej wymagające urządzenia lakierni: ok. 5,8 bar u odbiorcy (pomiar 02–03.2026)",
+            "straty": "Spadek w sieci w szczycie ok. 0,4 bar; zapas regulacji 0,1 bar",
+            "kryterium": "≤ 6,3 bar na wyjściu ze sprężarkowni",
+            "kontrola": "Ciągle — sterownik; tygodniowo — zestawienie"
+          },
+          {
+            "parametr": "Punkt rosy",
+            "potrzeba": "Wymaganie procesu lakierni — wg specyfikacji linii lakierniczej (DTR, wydanie 2/2019)",
+            "straty": "—",
+            "kryterium": "Wg wymagania lakierni — nie niżej, niż potrzeba",
+            "kontrola": "Odczyt osuszacza, tygodniowo"
+          },
+          {
+            "parametr": "Spadek ciśnienia na filtrach",
+            "potrzeba": "Wartość graniczna z dokumentacji producenta sprężarek — wymaganie techniczne, nie wybór zakładu",
+            "straty": "Rosnący spadek na filtrze podnosi ciśnienie wyjściowe potrzebne do utrzymania 5,8 bar u odbiorcy",
+            "kryterium": "Wymiana filtra po przekroczeniu wartości producenta",
+            "kontrola": "Odczyt przy obchodzie, tygodniowo"
+          },
+          {
+            "parametr": "Przepływ w postoju",
+            "potrzeba": "Brak odbioru w czasie postoju — każdy przepływ to wycieki (test weekendowy 12.01.2026)",
+            "straty": "—",
+            "kryterium": "≤ 6 Nm³/min (stan 06.2026); cel 4 Nm³/min (06.2027)",
+            "kontrola": "Test weekendowy, kwartalnie"
+          }
+        ],
+        "tryby": [
+          {
+            "tryb": "Produkcja (pon.–pt., 3 zmiany)",
+            "jak": "Sprężarki według kolejności ustalonej w sterowniku; ciśnienie ≤ 6,3 bar",
+            "uwagi": "Zmiana kolejności — tylko kierownik UR"
+          },
+          {
+            "tryb": "Postój (weekend, święta)",
+            "jak": "Jedna sprężarka tylko wtedy, gdy potrzebują jej odbiorcy w podtrzymaniu; w przeciwnym razie wyłączone",
+            "uwagi": "Decyzję o pracy w postoju zapisuje kierownik zmiany"
+          },
+          {
+            "tryb": "Po modernizacji (06.2027)",
+            "jak": "Obniżanie ciśnienia poza produkcją — wartość ustalona przed uruchomieniem",
+            "uwagi": "Aktualizacja kryteriów: kierownik UR, do 05.2027"
+          }
+        ],
+        "zmiany": {
+          "ktoZmienia": "Kierownik UR po uzgodnieniu z Energy Managerem; technik — tylko w trybie awaryjnym, z wpisem do rejestru i zgłoszeniem w ciągu zmiany.",
+          "wykonawcy": "Nastawy ciśnienia i kolejności pracy sprężarek zmienia się tylko za zgodą kierownika UR; protokół z przeglądu podaje nastawy przed i po; wykryte wycieki serwis zgłasza w protokole. Wprowadzone po zdarzeniu z czerwca 2026 r. — przywróceniu nastaw fabrycznych 7 bar po planowym przeglądzie.",
+          "planowane": "Modernizacja (sterownik nadrzędny i napęd o zmiennej prędkości, uruchomienie 06.2027) — kryteria aktualizowane przed uruchomieniem, odpowiada kierownik UR, termin 05.2027. Nowe odbiorniki — sprawdzenie potrzeby ciśnienia przed podłączeniem.",
+          "niezamierzone": "Zmiana wykryta w tygodniowym zestawieniu wskaźnika: przegląd skutków (o ile wzrosło zużycie i za jaki okres), przywrócenie kryterium w ciągu zmiany, usunięcie przyczyny. W czerwcu 2026 r. skutkiem był wzrost kWh/Nm³ widoczny w zestawieniu tygodniowym; przyczynę usunięto aneksem do zlecenia serwisowego.",
+          "zapisZmian": "Rejestr zmian nastaw przy panelu sprężarkowni: data, kto, z czego na co, dlaczego, zgoda."
+        },
+        "sygnaly": [
+          {
+            "sygnal": "Tygodniowy kWh/Nm³ (S-1)",
+            "prog": "> 0,122 (ok. 2,5% powyżej średniej 07–09.2026)",
+            "kolejnosc": "1) nastawa i rejestr zmian nastaw, 2) kolejność pracy sprężarek w sterowniku, 3) filtry i osuszacz, 4) wycieki — detektor ultradźwiękowy, 5) zmiana zapotrzebowania w produkcji",
+            "kto": "Technik UR",
+            "zglasza": "Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 5 dni roboczych",
+            "zapis": "Zestawienie tygodniowe z adnotacją"
+          },
+          {
+            "sygnal": "Ciśnienie w sieci",
+            "prog": "> 6,3 bar dłużej niż 1 h",
+            "kolejnosc": "1) nastawa w sterowniku i rejestr zmian, 2) praca sterownika i kolejność sprężarek",
+            "kto": "Technik UR",
+            "zglasza": "Kierownik UR",
+            "zapis": "Rejestr zmian nastaw"
+          },
+          {
+            "sygnal": "Przepływ w postoju (S-2)",
+            "prog": "> 6 Nm³/min",
+            "kolejnosc": "1) lokalizacja wycieków detektorem w obiegu hal, 2) złączki i szybkozłącza przy prasach, 3) zawory odcinające i ich stan, 4) osuszacz i odwodnienia",
+            "kto": "Utrzymanie ruchu",
+            "zglasza": "Kierownik UR; wynik do Energy Managera",
+            "zapis": "Protokół testu weekendowego, lista wycieków"
+          }
+        ],
+        "utrzymanie": [
+          {
+            "czynnosc": "Przegląd szczelności sieci — test w postoju i detektor ultradźwiękowy",
+            "czestotliwosc": "Kwartalnie (III-24, działanie 2 celu C1)",
+            "wykonuje": "Utrzymanie ruchu",
+            "zapis": "Protokół testu, lista wycieków"
+          },
+          {
+            "czynnosc": "Wymiana filtrów",
+            "czestotliwosc": "Po przekroczeniu spadku ciśnienia wg producenta albo według harmonogramu producenta — co nastąpi pierwsze",
+            "wykonuje": "Serwis zewnętrzny",
+            "zapis": "Protokół serwisu z nastawami przed i po"
+          },
+          {
+            "czynnosc": "Przegląd sprężarek",
+            "czestotliwosc": "Wg dokumentacji producenta (motogodziny)",
+            "wykonuje": "Serwis zewnętrzny",
+            "zapis": "Protokół serwisu z nastawami przed i po"
+          },
+          {
+            "czynnosc": "Czyszczenie chłodnic",
+            "czestotliwosc": "Wg instrukcji producenta i stanu — częściej latem",
+            "wykonuje": "Utrzymanie ruchu",
+            "zapis": "Karta obchodu"
+          }
+        ],
+        "przekazanie": [
+          {
+            "komu": "Technicy UR (3 zmiany)",
+            "wykonawca": false,
+            "jak": "Instrukcja I-SP-02 w koszulce przy panelu; szkolenie z serwisem",
+            "data": "2026-06-30",
+            "sprawdzenie": "„Pokaż — rozpoznaj — powiedz” przy sprężarkowni (III-28)"
+          },
+          {
+            "komu": "Kierownicy zmian produkcji",
+            "wykonawca": false,
+            "jak": "Informacja o trybie postoju na odprawie",
+            "data": "2026-06-30",
+            "sprawdzenie": "Rozmowa przy obchodzie"
+          },
+          {
+            "komu": "Serwis sprężarek",
+            "wykonawca": true,
+            "jak": "Zlecenie serwisowe — sekcja C (aneks do umowy z 28.04.2026)",
+            "data": "2026-07-20",
+            "sprawdzenie": "Protokół z nastawami przy kolejnym przeglądzie"
+          }
+        ]
+      },
+      {
+        "seu": "Lakiernia — piec gazowy i dwie kabiny",
+        "lokalizacja": "Hala C",
+        "zuzycie": "2 425 MWh (2025), 20,0% zużycia zakładu — gaz 2 000 MWh i energia elektryczna 425 MWh",
+        "osoby": "Operatorzy lakierni (3 zmiany), technolog lakierni, kierownik UR, serwis linii lakierniczej",
+        "wskaznik": "L-1 zużycie rzeczywiste / oczekiwane (model na powierzchni i stopniodniach): 1,000 → monitorowanie",
+        "utworzono": "2026-06-20",
+        "aktualizacja": "2026-09-30",
+        "opracowal": "Technolog lakierni z Energy Managerem",
+        "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+        "kryteria": [
+          {
+            "parametr": "Temperatura pieca",
+            "potrzeba": "Wymaganie technologii lakierowania dla stosowanego lakieru proszkowego — profil wygrzewania z karty technicznej lakieru",
+            "straty": "Straty przez otwarcia i wentylację — uwzględnione w profilu nagrzewania",
+            "kryterium": "Wg profilu z instrukcji I-LAK-01; bez podnoszenia nastawy „na zapas”",
+            "kontrola": "Ciągle — sterownik pieca; raport tygodniowy"
+          },
+          {
+            "parametr": "Harmonogram pracy pieca",
+            "potrzeba": "Piec musi być w temperaturze na początek zmiany; nagrzewanie trwa ok. 70 minut (pomiar 06.2026)",
+            "straty": "Nagrzewanie wcześniejsze niż potrzebne to zużycie bez produkcji",
+            "kryterium": "Start nagrzewania 70 minut przed pierwszym zleceniem zmiany, nie wcześniej; wyłączenie po ostatnim zleceniu",
+            "kontrola": "Harmonogram w sterowniku; sprawdzenie przy obchodzie"
+          },
+          {
+            "parametr": "Wentylacja kabin",
+            "potrzeba": "Wymaganie bezpieczeństwa i jakości powłoki w czasie natrysku i odparowania",
+            "straty": "Praca wentylacji po zakończeniu cyklu to zużycie bez efektu",
+            "kryterium": "Wentylacja pracuje w czasie cyklu i przez czas odparowania wg I-LAK-01; nie dłużej",
+            "kontrola": "Sterownik kabiny; obchód"
+          }
+        ],
+        "tryby": [
+          {
+            "tryb": "Produkcja (3 zmiany)",
+            "jak": "Piec w temperaturze wg profilu; kabiny według zleceń",
+            "uwagi": "Zmianę profilu uzgadnia technolog z Energy Managerem"
+          },
+          {
+            "tryb": "Przerwa między zleceniami dłuższa niż 2 h",
+            "jak": "Piec w trybie obniżonym wg I-LAK-01; wentylacja kabin wyłączona",
+            "uwagi": "Decyzję podejmuje operator, zapisuje w karcie zmiany"
+          },
+          {
+            "tryb": "Postój (weekend)",
+            "jak": "Piec i kabiny wyłączone",
+            "uwagi": "Ponowne nagrzewanie planowane na koniec postoju, nie na jego początek"
+          }
+        ],
+        "zmiany": {
+          "ktoZmienia": "Profil temperatur i harmonogram — technolog lakierni po uzgodnieniu z Energy Managerem. Operator nie zmienia nastaw; w razie problemu zgłasza technologowi.",
+          "wykonawcy": "Serwis linii lakierniczej: zmiana profilu albo parametrów sterownika tylko za zgodą technologa; protokół serwisu podaje parametry przed i po; wykryte nieszczelności komory i nieprawidłowości wentylacji serwis zgłasza w protokole.",
+          "planowane": "Zmiana lakieru albo asortymentu — technolog sprawdza, czy profil wygrzewania pozostaje właściwy, przed pierwszym zleceniem w nowej technologii. Montaż podlicznika gazu pieca (06.2026) — kryteria uzupełnione o kontrolę zużycia dziennego.",
+          "niezamierzone": "Odchylenie wskaźnika L-1: przegląd skutków w raporcie miesięcznym, sprawdzenie profilu w sterowniku wobec I-LAK-01, przywrócenie profilu i zapis przyczyny w karcie zmiany.",
+          "zapisZmian": "Rejestr zmian parametrów w karcie pieca (teczka techniczna UR) oraz adnotacja w raporcie tygodniowym."
+        },
+        "sygnaly": [
+          {
+            "sygnal": "Miesięczny wskaźnik L-1",
+            "prog": "> 1,03 (3% powyżej zużycia oczekiwanego z modelu)",
+            "kolejnosc": "1) profil temperatur w sterowniku wobec I-LAK-01, 2) harmonogram startu nagrzewania, 3) czas pracy wentylacji kabin, 4) szczelność komory i stan uszczelek, 5) zmiana asortymentu albo lakieru",
+            "kto": "Technolog lakierni",
+            "zglasza": "Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 10 dni",
+            "zapis": "Raport miesięczny z adnotacją"
+          },
+          {
+            "sygnal": "Dzienne zużycie gazu pieca",
+            "prog": "> 15% powyżej średniej dla porównywalnej liczby zleceń",
+            "kolejnosc": "1) godzina startu nagrzewania w sterowniku, 2) tryb obniżony w przerwach, 3) liczba i czas otwarć komory",
+            "kto": "Operator zgłasza, sprawdza technolog",
+            "zglasza": "Technolog; wynik do Energy Managera w raporcie miesięcznym",
+            "zapis": "Odczyt podlicznika w arkuszu EnMS"
+          }
+        ],
+        "utrzymanie": [
+          {
+            "czynnosc": "Sprawdzenie szczelności komory i stanu uszczelek",
+            "czestotliwosc": "Kwartalnie",
+            "wykonuje": "Utrzymanie ruchu",
+            "zapis": "Karta obchodu"
+          },
+          {
+            "czynnosc": "Sprawdzenie czujnika temperatury pieca",
+            "czestotliwosc": "Raz w roku",
+            "wykonuje": "Serwis linii lakierniczej",
+            "zapis": "Protokół serwisu z parametrami"
+          },
+          {
+            "czynnosc": "Czyszczenie filtrów wentylacji kabin",
+            "czestotliwosc": "Wg instrukcji producenta i wskazania spadku ciśnienia",
+            "wykonuje": "Utrzymanie ruchu",
+            "zapis": "Karta obchodu"
+          }
+        ],
+        "przekazanie": [
+          {
+            "komu": "Operatorzy lakierni (3 zmiany)",
+            "wykonawca": false,
+            "jak": "Instrukcja I-LAK-01 przy kabinie; instruktaż na stanowisku (plan F-EnMS-12, poz. 2)",
+            "data": "2026-09-30",
+            "sprawdzenie": "Obserwacja przy pracy — start nagrzewania i wyłączanie wentylacji"
+          },
+          {
+            "komu": "Serwis linii lakierniczej",
+            "wykonawca": true,
+            "jak": "Zlecenie serwisowe — wymagania jak w sekcji C",
+            "data": "2026-08-10",
+            "sprawdzenie": "Protokół z parametrami przy kolejnym przeglądzie"
+          }
+        ]
+      }
+    ],
+    "P_META": {
+      "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu",
+      "data": "2026-07-20",
+      "przeglad": "Przed każdą planowaną zmianą instalacji, przy podłączeniu nowego odbiornika, przy corocznej aktualizacji przeglądu energetycznego oraz po każdym odchyleniu nieusuniętym w terminie z części D"
+    },
+    "WNIOSKI_PRZYKLAD": [
+      {
+        "znaczenie": "Znaczące użycie bez kryteriów eksploatacji zależy od tego, kto ma zmianę.",
+        "decyzja": "Kryteria eksploatacji ustalone dla sprężarkowni i lakierni razem z utrzymaniem ruchu, a nie narzucone zza biurka.",
+        "dzialanie": "Obniżone ciśnienie robocze zapisane jako kryterium; kwartalny przegląd szczelności; nadzór nad serwisem zewnętrznym wpisany do umowy.",
+        "sprawdzenie": "Odchylenie od kryterium widoczne w raporcie miesięcznym; ciśnienie nie wraca do wartości sprzed zmiany."
+      }
+    ],
+    "OGNIWA": [
+      "znaczenie",
+      "decyzja",
+      "dzialanie",
+      "sprawdzenie"
+    ],
+    "OGNIWA_PYT": [
+      [
+        "znaczenie",
+        "Co to znaczy dla systemu?"
+      ],
+      [
+        "decyzja",
+        "Co postanawiamy?"
+      ],
+      [
+        "dzialanie",
+        "Co konkretnie robimy?"
+      ],
+      [
+        "sprawdzenie",
+        "Po czym poznamy, że zadziałało?"
+      ]
+    ],
+    "KARTY": [],
+    "WNIOSKI": []
+  },
+  "example_literals": {}
+}
