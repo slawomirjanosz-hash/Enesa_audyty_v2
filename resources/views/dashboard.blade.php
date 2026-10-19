@@ -10,12 +10,6 @@
     @keyframes questionnaire-pulse { 0%,100% { box-shadow:0 0 0 1px #e5bd58; } 50% { box-shadow:0 0 0 4px #e5bd5880,0 4px 18px #e5bd5830; } }
     @media (prefers-reduced-motion:reduce) { .questionnaire-attention { animation:none;outline:2px solid #e5bd58; } }
     /* ── Page header ──────────────────────── */
-    .page-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        margin-bottom: 22px;
-    }
     .page-badge {
         display: inline-block;
         background: #E8F5E9;
@@ -319,10 +313,6 @@
     @media (max-width: 640px) {
         .stats-grid { grid-template-columns: 1fr; }
         .clients-grid { grid-template-columns: 1fr; }
-        .page-header { gap:14px; }
-        .page-header > div:last-child { width:100%; flex-wrap:wrap; }
-        .dashboard-search-box { order:3; width:100%; }
-        .dashboard-search-box input { width:100%; }
     }
 
     /* ── View toggle ──────────────────────── */
@@ -430,33 +420,22 @@
     }
     .table-btn-primary:hover { background: #153d2e; }
 
-    .dashboard-search-box { position:relative; }
-    .dashboard-search-box input { font-size:13px; padding:8px 12px 8px 34px; border-radius:7px; border:1px solid #D0CCC0; outline:none; width:300px; font-family:'Lato',sans-serif; }
-    .dashboard-search-box input:focus { border-color:var(--green); }
-    .dashboard-search-box i { position:absolute; left:10px; top:16px; color:#aaa; font-size:16px; }
-    .dashboard-search-result { min-height:15px; margin-top:4px; color:#777; font-size:11px; }
     .companies-table th { cursor:pointer; user-select:none; }
     .companies-table th:hover { color:#fff; }
     .sort-icon-dash { font-size:10px; opacity:.6; margin-left:3px; }
 </style>
+@include('partials.header-search-styles')
 @endpush
 
 @section('content')
 
 {{-- ══════ NAGŁÓWEK ══════ --}}
-<div class="page-header">
+<div class="app-search-header">
     <div>
         <span class="page-badge">{{ $auditsEnabled ? 'Widok audytora' : 'Widok kart klientów' }}</span>
         <h1 class="page-title">Klienci wymagający uwagi</h1>
     </div>
-    <div style="display:flex;gap:12px;align-items:center;">
-        <div class="dashboard-search-box">
-            <i class="ti ti-search"></i>
-            <input type="search" id="dashboard-company-search" autocomplete="off"
-                   placeholder="Szukaj: firma, oferta, zapytanie{{ $auditsEnabled ? ', audyt' : '' }}{{ $projectsEnabled ? ', projekt' : '' }}…"
-                   oninput="searchDashboardCompanies(this.value)">
-            <div id="dashboard-search-result" class="dashboard-search-result" aria-live="polite"></div>
-        </div>
+    <div class="app-search-toolbar">
         <div class="view-toggle">
             <button class="view-toggle-btn active" id="viewTilesBtn" onclick="switchView('tiles')" title="Widok kafelków">
                 <i class="ti ti-layout-grid"></i>
@@ -464,6 +443,14 @@
             <button class="view-toggle-btn" id="viewTableBtn" onclick="switchView('table')" title="Widok tabeli">
                 <i class="ti ti-table"></i>
             </button>
+        </div>
+        <div class="app-header-search">
+            <i class="ti ti-search" aria-hidden="true"></i>
+            <input type="search" id="dashboard-company-search" autocomplete="off"
+                   aria-label="Szukaj w dashboardzie"
+                   placeholder="Szukaj: firma, oferta, zapytanie{{ $auditsEnabled ? ', audyt' : '' }}{{ $projectsEnabled ? ', projekt' : '' }}…"
+                   oninput="searchDashboardCompanies(this.value)">
+            <div id="dashboard-search-result" class="app-header-search-result" aria-live="polite"></div>
         </div>
         <a href="#" class="btn-add" onclick="openModal()">
             <i class="ti ti-plus"></i>Dodaj firmę

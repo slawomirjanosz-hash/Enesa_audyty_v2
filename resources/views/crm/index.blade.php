@@ -3,6 +3,7 @@
 @section('page-title', 'CRM')
 
 @push('styles')
+@include('partials.header-search-styles')
 <style>
 .crm-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
 .crm-stat { background:#fff; border:1px solid #E5E1D8; border-radius:12px; padding:18px 20px; }
@@ -130,16 +131,16 @@
 @endphp
 
 {{-- HEADER --}}
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+<div class="app-search-header">
     <h1 style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:700;color:var(--green);margin:0;">
         <i class="ti ti-users"></i> CRM
     </h1>
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+    <div class="app-search-toolbar">
         @if($currentTab === 'pipeline')
-            <div class="pipeline-search-box">
+            <div class="app-header-search">
                 <i class="ti ti-search" aria-hidden="true"></i>
                 <input type="search" id="pipeline-search" autocomplete="off" aria-label="Szukaj w lejku sprzedaży" placeholder="Szukaj: szansa, firma, oferta, osoba…">
-                <div id="pipeline-search-result" class="pipeline-search-result" aria-live="polite"></div>
+                <div id="pipeline-search-result" class="app-header-search-result" aria-live="polite"></div>
             </div>
             <button onclick="document.getElementById('modal-opp').style.display='flex'" class="btn-primary">
                 <i class="ti ti-plus"></i> Nowa szansa
@@ -365,9 +366,6 @@
 
 {{-- ═══ TAB: PIPELINE ═══ --}}
 @if($currentTab === 'pipeline')
-<style>
-.pipeline-search-box{position:relative}.pipeline-search-box input{box-sizing:border-box;font-size:13px;padding:8px 12px 8px 34px;border-radius:7px;border:1px solid #D0CCC0;outline:none;width:300px;font-family:'Lato',sans-serif}.pipeline-search-box input:focus{border-color:var(--green)}.pipeline-search-box i{position:absolute;left:10px;top:16px;color:#aaa;font-size:16px}.pipeline-search-result{min-height:15px;margin-top:4px;color:#777;font-size:11px}@media(max-width:700px){.pipeline-search-box,.pipeline-search-box input{width:100%}}
-</style>
 <script type="module" src="{{ asset('js/crm-pipeline-search.js') }}?v=1"></script>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
     <div style="font-size:13px;color:#888;">
