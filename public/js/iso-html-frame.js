@@ -80,6 +80,7 @@
         send(name, capture());
     };
     if (config.section === 'intro') window.przekaz = id => {
+        if (!config.editable) return;
         const section = SCHEMA.sekcje.find(item => item.id === id);
         const missing = widoczne(section).filter(question => !pelna(question));
         if (missing.length) {
@@ -115,7 +116,7 @@
         question.addEventListener('input', () => { if (ODP[key] !== 'nie wiem') badge.remove(); });
         question.addEventListener('change', () => { if (ODP[key] !== 'nie wiem') badge.remove(); });
     });
-    if (config.section === 'intro' && !config.editable) document.querySelectorAll('#widok_ankieta input,#widok_ankieta select,#widok_ankieta textarea,#widok_ankieta .dodaj').forEach(control => { control.disabled = true; });
+    if (config.section === 'intro' && !config.editable) document.querySelectorAll('#widok_ankieta input,#widok_ankieta select,#widok_ankieta textarea,#widok_ankieta .dodaj,#widok_ankieta .sek .stopka button').forEach(control => { control.disabled = true; });
     if (config.section !== 'intro' && !config.preview) document.querySelectorAll('input[type="file"],[onclick*="plik"]').forEach(control => {
         control.disabled = true; control.title = 'Profil jest pobierany z aktualnych danych zakładu w platformie.';
     });
