@@ -1,0 +1,1485 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 10.1 Niezgodność i działanie korygujące</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 10</div>
+ <h1>10.1 Niezgodność i działanie korygujące</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 10.1</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 10.1</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>10.1 Niezgodność i działanie korygujące</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 10.1 i pięć kroków reakcji na niezgodność.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 10.1<br>Niezgodności</div>
+   <div>
+    <h4>10.1 Niezgodność i działanie korygujące</h4>
+    <p>Sprawa zamknięta, problem nie. Co jest niezgodnością. Pięć kroków reakcji.
+    „Gdzie jeszcze?”. Zamknięcie na dowodzie.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 10.1. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">10.1 — niezgodności<br>11 slajdów</div>
+   <div>
+    <h4>10.1 Niezgodność i działanie korygujące</h4>
+    <p>Zdarzenie a niezgodność. Korekcja a działanie korygujące. Przyczyna, którą da się
+    zmienić. Ile niezgodności to dobrze.</p>
+    <p style="font-size:12.5px">11 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Gdy wystąpi niezgodność, organizacja reaguje na nią i — w stosownych przypadkach
+ — podejmuje działania, żeby ją opanować i skorygować, oraz radzi sobie z jej konsekwencjami. Ocenia potrzebę
+ działań usuwających przyczynę niezgodności, żeby nie wystąpiła ponownie ani gdzie indziej: przez przegląd
+ niezgodności, ustalenie jej przyczyn oraz ustalenie, czy podobne niezgodności występują lub mogą wystąpić.
+ Wdraża potrzebne działania, przegląda ich skuteczność i w razie potrzeby wprowadza zmiany w systemie.
+ Działania korygujące są adekwatne do skutków niezgodności. Organizacja zachowuje udokumentowane informacje
+ jako dowód charakteru niezgodności i podjętych działań oraz wyników działań korygujących. Omówienie
+ na podstawie punktu 10.1 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> gdy nie spełniasz wymagania, opanuj
+ sytuację, ustal przyczynę, sprawdź, czy problem nie występuje gdzie indziej, usuń przyczynę w zakresie
+ adekwatnym do skutków — i upewnij się, że to zadziałało.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 10, punkt 10.1. Karta niezgodności: III-49;
+ przykład AutoParts: III-50; rejestr: III-51.</div>
+
+ <div class="ramka">
+  <h3>◧ Sprawa zamknięta. Problem nie</h3>
+  <p style="font-size:13.5px">Lipiec 2026 r. Jan Kowalski zamyka kartę niezgodności z czerwca — tę, w której
+  serwis po przeglądzie przywrócił w sprężarkowni 7 bar zamiast 6,3. Wszystko się zgadza: ciśnienie przywrócone
+  w dniu wykrycia, wskaźnik wrócił do około 0,120 kWh/Nm³, zlecenie dla serwisu ma trzy nowe zdania.
+  <b>Status: zamknięta.</b></p>
+  <p style="font-size:13.5px">We wrześniu audytorka wewnętrzna prosi o protokół z kolejnego przeglądu
+  sprężarki. Protokół jest na wzorze serwisu — <b>bez nastaw przed i po</b>. Nikt go nie sprawdził przy
+  odbiorze usługi.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Czy zamknięcie w lipcu było błędem? Kowalski sprawdził, czy
+  wróciło ciśnienie. Nie mógł sprawdzić, czy serwis stosuje nowe zasady — bo do następnego przeglądu nie było
+  czego sprawdzać. <b>Wykonanie działania to jeszcze nie dowód jego skuteczności.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Co jest niezgodnością, a co nie?</h3>
+ <p style="font-size:14.5px">Niezgodność to <b>niespełnienie wymagania</b>. Wymaganie może pochodzić z normy,
+ z przepisów, z umowy z klientem albo z tego, co ustaliliście sami: polityki, procedury, kryterium z punktu 8.1.
+ Protokół serwisu bez nastaw to niezgodność z wymaganiem, które AutoParts sama wpisała do zlecenia.</p>
+ <table class="tab">
+ <tr><th style="width:38%">Sytuacja</th><th>Czy to niezgodność?</th></tr>
+ <tr><td>Wyciek wykryty w kwartalnym przeglądzie szczelności i usunięty zgodnie z planem</td><td><b>Nie</b> — to system, który działa</td></tr>
+ <tr><td>Plan przewidywał przegląd szczelności, nikt go nie wykonał</td><td><b>Tak</b> — nie spełniono wymagania, które organizacja sama ustaliła</td></tr>
+ <tr><td>Nieosiągnięty cel energetyczny</td><td><b>Nie automatycznie.</b> Najpierw ocena przyczyn i decyzja. Jeśli wskaźnik wyniesie 0,113 zamiast 0,110 — ustalcie dlaczego: czy modernizację uruchomiono później, czy zmieniło się zapotrzebowanie, czy efekt był mniejszy, niż obiecywał dostawca. Niezgodność rozpoznacie wtedy, gdy stwierdzicie niespełnienie konkretnego wymagania, np. że plan działań nie był realizowany, a nikt o tym nie zdecydował</td></tr>
+ <tr><td>Awaria, wzrost wskaźnika</td><td><b>Wymaga oceny:</b> co się stało i czy nie spełniono jakiegoś wymagania</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Jak reagować? Pięć kroków</h3>
+ <table class="tab">
+ <tr><th style="width:8%">Krok</th><th>Co zrobić</th></tr>
+ <tr><td><b>1</b></td><td><b>Opanuj sytuację i skoryguj.</b> Usuń to, co wykryliście, i ogranicz skutki: przywróćcie nastawę, naprawcie urządzenie, uzupełnijcie brakujący zapis. <b>Ta korekcja usuwa niezgodność, ale nie jej przyczynę.</b></td></tr>
+ <tr><td><b>2</b></td><td><b>Ustal przyczynę.</b> Tu wiele firm zatrzymuje się na pierwszej odpowiedzi: „serwisant nie wiedział”, „operator zapomniał”. Pytajcie dalej, aż dojdziecie do czegoś, co możecie zmienić w systemie: brak informacji w zleceniu, brak sprawdzenia przy odbiorze, instrukcja, której nikt nie widzi.</td></tr>
+ <tr><td><b>3</b></td><td><b>Sprawdź, czy problem występuje gdzie indziej.</b> Przy innych urządzeniach, u innych wykonawców, w innych działach? <b>To pytanie łatwo pominąć — a norma wprost go wymaga.</b></td></tr>
+ <tr><td><b>4</b></td><td><b>Oceń, jakie działanie jest potrzebne — i wdróż je.</b> Zakres reakcji ma wynikać z przyczyny, skutków i możliwości powtórzenia. Literówka w nieużywanym formularzu nie potrzebuje tej samej analizy co nastawa, która kosztuje tysiące złotych miesięcznie. Dobre działanie usuwa przyczynę, ma właściciela i termin — i czasem zmienia sam system: procedurę, wzór dokumentu, sposób odbioru usług.</td></tr>
+ <tr><td><b>5</b></td><td><b>Sprawdź skuteczność.</b> Zamknijcie niezgodność, gdy dowody potwierdzają skuteczność działania. Jeśli problem powrócił lub dowody są niewystarczające — kontynuujcie analizę. <b>Termin sprawdzenia dobierzcie do problemu:</b> zmianę zasad dla serwisu da się sprawdzić dopiero przy następnym przeglądzie, nie po tygodniu.</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ <b>Rada:</b> do ustalania przyczyny przydają się proste metody: „5 × Dlaczego”
+ — pytacie „dlaczego?”, aż dojdziecie do przyczyny, którą możecie usunąć — albo diagram Ishikawy, który
+ porządkuje przyczyny w grupach (ludzie, metody, maszyny, materiały, otoczenie). <b>To narzędzia, nie wymagania
+ normy.</b> Przy prostych sprawach wystarczy jedno rzetelne „dlaczego”.</p>
+
+ <h3 style="margin-top:22px">„Przypomnieliśmy pracownikowi” — czy to działanie korygujące?</h3>
+ <p style="font-size:14.5px"><b>Rzadko.</b> Przypomnienie działa, dopóki ktoś pamięta, że ktoś przypominał.
+ Jeśli przyczyną był brak informacji, samo przypomnienie często usuwa objaw. Jeśli ma usunąć ustaloną
+ przyczynę, uzasadnijcie ten wybór i sprawdźcie skuteczność. <b>Działanie korygujące zmienia coś trwałego:</b>
+ instrukcję w miejscu pracy, wzór zlecenia, kalendarz terminów, sposób sprawdzania. Ludzie nadal mają
+ znaczenie — ale system nie powinien opierać się wyłącznie na ich pamięci.</p>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts: niezgodność z czerwca otwarta ponownie po audycie we wrześniu</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Działanie z lipca zostało wykonane, ale nie zadziałało w całości: zlecenie się zmieniło, a odbiór usługi — nie.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Kowalski otwiera kartę ponownie. Nowa przyczyna: serwis używa własnego wzoru protokołu, a w zakładzie nikt nie sprawdza protokołu przy odbiorze. Pytanie „gdzie jeszcze?”: zlecenie dla serwisu kotłowni też nie mówi nic o nastawach — a wskaźnik kotłowni (K-1 = 1,01) był w I półroczu o 1% powyżej linii bazowej.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Wzór protokołu z nastawami przed i po dla wszystkich wykonawców przy znaczących użyciach energii (sprężarki, kotłownia, automatyka lakierni); kierownik utrzymania ruchu sprawdza protokół przy odbiorze usługi — ta zasada trafia do procedury P-EnMS-06. <b>To zmiana systemu, nie tylko jednego zlecenia.</b></td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Planowany przegląd kotłowni przed sezonem grzewczym i następny przegląd sprężarek: protokoły z nastawami, podpis kierownika UR przy odbiorze. <b>Karta pozostaje otwarta do tego czasu.</b></td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Ile niezgodności to dobrze?</h3>
+ <p style="font-size:14.5px"><b>Nie oceniajcie systemu liczbą niezgodności.</b> Sprawdzajcie, czy problemy są
+ wykrywane, analizowane i skutecznie usuwane. Zero otwartych niezgodności może oznaczać, że organizacja
+ skutecznie je zamknęła. Dziesięć otwartych może oznaczać, że wykrywa dużo — albo że niczego nie kończy.
+ <b>Liczba sama niczego nie rozstrzyga.</b></p>
+
+ <div class="ramka">
+  <h3>✓ Co zadziałało: „wcześniej łataliśmy dziury, teraz naprawiamy dach”</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Producent napojów, około 280 pracowników. Audyty wewnętrzne
+  co kwartał znajdowały podobne problemy: nieaktualne zapisy, nowi pracownicy bez instruktażu, przekroczone
+  terminy kalibracji. Działania korygujące były, a problemy wracały. Konsultant poprosił o działania z ostatniego
+  roku — większość brzmiała: <b>„przypomnieć pracownikom”, „zwrócić uwagę”, „przeprowadzić rozmowę”</b>.
+  Analiza zatrzymywała się na pierwszym „dlaczego”. Zmiana podejścia: przy niezgodnościach, które wracają
+  lub mają duże skutki — analiza do poziomu, który da się zmienić w systemie; przypomnienie traktowane jako
+  korekcja, nie działanie korygujące; pytanie „gdzie jeszcze?” przy każdej karcie; termin sprawdzenia dobrany
+  do problemu. Przykład: brak zapisu z kalibracji miernika. Dawniej „przypomnieć technikowi”. Teraz: terminy
+  kalibracji w kalendarzu z automatycznym przypomnieniem dwa tygodnie wcześniej i punkt na cotygodniowej
+  odprawie. Przy okazji sprawdzono wszystkie przyrządy — <b>w dwóch innych też minął termin</b>. Po roku
+  z dwunastu niezgodności, które wcześniej wracały, powtórzyły się trzy. <b>Działanie korygujące musi zmienić
+  coś, co zostanie, gdy ludzie zapomną.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Przyczyna: „błąd ludzki”</td><td>Pytajcie dalej: dlaczego człowiek mógł popełnić ten błąd? Co w systemie na to pozwoliło?</td></tr>
+ <tr><td>Działanie: „przypomnieć pracownikowi”</td><td>Traktujcie to jako korekcję; zmieńcie coś trwałego</td></tr>
+ <tr><td>Zamknięcie po wykonaniu działania</td><td>Zamknijcie po dowodzie skuteczności; dobierzcie termin sprawdzenia do problemu</td></tr>
+ <tr><td>Brak pytania „gdzie jeszcze?”</td><td>Sprawdźcie inne urządzenia, wykonawców, działy</td></tr>
+ <tr><td>Każdy nieosiągnięty cel to niezgodność</td><td>Najpierw oceńcie przyczyny i podejmijcie decyzję; niezgodność — gdy nie spełniono wymagania</td></tr>
+ <tr><td>Ta sama rozbudowana analiza dla każdej sprawy</td><td>Dopasujcie zakres do skutków i ryzyka powtórzenia</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Niezgodność to informacja, że nie spełniacie wymagania.
+  <b>Działanie bez weryfikacji skuteczności to nadzieja, nie zarządzanie.</b><br><br>
+  <b>Zadanie:</b> weźcie ostatnią zamkniętą niezgodność i sprawdźcie, na podstawie jakiego dowodu ją
+  zamknięto — wykonania działania czy jego skutku. Ankieta pilnuje tego sama: porównuje datę sprawdzenia
+  z terminem, w którym dowód mógł w ogóle powstać.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma wycenia nadwyżkę zużycia, wykrywa przyczyny kończące się na „błędzie ludzkim”
+  i przypomnienia udające działania korygujące — a karty nie pozwala zamknąć przed terminem, w którym dowód
+  skuteczności mógł powstać.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 10.1 w formacie stron 4.1–9.3.</b> Strona o jednym zdaniu: <b>wykonanie działania
+to jeszcze nie dowód jego skuteczności</b>. Cała reszta — karta w sześciu częściach, rejestr, metody analizy
+przyczyn — służy temu, żeby to zdanie dało się sprawdzić. I da się: platforma porównuje datę sprawdzenia
+z terminem, w którym dowód mógł powstać, i wyłapuje dokładnie błąd z lipca 2026 r.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 10, punkt 10.1</td><td>Scena „sprawa zamknięta, problem nie” z lipcowym zamknięciem i wrześniowym protokołem, akapit „co jest niezgodnością, a co nie” wraz z trzema przypadkami (wyciek usunięty zgodnie z planem, niewykonany przegląd, nieosiągnięty cel 0,113 zamiast 0,110), pięć kroków reakcji, rada o metodach analizy przyczyn, akapit „przypomnieliśmy pracownikowi”, przykład w czterech ogniwach z pytaniem „gdzie jeszcze?” i kotłownią, akapit „ile niezgodności to dobrze”, lista samosprawdzająca, tabela sześciu błędów, przykład ilustracyjny producenta napojów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 8 — III-49 (F-EnMS-21)</td><td>Karta w sześciu częściach: A identyfikacja (źródło, niespełnione wymaganie, opis, dowód, opcjonalna klasyfikacja), B korekcja i konsekwencje, C przyczyna (metoda, przebieg, ustalona przyczyna), D podobne przypadki, E ocena potrzeby działania wraz z tabelą działań i pytaniem o zmianę w systemie, F skuteczność z <b>dowodem planowanym</b> i trzema decyzjami zamknięcia. Zdanie z nagłówka: zakres wypełnienia dopasowuje się do skutków niezgodności.</td></tr>
+<tr><td>Część III, Moduł 8 — III-50</td><td>Przykład NK-2026-01: daty 22.06.2026 i ponowne otwarcie 18.09.2026, nastawa 7,0 bar, S-1 0,120 → 0,125, nadwyżka około 1,6 MWh (około 1 400 zł), dwie analizy „5 × Dlaczego”, przyczyna systemowa, sprawdzenie zleceń trzech wykonawców, trzy działania, zmiana P-EnMS-06, planowany dowód skuteczności z trzech przeglądów oraz zapis o pierwszym zamknięciu z 20.07.2026, które <b>potwierdzało korekcję, nie działanie</b>.</td></tr>
+<tr><td>Część III, Moduł 8 — III-51 (F-EnMS-22)</td><td>Dziewięć kolumn rejestru i cztery stany: O otwarta, W działanie w toku, S czeka na sprawdzenie skuteczności, Z zamknięta. Zasada: w rejestrze są <b>tylko</b> niezgodności; możliwości doskonalenia prowadzi się w planie doskonalenia. Przykład NK-2026-01 i NK-2026-02.</td></tr>
+<tr><td>Część III, Moduł 8 — III-54</td><td>Lista kontrolna sekcji 10.1: 8 pozycji — sześć wymagań normy i dwa zalecenia metodyki.</td></tr>
+<tr><td>Część III, Moduł 8 — III-55, pkt 4.1</td><td>Kroki 1–6 procedury P-EnMS-08: ocena, czy zdarzenie jest niezgodnością; wpis do rejestru i założenie karty; reakcja kierownika obszaru; ocena potrzeby działania z metodą dobraną do skutków i pytaniem o podobne przypadki; wdrożenie i zmiana systemu; <b>ustalenie dowodu skuteczności i terminu jego zebrania przy planowaniu działania</b>.</td></tr>
+</table>
+<div class="warn"><b>Sprawdzenie liczby z przykładu.</b> 1,6 MWh × 890 zł/MWh = 1 424 zł — III-50 podaje
+„około 1 400 zł”. Platforma liczy to z nadwyżki i ceny energii z zakładki 1, więc liczba w karcie zawsze
+odpowiada przyjętej cenie. Przy zmianie ceny energii w ustawieniach wycena wszystkich kart przelicza się sama
+— i to jest właściwe zachowanie, bo koszt niezgodności zależy od ceny, a nie od tego, co ktoś kiedyś wpisał.</div>
+<div class="note"><b>Co w przykładzie jest nasze.</b> NK-2026-01 pochodzi w całości z III-50; rozwinęliśmy
+brzmienie pól do pełnych zdań i dopisaliśmy <b>uzasadnienie zakresu działania</b> (część E), którego III-50
+nie zawiera jako osobnej pozycji. NK-2026-02 jest w III-51 jednym wierszem rejestru — <b>całą kartę
+zbudowaliśmy my</b>, z danych oceny zgodności (III-42) i rejestru wymagań (III-04): przyczyna, sprawdzenie
+pozostałych terminów w rejestrze, dwa działania i planowany dowód. Rozbicie działania „termin w kalendarzu,
+przypomnienie EM 14 dni wcześniej” na dwie pozycje jest nasze. <b>Przy publikacji wymaga potwierdzenia:</b>
+cała część C i D karty NK-2026-02 oraz stwierdzenie, że wiersze 1 i 8 rejestru wykonano w terminie bez
+mechanizmu, który to zapewniał.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>niezgodnosc</code></td><td>id, audyt_id, nr, data_wykrycia, <b>data_ponownego_otwarcia</b>, zrodlo ENUM, wymaganie, opis, dowod, klasyfikacja, korekcja, korekcja_kto, konsekwencje, <b>nadwyzka_mwh</b>, skala_skutkow ENUM, metoda ENUM, przebieg_analizy, przyczyna, podobne_sprawdzono, podobne_znalezione BOOL, uzasadnienie_zakresu, zakres_dzialania ENUM, zmiana_systemu BOOL, zmiana_opis, <b>dowod_planowany</b>, <b>termin_dowodu DATE</b>, data_sprawdzenia DATE, wynik_sprawdzenia, decyzja ENUM, sprawdzil.</td></tr>
+<tr><td><code>dzialanie_korygujace</code></td><td>id, niezgodnosc_id, tresc, odpowiedzialny, termin, wykonano. Pole <code>wykonano</code> jest dziś tekstem, bo III-50 wpisuje tam „W toku” — przy wdrożeniu rozdzielić na <code>status ENUM</code> i <code>data_wykonania DATE</code>.</td></tr>
+<tr><td><code>stan</code> (wyliczany)</td><td><b>Nie jest przechowywany.</b> O / W / S / Z wynika z danych: Z gdy decyzja zamknięcia i jest wynik sprawdzenia; S gdy wszystkie działania wykonane i jest planowany dowód; W gdy są działania; inaczej O. Dzięki temu stan nie może się rozjechać z treścią karty — a w rejestrach prowadzonych w arkuszu rozjeżdża się zawsze.</td></tr>
+<tr><td>Powiązania</td><td><code>zrodlo</code> powinno wskazywać <b>konkretny rekord</b>: ustalenie audytu (9.2), odchylenie (9.1.1), pozycję oceny zgodności (9.1.2) albo zgłoszenie (7.4). Dziś to ENUM.</td></tr>
+</table>
+
+<h2>Liczenie i stany</h2>
+<table>
+<tr><th style="width:30%">Wielkość</th><th>Wzór i uwagi dla implementacji</th></tr>
+<tr><td>Koszt nadwyżki zużycia</td><td><code>nadwyzka_mwh × cena_energii</code>. Pokazywane z podstawionymi liczbami przy polu konsekwencji.</td></tr>
+<tr><td>Dni otwarcia</td><td>Od daty wykrycia do daty sprawdzenia (karta zamknięta) albo do dnia dzisiejszego. Chip przy karcie w rejestrze.</td></tr>
+<tr><td><b>Zamknięcie przedwczesne</b></td><td><code>data_sprawdzenia &lt; termin_dowodu</code> przy decyzji „zamknąć”. Komunikat podaje, o ile dni za wcześnie. <b>To najważniejsza reguła tej strony</b> — i jedyna, która potrafi wykryć błąd z lipca 2026 r. zanim się powtórzy.</td></tr>
+<tr><td>Stan rejestru</td><td>Wyliczany, nie wpisywany — patrz model danych.</td></tr>
+<tr><td>Miara, która mówi najwięcej</td><td><b>Liczba kart otwartych ponownie.</b> Tabela miar w zakładce 1 stawia ją na czwartym miejscu, a pod tabelą platforma mówi dlaczego: powtórzona niezgodność znaczy, że działanie usunęło objaw, nie przyczynę. Liczba niezgodności jest w tej tabeli pierwsza, ale opatrzona zdaniem, że sama niczego nie rozstrzyga.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Zamknięcie przed terminem dowodu</b></td><td>Ostrzeżenie z liczbą dni, chip „zamknięta przedwcześnie” w przeglądzie części karty, pozycja w braki() i blokada kompletności karty. Komunikat nazywa rzecz po imieniu: <b>sprawdzono, czy wróciło ciśnienie — czyli potwierdzono korekcję, nie działanie.</b> W bloku konsultanta dodaje, że to brak w procedurze, nie zarzut wobec osoby sprawdzającej: termin dowodu trzeba ustalać przy planowaniu działania, nie szukać go przy zamykaniu.</td></tr>
+<tr><td><b>Brak planowanego dowodu skuteczności</b></td><td>Są działania, ale nie ustalono, co będzie dowodem i kiedy da się go zebrać → ostrzeżenie. To ten moment, w którym karta zamyka się później na pierwszym dostępnym dowodzie — zwykle na potwierdzeniu korekcji. P-EnMS-08 wymaga ustalenia tego <b>przy planowaniu działania</b>.</td></tr>
+<tr><td><b>Przyczyna: „błąd ludzki”</b></td><td>Wyrażenie wykrywa w polu <b>ustalonej przyczyny</b> formy „błąd ludzki”, „nieuwaga”, „zapomniał”, „nie wiedział”, „przeoczył”, „niedopatrzenie”, „brak uwagi”, „pomyłka pracownika”, „wina operatora” → ostrzeżenie z dwoma pytaniami z książki i liczbą z przykładu producenta napojów (z dwunastu powracających zostały trzy).<br><br><b>Uwaga dla implementacji:</b> reguła działa <b>tylko na polu przyczyny</b>, nigdy na przebiegu analizy. W przebiegu zdanie „Nie wiedział, że 6,3 bar to kryterium” jest <b>poprawnym krokiem</b> na drodze do przyczyny — tak wygląda analiza „5 × Dlaczego” w III-50. Gdyby reguła objęła oba pola, zapalałaby się na prawidłowo przeprowadzonej analizie. Wzorzec dopuszcza też do dwóch słów po „nie” (klasą <code>[^\s.;,]+</code>, nie <code>\w+</code> — polskie litery).</td></tr>
+<tr><td><b>Tylko przypomnienie jako działanie</b></td><td>Wszystkie działania pasują do wzorca „przypomnieć / zwrócić uwagę / rozmowa z / pouczyć / omówić na odprawie” <b>i</b> nie ma zmiany w systemie → ostrzeżenie. Dwuczłonowy warunek jest konieczny: w karcie NK-2026-02 jedno z dwóch działań to przypomnienie 14 dni przed terminem — i jest <b>sensowne</b>, bo drugim działaniem jest kalendarz terminów, czyli zmiana trwała. Pojedyncze działanie będące przypomnieniem dostaje tylko informacyjny chip, nie ostrzeżenie.</td></tr>
+<tr><td><b>Brak pytania „gdzie jeszcze?”</b></td><td>Puste pole „co sprawdzono” w części D → ostrzeżenie. Komunikat dodaje, że to <b>jedyne wymaganie normy w tym punkcie, które da się pominąć, nie zauważając tego</b> — nie zostawia śladu w karcie, bo nie ma rubryki, która świeciłaby pustką.</td></tr>
+<tr><td><b>Podobne przypadki bez rozszerzenia zakresu</b></td><td>W części D znaleziono podobne przypadki, a zakres działania to „tylko w miejscu wykrycia” → ostrzeżenie: norma każe ocenić potrzebę działań, żeby niezgodność nie wystąpiła ponownie <b>ani gdzie indziej</b>. Propozycja: albo rozszerzyć zakres, albo uzasadnić, dlaczego pozostałe przypadki nie wymagają działania. Blok konsultanta dodaje, że zwykle nie chodzi o niewiedzę, a o budżet albo czas — i lepiej to zapisać niż zostawić jako przeoczenie.</td></tr>
+<tr><td>Zdarzenie bez niespełnionego wymagania</td><td>Opis wypełniony, pole wymagania puste → ostrzeżenie: <b>niezgodność to niespełnienie wymagania, nic więcej.</b> Komunikat wskazuje, gdzie taki zapis należy: odchylenie do 9.1.1, możliwość doskonalenia do 10.2. To reguła przeciw błędowi „każdy nieosiągnięty cel to niezgodność”.</td></tr>
+<tr><td>Metoda nieadekwatna do skutków</td><td>Skala skutków „duże” i metoda „jedno dlaczego” → nota, nie ostrzeżenie. Platforma nie może orzekać, ile analizy wystarczy, ale może zapytać. Odwrotnego kierunku <b>nie sprawdzamy</b>: rozbudowana analiza małej sprawy jest marnowaniem czasu, nie błędem systemowym.</td></tr>
+<tr><td>Decyzja „zamknąć bez działania” przy wpisanych działaniach</td><td>Ostrzeżenie: albo usunąć działania, albo zmienić decyzję — inaczej z karty nie wynika, co postanowiono.</td></tr>
+<tr><td>Decyzja „kontynuować”</td><td>Nota, <b>nie ostrzeżenie</b>: to pełnoprawny wynik sprawdzenia, nie porażka. Ponowne otwarcie karty po audycie oznacza, że sprawdzanie skuteczności działa. Nota kieruje z powrotem do części C po nową przyczynę i do części D po pytanie „gdzie jeszcze?” — bo tak zrobiono w AutoParts.</td></tr>
+<tr><td>Żadna karta nie zmienia systemu</td><td>Nota w bloku konsultanta: przy pojedynczej sprawie normalne, przy kilku oznacza zwykle, że analiza zatrzymuje się przed poziomem, na którym da się coś zmienić.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-54 — sekcja 10.1</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Na niezgodności reaguje się: opanowanie, korekcja, zajęcie się konsekwencjami.</td><td class='mono'>N</td><td><code>reakcja</code></td></tr><tr><td>Ocenia się potrzebę działania korygującego: przegląd niezgodności, przyczyny, podobne przypadki gdzie indziej.</td><td class='mono'>N</td><td><code>ocenaPotrzeby</code></td></tr><tr><td>Potrzebne działania są wdrażane i adekwatne do skutków niezgodności.</td><td class='mono'>N</td><td><code>wdrozenie</code></td></tr><tr><td>Przegląda się skuteczność działań korygujących.</td><td class='mono'>N</td><td><code>przegladSkutecznosci</code></td></tr><tr><td>W razie potrzeby wprowadza się zmiany w systemie.</td><td class='mono'>N</td><td><code>zmianySystemu</code></td></tr><tr><td>Zachowano zapisy o charakterze niezgodności, działaniach i wynikach działań korygujących.</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Przy podjętym działaniu korygującym niezgodność zamyka się na dowodzie skuteczności, nie na wykonaniu działania.</td><td class='mono'>M</td><td><code>zamkniecie</code></td></tr><tr><td>Prowadzony jest rejestr (F-EnMS-22) i karty (F-EnMS-21); stosowana jest metoda analizy przyczyn.</td><td class='mono'>M</td><td><code>narzedzia</code></td></tr></table>
+<div class="note">Pozycja o zamykaniu na dowodzie skuteczności zwraca <b>„nie dotyczy”</b>, gdy żadna karta
+nie jest jeszcze zamknięta — i tak jest w przykładzie AutoParts, gdzie obie karty czekają na dowody.
+<b>To poprawny stan systemu w pierwszym roku</b>, a nie luka: niezgodność z czerwca da się zamknąć najwcześniej
+po przeglądzie kotłowni w październiku, a tę z września — po raporcie dla banku w czerwcu 2027 r. Pozycja
+zapala się na zielono dopiero wtedy, gdy jakaś karta została zamknięta <b>i</b> żadna nie została zamknięta
+przedwcześnie.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Części A i B</td><td>Wypełnia osoba, która wykryła niezgodność, oraz <b>kierownik obszaru</b> — korekcja i konsekwencje są jego odpowiedzialnością według P-EnMS-08.</td></tr>
+<tr><td>Części C, D i E</td><td>Kierownik obszaru z Energy Managerem. Analiza przyczyn prowadzona samodzielnie przez osobę odpowiedzialną za obszar rzadko dochodzi do przyczyny systemowej — i to jest argument za udziałem kogoś z zewnątrz obszaru, nie za nieufnością.</td></tr>
+<tr><td>Część F</td><td><b>Energy Manager</b> — on zamyka niezgodność, gdy dowody potwierdzają skuteczność. W platformie warto to wymusić uprawnieniem: osoba odpowiedzialna za działanie nie powinna móc sama potwierdzić jego skuteczności.</td></tr>
+<tr><td>Zakładka 6 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok liczy karty z przyczyną kończącą się na człowieku, karty z samym przypomnieniem, karty bez pytania „gdzie jeszcze?”, karty zamknięte przedwcześnie i karty bez planowanego dowodu. Przy przyczynach „ludzkich” formułuje to jako mechanizm, nie zarzut: <b>dopóki przyczyną jest „zapomniał”, działaniem będzie „przypomnieć” — i niezgodność wróci.</b></td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-NKR-01</code> — rejestr niezgodności i karty działań korygujących</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-21 (załącznik III-49; przykład III-50) i F-EnMS-22 (załącznik III-51)</td></tr>
+<tr><td>Status w normie</td><td><b>Dwa wymagania dokumentacyjne:</b> dowód charakteru niezgodności i podjętych działań oraz wyniki działań korygujących. Forma karty i rejestru, metody analizy przyczyn oraz podział na niezgodności duże i małe są zaleceniami metodyki. W wykazie z punktu 7.5 pozycja pojawia się jako Z i N (10.1).</td></tr>
+<tr><td>Rytm</td><td>Karta zakładana przy każdej niezgodności; rejestr przeglądany w rytmie oceny skuteczności systemu (w AutoParts co kwartał) i przed przeglądem zarządzania.</td></tr>
+<tr><td>Wyzwalacze</td><td>Ustalenie audytu wewnętrznego lub zewnętrznego, znaczące odchylenie ujawniające niespełnienie wymagania (9.1.1), brak zgodności z oceny zgodności (9.1.2), zgłoszenie pracownika (7.4), niewykonane działanie z planu.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>8.1 Nadzór operacyjny</td><td><b>Wejście i wyjście, najściślejsze.</b> Niespełnione wymaganie w przykładzie to kryterium eksploatacji sprężarkowni wraz z sekcją C karty kryteriów (przekazanie wymagań wykonawcom). Działanie korygujące kończy się zmianą sposobu odbioru usług — czyli zmianą w 8.1.</td></tr>
+<tr><td>9.1.1 Monitorowanie</td><td><b>Wejście.</b> Źródłem NK-2026-01 jest tygodniowe zestawienie S-1. Kolumna „niezgodność? → 10.1” w tabeli odchyleń jest przejściem między punktami — i to ona decyduje, czy badanie odchylenia zamknie sprawę, czy ją otworzy.</td></tr>
+<tr><td>9.1.2 Ocena zgodności</td><td><b>Wejście.</b> Źródłem NK-2026-02 jest ocena zgodności z września. Każdy brak zgodności idzie tą ścieżką.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Wejście i sprawdzenie.</b> Audyt A-01/2026 otworzył kartę NK-2026-01 ponownie; skuteczność działania oceni <b>następny audyt sprężarkowni</b> (pozycja 3 programu, III kw. 2027). Dlatego termin tej pozycji programu jest po uruchomieniu modernizacji.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Wyjście.</b> Trendy niezgodności i działań korygujących to wymagana pozycja danych wejściowych przeglądu. Decyzja z 29.09.2026 o nadzorze nad serwisem jest odpowiedzią wprost na tę kartę.</td></tr>
+<tr><td>10.2 Ciągłe doskonalenie</td><td><b>Wyjście.</b> Analiza niezgodności jest jednym ze stałych źródeł możliwości poprawy. Zmiany w systemie z tej karty — wzór protokołu i zasady odbioru usług — są pozycją 1 planu doskonalenia.</td></tr>
+<tr><td>7.4 Komunikacja</td><td><b>Wejście.</b> Zgłoszenie pracownika jest jednym ze źródeł niezgodności; rejestr zgłoszeń z 7.4 i rejestr niezgodności to dwa różne rejestry — w tym są tylko niespełnienia wymagania.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Termin dowodu jako termin pilnowany</b></td><td>Dziś platforma porównuje dwie daty przy zamykaniu karty. Powinna <b>pilnować terminu dowodu aktywnie</b>: gdy nadejdzie, przypomnieć osobie sprawdzającej, że można zebrać dowód — i gdy minie bez wyniku sprawdzenia, oznaczyć kartę jako zaległą. To dziesiąte wystąpienie potrzeby generycznego mechanizmu terminów (6.5, 7.2, 7.4, 7.5, 8.2, 8.3, 9.1.1, 9.1.2, 9.3, 10.1), ale <b>pierwsze, w którym termin ma dwie strony</b>: nie wolno sprawdzać przed nim, nie wolno zapomnieć po nim.</td></tr>
+<tr><td><b>Pole „wykonano” rozdzielić na status i datę</b></td><td>III-50 wpisuje w tę kolumnę „W toku”, więc makieta traktuje ją jako tekst i rozpoznaje niewykonanie wzorcem. Przy wdrożeniu: <code>status ENUM('planowane','w_toku','wykonane')</code> plus <code>data_wykonania</code>. Od tego zależy wyliczany stan karty w rejestrze — a stan rejestru jest tym, co widzi zarząd.</td></tr>
+<tr><td>Źródło jako klucz obcy</td><td>Dziś ENUM. Powinno wskazywać konkretne ustalenie audytu, odchylenie, pozycję oceny zgodności albo zgłoszenie. Wtedy przy ustaleniu audytu widać kartę, a przy karcie — ustalenie; dziś związek istnieje tylko w treści pól. Dotyczy to także <b>ponownego otwarcia</b>: NK-2026-01 otworzył konkretny audyt i warto to zapisać kluczem, nie datą w nawiasie.</td></tr>
+<tr><td><b>Powiązanie zmiany systemu z dokumentem</b></td><td>Pole „jaka zmiana” jest tekstem wskazującym P-EnMS-06 i wzór protokołu. Powinno wskazywać <b>konkretny dokument w wykazie z 7.5</b> i jego wersję. Wtedy platforma odpowie na pytanie, które audytor zadaje przy sprawdzaniu skuteczności: <b>czy procedura rzeczywiście się zmieniła, i kiedy.</b></td></tr>
+<tr><td>Podobne przypadki jako lista pozycji</td><td>Część D jest jednym polem tekstowym. Przy wdrożeniu lepiej lista: obszar albo wykonawca, wynik sprawdzenia, czy objęty działaniem. Wtedy reguła o rozszerzeniu zakresu przestaje opierać się na jednym polu wyboru i wskazuje <b>konkretne pominięte miejsca</b> — w przykładzie byłyby to kotłownia i automatyka lakierni.</td></tr>
+<tr><td>Zamykanie przez osobę niezależną</td><td>P-EnMS-08 daje zamykanie Energy Managerowi, a działania należą do kierowników obszarów. Platforma powinna to wymusić uprawnieniem: <b>odpowiedzialny za działanie nie potwierdza jego skuteczności.</b> To ta sama zasada, która w 9.2 oddziela audytora od audytowanego obszaru.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 10.1 wraz z kartami NK-2026-01 i NK-2026-02.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_101&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Na niezgodności reaguje się: opanowanie, korekcja, zajęcie się konsekwencjami.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;reakcja&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ocenia się potrzebę działania korygującego: przegląd niezgodności, przyczyny, podobne przypadki gdzie indziej.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;ocenaPotrzeby&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Potrzebne działania są wdrażane i adekwatne do skutków niezgodności.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wdrozenie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Przegląda się skuteczność działań korygujących.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;przegladSkutecznosci&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;W razie potrzeby wprowadza się zmiany w systemie.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zmianySystemu&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano zapisy o charakterze niezgodności, działaniach i wynikach działań korygujących.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Przy podjętym działaniu korygującym niezgodność zamyka się na dowodzie skuteczności, nie na wykonaniu działania.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;zamkniecie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Prowadzony jest rejestr (F-EnMS-22) i karty (F-EnMS-21); stosowana jest metoda analizy przyczyn.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;narzedzia&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;KARTY&quot;: [
+   {
+    &quot;nr&quot;: &quot;NK-2026-01&quot;,
+    &quot;dataWykrycia&quot;: &quot;2026-06-22&quot;,
+    &quot;ponownieOtwarta&quot;: &quot;2026-09-18&quot;,
+    &quot;zrodlo&quot;: &quot;monitorowanie&quot;,
+    &quot;wymaganie&quot;: &quot;Wymaganie organizacji — kryterium sprężarkowni: ciśnienie w sieci nie wyżej niż 6,3 bar, zmiany nastaw tylko za zgodą kierownika utrzymania ruchu (III-35, punkt 8.1). Od 07.2026 także: protokół serwisu z nastawami przed i po.&quot;,
+    &quot;opis&quot;: &quot;Serwis po przeglądzie sprężarki z 15.06.2026 przywrócił nastawę fabryczną 7,0 bar zamiast kryterialnych 6,3 bar. We wrześniu 2026 r. audyt wewnętrzny wykazał, że protokół z kolejnego przeglądu sprężarki jest na wzorze serwisu — bez nastaw przed i po — i że nikt nie sprawdza protokołu przy odbiorze usługi.&quot;,
+    &quot;dowod&quot;: &quot;S-1 około 0,120 → około 0,125 kWh/Nm³ w tygodniu przeglądu, przy produkcji i temperaturze jak tydzień wcześniej; nastawa 7,0 bar odczytana ze sterownika; protokół serwisu z 15.06.2026. We wrześniu: protokół z przeglądu sprężarki na wzorze serwisu, bez nastaw (audyt A-01/2026, ustalenie N-1).&quot;,
+    &quot;klasyfikacja&quot;: &quot;Niestosowana — AutoParts nie dzieli niezgodności na duże i małe w audytach wewnętrznych&quot;,
+    &quot;korekcja&quot;: &quot;Przywrócenie nastawy 6,3 bar w dniu wykrycia; wpis w rejestrze zmian nastaw sprężarkowni.&quot;,
+    &quot;korekcjaKto&quot;: &quot;Kierownik utrzymania ruchu, 22.06.2026&quot;,
+    &quot;konsekwencje&quot;: &quot;Około tygodnia pracy sprężarkowni przy 7,0 bar zamiast 6,3 bar. Nadwyżka zużycia ponad wartość oczekiwaną przy spełnionym kryterium — poniżej. Bez skutków dla produkcji i bez skutków dla zgodności z wymaganiami prawnymi; wpływ na wskaźnik S-1 odnotowany w raporcie monitorowania.&quot;,
+    &quot;nadwyzkaMWh&quot;: &quot;1,6&quot;,
+    &quot;skalaSkutkow&quot;: &quot;srednie&quot;,
+    &quot;metoda&quot;: &quot;5x&quot;,
+    &quot;przebieg&quot;: &quot;Analiza 1 (07.2026): Dlaczego 7 bar? Serwis przywrócił nastawy fabryczne. Dlaczego? Nie wiedział, że 6,3 bar to kryterium. Dlaczego? Zlecenie serwisowe nie zawierało kryteriów ani zasad zmiany nastaw.\nAnaliza 2 (09.2026): Dlaczego protokół bez nastaw? Serwis używa własnego wzoru. Dlaczego nikt tego nie zauważył? Odbiór usługi nie obejmował sprawdzenia protokołu. Dlaczego? Procedura P-EnMS-06 nie określała, jak odbiera się usługi przy znaczących użyciach energii.&quot;,
+    &quot;przyczyna&quot;: &quot;Brak zasad odbioru usług wykonawców przy znaczących użyciach energii — samo zlecenie nie wystarcza, jeśli nikt nie sprawdza jego wykonania.&quot;,
+    &quot;podobneSprawdzono&quot;: &quot;Przejrzano zlecenia wszystkich wykonawców pracujących przy znaczących użyciach energii: serwis kotłowni — brak jakichkolwiek wymagań co do nastaw (wskaźnik K-1 = 1,01 w I półroczu, czyli 1% powyżej linii bazowej); automatyka lakierni — brak wymagań; serwis sprężarek — wymagania są, wprowadzone w 07.2026.&quot;,
+    &quot;podobneZnalezione&quot;: &quot;tak&quot;,
+    &quot;uzasadnienieZakres&quot;: &quot;Przyczyna jest systemowa i dotyczy wszystkich wykonawców przy znaczących użyciach energii, nie tylko serwisu sprężarek. Skutki jednostkowego zdarzenia są umiarkowane (około 1 400 zł), ale ryzyko powtórzenia występuje przy każdym przeglądzie u trzech wykonawców, a przy kotłowni wskaźnik już jest powyżej linii bazowej. Działanie obejmuje wszystkich trzech wykonawców oraz zmianę procedury odbioru usług.&quot;,
+    &quot;zakresDzialania&quot;: &quot;szerszy&quot;,
+    &quot;dzialania&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Trzy zdania w zleceniu dla serwisu sprężarek: zgoda kierownika UR na zmianę nastaw, protokół z nastawami przed i po, zgłaszanie wykrytych wycieków.&quot;,
+      &quot;odp&quot;: &quot;Kierownik utrzymania ruchu&quot;,
+      &quot;data&quot;: &quot;07.2026&quot;,
+      &quot;wykonano&quot;: &quot;10.07.2026&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Wzór protokołu z nastawami przed i po dla wykonawców przy wszystkich znaczących użyciach energii: sprężarki, kotłownia, automatyka lakierni.&quot;,
+      &quot;odp&quot;: &quot;Kierownik utrzymania ruchu&quot;,
+      &quot;data&quot;: &quot;10.2026&quot;,
+      &quot;wykonano&quot;: &quot;W toku&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Sprawdzanie protokołu przy odbiorze usługi przy znaczącym użyciu energii — zmiana procedury P-EnMS-06, punkt 4.2.&quot;,
+      &quot;odp&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+      &quot;data&quot;: &quot;10.2026&quot;,
+      &quot;wykonano&quot;: &quot;W toku&quot;
+     }
+    ],
+    &quot;zmianaSystemu&quot;: &quot;tak&quot;,
+    &quot;zmianaOpis&quot;: &quot;Procedura P-EnMS-06 — zasady odbioru usług przy znaczących użyciach energii; wzór protokołu z nastawami dla wykonawców (załącznik do zlecenia).&quot;,
+    &quot;dowodPlanowany&quot;: &quot;Protokoły z nastawami przed i po, podpisane przy odbiorze przez kierownika utrzymania ruchu, z trzech przeglądów: kotłownia przed rozpoczęciem sezonu grzewczego (plan: 10.2026), następny przegląd sprężarek (11.2026) oraz najbliższy serwis automatyki lakierni (termin do ustalenia przez kierownika UR). Dodatkowo wskaźnik S-1 oceniony w porównywalnych warunkach w tygodniach przeglądów.&quot;,
+    &quot;terminDowodu&quot;: &quot;2026-10-31&quot;,
+    &quot;dataSprawdzenia&quot;: &quot;&quot;,
+    &quot;wynikSprawdzenia&quot;: &quot;&quot;,
+    &quot;decyzja&quot;: &quot;kontynuowac&quot;,
+    &quot;sprawdzil&quot;: &quot;Jan Kowalski — Energy Manager&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;NK-2026-02&quot;,
+    &quot;dataWykrycia&quot;: &quot;2026-09-18&quot;,
+    &quot;ponownieOtwarta&quot;: &quot;&quot;,
+    &quot;zrodlo&quot;: &quot;zgodnosc&quot;,
+    &quot;wymaganie&quot;: &quot;Wymaganie umowne — coroczne wskaźniki zużycia energii zakładu dla banku finansującego modernizację, termin 30 czerwca (rejestr III-04, wiersz 9; umowa kredytowa, załącznik ESG).&quot;,
+    &quot;opis&quot;: &quot;Raport z wskaźnikami zużycia energii za 2025 r. wysłano do banku 12.08.2026, czyli po terminie umownym 30.06.2026 — i dopiero po przypomnieniu ze strony banku.&quot;,
+    &quot;dowod&quot;: &quot;E-mail z raportem z 12.08.2026; brak korespondencji przed terminem; przypomnienie z banku z 05.08.2026. Ustalenie z oceny zgodności z 18.09.2026 (stan prawny na 15.09.2026).&quot;,
+    &quot;klasyfikacja&quot;: &quot;Niestosowana&quot;,
+    &quot;korekcja&quot;: &quot;Raport wysłany 12.08.2026 — obowiązek wykonany, z opóźnieniem. Bank potwierdził przyjęcie bez konsekwencji umownych.&quot;,
+    &quot;korekcjaKto&quot;: &quot;Kontroler finansowy, 12.08.2026&quot;,
+    &quot;konsekwencje&quot;: &quot;Bez skutków energetycznych i bez naruszenia warunków finansowania. Skutek reputacyjny: obowiązek wykonany po przypomnieniu strony zainteresowanej, nie z własnego kalendarza.&quot;,
+    &quot;nadwyzkaMWh&quot;: &quot;0&quot;,
+    &quot;skalaSkutkow&quot;: &quot;male&quot;,
+    &quot;metoda&quot;: &quot;jedno&quot;,
+    &quot;przebieg&quot;: &quot;Dlaczego raport wyszedł po terminie? Termin 30 czerwca nie był zapisany w kalendarzu żadnej osoby. Rejestr wymagań wskazywał wymaganie, źródło i właściciela — ale nie datę, a sam rejestr przeglądany jest raz w roku.&quot;,
+    &quot;przyczyna&quot;: &quot;Terminy obowiązków z rejestru wymagań prawnych i innych nie są przeniesione do kalendarza osób odpowiedzialnych — rejestr wskazuje właściciela, nie moment wykonania.&quot;,
+    &quot;podobneSprawdzono&quot;: &quot;Przejrzano wszystkie wiersze rejestru III-04 pod kątem terminów. Terminy mają: wiersz 1 (dane dla klienta do 31 marca), wiersz 7 (zawiadomienie URE w 30 dni od zakończenia audytu), wiersz 8 (miesięczne prognozy dla dostawcy) i wiersz 9 (raport dla banku do 30 czerwca). Żaden z nich nie był wpisany do kalendarza kontrolingu; wiersze 1 i 8 wykonano w terminie, ale bez mechanizmu, który to zapewniał.&quot;,
+    &quot;podobneZnalezione&quot;: &quot;tak&quot;,
+    &quot;uzasadnienieZakres&quot;: &quot;Skutki jednostkowe niewielkie, ale przyczyna dotyczy czterech obowiązków z terminem, z czego dwa wykonano w terminie przypadkiem. Działanie obejmuje wszystkie terminy z rejestru, nie tylko raport dla banku.&quot;,
+    &quot;zakresDzialania&quot;: &quot;szerszy&quot;,
+    &quot;dzialania&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Wszystkie terminy obowiązków z rejestru III-04 wpisane do kalendarza kontrolingu jako zadania cykliczne, z właścicielem przy każdym.&quot;,
+      &quot;odp&quot;: &quot;Kontroler finansowy&quot;,
+      &quot;data&quot;: &quot;10.2026&quot;,
+      &quot;wykonano&quot;: &quot;W toku&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Przypomnienie od Energy Managera do właściciela obowiązku 14 dni przed każdym terminem.&quot;,
+      &quot;odp&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+      &quot;data&quot;: &quot;10.2026&quot;,
+      &quot;wykonano&quot;: &quot;W toku&quot;
+     }
+    ],
+    &quot;zmianaSystemu&quot;: &quot;tak&quot;,
+    &quot;zmianaOpis&quot;: &quot;Kalendarz terminów obowiązków z rejestru wymagań jako stały element pracy kontrolingu; rejestr III-04 uzupełniony kolumną terminu przy wierszach 1, 7, 8 i 9.&quot;,
+    &quot;dowodPlanowany&quot;: &quot;Raport dla banku za 2026 r. wysłany do 30.06.2027 bez przypomnienia ze strony banku; dane dla klienta do 31.03.2027; potwierdzenie wpisów w kalendarzu kontrolingu z właścicielami. Sprawdzenie w ocenie zgodności 09.2027.&quot;,
+    &quot;terminDowodu&quot;: &quot;2027-06-30&quot;,
+    &quot;dataSprawdzenia&quot;: &quot;&quot;,
+    &quot;wynikSprawdzenia&quot;: &quot;&quot;,
+    &quot;decyzja&quot;: &quot;kontynuowac&quot;,
+    &quot;sprawdzil&quot;: &quot;Jan Kowalski — Energy Manager&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;cenaEnergii&quot;: &quot;890&quot;,
+   &quot;zatwierdzil&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+   &quot;dataZatw&quot;: &quot;2026-09-30&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_101 = [{"tekst": "Na niezgodności reaguje się: opanowanie, korekcja, zajęcie się konsekwencjami.", "podstawa": "N", "auto": "reakcja"}, {"tekst": "Ocenia się potrzebę działania korygującego: przegląd niezgodności, przyczyny, podobne przypadki gdzie indziej.", "podstawa": "N", "auto": "ocenaPotrzeby"}, {"tekst": "Potrzebne działania są wdrażane i adekwatne do skutków niezgodności.", "podstawa": "N", "auto": "wdrozenie"}, {"tekst": "Przegląda się skuteczność działań korygujących.", "podstawa": "N", "auto": "przegladSkutecznosci"}, {"tekst": "W razie potrzeby wprowadza się zmiany w systemie.", "podstawa": "N", "auto": "zmianySystemu"}, {"tekst": "Zachowano zapisy o charakterze niezgodności, działaniach i wynikach działań korygujących.", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Przy podjętym działaniu korygującym niezgodność zamyka się na dowodzie skuteczności, nie na wykonaniu działania.", "podstawa": "M", "auto": "zamkniecie"}, {"tekst": "Prowadzony jest rejestr (F-EnMS-22) i karty (F-EnMS-21); stosowana jest metoda analizy przyczyn.", "podstawa": "M", "auto": "narzedzia"}];
+var PRZYKLAD = {"KARTY": [{"nr": "NK-2026-01", "dataWykrycia": "2026-06-22", "ponownieOtwarta": "2026-09-18", "zrodlo": "monitorowanie", "wymaganie": "Wymaganie organizacji — kryterium sprężarkowni: ciśnienie w sieci nie wyżej niż 6,3 bar, zmiany nastaw tylko za zgodą kierownika utrzymania ruchu (III-35, punkt 8.1). Od 07.2026 także: protokół serwisu z nastawami przed i po.", "opis": "Serwis po przeglądzie sprężarki z 15.06.2026 przywrócił nastawę fabryczną 7,0 bar zamiast kryterialnych 6,3 bar. We wrześniu 2026 r. audyt wewnętrzny wykazał, że protokół z kolejnego przeglądu sprężarki jest na wzorze serwisu — bez nastaw przed i po — i że nikt nie sprawdza protokołu przy odbiorze usługi.", "dowod": "S-1 około 0,120 → około 0,125 kWh/Nm³ w tygodniu przeglądu, przy produkcji i temperaturze jak tydzień wcześniej; nastawa 7,0 bar odczytana ze sterownika; protokół serwisu z 15.06.2026. We wrześniu: protokół z przeglądu sprężarki na wzorze serwisu, bez nastaw (audyt A-01/2026, ustalenie N-1).", "klasyfikacja": "Niestosowana — AutoParts nie dzieli niezgodności na duże i małe w audytach wewnętrznych", "korekcja": "Przywrócenie nastawy 6,3 bar w dniu wykrycia; wpis w rejestrze zmian nastaw sprężarkowni.", "korekcjaKto": "Kierownik utrzymania ruchu, 22.06.2026", "konsekwencje": "Około tygodnia pracy sprężarkowni przy 7,0 bar zamiast 6,3 bar. Nadwyżka zużycia ponad wartość oczekiwaną przy spełnionym kryterium — poniżej. Bez skutków dla produkcji i bez skutków dla zgodności z wymaganiami prawnymi; wpływ na wskaźnik S-1 odnotowany w raporcie monitorowania.", "nadwyzkaMWh": "1,6", "skalaSkutkow": "srednie", "metoda": "5x", "przebieg": "Analiza 1 (07.2026): Dlaczego 7 bar? Serwis przywrócił nastawy fabryczne. Dlaczego? Nie wiedział, że 6,3 bar to kryterium. Dlaczego? Zlecenie serwisowe nie zawierało kryteriów ani zasad zmiany nastaw.\nAnaliza 2 (09.2026): Dlaczego protokół bez nastaw? Serwis używa własnego wzoru. Dlaczego nikt tego nie zauważył? Odbiór usługi nie obejmował sprawdzenia protokołu. Dlaczego? Procedura P-EnMS-06 nie określała, jak odbiera się usługi przy znaczących użyciach energii.", "przyczyna": "Brak zasad odbioru usług wykonawców przy znaczących użyciach energii — samo zlecenie nie wystarcza, jeśli nikt nie sprawdza jego wykonania.", "podobneSprawdzono": "Przejrzano zlecenia wszystkich wykonawców pracujących przy znaczących użyciach energii: serwis kotłowni — brak jakichkolwiek wymagań co do nastaw (wskaźnik K-1 = 1,01 w I półroczu, czyli 1% powyżej linii bazowej); automatyka lakierni — brak wymagań; serwis sprężarek — wymagania są, wprowadzone w 07.2026.", "podobneZnalezione": "tak", "uzasadnienieZakres": "Przyczyna jest systemowa i dotyczy wszystkich wykonawców przy znaczących użyciach energii, nie tylko serwisu sprężarek. Skutki jednostkowego zdarzenia są umiarkowane (około 1 400 zł), ale ryzyko powtórzenia występuje przy każdym przeglądzie u trzech wykonawców, a przy kotłowni wskaźnik już jest powyżej linii bazowej. Działanie obejmuje wszystkich trzech wykonawców oraz zmianę procedury odbioru usług.", "zakresDzialania": "szerszy", "dzialania": [{"tresc": "Trzy zdania w zleceniu dla serwisu sprężarek: zgoda kierownika UR na zmianę nastaw, protokół z nastawami przed i po, zgłaszanie wykrytych wycieków.", "odp": "Kierownik utrzymania ruchu", "data": "07.2026", "wykonano": "10.07.2026"}, {"tresc": "Wzór protokołu z nastawami przed i po dla wykonawców przy wszystkich znaczących użyciach energii: sprężarki, kotłownia, automatyka lakierni.", "odp": "Kierownik utrzymania ruchu", "data": "10.2026", "wykonano": "W toku"}, {"tresc": "Sprawdzanie protokołu przy odbiorze usługi przy znaczącym użyciu energii — zmiana procedury P-EnMS-06, punkt 4.2.", "odp": "Jan Kowalski — Energy Manager", "data": "10.2026", "wykonano": "W toku"}], "zmianaSystemu": "tak", "zmianaOpis": "Procedura P-EnMS-06 — zasady odbioru usług przy znaczących użyciach energii; wzór protokołu z nastawami dla wykonawców (załącznik do zlecenia).", "dowodPlanowany": "Protokoły z nastawami przed i po, podpisane przy odbiorze przez kierownika utrzymania ruchu, z trzech przeglądów: kotłownia przed rozpoczęciem sezonu grzewczego (plan: 10.2026), następny przegląd sprężarek (11.2026) oraz najbliższy serwis automatyki lakierni (termin do ustalenia przez kierownika UR). Dodatkowo wskaźnik S-1 oceniony w porównywalnych warunkach w tygodniach przeglądów.", "terminDowodu": "2026-10-31", "dataSprawdzenia": "", "wynikSprawdzenia": "", "decyzja": "kontynuowac", "sprawdzil": "Jan Kowalski — Energy Manager"}, {"nr": "NK-2026-02", "dataWykrycia": "2026-09-18", "ponownieOtwarta": "", "zrodlo": "zgodnosc", "wymaganie": "Wymaganie umowne — coroczne wskaźniki zużycia energii zakładu dla banku finansującego modernizację, termin 30 czerwca (rejestr III-04, wiersz 9; umowa kredytowa, załącznik ESG).", "opis": "Raport z wskaźnikami zużycia energii za 2025 r. wysłano do banku 12.08.2026, czyli po terminie umownym 30.06.2026 — i dopiero po przypomnieniu ze strony banku.", "dowod": "E-mail z raportem z 12.08.2026; brak korespondencji przed terminem; przypomnienie z banku z 05.08.2026. Ustalenie z oceny zgodności z 18.09.2026 (stan prawny na 15.09.2026).", "klasyfikacja": "Niestosowana", "korekcja": "Raport wysłany 12.08.2026 — obowiązek wykonany, z opóźnieniem. Bank potwierdził przyjęcie bez konsekwencji umownych.", "korekcjaKto": "Kontroler finansowy, 12.08.2026", "konsekwencje": "Bez skutków energetycznych i bez naruszenia warunków finansowania. Skutek reputacyjny: obowiązek wykonany po przypomnieniu strony zainteresowanej, nie z własnego kalendarza.", "nadwyzkaMWh": "0", "skalaSkutkow": "male", "metoda": "jedno", "przebieg": "Dlaczego raport wyszedł po terminie? Termin 30 czerwca nie był zapisany w kalendarzu żadnej osoby. Rejestr wymagań wskazywał wymaganie, źródło i właściciela — ale nie datę, a sam rejestr przeglądany jest raz w roku.", "przyczyna": "Terminy obowiązków z rejestru wymagań prawnych i innych nie są przeniesione do kalendarza osób odpowiedzialnych — rejestr wskazuje właściciela, nie moment wykonania.", "podobneSprawdzono": "Przejrzano wszystkie wiersze rejestru III-04 pod kątem terminów. Terminy mają: wiersz 1 (dane dla klienta do 31 marca), wiersz 7 (zawiadomienie URE w 30 dni od zakończenia audytu), wiersz 8 (miesięczne prognozy dla dostawcy) i wiersz 9 (raport dla banku do 30 czerwca). Żaden z nich nie był wpisany do kalendarza kontrolingu; wiersze 1 i 8 wykonano w terminie, ale bez mechanizmu, który to zapewniał.", "podobneZnalezione": "tak", "uzasadnienieZakres": "Skutki jednostkowe niewielkie, ale przyczyna dotyczy czterech obowiązków z terminem, z czego dwa wykonano w terminie przypadkiem. Działanie obejmuje wszystkie terminy z rejestru, nie tylko raport dla banku.", "zakresDzialania": "szerszy", "dzialania": [{"tresc": "Wszystkie terminy obowiązków z rejestru III-04 wpisane do kalendarza kontrolingu jako zadania cykliczne, z właścicielem przy każdym.", "odp": "Kontroler finansowy", "data": "10.2026", "wykonano": "W toku"}, {"tresc": "Przypomnienie od Energy Managera do właściciela obowiązku 14 dni przed każdym terminem.", "odp": "Jan Kowalski — Energy Manager", "data": "10.2026", "wykonano": "W toku"}], "zmianaSystemu": "tak", "zmianaOpis": "Kalendarz terminów obowiązków z rejestru wymagań jako stały element pracy kontrolingu; rejestr III-04 uzupełniony kolumną terminu przy wierszach 1, 7, 8 i 9.", "dowodPlanowany": "Raport dla banku za 2026 r. wysłany do 30.06.2027 bez przypomnienia ze strony banku; dane dla klienta do 31.03.2027; potwierdzenie wpisów w kalendarzu kontrolingu z właścicielami. Sprawdzenie w ocenie zgodności 09.2027.", "terminDowodu": "2027-06-30", "dataSprawdzenia": "", "wynikSprawdzenia": "", "decyzja": "kontynuowac", "sprawdzil": "Jan Kowalski — Energy Manager"}], "META": {"cenaEnergii": "890", "zatwierdzil": "Jan Kowalski — Energy Manager", "dataZatw": "2026-09-30"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Karta zamknięta na wykonaniu działania nie dowodzi, że niezgodność nie wróci.", "decyzja": "Kartę zamykamy na dowodzie skuteczności, nie na wykonaniu działania.", "dzialanie": "NK-2026-01: przyczyna dociekana do braku kryterium, a nie do „błędu ludzkiego”; termin dowodu wyznaczony przed zamknięciem karty.", "sprawdzenie": "Data sprawdzenia nie jest wcześniejsza niż termin, w którym dowód skuteczności mógł powstać."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 10.1 — Niezgodność i działanie korygujące.
+   F-EnMS-21 karta (III-49) części A–F i F-EnMS-22 rejestr (III-51);
+   przykład III-50; lista kontrolna III-54 sekcja 10.1; procedura P-EnMS-08 (III-55) pkt 4.1. */
+"use strict";
+
+var PUNKT = "10.1";
+var TERAZ = "11.10.2026 17:10";
+var DZIS = "2026-09-30";
+var KARTY = [];
+var AKTK = 0;
+var META = { cenaEnergii: "", zatwierdzil: "", dataZatw: "" };
+var WNIOSKI = [];
+var AKT = "rejestr";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 17:05", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 10.1" }];
+
+var ZRODLA_NK = [["", "—"],
+["audyt_w", "Audyt wewnętrzny (9.2)"],
+["audyt_z", "Audyt zewnętrzny"],
+["monitorowanie", "Monitorowanie (9.1.1)"],
+["zgodnosc", "Ocena zgodności (9.1.2)"],
+["zgloszenie", "Zgłoszenie (7.4)"],
+["inne", "Inne"]];
+var METODY = [["", "—"],
+["jedno", "Jedno „dlaczego” — przy prostej sprawie"],
+["5x", "5 × Dlaczego"],
+["ishikawa", "Diagram Ishikawy"]];
+var SKALE = [["", "—"], ["male", "Małe"], ["srednie", "Średnie"], ["duze", "Duże"]];
+var ZAKRESY = [["", "—"],
+["tylko_tu", "Tylko w miejscu wykrycia"],
+["szerszy", "Szerszy — obejmuje podobne przypadki"]];
+var DECYZJE_F = [["", "—"],
+["zamknac", "Zamknąć — dowody potwierdzają skuteczność"],
+["zamknacBez", "Zamknąć bez działania korygującego — korekcja i konsekwencje sprawdzone"],
+["kontynuowac", "Kontynuować — problem wrócił lub dowody niewystarczające"]];
+var STANY_NK = { O: "O — otwarta", W: "W — działanie w toku", S: "S — czeka na sprawdzenie skuteczności", Z: "Z — zamknięta" };
+
+function etykieta(lista, v) {
+  var x = lista.filter(function (y) { return y[0] === v; })[0];
+  return x ? x[1] : "—";
+}
+function nowaKarta() {
+  return { nr: "", dataWykrycia: "", ponownieOtwarta: "", zrodlo: "", wymaganie: "", opis: "", dowod: "",
+    klasyfikacja: "", korekcja: "", korekcjaKto: "", konsekwencje: "", nadwyzkaMWh: "", skalaSkutkow: "",
+    metoda: "", przebieg: "", przyczyna: "", podobneSprawdzono: "", podobneZnalezione: "",
+    uzasadnienieZakres: "", zakresDzialania: "", dzialania: [], zmianaSystemu: "", zmianaOpis: "",
+    dowodPlanowany: "", terminDowodu: "", dataSprawdzenia: "", wynikSprawdzenia: "", decyzja: "", sprawdzil: "" };
+}
+function kar() { return KARTY[AKTK] || null; }
+function nazwaKarty(k, i) { return (k.nr || "").trim() || ("Karta " + (i + 1)); }
+
+/* ── stan karty w rejestrze ── */
+function dzialania(k) { return (k && k.dzialania) || []; }
+/* „W toku" w kolumnie „wykonano" nie znaczy wykonane — a tak wygląda wpis
+   w III-50, więc puste pole nie jest jedynym sygnałem niewykonania. */
+var RE_NIEWYKONANE = /^(w\s*toku|planowan\w*|nie|—|-|brak)$/i;
+function wykonane(x) {
+  var t = (x.wykonano || "").trim();
+  return !!t && !RE_NIEWYKONANE.test(t);
+}
+function wszystkieWykonane(k) {
+  var d = dzialania(k);
+  return d.length > 0 && d.every(wykonane);
+}
+function stanKarty(k) {
+  if ((k.decyzja === "zamknac" || k.decyzja === "zamknacBez") && (k.wynikSprawdzenia || "").trim()) return "Z";
+  if (dzialania(k).length && wszystkieWykonane(k) && (k.dowodPlanowany || "").trim()) return "S";
+  if (dzialania(k).length) return "W";
+  return "O";
+}
+function dniOtwarta(k) {
+  if (!k.dataWykrycia) return null;
+  var a = new Date(k.dataWykrycia);
+  var b = stanKarty(k) === "Z" && k.dataSprawdzenia ? new Date(k.dataSprawdzenia) : new Date(DZIS);
+  return Math.round((b - a) / 86400000);
+}
+
+/* ── liczenie konsekwencji ── */
+function kosztNadwyzki(k) {
+  var m = lb(k.nadwyzkaMWh), c = lb(META.cenaEnergii);
+  if (m === null || c === null) return null;
+  return m * c;
+}
+
+/* ── walidacje części A ── */
+function aOk(k) {
+  return !!((k.nr || "").trim() && k.dataWykrycia && k.zrodlo && (k.wymaganie || "").trim()
+    && (k.opis || "").trim() && (k.dowod || "").trim());
+}
+/* „Niezgodność to niespełnienie wymagania. Nic więcej." */
+function bezWymagania(k) { return !!((k.opis || "").trim()) && !(k.wymaganie || "").trim(); }
+
+/* ── walidacje części B ── */
+function bOk(k) { return !!((k.korekcja || "").trim() && (k.korekcjaKto || "").trim() && (k.konsekwencje || "").trim()); }
+
+/* ── walidacje części C ── */
+var RE_BLAD_LUDZKI = /(b[łl][ąa]d\s+ludzk|nieuwag|zapomnia|nie\s+(?:[^\s.;,]+\s+){0,2}wiedzia|przeoczy|niedopatrzeni|brak\s+uwagi|pomy[łl]k\w*\s+(pracownik|operator|technik|serwisant)|wina\s+(pracownik|operator))/i;
+function przyczynaBladLudzki(k) { return RE_BLAD_LUDZKI.test(k.przyczyna || ""); }
+function cOk(k) { return !!(k.metoda && (k.przebieg || "").trim() && (k.przyczyna || "").trim()); }
+/* „Ta sama rozbudowana analiza dla każdej sprawy" — i odwrotnie. */
+function metodaNieadekwatna(k) { return k.skalaSkutkow === "duze" && k.metoda === "jedno"; }
+
+/* ── walidacje części D ── */
+function dOk(k) { return !!((k.podobneSprawdzono || "").trim() && k.podobneZnalezione); }
+function brakGdzieJeszcze(k) { return !(k.podobneSprawdzono || "").trim(); }
+/* Znaleziono podobne, a działanie obejmuje tylko miejsce wykrycia. */
+function podobneBezZakresu(k) {
+  return k.podobneZnalezione === "tak" && k.zakresDzialania === "tylko_tu";
+}
+
+/* ── walidacje części E ── */
+var RE_PRZYPOMNIENIE = /(przypomn|zwr[óo]ci[ćc]\s+uwag|rozmow\w*\s+z\s|poinformowa[ćc]\s+ponownie|pouczy|uczuli|om[óo]wi[ćc]\s+na\s+(odprawie|zebraniu))/i;
+function dzialanieOk(x) { return !!((x.tresc || "").trim() && (x.odp || "").trim() && (x.data || "").trim()); }
+function tylkoPrzypomnienie(k) {
+  var d = dzialania(k).filter(function (x) { return (x.tresc || "").trim(); });
+  if (!d.length) return false;
+  return d.every(function (x) { return RE_PRZYPOMNIENIE.test(x.tresc); }) && k.zmianaSystemu !== "tak";
+}
+function eOk(k) {
+  if (!((k.uzasadnienieZakres || "").trim() && k.zakresDzialania && k.zmianaSystemu)) return false;
+  if (k.zmianaSystemu === "tak" && !(k.zmianaOpis || "").trim()) return false;
+  if (k.decyzja === "zamknacBez") return true;
+  return dzialania(k).length > 0 && dzialania(k).every(dzialanieOk);
+}
+
+/* ── walidacje części F — serce tego punktu ── */
+function fOk(k) {
+  if (!dzialania(k).length && k.decyzja === "zamknacBez") return !!((k.wynikSprawdzenia || "").trim() && (k.sprawdzil || "").trim());
+  if (!((k.dowodPlanowany || "").trim() && k.terminDowodu)) return false;
+  if (!k.decyzja) return false;
+  if (k.decyzja === "kontynuowac") return !!(k.sprawdzil || "").trim();
+  return !!((k.dataSprawdzenia) && (k.wynikSprawdzenia || "").trim() && (k.sprawdzil || "").trim());
+}
+/* „Zamknięcie po wykonaniu działania": sprawdzenie przed terminem, w którym
+   dowód skuteczności mógł w ogóle powstać. Dokładnie błąd z lipca 2026. */
+function zamknieteNaKorekcji(k) {
+  if (k.decyzja !== "zamknac" || !k.dataSprawdzenia || !k.terminDowodu) return false;
+  return k.dataSprawdzenia < k.terminDowodu;
+}
+function brakDowoduPlanowanego(k) {
+  return dzialania(k).length > 0 && !((k.dowodPlanowany || "").trim() && k.terminDowodu);
+}
+function kartaOk(k) {
+  return aOk(k) && bOk(k) && cOk(k) && dOk(k) && eOk(k) && fOk(k) && !zamknieteNaKorekcji(k);
+}
+function ponowna(k) { return !!(k.ponownieOtwarta || "").trim(); }
+
+/* ── zakładka 1: rejestr ── */
+function rysujRejestr(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Rejestr niezgodności"));
+  s.appendChild(hel("div", "warn", "Lipiec 2026 r. Jan Kowalski zamyka kartę niezgodności z czerwca — tę, w której serwis po przeglądzie przywrócił w sprężarkowni 7 bar zamiast 6,3. Wszystko się zgadza: ciśnienie przywrócone w dniu wykrycia, wskaźnik wrócił do około 0,120 kWh/Nm³, zlecenie dla serwisu ma trzy nowe zdania. Status: zamknięta.<br><br>We wrześniu audytorka prosi o protokół z kolejnego przeglądu sprężarki. Protokół jest na wzorze serwisu — <b>bez nastaw przed i po</b>. Nikt go nie sprawdził przy odbiorze usługi.<br><br>Czy zamknięcie w lipcu było błędem? Kowalski sprawdził, czy wróciło ciśnienie. Nie mógł sprawdzić, czy serwis stosuje nowe zasady — bo do następnego przeglądu nie było czego sprawdzać. <b>Wykonanie działania to jeszcze nie dowód jego skuteczności.</b>"));
+  s.appendChild(hel("div", "note", "<b>Co jest niezgodnością, a co nie?</b> Niezgodność to niespełnienie wymagania — normy, przepisu, umowy albo tego, co organizacja ustaliła sama. <b>Nie każde zdarzenie nią jest.</b> Wyciek wykryty w kwartalnym przeglądzie szczelności i usunięty zgodnie z planem to system, który działa. Jeśli plan przewidywał przegląd, a nikt go nie wykonał — to już niezgodność. <b>Nieosiągnięty cel też nie jest automatycznie niezgodnością</b> — wymaga oceny przyczyn i decyzji; niezgodność rozpoznaje się wtedy, gdy stwierdzono niespełnienie konkretnego wymagania."));
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Założenia wspólne"));
+  m.appendChild(pole("Cena energii do wyceny konsekwencji [zł/MWh]",
+    inp(META.cenaEnergii, "np. 890", function (v) { META.cenaEnergii = v; }),
+    "Służy wyliczeniu kosztu nadwyżki zużycia w części B. W AutoParts 890 zł/MWh dla energii elektrycznej."));
+  s.appendChild(m);
+  host.appendChild(s);
+
+  if (KARTY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Nr", "Data", "Źródło", "Wymaganie", "Korekcja", "Sprawdzenie skuteczności", "Stan"],
+      KARTY.map(function (k, i) {
+        var st = stanKarty(k);
+        return [nazwaKarty(k, i) + (ponowna(k) ? " (ponownie otwarta)" : ""),
+          k.dataWykrycia || "—", k.zrodlo ? etykieta(ZRODLA_NK, k.zrodlo) : "—",
+          (k.wymaganie || "—").slice(0, 80),
+          (k.korekcja || "—").slice(0, 60),
+          (k.dowodPlanowany || "—").slice(0, 70),
+          el("span", "chip " + (st === "Z" ? "green" : st === "O" ? "red" : ""), st)];
+      }), ["mono"]));
+    t.appendChild(hel("div", "note", "<b>Nie oceniajcie systemu liczbą niezgodności.</b> Zero otwartych może oznaczać, że organizacja skutecznie je zamknęła. Dziesięć otwartych może oznaczać, że wykrywa dużo — albo że niczego nie kończy. <b>Liczba sama niczego nie rozstrzyga.</b> Sprawdzajcie, czy problemy są wykrywane, analizowane i skutecznie usuwane."));
+    var powt = KARTY.filter(ponowna).length;
+    t.appendChild(tabela(["Miara", "Wartość"], [
+      ["Niezgodności w rejestrze", String(KARTY.length)],
+      ["Otwarte (O, W, S)", String(KARTY.filter(function (k) { return stanKarty(k) !== "Z"; }).length)],
+      ["Zamknięte na dowodzie skuteczności", String(KARTY.filter(function (k) { return stanKarty(k) === "Z"; }).length)],
+      ["Otwarte ponownie", el("span", "chip " + (powt ? "amber" : "green"), String(powt))],
+      ["Z działaniem zmieniającym system", String(KARTY.filter(function (k) { return k.zmianaSystemu === "tak"; }).length)]
+    ]));
+    t.appendChild(el("div", "note", "Miara, która mówi najwięcej, jest czwarta: <b>otwarte ponownie</b>. Powtórzona niezgodność znaczy, że działanie usunęło objaw, nie przyczynę."));
+    host.appendChild(t);
+  }
+
+  KARTY.forEach(function (k, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, nazwaKarty(k, i));
+    var st = stanKarty(k);
+    hh.appendChild(el("span", "chip " + (st === "Z" ? "green" : st === "O" ? "red" : ""), STANY_NK[st]));
+    hh.appendChild(el("span", "chip " + (kartaOk(k) ? "green" : "amber"), kartaOk(k) ? "kompletna" : "do uzupełnienia"));
+    if (ponowna(k)) hh.appendChild(el("span", "chip amber", "otwarta ponownie " + k.ponownieOtwarta));
+    var d = dniOtwarta(k);
+    if (d !== null) hh.appendChild(el("span", "chip", ile(d, "dzień", "dni", "dni")));
+    var ot = el("button", "link", i === AKTK ? "otwarta" : "otwórz części A–F");
+    ot.onclick = function () { AKTK = i; AKT = "identyfikacja"; rysuj(); window.scrollTo(0, 0); };
+    hh.appendChild(ot);
+    hh.appendChild(przyciskUsun(function () { KARTY.splice(i, 1); if (AKTK >= KARTY.length) AKTK = Math.max(0, KARTY.length - 1); },
+      "usuń", "Usunąć kartę " + nazwaKarty(k, i) + "?"));
+    sec.appendChild(hh);
+    sec.appendChild(tabela(["Część", "Stan"], [
+      ["A. Identyfikacja", el("span", "chip " + (aOk(k) ? "green" : "amber"), aOk(k) ? "OK" : "niepełna")],
+      ["B. Korekcja i konsekwencje", el("span", "chip " + (bOk(k) ? "green" : "amber"), bOk(k) ? "OK" : "niepełna")],
+      ["C. Przyczyna", el("span", "chip " + (cOk(k) && !przyczynaBladLudzki(k) ? "green" : "amber"), cOk(k) ? (przyczynaBladLudzki(k) ? "do pogłębienia" : "OK") : "niepełna")],
+      ["D. Podobne przypadki", el("span", "chip " + (dOk(k) ? "green" : "amber"), dOk(k) ? "OK" : "niepełna")],
+      ["E. Ocena potrzeby i działania", el("span", "chip " + (eOk(k) ? "green" : "amber"), eOk(k) ? "OK" : "niepełna")],
+      ["F. Skuteczność", el("span", "chip " + (fOk(k) && !zamknieteNaKorekcji(k) ? "green" : "amber"),
+        zamknieteNaKorekcji(k) ? "zamknięta przedwcześnie" : fOk(k) ? "OK" : "niepełna")]
+    ]));
+    host.appendChild(sec);
+  });
+
+  var dd = el("div", "sekcja");
+  dd.appendChild(przyciskDodaj("+ dodaj niezgodność", function () { KARTY.push(nowaKarta()); AKTK = KARTY.length - 1; }));
+  if (!KARTY.length) dd.appendChild(el("div", "warn", "Rejestr niezgodności jest pusty."));
+  dd.appendChild(hel("div", "note", "W rejestrze są <b>tylko niezgodności</b> — niespełnienia wymagania. Możliwości doskonalenia z audytów i zgłoszeń prowadźcie w planie doskonalenia (10.2)."));
+  host.appendChild(dd);
+}
+
+/* ── wspólny nagłówek karty ── */
+function naglowekKarty(host, tytul) {
+  var k = kar();
+  if (!k) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "warn", "Nie wybrano karty. Dodajcie niezgodność w zakładce 1."));
+    host.appendChild(x);
+    return null;
+  }
+  var s = el("div", "sekcja");
+  var h = el("h3", null, tytul);
+  h.appendChild(el("span", "chip", nazwaKarty(k, AKTK)));
+  h.appendChild(el("span", "chip " + (stanKarty(k) === "Z" ? "green" : ""), STANY_NK[stanKarty(k)]));
+  if (KARTY.length > 1) {
+    var lab = el("span", "rola");
+    lab.appendChild(el("span", "rolaetyk", "Karta:"));
+    lab.appendChild(sel(String(AKTK), KARTY.map(function (x, i) { return [String(i), nazwaKarty(x, i)]; }),
+      function (v) { AKTK = parseInt(v, 10); }));
+    h.appendChild(lab);
+  }
+  s.appendChild(h);
+  host.appendChild(s);
+  return k;
+}
+
+/* ── zakładka 2: A i B ── */
+function rysujIdentyfikacja(host) {
+  var k = naglowekKarty(host, "A. Identyfikacja · B. Korekcja i konsekwencje");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "A. Identyfikacja"));
+  var ka = el("div", "poz" + (aOk(k) ? "" : " brak"));
+  ka.appendChild(pole("Numer karty", inp(k.nr, "np. NK-2026-01", function (v) { k.nr = v; })));
+  ka.appendChild(pole("Data wykrycia", inp(k.dataWykrycia, "", function (v) { k.dataWykrycia = v; }, "date")));
+  ka.appendChild(pole("Data ponownego otwarcia, jeśli było", inp(k.ponownieOtwarta, "", function (v) { k.ponownieOtwarta = v; }, "date"),
+    "Ponowne otwarcie nie jest porażką — jest dowodem, że sprawdzanie skuteczności działa."));
+  ka.appendChild(poleChip("Źródło", "metodyka ENESA", sel(k.zrodlo, ZRODLA_NK, function (v) { k.zrodlo = v; })));
+  ka.appendChild(poleChip("Niespełnione wymaganie i punkt", "wymóg normy",
+    txt(k.wymaganie, "np. Wymaganie organizacji — kryterium sprężarkowni: ciśnienie w sieci ≤ 6,3 bar, zmiany nastaw tylko za zgodą kierownika UR (III-35, punkt 8.1); od 07.2026 także protokół serwisu z nastawami przed i po", 3,
+      function (v) { k.wymaganie = v; }),
+    "Wymaganie może pochodzić z normy, przepisu, umowy albo z tego, co organizacja ustaliła sama."));
+  ka.appendChild(poleChip("Opis niezgodności — co, gdzie, kiedy", "wymóg normy",
+    txt(k.opis, "np. Serwis po przeglądzie sprężarki przywrócił nastawę 7,0 bar zamiast 6,3 bar. We wrześniu: protokół z przeglądu na wzorze serwisu, bez nastaw przed i po.", 3,
+      function (v) { k.opis = v; })));
+  ka.appendChild(poleChip("Dowód niespełnienia", "wymóg normy",
+    txt(k.dowod, "np. S-1 około 0,120 → 0,125 kWh/Nm³ w tygodniu przeglądu; nastawa 7,0 bar w sterowniku; protokół serwisu z 15.06.2026", 3,
+      function (v) { k.dowod = v; })));
+  ka.appendChild(pole("Klasyfikacja — opcjonalna",
+    inp(k.klasyfikacja, "np. Niestosowana w audytach wewnętrznych AutoParts", function (v) { k.klasyfikacja = v; }),
+    "Podział na niezgodności duże i małe jest zaleceniem, nie wymaganiem normy. Formularz nie przewiduje kategorii „obserwacja”."));
+  s.appendChild(ka);
+  if (bezWymagania(k))
+    s.appendChild(hel("div", "warn", "Opisano zdarzenie, ale nie wskazano niespełnionego wymagania. <b>Niezgodność to niespełnienie wymagania — nic więcej.</b> Jeśli nie da się wskazać wymagania, to nie jest niezgodność: zdarzenie oceńcie i zapiszcie tam, gdzie należy (odchylenie w 9.1.1, możliwość doskonalenia w 10.2)."));
+  host.appendChild(s);
+
+  var b = el("div", "sekcja");
+  b.appendChild(el("h3", null, "B. Korekcja i konsekwencje"));
+  b.appendChild(hel("div", "note", "<b>Korekcja usuwa niezgodność, ale nie jej przyczynę.</b> Przywrócenie nastawy, naprawa urządzenia, uzupełnienie brakującego zapisu — to pierwszy krok, nie działanie korygujące."));
+  var kb = el("div", "poz" + (bOk(k) ? "" : " brak"));
+  kb.appendChild(poleChip("Co zrobiono, żeby opanować i skorygować", "wymóg normy",
+    txt(k.korekcja, "np. 22.06.2026 — przywrócenie 6,3 bar; wpis w rejestrze zmian nastaw", 2,
+      function (v) { k.korekcja = v; })));
+  kb.appendChild(pole("Kto i kiedy", inp(k.korekcjaKto, "np. Kierownik UR, 22.06.2026", function (v) { k.korekcjaKto = v; })));
+  kb.appendChild(poleChip("Konsekwencje i jak się nimi zajęto", "wymóg normy",
+    txt(k.konsekwencje, "np. Około tydzień pracy przy 7 bar; bez skutków dla produkcji", 3,
+      function (v) { k.konsekwencje = v; })));
+  kb.appendChild(pole("Nadwyżka zużycia energii [MWh]", inp(k.nadwyzkaMWh, "np. 1,6", function (v) { k.nadwyzkaMWh = v; }),
+    "Ponad zużycie oczekiwane przy spełnionym wymaganiu. Platforma wycenia ją ceną z zakładki 1."));
+  kb.appendChild(pole("Skala skutków", sel(k.skalaSkutkow, SKALE, function (v) { k.skalaSkutkow = v; }),
+    "Decyduje o zakresie analizy i działania. <b>Literówka w nieużywanym formularzu nie potrzebuje tej samej analizy co nastawa, która kosztuje tysiące złotych miesięcznie.</b>"));
+  var kn = kosztNadwyzki(k);
+  if (kn !== null) {
+    var w = el("div", "note");
+    w.appendChild(el("b", null, "Wyliczenie: "));
+    w.appendChild(document.createTextNode("nadwyżka " + lcz(lb(k.nadwyzkaMWh), 1) + " MWh × " +
+      lkw(lb(META.cenaEnergii), 0) + " zł/MWh = " + lkw(kn, 0) + " zł"));
+    kb.appendChild(w);
+  }
+  b.appendChild(kb);
+  host.appendChild(b);
+}
+
+/* ── zakładka 3: C i D ── */
+function rysujPrzyczyna(host) {
+  var k = naglowekKarty(host, "C. Przyczyna · D. Podobne przypadki");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "C. Przyczyna"));
+  s.appendChild(hel("div", "warn", "<b>Tu wiele firm zatrzymuje się na pierwszej odpowiedzi:</b> „serwisant nie wiedział”, „operator zapomniał”. Pytajcie dalej, aż dojdziecie do czegoś, co możecie <b>zmienić w systemie</b>: brak informacji w zleceniu, brak sprawdzenia przy odbiorze, instrukcja, której nikt nie widzi."));
+  s.appendChild(hel("div", "note", "★ Metody są narzędziem, nie wymaganiem normy. „5 × Dlaczego” — pytacie „dlaczego?”, aż dojdziecie do przyczyny, którą możecie usunąć. Diagram Ishikawy porządkuje przyczyny w grupach (ludzie, metody, maszyny, materiały, otoczenie). <b>Przy prostych sprawach wystarczy jedno rzetelne „dlaczego”.</b>"));
+  var kc = el("div", "poz" + (cOk(k) ? "" : " brak"));
+  kc.appendChild(pole("Metoda", sel(k.metoda, METODY, function (v) { k.metoda = v; })));
+  kc.appendChild(pole("Przebieg analizy", txt(k.przebieg, "np. Dlaczego 7 bar? Serwis przywrócił nastawy fabryczne. Dlaczego? Nie wiedział, że 6,3 bar to kryterium. Dlaczego? Zlecenie serwisowe nie zawierało kryteriów ani zasad zmiany nastaw.", 4,
+    function (v) { k.przebieg = v; }),
+    "Tu pośrednie odpowiedzi są na miejscu — także te o ludziach. Chodzi o ślad drogi do przyczyny."));
+  kc.appendChild(poleChip("Ustalona przyczyna niezgodności", "wymóg normy",
+    txt(k.przyczyna, "np. Brak zasad odbioru usług wykonawców przy SEU — samo zlecenie nie wystarcza, jeśli nikt nie sprawdza jego wykonania", 3,
+      function (v) { k.przyczyna = v; }),
+    "Przyczyna ma być czymś, co da się zmienić w systemie."));
+  if (przyczynaBladLudzki(k))
+    kc.appendChild(hel("div", "warn", "Przyczyna kończy się na człowieku: „nie wiedział”, „zapomniał”, „błąd ludzki”. <b>Pytajcie dalej: dlaczego człowiek mógł popełnić ten błąd? Co w systemie na to pozwoliło?</b> W jednym z zakładów większość działań korygujących brzmiała „przypomnieć pracownikom” — i te same niezgodności wracały przez rok. Po pogłębieniu analizy z dwunastu powtarzających się zostały trzy."));
+  if (metodaNieadekwatna(k))
+    kc.appendChild(hel("div", "note", "Skutki oznaczono jako duże, a analizę ograniczono do jednego „dlaczego”. Zakres analizy ma wynikać ze skutków i ryzyka powtórzenia — przy dużych skutkach warto przejść „5 × Dlaczego” albo uporządkować przyczyny diagramem."));
+  s.appendChild(kc);
+  host.appendChild(s);
+
+  var d = el("div", "sekcja");
+  d.appendChild(el("h3", null, "D. Podobne przypadki — „gdzie jeszcze?”"));
+  d.appendChild(hel("div", "warn", "<b>To pytanie łatwo pominąć — a norma wprost go wymaga.</b> Czy podobny problem występuje albo może wystąpić przy innych urządzeniach, u innych wykonawców, w innych działach?<br><br>W AutoParts odpowiedź zmieniła całe działanie: zlecenie dla serwisu kotłowni też nie mówiło nic o nastawach — a wskaźnik kotłowni był w I półroczu o 1% powyżej linii bazowej."));
+  var kd = el("div", "poz" + (dOk(k) ? "" : " brak"));
+  kd.appendChild(poleChip("Co sprawdzono", "wymóg normy",
+    txt(k.podobneSprawdzono, "np. Zlecenia wszystkich wykonawców przy SEU: serwis kotłowni — brak wymagań co do nastaw; automatyka lakierni — brak wymagań; serwis sprężarek — wymagania są od 07.2026", 3,
+      function (v) { k.podobneSprawdzono = v; })));
+  kd.appendChild(poleChip("Czy podobny problem występuje albo może wystąpić gdzie indziej", "wymóg normy",
+    sel(k.podobneZnalezione, [["", "—"], ["tak", "Tak — znaleziono podobne przypadki"], ["nie", "Nie"]],
+      function (v) { k.podobneZnalezione = v; })));
+  d.appendChild(kd);
+  if (brakGdzieJeszcze(k))
+    d.appendChild(hel("div", "warn", "Nie zapisano, co sprawdzono. <b>Brak pytania „gdzie jeszcze?”</b> to jeden z sześciu błędów tego punktu — i jedyne wymaganie normy w tym punkcie, które da się pominąć, nie zauważając tego."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 4: E ── */
+function rysujDzialania(host) {
+  var k = naglowekKarty(host, "E. Ocena potrzeby działania i działania");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "note", "<b>Zakres reakcji ma wynikać z przyczyny, skutków i możliwości powtórzenia.</b> Działania korygujące są adekwatne do skutków niezgodności — norma mówi to wprost. Decyzja „bez działania korygującego” jest dopuszczalna, jeśli ją uzasadnicie."));
+  var ke = el("div", "poz" + (eOk(k) ? "" : " brak"));
+  ke.appendChild(poleChip("Decyzja o zakresie działania i uzasadnienie", "wymóg normy",
+    txt(k.uzasadnienieZakres, "np. Przyczyna jest systemowa i dotyczy wszystkich wykonawców przy SEU — działanie obejmuje trzech wykonawców oraz zmianę procedury odbioru usług. Skutki jednostkowe niewielkie, ale ryzyko powtórzenia wysokie przy każdym przeglądzie.", 3,
+      function (v) { k.uzasadnienieZakres = v; })));
+  ke.appendChild(poleChip("Zakres działania", "wymóg normy", sel(k.zakresDzialania, ZAKRESY, function (v) { k.zakresDzialania = v; })));
+  s.appendChild(ke);
+  if (podobneBezZakresu(k))
+    s.appendChild(hel("div", "warn", "W części D znaleziono podobne przypadki, a działanie obejmuje <b>tylko miejsce wykrycia</b>. Norma każe ocenić potrzebę działań, żeby niezgodność nie wystąpiła ponownie <b>ani gdzie indziej</b> — albo rozszerzcie zakres, albo uzasadnijcie, dlaczego pozostałe przypadki nie wymagają działania."));
+  host.appendChild(s);
+
+  var dz = el("div", "sekcja");
+  var h = el("h3", null, "Działania korygujące");
+  h.appendChild(el("span", "chip " + (dzialania(k).length && dzialania(k).every(dzialanieOk) ? "green" : "amber"),
+    dzialania(k).filter(dzialanieOk).length + " / " + dzialania(k).length));
+  dz.appendChild(h);
+  dzialania(k).forEach(function (x, i) {
+    var kk = el("div", "poz" + (dzialanieOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Działanie " + (i + 1)));
+    if (wykonane(x)) g.appendChild(el("span", "chip green", "wykonano " + x.wykonano));
+    else if ((x.wykonano || "").trim()) g.appendChild(el("span", "chip", x.wykonano));
+    if (RE_PRZYPOMNIENIE.test(x.tresc || "")) g.appendChild(el("span", "chip amber", "przypomnienie"));
+    g.appendChild(przyciskUsun(function () { k.dzialania.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Treść", txt(x.tresc, "np. Wzór protokołu z nastawami dla wykonawców przy SEU: sprężarki, kotłownia, automatyka lakierni", 2,
+      function (v) { x.tresc = v; })));
+    kk.appendChild(pole("Odpowiedzialny", inp(x.odp, "np. Kierownik UR", function (v) { x.odp = v; })));
+    kk.appendChild(pole("Termin", inp(x.data, "np. 10.2026", function (v) { x.data = v; })));
+    kk.appendChild(pole("Wykonano", inp(x.wykonano, "np. 10.07.2026 albo: w toku", function (v) { x.wykonano = v; })));
+    dz.appendChild(kk);
+  });
+  dz.appendChild(przyciskDodaj("+ dodaj działanie", function () { if (!k.dzialania) k.dzialania = []; k.dzialania.push({}); }));
+  if (tylkoPrzypomnienie(k))
+    dz.appendChild(hel("div", "warn", "Wszystkie działania sprowadzają się do przypomnienia, rozmowy albo zwrócenia uwagi — i nic nie zmienia się w systemie. <b>„Przypomnieliśmy pracownikowi” rzadko jest działaniem korygującym:</b> przypomnienie działa, dopóki ktoś pamięta, że ktoś przypominał. Traktujcie je jako korekcję i zmieńcie coś trwałego — instrukcję w miejscu pracy, wzór zlecenia, kalendarz terminów, sposób sprawdzania. <b>Ludzie nadal mają znaczenie, ale system nie powinien opierać się wyłącznie na ich pamięci.</b>"));
+  host.appendChild(dz);
+
+  var zm = el("div", "sekcja");
+  zm.appendChild(el("h3", null, "Zmiana w systemie"));
+  zm.appendChild(hel("div", "note", "Norma wymienia to jako osobny krok: <b>w razie potrzeby wprowadza się zmiany w systemie zarządzania energią</b> — procedura, wzór dokumentu, kryteria, kompetencje. To różnica między naprawieniem przypadku a naprawieniem systemu."));
+  var kz = el("div", "poz" + (k.zmianaSystemu && (k.zmianaSystemu !== "tak" || (k.zmianaOpis || "").trim()) ? "" : " brak"));
+  kz.appendChild(poleChip("Czy wprowadzono zmianę w systemie", "wymóg normy",
+    sel(k.zmianaSystemu, [["", "—"], ["nie", "Nie"], ["tak", "Tak"]], function (v) { k.zmianaSystemu = v; })));
+  if (k.zmianaSystemu === "tak")
+    kz.appendChild(pole("Jaka zmiana", txt(k.zmianaOpis, "np. P-EnMS-06 — zasady odbioru usług przy SEU; wzór protokołu z nastawami dla wykonawców", 2,
+      function (v) { k.zmianaOpis = v; })));
+  zm.appendChild(kz);
+  host.appendChild(zm);
+}
+
+/* ── zakładka 5: F ── */
+function rysujSkutecznosc(host) {
+  var k = naglowekKarty(host, "F. Skuteczność");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "warn", "<b>Zamknięcie po wykonaniu działania</b> to najczęstszy i najdroższy błąd tego punktu. Niezgodność zamyka się, gdy <b>dowody potwierdzają skuteczność działania</b> — nie gdy działanie zostało wykonane. Termin sprawdzenia dobierzcie do problemu: <b>zmianę zasad dla serwisu da się sprawdzić dopiero przy następnym przeglądzie, nie po tygodniu.</b>"));
+  var kf = el("div", "poz" + (fOk(k) ? "" : " brak"));
+  kf.appendChild(poleChip("Co będzie dowodem skuteczności i kiedy da się go zebrać", "metodyka ENESA",
+    txt(k.dowodPlanowany, "np. Protokoły z nastawami przed i po, podpisane przy odbiorze przez kierownika UR: przegląd kotłowni przed sezonem grzewczym, następny przegląd sprężarek, najbliższy serwis automatyki lakierni; S-1 oceniony w porównywalnych warunkach w tygodniach przeglądów", 4,
+      function (v) { k.dowodPlanowany = v; }),
+    "Ustala się to <b>przy planowaniu działania</b>, nie po jego wykonaniu. Bez tego nie wiadomo, na co czekać."));
+  kf.appendChild(poleChip("Najwcześniejszy termin, w którym dowód może powstać", "metodyka ENESA",
+    inp(k.terminDowodu, "", function (v) { k.terminDowodu = v; }, "date"),
+    "Platforma porównuje go z datą sprawdzenia — i nie pozwala zamknąć karty, zanim dowód mógł w ogóle powstać."));
+  kf.appendChild(pole("Data sprawdzenia", inp(k.dataSprawdzenia, "", function (v) { k.dataSprawdzenia = v; }, "date")));
+  kf.appendChild(poleChip("Wynik sprawdzenia — dowód", "wymóg normy",
+    txt(k.wynikSprawdzenia, "np. Protokół z przeglądu kotłowni z 14.10.2026 zawiera nastawy przed i po, podpisany przy odbiorze przez kierownika UR", 3,
+      function (v) { k.wynikSprawdzenia = v; })));
+  kf.appendChild(poleChip("Decyzja", "wymóg normy", sel(k.decyzja, DECYZJE_F, function (v) { k.decyzja = v; })));
+  kf.appendChild(pole("Sprawdził", inp(k.sprawdzil, "np. Jan Kowalski — Energy Manager", function (v) { k.sprawdzil = v; })));
+  s.appendChild(kf);
+  if (brakDowoduPlanowanego(k))
+    s.appendChild(hel("div", "warn", "Są działania, ale nie ustalono, <b>co będzie dowodem skuteczności i kiedy da się go zebrać</b>. To ten moment, w którym karta zamyka się później na pierwszym dostępnym dowodzie — zwykle na potwierdzeniu korekcji."));
+  if (zamknieteNaKorekcji(k)) {
+    var d1 = new Date(k.terminDowodu), d2 = new Date(k.dataSprawdzenia);
+    var dni = Math.round((d1 - d2) / 86400000);
+    s.appendChild(hel("div", "warn", "Karta zamknięta <b>" + ile(dni, "dzień", "dni", "dni") +
+      " przed terminem</b>, w którym dowód skuteczności mógł powstać. To dokładnie błąd z lipca 2026: sprawdzono, czy wróciło ciśnienie — czyli <b>potwierdzono korekcję, nie działanie</b>. Zasady dla serwisu dały się sprawdzić dopiero przy kolejnym przeglądzie, a karta wróciła po audycie we wrześniu."));
+  }
+  if (k.decyzja === "kontynuowac")
+    s.appendChild(el("div", "note", "Decyzja „kontynuować” jest pełnoprawnym wynikiem sprawdzenia, nie porażką. Ponowne otwarcie karty po audycie oznacza, że sprawdzanie skuteczności działa — i warto wtedy wrócić do części C po nową przyczynę oraz do części D po pytanie „gdzie jeszcze?”."));
+  if (k.decyzja === "zamknacBez" && dzialania(k).length)
+    s.appendChild(el("div", "warn", "Wybrano zamknięcie bez działania korygującego, a w części E są wpisane działania. Albo usuńcie działania, albo zmieńcie decyzję — inaczej z karty nie wynika, co właściwie postanowiono."));
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  w.appendChild(el("h3", null, "Skąd wiesz, że działania korygujące działają"));
+  var lista = [
+    { t: "Przy każdej niezgodności wiadomo, jakie wymaganie nie zostało spełnione i jaki jest na to dowód.",
+      ok: KARTY.length > 0 && KARTY.every(function (x) { return (x.wymaganie || "").trim() && (x.dowod || "").trim(); }) },
+    { t: "Przyczyna jest czymś, co da się zmienić w systemie — nie kończy się na „błędzie ludzkim”.",
+      ok: KARTY.filter(function (x) { return (x.przyczyna || "").trim(); }).length === 0 ? null
+        : !KARTY.some(przyczynaBladLudzki) },
+    { t: "Sprawdzono, czy podobny problem występuje lub może wystąpić gdzie indziej.",
+      ok: KARTY.length > 0 && !KARTY.some(brakGdzieJeszcze) && !KARTY.some(podobneBezZakresu) },
+    { t: "Zakres działania odpowiada skutkom i ryzyku powtórzenia.",
+      ok: KARTY.length > 0 && KARTY.every(function (x) { return (x.uzasadnienieZakres || "").trim() && x.skalaSkutkow; })
+        && !KARTY.some(tylkoPrzypomnienie) },
+    { t: "Niezgodność zamyka się na podstawie dowodu skuteczności, a nie wykonania działania.",
+      ok: KARTY.length > 0 && !KARTY.some(zamknieteNaKorekcji) && !KARTY.some(brakDowoduPlanowanego) }
+  ];
+  lista.forEach(function (x) {
+    var kw = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "chip " + (x.ok === null ? "" : x.ok ? "green" : "amber"),
+      x.ok === null ? "nie dotyczy" : x.ok ? "tak" : "jeszcze nie"));
+    g.appendChild(el("span", null, x.t));
+    kw.appendChild(g);
+    w.appendChild(kw);
+  });
+  host.appendChild(w);
+}
+
+/* ── zakładka 6 ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz niezgodności: "));
+  n.appendChild(document.createTextNode(
+    ile(KARTY.length, "karta", "karty", "kart") +
+    " · otwartych: " + KARTY.filter(function (k) { return stanKarty(k) !== "Z"; }).length +
+    " · otwartych ponownie: " + KARTY.filter(ponowna).length +
+    " · ze zmianą systemu: " + KARTY.filter(function (k) { return k.zmianaSystemu === "tak"; }).length +
+    " · kompletnych: " + KARTY.filter(kartaOk).length));
+  s.appendChild(n);
+  var bl = KARTY.filter(przyczynaBladLudzki);
+  if (bl.length)
+    s.appendChild(el("div", "warn", "W " + ile(bl.length, "karcie", "kartach", "kartach") +
+      " przyczyna kończy się na człowieku. To najlepsze miejsce na rozmowę o tym, po co jest analiza przyczyn: dopóki przyczyną jest „zapomniał”, działaniem będzie „przypomnieć” — i niezgodność wróci."));
+  var pp = KARTY.filter(tylkoPrzypomnienie);
+  if (pp.length)
+    s.appendChild(el("div", "warn", "W " + ile(pp.length, "karcie", "kartach", "kartach") +
+      " jedynym działaniem jest przypomnienie, bez zmiany w systemie. Pytanie do klienta: <b>co zostanie, gdy ludzie zapomną?</b>"));
+  var gj = KARTY.filter(brakGdzieJeszcze);
+  if (gj.length)
+    s.appendChild(el("div", "warn", ile(gj.length, "karta nie odpowiada", "karty nie odpowiadają", "kart nie odpowiada") +
+      " na pytanie „gdzie jeszcze?”. To wprost wymaganie normy — i w AutoParts właśnie ta odpowiedź zmieniła działanie z jednego zlecenia na zmianę procedury odbioru usług."));
+  var pz = KARTY.filter(podobneBezZakresu);
+  if (pz.length)
+    s.appendChild(el("div", "warn", "W " + ile(pz.length, "karcie", "kartach", "kartach") +
+      " znaleziono podobne przypadki, ale działanie obejmuje tylko miejsce wykrycia. Tu zwykle nie chodzi o niewiedzę, a o zakres budżetu albo czasu — warto to zapisać w uzasadnieniu, zamiast zostawiać jako przeoczenie."));
+  var zk = KARTY.filter(zamknieteNaKorekcji);
+  if (zk.length)
+    s.appendChild(el("div", "warn", ile(zk.length, "karta została zamknięta", "karty zostały zamknięte", "kart zostało zamkniętych") +
+      " przed terminem, w którym dowód skuteczności mógł powstać. To nie jest zarzut wobec osoby sprawdzającej — <b>to brak w procedurze</b>: termin dowodu trzeba ustalać przy planowaniu działania, nie szukać go przy zamykaniu."));
+  var bd = KARTY.filter(brakDowoduPlanowanego);
+  if (bd.length)
+    s.appendChild(el("div", "note", "W " + ile(bd.length, "karcie", "kartach", "kartach") +
+      " nie ustalono planowanego dowodu skuteczności. Rozmowa prosta: na co czekamy i kiedy to będzie widać?"));
+  if (KARTY.length && !KARTY.some(function (k) { return k.zmianaSystemu === "tak"; }))
+    s.appendChild(el("div", "note", "Żadna niezgodność nie doprowadziła do zmiany w systemie. Przy pojedynczej sprawie to normalne; przy kilku oznacza zwykle, że analiza zatrzymuje się przed poziomem, na którym da się coś zmienić."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-54, sekcja 10.1 ── */
+function stanPozycji(q) {
+  var f = {
+    reakcja: function () {
+      return KARTY.length > 0 && KARTY.every(bOk);
+    },
+    ocenaPotrzeby: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) { return cOk(k) && dOk(k); })
+        && !KARTY.some(przyczynaBladLudzki);
+    },
+    wdrozenie: function () {
+      return KARTY.length > 0 && KARTY.every(eOk) && !KARTY.some(tylkoPrzypomnienie)
+        && !KARTY.some(podobneBezZakresu);
+    },
+    przegladSkutecznosci: function () {
+      return KARTY.length > 0 && KARTY.every(fOk);
+    },
+    zmianySystemu: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return k.zmianaSystemu && (k.zmianaSystemu !== "tak" || (k.zmianaOpis || "").trim());
+      });
+    },
+    /* Podwójna negacja celowo: bez niej funkcja zwraca treść ostatniego pola
+       (datę), a widok listy kontrolnej traktuje wartość inną niż logiczna
+       jak „nie dotyczy" — pozycja wyglądałaby na nieoceniałną. */
+    zapisy: function () {
+      return !!(KARTY.length > 0 && KARTY.every(aOk) && (META.zatwierdzil || "").trim() && META.dataZatw);
+    },
+    zamkniecie: function () {
+      var z = KARTY.filter(function (k) { return k.decyzja === "zamknac"; });
+      if (!z.length) return null;
+      return !z.some(zamknieteNaKorekcji) && !KARTY.some(brakDowoduPlanowanego);
+    },
+    narzedzia: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) { return k.metoda; }) && !KARTY.some(metodaNieadekwatna);
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!KARTY.length) b.push({ t: "Rejestr niezgodności jest pusty.", kto: "klient" });
+  if (lb(META.cenaEnergii) === null) b.push({ t: "Nie podano ceny energii do wyceny konsekwencji.", kto: "klient", metodyka: true });
+  KARTY.forEach(function (k, i) {
+    var n = nazwaKarty(k, i);
+    if (!aOk(k)) b.push({ t: n + " — niepełna część A (wymaganie, opis, dowód, źródło).", kto: "klient" });
+    if (bezWymagania(k)) b.push({ t: n + " — opisano zdarzenie bez wskazania niespełnionego wymagania.", kto: "klient" });
+    if (!bOk(k)) b.push({ t: n + " — niepełna część B (korekcja, kto, konsekwencje).", kto: "klient" });
+    if (!cOk(k)) b.push({ t: n + " — niepełna część C (metoda, przebieg, przyczyna).", kto: "klient" });
+    if (przyczynaBladLudzki(k)) b.push({ t: n + " — przyczyna kończy się na błędzie człowieka.", kto: "klient" });
+    if (brakGdzieJeszcze(k)) b.push({ t: n + " — brak odpowiedzi na pytanie „gdzie jeszcze?”.", kto: "klient" });
+    if (!dOk(k)) b.push({ t: n + " — niepełna część D.", kto: "klient" });
+    if (podobneBezZakresu(k)) b.push({ t: n + " — znaleziono podobne przypadki, działanie obejmuje tylko miejsce wykrycia.", kto: "klient" });
+    if (!eOk(k)) b.push({ t: n + " — niepełna część E (uzasadnienie zakresu, działania, zmiana systemu).", kto: "klient" });
+    if (tylkoPrzypomnienie(k)) b.push({ t: n + " — jedynym działaniem jest przypomnienie, bez zmiany w systemie.", kto: "klient" });
+    if (brakDowoduPlanowanego(k)) b.push({ t: n + " — nie ustalono dowodu skuteczności ani terminu jego zebrania.", kto: "klient", metodyka: true });
+    if (zamknieteNaKorekcji(k)) b.push({ t: n + " — zamknięta przed terminem, w którym dowód skuteczności mógł powstać.", kto: "klient" });
+    if (!fOk(k)) b.push({ t: n + " — niepełna część F (dowód, decyzja, sprawdził).", kto: "klient" });
+  });
+  if (!META.dataZatw || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia rejestru.", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 7 ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-NKR-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie rejestru"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Jan Kowalski — Energy Manager", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.dataZatw, "", function (v) { META.dataZatw = v; }, "date")));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_101, "Lista kontrolna III-54 — sekcja 10.1", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-NKR-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Rejestr niezgodności (F-EnMS-22)", "zakładka 1",
+      ile(KARTY.length, "pozycja", "pozycje", "pozycji") + " · otwartych: " +
+      KARTY.filter(function (k) { return stanKarty(k) !== "Z"; }).length],
+    ["A i B — identyfikacja, korekcja, konsekwencje", "zakładka 2",
+      KARTY.filter(function (k) { return aOk(k) && bOk(k); }).length + " z " + KARTY.length],
+    ["C i D — przyczyna i podobne przypadki", "zakładka 3",
+      KARTY.filter(function (k) { return cOk(k) && dOk(k); }).length + " z " + KARTY.length],
+    ["E — ocena potrzeby i działania", "zakładka 4", KARTY.filter(eOk).length + " z " + KARTY.length],
+    ["F — skuteczność", "zakładka 5", KARTY.filter(fOk).length + " z " + KARTY.length],
+    ["Wnioski konsultanta", "zakładka 6", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie: <b>reakcji</b> na niezgodność wraz z korekcją i zajęciem się konsekwencjami, <b>oceny potrzeby działań</b> usuwających przyczynę — przez przegląd niezgodności, ustalenie przyczyn i ustalenie, czy podobne niezgodności występują lub mogą wystąpić — <b>wdrożenia potrzebnych działań</b> adekwatnych do skutków, <b>przeglądu ich skuteczności</b>, w razie potrzeby <b>zmian w systemie</b> oraz <b>zapisów</b> o charakterze niezgodności, podjętych działaniach i wynikach działań korygujących. Forma karty i rejestru, metody analizy przyczyn i podział na niezgodności duże i małe są zaleceniami metodyki ENESA. Dokument D-EnMS-NKR-01 łączy formularze F-EnMS-21 (III-49) i F-EnMS-22 (III-51)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "rejestr", t: "1. Rejestr", f: rysujRejestr },
+  { id: "identyfikacja", t: "2. A i B — identyfikacja", f: rysujIdentyfikacja },
+  { id: "przyczyna", t: "3. C i D — przyczyna", f: rysujPrzyczyna },
+  { id: "dzialania", t: "4. E — działania", f: rysujDzialania },
+  { id: "skutecznosc", t: "5. F — skuteczność", f: rysujSkutecznosc },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  var n = Math.max(KARTY.length, 1);
+  return {
+    razem: n * 3 + 2,
+    zrob: KARTY.filter(aOk).length + KARTY.filter(function (k) { return cOk(k) && dOk(k); }).length
+      + KARTY.filter(kartaOk).length
+      + (lb(META.cenaEnergii) !== null ? 1 : 0)
+      + ((META.zatwierdzil || "").trim() && META.dataZatw ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_101", JSON.stringify({ KARTY: KARTY, META: META, WNIOSKI: WNIOSKI }));
+    /* Trendy niezgodności są wymaganą pozycją danych wejściowych przeglądu (9.3);
+       niezgodności są też źródłem możliwości doskonalenia (10.2). */
+    localStorage.setItem("enesa_niezgodnosci", JSON.stringify({
+      razem: KARTY.length,
+      otwarte: KARTY.filter(function (k) { return stanKarty(k) !== "Z"; }).length,
+      ponownie: KARTY.filter(ponowna).length,
+      zmianySystemu: KARTY.filter(function (k) { return k.zmianaSystemu === "tak"; })
+        .map(function (k) { return { nr: k.nr, zmiana: k.zmianaOpis }; })
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_101"); if (!s) return;
+    var d = JSON.parse(s);
+    KARTY = d.KARTY || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var p = JSON.parse(JSON.stringify(PRZYKLAD));
+  KARTY = p.KARTY; META = p.META; AKTK = 0;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić rejestr niezgodności?")) return;
+  KARTY = []; WNIOSKI = []; AKTK = 0;
+  META = { cenaEnergii: "", zatwierdzil: "", dataZatw: "" };
+  try { localStorage.removeItem("enesa_101"); } catch (e) { }
+  rysuj();
+}
+
+function lkw(x, d) {
+  if (x === null || x === undefined) return "—";
+  var c = Math.abs(x).toFixed(d === undefined ? 0 : d).split(".");
+  c[0] = c[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return (x < 0 ? "−" : "") + c.join(",");
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

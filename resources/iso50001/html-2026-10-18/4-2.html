@@ -1,0 +1,1565 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 4.2 Strony zainteresowane</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+
+.zrodlo3{display:grid;grid-template-columns:1.4fr 1fr 0.8fr;gap:8px}
+.kwalchip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.kwalchip.prawne{background:var(--redbg);color:var(--red);font-weight:600}
+.kwalchip.umowne{background:#e8f1f6;color:#1c5678;font-weight:600}
+.kwalchip.przyjete{background:#f8ebd0;color:var(--amber);font-weight:600}
+.kwalchip.oczek{background:#eceee9;color:var(--mut)}
+@media(max-width:820px){.zrodlo3{grid-template-columns:1fr}}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 4</div>
+ <h1>4.2 Potrzeby i oczekiwania stron zainteresowanych</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001 · wersja 2.0</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 4.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Rejestr 4.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>4.2 Zrozumienie potrzeb i oczekiwań stron zainteresowanych</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 4.2 i sposób przygotowania rejestru.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 4.2<br>Strony zainteresowane</div>
+   <div>
+    <h4>4.2 Potrzeby i oczekiwania stron zainteresowanych</h4>
+    <p>Kto ma interes w tym, jak zarządzasz energią, czego naprawdę wymaga — i co z tego przyjmujesz.
+    Różnica między oczekiwaniem, wymaganiem obowiązującym i sposobem uwzględnienia.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 4.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">4.2 — część A<br>14 slajdów</div>
+   <div>
+    <h4>4.2 Strony zainteresowane — część A</h4>
+    <p>Trzy poziomy: oczekiwanie, wymaganie obowiązujące, sposób uwzględnienia. Źródło wymagania.
+    Druga połowa punktu: wymagania prawne i inne.</p>
+    <p style="font-size:12.5px">14 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Ustal, kto jest w grze, czego wymaga i co Cię obowiązuje — także z przepisów — a potem
+ zdecyduj, co z tego uwzględniasz w systemie. Trzeba też rozpoznać wymagania prawne i inne dotyczące efektywności
+ energetycznej, wykorzystania i zużycia energii, mieć do nich dostęp, ustalić, jak dotyczą zakładu, uwzględnić je
+ w systemie i <b>w ustalonych odstępach czasu</b> sprawdzać, czy lista jest aktualna.</p>
+
+ <div class="note" style="margin:14px 0"><b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 1, punkt 4.2.
+ Wymagania wobec energii rzadko przychodzą do koordynatora systemu — przychodzą do sprzedaży, zakupów i księgowości.
+ <b>W 4.2 ustalasz, co Cię obowiązuje. W 9.1.2 sprawdzasz, czy to spełniasz.</b> Oba kroki opierają się na tym samym
+ rejestrze wymagań prawnych i innych.</div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Co sprawdzić podczas audytu</h3>
+   <ul>
+    <li>Czy rejestr obejmuje strony wewnętrzne, nie tylko organy i dostawców?</li>
+    <li>Skąd wiecie o każdym wymaganiu — paragraf, wersja specyfikacji, data pisma?</li>
+    <li>Które wymagania przyjęliście jako obowiązujące i na jakiej podstawie?</li>
+    <li>Kto odpowiada za każde wymaganie i jak sprawdzacie jego spełnienie?</li>
+    <li>Czy uwzględniono wymagania stron związane ze zmianą klimatu?</li>
+   </ul>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Oczekiwane dowody i dokumenty</h3>
+   <ul>
+    <li>Rejestr stron i wymagań z datą przeglądu (F-EnMS-02)</li>
+    <li>Umowy, specyfikacje i pisma, na które powołuje się rejestr</li>
+    <li>Wymagania obowiązujące przeniesione do rejestru wymagań prawnych (9.1.2)</li>
+    <li>Uzasadnienia dla oczekiwań nieprzyjętych</li>
+   </ul>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>☰ Zalecany sposób wdrożenia</h3>
+  <ol class="kroki">
+   <li><b>Zapytaj dział sprzedaży i zakupów</b>, czego klienci i dostawcy wymagali w ostatnim roku w sprawie energii
+   i emisji. Poproś o dokumenty, nie o wspomnienia.</li>
+   <li>Przejrzyj propozycje wygenerowane z profilu zakładu i z potwierdzonych czynników punktu 4.1.</li>
+   <li>Przy każdym wymaganiu zapisz źródło: paragraf umowy, specyfikację z numerem wersji albo pismo z datą.</li>
+   <li>Zakwalifikuj każde wymaganie i przy obowiązujących wskaż właściciela oraz sposób sprawdzania.</li>
+   <li>Dopisz strony i wymagania, których system nie mógł się domyślić.</li>
+  </ol>
+ </div>
+
+ <div class="ankbox">
+  <h3>4.2 Rejestr stron zainteresowanych i ich wymagań</h3>
+  <p class="op">Jeden wiersz to jedno wymaganie, nie jedna strona — tak jak w formularzu F-EnMS-02. Sześć działów.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz rejestr 4.2</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”, tom 1 i 2.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>Rejestr stron zainteresowanych i ich wymagań z datą przeglądu</li>
+   <li>Wyciąg wymagań obowiązujących do rejestru wymagań prawnych i innych</li>
+   <li>Dokumenty źródłowe: umowy, specyfikacje, pisma</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia"><span id="postep">Wypełnienie: 0% · 0 / 0</span><span style="font-weight:400;color:#6f7d76">Wypełnianie</span></div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Zapisz odpowiedzi przed wyjściem. Rejestr przeglądaj co najmniej raz w roku i za każdym razem, gdy podpisujecie ważną umowę.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Wersja 2.0 — przebudowana pod formularz F-EnMS-02.</b> Podstawa: „Energia pod kontrolą”,
+Tom 2 rozdz. 1 pkt 4.2 (wersja 2.1 z 4.10.2026) oraz Toolkit Modułu 1 wersja 2.4, Załączniki III-03 i III-04.</div>
+
+<div class="note"><b>Przykład AutoParts — nowe, 18.10.2026.</b> Przycisk „Wypełnij przykładem” w stopce
+wypełnia cały rejestr: ocenę wymagań klimatycznych stron, odstęp przeglądu i wszystkie 24 aktywne wymagania
+— decyzja, kwalifikacja, źródło z oznaczeniem i datą, sposób realizacji w EnMS, właściciel i sposób sprawdzania.
+Wypełnienie 100% · 26/26, zero ostrzeżeń. Dane w zmiennej <span class="mono">PRZYKLAD_42</span>.
+Dziewięć wierszy pochodzi wprost z III-04; pozostałe to strony z biblioteki, które dla AutoParts też stawiają
+wymagania — wypełnione zgodnie z resztą serii (zarządzenie 3/2026 o rolach, umowa na energię do 31.12.2026 r.,
+gaz do 30.09.2027 r., ISO 14001 od 2015 r., moc umowna 1 400 kW, LPG do wózków widłowych). Daty dokumentów,
+których III-04 nie podaje, przyjęto jako wiarygodne — do sprawdzenia przy publikacji.
+<br><br><b>Jedna liczba do uzgodnienia.</b> Wypełniony rejestr daje <b>22 wymagania obowiązujące</b>, które
+przechodzą do oceny zgodności, a przykład w punkcie 9.1.2 liczy <b>7</b> — bo tam odwzorowano dziewięciowierszowy
+rejestr z III-04, a nie rejestr generowany na platformie. To nie jest błąd żadnej ze stron: III-04 jest skrótem
+na potrzeby książki, platforma pyta o pełną listę stron z biblioteki. Przed publikacją trzeba zdecydować, czy
+przykład 9.1.2 ma przejść na pełny wyciąg z 4.2 (wtedy oba punkty pokazują te same liczby), czy zostaje przy
+brzmieniu z książki z adnotacją.
+<br><br><b>Poprawka kwalifikacji.</b> Biblioteka sugeruje przy <span class="mono">WYM-30</span> (jednostka
+certyfikująca) kwalifikację „prawne”. Wymagania jednostki certyfikującej wynikają z umowy o certyfikację,
+nie z przepisu — przykład ustawia „umowne”. Sugestię w bibliotece warto poprawić.</div>
+
+<h2>Zmiana modelu danych — najważniejsza rzecz w tej wersji</h2>
+<div class="warn"><b>Wiersz rejestru to wymaganie, nie strona zainteresowana.</b> W wypełnionym przykładzie III-04
+„Główny klient” występuje dwa razy: raz z wymaganiem o corocznych danych o zużyciu (właściciel: Energy Manager),
+raz z wymaganiem certyfikatu (właściciel: Dyrektor Zakładu). „Pracownicy” też dwa razy: mikroklimat i oświetlenie
+z przepisów BHP jako <span class="mono">prawne</span>, preferencja chłodniejszych hal jako
+<span class="mono">oczekiwanie nieprzyjęte</span>. Te wiersze mają różną kwalifikację, różnego właściciela
+i różny sposób sprawdzania — jeden wiersz na stronę tego nie pomieści.</div>
+<p class="sub2">W poprzedniej wersji platformy była jedna karta na stronę zainteresowaną. Teraz jedna karta to jedno wymaganie,
+a do każdej strony można dopisać kolejne. Biblioteka proponuje <b>31 wymagań</b> dla 28 stron,
+w tym 5 z rozbić przeniesionych wprost z III-04.</p>
+
+<h2>Dziewięć kolumn F-EnMS-02 w karcie wymagania</h2>
+<table>
+<tr><th style="width:22%">Kolumna formularza</th><th style="width:26%">Pole na platformie</th><th>Uwagi</th></tr>
+<tr><td>Nr</td><td class="mono">id</td><td>Numer porządkowy wiersza w rejestrze.</td></tr>
+<tr><td>Strona</td><td class="mono">strona</td><td>Z biblioteki albo dopisana przez klienta.</td></tr>
+<tr><td>Wew. / zew.</td><td class="mono">typ</td><td>Wartości dosłownie jak w formularzu: <span class="mono">wew.</span> / <span class="mono">zew.</span></td></tr>
+<tr><td>Wymaganie lub oczekiwanie (zakres)</td><td class="mono">wymaganie</td><td>Edytowalne. Propozycja z biblioteki jest punktem wyjścia.</td></tr>
+<tr><td><b>Źródło</b></td><td class="mono">zrodlo_dokument · zrodlo_oznaczenie · zrodlo_data</td><td><b>Nowe.</b> Trzy pola zamiast tekstu: dokument, paragraf albo numer wersji, data. Wymagane dla każdego wymagania obowiązującego.</td></tr>
+<tr><td><b>Kwalifikacja</b></td><td class="mono">kwalifikacja</td><td><b>Cztery wartości</b> zamiast dawnego „wymóg zgodności tak/nie”. Lista niżej.</td></tr>
+<tr><td>Sposób realizacji w EnMS</td><td class="mono">sposob</td><td>Edytowalne. Przy oczekiwaniu nieprzyjętym — powód decyzji.</td></tr>
+<tr><td><b>Właściciel</b></td><td class="mono">wlasciciel</td><td><b>Nowe.</b> Stanowisko, nie imię.</td></tr>
+<tr><td><b>Sprawdzanie (jak, kiedy)</b></td><td class="mono">sprawdzanie</td><td><b>Nowe.</b> Trzecia część „sposobu uwzględnienia” według Tomu 2: co robisz, kto odpowiada, <b>jak sprawdzasz</b>.</td></tr>
+<tr><td><i>brak odpowiednika</i></td><td class="mono">termin · termin_powtarzalnosc</td><td><b>Do dobudowania — dziesiąta kolumna, której nie ma ani formularz, ani ta makieta.</b> Wymaganie z terminem (dane dla klienta do 31 marca, wskaźniki dla banku do 30 czerwca, zawiadomienie URE w ciągu 30 dni) ma dziś datę <b>wewnątrz treści wymagania</b>, jako tekst. Dopóki tak jest, punkt 9.1.2 potrafi tylko zapytać, czy sposób sprawdzenia odwołuje się do daty — nie potrafi przypomnieć, że termin nadchodzi. W AutoParts to kosztowało niezgodność NK-2026-02: rejestr wskazywał wymaganie, źródło i właściciela, ale <b>nikt nie miał tej daty u siebie</b>, więc raport dla banku wyszedł 12 sierpnia wobec terminu 30 czerwca. Po dodaniu tych dwóch pól platforma pilnuje terminów sama, a ocena zgodności (9.1.2) przestaje być rocznym przeglądem i staje się bieżącym pilnowaniem. To ten sam generyczny mechanizm terminów, który zbiera się w specyfikacjach od 6.5 do 10.1 — tutaj jest jego najwcześniejszym i najtańszym miejscem wdrożenia.</td></tr>
+</table>
+
+<h2>Kwalifikacja — cztery wartości</h2>
+<table>
+<tr><th style="width:24%">Wartość</th><th style="width:26%">Co znaczy</th><th>Co wymusza</th></tr>
+<tr><td class="mono">prawne</td><td>Wynika z przepisu.</td><td>Źródło + <b>data ustalenia brzmienia</b> + właściciel + sprawdzanie. Trafia do rejestru wymagań prawnych (9.1.2).</td></tr>
+<tr><td class="mono">umowne</td><td>Wynika z umowy albo specyfikacji.</td><td>Źródło + właściciel + sprawdzanie. Trafia do rejestru wymagań.</td></tr>
+<tr><td class="mono">przyjęte zobowiązanie</td><td>Firma zobowiązała się dobrowolnie.</td><td>To samo co wyżej. <b>„Dobrowolne” nie znaczy „dowolne”</b> — przyjęte zobowiązanie spełnia się tak samo jak przepis.</td></tr>
+<tr><td class="mono">oczekiwanie nieprzyjęte</td><td>Strona czegoś chce, organizacja tego nie przyjmuje.</td><td><b>Powód decyzji</b> i termin ponownego rozpatrzenia. Nie trafia do rejestru wymagań.</td></tr>
+</table>
+<p class="sub2">Pozycja bez kwalifikacji jest nierozstrzygnięta i blokuje przekazanie rejestru — bo „samo oczekiwanie nie jest
+obowiązkiem, ale trzeba zdecydować świadomie i zapisać powód”.</p>
+
+<h2>Walidacje wzięte z tabeli błędów</h2>
+<table>
+<tr><th style="width:34%">Błąd z książki</th><th>Co robi platforma</th></tr>
+<tr><td>Brak źródła wymagania</td><td>Kwalifikacja prawne, umowne albo przyjęte zobowiązanie bez wypełnionego źródła blokuje pozycję. Komunikat: „«Klient tak mówił» nie wystarczy. Podaj paragraf umowy, specyfikację z numerem wersji albo pismo z datą.”</td></tr>
+<tr><td>Każde oczekiwanie jako obowiązek</td><td>Oczekiwanie nieprzyjęte wymaga powodu; pole jest osobne i wymagane.</td></tr>
+<tr><td>Warunki pracy „załatwione” szkoleniem</td><td>Przy wymaganiu oznaczonym jako BHP sposób realizacji zawierający wyłącznie szkolenie wywołuje ostrzeżenie: „Temperaturę i oświetlenie wymagane przez BHP zapewniają kryteria eksploatacji i pomiary. Szkolenie je tylko wspiera.”</td></tr>
+<tr><td>Odpowiedź szersza lub węższa niż wymaganie</td><td>Przy wymaganiu o ślad węglowy sposób ograniczony do energii wywołuje ostrzeżenie: ślad węglowy obejmuje też materiały i transport.</td></tr>
+<tr><td>Pominięty kluczowy klient</td><td>Podpowiedź w kroku 1 zalecanego wdrożenia i w zakładce „Własne wymagania”: zapytaj sprzedaż, poproś o dokumenty.</td></tr>
+<tr><td>Rejestr bez aktualizacji</td><td>Pole odstępu przeglądu w zakładce klimatu i przypomnienie w stopce: co najmniej raz w roku i przy każdej ważnej umowie.</td></tr>
+</table>
+
+<h2>Poprawione brzmienie STK-Z-02</h2>
+<div class="warn">Poprzednia wersja opisywała obowiązek jako obowiązujący: „Posiadanie systemu zarządzania energią zgodnie
+z art. 11 dyrektywy 2023/1791 w terminie do 11.10.2027”, z kwalifikacją ustawioną na stałe jako wymóg zgodności.
+Nota o stanie prawnym z 4 października 2026 r. mówi, że projekt nowelizacji <span class="mono">UC77</span> nie został
+uchwalony. Dyrektywa wiąże państwo, nie przedsiębiorstwo. Nowe brzmienie idzie za wzorcem z III-04, wiersz 7:
+wymienia ustawę i projekt, zostawia kwalifikację do rozstrzygnięcia i proponuje sprawdzanie „co kwartał do wejścia
+w życie nowelizacji”. <b>To zamyka pozycję „sformułowanie KTX-ZR-01” z listy synchronizacji w Toolkicie</b> —
+odpowiednik w punkcie 4.1 wymaga tej samej poprawki.</div>
+
+<h2>Biblioteka — 31 wymagań</h2>
+<h2>Strony wewnętrzne</h2><p class="sub2">Komórki i role wewnątrz organizacji. Norma wymaga ich uwzględnienia tak samo jak stron zewnętrznych. · 11 wymagań</p><table><tr><th style='width:7%'>Nr</th><th style='width:16%'>Strona</th><th style='width:28%'>Wymaganie</th><th style='width:12%'>Kwalifikacja</th><th style='width:17%'>Warunek</th><th>Podpowiedź źródła</th></tr><tr><td class='mono'>WYM-01</td><td>Zarząd / najwyższe kierownictwo</td><td>Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-02</td><td>Właściciel / grupa kapitałowa</td><td>Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_GRUPA_KAPITALOWA = tak</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-03</td><td>Pracownicy</td><td>Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP</td><td>prawne — wynika z przepisu</td><td class='mono'>ZAWSZE</td><td>Przepisy BHP — rozporządzenie o ogólnych przepisach bhp, normy oświetlenia stanowisk</td></tr><tr><td class='mono'>WYM-04</td><td>Pracownicy</td><td>Preferencja: niższa temperatura w halach w czasie upałów</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Ankieta pracownicza, zgłoszenia do działu BHP</td></tr><tr><td class='mono'>WYM-05</td><td>Służby utrzymania ruchu</td><td>Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-06</td><td>Dział produkcji</td><td>Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-07</td><td>Dział zakupów</td><td>Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-08</td><td>Kontroling / finanse</td><td>Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-09</td><td>Dział BHP i ochrony środowiska</td><td>Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-10</td><td>Energy Manager / zespół ds. energii</td><td>Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-11</td><td>Rada pracowników / związki zawodowe</td><td>Informacja o zmianach organizacyjnych wynikających z wdrożenia; brak pogorszenia warunków pracy</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_ZWIAZKI = tak</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr></table><h2>Organy, regulatorzy i zamawiający publiczni</h2><p class="sub2">Tu rodzą się wymagania prawne. Przy każdym zapisz, na jaki dzień ustalono brzmienie przepisu. · 7 wymagań</p><table><tr><th style='width:7%'>Nr</th><th style='width:16%'>Strona</th><th style='width:28%'>Wymaganie</th><th style='width:12%'>Kwalifikacja</th><th style='width:17%'>Warunek</th><th>Podpowiedź źródła</th></tr><tr><td class='mono'>WYM-12</td><td>Prezes URE</td><td>Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania</td><td>prawne — wynika z przepisu</td><td class='mono'>ZAWSZE</td><td>Akt prawny — tytuł, artykuł, stan na dzień</td></tr><tr><td class='mono'>WYM-13</td><td>Organ właściwy ds. EED / minister</td><td>Obowiązek posiadania certyfikowanego systemu zarządzania energią — wprowadzany projektem nowelizacji ustawy o efektywności energetycznej (UC77), wdrażającym art. 11 dyrektywy (UE) 2023/1791</td><td>— do rozstrzygnięcia</td><td class='mono'>ZUZYCIE_TJ &gt; 85</td><td>Ustawa o efektywności energetycznej; projekt nowelizacji UC77 (legislacja.rcl.gov.pl) — zapisz, na jaki dzień ustalono brzmienie</td></tr><tr><td class='mono'>WYM-14</td><td>Urząd Dozoru Technicznego</td><td>Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja</td><td>prawne — wynika z przepisu</td><td class='mono'>FAKT_UDT = tak</td><td>Akt prawny — tytuł, artykuł, stan na dzień</td></tr><tr><td class='mono'>WYM-15</td><td>Organy ochrony środowiska / KOBiZE</td><td>Monitorowanie i raportowanie emisji; obowiązki wynikające z pozwoleń</td><td>prawne — wynika z przepisu</td><td class='mono'>FAKT_ETS = tak</td><td>Akt prawny — tytuł, artykuł, stan na dzień</td></tr><tr><td class='mono'>WYM-16</td><td>Organ prowadzący rejestr f-gazów</td><td>Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO</td><td>prawne — wynika z przepisu</td><td class='mono'>FAKT_FGAZ = tak</td><td>Akt prawny — tytuł, artykuł, stan na dzień</td></tr><tr><td class='mono'>WYM-17</td><td>Operator systemu świadectw efektywności</td><td>Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-18</td><td>Zamawiający publiczni</td><td>Posiadanie certyfikowanego systemu jako warunek lub kryterium oceny ofert</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_PRZETARGI = tak</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr></table><h2>Rynek, dostawcy i odbiorcy</h2><p class="sub2">Wymagania umowne. Źródłem jest paragraf umowy albo specyfikacja z numerem wersji. · 9 wymagań</p><table><tr><th style='width:7%'>Nr</th><th style='width:16%'>Strona</th><th style='width:28%'>Wymaganie</th><th style='width:12%'>Kwalifikacja</th><th style='width:17%'>Warunek</th><th>Podpowiedź źródła</th></tr><tr><td class='mono'>WYM-19</td><td>Operator systemu dystrybucyjnego</td><td>Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji</td><td>prawne — wynika z przepisu</td><td class='mono'>ZAWSZE</td><td>Akt prawny — tytuł, artykuł, stan na dzień</td></tr><tr><td class='mono'>WYM-20</td><td>Sprzedawca energii elektrycznej</td><td>Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-21</td><td>Dostawca gazu lub ciepła sieciowego</td><td>Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-22</td><td>Dostawcy paliw transportowych</td><td>Warunki umów flotowych; dane o zużyciu paliw do rozliczeń</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_FLOTA = tak</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-23</td><td>Odbiorcy / klienci</td><td>Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku</td><td>umowne — wynika z umowy albo specyfikacji</td><td class='mono'>FAKT_ODBIORCY_CO2 = tak</td><td>Wymagania dla dostawców — rozdział i wersja dokumentu, data</td></tr><tr><td class='mono'>WYM-24</td><td>Odbiorcy / klienci</td><td>Informacja o śladzie węglowym wyrobu</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_ODBIORCY_CO2 = tak</td><td>Specyfikacja dla dostawców albo pismo działu zakupów klienta z datą</td></tr><tr><td class='mono'>WYM-25</td><td>Odbiorcy / klienci</td><td>Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.</td><td>umowne — wynika z umowy albo specyfikacji</td><td class='mono'>FAKT_ODBIORCY_CO2 = tak</td><td>Wymagania dla dostawców — rozdział i wersja dokumentu, data</td></tr><tr><td class='mono'>WYM-26</td><td>Dostawcy urządzeń i usług</td><td>Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-27</td><td>Wykonawcy i podwykonawcy na terenie zakładu</td><td>Znajomość zasad eksploatacji obowiązujących na terenie; instruktaż przed rozpoczęciem prac</td><td>— do rozstrzygnięcia</td><td class='mono'>FAKT_UR_WLASNE IN (zewnetrzne, mieszane)</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr></table><h2>Finansowanie, ubezpieczenie i certyfikacja</h2><p class="sub2">Strony oceniające organizację z zewnątrz, zwykle na podstawie udokumentowanych efektów. · 4 wymagań</p><table><tr><th style='width:7%'>Nr</th><th style='width:16%'>Strona</th><th style='width:28%'>Wymaganie</th><th style='width:12%'>Kwalifikacja</th><th style='width:17%'>Warunek</th><th>Podpowiedź źródła</th></tr><tr><td class='mono'>WYM-28</td><td>Instytucje finansujące / banki</td><td>Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-29</td><td>Inwestorzy / podmiot raportujący ESG</td><td>Dane o zużyciu i intensywności energetycznej do sprawozdawczości zrównoważonego rozwoju</td><td>prawne — wynika z przepisu</td><td class='mono'>FAKT_CSRD = tak</td><td>Akt prawny — tytuł, artykuł, stan na dzień</td></tr><tr><td class='mono'>WYM-30</td><td>Ubezpieczyciel</td><td>Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności</td><td>— do rozstrzygnięcia</td><td class='mono'>ZAWSZE</td><td>Umowa, specyfikacja z numerem wersji albo pismo z datą</td></tr><tr><td class='mono'>WYM-31</td><td>Jednostka certyfikująca</td><td>Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres</td><td>umowne — wynika z umowy albo specyfikacji</td><td class='mono'>ZAWSZE</td><td>Umowa o certyfikację i wymagania jednostki certyfikującej — punkt i wersja dokumentu</td></tr></table><h2>Mapowanie 4.1 → 4.2</h2><p class='sub2'>Potwierdzony czynnik wciąga stronę do rejestru wraz z gotową treścią wymagania. 21 reguł.</p><table><tr><th style='width:12%'>Czynnik 4.1</th><th style='width:14%'>Strona 4.2</th><th style='width:42%'>Wymaganie do wpisania</th><th>Kwalifikacja</th></tr><tr><td class='mono'>KTX-ZR-01</td><td class='mono'>STK-Z-02</td><td>Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZR-03</td><td class='mono'>STK-Z-01</td><td>Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZR-04</td><td class='mono'>STK-Z-04</td><td>Monitorowanie i raportowanie emisji, umorzenie uprawnień</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZR-05</td><td class='mono'>STK-Z-16</td><td>Dane o zużyciu i intensywności energetycznej do sprawozdania</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZR-06</td><td class='mono'>STK-Z-03</td><td>Terminowe badania i przeglądy, aktualna dokumentacja</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZR-07</td><td class='mono'>STK-Z-05</td><td>Kontrole szczelności i karty urządzeń w CRO</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZR-08</td><td class='mono'>STK-Z-06</td><td>Poprawna dokumentacja przedsięwzięć i oszczędności</td><td>nie</td></tr><tr><td class='mono'>KTX-ZR-10</td><td class='mono'>STK-Z-07</td><td>Certyfikat jako warunek lub kryterium w postępowaniach</td><td>KANDYDAT</td></tr><tr><td class='mono'>KTX-ZM-02</td><td class='mono'>STK-Z-09</td><td>Zgodność profilu poboru z warunkami nowej umowy</td><td>nie</td></tr><tr><td class='mono'>KTX-ZM-03</td><td class='mono'>STK-Z-12</td><td>Informacja o śladzie węglowym i efektywności wyrobu</td><td>KANDYDAT</td></tr><tr><td class='mono'>KTX-ZM-05</td><td class='mono'>STK-Z-08</td><td>Nieprzekraczanie mocy umownej, warunki przyłączenia</td><td>TAK</td></tr><tr><td class='mono'>KTX-ZM-07</td><td class='mono'>STK-Z-07</td><td>Posiadanie certyfikatu w terminie postępowań</td><td>KANDYDAT</td></tr><tr><td class='mono'>KTX-WT-07</td><td class='mono'>STK-Z-08</td><td>Warunki przyłączenia źródła, zgłaszanie zmian w instalacji</td><td>TAK</td></tr><tr><td class='mono'>KTX-WT-09</td><td class='mono'>STK-Z-01</td><td>Obowiązki koncesyjne i sprawozdawcze dla wytwarzania</td><td>TAK</td></tr><tr><td class='mono'>KTX-WT-13</td><td class='mono'>STK-Z-11</td><td>Warunki umów flotowych i dane o zużyciu paliw</td><td>nie</td></tr><tr><td class='mono'>KTX-WO-01</td><td class='mono'>STK-W-01</td><td>Oczekiwanie powołania Energy Managera i przypisania uprawnień</td><td>nie</td></tr><tr><td class='mono'>KTX-WO-09</td><td class='mono'>STK-W-05</td><td>Brak ograniczeń dla ciągłości produkcji przy pomiarach</td><td>nie</td></tr><tr><td class='mono'>KTX-WO-11</td><td class='mono'>STK-W-04</td><td>Dostęp do danych i wpływ na decyzje eksploatacyjne</td><td>nie</td></tr><tr><td class='mono'>KTX-WF-06</td><td class='mono'>STK-Z-15</td><td>Udokumentowane efekty energetyczne przy finansowaniu</td><td>KANDYDAT</td></tr><tr><td class='mono'>KTX-ZK-08</td><td class='mono'>STK-Z-12</td><td>Odporność łańcucha dostaw, raportowanie emisji</td><td>KANDYDAT</td></tr><tr><td class='mono'>KTX-ZK-08</td><td class='mono'>STK-Z-16</td><td>Odporność łańcucha dostaw, raportowanie emisji</td><td>KANDYDAT</td></tr></table><h2>Dane w formacie JSON</h2><p class='sub2'>Biblioteka wymagań, grupy i reguły mapowania.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;wymagania&quot;: [
+    {
+      &quot;id&quot;: &quot;WYM-01&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-01&quot;,
+      &quot;strona&quot;: &quot;Zarząd / najwyższe kierownictwo&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Polityka energetyczna, cele energetyczne, Przegląd Zarządzania (kl. 9.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Dyrektor Zakładu&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-02&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-02&quot;,
+      &quot;strona&quot;: &quot;Właściciel / grupa kapitałowa&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Wskaźniki EnPI definiowane spójnie z wytycznymi grupy&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Dyrektor Zakładu&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_GRUPA_KAPITALOWA = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-03&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-03&quot;,
+      &quot;strona&quot;: &quot;Pracownicy&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Kryteria eksploatacji wentylacji, klimatyzacji i oświetlenia (8.1); pomiary okresowe&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Kierownik UR, specjalista BHP&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Pomiary okresowe oświetlenia i mikroklimatu; kontrole BHP&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Przepisy BHP — rozporządzenie o ogólnych przepisach bhp, normy oświetlenia stanowisk&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: true,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-04&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-03&quot;,
+      &quot;strona&quot;: &quot;Pracownicy&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Preferencja: niższa temperatura w halach w czasie upałów&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Kierownik UR, specjalista BHP&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Ankieta roczna; decyzja przy planowaniu budżetu&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Ankieta pracownicza, zgłoszenia do działu BHP&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: true,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-05&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-04&quot;,
+      &quot;strona&quot;: &quot;Służby utrzymania ruchu&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Nadzór operacyjny nad SEU (kl. 8.1), plan zbierania danych (kl. 6.6)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-06&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-05&quot;,
+      &quot;strona&quot;: &quot;Dział produkcji&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Zmienne istotne w przeglądzie energetycznym (kl. 6.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Kierownik Produkcji&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-07&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-06&quot;,
+      &quot;strona&quot;: &quot;Dział zakupów&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Kryteria energetyczne w zakupach (kl. 8.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Dział Zakupów&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-08&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-07&quot;,
+      &quot;strona&quot;: &quot;Kontroling / finanse&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Ocena możliwości poprawy z okresem zwrotu (kl. 6.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Kontroling&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-09&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-08&quot;,
+      &quot;strona&quot;: &quot;Dział BHP i ochrony środowiska&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Integracja rejestru wymagań prawnych&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Specjalista ds. środowiska&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-10&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-09&quot;,
+      &quot;strona&quot;: &quot;Energy Manager / zespół ds. energii&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Zarządzenie o powołaniu zespołu, przypisanie ról (kl. 5.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-11&quot;,
+      &quot;strona_kod&quot;: &quot;STK-W-10&quot;,
+      &quot;strona&quot;: &quot;Rada pracowników / związki zawodowe&quot;,
+      &quot;typ&quot;: &quot;wew.&quot;,
+      &quot;wymaganie&quot;: &quot;Informacja o zmianach organizacyjnych wynikających z wdrożenia; brak pogorszenia warunków pracy&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Plan komunikacji wewnętrznej (kl. 7.4)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Dział Kadr&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_ZWIAZKI = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-12&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-01&quot;,
+      &quot;strona&quot;: &quot;Prezes URE&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Rejestr wymagań prawnych, ocena zgodności (kl. 9.1.2)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Akt prawny — tytuł, artykuł, stan na dzień&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-13&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-02&quot;,
+      &quot;strona&quot;: &quot;Organ właściwy ds. EED / minister&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Obowiązek posiadania certyfikowanego systemu zarządzania energią — wprowadzany projektem nowelizacji ustawy o efektywności energetycznej (UC77), wdrażającym art. 11 dyrektywy (UE) 2023/1791&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Rejestr wymagań prawnych i innych; harmonogram wdrożenia i certyfikacji dostosowany do terminu wynikającego z ustawy po jej uchwaleniu&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Ustawa o efektywności energetycznej; projekt nowelizacji UC77 (legislacja.rcl.gov.pl) — zapisz, na jaki dzień ustalono brzmienie&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZUZYCIE_TJ &gt; 85&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false,
+      &quot;uwaga_prawna&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;WYM-14&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-03&quot;,
+      &quot;strona&quot;: &quot;Urząd Dozoru Technicznego&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Harmonogram przeglądów UDT w rejestrze wymagań&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Akt prawny — tytuł, artykuł, stan na dzień&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_UDT = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-15&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-04&quot;,
+      &quot;strona&quot;: &quot;Organy ochrony środowiska / KOBiZE&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Monitorowanie i raportowanie emisji; obowiązki wynikające z pozwoleń&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Powiązanie celów energetycznych z emisyjnymi&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Akt prawny — tytuł, artykuł, stan na dzień&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_ETS = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-16&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-05&quot;,
+      &quot;strona&quot;: &quot;Organ prowadzący rejestr f-gazów&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Rejestr F-gaz włączony do wymagań prawnych&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Akt prawny — tytuł, artykuł, stan na dzień&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_FGAZ = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-17&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-06&quot;,
+      &quot;strona&quot;: &quot;Operator systemu świadectw efektywności&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Dokumentacja efektów w planach działań (kl. 6.2)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-18&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-07&quot;,
+      &quot;strona&quot;: &quot;Zamawiający publiczni&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Posiadanie certyfikowanego systemu jako warunek lub kryterium oceny ofert&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Termin certyfikacji podporządkowany kalendarzowi postępowań&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_PRZETARGI = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-19&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-08&quot;,
+      &quot;strona&quot;: &quot;Operator systemu dystrybucyjnego&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Monitorowanie mocy szczytowej (kl. 9.1), warunki przyłączeniowe w rejestrze&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Akt prawny — tytuł, artykuł, stan na dzień&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-20&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-09&quot;,
+      &quot;strona&quot;: &quot;Sprzedawca energii elektrycznej&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Analiza profilu poboru jako możliwość poprawy (kl. 6.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-21&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-10&quot;,
+      &quot;strona&quot;: &quot;Dostawca gazu lub ciepła sieciowego&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Gospodarka cieplna w przeglądzie energetycznym&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-22&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-11&quot;,
+      &quot;strona&quot;: &quot;Dostawcy paliw transportowych&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Warunki umów flotowych; dane o zużyciu paliw do rozliczeń&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Flota jako odrębny obszar monitorowania&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_FLOTA = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-23&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-12&quot;,
+      &quot;strona&quot;: &quot;Odbiorcy / klienci&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku&quot;,
+      &quot;kwal_sug&quot;: &quot;umowne&quot;,
+      &quot;sposob_sug&quot;: &quot;Plan zbierania danych (6.6): przypisanie zużycia do linii produkcyjnych&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Potwierdzenie odbioru raportu; ocena zgodności raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Wymagania dla dostawców — rozdział i wersja dokumentu, data&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_ODBIORCY_CO2 = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-24&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-12&quot;,
+      &quot;strona&quot;: &quot;Odbiorcy / klienci&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Informacja o śladzie węglowym wyrobu&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Ponowna decyzja przy odnowieniu umowy&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Specyfikacja dla dostawców albo pismo działu zakupów klienta z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_ODBIORCY_CO2 = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;WYM-25&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-12&quot;,
+      &quot;strona&quot;: &quot;Odbiorcy / klienci&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.&quot;,
+      &quot;kwal_sug&quot;: &quot;umowne&quot;,
+      &quot;sposob_sug&quot;: &quot;Wdrożenie i certyfikacja zgodnie z harmonogramem wdrożenia&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Wymagania dla dostawców — rozdział i wersja dokumentu, data&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_ODBIORCY_CO2 = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-26&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-13&quot;,
+      &quot;strona&quot;: &quot;Dostawcy urządzeń i usług&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Wymagania dla dostawców (kl. 8.3)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-27&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-14&quot;,
+      &quot;strona&quot;: &quot;Wykonawcy i podwykonawcy na terenie zakładu&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Znajomość zasad eksploatacji obowiązujących na terenie; instruktaż przed rozpoczęciem prac&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Nadzór operacyjny rozciągnięty na wykonawców (kl. 8.1)&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_UR_WLASNE IN (zewnetrzne, mieszane)&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-28&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-15&quot;,
+      &quot;strona&quot;: &quot;Instytucje finansujące / banki&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Dokumentacja efektów do wniosków kredytowych&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-29&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-16&quot;,
+      &quot;strona&quot;: &quot;Inwestorzy / podmiot raportujący ESG&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Dane o zużyciu i intensywności energetycznej do sprawozdawczości zrównoważonego rozwoju&quot;,
+      &quot;kwal_sug&quot;: &quot;prawne&quot;,
+      &quot;sposob_sug&quot;: &quot;Wskaźniki EnPI spójne z wymaganiami sprawozdawczymi&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Akt prawny — tytuł, artykuł, stan na dzień&quot;,
+      &quot;pokaz_gdy&quot;: &quot;FAKT_CSRD = tak&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-30&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-17&quot;,
+      &quot;strona&quot;: &quot;Ubezpieczyciel&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności&quot;,
+      &quot;kwal_sug&quot;: &quot;&quot;,
+      &quot;sposob_sug&quot;: &quot;Kryteria eksploatacji SEU, harmonogram przeglądów&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Przegląd rejestru raz w roku&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa, specyfikacja z numerem wersji albo pismo z datą&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;WYM-31&quot;,
+      &quot;strona_kod&quot;: &quot;STK-Z-18&quot;,
+      &quot;strona&quot;: &quot;Jednostka certyfikująca&quot;,
+      &quot;typ&quot;: &quot;zew.&quot;,
+      &quot;wymaganie&quot;: &quot;Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres&quot;,
+      &quot;kwal_sug&quot;: &quot;umowne&quot;,
+      &quot;sposob_sug&quot;: &quot;Nadzór nad dokumentacją (kl. 7.5), zapisy z audytu i przeglądu&quot;,
+      &quot;wlasciciel_sug&quot;: &quot;Energy Manager&quot;,
+      &quot;sprawdzanie_sug&quot;: &quot;Audit certyfikacyjny; audity wewnętrzne (9.2)&quot;,
+      &quot;zrodlo_podp&quot;: &quot;Umowa o certyfikację i wymagania jednostki certyfikującej — punkt i wersja dokumentu&quot;,
+      &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+      &quot;bhp&quot;: false,
+      &quot;preferencja&quot;: false,
+      &quot;slad&quot;: false
+    }
+  ],
+  &quot;grupy&quot;: [
+    {
+      &quot;id&quot;: &quot;wewn&quot;,
+      &quot;krotka&quot;: &quot;Strony wewnętrzne&quot;,
+      &quot;nazwa&quot;: &quot;Strony wewnętrzne&quot;,
+      &quot;opis&quot;: &quot;Komórki i role wewnątrz organizacji. Norma wymaga ich uwzględnienia tak samo jak stron zewnętrznych.&quot;,
+      &quot;strony&quot;: [
+        &quot;STK-W-01&quot;,
+        &quot;STK-W-02&quot;,
+        &quot;STK-W-03&quot;,
+        &quot;STK-W-04&quot;,
+        &quot;STK-W-05&quot;,
+        &quot;STK-W-06&quot;,
+        &quot;STK-W-07&quot;,
+        &quot;STK-W-08&quot;,
+        &quot;STK-W-09&quot;,
+        &quot;STK-W-10&quot;
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;organy&quot;,
+      &quot;krotka&quot;: &quot;Organy i regulatorzy&quot;,
+      &quot;nazwa&quot;: &quot;Organy, regulatorzy i zamawiający publiczni&quot;,
+      &quot;opis&quot;: &quot;Tu rodzą się wymagania prawne. Przy każdym zapisz, na jaki dzień ustalono brzmienie przepisu.&quot;,
+      &quot;strony&quot;: [
+        &quot;STK-Z-01&quot;,
+        &quot;STK-Z-02&quot;,
+        &quot;STK-Z-03&quot;,
+        &quot;STK-Z-04&quot;,
+        &quot;STK-Z-05&quot;,
+        &quot;STK-Z-06&quot;,
+        &quot;STK-Z-07&quot;
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;rynek&quot;,
+      &quot;krotka&quot;: &quot;Rynek i dostawcy&quot;,
+      &quot;nazwa&quot;: &quot;Rynek, dostawcy i odbiorcy&quot;,
+      &quot;opis&quot;: &quot;Wymagania umowne. Źródłem jest paragraf umowy albo specyfikacja z numerem wersji.&quot;,
+      &quot;strony&quot;: [
+        &quot;STK-Z-08&quot;,
+        &quot;STK-Z-09&quot;,
+        &quot;STK-Z-10&quot;,
+        &quot;STK-Z-11&quot;,
+        &quot;STK-Z-12&quot;,
+        &quot;STK-Z-13&quot;,
+        &quot;STK-Z-14&quot;
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;finanse&quot;,
+      &quot;krotka&quot;: &quot;Finansowanie i nadzór&quot;,
+      &quot;nazwa&quot;: &quot;Finansowanie, ubezpieczenie i certyfikacja&quot;,
+      &quot;opis&quot;: &quot;Strony oceniające organizację z zewnątrz, zwykle na podstawie udokumentowanych efektów.&quot;,
+      &quot;strony&quot;: [
+        &quot;STK-Z-15&quot;,
+        &quot;STK-Z-16&quot;,
+        &quot;STK-Z-17&quot;,
+        &quot;STK-Z-18&quot;
+      ]
+    }
+  ],
+  &quot;kwalifikacje&quot;: [
+    [
+      &quot;prawne&quot;,
+      &quot;prawne — wynika z przepisu&quot;
+    ],
+    [
+      &quot;umowne&quot;,
+      &quot;umowne — wynika z umowy albo specyfikacji&quot;
+    ],
+    [
+      &quot;przyjete&quot;,
+      &quot;przyjęte zobowiązanie — firma zobowiązała się dobrowolnie&quot;
+    ],
+    [
+      &quot;oczekiwanie_nieprzyjete&quot;,
+      &quot;oczekiwanie nieprzyjęte — nie przyjmujemy go jako obowiązku&quot;
+    ]
+  ],
+  &quot;mapowanie&quot;: [
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-01&quot;,
+      &quot;strona&quot;: &quot;STK-Z-02&quot;,
+      &quot;wymaganie&quot;: &quot;Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-03&quot;,
+      &quot;strona&quot;: &quot;STK-Z-01&quot;,
+      &quot;wymaganie&quot;: &quot;Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-04&quot;,
+      &quot;strona&quot;: &quot;STK-Z-04&quot;,
+      &quot;wymaganie&quot;: &quot;Monitorowanie i raportowanie emisji, umorzenie uprawnień&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-05&quot;,
+      &quot;strona&quot;: &quot;STK-Z-16&quot;,
+      &quot;wymaganie&quot;: &quot;Dane o zużyciu i intensywności energetycznej do sprawozdania&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-06&quot;,
+      &quot;strona&quot;: &quot;STK-Z-03&quot;,
+      &quot;wymaganie&quot;: &quot;Terminowe badania i przeglądy, aktualna dokumentacja&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-07&quot;,
+      &quot;strona&quot;: &quot;STK-Z-05&quot;,
+      &quot;wymaganie&quot;: &quot;Kontrole szczelności i karty urządzeń w CRO&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-08&quot;,
+      &quot;strona&quot;: &quot;STK-Z-06&quot;,
+      &quot;wymaganie&quot;: &quot;Poprawna dokumentacja przedsięwzięć i oszczędności&quot;,
+      &quot;zgodnosc&quot;: &quot;nie&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZR-10&quot;,
+      &quot;strona&quot;: &quot;STK-Z-07&quot;,
+      &quot;wymaganie&quot;: &quot;Certyfikat jako warunek lub kryterium w postępowaniach&quot;,
+      &quot;zgodnosc&quot;: &quot;KANDYDAT&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZM-02&quot;,
+      &quot;strona&quot;: &quot;STK-Z-09&quot;,
+      &quot;wymaganie&quot;: &quot;Zgodność profilu poboru z warunkami nowej umowy&quot;,
+      &quot;zgodnosc&quot;: &quot;nie&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZM-03&quot;,
+      &quot;strona&quot;: &quot;STK-Z-12&quot;,
+      &quot;wymaganie&quot;: &quot;Informacja o śladzie węglowym i efektywności wyrobu&quot;,
+      &quot;zgodnosc&quot;: &quot;KANDYDAT&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZM-05&quot;,
+      &quot;strona&quot;: &quot;STK-Z-08&quot;,
+      &quot;wymaganie&quot;: &quot;Nieprzekraczanie mocy umownej, warunki przyłączenia&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZM-07&quot;,
+      &quot;strona&quot;: &quot;STK-Z-07&quot;,
+      &quot;wymaganie&quot;: &quot;Posiadanie certyfikatu w terminie postępowań&quot;,
+      &quot;zgodnosc&quot;: &quot;KANDYDAT&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WT-07&quot;,
+      &quot;strona&quot;: &quot;STK-Z-08&quot;,
+      &quot;wymaganie&quot;: &quot;Warunki przyłączenia źródła, zgłaszanie zmian w instalacji&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WT-09&quot;,
+      &quot;strona&quot;: &quot;STK-Z-01&quot;,
+      &quot;wymaganie&quot;: &quot;Obowiązki koncesyjne i sprawozdawcze dla wytwarzania&quot;,
+      &quot;zgodnosc&quot;: &quot;TAK&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WT-13&quot;,
+      &quot;strona&quot;: &quot;STK-Z-11&quot;,
+      &quot;wymaganie&quot;: &quot;Warunki umów flotowych i dane o zużyciu paliw&quot;,
+      &quot;zgodnosc&quot;: &quot;nie&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WO-01&quot;,
+      &quot;strona&quot;: &quot;STK-W-01&quot;,
+      &quot;wymaganie&quot;: &quot;Oczekiwanie powołania Energy Managera i przypisania uprawnień&quot;,
+      &quot;zgodnosc&quot;: &quot;nie&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WO-09&quot;,
+      &quot;strona&quot;: &quot;STK-W-05&quot;,
+      &quot;wymaganie&quot;: &quot;Brak ograniczeń dla ciągłości produkcji przy pomiarach&quot;,
+      &quot;zgodnosc&quot;: &quot;nie&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WO-11&quot;,
+      &quot;strona&quot;: &quot;STK-W-04&quot;,
+      &quot;wymaganie&quot;: &quot;Dostęp do danych i wpływ na decyzje eksploatacyjne&quot;,
+      &quot;zgodnosc&quot;: &quot;nie&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-WF-06&quot;,
+      &quot;strona&quot;: &quot;STK-Z-15&quot;,
+      &quot;wymaganie&quot;: &quot;Udokumentowane efekty energetyczne przy finansowaniu&quot;,
+      &quot;zgodnosc&quot;: &quot;KANDYDAT&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZK-08&quot;,
+      &quot;strona&quot;: &quot;STK-Z-12&quot;,
+      &quot;wymaganie&quot;: &quot;Odporność łańcucha dostaw, raportowanie emisji&quot;,
+      &quot;zgodnosc&quot;: &quot;KANDYDAT&quot;
+    },
+    {
+      &quot;czynnik&quot;: &quot;KTX-ZK-08&quot;,
+      &quot;strona&quot;: &quot;STK-Z-16&quot;,
+      &quot;wymaganie&quot;: &quot;Odporność łańcucha dostaw, raportowanie emisji&quot;,
+      &quot;zgodnosc&quot;: &quot;KANDYDAT&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var PYT = {"FAKT_LOKALIZACJE": {"pytanie": "Ile lokalizacji obejmie system zarządzania energią?", "jednostka": "szt.", "etykiety": {}}, "FAKT_LOKALIZACJE_LISTA": {"pytanie": "Wymień lokalizacje", "jednostka": "", "etykiety": {}}, "FAKT_BRANZA": {"pytanie": "Główna działalność zakładu", "jednostka": "", "etykiety": {}}, "FAKT_PRACOWNICY": {"pytanie": "Liczba pracowników", "jednostka": "osób", "etykiety": {}}, "FAKT_ZMIANY": {"pytanie": "Ile zmian pracuje zakład?", "jednostka": "", "etykiety": {"1": "1", "2": "2", "3": "3", "4": "4"}}, "FAKT_SEZONOWOSC": {"pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_PODMIOT": {"pytanie": "Typ organizacji", "jednostka": "", "etykiety": {"prywatny": "prywatny", "komunalny": "komunalny", "publiczny": "publiczny"}}, "FAKT_GRUPA_KAPITALOWA": {"pytanie": "Czy organizacja należy do grupy kapitałowej?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_ZWIAZKI": {"pytanie": "Czy działają związki zawodowe lub rada pracowników?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_SYSTEM_BAZOWY": {"pytanie": "Czy organizacja ma wdrożony system zarządzania?", "jednostka": "", "etykiety": {"brak": "Brak certyfikowanego systemu", "iso_9001": "ISO 9001", "iso_14001": "ISO 14001", "oba": "ISO 9001 i ISO 14001", "inny": "Inny system certyfikowany"}}, "FAKT_SYSTEM_BAZOWY_ROK": {"pytanie": "Od którego roku system jest certyfikowany?", "jednostka": "", "etykiety": {}}, "FAKT_ZGODA_INTEGRACJA": {"pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?", "jednostka": "", "etykiety": {"tak": "Tak — rozszerzamy istniejącą dokumentację", "nie": "Nie — tworzymy odrębny system", "brak decyzji": "Decyzja jeszcze nie zapadła"}}, "FAKT_ENERGY_MANAGER": {"pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?", "jednostka": "", "etykiety": {"nie": "Nie wyznaczono nikogo", "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków", "tak": "Tak, z pisemnym zakresem obowiązków"}}, "FAKT_UR_WLASNE": {"pytanie": "Kto prowadzi utrzymanie ruchu?", "jednostka": "", "etykiety": {"wlasne": "Własne służby utrzymania ruchu", "zewnetrzne": "Firma zewnętrzna", "mieszane": "Częściowo własne służby, część prac zlecana"}}, "FAKT_INSTRUKCJE_EKSPL": {"pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?", "jednostka": "", "etykiety": {"tak": "Tak, dla wszystkich głównych urządzeń", "czesciowo": "Dla części urządzeń", "nie": "Nie ma"}}, "FAKT_ZAKUPY_KRYTERIA": {"pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?", "jednostka": "", "etykiety": {"zawsze": "Zawsze — to stałe kryterium zakupowe", "czasami": "Czasami, przy większych zakupach", "nie": "Nie — decyduje cena zakupu"}}, "FAKT_ROTACJA": {"pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku", "jednostka": "", "etykiety": {"niska": "Niska — poniżej 5% rocznie", "srednia": "Średnia — od 5 do 15% rocznie", "wysoka": "Wysoka — powyżej 15% rocznie"}}, "FAKT_ROK_ODNIESIENIA": {"pytanie": "Za który rok podajesz dane?", "jednostka": "", "etykiety": {}}, "FAKT_NOSNIKI": {"pytanie": "Zużycie nośników energii w roku odniesienia", "jednostka": "", "etykiety": {}}, "ZUZYCIE_TJ": {"pytanie": "Roczne zużycie energii", "jednostka": "TJ", "etykiety": {}}, "FAKT_PRODUKCJA_JEDN": {"pytanie": "W czym mierzycie wielkość produkcji?", "jednostka": "", "etykiety": {"t": "tony wyrobu", "szt": "sztuki wyrobu", "m2": "metry kwadratowe", "m3": "metry sześcienne", "mwh": "MWh wyrobu (ciepło, chłód)", "inna": "Inna jednostka"}}, "FAKT_PRODUKCJA_INNA": {"pytanie": "Jaka jednostka?", "jednostka": "", "etykiety": {}}, "FAKT_PRODUKCJA": {"pytanie": "Wielkość produkcji w roku odniesienia", "jednostka": "", "etykiety": {}}, "FAKT_PRODUKCJA_POPRZ": {"pytanie": "Wielkość produkcji w roku poprzednim", "jednostka": "", "etykiety": {}}, "FAKT_HDD": {"pytanie": "Stopniodni grzania (HDD) w roku odniesienia", "jednostka": "°C·dzień", "etykiety": {}}, "FAKT_HDD_POPRZ": {"pytanie": "Stopniodni grzania w roku poprzednim", "jednostka": "°C·dzień", "etykiety": {}}, "FAKT_PRZYCHOD": {"pytanie": "Przychód ze sprzedaży w roku odniesienia", "jednostka": "mln zł", "etykiety": {}}, "FAKT_UDZIAL_ENERGII": {"pytanie": "Jaki procent kosztów operacyjnych stanowi energia?", "jednostka": "%", "etykiety": {}}, "FAKT_MOC_UMOWNA": {"pytanie": "Moc umowna energii elektrycznej", "jednostka": "kW", "etykiety": {}}, "FAKT_MOC_OGRANICZONA": {"pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_UMOWA_WYGASA": {"pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_UMOWA_DATA": {"pytanie": "Data wygaśnięcia umowy", "jednostka": "", "etykiety": {}}, "FAKT_BUDZET": {"pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_PBT_PROG": {"pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?", "jednostka": "lat", "etykiety": {}}, "FAKT_INWESTYCJE": {"pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_INWESTYCJE_OPIS": {"pytanie": "Jakie?", "jednostka": "", "etykiety": {}}, "FAKT_BIALE_MOZLIWE": {"pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_SPREZONE": {"pytanie": "Czy zakład ma instalację sprężonego powietrza?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_CA_LICZBA": {"pytanie": "Ile jest sprężarek?", "jednostka": "szt.", "etykiety": {}}, "FAKT_CA_MOC": {"pytanie": "Łączna moc znamionowa sprężarek", "jednostka": "kW", "etykiety": {}}, "FAKT_CA_VSD": {"pytanie": "Ile sprężarek ma regulację obrotów (falownik)?", "jednostka": "szt.", "etykiety": {}}, "FAKT_CA_STEROWNIK": {"pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_CA_SZCZELNOSC": {"pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_CA_ODZYSK": {"pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_CA_GODZINY": {"pytanie": "Ile godzin w roku pracuje sprężarkownia?", "jednostka": "h/rok", "etykiety": {}}, "FAKT_WENT": {"pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_WENT_LICZBA": {"pytanie": "Ile jest central?", "jednostka": "szt.", "etykiety": {}}, "FAKT_WENT_ODZYSK": {"pytanie": "Czy centrale mają odzysk ciepła?", "jednostka": "", "etykiety": {"wszystkie": "Wszystkie centrale mają odzysk", "czesc": "Część central ma odzysk", "zadna": "Żadna nie ma odzysku", "nie wiem": "Nie wiem"}}, "FAKT_WENT_HARMONOGRAM": {"pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?", "jednostka": "", "etykiety": {"tak": "Tak, wszystkie", "czesciowo": "Część central", "nie": "Nie — pracują tak samo cały czas"}}, "FAKT_CHLODZENIE": {"pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_CHLODZENIE_MOC": {"pytanie": "Łączna moc chłodnicza", "jednostka": "kW", "etykiety": {}}, "FAKT_CHLODZENIE_WODNE": {"pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_FGAZ": {"pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_NAPEDY_VSD": {"pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?", "jednostka": "", "etykiety": {"brak": "Żaden albo pojedyncze", "czesc": "Mniej więcej połowa", "wiekszosc": "Większość", "nie wiem": "Nie wiem"}}, "FAKT_LED_UDZIAL": {"pytanie": "Jaki procent oświetlenia stanowią źródła LED?", "jednostka": "%", "etykiety": {}}, "FAKT_OSW_STEROWANIE": {"pytanie": "Jak sterowane jest oświetlenie hal?", "jednostka": "", "etykiety": {"czujniki": "Czujniki ruchu albo natężenia światła", "harmonogram": "Automatyczny harmonogram", "recznie": "Ręcznie — włącznikiem"}}, "FAKT_WIEK_INFRA": {"pytanie": "Ile lat ma większość głównych urządzeń energetycznych?", "jednostka": "lat", "etykiety": {}}, "FAKT_UDT": {"pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_KOTLOWNIA": {"pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?", "jednostka": "", "etykiety": {"wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)", "siec": "Wyłącznie z sieci ciepłowniczej", "oba": "Z własnego źródła i z sieci ciepłowniczej", "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"}}, "FAKT_CIEPLO_PALIWO": {"pytanie": "Czym zasilane jest własne źródło ciepła?", "jednostka": "", "etykiety": {"gaz ziemny": "gaz ziemny", "olej": "olej", "węgiel": "węgiel", "biomasa": "biomasa", "biogaz": "biogaz", "pompa ciepła": "pompa ciepła", "energia elektryczna": "energia elektryczna"}}, "FAKT_CIEPLO_PALIWA": {"pytanie": "Czy ciepło wytwarzane jest z paliw kopalnych?", "jednostka": "", "etykiety": {}}, "FAKT_KOTLOWNIA_MOC": {"pytanie": "Moc zainstalowana źródeł ciepła", "jednostka": "kW", "etykiety": {}}, "FAKT_KOTLOWNIA_WIEK": {"pytanie": "Wiek najstarszego czynnego kotła", "jednostka": "lat", "etykiety": {}}, "FAKT_CIEPLO_MOC_ZAMOWIONA": {"pytanie": "Zamówiona moc cieplna z sieci", "jednostka": "kW", "etykiety": {}}, "FAKT_PROCESY": {"pytanie": "Które procesy zużywają najwięcej energii?", "jednostka": "", "etykiety": {"piece i nagrzewnice": "piece i nagrzewnice", "suszarnie": "suszarnie", "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki", "prasy": "prasy", "malarnia": "malarnia", "galwanizernia": "galwanizernia", "pompy procesowe": "pompy procesowe", "chłodzenie procesu": "chłodzenie procesu", "inne": "inne"}}, "FAKT_CIEPLO_ODPADOWE": {"pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_ODZYSK_CIEPLA": {"pytanie": "Czy to ciepło jest odzyskiwane?", "jednostka": "", "etykiety": {"tak": "Tak, w całości albo prawie w całości", "czesciowo": "Częściowo", "nie": "Nie jest odzyskiwane"}}, "FAKT_PROCES_BEZ_ALTERNATYWY": {"pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_PV": {"pytanie": "Czy zakład ma instalację fotowoltaiczną?", "jednostka": "", "etykiety": {"tak": "Tak, działa", "nie": "Nie", "w planach": "W planach albo w budowie"}}, "FAKT_PV_MOC": {"pytanie": "Moc instalacji fotowoltaicznej", "jednostka": "kWp", "etykiety": {}}, "FAKT_BESS": {"pytanie": "Czy zakład ma magazyn energii?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_BESS_POJ": {"pytanie": "Pojemność magazynu", "jednostka": "kWh", "etykiety": {}}, "FAKT_CHP": {"pytanie": "Czy zakład ma kogenerację?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_CHP_MOC": {"pytanie": "Moc elektryczna kogeneracji", "jednostka": "kWe", "etykiety": {}}, "FAKT_FLOTA": {"pytanie": "Czy w zakresie systemu jest flota pojazdów?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_FLOTA_LICZBA": {"pytanie": "Liczba pojazdów", "jednostka": "szt.", "etykiety": {}}, "FAKT_PODLICZNIKI": {"pytanie": "Jak opomiarowana jest energia elektryczna?", "jednostka": "", "etykiety": {"brak": "Tylko licznik główny", "czesciowo": "Podliczniki na części obiektów lub wydziałów", "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"}}, "FAKT_PODLICZNIKI_LICZBA": {"pytanie": "Ile jest podliczników?", "jednostka": "szt.", "etykiety": {}}, "FAKT_ODCZYT": {"pytanie": "Jak odczytywane są liczniki?", "jednostka": "", "etykiety": {"recznie": "Ręcznie, spisywane z liczników", "zdalnie": "Zdalnie, automatycznie do systemu", "mieszane": "Część ręcznie, część zdalnie"}}, "FAKT_SCADA": {"pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_SCADA_ZAKRES": {"pytanie": "Jaki procent zużycia energii obejmuje?", "jednostka": "%", "etykiety": {}}, "FAKT_DANE_HISTORIA": {"pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?", "jednostka": "mies.", "etykiety": {}}, "FAKT_MES": {"pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_ANALIZA_DANYCH": {"pytanie": "Czy dane o zużyciu energii są analizowane?", "jednostka": "", "etykiety": {"nie": "nie", "okresowo": "okresowo", "systematycznie": "systematycznie"}}, "FAKT_AUDYT_ENERG": {"pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_AUDYT_ROK": {"pytanie": "W którym roku?", "jednostka": "", "etykiety": {}}, "FAKT_ETS": {"pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_CSRD": {"pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}}, "FAKT_CSRD_ROK": {"pytanie": "Od którego roku?", "jednostka": "", "etykiety": {}}, "FAKT_ODBIORCY_CO2": {"pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_PRZETARGI": {"pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}, "FAKT_PRZERWY_POGODA": {"pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}}};
+var WYMAGANIA = [{"id": "WYM-01", "strona_kod": "STK-W-01", "strona": "Zarząd / najwyższe kierownictwo", "typ": "wew.", "wymaganie": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów", "kwal_sug": "", "sposob_sug": "Polityka energetyczna, cele energetyczne, Przegląd Zarządzania (kl. 9.3)", "wlasciciel_sug": "Dyrektor Zakładu", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-02", "strona_kod": "STK-W-02", "strona": "Właściciel / grupa kapitałowa", "typ": "wew.", "wymaganie": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny", "kwal_sug": "", "sposob_sug": "Wskaźniki EnPI definiowane spójnie z wytycznymi grupy", "wlasciciel_sug": "Dyrektor Zakładu", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_GRUPA_KAPITALOWA = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-03", "strona_kod": "STK-W-03", "strona": "Pracownicy", "typ": "wew.", "wymaganie": "Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP", "kwal_sug": "prawne", "sposob_sug": "Kryteria eksploatacji wentylacji, klimatyzacji i oświetlenia (8.1); pomiary okresowe", "wlasciciel_sug": "Kierownik UR, specjalista BHP", "sprawdzanie_sug": "Pomiary okresowe oświetlenia i mikroklimatu; kontrole BHP", "zrodlo_podp": "Przepisy BHP — rozporządzenie o ogólnych przepisach bhp, normy oświetlenia stanowisk", "pokaz_gdy": "ZAWSZE", "bhp": true, "preferencja": false, "slad": false}, {"id": "WYM-04", "strona_kod": "STK-W-03", "strona": "Pracownicy", "typ": "wew.", "wymaganie": "Preferencja: niższa temperatura w halach w czasie upałów", "kwal_sug": "", "sposob_sug": "", "wlasciciel_sug": "Kierownik UR, specjalista BHP", "sprawdzanie_sug": "Ankieta roczna; decyzja przy planowaniu budżetu", "zrodlo_podp": "Ankieta pracownicza, zgłoszenia do działu BHP", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": true, "slad": false}, {"id": "WYM-05", "strona_kod": "STK-W-04", "strona": "Służby utrzymania ruchu", "typ": "wew.", "wymaganie": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji", "kwal_sug": "", "sposob_sug": "Nadzór operacyjny nad SEU (kl. 8.1), plan zbierania danych (kl. 6.6)", "wlasciciel_sug": "Kierownik Utrzymania Ruchu", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-06", "strona_kod": "STK-W-05", "strona": "Dział produkcji", "typ": "wew.", "wymaganie": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach", "kwal_sug": "", "sposob_sug": "Zmienne istotne w przeglądzie energetycznym (kl. 6.3)", "wlasciciel_sug": "Kierownik Produkcji", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-07", "strona_kod": "STK-W-06", "strona": "Dział zakupów", "typ": "wew.", "wymaganie": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert", "kwal_sug": "", "sposob_sug": "Kryteria energetyczne w zakupach (kl. 8.3)", "wlasciciel_sug": "Dział Zakupów", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-08", "strona_kod": "STK-W-07", "strona": "Kontroling / finanse", "typ": "wew.", "wymaganie": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć", "kwal_sug": "", "sposob_sug": "Ocena możliwości poprawy z okresem zwrotu (kl. 6.3)", "wlasciciel_sug": "Kontroling", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-09", "strona_kod": "STK-W-08", "strona": "Dział BHP i ochrony środowiska", "typ": "wew.", "wymaganie": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów", "kwal_sug": "", "sposob_sug": "Integracja rejestru wymagań prawnych", "wlasciciel_sug": "Specjalista ds. środowiska", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-10", "strona_kod": "STK-W-09", "strona": "Energy Manager / zespół ds. energii", "typ": "wew.", "wymaganie": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu", "kwal_sug": "", "sposob_sug": "Zarządzenie o powołaniu zespołu, przypisanie ról (kl. 5.3)", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-11", "strona_kod": "STK-W-10", "strona": "Rada pracowników / związki zawodowe", "typ": "wew.", "wymaganie": "Informacja o zmianach organizacyjnych wynikających z wdrożenia; brak pogorszenia warunków pracy", "kwal_sug": "", "sposob_sug": "Plan komunikacji wewnętrznej (kl. 7.4)", "wlasciciel_sug": "Dział Kadr", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_ZWIAZKI = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-12", "strona_kod": "STK-Z-01", "strona": "Prezes URE", "typ": "zew.", "wymaganie": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania", "kwal_sug": "prawne", "sposob_sug": "Rejestr wymagań prawnych, ocena zgodności (kl. 9.1.2)", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)", "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-13", "strona_kod": "STK-Z-02", "strona": "Organ właściwy ds. EED / minister", "typ": "zew.", "wymaganie": "Obowiązek posiadania certyfikowanego systemu zarządzania energią — wprowadzany projektem nowelizacji ustawy o efektywności energetycznej (UC77), wdrażającym art. 11 dyrektywy (UE) 2023/1791", "kwal_sug": "", "sposob_sug": "Rejestr wymagań prawnych i innych; harmonogram wdrożenia i certyfikacji dostosowany do terminu wynikającego z ustawy po jej uchwaleniu", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji", "zrodlo_podp": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77 (legislacja.rcl.gov.pl) — zapisz, na jaki dzień ustalono brzmienie", "pokaz_gdy": "ZUZYCIE_TJ > 85", "bhp": false, "preferencja": false, "slad": false, "uwaga_prawna": true}, {"id": "WYM-14", "strona_kod": "STK-Z-03", "strona": "Urząd Dozoru Technicznego", "typ": "zew.", "wymaganie": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja", "kwal_sug": "prawne", "sposob_sug": "Harmonogram przeglądów UDT w rejestrze wymagań", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)", "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień", "pokaz_gdy": "FAKT_UDT = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-15", "strona_kod": "STK-Z-04", "strona": "Organy ochrony środowiska / KOBiZE", "typ": "zew.", "wymaganie": "Monitorowanie i raportowanie emisji; obowiązki wynikające z pozwoleń", "kwal_sug": "prawne", "sposob_sug": "Powiązanie celów energetycznych z emisyjnymi", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)", "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień", "pokaz_gdy": "FAKT_ETS = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-16", "strona_kod": "STK-Z-05", "strona": "Organ prowadzący rejestr f-gazów", "typ": "zew.", "wymaganie": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO", "kwal_sug": "prawne", "sposob_sug": "Rejestr F-gaz włączony do wymagań prawnych", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)", "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień", "pokaz_gdy": "FAKT_FGAZ = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-17", "strona_kod": "STK-Z-06", "strona": "Operator systemu świadectw efektywności", "typ": "zew.", "wymaganie": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa", "kwal_sug": "", "sposob_sug": "Dokumentacja efektów w planach działań (kl. 6.2)", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-18", "strona_kod": "STK-Z-07", "strona": "Zamawiający publiczni", "typ": "zew.", "wymaganie": "Posiadanie certyfikowanego systemu jako warunek lub kryterium oceny ofert", "kwal_sug": "", "sposob_sug": "Termin certyfikacji podporządkowany kalendarzowi postępowań", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_PRZETARGI = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-19", "strona_kod": "STK-Z-08", "strona": "Operator systemu dystrybucyjnego", "typ": "zew.", "wymaganie": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji", "kwal_sug": "prawne", "sposob_sug": "Monitorowanie mocy szczytowej (kl. 9.1), warunki przyłączeniowe w rejestrze", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)", "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-20", "strona_kod": "STK-Z-09", "strona": "Sprzedawca energii elektrycznej", "typ": "zew.", "wymaganie": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży", "kwal_sug": "", "sposob_sug": "Analiza profilu poboru jako możliwość poprawy (kl. 6.3)", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-21", "strona_kod": "STK-Z-10", "strona": "Dostawca gazu lub ciepła sieciowego", "typ": "zew.", "wymaganie": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy", "kwal_sug": "", "sposob_sug": "Gospodarka cieplna w przeglądzie energetycznym", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-22", "strona_kod": "STK-Z-11", "strona": "Dostawcy paliw transportowych", "typ": "zew.", "wymaganie": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń", "kwal_sug": "", "sposob_sug": "Flota jako odrębny obszar monitorowania", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_FLOTA = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-23", "strona_kod": "STK-Z-12", "strona": "Odbiorcy / klienci", "typ": "zew.", "wymaganie": "Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku", "kwal_sug": "umowne", "sposob_sug": "Plan zbierania danych (6.6): przypisanie zużycia do linii produkcyjnych", "wlasciciel_sug": "", "sprawdzanie_sug": "Potwierdzenie odbioru raportu; ocena zgodności raz w roku", "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data", "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-24", "strona_kod": "STK-Z-12", "strona": "Odbiorcy / klienci", "typ": "zew.", "wymaganie": "Informacja o śladzie węglowym wyrobu", "kwal_sug": "", "sposob_sug": "", "wlasciciel_sug": "", "sprawdzanie_sug": "Ponowna decyzja przy odnowieniu umowy", "zrodlo_podp": "Specyfikacja dla dostawców albo pismo działu zakupów klienta z datą", "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak", "bhp": false, "preferencja": false, "slad": true}, {"id": "WYM-25", "strona_kod": "STK-Z-12", "strona": "Odbiorcy / klienci", "typ": "zew.", "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.", "kwal_sug": "umowne", "sposob_sug": "Wdrożenie i certyfikacja zgodnie z harmonogramem wdrożenia", "wlasciciel_sug": "", "sprawdzanie_sug": "Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc", "zrodlo_podp": "Wymagania dla dostawców — rozdział i wersja dokumentu, data", "pokaz_gdy": "FAKT_ODBIORCY_CO2 = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-26", "strona_kod": "STK-Z-13", "strona": "Dostawcy urządzeń i usług", "typ": "zew.", "wymaganie": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry", "kwal_sug": "", "sposob_sug": "Wymagania dla dostawców (kl. 8.3)", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-27", "strona_kod": "STK-Z-14", "strona": "Wykonawcy i podwykonawcy na terenie zakładu", "typ": "zew.", "wymaganie": "Znajomość zasad eksploatacji obowiązujących na terenie; instruktaż przed rozpoczęciem prac", "kwal_sug": "", "sposob_sug": "Nadzór operacyjny rozciągnięty na wykonawców (kl. 8.1)", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "FAKT_UR_WLASNE IN (zewnetrzne, mieszane)", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-28", "strona_kod": "STK-Z-15", "strona": "Instytucje finansujące / banki", "typ": "zew.", "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”", "kwal_sug": "", "sposob_sug": "Dokumentacja efektów do wniosków kredytowych", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-29", "strona_kod": "STK-Z-16", "strona": "Inwestorzy / podmiot raportujący ESG", "typ": "zew.", "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdawczości zrównoważonego rozwoju", "kwal_sug": "prawne", "sposob_sug": "Wskaźniki EnPI spójne z wymaganiami sprawozdawczymi", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd stanu prawnego — co kwartał; ocena zgodności raz w roku (9.1.2)", "zrodlo_podp": "Akt prawny — tytuł, artykuł, stan na dzień", "pokaz_gdy": "FAKT_CSRD = tak", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-30", "strona_kod": "STK-Z-17", "strona": "Ubezpieczyciel", "typ": "zew.", "wymaganie": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności", "kwal_sug": "", "sposob_sug": "Kryteria eksploatacji SEU, harmonogram przeglądów", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Przegląd rejestru raz w roku", "zrodlo_podp": "Umowa, specyfikacja z numerem wersji albo pismo z datą", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}, {"id": "WYM-31", "strona_kod": "STK-Z-18", "strona": "Jednostka certyfikująca", "typ": "zew.", "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres", "kwal_sug": "umowne", "sposob_sug": "Nadzór nad dokumentacją (kl. 7.5), zapisy z audytu i przeglądu", "wlasciciel_sug": "Energy Manager", "sprawdzanie_sug": "Audit certyfikacyjny; audity wewnętrzne (9.2)", "zrodlo_podp": "Umowa o certyfikację i wymagania jednostki certyfikującej — punkt i wersja dokumentu", "pokaz_gdy": "ZAWSZE", "bhp": false, "preferencja": false, "slad": false}];
+var GRUPY = [{"id": "wewn", "krotka": "Strony wewnętrzne", "nazwa": "Strony wewnętrzne", "opis": "Komórki i role wewnątrz organizacji. Norma wymaga ich uwzględnienia tak samo jak stron zewnętrznych.", "strony": ["STK-W-01", "STK-W-02", "STK-W-03", "STK-W-04", "STK-W-05", "STK-W-06", "STK-W-07", "STK-W-08", "STK-W-09", "STK-W-10"]}, {"id": "organy", "krotka": "Organy i regulatorzy", "nazwa": "Organy, regulatorzy i zamawiający publiczni", "opis": "Tu rodzą się wymagania prawne. Przy każdym zapisz, na jaki dzień ustalono brzmienie przepisu.", "strony": ["STK-Z-01", "STK-Z-02", "STK-Z-03", "STK-Z-04", "STK-Z-05", "STK-Z-06", "STK-Z-07"]}, {"id": "rynek", "krotka": "Rynek i dostawcy", "nazwa": "Rynek, dostawcy i odbiorcy", "opis": "Wymagania umowne. Źródłem jest paragraf umowy albo specyfikacja z numerem wersji.", "strony": ["STK-Z-08", "STK-Z-09", "STK-Z-10", "STK-Z-11", "STK-Z-12", "STK-Z-13", "STK-Z-14"]}, {"id": "finanse", "krotka": "Finansowanie i nadzór", "nazwa": "Finansowanie, ubezpieczenie i certyfikacja", "opis": "Strony oceniające organizację z zewnątrz, zwykle na podstawie udokumentowanych efektów.", "strony": ["STK-Z-15", "STK-Z-16", "STK-Z-17", "STK-Z-18"]}];
+var KWALIFIKACJE = [["prawne", "prawne — wynika z przepisu"], ["umowne", "umowne — wynika z umowy albo specyfikacji"], ["przyjete", "przyjęte zobowiązanie — firma zobowiązała się dobrowolnie"], ["oczekiwanie_nieprzyjete", "oczekiwanie nieprzyjęte — nie przyjmujemy go jako obowiązku"]];
+var MAPOWANIE = [{"czynnik": "KTX-ZR-01", "strona": "STK-Z-02", "wymaganie": "Posiadanie certyfikowanego systemu zarządzania energią do 11.10.2027", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZR-03", "strona": "STK-Z-01", "wymaganie": "Terminowe zawiadomienie o przeprowadzeniu audytu energetycznego", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZR-04", "strona": "STK-Z-04", "wymaganie": "Monitorowanie i raportowanie emisji, umorzenie uprawnień", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZR-05", "strona": "STK-Z-16", "wymaganie": "Dane o zużyciu i intensywności energetycznej do sprawozdania", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZR-06", "strona": "STK-Z-03", "wymaganie": "Terminowe badania i przeglądy, aktualna dokumentacja", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZR-07", "strona": "STK-Z-05", "wymaganie": "Kontrole szczelności i karty urządzeń w CRO", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZR-08", "strona": "STK-Z-06", "wymaganie": "Poprawna dokumentacja przedsięwzięć i oszczędności", "zgodnosc": "nie"}, {"czynnik": "KTX-ZR-10", "strona": "STK-Z-07", "wymaganie": "Certyfikat jako warunek lub kryterium w postępowaniach", "zgodnosc": "KANDYDAT"}, {"czynnik": "KTX-ZM-02", "strona": "STK-Z-09", "wymaganie": "Zgodność profilu poboru z warunkami nowej umowy", "zgodnosc": "nie"}, {"czynnik": "KTX-ZM-03", "strona": "STK-Z-12", "wymaganie": "Informacja o śladzie węglowym i efektywności wyrobu", "zgodnosc": "KANDYDAT"}, {"czynnik": "KTX-ZM-05", "strona": "STK-Z-08", "wymaganie": "Nieprzekraczanie mocy umownej, warunki przyłączenia", "zgodnosc": "TAK"}, {"czynnik": "KTX-ZM-07", "strona": "STK-Z-07", "wymaganie": "Posiadanie certyfikatu w terminie postępowań", "zgodnosc": "KANDYDAT"}, {"czynnik": "KTX-WT-07", "strona": "STK-Z-08", "wymaganie": "Warunki przyłączenia źródła, zgłaszanie zmian w instalacji", "zgodnosc": "TAK"}, {"czynnik": "KTX-WT-09", "strona": "STK-Z-01", "wymaganie": "Obowiązki koncesyjne i sprawozdawcze dla wytwarzania", "zgodnosc": "TAK"}, {"czynnik": "KTX-WT-13", "strona": "STK-Z-11", "wymaganie": "Warunki umów flotowych i dane o zużyciu paliw", "zgodnosc": "nie"}, {"czynnik": "KTX-WO-01", "strona": "STK-W-01", "wymaganie": "Oczekiwanie powołania Energy Managera i przypisania uprawnień", "zgodnosc": "nie"}, {"czynnik": "KTX-WO-09", "strona": "STK-W-05", "wymaganie": "Brak ograniczeń dla ciągłości produkcji przy pomiarach", "zgodnosc": "nie"}, {"czynnik": "KTX-WO-11", "strona": "STK-W-04", "wymaganie": "Dostęp do danych i wpływ na decyzje eksploatacyjne", "zgodnosc": "nie"}, {"czynnik": "KTX-WF-06", "strona": "STK-Z-15", "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu", "zgodnosc": "KANDYDAT"}, {"czynnik": "KTX-ZK-08", "strona": "STK-Z-12", "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji", "zgodnosc": "KANDYDAT"}, {"czynnik": "KTX-ZK-08", "strona": "STK-Z-16", "wymaganie": "Odporność łańcucha dostaw, raportowanie emisji", "zgodnosc": "KANDYDAT"}];
+var PROFIL = {"FAKT_LOKALIZACJE": "2", "FAKT_LOKALIZACJE_LISTA": [{"c0": "Zakład produkcyjny", "c1": "ul. Przemysłowa 12, Katowice", "c2": "produkcja", "c3": "tak"}, {"c0": "Magazyn wyrobów gotowych", "c1": "ul. Składowa 11, Katowice", "c2": "magazyn", "c3": "tak"}], "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)", "FAKT_PRACOWNICY": "850", "FAKT_ZMIANY": "3", "FAKT_SEZONOWOSC": "nie", "FAKT_PODMIOT": "prywatny", "FAKT_GRUPA_KAPITALOWA": "tak", "FAKT_ZWIAZKI": "nie", "FAKT_SYSTEM_BAZOWY": "iso_14001", "FAKT_SYSTEM_BAZOWY_ROK": "2019", "FAKT_ZGODA_INTEGRACJA": "tak", "FAKT_ENERGY_MANAGER": "nieformalnie", "FAKT_UR_WLASNE": "wlasne", "FAKT_INSTRUKCJE_EKSPL": "czesciowo", "FAKT_ZAKUPY_KRYTERIA": "czasami", "FAKT_ROTACJA": "srednia", "FAKT_NOSNIKI": [{"c0": "energia elektryczna", "c1": "8500", "c2": "MWh", "c3": "7565000"}, {"c0": "gaz ziemny", "c1": "350000", "c2": "m³", "c3": "875000"}, {"c0": "LPG", "c1": "18000", "c2": "l", "c3": "54000"}], "FAKT_ROK_ODNIESIENIA": "2025", "FAKT_UDZIAL_ENERGII": "2,5", "FAKT_MOC_UMOWNA": "1400", "FAKT_SPREZONE": "tak", "FAKT_CA_LICZBA": "4", "FAKT_CA_MOC": "440", "FAKT_CA_VSD": "0", "FAKT_CA_STEROWNIK": "nie", "FAKT_CA_SZCZELNOSC": "nie", "FAKT_CA_ODZYSK": "nie", "FAKT_CA_GODZINY": "6000", "FAKT_KOTLOWNIA": "wlasne", "FAKT_CIEPLO_PALIWO": ["gaz ziemny"], "FAKT_KOTLOWNIA_MOC": "1200", "FAKT_KOTLOWNIA_WIEK": "18", "FAKT_PODLICZNIKI": "czesciowo", "FAKT_ODCZYT": "mieszane", "FAKT_UDT": "tak", "FAKT_ETS": "nie", "FAKT_CSRD": "nie", "FAKT_FGAZ": "tak", "FAKT_PRZETARGI": "nie", "FAKT_ODBIORCY_CO2": "tak", "FAKT_FLOTA": "tak", "FAKT_AUDYT_ENERG": "tak", "FAKT_UMOWA_WYGASA": "tak", "FAKT_MOC_OGRANICZONA": "nie", "FAKT_PV": "nie", "FAKT_CHP": "nie", "FAKT_CIEPLO_ODPADOWE": "tak"};
+var POTWIERDZONE = ["KTX-ZR-03", "KTX-ZR-06", "KTX-ZR-07", "KTX-ZM-02", "KTX-ZM-03", "KTX-WT-13", "KTX-WO-01", "KTX-WO-11", "KTX-WF-06"];
+var PRZYKLAD_42 = {"klimat": {"odp": "tak", "lista": "Trzy strony: główny klient — dane o zużyciu i emisjach przypadających na dostarczane wyroby; drugi klient (Tier 1) — deklaracja redukcji śladu węglowego dostaw, przyjęta jako oczekiwanie nieprzyjęte; bank finansujący modernizację — wskaźniki w załączniku ESG do umowy kredytowej.", "odstep": "rok_umowy"}, "wym": {"WYM-01": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Strategia zakładu 2026–2028", "zr_ozn": "cel: obniżenie kosztów energii o 8% do 2028 r.", "zr_data": "2026-01-15", "sposob": "Cele energetyczne i plany działań (6.2); roczny raport kosztów energii na przeglądzie zarządzania", "wlasciciel": "Dyrektor Zakładu", "sprawdzanie": "Przegląd zarządzania (9.3) — raz w roku"}, "WYM-02": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Polityka klimatyczna grupy kapitałowej", "zr_ozn": "wersja 2025, rozdz. 3 — wskaźniki raportowane rocznie", "zr_data": "2025-06-30", "sposob": "Wskaźniki EnPI liczone jednolicie dla obu lokalizacji (6.4); raport roczny do spółki matki", "wlasciciel": "Dyrektor Zakładu", "sprawdzanie": "Raport roczny do grupy; przegląd zarządzania (9.3)"}, "WYM-03": {"decyzja": "dotyczy", "kwalifikacja": "prawne", "zr_dok": "Rozporządzenie o ogólnych przepisach bhp; PN-EN 12464-1", "zr_ozn": "wymagania dla mikroklimatu i oświetlenia stanowisk — stan na 10.02.2026 r.", "zr_data": "2026-02-10", "sposob": "Kryteria eksploatacji wentylacji, klimatyzacji i oświetlenia (8.1); uwzględnienie przy wymianie oświetlenia na LED w hali B (8.2)", "wlasciciel": "Kierownik Utrzymania Ruchu, specjalista BHP", "sprawdzanie": "Pomiary okresowe oświetlenia i mikroklimatu; kontrole BHP", "data_brzmienia": "2026-02-10"}, "WYM-04": {"decyzja": "dotyczy", "kwalifikacja": "oczekiwanie_nieprzyjete", "zr_dok": "Ankieta BHP", "zr_ozn": "ankieta pracownicza 2025, pytanie 7", "zr_data": "2025-10-20", "sposob": "", "wlasciciel": "Specjalista BHP", "sprawdzanie": "Ankieta roczna; ponowna decyzja przy planowaniu budżetu na 2027 r.", "powod": "Preferencja wykracza poza wymagania przepisów i wymaga analizy kosztów chłodzenia hal montażowych. Rozważane w planie działań na 2027 r."}, "WYM-05": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Zarządzenie 3/2026 o rolach w systemie zarządzania energią", "zr_ozn": "§ 4 — uprawnienia utrzymania ruchu", "zr_data": "2026-02-12", "sposob": "Dostęp do arkusza EnPI i raportów miesięcznych; kryteria eksploatacji uzgadniane z utrzymaniem ruchu (8.1)", "wlasciciel": "Kierownik Utrzymania Ruchu", "sprawdzanie": "Przegląd rejestru raz w roku"}, "WYM-06": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Zarządzenie 3/2026", "zr_ozn": "§ 5 — pomiary bez wpływu na ciągłość produkcji", "zr_data": "2026-02-12", "sposob": "Pomiary okresowe planowane w oknach postojowych; harmonogram uzgadniany z Kierownikiem Produkcji", "wlasciciel": "Kierownik Produkcji", "sprawdzanie": "Przegląd rejestru raz w roku"}, "WYM-07": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Zarządzenie 3/2026", "zr_ozn": "§ 6 — kryteria energetyczne w zakupach", "zr_data": "2026-02-12", "sposob": "Kryteria energetyczne w zapytaniach ofertowych (8.3); wsparcie Energy Managera przy ocenie ofert", "wlasciciel": "Dział Zakupów", "sprawdzanie": "Przegląd rejestru raz w roku"}, "WYM-08": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Zarządzenie 3/2026", "zr_ozn": "§ 7 — dane kosztowe dla systemu", "zr_data": "2026-02-12", "sposob": "Miesięczne zestawienie kosztów energii z faktur; SPBT liczony jednolicie, próg 3 lata", "wlasciciel": "Kontroling", "sprawdzanie": "Przegląd rejestru raz w roku"}, "WYM-09": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Dokumentacja ISO 14001 — rejestr aspektów i wymagań prawnych", "zr_ozn": "wersja 6; zasada „jeden proces — jeden dokument”", "zr_data": "2025-11-30", "sposob": "Wspólny rejestr wymagań prawnych z systemem środowiskowym, bez dublowania (4.4)", "wlasciciel": "Specjalista ds. środowiska", "sprawdzanie": "Przegląd rejestru raz w roku"}, "WYM-10": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Zarządzenie 3/2026", "zr_ozn": "§ 2 — zakres obowiązków i uprawnień Energy Managera", "zr_data": "2026-02-12", "sposob": "Uprawnienia decyzyjne przypisane w zarządzeniu; czas pracy i zasoby w planie na 2026 r. (7.1)", "wlasciciel": "Dyrektor Zakładu", "sprawdzanie": "Przegląd zarządzania (9.3)"}, "WYM-12": {"decyzja": "dotyczy", "kwalifikacja": "prawne", "zr_dok": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77", "zr_ozn": "obowiązek audytu energetycznego albo systemu zarządzania — stan na 10.02.2026 r.", "zr_data": "2026-02-10", "sposob": "Rejestr wymagań prawnych i innych; certyfikat ISO 50001 albo audyt energetyczny przedsiębiorstwa", "wlasciciel": "Energy Manager", "sprawdzanie": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji; ocena zgodności (9.1.2)", "data_brzmienia": "2026-02-10"}, "WYM-14": {"decyzja": "dotyczy", "kwalifikacja": "prawne", "zr_dok": "Ustawa o dozorze technicznym", "zr_ozn": "badania okresowe urządzeń podlegających dozorowi — stan na 10.02.2026 r.", "zr_data": "2026-02-10", "sposob": "Harmonogram badań UDT powiązany z planem przeglądów; terminy uwzględniane przy planowaniu pomiarów", "wlasciciel": "Kierownik Utrzymania Ruchu", "sprawdzanie": "Przegląd stanu prawnego co kwartał; ocena zgodności (9.1.2)", "data_brzmienia": "2026-02-10"}, "WYM-16": {"decyzja": "dotyczy", "kwalifikacja": "prawne", "zr_dok": "Ustawa o substancjach zubożających warstwę ozonową i o f-gazach; rozporządzenie (UE) 2024/573", "zr_ozn": "kontrole szczelności i karty urządzeń w CRO — stan na 10.02.2026 r.", "zr_data": "2026-02-10", "sposob": "Kontrole szczelności instalacji chłodniczych w wymaganych terminach; karty urządzeń prowadzone w CRO", "wlasciciel": "Kierownik Utrzymania Ruchu", "sprawdzanie": "Przegląd stanu prawnego co kwartał; ocena zgodności (9.1.2)", "data_brzmienia": "2026-02-10"}, "WYM-17": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Ustawa o efektywności energetycznej — system świadectw", "zr_ozn": "dokumentacja przedsięwzięcia i audyt efektywności energetycznej", "zr_data": "2026-02-10", "sposob": "Przy sterowniku sprężarkowni (INW/2027/04) sprawdzenie progu oszczędności i przygotowanie dokumentacji", "wlasciciel": "Energy Manager", "sprawdzanie": "Decyzja przy przygotowaniu inwestycji na 2027 r."}, "WYM-19": {"decyzja": "dotyczy", "kwalifikacja": "prawne", "zr_dok": "Umowa o świadczenie usług dystrybucji; Prawo energetyczne", "zr_ozn": "moc umowna 1 400 kW, warunki przyłączenia — stan na 10.02.2026 r.", "zr_data": "2026-02-10", "sposob": "Kontrola mocy piętnastominutowej w arkuszu EnPI; zgłaszanie zmian w instalacji przed uruchomieniem", "wlasciciel": "Energy Manager", "sprawdzanie": "Rozliczenie mocy na fakturze — co miesiąc; ocena zgodności (9.1.2)", "data_brzmienia": "2026-02-10"}, "WYM-20": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Umowa sprzedaży energii elektrycznej", "zr_ozn": "§ 7 — miesięczne prognozy zużycia; cena stała do 31.12.2026 r.", "zr_data": "2024-12-18", "sposob": "Prognoza przygotowywana z planu produkcji; analiza profilu zużycia przed negocjacjami na 2027 r.", "wlasciciel": "Dział Zakupów", "sprawdzanie": "Rozliczenie odchyleń na fakturze — co miesiąc"}, "WYM-21": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Umowa kompleksowa na dostawę gazu ziemnego", "zr_ozn": "§ 4 — moc zamówiona i warunki odbioru; umowa do 30.09.2027 r.", "zr_data": "2024-09-30", "sposob": "Kontrola mocy zamówionej kotłowni; zgłaszanie zmian zapotrzebowania", "wlasciciel": "Dział Zakupów", "sprawdzanie": "Rozliczenie na fakturze — co miesiąc"}, "WYM-22": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Umowa na dostawę LPG do wózków widłowych", "zr_ozn": "§ 3 — ewidencja wydań butli", "zr_data": "2025-03-10", "sposob": "Ewidencja zużycia LPG; dane do bilansu nośników (6.3)", "wlasciciel": "Kierownik Logistyki Wewnętrznej", "sprawdzanie": "Zestawienie z fakturami — co kwartał"}, "WYM-23": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Wymagania dla dostawców, wersja 2025", "zr_ozn": "rozdz. 4, załącznik do umowy ramowej — raport co roku do 31 marca", "zr_data": "2025-10-01", "sposob": "Plan zbierania danych (6.6): przypisanie zużycia do linii klienta z liczników głównych i pomiarów okresowych; raport roczny", "wlasciciel": "Energy Manager", "sprawdzanie": "Potwierdzenie odbioru raportu; ocena zgodności raz w roku (9.1.2)"}, "WYM-24": {"decyzja": "dotyczy", "kwalifikacja": "oczekiwanie_nieprzyjete", "zr_dok": "E-mail działu zakupów klienta (dostawca systemów, Tier 1)", "zr_ozn": "korespondencja z 14.11.2025 r.", "zr_data": "2025-11-14", "sposob": "", "wlasciciel": "Dział Sprzedaży", "sprawdzanie": "Ponowna decyzja przy odnowieniu umowy — I kwartał 2027 r.", "powod": "Plan działań energetycznych obejmuje emisje z energii, a ślad węglowy wyrobu także materiały i transport. Decyzja po analizie pełnego śladu."}, "WYM-25": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Wymagania dla dostawców, wersja 2025", "zr_ozn": "rozdz. 2 — certyfikat ISO 50001 dla nowych kontraktów od 2027 r.", "zr_data": "2025-10-01", "sposob": "Wdrożenie i certyfikacja do XII 2026 r. zgodnie z harmonogramem wdrożenia", "wlasciciel": "Dyrektor Zakładu", "sprawdzanie": "Porównanie harmonogramu wdrożenia z terminem wymagania — co miesiąc"}, "WYM-26": {"decyzja": "dotyczy", "kwalifikacja": "przyjete", "zr_dok": "Procedura zakupowa z kryteriami energetycznymi", "zr_ozn": "wersja 1.0 — kryteria podawane w zapytaniach ofertowych", "zr_data": "2026-03-02", "sposob": "Wymagania energetyczne w zapytaniach ofertowych (8.3); kryteria oceny znane oferentom z góry", "wlasciciel": "Dział Zakupów", "sprawdzanie": "Przegląd rejestru raz w roku"}, "WYM-28": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Umowa kredytowa na modernizację", "zr_ozn": "załącznik ESG — coroczne wskaźniki zużycia energii zakładu", "zr_data": "2025-12-05", "sposob": "Raport roczny z danych EnPI (6.4)", "wlasciciel": "Kontroling", "sprawdzanie": "Potwierdzenie przyjęcia raportu przez bank"}, "WYM-30": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Polisa ubezpieczenia mienia i przerw w działalności", "zr_ozn": "§ 9 — wymogi utrzymania instalacji", "zr_data": "2025-12-31", "sposob": "Plan przeglądów instalacji; przeglądy sprężarkowni i kotłowni w terminach", "wlasciciel": "Kierownik Utrzymania Ruchu", "sprawdzanie": "Przegląd polisy raz w roku"}, "WYM-31": {"decyzja": "dotyczy", "kwalifikacja": "umowne", "zr_dok": "Umowa o certyfikację ISO 50001 i wymagania jednostki certyfikującej", "zr_ozn": "pkt 4 — zakres i dostępność udokumentowanej informacji, wymagany okres dowodów", "zr_data": "2026-04-15", "sposob": "Nadzór nad udokumentowaną informacją (7.5); dowody działania systemu zbierane od marca 2026 r.", "wlasciciel": "Pełnomocnik ds. systemów zarządzania", "sprawdzanie": "Audit certyfikacyjny; audity wewnętrzne (9.2)"}}};
+</script>
+<script>/* ENESA 4.2 — rejestr stron zainteresowanych i ich wymagań.
+   Wiersz = wymaganie (F-EnMS-02, Załącznik III-03). Parser warunków własny, bez eval. */
+"use strict";
+
+var ODP = PROFIL;
+var CZYN41 = POTWIERDZONE;
+var W = {};          // id wymagania -> wypełnienie
+var WLASNE = [];     // wymagania dopisane przez klienta
+var KLIMAT = { odp: "", lista: "", odstep: "" };
+var AKT = "klimat";
+
+/* ── parser warunków (ten sam co w 4.1) ── */
+function norm(v) {
+  if (v === undefined || v === null) return null;
+  if (Array.isArray(v)) return v.length ? v : null;
+  var s = String(v).trim();
+  if (s === "" || s.toLowerCase() === "nie wiem") return null;
+  return s;
+}
+function pobierz(k) { return WYL[k] !== undefined ? norm(WYL[k]) : norm(ODP[k]); }
+function liczba(v) { var n = parseFloat(String(v).replace(",", ".")); return isNaN(n) ? null : n; }
+function term(t) {
+  t = t.trim();
+  if (t === "" || t === "ZAWSZE") return true;
+  var m = t.match(/^([A-Z0-9_]+)\s+IN\s*\(([^)]*)\)$/i);
+  if (m) {
+    var v = pobierz(m[1]); if (v === null) return false;
+    var l = m[2].split(",").map(function (x) { return x.trim().toLowerCase(); });
+    if (Array.isArray(v)) return v.some(function (x) { return l.indexOf(String(x).toLowerCase()) >= 0; });
+    return l.indexOf(String(v).toLowerCase()) >= 0;
+  }
+  m = t.match(/^([A-Z0-9_]+)\s*(>=|<=|!=|=|>|<)\s*(.+)$/);
+  if (!m) return false;
+  var val = pobierz(m[1]), op = m[2], praw = m[3].trim();
+  if (val === null) return false;
+  var a = liczba(val), b = liczba(praw);
+  if (op === ">" || op === "<" || op === ">=" || op === "<=") {
+    if (a === null || b === null) return false;
+    return op === ">" ? a > b : op === "<" ? a < b : op === ">=" ? a >= b : a <= b;
+  }
+  var r = (a !== null && b !== null) ? a === b
+    : Array.isArray(val) ? val.some(function (x) { return String(x).toLowerCase() === praw.toLowerCase(); })
+      : String(val).toLowerCase() === praw.toLowerCase();
+  return op === "=" ? r : !r;
+}
+function ocen(w) {
+  if (!w || w === "ZAWSZE") return true;
+  return w.split(/\s+OR\s+/i).some(function (g) { return g.split(/\s+AND\s+/i).every(term); });
+}
+function polaW(w) {
+  return (String(w).match(/[A-Z][A-Z0-9_]{3,}/g) || []).filter(function (x) { return ["IN", "AND", "OR", "ZAWSZE"].indexOf(x) < 0; });
+}
+var WYL = {};
+(function () {
+  var w = ODP["FAKT_NOSNIKI"], WO = {
+    "energia elektryczna": { kWh: 0.0036, MWh: 3.6, GJ: 1 }, "gaz ziemny": { "m³": 0.0395, GJ: 1 },
+    "ciepło sieciowe": { GJ: 1, MWh: 3.6 }, "olej napędowy": { l: 0.0386 }, "olej opałowy": { l: 0.0387 },
+    "węgiel": { t: 23.0 }, "biomasa": { t: 15.0 }
+  };
+  if (Array.isArray(w)) {
+    var gj = 0, ok = false;
+    w.forEach(function (r) {
+      var t = WO[(r.c0 || "").trim()], il = liczba(r.c1), j = (r.c2 || "").trim();
+      if (!t || il === null || t[j] === undefined) return;
+      gj += il * t[j]; ok = true;
+    });
+    if (ok) WYL["ZUZYCIE_TJ"] = Math.round(gj / 10) / 100;
+  }
+})();
+
+/* ── które wymagania wchodzą do rejestru ── */
+function zMapowania(kod) {
+  return MAPOWANIE.filter(function (m) { return m.strona === kod && CZYN41.indexOf(m.czynnik) >= 0; });
+}
+function aktywne(w) { return ocen(w.pokaz_gdy) || zMapowania(w.strona_kod).length > 0; }
+
+var OBOW = ["prawne", "umowne", "przyjete"];
+function obowiazujace(k) { return OBOW.indexOf(k) >= 0; }
+
+function kompletne(w) {
+  var d = W[w.id] || {};
+  if (d.decyzja === "nie_dotyczy") return !!(d.powod || "").trim();
+  if (d.decyzja !== "dotyczy") return false;
+  if (!d.kwalifikacja) return false;
+  if (obowiazujace(d.kwalifikacja)) {
+    if (!(d.zr_dok || "").trim() || !(d.zr_ozn || "").trim() || !d.zr_data) return false;
+    if (d.kwalifikacja === "prawne" && !d.data_brzmienia) return false;
+    if (!(d.wlasciciel || "").trim() || !(d.sprawdzanie || "").trim()) return false;
+    return !!(d.sposob || "").trim();
+  }
+  return !!(d.powod || "").trim();   // oczekiwanie nieprzyjęte
+}
+
+/* ── walidacje z tabeli błędów ── */
+function samoSzkolenie(t) {
+  return /szkolen|świadomoś|instrukta/i.test(t || "") && !/pomiar|kryteri|eksploatac|wentylac|klimatyzac|oświetlen/i.test(t || "");
+}
+function tylkoEnergia(t) {
+  return (t || "").trim().length > 0 && /energ|EnPI|zużyci/i.test(t || "") && !/materia|transport|zakres 3|łańcuch dostaw/i.test(t || "");
+}
+function ostrzezenia(w) {
+  var d = W[w.id] || {}, o = [];
+  if (w.bhp && (d.sposob || "").trim() && samoSzkolenie(d.sposob))
+    o.push("Temperaturę i oświetlenie wymagane przez BHP zapewniają kryteria eksploatacji i pomiary. Szkolenie je tylko wspiera.");
+  if (w.slad && obowiazujace(d.kwalifikacja) && tylkoEnergia(d.sposob))
+    o.push("Sprawdź zakres odpowiedzi: ślad węglowy obejmuje też materiały i transport, a nie samą energię.");
+  if (d.kwalifikacja === "przyjete" && !(d.sprawdzanie || "").trim())
+    o.push("„Dobrowolne” nie znaczy „dowolne” — przyjęte zobowiązanie spełnia się tak samo jak przepis. Wskaż, jak sprawdzacie jego spełnienie.");
+  return o;
+}
+
+/* ── elementy ── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function pole(label, kontrolka, pomoc, klasa) {
+  var p = el("div", klasa || "pole");
+  if (label) p.appendChild(el("label", null, label));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function inp(val, ph, on, typ) {
+  var i = el("input"); i.type = typ || "text"; i.value = val || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { on(i.value); zapisz(); rysuj(); };
+  return i;
+}
+function sel(val, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = val || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function ta(val, ph, on, rows) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = val || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { on(t.value); zapisz(); rysuj(); };
+  return t;
+}
+
+/* ── karta wymagania ── */
+function karta(w) {
+  var d = W[w.id] || (W[w.id] = {});
+  var ok = kompletne(w);
+  var k = el("div", "poz" + (ok ? "" : " brak") + (d.decyzja === "nie_dotyczy" ? " odrz" : ""));
+
+  var g = el("div", "pozkod");
+  g.appendChild(el("b", null, w.id + " · " + w.strona));
+  g.appendChild(el("span", "chip", w.typ));
+  if (d.kwalifikacja) {
+    var kl = { prawne: "prawne", umowne: "umowne", przyjete: "przyjete", oczekiwanie_nieprzyjete: "oczek" }[d.kwalifikacja];
+    var et = {}; KWALIFIKACJE.forEach(function (x) { et[x[0]] = x[1].split(" — ")[0]; });
+    g.appendChild(el("span", "kwalchip " + kl, et[d.kwalifikacja]));
+  }
+  if (w.bhp) g.appendChild(el("span", "chip red", "wymaganie BHP"));
+  if (w.uwaga_prawna) g.appendChild(el("span", "chip amber", "stan prawny do potwierdzenia"));
+  k.appendChild(g);
+
+  k.appendChild(pole("Wymaganie lub oczekiwanie (zakres)",
+    ta(d.wymaganie !== undefined ? d.wymaganie : w.wymaganie, "", function (v) { d.wymaganie = v; }, 2)));
+
+  k.appendChild(pole("Czy to wymaganie Was dotyczy?", sel(d.decyzja, [["", "Wybierz"],
+  ["dotyczy", "Tak — wpisujemy do rejestru"], ["nie_dotyczy", "Nie dotyczy nas"]],
+    function (v) { d.decyzja = v; })));
+
+  if (d.decyzja === "nie_dotyczy") {
+    k.appendChild(pole("Dlaczego nie dotyczy — uzasadnienie wymagane",
+      inp(d.powod, "", function (v) { d.powod = v; })));
+    return k;
+  }
+  if (d.decyzja !== "dotyczy") { k.appendChild(zrodloPropozycji(w)); return k; }
+
+  /* Źródło — trzy pola zamiast wolnego tekstu. */
+  var z = el("div", "pole kandydat");
+  z.appendChild(el("label", null, "Źródło — skąd wiecie o tym wymaganiu"));
+  var g3 = el("div", "zrodlo3");
+  g3.appendChild(inp(d.zr_dok, "Dokument — np. Wymagania dla dostawców", function (v) { d.zr_dok = v; }));
+  g3.appendChild(inp(d.zr_ozn, "Paragraf / rozdział / wersja", function (v) { d.zr_ozn = v; }));
+  g3.appendChild(inp(d.zr_data, "", function (v) { d.zr_data = v; }, "date"));
+  z.appendChild(g3);
+  z.appendChild(el("div", "pozmeta", "„Klient tak mówił” nie wystarczy ani Wam, ani nikomu, kto przejmie po Was system. " + (w.zrodlo_podp || "")));
+  k.appendChild(z);
+
+  k.appendChild(pole("Kwalifikacja", sel(d.kwalifikacja, [["", "Wybierz"]].concat(KWALIFIKACJE),
+    function (v) { d.kwalifikacja = v; }),
+    "Wymaganie prawne, umowne albo przyjęte zobowiązanie trafia do rejestru wymagań prawnych i innych, a stamtąd do oceny zgodności w punkcie 9.1.2."));
+
+  if (d.kwalifikacja === "prawne")
+    k.appendChild(pole("Na jaki dzień ustalono brzmienie przepisu",
+      inp(d.data_brzmienia, "", function (v) { d.data_brzmienia = v; }, "date"),
+      "Obowiązki ustala się według przepisów obowiązujących w dniu analizy."));
+
+  if (d.kwalifikacja === "oczekiwanie_nieprzyjete") {
+    k.appendChild(pole("Powód decyzji — wymagany",
+      ta(d.powod, "np. plan działań energetycznych obejmuje tylko emisje z energii; pełny ślad węglowy wymaga osobnego projektu",
+        function (v) { d.powod = v; }, 2)));
+    k.appendChild(pole("Kiedy wrócicie do tej decyzji",
+      inp(d.sprawdzanie, "np. ponowna decyzja przy odnowieniu umowy (I kw. 2027)", function (v) { d.sprawdzanie = v; })));
+  } else if (obowiazujace(d.kwalifikacja)) {
+    k.appendChild(pole("Sposób realizacji w EnMS — co konkretnie robimy",
+      ta(d.sposob !== undefined ? d.sposob : w.sposob_sug, "", function (v) { d.sposob = v; }, 2)));
+    k.appendChild(pole("Właściciel — stanowisko, nie imię",
+      inp(d.wlasciciel, w.wlasciciel_sug || "np. Energy Manager", function (v) { d.wlasciciel = v; })));
+    k.appendChild(pole("Sprawdzanie — jak i kiedy",
+      inp(d.sprawdzanie !== undefined ? d.sprawdzanie : w.sprawdzanie_sug, "", function (v) { d.sprawdzanie = v; })));
+  }
+
+  ostrzezenia(w).forEach(function (o) { k.appendChild(el("div", "warn", o)); });
+  k.appendChild(zrodloPropozycji(w));
+  return k;
+}
+
+function zrodloPropozycji(w) {
+  var det = document.createElement("details");
+  det.appendChild(el("summary", null, "Podstawa propozycji — skąd ta pozycja w rejestrze"));
+  var b = el("div", "zrodlo");
+  var m = zMapowania(w.strona_kod);
+  if (m.length) {
+    b.appendChild(el("div", "zr_tyt", "Z punktu 4.1 — potwierdzone czynniki:"));
+    m.forEach(function (x) { b.appendChild(el("div", "zr_w", x.czynnik + " → " + x.wymaganie)); });
+  }
+  if (w.pokaz_gdy === "ZAWSZE") b.appendChild(el("div", "zr_w", "Z biblioteki: pozycja rozpatrywana dla każdego zakładu."));
+  else {
+    b.appendChild(el("div", "zr_tyt", "Z profilu zakładu: " + w.pokaz_gdy + " → " + (ocen(w.pokaz_gdy) ? "spełniony" : "niespełniony")));
+    polaW(w.pokaz_gdy).forEach(function (p) {
+      var q = PYT[p], v = WYL[p] !== undefined ? WYL[p] : ODP[p];
+      var txt = (v === undefined || v === null || v === "") ? "brak odpowiedzi"
+        : Array.isArray(v) ? v.join(", ") : String(v) + (q && q.jednostka ? " " + q.jednostka : "");
+      b.appendChild(el("div", "zr_w", (q ? q.pytanie : p) + " → " + ((q && q.etykiety && q.etykiety[v]) || txt)));
+    });
+  }
+  det.appendChild(b);
+  return det;
+}
+
+function kartaWlasnego(c, i) {
+  var k = el("div", "poz wlasna");
+  var g = el("div", "pozkod");
+  g.appendChild(el("b", null, "WLASNE-" + String(i + 1).padStart(2, "0")));
+  var us = el("button", "link", "usuń");
+  us.onclick = function () { WLASNE.splice(i, 1); zapisz(); rysuj(); };
+  g.appendChild(us); k.appendChild(g);
+  k.appendChild(pole("Strona zainteresowana", inp(c.strona, "np. Główny klient — koncern motoryzacyjny", function (v) { c.strona = v; })));
+  k.appendChild(pole("Wewnętrzna czy zewnętrzna", sel(c.typ, [["", "Wybierz"], ["wew.", "wew."], ["zew.", "zew."]], function (v) { c.typ = v; })));
+  k.appendChild(pole("Wymaganie lub oczekiwanie (zakres)", ta(c.wymaganie, "", function (v) { c.wymaganie = v; }, 2)));
+  var z = el("div", "pole kandydat");
+  z.appendChild(el("label", null, "Źródło"));
+  var g3 = el("div", "zrodlo3");
+  g3.appendChild(inp(c.zr_dok, "Dokument", function (v) { c.zr_dok = v; }));
+  g3.appendChild(inp(c.zr_ozn, "Paragraf / wersja", function (v) { c.zr_ozn = v; }));
+  g3.appendChild(inp(c.zr_data, "", function (v) { c.zr_data = v; }, "date"));
+  z.appendChild(g3); k.appendChild(z);
+  k.appendChild(pole("Kwalifikacja", sel(c.kwalifikacja, [["", "Wybierz"]].concat(KWALIFIKACJE), function (v) { c.kwalifikacja = v; })));
+  k.appendChild(pole("Sposób realizacji w EnMS", ta(c.sposob, "", function (v) { c.sposob = v; }, 2)));
+  k.appendChild(pole("Właściciel", inp(c.wlasciciel, "", function (v) { c.wlasciciel = v; })));
+  k.appendChild(pole("Sprawdzanie — jak i kiedy", inp(c.sprawdzanie, "", function (v) { c.sprawdzanie = v; })));
+  return k;
+}
+function wlasneKompletne(c) {
+  if (!(c.strona || "").trim() || !(c.wymaganie || "").trim() || !c.kwalifikacja) return false;
+  if (obowiazujace(c.kwalifikacja))
+    return (c.zr_dok || "").trim() && (c.wlasciciel || "").trim() && (c.sprawdzanie || "").trim();
+  return !!(c.sposob || "").trim();
+}
+
+/* ── zakładki ── */
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  if (AKT === "klimat") rysujKlimat(host);
+  else if (AKT === "wlasne") rysujWlasne(host);
+  else if (AKT === "zatw") rysujZatw(host);
+  else rysujGrupe(host);
+  pasek();
+}
+
+function rysujKlimat(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Wymagania klimatyczne i odstęp przeglądu"));
+  s.appendChild(el("p", "opis", "Zmiana normy z 2024 roku przypomina, że strony zainteresowane mogą mieć wymagania związane ze zmianą klimatu: klient chce danych o śladzie węglowym, bank pyta o ryzyka klimatyczne, właściciel ma cel redukcji emisji. Ta zakładka jest pierwsza, bo odpowiedź wpływa na pozycje w pozostałych."));
+  var k = el("div", "poz" + (KLIMAT.odp && KLIMAT.lista.trim().length >= 20 ? "" : " brak"));
+  k.appendChild(el("div", "pozkod")).appendChild(el("b", null, "FAKT_KLIMAT_STRONY"));
+  k.appendChild(el("div", "poznazwa", "Czy którakolwiek ze stron zainteresowanych stawia wymagania związane ze zmianą klimatu?"));
+  k.appendChild(pole("", sel(KLIMAT.odp, [["", "Wybierz"], ["tak", "Tak — są takie wymagania"],
+  ["nie", "Nie — żadna strona ich nie stawia"]], function (v) { KLIMAT.odp = v; })));
+  k.appendChild(pole(KLIMAT.odp === "nie" ? "Uzasadnienie — wymagane przy odpowiedzi „nie”" : "Które strony i jakie wymagania",
+    ta(KLIMAT.lista, KLIMAT.odp === "nie"
+      ? "np. odbiorcy nie pytają o ślad węglowy, organizacja nie podlega raportowaniu emisji, grupa nie narzuca celów klimatycznych"
+      : "np. odbiorcy wymagają danych o śladzie węglowym wyrobu; bank pyta o ryzyka klimatyczne",
+      function (v) { KLIMAT.lista = v; }, 3)));
+  if (KLIMAT.odp === "tak")
+    k.appendChild(el("div", "note", "Najpierw ustal dokładnie, czego strona chce — jakie dane, w jakim zakresie, jaką metodą — a dopiero potem zdecyduj. Dane o energii są często częścią takiego wymagania, ale rzadko całością: ślad węglowy obejmuje też materiały i transport."));
+  s.appendChild(k);
+
+  var o = el("div", "poz" + (KLIMAT.odstep ? "" : " brak"));
+  o.appendChild(el("div", "pozkod")).appendChild(el("b", null, "ODSTEP_PRZEGLADU"));
+  o.appendChild(el("div", "poznazwa", "W jakich odstępach przeglądacie rejestr stron i wymagań?"));
+  o.appendChild(el("div", "pozmeta", "Norma mówi o przeglądzie „w ustalonych odstępach czasu”. Rada z książki: co najmniej raz w roku i za każdym razem, gdy podpisujecie ważną umowę."));
+  o.appendChild(pole("", sel(KLIMAT.odstep, [["", "Wybierz"], ["kwartal", "Co kwartał"], ["polrocze", "Co pół roku"],
+  ["rok", "Raz w roku"], ["rok_umowy", "Raz w roku oraz przy każdej ważnej umowie"]], function (v) { KLIMAT.odstep = v; })));
+  s.appendChild(o);
+  host.appendChild(s);
+}
+
+function rysujGrupe(host) {
+  var g = GRUPY.filter(function (x) { return x.id === AKT; })[0];
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, g.nazwa));
+  s.appendChild(el("p", "opis", g.opis));
+  var lista = WYMAGANIA.filter(function (w) { return g.strony.indexOf(w.strona_kod) >= 0; });
+  var akt = lista.filter(aktywne);
+  akt.forEach(function (w) { s.appendChild(karta(w)); });
+  if (!akt.length) s.appendChild(el("p", "opis", "Żadne wymaganie z tej grupy nie wynika z profilu zakładu ani z punktu 4.1."));
+  var pom = lista.filter(function (w) { return !aktywne(w); });
+  if (pom.length) {
+    var det = document.createElement("details"); det.className = "pominiete";
+    det.appendChild(el("summary", null, "Wymagania niewynikające z aktualnych odpowiedzi (" + pom.length + ")"));
+    var t = el("table", "tab");
+    var tr = el("tr"); ["Nr", "Strona", "Wymaganie", "Warunek"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+    t.appendChild(tr);
+    pom.forEach(function (w) {
+      var r = el("tr");
+      [w.id, w.strona, w.wymaganie, w.pokaz_gdy].forEach(function (v) { r.appendChild(el("td", null, v)); });
+      t.appendChild(r);
+    });
+    det.appendChild(t); s.appendChild(det);
+  }
+  host.appendChild(s);
+}
+
+function rysujWlasne(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Własne wymagania"));
+  s.appendChild(el("p", "opis", "Lista z szablonu wygląda kompletnie, a pomija akurat tę stronę, która zmienia priorytety. Zapytaj dział sprzedaży i zakupów, czego klienci i dostawcy wymagali w ostatnim roku w sprawie energii i emisji — i poproś o dokumenty, nie o wspomnienia."));
+  WLASNE.forEach(function (c, i) { s.appendChild(kartaWlasnego(c, i)); });
+  var dod = el("button", "dodaj", "+ dodaj wymaganie");
+  dod.onclick = function () { WLASNE.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  host.appendChild(s);
+}
+
+function rysujZatw(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var braki = [], ostrz = [];
+  if (!KLIMAT.odp) braki.push("Brak oceny wymagań klimatycznych stron zainteresowanych.");
+  if (KLIMAT.odp && KLIMAT.lista.trim().length < 20) braki.push("Ocena klimatu bez wypełnionego uzasadnienia.");
+  if (!KLIMAT.odstep) braki.push("Nie ustalono odstępu przeglądu rejestru.");
+  WYMAGANIA.filter(aktywne).forEach(function (w) {
+    var d = W[w.id] || {};
+    if (!kompletne(w)) {
+      braki.push(w.id + " (" + w.strona + ") — " + (!d.decyzja ? "brak decyzji"
+        : d.decyzja === "nie_dotyczy" ? "odrzucone bez uzasadnienia"
+          : !d.kwalifikacja ? "brak kwalifikacji"
+            : obowiazujace(d.kwalifikacja) && (!(d.zr_dok || "").trim() || !(d.zr_ozn || "").trim() || !d.zr_data) ? "brak źródła wymagania"
+              : d.kwalifikacja === "prawne" && !d.data_brzmienia ? "brak daty ustalenia brzmienia przepisu"
+                : obowiazujace(d.kwalifikacja) && !(d.wlasciciel || "").trim() ? "brak właściciela"
+                  : obowiazujace(d.kwalifikacja) && !(d.sprawdzanie || "").trim() ? "brak sposobu sprawdzania"
+                    : "niekompletne"));
+    }
+    ostrzezenia(w).forEach(function (o) { ostrz.push(w.id + ": " + o); });
+  });
+  WLASNE.forEach(function (c, i) { if (!wlasneKompletne(c)) braki.push("WLASNE-" + String(i + 1).padStart(2, "0") + " — niekompletne"); });
+
+  if (!braki.length) s.appendChild(el("div", "ok", "Rejestr kompletny. Można go przekazać konsultantowi."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia przed przekazaniem (" + braki.length + "):"));
+    var ul = el("ul");
+    braki.slice(0, 14).forEach(function (x) { ul.appendChild(el("li", null, x)); });
+    if (braki.length > 14) ul.appendChild(el("li", null, "… i " + (braki.length - 14) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+  if (ostrz.length) {
+    var w2 = el("div", "warn");
+    w2.appendChild(el("b", null, "Ostrzeżenia merytoryczne (" + ostrz.length + ") — nie blokują:"));
+    var ul2 = el("ul"); ostrz.forEach(function (x) { ul2.appendChild(el("li", null, x)); });
+    w2.appendChild(ul2); s.appendChild(w2);
+  }
+
+  var obow = WYMAGANIA.filter(aktywne).filter(function (w) { return obowiazujace((W[w.id] || {}).kwalifikacja); });
+  s.appendChild(el("h4", null, "Wyciąg do rejestru wymagań prawnych i innych (9.1.2)"));
+  s.appendChild(el("p", "opis", obow.length + " wymagań obowiązujących. Tylko one przechodzą do oceny zgodności — oczekiwania nieprzyjęte zostają w rejestrze stron."));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Nr", "Strona", "Wymaganie", "Kwalifikacja", "Właściciel", "Sprawdzanie"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  obow.forEach(function (w) {
+    var d = W[w.id] || {}, et = {};
+    KWALIFIKACJE.forEach(function (x) { et[x[0]] = x[1].split(" — ")[0]; });
+    var r = el("tr");
+    [w.id, w.strona, (d.wymaganie !== undefined ? d.wymaganie : w.wymaganie), et[d.kwalifikacja],
+    d.wlasciciel || "—", d.sprawdzanie || "—"].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    t.appendChild(r);
+  });
+  if (!obow.length) { var r0 = el("tr"); var td = el("td", "pusto", "Nic jeszcze nie zakwalifikowano jako obowiązujące."); td.colSpan = 6; r0.appendChild(td); t.appendChild(r0); }
+  s.appendChild(t);
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── pasek i nawigacja ── */
+function pasek() {
+  var akt = WYMAGANIA.filter(aktywne);
+  var razem = akt.length + WLASNE.length + 2;
+  var zrob = akt.filter(kompletne).length + WLASNE.filter(wlasneKompletne).length
+    + (KLIMAT.odp && KLIMAT.lista.trim().length >= 20 ? 1 : 0) + (KLIMAT.odstep ? 1 : 0);
+  var proc = razem ? Math.round(100 * zrob / razem) : 0;
+  document.getElementById("postep").textContent = "Wypełnienie: " + proc + "% · " + zrob + " / " + razem;
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + proc + "%"; document.getElementById("tor_strona").style.width = proc + "%"; }
+  ZAKLADKI().forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+}
+function ZAKLADKI() {
+  return [{ id: "klimat", t: "Klimat i przegląd" }]
+    .concat(GRUPY.map(function (g) { return { id: g.id, t: g.krotka }; }))
+    .concat([{ id: "wlasne", t: "Własne wymagania" }, { id: "zatw", t: "Zatwierdzenia" }]);
+}
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI().forEach(function (x) {
+    var b = el("button", "zak", x.t); b.id = "zak_" + x.id;
+    b.onclick = function () { AKT = x.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+
+var HISTORIA = [{ data: "04.10.2026 11:40", osoba: "Jan Kowalski", akcja: "Otwarto rejestr 4.2" }];
+function zapisz() { try { localStorage.setItem("enesa_42v2", JSON.stringify({ W: W, WLASNE: WLASNE, KLIMAT: KLIMAT })); } catch (e) { } }
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_42v2"); if (!s) return;
+    var d = JSON.parse(s); W = d.W || {}; WLASNE = d.WLASNE || []; KLIMAT = d.KLIMAT || KLIMAT;
+  } catch (e) { }
+}
+/* Przykład wypełnia cały rejestr — tak samo jak na stronach 4.1, 4.3, 4.4 i 5.1–10.2.
+   Wymaganie, dla którego przykład nie ma wpisu (również dopisane do biblioteki później),
+   dostaje sugestie z biblioteki — rejestr zostaje kompletny, nie wraca do stanu „brak”. */
+function przyklad() {
+  var p = PRZYKLAD_42;
+  KLIMAT = JSON.parse(JSON.stringify(p.klimat));
+  W = {}; WLASNE = [];
+  WYMAGANIA.filter(aktywne).forEach(function (w) {
+    if (p.wym[w.id]) { W[w.id] = JSON.parse(JSON.stringify(p.wym[w.id])); return; }
+    W[w.id] = {
+      decyzja: "dotyczy",
+      kwalifikacja: w.kwal_sug || "przyjete",
+      zr_dok: w.zrodlo_podp || "Dokument do wskazania",
+      zr_ozn: "do uzupełnienia przy publikacji",
+      zr_data: "2026-02-10",
+      data_brzmienia: "2026-02-10",
+      sposob: w.sposob_sug || "",
+      wlasciciel: w.wlasciciel_sug || "Energy Manager",
+      sprawdzanie: w.sprawdzanie_sug || "Przegląd rejestru raz w roku"
+    };
+  });
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić cały rejestr 4.2?")) return;
+  W = {}; WLASNE = []; KLIMAT = { odp: "", lista: "", odstep: "" };
+  try { localStorage.removeItem("enesa_42v2"); } catch (e) { }
+  rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "04.10.2026 11:45", osoba: "Jan Kowalski", akcja: "Zapisano rejestr" });
+  zapisz(); rysuj(); alert("Zapisano rejestr stron zainteresowanych i ich wymagań.");
+}
+function zatwierdz() { AKT = "zatw"; rysuj(); }
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

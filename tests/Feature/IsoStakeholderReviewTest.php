@@ -69,7 +69,7 @@ test('stakeholder workflow requires consultant decisions before client approval 
     $clientUrl = route('client.audits.stakeholders.update', [$audit, $profile]);
     $staffUrl = route('audits.stakeholders.update', [$audit, $profile]);
     $this->actingAs($client)->get(route('client.audits.stakeholders.show', [$audit, $profile]))->assertOk()->assertSee('FAKT_KLIMAT_STRONY')->assertSee('WYM-27');
-    $this->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => '4-2']))->assertOk()->assertSee('Otwórz ankietę 4.2');
+    $this->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => '4-2']))->assertOk()->assertSee('data-iso-html-point', false)->assertSee(route('client.audits.stakeholders.show', [$audit, $profile]), false);
     $this->post($clientUrl, $input)->assertSessionHasNoErrors();
     $review = IsoStakeholderReview::sole();
     expect($review->client_changes)->toBeNull();

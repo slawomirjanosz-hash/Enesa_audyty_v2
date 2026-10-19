@@ -1,0 +1,1569 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 5.1 Przywództwo i zaangażowanie</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 5</div>
+ <h1>5.1 Przywództwo i zaangażowanie</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 5.1</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 5.1</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>5.1 Przywództwo i zaangażowanie</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 5.1 i sposób przygotowania dowodów.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 5.1<br>Przywództwo i zaangażowanie</div>
+   <div>
+    <h4>5.1 Przywództwo i zaangażowanie</h4>
+    <p>Trzynaście obowiązków kierownictwa w czterech pytaniach. Dlaczego podpis na polityce niczego nie dowodzi
+    i czego zamiast niego szuka audytor.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 5.1. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">5.1 — część A<br>12 slajdów</div>
+   <div>
+    <h4>5.1 Przywództwo i zaangażowanie — część A</h4>
+    <p>Cztery pytania kontrolne. Pięć nawyków zaangażowanego kierownictwa. Jak rozmawiać z zarządem językiem
+    pieniędzy, ryzyka i prawa.</p>
+    <p style="font-size:12.5px">12 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Najwyższe kierownictwo wykazuje przywództwo i zaangażowanie w ciągłe doskonalenie wyniku
+ energetycznego i skuteczność systemu zarządzania energią. Zapewnia między innymi, że: ustalono zakres i granice
+ systemu; ustanowiono politykę energetyczną, cele i zadania zgodne z kierunkiem strategicznym organizacji; wymagania
+ systemu włączono do procesów biznesowych; plany działań są zatwierdzane i realizowane; potrzebne zasoby są dostępne;
+ system osiąga zamierzone wyniki; powołano zespół ds. zarządzania energią; wskaźniki EnPI właściwie odzwierciedlają
+ wynik energetyczny; istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie. Ponadto
+ komunikuje znaczenie skutecznego zarządzania energią, kieruje ludźmi i wspiera ich, promuje ciągłe doskonalenie oraz
+ wspiera inne role kierownicze w ich obszarach. Omówienie na podstawie punktu 5.1 PN-EN ISO 50001:2018; nie jest to
+ dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> kierownictwo nie musi wszystkiego robić samo —
+ ale musi dopilnować, żeby system miał kierunek, zasoby, ludzi i wyniki.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 2, punkt 5.1. W tym punkcie mowa o prezesie, zarządzie albo
+ dyrektorze — chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu.</div>
+
+ <div class="ramka">
+  <h3>◧ Dwa zakłady, ten sam certyfikat</h3>
+  <p style="font-size:13.5px">W pierwszym prezes podpisał politykę energetyczną, uścisnął dłoń konsultantowi i wrócił
+  do swoich spraw. Na kolejnym spotkaniu o energii pojawił się rok później — na audycie.</p>
+  <p style="font-size:13.5px">W drugim dyrektor w każdy poniedziałek zadaje na odprawie to samo pytanie: „Ile energii
+  zużyliśmy w zeszłym tygodniu, co wpłynęło na wynik i co z tym robimy?” A potem wraca do odpowiedzi: zleca
+  sprawdzenie, przesuwa remont, zatwierdza wydatek.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Zgadnij, w którym zakładzie kierownik zmiany wyłącza sprężarkę przed
+  weekendem. <b>Ludzie nie patrzą na podpisy. Patrzą na to, o co pyta szef i co robi z odpowiedzią.</b></p>
+ </div>
+
+ <div class="ramka">
+  <h3>✓ Cztery pytania, na które kierownictwo musi odpowiedzieć „tak”</h3>
+  <p class="op">Trzynaście obowiązków brzmi groźnie. Pogrupowane dają cztery pytania. W ankiecie każde ma własną
+  sekcję z obowiązkami i miejscem na dowód.</p>
+  <table class="tab">
+   <tr><th style="width:30%">Pytanie</th><th style="width:36%">Co się pod nim kryje</th><th>Dowód</th></tr>
+   <tr><td><b>1. Czy wiemy, dokąd idziemy?</b></td>
+   <td>Zakres i granice ustalone. Polityka, cele i zadania pasują do strategii. Wskaźniki uczciwie pokazują wynik.</td>
+   <td>zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach</td></tr>
+   <tr><td><b>2. Czy energia jest w naszych decyzjach?</b></td>
+   <td>Wymagania systemu wbudowane w procesy firmy. Plany zatwierdzane i realizowane. Są zasoby. Jest zespół.</td>
+   <td>energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu</td></tr>
+   <tr><td><b>3. Czy ludzie wiedzą, że to ważne?</b></td>
+   <td>Kierownictwo mówi o znaczeniu systemu, kieruje ludźmi i wspiera innych kierowników w ich obszarach.</td>
+   <td>komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety</td></tr>
+   <tr><td><b>4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?</b></td>
+   <td>System osiąga zamierzone wyniki. Kierownictwo promuje doskonalenie. Zmiany trafiają do zespołu przed decyzją.</td>
+   <td>przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu</td></tr>
+  </table>
+  <p style="font-size:13.5px;margin:10px 0 0">★ Podział na cztery pytania to pomoc autora — norma wymienia obowiązki
+  jeden po drugim. Lista kontrolna III-13 sprawdza wszystkie trzynaście.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>♫ Analogia: orkiestra symfoniczna</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Dyrygent nie gra na żadnym instrumencie, a bez niego orkiestra brzmi jak
+  chaos. Ustala wizję wykonania — to polityka energetyczna. Dobiera program — to cele. Zapewnia salę prób, nuty i czas
+  — to zasoby. Daje wejścia i koordynuje sekcje. Słucha wyniku i reaguje, gdy coś brzmi fałszywie, nie czekając do
+  końca koncertu. Czego nie robi? Nie ćwiczy za muzyków i nie stroi im instrumentów. Najwyższe kierownictwo działa tak
+  samo: nie musi znać się na sprężarkach, musi wiedzieć, dokąd organizacja zmierza, zapewnić zasoby i reagować,
+  gdy wyniki odbiegają od planu.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>⟳ Gdzie w tym jest miejsce kierownictwa</h3>
+  <p class="op">AutoParts Polska, kampania pomiarowa w lutym i marcu 2026 r. Sprężarkownia: 0,125 kWh/Nm³,
+  wycieki ok. 9 Nm³/min.</p>
+  <ol class="kroki">
+   <li><b>Znaczenie:</b> sprężarkownia zużywa 17,5% energii zakładu; zespół szacuje, że wycieki to duża część tego zużycia.</li>
+   <li><b>Decyzja:</b> zarząd — w jego imieniu dyrektor zakładu — zatwierdza cele Z1.1 (0,110 kWh/Nm³ do końca 2027 r.)
+   i Z1.2 (wycieki do 4 Nm³/min) oraz plan działań, <b>z czasem technika na przeglądy szczelności</b>.</li>
+   <li><b>Działanie:</b> utrzymanie ruchu co kwartał przegląda szczelność sieci; Energy Manager co miesiąc raportuje postęp.</li>
+   <li><b>Sprawdzenie:</b> czerwcowy pomiar pokazał 6 Nm³/min — cel pośredni osiągnięty. Na przeglądzie zarządzania
+   dyrektor pyta nie „czy zrobiliście”, tylko „ile to dało i czego potrzebujecie dalej”.</li>
+  </ol>
+  <p style="font-size:13.5px;margin:10px 0 0">Kierownictwo nie wymienia uszczelek. Ale bez jego decyzji o celu, czasie
+  i ocenie wyniku nikt by ich nie wymieniał.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>◉ Pięć nawyków zaangażowanego kierownictwa</h3>
+  <p class="op">Zaangażowanie to nie uczucie. To nawyki. Po tych pięciu każdy pracownik rozpozna, że kierownictwu zależy.</p>
+  <ul>
+   <li><b>Daje zasoby</b>, nie tylko budżet na certyfikat — ludzi, czas, narzędzia pomiarowe, dostęp do danych.
+   Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie.</li>
+   <li><b>Myśli energią przy każdej dużej decyzji.</b> Zakup maszyny, inwestycja, plan produkcji — za każdym razem
+   pada pytanie: „A ile to będzie zużywać?”</li>
+   <li><b>Mówi o energii.</b> Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.</li>
+   <li><b>Jest widoczne.</b> Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.</li>
+   <li><b>Staje za zespołem.</b> Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.</li>
+  </ul>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>„Prezes odmówił zakupu licznika. Czyli nie jest zaangażowany?”</b>
+ Niekoniecznie. Jedna odmowa niczego nie dowodzi — może wybrał tańsze rozwiązanie, może przesunął zakup o kwartał,
+ bo ważniejszy był remont kotłowni. Pytanie brzmi inaczej: <b>czy system ma dość zasobów, żeby działać?</b> Jeśli tak
+ — wszystko w porządku. Jeśli każdy wniosek ląduje w szufladzie bez odpowiedzi — wtedy macie problem.<br><br>
+ Podobnie z celami. Gdy cel nie jest osiągany, najpierw ustal przyczynę, potem zdecyduj: więcej zasobów, inny plan
+ albo — z uzasadnieniem — korekta celu. Nie obniżaj celu po to, żeby ogłosić sukces.</div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Skąd wiesz, że kierownictwo jest naprawdę zaangażowane?</h3>
+   <p class="op">Nie z deklaracji, tylko z faktów. Sprawdź pięć rzeczy — te same sprawdzi zresztą audytor.</p>
+   <ul>
+    <li>Potrafisz wskazać kilka decyzji z ostatnich miesięcy, w których energia miała znaczenie — z datami.</li>
+    <li>Ktoś z kierownictwa zna politykę, główne cele i wyniki — i pamięta, co sam zdecydował.</li>
+    <li>Wiesz konkretnie, jakie zasoby dostał system: ludzie, czas, pieniądze, narzędzia, dane.</li>
+    <li>Energia jest w procedurze inwestycyjnej, w zakupach, w planowaniu produkcji i remontów.</li>
+    <li>Gdy cel nie był osiągany, kierownictwo zareagowało decyzją, a nie milczeniem.</li>
+   </ul>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Dokumenty do przygotowania</h3>
+   <ul>
+    <li>Dowody zaangażowania: decyzje z datami, protokoły przeglądu zarządzania, komunikaty</li>
+    <li>Decyzja o powołaniu zespołu ds. zarządzania energią — ★ wygodna forma, nie wymóg normy</li>
+    <li>Zapis przydziału zasobów: ludzie, czas, budżet, narzędzia, dane</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0"><b>Punkt 5.1 nie wymaga własnej udokumentowanej informacji.</b>
+   W całym rozdziale 5 norma wymaga udokumentowania tylko polityki energetycznej (5.2).<br>
+   Szczegółowe szablony: Część II, Moduł 2, punkt 5.1; Część III, lista kontrolna III-13 i procedura P-EnMS-02 (III-14).</p>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>☰ Zalecany sposób wdrożenia</h3>
+  <ol class="kroki">
+   <li>Ustal, kto jest najwyższym kierownictwem dla Waszego systemu — i czy ma upoważnienie na piśmie.</li>
+   <li>Przejdź cztery pytania kontrolne i przy każdym z trzynastu obowiązków wskaż dowód z datą.</li>
+   <li>Sprawdź siedem procesów biznesowych: czy decyzja wygląda inaczej, odkąd istnieje system.</li>
+   <li>Powołaj zespół ds. zarządzania energią i ogłoś jego skład — ludzie muszą wiedzieć, że w nim są.</li>
+   <li>Zapisz przydział zasobów, zwłaszcza czasu. To najczęściej brakujący i najrzadziej zapisany zasób.</li>
+   <li>Ustal stałe punkty styku kierownictwa z systemem: przegląd, raport, komunikat.</li>
+   <li>Zbierz co najmniej kilka decyzji z ostatnich miesięcy, w których energia miała znaczenie.</li>
+  </ol>
+ </div>
+
+ <div class="ramka">
+  <h3>⚠ Na co uważać — najczęstsze błędy</h3>
+  <table class="tab">
+   <tr><th style="width:38%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+   <tr><td>Zaangażowanie tylko na papierze</td><td>Zaplanuj stałe „punkty styku”: przegląd zarządzania, krótki raport (★ np. miesięczny), obchód hali</td></tr>
+   <tr><td>Kierownictwo nie zna podstaw systemu</td><td>Regularny krótki przegląd wyników i decyzji (★ np. raz w miesiącu): polityka, cele, największe zużycia, wyniki</td></tr>
+   <tr><td>Cele bez zasobów</td><td>Przy zatwierdzaniu celu od razu ustal: kto, za ile, do kiedy</td></tr>
+   <tr><td>Energia jako „projekt ISO”</td><td>Wpisz energię do zwykłych raportów firmy — tam, gdzie są sprzedaż i jakość</td></tr>
+   <tr><td>Każde odchylenie = działanie korygujące</td><td>Najpierw ustal przyczynę i skalę. Działanie korygujące — gdy rzeczywiście jest niezgodność</td></tr>
+  </table>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>★ Rada:</b> wpisz wskaźniki energetyczne do rocznych celów kierowników
+ produkcji i utrzymania ruchu. Ludzie zmieniają zachowania najszybciej tam, gdzie są z czegoś rozliczani.<br>
+ <b>★ Rada:</b> poproś prezesa o jedno stałe pytanie o energię na cotygodniowej odprawie. Jedno regularne pytanie
+ pomaga nadać energii znaczenie — jeżeli za odpowiedzią idą decyzje.</div>
+
+ <div class="note" style="margin:14px 0"><b>Twój ruch.</b> Zaangażowanie kierownictwa mierzy się nie liczbą podpisów,
+ ale liczbą decyzji, w których energia miała znaczenie.<br>
+ <b>Zadanie:</b> wypisz cztery pytania z tego punktu i przy każdym jeden dowód z ostatnich trzech miesięcy.
+ Tam, gdzie dowodu brakuje, masz temat na najbliższą rozmowę z kierownictwem.</div>
+
+ <div class="ankbox">
+  <h3>5.1 Ankieta przywództwa i zaangażowania</h3>
+  <p class="op">Trzynaście obowiązków w czterech pytaniach, integracja z procesami, zespół, zasoby, nawyki i dowody
+  z decyzji. Siedem zakładek.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz ankietę 5.1</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”,
+ Tom 2 rozdział 2 punkt 5.1 oraz Część III (Toolkit) Moduł 2 wersja 2.1.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>D-EnMS-PRZ-01 Przywództwo i zaangażowanie — zestawienie obowiązków z dowodami</li>
+   <li>Decyzja o powołaniu zespołu ds. zarządzania energią (wzór: III-14, załącznik A)</li>
+   <li>Zapis przydziału zasobów i punktów styku kierownictwa z systemem</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Zapisz odpowiedzi przed wyjściem. Punkt 5.1 zbiera dowody powstające w innych punktach —
+  jedna decyzja albo jeden przegląd zarządzania może potwierdzać kilka pozycji.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 5.1 w formacie stron 4.1–4.4.</b> Ten sam układ strony klauzuli, ta sama ankieta
+z zakładkami, ten sam przełącznik roli i ta sama stopka. Pierwszy punkt rozdziału 5 na platformie.</div>
+
+<h2>Źródła</h2>
+<p class="sub2">Ten plik powstał na podstawie dwóch dokumentów książki, bez zgadywania:</p>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 2, punkt 5.1</td><td>Cztery pytania kontrolne, pięć nawyków, pięć pytań samosprawdzenia, tabela błędów, obie ★ Rady, „Twój ruch”, analogia orkiestry, scena dwóch zakładów, przykład sprężarkowni AutoParts, akapit „Prezes odmówił zakupu licznika”.</td></tr>
+<tr><td>Część III, Moduł 2, wersja 2.1 — III-13</td><td>Lista kontrolna sekcji 5.1 w pełnym brzmieniu: 15 pozycji z kolumną N / M. Kolumna „Dowód / miejsce zapisu” jest w ankiecie polem przy każdym obowiązku.</td></tr>
+<tr><td>Część III, Moduł 2 — III-14</td><td>Procedura P-EnMS-02 i opcjonalny wzór decyzji o powołaniu zespołu (F-EnMS-06, załącznik A) — odesłanie w zakładce 3.</td></tr>
+</table>
+<div class="note"><b>Jedna pozycja dodana przez platformę.</b> Do listy III-13 dopisałem wiersz
+<i>„Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami”</i>, oznaczony jako M.
+To pierwsze pytanie samosprawdzenia z Tomu 2, którego nie ma w III-13. <b>Do rozstrzygnięcia:</b> dopisać je do III-13
+w książce albo zostawić jako element wyłącznie platformy.</div>
+
+<h2>Zakładki ankiety</h2>
+<table>
+<tr><th style="width:20%">Zakładka</th><th style="width:12%">Rola</th><th style="width:30%">Skąd treść</th><th>Co wypełnia klient</th></tr>
+<tr><td>1. Cztery pytania kontrolne</td><td>wejście</td><td>15 obowiązków zgrupowanych w 4 pytania; 13 to wymagania normy</td><td>Stan, dowód z datą i osoba z kierownictwa przy każdym obowiązku</td></tr>
+<tr><td>2. Integracja z procesami</td><td>wejście</td><td>7 procesów biznesowych</td><td>Czy proces uwzględnia energię, jak i gdzie to zapisane</td></tr>
+<tr><td>3. Zespół ds. energii</td><td>wejście</td><td>Umocowanie + skład; wzór decyzji III-14 zał. A</td><td>Dokument powołujący, skład, zastępcy, czy ludzie wiedzą, że są w zespole</td></tr>
+<tr><td>4. Zasoby</td><td>wejście</td><td>6 rodzajów zasobów, w tym czas</td><td>Stan i konkret: ile, skąd, od kiedy</td></tr>
+<tr><td>5. Nawyki i decyzje</td><td>wejście</td><td>5 nawyków z Tomu 2 + rejestr decyzji</td><td>Czy nawyk działa; decyzje z datami i skutkiem</td></tr>
+<tr><td>6. Analiza konsultanta</td><td>wynik</td><td>Kandydaci na wnioski wyliczani z zakładek 1, 2 i 4</td><td>Nic — rola konsultanta</td></tr>
+<tr><td>7. Zatwierdzenia</td><td>—</td><td>braki, lista kontrolna III-13, zawartość dokumentu, historia</td><td>Przekazanie konsultantowi</td></tr>
+</table>
+
+<h2>Reguły, które tu obowiązują</h2>
+<table>
+<tr><th style="width:30%">Reguła</th><th>Działanie</th></tr>
+<tr><td>Dowód zamiast deklaracji</td><td>Stan „jest” albo „częściowo” wymaga wpisania dowodu <b>i</b> osoby z kierownictwa. Stan „nie” wymaga planu: co i kiedy powstanie. Pozycja bez żadnego z tych pól blokuje przekazanie.</td></tr>
+<tr><td>Ostrzeżenie o jednym nazwisku</td><td>Jeśli przy co najmniej 75% obowiązków wpisano to samo stanowisko, platforma pokazuje ostrzeżenie. Punkt 5.1 wymaga też wspierania innych ról kierowniczych — skupienie wszystkiego na jednej osobie jest sygnałem, nie rozwiązaniem.</td></tr>
+<tr><td>Integracja „na papierze”</td><td>Odpowiedź „jest zapis, ale decyzje wyglądają tak samo” nie blokuje przekazania, ale trafia do kandydatów na wnioski konsultanta i wywołuje ostrzeżenie. To rozróżnienie wprost z analogii „dieta szefa”.</td></tr>
+<tr><td>Trzy decyzje</td><td>Mniej niż trzy udokumentowane decyzje kierownictwa daje ostrzeżenie oznaczone jako <b>metodyka ENESA, nie wymóg normy</b>. Liczba jest umowna — książka mówi „kilka decyzji z ostatnich miesięcy”.</td></tr>
+<tr><td>Zakomunikowanie ról</td><td>Członek zespołu z odpowiedzią „jeszcze nie wie, że jest w zespole” blokuje przekazanie. To wymaganie normy z punktu 5.3, sprawdzane już tutaj, bo zespół powołuje się w 5.1.</td></tr>
+<tr><td>Dane z profilu zakładu</td><td>Czytane, nie kopiowane — tak jak w 4.1–4.4. Platforma pokazuje odpowiedź z profilu przy obowiązkach i procesach, których ona dotyczy, i dopisuje ostrzeżenie, gdy odpowiedź wskazuje na lukę.</td></tr>
+</table>
+
+<h2>Pola profilu zakładu używane przez ten punkt</h2>
+<table>
+<tr><th style="width:26%">Pole</th><th style="width:32%">Pytanie w profilu</th><th>Gdzie używane</th></tr>
+<tr><td class="mono">FAKT_BUDZET</td><td>Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?</td><td>PRZ-06, INT-BUD</td></tr><tr><td class="mono">FAKT_ENERGY_MANAGER</td><td>Czy wyznaczono osobę odpowiedzialną za energię?</td><td>PRZ-07</td></tr><tr><td class="mono">FAKT_INSTRUKCJE_EKSPL</td><td>Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?</td><td>INT-UR</td></tr><tr><td class="mono">FAKT_INWESTYCJE</td><td>Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?</td><td>PRZ-13, INT-INW</td></tr><tr><td class="mono">FAKT_PBT_PROG</td><td>Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?</td><td>ostrzeżenia i noty</td></tr><tr><td class="mono">FAKT_ROTACJA</td><td>Rotacja pracowników produkcji i utrzymania ruchu w skali roku</td><td>ostrzeżenia i noty</td></tr><tr><td class="mono">FAKT_SYSTEM_BAZOWY</td><td>Czy organizacja ma wdrożony system zarządzania?</td><td>ostrzeżenia i noty</td></tr><tr><td class="mono">FAKT_ZAKUPY_KRYTERIA</td><td>Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?</td><td>PRZ-04, INT-ZAK</td></tr></table>
+<h2>Lista kontrolna III-13 — sekcja 5.1 i sposób liczenia</h2>
+<table>
+<tr><th style="width:54%">Pozycja</th><th style="width:8%">N / M</th><th>Jak wyliczana</th></tr>
+<tr><td>Ustalono, kto jest najwyższym kierownictwem dla systemu</td><td class="mono">M</td><td>stan i dowód obowiązku PRZ-00</td></tr><tr><td>…ustalono zakres i granice systemu</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-01</td></tr><tr><td>…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-02</td></tr><tr><td>…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)</td><td class="mono">N</td><td>wszystkie procesy biznesowe rozstrzygnięte</td></tr><tr><td>…plany działań są zatwierdzane i realizowane</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-05</td></tr><tr><td>…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)</td><td class="mono">N</td><td>wszystkie rodzaje zasobów opisane</td></tr><tr><td>Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-08</td></tr><tr><td>…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-11</td></tr><tr><td>Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-12</td></tr><tr><td>…powołano zespół ds. zarządzania energią</td><td class="mono">N</td><td>zespół powołany i skład kompletny</td></tr><tr><td>Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-09</td></tr><tr><td>Kierownictwo wspiera inne role kierownicze w ich obszarach</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-10</td></tr><tr><td>…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-03</td></tr><tr><td>…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie</td><td class="mono">N</td><td>stan i dowód obowiązku PRZ-13</td></tr><tr><td>Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)</td><td class="mono">M</td><td>wszystkie pięć nawyków rozstrzygniętych</td></tr><tr><td>Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami</td><td class="mono">M</td><td>co najmniej trzy udokumentowane decyzje</td></tr></table><p class="sub2">Podstawa <span class="mono">N</span> oznacza wymaganie normy, <span class="mono">M</span> — zalecenie metody ENESA.
+Rozróżnienie wzięte wprost z III-13 i utrzymane na platformie, tak samo jak w rozdziale 4.</p>
+<h2>Czego tu nie ma — zostaje do punktów 5.2 i 5.3</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Gdzie trafia</th></tr>
+<tr><td>Treść polityki energetycznej, elementy a–g</td><td>Punkt 5.2 — formularz F-EnMS-04 (III-09), przykład III-10</td></tr>
+<tr><td>Matryca odpowiedzialności i uprawnień, oznaczenia Z / O / W / I</td><td>Punkt 5.3 — formularz F-EnMS-05 (III-11), przykład III-12</td></tr>
+<tr><td>Pięć zadań zespołu (a–e z punktu 5.3)</td><td>Punkt 5.3 — tutaj sprawdzamy tylko, czy zespół istnieje i ma umocowanie</td></tr>
+<tr><td>Uprawnienia koordynatora i limity decyzji</td><td>Punkt 5.3 — tabela uprawnień kluczowych ról</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 5.1. Format pól zgodny z 4.1–4.4.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;pytania_4&quot;: [
+    {
+      &quot;id&quot;: &quot;P1&quot;,
+      &quot;nazwa&quot;: &quot;1. Czy wiemy, dokąd idziemy?&quot;,
+      &quot;opis&quot;: &quot;Zakres i granice systemu są ustalone. Polityka, cele i zadania energetyczne pasują do strategii firmy. Wskaźniki uczciwie pokazują wynik.&quot;,
+      &quot;dowod&quot;: &quot;zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach&quot;
+    },
+    {
+      &quot;id&quot;: &quot;P2&quot;,
+      &quot;nazwa&quot;: &quot;2. Czy energia jest w naszych decyzjach?&quot;,
+      &quot;opis&quot;: &quot;Wymagania systemu są wbudowane w procesy firmy. Plany działań są zatwierdzane i realizowane. Są zasoby. Jest zespół ds. zarządzania energią.&quot;,
+      &quot;dowod&quot;: &quot;energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu&quot;
+    },
+    {
+      &quot;id&quot;: &quot;P3&quot;,
+      &quot;nazwa&quot;: &quot;3. Czy ludzie wiedzą, że to ważne?&quot;,
+      &quot;opis&quot;: &quot;Kierownictwo mówi o znaczeniu zarządzania energią i przestrzegania zasad systemu. Kieruje ludźmi i ich wspiera. Wspiera też innych kierowników w ich obszarach.&quot;,
+      &quot;dowod&quot;: &quot;komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety&quot;
+    },
+    {
+      &quot;id&quot;: &quot;P4&quot;,
+      &quot;nazwa&quot;: &quot;4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?&quot;,
+      &quot;opis&quot;: &quot;System osiąga zamierzone wyniki. Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu. Zmiany — nowa linia, nowy klient, nowa umowa na energię — trafiają do zespołu przed decyzją, nie po.&quot;,
+      &quot;dowod&quot;: &quot;przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu&quot;
+    }
+  ],
+  &quot;zobowiazania&quot;: [
+    {
+      &quot;kod&quot;: &quot;PRZ-00&quot;,
+      &quot;pytanie&quot;: &quot;P1&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;tresc&quot;: &quot;Ustalono, kto jest najwyższym kierownictwem dla systemu&quot;,
+      &quot;pomoc&quot;: &quot;Chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu — zarząd spółki, dyrektor zakładu albo osoba przez nich upoważniona. Bez tego ustalenia pozostałe pozycje nie mają adresata.&quot;,
+      &quot;dowod&quot;: &quot;np. Zarząd spółki; w jego imieniu Dyrektor Zakładu Piotr Nowak — upoważnienie z 20.02.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-01&quot;,
+      &quot;pytanie&quot;: &quot;P1&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;,
+      &quot;tresc&quot;: &quot;Ustalono zakres i granice systemu&quot;,
+      &quot;pomoc&quot;: &quot;Wynik punktu 4.3. Tutaj pytamy, czy kierownictwo je zatwierdziło.&quot;,
+      &quot;dowod&quot;: &quot;np. D-EnMS-ZAK-01 wersja 1.0, zatwierdzony uchwałą Zarządu z 20.02.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-02&quot;,
+      &quot;pytanie&quot;: &quot;P1&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;5.2, 6.2&quot;,
+      &quot;tresc&quot;: &quot;Ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym&quot;,
+      &quot;pomoc&quot;: &quot;„Zgodne z kierunkiem strategicznym” znaczy, że cele energetyczne nie stoją obok planu firmy, tylko są jego częścią.&quot;,
+      &quot;dowod&quot;: &quot;np. Polityka energetyczna wersja 1.0 (uchwała Zarządu 3/2026); cele Z1.1 i Z1.2 w planie operacyjnym na 2026/2027&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-03&quot;,
+      &quot;pytanie&quot;: &quot;P1&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;6.4&quot;,
+      &quot;tresc&quot;: &quot;Wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny&quot;,
+      &quot;pomoc&quot;: &quot;Kierownictwo nie musi liczyć wskaźników, ale musi zatwierdzić, że mierzą to, co trzeba. Wskaźnik, który nie reaguje na zmiany w zakładzie, jest bezużyteczny.&quot;,
+      &quot;dowod&quot;: &quot;np. decyzja o zestawie EnPI z przeglądu zarządzania 18.06.2026, z uzasadnieniem doboru&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-04&quot;,
+      &quot;pytanie&quot;: &quot;P2&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;8.1–8.3&quot;,
+      &quot;tresc&quot;: &quot;Wymagania systemu włączono do procesów biznesowych&quot;,
+      &quot;pomoc&quot;: &quot;Inwestycje, zakupy, planowanie produkcji. Szczegóły wypełniacie w zakładce 2 — tutaj wpisujecie dowód zbiorczy.&quot;,
+      &quot;profil&quot;: &quot;FAKT_ZAKUPY_KRYTERIA&quot;,
+      &quot;profilUwaga&quot;: &quot;Jeśli przy zakupach decyduje cena nabycia, integracja z tym procesem jeszcze nie działa.&quot;,
+      &quot;dowod&quot;: &quot;np. Procedura zakupowa P-ZAK-02 pkt 4.3 (kryteria energetyczne) i Procedura inwestycyjna P-INW-01 pkt 5.2, obie od 01.04.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-05&quot;,
+      &quot;pytanie&quot;: &quot;P2&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;6.2&quot;,
+      &quot;tresc&quot;: &quot;Plany działań są zatwierdzane i realizowane&quot;,
+      &quot;pomoc&quot;: &quot;Dwa warunki naraz: zatwierdzenie i realizacja. Zatwierdzony plan, którego nikt nie wykonuje, nie spełnia tej pozycji.&quot;,
+      &quot;dowod&quot;: &quot;np. Plan działań 2026 zatwierdzony 20.03.2026; stan realizacji na 30.09.2026: 4 z 6 działań zakończone&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-06&quot;,
+      &quot;pytanie&quot;: &quot;P2&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;7.1&quot;,
+      &quot;tresc&quot;: &quot;Potrzebne zasoby są dostępne — ludzie, czas, budżet, narzędzia, dane&quot;,
+      &quot;pomoc&quot;: &quot;Szczegóły wypełniacie w zakładce 4. Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza.&quot;,
+      &quot;profil&quot;: &quot;FAKT_BUDZET&quot;,
+      &quot;dowod&quot;: &quot;np. 0,3 etatu Energy Managera, 40 tys. zł w budżecie utrzymania ruchu na 2026, dostęp do danych z liczników głównych&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-07&quot;,
+      &quot;pytanie&quot;: &quot;P2&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;5.3&quot;,
+      &quot;tresc&quot;: &quot;Powołano zespół ds. zarządzania energią&quot;,
+      &quot;pomoc&quot;: &quot;Szczegóły w zakładce 3. Norma wymaga zespołu, nie stanowiska Energy Managera.&quot;,
+      &quot;profil&quot;: &quot;FAKT_ENERGY_MANAGER&quot;,
+      &quot;dowod&quot;: &quot;np. Decyzja Zarządu nr 7/2026 z 20.02.2026 o powołaniu Zespołu ds. Zarządzania Energią — 5 osób&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-08&quot;,
+      &quot;pytanie&quot;: &quot;P3&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;7.4&quot;,
+      &quot;tresc&quot;: &quot;Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu&quot;,
+      &quot;pomoc&quot;: &quot;Nie chodzi o jedno przemówienie przy podpisywaniu polityki, tylko o regularność. Krótko, ale stale.&quot;,
+      &quot;dowod&quot;: &quot;np. stały punkt „energia” na poniedziałkowej odprawie kierowników od 03.2026; komunikat Prezesa z 15.03.2026 na tablicach&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-09&quot;,
+      &quot;pytanie&quot;: &quot;P3&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;7.2, 7.3&quot;,
+      &quot;tresc&quot;: &quot;Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku&quot;,
+      &quot;pomoc&quot;: &quot;Najmocniejszy dowód: sytuacja, w której zespół trafił na opór, a kierownictwo rozstrzygnęło spór, zamiast powiedzieć „dogadajcie się”.&quot;,
+      &quot;dowod&quot;: &quot;np. rozstrzygnięcie sporu o postój lakierni na rzecz przeglądu szczelności — decyzja Dyrektora z 12.05.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-10&quot;,
+      &quot;pytanie&quot;: &quot;P3&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;tresc&quot;: &quot;Kierownictwo wspiera inne role kierownicze w ich obszarach odpowiedzialności&quot;,
+      &quot;pomoc&quot;: &quot;Przywództwo w punkcie 5.1 nie kończy się na zarządzie. Kierownik produkcji też ma w swoim obszarze pokazywać, że energia ma znaczenie — i potrzebuje do tego wsparcia z góry.&quot;,
+      &quot;dowod&quot;: &quot;np. wskaźniki energetyczne w rocznych celach kierowników produkcji i utrzymania ruchu od 2026 r.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-11&quot;,
+      &quot;pytanie&quot;: &quot;P4&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;9.3&quot;,
+      &quot;tresc&quot;: &quot;System osiąga zamierzone wyniki&quot;,
+      &quot;pomoc&quot;: &quot;Dowodem są decyzje z przeglądu zarządzania — nie sam fakt, że przegląd się odbył.&quot;,
+      &quot;dowod&quot;: &quot;np. protokół przeglądu zarządzania 1/2026 z 18.06.2026: trzy decyzje, w tym przesunięcie środków na sterowanie sprężarek&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-12&quot;,
+      &quot;pytanie&quot;: &quot;P4&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;10.2&quot;,
+      &quot;tresc&quot;: &quot;Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu&quot;,
+      &quot;pomoc&quot;: &quot;Obu naraz: wyniku i systemu. Usprawnianie procedur bez poprawy wyniku to połowa wymagania.&quot;,
+      &quot;dowod&quot;: &quot;np. porównanie „rok temu — dziś — plan” omówione na przeglądzie; docenienie wyniku sprężarkowni na odprawie 22.06.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-13&quot;,
+      &quot;pytanie&quot;: &quot;P4&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;6.1&quot;,
+      &quot;tresc&quot;: &quot;Istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie&quot;,
+      &quot;pomoc&quot;: &quot;Nowa linia, nowy klient, nowa umowa na energię — zmiana ma trafić do zespołu przed decyzją, nie po niej.&quot;,
+      &quot;profil&quot;: &quot;FAKT_INWESTYCJE&quot;,
+      &quot;profilUwaga&quot;: &quot;Planowane inwestycje to pierwszy test tego procesu: czy zespół dowiaduje się o nich na etapie założeń, czy po podpisaniu umowy?&quot;,
+      &quot;dowod&quot;: &quot;np. zapis w procedurze inwestycyjnej: opinia Energy Managera przed decyzją o zakupie urządzenia powyżej 50 kW&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PRZ-14&quot;,
+      &quot;pytanie&quot;: &quot;P4&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;tresc&quot;: &quot;Zaplanowano „punkty styku” kierownictwa z systemem — przegląd, raporty, komunikaty&quot;,
+      &quot;pomoc&quot;: &quot;Pozycja metodyczna. Zaangażowanie łatwiej utrzymać, gdy ma stały rytm, a nie zależy od pamięci koordynatora. Szczegóły w zakładce 5.&quot;,
+      &quot;dowod&quot;: &quot;np. przegląd zarządzania 2 razy w roku, raport miesięczny do Dyrektora, kwartalny komunikat na tablicach&quot;
+    }
+  ],
+  &quot;procesy_biz&quot;: [
+    {
+      &quot;kod&quot;: &quot;INT-ZAK&quot;,
+      &quot;nazwa&quot;: &quot;Zakupy&quot;,
+      &quot;klauzula&quot;: &quot;8.3&quot;,
+      &quot;pytanie&quot;: &quot;Czy przy zakupie urządzeń i usług wpływających na zużycie energii bierzecie pod uwagę efektywność, a nie samą cenę nabycia?&quot;,
+      &quot;profil&quot;: &quot;FAKT_ZAKUPY_KRYTERIA&quot;,
+      &quot;placeholder&quot;: &quot;np. dla urządzeń powyżej 10 kW porównanie kosztu w cyklu życia; Energy Manager może wstrzymać zamówienie do 5 dni roboczych na ocenę&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;INT-INW&quot;,
+      &quot;nazwa&quot;: &quot;Inwestycje i modernizacje&quot;,
+      &quot;klauzula&quot;: &quot;8.2&quot;,
+      &quot;pytanie&quot;: &quot;Czy wniosek inwestycyjny zawiera ocenę wpływu na zużycie energii?&quot;,
+      &quot;profil&quot;: &quot;FAKT_INWESTYCJE&quot;,
+      &quot;placeholder&quot;: &quot;np. rubryka „wpływ na zużycie energii i koszt eksploatacji” we wniosku inwestycyjnym; opinia Energy Managera przed decyzją&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;INT-PROD&quot;,
+      &quot;nazwa&quot;: &quot;Planowanie produkcji&quot;,
+      &quot;klauzula&quot;: &quot;8.1&quot;,
+      &quot;pytanie&quot;: &quot;Czy planując produkcję, bierzecie pod uwagę zużycie energii — kolejność uruchomień, postoje, praca w weekendy?&quot;,
+      &quot;placeholder&quot;: &quot;np. harmonogram uruchamiania pras uwzględnia szczyt energetyczny; wyłączenie sprężarkowni na weekend ujęte w planie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;INT-UR&quot;,
+      &quot;nazwa&quot;: &quot;Utrzymanie ruchu i remonty&quot;,
+      &quot;klauzula&quot;: &quot;8.1&quot;,
+      &quot;pytanie&quot;: &quot;Czy plan przeglądów i remontów uwzględnia stan energetyczny urządzeń?&quot;,
+      &quot;profil&quot;: &quot;FAKT_INSTRUKCJE_EKSPL&quot;,
+      &quot;placeholder&quot;: &quot;np. kwartalny przegląd szczelności sieci sprężonego powietrza w planie przeglądów od 03.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;INT-BUD&quot;,
+      &quot;nazwa&quot;: &quot;Budżetowanie&quot;,
+      &quot;klauzula&quot;: &quot;7.1&quot;,
+      &quot;pytanie&quot;: &quot;Czy przy planowaniu budżetu rozmawia się o kosztach energii i o środkach na ich obniżenie?&quot;,
+      &quot;profil&quot;: &quot;FAKT_BUDZET&quot;,
+      &quot;placeholder&quot;: &quot;np. koszt energii i lista działań z przeglądu energetycznego omawiane na budżecie wrześniowym&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;INT-RAP&quot;,
+      &quot;nazwa&quot;: &quot;Raportowanie zarządcze&quot;,
+      &quot;klauzula&quot;: &quot;9.1&quot;,
+      &quot;pytanie&quot;: &quot;Czy wskaźniki energetyczne są w zwykłych raportach firmy — tam, gdzie sprzedaż i jakość?&quot;,
+      &quot;placeholder&quot;: &quot;np. kWh/t i koszt energii w miesięcznym raporcie operacyjnym od 04.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;INT-ZMI&quot;,
+      &quot;nazwa&quot;: &quot;Zarządzanie zmianą&quot;,
+      &quot;klauzula&quot;: &quot;6.1&quot;,
+      &quot;pytanie&quot;: &quot;Czy nowa linia, nowy klient albo nowa umowa na energię trafiają do zespołu przed decyzją?&quot;,
+      &quot;placeholder&quot;: &quot;np. zespół opiniuje każdą zmianę technologiczną na etapie założeń; nowa umowa na energię konsultowana przed podpisaniem&quot;
+    }
+  ],
+  &quot;zasoby&quot;: [
+    {
+      &quot;kod&quot;: &quot;ZAS-LUD&quot;,
+      &quot;nazwa&quot;: &quot;Ludzie&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Kto realnie zajmuje się systemem. Nie musi to być osobny etat.&quot;,
+      &quot;placeholder&quot;: &quot;np. Energy Manager 0,3 etatu; czterech członków zespołu po ok. 8 godzin miesięcznie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAS-CZAS&quot;,
+      &quot;nazwa&quot;: &quot;Czas&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;III-13: „Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań”. To najczęściej brakujący zasób — i najrzadziej zapisany.&quot;,
+      &quot;placeholder&quot;: &quot;np. 4 godziny miesięcznie technika UR na przeglądy szczelności, ujęte w grafiku&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAS-BUD&quot;,
+      &quot;nazwa&quot;: &quot;Budżet&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Skąd biorą się pieniądze na działania. Osobna pozycja w budżecie nie jest wymagana.&quot;,
+      &quot;placeholder&quot;: &quot;np. 40 tys. zł rocznie w budżecie utrzymania ruchu; większe inwestycje z wniosku inwestycyjnego&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAS-NARZ&quot;,
+      &quot;nazwa&quot;: &quot;Narzędzia i opomiarowanie&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Liczniki, analizatory, arkusze, oprogramowanie. Bez danych system nie ma z czego liczyć wskaźników.&quot;,
+      &quot;placeholder&quot;: &quot;np. dwa liczniki główne, analizator przenośny wypożyczany kwartalnie, arkusz EnPI&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAS-DANE&quot;,
+      &quot;nazwa&quot;: &quot;Dostęp do danych&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Zasobem jest także dostęp: do faktur, do danych produkcyjnych, do systemu nadzoru.&quot;,
+      &quot;placeholder&quot;: &quot;np. Energy Manager ma dostęp do faktur za energię, danych z liczników i planów produkcji&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAS-KOMP&quot;,
+      &quot;nazwa&quot;: &quot;Kompetencje i szkolenia&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;pomoc&quot;: &quot;Punkt 7.2 opisuje to szczegółowo. Tutaj chodzi o to, czy kierownictwo zapewniło na nie środki.&quot;,
+      &quot;placeholder&quot;: &quot;np. szkolenie wewnętrzne dla zespołu 05.2026; udział Energy Managera w kursie audytora wewnętrznego&quot;
+    }
+  ],
+  &quot;nawyki&quot;: [
+    {
+      &quot;kod&quot;: &quot;NAW-1&quot;,
+      &quot;nazwa&quot;: &quot;Daje zasoby, nie tylko budżet na certyfikat&quot;,
+      &quot;opis&quot;: &quot;Ludzi, czas, narzędzia pomiarowe, dostęp do danych. Ile? Tyle, żeby system działał.&quot;,
+      &quot;placeholder&quot;: &quot;np. przydział czasu technika zapisany w grafiku, nie „jak znajdzie chwilę”&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;NAW-2&quot;,
+      &quot;nazwa&quot;: &quot;Myśli energią przy każdej dużej decyzji&quot;,
+      &quot;opis&quot;: &quot;Zakup maszyny, inwestycja, plan produkcji — za każdym razem pada pytanie: a ile to będzie zużywać?&quot;,
+      &quot;placeholder&quot;: &quot;np. pytanie o zużycie przy każdym wniosku inwestycyjnym powyżej 50 tys. zł&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;NAW-3&quot;,
+      &quot;nazwa&quot;: &quot;Mówi o energii&quot;,
+      &quot;opis&quot;: &quot;Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.&quot;,
+      &quot;placeholder&quot;: &quot;np. stałe pytanie o zużycie na poniedziałkowej odprawie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;NAW-4&quot;,
+      &quot;nazwa&quot;: &quot;Jest widoczne&quot;,
+      &quot;opis&quot;: &quot;Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.&quot;,
+      &quot;placeholder&quot;: &quot;np. przegląd zarządzania prowadzi Dyrektor Zakładu, nie jego zastępca&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;NAW-5&quot;,
+      &quot;nazwa&quot;: &quot;Staje za zespołem&quot;,
+      &quot;opis&quot;: &quot;Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.&quot;,
+      &quot;placeholder&quot;: &quot;np. rozstrzygnięcie konfliktu między terminem dostawy a postojem na przegląd&quot;
+    }
+  ],
+  &quot;lista_51&quot;: [
+    {
+      &quot;tekst&quot;: &quot;Ustalono, kto jest najwyższym kierownictwem dla systemu&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-00&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…ustalono zakres i granice systemu&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-01&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-02&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;integracja&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…plany działań są zatwierdzane i realizowane&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-05&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zasoby&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-08&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-11&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-12&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…powołano zespół ds. zarządzania energią&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zespol&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-09&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Kierownictwo wspiera inne role kierownicze w ich obszarach&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-10&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-03&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zob&quot;,
+      &quot;zob&quot;: &quot;PRZ-13&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;styk&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;decyzje&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var PYTANIA_4 = [{"id": "P1", "nazwa": "1. Czy wiemy, dokąd idziemy?", "opis": "Zakres i granice systemu są ustalone. Polityka, cele i zadania energetyczne pasują do strategii firmy. Wskaźniki uczciwie pokazują wynik.", "dowod": "zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach"}, {"id": "P2", "nazwa": "2. Czy energia jest w naszych decyzjach?", "opis": "Wymagania systemu są wbudowane w procesy firmy. Plany działań są zatwierdzane i realizowane. Są zasoby. Jest zespół ds. zarządzania energią.", "dowod": "energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu"}, {"id": "P3", "nazwa": "3. Czy ludzie wiedzą, że to ważne?", "opis": "Kierownictwo mówi o znaczeniu zarządzania energią i przestrzegania zasad systemu. Kieruje ludźmi i ich wspiera. Wspiera też innych kierowników w ich obszarach.", "dowod": "komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety"}, {"id": "P4", "nazwa": "4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?", "opis": "System osiąga zamierzone wyniki. Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu. Zmiany — nowa linia, nowy klient, nowa umowa na energię — trafiają do zespołu przed decyzją, nie po.", "dowod": "przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu"}];
+var ZOBOWIAZANIA = [{"kod": "PRZ-00", "pytanie": "P1", "podstawa": "M", "tresc": "Ustalono, kto jest najwyższym kierownictwem dla systemu", "pomoc": "Chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu — zarząd spółki, dyrektor zakładu albo osoba przez nich upoważniona. Bez tego ustalenia pozostałe pozycje nie mają adresata.", "dowod": "np. Zarząd spółki; w jego imieniu Dyrektor Zakładu Piotr Nowak — upoważnienie z 20.02.2026"}, {"kod": "PRZ-01", "pytanie": "P1", "podstawa": "N", "klauzula": "4.3", "tresc": "Ustalono zakres i granice systemu", "pomoc": "Wynik punktu 4.3. Tutaj pytamy, czy kierownictwo je zatwierdziło.", "dowod": "np. D-EnMS-ZAK-01 wersja 1.0, zatwierdzony uchwałą Zarządu z 20.02.2026"}, {"kod": "PRZ-02", "pytanie": "P1", "podstawa": "N", "klauzula": "5.2, 6.2", "tresc": "Ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym", "pomoc": "„Zgodne z kierunkiem strategicznym” znaczy, że cele energetyczne nie stoją obok planu firmy, tylko są jego częścią.", "dowod": "np. Polityka energetyczna wersja 1.0 (uchwała Zarządu 3/2026); cele Z1.1 i Z1.2 w planie operacyjnym na 2026/2027"}, {"kod": "PRZ-03", "pytanie": "P1", "podstawa": "N", "klauzula": "6.4", "tresc": "Wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny", "pomoc": "Kierownictwo nie musi liczyć wskaźników, ale musi zatwierdzić, że mierzą to, co trzeba. Wskaźnik, który nie reaguje na zmiany w zakładzie, jest bezużyteczny.", "dowod": "np. decyzja o zestawie EnPI z przeglądu zarządzania 18.06.2026, z uzasadnieniem doboru"}, {"kod": "PRZ-04", "pytanie": "P2", "podstawa": "N", "klauzula": "8.1–8.3", "tresc": "Wymagania systemu włączono do procesów biznesowych", "pomoc": "Inwestycje, zakupy, planowanie produkcji. Szczegóły wypełniacie w zakładce 2 — tutaj wpisujecie dowód zbiorczy.", "profil": "FAKT_ZAKUPY_KRYTERIA", "profilUwaga": "Jeśli przy zakupach decyduje cena nabycia, integracja z tym procesem jeszcze nie działa.", "dowod": "np. Procedura zakupowa P-ZAK-02 pkt 4.3 (kryteria energetyczne) i Procedura inwestycyjna P-INW-01 pkt 5.2, obie od 01.04.2026"}, {"kod": "PRZ-05", "pytanie": "P2", "podstawa": "N", "klauzula": "6.2", "tresc": "Plany działań są zatwierdzane i realizowane", "pomoc": "Dwa warunki naraz: zatwierdzenie i realizacja. Zatwierdzony plan, którego nikt nie wykonuje, nie spełnia tej pozycji.", "dowod": "np. Plan działań 2026 zatwierdzony 20.03.2026; stan realizacji na 30.09.2026: 4 z 6 działań zakończone"}, {"kod": "PRZ-06", "pytanie": "P2", "podstawa": "N", "klauzula": "7.1", "tresc": "Potrzebne zasoby są dostępne — ludzie, czas, budżet, narzędzia, dane", "pomoc": "Szczegóły wypełniacie w zakładce 4. Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza.", "profil": "FAKT_BUDZET", "dowod": "np. 0,3 etatu Energy Managera, 40 tys. zł w budżecie utrzymania ruchu na 2026, dostęp do danych z liczników głównych"}, {"kod": "PRZ-07", "pytanie": "P2", "podstawa": "N", "klauzula": "5.3", "tresc": "Powołano zespół ds. zarządzania energią", "pomoc": "Szczegóły w zakładce 3. Norma wymaga zespołu, nie stanowiska Energy Managera.", "profil": "FAKT_ENERGY_MANAGER", "dowod": "np. Decyzja Zarządu nr 7/2026 z 20.02.2026 o powołaniu Zespołu ds. Zarządzania Energią — 5 osób"}, {"kod": "PRZ-08", "pytanie": "P3", "podstawa": "N", "klauzula": "7.4", "tresc": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu", "pomoc": "Nie chodzi o jedno przemówienie przy podpisywaniu polityki, tylko o regularność. Krótko, ale stale.", "dowod": "np. stały punkt „energia” na poniedziałkowej odprawie kierowników od 03.2026; komunikat Prezesa z 15.03.2026 na tablicach"}, {"kod": "PRZ-09", "pytanie": "P3", "podstawa": "N", "klauzula": "7.2, 7.3", "tresc": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku", "pomoc": "Najmocniejszy dowód: sytuacja, w której zespół trafił na opór, a kierownictwo rozstrzygnęło spór, zamiast powiedzieć „dogadajcie się”.", "dowod": "np. rozstrzygnięcie sporu o postój lakierni na rzecz przeglądu szczelności — decyzja Dyrektora z 12.05.2026"}, {"kod": "PRZ-10", "pytanie": "P3", "podstawa": "N", "tresc": "Kierownictwo wspiera inne role kierownicze w ich obszarach odpowiedzialności", "pomoc": "Przywództwo w punkcie 5.1 nie kończy się na zarządzie. Kierownik produkcji też ma w swoim obszarze pokazywać, że energia ma znaczenie — i potrzebuje do tego wsparcia z góry.", "dowod": "np. wskaźniki energetyczne w rocznych celach kierowników produkcji i utrzymania ruchu od 2026 r."}, {"kod": "PRZ-11", "pytanie": "P4", "podstawa": "N", "klauzula": "9.3", "tresc": "System osiąga zamierzone wyniki", "pomoc": "Dowodem są decyzje z przeglądu zarządzania — nie sam fakt, że przegląd się odbył.", "dowod": "np. protokół przeglądu zarządzania 1/2026 z 18.06.2026: trzy decyzje, w tym przesunięcie środków na sterowanie sprężarek"}, {"kod": "PRZ-12", "pytanie": "P4", "podstawa": "N", "klauzula": "10.2", "tresc": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu", "pomoc": "Obu naraz: wyniku i systemu. Usprawnianie procedur bez poprawy wyniku to połowa wymagania.", "dowod": "np. porównanie „rok temu — dziś — plan” omówione na przeglądzie; docenienie wyniku sprężarkowni na odprawie 22.06.2026"}, {"kod": "PRZ-13", "pytanie": "P4", "podstawa": "N", "klauzula": "6.1", "tresc": "Istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie", "pomoc": "Nowa linia, nowy klient, nowa umowa na energię — zmiana ma trafić do zespołu przed decyzją, nie po niej.", "profil": "FAKT_INWESTYCJE", "profilUwaga": "Planowane inwestycje to pierwszy test tego procesu: czy zespół dowiaduje się o nich na etapie założeń, czy po podpisaniu umowy?", "dowod": "np. zapis w procedurze inwestycyjnej: opinia Energy Managera przed decyzją o zakupie urządzenia powyżej 50 kW"}, {"kod": "PRZ-14", "pytanie": "P4", "podstawa": "M", "tresc": "Zaplanowano „punkty styku” kierownictwa z systemem — przegląd, raporty, komunikaty", "pomoc": "Pozycja metodyczna. Zaangażowanie łatwiej utrzymać, gdy ma stały rytm, a nie zależy od pamięci koordynatora. Szczegóły w zakładce 5.", "dowod": "np. przegląd zarządzania 2 razy w roku, raport miesięczny do Dyrektora, kwartalny komunikat na tablicach"}];
+var PROCESY_BIZ = [{"kod": "INT-ZAK", "nazwa": "Zakupy", "klauzula": "8.3", "pytanie": "Czy przy zakupie urządzeń i usług wpływających na zużycie energii bierzecie pod uwagę efektywność, a nie samą cenę nabycia?", "profil": "FAKT_ZAKUPY_KRYTERIA", "placeholder": "np. dla urządzeń powyżej 10 kW porównanie kosztu w cyklu życia; Energy Manager może wstrzymać zamówienie do 5 dni roboczych na ocenę"}, {"kod": "INT-INW", "nazwa": "Inwestycje i modernizacje", "klauzula": "8.2", "pytanie": "Czy wniosek inwestycyjny zawiera ocenę wpływu na zużycie energii?", "profil": "FAKT_INWESTYCJE", "placeholder": "np. rubryka „wpływ na zużycie energii i koszt eksploatacji” we wniosku inwestycyjnym; opinia Energy Managera przed decyzją"}, {"kod": "INT-PROD", "nazwa": "Planowanie produkcji", "klauzula": "8.1", "pytanie": "Czy planując produkcję, bierzecie pod uwagę zużycie energii — kolejność uruchomień, postoje, praca w weekendy?", "placeholder": "np. harmonogram uruchamiania pras uwzględnia szczyt energetyczny; wyłączenie sprężarkowni na weekend ujęte w planie"}, {"kod": "INT-UR", "nazwa": "Utrzymanie ruchu i remonty", "klauzula": "8.1", "pytanie": "Czy plan przeglądów i remontów uwzględnia stan energetyczny urządzeń?", "profil": "FAKT_INSTRUKCJE_EKSPL", "placeholder": "np. kwartalny przegląd szczelności sieci sprężonego powietrza w planie przeglądów od 03.2026"}, {"kod": "INT-BUD", "nazwa": "Budżetowanie", "klauzula": "7.1", "pytanie": "Czy przy planowaniu budżetu rozmawia się o kosztach energii i o środkach na ich obniżenie?", "profil": "FAKT_BUDZET", "placeholder": "np. koszt energii i lista działań z przeglądu energetycznego omawiane na budżecie wrześniowym"}, {"kod": "INT-RAP", "nazwa": "Raportowanie zarządcze", "klauzula": "9.1", "pytanie": "Czy wskaźniki energetyczne są w zwykłych raportach firmy — tam, gdzie sprzedaż i jakość?", "placeholder": "np. kWh/t i koszt energii w miesięcznym raporcie operacyjnym od 04.2026"}, {"kod": "INT-ZMI", "nazwa": "Zarządzanie zmianą", "klauzula": "6.1", "pytanie": "Czy nowa linia, nowy klient albo nowa umowa na energię trafiają do zespołu przed decyzją?", "placeholder": "np. zespół opiniuje każdą zmianę technologiczną na etapie założeń; nowa umowa na energię konsultowana przed podpisaniem"}];
+var ZASOBY = [{"kod": "ZAS-LUD", "nazwa": "Ludzie", "podstawa": "N", "pomoc": "Kto realnie zajmuje się systemem. Nie musi to być osobny etat.", "placeholder": "np. Energy Manager 0,3 etatu; czterech członków zespołu po ok. 8 godzin miesięcznie"}, {"kod": "ZAS-CZAS", "nazwa": "Czas", "podstawa": "N", "pomoc": "III-13: „Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań”. To najczęściej brakujący zasób — i najrzadziej zapisany.", "placeholder": "np. 4 godziny miesięcznie technika UR na przeglądy szczelności, ujęte w grafiku"}, {"kod": "ZAS-BUD", "nazwa": "Budżet", "podstawa": "N", "pomoc": "Skąd biorą się pieniądze na działania. Osobna pozycja w budżecie nie jest wymagana.", "placeholder": "np. 40 tys. zł rocznie w budżecie utrzymania ruchu; większe inwestycje z wniosku inwestycyjnego"}, {"kod": "ZAS-NARZ", "nazwa": "Narzędzia i opomiarowanie", "podstawa": "N", "pomoc": "Liczniki, analizatory, arkusze, oprogramowanie. Bez danych system nie ma z czego liczyć wskaźników.", "placeholder": "np. dwa liczniki główne, analizator przenośny wypożyczany kwartalnie, arkusz EnPI"}, {"kod": "ZAS-DANE", "nazwa": "Dostęp do danych", "podstawa": "N", "pomoc": "Zasobem jest także dostęp: do faktur, do danych produkcyjnych, do systemu nadzoru.", "placeholder": "np. Energy Manager ma dostęp do faktur za energię, danych z liczników i planów produkcji"}, {"kod": "ZAS-KOMP", "nazwa": "Kompetencje i szkolenia", "podstawa": "M", "pomoc": "Punkt 7.2 opisuje to szczegółowo. Tutaj chodzi o to, czy kierownictwo zapewniło na nie środki.", "placeholder": "np. szkolenie wewnętrzne dla zespołu 05.2026; udział Energy Managera w kursie audytora wewnętrznego"}];
+var NAWYKI = [{"kod": "NAW-1", "nazwa": "Daje zasoby, nie tylko budżet na certyfikat", "opis": "Ludzi, czas, narzędzia pomiarowe, dostęp do danych. Ile? Tyle, żeby system działał.", "placeholder": "np. przydział czasu technika zapisany w grafiku, nie „jak znajdzie chwilę”"}, {"kod": "NAW-2", "nazwa": "Myśli energią przy każdej dużej decyzji", "opis": "Zakup maszyny, inwestycja, plan produkcji — za każdym razem pada pytanie: a ile to będzie zużywać?", "placeholder": "np. pytanie o zużycie przy każdym wniosku inwestycyjnym powyżej 50 tys. zł"}, {"kod": "NAW-3", "nazwa": "Mówi o energii", "opis": "Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.", "placeholder": "np. stałe pytanie o zużycie na poniedziałkowej odprawie"}, {"kod": "NAW-4", "nazwa": "Jest widoczne", "opis": "Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.", "placeholder": "np. przegląd zarządzania prowadzi Dyrektor Zakładu, nie jego zastępca"}, {"kod": "NAW-5", "nazwa": "Staje za zespołem", "opis": "Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.", "placeholder": "np. rozstrzygnięcie konfliktu między terminem dostawy a postojem na przegląd"}];
+var LISTA_51 = [{"tekst": "Ustalono, kto jest najwyższym kierownictwem dla systemu", "podstawa": "M", "auto": "zob", "zob": "PRZ-00"}, {"tekst": "…ustalono zakres i granice systemu", "podstawa": "N", "auto": "zob", "zob": "PRZ-01"}, {"tekst": "…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym", "podstawa": "N", "auto": "zob", "zob": "PRZ-02"}, {"tekst": "…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)", "podstawa": "N", "auto": "integracja"}, {"tekst": "…plany działań są zatwierdzane i realizowane", "podstawa": "N", "auto": "zob", "zob": "PRZ-05"}, {"tekst": "…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)", "podstawa": "N", "auto": "zasoby"}, {"tekst": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu", "podstawa": "N", "auto": "zob", "zob": "PRZ-08"}, {"tekst": "…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)", "podstawa": "N", "auto": "zob", "zob": "PRZ-11"}, {"tekst": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu", "podstawa": "N", "auto": "zob", "zob": "PRZ-12"}, {"tekst": "…powołano zespół ds. zarządzania energią", "podstawa": "N", "auto": "zespol"}, {"tekst": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku", "podstawa": "N", "auto": "zob", "zob": "PRZ-09"}, {"tekst": "Kierownictwo wspiera inne role kierownicze w ich obszarach", "podstawa": "N", "auto": "zob", "zob": "PRZ-10"}, {"tekst": "…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny", "podstawa": "N", "auto": "zob", "zob": "PRZ-03"}, {"tekst": "…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie", "podstawa": "N", "auto": "zob", "zob": "PRZ-13"}, {"tekst": "Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)", "podstawa": "M", "auto": "styk"}, {"tekst": "Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami", "podstawa": "M", "auto": "decyzje"}];
+var PROFIL = {"FAKT_LOKALIZACJE": "2", "FAKT_LOKALIZACJE_LISTA": [{"c0": "Zakład produkcyjny", "c1": "ul. Przemysłowa 12, Katowice", "c2": "produkcja", "c3": "tak"}, {"c0": "Magazyn wyrobów gotowych", "c1": "ul. Składowa 11, Katowice", "c2": "magazyn", "c3": "tak"}], "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)", "FAKT_PRACOWNICY": "850", "FAKT_ZMIANY": "3", "FAKT_SEZONOWOSC": "nie", "FAKT_PODMIOT": "prywatny", "FAKT_GRUPA_KAPITALOWA": "tak", "FAKT_ZWIAZKI": "nie", "FAKT_SYSTEM_BAZOWY": "iso_14001", "FAKT_SYSTEM_BAZOWY_ROK": "2019", "FAKT_ZGODA_INTEGRACJA": "tak", "FAKT_ENERGY_MANAGER": "nieformalnie", "FAKT_UR_WLASNE": "wlasne", "FAKT_INSTRUKCJE_EKSPL": "czesciowo", "FAKT_ZAKUPY_KRYTERIA": "czasami", "FAKT_ROTACJA": "srednia", "FAKT_NOSNIKI": [{"c0": "energia elektryczna", "c1": "8500", "c2": "MWh", "c3": "7565000"}, {"c0": "gaz ziemny", "c1": "350000", "c2": "m³", "c3": "875000"}, {"c0": "LPG", "c1": "18000", "c2": "l", "c3": "54000"}], "FAKT_ROK_ODNIESIENIA": "2025", "FAKT_UDZIAL_ENERGII": "2,5", "FAKT_MOC_UMOWNA": "1400", "FAKT_SPREZONE": "tak", "FAKT_CA_LICZBA": "4", "FAKT_CA_MOC": "440", "FAKT_CA_VSD": "0", "FAKT_CA_STEROWNIK": "nie", "FAKT_CA_SZCZELNOSC": "nie", "FAKT_CA_ODZYSK": "nie", "FAKT_CA_GODZINY": "6000", "FAKT_KOTLOWNIA": "wlasne", "FAKT_CIEPLO_PALIWO": ["gaz ziemny"], "FAKT_KOTLOWNIA_MOC": "1200", "FAKT_KOTLOWNIA_WIEK": "18", "FAKT_PODLICZNIKI": "czesciowo", "FAKT_ODCZYT": "mieszane", "FAKT_PRODUKCJA_JEDN": "t", "FAKT_PRODUKCJA": "24000", "FAKT_PRODUKCJA_POPRZ": "23500", "FAKT_HDD": "3600", "FAKT_HDD_POPRZ": "3450", "FAKT_PRZYCHOD": "380", "FAKT_SCADA": "nie", "FAKT_MES": "nie", "FAKT_ANALIZA_DANYCH": "arkusz", "FAKT_AUDYT_ENERG": "tak", "FAKT_ETS": "nie", "FAKT_CSRD": "nie", "FAKT_PRZETARGI": "nie", "FAKT_ODBIORCY_CO2": "tak", "FAKT_MOC_OGRANICZONA": "nie", "FAKT_UMOWA_WYGASA": "tak", "FAKT_BUDZET": "nie", "FAKT_PBT_PROG": "3", "FAKT_INWESTYCJE": "tak", "FAKT_BIALE_MOZLIWE": "nie", "FAKT_CHLODZENIE": "tak", "FAKT_CHLODZENIE_WODNE": "nie", "FAKT_FGAZ": "tak", "FAKT_UDT": "tak", "FAKT_WIEK_INFRA": "22", "FAKT_LED_UDZIAL": "35", "FAKT_OSW_STEROWANIE": "recznie", "FAKT_NAPEDY_VSD": "czesc", "FAKT_WENT": "tak", "FAKT_WENT_LICZBA": "6", "FAKT_WENT_ODZYSK": "czesc", "FAKT_WENT_HARMONOGRAM": "nie", "FAKT_CIEPLO_ODPADOWE": "tak", "FAKT_ODZYSK_CIEPLA": "nie", "FAKT_PROCES_BEZ_ALTERNATYWY": "tak", "FAKT_PROCESY": ["piece i nagrzewnice", "pompy procesowe"], "FAKT_PV": "nie", "FAKT_BESS": "nie", "FAKT_CHP": "nie", "FAKT_FLOTA": "tak", "FAKT_FLOTA_LICZBA": "4", "FAKT_PRZERWY_POGODA": "nie"};
+var PYT = {"FAKT_LOKALIZACJE": {"pytanie": "Ile lokalizacji obejmie system zarządzania energią?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S1"}, "FAKT_LOKALIZACJE_LISTA": {"pytanie": "Wymień lokalizacje", "typ": "repeater", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_BRANZA": {"pytanie": "Główna działalność zakładu", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_PRACOWNICY": {"pytanie": "Liczba pracowników", "typ": "number", "jednostka": "osób", "etykiety": {}, "sekcja": "S1"}, "FAKT_ZMIANY": {"pytanie": "Ile zmian pracuje zakład?", "typ": "select", "jednostka": "", "etykiety": {"1": "1", "2": "2", "3": "3", "4": "4"}, "sekcja": "S1"}, "FAKT_SEZONOWOSC": {"pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S1"}, "FAKT_PODMIOT": {"pytanie": "Typ organizacji", "typ": "select", "jednostka": "", "etykiety": {"prywatny": "prywatny", "komunalny": "komunalny", "publiczny": "publiczny"}, "sekcja": "S1"}, "FAKT_GRUPA_KAPITALOWA": {"pytanie": "Czy organizacja należy do grupy kapitałowej?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S1"}, "FAKT_ZWIAZKI": {"pytanie": "Czy działają związki zawodowe lub rada pracowników?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S1"}, "FAKT_SYSTEM_BAZOWY": {"pytanie": "Czy organizacja ma wdrożony system zarządzania?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Brak certyfikowanego systemu", "iso_9001": "ISO 9001", "iso_14001": "ISO 14001", "oba": "ISO 9001 i ISO 14001", "inny": "Inny system certyfikowany"}, "sekcja": "S1"}, "FAKT_SYSTEM_BAZOWY_ROK": {"pytanie": "Od którego roku system jest certyfikowany?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_ZGODA_INTEGRACJA": {"pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak — rozszerzamy istniejącą dokumentację", "nie": "Nie — tworzymy odrębny system", "brak decyzji": "Decyzja jeszcze nie zapadła"}, "sekcja": "S1"}, "FAKT_ENERGY_MANAGER": {"pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?", "typ": "select", "jednostka": "", "etykiety": {"nie": "Nie wyznaczono nikogo", "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków", "tak": "Tak, z pisemnym zakresem obowiązków"}, "sekcja": "S1"}, "FAKT_UR_WLASNE": {"pytanie": "Kto prowadzi utrzymanie ruchu?", "typ": "select", "jednostka": "", "etykiety": {"wlasne": "Własne służby utrzymania ruchu", "zewnetrzne": "Firma zewnętrzna", "mieszane": "Częściowo własne służby, część prac zlecana"}, "sekcja": "S1"}, "FAKT_INSTRUKCJE_EKSPL": {"pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, dla wszystkich głównych urządzeń", "czesciowo": "Dla części urządzeń", "nie": "Nie ma"}, "sekcja": "S1"}, "FAKT_ZAKUPY_KRYTERIA": {"pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?", "typ": "select", "jednostka": "", "etykiety": {"zawsze": "Zawsze — to stałe kryterium zakupowe", "czasami": "Czasami, przy większych zakupach", "nie": "Nie — decyduje cena zakupu"}, "sekcja": "S1"}, "FAKT_ROTACJA": {"pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku", "typ": "select", "jednostka": "", "etykiety": {"niska": "Niska — poniżej 5% rocznie", "srednia": "Średnia — od 5 do 15% rocznie", "wysoka": "Wysoka — powyżej 15% rocznie"}, "sekcja": "S1"}, "FAKT_ROK_ODNIESIENIA": {"pytanie": "Za który rok podajesz dane?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_NOSNIKI": {"pytanie": "Zużycie nośników energii w roku odniesienia", "typ": "repeater", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "ZUZYCIE_TJ": {"pytanie": "Roczne zużycie energii", "typ": "auto", "jednostka": "TJ", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA_JEDN": {"pytanie": "W czym mierzycie wielkość produkcji?", "typ": "select", "jednostka": "", "etykiety": {"t": "tony wyrobu", "szt": "sztuki wyrobu", "m2": "metry kwadratowe", "m3": "metry sześcienne", "mwh": "MWh wyrobu (ciepło, chłód)", "inna": "Inna jednostka"}, "sekcja": "S2"}, "FAKT_PRODUKCJA_INNA": {"pytanie": "Jaka jednostka?", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA": {"pytanie": "Wielkość produkcji w roku odniesienia", "typ": "number", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA_POPRZ": {"pytanie": "Wielkość produkcji w roku poprzednim", "typ": "number", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_HDD": {"pytanie": "Stopniodni grzania (HDD) w roku odniesienia", "typ": "number", "jednostka": "°C·dzień", "etykiety": {}, "sekcja": "S2"}, "FAKT_HDD_POPRZ": {"pytanie": "Stopniodni grzania w roku poprzednim", "typ": "number", "jednostka": "°C·dzień", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRZYCHOD": {"pytanie": "Przychód ze sprzedaży w roku odniesienia", "typ": "number", "jednostka": "mln zł", "etykiety": {}, "sekcja": "S2"}, "FAKT_UDZIAL_ENERGII": {"pytanie": "Jaki procent kosztów operacyjnych stanowi energia?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S2"}, "FAKT_MOC_UMOWNA": {"pytanie": "Moc umowna energii elektrycznej", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S2"}, "FAKT_MOC_OGRANICZONA": {"pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_UMOWA_WYGASA": {"pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_UMOWA_DATA": {"pytanie": "Data wygaśnięcia umowy", "typ": "date", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_BUDZET": {"pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S2"}, "FAKT_PBT_PROG": {"pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S2"}, "FAKT_INWESTYCJE": {"pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S2"}, "FAKT_INWESTYCJE_OPIS": {"pytanie": "Jakie?", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_BIALE_MOZLIWE": {"pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_SPREZONE": {"pytanie": "Czy zakład ma instalację sprężonego powietrza?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_CA_LICZBA": {"pytanie": "Ile jest sprężarek?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_MOC": {"pytanie": "Łączna moc znamionowa sprężarek", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_VSD": {"pytanie": "Ile sprężarek ma regulację obrotów (falownik)?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_STEROWNIK": {"pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_SZCZELNOSC": {"pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_ODZYSK": {"pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_GODZINY": {"pytanie": "Ile godzin w roku pracuje sprężarkownia?", "typ": "number", "jednostka": "h/rok", "etykiety": {}, "sekcja": "S3"}, "FAKT_WENT": {"pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_WENT_LICZBA": {"pytanie": "Ile jest central?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_WENT_ODZYSK": {"pytanie": "Czy centrale mają odzysk ciepła?", "typ": "select", "jednostka": "", "etykiety": {"wszystkie": "Wszystkie centrale mają odzysk", "czesc": "Część central ma odzysk", "zadna": "Żadna nie ma odzysku", "nie wiem": "Nie wiem"}, "sekcja": "S3"}, "FAKT_WENT_HARMONOGRAM": {"pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, wszystkie", "czesciowo": "Część central", "nie": "Nie — pracują tak samo cały czas"}, "sekcja": "S3"}, "FAKT_CHLODZENIE": {"pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_CHLODZENIE_MOC": {"pytanie": "Łączna moc chłodnicza", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S3"}, "FAKT_CHLODZENIE_WODNE": {"pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_FGAZ": {"pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_NAPEDY_VSD": {"pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Żaden albo pojedyncze", "czesc": "Mniej więcej połowa", "wiekszosc": "Większość", "nie wiem": "Nie wiem"}, "sekcja": "S3"}, "FAKT_LED_UDZIAL": {"pytanie": "Jaki procent oświetlenia stanowią źródła LED?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S3"}, "FAKT_OSW_STEROWANIE": {"pytanie": "Jak sterowane jest oświetlenie hal?", "typ": "select", "jednostka": "", "etykiety": {"czujniki": "Czujniki ruchu albo natężenia światła", "harmonogram": "Automatyczny harmonogram", "recznie": "Ręcznie — włącznikiem"}, "sekcja": "S3"}, "FAKT_WIEK_INFRA": {"pytanie": "Ile lat ma większość głównych urządzeń energetycznych?", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S3"}, "FAKT_UDT": {"pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_KOTLOWNIA": {"pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?", "typ": "select", "jednostka": "", "etykiety": {"wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)", "siec": "Wyłącznie z sieci ciepłowniczej", "oba": "Z własnego źródła i z sieci ciepłowniczej", "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"}, "sekcja": "S4"}, "FAKT_CIEPLO_PALIWO": {"pytanie": "Czym zasilane jest własne źródło ciepła?", "typ": "multi", "jednostka": "", "etykiety": {"gaz ziemny": "gaz ziemny", "olej": "olej", "węgiel": "węgiel", "biomasa": "biomasa", "biogaz": "biogaz", "pompa ciepła": "pompa ciepła", "energia elektryczna": "energia elektryczna"}, "sekcja": "S4"}, "FAKT_CIEPLO_PALIWA": {"pytanie": "Czy ciepło pochodzi z paliw kopalnych?", "typ": "auto", "jednostka": "", "etykiety": {}, "sekcja": "S4"}, "FAKT_KOTLOWNIA_MOC": {"pytanie": "Moc zainstalowana źródeł ciepła", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S4"}, "FAKT_KOTLOWNIA_WIEK": {"pytanie": "Wiek najstarszego czynnego kotła", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S4"}, "FAKT_CIEPLO_MOC_ZAMOWIONA": {"pytanie": "Zamówiona moc cieplna z sieci", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S4"}, "FAKT_PROCESY": {"pytanie": "Które procesy zużywają najwięcej energii?", "typ": "multi", "jednostka": "", "etykiety": {"piece i nagrzewnice": "piece i nagrzewnice", "suszarnie": "suszarnie", "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki", "prasy": "prasy", "malarnia": "malarnia", "galwanizernia": "galwanizernia", "pompy procesowe": "pompy procesowe", "chłodzenie procesu": "chłodzenie procesu", "inne": "inne"}, "sekcja": "S4"}, "FAKT_CIEPLO_ODPADOWE": {"pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S4"}, "FAKT_ODZYSK_CIEPLA": {"pytanie": "Czy to ciepło jest odzyskiwane?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, w całości albo prawie w całości", "czesciowo": "Częściowo", "nie": "Nie jest odzyskiwane"}, "sekcja": "S4"}, "FAKT_PROCES_BEZ_ALTERNATYWY": {"pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S4"}, "FAKT_PV": {"pytanie": "Czy zakład ma instalację fotowoltaiczną?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, działa", "nie": "Nie", "w planach": "W planach albo w budowie"}, "sekcja": "S4"}, "FAKT_PV_MOC": {"pytanie": "Moc instalacji fotowoltaicznej", "typ": "number", "jednostka": "kWp", "etykiety": {}, "sekcja": "S4"}, "FAKT_BESS": {"pytanie": "Czy zakład ma magazyn energii?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_BESS_POJ": {"pytanie": "Pojemność magazynu", "typ": "number", "jednostka": "kWh", "etykiety": {}, "sekcja": "S4"}, "FAKT_CHP": {"pytanie": "Czy zakład ma kogenerację?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_CHP_MOC": {"pytanie": "Moc elektryczna kogeneracji", "typ": "number", "jednostka": "kWe", "etykiety": {}, "sekcja": "S4"}, "FAKT_FLOTA": {"pytanie": "Czy w zakresie systemu jest flota pojazdów?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_FLOTA_LICZBA": {"pytanie": "Liczba pojazdów", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S4"}, "FAKT_PODLICZNIKI": {"pytanie": "Jak opomiarowana jest energia elektryczna?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Tylko licznik główny", "czesciowo": "Podliczniki na części obiektów lub wydziałów", "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"}, "sekcja": "S5"}, "FAKT_PODLICZNIKI_LICZBA": {"pytanie": "Ile jest podliczników?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S5"}, "FAKT_ODCZYT": {"pytanie": "Jak odczytywane są liczniki?", "typ": "select", "jednostka": "", "etykiety": {"recznie": "Ręcznie, spisywane z liczników", "zdalnie": "Zdalnie, automatycznie do systemu", "mieszane": "Część ręcznie, część zdalnie"}, "sekcja": "S5"}, "FAKT_SCADA": {"pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S5"}, "FAKT_SCADA_ZAKRES": {"pytanie": "Jaki procent zużycia energii obejmuje?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S5"}, "FAKT_DANE_HISTORIA": {"pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?", "typ": "number", "jednostka": "mies.", "etykiety": {}, "sekcja": "S5"}, "FAKT_MES": {"pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S5"}, "FAKT_ANALIZA_DANYCH": {"pytanie": "Czy dane o zużyciu energii są analizowane?", "typ": "select", "jednostka": "", "etykiety": {"nie": "nie", "okresowo": "okresowo", "systematycznie": "systematycznie"}, "sekcja": "S5"}, "FAKT_AUDYT_ENERG": {"pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_AUDYT_ROK": {"pytanie": "W którym roku?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S6"}, "FAKT_ETS": {"pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_CSRD": {"pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_CSRD_ROK": {"pytanie": "Od którego roku?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S6"}, "FAKT_ODBIORCY_CO2": {"pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}, "FAKT_PRZETARGI": {"pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}, "FAKT_PRZERWY_POGODA": {"pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Kierownictwo, które daje budżet na certyfikat, ale nie daje czasu ludzi, dostaje system na papierze — i dowiaduje się o tym na audicie.", "decyzja": "Zasoby przyznane przed wdrożeniem, nie po pierwszym audicie: czas Energy Managera, czas utrzymania ruchu i wyodrębniony budżet.", "dzialanie": "Zarządzenie 3/2026 z zespołem i rolami; plan zasobów (7.1); budżet 500 tys. zł na 2026 r. i 380 tys. zł w projekcie budżetu na 2027 r.", "sprawdzenie": "Na przeglądzie zarządzania zestawiamy zadania z dostępnym czasem i budżet z wykonaniem; przekroczenie obciążenia kończy się decyzją o zasobie, a nie przesunięciem terminu."}];
+</script>
+<script>/* ENESA 5.1 — Przywództwo i zaangażowanie. Format jak strony 4.1–4.4.
+   Zgodny z: Tom 2 rozdz. 2 pkt 5.1 oraz Część III Moduł 2 wersja 2.1 (III-13, III-14). */
+"use strict";
+
+var ZOB = {};      // kod obowiązku -> {stan, dowod, kto, plan}
+var ZESP = { dokument: "", data: "", organ: "" };
+var CZLON = [];
+var ZAS = {};      // kod zasobu -> {stan, opis}
+var INT = {};      // kod procesu -> {stan, jak, gdzie}
+var STYK = {};     // kod nawyku -> {stan, jak}
+var DECYZJE = [];  // dowody z decyzji kierownictwa
+var WNIOSKI = [];
+var AKT = "pytania";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+
+/* ── pomocnicze ── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+var STANY3 = [["", "Wybierz"], ["jest", "Jest — potrafimy to pokazać"],
+["czesciowo", "Częściowo — część dowodów istnieje"], ["nie", "Nie — jeszcze tego nie ma"]];
+
+/* profil zakładu: czytany, nie kopiowany */
+function pr(k) { return PROFIL[k]; }
+function etykietaProfilu(k) {
+  var q = PYT[k], v = PROFIL[k];
+  if (v === undefined || v === null || v === "") return null;
+  return (q && q.etykiety && q.etykiety[v]) || String(v) + (q && q.jednostka ? " " + q.jednostka : "");
+}
+function notaProfilu(k, uwaga) {
+  var v = etykietaProfilu(k);
+  if (v === null) return null;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Z profilu zakładu: "));
+  n.appendChild(document.createTextNode((PYT[k] ? PYT[k].pytanie + " → " : "") + v + (uwaga ? " " + uwaga : "")));
+  return n;
+}
+
+/* ── kompletność ── */
+function zobOk(z) {
+  var d = ZOB[z.kod] || {};
+  if (!d.stan) return false;
+  if (d.stan === "nie") return !!(d.plan || "").trim();
+  return !!(d.dowod || "").trim() && !!(d.kto || "").trim();
+}
+function czlonOk(c) { return !!(c.osoba || "").trim() && !!c.rola; }
+function zespolOk() {
+  return !!(ZESP.dokument || "").trim() && !!ZESP.data && CZLON.length > 0 && CZLON.every(czlonOk);
+}
+function zasOk(z) { var d = ZAS[z.kod] || {}; return !!d.stan && !!(d.opis || "").trim(); }
+function intOk(p) {
+  var d = INT[p.kod] || {};
+  if (!d.stan) return false;
+  if (d.stan === "nie") return true;
+  return !!(d.jak || "").trim();
+}
+function stykOk(n) { var d = STYK[n.kod] || {}; return !!d.stan && (d.stan === "nie" || !!(d.jak || "").trim()); }
+function decyzjaOk(d) { return !!d.data && !!(d.czego || "").trim() && !!(d.kto || "").trim() && !!(d.skutek || "").trim(); }
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+
+/* ── zakładka 1: cztery pytania kontrolne, trzynaście obowiązków ── */
+function rysujPytania(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Cztery pytania kontrolne"));
+  s.appendChild(el("p", "opis", "Norma rozpisuje przywództwo na trzynaście obowiązków. Książka grupuje je w cztery pytania — jeśli na każde kierownictwo odpowie „tak” i pokaże dowód, macie punkt wyjścia do sprawdzenia wszystkich trzynastu. Przy każdym obowiązku wpisz dowód i nazwisko osoby z kierownictwa."));
+  s.appendChild(el("div", "note", "★ Podział na cztery pytania to pomoc autora — norma wymienia obowiązki jeden po drugim. Zachowujemy oba układy: grupowanie ułatwia rozmowę z zarządem, a lista trzynastu pozycji odpowiada liście kontrolnej III-13."));
+  s.appendChild(el("div", "warn", "Przywództwa nie da się delegować na Energy Managera. Ludzie nie patrzą na podpisy — patrzą na to, o co pyta szef i co robi z odpowiedzią."));
+  host.appendChild(s);
+
+  PYTANIA_4.forEach(function (q) {
+    var sec = el("div", "sekcja"); sec.id = "pyt_" + q.id;
+    var lista = ZOBOWIAZANIA.filter(function (z) { return z.pytanie === q.id; });
+    var got = lista.filter(zobOk).length;
+    var h = el("h3", null, q.nazwa);
+    h.appendChild(el("span", "chip " + (got === lista.length ? "green" : "amber"), got + " / " + lista.length));
+    sec.appendChild(h);
+    sec.appendChild(el("p", "opis", q.opis));
+    sec.appendChild(el("div", "note", "Dowód według książki: " + q.dowod));
+
+    lista.forEach(function (z) {
+      var d = ZOB[z.kod] || (ZOB[z.kod] = {});
+      var k = el("div", "poz" + (zobOk(z) ? "" : " brak"));
+      var g = el("div", "pozkod");
+      g.appendChild(el("b", null, z.kod));
+      g.appendChild(el("span", "chip " + (z.podstawa === "N" ? "red" : ""),
+        z.podstawa === "N" ? "wymaganie normy" : "metoda ENESA"));
+      if (z.klauzula) g.appendChild(el("span", "chip", "dalej: " + z.klauzula));
+      k.appendChild(g);
+      k.appendChild(el("div", "poznazwa", z.tresc));
+      if (z.pomoc) k.appendChild(el("div", "pozmeta", z.pomoc));
+      if (z.profil) {
+        var n = notaProfilu(z.profil, z.profilUwaga);
+        if (n) k.appendChild(n);
+      }
+      k.appendChild(pole("Stan", sel(d.stan, STANY3, function (v) { d.stan = v; })));
+      if (d.stan === "nie") {
+        var p = pole("Co i kiedy robicie, żeby to powstało — wymagane",
+          txt(d.plan, z.plan || "np. uchwała zarządu do 30.11.2026, odpowiedzialny Dyrektor Zakładu", 2,
+            function (v) { d.plan = v; }));
+        p.className = "pole kandydat";
+        k.appendChild(p);
+      } else if (d.stan) {
+        k.appendChild(pole("Dowód — gdzie jest zapis, z datą — wymagane",
+          txt(d.dowod, z.dowod, 2, function (v) { d.dowod = v; }),
+          "Kolumna „Dowód / miejsce zapisu” z listy kontrolnej III-13. Jedna decyzja albo jeden przegląd zarządzania może potwierdzać kilka pozycji."));
+        k.appendChild(pole("Kto z najwyższego kierownictwa — wymagane",
+          inp(d.kto, "stanowisko, nie imię — np. Prezes Zarządu, Dyrektor Zakładu", function (v) { d.kto = v; })));
+      }
+      sec.appendChild(k);
+    });
+    host.appendChild(sec);
+  });
+
+  var kto = {};
+  ZOBOWIAZANIA.forEach(function (z) {
+    var w = ((ZOB[z.kod] || {}).kto || "").trim().toLowerCase();
+    if (w) kto[w] = (kto[w] || 0) + 1;
+  });
+  var naj = Object.keys(kto).sort(function (a, b) { return kto[b] - kto[a]; })[0];
+  if (naj && kto[naj] >= Math.ceil(ZOBOWIAZANIA.length * 0.75)) {
+    var o = el("div", "sekcja");
+    o.appendChild(el("div", "warn", "Przy " + kto[naj] + " z " + ZOBOWIAZANIA.length +
+      " obowiązków wpisano to samo stanowisko. Punkt 5.1 dotyczy najwyższego kierownictwa jako zespołu — a punkt 5.1 wymaga też, żeby kierownictwo wspierało inne role kierownicze w ich obszarach. Jeśli wszystko spoczywa na jednej osobie, przywództwo jest nazwane, a nie wykonywane."));
+    host.appendChild(o);
+  }
+}
+
+/* ── zakładka 2: integracja z procesami biznesowymi ── */
+function rysujIntegracje(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Integracja z procesami biznesowymi"));
+  s.appendChild(el("p", "opis", "Jeden z trzynastu obowiązków, a w praktyce ten, który najłatwiej przeoczyć. Norma wymaga, żeby wymagania systemu były wbudowane w procesy firmy — a nie prowadzone obok nich jako „projekt ISO”."));
+  s.appendChild(el("div", "note", "Analogia z książki: firma ogłasza program „Zdrowy pracownik”, a prezes codziennie zamawia pizzę do gabinetu. Jeśli kierownictwo mówi o oszczędzaniu energii, ale przy zakupie nowej prasy nikt nie pyta o jej zużycie, ludzie słyszą jedno: to nie jest naprawdę ważne. Pracownicy uczą się priorytetów z decyzji, nie z deklaracji."));
+  var n1 = notaProfilu("FAKT_SYSTEM_BAZOWY", "Integrację prowadźcie przez rozszerzenie istniejących procesów, nie przez budowanie równoległych — jeden proces, jeden dokument.");
+  if (n1 && pr("FAKT_SYSTEM_BAZOWY") !== "brak") s.appendChild(n1);
+
+  PROCESY_BIZ.forEach(function (p) {
+    var d = INT[p.kod] || (INT[p.kod] = {});
+    var k = el("div", "poz" + (intOk(p) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, p.kod));
+    if (p.klauzula) g.appendChild(el("span", "chip", "dalej: " + p.klauzula));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", p.nazwa));
+    k.appendChild(el("div", "pozmeta", p.pytanie));
+    if (p.profil) { var n = notaProfilu(p.profil, p.profilUwaga); if (n) k.appendChild(n); }
+    k.appendChild(pole("Czy ten proces uwzględnia energię?", sel(d.stan, [["", "Wybierz"],
+    ["tak", "Tak — i widać to w decyzjach"],
+    ["zapis", "Jest zapis, ale decyzje wyglądają tak samo"],
+    ["nie", "Nie"]], function (v) { d.stan = v; })));
+    if (d.stan === "zapis")
+      k.appendChild(el("div", "warn", "Zapis bez zmiany w decyzjach to integracja na papierze. Audytor poprosi o konkretny przypadek z ostatniego roku — i to jego brak będzie ustaleniem, nie brak procedury."));
+    if (d.stan && d.stan !== "nie") {
+      k.appendChild(pole("Jak dokładnie — wymagane", txt(d.jak, p.placeholder, 2, function (v) { d.jak = v; })));
+      k.appendChild(pole("Gdzie to jest zapisane",
+        inp(d.gdzie, "np. Procedura zakupowa P-ZAK-02, pkt 4.3", function (v) { d.gdzie = v; })));
+    }
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: zespół ds. zarządzania energią ── */
+function rysujZespol(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zespół do spraw zarządzania energią"));
+  s.appendChild(el("p", "opis", "Powołanie zespołu to jeden z trzynastu obowiązków z punktu 5.1. Szczegółowy podział zadań i uprawnień opiszecie w punkcie 5.3 — tutaj chodzi o to, czy zespół istnieje i ma umocowanie."));
+  s.appendChild(el("div", "note", "Norma nie każe zatrudniać Energy Managera ani tworzyć osobnego etatu. Wymaga zespołu. Stanowisko „przedstawiciela kierownictwa” znała poprzednia wersja normy, z 2011 roku; obecna mówi o zespole. Koordynator to rozwiązanie metody, nie wymóg — ale jeśli go nie wyznaczycie, kierownictwo musi rozdzielić jego zadania między członków zespołu."));
+
+  var em = pr("FAKT_ENERGY_MANAGER");
+  if (em === "nie")
+    s.appendChild(el("div", "warn", "Profil zakładu: nie wyznaczono nikogo odpowiedzialnego za energię. To pierwsza rzecz do zrobienia w tym punkcie — bez niej nie ruszy ani przegląd energetyczny (6.3), ani monitorowanie (9.1)."));
+  else if (em === "nieformalnie")
+    s.appendChild(el("div", "warn", "Profil zakładu: „" + etykietaProfilu("FAKT_ENERGY_MANAGER") + "”. Nieformalne zajmowanie się energią nie jest powołaniem zespołu. Zakres zadań trzeba zapisać i ogłosić — norma wymaga, żeby role były zakomunikowane."));
+  if (pr("FAKT_ROTACJA") === "wysoka")
+    s.appendChild(el("div", "warn", "Profil zakładu: wysoka rotacja pracowników. Przy takiej rotacji zastępstwa w zespole nie są formalnością — bez nich system zatrzymuje się na pierwszym odejściu. Ten sam problem sprawdza test ciągłości w punkcie 4.4."));
+
+  var u = el("div", "poz" + ((ZESP.dokument || "").trim() && ZESP.data ? "" : " brak"));
+  var g = el("div", "pozkod");
+  g.appendChild(el("b", null, "ZESP-UMOC"));
+  g.appendChild(el("span", "chip red", "wymaganie normy"));
+  g.appendChild(el("span", "chip", "wzór: III-14, załącznik A"));
+  u.appendChild(g);
+  u.appendChild(el("div", "poznazwa", "Umocowanie zespołu"));
+  u.appendChild(el("div", "pozmeta", "Czym zespół został powołany i kiedy. Forma jest dowolna — decyzja, zarządzenie, uchwała. Toolkit proponuje wzór F-EnMS-06 jako załącznik A do procedury P-EnMS-02."));
+  u.appendChild(pole("Dokument powołujący",
+    inp(ZESP.dokument, "np. Decyzja Zarządu nr 7/2026 o powołaniu Zespołu ds. Zarządzania Energią",
+      function (v) { ZESP.dokument = v; })));
+  u.appendChild(pole("Data powołania", inp(ZESP.data, "", function (v) { ZESP.data = v; }, "date")));
+  u.appendChild(pole("Kto powołał", inp(ZESP.organ, "np. Zarząd uchwałą / Prezes Zarządu",
+    function (v) { ZESP.organ = v; })));
+  s.appendChild(u);
+  host.appendChild(s);
+
+  var sk = el("div", "sekcja");
+  var h = el("h3", null, "Skład zespołu");
+  h.appendChild(el("span", "chip " + (zespolOk() ? "green" : "amber"),
+    ile(CZLON.filter(czlonOk).length, "osoba", "osoby", "osób")));
+  sk.appendChild(h);
+  sk.appendChild(el("p", "opis", "Zespół ma sens wtedy, gdy są w nim ludzie z obszarów, które zużywają energię i decydują o zakupach."));
+  sk.appendChild(el("div", "note", "★ Rada z książki — orientacyjnie: do ok. 50 osób jedna osoba; 50–250 koordynator i 2–3 osoby z kluczowych działów; powyżej 250 zespół z przedstawicielami produkcji, utrzymania ruchu, zakupów i finansów. Ostatecznie decydują zadania, nie liczba pracowników."));
+  CZLON.forEach(function (c, i) {
+    var k = el("div", "poz" + (czlonOk(c) ? "" : " brak"));
+    var g2 = el("div", "pozkod");
+    g2.appendChild(el("b", null, "Osoba " + (i + 1)));
+    if (c.rola === "kierujacy") g2.appendChild(el("span", "chip green", "koordynator"));
+    if (c.rola === "sponsor") g2.appendChild(el("span", "chip green", "kierownictwo"));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { CZLON.splice(i, 1); zapisz(); rysuj(); };
+    g2.appendChild(us);
+    k.appendChild(g2);
+    k.appendChild(pole("Stanowisko", inp(c.osoba, "np. Kierownik Utrzymania Ruchu", function (v) { c.osoba = v; })));
+    k.appendChild(pole("Rola w zespole", sel(c.rola, [["", "Wybierz"],
+    ["kierujacy", "Koordynuje zespół (Energy Manager)"],
+    ["czlonek", "Członek zespołu"],
+    ["sponsor", "Sponsor ze strony kierownictwa"],
+    ["wsparcie", "Wsparcie zewnętrzne (konsultant, audytor)"]], function (v) { c.rola = v; })));
+    k.appendChild(pole("Obszar, który reprezentuje",
+      inp(c.obszar, "np. sprężarkownia i instalacje pomocnicze", function (v) { c.obszar = v; })));
+    k.appendChild(pole("Zastępca", inp(c.zastepca, "kto przejmuje zadania podczas nieobecności",
+      function (v) { c.zastepca = v; }),
+      "Pozycja listy kontrolnej z punktu 4.4: kluczowe role mają zastępców."));
+    k.appendChild(pole("Czy wie, że jest w zespole, i zna swoje zadania?", sel(c.wie, [["", "Wybierz"],
+    ["tak", "Tak — zostało to zakomunikowane"], ["nie", "Jeszcze nie"]], function (v) { c.wie = v; }),
+      "Norma wymaga, żeby role były zakomunikowane. Najczęstszy błąd: nikt nie wie, że jest w zespole."));
+    k.appendChild(pole("Czas przewidziany na zadania w systemie",
+      inp(c.czas, "np. 8 godzin miesięcznie", function (v) { c.czas = v; }),
+      "III-13 pozycja M: ustalono i zapisano sposób przydziału czasu i zasobów."));
+    sk.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj osobę");
+  dod.onclick = function () { CZLON.push({}); zapisz(); rysuj(); };
+  sk.appendChild(dod);
+  if (CZLON.length && !CZLON.some(function (c) { return c.rola === "kierujacy"; }))
+    sk.appendChild(el("div", "warn", "Nie wskazano koordynatora. To dopuszczalne — norma go nie wymaga — ale wtedy kierownictwo musi rozdzielić jego zadania między członków zespołu i zapisać ten podział w punkcie 5.3."));
+  if (CZLON.length && !CZLON.some(function (c) { return c.rola === "sponsor"; }))
+    sk.appendChild(el("div", "warn", "W zespole nie ma nikogo z kierownictwa. Książka zaleca wskazanie jednego członka kierownictwa jako sponsora systemu — to on rozstrzyga spory o priorytety, gdy zespół trafia na opór."));
+  if (CZLON.some(function (c) { return c.wie === "nie"; }))
+    sk.appendChild(el("div", "warn", "Co najmniej jedna osoba nie wie, że jest w zespole. Dopóki skład nie zostanie ogłoszony, wymaganie o zakomunikowaniu ról nie jest spełnione."));
+  host.appendChild(sk);
+}
+
+/* ── zakładka 4: zasoby ── */
+function rysujZasoby(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zasoby dla systemu"));
+  s.appendChild(el("p", "opis", "Zapewnienie zasobów to jeden z trzynastu obowiązków. Norma nie podaje kwot i nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza, żeby system działał."));
+  s.appendChild(el("div", "note", "„Prezes odmówił zakupu licznika — czyli nie jest zaangażowany?” Niekoniecznie. Jedna odmowa niczego nie dowodzi; może wybrał tańsze rozwiązanie albo przesunął zakup o kwartał. Pytanie brzmi inaczej: czy system ma dość zasobów, żeby działać? Jeśli każdy wniosek ląduje w szufladzie bez odpowiedzi — wtedy macie problem."));
+  var nb = notaProfilu("FAKT_BUDZET");
+  if (pr("FAKT_BUDZET") === "nie")
+    s.appendChild(el("div", "warn", "Profil zakładu: w budżecie nie ma osobnej pozycji na poprawę efektywności energetycznej. To nie jest automatycznie niezgodność — norma jej nie wymaga. Trzeba jednak pokazać, skąd biorą się pieniądze na działania z punktu 6.2."));
+  else if (nb) s.appendChild(nb);
+  var np = notaProfilu("FAKT_PBT_PROG", "Ten próg przesądza, które działania w ogóle wejdą do planu — warto, żeby zapadł świadomie na poziomie kierownictwa, a nie w arkuszu kalkulacyjnym.");
+  if (np) s.appendChild(np);
+
+  ZASOBY.forEach(function (z) {
+    var d = ZAS[z.kod] || (ZAS[z.kod] = {});
+    var k = el("div", "poz" + (zasOk(z) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, z.kod));
+    g.appendChild(el("span", "chip " + (z.podstawa === "N" ? "red" : ""),
+      z.podstawa === "N" ? "wymaganie normy" : "metoda ENESA"));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", z.nazwa));
+    k.appendChild(el("div", "pozmeta", z.pomoc));
+    k.appendChild(pole("Stan", sel(d.stan, [["", "Wybierz"],
+    ["zapewnione", "Zapewnione"], ["czesciowo", "Częściowo"], ["brak", "Brak"]], function (v) { d.stan = v; })));
+    k.appendChild(pole(d.stan === "brak" ? "Co z tego wynika i kiedy to uzupełnicie — wymagane"
+      : "Konkretnie — ile, skąd, od kiedy — wymagane",
+      txt(d.opis, z.placeholder, 2, function (v) { d.opis = v; })));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: nawyki, punkty styku i dowody z decyzji ── */
+function rysujStyk(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Pięć nawyków zaangażowanego kierownictwa"));
+  s.appendChild(el("p", "opis", "Zaangażowanie to nie uczucie, tylko nawyki. Po tych pięciu każdy pracownik rozpozna, że kierownictwu naprawdę zależy."));
+  NAWYKI.forEach(function (n) {
+    var d = STYK[n.kod] || (STYK[n.kod] = {});
+    var k = el("div", "poz" + (stykOk(n) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, n.kod));
+    g.appendChild(el("span", "chip", "metoda ENESA"));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", n.nazwa));
+    k.appendChild(el("div", "pozmeta", n.opis));
+    k.appendChild(pole("Czy to u Was działa?", sel(d.stan, [["", "Wybierz"],
+    ["tak", "Tak, regularnie"], ["czasem", "Nieregularnie"], ["nie", "Nie"]], function (v) { d.stan = v; })));
+    if (d.stan && d.stan !== "nie")
+      k.appendChild(pole("Jak i jak często — wymagane", inp(d.jak, n.placeholder, function (v) { d.jak = v; })));
+    s.appendChild(k);
+  });
+  s.appendChild(el("div", "note", "★ Rada z książki: wpiszcie wskaźniki energetyczne do rocznych celów kierowników produkcji i utrzymania ruchu. Ludzie zmieniają zachowania najszybciej tam, gdzie są z czegoś rozliczani.\n★ Rada: poproście prezesa o jedno stałe pytanie o energię na cotygodniowej odprawie. Jedno regularne pytanie nadaje energii znaczenie — jeżeli za odpowiedzią idą decyzje."));
+  host.appendChild(s);
+
+  var d2 = el("div", "sekcja");
+  var h = el("h3", null, "Dowody z decyzji");
+  h.appendChild(el("span", "chip " + (DECYZJE.filter(decyzjaOk).length >= 3 ? "green" : "amber"),
+    ile(DECYZJE.filter(decyzjaOk).length, "decyzja", "decyzje", "decyzji")));
+  d2.appendChild(h);
+  d2.appendChild(el("p", "opis", "Pierwsze pytanie samosprawdzenia z książki: czy potraficie wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami. To jest najmocniejszy dowód w całym punkcie 5.1 i to o niego najpierw poprosi audytor."));
+  DECYZJE.forEach(function (x, i) {
+    var k = el("div", "poz" + (decyzjaOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Decyzja " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { DECYZJE.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Data", inp(x.data, "", function (v) { x.data = v; }, "date")));
+    k.appendChild(pole("Czego dotyczyła",
+      inp(x.czego, "np. zatwierdzenie celu Z1.1 dla sprężarkowni i czasu technika na przeglądy szczelności",
+        function (v) { x.czego = v; })));
+    k.appendChild(pole("Kto zdecydował", inp(x.kto, "np. Dyrektor Zakładu w imieniu Zarządu", function (v) { x.kto = v; })));
+    k.appendChild(pole("Co z tego wyszło",
+      inp(x.skutek, "np. czerwcowy pomiar: wycieki 6 Nm³/min wobec 9 na starcie — cel pośredni osiągnięty",
+        function (v) { x.skutek = v; })));
+    k.appendChild(pole("Gdzie jest zapis", inp(x.zapis, "np. protokół przeglądu zarządzania nr 1/2026",
+      function (v) { x.zapis = v; })));
+    d2.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj decyzję");
+  dod.onclick = function () { DECYZJE.push({}); zapisz(); rysuj(); };
+  d2.appendChild(dod);
+  if (DECYZJE.filter(decyzjaOk).length < 3)
+    d2.appendChild(el("div", "warn", "Mniej niż trzy udokumentowane decyzje. To nie jest próg z normy, tylko praktyka: jeśli przez ostatnie miesiące kierownictwo nie podjęło ani kilku decyzji, w których energia miała znaczenie, trudno mówić o zaangażowaniu — niezależnie od tego, co jest podpisane."));
+  host.appendChild(d2);
+}
+
+/* ── zakładka 6: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Osobny endpoint, sprawdzenie roli po stronie serwera. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  s.appendChild(el("p", "opis", "Wnioski powstają z obowiązków bez pełnego pokrycia, z braków w zasobach i z procesów, w których integracja istnieje tylko na papierze."));
+
+  var kand = [];
+  ZOBOWIAZANIA.forEach(function (z) {
+    var d = ZOB[z.kod] || {};
+    if (d.stan === "nie" || d.stan === "czesciowo") kand.push(z.kod + " (" + d.stan + ")");
+  });
+  PROCESY_BIZ.forEach(function (p) {
+    if ((INT[p.kod] || {}).stan === "zapis") kand.push(p.kod + " (integracja na papierze)");
+  });
+  ZASOBY.forEach(function (z) {
+    if ((ZAS[z.kod] || {}).stan === "brak") kand.push(z.kod + " (brak zasobu)");
+  });
+  if (kand.length) {
+    var n = el("div", "note");
+    n.appendChild(el("b", null, "Kandydaci na wnioski (" + kand.length + "): "));
+    n.appendChild(document.createTextNode(kand.join(", ") + "."));
+    s.appendChild(n);
+  }
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie. Ten sam łańcuch co w punktach 4.1 i 4.4. Liczba wniosków nie jest progiem."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var k = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    if (w.zrodlo) g.appendChild(el("span", "chip", "z " + w.zrodlo));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Z czego wynika", (function () {
+      var sl = document.createElement("select");
+      sl.appendChild(new Option("— bez odniesienia —", ""));
+      ZOBOWIAZANIA.forEach(function (z) { sl.appendChild(new Option(z.kod + " — " + z.tresc.slice(0, 55), z.kod)); });
+      ZASOBY.forEach(function (z) { sl.appendChild(new Option(z.kod + " — " + z.nazwa, z.kod)); });
+      PROCESY_BIZ.forEach(function (p) { sl.appendChild(new Option(p.kod + " — " + p.nazwa, p.kod)); });
+      sl.value = w.zrodlo || "";
+      sl.onchange = function () { w.zrodlo = sl.value; zapisz(); rysuj(); };
+      return sl;
+    })()));
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-13, sekcja 5.1 ── */
+function stanPozycji(p) {
+  var f = {
+    kierownictwo: function () { return ZOBOWIAZANIA.some(function (z) { return ((ZOB[z.kod] || {}).kto || "").trim(); }); },
+    zobowiazania: function () { return ZOBOWIAZANIA.every(zobOk); },
+    zob: function () { return zobOk({ kod: p.zob }); },
+    integracja: function () { return PROCESY_BIZ.every(intOk); },
+    zasoby: function () { return ZASOBY.every(zasOk); },
+    zespol: function () { return zespolOk(); },
+    styk: function () { return NAWYKI.every(stykOk); },
+    decyzje: function () { return DECYZJE.filter(decyzjaOk).length >= 3; }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── zakładka 7: zatwierdzenia ── */
+function braki() {
+  var b = [];
+  ZOBOWIAZANIA.forEach(function (z) {
+    var d = ZOB[z.kod] || {};
+    if (!d.stan) b.push({ t: z.kod + " — nie wskazano stanu.", kto: "klient" });
+    else if (d.stan === "nie" && !(d.plan || "").trim())
+      b.push({ t: z.kod + " — brak planu, co i kiedy powstanie.", kto: "klient" });
+    else if (d.stan !== "nie" && !(d.dowod || "").trim())
+      b.push({ t: z.kod + " — brak dowodu.", kto: "klient" });
+    else if (d.stan !== "nie" && !(d.kto || "").trim())
+      b.push({ t: z.kod + " — nie wskazano osoby z kierownictwa.", kto: "klient" });
+  });
+  PROCESY_BIZ.forEach(function (p) { if (!intOk(p)) b.push({ t: "Integracja: " + p.nazwa + " — brak odpowiedzi.", kto: "klient" }); });
+  if (!(ZESP.dokument || "").trim()) b.push({ t: "Zespół — brak dokumentu powołującego.", kto: "klient" });
+  if (!ZESP.data) b.push({ t: "Zespół — brak daty powołania.", kto: "klient" });
+  if (!CZLON.length) b.push({ t: "Zespół — pusty skład.", kto: "klient" });
+  CZLON.forEach(function (c, i) {
+    if (!czlonOk(c)) b.push({ t: "Zespół, osoba " + (i + 1) + " — brak stanowiska albo roli.", kto: "klient" });
+    else if (c.wie === "nie") b.push({ t: "Zespół, " + c.osoba + " — nie wie, że jest w zespole.", kto: "klient" });
+  });
+  ZASOBY.forEach(function (z) { if (!zasOk(z)) b.push({ t: "Zasoby: " + z.nazwa + " — niekompletne.", kto: "klient" }); });
+  NAWYKI.forEach(function (n) { if (!stykOk(n)) b.push({ t: "Nawyk: " + n.nazwa + " — brak odpowiedzi.", kto: "klient", metodyka: true }); });
+  if (DECYZJE.filter(decyzjaOk).length < 3)
+    b.push({ t: "Mniej niż trzy udokumentowane decyzje kierownictwa.", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-PRZ-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-13 — sekcja 5.1"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan", "Skąd"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_51.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "ocena konsultanta"));
+    r.appendChild(td);
+    r.appendChild(el("td", "pozmeta", p.auto ? "wyliczane" : "ręcznie"));
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+  s.appendChild(el("div", "note", "Lista odpowiada załącznikowi III-13 w wersji 2.1, sekcja 5.1 — te same pozycje i ta sama kolumna „N / M”. Kolumnę „Dowód / miejsce zapisu” z formularza wypełniacie przy obowiązkach w zakładce 1; platforma przenosi ją do dokumentu."));
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-PRZ-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["1. Trzynaście obowiązków z dowodami", "zakładka 1", ZOBOWIAZANIA.filter(zobOk).length + " z " + ZOBOWIAZANIA.length + " rozstrzygniętych"],
+  ["2. Integracja z procesami biznesowymi", "zakładka 2", PROCESY_BIZ.filter(intOk).length + " z " + PROCESY_BIZ.length + " procesów"],
+  ["3. Powołanie i skład zespołu", "zakładka 3", (ZESP.dokument || "—") + " · " + ile(CZLON.filter(czlonOk).length, "osoba", "osoby", "osób")],
+  ["4. Zasoby zapewnione dla systemu", "zakładka 4", ZASOBY.filter(zasOk).length + " z " + ZASOBY.length + " opisanych"],
+  ["5. Punkty styku i dowody z decyzji", "zakładka 5", ile(DECYZJE.filter(decyzjaOk).length, "decyzja", "decyzje", "decyzji") + " z datami"],
+  ["6. Wnioski", "zakładka 6", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+  ["7. Lista kontrolna III-13, sekcja 5.1", "zakładka 7", LISTA_51.length + " pozycji ze stanem na dzień wydania"],
+  ["8. Zatwierdzenie i historia zmian", "stopka", "Wersja, data, osoba zatwierdzająca"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(el("div", "note", "Punkt 5.1 nie wymaga własnej udokumentowanej informacji. W całym rozdziale 5 norma wymaga udokumentowania tylko polityki energetycznej (5.2). Dowodem przywództwa są zapisy powstające gdzie indziej: polityka, matryca ról (5.3), budżet, protokoły przeglądu zarządzania (9.3). D-EnMS-PRZ-01 zbiera je w jednym miejscu — to dowód metodyczny ENESA, przydatny w audycie, ale nie wymagany wprost."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "pytania", t: "1. Cztery pytania kontrolne", f: rysujPytania },
+  { id: "integracja", t: "2. Integracja z procesami", f: rysujIntegracje },
+  { id: "zespol", t: "3. Zespół ds. energii", f: rysujZespol },
+  { id: "zasoby", t: "4. Zasoby", f: rysujZasoby },
+  { id: "styk", t: "5. Nawyki i decyzje", f: rysujStyk },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+
+function aktualizujPasek() {
+  var razem = ZOBOWIAZANIA.length + PROCESY_BIZ.length + 1 + Math.max(CZLON.length, 1)
+    + ZASOBY.length + NAWYKI.length + 3;
+  var zrob = ZOBOWIAZANIA.filter(zobOk).length
+    + PROCESY_BIZ.filter(intOk).length
+    + ((ZESP.dokument || "").trim() && ZESP.data ? 1 : 0)
+    + CZLON.filter(czlonOk).length
+    + ZASOBY.filter(zasOk).length
+    + NAWYKI.filter(stykOk).length
+    + Math.min(DECYZJE.filter(decyzjaOk).length, 3);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 16:30", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 5.1" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_51", JSON.stringify({
+      ZOB: ZOB, ZESP: ZESP, CZLON: CZLON, ZAS: ZAS, INT: INT, STYK: STYK, DECYZJE: DECYZJE, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_51"); if (!s) return;
+    var d = JSON.parse(s);
+    ZOB = d.ZOB || {}; ZESP = d.ZESP || ZESP; CZLON = d.CZLON || [];
+    ZAS = d.ZAS || {}; INT = d.INT || {}; STYK = d.STYK || {};
+    DECYZJE = d.DECYZJE || []; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+
+/* Przykład AutoParts — wprowadzony 18.10.2026. Punkt 5.1 był jedyną stroną platformy bez
+   przycisku „wypełnij przykładem”: otwierał się z trzydziestoma ośmioma brakami, więc nie dało
+   się go nikomu pokazać. Dowody są te same, które powstają w innych punktach — tu tylko zbierane:
+   zarządzenie 3/2026, protokół przeglądu z 18.06.2026, plan zasobów (7.1), plany działań (6.2). */
+function przyklad() {
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var DZ = "Dyrektor Zakładu";
+  function zob(stan, dowod, kto) { return { stan: stan, dowod: dowod, kto: kto || DZ, plan: "" }; }
+  ZOB = {
+    "PRZ-00": zob("jest", "Zarządzenie 3/2026 z 12.02.2026 r.: najwyższym kierownictwem dla systemu jest Dyrektor Zakładu, a w sprawach nakładów powyżej budżetu rocznego — zarząd spółki."),
+    "PRZ-01": zob("jest", "D-EnMS-ZAK-01 — zakres i granice zatwierdzone 20.02.2026 r.; obie lokalizacje w Katowicach w systemie."),
+    "PRZ-02": zob("jest", "Polityka energetyczna z 12.02.2026 r. powiązana z celem obniżenia kosztów energii o 8% do 2028 r. ze strategii 2026–2028; cele Z1–Z3 w planie działań (6.2)."),
+    "PRZ-03": zob("czesciowo", "Karty wskaźników dla zakładu, pras i sprężarkowni (6.4). Dla sprężarkowni wskaźnik liczony dziś z szacunku — podlicznik i przepływomierz w planie C4, termin 30.06.2027 r.", "Energy Manager"),
+    "PRZ-04": zob("czesciowo", "Kryteria energetyczne w procedurze zakupowej od 03.2026 r.; planowanie produkcji i budżetowanie uwzględniają energię od II półrocza 2026 r. Zarządzanie zmianą jeszcze bez punktu o energii."),
+    "PRZ-05": zob("jest", "Plany działań C1–C4 zatwierdzone 12.02.2026 r.; trzy działania planu C1 wykonane do 09.2026 r., protokoły w rejestrze."),
+    "PRZ-06": zob("jest", "Plan zasobów (7.1): 25% etatu Energy Managera, 2,5 h tygodniowo Kierownika Utrzymania Ruchu, budżet 500 tys. zł na 2026 r."),
+    "PRZ-07": zob("jest", "Zarządzenie 3/2026 — zespół ds. zarządzania energią w pięcioosobowym składzie; skład w zakładce 2."),
+    "PRZ-08": zob("jest", "Spotkanie kierownictwa 12.02.2026 r. i instruktaże stanowiskowe; polityka w intranecie i na tablicy przy portierni; wynik S-1 ogłaszany co miesiąc."),
+    "PRZ-09": zob("czesciowo", "Szkolenie operatorów sprężarkowni 05.2026 r.; rejestr zgłoszeń uwag działa od 04.2026 r. Program świadomości dla pozostałych wydziałów w przygotowaniu (7.3)."),
+    "PRZ-10": zob("jest", "Kierownik Produkcji i Kierownik Utrzymania Ruchu mają przypisane znaczące użycia energii i uprawnienia opisane w punkcie 5.3."),
+    "PRZ-11": zob("czesciowo", "Wynik roku: S-1 z 0,125 na 0,119 kWh/Nm³ (VII–IX 2026) wobec celu 0,110 do 31.12.2027 r. Cel kosztowy rozliczany po zamknięciu roku.", "Energy Manager"),
+    "PRZ-12": zob("jest", "Plan doskonalenia (10.2) z pozycjami na 2027 r.; decyzja o projekcie budżetu 380 tys. zł na sterownik i napęd — INW/2027/04."),
+    "PRZ-13": zob("czesciowo", "Przegląd stanu prawnego co kwartał; ocena zgodności raz w roku (9.1.2); zmiany czynników kontekstowych jako punkt agendy przeglądu zarządzania. Zgłaszanie zmian technicznych przed uruchomieniem — do wprowadzenia."),
+    "PRZ-14": zob("jest", "Raport miesięczny do Dyrektora Zakładu, kwartalny punkt na naradzie produkcyjnej, roczny przegląd zarządzania — ostatni 18.06.2026 r.")
+  };
+  INT = {
+    "INT-ZAK": { stan: "jest", jak: "Kryteria energetyczne w zapytaniach ofertowych i w karcie oceny ofert; przy zakupach o istotnym zużyciu liczony koszt w cyklu życia.", gdzie: "Procedura zakupowa, wersja 1.0 (8.3)" },
+    "INT-INW": { stan: "jest", jak: "Wniosek inwestycyjny zawiera szacunek zużycia i SPBT; próg 3 lata przyjęty przez zarząd.", gdzie: "Wniosek INW/2027/04" },
+    "INT-PROD": { stan: "czesciowo", jak: "Plan produkcji przekazywany do prognoz zużycia; wyłączenia instalacji w przerwach uzgadniane z utrzymaniem ruchu. Energia nie jest jeszcze kryterium przy układaniu kolejności zleceń.", gdzie: "Narada produkcyjna, zapis w notatce" },
+    "INT-UR": { stan: "jest", jak: "Kryteria eksploatacji znaczących użyć w planie przeglądów; kwartalny przegląd szczelności jako zadanie cykliczne.", gdzie: "Plan przeglądów 2026 (8.1)" },
+    "INT-BUD": { stan: "jest", jak: "Budżet na efektywność energetyczną wyodrębniony na 2026 r. (500 tys. zł) i w projekcie na 2027 r. (380 tys. zł).", gdzie: "Budżet zakładu, pozycja „efektywność energetyczna”" },
+    "INT-RAP": { stan: "jest", jak: "Wynik energetyczny i postęp planów w miesięcznym raporcie zarządczym obok kosztów i produkcji.", gdzie: "Raport miesięczny dla Dyrektora Zakładu" },
+    "INT-ZMI": { stan: "nie", jak: "", gdzie: "" }
+  };
+  ZESP = { dokument: "Zarządzenie 3/2026 Dyrektora Zakładu o powołaniu zespołu ds. zarządzania energią", data: "2026-02-12", organ: "Dyrektor Zakładu" };
+  CZLON = [
+    { osoba: "Energy Manager", rola: "kierujacy", wie: "tak" },
+    { osoba: "Dyrektor Zakładu", rola: "sponsor", wie: "tak" },
+    { osoba: "Kierownik Utrzymania Ruchu", rola: "czlonek", wie: "tak" },
+    { osoba: "Kierownik Produkcji", rola: "czlonek", wie: "tak" },
+    { osoba: "Kontroling", rola: "czlonek", wie: "tak" },
+    { osoba: "Konsultant ENESA", rola: "wsparcie", wie: "tak" }
+  ];
+  ZAS = {
+    "ZAS-LUD": { stan: "jest", opis: "Energy Manager w 25% etatu, zespół pięcioosobowy, auditor wewnętrzny z ISO 14001 przeszkolony z ISO 50001." },
+    "ZAS-CZAS": { stan: "jest", opis: "Czas przypisany w planie zasobów (7.1): 130 h Energy Managera, 30 h Kierownika Utrzymania Ruchu, 16 h technika w kwartale." },
+    "ZAS-BUD": { stan: "jest", opis: "500 tys. zł na 2026 r. na działania nisko- i średniokosztowe; 380 tys. zł w projekcie budżetu 2027 r. na sterownik nadrzędny i napęd." },
+    "ZAS-NARZ": { stan: "czesciowo", opis: "Liczniki główne energii elektrycznej i gazu, analizator przenośny, detektor ultradźwiękowy. Brakuje podlicznika sprężarkowni i przepływomierza — plan C4, termin 30.06.2027 r." },
+    "ZAS-DANE": { stan: "czesciowo", opis: "Faktury, odczyty tygodniowe, dane o produkcji z ERP, stopniodnie z najbliższej stacji IMGW-PIB. Odczyty nadal ręczne — bez systemu nadzoru." },
+    "ZAS-KOMP": { stan: "czesciowo", opis: "Szkolenie operatorów sprężarkowni 05.2026 r., kurs ISO 50001 dla Energy Managera. Matryca kompetencji (7.2) wskazuje dwie luki do zamknięcia do 12.2026 r." }
+  };
+  STYK = {
+    "NAW-1": { stan: "jest", jak: "Poza budżetem na certyfikat przyznano czas ludzi i budżet na działania — decyzja z 12.02.2026 r., plan zasobów (7.1)." },
+    "NAW-2": { stan: "czesciowo", jak: "Energia jest kryterium przy zakupach i inwestycjach; przy planowaniu produkcji jeszcze nie." },
+    "NAW-3": { stan: "jest", jak: "Wynik S-1 ogłaszany co miesiąc na tablicy; punkt o energii na kwartalnej naradzie produkcyjnej." },
+    "NAW-4": { stan: "jest", jak: "Dyrektor Zakładu prowadził spotkanie otwierające 12.02.2026 r. i przegląd zarządzania 18.06.2026 r." },
+    "NAW-5": { stan: "jest", jak: "Przy sporze o wyłączenia pras w przerwach kierownictwo poparło kryterium eksploatacji — zapis w protokole narady z 09.2026 r." }
+  };
+  DECYZJE = [
+    { data: "2026-02-12", czego: "Powołanie zespołu, zatwierdzenie polityki energetycznej i celów Z1–Z3", kto: "Dyrektor Zakładu", skutek: "Zarządzenie 3/2026; polityka w wersji 1.0; plany działań C1–C4 z budżetem 500 tys. zł" },
+    { data: "2026-06-18", czego: "Przegląd zarządzania: rewizja linii bazowej po modernizacji sprężarkowni i projekt budżetu na 2027 r.", kto: "Dyrektor Zakładu", skutek: "Protokół przeglądu; wniosek INW/2027/04 na 380 tys. zł skierowany do projektu budżetu" },
+    { data: "2026-09-14", czego: "Zwiększenie czasu Kierownika Utrzymania Ruchu z 2 do 2,5 h tygodniowo po przeglądzie obciążeń", kto: "Dyrektor Zakładu", skutek: "Aneks do zakresu obowiązków; zadania z planu C1 wykonane w terminie" }
+  ];
+  zapisz(); rysuj();
+}
+function wyczyscPrzyklad() { }
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 16:35", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 5.1.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  ZOB = {}; ZESP = { dokument: "", data: "", organ: "" }; CZLON = []; ZAS = {}; INT = {};
+  STYK = {}; DECYZJE = []; WNIOSKI = [];
+  try { localStorage.removeItem("enesa_51"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

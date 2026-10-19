@@ -1,0 +1,1584 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 10.2 Ciągłe doskonalenie</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 10</div>
+ <h1>10.2 Ciągłe doskonalenie</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 10.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 10.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>10.2 Ciągłe doskonalenie</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 10.2 i dwie strony ciągłego doskonalenia.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 10.2<br>Doskonalenie</div>
+   <div>
+    <h4>10.2 Ciągłe doskonalenie</h4>
+    <p>Dwa obszary: system i wynik. Czy każdy miesiąc musi być lepszy. Skąd brać pomysły.
+    Planuj — rób — sprawdzaj — działaj.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 10.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">10.2 — doskonalenie<br>9 slajdów</div>
+   <div>
+    <h4>10.2 Ciągłe doskonalenie</h4>
+    <p>Plan to obietnica, dowodem jest wskaźnik. Małe usprawnienia też się liczą.
+    Porównanie z właściwą linią bazową.</p>
+    <p style="font-size:12.5px">9 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja ciągle doskonali przydatność, adekwatność i skuteczność systemu
+ zarządzania energią. Organizacja wykazuje ciągłą poprawę wyniku energetycznego. Omówienie na podstawie
+ punktu 10.2 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> doskonal system — żeby był przydatny,
+ adekwatny i skuteczny — i wykazuj, że wynik energetyczny się poprawia.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 10, punkt 10.2. Plan doskonalenia: III-52;
+ przykład AutoParts: III-53; procedura P-EnMS-08: III-55.</div>
+
+ <div class="ramka">
+  <h3>◧ Trzy zmiany, których nie widać w żadnej tabeli</h3>
+  <p style="font-size:13.5px">Przegląd zarządzania AutoParts, wrzesień 2026 r. Wskaźnik zakładu „rzeczywiste
+  do oczekiwanego” wynosi 0,97 wobec linii bazowej 1,000. Sprężarkownia: 0,119 wobec 0,125 kWh/Nm³.
+  <b>Jest poprawa — policzona, w porównywalnych warunkach, z danymi.</b></p>
+  <p style="font-size:13.5px;margin-bottom:0">A obok wskaźników — trzy zmiany w systemie, o których
+  zdecydowano i których nie widać w żadnej tabeli: wymagania dotyczące nastaw w zleceniach dla wykonawców,
+  pytania o energię dopisywane do procedury inwestycyjnej i terminy obowiązków w kalendarzu kontrolingu. Każda
+  wzięła się z problemu i każda ma sprawić, że system będzie działał lepiej. <b>To są dwie strony ciągłego
+  doskonalenia.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Dwa obszary doskonalenia</h3>
+ <table class="tab">
+ <tr><th style="width:30%">Obszar</th><th>Na czym polega</th></tr>
+ <tr><td><b>System zarządzania energią</b></td><td>Czy jest przydatny, adekwatny do skali firmy i skuteczny? Lepsze zasady odbioru usług, prostsze procedury, pewniejsze dane, sprawniejszy przegląd zarządzania.</td></tr>
+ <tr><td><b>Wynik energetyczny</b></td><td>To <b>szersze pojęcie niż efektywność</b>. Obejmuje efektywność energetyczną (np. energię na jednostkę produktu), ale też zużycie energii i sposób jej wykorzystania. Poprawą wyniku może być mniejsze zużycie sprężarkowni w postoju, a nie tylko niższe kWh na tonę.</td></tr>
+ </table>
+ <p style="font-size:14.5px">Poprawę wyniku energetycznego trzeba <b>osiągnąć i wykazać</b> — a nie tylko
+ zaplanować. <b>Plan działań to obietnica; dowodem jest wskaźnik porównany z linią bazową.</b></p>
+
+ <h3 style="margin-top:22px">„Czy każdy miesiąc musi być lepszy?”</h3>
+ <p style="font-size:14.5px"><b>Nie.</b> Szukajcie kolejnych możliwości poprawy i sprawdzajcie osiągane
+ rezultaty. Nie każdy miesiąc będzie lepszy od poprzedniego — oceniajcie wynik w porównywalnych warunkach
+ i w odpowiednim okresie. W AutoParts wskaźnik zakładu wyniósł 0,974 w marcu i 0,970 w lipcu: praktycznie
+ bez zmian w ciągu kilku miesięcy, a jednak wyraźnie lepiej niż w roku bazowym.</p>
+ <p style="font-size:14.5px">Cel utrzymania parametru też może być uzasadniony — na przykład utrzymanie
+ ciśnienia sprężonego powietrza na poziomie, który już osiągnięto. <b>Problem pojawia się wtedy, gdy cała
+ organizacja przez dłuższy czas nie osiąga i nie wykazuje poprawy.</b></p>
+
+ <h3 style="margin-top:22px">Skąd brać pomysły?</h3>
+ <p style="font-size:14.5px">Z miejsc, które już macie w systemie:</p>
+ <table class="tab">
+ <tr><th style="width:18%">Punkt</th><th>Źródło</th></tr>
+ <tr><td><b>6.3</b></td><td>Lista możliwości poprawy z przeglądu energetycznego — AutoParts ma siedem możliwości, razem około 1 375 MWh rocznie</td></tr>
+ <tr><td><b>9.1</b></td><td>Dane z monitorowania</td></tr>
+ <tr><td><b>9.2</b></td><td>Ustalenia z audytów</td></tr>
+ <tr><td><b>9.3</b></td><td>Decyzje z przeglądu zarządzania</td></tr>
+ <tr><td><b>7.4</b></td><td>Zgłoszenia pracowników</td></tr>
+ <tr><td><b>10.1</b></td><td>Analiza niezgodności</td></tr>
+ </table>
+ <p style="font-size:14.5px"><b>Małe usprawnienia też się liczą:</b> harmonogram wyłączania, poprawiona
+ instrukcja, lepszy wzór protokołu. Duże inwestycje również — <b>o tym, co wybrać, decyduje potencjał, koszt
+ i ryzyko, a nie wielkość projektu.</b></p>
+
+ <h3 style="margin-top:22px">Planuj — rób — sprawdzaj — działaj</h3>
+ <p style="font-size:14.5px">Cykl na przykładzie zadania Z2.1 z planu AutoParts — wymiany oświetlenia hal
+ (680 → 410 MWh rocznie, 2027 r.):</p>
+ <table class="tab">
+ <tr><th style="width:14%">Etap</th><th style="width:34%">Co robicie</th><th>AutoParts — oświetlenie hal</th></tr>
+ <tr><td><b>Planuj</b></td><td>Ustalcie działanie, oczekiwany efekt i sposób sprawdzenia</td><td>Wymiana na LED ze sterowaniem; −270 MWh/rok; pomiar mocy rozdzielnic i czas pracy</td></tr>
+ <tr><td><b>Rób</b></td><td>Wdróżcie</td><td>Wymiana hala po hali w 2027 r.</td></tr>
+ <tr><td><b>Sprawdzaj</b></td><td>Porównajcie z właściwą linią bazową, uwzględniając zmiany warunków</td><td>12 miesięcy po wymianie wobec 680 MWh; przy zmianie liczby zmian — przeliczenie godzin</td></tr>
+ <tr><td><b>Działaj</b></td><td>Utrwalcie albo poprawcie</td><td>Kryteria sterowania do instrukcji (8.1); jeśli efekt mniejszy — sprawdzić czujniki i harmonogramy</td></tr>
+ </table>
+ <p style="font-size:14.5px">Porównujcie efekt z <b>właściwą</b> linią bazową, uwzględniając zmiany warunków —
+ zgodnie z zasadami z punktów 6.4–6.5 i 9.1.1. <b>Sam pomiar „przed i po” nie wystarczy</b>, jeśli
+ w międzyczasie zmieniła się produkcja, pogoda albo czas pracy.</p>
+
+ <div class="ramka">
+  <h3>✗ Czego unikać: cztery lata „utrzymać poziom”</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Zakład produkcji kabli, około 320 pracowników, certyfikat
+  ISO 50001 od czterech lat. Przez cztery lata cele brzmiały co roku tak samo: <b>„utrzymać poziom zużycia”</b>.
+  W planach działań nie było ani jednego projektu poprawy. Protokoły przeglądów zarządzania różniły się datą.
+  Przy audycie recertyfikacyjnym audytor poprosił o dowody poprawy wyniku energetycznego — zakład pokazał
+  wskaźnik na tym samym poziomie co w roku bazowym. „System działa, nie ma problemów, po co zmieniać?” —
+  odpowiedział dyrektor. Norma wymaga jednak wykazania ciągłej poprawy. <b>Utrzymanie parametru może być
+  rozsądnym celem dla jednego urządzenia — ale nie dla całej organizacji przez cztery lata.</b> Niezgodność
+  z punktem 10.2. Koszty: audyt dodatkowy 6 000 zł, konsultant 15 000 zł, odnowienie certyfikatu opóźnione
+  o cztery miesiące. <b>Certyfikat nie jest celem samym w sobie. System ma prowadzić do poprawy, którą da się
+  pokazać w danych.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Doskonalenie = tylko duże projekty</td><td>Liczcie też małe usprawnienia; wybierajcie według potencjału, kosztu i ryzyka</td></tr>
+ <tr><td>Plan zamiast wyniku</td><td>Wykazujcie poprawę: wskaźnik wobec linii bazowej</td></tr>
+ <tr><td>„Przed i po” bez uwzględnienia warunków</td><td>Porównujcie z właściwą linią bazową, z uwzględnieniem zmiennych</td></tr>
+ <tr><td>Oczekiwanie poprawy w każdym miesiącu</td><td>Oceniajcie w odpowiednim okresie i w porównywalnych warunkach</td></tr>
+ <tr><td>Doskonalenie tylko przed audytem</td><td>Wracajcie do możliwości poprawy na przeglądach zarządzania i przy planowaniu</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Ciągłe doskonalenie ma dwie strony: system, który działa coraz
+  lepiej, i wynik energetyczny, którego poprawę umiecie wykazać. Nie każdy miesiąc musi być lepszy — ale
+  <b>w dłuższym okresie poprawa musi być widoczna w danych.</b><br><br>
+  <b>Zadanie:</b> wypiszcie trzy zmiany w swoim systemie z ostatniego roku i przy każdej zapiszcie, jaki
+  problem lub jaką możliwość rozwiązała. Ankieta składa to zestawienie sama — z pozycji planu oznaczonych
+  jako obszar „system”.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma liczy oszczędność roczną i prosty okres zwrotu każdej możliwości, sprawdza
+  pokrycie potencjału z przeglądu energetycznego i rozstrzyga, czy poprawę wyniku rzeczywiście wykazano —
+  wskaźnik wobec linii bazowej, w porównywalnych warunkach.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 10.2 w formacie stron 4.1–10.1 — i ostatni plik rozdziału 10.</b> Norma mówi tu
+dwa zdania i nie wymaga żadnego dokumentu. Mimo to jest to jedyny punkt, w którym <b>nie wystarczy nic
+napisać</b>: organizacja musi <b>wykazać</b> poprawę wyniku energetycznego, a dowodem są zapisy
+z monitorowania, nie ten formularz. Strona zbiera więc w jednym miejscu to, co w systemie już jest —
+i rozstrzyga, czy to składa się na poprawę.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 10, punkt 10.2</td><td>Scena przeglądu z września 2026 r. i trzech zmian, których nie widać w żadnej tabeli; dwa obszary doskonalenia wraz z wyjaśnieniem, że wynik energetyczny jest szerszy niż efektywność; zdanie „plan działań to obietnica, dowodem jest wskaźnik”; akapit „czy każdy miesiąc musi być lepszy” z liczbami marca i lipca oraz uwagą o celu utrzymania parametru; sześć źródeł pomysłów wraz z liczbą 1 375 MWh; akapit o małych usprawnieniach; tabela cyklu na przykładzie oświetlenia hal; lista samosprawdzająca; tabela pięciu błędów; przykład ilustracyjny zakładu produkcji kabli; „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 8 — III-52 (F-EnMS-23)</td><td>Dziesięć kolumn planu doskonalenia, obszary S i W, stany P / W / Z / A oraz zasada z nagłówka: <b>działanie „zakończone” wpisuj razem z osiągniętym efektem i dowodem</b>. Zalecenie osobnego planu dla działań spoza celów i planów działań z 6.2.</td></tr>
+<tr><td>Część III, Moduł 8 — III-53</td><td>Przykład planu 10.2026–12.2027 zatwierdzonego na przeglądzie 29.09.2026: 6 pozycji (4 dotyczące systemu, 2 wyniku), ich źródła, oczekiwane efekty z punktami odniesienia, sposoby weryfikacji, odpowiedzialni i stany. Zdanie z metryki: działania celów C1–C3 prowadzone w planie działań i nie powtarzane tutaj.</td></tr>
+<tr><td>Część III, Moduł 8 — III-54</td><td>Lista kontrolna sekcji 10.2: 4 pozycje — dwa wymagania normy i dwa zalecenia metodyki.</td></tr>
+<tr><td>Część III, Moduł 8 — III-55, pkt 4.2</td><td>Kroki 7–11 procedury P-EnMS-08: zbieranie możliwości z sześciu źródeł; ocena po potencjale, koszcie, prostym okresie zwrotu, łatwości i ryzyku; wpisanie do planów działań albo planu doskonalenia z oczekiwanym efektem, punktem odniesienia i sposobem weryfikacji; porównanie efektu z właściwą linią bazową z uwzględnieniem zmian warunków; przedstawienie poprawy na przeglądzie zarządzania.</td></tr>
+</table>
+<div class="warn"><b>Sprawdzenie liczb przykładu.</b> Prosty okres zwrotu: sterownik i napęd
+380 000 / (230 × 890) = 380 000 / 204 700 = <b>1,9 lat</b>; LED 240 000 / (270 × 890) = 240 000 / 240 300 =
+<b>1,0 lat</b>; odzysk ciepła — koszt nieustalony, więc platforma pokazuje tylko oszczędność roczną
+250 × 250 = <b>62 500 zł/rok</b> i kreskę w kolumnie zwrotu. Pokrycie potencjału: 750 MWh/rok
+w planach z 1 375 MWh/rok zidentyfikowanych w przeglądzie — <b>55%</b>.
+Zmiany wskaźników: O-1 −3,5%, P-1 −2,0%, L-1 −1,0%, S-1 −5,6%, OŚ-1 −1,6%, <b>K-1 +1,0%</b> —
+pięć z poprawą, jeden z pogorszeniem.</div>
+<div class="note"><b>Co w przykładzie jest nasze.</b> Plan doskonalenia pochodzi w całości z III-53;
+rozwinęliśmy brzmienie pól i <b>dopisaliśmy punkty odniesienia</b> tam, gdzie III-53 ich nie podaje —
+„(dziś: 0 z 4 terminów w kalendarzu)” przy pozycji 3 i „(dziś: koncepcja modernizacji trafiła do oceny dopiero
+przed zatwierdzeniem)” przy pozycji 2. Przy pozycji 6 przenieśliśmy liczbę 250 MWh gazu z kolumny źródła
+do oczekiwanego efektu, bo tam jest punktem odniesienia. <b>Cała zakładka 2 jest naszym rozszerzeniem:</b>
+III-53 nie zawiera ani zestawienia sześciu źródeł, ani tabeli oceny możliwości z prostym okresem zwrotu —
+jedno i drugie wynika z pozycji listy kontrolnej III-54 i z kroków 7–8 procedury, ale same liczby kosztów
+(380 000 zł, 240 000 zł) pochodzą z III-24 i III-38, a potencjały z przeglądu energetycznego.
+<b>Przy publikacji wymagają potwierdzenia:</b> rozbicie 1 375 MWh na poszczególne możliwości oraz
+przypisanie 230 MWh do modernizacji sprężarkowni i 270 MWh do LED.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>plan_doskonalenia</code></td><td>id, audyt_id, okres, zatwierdzil, data_zatwierdzenia, cena_el, cena_gaz, potencjal_razem. Jeden rekord na okres planu.</td></tr>
+<tr><td><code>pozycja_doskonalenia</code></td><td>id, plan_id, nr, dzialanie, <b>obszar ENUM('S','W')</b>, zrodlo, oczekiwany_efekt, sposob_weryfikacji, odpowiedzialny, data, stan ENUM('P','W','Z','A'), osiagniety_efekt, dowod.</td></tr>
+<tr><td><code>zrodlo_mozliwosci</code></td><td>plan_id, zrodlo ENUM(sześć źródeł), co_wplynelo. Sześć wierszy — słownik systemowy, nie dane klienta.</td></tr>
+<tr><td><code>mozliwosc_poprawy</code></td><td>id, audyt_id, nazwa, potencjal_mwh, nosnik ENUM, koszt, jak_wykazac, ryzyko, decyzja ENUM, powod. <b>Powinna żyć w punkcie 6.3</b> — przegląd energetyczny ją identyfikuje, a 10.2 tylko ocenia i rozdziela. W makiecie jest tutaj, bo strona musi być samodzielna.</td></tr>
+<tr><td><code>wykazanie_poprawy</code></td><td>id, plan_id, enpi_id, enb, enb_okres, wartosc, warunki, wyjasnienie. <b>Docelowo w całości wyliczane</b> z kart wskaźników (6.4), linii bazowych (6.5) i wartości z monitorowania (9.1.1) — klient nie powinien tego przepisywać.</td></tr>
+</table>
+<div class="warn"><b>Najważniejsza uwaga do modelu.</b> Zakładka 3 — wykazanie poprawy — <b>nie powinna być
+ankietą</b>. Wszystkie jej dane istnieją już w punktach 6.4, 6.5 i 9.1.1. W makiecie są wpisywane, bo strona
+działa samodzielnie, ale przy wdrożeniu ta zakładka ma być <b>widokiem</b>: platforma sama zestawia każdy EnPI
+z jego linią bazową i warunkami porównania z karty, a klient dopisuje wyłącznie wyjaśnienie przy wskaźniku,
+który się pogorszył. Przepisywanie tych liczb ręcznie jest jedynym sposobem, w jaki dowód poprawy może się
+rozjechać z danymi — a to jest dokładnie ten dowód, o który pyta audytor przy recertyfikacji.</div>
+
+<h2>Liczenie</h2>
+<table>
+<tr><th style="width:30%">Wielkość</th><th>Wzór i uwagi dla implementacji</th></tr>
+<tr><td>Oszczędność roczna</td><td><code>potencjal_mwh × cena_nosnika</code>. Cena wybierana według nośnika: energia elektryczna albo gaz. Pokazywana z podstawionymi liczbami.</td></tr>
+<tr><td><b>Prosty okres zwrotu</b></td><td><code>koszt / oszczednosc_roczna</code>, w latach. Przy nieustalonym koszcie platforma pokazuje kreskę <b>i mówi dlaczego</b> — zamiast udawać, że czegoś nie policzyła. Chip przy możliwości: zielony do 3 lat, pomarańczowy do 7.</td></tr>
+<tr><td>Pokrycie potencjału</td><td>Suma potencjałów możliwości skierowanych do planów, podzielona przez potencjał z przeglądu energetycznego. Poniżej 40% — nota w bloku konsultanta, nie ostrzeżenie: kolejność wynika z budżetu, nie z zaniedbania.</td></tr>
+<tr><td>Zmiana wskaźnika</td><td><code>(wartosc − enb) / enb · 100%</code>, oceniana wobec kierunku poprawy z karty wskaźnika (6.4) — ta sama reguła co w 9.1.1.</td></tr>
+<tr><td><b>Czy poprawę wykazano</b></td><td>Co najmniej jeden wskaźnik poprawiony <b>i</b> każdy poprawiony ma opisane warunki porównania. Pogorszenie innych wskaźników nie unieważnia wykazania — ale wymaga wyjaśnienia (osobna reguła). Wynik pokazywany chipem przy nagłówku zakładki 3: <b>wykazana / niewykazana</b>.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Nie wykazano poprawy</b></td><td>Żaden wskaźnik nie pokazuje poprawy wobec linii bazowej → ostrzeżenie z przypadkiem zakładu produkcji kabli wraz z kosztami (audyt dodatkowy 6 000 zł, konsultant 15 000 zł, certyfikat opóźniony o cztery miesiące) i ze zdaniem, które tam padło: <b>utrzymanie parametru może być rozsądnym celem dla jednego urządzenia, ale nie dla całej organizacji przez cztery lata.</b> W bloku konsultanta: to jedyna rzecz w tym punkcie, której nie da się nadrobić dokumentacją.</td></tr>
+<tr><td><b>Plan zamiast wyniku</b></td><td>Pozycja ze stanem „zakończone” bez osiągniętego efektu i dowodu → ostrzeżenie. Formularz III-52 wymaga wpisywania ich <b>razem</b> ze zmianą stanu, i platforma pokazuje te pola dopiero po wybraniu stanu „Z” albo „A” — żeby nie dało się oznaczyć pozycji jako zakończonej, nie widząc pustych pól efektu.</td></tr>
+<tr><td><b>Oczekiwany efekt bez punktu odniesienia</b></td><td>Wyrażenie szuka markerów stanu wyjściowego: „dziś”, „obecnie”, „wobec”, „dotychczas”, „przed zmianą”, „EnB”, „linia bazowa”, „1 z 3”, „z 9 do 4”, „potencjał”, „około 250”, „15%”. <b>Celowo nie uznaje samej cyfry</b> — „uruchomienie 06.2027” zawiera liczbę, ale nie mówi, od jakiego stanu wychodzimy. Pierwsza wersja reguły przepuszczała taki wpis, bo akceptowała dowolną cyfrę.<br><br><b>Uwaga dla implementacji — trzeci wariant tej samej pułapki.</b> Marker „dziś” nie może być zapisany jako <code>dzi[śs]\b</code>: granica słowa <code>\b</code> wymaga po jednej stronie znaku z klasy <code>[A-Za-z0-9_]</code>, a „ś” do niej nie należy — więc w zapisie „dziś:” granica nie powstaje i wzorzec milczy. Dwie poprzednie odmiany tego samego problemu są opisane w specyfikacjach 9.1.1 (<code>\w</code> nie obejmuje polskich liter) i 9.1.2 (wzorce muszą szukać prefiksów, nie form mianownika). <b>Reguła ogólna dla całej platformy: w wyrażeniach dotyczących polskiego tekstu nie używać ani <code>\w</code>, ani <code>\b</code> w sąsiedztwie znaków diakrytycznych.</b></td></tr>
+<tr><td><b>„Przed i po” bez warunków</b></td><td>Dotyczy <b>tylko pozycji o obszarze „wynik energetyczny”</b>: sposób weryfikacji bez odwołania do linii bazowej, modelu, warunków, normalizacji, stopniodni albo produkcji → ostrzeżenie. Dla pozycji systemowych reguła nie ma sensu: dowodem wdrożenia wzoru protokołu jest protokół, nie model regresji.</td></tr>
+<tr><td>Wartość wskaźnika bez warunków porównania</td><td>Ostrzeżenie: sam pomiar „przed i po” nie wystarczy, jeśli zmieniła się produkcja, pogoda albo czas pracy. Pozycja listy kontrolnej o wykazaniu poprawy wymaga warunków przy <b>każdym</b> wskaźniku.</td></tr>
+<tr><td><b>Pogorszenie bez wyjaśnienia</b></td><td>Wskaźnik z zmianą w stronę przeciwną do kierunku poprawy i puste pole wyjaśnienia → ostrzeżenie. Komunikat formułuje to jako kwestię narracji, nie winy: <b>pogorszenie jednego wskaźnika nie unieważnia poprawy całości, ale nieopisane staje się argumentem audytora, nie waszym.</b> Pole wyjaśnienia pokazuje się dopiero przy pogorszeniu.</td></tr>
+<tr><td>Mniej niż trzy czynne źródła możliwości</td><td>Ostrzeżenie z piątym błędem („doskonalenie tylko przed audytem”). Blok konsultanta dodaje interpretację: to zwykle znaczy, że doskonalenie dzieje się przy przeglądzie zarządzania raz w roku, a nie w rytmie pracy systemu.</td></tr>
+<tr><td>Brak pozycji dotyczących systemu</td><td>Nota: <b>doskonalenie to nie tylko duże projekty.</b> Norma wymienia doskonalenie systemu i poprawę wyniku jako dwa osobne zdania — i tylko pierwsze da się prowadzić bez budżetu inwestycyjnego.</td></tr>
+</table>
+
+<h2>Zakładka 4 — zestawienie zmian w systemie</h2>
+<div class="note">Czwarta zakładka pokazuje cykl „planuj — rób — sprawdzaj — działaj” na przykładzie
+oświetlenia hal, a pod nim <b>składa automatycznie zestawienie zmian w systemie</b> z pozycji planu
+o obszarze „S”: zmiana, z czego wynikła, stan, osiągnięty efekt. To odpowiedź na zadanie z książki —
+„wypiszcie trzy zmiany w swoim systemie z ostatniego roku i przy każdej zapiszcie, jaki problem rozwiązała”.
+Pozycja bez wypełnionego źródła dostaje w tym zestawieniu czerwony chip <b>„brak źródła”</b>: zmiana,
+o której nie wiadomo, skąd się wzięła, nie jest dowodem doskonalenia, tylko zapisem pracy.</div>
+
+<h2>Lista kontrolna III-54 — sekcja 10.2</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Doskonali się przydatność, adekwatność i skuteczność systemu.</td><td class='mono'>N</td><td><code>doskonalenieSystemu</code></td></tr><tr><td>Wykazano ciągłą poprawę wyniku energetycznego — EnPI wobec EnB, w porównywalnych warunkach.</td><td class='mono'>N</td><td><code>poprawaWyniku</code></td></tr><tr><td>Możliwości poprawy mają stałe źródła i są oceniane (potencjał, koszt, prosty okres zwrotu, ryzyko).</td><td class='mono'>M</td><td><code>zrodlaIOcena</code></td></tr><tr><td>Prowadzony jest plan doskonalenia z oczekiwanym i osiągniętym efektem (F-EnMS-23).</td><td class='mono'>M</td><td><code>plan</code></td></tr></table>
+<div class="note">Cztery pozycje na cały punkt — i żadna nie zwraca „nie dotyczy”. Pozycja o poprawie wyniku
+jest spełniona tylko wtedy, gdy <b>jednocześnie</b> poprawę wykazano, każdy wskaźnik ma warunki porównania
+i każde pogorszenie ma wyjaśnienie. To najostrzejszy warunek w całej platformie — i słusznie, bo stoi
+za nim jedno z dwóch zdań, jakie norma mówi w tym punkcie.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1 i 2</td><td>Wypełnia Energy Manager; plan zatwierdza najwyższe kierownictwo na przeglądzie zarządzania — w AutoParts cały plan zatwierdzono 29.09.2026, co jest w metryce.</td></tr>
+<tr><td>Zakładka 3</td><td>Docelowo <b>widok, nie ankieta</b> (patrz uwaga do modelu danych). Klient dopisuje wyłącznie wyjaśnienia przy pogorszeniach.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok liczy pozycje zamknięte bez efektu, efekty bez punktu odniesienia, weryfikacje bez warunków, pogorszenia bez wyjaśnienia i czynne źródła. Przy pozycjach zamkniętych bez efektu zadaje to samo pytanie co 10.1 przy zamykaniu niezgodności: <b>skąd wiemy, że to zadziałało?</b> — i to nie jest zbieżność, bo w obu punktach chodzi o jedno: dowód skutku zamiast dowodu wykonania.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-DOS-01</code> — plan doskonalenia i wykazanie poprawy wyniku</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-23, załącznik III-52; przykład III-53</td></tr>
+<tr><td>Status w normie</td><td><b>Punkt 10.2 nie wymaga żadnej udokumentowanej informacji.</b> Plan doskonalenia, ocena możliwości i prosty okres zwrotu są narzędziami metodyki ENESA. Dowodem poprawy wyniku są zapisy z monitorowania (9.1.1) oraz karty wskaźników i linii bazowych (6.4–6.5). W wykazie z punktu 7.5 ten dokument pojawia się wyłącznie jako Z — zapis z metodyki.</td></tr>
+<tr><td>Rytm</td><td>Plan na okres ustalony przez organizację (AutoParts: 10.2026–12.2027), zatwierdzany na przeglądzie zarządzania. Wykazanie poprawy — w rytmie monitorowania, przedstawiane na przeglądzie raz w roku.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Nowa możliwość z któregokolwiek z sześciu źródeł, decyzja przeglądu zarządzania, zakończenie pozycji planu, aktualizacja przeglądu energetycznego zmieniająca listę możliwości, rewizja linii bazowej unieważniająca wcześniejsze porównania.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Rozdzielenie, nie powiązanie.</b> Plan doskonalenia jest <b>osobny</b> od planów działań: tam idą działania celów energetycznych, tutaj zmiany systemu, kompetencje i analizy. Metryka planu mówi to wprost, żeby te same działania nie figurowały w dwóch miejscach z dwoma stanami.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście, główne.</b> Lista możliwości poprawy wraz z potencjałem. Tabela oceny możliwości powinna docelowo czytać ją wprost, a nie powtarzać — a pokrycie potencjału jest wtedy liczbą, którą platforma zna bez pytania.</td></tr>
+<tr><td>6.4 i 6.5 EnPI i EnB</td><td><b>Wejście, rozstrzygające.</b> Cała zakładka 3 opiera się na kartach wskaźników i liniach bazowych: wartość, kierunek poprawy, warunki porównania. <b>Rewizja linii bazowej unieważnia wcześniejsze wykazanie poprawy</b> — i platforma powinna to oznaczać, a nie pozwalać, by stary dowód został bez adnotacji.</td></tr>
+<tr><td>9.1.1 Monitorowanie</td><td><b>Wejście.</b> Wartości wskaźników i ich warunki pochodzą z raportów monitorowania. To stamtąd bierze się dowód, którego wymaga norma — ten dokument go tylko zestawia.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Wejście.</b> Ustalenia audytu są jednym z sześciu źródeł; w przykładzie dwie możliwości doskonalenia z audytu A-01/2026 weszły do planu jako pozycje 1 i 4. <b>Możliwości doskonalenia z audytu idą tutaj, nie do rejestru niezgodności</b> — to rozdział, którego pilnuje nagłówek rejestru w 10.1.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Dwukierunkowo.</b> Decyzje przeglądu są źródłem pozycji planu, a plan zatwierdza przegląd. Poprawę wyniku i możliwości doskonalenia przedstawia się na przeglądzie — to wymagana pozycja jego danych wejściowych.</td></tr>
+<tr><td>10.1 Niezgodności</td><td><b>Wejście.</b> Analiza niezgodności jest szóstym źródłem; zmiany w systemie z kart NK-2026-01 i NK-2026-02 są pozycjami 1 i 3 planu. Te same zmiany są w karcie niezgodności jako działania korygujące — <b>i to nie jest dublowanie</b>: w 10.1 odpowiadają na problem, tutaj są elementem doskonalenia systemu i mają własny punkt odniesienia.</td></tr>
+<tr><td>7.4 Komunikacja</td><td><b>Wejście.</b> Zgłoszenia pracowników jako piąte źródło; w przykładzie zgłoszenie o jednym wyłączniku na halę weszło do zakresu projektu LED.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Zakładka 3 jako widok</b></td><td>Najważniejsza zmiana tej strony i opisana wyżej: wykazanie poprawy ma być <b>zestawiane automatycznie</b> z kart wskaźników (6.4), linii bazowych (6.5) i wartości z monitorowania (9.1.1). Klient dopisuje tylko wyjaśnienia przy pogorszeniach. Dopóki te liczby przepisuje się ręcznie, dowód poprawy może się rozjechać z danymi — a to jedyny dowód, którego audytor przy recertyfikacji zażąda wprost.</td></tr>
+<tr><td><b>Możliwości poprawy w punkcie 6.3</b></td><td>Tabela oceny możliwości powinna żyć w przeglądzie energetycznym, który je identyfikuje; punkt 10.2 ma je tylko <b>oceniać i rozdzielać</b> między plany działań i plan doskonalenia. Wtedy pokrycie potencjału liczy się samo, a odłożona możliwość ma w jednym miejscu powód, termin powrotu i historię decyzji — dziś powód jest w polu tekstowym przy decyzji.</td></tr>
+<tr><td>Pozycja planu jako zadanie z powiązaniem</td><td>Pole „źródło” jest tekstem wskazującym kartę niezgodności, ustalenie audytu albo decyzję przeglądu. Powinno być <b>kluczem obcym</b>. Wtedy przy karcie NK-2026-01 widać pozycję planu, która ją realizuje, a przy decyzji przeglądu — czy w ogóle trafiła do planu. To domyka trójkąt 9.3 → 10.1 → 10.2, który dziś istnieje tylko w treści pól.</td></tr>
+<tr><td><b>Rewizja linii bazowej unieważnia dowód</b></td><td>Jeśli EnB zostanie zrewidowana (6.5), wcześniejsze wykazanie poprawy przestaje być porównaniem z aktualną linią. Platforma powinna <b>oznaczać takie zestawienia jako historyczne</b> i wymagać ponownego wykazania wobec nowej linii. Bez tego rewizja linii bazowej po cichu kasuje dowód, na którym opiera się zgodność z punktem 10.2.</td></tr>
+<tr><td>Prosty okres zwrotu a pełniejsze miary</td><td>Platforma liczy prosty okres zwrotu, bo tego wymaga pozycja listy kontrolnej. Przy wdrożeniu warto dodać <b>wyłączone domyślnie</b> pola stopy dyskontowej i wzrostu cen energii — tak samo jak w 8.3 przy porównaniu kosztu zakupu i energii, i z tym samym zastrzeżeniem: założenia muszą wtedy wejść do zapisu automatycznie.</td></tr>
+<tr><td>Okres planu i przenoszenie pozycji</td><td>Plan ma okres, pozycje mają stany. Przy zamknięciu okresu pozycje nierozpoczęte powinny się <b>przenosić do następnego planu z zachowaniem historii</b>, a nie być kopiowane ręcznie. Inaczej po dwóch latach nie będzie wiadomo, czy pozycja jest nowa, czy przechodzi trzeci rok z rzędu — a to jest dokładnie ta informacja, która mówi, czy doskonalenie działa.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 10.2 wraz z planem doskonalenia AutoParts 2026–2027.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;ZRODLA_DEF&quot;: [
+  {
+   &quot;kod&quot;: &quot;przeglad&quot;,
+   &quot;punkt&quot;: &quot;6.3&quot;,
+   &quot;nazwa&quot;: &quot;Przegląd energetyczny — lista możliwości poprawy&quot;,
+   &quot;ph&quot;: &quot;np. Siedem możliwości, razem około 1 375 MWh rocznie. Zrealizowane: usunięcie nieszczelności i obniżenie ciśnienia. Pozostałe: sterownik i napęd sprężarkowni, LED w halach, odzysk ciepła ze sprężarek.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;monitorowanie&quot;,
+   &quot;punkt&quot;: &quot;9.1.1&quot;,
+   &quot;nazwa&quot;: &quot;Dane z monitorowania&quot;,
+   &quot;ph&quot;: &quot;np. K-1 o 1% powyżej linii bazowej w I półroczu — stąd pozycja 5 planu. S-1 pokazuje, że samo ciśnienie nie dowiezie celu Z1.1.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;audyty&quot;,
+   &quot;punkt&quot;: &quot;9.2&quot;,
+   &quot;nazwa&quot;: &quot;Ustalenia z audytów wewnętrznych&quot;,
+   &quot;ph&quot;: &quot;np. Audyt A-01/2026: jedna niezgodność i dwie możliwości doskonalenia — wzór protokołu dla wykonawców i luka kompetencyjna w zakupach. Obie w planie (pozycje 1 i 4).&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;przeglad_zarz&quot;,
+   &quot;punkt&quot;: &quot;9.3&quot;,
+   &quot;nazwa&quot;: &quot;Decyzje z przeglądu zarządzania&quot;,
+   &quot;ph&quot;: &quot;np. Przegląd 29.09.2026: pytania o energię w procedurze inwestycyjnej, warsztat dla zakupów, analiza K-1 przed sezonem. Cały plan zatwierdzono na tym przeglądzie.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zgloszenia&quot;,
+   &quot;punkt&quot;: &quot;7.4&quot;,
+   &quot;nazwa&quot;: &quot;Zgłoszenia pracowników&quot;,
+   &quot;ph&quot;: &quot;np. Zgłoszenie 2026/08: jeden wyłącznik na całą halę B — weszło do zakresu projektu LED jako podział na trzy strefy.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;niezgodnosci&quot;,
+   &quot;punkt&quot;: &quot;10.1&quot;,
+   &quot;nazwa&quot;: &quot;Analiza niezgodności&quot;,
+   &quot;ph&quot;: &quot;np. NK-2026-01 — brak zasad odbioru usług przy SEU (pozycja 1 planu). NK-2026-02 — terminy obowiązków poza kalendarzem (pozycja 3).&quot;
+  }
+ ],
+ &quot;LISTA_102&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Doskonali się przydatność, adekwatność i skuteczność systemu.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;doskonalenieSystemu&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Wykazano ciągłą poprawę wyniku energetycznego — EnPI wobec EnB, w porównywalnych warunkach.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;poprawaWyniku&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Możliwości poprawy mają stałe źródła i są oceniane (potencjał, koszt, prosty okres zwrotu, ryzyko).&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;zrodlaIOcena&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Prowadzony jest plan doskonalenia z oczekiwanym i osiągniętym efektem (F-EnMS-23).&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;plan&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;POZYCJE&quot;: [
+   {
+    &quot;nr&quot;: &quot;1&quot;,
+    &quot;dzialanie&quot;: &quot;Wzór protokołu z nastawami i odbiór usług przy znaczących użyciach energii&quot;,
+    &quot;obszar&quot;: &quot;S&quot;,
+    &quot;zrodlo&quot;: &quot;NK-2026-01; audyt A-01/2026&quot;,
+    &quot;efekt&quot;: &quot;Protokół z nastawami przed i po przy każdej usłudze przy SEU (dziś: 1 z 3 wykonawców ma wymagania w zleceniu)&quot;,
+    &quot;weryfikacja&quot;: &quot;Po wdrożeniu: protokoły z przeglądów kotłowni, sprężarek i automatyki lakierni; sprawdzenie, czy odbiór usługi obejmuje kontrolę protokołu (terminy w karcie NK-2026-01)&quot;,
+    &quot;odp&quot;: &quot;Kierownik utrzymania ruchu&quot;,
+    &quot;data&quot;: &quot;10.2026&quot;,
+    &quot;stan&quot;: &quot;W&quot;,
+    &quot;osiagniety&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2&quot;,
+    &quot;dzialanie&quot;: &quot;Pytania o energię na etapie założeń w procedurze inwestycyjnej firmy&quot;,
+    &quot;obszar&quot;: &quot;S&quot;,
+    &quot;zrodlo&quot;: &quot;Przegląd zarządzania 09.2026; koncepcja modernizacji sprężarkowni (8.2)&quot;,
+    &quot;efekt&quot;: &quot;Każda koncepcja dotycząca SEU przechodzi listę kontrolną III-36 na etapie założeń (dziś: koncepcja modernizacji sprężarkowni trafiła do oceny dopiero przed zatwierdzeniem)&quot;,
+    &quot;weryfikacja&quot;: &quot;Audyt wewnętrzny II kw. 2027 — pozycja 2 programu, zakupy i projekty&quot;,
+    &quot;odp&quot;: &quot;Dyrektor Zakładu&quot;,
+    &quot;data&quot;: &quot;12.2026&quot;,
+    &quot;stan&quot;: &quot;P&quot;,
+    &quot;osiagniety&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;3&quot;,
+    &quot;dzialanie&quot;: &quot;Terminy obowiązków z rejestru wymagań w kalendarzu kontrolingu&quot;,
+    &quot;obszar&quot;: &quot;S&quot;,
+    &quot;zrodlo&quot;: &quot;NK-2026-02&quot;,
+    &quot;efekt&quot;: &quot;Wszystkie terminy z rejestru III-04 w kalendarzu z właścicielem; raport dla banku za 2026 r. wysłany do 30.06.2027 (dziś: 0 z 4 terminów w kalendarzu)&quot;,
+    &quot;weryfikacja&quot;: &quot;Kontrola wysyłki do 30.06.2027; ocena zgodności 09.2027&quot;,
+    &quot;odp&quot;: &quot;Kontroler finansowy&quot;,
+    &quot;data&quot;: &quot;10.2026&quot;,
+    &quot;stan&quot;: &quot;W&quot;,
+    &quot;osiagniety&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;4&quot;,
+    &quot;dzialanie&quot;: &quot;Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania&quot;,
+    &quot;obszar&quot;: &quot;S&quot;,
+    &quot;zrodlo&quot;: &quot;Luka w matrycy kompetencji III-28; przegląd zarządzania 09.2026; ustalenie D-2 audytu A-01/2026&quot;,
+    &quot;efekt&quot;: &quot;Trzy kolejne zamówienia przy SEU z porównaniem kosztu zakupu i energii wykonanym przez dział zakupów (dziś: 1, i to przygotowane przez Energy Managera)&quot;,
+    &quot;weryfikacja&quot;: &quot;Przegląd zamówień przy SEU przez Energy Managera; wzór porównania dołączony do procedury zakupowej&quot;,
+    &quot;odp&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;data&quot;: &quot;11.2026&quot;,
+    &quot;stan&quot;: &quot;P&quot;,
+    &quot;osiagniety&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;5&quot;,
+    &quot;dzialanie&quot;: &quot;Analiza przyczyn K-1 = 1,01 przed sezonem grzewczym&quot;,
+    &quot;obszar&quot;: &quot;W&quot;,
+    &quot;zrodlo&quot;: &quot;Raport z monitorowania III-42; przegląd zarządzania 09.2026&quot;,
+    &quot;efekt&quot;: &quot;Przyczyna ustalona; propozycja do zatwierdzenia po analizie: K-1 za sezon 2026/27 nie wyżej niż 1,00 wobec EnB&quot;,
+    &quot;weryfikacja&quot;: &quot;Model kotłowni ze stopniodniami (HDD) dla sezonu 2026/27, w porównywalnych warunkach; ocena 05.2027&quot;,
+    &quot;odp&quot;: &quot;Kierownik utrzymania ruchu&quot;,
+    &quot;data&quot;: &quot;Przed sezonem (plan: 10.2026); ocena 05.2027&quot;,
+    &quot;stan&quot;: &quot;W&quot;,
+    &quot;osiagniety&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;6&quot;,
+    &quot;dzialanie&quot;: &quot;Odzysk ciepła ze sprężarek — analiza po modernizacji&quot;,
+    &quot;obszar&quot;: &quot;W&quot;,
+    &quot;zrodlo&quot;: &quot;Przegląd energetyczny, możliwość 7; analiza projektu III-36 (wniosek odrzucony z zostawieniem przyłączy)&quot;,
+    &quot;efekt&quot;: &quot;Decyzja inwestycyjna na podstawie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027 (potencjał z przeglądu: około 250 MWh gazu rocznie)&quot;,
+    &quot;weryfikacja&quot;: &quot;Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni z uwzględnieniem stopniodni&quot;,
+    &quot;odp&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;data&quot;: &quot;12.2027&quot;,
+    &quot;stan&quot;: &quot;P&quot;,
+    &quot;osiagniety&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;
+   }
+  ],
+  &quot;ZRODLA&quot;: [
+   {
+    &quot;kod&quot;: &quot;przeglad&quot;,
+    &quot;coWplynelo&quot;: &quot;Siedem możliwości poprawy, razem około 1 375 MWh rocznie. Zrealizowane w 2026 r.: usunięcie 35 nieszczelności i obniżenie ciśnienia sieci z 7,0 do 6,3 bar. Pozostałe skierowane do oceny: sterownik i napęd sprężarkowni, LED w halach H1 i H2, odzysk ciepła ze sprężarek.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;monitorowanie&quot;,
+    &quot;coWplynelo&quot;: &quot;K-1 o 1% powyżej linii bazowej w I półroczu 2026 r. — stąd pozycja 5 planu. S-1 za okres VII–IX pokazuje, że do celu Z1.1 brakuje więcej, niż osiągnięto samym ciśnieniem — stąd utrzymanie modernizacji w budżecie 2027.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;audyty&quot;,
+    &quot;coWplynelo&quot;: &quot;Audyt A-01/2026: jedna niezgodność (protokół serwisu bez nastaw) i dwie możliwości doskonalenia — jeden wzór protokołu dla wykonawców przy wszystkich SEU oraz luka kompetencyjna w zakupach. Obie weszły do planu jako pozycje 1 i 4.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;przeglad_zarz&quot;,
+    &quot;coWplynelo&quot;: &quot;Przegląd z 29.09.2026: pytania o energię w procedurze inwestycyjnej firmy, warsztat dla zakupów, analiza przyczyn K-1 przed sezonem grzewczym. Na tym przeglądzie zatwierdzono cały plan doskonalenia.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;zgloszenia&quot;,
+    &quot;coWplynelo&quot;: &quot;Zgłoszenie 2026/08 z rejestru komunikacji: jeden wyłącznik na całą halę B, nie da się zgasić nieużywanej części. Weszło do zakresu projektu LED jako podział hali na trzy strefy — projekt prowadzony w planie działań celu C2.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;niezgodnosci&quot;,
+    &quot;coWplynelo&quot;: &quot;NK-2026-01 — brak zasad odbioru usług wykonawców przy SEU; przyczyna systemowa, stąd pozycja 1 planu. NK-2026-02 — terminy obowiązków z rejestru poza kalendarzem osób odpowiedzialnych; stąd pozycja 3.&quot;
+   }
+  ],
+  &quot;MOZLIWOSCI&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Sterownik nadrzędny i napęd o zmiennej prędkości w sprężarkowni&quot;,
+    &quot;potencjalMWh&quot;: &quot;230&quot;,
+    &quot;nosnik&quot;: &quot;el&quot;,
+    &quot;koszt&quot;: &quot;380000&quot;,
+    &quot;jakWykazac&quot;: &quot;kWh/Nm³ cztery tygodnie po odbiorze i za rok 2027, w warunkach z części D formularza celów: ciśnienie 6,3 bar, obciążenie 60–90%, trzy zmiany&quot;,
+    &quot;ryzyko&quot;: &quot;Efekt zależny od profilu obciążenia — przy niższej produkcji oszczędność mniejsza. Deklaracja oferty 1 600 MWh/rok do sprawdzenia po uruchomieniu.&quot;,
+    &quot;decyzja&quot;: &quot;plan_dzialan&quot;,
+    &quot;powod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Wymiana opraw na LED ze sterowaniem strefowym w halach H1 i H2&quot;,
+    &quot;potencjalMWh&quot;: &quot;270&quot;,
+    &quot;nosnik&quot;: &quot;el&quot;,
+    &quot;koszt&quot;: &quot;240000&quot;,
+    &quot;jakWykazac&quot;: &quot;OŚ-1 z podlicznika oświetlenia, 12 miesięcy po wymianie wobec 680 MWh/rok; przy zmianie liczby zmian przeliczenie na godzinę pracy zakładu&quot;,
+    &quot;ryzyko&quot;: &quot;Efekt sterowania strefowego zależy od dyscypliny harmonogramów; bez podlicznika poprawy nie da się wykazać pomiarem.&quot;,
+    &quot;decyzja&quot;: &quot;plan_dzialan&quot;,
+    &quot;powod&quot;: &quot;&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Odzysk ciepła ze sprężarek na potrzeby ciepłej wody i ogrzewania&quot;,
+    &quot;potencjalMWh&quot;: &quot;250&quot;,
+    &quot;nosnik&quot;: &quot;gaz&quot;,
+    &quot;koszt&quot;: &quot;&quot;,
+    &quot;jakWykazac&quot;: &quot;Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni ze stopniodniami&quot;,
+    &quot;ryzyko&quot;: &quot;Ilość ciepła odpadowego zmieni się po modernizacji sprężarkowni — przy innym profilu obciążenia potencjał może być niższy. Koszt nieustalony do czasu analizy.&quot;,
+    &quot;decyzja&quot;: &quot;plan_dosk&quot;,
+    &quot;powod&quot;: &quot;Decyzja po ocenie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027. Projekt modernizacji zostawia miejsce i przyłącza pod wymiennik, więc odłożenie nie zamyka drogi.&quot;
+   }
+  ],
+  &quot;POPRAWA&quot;: [
+   {
+    &quot;kod&quot;: &quot;O-1&quot;,
+    &quot;nazwa&quot;: &quot;zakład — rzeczywiste / oczekiwane&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;1,000&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;0,965&quot;,
+    &quot;powodBraku&quot;: &quot;&quot;,
+    &quot;warunki&quot;: &quot;Model zużycia zakładu z przeglądu energetycznego przy rzeczywistej produkcji i rzeczywistych stopniodniach — wskaźnik normalizuje produkcję i pogodę. Sierpień 2026; I półrocze 0,97.&quot;,
+    &quot;wyjasnienie&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;P-1&quot;,
+    &quot;nazwa&quot;: &quot;prasy [kWh/t]&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;124,0&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;121,5&quot;,
+    &quot;powodBraku&quot;: &quot;&quot;,
+    &quot;warunki&quot;: &quot;Ten sam asortyment i ta sama liczba zmian; wskaźnik jednostkowy normalizuje tonaż. Sierpień 2026.&quot;,
+    &quot;wyjasnienie&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;L-1&quot;,
+    &quot;nazwa&quot;: &quot;lakiernia — indeks znormalizowany&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;1,000&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;0,99&quot;,
+    &quot;powodBraku&quot;: &quot;&quot;,
+    &quot;warunki&quot;: &quot;Model lakierni z punktu 6.6, powierzchnia malowana jako zmienna istotna. Sierpień 2026; zmiana w granicach progu 2%.&quot;,
+    &quot;wyjasnienie&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;S-1&quot;,
+    &quot;nazwa&quot;: &quot;sprężarkownia [kWh/Nm³]&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;0,125&quot;,
+    &quot;enbOkres&quot;: &quot;02–03.2026&quot;,
+    &quot;biez&quot;: &quot;0,118&quot;,
+    &quot;powodBraku&quot;: &quot;&quot;,
+    &quot;warunki&quot;: &quot;Pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar, obciążenie 60–90%. Wskaźnik jednostkowy normalizuje objętość powietrza. Temperatura zasysania różna o więcej niż 10 °C wymaga adnotacji. Sierpień 2026; okres VII–18.IX: 0,119.&quot;,
+    &quot;wyjasnienie&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;OŚ-1&quot;,
+    &quot;nazwa&quot;: &quot;oświetlenie [MWh/miesiąc]&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;56,7&quot;,
+    &quot;enbOkres&quot;: &quot;680 MWh/rok 2025, czyli 56,7 MWh/mies.&quot;,
+    &quot;biez&quot;: &quot;55,8&quot;,
+    &quot;powodBraku&quot;: &quot;&quot;,
+    &quot;warunki&quot;: &quot;Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych; bez zmiany powierzchni oświetlanej. Sierpień 2026.&quot;,
+    &quot;wyjasnienie&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;K-1&quot;,
+    &quot;nazwa&quot;: &quot;kotłownia — indeks znormalizowany&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;1,000&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;1,01&quot;,
+    &quot;powodBraku&quot;: &quot;&quot;,
+    &quot;warunki&quot;: &quot;Model kotłowni ze stopniodniami grzania; porównanie za I półrocze 2026 wobec tego samego okresu roku bazowego.&quot;,
+    &quot;wyjasnienie&quot;: &quot;Pogorszenie o 1% wobec linii bazowej w I półroczu. Przyczyna nieustalona — analiza przed rozpoczęciem sezonu grzewczego (pozycja 5 planu doskonalenia, kierownik UR, plan 10.2026). Ocena sezonu 2026/27 w 05.2027; wynik na zebraniu Zarządu w IV kwartale 2026 r. Pogorszenie jednego wskaźnika nie unieważnia poprawy w pozostałych pięciu, ale wymaga decyzji.&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;okres&quot;: &quot;10.2026 – 12.2027. Działania celów C1–C3 prowadzone w planie działań (III-24) i nie powtarzane w tym planie.&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu, członek Zarządu; przegląd zarządzania 29.09.2026&quot;,
+   &quot;dataZatw&quot;: &quot;2026-09-29&quot;,
+   &quot;cenaEl&quot;: &quot;890&quot;,
+   &quot;cenaGaz&quot;: &quot;250&quot;,
+   &quot;potencjalRazem&quot;: &quot;1375&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var ZRODLA_DEF = [{"kod": "przeglad", "punkt": "6.3", "nazwa": "Przegląd energetyczny — lista możliwości poprawy", "ph": "np. Siedem możliwości, razem około 1 375 MWh rocznie. Zrealizowane: usunięcie nieszczelności i obniżenie ciśnienia. Pozostałe: sterownik i napęd sprężarkowni, LED w halach, odzysk ciepła ze sprężarek."}, {"kod": "monitorowanie", "punkt": "9.1.1", "nazwa": "Dane z monitorowania", "ph": "np. K-1 o 1% powyżej linii bazowej w I półroczu — stąd pozycja 5 planu. S-1 pokazuje, że samo ciśnienie nie dowiezie celu Z1.1."}, {"kod": "audyty", "punkt": "9.2", "nazwa": "Ustalenia z audytów wewnętrznych", "ph": "np. Audyt A-01/2026: jedna niezgodność i dwie możliwości doskonalenia — wzór protokołu dla wykonawców i luka kompetencyjna w zakupach. Obie w planie (pozycje 1 i 4)."}, {"kod": "przeglad_zarz", "punkt": "9.3", "nazwa": "Decyzje z przeglądu zarządzania", "ph": "np. Przegląd 29.09.2026: pytania o energię w procedurze inwestycyjnej, warsztat dla zakupów, analiza K-1 przed sezonem. Cały plan zatwierdzono na tym przeglądzie."}, {"kod": "zgloszenia", "punkt": "7.4", "nazwa": "Zgłoszenia pracowników", "ph": "np. Zgłoszenie 2026/08: jeden wyłącznik na całą halę B — weszło do zakresu projektu LED jako podział na trzy strefy."}, {"kod": "niezgodnosci", "punkt": "10.1", "nazwa": "Analiza niezgodności", "ph": "np. NK-2026-01 — brak zasad odbioru usług przy SEU (pozycja 1 planu). NK-2026-02 — terminy obowiązków poza kalendarzem (pozycja 3)."}];
+var LISTA_102 = [{"tekst": "Doskonali się przydatność, adekwatność i skuteczność systemu.", "podstawa": "N", "auto": "doskonalenieSystemu"}, {"tekst": "Wykazano ciągłą poprawę wyniku energetycznego — EnPI wobec EnB, w porównywalnych warunkach.", "podstawa": "N", "auto": "poprawaWyniku"}, {"tekst": "Możliwości poprawy mają stałe źródła i są oceniane (potencjał, koszt, prosty okres zwrotu, ryzyko).", "podstawa": "M", "auto": "zrodlaIOcena"}, {"tekst": "Prowadzony jest plan doskonalenia z oczekiwanym i osiągniętym efektem (F-EnMS-23).", "podstawa": "M", "auto": "plan"}];
+var PRZYKLAD = {"POZYCJE": [{"nr": "1", "dzialanie": "Wzór protokołu z nastawami i odbiór usług przy znaczących użyciach energii", "obszar": "S", "zrodlo": "NK-2026-01; audyt A-01/2026", "efekt": "Protokół z nastawami przed i po przy każdej usłudze przy SEU (dziś: 1 z 3 wykonawców ma wymagania w zleceniu)", "weryfikacja": "Po wdrożeniu: protokoły z przeglądów kotłowni, sprężarek i automatyki lakierni; sprawdzenie, czy odbiór usługi obejmuje kontrolę protokołu (terminy w karcie NK-2026-01)", "odp": "Kierownik utrzymania ruchu", "data": "10.2026", "stan": "W", "osiagniety": "", "dowod": ""}, {"nr": "2", "dzialanie": "Pytania o energię na etapie założeń w procedurze inwestycyjnej firmy", "obszar": "S", "zrodlo": "Przegląd zarządzania 09.2026; koncepcja modernizacji sprężarkowni (8.2)", "efekt": "Każda koncepcja dotycząca SEU przechodzi listę kontrolną III-36 na etapie założeń (dziś: koncepcja modernizacji sprężarkowni trafiła do oceny dopiero przed zatwierdzeniem)", "weryfikacja": "Audyt wewnętrzny II kw. 2027 — pozycja 2 programu, zakupy i projekty", "odp": "Dyrektor Zakładu", "data": "12.2026", "stan": "P", "osiagniety": "", "dowod": ""}, {"nr": "3", "dzialanie": "Terminy obowiązków z rejestru wymagań w kalendarzu kontrolingu", "obszar": "S", "zrodlo": "NK-2026-02", "efekt": "Wszystkie terminy z rejestru III-04 w kalendarzu z właścicielem; raport dla banku za 2026 r. wysłany do 30.06.2027 (dziś: 0 z 4 terminów w kalendarzu)", "weryfikacja": "Kontrola wysyłki do 30.06.2027; ocena zgodności 09.2027", "odp": "Kontroler finansowy", "data": "10.2026", "stan": "W", "osiagniety": "", "dowod": ""}, {"nr": "4", "dzialanie": "Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania", "obszar": "S", "zrodlo": "Luka w matrycy kompetencji III-28; przegląd zarządzania 09.2026; ustalenie D-2 audytu A-01/2026", "efekt": "Trzy kolejne zamówienia przy SEU z porównaniem kosztu zakupu i energii wykonanym przez dział zakupów (dziś: 1, i to przygotowane przez Energy Managera)", "weryfikacja": "Przegląd zamówień przy SEU przez Energy Managera; wzór porównania dołączony do procedury zakupowej", "odp": "Jan Kowalski — Energy Manager", "data": "11.2026", "stan": "P", "osiagniety": "", "dowod": ""}, {"nr": "5", "dzialanie": "Analiza przyczyn K-1 = 1,01 przed sezonem grzewczym", "obszar": "W", "zrodlo": "Raport z monitorowania III-42; przegląd zarządzania 09.2026", "efekt": "Przyczyna ustalona; propozycja do zatwierdzenia po analizie: K-1 za sezon 2026/27 nie wyżej niż 1,00 wobec EnB", "weryfikacja": "Model kotłowni ze stopniodniami (HDD) dla sezonu 2026/27, w porównywalnych warunkach; ocena 05.2027", "odp": "Kierownik utrzymania ruchu", "data": "Przed sezonem (plan: 10.2026); ocena 05.2027", "stan": "W", "osiagniety": "", "dowod": ""}, {"nr": "6", "dzialanie": "Odzysk ciepła ze sprężarek — analiza po modernizacji", "obszar": "W", "zrodlo": "Przegląd energetyczny, możliwość 7; analiza projektu III-36 (wniosek odrzucony z zostawieniem przyłączy)", "efekt": "Decyzja inwestycyjna na podstawie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027 (potencjał z przeglądu: około 250 MWh gazu rocznie)", "weryfikacja": "Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni z uwzględnieniem stopniodni", "odp": "Jan Kowalski — Energy Manager", "data": "12.2027", "stan": "P", "osiagniety": "", "dowod": ""}], "ZRODLA": [{"kod": "przeglad", "coWplynelo": "Siedem możliwości poprawy, razem około 1 375 MWh rocznie. Zrealizowane w 2026 r.: usunięcie 35 nieszczelności i obniżenie ciśnienia sieci z 7,0 do 6,3 bar. Pozostałe skierowane do oceny: sterownik i napęd sprężarkowni, LED w halach H1 i H2, odzysk ciepła ze sprężarek."}, {"kod": "monitorowanie", "coWplynelo": "K-1 o 1% powyżej linii bazowej w I półroczu 2026 r. — stąd pozycja 5 planu. S-1 za okres VII–IX pokazuje, że do celu Z1.1 brakuje więcej, niż osiągnięto samym ciśnieniem — stąd utrzymanie modernizacji w budżecie 2027."}, {"kod": "audyty", "coWplynelo": "Audyt A-01/2026: jedna niezgodność (protokół serwisu bez nastaw) i dwie możliwości doskonalenia — jeden wzór protokołu dla wykonawców przy wszystkich SEU oraz luka kompetencyjna w zakupach. Obie weszły do planu jako pozycje 1 i 4."}, {"kod": "przeglad_zarz", "coWplynelo": "Przegląd z 29.09.2026: pytania o energię w procedurze inwestycyjnej firmy, warsztat dla zakupów, analiza przyczyn K-1 przed sezonem grzewczym. Na tym przeglądzie zatwierdzono cały plan doskonalenia."}, {"kod": "zgloszenia", "coWplynelo": "Zgłoszenie 2026/08 z rejestru komunikacji: jeden wyłącznik na całą halę B, nie da się zgasić nieużywanej części. Weszło do zakresu projektu LED jako podział hali na trzy strefy — projekt prowadzony w planie działań celu C2."}, {"kod": "niezgodnosci", "coWplynelo": "NK-2026-01 — brak zasad odbioru usług wykonawców przy SEU; przyczyna systemowa, stąd pozycja 1 planu. NK-2026-02 — terminy obowiązków z rejestru poza kalendarzem osób odpowiedzialnych; stąd pozycja 3."}], "MOZLIWOSCI": [{"nazwa": "Sterownik nadrzędny i napęd o zmiennej prędkości w sprężarkowni", "potencjalMWh": "230", "nosnik": "el", "koszt": "380000", "jakWykazac": "kWh/Nm³ cztery tygodnie po odbiorze i za rok 2027, w warunkach z części D formularza celów: ciśnienie 6,3 bar, obciążenie 60–90%, trzy zmiany", "ryzyko": "Efekt zależny od profilu obciążenia — przy niższej produkcji oszczędność mniejsza. Deklaracja oferty 1 600 MWh/rok do sprawdzenia po uruchomieniu.", "decyzja": "plan_dzialan", "powod": ""}, {"nazwa": "Wymiana opraw na LED ze sterowaniem strefowym w halach H1 i H2", "potencjalMWh": "270", "nosnik": "el", "koszt": "240000", "jakWykazac": "OŚ-1 z podlicznika oświetlenia, 12 miesięcy po wymianie wobec 680 MWh/rok; przy zmianie liczby zmian przeliczenie na godzinę pracy zakładu", "ryzyko": "Efekt sterowania strefowego zależy od dyscypliny harmonogramów; bez podlicznika poprawy nie da się wykazać pomiarem.", "decyzja": "plan_dzialan", "powod": ""}, {"nazwa": "Odzysk ciepła ze sprężarek na potrzeby ciepłej wody i ogrzewania", "potencjalMWh": "250", "nosnik": "gaz", "koszt": "", "jakWykazac": "Pomiar ciepła odpadowego przy nowym profilu obciążenia; model kotłowni ze stopniodniami", "ryzyko": "Ilość ciepła odpadowego zmieni się po modernizacji sprężarkowni — przy innym profilu obciążenia potencjał może być niższy. Koszt nieustalony do czasu analizy.", "decyzja": "plan_dosk", "powod": "Decyzja po ocenie rzeczywistej pracy sprężarek po uruchomieniu modernizacji w 06.2027. Projekt modernizacji zostawia miejsce i przyłącza pod wymiennik, więc odłożenie nie zamyka drogi."}], "POPRAWA": [{"kod": "O-1", "nazwa": "zakład — rzeczywiste / oczekiwane", "kierunek": "nizej", "enb": "1,000", "enbOkres": "2025", "biez": "0,965", "powodBraku": "", "warunki": "Model zużycia zakładu z przeglądu energetycznego przy rzeczywistej produkcji i rzeczywistych stopniodniach — wskaźnik normalizuje produkcję i pogodę. Sierpień 2026; I półrocze 0,97.", "wyjasnienie": ""}, {"kod": "P-1", "nazwa": "prasy [kWh/t]", "kierunek": "nizej", "enb": "124,0", "enbOkres": "2025", "biez": "121,5", "powodBraku": "", "warunki": "Ten sam asortyment i ta sama liczba zmian; wskaźnik jednostkowy normalizuje tonaż. Sierpień 2026.", "wyjasnienie": ""}, {"kod": "L-1", "nazwa": "lakiernia — indeks znormalizowany", "kierunek": "nizej", "enb": "1,000", "enbOkres": "2025", "biez": "0,99", "powodBraku": "", "warunki": "Model lakierni z punktu 6.6, powierzchnia malowana jako zmienna istotna. Sierpień 2026; zmiana w granicach progu 2%.", "wyjasnienie": ""}, {"kod": "S-1", "nazwa": "sprężarkownia [kWh/Nm³]", "kierunek": "nizej", "enb": "0,125", "enbOkres": "02–03.2026", "biez": "0,118", "powodBraku": "", "warunki": "Pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar, obciążenie 60–90%. Wskaźnik jednostkowy normalizuje objętość powietrza. Temperatura zasysania różna o więcej niż 10 °C wymaga adnotacji. Sierpień 2026; okres VII–18.IX: 0,119.", "wyjasnienie": ""}, {"kod": "OŚ-1", "nazwa": "oświetlenie [MWh/miesiąc]", "kierunek": "nizej", "enb": "56,7", "enbOkres": "680 MWh/rok 2025, czyli 56,7 MWh/mies.", "biez": "55,8", "powodBraku": "", "warunki": "Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych; bez zmiany powierzchni oświetlanej. Sierpień 2026.", "wyjasnienie": ""}, {"kod": "K-1", "nazwa": "kotłownia — indeks znormalizowany", "kierunek": "nizej", "enb": "1,000", "enbOkres": "2025", "biez": "1,01", "powodBraku": "", "warunki": "Model kotłowni ze stopniodniami grzania; porównanie za I półrocze 2026 wobec tego samego okresu roku bazowego.", "wyjasnienie": "Pogorszenie o 1% wobec linii bazowej w I półroczu. Przyczyna nieustalona — analiza przed rozpoczęciem sezonu grzewczego (pozycja 5 planu doskonalenia, kierownik UR, plan 10.2026). Ocena sezonu 2026/27 w 05.2027; wynik na zebraniu Zarządu w IV kwartale 2026 r. Pogorszenie jednego wskaźnika nie unieważnia poprawy w pozostałych pięciu, ale wymaga decyzji."}], "META": {"okres": "10.2026 – 12.2027. Działania celów C1–C3 prowadzone w planie działań (III-24) i nie powtarzane w tym planie.", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu; przegląd zarządzania 29.09.2026", "dataZatw": "2026-09-29", "cenaEl": "890", "cenaGaz": "250", "potencjalRazem": "1375"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Doskonalenie pokazane jako lista działań nie mówi, czy wynik energetyczny się poprawił.", "decyzja": "Poprawę wykazujemy na wskaźnikach i zawsze w odniesieniu do stanu sprzed zmiany.", "dzialanie": "Plan doskonalenia z pozycjami rozpisanymi na źródła i okresy; 1 375 MWh oszczędności przypisane do konkretnych działań.", "sprawdzenie": "Każda pozycja planu podaje efekt z odniesieniem: wartość przed, wartość po i okres porównania."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 10.2 — Ciągłe doskonalenie.
+   F-EnMS-23 plan doskonalenia (III-52); przykład III-53; lista kontrolna III-54 sekcja 10.2;
+   procedura P-EnMS-08 (III-55) pkt 4.2. */
+"use strict";
+
+var PUNKT = "10.2";
+var TERAZ = "11.10.2026 18:20";
+var POZYCJE = [];
+var ZRODLA = [];
+var MOZLIWOSCI = [];
+var POPRAWA = [];
+var META = { okres: "", zatwierdzil: "", dataZatw: "", cenaEl: "", cenaGaz: "", potencjalRazem: "" };
+var WNIOSKI = [];
+var AKT = "plan";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 18:15", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 10.2" }];
+
+var OBSZARY = [["", "—"], ["S", "S — system zarządzania energią"], ["W", "W — wynik energetyczny"]];
+var STANY_P = [["", "—"], ["P", "P — planowane"], ["W", "W — w toku"], ["Z", "Z — zakończone"], ["A", "A — anulowane"]];
+var KIERUNKI = [["", "—"], ["nizej", "Niżej znaczy lepiej"], ["wyzej", "Wyżej znaczy lepiej"]];
+var NOSNIKI = [["", "—"], ["el", "Energia elektryczna"], ["gaz", "Gaz"]];
+var DECYZJE_M = [["", "—"], ["plan_dzialan", "Do planów działań (6.2)"],
+["plan_dosk", "Do planu doskonalenia (10.2)"], ["odlozona", "Odłożona — z powodem"], ["odrzucona", "Odrzucona — z powodem"]];
+
+function etykieta(lista, v) {
+  var x = lista.filter(function (y) { return y[0] === v; })[0];
+  return x ? x[1] : "—";
+}
+function lkw(x, d) {
+  if (x === null || x === undefined) return "—";
+  var c = Math.abs(x).toFixed(d === undefined ? 0 : d).split(".");
+  c[0] = c[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return (x < 0 ? "−" : "") + c.join(",");
+}
+
+/* ── plan doskonalenia ── */
+/* Celowo bez samej cyfry: „uruchomienie 06.2027" zawiera liczbę, ale nie mówi,
+   od jakiego stanu wychodzimy. Punktem odniesienia jest stan wyjściowy. */
+/* Bez \b po „dziś": granica słowa wymaga po jednej stronie znaku [A-Za-z0-9_],
+   a „ś" nim nie jest — więc „dziś:" nigdy by się nie dopasowało. */
+var RE_ODNIESIENIE = /(dzi[śs]|obecnie|wobec|dotychczas|przed\s+zmian|\bEnB\b|lini\w*\s+bazow|\d+\s*z\s*\d|z\s+\d+\s+(do|na)|potencja[łl]|oko[łl]o\s*\d|ok\.\s*\d|\d+\s*%)/i;
+var RE_WARUNKI = /(lini\w*\s+bazow|\bEnB\b|por[óo]wnywaln|warunk|model|znormalizow|przelicz|hdd|stopniodn|produkcj|ten sam|tych samych)/i;
+function pozycjaOk(p) {
+  if (!((p.dzialanie || "").trim() && p.obszar && (p.zrodlo || "").trim() && (p.efekt || "").trim()
+    && (p.weryfikacja || "").trim() && (p.odp || "").trim() && (p.data || "").trim() && p.stan)) return false;
+  if (p.stan === "Z") return !!((p.osiagniety || "").trim() && (p.dowod || "").trim());
+  if (p.stan === "A") return !!(p.osiagniety || "").trim();
+  return true;
+}
+/* „Plan zamiast wyniku": pozycja zakończona bez efektu i dowodu. */
+function zakonczonaBezEfektu(p) {
+  return p.stan === "Z" && !((p.osiagniety || "").trim() && (p.dowod || "").trim());
+}
+function efektBezOdniesienia(p) {
+  return !!(p.efekt || "").trim() && !RE_ODNIESIENIE.test(p.efekt);
+}
+/* „Przed i po" bez uwzględnienia warunków. */
+function weryfikacjaBezWarunkow(p) {
+  return p.obszar === "W" && !!(p.weryfikacja || "").trim() && !RE_WARUNKI.test(p.weryfikacja);
+}
+function brakSystemowych() {
+  return POZYCJE.length > 0 && !POZYCJE.some(function (p) { return p.obszar === "S"; });
+}
+function metaOk() {
+  return !!((META.okres || "").trim() && (META.zatwierdzil || "").trim() && META.dataZatw
+    && lb(META.cenaEl) !== null);
+}
+
+/* ── źródła możliwości ── */
+function zrodlo(kod) {
+  var z = ZRODLA.filter(function (x) { return x.kod === kod; })[0];
+  if (!z) { z = { kod: kod }; ZRODLA.push(z); }
+  return z;
+}
+function zrodloCzynne(z) { return !!(z && (z.coWplynelo || "").trim()); }
+function czynneZrodla() { return ZRODLA_DEF.filter(function (d) { return zrodloCzynne(zrodlo(d.kod)); }).length; }
+
+/* ── ocena możliwości: prosty okres zwrotu ── */
+function cenaNosnika(m) {
+  if (m.nosnik === "gaz") return lb(META.cenaGaz);
+  if (m.nosnik === "el") return lb(META.cenaEl);
+  return null;
+}
+function oszczednoscRoczna(m) {
+  var p = lb(m.potencjalMWh), c = cenaNosnika(m);
+  if (p === null || c === null) return null;
+  return p * c;
+}
+function spbt(m) {
+  var o = oszczednoscRoczna(m), k = lb(m.koszt);
+  if (o === null || k === null || o === 0) return null;
+  return k / o;
+}
+function mozliwoscOk(m) {
+  return !!((m.nazwa || "").trim() && lb(m.potencjalMWh) !== null && m.nosnik
+    && (m.ryzyko || "").trim() && m.decyzja);
+}
+function potencjalWPlanach() {
+  return MOZLIWOSCI.filter(function (m) {
+    return m.decyzja === "plan_dzialan" || m.decyzja === "plan_dosk";
+  }).reduce(function (a, m) { return a + (lb(m.potencjalMWh) || 0); }, 0);
+}
+function udzialPotencjalu() {
+  var r = lb(META.potencjalRazem);
+  if (r === null || r === 0) return null;
+  return potencjalWPlanach() / r * 100;
+}
+
+/* ── wykazanie poprawy ── */
+function zmiana(w) {
+  var e = lb(w.enb), b = lb(w.biez);
+  if (e === null || b === null || e === 0) return null;
+  return (b - e) / e * 100;
+}
+function lepiej(w) {
+  var z = zmiana(w);
+  if (z === null || !w.kierunek) return null;
+  if (z === 0) return 0;
+  return w.kierunek === "nizej" ? (z < 0 ? 1 : -1) : (z > 0 ? 1 : -1);
+}
+function poprawaOk(w) {
+  return !!((w.nazwa || "").trim() && w.kierunek && lb(w.enb) !== null && (w.enbOkres || "").trim()
+    && (w.warunki || "").trim() && (lb(w.biez) !== null || (w.powodBraku || "").trim()));
+}
+function bezWarunkow(w) { return lb(w.biez) !== null && !(w.warunki || "").trim(); }
+function ilePoprawionych() { return POPRAWA.filter(function (w) { return lepiej(w) === 1; }).length; }
+function ilePogorszonych() { return POPRAWA.filter(function (w) { return lepiej(w) === -1; }).length; }
+function poprawaWykazana() {
+  var ocenione = POPRAWA.filter(function (w) { return lepiej(w) !== null; });
+  if (!ocenione.length) return null;
+  return ilePoprawionych() > 0 && POPRAWA.filter(function (w) { return lepiej(w) === 1; }).every(function (w) {
+    return (w.warunki || "").trim();
+  });
+}
+function pogorszoneBezWyjasnienia() {
+  return POPRAWA.filter(function (w) { return lepiej(w) === -1 && !(w.wyjasnienie || "").trim(); });
+}
+
+/* ── zakładka 1: plan ── */
+function rysujPlan(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Plan doskonalenia"));
+  s.appendChild(hel("div", "warn", "Przegląd zarządzania AutoParts, wrzesień 2026 r. Wskaźnik zakładu wynosi 0,97 wobec linii bazowej 1,000. Sprężarkownia: 0,119 wobec 0,125 kWh/Nm³. <b>Jest poprawa — policzona, w porównywalnych warunkach, z danymi.</b><br><br>A obok wskaźników — trzy zmiany w systemie, o których zdecydowano i których <b>nie widać w żadnej tabeli</b>: wymagania dotyczące nastaw w zleceniach dla wykonawców, pytania o energię dopisywane do procedury inwestycyjnej i terminy obowiązków w kalendarzu kontrolingu. Każda wzięła się z problemu i każda ma sprawić, że system będzie działał lepiej. <b>To są dwie strony ciągłego doskonalenia.</b>"));
+  s.appendChild(hel("div", "note", "★ Plan doskonalenia jest <b>zaleceniem metodyki ENESA</b>, nie wymaganiem normy — osobny plan dla działań doskonalących spoza celów i planów działań z punktu 6.2: zmian systemu, kompetencji, analiz. Działania celów energetycznych prowadźcie w planie działań, nie powtarzajcie ich tutaj."));
+  var m = el("div", "poz" + (metaOk() ? "" : " brak"));
+  m.appendChild(pole("Okres planu", txt(META.okres, "np. 10.2026 – 12.2027; działania celów C1–C3 prowadzone w planie działań III-24 i nie powtarzane tutaj", 2,
+    function (v) { META.okres = v; })));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu, członek Zarządu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data zatwierdzenia", inp(META.dataZatw, "", function (v) { META.dataZatw = v; }, "date")));
+  m.appendChild(pole("Cena energii elektrycznej [zł/MWh]", inp(META.cenaEl, "np. 890", function (v) { META.cenaEl = v; }),
+    "Służy liczeniu prostego okresu zwrotu w zakładce 2."));
+  m.appendChild(pole("Cena gazu [zł/MWh]", inp(META.cenaGaz, "np. 250", function (v) { META.cenaGaz = v; })));
+  s.appendChild(m);
+  host.appendChild(s);
+
+  if (POZYCJE.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Nr", "Działanie", "Obszar", "Źródło", "Oczekiwany efekt i punkt odniesienia", "Odp.", "Data", "Stan", "Osiągnięty efekt"],
+      POZYCJE.map(function (p, i) {
+        return [p.nr || String(i + 1), p.dzialanie || "—",
+          el("span", "chip " + (p.obszar === "S" ? "" : "green"), p.obszar || "—"),
+          p.zrodlo || "—", p.efekt || "—", p.odp || "—", p.data || "—",
+          el("span", "chip " + (p.stan === "Z" ? "green" : p.stan === "A" ? "red" : ""), p.stan || "—"),
+          (p.osiagniety || "").trim() || "—"];
+      })));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  var h = el("h3", null, "Pozycje planu — edycja");
+  h.appendChild(el("span", "chip " + (POZYCJE.length && POZYCJE.every(pozycjaOk) ? "green" : "amber"),
+    POZYCJE.filter(pozycjaOk).length + " / " + POZYCJE.length));
+  e.appendChild(h);
+  POZYCJE.forEach(function (p, i) {
+    var kk = el("div", "poz" + (pozycjaOk(p) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Pozycja " + (p.nr || i + 1)));
+    if (p.obszar) g.appendChild(el("span", "chip", p.obszar === "S" ? "system" : "wynik"));
+    if (p.stan) g.appendChild(el("span", "chip " + (p.stan === "Z" ? "green" : ""), etykieta(STANY_P, p.stan).split(" — ")[1] || p.stan));
+    g.appendChild(przyciskUsun(function () { POZYCJE.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Numer", inp(p.nr, "np. 1", function (v) { p.nr = v; })));
+    kk.appendChild(pole("Działanie", txt(p.dzialanie, "np. Wzór protokołu z nastawami i odbiór usług przy znaczących użyciach energii", 2,
+      function (v) { p.dzialanie = v; })));
+    kk.appendChild(pole("Obszar", sel(p.obszar, OBSZARY, function (v) { p.obszar = v; }),
+      "System — przydatność, adekwatność i skuteczność systemu. Wynik — zużycie i sposób wykorzystania energii. <b>Oba są wymaganiem normy</b>, każde z osobnym zdaniem."));
+    kk.appendChild(pole("Źródło", inp(p.zrodlo, "np. NK-2026-01; audyt A-01/2026", function (v) { p.zrodlo = v; })));
+    kk.appendChild(poleChip("Oczekiwany efekt i punkt odniesienia", "metodyka ENESA",
+      txt(p.efekt, "np. Protokół z nastawami przy każdej usłudze przy SEU (dziś: 1 z 3 wykonawców ma wymagania)", 2,
+        function (v) { p.efekt = v; }),
+      "Bez punktu odniesienia nie da się powiedzieć, czy efekt osiągnięto. „Lepszy nadzór” nie jest efektem."));
+    kk.appendChild(pole("Sposób weryfikacji", txt(p.weryfikacja, "np. Po wdrożeniu: protokoły kotłowni, sprężarek i automatyki lakierni; sprawdzenie odbioru usług", 2,
+      function (v) { p.weryfikacja = v; })));
+    kk.appendChild(pole("Odpowiedzialny", inp(p.odp, "np. Kierownik UR", function (v) { p.odp = v; })));
+    kk.appendChild(pole("Data", inp(p.data, "np. 10.2026", function (v) { p.data = v; })));
+    kk.appendChild(pole("Stan", sel(p.stan, STANY_P, function (v) { p.stan = v; })));
+    if (p.stan === "Z" || p.stan === "A") {
+      kk.appendChild(poleChip("Osiągnięty efekt" + (p.stan === "A" ? " albo powód anulowania" : ""), "metodyka ENESA",
+        txt(p.osiagniety, "np. Protokoły z nastawami przy trzech kolejnych usługach; wszyscy trzej wykonawcy mają wymagania", 2,
+          function (v) { p.osiagniety = v; })));
+      if (p.stan === "Z")
+        kk.appendChild(pole("Dowód", txt(p.dowod, "np. Protokoły z 14.10.2026, 21.11.2026 i 08.01.2027, podpisane przy odbiorze", 2,
+          function (v) { p.dowod = v; })));
+    }
+    if (zakonczonaBezEfektu(p))
+      kk.appendChild(hel("div", "warn", "Pozycja oznaczona jako zakończona bez osiągniętego efektu i dowodu. <b>Plan zamiast wyniku</b> to jeden z pięciu błędów tego punktu — formularz wymaga, by działanie „zakończone” wpisywać <b>razem z osiągniętym efektem i dowodem</b>. Inaczej plan dokumentuje wykonanie, nie poprawę."));
+    if (efektBezOdniesienia(p))
+      kk.appendChild(hel("div", "warn", "Oczekiwany efekt bez punktu odniesienia. Dopiszcie stan wyjściowy — „dziś: 1 z 3”, „wobec 680 MWh”, „z 9 do 4 Nm³/min”. <b>Bez niego po roku nikt nie rozstrzygnie, czy efekt osiągnięto.</b>"));
+    if (weryfikacjaBezWarunkow(p))
+      kk.appendChild(hel("div", "warn", "Pozycja dotyczy wyniku energetycznego, a sposób weryfikacji nie odwołuje się do linii bazowej ani do warunków porównania. <b>„Przed i po” bez uwzględnienia warunków</b> to trzeci z pięciu błędów: sam pomiar nie wystarczy, jeśli w międzyczasie zmieniła się produkcja, pogoda albo czas pracy."));
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj pozycję planu", function () { POZYCJE.push({}); }));
+  if (!POZYCJE.length) e.appendChild(el("div", "warn", "Plan doskonalenia jest pusty."));
+  if (brakSystemowych())
+    e.appendChild(hel("div", "note", "Żadna pozycja nie dotyczy systemu zarządzania energią. <b>Doskonalenie to nie tylko duże projekty</b> — harmonogram wyłączania, poprawiona instrukcja, lepszy wzór protokołu też się liczą. Norma wymienia doskonalenie systemu i poprawę wyniku jako <b>dwa osobne zdania</b>."));
+  host.appendChild(e);
+}
+
+/* ── zakładka 2: źródła i ocena możliwości ── */
+function rysujZrodla(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Skąd brać pomysły — stałe źródła możliwości poprawy");
+  h.appendChild(el("span", "chip " + (czynneZrodla() >= 4 ? "green" : czynneZrodla() >= 2 ? "amber" : "red"),
+    czynneZrodla() + " / " + ZRODLA_DEF.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "note", "Pomysły biorą się z miejsc, które <b>już macie w systemie</b>. AutoParts ma w przeglądzie energetycznym siedem możliwości, razem około 1 375 MWh rocznie — kolejne przechodzą do planu działań, gdy pozwalają na to budżet i wyniki poprzednich."));
+  ZRODLA_DEF.forEach(function (d) {
+    var z = zrodlo(d.kod);
+    var kk = el("div", "poz" + (zrodloCzynne(z) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, d.nazwa));
+    g.appendChild(el("span", "chip", d.punkt));
+    if (zrodloCzynne(z)) g.appendChild(el("span", "chip green", "czynne"));
+    kk.appendChild(g);
+    kk.appendChild(pole("Co z tego źródła wpłynęło w tym okresie",
+      txt(z.coWplynelo, d.ph || "", 2, function (v) { z.coWplynelo = v; })));
+    s.appendChild(kk);
+  });
+  if (czynneZrodla() < 3 && ZRODLA.length)
+    s.appendChild(hel("div", "warn", "Mniej niż trzy źródła wniosły cokolwiek w tym okresie. <b>Doskonalenie tylko przed audytem</b> to piąty z pięciu błędów tego punktu — wracajcie do możliwości poprawy na przeglądach zarządzania i przy planowaniu, nie wtedy, gdy zbliża się audytor."));
+  host.appendChild(s);
+
+  var o = el("div", "sekcja");
+  var ho = el("h3", null, "Ocena możliwości poprawy");
+  ho.appendChild(el("span", "chip " + (MOZLIWOSCI.length && MOZLIWOSCI.every(mozliwoscOk) ? "green" : "amber"),
+    MOZLIWOSCI.filter(mozliwoscOk).length + " / " + MOZLIWOSCI.length));
+  o.appendChild(ho);
+  o.appendChild(hel("div", "note", "★ Metodyka zaleca ocenę po <b>potencjale, koszcie, prostym okresie zwrotu i ryzyku</b>. Platforma liczy oszczędność roczną i prosty okres zwrotu z potencjału, nośnika i kosztu. <b>O tym, co wybrać, decyduje potencjał, koszt i ryzyko — nie wielkość projektu.</b>"));
+  host.appendChild(o);
+
+  if (MOZLIWOSCI.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Możliwość", "Potencjał", "Nośnik", "Oszczędność roczna", "Koszt", "Prosty okres zwrotu", "Ryzyko", "Decyzja"],
+      MOZLIWOSCI.map(function (m) {
+        var osz = oszczednoscRoczna(m), sp = spbt(m);
+        return [m.nazwa || "—",
+          lb(m.potencjalMWh) === null ? "—" : lkw(lb(m.potencjalMWh), 0) + " MWh/rok",
+          m.nosnik ? etykieta(NOSNIKI, m.nosnik) : "—",
+          osz === null ? "—" : lkw(osz, 0) + " zł/rok",
+          lb(m.koszt) === null ? "—" : lkw(lb(m.koszt), 0) + " zł",
+          sp === null ? "—" : lcz(sp, 1) + " lat",
+          m.ryzyko || "—", m.decyzja ? etykieta(DECYZJE_M, m.decyzja).split(" (")[0] : "—"];
+      })));
+    var u = udzialPotencjalu();
+    if (u !== null)
+      t.appendChild(hel("div", u >= 50 ? "ok" : "note",
+        "<b>Pokrycie potencjału:</b> w planach jest " + lkw(potencjalWPlanach(), 0) + " MWh/rok z " +
+        lkw(lb(META.potencjalRazem), 0) + " MWh/rok zidentyfikowanych w przeglądzie energetycznym — " +
+        lcz(u, 0) + "%. Pozostałe możliwości przechodzą do planów, gdy pozwalają na to budżet i wyniki poprzednich."));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Możliwości — edycja"));
+  var mk = el("div", "poz");
+  mk.appendChild(pole("Potencjał zidentyfikowany w przeglądzie energetycznym [MWh/rok]",
+    inp(META.potencjalRazem, "np. 1375", function (v) { META.potencjalRazem = v; }),
+    "Suma możliwości z punktu 6.3. Platforma porównuje ją z sumą możliwości skierowanych do planów."));
+  e.appendChild(mk);
+  MOZLIWOSCI.forEach(function (m, i) {
+    var kk = el("div", "poz" + (mozliwoscOk(m) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, m.nazwa || "Możliwość " + (i + 1)));
+    var sp = spbt(m);
+    if (sp !== null) g.appendChild(el("span", "chip " + (sp <= 3 ? "green" : sp <= 7 ? "amber" : ""), lcz(sp, 1) + " lat"));
+    g.appendChild(przyciskUsun(function () { MOZLIWOSCI.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Możliwość", inp(m.nazwa, "np. Sterownik nadrzędny i napęd o zmiennej prędkości sprężarkowni",
+      function (v) { m.nazwa = v; })));
+    kk.appendChild(pole("Potencjał [MWh/rok]", inp(m.potencjalMWh, "np. 230", function (v) { m.potencjalMWh = v; })));
+    kk.appendChild(pole("Nośnik", sel(m.nosnik, NOSNIKI, function (v) { m.nosnik = v; })));
+    kk.appendChild(pole("Koszt [zł]", inp(m.koszt, "np. 380000 — pozostaw puste, jeśli nieustalony",
+      function (v) { m.koszt = v; })));
+    kk.appendChild(pole("Sposób wykazania potencjału", txt(m.jakWykazac, "np. Pomiar kWh/Nm³ przed i po, w porównywalnych warunkach ciśnienia i obciążenia", 2,
+      function (v) { m.jakWykazac = v; })));
+    kk.appendChild(poleChip("Ryzyko", "metodyka ENESA", txt(m.ryzyko, "np. Efekt zależny od profilu obciążenia; przy niższej produkcji oszczędność mniejsza", 2,
+      function (v) { m.ryzyko = v; })));
+    kk.appendChild(pole("Decyzja", sel(m.decyzja, DECYZJE_M, function (v) { m.decyzja = v; })));
+    if (m.decyzja === "odlozona" || m.decyzja === "odrzucona")
+      kk.appendChild(pole("Powód", txt(m.powod, "np. Decyzja po ocenie pracy sprężarek po modernizacji — przy zmienionym profilu ilość ciepła odpadowego będzie inna", 2,
+        function (v) { m.powod = v; })));
+    var osz = oszczednoscRoczna(m);
+    if (osz !== null) {
+      var w = el("div", "note");
+      w.appendChild(el("b", null, "Wyliczenie: "));
+      w.appendChild(document.createTextNode(lkw(lb(m.potencjalMWh), 0) + " MWh × " +
+        lkw(cenaNosnika(m), 0) + " zł/MWh = " + lkw(osz, 0) + " zł/rok" +
+        (sp !== null ? "; prosty okres zwrotu " + lkw(lb(m.koszt), 0) + " / " + lkw(osz, 0) + " = " + lcz(sp, 1) + " lat"
+          : "; koszt nieustalony — prosty okres zwrotu nie do policzenia")));
+      kk.appendChild(w);
+    }
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj możliwość", function () { MOZLIWOSCI.push({}); }));
+  host.appendChild(e);
+}
+
+/* ── zakładka 3: wykazanie poprawy ── */
+function rysujPoprawe(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wykazanie poprawy wyniku energetycznego");
+  var pw = poprawaWykazana();
+  h.appendChild(el("span", "chip " + (pw === null ? "" : pw ? "green" : "red"),
+    pw === null ? "brak danych" : pw ? "wykazana" : "niewykazana"));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "To jedno z dwóch zdań normy w tym punkcie i <b>jedyne wymaganie w całym systemie, którego nie da się spełnić dokumentem</b>: organizacja <b>wykazuje</b> ciągłą poprawę wyniku energetycznego. <b>Plan działań to obietnica; dowodem jest wskaźnik porównany z linią bazową.</b>"));
+  s.appendChild(hel("div", "note", "<b>Czy każdy miesiąc musi być lepszy? Nie.</b> Oceniajcie wynik w porównywalnych warunkach i w odpowiednim okresie. W AutoParts wskaźnik zakładu wyniósł 0,974 w marcu i 0,970 w lipcu — praktycznie bez zmian w ciągu kilku miesięcy, a jednak wyraźnie lepiej niż w roku bazowym.<br><br>Cel utrzymania parametru też może być uzasadniony — na przykład utrzymanie ciśnienia na poziomie, który już osiągnięto. <b>Problem pojawia się wtedy, gdy cała organizacja przez dłuższy czas nie osiąga i nie wykazuje poprawy.</b>"));
+  host.appendChild(s);
+
+  if (POPRAWA.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["EnPI", "Kierunek", "EnB (okres)", "Wartość", "Zmiana", "Warunki porównania"],
+      POPRAWA.map(function (w) {
+        var z = zmiana(w), l = lepiej(w);
+        var zt = z === null ? "—" : (z > 0 ? "+" : "") + lcz(z, 1) + "%";
+        return [(w.kod ? w.kod + " " : "") + (w.nazwa || "—"),
+          w.kierunek === "nizej" ? "niżej lepiej" : w.kierunek === "wyzej" ? "wyżej lepiej" : "—",
+          ((w.enb || "").trim() || "—") + (w.enbOkres ? " (" + w.enbOkres + ")" : ""),
+          (w.biez || "").trim() || w.powodBraku || "—",
+          l === 1 ? el("span", "chip green", zt) : l === -1 ? el("span", "chip red", zt) : zt,
+          (w.warunki || "").trim() ? "opisane" : el("span", "chip red", "brak")];
+      })));
+    t.appendChild(tabela(["Miara", "Wartość"], [
+      ["Wskaźniki z wykazaną poprawą", el("span", "chip " + (ilePoprawionych() ? "green" : "red"), String(ilePoprawionych()))],
+      ["Wskaźniki z pogorszeniem", el("span", "chip " + (ilePogorszonych() ? "amber" : "green"), String(ilePogorszonych()))],
+      ["Wskaźniki bez oceny w tym okresie",
+        String(POPRAWA.filter(function (w) { return lepiej(w) === null; }).length)]
+    ]));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Wskaźniki — edycja"));
+  POPRAWA.forEach(function (w, i) {
+    var kk = el("div", "poz" + (poprawaOk(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (w.kod || "") + " " + (w.nazwa || "Wskaźnik " + (i + 1))));
+    var z = zmiana(w);
+    if (z !== null) g.appendChild(el("span", "chip " + (lepiej(w) === 1 ? "green" : lepiej(w) === -1 ? "red" : ""),
+      (z > 0 ? "+" : "") + lcz(z, 1) + "%"));
+    g.appendChild(przyciskUsun(function () { POPRAWA.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Kod", inp(w.kod, "np. S-1", function (v) { w.kod = v; })));
+    kk.appendChild(pole("Nazwa i jednostka", inp(w.nazwa, "np. sprężarkownia [kWh/Nm³]", function (v) { w.nazwa = v; })));
+    kk.appendChild(pole("Kierunek poprawy", sel(w.kierunek, KIERUNKI, function (v) { w.kierunek = v; })));
+    kk.appendChild(pole("EnB — wartość", inp(w.enb, "np. 0,125", function (v) { w.enb = v; })));
+    kk.appendChild(pole("EnB — okres", inp(w.enbOkres, "np. 02–03.2026", function (v) { w.enbOkres = v; })));
+    kk.appendChild(pole("Wartość w ocenianym okresie", inp(w.biez, "np. 0,118", function (v) { w.biez = v; })));
+    kk.appendChild(pole("Powód braku wartości, jeśli nie ma", inp(w.powodBraku, "np. poza sezonem grzewczym",
+      function (v) { w.powodBraku = v; })));
+    kk.appendChild(poleChip("Warunki porównania", "wymóg normy",
+      txt(w.warunki, "np. Pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar; wskaźnik jednostkowy normalizuje objętość powietrza", 2,
+        function (v) { w.warunki = v; }),
+      "Porównanie z linią bazową w porównywalnych warunkach — to jest treść wymagania, nie dodatek do niego."));
+    if (lepiej(w) === -1)
+      kk.appendChild(pole("Wyjaśnienie pogorszenia i co dalej",
+        txt(w.wyjasnienie, "np. Analiza przyczyn przed sezonem grzewczym (pozycja 5 planu); K-1 za sezon 2026/27 do oceny w 05.2027", 2,
+          function (v) { w.wyjasnienie = v; })));
+    if (bezWarunkow(w))
+      kk.appendChild(hel("div", "warn", "Wartość podana bez warunków porównania. <b>Sam pomiar „przed i po” nie wystarczy</b>, jeśli w międzyczasie zmieniła się produkcja, pogoda albo czas pracy — porównanie z linią bazową prowadzi się według zasad z punktów 6.4–6.5 i 9.1.1."));
+    if (lepiej(w) === -1 && !(w.wyjasnienie || "").trim())
+      kk.appendChild(el("div", "warn", "Wskaźnik pogorszył się wobec linii bazowej, a karta nie mówi, co z tym dalej. Pogorszenie jednego wskaźnika nie unieważnia poprawy całości — ale musi mieć wyjaśnienie i decyzję."));
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj wskaźnik", function () { POPRAWA.push({}); }));
+  host.appendChild(e);
+
+  if (pw === false) {
+    var x = el("div", "sekcja");
+    x.appendChild(hel("div", "warn", "<b>Żaden wskaźnik nie pokazuje poprawy wobec linii bazowej w porównywalnych warunkach.</b> W jednym z zakładów produkcji kabli cele brzmiały cztery lata pod rząd „utrzymać poziom zużycia”, a w planach działań nie było ani jednego projektu poprawy. Przy audycie recertyfikacyjnym zakład pokazał wskaźnik na poziomie roku bazowego i usłyszał: <b>utrzymanie parametru może być rozsądnym celem dla jednego urządzenia, ale nie dla całej organizacji przez cztery lata.</b> Niezgodność z punktem 10.2, audyt dodatkowy 6 000 zł, konsultant 15 000 zł, odnowienie certyfikatu opóźnione o cztery miesiące."));
+    host.appendChild(x);
+  }
+
+  var w2 = el("div", "sekcja");
+  w2.appendChild(el("h3", null, "Skąd wiesz, że system się doskonali"));
+  var lista = [
+    { t: "Umiecie pokazać poprawę wyniku energetycznego — wskaźnik wobec linii bazowej, w porównywalnych warunkach.",
+      ok: pw },
+    { t: "Potraficie wymienić zmiany w systemie z ostatniego roku i powiedzieć, z czego wynikły.",
+      ok: POZYCJE.filter(function (p) { return p.obszar === "S"; }).length > 0
+        && POZYCJE.filter(function (p) { return p.obszar === "S"; }).every(function (p) { return (p.zrodlo || "").trim(); }) },
+    { t: "Pomysły na poprawę mają stałe źródła, a wybrane trafiają do planów działań.",
+      ok: czynneZrodla() >= 3 && MOZLIWOSCI.some(function (m) { return m.decyzja === "plan_dzialan" || m.decyzja === "plan_dosk"; }) },
+    { t: "Przy każdym zakończonym działaniu wiadomo, jaki był efekt — a nie tylko, że je wykonano.",
+      ok: POZYCJE.filter(function (p) { return p.stan === "Z"; }).length === 0 ? null
+        : !POZYCJE.some(zakonczonaBezEfektu) }
+  ];
+  lista.forEach(function (x) {
+    var kw = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "chip " + (x.ok === null ? "" : x.ok ? "green" : "amber"),
+      x.ok === null ? "nie dotyczy" : x.ok ? "tak" : "jeszcze nie"));
+    g.appendChild(el("span", null, x.t));
+    kw.appendChild(g);
+    w2.appendChild(kw);
+  });
+  host.appendChild(w2);
+}
+
+/* ── zakładka 4: cykl PDCA ── */
+function rysujCykl(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Planuj — rób — sprawdzaj — działaj"));
+  s.appendChild(hel("div", "note", "Cykl nie jest wymaganiem normy — jest sposobem pracy, który sprawia, że poprawę da się wykazać. Poniżej na przykładzie zadania Z2.1 z planu działań AutoParts: wymiana oświetlenia hal, 680 → 410 MWh rocznie, 2027 r."));
+  s.appendChild(tabela(["Etap", "Co robicie", "AutoParts — oświetlenie hal"], [
+    ["Planuj", "Ustalcie działanie, oczekiwany efekt i sposób sprawdzenia",
+      "Wymiana na LED ze sterowaniem; −270 MWh/rok; pomiar mocy rozdzielnic i czas pracy"],
+    ["Rób", "Wdróżcie", "Wymiana hala po hali w 2027 r."],
+    ["Sprawdzaj", "Porównajcie z właściwą linią bazową, uwzględniając zmiany warunków",
+      "12 miesięcy po wymianie wobec 680 MWh; przy zmianie liczby zmian — przeliczenie godzin"],
+    ["Działaj", "Utrwalcie albo popraw",
+      "Kryteria sterowania do instrukcji (8.1); jeśli efekt mniejszy — sprawdzić czujniki i harmonogramy"]
+  ]));
+  s.appendChild(hel("div", "warn", "Porównujcie efekt z <b>właściwą</b> linią bazową, uwzględniając zmiany warunków — zgodnie z zasadami z punktów 6.4–6.5 i 9.1.1. <b>Sam pomiar „przed i po” nie wystarczy</b>, jeśli w międzyczasie zmieniła się produkcja, pogoda albo czas pracy."));
+  host.appendChild(s);
+
+  var d = el("div", "sekcja");
+  d.appendChild(el("h3", null, "Zmiany w systemie w tym okresie"));
+  var sys = POZYCJE.filter(function (p) { return p.obszar === "S"; });
+  if (sys.length) {
+    d.appendChild(tabela(["Zmiana", "Z czego wynikła", "Stan", "Osiągnięty efekt"],
+      sys.map(function (p) {
+        return [p.dzialanie || "—", p.zrodlo || el("span", "chip red", "brak źródła"),
+          p.stan || "—", (p.osiagniety || "").trim() || "—"];
+      })));
+    d.appendChild(hel("div", "note", "To zestawienie odpowiada na zadanie z książki: <b>wypiszcie trzy zmiany w swoim systemie z ostatniego roku i przy każdej zapiszcie, jaki problem lub jaką możliwość rozwiązała.</b> Platforma buduje je z pozycji planu oznaczonych jako obszar „system” — pod warunkiem że każda ma wypełnione źródło."));
+  } else {
+    d.appendChild(el("div", "warn", "Brak pozycji dotyczących systemu — nie ma z czego zbudować zestawienia zmian."));
+  }
+  host.appendChild(d);
+}
+
+/* ── zakładka 5 ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz doskonalenia: "));
+  n.appendChild(document.createTextNode(
+    ile(POZYCJE.length, "pozycja planu", "pozycje planu", "pozycji planu") +
+    " (system: " + POZYCJE.filter(function (p) { return p.obszar === "S"; }).length +
+    ", wynik: " + POZYCJE.filter(function (p) { return p.obszar === "W"; }).length + ")" +
+    " · zakończonych: " + POZYCJE.filter(function (p) { return p.stan === "Z"; }).length +
+    " · czynnych źródeł: " + czynneZrodla() + " z " + ZRODLA_DEF.length +
+    " · wskaźniki z poprawą: " + ilePoprawionych() + ", z pogorszeniem: " + ilePogorszonych()));
+  s.appendChild(n);
+  if (poprawaWykazana() === false)
+    s.appendChild(el("div", "warn", "Żaden wskaźnik nie pokazuje poprawy. To jedyna rzecz w tym punkcie, której nie da się nadrobić dokumentacją — i jedyna, która przy recertyfikacji kończy się niezgodnością bez dyskusji."));
+  var bz = POZYCJE.filter(zakonczonaBezEfektu);
+  if (bz.length)
+    s.appendChild(el("div", "warn", ile(bz.length, "pozycja jest zamknięta", "pozycje są zamknięte", "pozycji jest zamkniętych") +
+      " bez osiągniętego efektu. Pytanie do klienta jest to samo co w 10.1 przy zamykaniu niezgodności: <b>skąd wiemy, że to zadziałało?</b>"));
+  var bo = POZYCJE.filter(efektBezOdniesienia);
+  if (bo.length)
+    s.appendChild(el("div", "warn", "W " + ile(bo.length, "pozycji", "pozycjach", "pozycjach") +
+      " oczekiwany efekt nie ma punktu odniesienia. Takie pozycje zamykają się później „wykonane” — bo nie ma czego porównać."));
+  var bw = POZYCJE.filter(weryfikacjaBezWarunkow);
+  if (bw.length)
+    s.appendChild(el("div", "warn", "W " + ile(bw.length, "pozycji", "pozycjach", "pozycjach") +
+      " dotyczącej wyniku energetycznego weryfikacja nie odwołuje się do warunków porównania. Przy ocenie efektu wyjdzie to jako spór o liczby, zwykle rok później."));
+  var pbw = pogorszoneBezWyjasnienia();
+  if (pbw.length)
+    s.appendChild(el("div", "warn", ile(pbw.length, "wskaźnik pogorszył się", "wskaźniki pogorszyły się", "wskaźników pogorszyło się") +
+      " bez wyjaśnienia i decyzji. Pogorszenie jednego wskaźnika nie unieważnia poprawy całości — ale nieopisane staje się argumentem audytora, nie waszym."));
+  if (czynneZrodla() < 3)
+    s.appendChild(el("div", "warn", "Mniej niż trzy źródła możliwości są czynne. To zwykle znaczy, że doskonalenie dzieje się przy przeglądzie zarządzania raz w roku — a nie w rytmie pracy systemu."));
+  if (brakSystemowych())
+    s.appendChild(el("div", "note", "Plan nie zawiera pozycji dotyczących systemu. Rozmowa o tym, że norma stawia doskonalenie systemu i poprawę wyniku jako dwa osobne zdania — i że tylko pierwsze da się prowadzić bez budżetu inwestycyjnego."));
+  var u = udzialPotencjalu();
+  if (u !== null && u < 40)
+    s.appendChild(el("div", "note", "W planach jest mniej niż 40% zidentyfikowanego potencjału. Nie jest to zarzut — kolejność wynika z budżetu — ale warto, żeby odłożone możliwości miały zapisany powód i termin powrotu."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-54, sekcja 10.2 ── */
+function stanPozycji(q) {
+  var f = {
+    doskonalenieSystemu: function () {
+      var sys = POZYCJE.filter(function (p) { return p.obszar === "S"; });
+      return sys.length > 0 && sys.every(function (p) { return (p.zrodlo || "").trim() && pozycjaOk(p); });
+    },
+    poprawaWyniku: function () {
+      var pw = poprawaWykazana();
+      if (pw === null) return false;
+      return pw && !POPRAWA.some(bezWarunkow) && pogorszoneBezWyjasnienia().length === 0;
+    },
+    zrodlaIOcena: function () {
+      return czynneZrodla() >= 3 && MOZLIWOSCI.length > 0 && MOZLIWOSCI.every(mozliwoscOk);
+    },
+    plan: function () {
+      return !!(POZYCJE.length > 0 && POZYCJE.every(pozycjaOk) && !POZYCJE.some(zakonczonaBezEfektu)
+        && (META.zatwierdzil || "").trim() && META.dataZatw);
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!metaOk()) b.push({ t: "Niepełna metryka planu (okres, zatwierdził, data, cena energii).", kto: "klient", metodyka: true });
+  if (!POZYCJE.length) b.push({ t: "Plan doskonalenia jest pusty.", kto: "klient", metodyka: true });
+  POZYCJE.forEach(function (p, i) {
+    var n = "Pozycja " + (p.nr || i + 1);
+    if (!pozycjaOk(p)) b.push({ t: n + " — niepełna (obszar, źródło, efekt z punktem odniesienia, weryfikacja, odpowiedzialny, stan).", kto: "klient", metodyka: true });
+    if (zakonczonaBezEfektu(p)) b.push({ t: n + " — zakończona bez osiągniętego efektu i dowodu.", kto: "klient" });
+    if (efektBezOdniesienia(p)) b.push({ t: n + " — oczekiwany efekt bez punktu odniesienia.", kto: "klient", metodyka: true });
+    if (weryfikacjaBezWarunkow(p)) b.push({ t: n + " — weryfikacja wyniku bez warunków porównania.", kto: "klient" });
+  });
+  if (czynneZrodla() < 3) b.push({ t: "Mniej niż trzy stałe źródła możliwości poprawy są czynne.", kto: "klient", metodyka: true });
+  if (!MOZLIWOSCI.length) b.push({ t: "Nie oceniono żadnej możliwości poprawy.", kto: "klient", metodyka: true });
+  MOZLIWOSCI.forEach(function (m, i) {
+    if (!mozliwoscOk(m)) b.push({ t: "Możliwość " + (m.nazwa || i + 1) + " — niepełna ocena (potencjał, nośnik, ryzyko, decyzja).", kto: "klient", metodyka: true });
+  });
+  if (!POPRAWA.length) b.push({ t: "Nie zestawiono wskaźników do wykazania poprawy.", kto: "klient" });
+  if (poprawaWykazana() === false) b.push({ t: "Nie wykazano poprawy wyniku energetycznego.", kto: "klient" });
+  POPRAWA.forEach(function (w, i) {
+    var n = (w.kod || "") + " " + (w.nazwa || "wskaźnik " + (i + 1));
+    if (!poprawaOk(w)) b.push({ t: n + " — niepełna pozycja (kierunek, EnB z okresem, warunki).", kto: "klient" });
+    if (bezWarunkow(w)) b.push({ t: n + " — wartość bez warunków porównania.", kto: "klient" });
+  });
+  pogorszoneBezWyjasnienia().forEach(function (w) {
+    b.push({ t: (w.kod || "wskaźnik") + " — pogorszenie bez wyjaśnienia i decyzji.", kto: "klient" });
+  });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6 ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-DOS-01");
+  rysujListeKontrolna(s, LISTA_102, "Lista kontrolna III-54 — sekcja 10.2", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-DOS-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Plan doskonalenia (F-EnMS-23)", "zakładka 1",
+      ile(POZYCJE.length, "pozycja", "pozycje", "pozycji") + " · system: " +
+      POZYCJE.filter(function (p) { return p.obszar === "S"; }).length + ", wynik: " +
+      POZYCJE.filter(function (p) { return p.obszar === "W"; }).length],
+    ["Źródła możliwości i ich ocena", "zakładka 2",
+      czynneZrodla() + " z " + ZRODLA_DEF.length + " źródeł · " +
+      ile(MOZLIWOSCI.length, "możliwość oceniona", "możliwości ocenione", "możliwości ocenionych")],
+    ["Wykazanie poprawy wyniku", "zakładka 3",
+      poprawaWykazana() === null ? "brak danych" : poprawaWykazana() ? "wykazana — " + ilePoprawionych() + " wskaźników" : "niewykazana"],
+    ["Zmiany w systemie i cykl", "zakładka 4",
+      ile(POZYCJE.filter(function (p) { return p.obszar === "S"; }).length, "zmiana", "zmiany", "zmian")],
+    ["Wnioski konsultanta", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 1", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>dwóch rzeczy, w dwóch zdaniach</b>: organizacja ciągle doskonali przydatność, adekwatność i skuteczność systemu — oraz <b>wykazuje ciągłą poprawę wyniku energetycznego</b>. Nie wymaga ani planu doskonalenia, ani oceny możliwości, ani prostego okresu zwrotu; to narzędzia metodyki ENESA. Dowodem poprawy są zapisy z monitorowania (9.1.1) i karty wskaźników (6.4–6.5), a nie ten dokument. Dokument D-EnMS-DOS-01 odpowiada formularzowi F-EnMS-23 (załącznik III-52) i zbiera w jednym miejscu to, co w systemie już jest."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "plan", t: "1. Plan doskonalenia", f: rysujPlan },
+  { id: "zrodla", t: "2. Źródła i ocena możliwości", f: rysujZrodla },
+  { id: "poprawa", t: "3. Wykazanie poprawy", f: rysujPoprawe },
+  { id: "cykl", t: "4. Cykl i zmiany systemu", f: rysujCykl },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(POZYCJE.length, 1) + ZRODLA_DEF.length + Math.max(POPRAWA.length, 1) + 2,
+    zrob: POZYCJE.filter(pozycjaOk).length + czynneZrodla() + POPRAWA.filter(poprawaOk).length
+      + (metaOk() ? 1 : 0)
+      + (MOZLIWOSCI.length && MOZLIWOSCI.every(mozliwoscOk) ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_102", JSON.stringify({
+      POZYCJE: POZYCJE, ZRODLA: ZRODLA, MOZLIWOSCI: MOZLIWOSCI, POPRAWA: POPRAWA,
+      META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_102"); if (!s) return;
+    var d = JSON.parse(s);
+    POZYCJE = d.POZYCJE || []; ZRODLA = d.ZRODLA || []; MOZLIWOSCI = d.MOZLIWOSCI || [];
+    POPRAWA = d.POPRAWA || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var p = JSON.parse(JSON.stringify(PRZYKLAD));
+  POZYCJE = p.POZYCJE; ZRODLA = p.ZRODLA; MOZLIWOSCI = p.MOZLIWOSCI; POPRAWA = p.POPRAWA; META = p.META;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić plan doskonalenia?")) return;
+  POZYCJE = []; ZRODLA = []; MOZLIWOSCI = []; POPRAWA = []; WNIOSKI = [];
+  META = { okres: "", zatwierdzil: "", dataZatw: "", cenaEl: "", cenaGaz: "", potencjalRazem: "" };
+  try { localStorage.removeItem("enesa_102"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

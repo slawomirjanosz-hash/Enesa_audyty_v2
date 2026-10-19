@@ -1,0 +1,1127 @@
+[
+  {
+    "section": "10-1",
+    "file": "ENESA_10.1_Niezgodnosci_platforma.html",
+    "sha256": "84ec214ea236a12a4c0c1a67db00f07a0beeb009b4b5d1745fbdece202770e91",
+    "tabs": [
+      {
+        "id": "rejestr",
+        "title": "1. Rejestr"
+      },
+      {
+        "id": "identyfikacja",
+        "title": "2. A i B — identyfikacja"
+      },
+      {
+        "id": "przyczyna",
+        "title": "3. C i D — przyczyna"
+      },
+      {
+        "id": "dzialania",
+        "title": "4. E — działania"
+      },
+      {
+        "id": "skutecznosc",
+        "title": "5. F — skuteczność"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "KARTY",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "10-2",
+    "file": "ENESA_10.2_Ciagle_doskonalenie_platforma.html",
+    "sha256": "7746e2a04e11d8f59c9f3c1b7549c8a6b9a142dfa3882254e7565b17cde9cd36",
+    "tabs": [
+      {
+        "id": "plan",
+        "title": "1. Plan doskonalenia"
+      },
+      {
+        "id": "zrodla",
+        "title": "2. Źródła i ocena możliwości"
+      },
+      {
+        "id": "poprawa",
+        "title": "3. Wykazanie poprawy"
+      },
+      {
+        "id": "cykl",
+        "title": "4. Cykl i zmiany systemu"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "POZYCJE",
+      "ZRODLA",
+      "MOZLIWOSCI",
+      "POPRAWA",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "4-1",
+    "file": "ENESA_4.1_Kontekst_platforma.html",
+    "sha256": "3fff714372cf80efb44c2ebbbf64be520cc4577557cff6f8177f1470be7fe457",
+    "tabs": [
+      {
+        "id": "klimat",
+        "title": "1. Klimat i stan prawny"
+      },
+      {
+        "id": "zewn",
+        "title": "2. Czynniki zewnętrzne"
+      },
+      {
+        "id": "wewn",
+        "title": "3. Czynniki wewnętrzne"
+      },
+      {
+        "id": "wlasne",
+        "title": "4. Czynniki własne"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "DEC",
+      "WLASNE",
+      "KLIMAT",
+      "PRAWO",
+      "SWOT",
+      "WNIOSKI",
+      "ODP",
+      "PROFIL"
+    ]
+  },
+  {
+    "section": "4-2",
+    "file": "ENESA_4.2_Strony_zainteresowane_platforma.html",
+    "sha256": "00cc1c27b51badb2d82bd261f1352a5c95a33e754fcaa7c90f7974135fcf7532",
+    "tabs": [
+      {
+        "id": "klimat",
+        "title": "Klimat i przegląd"
+      },
+      {
+        "id": "wewn",
+        "title": "Strony wewnętrzne"
+      },
+      {
+        "id": "organy",
+        "title": "Organy i regulatorzy"
+      },
+      {
+        "id": "rynek",
+        "title": "Rynek i dostawcy"
+      },
+      {
+        "id": "finanse",
+        "title": "Finansowanie i nadzór"
+      },
+      {
+        "id": "wlasne",
+        "title": "Własne wymagania"
+      },
+      {
+        "id": "zatw",
+        "title": "Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "W",
+      "WLASNE",
+      "KLIMAT"
+    ]
+  },
+  {
+    "section": "4-3",
+    "file": "ENESA_4.3_Zakres_systemu_platforma.html",
+    "sha256": "40ea421b699e36067349d0854236a11548a4e34d1b1539fb7e6f7794e250b755",
+    "tabs": [
+      {
+        "id": "konsekwencje",
+        "title": "1. Konsekwencje z 4.1 i 4.2"
+      },
+      {
+        "id": "zakres",
+        "title": "2. Zakres"
+      },
+      {
+        "id": "granice",
+        "title": "3. Granice"
+      },
+      {
+        "id": "uprawnienia",
+        "title": "4. Uprawnienia"
+      },
+      {
+        "id": "energia",
+        "title": "5. Rodzaje energii"
+      },
+      {
+        "id": "poza",
+        "title": "6. Poza granicami"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "KON",
+      "ZAKRES",
+      "GRANICE",
+      "UPRAW",
+      "ENERGIA",
+      "POZA",
+      "SPRAWDZONE"
+    ]
+  },
+  {
+    "section": "4-4",
+    "file": "ENESA_4.4_System_zarzadzania_energia_platforma.html",
+    "sha256": "aec6f6c250d6cd651ab6373270105d560e056bdf039aed742d67bd77e96e6805",
+    "tabs": [
+      {
+        "id": "pytania",
+        "title": "1. Decyzje o systemie"
+      },
+      {
+        "id": "czasowniki",
+        "title": "2. Cztery pytania kontrolne"
+      },
+      {
+        "id": "obieg",
+        "title": "3. Obieg informacji"
+      },
+      {
+        "id": "test",
+        "title": "4. Test ciągłości"
+      },
+      {
+        "id": "procesy",
+        "title": "5. Procesy systemu"
+      },
+      {
+        "id": "powiazania",
+        "title": "6. Mapa powiązań"
+      },
+      {
+        "id": "komplet",
+        "title": "7. Kompletność"
+      },
+      {
+        "id": "zatw",
+        "title": "8. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "ODP",
+      "CZ",
+      "OB",
+      "PG",
+      "TS",
+      "PROC",
+      "POW"
+    ]
+  },
+  {
+    "section": "5-1",
+    "file": "ENESA_5.1_Przywodztwo_platforma.html",
+    "sha256": "ede5471120082c7390dc4a329c3a2707a6bcdbe640304bdef86091d10c464148",
+    "tabs": [
+      {
+        "id": "pytania",
+        "title": "1. Cztery pytania kontrolne"
+      },
+      {
+        "id": "integracja",
+        "title": "2. Integracja z procesami"
+      },
+      {
+        "id": "zespol",
+        "title": "3. Zespół ds. energii"
+      },
+      {
+        "id": "zasoby",
+        "title": "4. Zasoby"
+      },
+      {
+        "id": "styk",
+        "title": "5. Nawyki i decyzje"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "ZOB",
+      "ZESP",
+      "CZLON",
+      "ZAS",
+      "INT",
+      "STYK",
+      "DECYZJE",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "5-2",
+    "file": "ENESA_5.2_Polityka_energetyczna_platforma.html",
+    "sha256": "c9f7343dbaa51172f4ae9c61dc815ca5254c82212d800a8171ffe840783817af",
+    "tabs": [
+      {
+        "id": "elementy",
+        "title": "1. Siedem elementów"
+      },
+      {
+        "id": "dodatkowe",
+        "title": "2. Zobowiązania dodatkowe"
+      },
+      {
+        "id": "utrzymanie",
+        "title": "3. Utrzymywanie i zatwierdzenie"
+      },
+      {
+        "id": "podglad",
+        "title": "4. Podgląd polityki"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "POL",
+      "TRESC",
+      "DODATKOWE",
+      "UTRZ",
+      "ZATW",
+      "PRZEGLADY",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "5-3",
+    "file": "ENESA_5.3_Role_i_uprawnienia_platforma.html",
+    "sha256": "a3b22ca085000fd5ff1862361b1e3f868e0e460b6eea732aaad78a5487a86b8d",
+    "tabs": [
+      {
+        "id": "zadania",
+        "title": "1. Pięć zadań zespołu"
+      },
+      {
+        "id": "matryca",
+        "title": "2. Matryca odpowiedzialności"
+      },
+      {
+        "id": "uprawnienia",
+        "title": "3. Uprawnienia"
+      },
+      {
+        "id": "seu",
+        "title": "4. Właściciele SEU"
+      },
+      {
+        "id": "komunikacja",
+        "title": "5. Zakomunikowanie ról"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "ZAD",
+      "ROLE",
+      "MAT",
+      "UWAGI",
+      "UPR",
+      "SEU",
+      "KOM",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "6-1",
+    "file": "ENESA_6.1_Ryzyka_i_szanse_platforma.html",
+    "sha256": "fdd6f1323562f3272bfb7b0d59fde21e943ee88900f1daae509e1f4a81dc7c17",
+    "tabs": [
+      {
+        "id": "wejscie",
+        "title": "1. Dane wejściowe"
+      },
+      {
+        "id": "ryzyka",
+        "title": "2. Rejestr ryzyk"
+      },
+      {
+        "id": "szanse",
+        "title": "3. Rejestr szans"
+      },
+      {
+        "id": "przeglad",
+        "title": "4. Przegląd rejestru"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "WEJ",
+      "PROCESY",
+      "RYZYKA",
+      "SZANSE",
+      "PRZEGLAD",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "6-2",
+    "file": "ENESA_6.2_Cele_i_plany_dzialan_platforma.html",
+    "sha256": "6e9cd2b853df0389b51612b00afb84fe748ca70dda3fbe158520f732c66d81b3",
+    "tabs": [
+      {
+        "id": "cele",
+        "title": "1. Cele"
+      },
+      {
+        "id": "zadania",
+        "title": "2. Zadania energetyczne"
+      },
+      {
+        "id": "dzialania",
+        "title": "3. Plany działań"
+      },
+      {
+        "id": "weryfikacja",
+        "title": "4. Metoda weryfikacji"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "CELE",
+      "ZADANIA",
+      "DZIAL",
+      "WER",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "6-3",
+    "file": "ENESA_6.3_Przeglad_energetyczny_platforma.html",
+    "sha256": "cb29a45f06ff05d4abeeb3a6c6961cbf4f4fc7531756f82c61aa7e9ccb0430b1",
+    "tabs": [
+      {
+        "id": "metody",
+        "title": "1. Metody i kryteria"
+      },
+      {
+        "id": "nosniki",
+        "title": "2. Rodzaje energii"
+      },
+      {
+        "id": "bilans",
+        "title": "3. Bilans i obszary"
+      },
+      {
+        "id": "seu",
+        "title": "4. Znaczące użycia"
+      },
+      {
+        "id": "mozliwosci",
+        "title": "5. Możliwości poprawy"
+      },
+      {
+        "id": "prognoza",
+        "title": "6. Prognoza i aktualizacja"
+      },
+      {
+        "id": "kons",
+        "title": "7. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "8. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "MET",
+      "NOSNIKI",
+      "TREND",
+      "OBSZARY",
+      "SEU",
+      "MOZL",
+      "PROG",
+      "AKTUAL",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "6-4",
+    "file": "ENESA_6.4_Wskazniki_EnPI_platforma.html",
+    "sha256": "cd782620d5688f192f27327e0b56c6f1258a5be412010f37d441d4fea906c032",
+    "tabs": [
+      {
+        "id": "rejestr",
+        "title": "1. Rejestr EnPI"
+      },
+      {
+        "id": "karty",
+        "title": "2. Karty wskaźników"
+      },
+      {
+        "id": "wartosci",
+        "title": "3. Wartości"
+      },
+      {
+        "id": "metoda",
+        "title": "4. Metoda EnPI"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "KARTY",
+      "META",
+      "METODA",
+      "WARTOSCI",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "6-5",
+    "file": "ENESA_6.5_Linia_bazowa_EnB_platforma.html",
+    "sha256": "0581ec4fb87934577b482462a844718c78a1d704cbdecebbd09785c385f00295",
+    "tabs": [
+      {
+        "id": "bazowe",
+        "title": "1. Linie bazowe"
+      },
+      {
+        "id": "norm",
+        "title": "2. Normalizacja"
+      },
+      {
+        "id": "rewizje",
+        "title": "3. Zasady rewizji"
+      },
+      {
+        "id": "hist",
+        "title": "4. Historia rewizji"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "KARTY",
+      "META",
+      "ZASADY",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "6-6",
+    "file": "ENESA_6.6_Plan_zbierania_danych_platforma.html",
+    "sha256": "cbb0264c1feec3d86f9a71961d69882a9c49760fadf7802e61b3a7bb7d5f498f",
+    "tabs": [
+      {
+        "id": "plan",
+        "title": "1. Pozycje planu"
+      },
+      {
+        "id": "kompl",
+        "title": "2. Kompletność"
+      },
+      {
+        "id": "dokl",
+        "title": "3. Dokładność i zasady"
+      },
+      {
+        "id": "kons",
+        "title": "4. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "5. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "POZYCJE",
+      "ZASADY",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "7-1",
+    "file": "ENESA_7.1_Zasoby_platforma.html",
+    "sha256": "d23e9c0bc5a1a10a4bd5268f64ef136ee37709ff3a683b56e7d173e30b8d0c9b",
+    "tabs": [
+      {
+        "id": "zadania",
+        "title": "1. Zadania systemu"
+      },
+      {
+        "id": "osoby",
+        "title": "2. Obciążenie osób"
+      },
+      {
+        "id": "zasoby",
+        "title": "3. Cztery kategorie"
+      },
+      {
+        "id": "decyzje",
+        "title": "4. Decyzje"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "ZADANIA",
+      "OSOBY",
+      "ZASOBY",
+      "DECYZJE",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "7-2",
+    "file": "ENESA_7.2_Kompetencje_platforma.html",
+    "sha256": "ebcefcc3d4959ea7bf96acf521b843170716e82977819bba96d217385dcb3f54",
+    "tabs": [
+      {
+        "id": "zakres",
+        "title": "1. Kompetencje i role"
+      },
+      {
+        "id": "matryca",
+        "title": "2. Matryca W/A"
+      },
+      {
+        "id": "luki",
+        "title": "3. Luki i działania"
+      },
+      {
+        "id": "plan",
+        "title": "4. Plan szkoleń"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "KOMPETENCJE",
+      "ROLE",
+      "MAC",
+      "LUKI",
+      "META",
+      "WNIOSKI",
+      "PLAN"
+    ]
+  },
+  {
+    "section": "7-3",
+    "file": "ENESA_7.3_Swiadomosc_platforma.html",
+    "sha256": "5b86b32d3ff435de8609801c7606f0633f62d394651612502445798304b199cc",
+    "tabs": [
+      {
+        "id": "grupy",
+        "title": "1. Grupy i elementy"
+      },
+      {
+        "id": "kanaly",
+        "title": "2. Kanały i rytm"
+      },
+      {
+        "id": "sprawdz",
+        "title": "3. Sprawdzenia"
+      },
+      {
+        "id": "przeszkody",
+        "title": "4. Przeszkody"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "GRUPY",
+      "KANALY",
+      "SPRAWDZENIA",
+      "PRZESZKODY",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "7-4",
+    "file": "ENESA_7.4_Komunikacja_platforma.html",
+    "sha256": "fa4828663ebed7934fab0c81703ad5b406b83e2095c7b4d36b460032f97f2e40",
+    "tabs": [
+      {
+        "id": "wew",
+        "title": "1. Wewnętrzna"
+      },
+      {
+        "id": "zew",
+        "title": "2. Zewnętrzna"
+      },
+      {
+        "id": "proces",
+        "title": "3. Proces zgłaszania"
+      },
+      {
+        "id": "rejestr",
+        "title": "4. Rejestr zgłoszeń"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "WEW",
+      "ZEW",
+      "PROCES",
+      "ZGLOSZENIA",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "7-5",
+    "file": "ENESA_7.5_Udokumentowane_informacje_platforma.html",
+    "sha256": "99db43e309ae6e018e09fed88c671db244f06ef848d4ef1e5418782061d4b8b0",
+    "tabs": [
+      {
+        "id": "wykaz",
+        "title": "1. Wykaz"
+      },
+      {
+        "id": "pokrycie",
+        "title": "2. Pokrycie wymagań"
+      },
+      {
+        "id": "zasady",
+        "title": "3. Zasady nadzoru"
+      },
+      {
+        "id": "zewn",
+        "title": "4. Dokumenty zewnętrzne"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "WYKAZ",
+      "ZASADY",
+      "ZEWN",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "8-1",
+    "file": "ENESA_8.1_Nadzor_operacyjny_platforma.html",
+    "sha256": "4dfd822f77110242990ffa34a0b4c6b1a6dcd0bfff96590d98366716b8444038",
+    "tabs": [
+      {
+        "id": "karty",
+        "title": "1. Karty SEU"
+      },
+      {
+        "id": "kryteria",
+        "title": "2. A — kryteria"
+      },
+      {
+        "id": "sterowanie",
+        "title": "3. B i C — tryby, zmiany"
+      },
+      {
+        "id": "monitoring",
+        "title": "4. D i E — monitoring"
+      },
+      {
+        "id": "przekazanie",
+        "title": "5. F — przekazanie"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "KARTY",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "8-2",
+    "file": "ENESA_8.2_Projektowanie_platforma.html",
+    "sha256": "65cbd8dbca12252e4fda0062b032123e709b7bdb09203b838f564870ec0bfb66",
+    "tabs": [
+      {
+        "id": "projekty",
+        "title": "1. Projekty"
+      },
+      {
+        "id": "rozpoznanie",
+        "title": "2. A — rozpoznanie"
+      },
+      {
+        "id": "mozliwosci",
+        "title": "3. B i C — możliwości, obsługa"
+      },
+      {
+        "id": "wnioskiP",
+        "title": "4. D — wnioski"
+      },
+      {
+        "id": "sprawdzenie",
+        "title": "5. E — po uruchomieniu"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "PROJEKTY",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "8-3",
+    "file": "ENESA_8.3_Zakupy_platforma.html",
+    "sha256": "13cdba271bed1582ff3bcadbc8f1e9e1cf550200b159964bd797300abcba642f",
+    "tabs": [
+      {
+        "id": "zakupy",
+        "title": "1. Zakupy i ocena (A)"
+      },
+      {
+        "id": "kategorie",
+        "title": "2. B — kryteria kategorii"
+      },
+      {
+        "id": "zapytanie",
+        "title": "3. C — zapytanie"
+      },
+      {
+        "id": "porownanie",
+        "title": "4. D — porównanie ofert"
+      },
+      {
+        "id": "odbior",
+        "title": "5. E — odbiór"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "ZAKUPY",
+      "KATEGORIE",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "9-1-1",
+    "file": "ENESA_9.1.1_Monitorowanie_platforma.html",
+    "sha256": "5eb4a341dcba9906f6a46df1d9f2cc4bb62e46471e854fee1bd41f216590c02c",
+    "tabs": [
+      {
+        "id": "ustalenia",
+        "title": "1. Ustalenia monitorowania"
+      },
+      {
+        "id": "zuzycie",
+        "title": "2. A — rzeczywiste a oczekiwane"
+      },
+      {
+        "id": "wskazniki",
+        "title": "3. B — EnPI wobec EnB"
+      },
+      {
+        "id": "seu",
+        "title": "4. C — SEU i odchylenia"
+      },
+      {
+        "id": "ocena",
+        "title": "5. E — wnioski"
+      },
+      {
+        "id": "kons",
+        "title": "6. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "7. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "USTALENIA",
+      "MODEL",
+      "OKRESY",
+      "WSKAZNIKI",
+      "SEU",
+      "ODCH",
+      "OCENA_E",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "9-1-2",
+    "file": "ENESA_9.1.2_Ocena_zgodnosci_platforma.html",
+    "sha256": "816e4ee0e8cecc048a84df4ed6a891ef9917f6891bc8eee2a72f8d30413b272c",
+    "tabs": [
+      {
+        "id": "ocena",
+        "title": "1. Ocena i zakres"
+      },
+      {
+        "id": "wymagania",
+        "title": "2. D — wymagania"
+      },
+      {
+        "id": "wnioski",
+        "title": "3. Wnioski i przekazanie"
+      },
+      {
+        "id": "kons",
+        "title": "4. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "5. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "WYM",
+      "OCENA",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "9-2",
+    "file": "ENESA_9.2_Audyt_wewnetrzny_platforma.html",
+    "sha256": "1d1ed63aad8b265f80957920ccbee44933ad2d1c5ec0ea760e4502bc9137aaf1",
+    "tabs": [
+      {
+        "id": "program",
+        "title": "1. Program audytów"
+      },
+      {
+        "id": "raporty",
+        "title": "2. Raporty"
+      },
+      {
+        "id": "ustalenia",
+        "title": "3. A — ustalenia"
+      },
+      {
+        "id": "wnioskiB",
+        "title": "4. B — wnioski"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "PROGRAM",
+      "RAPORTY",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "9-3",
+    "file": "ENESA_9.3_Przeglad_zarzadzania_platforma.html",
+    "sha256": "749732f3a0dd5274712de251cffbb4cfc6e6f25f73f047ba4549d0f021108014",
+    "tabs": [
+      {
+        "id": "przeglad",
+        "title": "1. Przegląd"
+      },
+      {
+        "id": "wejscia",
+        "title": "2. A — dane wejściowe"
+      },
+      {
+        "id": "decyzje",
+        "title": "3. B — decyzje"
+      },
+      {
+        "id": "ocenac",
+        "title": "4. C — ocena ogólna"
+      },
+      {
+        "id": "kons",
+        "title": "5. Analiza konsultanta"
+      },
+      {
+        "id": "zatw",
+        "title": "6. Zatwierdzenia"
+      }
+    ],
+    "state": [
+      "WEJSCIA",
+      "DECYZJE",
+      "OCENA_C",
+      "META",
+      "WNIOSKI"
+    ]
+  },
+  {
+    "section": "intro",
+    "file": "ENESA_Profil_zakladu_ankieta.html",
+    "sha256": "6790206584b00b077f6796685fc382c7c434ff1d15ec21624adac94f350a1a5a",
+    "tabs": [
+      {
+        "id": "S1",
+        "title": "Organizacja i obiekty"
+      },
+      {
+        "id": "S2",
+        "title": "Energia i koszty"
+      },
+      {
+        "id": "S3",
+        "title": "Instalacje zasilane energią elektryczną"
+      },
+      {
+        "id": "S4",
+        "title": "Ciepło, procesy i źródła własne"
+      },
+      {
+        "id": "S5",
+        "title": "Opomiarowanie i dane"
+      },
+      {
+        "id": "S6",
+        "title": "Otoczenie prawne i rynkowe"
+      }
+    ],
+    "state": [
+      "ODP",
+      "STAN"
+    ]
+  }
+]

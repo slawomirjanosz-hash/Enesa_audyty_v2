@@ -1,0 +1,1436 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 6.1 Ryzyka i szanse</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 6</div>
+ <h1>6.1 Działania odnoszące się do ryzyk i szans</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 6.1</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 6.1</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>6.1 Działania odnoszące się do ryzyk i szans</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 6.1 i sposób prowadzenia rejestru.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 6.1<br>Ryzyka i szanse</div>
+   <div>
+    <h4>6.1 Działania odnoszące się do ryzyk i szans</h4>
+    <p>Skąd biorą się ryzyka i szanse, jak je ocenić i dlaczego „wykonane” to jeszcze nie „skuteczne”.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 6.1. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">6.1 — część A<br>11 slajdów</div>
+   <div>
+    <h4>6.1 Ryzyka i szanse — część A</h4>
+    <p>Trzy źródła ryzyk. Ocena P × W. Włączenie działań w procesy firmy i planowanie oceny skuteczności.</p>
+    <p style="font-size:12.5px">11 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Planując system zarządzania energią, organizacja uwzględnia czynniki z punktu 4.1
+ i wymagania z punktu 4.2 oraz przegląda swoje działania i procesy, które mogą wpływać na wynik energetyczny.
+ Planowanie ma być spójne z polityką energetyczną i prowadzić do działań skutkujących ciągłym doskonaleniem wyniku
+ energetycznego. Organizacja określa ryzyka i szanse, którymi trzeba się zająć, aby: zapewnić, że system może
+ osiągnąć zamierzone wyniki, w tym poprawę wyniku energetycznego; zapobiec niepożądanym skutkom lub je ograniczyć;
+ osiągać ciągłe doskonalenie systemu i wyniku energetycznego. Organizacja planuje działania odnoszące się do tych
+ ryzyk i szans oraz sposób włączenia i wdrożenia tych działań w procesy systemu i procesy związane z wynikiem
+ energetycznym, a także sposób oceny ich skuteczności. Omówienie na podstawie punktu 6.1 PN-EN ISO 50001:2018;
+ nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> ustal, co może pomóc albo zaszkodzić Twojemu
+ systemowi i wynikowi energetycznemu, zaplanuj działania, wbuduj je w procesy firmy i sprawdź, czy zadziałały.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 3, punkt 6.1. Formularz: III-15 (F-EnMS-07),
+ przykład AutoParts: III-16, procedura P-EnMS-03: III-18.</div>
+
+ <div class="ramka">
+  <h3>◧ Jesień 2022. Rejestr sprzed roku</h3>
+  <p style="font-size:13.5px">Ceny energii elektrycznej rosną w kilka tygodni tak, jak wcześniej przez kilka lat.
+  Dyrektor finansowy mleczarni przynosi prognozę: jeśli tak zostanie, za pół roku firma straci rentowność.</p>
+  <p style="font-size:13.5px">Przez tydzień panika. Potem Energy Manager otwiera rejestr ryzyk sprzed roku. Jest tam
+  wpis: „Gwałtowny wzrost cen energii elektrycznej — wpływ wysoki. Działanie: lista szybkich oszczędności do wdrożenia
+  w 30 dni.” Lista leży gotowa.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Nikt w tej firmie nie przewidział kryzysu. Ale ktoś rok wcześniej
+  zapytał: „A co, jeśli?” — i przygotował odpowiedź.</b> Na tym polega punkt 6.1.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>◉ Skąd biorą się ryzyka i szanse?</h3>
+  <p class="op">Nie z szablonu z internetu, tylko z trzech źródeł, które już znacie.</p>
+  <ul>
+   <li><b>Kontekst (4.1)</b> — ceny energii, przepisy, technologia, klimat, stan maszyn, budżet.</li>
+   <li><b>Strony zainteresowane (4.2)</b> — wymagania klientów, banków, właścicieli.</li>
+   <li><b>Działania i procesy wpływające na wynik energetyczny</b> — awaria sprężarki, nowa linia, wiedza zamknięta
+   w głowie jednej osoby.</li>
+  </ul>
+  <p style="font-size:13.5px;margin:10px 0 0"><b>Ryzyko to nie to samo co problem.</b> Problem już się wydarzył.
+  Ryzyko może się wydarzyć — i możecie się na nie przygotować. Szansa to sytuacja, która może przynieść korzyść
+  systemowi albo wynikowi energetycznemu, jeśli ją zauważycie i wykorzystacie.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>⚖ Jak ocenić, czym się zająć?</h3>
+  <p class="op">Norma nie narzuca metody oceny. ★ Ta seria proponuje prostą: prawdopodobieństwo (P) i wpływ (W)
+  w skali 1–3, poziom = P × W. Przy szansach P oznacza prawdopodobieństwo, że uda się uzyskać korzyść,
+  a nie tylko że okazja się pojawi.</p>
+  <table class="tab">
+   <tr><th style="width:22%">Poziom (P × W)</th><th style="width:42%">Co robisz</th><th>Kto zatwierdza</th></tr>
+   <tr><td><b>1–2: niski</b></td><td>Obserwujesz przy przeglądzie rejestru</td><td>—</td></tr>
+   <tr><td><b>3–4: średni</b></td><td>Planujesz działanie i sposób oceny jego skuteczności</td><td>Koordynator z zespołem</td></tr>
+   <tr><td><b>6–9: wysoki</b></td><td>Działanie priorytetowe, z zasobami i terminem</td><td>Najwyższe kierownictwo</td></tr>
+  </table>
+  <p style="font-size:13.5px;margin:10px 0 0">★ Skala i progi to propozycja metody ENESA — norma ich nie narzuca.
+  Ankieta liczy poziom sama i otwiera kolejne pola dopiero wtedy, gdy są potrzebne.</p>
+ </div>
+
+ <div class="warn" style="margin:14px 0"><b>Plan to połowa pracy.</b> Norma wymaga dwóch rzeczy więcej niż lista.
+ Po pierwsze: działanie trzeba <b>włączyć w proces</b>, w którym naprawdę się wydarzy — budżet, plan remontów,
+ procedurę zakupów. Po drugie: trzeba zaplanować, <b>jak sprawdzicie jego skuteczność</b>. Wykonane to jeszcze nie
+ skuteczne. Przegląd szczelności „zrobiony” nic nie znaczy, dopóki przepływ w postoju nie spadnie.</div>
+
+ <div class="ramka">
+  <h3>⟳ Pełna droga jednej szansy — od zauważenia do sprawdzenia</h3>
+  <p class="op">Szansa S1 z rejestru AutoParts: nieszczelności i zbyt wysokie ciśnienie sprężonego powietrza.</p>
+  <ol class="kroki">
+   <li><b>Znaczenie:</b> przegląd energetyczny szacuje możliwą oszczędność na ok. 295 MWh rocznie.</li>
+   <li><b>Ocena:</b> prawdopodobieństwo 3, wpływ 2 — poziom 6, czyli działanie priorytetowe.</li>
+   <li><b>Działanie:</b> usunięcie nieszczelności i obniżenie ciśnienia — wpisane do planu działań celu C1
+   i do planu utrzymania ruchu.</li>
+   <li><b>Sprawdzenie:</b> przepływ w czasie postoju spadł z 9 do 6 Nm³/min (czerwiec 2026 r.).
+   Wykonane — i widać, że skuteczne.</li>
+  </ol>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>Uwaga przy fotowoltaice.</b> Instalacja PV zmniejsza <b>zakup</b> energii
+ z sieci, a nie <b>zużycie</b> zakładu — wynik energetyczny się od niej nie zmienia. W rejestrze AutoParts szansa S2
+ jest opisana właśnie tak: mniejszy zakup o ok. 1 400 MWh rocznie. Ankieta przypomina o tym, gdy w opisie szansy
+ pojawi się fotowoltaika.</div>
+
+ <div class="ramka">
+  <h3>§ Ryzyko prawne: nadchodzące obowiązki dla dużych odbiorców energii</h3>
+  <p style="font-size:13.5px">Dyrektywa (UE) 2023/1791 przewiduje obowiązek systemu zarządzania energią dla
+  przedsiębiorstw zużywających średnio ponad 85 TJ rocznie oraz audytu energetycznego dla zużywających ponad 10 TJ.
+  Obowiązki dla firm w Polsce określi ustawa, która ją wdroży. Jeśli Wasza firma może przekroczyć te progi, wpiszcie
+  to ryzyko do rejestru z konkretnymi skutkami: presja czasu, koszty wdrożenia w pośpiechu, wymagania klientów.
+  Działania: policzcie średnie zużycie z trzech lat (wszystkie nośniki, w TJ), śledźcie prace nad ustawą, zaplanujcie
+  harmonogram i zasoby.</p>
+  <div class="warn" style="margin-bottom:0"><b>Stan prawny na 6 października 2026 r.</b> Projekt nowelizacji ustawy
+  o efektywności energetycznej wdrażający dyrektywę (UE) 2023/1791 — numer w wykazie prac rządu UC77 — nie został
+  jeszcze uchwalony; rząd planował jego przyjęcie w III kwartale 2026 r. Projekt przewiduje progi 10 TJ (audyt)
+  i 85 TJ (certyfikowany system). <b>Sankcji ani terminów dla polskich firm nie zakładajcie, dopóki ustawa nie
+  zostanie uchwalona.</b></div>
+ </div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Skąd wiesz, że Twój rejestr działa?</h3>
+   <ul>
+    <li>Ryzyka i szanse są Wasze — przy każdym wiadomo, z którego źródła pochodzi (4.1, 4.2, proces).</li>
+    <li>Przy ważnych pozycjach jest działanie z terminem, osobą i miejscem w procesach firmy.</li>
+    <li>Przy działaniach jest zaplanowany sposób oceny skuteczności — a przy zakończonych: jej wynik.</li>
+    <li>Rejestr był przeglądany po ostatniej istotnej zmianie w firmie.</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Ankieta odpowiada na te cztery pytania sama,
+   w zakładce „Przegląd rejestru”.</p>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Dokumenty do przygotowania</h3>
+   <ul>
+    <li>★ Rejestr ryzyk i szans z oceną — <b>zalecenie; norma nie wymaga udokumentowania</b></li>
+    <li>Działania: co, kto, kiedy, jakie zasoby, w którym procesie — <b>wymaganie normy: zaplanować i włączyć w procesy</b></li>
+    <li>Sposób i termin oceny skuteczności działań — <b>wymaganie normy: zaplanować</b></li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Szczegółowe szablony: Część II, Moduł 3;
+   Część III: III-15–III-18.</p>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>☰ Zalecany sposób wdrożenia</h3>
+  <ol class="kroki">
+   <li>Zbierzcie zespół — koordynatora, przedstawicieli działów, kogoś z finansów.</li>
+   <li>Przejrzyjcie kontekst, strony zainteresowane i procesy wpływające na energię.</li>
+   <li>Wypiszcie ryzyka — co może pójść nie tak? — i szanse: co możecie wykorzystać?</li>
+   <li>Oceńcie ich znaczenie, na przykład prawdopodobieństwo × wpływ.</li>
+   <li>Zaplanujcie działania i wskażcie proces, w którym się wydarzą.</li>
+   <li>Ustalcie, jak i kiedy sprawdzicie skuteczność — i zapiszcie wynik.</li>
+  </ol>
+ </div>
+
+ <div class="ramka">
+  <h3>⚠ Na co uważać — najczęstsze błędy</h3>
+  <table class="tab">
+   <tr><th style="width:38%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+   <tr><td>Tylko ryzyka, bez szans</td><td>Norma wymaga określenia ryzyk i szans. Szanse są równie ważne</td></tr>
+   <tr><td>Ryzyka skopiowane z internetu</td><td>Piszcie o swoich ryzykach. „Wzrost cen energii” znaczy co innego dla huty i dla biura</td></tr>
+   <tr><td>Brak powiązania z kontekstem</td><td>Ryzyka mają wynikać z kontekstu (4.1), stron (4.2) i przeglądu procesów</td></tr>
+   <tr><td>Ryzyka bez działań</td><td>Dla pozycji, którymi postanowiliście się zająć, zaplanujcie działanie i jego miejsce w procesach</td></tr>
+   <tr><td>„Wykonane” = „skuteczne”</td><td>Zaplanujcie, jak i kiedy sprawdzicie skuteczność — i zapiszcie wynik</td></tr>
+   <tr><td>Jednorazowa analiza</td><td>Przeglądajcie rejestr przy istotnych zmianach i okresowo (★ co najmniej raz w roku)</td></tr>
+  </table>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>Twój ruch.</b> Analiza ryzyk i szans nie służy do przewidywania
+ przyszłości. Służy do tego, żeby na najważniejsze „a co, jeśli?” mieć gotową odpowiedź — wbudowaną w procesy firmy
+ i sprawdzoną.<br>
+ <b>Zadanie:</b> wypiszcie trzy ryzyka i jedną szansę dla swojego zakładu. Przy każdej pozycji zapiszcie źródło
+ (4.1, 4.2 albo proces) i jedno działanie.</div>
+
+ <div class="ankbox">
+  <h3>6.1 Rejestr ryzyk i szans</h3>
+  <p class="op">Dane wejściowe, rejestr ryzyk, rejestr szans, przegląd. Ocena P × W liczona automatycznie,
+  pola działań otwierają się według poziomu. Sześć zakładek.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz ankietę 6.1</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”,
+ Tom 2 rozdział 3 punkt 6.1 oraz Część III (Toolkit) Moduł 3 wersja 2.1.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>D-EnMS-RYZ-01 Rejestr ryzyk i szans (= formularz F-EnMS-07, załącznik III-15)</li>
+   <li>Zapisy oceny skuteczności działań</li>
+   <li>Notatka z przeglądu rejestru</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Poziom liczony automatycznie: P × W. Od poziomu 3 wymagane jest działanie z oceną skuteczności,
+  od poziomu 6 — zatwierdzenie przez kierownictwo.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 6.1 w formacie stron 4.1–5.3.</b> Pierwszy punkt rozdziału 6 na platformie.
+Różnica wobec poprzednich: tutaj platforma <b>liczy</b> — poziom P × W steruje tym, które pola są wymagane
+i kto zatwierdza pozycję.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 3, punkt 6.1</td><td>Scena mleczarni z jesieni 2022, trzy źródła ryzyk, rozróżnienie ryzyko / problem, skala P × W z progami, pełna droga szansy S1, uwaga o fotowoltaice (zakup, nie zużycie), ramka o ryzyku prawnym i stanie prawnym UC77, cztery pytania samosprawdzenia, tabela błędów, „Twój ruch”, analogia szachowa.</td></tr>
+<tr><td>Część III, Moduł 3 — III-15 (F-EnMS-07)</td><td>Kolumny rejestru: źródło, opis, P, W, P×W, działanie, zasoby, odpowiedzialny i termin, powiązanie z procesem lub planem, sposób oceny skuteczności, termin i wynik oceny. Metryka rejestru. Definicja P przy szansach. Progi 3 i 6.</td></tr>
+<tr><td>Część III, Moduł 3 — III-16</td><td>Sześć ryzyk i pięć szans AutoParts jako wypełnienie demonstracyjne (przycisk w stopce).</td></tr>
+<tr><td>Część III, Moduł 3 — III-17</td><td>Lista kontrolna punktu 6.1 w pełnym brzmieniu: 20 pozycji w czterech grupach, z kolumną N / M.</td></tr>
+<tr><td>Część III, Moduł 3 — III-18</td><td>Procedura P-EnMS-03: progi 3–4 (koordynator) i 6–9 (kierownictwo) bez luk, ocena skuteczności, wariant bez koordynatora.</td></tr>
+</table>
+
+<h2>Reguły wyliczane — to jest sedno tego punktu</h2>
+<table>
+<tr><th style="width:26%">Reguła</th><th>Działanie</th></tr>
+<tr><td>Poziom = P × W</td><td>Liczony automatycznie po wybraniu P i W ze skali 1–3. Plakietka przy pozycji pokazuje wartość i kategorię: niski, średni, wysoki.</td></tr>
+<tr><td>Poziom 1–2</td><td>Nie wymaga działania. Platforma pokazuje notę „wystarczy obserwacja przy przeglądzie rejestru” i nie otwiera dalszych pól. Pozycja liczy się jako kompletna.</td></tr>
+<tr><td>Poziom 3–4</td><td>Otwiera komplet pól działania: działanie, zasoby, odpowiedzialny, termin, powiązanie z procesem, sposób oceny skuteczności, termin oceny. Wszystkie oprócz zasobów i wyniku oceny są wymagane.</td></tr>
+<tr><td>Poziom 6–9</td><td>Dodatkowo otwiera pole „kto zatwierdził” z notą, że przy tym poziomie zatwierdza najwyższe kierownictwo.</td></tr>
+<tr><td>„Wykonane” jako ocena</td><td>Wpisanie samego „wykonano”, „zrobione”, „zrealizowano” albo „tak” w polu oceny skuteczności wywołuje ostrzeżenie i nie zalicza pozycji. To wprost zdanie z III-15: „«Wykonano» nie jest oceną skuteczności”.</td></tr>
+<tr><td>Brak szans</td><td>Pusty rejestr szans daje ostrzeżenie i blokuje przekazanie. Norma wymaga określenia ryzyk <b>i</b> szans — to najczęstszy błąd w tym punkcie.</td></tr>
+<tr><td>Jedno źródło</td><td>Jeśli od trzech pozycji wzwyż wszystkie mają to samo źródło, platforma ostrzega, że dwa pozostałe źródła prawdopodobnie nie zostały przejrzane.</td></tr>
+<tr><td>Fotowoltaika</td><td>Słowo „fotowoltaika”, „PV” albo „panele słoneczne” w opisie szansy wywołuje notę: PV zmniejsza zakup, a nie zużycie — wynik energetyczny się od niej nie zmienia.</td></tr>
+</table>
+
+<h2>Zakładki ankiety</h2>
+<table>
+<tr><th style="width:22%">Zakładka</th><th style="width:12%">Rola</th><th style="width:28%">Skąd treść</th><th>Co wypełnia klient</th></tr>
+<tr><td>1. Dane wejściowe</td><td>wejście</td><td>5 pozycji z sekcji „DANE WEJŚCIOWE” III-17 + lista procesów</td><td>Stan i dowód; procesy wpływające na wynik z oceną wpływu</td></tr>
+<tr><td>2. Rejestr ryzyk</td><td>wejście</td><td>Kolumny F-EnMS-07; przykład III-16 pod przyciskiem</td><td>Źródło, opis, P, W, działanie i ocena skuteczności według poziomu</td></tr>
+<tr><td>3. Rejestr szans</td><td>wejście</td><td>Te same kolumny, inna definicja P</td><td>To samo; przy PV dodatkowa nota</td></tr>
+<tr><td>4. Przegląd rejestru</td><td>wejście + wynik</td><td>Sekcja „PRZEGLĄD” III-17 + metryka formularza + cztery sprawdzenia z Tomu 2</td><td>Kiedy przeglądany, data ostatniego, jak wnioski trafiają do 6.2</td></tr>
+<tr><td>5. Analiza konsultanta</td><td>wynik</td><td>Rozkład rejestru wyliczany z zakładek 2 i 3</td><td>Nic — rola konsultanta</td></tr>
+<tr><td>6. Zatwierdzenia</td><td>—</td><td>braki, lista kontrolna III-17, zawartość dokumentu</td><td>Przekazanie konsultantowi</td></tr>
+</table>
+
+<h2>Lista kontrolna III-17 i sposób liczenia</h2>
+<table>
+<tr><th style="width:14%">Grupa</th><th style="width:44%">Pozycja</th><th style="width:7%">N / M</th><th>Jak wyliczana</th></tr>
+<tr><td class="mono">DANE WEJŚCIOWE</td><td>Uwzględniono czynniki zewnętrzne i wewnętrzne (4.1)</td><td class="mono">N</td><td>stan i dowód pozycji danych wejściowych</td></tr><tr><td class="mono"></td><td>Uwzględniono wymagania stron zainteresowanych (4.2)</td><td class="mono">N</td><td>stan i dowód pozycji danych wejściowych</td></tr><tr><td class="mono"></td><td>Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny</td><td class="mono">N</td><td>lista procesów niepusta, każda pozycja z oceną wpływu</td></tr><tr><td class="mono"></td><td>Uwzględniono zakres i granice systemu (4.3)</td><td class="mono">M</td><td>stan i dowód pozycji danych wejściowych</td></tr><tr><td class="mono"></td><td>Planowanie jest spójne z polityką energetyczną</td><td class="mono">N</td><td>stan i dowód pozycji danych wejściowych</td></tr><tr><td class="mono">IDENTYFIKACJA I OCENA</td><td>Określono ryzyka i szanse istotne dla zamierzonych wyników systemu i poprawy wyniku energetycznego</td><td class="mono">N</td><td>rejestr ryzyk i rejestr szans niepuste</td></tr><tr><td class="mono"></td><td>Określono ryzyka i szanse związane z zapobieganiem niepożądanym skutkom</td><td class="mono">N</td><td>ocena konsultanta</td></tr><tr><td class="mono"></td><td>Określono ryzyka i szanse związane z ciągłym doskonaleniem systemu i wyniku</td><td class="mono">N</td><td>ocena konsultanta</td></tr><tr><td class="mono"></td><td>Każda pozycja ma źródło (4.1, 4.2, proces)</td><td class="mono">M</td><td>każda pozycja obu rejestrów ma wskazane źródło</td></tr><tr><td class="mono"></td><td>Przyjęto i zapisano metodę oceny (P × W, skala 1–3)</td><td class="mono">M</td><td>metoda P × W wbudowana w formularz — zawsze spełnione</td></tr><tr><td class="mono"></td><td>Przy szansach P oznacza prawdopodobieństwo uzyskania korzyści</td><td class="mono">M</td><td>metoda P × W wbudowana w formularz — zawsze spełnione</td></tr><tr><td class="mono"></td><td>Oceniono każdą pozycję</td><td class="mono">M</td><td>każda pozycja ma P i W</td></tr><tr><td class="mono">DZIAŁANIA</td><td>Zaplanowano działania odnoszące się do ryzyk i szans</td><td class="mono">N</td><td>każda pozycja o poziomie 3 i wyżej ma zaplanowane działanie</td></tr><tr><td class="mono"></td><td>Zastosowano progi: działania od poziomu 3, zatwierdzenie kierownictwa od poziomu 6</td><td class="mono">M</td><td>każda pozycja o poziomie 6 i wyżej ma wskazanego zatwierdzającego</td></tr><tr><td class="mono"></td><td>Dla działań określono zasoby, odpowiedzialnych i terminy</td><td class="mono">M</td><td>każda pozycja z działaniem ma odpowiedzialnego i termin</td></tr><tr><td class="mono"></td><td>Zaplanowano włączenie działań w procesy systemu i procesy związane z wynikiem energetycznym</td><td class="mono">N</td><td>każda pozycja z działaniem ma wskazany proces albo plan</td></tr><tr><td class="mono"></td><td>Zaplanowano sposób oceny skuteczności działań</td><td class="mono">N</td><td>każda pozycja z działaniem ma sposób oceny inny niż „wykonano”</td></tr><tr><td class="mono"></td><td>Zapisano termin i wynik oceny skuteczności</td><td class="mono">M</td><td>co najmniej jedna pozycja po terminie oceny ma zapisany wynik</td></tr><tr><td class="mono">PRZEGLĄD</td><td>Rejestr przegląda się przy istotnych zmianach i okresowo (np. co kwartał w pierwszym roku)</td><td class="mono">M</td><td>wypełnione: kiedy przeglądany i data ostatniego przeglądu</td></tr><tr><td class="mono"></td><td>Wnioski z ryzyk i szans przekazano do celów i planów działań (6.2)</td><td class="mono">M</td><td>wypełnione: jak wnioski trafiają do celów i planów działań</td></tr></table><p class="sub2">Dwie pozycje grupy „Identyfikacja i ocena” — o zapobieganiu niepożądanym skutkom
+i o ciągłym doskonaleniu — zostają do oceny konsultanta. Platforma nie ma jak rozstrzygnąć, czy rejestr pokrywa
+wszystkie trzy cele z normy; to ocena merytoryczna, nie formalna.</p>
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:22%">Z punktu</th><th style="width:30%">Co wchodzi</th><th>Dokąd wychodzi</th></tr>
+<tr><td class="mono">4.1 Kontekst</td><td>Czynniki istotne i wnioski — źródło ryzyk i szans</td><td>—</td></tr>
+<tr><td class="mono">4.2 Strony</td><td>Wymagania stron — źródło ryzyk i szans</td><td>—</td></tr>
+<tr><td class="mono">4.3 Zakres</td><td>Granice — rejestr obejmuje tylko działalność w granicach</td><td>—</td></tr>
+<tr><td class="mono">5.2 Polityka</td><td>Spójność planowania z polityką</td><td>—</td></tr>
+<tr><td class="mono">6.3 Przegląd energetyczny</td><td>Możliwości poprawy jako źródło szans</td><td>—</td></tr>
+<tr><td class="mono">6.1 → 6.2</td><td>—</td><td><b>Pozycje o poziomie 6 i wyżej wchodzą do celów i planów działań.</b> Na produkcji platforma przeniesie je jako propozycje zadań energetycznych.</td></tr>
+<tr><td class="mono">6.1 → 9.3</td><td>—</td><td>Rejestr i wynik oceny skuteczności jako punkt agendy przeglądu zarządzania</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 6.1 wraz z przykładem AutoParts.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;dane_wejsciowe&quot;: [
+    {
+      &quot;kod&quot;: &quot;WEJ-41&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;,
+      &quot;tresc&quot;: &quot;Uwzględniono czynniki zewnętrzne i wewnętrzne&quot;,
+      &quot;pomoc&quot;: &quot;Ceny energii, przepisy, technologia, klimat, stan maszyn, budżet. Platforma ma je w dokumencie D-EnMS-KON-01.&quot;,
+      &quot;przyklad&quot;: &quot;np. D-EnMS-KON-01 wersja 1.0 — 23 potwierdzone czynniki przejrzane na spotkaniu zespołu 06.03.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;WEJ-42&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;4.2&quot;,
+      &quot;tresc&quot;: &quot;Uwzględniono wymagania stron zainteresowanych&quot;,
+      &quot;pomoc&quot;: &quot;Wymagania klientów, banków, właścicieli — z rejestru D-EnMS-STR-01.&quot;,
+      &quot;przyklad&quot;: &quot;np. D-EnMS-STR-01 — wymagania odbiorcy OEM i banku przejrzane 06.03.2026&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;WEJ-PROC&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;tresc&quot;: &quot;Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny&quot;,
+      &quot;pomoc&quot;: &quot;Trzecie źródło: awaria sprężarki, nowa linia, wiedza zamknięta w głowie jednej osoby. Listę wypełniacie niżej.&quot;,
+      &quot;przyklad&quot;: &quot;np. przegląd 7 procesów na spotkaniu zespołu 06.03.2026 — notatka w rejestrze&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;WEJ-43&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;,
+      &quot;tresc&quot;: &quot;Uwzględniono zakres i granice systemu&quot;,
+      &quot;pomoc&quot;: &quot;Ryzyko dotyczące działalności spoza granic systemu nie powinno trafiać do tego rejestru.&quot;,
+      &quot;przyklad&quot;: &quot;np. D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;WEJ-POL&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;klauzula&quot;: &quot;5.2&quot;,
+      &quot;tresc&quot;: &quot;Planowanie jest spójne z polityką energetyczną&quot;,
+      &quot;pomoc&quot;: &quot;Jeśli polityka zobowiązuje do uwzględniania efektywności przy zakupach, w rejestrze powinno to mieć odbicie.&quot;,
+      &quot;przyklad&quot;: &quot;np. element f) polityki przełożony na ryzyko R1 i zasadę w procedurze zakupowej&quot;
+    }
+  ],
+  &quot;lista_61&quot;: [
+    {
+      &quot;grupa&quot;: &quot;DANE WEJŚCIOWE&quot;,
+      &quot;tekst&quot;: &quot;Uwzględniono czynniki zewnętrzne i wewnętrzne (4.1)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;wej&quot;,
+      &quot;wej&quot;: &quot;WEJ-41&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DANE WEJŚCIOWE&quot;,
+      &quot;tekst&quot;: &quot;Uwzględniono wymagania stron zainteresowanych (4.2)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;wej&quot;,
+      &quot;wej&quot;: &quot;WEJ-42&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DANE WEJŚCIOWE&quot;,
+      &quot;tekst&quot;: &quot;Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;procesy&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DANE WEJŚCIOWE&quot;,
+      &quot;tekst&quot;: &quot;Uwzględniono zakres i granice systemu (4.3)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;wej&quot;,
+      &quot;wej&quot;: &quot;WEJ-43&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DANE WEJŚCIOWE&quot;,
+      &quot;tekst&quot;: &quot;Planowanie jest spójne z polityką energetyczną&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;wej&quot;,
+      &quot;wej&quot;: &quot;WEJ-POL&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Określono ryzyka i szanse istotne dla zamierzonych wyników systemu i poprawy wyniku energetycznego&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;sa_pozycje&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Określono ryzyka i szanse związane z zapobieganiem niepożądanym skutkom&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Określono ryzyka i szanse związane z ciągłym doskonaleniem systemu i wyniku&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Każda pozycja ma źródło (4.1, 4.2, proces)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;zrodla&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Przyjęto i zapisano metodę oceny (P × W, skala 1–3)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;metoda&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Przy szansach P oznacza prawdopodobieństwo uzyskania korzyści&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;metoda&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;IDENTYFIKACJA I OCENA&quot;,
+      &quot;tekst&quot;: &quot;Oceniono każdą pozycję&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;ocenione&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DZIAŁANIA&quot;,
+      &quot;tekst&quot;: &quot;Zaplanowano działania odnoszące się do ryzyk i szans&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;dzialania&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DZIAŁANIA&quot;,
+      &quot;tekst&quot;: &quot;Zastosowano progi: działania od poziomu 3, zatwierdzenie kierownictwa od poziomu 6&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;progi&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DZIAŁANIA&quot;,
+      &quot;tekst&quot;: &quot;Dla działań określono zasoby, odpowiedzialnych i terminy&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;zasoby&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DZIAŁANIA&quot;,
+      &quot;tekst&quot;: &quot;Zaplanowano włączenie działań w procesy systemu i procesy związane z wynikiem energetycznym&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;procesy_wl&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DZIAŁANIA&quot;,
+      &quot;tekst&quot;: &quot;Zaplanowano sposób oceny skuteczności działań&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;skutecznosc&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;DZIAŁANIA&quot;,
+      &quot;tekst&quot;: &quot;Zapisano termin i wynik oceny skuteczności&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;wynik_oceny&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;PRZEGLĄD&quot;,
+      &quot;tekst&quot;: &quot;Rejestr przegląda się przy istotnych zmianach i okresowo (np. co kwartał w pierwszym roku)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;przeglad&quot;
+    },
+    {
+      &quot;grupa&quot;: &quot;PRZEGLĄD&quot;,
+      &quot;tekst&quot;: &quot;Wnioski z ryzyk i szans przekazano do celów i planów działań (6.2)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;do_celow&quot;
+    }
+  ],
+  &quot;przyklad_ryzyka&quot;: [
+    {
+      &quot;zrodlo&quot;: &quot;4.1&quot;,
+      &quot;opis&quot;: &quot;Wzrost cen energii elektrycznej o ok. 20% w 2027 r. — ok. +1,5 mln zł kosztów rocznie&quot;,
+      &quot;P&quot;: &quot;3&quot;,
+      &quot;W&quot;: &quot;3&quot;,
+      &quot;dzialanie&quot;: &quot;Przyspieszenie działań nisko- i bezkosztowych (C1, C2); analiza umowy z ceną stałą na 2027 r.&quot;,
+      &quot;zasoby&quot;: &quot;Czas zespołu; doradca zakupowy 15 tys. zł&quot;,
+      &quot;odp&quot;: &quot;Kierownik Zakupów / Energy Manager&quot;,
+      &quot;termin&quot;: &quot;2026-09-30&quot;,
+      &quot;powiazanie&quot;: &quot;Plan działań C1–C2; budżet 2027&quot;,
+      &quot;ocena&quot;: &quot;Koszt jednostkowy energii elektrycznej wobec budżetu; udział wolumenu z ceną stałą&quot;,
+      &quot;terminOceny&quot;: &quot;2027-03-31&quot;,
+      &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu, członek Zarządu&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;4.2&quot;,
+      &quot;opis&quot;: &quot;Niespełnienie wymagań odbiorcy: dane o energii i CO₂ od 2026 r., certyfikat ISO 50001 od 2027 r. — utrata części zamówień (45% przychodu)&quot;,
+      &quot;P&quot;: &quot;2&quot;,
+      &quot;W&quot;: &quot;3&quot;,
+      &quot;dzialanie&quot;: &quot;Harmonogram certyfikacji; kwartalny raport danych dla odbiorcy&quot;,
+      &quot;zasoby&quot;: &quot;Jednostka certyfikująca ok. 40 tys. zł; czas Energy Managera&quot;,
+      &quot;odp&quot;: &quot;Energy Manager&quot;,
+      &quot;termin&quot;: &quot;2026-12-31&quot;,
+      &quot;powiazanie&quot;: &quot;Harmonogram wdrożenia&quot;,
+      &quot;ocena&quot;: &quot;Terminowość raportów; certyfikat do 31.12.2026&quot;,
+      &quot;terminOceny&quot;: &quot;2026-12-31&quot;,
+      &quot;wynikOceny&quot;: &quot;Raport za I kw. 2026 przekazany terminowo&quot;,
+      &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;4.1&quot;,
+      &quot;opis&quot;: &quot;Tylko dwa liczniki główne — nie da się wykazać poprawy na znaczących użyciach energii&quot;,
+      &quot;P&quot;: &quot;3&quot;,
+      &quot;W&quot;: &quot;2&quot;,
+      &quot;dzialanie&quot;: &quot;Podlicznik i przepływomierz w sprężarkowni, podlicznik gazu pieca lakierni; pomiary okresowe pras&quot;,
+      &quot;zasoby&quot;: &quot;ok. 60 tys. zł&quot;,
+      &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+      &quot;termin&quot;: &quot;2026-06-30&quot;,
+      &quot;powiazanie&quot;: &quot;Cel C4; plan zbierania danych F-EnMS-11&quot;,
+      &quot;ocena&quot;: &quot;Kompletność danych dla znaczących użyć energii co najmniej 95% miesięcy&quot;,
+      &quot;terminOceny&quot;: &quot;2026-12-31&quot;,
+      &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;proces&quot;,
+      &quot;opis&quot;: &quot;Obciążenie koordynatora zadaniami systemu i utrzymania ruchu w roku wdrożenia — opóźnienia&quot;,
+      &quot;P&quot;: &quot;2&quot;,
+      &quot;W&quot;: &quot;2&quot;,
+      &quot;dzialanie&quot;: &quot;Zastępca koordynatora; podział zadań według matrycy odpowiedzialności&quot;,
+      &quot;zasoby&quot;: &quot;Czas specjalisty ds. środowiska&quot;,
+      &quot;odp&quot;: &quot;Dyrektor Zakładu&quot;,
+      &quot;termin&quot;: &quot;2026-03-31&quot;,
+      &quot;powiazanie&quot;: &quot;Matryca odpowiedzialności (5.3)&quot;,
+      &quot;ocena&quot;: &quot;Opóźnienie harmonogramu nie większe niż 1 miesiąc&quot;,
+      &quot;terminOceny&quot;: &quot;2026-09-30&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;proces&quot;,
+      &quot;opis&quot;: &quot;Wiedza o nastawach sprężarek tylko u serwisanta zewnętrznego&quot;,
+      &quot;P&quot;: &quot;2&quot;,
+      &quot;W&quot;: &quot;2&quot;,
+      &quot;dzialanie&quot;: &quot;Kryteria eksploatacji w instrukcji; szkolenie dwóch techników utrzymania ruchu&quot;,
+      &quot;zasoby&quot;: &quot;Szkolenie 4 tys. zł&quot;,
+      &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+      &quot;termin&quot;: &quot;2026-06-30&quot;,
+      &quot;powiazanie&quot;: &quot;Sterowanie operacyjne (8.1)&quot;,
+      &quot;ocena&quot;: &quot;Technicy samodzielnie zmieniają nastawy według instrukcji&quot;,
+      &quot;terminOceny&quot;: &quot;2026-07-31&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;proces&quot;,
+      &quot;opis&quot;: &quot;Wzrost produkcji o ok. 8% w 2027 r. zaburzy porównania zużycia&quot;,
+      &quot;P&quot;: &quot;3&quot;,
+      &quot;W&quot;: &quot;1&quot;,
+      &quot;dzialanie&quot;: &quot;Wskaźniki z normalizacją — model organizacji, kWh na tonę&quot;,
+      &quot;zasoby&quot;: &quot;Czas Energy Managera&quot;,
+      &quot;odp&quot;: &quot;Energy Manager&quot;,
+      &quot;termin&quot;: &quot;2026-04-30&quot;,
+      &quot;powiazanie&quot;: &quot;Karty EnPI (6.4)&quot;,
+      &quot;ocena&quot;: &quot;Porównania 2027 oparte na modelu&quot;,
+      &quot;terminOceny&quot;: &quot;2027-03-31&quot;
+    }
+  ],
+  &quot;przyklad_szanse&quot;: [
+    {
+      &quot;zrodlo&quot;: &quot;przeglad&quot;,
+      &quot;opis&quot;: &quot;Nieszczelności i zbyt wysokie ciśnienie sprężonego powietrza — ok. 295 MWh rocznie&quot;,
+      &quot;P&quot;: &quot;3&quot;,
+      &quot;W&quot;: &quot;2&quot;,
+      &quot;dzialanie&quot;: &quot;Usunięcie nieszczelności, obniżenie ciśnienia (cel C1)&quot;,
+      &quot;zasoby&quot;: &quot;ok. 30 tys. zł&quot;,
+      &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+      &quot;termin&quot;: &quot;2026-06-30&quot;,
+      &quot;powiazanie&quot;: &quot;Plan działań C1; plan utrzymania ruchu&quot;,
+      &quot;ocena&quot;: &quot;Przepływ w czasie postoju; wskaźnik kWh/Nm³&quot;,
+      &quot;terminOceny&quot;: &quot;2026-07-31&quot;,
+      &quot;wynikOceny&quot;: &quot;Przepływ 9 → 6 Nm³/min (06.2026)&quot;,
+      &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;4.1&quot;,
+      &quot;opis&quot;: &quot;Fotowoltaika na dachu hali D, ok. 1,5 MWp — mniejszy zakup energii o ok. 1 400 MWh rocznie (nie zmienia zużycia)&quot;,
+      &quot;P&quot;: &quot;2&quot;,
+      &quot;W&quot;: &quot;3&quot;,
+      &quot;dzialanie&quot;: &quot;Analiza przyłączeniowa i opłacalności; decyzja Zarządu&quot;,
+      &quot;zasoby&quot;: &quot;Analiza 20 tys. zł&quot;,
+      &quot;odp&quot;: &quot;Energy Manager&quot;,
+      &quot;termin&quot;: &quot;2026-12-31&quot;,
+      &quot;powiazanie&quot;: &quot;Plan inwestycji 2027&quot;,
+      &quot;ocena&quot;: &quot;Decyzja Zarządu na podstawie analizy&quot;,
+      &quot;terminOceny&quot;: &quot;2027-01-31&quot;,
+      &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;4.1&quot;,
+      &quot;opis&quot;: &quot;Program wsparcia efektywności energetycznej — dofinansowanie części inwestycji; dostępność naboru do sprawdzenia&quot;,
+      &quot;P&quot;: &quot;1&quot;,
+      &quot;W&quot;: &quot;3&quot;,
+      &quot;dzialanie&quot;: &quot;Monitorowanie naborów; dokumentacja projektów „z półki” (napędy o zmiennej prędkości, LED)&quot;,
+      &quot;zasoby&quot;: &quot;Czas kontrolera finansowego&quot;,
+      &quot;odp&quot;: &quot;Kontroler finansowy&quot;,
+      &quot;termin&quot;: &quot;2026-12-31&quot;,
+      &quot;powiazanie&quot;: &quot;Budżet inwestycji&quot;,
+      &quot;ocena&quot;: &quot;Wniosek złożony, gdy nabór ogłoszony&quot;,
+      &quot;terminOceny&quot;: &quot;2026-12-31&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;4.1&quot;,
+      &quot;opis&quot;: &quot;Wspólne audyty i przegląd zarządzania z ISO 14001&quot;,
+      &quot;P&quot;: &quot;3&quot;,
+      &quot;W&quot;: &quot;1&quot;,
+      &quot;dzialanie&quot;: &quot;Wspólny program audytów i agenda przeglądu&quot;,
+      &quot;zasoby&quot;: &quot;—&quot;,
+      &quot;odp&quot;: &quot;Specjalista ds. środowiska&quot;,
+      &quot;termin&quot;: &quot;2026-06-30&quot;,
+      &quot;powiazanie&quot;: &quot;Program audytów (9.2)&quot;,
+      &quot;ocena&quot;: &quot;Czas audytów wobec planu&quot;,
+      &quot;terminOceny&quot;: &quot;2026-12-31&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;4.2&quot;,
+      &quot;opis&quot;: &quot;Dane o energii na wyrób jako atut w przetargu na nowy projekt&quot;,
+      &quot;P&quot;: &quot;2&quot;,
+      &quot;W&quot;: &quot;2&quot;,
+      &quot;dzialanie&quot;: &quot;Raport energii na wyrób dla trzech głównych wyrobów&quot;,
+      &quot;zasoby&quot;: &quot;Czas Energy Managera&quot;,
+      &quot;odp&quot;: &quot;Energy Manager&quot;,
+      &quot;termin&quot;: &quot;2026-10-31&quot;,
+      &quot;powiazanie&quot;: &quot;Ofertowanie — dział sprzedaży&quot;,
+      &quot;ocena&quot;: &quot;Raport dołączony do oferty&quot;,
+      &quot;terminOceny&quot;: &quot;2026-11-30&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var DANE_WEJ = [{"kod": "WEJ-41", "podstawa": "N", "klauzula": "4.1", "tresc": "Uwzględniono czynniki zewnętrzne i wewnętrzne", "pomoc": "Ceny energii, przepisy, technologia, klimat, stan maszyn, budżet. Platforma ma je w dokumencie D-EnMS-KON-01.", "przyklad": "np. D-EnMS-KON-01 wersja 1.0 — 23 potwierdzone czynniki przejrzane na spotkaniu zespołu 06.03.2026"}, {"kod": "WEJ-42", "podstawa": "N", "klauzula": "4.2", "tresc": "Uwzględniono wymagania stron zainteresowanych", "pomoc": "Wymagania klientów, banków, właścicieli — z rejestru D-EnMS-STR-01.", "przyklad": "np. D-EnMS-STR-01 — wymagania odbiorcy OEM i banku przejrzane 06.03.2026"}, {"kod": "WEJ-PROC", "podstawa": "N", "tresc": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny", "pomoc": "Trzecie źródło: awaria sprężarki, nowa linia, wiedza zamknięta w głowie jednej osoby. Listę wypełniacie niżej.", "przyklad": "np. przegląd 7 procesów na spotkaniu zespołu 06.03.2026 — notatka w rejestrze"}, {"kod": "WEJ-43", "podstawa": "M", "klauzula": "4.3", "tresc": "Uwzględniono zakres i granice systemu", "pomoc": "Ryzyko dotyczące działalności spoza granic systemu nie powinno trafiać do tego rejestru.", "przyklad": "np. D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu"}, {"kod": "WEJ-POL", "podstawa": "N", "klauzula": "5.2", "tresc": "Planowanie jest spójne z polityką energetyczną", "pomoc": "Jeśli polityka zobowiązuje do uwzględniania efektywności przy zakupach, w rejestrze powinno to mieć odbicie.", "przyklad": "np. element f) polityki przełożony na ryzyko R1 i zasadę w procedurze zakupowej"}];
+var LISTA_61 = [{"grupa": "DANE WEJŚCIOWE", "tekst": "Uwzględniono czynniki zewnętrzne i wewnętrzne (4.1)", "podstawa": "N", "auto": "wej", "wej": "WEJ-41"}, {"grupa": "DANE WEJŚCIOWE", "tekst": "Uwzględniono wymagania stron zainteresowanych (4.2)", "podstawa": "N", "auto": "wej", "wej": "WEJ-42"}, {"grupa": "DANE WEJŚCIOWE", "tekst": "Przejrzano działania i procesy, które mogą wpływać na wynik energetyczny", "podstawa": "N", "auto": "procesy"}, {"grupa": "DANE WEJŚCIOWE", "tekst": "Uwzględniono zakres i granice systemu (4.3)", "podstawa": "M", "auto": "wej", "wej": "WEJ-43"}, {"grupa": "DANE WEJŚCIOWE", "tekst": "Planowanie jest spójne z polityką energetyczną", "podstawa": "N", "auto": "wej", "wej": "WEJ-POL"}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Określono ryzyka i szanse istotne dla zamierzonych wyników systemu i poprawy wyniku energetycznego", "podstawa": "N", "auto": "sa_pozycje"}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Określono ryzyka i szanse związane z zapobieganiem niepożądanym skutkom", "podstawa": "N", "auto": null}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Określono ryzyka i szanse związane z ciągłym doskonaleniem systemu i wyniku", "podstawa": "N", "auto": null}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Każda pozycja ma źródło (4.1, 4.2, proces)", "podstawa": "M", "auto": "zrodla"}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Przyjęto i zapisano metodę oceny (P × W, skala 1–3)", "podstawa": "M", "auto": "metoda"}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Przy szansach P oznacza prawdopodobieństwo uzyskania korzyści", "podstawa": "M", "auto": "metoda"}, {"grupa": "IDENTYFIKACJA I OCENA", "tekst": "Oceniono każdą pozycję", "podstawa": "M", "auto": "ocenione"}, {"grupa": "DZIAŁANIA", "tekst": "Zaplanowano działania odnoszące się do ryzyk i szans", "podstawa": "N", "auto": "dzialania"}, {"grupa": "DZIAŁANIA", "tekst": "Zastosowano progi: działania od poziomu 3, zatwierdzenie kierownictwa od poziomu 6", "podstawa": "M", "auto": "progi"}, {"grupa": "DZIAŁANIA", "tekst": "Dla działań określono zasoby, odpowiedzialnych i terminy", "podstawa": "M", "auto": "zasoby"}, {"grupa": "DZIAŁANIA", "tekst": "Zaplanowano włączenie działań w procesy systemu i procesy związane z wynikiem energetycznym", "podstawa": "N", "auto": "procesy_wl"}, {"grupa": "DZIAŁANIA", "tekst": "Zaplanowano sposób oceny skuteczności działań", "podstawa": "N", "auto": "skutecznosc"}, {"grupa": "DZIAŁANIA", "tekst": "Zapisano termin i wynik oceny skuteczności", "podstawa": "M", "auto": "wynik_oceny"}, {"grupa": "PRZEGLĄD", "tekst": "Rejestr przegląda się przy istotnych zmianach i okresowo (np. co kwartał w pierwszym roku)", "podstawa": "M", "auto": "przeglad"}, {"grupa": "PRZEGLĄD", "tekst": "Wnioski z ryzyk i szans przekazano do celów i planów działań (6.2)", "podstawa": "M", "auto": "do_celow"}];
+var PRZYKLAD_R = [{"zrodlo": "4.1", "opis": "Wzrost cen energii elektrycznej o ok. 20% w 2027 r. — ok. +1,5 mln zł kosztów rocznie", "P": "3", "W": "3", "dzialanie": "Przyspieszenie działań nisko- i bezkosztowych (C1, C2); analiza umowy z ceną stałą na 2027 r.", "zasoby": "Czas zespołu; doradca zakupowy 15 tys. zł", "odp": "Kierownik Zakupów / Energy Manager", "termin": "2026-09-30", "powiazanie": "Plan działań C1–C2; budżet 2027", "ocena": "Koszt jednostkowy energii elektrycznej wobec budżetu; udział wolumenu z ceną stałą", "terminOceny": "2027-03-31", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu"}, {"zrodlo": "4.2", "opis": "Niespełnienie wymagań odbiorcy: dane o energii i CO₂ od 2026 r., certyfikat ISO 50001 od 2027 r. — utrata części zamówień (45% przychodu)", "P": "2", "W": "3", "dzialanie": "Harmonogram certyfikacji; kwartalny raport danych dla odbiorcy", "zasoby": "Jednostka certyfikująca ok. 40 tys. zł; czas Energy Managera", "odp": "Energy Manager", "termin": "2026-12-31", "powiazanie": "Harmonogram wdrożenia", "ocena": "Terminowość raportów; certyfikat do 31.12.2026", "terminOceny": "2026-12-31", "wynikOceny": "Raport za I kw. 2026 przekazany terminowo", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"}, {"zrodlo": "4.1", "opis": "Tylko dwa liczniki główne — nie da się wykazać poprawy na znaczących użyciach energii", "P": "3", "W": "2", "dzialanie": "Podlicznik i przepływomierz w sprężarkowni, podlicznik gazu pieca lakierni; pomiary okresowe pras", "zasoby": "ok. 60 tys. zł", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-06-30", "powiazanie": "Cel C4; plan zbierania danych F-EnMS-11", "ocena": "Kompletność danych dla znaczących użyć energii co najmniej 95% miesięcy", "terminOceny": "2026-12-31", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"}, {"zrodlo": "proces", "opis": "Obciążenie koordynatora zadaniami systemu i utrzymania ruchu w roku wdrożenia — opóźnienia", "P": "2", "W": "2", "dzialanie": "Zastępca koordynatora; podział zadań według matrycy odpowiedzialności", "zasoby": "Czas specjalisty ds. środowiska", "odp": "Dyrektor Zakładu", "termin": "2026-03-31", "powiazanie": "Matryca odpowiedzialności (5.3)", "ocena": "Opóźnienie harmonogramu nie większe niż 1 miesiąc", "terminOceny": "2026-09-30"}, {"zrodlo": "proces", "opis": "Wiedza o nastawach sprężarek tylko u serwisanta zewnętrznego", "P": "2", "W": "2", "dzialanie": "Kryteria eksploatacji w instrukcji; szkolenie dwóch techników utrzymania ruchu", "zasoby": "Szkolenie 4 tys. zł", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-06-30", "powiazanie": "Sterowanie operacyjne (8.1)", "ocena": "Technicy samodzielnie zmieniają nastawy według instrukcji", "terminOceny": "2026-07-31"}, {"zrodlo": "proces", "opis": "Wzrost produkcji o ok. 8% w 2027 r. zaburzy porównania zużycia", "P": "3", "W": "1", "dzialanie": "Wskaźniki z normalizacją — model organizacji, kWh na tonę", "zasoby": "Czas Energy Managera", "odp": "Energy Manager", "termin": "2026-04-30", "powiazanie": "Karty EnPI (6.4)", "ocena": "Porównania 2027 oparte na modelu", "terminOceny": "2027-03-31"}];
+var PRZYKLAD_S = [{"zrodlo": "przeglad", "opis": "Nieszczelności i zbyt wysokie ciśnienie sprężonego powietrza — ok. 295 MWh rocznie", "P": "3", "W": "2", "dzialanie": "Usunięcie nieszczelności, obniżenie ciśnienia (cel C1)", "zasoby": "ok. 30 tys. zł", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-06-30", "powiazanie": "Plan działań C1; plan utrzymania ruchu", "ocena": "Przepływ w czasie postoju; wskaźnik kWh/Nm³", "terminOceny": "2026-07-31", "wynikOceny": "Przepływ 9 → 6 Nm³/min (06.2026)", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"}, {"zrodlo": "4.1", "opis": "Fotowoltaika na dachu hali D, ok. 1,5 MWp — mniejszy zakup energii o ok. 1 400 MWh rocznie (nie zmienia zużycia)", "P": "2", "W": "3", "dzialanie": "Analiza przyłączeniowa i opłacalności; decyzja Zarządu", "zasoby": "Analiza 20 tys. zł", "odp": "Energy Manager", "termin": "2026-12-31", "powiazanie": "Plan inwestycji 2027", "ocena": "Decyzja Zarządu na podstawie analizy", "terminOceny": "2027-01-31", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"}, {"zrodlo": "4.1", "opis": "Program wsparcia efektywności energetycznej — dofinansowanie części inwestycji; dostępność naboru do sprawdzenia", "P": "1", "W": "3", "dzialanie": "Monitorowanie naborów; dokumentacja projektów „z półki” (napędy o zmiennej prędkości, LED)", "zasoby": "Czas kontrolera finansowego", "odp": "Kontroler finansowy", "termin": "2026-12-31", "powiazanie": "Budżet inwestycji", "ocena": "Wniosek złożony, gdy nabór ogłoszony", "terminOceny": "2026-12-31"}, {"zrodlo": "4.1", "opis": "Wspólne audyty i przegląd zarządzania z ISO 14001", "P": "3", "W": "1", "dzialanie": "Wspólny program audytów i agenda przeglądu", "zasoby": "—", "odp": "Specjalista ds. środowiska", "termin": "2026-06-30", "powiazanie": "Program audytów (9.2)", "ocena": "Czas audytów wobec planu", "terminOceny": "2026-12-31"}, {"zrodlo": "4.2", "opis": "Dane o energii na wyrób jako atut w przetargu na nowy projekt", "P": "2", "W": "2", "dzialanie": "Raport energii na wyrób dla trzech głównych wyrobów", "zasoby": "Czas Energy Managera", "odp": "Energy Manager", "termin": "2026-10-31", "powiazanie": "Ofertowanie — dział sprzedaży", "ocena": "Raport dołączony do oferty", "terminOceny": "2026-11-30"}];
+var PROFIL = {"FAKT_LOKALIZACJE": "2", "FAKT_LOKALIZACJE_LISTA": [{"c0": "Zakład produkcyjny", "c1": "ul. Przemysłowa 12, Katowice", "c2": "produkcja", "c3": "tak"}, {"c0": "Magazyn wyrobów gotowych", "c1": "ul. Składowa 11, Katowice", "c2": "magazyn", "c3": "tak"}], "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)", "FAKT_PRACOWNICY": "850", "FAKT_ZMIANY": "3", "FAKT_SEZONOWOSC": "nie", "FAKT_PODMIOT": "prywatny", "FAKT_GRUPA_KAPITALOWA": "tak", "FAKT_ZWIAZKI": "nie", "FAKT_SYSTEM_BAZOWY": "iso_14001", "FAKT_SYSTEM_BAZOWY_ROK": "2019", "FAKT_ZGODA_INTEGRACJA": "tak", "FAKT_ENERGY_MANAGER": "nieformalnie", "FAKT_UR_WLASNE": "wlasne", "FAKT_INSTRUKCJE_EKSPL": "czesciowo", "FAKT_ZAKUPY_KRYTERIA": "czasami", "FAKT_ROTACJA": "srednia", "FAKT_NOSNIKI": [{"c0": "energia elektryczna", "c1": "8500", "c2": "MWh", "c3": "7565000"}, {"c0": "gaz ziemny", "c1": "350000", "c2": "m³", "c3": "875000"}, {"c0": "LPG", "c1": "18000", "c2": "l", "c3": "54000"}], "FAKT_ROK_ODNIESIENIA": "2025", "FAKT_UDZIAL_ENERGII": "2,5", "FAKT_MOC_UMOWNA": "1400", "FAKT_SPREZONE": "tak", "FAKT_CA_LICZBA": "4", "FAKT_CA_MOC": "440", "FAKT_CA_VSD": "0", "FAKT_CA_STEROWNIK": "nie", "FAKT_CA_SZCZELNOSC": "nie", "FAKT_CA_ODZYSK": "nie", "FAKT_CA_GODZINY": "6000", "FAKT_KOTLOWNIA": "wlasne", "FAKT_CIEPLO_PALIWO": ["gaz ziemny"], "FAKT_KOTLOWNIA_MOC": "1200", "FAKT_KOTLOWNIA_WIEK": "18", "FAKT_PODLICZNIKI": "czesciowo", "FAKT_ODCZYT": "mieszane", "FAKT_PRODUKCJA_JEDN": "t", "FAKT_PRODUKCJA": "24000", "FAKT_PRODUKCJA_POPRZ": "23500", "FAKT_HDD": "3600", "FAKT_HDD_POPRZ": "3450", "FAKT_PRZYCHOD": "380", "FAKT_SCADA": "nie", "FAKT_MES": "nie", "FAKT_ANALIZA_DANYCH": "arkusz", "FAKT_AUDYT_ENERG": "tak", "FAKT_ETS": "nie", "FAKT_CSRD": "nie", "FAKT_PRZETARGI": "nie", "FAKT_ODBIORCY_CO2": "tak", "FAKT_MOC_OGRANICZONA": "nie", "FAKT_UMOWA_WYGASA": "tak", "FAKT_BUDZET": "nie", "FAKT_PBT_PROG": "3", "FAKT_INWESTYCJE": "tak", "FAKT_BIALE_MOZLIWE": "nie", "FAKT_CHLODZENIE": "tak", "FAKT_CHLODZENIE_WODNE": "nie", "FAKT_FGAZ": "tak", "FAKT_UDT": "tak", "FAKT_WIEK_INFRA": "22", "FAKT_LED_UDZIAL": "35", "FAKT_OSW_STEROWANIE": "recznie", "FAKT_NAPEDY_VSD": "czesc", "FAKT_WENT": "tak", "FAKT_WENT_LICZBA": "6", "FAKT_WENT_ODZYSK": "czesc", "FAKT_WENT_HARMONOGRAM": "nie", "FAKT_CIEPLO_ODPADOWE": "tak", "FAKT_ODZYSK_CIEPLA": "nie", "FAKT_PROCES_BEZ_ALTERNATYWY": "tak", "FAKT_PROCESY": ["piece i nagrzewnice", "pompy procesowe"], "FAKT_PV": "nie", "FAKT_BESS": "nie", "FAKT_CHP": "nie", "FAKT_FLOTA": "tak", "FAKT_FLOTA_LICZBA": "4", "FAKT_PRZERWY_POGODA": "nie"};
+var PYT = {"FAKT_LOKALIZACJE": {"pytanie": "Ile lokalizacji obejmie system zarządzania energią?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S1"}, "FAKT_LOKALIZACJE_LISTA": {"pytanie": "Wymień lokalizacje", "typ": "repeater", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_BRANZA": {"pytanie": "Główna działalność zakładu", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_PRACOWNICY": {"pytanie": "Liczba pracowników", "typ": "number", "jednostka": "osób", "etykiety": {}, "sekcja": "S1"}, "FAKT_ZMIANY": {"pytanie": "Ile zmian pracuje zakład?", "typ": "select", "jednostka": "", "etykiety": {"1": "1", "2": "2", "3": "3", "4": "4"}, "sekcja": "S1"}, "FAKT_SEZONOWOSC": {"pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S1"}, "FAKT_PODMIOT": {"pytanie": "Typ organizacji", "typ": "select", "jednostka": "", "etykiety": {"prywatny": "prywatny", "komunalny": "komunalny", "publiczny": "publiczny"}, "sekcja": "S1"}, "FAKT_GRUPA_KAPITALOWA": {"pytanie": "Czy organizacja należy do grupy kapitałowej?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S1"}, "FAKT_ZWIAZKI": {"pytanie": "Czy działają związki zawodowe lub rada pracowników?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S1"}, "FAKT_SYSTEM_BAZOWY": {"pytanie": "Czy organizacja ma wdrożony system zarządzania?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Brak certyfikowanego systemu", "iso_9001": "ISO 9001", "iso_14001": "ISO 14001", "oba": "ISO 9001 i ISO 14001", "inny": "Inny system certyfikowany"}, "sekcja": "S1"}, "FAKT_SYSTEM_BAZOWY_ROK": {"pytanie": "Od którego roku system jest certyfikowany?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_ZGODA_INTEGRACJA": {"pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak — rozszerzamy istniejącą dokumentację", "nie": "Nie — tworzymy odrębny system", "brak decyzji": "Decyzja jeszcze nie zapadła"}, "sekcja": "S1"}, "FAKT_ENERGY_MANAGER": {"pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?", "typ": "select", "jednostka": "", "etykiety": {"nie": "Nie wyznaczono nikogo", "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków", "tak": "Tak, z pisemnym zakresem obowiązków"}, "sekcja": "S1"}, "FAKT_UR_WLASNE": {"pytanie": "Kto prowadzi utrzymanie ruchu?", "typ": "select", "jednostka": "", "etykiety": {"wlasne": "Własne służby utrzymania ruchu", "zewnetrzne": "Firma zewnętrzna", "mieszane": "Częściowo własne służby, część prac zlecana"}, "sekcja": "S1"}, "FAKT_INSTRUKCJE_EKSPL": {"pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, dla wszystkich głównych urządzeń", "czesciowo": "Dla części urządzeń", "nie": "Nie ma"}, "sekcja": "S1"}, "FAKT_ZAKUPY_KRYTERIA": {"pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?", "typ": "select", "jednostka": "", "etykiety": {"zawsze": "Zawsze — to stałe kryterium zakupowe", "czasami": "Czasami, przy większych zakupach", "nie": "Nie — decyduje cena zakupu"}, "sekcja": "S1"}, "FAKT_ROTACJA": {"pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku", "typ": "select", "jednostka": "", "etykiety": {"niska": "Niska — poniżej 5% rocznie", "srednia": "Średnia — od 5 do 15% rocznie", "wysoka": "Wysoka — powyżej 15% rocznie"}, "sekcja": "S1"}, "FAKT_ROK_ODNIESIENIA": {"pytanie": "Za który rok podajesz dane?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_NOSNIKI": {"pytanie": "Zużycie nośników energii w roku odniesienia", "typ": "repeater", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "ZUZYCIE_TJ": {"pytanie": "Roczne zużycie energii", "typ": "auto", "jednostka": "TJ", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA_JEDN": {"pytanie": "W czym mierzycie wielkość produkcji?", "typ": "select", "jednostka": "", "etykiety": {"t": "tony wyrobu", "szt": "sztuki wyrobu", "m2": "metry kwadratowe", "m3": "metry sześcienne", "mwh": "MWh wyrobu (ciepło, chłód)", "inna": "Inna jednostka"}, "sekcja": "S2"}, "FAKT_PRODUKCJA_INNA": {"pytanie": "Jaka jednostka?", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA": {"pytanie": "Wielkość produkcji w roku odniesienia", "typ": "number", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA_POPRZ": {"pytanie": "Wielkość produkcji w roku poprzednim", "typ": "number", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_HDD": {"pytanie": "Stopniodni grzania (HDD) w roku odniesienia", "typ": "number", "jednostka": "°C·dzień", "etykiety": {}, "sekcja": "S2"}, "FAKT_HDD_POPRZ": {"pytanie": "Stopniodni grzania w roku poprzednim", "typ": "number", "jednostka": "°C·dzień", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRZYCHOD": {"pytanie": "Przychód ze sprzedaży w roku odniesienia", "typ": "number", "jednostka": "mln zł", "etykiety": {}, "sekcja": "S2"}, "FAKT_UDZIAL_ENERGII": {"pytanie": "Jaki procent kosztów operacyjnych stanowi energia?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S2"}, "FAKT_MOC_UMOWNA": {"pytanie": "Moc umowna energii elektrycznej", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S2"}, "FAKT_MOC_OGRANICZONA": {"pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_UMOWA_WYGASA": {"pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_UMOWA_DATA": {"pytanie": "Data wygaśnięcia umowy", "typ": "date", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_BUDZET": {"pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S2"}, "FAKT_PBT_PROG": {"pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S2"}, "FAKT_INWESTYCJE": {"pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S2"}, "FAKT_INWESTYCJE_OPIS": {"pytanie": "Jakie?", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_BIALE_MOZLIWE": {"pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_SPREZONE": {"pytanie": "Czy zakład ma instalację sprężonego powietrza?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_CA_LICZBA": {"pytanie": "Ile jest sprężarek?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_MOC": {"pytanie": "Łączna moc znamionowa sprężarek", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_VSD": {"pytanie": "Ile sprężarek ma regulację obrotów (falownik)?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_STEROWNIK": {"pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_SZCZELNOSC": {"pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_ODZYSK": {"pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_GODZINY": {"pytanie": "Ile godzin w roku pracuje sprężarkownia?", "typ": "number", "jednostka": "h/rok", "etykiety": {}, "sekcja": "S3"}, "FAKT_WENT": {"pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_WENT_LICZBA": {"pytanie": "Ile jest central?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_WENT_ODZYSK": {"pytanie": "Czy centrale mają odzysk ciepła?", "typ": "select", "jednostka": "", "etykiety": {"wszystkie": "Wszystkie centrale mają odzysk", "czesc": "Część central ma odzysk", "zadna": "Żadna nie ma odzysku", "nie wiem": "Nie wiem"}, "sekcja": "S3"}, "FAKT_WENT_HARMONOGRAM": {"pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, wszystkie", "czesciowo": "Część central", "nie": "Nie — pracują tak samo cały czas"}, "sekcja": "S3"}, "FAKT_CHLODZENIE": {"pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_CHLODZENIE_MOC": {"pytanie": "Łączna moc chłodnicza", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S3"}, "FAKT_CHLODZENIE_WODNE": {"pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_FGAZ": {"pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_NAPEDY_VSD": {"pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Żaden albo pojedyncze", "czesc": "Mniej więcej połowa", "wiekszosc": "Większość", "nie wiem": "Nie wiem"}, "sekcja": "S3"}, "FAKT_LED_UDZIAL": {"pytanie": "Jaki procent oświetlenia stanowią źródła LED?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S3"}, "FAKT_OSW_STEROWANIE": {"pytanie": "Jak sterowane jest oświetlenie hal?", "typ": "select", "jednostka": "", "etykiety": {"czujniki": "Czujniki ruchu albo natężenia światła", "harmonogram": "Automatyczny harmonogram", "recznie": "Ręcznie — włącznikiem"}, "sekcja": "S3"}, "FAKT_WIEK_INFRA": {"pytanie": "Ile lat ma większość głównych urządzeń energetycznych?", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S3"}, "FAKT_UDT": {"pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_KOTLOWNIA": {"pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?", "typ": "select", "jednostka": "", "etykiety": {"wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)", "siec": "Wyłącznie z sieci ciepłowniczej", "oba": "Z własnego źródła i z sieci ciepłowniczej", "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"}, "sekcja": "S4"}, "FAKT_CIEPLO_PALIWO": {"pytanie": "Czym zasilane jest własne źródło ciepła?", "typ": "multi", "jednostka": "", "etykiety": {"gaz ziemny": "gaz ziemny", "olej": "olej", "węgiel": "węgiel", "biomasa": "biomasa", "biogaz": "biogaz", "pompa ciepła": "pompa ciepła", "energia elektryczna": "energia elektryczna"}, "sekcja": "S4"}, "FAKT_CIEPLO_PALIWA": {"pytanie": "Czy ciepło pochodzi z paliw kopalnych?", "typ": "auto", "jednostka": "", "etykiety": {}, "sekcja": "S4"}, "FAKT_KOTLOWNIA_MOC": {"pytanie": "Moc zainstalowana źródeł ciepła", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S4"}, "FAKT_KOTLOWNIA_WIEK": {"pytanie": "Wiek najstarszego czynnego kotła", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S4"}, "FAKT_CIEPLO_MOC_ZAMOWIONA": {"pytanie": "Zamówiona moc cieplna z sieci", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S4"}, "FAKT_PROCESY": {"pytanie": "Które procesy zużywają najwięcej energii?", "typ": "multi", "jednostka": "", "etykiety": {"piece i nagrzewnice": "piece i nagrzewnice", "suszarnie": "suszarnie", "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki", "prasy": "prasy", "malarnia": "malarnia", "galwanizernia": "galwanizernia", "pompy procesowe": "pompy procesowe", "chłodzenie procesu": "chłodzenie procesu", "inne": "inne"}, "sekcja": "S4"}, "FAKT_CIEPLO_ODPADOWE": {"pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S4"}, "FAKT_ODZYSK_CIEPLA": {"pytanie": "Czy to ciepło jest odzyskiwane?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, w całości albo prawie w całości", "czesciowo": "Częściowo", "nie": "Nie jest odzyskiwane"}, "sekcja": "S4"}, "FAKT_PROCES_BEZ_ALTERNATYWY": {"pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S4"}, "FAKT_PV": {"pytanie": "Czy zakład ma instalację fotowoltaiczną?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, działa", "nie": "Nie", "w planach": "W planach albo w budowie"}, "sekcja": "S4"}, "FAKT_PV_MOC": {"pytanie": "Moc instalacji fotowoltaicznej", "typ": "number", "jednostka": "kWp", "etykiety": {}, "sekcja": "S4"}, "FAKT_BESS": {"pytanie": "Czy zakład ma magazyn energii?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_BESS_POJ": {"pytanie": "Pojemność magazynu", "typ": "number", "jednostka": "kWh", "etykiety": {}, "sekcja": "S4"}, "FAKT_CHP": {"pytanie": "Czy zakład ma kogenerację?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_CHP_MOC": {"pytanie": "Moc elektryczna kogeneracji", "typ": "number", "jednostka": "kWe", "etykiety": {}, "sekcja": "S4"}, "FAKT_FLOTA": {"pytanie": "Czy w zakresie systemu jest flota pojazdów?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_FLOTA_LICZBA": {"pytanie": "Liczba pojazdów", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S4"}, "FAKT_PODLICZNIKI": {"pytanie": "Jak opomiarowana jest energia elektryczna?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Tylko licznik główny", "czesciowo": "Podliczniki na części obiektów lub wydziałów", "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"}, "sekcja": "S5"}, "FAKT_PODLICZNIKI_LICZBA": {"pytanie": "Ile jest podliczników?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S5"}, "FAKT_ODCZYT": {"pytanie": "Jak odczytywane są liczniki?", "typ": "select", "jednostka": "", "etykiety": {"recznie": "Ręcznie, spisywane z liczników", "zdalnie": "Zdalnie, automatycznie do systemu", "mieszane": "Część ręcznie, część zdalnie"}, "sekcja": "S5"}, "FAKT_SCADA": {"pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S5"}, "FAKT_SCADA_ZAKRES": {"pytanie": "Jaki procent zużycia energii obejmuje?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S5"}, "FAKT_DANE_HISTORIA": {"pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?", "typ": "number", "jednostka": "mies.", "etykiety": {}, "sekcja": "S5"}, "FAKT_MES": {"pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S5"}, "FAKT_ANALIZA_DANYCH": {"pytanie": "Czy dane o zużyciu energii są analizowane?", "typ": "select", "jednostka": "", "etykiety": {"nie": "nie", "okresowo": "okresowo", "systematycznie": "systematycznie"}, "sekcja": "S5"}, "FAKT_AUDYT_ENERG": {"pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_AUDYT_ROK": {"pytanie": "W którym roku?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S6"}, "FAKT_ETS": {"pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_CSRD": {"pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_CSRD_ROK": {"pytanie": "Od którego roku?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S6"}, "FAKT_ODBIORCY_CO2": {"pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}, "FAKT_PRZETARGI": {"pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}, "FAKT_PRZERWY_POGODA": {"pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Słabość z analizy kontekstu staje się ryzykiem dopiero wtedy, gdy ktoś ją wyceni i weźmie za nią odpowiedzialność.", "decyzja": "Przegrzewanie sprężarkowni w upały wpisane do rejestru ryzyk z właścicielem i terminem.", "dzialanie": "Rejestr F-EnMS-07; działania: kryterium temperaturowe przy zakupie sprężarki (8.3) i sprawdzenie wpływu temperatury na zużycie (6.3, 6.4).", "sprawdzenie": "W kolejnym lecie brak wyłączeń sprężarek z przegrzania; temperatura obecna w modelu zużycia jako zmienna."}];
+</script>
+<script>/* ENESA 6.1 — Działania odnoszące się do ryzyk i szans. Format jak strony 4.1–5.3.
+   Zgodny z: Tom 2 rozdz. 3 pkt 6.1 oraz Część III Moduł 3 v2.1 (III-15 = F-EnMS-07, III-16, III-17, III-18). */
+"use strict";
+
+var WEJ = {};        // kod danych wejściowych -> {stan, dowod}
+var PROCESY = [];    // przegląd działań i procesów wpływających na wynik
+var RYZYKA = [];
+var SZANSE = [];
+var PRZEGLAD = { kiedy: "", ostatni: "", doCelow: "" };
+var META = { opracowal: "", zatwierdzil: "", utworzony: "" };
+var WNIOSKI = [];
+var AKT = "wejscie";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+
+/* ── pomocnicze ── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function pr(k) { return PROFIL[k]; }
+function etykietaProfilu(k) {
+  var q = PYT[k], v = PROFIL[k];
+  if (v === undefined || v === null || v === "") return null;
+  return (q && q.etykiety && q.etykiety[v]) || String(v) + (q && q.jednostka ? " " + q.jednostka : "");
+}
+
+/* ── ocena: P × W, skala 1–3, progi 3 i 6 (metoda ENESA) ── */
+function poziom(x) {
+  var p = parseInt(x.P, 10), w = parseInt(x.W, 10);
+  if (!p || !w) return null;
+  return p * w;
+}
+function kategoria(lv) {
+  if (lv === null) return null;
+  if (lv <= 2) return "niski";
+  if (lv <= 4) return "sredni";
+  return "wysoki";
+}
+function wymagaDzialania(x) { var lv = poziom(x); return lv !== null && lv >= 3; }
+function wymagaKierownictwa(x) { var lv = poziom(x); return lv !== null && lv >= 6; }
+function pustaOcena(t) { return /^\s*(wykonano|wykonane|zrobione|zrealizowano|tak)\s*\.?\s*$/i.test(t || ""); }
+
+function pozycjaOk(x) {
+  if (!(x.opis || "").trim() || !x.zrodlo) return false;
+  if (poziom(x) === null) return false;
+  if (!wymagaDzialania(x)) return true;
+  if (!(x.dzialanie || "").trim() || !(x.odp || "").trim() || !x.termin) return false;
+  if (!(x.powiazanie || "").trim()) return false;
+  if (!(x.ocena || "").trim() || pustaOcena(x.ocena)) return false;
+  if (wymagaKierownictwa(x) && !(x.zatwierdzil || "").trim()) return false;
+  return true;
+}
+function wejOk(w) {
+  var d = WEJ[w.kod] || {};
+  return !!d.stan && (d.stan === "nie" || !!(d.dowod || "").trim());
+}
+function procesOk(p) { return !!(p.nazwa || "").trim() && !!p.wplyw; }
+function przegladOk() { return !!(PRZEGLAD.kiedy || "").trim() && !!PRZEGLAD.ostatni; }
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+
+/* ── zakładka 1: dane wejściowe ── */
+function rysujWejscie(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Dane wejściowe planowania"));
+  s.appendChild(el("p", "opis", "Ryzyka i szanse nie biorą się z szablonu z internetu, tylko z trzech źródeł, które już znacie: kontekstu (4.1), stron zainteresowanych (4.2) oraz przeglądu działań i procesów wpływających na wynik energetyczny."));
+  s.appendChild(el("div", "note", "To pierwsza sekcja listy kontrolnej III-17. Bez niej rejestr będzie listą ogólników — a dokładnie przed tym książka ostrzega na przykładzie producenta szkła, który skopiował rejestr z internetu i nie przewidział utraty sprzedawcy energii."));
+  DANE_WEJ.forEach(function (w) {
+    var d = WEJ[w.kod] || (WEJ[w.kod] = {});
+    var k = el("div", "poz" + (wejOk(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, w.kod));
+    g.appendChild(el("span", "chip " + (w.podstawa === "N" ? "red" : ""),
+      w.podstawa === "N" ? "wymaganie normy" : "metoda ENESA"));
+    if (w.klauzula) g.appendChild(el("span", "chip", "z punktu " + w.klauzula));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", w.tresc));
+    if (w.pomoc) k.appendChild(el("div", "pozmeta", w.pomoc));
+    k.appendChild(pole("Stan", sel(d.stan, [["", "Wybierz"],
+    ["tak", "Uwzględniono"], ["czesciowo", "Częściowo"], ["nie", "Jeszcze nie"]], function (v) { d.stan = v; })));
+    if (d.stan && d.stan !== "nie")
+      k.appendChild(pole("Gdzie to widać — dowód", inp(d.dowod, w.przyklad, function (v) { d.dowod = v; })));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+
+  var p = el("div", "sekcja");
+  var h = el("h3", null, "Przegląd działań i procesów wpływających na wynik energetyczny");
+  h.appendChild(el("span", "chip " + (PROCESY.length && PROCESY.every(procesOk) ? "green" : "amber"),
+    ile(PROCESY.filter(procesOk).length, "pozycja", "pozycje", "pozycji")));
+  p.appendChild(h);
+  p.appendChild(el("p", "opis", "Trzecie źródło ryzyk i szans — to, czego nie ma ani w kontekście, ani u stron zainteresowanych: awaria sprężarki, nowa linia, wiedza zamknięta w głowie jednej osoby."));
+  PROCESY.forEach(function (x, i) {
+    var k = el("div", "poz" + (procesOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Proces " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { PROCESY.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Działanie albo proces",
+      inp(x.nazwa, "np. sprężarkownia — nastawy i konserwacja", function (v) { x.nazwa = v; })));
+    k.appendChild(pole("Jak wpływa na wynik energetyczny", sel(x.wplyw, [["", "Wybierz"],
+    ["duzy", "Duży — to jedno ze znaczących użyć energii"],
+    ["sredni", "Średni"], ["maly", "Mały"]], function (v) { x.wplyw = v; })));
+    k.appendChild(pole("Co może pójść nie tak albo co da się wykorzystać",
+      inp(x.uwaga, "np. wiedzę o nastawach ma tylko serwisant zewnętrzny", function (v) { x.uwaga = v; })));
+    p.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj proces");
+  dod.onclick = function () { PROCESY.push({}); zapisz(); rysuj(); };
+  p.appendChild(dod);
+  host.appendChild(p);
+}
+
+/* ── wspólna karta pozycji rejestru ── */
+function kartaPozycji(x, i, typ, lista) {
+  var lv = poziom(x), kat = kategoria(lv);
+  var k = el("div", "poz" + (pozycjaOk(x) ? "" : " brak"));
+  var g = el("div", "pozkod");
+  g.appendChild(el("b", null, (typ === "ryzyko" ? "R" : "S") + (i + 1)));
+  if (lv !== null)
+    g.appendChild(el("span", "chip " + (kat === "wysoki" ? "red" : kat === "sredni" ? "amber" : ""),
+      "poziom " + lv + " — " + (kat === "wysoki" ? "wysoki" : kat === "sredni" ? "średni" : "niski")));
+  var us = el("button", "link", "usuń");
+  us.onclick = function () { lista.splice(i, 1); zapisz(); rysuj(); };
+  g.appendChild(us);
+  k.appendChild(g);
+
+  k.appendChild(pole("Źródło", sel(x.zrodlo, [["", "Wybierz"],
+  ["4.1", "4.1 — czynnik kontekstowy"], ["4.2", "4.2 — wymaganie strony zainteresowanej"],
+  ["proces", "Proces albo działanie wpływające na wynik"],
+  ["przeglad", "Przegląd energetyczny (6.3)"]], function (v) { x.zrodlo = v; }),
+    "Każda pozycja ma mieć źródło — to pozycja listy kontrolnej III-17 i pierwsza rzecz, którą sprawdza audytor."));
+  k.appendChild(pole("Opis — konkretnie, z liczbami jeśli je macie",
+    txt(x.opis, typ === "ryzyko"
+      ? "np. Wzrost cen energii elektrycznej o ok. 20% w 2027 r. — ok. +1,5 mln zł kosztów rocznie"
+      : "np. Nieszczelności i zbyt wysokie ciśnienie sprężonego powietrza — ok. 295 MWh rocznie", 2,
+      function (v) { x.opis = v; })));
+
+  if (typ === "szansa" && /fotowolt|\bPV\b|panele słoneczne/i.test(x.opis || ""))
+    k.appendChild(el("note" && "div", "note", "Fotowoltaika zmniejsza <b>zakup</b> energii z sieci, a nie <b>zużycie</b> zakładu — wynik energetyczny się od niej nie zmienia. Opiszcie korzyść jako mniejszy zakup, żeby nie zaburzyć później wskaźników."));
+
+  var o = el("div", "pole");
+  o.appendChild(el("label", null, typ === "ryzyko"
+    ? "Ocena: P — prawdopodobieństwo, W — wpływ na system lub wynik energetyczny (skala 1–3)"
+    : "Ocena: P — prawdopodobieństwo uzyskania korzyści, W — wielkość korzyści (skala 1–3)"));
+  var wiersz = el("div", "wej");
+  [["P", "P"], ["W", "W"]].forEach(function (f) {
+    var lab = el("span", "rolaetyk", f[1] + ":");
+    wiersz.appendChild(lab);
+    var sl = document.createElement("select");
+    sl.style.width = "auto"; sl.style.minWidth = "64px";
+    [["", "–"], ["1", "1"], ["2", "2"], ["3", "3"]].forEach(function (op) { sl.appendChild(new Option(op[1], op[0])); });
+    sl.value = x[f[0]] || "";
+    sl.onchange = function () { x[f[0]] = sl.value; zapisz(); rysuj(); };
+    wiersz.appendChild(sl);
+  });
+  if (lv !== null) wiersz.appendChild(el("span", "rolaetyk", "P × W = " + lv));
+  o.appendChild(wiersz);
+  k.appendChild(o);
+
+  if (lv !== null && lv <= 2)
+    k.appendChild(el("div", "note", "Poziom niski — wystarczy obserwacja przy przeglądzie rejestru. Działania nie wymagamy."));
+
+  if (wymagaDzialania(x)) {
+    var d = el("div", "pole kandydat");
+    d.appendChild(el("label", null, "Poziom " + lv + " — wymagane zaplanowanie działania"));
+    d.appendChild(pole("Działanie", txt(x.dzialanie, typ === "ryzyko"
+      ? "np. Przyspieszenie działań nisko- i bezkosztowych; analiza umowy z ceną stałą na 2027 r."
+      : "np. Usunięcie nieszczelności i obniżenie ciśnienia", 2, function (v) { x.dzialanie = v; })));
+    d.appendChild(pole("Zasoby", inp(x.zasoby, "np. czas zespołu; doradca zakupowy 15 tys. zł", function (v) { x.zasoby = v; })));
+    d.appendChild(pole("Odpowiedzialny", inp(x.odp, "np. Kierownik Utrzymania Ruchu", function (v) { x.odp = v; })));
+    d.appendChild(pole("Termin", inp(x.termin, "", function (v) { x.termin = v; }, "date")));
+    d.appendChild(pole("W którym procesie albo planie to się wydarzy",
+      inp(x.powiazanie, "np. Plan działań celu C1; plan przeglądów utrzymania ruchu", function (v) { x.powiazanie = v; }),
+      "Wymaganie normy: działania trzeba włączyć w procesy systemu i procesy związane z wynikiem energetycznym. Działanie bez procesu zostaje na liście życzeń."));
+    k.appendChild(d);
+
+    var sk = el("div", "pole kandydat");
+    sk.appendChild(el("label", null, "Ocena skuteczności — wymaganie normy"));
+    sk.appendChild(pole("Jak sprawdzicie, że działanie przyniosło zamierzony skutek",
+      inp(x.ocena, typ === "ryzyko"
+        ? "np. koszt jednostkowy energii elektrycznej wobec budżetu; udział wolumenu z ceną stałą"
+        : "np. przepływ w czasie postoju; wskaźnik kWh/Nm³", function (v) { x.ocena = v; })));
+    sk.appendChild(pole("Termin oceny", inp(x.terminOceny, "", function (v) { x.terminOceny = v; }, "date")));
+    sk.appendChild(pole("Wynik oceny — wypełniacie po terminie",
+      inp(x.wynikOceny, "np. przepływ 9 → 6 Nm³/min (06.2026)", function (v) { x.wynikOceny = v; })));
+    k.appendChild(sk);
+    if (pustaOcena(x.ocena))
+      k.appendChild(el("div", "warn", "„Wykonane” nie jest oceną skuteczności. Przegląd szczelności „zrobiony” nic nie znaczy, dopóki przepływ w postoju nie spadnie. Napiszcie, co zmierzycie i z czym porównacie."));
+  }
+
+  if (wymagaKierownictwa(x)) {
+    var z = el("div", "pole kandydat");
+    z.appendChild(el("label", null, "Poziom " + lv + " — działanie priorytetowe, zatwierdza najwyższe kierownictwo"));
+    z.appendChild(pole("Kto zatwierdził",
+      inp(x.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu, członek Zarządu", function (v) { x.zatwierdzil = v; }),
+      "Próg 6 to propozycja metody ENESA — norma nie narzuca ani skali, ani progów."));
+    k.appendChild(z);
+  }
+  return k;
+}
+
+/* ── zakładka 2 i 3: rejestr ── */
+function rysujRejestr(host, typ) {
+  var lista = typ === "ryzyko" ? RYZYKA : SZANSE;
+  var s = el("div", "sekcja");
+  var h = el("h3", null, typ === "ryzyko" ? "Rejestr ryzyk" : "Rejestr szans");
+  h.appendChild(el("span", "chip " + (lista.length && lista.every(pozycjaOk) ? "green" : "amber"),
+    lista.filter(pozycjaOk).length + " / " + lista.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", typ === "ryzyko"
+    ? "Ryzyko to nie to samo co problem. Problem już się wydarzył; ryzyko może się wydarzyć — i możecie się na nie przygotować."
+    : "Szansa to sytuacja, która może przynieść korzyść systemowi albo wynikowi energetycznemu — jeśli ją zauważycie i wykorzystacie. Norma wymaga określenia ryzyk i szans, nie samych ryzyk."));
+  s.appendChild(el("div", "note", "Metoda oceny jest zaleceniem metody ENESA — norma nie narzuca skali, progów ani częstotliwości przeglądu. Poziom = P × W: 1–2 niski (obserwacja), 3–4 średni (działanie z oceną skuteczności, zatwierdza koordynator z zespołem), 6–9 wysoki (działanie priorytetowe, zatwierdza najwyższe kierownictwo)."));
+  if (typ === "szansa")
+    s.appendChild(el("div", "note", "Dobry szachista nie tylko broni się przed atakami — szuka okazji do ataku. Kto tylko się broni, w najlepszym razie remisuje."));
+
+  lista.forEach(function (x, i) { s.appendChild(kartaPozycji(x, i, typ, lista)); });
+  var dod = el("button", "dodaj", typ === "ryzyko" ? "+ dodaj ryzyko" : "+ dodaj szansę");
+  dod.onclick = function () { lista.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+
+  if (typ === "szansa" && !SZANSE.length)
+    s.appendChild(el("div", "warn", "Rejestr bez szans nie spełnia wymagania. Norma wymaga określenia ryzyk <b>i</b> szans — to najczęstszy błąd w tym punkcie."));
+  if (typ === "ryzyko" && !RYZYKA.length)
+    s.appendChild(el("div", "warn", "Rejestr ryzyk jest pusty."));
+
+  var zr = {};
+  lista.forEach(function (x) { if (x.zrodlo) zr[x.zrodlo] = (zr[x.zrodlo] || 0) + 1; });
+  if (lista.length >= 3 && Object.keys(zr).length === 1)
+    s.appendChild(el("div", "warn", "Wszystkie pozycje mają to samo źródło. Ryzyka i szanse mają wynikać z trzech źródeł: kontekstu (4.1), stron zainteresowanych (4.2) i przeglądu procesów. Jedno źródło zwykle znaczy, że dwa pozostałe nie zostały przejrzane."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 4: przegląd rejestru ── */
+function rysujPrzeglad(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Przegląd rejestru i przekazanie do celów"));
+  s.appendChild(el("p", "opis", "Rejestr skopiowany raz i odłożony do szuflady nic nie daje. Norma nie podaje częstotliwości — wymaga, żeby planowanie było aktualne."));
+  var k = el("div", "poz" + (przegladOk() ? "" : " brak"));
+  k.appendChild(pole("Kiedy przeglądacie rejestr",
+    inp(PRZEGLAD.kiedy, "np. przy każdej istotnej zmianie oraz co kwartał w pierwszym roku wdrożenia",
+      function (v) { PRZEGLAD.kiedy = v; }),
+    "★ Rada z książki: co najmniej raz w roku, a w pierwszym roku wdrożenia co kwartał."));
+  k.appendChild(pole("Data ostatniego przeglądu", inp(PRZEGLAD.ostatni, "", function (v) { PRZEGLAD.ostatni = v; }, "date")));
+  k.appendChild(pole("Jak wnioski trafiają do celów i planów działań (6.2)",
+    txt(PRZEGLAD.doCelow, "np. pozycje o poziomie 6 i wyżej wchodzą do planu działań jako zadania energetyczne; omawiane na przeglądzie zarządzania", 2,
+      function (v) { PRZEGLAD.doCelow = v; })));
+  s.appendChild(k);
+
+  var m = el("div", "sekcja");
+  m.appendChild(el("h3", null, "Metryka rejestru"));
+  m.appendChild(el("p", "opis", "Nagłówek formularza F-EnMS-07. Przy pozycjach o poziomie 6 i wyżej zatwierdzającym jest najwyższe kierownictwo."));
+  var k2 = el("div", "poz");
+  k2.appendChild(pole("Data utworzenia", inp(META.utworzony, "", function (v) { META.utworzony = v; }, "date")));
+  k2.appendChild(pole("Opracował", inp(META.opracowal, "np. Jan Kowalski — Energy Manager, z zespołem", function (v) { META.opracowal = v; })));
+  k2.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu (pozycje o poziomie ≥ 6)", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(k2);
+  s.appendChild(m);
+
+  var st = el("div", "sekcja");
+  st.appendChild(el("h3", null, "Skąd wiesz, że Twój rejestr działa?"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sprawdzenie", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  var wsz = RYZYKA.concat(SZANSE);
+  [["Przy każdej pozycji wiadomo, z którego źródła pochodzi (4.1, 4.2, proces)",
+    wsz.length > 0 && wsz.every(function (x) { return !!x.zrodlo; })],
+  ["Przy ważnych pozycjach jest działanie z terminem, osobą i miejscem w procesach firmy",
+    wsz.filter(wymagaDzialania).length > 0 && wsz.filter(wymagaDzialania).every(function (x) {
+      return (x.dzialanie || "").trim() && (x.odp || "").trim() && x.termin && (x.powiazanie || "").trim();
+    })],
+  ["Przy działaniach jest zaplanowany sposób oceny skuteczności",
+    wsz.filter(wymagaDzialania).length > 0 && wsz.filter(wymagaDzialania).every(function (x) {
+      return (x.ocena || "").trim() && !pustaOcena(x.ocena);
+    })],
+  ["Rejestr był przeglądany po ostatniej istotnej zmianie w firmie", przegladOk()]
+  ].forEach(function (r) {
+    var row = el("tr");
+    row.appendChild(el("td", null, r[0]));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (r[1] ? "green" : "amber"), r[1] ? "tak" : "jeszcze nie"));
+    row.appendChild(td);
+    t.appendChild(row);
+  });
+  st.appendChild(t);
+  s.appendChild(st);
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  var wsz = RYZYKA.concat(SZANSE);
+  var wys = wsz.filter(wymagaKierownictwa).length;
+  var sr = wsz.filter(function (x) { return kategoria(poziom(x)) === "sredni"; }).length;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Rozkład rejestru: "));
+  n.appendChild(document.createTextNode(ile(RYZYKA.length, "ryzyko", "ryzyka", "ryzyk") + " i " +
+    ile(SZANSE.length, "szansa", "szanse", "szans") + " · poziom wysoki: " + wys + " · średni: " + sr +
+    ". Pozycje o poziomie 6 i wyżej wchodzą do celów i planów działań w punkcie 6.2."));
+  s.appendChild(n);
+  if (!SZANSE.length)
+    s.appendChild(el("div", "warn", "Brak szans w rejestrze — to pierwszy wniosek do omówienia z klientem."));
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie. Ten sam łańcuch co w punktach 4.1, 4.4 i 5.x."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var k = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-17 ── */
+function stanPozycji(p) {
+  var wsz = RYZYKA.concat(SZANSE);
+  var zD = wsz.filter(wymagaDzialania);
+  var f = {
+    wej: function () { return wejOk({ kod: p.wej }); },
+    procesy: function () { return PROCESY.length > 0 && PROCESY.every(procesOk); },
+    sa_pozycje: function () { return RYZYKA.length > 0 && SZANSE.length > 0; },
+    zrodla: function () { return wsz.length > 0 && wsz.every(function (x) { return !!x.zrodlo; }); },
+    metoda: function () { return true; },
+    ocenione: function () { return wsz.length > 0 && wsz.every(function (x) { return poziom(x) !== null; }); },
+    dzialania: function () { return zD.length === 0 ? null : zD.every(function (x) { return (x.dzialanie || "").trim(); }); },
+    progi: function () {
+      var w6 = wsz.filter(wymagaKierownictwa);
+      return w6.length === 0 ? null : w6.every(function (x) { return (x.zatwierdzil || "").trim(); });
+    },
+    zasoby: function () {
+      return zD.length === 0 ? null : zD.every(function (x) { return (x.odp || "").trim() && x.termin; });
+    },
+    procesy_wl: function () {
+      return zD.length === 0 ? null : zD.every(function (x) { return (x.powiazanie || "").trim(); });
+    },
+    skutecznosc: function () {
+      return zD.length === 0 ? null : zD.every(function (x) { return (x.ocena || "").trim() && !pustaOcena(x.ocena); });
+    },
+    wynik_oceny: function () {
+      var g = zD.filter(function (x) { return x.terminOceny; });
+      return g.length === 0 ? null : g.some(function (x) { return (x.wynikOceny || "").trim(); });
+    },
+    przeglad: function () { return przegladOk(); },
+    do_celow: function () { return !!(PRZEGLAD.doCelow || "").trim(); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  DANE_WEJ.forEach(function (w) {
+    if (!wejOk(w)) b.push({ t: "Dane wejściowe: " + w.kod + " — brak odpowiedzi albo dowodu.", kto: "klient", metodyka: w.podstawa === "M" });
+  });
+  if (!PROCESY.length) b.push({ t: "Nie przejrzano działań i procesów wpływających na wynik energetyczny.", kto: "klient" });
+  PROCESY.forEach(function (x, i) {
+    if (!procesOk(x)) b.push({ t: "Proces " + (i + 1) + " — brak nazwy albo oceny wpływu.", kto: "klient" });
+  });
+  if (!RYZYKA.length) b.push({ t: "Rejestr ryzyk jest pusty.", kto: "klient" });
+  if (!SZANSE.length) b.push({ t: "Rejestr szans jest pusty — norma wymaga ryzyk i szans.", kto: "klient" });
+  [["R", RYZYKA], ["S", SZANSE]].forEach(function (para) {
+    para[1].forEach(function (x, i) {
+      var et = para[0] + (i + 1);
+      if (!(x.opis || "").trim()) b.push({ t: et + " — brak opisu.", kto: "klient" });
+      else if (!x.zrodlo) b.push({ t: et + " — brak źródła.", kto: "klient", metodyka: true });
+      else if (poziom(x) === null) b.push({ t: et + " — brak oceny P i W.", kto: "klient", metodyka: true });
+      else if (wymagaDzialania(x)) {
+        if (!(x.dzialanie || "").trim()) b.push({ t: et + " — poziom " + poziom(x) + " bez zaplanowanego działania.", kto: "klient" });
+        else if (!(x.odp || "").trim() || !x.termin) b.push({ t: et + " — działanie bez osoby albo terminu.", kto: "klient", metodyka: true });
+        else if (!(x.powiazanie || "").trim()) b.push({ t: et + " — nie wskazano procesu, w którym działanie się wydarzy.", kto: "klient" });
+        else if (!(x.ocena || "").trim()) b.push({ t: et + " — brak zaplanowanej oceny skuteczności.", kto: "klient" });
+        else if (pustaOcena(x.ocena)) b.push({ t: et + " — „wykonane” nie jest oceną skuteczności.", kto: "klient" });
+        else if (wymagaKierownictwa(x) && !(x.zatwierdzil || "").trim())
+          b.push({ t: et + " — poziom " + poziom(x) + " wymaga zatwierdzenia przez kierownictwo.", kto: "klient", metodyka: true });
+      }
+    });
+  });
+  if (!przegladOk()) b.push({ t: "Nie ustalono, kiedy przeglądany jest rejestr, albo brak daty ostatniego przeglądu.", kto: "klient", metodyka: true });
+  if (!(PRZEGLAD.doCelow || "").trim()) b.push({ t: "Nie opisano, jak wnioski trafiają do celów i planów działań (6.2).", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-RYZ-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-17 — punkt 6.1"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  var grupa = null;
+  LISTA_61.forEach(function (p) {
+    if (p.grupa !== grupa) {
+      grupa = p.grupa;
+      var gr = el("tr", "grupa");
+      var td = el("td", null, grupa); td.colSpan = 3;
+      gr.appendChild(td); lk.appendChild(gr);
+    }
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td2 = el("td");
+    td2.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td2);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-RYZ-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["Metryka rejestru", "zakładka 4", (META.opracowal || "—") + " · " + (META.utworzony || "—")],
+  ["1. Dane wejściowe planowania", "zakładka 1", DANE_WEJ.filter(wejOk).length + " z " + DANE_WEJ.length + " · " + ile(PROCESY.filter(procesOk).length, "proces", "procesy", "procesów")],
+  ["2. Rejestr ryzyk", "zakładka 2", ile(RYZYKA.length, "pozycja", "pozycje", "pozycji")],
+  ["3. Rejestr szans", "zakładka 3", ile(SZANSE.length, "pozycja", "pozycje", "pozycji")],
+  ["4. Przegląd rejestru", "zakładka 4", PRZEGLAD.ostatni ? "ostatni: " + PRZEGLAD.ostatni : "do uzupełnienia"],
+  ["5. Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+  ["6. Lista kontrolna III-17", "zakładka 6", LISTA_61.length + " pozycji ze stanem na dzień wydania"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(el("div", "note", "Norma nie wymaga, żeby rejestr ryzyk i szans był udokumentowany. Wymaga natomiast zaplanowania działań, włączenia ich w procesy i zaplanowania oceny skuteczności. ★ Rejestr na piśmie to zalecenie metody ENESA i książki — bez zapisu trudno go przeglądać i pokazać, co zaplanowano."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "wejscie", t: "1. Dane wejściowe", f: rysujWejscie },
+  { id: "ryzyka", t: "2. Rejestr ryzyk", f: function (h) { rysujRejestr(h, "ryzyko"); } },
+  { id: "szanse", t: "3. Rejestr szans", f: function (h) { rysujRejestr(h, "szansa"); } },
+  { id: "przeglad", t: "4. Przegląd rejestru", f: rysujPrzeglad },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+
+function aktualizujPasek() {
+  var razem = DANE_WEJ.length + Math.max(PROCESY.length, 1) + Math.max(RYZYKA.length, 1)
+    + Math.max(SZANSE.length, 1) + 1;
+  var zrob = DANE_WEJ.filter(wejOk).length + PROCESY.filter(procesOk).length
+    + RYZYKA.filter(pozycjaOk).length + SZANSE.filter(pozycjaOk).length + (przegladOk() ? 1 : 0);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 18:00", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 6.1" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_61", JSON.stringify({
+      WEJ: WEJ, PROCESY: PROCESY, RYZYKA: RYZYKA, SZANSE: SZANSE,
+      PRZEGLAD: PRZEGLAD, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_61"); if (!s) return;
+    var d = JSON.parse(s);
+    WEJ = d.WEJ || {}; PROCESY = d.PROCESY || []; RYZYKA = d.RYZYKA || []; SZANSE = d.SZANSE || [];
+    PRZEGLAD = d.PRZEGLAD || PRZEGLAD; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  RYZYKA = JSON.parse(JSON.stringify(PRZYKLAD_R));
+  SZANSE = JSON.parse(JSON.stringify(PRZYKLAD_S));
+  /* Przykład wypełniał same rejestry, a norma pyta najpierw, skąd one się wzięły: z czynników 4.1,
+     z wymagań stron 4.2, z przeglądu procesów, z zakresu 4.3 i z polityki. Bez tego strona
+     pokazywała rejestr bez danych wejściowych — czyli dokładnie to, czego audytor szuka. */
+  WEJ = {
+    "WEJ-41": { stan: "tak",
+      dowod: "D-EnMS-KON-01 wersja 1.0 — czynniki potwierdzone w punkcie 4.1 przejrzane na spotkaniu zespołu "
+        + "06.03.2026 r.; słabości i zagrożenia przeniesione do rejestru ryzyk, mocne strony i szanse — do szans." },
+    "WEJ-42": { stan: "tak",
+      dowod: "D-EnMS-STR-01 — wymagania głównego klienta (certyfikat od 2027 r., dane o energii) i banku "
+        + "(wskaźniki EnPI w załączniku ESG) przejrzane 06.03.2026 r." },
+    "WEJ-PROC": { stan: "tak",
+      dowod: "Przegląd siedmiu działań i procesów na spotkaniu zespołu 06.03.2026 r. — notatka w rejestrze; "
+        + "lista w zakładce poniżej." },
+    "WEJ-43": { stan: "tak",
+      dowod: "D-EnMS-ZAK-01 — rejestr obejmuje wyłącznie działalność w granicach systemu; transport wyrobów "
+        + "opisany jako działalność poza granicami i nie trafia do rejestru ryzyk." },
+    "WEJ-POL": { stan: "tak",
+      dowod: "Element polityki o uwzględnianiu efektywności przy zakupach przełożony na kryteria w procedurze "
+        + "zakupowej (8.3) i na ryzyko kosztowe nowej umowy na energię." }
+  };
+  PROCESY = [
+    { nazwa: "Sprężarkownia — nastawy, szczelność i konserwacja", wplyw: "duzy",
+      uwaga: "Wiedzę o nastawach ma dziś głównie serwis zewnętrzny; brak sterownika nadrzędnego." },
+    { nazwa: "Linie pras — harmonogram pracy i wyłączenia w przerwach", wplyw: "duzy",
+      uwaga: "Przy zmianie planu produkcji prasy bywają utrzymywane w gotowości bez potrzeby." },
+    { nazwa: "Lakiernia — piece suszące, temperatury i czasy", wplyw: "duzy",
+      uwaga: "Parametry suszenia dobierane doświadczeniem; brak zapisanych kryteriów." },
+    { nazwa: "Kotłownia gazowa — ogrzewanie hal", wplyw: "sredni",
+      uwaga: "Kocioł ma 18 lat; brak licznika ciepła, zużycie ujęte tylko przez gaz." },
+    { nazwa: "Oświetlenie hal — sterowanie ręczne", wplyw: "sredni",
+      uwaga: "Hala B oświetlona oprawami świetlówkowymi; światło bywa włączone przez całą zmianę." },
+    { nazwa: "Zakupy urządzeń i usług", wplyw: "sredni",
+      uwaga: "Szansa: kryteria energetyczne w zapytaniach zmieniają koszt eksploatacji na lata." },
+    { nazwa: "Transport wewnętrzny — wózki widłowe", wplyw: "maly",
+      uwaga: "LPG to ok. 1% zużycia; ładowanie wózków elektrycznych w szczycie poboru mocy." }
+  ];
+  PRZEGLAD = {
+    kiedy: "Raz w roku przed przeglądem zarządzania oraz po każdej istotnej zmianie: nowa umowa na energię, "
+      + "nowy kluczowy klient, nowa instalacja, zmiana przepisu.",
+    ostatni: "2026-06-18",
+    doCelow: "Pozycje o poziomie 6 i wyżej wchodzą do planu działań (6.2) jako zadania energetyczne "
+      + "z właścicielem i terminem; pozostałe wracają na kolejny przegląd. Szanse o tym samym poziomie "
+      + "trafiają do przeglądu energetycznego (6.3) jako możliwości poprawy."
+  };
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 18:05", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 6.1.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  WEJ = {}; PROCESY = []; RYZYKA = []; SZANSE = [];
+  PRZEGLAD = { kiedy: "", ostatni: "", doCelow: "" };
+  META = { opracowal: "", zatwierdzil: "", utworzony: "" }; WNIOSKI = [];
+  try { localStorage.removeItem("enesa_61"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

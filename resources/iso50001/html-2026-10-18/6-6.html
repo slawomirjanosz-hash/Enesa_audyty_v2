@@ -1,0 +1,1428 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 6.6 Plan zbierania danych</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 6</div>
+ <h1>6.6 Plan zbierania danych energetycznych</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 6.6</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 6.6</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>6.6 Plan zbierania danych energetycznych</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 6.6 i budowę planu zbierania danych.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 6.6<br>Plan danych</div>
+   <div>
+    <h4>6.6 Plan zbierania danych energetycznych</h4>
+    <p>Pięć rodzajów danych, których wymaga norma. Sześć pytań dla każdego parametru.
+    Dokładność i powtarzalność pomiarów — i dlaczego nie każde SEU potrzebuje podlicznika.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 6.6. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">6.6 — plan danych<br>11 slajdów</div>
+   <div>
+    <h4>6.6 Plan zbierania danych</h4>
+    <p>Kategorie a–e. Tabela częstotliwości. Sposoby zapewnienia dokładności. Twarda zasada:
+    plan to nie lista życzeń.</p>
+    <p style="font-size:12.5px">11 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja zapewnia, że kluczowe charakterystyki jej działań wpływających na wynik
+ energetyczny są identyfikowane, mierzone, monitorowane i analizowane w zaplanowanych odstępach. Ustala i wdraża
+ plan zbierania danych energetycznych odpowiedni do swojej wielkości, złożoności, zasobów oraz wyposażenia
+ pomiarowego. Plan określa, jakie dane są potrzebne oraz jak i jak często będą zbierane i przechowywane.
+ Zbiera się — mierzy, gdy to stosowne — i zachowuje jako udokumentowaną informację: a) istotne zmienne dla
+ znaczących użyć energii; b) zużycie energii związane z nimi i z organizacją; c) kryteria eksploatacji związane
+ ze znaczącymi użyciami; d) czynniki statyczne, jeśli dotyczy; e) dane określone w planach działań. Plan
+ przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb. Wyposażenie do pomiaru kluczowych
+ charakterystyk ma dostarczać danych dokładnych i powtarzalnych; organizacja zachowuje udokumentowaną informację
+ o sposobach zapewnienia dokładności i powtarzalności. Omówienie na podstawie punktu 6.6
+ PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> zaplanuj, jakie dane zbierasz, skąd,
+ jak często i kto za nie odpowiada — i zadbaj, żeby pomiary były dokładne i powtarzalne.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 5, punkt 6.6. Formularz planu: załącznik A
+ do procedury III-26 (F-EnMS-11), przykład AutoParts: załącznik B.</div>
+
+ <div class="ramka">
+  <h3>◧ „Technik był na urlopie, a potem jakoś zapomnieliśmy”</h3>
+  <p style="font-size:13.5px">Przegląd zarządzania. Dyrektor pyta: „Jak idzie sprężarkownia?” Energy Manager
+  otwiera pierwszy arkusz. Potem drugi. W trzecim — od maja nic. Wskaźnik za ostatnie pół roku? Policzony na oko.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Cele były, wskaźniki były. <b>Nie było planu, który zapewnia dane.</b>
+  Wskaźnik jest tak dobry jak liczby, z których go liczysz.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Pięć rodzajów danych, których wymaga norma</h3>
+ <table class="tab">
+ <tr><th style="width:8%">Kat.</th><th style="width:32%">Rodzaj danych</th><th>Przykłady</th></tr>
+ <tr><td class="mono"><b>a</b></td><td>Zmienne dla znaczących użyć energii</td><td>Masa przetworzonej stali, stopniodni grzania, lakierowana powierzchnia</td></tr>
+ <tr><td class="mono"><b>b</b></td><td>Zużycie energii — całej organizacji i każdego znaczącego użycia</td><td>Liczniki, podliczniki, pomiary okresowe, faktury</td></tr>
+ <tr><td class="mono"><b>c</b></td><td>Kryteria eksploatacji</td><td>Ciśnienie sprężonego powietrza, temperatura pieca, godziny pracy oświetlenia</td></tr>
+ <tr><td class="mono"><b>d</b></td><td>Czynniki statyczne, jeśli dotyczy</td><td>Liczba zmian, powierzchnia ogrzewana, liczba maszyn</td></tr>
+ <tr><td class="mono"><b>e</b></td><td>Dane z planów działań</td><td>Parametry przed i po modernizacji, daty wdrożeń, pomiary kontrolne</td></tr>
+ </table>
+ <p style="font-size:14.5px">Dla każdego parametru plan odpowiada na sześć pytań: <b>co mierzymy? czym?
+ jak często? kto odpowiada? gdzie przechowujemy? jak sprawdzamy, że dane są dobre?</b> Forma jest dowolna —
+ małej firmie wystarczy tabela w arkuszu, duża może mieć moduł w systemie monitoringu. Liczy się kompletność
+ i to, czy plan odpowiada rzeczywistości.</p>
+ <p style="font-size:13.5px">Punkt 6.6 to zaplanowanie danych. Ich analiza i reakcja na odchylenia to już
+ punkt 9.1 — ale bez dobrego planu nie będzie czego analizować.</p>
+
+ <h3 style="margin-top:22px">„Skąd mam wiedzieć, że licznik mówi prawdę?”</h3>
+ <p style="font-size:14.5px">Norma wymaga, żeby pomiary kluczowych parametrów były dokładne i powtarzalne —
+ i żebyście mieli na to zapisane dowody. Wzorcowanie to jeden sposób. Inne:</p>
+ <table class="tab">
+ <tr><th style="width:40%">Sposób</th><th>Kiedy pasuje</th></tr>
+ <tr><td>Legalizacja licznika rozliczeniowego</td><td>Liczniki główne energii elektrycznej i gazu — robi to operator sieci, potwierdzenie bywa na fakturze</td></tr>
+ <tr><td>Porównanie sumy podliczników z licznikiem głównym</td><td>Najtańsza i najskuteczniejsza kontrola bieżąca; różnica powyżej kilku procent to sygnał</td></tr>
+ <tr><td>Pomiar kontrolny analizatorem</td><td>Tam, gdzie zużycie wyznaczacie obliczeniem albo pomiarem okresowym</td></tr>
+ <tr><td>Sprawdzenie przepływomierza po montażu</td><td>Nowe wyposażenie — zanim jego dane wejdą do wskaźnika</td></tr>
+ <tr><td>Świadectwo wzorcowania</td><td>Przyrządy przenośne: analizatory, detektory nieszczelności</td></tr>
+ </table>
+
+ <div class="note" style="margin:14px 0"><b>„Czy każde znaczące użycie energii musi mieć podlicznik?”</b>
+ Nie. Podlicznik to jedno z rozwiązań. Czasem wystarczą pomiary okresowe albo obliczenia z mocy i czasu pracy —
+ jeśli są wiarygodne i zapisane. <b>Licznik montujecie tam, gdzie bez niego nie da się wykazać poprawy.</b></div>
+
+ <h3 style="margin-top:22px">Jak to wygląda w praktyce</h3>
+ <p style="font-size:14.5px">Tak zaczynała AutoParts Polska — z dwoma licznikami głównymi i pięcioma znaczącymi
+ użyciami energii.</p>
+ <table class="tab">
+ <tr><th style="width:18%">Ogniwo</th><th>Treść</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Bez danych o obszarach nie da się policzyć wskaźników ani wykazać poprawy.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Najpierw pomiary okresowe (kampania w sprężarkowni w lutym i marcu 2026 r.) i obliczenia; podlicznik i przepływomierz tylko tam, gdzie szacunki nie wystarczą — w sprężarkowni i dla pieca lakierni.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Plan zbierania danych: dla każdego znaczącego użycia źródło, częstotliwość, osoba, miejsce przechowywania i sposób kontroli.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Co miesiąc bilans zamyka się na licznikach głównych, a różnica bilansowa jest zapisana; po montażu przepływomierza — pomiar kontrolny.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Jak często zbierać dane</h3>
+ <p style="font-size:14.5px">To zależy od tego, co mierzycie i do czego dane służą. Zasada: im częściej zbieracie
+ i analizujecie, tym szybciej wykryjecie problem. Firma, która patrzy na zużycie raz na kwartał, dowie się
+ o awarii sprężarki po trzech miesiącach. Firma z danymi dziennymi — po dniu.</p>
+ <table class="tab">
+ <tr><th style="width:34%">Dane</th><th>Rozsądne minimum ★</th><th>Z systemem monitoringu</th></tr>
+<tr><td>Zużycie — liczniki główne</td><td>Miesięcznie (z faktur)</td><td>Codziennie lub co 15 min</td></tr><tr><td>Zużycie znaczących użyć energii</td><td>Miesięcznie</td><td>Codziennie</td></tr><tr><td>Zmienne (produkcja, pogoda)</td><td>Miesięcznie</td><td>Tygodniowo lub codziennie</td></tr><tr><td>Kryteria eksploatacji</td><td>Przy każdej zmianie parametrów pracy</td><td>Ciągle, z alarmem</td></tr><tr><td>EnPI i porównanie z EnB</td><td>Miesięcznie lub kwartalnie</td><td>Miesięcznie</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ Częstotliwości to rada autora — norma każe je zaplanować, ale ich nie narzuca.</p>
+
+ <div class="warn" style="margin:14px 0"><b>⚠ Twarda zasada</b><br><br>
+ Plan zbierania danych to nie lista życzeń. Jeśli wpisujecie „monitoring co 15 minut”, a macie licznik główny
+ odczytywany raz w miesiącu przez elektryka z notesem, plan rozmija się z rzeczywistością.
+ <b>Lepszy rzetelny plan z odczytami miesięcznymi niż ambitny, którego nikt nie realizuje.</b></div>
+
+ <h3 style="margin-top:22px">Skąd wiecie, że plan działa</h3>
+ <table class="tab">
+ <tr><th style="width:44%">Sprawdzenie</th><th>Co ma być widać</th></tr>
+ <tr><td>Obejmuje wszystkie pięć rodzajów danych i każdy wskaźnik</td><td>Przy każdym parametrze wiadomo, skąd są dane, jak często i kto odpowiada.</td></tr>
+ <tr><td>Jest realizowany</td><td>Dane z ostatnich miesięcy są kompletne, a luki mają wyjaśnienie.</td></tr>
+ <tr><td>Potraficie przejść drogę od licznika przez arkusz do wskaźnika</td><td>I macie zapisane, jak sprawdzacie dokładność pomiarów.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:38%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Tylko licznik główny</td><td>Zaplanujcie, skąd weźmiecie dane każdego znaczącego użycia: podlicznik, pomiar okresowy albo obliczenie</td></tr>
+ <tr><td>Brak danych o produkcji</td><td>Uzgodnijcie z produkcją przekazywanie wolumenu w tym samym rytmie co dane o energii</td></tr>
+ <tr><td>Brak kryteriów eksploatacji</td><td>Zbierajcie też parametry pracy: ciśnienia, temperatury, harmonogramy</td></tr>
+ <tr><td>Dane zbierane, nieoglądane</td><td>Wyznaczcie osobę i termin analizy — to już punkt 9.1, ale plan musi to umożliwić</td></tr>
+ <tr><td>Plan zależny od jednej osoby</td><td>Wpiszcie zastępcę przy każdym odczycie ręcznym</td></tr>
+ <tr><td>Plan, który się zestarzał</td><td>Przeglądajcie go przy każdej zmianie procesów, wyposażenia lub wskaźników</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ <b>Rada:</b> zacznijcie od jednej strony A4 — w wierszach każdy wskaźnik, każde
+ znaczące użycie energii i dane z planów działań; w kolumnach: co, czym, jak często, kto, gdzie, jak sprawdzacie
+ jakość. Nawet ręczne odczyty wpisywane co tydzień do arkusza to dobry plan, jeśli jest konsekwentnie
+ realizowany.</p>
+
+ <h3 style="margin-top:22px">Jak to wszystko łączy się w całość</h3>
+ <p style="font-size:14.5px">Wskaźniki, linia bazowa, cele i dane tworzą jeden system nawigacji.
+ Na sprężarkowni AutoParts Polska wygląda to tak:</p>
+ <table class="tab">
+ <tr><th style="width:26%">Element</th><th>Co mówi</th></tr>
+ <tr><td>Linia bazowa (6.5)</td><td>„Tu zacząłeś — 0,125 kWh/Nm³ w kampanii pomiarowej z lutego i marca 2026 r.”</td></tr>
+ <tr><td>Cel (6.2)</td><td>„Tu chcesz być — 0,110 kWh/Nm³ do końca 2027 r.”</td></tr>
+ <tr><td>Wskaźnik (6.4)</td><td>„Tu jesteś teraz — 0,119 kWh/Nm³ w lipcu–wrześniu 2026 r., po obniżeniu ciśnienia w sieci.”</td></tr>
+ <tr><td><b>Plan danych (6.6)</b></td><td><b>„Tak wiesz, że te liczby są prawdziwe.”</b></td></tr>
+ </table>
+ <p style="font-size:13.5px">Czy się poprawiliście? Wskaźnik spadł o 4,8%. Żeby uznać to za poprawę, sprawdzacie
+ wpływ sezonów, obciążenia i warunków pracy. Porównanie ma adnotację: linia bazowa pochodzi z zimy, wynik z lata,
+ a latem sprężarki pracują w trudniejszych warunkach — więc ta różnica raczej nie zawyża poprawy. Ile zostało?
+ 0,009 kWh/Nm³, czyli jeszcze około 7,6% obecnej wartości.</p>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Wskaźnik jest tak wiarygodny jak dane, z których powstaje.
+  Plan zbierania danych to prosta tabela — ale musi odpowiadać temu, co naprawdę dzieje się w zakładzie.<br><br>
+  <b>Zadanie:</b> wybierzcie jeden wskaźnik i przejdźcie drogę jego danych od licznika do raportu.
+  Zapiszcie każde miejsce, w którym ta droga zależy od pamięci jednej osoby. W ankiecie jest na to osobne
+  pole — a platforma sama wskaże pozycje bez wpisanego zastępcy.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma sprawdza pokrycie kategorii a–e, zestawia plan z kartami wskaźników z punktów
+  6.4 i 6.5 oraz wykrywa pozycje, w których częstotliwość rozmija się ze źródłem.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 6.6 w formacie stron 4.1–6.5.</b> Ostatni punkt rozdziału 6 i jedyny, który
+<b>zasila wszystkie poprzednie</b>: każde źródło danych w karcie EnPI, każde „dane i źródło” w metodzie
+weryfikacji z 6.2 i każda zmienna z przeglądu energetycznego powinny mieć tu swoją pozycję.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 5, punkt 6.6</td><td>Scena przeglądu zarządzania („technik był na urlopie”), pięć rodzajów danych, sześć pytań dla każdego parametru, akapit o dokładności i sposobach jej zapewnienia, odpowiedź „czy każde SEU musi mieć podlicznik”, przykład AutoParts w czterech ogniwach, tabela częstotliwości, twarda zasada o liście życzeń, trzy sprawdzenia, tabela sześciu błędów, „Twój ruch”, podsumowanie „jak to wszystko łączy się w całość”.</td></tr>
+<tr><td>Część III, Moduł 4 — III-26 zał. A (F-EnMS-11)</td><td>Dziewięć kolumn formularza: parametr, kategoria, jednostka, źródło i metoda, częstotliwość, odpowiedzialny, przechowywanie, kontrola jakości i dokładność, postępowanie z brakami. Plus metryka: data i wersja planu, przegląd planu, zatwierdził.</td></tr>
+<tr><td>Część III, Moduł 4 — III-26 zał. B</td><td>Przykład AutoParts: 16 pozycji z kategoriami a–e, w tym pozycja 14 z dwiema kategoriami (b, e), zasady kontroli jakości i postępowania z brakami przy każdej pozycji.</td></tr>
+<tr><td>Część III, Moduł 4 — III-26, pkt 4.4</td><td>Kroki 18–21 procedury P-EnMS-04 jako treść bloku „zasady wspólne”.</td></tr>
+<tr><td>Część III, Moduł 4 — III-25</td><td>Lista kontrolna sekcji 6.6: 7 pozycji z kolumną N / M.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela / pole</th><th>Uwagi implementacyjne</th></tr>
+<tr><td><code>plan_danych</code></td><td>audyt_id, wersja, data, przeglad_kiedy, opracowal, zatwierdzil. Jeden plan na audyt, wersjonowany.</td></tr>
+<tr><td><code>pozycja_planu</code></td><td>id, plan_id, kolejnosc, parametr, jednostka, zrodlo, czestotliwosc, odpowiedzialny, zastepca, przechowywanie, kontrola, braki, kluczowa BOOL.</td></tr>
+<tr><td><code>pozycja_kategoria</code></td><td>Tabela łącząca: pozycja_id, kategoria ENUM('a','b','c','d','e'). <b>Relacja wiele-do-wielu</b> — pozycja 14 przykładu należy do kategorii b i e naraz. Pojedyncza kolumna ENUM by tego nie udźwignęła.</td></tr>
+<tr><td><code>zasady_planu</code></td><td>plan_id plus 5 pól tekstowych (przechowywanie, dowody dokładności, jakość danych i braki, przegląd planu, droga danych).</td></tr>
+<tr><td>Referencje z innych punktów</td><td>Docelowo: <code>karta_enpi.zrodla</code> → lista <code>pozycja_planu.id</code>; <code>metoda_weryfikacji.dane</code> (6.2) → to samo. Dziś oba są tekstem — zakładka 2 zestawia je wizualnie, ale nie waliduje referencji.</td></tr>
+<tr><td><code>pozycja_planu.kluczowa</code></td><td>Steruje wymaganiem opisu kontroli dokładności. To <b>decyzja klienta</b>, które pomiary są kluczowymi charakterystykami — platforma jej nie podejmuje, ale ostrzega, gdy nie oznaczono żadnej.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Lista życzeń:</b> gęsta częstotliwość przy źródle, które jej nie zapewni</td><td>Chip „lista życzeń” w tabeli planu i ostrzeżenie cytujące obie wartości. Wykrywanie: <code>RE_GESTA</code> (ciągle, 15 min, codziennie, dziennie, na bieżąco, godzinowo) <b>i</b> <code>RE_RZADKIE_ZRODLO</code> (faktura, inwentaryzacja, spis, notes, zeszyt, obchód, ręczny) <b>i nie</b> <code>RE_AUTO_ZRODLO</code> (system monitoringu, sterownik, podlicznik, przepływomierz, profil 15, ERP, MES, czujnik, przetwornik). To wprost „twarda zasada” z książki.</td></tr>
+<tr><td>Kategoria a, b, c, d albo e bez ani jednej pozycji</td><td>Ostrzeżenie w zakładce 2 i pozycja w braki(). Norma wylicza te pięć rodzajów danych wprost, więc jest to wymaganie N.</td></tr>
+<tr><td>Pozycja oznaczona jako kluczowa charakterystyka bez opisu kontroli dokładności</td><td>Ostrzeżenie przy pozycji, czerwony chip w tabeli, pozycja w braki() jako N.</td></tr>
+<tr><td>Żadna pozycja nie oznaczona jako kluczowa</td><td>Ostrzeżenie w zakładce 3 i w braki(). Przy wskaźnikach i wykazywaniu poprawy przynajmniej liczniki i pomiary zmiennych dla SEU nimi są — brak oznaczeń znaczy, że pytania o dokładność nikt jeszcze nie zadał.</td></tr>
+<tr><td>Źródło wygląda na odczyt ręczny lub pomiar okresowy, a zastępca jest pusty</td><td>Nota przy pozycji, pozycja w braki() z chipem metodyki. To błąd „plan zależny od jednej osoby” z tabeli błędów — i dokładnie scena z początku punktu.</td></tr>
+<tr><td>Pozycja bez zasady postępowania z brakami</td><td>Nota i pozycja w braki() jako metodyka ENESA. Norma mówi o dokładności pomiaru, nie o lukach — ale luki są nieuniknione.</td></tr>
+<tr><td><b>„Tylko licznik główny”:</b> trzy pozycje kategorii b albo mniej, przy istniejących kartach SEU</td><td>Ostrzeżenie zestawiające liczbę pozycji kategorii b z liczbą kart SEU z punktu 6.4. Heurystyka — dlatego tylko ostrzeżenie, bez wpisu do braków.</td></tr>
+<tr><td>Wskaźnik z 6.4 bez wpisanych źródeł danych</td><td>Ostrzeżenie w zakładce 2: wskaźnik bez zaplanowanych danych nie będzie liczony. Karty czytane są z magazynu punktów 6.4 i 6.5 — w makiecie tylko do odczytu.</td></tr>
+<tr><td>Brak odstępów przeglądu planu</td><td>Ostrzeżenie i pozycja w braki(). „Plan, który się zestarzał, jest gorszy od żadnego — bo wygląda na obowiązujący.”</td></tr>
+</table>
+
+<h2>Lista kontrolna III-25 — sekcja 6.6</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Plan jest odpowiedni do wielkości, złożoności, zasobów i wyposażenia pomiarowego organizacji.</td><td class='mono'>N</td><td><code>odpowiedni</code></td></tr><tr><td>Plan obejmuje: a) istotne zmienne dla SEU; b) zużycie energii SEU i organizacji; c) kryteria eksploatacji SEU; d) czynniki statyczne; e) dane z planów działań.</td><td class='mono'>N</td><td><code>kategorie</code></td></tr><tr><td>Plan określa, jak i jak często dane są zbierane oraz przechowywane.</td><td class='mono'>N</td><td><code>jak</code></td></tr><tr><td>Dane są zachowane jako udokumentowana informacja.</td><td class='mono'>N</td><td><code>zachowane</code></td></tr><tr><td>Pomiar kluczowych charakterystyk daje dane dokładne i powtarzalne; zachowano na to dowody.</td><td class='mono'>N</td><td><code>dokladnosc</code></td></tr><tr><td>Określono zasady jakości danych i postępowania z brakami.</td><td class='mono'>M</td><td><code>jakosc</code></td></tr><tr><td>Plan przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb.</td><td class='mono'>N</td><td><code>przeglad</code></td></tr></table>
+<div class="note">Pozycja <code>odpowiedni</code> („plan odpowiedni do wielkości, złożoności, zasobów
+i wyposażenia”) jest oceniana przez <b>brak pozycji typu lista życzeń</b> plus kompletność wszystkich pozycji.
+To interpretacja: norma mówi o adekwatności, a jedyny mierzalny ślad nieadekwatności, jaki platforma widzi,
+to rozjazd między częstotliwością i źródłem. Pełna ocena adekwatności należy do konsultanta — i tak powinna
+być przedstawiana klientowi.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–3, 5</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 4 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Zawiera m.in. ocenę, czy plan jest realny — zdanie „to wygląda na listę życzeń” lepiej powiedzieć w rozmowie niż pokazać w formularzu.</td></tr>
+<tr><td>Wnioski — cztery ogniwa</td><td>znaczenie → decyzja → działanie → sprawdzenie.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-DAN-01</code> — plan zbierania danych energetycznych</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-11, załącznik A do procedury III-26 (P-EnMS-04); przykład — załącznik B</td></tr>
+<tr><td>Status w normie</td><td>Plan jest <b>ustalany i wdrażany</b>, przeglądany w określonych odstępach i aktualizowany — więc ma wersje. Osobno zachowywane są: same dane (a–e) oraz informacja o sposobach zapewnienia dokładności i powtarzalności.</td></tr>
+<tr><td>Zawartość</td><td>Tabela planu z zakładki 1, pokrycie kategorii z zakładki 2, dowody dokładności i zasady wspólne z zakładki 3, metryka i zatwierdzenie z zakładki 5, wnioski konsultanta z zakładki 4 (tylko w wersji konsultanckiej).</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Zmiana znaczących użyć energii albo zmiennych (6.3), nowy albo zmieniony wskaźnik (6.4), rewizja linii bazowej (6.5), nowy plan działań (6.2), zmiana wyposażenia pomiarowego, zmiana zakresu systemu (4.3).</td></tr>
+<tr><td>Kod do dopisania</td><td><code>F-EnMS-11</code> trzeba dodać do listy kodów formularzy platformy — przy poprzednich punktach lista kończyła się na F-EnMS-10.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Lista SEU, istotne zmienne, czynniki statyczne i kryteria eksploatacji — to one wypełniają kategorie a, c i d. Metody podziału zużycia z przeglądu stają się pozycjami kategorii b.</td></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Dwukierunkowo.</b> Kategoria e to dane z planów działań. Odwrotnie: każde pole „dane i źródło” w metodzie weryfikacji poprawy musi mieć tu pozycję — inaczej weryfikacja nie będzie wykonalna.</td></tr>
+<tr><td>6.4 Wskaźniki EnPI</td><td><b>Dwukierunkowo.</b> Pole „źródła danych” w karcie wskazuje pozycje tego planu. Zakładka 2 zestawia jedno z drugim.</td></tr>
+<tr><td>6.5 Linia bazowa</td><td><b>Wejście do normalizacji.</b> Dane o istotnych zmiennych z okresu bazowego muszą mieć pozycję w planie — bez nich normalizacji nie da się powtórzyć.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Wyjście.</b> Osoby z kolumny „odpowiedzialny” i „zastępca” muszą umieć wykonać odczyt i wiedzieć, po co. Lista z planu jest wejściem do planu szkoleń.</td></tr>
+<tr><td>7.5 Udokumentowana informacja</td><td><b>Wyjście.</b> Kolumna „przechowywanie” to w praktyce decyzja o nadzorze nad zapisami.</td></tr>
+<tr><td>8.1 Planowanie operacyjne</td><td><b>Dwukierunkowo.</b> Kryteria eksploatacji (kategoria c) są ustalane w 8.1, a zbierane według tego planu.</td></tr>
+<tr><td>9.1 Monitorowanie i ocena</td><td><b>Najważniejsze wyjście.</b> Punkt 6.6 planuje dane, 9.1 je analizuje i reaguje na odchylenia. Brakująca pozycja planu objawia się dopiero jako luka w 9.1 — pół roku później, jak w scenie z początku punktu.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Wyjście.</b> Kompletność danych i działanie planu są wejściem do przeglądu.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td>Referencje zamiast tekstu</td><td>Największa pojedyncza poprawa w całym rozdziale 6: pola „źródła danych” (6.4), „dane i źródło” (6.2, metoda weryfikacji) oraz zmienne SEU (6.3) powinny wskazywać <b>pozycje tego planu</b> przez identyfikator. Wtedy platforma odpowie na pytanie, na które dziś nie umie: „który wskaźnik przestanie działać, jeśli ta pozycja planu zniknie?”.</td></tr>
+<tr><td>Generowanie szkieletu planu</td><td>Mając 6.3 i 6.4, platforma może <b>zaproponować pozycje planu sama</b>: po jednej na każdą zmienną SEU (kat. a), na zużycie organizacji i każdego SEU (kat. b), na każde kryterium eksploatacji z 8.1 (kat. c), na czynniki statyczne (kat. d) i na dane z planów działań (kat. e). Klient uzupełnia źródła i osoby, zamiast zaczynać od pustej tabeli. Proponuję to zrobić — tu oszczędność czasu klienta jest największa w całym rozdziale.</td></tr>
+<tr><td>Monitorowanie realizacji planu</td><td>Plan mówi, co ma być zbierane; nic nie sprawdza, czy jest. Proponuję prostą tabelę <code>odczyt</code> (pozycja_id, okres, wartość, oznaczenie oszacowania) i widok „luki w danych” — to zamienia plan z deklaracji w narzędzie. Formalnie to już punkt 9.1, ale technicznie należy do tej samej struktury.</td></tr>
+<tr><td>Termin ważności dowodów dokładności</td><td>Świadectwa wzorcowania i sprawdzenia roczne mają daty. Warto trzymać je jako terminy z przypomnieniem, a nie jako tekst w kolumnie „kontrola jakości”.</td></tr>
+<tr><td>Przelicznik gazu</td><td>Nadal otwarte z punktu 6.3: profil zakładu liczy gaz po 0,0395 GJ/m³ (około 10,97 kWh/m³), a książka i III-20 po 10 kWh/m³. Przy 350 000 m³ to różnica około 340 MWh, czyli blisko 3% zużycia zakładu. Pozycja 2 tego planu („jedna podstawa przeliczenia dla całego bilansu”) jest miejscem, w którym ta decyzja musi zostać zapisana — <b>do rozstrzygnięcia przed wdrożeniem</b>.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 6.6 wraz z przykładem AutoParts (16 pozycji planu).</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;KATEGORIE&quot;: [
+  [
+   &quot;a&quot;,
+   &quot;Istotne zmienne dla znaczących użyć energii&quot;
+  ],
+  [
+   &quot;b&quot;,
+   &quot;Zużycie energii — znaczących użyć i organizacji&quot;
+  ],
+  [
+   &quot;c&quot;,
+   &quot;Kryteria eksploatacji znaczących użyć energii&quot;
+  ],
+  [
+   &quot;d&quot;,
+   &quot;Czynniki statyczne, jeśli dotyczy&quot;
+  ],
+  [
+   &quot;e&quot;,
+   &quot;Dane określone w planach działań&quot;
+  ]
+ ],
+ &quot;LISTA_66&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Plan jest odpowiedni do wielkości, złożoności, zasobów i wyposażenia pomiarowego organizacji.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;odpowiedni&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Plan obejmuje: a) istotne zmienne dla SEU; b) zużycie energii SEU i organizacji; c) kryteria eksploatacji SEU; d) czynniki statyczne; e) dane z planów działań.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;kategorie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Plan określa, jak i jak często dane są zbierane oraz przechowywane.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;jak&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Dane są zachowane jako udokumentowana informacja.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zachowane&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Pomiar kluczowych charakterystyk daje dane dokładne i powtarzalne; zachowano na to dowody.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;dokladnosc&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Określono zasady jakości danych i postępowania z brakami.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;jakosc&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Plan przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;przeglad&quot;
+  }
+ ],
+ &quot;POLA_ZASAD&quot;: [
+  {
+   &quot;kod&quot;: &quot;zapisy&quot;,
+   &quot;nazwa&quot;: &quot;Gdzie i jak długo przechowujecie dane&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;rows&quot;: 2,
+   &quot;ph&quot;: &quot;np. Arkusz EnMS na serwerze, kopia tygodniowa; dane z systemu monitoringu 30 dni w sterowniku, dalej eksport miesięczny do arkusza; faktury w księgowości 5 lat.&quot;,
+   &quot;pomoc&quot;: &quot;Norma wymaga, żeby plan określał, jak dane będą przechowywane, i żeby dane były zachowane jako udokumentowana informacja.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;dowody&quot;,
+   &quot;nazwa&quot;: &quot;Jak zapewniacie dokładność i powtarzalność — zasada ogólna&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;rows&quot;: 3,
+   &quot;ph&quot;: &quot;np. Liczniki rozliczeniowe — legalizacja przez OSD. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy z licznikiem głównym (różnica ≤ 5%). Analizator i detektor — świadectwo wzorcowania. Czujniki temperatury i ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.&quot;,
+   &quot;pomoc&quot;: &quot;Organizacja zachowuje udokumentowaną informację o sposobach zapewnienia dokładności i powtarzalności pomiarów kluczowych charakterystyk.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;jakosc&quot;,
+   &quot;nazwa&quot;: &quot;Zasady jakości danych i postępowania z brakami&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;rows&quot;: 3,
+   &quot;ph&quot;: &quot;np. Każda wartość oszacowana jest oznaczona w arkuszu i opisana. Luka dłuższa niż miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji w porównaniu.&quot;,
+   &quot;pomoc&quot;: &quot;Wymaganie metodyki ENESA. Norma mówi o dokładności pomiaru, ale nie o postępowaniu z lukami — a luki są nieuniknione.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;przeglad&quot;,
+   &quot;nazwa&quot;: &quot;Kto i kiedy przegląda plan&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;rows&quot;: 2,
+   &quot;ph&quot;: &quot;np. Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny.&quot;,
+   &quot;pomoc&quot;: &quot;Plan, który się zestarzał, jest gorszy od żadnego — bo wygląda na obowiązujący.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;droga&quot;,
+   &quot;nazwa&quot;: &quot;Droga danych od licznika do wskaźnika&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;rows&quot;: 3,
+   &quot;ph&quot;: &quot;np. Podlicznik → eksport z systemu monitoringu (Kier. UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika (Energy Manager, do 10 dnia) → raport na odprawę kierownictwa. Punkty zależne od pamięci jednej osoby: eksport ręczny z systemu monitoringu — wpisany zastępca.&quot;,
+   &quot;pomoc&quot;: &quot;Zadanie z książki: wybierzcie jeden wskaźnik i przejdźcie drogę jego danych od licznika do raportu. Zapiszcie każde miejsce, w którym ta droga zależy od pamięci jednej osoby.&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;POZYCJE&quot;: [
+   {
+    &quot;parametr&quot;: &quot;Energia elektryczna — organizacja&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;
+    ],
+    &quot;jednostka&quot;: &quot;MWh&quot;,
+    &quot;zrodlo&quot;: &quot;Licznik główny rozliczeniowy (OSD), faktura; profil 15-minutowy z OSD&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;przechowywanie&quot;: &quot;Arkusz EnMS; faktury w księgowości&quot;,
+    &quot;kontrola&quot;: &quot;Porównanie z fakturą; licznik legalizowany przez OSD&quot;,
+    &quot;braki&quot;: &quot;Korekta z faktury korygującej&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Kierownik Utrzymania Ruchu&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Gaz — organizacja&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;
+    ],
+    &quot;jednostka&quot;: &quot;m³, kWh&quot;,
+    &quot;zrodlo&quot;: &quot;Licznik główny, faktura&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;przechowywanie&quot;: &quot;Arkusz EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Porównanie z fakturą; jedna podstawa przeliczenia dla całego bilansu&quot;,
+    &quot;braki&quot;: &quot;Korekta z faktury korygującej&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Kierownik Utrzymania Ruchu&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;LPG — wózki widłowe&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;
+    ],
+    &quot;jednostka&quot;: &quot;l&quot;,
+    &quot;zrodlo&quot;: &quot;Faktury dostaw, stan zbiornika&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Kierownik Zakupów&quot;,
+    &quot;przechowywanie&quot;: &quot;Arkusz EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Dostawy zestawione ze stanem zbiornika&quot;,
+    &quot;braki&quot;: &quot;Oszacowanie z liczby motogodzin, wartość oznaczona&quot;,
+    &quot;kluczowa&quot;: false,
+    &quot;zastepca&quot;: &quot;Specjalista ds. zakupów&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Energia elektryczna — sprężarkownia&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;
+    ],
+    &quot;jednostka&quot;: &quot;kWh&quot;,
+    &quot;zrodlo&quot;: &quot;Podlicznik klasy 1 (od 06.2026)&quot;,
+    &quot;czestotliwosc&quot;: &quot;15 min; zestawienie miesięczne&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;System monitoringu, kopia co tydzień&quot;,
+    &quot;kontrola&quot;: &quot;Suma podliczników wobec licznika głównego (różnica ≤ 5%); sprawdzenie po montażu&quot;,
+    &quot;braki&quot;: &quot;Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technik UR&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Wolumen sprężonego powietrza&quot;,
+    &quot;kat&quot;: [
+     &quot;a&quot;
+    ],
+    &quot;jednostka&quot;: &quot;Nm³&quot;,
+    &quot;zrodlo&quot;: &quot;Przepływomierz na kolektorze głównym (od 06.2026)&quot;,
+    &quot;czestotliwosc&quot;: &quot;15 min&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;System monitoringu&quot;,
+    &quot;kontrola&quot;: &quot;Sprawdzenie po montażu; porównanie z wydajnością katalogową sprężarek&quot;,
+    &quot;braki&quot;: &quot;Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technik UR&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Ciśnienie w sieci sprężonego powietrza&quot;,
+    &quot;kat&quot;: [
+     &quot;c&quot;
+    ],
+    &quot;jednostka&quot;: &quot;bar&quot;,
+    &quot;zrodlo&quot;: &quot;Przetwornik ciśnienia w sterowniku sprężarkowni&quot;,
+    &quot;czestotliwosc&quot;: &quot;Ciągle; alarm powyżej 6,5 bar&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;Sterownik (30 dni), eksport miesięczny&quot;,
+    &quot;kontrola&quot;: &quot;Sprawdzenie przetwornika raz w roku&quot;,
+    &quot;braki&quot;: &quot;—&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technik UR&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Przepływ powietrza w czasie postoju&quot;,
+    &quot;kat&quot;: [
+     &quot;e&quot;
+    ],
+    &quot;jednostka&quot;: &quot;Nm³/min&quot;,
+    &quot;zrodlo&quot;: &quot;Test weekendowy przepływomierzem, procedura I-SP-02&quot;,
+    &quot;czestotliwosc&quot;: &quot;Co kwartał&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;Protokół testu w teczce EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Ta sama procedura testu i to samo ciśnienie przy każdym pomiarze&quot;,
+    &quot;braki&quot;: &quot;Powtórzenie testu w kolejny weekend&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technik UR&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Gaz — piec lakierni&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;
+    ],
+    &quot;jednostka&quot;: &quot;m³&quot;,
+    &quot;zrodlo&quot;: &quot;Podlicznik gazu (od 06.2026)&quot;,
+    &quot;czestotliwosc&quot;: &quot;Dziennie; zestawienie miesięczne&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;Arkusz EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Porównanie z licznikiem głównym w miesiącach letnich (kotłownia wyłączona)&quot;,
+    &quot;braki&quot;: &quot;Oszacowanie z czasu pracy palników, wartość oznaczona&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technolog lakierni&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Lakierowana powierzchnia&quot;,
+    &quot;kat&quot;: [
+     &quot;a&quot;
+    ],
+    &quot;jednostka&quot;: &quot;m²&quot;,
+    &quot;zrodlo&quot;: &quot;System MES — karta zlecenia&quot;,
+    &quot;czestotliwosc&quot;: &quot;Dziennie&quot;,
+    &quot;odp&quot;: &quot;Kierownik Produkcji&quot;,
+    &quot;przechowywanie&quot;: &quot;ERP&quot;,
+    &quot;kontrola&quot;: &quot;Miesięczne uzgodnienie z planem produkcji&quot;,
+    &quot;braki&quot;: &quot;Wartość z planu produkcji, oznaczona&quot;,
+    &quot;kluczowa&quot;: false,
+    &quot;zastepca&quot;: &quot;Planista produkcji&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Temperatura i harmonogram pracy pieca&quot;,
+    &quot;kat&quot;: [
+     &quot;c&quot;
+    ],
+    &quot;jednostka&quot;: &quot;°C, h&quot;,
+    &quot;zrodlo&quot;: &quot;Sterownik pieca lakierni&quot;,
+    &quot;czestotliwosc&quot;: &quot;Ciągle&quot;,
+    &quot;odp&quot;: &quot;Technolog lakierni&quot;,
+    &quot;przechowywanie&quot;: &quot;Sterownik, raport tygodniowy&quot;,
+    &quot;kontrola&quot;: &quot;Sprawdzenie czujnika raz w roku&quot;,
+    &quot;braki&quot;: &quot;—&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Kierownik Utrzymania Ruchu&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Masa przetworzonej stali&quot;,
+    &quot;kat&quot;: [
+     &quot;a&quot;
+    ],
+    &quot;jednostka&quot;: &quot;t&quot;,
+    &quot;zrodlo&quot;: &quot;ERP — zużycie blachy&quot;,
+    &quot;czestotliwosc&quot;: &quot;Dziennie&quot;,
+    &quot;odp&quot;: &quot;Kierownik Produkcji&quot;,
+    &quot;przechowywanie&quot;: &quot;ERP&quot;,
+    &quot;kontrola&quot;: &quot;Inwentaryzacja miesięczna&quot;,
+    &quot;braki&quot;: &quot;Wartość z wydań magazynowych&quot;,
+    &quot;kluczowa&quot;: false,
+    &quot;zastepca&quot;: &quot;Planista produkcji&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Energia elektryczna — prasy&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;
+    ],
+    &quot;jednostka&quot;: &quot;kWh&quot;,
+    &quot;zrodlo&quot;: &quot;Pomiar analizatorem 2 tygodnie co kwartał i obliczenie z czasu pracy linii&quot;,
+    &quot;czestotliwosc&quot;: &quot;Kwartalnie&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;Protokoły pomiarów w teczce EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Analizator ze świadectwem wzorcowania; porównanie z bilansem licznika głównego&quot;,
+    &quot;braki&quot;: &quot;Powtórzenie pomiaru w kolejnym kwartale, wartość oznaczona&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technik UR&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Stopniodni grzania&quot;,
+    &quot;kat&quot;: [
+     &quot;a&quot;
+    ],
+    &quot;jednostka&quot;: &quot;HDD&quot;,
+    &quot;zrodlo&quot;: &quot;IMGW, stacja Katowice, baza 18 °C&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;przechowywanie&quot;: &quot;Arkusz EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Jedno źródło i jedna baza przez cały okres porównania&quot;,
+    &quot;braki&quot;: &quot;Stacja zastępcza (Gliwice), wartość oznaczona&quot;,
+    &quot;kluczowa&quot;: false,
+    &quot;zastepca&quot;: &quot;Specjalista ds. EnMS&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Oświetlenie hal H1 i H2&quot;,
+    &quot;kat&quot;: [
+     &quot;b&quot;,
+     &quot;e&quot;
+    ],
+    &quot;jednostka&quot;: &quot;kW, h&quot;,
+    &quot;zrodlo&quot;: &quot;Pomiar mocy na rozdzielnicach przed i po wymianie na LED; czas pracy z planu zmian&quot;,
+    &quot;czestotliwosc&quot;: &quot;Przed i po wdrożeniu, potem raz w roku&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przechowywanie&quot;: &quot;Protokoły pomiarów w teczce EnMS&quot;,
+    &quot;kontrola&quot;: &quot;Ten sam analizator i te same punkty pomiarowe&quot;,
+    &quot;braki&quot;: &quot;—&quot;,
+    &quot;kluczowa&quot;: true,
+    &quot;zastepca&quot;: &quot;Technik UR&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Czynniki statyczne zakładu&quot;,
+    &quot;kat&quot;: [
+     &quot;d&quot;
+    ],
+    &quot;jednostka&quot;: &quot;—&quot;,
+    &quot;zrodlo&quot;: &quot;Plan produkcji i karta zakładu: liczba zmian, liczba linii, powierzchnia ogrzewana&quot;,
+    &quot;czestotliwosc&quot;: &quot;Przy każdej zmianie&quot;,
+    &quot;odp&quot;: &quot;Kierownik Produkcji i Energy Manager&quot;,
+    &quot;przechowywanie&quot;: &quot;Rejestr zmian w teczce EnMS&quot;,
+    &quot;kontrola&quot;: &quot;—&quot;,
+    &quot;braki&quot;: &quot;—&quot;,
+    &quot;kluczowa&quot;: false,
+    &quot;zastepca&quot;: &quot;Specjalista ds. EnMS&quot;
+   },
+   {
+    &quot;parametr&quot;: &quot;Dane z planów działań&quot;,
+    &quot;kat&quot;: [
+     &quot;e&quot;
+    ],
+    &quot;jednostka&quot;: &quot;—&quot;,
+    &quot;zrodlo&quot;: &quot;Protokoły odbioru, daty wdrożeń, pomiary przed i po modernizacji&quot;,
+    &quot;czestotliwosc&quot;: &quot;Przy każdym działaniu&quot;,
+    &quot;odp&quot;: &quot;Właściciel działania&quot;,
+    &quot;przechowywanie&quot;: &quot;F-EnMS-10, część D (metoda weryfikacji)&quot;,
+    &quot;kontrola&quot;: &quot;Warunki porównania zgodne z częścią D formularza celów&quot;,
+    &quot;braki&quot;: &quot;Brak pomiaru „przed” uniemożliwia weryfikację — działanie wstrzymuje się do wykonania pomiaru&quot;,
+    &quot;kluczowa&quot;: false,
+    &quot;zastepca&quot;: &quot;Energy Manager&quot;
+   }
+  ],
+  &quot;ZASADY&quot;: {
+   &quot;zapisy&quot;: &quot;Arkusz EnMS na serwerze firmowym, kopia tygodniowa. Dane z systemu monitoringu: 30 dni w sterowniku, dalej eksport miesięczny do arkusza. Protokoły pomiarów i świadectwa wzorcowania w teczce EnMS. Faktury w księgowości, zgodnie z obowiązującym okresem przechowywania.&quot;,
+   &quot;dowody&quot;: &quot;Liczniki rozliczeniowe energii elektrycznej i gazu — legalizacja po stronie OSD, potwierdzenie na fakturze. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy podliczników z licznikiem głównym; dopuszczalna różnica bilansowa 5%. Przepływomierz — sprawdzenie po montażu i porównanie z wydajnością katalogową sprężarek. Analizator sieci i detektor ultradźwiękowy — świadectwa wzorcowania, odnawiane zgodnie z zaleceniem producenta. Czujniki temperatury i przetworniki ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.&quot;,
+   &quot;jakosc&quot;: &quot;Każda wartość oszacowana jest oznaczona w arkuszu i opisana (metoda i powód). Luka dłuższa niż jeden miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji przy porównaniu. Różnica bilansowa powyżej 5% uruchamia sprawdzenie podziału zużycia na obszary.&quot;,
+   &quot;przeglad&quot;: &quot;Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny; wersja planu rośnie przy każdej zmianie zakresu danych.&quot;,
+   &quot;droga&quot;: &quot;Dla wskaźnika S-1: podlicznik sprężarkowni i przepływomierz → eksport z systemu monitoringu (Kierownik UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika i porównanie z EnB (Energy Manager, do 10 dnia) → trend na odprawie kierownictwa. Miejsca zależne od pamięci jednej osoby: ręczny eksport z systemu monitoringu i kwartalny test weekendowy — przy obu wpisany zastępca (Technik UR).&quot;
+  },
+  &quot;META&quot;: {
+   &quot;wersja&quot;: &quot;1.0&quot;,
+   &quot;data&quot;: &quot;2026-04-15&quot;,
+   &quot;przeglad&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego lub planów działań&quot;,
+   &quot;opracowal&quot;: &quot;Jan Kowalski, Energy Manager&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Techniczny&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var KATEGORIE = [["a", "Istotne zmienne dla znaczących użyć energii"], ["b", "Zużycie energii — znaczących użyć i organizacji"], ["c", "Kryteria eksploatacji znaczących użyć energii"], ["d", "Czynniki statyczne, jeśli dotyczy"], ["e", "Dane określone w planach działań"]];
+var CZESTOTLIWOSCI = [["Zużycie — liczniki główne", "Miesięcznie (z faktur)", "Codziennie lub co 15 min"], ["Zużycie znaczących użyć energii", "Miesięcznie", "Codziennie"], ["Zmienne (produkcja, pogoda)", "Miesięcznie", "Tygodniowo lub codziennie"], ["Kryteria eksploatacji", "Przy każdej zmianie parametrów pracy", "Ciągle, z alarmem"], ["EnPI i porównanie z EnB", "Miesięcznie lub kwartalnie", "Miesięcznie"]];
+var LISTA_66 = [{"tekst": "Plan jest odpowiedni do wielkości, złożoności, zasobów i wyposażenia pomiarowego organizacji.", "podstawa": "N", "auto": "odpowiedni"}, {"tekst": "Plan obejmuje: a) istotne zmienne dla SEU; b) zużycie energii SEU i organizacji; c) kryteria eksploatacji SEU; d) czynniki statyczne; e) dane z planów działań.", "podstawa": "N", "auto": "kategorie"}, {"tekst": "Plan określa, jak i jak często dane są zbierane oraz przechowywane.", "podstawa": "N", "auto": "jak"}, {"tekst": "Dane są zachowane jako udokumentowana informacja.", "podstawa": "N", "auto": "zachowane"}, {"tekst": "Pomiar kluczowych charakterystyk daje dane dokładne i powtarzalne; zachowano na to dowody.", "podstawa": "N", "auto": "dokladnosc"}, {"tekst": "Określono zasady jakości danych i postępowania z brakami.", "podstawa": "M", "auto": "jakosc"}, {"tekst": "Plan przegląda się w określonych odstępach i aktualizuje stosownie do potrzeb.", "podstawa": "N", "auto": "przeglad"}];
+var POLA_ZASAD = [{"kod": "zapisy", "nazwa": "Gdzie i jak długo przechowujecie dane", "podstawa": "N", "rows": 2, "ph": "np. Arkusz EnMS na serwerze, kopia tygodniowa; dane z systemu monitoringu 30 dni w sterowniku, dalej eksport miesięczny do arkusza; faktury w księgowości 5 lat.", "pomoc": "Norma wymaga, żeby plan określał, jak dane będą przechowywane, i żeby dane były zachowane jako udokumentowana informacja."}, {"kod": "dowody", "nazwa": "Jak zapewniacie dokładność i powtarzalność — zasada ogólna", "podstawa": "N", "rows": 3, "ph": "np. Liczniki rozliczeniowe — legalizacja przez OSD. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy z licznikiem głównym (różnica ≤ 5%). Analizator i detektor — świadectwo wzorcowania. Czujniki temperatury i ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.", "pomoc": "Organizacja zachowuje udokumentowaną informację o sposobach zapewnienia dokładności i powtarzalności pomiarów kluczowych charakterystyk."}, {"kod": "jakosc", "nazwa": "Zasady jakości danych i postępowania z brakami", "podstawa": "M", "rows": 3, "ph": "np. Każda wartość oszacowana jest oznaczona w arkuszu i opisana. Luka dłuższa niż miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji w porównaniu.", "pomoc": "Wymaganie metodyki ENESA. Norma mówi o dokładności pomiaru, ale nie o postępowaniu z lukami — a luki są nieuniknione."}, {"kod": "przeglad", "nazwa": "Kto i kiedy przegląda plan", "podstawa": "N", "rows": 2, "ph": "np. Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny.", "pomoc": "Plan, który się zestarzał, jest gorszy od żadnego — bo wygląda na obowiązujący."}, {"kod": "droga", "nazwa": "Droga danych od licznika do wskaźnika", "podstawa": "M", "rows": 3, "ph": "np. Podlicznik → eksport z systemu monitoringu (Kier. UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika (Energy Manager, do 10 dnia) → raport na odprawę kierownictwa. Punkty zależne od pamięci jednej osoby: eksport ręczny z systemu monitoringu — wpisany zastępca.", "pomoc": "Zadanie z książki: wybierzcie jeden wskaźnik i przejdźcie drogę jego danych od licznika do raportu. Zapiszcie każde miejsce, w którym ta droga zależy od pamięci jednej osoby."}];
+var P_POZYCJE = [{"parametr": "Energia elektryczna — organizacja", "kat": ["b"], "jednostka": "MWh", "zrodlo": "Licznik główny rozliczeniowy (OSD), faktura; profil 15-minutowy z OSD", "czestotliwosc": "Miesięcznie", "odp": "Energy Manager", "przechowywanie": "Arkusz EnMS; faktury w księgowości", "kontrola": "Porównanie z fakturą; licznik legalizowany przez OSD", "braki": "Korekta z faktury korygującej", "kluczowa": true, "zastepca": "Kierownik Utrzymania Ruchu"}, {"parametr": "Gaz — organizacja", "kat": ["b"], "jednostka": "m³, kWh", "zrodlo": "Licznik główny, faktura", "czestotliwosc": "Miesięcznie", "odp": "Energy Manager", "przechowywanie": "Arkusz EnMS", "kontrola": "Porównanie z fakturą; jedna podstawa przeliczenia dla całego bilansu", "braki": "Korekta z faktury korygującej", "kluczowa": true, "zastepca": "Kierownik Utrzymania Ruchu"}, {"parametr": "LPG — wózki widłowe", "kat": ["b"], "jednostka": "l", "zrodlo": "Faktury dostaw, stan zbiornika", "czestotliwosc": "Miesięcznie", "odp": "Kierownik Zakupów", "przechowywanie": "Arkusz EnMS", "kontrola": "Dostawy zestawione ze stanem zbiornika", "braki": "Oszacowanie z liczby motogodzin, wartość oznaczona", "kluczowa": false, "zastepca": "Specjalista ds. zakupów"}, {"parametr": "Energia elektryczna — sprężarkownia", "kat": ["b"], "jednostka": "kWh", "zrodlo": "Podlicznik klasy 1 (od 06.2026)", "czestotliwosc": "15 min; zestawienie miesięczne", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "System monitoringu, kopia co tydzień", "kontrola": "Suma podliczników wobec licznika głównego (różnica ≤ 5%); sprawdzenie po montażu", "braki": "Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona", "kluczowa": true, "zastepca": "Technik UR"}, {"parametr": "Wolumen sprężonego powietrza", "kat": ["a"], "jednostka": "Nm³", "zrodlo": "Przepływomierz na kolektorze głównym (od 06.2026)", "czestotliwosc": "15 min", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "System monitoringu", "kontrola": "Sprawdzenie po montażu; porównanie z wydajnością katalogową sprężarek", "braki": "Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, wartość oznaczona", "kluczowa": true, "zastepca": "Technik UR"}, {"parametr": "Ciśnienie w sieci sprężonego powietrza", "kat": ["c"], "jednostka": "bar", "zrodlo": "Przetwornik ciśnienia w sterowniku sprężarkowni", "czestotliwosc": "Ciągle; alarm powyżej 6,5 bar", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "Sterownik (30 dni), eksport miesięczny", "kontrola": "Sprawdzenie przetwornika raz w roku", "braki": "—", "kluczowa": true, "zastepca": "Technik UR"}, {"parametr": "Przepływ powietrza w czasie postoju", "kat": ["e"], "jednostka": "Nm³/min", "zrodlo": "Test weekendowy przepływomierzem, procedura I-SP-02", "czestotliwosc": "Co kwartał", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "Protokół testu w teczce EnMS", "kontrola": "Ta sama procedura testu i to samo ciśnienie przy każdym pomiarze", "braki": "Powtórzenie testu w kolejny weekend", "kluczowa": true, "zastepca": "Technik UR"}, {"parametr": "Gaz — piec lakierni", "kat": ["b"], "jednostka": "m³", "zrodlo": "Podlicznik gazu (od 06.2026)", "czestotliwosc": "Dziennie; zestawienie miesięczne", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "Arkusz EnMS", "kontrola": "Porównanie z licznikiem głównym w miesiącach letnich (kotłownia wyłączona)", "braki": "Oszacowanie z czasu pracy palników, wartość oznaczona", "kluczowa": true, "zastepca": "Technolog lakierni"}, {"parametr": "Lakierowana powierzchnia", "kat": ["a"], "jednostka": "m²", "zrodlo": "System MES — karta zlecenia", "czestotliwosc": "Dziennie", "odp": "Kierownik Produkcji", "przechowywanie": "ERP", "kontrola": "Miesięczne uzgodnienie z planem produkcji", "braki": "Wartość z planu produkcji, oznaczona", "kluczowa": false, "zastepca": "Planista produkcji"}, {"parametr": "Temperatura i harmonogram pracy pieca", "kat": ["c"], "jednostka": "°C, h", "zrodlo": "Sterownik pieca lakierni", "czestotliwosc": "Ciągle", "odp": "Technolog lakierni", "przechowywanie": "Sterownik, raport tygodniowy", "kontrola": "Sprawdzenie czujnika raz w roku", "braki": "—", "kluczowa": true, "zastepca": "Kierownik Utrzymania Ruchu"}, {"parametr": "Masa przetworzonej stali", "kat": ["a"], "jednostka": "t", "zrodlo": "ERP — zużycie blachy", "czestotliwosc": "Dziennie", "odp": "Kierownik Produkcji", "przechowywanie": "ERP", "kontrola": "Inwentaryzacja miesięczna", "braki": "Wartość z wydań magazynowych", "kluczowa": false, "zastepca": "Planista produkcji"}, {"parametr": "Energia elektryczna — prasy", "kat": ["b"], "jednostka": "kWh", "zrodlo": "Pomiar analizatorem 2 tygodnie co kwartał i obliczenie z czasu pracy linii", "czestotliwosc": "Kwartalnie", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "Protokoły pomiarów w teczce EnMS", "kontrola": "Analizator ze świadectwem wzorcowania; porównanie z bilansem licznika głównego", "braki": "Powtórzenie pomiaru w kolejnym kwartale, wartość oznaczona", "kluczowa": true, "zastepca": "Technik UR"}, {"parametr": "Stopniodni grzania", "kat": ["a"], "jednostka": "HDD", "zrodlo": "IMGW, stacja Katowice, baza 18 °C", "czestotliwosc": "Miesięcznie", "odp": "Energy Manager", "przechowywanie": "Arkusz EnMS", "kontrola": "Jedno źródło i jedna baza przez cały okres porównania", "braki": "Stacja zastępcza (Gliwice), wartość oznaczona", "kluczowa": false, "zastepca": "Specjalista ds. EnMS"}, {"parametr": "Oświetlenie hal H1 i H2", "kat": ["b", "e"], "jednostka": "kW, h", "zrodlo": "Pomiar mocy na rozdzielnicach przed i po wymianie na LED; czas pracy z planu zmian", "czestotliwosc": "Przed i po wdrożeniu, potem raz w roku", "odp": "Kierownik Utrzymania Ruchu", "przechowywanie": "Protokoły pomiarów w teczce EnMS", "kontrola": "Ten sam analizator i te same punkty pomiarowe", "braki": "—", "kluczowa": true, "zastepca": "Technik UR"}, {"parametr": "Czynniki statyczne zakładu", "kat": ["d"], "jednostka": "—", "zrodlo": "Plan produkcji i karta zakładu: liczba zmian, liczba linii, powierzchnia ogrzewana", "czestotliwosc": "Przy każdej zmianie", "odp": "Kierownik Produkcji i Energy Manager", "przechowywanie": "Rejestr zmian w teczce EnMS", "kontrola": "—", "braki": "—", "kluczowa": false, "zastepca": "Specjalista ds. EnMS"}, {"parametr": "Dane z planów działań", "kat": ["e"], "jednostka": "—", "zrodlo": "Protokoły odbioru, daty wdrożeń, pomiary przed i po modernizacji", "czestotliwosc": "Przy każdym działaniu", "odp": "Właściciel działania", "przechowywanie": "F-EnMS-10, część D (metoda weryfikacji)", "kontrola": "Warunki porównania zgodne z częścią D formularza celów", "braki": "Brak pomiaru „przed” uniemożliwia weryfikację — działanie wstrzymuje się do wykonania pomiaru", "kluczowa": false, "zastepca": "Energy Manager"}];
+var P_ZASADY_66 = {"zapisy": "Arkusz EnMS na serwerze firmowym, kopia tygodniowa. Dane z systemu monitoringu: 30 dni w sterowniku, dalej eksport miesięczny do arkusza. Protokoły pomiarów i świadectwa wzorcowania w teczce EnMS. Faktury w księgowości, zgodnie z obowiązującym okresem przechowywania.", "dowody": "Liczniki rozliczeniowe energii elektrycznej i gazu — legalizacja po stronie OSD, potwierdzenie na fakturze. Podliczniki — sprawdzenie po montażu i miesięczne porównanie sumy podliczników z licznikiem głównym; dopuszczalna różnica bilansowa 5%. Przepływomierz — sprawdzenie po montażu i porównanie z wydajnością katalogową sprężarek. Analizator sieci i detektor ultradźwiękowy — świadectwa wzorcowania, odnawiane zgodnie z zaleceniem producenta. Czujniki temperatury i przetworniki ciśnienia — sprawdzenie raz w roku. Protokoły w teczce EnMS.", "jakosc": "Każda wartość oszacowana jest oznaczona w arkuszu i opisana (metoda i powód). Luka dłuższa niż jeden miesiąc wymaga decyzji Energy Managera o metodzie uzupełnienia. Wartości oszacowane nie są używane do wykazania poprawy bez adnotacji przy porównaniu. Różnica bilansowa powyżej 5% uruchamia sprawdzenie podziału zużycia na obszary.", "przeglad": "Energy Manager przegląda plan przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wskaźników, wyposażenia pomiarowego albo planów działań. Zmiany zatwierdza Dyrektor Techniczny; wersja planu rośnie przy każdej zmianie zakresu danych.", "droga": "Dla wskaźnika S-1: podlicznik sprężarkowni i przepływomierz → eksport z systemu monitoringu (Kierownik UR, do 5 dnia miesiąca) → arkusz EnMS, zakładka S-1 → obliczenie wskaźnika i porównanie z EnB (Energy Manager, do 10 dnia) → trend na odprawie kierownictwa. Miejsca zależne od pamięci jednej osoby: ręczny eksport z systemu monitoringu i kwartalny test weekendowy — przy obu wpisany zastępca (Technik UR)."};
+var P_META_66 = {"wersja": "1.0", "data": "2026-04-15", "przeglad": "Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz przy zmianie SEU, wskaźników, wyposażenia pomiarowego lub planów działań", "opracowal": "Jan Kowalski, Energy Manager", "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny"};
+var P_KARTY_PODGLAD = [{"nr": "O-1", "nazwa": "Zużycie rzeczywiste / zużycie oczekiwane według modelu bazowego", "obszar": "organizacja", "zrodla": "Poz. 1–3, 11, 13 planu zbierania danych F-EnMS-11"}, {"nr": "P-1", "nazwa": "Energia jednostkowa pras — kWh na tonę przetworzonej stali", "obszar": "seu", "zrodla": "Poz. 11 (masa stali) i poz. 12 (energia pras) planu F-EnMS-11"}, {"nr": "L-1", "nazwa": "Zużycie rzeczywiste / oczekiwane — lakiernia", "obszar": "seu", "zrodla": "Poz. 8 (gaz pieca), poz. 9 (lakierowana powierzchnia), poz. 13 (HDD) planu F-EnMS-11"}, {"nr": "S-1", "nazwa": "Energia jednostkowa sprężarkowni — kWh na Nm³ sprężonego powietrza", "obszar": "seu", "zrodla": "Poz. 4 (energia sprężarkowni), poz. 5 (wolumen powietrza), poz. 6 (ciśnienie sieci) planu F-EnMS-11"}, {"nr": "S-2", "nazwa": "Przepływ sprężonego powietrza w czasie postoju", "obszar": "seu", "zrodla": "Poz. 7 (przepływ w postoju) planu F-EnMS-11"}, {"nr": "K-1", "nazwa": "Zużycie rzeczywiste / oczekiwane — kotłownia", "obszar": "seu", "zrodla": "Poz. 2 (gaz — organizacja, po odjęciu pieca lakierni) i poz. 13 (HDD) planu F-EnMS-11"}, {"nr": "OŚ-1", "nazwa": "Roczne zużycie energii na oświetlenie", "obszar": "seu", "zrodla": "Poz. 14 (oświetlenie) i poz. 15 (czynniki statyczne) planu F-EnMS-11"}];
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Dane zbierane bez planu okazują się niepełne akurat tam, gdzie są potrzebne do rozliczenia celu.", "decyzja": "Plan zbierania danych obejmuje wszystkie znaczące użycia, zmienne istotne i dane wymagane przez klienta.", "dzialanie": "Odczyty tygodniowe liczników głównych; podlicznik sprężarkowni i przepływomierz w planie C4; stopniodnie z najbliższej stacji IMGW-PIB.", "sprawdzenie": "Ocena zgodności (9.1.2) i roczny raport dla klienta powstają bez uzupełniania danych wstecz."}];
+</script>
+<script>/* ENESA 6.6 — Plan zbierania danych energetycznych.
+   Zgodny z: Tom 2 rozdz. 5 pkt 6.6 oraz Część III Moduł 4 v2.1
+   (III-26 = P-EnMS-04, zał. A = F-EnMS-11, zał. B = przykład AutoParts, III-25). */
+"use strict";
+
+var POZYCJE = [];
+var ZASADY = {};
+var META = { wersja: "", data: "", przeglad: "", zatwierdzil: "", opracowal: "" };
+var WNIOSKI = [];
+var AKT = "plan";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var KARTY = [];                      // tylko do odczytu, z magazynu punktów 6.4 i 6.5
+
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[0] + " — " + o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      lista.sort();
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+
+/* ── kompletność pozycji ── */
+function katy(p) { return p.kat || []; }
+function pozycjaOk(p) {
+  return !!((p.parametr || "").trim() && katy(p).length && (p.zrodlo || "").trim()
+    && (p.czestotliwosc || "").trim() && (p.odp || "").trim() && (p.przechowywanie || "").trim());
+}
+function kluczowa(p) { return !!p.kluczowa; }
+function brakKontroli(p) { return kluczowa(p) && !(p.kontrola || "").trim(); }
+function brakBrakow(p) { return (p.parametr || "").trim() && !(p.braki || "").trim(); }
+
+/* ── reguły z książki ── */
+var RE_GESTA = /(ciągle|ciagle|15\s*min|co\s*15|codzien|dziennie|na bieżąco|online|w czasie rzeczywistym|godzin)/i;
+var RE_RZADKIE_ZRODLO = /(faktur|rachunek|inwentaryzacj|spis\b|notes|zeszyt|obchód|obchod|ręczn|reczn|kartk)/i;
+var RE_AUTO_ZRODLO = /(system monitoringu|sterownik|podlicznik|przepływomierz|przeplywomierz|profil 15|rejestrac|erp\b|mes\b|automat|czujnik|przetwornik|licznik klasy|rejestrator)/i;
+function listaZyczen(p) {
+  var cz = p.czestotliwosc || "", zr = p.zrodlo || "";
+  if (!cz.trim() || !zr.trim()) return false;
+  return RE_GESTA.test(cz) && RE_RZADKIE_ZRODLO.test(zr) && !RE_AUTO_ZRODLO.test(zr);
+}
+var RE_RECZNE = /(ręczn|reczn|odczyt\b|notes|zeszyt|obchód|obchod|spis\b|inwentaryzacj|test\b|pomiar\b|protok)/i;
+function recznaPozycja(p) {
+  var zr = p.zrodlo || "";
+  return RE_RECZNE.test(zr) && !/(system monitoringu|ciągle|automat)/i.test(zr);
+}
+function brakZastepcy(p) { return recznaPozycja(p) && !(p.zastepca || "").trim(); }
+
+function pozycjeKategorii(k) { return POZYCJE.filter(function (p) { return katy(p).indexOf(k) >= 0; }); }
+function brakujaceKategorie() {
+  return KATEGORIE.filter(function (k) { return !pozycjeKategorii(k[0]).length; });
+}
+function tylkoLicznikiGlowne() {
+  var b = pozycjeKategorii("b");
+  if (b.length > 3) return false;
+  var seu = KARTY.filter(function (k) { return k.obszar === "seu"; }).length;
+  return b.length > 0 && seu > 0;
+}
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+function zasadyOk() {
+  return POLA_ZASAD.filter(function (p) { return p.podstawa === "N"; })
+    .every(function (p) { return (ZASADY[p.kod] || "").trim(); });
+}
+
+/* ── zakładka 1: pozycje planu ── */
+function rysujPlan(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Pozycje planu");
+  h.appendChild(el("span", "chip " + (POZYCJE.length && POZYCJE.every(pozycjaOk) ? "green" : "amber"),
+    POZYCJE.filter(pozycjaOk).length + " / " + POZYCJE.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Dla każdego parametru plan odpowiada na sześć pytań: co mierzymy, czym, jak często, kto odpowiada, gdzie przechowujemy i jak sprawdzamy, że dane są dobre."));
+  s.appendChild(hel("div", "warn", "Przegląd zarządzania. Dyrektor pyta: „Jak idzie sprężarkownia?” Energy Manager otwiera pierwszy arkusz. Potem drugi. W trzecim — od maja nic. „Technik był na urlopie, a potem jakoś zapomnieliśmy.”<br><br>Cele były, wskaźniki były. <b>Nie było planu, który zapewnia dane.</b> Wskaźnik jest tak dobry jak liczby, z których go liczycie."));
+  s.appendChild(hel("div", "note", "<b>Twarda zasada:</b> plan zbierania danych to nie lista życzeń. Jeśli wpisujecie „monitoring co 15 minut”, a macie licznik główny odczytywany raz w miesiącu przez elektryka z notesem, plan rozmija się z rzeczywistością. Lepszy rzetelny plan z odczytami miesięcznymi niż ambitny, którego nikt nie realizuje."));
+
+  if (POZYCJE.length) {
+    var t = el("table", "tab");
+    var tr = el("tr");
+    ["#", "Parametr", "Kat.", "Jedn.", "Źródło", "Częstotliwość", "Odp.", "Stan"].forEach(function (x) {
+      tr.appendChild(el("th", null, x));
+    });
+    t.appendChild(tr);
+    POZYCJE.forEach(function (p, i) {
+      var r = el("tr");
+      r.appendChild(el("td", "mono", String(i + 1)));
+      r.appendChild(el("td", null, p.parametr || "—"));
+      r.appendChild(el("td", "mono", katy(p).join(", ") || "—"));
+      r.appendChild(el("td", null, p.jednostka || "—"));
+      r.appendChild(el("td", null, (p.zrodlo || "—").slice(0, 46)));
+      r.appendChild(el("td", null, p.czestotliwosc || "—"));
+      r.appendChild(el("td", null, p.odp || "—"));
+      var td = el("td");
+      td.appendChild(el("span", "chip " + (pozycjaOk(p) ? "green" : "amber"), pozycjaOk(p) ? "OK" : "brak"));
+      if (kluczowa(p)) td.appendChild(el("span", "chip " + (brakKontroli(p) ? "red" : ""), "kluczowa"));
+      if (listaZyczen(p)) td.appendChild(el("span", "chip red", "lista życzeń"));
+      r.appendChild(td);
+      t.appendChild(r);
+    });
+    s.appendChild(t);
+  }
+  host.appendChild(s);
+
+  POZYCJE.forEach(function (p, i) {
+    var sec = el("div", "poz" + (pozycjaOk(p) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Poz. " + (i + 1)));
+    if (katy(p).length) g.appendChild(el("span", "chip", "kategoria " + katy(p).join(", ")));
+    if (kluczowa(p)) g.appendChild(el("span", "chip green", "kluczowa charakterystyka"));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { POZYCJE.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    sec.appendChild(g);
+    sec.appendChild(pole("Parametr", inp(p.parametr, "np. Energia elektryczna — sprężarkownia", function (v) { p.parametr = v; })));
+    sec.appendChild(pole("Kategoria z punktu 6.6 — można wybrać kilka",
+      kratki(katy(p), KATEGORIE, function (v) { p.kat = v; }),
+      "a — istotne zmienne dla SEU; b — zużycie energii SEU i organizacji; c — kryteria eksploatacji SEU; d — czynniki statyczne; e — dane z planów działań."));
+    sec.appendChild(pole("Jednostka", inp(p.jednostka, "np. kWh, m³, t, HDD, °C, bar", function (v) { p.jednostka = v; })));
+    sec.appendChild(pole("Źródło i metoda", txt(p.zrodlo,
+      "np. Podlicznik klasy 1 (od 06.2026); pomiar analizatorem 2 tygodnie co kwartał i obliczenie", 2,
+      function (v) { p.zrodlo = v; }),
+      "Podlicznik to jedno z rozwiązań. Czasem wystarczą pomiary okresowe albo obliczenia z mocy i czasu pracy — jeśli są wiarygodne i zapisane. Licznik montuje się tam, gdzie bez niego nie da się wykazać poprawy."));
+    sec.appendChild(pole("Częstotliwość", inp(p.czestotliwosc, "np. Miesięcznie; 15 min; dziennie; przy zmianie parametrów",
+      function (v) { p.czestotliwosc = v; })));
+    if (listaZyczen(p))
+      kratkaOstrzezenie(sec, p);
+    sec.appendChild(pole("Odpowiedzialny", inp(p.odp, "np. Kierownik Utrzymania Ruchu", function (v) { p.odp = v; })));
+    sec.appendChild(pole("Zastępca", inp(p.zastepca, "np. Technik UR — Marek Zieliński", function (v) { p.zastepca = v; }),
+      "Przy każdym odczycie ręcznym warto wpisać zastępcę. Plan zależny od jednej osoby przestaje działać na czas jej urlopu — i to jest dokładnie scena z początku tego punktu."));
+    if (brakZastepcy(p))
+      sec.appendChild(el("div", "note", "Źródło wygląda na odczyt ręczny albo pomiar okresowy, a zastępca nie jest wpisany. To ta pozycja planu, która znika razem z urlopem jednej osoby."));
+    sec.appendChild(pole("Przechowywanie", inp(p.przechowywanie, "np. Arkusz EnMS; system monitoringu, kopia co tydzień",
+      function (v) { p.przechowywanie = v; })));
+    var kl = el("div", "pole");
+    var lab = el("label", null, "Kluczowa charakterystyka");
+    lab.appendChild(el("span", "chip", "wymóg normy przy dokładności"));
+    kl.appendChild(lab);
+    kl.appendChild(sel(p.kluczowa ? "tak" : "nie", [["nie", "Nie"], ["tak", "Tak — pomiar wymaga dowodów dokładności i powtarzalności"]],
+      function (v) { p.kluczowa = (v === "tak"); }));
+    kl.appendChild(el("div", "pozmeta", "Norma wymaga, żeby wyposażenie do pomiaru kluczowych charakterystyk dostarczało danych dokładnych i powtarzalnych — i żeby były na to zachowane dowody."));
+    sec.appendChild(kl);
+    sec.appendChild(pole("Kontrola jakości i dokładność", txt(p.kontrola,
+      "np. Suma podliczników wobec licznika głównego (różnica ≤ 5%); sprawdzenie po montażu; analizator ze świadectwem wzorcowania", 2,
+      function (v) { p.kontrola = v; }),
+      "Wzorcowanie to jeden sposób. Inne: legalizacja licznika rozliczeniowego, porównanie sumy podliczników z licznikiem głównym, pomiar kontrolny analizatorem, sprawdzenie przepływomierza po montażu."));
+    if (brakKontroli(p))
+      sec.appendChild(el("div", "warn", "Pozycja oznaczona jako kluczowa charakterystyka bez opisanej kontroli jakości. To wprost wymaganie normy — pomiar ma dawać dane dokładne i powtarzalne, a na to mają być dowody."));
+    sec.appendChild(pole("Postępowanie z brakami", txt(p.braki,
+      "np. Brak dłuższy niż 24 h: oszacowanie z czasu pracy sprężarek, pozycja oznaczona w arkuszu", 2,
+      function (v) { p.braki = v; }),
+      "Metodyka ENESA. Luka w danych jest nieunikniona — zasada mówi, co wtedy robicie i jak oznaczacie wartość oszacowaną."));
+    if (brakBrakow(p))
+      sec.appendChild(el("div", "note", "Nie opisano postępowania z brakami. Bez tej zasady luka w danych zostaje luką — albo, co gorsza, cichym oszacowaniem."));
+    host.appendChild(sec);
+  });
+
+  var dod = el("div", "sekcja");
+  var b = el("button", "dodaj", "+ dodaj pozycję planu");
+  b.onclick = function () { POZYCJE.push({ kat: [] }); zapisz(); rysuj(); };
+  dod.appendChild(b);
+  if (!POZYCJE.length) dod.appendChild(el("div", "warn", "Plan nie ma ani jednej pozycji."));
+  host.appendChild(dod);
+}
+function kratkaOstrzezenie(sec, p) {
+  sec.appendChild(hel("div", "warn", "Częstotliwość „" + (p.czestotliwosc || "") + "” przy źródle „" +
+    (p.zrodlo || "").slice(0, 60) + "” — to wygląda na <b>listę życzeń</b>. Albo źródło jest inne, niż opisane, albo częstotliwość jest nierealna. Lepszy rzetelny plan z odczytami miesięcznymi niż ambitny, którego nikt nie realizuje."));
+}
+
+/* ── zakładka 2: kompletność ── */
+function rysujKompletnosc(host) {
+  var s = el("div", "sekcja");
+  var bk = brakujaceKategorie();
+  var h = el("h3", null, "Kompletność planu — kategorie a–e");
+  h.appendChild(el("span", "chip " + (bk.length ? "amber" : "green"),
+    (KATEGORIE.length - bk.length) + " / " + KATEGORIE.length + " kategorii pokrytych"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Norma wylicza pięć rodzajów danych, które trzeba zbierać (mierzyć, gdy to stosowne) i zachowywać jako udokumentowaną informację."));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Kat.", "Rodzaj danych", "Pozycje planu", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  KATEGORIE.forEach(function (k) {
+    var lista = POZYCJE.map(function (p, i) { return { p: p, i: i }; })
+      .filter(function (x) { return katy(x.p).indexOf(k[0]) >= 0; });
+    var r = el("tr");
+    r.appendChild(el("td", "mono", k[0]));
+    r.appendChild(el("td", null, k[1]));
+    r.appendChild(el("td", null, lista.length
+      ? lista.map(function (x) { return "poz. " + (x.i + 1); }).join(", ")
+      : "—"));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (lista.length ? "green" : "amber"), lista.length ? ile(lista.length, "pozycja", "pozycje", "pozycji") : "brak"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  s.appendChild(t);
+  bk.forEach(function (k) {
+    s.appendChild(el("div", "warn", "Kategoria " + k[0] + " („" + k[1] + "”) nie ma w planie ani jednej pozycji. Norma wymienia ją wprost."));
+  });
+  if (tylkoLicznikiGlowne())
+    s.appendChild(hel("div", "warn", "Kategoria b ma " + ile(pozycjeKategorii("b").length, "pozycję", "pozycje", "pozycji") +
+      ", a znaczących użyć energii jest " + KARTY.filter(function (k) { return k.obszar === "seu"; }).length +
+      ". To wygląda na <b>„tylko licznik główny”</b>. Zaplanujcie, skąd weźmiecie dane każdego znaczącego użycia: podlicznik, pomiar okresowy albo obliczenie."));
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  var wh = el("h3", null, "Wskaźniki z punktów 6.4 i 6.5 a plan danych");
+  wh.appendChild(el("span", "chip " + (KARTY.length ? "" : "amber"), ile(KARTY.length, "karta", "karty", "kart")));
+  w.appendChild(wh);
+  if (!KARTY.length)
+    w.appendChild(el("div", "note", "Nie znaleziono kart wskaźników. Jeśli punkty 6.4 i 6.5 są już wypełnione, platforma zestawi tu każdy wskaźnik z pozycjami planu, które go zasilają. W makiecie karty pochodzą ze wspólnego magazynu przeglądarki — wypełnij najpierw ankietę 6.4."));
+  else {
+    w.appendChild(el("p", "opis", "Każdy wskaźnik musi mieć w planie dane, z których się go liczy — i dane o istotnych zmiennych, bez których nie da się powtórzyć normalizacji."));
+    var tw = el("table", "tab");
+    var twr = el("tr"); ["Nr", "Wskaźnik", "Źródła wpisane w karcie", "Stan"].forEach(function (x) { twr.appendChild(el("th", null, x)); });
+    tw.appendChild(twr);
+    KARTY.forEach(function (k, i) {
+      var r = el("tr");
+      r.appendChild(el("td", "mono", (k.nr || "E" + (i + 1))));
+      r.appendChild(el("td", null, (k.nazwa || "—").slice(0, 50)));
+      r.appendChild(el("td", null, k.zrodla || "—"));
+      var td = el("td");
+      var ok = !!(k.zrodla || "").trim();
+      td.appendChild(el("span", "chip " + (ok ? "green" : "amber"), ok ? "wskazane" : "brak wskazania"));
+      r.appendChild(td);
+      tw.appendChild(r);
+    });
+    w.appendChild(tw);
+    var bezZr = KARTY.filter(function (k) { return !(k.zrodla || "").trim(); }).length;
+    if (bezZr) w.appendChild(el("div", "warn", ile(bezZr, "wskaźnik nie wskazuje", "wskaźniki nie wskazują", "wskaźników nie wskazuje") + " pozycji planu danych. Wskaźnik bez zaplanowanych danych nie będzie liczony."));
+    else w.appendChild(el("div", "ok", "Każda karta wskaźnika wskazuje pozycje planu. Po wdrożeniu platformy to będzie twarda referencja, a nie tekst — i wtedy platforma sprawdzi też, czy wskazane pozycje istnieją."));
+  }
+  host.appendChild(w);
+}
+
+/* ── zakładka 3: dokładność ── */
+function rysujDokladnosc(host) {
+  var klucz = POZYCJE.map(function (p, i) { return { p: p, i: i }; }).filter(function (x) { return kluczowa(x.p); });
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Dokładność i powtarzalność pomiarów");
+  h.appendChild(el("span", "chip " + (klucz.length && klucz.every(function (x) { return !brakKontroli(x.p); }) ? "green" : "amber"),
+    klucz.filter(function (x) { return !brakKontroli(x.p); }).length + " / " + klucz.length + " z dowodami"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Wyposażenie do pomiaru kluczowych charakterystyk ma dostarczać danych dokładnych i powtarzalnych. Organizacja zachowuje udokumentowaną informację o sposobach zapewnienia jednego i drugiego."));
+  s.appendChild(hel("div", "note", "„Skąd mam wiedzieć, że licznik mówi prawdę?” Wzorcowanie to jeden sposób. Inne: <b>legalizacja licznika rozliczeniowego, porównanie sumy podliczników z licznikiem głównym, pomiar kontrolny analizatorem, sprawdzenie przepływomierza po montażu.</b> Wybierzcie sposób dla każdego kluczowego pomiaru i zapiszcie go."));
+  if (!klucz.length)
+    s.appendChild(el("div", "warn", "Żadna pozycja nie jest oznaczona jako kluczowa charakterystyka. Przy wskaźnikach, celach i wykazywaniu poprawy co najmniej liczniki energii i pomiary zmiennych dla znaczących użyć nimi są — oznaczcie je w zakładce 1."));
+  else {
+    var t = el("table", "tab");
+    var tr = el("tr"); ["Poz.", "Parametr", "Źródło", "Sposób zapewnienia dokładności", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+    t.appendChild(tr);
+    klucz.forEach(function (x) {
+      var r = el("tr");
+      r.appendChild(el("td", "mono", String(x.i + 1)));
+      r.appendChild(el("td", null, x.p.parametr || "—"));
+      r.appendChild(el("td", null, (x.p.zrodlo || "—").slice(0, 40)));
+      r.appendChild(el("td", null, x.p.kontrola || "—"));
+      var td = el("td");
+      td.appendChild(el("span", "chip " + (brakKontroli(x.p) ? "amber" : "green"), brakKontroli(x.p) ? "brak dowodu" : "opisane"));
+      r.appendChild(td);
+      t.appendChild(r);
+    });
+    s.appendChild(t);
+  }
+  host.appendChild(s);
+
+  var z = el("div", "sekcja");
+  var zh = el("h3", null, "Zasady wspólne");
+  zh.appendChild(el("span", "chip " + (zasadyOk() ? "green" : "amber"),
+    POLA_ZASAD.filter(function (p) { return (ZASADY[p.kod] || "").trim(); }).length + " / " + POLA_ZASAD.length));
+  z.appendChild(zh);
+  var zk = el("div", "poz" + (zasadyOk() ? "" : " brak"));
+  POLA_ZASAD.forEach(function (f) {
+    var p = pole(f.nazwa, txt(ZASADY[f.kod], f.ph, f.rows || 2, function (v) { ZASADY[f.kod] = v; }), f.pomoc);
+    p.querySelector("label").appendChild(el("span", "chip", f.podstawa === "N" ? "wymóg normy" : "metodyka ENESA"));
+    zk.appendChild(p);
+  });
+  z.appendChild(zk);
+  host.appendChild(z);
+
+  var c = el("div", "sekcja");
+  c.appendChild(el("h3", null, "Jak często zbierać dane — rada autora"));
+  c.appendChild(el("p", "opis", "Zasada: im częściej zbieracie i analizujecie, tym szybciej wykryjecie problem. Firma, która patrzy na zużycie raz na kwartał, dowie się o awarii sprężarki po trzech miesiącach. Firma z danymi dziennymi — po dniu."));
+  var ct = el("table", "tab");
+  var ctr = el("tr"); ["Dane", "Rozsądne minimum", "Z systemem monitoringu"].forEach(function (x) { ctr.appendChild(el("th", null, x)); });
+  ct.appendChild(ctr);
+  CZESTOTLIWOSCI.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v) { r.appendChild(el("td", null, v)); });
+    ct.appendChild(r);
+  });
+  c.appendChild(ct);
+  c.appendChild(el("div", "note", "Te częstotliwości są radą autora — norma każe je zaplanować, ale ich nie narzuca. Platforma nie sprawdza, czy pozycja mieści się w tabeli; sprawdza tylko, czy częstotliwość nie rozmija się ze źródłem."));
+  host.appendChild(c);
+}
+
+/* ── zakładka 4: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz planu: "));
+  n.appendChild(document.createTextNode(
+    ile(POZYCJE.length, "pozycja", "pozycje", "pozycji") + " · kompletnych: " + POZYCJE.filter(pozycjaOk).length +
+    " · kluczowych charakterystyk: " + POZYCJE.filter(kluczowa).length +
+    " · bez zastępcy przy odczycie ręcznym: " + POZYCJE.filter(brakZastepcy).length +
+    " · bez zasady braków: " + POZYCJE.filter(brakBrakow).length));
+  s.appendChild(n);
+  var lz = POZYCJE.filter(listaZyczen).length;
+  if (lz) s.appendChild(el("div", "warn", ile(lz, "pozycja wygląda", "pozycje wyglądają", "pozycji wygląda") + " na listę życzeń — gęsta częstotliwość przy źródle, które jej nie zapewni. Do rozmowy: obniżyć częstotliwość albo zaplanować inne źródło."));
+  var bk = brakujaceKategorie();
+  if (bk.length) s.appendChild(el("div", "warn", "Kategorie bez pozycji: " + bk.map(function (k) { return k[0]; }).join(", ") + ". To wymaganie normy wyliczone wprost."));
+  if (!POZYCJE.filter(kluczowa).length)
+    s.appendChild(el("div", "warn", "Nie oznaczono żadnej kluczowej charakterystyki — więc nie ma też żadnych dowodów dokładności. Typowy brak przy pierwszym podejściu."));
+  if (!META.przeglad)
+    s.appendChild(el("div", "warn", "Nie ustalono odstępów przeglądu planu. Norma wymaga przeglądania planu w określonych odstępach i aktualizowania go stosownie do potrzeb."));
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var kk = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    kk.appendChild(g);
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      kk.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(kk);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-25, sekcja 6.6 ── */
+function stanPozycji(p) {
+  var f = {
+    odpowiedni: function () { return POZYCJE.length > 0 && POZYCJE.every(pozycjaOk) && !POZYCJE.some(listaZyczen); },
+    kategorie: function () { return POZYCJE.length > 0 && !brakujaceKategorie().length; },
+    jak: function () {
+      return POZYCJE.length > 0 && POZYCJE.every(function (p) {
+        return (p.czestotliwosc || "").trim() && (p.przechowywanie || "").trim();
+      });
+    },
+    zachowane: function () {
+      return POZYCJE.length > 0 && POZYCJE.every(function (p) { return (p.przechowywanie || "").trim(); })
+        && !!(ZASADY.zapisy || "").trim();
+    },
+    dokladnosc: function () {
+      var k = POZYCJE.filter(kluczowa);
+      if (!k.length) return false;
+      return k.every(function (p) { return (p.kontrola || "").trim(); }) && !!(ZASADY.dowody || "").trim();
+    },
+    jakosc: function () {
+      return POZYCJE.length > 0 && !POZYCJE.some(brakBrakow) && !!(ZASADY.jakosc || "").trim();
+    },
+    przeglad: function () { return !!META.przeglad && !!(ZASADY.przeglad || "").trim(); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!POZYCJE.length) b.push({ t: "Plan nie ma ani jednej pozycji.", kto: "klient" });
+  brakujaceKategorie().forEach(function (k) {
+    b.push({ t: "Kategoria " + k[0] + " („" + k[1] + "”) nie ma w planie żadnej pozycji.", kto: "klient" });
+  });
+  POZYCJE.forEach(function (p, i) {
+    var nr = "Poz. " + (i + 1);
+    if (!pozycjaOk(p)) b.push({ t: nr + " — pozycja niekompletna (parametr, kategoria, źródło, częstotliwość, osoba, przechowywanie).", kto: "klient" });
+    if (listaZyczen(p)) b.push({ t: nr + " — częstotliwość rozmija się ze źródłem (lista życzeń).", kto: "klient", metodyka: true });
+    if (brakKontroli(p)) b.push({ t: nr + " — kluczowa charakterystyka bez opisanej kontroli dokładności.", kto: "klient" });
+    if (brakBrakow(p)) b.push({ t: nr + " — brak zasady postępowania z brakami danych.", kto: "klient", metodyka: true });
+    if (brakZastepcy(p)) b.push({ t: nr + " — odczyt ręczny bez wpisanego zastępcy.", kto: "klient", metodyka: true });
+  });
+  if (!POZYCJE.filter(kluczowa).length)
+    b.push({ t: "Nie oznaczono żadnej kluczowej charakterystyki — brak dowodów dokładności i powtarzalności.", kto: "klient" });
+  if (!zasadyOk()) b.push({ t: "Zasady wspólne planu (przechowywanie, dowody dokładności, jakość danych, przegląd) są niekompletne.", kto: "klient" });
+  if (!META.przeglad) b.push({ t: "Nie ustalono odstępów przeglądu planu.", kto: "klient" });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak wersji, daty albo osoby zatwierdzającej plan.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 5: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-DAN-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Metryka planu"));
+  m.appendChild(pole("Wersja", inp(META.wersja, "np. 1.0", function (v) { META.wersja = v; })));
+  m.appendChild(pole("Data planu", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Przegląd planu — kiedy", inp(META.przeglad,
+    "np. Przy corocznej aktualizacji przeglądu energetycznego oraz przy zmianie SEU, EnPI, wyposażenia lub planów działań",
+    function (v) { META.przeglad = v; }),
+    "Norma wymaga przeglądania planu w określonych odstępach i aktualizowania go stosownie do potrzeb."));
+  m.appendChild(pole("Opracował", inp(META.opracowal, "np. Jan Kowalski, Energy Manager", function (v) { META.opracowal = v; })));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak, Dyrektor Techniczny", function (v) { META.zatwierdzil = v; })));
+  s.appendChild(m);
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-25 — sekcja 6.6"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_66.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "ocena konsultanta"));
+    r.appendChild(td);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-DAN-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Część", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["Tabela planu", "zakładka 1", ile(POZYCJE.length, "pozycja", "pozycje", "pozycji") + ", " + POZYCJE.filter(pozycjaOk).length + " kompletnych"],
+  ["Pokrycie kategorii a–e", "zakładka 2", (KATEGORIE.length - brakujaceKategorie().length) + " z " + KATEGORIE.length],
+  ["Dowody dokładności", "zakładka 3", ile(POZYCJE.filter(kluczowa).length, "kluczowa charakterystyka", "kluczowe charakterystyki", "kluczowych charakterystyk")],
+  ["Zasady wspólne", "zakładka 3", zasadyOk() ? "kompletne" : "do uzupełnienia"],
+  ["Wnioski", "zakładka 4", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+  ["Metryka i zatwierdzenie", "zakładka 5", (META.wersja ? "wersja " + META.wersja : "bez wersji") + " · " + (META.zatwierdzil || "do uzupełnienia")]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(hel("div", "ok", "Forma planu jest dowolna — małej firmie wystarczy tabela w arkuszu. <b>Liczy się kompletność i to, czy plan odpowiada rzeczywistości.</b> Punkt 6.6 to zaplanowanie danych; ich analiza i reakcja na odchylenia to już punkt 9.1 — ale bez dobrego planu nie będzie czego analizować. D-EnMS-DAN-01 odpowiada formularzowi F-EnMS-11 (załącznik A do procedury III-26)."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "plan", t: "1. Pozycje planu", f: rysujPlan },
+  { id: "kompl", t: "2. Kompletność", f: rysujKompletnosc },
+  { id: "dokl", t: "3. Dokładność i zasady", f: rysujDokladnosc },
+  { id: "kons", t: "4. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "5. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+function aktualizujPasek() {
+  var razem = Math.max(POZYCJE.length, 1) + KATEGORIE.length + POLA_ZASAD.length + 1;
+  var zrob = POZYCJE.filter(pozycjaOk).length
+    + (KATEGORIE.length - brakujaceKategorie().length)
+    + POLA_ZASAD.filter(function (p) { return (ZASADY[p.kod] || "").trim(); }).length
+    + ((META.zatwierdzil || "").trim() && META.data && META.przeglad ? 1 : 0);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+}
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 22:40", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 6.6" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_66", JSON.stringify({
+      POZYCJE: POZYCJE, ZASADY: ZASADY, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_66");
+    if (s) {
+      var d = JSON.parse(s);
+      POZYCJE = d.POZYCJE || []; ZASADY = d.ZASADY || {}; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+    }
+    var s2 = localStorage.getItem("enesa_karty_enpi");
+    if (s2) KARTY = (JSON.parse(s2).KARTY) || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  POZYCJE = JSON.parse(JSON.stringify(P_POZYCJE));
+  ZASADY = JSON.parse(JSON.stringify(P_ZASADY_66));
+  META = JSON.parse(JSON.stringify(P_META_66));
+  if (!KARTY.length && typeof P_KARTY_PODGLAD !== "undefined") KARTY = JSON.parse(JSON.stringify(P_KARTY_PODGLAD));
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 22:45", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 6.6.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić plan zbierania danych?")) return;
+  POZYCJE = []; ZASADY = {}; WNIOSKI = [];
+  META = { wersja: "", data: "", przeglad: "", zatwierdzil: "", opracowal: "" };
+  try { localStorage.removeItem("enesa_66"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

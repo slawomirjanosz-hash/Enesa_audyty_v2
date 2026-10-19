@@ -121,6 +121,12 @@ class IsoPlanningQuestionnaire
         $groups = [];
         foreach ($schema['form']['groups'] as $i => $group) {
             foreach ($group['fields'] as &$field) {
+                if ($section === '6-1' && str_starts_with($field['key'], 'META.')) {
+                    // These three extra fields are absent from the supplied 6.1 HTML.
+                    // Account approval remains recorded by the existing review workflow;
+                    // it must not be presented as a fabricated management signature.
+                    $field['required'] = false;
+                }
                 if (preg_match('/\.(data|utworzony|ostatni|stan)$/', $field['key'])) {
                     $field['type'] = 'date';
                 }
@@ -179,7 +185,7 @@ class IsoPlanningQuestionnaire
             if ($root === 'CELE' && $key === 'rodzaj') {
                 $options = ['wynik' => 'Poprawa wyniku energetycznego', 'system' => 'Cel systemowy'];
             }
-            $optional = in_array($key, ['wynikOceny', 'postep', 'adnotacja', 'grupa', 'uzasadnienieNie', 'modelBazowy', 'daneZmiennych', 'seu', 'zmienne', 'ocenaModelu']);
+            $optional = ($section === '6-4' && $key === 'plan') || ($section === '6-5' && $root === 'REWIZJE' && $key === 'zatwierdzil') || in_array($key, ['wynikOceny', 'postep', 'adnotacja', 'grupa', 'uzasadnienieNie', 'modelBazowy', 'daneZmiennych', 'seu', 'zmienne', 'ocenaModelu']);
             if (in_array($root, ['RYZYKA', 'SZANSE']) && ! in_array($key, ['nr', 'zrodlo', 'opis', 'P', 'W'])) {
                 $optional = true; // Required according to the computed priority in validateContent.
             }
@@ -405,7 +411,7 @@ class IsoPlanningQuestionnaire
             if ($complete && $section === '6-5' && filled($cards->get($card['nr'])['zmienne'] ?? null) && ! filled($card['daneZmiennych'] ?? null)) {
                 $errors["KARTY.$i.daneZmiennych"] = 'Zachowaj dane istotnych zmiennych z okresu bazowego.';
             }
-            if ($complete && $section === '6-4' && ($card['obszar'] ?? '') === 'seu' && ! in_array($card['seu'] ?? '', array_column($sources['upstream']['6-3']['SEU'] ?? [], 'nr'), true)) {
+            if ($complete && $section === '6-4' && ($card['obszar'] ?? '') === 'seu' && filled($card['seu'] ?? null) && ! in_array($card['seu'] ?? '', array_column($sources['upstream']['6-3']['SEU'] ?? [], 'nr'), true)) {
                 $errors["KARTY.$i.seu"] = 'Wskaż istniejący identyfikator SEU z 6.3.';
             }
         }

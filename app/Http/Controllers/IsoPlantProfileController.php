@@ -8,6 +8,7 @@ use App\Models\CompanySettings;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
+use App\Services\IsoHtmlState;
 use App\Services\IsoPlantElaboration;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\IsoPlatformRelease;
@@ -119,8 +120,20 @@ class IsoPlantProfileController extends Controller
     {
         $client = $this->access($request, $audit, true);
         $this->checkProfile($audit, $profile);
+        $htmlState = app(IsoHtmlState::class)->ingest($request, 'intro', [], $profile->answers ?? []);
+        if ($htmlState !== null) {
+            $request->validate(['html_meta' => 'nullable|array|max:10', 'html_meta.*' => 'nullable|string|max:1000']);
+            $htmlAnswers = $request->input('answers');
+            foreach ($this->questionnaire->questions($profile->definition) as $identityQuestion) {
+                $key = $identityQuestion['key'];
+                if (! str_starts_with($key, 'FAKT_') && $identityQuestion['type'] === 'text' && array_key_exists($key, $request->input('html_meta', []))) {
+                    $htmlAnswers[$key] = array_replace($htmlAnswers[$key] ?? [], ['value' => $request->input('html_meta')[$key], 'unknown' => false]);
+                }
+            }
+            $request->merge(['answers' => $htmlAnswers]);
+        }
         $data = $request->validate(['lock_version' => 'required|integer|min:0', 'operation' => ['required', Rule::in(['save', 'submit', 'approve', 'return', 'revise', 'withdraw'])], 'as_of_date' => 'nullable|date_format:Y-m-d', 'answers' => 'nullable|array|max:100', 'note' => 'nullable|string|max:3000']);
-        $profile = DB::transaction(function () use ($request, $audit, $profile, $client, $data) {
+        $profile = DB::transaction(function () use ($request, $audit, $profile, $client, $data, $htmlState) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $current = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             abort_unless($current->lock_version === (int) $data['lock_version'], 409, 'Profil zmienił się w innym oknie. Odśwież stronę przed ponownym zapisem.');
@@ -144,6 +157,9 @@ class IsoPlantProfileController extends Controller
                 }
                 $request->validate(['answers' => 'required|array', 'as_of_date' => 'required|date_format:Y-m-d', 'complete_form' => 'required|accepted'], ['complete_form.required' => 'Nie dotarł cały formularz. Zmniejsz liczbę wierszy i spróbuj ponownie — dotychczasowy zapis pozostał bez zmian.']);
                 $answers = $this->questionnaire->normalize($data['answers'], $current->definition, $current->answers, $request->user()->id, $op === 'submit');
+                if ($htmlState !== null) {
+                    $answers['_html'] = $htmlState;
+                }
                 $changed = $current->as_of_date->format('Y-m-d') !== $data['as_of_date'];
                 $changeField = $client ? 'client_changes' : 'auditor_changes';
                 $changes = $current->$changeField ?? [];
@@ -153,6 +169,9 @@ class IsoPlantProfileController extends Controller
                     $changes['_as_of_date'] = ['before' => $changes['_as_of_date']['before'] ?? $current->as_of_date->format('Y-m-d'), 'after' => $data['as_of_date'], 'by' => $request->user()->name, 'at' => now()->toIso8601String()];
                 }
                 foreach ($answers as $key => $answer) {
+                    if ($key === '_html') {
+                        continue;
+                    }
                     $questionChanged = false;
                     foreach (['value', 'unknown', 'detail', 'source'] as $field) {
                         $before = $current->answers[$key][$field] ?? ($field === 'unknown' ? false : null);

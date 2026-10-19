@@ -10,6 +10,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\IsoFactorQuestionnaire;
+use App\Services\IsoHtmlState;
 use App\Services\IsoPlatformRelease;
 use App\Services\IsoQuestionnaireWorkbook;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -71,8 +72,9 @@ class IsoFactorReviewController extends Controller
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile)
     {
         $client = $this->access($request, $audit, $profile, true);
+        $htmlState = $request->has('html_state') ? app(IsoHtmlState::class)->ingest($request, '4-1', ['facts' => $this->questionnaire->facts($profile)], IsoFactorReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->first()?->answers ?? []) : null;
         $data = $request->validate(['lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['save', 'submit', 'approve', 'save_swot', 'return', 'withdraw'])], 'answers' => 'nullable|array', 'note' => 'nullable|string|max:3000']);
-        DB::transaction(function () use ($request, $audit, $profile, $client, $data) {
+        DB::transaction(function () use ($request, $audit, $profile, $client, $data, $htmlState) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             $this->access($request, $audit, $profile, true);
@@ -114,7 +116,7 @@ class IsoFactorReviewController extends Controller
                 $input = $data['answers'];
                 $previous = $this->questionnaire->currentAnswers($review->answers ?? [], $review->basis ?? [], $facts);
                 $input['factors'] = array_replace($previous['factors'] ?? [], is_array($input['factors'] ?? null) ? $input['factors'] : []);
-                if (($input['FAKT_KLIMAT_ISTOTNY'] ?? null) !== ($previous['FAKT_KLIMAT_ISTOTNY'] ?? null)) {
+                if ($htmlState === null && ($input['FAKT_KLIMAT_ISTOTNY'] ?? null) !== ($previous['FAKT_KLIMAT_ISTOTNY'] ?? null)) {
                     foreach ($this->questionnaire->factors($facts, $previous) as $factor) {
                         if (array_key_exists('FAKT_KLIMAT_ISTOTNY', $factor['dependencies'])) {
                             unset($input['factors'][$factor['kod']]['decyzja']);
@@ -125,6 +127,9 @@ class IsoFactorReviewController extends Controller
                     $answers = $this->questionnaire->normalize($input, $facts, $op === 'submit');
                 } catch (ValidationException $error) {
                     throw ValidationException::withMessages(collect($error->errors())->mapWithKeys(fn ($messages, $key) => ['answers.'.$key => $messages])->all());
+                }
+                if ($htmlState !== null || isset($review->answers['_html'])) {
+                    $answers['_html'] = $htmlState ?? $review->answers['_html'];
                 }
                 $changed = $stale || $answers !== ($review->answers ?? []);
                 if (! $client && ! $changed) {

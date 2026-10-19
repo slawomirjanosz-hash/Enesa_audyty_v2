@@ -1,0 +1,1740 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 4.4 System zarządzania energią</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 4</div>
+ <h1>4.4 System zarządzania energią</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 4.4</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 4.4</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>4.4 System zarządzania energią</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 4.4 i sposób przygotowania dokumentacji.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 4.4<br>System zarządzania energią</div>
+   <div>
+    <h4>4.4 System zarządzania energią</h4>
+    <p>Czym jest system jako całość, jakie procesy są potrzebne do jego działania i dlaczego audytor pyta nie o listę
+    procedur, tylko o to, co z czego wynika.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 4.4. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">4.4 — część A<br>11 slajdów</div>
+   <div>
+    <h4>4.4 System zarządzania energią — część A</h4>
+    <p>Cztery czasowniki jako cztery pytania kontrolne. Obieg informacji od sygnału do sprawdzenia efektu.
+    Test ciągłości: co się stanie, gdy koordynator zniknie na trzy miesiące.</p>
+    <p style="font-size:12.5px">11 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja ustanawia, wdraża, utrzymuje i ciągle doskonali system zarządzania energią —
+ w tym potrzebne procesy i ich wzajemne oddziaływania — oraz ciągle doskonali swój wynik energetyczny, zgodnie
+ z wymaganiami normy. Omówienie na podstawie punktu 4.4 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> zbuduj system, który działa sam — przez procesy,
+ a nie przez jedną osobę — i który z roku na rok poprawia wynik energetyczny.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 1, punkt 4.4. Punkt 4.4 jest krótki w normie, ale to kręgosłup
+ całego systemu — <b>wypełnia się go jako ostatni w rozdziale 4</b>, po zamknięciu punktów 4.1, 4.2 i 4.3.</div>
+
+ <div class="ramka">
+  <h3>◧ Dwa zadania w jednym zdaniu</h3>
+  <p style="font-size:13.5px">Pierwsze: <b>doskonalić sam system</b> — sposób, w jaki zarządzasz energią: lepsze dane,
+  szybsza reakcja, jaśniejsze odpowiedzialności. Drugie: <b>poprawiać wynik energetyczny</b> — ile energii naprawdę
+  zużywasz na jednostkę produkcji.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Jedno bez drugiego nie wystarczy. Pięknie opisane procesy bez poprawy
+  wyniku to papier. Jednorazowa oszczędność bez systemu szybko się rozmywa.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>✓ Cztery czasowniki — cztery pytania kontrolne</h3>
+  <p class="op">Wymaganie zawiera cztery czasowniki. Każdy to pytanie, które możesz zadać swojemu systemowi.
+  W ankiecie każde z nich ma własną kartę z miejscem na dowód.</p>
+  <table class="tab">
+   <tr><th style="width:17%">Czasownik</th><th style="width:28%">Pytanie do systemu</th><th>Dowód</th></tr>
+   <tr><td><b>USTANOWIĆ</b></td><td>Czy system jest zaprojektowany?</td><td>polityka powiązana ze strategią; przypisane role; opis procesów i ich powiązań</td></tr>
+   <tr><td><b>WDROŻYĆ</b></td><td>Czy działa w praktyce?</td><td>pracownicy znają swoje role; są zapisy z działania</td></tr>
+   <tr><td><b>UTRZYMYWAĆ</b></td><td>Czy działa stale?</td><td>regularne analizy i przeglądy; aktualne dane; zastępstwa</td></tr>
+   <tr><td><b>DOSKONALIĆ</b></td><td>Czy jest coraz lepiej?</td><td>porównanie „rok temu — dziś — plan”; poprawa wykazana na wskaźnikach</td></tr>
+  </table>
+ </div>
+
+ <div class="ramka">
+  <h3>✈ Analogia: autopilot w samolocie</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Autopilot zbiera dane, porównuje je z planem lotu, sygnalizuje odchylenia
+  i pomaga wrócić na kurs. Ale ktoś musi go włączyć, ustawić mu kurs i reagować na jego komunikaty. Sam z siebie nic nie
+  zrobi. W zakładzie „włączyć autopilota” znaczy: przypisać właścicieli procesów, ustalić progi, przy których ktoś ma
+  zareagować, i regularnie patrzeć na wyniki. Decyzje nadal podejmują ludzie — system pilnuje, żeby mieli na czym je oprzeć.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>⟳ „Mamy procedury. Czy to już system?”</h3>
+  <p style="font-size:13.5px">Jeszcze nie. System to procesy, które przekazują sobie informacje — tak, że jedna
+  obserwacja kończy się decyzją i sprawdzeniem efektu. Przykład sprężarkowni AutoParts Polska; wskaźnik: energia
+  na metr sześcienny sprężonego powietrza, zwykle ok. 0,125 kWh/Nm³ (liczby ilustracyjne):</p>
+  <ol class="kroki">
+   <li><b>Sytuacja:</b> monitoring pokazuje, że wskaźnik wzrósł do 0,135 kWh/Nm³ i przekroczył ustalony próg.</li>
+   <li><b>Znaczenie:</b> utrzymanie ruchu sprawdza przyczynę i znajduje nieszczelność w sieci.</li>
+   <li><b>Decyzja:</b> kierownik utrzymania ruchu zleca naprawę i zmienia częstotliwość kontroli szczelności.</li>
+   <li><b>Działanie:</b> naprawa wykonana, nowy harmonogram kontroli wpisany do planu przeglądów.</li>
+   <li><b>Sprawdzenie:</b> po miesiącu Energy Manager porównuje wskaźnik — wrócił do ok. 0,126 kWh/Nm³ — i przekazuje
+   wnioski na przegląd zarządzania.</li>
+  </ol>
+  <p style="font-size:13.5px;margin:10px 0 0"><b>Brakuje jednego ogniwa — i informacja ginie po drodze.</b>
+  Ten obieg wypełnia się w zakładce 3 ankiety: przy każdym ogniwie wpisujesz, kto za nie odpowiada.</p>
+ </div>
+
+ <div class="warn" style="margin:14px 0"><b>Odchylenie to nie to samo co niezgodność.</b> Na każde niekorzystne
+ odchylenie trzeba zareagować — ale działanie korygujące podejmujesz dopiero wtedy, gdy nie spełniono wymagania.</div>
+
+ <div class="ramka">
+  <h3>⌛ Test: koordynator znika na trzy miesiące</h3>
+  <p class="op">Najprostszy sposób, żeby sprawdzić, czy masz system, czy projekt jednej osoby. Pięć pytań —
+  przy każdym wpisz nazwisko (zakładka 4 ankiety).</p>
+  <ol class="kroki">
+   <li>Kto zauważy, że wskaźnik sprężarkowni przekroczył próg — i kto zdecyduje, co z tym zrobić?</li>
+   <li>Kto zwoła przegląd zarządzania i przygotuje dane?</li>
+   <li>Kto zaproponuje cele na kolejny rok?</li>
+   <li>Czy pracownicy wiedzą, gdzie jest polityka i co z niej wynika dla ich pracy?</li>
+   <li>Czy zapisane zasady pozwalają zastępcy działać bez zgadywania?</li>
+  </ol>
+  <p style="font-size:13.5px;margin:10px 0 0">Jeśli na któreś pytanie odpowiedź brzmi „nikt” albo „nie wiem” — wiesz,
+  od czego zacząć. Typowe przyczyny: dane zbierane, ale nieanalizowane; cele bez planów działań; pracownicy, którzy nie
+  znają systemu; i system, który poprawia procedury, a nie wynik. Każdą usuwa się tak samo:
+  <b>przypisz osobę, termin i sposób sprawdzenia</b>.</p>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>★ Rada:</b> analizuj dane dla zakładu co najmniej raz w miesiącu,
+ a dla znaczących użyć energii częściej — z progami alarmowymi. To rada autora, nie wymaganie normy.</div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Co sprawdzi audytor</h3>
+   <ul>
+    <li>Czy system jest ustanowiony, wdrożony i utrzymywany — czy tylko opisany?</li>
+    <li>Jakie procesy są potrzebne do działania systemu i kto jest ich właścicielem?</li>
+    <li>Jak te procesy są ze sobą powiązane — co z czego wynika?</li>
+    <li>Czym organizacja wykazuje ciągłą poprawę wyniku energetycznego?</li>
+    <li>Czy system obejmuje cały zakres ustalony w punkcie 4.3?</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Audytor nie rozmawia wyłącznie z koordynatorem — pyta
+   utrzymanie ruchu, produkcję i techników, czy wiedzą, jak zarządza się energią w ich obszarze.</p>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Dokumenty do przygotowania</h3>
+   <ul>
+    <li>Analiza kontekstu z wnioskami i rozstrzygnięciem w sprawie zmiany klimatu</li>
+    <li>Rejestr stron zainteresowanych i ich wymagań — z kwalifikacją każdego wymagania</li>
+    <li><b>Zakres i granice systemu — jedyny dokument z tego rozdziału, którego udokumentowania wymaga norma</b></li>
+    <li>Opis procesów i przepływu informacji (forma dowolna)</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Szczegółowe szablony: Część II (Podręcznik Techniczny),
+   Moduł 1; Część III (Toolkit), III-01–III-08.</p>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>☰ Zalecany sposób wdrożenia</h3>
+  <ol class="kroki">
+   <li>Rozstrzygnij formę dokumentacji systemu: zestaw procedur, jeden dokument czy nadbudowa na istniejącym ISO.</li>
+   <li>Odpowiedz na cztery pytania kontrolne i przy każdym wskaż dowód — czym to pokażecie.</li>
+   <li>Opisz obieg informacji: pięć ogniw od sygnału do sprawdzenia efektu, przy każdym osoba.</li>
+   <li>Ustal progi reakcji i częstotliwość analiz — osobno dla zakładu i dla znaczących użyć energii.</li>
+   <li>Przeprowadź test ciągłości i przy każdym z pięciu pytań wpisz nazwisko.</li>
+   <li>Przypisz właścicieli procesów i zastępców dla ról kluczowych.</li>
+   <li>Sprawdź listę kontrolną 4.1–4.4 i dopiero wtedy zamknij punkt 4.4.</li>
+  </ol>
+ </div>
+
+ <div class="ramka">
+  <h3>⚠ Na co uważać — typowe pułapki</h3>
+  <ul>
+   <li>„To tylko formalność” — kontekst jako pole do odhaczenia. Efekt: system oderwany od rzeczywistości, cele z sufitu.</li>
+   <li>Kopiowanie z internetu — „społeczność lokalna” na liście stron, choć zakład stoi w środku strefy przemysłowej.</li>
+   <li>Za szeroki zakres na start — wszystko naraz. Efekt: nic zrobione porządnie.</li>
+   <li>Ukrywanie „niewygodnych” obszarów — kotłownia poza systemem, „bo i tak ją wymienimy”. Efekt: system niezgodny
+   z normą i przeoczone największe oszczędności.</li>
+   <li>Jednorazowa analiza — po roku kontekst się zmienił, a system o tym nie wie.</li>
+  </ul>
+ </div>
+
+ <div class="ramka">
+  <h3>◆ Zanim pójdziesz dalej — cały rozdział 4 w czterech pytaniach</h3>
+  <table class="tab">
+   <tr><th style="width:10%">Punkt</th><th style="width:45%">Pytanie</th><th>Zapamiętaj</th></tr>
+   <tr><td class="mono">4.1</td><td>W jakim środowisku działamy — i co z tego wynika?</td><td>Kontekst to mapa terenu. Liczą się wnioski.</td></tr>
+   <tr><td class="mono">4.2</td><td>Kogo obchodzi nasza energia i co nas obowiązuje?</td><td>Oczekiwanie to jeszcze nie obowiązek.</td></tr>
+   <tr><td class="mono">4.3</td><td>Co obejmuje nasz system?</td><td>Granice wybierasz. Rodzajów energii — nie.</td></tr>
+   <tr><td class="mono">4.4</td><td>Czy system działa bez jednej osoby?</td><td>System, nie projekt pod audyt.</td></tr>
+  </table>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>Twój ruch.</b> Punkt 4.4 to dowód, że zarządzanie energią jest normalną
+ częścią pracy firmy, a nie projektem pod audyt: procesy przekazują sobie informacje, a wynik energetyczny się poprawia.<br>
+ <b>Zadanie:</b> przeprowadź test „koordynator znika na trzy miesiące” i przy każdym pytaniu wpisz nazwisko.</div>
+
+ <div class="ankbox">
+  <h3>4.4 Ankieta systemu zarządzania energią</h3>
+  <p class="op">Cztery pytania kontrolne, obieg informacji, test ciągłości, procesy i powiązania. Siedem zakładek.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz ankietę 4.4</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”,
+ Tom 2 punkt 4.4 wersja 2.1 oraz Część III (Toolkit) Modułu 1 wersja 2.4.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>Mapa systemu zarządzania energią z właścicielami procesów i zastępstwami</li>
+   <li>Tabela przepływu informacji — pięć ogniw obiegu</li>
+   <li>Progi reakcji i częstotliwość analiz</li>
+   <li>Wynik testu ciągłości</li>
+   <li>Opis mechanizmu ciągłej poprawy wyniku energetycznego</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia"><span id="postep">Wypełnienie: 0% · 0 / 0</span><span style="font-weight:400;color:#6f7d76">Wypełnianie</span></div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Zapisz odpowiedzi przed wyjściem. Punkt 4.4 domyka rozdział 4 — przekazanie wymaga zamkniętych punktów 4.1, 4.2 i 4.3.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 4.4 w formacie stron 4.1–4.3.</b> Ten sam układ strony klauzuli, ta sama ankieta z zakładkami,
+ta sama stopka i te same stany. Treść jest inna, bo 4.4 nie ma biblioteki gotowych zdań — jest spinaczem rozdziału 4.</div>
+
+<div class="note"><b>Przykład AutoParts — nowe, 18.10.2026.</b> Przycisk „Wypełnij przykładem” w stopce wypełnia
+wszystkie osiem zakładek, stan na październik 2026 r.: pięć decyzji o systemie, cztery czasowniki z dowodami
+i poprawą wykazaną na wskaźnikach, pięć ogniw obiegu z osobami i terminami, progi reakcji, test ciągłości,
+jedenaście procesów z właścicielami i zastępcami oraz dziewięć powiązań. Wypełnienie 100% · 39/39, lista braków
+pusta, cała lista kontrolna III-07 odhaczona na pozycjach wyliczanych. Dane w zmiennej
+<span class="mono">PRZYKLAD_44</span>.
+<br><br>Dwie rzeczy, które przykład robi świadomie. Po pierwsze ustawia stany dokumentów 4.1, 4.2 i 4.3 na
+„gotowy” — bez tego lista braków słusznie mówi, że 4.4 opisuje system, którego część jeszcze nie istnieje;
+na platformie te stany przyjdą z tamtych punktów, tu są symulowane. Po drugie odpowiedź
+<span class="mono">SYS-01</span> brzmi „nadbudowa”, zgodnie z wnioskiem 4 z III-02 („rozbudowa istniejącego
+systemu”), więc cztery procesy opisane już w dokumentacji ISO 14001 znikają z listy — przykład wypełnia je mimo
+to, żeby zmiana odpowiedzi nie cofała strony do stanu „brak”.
+<br><br>Test ciągłości T-5 jest celowo odpowiedziany „nie wiem” z planem naprawy. Punkt 4.4 jest o tym, czy
+system działa bez konkretnego człowieka — przykład, w którym wszystko jest gotowe, nie pokazałby, po co ten test
+w ogóle istnieje.</div>
+
+<h2>Co zmieniono wobec poprzedniej wersji</h2>
+<p class="sub2">Podstawa: Tom 2 punkt 4.4 wersja 2.1 (4.10.2026) i Część III Modułu 1 wersja 2.4 (2.10.2026).</p>
+<table>
+<tr><th style="width:26%">Element</th><th>Zmiana</th></tr>
+<tr><td>Zakładka „Cztery pytania kontrolne”</td><td><b>Nowa.</b> Cztery czasowniki normy jako cztery pytania do własnego systemu, każdy z listą dowodów z książki i polem „czym to pokażecie”.</td></tr>
+<tr><td>Zakładka „Obieg informacji”</td><td><b>Nowa.</b> Pięć ogniw: sytuacja → znaczenie → decyzja → działanie → sprawdzenie, przy każdym osoba i termin. Plus progi reakcji i częstotliwość analiz, osobno dla zakładu i dla SEU.</td></tr>
+<tr><td>Zakładka „Test ciągłości”</td><td><b>Nowa.</b> Pięć pytań z książki, przy każdym pole na nazwisko. Odpowiedź „nikt” albo „nie wiem” wymaga wskazania, od czego zaczynacie.</td></tr>
+<tr><td>Zastępstwa</td><td>Procesy oznaczone jako kluczowe wymagają zastępcy, nie tylko właściciela (III-07: „kluczowe role mają zastępców”).</td></tr>
+<tr><td>Odchylenie ≠ niezgodność</td><td>Nowe pytanie SYS-07. Działanie korygujące tylko przy niespełnieniu wymagania.</td></tr>
+<tr><td>Lista kontrolna</td><td>Pełne III-07 w brzmieniu z wersji 2.4: 14 pozycji dla 4.1, 6 dla 4.2, 10 dla 4.3 i <b>7 dla 4.4</b> (wcześniej 3).</td></tr>
+<tr><td>Nazewnictwo</td><td>Sekcja 8 procedury to „Mapa powiązań procedury P-EnMS-01” — fragment systemu, nie jego pełny obieg. SCADA opisywana jako „system nadzoru”.</td></tr>
+<tr><td>Udokumentowana informacja</td><td>W ramce dokumentów zaznaczone, że <b>zakres i granice</b> to jedyny dokument rozdziału 4, którego udokumentowania wymaga norma.</td></tr>
+</table>
+
+<h2>Dlaczego 4.4 nie ma biblioteki</h2>
+<p class="sub2">W 4.1 i 4.2 system proponuje zdania z biblioteki na podstawie faktów z profilu. W 4.4 nie ma czego proponować:
+norma pyta o to, jak zorganizowaliście pracę, a tego nie da się wyprowadzić z faktów o zakładzie.</p>
+<table>
+<tr><th style="width:20%">Punkt</th><th style="width:26%">Czym wypełniany</th><th style="width:22%">Źródło propozycji</th><th>Dokument wyjściowy</th></tr>
+<tr><td>4.1 Kontekst</td><td>69 czynników z biblioteki</td><td>profil zakładu</td><td class="mono">D-EnMS-KON-01</td></tr>
+<tr><td>4.2 Strony zainteresowane</td><td>30 wymagań z biblioteki</td><td>profil zakładu + potwierdzone czynniki 4.1</td><td class="mono">D-EnMS-STR-01</td></tr>
+<tr><td>4.3 Zakres</td><td>formularz w 6 sekcjach</td><td>profil zakładu + wnioski 4.1 i 4.2</td><td class="mono">D-EnMS-ZAK-01</td></tr>
+<tr><td><b>4.4 System</b></td><td><b>cztery pytania kontrolne, obieg informacji, test ciągłości, mapa procesów</b></td><td><b>procedury z książki + stan punktów na platformie</b></td><td class="mono"><b>D-EnMS-SYS-01</b></td></tr>
+</table>
+
+<h2>Zgodność z książką „Energia pod kontrolą”</h2>
+<p class="sub2">Tabela rozszerza zestawienie z Toolkitu Modułu 1, wersja 2.4, sekcja „Zgodność z platformą ENESA”.</p>
+<table>
+<tr><th style="width:32%">Książka (Toolkit)</th><th style="width:22%">Platforma ENESA</th><th>Uwagi</th></tr>
+<tr><td>F-EnMS-01 Kontekst organizacji (III-01)</td><td class="mono">D-EnMS-KON-01</td><td>Te same sekcje 1–9. Model „4 + 3”, rozstrzygnięcie w sprawie klimatu, wnioski bez progu minimalnej liczby.</td></tr>
+<tr><td>F-EnMS-02 Rejestr stron zainteresowanych (III-03)</td><td class="mono">D-EnMS-STR-01</td><td>Wiersz = wymaganie, nie strona. Kwalifikacja czterowartościowa.</td></tr>
+<tr><td>F-EnMS-03 Zakres i granice EnMS (III-05)</td><td class="mono">D-EnMS-ZAK-01</td><td>Kolumna „Pochodzenie (zakup / wytwarzanie własne)”; usługi zlecone w sekcji 6.</td></tr>
+<tr><td>F-EnMS-07 Rejestr ryzyk i szans</td><td class="mono">D-EnMS-RYZ-01</td><td>—</td></tr>
+<tr><td>Rejestr wymagań prawnych i innych</td><td class="mono">D-EnMS-PRAW-01</td><td>Formularz książkowy do dopisania (errata D9: F-EnMS-24).</td></tr>
+<tr style="background:#fdf6e3"><td><b>P-EnMS-01 sekcja 8 — Mapa powiązań procedury P-EnMS-01 (III-08)</b></td><td class="mono"><b>D-EnMS-SYS-01</b>, zakładka 6</td><td><b>Zgodne z wersją 2.4.</b> Mapa pokazuje, gdzie trafiają wyniki tej procedury — to fragment systemu, nie jego pełny obieg. Pełny obieg (monitoring → analiza → decyzja → działanie → ocena skuteczności → aktualizacja) opisuje Część II punkt 4.4 Krok 2 i odwzorowuje go <b>zakładka 3 „Obieg informacji”</b>.</td></tr>
+<tr style="background:#fdf6e3"><td>Lista kontrolna 4.1–4.4 (III-07)</td><td class="mono">zakładka „Kompletność”</td><td>Pełne 37 pozycji w brzmieniu 2.4. Platforma odhacza automatycznie pozycje wynikające ze stanu punktów i z odpowiedzi w ankiecie; pozostałe ocenia konsultant.</td></tr>
+<tr style="background:#fdf6e3"><td>Formularz dla punktu 4.4</td><td class="mono">D-EnMS-SYS-01</td><td>Książka nie ma własnego formularza 4.4 — dowodem jest mapa powiązań w procedurze. <b>Propozycja do rozważenia:</b> dodać <span class="mono">F-EnMS-04 Mapa systemu EnMS</span> jako nowy załącznik Modułu 1. Numer załącznika do ustalenia — III-01…III-08 są zajęte.</td></tr>
+</table>
+
+<div class="warn"><b>Trzy rzeczy do uzgodnienia, zgłoszone w Toolkicie 2.4 („Do synchronizacji poza tym plikiem”).</b>
+Książka sama je wskazała jako rozbieżności z platformą — żadnej z nich nie rozstrzygałem samodzielnie:
+<ul>
+<li><b>Warunek „minimum 4 wnioski”</b> — na platformie blokuje publikację dokumentu 4.1; w książce nie ma takiego progu. Albo wpisujemy go do metodyki w książce, albo zdejmujemy z platformy jako blokadę i zostawiamy jako zalecenie.</li>
+<li><b>Określenie „metoda PESTEL”</b> — książka używa modelu „4 + 3” (cztery wymiary zewnętrzne, trzy wewnętrzne). Platforma w jednym miejscu mówi o PESTEL. Trzeba wybrać jedno nazewnictwo.</li>
+<li><b>Sformułowanie KTX-ZR-01</b> — czynnik o progu 85 TJ. W 4.2 ten sam problem rozwiązałem już w STK-Z-02: obowiązek opisany jako <i>wprowadzany projektem nowelizacji (UC77)</i>, bo ustawa nie weszła jeszcze w życie. W 4.1 brzmienie wymaga tej samej poprawki.</li>
+</ul>
+Do tego czwarta, moja: <b>numeracja procedur</b>. Z materiałów potwierdzone są P-EnMS-01, P-EnMS-03, P-EnMS-04 i P-EnMS-07.
+Pozostałe siedem procesów ma plakietkę „numer do uzgodnienia z książką” i tymczasowe kody PR-xx.</div>
+
+<h2>Zakładki ankiety</h2>
+<table>
+<tr><th style="width:20%">Zakładka</th><th style="width:14%">Rola</th><th style="width:28%">Skąd treść</th><th>Co wypełnia klient</th></tr>
+<tr><td>1. Decyzje o systemie</td><td>wejście</td><td>5 pytań — 1 wymaganie normy, reszta metodyka ENESA</td><td>Forma dokumentacji, odpowiedzialny i jego zastępca, rozróżnienie odchylenie / niezgodność</td></tr>
+<tr><td>2. Cztery pytania kontrolne</td><td>wejście</td><td>Tom 2 punkt 4.4, sekcja „Cztery czasowniki”</td><td>Stan i dowód dla każdego z czterech czasowników; przy DOSKONALIĆ — poprawa na wskaźnikach</td></tr>
+<tr><td>3. Obieg informacji</td><td>wejście</td><td>Część II punkt 4.4 Krok 2; przykład sprężarkowni z Tomu 2</td><td>5 ogniw: kto i kiedy; progi reakcji i częstotliwość analiz</td></tr>
+<tr><td>4. Test ciągłości</td><td>wejście</td><td>Tom 2, „Koordynator znika na trzy miesiące”</td><td>5 nazwisk; przy „nikt” albo „nie wiem” — od czego zaczynacie</td></tr>
+<tr><td>5. Procesy systemu</td><td>wynik + wejście</td><td>11 procesów z procedur książki; część odpada przy wyborze „nadbudowa”</td><td>Właściciel, zastępca (role kluczowe), forma zapisu, komu przekazuje wynik</td></tr>
+<tr><td>6. Mapa powiązań</td><td>wynik</td><td>9 powiązań — 6 z P-EnMS-01 §8, 3 propozycje ENESA</td><td>Czy powiązanie działa, czy jest dopiero zaplanowane</td></tr>
+<tr><td>7. Kompletność</td><td>wynik</td><td>37 pozycji listy kontrolnej III-07 (wersja 2.4)</td><td>Nic — poza pozycjami metodycznymi, które ocenia konsultant</td></tr>
+<tr><td>8. Zatwierdzenia</td><td>—</td><td>braki, zawartość dokumentu, historia</td><td>Przekazanie konsultantowi</td></tr>
+</table>
+
+<h2>Kolejność, która tu obowiązuje</h2>
+<div class="note"><b>4.4 wypełnia się jako ostatni w rozdziale 4.</b> Zakładka „Zatwierdzenia” blokuje przekazanie,
+dopóki punkty 4.1, 4.2 i 4.3 nie mają opublikowanych dokumentów — bo 4.4 opisuje system, którego części jeszcze nie ma.
+To jedyna klauzula w rozdziale 4 z twardą zależnością od stanu innych punktów, a nie tylko od ich treści.</div>
+
+<h2>Pozycje listy kontrolnej i sposób liczenia</h2>
+<table>
+<tr><th style="width:7%">Punkt</th><th style="width:47%">Pozycja</th><th style="width:9%">Podstawa</th><th>Jak wyliczana</th></tr>
+<tr><td class="mono">4.1</td><td>Zebrano dane wejściowe: faktury (12–36 mies.), umowy, wymagania klientów, audyt, strategię, dane pogodowe</td><td class="mono">M</td><td>ocena konsultanta</td></tr><tr><td class="mono">4.1</td><td>Określono istotne czynniki zewnętrzne</td><td class="mono">N</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Określono istotne czynniki wewnętrzne</td><td class="mono">N</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Czynniki uporządkowano w wymiarach (model 4 + 3)</td><td class="mono">M</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Analizę skonsultowano z produkcją, utrzymaniem ruchu, zakupami i finansami</td><td class="mono">M</td><td>ocena konsultanta</td></tr><tr><td class="mono">4.1</td><td>Dla każdego czynnika zapisano fakty, wpływ i skutek dla systemu</td><td class="mono">M</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Rozstrzygnięto, czy zmiana klimatu jest istotną kwestią (Amd 1:2024)</td><td class="mono">N</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Rozstrzygnięcie ma zapisane uzasadnienie i podstawę</td><td class="mono">M</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Każdy istotny czynnik ma wniosek: konsekwencja → decyzja → gdzie dalej</td><td class="mono">M</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Czynniki i wnioski uwzględniono przy planowaniu ryzyk i szans (6.1) oraz celów (6.2)</td><td class="mono">N</td><td>ocena konsultanta</td></tr><tr><td class="mono">4.1</td><td>Ustalono stan prawny i zapisano, na jaki dzień</td><td class="mono">M</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Analizę przedstawiono zarządowi i zatwierdzono</td><td class="mono">M</td><td>stan punktu 4.1</td></tr><tr><td class="mono">4.1</td><td>Zmiany czynników są punktem agendy przeglądu zarządzania (9.3)</td><td class="mono">N</td><td>ocena konsultanta</td></tr><tr><td class="mono">4.1</td><td>Zaplanowano przegląd analizy: przy istotnej zmianie i co najmniej raz w roku</td><td class="mono">M</td><td>ocena konsultanta</td></tr><tr><td class="mono">4.2</td><td>Określono strony zainteresowane istotne dla wyniku energetycznego i EnMS</td><td class="mono">N</td><td>stan punktu 4.2</td></tr><tr><td class="mono">4.2</td><td>Określono istotne wymagania tych stron</td><td class="mono">N</td><td>stan punktu 4.2</td></tr><tr><td class="mono">4.2</td><td>Ustalono, które wymagania organizacja spełnia w ramach EnMS (wymagania zgodności)</td><td class="mono">N</td><td>stan punktu 4.2</td></tr><tr><td class="mono">4.2</td><td>Wskazano źródło każdego wymagania (przepis, umowa, deklaracja)</td><td class="mono">M</td><td>stan punktu 4.2</td></tr><tr><td class="mono">4.2</td><td>Rozważono wymagania stron związane ze zmianą klimatu</td><td class="mono">M</td><td>stan punktu 4.2</td></tr><tr><td class="mono">4.2</td><td>Wymagania zgodności przeniesiono do rejestru wymagań prawnych i innych (9.1.2)</td><td class="mono">M</td><td>ocena konsultanta</td></tr><tr><td class="mono">4.3</td><td>Przy ustalaniu zakresu uwzględniono czynniki z 4.1 i wymagania z 4.2</td><td class="mono">N</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Określono działalność objętą systemem (zakres)</td><td class="mono">N</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Wyznaczono granice fizyczne i organizacyjne</td><td class="mono">N</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Organizacja ma uprawnienia do sterowania efektywnością, wykorzystaniem i zużyciem energii w zakresie i granicach</td><td class="mono">N</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Sprawdzono uprawnienia w obiektach wynajmowanych, przy wspólnych instalacjach i usługach zleconych</td><td class="mono">M</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Uwzględniono wszystkie rodzaje energii wykorzystywane w granicach — żadnego nie wyłączono</td><td class="mono">N</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Odróżniono rodzaj energii, który nie występuje, od działalności poza granicami</td><td class="mono">M</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Działalność poza granicami opisano: przynależność, uprawnienia, przepływy energii (nie sam procent udziału)</td><td class="mono">M</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Zakres i granice są utrzymywane jako udokumentowana informacja</td><td class="mono">N</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.3</td><td>Zakres zatwierdzono i udostępniono</td><td class="mono">M</td><td>stan punktu 4.3</td></tr><tr><td class="mono">4.4</td><td>Ustanowiono, wdrożono, utrzymuje się i doskonali EnMS, w tym potrzebne procesy i ich wzajemne oddziaływania</td><td class="mono">N</td><td>wszystkie cztery pytania kontrolne mają stan i dowód</td></tr><tr><td class="mono">4.4</td><td>Ciągle doskonali się wynik energetyczny — poprawa wykazana na wskaźnikach wobec linii bazowej</td><td class="mono">N</td><td>wypełnione pole poprawy na wskaźnikach (CZ-04)</td></tr><tr><td class="mono">4.4</td><td>Każdy proces ma właściciela; kluczowe role mają zastępców</td><td class="mono">M</td><td>każdy wymagany proces ma właściciela; role kluczowe mają zastępcę</td></tr><tr><td class="mono">4.4</td><td>Wiadomo, kto przekazuje komu wyniki monitoringu i analiz (tabela lub schemat przepływu informacji)</td><td class="mono">M</td><td>wszystkie pięć ogniw obiegu ma wskazaną osobę</td></tr><tr><td class="mono">4.4</td><td>Ustalono, kto reaguje na niekorzystne odchylenie i jak szybko (progi, częstotliwość analiz)</td><td class="mono">M</td><td>wypełnione progi reakcji i czas reakcji (PG-03, PG-04)</td></tr><tr><td class="mono">4.4</td><td>Po każdym działaniu sprawdza się jego skuteczność, a wnioski trafiają do systemu</td><td class="mono">M</td><td>ogniwo 5 „Sprawdzenie” ma osobę i tryb przekazania wniosku</td></tr><tr><td class="mono">4.4</td><td>Test ciągłości: system działa podczas nieobecności koordynatora</td><td class="mono">M</td><td>wszystkie pięć pytań testu ciągłości rozstrzygnięte</td></tr></table><p class="sub2">Podstawa <span class="mono">N</span> oznacza wymaganie normy, <span class="mono">M</span> — zalecenie metody ENESA.
+To rozróżnienie jest wzięte wprost z listy kontrolnej III-07 i trzeba je utrzymać także na platformie.</p><h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 4.4. Format pól zgodny z 4.1, 4.2 i 4.3.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;pytania&quot;: [
+    {
+      &quot;kod&quot;: &quot;SYS-01&quot;,
+      &quot;norma&quot;: false,
+      &quot;pytanie&quot;: &quot;W jakiej formie dokumentujecie system zarządzania energią?&quot;,
+      &quot;pomoc&quot;: &quot;Norma nie narzuca formy. Decyzja wpływa na to, ile dokumentów powstanie w kolejnych punktach.&quot;,
+      &quot;opcje&quot;: [
+        [
+          &quot;procedury&quot;,
+          &quot;Zestaw procedur systemowych (P-EnMS-01 … P-EnMS-07)&quot;
+        ],
+        [
+          &quot;jeden&quot;,
+          &quot;Jeden dokument opisujący cały system&quot;
+        ],
+        [
+          &quot;nadbudowa&quot;,
+          &quot;Rozszerzenie dokumentacji istniejącego ISO 14001 / 9001&quot;
+        ]
+      ],
+      &quot;skutek&quot;: &quot;Wybór „nadbudowa” zdejmuje z listy 4 procesy, które opisuje już dokumentacja ISO 14001 lub 9001.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;SYS-02&quot;,
+      &quot;norma&quot;: true,
+      &quot;pytanie&quot;: &quot;Czy system obejmuje cały zakres i granice ustalone w punkcie 4.3?&quot;,
+      &quot;pomoc&quot;: &quot;Jeśli nie, zakres w 4.3 jest nieaktualny i trzeba go poprawić tam, nie tutaj.&quot;,
+      &quot;opcje&quot;: [
+        [
+          &quot;tak&quot;,
+          &quot;Tak — system obejmuje cały zakres z 4.3&quot;
+        ],
+        [
+          &quot;nie&quot;,
+          &quot;Nie — zakres wymaga korekty w punkcie 4.3&quot;
+        ]
+      ],
+      &quot;skutek&quot;: &quot;Odpowiedź „nie” blokuje przekazanie i odsyła do punktu 4.3.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;SYS-05&quot;,
+      &quot;norma&quot;: false,
+      &quot;pytanie&quot;: &quot;Kto odpowiada za system jako całość?&quot;,
+      &quot;pomoc&quot;: &quot;Stanowisko, nie imię. To nie to samo co właściciel pojedynczego procesu. Jeśli odpowiedź brzmi „koordynator i tylko koordynator”, test ciągłości w zakładce 4 pokaże, co się stanie.&quot;,
+      &quot;rows&quot;: 1,
+      &quot;placeholder&quot;: &quot;np. Energy Manager / Pełnomocnik ds. systemów zarządzania&quot;,
+      &quot;skutek&quot;: &quot;Wchodzi do sekcji 1 dokumentu i do odpowiedzialności w P-EnMS-01.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;SYS-06&quot;,
+      &quot;norma&quot;: false,
+      &quot;pytanie&quot;: &quot;Kto zastępuje tę osobę podczas nieobecności?&quot;,
+      &quot;pomoc&quot;: &quot;Punkt 4.4 wymaga systemu, który działa bez konkretnego człowieka. Zastępstwo dla osoby odpowiedzialnej za całość jest pierwszym warunkiem ciągłości.&quot;,
+      &quot;rows&quot;: 1,
+      &quot;placeholder&quot;: &quot;np. Kierownik Utrzymania Ruchu — pełnomocnictwo stałe&quot;,
+      &quot;skutek&quot;: &quot;Pozycja listy kontrolnej III-07: „kluczowe role mają zastępców”.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;SYS-07&quot;,
+      &quot;norma&quot;: false,
+      &quot;pytanie&quot;: &quot;Czy w systemie odróżniacie odchylenie od niezgodności?&quot;,
+      &quot;pomoc&quot;: &quot;Na każde niekorzystne odchylenie trzeba zareagować. Działanie korygujące (10.2) podejmujecie dopiero wtedy, gdy nie spełniono wymagania. Mylenie obu pojęć zamienia rejestr niezgodności w listę wahań wskaźnika.&quot;,
+      &quot;opcje&quot;: [
+        [
+          &quot;tak&quot;,
+          &quot;Tak — mamy to zapisane i rozróżniamy w praktyce&quot;
+        ],
+        [
+          &quot;czesciowo&quot;,
+          &quot;Częściowo — rozróżniamy w praktyce, ale nie jest to nigdzie zapisane&quot;
+        ],
+        [
+          &quot;nie&quot;,
+          &quot;Nie — każde odchylenie trafia do rejestru niezgodności&quot;
+        ]
+      ],
+      &quot;skutek&quot;: &quot;Odpowiedź inna niż „tak” dopisuje uwagę do analizy konsultanta.&quot;
+    }
+  ],
+  &quot;czasowniki&quot;: [
+    {
+      &quot;kod&quot;: &quot;CZ-01&quot;,
+      &quot;slowo&quot;: &quot;USTANOWIĆ&quot;,
+      &quot;pytanie&quot;: &quot;Czy system jest zaprojektowany?&quot;,
+      &quot;opis&quot;: &quot;Świadomie ustalony sposób zarządzania: procesy, odpowiedzialności, cele, zasady.&quot;,
+      &quot;dowod&quot;: [
+        &quot;polityka powiązana ze strategią&quot;,
+        &quot;przypisane role&quot;,
+        &quot;opis procesów i ich powiązań&quot;
+      ],
+      &quot;placeholder&quot;: &quot;np. Polityka energetyczna zatwierdzona 12.02.2026, powiązana z celem redukcji kosztów energii w strategii 2026–2028; role przypisane zarządzeniem 3/2026; procesy opisane w P-EnMS-01…07.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;CZ-02&quot;,
+      &quot;slowo&quot;: &quot;WDROŻYĆ&quot;,
+      &quot;pytanie&quot;: &quot;Czy działa w praktyce?&quot;,
+      &quot;opis&quot;: &quot;Dane są zbierane, wskaźniki liczone, działania realizowane.&quot;,
+      &quot;dowod&quot;: [
+        &quot;pracownicy znają swoje role&quot;,
+        &quot;są zapisy z działania&quot;
+      ],
+      &quot;placeholder&quot;: &quot;np. Odczyty liczników co tydzień w arkuszu EnPI; raport miesięczny za wrzesień; protokoły z trzech działań z planu 2026; lista obecności ze szkolenia 05.2026.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;CZ-03&quot;,
+      &quot;slowo&quot;: &quot;UTRZYMYWAĆ&quot;,
+      &quot;pytanie&quot;: &quot;Czy działa stale?&quot;,
+      &quot;opis&quot;: &quot;Nie tylko „na start” — i nie zależy od jednej osoby.&quot;,
+      &quot;dowod&quot;: [
+        &quot;regularne analizy i przeglądy&quot;,
+        &quot;aktualne dane&quot;,
+        &quot;zastępstwa&quot;
+      ],
+      &quot;placeholder&quot;: &quot;np. Analiza danych co miesiąc (ostatnia 30.09.2026); przegląd zarządzania 18.06.2026; zastępstwa opisane w zarządzeniu; dane w systemie nadzoru (SCADA) aktualizowane automatycznie.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;CZ-04&quot;,
+      &quot;slowo&quot;: &quot;DOSKONALIĆ&quot;,
+      &quot;pytanie&quot;: &quot;Czy jest coraz lepiej?&quot;,
+      &quot;opis&quot;: &quot;Usprawniasz system i poprawiasz wynik energetyczny.&quot;,
+      &quot;dowod&quot;: [
+        &quot;porównanie „rok temu — dziś — plan”&quot;,
+        &quot;poprawa wykazana na wskaźnikach&quot;
+      ],
+      &quot;placeholder&quot;: &quot;np. Usprawnienia systemu: skrócony obieg danych z 14 do 3 dni, progi alarmowe na sprężarkowni od 03.2026.&quot;,
+      &quot;wskazniki&quot;: true
+    }
+  ],
+  &quot;obieg&quot;: [
+    {
+      &quot;kod&quot;: &quot;OB-1&quot;,
+      &quot;ogniwo&quot;: &quot;Sytuacja&quot;,
+      &quot;pyt&quot;: &quot;Kto zauważa, że wskaźnik przekroczył próg?&quot;,
+      &quot;przyklad&quot;: &quot;monitoring pokazuje, że wskaźnik sprężarkowni wzrósł z ok. 0,125 do 0,135 kWh/Nm³ i przekroczył ustalony próg&quot;,
+      &quot;kiedy&quot;: &quot;Jak często patrzy i skąd bierze dane&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;OB-2&quot;,
+      &quot;ogniwo&quot;: &quot;Znaczenie&quot;,
+      &quot;pyt&quot;: &quot;Kto ustala przyczynę?&quot;,
+      &quot;przyklad&quot;: &quot;utrzymanie ruchu sprawdza przyczynę i znajduje nieszczelność w sieci&quot;,
+      &quot;kiedy&quot;: &quot;W jakim czasie od sygnału&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;OB-3&quot;,
+      &quot;ogniwo&quot;: &quot;Decyzja&quot;,
+      &quot;pyt&quot;: &quot;Kto decyduje, co z tym zrobić?&quot;,
+      &quot;przyklad&quot;: &quot;kierownik utrzymania ruchu zleca naprawę i zmienia częstotliwość kontroli szczelności&quot;,
+      &quot;kiedy&quot;: &quot;Na jakiej podstawie i w jakim trybie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;OB-4&quot;,
+      &quot;ogniwo&quot;: &quot;Działanie&quot;,
+      &quot;pyt&quot;: &quot;Kto wykonuje i gdzie to zapisuje?&quot;,
+      &quot;przyklad&quot;: &quot;naprawa wykonana, nowy harmonogram kontroli wpisany do planu przeglądów&quot;,
+      &quot;kiedy&quot;: &quot;Gdzie powstaje zapis&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;OB-5&quot;,
+      &quot;ogniwo&quot;: &quot;Sprawdzenie&quot;,
+      &quot;pyt&quot;: &quot;Kto sprawdza efekt i komu przekazuje wniosek?&quot;,
+      &quot;przyklad&quot;: &quot;po miesiącu Energy Manager porównuje wskaźnik — wrócił do ok. 0,126 kWh/Nm³ — i przekazuje wnioski na przegląd zarządzania&quot;,
+      &quot;kiedy&quot;: &quot;Po jakim czasie i na jakie forum trafia wniosek&quot;
+    }
+  ],
+  &quot;progi&quot;: [
+    {
+      &quot;kod&quot;: &quot;PG-01&quot;,
+      &quot;etykieta&quot;: &quot;Jak często analizujecie dane energetyczne dla całego zakładu?&quot;,
+      &quot;opcje&quot;: [
+        [
+          &quot;tydzien&quot;,
+          &quot;Co tydzień&quot;
+        ],
+        [
+          &quot;miesiac&quot;,
+          &quot;Co miesiąc&quot;
+        ],
+        [
+          &quot;kwartal&quot;,
+          &quot;Co kwartał&quot;
+        ],
+        [
+          &quot;rzadziej&quot;,
+          &quot;Rzadziej niż co kwartał&quot;
+        ]
+      ],
+      &quot;rada&quot;: &quot;rzadziej&quot;,
+      &quot;radatekst&quot;: &quot;Rada autora: analizuj dane dla zakładu co najmniej raz w miesiącu. To zalecenie, nie wymaganie normy.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PG-02&quot;,
+      &quot;etykieta&quot;: &quot;Jak często analizujecie dane dla znaczących użyć energii (SEU)?&quot;,
+      &quot;opcje&quot;: [
+        [
+          &quot;ciagle&quot;,
+          &quot;Na bieżąco — system nadzoru z alarmem&quot;
+        ],
+        [
+          &quot;tydzien&quot;,
+          &quot;Co tydzień&quot;
+        ],
+        [
+          &quot;miesiac&quot;,
+          &quot;Co miesiąc&quot;
+        ],
+        [
+          &quot;tak_samo&quot;,
+          &quot;Tak samo jak dla całego zakładu&quot;
+        ]
+      ],
+      &quot;rada&quot;: &quot;tak_samo&quot;,
+      &quot;radatekst&quot;: &quot;Rada autora: dla znaczących użyć energii analizuj częściej niż dla zakładu — z progami alarmowymi.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PG-03&quot;,
+      &quot;etykieta&quot;: &quot;Jakie progi uruchamiają reakcję?&quot;,
+      &quot;rows&quot;: 2,
+      &quot;placeholder&quot;: &quot;np. sprężarkownia: wzrost kWh/Nm³ o ponad 5% wobec średniej z 4 tygodni; chłodnictwo: wzrost kWh/t o ponad 8%; zakład: odchylenie EnPI o ponad 10% wobec linii bazowej&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PG-04&quot;,
+      &quot;etykieta&quot;: &quot;W jakim czasie ktoś ma zareagować po przekroczeniu progu?&quot;,
+      &quot;rows&quot;: 1,
+      &quot;placeholder&quot;: &quot;np. sygnał tego samego dnia roboczego, ustalenie przyczyny w ciągu 5 dni roboczych, decyzja na najbliższym spotkaniu produkcyjnym&quot;
+    }
+  ],
+  &quot;test&quot;: [
+    {
+      &quot;kod&quot;: &quot;T-1&quot;,
+      &quot;pyt&quot;: &quot;Kto zauważy, że wskaźnik sprężarkowni przekroczył próg — i kto zdecyduje, co z tym zrobić?&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;T-2&quot;,
+      &quot;pyt&quot;: &quot;Kto zwoła przegląd zarządzania i przygotuje dane?&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;T-3&quot;,
+      &quot;pyt&quot;: &quot;Kto zaproponuje cele na kolejny rok?&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;T-4&quot;,
+      &quot;pyt&quot;: &quot;Czy pracownicy wiedzą, gdzie jest polityka i co z niej wynika dla ich pracy — i kto za to odpowiada?&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;T-5&quot;,
+      &quot;pyt&quot;: &quot;Czy zapisane zasady pozwalają zastępcy działać bez zgadywania — i kto je utrzymuje?&quot;
+    }
+  ],
+  &quot;procesy&quot;: [
+    {
+      &quot;kod&quot;: &quot;PR-01&quot;,
+      &quot;nazwa&quot;: &quot;Określanie kontekstu i zakresu EnMS&quot;,
+      &quot;klauzula&quot;: &quot;4.1–4.3&quot;,
+      &quot;klauzulaKod&quot;: &quot;4.3&quot;,
+      &quot;ksiazka&quot;: &quot;P-EnMS-01&quot;,
+      &quot;wynik&quot;: &quot;D-EnMS-KON-01, D-EnMS-STR-01, D-EnMS-ZAK-01&quot;,
+      &quot;sugestia&quot;: &quot;Energy Manager&quot;,
+      &quot;kluczowy&quot;: true,
+      &quot;trafia&quot;: &quot;6.1, 6.2–6.3, 4.3, 9.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-02&quot;,
+      &quot;nazwa&quot;: &quot;Przywództwo, polityka energetyczna i role&quot;,
+      &quot;klauzula&quot;: &quot;5&quot;,
+      &quot;klauzulaKod&quot;: &quot;5&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Polityka energetyczna, zarządzenie o rolach&quot;,
+      &quot;sugestia&quot;: &quot;Najwyższe kierownictwo&quot;,
+      &quot;trafia&quot;: &quot;7.3 świadomość, 7.4 komunikacja&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-03&quot;,
+      &quot;nazwa&quot;: &quot;Ryzyka i szanse&quot;,
+      &quot;klauzula&quot;: &quot;6.1&quot;,
+      &quot;klauzulaKod&quot;: &quot;6.1&quot;,
+      &quot;ksiazka&quot;: &quot;P-EnMS-03&quot;,
+      &quot;wynik&quot;: &quot;D-EnMS-RYZ-01 Rejestr ryzyk i szans&quot;,
+      &quot;sugestia&quot;: &quot;Energy Manager&quot;,
+      &quot;kluczowy&quot;: true,
+      &quot;trafia&quot;: &quot;6.2 cele, 8.1 nadzór operacyjny&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-04&quot;,
+      &quot;nazwa&quot;: &quot;Przegląd energetyczny, cele, EnPI i plany działań&quot;,
+      &quot;klauzula&quot;: &quot;6.2–6.5&quot;,
+      &quot;klauzulaKod&quot;: &quot;6.3&quot;,
+      &quot;ksiazka&quot;: &quot;P-EnMS-04&quot;,
+      &quot;wynik&quot;: &quot;Przegląd energetyczny, linia bazowa, EnPI, plany działań&quot;,
+      &quot;sugestia&quot;: &quot;Energy Manager&quot;,
+      &quot;kluczowy&quot;: true,
+      &quot;trafia&quot;: &quot;9.1 monitorowanie, 9.3 przegląd zarządzania&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-05&quot;,
+      &quot;nazwa&quot;: &quot;Kompetencje, świadomość i komunikacja&quot;,
+      &quot;klauzula&quot;: &quot;7.1–7.4&quot;,
+      &quot;klauzulaKod&quot;: &quot;7.2&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Plan szkoleń, zapisy kompetencji&quot;,
+      &quot;sugestia&quot;: &quot;Dział kadr / Energy Manager&quot;,
+      &quot;pokrywaIso&quot;: true,
+      &quot;trafia&quot;: &quot;8.1 nadzór operacyjny&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-06&quot;,
+      &quot;nazwa&quot;: &quot;Nadzór nad udokumentowaną informacją&quot;,
+      &quot;klauzula&quot;: &quot;7.5&quot;,
+      &quot;klauzulaKod&quot;: &quot;7.5&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Wykaz dokumentów, zasady wersjonowania&quot;,
+      &quot;sugestia&quot;: &quot;Pełnomocnik ds. systemów zarządzania&quot;,
+      &quot;pokrywaIso&quot;: true,
+      &quot;trafia&quot;: &quot;wszystkie procesy&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-07&quot;,
+      &quot;nazwa&quot;: &quot;Nadzór operacyjny, projektowanie i zakupy&quot;,
+      &quot;klauzula&quot;: &quot;8.1–8.3&quot;,
+      &quot;klauzulaKod&quot;: &quot;8.1&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Kryteria eksploatacyjne dla SEU, kryteria zakupowe&quot;,
+      &quot;sugestia&quot;: &quot;Utrzymanie ruchu / Zakupy&quot;,
+      &quot;kluczowy&quot;: true,
+      &quot;trafia&quot;: &quot;9.1 monitorowanie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-08&quot;,
+      &quot;nazwa&quot;: &quot;Monitorowanie, pomiary i ocena zgodności&quot;,
+      &quot;klauzula&quot;: &quot;9.1&quot;,
+      &quot;klauzulaKod&quot;: &quot;9.1&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Plan zbierania danych, ocena zgodności z D-EnMS-PRAW-01&quot;,
+      &quot;sugestia&quot;: &quot;Energy Manager&quot;,
+      &quot;kluczowy&quot;: true,
+      &quot;trafia&quot;: &quot;9.3 przegląd zarządzania, 10.1 odchylenia i niezgodności&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-09&quot;,
+      &quot;nazwa&quot;: &quot;Audit wewnętrzny&quot;,
+      &quot;klauzula&quot;: &quot;9.2&quot;,
+      &quot;klauzulaKod&quot;: &quot;9.2&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Program auditów, raporty&quot;,
+      &quot;sugestia&quot;: &quot;Auditor wewnętrzny&quot;,
+      &quot;pokrywaIso&quot;: true,
+      &quot;trafia&quot;: &quot;9.3, 10.2&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-10&quot;,
+      &quot;nazwa&quot;: &quot;Przegląd zarządzania&quot;,
+      &quot;klauzula&quot;: &quot;9.3&quot;,
+      &quot;klauzulaKod&quot;: &quot;9.3&quot;,
+      &quot;ksiazka&quot;: &quot;P-EnMS-07&quot;,
+      &quot;wynik&quot;: &quot;Protokół przeglądu zarządzania&quot;,
+      &quot;sugestia&quot;: &quot;Najwyższe kierownictwo&quot;,
+      &quot;kluczowy&quot;: true,
+      &quot;trafia&quot;: &quot;6.2 cele na kolejny rok, 4.1 aktualizacja kontekstu&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;PR-11&quot;,
+      &quot;nazwa&quot;: &quot;Niezgodności i działania korygujące&quot;,
+      &quot;klauzula&quot;: &quot;10.1–10.2&quot;,
+      &quot;klauzulaKod&quot;: &quot;10.2&quot;,
+      &quot;uzgodnic&quot;: true,
+      &quot;wynik&quot;: &quot;Rejestr niezgodności i działań&quot;,
+      &quot;sugestia&quot;: &quot;Energy Manager&quot;,
+      &quot;pokrywaIso&quot;: true,
+      &quot;trafia&quot;: &quot;9.3 przegląd zarządzania&quot;
+    }
+  ],
+  &quot;powiazania&quot;: [
+    {
+      &quot;z&quot;: &quot;4.1&quot;,
+      &quot;do&quot;: &quot;6.1&quot;,
+      &quot;wynik&quot;: &quot;Czynniki istotne i wnioski&quot;,
+      &quot;sposob&quot;: &quot;Słabości i zagrożenia → ryzyka; mocne strony i szanse → szanse&quot;,
+      &quot;zrodlo&quot;: &quot;P-EnMS-01 §8&quot;
+    },
+    {
+      &quot;z&quot;: &quot;4.1&quot;,
+      &quot;do&quot;: &quot;6.2–6.3&quot;,
+      &quot;wynik&quot;: &quot;Wnioski z analizy kontekstu&quot;,
+      &quot;sposob&quot;: &quot;Decyzje z tabeli wniosków trafiają do przeglądu energetycznego, celów i planów działań&quot;,
+      &quot;zrodlo&quot;: &quot;P-EnMS-01 §8&quot;
+    },
+    {
+      &quot;z&quot;: &quot;4.1&quot;,
+      &quot;do&quot;: &quot;6.1, 6.3–6.4, 8.2–8.3&quot;,
+      &quot;wynik&quot;: &quot;Rozstrzygnięcie w sprawie zmiany klimatu&quot;,
+      &quot;sposob&quot;: &quot;Przy odpowiedzi „tak” konsekwencje przechodzą do analizy ryzyk, wskaźników i nadzoru operacyjnego&quot;,
+      &quot;zrodlo&quot;: &quot;P-EnMS-01 §8&quot;
+    },
+    {
+      &quot;z&quot;: &quot;4.2&quot;,
+      &quot;do&quot;: &quot;9.1.2&quot;,
+      &quot;wynik&quot;: &quot;Wymagania zgodności&quot;,
+      &quot;sposob&quot;: &quot;Przeniesienie z rejestru stron do rejestru wymagań prawnych i innych&quot;,
+      &quot;zrodlo&quot;: &quot;P-EnMS-01 §8&quot;
+    },
+    {
+      &quot;z&quot;: &quot;4.1, 4.2&quot;,
+      &quot;do&quot;: &quot;4.3&quot;,
+      &quot;wynik&quot;: &quot;Czynniki i wymagania stron&quot;,
+      &quot;sposob&quot;: &quot;Uwzględnienie przy ustalaniu zakresu i granic&quot;,
+      &quot;zrodlo&quot;: &quot;P-EnMS-01 §8&quot;
+    },
+    {
+      &quot;z&quot;: &quot;4.1&quot;,
+      &quot;do&quot;: &quot;9.3&quot;,
+      &quot;wynik&quot;: &quot;Zmiany czynników kontekstowych&quot;,
+      &quot;sposob&quot;: &quot;Punkt agendy przeglądu zarządzania&quot;,
+      &quot;zrodlo&quot;: &quot;P-EnMS-01 §8&quot;
+    },
+    {
+      &quot;z&quot;: &quot;4.3&quot;,
+      &quot;do&quot;: &quot;4.4&quot;,
+      &quot;wynik&quot;: &quot;Zakres i granice systemu&quot;,
+      &quot;sposob&quot;: &quot;System obejmuje dokładnie tę działalność i te granice — bez powielania opisu&quot;,
+      &quot;propozycja&quot;: true
+    },
+    {
+      &quot;z&quot;: &quot;4.4&quot;,
+      &quot;do&quot;: &quot;7.5&quot;,
+      &quot;wynik&quot;: &quot;Lista procesów i ich właścicieli&quot;,
+      &quot;sposob&quot;: &quot;Wykaz udokumentowanej informacji wymaganej przez system&quot;,
+      &quot;propozycja&quot;: true
+    },
+    {
+      &quot;z&quot;: &quot;4.4&quot;,
+      &quot;do&quot;: &quot;9.2&quot;,
+      &quot;wynik&quot;: &quot;Mapa procesów&quot;,
+      &quot;sposob&quot;: &quot;Program auditu wewnętrznego układany według procesów, nie według punktów normy&quot;,
+      &quot;propozycja&quot;: true
+    }
+  ],
+  &quot;lista_kontrolna&quot;: [
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Zebrano dane wejściowe: faktury (12–36 mies.), umowy, wymagania klientów, audyt, strategię, dane pogodowe&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Określono istotne czynniki zewnętrzne&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Określono istotne czynniki wewnętrzne&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Czynniki uporządkowano w wymiarach (model 4 + 3)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Analizę skonsultowano z produkcją, utrzymaniem ruchu, zakupami i finansami&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Dla każdego czynnika zapisano fakty, wpływ i skutek dla systemu&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Rozstrzygnięto, czy zmiana klimatu jest istotną kwestią (Amd 1:2024)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Rozstrzygnięcie ma zapisane uzasadnienie i podstawę&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Każdy istotny czynnik ma wniosek: konsekwencja → decyzja → gdzie dalej&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Czynniki i wnioski uwzględniono przy planowaniu ryzyk i szans (6.1) oraz celów (6.2)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Ustalono stan prawny i zapisano, na jaki dzień&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Analizę przedstawiono zarządowi i zatwierdzono&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.1&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Zmiany czynników są punktem agendy przeglądu zarządzania (9.3)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;tekst&quot;: &quot;Zaplanowano przegląd analizy: przy istotnej zmianie i co najmniej raz w roku&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;tekst&quot;: &quot;Określono strony zainteresowane istotne dla wyniku energetycznego i EnMS&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.2&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;tekst&quot;: &quot;Określono istotne wymagania tych stron&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.2&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;tekst&quot;: &quot;Ustalono, które wymagania organizacja spełnia w ramach EnMS (wymagania zgodności)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.2&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;tekst&quot;: &quot;Wskazano źródło każdego wymagania (przepis, umowa, deklaracja)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.2&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;tekst&quot;: &quot;Rozważono wymagania stron związane ze zmianą klimatu&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.2&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;tekst&quot;: &quot;Wymagania zgodności przeniesiono do rejestru wymagań prawnych i innych (9.1.2)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Przy ustalaniu zakresu uwzględniono czynniki z 4.1 i wymagania z 4.2&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Określono działalność objętą systemem (zakres)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Wyznaczono granice fizyczne i organizacyjne&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Organizacja ma uprawnienia do sterowania efektywnością, wykorzystaniem i zużyciem energii w zakresie i granicach&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Sprawdzono uprawnienia w obiektach wynajmowanych, przy wspólnych instalacjach i usługach zleconych&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Uwzględniono wszystkie rodzaje energii wykorzystywane w granicach — żadnego nie wyłączono&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Odróżniono rodzaj energii, który nie występuje, od działalności poza granicami&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Działalność poza granicami opisano: przynależność, uprawnienia, przepływy energii (nie sam procent udziału)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Zakres i granice są utrzymywane jako udokumentowana informacja&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.3&quot;,
+      &quot;tekst&quot;: &quot;Zakres zatwierdzono i udostępniono&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;klauzula&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Ustanowiono, wdrożono, utrzymuje się i doskonali EnMS, w tym potrzebne procesy i ich wzajemne oddziaływania&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;czasowniki&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Ciągle doskonali się wynik energetyczny — poprawa wykazana na wskaźnikach wobec linii bazowej&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;wskazniki&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Każdy proces ma właściciela; kluczowe role mają zastępców&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;procesy&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Wiadomo, kto przekazuje komu wyniki monitoringu i analiz (tabela lub schemat przepływu informacji)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;obieg&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Ustalono, kto reaguje na niekorzystne odchylenie i jak szybko (progi, częstotliwość analiz)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;progi&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Po każdym działaniu sprawdza się jego skuteczność, a wnioski trafiają do systemu&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;sprawdzenie&quot;
+    },
+    {
+      &quot;punkt&quot;: &quot;4.4&quot;,
+      &quot;tekst&quot;: &quot;Test ciągłości: system działa podczas nieobecności koordynatora&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;test&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var PYTANIA = [{"kod": "SYS-01", "norma": false, "pytanie": "W jakiej formie dokumentujecie system zarządzania energią?", "pomoc": "Norma nie narzuca formy. Decyzja wpływa na to, ile dokumentów powstanie w kolejnych punktach.", "opcje": [["procedury", "Zestaw procedur systemowych (P-EnMS-01 … P-EnMS-07)"], ["jeden", "Jeden dokument opisujący cały system"], ["nadbudowa", "Rozszerzenie dokumentacji istniejącego ISO 14001 / 9001"]], "skutek": "Wybór „nadbudowa” zdejmuje z listy 4 procesy, które opisuje już dokumentacja ISO 14001 lub 9001."}, {"kod": "SYS-02", "norma": true, "pytanie": "Czy system obejmuje cały zakres i granice ustalone w punkcie 4.3?", "pomoc": "Jeśli nie, zakres w 4.3 jest nieaktualny i trzeba go poprawić tam, nie tutaj.", "opcje": [["tak", "Tak — system obejmuje cały zakres z 4.3"], ["nie", "Nie — zakres wymaga korekty w punkcie 4.3"]], "skutek": "Odpowiedź „nie” blokuje przekazanie i odsyła do punktu 4.3."}, {"kod": "SYS-05", "norma": false, "pytanie": "Kto odpowiada za system jako całość?", "pomoc": "Stanowisko, nie imię. To nie to samo co właściciel pojedynczego procesu. Jeśli odpowiedź brzmi „koordynator i tylko koordynator”, test ciągłości w zakładce 4 pokaże, co się stanie.", "rows": 1, "placeholder": "np. Energy Manager / Pełnomocnik ds. systemów zarządzania", "skutek": "Wchodzi do sekcji 1 dokumentu i do odpowiedzialności w P-EnMS-01."}, {"kod": "SYS-06", "norma": false, "pytanie": "Kto zastępuje tę osobę podczas nieobecności?", "pomoc": "Punkt 4.4 wymaga systemu, który działa bez konkretnego człowieka. Zastępstwo dla osoby odpowiedzialnej za całość jest pierwszym warunkiem ciągłości.", "rows": 1, "placeholder": "np. Kierownik Utrzymania Ruchu — pełnomocnictwo stałe", "skutek": "Pozycja listy kontrolnej III-07: „kluczowe role mają zastępców”."}, {"kod": "SYS-07", "norma": false, "pytanie": "Czy w systemie odróżniacie odchylenie od niezgodności?", "pomoc": "Na każde niekorzystne odchylenie trzeba zareagować. Działanie korygujące (10.2) podejmujecie dopiero wtedy, gdy nie spełniono wymagania. Mylenie obu pojęć zamienia rejestr niezgodności w listę wahań wskaźnika.", "opcje": [["tak", "Tak — mamy to zapisane i rozróżniamy w praktyce"], ["czesciowo", "Częściowo — rozróżniamy w praktyce, ale nie jest to nigdzie zapisane"], ["nie", "Nie — każde odchylenie trafia do rejestru niezgodności"]], "skutek": "Odpowiedź inna niż „tak” dopisuje uwagę do analizy konsultanta."}];
+var CZASOWNIKI = [{"kod": "CZ-01", "slowo": "USTANOWIĆ", "pytanie": "Czy system jest zaprojektowany?", "opis": "Świadomie ustalony sposób zarządzania: procesy, odpowiedzialności, cele, zasady.", "dowod": ["polityka powiązana ze strategią", "przypisane role", "opis procesów i ich powiązań"], "placeholder": "np. Polityka energetyczna zatwierdzona 12.02.2026, powiązana z celem redukcji kosztów energii w strategii 2026–2028; role przypisane zarządzeniem 3/2026; procesy opisane w P-EnMS-01…07."}, {"kod": "CZ-02", "slowo": "WDROŻYĆ", "pytanie": "Czy działa w praktyce?", "opis": "Dane są zbierane, wskaźniki liczone, działania realizowane.", "dowod": ["pracownicy znają swoje role", "są zapisy z działania"], "placeholder": "np. Odczyty liczników co tydzień w arkuszu EnPI; raport miesięczny za wrzesień; protokoły z trzech działań z planu 2026; lista obecności ze szkolenia 05.2026."}, {"kod": "CZ-03", "slowo": "UTRZYMYWAĆ", "pytanie": "Czy działa stale?", "opis": "Nie tylko „na start” — i nie zależy od jednej osoby.", "dowod": ["regularne analizy i przeglądy", "aktualne dane", "zastępstwa"], "placeholder": "np. Analiza danych co miesiąc (ostatnia 30.09.2026); przegląd zarządzania 18.06.2026; zastępstwa opisane w zarządzeniu; dane w systemie nadzoru (SCADA) aktualizowane automatycznie."}, {"kod": "CZ-04", "slowo": "DOSKONALIĆ", "pytanie": "Czy jest coraz lepiej?", "opis": "Usprawniasz system i poprawiasz wynik energetyczny.", "dowod": ["porównanie „rok temu — dziś — plan”", "poprawa wykazana na wskaźnikach"], "placeholder": "np. Usprawnienia systemu: skrócony obieg danych z 14 do 3 dni, progi alarmowe na sprężarkowni od 03.2026.", "wskazniki": true}];
+var OBIEG = [{"kod": "OB-1", "ogniwo": "Sytuacja", "pyt": "Kto zauważa, że wskaźnik przekroczył próg?", "przyklad": "monitoring pokazuje, że wskaźnik sprężarkowni wzrósł z ok. 0,125 do 0,135 kWh/Nm³ i przekroczył ustalony próg", "kiedy": "Jak często patrzy i skąd bierze dane"}, {"kod": "OB-2", "ogniwo": "Znaczenie", "pyt": "Kto ustala przyczynę?", "przyklad": "utrzymanie ruchu sprawdza przyczynę i znajduje nieszczelność w sieci", "kiedy": "W jakim czasie od sygnału"}, {"kod": "OB-3", "ogniwo": "Decyzja", "pyt": "Kto decyduje, co z tym zrobić?", "przyklad": "kierownik utrzymania ruchu zleca naprawę i zmienia częstotliwość kontroli szczelności", "kiedy": "Na jakiej podstawie i w jakim trybie"}, {"kod": "OB-4", "ogniwo": "Działanie", "pyt": "Kto wykonuje i gdzie to zapisuje?", "przyklad": "naprawa wykonana, nowy harmonogram kontroli wpisany do planu przeglądów", "kiedy": "Gdzie powstaje zapis"}, {"kod": "OB-5", "ogniwo": "Sprawdzenie", "pyt": "Kto sprawdza efekt i komu przekazuje wniosek?", "przyklad": "po miesiącu Energy Manager porównuje wskaźnik — wrócił do ok. 0,126 kWh/Nm³ — i przekazuje wnioski na przegląd zarządzania", "kiedy": "Po jakim czasie i na jakie forum trafia wniosek"}];
+var PROGI = [{"kod": "PG-01", "etykieta": "Jak często analizujecie dane energetyczne dla całego zakładu?", "opcje": [["tydzien", "Co tydzień"], ["miesiac", "Co miesiąc"], ["kwartal", "Co kwartał"], ["rzadziej", "Rzadziej niż co kwartał"]], "rada": "rzadziej", "radatekst": "Rada autora: analizuj dane dla zakładu co najmniej raz w miesiącu. To zalecenie, nie wymaganie normy."}, {"kod": "PG-02", "etykieta": "Jak często analizujecie dane dla znaczących użyć energii (SEU)?", "opcje": [["ciagle", "Na bieżąco — system nadzoru z alarmem"], ["tydzien", "Co tydzień"], ["miesiac", "Co miesiąc"], ["tak_samo", "Tak samo jak dla całego zakładu"]], "rada": "tak_samo", "radatekst": "Rada autora: dla znaczących użyć energii analizuj częściej niż dla zakładu — z progami alarmowymi."}, {"kod": "PG-03", "etykieta": "Jakie progi uruchamiają reakcję?", "rows": 2, "placeholder": "np. sprężarkownia: wzrost kWh/Nm³ o ponad 5% wobec średniej z 4 tygodni; chłodnictwo: wzrost kWh/t o ponad 8%; zakład: odchylenie EnPI o ponad 10% wobec linii bazowej"}, {"kod": "PG-04", "etykieta": "W jakim czasie ktoś ma zareagować po przekroczeniu progu?", "rows": 1, "placeholder": "np. sygnał tego samego dnia roboczego, ustalenie przyczyny w ciągu 5 dni roboczych, decyzja na najbliższym spotkaniu produkcyjnym"}];
+var TEST = [{"kod": "T-1", "pyt": "Kto zauważy, że wskaźnik sprężarkowni przekroczył próg — i kto zdecyduje, co z tym zrobić?"}, {"kod": "T-2", "pyt": "Kto zwoła przegląd zarządzania i przygotuje dane?"}, {"kod": "T-3", "pyt": "Kto zaproponuje cele na kolejny rok?"}, {"kod": "T-4", "pyt": "Czy pracownicy wiedzą, gdzie jest polityka i co z niej wynika dla ich pracy — i kto za to odpowiada?"}, {"kod": "T-5", "pyt": "Czy zapisane zasady pozwalają zastępcy działać bez zgadywania — i kto je utrzymuje?"}];
+var PRZYCZYNY = ["Dane zbierane, ale nieanalizowane", "Cele bez planów działań", "Pracownicy, którzy nie znają systemu", "System, który poprawia procedury, a nie wynik"];
+var PROCESY = [{"kod": "PR-01", "nazwa": "Określanie kontekstu i zakresu EnMS", "klauzula": "4.1–4.3", "klauzulaKod": "4.3", "ksiazka": "P-EnMS-01", "wynik": "D-EnMS-KON-01, D-EnMS-STR-01, D-EnMS-ZAK-01", "sugestia": "Energy Manager", "kluczowy": true, "trafia": "6.1, 6.2–6.3, 4.3, 9.3"}, {"kod": "PR-02", "nazwa": "Przywództwo, polityka energetyczna i role", "klauzula": "5", "klauzulaKod": "5", "uzgodnic": true, "wynik": "Polityka energetyczna, zarządzenie o rolach", "sugestia": "Najwyższe kierownictwo", "trafia": "7.3 świadomość, 7.4 komunikacja"}, {"kod": "PR-03", "nazwa": "Ryzyka i szanse", "klauzula": "6.1", "klauzulaKod": "6.1", "ksiazka": "P-EnMS-03", "wynik": "D-EnMS-RYZ-01 Rejestr ryzyk i szans", "sugestia": "Energy Manager", "kluczowy": true, "trafia": "6.2 cele, 8.1 nadzór operacyjny"}, {"kod": "PR-04", "nazwa": "Przegląd energetyczny, cele, EnPI i plany działań", "klauzula": "6.2–6.5", "klauzulaKod": "6.3", "ksiazka": "P-EnMS-04", "wynik": "Przegląd energetyczny, linia bazowa, EnPI, plany działań", "sugestia": "Energy Manager", "kluczowy": true, "trafia": "9.1 monitorowanie, 9.3 przegląd zarządzania"}, {"kod": "PR-05", "nazwa": "Kompetencje, świadomość i komunikacja", "klauzula": "7.1–7.4", "klauzulaKod": "7.2", "uzgodnic": true, "wynik": "Plan szkoleń, zapisy kompetencji", "sugestia": "Dział kadr / Energy Manager", "pokrywaIso": true, "trafia": "8.1 nadzór operacyjny"}, {"kod": "PR-06", "nazwa": "Nadzór nad udokumentowaną informacją", "klauzula": "7.5", "klauzulaKod": "7.5", "uzgodnic": true, "wynik": "Wykaz dokumentów, zasady wersjonowania", "sugestia": "Pełnomocnik ds. systemów zarządzania", "pokrywaIso": true, "trafia": "wszystkie procesy"}, {"kod": "PR-07", "nazwa": "Nadzór operacyjny, projektowanie i zakupy", "klauzula": "8.1–8.3", "klauzulaKod": "8.1", "uzgodnic": true, "wynik": "Kryteria eksploatacyjne dla SEU, kryteria zakupowe", "sugestia": "Utrzymanie ruchu / Zakupy", "kluczowy": true, "trafia": "9.1 monitorowanie"}, {"kod": "PR-08", "nazwa": "Monitorowanie, pomiary i ocena zgodności", "klauzula": "9.1", "klauzulaKod": "9.1", "uzgodnic": true, "wynik": "Plan zbierania danych, ocena zgodności z D-EnMS-PRAW-01", "sugestia": "Energy Manager", "kluczowy": true, "trafia": "9.3 przegląd zarządzania, 10.1 odchylenia i niezgodności"}, {"kod": "PR-09", "nazwa": "Audit wewnętrzny", "klauzula": "9.2", "klauzulaKod": "9.2", "uzgodnic": true, "wynik": "Program auditów, raporty", "sugestia": "Auditor wewnętrzny", "pokrywaIso": true, "trafia": "9.3, 10.2"}, {"kod": "PR-10", "nazwa": "Przegląd zarządzania", "klauzula": "9.3", "klauzulaKod": "9.3", "ksiazka": "P-EnMS-07", "wynik": "Protokół przeglądu zarządzania", "sugestia": "Najwyższe kierownictwo", "kluczowy": true, "trafia": "6.2 cele na kolejny rok, 4.1 aktualizacja kontekstu"}, {"kod": "PR-11", "nazwa": "Niezgodności i działania korygujące", "klauzula": "10.1–10.2", "klauzulaKod": "10.2", "uzgodnic": true, "wynik": "Rejestr niezgodności i działań", "sugestia": "Energy Manager", "pokrywaIso": true, "trafia": "9.3 przegląd zarządzania"}];
+var POWIAZANIA = [{"z": "4.1", "do": "6.1", "wynik": "Czynniki istotne i wnioski", "sposob": "Słabości i zagrożenia → ryzyka; mocne strony i szanse → szanse", "zrodlo": "P-EnMS-01 §8"}, {"z": "4.1", "do": "6.2–6.3", "wynik": "Wnioski z analizy kontekstu", "sposob": "Decyzje z tabeli wniosków trafiają do przeglądu energetycznego, celów i planów działań", "zrodlo": "P-EnMS-01 §8"}, {"z": "4.1", "do": "6.1, 6.3–6.4, 8.2–8.3", "wynik": "Rozstrzygnięcie w sprawie zmiany klimatu", "sposob": "Przy odpowiedzi „tak” konsekwencje przechodzą do analizy ryzyk, wskaźników i nadzoru operacyjnego", "zrodlo": "P-EnMS-01 §8"}, {"z": "4.2", "do": "9.1.2", "wynik": "Wymagania zgodności", "sposob": "Przeniesienie z rejestru stron do rejestru wymagań prawnych i innych", "zrodlo": "P-EnMS-01 §8"}, {"z": "4.1, 4.2", "do": "4.3", "wynik": "Czynniki i wymagania stron", "sposob": "Uwzględnienie przy ustalaniu zakresu i granic", "zrodlo": "P-EnMS-01 §8"}, {"z": "4.1", "do": "9.3", "wynik": "Zmiany czynników kontekstowych", "sposob": "Punkt agendy przeglądu zarządzania", "zrodlo": "P-EnMS-01 §8"}, {"z": "4.3", "do": "4.4", "wynik": "Zakres i granice systemu", "sposob": "System obejmuje dokładnie tę działalność i te granice — bez powielania opisu", "propozycja": true}, {"z": "4.4", "do": "7.5", "wynik": "Lista procesów i ich właścicieli", "sposob": "Wykaz udokumentowanej informacji wymaganej przez system", "propozycja": true}, {"z": "4.4", "do": "9.2", "wynik": "Mapa procesów", "sposob": "Program auditu wewnętrznego układany według procesów, nie według punktów normy", "propozycja": true}];
+var LISTA_KONTROLNA = [{"punkt": "4.1", "tekst": "Zebrano dane wejściowe: faktury (12–36 mies.), umowy, wymagania klientów, audyt, strategię, dane pogodowe", "podstawa": "M", "auto": null}, {"punkt": "4.1", "tekst": "Określono istotne czynniki zewnętrzne", "podstawa": "N", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Określono istotne czynniki wewnętrzne", "podstawa": "N", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Czynniki uporządkowano w wymiarach (model 4 + 3)", "podstawa": "M", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Analizę skonsultowano z produkcją, utrzymaniem ruchu, zakupami i finansami", "podstawa": "M", "auto": null}, {"punkt": "4.1", "tekst": "Dla każdego czynnika zapisano fakty, wpływ i skutek dla systemu", "podstawa": "M", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Rozstrzygnięto, czy zmiana klimatu jest istotną kwestią (Amd 1:2024)", "podstawa": "N", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Rozstrzygnięcie ma zapisane uzasadnienie i podstawę", "podstawa": "M", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Każdy istotny czynnik ma wniosek: konsekwencja → decyzja → gdzie dalej", "podstawa": "M", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Czynniki i wnioski uwzględniono przy planowaniu ryzyk i szans (6.1) oraz celów (6.2)", "podstawa": "N", "auto": null}, {"punkt": "4.1", "tekst": "Ustalono stan prawny i zapisano, na jaki dzień", "podstawa": "M", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Analizę przedstawiono zarządowi i zatwierdzono", "podstawa": "M", "auto": "klauzula", "klauzula": "4.1"}, {"punkt": "4.1", "tekst": "Zmiany czynników są punktem agendy przeglądu zarządzania (9.3)", "podstawa": "N", "auto": null}, {"punkt": "4.1", "tekst": "Zaplanowano przegląd analizy: przy istotnej zmianie i co najmniej raz w roku", "podstawa": "M", "auto": null}, {"punkt": "4.2", "tekst": "Określono strony zainteresowane istotne dla wyniku energetycznego i EnMS", "podstawa": "N", "auto": "klauzula", "klauzula": "4.2"}, {"punkt": "4.2", "tekst": "Określono istotne wymagania tych stron", "podstawa": "N", "auto": "klauzula", "klauzula": "4.2"}, {"punkt": "4.2", "tekst": "Ustalono, które wymagania organizacja spełnia w ramach EnMS (wymagania zgodności)", "podstawa": "N", "auto": "klauzula", "klauzula": "4.2"}, {"punkt": "4.2", "tekst": "Wskazano źródło każdego wymagania (przepis, umowa, deklaracja)", "podstawa": "M", "auto": "klauzula", "klauzula": "4.2"}, {"punkt": "4.2", "tekst": "Rozważono wymagania stron związane ze zmianą klimatu", "podstawa": "M", "auto": "klauzula", "klauzula": "4.2"}, {"punkt": "4.2", "tekst": "Wymagania zgodności przeniesiono do rejestru wymagań prawnych i innych (9.1.2)", "podstawa": "M", "auto": null}, {"punkt": "4.3", "tekst": "Przy ustalaniu zakresu uwzględniono czynniki z 4.1 i wymagania z 4.2", "podstawa": "N", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Określono działalność objętą systemem (zakres)", "podstawa": "N", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Wyznaczono granice fizyczne i organizacyjne", "podstawa": "N", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Organizacja ma uprawnienia do sterowania efektywnością, wykorzystaniem i zużyciem energii w zakresie i granicach", "podstawa": "N", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Sprawdzono uprawnienia w obiektach wynajmowanych, przy wspólnych instalacjach i usługach zleconych", "podstawa": "M", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Uwzględniono wszystkie rodzaje energii wykorzystywane w granicach — żadnego nie wyłączono", "podstawa": "N", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Odróżniono rodzaj energii, który nie występuje, od działalności poza granicami", "podstawa": "M", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Działalność poza granicami opisano: przynależność, uprawnienia, przepływy energii (nie sam procent udziału)", "podstawa": "M", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Zakres i granice są utrzymywane jako udokumentowana informacja", "podstawa": "N", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.3", "tekst": "Zakres zatwierdzono i udostępniono", "podstawa": "M", "auto": "klauzula", "klauzula": "4.3"}, {"punkt": "4.4", "tekst": "Ustanowiono, wdrożono, utrzymuje się i doskonali EnMS, w tym potrzebne procesy i ich wzajemne oddziaływania", "podstawa": "N", "auto": "czasowniki"}, {"punkt": "4.4", "tekst": "Ciągle doskonali się wynik energetyczny — poprawa wykazana na wskaźnikach wobec linii bazowej", "podstawa": "N", "auto": "wskazniki"}, {"punkt": "4.4", "tekst": "Każdy proces ma właściciela; kluczowe role mają zastępców", "podstawa": "M", "auto": "procesy"}, {"punkt": "4.4", "tekst": "Wiadomo, kto przekazuje komu wyniki monitoringu i analiz (tabela lub schemat przepływu informacji)", "podstawa": "M", "auto": "obieg"}, {"punkt": "4.4", "tekst": "Ustalono, kto reaguje na niekorzystne odchylenie i jak szybko (progi, częstotliwość analiz)", "podstawa": "M", "auto": "progi"}, {"punkt": "4.4", "tekst": "Po każdym działaniu sprawdza się jego skuteczność, a wnioski trafiają do systemu", "podstawa": "M", "auto": "sprawdzenie"}, {"punkt": "4.4", "tekst": "Test ciągłości: system działa podczas nieobecności koordynatora", "podstawa": "M", "auto": "test"}];
+var STAN_KLAUZUL = {"4.1": {"stan": "gotowy"}, "4.2": {"stan": "opracowanie"}, "4.3": {"stan": "ankieta"}, "5": {"stan": "nierozpoczety"}, "6.1": {"stan": "nierozpoczety"}, "6.3": {"stan": "nierozpoczety"}, "7.2": {"stan": "nierozpoczety"}, "7.5": {"stan": "nierozpoczety"}, "8.1": {"stan": "nierozpoczety"}, "9.1": {"stan": "nierozpoczety"}, "9.2": {"stan": "nierozpoczety"}, "9.3": {"stan": "nierozpoczety"}, "10.2": {"stan": "nierozpoczety"}};
+var PRZYKLAD_44 = {"stanKlauzul": ["4.1", "4.2", "4.3"], "odp": {"SYS-01": "nadbudowa", "SYS-02": "tak", "SYS-05": "Energy Manager — stanowisko utworzone zarządzeniem 3/2026 z 12.02.2026 r.", "SYS-06": "Kierownik Utrzymania Ruchu — pełnomocnictwo stałe, to samo zarządzenie", "SYS-07": "tak"}, "cz": {"CZ-01": {"stan": "jest", "dowod": "Polityka energetyczna zatwierdzona 12.02.2026 r., powiązana z celem obniżenia kosztów energii o 8% ze strategii 2026–2028; role przypisane zarządzeniem 3/2026; procesy opisane jako rozszerzenie procedur ISO 14001 — mapa w zakładce 6."}, "CZ-02": {"stan": "jest", "dowod": "Odczyty liczników co tydzień w arkuszu EnPI; raporty miesięczne od marca 2026 r.; protokoły z trzech działań planu C1 (kampania pomiarowa 02–03.2026, usunięcie 35 nieszczelności, obniżenie ciśnienia); lista obecności ze szkolenia operatorów sprężarkowni z maja 2026 r."}, "CZ-03": {"stan": "czesciowo", "dowod": "Analiza danych co miesiąc, ostatnia 30.09.2026 r.; przegląd zarządzania 18.06.2026 r.; zastępstwa w zarządzeniu 3/2026. Czego brakuje: odczyty nadal ręczne — podlicznik sprężarkowni i przepływomierz są w planie C4, termin 30.06.2027 r."}, "CZ-04": {"stan": "czesciowo", "dowod": "Usprawnienia systemu: obieg danych skrócony z 14 do 3 dni roboczych, progi alarmowe na sprężarkowni od marca 2026 r.", "wskazniki": "S-1 sprężarkownia: 0,125 kWh/Nm³ (linia bazowa, kampania 02–03.2026) — 0,119 kWh/Nm³ (VII–IX 2026) — 0,110 kWh/Nm³ w planie do 31.12.2027 r. Prasy: 124,0 kWh/t (2025 r.) — 122,1 kWh/t (I półrocze 2026 r.)."}}, "ob": {"OB-1": {"kto": "Energy Manager — przegląd arkusza EnPI", "kiedy": "Co tydzień, na danych z odczytów liczników"}, "OB-2": {"kto": "Kierownik Utrzymania Ruchu", "kiedy": "Ustalenie przyczyny w ciągu 5 dni roboczych od sygnału"}, "OB-3": {"kto": "Kierownik Utrzymania Ruchu; powyżej 50 tys. zł — Dyrektor Zakładu", "kiedy": "Na najbliższym spotkaniu produkcyjnym, na podstawie kosztu i SPBT (próg 3 lata)"}, "OB-4": {"kto": "Służby utrzymania ruchu własne; serwis zewnętrzny przy sprężarkowni", "kiedy": "Zapis powstaje w planie przeglądów i w karcie działania"}, "OB-5": {"kto": "Energy Manager", "kiedy": "Po miesiącu porównanie wskaźnika z progiem; wniosek na przegląd zarządzania (9.3)"}}, "pg": {"PG-01": "miesiac", "PG-02": "tydzien", "PG-03": "Sprężarkownia: wzrost kWh/Nm³ o ponad 5% wobec średniej z czterech tygodni. Lakiernia: wzrost zużycia gazu o ponad 8% przy porównywalnej produkcji i stopniodniach. Zakład: odchylenie EnPI o ponad 10% wobec modelu bazowego E_ocz = 0,23·t + 0,48·HDD + 406.", "PG-04": "Sygnał tego samego dnia roboczego, ustalenie przyczyny w ciągu 5 dni roboczych, decyzja na najbliższym spotkaniu produkcyjnym."}, "ts": {"T-1": {"stan": "jest", "kto": "Sygnał — Energy Manager; decyzja — Kierownik Utrzymania Ruchu (zarządzenie 3/2026)"}, "T-2": {"stan": "jest", "kto": "Zwołuje Pełnomocnik ds. systemów zarządzania, dane przygotowuje Energy Manager"}, "T-3": {"stan": "jest", "kto": "Energy Manager z Kierownikiem Produkcji; zatwierdza Dyrektor Zakładu"}, "T-4": {"stan": "jest", "kto": "Kierownik Produkcji — polityka w intranecie i na tablicy przy portierni, instruktaż stanowiskowy"}, "T-5": {"stan": "niewiem", "start": "Zasady są rozproszone między zarządzenie 3/2026 a procedury ISO 14001. Zaczynamy od spisania ich w jednym miejscu — mapa procesów z zakładki 6, termin 30.11.2026 r., odpowiedzialny Energy Manager."}}, "proc": {"PR-01": {"wlasciciel": "Energy Manager", "zastepca": "Pełnomocnik ds. systemów zarządzania", "forma": "nadbudowa"}, "PR-02": {"wlasciciel": "Dyrektor Zakładu", "forma": "opis"}, "PR-03": {"wlasciciel": "Energy Manager", "zastepca": "Kierownik Utrzymania Ruchu", "forma": "nadbudowa"}, "PR-04": {"wlasciciel": "Energy Manager", "zastepca": "Kierownik Produkcji", "forma": "procedura"}, "PR-05": {"wlasciciel": "Dział kadr z Energy Managerem", "forma": "nadbudowa"}, "PR-06": {"wlasciciel": "Pełnomocnik ds. systemów zarządzania", "forma": "nadbudowa"}, "PR-07": {"wlasciciel": "Kierownik Utrzymania Ruchu; zakupy — Kierownik Działu Zakupów", "zastepca": "Mistrz zmianowy utrzymania ruchu", "forma": "procedura"}, "PR-08": {"wlasciciel": "Energy Manager", "zastepca": "Specjalista ds. mediów", "forma": "procedura"}, "PR-09": {"wlasciciel": "Auditor wewnętrzny ISO 14001", "forma": "nadbudowa"}, "PR-10": {"wlasciciel": "Dyrektor Zakładu", "zastepca": "Pełnomocnik ds. systemów zarządzania", "forma": "nadbudowa"}, "PR-11": {"wlasciciel": "Energy Manager", "forma": "nadbudowa"}}, "powPlanowane": ["4.4→7.5", "4.4→9.2"]};
+</script>
+<script>/* ENESA 4.4 — system zarządzania energią. Format jak 4.1–4.3 Sławka.
+   Zgodny z Tomem 2 punkt 4.4 wersja 2.1 i Toolkitem Modułu 1 wersja 2.4. */
+"use strict";
+
+var ODP = {};      // kod pytania klauzuli -> wartość
+var CZ = {};       // kod czasownika -> {stan, dowod, plan, wskazniki}
+var OB = {};       // kod ogniwa -> {kto, kiedy}
+var PG = {};       // kod progu -> wartość
+var TS = {};       // kod pytania testu -> {kto, stan, start}
+var PROC = {};     // kod procesu -> {wlasciciel, zastepca, forma, uwagi, trafia}
+var POW = {};      // indeks powiązania -> {potwierdzone}
+var AKT = "pytania";
+
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on) {
+  var i = el("input"); i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+
+/* ── stan klauzul z platformy (w aplikacji czytany z bazy) ── */
+function stanKlauzuli(k) { return STAN_KLAUZUL[k] || { stan: "nierozpoczety", dokument: null }; }
+function etykietaStanu(s) {
+  return { gotowy: "dokument opublikowany", opracowanie: "w opracowaniu", ankieta: "ankieta w wypełnianiu", nierozpoczety: "nierozpoczęty" }[s] || s;
+}
+function kolorStanu(s) {
+  return { gotowy: "green", opracowanie: "amber", ankieta: "amber", nierozpoczety: "" }[s] || "";
+}
+/* Proces odpada tylko wtedy, gdy opisuje go istniejący system ISO 14001 / 9001
+   i organizacja wybrała tryb nadbudowy. */
+function wymagany(x) { return !(x.pokrywaIso && ODP["SYS-01"] === "nadbudowa"); }
+
+/* ── stany pojedynczych bloków ── */
+function czasownikOk(c) {
+  var d = CZ[c.kod] || {};
+  if (!d.stan) return false;
+  if (d.stan === "nie") return !!(d.plan || "").trim();
+  if (!(d.dowod || "").trim()) return false;
+  if (c.wskazniki && !(d.wskazniki || "").trim()) return false;
+  return true;
+}
+function ogniwoOk(o) { var d = OB[o.kod] || {}; return !!(d.kto || "").trim(); }
+function obiegPelny() { return OBIEG.every(ogniwoOk); }
+function progiOk() { return !!(PG["PG-03"] || "").trim() && !!(PG["PG-04"] || "").trim() && !!PG["PG-01"] && !!PG["PG-02"]; }
+function testOk(t) {
+  var d = TS[t.kod] || {};
+  if (!d.stan) return false;
+  if (d.stan === "jest") return !!(d.kto || "").trim();
+  return !!(d.start || "").trim();   /* „nikt” albo „nie wiem” — trzeba wskazać, od czego zaczynacie */
+}
+function procesOk(x) {
+  var d = PROC[x.kod] || {};
+  if (!(d.wlasciciel || "").trim() || !d.forma) return false;
+  if (d.forma === "brak" && !(d.uwagi || "").trim()) return false;
+  if (x.kluczowy && !(d.zastepca || "").trim()) return false;
+  return true;
+}
+
+/* ── kompletność: pozycje listy kontrolnej III-07 ── */
+function kompletnosc() {
+  var w = [];
+  LISTA_KONTROLNA.forEach(function (p) {
+    var ok;
+    if (p.auto === "klauzula") ok = stanKlauzuli(p.klauzula).stan === "gotowy";
+    else if (p.auto === "czasowniki") ok = CZASOWNIKI.every(czasownikOk);
+    else if (p.auto === "wskazniki") ok = !!((CZ["CZ-04"] || {}).wskazniki || "").trim();
+    else if (p.auto === "procesy") ok = PROCESY.filter(wymagany).every(procesOk);
+    else if (p.auto === "obieg") ok = obiegPelny();
+    else if (p.auto === "sprawdzenie") { var d5 = OB["OB-5"] || {}; ok = !!(d5.kto || "").trim() && !!(d5.kiedy || "").trim(); }
+    else if (p.auto === "progi") ok = progiOk();
+    else if (p.auto === "test") ok = TEST.every(testOk);
+    else ok = null;
+    w.push({ p: p, ok: ok });
+  });
+  return w;
+}
+
+/* ── zakładka 1: decyzje o kształcie systemu ── */
+function rysujPytania(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Decyzje o kształcie systemu"));
+  s.appendChild(el("p", "opis", "Punkt 4.4 nie ma biblioteki gotowych zdań — nie da się go wypełnić za organizację. To są decyzje o kształcie systemu, które trzeba podjąć, zanim powstanie mapa procesów. Dlatego ta zakładka jest pierwsza."));
+  PYTANIA.forEach(function (q) {
+    var k = el("div", "poz" + ((ODP[q.kod] || "").trim() ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, q.kod));
+    g.appendChild(el("span", "chip " + (q.norma ? "red" : ""), q.norma ? "wymaganie normy" : "metoda ENESA"));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", q.pytanie));
+    if (q.pomoc) k.appendChild(el("div", "pozmeta", q.pomoc));
+    if (q.opcje) {
+      var o = [["", "Wybierz"]].concat(q.opcje);
+      k.appendChild(pole(null, sel(ODP[q.kod], o, function (v) { ODP[q.kod] = v; })));
+    } else {
+      k.appendChild(pole(null, txt(ODP[q.kod], q.placeholder, q.rows, function (v) { ODP[q.kod] = v; })));
+    }
+    if (q.kod === "SYS-07" && ODP["SYS-07"] && ODP["SYS-07"] !== "tak")
+      k.appendChild(el("div", "warn", "Na każde niekorzystne odchylenie trzeba zareagować, ale działanie korygujące podejmuje się dopiero przy niespełnieniu wymagania. Bez tego rozróżnienia rejestr niezgodności zapełnia się wahaniami wskaźnika, a prawdziwe niezgodności giną w tłumie."));
+    if (q.kod === "SYS-02" && ODP["SYS-02"] === "nie")
+      k.appendChild(el("div", "warn", "Zakres poprawia się w punkcie 4.3, nie tutaj. Przekazanie 4.4 jest zablokowane do czasu korekty."));
+    if (q.skutek) k.appendChild(el("div", "pozmeta", "Skutek: " + q.skutek));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 2: cztery pytania kontrolne ── */
+function rysujCzasowniki(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Cztery pytania kontrolne"));
+  s.appendChild(el("p", "opis", "Wymaganie normy zawiera cztery czasowniki. Każdy to pytanie, które możesz zadać swojemu systemowi. Przy każdym wpisz dowód — to, co pokażesz audytorowi, a nie deklarację."));
+  s.appendChild(el("div", "note", "Dwa zadania w jednym zdaniu: doskonalić sam system (lepsze dane, szybsza reakcja, jaśniejsze odpowiedzialności) i poprawiać wynik energetyczny (ile energii zużywacie na jednostkę produkcji). Pięknie opisane procesy bez poprawy wyniku to papier; jednorazowa oszczędność bez systemu szybko się rozmywa."));
+  CZASOWNIKI.forEach(function (c) {
+    var d = CZ[c.kod] || (CZ[c.kod] = {});
+    var k = el("div", "poz" + (czasownikOk(c) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, c.slowo));
+    g.appendChild(el("span", "chip red", "wymaganie normy"));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", c.pytanie));
+    k.appendChild(el("div", "pozmeta", c.opis));
+    var dow = el("div", "lanc");
+    dow.textContent = "Dowód wg książki: " + c.dowod.join(" · ");
+    k.appendChild(dow);
+    k.appendChild(pole("Stan", sel(d.stan, [["", "Wybierz"],
+      ["jest", "Jest — potrafimy to pokazać"],
+      ["czesciowo", "Częściowo — część dowodów istnieje"],
+      ["nie", "Nie — jeszcze tego nie ma"]], function (v) { d.stan = v; })));
+    if (d.stan === "nie") {
+      var p = pole("Co i kiedy robicie, żeby to powstało — wymagane",
+        txt(d.plan, "np. opis procesów do 30.11.2026, odpowiedzialny Energy Manager", 2, function (v) { d.plan = v; }));
+      p.className = "pole kandydat";
+      k.appendChild(p);
+    } else if (d.stan) {
+      k.appendChild(pole("Czym to pokażecie — dokument, zapis, data — wymagane",
+        txt(d.dowod, c.placeholder, 3, function (v) { d.dowod = v; })));
+      if (c.wskazniki) {
+        var pw = pole("Poprawa wyniku energetycznego wykazana na wskaźnikach: rok temu — dziś — plan — wymagane",
+          txt(d.wskazniki, "np. EnPI zakładu 0,78 → 0,74 MWh/t wobec linii bazowej 2024; plan 2027: 0,71. Sprężarkownia: 0,135 → 0,126 kWh/Nm³ po naprawie nieszczelności.", 3,
+            function (v) { d.wskazniki = v; }),
+          "Pozycja listy kontrolnej III-07: „Ciągle doskonali się wynik energetyczny — poprawa wykazana na wskaźnikach wobec linii bazowej”. Doskonalenie samego systemu tej pozycji nie zamyka.");
+        pw.className = "pole kandydat";
+        k.appendChild(pw);
+      }
+    }
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: obieg informacji ── */
+function rysujObieg(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Obieg informacji — pięć ogniw"));
+  s.appendChild(el("p", "opis", "To jest odpowiedź na pytanie „mamy procedury, czy to już system?”. System to procesy, które przekazują sobie informacje tak, że jedna obserwacja kończy się decyzją i sprawdzeniem efektu. Przy każdym ogniwie wskaż osobę — stanowisko, nie imię."));
+  if (!obiegPelny())
+    s.appendChild(el("div", "warn", "Brakuje jednego ogniwa — i informacja ginie po drodze. Dokładnie to zdarzyło się w zakładzie mięsnym z przykładu: dane spływały do systemu nadzoru, ale nikt nie miał ich oglądać."));
+  OBIEG.forEach(function (o, i) {
+    var d = OB[o.kod] || (OB[o.kod] = {});
+    var k = el("div", "poz" + (ogniwoOk(o) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    var nr = el("span", "ognr", String(i + 1));
+    g.appendChild(nr);
+    g.appendChild(el("b", null, o.ogniwo));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", o.pyt));
+    k.appendChild(el("div", "pozmeta", "Przykład (sprężarkownia AutoParts, liczby ilustracyjne): " + o.przyklad));
+    k.appendChild(pole("Kto — stanowisko, nie imię — wymagane",
+      inp(d.kto, i === 0 ? "np. Energy Manager — raport tygodniowy z systemu nadzoru" : "np. Kierownik Utrzymania Ruchu",
+        function (v) { d.kto = v; })));
+    k.appendChild(pole(o.kiedy, inp(d.kiedy, "", function (v) { d.kiedy = v; })));
+    s.appendChild(k);
+  });
+
+  var sp = el("div", "sekcja");
+  sp.appendChild(el("h3", null, "Progi reakcji i częstotliwość analiz"));
+  sp.appendChild(el("p", "opis", "Pozycja listy kontrolnej III-07: „Ustalono, kto reaguje na niekorzystne odchylenie i jak szybko (progi, częstotliwość analiz)”."));
+  PROGI.forEach(function (q) {
+    var k = el("div", "poz" + ((PG[q.kod] || "").trim() ? "" : " brak"));
+    k.appendChild(el("div", "poznazwa", q.etykieta));
+    if (q.opcje) {
+      k.appendChild(pole(null, sel(PG[q.kod], [["", "Wybierz"]].concat(q.opcje), function (v) { PG[q.kod] = v; })));
+      if (q.rada && PG[q.kod] === q.rada) k.appendChild(el("div", "note", q.radatekst));
+    } else {
+      k.appendChild(pole(null, txt(PG[q.kod], q.placeholder, q.rows, function (v) { PG[q.kod] = v; })));
+    }
+    sp.appendChild(k);
+  });
+  sp.appendChild(el("div", "warn", "Odchylenie to nie to samo co niezgodność. Na każde niekorzystne odchylenie trzeba zareagować — ale działanie korygujące (10.2) podejmujecie dopiero wtedy, gdy nie spełniono wymagania."));
+  host.appendChild(s);
+  host.appendChild(sp);
+}
+
+/* ── zakładka 4: test ciągłości ── */
+function rysujTest(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Test ciągłości: koordynator znika na trzy miesiące"));
+  s.appendChild(el("p", "opis", "Najprostszy sposób, żeby sprawdzić, czy macie system, czy projekt jednej osoby. Przy każdym pytaniu wpisz nazwisko. Jeśli na któreś odpowiedź brzmi „nikt” albo „nie wiem” — wiecie, od czego zacząć."));
+  TEST.forEach(function (t, i) {
+    var d = TS[t.kod] || (TS[t.kod] = {});
+    var k = el("div", "poz" + (testOk(t) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "ognr", String(i + 1)));
+    g.appendChild(el("b", null, t.kod));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", t.pyt));
+    k.appendChild(pole("Odpowiedź", sel(d.stan, [["", "Wybierz"],
+      ["jest", "Jest taka osoba / tak"],
+      ["nikt", "Nikt"],
+      ["niewiem", "Nie wiem"]], function (v) { d.stan = v; })));
+    if (d.stan === "jest")
+      k.appendChild(pole("Nazwisko i stanowisko — wymagane",
+        inp(d.kto, "np. Anna Mazur, Kierownik Utrzymania Ruchu (zastępstwo stałe)", function (v) { d.kto = v; })));
+    else if (d.stan) {
+      var p = pole("Od czego zaczynacie — osoba, termin, sposób sprawdzenia — wymagane",
+        txt(d.start, "np. przypisać kierownikowi produkcji do 15.11.2026; sprawdzenie: pierwszy raport miesięczny bez udziału Energy Managera", 2,
+          function (v) { d.start = v; }));
+      p.className = "pole kandydat";
+      k.appendChild(p);
+      k.appendChild(el("div", "warn", "Brak odpowiedzi na to pytanie to nie formalność — to miejsce, w którym system przestaje działać po odejściu jednej osoby."));
+    }
+    s.appendChild(k);
+  });
+  var braki = TEST.filter(function (t) { var d = TS[t.kod] || {}; return d.stan && d.stan !== "jest"; });
+  if (braki.length) {
+    var n = el("div", "note");
+    n.appendChild(el("b", null, "Typowe przyczyny — i jeden sposób naprawy:"));
+    var ul = el("ul");
+    PRZYCZYNY.forEach(function (p) { ul.appendChild(el("li", null, p)); });
+    n.appendChild(ul);
+    n.appendChild(document.createTextNode("Każdą usuwa się tak samo: przypisz osobę, termin i sposób sprawdzenia."));
+    s.appendChild(n);
+  }
+  s.appendChild(el("div", "note", "Audytor sprawdza to samo, tylko innymi słowami. Nie rozmawia wyłącznie z koordynatorem — pyta utrzymanie ruchu, produkcję i techników, czy wiedzą, jak zarządza się energią w ich obszarze."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: procesy systemu ── */
+function rysujProcesy(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Procesy systemu zarządzania energią"));
+  s.appendChild(el("p", "opis", "Norma wymaga ustanowienia procesów potrzebnych do działania systemu i opisania ich wzajemnych oddziaływań. Lista odpowiada procedurom z książki wdrożeniowej. Przy każdym procesie wskaż właściciela — to jest ta część, której system nie wypełni za Was."));
+  s.appendChild(el("div", "note", "Procesy oznaczone jako kluczowe wymagają także zastępcy. Pozycja listy kontrolnej III-07: „Każdy proces ma właściciela; kluczowe role mają zastępców”."));
+  var lista = PROCESY.filter(wymagany);
+  lista.forEach(function (x) {
+    var d = PROC[x.kod] || (PROC[x.kod] = {});
+    var k = el("div", "poz" + (procesOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, x.kod + " · " + x.klauzula));
+    if (x.ksiazka) g.appendChild(el("span", "chip", "książka: " + x.ksiazka));
+    if (x.uzgodnic) g.appendChild(el("span", "chip amber", "numer do uzgodnienia z książką"));
+    if (x.kluczowy) g.appendChild(el("span", "chip red", "rola kluczowa"));
+    var st = stanKlauzuli(x.klauzulaKod);
+    if (x.klauzulaKod) g.appendChild(el("span", "chip " + kolorStanu(st.stan), etykietaStanu(st.stan)));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", x.nazwa));
+    k.appendChild(el("div", "pozmeta", "Wynik procesu: " + x.wynik));
+
+    k.appendChild(pole("Właściciel procesu — stanowisko, nie imię",
+      inp(d.wlasciciel, x.sugestia || "np. Energy Manager", function (v) { d.wlasciciel = v; })));
+    if (x.kluczowy) {
+      var pz = pole("Zastępca — wymagane dla roli kluczowej",
+        inp(d.zastepca, "np. Kierownik Utrzymania Ruchu — pełnomocnictwo stałe", function (v) { d.zastepca = v; }),
+        "Bez zastępstwa proces zatrzymuje się na czas nieobecności jednej osoby.");
+      pz.className = "pole kandydat";
+      k.appendChild(pz);
+    }
+    k.appendChild(pole("Forma zapisu procesu", sel(d.forma, [["", "Wybierz"],
+      ["procedura", "Osobna procedura systemowa"],
+      ["opis", "Opis w jednym dokumencie systemu"],
+      ["nadbudowa", "Rozszerzenie istniejącej procedury ISO 14001 / 9001"],
+      ["brak", "Proces bez udokumentowanego opisu"]], function (v) { d.forma = v; })));
+    if (d.forma === "brak") {
+      var pu = pole("Uzasadnienie — proces bez opisu wymaga wyjaśnienia przed audytorem",
+        inp(d.uwagi, "", function (v) { d.uwagi = v; }));
+      pu.className = "pole kandydat";
+      k.appendChild(pu);
+    }
+    k.appendChild(pole("Komu przekazuje wynik", inp(d.trafia === undefined ? x.trafia : d.trafia,
+      x.trafia || "", function (v) { d.trafia = v; }),
+      "Wypełnione propozycją z mapy powiązań. Zmieńcie, jeśli u Was wygląda to inaczej — to jest tabela przepływu informacji, o którą pyta lista kontrolna."));
+    s.appendChild(k);
+  });
+  var pom = PROCESY.filter(function (x) { return !wymagany(x); });
+  if (pom.length) {
+    var det = document.createElement("details");
+    det.className = "pominiete";
+    det.appendChild(el("summary", null, "Procesy przejęte przez istniejący system ISO (" + pom.length + ") — pokaż"));
+    var t = el("table", "tab");
+    var tr = el("tr"); ["Kod", "Proces", "Dlaczego pominięty"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+    t.appendChild(tr);
+    pom.forEach(function (x) {
+      var r = el("tr");
+      [x.kod, x.nazwa, "opisuje go istniejąca dokumentacja ISO 14001 / 9001"].forEach(function (v) { r.appendChild(el("td", null, v)); });
+      t.appendChild(r);
+    });
+    det.appendChild(t); s.appendChild(det);
+  }
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: mapa powiązań procedury P-EnMS-01 ── */
+function rysujPowiazania(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Mapa powiązań procedury P-EnMS-01"));
+  s.appendChild(el("p", "opis", "Mapa pokazuje, gdzie trafiają wyniki tej procedury — analizy kontekstu, rejestru stron i zakresu. To fragment systemu, nie jego pełny obieg."));
+  s.appendChild(el("div", "note", "Obieg całego systemu — monitoring → analiza → decyzja → działanie → ocena skuteczności → aktualizacja — opisuje Część II, punkt 4.4, Krok 2. Na platformie wypełniacie go w zakładce 3 „Obieg informacji”. Odpowiada to sekcji 8 procedury w Toolkicie, wersja 2.4."));
+  POWIAZANIA.forEach(function (x, i) {
+    var d = POW[i] || (POW[i] = {});
+    var k = el("div", "poz" + (d.potwierdzone ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, x.z + " → " + x.do));
+    if (x.zrodlo) g.appendChild(el("span", "chip", x.zrodlo));
+    if (x.propozycja) g.appendChild(el("span", "chip amber", "propozycja ENESA — do uzgodnienia z książką"));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", x.wynik));
+    k.appendChild(el("div", "pozmeta", "W jaki sposób: " + x.sposob));
+    k.appendChild(pole("Czy to powiązanie działa w Waszym systemie?", sel(d.potwierdzone, [["", "Wybierz"],
+      ["tak", "Tak — działa i da się to pokazać"],
+      ["planowane", "Jeszcze nie — zaplanowane w harmonogramie wdrożenia"]], function (v) { d.potwierdzone = v; })));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 7: kompletność (lista kontrolna III-07) ── */
+function rysujKompletnosc(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Kompletność — lista kontrolna 4.1–4.4"));
+  s.appendChild(el("p", "opis", "Pełna lista kontrolna III-07 w brzmieniu z Toolkitu, wersja 2.4. Kolumna „Podstawa” odróżnia wymaganie normy (N) od zalecenia metody ENESA (M). Pozycje oznaczone jako wyliczane system odhacza sam — na podstawie stanu punktów na platformie i odpowiedzi w tej ankiecie."));
+  var w = kompletnosc();
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "Podstawa", "Stan", "Skąd"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  var biezacy = null;
+  w.forEach(function (x) {
+    if (x.p.punkt !== biezacy) {
+      biezacy = x.p.punkt;
+      var gr = el("tr", "grupa");
+      var td = el("td", null, "PUNKT " + biezacy);
+      td.colSpan = 4;
+      gr.appendChild(td); t.appendChild(gr);
+    }
+    var r = el("tr");
+    r.appendChild(el("td", null, x.p.tekst));
+    r.appendChild(el("td", "mono", x.p.podstawa));
+    var td2 = el("td");
+    td2.appendChild(el("span", "chip " + (x.ok === true ? "green" : x.ok === false ? "amber" : ""),
+      x.ok === true ? "spełnione" : x.ok === false ? "do zrobienia" : "ocena konsultanta"));
+    r.appendChild(td2);
+    r.appendChild(el("td", "pozmeta", x.p.auto ? "wyliczane" : "ręcznie"));
+    t.appendChild(r);
+  });
+  s.appendChild(t);
+  var auto = w.filter(function (x) { return x.ok !== null; });
+  var ok = auto.filter(function (x) { return x.ok; });
+  s.appendChild(el("p", "opis", "Wyliczane automatycznie: " + ok.length + " z " + auto.length + " spełnionych. Pozostałe pozycje (" +
+    (w.length - auto.length) + ") ocenia konsultant — system nie ma skąd wiedzieć, czy konsultacje się odbyły ani czy wnioski trafiły do planowania ryzyk."));
+  host.appendChild(s);
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  PYTANIA.forEach(function (q) { if (!(ODP[q.kod] || "").trim()) b.push(q.kod + " — brak odpowiedzi"); });
+  if (ODP["SYS-02"] === "nie") b.push("SYS-02 — zakres z 4.3 wymaga korekty; popraw go w punkcie 4.3 przed zamknięciem 4.4");
+  CZASOWNIKI.forEach(function (c) {
+    var d = CZ[c.kod] || {};
+    if (!d.stan) b.push(c.slowo + " — nie wskazano stanu");
+    else if (d.stan === "nie" && !(d.plan || "").trim()) b.push(c.slowo + " — brak planu, co i kiedy powstanie");
+    else if (d.stan !== "nie" && !(d.dowod || "").trim()) b.push(c.slowo + " — brak dowodu");
+    else if (c.wskazniki && !(d.wskazniki || "").trim()) b.push(c.slowo + " — brak poprawy wykazanej na wskaźnikach");
+  });
+  OBIEG.forEach(function (o) { if (!ogniwoOk(o)) b.push("Obieg, ogniwo „" + o.ogniwo + "” — nie wskazano osoby"); });
+  var d5 = OB["OB-5"] || {};
+  if ((d5.kto || "").trim() && !(d5.kiedy || "").trim()) b.push("Obieg, ogniwo „Sprawdzenie” — nie wskazano, po jakim czasie i na jakie forum trafia wniosek");
+  if (!PG["PG-01"]) b.push("Progi — nie wskazano częstotliwości analiz dla zakładu");
+  if (!PG["PG-02"]) b.push("Progi — nie wskazano częstotliwości analiz dla znaczących użyć energii");
+  if (!(PG["PG-03"] || "").trim()) b.push("Progi — nie opisano progów uruchamiających reakcję");
+  if (!(PG["PG-04"] || "").trim()) b.push("Progi — nie wskazano czasu reakcji");
+  TEST.forEach(function (t) {
+    var d = TS[t.kod] || {};
+    if (!d.stan) b.push("Test ciągłości " + t.kod + " — brak odpowiedzi");
+    else if (d.stan === "jest" && !(d.kto || "").trim()) b.push("Test ciągłości " + t.kod + " — brak nazwiska");
+    else if (d.stan !== "jest" && !(d.start || "").trim()) b.push("Test ciągłości " + t.kod + " — „" + (d.stan === "nikt" ? "nikt" : "nie wiem") + "” bez wskazania, od czego zaczynacie");
+  });
+  PROCESY.filter(wymagany).forEach(function (x) {
+    var d = PROC[x.kod] || {};
+    if (!(d.wlasciciel || "").trim()) b.push(x.kod + " — brak właściciela procesu");
+    else if (x.kluczowy && !(d.zastepca || "").trim()) b.push(x.kod + " — rola kluczowa bez zastępcy");
+    else if (!d.forma) b.push(x.kod + " — nie wskazano formy zapisu");
+    else if (d.forma === "brak" && !(d.uwagi || "").trim()) b.push(x.kod + " — proces bez opisu i bez uzasadnienia");
+  });
+  POWIAZANIA.forEach(function (x, i) { if (!(POW[i] || {}).potwierdzone) b.push("Powiązanie " + x.z + " → " + x.do + " — brak odpowiedzi"); });
+  ["4.1", "4.2", "4.3"].forEach(function (k) {
+    if (stanKlauzuli(k).stan !== "gotowy")
+      b.push("Punkt " + k + " nie ma opublikowanego dokumentu — 4.4 opisuje system, którego część jeszcze nie istnieje");
+  });
+  return b;
+}
+
+/* ── zakładka 8: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki();
+  if (!b.length) s.appendChild(el("div", "ok", "Ankieta kompletna. Można ją przekazać konsultantowi."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia przed przekazaniem (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) { ul.appendChild(el("li", null, x)); });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-SYS-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["1. Deklaracja ustanowienia systemu", "zakładka 1", "Forma systemu, odpowiedzialny i zastępca, rozróżnienie odchylenie / niezgodność"],
+  ["2. Cztery pytania kontrolne z dowodami", "zakładka 2", "Stan i dowód dla USTANOWIĆ, WDROŻYĆ, UTRZYMYWAĆ, DOSKONALIĆ"],
+  ["3. Poprawa wyniku energetycznego", "zakładka 2", "Porównanie „rok temu — dziś — plan” na wskaźnikach wobec linii bazowej"],
+  ["4. Tabela przepływu informacji", "zakładka 3", OBIEG.length + " ogniw z osobami i terminami; progi reakcji i częstotliwość analiz"],
+  ["5. Wynik testu ciągłości", "zakładka 4", TEST.length + " pytań z nazwiskami albo z planem uzupełnienia"],
+  ["6. Procesy systemu i ich właściciele", "zakładka 5", PROCESY.filter(wymagany).length + " procesów z właścicielem, zastępcą i formą zapisu"],
+  ["7. Mapa powiązań procedury P-EnMS-01", "zakładka 6", POWIAZANIA.length + " powiązań ze wskazaniem, które działają"],
+  ["8. Ocena kompletności", "zakładka 7", "Lista kontrolna III-07 (" + LISTA_KONTROLNA.length + " pozycji) ze stanem na dzień wydania"],
+  ["9. Zatwierdzenie i historia zmian", "stopka", "Wersja, data, osoba zatwierdzająca"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(el("div", "note", "Zakres i granice systemu (D-EnMS-ZAK-01 z punktu 4.3) to jedyny dokument rozdziału 4, którego udokumentowania wymaga norma. D-EnMS-SYS-01 jest dowodem metodycznym ENESA — przydatnym w audycie, ale nie wymaganym wprost."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "pytania", t: "1. Decyzje o systemie", f: rysujPytania },
+  { id: "czasowniki", t: "2. Cztery pytania kontrolne", f: rysujCzasowniki },
+  { id: "obieg", t: "3. Obieg informacji", f: rysujObieg },
+  { id: "test", t: "4. Test ciągłości", f: rysujTest },
+  { id: "procesy", t: "5. Procesy systemu", f: rysujProcesy },
+  { id: "powiazania", t: "6. Mapa powiązań", f: rysujPowiazania },
+  { id: "komplet", t: "7. Kompletność", f: rysujKompletnosc },
+  { id: "zatw", t: "8. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+
+function aktualizujPasek() {
+  var proc = PROCESY.filter(wymagany);
+  var razem = PYTANIA.length + CZASOWNIKI.length + OBIEG.length + PROGI.length + TEST.length + proc.length + POWIAZANIA.length;
+  var zrob = PYTANIA.filter(function (q) { return (ODP[q.kod] || "").trim(); }).length
+    + CZASOWNIKI.filter(czasownikOk).length
+    + OBIEG.filter(ogniwoOk).length
+    + PROGI.filter(function (q) { return (PG[q.kod] || "").trim(); }).length
+    + TEST.filter(testOk).length
+    + proc.filter(procesOk).length
+    + POWIAZANIA.filter(function (_, i) { return (POW[i] || {}).potwierdzone; }).length;
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  document.getElementById("postep").textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+
+var HISTORIA = [{ data: "04.10.2026 12:30", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 4.4" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_44", JSON.stringify({ ODP: ODP, CZ: CZ, OB: OB, PG: PG, TS: TS, PROC: PROC, POW: POW }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_44"); if (!s) return;
+    var d = JSON.parse(s);
+    ODP = d.ODP || {}; CZ = d.CZ || {}; OB = d.OB || {}; PG = d.PG || {};
+    TS = d.TS || {}; PROC = d.PROC || {}; POW = d.POW || {};
+  } catch (e) { }
+}
+/* Przykład wypełnia całą ankietę — jak w 4.1, 4.3 i na stronach 5.1–10.2.
+   Stany dokumentów 4.1–4.3 ustawiamy na „gotowy”, bo 4.4 opisuje system złożony z tych punktów:
+   bez tego lista braków słusznie mówi, że opisujemy system, którego część jeszcze nie istnieje.
+   Procesy wypełniamy wszystkie, także te zdejmowane przez „nadbudowę” — gdyby klient zmienił
+   odpowiedź SYS-01, wracają na listę już wypełnione, zamiast cofać stronę do stanu „brak”. */
+function przyklad() {
+  var p = PRZYKLAD_44;
+  (p.stanKlauzul || []).forEach(function (k) {
+    STAN_KLAUZUL[k] = { stan: "gotowy", dokument: (STAN_KLAUZUL[k] || {}).dokument || null };
+  });
+  ODP = JSON.parse(JSON.stringify(p.odp));
+  CZ = JSON.parse(JSON.stringify(p.cz));
+  OB = JSON.parse(JSON.stringify(p.ob));
+  PG = JSON.parse(JSON.stringify(p.pg));
+  TS = JSON.parse(JSON.stringify(p.ts));
+  PROC = JSON.parse(JSON.stringify(p.proc));
+  POW = {};
+  POWIAZANIA.forEach(function (x, i) {
+    POW[i] = { potwierdzone: (p.powPlanowane || []).indexOf(x.z + "→" + x.do) >= 0 ? "planowane" : "tak" };
+  });
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić całą ankietę 4.4?")) return;
+  ODP = {}; CZ = {}; OB = {}; PG = {}; TS = {}; PROC = {}; POW = {};
+  try { localStorage.removeItem("enesa_44"); } catch (e) { }
+  rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "04.10.2026 12:35", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 4.4.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

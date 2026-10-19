@@ -272,7 +272,7 @@ class IsoSystemQuestionnaire
             $groups['procesy']['fields'][] = $f("$b.wlasciciel", $q['kod'].' '.$q['nazwa'].' — właściciel', [], true, $when, 'text', 'Wynik: '.$q['wynik'].'. '.($q['ksiazka'] ?? 'Numer procedury do uzgodnienia'));
             $groups['procesy']['fields'][] = $f("$b.zastepca", $q['kod'].' — zastępca', [], (bool) ($q['kluczowy'] ?? false), $when);
             $groups['procesy']['fields'][] = $f("$b.forma", $q['kod'].' — forma zapisu', ['procedura' => 'Procedura', 'instrukcja' => 'Instrukcja', 'system' => 'Opis w systemie', 'inne' => 'Inny zapis', 'brak' => 'Brak opisu'], true, $when);
-            $groups['procesy']['fields'][] = $f("$b.uwagi", $q['kod'].' — dokument / uzasadnienie braku opisu', [], true, $when);
+            $groups['procesy']['fields'][] = $f("$b.uwagi", $q['kod'].' — uzasadnienie braku opisu', [], true, ["$b.forma", ['brak']]);
             $groups['procesy']['fields'][] = $f("$b.trafia", $q['kod'].' — komu przekazywany jest wynik', [], true, $when, 'text', $q['trafia']);
             if ($q['pokrywaIso'] ?? false) {
                 $groups['procesy']['fields'][] = $f("$b.integracja", $q['kod'].' — odwołanie do istniejącej dokumentacji ISO 14001 / 9001', [], true, ['ODP.SYS-01', ['nadbudowa']], 'text', 'Proces nie znika z systemu — wykorzystuje istniejącą dokumentację.');

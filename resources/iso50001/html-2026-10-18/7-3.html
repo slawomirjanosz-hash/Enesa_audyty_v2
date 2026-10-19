@@ -1,0 +1,1299 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 7.3 Świadomość</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 7</div>
+ <h1>7.3 Świadomość</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 7.3</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 7.3</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>7.3 Świadomość</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 7.3 i sposób budowania świadomości.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 7.3<br>Świadomość</div>
+   <div>
+    <h4>7.3 Świadomość</h4>
+    <p>Cztery rzeczy, które ludzie mają rozumieć. Dlaczego samo wyjaśnienie czasem nie wystarcza —
+    i co zrobić z przeszkodą, która jest w organizacji pracy.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 7.3. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">7.3 — świadomość<br>10 slajdów</div>
+   <div>
+    <h4>7.3 Świadomość</h4>
+    <p>Kompetencja a świadomość. Cztery elementy a–d. Liczby, które coś mówią.
+    Sprawdzanie rozmową zamiast listy obecności.</p>
+    <p style="font-size:12.5px">10 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Osoby wykonujące pracę pod nadzorem organizacji są świadome: a) polityki
+ energetycznej; b) swojego wkładu w skuteczność systemu, w tym w osiąganie celów i zadań energetycznych,
+ oraz korzyści z poprawy wyniku energetycznego; c) wpływu swoich działań lub zachowań na wynik energetyczny;
+ d) konsekwencji niespełnienia wymagań systemu. Omówienie na podstawie punktu 7.3
+ PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> zadbaj, żeby ludzie pracujący pod Twoim
+ nadzorem znali politykę, rozumieli swój wpływ na energię i wiedzieli, co się stanie, gdy zasady nie będą
+ przestrzegane.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 6, punkt 7.3. Punkt 7.3 <b>nie ma własnego formularza
+ w Toolkicie</b> — obowiązuje procedura P-EnMS-05 (III-33, pkt 4.3), lista kontrolna III-32 oraz wiersze
+ planu F-EnMS-12 (III-29) oznaczone jako 7.3.</div>
+
+ <div class="ramka">
+  <h3>◧ Rampa przy chłodni</h3>
+  <p style="font-size:13.5px">Magazynier wie, jak zamknąć drzwi — to nie jest trudne. A jednak drzwi stoją
+  otwarte przez cały rozładunek. Dlaczego?</p>
+  <p style="font-size:13.5px">Bo nikt mu nie powiedział, ile to kosztuje. Bo przy każdej palecie musiałby
+  je otwierać od nowa, a drzwi są ciężkie. I bo „chłodnia i tak chłodzi”.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Kompetencja to „umiem”. Świadomość to „rozumiem, dlaczego
+  to ważne”.</b> Ale ta scena uczy też drugiej rzeczy: czasem samo wyjaśnienie nie wystarcza, bo przeszkoda
+  jest w organizacji pracy — tu w ciężkich drzwiach.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Cztery rzeczy, które ludzie mają rozumieć</h3>
+ <table class="tab">
+ <tr><th style="width:8%">Lit.</th><th style="width:26%">Element</th><th>Co to znaczy w praktyce</th></tr>
+<tr><td class='mono'><b>a)</b></td><td><b>Polityka</b></td><td>Wiedzą, że istnieje, o czym mówi i gdzie ją znaleźć. <b>Nie muszą jej recytować.</b></td></tr><tr><td class='mono'><b>b)</b></td><td><b>Swój wkład</b></td><td>Jak ich praca pomaga osiągać cele i co firma — i oni — zyskuje na lepszym wyniku: niższe koszty, stabilniejsza praca instalacji, mocniejsza pozycja wobec klientów.</td></tr><tr><td class='mono'><b>c)</b></td><td><b>Swój wpływ</b></td><td>Co konkretnie w ich pracy zmienia zużycie energii. <b>Magazynier: drzwi. Operator: nastawy i postoje.</b></td></tr><tr><td class='mono'><b>d)</b></td><td><b>Konsekwencje</b></td><td>Co się dzieje, gdy zasady nie są przestrzegane. Nie chodzi tylko o konsekwencje dla pracownika — to również straty energii, gorsza praca instalacji i cele, których zakład nie osiągnie.</td></tr>
+ </table>
+ <div class="warn" style="margin:14px 0"><b>Świadomość dotyczy wszystkich, którzy pracują pod nadzorem
+ organizacji</b> — także wykonawców zewnętrznych na terenie zakładu. Firma sprzątająca, która zostawia
+ włączone oświetlenie w nocy, też wpływa na Wasz wynik.</div>
+
+ <h3 style="margin-top:22px">Jak to zrobić bez kampanii plakatowej</h3>
+ <p style="font-size:14.5px">Nie potrzebujecie dziesięciu kanałów. Wystarczy kilka, stosowanych regularnie.
+ Zobaczcie, co zrobił zakład mięsny:</p>
+ <table class="tab">
+ <tr><th style="width:30%">Co zrobili</th><th>Jak to wyglądało</th></tr>
+ <tr><td>Wprowadzenie dla nowych</td><td>15 minut o polityce i o tym, jak dana praca wpływa na energię. <b>Także dla wykonawców.</b></td></tr>
+ <tr><td>Krótkie spotkanie na początku zmiany</td><td>Raz w tygodniu, 10 minut, jeden temat: „w tym tygodniu — drzwi chłodni”.</td></tr>
+ <tr><td>Liczby, które coś mówią</td><td>Zespół oszacował, że drzwi otwarte przez 10 minut kosztują w tej chłodni około 5 zł. W poprzednim miesiącu takich sytuacji było około 300 — razem około 1 500 zł.</td></tr>
+ <tr><td>Widoczne wyniki</td><td>Tablica na stołówce, aktualizowana co tydzień.</td></tr>
+ <tr><td><b>Usunięcie przeszkody</b></td><td>Automatyczne zamykacze drzwi. <b>Zrozumienie i warunki pracy działają razem.</b></td></tr>
+ </table>
+ <p style="font-size:13.5px">★ <b>Rada:</b> raz na kwartał zapytajcie trzech losowo wybranych pracowników:
+ co mówi nasza polityka, jak Twoja praca wpływa na energię, co się stanie, jeśli zasada nie będzie
+ przestrzegana. <b>Odpowiedzi pokażą Wam więcej niż listy obecności.</b></p>
+
+ <div class="ramka">
+  <h3>✗ Przykład ilustracyjny — czego unikać</h3>
+  <p style="font-size:13.5px"><b>Producent stolarki okiennej, około 150 pracowników.</b> Firma wdrożyła
+  ISO 50001 „po cichu”. Zarząd nie chciał „robić zamieszania” — bał się, że pracownicy pomyślą o zwolnieniach
+  („oszczędności to cięcia”). Politykę podpisano, ale nigdzie jej nie pokazano. Szkolenia ograniczono
+  do Energy Managera i dwóch osób z utrzymania ruchu.</p>
+  <p style="font-size:13.5px">Podczas audytu certyfikującego audytor rozmawiał z pracownikami produkcji.
+  „Czy zna Pan politykę energetyczną?” — <b>„Jaką politykę?”</b> „Co w Pana pracy wpływa na zużycie energii?” —
+  „Nie wiem, nikt mi nie mówił.”</p>
+  <p style="font-size:13.5px;margin-bottom:0">Audytor stwierdził niezgodność z punktem 7.3 i certyfikacja się
+  przesunęła. Przez trzy miesiące firma nadrabiała to, co mogła zrobić od początku. Koszt: około 35 000 zł
+  i nadszarpnięte zaufanie — „dlaczego wcześniej nic nie mówili?”.<br><br>
+  <b>Wniosek:</b> system zarządzania energią to zmiana w całej organizacji. Ludzie i tak się o niej dowiedzą —
+  lepiej, żeby od Was. Przypadek złożony z doświadczeń kilku wdrożeń; nazwy i liczby zmieniono.</p>
+ </div>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Świadomość nie bierze się z plakatu. Bierze się z regularnej,
+  konkretnej informacji, widocznych wyników — i z usuwania przeszkód, które utrudniają ludziom robienie tego,
+  co słuszne.<br><br>
+  <b>Zadanie:</b> zapytajcie trzech pracowników, czy wiedzą, co w ich pracy najbardziej wpływa na zużycie
+  energii. Odpowiedzi wpiszcie w zakładce 3 ankiety — razem z tym, co z nich wynikło.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Cztery elementy świadomości są wymagane dla każdej grupy osobno — także dla wykonawców.
+  Platforma pilnuje też rytmu sprawdzeń i przeszkód bez decyzji.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 7.3 w formacie stron 4.1–7.2.</b> Drugi punkt rozdziału 7 bez formularza w Toolkicie.
+Struktura ankiety wychodzi z <b>czterech elementów a–d normy, pomnożonych przez grupy osób</b> — bo element c
+(wpływ własnej pracy) jest z definicji inny dla magazyniera i dla operatora prasy. Dochodzą trzy kroki
+procedury P-EnMS-05 pkt 4.3 oraz rejestr przeszkód, który bierze się wprost ze scenki z ciężkimi drzwiami.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 6, punkt 7.3</td><td>Scena rampy przy chłodni, cztery elementy a–d z opisami, uwaga o wykonawcach, pięć rzeczy, które zrobił zakład mięsny (w tym „liczby, które coś mówią” i usunięcie przeszkody), rada o kwartalnej rozmowie z trzema pracownikami, przykład producenta stolarki, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 5 — III-33 (P-EnMS-05), pkt 4.3</td><td>Trzy kroki: wprowadzenie dla nowych osób i wykonawców (15–30 min); krótkie informacje na spotkaniach zmian i widoczne wyniki; kwartalne sprawdzenie świadomości rozmową i usuwanie zgłoszonych przeszkód. To one wyznaczają zakładki 2, 3 i 4.</td></tr>
+<tr><td>Część III, Moduł 5 — III-29 (F-EnMS-12)</td><td>Wiersze planu oznaczone jako 7.3 — wprowadzenie dla nowych i wykonawców, informacja tygodniowa. Plan należy do punktu 7.2; tutaj tylko do wglądu.</td></tr>
+<tr><td>Część III, Moduł 5 — III-32</td><td>Lista kontrolna sekcji 7.3: 5 pozycji. Cztery to wymagania normy (po jednym na element a–d), piąta jest metodyką ENESA.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>grupa_swiadomosci</code></td><td>id, audyt_id, nazwa, osoby, wykonawca BOOL, plus <b>cztery pola tekstowe</b>: polityka, wklad, wplyw, konsekwencje. Cztery kolumny, nie tabela łącząca — bo każdy element ma dla grupy własną treść, a nie tylko znacznik „pokryte”.</td></tr>
+<tr><td><code>kanal_swiadomosci</code></td><td>id, audyt_id, nazwa, tresc, rytm, kto, grupy, plus tabela łącząca z elementami a–d (wiele do wielu — jeden kanał zwykle obsługuje kilka).</td></tr>
+<tr><td><code>sprawdzenie_swiadomosci</code></td><td>id, audyt_id, data, kto, osoby, wynik, luki, dzialanie. <b>Append-only</b> — historia sprawdzeń jest dowodem rytmu i nie powinna być nadpisywana.</td></tr>
+<tr><td><code>przeszkoda</code></td><td>id, audyt_id, opis, grupa, zglosil, decyzja, stan ENUM('zgloszona','wtoku','usunieta','odrzucona'), efekt. Powiązać z rejestrem zgłoszeń z punktu 7.4 — patrz uwagi na końcu.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td>Grupa z mniej niż czterema opisanymi elementami</td><td>Ostrzeżenie przy grupie z licznikiem oraz osobna pozycja w braki() <b>dla każdego brakującego elementu</b>. Norma wylicza a–d osobno, więc brak jednego z nich jest brakiem wymagania, a nie niekompletnością formularza. Lista kontrolna ma po jednej pozycji na element, każda oceniana niezależnie.</td></tr>
+<tr><td>Brak grupy wykonawców zewnętrznych</td><td>Ostrzeżenie i pozycja w braki() jako N. Wszystkie cztery pozycje listy kontrolnej wymagają obecności takiej grupy — bo norma mówi o osobach pracujących pod nadzorem organizacji, nie o pracownikach.</td></tr>
+<tr><td><b>Powtórzony opis wpływu</b></td><td>Porównanie znormalizowanych tekstów (małe litery, bez znaków przestankowych) między grupami. Powtórzenie → nota: element c ma być konkretny dla grupy. Identyczny tekst dla wszystkich zwykle znaczy, że powstał raz i został skopiowany — a to jest dokładnie ten rodzaj dokumentacji, który nie zmienia niczego na hali.</td></tr>
+<tr><td>Brak sprawdzeń albo sprawdzenie starsze niż 6 miesięcy</td><td>Ostrzeżenie z liczbą miesięcy. Między 4 a 6 miesiącami — nota, że zbliża się termin. Progi są metodyką ENESA, wyprowadzoną z rady o rytmie kwartalnym. <b>Data odniesienia w makiecie jest wpisana na stałe</b> (11.10.2026) — przy wdrożeniu to bieżąca data.</td></tr>
+<tr><td>Sprawdzenie wykazało luki, ale nie zapisano reakcji</td><td>Ostrzeżenie: sprawdzenie bez reakcji jest tylko pomiarem. Ten sam błąd co „dane zbierane, nieoglądane” w punkcie 6.6.</td></tr>
+<tr><td>Przeszkoda bez decyzji</td><td>Ostrzeżenie: zgłoszenie bez odpowiedzi uczy ludzi, że zgłaszanie nie ma sensu — czyli wprost psuje punkt 7.4. Pozycja w braki() jako metodyka.</td></tr>
+<tr><td>Przeszkoda odrzucona bez uzasadnienia w polu „efekt”</td><td>Nota. Odrzucenie jest poprawną odpowiedzią, jeśli ma uzasadnienie — i jeśli zgłaszający je usłyszy.</td></tr>
+<tr><td>Pusty rejestr przeszkód</td><td>Nota, nie błąd: możliwe, ale rzadkie. Pusty rejestr bywa znakiem, że nikt o przeszkody nie zapytał.</td></tr>
+<tr><td>Plan F-EnMS-12 bez wiersza 7.3</td><td>Ostrzeżenie z odesłaniem do ankiety punktu 7.2. Brak wprowadzenia dla nowych osób i wykonawców to dokładnie niezgodność z przykładu producenta stolarki.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-32 — sekcja 7.3</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Osoby pracujące pod nadzorem organizacji znają politykę energetyczną.</td><td class='mono'>N</td><td><code>polityka</code></td></tr><tr><td>Rozumieją swój wkład w system, w tym korzyści z poprawy wyniku energetycznego i osiąganie celów.</td><td class='mono'>N</td><td><code>wklad</code></td></tr><tr><td>Znają wpływ swoich działań lub zachowań na wynik energetyczny.</td><td class='mono'>N</td><td><code>wplyw</code></td></tr><tr><td>Znają konsekwencje niespełnienia wymagań systemu.</td><td class='mono'>N</td><td><code>konsekwencje</code></td></tr><tr><td>Świadomość jest sprawdzana rozmową (np. kwartalnie), a zgłoszone przeszkody są usuwane.</td><td class='mono'>M</td><td><code>sprawdzanie</code></td></tr></table>
+<div class="note">Cztery pierwsze pozycje mają identyczną konstrukcję: wszystkie grupy — w tym grupa wykonawców —
+muszą mieć opisany dany element. Piąta zbiera to, co w tym punkcie jest nasze: rytm sprawdzeń, reakcja
+na wykryte luki i decyzje w sprawie przeszkód.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok ocenia m.in. czy opisy wpływu nie są kopiowane i czy pusty rejestr przeszkód nie oznacza, że nikt nie zapytał — to zdania na rozmowę, nie do ankiety.</td></tr>
+<tr><td>Zapisy ze sprawdzeń</td><td>Zawierają to, czego konkretni ludzie <b>nie wiedzieli</b>. W przykładzie: serwisant nie znał celu na sprężonym powietrzu. Przy wdrożeniu warto, żeby pole „wynik” nie wymagało nazwisk — wystarczy rola i zmiana. Dziś przykład jest tak napisany.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-SWI-01</code> — świadomość: grupy, elementy, kanały, sprawdzenia, przeszkody</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td><b>Brak formularza.</b> Punkt obsługiwany procedurą P-EnMS-05 (III-33) i listą kontrolną III-32; działania w planie F-EnMS-12 (III-29).</td></tr>
+<tr><td>Status w normie</td><td><b>Punkt 7.3 nie wymaga udokumentowanej informacji</b> — wymaga <b>stanu</b>: żeby ludzie byli świadomi czterech rzeczy. Dowodem na audycie jest rozmowa z pracownikami, nie formularz. Dlatego zakładka 3 jest w tym punkcie najważniejsza: zapisuje, co ludzie naprawdę odpowiedzieli.</td></tr>
+<tr><td>Konsekwencja dla wykazu 7.5</td><td>W wykazie pojawia się jako M, nie N — podobnie jak dokument punktu 7.1.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Zmiana polityki (5.2), nowe cele (6.2), nowa grupa osób albo nowy wykonawca, wynik sprawdzenia, zgłoszona przeszkoda, zmiana SEU (6.3).</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>5.2 Polityka energetyczna</td><td><b>Wejście.</b> Element a) dotyczy wprost polityki — zmiana polityki wymusza przejście przez wszystkie kanały.</td></tr>
+<tr><td>6.2 Cele i zadania</td><td><b>Wejście.</b> Element b) odwołuje się do celów. W przykładzie widać pułapkę: wprowadzenie dla wykonawców odbyło się przed zatwierdzeniem celów, więc serwisant ich nie znał — sprawdzenie to wykryło.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Element c) bierze się z kolumny „osoby wpływające na SEU” i z kryteriów eksploatacji.</td></tr>
+<tr><td>7.1 Zasoby</td><td><b>Dwukierunkowo.</b> Usunięcie przeszkody kosztuje — zawory dźwigniowe to 3 tys. zł i czas utrzymania ruchu. Odwrotnie: brak czasu liderów zmian uniemożliwia cotygodniowe spotkania.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Wspólny plan F-EnMS-12.</b> Kompetencja to „umiem”, świadomość to „rozumiem, dlaczego to ważne” — ale droga dojścia bywa tym samym spotkaniem.</td></tr>
+<tr><td>7.4 Komunikacja</td><td><b>Dwukierunkowo i blisko.</b> Kanały z zakładki 2 to w praktyce te same kanały co w planie komunikacji; przeszkody z zakładki 4 trafiają zwykle przez proces zgłaszania uwag. Patrz uwagi na końcu.</td></tr>
+<tr><td>8.1 Działania operacyjne</td><td><b>Wejście.</b> Kryteria eksploatacji SEU są treścią elementu c) dla operatorów.</td></tr>
+<tr><td>10.2 Niezgodności</td><td><b>Wyjście.</b> Luka świadomości wykryta sprawdzeniem albo audytem bywa niezgodnością; przeszkoda w organizacji pracy jest typową przyczyną źródłową.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Przeszkody a rejestr zgłoszeń z 7.4</b></td><td>Przeszkoda zgłoszona przez pracownika jest jednocześnie zgłoszeniem w rozumieniu punktu 7.4 — i powinna dostać odpowiedź tą samą drogą. Dziś to dwa osobne rejestry. <b>Propozycja:</b> jedna tabela <code>zgloszenie</code> z polem <code>rodzaj</code> ('przeszkoda', 'propozycja', 'uwaga'), widoczna z obu stron. Inaczej ta sama sprawa będzie wpisywana dwa razy albo zniknie z jednej z nich. To najważniejsza decyzja projektowa w tym punkcie.</td></tr>
+<tr><td>Kanały a plan komunikacji z 7.4</td><td>Zakładka 2 i plan komunikacji A1 z punktu 7.4 opisują w dużej mierze to samo, z różnym naciskiem: tu „który element świadomości”, tam „podstawa danych”. Rozważyć wspólną tabelę kanałów z dwiema grupami kolumn, tak jak karta EnPI obsługuje 6.4 i 6.5. <b>Do decyzji</b> — argument przeciw: punkt 7.3 dotyczy też kanałów, które nie są komunikacją w rozumieniu 7.4 (np. instrukcja przy maszynie).</td></tr>
+<tr><td>Data odniesienia dla rytmu sprawdzeń</td><td>W makiecie wpisana na stałe (11.10.2026). Przy wdrożeniu bieżąca data; progi 4 i 6 miesięcy do potwierdzenia przez Martynę.</td></tr>
+<tr><td>Dane osobowe w sprawdzeniach</td><td>Pole „wynik” opisuje, czego konkretne osoby nie wiedziały. Przykład używa rół i zmian, nie nazwisk — warto to utrzymać jako zasadę i napisać w podpowiedzi pola.</td></tr>
+<tr><td>Automatyczne zasilenie grup</td><td>Grupy osób pokrywają się z kolumnami matrycy kompetencji z 7.2 i z kolumną „osoby” przy SEU z 6.3. <b>Można je zaproponować automatycznie</b> — klient uzupełniałby tylko cztery elementy. Ten sam zabieg co generowanie planu danych w 6.6.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 7.3 wraz z przykładem AutoParts.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_73&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Osoby pracujące pod nadzorem organizacji znają politykę energetyczną.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;polityka&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Rozumieją swój wkład w system, w tym korzyści z poprawy wyniku energetycznego i osiąganie celów.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wklad&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Znają wpływ swoich działań lub zachowań na wynik energetyczny.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wplyw&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Znają konsekwencje niespełnienia wymagań systemu.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;konsekwencje&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Świadomość jest sprawdzana rozmową (np. kwartalnie), a zgłoszone przeszkody są usuwane.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;sprawdzanie&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;GRUPY&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Operatorzy pras i lakierni&quot;,
+    &quot;osoby&quot;: &quot;24 osoby na trzech zmianach&quot;,
+    &quot;wykonawca&quot;: false,
+    &quot;polityka&quot;: &quot;Omawiana na wprowadzeniu (15 min) i raz w roku na spotkaniu zmiany. Wywieszona przy wejściu do hali A i w intranecie.&quot;,
+    &quot;wklad&quot;: &quot;Cel C1 — ograniczenie zużycia na sprężone powietrze — zależy wprost od tego, czy zgłaszają syczenie przy złączkach i zamykają zawory odcinające. Niższy koszt energii na tonę to argument w rozmowach z klientem OEM, a stabilniejsze ciśnienie to mniej przestojów na ich własnych liniach.&quot;,
+    &quot;wplyw&quot;: &quot;Zamykanie zaworów odcinających przy prasach na przerwach i postojach; zgłaszanie nieszczelności; przestrzeganie harmonogramu pieca lakierni; niewyłączanie wentylacji kabin przed końcem cyklu.&quot;,
+    &quot;konsekwencje&quot;: &quot;Jeden otwarty zawór przez weekend to około 2 900 zł. Nieszczelności na poziomie 9 Nm³/min kosztują około 60 zł za każdą godzinę postoju. Niedotrzymanie celu C1 oznacza brak poprawy wobec linii bazowej i uwagę w audycie wewnętrznym.&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Technicy i kierownik Utrzymania Ruchu&quot;,
+    &quot;osoby&quot;: &quot;3 osoby&quot;,
+    &quot;wykonawca&quot;: false,
+    &quot;polityka&quot;: &quot;Omawiana przy przyjęciu i na spotkaniu kierownictwa; dostępna w intranecie.&quot;,
+    &quot;wklad&quot;: &quot;Odpowiadają za trzy z pięciu znaczących użyć energii. Od ich przeglądów szczelności i nastaw zależą cele C1 i C4 oraz wiarygodność danych w planie zbierania danych.&quot;,
+    &quot;wplyw&quot;: &quot;Nastawa ciśnienia sieci (6,3 bar); kwartalne przeglądy szczelności; harmonogram i temperatura pieca lakierni; terminowość odczytów podliczników; jakość pomiarów analizatorem.&quot;,
+    &quot;konsekwencje&quot;: &quot;Podniesienie ciśnienia o 0,5 bar to około 3% zużycia sprężarkowni. Luka w odczytach uniemożliwia policzenie wskaźnika za dany miesiąc — i tym samym wykazanie poprawy.&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Zakupy&quot;,
+    &quot;osoby&quot;: &quot;Kierownik Zakupów i specjalista — 2 osoby&quot;,
+    &quot;wykonawca&quot;: false,
+    &quot;polityka&quot;: &quot;Omawiana na warsztacie z kryteriów energetycznych; polityka przywołana w procedurze zakupowej P-ZAK-01.&quot;,
+    &quot;wklad&quot;: &quot;Decydują o energochłonności urządzeń na kolejne 10–15 lat. Zastosowanie kryterium energetycznego przy jednym zamówieniu sprężarki daje więcej niż rok oszczędności eksploatacyjnych.&quot;,
+    &quot;wplyw&quot;: &quot;Kryteria energetyczne w specyfikacjach urządzeń powyżej 10 kW; porównanie ofert kosztem cyklu życia, nie ceną zakupu; wymagania kompetencyjne i energetyczne w umowach z wykonawcami.&quot;,
+    &quot;konsekwencje&quot;: &quot;Zakup urządzenia bez kryterium energetycznego zamyka możliwość poprawy na całe jego życie. Brak wymagań w umowie serwisowej doprowadził już do ryzyka R5 — zmian nastaw bez zgłaszania.&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Kierownicy działów i zarząd&quot;,
+    &quot;osoby&quot;: &quot;6 osób&quot;,
+    &quot;wykonawca&quot;: false,
+    &quot;polityka&quot;: &quot;Zatwierdzili ją i podpisali; omawiana na każdym przeglądzie zarządzania.&quot;,
+    &quot;wklad&quot;: &quot;Zapewniają zasoby i podejmują decyzje, które przesądzają o wyniku energetycznym — asortyment, liczba zmian, inwestycje, budżet szkoleń.&quot;,
+    &quot;wplyw&quot;: &quot;Decyzje o asortymencie (zmieniają energochłonność tony i mogą unieważnić linię bazową); liczba zmian; zatwierdzanie inwestycji z kryterium energetycznym; przydział czasu ludziom na zadania systemu.&quot;,
+    &quot;konsekwencje&quot;: &quot;Decyzja sprzeczna z celami energetycznymi unieważnia plany działań. Nieprzydzielenie czasu oznacza, że zadania systemu nie zostaną wykonane — i to jest realny powód, dla którego systemy się rozpadają.&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Pracownicy biura i magazynu&quot;,
+    &quot;osoby&quot;: &quot;18 osób&quot;,
+    &quot;wykonawca&quot;: false,
+    &quot;polityka&quot;: &quot;Wprowadzenie przy przyjęciu; polityka w intranecie i na tablicy przy stołówce.&quot;,
+    &quot;wklad&quot;: &quot;Oświetlenie i urządzenia biurowe to część zużycia niezależnego od produkcji, które stanowi około 40% całości — czyli dokładnie ta część, której nie poprawi żadna modernizacja produkcji.&quot;,
+    &quot;wplyw&quot;: &quot;Wyłączanie oświetlenia strefowego i komputerów; zamykanie drzwi magazynu przy rozładunku; zgłaszanie świecących się opraw w nieużywanych pomieszczeniach.&quot;,
+    &quot;konsekwencje&quot;: &quot;Oświetlenie hal to 680 MWh rocznie — około 600 tys. zł. Cel C2 zakłada zejście do 410 MWh, co bez dyscypliny po wymianie opraw na LED się nie utrzyma.&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Wykonawcy na terenie zakładu&quot;,
+    &quot;osoby&quot;: &quot;Serwis sprężarek (2 serwisanci), firma sprzątająca (4 osoby), ekipy remontowe&quot;,
+    &quot;wykonawca&quot;: true,
+    &quot;polityka&quot;: &quot;Wprowadzenie 15 min przy pierwszej wizycie, prowadzone przez kierownika zlecającego; jednostronicowa informacja przekazywana z zamówieniem.&quot;,
+    &quot;wklad&quot;: &quot;Serwis sprężarek decyduje o nastawach, od których zależy cel C1. Firma sprzątająca pracuje po godzinach, gdy nikt inny nie gasi świateł.&quot;,
+    &quot;wplyw&quot;: &quot;Serwis: nastawy ciśnienia i zgłaszanie ich zmian kierownikowi UR. Firma sprzątająca: wyłączanie oświetlenia hal i biur po zakończeniu pracy. Ekipy remontowe: niezastawianie czujników obecności i niewyłączanie wentylacji.&quot;,
+    &quot;konsekwencje&quot;: &quot;Zmiana nastawy bez zgłoszenia unieważnia porównanie z linią bazową i może zniweczyć poprawę wykazaną przez cały rok. Oświetlenie hali zostawione na noc to około 190 zł za jedną noc.&quot;
+   }
+  ],
+  &quot;KANALY&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Wprowadzenie dla nowych osób i wykonawców&quot;,
+    &quot;tresc&quot;: &quot;Polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi i pomysły.&quot;,
+    &quot;rytm&quot;: &quot;Przy przyjęciu; dla wykonawców przy pierwszej wizycie po zawarciu umowy&quot;,
+    &quot;kto&quot;: &quot;Energy Manager; dla wykonawców — kierownik zlecający&quot;,
+    &quot;grupy&quot;: &quot;Wszyscy nowi pracownicy i wykonawcy&quot;,
+    &quot;elementy&quot;: [
+     &quot;polityka&quot;,
+     &quot;wklad&quot;,
+     &quot;wplyw&quot;,
+     &quot;konsekwencje&quot;
+    ]
+   },
+   {
+    &quot;nazwa&quot;: &quot;Krótkie spotkanie na początku zmiany&quot;,
+    &quot;tresc&quot;: &quot;Jeden temat tygodniowo, na przykład „w tym tygodniu: zawory odcinające na przerwach”. Konkret, nie ogólniki.&quot;,
+    &quot;rytm&quot;: &quot;Raz w tygodniu, 10 minut&quot;,
+    &quot;kto&quot;: &quot;Liderzy zmian&quot;,
+    &quot;grupy&quot;: &quot;Operatorzy pras i lakierni, magazyn&quot;,
+    &quot;elementy&quot;: [
+     &quot;wplyw&quot;,
+     &quot;konsekwencje&quot;
+    ]
+   },
+   {
+    &quot;nazwa&quot;: &quot;Liczby, które coś mówią&quot;,
+    &quot;tresc&quot;: &quot;Przeliczenie zachowania na złotówki: nieszczelności 9 Nm³/min przy 0,125 kWh/Nm³ i cenie 890 zł/MWh to około 60 zł za godzinę postoju, czyli blisko 2 900 zł za weekend. Oświetlenie hali zostawione na noc — około 190 zł.&quot;,
+    &quot;rytm&quot;: &quot;Przy każdym temacie tygodnia; aktualizacja liczb co kwartał&quot;,
+    &quot;kto&quot;: &quot;Energy Manager przygotowuje, liderzy zmian przekazują&quot;,
+    &quot;grupy&quot;: &quot;Produkcja, magazyn, wykonawcy&quot;,
+    &quot;elementy&quot;: [
+     &quot;konsekwencje&quot;,
+     &quot;wplyw&quot;
+    ]
+   },
+   {
+    &quot;nazwa&quot;: &quot;Tablica wyników przy stołówce&quot;,
+    &quot;tresc&quot;: &quot;Wskaźnik ogólny zakładu wobec linii bazowej, postęp celów C1–C4, liczba zgłoszeń z hali i co z nich wyszło.&quot;,
+    &quot;rytm&quot;: &quot;Aktualizacja raz w miesiącu&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;grupy&quot;: &quot;Wszyscy pracownicy&quot;,
+    &quot;elementy&quot;: [
+     &quot;wklad&quot;,
+     &quot;polityka&quot;
+    ]
+   },
+   {
+    &quot;nazwa&quot;: &quot;Tablica przy sprężarkowni&quot;,
+    &quot;tresc&quot;: &quot;Wskaźnik S-1 (kWh/Nm³), przepływ w czasie postoju, cel 0,110 kWh/Nm³ i aktualna wartość.&quot;,
+    &quot;rytm&quot;: &quot;Aktualizacja raz w miesiącu&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;grupy&quot;: &quot;Technicy UR, operatorzy pras&quot;,
+    &quot;elementy&quot;: [
+     &quot;wklad&quot;,
+     &quot;wplyw&quot;
+    ]
+   },
+   {
+    &quot;nazwa&quot;: &quot;Odprawa kierownictwa&quot;,
+    &quot;tresc&quot;: &quot;Trend wskaźników EnPI wobec linii bazowych, postęp celów, decyzje wymagające zasobów.&quot;,
+    &quot;rytm&quot;: &quot;Raz w miesiącu&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;grupy&quot;: &quot;Kierownicy działów i zarząd&quot;,
+    &quot;elementy&quot;: [
+     &quot;wklad&quot;,
+     &quot;konsekwencje&quot;
+    ]
+   },
+   {
+    &quot;nazwa&quot;: &quot;Intranet&quot;,
+    &quot;tresc&quot;: &quot;Polityka energetyczna, cele, wyniki kwartalne, formularz zgłaszania uwag.&quot;,
+    &quot;rytm&quot;: &quot;Stale dostępne; wyniki co kwartał&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;grupy&quot;: &quot;Pracownicy z dostępem do komputera&quot;,
+    &quot;elementy&quot;: [
+     &quot;polityka&quot;,
+     &quot;wklad&quot;
+    ]
+   }
+  ],
+  &quot;SPRAWDZENIA&quot;: [
+   {
+    &quot;data&quot;: &quot;2026-06-26&quot;,
+    &quot;kto&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;osoby&quot;: &quot;Trzy osoby losowo: operator prasy (II zmiana), magazynier, specjalista ds. zakupów&quot;,
+    &quot;wynik&quot;: &quot;Politykę kojarzą wszyscy troje — operator wskazał tablicę przy wejściu. Operator i magazynier trafnie opisali swój wpływ (zawory odcinające, drzwi magazynu). Specjalista ds. zakupów znał kryteria energetyczne, ale nie potrafił podać, gdzie zgłosić uwagę.&quot;,
+    &quot;luki&quot;: &quot;Droga zgłaszania uwag znana tylko na produkcji — w biurze nie, bo komunikat szedł kanałem spotkań zmianowych.&quot;,
+    &quot;dzialanie&quot;: &quot;Formularz zgłaszania uwag dodany do intranetu i przypomniany na odprawie kierownictwa; informacja dopisana do wprowadzenia dla biura.&quot;
+   },
+   {
+    &quot;data&quot;: &quot;2026-09-25&quot;,
+    &quot;kto&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;osoby&quot;: &quot;Trzy osoby losowo: operator lakierni (III zmiana), technik UR, serwisant sprężarek (wykonawca)&quot;,
+    &quot;wynik&quot;: &quot;Operator lakierni i technik UR odpowiedzieli poprawnie na wszystkie trzy pytania; technik sam podał koszt godziny nieszczelności. Serwisant znał obowiązek zgłaszania zmian nastaw, ale nie wiedział, że zakład ma cel na sprężonym powietrzu ani jaka jest jego wartość.&quot;,
+    &quot;luki&quot;: &quot;Wykonawcy nie znają celów energetycznych — wprowadzenie dla serwisu odbyło się w kwietniu, przed zatwierdzeniem celów (uchwała z 15.04.2026).&quot;,
+    &quot;dzialanie&quot;: &quot;Cele dopisane do jednostronicowej informacji dla wykonawców; serwis dostał ją przy wizycie 10.2026. Wprowadzenie dla wykonawców zaktualizowane w planie F-EnMS-12, poz. 1.&quot;
+   }
+  ],
+  &quot;PRZESZKODY&quot;: [
+   {
+    &quot;opis&quot;: &quot;Zaworów odcinających przy prasach nie da się zamknąć bez klucza, a klucz ma tylko utrzymanie ruchu. Operator, który chce odciąć powietrze na przerwie, musiałby po niego iść.&quot;,
+    &quot;grupa&quot;: &quot;Operatorzy pras&quot;,
+    &quot;zglosil&quot;: &quot;Operator prasy nr 2 na spotkaniu zmiany, 06.2026&quot;,
+    &quot;decyzja&quot;: &quot;Wymiana zaworów na dźwigniowe przy czterech prasach — 3 tys. zł, utrzymanie ruchu, do 30.09.2026. Zatwierdził kierownik UR.&quot;,
+    &quot;stan&quot;: &quot;usunieta&quot;,
+    &quot;efekt&quot;: &quot;Zawory wymienione we wrześniu. Przepływ w czasie postoju spadł z 6,5 do 5,8 Nm³/min — część poprawy przypisana zamykaniu zaworów, część usunięciu nieszczelności.&quot;
+   },
+   {
+    &quot;opis&quot;: &quot;Oświetlenie hali B ma jeden wyłącznik na całą halę. Nie da się zgasić nieużywanej części, więc świeci się wszystko albo nic.&quot;,
+    &quot;grupa&quot;: &quot;Operatorzy, magazyn, firma sprzątająca&quot;,
+    &quot;zglosil&quot;: &quot;Magazynier przez formularz w intranecie, 08.2026&quot;,
+    &quot;decyzja&quot;: &quot;Podział oświetlenia hali B na trzy strefy zostanie wykonany razem z wymianą opraw na LED (cel C2, III kwartał 2027). Do tego czasu firma sprzątająca pracuje w halach w jednym bloku czasowym, żeby nie świecić dwa razy.&quot;,
+    &quot;stan&quot;: &quot;wtoku&quot;,
+    &quot;efekt&quot;: &quot;Zmiana harmonogramu sprzątania wprowadzona od 09.2026 — oszacowana oszczędność około 4 MWh rocznie.&quot;
+   },
+   {
+    &quot;opis&quot;: &quot;Instrukcja przy sprężarkowni podaje ciśnienie 7,0 bar, choć od marca obowiązuje 6,3 bar. Technicy pytają, która wartość jest właściwa.&quot;,
+    &quot;grupa&quot;: &quot;Technicy UR, serwis sprężarek&quot;,
+    &quot;zglosil&quot;: &quot;Technik UR, 07.2026&quot;,
+    &quot;decyzja&quot;: &quot;Instrukcja I-SP-02 zaktualizowana i zatwierdzona; stara wersja zdjęta z tablicy. Sprawa dopisana do wykazu udokumentowanych informacji (7.5) jako przypadek dwóch wersji w obiegu.&quot;,
+    &quot;stan&quot;: &quot;usunieta&quot;,
+    &quot;efekt&quot;: &quot;Jedna zatwierdzona wersja przy sprężarkowni. Przy przeglądzie dokumentacji znaleziono jeszcze dwie nieaktualne instrukcje w hali A — też wycofane.&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+   &quot;data&quot;: &quot;2026-09-30&quot;,
+   &quot;rytmSprawdzen&quot;: &quot;Raz na kwartał, trzy losowo wybrane osoby z różnych grup — w tym co drugi raz wykonawca&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_73 = [{"tekst": "Osoby pracujące pod nadzorem organizacji znają politykę energetyczną.", "podstawa": "N", "auto": "polityka"}, {"tekst": "Rozumieją swój wkład w system, w tym korzyści z poprawy wyniku energetycznego i osiąganie celów.", "podstawa": "N", "auto": "wklad"}, {"tekst": "Znają wpływ swoich działań lub zachowań na wynik energetyczny.", "podstawa": "N", "auto": "wplyw"}, {"tekst": "Znają konsekwencje niespełnienia wymagań systemu.", "podstawa": "N", "auto": "konsekwencje"}, {"tekst": "Świadomość jest sprawdzana rozmową (np. kwartalnie), a zgłoszone przeszkody są usuwane.", "podstawa": "M", "auto": "sprawdzanie"}];
+var P_GRUPY = [{"nazwa": "Operatorzy pras i lakierni", "osoby": "24 osoby na trzech zmianach", "wykonawca": false, "polityka": "Omawiana na wprowadzeniu (15 min) i raz w roku na spotkaniu zmiany. Wywieszona przy wejściu do hali A i w intranecie.", "wklad": "Cel C1 — ograniczenie zużycia na sprężone powietrze — zależy wprost od tego, czy zgłaszają syczenie przy złączkach i zamykają zawory odcinające. Niższy koszt energii na tonę to argument w rozmowach z klientem OEM, a stabilniejsze ciśnienie to mniej przestojów na ich własnych liniach.", "wplyw": "Zamykanie zaworów odcinających przy prasach na przerwach i postojach; zgłaszanie nieszczelności; przestrzeganie harmonogramu pieca lakierni; niewyłączanie wentylacji kabin przed końcem cyklu.", "konsekwencje": "Jeden otwarty zawór przez weekend to około 2 900 zł. Nieszczelności na poziomie 9 Nm³/min kosztują około 60 zł za każdą godzinę postoju. Niedotrzymanie celu C1 oznacza brak poprawy wobec linii bazowej i uwagę w audycie wewnętrznym."}, {"nazwa": "Technicy i kierownik Utrzymania Ruchu", "osoby": "3 osoby", "wykonawca": false, "polityka": "Omawiana przy przyjęciu i na spotkaniu kierownictwa; dostępna w intranecie.", "wklad": "Odpowiadają za trzy z pięciu znaczących użyć energii. Od ich przeglądów szczelności i nastaw zależą cele C1 i C4 oraz wiarygodność danych w planie zbierania danych.", "wplyw": "Nastawa ciśnienia sieci (6,3 bar); kwartalne przeglądy szczelności; harmonogram i temperatura pieca lakierni; terminowość odczytów podliczników; jakość pomiarów analizatorem.", "konsekwencje": "Podniesienie ciśnienia o 0,5 bar to około 3% zużycia sprężarkowni. Luka w odczytach uniemożliwia policzenie wskaźnika za dany miesiąc — i tym samym wykazanie poprawy."}, {"nazwa": "Zakupy", "osoby": "Kierownik Zakupów i specjalista — 2 osoby", "wykonawca": false, "polityka": "Omawiana na warsztacie z kryteriów energetycznych; polityka przywołana w procedurze zakupowej P-ZAK-01.", "wklad": "Decydują o energochłonności urządzeń na kolejne 10–15 lat. Zastosowanie kryterium energetycznego przy jednym zamówieniu sprężarki daje więcej niż rok oszczędności eksploatacyjnych.", "wplyw": "Kryteria energetyczne w specyfikacjach urządzeń powyżej 10 kW; porównanie ofert kosztem cyklu życia, nie ceną zakupu; wymagania kompetencyjne i energetyczne w umowach z wykonawcami.", "konsekwencje": "Zakup urządzenia bez kryterium energetycznego zamyka możliwość poprawy na całe jego życie. Brak wymagań w umowie serwisowej doprowadził już do ryzyka R5 — zmian nastaw bez zgłaszania."}, {"nazwa": "Kierownicy działów i zarząd", "osoby": "6 osób", "wykonawca": false, "polityka": "Zatwierdzili ją i podpisali; omawiana na każdym przeglądzie zarządzania.", "wklad": "Zapewniają zasoby i podejmują decyzje, które przesądzają o wyniku energetycznym — asortyment, liczba zmian, inwestycje, budżet szkoleń.", "wplyw": "Decyzje o asortymencie (zmieniają energochłonność tony i mogą unieważnić linię bazową); liczba zmian; zatwierdzanie inwestycji z kryterium energetycznym; przydział czasu ludziom na zadania systemu.", "konsekwencje": "Decyzja sprzeczna z celami energetycznymi unieważnia plany działań. Nieprzydzielenie czasu oznacza, że zadania systemu nie zostaną wykonane — i to jest realny powód, dla którego systemy się rozpadają."}, {"nazwa": "Pracownicy biura i magazynu", "osoby": "18 osób", "wykonawca": false, "polityka": "Wprowadzenie przy przyjęciu; polityka w intranecie i na tablicy przy stołówce.", "wklad": "Oświetlenie i urządzenia biurowe to część zużycia niezależnego od produkcji, które stanowi około 40% całości — czyli dokładnie ta część, której nie poprawi żadna modernizacja produkcji.", "wplyw": "Wyłączanie oświetlenia strefowego i komputerów; zamykanie drzwi magazynu przy rozładunku; zgłaszanie świecących się opraw w nieużywanych pomieszczeniach.", "konsekwencje": "Oświetlenie hal to 680 MWh rocznie — około 600 tys. zł. Cel C2 zakłada zejście do 410 MWh, co bez dyscypliny po wymianie opraw na LED się nie utrzyma."}, {"nazwa": "Wykonawcy na terenie zakładu", "osoby": "Serwis sprężarek (2 serwisanci), firma sprzątająca (4 osoby), ekipy remontowe", "wykonawca": true, "polityka": "Wprowadzenie 15 min przy pierwszej wizycie, prowadzone przez kierownika zlecającego; jednostronicowa informacja przekazywana z zamówieniem.", "wklad": "Serwis sprężarek decyduje o nastawach, od których zależy cel C1. Firma sprzątająca pracuje po godzinach, gdy nikt inny nie gasi świateł.", "wplyw": "Serwis: nastawy ciśnienia i zgłaszanie ich zmian kierownikowi UR. Firma sprzątająca: wyłączanie oświetlenia hal i biur po zakończeniu pracy. Ekipy remontowe: niezastawianie czujników obecności i niewyłączanie wentylacji.", "konsekwencje": "Zmiana nastawy bez zgłoszenia unieważnia porównanie z linią bazową i może zniweczyć poprawę wykazaną przez cały rok. Oświetlenie hali zostawione na noc to około 190 zł za jedną noc."}];
+var P_KANALY = [{"nazwa": "Wprowadzenie dla nowych osób i wykonawców", "tresc": "Polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi i pomysły.", "rytm": "Przy przyjęciu; dla wykonawców przy pierwszej wizycie po zawarciu umowy", "kto": "Energy Manager; dla wykonawców — kierownik zlecający", "grupy": "Wszyscy nowi pracownicy i wykonawcy", "elementy": ["polityka", "wklad", "wplyw", "konsekwencje"]}, {"nazwa": "Krótkie spotkanie na początku zmiany", "tresc": "Jeden temat tygodniowo, na przykład „w tym tygodniu: zawory odcinające na przerwach”. Konkret, nie ogólniki.", "rytm": "Raz w tygodniu, 10 minut", "kto": "Liderzy zmian", "grupy": "Operatorzy pras i lakierni, magazyn", "elementy": ["wplyw", "konsekwencje"]}, {"nazwa": "Liczby, które coś mówią", "tresc": "Przeliczenie zachowania na złotówki: nieszczelności 9 Nm³/min przy 0,125 kWh/Nm³ i cenie 890 zł/MWh to około 60 zł za godzinę postoju, czyli blisko 2 900 zł za weekend. Oświetlenie hali zostawione na noc — około 190 zł.", "rytm": "Przy każdym temacie tygodnia; aktualizacja liczb co kwartał", "kto": "Energy Manager przygotowuje, liderzy zmian przekazują", "grupy": "Produkcja, magazyn, wykonawcy", "elementy": ["konsekwencje", "wplyw"]}, {"nazwa": "Tablica wyników przy stołówce", "tresc": "Wskaźnik ogólny zakładu wobec linii bazowej, postęp celów C1–C4, liczba zgłoszeń z hali i co z nich wyszło.", "rytm": "Aktualizacja raz w miesiącu", "kto": "Energy Manager", "grupy": "Wszyscy pracownicy", "elementy": ["wklad", "polityka"]}, {"nazwa": "Tablica przy sprężarkowni", "tresc": "Wskaźnik S-1 (kWh/Nm³), przepływ w czasie postoju, cel 0,110 kWh/Nm³ i aktualna wartość.", "rytm": "Aktualizacja raz w miesiącu", "kto": "Kierownik Utrzymania Ruchu", "grupy": "Technicy UR, operatorzy pras", "elementy": ["wklad", "wplyw"]}, {"nazwa": "Odprawa kierownictwa", "tresc": "Trend wskaźników EnPI wobec linii bazowych, postęp celów, decyzje wymagające zasobów.", "rytm": "Raz w miesiącu", "kto": "Energy Manager", "grupy": "Kierownicy działów i zarząd", "elementy": ["wklad", "konsekwencje"]}, {"nazwa": "Intranet", "tresc": "Polityka energetyczna, cele, wyniki kwartalne, formularz zgłaszania uwag.", "rytm": "Stale dostępne; wyniki co kwartał", "kto": "Energy Manager", "grupy": "Pracownicy z dostępem do komputera", "elementy": ["polityka", "wklad"]}];
+var P_SPRAWDZENIA = [{"data": "2026-06-26", "kto": "Jan Kowalski — Energy Manager", "osoby": "Trzy osoby losowo: operator prasy (II zmiana), magazynier, specjalista ds. zakupów", "wynik": "Politykę kojarzą wszyscy troje — operator wskazał tablicę przy wejściu. Operator i magazynier trafnie opisali swój wpływ (zawory odcinające, drzwi magazynu). Specjalista ds. zakupów znał kryteria energetyczne, ale nie potrafił podać, gdzie zgłosić uwagę.", "luki": "Droga zgłaszania uwag znana tylko na produkcji — w biurze nie, bo komunikat szedł kanałem spotkań zmianowych.", "dzialanie": "Formularz zgłaszania uwag dodany do intranetu i przypomniany na odprawie kierownictwa; informacja dopisana do wprowadzenia dla biura."}, {"data": "2026-09-25", "kto": "Jan Kowalski — Energy Manager", "osoby": "Trzy osoby losowo: operator lakierni (III zmiana), technik UR, serwisant sprężarek (wykonawca)", "wynik": "Operator lakierni i technik UR odpowiedzieli poprawnie na wszystkie trzy pytania; technik sam podał koszt godziny nieszczelności. Serwisant znał obowiązek zgłaszania zmian nastaw, ale nie wiedział, że zakład ma cel na sprężonym powietrzu ani jaka jest jego wartość.", "luki": "Wykonawcy nie znają celów energetycznych — wprowadzenie dla serwisu odbyło się w kwietniu, przed zatwierdzeniem celów (uchwała z 15.04.2026).", "dzialanie": "Cele dopisane do jednostronicowej informacji dla wykonawców; serwis dostał ją przy wizycie 10.2026. Wprowadzenie dla wykonawców zaktualizowane w planie F-EnMS-12, poz. 1."}];
+var P_PRZESZKODY = [{"opis": "Zaworów odcinających przy prasach nie da się zamknąć bez klucza, a klucz ma tylko utrzymanie ruchu. Operator, który chce odciąć powietrze na przerwie, musiałby po niego iść.", "grupa": "Operatorzy pras", "zglosil": "Operator prasy nr 2 na spotkaniu zmiany, 06.2026", "decyzja": "Wymiana zaworów na dźwigniowe przy czterech prasach — 3 tys. zł, utrzymanie ruchu, do 30.09.2026. Zatwierdził kierownik UR.", "stan": "usunieta", "efekt": "Zawory wymienione we wrześniu. Przepływ w czasie postoju spadł z 6,5 do 5,8 Nm³/min — część poprawy przypisana zamykaniu zaworów, część usunięciu nieszczelności."}, {"opis": "Oświetlenie hali B ma jeden wyłącznik na całą halę. Nie da się zgasić nieużywanej części, więc świeci się wszystko albo nic.", "grupa": "Operatorzy, magazyn, firma sprzątająca", "zglosil": "Magazynier przez formularz w intranecie, 08.2026", "decyzja": "Podział oświetlenia hali B na trzy strefy zostanie wykonany razem z wymianą opraw na LED (cel C2, III kwartał 2027). Do tego czasu firma sprzątająca pracuje w halach w jednym bloku czasowym, żeby nie świecić dwa razy.", "stan": "wtoku", "efekt": "Zmiana harmonogramu sprzątania wprowadzona od 09.2026 — oszacowana oszczędność około 4 MWh rocznie."}, {"opis": "Instrukcja przy sprężarkowni podaje ciśnienie 7,0 bar, choć od marca obowiązuje 6,3 bar. Technicy pytają, która wartość jest właściwa.", "grupa": "Technicy UR, serwis sprężarek", "zglosil": "Technik UR, 07.2026", "decyzja": "Instrukcja I-SP-02 zaktualizowana i zatwierdzona; stara wersja zdjęta z tablicy. Sprawa dopisana do wykazu udokumentowanych informacji (7.5) jako przypadek dwóch wersji w obiegu.", "stan": "usunieta", "efekt": "Jedna zatwierdzona wersja przy sprężarkowni. Przy przeglądzie dokumentacji znaleziono jeszcze dwie nieaktualne instrukcje w hali A — też wycofane."}];
+var P_META = {"zatwierdzil": "Jan Kowalski — Energy Manager", "data": "2026-09-30", "rytmSprawdzen": "Raz na kwartał, trzy losowo wybrane osoby z różnych grup — w tym co drugi raz wykonawca"};
+var P_PLAN_PODGLAD = [{"nr": "1", "temat": "Wprowadzenie: polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi", "punkty": ["7.3"], "grupa": "Nowi pracownicy oraz wykonawcy pracujący na terenie zakładu", "forma": "spotkanie", "prowadzacy": "Energy Manager (dla wykonawców — kierownik zlecający)", "czas": "15–30 min", "termin": "2026-05-04", "ocena": "Rozmowa kontrolna po miesiącu — trzy pytania o politykę, wpływ własnej pracy i drogę zgłoszenia", "status": "wtoku"}, {"nr": "3", "temat": "Wymagania systemu dla kierownictwa: wynik energetyczny, cele, decyzje wpływające na energię", "punkty": ["7.2", "7.3"], "grupa": "Kierownicy działów i zarząd", "forma": "spotkanie", "prowadzacy": "Energy Manager z konsultantem", "czas": "1–2 h", "termin": "2026-06-15", "ocena": "Omówienie wyników na przeglądzie zarządzania — czy decyzje uwzględniają wynik energetyczny", "status": "zaliczone"}, {"nr": "6", "temat": "Krótka informacja na początku zmiany — jeden temat tygodniowo", "punkty": ["7.3"], "grupa": "Wszyscy pracownicy produkcji", "forma": "spotkanie", "prowadzacy": "Liderzy zmian", "czas": "10 min tygodniowo", "termin": "2026-05-11", "ocena": "Kwartalna rozmowa Energy Managera z trzema losowo wybranymi osobami", "status": "wtoku"}];
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Pracownik, który nie wie, jak jego praca wpływa na zużycie, nie zmieni zachowania.", "decyzja": "Program świadomości powiązany z konkretnymi zachowaniami przy znaczących użyciach, nie z ogólną kampanią oszczędzania.", "dzialanie": "Instruktaż stanowiskowy o ciśnieniu roboczym i nieszczelnościach; wynik S-1 na tablicy co miesiąc.", "sprawdzenie": "Liczba nieszczelności zgłoszonych przez obsługę i trend przepływu w czasie postoju."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 7.3 — Świadomość.
+   Punkt bez własnego formularza: podstawa to P-EnMS-05 pkt 4.3 (III-33), cztery elementy a–d z normy,
+   lista kontrolna III-32 sekcja 7.3 oraz wiersze planu F-EnMS-12 oznaczone jako 7.3 (wspólne z 7.2). */
+"use strict";
+
+var PUNKT = "7.3";
+var TERAZ = "11.10.2026 01:05";
+var MAGAZYN_PLAN = "enesa_plan_kompetencji";   // wspólny z punktem 7.2
+var GRUPY = [];
+var KANALY = [];
+var SPRAWDZENIA = [];
+var PRZESZKODY = [];
+var PLAN = [];                                  // tylko do odczytu
+var META = { zatwierdzil: "", data: "", rytmSprawdzen: "" };
+var WNIOSKI = [];
+var AKT = "grupy";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 01:00", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 7.3" }];
+
+var ELEMENTY = [
+  { kod: "polityka", lit: "a)", nazwa: "Polityka energetyczna",
+    opis: "Wiedzą, że istnieje, o czym mówi i gdzie ją znaleźć. Nie muszą jej recytować.",
+    ph: "np. Omawiana na wprowadzeniu; wywieszona przy wejściu do hali i w intranecie; przypominana przy zmianie" },
+  { kod: "wklad", lit: "b)", nazwa: "Swój wkład w system",
+    opis: "Jak ich praca pomaga osiągać cele i co firma — i oni — zyskuje na lepszym wyniku: niższe koszty, stabilniejsza praca instalacji, mocniejsza pozycja wobec klientów.",
+    ph: "np. Cel C1 na sprężonym powietrzu zależy od tego, czy zgłaszają syczenie; niższy koszt energii to argument w rozmowach z klientem OEM" },
+  { kod: "wplyw", lit: "c)", nazwa: "Wpływ swoich działań i zachowań",
+    opis: "Co konkretnie w ich pracy zmienia zużycie energii. Magazynier: drzwi. Operator: nastawy i postoje.",
+    ph: "np. Zamykanie zaworów odcinających na przerwach; nastawa ciśnienia; wyłączanie oświetlenia strefowego" },
+  { kod: "konsekwencje", lit: "d)", nazwa: "Konsekwencje niespełnienia wymagań",
+    opis: "Nie chodzi tylko o konsekwencje dla pracownika. To również straty energii, gorsza praca instalacji i cele, których zakład nie osiągnie.",
+    ph: "np. Otwarty zawór na weekend to około 2 900 zł; niedotrzymanie celu C1 oznacza brak poprawy wobec linii bazowej i uwagę w audycie" }
+];
+
+/* ── kompletność ── */
+function grupaOk(g) {
+  return !!((g.nazwa || "").trim()) && ELEMENTY.every(function (e) { return (g[e.kod] || "").trim(); });
+}
+function elementyGrupy(g) { return ELEMENTY.filter(function (e) { return (g[e.kod] || "").trim(); }).length; }
+function kanalOk(k) {
+  return !!((k.nazwa || "").trim() && (k.tresc || "").trim() && (k.rytm || "").trim() && (k.kto || "").trim());
+}
+function sprawdzenieOk(s) {
+  return !!(s.data && (s.kto || "").trim() && (s.osoby || "").trim() && (s.wynik || "").trim());
+}
+function przeszkodaOk(p) {
+  return !!((p.opis || "").trim() && (p.decyzja || "").trim());
+}
+function maWykonawce() { return GRUPY.some(function (g) { return g.wykonawca; }); }
+function wierszePlanu() { return PLAN.filter(function (p) { return (p.punkty || []).indexOf("7.3") >= 0; }); }
+
+/* ── reguły z książki ── */
+function norm(s) { return String(s || "").toLowerCase().replace(/[^a-ząćęłńóśźż0-9]+/g, " ").trim(); }
+function powtorzonyWplyw() {
+  var m = {}, out = [];
+  GRUPY.forEach(function (g) {
+    var t = norm(g.wplyw);
+    if (!t) return;
+    if (m[t]) { if (out.indexOf(t) < 0) out.push(t); } else m[t] = true;
+  });
+  return out.length;
+}
+function ostatnieSprawdzenie() {
+  var d = SPRAWDZENIA.map(function (s) { return s.data; }).filter(Boolean).sort();
+  return d.length ? d[d.length - 1] : null;
+}
+function miesiaceOdSprawdzenia() {
+  var d = ostatnieSprawdzenie();
+  if (!d) return null;
+  var t = new Date(d + "T00:00:00"), teraz = new Date("2026-10-11T00:00:00");
+  return (teraz - t) / (1000 * 60 * 60 * 24 * 30.4);
+}
+function sprawdzeniaZLukami() {
+  return SPRAWDZENIA.filter(function (s) { return (s.luki || "").trim(); });
+}
+function lukiBezDzialania() {
+  return SPRAWDZENIA.filter(function (s) { return (s.luki || "").trim() && !(s.dzialanie || "").trim(); }).length;
+}
+function przeszkodyOtwarte() {
+  return PRZESZKODY.filter(function (p) { return (p.opis || "").trim() && p.stan !== "usunieta" && p.stan !== "odrzucona"; });
+}
+function przeszkodyBezDecyzji() {
+  return PRZESZKODY.filter(function (p) { return (p.opis || "").trim() && !(p.decyzja || "").trim(); }).length;
+}
+
+/* ── zakładka 1: grupy i cztery elementy ── */
+function rysujGrupy(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Grupy osób i cztery elementy świadomości");
+  h.appendChild(el("span", "chip " + (GRUPY.length && GRUPY.every(grupaOk) && maWykonawce() ? "green" : "amber"),
+    GRUPY.filter(grupaOk).length + " / " + GRUPY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Rampa przy chłodni. Magazynier wie, jak zamknąć drzwi — to nie jest trudne. A jednak drzwi stoją otwarte przez cały rozładunek. Dlaczego? Bo nikt mu nie powiedział, ile to kosztuje. Bo przy każdej palecie musiałby je otwierać od nowa, a drzwi są ciężkie. I bo „chłodnia i tak chłodzi”.<br><br><b>Kompetencja to „umiem”. Świadomość to „rozumiem, dlaczego to ważne”.</b> Ale ta scena uczy też drugiej rzeczy: czasem samo wyjaśnienie nie wystarczy, bo przeszkoda jest w organizacji pracy — tu w ciężkich drzwiach."));
+  s.appendChild(el("div", "note", "Świadomość dotyczy wszystkich, którzy pracują pod nadzorem organizacji — także wykonawców zewnętrznych na terenie zakładu. Firma sprzątająca, która zostawia włączone oświetlenie w nocy, też wpływa na Wasz wynik."));
+  host.appendChild(s);
+
+  if (GRUPY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Grupa", "Osoby"].concat(ELEMENTY.map(function (e) { return e.lit; })).concat(["Stan"]),
+      GRUPY.map(function (g) {
+        var w = [g.nazwa || "—", g.osoby || "—"];
+        ELEMENTY.forEach(function (e) {
+          w.push(el("span", "chip " + ((g[e.kod] || "").trim() ? "green" : "amber"), (g[e.kod] || "").trim() ? "✓" : "—"));
+        });
+        w.push(el("span", "chip " + (grupaOk(g) ? "green" : "amber"), elementyGrupy(g) + " / 4"));
+        return w;
+      })));
+    host.appendChild(t);
+  }
+
+  GRUPY.forEach(function (g, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, g.nazwa || "Grupa " + (i + 1));
+    hh.appendChild(el("span", "chip " + (grupaOk(g) ? "green" : "amber"), elementyGrupy(g) + " / 4 elementów"));
+    if (g.wykonawca) hh.appendChild(el("span", "chip red", "wykonawca zewnętrzny"));
+    hh.appendChild(przyciskUsun(function () { GRUPY.splice(i, 1); }));
+    sec.appendChild(hh);
+    var k = el("div", "poz" + (grupaOk(g) ? "" : " brak"));
+    k.appendChild(pole("Grupa", inp(g.nazwa, "np. Operatorzy pras i lakierni", function (v) { g.nazwa = v; })));
+    k.appendChild(pole("Kogo obejmuje", inp(g.osoby, "np. 24 osoby na trzech zmianach", function (v) { g.osoby = v; })));
+    k.appendChild(pole("Rodzaj", sel(g.wykonawca ? "tak" : "nie",
+      [["nie", "Pracownicy organizacji"], ["tak", "Wykonawcy pracujący pod nadzorem organizacji"]],
+      function (v) { g.wykonawca = (v === "tak"); })));
+    ELEMENTY.forEach(function (e) {
+      k.appendChild(poleChip(e.lit + " " + e.nazwa, "wymóg normy",
+        txt(g[e.kod], e.ph, 2, function (v) { g[e.kod] = v; }), e.opis));
+    });
+    if ((g.nazwa || "").trim() && elementyGrupy(g) < 4)
+      k.appendChild(el("div", "warn", "Opisano " + elementyGrupy(g) + " z czterech elementów. Norma wylicza wszystkie cztery osobno — brak któregokolwiek jest brakiem wymagania, nie niedopatrzeniem w formularzu."));
+    sec.appendChild(k);
+    host.appendChild(sec);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj grupę", function () { GRUPY.push({}); }));
+  if (!GRUPY.length) d.appendChild(el("div", "warn", "Nie określono żadnej grupy osób."));
+  if (GRUPY.length && !maWykonawce())
+    d.appendChild(hel("div", "warn", "Nie ma grupy wykonawców zewnętrznych. Norma mówi o osobach wykonujących pracę <b>pod nadzorem organizacji</b> — serwis, firma sprzątająca, ekipa remontowa. Jeśli naprawdę nikt taki nie pracuje w zakładzie, zapiszcie to w analizie konsultanta."));
+  if (powtorzonyWplyw())
+    d.appendChild(hel("div", "note", "Opis wpływu (element c) powtarza się dosłownie w kilku grupach. Ten element ma być <b>konkretny dla grupy</b> — magazynier: drzwi, operator: nastawy i postoje. Identyczny tekst dla wszystkich zwykle znaczy, że powstał raz i został skopiowany."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 2: kanały i rytm ── */
+function rysujKanaly(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Kanały i rytm");
+  h.appendChild(el("span", "chip " + (KANALY.length && KANALY.every(kanalOk) ? "green" : "amber"),
+    KANALY.filter(kanalOk).length + " / " + KANALY.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Nie potrzebujecie dziesięciu kanałów. Wystarczy kilka, stosowanych regularnie."));
+  s.appendChild(hel("div", "note", "Co zrobił zakład mięsny: wprowadzenie dla nowych (także dla wykonawców), krótkie spotkanie na początku zmiany raz w tygodniu z jednym tematem, <b>liczby, które coś mówią</b> (drzwi otwarte przez 10 minut kosztują w tej chłodni około 5 zł; w poprzednim miesiącu takich sytuacji było około 300 — razem około 1 500 zł), widoczne wyniki na tablicy w stołówce i <b>usunięcie przeszkody</b> — automatyczne zamykacze drzwi."));
+  host.appendChild(s);
+
+  KANALY.forEach(function (k, i) {
+    var kk = el("div", "poz" + (kanalOk(k) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, k.nazwa || "Kanał " + (i + 1)));
+    if (k.rytm) g.appendChild(el("span", "chip", k.rytm));
+    g.appendChild(przyciskUsun(function () { KANALY.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Kanał", inp(k.nazwa, "np. Krótkie spotkanie na początku zmiany", function (v) { k.nazwa = v; })));
+    kk.appendChild(pole("Co przekazujecie", txt(k.tresc, "np. Jeden temat tygodniowo — „w tym tygodniu: zawory odcinające na przerwach”", 2,
+      function (v) { k.tresc = v; })));
+    kk.appendChild(pole("Rytm", inp(k.rytm, "np. Raz w tygodniu, 10 minut", function (v) { k.rytm = v; })));
+    kk.appendChild(pole("Kto prowadzi", inp(k.kto, "np. Liderzy zmian", function (v) { k.kto = v; })));
+    kk.appendChild(pole("Dla kogo", inp(k.grupy, "np. Operatorzy pras i lakierni, magazyn", function (v) { k.grupy = v; })));
+    kk.appendChild(pole("Który element świadomości obsługuje",
+      kratki(k.elementy, ELEMENTY.map(function (e) { return [e.kod, e.lit]; }), function (v) { k.elementy = v; })));
+    host.appendChild(kk);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj kanał", function () { KANALY.push({ elementy: [] }); }));
+  if (!KANALY.length) d.appendChild(el("div", "warn", "Nie opisano żadnego kanału. Bez tego cztery elementy świadomości zostają deklaracją."));
+  if (KANALY.length === 1)
+    d.appendChild(el("div", "note", "Jeden kanał dla wszystkich to jeden z typowych błędów punktu 7.4 — hala, biuro i zarząd potrzebują różnych form i rytmu. Tu obowiązuje ta sama zasada."));
+  host.appendChild(d);
+
+  var p = el("div", "sekcja");
+  var hp = el("h3", null, "Działania z planu F-EnMS-12 oznaczone jako 7.3");
+  hp.appendChild(el("span", "chip " + (wierszePlanu().length ? "green" : "amber"),
+    ile(wierszePlanu().length, "pozycja", "pozycje", "pozycji")));
+  p.appendChild(hp);
+  p.appendChild(el("p", "opis", "Plan działań kompetencyjnych i szkoleń jest wspólny z punktem 7.2. Te pozycje wpisuje się tam — tutaj są tylko do wglądu."));
+  if (!wierszePlanu().length)
+    p.appendChild(hel("div", "warn", "Plan nie ma ani jednej pozycji oznaczonej jako 7.3. Procedura P-EnMS-05 przewiduje <b>wprowadzenie dla nowych osób i wykonawców</b> — 15 do 30 minut o polityce, celach, wpływie ich pracy, konsekwencjach i zgłaszaniu uwag. Dodajcie je w ankiecie punktu 7.2, zakładka „Plan szkoleń”."));
+  else
+    p.appendChild(tabela(["Nr", "Temat", "Grupa", "Forma", "Termin", "Status"],
+      wierszePlanu().map(function (x) {
+        return [x.nr || "—", (x.temat || "—").slice(0, 70), x.grupa || "—",
+          x.forma || "—", x.termin || "—", x.status || "—"];
+      }), ["mono"]));
+  host.appendChild(p);
+}
+
+/* ── zakładka 3: sprawdzenia rozmową ── */
+function rysujSprawdzenia(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Sprawdzenia świadomości");
+  h.appendChild(el("span", "chip " + (SPRAWDZENIA.length && SPRAWDZENIA.every(sprawdzenieOk) ? "green" : "amber"),
+    SPRAWDZENIA.filter(sprawdzenieOk).length + " / " + SPRAWDZENIA.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "note", "★ <b>Rada z książki:</b> raz na kwartał zapytajcie trzech losowo wybranych pracowników: co mówi nasza polityka, jak Twoja praca wpływa na energię, co się stanie, jeśli zasada nie będzie przestrzegana. <b>Odpowiedzi pokażą Wam więcej niż listy obecności.</b>"));
+  s.appendChild(pole("Rytm sprawdzeń",
+    inp(META.rytmSprawdzen, "np. Raz na kwartał, trzy losowo wybrane osoby z różnych grup",
+      function (v) { META.rytmSprawdzen = v; }),
+    "Krok 11 procedury P-EnMS-05. Sprawdzanie świadomości rozmową jest zaleceniem metodyki, nie wymogiem normy — ale to jedyny sposób, żeby wiedzieć, czy cztery elementy naprawdę dotarły."));
+  host.appendChild(s);
+
+  SPRAWDZENIA.forEach(function (x, i) {
+    var k = el("div", "poz" + (sprawdzenieOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Sprawdzenie " + (i + 1) + (x.data ? " · " + x.data : "")));
+    if ((x.luki || "").trim()) g.appendChild(el("span", "chip " + ((x.dzialanie || "").trim() ? "" : "red"),
+      (x.dzialanie || "").trim() ? "luki z działaniem" : "luki bez działania"));
+    g.appendChild(przyciskUsun(function () { SPRAWDZENIA.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Data", inp(x.data, "", function (v) { x.data = v; }, "date")));
+    k.appendChild(pole("Kto sprawdzał", inp(x.kto, "np. Energy Manager", function (v) { x.kto = v; })));
+    k.appendChild(pole("Z kim rozmawiano", inp(x.osoby, "np. Trzy osoby losowo: operator pras, magazynier, serwisant sprężarek",
+      function (v) { x.osoby = v; })));
+    k.appendChild(pole("Wynik — co ludzie odpowiedzieli", txt(x.wynik,
+      "np. Politykę kojarzą wszyscy troje; operator i magazynier trafnie wskazali swój wpływ; serwisant nie wiedział o celu na sprężonym powietrzu", 3,
+      function (v) { x.wynik = v; })));
+    k.appendChild(pole("Luki w świadomości", txt(x.luki,
+      "np. Wykonawcy nie znają celów energetycznych — wprowadzenie było, ale przed ich zatwierdzeniem", 2,
+      function (v) { x.luki = v; })));
+    k.appendChild(pole("Co z tym zrobiono", txt(x.dzialanie,
+      "np. Cele dopisane do wprowadzenia dla wykonawców; serwis dostał jednostronicową informację przy kolejnej wizycie", 2,
+      function (v) { x.dzialanie = v; })));
+    if ((x.luki || "").trim() && !(x.dzialanie || "").trim())
+      k.appendChild(el("div", "warn", "Sprawdzenie wykazało luki, ale nie zapisano, co z nimi zrobiono. Sprawdzenie bez reakcji jest tylko pomiarem — a to ten sam błąd, co dane zbierane i nieoglądane w punkcie 6.6."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj sprawdzenie", function () { SPRAWDZENIA.push({}); }));
+  if (!SPRAWDZENIA.length)
+    d.appendChild(el("div", "warn", "Nie zapisano żadnego sprawdzenia świadomości."));
+  else {
+    var m = miesiaceOdSprawdzenia();
+    if (m !== null && m > 6)
+      d.appendChild(el("div", "warn", "Od ostatniego sprawdzenia minęło około " + ile(Math.round(m), "miesiąc", "miesiące", "miesięcy") +
+        ". Przy rytmie kwartalnym to już luka — a audytor zapyta o ostatnie, nie o pierwsze."));
+    else if (m !== null && m > 4)
+      d.appendChild(el("div", "note", "Od ostatniego sprawdzenia minęło około " + ile(Math.round(m), "miesiąc", "miesiące", "miesięcy") + ". Zbliża się termin kolejnego."));
+  }
+  host.appendChild(d);
+}
+
+/* ── zakładka 4: przeszkody ── */
+var STANY_P = [["", "Wybierz"], ["zgloszona", "Zgłoszona"], ["wtoku", "W toku"],
+["usunieta", "Usunięta"], ["odrzucona", "Odrzucona — z uzasadnieniem"]];
+
+function rysujPrzeszkody(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Przeszkody w robieniu tego, co słuszne");
+  h.appendChild(el("span", "chip " + (PRZESZKODY.length && !przeszkodyBezDecyzji() ? "green" : "amber"),
+    PRZESZKODY.filter(przeszkodaOk).length + " / " + PRZESZKODY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Magazynier wiedział, jak zamknąć drzwi. Nie zamykał, bo <b>drzwi były ciężkie</b> i przy każdej palecie musiałby je otwierać od nowa. Wyjaśnianie nie pomogło. Pomogły automatyczne zamykacze.<br><br>Świadomość nie bierze się z plakatu. Bierze się z regularnej, konkretnej informacji, widocznych wyników — <b>i z usuwania przeszkód, które utrudniają ludziom robienie tego, co słuszne.</b>"));
+  s.appendChild(el("div", "note", "Zanim powiecie, że ludzie „nie chcą”, sprawdźcie, czy mają czas, wiedzę, informację i właściwe instrukcje. Ten rejestr jest po to, żeby takie przeszkody miały swoje miejsce — i decyzję."));
+  host.appendChild(s);
+
+  PRZESZKODY.forEach(function (p, i) {
+    var k = el("div", "poz" + (przeszkodaOk(p) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Przeszkoda " + (i + 1)));
+    if (p.stan) g.appendChild(el("span", "chip " + (p.stan === "usunieta" ? "green" : p.stan === "zgloszona" ? "amber" : ""),
+      (STANY_P.filter(function (o) { return o[0] === p.stan; })[0] || ["", ""])[1]));
+    g.appendChild(przyciskUsun(function () { PRZESZKODY.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Co utrudnia", txt(p.opis, "np. Zaworów odcinających przy prasach nie da się zamknąć bez klucza, a klucz ma tylko utrzymanie ruchu", 2,
+      function (v) { p.opis = v; })));
+    k.appendChild(pole("Kogo dotyczy", inp(p.grupa, "np. Operatorzy pras", function (v) { p.grupa = v; })));
+    k.appendChild(pole("Kto i kiedy zgłosił", inp(p.zglosil, "np. Operator na spotkaniu zmiany, 06.2026", function (v) { p.zglosil = v; })));
+    k.appendChild(pole("Decyzja", txt(p.decyzja, "np. Wymiana zaworów na dźwigniowe przy czterech prasach — 3 tys. zł, utrzymanie ruchu, do 30.09.2026", 2,
+      function (v) { p.decyzja = v; })));
+    k.appendChild(pole("Stan", sel(p.stan, STANY_P, function (v) { p.stan = v; })));
+    k.appendChild(pole("Efekt", txt(p.efekt, "np. Zawory wymienione; przepływ w czasie postoju spadł z 6,5 do 5,8 Nm³/min", 2,
+      function (v) { p.efekt = v; })));
+    if ((p.opis || "").trim() && !(p.decyzja || "").trim())
+      k.appendChild(el("div", "warn", "Przeszkoda bez decyzji. Zgłoszenie bez odpowiedzi jest dokładnie tym, co uczy ludzi, że zgłaszanie nie ma sensu — o tym jest punkt 7.4."));
+    if (p.stan === "odrzucona" && !(p.efekt || "").trim())
+      k.appendChild(el("div", "note", "Odrzucenie jest poprawną odpowiedzią, jeśli ma uzasadnienie. Warto je zapisać w polu „efekt” — i przekazać zgłaszającemu."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj przeszkodę", function () { PRZESZKODY.push({}); }));
+  if (!PRZESZKODY.length)
+    d.appendChild(el("div", "note", "Rejestr przeszkód jest pusty. To możliwe, ale rzadkie — jeśli ludzie czegoś nie robią, zwykle istnieje powód w organizacji pracy. Pusty rejestr bywa znakiem, że nikt o to nie zapytał."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz świadomości: "));
+  n.appendChild(document.createTextNode(
+    ile(GRUPY.length, "grupa", "grupy", "grup") + " (wykonawcy: " + (maWykonawce() ? "tak" : "nie") + ") · " +
+    "elementy opisane: " + GRUPY.reduce(function (a, g) { return a + elementyGrupy(g); }, 0) + " z " + (GRUPY.length * 4) + " · " +
+    ile(KANALY.length, "kanał", "kanały", "kanałów") + " · " +
+    ile(SPRAWDZENIA.length, "sprawdzenie", "sprawdzenia", "sprawdzeń") + " · " +
+    ile(PRZESZKODY.length, "przeszkoda", "przeszkody", "przeszkód") +
+    " (otwartych: " + przeszkodyOtwarte().length + ")"));
+  s.appendChild(n);
+  if (!maWykonawce())
+    s.appendChild(el("div", "warn", "Brak grupy wykonawców. Do sprawdzenia w rozmowie: kto wchodzi na teren zakładu po godzinach i kto zmienia parametry urządzeń. Scena producenta stolarki z książki — „jaką politykę?” na audycie certyfikującym — kosztowała około 35 tys. zł i przesunięcie certyfikacji."));
+  var niepelne = GRUPY.filter(function (g) { return (g.nazwa || "").trim() && elementyGrupy(g) < 4; });
+  if (niepelne.length)
+    s.appendChild(el("div", "warn", "Grupy z niepełnym opisem elementów: " +
+      niepelne.map(function (g) { return g.nazwa + " (" + elementyGrupy(g) + "/4)"; }).join("; ") + "."));
+  if (powtorzonyWplyw())
+    s.appendChild(el("div", "note", "Opis wpływu powtarza się między grupami. Do rozmowy: element c ma odpowiadać na pytanie „co konkretnie w mojej pracy zmienia zużycie”, a odpowiedź magazyniera i operatora prasy nie może być ta sama."));
+  var m = miesiaceOdSprawdzenia();
+  if (m === null)
+    s.appendChild(el("div", "warn", "Brak zapisanego sprawdzenia świadomości. To zalecenie metodyki, nie wymóg normy — ale bez niego nie wiadomo, czy cztery elementy dotarły, a audytor sprawdza to rozmową z pracownikami, nie lekturą formularza."));
+  else if (m > 6)
+    s.appendChild(el("div", "warn", "Ostatnie sprawdzenie sprzed około " + ile(Math.round(m), "miesiąca", "miesięcy", "miesięcy") + "."));
+  if (lukiBezDzialania())
+    s.appendChild(el("div", "warn", ile(lukiBezDzialania(), "sprawdzenie wykazało", "sprawdzenia wykazały", "sprawdzeń wykazało") +
+      " luki bez zapisanej reakcji."));
+  if (przeszkodyBezDecyzji())
+    s.appendChild(el("div", "warn", ile(przeszkodyBezDecyzji(), "przeszkoda nie ma", "przeszkody nie mają", "przeszkód nie ma") +
+      " decyzji. To wprost uczy ludzi, że zgłaszanie nie ma sensu."));
+  if (!PRZESZKODY.length)
+    s.appendChild(el("div", "note", "Pusty rejestr przeszkód. Warto zapytać na hali — zwykle znajduje się co najmniej jedna. Jeśli naprawdę nie ma, to też jest ustalenie warte zapisania."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-32, sekcja 7.3 ── */
+function stanPozycji(p) {
+  var f = {
+    polityka: function () { return GRUPY.length > 0 && maWykonawce() && GRUPY.every(function (g) { return (g.polityka || "").trim(); }); },
+    wklad: function () { return GRUPY.length > 0 && maWykonawce() && GRUPY.every(function (g) { return (g.wklad || "").trim(); }); },
+    wplyw: function () { return GRUPY.length > 0 && maWykonawce() && GRUPY.every(function (g) { return (g.wplyw || "").trim(); }); },
+    konsekwencje: function () { return GRUPY.length > 0 && maWykonawce() && GRUPY.every(function (g) { return (g.konsekwencje || "").trim(); }); },
+    sprawdzanie: function () {
+      var m = miesiaceOdSprawdzenia();
+      return SPRAWDZENIA.length > 0 && SPRAWDZENIA.every(sprawdzenieOk) && m !== null && m <= 6
+        && !lukiBezDzialania() && !przeszkodyBezDecyzji() && !!(META.rytmSprawdzen || "").trim();
+    }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!GRUPY.length) b.push({ t: "Nie określono żadnej grupy osób.", kto: "klient" });
+  if (GRUPY.length && !maWykonawce())
+    b.push({ t: "Nie uwzględniono wykonawców pracujących pod nadzorem organizacji.", kto: "klient" });
+  GRUPY.forEach(function (g, i) {
+    var nazwa = (g.nazwa || "Grupa " + (i + 1));
+    if (!(g.nazwa || "").trim()) b.push({ t: "Grupa " + (i + 1) + " — brak nazwy.", kto: "klient" });
+    ELEMENTY.forEach(function (e) {
+      if (!(g[e.kod] || "").trim())
+        b.push({ t: nazwa + " — brak elementu " + e.lit + " " + e.nazwa.toLowerCase() + ".", kto: "klient" });
+    });
+  });
+  if (powtorzonyWplyw()) b.push({ t: "Opis wpływu powtarza się dosłownie między grupami.", kto: "klient", metodyka: true });
+  if (!KANALY.length) b.push({ t: "Nie opisano żadnego kanału przekazywania informacji.", kto: "klient", metodyka: true });
+  KANALY.forEach(function (k, i) {
+    if (!kanalOk(k)) b.push({ t: "Kanał " + (k.nazwa || i + 1) + " — brak treści, rytmu albo osoby prowadzącej.", kto: "klient", metodyka: true });
+  });
+  if (!wierszePlanu().length)
+    b.push({ t: "Plan F-EnMS-12 nie ma pozycji oznaczonej jako 7.3 — brak wprowadzenia dla nowych osób i wykonawców.", kto: "klient", metodyka: true });
+  if (!(META.rytmSprawdzen || "").trim()) b.push({ t: "Nie ustalono rytmu sprawdzania świadomości.", kto: "klient", metodyka: true });
+  if (!SPRAWDZENIA.length) b.push({ t: "Nie zapisano żadnego sprawdzenia świadomości.", kto: "klient", metodyka: true });
+  SPRAWDZENIA.forEach(function (x, i) {
+    if (!sprawdzenieOk(x)) b.push({ t: "Sprawdzenie " + (i + 1) + " — brak daty, osoby sprawdzającej albo wyniku.", kto: "klient", metodyka: true });
+  });
+  if (lukiBezDzialania()) b.push({ t: "Sprawdzenia z lukami bez zapisanej reakcji: " + lukiBezDzialania() + ".", kto: "klient", metodyka: true });
+  if (przeszkodyBezDecyzji()) b.push({ t: "Przeszkody bez decyzji: " + przeszkodyBezDecyzji() + ".", kto: "klient", metodyka: true });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-SWI-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Jan Kowalski — Energy Manager", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_73, "Lista kontrolna III-32 — sekcja 7.3", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-SWI-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Grupy i cztery elementy", "zakładka 1", ile(GRUPY.length, "grupa", "grupy", "grup") + " · " +
+      GRUPY.reduce(function (a, g) { return a + elementyGrupy(g); }, 0) + " z " + (GRUPY.length * 4) + " elementów"],
+    ["Kanały i rytm", "zakładka 2", ile(KANALY.length, "kanał", "kanały", "kanałów")],
+    ["Działania z planu F-EnMS-12", "punkt 7.2", ile(wierszePlanu().length, "pozycja", "pozycje", "pozycji") + " oznaczonych jako 7.3"],
+    ["Sprawdzenia świadomości", "zakładka 3", ile(SPRAWDZENIA.length, "sprawdzenie", "sprawdzenia", "sprawdzeń") +
+      (ostatnieSprawdzenie() ? ", ostatnie " + ostatnieSprawdzenie() : "")],
+    ["Rejestr przeszkód", "zakładka 4", ile(PRZESZKODY.length, "przeszkoda", "przeszkody", "przeszkód") +
+      " · usuniętych: " + PRZESZKODY.filter(function (p) { return p.stan === "usunieta"; }).length],
+    ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Punkt 7.3 <b>nie wymaga udokumentowanej informacji</b> — wymaga stanu: żeby ludzie byli świadomi czterech rzeczy. Dowodem na audycie jest rozmowa z pracownikami, nie formularz. Dokument D-EnMS-SWI-01 jest narzędziem metodyki ENESA: pokazuje, co zrobiliście, żeby ten stan osiągnąć, i co sprawdzenia wykazały."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "grupy", t: "1. Grupy i elementy", f: rysujGrupy },
+  { id: "kanaly", t: "2. Kanały i rytm", f: rysujKanaly },
+  { id: "sprawdz", t: "3. Sprawdzenia", f: rysujSprawdzenia },
+  { id: "przeszkody", t: "4. Przeszkody", f: rysujPrzeszkody },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(GRUPY.length, 1) * 4 + Math.max(KANALY.length, 1) + Math.max(SPRAWDZENIA.length, 1) + 2,
+    zrob: GRUPY.reduce(function (a, g) { return a + elementyGrupy(g); }, 0)
+      + KANALY.filter(kanalOk).length + SPRAWDZENIA.filter(sprawdzenieOk).length
+      + ((META.rytmSprawdzen || "").trim() ? 1 : 0)
+      + ((META.zatwierdzil || "").trim() && META.data ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_73", JSON.stringify({
+      GRUPY: GRUPY, KANALY: KANALY, SPRAWDZENIA: SPRAWDZENIA, PRZESZKODY: PRZESZKODY,
+      META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_73");
+    if (s) {
+      var d = JSON.parse(s);
+      GRUPY = d.GRUPY || []; KANALY = d.KANALY || []; SPRAWDZENIA = d.SPRAWDZENIA || [];
+      PRZESZKODY = d.PRZESZKODY || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+    }
+    var s2 = localStorage.getItem(MAGAZYN_PLAN);
+    if (s2) PLAN = (JSON.parse(s2).PLAN) || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  GRUPY = JSON.parse(JSON.stringify(P_GRUPY));
+  KANALY = JSON.parse(JSON.stringify(P_KANALY));
+  SPRAWDZENIA = JSON.parse(JSON.stringify(P_SPRAWDZENIA));
+  PRZESZKODY = JSON.parse(JSON.stringify(P_PRZESZKODY));
+  META = JSON.parse(JSON.stringify(P_META));
+  if (!PLAN.length && typeof P_PLAN_PODGLAD !== "undefined") {
+    PLAN = JSON.parse(JSON.stringify(P_PLAN_PODGLAD));
+    try { localStorage.setItem(MAGAZYN_PLAN, JSON.stringify({ PLAN: PLAN })); } catch (e) { }
+  }
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety? Plan szkoleń należy do punktu 7.2 i zostanie.")) return;
+  GRUPY = []; KANALY = []; SPRAWDZENIA = []; PRZESZKODY = []; WNIOSKI = [];
+  META = { zatwierdzil: "", data: "", rytmSprawdzen: "" };
+  try { localStorage.removeItem("enesa_73"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

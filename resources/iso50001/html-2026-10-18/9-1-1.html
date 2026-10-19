@@ -1,0 +1,1728 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 9.1.1 Monitorowanie, pomiary, analiza i ocena</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 9</div>
+ <h1>9.1.1 Monitorowanie, pomiary, analiza i ocena</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 9.1.1</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 9.1.1</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>9.1.1 Monitorowanie, pomiary, analiza i ocena</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 9.1.1 i cztery kluczowe charakterystyki.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 9.1.1<br>Monitorowanie</div>
+   <div>
+    <h4>9.1.1 Monitorowanie, pomiary, analiza i ocena</h4>
+    <p>Cztery czynności, nie jedna. Cztery kluczowe charakterystyki. Jak porównywać uczciwie.
+    Odchylenie a niezgodność.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 9.1.1. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">9.1.1 — monitorowanie<br>12 slajdów</div>
+   <div>
+    <h4>9.1.1 Monitorowanie i ocena</h4>
+    <p>Pomiar, monitorowanie, analiza, ocena. Dwie pułapki porównań. Czy system działa.
+    Progi reagowania.</p>
+    <p style="font-size:12.5px">12 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Dla wyniku energetycznego i systemu zarządzania energią organizacja ustala,
+ co trzeba monitorować i mierzyć — co najmniej cztery kluczowe charakterystyki — jakimi metodami, kiedy
+ prowadzi się pomiary i kiedy wyniki analizuje się i ocenia. Ocenia swój wynik energetyczny i skuteczność
+ systemu. Poprawę wyniku ocenia, porównując wartości EnPI z odpowiadającymi im liniami bazowymi. Znaczące
+ odchylenia bada i na nie reaguje, zachowując informacje o wynikach badań i reakcji oraz o wynikach
+ monitorowania i pomiarów. Omówienie na podstawie punktu 9.1.1 PN-EN ISO 50001:2018; nie jest to dosłowne
+ brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> ustal, co, jak i kiedy mierzysz
+ i analizujesz; oceniaj wynik energetyczny i skuteczność systemu, a znaczące odchylenia badaj i na nie
+ reaguj.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 8, punkt 9.1.1. Raport z monitorowania i oceny:
+ III-41; przykład AutoParts: III-42.</div>
+
+ <div class="ramka">
+  <h3>◧ „Ogłaszamy? System działa”</h3>
+  <p style="font-size:13.5px">Sierpień 2026 r., zestawienie za lipiec. Zużycie energii w AutoParts:
+  <b>795 MWh</b>. W marcu było <b>1 030 MWh</b> — prawie jedna czwarta mniej. Dyrektor zakładu Piotr Nowak
+  jest zadowolony: „Ogłaszamy? System działa”.</p>
+  <p style="font-size:13.5px">Jan Kowalski zadaje dwa pytania: <b>ile wyprodukowaliśmy i czy grzaliśmy
+  hale?</b> W marcu prasy przerobiły 2 100 ton stali i trzeba było ogrzewać hale. W lipcu — 1 800 ton, część
+  załogi na urlopach i ani jednego dnia grzania. Model zużycia zakładu mówi, że w takich warunkach oczekiwane
+  zużycie to około 820 MWh w lipcu i około 1 057 MWh w marcu. Wskaźnik „rzeczywiste do oczekiwanego” wyniósł
+  0,970 w lipcu i 0,974 w marcu.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Zużycie spadło o prawie 23%. <b>Wynik energetyczny praktycznie
+  się nie zmienił</b> — w obu miesiącach zakład zużył około 3% mniej, niż przewiduje model. Spadek zrobiły lato
+  i plan produkcji. <b>Punkt 9.1 jest o tym, żeby umieć powiedzieć, które z tych dwóch zdań jest prawdziwe —
+  zanim ktoś je ogłosi.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Cztery czynności, nie jedna</h3>
+ <p style="font-size:14.5px">W wielu firmach „monitoring” oznacza zbieranie danych i raport na koniec
+ miesiąca. Norma wymienia cztery różne czynności — i każda daje coś innego:</p>
+ <table class="tab">
+ <tr><th style="width:20%">Czynność</th><th>Co daje — na przykładzie sprężarkowni AutoParts</th></tr>
+ <tr><td><b>Pomiar</b></td><td>Wartość: w tym tygodniu sprężarkownia zużyła 36 MWh i wytworzyła 303 tys. Nm³ powietrza.</td></tr>
+ <tr><td><b>Monitorowanie</b></td><td>Przebieg: w pierwszym tygodniu po obniżeniu ciśnienia wskaźnik wynosił około 0,120 kWh/Nm³, w następnym — około 0,125.</td></tr>
+ <tr><td><b>Analiza</b></td><td>Zależność: wzrost zaczął się w dniu przeglądu serwisowego, a ciśnienie w sieci podskoczyło do 7 bar.</td></tr>
+ <tr><td><b>Ocena</b></td><td>Znaczenie: to znaczące odchylenie od zamierzonego wyniku, kryterium z punktu 8.1 nie zadziałało, trzeba reagować.</td></tr>
+ </table>
+ <p style="font-size:14.5px">Same pomiary nie dadzą odpowiedzi. Same wykresy też nie. <b>Odpowiedź daje
+ dopiero ocena — a ocena wymaga, żeby ktoś wiedział, z czym porównuje.</b></p>
+
+ <h3 style="margin-top:22px">Co trzeba śledzić? Cztery kluczowe charakterystyki</h3>
+ <table class="tab">
+ <tr><th style="width:26%">Kluczowa charakterystyka</th><th>Przykład AutoParts</th><th style="width:20%">★ Jak często</th></tr>
+ <tr><td><b>Skuteczność planów działań</b></td><td>Czy działania z planu (III-24) są wykonane i czy przynoszą zakładany efekt — np. przepływ w postoju 9 → 6 Nm³/min</td><td>Co kwartał</td></tr>
+ <tr><td><b>Wskaźniki wyniku energetycznego</b></td><td>O-1 dla zakładu, P-1 prasy, L-1 lakiernia, S-1 sprężarkownia, K-1 kotłownia, OŚ-1 oświetlenie</td><td>Co miesiąc; S-1 co tydzień</td></tr>
+ <tr><td><b>Działanie znaczących użyć energii</b></td><td>Czy SEU pracują według kryteriów z 8.1: ciśnienie ≤ 6,3 bar, tryby postoju</td><td>Na bieżąco (sterownik, obchody)</td></tr>
+ <tr><td><b>Zużycie rzeczywiste a oczekiwane</b></td><td>Model zakładu: 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh stałego zużycia w miesiącu</td><td>Co miesiąc</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ Częstotliwości w trzeciej kolumnie to wybór AutoParts, <b>nie wymaganie
+ normy</b>. Norma każe je ustalić. Dobieracie je do tego, jak szybko coś może się zepsuć i ile kosztuje
+ zwłoka. Wskaźnik sprężarkowni AutoParts sprawdza co tydzień, bo <b>jedna zła nastawa kosztuje tam tysiące
+ złotych miesięcznie.</b></p>
+
+ <h3 style="margin-top:22px">Jak porównywać uczciwie? Dwie pułapki</h3>
+ <table class="tab">
+ <tr><th style="width:30%">Pułapka</th><th>Na czym polega</th></tr>
+ <tr><td><b>„Wyżej znaczy gorzej”</b></td><td>Dla kWh/Nm³ niższa wartość oznacza poprawę. Dla wskaźnika „rzeczywiste do oczekiwanego” — wartość poniżej 1. Ale dla wskaźnika typu „udział ciepła odzyskanego” poprawą jest wzrost. <b>Kierunek wynika z definicji wskaźnika, którą zapisaliście w punkcie 6.4.</b></td></tr>
+ <tr><td><b>„Wskaźnik na tonę wzrósł, więc jest gorzej”</b></td><td>Produkcja spada o 15% (2 000 → 1 700 t), zużycie o 12% (840 → 739 MWh). Zużycie na tonę rośnie z 420 do 435 kWh. Pogorszenie? Model uwzględniający zużycie stałe mówi co innego: oczekiwane spada z 866 do 797 MWh, a wskaźnik „rzeczywiste do oczekiwanego” <b>poprawia się z 0,970 do 0,927</b>. Przy dużym zużyciu stałym prosty wskaźnik na tonę rośnie, gdy produkcja spada — nawet jeśli zakład pracuje lepiej.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Wynik energetyczny to nie wszystko — czy system działa?</h3>
+ <p style="font-size:14.5px">Norma każe oceniać także skuteczność systemu. To inne pytanie niż „ile
+ zużyliśmy”: czy działania z planów są wykonywane w terminie, czy odchylenia są badane, czy kryteria z 8.1
+ są stosowane, czy ustalenia z analiz trafiają do praktyki. <b>Zakład może mieć dobry wynik w łagodną zimę,
+ choć połowa systemu stoi. I odwrotnie — może mieć słaby miesiąc, choć system działa bez zarzutu.</b></p>
+ <p style="font-size:13.5px">★ AutoParts ocenia skuteczność systemu raz na kwartał, w kilku zdaniach raportu
+ dla dyrektora: ile działań z planu jest wykonanych w terminie, ile znaczących odchyleń wykryto, ile z nich
+ zbadano i jak szybko, co zmieniono po analizach.</p>
+
+ <h3 style="margin-top:22px">Odchylenie: zbadaj, zareaguj — i nie myl tego z działaniem korygującym</h3>
+ <p style="font-size:14.5px">Nie każde odchylenie wymaga reakcji. Wahania z tygodnia na tydzień to normalna
+ rzecz. Norma każe badać <b>znaczące</b> odchylenia — a to, co jest znaczące, ustalacie sami, np. progiem
+ dla wskaźnika. Kolejność jest prosta:</p>
+ <table class="tab">
+ <tr><th style="width:8%">Krok</th><th>Co zrobić</th></tr>
+ <tr><td><b>1</b></td><td>Zbadaj, co się stało: błąd pomiaru, zmiana warunków, awaria, zmiana nastawy?</td></tr>
+ <tr><td><b>2</b></td><td>Zareaguj adekwatnie: popraw dane, uwzględnij zmienną, napraw urządzenie, przywróć nastawę.</td></tr>
+ <tr><td><b>3</b></td><td>Jeśli przy okazji okaże się, że <b>nie spełniono wymagania</b> — np. kryterium z 8.1 nie zostało zastosowane — to jest niezgodność. Wtedy stosujecie zasady z punktu 10.1: reagujecie, oceniacie potrzebę usunięcia przyczyny, wdrażacie potrzebne działania i sprawdzacie ich skuteczność.</td></tr>
+ <tr><td><b>4</b></td><td>Zapisz wynik badania i reakcji. <b>Tego norma wymaga.</b></td></tr>
+ </table>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts, czerwiec 2026: wskaźnik sprężarkowni 0,120 → 0,125 kWh/Nm³</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Wzrost przekracza próg ustalony dla S-1, a produkcja i temperatura były takie jak tydzień wcześniej — to znaczące odchylenie.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Kierownik utrzymania ruchu sprawdza kolejno nastawę, pracę sprężarek, filtry, wycieki — w kolejności z kryteriów 8.1.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Przyczyna: serwis po przeglądzie przywrócił 7 bar. Reakcja: powrót do 6,3 bar tego samego dnia. Ponieważ nie zastosowano kryterium, <b>jest to niezgodność</b>. Działanie korygujące (10.1): trzy zdania w zleceniu serwisowym.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>W kolejnych tygodniach wskaźnik wrócił do około 0,120. Przy następnym przeglądzie kierownik UR miał sprawdzić protokół z nastawami — <b>wrześniowy audyt pokazał, że tego zabrakło</b> (9.2). Zapis: notatka w zestawieniu tygodniowym i karta niezgodności.</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ <b>Rada:</b> ustalcie progi i terminy, które uruchamiają reakcję — np. wzrost
+ tygodniowego wskaźnika o więcej niż kilka procent wobec średniej z ostatnich tygodni, luka w danych dłuższa
+ niż tydzień, raport miesięczny w ciągu dziesięciu dni po zamknięciu miesiąca. To przykłady organizacji pracy,
+ nie wymagania normy.</p>
+
+ <h3 style="margin-top:22px">Jakie dane są potrzebne?</h3>
+ <p style="font-size:14.5px">Odpowiednie i wiarygodne. Sposób ich uzyskania wynika z potrzeb, <b>nie z zasady
+ „podlicznik na każdym SEU”.</b> AutoParts ma podlicznik i przepływomierz w sprężarkowni, bo tam liczy się
+ każdy tydzień. Oświetlenie ocenia z pomiaru mocy rozdzielnic i czasu pracy, a lakiernię — z modelu (6.6).
+ Ważne, żeby metoda dawała wiarygodne wyniki, a <b>luki w danych miały ustalony sposób uzupełniania.</b></p>
+
+ <div class="ramka">
+  <h3>✗ Czego unikać: system monitoringu za 85 000 zł</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Producent okien PVC, około 200 pracowników. Firma zainwestowała
+  85 000 zł w system monitoringu: liczniki na wszystkich liniach, automatyczne raporty, wykresy online. Raporty
+  co tydzień trafiały do skrzynki Energy Managera, który „nie miał czasu”. Jedna z linii od czterech miesięcy
+  zużywała o 35% więcej energii na metr profilu niż wcześniej, przy podobnej produkcji. System to pokazywał,
+  ale nikt tego nie zauważył. Przyczyna: zapchany wymiennik ciepła — naprawa za 2 000 zł. Nadmierne zużycie
+  kosztowało w tym czasie około 45 000 zł. Na audycie certyfikującym: dane były, analiz i reakcji nie —
+  niezgodność z punktem 9.1.1. <b>System monitoringu bez kogoś, kto patrzy na dane, kosztuje dwa razy:
+  przy zakupie i w rachunkach.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Porównanie dwóch dowolnych miesięcy</td><td>Porównujcie EnPI z odpowiadającą mu EnB, w porównywalnych warunkach</td></tr>
+ <tr><td>Spadek zużycia ogłoszony jako poprawa wyniku</td><td>Najpierw sprawdźcie produkcję, pogodę i inne zmienne; porównajcie zużycie rzeczywiste z oczekiwanym</td></tr>
+ <tr><td>Dane zbierane automatycznie, nikt ich nie analizuje</td><td>Wyznaczcie osobę i termin analizy; przy SEU — rytm dopasowany do ryzyka</td></tr>
+ <tr><td>Każde wahanie traktowane jak alarm</td><td>Ustalcie, co jest znaczącym odchyleniem; resztę obserwujcie</td></tr>
+ <tr><td>Odchylenie wyjaśnione, ale niezapisane</td><td>Zapiszcie przyczynę i reakcję — tego wymaga norma</td></tr>
+ <tr><td>Ocena tylko liczb, bez oceny systemu</td><td>Sprawdzajcie też, czy działania, kryteria i ustalenia działają</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Monitorowanie to cztery czynności: pomiar, śledzenie przebiegu,
+  analiza i ocena. Dopiero ocena powie, czy wynik energetyczny się poprawił i czy system działa.<br><br>
+  <b>Zadanie:</b> weźcie ostatni miesiąc, w którym zużycie wyraźnie spadło albo wzrosło, i sprawdźcie, ile
+  z tej zmiany wyjaśnia produkcja i pogoda. Ankieta liczy to za Was w części A — wystarczy wpisać zmienne
+  i zużycie rzeczywiste.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma liczy zużycie oczekiwane z modelu, iloraz rzeczywistego do oczekiwanego
+  oraz zmianę każdego EnPI wobec jego EnB — i sprawdza tę zmianę wobec zadeklarowanego kierunku poprawy.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 9.1.1 w formacie stron 4.1–8.3.</b> Druga po 8.3 strona, w której <b>platforma
+liczy</b>, i pierwsza, w której liczenie służy <b>rozstrzyganiu sporu</b>: czy spadek zużycia był poprawą
+wyniku energetycznego, czy zasługą produkcji i pogody. Formularz F-EnMS-17 jest jeden dla 9.1.1 i 9.1.2 —
+części A, B, C i E są tutaj, część D (ocena zgodności) w punkcie 9.1.2.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 8, punkt 9.1.1</td><td>Scena „Ogłaszamy? System działa” z liczbami marca i lipca 2026, cztery czynności na przykładzie sprężarkowni, tabela czterech kluczowych charakterystyk z częstotliwościami AutoParts, dwie pułapki porównań wraz z przykładem liczbowym spadku produkcji o 15%, akapit o ocenie skuteczności systemu, akapit o danych odpowiednich i wiarygodnych, czterokrokowa kolejność przy odchyleniu, przykład czerwcowy w czterech ogniwach, rada o progach, przykład ilustracyjny producenta okien PVC, tabela sześciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 7 — III-41 (F-EnMS-17)</td><td>Metryka raportu (okres, data, sporządził, odbiorcy) i części: A zużycie rzeczywiste a oczekiwane, B EnPI wobec odpowiadających im EnB z kolumną kierunku poprawy, C działanie SEU i plany działań oraz osobna tabela znaczących odchyleń z kolumną „niezgodność? → 10.1”, E wnioski i ocena skuteczności systemu.</td></tr>
+<tr><td>Część III, Moduł 7 — III-42</td><td>Przykład za sierpień 2026: model 0,23·t + 0,48·HDD + 406, wiersz 2 050 t i 10 HDD, sześć wskaźników z wartościami i zmianami, trzy pozycje części C, uwaga o dowodzie spełnienia kryterium sprężarkowni, wnioski części E.</td></tr>
+<tr><td>Część III, Moduł 7 — III-47</td><td>Lista kontrolna sekcji 9.1.1: 9 pozycji — osiem wymagań normy i jedno zalecenie metodyki.</td></tr>
+<tr><td>Część III, Moduł 7 — III-48, pkt 4.1</td><td>Kroki 1–5 procedury P-EnMS-07: zestawienie co, jak i kiedy; porównanie EnPI z EnB w porównywalnych warunkach; definicja znaczącego odchylenia i termin badania; kwartalna ocena skuteczności systemu; obieg raportu i zachowanie zapisów.</td></tr>
+</table>
+<div class="warn"><b>Sprawdzenie liczb przykładu.</b> Model: 0,23·2 050 + 0,48·10 + 406 = 882,3 ≈ 882 MWh;
+851 / 882 = 0,965 — <b>zgodnie z III-42</b>. Lipiec: 0,23·1 800 + 0,48·0 + 406 = 820; 795 / 820 = 0,970.
+Marzec: 0,23·2 100 + 0,48·350 + 406 = 1 057; 1 030 / 1 057 = 0,974 — <b>zgodnie ze sceną z rozdziału 8</b>.
+Zmiany w części B: O-1 −3,5%, P-1 −2,0%, L-1 −1,0%, S-1 −5,6%, OŚ-1 −1,6% — wszystkie zgodne z III-42.
+Sprawdzenie modelu na roku bazowym: 0,23·24 000 + 0,48·3 600 + 406·12 = 12 120 MWh, czyli zużycie
+AutoParts w 2025 r. <b>Te wyliczenia są testem regresji</b> — przy zmianie wzorów w implementacji muszą
+dawać te same wartości.</div>
+<div class="note">Liczba stopniodni dla marca (350) i rozbicie zużycia na nośniki dla lipca i marca
+<b>nie pochodzą z Toolkitu</b>. Stopniodni wyliczyliśmy wstecz z podanego w książce zużycia oczekiwanego
+1 057 MWh — przy modelu 0,23·2 100 + 406 = 889 reszta 168 MWh daje 350 HDD. Wartość jest spójna
+z marcem w klimacie Polski, ale przy publikacji wymaga potwierdzenia danymi meteorologicznymi
+dla lokalizacji zakładu. Dwa dodatkowe wiersze części C (lakiernia, kotłownia) i progi odchyleń dla
+poszczególnych wskaźników są naszym rozszerzeniem — bez progów nie dałoby się pokazać walidacji, której
+wymaga lista kontrolna.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>ustalenie_monitorowania</code></td><td>id, audyt_id, charakterystyka ENUM('plany','enpi','seu','rzecz_ocz'), co, zrodlo, metoda, kto_mierzy, czestosc_pomiaru, kto_analizuje, czestosc_analizy, prog. <b>Cztery wiersze są obowiązkowe</b> — to minimum normy; dalsze można dodawać.</td></tr>
+<tr><td><code>model_zuzycia</code></td><td>audyt_id, wsp_a, zmienna_a, wsp_b, zmienna_b, zuzycie_stale, zrodlo. Docelowo <b>współdzielony z punktem 6.4</b> (karta wskaźnika O-1) — dziś wpisywany ponownie.</td></tr>
+<tr><td><code>okres_monitorowania</code></td><td>id, audyt_id, okres, x1, x2, zuzycie_rzeczywiste, rozbicie_nosniki, komentarz. Zużycie oczekiwane i iloraz <b>nie są przechowywane</b> — platforma liczy je przy każdym wyświetleniu z aktualnego modelu.</td></tr>
+<tr><td><code>wartosc_enpi</code></td><td>id, audyt_id, enpi_id, okres, wartosc, ocena. Kod, nazwa, kierunek, EnB i próg należą do <b>karty wskaźnika z 6.4</b> — tutaj są kopiowane tylko dlatego, że makieta jest samodzielna.</td></tr>
+<tr><td><code>stan_seu</code></td><td>id, raport_id, obszar, kryterium, stan ENUM, uwagi. <code>obszar</code> docelowo klucz obcy do SEU z 6.3 albo do karty kryteriów z 8.1.</td></tr>
+<tr><td><code>odchylenie</code></td><td>id, raport_id, co, kiedy, wartosc_proc, prog_proc, przyczyna, reakcja, czy_niezgodnosc BOOL, kto_kiedy, dzialanie. Przy <code>czy_niezgodnosc</code> — klucz obcy do karty niezgodności z 10.1.</td></tr>
+<tr><td><code>ocena_okresowa</code></td><td>raport_id, wynik_energetyczny, skutecznosc_systemu, rekomendacje, rytm_oceny_systemu. Część E — jeden rekord na raport.</td></tr>
+</table>
+
+<h2>Liczenie</h2>
+<table>
+<tr><th style="width:30%">Wielkość</th><th>Wzór i uwagi dla implementacji</th></tr>
+<tr><td>Zużycie oczekiwane [MWh]</td><td><code>a·x1 + b·x2 + c</code>. Platforma pokazuje nie tylko wynik, ale i <b>podstawiony wzór</b> — tak jak III-42: „882 (0,23·2 050 + 0,48·10 + 406)”. To celowe: liczba bez wzoru nie daje się sprawdzić na spotkaniu.</td></tr>
+<tr><td>Rzeczywiste / oczekiwane</td><td><code>zuzycie_rzeczywiste / oczekiwane</code>, trzy miejsca po przecinku. To jednocześnie wartość wskaźnika O-1.</td></tr>
+<tr><td>Zmiana EnPI wobec EnB</td><td><code>(wartosc − enb) / enb · 100%</code>. Wyświetlana ze znakiem; zielony chip, gdy zgodna z kierunkiem poprawy, czerwony — gdy przeciwna.</td></tr>
+<tr><td>Kierunek poprawy</td><td><code>nizej</code> albo <code>wyzej</code>, <b>z karty wskaźnika z 6.4</b>. Bez tego pola znak zmiany nie znaczy nic — i to jest cała treść pułapki „wyżej znaczy gorzej”.</td></tr>
+<tr><td>Model przy więcej niż dwóch zmiennych</td><td>Makieta ma dwie zmienne, bo tyle ma model AutoParts. Przy wdrożeniu: <code>model_zmienna</code> jako tabela podrzędna i suma iloczynów — wzór podstawiony generowany z tej listy.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Dane zbierane, nikt ich nie analizuje</b></td><td>Charakterystyka ma źródło i częstotliwość pomiaru, nie ma osoby ani częstotliwości analizy → ostrzeżenie cytujące przypadek producenta okien PVC: 85 000 zł na system, 45 000 zł nadmiernego zużycia, naprawa za 2 000 zł. Pozycja w braki() i w analizie konsultanta. <b>To jest ta niezgodność, którą audytorzy w tym punkcie stawiają najczęściej.</b></td></tr>
+<tr><td><b>Spadek zużycia ogłoszony jako poprawa</b></td><td>Reguła <b>nie</b> sprawdza, czy iloraz się pogorszył — w lipcu drgnął o 0,4% w dobrą stronę, więc taki warunek milczałby na przypadku, dla którego powstał. Sprawdza <b>nieproporcjonalność</b>: spadek zużycia minus poprawa ilorazu ≥ 5 punktów procentowych, przy komentarzu mówiącym o poprawie i bez zastrzeżenia. Lipiec: zużycie −22,8%, iloraz +0,4% → luka 22,4 pp, ostrzeżenie zapala się i podaje oba te procenty. Komentarz lipca w przykładzie zawiera jednak zastrzeżenie („wynik praktycznie się nie zmienił”) — i dlatego milczy. <b>Dwuczłonowy warunek jest konieczny</b>: bez niego poprawnie opisany miesiąc zapalałby alarm.</td></tr>
+<tr><td><b>Ocena wbrew kierunkowi wskaźnika</b></td><td>Zmiana idzie w stronę przeciwną do zadeklarowanego kierunku, a pole oceny zawiera słowo o poprawie → ostrzeżenie „wyżej znaczy gorzej” z odesłaniem do karty wskaźnika z 6.4. Czerwony chip przy zmianie w tabeli.</td></tr>
+<tr><td>EnB bez podanego okresu</td><td>Ostrzeżenie: bez okresu nie da się sprawdzić, czy porównanie jest w porównywalnych warunkach. Pozycja listy kontrolnej „EnPI wobec odpowiadających EnB” nie zalicza się bez okresu przy każdym wskaźniku.</td></tr>
+<tr><td><b>Kryterium SEU spełnione bez dowodu</b></td><td>Stan „spełnione”, a uwagi nie zawierają żadnego ze słów wskazujących dowód (trend, zapis, obchód, protokół, wykres, rejestr, sterownik, odczyt, pomiar, raport) → ostrzeżenie ze zdaniem z III-42: <b>brak wpisów o zmianach nastaw sam nie dowodzi spełnienia kryterium</b>. Ta walidacja przewiduje wrześniowy audyt: dokładnie tak zaczęło się ustalenie o protokole serwisu.</td></tr>
+<tr><td><b>Niezgodność nieskierowana do 10.1</b></td><td>Przyczyna odchylenia zawiera wyrażenie wskazujące niespełnienie wymagania („nie zastosowano”, „nie spełniono”, „wbrew kryterium”, „nie przestrzegano”, „z pominięciem”…), a pozycja jest oznaczona jako „tylko odchylenie” → ostrzeżenie z trzecim krokiem procedury. <b>To miejsce, w którym niezgodności najczęściej znikają z systemu:</b> badanie odchylenia zamyka sprawę, zamiast ją otworzyć.<br><br><b>Uwaga dla implementacji:</b> wzorzec dopuszcza do dwóch słów między „nie” a czasownikiem, bo zdanie z przykładu brzmi „kryterium nie <i>zostało</i> zastosowane”. Odstęp trzeba opisać klasą <code>[^\s.;,]+</code>, a nie <code>\w+</code> — <b><code>\w</code> w JavaScripcie nie obejmuje polskich liter</b>, więc „zostało” nie zostanie dopasowane i reguła zamilczy dokładnie na tym zdaniu, dla którego powstała. Ta sama uwaga dotyczy wszystkich wyrażeń w platformie, w których po „nie” może stanąć polskie słowo.</td></tr>
+<tr><td>Odchylenie poniżej własnego progu</td><td>Nota, nie ostrzeżenie: „każde wahanie traktowane jak alarm” to jeden z sześciu błędów. Taką pozycję zwykle wystarczy obserwować. W przykładzie tę ścieżkę pokazuje L-1 — wzrost z 0,98 do 0,99 jest zapisany w ocenie wskaźnika, a nie w tabeli odchyleń.</td></tr>
+<tr><td>Brak progu przy wskaźniku albo charakterystyce</td><td>Ostrzeżenie i pozycja w braki(). Norma wymaga ustalenia <b>i stosowania</b> kryteriów identyfikowania znaczących odchyleń — bez progu albo każde wahanie jest alarmem, albo żadne.</td></tr>
+<tr><td>Brak oceny skuteczności systemu</td><td>Pozycja w braki() jako wymóg normy oraz nota w analizie konsultanta. To osobne wymaganie obok oceny wyniku — i wypada pierwsze, bo nie opiera się na liczbach, które powstają same.</td></tr>
+<tr><td>Mniej niż dwa okresy w części A</td><td>Nota: model działa, ale nie widać trendu — a to on rozstrzyga, czy spadek zużycia był poprawą.</td></tr>
+<tr><td>Niezgodność sumy nośników z zużyciem</td><td><b>Do zbudowania przy wdrożeniu.</b> Dziś rozbicie na nośniki jest tekstem; powinno być osobnymi polami liczbowymi, a platforma powinna porównywać sumę z zużyciem rzeczywistym — tak jak 6.3 zamyka bilans na licznikach głównych.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-47 — sekcja 9.1.1</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Ustalono, co monitorować i mierzyć — co najmniej: skuteczność planów działań, EnPI, działanie SEU, zużycie rzeczywiste wobec oczekiwanego.</td><td class='mono'>N</td><td><code>co</code></td></tr><tr><td>Ustalono metody monitorowania, pomiaru, analizy i oceny zapewniające wiarygodne wyniki.</td><td class='mono'>N</td><td><code>metody</code></td></tr><tr><td>Ustalono, kiedy prowadzi się pomiary i kiedy analizuje i ocenia wyniki.</td><td class='mono'>N</td><td><code>kiedy</code></td></tr><tr><td>Oceniany jest wynik energetyczny — EnPI wobec odpowiadających im EnB.</td><td class='mono'>N</td><td><code>enpiEnb</code></td></tr><tr><td>Oceniana jest skuteczność systemu.</td><td class='mono'>N</td><td><code>skutecznosc</code></td></tr><tr><td>Znaczące odchylenia są badane, a reakcje — zapisane.</td><td class='mono'>N</td><td><code>odchylenia</code></td></tr><tr><td>Zachowano zapisy wyników monitorowania i pomiarów.</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Ustalono i stosuje się kryteria identyfikowania znaczących odchyleń.</td><td class='mono'>N</td><td><code>progi</code></td></tr><tr><td>Raport z monitorowania zawiera wnioski i rekomendacje (III-41).</td><td class='mono'>M</td><td><code>wnioski</code></td></tr></table>
+<div class="note">Pozycja o znaczących odchyleniach zwraca „nie dotyczy”, gdy w okresie nie było żadnego —
+<b>i to jest poprawny stan systemu</b>, o ile progi są ustalone, a dane analizowane. Pozycja o zapisach
+wyników monitorowania wymaga kompletnej metryki raportu: bez okresu, daty i odbiorców zapis nie jest
+dowodem, tylko notatką.</div>
+
+<h2>Zakładka „Skąd wiesz, że monitorowanie działa”</h2>
+<div class="note">Piąta zakładka kończy się listą pięciu stwierdzeń z książki, ale <b>platforma sama je
+ocenia</b> — każde ma chip „tak”, „jeszcze nie” albo „nie dotyczy”, wyliczony z wypełnienia ankiety. To
+pierwsze miejsce w serii, gdzie lista samosprawdzająca z książki jest policzona, a nie przepisana. Reguły:
+cztery charakterystyki kompletne; każdy EnPI z EnB i jej okresem; model czynny i co najmniej dwa okresy;
+wszystkie odchylenia z przyczyną i reakcją; ocena systemu wraz z ustalonym rytmem.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–5, 7</td><td>Wypełnia klient — Energy Manager, przy części C razem z kierownikami obszarów SEU. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 6 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok nazywa charakterystyki bez analizy, kryteria SEU bez dowodu, wskaźniki bez progu i odchylenia nieskierowane do 10.1. Przy braku oceny systemu dodaje zdanie do rozmowy: <b>ocena wyniku jest łatwiejsza, bo opiera się na liczbach, które i tak powstają — ocena systemu wymaga przejrzenia działań, odchyleń i ustaleń, i dlatego wypada pierwsza.</b></td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-MON-01</code> — raport z monitorowania i oceny</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-17 części A, B, C i E (załącznik III-41); przykład III-42. Część D jest dokumentem <code>D-EnMS-ZGD-01</code> w punkcie 9.1.2.</td></tr>
+<tr><td>Status w normie</td><td><b>Trzy osobne wymagania dokumentacyjne:</b> ustalenia co/jak/kiedy, zapisy wyników monitorowania i pomiarów oraz zapisy badania znaczących odchyleń i reakcji. Forma raportu należy do organizacji — wypełniony formularz spełnia wszystkie trzy. W wykazie z punktu 7.5 pozycja pojawia się jako Z i N (9.1.1).</td></tr>
+<tr><td>Rytm</td><td>Części A–C i E w rytmie ustalonym przez organizację (w AutoParts co miesiąc, do 10. dnia po zamknięciu miesiąca); ocena skuteczności systemu — co kwartał; S-1 w zestawieniu tygodniowym.</td></tr>
+<tr><td>Wyzwalacze poza rytmem</td><td>Znaczące odchylenie, luka w danych dłuższa niż ustalony okres, zmiana metody pomiaru albo źródła danych, zakończenie działania z planu, rewizja EnB (6.5).</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Wejście.</b> Pierwsza kluczowa charakterystyka to skuteczność planów działań. Platforma powinna czytać status i efekt działań wprost z 6.2, zamiast prosić o przepisanie.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Lista SEU wyznacza wiersze części C; model zużycia pochodzi z przeglądu (III-22).</td></tr>
+<tr><td>6.4 EnPI</td><td><b>Wejście, najściślejsze.</b> Kod, nazwa, kierunek poprawy, metoda liczenia i warunki porównania są w karcie wskaźnika. Część B powinna je czytać, a wpisywać tylko wartość okresu i ocenę. Dziś makieta kopiuje całość, bo jest samodzielna.</td></tr>
+<tr><td>6.5 Linia bazowa EnB</td><td><b>Wejście.</b> EnB i jej okres przy każdym wskaźniku. Rewizja linii bazowej unieważnia wcześniejsze porównania — platforma powinna to oznaczać w historii wartości.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Wejście.</b> Źródła danych, częstotliwości i sposób uzupełniania luk są w planie danych. Pole „metoda” w zakładce 1 jest w istocie streszczeniem planu dla danej charakterystyki.</td></tr>
+<tr><td>8.1 Nadzór operacyjny</td><td><b>Dwukierunkowo.</b> Część C sprawdza, czy SEU pracują według kryteriów z karty F-EnMS-14; kolejność sprawdzania przy odchyleniu pochodzi z sekcji sygnałów tej karty. Odchylenie ujawniające niezastosowanie kryterium wraca do 8.1 jako sygnał o samym kryterium.</td></tr>
+<tr><td>8.2 i 8.3 Projektowanie i zakupy</td><td><b>Wejście.</b> Sprawdzenie wyniku po uruchomieniu (część E formularzy projektowego i zakupowego) wykonuje się w rytmie 9.1.1 i w warunkach zapisanych tam.</td></tr>
+<tr><td>9.1.2 Ocena zgodności</td><td><b>Ten sam formularz.</b> Część D F-EnMS-17 jest osobnym dokumentem, bo ma inny rytm (raz w roku przed przeglądem) i innego adresata. Wniosek z oceny zgodności wchodzi do części E jako element oceny skuteczności systemu.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Wyjście.</b> Wyniki monitorowania są kryterium przy budowie programu audytów: obszar z odchyleniem audytuje się uważniej. W AutoParts pozycja 3 programu powstała właśnie z czerwcowego odchylenia.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Wyjście.</b> Rekomendacje z części E są jednym z wejść przeglądu, a wyniki monitorowania — osobną pozycją danych wejściowych.</td></tr>
+<tr><td>10.1 Niezgodności</td><td><b>Wyjście.</b> Kolumna „niezgodność? → 10.1” jest przejściem między punktami. Badanie odchylenia i działanie korygujące to dwie różne rzeczy — i ta kolumna pilnuje, żeby się nie zlały.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Karty wskaźników jako jedno źródło</b></td><td>Część B kopiuje dziś z 6.4 kod, nazwę, kierunek, EnB, okres EnB i próg. Przy wdrożeniu powinna <b>czytać kartę wskaźnika</b>, a zapisywać tylko wartość okresu i ocenę. Inaczej powstanie dokładnie ten problem, który rozdzieliliśmy w 4.1: dwa opisy tego samego, które się rozjeżdżają. Dotyczy to też modelu zużycia, który żyje w karcie O-1.</td></tr>
+<tr><td><b>Rozbicie na nośniki jako liczby</b></td><td>Dziś pole tekstowe. Powinny to być pozycje liczbowe z sumą sprawdzaną wobec zużycia rzeczywistego — i wobec bilansu z 6.3. Dopiero wtedy platforma odpowie, czy bilans zamyka się na licznikach głównych, zamiast wierzyć wpisowi.</td></tr>
+<tr><td>Historia wartości wskaźnika</td><td>Makieta przechowuje jedną wartość bieżącą na wskaźnik. Docelowo <code>wartosc_enpi</code> z okresem daje wykres, średnią z poprzednich okresów (potrzebną do progów wyrażonych względem średniej) i automatyczne wykrywanie przekroczenia progu — zamiast ręcznego wpisywania odchylenia.</td></tr>
+<tr><td><b>Automatyczne wykrywanie odchyleń</b></td><td>Progi są dziś tekstem, a odchylenia wpisuje się ręcznie. Przy historii wartości i progu wyrażonym liczbą platforma może sama <b>zakładać pozycję odchylenia</b> i czekać na przyczynę i reakcję. To zmienia charakter punktu: z raportowania na pilnowanie.</td></tr>
+<tr><td>Przypomnienie o terminie analizy</td><td>Zakładka 1 ustala, kiedy się analizuje — platforma nie wie, czy to się stało. <b>Siódme wystąpienie</b> tego samego braku (6.5, 7.2, 7.4, 7.5, 8.2, 8.3, 9.1.1); jeden generyczny mechanizm terminów z przypomnieniem obsłuży wszystkie. Tutaj ma on dodatkowe znaczenie: niewykonana analiza jest wprost niezgodnością z 9.1.1.</td></tr>
+<tr><td>Luki w danych</td><td>Metoda ma opisywać sposób uzupełniania luk. Platforma powinna <b>oznaczać wartość uzupełnioną</b> innym kolorem i wymagać adnotacji — tak jak 6.4 wymaga adnotacji przy odchyleniu powyżej 25%. Dziś to tylko zdanie w polu metody.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 9.1.1 wraz z przykładem AutoParts za sierpień 2026.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;CHARAKTERYSTYKI&quot;: [
+  {
+   &quot;kod&quot;: &quot;plany&quot;,
+   &quot;nazwa&quot;: &quot;Skuteczność planów działań w osiąganiu celów i zadań&quot;,
+   &quot;pomoc&quot;: &quot;Nie „czy działanie wykonano”, ale czy przynosi zakładany efekt.&quot;,
+   &quot;ph&quot;: &quot;np. Czy działania z planu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — przepływ w postoju 9 → 6 Nm³/min&quot;,
+   &quot;phZ&quot;: &quot;np. Plan działań III-24; protokoły testów weekendowych&quot;,
+   &quot;phM&quot;: &quot;np. Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach jak w teście bazowym; porównanie z wartością bazową 9 Nm³/min&quot;,
+   &quot;phCz&quot;: &quot;np. co kwartał&quot;,
+   &quot;phP&quot;: &quot;np. brak postępu między dwoma kolejnymi testami&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;enpi&quot;,
+   &quot;nazwa&quot;: &quot;Wskaźniki wyniku energetycznego (EnPI)&quot;,
+   &quot;ph&quot;: &quot;np. O-1 zakład, P-1 prasy, L-1 lakiernia, S-1 sprężarkownia, K-1 kotłownia, OŚ-1 oświetlenie&quot;,
+   &quot;phZ&quot;: &quot;np. Podliczniki obszarowe, przepływomierz sprężarkowni, faktury, raporty produkcyjne&quot;,
+   &quot;phM&quot;: &quot;np. Karty wskaźników z punktu 6.4; każdy EnPI liczony metodą z karty i porównywany z odpowiadającą mu EnB w porównywalnych warunkach&quot;,
+   &quot;phCz&quot;: &quot;np. co miesiąc; S-1 co tydzień&quot;,
+   &quot;phP&quot;: &quot;np. 3% wobec średniej z ostatnich okresów; S-1 — 3% tygodniowo&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;seu&quot;,
+   &quot;nazwa&quot;: &quot;Działanie znaczących użyć energii&quot;,
+   &quot;pomoc&quot;: &quot;Czy SEU pracują według kryteriów ustalonych w punkcie 8.1.&quot;,
+   &quot;ph&quot;: &quot;np. Czy sprężarkownia utrzymuje ciśnienie ≤ 6,3 bar i czy tryby postoju są stosowane&quot;,
+   &quot;phZ&quot;: &quot;np. Trend ciśnienia ze sterownika; zapisy obchodów; protokoły serwisu&quot;,
+   &quot;phM&quot;: &quot;np. Odczyt trendu ciśnienia z rejestratora sterownika i przegląd zapisów obchodów; przy każdej usłudze serwisowej — protokół z nastawami przed i po&quot;,
+   &quot;phCz&quot;: &quot;np. na bieżąco (sterownik, obchody)&quot;,
+   &quot;phP&quot;: &quot;np. każde przekroczenie 6,3 bar dłuższe niż 4 h&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;rzeczOcz&quot;,
+   &quot;nazwa&quot;: &quot;Zużycie rzeczywiste w porównaniu z oczekiwanym&quot;,
+   &quot;ph&quot;: &quot;np. Model zakładu: 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu&quot;,
+   &quot;phZ&quot;: &quot;np. Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny; stopniodni z danych meteorologicznych&quot;,
+   &quot;phM&quot;: &quot;np. Zużycie oczekiwane z modelu regresji (III-22) przy rzeczywistej produkcji i stopniodniach; iloraz rzeczywistego i oczekiwanego jako wskaźnik O-1&quot;,
+   &quot;phCz&quot;: &quot;np. co miesiąc&quot;,
+   &quot;phP&quot;: &quot;np. iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca&quot;
+  }
+ ],
+ &quot;LISTA_911&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Ustalono, co monitorować i mierzyć — co najmniej: skuteczność planów działań, EnPI, działanie SEU, zużycie rzeczywiste wobec oczekiwanego.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;co&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ustalono metody monitorowania, pomiaru, analizy i oceny zapewniające wiarygodne wyniki.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;metody&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ustalono, kiedy prowadzi się pomiary i kiedy analizuje i ocenia wyniki.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;kiedy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Oceniany jest wynik energetyczny — EnPI wobec odpowiadających im EnB.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;enpiEnb&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Oceniana jest skuteczność systemu.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;skutecznosc&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Znaczące odchylenia są badane, a reakcje — zapisane.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;odchylenia&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano zapisy wyników monitorowania i pomiarów.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ustalono i stosuje się kryteria identyfikowania znaczących odchyleń.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;progi&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Raport z monitorowania zawiera wnioski i rekomendacje (III-41).&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;wnioski&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;USTALENIA&quot;: [
+   {
+    &quot;kod&quot;: &quot;plany&quot;,
+    &quot;co&quot;: &quot;Czy działania z planu działań celu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — w szczególności przepływ sprężonego powietrza w postoju (zadanie Z1.2, 9 → 4 Nm³/min).&quot;,
+    &quot;zrodlo&quot;: &quot;Plan działań III-24; protokoły testów weekendowych; zadania UR w planie utrzymania ruchu&quot;,
+    &quot;metoda&quot;: &quot;Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach ustawionych jak w teście bazowym; wynik porównywany z wartością bazową 9 Nm³/min z 01.2026. Status działań odczytywany z planu III-24.&quot;,
+    &quot;ktoMierzy&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;czestoscPomiar&quot;: &quot;Co kwartał (test), status działań — na bieżąco&quot;,
+    &quot;ktoAnalizuje&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;czestoscAnaliza&quot;: &quot;Co kwartał, w ocenie skuteczności systemu&quot;,
+    &quot;prog&quot;: &quot;Brak postępu między dwoma kolejnymi testami kwartalnymi albo opóźnienie działania powyżej jednego kwartału&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;enpi&quot;,
+    &quot;co&quot;: &quot;Sześć wskaźników: O-1 zakład (rzeczywiste / oczekiwane), P-1 prasy [kWh/t], L-1 lakiernia, S-1 sprężarkownia [kWh/Nm³], K-1 kotłownia, OŚ-1 oświetlenie [MWh].&quot;,
+    &quot;zrodlo&quot;: &quot;Podliczniki obszarowe (6 szt.), przepływomierz na kolektorze głównym, faktury za energię elektryczną, gaz i LPG, raport produkcyjny, stopniodni z danych meteorologicznych&quot;,
+    &quot;metoda&quot;: &quot;Każdy wskaźnik liczony metodą z własnej karty (6.4) i porównywany z odpowiadającą mu EnB w warunkach zapisanych w karcie. Luki w danych uzupełniane sposobem z planu zbierania danych (6.6); każde uzupełnienie oznaczane adnotacją.&quot;,
+    &quot;ktoMierzy&quot;: &quot;Utrzymanie ruchu — odczyty podliczników; kontroling — faktury&quot;,
+    &quot;czestoscPomiar&quot;: &quot;Co miesiąc; S-1 co tydzień&quot;,
+    &quot;ktoAnalizuje&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;czestoscAnaliza&quot;: &quot;Co miesiąc, do 10. dnia po zamknięciu miesiąca; S-1 w zestawieniu tygodniowym&quot;,
+    &quot;prog&quot;: &quot;3% wobec średniej z trzech poprzednich okresów; S-1 — 3% wobec średniej z ostatnich tygodni; L-1 — 2%&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;seu&quot;,
+    &quot;co&quot;: &quot;Czy pięć znaczących użyć energii pracuje według kryteriów z punktu 8.1 — w sprężarkowni ciśnienie ≤ 6,3 bar i stosowanie trybu postoju.&quot;,
+    &quot;zrodlo&quot;: &quot;Trend ciśnienia z rejestratora sterownika sprężarkowni; zapisy obchodów; protokoły serwisu; karta kryteriów F-EnMS-14&quot;,
+    &quot;metoda&quot;: &quot;Odczyt trendu ciśnienia z rejestratora i przegląd zapisów obchodów. Przy każdej usłudze serwisowej przy SEU — protokół z nastawami przed i po, sprawdzany przy odbiorze usługi. Brak wpisów o zmianach nastaw nie jest traktowany jako dowód spełnienia kryterium.&quot;,
+    &quot;ktoMierzy&quot;: &quot;Technicy UR — obchody; sterownik — rejestracja ciągła&quot;,
+    &quot;czestoscPomiar&quot;: &quot;Na bieżąco (sterownik, obchody na każdej zmianie)&quot;,
+    &quot;ktoAnalizuje&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;czestoscAnaliza&quot;: &quot;Co tydzień wraz z wskaźnikiem S-1; przegląd zapisów co miesiąc&quot;,
+    &quot;prog&quot;: &quot;Każde przekroczenie 6,3 bar utrzymujące się dłużej niż 4 godziny; każda zmiana nastawy bez wpisu&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;rzeczOcz&quot;,
+    &quot;co&quot;: &quot;Zużycie rzeczywiste zakładu wobec zużycia oczekiwanego z modelu, przy rzeczywistej produkcji i rzeczywistych stopniodniach.&quot;,
+    &quot;zrodlo&quot;: &quot;Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny (tony stali); stopniodni grzania z danych meteorologicznych dla lokalizacji zakładu&quot;,
+    &quot;metoda&quot;: &quot;Zużycie oczekiwane z modelu regresji z przeglądu energetycznego (III-22): 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu. Iloraz rzeczywistego i oczekiwanego jest wskaźnikiem O-1. Suma nośników sprawdzana z licznikami głównymi.&quot;,
+    &quot;ktoMierzy&quot;: &quot;Kontroling — odczyt liczników głównych i faktur&quot;,
+    &quot;czestoscPomiar&quot;: &quot;Co miesiąc, po zamknięciu miesiąca&quot;,
+    &quot;ktoAnalizuje&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+    &quot;czestoscAnaliza&quot;: &quot;Co miesiąc, do 10. dnia po zamknięciu miesiąca&quot;,
+    &quot;prog&quot;: &quot;Iloraz powyżej 1,03 albo wzrost ilorazu o 3 punkty procentowe wobec poprzedniego miesiąca&quot;
+   }
+  ],
+  &quot;MODEL&quot;: {
+   &quot;a&quot;: &quot;0,23&quot;,
+   &quot;opisA&quot;: &quot;produkcja [t stali]&quot;,
+   &quot;b&quot;: &quot;0,48&quot;,
+   &quot;opisB&quot;: &quot;stopniodni grzania [HDD]&quot;,
+   &quot;c&quot;: &quot;406&quot;,
+   &quot;zrodlo&quot;: &quot;Model zużycia zakładu z przeglądu energetycznego (III-22), regresja wieloraka na 24 miesiącach 2024–2025; R² = 0,94. Sprawdzenie na roku bazowym: 0,23·24 000 t + 0,48·3 600 HDD + 406·12 = 12 120 MWh — tyle, ile zakład zużył w 2025 r.&quot;
+  },
+  &quot;OKRESY&quot;: [
+   {
+    &quot;okres&quot;: &quot;Marzec 2026&quot;,
+    &quot;x1&quot;: &quot;2100&quot;,
+    &quot;x2&quot;: &quot;350&quot;,
+    &quot;rzeczywiste&quot;: &quot;1030&quot;,
+    &quot;rozbicie&quot;: &quot;&quot;,
+    &quot;komentarz&quot;: &quot;Pełna produkcja, ogrzewanie hal przez cały miesiąc. Iloraz 0,974.&quot;
+   },
+   {
+    &quot;okres&quot;: &quot;Lipiec 2026&quot;,
+    &quot;x1&quot;: &quot;1800&quot;,
+    &quot;x2&quot;: &quot;0&quot;,
+    &quot;rzeczywiste&quot;: &quot;795&quot;,
+    &quot;rozbicie&quot;: &quot;&quot;,
+    &quot;komentarz&quot;: &quot;Zużycie o prawie 23% niższe niż w marcu, ale wynik energetyczny praktycznie się nie zmienił — spadek zrobiły lato i plan produkcji. Część załogi na urlopach, ani jednego dnia grzania.&quot;
+   },
+   {
+    &quot;okres&quot;: &quot;Sierpień 2026&quot;,
+    &quot;x1&quot;: &quot;2050&quot;,
+    &quot;x2&quot;: &quot;10&quot;,
+    &quot;rzeczywiste&quot;: &quot;851&quot;,
+    &quot;rozbicie&quot;: &quot;en. el. 690; gaz 150; LPG 11&quot;,
+    &quot;komentarz&quot;: &quot;Poprawa wobec EnB 1,000; lipiec 0,970.&quot;
+   }
+  ],
+  &quot;WSKAZNIKI&quot;: [
+   {
+    &quot;kod&quot;: &quot;O-1&quot;,
+    &quot;nazwa&quot;: &quot;zakład — rzeczywiste / oczekiwane&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;1,000&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;0,965&quot;,
+    &quot;biezOkres&quot;: &quot;VIII 2026&quot;,
+    &quot;cel&quot;: &quot;≤ 0,95&quot;,
+    &quot;celTermin&quot;: &quot;za rok 2027&quot;,
+    &quot;prog&quot;: &quot;Iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca&quot;,
+    &quot;ocena&quot;: &quot;Poprawa. I półrocze 2026: 0,97.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;P-1&quot;,
+    &quot;nazwa&quot;: &quot;prasy [kWh/t]&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;124,0&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;121,5&quot;,
+    &quot;biezOkres&quot;: &quot;VIII 2026&quot;,
+    &quot;cel&quot;: &quot;monitorowanie&quot;,
+    &quot;celTermin&quot;: &quot;&quot;,
+    &quot;prog&quot;: &quot;3% wobec średniej z trzech poprzednich miesięcy&quot;,
+    &quot;ocena&quot;: &quot;Poprawa.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;L-1&quot;,
+    &quot;nazwa&quot;: &quot;lakiernia — indeks znormalizowany&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;1,000&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;0,99&quot;,
+    &quot;biezOkres&quot;: &quot;VIII 2026&quot;,
+    &quot;cel&quot;: &quot;—&quot;,
+    &quot;celTermin&quot;: &quot;&quot;,
+    &quot;prog&quot;: &quot;2% wobec średniej z trzech poprzednich miesięcy&quot;,
+    &quot;ocena&quot;: &quot;W granicach progu. Wzrost z 0,98 do 0,99 — poniżej progu; obserwacja w kolejnym miesiącu.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;S-1&quot;,
+    &quot;nazwa&quot;: &quot;sprężarkownia [kWh/Nm³]&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;0,125&quot;,
+    &quot;enbOkres&quot;: &quot;02–03.2026&quot;,
+    &quot;biez&quot;: &quot;0,118&quot;,
+    &quot;biezOkres&quot;: &quot;VIII 2026; VII–18.IX: 0,119&quot;,
+    &quot;cel&quot;: &quot;0,110&quot;,
+    &quot;celTermin&quot;: &quot;12.2027&quot;,
+    &quot;prog&quot;: &quot;3% wobec średniej z ostatnich tygodni — wskaźnik liczony tygodniowo&quot;,
+    &quot;ocena&quot;: &quot;Poprawa; cel w toku. Do celu brakuje więcej, niż już osiągnięto — samo ciśnienie więcej nie da.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;K-1&quot;,
+    &quot;nazwa&quot;: &quot;kotłownia — indeks znormalizowany&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;1,000&quot;,
+    &quot;enbOkres&quot;: &quot;2025&quot;,
+    &quot;biez&quot;: &quot;&quot;,
+    &quot;biezOkres&quot;: &quot;poza sezonem grzewczym&quot;,
+    &quot;cel&quot;: &quot;—&quot;,
+    &quot;celTermin&quot;: &quot;&quot;,
+    &quot;prog&quot;: &quot;3% wobec tego samego okresu sezonu grzewczego&quot;,
+    &quot;ocena&quot;: &quot;Analiza przed sezonem. I półrocze: +1% wobec EnB — przyczyny do ustalenia przed rozpoczęciem sezonu.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;OŚ-1&quot;,
+    &quot;nazwa&quot;: &quot;oświetlenie [MWh/miesiąc]&quot;,
+    &quot;kierunek&quot;: &quot;nizej&quot;,
+    &quot;enb&quot;: &quot;56,7&quot;,
+    &quot;enbOkres&quot;: &quot;680 MWh/rok 2025, czyli 56,7 MWh/mies.&quot;,
+    &quot;biez&quot;: &quot;55,8&quot;,
+    &quot;biezOkres&quot;: &quot;VIII 2026&quot;,
+    &quot;cel&quot;: &quot;410 MWh/rok&quot;,
+    &quot;celTermin&quot;: &quot;2027&quot;,
+    &quot;prog&quot;: &quot;5% wobec tego samego miesiąca poprzedniego roku&quot;,
+    &quot;ocena&quot;: &quot;Bez istotnej zmiany do wymiany opraw na LED (zadanie Z2.1).&quot;
+   }
+  ],
+  &quot;SEU&quot;: [
+   {
+    &quot;obszar&quot;: &quot;Sprężarkownia&quot;,
+    &quot;kryterium&quot;: &quot;Ciśnienie ≤ 6,3 bar (III-35)&quot;,
+    &quot;stan&quot;: &quot;spelnione&quot;,
+    &quot;uwagi&quot;: &quot;Potwierdzone trendem ciśnienia z rejestratora sterownika za cały miesiąc oraz zapisami obchodów. Uwaga metodyczna: brak wpisów o zmianach nastaw sam nie dowodziłby spełnienia kryterium.&quot;
+   },
+   {
+    &quot;obszar&quot;: &quot;Z1.2 — przepływ sprężonego powietrza w postoju&quot;,
+    &quot;kryterium&quot;: &quot;6 Nm³/min (06.2026) → 4 Nm³/min (06.2027)&quot;,
+    &quot;stan&quot;: &quot;czesciowo&quot;,
+    &quot;uwagi&quot;: &quot;Następny test weekendowy zaplanowany na 09.2026. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min.&quot;
+   },
+   {
+    &quot;obszar&quot;: &quot;Z1.1 — modernizacja sprężarkowni&quot;,
+    &quot;kryterium&quot;: &quot;Uruchomienie 06.2027&quot;,
+    &quot;stan&quot;: &quot;czesciowo&quot;,
+    &quot;uwagi&quot;: &quot;Koncepcja w przeglądzie (09.2026) — patrz analiza projektu III-36 i specyfikacja zakupowa III-38. Zapis postępu w planie działań III-24, pozycja 4.&quot;
+   },
+   {
+    &quot;obszar&quot;: &quot;Lakiernia&quot;,
+    &quot;kryterium&quot;: &quot;Temperatura i czas suszenia zgodnie z instrukcją I-LK-03&quot;,
+    &quot;stan&quot;: &quot;spelnione&quot;,
+    &quot;uwagi&quot;: &quot;Zapisy ze sterownika pieca i protokoły zmianowe za cały miesiąc.&quot;
+   },
+   {
+    &quot;obszar&quot;: &quot;Kotłownia&quot;,
+    &quot;kryterium&quot;: &quot;Krzywa grzewcza i nastawy wg instrukcji I-KT-01&quot;,
+    &quot;stan&quot;: &quot;poza&quot;,
+    &quot;uwagi&quot;: &quot;Poza sezonem grzewczym — ocena przed rozpoczęciem sezonu, razem z analizą K-1.&quot;
+   }
+  ],
+  &quot;ODCH&quot;: [
+   {
+    &quot;co&quot;: &quot;S-1 wzrósł z około 0,120 do około 0,125 kWh/Nm³ w jednym tygodniu, przy produkcji i temperaturze takich jak tydzień wcześniej.&quot;,
+    &quot;kiedy&quot;: &quot;Czerwiec 2026&quot;,
+    &quot;wartosc&quot;: &quot;4,2&quot;,
+    &quot;prog&quot;: &quot;3&quot;,
+    &quot;przyczyna&quot;: &quot;Serwis po przeglądzie przywrócił ciśnienie 7 bar — kryterium 6,3 bar z karty sprężarkowni nie zostało zastosowane. Kierownik UR sprawdził kolejno nastawę, pracę sprężarek, filtry i wycieki, w kolejności z kryteriów 8.1.&quot;,
+    &quot;reakcja&quot;: &quot;Powrót do 6,3 bar tego samego dnia.&quot;,
+    &quot;niezgodnosc&quot;: &quot;tak&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu — zbadane w ciągu tygodnia&quot;,
+    &quot;dzialanie&quot;: &quot;Działanie korygujące (10.1): trzy zdania w zleceniu serwisowym o zakazie zmiany nastaw bez zgłoszenia. W kolejnych tygodniach wskaźnik wrócił do około 0,120. Przy następnym przeglądzie kierownik UR miał sprawdzić protokół z nastawami — wrześniowy audyt wewnętrzny pokazał, że tego zabrakło (karta niezgodności NK-2026-01, ponowne otwarcie 18.09.2026).&quot;
+   }
+  ],
+  &quot;OCENA_E&quot;: {
+   &quot;wynik&quot;: &quot;Poprawa wobec EnB w O-1 (0,965 wobec 1,000), P-1 (121,5 wobec 124,0) i S-1 (0,118 wobec 0,125). L-1 w granicach progu. OŚ-1 bez istotnej zmiany do wymiany opraw. K-1 do analizy przed sezonem grzewczym — w I półroczu 1% powyżej EnB.&quot;,
+   &quot;system&quot;: &quot;Działania 1–3 planu C1 wykonane w terminie, pozycja 4 zatwierdzona w budżecie 2027. Jedno znaczące odchylenie (06.2026) zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Stosowanie kryteriów sprężarkowni potwierdzone trendem ciśnienia i zapisami obchodów. Ocena zgodności (09.2026): 7 wymagań ocenianych, 1 niezgodne — działanie w toku; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Słabe miejsce: sprawdzanie protokołów serwisu przy odbiorze usługi — ustalenie z czerwca działa tylko w połowie.&quot;,
+   &quot;rekomendacje&quot;: &quot;Utrzymać modernizację sprężarkowni (380 000 zł) w budżecie 2027 — cel Z1.1 nie jest osiągalny samym ciśnieniem. Przyjąć działanie dla raportu bankowego. Przeprowadzić analizę przyczyn K-1 przed rozpoczęciem sezonu grzewczego. Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi.&quot;,
+   &quot;rytmSystem&quot;: &quot;Raz na kwartał, w kilku zdaniach raportu dla dyrektora zakładu: ile działań z planu wykonano w terminie, ile znaczących odchyleń wykryto, ile z nich zbadano i jak szybko, co zmieniono po analizach. Raport miesięczny części A–C do 10. dnia po zamknięciu miesiąca.&quot;
+  },
+  &quot;META&quot;: {
+   &quot;okres&quot;: &quot;Sierpień 2026 (części A–C, E)&quot;,
+   &quot;data&quot;: &quot;2026-09-07&quot;,
+   &quot;sporzadzil&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+   &quot;odbiorcy&quot;: &quot;Piotr Nowak — Dyrektor Zakładu; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;dataZatw&quot;: &quot;2026-09-18&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var CHARAKTERYSTYKI = [{"kod": "plany", "nazwa": "Skuteczność planów działań w osiąganiu celów i zadań", "pomoc": "Nie „czy działanie wykonano”, ale czy przynosi zakładany efekt.", "ph": "np. Czy działania z planu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — przepływ w postoju 9 → 6 Nm³/min", "phZ": "np. Plan działań III-24; protokoły testów weekendowych", "phM": "np. Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach jak w teście bazowym; porównanie z wartością bazową 9 Nm³/min", "phCz": "np. co kwartał", "phP": "np. brak postępu między dwoma kolejnymi testami"}, {"kod": "enpi", "nazwa": "Wskaźniki wyniku energetycznego (EnPI)", "ph": "np. O-1 zakład, P-1 prasy, L-1 lakiernia, S-1 sprężarkownia, K-1 kotłownia, OŚ-1 oświetlenie", "phZ": "np. Podliczniki obszarowe, przepływomierz sprężarkowni, faktury, raporty produkcyjne", "phM": "np. Karty wskaźników z punktu 6.4; każdy EnPI liczony metodą z karty i porównywany z odpowiadającą mu EnB w porównywalnych warunkach", "phCz": "np. co miesiąc; S-1 co tydzień", "phP": "np. 3% wobec średniej z ostatnich okresów; S-1 — 3% tygodniowo"}, {"kod": "seu", "nazwa": "Działanie znaczących użyć energii", "pomoc": "Czy SEU pracują według kryteriów ustalonych w punkcie 8.1.", "ph": "np. Czy sprężarkownia utrzymuje ciśnienie ≤ 6,3 bar i czy tryby postoju są stosowane", "phZ": "np. Trend ciśnienia ze sterownika; zapisy obchodów; protokoły serwisu", "phM": "np. Odczyt trendu ciśnienia z rejestratora sterownika i przegląd zapisów obchodów; przy każdej usłudze serwisowej — protokół z nastawami przed i po", "phCz": "np. na bieżąco (sterownik, obchody)", "phP": "np. każde przekroczenie 6,3 bar dłuższe niż 4 h"}, {"kod": "rzeczOcz", "nazwa": "Zużycie rzeczywiste w porównaniu z oczekiwanym", "ph": "np. Model zakładu: 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu", "phZ": "np. Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny; stopniodni z danych meteorologicznych", "phM": "np. Zużycie oczekiwane z modelu regresji (III-22) przy rzeczywistej produkcji i stopniodniach; iloraz rzeczywistego i oczekiwanego jako wskaźnik O-1", "phCz": "np. co miesiąc", "phP": "np. iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca"}];
+var LISTA_911 = [{"tekst": "Ustalono, co monitorować i mierzyć — co najmniej: skuteczność planów działań, EnPI, działanie SEU, zużycie rzeczywiste wobec oczekiwanego.", "podstawa": "N", "auto": "co"}, {"tekst": "Ustalono metody monitorowania, pomiaru, analizy i oceny zapewniające wiarygodne wyniki.", "podstawa": "N", "auto": "metody"}, {"tekst": "Ustalono, kiedy prowadzi się pomiary i kiedy analizuje i ocenia wyniki.", "podstawa": "N", "auto": "kiedy"}, {"tekst": "Oceniany jest wynik energetyczny — EnPI wobec odpowiadających im EnB.", "podstawa": "N", "auto": "enpiEnb"}, {"tekst": "Oceniana jest skuteczność systemu.", "podstawa": "N", "auto": "skutecznosc"}, {"tekst": "Znaczące odchylenia są badane, a reakcje — zapisane.", "podstawa": "N", "auto": "odchylenia"}, {"tekst": "Zachowano zapisy wyników monitorowania i pomiarów.", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Ustalono i stosuje się kryteria identyfikowania znaczących odchyleń.", "podstawa": "N", "auto": "progi"}, {"tekst": "Raport z monitorowania zawiera wnioski i rekomendacje (III-41).", "podstawa": "M", "auto": "wnioski"}];
+var PRZYKLAD = {"USTALENIA": [{"kod": "plany", "co": "Czy działania z planu działań celu C1 (III-24) są wykonane i czy przynoszą zakładany efekt — w szczególności przepływ sprężonego powietrza w postoju (zadanie Z1.2, 9 → 4 Nm³/min).", "zrodlo": "Plan działań III-24; protokoły testów weekendowych; zadania UR w planie utrzymania ruchu", "metoda": "Test weekendowy przepływomierzem przy wszystkich maszynach wyłączonych i zaworach ustawionych jak w teście bazowym; wynik porównywany z wartością bazową 9 Nm³/min z 01.2026. Status działań odczytywany z planu III-24.", "ktoMierzy": "Kierownik Utrzymania Ruchu", "czestoscPomiar": "Co kwartał (test), status działań — na bieżąco", "ktoAnalizuje": "Jan Kowalski — Energy Manager", "czestoscAnaliza": "Co kwartał, w ocenie skuteczności systemu", "prog": "Brak postępu między dwoma kolejnymi testami kwartalnymi albo opóźnienie działania powyżej jednego kwartału"}, {"kod": "enpi", "co": "Sześć wskaźników: O-1 zakład (rzeczywiste / oczekiwane), P-1 prasy [kWh/t], L-1 lakiernia, S-1 sprężarkownia [kWh/Nm³], K-1 kotłownia, OŚ-1 oświetlenie [MWh].", "zrodlo": "Podliczniki obszarowe (6 szt.), przepływomierz na kolektorze głównym, faktury za energię elektryczną, gaz i LPG, raport produkcyjny, stopniodni z danych meteorologicznych", "metoda": "Każdy wskaźnik liczony metodą z własnej karty (6.4) i porównywany z odpowiadającą mu EnB w warunkach zapisanych w karcie. Luki w danych uzupełniane sposobem z planu zbierania danych (6.6); każde uzupełnienie oznaczane adnotacją.", "ktoMierzy": "Utrzymanie ruchu — odczyty podliczników; kontroling — faktury", "czestoscPomiar": "Co miesiąc; S-1 co tydzień", "ktoAnalizuje": "Jan Kowalski — Energy Manager", "czestoscAnaliza": "Co miesiąc, do 10. dnia po zamknięciu miesiąca; S-1 w zestawieniu tygodniowym", "prog": "3% wobec średniej z trzech poprzednich okresów; S-1 — 3% wobec średniej z ostatnich tygodni; L-1 — 2%"}, {"kod": "seu", "co": "Czy pięć znaczących użyć energii pracuje według kryteriów z punktu 8.1 — w sprężarkowni ciśnienie ≤ 6,3 bar i stosowanie trybu postoju.", "zrodlo": "Trend ciśnienia z rejestratora sterownika sprężarkowni; zapisy obchodów; protokoły serwisu; karta kryteriów F-EnMS-14", "metoda": "Odczyt trendu ciśnienia z rejestratora i przegląd zapisów obchodów. Przy każdej usłudze serwisowej przy SEU — protokół z nastawami przed i po, sprawdzany przy odbiorze usługi. Brak wpisów o zmianach nastaw nie jest traktowany jako dowód spełnienia kryterium.", "ktoMierzy": "Technicy UR — obchody; sterownik — rejestracja ciągła", "czestoscPomiar": "Na bieżąco (sterownik, obchody na każdej zmianie)", "ktoAnalizuje": "Kierownik Utrzymania Ruchu", "czestoscAnaliza": "Co tydzień wraz z wskaźnikiem S-1; przegląd zapisów co miesiąc", "prog": "Każde przekroczenie 6,3 bar utrzymujące się dłużej niż 4 godziny; każda zmiana nastawy bez wpisu"}, {"kod": "rzeczOcz", "co": "Zużycie rzeczywiste zakładu wobec zużycia oczekiwanego z modelu, przy rzeczywistej produkcji i rzeczywistych stopniodniach.", "zrodlo": "Liczniki główne energii elektrycznej, gazu i LPG; raport produkcyjny (tony stali); stopniodni grzania z danych meteorologicznych dla lokalizacji zakładu", "metoda": "Zużycie oczekiwane z modelu regresji z przeglądu energetycznego (III-22): 0,23 MWh na tonę stali, 0,48 MWh na stopniodzień, 406 MWh zużycia stałego w miesiącu. Iloraz rzeczywistego i oczekiwanego jest wskaźnikiem O-1. Suma nośników sprawdzana z licznikami głównymi.", "ktoMierzy": "Kontroling — odczyt liczników głównych i faktur", "czestoscPomiar": "Co miesiąc, po zamknięciu miesiąca", "ktoAnalizuje": "Jan Kowalski — Energy Manager", "czestoscAnaliza": "Co miesiąc, do 10. dnia po zamknięciu miesiąca", "prog": "Iloraz powyżej 1,03 albo wzrost ilorazu o 3 punkty procentowe wobec poprzedniego miesiąca"}], "MODEL": {"a": "0,23", "opisA": "produkcja [t stali]", "b": "0,48", "opisB": "stopniodni grzania [HDD]", "c": "406", "zrodlo": "Model zużycia zakładu z przeglądu energetycznego (III-22), regresja wieloraka na 24 miesiącach 2024–2025; R² = 0,94. Sprawdzenie na roku bazowym: 0,23·24 000 t + 0,48·3 600 HDD + 406·12 = 12 120 MWh — tyle, ile zakład zużył w 2025 r."}, "OKRESY": [{"okres": "Marzec 2026", "x1": "2100", "x2": "350", "rzeczywiste": "1030", "rozbicie": "", "komentarz": "Pełna produkcja, ogrzewanie hal przez cały miesiąc. Iloraz 0,974."}, {"okres": "Lipiec 2026", "x1": "1800", "x2": "0", "rzeczywiste": "795", "rozbicie": "", "komentarz": "Zużycie o prawie 23% niższe niż w marcu, ale wynik energetyczny praktycznie się nie zmienił — spadek zrobiły lato i plan produkcji. Część załogi na urlopach, ani jednego dnia grzania."}, {"okres": "Sierpień 2026", "x1": "2050", "x2": "10", "rzeczywiste": "851", "rozbicie": "en. el. 690; gaz 150; LPG 11", "komentarz": "Poprawa wobec EnB 1,000; lipiec 0,970."}], "WSKAZNIKI": [{"kod": "O-1", "nazwa": "zakład — rzeczywiste / oczekiwane", "kierunek": "nizej", "enb": "1,000", "enbOkres": "2025", "biez": "0,965", "biezOkres": "VIII 2026", "cel": "≤ 0,95", "celTermin": "za rok 2027", "prog": "Iloraz powyżej 1,03 albo wzrost o 3 punkty procentowe wobec poprzedniego miesiąca", "ocena": "Poprawa. I półrocze 2026: 0,97."}, {"kod": "P-1", "nazwa": "prasy [kWh/t]", "kierunek": "nizej", "enb": "124,0", "enbOkres": "2025", "biez": "121,5", "biezOkres": "VIII 2026", "cel": "monitorowanie", "celTermin": "", "prog": "3% wobec średniej z trzech poprzednich miesięcy", "ocena": "Poprawa."}, {"kod": "L-1", "nazwa": "lakiernia — indeks znormalizowany", "kierunek": "nizej", "enb": "1,000", "enbOkres": "2025", "biez": "0,99", "biezOkres": "VIII 2026", "cel": "—", "celTermin": "", "prog": "2% wobec średniej z trzech poprzednich miesięcy", "ocena": "W granicach progu. Wzrost z 0,98 do 0,99 — poniżej progu; obserwacja w kolejnym miesiącu."}, {"kod": "S-1", "nazwa": "sprężarkownia [kWh/Nm³]", "kierunek": "nizej", "enb": "0,125", "enbOkres": "02–03.2026", "biez": "0,118", "biezOkres": "VIII 2026; VII–18.IX: 0,119", "cel": "0,110", "celTermin": "12.2027", "prog": "3% wobec średniej z ostatnich tygodni — wskaźnik liczony tygodniowo", "ocena": "Poprawa; cel w toku. Do celu brakuje więcej, niż już osiągnięto — samo ciśnienie więcej nie da."}, {"kod": "K-1", "nazwa": "kotłownia — indeks znormalizowany", "kierunek": "nizej", "enb": "1,000", "enbOkres": "2025", "biez": "", "biezOkres": "poza sezonem grzewczym", "cel": "—", "celTermin": "", "prog": "3% wobec tego samego okresu sezonu grzewczego", "ocena": "Analiza przed sezonem. I półrocze: +1% wobec EnB — przyczyny do ustalenia przed rozpoczęciem sezonu."}, {"kod": "OŚ-1", "nazwa": "oświetlenie [MWh/miesiąc]", "kierunek": "nizej", "enb": "56,7", "enbOkres": "680 MWh/rok 2025, czyli 56,7 MWh/mies.", "biez": "55,8", "biezOkres": "VIII 2026", "cel": "410 MWh/rok", "celTermin": "2027", "prog": "5% wobec tego samego miesiąca poprzedniego roku", "ocena": "Bez istotnej zmiany do wymiany opraw na LED (zadanie Z2.1)."}], "SEU": [{"obszar": "Sprężarkownia", "kryterium": "Ciśnienie ≤ 6,3 bar (III-35)", "stan": "spelnione", "uwagi": "Potwierdzone trendem ciśnienia z rejestratora sterownika za cały miesiąc oraz zapisami obchodów. Uwaga metodyczna: brak wpisów o zmianach nastaw sam nie dowodziłby spełnienia kryterium."}, {"obszar": "Z1.2 — przepływ sprężonego powietrza w postoju", "kryterium": "6 Nm³/min (06.2026) → 4 Nm³/min (06.2027)", "stan": "czesciowo", "uwagi": "Następny test weekendowy zaplanowany na 09.2026. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min."}, {"obszar": "Z1.1 — modernizacja sprężarkowni", "kryterium": "Uruchomienie 06.2027", "stan": "czesciowo", "uwagi": "Koncepcja w przeglądzie (09.2026) — patrz analiza projektu III-36 i specyfikacja zakupowa III-38. Zapis postępu w planie działań III-24, pozycja 4."}, {"obszar": "Lakiernia", "kryterium": "Temperatura i czas suszenia zgodnie z instrukcją I-LK-03", "stan": "spelnione", "uwagi": "Zapisy ze sterownika pieca i protokoły zmianowe za cały miesiąc."}, {"obszar": "Kotłownia", "kryterium": "Krzywa grzewcza i nastawy wg instrukcji I-KT-01", "stan": "poza", "uwagi": "Poza sezonem grzewczym — ocena przed rozpoczęciem sezonu, razem z analizą K-1."}], "ODCH": [{"co": "S-1 wzrósł z około 0,120 do około 0,125 kWh/Nm³ w jednym tygodniu, przy produkcji i temperaturze takich jak tydzień wcześniej.", "kiedy": "Czerwiec 2026", "wartosc": "4,2", "prog": "3", "przyczyna": "Serwis po przeglądzie przywrócił ciśnienie 7 bar — kryterium 6,3 bar z karty sprężarkowni nie zostało zastosowane. Kierownik UR sprawdził kolejno nastawę, pracę sprężarek, filtry i wycieki, w kolejności z kryteriów 8.1.", "reakcja": "Powrót do 6,3 bar tego samego dnia.", "niezgodnosc": "tak", "kto": "Kierownik Utrzymania Ruchu — zbadane w ciągu tygodnia", "dzialanie": "Działanie korygujące (10.1): trzy zdania w zleceniu serwisowym o zakazie zmiany nastaw bez zgłoszenia. W kolejnych tygodniach wskaźnik wrócił do około 0,120. Przy następnym przeglądzie kierownik UR miał sprawdzić protokół z nastawami — wrześniowy audyt wewnętrzny pokazał, że tego zabrakło (karta niezgodności NK-2026-01, ponowne otwarcie 18.09.2026)."}], "OCENA_E": {"wynik": "Poprawa wobec EnB w O-1 (0,965 wobec 1,000), P-1 (121,5 wobec 124,0) i S-1 (0,118 wobec 0,125). L-1 w granicach progu. OŚ-1 bez istotnej zmiany do wymiany opraw. K-1 do analizy przed sezonem grzewczym — w I półroczu 1% powyżej EnB.", "system": "Działania 1–3 planu C1 wykonane w terminie, pozycja 4 zatwierdzona w budżecie 2027. Jedno znaczące odchylenie (06.2026) zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Stosowanie kryteriów sprężarkowni potwierdzone trendem ciśnienia i zapisami obchodów. Ocena zgodności (09.2026): 7 wymagań ocenianych, 1 niezgodne — działanie w toku; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Słabe miejsce: sprawdzanie protokołów serwisu przy odbiorze usługi — ustalenie z czerwca działa tylko w połowie.", "rekomendacje": "Utrzymać modernizację sprężarkowni (380 000 zł) w budżecie 2027 — cel Z1.1 nie jest osiągalny samym ciśnieniem. Przyjąć działanie dla raportu bankowego. Przeprowadzić analizę przyczyn K-1 przed rozpoczęciem sezonu grzewczego. Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi.", "rytmSystem": "Raz na kwartał, w kilku zdaniach raportu dla dyrektora zakładu: ile działań z planu wykonano w terminie, ile znaczących odchyleń wykryto, ile z nich zbadano i jak szybko, co zmieniono po analizach. Raport miesięczny części A–C do 10. dnia po zamknięciu miesiąca."}, "META": {"okres": "Sierpień 2026 (części A–C, E)", "data": "2026-09-07", "sporzadzil": "Jan Kowalski — Energy Manager", "odbiorcy": "Piotr Nowak — Dyrektor Zakładu; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "dataZatw": "2026-09-18"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Spadek zużycia przy mniejszej produkcji nie jest poprawą, a bywa tak raportowany.", "decyzja": "Wynik liczymy wobec modelu ze zmiennymi istotnymi, nie wobec zużycia z poprzedniego okresu.", "dzialanie": "Raport miesięczny podaje produkcję, stopniodnie i zużycie; model podstawiony liczbami wprost w raporcie.", "sprawdzenie": "Rozbieżność większa niż 5 punktów procentowych między spadkiem zużycia a poprawą wskaźnika wymaga adnotacji w raporcie."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 9.1.1 — Monitorowanie, pomiary, analiza i ocena.
+   F-EnMS-17 (III-41) części A, B, C, E; przykład III-42; lista kontrolna III-47 sekcja 9.1.1;
+   procedura P-EnMS-07 (III-48) pkt 4.1. */
+"use strict";
+
+var PUNKT = "9.1.1";
+var TERAZ = "11.10.2026 13:40";
+var USTALENIA = [];
+var MODEL = {};
+var OKRESY = [];
+var WSKAZNIKI = [];
+var SEU = [];
+var ODCH = [];
+var OCENA_E = { wynik: "", system: "", rekomendacje: "", rytmSystem: "" };
+var META = { okres: "", data: "", sporzadzil: "", odbiorcy: "", zatwierdzil: "", dataZatw: "" };
+var WNIOSKI = [];
+var AKT = "ustalenia";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 13:30", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 9.1.1" }];
+
+var KIERUNKI = [["", "—"], ["nizej", "Niżej znaczy lepiej"], ["wyzej", "Wyżej znaczy lepiej"]];
+var STANY = [["", "—"], ["spelnione", "Spełnione"], ["czesciowo", "Spełnione częściowo"],
+["niespelnione", "Niespełnione"], ["poza", "Poza okresem oceny"]];
+
+/* ── część 1: ustalenia monitorowania ── */
+function ustalenieOk(u) {
+  return !!((u.co || "").trim() && (u.zrodlo || "").trim() && (u.metoda || "").trim()
+    && (u.ktoMierzy || "").trim() && (u.czestoscPomiar || "").trim()
+    && (u.ktoAnalizuje || "").trim() && (u.czestoscAnaliza || "").trim());
+}
+/* Pułapka z producenta okien PVC: dane są, analizy nie ma. */
+function zbieraBezAnalizy(u) {
+  return !!((u.zrodlo || "").trim() && (u.czestoscPomiar || "").trim())
+    && !((u.ktoAnalizuje || "").trim() && (u.czestoscAnaliza || "").trim());
+}
+function brakujaceCharakterystyki() {
+  return CHARAKTERYSTYKI.filter(function (c) {
+    return !USTALENIA.some(function (u) { return u.kod === c.kod && ustalenieOk(u); });
+  });
+}
+
+/* ── część A: zużycie rzeczywiste a oczekiwane ── */
+function modelOk() {
+  return lb(MODEL.a) !== null && lb(MODEL.b) !== null && lb(MODEL.c) !== null
+    && !!(MODEL.opisA || "").trim() && !!(MODEL.opisB || "").trim() && !!(MODEL.zrodlo || "").trim();
+}
+function oczekiwane(o) {
+  var a = lb(MODEL.a), b = lb(MODEL.b), c = lb(MODEL.c), x1 = lb(o.x1), x2 = lb(o.x2);
+  if (a === null || b === null || c === null || x1 === null || x2 === null) return null;
+  return a * x1 + b * x2 + c;
+}
+function wzorOczekiwanego(o) {
+  var a = lb(MODEL.a), b = lb(MODEL.b), c = lb(MODEL.c);
+  return lcz(a, 2) + "·" + lkw(lb(o.x1), 0) + " + " + lcz(b, 2) + "·" + lkw(lb(o.x2), 0) + " + " + lkw(c, 0);
+}
+function stosunek(o) {
+  var ocz = oczekiwane(o), rz = lb(o.rzeczywiste);
+  if (ocz === null || rz === null || ocz === 0) return null;
+  return rz / ocz;
+}
+function okresOk(o) {
+  return !!((o.okres || "").trim() && lb(o.x1) !== null && lb(o.x2) !== null && lb(o.rzeczywiste) !== null);
+}
+/* Scena otwierająca rozdział 8: zużycie spadło, wynik się nie zmienił. */
+var RE_POPRAWA_K = /(popraw\w*|lepsz\w*|sukces|spad\w*\s+zu[żz]yci|mniej\s+zu[żz]y|oszcz[ęe]dn)/i;
+var RE_ZASTRZEZENIE_K = /(nie jest popraw|to nie popraw|zrobi\S*\s+(lato|pogod|produkcj)|bez popraw|praktycznie\s+si[ęe]\s+nie\s+zmieni|wynik.{0,25}(bez zmian|nie zmieni))/i;
+/* Rzecz nie polega na tym, że wskaźnik się pogorszył — w lipcu drgnął o 0,4%.
+   Polega na nieproporcjonalności: zużycie runęło o 23%, wynik stał w miejscu. */
+function dysproporcja(i) {
+  var o = OKRESY[i], p = OKRESY[i - 1];
+  if (!o || !p) return null;
+  var s = stosunek(o), sp = stosunek(p), rz = lb(o.rzeczywiste), rzp = lb(p.rzeczywiste);
+  if (s === null || sp === null || rz === null || rzp === null || rzp === 0 || sp === 0) return null;
+  var spadekZuzycia = (rzp - rz) / rzp * 100;
+  var poprawaWyniku = (sp - s) / sp * 100;
+  if (spadekZuzycia <= 0) return null;
+  return { zuzycie: spadekZuzycia, wynik: poprawaWyniku, luka: spadekZuzycia - poprawaWyniku };
+}
+function spadekJakoPoprawa(i) {
+  var d = dysproporcja(i);
+  if (!d || d.luka < 5) return false;
+  return RE_POPRAWA_K.test(OKRESY[i].komentarz || "") && !RE_ZASTRZEZENIE_K.test(OKRESY[i].komentarz || "");
+}
+
+/* ── część B: EnPI wobec EnB ── */
+function zmiana(w) {
+  var e = lb(w.enb), b = lb(w.biez);
+  if (e === null || b === null || e === 0) return null;
+  return (b - e) / e * 100;
+}
+function lepiej(w) {
+  var z = zmiana(w);
+  if (z === null || !w.kierunek) return null;
+  if (z === 0) return 0;
+  return w.kierunek === "nizej" ? (z < 0 ? 1 : -1) : (z > 0 ? 1 : -1);
+}
+function wskaznikOk(w) {
+  return !!((w.nazwa || "").trim() && w.kierunek && lb(w.enb) !== null && (w.enbOkres || "").trim()
+    && (w.ocena || "").trim() && (w.prog || "").trim());
+}
+var RE_OCENA_POPRAWA = /(popraw\w*|lepiej|lepsz\w*|cel osi[ąa]gni)/i;
+/* „Wyżej znaczy gorzej" — ocena mówi „poprawa", a kierunek wskaźnika mówi inaczej. */
+function ocenaWbrewKierunkowi(w) {
+  return lepiej(w) === -1 && RE_OCENA_POPRAWA.test(w.ocena || "");
+}
+function enbBezOkresu(w) { return lb(w.enb) !== null && !(w.enbOkres || "").trim(); }
+
+/* ── część C: SEU i znaczące odchylenia ── */
+var RE_DOWOD = /(trend|zapis|obchod|obchód|protok|wykres|rejestr|sterownik|odczyt|pomiar|histori|log\b|raport)/i;
+/* III-42: brak wpisów o zmianach nastaw sam nie dowodzi spełnienia kryterium. */
+function spelnioneBezDowodu(s) {
+  return s.stan === "spelnione" && !RE_DOWOD.test(s.uwagi || "");
+}
+function seuOk(s) { return !!((s.obszar || "").trim() && (s.kryterium || "").trim() && s.stan); }
+
+function odchOk(o) {
+  return !!((o.co || "").trim() && (o.kiedy || "").trim() && (o.przyczyna || "").trim()
+    && (o.reakcja || "").trim() && o.niezgodnosc && (o.kto || "").trim());
+}
+/* Dopuszczamy do dwóch słów między „nie" a czasownikiem: „kryterium nie zostało zastosowane".
+   Uwaga: \w w JavaScripcie nie obejmuje polskich liter, więc „zostało" trzeba złapać
+   klasą [^\s.;,] — inaczej reguła milczy dokładnie na tym zdaniu, dla którego powstała. */
+var RE_NIESPELNIENIE = /(nie\s+(?:[^\s.;,]+\s+){0,2}(?:zastosowa|spe[łl]ni|dotrzyma|przestrzeg|uwzgl[ęe]dni|wprowadz)|wbrew\s+kryterium|poza\s+kryterium|z\s+pomini[ęe]ciem|niezgodn)/i;
+/* Odchylenie, które przy okazji ujawnia niespełnienie wymagania, jest niezgodnością (10.1). */
+function niezgodnoscNieoznaczona(o) {
+  return RE_NIESPELNIENIE.test(o.przyczyna || "") && o.niezgodnosc === "nie";
+}
+function ponizejProgu(o) {
+  var w = lb(o.wartosc), p = lb(o.prog);
+  return w !== null && p !== null && Math.abs(w) < p;
+}
+
+/* ── część E ── */
+function ocenaEOk() {
+  return !!((OCENA_E.wynik || "").trim() && (OCENA_E.system || "").trim()
+    && (OCENA_E.rekomendacje || "").trim() && (OCENA_E.rytmSystem || "").trim());
+}
+function metaOk() {
+  return !!((META.okres || "").trim() && META.data && (META.sporzadzil || "").trim() && (META.odbiorcy || "").trim());
+}
+
+/* ── zakładka 1 ── */
+function rysujUstalenia(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Ustalenia monitorowania — cztery kluczowe charakterystyki");
+  h.appendChild(el("span", "chip " + (!brakujaceCharakterystyki().length ? "green" : "amber"),
+    (CHARAKTERYSTYKI.length - brakujaceCharakterystyki().length) + " / " + CHARAKTERYSTYKI.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Norma wymienia <b>cztery różne czynności</b>, a nie jedną. Pomiar daje wartość. Monitorowanie pokazuje przebieg. Analiza wyjaśnia zależność. <b>Ocena mówi, co to znaczy.</b><br><br>Same pomiary nie dadzą odpowiedzi, same wykresy też nie. Odpowiedź daje dopiero ocena — a ocena wymaga, żeby ktoś wiedział, z czym porównuje."));
+  s.appendChild(hel("div", "note", "Dla każdej charakterystyki norma każe ustalić <b>co</b> się mierzy, <b>jaką metodą</b>, <b>kiedy się mierzy</b> i <b>kiedy się analizuje i ocenia</b>. Częstotliwości dobieracie sami — do tego, jak szybko coś może się zepsuć i ile kosztuje zwłoka."));
+  host.appendChild(s);
+
+  var m = el("div", "sekcja");
+  m.appendChild(el("h3", null, "Metryka raportu"));
+  var mk = el("div", "poz" + (metaOk() ? "" : " brak"));
+  mk.appendChild(pole("Okres", inp(META.okres, "np. Sierpień 2026 (części A–C, E)", function (v) { META.okres = v; })));
+  mk.appendChild(pole("Data raportu", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  mk.appendChild(pole("Sporządził", inp(META.sporzadzil, "np. Jan Kowalski — Energy Manager", function (v) { META.sporzadzil = v; })));
+  mk.appendChild(pole("Odbiorcy", txt(META.odbiorcy, "np. Piotr Nowak — Dyrektor Zakładu; kierownicy UR, produkcji, zakupów; kontroler finansowy", 2,
+    function (v) { META.odbiorcy = v; }),
+    "Raport bez odbiorcy nie prowadzi do reakcji. To zalecenie metodyki, ale decyduje o tym, czy ocena ma jakikolwiek skutek."));
+  m.appendChild(mk);
+  host.appendChild(m);
+
+  var t = el("div", "sekcja");
+  t.appendChild(tabela(["Charakterystyka", "Co konkretnie", "Jak często mierzone", "Kto analizuje", "Jak często oceniane", "Stan"],
+    CHARAKTERYSTYKI.map(function (c) {
+      var u = USTALENIA.filter(function (x) { return x.kod === c.kod; })[0];
+      if (!u) return [c.nazwa, "—", "—", "—", "—", el("span", "chip red", "brak")];
+      return [c.nazwa, u.co || "—", u.czestoscPomiar || "—", u.ktoAnalizuje || "—", u.czestoscAnaliza || "—",
+        el("span", "chip " + (ustalenieOk(u) ? "green" : "amber"), ustalenieOk(u) ? "OK" : "niepełne")];
+    })));
+  host.appendChild(t);
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Ustalenia — edycja"));
+  CHARAKTERYSTYKI.forEach(function (c) {
+    var u = USTALENIA.filter(function (x) { return x.kod === c.kod; })[0];
+    if (!u) { u = { kod: c.kod }; USTALENIA.push(u); }
+    var kk = el("div", "poz" + (ustalenieOk(u) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, c.nazwa));
+    g.appendChild(el("span", "chip red", "wymóg normy"));
+    kk.appendChild(g);
+    if (c.pomoc) kk.appendChild(el("p", "opis", c.pomoc));
+    kk.appendChild(pole("Co konkretnie", txt(u.co, c.ph || "", 2, function (v) { u.co = v; })));
+    kk.appendChild(pole("Źródło danych", inp(u.zrodlo, c.phZ || "", function (v) { u.zrodlo = v; })));
+    kk.appendChild(pole("Metoda — żeby wyniki były wiarygodne", txt(u.metoda, c.phM || "", 2, function (v) { u.metoda = v; }),
+      "Sposób uzyskania danych wynika z potrzeb, nie z zasady „podlicznik na każdym SEU”. Ważne, żeby metoda dawała wiarygodne wyniki, a luki w danych miały ustalony sposób uzupełniania."));
+    kk.appendChild(pole("Kto mierzy", inp(u.ktoMierzy, "np. Utrzymanie ruchu — odczyt podlicznika", function (v) { u.ktoMierzy = v; })));
+    kk.appendChild(pole("Kiedy się mierzy", inp(u.czestoscPomiar, c.phCz || "np. co miesiąc", function (v) { u.czestoscPomiar = v; })));
+    kk.appendChild(pole("Kto analizuje i ocenia", inp(u.ktoAnalizuje, "np. Jan Kowalski — Energy Manager", function (v) { u.ktoAnalizuje = v; })));
+    kk.appendChild(pole("Kiedy się analizuje i ocenia", inp(u.czestoscAnaliza, "np. co miesiąc, do 10. dnia po zamknięciu miesiąca",
+      function (v) { u.czestoscAnaliza = v; })));
+    kk.appendChild(poleChip("Próg znaczącego odchylenia", "wymóg normy",
+      inp(u.prog, c.phP || "", function (v) { u.prog = v; }),
+      "Norma każe badać znaczące odchylenia — a to, co jest znaczące, ustalacie sami. Bez progu każde wahanie jest alarmem albo żadne nim nie jest."));
+    if (zbieraBezAnalizy(u))
+      kk.appendChild(hel("div", "warn", "Dane są zbierane, ale nie wskazano, kto i kiedy je analizuje. <b>To najdroższa pułapka tego punktu:</b> w jednym z zakładów system monitoringu za 85 000 zł pokazywał przez cztery miesiące zużycie wyższe o 35% na jednej linii. Nikt nie czytał raportów. Naprawa kosztowała 2 000 zł, nadmierne zużycie — około 45 000 zł."));
+    e.appendChild(kk);
+  });
+  host.appendChild(e);
+
+  var r = el("div", "sekcja");
+  r.appendChild(el("h3", null, "Ocena skuteczności systemu — rytm"));
+  var rk = el("div", "poz" + ((OCENA_E.rytmSystem || "").trim() ? "" : " brak"));
+  rk.appendChild(poleChip("Kiedy oceniana jest skuteczność systemu", "wymóg normy",
+    txt(OCENA_E.rytmSystem, "np. Raz na kwartał, w kilku zdaniach raportu dla dyrektora: ile działań z planu wykonano w terminie, ile znaczących odchyleń wykryto, ile zbadano i jak szybko, co zmieniono po analizach.", 3,
+      function (v) { OCENA_E.rytmSystem = v; }),
+    "Norma każe oceniać wynik energetyczny <b>i</b> skuteczność systemu. To dwa różne pytania: zakład może mieć dobry wynik w łagodną zimę, choć połowa systemu stoi."));
+  r.appendChild(rk);
+  host.appendChild(r);
+}
+
+/* ── zakładka 2: część A ── */
+function rysujZuzycie(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "A. Zużycie rzeczywiste a oczekiwane");
+  h.appendChild(el("span", "chip " + (OKRESY.length && OKRESY.every(okresOk) && modelOk() ? "green" : "amber"),
+    OKRESY.filter(okresOk).length + " / " + OKRESY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Sierpień 2026 r., zestawienie za lipiec. Zużycie: 795 MWh. W marcu było 1 030 MWh — prawie jedna czwarta mniej. Dyrektor zakładu jest zadowolony: „Ogłaszamy? System działa”.<br><br>Dwa pytania: <b>ile wyprodukowaliśmy i czy grzaliśmy hale?</b> W marcu prasy przerobiły 2 100 ton i trzeba było ogrzewać hale. W lipcu — 1 800 ton, część załogi na urlopach i ani jednego dnia grzania. Zużycie spadło o 23%. <b>Wynik energetyczny praktycznie się nie zmienił.</b> Spadek zrobiły lato i plan produkcji."));
+  host.appendChild(s);
+
+  var m = el("div", "sekcja");
+  m.appendChild(el("h3", null, "Model zużycia zakładu"));
+  var mk = el("div", "poz" + (modelOk() ? "" : " brak"));
+  mk.appendChild(pole("Współczynnik przy zmiennej 1", inp(MODEL.a, "np. 0,23", function (v) { MODEL.a = v; })));
+  mk.appendChild(pole("Zmienna 1 — nazwa i jednostka", inp(MODEL.opisA, "np. produkcja [t stali]", function (v) { MODEL.opisA = v; })));
+  mk.appendChild(pole("Współczynnik przy zmiennej 2", inp(MODEL.b, "np. 0,48", function (v) { MODEL.b = v; })));
+  mk.appendChild(pole("Zmienna 2 — nazwa i jednostka", inp(MODEL.opisB, "np. stopniodni grzania [HDD]", function (v) { MODEL.opisB = v; })));
+  mk.appendChild(pole("Zużycie stałe w miesiącu [MWh]", inp(MODEL.c, "np. 406", function (v) { MODEL.c = v; })));
+  mk.appendChild(pole("Źródło modelu", txt(MODEL.zrodlo, "np. Model z przeglądu energetycznego (III-22), regresja na 24 miesiącach 2024–2025; R² = 0,94", 2,
+    function (v) { MODEL.zrodlo = v; })));
+  if (modelOk())
+    mk.appendChild(hel("div", "ok", "Model: zużycie oczekiwane [MWh] = <b>" + lcz(lb(MODEL.a), 2) + "</b> · " +
+      E_(MODEL.opisA) + " + <b>" + lcz(lb(MODEL.b), 2) + "</b> · " + E_(MODEL.opisB) +
+      " + <b>" + lkw(lb(MODEL.c), 0) + "</b>"));
+  m.appendChild(mk);
+  host.appendChild(m);
+
+  if (OKRESY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Okres", MODEL.opisA || "Zmienna 1", MODEL.opisB || "Zmienna 2",
+      "Oczekiwane [MWh]", "Rzeczywiste [MWh]", "Rzecz. / ocz.", "Ocena"],
+      OKRESY.map(function (o) {
+        var ocz = oczekiwane(o), st = stosunek(o);
+        return [o.okres || "—", lkw(lb(o.x1), 0), lkw(lb(o.x2), 0),
+          ocz === null ? "—" : lkw(ocz, 0), lkw(lb(o.rzeczywiste), 0),
+          st === null ? "—" : lcz(st, 3),
+          st === null ? "—" : st < 1 ? "poniżej modelu" : st > 1 ? "powyżej modelu" : "zgodnie z modelem"];
+      })));
+    t.appendChild(el("div", "note", "Wskaźnik „rzeczywiste do oczekiwanego” poniżej 1 oznacza, że zakład zużył mniej, niż przewiduje model przy tych warunkach."));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Okresy — edycja"));
+  OKRESY.forEach(function (o, i) {
+    var kk = el("div", "poz" + (okresOk(o) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, o.okres || "Okres " + (i + 1)));
+    var st = stosunek(o);
+    if (st !== null) g.appendChild(el("span", "chip " + (st < 1 ? "green" : "amber"), lcz(st, 3)));
+    g.appendChild(przyciskUsun(function () { OKRESY.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Okres", inp(o.okres, "np. Sierpień 2026", function (v) { o.okres = v; })));
+    kk.appendChild(pole((MODEL.opisA || "Zmienna 1"), inp(o.x1, "np. 2050", function (v) { o.x1 = v; })));
+    kk.appendChild(pole((MODEL.opisB || "Zmienna 2"), inp(o.x2, "np. 10", function (v) { o.x2 = v; })));
+    kk.appendChild(pole("Zużycie rzeczywiste [MWh]", inp(o.rzeczywiste, "np. 851", function (v) { o.rzeczywiste = v; })));
+    kk.appendChild(pole("Rozbicie na nośniki", inp(o.rozbicie, "np. en. el. 690; gaz 150; LPG 11", function (v) { o.rozbicie = v; }),
+      "Suma nośników musi się zgadzać z liczbą powyżej — inaczej bilans nie zamyka się na licznikach głównych."));
+    kk.appendChild(pole("Komentarz", txt(o.komentarz, "np. Poprawa wobec EnB 1,000; lipiec 0,970", 2, function (v) { o.komentarz = v; })));
+    var ocz = oczekiwane(o);
+    if (ocz !== null) {
+      var w = el("div", "note");
+      w.appendChild(el("b", null, "Wyliczenie: "));
+      w.appendChild(document.createTextNode("oczekiwane " + lkw(ocz, 0) + " MWh (" + wzorOczekiwanego(o) + ")" +
+        (st !== null ? "; rzeczywiste / oczekiwane = " + lcz(st, 3) : "")));
+      kk.appendChild(w);
+    }
+    if (spadekJakoPoprawa(i)) {
+      var d = dysproporcja(i);
+      kk.appendChild(hel("div", "warn", "Zużycie spadło o <b>" + lcz(d.zuzycie, 1) +
+        "%</b> wobec poprzedniego okresu, a wskaźnik „rzeczywiste do oczekiwanego” zmienił się tylko o <b>" +
+        lcz(d.wynik, 1) + "%</b> — komentarz mówi natomiast o poprawie. To dokładnie ta sytuacja, którą punkt 9.1 ma rozstrzygać: <b>najpierw sprawdźcie produkcję, pogodę i inne zmienne.</b> Spadek zużycia nie jest poprawą wyniku energetycznego, jeśli zrobiły go lato i plan produkcji."));
+    }
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj okres", function () { OKRESY.push({}); }));
+  if (!OKRESY.length) e.appendChild(el("div", "warn", "Brak okresów do porównania."));
+  host.appendChild(e);
+}
+
+/* ── zakładka 3: część B ── */
+function rysujWskazniki(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "B. EnPI wobec odpowiadających im EnB");
+  h.appendChild(el("span", "chip " + (WSKAZNIKI.length && WSKAZNIKI.every(wskaznikOk) ? "green" : "amber"),
+    WSKAZNIKI.filter(wskaznikOk).length + " / " + WSKAZNIKI.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Poprawę ocenia się, porównując EnPI z <b>odpowiadającą mu linią bazową</b> — tym samym wskaźnikiem, policzonym tą samą metodą, w porównywalnych warunkach. <b>Zestawienie dowolnych dwóch miesięcy, jak marzec i lipiec, nie jest takim porównaniem.</b>"));
+  s.appendChild(hel("div", "note", "<b>Kierunek poprawy wynika z definicji wskaźnika</b> zapisanej w punkcie 6.4. Dla kWh/Nm³ poprawą jest spadek. Dla wskaźnika typu „udział ciepła odzyskanego” poprawą jest wzrost. Platforma liczy zmianę i sprawdza ją wobec zadeklarowanego kierunku."));
+  host.appendChild(s);
+
+  if (WSKAZNIKI.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["EnPI", "Kierunek", "EnB (okres)", "Wartość bieżąca", "Zmiana", "Cel (termin)", "Ocena"],
+      WSKAZNIKI.map(function (w) {
+        var z = zmiana(w), l = lepiej(w);
+        var zt = z === null ? "—" : (z > 0 ? "+" : "") + lcz(z, 1) + "%";
+        var cell = el("span", null, zt);
+        if (l === 1) cell = el("span", "chip green", zt);
+        else if (l === -1) cell = el("span", "chip red", zt);
+        /* Wartości pokazujemy tak, jak je wpisano — zaokrąglanie do stałej liczby
+           miejsc zmieniałoby 124,0 na 124,000, a 1,000 na 1. */
+        return [(w.kod ? w.kod + " " : "") + (w.nazwa || "—"),
+          w.kierunek === "nizej" ? "niżej lepiej" : w.kierunek === "wyzej" ? "wyżej lepiej" : "—",
+          ((w.enb || "").trim() || "—") + (w.enbOkres ? " (" + w.enbOkres + ")" : ""),
+          (w.biez || "").trim() || w.biezOkres || "—",
+          cell, (w.cel || "—") + (w.celTermin ? " (" + w.celTermin + ")" : ""), w.ocena || "—"];
+      })));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Wskaźniki — edycja"));
+  WSKAZNIKI.forEach(function (w, i) {
+    var kk = el("div", "poz" + (wskaznikOk(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (w.kod || "") + " " + (w.nazwa || "Wskaźnik " + (i + 1))));
+    var z = zmiana(w);
+    if (z !== null) g.appendChild(el("span", "chip " + (lepiej(w) === 1 ? "green" : lepiej(w) === -1 ? "red" : ""),
+      (z > 0 ? "+" : "") + lcz(z, 1) + "%"));
+    g.appendChild(przyciskUsun(function () { WSKAZNIKI.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Kod", inp(w.kod, "np. S-1", function (v) { w.kod = v; })));
+    kk.appendChild(pole("Nazwa i jednostka", inp(w.nazwa, "np. sprężarkownia [kWh/Nm³]", function (v) { w.nazwa = v; })));
+    kk.appendChild(poleChip("Kierunek poprawy", "wymóg normy", sel(w.kierunek, KIERUNKI, function (v) { w.kierunek = v; }),
+      "Z karty wskaźnika (6.4). Bez kierunku nie da się powiedzieć, czy zmiana jest poprawą."));
+    kk.appendChild(pole("EnB — wartość", inp(w.enb, "np. 0,125", function (v) { w.enb = v; })));
+    kk.appendChild(poleChip("EnB — okres", "wymóg normy", inp(w.enbOkres, "np. 02–03.2026", function (v) { w.enbOkres = v; })));
+    kk.appendChild(pole("Wartość bieżąca", inp(w.biez, "np. 0,118", function (v) { w.biez = v; })));
+    kk.appendChild(pole("Okres wartości bieżącej albo powód braku", inp(w.biezOkres, "np. VIII 2026; albo: poza sezonem",
+      function (v) { w.biezOkres = v; })));
+    kk.appendChild(pole("Cel", inp(w.cel, "np. 0,110", function (v) { w.cel = v; })));
+    kk.appendChild(pole("Termin celu", inp(w.celTermin, "np. 12.2027", function (v) { w.celTermin = v; })));
+    kk.appendChild(poleChip("Próg znaczącego odchylenia", "wymóg normy", inp(w.prog, "np. 3% wobec średniej z ostatnich tygodni",
+      function (v) { w.prog = v; })));
+    kk.appendChild(pole("Ocena", txt(w.ocena, "np. Poprawa; cel w toku", 2, function (v) { w.ocena = v; })));
+    if (z !== null) {
+      var n = el("div", "note");
+      n.appendChild(el("b", null, "Wyliczenie: "));
+      n.appendChild(document.createTextNode("(" + (w.biez || "").trim() + " − " + (w.enb || "").trim() + ") / " +
+        (w.enb || "").trim() + " = " + (z > 0 ? "+" : "") + lcz(z, 1) + "% — " +
+        (lepiej(w) === 1 ? "w kierunku poprawy" : lepiej(w) === -1 ? "w kierunku pogorszenia" : "bez zmiany")));
+      kk.appendChild(n);
+    }
+    if (ocenaWbrewKierunkowi(w))
+      kk.appendChild(hel("div", "warn", "Ocena mówi o poprawie, a zmiana idzie <b>w stronę przeciwną do zadeklarowanego kierunku</b> wskaźnika. „Wyżej znaczy gorzej” to jedna z dwóch najczęstszych pułapek tego punktu — sprawdźcie kierunek w karcie wskaźnika (6.4)."));
+    if (enbBezOkresu(w))
+      kk.appendChild(el("div", "warn", "EnB bez podanego okresu. Bez niego nie da się sprawdzić, czy porównanie jest prowadzone w porównywalnych warunkach — a to jest cała treść tego wymagania."));
+    if (!(w.prog || "").trim() && (w.nazwa || "").trim())
+      kk.appendChild(el("div", "warn", "Brak progu znaczącego odchylenia. Norma wymaga ustalenia i stosowania kryteriów identyfikowania znaczących odchyleń."));
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj wskaźnik", function () { WSKAZNIKI.push({}); }));
+  host.appendChild(e);
+
+  var p = el("div", "sekcja");
+  p.appendChild(hel("div", "note", "<b>Druga pułapka: „wskaźnik na tonę wzrósł, więc jest gorzej”.</b> Gdy produkcja spada o 15% (2 000 → 1 700 t), a zużycie o 12% (840 → 739 MWh), zużycie na tonę rośnie z 420 do 435 kWh. Model uwzględniający zużycie stałe mówi co innego: oczekiwane spada z 866 do 797 MWh, a wskaźnik „rzeczywiste do oczekiwanego” <b>poprawia się z 0,970 do 0,927</b>. Przy dużym zużyciu stałym prosty wskaźnik na tonę rośnie, gdy produkcja spada — nawet jeśli zakład pracuje lepiej."));
+  host.appendChild(p);
+}
+
+/* ── zakładka 4: część C ── */
+function rysujSeu(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "C. Działanie SEU, plany działań i znaczące odchylenia");
+  h.appendChild(el("span", "chip " + (SEU.length && SEU.every(seuOk) && !SEU.some(spelnioneBezDowodu) ? "green" : "amber"),
+    SEU.filter(seuOk).length + " / " + SEU.length));
+  s.appendChild(h);
+  SEU.forEach(function (x, i) {
+    var kk = el("div", "poz" + (seuOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, x.obszar || "Pozycja " + (i + 1)));
+    if (x.stan) g.appendChild(el("span", "chip " + (x.stan === "spelnione" ? "green" : x.stan === "niespelnione" ? "red" : ""),
+      STANY.filter(function (y) { return y[0] === x.stan; })[0][1]));
+    g.appendChild(przyciskUsun(function () { SEU.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("SEU albo działanie z planu", inp(x.obszar, "np. Sprężarkownia; albo: Z1.2 przepływ w postoju",
+      function (v) { x.obszar = v; })));
+    kk.appendChild(pole("Kryterium albo cel", inp(x.kryterium, "np. Ciśnienie ≤ 6,3 bar (III-35)", function (v) { x.kryterium = v; })));
+    kk.appendChild(pole("Stan", sel(x.stan, STANY, function (v) { x.stan = v; })));
+    kk.appendChild(pole("Uwagi i dowód", txt(x.uwagi, "np. Potwierdzone trendem ciśnienia ze sterownika i zapisami obchodów", 2,
+      function (v) { x.uwagi = v; })));
+    if (spelnioneBezDowodu(x))
+      kk.appendChild(hel("div", "warn", "Kryterium oznaczone jako spełnione, a w uwagach nie ma wskazania dowodu. <b>Brak wpisów o zmianach nastaw sam nie dowodzi spełnienia kryterium</b> — potwierdźcie trendem ciśnienia albo zapisami obchodów. To różnica między odhaczaniem a oceną."));
+    s.appendChild(kk);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj pozycję", function () { SEU.push({}); }));
+  host.appendChild(s);
+
+  var d = el("div", "sekcja");
+  var hd = el("h3", null, "Znaczące odchylenia");
+  hd.appendChild(el("span", "chip " + (ODCH.every(odchOk) ? "green" : "amber"),
+    ODCH.filter(odchOk).length + " / " + ODCH.length));
+  d.appendChild(hd);
+  d.appendChild(hel("div", "note", "<b>Nie każde odchylenie wymaga reakcji.</b> Wahania z tygodnia na tydzień to normalna rzecz. Norma każe badać <b>znaczące</b> odchylenia — a to, co jest znaczące, ustalacie sami progiem. Kolejność: zbadaj, zareaguj adekwatnie, sprawdź, czy przy okazji nie ujawniło się niespełnienie wymagania, zapisz wynik badania i reakcji."));
+  ODCH.forEach(function (o, i) {
+    var kk = el("div", "poz" + (odchOk(o) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (o.co || "Odchylenie " + (i + 1))));
+    if (o.niezgodnosc === "tak") g.appendChild(el("span", "chip red", "niezgodność → 10.1"));
+    g.appendChild(przyciskUsun(function () { ODCH.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Co się stało", txt(o.co, "np. S-1 wzrósł z 0,120 do 0,125 kWh/Nm³ w jednym tygodniu", 2,
+      function (v) { o.co = v; })));
+    kk.appendChild(pole("Kiedy", inp(o.kiedy, "np. tydzień 24/2026 (czerwiec 2026)", function (v) { o.kiedy = v; })));
+    kk.appendChild(pole("Wielkość odchylenia [%]", inp(o.wartosc, "np. 4,2", function (v) { o.wartosc = v; })));
+    kk.appendChild(pole("Próg [%]", inp(o.prog, "np. 3", function (v) { o.prog = v; })));
+    kk.appendChild(poleChip("Przyczyna", "wymóg normy", txt(o.przyczyna, "np. Serwis po przeglądzie przywrócił ciśnienie 7 bar; produkcja i temperatura jak tydzień wcześniej", 2,
+      function (v) { o.przyczyna = v; })));
+    kk.appendChild(poleChip("Reakcja", "wymóg normy", txt(o.reakcja, "np. Powrót do 6,3 bar tego samego dnia", 2,
+      function (v) { o.reakcja = v; })));
+    kk.appendChild(pole("Czy ujawniono niespełnienie wymagania? → 10.1",
+      sel(o.niezgodnosc, [["", "—"], ["tak", "Tak — niezgodność, karta 10.1"], ["nie", "Nie — tylko odchylenie"]],
+        function (v) { o.niezgodnosc = v; }),
+      "Jeśli przy okazji okaże się, że nie spełniono wymagania — np. kryterium z 8.1 nie zostało zastosowane — to jest niezgodność, a nie tylko odchylenie."));
+    kk.appendChild(pole("Kto i kiedy", inp(o.kto, "np. Kierownik UR, zbadane w ciągu tygodnia", function (v) { o.kto = v; })));
+    kk.appendChild(pole("Działanie korygujące i sprawdzenie", txt(o.dzialanie, "np. Trzy zdania w zleceniu serwisowym; wskaźnik wrócił do 0,120 w kolejnych tygodniach. Sprawdzenie protokołu przy następnym przeglądzie — wrześniowy audyt pokazał, że tego zabrakło", 3,
+      function (v) { o.dzialanie = v; })));
+    if (niezgodnoscNieoznaczona(o))
+      kk.appendChild(hel("div", "warn", "Przyczyna wskazuje, że <b>nie spełniono wymagania</b>, a odchylenie jest oznaczone jako „tylko odchylenie”. Wtedy stosuje się zasady z punktu 10.1: reakcja, ocena potrzeby usunięcia przyczyny, działanie i sprawdzenie skuteczności — żeby problem nie wrócił."));
+    if (ponizejProgu(o))
+      kk.appendChild(hel("div", "note", "Odchylenie jest mniejsze niż własny próg. <b>Każde wahanie traktowane jak alarm</b> to jeden z błędów tego punktu — taką pozycję zwykle wystarczy obserwować i zapisać w uwagach, a nie badać jako znaczące odchylenie."));
+    d.appendChild(kk);
+  });
+  d.appendChild(przyciskDodaj("+ dodaj odchylenie", function () { ODCH.push({}); }));
+  if (!ODCH.length)
+    d.appendChild(el("div", "note", "Brak znaczących odchyleń w okresie to poprawny stan — jeśli progi są ustalone i dane analizowane. Zapiszcie to w uwagach pozycji SEU."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 5: część E ── */
+function rysujOcene(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "E. Wnioski i ocena skuteczności systemu");
+  h.appendChild(el("span", "chip " + (ocenaEOk() ? "green" : "amber"), ocenaEOk() ? "kompletne" : "do uzupełnienia"));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "<b>Ocena tylko liczb, bez oceny systemu</b> to jeden z sześciu błędów tego punktu. „Czy wynik się poprawia” i „czy system działa” to dwa różne pytania. Zakład może mieć dobry wynik w łagodną zimę, choć połowa systemu stoi — i odwrotnie, może mieć słaby miesiąc, choć system działa bez zarzutu."));
+  var kk = el("div", "poz" + (ocenaEOk() ? "" : " brak"));
+  kk.appendChild(poleChip("Czy wynik energetyczny się poprawia? (EnPI wobec EnB)", "wymóg normy",
+    txt(OCENA_E.wynik, "np. Poprawa wobec EnB w O-1, P-1 i S-1; K-1 do analizy przed sezonem grzewczym", 3,
+      function (v) { OCENA_E.wynik = v; })));
+  kk.appendChild(poleChip("Czy system działa?", "wymóg normy",
+    txt(OCENA_E.system, "np. Działania 1–3 planu C1 wykonane w terminie; 1 znaczące odchylenie (06.2026) zbadane w ciągu tygodnia; stosowanie kryteriów sprężarkowni do potwierdzenia zapisami; ocena zgodności: 1 niezgodność, działanie w toku", 4,
+      function (v) { OCENA_E.system = v; }),
+    "Cztery rzeczy do sprawdzenia: czy działania z planów są wykonywane w terminie, czy odchylenia są badane, czy kryteria z 8.1 są stosowane, czy ustalenia z analiz trafiają do praktyki."));
+  kk.appendChild(pole("Rekomendacje dla kierownictwa",
+    txt(OCENA_E.rekomendacje, "np. Utrzymać modernizację sprężarkowni w budżecie 2027; przyjąć działanie dla raportu bankowego; analiza K-1 przed sezonem", 3,
+      function (v) { OCENA_E.rekomendacje = v; }),
+    "Rekomendacja to wejście do przeglądu zarządzania (9.3). Wykres pokazuje, co się stało — rekomendacja mówi, co z tym zrobić i dlaczego."));
+  s.appendChild(kk);
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  w.appendChild(el("h3", null, "Skąd wiesz, że monitorowanie działa"));
+  var lista = [
+    { t: "Dla każdej z czterech kluczowych charakterystyk wiadomo, skąd są dane, kto je analizuje i kiedy.",
+      ok: !brakujaceCharakterystyki().length },
+    { t: "EnPI porównywane z odpowiadającą im EnB w porównywalnych warunkach — a nie dwa dowolne okresy.",
+      ok: WSKAZNIKI.length > 0 && !WSKAZNIKI.some(enbBezOkresu) },
+    { t: "Da się powiedzieć, czy spadek zużycia to poprawa wyniku, czy zasługa produkcji i pogody.",
+      ok: modelOk() && OKRESY.filter(okresOk).length >= 2 },
+    { t: "Ostatnie znaczące odchylenie ma zapisaną przyczynę i reakcję.",
+      ok: ODCH.length === 0 ? null : ODCH.every(odchOk) },
+    { t: "Oceniane są nie tylko liczby, ale i to, czy system działa.",
+      ok: !!(OCENA_E.system || "").trim() && !!(OCENA_E.rytmSystem || "").trim() }
+  ];
+  lista.forEach(function (x) {
+    var kw = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "chip " + (x.ok === null ? "" : x.ok ? "green" : "amber"),
+      x.ok === null ? "nie dotyczy" : x.ok ? "tak" : "jeszcze nie"));
+    g.appendChild(el("span", null, x.t));
+    kw.appendChild(g);
+    w.appendChild(kw);
+  });
+  host.appendChild(w);
+}
+
+/* ── zakładka 6 ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz monitorowania: "));
+  n.appendChild(document.createTextNode(
+    "charakterystyki: " + (CHARAKTERYSTYKI.length - brakujaceCharakterystyki().length) + " z " + CHARAKTERYSTYKI.length +
+    " · wskaźniki: " + WSKAZNIKI.filter(wskaznikOk).length + " z " + WSKAZNIKI.length +
+    " · okresy w części A: " + OKRESY.filter(okresOk).length +
+    " · " + ile(ODCH.length, "odchylenie", "odchylenia", "odchyleń") +
+    ", niezgodności: " + ODCH.filter(function (o) { return o.niezgodnosc === "tak"; }).length));
+  s.appendChild(n);
+  var bez = USTALENIA.filter(zbieraBezAnalizy);
+  if (bez.length)
+    s.appendChild(el("div", "warn", "W " + ile(bez.length, "charakterystyce", "charakterystykach", "charakterystykach") +
+      " dane są zbierane, ale nikt ich nie analizuje. To nie jest luka w dokumentacji — to pieniądze. Przy audycie certyfikującym kończy się niezgodnością z 9.1.1."));
+  var bezDow = SEU.filter(spelnioneBezDowodu);
+  if (bezDow.length)
+    s.appendChild(el("div", "warn", ile(bezDow.length, "kryterium SEU jest oznaczone", "kryteria SEU są oznaczone", "kryteriów SEU jest oznaczonych") +
+      " jako spełnione bez wskazania dowodu. To pierwsza rzecz, o którą zapyta audytor — i w AutoParts dokładnie tak zaczął się wrześniowy audyt."));
+  var bezProgu = WSKAZNIKI.filter(function (w) { return (w.nazwa || "").trim() && !(w.prog || "").trim(); });
+  if (bezProgu.length)
+    s.appendChild(el("div", "warn", ile(bezProgu.length, "wskaźnik nie ma", "wskaźniki nie mają", "wskaźników nie ma") +
+      " progu znaczącego odchylenia. Bez progów rozmowa o reagowaniu nie ma punktu odniesienia: albo każde wahanie jest alarmem, albo żadne."));
+  var nieozn = ODCH.filter(niezgodnoscNieoznaczona);
+  if (nieozn.length)
+    s.appendChild(el("div", "warn", "W " + ile(nieozn.length, "odchyleniu", "odchyleniach", "odchyleniach") +
+      " przyczyna wskazuje niespełnienie wymagania, a pozycja nie jest skierowana do 10.1. To najczęstsze miejsce, w którym niezgodność znika z systemu — badanie odchylenia zamyka sprawę, zamiast ją otworzyć."));
+  if (!(OCENA_E.system || "").trim())
+    s.appendChild(el("div", "warn", "Brak oceny skuteczności systemu. Rozmowa z klientem: ocena wyniku jest łatwiejsza, bo opiera się na liczbach, które i tak powstają. Ocena systemu wymaga przejrzenia działań, odchyleń i ustaleń — i dlatego wypada pierwsza."));
+  if (modelOk() && OKRESY.filter(okresOk).length < 2)
+    s.appendChild(el("div", "note", "W części A jest mniej niż dwa okresy. Model działa, ale nie widać trendu — a to on rozstrzyga, czy spadek zużycia był poprawą."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-47, sekcja 9.1.1 ── */
+function stanPozycji(q) {
+  var f = {
+    co: function () { return !brakujaceCharakterystyki().length; },
+    metody: function () {
+      if (!USTALENIA.length) return false;
+      return CHARAKTERYSTYKI.every(function (c) {
+        var u = USTALENIA.filter(function (x) { return x.kod === c.kod; })[0];
+        return u && (u.metoda || "").trim() && (u.zrodlo || "").trim();
+      });
+    },
+    kiedy: function () {
+      return CHARAKTERYSTYKI.every(function (c) {
+        var u = USTALENIA.filter(function (x) { return x.kod === c.kod; })[0];
+        return u && (u.czestoscPomiar || "").trim() && (u.czestoscAnaliza || "").trim();
+      });
+    },
+    enpiEnb: function () {
+      return WSKAZNIKI.length > 0 && WSKAZNIKI.every(function (w) {
+        return lb(w.enb) !== null && (w.enbOkres || "").trim() && w.kierunek;
+      }) && !WSKAZNIKI.some(ocenaWbrewKierunkowi);
+    },
+    skutecznosc: function () { return !!((OCENA_E.system || "").trim() && (OCENA_E.rytmSystem || "").trim()); },
+    odchylenia: function () {
+      if (!ODCH.length) return null;
+      return ODCH.every(odchOk) && !ODCH.some(niezgodnoscNieoznaczona);
+    },
+    zapisy: function () {
+      return modelOk() && OKRESY.length > 0 && OKRESY.every(okresOk) && metaOk();
+    },
+    progi: function () {
+      return WSKAZNIKI.length > 0 && WSKAZNIKI.every(function (w) { return (w.prog || "").trim(); })
+        && CHARAKTERYSTYKI.every(function (c) {
+          var u = USTALENIA.filter(function (x) { return x.kod === c.kod; })[0];
+          return u && (u.prog || "").trim();
+        });
+    },
+    wnioski: function () {
+      return !!((OCENA_E.wynik || "").trim() && (OCENA_E.rekomendacje || "").trim());
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!metaOk()) b.push({ t: "Niepełna metryka raportu (okres, data, sporządził, odbiorcy).", kto: "klient" });
+  brakujaceCharakterystyki().forEach(function (c) {
+    b.push({ t: "Charakterystyka „" + c.nazwa + "” — niepełne ustalenia monitorowania.", kto: "klient" });
+  });
+  USTALENIA.filter(zbieraBezAnalizy).forEach(function (u) {
+    var c = CHARAKTERYSTYKI.filter(function (x) { return x.kod === u.kod; })[0];
+    b.push({ t: (c ? c.nazwa : u.kod) + " — dane zbierane, brak osoby i terminu analizy.", kto: "klient" });
+  });
+  if (!modelOk()) b.push({ t: "Model zużycia niepełny — nie da się policzyć zużycia oczekiwanego.", kto: "klient" });
+  if (!OKRESY.length) b.push({ t: "Brak okresów w części A.", kto: "klient" });
+  OKRESY.forEach(function (o, i) {
+    if (!okresOk(o)) b.push({ t: "Okres " + (o.okres || i + 1) + " — brak zmiennych albo zużycia rzeczywistego.", kto: "klient" });
+  });
+  if (!WSKAZNIKI.length) b.push({ t: "Brak wskaźników w części B.", kto: "klient" });
+  WSKAZNIKI.forEach(function (w, i) {
+    var n = (w.kod || "") + " " + (w.nazwa || "wskaźnik " + (i + 1));
+    if (!wskaznikOk(w)) b.push({ t: n + " — niepełna pozycja (kierunek, EnB z okresem, próg, ocena).", kto: "klient" });
+    if (ocenaWbrewKierunkowi(w)) b.push({ t: n + " — ocena mówi o poprawie wbrew kierunkowi wskaźnika.", kto: "klient" });
+  });
+  SEU.filter(spelnioneBezDowodu).forEach(function (x) {
+    b.push({ t: (x.obszar || "SEU") + " — kryterium spełnione bez wskazania dowodu.", kto: "klient", metodyka: true });
+  });
+  ODCH.forEach(function (o, i) {
+    if (!odchOk(o)) b.push({ t: "Odchylenie " + (i + 1) + " — brak przyczyny, reakcji albo zapisu kto i kiedy.", kto: "klient" });
+    if (niezgodnoscNieoznaczona(o)) b.push({ t: "Odchylenie " + (i + 1) + " — niespełnienie wymagania nieskierowane do 10.1.", kto: "klient" });
+  });
+  if (!(OCENA_E.wynik || "").trim()) b.push({ t: "Brak oceny poprawy wyniku energetycznego.", kto: "klient" });
+  if (!(OCENA_E.system || "").trim()) b.push({ t: "Brak oceny skuteczności systemu.", kto: "klient" });
+  if (!(OCENA_E.rytmSystem || "").trim()) b.push({ t: "Nie ustalono, kiedy oceniana jest skuteczność systemu.", kto: "klient" });
+  if (!(OCENA_E.rekomendacje || "").trim()) b.push({ t: "Brak rekomendacji dla kierownictwa.", kto: "klient", metodyka: true });
+  if (!META.dataZatw || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia raportu.", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 7 ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-MON-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.dataZatw, "", function (v) { META.dataZatw = v; }, "date")));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_911, "Lista kontrolna III-47 — sekcja 9.1.1", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-MON-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Ustalenia monitorowania", "zakładka 1",
+      (CHARAKTERYSTYKI.length - brakujaceCharakterystyki().length) + " z " + CHARAKTERYSTYKI.length + " charakterystyk"],
+    ["A. Zużycie rzeczywiste a oczekiwane", "zakładka 2",
+      modelOk() ? ile(OKRESY.filter(okresOk).length, "okres", "okresy", "okresów") + " · model czynny" : "model niepełny"],
+    ["B. EnPI wobec EnB", "zakładka 3", WSKAZNIKI.filter(wskaznikOk).length + " z " + WSKAZNIKI.length + " wskaźników"],
+    ["C. SEU, plany i odchylenia", "zakładka 4",
+      SEU.filter(seuOk).length + " z " + SEU.length + " pozycji · " + ile(ODCH.length, "odchylenie", "odchylenia", "odchyleń")],
+    ["E. Wnioski i skuteczność systemu", "zakładka 5", ocenaEOk() ? "kompletne" : "do uzupełnienia"],
+    ["Wnioski konsultanta", "zakładka 6", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 7", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>ustaleń</b> (co, jakimi metodami, kiedy mierzone, kiedy analizowane i oceniane), <b>oceny wyniku energetycznego i skuteczności systemu</b>, <b>badania znaczących odchyleń i reakcji</b> oraz <b>zapisów</b> wyników monitorowania i pomiarów. Forma raportu jest zaleceniem metodyki ENESA. Dokument D-EnMS-MON-01 odpowiada częściom A, B, C i E formularza F-EnMS-17 (załącznik III-41); część D — ocena zgodności — jest w punkcie 9.1.2."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "ustalenia", t: "1. Ustalenia monitorowania", f: rysujUstalenia },
+  { id: "zuzycie", t: "2. A — rzeczywiste a oczekiwane", f: rysujZuzycie },
+  { id: "wskazniki", t: "3. B — EnPI wobec EnB", f: rysujWskazniki },
+  { id: "seu", t: "4. C — SEU i odchylenia", f: rysujSeu },
+  { id: "ocena", t: "5. E — wnioski", f: rysujOcene },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: CHARAKTERYSTYKI.length + Math.max(WSKAZNIKI.length, 1) + Math.max(OKRESY.length, 1) + 5,
+    zrob: (CHARAKTERYSTYKI.length - brakujaceCharakterystyki().length)
+      + WSKAZNIKI.filter(wskaznikOk).length
+      + OKRESY.filter(okresOk).length
+      + (modelOk() ? 1 : 0) + (metaOk() ? 1 : 0)
+      + (SEU.length && SEU.every(seuOk) && !SEU.some(spelnioneBezDowodu) ? 1 : 0)
+      + (ocenaEOk() ? 1 : 0)
+      + ((META.zatwierdzil || "").trim() && META.dataZatw ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_911", JSON.stringify({
+      USTALENIA: USTALENIA, MODEL: MODEL, OKRESY: OKRESY, WSKAZNIKI: WSKAZNIKI,
+      SEU: SEU, ODCH: ODCH, OCENA_E: OCENA_E, META: META, WNIOSKI: WNIOSKI
+    }));
+    /* Wskaźniki czyta 9.3 (dane wejściowe przeglądu) i 9.2 (program audytów). */
+    localStorage.setItem("enesa_monitoring", JSON.stringify({
+      WSKAZNIKI: WSKAZNIKI, ODCH: ODCH, OCENA_E: OCENA_E, okres: META.okres
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_911"); if (!s) return;
+    var d = JSON.parse(s);
+    USTALENIA = d.USTALENIA || []; MODEL = d.MODEL || {}; OKRESY = d.OKRESY || [];
+    WSKAZNIKI = d.WSKAZNIKI || []; SEU = d.SEU || []; ODCH = d.ODCH || [];
+    OCENA_E = d.OCENA_E || OCENA_E; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var p = JSON.parse(JSON.stringify(PRZYKLAD));
+  USTALENIA = p.USTALENIA; MODEL = p.MODEL; OKRESY = p.OKRESY; WSKAZNIKI = p.WSKAZNIKI;
+  SEU = p.SEU; ODCH = p.ODCH; OCENA_E = p.OCENA_E; META = p.META;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić raport z monitorowania?")) return;
+  USTALENIA = []; MODEL = {}; OKRESY = []; WSKAZNIKI = []; SEU = []; ODCH = []; WNIOSKI = [];
+  OCENA_E = { wynik: "", system: "", rekomendacje: "", rytmSystem: "" };
+  META = { okres: "", data: "", sporzadzil: "", odbiorcy: "", zatwierdzil: "", dataZatw: "" };
+  try { localStorage.removeItem("enesa_911"); } catch (e) { }
+  rysuj();
+}
+
+/* Kwoty i wielkości z separatorem tysięcy. */
+function lkw(x, d) {
+  if (x === null || x === undefined) return "—";
+  var c = Math.abs(x).toFixed(d === undefined ? 0 : d).split(".");
+  c[0] = c[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return (x < 0 ? "−" : "") + c.join(",");
+}
+function E_(t) { return (t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

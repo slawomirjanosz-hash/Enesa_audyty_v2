@@ -1,0 +1,1539 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 7.2 Kompetencje</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 7</div>
+ <h1>7.2 Kompetencje</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 7.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 7.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>7.2 Kompetencje</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 7.2 i sposób sprawdzania kompetencji.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 7.2<br>Kompetencje</div>
+   <div>
+    <h4>7.2 Kompetencje: czy ludzie potrafią to zrobić?</h4>
+    <p>Dlaczego lista obecności nie jest dowodem kompetencji. Sześć kroków od „kto wpływa na energię”
+    do zachowanego dowodu. Jak sprawdzić, że ktoś umie.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 7.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">7.2 — kompetencje<br>12 slajdów</div>
+   <div>
+    <h4>7.2 Kompetencje</h4>
+    <p>Matryca kompetencji i skala W/A. Działanie to nie tylko kurs. Ocena skuteczności.
+    Wykonawcy zewnętrzni pod nadzorem organizacji.</p>
+    <p style="font-size:12.5px">12 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja ustala, jakie kompetencje są potrzebne osobom wykonującym pod jej
+ nadzorem pracę, która wpływa na wynik energetyczny i system zarządzania energią; zapewnia, że osoby te są
+ kompetentne — na podstawie odpowiedniego wykształcenia, szkolenia, umiejętności lub doświadczenia; tam, gdzie
+ to potrzebne, podejmuje działania, żeby uzyskać brakujące kompetencje, i ocenia, czy te działania okazały się
+ skuteczne; zachowuje odpowiednie udokumentowane informacje jako dowód kompetencji. Działaniami mogą być
+ na przykład szkolenie, mentoring, zmiana przydziału zadań, zatrudnienie albo zlecenie pracy kompetentnym
+ osobom. Omówienie na podstawie punktu 7.2 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> ustal, co muszą umieć ludzie, których
+ praca wpływa na energię, zapewnij, że to umieją, i miej na to dowód.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 6, punkt 7.2. Matryca kompetencji: III-27 (F-EnMS-24),
+ przykład AutoParts: III-28, plan działań i szkoleń: III-29 (F-EnMS-12).</div>
+
+ <div class="ramka">
+  <h3>◧ Dwaj operatorzy chłodni</h3>
+  <p style="font-size:13.5px">Obaj byli na tym samym szkoleniu. Obaj mają podpis na liście obecności.</p>
+  <p style="font-size:13.5px">W czwartek sprężarka chłodnicza zaczyna pracować bez przerw, a parownik pokrywa
+  się grubym szronem. Pierwszy operator niczego nie zauważa — temperatura w komorze jeszcze się trzyma.
+  Drugi od razu sprawdza nastawy, widzi, że cykl odszraniania się nie uruchomił, i dzwoni do utrzymania ruchu.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Lista obecności potwierdza udział w szkoleniu. Dopiero
+  sprawdzenie pokazuje, czy człowiek umie wykonać zadanie.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Kogo to dotyczy</h3>
+ <p style="font-size:14.5px">Nie wszystkich jednakowo. Kompetencje energetyczne są potrzebne tym, których praca
+ wpływa na wynik energetyczny albo na działanie systemu. Listę podpowie przegląd energetyczny (6.3) — przy
+ każdym znaczącym użyciu energii zapisaliście osoby, które na nie wpływają. Zwykle to operatorzy, utrzymanie
+ ruchu, zakupy, projektanci i kierownicy planujący produkcję.</p>
+ <div class="warn" style="margin:14px 0"><b>Uwaga na słowa „pod nadzorem organizacji”.</b> Obejmują one także
+ wykonawców zewnętrznych: serwis chłodniczy, który zmienia nastawy sprężarek w Waszym zakładzie, wpływa
+ na Wasz wynik tak samo jak własny technik.</div>
+ <p style="font-size:13.5px">Matryca kompetencji to wygodne narzędzie, ale tylko przykład. <b>Norma nie
+ przypisuje stanowiskom żadnego zestawu umiejętności</b> — to Wy ustalacie, co jest potrzebne, na podstawie
+ odpowiedzialności w swoim zakładzie (5.3).</p>
+
+ <h3 style="margin-top:22px">„Czyli trzeba wszystkich przeszkolić?”</h3>
+ <p style="font-size:14.5px">Niekoniecznie. Kompetencje biorą się z wykształcenia, szkoleń, umiejętności
+ i doświadczenia. Doświadczony mechanik chłodnictwa może nie potrzebować kursu — wystarczy potwierdzić,
+ że zna Wasze instalacje. A tam, gdzie czegoś brakuje, szkolenie jest tylko jednym z rozwiązań. Inne to
+ instruktaż na stanowisku, praca pod okiem doświadczonego kolegi, zmiana przydziału zadań, zatrudnienie albo
+ zlecenie pracy firmie, która ma potrzebne kompetencje.</p>
+
+ <h3 style="margin-top:22px">Cała droga — sześć kroków</h3>
+ <table class="tab">
+ <tr><th style="width:8%">Krok</th><th style="width:34%">Co robicie</th><th>Na czym to polega</th></tr>
+ <tr><td class="mono"><b>1</b></td><td>Ustalcie, kto wpływa na energię i system</td><td>Z przeglądu energetycznego i przypisanych ról. Także wykonawcy.</td></tr>
+ <tr><td class="mono"><b>2</b></td><td>Ustalcie, co ma umieć</td><td>Konkretnie: jakie nastawy stosuje, po czym rozpoznaje nieprawidłową pracę, komu ją zgłasza.</td></tr>
+ <tr><td class="mono"><b>3</b></td><td>Sprawdźcie, co umie dziś</td><td>Rozmowa, obserwacja przy pracy, dokumenty o wykształceniu i doświadczeniu.</td></tr>
+ <tr><td class="mono"><b>4</b></td><td>Uzupełnijcie lukę</td><td>Najprostszym skutecznym sposobem.</td></tr>
+ <tr><td class="mono"><b>5</b></td><td>Sprawdźcie skuteczność</td><td>Czy człowiek teraz umie. <b>Nie czy był obecny.</b></td></tr>
+ <tr><td class="mono"><b>6</b></td><td>Zachowajcie dowód</td><td>Zapis z oceny, dyplom, zaświadczenie, protokół z obserwacji. <b>Ten zapis norma wymaga zachować.</b></td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Jak sprawdzić, że ktoś umie</h3>
+ <p style="font-size:14.5px">W AutoParts Polska po szkoleniu z obsługi sprężarkowni kierownik utrzymania ruchu
+ nie zbiera testów. Idzie z każdym technikiem do sprężarkowni i prosi o trzy rzeczy:</p>
+ <table class="tab">
+ <tr><th style="width:26%">Prośba</th><th>Co pokazuje</th></tr>
+ <tr><td><b>Pokaż</b></td><td>Jakie ciśnienie jest ustawione i dlaczego.</td></tr>
+ <tr><td><b>Rozpoznaj</b></td><td>Po czym poznasz, że sprężarka pracuje nieprawidłowo.</td></tr>
+ <tr><td><b>Powiedz</b></td><td>Komu i jak to zgłosisz.</td></tr>
+ </table>
+ <p style="font-size:13.5px">Wynik zapisuje w karcie technika. Kto nie przeszedł, pracuje przez dwa tygodnie
+ z doświadczonym kolegą i podchodzi jeszcze raz. <b>Po kwartale kierownik sprawdza jeszcze jedno:</b> czy
+ zgłoszenia o nieprawidłowej pracy sprężarek rzeczywiście się pojawiają. Jeśli zgłoszeń nie ma, sprawdza,
+ czy nie było nieprawidłowości, czy pracownicy ich nie zauważyli, czy nie zgłosili.</p>
+
+ <div class="ramka">
+  <h3>◧ Analogia: prawo jazdy</h3>
+  <p style="font-size:13.5px">Nie każdy w firmie musi umieć prowadzić ciężarówkę. Ale ten, kto ją prowadzi,
+  potrzebuje uprawnień — i czegoś więcej niż uprawnień. Prawo jazdy kategorii C nie znaczy jeszcze, że kierowca
+  umie wjechać tyłem na ciasną rampę Waszego magazynu.</p>
+  <p style="font-size:13.5px;margin-bottom:0">W zakładzie jest tak samo: certyfikat czy zaświadczenie to dobry
+  początek. <b>Kompetencją jest dopiero to, że człowiek umie wykonać zadanie na Waszych urządzeniach,
+  w Waszych warunkach.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:40%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Lista obecności jako dowód kompetencji</td><td>Sprawdźcie umiejętność: obserwacja przy pracy, pokazanie, rozmowa</td></tr>
+ <tr><td>Jedno szkolenie przy wdrożeniu</td><td>Wracajcie do kompetencji przy zmianie urządzeń, nastaw, ról i przy nowych osobach</td></tr>
+ <tr><td>To samo szkolenie dla wszystkich</td><td>Dobierzcie treść do tego, jak dana osoba wpływa na energię</td></tr>
+ <tr><td>Pominięci wykonawcy zewnętrzni</td><td>Ustalcie, jakich kompetencji wymagacie od serwisu, i sprawdzajcie je przy zleceniu</td></tr>
+ <tr><td>Wymagania od szkoleniowca, nie od zakładu</td><td>Najpierw ustalcie, co ludzie mają umieć u Was, potem szukajcie sposobu</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Kompetencja to umiejętność wykonania zadania, nie podpis
+  na liście. Zaczyna się od pytania, co ktoś ma umieć, a kończy na sprawdzeniu, że umie.<br><br>
+  <b>Zadanie:</b> wybierzcie jedno znaczące użycie energii i zapytajcie jego operatora: po czym poznasz,
+  że urządzenie pracuje nieprawidłowo, i komu to zgłosisz?</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma liczy luki z matrycy (W − A), wymaga działania przy luce 2 i większej oraz
+  wykrywa listę obecności użytą jako dowód kompetencji. Plan szkoleń jest wspólny z punktem 7.3.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 7.2 w formacie stron 4.1–7.1.</b> Pierwsza strona w całej serii z <b>matrycą jako
+siatką wejściową</b>: 7 kompetencji × 7 ról = 49
+komórek, każda z parą W/A. Z tej siatki platforma wyprowadza luki i sprawdza, czy mają działanie.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 6, punkt 7.2</td><td>Scena dwóch operatorów chłodni, akapit „kogo to dotyczy” z uwagą o pracy pod nadzorem organizacji, odpowiedź na „czy trzeba wszystkich przeszkolić”, sześciostopniowa droga, metoda „pokaż — rozpoznaj — powiedz” z kwartalnym sprawdzeniem zgłoszeń, analogia prawa jazdy, tabela pięciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 5 — III-27 (F-EnMS-24)</td><td>Metryka; część A: kompetencje opisane zadaniami, kolumny ról z kolumną wykonawcy, kolumna „jak sprawdzamy”, skala 0–4 i zapis W/A; część B: osoba, luka, działanie (nie tylko szkolenie), termin, ocena skuteczności, wynik, dowód.</td></tr>
+<tr><td>Część III, Moduł 5 — III-28</td><td>Przykład AutoParts: pełna matryca 7 × 7 i 6 pozycji części B. Spójny z III-12 (role), III-16 (ryzyko R5 — wiedza o nastawach tylko u serwisanta), III-20 (osoby przy SEU) i III-24 (zamówienie napędu).</td></tr>
+<tr><td>Część III, Moduł 5 — III-29 (F-EnMS-12)</td><td>Plan działań kompetencyjnych i szkoleń: 6 pozycji, kolumna oceny skuteczności, wprowadzenie dla wykonawców oznaczone jako 7.3.</td></tr>
+<tr><td>Część III, Moduł 5 — III-32</td><td>Lista kontrolna sekcji 7.2: 6 pozycji z kolumną N / M. Pięć z sześciu to wymagania normy — to najbardziej „twardy” punkt całego rozdziału 7.</td></tr>
+<tr><td>Część III, Moduł 5 — III-33, pkt 4.2</td><td>Kroki 4–8 procedury P-EnMS-05, w tym przegląd kompetencji przy zmianie urządzeń, nastaw, ról i przy nowych osobach.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>kompetencja</code></td><td>id, audyt_id, kolejnosc, nazwa (opisana zadaniem), jak_sprawdzamy. Wiersze matrycy.</td></tr>
+<tr><td><code>rola_kompetencyjna</code></td><td>id, audyt_id, kolejnosc, nazwa, opis, wykonawca BOOL. Kolumny matrycy. Docelowo referencja do roli z matrycy odpowiedzialności 5.3.</td></tr>
+<tr><td><code>poziom_kompetencji</code></td><td>kompetencja_id, rola_id, wymagany SMALLINT 0–4, aktualny SMALLINT 0–4, nie_dotyczy BOOL. <b>Dwie kolumny liczbowe, nie tekst „3/2”</b> — zapis W/A jest formą wprowadzania w formularzu, nie formatem przechowywania.</td></tr>
+<tr><td><code>luka_kompetencyjna</code></td><td>id, kompetencja_id, rola_id, osoba, opis_luki, dzialanie, forma ENUM, termin, ocena_skutecznosci, wynik, status ENUM, dowod_miejsce. Część B.</td></tr>
+<tr><td><code>pozycja_planu_kompetencji</code></td><td>id, audyt_id, nr, temat, grupa, forma, prowadzacy, czas, termin, ocena_skutecznosci, status. Plus tabela łącząca z punktem normy (7.2, 7.3) — <b>wiele do wielu</b>, bo pozycja „wymagania systemu dla kierownictwa” dotyczy obu.</td></tr>
+</table>
+<div class="note"><b>Plan jest wspólny z punktem 7.3.</b> W makiecie oba pliki używają magazynu
+<code>enesa_plan_kompetencji</code> — ten sam zabieg co z kartą EnPI w punktach 6.4 i 6.5. Formularz III-29
+jest w Toolkicie oznaczony jako „punkty normy: 7.2, 7.3”, więc rozdzielenie go na dwie tabele byłoby
+odejściem od źródła.</div>
+
+<h2>Co platforma liczy sama</h2>
+<table>
+<tr><th style="width:26%">Wielkość</th><th>Sposób i reakcja</th></tr>
+<tr><td>Luka</td><td>W − A dla każdej komórki, gdzie W &gt; 0. Pokazywana w komórce jako „luka n” i tłem: żółtym przy 1, czerwonawym przy 2 i więcej. Komórka z zapisem „0” (nie dotyczy) ma tło szare i nie generuje luki.</td></tr>
+<tr><td>Zestawienie luk</td><td>Tabela pod matrycą: rola, kompetencja, luka, stan działania w części B. Powiązanie po etykiecie „rola — kompetencja”.</td></tr>
+<tr><td>Próg wymagalności działania</td><td><b>Luka ≥ 2 wymaga działania</b> (ostrzeżenie i pozycja w braki()); luka = 1 daje tylko notę. Uzasadnienie: norma mówi o działaniach „tam, gdzie to potrzebne”, a różnica dwóch poziomów to zwykle „ma wykonywać samodzielnie, a wykonuje pod nadzorem”. <b>Próg jest metodyką ENESA</b> — do potwierdzenia przez Martynę.</td></tr>
+<tr><td>Poprawność wpisu</td><td>Wzorzec <code>^[0-4]\s*/\s*[0-4]$</code> albo samo <code>0</code>. Błędny wpis obramowany na czerwono, z licznikiem w ostrzeżeniu. Komórka pusta daje notę, nie błąd — ale blokuje pozycję „ustalono kompetencje” na liście kontrolnej, bo puste pole nie mówi, czy to decyzja, czy przeoczenie.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Lista obecności jako dowód albo ocena</b></td><td>Wzorzec <code>/(lista obecno|obecność|podpis na liście|lista uczestnik|potwierdzenie udzia)/i</code> w polu oceny skuteczności albo dowodu → ostrzeżenie: lista obecności jest dowodem udziału, nie kompetencji. Pozycja w braki() jako N i osobna linia w analizie konsultanta z adnotacją, że to temat na rozmowę, nie poprawkę w formularzu. To centralna teza punktu 7.2.</td></tr>
+<tr><td>Działanie bez oceny skuteczności</td><td>Ostrzeżenie przy pozycji i w braki() jako N. Ocena skuteczności jest osobnym wymaganiem od samego podjęcia działania — to rozróżnienie audytorzy sprawdzają w tym punkcie najczęściej.</td></tr>
+<tr><td>Działanie bez miejsca dowodu</td><td>Ostrzeżenie. Dowód kompetencji to jedyna udokumentowana informacja wymagana w punkcie 7.2.</td></tr>
+<tr><td>Matryca bez kolumny wykonawcy zewnętrznego</td><td>Ostrzeżenie w zakładce 1 i pozycja w braki() jako N, z wyjaśnieniem „pod nadzorem organizacji”. Jeśli naprawdę nikt taki nie pracuje w zakładzie, konsultant zapisuje to we wniosku — platforma nie ma jak tego wiedzieć.</td></tr>
+<tr><td>Kompetencja bez pola „jak sprawdzamy”</td><td>Pozycja w braki(). Bez tego pola nie da się później ocenić skuteczności — więc brak tutaj przekłada się na brak wymagania normy dalej.</td></tr>
+<tr><td>Pozycja części B wskazuje lukę, której nie ma już w matrycy</td><td>Nota, nie błąd: luka mogła zostać uzupełniona (i wtedy pozycja jest zapisem, który należy zachować) albo zmieniono wiersz lub kolumnę. Usuwanie takiej pozycji automatycznie byłoby kasowaniem dowodu.</td></tr>
+<tr><td>Plan bez pozycji oznaczonej 7.3</td><td>Nota i pozycja w braki() jako metodyka: brak wprowadzenia dla nowych osób i wykonawców. To typowa pozycja zamykająca niezgodność z punktem 7.3 — scena producenta stolarki z książki kosztowała 35 tys. zł i przesunięcie certyfikacji właśnie na tym.</td></tr>
+<tr><td>Pozycja planu dotycząca 7.2 bez oceny skuteczności</td><td>Ostrzeżenie. Przy pozycjach wyłącznie 7.3 ocena nie jest wymogiem normy, więc tam tylko brak kompletności.</td></tr>
+</table>
+<div class="warn"><b>Usuwanie wiersza albo kolumny matrycy</b> przenumerowuje klucze komórek
+(<code>kompetencja|rola</code>) — w makiecie robi to funkcja przy przycisku „usuń”, po potwierdzeniu.
+Przy wdrożeniu na identyfikatorach bazodanowych problem znika sam, ale <b>warto to sprawdzić w testach</b>:
+błąd w tym miejscu cicho przesuwa całą matrycę i zmienia luki, nie zgłaszając niczego.</div>
+
+<h2>Lista kontrolna III-32 — sekcja 7.2</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.</td><td class='mono'>N</td><td><code>ustalono</code></td></tr><tr><td>Kompetencje zapewniono na podstawie wykształcenia, szkolenia, umiejętności lub doświadczenia.</td><td class='mono'>N</td><td><code>zapewniono</code></td></tr><tr><td>Podjęto działania uzupełniające luki (w stosownych przypadkach).</td><td class='mono'>N</td><td><code>dzialania</code></td></tr><tr><td>Oceniono skuteczność działań — sprawdzenie umiejętności, nie tylko obecności.</td><td class='mono'>N</td><td><code>skutecznosc</code></td></tr><tr><td>Zachowano dowody kompetencji.</td><td class='mono'>N</td><td><code>dowody</code></td></tr><tr><td>Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).</td><td class='mono'>M</td><td><code>narzedzia</code></td></tr></table>
+<div class="note">Dwie pozycje zwracają „nie dotyczy”: <code>skutecznosc</code> i <code>dowody</code>, gdy
+w części B nie ma jeszcze żadnego działania — bo nie ma czego oceniać. Pozycja <code>dzialania</code> zwraca
+„nie dotyczy” tylko wtedy, gdy matryca jest wypełniona i <b>nie pokazuje żadnej luki</b>: to stan poprawny,
+a nie brak.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. W tym punkcie jest to szczególnie wrażliwe: blok wymienia role z lukami i ocenia, czy sposób sprawdzania kompetencji jest w ogóle sprawdzaniem. Takie zdania o konkretnych ludziach nie powinny trafiać do ankiety, którą przegląda ich kierownik.</td></tr>
+<tr><td>Dane osobowe</td><td>Część B zawiera imiona i nazwiska oraz wyniki oceny. <b>Przy wdrożeniu to dane o ocenie pracownika</b> — dostęp powinien być węższy niż do reszty ankiety (HR i przełożony), a eksport dokumentu powinien mieć wariant bez nazwisk, z rolami. Do rozstrzygnięcia z Martyną i z kimś od ochrony danych.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-KMP-01</code> — matryca kompetencji, luki i działania</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-24, załącznik III-27 (przykład: III-28). Plan F-EnMS-12 (III-29) wspólny z punktem 7.3.</td></tr>
+<tr><td>Status w normie</td><td><b>Zachowywana</b> jest tylko jedna rzecz: dowód kompetencji. Matryca i plan są narzędziami metodyki ENESA. W wykazie z punktu 7.5 pozycja F-EnMS-24 jest oznaczona jako Z (zapis) i N (7.2) — bo liczy się zapis z oceny, nie sama siatka.</td></tr>
+<tr><td>Zmiana kodu</td><td>Matryca kompetencji to <b>F-EnMS-24</b>, nie F-EnMS-11 — ten kod należy do planu zbierania danych z punktu 6.6. Moduł 5 v2.0 przenosi numer; strona 6.6 zbudowana wcześniej jest z tym zgodna i nie wymaga poprawki.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Zmiana urządzeń, nastaw albo ról (5.3); nowa osoba albo nowy wykonawca; zmiana SEU albo zmiennych (6.3); nowe zadanie energetyczne (6.2); wynik oceny skuteczności; audyt wewnętrzny (9.2).</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>5.3 Role i uprawnienia</td><td><b>Wejście.</b> Kolumny matrycy to role z matrycy odpowiedzialności. Rola, która jest w 5.3 i nie ma kolumny tutaj, jest sygnałem rozjazdu.</td></tr>
+<tr><td>6.1 Ryzyka i szanse</td><td><b>Dwukierunkowo.</b> W AutoParts ryzyko R5 — wiedza o nastawach tylko u serwisanta — jest wprost luką w matrycy, zamkniętą aneksem do umowy serwisowej. Odwrotnie: nieuzupełniona luka przy kluczowym SEU jest kandydatem na ryzyko.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Kolumna „osoby, które wpływają na SEU” to lista, od której zaczyna się matryca.</td></tr>
+<tr><td>7.1 Zasoby</td><td><b>Dwukierunkowo.</b> Działania kompetencyjne kosztują czas i pieniądze — wracają do 7.1 jako zadania i decyzje budżetowe. W przykładzie: 4 tys. zł na szkolenie techników z serwisem.</td></tr>
+<tr><td>7.3 Świadomość</td><td><b>Wspólny plan.</b> F-EnMS-12 obejmuje oba punkty. Kompetencja to „umiem”, świadomość to „rozumiem, dlaczego to ważne” — ale droga dojścia bywa tym samym spotkaniem.</td></tr>
+<tr><td>7.5 Udokumentowane informacje</td><td><b>Wyjście.</b> Dowody kompetencji trafiają do wykazu jako zapis wymagany przez normę, z okresem przechowywania i uzasadnieniem.</td></tr>
+<tr><td>8.1 Działania operacyjne</td><td><b>Wejście.</b> Kryteria eksploatacji SEU wyznaczają, co operator ma umieć — „stosuje nastawy sprężarkowni 6,3 bar” jest wprost kryterium z 8.1.</td></tr>
+<tr><td>8.3 Zakupy</td><td><b>Dwukierunkowo.</b> Kompetencja „stosuje kryteria energetyczne przy zakupach” jest warunkiem działania punktu 8.3; wymagania kompetencyjne wobec wykonawców są elementem umowy.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Dwukierunkowo.</b> Kompetencja audytora jest wierszem matrycy; audyt sprawdza pozostałe wiersze.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td>Próg wymagalności działania</td><td>Luka ≥ 2 wymaga działania, luka = 1 jest decyzją klienta. Liczba jest nasza, nie z normy ani z książki — w interfejsie i w braki() oznaczona jako metodyka. <b>Do potwierdzenia przez Martynę</b>, bo to ona będzie tego broniła przed audytorem.</td></tr>
+<tr><td>Dane osobowe w części B</td><td>Imiona, nazwiska i wyniki oceny kompetencji. Potrzebny węższy dostęp niż do reszty ankiety oraz eksport bez nazwisk. Patrz uwaga w sekcji o rolach.</td></tr>
+<tr><td>Matryca na role czy na osoby</td><td>Toolkit prowadzi matrycę na <b>rolach</b> (kolumny: Technicy UR, Operatorzy SEU), a dowód kompetencji dotyczy <b>osoby</b>. Dziś rozwiązane tak: matryca na rolach, część B z polem „osoby”. Działa, ale przy 24 operatorach nie widać, kto z nich został sprawdzony. <b>Propozycja:</b> dodać podtabelę osób przy pozycji części B — jedna osoba, jeden wynik, jeden dowód. To jest realna potrzeba audytowa: audytor pyta o konkretnego operatora, nie o grupę.</td></tr>
+<tr><td>Powiązanie kolumn z rolami z 5.3</td><td>Dziś nazwa tekstowa. Po wdrożeniu referencja, z wyliczeniem ról z 5.3 bez kolumny w matrycy.</td></tr>
+<tr><td>Przypomnienia o terminach</td><td>Pozycje części B i planu mają terminy i statusy, ale nic nie przypomina o ich upływie. Ten sam brak co przy regule c) w punkcie 6.5 — warto rozwiązać raz, dla wszystkich terminów w systemie.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 7.2 wraz z przykładem AutoParts (III-28 i III-29).</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_72&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;ustalono&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Kompetencje zapewniono na podstawie wykształcenia, szkolenia, umiejętności lub doświadczenia.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapewniono&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Podjęto działania uzupełniające luki (w stosownych przypadkach).&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;dzialania&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Oceniono skuteczność działań — sprawdzenie umiejętności, nie tylko obecności.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;skutecznosc&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano dowody kompetencji.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;dowody&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;narzedzia&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;KOMPETENCJE&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Zna wymagania systemu w swoim zakresie&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;Rozmowa; dla audytora wewnętrznego — zaświadczenie&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Zbiera i sprawdza dane energetyczne&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;Obserwacja odczytu i zamknięcia bilansu miesięcznego&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Analizuje wskaźniki i odchylenia&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;Omówienie raportu miesięcznego&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Stosuje nastawy sprężarkowni (6,3 bar)&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;Obserwacja przy sprężarkowni&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;„Pokaż — rozpoznaj — powiedz” przy maszynie&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Stosuje kryteria energetyczne przy zakupach&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;Przegląd ostatniego zamówienia urządzenia energochłonnego&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Przeprowadza audyt wewnętrzny&quot;,
+    &quot;jakSprawdzamy&quot;: &quot;Zaświadczenie oraz audyt pod obserwacją&quot;
+   }
+  ],
+  &quot;ROLE&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Energy Manager&quot;,
+    &quot;opis&quot;: &quot;Jan Kowalski — koordynator zespołu, 25% etatu&quot;,
+    &quot;wykonawca&quot;: false
+   },
+   {
+    &quot;nazwa&quot;: &quot;Kier. UR&quot;,
+    &quot;opis&quot;: &quot;Kierownik Utrzymania Ruchu — właściciel SEU sprężarkownia, lakiernia, prasy&quot;,
+    &quot;wykonawca&quot;: false
+   },
+   {
+    &quot;nazwa&quot;: &quot;Technicy UR&quot;,
+    &quot;opis&quot;: &quot;Dwóch techników utrzymania ruchu — sprężarkownia i lakiernia&quot;,
+    &quot;wykonawca&quot;: false
+   },
+   {
+    &quot;nazwa&quot;: &quot;Operatorzy SEU&quot;,
+    &quot;opis&quot;: &quot;Operatorzy pras i lakierni — 24 osoby&quot;,
+    &quot;wykonawca&quot;: false
+   },
+   {
+    &quot;nazwa&quot;: &quot;Zakupy&quot;,
+    &quot;opis&quot;: &quot;Kierownik Zakupów i specjalista ds. zakupów — 2 osoby&quot;,
+    &quot;wykonawca&quot;: false
+   },
+   {
+    &quot;nazwa&quot;: &quot;Audytor wewn.&quot;,
+    &quot;opis&quot;: &quot;Specjalista ds. środowiska — audytor ISO 14001, audyty wspólne (szansa S4)&quot;,
+    &quot;wykonawca&quot;: false
+   },
+   {
+    &quot;nazwa&quot;: &quot;Wykonawca (serwis)&quot;,
+    &quot;opis&quot;: &quot;Serwis sprężarek — zmienia nastawy w zakładzie, więc pracuje pod nadzorem organizacji&quot;,
+    &quot;wykonawca&quot;: true
+   }
+  ],
+  &quot;MAC&quot;: {
+   &quot;0|0&quot;: &quot;4/3&quot;,
+   &quot;0|1&quot;: &quot;2/2&quot;,
+   &quot;0|2&quot;: &quot;1/1&quot;,
+   &quot;0|3&quot;: &quot;1/1&quot;,
+   &quot;0|4&quot;: &quot;1/1&quot;,
+   &quot;0|5&quot;: &quot;3/3&quot;,
+   &quot;0|6&quot;: &quot;1/0&quot;,
+   &quot;1|0&quot;: &quot;3/3&quot;,
+   &quot;1|1&quot;: &quot;2/2&quot;,
+   &quot;1|2&quot;: &quot;2/1&quot;,
+   &quot;1|3&quot;: &quot;0&quot;,
+   &quot;1|4&quot;: &quot;0&quot;,
+   &quot;1|5&quot;: &quot;1/1&quot;,
+   &quot;1|6&quot;: &quot;0&quot;,
+   &quot;2|0&quot;: &quot;3/3&quot;,
+   &quot;2|1&quot;: &quot;2/1&quot;,
+   &quot;2|2&quot;: &quot;1/1&quot;,
+   &quot;2|3&quot;: &quot;0&quot;,
+   &quot;2|4&quot;: &quot;0&quot;,
+   &quot;2|5&quot;: &quot;2/2&quot;,
+   &quot;2|6&quot;: &quot;0&quot;,
+   &quot;3|0&quot;: &quot;1/1&quot;,
+   &quot;3|1&quot;: &quot;3/3&quot;,
+   &quot;3|2&quot;: &quot;3/1&quot;,
+   &quot;3|3&quot;: &quot;0&quot;,
+   &quot;3|4&quot;: &quot;0&quot;,
+   &quot;3|5&quot;: &quot;0&quot;,
+   &quot;3|6&quot;: &quot;3/3&quot;,
+   &quot;4|0&quot;: &quot;1/1&quot;,
+   &quot;4|1&quot;: &quot;3/3&quot;,
+   &quot;4|2&quot;: &quot;3/1&quot;,
+   &quot;4|3&quot;: &quot;3/2&quot;,
+   &quot;4|4&quot;: &quot;0&quot;,
+   &quot;4|5&quot;: &quot;0&quot;,
+   &quot;4|6&quot;: &quot;3/3&quot;,
+   &quot;5|0&quot;: &quot;2/2&quot;,
+   &quot;5|1&quot;: &quot;2/1&quot;,
+   &quot;5|2&quot;: &quot;0&quot;,
+   &quot;5|3&quot;: &quot;0&quot;,
+   &quot;5|4&quot;: &quot;3/1&quot;,
+   &quot;5|5&quot;: &quot;1/1&quot;,
+   &quot;5|6&quot;: &quot;0&quot;,
+   &quot;6|0&quot;: &quot;2/2&quot;,
+   &quot;6|1&quot;: &quot;0&quot;,
+   &quot;6|2&quot;: &quot;0&quot;,
+   &quot;6|3&quot;: &quot;0&quot;,
+   &quot;6|4&quot;: &quot;0&quot;,
+   &quot;6|5&quot;: &quot;3/3&quot;,
+   &quot;6|6&quot;: &quot;0&quot;
+  },
+  &quot;LUKI&quot;: [
+   {
+    &quot;dotyczy&quot;: &quot;Technicy UR — Stosuje nastawy sprężarkowni (6,3 bar)&quot;,
+    &quot;osoba&quot;: &quot;Technicy UR — 2 osoby (Marek Z., Adam P.)&quot;,
+    &quot;luka&quot;: &quot;Nastawy sprężarkowni — wykonują pod nadzorem, mają wykonywać samodzielnie&quot;,
+    &quot;dzialanie&quot;: &quot;Szkolenie z serwisem sprężarek (4 tys. zł) oraz dwa tygodnie pracy z kierownikiem UR przy nastawach.&quot;,
+    &quot;forma&quot;: &quot;szkolenie_zewn&quot;,
+    &quot;termin&quot;: &quot;2026-06-30&quot;,
+    &quot;ocena&quot;: &quot;Kierownik UR: „pokaż — rozpoznaj — powiedz” przy sprężarkowni. Po kwartale drugie sprawdzenie: czy zgłoszenia o nieprawidłowej pracy sprężarek rzeczywiście się pojawiają.&quot;,
+    &quot;wynik&quot;: &quot;1 osoba zaliczyła w czerwcu; 1 osoba — ponowne sprawdzenie 07.2026: zaliczone. W III kwartale 3 zgłoszenia o nieprawidłowej pracy.&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;,
+    &quot;dowod&quot;: &quot;Karty techników (HR), protokół sprawdzenia&quot;
+   },
+   {
+    &quot;dotyczy&quot;: &quot;Technicy UR — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić&quot;,
+    &quot;osoba&quot;: &quot;Technicy UR — 2 osoby&quot;,
+    &quot;luka&quot;: &quot;Rozpoznawanie nieprawidłowej pracy sprężarek — wykonują pod nadzorem&quot;,
+    &quot;dzialanie&quot;: &quot;Ta sama ścieżka co przy nastawach: szkolenie z serwisem i praca z kierownikiem UR; dodatkowo instrukcja z objawami nieprawidłowej pracy przy sprężarkowni.&quot;,
+    &quot;forma&quot;: &quot;mentoring&quot;,
+    &quot;termin&quot;: &quot;2026-06-30&quot;,
+    &quot;ocena&quot;: &quot;„Pokaż — rozpoznaj — powiedz”; po kwartale liczba i trafność zgłoszeń.&quot;,
+    &quot;wynik&quot;: &quot;Zaliczone przez obie osoby; zgłoszenia pojawiają się i są trafne.&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;,
+    &quot;dowod&quot;: &quot;Karty techników (HR)&quot;
+   },
+   {
+    &quot;dotyczy&quot;: &quot;Operatorzy SEU — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić&quot;,
+    &quot;osoba&quot;: &quot;Operatorzy pras i lakierni — 24 osoby&quot;,
+    &quot;luka&quot;: &quot;Rozpoznawanie nieprawidłowej pracy i zgłaszanie — brakuje jednego poziomu&quot;,
+    &quot;dzialanie&quot;: &quot;Instruktaż na stanowisku, 1 h, plus instrukcja przy maszynie: po czym poznać nieprawidłową pracę i komu ją zgłosić.&quot;,
+    &quot;forma&quot;: &quot;instruktaz&quot;,
+    &quot;termin&quot;: &quot;2026-09-30&quot;,
+    &quot;ocena&quot;: &quot;Obserwacja 5 losowo wybranych operatorów przy pracy — sprawdzenie, czy potrafią wskazać objawy i podać drogę zgłoszenia.&quot;,
+    &quot;wynik&quot;: &quot;W toku — instruktaż przeprowadzony dla 18 z 24 osób, obserwacja zaplanowana na 10.2026.&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;,
+    &quot;dowod&quot;: &quot;Protokół obserwacji; karty operatorów&quot;
+   },
+   {
+    &quot;dotyczy&quot;: &quot;Kier. UR — Analizuje wskaźniki i odchylenia&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;luka&quot;: &quot;Analiza wskaźników — wykonuje pod nadzorem Energy Managera&quot;,
+    &quot;dzialanie&quot;: &quot;Mentoring Energy Managera: wspólne przygotowanie raportów miesięcznych przez kwartał, potem raport samodzielny.&quot;,
+    &quot;forma&quot;: &quot;mentoring&quot;,
+    &quot;termin&quot;: &quot;2026-09-30&quot;,
+    &quot;ocena&quot;: &quot;Samodzielnie przygotowany raport za wrzesień, omówiony z Energy Managerem.&quot;,
+    &quot;wynik&quot;: &quot;Zaliczone — raport za wrzesień przygotowany samodzielnie, z poprawną normalizacją.&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;,
+    &quot;dowod&quot;: &quot;Raport wrześniowy, notatka Energy Managera&quot;
+   },
+   {
+    &quot;dotyczy&quot;: &quot;Zakupy — Stosuje kryteria energetyczne przy zakupach&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Zakupów i specjalista ds. zakupów — 2 osoby&quot;,
+    &quot;luka&quot;: &quot;Kryteria energetyczne i koszt cyklu życia — mają stosować samodzielnie, wiedzą tylko, gdzie szukać&quot;,
+    &quot;dzialanie&quot;: &quot;Warsztat 2 h z Energy Managerem oraz lista kontrolna zakupów urządzeń energochłonnych dopisana do procedury P-ZAK-01.&quot;,
+    &quot;forma&quot;: &quot;warsztat&quot;,
+    &quot;termin&quot;: &quot;2026-05-31&quot;,
+    &quot;ocena&quot;: &quot;Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW — czy kryterium energetyczne znalazło się w specyfikacji i czy porównano koszt cyklu życia.&quot;,
+    &quot;wynik&quot;: &quot;Zaliczone — w zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14) kryterium zastosowane, porównano oferty kosztem zakupu i energii w 15 lat.&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;,
+    &quot;dowod&quot;: &quot;Notatka z przeglądu zamówień; specyfikacja zamówienia INW/2026/07&quot;
+   },
+   {
+    &quot;dotyczy&quot;: &quot;Wykonawca (serwis) — Zna wymagania systemu w swoim zakresie&quot;,
+    &quot;osoba&quot;: &quot;Serwis sprężarek — firma zewnętrzna, 2 serwisanci&quot;,
+    &quot;luka&quot;: &quot;Nie zna wymagań systemu — nastawy zmieniał bez zgłaszania (ryzyko R5)&quot;,
+    &quot;dzialanie&quot;: &quot;Wymagania wpisane do umowy serwisowej (aneks 04.2026): obowiązek zgłaszania każdej zmiany nastaw kierownikowi UR oraz przekazywania raportu serwisowego z wartościami nastaw. Wprowadzenie 15 min przy pierwszej wizycie po aneksie.&quot;,
+    &quot;forma&quot;: &quot;umowa&quot;,
+    &quot;termin&quot;: &quot;2026-04-28&quot;,
+    &quot;ocena&quot;: &quot;Sprawdzenie raportów serwisowych z trzech kolejnych wizyt — czy nastawy są podane i czy zmiany były zgłaszane.&quot;,
+    &quot;wynik&quot;: &quot;Zgodne — trzy raporty z wartościami nastaw, jedna zmiana ciśnienia zgłoszona kierownikowi UR przed wykonaniem.&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;,
+    &quot;dowod&quot;: &quot;Aneks do umowy serwisowej; raporty serwisowe w teczce EnMS&quot;
+   }
+  ],
+  &quot;PLAN&quot;: [
+   {
+    &quot;nr&quot;: &quot;1&quot;,
+    &quot;temat&quot;: &quot;Wprowadzenie: polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi&quot;,
+    &quot;punkty&quot;: [
+     &quot;7.3&quot;
+    ],
+    &quot;grupa&quot;: &quot;Nowi pracownicy oraz wykonawcy pracujący na terenie zakładu&quot;,
+    &quot;forma&quot;: &quot;spotkanie&quot;,
+    &quot;prowadzacy&quot;: &quot;Energy Manager (dla wykonawców — kierownik zlecający)&quot;,
+    &quot;czas&quot;: &quot;15–30 min&quot;,
+    &quot;termin&quot;: &quot;2026-05-04&quot;,
+    &quot;ocena&quot;: &quot;Rozmowa kontrolna po miesiącu — trzy pytania o politykę, wpływ własnej pracy i drogę zgłoszenia&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2&quot;,
+    &quot;temat&quot;: &quot;Nastawy i rozpoznawanie nieprawidłowej pracy znaczących użyć energii&quot;,
+    &quot;punkty&quot;: [
+     &quot;7.2&quot;
+    ],
+    &quot;grupa&quot;: &quot;Operatorzy pras i lakierni, technicy UR&quot;,
+    &quot;forma&quot;: &quot;instruktaz&quot;,
+    &quot;prowadzacy&quot;: &quot;Kierownik UR, przy sprężarkowni — z serwisem&quot;,
+    &quot;czas&quot;: &quot;1–2 h&quot;,
+    &quot;termin&quot;: &quot;2026-09-30&quot;,
+    &quot;ocena&quot;: &quot;„Pokaż — rozpoznaj — powiedz” przy maszynie; obserwacja 5 losowych osób&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;3&quot;,
+    &quot;temat&quot;: &quot;Wymagania systemu dla kierownictwa: wynik energetyczny, cele, decyzje wpływające na energię&quot;,
+    &quot;punkty&quot;: [
+     &quot;7.2&quot;,
+     &quot;7.3&quot;
+    ],
+    &quot;grupa&quot;: &quot;Kierownicy działów i zarząd&quot;,
+    &quot;forma&quot;: &quot;spotkanie&quot;,
+    &quot;prowadzacy&quot;: &quot;Energy Manager z konsultantem&quot;,
+    &quot;czas&quot;: &quot;1–2 h&quot;,
+    &quot;termin&quot;: &quot;2026-06-15&quot;,
+    &quot;ocena&quot;: &quot;Omówienie wyników na przeglądzie zarządzania — czy decyzje uwzględniają wynik energetyczny&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;4&quot;,
+    &quot;temat&quot;: &quot;Kryteria energetyczne i koszt cyklu życia w zakupach&quot;,
+    &quot;punkty&quot;: [
+     &quot;7.2&quot;
+    ],
+    &quot;grupa&quot;: &quot;Zakupy — 2 osoby&quot;,
+    &quot;forma&quot;: &quot;warsztat&quot;,
+    &quot;prowadzacy&quot;: &quot;Energy Manager&quot;,
+    &quot;czas&quot;: &quot;2 h&quot;,
+    &quot;termin&quot;: &quot;2026-05-31&quot;,
+    &quot;ocena&quot;: &quot;Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;5&quot;,
+    &quot;temat&quot;: &quot;Audytor wewnętrzny systemu zarządzania energią&quot;,
+    &quot;punkty&quot;: [
+     &quot;7.2&quot;
+    ],
+    &quot;grupa&quot;: &quot;Specjalista ds. środowiska (audytor ISO 14001)&quot;,
+    &quot;forma&quot;: &quot;szkolenie_zewn&quot;,
+    &quot;prowadzacy&quot;: &quot;Jednostka szkoleniowa&quot;,
+    &quot;czas&quot;: &quot;1–2 dni&quot;,
+    &quot;termin&quot;: &quot;2026-08-31&quot;,
+    &quot;ocena&quot;: &quot;Audyt pod obserwacją Energy Managera i konsultanta&quot;,
+    &quot;status&quot;: &quot;zaliczone&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;6&quot;,
+    &quot;temat&quot;: &quot;Krótka informacja na początku zmiany — jeden temat tygodniowo (np. „w tym tygodniu: ciśnienie w sieci”)&quot;,
+    &quot;punkty&quot;: [
+     &quot;7.3&quot;
+    ],
+    &quot;grupa&quot;: &quot;Wszyscy pracownicy produkcji&quot;,
+    &quot;forma&quot;: &quot;spotkanie&quot;,
+    &quot;prowadzacy&quot;: &quot;Liderzy zmian&quot;,
+    &quot;czas&quot;: &quot;10 min tygodniowo&quot;,
+    &quot;termin&quot;: &quot;2026-05-11&quot;,
+    &quot;ocena&quot;: &quot;Kwartalna rozmowa Energy Managera z trzema losowo wybranymi osobami&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;utworzono&quot;: &quot;2026-04-20&quot;,
+   &quot;aktualizacja&quot;: &quot;2026-09-30&quot;,
+   &quot;opracowal&quot;: &quot;Jan Kowalski — Energy Manager, z HR&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;przeglad&quot;: &quot;Przy zmianie urządzeń, nastaw i ról, przy każdej nowej osobie oraz raz w roku przed audytem wewnętrznym&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_72 = [{"tekst": "Ustalono kompetencje osób wpływających na wynik energetyczny i system — także wykonawców pracujących pod nadzorem organizacji.", "podstawa": "N", "auto": "ustalono"}, {"tekst": "Kompetencje zapewniono na podstawie wykształcenia, szkolenia, umiejętności lub doświadczenia.", "podstawa": "N", "auto": "zapewniono"}, {"tekst": "Podjęto działania uzupełniające luki (w stosownych przypadkach).", "podstawa": "N", "auto": "dzialania"}, {"tekst": "Oceniono skuteczność działań — sprawdzenie umiejętności, nie tylko obecności.", "podstawa": "N", "auto": "skutecznosc"}, {"tekst": "Zachowano dowody kompetencji.", "podstawa": "N", "auto": "dowody"}, {"tekst": "Prowadzi się matrycę kompetencji (F-EnMS-24) i plan działań (F-EnMS-12).", "podstawa": "M", "auto": "narzedzia"}];
+var P_KOMPETENCJE = [{"nazwa": "Zna wymagania systemu w swoim zakresie", "jakSprawdzamy": "Rozmowa; dla audytora wewnętrznego — zaświadczenie"}, {"nazwa": "Zbiera i sprawdza dane energetyczne", "jakSprawdzamy": "Obserwacja odczytu i zamknięcia bilansu miesięcznego"}, {"nazwa": "Analizuje wskaźniki i odchylenia", "jakSprawdzamy": "Omówienie raportu miesięcznego"}, {"nazwa": "Stosuje nastawy sprężarkowni (6,3 bar)", "jakSprawdzamy": "Obserwacja przy sprężarkowni"}, {"nazwa": "Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić", "jakSprawdzamy": "„Pokaż — rozpoznaj — powiedz” przy maszynie"}, {"nazwa": "Stosuje kryteria energetyczne przy zakupach", "jakSprawdzamy": "Przegląd ostatniego zamówienia urządzenia energochłonnego"}, {"nazwa": "Przeprowadza audyt wewnętrzny", "jakSprawdzamy": "Zaświadczenie oraz audyt pod obserwacją"}];
+var P_ROLE = [{"nazwa": "Energy Manager", "opis": "Jan Kowalski — koordynator zespołu, 25% etatu", "wykonawca": false}, {"nazwa": "Kier. UR", "opis": "Kierownik Utrzymania Ruchu — właściciel SEU sprężarkownia, lakiernia, prasy", "wykonawca": false}, {"nazwa": "Technicy UR", "opis": "Dwóch techników utrzymania ruchu — sprężarkownia i lakiernia", "wykonawca": false}, {"nazwa": "Operatorzy SEU", "opis": "Operatorzy pras i lakierni — 24 osoby", "wykonawca": false}, {"nazwa": "Zakupy", "opis": "Kierownik Zakupów i specjalista ds. zakupów — 2 osoby", "wykonawca": false}, {"nazwa": "Audytor wewn.", "opis": "Specjalista ds. środowiska — audytor ISO 14001, audyty wspólne (szansa S4)", "wykonawca": false}, {"nazwa": "Wykonawca (serwis)", "opis": "Serwis sprężarek — zmienia nastawy w zakładzie, więc pracuje pod nadzorem organizacji", "wykonawca": true}];
+var P_MAC = {"0|0": "4/3", "0|1": "2/2", "0|2": "1/1", "0|3": "1/1", "0|4": "1/1", "0|5": "3/3", "0|6": "1/0", "1|0": "3/3", "1|1": "2/2", "1|2": "2/1", "1|3": "0", "1|4": "0", "1|5": "1/1", "1|6": "0", "2|0": "3/3", "2|1": "2/1", "2|2": "1/1", "2|3": "0", "2|4": "0", "2|5": "2/2", "2|6": "0", "3|0": "1/1", "3|1": "3/3", "3|2": "3/1", "3|3": "0", "3|4": "0", "3|5": "0", "3|6": "3/3", "4|0": "1/1", "4|1": "3/3", "4|2": "3/1", "4|3": "3/2", "4|4": "0", "4|5": "0", "4|6": "3/3", "5|0": "2/2", "5|1": "2/1", "5|2": "0", "5|3": "0", "5|4": "3/1", "5|5": "1/1", "5|6": "0", "6|0": "2/2", "6|1": "0", "6|2": "0", "6|3": "0", "6|4": "0", "6|5": "3/3", "6|6": "0"};
+var P_LUKI = [{"dotyczy": "Technicy UR — Stosuje nastawy sprężarkowni (6,3 bar)", "osoba": "Technicy UR — 2 osoby (Marek Z., Adam P.)", "luka": "Nastawy sprężarkowni — wykonują pod nadzorem, mają wykonywać samodzielnie", "dzialanie": "Szkolenie z serwisem sprężarek (4 tys. zł) oraz dwa tygodnie pracy z kierownikiem UR przy nastawach.", "forma": "szkolenie_zewn", "termin": "2026-06-30", "ocena": "Kierownik UR: „pokaż — rozpoznaj — powiedz” przy sprężarkowni. Po kwartale drugie sprawdzenie: czy zgłoszenia o nieprawidłowej pracy sprężarek rzeczywiście się pojawiają.", "wynik": "1 osoba zaliczyła w czerwcu; 1 osoba — ponowne sprawdzenie 07.2026: zaliczone. W III kwartale 3 zgłoszenia o nieprawidłowej pracy.", "status": "zaliczone", "dowod": "Karty techników (HR), protokół sprawdzenia"}, {"dotyczy": "Technicy UR — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić", "osoba": "Technicy UR — 2 osoby", "luka": "Rozpoznawanie nieprawidłowej pracy sprężarek — wykonują pod nadzorem", "dzialanie": "Ta sama ścieżka co przy nastawach: szkolenie z serwisem i praca z kierownikiem UR; dodatkowo instrukcja z objawami nieprawidłowej pracy przy sprężarkowni.", "forma": "mentoring", "termin": "2026-06-30", "ocena": "„Pokaż — rozpoznaj — powiedz”; po kwartale liczba i trafność zgłoszeń.", "wynik": "Zaliczone przez obie osoby; zgłoszenia pojawiają się i są trafne.", "status": "zaliczone", "dowod": "Karty techników (HR)"}, {"dotyczy": "Operatorzy SEU — Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić", "osoba": "Operatorzy pras i lakierni — 24 osoby", "luka": "Rozpoznawanie nieprawidłowej pracy i zgłaszanie — brakuje jednego poziomu", "dzialanie": "Instruktaż na stanowisku, 1 h, plus instrukcja przy maszynie: po czym poznać nieprawidłową pracę i komu ją zgłosić.", "forma": "instruktaz", "termin": "2026-09-30", "ocena": "Obserwacja 5 losowo wybranych operatorów przy pracy — sprawdzenie, czy potrafią wskazać objawy i podać drogę zgłoszenia.", "wynik": "W toku — instruktaż przeprowadzony dla 18 z 24 osób, obserwacja zaplanowana na 10.2026.", "status": "wtoku", "dowod": "Protokół obserwacji; karty operatorów"}, {"dotyczy": "Kier. UR — Analizuje wskaźniki i odchylenia", "osoba": "Kierownik Utrzymania Ruchu", "luka": "Analiza wskaźników — wykonuje pod nadzorem Energy Managera", "dzialanie": "Mentoring Energy Managera: wspólne przygotowanie raportów miesięcznych przez kwartał, potem raport samodzielny.", "forma": "mentoring", "termin": "2026-09-30", "ocena": "Samodzielnie przygotowany raport za wrzesień, omówiony z Energy Managerem.", "wynik": "Zaliczone — raport za wrzesień przygotowany samodzielnie, z poprawną normalizacją.", "status": "zaliczone", "dowod": "Raport wrześniowy, notatka Energy Managera"}, {"dotyczy": "Zakupy — Stosuje kryteria energetyczne przy zakupach", "osoba": "Kierownik Zakupów i specjalista ds. zakupów — 2 osoby", "luka": "Kryteria energetyczne i koszt cyklu życia — mają stosować samodzielnie, wiedzą tylko, gdzie szukać", "dzialanie": "Warsztat 2 h z Energy Managerem oraz lista kontrolna zakupów urządzeń energochłonnych dopisana do procedury P-ZAK-01.", "forma": "warsztat", "termin": "2026-05-31", "ocena": "Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW — czy kryterium energetyczne znalazło się w specyfikacji i czy porównano koszt cyklu życia.", "wynik": "Zaliczone — w zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14) kryterium zastosowane, porównano oferty kosztem zakupu i energii w 15 lat.", "status": "zaliczone", "dowod": "Notatka z przeglądu zamówień; specyfikacja zamówienia INW/2026/07"}, {"dotyczy": "Wykonawca (serwis) — Zna wymagania systemu w swoim zakresie", "osoba": "Serwis sprężarek — firma zewnętrzna, 2 serwisanci", "luka": "Nie zna wymagań systemu — nastawy zmieniał bez zgłaszania (ryzyko R5)", "dzialanie": "Wymagania wpisane do umowy serwisowej (aneks 04.2026): obowiązek zgłaszania każdej zmiany nastaw kierownikowi UR oraz przekazywania raportu serwisowego z wartościami nastaw. Wprowadzenie 15 min przy pierwszej wizycie po aneksie.", "forma": "umowa", "termin": "2026-04-28", "ocena": "Sprawdzenie raportów serwisowych z trzech kolejnych wizyt — czy nastawy są podane i czy zmiany były zgłaszane.", "wynik": "Zgodne — trzy raporty z wartościami nastaw, jedna zmiana ciśnienia zgłoszona kierownikowi UR przed wykonaniem.", "status": "zaliczone", "dowod": "Aneks do umowy serwisowej; raporty serwisowe w teczce EnMS"}];
+var P_PLAN = [{"nr": "1", "temat": "Wprowadzenie: polityka energetyczna, cele, co w mojej pracy wpływa na energię, konsekwencje niespełnienia wymagań, gdzie zgłaszać uwagi", "punkty": ["7.3"], "grupa": "Nowi pracownicy oraz wykonawcy pracujący na terenie zakładu", "forma": "spotkanie", "prowadzacy": "Energy Manager (dla wykonawców — kierownik zlecający)", "czas": "15–30 min", "termin": "2026-05-04", "ocena": "Rozmowa kontrolna po miesiącu — trzy pytania o politykę, wpływ własnej pracy i drogę zgłoszenia", "status": "wtoku"}, {"nr": "2", "temat": "Nastawy i rozpoznawanie nieprawidłowej pracy znaczących użyć energii", "punkty": ["7.2"], "grupa": "Operatorzy pras i lakierni, technicy UR", "forma": "instruktaz", "prowadzacy": "Kierownik UR, przy sprężarkowni — z serwisem", "czas": "1–2 h", "termin": "2026-09-30", "ocena": "„Pokaż — rozpoznaj — powiedz” przy maszynie; obserwacja 5 losowych osób", "status": "wtoku"}, {"nr": "3", "temat": "Wymagania systemu dla kierownictwa: wynik energetyczny, cele, decyzje wpływające na energię", "punkty": ["7.2", "7.3"], "grupa": "Kierownicy działów i zarząd", "forma": "spotkanie", "prowadzacy": "Energy Manager z konsultantem", "czas": "1–2 h", "termin": "2026-06-15", "ocena": "Omówienie wyników na przeglądzie zarządzania — czy decyzje uwzględniają wynik energetyczny", "status": "zaliczone"}, {"nr": "4", "temat": "Kryteria energetyczne i koszt cyklu życia w zakupach", "punkty": ["7.2"], "grupa": "Zakupy — 2 osoby", "forma": "warsztat", "prowadzacy": "Energy Manager", "czas": "2 h", "termin": "2026-05-31", "ocena": "Przegląd trzech kolejnych zamówień urządzeń powyżej 10 kW", "status": "zaliczone"}, {"nr": "5", "temat": "Audytor wewnętrzny systemu zarządzania energią", "punkty": ["7.2"], "grupa": "Specjalista ds. środowiska (audytor ISO 14001)", "forma": "szkolenie_zewn", "prowadzacy": "Jednostka szkoleniowa", "czas": "1–2 dni", "termin": "2026-08-31", "ocena": "Audyt pod obserwacją Energy Managera i konsultanta", "status": "zaliczone"}, {"nr": "6", "temat": "Krótka informacja na początku zmiany — jeden temat tygodniowo (np. „w tym tygodniu: ciśnienie w sieci”)", "punkty": ["7.3"], "grupa": "Wszyscy pracownicy produkcji", "forma": "spotkanie", "prowadzacy": "Liderzy zmian", "czas": "10 min tygodniowo", "termin": "2026-05-11", "ocena": "Kwartalna rozmowa Energy Managera z trzema losowo wybranymi osobami", "status": "wtoku"}];
+var P_META = {"utworzono": "2026-04-20", "aktualizacja": "2026-09-30", "opracowal": "Jan Kowalski — Energy Manager, z HR", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "przeglad": "Przy zmianie urządzeń, nastaw i ról, przy każdej nowej osobie oraz raz w roku przed audytem wewnętrznym"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Kryteria eksploatacji działają tylko wtedy, gdy obsługa wie, co ustawia i dlaczego.", "decyzja": "Wymagane kompetencje opisane dla ról związanych ze znaczącymi użyciami; luki zamykane szkoleniem z terminem.", "dzialanie": "Matryca kompetencji; szkolenie operatorów sprężarkowni w maju 2026 r.; instruktaż dla serwisu zewnętrznego przed rozpoczęciem prac.", "sprawdzenie": "Sprawdzian po szkoleniu i obserwacja nastaw na stanowisku; wynik zapisany w karcie kompetencji."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 7.2 — Kompetencje.
+   F-EnMS-24 (III-27) część A — matryca W/A, część B — luki i działania.
+   Plan działań F-EnMS-12 (III-29) jest wspólny z punktem 7.3 — osobny magazyn.
+   Lista kontrolna III-32 sekcja 7.2. Przykład: III-28. */
+"use strict";
+
+var PUNKT = "7.2";
+var TERAZ = "11.10.2026 00:40";
+var MAGAZYN_PLAN = "enesa_plan_kompetencji";   // wspólny z punktem 7.3
+var KOMPETENCJE = [];
+var ROLE = [];
+var MAC = {};
+var LUKI = [];
+var PLAN = [];
+var META = { utworzono: "", aktualizacja: "", opracowal: "", zatwierdzil: "", przeglad: "" };
+var WNIOSKI = [];
+var AKT = "zakres";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 00:35", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 7.2" }];
+
+var SKALA = [
+  [0, "nie dotyczy"],
+  [1, "wie, gdzie szukać"],
+  [2, "wykonuje pod nadzorem"],
+  [3, "wykonuje samodzielnie"],
+  [4, "uczy innych"]
+];
+var FORMY = [["", "Wybierz formę"],
+["spotkanie", "Spotkanie"], ["instruktaz", "Instruktaż na stanowisku"],
+["mentoring", "Mentoring — praca pod okiem"], ["warsztat", "Warsztat"],
+["szkolenie_zewn", "Szkolenie zewnętrzne"], ["szkolenie_wewn", "Szkolenie wewnętrzne"],
+["zmiana", "Zmiana przydziału zadań"], ["zatrudnienie", "Zatrudnienie"],
+["zlecenie", "Zlecenie pracy kompetentnej firmie"], ["umowa", "Wymagania w umowie z wykonawcą"]];
+var STATUSY = [["", "Wybierz"], ["planowane", "Planowane"], ["wtoku", "W toku"],
+["zaliczone", "Zaliczone"], ["niezaliczone", "Niezaliczone — powtórka"], ["odwolane", "Odwołane"]];
+
+/* ── matryca: odczyt i zapis komórek ── */
+function kluczKom(i, j) { return i + "|" + j; }
+function komorka(i, j) { return MAC[kluczKom(i, j)] || ""; }
+function parsujWA(s) {
+  var t = String(s || "").trim().replace(/\s/g, "");
+  if (!t) return { pusta: true };
+  if (/^0$/.test(t)) return { w: 0, a: 0, nd: true };
+  var m = t.match(/^([0-4])\s*\/\s*([0-4])$/);
+  if (!m) return { zle: true };
+  return { w: parseInt(m[1], 10), a: parseInt(m[2], 10) };
+}
+function lukaKom(i, j) {
+  var v = parsujWA(komorka(i, j));
+  if (v.pusta || v.zle || v.nd) return null;
+  return Math.max(0, v.w - v.a);
+}
+function wszystkieLuki() {
+  var out = [];
+  KOMPETENCJE.forEach(function (k, i) {
+    ROLE.forEach(function (r, j) {
+      var l = lukaKom(i, j);
+      if (l !== null && l > 0) out.push({ i: i, j: j, luka: l, kom: k.nazwa, rola: r.nazwa });
+    });
+  });
+  return out;
+}
+function zleKomorki() {
+  var n = 0;
+  KOMPETENCJE.forEach(function (k, i) {
+    ROLE.forEach(function (r, j) { if (parsujWA(komorka(i, j)).zle) n++; });
+  });
+  return n;
+}
+function pusteKomorki() {
+  var n = 0;
+  KOMPETENCJE.forEach(function (k, i) {
+    ROLE.forEach(function (r, j) { if (parsujWA(komorka(i, j)).pusta) n++; });
+  });
+  return n;
+}
+function etykietaLuki(l) { return l.rola + " — " + l.kom; }
+function lukaPokryta(l) {
+  return LUKI.some(function (x) { return (x.dotyczy || "") === etykietaLuki(l); });
+}
+function lukiNiepokryte(min) {
+  return wszystkieLuki().filter(function (l) { return l.luka >= (min || 1) && !lukaPokryta(l); });
+}
+
+/* ── kompletność ── */
+function kompetencjaOk(k) { return !!((k.nazwa || "").trim() && (k.jakSprawdzamy || "").trim()); }
+function rolaOk(r) { return !!(r.nazwa || "").trim(); }
+var RE_OBECNOSC = /(lista obecno|obecno[śs][ćc]|podpis na li[śs]cie|lista uczestnik|potwierdzenie udzia)/i;
+function dowodObecnosci(x) { return RE_OBECNOSC.test((x.ocena || "") + " " + (x.dowod || "")); }
+function lukaOk(x) {
+  return !!((x.dotyczy || "").trim() && (x.dzialanie || "").trim() && x.termin
+    && (x.ocena || "").trim() && (x.dowod || "").trim()) && !dowodObecnosci(x);
+}
+function planOk(p) {
+  return !!((p.temat || "").trim() && (p.grupa || "").trim() && p.forma && p.termin && (p.ocena || "").trim());
+}
+function maWykonawce() { return ROLE.some(function (r) { return r.wykonawca; }); }
+function wierszeWprowadzenia() { return PLAN.filter(function (p) { return (p.punkty || []).indexOf("7.3") >= 0; }); }
+
+/* ── zakładka 1: kompetencje i role ── */
+function rysujZakres(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Metryka matrycy");
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Dwaj operatorzy chłodni. Obaj byli na tym samym szkoleniu, obaj mają podpis na liście obecności. W czwartek sprężarka zaczyna pracować bez przerw, a parownik pokrywa się szronem. Pierwszy niczego nie zauważa. Drugi sprawdza nastawy, widzi, że cykl odszraniania się nie uruchomił, i dzwoni do utrzymania ruchu.<br><br><b>Lista obecności potwierdza udział w szkoleniu. Dopiero sprawdzenie pokazuje, czy człowiek umie wykonać zadanie.</b>"));
+  var m = el("div", "poz");
+  m.appendChild(pole("Data utworzenia", inp(META.utworzono, "", function (v) { META.utworzono = v; }, "date")));
+  m.appendChild(pole("Ostatnia aktualizacja", inp(META.aktualizacja, "", function (v) { META.aktualizacja = v; }, "date")));
+  m.appendChild(pole("Opracował", inp(META.opracowal, "np. Jan Kowalski — Energy Manager, z HR", function (v) { META.opracowal = v; })));
+  s.appendChild(m);
+  host.appendChild(s);
+
+  var sk = el("div", "sekcja");
+  var hk = el("h3", null, "Kompetencje — opisane zadaniami");
+  hk.appendChild(el("span", "chip " + (KOMPETENCJE.length && KOMPETENCJE.every(kompetencjaOk) ? "green" : "amber"),
+    KOMPETENCJE.filter(kompetencjaOk).length + " / " + KOMPETENCJE.length));
+  sk.appendChild(hk);
+  sk.appendChild(el("p", "opis", "Norma nie przypisuje stanowiskom żadnego zestawu umiejętności — to Wy ustalacie, co jest potrzebne, na podstawie odpowiedzialności w swoim zakładzie."));
+  sk.appendChild(el("div", "note", "Opisujcie kompetencję zadaniem, nie hasłem. Nie „znajomość ISO 50001”, a „rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić”. Wtedy od razu widać, jak to sprawdzić."));
+  KOMPETENCJE.forEach(function (k, i) {
+    var kk = el("div", "poz" + (kompetencjaOk(k) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Kompetencja " + (i + 1)));
+    g.appendChild(przyciskUsun(function () {
+      KOMPETENCJE.splice(i, 1);
+      var nowa = {};
+      Object.keys(MAC).forEach(function (kl) {
+        var p = kl.split("|"), ki = parseInt(p[0], 10), rj = parseInt(p[1], 10);
+        if (ki === i) return;
+        nowa[kluczKom(ki > i ? ki - 1 : ki, rj)] = MAC[kl];
+      });
+      MAC = nowa;
+    }, "usuń", "Usunąć tę kompetencję? Zniknie cały jej wiersz w matrycy."));
+    kk.appendChild(g);
+    kk.appendChild(pole("Kompetencja", inp(k.nazwa, "np. Rozpoznaje nieprawidłową pracę i wie, komu ją zgłosić", function (v) { k.nazwa = v; })));
+    kk.appendChild(pole("Jak sprawdzamy", inp(k.jakSprawdzamy, "np. „Pokaż — rozpoznaj — powiedz” przy maszynie", function (v) { k.jakSprawdzamy = v; }),
+      "Obserwacja przy pracy, rozmowa, dokument (dyplom, uprawnienia, doświadczenie). To pole decyduje, czy w ogóle da się ocenić skuteczność działania."));
+    sk.appendChild(kk);
+  });
+  sk.appendChild(przyciskDodaj("+ dodaj kompetencję", function () { KOMPETENCJE.push({}); }));
+  if (!KOMPETENCJE.length) sk.appendChild(el("div", "warn", "Nie ustalono żadnej kompetencji."));
+  host.appendChild(sk);
+
+  var sr = el("div", "sekcja");
+  var hr = el("h3", null, "Role i grupy osób");
+  hr.appendChild(el("span", "chip " + (ROLE.length && maWykonawce() ? "green" : "amber"),
+    ile(ROLE.length, "kolumna", "kolumny", "kolumn")));
+  sr.appendChild(hr);
+  sr.appendChild(el("p", "opis", "Kolumny matrycy. Listę podpowie przegląd energetyczny — przy każdym znaczącym użyciu energii zapisano osoby, które na nie wpływają — oraz matryca odpowiedzialności z punktu 5.3."));
+  sr.appendChild(hel("div", "note", "Uwaga na słowa <b>„pod nadzorem organizacji”</b>. Obejmują one także wykonawców zewnętrznych: serwis, który zmienia nastawy sprężarek w Waszym zakładzie, wpływa na Wasz wynik tak samo jak własny technik."));
+  ROLE.forEach(function (r, j) {
+    var kk = el("div", "poz" + (rolaOk(r) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, r.nazwa || "Rola " + (j + 1)));
+    if (r.wykonawca) g.appendChild(el("span", "chip red", "wykonawca zewnętrzny"));
+    g.appendChild(przyciskUsun(function () {
+      ROLE.splice(j, 1);
+      var nowa = {};
+      Object.keys(MAC).forEach(function (kl) {
+        var p = kl.split("|"), ki = parseInt(p[0], 10), rj = parseInt(p[1], 10);
+        if (rj === j) return;
+        nowa[kluczKom(ki, rj > j ? rj - 1 : rj)] = MAC[kl];
+      });
+      MAC = nowa;
+    }, "usuń", "Usunąć tę rolę? Zniknie cała jej kolumna w matrycy."));
+    kk.appendChild(g);
+    kk.appendChild(pole("Nazwa", inp(r.nazwa, "np. Technicy UR", function (v) { r.nazwa = v; })));
+    kk.appendChild(pole("Kogo obejmuje", inp(r.opis, "np. Dwóch techników utrzymania ruchu — sprężarkownia i lakiernia", function (v) { r.opis = v; })));
+    kk.appendChild(pole("Rodzaj", sel(r.wykonawca ? "tak" : "nie",
+      [["nie", "Pracownik organizacji"], ["tak", "Wykonawca zewnętrzny pracujący pod nadzorem organizacji"]],
+      function (v) { r.wykonawca = (v === "tak"); })));
+    sr.appendChild(kk);
+  });
+  sr.appendChild(przyciskDodaj("+ dodaj rolę", function () { ROLE.push({}); }));
+  if (ROLE.length && !maWykonawce())
+    sr.appendChild(hel("div", "warn", "Matryca nie ma ani jednej kolumny wykonawcy zewnętrznego. Norma obejmuje osoby wykonujące pracę <b>pod nadzorem organizacji</b> — jeśli serwis, firma sprzątająca albo wykonawca remontu wpływa na Wasz wynik energetyczny, powinien być w matrycy. Jeśli naprawdę nikt taki nie pracuje w zakładzie, zapiszcie to w analizie konsultanta."));
+  host.appendChild(sr);
+}
+
+/* ── zakładka 2: matryca ── */
+function rysujMatryca(host) {
+  var s = el("div", "sekcja");
+  var luki = wszystkieLuki();
+  var h = el("h3", null, "A. Co kto ma umieć — poziom wymagany (W) i aktualny (A)");
+  h.appendChild(el("span", "chip " + (!pusteKomorki() && !zleKomorki() ? "green" : "amber"),
+    (KOMPETENCJE.length * ROLE.length - pusteKomorki()) + " / " + (KOMPETENCJE.length * ROLE.length) + " komórek"));
+  if (luki.length) h.appendChild(el("span", "chip red", ile(luki.length, "luka", "luki", "luk")));
+  s.appendChild(h);
+  host.appendChild(s);
+
+  if (!KOMPETENCJE.length || !ROLE.length) {
+    var p = el("div", "sekcja");
+    p.appendChild(el("div", "warn", "Najpierw ustalcie kompetencje i role w zakładce 1 — matryca to ich iloczyn."));
+    host.appendChild(p); return;
+  }
+
+  var sm = el("div", "sekcja");
+  var t = el("table", "mat");
+  var tr = el("tr");
+  tr.appendChild(el("th", null, "Kompetencja (opisana zadaniem)"));
+  ROLE.forEach(function (r) {
+    var th = el("th", "rot", r.nazwa || "—");
+    if (r.wykonawca) th.appendChild(el("div", "lukachip", "wykonawca"));
+    tr.appendChild(th);
+  });
+  tr.appendChild(el("th", null, "Jak sprawdzamy"));
+  t.appendChild(tr);
+
+  KOMPETENCJE.forEach(function (k, i) {
+    var r = el("tr");
+    r.appendChild(el("td", "kom", k.nazwa || "—"));
+    ROLE.forEach(function (rl, j) {
+      var v = parsujWA(komorka(i, j));
+      var l = lukaKom(i, j);
+      var td = el("td", "cel" + (v.nd ? " nd" : l === 1 ? " luka1" : l >= 2 ? " luka2" : ""));
+      var inp2 = el("input", "wa" + (v.zle ? " zle" : ""));
+      inp2.value = komorka(i, j);
+      inp2.placeholder = "W/A";
+      inp2.title = (k.nazwa || "") + " · " + (rl.nazwa || "");
+      inp2.oninput = function () { MAC[kluczKom(i, j)] = inp2.value; };
+      inp2.onchange = function () { zapisz(); rysuj(); };
+      td.appendChild(inp2);
+      if (l !== null && l > 0) td.appendChild(el("div", "lukachip", "luka " + l));
+      r.appendChild(td);
+    });
+    r.appendChild(el("td", null, k.jakSprawdzamy || "—"));
+    t.appendChild(r);
+  });
+  sm.appendChild(t);
+
+  var sk = el("div", "skala");
+  sk.appendChild(el("b", null, "Skala: "));
+  sk.appendChild(document.createTextNode(SKALA.map(function (x) { return x[0] + " — " + x[1]; }).join("; ") +
+    ". Wpis w komórce: W/A, na przykład 3/2. Samo 0 oznacza, że kompetencja tej roli nie dotyczy. Luka = W − A."));
+  sm.appendChild(sk);
+  if (zleKomorki())
+    sm.appendChild(el("div", "warn", "Niepoprawny wpis w " + ile(zleKomorki(), "komórce", "komórkach", "komórkach") +
+      " — oczekiwany format to W/A (np. 3/2) albo samo 0. Komórki z błędem są obramowane na czerwono."));
+  if (pusteKomorki())
+    sm.appendChild(el("div", "note", ile(pusteKomorki(), "komórka jest", "komórki są", "komórek jest") +
+      " niewypełnionych. Jeśli kompetencja danej roli nie dotyczy, wpiszcie 0 — puste pole nie mówi, czy to decyzja, czy przeoczenie."));
+  host.appendChild(sm);
+
+  if (luki.length) {
+    var sl = el("div", "sekcja");
+    var hl = el("h3", null, "Wykryte luki");
+    hl.appendChild(el("span", "chip " + (lukiNiepokryte(2).length ? "amber" : "green"),
+      luki.filter(lukaPokryta).length + " / " + luki.length + " z działaniem"));
+    sl.appendChild(hl);
+    sl.appendChild(tabela(["Rola", "Kompetencja", "Luka", "Działanie w części B"],
+      luki.map(function (l) {
+        var chip = el("span", "chip " + (lukaPokryta(l) ? "green" : l.luka >= 2 ? "amber" : ""),
+          lukaPokryta(l) ? "zaplanowane" : l.luka >= 2 ? "brak — do zaplanowania" : "brak — do decyzji");
+        return [l.rola, l.kom, String(l.luka), chip];
+      })));
+    var duze = lukiNiepokryte(2);
+    if (duze.length)
+      sl.appendChild(hel("div", "warn", ile(duze.length, "luka wynosi", "luki wynoszą", "luk wynosi") +
+        " 2 lub więcej i nie ma dla nich działania w części B. Różnica dwóch poziomów to zwykle „ma wykonywać samodzielnie, a wykonuje pod nadzorem” albo gorzej — <b>tam działanie jest potrzebne</b>."));
+    var male = lukiNiepokryte(1).filter(function (l) { return l.luka === 1; });
+    if (male.length)
+      sl.appendChild(el("div", "note", ile(male.length, "luka wynosi", "luki wynoszą", "luk wynosi") +
+        " 1 i nie ma dla nich działania. Norma każe podjąć działania „tam, gdzie to potrzebne” — luka jednego poziomu nie zawsze tego wymaga. Jeśli świadomie jej nie uzupełniacie, warto to zapisać we wniosku konsultanta."));
+    host.appendChild(sl);
+  }
+}
+
+/* ── zakładka 3: luki i działania (część B) ── */
+function rysujLuki(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "B. Luki i działania");
+  h.appendChild(el("span", "chip " + (LUKI.length && LUKI.every(lukaOk) ? "green" : "amber"),
+    LUKI.filter(lukaOk).length + " / " + LUKI.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Dla każdej luki: działanie, termin, sposób oceny skuteczności, wynik i miejsce dowodu kompetencji."));
+  s.appendChild(hel("div", "note", "<b>Działaniem nie musi być kurs.</b> Kompetencje biorą się z wykształcenia, szkoleń, umiejętności i doświadczenia. Doświadczony mechanik chłodnictwa może nie potrzebować kursu — wystarczy potwierdzić, że zna Wasze instalacje. Inne drogi: instruktaż na stanowisku, praca pod okiem doświadczonego kolegi, zmiana przydziału zadań, zatrudnienie albo zlecenie pracy firmie, która ma potrzebne kompetencje."));
+  s.appendChild(hel("div", "warn", "Dwa pola są wymaganiami normy, nie wygodą: <b>ocena skuteczności</b> („czy człowiek teraz umie”, nie „czy był obecny”) i <b>dowód kompetencji</b>, który trzeba zachować."));
+  host.appendChild(s);
+
+  var opcjeLuk = [["", "Wybierz lukę z matrycy"]].concat(
+    wszystkieLuki().map(function (l) { return [etykietaLuki(l), etykietaLuki(l) + " (luka " + l.luka + ")"]; }));
+
+  LUKI.forEach(function (x, i) {
+    var k = el("div", "poz" + (lukaOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Pozycja " + (i + 1)));
+    if (x.status) g.appendChild(el("span", "chip " + (x.status === "zaliczone" ? "green" : x.status === "niezaliczone" ? "red" : ""),
+      (STATUSY.filter(function (o) { return o[0] === x.status; })[0] || ["", ""])[1]));
+    g.appendChild(przyciskUsun(function () { LUKI.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Czego dotyczy", sel(x.dotyczy, opcjeLuk, function (v) { x.dotyczy = v; }),
+      "Lista pochodzi z matrycy — pozycja bez wskazania luki nie wiąże się z niczym, co da się sprawdzić."));
+    if ((x.dotyczy || "") && !wszystkieLuki().some(function (l) { return etykietaLuki(l) === x.dotyczy; }))
+      k.appendChild(el("div", "note", "Ta luka nie występuje już w matrycy — albo została uzupełniona, albo zmieniono wiersz lub kolumnę. Jeśli działanie zostało wykonane, zostawcie pozycję jako zapis; jeśli nie, zaktualizujcie wskazanie."));
+    k.appendChild(pole("Osoby", inp(x.osoba, "np. Technicy UR — 2 osoby", function (v) { x.osoba = v; }),
+      "Dowód kompetencji dotyczy konkretnej osoby, nie stanowiska. Jeśli działanie obejmuje grupę, dowód powstaje dla każdej osoby osobno."));
+    k.appendChild(pole("Opis luki", inp(x.luka, "np. Nastawy sprężarkowni, rozpoznawanie nieprawidłowej pracy", function (v) { x.luka = v; })));
+    k.appendChild(pole("Działanie", txt(x.dzialanie, "np. Szkolenie z serwisem (4 tys. zł) i dwa tygodnie pracy z kierownikiem UR", 2,
+      function (v) { x.dzialanie = v; })));
+    k.appendChild(pole("Forma", sel(x.forma, FORMY, function (v) { x.forma = v; })));
+    k.appendChild(pole("Termin", inp(x.termin, "", function (v) { x.termin = v; }, "date")));
+    k.appendChild(poleChip("Ocena skuteczności — jak i kiedy", "wymóg normy",
+      txt(x.ocena, "np. Kierownik UR: „pokaż — rozpoznaj — powiedz”; po kwartale sprawdzenie, czy zgłoszenia o nieprawidłowej pracy się pojawiają", 2,
+        function (v) { x.ocena = v; }),
+      "Norma wymaga oceny skuteczności działania. Sprawdzeniem jest umiejętność, nie obecność."));
+    k.appendChild(pole("Wynik", txt(x.wynik, "np. 1 osoba zaliczyła; 1 osoba — ponowne sprawdzenie 07.2026: zaliczone; 3 zgłoszenia w III kwartale", 2,
+      function (v) { x.wynik = v; })));
+    k.appendChild(pole("Status", sel(x.status, STATUSY, function (v) { x.status = v; })));
+    k.appendChild(poleChip("Dowód kompetencji — miejsce", "wymóg normy",
+      inp(x.dowod, "np. Karty techników (HR)", function (v) { x.dowod = v; }),
+      "To jedyna udokumentowana informacja, której norma wymaga w tym punkcie. Zapis z oceny, dyplom, zaświadczenie, protokół z obserwacji."));
+    if (dowodObecnosci(x))
+      k.appendChild(hel("div", "warn", "W ocenie skuteczności albo w dowodzie pojawia się lista obecności. <b>Lista obecności jest dowodem udziału, nie kompetencji.</b> Dowodem kompetencji jest zapis z oceny: obserwacja przy pracy, pokazanie, rozmowa."));
+    if ((x.dzialanie || "").trim() && !(x.ocena || "").trim())
+      k.appendChild(el("div", "warn", "Działanie bez oceny skuteczności. Norma wymaga oceny, czy działanie okazało się skuteczne — to osobne wymaganie od samego podjęcia działania."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj pozycję", function () { LUKI.push({}); }));
+  if (!LUKI.length && wszystkieLuki().length)
+    d.appendChild(el("div", "warn", "Matryca pokazuje luki, a część B jest pusta."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 4: plan działań i szkoleń (F-EnMS-12) ── */
+function rysujPlan(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Plan działań kompetencyjnych i szkoleń");
+  h.appendChild(el("span", "chip " + (PLAN.length && PLAN.every(planOk) ? "green" : "amber"),
+    PLAN.filter(planOk).length + " / " + PLAN.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Formularz F-EnMS-12 obejmuje działania z matrycy (7.2) i działania budujące świadomość (7.3). Dlatego ten plan jest wspólny dla obu punktów."));
+  s.appendChild(hel("div", "note", "Wiersze oznaczone <b>7.3</b> pojawią się także na stronie punktu „Świadomość” — w szczególności wprowadzenie dla nowych pracowników i wykonawców. Nie trzeba ich wpisywać dwa razy."));
+  host.appendChild(s);
+
+  PLAN.forEach(function (p, i) {
+    var k = el("div", "poz" + (planOk(p) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (p.nr || String(i + 1))));
+    (p.punkty || []).forEach(function (x) { g.appendChild(el("span", "chip", "punkt " + x)); });
+    if (p.status) g.appendChild(el("span", "chip " + (p.status === "zaliczone" ? "green" : p.status === "niezaliczone" ? "red" : ""),
+      (STATUSY.filter(function (o) { return o[0] === p.status; })[0] || ["", ""])[1]));
+    g.appendChild(przyciskUsun(function () { PLAN.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Numer", inp(p.nr, "np. 1", function (v) { p.nr = v; })));
+    k.appendChild(pole("Temat albo cel", txt(p.temat, "np. Wprowadzenie: polityka, cele, co w mojej pracy wpływa na energię, gdzie zgłaszać uwagi", 2,
+      function (v) { p.temat = v; })));
+    k.appendChild(pole("Punkt normy", kratki(p.punkty, [["7.2", "7.2 — kompetencje"], ["7.3", "7.3 — świadomość"]],
+      function (v) { p.punkty = v; }),
+      "Można wybrać oba. Wprowadzenie dla nowych osób zwykle służy świadomości, instruktaż na stanowisku — kompetencjom."));
+    k.appendChild(pole("Grupa", inp(p.grupa, "np. Nowi pracownicy, wykonawcy na terenie zakładu", function (v) { p.grupa = v; })));
+    k.appendChild(pole("Forma", sel(p.forma, FORMY, function (v) { p.forma = v; })));
+    k.appendChild(pole("Prowadzący", inp(p.prowadzacy, "np. Energy Manager", function (v) { p.prowadzacy = v; })));
+    k.appendChild(pole("Czas", inp(p.czas, "np. 15–30 min", function (v) { p.czas = v; }),
+      "Czasy w formularzu Toolkitu są orientacyjne — zalecenie metodyki ENESA, nie wymóg."));
+    k.appendChild(pole("Termin", inp(p.termin, "", function (v) { p.termin = v; }, "date")));
+    k.appendChild(poleChip("Ocena skuteczności", "wymóg normy przy 7.2",
+      inp(p.ocena, "np. Rozmowa kontrolna po miesiącu", function (v) { p.ocena = v; })));
+    k.appendChild(pole("Status", sel(p.status, STATUSY, function (v) { p.status = v; })));
+    if ((p.punkty || []).indexOf("7.2") >= 0 && !(p.ocena || "").trim())
+      k.appendChild(el("div", "warn", "Pozycja dotyczy kompetencji (7.2), a nie ma oceny skuteczności. Przy działaniach kompetencyjnych ocena jest wymaganiem normy."));
+    if (RE_OBECNOSC.test(p.ocena || ""))
+      k.appendChild(el("div", "warn", "Ocena skuteczności oparta na liście obecności. Trzeba sprawdzić umiejętność, nie udział."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj pozycję planu", function () { PLAN.push({ punkty: [] }); }));
+  if (!PLAN.length) d.appendChild(el("div", "warn", "Plan działań jest pusty."));
+  if (PLAN.length && !wierszeWprowadzenia().length)
+    d.appendChild(hel("div", "note", "W planie nie ma ani jednej pozycji oznaczonej jako 7.3. Procedura P-EnMS-05 przewiduje <b>wprowadzenie dla nowych osób i wykonawców</b> — 15 do 30 minut o polityce, celach, wpływie ich pracy, konsekwencjach i zgłaszaniu uwag. To typowa pozycja, która zamyka niezgodność z punktem 7.3."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var luki = wszystkieLuki();
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz kompetencji: "));
+  n.appendChild(document.createTextNode(
+    ile(KOMPETENCJE.length, "kompetencja", "kompetencje", "kompetencji") + " × " +
+    ile(ROLE.length, "rola", "role", "ról") + " · " + ile(luki.length, "luka", "luki", "luk") +
+    " (z działaniem: " + luki.filter(lukaPokryta).length + ") · " +
+    ile(LUKI.length, "pozycja", "pozycje", "pozycji") + " w części B · " +
+    ile(PLAN.length, "pozycja", "pozycje", "pozycji") + " w planie"));
+  s.appendChild(n);
+  if (!maWykonawce())
+    s.appendChild(el("div", "warn", "Brak kolumny wykonawcy zewnętrznego. Do sprawdzenia w rozmowie: kto zmienia nastawy, kto sprząta po godzinach, kto robi remonty. Pominięci wykonawcy to jeden z pięciu typowych błędów tego punktu."));
+  var duze = lukiNiepokryte(2);
+  if (duze.length)
+    s.appendChild(el("div", "warn", "Luki 2 i większe bez działania: " +
+      duze.map(etykietaLuki).join("; ") + "."));
+  var bezOceny = LUKI.filter(function (x) { return (x.dzialanie || "").trim() && !(x.ocena || "").trim(); }).length;
+  if (bezOceny)
+    s.appendChild(el("div", "warn", ile(bezOceny, "działanie nie ma", "działania nie mają", "działań nie ma") +
+      " oceny skuteczności. To wymaganie normy, które audytorzy sprawdzają najczęściej w tym punkcie."));
+  var obec = LUKI.filter(dowodObecnosci).length + PLAN.filter(function (p) { return RE_OBECNOSC.test(p.ocena || ""); }).length;
+  if (obec)
+    s.appendChild(el("div", "warn", "W " + ile(obec, "pozycji", "pozycjach", "pozycjach") +
+      " lista obecności występuje jako dowód albo ocena. To do rozmowy, nie do poprawki w formularzu — zmiana wymaga innego sposobu sprawdzania."));
+  var bezDowodu = LUKI.filter(function (x) { return (x.dzialanie || "").trim() && !(x.dowod || "").trim(); }).length;
+  if (bezDowodu)
+    s.appendChild(el("div", "warn", ile(bezDowodu, "pozycja nie wskazuje", "pozycje nie wskazują", "pozycji nie wskazuje") +
+      " miejsca dowodu kompetencji. To jedyna udokumentowana informacja wymagana w tym punkcie."));
+  if (!(META.przeglad || "").trim())
+    s.appendChild(el("div", "note", "Nie zapisano, kiedy matryca jest przeglądana. Kompetencje wraca się sprawdzić przy zmianie urządzeń, nastaw, ról i przy nowych osobach — to krok 8 procedury P-EnMS-05."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-32, sekcja 7.2 ── */
+function stanPozycji(p) {
+  var f = {
+    ustalono: function () {
+      return KOMPETENCJE.length > 0 && ROLE.length > 0 && KOMPETENCJE.every(kompetencjaOk)
+        && maWykonawce() && !pusteKomorki() && !zleKomorki();
+    },
+    zapewniono: function () {
+      return KOMPETENCJE.length > 0 && KOMPETENCJE.every(function (k) { return (k.jakSprawdzamy || "").trim(); });
+    },
+    dzialania: function () {
+      if (!wszystkieLuki().length) return KOMPETENCJE.length > 0 && !pusteKomorki() ? true : null;
+      return !lukiNiepokryte(2).length;
+    },
+    skutecznosc: function () {
+      var z = LUKI.filter(function (x) { return (x.dzialanie || "").trim(); });
+      if (!z.length) return null;
+      return z.every(function (x) { return (x.ocena || "").trim() && !dowodObecnosci(x); });
+    },
+    dowody: function () {
+      var z = LUKI.filter(function (x) { return (x.dzialanie || "").trim(); });
+      if (!z.length) return null;
+      return z.every(function (x) { return (x.dowod || "").trim() && !dowodObecnosci(x); });
+    },
+    narzedzia: function () {
+      return KOMPETENCJE.length > 0 && ROLE.length > 0 && PLAN.length > 0 && PLAN.every(planOk);
+    }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!KOMPETENCJE.length) b.push({ t: "Nie ustalono żadnej kompetencji.", kto: "klient" });
+  if (!ROLE.length) b.push({ t: "Nie określono żadnej roli — matryca jest pusta.", kto: "klient" });
+  KOMPETENCJE.forEach(function (k, i) {
+    if (!(k.nazwa || "").trim()) b.push({ t: "Kompetencja " + (i + 1) + " — brak treści.", kto: "klient" });
+    else if (!(k.jakSprawdzamy || "").trim()) b.push({ t: "„" + k.nazwa.slice(0, 40) + "” — nie zapisano, jak sprawdzacie tę kompetencję.", kto: "klient" });
+  });
+  if (!maWykonawce()) b.push({ t: "Matryca nie obejmuje wykonawców zewnętrznych pracujących pod nadzorem organizacji.", kto: "klient" });
+  if (zleKomorki()) b.push({ t: "Niepoprawny format w " + ile(zleKomorki(), "komórce", "komórkach", "komórkach") + " matrycy.", kto: "klient" });
+  if (pusteKomorki()) b.push({ t: ile(pusteKomorki(), "komórka matrycy jest", "komórki matrycy są", "komórek matrycy jest") + " niewypełnionych.", kto: "klient", metodyka: true });
+  lukiNiepokryte(2).forEach(function (l) {
+    b.push({ t: etykietaLuki(l) + " — luka " + l.luka + " bez działania w części B.", kto: "klient" });
+  });
+  LUKI.forEach(function (x, i) {
+    if (!(x.dotyczy || "").trim()) b.push({ t: "Pozycja " + (i + 1) + " części B nie wskazuje luki z matrycy.", kto: "klient", metodyka: true });
+    if ((x.dzialanie || "").trim() && !(x.ocena || "").trim()) b.push({ t: "Pozycja " + (i + 1) + " — działanie bez oceny skuteczności.", kto: "klient" });
+    if ((x.dzialanie || "").trim() && !(x.dowod || "").trim()) b.push({ t: "Pozycja " + (i + 1) + " — brak miejsca dowodu kompetencji.", kto: "klient" });
+    if (dowodObecnosci(x)) b.push({ t: "Pozycja " + (i + 1) + " — lista obecności jako dowód albo ocena kompetencji.", kto: "klient" });
+  });
+  if (!PLAN.length) b.push({ t: "Plan działań kompetencyjnych i szkoleń jest pusty.", kto: "klient", metodyka: true });
+  PLAN.forEach(function (p, i) {
+    if (!planOk(p)) b.push({ t: "Plan, pozycja " + (p.nr || (i + 1)) + " — brak tematu, grupy, formy, terminu albo oceny skuteczności.", kto: "klient", metodyka: true });
+  });
+  if (PLAN.length && !wierszeWprowadzenia().length)
+    b.push({ t: "W planie nie ma wprowadzenia dla nowych osób i wykonawców (punkt 7.3).", kto: "klient", metodyka: true });
+  if (!(META.przeglad || "").trim()) b.push({ t: "Nie ustalono, kiedy matryca jest przeglądana.", kto: "klient", metodyka: true });
+  if (!META.aktualizacja || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak daty aktualizacji albo osoby zatwierdzającej.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-KMP-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Ostatnia aktualizacja", inp(META.aktualizacja, "", function (v) { META.aktualizacja = v; }, "date")));
+  m.appendChild(pole("Kiedy matryca jest przeglądana",
+    inp(META.przeglad, "np. Przy zmianie urządzeń, nastaw i ról, przy każdej nowej osobie oraz raz w roku przed audytem wewnętrznym",
+      function (v) { META.przeglad = v; }),
+    "Krok 8 procedury P-EnMS-05. „Jedno szkolenie przy wdrożeniu” to jeden z pięciu błędów tego punktu."));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_72, "Lista kontrolna III-32 — sekcja 7.2", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-KMP-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Metryka", "zakładka 1", META.opracowal || "do uzupełnienia"],
+    ["A. Matryca kompetencji", "zakładki 1 i 2", KOMPETENCJE.length + " × " + ROLE.length + " = " +
+      (KOMPETENCJE.length * ROLE.length) + " komórek · " + ile(wszystkieLuki().length, "luka", "luki", "luk")],
+    ["B. Luki i działania", "zakładka 3", LUKI.filter(lukaOk).length + " z " + LUKI.length + " kompletnych"],
+    ["Plan F-EnMS-12", "zakładka 4", ile(PLAN.length, "pozycja", "pozycje", "pozycji") +
+      " (7.3: " + wierszeWprowadzenia().length + ")"],
+    ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>jednej</b> udokumentowanej informacji: dowodów kompetencji (kolumna „dowód” w części B). Matryca i plan są narzędziami metodyki ENESA — wygodnymi, ale nie wymaganymi. Dokument D-EnMS-KMP-01 odpowiada formularzowi F-EnMS-24 (załącznik III-27); plan F-EnMS-12 (III-29) jest wspólny z punktem 7.3."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "zakres", t: "1. Kompetencje i role", f: rysujZakres },
+  { id: "matryca", t: "2. Matryca W/A", f: rysujMatryca },
+  { id: "luki", t: "3. Luki i działania", f: rysujLuki },
+  { id: "plan", t: "4. Plan szkoleń", f: rysujPlan },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  var kom = KOMPETENCJE.length * ROLE.length;
+  return {
+    razem: Math.max(KOMPETENCJE.length, 1) + (kom || 1) + Math.max(LUKI.length, 1) + Math.max(PLAN.length, 1) + 1,
+    zrob: KOMPETENCJE.filter(kompetencjaOk).length + (kom - pusteKomorki() - zleKomorki())
+      + LUKI.filter(lukaOk).length + PLAN.filter(planOk).length
+      + ((META.zatwierdzil || "").trim() && META.aktualizacja ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_72", JSON.stringify({
+      KOMPETENCJE: KOMPETENCJE, ROLE: ROLE, MAC: MAC, LUKI: LUKI, META: META, WNIOSKI: WNIOSKI
+    }));
+    localStorage.setItem(MAGAZYN_PLAN, JSON.stringify({ PLAN: PLAN }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_72");
+    if (s) {
+      var d = JSON.parse(s);
+      KOMPETENCJE = d.KOMPETENCJE || []; ROLE = d.ROLE || []; MAC = d.MAC || {};
+      LUKI = d.LUKI || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+    }
+    var s2 = localStorage.getItem(MAGAZYN_PLAN);
+    if (s2) PLAN = (JSON.parse(s2).PLAN) || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  KOMPETENCJE = JSON.parse(JSON.stringify(P_KOMPETENCJE));
+  ROLE = JSON.parse(JSON.stringify(P_ROLE));
+  MAC = JSON.parse(JSON.stringify(P_MAC));
+  LUKI = JSON.parse(JSON.stringify(P_LUKI));
+  PLAN = JSON.parse(JSON.stringify(P_PLAN));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić matrycę, luki i plan? Plan jest wspólny z punktem 7.3.")) return;
+  KOMPETENCJE = []; ROLE = []; MAC = {}; LUKI = []; PLAN = []; WNIOSKI = [];
+  META = { utworzono: "", aktualizacja: "", opracowal: "", zatwierdzil: "", przeglad: "" };
+  try { localStorage.removeItem("enesa_72"); localStorage.removeItem(MAGAZYN_PLAN); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

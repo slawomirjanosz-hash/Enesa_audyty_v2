@@ -1,0 +1,1370 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 7.1 Zasoby</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 7</div>
+ <h1>7.1 Zasoby</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 7.1</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 7.1</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>7.1 Zasoby</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 7.1 i sposób policzenia zasobów.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 7.1<br>Zasoby</div>
+   <div>
+    <h4>7.1 Zasoby</h4>
+    <p>Cztery rodzaje zasobów, o których trzeba pomyśleć — i dlaczego pieniądze są najrzadziej tym,
+    czego brakuje. Jak policzyć zadania systemu, zanim ogłosi się cel.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 7.1. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">7.1 — zasoby<br>9 slajdów</div>
+   <div>
+    <h4>7.1 Zasoby</h4>
+    <p>Zadanie bez czasu to życzenie. Spis zadań z godzinami. Etat a zadania. Zasoby na codzienne
+    działanie, nie tylko na certyfikat.</p>
+    <p style="font-size:12.5px">9 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>◧ Plan był. Zmiany nie było.</h3>
+  <p style="font-size:13.5px">Zakład mięsny — ten, w którym system rozpadł się po odejściu Energy Managera.
+  Nowy Energy Manager odbudował go wokół procesów, formalne braki zamknął, plan oszczędności miał dobry.
+  Po kwartale nic się nie zmieniło.</p>
+  <p style="font-size:13.5px">Zszedł więc na halę i zapytał: „Dlaczego nie robicie tego, co jest w planie?”
+  Odpowiedzi były proste:</p>
+  <table class="tab">
+  <tr><th style="width:52%">Odpowiedź z hali</th><th>Punkt normy</th></tr>
+  <tr><td>„Nie mamy czasu, żeby to sprawdzać.”</td><td><b>zasoby (7.1)</b></td></tr>
+  <tr><td>„Nie wiemy, jakie temperatury są właściwe.”</td><td>kompetencje (7.2)</td></tr>
+  <tr><td>„Nie wiemy, ile to kosztuje.”</td><td>świadomość (7.3)</td></tr>
+  <tr><td>„Nikt nam nie powiedział.”</td><td>komunikacja (7.4)</td></tr>
+  <tr><td>„Przy chłodni wiszą dwie instrukcje. Która jest ważna?”</td><td>udokumentowane informacje (7.5)</td></tr>
+  </table>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Żadna z tych odpowiedzi nie mówi „nie chce nam się”.</b>
+  Każda mówi o warunkach, w jakich ludzie pracują. O tym jest cały rozdział 7 normy — norma nazywa
+  to wsparciem.</p>
+ </div>
+
+ <p style="font-size:14.5px;margin-top:18px">Organizacja ustala, jakich zasobów potrzebuje, żeby ustanowić,
+ wdrożyć, utrzymywać i ciągle doskonalić system zarządzania energią oraz ciągle poprawiać wynik energetyczny —
+ i zapewnia te zasoby. Omówienie na podstawie punktu 7.1 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie
+ normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> ustal, czego system potrzebuje, żeby
+ działać i poprawiać wynik energetyczny — i zapewnij to.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 6, punkt 7.1. Punkt 7.1 <b>nie ma własnego formularza
+ w Toolkicie</b> — obowiązuje procedura P-EnMS-05 (III-33, pkt 4.1) i lista kontrolna III-32.</div>
+
+ <div class="ramka">
+  <h3>◧ „Od dziś pilnujesz też temperatur”</h3>
+  <p style="font-size:13.5px">Poniedziałkowa odprawa. Lider zmiany kiwa głową. Nikt nie zdejmuje z niego
+  żadnego z dotychczasowych obowiązków. Nikt nie mówi, kiedy ma to robić.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Po miesiącu temperatur nie sprawdza nikt. <b>Lider nie jest
+  leniwy — po prostu doba ma tyle samo godzin co przed odprawą.</b> Zadanie bez czasu, narzędzi i ludzi
+  to tylko życzenie. Punkt 7.1 każe to policzyć, zanim cokolwiek ogłosicie.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Zasoby to nie tylko pieniądze</h3>
+ <p style="font-size:14.5px">Myśląc o zasobach, większość osób myśli o budżecie. Tymczasem systemowi
+ najczęściej brakuje czegoś innego.</p>
+ <table class="tab">
+ <tr><th style="width:26%">Rodzaj zasobu</th><th>Co to w praktyce znaczy</th></tr>
+<tr><td><b>Ludzie i ich czas</b></td><td>Godziny Energy Managera, członków zespołu, techników, liderów zmian. Nie „w miarę możliwości”, tylko w planie pracy.</td></tr><tr><td><b>Pieniądze</b></td><td>Na działania z planów, szkolenia, pomiary, oprogramowanie.</td></tr><tr><td><b>Infrastruktura i narzędzia</b></td><td>Liczniki, systemy monitoringu, przyrządy pomiarowe.</td></tr><tr><td><b>Wiedza z zewnątrz</b></td><td>Konsultant, audytor energetyczny, serwis producenta — tam, gdzie własnych kompetencji brakuje.</td></tr>
+ </table>
+ <p style="font-size:14.5px">Najważniejsze pytanie brzmi: <b>czy zasoby są proporcjonalne do ambicji?</b>
+ I drugie, o którym łatwo zapomnieć: czy wystarczą też na codzienne działanie systemu — zbieranie danych,
+ analizy, przeglądy — a nie tylko na projekty i certyfikat?</p>
+
+ <div class="warn" style="margin:14px 0"><b>„Czy potrzebujemy Energy Managera na pełny etat?”</b><br><br>
+ Nie zaczynajcie od etatu. Zacznijcie od zadań. Sprawdźcie, co trzeba zrobić, kto to przejmie i kiedy
+ to zrobi. <b>Jeśli wszystko ma się wydarzyć „w wolnej chwili”, planujecie opóźnienia.</b><br><br>
+ Wymiar etatu zależy od skali systemu, liczby znaczących użyć energii i od tego, jak zadania rozłożono
+ między ludzi. W małej firmie część etatu może wystarczyć, jeśli inni przejęli swoje kawałki pracy.
+ W dużej — nawet pełny etat bywa za mały, jeśli koordynator robi wszystko sam. Norma nie podaje żadnej
+ liczby. Wymaga, żeby zasoby wystarczały.</div>
+
+ <p style="font-size:13.5px">★ <b>Rada:</b> spiszcie zadania systemu na najbliższy kwartał — zbieranie
+ danych, analizy, spotkania, działania z planów — przy każdym wpiszcie osobę i szacunek godzin. Porównajcie
+ z czasem, który te osoby naprawdę mają. <b>Różnica to Wasza rozmowa z zarządem.</b> Ankieta w zakładce 2
+ liczy tę różnicę sama.</p>
+
+ <h3 style="margin-top:22px">Jak to wygląda w praktyce</h3>
+ <p style="font-size:14.5px">AutoParts Polska ma cel: zmniejszyć wycieki sprężonego powietrza z 9 do
+ 4 Nm³/min, z celem pośrednim 6 Nm³/min do czerwca 2026 r. Zobaczcie, jak z celu wynikają zasoby.</p>
+ <table class="tab">
+ <tr><th style="width:18%">Ogniwo</th><th>Treść</th></tr>
+ <tr><td><b>Sytuacja</b></td><td>Wycieki szacowane na 9 Nm³/min; sprężarkownia to 17,5% zużycia energii zakładu.</td></tr>
+ <tr><td><b>Znaczenie</b></td><td>Bez regularnego wyszukiwania wycieków cel zostanie na papierze.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Zarząd — w jego imieniu dyrektor zakładu — przydziela technikowi utrzymania ruchu czas na kwartalny przegląd szczelności i bieżące naprawy oraz zatwierdza wypożyczenie detektora ultradźwiękowego zamiast jego zakupu.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Kwartalny przegląd sieci z detektorem, oznaczanie i naprawa nieszczelności; zgłoszenia z hali naprawiane na bieżąco.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Czerwcowy pomiar przepływu w postoju pokazał 6 Nm³/min — cel pośredni osiągnięty. Gdyby przydzielony czas nie wystarczył, wróciliby z tym do zarządu.</td></tr>
+ </table>
+ <div class="note" style="margin:14px 0"><b>Zwróćcie uwagę:</b> dowodem zapewnienia zasobów są tu
+ <b>decyzje</b> — przydział czasu, zatwierdzone środki, sprzęt. Forma zależy od firmy.
+ Nie musi to być osobny „plan zasobów”.</div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:40%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Nowe zadania bez zdjęcia starych</td><td>Przy każdym przydziale ustalcie, kiedy osoba ma to robić i co przestaje robić</td></tr>
+ <tr><td>Zasoby tylko na wdrożenie i certyfikat</td><td>Zaplanujcie też czas na codzienne działanie systemu: dane, analizy, przeglądy</td></tr>
+ <tr><td>Ambitne cele, zero środków</td><td>Przy zatwierdzaniu celu od razu ustalcie: kto, ile czasu, za ile, do kiedy</td></tr>
+ <tr><td>„Najpierw kupmy liczniki”</td><td>Najpierw sprawdźcie, jakich danych brakuje i czy da się je uzyskać pomiarem okresowym lub obliczeniem</td></tr>
+ <tr><td>Nikt nie sprawdza, czy zasoby wystarczają</td><td>Wracajcie do tego pytania na każdym przeglądzie zarządzania</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">System bez zasobów to dokumenty, których nikt nie realizuje —
+  bo nie ma kiedy ani czym. Zasoby nie muszą być duże, ale muszą odpowiadać zadaniom.<br><br>
+  <b>Zadanie:</b> wybierzcie jeden cel energetyczny i sprawdźcie: kto go realizuje, ile ma na to czasu
+  i jakie środki zatwierdzono.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma sumuje godziny zadań po osobach i porównuje je z czasem, który te osoby
+  naprawdę mają. Różnica jest tym, co trzeba zapewnić albo zdjąć.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 7.1 w formacie stron 4.1–6.6</b> — z jedną różnicą: ten punkt <b>nie ma formularza
+w Toolkicie</b>. Moduł 5 obejmuje go procedurą P-EnMS-05 (III-33, pkt 4.1) i listą kontrolną III-32. Struktura
+ankiety jest więc wyprowadzona z trzech kroków procedury i czterech kategorii zasobów z Tomu 2 — co zapisuję
+wprost, żeby nie wyglądało na przepisanie formularza, którego nie ma.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 6 — wstęp</td><td>Scena zakładu mięsnego: pięć odpowiedzi z hali przypisanych do pięciu punktów normy. Otwiera stronę 7.1, bo wprowadza cały rozdział.</td></tr>
+<tr><td>Tom 2, rozdział 6, punkt 7.1</td><td>Scena poniedziałkowej odprawy, cztery kategorie zasobów z opisami, akapit „czy potrzebujemy Energy Managera na pełny etat”, rada o spisie zadań z godzinami, przykład celu Z1.2 w pięciu ogniwach, uwaga o decyzjach jako dowodzie, tabela pięciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 5 — III-33 (P-EnMS-05), pkt 4.1</td><td>Trzy kroki: spis zadań z osobami i szacunkiem czasu na kolejny kwartał; potrzeby zasobów do budżetu, planu inwestycji i zakresów obowiązków; ocena wystarczalności na przeglądzie zarządzania. To one wyznaczają zakładki 1, 4 i pole „kiedy oceniana jest wystarczalność”.</td></tr>
+<tr><td>Część III, Moduł 5 — III-32</td><td>Lista kontrolna sekcji 7.1: 5 pozycji z kolumną N / M. Trzy z nich są metodyką ENESA — w tym cały spis zadań z godzinami.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:22%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>zadanie_systemu</code></td><td>id, audyt_id, okres, nazwa, rodzaj ENUM('stale','plan','wdrozenie'), osoba, godziny DECIMAL, zrodlo, zdjete. Pole <code>zrodlo</code> docelowo referencja do działania z 6.2 albo pozycji planu danych z 6.6.</td></tr>
+<tr><td><code>osoba_systemu</code></td><td>id, audyt_id, nazwa, rola, dostepne_godziny DECIMAL, podstawa. <b>Łączenie po nazwie</b> — patrz uwagi na końcu.</td></tr>
+<tr><td><code>zasob_kategoria</code></td><td>audyt_id, kategoria ENUM('ludzie','pieniadze','infra','zewn'), potrzeba, decyzja, luka. Cztery wiersze, stałe.</td></tr>
+<tr><td><code>decyzja_zasoby</code></td><td>id, audyt_id, tresc, rodzaj ENUM('czas','budzet','sprzet','zewn'), kto, data, gdzie, powiazanie. To właściwy dowód spełnienia punktu.</td></tr>
+</table>
+
+<h2>Co platforma liczy sama</h2>
+<table>
+<tr><th style="width:26%">Wielkość</th><th>Sposób i reakcja</th></tr>
+<tr><td>Obciążenie osoby</td><td>Suma godzin zadań przypisanych do tej nazwy, rozbita na trzy rodzaje (stałe / z planów / wdrożeniowe). Rozbicie jest istotne: osoba obciążona tylko wdrożeniowo zwolni się po certyfikacji, obciążona stale — nie.</td></tr>
+<tr><td>Różnica</td><td>dostępne − potrzebne. Ujemna → chip „brakuje czasu” i ostrzeżenie z liczbą godzin. To jedyny argument w tym punkcie, który da się pokazać liczbą.</td></tr>
+<tr><td>„Na styk”</td><td>Margines dodatni, ale mniejszy niż 15% dostępnego czasu → nota. Próg jest metodyką ENESA. Uzasadnienie: przy pierwszej awarii albo urlopie zadania systemu wypadają pierwsze, a bez tej noty taka osoba wygląda w tabeli identycznie jak ta z dużym zapasem.</td></tr>
+<tr><td>Bilans okresu</td><td>Suma wszystkich godzin wobec sumy dostępnych. <b>Uwaga interpretacyjna:</b> bilans może być dodatni, gdy jedna osoba jest przeciążona — tak jest w przykładzie AutoParts (ogólnie 108 h wobec 194 h, ale kierownikowi UR brakuje 6 h). Dlatego tabela osób jest ważniejsza od bilansu i stoi nad nim.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td>Brak zadań rodzaju „stałe”</td><td>Ostrzeżenie: „zasoby tylko na wdrożenie i certyfikat” to jeden z pięciu błędów tego punktu. Pozycja w braki() jako metodyka ENESA.</td></tr>
+<tr><td>Ponad 60% zadań wdrożeniowych i ani jednego stałego</td><td>Ostrzeżenie w analizie konsultanta: typowy obraz systemu, który zadziała do certyfikatu i przestanie po nim.</td></tr>
+<tr><td>Zadanie przypisane osobie, dla której nie zadeklarowano dostępnego czasu</td><td>Ostrzeżenie z listą nazw. Bez tej liczby nie da się sprawdzić, czy zasoby wystarczają — a to jest treść wymagania.</td></tr>
+<tr><td>Zadania osoby przekraczają jej dostępny czas</td><td>Ostrzeżenie przy osobie z konkretną liczbą brakujących godzin oraz pozycja w braki() jako N. Nie blokuje — bo to może być świadomy stan przed rozmową z zarządem, i właśnie do tej rozmowy ten ekran służy.</td></tr>
+<tr><td>Kategoria zasobów bez opisu potrzeby albo tego, co zapewniono</td><td>Pozycja w braki(). Cztery kategorie są stałe — nie da się ich usunąć, bo norma mówi o zasobach w całości.</td></tr>
+<tr><td>Brak decyzji o zapewnieniu zasobów</td><td>Ostrzeżenie: bez tego punkt 7.1 nie ma dowodu. To jedyna rzecz w tym punkcie, którą audytor zobaczy.</td></tr>
+<tr><td>Decyzja bez wskazania zadania albo celu</td><td>Nota, nie ostrzeżenie — powiązanie zasobów z planami działań jest pozycją M listy kontrolnej.</td></tr>
+<tr><td>Brak zapisu, kiedy oceniana jest wystarczalność zasobów</td><td>Pozycja w braki() jako metodyka. Odpowiada błędowi „nikt nie sprawdza, czy zasoby wystarczają”.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-32 — sekcja 7.1</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.</td><td class='mono'>N</td><td><code>okreslono</code></td></tr><tr><td>Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.</td><td class='mono'>N</td><td><code>zapewniono</code></td></tr><tr><td>Zasoby powiązano z planami działań (6.2).</td><td class='mono'>M</td><td><code>powiazano</code></td></tr><tr><td>Zadania systemu spisano z osobami i szacunkiem czasu.</td><td class='mono'>M</td><td><code>spisano</code></td></tr><tr><td>Wystarczalność zasobów oceniono na przeglądzie zarządzania.</td><td class='mono'>M</td><td><code>wystarczalnosc</code></td></tr></table>
+<div class="note">Trzy z pięciu pozycji są oznaczone <b>M</b> — w tym cały spis zadań z godzinami, który jest
+sercem tej ankiety. Warto to mówić klientowi wprost: norma w punkcie 7.1 wymaga dwóch rzeczy (ustalić
+i zapewnić), a wszystko pozostałe jest naszym sposobem dojścia do odpowiedzi na pytanie „czy wystarcza”.</div>
+
+<h2>Wspólny moduł JavaScript</h2>
+<div class="note"><b>Zmiana wobec punktów 4.1–6.6.</b> Pomocniki powtarzające się dosłownie w dziewięciu
+plikach (<code>el</code>, <code>ile</code>, <code>txt</code>, <code>inp</code>, <code>sel</code>,
+<code>pole</code>, wnioski w czterech ogniwach, blok konsultanta, lista braków, lista kontrolna, historia,
+szkielet zakładek i przełącznik roli) są teraz w osobnym pliku <code>wspolne.js</code>, dołączanym przed
+plikiem punktu. Pięć stron rozdziału 7 powtarzałoby inaczej te same 120 linii.<br><br>
+Przy wdrożeniu to i tak powinien być jeden moduł — a przy okazji znika ryzyko, które już raz nas kosztowało
+czas w punkcie 4.3: poprawka wklejona do jednej kopii funkcji i nie wklejona do pozostałych.
+<b>Strony 4.1–6.6 zostały bez zmian</b> — przepisywanie dziewięciu przetestowanych plików tylko dla porządku
+nie jest tego warte; przy wdrożeniu scalą się same.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Tu jest szczególnie istotne: blok nazywa po imieniu osoby, którym brakuje czasu, i ocenia, czy system przestanie działać po certyfikacji. To materiał na rozmowę z zarządem, nie dla przeglądającego ankietę kierownika.</td></tr>
+<tr><td>Wnioski — cztery ogniwa</td><td>znaczenie → decyzja → działanie → sprawdzenie.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-ZAS-01</code></td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td><b>Brak formularza.</b> Punkt obsługiwany procedurą P-EnMS-05 (III-33) i listą kontrolną III-32.</td></tr>
+<tr><td>Status w normie</td><td><b>Punkt 7.1 nie wymaga udokumentowanej informacji</b> — nie występuje w wykazie z punktu 7.5. Dowodem są decyzje. D-EnMS-ZAS-01 jest narzędziem metodyki ENESA.</td></tr>
+<tr><td>Konsekwencja dla wykazu 7.5</td><td>W wykazie udokumentowanych informacji ten dokument pojawia się jako <b>M</b>, nie N. Strona 7.5 wstępnie wypełnia go właśnie tak.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Nowy kwartał (spis zadań), nowy cel albo plan działań (6.2), zmiana ról (5.3), decyzja przeglądu zarządzania (9.3), odejście albo zmiana osoby z tabeli obciążeń.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>5.1 Przywództwo</td><td><b>Wejście.</b> Zapewnienie zasobów jest jednym z piętnastu zobowiązań najwyższego kierownictwa z punktu 5.1 — tam jest deklaracja, tutaj liczby.</td></tr>
+<tr><td>5.3 Role i uprawnienia</td><td><b>Wejście.</b> Osoby i ich role pochodzą z matrycy odpowiedzialności. Zadanie przypisane osobie, której nie ma w 5.3, jest sygnałem rozjazdu.</td></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Dwukierunkowo.</b> Kolumna „zasoby” w planie działań to wejście tutaj; stwierdzony brak czasu jest powodem zmiany terminu albo zakresu celu.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Wejście.</b> Każda pozycja planu danych z odczytem ręcznym to zadanie stałe z godzinami. To najczęściej pomijane źródło obciążenia.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Wyjście.</b> Działania kompetencyjne z planu F-EnMS-12 kosztują czas i pieniądze — wracają tu jako zadania i decyzje budżetowe.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Wejście.</b> Audyt jest zadaniem z godzinami. W AutoParts łączony z audytem ISO 14001 — stąd 16 h, nie 32.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Dwukierunkowo.</b> Wystarczalność zasobów jest oceniana na przeglądzie; decyzje przeglądu zmieniają przydziały.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td>Łączenie zadań z osobami po nazwie</td><td>Dziś zadanie wskazuje osobę tekstem, a tabela obciążeń sumuje po dokładnej zgodności napisu. Literówka rozdzieli obciążenie na dwie osoby i ukryje przeciążenie. <b>Przy wdrożeniu musi to być wybór z listy osób</b> — najlepiej z matrycy odpowiedzialności z 5.3, z możliwością dodania osoby w miejscu. To najpoważniejsza słabość tej makiety i jedyna, która może dać fałszywie spokojny wynik.</td></tr>
+<tr><td>Jednostka czasu</td><td>Wszystko w godzinach na okres. Rozważyć drugi tryb — godziny tygodniowo — bo tak zwykle zapisuje się przydziały w zakresach obowiązków („2 h tygodniowo”). Przeliczenie wymaga liczby tygodni w okresie, więc to pole okresu musiałoby być strukturalne, nie tekstowe.</td></tr>
+<tr><td>Zadania cykliczne</td><td>Kwartalny przegląd szczelności w okresie kwartalnym to jedno wystąpienie, ale odczyt podliczników to trzy. Dziś klient wpisuje sumę ręcznie. Dodanie pola „ile razy w okresie” zdjęłoby z niego to mnożenie i zmniejszyło błąd.</td></tr>
+<tr><td>Automatyczne zasilenie spisu zadań</td><td>Platforma zna już zadania stałe z planu danych (6.6, kolumna „częstotliwość” i „odpowiedzialny”) oraz działania z planów (6.2, kolumna „zasoby” i „odpowiedzialny”). <b>Spis zadań można wygenerować w 80%</b> — klient dopisywałby tylko godziny. Proponuję to zrobić: jest to ten sam zabieg co generowanie planu danych z 6.3 i 6.4, opisany w specyfikacji punktu 6.6.</td></tr>
+<tr><td>Próg „na styk”</td><td>15% dostępnego czasu. Liczba wzięta z doświadczenia, nie z normy ani z książki — do potwierdzenia albo zmiany przez Martynę. W specyfikacji i w interfejsie jest oznaczona jako metodyka.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 7.1 wraz z przykładem AutoParts na IV kwartał 2026.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;KATEGORIE_Z&quot;: [
+  {
+   &quot;kod&quot;: &quot;ludzie&quot;,
+   &quot;nazwa&quot;: &quot;Ludzie i ich czas&quot;,
+   &quot;opis&quot;: &quot;Godziny Energy Managera, członków zespołu, techników, liderów zmian. Nie „w miarę możliwości”, tylko w planie pracy.&quot;,
+   &quot;ph1&quot;: &quot;np. Energy Manager 25% etatu; 2 h tygodniowo dla każdego lidera zmiany; technik UR na kwartalne przeglądy szczelności&quot;,
+   &quot;ph2&quot;: &quot;np. Aneksy do zakresów obowiązków z 15.04.2026; decyzja dyrektora zakładu o przydziale 2 h tygodniowo liderom&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;pieniadze&quot;,
+   &quot;nazwa&quot;: &quot;Pieniądze&quot;,
+   &quot;opis&quot;: &quot;Na działania z planów, szkolenia, pomiary, oprogramowanie.&quot;,
+   &quot;ph1&quot;: &quot;np. 65 tys. zł na podliczniki (INW/2026/11); 12 tys. zł na szkolenia; 10 tys. zł na usuwanie nieszczelności&quot;,
+   &quot;ph2&quot;: &quot;np. Budżet inwestycji 2026 zatwierdzony uchwałą zarządu nr 4/2026; budżet szkoleń w planie HR&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;infra&quot;,
+   &quot;nazwa&quot;: &quot;Infrastruktura i narzędzia&quot;,
+   &quot;opis&quot;: &quot;Liczniki, systemy monitoringu, przyrządy pomiarowe.&quot;,
+   &quot;ph1&quot;: &quot;np. 6 podliczników, przepływomierz, dostęp do systemu monitoringu, detektor ultradźwiękowy do przeglądów szczelności&quot;,
+   &quot;ph2&quot;: &quot;np. Podliczniki i przepływomierz uruchomione 06.2026; detektor wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zewn&quot;,
+   &quot;nazwa&quot;: &quot;Wiedza z zewnątrz&quot;,
+   &quot;opis&quot;: &quot;Konsultant, audytor energetyczny, serwis producenta — tam, gdzie własnych kompetencji brakuje.&quot;,
+   &quot;ph1&quot;: &quot;np. Konsultant ENESA do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw i szkolenia techników&quot;,
+   &quot;ph2&quot;: &quot;np. Umowa z ENESA z 02.2026; umowa serwisowa z wymaganiami kompetencyjnymi (aneks 04.2026)&quot;
+  }
+ ],
+ &quot;LISTA_71&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;okreslono&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapewniono&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zasoby powiązano z planami działań (6.2).&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;powiazano&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zadania systemu spisano z osobami i szacunkiem czasu.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;spisano&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Wystarczalność zasobów oceniono na przeglądzie zarządzania.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;wystarczalnosc&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;ZADANIA&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Odczyt podliczników i zestawienie miesięczne&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;godziny&quot;: &quot;6&quot;,
+    &quot;zrodlo&quot;: &quot;Plan zbierania danych, poz. 4, 5, 8&quot;,
+    &quot;zdjete&quot;: &quot;Nic — zadanie w ramach obecnych obowiązków&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Obliczenie wskaźników EnPI i porównanie z liniami bazowymi&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Energy Manager&quot;,
+    &quot;godziny&quot;: &quot;12&quot;,
+    &quot;zrodlo&quot;: &quot;Karty EnPI F-EnMS-09, metoda EnPI (6.4)&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Odczyt liczników głównych i uzgodnienie z fakturami&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Energy Manager&quot;,
+    &quot;godziny&quot;: &quot;3&quot;,
+    &quot;zrodlo&quot;: &quot;Plan zbierania danych, poz. 1–3&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Przekazanie danych o produkcji i lakierowanej powierzchni&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Produkcji&quot;,
+    &quot;godziny&quot;: &quot;3&quot;,
+    &quot;zrodlo&quot;: &quot;Plan zbierania danych, poz. 9, 11&quot;,
+    &quot;zdjete&quot;: &quot;Nic — dane pochodzą z ERP, który i tak prowadzi&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Kwartalny przegląd wskaźników na naradzie produkcyjnej&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Energy Manager&quot;,
+    &quot;godziny&quot;: &quot;4&quot;,
+    &quot;zrodlo&quot;: &quot;Cel C3, działanie 2 — stały punkt agendy&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Prowadzenie rejestru zgłoszeń i odpowiadanie na nie&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Energy Manager&quot;,
+    &quot;godziny&quot;: &quot;6&quot;,
+    &quot;zrodlo&quot;: &quot;Proces zgłaszania uwag (7.4)&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Pomiar energii pras analizatorem — 2 tygodnie&quot;,
+    &quot;rodzaj&quot;: &quot;stale&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;godziny&quot;: &quot;10&quot;,
+    &quot;zrodlo&quot;: &quot;Plan zbierania danych, poz. 12&quot;,
+    &quot;zdjete&quot;: &quot;Pomiar wykonuje technik UR pod nadzorem kierownika&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Kwartalny przegląd szczelności detektorem ultradźwiękowym&quot;,
+    &quot;rodzaj&quot;: &quot;plan&quot;,
+    &quot;osoba&quot;: &quot;Technik UR&quot;,
+    &quot;godziny&quot;: &quot;8&quot;,
+    &quot;zrodlo&quot;: &quot;Cel C1, działanie 2&quot;,
+    &quot;zdjete&quot;: &quot;Przegląd filtrów w hali B przeniesiony na drugiego technika&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Nadzór nad montażem czujników obecności w magazynie&quot;,
+    &quot;rodzaj&quot;: &quot;plan&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;godziny&quot;: &quot;6&quot;,
+    &quot;zrodlo&quot;: &quot;Cel C2, działanie 2&quot;,
+    &quot;zdjete&quot;: &quot;Nic — brak możliwości zdjęcia, zadanie dodane&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Konfiguracja miesięcznego raportu z podliczników&quot;,
+    &quot;rodzaj&quot;: &quot;plan&quot;,
+    &quot;osoba&quot;: &quot;Energy Manager&quot;,
+    &quot;godziny&quot;: &quot;10&quot;,
+    &quot;zrodlo&quot;: &quot;Cel C4, działanie 2&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Test weekendowy przepływu w czasie postoju&quot;,
+    &quot;rodzaj&quot;: &quot;plan&quot;,
+    &quot;osoba&quot;: &quot;Technik UR&quot;,
+    &quot;godziny&quot;: &quot;4&quot;,
+    &quot;zrodlo&quot;: &quot;Zadanie Z1.2; plan zbierania danych, poz. 7&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Przygotowanie przeglądu zarządzania&quot;,
+    &quot;rodzaj&quot;: &quot;wdrozenie&quot;,
+    &quot;osoba&quot;: &quot;Energy Manager&quot;,
+    &quot;godziny&quot;: &quot;12&quot;,
+    &quot;zrodlo&quot;: &quot;Punkt 9.3 — przegląd planowany na 12.2026&quot;,
+    &quot;zdjete&quot;: &quot;—&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Audyt wewnętrzny systemu&quot;,
+    &quot;rodzaj&quot;: &quot;wdrozenie&quot;,
+    &quot;osoba&quot;: &quot;Audytor wewnętrzny&quot;,
+    &quot;godziny&quot;: &quot;16&quot;,
+    &quot;zrodlo&quot;: &quot;Punkt 9.2 — audyt przed certyfikacją&quot;,
+    &quot;zdjete&quot;: &quot;Audyt ISO 14001 łączony z audytem EnMS (szansa S4)&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Instruktaż operatorów pras i lakierni&quot;,
+    &quot;rodzaj&quot;: &quot;wdrozenie&quot;,
+    &quot;osoba&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;godziny&quot;: &quot;8&quot;,
+    &quot;zrodlo&quot;: &quot;Plan F-EnMS-12, poz. 2&quot;,
+    &quot;zdjete&quot;: &quot;Nic — brak możliwości zdjęcia, zadanie dodane&quot;
+   }
+  ],
+  &quot;OSOBY&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Energy Manager&quot;,
+    &quot;rola&quot;: &quot;Koordynator zespołu: dane, wskaźniki, karty EnPI, plan komunikacji, rejestr zgłoszeń&quot;,
+    &quot;dostepne&quot;: &quot;130&quot;,
+    &quot;podstawa&quot;: &quot;25% etatu — aneks do zakresu obowiązków z 15.04.2026&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;rola&quot;: &quot;Właściciel SEU sprężarkownia, lakiernia, prasy; odczyty podliczników&quot;,
+    &quot;dostepne&quot;: &quot;30&quot;,
+    &quot;podstawa&quot;: &quot;Zakres obowiązków, aneks z 15.04.2026 — 2 h tygodniowo; od 06.2026 zwiększone do 2,5 h tygodniowo decyzją Dyrektora Zakładu po przeglądzie obciążeń&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Technik UR&quot;,
+    &quot;rola&quot;: &quot;Przeglądy szczelności, testy przepływu, pomiary analizatorem&quot;,
+    &quot;dostepne&quot;: &quot;16&quot;,
+    &quot;podstawa&quot;: &quot;Harmonogram przeglądów okresowych; decyzja kierownika UR&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Kierownik Produkcji&quot;,
+    &quot;rola&quot;: &quot;Dane o produkcji i lakierowanej powierzchni; czynniki statyczne&quot;,
+    &quot;dostepne&quot;: &quot;8&quot;,
+    &quot;podstawa&quot;: &quot;Zakres obowiązków — dane z ERP, bez dodatkowych odczytów&quot;
+   },
+   {
+    &quot;nazwa&quot;: &quot;Audytor wewnętrzny&quot;,
+    &quot;rola&quot;: &quot;Specjalista ds. środowiska, audytor ISO 14001 — audyty wspólne&quot;,
+    &quot;dostepne&quot;: &quot;16&quot;,
+    &quot;podstawa&quot;: &quot;Plan audytów 2026 zatwierdzony przez dyrektora zakładu&quot;
+   }
+  ],
+  &quot;ZASOBY&quot;: {
+   &quot;ludzie&quot;: {
+    &quot;potrzeba&quot;: &quot;Energy Manager 25% etatu; 2 h tygodniowo dla kierownika UR; technik UR na kwartalne przeglądy szczelności i testy przepływu; kierownik produkcji na przekazywanie danych; specjalista ds. środowiska na audyty wewnętrzne.&quot;,
+    &quot;decyzja&quot;: &quot;Aneksy do zakresów obowiązków z 15 kwietnia 2026 r. (Energy Manager, kierownik UR). Przydział czasu technikowi UR — decyzja kierownika UR w harmonogramie przeglądów. Audyty w planie audytów 2026, łączone z ISO 14001.&quot;,
+    &quot;luka&quot;: &quot;Kierownikowi UR brakuje około 6 h na kwartał — do rozstrzygnięcia na przeglądzie zarządzania w grudniu: albo zwiększenie przydziału do 2,5 h tygodniowo, albo przeniesienie nadzoru nad montażem czujników na technika UR.&quot;
+   },
+   &quot;pieniadze&quot;: {
+    &quot;potrzeba&quot;: &quot;65 tys. zł na 6 podliczników (INW/2026/11); 10 tys. zł na usuwanie nieszczelności; 12 tys. zł na podlicznik gazu i przepływomierz; 8 tys. zł na konfigurację raportu; szkolenia: 4 tys. zł (technicy UR z serwisem) i warsztat zakupów.&quot;,
+    &quot;decyzja&quot;: &quot;Budżet inwestycji 2026 — uchwała zarządu nr 4/2026 z 15 kwietnia 2026 r. Budżet szkoleń w planie HR na 2026 r. Wymiana opraw na LED (240 tys. zł) w budżecie 2027 oraz sterownik nadrzędny sprężarkowni z napędem o zmiennej prędkości (380 tys. zł) w projekcie budżetu na 2027 r.&quot;,
+    &quot;luka&quot;: &quot;Brak środków na drugi podlicznik gazu dla kotłowni — zużycie wyznaczane różnicą, co powiększa niepewność modelu K-1. Wniosek do budżetu 2027, decyzja w listopadzie.&quot;
+   },
+   &quot;infra&quot;: {
+    &quot;potrzeba&quot;: &quot;6 podliczników energii elektrycznej, podlicznik gazu pieca lakierni, przepływomierz na kolektorze sprężonego powietrza, dostęp do systemu monitoringu, analizator sieci, detektor ultradźwiękowy, arkusz EnMS na serwerze z kopią tygodniową.&quot;,
+    &quot;decyzja&quot;: &quot;Podliczniki i przepływomierz uruchomione w czerwcu 2026 r. Analizator sieci — własny, ze świadectwem wzorcowania. Detektor ultradźwiękowy wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu (koszt wypożyczenia niższy od amortyzacji przy czterech użyciach w roku).&quot;,
+    &quot;luka&quot;: &quot;Oświetlenie hal H1 i H2 bez podlicznika — zużycie liczone z inwentaryzacji opraw i czasu pracy. Podlicznik zaplanowany razem z wymianą opraw na LED w III kwartale 2027 r.&quot;
+   },
+   &quot;zewn&quot;: {
+    &quot;potrzeba&quot;: &quot;Konsultant do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw, szkolenia techników i zgłaszania zmian nastaw; jednostka certyfikująca.&quot;,
+    &quot;decyzja&quot;: &quot;Umowa z konsultantem z lutego 2026 r. Umowa serwisowa sprężarek rozszerzona aneksem z kwietnia 2026 r. o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw kierownikowi UR (ryzyko R5 — wiedza o nastawach tylko u serwisanta).&quot;,
+    &quot;luka&quot;: &quot;Brak własnych kompetencji do budowy modeli regresji — modele zbudowane z konsultantem. Do rozstrzygnięcia przed odejściem konsultanta: czy Energy Manager przejmuje przeliczanie modeli, czy zostaje to przy wsparciu zewnętrznym.&quot;
+   }
+  },
+  &quot;DECYZJE&quot;: [
+   {
+    &quot;tresc&quot;: &quot;Przydział 25% etatu na funkcję Energy Managera oraz 2 h tygodniowo kierownikowi Utrzymania Ruchu na sprawy systemu.&quot;,
+    &quot;rodzaj&quot;: &quot;czas&quot;,
+    &quot;kto&quot;: &quot;Zarząd — w jego imieniu dyrektor zakładu&quot;,
+    &quot;data&quot;: &quot;2026-04-15&quot;,
+    &quot;gdzie&quot;: &quot;Aneksy do zakresów obowiązków; protokół przeglądu zarządzania z 15.04.2026&quot;,
+    &quot;powiazanie&quot;: &quot;Wszystkie cele C1–C4 oraz codzienne działanie systemu&quot;
+   },
+   {
+    &quot;tresc&quot;: &quot;Przydział technikowi Utrzymania Ruchu czasu na kwartalny przegląd szczelności i bieżące naprawy nieszczelności.&quot;,
+    &quot;rodzaj&quot;: &quot;czas&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;data&quot;: &quot;2026-04-20&quot;,
+    &quot;gdzie&quot;: &quot;Harmonogram przeglądów okresowych; zadanie UR/2026/18&quot;,
+    &quot;powiazanie&quot;: &quot;Cel C1, zadanie Z1.2 — wycieki sprężonego powietrza&quot;
+   },
+   {
+    &quot;tresc&quot;: &quot;Zgoda na kwartalne wypożyczanie detektora ultradźwiękowego zamiast jego zakupu.&quot;,
+    &quot;rodzaj&quot;: &quot;sprzet&quot;,
+    &quot;kto&quot;: &quot;Dyrektor zakładu&quot;,
+    &quot;data&quot;: &quot;2026-04-20&quot;,
+    &quot;gdzie&quot;: &quot;Notatka z decyzji; faktury za wypożyczenie&quot;,
+    &quot;powiazanie&quot;: &quot;Cel C1, działanie 2 — kwartalny przegląd szczelności&quot;
+   },
+   {
+    &quot;tresc&quot;: &quot;Budżet inwestycji 2026: 65 tys. zł na podliczniki, 12 tys. zł na podlicznik gazu i przepływomierz. Projekt budżetu 2027: 380 tys. zł na modernizację sprężarkowni.&quot;,
+    &quot;rodzaj&quot;: &quot;budzet&quot;,
+    &quot;kto&quot;: &quot;Zarząd, uchwała nr 4/2026&quot;,
+    &quot;data&quot;: &quot;2026-04-15&quot;,
+    &quot;gdzie&quot;: &quot;Budżet inwestycji 2026, pozycje INW/2026/07 i INW/2026/11&quot;,
+    &quot;powiazanie&quot;: &quot;Cele C1 i C4 — opomiarowanie i modernizacja sprężarkowni&quot;
+   },
+   {
+    &quot;tresc&quot;: &quot;Rozszerzenie umowy serwisowej sprężarek o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw.&quot;,
+    &quot;rodzaj&quot;: &quot;zewn&quot;,
+    &quot;kto&quot;: &quot;Dyrektor zakładu i kierownik Zakupów&quot;,
+    &quot;data&quot;: &quot;2026-04-28&quot;,
+    &quot;gdzie&quot;: &quot;Aneks do umowy serwisowej&quot;,
+    &quot;powiazanie&quot;: &quot;Ryzyko R5 — wiedza o nastawach tylko u serwisanta; kryteria eksploatacji sprężarkowni&quot;
+   },
+   {
+    &quot;tresc&quot;: &quot;Zatwierdzenie szkolenia techników UR z serwisem sprężarek (4 tys. zł) i dwóch tygodni pracy pod okiem kierownika UR.&quot;,
+    &quot;rodzaj&quot;: &quot;budzet&quot;,
+    &quot;kto&quot;: &quot;Dyrektor zakładu, na wniosek kierownika UR&quot;,
+    &quot;data&quot;: &quot;2026-05-04&quot;,
+    &quot;gdzie&quot;: &quot;Plan szkoleń F-EnMS-12, poz. 2; budżet szkoleń HR 2026&quot;,
+    &quot;powiazanie&quot;: &quot;Luka kompetencyjna: nastawy sprężarkowni (matryca F-EnMS-24)&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;okres&quot;: &quot;IV kwartał 2026&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu — w imieniu zarządu&quot;,
+   &quot;data&quot;: &quot;2026-04-15&quot;,
+   &quot;przeglad&quot;: &quot;Na każdym przeglądzie zarządzania (dwa razy w roku) oraz przy zatwierdzaniu każdego nowego celu energetycznego&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var KATEGORIE_Z = [{"kod": "ludzie", "nazwa": "Ludzie i ich czas", "opis": "Godziny Energy Managera, członków zespołu, techników, liderów zmian. Nie „w miarę możliwości”, tylko w planie pracy.", "ph1": "np. Energy Manager 25% etatu; 2 h tygodniowo dla każdego lidera zmiany; technik UR na kwartalne przeglądy szczelności", "ph2": "np. Aneksy do zakresów obowiązków z 15.04.2026; decyzja dyrektora zakładu o przydziale 2 h tygodniowo liderom"}, {"kod": "pieniadze", "nazwa": "Pieniądze", "opis": "Na działania z planów, szkolenia, pomiary, oprogramowanie.", "ph1": "np. 65 tys. zł na podliczniki (INW/2026/11); 12 tys. zł na szkolenia; 10 tys. zł na usuwanie nieszczelności", "ph2": "np. Budżet inwestycji 2026 zatwierdzony uchwałą zarządu nr 4/2026; budżet szkoleń w planie HR"}, {"kod": "infra", "nazwa": "Infrastruktura i narzędzia", "opis": "Liczniki, systemy monitoringu, przyrządy pomiarowe.", "ph1": "np. 6 podliczników, przepływomierz, dostęp do systemu monitoringu, detektor ultradźwiękowy do przeglądów szczelności", "ph2": "np. Podliczniki i przepływomierz uruchomione 06.2026; detektor wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu"}, {"kod": "zewn", "nazwa": "Wiedza z zewnątrz", "opis": "Konsultant, audytor energetyczny, serwis producenta — tam, gdzie własnych kompetencji brakuje.", "ph1": "np. Konsultant ENESA do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw i szkolenia techników", "ph2": "np. Umowa z ENESA z 02.2026; umowa serwisowa z wymaganiami kompetencyjnymi (aneks 04.2026)"}];
+var LISTA_71 = [{"tekst": "Określono zasoby potrzebne do wdrożenia, utrzymania i doskonalenia systemu oraz poprawy wyniku energetycznego.", "podstawa": "N", "auto": "okreslono"}, {"tekst": "Zasoby zapewniono — są decyzje: przydział zadań i czasu, budżet, sprzęt.", "podstawa": "N", "auto": "zapewniono"}, {"tekst": "Zasoby powiązano z planami działań (6.2).", "podstawa": "M", "auto": "powiazano"}, {"tekst": "Zadania systemu spisano z osobami i szacunkiem czasu.", "podstawa": "M", "auto": "spisano"}, {"tekst": "Wystarczalność zasobów oceniono na przeglądzie zarządzania.", "podstawa": "M", "auto": "wystarczalnosc"}];
+var P_ZADANIA = [{"nazwa": "Odczyt podliczników i zestawienie miesięczne", "rodzaj": "stale", "osoba": "Kierownik Utrzymania Ruchu", "godziny": "6", "zrodlo": "Plan zbierania danych, poz. 4, 5, 8", "zdjete": "Nic — zadanie w ramach obecnych obowiązków"}, {"nazwa": "Obliczenie wskaźników EnPI i porównanie z liniami bazowymi", "rodzaj": "stale", "osoba": "Energy Manager", "godziny": "12", "zrodlo": "Karty EnPI F-EnMS-09, metoda EnPI (6.4)", "zdjete": "—"}, {"nazwa": "Odczyt liczników głównych i uzgodnienie z fakturami", "rodzaj": "stale", "osoba": "Energy Manager", "godziny": "3", "zrodlo": "Plan zbierania danych, poz. 1–3", "zdjete": "—"}, {"nazwa": "Przekazanie danych o produkcji i lakierowanej powierzchni", "rodzaj": "stale", "osoba": "Kierownik Produkcji", "godziny": "3", "zrodlo": "Plan zbierania danych, poz. 9, 11", "zdjete": "Nic — dane pochodzą z ERP, który i tak prowadzi"}, {"nazwa": "Kwartalny przegląd wskaźników na naradzie produkcyjnej", "rodzaj": "stale", "osoba": "Energy Manager", "godziny": "4", "zrodlo": "Cel C3, działanie 2 — stały punkt agendy", "zdjete": "—"}, {"nazwa": "Prowadzenie rejestru zgłoszeń i odpowiadanie na nie", "rodzaj": "stale", "osoba": "Energy Manager", "godziny": "6", "zrodlo": "Proces zgłaszania uwag (7.4)", "zdjete": "—"}, {"nazwa": "Pomiar energii pras analizatorem — 2 tygodnie", "rodzaj": "stale", "osoba": "Kierownik Utrzymania Ruchu", "godziny": "10", "zrodlo": "Plan zbierania danych, poz. 12", "zdjete": "Pomiar wykonuje technik UR pod nadzorem kierownika"}, {"nazwa": "Kwartalny przegląd szczelności detektorem ultradźwiękowym", "rodzaj": "plan", "osoba": "Technik UR", "godziny": "8", "zrodlo": "Cel C1, działanie 2", "zdjete": "Przegląd filtrów w hali B przeniesiony na drugiego technika"}, {"nazwa": "Nadzór nad montażem czujników obecności w magazynie", "rodzaj": "plan", "osoba": "Kierownik Utrzymania Ruchu", "godziny": "6", "zrodlo": "Cel C2, działanie 2", "zdjete": "Nic — brak możliwości zdjęcia, zadanie dodane"}, {"nazwa": "Konfiguracja miesięcznego raportu z podliczników", "rodzaj": "plan", "osoba": "Energy Manager", "godziny": "10", "zrodlo": "Cel C4, działanie 2", "zdjete": "—"}, {"nazwa": "Test weekendowy przepływu w czasie postoju", "rodzaj": "plan", "osoba": "Technik UR", "godziny": "4", "zrodlo": "Zadanie Z1.2; plan zbierania danych, poz. 7", "zdjete": "—"}, {"nazwa": "Przygotowanie przeglądu zarządzania", "rodzaj": "wdrozenie", "osoba": "Energy Manager", "godziny": "12", "zrodlo": "Punkt 9.3 — przegląd planowany na 12.2026", "zdjete": "—"}, {"nazwa": "Audyt wewnętrzny systemu", "rodzaj": "wdrozenie", "osoba": "Audytor wewnętrzny", "godziny": "16", "zrodlo": "Punkt 9.2 — audyt przed certyfikacją", "zdjete": "Audyt ISO 14001 łączony z audytem EnMS (szansa S4)"}, {"nazwa": "Instruktaż operatorów pras i lakierni", "rodzaj": "wdrozenie", "osoba": "Kierownik Utrzymania Ruchu", "godziny": "8", "zrodlo": "Plan F-EnMS-12, poz. 2", "zdjete": "Nic — brak możliwości zdjęcia, zadanie dodane"}];
+var P_OSOBY = [{"nazwa": "Energy Manager", "rola": "Koordynator zespołu: dane, wskaźniki, karty EnPI, plan komunikacji, rejestr zgłoszeń", "dostepne": "130", "podstawa": "25% etatu — aneks do zakresu obowiązków z 15.04.2026"}, {"nazwa": "Kierownik Utrzymania Ruchu", "rola": "Właściciel SEU sprężarkownia, lakiernia, prasy; odczyty podliczników", "dostepne": "30", "podstawa": "Zakres obowiązków, aneks z 15.04.2026 — 2 h tygodniowo; od 06.2026 zwiększone do 2,5 h tygodniowo decyzją Dyrektora Zakładu po przeglądzie obciążeń"}, {"nazwa": "Technik UR", "rola": "Przeglądy szczelności, testy przepływu, pomiary analizatorem", "dostepne": "16", "podstawa": "Harmonogram przeglądów okresowych; decyzja kierownika UR"}, {"nazwa": "Kierownik Produkcji", "rola": "Dane o produkcji i lakierowanej powierzchni; czynniki statyczne", "dostepne": "8", "podstawa": "Zakres obowiązków — dane z ERP, bez dodatkowych odczytów"}, {"nazwa": "Audytor wewnętrzny", "rola": "Specjalista ds. środowiska, audytor ISO 14001 — audyty wspólne", "dostepne": "16", "podstawa": "Plan audytów 2026 zatwierdzony przez dyrektora zakładu"}];
+var P_ZASOBY = {"ludzie": {"potrzeba": "Energy Manager 25% etatu; 2 h tygodniowo dla kierownika UR; technik UR na kwartalne przeglądy szczelności i testy przepływu; kierownik produkcji na przekazywanie danych; specjalista ds. środowiska na audyty wewnętrzne.", "decyzja": "Aneksy do zakresów obowiązków z 15 kwietnia 2026 r. (Energy Manager, kierownik UR). Przydział czasu technikowi UR — decyzja kierownika UR w harmonogramie przeglądów. Audyty w planie audytów 2026, łączone z ISO 14001.", "luka": "Kierownikowi UR brakuje około 6 h na kwartał — do rozstrzygnięcia na przeglądzie zarządzania w grudniu: albo zwiększenie przydziału do 2,5 h tygodniowo, albo przeniesienie nadzoru nad montażem czujników na technika UR."}, "pieniadze": {"potrzeba": "65 tys. zł na 6 podliczników (INW/2026/11); 10 tys. zł na usuwanie nieszczelności; 12 tys. zł na podlicznik gazu i przepływomierz; 8 tys. zł na konfigurację raportu; szkolenia: 4 tys. zł (technicy UR z serwisem) i warsztat zakupów.", "decyzja": "Budżet inwestycji 2026 — uchwała zarządu nr 4/2026 z 15 kwietnia 2026 r. Budżet szkoleń w planie HR na 2026 r. Wymiana opraw na LED (240 tys. zł) w budżecie 2027 oraz sterownik nadrzędny sprężarkowni z napędem o zmiennej prędkości (380 tys. zł) w projekcie budżetu na 2027 r.", "luka": "Brak środków na drugi podlicznik gazu dla kotłowni — zużycie wyznaczane różnicą, co powiększa niepewność modelu K-1. Wniosek do budżetu 2027, decyzja w listopadzie."}, "infra": {"potrzeba": "6 podliczników energii elektrycznej, podlicznik gazu pieca lakierni, przepływomierz na kolektorze sprężonego powietrza, dostęp do systemu monitoringu, analizator sieci, detektor ultradźwiękowy, arkusz EnMS na serwerze z kopią tygodniową.", "decyzja": "Podliczniki i przepływomierz uruchomione w czerwcu 2026 r. Analizator sieci — własny, ze świadectwem wzorcowania. Detektor ultradźwiękowy wypożyczany kwartalnie zamiast zakupu — decyzja dyrektora zakładu (koszt wypożyczenia niższy od amortyzacji przy czterech użyciach w roku).", "luka": "Oświetlenie hal H1 i H2 bez podlicznika — zużycie liczone z inwentaryzacji opraw i czasu pracy. Podlicznik zaplanowany razem z wymianą opraw na LED w III kwartale 2027 r."}, "zewn": {"potrzeba": "Konsultant do wdrożenia i przygotowania do certyfikacji; serwis sprężarek do nastaw, szkolenia techników i zgłaszania zmian nastaw; jednostka certyfikująca.", "decyzja": "Umowa z konsultantem z lutego 2026 r. Umowa serwisowa sprężarek rozszerzona aneksem z kwietnia 2026 r. o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw kierownikowi UR (ryzyko R5 — wiedza o nastawach tylko u serwisanta).", "luka": "Brak własnych kompetencji do budowy modeli regresji — modele zbudowane z konsultantem. Do rozstrzygnięcia przed odejściem konsultanta: czy Energy Manager przejmuje przeliczanie modeli, czy zostaje to przy wsparciu zewnętrznym."}};
+var P_DECYZJE = [{"tresc": "Przydział 25% etatu na funkcję Energy Managera oraz 2 h tygodniowo kierownikowi Utrzymania Ruchu na sprawy systemu.", "rodzaj": "czas", "kto": "Zarząd — w jego imieniu dyrektor zakładu", "data": "2026-04-15", "gdzie": "Aneksy do zakresów obowiązków; protokół przeglądu zarządzania z 15.04.2026", "powiazanie": "Wszystkie cele C1–C4 oraz codzienne działanie systemu"}, {"tresc": "Przydział technikowi Utrzymania Ruchu czasu na kwartalny przegląd szczelności i bieżące naprawy nieszczelności.", "rodzaj": "czas", "kto": "Kierownik Utrzymania Ruchu", "data": "2026-04-20", "gdzie": "Harmonogram przeglądów okresowych; zadanie UR/2026/18", "powiazanie": "Cel C1, zadanie Z1.2 — wycieki sprężonego powietrza"}, {"tresc": "Zgoda na kwartalne wypożyczanie detektora ultradźwiękowego zamiast jego zakupu.", "rodzaj": "sprzet", "kto": "Dyrektor zakładu", "data": "2026-04-20", "gdzie": "Notatka z decyzji; faktury za wypożyczenie", "powiazanie": "Cel C1, działanie 2 — kwartalny przegląd szczelności"}, {"tresc": "Budżet inwestycji 2026: 65 tys. zł na podliczniki, 12 tys. zł na podlicznik gazu i przepływomierz. Projekt budżetu 2027: 380 tys. zł na modernizację sprężarkowni.", "rodzaj": "budzet", "kto": "Zarząd, uchwała nr 4/2026", "data": "2026-04-15", "gdzie": "Budżet inwestycji 2026, pozycje INW/2026/07 i INW/2026/11", "powiazanie": "Cele C1 i C4 — opomiarowanie i modernizacja sprężarkowni"}, {"tresc": "Rozszerzenie umowy serwisowej sprężarek o wymagania kompetencyjne i obowiązek zgłaszania zmian nastaw.", "rodzaj": "zewn", "kto": "Dyrektor zakładu i kierownik Zakupów", "data": "2026-04-28", "gdzie": "Aneks do umowy serwisowej", "powiazanie": "Ryzyko R5 — wiedza o nastawach tylko u serwisanta; kryteria eksploatacji sprężarkowni"}, {"tresc": "Zatwierdzenie szkolenia techników UR z serwisem sprężarek (4 tys. zł) i dwóch tygodni pracy pod okiem kierownika UR.", "rodzaj": "budzet", "kto": "Dyrektor zakładu, na wniosek kierownika UR", "data": "2026-05-04", "gdzie": "Plan szkoleń F-EnMS-12, poz. 2; budżet szkoleń HR 2026", "powiazanie": "Luka kompetencyjna: nastawy sprężarkowni (matryca F-EnMS-24)"}];
+var P_META = {"okres": "IV kwartał 2026", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu — w imieniu zarządu", "data": "2026-04-15", "przeglad": "Na każdym przeglądzie zarządzania (dwa razy w roku) oraz przy zatwierdzaniu każdego nowego celu energetycznego"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "System bez przypisanego czasu ludzi i budżetu zatrzymuje się po pierwszym kwartale.", "decyzja": "Czas Energy Managera i budżet 500 tys. zł na 2026 r. przypisane w planie zasobów, a nie dopisane do istniejących obowiązków.", "dzialanie": "Zadania rozpisane na role; przekroczenie czasu Kierownika Utrzymania Ruchu rozwiązane przeniesieniem przeglądów szczelności do serwisu zewnętrznego.", "sprawdzenie": "Na przeglądzie zarządzania (9.3) zestawienie zadań z czasem oraz wykonanie budżetu."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 7.1 — Zasoby.
+   Punkt bez własnego formularza w Toolkicie: podstawa to P-EnMS-05 pkt 4.1 (III-33),
+   cztery kategorie zasobów z Tomu 2 rozdz. 6 i lista kontrolna III-32 sekcja 7.1. */
+"use strict";
+
+var PUNKT = "7.1";
+var TERAZ = "11.10.2026 00:20";
+var ZADANIA = [];
+var OSOBY = [];
+var ZASOBY = {};
+var DECYZJE = [];
+var META = { okres: "", zatwierdzil: "", data: "", przeglad: "" };
+var WNIOSKI = [];
+var AKT = "zadania";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 00:15", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 7.1" }];
+
+var RODZAJE_ZADAN = [["", "Wybierz"],
+["stale", "Zadanie stałe — codzienne działanie systemu"],
+["plan", "Zadanie z planu działań (6.2)"],
+["wdrozenie", "Zadanie wdrożeniowe albo certyfikacyjne"]];
+
+/* ── kompletność ── */
+function zadanieOk(z) {
+  return !!((z.nazwa || "").trim() && z.rodzaj && (z.osoba || "").trim() && lb(z.godziny) !== null);
+}
+function osobaOk(o) { return !!((o.nazwa || "").trim() && lb(o.dostepne) !== null); }
+function kategoriaOk(k) {
+  var z = ZASOBY[k] || {};
+  return !!((z.potrzeba || "").trim() && (z.decyzja || "").trim());
+}
+function decyzjaOk(d) {
+  return !!((d.tresc || "").trim() && (d.kto || "").trim() && d.data);
+}
+
+/* ── obciążenie osób ── */
+function godzinyOsoby(nazwa) {
+  return ZADANIA.filter(function (z) { return (z.osoba || "").trim() === nazwa; })
+    .reduce(function (a, z) { var g = lb(z.godziny); return a + (g === null ? 0 : g); }, 0);
+}
+function godzinyOsobyRodzaju(nazwa, rodzaj) {
+  return ZADANIA.filter(function (z) { return (z.osoba || "").trim() === nazwa && z.rodzaj === rodzaj; })
+    .reduce(function (a, z) { var g = lb(z.godziny); return a + (g === null ? 0 : g); }, 0);
+}
+function roznicaOsoby(o) {
+  var d = lb(o.dostepne);
+  if (d === null) return null;
+  return d - godzinyOsoby((o.nazwa || "").trim());
+}
+function przeciazona(o) { var r = roznicaOsoby(o); return r !== null && r < 0; }
+function naStyk(o) {
+  var r = roznicaOsoby(o), d = lb(o.dostepne);
+  return r !== null && d !== null && d > 0 && r >= 0 && r / d < 0.15;
+}
+function osobyZadan() {
+  var m = {};
+  ZADANIA.forEach(function (z) { var n = (z.osoba || "").trim(); if (n) m[n] = true; });
+  return Object.keys(m);
+}
+function osobyBezDeklaracji() {
+  var zn = OSOBY.map(function (o) { return (o.nazwa || "").trim(); });
+  return osobyZadan().filter(function (n) { return zn.indexOf(n) < 0; });
+}
+function sumaGodzin() { return ZADANIA.reduce(function (a, z) { var g = lb(z.godziny); return a + (g === null ? 0 : g); }, 0); }
+function sumaDostepnych() { return OSOBY.reduce(function (a, o) { var g = lb(o.dostepne); return a + (g === null ? 0 : g); }, 0); }
+function brakStalych() {
+  return ZADANIA.length > 0 && !ZADANIA.some(function (z) { return z.rodzaj === "stale"; });
+}
+function tylkoWdrozenie() {
+  if (!ZADANIA.length) return false;
+  var w = ZADANIA.filter(function (z) { return z.rodzaj === "wdrozenie"; }).length;
+  return w / ZADANIA.length > 0.6 && !ZADANIA.some(function (z) { return z.rodzaj === "stale"; });
+}
+
+/* ── zakładka 1: zadania systemu ── */
+function rysujZadania(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Zadania systemu");
+  h.appendChild(el("span", "chip " + (ZADANIA.length && ZADANIA.every(zadanieOk) ? "green" : "amber"),
+    ZADANIA.filter(zadanieOk).length + " / " + ZADANIA.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Spis zadań systemu na najbliższy kwartał: zadania stałe, zadania z planów działań i zadania wdrożeniowe. Przy każdym osoba i szacunek godzin."));
+  s.appendChild(hel("div", "warn", "Poniedziałkowa odprawa. Lider zmiany słyszy: „Od dziś pilnujesz też temperatur w chłodniach i zamykania drzwi.” Kiwa głową. Nikt nie zdejmuje z niego żadnego z dotychczasowych obowiązków. Nikt nie mówi, kiedy ma to robić.<br><br>Po miesiącu temperatur nie sprawdza nikt. Lider nie jest leniwy — <b>po prostu doba ma tyle samo godzin co przed odprawą.</b>"));
+  s.appendChild(el("div", "note", "Zadanie bez czasu, narzędzi i ludzi to tylko życzenie. Ten spis jest podstawą rozmowy z zarządem: różnica między godzinami potrzebnymi a tymi, które ludzie naprawdę mają, jest tym, co trzeba zapewnić albo zdjąć."));
+  s.appendChild(pole("Okres planowania",
+    inp(META.okres, "np. IV kwartał 2026", function (v) { META.okres = v; }),
+    "Procedura P-EnMS-05 przewiduje spis na kolejny kwartał. Dłuższy okres też jest możliwy, jeśli tak pracujecie."));
+  host.appendChild(s);
+
+  if (ZADANIA.length) {
+    var w = el("div", "sekcja");
+    w.appendChild(tabela(["#", "Zadanie", "Rodzaj", "Osoba", "Godz./okres", "Źródło"],
+      ZADANIA.map(function (z, i) {
+        return [String(i + 1), z.nazwa || "—",
+          (RODZAJE_ZADAN.filter(function (r) { return r[0] === z.rodzaj; })[0] || ["", "—"])[1].split(" — ")[0],
+          z.osoba || "—", lcz(lb(z.godziny), 1), z.zrodlo || "—"];
+      }), ["mono"]));
+    var sg = el("div", "note");
+    sg.appendChild(el("b", null, "Razem: "));
+    sg.appendChild(document.createTextNode(lcz(sumaGodzin(), 1) + " godzin w okresie, na " +
+      ile(osobyZadan().length, "osobę", "osoby", "osób") + "."));
+    w.appendChild(sg);
+    host.appendChild(w);
+  }
+
+  ZADANIA.forEach(function (z, i) {
+    var k = el("div", "poz" + (zadanieOk(z) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Zadanie " + (i + 1)));
+    if (z.rodzaj) g.appendChild(el("span", "chip" + (z.rodzaj === "stale" ? " green" : ""),
+      z.rodzaj === "stale" ? "stałe" : z.rodzaj === "plan" ? "z planu działań" : "wdrożeniowe"));
+    g.appendChild(przyciskUsun(function () { ZADANIA.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Zadanie", inp(z.nazwa, "np. Odczyt podliczników i zestawienie miesięczne", function (v) { z.nazwa = v; })));
+    k.appendChild(pole("Rodzaj", sel(z.rodzaj, RODZAJE_ZADAN, function (v) { z.rodzaj = v; }),
+      "Zadania stałe to codzienne działanie systemu: zbieranie danych, analizy, spotkania, przeglądy. Łatwo o nich zapomnieć, bo nie są w żadnym planie."));
+    k.appendChild(pole("Osoba", inp(z.osoba, "np. Kierownik Utrzymania Ruchu", function (v) { z.osoba = v; }),
+      "Wpisujcie tak samo jak w zakładce 2 — platforma sumuje godziny po tej nazwie."));
+    k.appendChild(pole("Szacunek godzin w okresie", inp(z.godziny, "np. 6", function (v) { z.godziny = v; })));
+    k.appendChild(pole("Źródło zadania", inp(z.zrodlo, "np. Plan zbierania danych, poz. 4; cel C1, działanie 2", function (v) { z.zrodlo = v; })));
+    k.appendChild(pole("Co ta osoba przestaje robić", inp(z.zdjete, "np. Nic — zadanie w ramach obecnych obowiązków; albo: kwartalny raport zużycia przejmuje specjalista ds. EnMS",
+      function (v) { z.zdjete = v; }),
+      "Najczęstszy błąd tego punktu: nowe zadania bez zdjęcia starych. Jeśli nic nie trzeba zdejmować, warto to napisać wprost."));
+    s.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj zadanie", function () { ZADANIA.push({}); }));
+  if (!ZADANIA.length) d.appendChild(el("div", "warn", "Nie spisano żadnego zadania systemu."));
+  if (brakStalych())
+    d.appendChild(hel("div", "warn", "Wśród zadań nie ma ani jednego stałego. <b>Zasoby tylko na wdrożenie i certyfikat</b> to jeden z pięciu typowych błędów tego punktu — zaplanujcie też czas na codzienne działanie systemu: dane, analizy, przeglądy."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 2: obciążenie osób ── */
+function rysujOsoby(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Obciążenie osób");
+  h.appendChild(el("span", "chip " + (OSOBY.length && OSOBY.every(osobaOk) && !OSOBY.some(przeciazona) ? "green" : "amber"),
+    OSOBY.filter(osobaOk).length + " / " + OSOBY.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Porównanie godzin potrzebnych z czasem, który te osoby naprawdę mają na sprawy systemu."));
+  s.appendChild(hel("div", "note", "„Czy potrzebujemy Energy Managera na pełny etat?” <b>Nie zaczynajcie od etatu. Zacznijcie od zadań.</b> Norma nie podaje żadnej liczby — wymaga, żeby zasoby wystarczały. Jeśli wszystko ma się wydarzyć „w wolnej chwili”, planujecie opóźnienia."));
+  host.appendChild(s);
+
+  if (!ZADANIA.length) {
+    var p = el("div", "sekcja");
+    p.appendChild(el("div", "warn", "Najpierw spiszcie zadania w zakładce 1 — bez nich nie ma czego porównywać z dostępnym czasem."));
+    host.appendChild(p);
+  }
+
+  if (OSOBY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Osoba", "Rola", "Stałe", "Z planów", "Wdrożenie", "Razem potrzebne", "Dostępne", "Różnica", "Stan"],
+      OSOBY.map(function (o) {
+        var n = (o.nazwa || "").trim();
+        var r = roznicaOsoby(o);
+        var chip = el("span", "chip " + (przeciazona(o) ? "red" : naStyk(o) ? "amber" : "green"),
+          przeciazona(o) ? "brakuje czasu" : naStyk(o) ? "na styk" : "wystarcza");
+        return [n || "—", o.rola || "—",
+          lcz(godzinyOsobyRodzaju(n, "stale"), 1), lcz(godzinyOsobyRodzaju(n, "plan"), 1),
+          lcz(godzinyOsobyRodzaju(n, "wdrozenie"), 1),
+          lcz(godzinyOsoby(n), 1), lcz(lb(o.dostepne), 1),
+          r === null ? "—" : (r > 0 ? "+" : "") + lcz(r, 1), chip];
+      }), [null, null, "mono", "mono", "mono", "mono", "mono", "mono"]));
+    var sum = el("div", (sumaGodzin() > sumaDostepnych() ? "warn" : "ok"));
+    sum.appendChild(el("b", null, "Bilans okresu: "));
+    sum.appendChild(document.createTextNode("potrzebne " + lcz(sumaGodzin(), 1) +
+      " h, dostępne " + lcz(sumaDostepnych(), 1) + " h, różnica " +
+      (sumaDostepnych() - sumaGodzin() > 0 ? "+" : "") + lcz(sumaDostepnych() - sumaGodzin(), 1) + " h."));
+    t.appendChild(sum);
+    host.appendChild(t);
+  }
+
+  OSOBY.forEach(function (o, i) {
+    var k = el("div", "poz" + (osobaOk(o) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (o.nazwa || "Osoba " + (i + 1))));
+    if (przeciazona(o)) g.appendChild(el("span", "chip red", "brakuje " + lcz(-roznicaOsoby(o), 1) + " h"));
+    g.appendChild(przyciskUsun(function () { OSOBY.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Osoba albo funkcja", inp(o.nazwa, "np. Kierownik Utrzymania Ruchu", function (v) { o.nazwa = v; })));
+    k.appendChild(pole("Rola w systemie", inp(o.rola, "np. Właściciel SEU sprężarkownia; odczyty podliczników", function (v) { o.rola = v; })));
+    k.appendChild(pole("Czas dostępny na sprawy systemu w okresie [h]",
+      inp(o.dostepne, "np. 24", function (v) { o.dostepne = v; }),
+      "Nie „w miarę możliwości”, tylko liczba wpisana w plan pracy. To ta liczba, którą zatwierdza kierownictwo."));
+    k.appendChild(pole("Podstawa — gdzie ten czas jest zapisany",
+      inp(o.podstawa, "np. Zakres obowiązków, aneks z 15.04.2026; decyzja dyrektora zakładu", function (v) { o.podstawa = v; })));
+    if (przeciazona(o))
+      k.appendChild(hel("div", "warn", "Zadania tej osoby wymagają " + lcz(godzinyOsoby((o.nazwa || "").trim()), 1) +
+        " h, a dostępne jest " + lcz(lb(o.dostepne), 1) + " h. <b>Ta różnica to Wasza rozmowa z zarządem</b> — albo zasoby trzeba zwiększyć, albo zadania przenieść, albo coś zdjąć."));
+    else if (naStyk(o))
+      k.appendChild(el("div", "note", "Czas wystarcza z marginesem mniejszym niż 15%. Przy pierwszej awarii albo urlopie te zadania wypadną pierwsze — warto to wiedzieć z góry."));
+    host.appendChild(k);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj osobę", function () { OSOBY.push({}); }));
+  var bez = osobyBezDeklaracji();
+  if (bez.length)
+    d.appendChild(el("div", "warn", "Zadania przypisano osobom, dla których nie zadeklarowano dostępnego czasu: " +
+      bez.join(", ") + ". Bez tej liczby nie da się sprawdzić, czy zasoby wystarczają."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 3: cztery kategorie zasobów ── */
+function rysujZasoby(host) {
+  var s = el("div", "sekcja");
+  var got = KATEGORIE_Z.filter(function (k) { return kategoriaOk(k.kod); }).length;
+  var h = el("h3", null, "Zasoby w czterech kategoriach");
+  h.appendChild(el("span", "chip " + (got === KATEGORIE_Z.length ? "green" : "amber"),
+    got + " / " + KATEGORIE_Z.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Myśląc o zasobach, większość osób myśli o budżecie. Tymczasem systemowi najczęściej brakuje czegoś innego."));
+  s.appendChild(hel("div", "note", "Dwa pytania, o których łatwo zapomnieć: <b>czy zasoby są proporcjonalne do ambicji</b> — i czy wystarczą też na codzienne działanie systemu, a nie tylko na projekty i certyfikat."));
+  host.appendChild(s);
+
+  KATEGORIE_Z.forEach(function (kat) {
+    var z = ZASOBY[kat.kod] || (ZASOBY[kat.kod] = {});
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, kat.nazwa);
+    hh.appendChild(el("span", "chip " + (kategoriaOk(kat.kod) ? "green" : "amber"),
+      kategoriaOk(kat.kod) ? "opisane" : "do uzupełnienia"));
+    sec.appendChild(hh);
+    sec.appendChild(el("p", "opis", kat.opis));
+    var k = el("div", "poz" + (kategoriaOk(kat.kod) ? "" : " brak"));
+    k.appendChild(pole("Co jest potrzebne", txt(z.potrzeba, kat.ph1, 2, function (v) { z.potrzeba = v; })));
+    k.appendChild(pole("Co zapewniono i na jakiej podstawie", txt(z.decyzja, kat.ph2, 2, function (v) { z.decyzja = v; }),
+      "Dowodem zapewnienia zasobów są decyzje: przydział czasu, zatwierdzone środki, sprzęt. Nie musi to być osobny „plan zasobów”."));
+    k.appendChild(pole("Czego brakuje i co z tym robicie", txt(z.luka, "np. Brak budżetu na drugi podlicznik — wniosek do budżetu 2027, decyzja w listopadzie", 2,
+      function (v) { z.luka = v; })));
+    if (kat.kod === "infra")
+      k.appendChild(el("div", "note", "Pomiar nie zawsze oznacza nowy licznik — czasem wystarczy pomiar okresowy albo obliczenie. Zanim kupicie licznik, sprawdźcie w planie zbierania danych (6.6), jakich danych naprawdę brakuje."));
+    sec.appendChild(k);
+    host.appendChild(sec);
+  });
+}
+
+/* ── zakładka 4: decyzje ── */
+function rysujDecyzje(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Decyzje o zapewnieniu zasobów");
+  h.appendChild(el("span", "chip " + (DECYZJE.length && DECYZJE.every(decyzjaOk) ? "green" : "amber"),
+    DECYZJE.filter(decyzjaOk).length + " / " + DECYZJE.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "To jest dowód spełnienia punktu 7.1. Norma nie wymaga dokumentu o nazwie „zasoby” — wymaga, żeby zasoby zostały ustalone i zapewnione."));
+  s.appendChild(el("div", "note", "W AutoParts dowodem był przydział technikowi czasu na kwartalny przegląd szczelności oraz zgoda na wypożyczenie detektora ultradźwiękowego zamiast jego zakupu. Decyzja, nie dokument."));
+  host.appendChild(s);
+
+  DECYZJE.forEach(function (d, i) {
+    var k = el("div", "poz" + (decyzjaOk(d) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Decyzja " + (i + 1)));
+    if (d.rodzaj) g.appendChild(el("span", "chip", d.rodzaj));
+    g.appendChild(przyciskUsun(function () { DECYZJE.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Treść decyzji", txt(d.tresc, "np. Przydział 2 h tygodniowo każdemu liderowi zmiany na sprawy energii", 2,
+      function (v) { d.tresc = v; })));
+    k.appendChild(pole("Rodzaj", sel(d.rodzaj, [["", "Wybierz"], ["czas", "Przydział zadań i czasu"],
+    ["budzet", "Budżet albo środki"], ["sprzet", "Sprzęt i infrastruktura"], ["zewn", "Wiedza z zewnątrz"]],
+      function (v) { d.rodzaj = v; })));
+    k.appendChild(pole("Kto zdecydował", inp(d.kto, "np. Zarząd — w jego imieniu dyrektor zakładu", function (v) { d.kto = v; })));
+    k.appendChild(pole("Data", inp(d.data, "", function (v) { d.data = v; }, "date")));
+    k.appendChild(pole("Gdzie jest zapisana", inp(d.gdzie, "np. Protokół przeglądu zarządzania z 15.04.2026; aneks do zakresu obowiązków",
+      function (v) { d.gdzie = v; })));
+    k.appendChild(pole("Czego dotyczy — zadanie albo cel", inp(d.powiazanie, "np. Cel Z1.2 — wycieki sprężonego powietrza", function (v) { d.powiazanie = v; }),
+      "Powiązanie zasobów z planami działań z punktu 6.2 jest zaleceniem metodyki, nie wymogiem normy — ale właśnie ono pokazuje, że zasoby są proporcjonalne do zadań."));
+    host.appendChild(k);
+  });
+  var dd = el("div", "sekcja");
+  dd.appendChild(przyciskDodaj("+ dodaj decyzję", function () { DECYZJE.push({}); }));
+  if (!DECYZJE.length) dd.appendChild(el("div", "warn", "Nie zapisano żadnej decyzji o zapewnieniu zasobów. Bez tego punkt 7.1 nie ma dowodu."));
+  var bezPow = DECYZJE.filter(function (d) { return (d.tresc || "").trim() && !(d.powiazanie || "").trim(); }).length;
+  if (bezPow) dd.appendChild(el("div", "note", ile(bezPow, "decyzja nie wskazuje", "decyzje nie wskazują", "decyzji nie wskazuje") +
+    " zadania ani celu, któremu służy. To zalecenie metodyki ENESA, nie wymóg normy."));
+  host.appendChild(dd);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz zasobów: "));
+  n.appendChild(document.createTextNode(
+    ile(ZADANIA.length, "zadanie", "zadania", "zadań") + " (stałych: " +
+    ZADANIA.filter(function (z) { return z.rodzaj === "stale"; }).length + ") · " +
+    ile(OSOBY.length, "osoba", "osoby", "osób") + " · potrzebne " + lcz(sumaGodzin(), 1) +
+    " h, dostępne " + lcz(sumaDostepnych(), 1) + " h · " + ile(DECYZJE.length, "decyzja", "decyzje", "decyzji")));
+  s.appendChild(n);
+  var prz = OSOBY.filter(przeciazona);
+  if (prz.length)
+    s.appendChild(el("div", "warn", "Osoby bez wystarczającego czasu: " +
+      prz.map(function (o) { return (o.nazwa || "?") + " (brakuje " + lcz(-roznicaOsoby(o), 1) + " h)"; }).join("; ") +
+      ". To najmocniejszy argument w rozmowie z zarządem — i jedyny, który da się pokazać liczbą."));
+  var styk = OSOBY.filter(naStyk);
+  if (styk.length)
+    s.appendChild(el("div", "note", "Na styk: " + styk.map(function (o) { return o.nazwa || "?"; }).join(", ") +
+      ". Zadania systemu wypadną u nich pierwsze przy awarii albo urlopie."));
+  if (brakStalych())
+    s.appendChild(el("div", "warn", "Brak zadań stałych w spisie. Do rozmowy: kto zbiera dane i liczy wskaźniki po certyfikacji."));
+  if (tylkoWdrozenie())
+    s.appendChild(el("div", "warn", "Spis zdominowany przez zadania wdrożeniowe. Typowy obraz systemu, który zadziała do certyfikatu i przestanie po nim."));
+  if (!META.przeglad)
+    s.appendChild(el("div", "note", "Nie zapisano, kiedy wystarczalność zasobów jest oceniana. Procedura P-EnMS-05 przewiduje ocenę na przeglądzie zarządzania — to też pozycja listy kontrolnej."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-32, sekcja 7.1 ── */
+function stanPozycji(p) {
+  var f = {
+    okreslono: function () { return ZADANIA.length > 0 && ZADANIA.every(zadanieOk) && KATEGORIE_Z.every(function (k) { return (ZASOBY[k.kod] || {}).potrzeba; }); },
+    zapewniono: function () { return DECYZJE.length > 0 && DECYZJE.every(decyzjaOk); },
+    powiazano: function () { return DECYZJE.length > 0 && DECYZJE.every(function (d) { return (d.powiazanie || "").trim(); }); },
+    spisano: function () {
+      return ZADANIA.length > 0 && ZADANIA.every(zadanieOk) && OSOBY.length > 0
+        && OSOBY.every(osobaOk) && !osobyBezDeklaracji().length;
+    },
+    wystarczalnosc: function () { return !!(META.przeglad || "").trim(); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!ZADANIA.length) b.push({ t: "Nie spisano zadań systemu.", kto: "klient" });
+  ZADANIA.forEach(function (z, i) {
+    if (!zadanieOk(z)) b.push({ t: "Zadanie " + (i + 1) + " — brak rodzaju, osoby albo szacunku godzin.", kto: "klient" });
+  });
+  if (brakStalych()) b.push({ t: "Brak zadań stałych — zaplanowano tylko wdrożenie.", kto: "klient", metodyka: true });
+  if (!OSOBY.length) b.push({ t: "Nie zadeklarowano dostępnego czasu żadnej osoby.", kto: "klient", metodyka: true });
+  osobyBezDeklaracji().forEach(function (n) {
+    b.push({ t: "Brak deklaracji dostępnego czasu dla: " + n + ".", kto: "klient", metodyka: true });
+  });
+  OSOBY.filter(przeciazona).forEach(function (o) {
+    b.push({ t: (o.nazwa || "?") + " — zadania przekraczają dostępny czas o " + lcz(-roznicaOsoby(o), 1) + " h.", kto: "klient" });
+  });
+  KATEGORIE_Z.forEach(function (k) {
+    if (!kategoriaOk(k.kod)) b.push({ t: k.nazwa + " — nie opisano potrzeby albo tego, co zapewniono.", kto: "klient" });
+  });
+  if (!DECYZJE.length) b.push({ t: "Brak decyzji o zapewnieniu zasobów — punkt 7.1 nie ma dowodu.", kto: "klient" });
+  DECYZJE.forEach(function (d, i) {
+    if (!decyzjaOk(d)) b.push({ t: "Decyzja " + (i + 1) + " — brak treści, osoby decydującej albo daty.", kto: "klient" });
+  });
+  if (!(META.przeglad || "").trim()) b.push({ t: "Nie ustalono, kiedy oceniana jest wystarczalność zasobów.", kto: "klient", metodyka: true });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-ZAS-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak, Dyrektor Zakładu — w imieniu zarządu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Kiedy oceniana jest wystarczalność zasobów",
+    inp(META.przeglad, "np. Na każdym przeglądzie zarządzania (dwa razy w roku) oraz przy zatwierdzaniu nowego celu",
+      function (v) { META.przeglad = v; }),
+    "Pozycja listy kontrolnej i krok 3 procedury P-EnMS-05. „Nikt nie sprawdza, czy zasoby wystarczają” to jeden z pięciu błędów tego punktu."));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_71, "Lista kontrolna III-32 — sekcja 7.1", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-ZAS-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Spis zadań systemu", "zakładka 1", ile(ZADANIA.length, "zadanie", "zadania", "zadań") + " · " + lcz(sumaGodzin(), 1) + " h"],
+    ["Obciążenie osób", "zakładka 2", ile(OSOBY.length, "osoba", "osoby", "osób") + " · " +
+      (OSOBY.filter(przeciazona).length ? OSOBY.filter(przeciazona).length + " bez wystarczającego czasu" : "czas wystarcza")],
+    ["Zasoby w czterech kategoriach", "zakładka 3", KATEGORIE_Z.filter(function (k) { return kategoriaOk(k.kod); }).length + " z " + KATEGORIE_Z.length + " opisanych"],
+    ["Decyzje o zapewnieniu zasobów", "zakładka 4", ile(DECYZJE.length, "decyzja", "decyzje", "decyzji")],
+    ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Punkt 7.1 <b>nie wymaga udokumentowanej informacji</b> — nie ma go w wykazie z punktu 7.5. Dowodem są decyzje: przydział zadań i czasu, budżet, sprzęt. Dokument D-EnMS-ZAS-01 jest narzędziem metodyki ENESA: zbiera te decyzje w jednym miejscu i pokazuje, czy zasoby odpowiadają zadaniom."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "zadania", t: "1. Zadania systemu", f: rysujZadania },
+  { id: "osoby", t: "2. Obciążenie osób", f: rysujOsoby },
+  { id: "zasoby", t: "3. Cztery kategorie", f: rysujZasoby },
+  { id: "decyzje", t: "4. Decyzje", f: rysujDecyzje },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(ZADANIA.length, 1) + Math.max(OSOBY.length, 1) + KATEGORIE_Z.length + Math.max(DECYZJE.length, 1) + 1,
+    zrob: ZADANIA.filter(zadanieOk).length + OSOBY.filter(osobaOk).length
+      + KATEGORIE_Z.filter(function (k) { return kategoriaOk(k.kod); }).length
+      + DECYZJE.filter(decyzjaOk).length
+      + ((META.zatwierdzil || "").trim() && META.data ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_71", JSON.stringify({
+      ZADANIA: ZADANIA, OSOBY: OSOBY, ZASOBY: ZASOBY, DECYZJE: DECYZJE, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_71"); if (!s) return;
+    var d = JSON.parse(s);
+    ZADANIA = d.ZADANIA || []; OSOBY = d.OSOBY || []; ZASOBY = d.ZASOBY || {};
+    DECYZJE = d.DECYZJE || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  ZADANIA = JSON.parse(JSON.stringify(P_ZADANIA));
+  OSOBY = JSON.parse(JSON.stringify(P_OSOBY));
+  ZASOBY = JSON.parse(JSON.stringify(P_ZASOBY));
+  DECYZJE = JSON.parse(JSON.stringify(P_DECYZJE));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  ZADANIA = []; OSOBY = []; ZASOBY = {}; DECYZJE = []; WNIOSKI = [];
+  META = { okres: "", zatwierdzil: "", data: "", przeglad: "" };
+  try { localStorage.removeItem("enesa_71"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

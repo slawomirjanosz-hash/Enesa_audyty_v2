@@ -109,7 +109,7 @@ class IsoLeadershipQuestionnaire
                 $groups['utrzymanie']['fields'][] = $f('UTRZ.'.$q['kod'], $q['etykieta'], [], true, null, 'textarea', $q['pomoc']);
             }
             $groups['utrzymanie']['title'] = '4. Utrzymywanie polityki';
-            $groups['zatwierdzenie'] = ['title' => '5. Zatwierdzenie przez kierownictwo', 'fields' => [$f('ZATW.wersja', 'Wersja'), $f('ZATW.od', 'Obowiązuje od', [], true, null, 'date'), $f('ZATW.kto', 'Kto zatwierdził — osoba / funkcja'), $f('ZATW.sposob', 'Sposób zatwierdzenia', ['podpis' => 'Podpis i data', 'uchwala' => 'Uchwała', 'elektronicznie' => 'Obieg elektroniczny']), $f('ZATW.uchwala', 'Numer i data uchwały', [], true, ['ZATW.sposob', ['uchwala']])]];
+            $groups['zatwierdzenie'] = ['title' => '5. Zatwierdzenie przez kierownictwo', 'fields' => [$f('ZATW.wersja', 'Wersja'), $f('ZATW.od', 'Obowiązuje od', [], true, null, 'date'), $f('ZATW.kto', 'Kto zatwierdził — osoba / funkcja'), $f('ZATW.sposob', 'Sposób zatwierdzenia'), $f('ZATW.uchwala', 'Numer i data uchwały', [], true, ['ZATW.sposob', ['uchwala']])]];
             $groups['przeglady'] = $this->repeater('PRZEGLADY', '6. Historia przeglądów polityki', $answers);
         } else {
             foreach ($schema['ZADANIA'] as $q) {
@@ -161,10 +161,9 @@ class IsoLeadershipQuestionnaire
             $options = match ($root.'.'.$key) {
                 'CZLON.rola' => ['kierujacy' => 'Koordynator', 'czlonek' => 'Członek', 'sponsor' => 'Sponsor kierownictwa', 'wsparcie' => 'Wsparcie zewnętrzne'],
                 'CZLON.wie', 'DODATKOWE.liczbowe' => ['tak' => 'Tak', 'nie' => 'Nie'],
-                'PRZEGLADY.wynik' => ['bez_zmian' => 'Bez zmian', 'zmiana' => 'Zmiana — nowa wersja'],
                 default => [],
             };
-            $required = ! in_array($key, ['obszar', 'zastepca', 'czas', 'sprawdzenie', 'zakres']) && ! ($root === 'DECYZJE' && $key === 'zapis');
+            $required = ! in_array($key, ['obszar', 'zastepca', 'czas', 'sprawdzenie', 'zakres']) && ! (in_array($root, ['DECYZJE', 'PRZEGLADY']) && $key === 'zapis');
             $when = $root === 'DODATKOWE' && in_array($key, ['wskaznik', 'kierunek', 'porownanie']) ? ["$root.$i.liczbowe", ['tak']] : null;
             $fields[] = $this->field("$root.$i.$key", $label, $options, $required, $when, $key === 'data' ? 'date' : 'text');
         }

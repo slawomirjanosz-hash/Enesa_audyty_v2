@@ -1,0 +1,1339 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 5.2 Polityka energetyczna</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 5</div>
+ <h1>5.2 Polityka energetyczna</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 5.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Kreator polityki</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>5.2 Polityka energetyczna</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 5.2 i sposób przygotowania polityki.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 5.2<br>Polityka energetyczna</div>
+   <div>
+    <h4>5.2 Polityka energetyczna</h4>
+    <p>Siedem elementów treści, cztery rzeczy, które dzieją się z dokumentem, i różnica między polityką
+    „do ramki” a polityką „do działania”.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 5.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">5.2 — część A<br>10 slajdów</div>
+   <div>
+    <h4>5.2 Polityka energetyczna — część A</h4>
+    <p>Elementy a–g krok po kroku. Jak nie zubożyć polityki skrótem. Czy wpisywać liczby.</p>
+    <p style="font-size:12.5px">10 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Najwyższe kierownictwo ustanawia politykę energetyczną, która: jest odpowiednia do celu
+ organizacji; zapewnia ramy do ustalania i przeglądu celów oraz zadań energetycznych; zawiera zobowiązanie
+ do zapewnienia dostępności informacji i zasobów potrzebnych do osiągnięcia celów i zadań; zawiera zobowiązanie
+ do spełniania mających zastosowanie wymagań prawnych i innych wymagań dotyczących efektywności energetycznej,
+ wykorzystania i zużycia energii; zawiera zobowiązanie do ciągłego doskonalenia wyniku energetycznego i systemu
+ zarządzania energią; wspiera zakup efektywnych energetycznie produktów i usług, które wpływają na wynik energetyczny;
+ wspiera działania projektowe uwzględniające poprawę wyniku energetycznego. Polityka jest dostępna jako udokumentowana
+ informacja, zakomunikowana w organizacji, dostępna dla stron zainteresowanych stosownie do potrzeb oraz okresowo
+ przeglądana i aktualizowana w razie potrzeby. Omówienie na podstawie punktu 5.2 PN-EN ISO 50001:2018; nie jest to
+ dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> kierownictwo ustala politykę, która spełnia
+ siedem warunków treści — a potem dba, żeby była spisana, znana, dostępna i aktualna.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 2, punkt 5.2. Formularz z instrukcją do każdego pola:
+ załącznik III-09 (F-EnMS-04); pełny przykład AutoParts Polska: III-10.</div>
+
+ <div class="ramka">
+  <h3>◧ Recepcja, złota ramka, cisza na hali</h3>
+  <p style="font-size:13.5px">Na ścianie, w złotej ramce, polityka energetyczna: logo, podpis prezesa, piękne słowa
+  o zrównoważonym rozwoju. Dyrektor oprowadza gościa od klienta i z dumą pokazuje ramkę.</p>
+  <p style="font-size:13.5px">Na hali gość pyta operatora prasy: „Co mówi wasza polityka energetyczna?” — „Nie wiem.
+  To chyba wisi w recepcji.” W dziale zakupów: „Czy polityka wpłynęła na ostatni zakup sprężarki?” Cisza.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Polityka istniała. Tylko nikt jej nie używał. <b>Wartość polityki nie
+  zależy od ramki, tylko od tego, czy ktoś bierze ją pod uwagę, gdy podejmuje decyzję.</b></p>
+ </div>
+
+ <div class="ramka">
+  <h3>✓ Siedem rzeczy, które muszą być w treści</h3>
+  <p class="op">Polityka nie musi być długa — najlepsze mieszczą się na jednej stronie. Ale każdy z siedmiu elementów
+  musi być widoczny w treści. Nagłówek nad akapitem nie wystarczy.</p>
+  <table class="tab">
+   <tr><th style="width:6%">—</th><th style="width:26%">Element</th><th>Co musi zawierać</th></tr>
+<tr><td class="mono"><b>a)</b></td><td><b>Cel i kontekst organizacji</b></td><td>odniesienie do celu organizacji — dlaczego zarządzanie energią jest dla Was ważne</td></tr><tr><td class="mono"><b>b)</b></td><td><b>Ramy dla celów i zadań energetycznych</b></td><td>zobowiązanie do ustalania i przeglądu celów oraz zadań energetycznych</td></tr><tr><td class="mono"><b>c)</b></td><td><b>Informacje i zasoby</b><br><span class="mono" style="font-size:11px;color:#a8342b">zobowiązanie</span></td><td>zobowiązanie do zapewnienia dostępności informacji (np. danych pomiarowych, wyników analiz) i zasobów potrzebnych do osiągnięcia celów. Oba słowa mają być w treści — nagłówek nie wystarczy</td></tr><tr><td class="mono"><b>d)</b></td><td><b>Wymagania prawne i inne</b><br><span class="mono" style="font-size:11px;color:#a8342b">zobowiązanie</span></td><td>zobowiązanie do spełniania mających zastosowanie wymagań prawnych i innych wymagań, które organizacja przyjęła, dotyczących efektywności energetycznej, wykorzystania i zużycia energii</td></tr><tr><td class="mono"><b>e)</b></td><td><b>Ciągłe doskonalenie</b><br><span class="mono" style="font-size:11px;color:#a8342b">zobowiązanie</span></td><td>zobowiązanie do ciągłego doskonalenia wyniku energetycznego i systemu zarządzania energią — obu</td></tr><tr><td class="mono"><b>f)</b></td><td><b>Zakupy</b></td><td>wsparcie zakupu efektywnych energetycznie produktów i usług, które wpływają na wynik energetyczny — nie tylko urządzeń</td></tr><tr><td class="mono"><b>g)</b></td><td><b>Projektowanie</b></td><td>wsparcie działań projektowych uwzględniających poprawę wyniku energetycznego</td></tr>
+  </table>
+  <p style="font-size:13.5px;margin:10px 0 0">Zwróć uwagę na różnicę. Trzy elementy — <b>c, d i e</b> — norma nazywa
+  wprost zobowiązaniami. Pozostałe opisują, jaka polityka ma być. W praktyce wszystkie zapisuje się jako zdania,
+  pod którymi kierownictwo się podpisuje — ale przy c, d i e treść musi mieć formę zobowiązania:
+  „zobowiązujemy się” albo równoważne sformułowanie.</p>
+ </div>
+
+ <div class="warn" style="margin:14px 0"><b>Najłatwiej zubożyć politykę skrótem.</b>
+ „Przestrzegamy przepisów” gubi inne wymagania — choćby wymagania klientów.
+ „Doskonalimy wynik” bez „i system” to tylko pół zobowiązania.
+ „Zapewniamy zasoby” pomija informacje.
+ „Kupujemy efektywne urządzenia” zapomina o usługach, na przykład serwisie sprężarek.<br><br>
+ Ankieta sprawdza każdy z tych czterech skrótów przy wpisywaniu treści.</div>
+
+ <div class="ramka">
+  <h3>⟳ Cztery rzeczy, które dzieją się z dokumentem</h3>
+  <ul>
+   <li><b>Jest spisana</b> — jako udokumentowana informacja, z wersją i dowodem zatwierdzenia: podpis i data,
+   uchwała zarządu albo zatwierdzenie elektroniczne.</li>
+   <li><b>Jest znana w firmie</b> — komunikat, tablica, intranet, szkolenie. Pracownik nie musi recytować tekstu,
+   ale powinien wiedzieć, o czym mówi i gdzie go znaleźć.</li>
+   <li><b>Jest dostępna dla stron zainteresowanych</b> — stosownie do potrzeb: na stronie internetowej albo na prośbę klienta.</li>
+   <li><b>Jest przeglądana</b> — okresowo, i aktualizowana, gdy trzeba. Przegląd może potwierdzić, że zmiana nie jest
+   potrzebna. Zapiszcie ten wynik — wtedy starsza data na dokumencie nikogo nie zaniepokoi.</li>
+  </ul>
+ </div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🅐 Typ A: „polityka do ramki”</h3>
+   <p style="font-size:13.5px;margin-bottom:0">Logo, podpis, ramka na ścianie. „Dążymy do zrównoważonego rozwoju.”
+   „Energia jest dla nas ważna.” Brzmi ładnie — i nikt nie pamięta, co w niej jest, bo niczego konkretnego tam nie ma.</p>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🅑 Typ B: „polityka do działania”</h3>
+   <p style="font-size:13.5px;margin-bottom:0">Wszystkie siedem elementów — i zdania, które widać w decyzjach.
+   Mniej elegancko, ale ludzie wiedzą, o co chodzi.</p>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>⟳ Jak polityka działa w decyzji</h3>
+  <p class="op">AutoParts Polska zatwierdziła politykę uchwałą zarządu w marcu 2026 r. Element f) — zakupy —
+  przełożono na zasadę w matrycy uprawnień: Energy Manager może wstrzymać zakup urządzenia energochłonnego
+  do czasu oceny energetycznej, najdłużej na 5 dni roboczych.</p>
+  <ol class="kroki">
+   <li><b>Znaczenie:</b> napęd będzie pracował kilkanaście lat; koszty energii w tym czasie wielokrotnie przewyższą cenę zakupu.</li>
+   <li><b>Decyzja:</b> Energy Manager wstrzymuje zamówienie na trzy dni i prosi o porównanie dwóch ofert w kosztach
+   cyklu życia, a nie tylko w cenie.</li>
+   <li><b>Działanie:</b> zakupy wybierają ofertę droższą w zakupie, ale tańszą w eksploatacji.</li>
+   <li><b>Sprawdzenie:</b> po uruchomieniu Energy Manager porównuje wskaźnik sprężarkowni z wartością sprzed zmiany,
+   w porównywalnych warunkach; wynik wchodzi do oceny celu.</li>
+  </ol>
+  <p style="font-size:13.5px;margin:10px 0 0">To jest różnica między typem A i B: <b>zdanie z polityki stało się
+  zasadą, a zasada — decyzją, którą da się sprawdzić.</b></p>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>„Czy w polityce wpisywać liczby?”</b> Możecie, ale nie musicie. Norma
+ wymaga, żeby polityka dawała <i>ramy</i> do ustalania celów — nie żeby zawierała same cele. Konkretne wartości zwykle
+ należą do celów i zadań energetycznych (6.2), a te przeglądacie regularnie — ★ w wielu firmach co roku. Jeśli jednak
+ świadomie wpisujecie liczbę i umiecie ją rozliczyć, powiedzcie, którego wskaźnika dotyczy, co oznacza poprawę
+ i z czym porównujecie — na przykład „kWh na tonę wyrobu wobec linii bazowej, przy porównywalnej produkcji”.
+ Samo „EnPI o 2% rocznie” to za mało.</div>
+
+ <div class="ramka">
+  <h3>§ Polityka a nadchodzące przepisy</h3>
+  <p style="font-size:13.5px">Jeśli Wasza firma może podlegać nowym obowiązkom z dyrektywy (UE) 2023/1791, polityka
+  to dobre miejsce, żeby kierownictwo potwierdziło gotowość. Piszcie jednak ostrożnie: dyrektywa wiąże państwa,
+  a firmy — dopiero polska ustawa. Na przykład:</p>
+  <p style="font-size:13.5px;font-style:italic;padding-left:14px;border-left:3px solid #d8ddd6">„Utrzymujemy system
+  zarządzania energią zgodny z normą ISO 50001 i spełniamy mające zastosowanie wymagania prawne, w tym przepisy
+  wdrażające dyrektywę (UE) 2023/1791 — od dnia ich wejścia w życie.”</p>
+  <div class="warn" style="margin-bottom:0"><b>Stan prawny na 6 października 2026 r.</b> Projekt nowelizacji ustawy
+  o efektywności energetycznej wdrażający dyrektywę (UE) 2023/1791 — numer w wykazie prac rządu UC77 — nie został
+  jeszcze uchwalony; rząd planował jego przyjęcie w III kwartale 2026 r. Projekt przewiduje progi 10 TJ (audyt)
+  i 85 TJ (certyfikowany system). Przed zatwierdzeniem polityki albo rozmową z zarządem sprawdźcie aktualny status
+  i ostateczne terminy.</div>
+ </div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>⚠ Na co uważać — najczęstsze błędy</h3>
+   <table class="tab">
+    <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+    <tr><td>Polityka skopiowana z internetu</td><td>Napiszcie własną — szablon nie powie nic o Waszej firmie ani o tym, co ma się zmienić</td></tr>
+    <tr><td>Element tylko w nagłówku albo okrojony skrótem</td><td>Sprawdźcie treść element po elemencie (a–g); przy c, d, e — „zobowiązujemy się” lub równoważne</td></tr>
+    <tr><td>Nikt jej nie zna</td><td>Tablica przy linii, intranet, omówienie na szkoleniu</td></tr>
+    <tr><td>Nie wiadomo, kto i kiedy zatwierdził</td><td>Podpis i data, uchwała albo zatwierdzenie elektroniczne — i numer wersji</td></tr>
+    <tr><td>Nikt jej nie przegląda</td><td>Ustalcie, kiedy ją przeglądacie, i zapisujcie wynik — także „bez zmian”</td></tr>
+    <tr><td>Polityka nie wpływa na decyzje</td><td>Przełóżcie przynajmniej jedno zdanie na zasadę w zakupach lub inwestycjach</td></tr>
+   </table>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Dokumenty do przygotowania</h3>
+   <ul>
+    <li><b>Polityka energetyczna — udokumentowana, zatwierdzona, ze wszystkimi elementami a–g.
+    To jedyny dokument rozdziału 5, którego udokumentowania wymaga norma.</b></li>
+    <li>Zapis wyniku ostatniego przeglądu polityki — także „bez zmian”</li>
+    <li>Dowód zakomunikowania: tablica, intranet, lista obecności ze szkolenia</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Szczegółowe szablony: Część II, Moduł 2, punkt 5.2;
+   Część III: formularz III-09 (F-EnMS-04) i przykład III-10.</p>
+  </div>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>★ Rada:</b> przeglądajcie politykę przy każdym przeglądzie zarządzania
+ i przy każdej istotnej zmianie strategii, zakresu albo kontekstu.<br>
+ <b>★ Rada:</b> powieście politykę nie tylko w recepcji, ale też przy linii produkcyjnej i w dziale zakupów.
+ Tam zapadają decyzje o energii.</div>
+
+ <div class="note" style="margin:14px 0"><b>Twój ruch.</b> Dobra polityka energetyczna mieści się na jednej stronie,
+ ale widać ją w decyzjach firmy.<br>
+ <b>Zadanie:</b> przeczytajcie swoją politykę element po elemencie (a–g). Przy każdym zapiszcie, w jakiej decyzji
+ z ostatniego roku było go widać.</div>
+
+ <div class="ankbox">
+  <h3>5.2 Kreator polityki energetycznej</h3>
+  <p class="op">Siedem elementów z walidacją treści, zobowiązania dodatkowe, utrzymywanie dokumentu i podgląd gotowej
+  polityki. Sześć zakładek.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz kreator 5.2</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”,
+ Tom 2 rozdział 2 punkt 5.2 oraz Część III (Toolkit) Moduł 2 wersja 2.1.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>D-EnMS-POL-01 Polityka energetyczna (= formularz F-EnMS-04, załącznik III-09)</li>
+   <li>Mapa elementów a–g — dowód kompletności, nie część polityki</li>
+   <li>Historia przeglądów polityki</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Polityka to jedyny dokument rozdziału 5 wymagany przez normę. Walidacja sprawdza treść
+  element po elemencie — tak samo jak zrobi to audytor.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 5.2 w formacie stron 4.1–4.4.</b> Ten sam układ, ten sam przełącznik roli, ta sama stopka.
+Różnica merytoryczna: 5.2 jest <b>kreatorem dokumentu</b>, a nie ankietą o faktach — platforma sprawdza treść
+element po elemencie i składa z niej gotową politykę.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 2, punkt 5.2</td><td>Scena z recepcji, siedem elementów, cztery rzeczy dziejące się z dokumentem, typy A i B, przykład decyzji zakupowej, „Czy wpisywać liczby”, akapit o nadchodzących przepisach, tabela błędów, obie ★ Rady, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 2 — III-09 (F-EnMS-04)</td><td>Podział „Musi zawierać (wymaganie normy)” / „Można dodać (zalecenie ENESA)” przy każdym z siedmiu elementów, sekcja „Utrzymywanie polityki”, tabela zatwierdzenia z trzema sposobami, historia przeglądów.</td></tr>
+<tr><td>Część III, Moduł 2 — III-10</td><td>Przykład AutoParts użyty jako wypełnienie demonstracyjne (przycisk „Wypełnij przykładem”) oraz komentarz „gdzie jest który element”, odwzorowany w zakładce 4.</td></tr>
+<tr><td>Część III, Moduł 2 — III-13</td><td>Lista kontrolna sekcji 5.2 w pełnym brzmieniu: 15 pozycji z kolumną N / M.</td></tr>
+</table>
+
+<h2>Walidacja treści — to jest sedno tego punktu</h2>
+<p class="sub2">Książka wymienia cztery skróty, którymi najłatwiej zubożyć politykę. Platforma sprawdza każdy z nich
+przy wpisywaniu treści. To nie jest kosmetyka: audytor czyta politykę element po elemencie i znajduje dokładnie te braki.</p>
+<table>
+<tr><th style="width:20%">Element</th><th style="width:34%">Czego wymaga walidator</th><th>Komunikat przy braku</th></tr>
+<tr><td class="mono">a) Cel i kontekst organizacji</td><td>minimalna długość treści (80 znaków)</td><td>Treść jest bardzo krótka — nagłówek nad akapitem nie wystarczy.</td></tr><tr><td class="mono">b) Ramy dla celów i zadań energetycznych</td><td class="mono">cel</td><td>Brakuje odniesienia do celów energetycznych.</td></tr><tr><td class="mono"></td><td class="mono">(przegląd|przeglądamy|weryfik|aktualizuj)</td><td>Element b) wymaga nie tylko ustalania celów, ale i ich przeglądu. Dopiszcie, kiedy i gdzie je przeglądacie.</td></tr><tr><td class="mono">c) Informacje i zasoby</td><td class="mono">informacj|dan(e|ych)|wynik</td><td>Brakuje informacji. „Zapewniamy zasoby” pomija połowę wymagania — dopiszcie dane pomiarowe, wyniki analiz, wiedzę o urządzeniach.</td></tr><tr><td class="mono"></td><td class="mono">zasob|ludzi|środk|czas|budżet</td><td>Brakuje zasobów. Dopiszcie ludzi, czas i środki finansowe.</td></tr><tr><td class="mono">d) Wymagania prawne i inne</td><td class="mono">prawn|ustaw|przepis</td><td>Brakuje wymagań prawnych.</td></tr><tr><td class="mono"></td><td class="mono">(inne wymagan|innych wymagan|przyjęl|przyjmujemy|umown|odbiorc|klient|strategi)</td><td>„Przestrzegamy przepisów” gubi inne wymagania — choćby wymagania klientów. Dopiszcie wymagania, które przyjęliście dobrowolnie albo umownie.</td></tr><tr><td class="mono">e) Ciągłe doskonalenie</td><td class="mono">wynik</td><td>Brakuje wyniku energetycznego.</td></tr><tr><td class="mono"></td><td class="mono">system</td><td>„Doskonalimy wynik” bez „i system” to tylko pół zobowiązania. Dopiszcie system zarządzania energią.</td></tr><tr><td class="mono"></td><td class="mono">doskonal|popraw</td><td>Brakuje słowa o doskonaleniu albo poprawie.</td></tr><tr><td class="mono">f) Zakupy</td><td class="mono">zakup|nabywan|kupuj</td><td>Brakuje odniesienia do zakupów.</td></tr><tr><td class="mono"></td><td class="mono">usług</td><td>„Kupujemy efektywne urządzenia” zapomina o usługach — na przykład serwisie sprężarek. Element f) obejmuje produkty i usługi.</td></tr><tr><td class="mono">g) Projektowanie</td><td class="mono">projekt</td><td>Brakuje odniesienia do projektowania.</td></tr><tr><td class="mono"></td><td class="mono">(wynik|efektywn|zużyci|energ)</td><td>Dopiszcie, czego dotyczy uwzględnienie — poprawy wyniku energetycznego.</td></tr></table>
+<div class="warn"><b>Zobowiązanie przy elementach c, d i e.</b> Norma nazywa te trzy elementy wprost zobowiązaniami.
+Walidator przyjmuje dwa rozwiązania:
+<ul>
+<li><b>Zobowiązanie w samym elemencie</b> — treść zawiera „zobowiązujemy się”, „zobowiązani” albo „deklarujemy”.</li>
+<li><b>Zdanie zobowiązujące we wstępie polityki</b> plus czas teraźniejszy w elemencie („Zapewniamy…”, „Spełniamy…”,
+„Ciągle doskonalimy…”). Tak zbudowany jest przykład AutoParts w III-10 — otwiera go zdanie „Zobowiązujemy się do tego,
+co opisujemy poniżej”. Platforma wykrywa ten układ i pokazuje notę zamiast ostrzeżenia.</li>
+</ul>
+Jeśli nie ma ani jednego, ani drugiego — element jest blokowany. Książka mówi wprost: „przy c, d i e treść musi mieć
+formę zobowiązania”.</div>
+
+<h2>Zakładki kreatora</h2>
+<table>
+<tr><th style="width:24%">Zakładka</th><th style="width:12%">Rola</th><th style="width:28%">Skąd treść</th><th>Co wypełnia klient</th></tr>
+
+<tr><td>1. Siedem elementów</td><td>wejście</td><td>Pola z III-09 z podziałem „musi zawierać” / „można dodać”</td><td>Nagłówek, zdanie wstępne i treść elementów a–g</td></tr>
+<tr><td>2. Zobowiązania dodatkowe</td><td>wejście</td><td>Sekcja 8 formularza — opcjonalna</td><td>Treść; przy liczbie: wskaźnik, kierunek poprawy, warunki porównania</td></tr>
+<tr><td>3. Utrzymywanie i zatwierdzenie</td><td>wejście</td><td>5 pól z sekcji „Utrzymywanie polityki” + tabela zatwierdzenia i historia przeglądów</td><td>Gdzie, jak komunikowana, jak udostępniana, kiedy przeglądana, gdzie wynik; wersja, data, osoba, sposób</td></tr>
+<tr><td>4. Podgląd polityki</td><td>wynik</td><td>Składany z zakładek 1–3</td><td>Nic — podgląd tylko do czytania, z mapą elementów a–g</td></tr>
+<tr><td>5. Analiza konsultanta</td><td>wynik</td><td>Elementy do uzupełnienia + wnioski</td><td>Nic — rola konsultanta</td></tr>
+<tr><td>6. Zatwierdzenia</td><td>—</td><td>braki, lista kontrolna III-13 sekcja 5.2, zawartość dokumentu</td><td>Przekazanie konsultantowi</td></tr>
+</table>
+
+<h2>Lista kontrolna III-13 — sekcja 5.2 i sposób liczenia</h2>
+<table>
+<tr><th style="width:54%">Pozycja</th><th style="width:8%">N / M</th><th>Jak wyliczana</th></tr>
+<tr><td>Polityka jest odpowiednia do celu organizacji (a)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>…zapewnia ramy do ustalania i przeglądu celów oraz zadań energetycznych (b)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>…zawiera zobowiązanie: dostępność informacji i zasobów — oba w treści (c)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>…zawiera zobowiązanie: wymagania prawne i inne wymagania dotyczące efektywności, wykorzystania i zużycia energii (d)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>…zawiera zobowiązanie: ciągłe doskonalenie wyniku energetycznego i systemu (e)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>…wspiera zakup efektywnych produktów i usług wpływających na wynik (f)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>…wspiera projektowanie uwzględniające poprawę wyniku (g)</td><td class="mono">N</td><td>walidacja treści elementu</td></tr><tr><td>W elemencie d) nie mieszano rodzajów wymagań (prawne / umowne / przyjęte dobrowolnie)</td><td class="mono">M</td><td>treść elementu d) zawiera osobno wymagania prawne i inne przyjęte</td></tr><tr><td>Zobowiązania liczbowe (jeśli są) mają wskaźnik, kierunek poprawy i warunki porównania</td><td class="mono">M</td><td>każde zobowiązanie liczbowe ma wskaźnik, kierunek i porównanie — przy braku zobowiązań liczbowych pozycja nie dotyczy</td></tr><tr><td>Polityka jest dostępna jako udokumentowana informacja</td><td class="mono">N</td><td>wypełnione pole „gdzie przechowywana”</td></tr><tr><td>Zatwierdzenie da się wykazać (podpis i data, uchwała, obieg elektroniczny)</td><td class="mono">M</td><td>komplet: wersja, data, osoba i sposób zatwierdzenia</td></tr><tr><td>Polityka jest zakomunikowana w organizacji</td><td class="mono">N</td><td>wypełnione pole „jak komunikowana”</td></tr><tr><td>Polityka jest dostępna dla stron zainteresowanych stosownie do potrzeb</td><td class="mono">N</td><td>wypełnione pole „jak udostępniana”</td></tr><tr><td>Polityka jest okresowo przeglądana i aktualizowana w razie potrzeby</td><td class="mono">N</td><td>wypełnione pole „kiedy przeglądana”</td></tr><tr><td>Wynik ostatniego przeglądu polityki jest zapisany (także „bez zmian”)</td><td class="mono">M</td><td>co najmniej jeden wpis w historii przeglądów z datą i wynikiem</td></tr></table>
+<h2>Decyzja projektowa do akceptacji</h2>
+<div class="warn"><b>Przycisk „Wypełnij przykładem” wstawia politykę AutoParts z III-10.</b> To wygodne przy
+demonstracji i przy szkoleniu, ale niesie ryzyko: klient może zostawić cudzy tekst i podpisać. Książka ostrzega wprost
+— „Nie kopiuj go — sprawdź każde zobowiązanie i dopasuj do swojej organizacji”. <b>Propozycja dla Sławka:</b>
+na produkcji przycisk dostępny tylko w roli konsultanta albo w trybie demonstracyjnym; w koncie klienta
+— przykłady wyłącznie jako podpowiedzi w polach, nigdy jako gotowa treść.</div>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja kreatora 5.2 wraz z regułami walidacji.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;elementy&quot;: [
+    {
+      &quot;kod&quot;: &quot;a&quot;,
+      &quot;litera&quot;: &quot;a&quot;,
+      &quot;nazwa&quot;: &quot;Cel i kontekst organizacji&quot;,
+      &quot;min&quot;: 80,
+      &quot;musi&quot;: &quot;odniesienie do celu organizacji — dlaczego zarządzanie energią jest dla Was ważne&quot;,
+      &quot;mozna&quot;: &quot;kim jesteście, wnioski z analizy kontekstu (4.1) i wymagania stron (4.2)&quot;,
+      &quot;przyklad&quot;: &quot;np. Jako dostawca komponentów dla motoryzacji zużywamy rocznie ok. 12 GWh energii — głównie elektrycznej na prasy i sprężone powietrze oraz gazu w lakierni. Energia to ok. 2,5% kosztów operacyjnych, a odbiorcy oczekują danych o zużyciu i emisjach.&quot;,
+      &quot;ostrzega&quot;: [
+        [
+          &quot;^(?!.*\\d)(?=.*(zrównoważon|dbałość o środowisko|troska o środowisko)).*$&quot;,
+          &quot;Treść brzmi jak deklaracja ogólna, bez faktów o Waszej firmie. To typowa „polityka do ramki”. Dopiszcie, ile energii zużywacie, na co i dlaczego to dla Was ważne.&quot;
+        ]
+      ],
+      &quot;przykladPelny&quot;: &quot;Jako dostawca Tier 1 dla producentów samochodów zużywamy rocznie ok. 12 GWh energii — głównie energii elektrycznej na prasy i sprężone powietrze oraz gazu ziemnego w lakierni i kotłowni. Energia to ok. 2,5% naszych kosztów operacyjnych, a odbiorcy oczekują od nas danych o zużyciu energii i emisjach. Zarządzanie energią jest częścią strategii zakładu na lata 2026–2028.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;b&quot;,
+      &quot;litera&quot;: &quot;b&quot;,
+      &quot;nazwa&quot;: &quot;Ramy dla celów i zadań energetycznych&quot;,
+      &quot;min&quot;: 70,
+      &quot;musi&quot;: &quot;zobowiązanie do ustalania i przeglądu celów oraz zadań energetycznych&quot;,
+      &quot;mozna&quot;: &quot;kto ustala cele, na jakiej podstawie i kiedy się je przegląda. Konkretne wartości zwykle należą do celów (6.2)&quot;,
+      &quot;wymaga&quot;: [
+        [
+          &quot;cel&quot;,
+          &quot;Brakuje odniesienia do celów energetycznych.&quot;
+        ],
+        [
+          &quot;(przegląd|przeglądamy|weryfik|aktualizuj)&quot;,
+          &quot;Element b) wymaga nie tylko ustalania celów, ale i ich przeglądu. Dopiszcie, kiedy i gdzie je przeglądacie.&quot;
+        ]
+      ],
+      &quot;przyklad&quot;: &quot;np. Ustalamy cele i zadania energetyczne — w pierwszej kolejności dla znaczących użyć energii — na podstawie przeglądu energetycznego. Cele zatwierdza Zarząd, a ich realizację i aktualność przeglądamy w ramach przeglądu zarządzania.&quot;,
+      &quot;przykladPelny&quot;: &quot;Ustalamy cele i zadania energetyczne — w pierwszej kolejności dla znaczących użyć energii: pras, sprężarkowni i lakierni — na podstawie przeglądu energetycznego. Cele zatwierdza Zarząd, a ich realizację i aktualność przeglądamy w ramach przeglądu zarządzania.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;c&quot;,
+      &quot;litera&quot;: &quot;c&quot;,
+      &quot;nazwa&quot;: &quot;Informacje i zasoby&quot;,
+      &quot;min&quot;: 70,
+      &quot;zobowiazanie&quot;: true,
+      &quot;musi&quot;: &quot;zobowiązanie do zapewnienia dostępności informacji (np. danych pomiarowych, wyników analiz) i zasobów potrzebnych do osiągnięcia celów. Oba słowa mają być w treści — nagłówek nie wystarczy&quot;,
+      &quot;wymaga&quot;: [
+        [
+          &quot;informacj|dan(e|ych)|wynik&quot;,
+          &quot;Brakuje informacji. „Zapewniamy zasoby” pomija połowę wymagania — dopiszcie dane pomiarowe, wyniki analiz, wiedzę o urządzeniach.&quot;
+        ],
+        [
+          &quot;zasob|ludzi|środk|czas|budżet&quot;,
+          &quot;Brakuje zasobów. Dopiszcie ludzi, czas i środki finansowe.&quot;
+        ]
+      ],
+      &quot;przyklad&quot;: &quot;np. Zapewniamy informacje potrzebne do zarządzania energią — dane z liczników i pomiarów, wyniki analiz i wskaźników — oraz ludzi, czas i środki finansowe niezbędne do osiągnięcia celów i zadań.&quot;,
+      &quot;przykladPelny&quot;: &quot;Zapewniamy informacje potrzebne do zarządzania energią — dane z liczników i pomiarów, wyniki analiz i wskaźników, wiedzę o urządzeniach — oraz ludzi, czas i środki finansowe niezbędne do osiągnięcia celów i zadań energetycznych.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;d&quot;,
+      &quot;litera&quot;: &quot;d&quot;,
+      &quot;nazwa&quot;: &quot;Wymagania prawne i inne&quot;,
+      &quot;min&quot;: 70,
+      &quot;zobowiazanie&quot;: true,
+      &quot;musi&quot;: &quot;zobowiązanie do spełniania mających zastosowanie wymagań prawnych i innych wymagań, które organizacja przyjęła, dotyczących efektywności energetycznej, wykorzystania i zużycia energii&quot;,
+      &quot;mozna&quot;: &quot;przykłady wymagań — bez mieszania rodzajów: prawne / umowne / przyjęte dobrowolnie (kwalifikacja z punktu 4.2)&quot;,
+      &quot;wymaga&quot;: [
+        [
+          &quot;prawn|ustaw|przepis&quot;,
+          &quot;Brakuje wymagań prawnych.&quot;
+        ],
+        [
+          &quot;(inne wymagan|innych wymagan|przyjęl|przyjmujemy|umown|odbiorc|klient|strategi)&quot;,
+          &quot;„Przestrzegamy przepisów” gubi inne wymagania — choćby wymagania klientów. Dopiszcie wymagania, które przyjęliście dobrowolnie albo umownie.&quot;
+        ]
+      ],
+      &quot;ostrzega&quot;: [
+        [
+          &quot;^(?!.*efektywn)&quot;,
+          &quot;W treści nie ma słowa „efektywność”. Norma wymienia trzy obszary: efektywność energetyczną, wykorzystanie i zużycie energii.&quot;
+        ],
+        [
+          &quot;^(?!.*(wykorzystan|zużyci))&quot;,
+          &quot;W treści brakuje wykorzystania albo zużycia energii. Norma wymienia wszystkie trzy obszary.&quot;
+        ]
+      ],
+      &quot;przyklad&quot;: &quot;np. Spełniamy mające zastosowanie wymagania prawne dotyczące efektywności energetycznej, wykorzystania i zużycia energii. Spełniamy również inne wymagania, które przyjęliśmy: wymagania odbiorców dotyczące danych o energii i emisjach oraz zobowiązania ze strategii zakładu.&quot;,
+      &quot;przykladPelny&quot;: &quot;Spełniamy mające zastosowanie wymagania prawne dotyczące efektywności energetycznej, wykorzystania i zużycia energii — obecnie przede wszystkim ustawę o efektywności energetycznej, a po wejściu w życie także przepisy wdrażające dyrektywę (UE) 2023/1791. Spełniamy również inne wymagania, które przyjęliśmy: wymagania naszych odbiorców dotyczące danych o energii i emisjach oraz certyfikacji systemu zarządzania energią, a także zobowiązania ze strategii zakładu.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;e&quot;,
+      &quot;litera&quot;: &quot;e&quot;,
+      &quot;nazwa&quot;: &quot;Ciągłe doskonalenie&quot;,
+      &quot;min&quot;: 50,
+      &quot;zobowiazanie&quot;: true,
+      &quot;musi&quot;: &quot;zobowiązanie do ciągłego doskonalenia wyniku energetycznego i systemu zarządzania energią — obu&quot;,
+      &quot;mozna&quot;: &quot;sposób doskonalenia: monitorowanie, analiza, usprawnienia&quot;,
+      &quot;wymaga&quot;: [
+        [
+          &quot;wynik&quot;,
+          &quot;Brakuje wyniku energetycznego.&quot;
+        ],
+        [
+          &quot;system&quot;,
+          &quot;„Doskonalimy wynik” bez „i system” to tylko pół zobowiązania. Dopiszcie system zarządzania energią.&quot;
+        ],
+        [
+          &quot;doskonal|popraw&quot;,
+          &quot;Brakuje słowa o doskonaleniu albo poprawie.&quot;
+        ]
+      ],
+      &quot;przyklad&quot;: &quot;np. Ciągle doskonalimy nasz wynik energetyczny i system zarządzania energią — przez monitorowanie, analizę danych, reagowanie na odchylenia i wdrażanie usprawnień.&quot;,
+      &quot;przykladPelny&quot;: &quot;Ciągle doskonalimy nasz wynik energetyczny i system zarządzania energią — przez monitorowanie, analizę danych, reagowanie na odchylenia i wdrażanie usprawnień.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;f&quot;,
+      &quot;litera&quot;: &quot;f&quot;,
+      &quot;nazwa&quot;: &quot;Zakupy&quot;,
+      &quot;min&quot;: 60,
+      &quot;musi&quot;: &quot;wsparcie zakupu efektywnych energetycznie produktów i usług, które wpływają na wynik energetyczny — nie tylko urządzeń&quot;,
+      &quot;mozna&quot;: &quot;jak to wsparcie działa, np. analiza kosztów w cyklu życia&quot;,
+      &quot;wymaga&quot;: [
+        [
+          &quot;zakup|nabywan|kupuj&quot;,
+          &quot;Brakuje odniesienia do zakupów.&quot;
+        ],
+        [
+          &quot;usług&quot;,
+          &quot;„Kupujemy efektywne urządzenia” zapomina o usługach — na przykład serwisie sprężarek. Element f) obejmuje produkty i usługi.&quot;
+        ]
+      ],
+      &quot;przyklad&quot;: &quot;np. Przy zakupie maszyn, urządzeń i usług, które wpływają na nasz wynik energetyczny — w tym serwisu sprężarek i instalacji — uwzględniamy efektywność energetyczną jako kryterium wyboru.&quot;,
+      &quot;przykladPelny&quot;: &quot;Przy zakupie maszyn, urządzeń i usług, które wpływają na nasz wynik energetyczny — w tym serwisu sprężarek i instalacji — uwzględniamy efektywność energetyczną jako kryterium wyboru, a przy większych zakupach oceniamy koszty energii w całym cyklu życia.&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;g&quot;,
+      &quot;litera&quot;: &quot;g&quot;,
+      &quot;nazwa&quot;: &quot;Projektowanie&quot;,
+      &quot;min&quot;: 50,
+      &quot;musi&quot;: &quot;wsparcie działań projektowych uwzględniających poprawę wyniku energetycznego&quot;,
+      &quot;mozna&quot;: &quot;jakich projektów dotyczy: nowe instalacje, modernizacje, zmiany procesów&quot;,
+      &quot;wymaga&quot;: [
+        [
+          &quot;projekt&quot;,
+          &quot;Brakuje odniesienia do projektowania.&quot;
+        ],
+        [
+          &quot;(wynik|efektywn|zużyci|energ)&quot;,
+          &quot;Dopiszcie, czego dotyczy uwzględnienie — poprawy wyniku energetycznego.&quot;
+        ]
+      ],
+      &quot;przyklad&quot;: &quot;np. Przy projektowaniu nowych procesów, modernizacji linii i zmian w budynkach uwzględniamy poprawę wyniku energetycznego już na etapie koncepcji.&quot;,
+      &quot;przykladPelny&quot;: &quot;Przy projektowaniu nowych procesów, modernizacji linii i zmian w budynkach uwzględniamy poprawę wyniku energetycznego już na etapie koncepcji.&quot;
+    }
+  ],
+  &quot;utrzymanie&quot;: [
+    {
+      &quot;kod&quot;: &quot;gdzie&quot;,
+      &quot;etykieta&quot;: &quot;Gdzie jest przechowywana&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Polityka ma być dostępna jako udokumentowana informacja. To jedyny dokument rozdziału 5 wymagany wprost przez normę.&quot;,
+      &quot;przyklad&quot;: &quot;np. system dokumentacji, dokument nr D-EnMS-POL-01, wersja 1.0&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;komunikacja&quot;,
+      &quot;etykieta&quot;: &quot;Jak jest komunikowana w organizacji&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Pracownik nie musi recytować tekstu, ale powinien wiedzieć, o czym mówi i gdzie go znaleźć.&quot;,
+      &quot;przyklad&quot;: &quot;np. tablice informacyjne przy linii, intranet, szkolenie wstępne, omówienie na spotkaniu zmianowym&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;udostepnianie&quot;,
+      &quot;etykieta&quot;: &quot;Jak jest udostępniana stronom zainteresowanym&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Stosownie do potrzeb — nie trzeba jej publikować, jeśli nikt o nią nie pyta.&quot;,
+      &quot;przyklad&quot;: &quot;np. na stronie internetowej firmy oraz na prośbę klienta lub banku&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;kiedy&quot;,
+      &quot;etykieta&quot;: &quot;Kiedy jest przeglądana&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;pomoc&quot;: &quot;Norma mówi „okresowo” i „aktualizowana w razie potrzeby”, bez częstotliwości. ★ Rada z książki: przy każdym przeglądzie zarządzania i przy każdej istotnej zmianie strategii, zakresu albo kontekstu.&quot;,
+      &quot;przyklad&quot;: &quot;np. podczas każdego przeglądu zarządzania oraz przy istotnej zmianie strategii, zakresu lub kontekstu&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;zapis&quot;,
+      &quot;etykieta&quot;: &quot;Gdzie zapisuje się wynik przeglądu&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;pomoc&quot;: &quot;Przegląd może potwierdzić, że zmiana nie jest potrzebna. Zapisany wynik „bez zmian” sprawia, że starsza data na dokumencie nikogo nie zaniepokoi.&quot;,
+      &quot;przyklad&quot;: &quot;np. protokół przeglądu zarządzania, punkt „przegląd polityki energetycznej”&quot;
+    }
+  ],
+  &quot;lista_52&quot;: [
+    {
+      &quot;tekst&quot;: &quot;Polityka jest odpowiednia do celu organizacji (a)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;a&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…zapewnia ramy do ustalania i przeglądu celów oraz zadań energetycznych (b)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;b&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…zawiera zobowiązanie: dostępność informacji i zasobów — oba w treści (c)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;c&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…zawiera zobowiązanie: wymagania prawne i inne wymagania dotyczące efektywności, wykorzystania i zużycia energii (d)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;d&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…zawiera zobowiązanie: ciągłe doskonalenie wyniku energetycznego i systemu (e)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;e&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…wspiera zakup efektywnych produktów i usług wpływających na wynik (f)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;f&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…wspiera projektowanie uwzględniające poprawę wyniku (g)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;elem&quot;,
+      &quot;elem&quot;: &quot;g&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;W elemencie d) nie mieszano rodzajów wymagań (prawne / umowne / przyjęte dobrowolnie)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;rodzaje_d&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Zobowiązania liczbowe (jeśli są) mają wskaźnik, kierunek poprawy i warunki porównania&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;liczbowe&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Polityka jest dostępna jako udokumentowana informacja&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;udokumentowana&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Zatwierdzenie da się wykazać (podpis i data, uchwała, obieg elektroniczny)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;zatwierdzenie&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Polityka jest zakomunikowana w organizacji&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;komunikacja&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Polityka jest dostępna dla stron zainteresowanych stosownie do potrzeb&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;udostepnianie&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Polityka jest okresowo przeglądana i aktualizowana w razie potrzeby&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;przeglad&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Wynik ostatniego przeglądu polityki jest zapisany (także „bez zmian”)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;wynik_przegladu&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var ELEMENTY = [{"kod": "a", "litera": "a", "nazwa": "Cel i kontekst organizacji", "min": 80, "musi": "odniesienie do celu organizacji — dlaczego zarządzanie energią jest dla Was ważne", "mozna": "kim jesteście, wnioski z analizy kontekstu (4.1) i wymagania stron (4.2)", "przyklad": "np. Jako dostawca komponentów dla motoryzacji zużywamy rocznie ok. 12 GWh energii — głównie elektrycznej na prasy i sprężone powietrze oraz gazu w lakierni. Energia to ok. 2,5% kosztów operacyjnych, a odbiorcy oczekują danych o zużyciu i emisjach.", "ostrzega": [["^(?!.*\\d)(?=.*(zrównoważon|dbałość o środowisko|troska o środowisko)).*$", "Treść brzmi jak deklaracja ogólna, bez faktów o Waszej firmie. To typowa „polityka do ramki”. Dopiszcie, ile energii zużywacie, na co i dlaczego to dla Was ważne."]], "przykladPelny": "Jako dostawca Tier 1 dla producentów samochodów zużywamy rocznie ok. 12 GWh energii — głównie energii elektrycznej na prasy i sprężone powietrze oraz gazu ziemnego w lakierni i kotłowni. Energia to ok. 2,5% naszych kosztów operacyjnych, a odbiorcy oczekują od nas danych o zużyciu energii i emisjach. Zarządzanie energią jest częścią strategii zakładu na lata 2026–2028."}, {"kod": "b", "litera": "b", "nazwa": "Ramy dla celów i zadań energetycznych", "min": 70, "musi": "zobowiązanie do ustalania i przeglądu celów oraz zadań energetycznych", "mozna": "kto ustala cele, na jakiej podstawie i kiedy się je przegląda. Konkretne wartości zwykle należą do celów (6.2)", "wymaga": [["cel", "Brakuje odniesienia do celów energetycznych."], ["(przegląd|przeglądamy|weryfik|aktualizuj)", "Element b) wymaga nie tylko ustalania celów, ale i ich przeglądu. Dopiszcie, kiedy i gdzie je przeglądacie."]], "przyklad": "np. Ustalamy cele i zadania energetyczne — w pierwszej kolejności dla znaczących użyć energii — na podstawie przeglądu energetycznego. Cele zatwierdza Zarząd, a ich realizację i aktualność przeglądamy w ramach przeglądu zarządzania.", "przykladPelny": "Ustalamy cele i zadania energetyczne — w pierwszej kolejności dla znaczących użyć energii: pras, sprężarkowni i lakierni — na podstawie przeglądu energetycznego. Cele zatwierdza Zarząd, a ich realizację i aktualność przeglądamy w ramach przeglądu zarządzania."}, {"kod": "c", "litera": "c", "nazwa": "Informacje i zasoby", "min": 70, "zobowiazanie": true, "musi": "zobowiązanie do zapewnienia dostępności informacji (np. danych pomiarowych, wyników analiz) i zasobów potrzebnych do osiągnięcia celów. Oba słowa mają być w treści — nagłówek nie wystarczy", "wymaga": [["informacj|dan(e|ych)|wynik", "Brakuje informacji. „Zapewniamy zasoby” pomija połowę wymagania — dopiszcie dane pomiarowe, wyniki analiz, wiedzę o urządzeniach."], ["zasob|ludzi|środk|czas|budżet", "Brakuje zasobów. Dopiszcie ludzi, czas i środki finansowe."]], "przyklad": "np. Zapewniamy informacje potrzebne do zarządzania energią — dane z liczników i pomiarów, wyniki analiz i wskaźników — oraz ludzi, czas i środki finansowe niezbędne do osiągnięcia celów i zadań.", "przykladPelny": "Zapewniamy informacje potrzebne do zarządzania energią — dane z liczników i pomiarów, wyniki analiz i wskaźników, wiedzę o urządzeniach — oraz ludzi, czas i środki finansowe niezbędne do osiągnięcia celów i zadań energetycznych."}, {"kod": "d", "litera": "d", "nazwa": "Wymagania prawne i inne", "min": 70, "zobowiazanie": true, "musi": "zobowiązanie do spełniania mających zastosowanie wymagań prawnych i innych wymagań, które organizacja przyjęła, dotyczących efektywności energetycznej, wykorzystania i zużycia energii", "mozna": "przykłady wymagań — bez mieszania rodzajów: prawne / umowne / przyjęte dobrowolnie (kwalifikacja z punktu 4.2)", "wymaga": [["prawn|ustaw|przepis", "Brakuje wymagań prawnych."], ["(inne wymagan|innych wymagan|przyjęl|przyjmujemy|umown|odbiorc|klient|strategi)", "„Przestrzegamy przepisów” gubi inne wymagania — choćby wymagania klientów. Dopiszcie wymagania, które przyjęliście dobrowolnie albo umownie."]], "ostrzega": [["^(?!.*efektywn)", "W treści nie ma słowa „efektywność”. Norma wymienia trzy obszary: efektywność energetyczną, wykorzystanie i zużycie energii."], ["^(?!.*(wykorzystan|zużyci))", "W treści brakuje wykorzystania albo zużycia energii. Norma wymienia wszystkie trzy obszary."]], "przyklad": "np. Spełniamy mające zastosowanie wymagania prawne dotyczące efektywności energetycznej, wykorzystania i zużycia energii. Spełniamy również inne wymagania, które przyjęliśmy: wymagania odbiorców dotyczące danych o energii i emisjach oraz zobowiązania ze strategii zakładu.", "przykladPelny": "Spełniamy mające zastosowanie wymagania prawne dotyczące efektywności energetycznej, wykorzystania i zużycia energii — obecnie przede wszystkim ustawę o efektywności energetycznej, a po wejściu w życie także przepisy wdrażające dyrektywę (UE) 2023/1791. Spełniamy również inne wymagania, które przyjęliśmy: wymagania naszych odbiorców dotyczące danych o energii i emisjach oraz certyfikacji systemu zarządzania energią, a także zobowiązania ze strategii zakładu."}, {"kod": "e", "litera": "e", "nazwa": "Ciągłe doskonalenie", "min": 50, "zobowiazanie": true, "musi": "zobowiązanie do ciągłego doskonalenia wyniku energetycznego i systemu zarządzania energią — obu", "mozna": "sposób doskonalenia: monitorowanie, analiza, usprawnienia", "wymaga": [["wynik", "Brakuje wyniku energetycznego."], ["system", "„Doskonalimy wynik” bez „i system” to tylko pół zobowiązania. Dopiszcie system zarządzania energią."], ["doskonal|popraw", "Brakuje słowa o doskonaleniu albo poprawie."]], "przyklad": "np. Ciągle doskonalimy nasz wynik energetyczny i system zarządzania energią — przez monitorowanie, analizę danych, reagowanie na odchylenia i wdrażanie usprawnień.", "przykladPelny": "Ciągle doskonalimy nasz wynik energetyczny i system zarządzania energią — przez monitorowanie, analizę danych, reagowanie na odchylenia i wdrażanie usprawnień."}, {"kod": "f", "litera": "f", "nazwa": "Zakupy", "min": 60, "musi": "wsparcie zakupu efektywnych energetycznie produktów i usług, które wpływają na wynik energetyczny — nie tylko urządzeń", "mozna": "jak to wsparcie działa, np. analiza kosztów w cyklu życia", "wymaga": [["zakup|nabywan|kupuj", "Brakuje odniesienia do zakupów."], ["usług", "„Kupujemy efektywne urządzenia” zapomina o usługach — na przykład serwisie sprężarek. Element f) obejmuje produkty i usługi."]], "przyklad": "np. Przy zakupie maszyn, urządzeń i usług, które wpływają na nasz wynik energetyczny — w tym serwisu sprężarek i instalacji — uwzględniamy efektywność energetyczną jako kryterium wyboru.", "przykladPelny": "Przy zakupie maszyn, urządzeń i usług, które wpływają na nasz wynik energetyczny — w tym serwisu sprężarek i instalacji — uwzględniamy efektywność energetyczną jako kryterium wyboru, a przy większych zakupach oceniamy koszty energii w całym cyklu życia."}, {"kod": "g", "litera": "g", "nazwa": "Projektowanie", "min": 50, "musi": "wsparcie działań projektowych uwzględniających poprawę wyniku energetycznego", "mozna": "jakich projektów dotyczy: nowe instalacje, modernizacje, zmiany procesów", "wymaga": [["projekt", "Brakuje odniesienia do projektowania."], ["(wynik|efektywn|zużyci|energ)", "Dopiszcie, czego dotyczy uwzględnienie — poprawy wyniku energetycznego."]], "przyklad": "np. Przy projektowaniu nowych procesów, modernizacji linii i zmian w budynkach uwzględniamy poprawę wyniku energetycznego już na etapie koncepcji.", "przykladPelny": "Przy projektowaniu nowych procesów, modernizacji linii i zmian w budynkach uwzględniamy poprawę wyniku energetycznego już na etapie koncepcji."}];
+var UTRZYMANIE = [{"kod": "gdzie", "etykieta": "Gdzie jest przechowywana", "podstawa": "N", "pomoc": "Polityka ma być dostępna jako udokumentowana informacja. To jedyny dokument rozdziału 5 wymagany wprost przez normę.", "przyklad": "np. system dokumentacji, dokument nr D-EnMS-POL-01, wersja 1.0"}, {"kod": "komunikacja", "etykieta": "Jak jest komunikowana w organizacji", "podstawa": "N", "pomoc": "Pracownik nie musi recytować tekstu, ale powinien wiedzieć, o czym mówi i gdzie go znaleźć.", "przyklad": "np. tablice informacyjne przy linii, intranet, szkolenie wstępne, omówienie na spotkaniu zmianowym"}, {"kod": "udostepnianie", "etykieta": "Jak jest udostępniana stronom zainteresowanym", "podstawa": "N", "pomoc": "Stosownie do potrzeb — nie trzeba jej publikować, jeśli nikt o nią nie pyta.", "przyklad": "np. na stronie internetowej firmy oraz na prośbę klienta lub banku"}, {"kod": "kiedy", "etykieta": "Kiedy jest przeglądana", "podstawa": "N", "pomoc": "Norma mówi „okresowo” i „aktualizowana w razie potrzeby”, bez częstotliwości. ★ Rada z książki: przy każdym przeglądzie zarządzania i przy każdej istotnej zmianie strategii, zakresu albo kontekstu.", "przyklad": "np. podczas każdego przeglądu zarządzania oraz przy istotnej zmianie strategii, zakresu lub kontekstu"}, {"kod": "zapis", "etykieta": "Gdzie zapisuje się wynik przeglądu", "podstawa": "M", "pomoc": "Przegląd może potwierdzić, że zmiana nie jest potrzebna. Zapisany wynik „bez zmian” sprawia, że starsza data na dokumencie nikogo nie zaniepokoi.", "przyklad": "np. protokół przeglądu zarządzania, punkt „przegląd polityki energetycznej”"}];
+var LISTA_52 = [{"tekst": "Polityka jest odpowiednia do celu organizacji (a)", "podstawa": "N", "auto": "elem", "elem": "a"}, {"tekst": "…zapewnia ramy do ustalania i przeglądu celów oraz zadań energetycznych (b)", "podstawa": "N", "auto": "elem", "elem": "b"}, {"tekst": "…zawiera zobowiązanie: dostępność informacji i zasobów — oba w treści (c)", "podstawa": "N", "auto": "elem", "elem": "c"}, {"tekst": "…zawiera zobowiązanie: wymagania prawne i inne wymagania dotyczące efektywności, wykorzystania i zużycia energii (d)", "podstawa": "N", "auto": "elem", "elem": "d"}, {"tekst": "…zawiera zobowiązanie: ciągłe doskonalenie wyniku energetycznego i systemu (e)", "podstawa": "N", "auto": "elem", "elem": "e"}, {"tekst": "…wspiera zakup efektywnych produktów i usług wpływających na wynik (f)", "podstawa": "N", "auto": "elem", "elem": "f"}, {"tekst": "…wspiera projektowanie uwzględniające poprawę wyniku (g)", "podstawa": "N", "auto": "elem", "elem": "g"}, {"tekst": "W elemencie d) nie mieszano rodzajów wymagań (prawne / umowne / przyjęte dobrowolnie)", "podstawa": "M", "auto": "rodzaje_d"}, {"tekst": "Zobowiązania liczbowe (jeśli są) mają wskaźnik, kierunek poprawy i warunki porównania", "podstawa": "M", "auto": "liczbowe"}, {"tekst": "Polityka jest dostępna jako udokumentowana informacja", "podstawa": "N", "auto": "udokumentowana"}, {"tekst": "Zatwierdzenie da się wykazać (podpis i data, uchwała, obieg elektroniczny)", "podstawa": "M", "auto": "zatwierdzenie"}, {"tekst": "Polityka jest zakomunikowana w organizacji", "podstawa": "N", "auto": "komunikacja"}, {"tekst": "Polityka jest dostępna dla stron zainteresowanych stosownie do potrzeb", "podstawa": "N", "auto": "udostepnianie"}, {"tekst": "Polityka jest okresowo przeglądana i aktualizowana w razie potrzeby", "podstawa": "N", "auto": "przeglad"}, {"tekst": "Wynik ostatniego przeglądu polityki jest zapisany (także „bez zmian”)", "podstawa": "M", "auto": "wynik_przegladu"}];
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Polityka bez powiązania ze strategią zostaje plakatem — nikt nie powołuje się na nią przy decyzjach o zakupach i inwestycjach.", "decyzja": "Polityka wiąże się wprost z celem obniżenia kosztów energii o 8% do 2028 r. ze strategii zakładu 2026–2028.", "dzialanie": "Zatwierdzona 12.02.2026, opublikowana w intranecie i na tablicy przy portierni, omówiona na szkoleniu operatorów w maju 2026 r.", "sprawdzenie": "Na przeglądzie zarządzania (9.3) sprawdzamy, czy decyzje inwestycyjne roku powoływały się na zobowiązania z polityki."}];
+</script>
+<script>/* ENESA 5.2 — Polityka energetyczna. Format jak strony 4.1–4.4.
+   Zgodny z: Tom 2 rozdz. 2 pkt 5.2 oraz Część III Moduł 2 v2.1 (III-09 = F-EnMS-04, III-10, III-13). */
+"use strict";
+
+var POL = { nazwa: "", czym: "", rola: "", wstep: "" };
+var TRESC = {};    // element a–g -> tekst
+var DODATKOWE = []; // zobowiązania dodatkowe
+var UTRZ = { gdzie: "", komunikacja: "", udostepnianie: "", kiedy: "", zapis: "" };
+var ZATW = { wersja: "", od: "", kto: "", sposob: "", uchwala: "" };
+var PRZEGLADY = [];
+var WNIOSKI = [];
+var AKT = "elementy";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+
+/* ── pomocnicze ── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+
+/* ── walidacja treści elementów a–g ── */
+/* Zobowiązanie: norma nazywa c, d i e wprost zobowiązaniami. Książka dopuszcza
+   „zobowiązujemy się” albo równoważne sformułowanie — przykład AutoParts używa
+   czasu teraźniejszego („Zapewniamy…”, „Spełniamy…”) pod wspólnym zdaniem wstępu. */
+var RE_ZOB = /zobowiązuj|zobowiązani|deklaruj/i;
+var RE_TERAZ = /\b(zapewniamy|spełniamy|doskonalimy|utrzymujemy|stosujemy|uwzględniamy|ustalamy|przeglądamy|realizujemy|wdrażamy)\b/i;
+
+function brakiElementu(e) {
+  var t = (TRESC[e.kod] || "").trim();
+  var b = [];
+  if (!t) return [{ t: "Brak treści.", blokuje: true }];
+  if (t.length < (e.min || 60))
+    b.push({ t: "Treść jest bardzo krótka. Nagłówek nad akapitem nie wystarczy — element musi być widoczny w zdaniu.", blokuje: true });
+  (e.wymaga || []).forEach(function (w) {
+    if (!new RegExp(w[0], "i").test(t)) b.push({ t: w[1], blokuje: true });
+  });
+  (e.ostrzega || []).forEach(function (w) {
+    if (new RegExp(w[0], "i").test(t)) b.push({ t: w[1], blokuje: false });
+  });
+  if (e.zobowiazanie && !RE_ZOB.test(t)) {
+    if (RE_TERAZ.test(t) && RE_ZOB.test(POL.wstep || ""))
+      b.push({ t: "Treść ma formę czasu teraźniejszego, a zdanie zobowiązujące jest we wstępie polityki. To rozwiązanie dopuszczalne — tak zbudowany jest przykład AutoParts (III-10).", blokuje: false, ok: true });
+    else
+      b.push({ t: "Norma nazywa ten element wprost zobowiązaniem. Użyj sformułowania „zobowiązujemy się” albo równoważnego — albo dodaj zdanie zobowiązujące we wstępie polityki (pole u góry zakładki).", blokuje: true });
+  }
+  return b;
+}
+function elementOk(e) { return !brakiElementu(e).some(function (x) { return x.blokuje; }); }
+function dodatkoweOk(d) {
+  if (!(d.tresc || "").trim()) return false;
+  if (d.liczbowe !== "tak") return true;
+  return !!(d.wskaznik || "").trim() && !!(d.kierunek || "").trim() && !!(d.porownanie || "").trim();
+}
+function utrzOk() {
+  return ["gdzie", "komunikacja", "udostepnianie", "kiedy", "zapis"].every(function (k) { return (UTRZ[k] || "").trim(); });
+}
+function zatwOk() {
+  if (!(ZATW.wersja || "").trim() || !ZATW.od || !(ZATW.kto || "").trim() || !ZATW.sposob) return false;
+  if (ZATW.sposob === "uchwala" && !(ZATW.uchwala || "").trim()) return false;
+  return true;
+}
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+
+/* ── zakładka 1: elementy a–g ── */
+function rysujElementy(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Nagłówek polityki i zdanie wstępne"));
+  s.appendChild(el("p", "opis", "Polityka nie musi być długa — najlepsze mieszczą się na jednej stronie. Zaczynamy od tego, kim jesteście i jaką rolę ma u Was energia."));
+  var k0 = el("div", "poz" + ((POL.nazwa || "").trim() && (POL.czym || "").trim() ? "" : " brak"));
+  k0.appendChild(pole("Nazwa organizacji", inp(POL.nazwa, "np. AutoParts Polska Sp. z o.o.", function (v) { POL.nazwa = v; })));
+  k0.appendChild(pole("Czym się zajmujecie i gdzie działacie",
+    inp(POL.czym, "np. producent komponentów dla przemysłu motoryzacyjnego z zakładem w Katowicach", function (v) { POL.czym = v; })));
+  k0.appendChild(pole("Jaką rolę ma energia w organizacji",
+    inp(POL.rola, "np. element konkurencyjności i odpowiedzialności wobec klientów, pracowników i otoczenia", function (v) { POL.rola = v; })));
+  k0.appendChild(pole("Zdanie wstępne — opcjonalne, ale przydatne",
+    txt(POL.wstep, "np. Zobowiązujemy się do tego, co opisujemy poniżej.", 1, function (v) { POL.wstep = v; }),
+    "Jedno zdanie zobowiązujące we wstępie pozwala zapisać elementy c, d i e w czasie teraźniejszym — tak zbudowany jest przykład AutoParts. Bez niego każdy z tych trzech elementów musi mieć własne „zobowiązujemy się”."));
+  s.appendChild(k0);
+  host.appendChild(s);
+
+  var got = ELEMENTY.filter(elementOk).length;
+  var w = el("div", "sekcja");
+  var h = el("h3", null, "Siedem elementów treści");
+  h.appendChild(el("span", "chip " + (got === ELEMENTY.length ? "green" : "amber"), got + " / " + ELEMENTY.length));
+  w.appendChild(h);
+  w.appendChild(el("p", "opis", "Każdy z siedmiu elementów musi być widoczny w treści. Nagłówek nad akapitem nie wystarczy."));
+  w.appendChild(el("div", "note", "Trzy elementy — c, d i e — norma nazywa wprost zobowiązaniami. Pozostałe opisują, jaka polityka ma być: odpowiednia do celu organizacji (a), dająca ramy dla celów (b), wspierająca zakupy (f) i projektowanie (g)."));
+  w.appendChild(el("div", "warn", "Najłatwiej zubożyć politykę skrótem. „Przestrzegamy przepisów” gubi inne wymagania — choćby wymagania klientów. „Doskonalimy wynik” bez „i system” to tylko pół zobowiązania. „Zapewniamy zasoby” pomija informacje. „Kupujemy efektywne urządzenia” zapomina o usługach, na przykład serwisie sprężarek."));
+  host.appendChild(w);
+
+  ELEMENTY.forEach(function (e) {
+    var b = brakiElementu(e);
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, e.litera + ") " + e.nazwa);
+    hh.appendChild(el("span", "chip " + (elementOk(e) ? "green" : "amber"), elementOk(e) ? "kompletny" : "do uzupełnienia"));
+    if (e.zobowiazanie) hh.appendChild(el("span", "chip red", "zobowiązanie"));
+    sec.appendChild(hh);
+    var k = el("div", "poz" + (elementOk(e) ? "" : " brak"));
+    k.appendChild(el("div", "pozmeta", "Musi zawierać (wymaganie normy): " + e.musi));
+    if (e.mozna) k.appendChild(el("div", "pozmeta", "Można dodać (zalecenie ENESA): " + e.mozna));
+    k.appendChild(pole("Treść do polityki", txt(TRESC[e.kod], e.przyklad, 3, function (v) { TRESC[e.kod] = v; })));
+    b.forEach(function (x) {
+      k.appendChild(el("div", x.ok ? "note" : x.blokuje ? "warn" : "note", x.t));
+    });
+    sec.appendChild(k);
+    host.appendChild(sec);
+  });
+}
+
+/* ── zakładka 2: zobowiązania dodatkowe ── */
+function rysujDodatkowe(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zobowiązania dodatkowe — opcjonalnie"));
+  s.appendChild(el("p", "opis", "Sekcja 8 formularza F-EnMS-04. Nie jest wymagana. Wpiszcie tylko to, co organizacja świadomie przyjmuje i potrafi rozliczyć."));
+  s.appendChild(el("div", "note", "„Czy w polityce wpisywać liczby?” Możecie, ale nie musicie. Norma wymaga, żeby polityka dawała ramy do ustalania celów — nie żeby zawierała same cele. Konkretne wartości zwykle należą do celów i zadań energetycznych (6.2). Jeśli jednak świadomie wpisujecie liczbę, powiedzcie, którego wskaźnika dotyczy, co oznacza poprawę i z czym porównujecie. Samo „EnPI o 2% rocznie” to za mało."));
+  DODATKOWE.forEach(function (d, i) {
+    var k = el("div", "poz" + (dodatkoweOk(d) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Zobowiązanie " + (i + 1)));
+    g.appendChild(el("span", "chip", "decyzja firmy, nie wymóg normy"));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { DODATKOWE.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Treść", txt(d.tresc, "np. Każdy wniosek inwestycyjny o wartości powyżej 50 tys. zł zawiera ocenę wpływu na zużycie energii.", 2, function (v) { d.tresc = v; })));
+    k.appendChild(pole("Czy zawiera wartość liczbową?", sel(d.liczbowe, [["", "Wybierz"],
+    ["nie", "Nie — zobowiązanie opisowe"], ["tak", "Tak — jest w nim liczba"]], function (v) { d.liczbowe = v; })));
+    if (d.liczbowe === "tak") {
+      var p = el("div", "pole kandydat");
+      p.appendChild(el("label", null, "Zobowiązanie liczbowe wymaga trzech rzeczy — wszystkie obowiązkowe"));
+      [["wskaznik", "Którego wskaźnika dotyczy", "np. kWh na tonę wyrobu"],
+      ["kierunek", "Co oznacza poprawę", "np. spadek wartości wskaźnika"],
+      ["porownanie", "Z czym porównujecie", "np. wobec linii bazowej 2024, przy porównywalnej produkcji"]].forEach(function (f) {
+        p.appendChild(pole(f[1], inp(d[f[0]], f[2], function (v) { d[f[0]] = v; })));
+      });
+      k.appendChild(p);
+      k.appendChild(el("div", "warn", "Zobowiązanie liczbowe w polityce to świadoma decyzja firmy. Cele przeglądacie regularnie — ★ w wielu firmach co roku — a politykę rzadziej. Liczba w polityce zestarzeje się szybciej niż sam dokument."));
+    }
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj zobowiązanie dodatkowe");
+  dod.onclick = function () { DODATKOWE.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  if (!DODATKOWE.length)
+    s.appendChild(el("div", "note", "Brak zobowiązań dodatkowych jest w pełni poprawny. Polityka z samymi elementami a–g spełnia wymagania normy."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: utrzymywanie polityki ── */
+function rysujUtrzymanie(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Cztery rzeczy, które dzieją się z dokumentem"));
+  s.appendChild(el("p", "opis", "Treść to połowa wymagania. Druga połowa to, co się z politykią dzieje: ma być spisana, znana, dostępna i przeglądana."));
+  UTRZYMANIE.forEach(function (u) {
+    var k = el("div", "poz" + ((UTRZ[u.kod] || "").trim() ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, u.etykieta));
+    g.appendChild(el("span", "chip " + (u.podstawa === "N" ? "red" : ""),
+      u.podstawa === "N" ? "wymaganie normy" : "metoda ENESA"));
+    k.appendChild(g);
+    k.appendChild(el("div", "pozmeta", u.pomoc));
+    k.appendChild(pole(null, txt(UTRZ[u.kod], u.przyklad, 2, function (v) { UTRZ[u.kod] = v; })));
+    s.appendChild(k);
+  });
+  s.appendChild(el("div", "note", "Przegląd może potwierdzić, że zmiana nie jest potrzebna. Zapiszcie ten wynik — wtedy starsza data na dokumencie nikogo nie zaniepokoi."));
+  host.appendChild(s);
+
+  var z = el("div", "sekcja");
+  z.appendChild(el("h3", null, "Zatwierdzenie"));
+  z.appendChild(el("p", "opis", "Polityka jest jedynym dokumentem rozdziału 5, którego udokumentowania wymaga norma. Musi być jasne, kto i kiedy ją zatwierdził."));
+  var k2 = el("div", "poz" + (zatwOk() ? "" : " brak"));
+  k2.appendChild(pole("Wersja", inp(ZATW.wersja, "np. 1.0", function (v) { ZATW.wersja = v; })));
+  k2.appendChild(pole("Obowiązuje od", inp(ZATW.od, "", function (v) { ZATW.od = v; }, "date")));
+  k2.appendChild(pole("Zatwierdził — imię, nazwisko, funkcja",
+    inp(ZATW.kto, "np. Piotr Nowak, Dyrektor Zakładu, członek Zarządu", function (v) { ZATW.kto = v; })));
+  k2.appendChild(pole("Sposób zatwierdzenia", sel(ZATW.sposob, [["", "Wybierz"],
+  ["podpis", "Podpis i data"], ["uchwala", "Uchwała"], ["elektronicznie", "Obieg elektroniczny"]],
+    function (v) { ZATW.sposob = v; })));
+  if (ZATW.sposob === "uchwala")
+    k2.appendChild(pole("Numer i data uchwały",
+      inp(ZATW.uchwala, "np. uchwała Zarządu nr 4/2026 z 18 marca 2026 r.", function (v) { ZATW.uchwala = v; })));
+  z.appendChild(k2);
+
+  var h = el("h4", null, "Historia przeglądów");
+  z.appendChild(h);
+  z.appendChild(el("p", "opis", "Zapisujcie także wynik „bez zmian” — to on pokazuje, że przegląd się odbył."));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Data przeglądu", "Wynik", "Zapis", ""].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  PRZEGLADY.forEach(function (p, i) {
+    var r = el("tr");
+    var c1 = el("td"); c1.appendChild(inp(p.data, "", function (v) { p.data = v; }, "date")); r.appendChild(c1);
+    var c2 = el("td"); c2.appendChild(sel(p.wynik, [["", "Wybierz"],
+    ["bez_zmian", "Bez zmian"], ["zmiana", "Zmiana — nowa wersja"]], function (v) { p.wynik = v; })); r.appendChild(c2);
+    var c3 = el("td"); c3.appendChild(inp(p.zapis, "np. protokół przeglądu zarządzania 1/2026", function (v) { p.zapis = v; })); r.appendChild(c3);
+    var c4 = el("td");
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { PRZEGLADY.splice(i, 1); zapisz(); rysuj(); };
+    c4.appendChild(us); r.appendChild(c4);
+    t.appendChild(r);
+  });
+  z.appendChild(t);
+  var dod = el("button", "dodaj", "+ dodaj przegląd");
+  dod.onclick = function () { PRZEGLADY.push({}); zapisz(); rysuj(); };
+  z.appendChild(dod);
+  host.appendChild(z);
+}
+
+/* ── zakładka 4: podgląd polityki ── */
+function rysujPodglad(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Podgląd polityki"));
+  s.appendChild(el("p", "opis", "Tak będzie wyglądał dokument D-EnMS-POL-01 złożony z Waszych odpowiedzi. Podgląd jest tylko do czytania — treść poprawiacie w zakładce 1."));
+  var d = el("div", "poz");
+  var tyt = el("div", "poznazwa", "POLITYKA ENERGETYCZNA" + (POL.nazwa ? " — " + POL.nazwa : ""));
+  d.appendChild(tyt);
+  d.appendChild(el("div", "pozmeta", "wersja " + (ZATW.wersja || "[nr]") + " · obowiązuje od " + (ZATW.od || "[data]")));
+  if (POL.nazwa || POL.czym || POL.rola)
+    d.appendChild(el("p", null, (POL.nazwa || "[nazwa]") + ", " + (POL.czym || "[czym się zajmuje]") +
+      ", traktuje zarządzanie energią jako " + (POL.rola || "[rola energii]") + ". " + (POL.wstep || "")));
+  ELEMENTY.forEach(function (e, i) {
+    var t = (TRESC[e.kod] || "").trim();
+    var hh = el("div", "poznazwa", (i + 1) + ". " + e.nazwa);
+    hh.style.fontSize = "14px"; hh.style.marginTop = "12px";
+    d.appendChild(hh);
+    var p = el("p", null, t || "[brak treści — uzupełnij w zakładce 1]");
+    if (!t) p.className = "pozmeta";
+    d.appendChild(p);
+  });
+  DODATKOWE.filter(function (x) { return (x.tresc || "").trim(); }).forEach(function (x, i) {
+    if (i === 0) {
+      var hh = el("div", "poznazwa", "8. Zobowiązania dodatkowe");
+      hh.style.fontSize = "14px"; hh.style.marginTop = "12px";
+      d.appendChild(hh);
+    }
+    d.appendChild(el("p", null, x.tresc));
+  });
+  if (utrzOk())
+    d.appendChild(el("p", null, "Polityka jest przechowywana: " + UTRZ.gdzie + ". Komunikowana: " + UTRZ.komunikacja +
+      ". Udostępniana stronom zainteresowanym: " + UTRZ.udostepnianie + ". Przeglądana: " + UTRZ.kiedy + "."));
+  if (zatwOk())
+    d.appendChild(el("p", "pozmeta", "Zatwierdził: " + ZATW.kto + " · " +
+      ({ podpis: "podpis i data", uchwala: ZATW.uchwala || "uchwała", elektronicznie: "obieg elektroniczny" }[ZATW.sposob] || "") +
+      " · obowiązuje od " + ZATW.od));
+  s.appendChild(d);
+  host.appendChild(s);
+
+  var m = el("div", "sekcja");
+  m.appendChild(el("h3", null, "Mapa: gdzie jest który element"));
+  m.appendChild(el("p", "opis", "Odpowiednik komentarza do przykładu III-10. Ta tabela nie jest częścią polityki — trafia do dokumentacji jako dowód kompletności."));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Wymaganie punktu 5.2", "Gdzie w polityce", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  ELEMENTY.forEach(function (e, i) {
+    var r = el("tr");
+    r.appendChild(el("td", null, e.litera + ") " + e.musi.slice(0, 90)));
+    r.appendChild(el("td", null, "Sekcja " + (i + 1)));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (elementOk(e) ? "green" : "amber"), elementOk(e) ? "kompletny" : "do uzupełnienia"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  var r2 = el("tr");
+  r2.appendChild(el("td", null, "udokumentowana, zakomunikowana, dostępna, przeglądana"));
+  r2.appendChild(el("td", null, "Akapit końcowy"));
+  var td2 = el("td");
+  td2.appendChild(el("span", "chip " + (utrzOk() ? "green" : "amber"), utrzOk() ? "kompletny" : "do uzupełnienia"));
+  r2.appendChild(td2); t.appendChild(r2);
+  var r3 = el("tr");
+  r3.appendChild(el("td", null, "zatwierdzenie"));
+  r3.appendChild(el("td", null, "Stopka"));
+  var td3 = el("td");
+  td3.appendChild(el("span", "chip " + (zatwOk() ? "green" : "amber"), zatwOk() ? "kompletny" : "do uzupełnienia"));
+  r3.appendChild(td3); t.appendChild(r3);
+  m.appendChild(t);
+  host.appendChild(m);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  s.appendChild(el("p", "opis", "Najważniejsze pytanie tego punktu nie dotyczy treści, tylko użycia: czy z polityki wynika choć jedna zasada, którą widać w decyzjach."));
+
+  var kand = ELEMENTY.filter(function (e) { return !elementOk(e); }).map(function (e) { return e.litera + ")"; });
+  if (kand.length) {
+    var n = el("div", "note");
+    n.appendChild(el("b", null, "Elementy do uzupełnienia: "));
+    n.appendChild(document.createTextNode(kand.join(", ") + "."));
+    s.appendChild(n);
+  }
+  s.appendChild(el("div", "warn", "Typ A czy typ B? Polityka „do ramki” ma logo, podpis i zdanie o zrównoważonym rozwoju — i nikt nie pamięta, co w niej jest. Polityka „do działania” ma wszystkie siedem elementów i zdania, które widać w decyzjach. Różnicę robi jedno: czy przynajmniej jedno zdanie polityki stało się zasadą w zakupach albo w inwestycjach."));
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie. Przykład z książki: element f) przełożony na zasadę w matrycy uprawnień — Energy Manager może wstrzymać zakup urządzenia energochłonnego do czasu oceny, najdłużej na 5 dni roboczych."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var k = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    if (w.element) g.appendChild(el("span", "chip", "element " + w.element));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Którego elementu dotyczy", (function () {
+      var sl = document.createElement("select");
+      sl.appendChild(new Option("— bez odniesienia —", ""));
+      ELEMENTY.forEach(function (e) { sl.appendChild(new Option(e.litera + ") " + e.nazwa, e.litera)); });
+      sl.value = w.element || "";
+      sl.onchange = function () { w.element = sl.value; zapisz(); rysuj(); };
+      return sl;
+    })()));
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-13, sekcja 5.2 ── */
+function stanPozycji(p) {
+  var f = {
+    elem: function () { return elementOk(ELEMENTY.filter(function (e) { return e.litera === p.elem; })[0]); },
+    rodzaje_d: function () {
+      var t = (TRESC["d"] || "");
+      return /prawn/i.test(t) && /(inne wymagan|innych wymagan|przyjęl|przyjmujemy|umown|odbiorc|klient)/i.test(t);
+    },
+    liczbowe: function () {
+      var l = DODATKOWE.filter(function (d) { return d.liczbowe === "tak"; });
+      if (!l.length) return null;
+      return l.every(dodatkoweOk);
+    },
+    udokumentowana: function () { return !!(UTRZ.gdzie || "").trim(); },
+    zatwierdzenie: function () { return zatwOk(); },
+    komunikacja: function () { return !!(UTRZ.komunikacja || "").trim(); },
+    udostepnianie: function () { return !!(UTRZ.udostepnianie || "").trim(); },
+    przeglad: function () { return !!(UTRZ.kiedy || "").trim(); },
+    wynik_przegladu: function () { return PRZEGLADY.some(function (x) { return x.data && x.wynik; }); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!(POL.nazwa || "").trim()) b.push({ t: "Brak nazwy organizacji.", kto: "klient" });
+  if (!(POL.czym || "").trim()) b.push({ t: "Nie opisano, czym zajmuje się organizacja.", kto: "klient" });
+  ELEMENTY.forEach(function (e) {
+    brakiElementu(e).forEach(function (x) {
+      if (x.blokuje) b.push({ t: "Element " + e.litera + ") — " + x.t, kto: "klient" });
+    });
+  });
+  DODATKOWE.forEach(function (d, i) {
+    if (!dodatkoweOk(d)) b.push({ t: "Zobowiązanie dodatkowe " + (i + 1) + " — niekompletne (liczbowe wymaga wskaźnika, kierunku i porównania).", kto: "klient" });
+  });
+  UTRZYMANIE.forEach(function (u) {
+    if (!(UTRZ[u.kod] || "").trim())
+      b.push({ t: "Utrzymywanie polityki: " + u.etykieta + " — brak odpowiedzi.", kto: "klient", metodyka: u.podstawa === "M" });
+  });
+  if (!zatwOk()) b.push({ t: "Zatwierdzenie polityki — niekompletne (wersja, data, osoba, sposób).", kto: "klient" });
+  if (!PRZEGLADY.some(function (x) { return x.data && x.wynik; }))
+    b.push({ t: "Brak zapisanego wyniku przeglądu polityki — także „bez zmian” jest wynikiem.", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-POL-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-13 — sekcja 5.2"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_52.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-POL-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["Nagłówek i wstęp", "zakładka 1", (POL.nazwa || "—") + " · wersja " + (ZATW.wersja || "—")],
+  ["Sekcje 1–7: elementy a–g", "zakładka 1", ELEMENTY.filter(elementOk).length + " z " + ELEMENTY.length + " kompletnych"],
+  ["Sekcja 8: zobowiązania dodatkowe", "zakładka 2", DODATKOWE.length ? ile(DODATKOWE.filter(dodatkoweOk).length, "zobowiązanie", "zobowiązania", "zobowiązań") : "brak — poprawne"],
+  ["Akapit końcowy: utrzymywanie polityki", "zakładka 3", utrzOk() ? "kompletny" : "do uzupełnienia"],
+  ["Stopka: zatwierdzenie", "zakładka 3", zatwOk() ? ZATW.kto : "do uzupełnienia"],
+  ["Historia przeglądów", "zakładka 3", ile(PRZEGLADY.filter(function (x) { return x.data; }).length, "przegląd", "przeglądy", "przeglądów")],
+  ["Mapa elementów a–g", "zakładka 4", "Dowód kompletności — nie jest częścią polityki"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(el("div", "ok", "Polityka energetyczna to jedyny dokument rozdziału 5, którego udokumentowania wymaga norma. D-EnMS-POL-01 odpowiada formularzowi F-EnMS-04 (załącznik III-09); przykład wypełniony to III-10."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "elementy", t: "1. Siedem elementów", f: rysujElementy },
+  { id: "dodatkowe", t: "2. Zobowiązania dodatkowe", f: rysujDodatkowe },
+  { id: "utrzymanie", t: "3. Utrzymywanie i zatwierdzenie", f: rysujUtrzymanie },
+  { id: "podglad", t: "4. Podgląd polityki", f: rysujPodglad },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+
+function aktualizujPasek() {
+  var razem = ELEMENTY.length + UTRZYMANIE.length + 2 + 1;
+  var zrob = ELEMENTY.filter(elementOk).length
+    + UTRZYMANIE.filter(function (u) { return (UTRZ[u.kod] || "").trim(); }).length
+    + ((POL.nazwa || "").trim() && (POL.czym || "").trim() ? 1 : 0)
+    + (zatwOk() ? 1 : 0)
+    + (PRZEGLADY.some(function (x) { return x.data && x.wynik; }) ? 1 : 0);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 17:00", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 5.2" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_52", JSON.stringify({
+      POL: POL, TRESC: TRESC, DODATKOWE: DODATKOWE, UTRZ: UTRZ, ZATW: ZATW,
+      PRZEGLADY: PRZEGLADY, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_52"); if (!s) return;
+    var d = JSON.parse(s);
+    POL = d.POL || POL; TRESC = d.TRESC || {}; DODATKOWE = d.DODATKOWE || [];
+    UTRZ = d.UTRZ || UTRZ; ZATW = d.ZATW || ZATW; PRZEGLADY = d.PRZEGLADY || []; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  POL = {
+    nazwa: "AutoParts Polska Sp. z o.o.",
+    czym: "producent komponentów dla przemysłu motoryzacyjnego z zakładem w Katowicach",
+    rola: "element konkurencyjności i odpowiedzialności wobec klientów, pracowników i otoczenia",
+    wstep: "Zobowiązujemy się do tego, co opisujemy poniżej."
+  };
+  ELEMENTY.forEach(function (e) { TRESC[e.kod] = e.przykladPelny || ""; });
+  /* Zakładka 3 była jedyną, której przykład nie dotykał — polityka wyglądała na gotową,
+     a brakowało tego, co norma wymienia wprost: gdzie jest, jak zakomunikowana, jak udostępniana
+     i kiedy przeglądana. Bez tego punkt 5.2 kończył się na samej treści. */
+  UTRZ = {
+    gdzie: "Intranet, zakładka „System zarządzania energią”, wersja aktualna; wydruk w gablocie przy portierni "
+      + "i w sekretariacie. Wykaz dokumentów (7.5) wskazuje wersję obowiązującą.",
+    komunikacja: "Omówiona na spotkaniu kierownictwa 12.02.2026 r. i na instruktażach stanowiskowych; "
+      + "treść w intranecie i na tablicy przy portierni; nowi pracownicy — na szkoleniu wstępnym.",
+    udostepnianie: "Na żądanie stron zainteresowanych: wysyłana klientom i instytucjom finansującym w wersji "
+      + "podpisanej; udostępniana dostawcom w zapytaniach ofertowych jako załącznik do wymagań energetycznych.",
+    kiedy: "Raz w roku na przeglądzie zarządzania (9.3) oraz przy istotnej zmianie: nowy kluczowy klient, "
+      + "nowa umowa na energię, zmiana zakresu systemu.",
+    zapis: "W protokole przeglądu zarządzania (D-EnMS-PZR-01) oraz w historii przeglądów tej strony; wynik "
+      + "„bez zmian” zapisywany tak samo jak zmiana treści."
+  };
+  ZATW = {
+    wersja: "1.0", od: "2026-02-12", kto: "Piotr Nowak — Dyrektor Zakładu",
+    sposob: "Podpis na dokumencie i zarządzenie 3/2026", uchwala: "Zarządzenie 3/2026 z 12.02.2026 r."
+  };
+  PRZEGLADY = [{
+    data: "2026-06-18",
+    wynik: "Przegląd na przeglądzie zarządzania: treść bez zmian. Sprawdzono zgodność z zakresem po dopisaniu "
+      + "magazynu wyrobów gotowych — polityka obejmuje całą działalność w granicach systemu.",
+    kto: "Piotr Nowak — Dyrektor Zakładu"
+  }];
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 17:05", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 5.2.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  POL = { nazwa: "", czym: "", rola: "", wstep: "" }; TRESC = {}; DODATKOWE = [];
+  UTRZ = { gdzie: "", komunikacja: "", udostepnianie: "", kiedy: "", zapis: "" };
+  ZATW = { wersja: "", od: "", kto: "", sposob: "", uchwala: "" };
+  PRZEGLADY = []; WNIOSKI = [];
+  try { localStorage.removeItem("enesa_52"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

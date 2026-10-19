@@ -1,0 +1,1844 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 8.3 Zakupy</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 8</div>
+ <h1>8.3 Zakupy</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 8.3</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 8.3</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>8.3 Zakupy</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 8.3 i porównanie kosztu zakupu i energii.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 8.3<br>Zakupy</div>
+   <div>
+    <h4>8.3 Zakupy</h4>
+    <p>Cena na fakturze to pierwsza rata. Kryteria dla kategorii zakupów, informowanie dostawców,
+    specyfikacja — także przy zakupie energii.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 8.3. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">8.3 — zakupy<br>10 slajdów</div>
+   <div>
+    <h4>8.3 Zakupy</h4>
+    <p>Które zakupy mają znaczący wpływ. Koszt zakupu i energii w praktyce. Jedno zdanie
+    w zapytaniu ofertowym. Zakup energii i usług.</p>
+    <p style="font-size:12.5px">10 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Przy zakupie wyrobów, urządzeń i usług zużywających energię, które mogą mieć
+ znaczący wpływ na wynik energetyczny, organizacja informuje dostawców, że wynik energetyczny jest jednym
+ z kryteriów oceny zakupu. Ustala i wdraża kryteria oceny wyniku energetycznego w planowanym lub przewidywanym
+ okresie użytkowania. Tam, gdzie ma to zastosowanie, określa specyfikacje dotyczące zakupu energii. Omówienie
+ na podstawie punktu 8.3 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> kupując coś, co będzie zużywać energię,
+ oceniaj nie tylko cenę zakupu, ale i koszt energii w całym okresie użytkowania — i powiedz o tym dostawcom.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 7, punkt 8.3. Formularz specyfikacji zakupowej:
+ III-37 (F-EnMS-16), przykład wypełnienia: III-38.</div>
+
+ <div class="ramka">
+  <h3>◧ Dwie oferty i 25 000 zł różnicy</h3>
+  <p style="font-size:13.5px">Dwie oferty na sprężarkę o tej samej wydajności. Różnica w cenie: 25 000 zł.
+  Dział zakupów ma w rocznych celach obniżkę kosztów zakupu i dobrze wie, którą ofertę wybrać.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Kłopot w tym, że <b>cena na fakturze to dopiero pierwsza
+  rata.</b> Kolejne zakład będzie płacił co miesiąc, w rachunku za energię, przez kilkanaście lat.
+  W ofercie ich nie widać — chyba że ktoś o nie zapyta. <b>Punkt 8.3 każe zapytać.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Których zakupów to dotyczy?</h3>
+ <p style="font-size:14.5px">Tych, które mogą mieć <b>znaczący wpływ na wynik energetyczny</b> — a to nie to
+ samo co „drogich”. Sygnały, od których warto zacząć: zakup dotyczy znaczącego użycia energii; zmienia nastawy
+ albo sterowanie; dotyczy urządzenia pracującego wiele godzin rocznie przez lata; jest usługą wpływającą
+ na pracę urządzeń; jest zakupem energii.</p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> próg kwotowy bywa wygodnym sygnałem dla działu zakupów, ale nie może
+ zastąpić oceny wpływu. <b>Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii
+ więcej niż drogie wyposażenie biura.</b></p>
+
+ <h3 style="margin-top:22px">Koszt zakupu i energii — jak to policzyć</h3>
+ <p style="font-size:14.5px">Najprostsze porównanie, które już wiele zmienia:</p>
+ <table class="tab">
+ <tr><th style="width:34%">Składnik</th><th>Jak go policzyć</th></tr>
+ <tr><td><b>Koszt zakupu</b></td><td>Cena z oferty wraz z montażem i uruchomieniem.</td></tr>
+ <tr><td><b>Koszt energii w roku</b></td><td>Średni pobór mocy × godziny pracy × cena energii — <b>albo</b>
+ zużycie jednostkowe × ilość produktu w roku × cena energii.</td></tr>
+ <tr><td><b>Koszt zakupu i energii</b></td><td>Koszt zakupu + koszt energii × liczba lat użytkowania.</td></tr>
+ </table>
+ <div class="warn" style="margin:14px 0"><b>Nie porównujcie samych mocy znamionowych.</b> Sprężarka o mocy
+ 45 kW może średnio pobierać znacznie mniej — albo pracować na biegu jałowym, zużywając energię bez wytwarzania
+ powietrza. Moc z tabliczki mówi, ile urządzenie może pobrać, nie ile pobierze u Was.</div>
+ <p style="font-size:13.5px">★ <b>Rada:</b> pełne porównanie kosztu cyklu życia uwzględnia też instalację,
+ serwis, zmiany cen energii i wartość pieniądza w czasie. To przydatna metoda — <b>nie format wymagany
+ przez normę.</b> Norma wymaga kryteriów oceny wyniku energetycznego w okresie użytkowania. Często jednak
+ najbardziej przekonuje pieniądz.</p>
+
+ <h3 style="margin-top:22px">Jedno zdanie w zapytaniu ofertowym</h3>
+ <p style="font-size:14.5px">Norma wymaga poinformowania dostawców, że wynik energetyczny jest jednym
+ z kryteriów oceny. W praktyce to jedno zdanie — i lista danych, których oczekujecie.
+ <b>Dostawca, który wie, że energia się liczy, zaproponuje inne rozwiązanie niż ten, który walczy
+ wyłącznie ceną.</b></p>
+ <div class="ramka">
+  <p style="font-size:13.5px;margin-bottom:0"><b>Z zapytania AutoParts:</b> „Wynik energetyczny jest jednym
+  z kryteriów oceny ofert. Prosimy o podanie przewidywanego zużycia energii (MWh/rok) oraz wskaźnika kWh/Nm³
+  przy profilu pracy z załącznika nr 2 i ciśnieniu sieci 6,3 bar, wraz z metodą obliczeń. Oferentów, którzy
+  podadzą tylko moc znamionową, poprosimy o uzupełnienie danych.”</p>
+ </div>
+
+ <h3 style="margin-top:22px">Zakup energii i zakup usług</h3>
+ <p style="font-size:14.5px">Norma wymaga specyfikacji także przy <b>zakupie energii</b> — tam, gdzie
+ to właściwe. Może dotyczyć struktury cen, profilu poboru, ciągłości dostaw, pochodzenia.
+ <b>Pochodzenie energii zapisujcie osobno:</b> zakup energii z odnawialnych źródeł może być ważny dla klienta
+ i dla emisji, ale sam w sobie nie poprawia wyniku energetycznego — <b>sprężarkownia zużyje tyle samo kWh
+ na Nm³ powietrza, niezależnie od tego, skąd pochodzi prąd.</b></p>
+ <p style="font-size:14.5px">Usługi kupuje się tak samo. <b>Trzy zdania w zleceniu dla serwisu sprężarek
+ z punktu 8.1 to też specyfikacja zakupu</b> — mówią wykonawcy, czego zakład oczekuje i jak oceni jego pracę.</p>
+
+ <h3 style="margin-top:22px">AutoParts: 756 000 zł w jednym porównaniu</h3>
+ <table class="tab">
+ <tr><th style="width:34%">Składnik</th><th>Oferta A</th><th>Oferta B</th></tr>
+ <tr><td>Cena zakupu</td><td>330 000 zł</td><td>375 000 zł</td></tr>
+ <tr><td>Przewidywane zużycie</td><td>1 660 MWh/rok</td><td>1 600 MWh/rok</td></tr>
+ <tr><td>Koszt energii w roku (890 zł/MWh)</td><td>1 477 400 zł</td><td>1 424 000 zł</td></tr>
+ <tr><td><b>Koszt zakupu i energii w 15 lat</b></td><td>22 491 000 zł</td><td><b>21 735 000 zł</b></td></tr>
+ </table>
+ <p style="font-size:14.5px">Oferta B jest droższa o 45 000 zł i tańsza o <b>756 000 zł</b>. Różnica
+ w koszcie energii w pierwszym roku — 53 400 zł — <b>przewyższa całą różnicę w cenie zakupu.</b></p>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts: zakup sterownika i napędu</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Sterownik i napęd będą pracować kilkanaście lat; wybór oferty ustala koszt energii na cały ten okres. Przy 1 600–1 660 MWh rocznie każde 60 MWh różnicy to ponad 50 tys. zł w roku.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Zapytanie zawiera zdanie o kryterium wyniku energetycznego i wymaganie danych dla profilu pracy zakładu. Oferty bez takich danych są uzupełniane, nie porównywane. Kryterium wyboru: najniższy koszt zakupu i energii w 15 lat spośród ofert spełniających wymagania minimalne.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Cztery wnioski z analizy projektu (8.2) weszły do wymagań minimalnych specyfikacji. Założenia porównania — cena 890 zł/MWh, 15 lat, profil z kampanii pomiarowej — zapisane przy porównaniu, żeby dało się je powtórzyć.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Przy odbiorze sprawdzane są deklaracje dostawcy: dwie nastawy, przetworniki, eksport danych, przyłącza. Kryteria obsługi wchodzą do karty z punktu 8.1 przed uruchomieniem. Cztery tygodnie po odbiorze i po zamknięciu 2027 r. wynik porównywany z deklaracją oferty.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Kryterium oceny to wyłącznie cena zakupu</td><td>Policzcie koszt zakupu i energii w okresie użytkowania</td></tr>
+ <tr><td>Próg wyłącznie kwotowy</td><td>Oceniajcie wpływ: SEU, nastawy, czas pracy, usługi, zakup energii</td></tr>
+ <tr><td>Dostawca nie wie, że energia się liczy</td><td>Jedno zdanie w zapytaniu i lista oczekiwanych danych</td></tr>
+ <tr><td>Porównanie mocy znamionowych zamiast zużycia</td><td>Żądajcie danych dla swojego profilu pracy; brakujące uzupełniajcie przed porównaniem</td></tr>
+ <tr><td>„Zielona energia” jako poprawa wyniku energetycznego</td><td>Raportujcie pochodzenie i zużycie osobno</td></tr>
+ <tr><td>Deklaracje dostawcy niesprawdzone</td><td>Sprawdźcie je przy odbiorze i porównajcie wynik po uruchomieniu</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Jedno porównanie potrafi zmienić decyzję na kilkaset tysięcy
+  złotych.<br><br>
+  <b>Zadanie:</b> weźcie ostatni zakup urządzenia, które pracuje wiele godzin w roku, i policzcie koszt energii
+  w przewidywanym okresie użytkowania. Potem sprawdźcie, czy w zapytaniu ofertowym było zdanie o wyniku
+  energetycznym. Ankieta ma na to część C i liczy koszt za Was w części D.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Część A decyduje o ścieżce: wszystkie „nie” zamykają ocenę z uzasadnieniem.
+  W części D platforma sama liczy zużycie roczne, koszt energii i koszt zakupu i energii — z mocy i godzin,
+  z zużycia jednostkowego albo z wartości podanej przez dostawcę.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 8.3 w formacie stron 4.1–8.2.</b> Druga ankieta z rozgałęzieniem (po 8.2) i pierwsza,
+w której <b>platforma liczy</b> zamiast tylko sprawdzać: zużycie roczne, koszt energii w roku i koszt zakupu
+i energii w całym okresie użytkowania. Razem 10 pytań w częściach A i C, tabela kryteriów dla kategorii
+zakupów (część B), porównanie ofert (D) i odbiór (E).</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 7, punkt 8.3</td><td>Scena dwóch ofert i 25 000 zł różnicy, zdanie o pierwszej racie, akapit o tym, których zakupów to dotyczy, rada o progu kwotowym i usłudze serwisowej kotłowni, trzy składniki kosztu zakupu i energii, ostrzeżenie o mocach znamionowych i biegu jałowym, rada o pełnym koszcie cyklu życia jako metodzie a nie formacie, akapit o jednym zdaniu w zapytaniu, zakup energii i pochodzenie osobno, zdanie o trzech zdaniach w zleceniu serwisowym jako specyfikacji, przykład w czterech ogniwach, tabela sześciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 6 — III-37 (F-EnMS-16)</td><td>Pięć części formularza: A ocena wpływu zakupu (6 pytania), B kryteria dla kategorii zakupów (tabela: kategoria, kryterium wyniku energetycznego, wymaganie minimalne, dane od dostawcy, podstawa), C elementy zapytania ofertowego (4 pytania), D porównanie ofert, E odbiór. Oznaczenia N / M przy każdym pytaniu.</td></tr>
+<tr><td>Część III, Moduł 6 — III-38</td><td>Przykład wypełnienia dla sterownika i napędu sprężarkowni: 380 000 zł, uruchomienie 06.2027, oferty A i B, zdanie informujące dostawców, cztery wymagania minimalne z analizy projektu, porównanie w 15 lat przy 890 zł/MWh.</td></tr>
+<tr><td>Część III, Moduł 6 — III-39</td><td>Lista kontrolna sekcji 8.3: 7 pozycji — trzy wymagania normy i cztery zalecenia metodyki.</td></tr>
+<tr><td>Część III, Moduł 6 — III-40, pkt 4.4</td><td>Procedura P-EnMS-06: ocena wpływu zakupu przed wysłaniem zapytania, kryteria dla kategorii, informowanie dostawców, porównanie kosztem zakupu i energii, przekazanie kryteriów obsługi do nadzoru operacyjnego.</td></tr>
+</table>
+<div class="note"><b>Trzy zakupy przykładu.</b> Pierwszy — sterownik i napęd sprężarkowni — pochodzi z III-38
+wraz z liczbami ofert. Drugi (umowa serwisowa, 28 000 zł) i trzeci (zakup energii na 2027 r., ok. 12 000 MWh)
+<b>są naszym rozszerzeniem</b>: bez nich w ankiecie nie widać ani ścieżki usługowej, ani zakupu energii —
+a to dwie rzeczy, które w tym punkcie najczęściej wypadają. Dane są spójne z kartą kryteriów sprężarkowni
+(8.1) i planem zbierania danych (6.6), ale <b>kwota 28 000 zł i wolumen 12 000 MWh wymagają potwierdzenia</b>
+przy publikacji.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>zakup</code></td><td>id, audyt_id, przedmiot, nr, zrodlo_wymagan, status, kto_prowadzi, data_oceny, uzasadnienie_a, informacja_dla_dostawcow, kryterium_wyboru, okres_lat, cena_energii, zalozenia, rekomendacja, porownanie_nd BOOL, porownanie_nd_powod.</td></tr>
+<tr><td><code>odpowiedz_zakupu</code></td><td>zakup_id, czesc ENUM('A','C'), pytanie_kod, odpowiedz ENUM('tak','nie','nd'), uwagi. Jedna tabela na obie części — pytania są słownikiem systemowym.</td></tr>
+<tr><td><code>wymaganie_minimalne</code></td><td>id, zakup_id, tresc, skad. Przy zakupach z projektu <code>skad</code> powinno docelowo wskazywać <b>konkretny wniosek z 8.2</b>, nie tekst.</td></tr>
+<tr><td><code>oferta</code></td><td>id, zakup_id, nazwa, spelnia_minimalne BOOL, cena, tryb ENUM('roczne','moc','jednostkowy'), zuzycie_roczne, srednia_moc, godziny_pracy, zuzycie_jednostkowe, ilosc_roczna, zrodlo_danych, inne_koszty. Wartości wyliczane <b>nie są przechowywane</b> — platforma liczy je przy każdym wyświetleniu.</td></tr>
+<tr><td><code>kategoria_zakupowa</code></td><td>id, audyt_id, kategoria, kryterium, wymaganie_minimalne, dane_od_dostawcy, podstawa. Część B — <b>poziom organizacji, nie zakupu</b>: ustalana raz, stosowana przy każdym zakupie z kategorii.</td></tr>
+<tr><td><code>odbior_zakupu</code></td><td>zakup_id plus trzy pola: deklaracje sprawdzone, kryteria przekazane do 8.1, sprawdzenie wyniku po uruchomieniu. Część E — jeden rekord na zakup.</td></tr>
+<tr><td><code>ustawienia_zakupow</code></td><td>Próg kwotowy i cena energii do porównań — w metryce audytu. Cena z zakupu nadpisuje cenę wspólną.</td></tr>
+</table>
+
+<h2>Liczenie w części D</h2>
+<table>
+<tr><th style="width:30%">Wielkość</th><th>Wzór i uwagi dla implementacji</th></tr>
+<tr><td>Zużycie roczne [MWh]</td><td>Trzy tryby: <code>roczne</code> — wartość podana przez dostawcę; <code>moc</code> — <code>średnia_moc [kW] × godziny [h] / 1000</code>; <code>jednostkowy</code> — <code>zużycie_jedn [kWh/j.] × ilość [j.] / 1000</code>. Przy sprężonym powietrzu „ilość” to objętość w Nm³ — <b>samo kWh/Nm³ pomnożone przez godziny nie daje kosztu</b>, brakuje ilości powietrza.</td></tr>
+<tr><td>Koszt energii w roku [zł]</td><td><code>zużycie_roczne × cena_energii</code>. Cena: z zakupu, a jeśli puste — wspólna z metryki audytu.</td></tr>
+<tr><td>Koszt zakupu i energii [zł]</td><td><code>cena + koszt_energii_roczny × lata + inne_koszty</code>. Bez dyskontowania — świadomie, zgodnie z radą z książki, że pełne LCC jest metodą, nie wymogiem. Pole „inne koszty” zostawia miejsce na instalację i serwis, gdy klient chce je uwzględnić.</td></tr>
+<tr><td>Najlepsza oferta</td><td>Najniższy koszt zakupu i energii <b>wyłącznie wśród ofert spełniających wymagania minimalne</b>. Oferta odrzucona na wymaganiach nie wchodzi do porównania, nawet jeśli jest najtańsza.</td></tr>
+<tr><td>Różnica wobec najlepszej</td><td>Ostatni wiersz zestawienia. W przykładzie pokazuje 756 000 zł — liczbę, która w książce zmienia decyzję.</td></tr>
+</table>
+<div class="warn"><b>Sprawdzenie zgodności z III-38.</b> Oferta A: 330 000 + 1 660 × 890 × 15 = 22 491 000 zł.
+Oferta B: 375 000 + 1 600 × 890 × 15 = 21 735 000 zł. Różnica 756 000 zł, różnica kosztu energii w roku
+53 400 zł — <b>obie liczby zgodne z przykładem w Toolkicie.</b> Przy zmianie wzoru w implementacji ten przykład
+jest testem regresji.</div>
+
+<h2>Logika ścieżki</h2>
+<table>
+<tr><th style="width:30%">Stan części A</th><th>Co robi platforma</th></tr>
+<tr><td>Wszystkie sześć odpowiedzi „nie”</td><td>Zakup <b>zamknięty na etapie A</b>. Części C–E pokazują komunikat, że nie są wymagane; zamiast nich pojawia się wymagane pole uzasadnienia. Lista kontrolna i braki() traktują taki zakup jako kompletny.</td></tr>
+<tr><td>Co najmniej jedno „tak”</td><td>Zakup istotny — części B–E wymagane.</td></tr>
+<tr><td><b>„Tak” tylko przy progu kwotowym</b></td><td>Ostrzeżenie: <b>próg wyłącznie kwotowy</b> to jeden z sześciu błędów. Komunikat wymienia pozostałe pięć sygnałów do sprawdzenia.</td></tr>
+<tr><td>„Nie” przy progu, „tak” przy czymkolwiek innym</td><td>Komunikat potwierdzający: zakup jest istotny, mimo że nie przekracza progu. <b>Dokładnie tak powinno to działać.</b> W przykładzie tę ścieżkę pokazuje umowa serwisowa za 28 000 zł.</td></tr>
+<tr><td>Porównanie oznaczone „nie dotyczy”</td><td>Część D zwija się do pola uzasadnienia. Dotyczy usług i zakupu energii, gdzie porównanie kosztem energii urządzenia jest bezsensowne — ale <b>uzasadnienie jest wymagane</b>, bo kryterium oceny wyniku energetycznego w okresie użytkowania wymaga normy także tam.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Źródło danych wskazuje moc znamionową</b></td><td>Czerwony chip „tylko moc znamionowa” przy ofercie, ostrzeżenie i pozycja w braki(). Wyrażenie: <code>/(tabliczk|moc znamionow|znamionow|katalogow|z katalogu)/i</code> na polu „źródło danych o zużyciu”. Komunikat cytuje zdanie z zapytania AutoParts o uzupełnieniu danych. <b>To pole istnieje wyłącznie po to, by ta walidacja była możliwa</b> — bez niego nie da się odróżnić danych dla profilu zakładu od liczby z tabliczki.</td></tr>
+<tr><td>Oferta niespełniająca wymagań minimalnych w rekomendacji</td><td>Ostrzeżenie: porównanie prowadzi się tylko wśród ofert spełniających wymagania. Wykrywane po nazwie oferty w tekście rekomendacji.</td></tr>
+<tr><td><b>Brak zapisanych założeń</b></td><td>Pole wymagane do kompletności porównania, pozycja w braki() i w analizie konsultanta. Bez założeń — okresu, ceny, profilu — <b>wyniku nie da się powtórzyć ani obronić przed zarządem</b>, a to jest zwykle moment, w którym porównanie traci wartość.</td></tr>
+<tr><td>Mniej niż dwie oferty</td><td>Ostrzeżenie z podpowiedzią: jeśli oferta jest jedna, oznaczcie porównanie jako niedotyczące i napiszcie dlaczego.</td></tr>
+<tr><td>„Nie” na pytanie oznaczone N przy zakupie dotyczącym SEU</td><td>Ostrzeżenie przy pytaniu i wymóg uzasadnienia; bez niego pozycja niewypełniona. Dotyczy dwóch pytań części C: informowania dostawców i specyfikacji.</td></tr>
+<tr><td>Brak informacji dla dostawców przy zakupie dotyczącym SEU</td><td>Ostrzeżenie w części C i pozycja w braki(): „dostawca nie wie, że energia się liczy”.</td></tr>
+<tr><td><b>Pochodzenie energii jako poprawa wyniku</b></td><td>Wyrażenie <code>RE_ZIELONA</code> (odnawialn / zielon / OZE / gwarancje pochodzenia) w kryterium wyboru albo rekomendacji <b>w połączeniu</b> ze słowami o poprawie wyniku lub oszczędności. Ostrzeżenie cytuje zdanie o sprężarkowni i kWh/Nm³. Dwuczłonowy warunek jest konieczny: zdanie „gwarancje pochodzenia wyceniane osobno i raportowane osobno” jest <b>poprawne</b> i nie może zapalać ostrzeżenia — tak jest wypełniony trzeci zakup przykładu.</td></tr>
+<tr><td>Kryterium kategorii powołujące się na pochodzenie</td><td>Ostrzeżenie przy kategorii, z propozycją przeniesienia pochodzenia do osobnego wiersza albo do pola podstawy.</td></tr>
+<tr><td>Zakup energii bez kategorii „Energia”</td><td>Ostrzeżenie w zakładce 2 i pozycja w braki(): norma wymaga specyfikacji także przy zakupie energii.</td></tr>
+<tr><td>Brak kategorii dla usług</td><td>Nota (nie ostrzeżenie): to nie tylko urządzenia — serwis, projekt i wykonawstwo też wpływają na wynik.</td></tr>
+<tr><td>Brak części E</td><td>Pozycja w braki() i w analizie konsultanta. „Deklaracje dostawcy niesprawdzone” to szósty błąd tego punktu.</td></tr>
+<tr><td>Brak zakupu usługi w rejestrze</td><td>Nota w analizie konsultanta: pytanie o to, kto serwisuje znaczące użycia energii i czy to zlecenie przechodzi przez ocenę wpływu.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-39 — sekcja 8.3</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Dla zakupów o znaczącym wpływie ustalono kryteria oceny wyniku energetycznego w okresie użytkowania.</td><td class='mono'>N</td><td><code>kryteria</code></td></tr><tr><td>Dostawcy są informowani, że wynik energetyczny jest jednym z kryteriów oceny.</td><td class='mono'>N</td><td><code>informuje</code></td></tr><tr><td>Przy zakupie energii, produktów i usług mających wpływ na znaczące użycia energii określono specyfikacje.</td><td class='mono'>N</td><td><code>specyfikacje</code></td></tr><tr><td>Ocena wpływu obejmuje także usługi i zakup energii, a próg kwotowy jest tylko sygnałem pomocniczym.</td><td class='mono'>M</td><td><code>wplyw</code></td></tr><tr><td>Oferty porównuje się na danych dla profilu pracy zakładu, nie na mocy znamionowej.</td><td class='mono'>M</td><td><code>profil</code></td></tr><tr><td>Założenia porównania — okres, cena energii, profil — są zapisane.</td><td class='mono'>M</td><td><code>zalozenia</code></td></tr><tr><td>Deklaracje dostawcy są sprawdzane przy odbiorze, a kryteria obsługi przekazywane do nadzoru operacyjnego.</td><td class='mono'>M</td><td><code>odbior</code></td></tr></table>
+<div class="note">Pięć pozycji zwraca „nie dotyczy”, gdy nie ma czego oceniać: brak zakupów istotnych, brak
+zakupów dotyczących znaczących użyć energii albo wszystkie porównania oznaczone jako niedotyczące. Pozycja
+o ocenie wpływu jest spełniona tylko wtedy, gdy w rejestrze jest <b>co najmniej jeden zakup usługi albo
+energii</b> — rejestr złożony wyłącznie z urządzeń jest sygnałem, że ocena obejmuje za mało.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–5, 7</td><td>Wypełnia klient — dział zakupów razem z Energy Managerem, przy usługach z kierownikiem utrzymania ruchu. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 6 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok liczy oferty oparte na mocy znamionowej, porównania bez założeń i zakupy dotyczące SEU bez informacji dla dostawców; przy pochodzeniu energii dodaje, że <b>to rozmowa, nie poprawka w formularzu</b> — bo wraca przy raportowaniu dla klienta.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-ZKP-01</code> — kryteria i specyfikacje zakupowe</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-16, załącznik III-37; przykład wypełnienia III-38</td></tr>
+<tr><td>Status w normie</td><td>Punkt 8.3 nie wymaga wprost zachowania udokumentowanych informacji, ale <b>ustalenie i wdrożenie kryteriów</b> bez zapisu jest niemożliwe do wykazania. W wykazie z punktu 7.5 pozycja pojawia się jako Z (8.3) — zapis z metodyki, nie z normy.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Nowy zakup przechodzący ocenę wpływu, zmiana listy SEU po przeglądzie energetycznym, nowa kategoria zakupowa, zmiana ceny energii do porównań, odbiór zakupu (część E), niezgodność dotycząca dostawcy.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Wejście i wyjście.</b> Zakup realizuje inwestycję z planu działań (sterownik i napęd — cel C1, zadanie Z1.1); wybrana oferta ustala, czy założona oszczędność jest osiągalna. Rozbieżność między deklaracją oferty a celem jest sygnałem do przeliczenia planu.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Lista SEU rozstrzyga pierwsze pytanie części A; oszczędność 230 MWh/rok z przeglądu jest odniesieniem dla deklaracji dostawców.</td></tr>
+<tr><td>6.4 i 6.5 EnPI i EnB</td><td><b>Wyjście.</b> Część E ustala, z czym porównać wynik po uruchomieniu. Zmiana źródła danych po zakupie energii (dane godzinowe zamiast faktury) wymaga adnotacji w karcie wskaźnika.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Wyjście.</b> Wymagania minimalne dotyczące pomiaru i eksportu danych kończą się nowymi pozycjami planu — w przykładzie dwa przetworniki ciśnienia i dane godzinowe od sprzedawcy energii.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Wejście.</b> Wymagania wobec kwalifikacji osób wykonujących usługę przy znaczącym użyciu energii to ta sama sprawa, którą matryca kompetencji opisuje dla pracowników — przy wykonawcach rozstrzyga ją specyfikacja zakupowa.</td></tr>
+<tr><td>7.3 Świadomość</td><td><b>Wyjście.</b> Element d) dla wykonawców — wpływ ich pracy na wynik energetyczny — przekazuje się w zapytaniu i w umowie, nie na szkoleniu.</td></tr>
+<tr><td>8.1 Nadzór operacyjny</td><td><b>Dwukierunkowo.</b> Kryteria obsługi z karty F-EnMS-14 są źródłem wymagań minimalnych; odbiór zakupu zobowiązuje do aktualizacji karty przed uruchomieniem. Sekcja C karty — przekazanie wymagań wykonawcom — i specyfikacja usługi to w praktyce ten sam dokument widziany z dwóch stron.</td></tr>
+<tr><td>8.2 Projektowanie</td><td><b>Wejście, najściślejsze.</b> Przyjęte wnioski z analizy projektu stają się wymaganiami minimalnymi specyfikacji. W przykładzie wszystkie cztery wnioski z F-EnMS-15 przeszły do części C formularza zakupowego.</td></tr>
+<tr><td>9.1 Monitorowanie</td><td><b>Wyjście.</b> Sprawdzenie wyniku po uruchomieniu wykonuje się w rytmie 9.1, w warunkach z części E; rozbieżność z deklaracją dostawcy jest sygnałem do postępowania z niezgodnością.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Wymaganie minimalne jako klucz obcy do wniosku z 8.2</b></td><td>Dziś pole „skąd” jest tekstem. Powinno wskazywać <b>konkretny wniosek z formularza 8.2</b>. Wtedy platforma odpowie na pytanie, które w AutoParts zadecydowało o wszystkim: czy każdy przyjęty wniosek z analizy projektu rzeczywiście trafił do specyfikacji. To domknięcie pary 8.2 ↔ 8.3 — dziś obie strony opisują to samo w dwóch polach tekstowych, czyli dokładnie ten problem, który rozdzieliliśmy w 4.1.</td></tr>
+<tr><td>Cena energii z kart wskaźników</td><td>Cena 890 zł/MWh jest dziś wpisywana ręcznie w trzech miejscach platformy: w celach (6.2), w ocenie oszczędności i tutaj. Powinna być <b>jedną wartością w ustawieniach audytu</b>, z historią zmian — inaczej porównania z różnych miesięcy przestaną być porównywalne, a nikt tego nie zauważy.</td></tr>
+<tr><td>Próg kwotowy jako liczba</td><td>Tak jak w 8.2: próg w ustawieniach i automatyczne porównanie z wartością zakupu, z zachowaniem zasady, że to sygnał pomocniczy. Odpowiedź na pytanie o próg wpisuje się dziś ręcznie — to zaproszenie do niespójności.</td></tr>
+<tr><td>Dyskontowanie i zmiany cen energii</td><td>Świadomie pominięte, zgodnie z radą z książki. Przy wdrożeniu warto dodać <b>wyłączone domyślnie</b> pola stopy dyskontowej i rocznego wzrostu cen — dla klientów, którzy porównują inwestycje w ten sposób. Założenia muszą wtedy wejść do pola założeń automatycznie.</td></tr>
+<tr><td>Rejestr dostawców i ocena po odbiorze</td><td>Część E ocenia pojedynczy zakup. Przy kilku zakupach od tego samego dostawcy warto <b>agregować ocenę na dostawcy</b> — zwłaszcza przy usługach serwisowych, gdzie powtarzające się zmiany nastaw bez zgłoszenia są sygnałem dla całej umowy, nie dla jednego przeglądu.</td></tr>
+<tr><td>Przypomnienie o sprawdzeniu po uruchomieniu</td><td>Część E ustala termin, ale platforma nie wie, czy zakup został odebrany. To <b>szóste wystąpienie</b> tego samego braku (6.5, 7.2, 7.4, 7.5, 8.2, 8.3) — jeden generyczny mechanizm terminów z przypomnieniem obsłuży wszystkie i nie powinien być budowany osobno w każdym punkcie.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 8.3 wraz z trzema zakupami i sześcioma kategoriami przykładu.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;PYT_ZA&quot;: [
+  {
+   &quot;kod&quot;: &quot;seu&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Dotyczy znaczącego użycia energii albo urządzenia w jego obrębie&quot;,
+   &quot;ph&quot;: &quot;np. Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;nastawy&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Zmienia nastawy, sterowanie albo sposób regulacji&quot;,
+   &quot;ph&quot;: &quot;np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;godziny&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata&quot;,
+   &quot;ph&quot;: &quot;np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;usluga&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;To usługa wpływająca na pracę urządzeń — serwis, projekt, wykonawstwo&quot;,
+   &quot;ph&quot;: &quot;np. Serwis sprężarek ustawia ciśnienia i wymienia filtry — to on decyduje o części wyniku&quot;,
+   &quot;pomoc&quot;: &quot;To nie tylko urządzenia. Serwis, który zmienia nastawy, bywa dla energii istotniejszy od urządzenia kupionego raz na dziesięć lat.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;energia&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;To zakup energii — prądu, gazu, paliwa, ciepła&quot;,
+   &quot;ph&quot;: &quot;np. Umowa na energię elektryczną na 2027 r., ok. 12 000 MWh&quot;,
+   &quot;pomoc&quot;: &quot;Norma wymaga specyfikacji także przy zakupie energii — tam, gdzie to właściwe: struktura cen, profil poboru, ciągłość dostaw, pochodzenie.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;prog&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Przekracza próg wartości ustalony w firmie — sygnał pomocniczy&quot;,
+   &quot;ph&quot;: &quot;np. 380 tys. zł, próg w firmie 100 tys. zł&quot;,
+   &quot;pomoc&quot;: &quot;★ Próg kwotowy nie może być jedynym kryterium. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura.&quot;
+  }
+ ],
+ &quot;PYT_ZC&quot;: [
+  {
+   &quot;kod&quot;: &quot;informacja&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;tekst&quot;: &quot;Dostawcy zostali poinformowani, że wynik energetyczny jest jednym z kryteriów oceny&quot;,
+   &quot;ph&quot;: &quot;np. Zdanie w punkcie 4 zapytania ofertowego z 12.10.2026, powtórzone w specyfikacji&quot;,
+   &quot;pomoc&quot;: &quot;Wymaganie normy przy zakupach wpływających na znaczące użycia energii. W praktyce jedno zdanie — ale musi być w zapytaniu, nie w notatce wewnętrznej.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;specyfikacja&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;tekst&quot;: &quot;Określono specyfikację dotyczącą wyniku energetycznego — tam, gdzie to właściwe&quot;,
+   &quot;ph&quot;: &quot;np. Wymagania minimalne: dwie nastawy ciśnienia, zapis danych pracy, dwa przetworniki u odbiorców, przyłącza pod odzysk ciepła&quot;,
+   &quot;pomoc&quot;: &quot;Dotyczy zakupu energii, produktów i usług mających wpływ na znaczące użycia energii.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;dane&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Wskazano, jakich danych o zużyciu oczekujecie — i w jakich warunkach&quot;,
+   &quot;ph&quot;: &quot;np. Zużycie [MWh/rok] i kWh/Nm³ przy profilu pracy z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;kryterium&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Podano, jak oferty będą porównywane&quot;,
+   &quot;ph&quot;: &quot;np. Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh&quot;
+  }
+ ],
+ &quot;LISTA_83&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Dla zakupów o znaczącym wpływie ustalono kryteria oceny wyniku energetycznego w okresie użytkowania.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;kryteria&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Dostawcy są informowani, że wynik energetyczny jest jednym z kryteriów oceny.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;informuje&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Przy zakupie energii, produktów i usług mających wpływ na znaczące użycia energii określono specyfikacje.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;specyfikacje&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ocena wpływu obejmuje także usługi i zakup energii, a próg kwotowy jest tylko sygnałem pomocniczym.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;wplyw&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Oferty porównuje się na danych dla profilu pracy zakładu, nie na mocy znamionowej.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;profil&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Założenia porównania — okres, cena energii, profil — są zapisane.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;zalozenia&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Deklaracje dostawcy są sprawdzane przy odbiorze, a kryteria obsługi przekazywane do nadzoru operacyjnego.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;odbior&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;ZAKUPY&quot;: [
+   {
+    &quot;przedmiot&quot;: &quot;Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej sprężarki&quot;,
+    &quot;nr&quot;: &quot;ZAP/2026/14&quot;,
+    &quot;zrodloWymagan&quot;: &quot;Cztery przyjęte wnioski z analizy projektu INW/2027/04 (F-EnMS-15, część D); karta kryteriów sprężarkowni F-EnMS-14, części A i B&quot;,
+    &quot;status&quot;: &quot;Specyfikacja 10.2026; zapytanie wysłane 12.10.2026; porównanie ofert 11.2026; odbiór planowany 06.2027&quot;,
+    &quot;kto&quot;: &quot;Dział zakupów z Janem Kowalskim (Energy Manager) i kierownikiem projektu&quot;,
+    &quot;data&quot;: &quot;2026-10-05&quot;,
+    &quot;A&quot;: {
+     &quot;seu&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu&quot;
+     },
+     &quot;nastawy&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji jednej jednostki&quot;
+     },
+     &quot;godziny&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat&quot;
+     },
+     &quot;usluga&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Zakres obejmuje dostawę, montaż i uruchomienie; serwis objęty osobną umową (ZAP/2026/19)&quot;
+     },
+     &quot;energia&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Zakup urządzeń, nie nośnika energii&quot;
+     },
+     &quot;prog&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;380 tys. zł wobec progu 100 tys. zł — sygnał dodatkowy, nie decydujący&quot;
+     }
+    },
+    &quot;uzasadnienieA&quot;: &quot;&quot;,
+    &quot;wymagania&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Dwie nastawy ciśnienia — produkcja i postój; możliwość obniżenia ciśnienia poza produkcją&quot;,
+      &quot;skad&quot;: &quot;Wniosek 1 z analizy projektu (F-EnMS-15); kryterium trybu postoju z karty F-EnMS-14 sekcja B&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika&quot;,
+      &quot;skad&quot;: &quot;Wniosek 2 z analizy projektu; plan zbierania danych (6.6) — nowe pozycje&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Zapis danych pracy sprężarek — obciążenie, ciśnienie, godziny — z eksportem do systemu monitoringu&quot;,
+      &quot;skad&quot;: &quot;Wniosek 3 z analizy projektu; plan zbierania danych (6.6), pozycje 4 i 5 — bez tego nie policzycie S-1&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek&quot;,
+      &quot;skad&quot;: &quot;Wniosek 4 z analizy projektu — odzysk poza tą inwestycją, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia&quot;
+     }
+    ],
+    &quot;C&quot;: {
+     &quot;informacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Punkt 4 zapytania ofertowego z 12.10.2026, powtórzony we wstępie specyfikacji&quot;
+     },
+     &quot;specyfikacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Cztery wymagania minimalne powyżej plus warunki pracy: profil obciążenia z kampanii 02–03.2026, ciśnienie sieci 6,3 bar&quot;
+     },
+     &quot;dane&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Zużycie [MWh/rok] i kWh/Nm³ przy profilu z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń; zużycie na biegu jałowym osobno&quot;
+     },
+     &quot;kryterium&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh, spośród ofert spełniających wymagania minimalne&quot;
+     }
+    },
+    &quot;informacja&quot;: &quot;Wynik energetyczny jest jednym z kryteriów oceny ofert. Prosimy o podanie przewidywanego zużycia energii (MWh/rok) oraz wskaźnika kWh/Nm³ przy profilu pracy z załącznika nr 2 i ciśnieniu sieci 6,3 bar, wraz z metodą obliczeń. Prosimy osobno podać zużycie na biegu jałowym. Oferentów, którzy podadzą tylko moc znamionową, poprosimy o uzupełnienie danych.&quot;,
+    &quot;kryteriumWyboru&quot;: &quot;Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat, przy porównywalnych warunkach serwisu i gwarancji.&quot;,
+    &quot;lata&quot;: &quot;15&quot;,
+    &quot;cenaEnergii&quot;: &quot;&quot;,
+    &quot;zalozenia&quot;: &quot;Stała cena energii elektrycznej 890 zł/MWh (ceny 2025, bez indeksacji). Okres 15 lat — przewidywany czas pracy sterownika i napędu. Profil pracy i ilość sprężonego powietrza jak w kampanii pomiarowej 02–03.2026, ciśnienie 6,3 bar. Warunki serwisu i gwarancji w obu ofertach porównywalne. Pominięte: zmiany cen energii, wartość pieniądza w czasie, koszty przestojów. Przy innej cenie energii różnica zmienia się proporcjonalnie.&quot;,
+    &quot;oferty&quot;: [
+     {
+      &quot;nazwa&quot;: &quot;Oferta A&quot;,
+      &quot;minimalne&quot;: &quot;tak&quot;,
+      &quot;cena&quot;: &quot;330000&quot;,
+      &quot;tryb&quot;: &quot;roczne&quot;,
+      &quot;roczne&quot;: &quot;1660&quot;,
+      &quot;zrodloDanych&quot;: &quot;Dane dostawcy dla profilu pracy z załącznika nr 2 (kampania 02–03.2026), z podaną metodą obliczeń; uzupełnione po pierwszym zapytaniu&quot;,
+      &quot;inne&quot;: &quot;0&quot;
+     },
+     {
+      &quot;nazwa&quot;: &quot;Oferta B&quot;,
+      &quot;minimalne&quot;: &quot;tak&quot;,
+      &quot;cena&quot;: &quot;375000&quot;,
+      &quot;tryb&quot;: &quot;roczne&quot;,
+      &quot;roczne&quot;: &quot;1600&quot;,
+      &quot;zrodloDanych&quot;: &quot;Dane dostawcy dla profilu pracy z załącznika nr 2, z podaną metodą obliczeń i wykresem zużycia w funkcji obciążenia&quot;,
+      &quot;inne&quot;: &quot;0&quot;
+     }
+    ],
+    &quot;rekomendacja&quot;: &quot;Przy przyjętych założeniach oferta B ma niższy koszt zakupu i energii — różnica 756 000 zł w 15 lat, mimo ceny wyższej o 45 000 zł. Oszczędność 60 MWh/rok wobec oferty A jest spójna z oszczędnością ok. 230 MWh/rok wyliczoną w przeglądzie energetycznym dla całej modernizacji. Przed decyzją: sprawdzić wymagania procesu dla trybu postoju i warunki serwisu w obu ofertach. Uzasadnienie wyboru zapisane w teczce ZAP/2026/14.&quot;,
+    &quot;porownanieNd&quot;: false,
+    &quot;porownanieNdPowod&quot;: &quot;&quot;,
+    &quot;E&quot;: {
+     &quot;deklaracje&quot;: &quot;Przy odbiorze sprawdzane: dwie nastawy ciśnienia działają i dają się zmienić z panelu; oba przetworniki u odbiorców podłączone i wskazują; dane pracy eksportowane do systemu monitoringu w uzgodnionym formacie; przyłącza pod wymiennik wykonane i zaślepione. Sprawdza kierownik UR z Energy Managerem, protokół odbioru.&quot;,
+     &quot;kryteria&quot;: &quot;Karta kryteriów sprężarkowni F-EnMS-14 aktualizowana przed uruchomieniem — kierownik UR, termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana po sprawdzeniu odbiorników w podtrzymaniu. Do planu zbierania danych (6.6) wchodzą dwie pozycje dla przetworników.&quot;,
+     &quot;wynik&quot;: &quot;kWh/Nm³ (wskaźnik S-1) cztery tygodnie po odbiorze i po zamknięciu roku 2027 — Energy Manager. Warunki porównania jak w części D formularza celów: pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar w trybie produkcji. Wynik porównywany z deklaracją oferty B (1 600 MWh/rok) i z wartością odniesienia 0,119 kWh/Nm³; wchodzi do oceny celu Z1.1.&quot;
+    }
+   },
+   {
+    &quot;przedmiot&quot;: &quot;Umowa serwisowa na sprężarkownię — 2027&quot;,
+    &quot;nr&quot;: &quot;ZAP/2026/19&quot;,
+    &quot;zrodloWymagan&quot;: &quot;Karta kryteriów sprężarkowni F-EnMS-14, sekcja C — przekazanie wymagań wykonawcom; trzy zdania ze zlecenia dla serwisu&quot;,
+    &quot;status&quot;: &quot;Zapytanie 11.2026; umowa od 01.2027&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu z działem zakupów&quot;,
+    &quot;data&quot;: &quot;2026-10-09&quot;,
+    &quot;A&quot;: {
+     &quot;seu&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Serwis obsługuje sprężarkownię — znaczące użycie energii&quot;
+     },
+     &quot;nastawy&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Serwis ustawia ciśnienia robocze i progi załączania; to on w praktyce decyduje o części wyniku energetycznego&quot;
+     },
+     &quot;godziny&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Usługa nie wnosi urządzenia zużywającego energię&quot;
+     },
+     &quot;usluga&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Serwis, przeglądy okresowe, wymiana filtrów i osuszaczy&quot;
+     },
+     &quot;energia&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Usługa, nie nośnik energii&quot;
+     },
+     &quot;prog&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;28 tys. zł rocznie, poniżej progu 100 tys. zł — zakup jest istotny z innego powodu&quot;
+     }
+    },
+    &quot;uzasadnienieA&quot;: &quot;&quot;,
+    &quot;wymagania&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Każda zmiana nastawy ciśnienia zgłaszana pisemnie przed wykonaniem; protokół z wartościami przed i po&quot;,
+      &quot;skad&quot;: &quot;Karta kryteriów F-EnMS-14 sekcja C; przypadek z 2025 r., gdy serwis podniósł ciśnienie o 0,5 bar bez zgłoszenia&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Utrzymanie ciśnienia w sieci na poziomie nie wyższym niż 6,3 bar w trybie produkcji; nastawy trybu postoju bez zmian&quot;,
+      &quot;skad&quot;: &quot;Karta kryteriów F-EnMS-14 sekcja A, kryterium 1&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Raport z przeglądu zawiera zmierzone zużycie jednostkowe i spadek ciśnienia na osuszaczu i filtrach&quot;,
+      &quot;skad&quot;: &quot;Plan zbierania danych (6.6), pozycja 5; bez tego nie da się odróżnić pogorszenia wyniku od zmiany profilu pracy&quot;
+     }
+    ],
+    &quot;C&quot;: {
+     &quot;informacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Zdanie w zapytaniu: utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty i podstawą rozliczenia&quot;
+     },
+     &quot;specyfikacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Trzy wymagania minimalne powyżej; zakres czynności z wykazem nastaw podlegających zmianie&quot;
+     },
+     &quot;dane&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Wzór raportu z przeglądu: zmierzone kWh/Nm³, spadki ciśnienia, lista zmienionych nastaw&quot;
+     },
+     &quot;kryterium&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Zakres i warunki, gotowość do pracy w weekendowym postoju, kwalifikacje osób; cena przy równych zakresach&quot;
+     }
+    },
+    &quot;informacja&quot;: &quot;Utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty. Prosimy o potwierdzenie, że każda zmiana nastawy ciśnienia będzie zgłaszana pisemnie przed wykonaniem i że raport z przeglądu obejmie zmierzone zużycie jednostkowe oraz spadki ciśnienia na osuszaczu i filtrach. Trzy zdania ze zlecenia serwisowego są częścią umowy.&quot;,
+    &quot;kryteriumWyboru&quot;: &quot;Zakres czynności i warunki reakcji przy równoważnych kwalifikacjach; cena przy porównywalnym zakresie. Zużycie energii samej usługi nie jest kryterium.&quot;,
+    &quot;lata&quot;: &quot;&quot;,
+    &quot;cenaEnergii&quot;: &quot;&quot;,
+    &quot;zalozenia&quot;: &quot;&quot;,
+    &quot;oferty&quot;: [],
+    &quot;rekomendacja&quot;: &quot;&quot;,
+    &quot;porownanieNd&quot;: true,
+    &quot;porownanieNdPowod&quot;: &quot;Zakup usługi — usługa nie zużywa energii, więc porównanie kosztu zakupu i energii nie ma tu sensu. Kryterium oceny wyniku energetycznego dotyczy wpływu serwisu na pracę nadzorowanych urządzeń: trybu zgłaszania zmian nastaw, zawartości raportu i przestrzegania kryteriów z karty F-EnMS-14. Oferty porównywane według zakresu, warunków reakcji i kwalifikacji, przy cenie jako kryterium końcowym.&quot;,
+    &quot;E&quot;: {
+     &quot;deklaracje&quot;: &quot;Po pierwszym przeglądzie sprawdzane: czy raport zawiera zmierzone kWh/Nm³ i spadki ciśnienia, czy zmiany nastaw zostały zgłoszone przed wykonaniem i czy ciśnienie po przeglądzie mieści się w kryterium. Sprawdza kierownik UR; wynik wchodzi do oceny dostawcy.&quot;,
+     &quot;kryteria&quot;: &quot;Wymagania z karty F-EnMS-14 sekcja C są załącznikiem do umowy. Zmiana kryteriów w karcie — na przykład nowa nastawa trybu postoju po modernizacji w 06.2027 — wymaga aneksu albo pisemnego przekazania wykonawcy; odpowiada kierownik UR.&quot;,
+     &quot;wynik&quot;: &quot;kWh/Nm³ po każdym przeglądzie, w porównaniu z wartością z miesiąca poprzedzającego — Energy Manager, w rytmie monitorowania z 9.1. Wzrost zużycia jednostkowego po przeglądzie o więcej niż 3% jest sygnałem z karty kryteriów i uruchamia rozmowę z serwisem.&quot;
+    }
+   },
+   {
+    &quot;przedmiot&quot;: &quot;Zakup energii elektrycznej na 2027 r.&quot;,
+    &quot;nr&quot;: &quot;ZAP/2026/22&quot;,
+    &quot;zrodloWymagan&quot;: &quot;Plan zbierania danych (6.6), pozycje 1 i 2 — wymagania co do danych pomiarowych od sprzedawcy; profil poboru godzinowego za 2025 r.&quot;,
+    &quot;status&quot;: &quot;Zapytanie 10.2026; wybór sprzedawcy 11.2026; umowa od 01.2027&quot;,
+    &quot;kto&quot;: &quot;Dyrektor Finansowy z Energy Managerem&quot;,
+    &quot;data&quot;: &quot;2026-10-02&quot;,
+    &quot;A&quot;: {
+     &quot;seu&quot;: {
+      &quot;o&quot;: &quot;nd&quot;,
+      &quot;u&quot;: &quot;Zakup energii dotyczy wszystkich użyć w zakładzie, nie jednego znaczącego użycia — stąd „nie dotyczy” zamiast „tak”&quot;
+     },
+     &quot;nastawy&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Wybór sprzedawcy nie zmienia nastaw ani sterowania żadnej instalacji&quot;
+     },
+     &quot;godziny&quot;: {
+      &quot;o&quot;: &quot;nd&quot;,
+      &quot;u&quot;: &quot;Nie dotyczy urządzenia — przedmiotem zakupu jest nośnik energii&quot;
+     },
+     &quot;usluga&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Dostawa energii, nie usługa wpływająca na pracę urządzeń&quot;
+     },
+     &quot;energia&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Energia elektryczna, ok. 12 000 MWh na 2027 r.&quot;
+     },
+     &quot;prog&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Ok. 10,8 mln zł wobec progu 100 tys. zł&quot;
+     }
+    },
+    &quot;uzasadnienieA&quot;: &quot;&quot;,
+    &quot;wymagania&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu, do 10. dnia następnego miesiąca&quot;,
+      &quot;skad&quot;: &quot;Plan zbierania danych (6.6), pozycje 1 i 2 — dziś dane z faktury przychodzą raz w miesiącu bez profilu godzinowego&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Gwarancja ceny na cały okres umowy; struktura cenowa wyliczona dla profilu poboru z 2025 r., nie dla profilu standardowego&quot;,
+      &quot;skad&quot;: &quot;Profil poboru godzinowego za 2025 r. — załącznik do zapytania&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Gwarancje pochodzenia wyceniane w osobnej pozycji oferty i raportowane osobno&quot;,
+      &quot;skad&quot;: &quot;Ustalenie z przeglądu zarządzania: pochodzenie energii nie wchodzi do wskaźników wyniku energetycznego ani do oceny celów&quot;
+     }
+    ],
+    &quot;C&quot;: {
+     &quot;informacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Zapytanie informuje, że dostępność danych pomiarowych i dopasowanie struktury cen do profilu są kryteriami oceny obok ceny&quot;
+     },
+     &quot;specyfikacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Trzy wymagania minimalne powyżej; profil poboru godzinowego za 2025 r. jako załącznik — specyfikacja dotycząca zakupu energii, wymagana przez normę&quot;
+     },
+     &quot;dane&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Struktura cenowa dla załączonego profilu, rozbicie na opłaty stałe i zmienne, format i częstotliwość udostępniania danych pomiarowych&quot;
+     },
+     &quot;kryterium&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Koszt energii wyliczony dla profilu z 2025 r., nie cena jednostkowa z taryfy; dostępność danych i ciągłość dostaw jako warunki&quot;
+     }
+    },
+    &quot;informacja&quot;: &quot;Dopasowanie struktury cenowej do załączonego profilu poboru oraz dostępność danych pomiarowych są — obok ceny — kryteriami oceny ofert. Prosimy o wyliczenie kosztu energii dla profilu godzinowego z załącznika nr 1, z rozbiciem na opłaty stałe i zmienne, oraz o wskazanie formatu i terminu udostępniania danych pomiarowych. Gwarancje pochodzenia prosimy wycenić w osobnej pozycji.&quot;,
+    &quot;kryteriumWyboru&quot;: &quot;Najniższy koszt energii wyliczony dla profilu poboru z 2025 r., przy gwarancji ceny na okres umowy, wymaganym formacie danych pomiarowych i potwierdzonej ciągłości dostaw. Gwarancje pochodzenia wyceniane w osobnej pozycji i rozliczane poza tym kryterium.&quot;,
+    &quot;lata&quot;: &quot;&quot;,
+    &quot;cenaEnergii&quot;: &quot;&quot;,
+    &quot;zalozenia&quot;: &quot;&quot;,
+    &quot;oferty&quot;: [],
+    &quot;rekomendacja&quot;: &quot;&quot;,
+    &quot;porownanieNd&quot;: true,
+    &quot;porownanieNdPowod&quot;: &quot;Wybór sprzedawcy nie zmienia zużycia energii w zakładzie — sprężarkownia zużyje tyle samo kWh na Nm³ powietrza niezależnie od tego, od kogo kupiono prąd. Porównanie prowadzone według kosztu energii wyliczonego dla profilu poboru z 2025 r., struktury taryfy i warunków udostępniania danych, a nie według kosztu zakupu i energii urządzenia. Pochodzenie energii wyceniane i raportowane osobno.&quot;,
+    &quot;E&quot;: {
+     &quot;deklaracje&quot;: &quot;Po pierwszym miesiącu rozliczenia sprawdzane: czy dane godzinowe przychodzą w uzgodnionym formacie i terminie, czy pozycje faktury odpowiadają strukturze z oferty i czy koszt zgadza się z wyliczeniem dla rzeczywistego profilu. Sprawdza Energy Manager z działem księgowości.&quot;,
+     &quot;kryteria&quot;: &quot;Dane godzinowe od sprzedawcy wchodzą do planu zbierania danych (6.6) jako nowe źródło pozycji 1 — zastępują odczyt z faktury. Zmiana źródła danych wymaga adnotacji w kartach wskaźników (6.4) i sprawdzenia porównywalności z linią bazową.&quot;,
+     &quot;wynik&quot;: &quot;Po pierwszym kwartale 2027 r. Energy Manager porównuje rzeczywisty koszt energii z wyliczeniem z oferty dla tego samego profilu. Rozbieżność powyżej 3% jest sygnałem do sprawdzenia, czy profil poboru się zmienił, czy rozliczenie odbiega od umowy. Wynik nie wchodzi do oceny wskaźników energetycznych — to kontrola kosztu, nie wyniku energetycznego.&quot;
+    }
+   }
+  ],
+  &quot;KATEGORIE&quot;: [
+   {
+    &quot;kategoria&quot;: &quot;Silniki elektryczne&quot;,
+    &quot;kryterium&quot;: &quot;Sprawność w rzeczywistym punkcie pracy, nie moc znamionowa&quot;,
+    &quot;minimum&quot;: &quot;Klasa IE4 dla pracy powyżej 2 000 h/rok; dobór mocy do zmierzonego obciążenia, bez zapasu powyżej 15%&quot;,
+    &quot;dane&quot;: &quot;Sprawność przy 50%, 75% i 100% obciążenia; moc zmierzona lub wyliczona dla aplikacji&quot;,
+    &quot;podstawa&quot;: &quot;Przegląd energetyczny 2026 — silniki w napędach pras i wentylatorów&quot;
+   },
+   {
+    &quot;kategoria&quot;: &quot;Sprężarki, pompy, wentylatory, napędy&quot;,
+    &quot;kryterium&quot;: &quot;Zużycie energii przy profilu pracy zakładu i zakres regulacji&quot;,
+    &quot;minimum&quot;: &quot;Regulacja w zakresie co najmniej 30–100% wydajności; zużycie nie wyższe niż obecne przy tym samym profilu; możliwość dwóch nastaw&quot;,
+    &quot;dane&quot;: &quot;Zużycie [MWh/rok] i wskaźnik jednostkowy dla profilu z załącznika, z metodą obliczeń; zużycie na biegu jałowym&quot;,
+    &quot;podstawa&quot;: &quot;Karta kryteriów sprężarkowni F-EnMS-14; profil z kampanii pomiarowej 02–03.2026&quot;
+   },
+   {
+    &quot;kategoria&quot;: &quot;Oświetlenie&quot;,
+    &quot;kryterium&quot;: &quot;Moc zainstalowana na wymagane natężenie i możliwość sterowania&quot;,
+    &quot;minimum&quot;: &quot;Skuteczność źródła co najmniej 140 lm/W; sterowanie strefowe i ściemnianie; natężenie zgodne z wymaganiem stanowiska, bez zawyżania&quot;,
+    &quot;dane&quot;: &quot;Moc oprawy, skuteczność, obliczenia natężenia dla układu stref, zakres sterowania&quot;,
+    &quot;podstawa&quot;: &quot;Cel C2 i zadanie Z2.1; zgłoszenie 2026/08 o jednym wyłączniku na halę&quot;
+   },
+   {
+    &quot;kategoria&quot;: &quot;Urządzenia produkcyjne&quot;,
+    &quot;kryterium&quot;: &quot;Zużycie energii na jednostkę produktu w przewidywanym trybie pracy&quot;,
+    &quot;minimum&quot;: &quot;Zużycie jednostkowe nie wyższe niż w urządzeniu zastępowanym; tryb czuwania poniżej 5% mocy pracy; licznik energii na urządzeniu&quot;,
+    &quot;dane&quot;: &quot;Zużycie jednostkowe [kWh/szt.] dla zadanej wydajności, zużycie w czuwaniu, obecność licznika&quot;,
+    &quot;podstawa&quot;: &quot;Plan zbierania danych (6.6) — nowe urządzenie wymaga pozycji w planie&quot;
+   },
+   {
+    &quot;kategoria&quot;: &quot;Usługi — serwis, projekt, wykonawstwo&quot;,
+    &quot;kryterium&quot;: &quot;Wpływ usługi na nastawy i sprawność nadzorowanych urządzeń&quot;,
+    &quot;minimum&quot;: &quot;Pisemne zgłoszenie każdej zmiany nastawy; protokół z wartościami przed i po; przestrzeganie kryteriów z karty F-EnMS-14&quot;,
+    &quot;dane&quot;: &quot;Zakres czynności, lista nastaw podlegających zmianie, wzór protokołu, kwalifikacje osób&quot;,
+    &quot;podstawa&quot;: &quot;Karta kryteriów sprężarkowni F-EnMS-14 sekcja C — przekazanie wymagań wykonawcom&quot;
+   },
+   {
+    &quot;kategoria&quot;: &quot;Energia elektryczna i gaz&quot;,
+    &quot;kryterium&quot;: &quot;Koszt energii przy rzeczywistym profilu poboru oraz dostępność danych pomiarowych&quot;,
+    &quot;minimum&quot;: &quot;Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu; gwarancja ceny na okres umowy; ciągłość dostaw&quot;,
+    &quot;dane&quot;: &quot;Struktura cenowa dla profilu z 2025 r., opłaty stałe i zmienne, format i częstotliwość udostępniania danych&quot;,
+    &quot;podstawa&quot;: &quot;Plan zbierania danych (6.6), pozycje 1 i 2; pochodzenie energii raportowane osobno, poza kryterium wyniku energetycznego&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;data&quot;: &quot;2026-10-09&quot;,
+   &quot;prog&quot;: &quot;100 000&quot;,
+   &quot;cenaEnergii&quot;: &quot;890&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var PYT_ZA = [{"kod": "seu", "podstawa": "M", "tekst": "Dotyczy znaczącego użycia energii albo urządzenia w jego obrębie", "ph": "np. Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"}, {"kod": "nastawy", "podstawa": "M", "tekst": "Zmienia nastawy, sterowanie albo sposób regulacji", "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"}, {"kod": "godziny", "podstawa": "M", "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata", "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"}, {"kod": "usluga", "podstawa": "M", "tekst": "To usługa wpływająca na pracę urządzeń — serwis, projekt, wykonawstwo", "ph": "np. Serwis sprężarek ustawia ciśnienia i wymienia filtry — to on decyduje o części wyniku", "pomoc": "To nie tylko urządzenia. Serwis, który zmienia nastawy, bywa dla energii istotniejszy od urządzenia kupionego raz na dziesięć lat."}, {"kod": "energia", "podstawa": "M", "tekst": "To zakup energii — prądu, gazu, paliwa, ciepła", "ph": "np. Umowa na energię elektryczną na 2027 r., ok. 12 000 MWh", "pomoc": "Norma wymaga specyfikacji także przy zakupie energii — tam, gdzie to właściwe: struktura cen, profil poboru, ciągłość dostaw, pochodzenie."}, {"kod": "prog", "podstawa": "M", "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy", "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł", "pomoc": "★ Próg kwotowy nie może być jedynym kryterium. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura."}];
+var PYT_ZC = [{"kod": "informacja", "podstawa": "N", "tekst": "Dostawcy zostali poinformowani, że wynik energetyczny jest jednym z kryteriów oceny", "ph": "np. Zdanie w punkcie 4 zapytania ofertowego z 12.10.2026, powtórzone w specyfikacji", "pomoc": "Wymaganie normy przy zakupach wpływających na znaczące użycia energii. W praktyce jedno zdanie — ale musi być w zapytaniu, nie w notatce wewnętrznej."}, {"kod": "specyfikacja", "podstawa": "N", "tekst": "Określono specyfikację dotyczącą wyniku energetycznego — tam, gdzie to właściwe", "ph": "np. Wymagania minimalne: dwie nastawy ciśnienia, zapis danych pracy, dwa przetworniki u odbiorców, przyłącza pod odzysk ciepła", "pomoc": "Dotyczy zakupu energii, produktów i usług mających wpływ na znaczące użycia energii."}, {"kod": "dane", "podstawa": "M", "tekst": "Wskazano, jakich danych o zużyciu oczekujecie — i w jakich warunkach", "ph": "np. Zużycie [MWh/rok] i kWh/Nm³ przy profilu pracy z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń"}, {"kod": "kryterium", "podstawa": "M", "tekst": "Podano, jak oferty będą porównywane", "ph": "np. Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh"}];
+var LISTA_83 = [{"tekst": "Dla zakupów o znaczącym wpływie ustalono kryteria oceny wyniku energetycznego w okresie użytkowania.", "podstawa": "N", "auto": "kryteria"}, {"tekst": "Dostawcy są informowani, że wynik energetyczny jest jednym z kryteriów oceny.", "podstawa": "N", "auto": "informuje"}, {"tekst": "Przy zakupie energii, produktów i usług mających wpływ na znaczące użycia energii określono specyfikacje.", "podstawa": "N", "auto": "specyfikacje"}, {"tekst": "Ocena wpływu obejmuje także usługi i zakup energii, a próg kwotowy jest tylko sygnałem pomocniczym.", "podstawa": "M", "auto": "wplyw"}, {"tekst": "Oferty porównuje się na danych dla profilu pracy zakładu, nie na mocy znamionowej.", "podstawa": "M", "auto": "profil"}, {"tekst": "Założenia porównania — okres, cena energii, profil — są zapisane.", "podstawa": "M", "auto": "zalozenia"}, {"tekst": "Deklaracje dostawcy są sprawdzane przy odbiorze, a kryteria obsługi przekazywane do nadzoru operacyjnego.", "podstawa": "M", "auto": "odbior"}];
+var P_ZAKUPY = [{"przedmiot": "Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej sprężarki", "nr": "ZAP/2026/14", "zrodloWymagan": "Cztery przyjęte wnioski z analizy projektu INW/2027/04 (F-EnMS-15, część D); karta kryteriów sprężarkowni F-EnMS-14, części A i B", "status": "Specyfikacja 10.2026; zapytanie wysłane 12.10.2026; porównanie ofert 11.2026; odbiór planowany 06.2027", "kto": "Dział zakupów z Janem Kowalskim (Energy Manager) i kierownikiem projektu", "data": "2026-10-05", "A": {"seu": {"o": "tak", "u": "Sprężarkownia — SEU, 2 125 MWh, 17,5% zużycia zakładu"}, "nastawy": {"o": "tak", "u": "Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji jednej jednostki"}, "godziny": {"o": "tak", "u": "Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"}, "usluga": {"o": "nie", "u": "Zakres obejmuje dostawę, montaż i uruchomienie; serwis objęty osobną umową (ZAP/2026/19)"}, "energia": {"o": "nie", "u": "Zakup urządzeń, nie nośnika energii"}, "prog": {"o": "tak", "u": "380 tys. zł wobec progu 100 tys. zł — sygnał dodatkowy, nie decydujący"}}, "uzasadnienieA": "", "wymagania": [{"tresc": "Dwie nastawy ciśnienia — produkcja i postój; możliwość obniżenia ciśnienia poza produkcją", "skad": "Wniosek 1 z analizy projektu (F-EnMS-15); kryterium trybu postoju z karty F-EnMS-14 sekcja B"}, {"tresc": "Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika", "skad": "Wniosek 2 z analizy projektu; plan zbierania danych (6.6) — nowe pozycje"}, {"tresc": "Zapis danych pracy sprężarek — obciążenie, ciśnienie, godziny — z eksportem do systemu monitoringu", "skad": "Wniosek 3 z analizy projektu; plan zbierania danych (6.6), pozycje 4 i 5 — bez tego nie policzycie S-1"}, {"tresc": "Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek", "skad": "Wniosek 4 z analizy projektu — odzysk poza tą inwestycją, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia"}], "C": {"informacja": {"o": "tak", "u": "Punkt 4 zapytania ofertowego z 12.10.2026, powtórzony we wstępie specyfikacji"}, "specyfikacja": {"o": "tak", "u": "Cztery wymagania minimalne powyżej plus warunki pracy: profil obciążenia z kampanii 02–03.2026, ciśnienie sieci 6,3 bar"}, "dane": {"o": "tak", "u": "Zużycie [MWh/rok] i kWh/Nm³ przy profilu z załącznika i ciśnieniu 6,3 bar, z metodą obliczeń; zużycie na biegu jałowym osobno"}, "kryterium": {"o": "tak", "u": "Najniższy koszt zakupu i energii w 15 lat przy 890 zł/MWh, spośród ofert spełniających wymagania minimalne"}}, "informacja": "Wynik energetyczny jest jednym z kryteriów oceny ofert. Prosimy o podanie przewidywanego zużycia energii (MWh/rok) oraz wskaźnika kWh/Nm³ przy profilu pracy z załącznika nr 2 i ciśnieniu sieci 6,3 bar, wraz z metodą obliczeń. Prosimy osobno podać zużycie na biegu jałowym. Oferentów, którzy podadzą tylko moc znamionową, poprosimy o uzupełnienie danych.", "kryteriumWyboru": "Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat, przy porównywalnych warunkach serwisu i gwarancji.", "lata": "15", "cenaEnergii": "", "zalozenia": "Stała cena energii elektrycznej 890 zł/MWh (ceny 2025, bez indeksacji). Okres 15 lat — przewidywany czas pracy sterownika i napędu. Profil pracy i ilość sprężonego powietrza jak w kampanii pomiarowej 02–03.2026, ciśnienie 6,3 bar. Warunki serwisu i gwarancji w obu ofertach porównywalne. Pominięte: zmiany cen energii, wartość pieniądza w czasie, koszty przestojów. Przy innej cenie energii różnica zmienia się proporcjonalnie.", "oferty": [{"nazwa": "Oferta A", "minimalne": "tak", "cena": "330000", "tryb": "roczne", "roczne": "1660", "zrodloDanych": "Dane dostawcy dla profilu pracy z załącznika nr 2 (kampania 02–03.2026), z podaną metodą obliczeń; uzupełnione po pierwszym zapytaniu", "inne": "0"}, {"nazwa": "Oferta B", "minimalne": "tak", "cena": "375000", "tryb": "roczne", "roczne": "1600", "zrodloDanych": "Dane dostawcy dla profilu pracy z załącznika nr 2, z podaną metodą obliczeń i wykresem zużycia w funkcji obciążenia", "inne": "0"}], "rekomendacja": "Przy przyjętych założeniach oferta B ma niższy koszt zakupu i energii — różnica 756 000 zł w 15 lat, mimo ceny wyższej o 45 000 zł. Oszczędność 60 MWh/rok wobec oferty A jest spójna z oszczędnością ok. 230 MWh/rok wyliczoną w przeglądzie energetycznym dla całej modernizacji. Przed decyzją: sprawdzić wymagania procesu dla trybu postoju i warunki serwisu w obu ofertach. Uzasadnienie wyboru zapisane w teczce ZAP/2026/14.", "porownanieNd": false, "porownanieNdPowod": "", "E": {"deklaracje": "Przy odbiorze sprawdzane: dwie nastawy ciśnienia działają i dają się zmienić z panelu; oba przetworniki u odbiorców podłączone i wskazują; dane pracy eksportowane do systemu monitoringu w uzgodnionym formacie; przyłącza pod wymiennik wykonane i zaślepione. Sprawdza kierownik UR z Energy Managerem, protokół odbioru.", "kryteria": "Karta kryteriów sprężarkowni F-EnMS-14 aktualizowana przed uruchomieniem — kierownik UR, termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana po sprawdzeniu odbiorników w podtrzymaniu. Do planu zbierania danych (6.6) wchodzą dwie pozycje dla przetworników.", "wynik": "kWh/Nm³ (wskaźnik S-1) cztery tygodnie po odbiorze i po zamknięciu roku 2027 — Energy Manager. Warunki porównania jak w części D formularza celów: pełne miesiące pracy trzyzmianowej, ciśnienie 6,3 bar w trybie produkcji. Wynik porównywany z deklaracją oferty B (1 600 MWh/rok) i z wartością odniesienia 0,119 kWh/Nm³; wchodzi do oceny celu Z1.1."}}, {"przedmiot": "Umowa serwisowa na sprężarkownię — 2027", "nr": "ZAP/2026/19", "zrodloWymagan": "Karta kryteriów sprężarkowni F-EnMS-14, sekcja C — przekazanie wymagań wykonawcom; trzy zdania ze zlecenia dla serwisu", "status": "Zapytanie 11.2026; umowa od 01.2027", "kto": "Kierownik Utrzymania Ruchu z działem zakupów", "data": "2026-10-09", "A": {"seu": {"o": "tak", "u": "Serwis obsługuje sprężarkownię — znaczące użycie energii"}, "nastawy": {"o": "tak", "u": "Serwis ustawia ciśnienia robocze i progi załączania; to on w praktyce decyduje o części wyniku energetycznego"}, "godziny": {"o": "nie", "u": "Usługa nie wnosi urządzenia zużywającego energię"}, "usluga": {"o": "tak", "u": "Serwis, przeglądy okresowe, wymiana filtrów i osuszaczy"}, "energia": {"o": "nie", "u": "Usługa, nie nośnik energii"}, "prog": {"o": "nie", "u": "28 tys. zł rocznie, poniżej progu 100 tys. zł — zakup jest istotny z innego powodu"}}, "uzasadnienieA": "", "wymagania": [{"tresc": "Każda zmiana nastawy ciśnienia zgłaszana pisemnie przed wykonaniem; protokół z wartościami przed i po", "skad": "Karta kryteriów F-EnMS-14 sekcja C; przypadek z 2025 r., gdy serwis podniósł ciśnienie o 0,5 bar bez zgłoszenia"}, {"tresc": "Utrzymanie ciśnienia w sieci na poziomie nie wyższym niż 6,3 bar w trybie produkcji; nastawy trybu postoju bez zmian", "skad": "Karta kryteriów F-EnMS-14 sekcja A, kryterium 1"}, {"tresc": "Raport z przeglądu zawiera zmierzone zużycie jednostkowe i spadek ciśnienia na osuszaczu i filtrach", "skad": "Plan zbierania danych (6.6), pozycja 5; bez tego nie da się odróżnić pogorszenia wyniku od zmiany profilu pracy"}], "C": {"informacja": {"o": "tak", "u": "Zdanie w zapytaniu: utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty i podstawą rozliczenia"}, "specyfikacja": {"o": "tak", "u": "Trzy wymagania minimalne powyżej; zakres czynności z wykazem nastaw podlegających zmianie"}, "dane": {"o": "tak", "u": "Wzór raportu z przeglądu: zmierzone kWh/Nm³, spadki ciśnienia, lista zmienionych nastaw"}, "kryterium": {"o": "tak", "u": "Zakres i warunki, gotowość do pracy w weekendowym postoju, kwalifikacje osób; cena przy równych zakresach"}}, "informacja": "Utrzymanie wyniku energetycznego sprężarkowni jest jednym z kryteriów oceny oferty. Prosimy o potwierdzenie, że każda zmiana nastawy ciśnienia będzie zgłaszana pisemnie przed wykonaniem i że raport z przeglądu obejmie zmierzone zużycie jednostkowe oraz spadki ciśnienia na osuszaczu i filtrach. Trzy zdania ze zlecenia serwisowego są częścią umowy.", "kryteriumWyboru": "Zakres czynności i warunki reakcji przy równoważnych kwalifikacjach; cena przy porównywalnym zakresie. Zużycie energii samej usługi nie jest kryterium.", "lata": "", "cenaEnergii": "", "zalozenia": "", "oferty": [], "rekomendacja": "", "porownanieNd": true, "porownanieNdPowod": "Zakup usługi — usługa nie zużywa energii, więc porównanie kosztu zakupu i energii nie ma tu sensu. Kryterium oceny wyniku energetycznego dotyczy wpływu serwisu na pracę nadzorowanych urządzeń: trybu zgłaszania zmian nastaw, zawartości raportu i przestrzegania kryteriów z karty F-EnMS-14. Oferty porównywane według zakresu, warunków reakcji i kwalifikacji, przy cenie jako kryterium końcowym.", "E": {"deklaracje": "Po pierwszym przeglądzie sprawdzane: czy raport zawiera zmierzone kWh/Nm³ i spadki ciśnienia, czy zmiany nastaw zostały zgłoszone przed wykonaniem i czy ciśnienie po przeglądzie mieści się w kryterium. Sprawdza kierownik UR; wynik wchodzi do oceny dostawcy.", "kryteria": "Wymagania z karty F-EnMS-14 sekcja C są załącznikiem do umowy. Zmiana kryteriów w karcie — na przykład nowa nastawa trybu postoju po modernizacji w 06.2027 — wymaga aneksu albo pisemnego przekazania wykonawcy; odpowiada kierownik UR.", "wynik": "kWh/Nm³ po każdym przeglądzie, w porównaniu z wartością z miesiąca poprzedzającego — Energy Manager, w rytmie monitorowania z 9.1. Wzrost zużycia jednostkowego po przeglądzie o więcej niż 3% jest sygnałem z karty kryteriów i uruchamia rozmowę z serwisem."}}, {"przedmiot": "Zakup energii elektrycznej na 2027 r.", "nr": "ZAP/2026/22", "zrodloWymagan": "Plan zbierania danych (6.6), pozycje 1 i 2 — wymagania co do danych pomiarowych od sprzedawcy; profil poboru godzinowego za 2025 r.", "status": "Zapytanie 10.2026; wybór sprzedawcy 11.2026; umowa od 01.2027", "kto": "Dyrektor Finansowy z Energy Managerem", "data": "2026-10-02", "A": {"seu": {"o": "nd", "u": "Zakup energii dotyczy wszystkich użyć w zakładzie, nie jednego znaczącego użycia — stąd „nie dotyczy” zamiast „tak”"}, "nastawy": {"o": "nie", "u": "Wybór sprzedawcy nie zmienia nastaw ani sterowania żadnej instalacji"}, "godziny": {"o": "nd", "u": "Nie dotyczy urządzenia — przedmiotem zakupu jest nośnik energii"}, "usluga": {"o": "nie", "u": "Dostawa energii, nie usługa wpływająca na pracę urządzeń"}, "energia": {"o": "tak", "u": "Energia elektryczna, ok. 12 000 MWh na 2027 r."}, "prog": {"o": "tak", "u": "Ok. 10,8 mln zł wobec progu 100 tys. zł"}}, "uzasadnienieA": "", "wymagania": [{"tresc": "Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu, do 10. dnia następnego miesiąca", "skad": "Plan zbierania danych (6.6), pozycje 1 i 2 — dziś dane z faktury przychodzą raz w miesiącu bez profilu godzinowego"}, {"tresc": "Gwarancja ceny na cały okres umowy; struktura cenowa wyliczona dla profilu poboru z 2025 r., nie dla profilu standardowego", "skad": "Profil poboru godzinowego za 2025 r. — załącznik do zapytania"}, {"tresc": "Gwarancje pochodzenia wyceniane w osobnej pozycji oferty i raportowane osobno", "skad": "Ustalenie z przeglądu zarządzania: pochodzenie energii nie wchodzi do wskaźników wyniku energetycznego ani do oceny celów"}], "C": {"informacja": {"o": "tak", "u": "Zapytanie informuje, że dostępność danych pomiarowych i dopasowanie struktury cen do profilu są kryteriami oceny obok ceny"}, "specyfikacja": {"o": "tak", "u": "Trzy wymagania minimalne powyżej; profil poboru godzinowego za 2025 r. jako załącznik — specyfikacja dotycząca zakupu energii, wymagana przez normę"}, "dane": {"o": "tak", "u": "Struktura cenowa dla załączonego profilu, rozbicie na opłaty stałe i zmienne, format i częstotliwość udostępniania danych pomiarowych"}, "kryterium": {"o": "tak", "u": "Koszt energii wyliczony dla profilu z 2025 r., nie cena jednostkowa z taryfy; dostępność danych i ciągłość dostaw jako warunki"}}, "informacja": "Dopasowanie struktury cenowej do załączonego profilu poboru oraz dostępność danych pomiarowych są — obok ceny — kryteriami oceny ofert. Prosimy o wyliczenie kosztu energii dla profilu godzinowego z załącznika nr 1, z rozbiciem na opłaty stałe i zmienne, oraz o wskazanie formatu i terminu udostępniania danych pomiarowych. Gwarancje pochodzenia prosimy wycenić w osobnej pozycji.", "kryteriumWyboru": "Najniższy koszt energii wyliczony dla profilu poboru z 2025 r., przy gwarancji ceny na okres umowy, wymaganym formacie danych pomiarowych i potwierdzonej ciągłości dostaw. Gwarancje pochodzenia wyceniane w osobnej pozycji i rozliczane poza tym kryterium.", "lata": "", "cenaEnergii": "", "zalozenia": "", "oferty": [], "rekomendacja": "", "porownanieNd": true, "porownanieNdPowod": "Wybór sprzedawcy nie zmienia zużycia energii w zakładzie — sprężarkownia zużyje tyle samo kWh na Nm³ powietrza niezależnie od tego, od kogo kupiono prąd. Porównanie prowadzone według kosztu energii wyliczonego dla profilu poboru z 2025 r., struktury taryfy i warunków udostępniania danych, a nie według kosztu zakupu i energii urządzenia. Pochodzenie energii wyceniane i raportowane osobno.", "E": {"deklaracje": "Po pierwszym miesiącu rozliczenia sprawdzane: czy dane godzinowe przychodzą w uzgodnionym formacie i terminie, czy pozycje faktury odpowiadają strukturze z oferty i czy koszt zgadza się z wyliczeniem dla rzeczywistego profilu. Sprawdza Energy Manager z działem księgowości.", "kryteria": "Dane godzinowe od sprzedawcy wchodzą do planu zbierania danych (6.6) jako nowe źródło pozycji 1 — zastępują odczyt z faktury. Zmiana źródła danych wymaga adnotacji w kartach wskaźników (6.4) i sprawdzenia porównywalności z linią bazową.", "wynik": "Po pierwszym kwartale 2027 r. Energy Manager porównuje rzeczywisty koszt energii z wyliczeniem z oferty dla tego samego profilu. Rozbieżność powyżej 3% jest sygnałem do sprawdzenia, czy profil poboru się zmienił, czy rozliczenie odbiega od umowy. Wynik nie wchodzi do oceny wskaźników energetycznych — to kontrola kosztu, nie wyniku energetycznego."}}];
+var P_KATEGORIE = [{"kategoria": "Silniki elektryczne", "kryterium": "Sprawność w rzeczywistym punkcie pracy, nie moc znamionowa", "minimum": "Klasa IE4 dla pracy powyżej 2 000 h/rok; dobór mocy do zmierzonego obciążenia, bez zapasu powyżej 15%", "dane": "Sprawność przy 50%, 75% i 100% obciążenia; moc zmierzona lub wyliczona dla aplikacji", "podstawa": "Przegląd energetyczny 2026 — silniki w napędach pras i wentylatorów"}, {"kategoria": "Sprężarki, pompy, wentylatory, napędy", "kryterium": "Zużycie energii przy profilu pracy zakładu i zakres regulacji", "minimum": "Regulacja w zakresie co najmniej 30–100% wydajności; zużycie nie wyższe niż obecne przy tym samym profilu; możliwość dwóch nastaw", "dane": "Zużycie [MWh/rok] i wskaźnik jednostkowy dla profilu z załącznika, z metodą obliczeń; zużycie na biegu jałowym", "podstawa": "Karta kryteriów sprężarkowni F-EnMS-14; profil z kampanii pomiarowej 02–03.2026"}, {"kategoria": "Oświetlenie", "kryterium": "Moc zainstalowana na wymagane natężenie i możliwość sterowania", "minimum": "Skuteczność źródła co najmniej 140 lm/W; sterowanie strefowe i ściemnianie; natężenie zgodne z wymaganiem stanowiska, bez zawyżania", "dane": "Moc oprawy, skuteczność, obliczenia natężenia dla układu stref, zakres sterowania", "podstawa": "Cel C2 i zadanie Z2.1; zgłoszenie 2026/08 o jednym wyłączniku na halę"}, {"kategoria": "Urządzenia produkcyjne", "kryterium": "Zużycie energii na jednostkę produktu w przewidywanym trybie pracy", "minimum": "Zużycie jednostkowe nie wyższe niż w urządzeniu zastępowanym; tryb czuwania poniżej 5% mocy pracy; licznik energii na urządzeniu", "dane": "Zużycie jednostkowe [kWh/szt.] dla zadanej wydajności, zużycie w czuwaniu, obecność licznika", "podstawa": "Plan zbierania danych (6.6) — nowe urządzenie wymaga pozycji w planie"}, {"kategoria": "Usługi — serwis, projekt, wykonawstwo", "kryterium": "Wpływ usługi na nastawy i sprawność nadzorowanych urządzeń", "minimum": "Pisemne zgłoszenie każdej zmiany nastawy; protokół z wartościami przed i po; przestrzeganie kryteriów z karty F-EnMS-14", "dane": "Zakres czynności, lista nastaw podlegających zmianie, wzór protokołu, kwalifikacje osób", "podstawa": "Karta kryteriów sprężarkowni F-EnMS-14 sekcja C — przekazanie wymagań wykonawcom"}, {"kategoria": "Energia elektryczna i gaz", "kryterium": "Koszt energii przy rzeczywistym profilu poboru oraz dostępność danych pomiarowych", "minimum": "Rozliczenie godzinowe z udostępnieniem danych w formacie nadającym się do importu; gwarancja ceny na okres umowy; ciągłość dostaw", "dane": "Struktura cenowa dla profilu z 2025 r., opłaty stałe i zmienne, format i częstotliwość udostępniania danych", "podstawa": "Plan zbierania danych (6.6), pozycje 1 i 2; pochodzenie energii raportowane osobno, poza kryterium wyniku energetycznego"}];
+var P_META = {"zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "data": "2026-10-09", "prog": "100 000", "cenaEnergii": "890"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Najtańsza oferta bywa najdroższa w eksploatacji — i nikt tego nie liczy po fakcie.", "decyzja": "Kryteria energetyczne w zapytaniach i ocena kosztu w cyklu życia przy zakupach o istotnym zużyciu energii.", "dzialanie": "Zapytanie ZAP/2026/14 z wymaganiami energetycznymi; porównanie ofert A i B w pełnym koszcie — różnica 756 000 zł na korzyść oferty B.", "sprawdzenie": "Zużycie zakupionego urządzenia po roku pracy wobec wartości deklarowanej przez dostawcę."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 8.3 — Zakupy.
+   F-EnMS-16 (III-37) części A–E; przykład III-38; lista kontrolna III-39 sekcja 8.3;
+   procedura P-EnMS-06 (III-40) pkt 4.4. */
+"use strict";
+
+var PUNKT = "8.3";
+var TERAZ = "11.10.2026 12:20";
+var ZAKUPY = [];
+var AKTZ = 0;
+var KATEGORIE = [];
+var META = { zatwierdzil: "", data: "", prog: "", cenaEnergii: "" };
+var WNIOSKI = [];
+var AKT = "zakupy";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 12:15", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 8.3" }];
+
+var ODP = [["", "—"], ["tak", "Tak"], ["nie", "Nie"], ["nd", "N.d."]];
+var TRYBY = [["", "Wybierz sposób"],
+["roczne", "Zużycie roczne podane przez dostawcę"],
+["moc", "Średni pobór mocy × godziny pracy"],
+["jednostkowy", "Zużycie jednostkowe × ilość produktu w roku"]];
+
+function nowyZakup() {
+  return { przedmiot: "", nr: "", zrodloWymagan: "", status: "", kto: "", data: "",
+    A: {}, uzasadnienieA: "", C: {}, wymagania: [], informacja: "", kryteriumWyboru: "",
+    oferty: [], lata: "", cenaEnergii: "", zalozenia: "", rekomendacja: "",
+    porownanieNd: false, porownanieNdPowod: "", E: {} };
+}
+function zak() { return ZAKUPY[AKTZ] || null; }
+function nazwaZakupu(z, i) { return (z.przedmiot || "").trim() || ("Zakup " + (i + 1)); }
+
+/* ── odpowiedzi ── */
+function odp(z, czesc, kod) { return ((z[czesc] || {})[kod] || {}).o || ""; }
+function uwaga(z, czesc, kod) { return ((z[czesc] || {})[kod] || {}).u || ""; }
+function ustaw(z, czesc, kod, pole, v) {
+  if (!z[czesc]) z[czesc] = {};
+  if (!z[czesc][kod]) z[czesc][kod] = {};
+  z[czesc][kod][pole] = v;
+}
+function pytaniaOk(z, czesc, lista) {
+  return lista.every(function (q) {
+    var o = odp(z, czesc, q.kod);
+    if (!o) return false;
+    if (o === "nd" && !uwaga(z, czesc, q.kod).trim()) return false;
+    if (q.podstawa === "N" && o === "nie" && !uwaga(z, czesc, q.kod).trim()) return false;
+    return true;
+  });
+}
+
+/* ── ścieżka zakupu ── */
+function istotny(z) { return PYT_ZA.some(function (q) { return odp(z, "A", q.kod) === "tak"; }); }
+function zamknietyNaA(z) { return PYT_ZA.every(function (q) { return odp(z, "A", q.kod) === "nie"; }); }
+function dotyczySEU(z) { return odp(z, "A", "seu") === "tak" || odp(z, "A", "usluga") === "tak"; }
+function zakupEnergii(z) { return odp(z, "A", "energia") === "tak"; }
+function metrykaOk(z) {
+  return !!((z.przedmiot || "").trim() && (z.zrodloWymagan || "").trim() && (z.kto || "").trim() && z.data);
+}
+
+/* ── liczenie kosztu zakupu i energii ── */
+/* Kwoty i MWh z separatorem tysięcy — bez niego 22491000 zł jest nieczytelne. */
+function lkw(x, d) {
+  if (x === null || x === undefined) return "—";
+  var c = Math.abs(x).toFixed(d === undefined ? 0 : d).split(".");
+  c[0] = c[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return (x < 0 ? "−" : "") + c.join(",");
+}
+function cenaEnergiiZakupu(z) {
+  var c = lb(z.cenaEnergii);
+  return c !== null ? c : lb(META.cenaEnergii);
+}
+function zuzycieRoczne(o) {
+  if (o.tryb === "roczne") return lb(o.roczne);
+  if (o.tryb === "moc") {
+    var m = lb(o.moc), g = lb(o.godziny);
+    if (m === null || g === null) return null;
+    return m * g / 1000;
+  }
+  if (o.tryb === "jednostkowy") {
+    var j = lb(o.jedn), i = lb(o.ilosc);
+    if (j === null || i === null) return null;
+    return j * i / 1000;
+  }
+  return null;
+}
+function kosztEnergiiRok(z, o) {
+  var mwh = zuzycieRoczne(o), c = cenaEnergiiZakupu(z);
+  if (mwh === null || c === null) return null;
+  return mwh * c;
+}
+function kosztCalkowity(z, o) {
+  var ke = kosztEnergiiRok(z, o), cena = lb(o.cena), lat = lb(z.lata);
+  if (ke === null || cena === null || lat === null) return null;
+  var inne = lb(o.inne) || 0;
+  return cena + ke * lat + inne;
+}
+function najlepszaOferta(z) {
+  var kand = (z.oferty || []).map(function (o, i) { return { o: o, i: i, k: kosztCalkowity(z, o) }; })
+    .filter(function (x) { return x.k !== null && x.o.minimalne === "tak"; });
+  if (!kand.length) return null;
+  return kand.reduce(function (a, b) { return b.k < a.k ? b : a; });
+}
+function ofertaOk(z, o) {
+  return !!((o.nazwa || "").trim() && o.minimalne && lb(o.cena) !== null
+    && o.tryb && zuzycieRoczne(o) !== null && (o.zrodloDanych || "").trim());
+}
+var RE_TABLICZKA = /(tabliczk|moc znamionow|znamionow|katalogow|z katalogu)/i;
+function tylkoMocZnamionowa(o) { return RE_TABLICZKA.test(o.zrodloDanych || ""); }
+var RE_ZIELONA = /(odnawialn|zielon|\boze\b|gwarancj\w*\s+pochodzen|certyfikat\w*\s+pochodzen)/i;
+function zielonaJakoPoprawa(z) {
+  var t = (z.rekomendacja || "") + " " + (z.kryteriumWyboru || "");
+  return RE_ZIELONA.test(t) && /(popraw\w*\s+wynik|wynik\w*\s+energetyczn|oszcz[ęe]dn)/i.test(t);
+}
+function porownanieOk(z) {
+  if (z.porownanieNd) return !!(z.porownanieNdPowod || "").trim();
+  return (z.oferty || []).length >= 2 && z.oferty.every(function (o) { return ofertaOk(z, o); })
+    && lb(z.lata) !== null && cenaEnergiiZakupu(z) !== null
+    && !!(z.zalozenia || "").trim() && !!(z.rekomendacja || "").trim();
+}
+function eOk(z) { return POLA_ODBIOR.every(function (f) { return ((z.E || {})[f.kod] || "").trim(); }); }
+function wymaganiaOk(z) {
+  return (z.wymagania || []).length > 0 && z.wymagania.every(function (w) {
+    return (w.tresc || "").trim() && (w.skad || "").trim();
+  });
+}
+function zakupOk(z) {
+  if (!metrykaOk(z)) return false;
+  if (!pytaniaOk(z, "A", PYT_ZA)) return false;
+  if (zamknietyNaA(z)) return !!(z.uzasadnienieA || "").trim();
+  if (!istotny(z)) return false;
+  return wymaganiaOk(z) && pytaniaOk(z, "C", PYT_ZC) && (z.informacja || "").trim()
+    && porownanieOk(z) && eOk(z);
+}
+function kategoriaOk(k) {
+  return !!((k.kategoria || "").trim() && (k.kryterium || "").trim()
+    && (k.minimum || "").trim() && (k.dane || "").trim() && (k.podstawa || "").trim());
+}
+
+/* ── zakładka 1: zakupy i część A ── */
+function rysujZakupy(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Rejestr zakupów o znaczącym wpływie");
+  h.appendChild(el("span", "chip " + (ZAKUPY.length && ZAKUPY.every(zakupOk) ? "green" : "amber"),
+    ZAKUPY.filter(zakupOk).length + " / " + ZAKUPY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Dwie oferty na sprężarkę o tej samej wydajności. Różnica w cenie: 25 000 zł. Dział zakupów ma w rocznych celach obniżkę kosztów zakupu i dobrze wie, którą ofertę wybrać.<br><br>Kłopot w tym, że <b>cena na fakturze to dopiero pierwsza rata.</b> Kolejne zakład będzie płacił co miesiąc, w rachunku za energię, przez kilkanaście lat. W ofercie ich nie widać — chyba że ktoś o nie zapyta. <b>Punkt 8.3 każe zapytać.</b>"));
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Założenia wspólne"));
+  m.appendChild(pole("Cena energii do porównań [zł/MWh]",
+    inp(META.cenaEnergii, "np. 890", function (v) { META.cenaEnergii = v; }),
+    "Używana przy każdym porównaniu, o ile zakup nie ma własnej ceny. W AutoParts 890 zł/MWh dla energii elektrycznej (ceny 2025)."));
+  m.appendChild(pole("Próg kwotowy — sygnał pomocniczy [zł]",
+    inp(META.prog, "np. 20 000", function (v) { META.prog = v; }),
+    "★ Rada: próg bywa wygodnym sygnałem dla działu zakupów, ale nie może zastąpić oceny wpływu. Tania usługa serwisowa, która zmienia nastawy kotłowni, może znaczyć dla energii więcej niż drogie wyposażenie biura."));
+  s.appendChild(m);
+  host.appendChild(s);
+
+  if (ZAKUPY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Nr", "Przedmiot", "Rodzaj", "Istotny", "Ofert", "Stan"],
+      ZAKUPY.map(function (z, i) {
+        var rodz = zakupEnergii(z) ? "zakup energii" : odp(z, "A", "usluga") === "tak" ? "usługa" : "urządzenie";
+        return [z.nr || String(i + 1), nazwaZakupu(z, i), rodz,
+          zamknietyNaA(z) ? "nie — zamknięty na A" : istotny(z) ? "tak" : "—",
+          z.porownanieNd ? "nie dotyczy" : String((z.oferty || []).length),
+          el("span", "chip " + (zakupOk(z) ? "green" : "amber"), zakupOk(z) ? "OK" : "do uzupełnienia")];
+      }), ["mono"]));
+    host.appendChild(t);
+  }
+
+  ZAKUPY.forEach(function (z, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, nazwaZakupu(z, i));
+    hh.appendChild(el("span", "chip " + (zakupOk(z) ? "green" : "amber"), zakupOk(z) ? "kompletny" : "do uzupełnienia"));
+    if (zamknietyNaA(z)) hh.appendChild(el("span", "chip", "zamknięty na etapie A"));
+    var ot = el("button", "link", i === AKTZ ? "otwarty" : "otwórz części C–E");
+    ot.onclick = function () { AKTZ = i; AKT = "zapytanie"; rysuj(); window.scrollTo(0, 0); };
+    hh.appendChild(ot);
+    hh.appendChild(przyciskUsun(function () { ZAKUPY.splice(i, 1); if (AKTZ >= ZAKUPY.length) AKTZ = Math.max(0, ZAKUPY.length - 1); },
+      "usuń", "Usunąć zakup " + nazwaZakupu(z, i) + "?"));
+    sec.appendChild(hh);
+    var k = el("div", "poz" + (metrykaOk(z) ? "" : " brak"));
+    k.appendChild(pole("Przedmiot", inp(z.przedmiot, "np. Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej sprężarki",
+      function (v) { z.przedmiot = v; })));
+    k.appendChild(pole("Numer", inp(z.nr, "np. ZAP/2026/14", function (v) { z.nr = v; })));
+    k.appendChild(pole("Źródło wymagań", inp(z.zrodloWymagan, "np. Lista kontrolna projektu III-36 z przeglądu koncepcji (09.2026); kryteria sprężarkowni F-EnMS-14",
+      function (v) { z.zrodloWymagan = v; }),
+      "Przy zakupach wynikających z projektu to wprost wnioski z punktu 8.2 — i one stają się wymaganiami minimalnymi."));
+    k.appendChild(pole("Status", inp(z.status, "np. Specyfikacja 10.2026; porównanie ofert 11.2026", function (v) { z.status = v; })));
+    k.appendChild(pole("Kto prowadzi", inp(z.kto, "np. Dział zakupów z Energy Managerem", function (v) { z.kto = v; })));
+    k.appendChild(pole("Data oceny wpływu", inp(z.data, "", function (v) { z.data = v; }, "date")));
+    sec.appendChild(k);
+
+    var a = el("div", "sekcja");
+    var ha = el("h3", null, "A. Czy zakup może znacząco wpłynąć na wynik energetyczny?");
+    ha.appendChild(el("span", "chip " + (pytaniaOk(z, "A", PYT_ZA) ? "green" : "amber"),
+      PYT_ZA.filter(function (q) { return odp(z, "A", q.kod); }).length + " / " + PYT_ZA.length));
+    a.appendChild(ha);
+    PYT_ZA.forEach(function (q) {
+      var o = odp(z, "A", q.kod);
+      var brak = !o || (o === "nd" && !uwaga(z, "A", q.kod).trim());
+      var kk = el("div", "poz" + (brak ? " brak" : ""));
+      var g = el("div", "pozkod");
+      g.appendChild(el("b", null, q.tekst));
+      g.appendChild(el("span", "chip", "metodyka ENESA"));
+      kk.appendChild(g);
+      kk.appendChild(pole("", sel(o, ODP, function (v) { ustaw(z, "A", q.kod, "o", v); })));
+      kk.appendChild(pole("Uwagi i uzasadnienie", txt(uwaga(z, "A", q.kod), q.ph || "", 2,
+        function (v) { ustaw(z, "A", q.kod, "u", v); }), q.pomoc));
+      a.appendChild(kk);
+    });
+    if (zamknietyNaA(z)) {
+      a.appendChild(hel("div", "ok", "Wszystkie odpowiedzi brzmią „nie” — zakup nie wymaga kryteriów energetycznych. <b>Zapiszcie uzasadnienie i zakończcie.</b>"));
+      a.appendChild(poleChip("Uzasadnienie zakończenia na etapie A", "metodyka ENESA",
+        txt(z.uzasadnienieA, "np. Zakup mebli biurowych nie dotyczy znaczącego użycia energii, nie zmienia nastaw ani sterowania i nie wprowadza urządzeń zużywających energię.", 2,
+          function (v) { z.uzasadnienieA = v; })));
+    } else if (istotny(z)) {
+      a.appendChild(el("div", "note", "Zakup istotny — wypełnijcie części B–E. Kryteria dla kategorii są w zakładce 2, pozostałe części w zakładkach 3–5."));
+      var tylkoProg = odp(z, "A", "prog") === "tak" &&
+        !["seu", "nastawy", "godziny", "usluga", "energia"].some(function (x) { return odp(z, "A", x) === "tak"; });
+      if (tylkoProg)
+        a.appendChild(hel("div", "warn", "Jedynym sygnałem „tak” jest próg kwotowy. <b>Próg wyłącznie kwotowy</b> to jeden z sześciu błędów tego punktu — sprawdźcie jeszcze, czy zakup dotyczy SEU, zmienia nastawy, dotyczy urządzenia pracującego wiele godzin albo jest usługą wpływającą na pracę urządzeń."));
+      var bezProgu = odp(z, "A", "prog") === "nie" &&
+        ["seu", "nastawy", "godziny", "usluga", "energia"].some(function (x) { return odp(z, "A", x) === "tak"; });
+      if (bezProgu)
+        a.appendChild(el("div", "ok", "Zakup jest istotny, mimo że nie przekracza progu kwotowego. Dokładnie tak powinno to działać — <b>tania usługa serwisowa może znaczyć dla energii więcej niż drogie wyposażenie biura.</b>"));
+    }
+    host.appendChild(a);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj zakup", function () { ZAKUPY.push(nowyZakup()); AKTZ = ZAKUPY.length - 1; }));
+  if (!ZAKUPY.length) d.appendChild(el("div", "warn", "Rejestr zakupów jest pusty."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 2: część B — kryteria dla kategorii ── */
+function rysujKategorie(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "B. Kryteria dla kategorii zakupów");
+  h.appendChild(el("span", "chip " + (KATEGORIE.length && KATEGORIE.every(kategoriaOk) ? "green" : "amber"),
+    KATEGORIE.filter(kategoriaOk).length + " / " + KATEGORIE.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Kryteria oceny wyniku energetycznego w okresie użytkowania — ustalone raz dla kategorii, stosowane przy każdym zakupie z tej kategorii. To jest wymaganie normy."));
+  s.appendChild(hel("div", "warn", "Norma wymaga kryteriów oceny wyniku energetycznego w okresie użytkowania — <b>nie konkretnej metody</b>. Kryterium może być minimalna sprawność, maksymalne zużycie jednostkowe przy Waszym profilu pracy albo zakres regulacji. Często najbardziej przekonuje jednak pieniądz."));
+  s.appendChild(hel("div", "note", "<b>Pochodzenie energii zapisujcie osobno.</b> Zakup energii z odnawialnych źródeł może być ważny dla klienta i dla emisji, ale sam w sobie nie poprawia wyniku energetycznego — sprężarkownia zużyje tyle samo kWh na Nm³ powietrza, niezależnie od tego, skąd pochodzi prąd."));
+  host.appendChild(s);
+
+  if (KATEGORIE.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Kategoria", "Kryterium wyniku energetycznego", "Wymaganie minimalne", "Dane od dostawcy", "Podstawa"],
+      KATEGORIE.map(function (k) {
+        return [k.kategoria || "—", k.kryterium || "—", k.minimum || "—", k.dane || "—", k.podstawa || "—"];
+      })));
+    host.appendChild(t);
+  }
+
+  var ed = el("div", "sekcja");
+  ed.appendChild(el("h3", null, "Kryteria — edycja"));
+  KATEGORIE.forEach(function (k, i) {
+    var kk = el("div", "poz" + (kategoriaOk(k) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (k.kategoria || "Kategoria " + (i + 1))));
+    g.appendChild(przyciskUsun(function () { KATEGORIE.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Kategoria", inp(k.kategoria, "np. Sprężarki, pompy, wentylatory, napędy", function (v) { k.kategoria = v; })));
+    kk.appendChild(poleChip("Kryterium wyniku energetycznego", "wymóg normy",
+      inp(k.kryterium, "np. Zużycie energii przy profilu pracy zakładu, nie moc znamionowa", function (v) { k.kryterium = v; })));
+    kk.appendChild(pole("Wymaganie minimalne", inp(k.minimum, "np. Zakres regulacji co najmniej 30–100% wydajności; zużycie nie wyższe niż obecne przy tym samym profilu",
+      function (v) { k.minimum = v; })));
+    kk.appendChild(pole("Dane od dostawcy", inp(k.dane, "np. Zużycie [MWh/rok] i wskaźnik jednostkowy dla profilu z załącznika, z metodą obliczeń",
+      function (v) { k.dane = v; })));
+    kk.appendChild(pole("Podstawa — proces albo przepis", inp(k.podstawa, "np. Kryteria sprężarkowni F-EnMS-14; profil z kampanii pomiarowej 02–03.2026",
+      function (v) { k.podstawa = v; })));
+    if (RE_ZIELONA.test(k.kryterium || "") && !/pochodzeni/i.test(k.kategoria || ""))
+      kk.appendChild(hel("div", "warn", "Kryterium powołuje się na pochodzenie energii. <b>Pochodzenie energii i jej zużycie to dwie różne sprawy</b> — i warto je raportować osobno. Jeśli chodzi o kategorię „Energia”, przenieście pochodzenie do osobnego wiersza albo do pola podstawy."));
+    ed.appendChild(kk);
+  });
+  if (KATEGORIE.length) host.appendChild(ed);
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj kategorię", function () { KATEGORIE.push({}); }));
+  if (!KATEGORIE.length) d.appendChild(el("div", "warn", "Nie ustalono kryteriów dla żadnej kategorii. To wprost wymaganie normy dla zakupów o znaczącym wpływie."));
+  var maEnergie = KATEGORIE.some(function (k) { return /energi/i.test(k.kategoria || ""); });
+  var kupujeEnergie = ZAKUPY.some(zakupEnergii);
+  if (kupujeEnergie && !maEnergie)
+    d.appendChild(hel("div", "warn", "W rejestrze jest zakup energii, a wśród kategorii nie ma pozycji „Energia”. Norma wymaga specyfikacji także przy zakupie energii — <b>tam, gdzie to właściwe</b>: struktura cen, profil poboru, ciągłość dostaw, pochodzenie."));
+  var maUslugi = KATEGORIE.some(function (k) { return /usług|uslug|serwis/i.test(k.kategoria || ""); });
+  if (!maUslugi && KATEGORIE.length)
+    d.appendChild(el("div", "note", "Brak kategorii dla usług. To nie tylko urządzenia — serwis, który zmienia nastawy, projekt i wykonawstwo instalacji też wpływają na wynik energetyczny."));
+  host.appendChild(d);
+}
+
+/* ── wspólny nagłówek ── */
+function naglowekZakupu(host, tytul) {
+  var z = zak();
+  if (!z) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "warn", "Nie wybrano zakupu. Dodajcie zakup w zakładce 1."));
+    host.appendChild(x);
+    return null;
+  }
+  var s = el("div", "sekcja");
+  var h = el("h3", null, tytul);
+  h.appendChild(el("span", "chip", nazwaZakupu(z, AKTZ)));
+  if (ZAKUPY.length > 1) {
+    var lab = el("span", "rola");
+    lab.appendChild(el("span", "rolaetyk", "Zakup:"));
+    lab.appendChild(sel(String(AKTZ), ZAKUPY.map(function (x, i) { return [String(i), nazwaZakupu(x, i)]; }),
+      function (v) { AKTZ = parseInt(v, 10); }));
+    h.appendChild(lab);
+  }
+  s.appendChild(h);
+  host.appendChild(s);
+  if (zamknietyNaA(z)) {
+    var o = el("div", "sekcja");
+    o.appendChild(el("div", "ok", "Zakup zamknięty na etapie A — części B–E nie są wymagane."));
+    host.appendChild(o);
+    return null;
+  }
+  return z;
+}
+
+/* ── zakładka 3: część C — zapytanie ofertowe ── */
+function rysujZapytanie(host) {
+  var z = naglowekZakupu(host, "C. Zapytanie ofertowe — elementy");
+  if (!z) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "warn", "Przy zakupach wpływających na znaczące użycia energii norma wymaga poinformowania dostawców, że <b>wynik energetyczny jest jednym z kryteriów oceny</b>. W praktyce to jedno zdanie w zapytaniu — i lista danych, których oczekujecie.<br><br>Dostawca, który wie, że energia się liczy, zaproponuje inne rozwiązanie niż ten, który walczy wyłącznie ceną."));
+  PYT_ZC.forEach(function (q) {
+    var o = odp(z, "C", q.kod);
+    var brak = !o || (o === "nd" && !uwaga(z, "C", q.kod).trim())
+      || (q.podstawa === "N" && o === "nie" && !uwaga(z, "C", q.kod).trim());
+    var kk = el("div", "poz" + (brak ? " brak" : ""));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, q.tekst));
+    g.appendChild(el("span", "chip " + (q.podstawa === "N" ? "red" : ""),
+      q.podstawa === "N" ? "wymóg normy" : "metodyka ENESA"));
+    kk.appendChild(g);
+    kk.appendChild(pole("", sel(o, ODP, function (v) { ustaw(z, "C", q.kod, "o", v); })));
+    kk.appendChild(pole("Uwagi i uzasadnienie", txt(uwaga(z, "C", q.kod), q.ph || "", 2,
+      function (v) { ustaw(z, "C", q.kod, "u", v); }), q.pomoc));
+    if (q.podstawa === "N" && o === "nie" && dotyczySEU(z))
+      kk.appendChild(el("div", "warn", "Odpowiedź „nie” przy zakupie dotyczącym znaczącego użycia energii. To wprost wymaganie normy — bez uzasadnienia pozycja zostaje niespełniona."));
+    s.appendChild(kk);
+  });
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  var hw = el("h3", null, "Wymagania minimalne");
+  hw.appendChild(el("span", "chip " + (wymaganiaOk(z) ? "green" : "amber"),
+    (z.wymagania || []).filter(function (x) { return (x.tresc || "").trim() && (x.skad || "").trim(); }).length +
+    " / " + (z.wymagania || []).length));
+  w.appendChild(hw);
+  w.appendChild(el("p", "opis", "Oferty spełniające wymagania minimalne wchodzą do porównania; pozostałe odpadają. Przy zakupach z projektu wymagania minimalne to przyjęte wnioski z punktu 8.2."));
+  (z.wymagania || []).forEach(function (x, i) {
+    var pelne = (x.tresc || "").trim() && (x.skad || "").trim();
+    var kk = el("div", "poz" + (pelne ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wymaganie " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { z.wymagania.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Wymaganie", txt(x.tresc, "np. Utrzymanie ciśnienia w sieci ≤ 6,3 bar; dwie nastawy — produkcja i postój", 2,
+      function (v) { x.tresc = v; })));
+    kk.appendChild(pole("Skąd", inp(x.skad, "np. Kryteria sprężarkowni F-EnMS-14, części A i B; uwaga z przeglądu koncepcji",
+      function (v) { x.skad = v; })));
+    w.appendChild(kk);
+  });
+  w.appendChild(przyciskDodaj("+ dodaj wymaganie minimalne", function () { if (!z.wymagania) z.wymagania = []; z.wymagania.push({}); }));
+  if (!(z.wymagania || []).length) w.appendChild(el("div", "warn", "Brak wymagań minimalnych — nie ma czym odsiać ofert przed porównaniem."));
+  host.appendChild(w);
+
+  var i2 = el("div", "sekcja");
+  i2.appendChild(el("h3", null, "Informacja dla dostawców i wymagane dane"));
+  i2.appendChild(poleChip("Treść informacji w zapytaniu", "wymóg normy",
+    txt(z.informacja, "np. „Wynik energetyczny jest jednym z kryteriów oceny ofert. Prosimy o podanie przewidywanego zużycia energii (MWh/rok) i wskaźnika kWh/Nm³ przy profilu pracy z załącznika i ciśnieniu sieci 6,3 bar, wraz z metodą obliczeń. Oferentów, którzy podadzą tylko moc znamionową, poprosimy o uzupełnienie danych.”", 4,
+      function (v) { z.informacja = v; }),
+    "To jedno zdanie plus lista danych. Bez niego dostawca nie ma powodu podawać czegokolwiek poza ceną."));
+  i2.appendChild(pole("Kryterium wyboru", txt(z.kryteriumWyboru, "np. Spośród ofert spełniających wymagania minimalne — najniższy koszt zakupu i energii w 15 lat, przy porównywalnych warunkach serwisu", 2,
+    function (v) { z.kryteriumWyboru = v; })));
+  if (!(z.informacja || "").trim() && dotyczySEU(z))
+    i2.appendChild(el("div", "warn", "Brak informacji dla dostawców przy zakupie dotyczącym znaczącego użycia energii. „Dostawca nie wie, że energia się liczy” to jeden z sześciu błędów tego punktu."));
+  if (zielonaJakoPoprawa(z))
+    i2.appendChild(hel("div", "warn", "Kryterium wyboru łączy pochodzenie energii z poprawą wyniku energetycznego. <b>„Zielona energia” jako poprawa wyniku energetycznego</b> to jeden z sześciu błędów tego punktu — raportujcie pochodzenie i zużycie osobno."));
+  host.appendChild(i2);
+}
+
+/* ── zakładka 4: część D — porównanie ofert ── */
+function rysujPorownanie(host) {
+  var z = naglowekZakupu(host, "D. Porównanie ofert — koszt zakupu i energii");
+  if (!z) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "note", "Koszt energii = średni pobór mocy × godziny pracy × cena <b>albo</b> zużycie jednostkowe × ilość produktu w roku × cena. <b>Nie porównujcie samych mocy znamionowych:</b> sprężarka o mocy 45 kW może średnio pobierać znacznie mniej — albo pracować na biegu jałowym, zużywając energię bez wytwarzania powietrza."));
+  s.appendChild(el("div", "note", "★ Pełne porównanie kosztu cyklu życia uwzględnia też instalację, serwis, zmiany cen energii i wartość pieniądza w czasie. To przydatna metoda, nie format wymagany przez normę."));
+
+  var nd = el("div", "poz");
+  nd.appendChild(pole("Czy porównanie kosztem energii ma zastosowanie",
+    sel(z.porownanieNd ? "nie" : "tak",
+      [["tak", "Tak — porównujemy oferty kosztem zakupu i energii"],
+      ["nie", "Nie dotyczy — uzasadnienie poniżej"]],
+      function (v) { z.porownanieNd = (v === "nie"); })));
+  if (z.porownanieNd)
+    nd.appendChild(poleChip("Uzasadnienie", "metodyka ENESA",
+      txt(z.porownanieNdPowod, "np. Zakup usługi serwisowej — kryterium oceny to nadzór nad nastawami i protokoły, nie zużycie energii samej usługi. Porównanie prowadzone według zakresu i warunków, nie kosztu energii.", 2,
+        function (v) { z.porownanieNdPowod = v; }),
+      "Przy usługach i zakupie energii porównanie kosztem energii bywa bezsensowne — ale trzeba to napisać, bo norma wymaga kryteriów oceny wyniku energetycznego w okresie użytkowania."));
+  s.appendChild(nd);
+  host.appendChild(s);
+  if (z.porownanieNd) return;
+
+  var z2 = el("div", "sekcja");
+  z2.appendChild(el("h3", null, "Założenia porównania"));
+  var zk = el("div", "poz" + (lb(z.lata) !== null && cenaEnergiiZakupu(z) !== null && (z.zalozenia || "").trim() ? "" : " brak"));
+  zk.appendChild(pole("Okres użytkowania [lat]", inp(z.lata, "np. 15", function (v) { z.lata = v; })));
+  zk.appendChild(pole("Cena energii [zł/MWh]", inp(z.cenaEnergii, "pozostaw puste, aby użyć ceny wspólnej: " + (META.cenaEnergii || "—"),
+    function (v) { z.cenaEnergii = v; })));
+  zk.appendChild(poleChip("Założenia", "metodyka ENESA",
+    txt(z.zalozenia, "np. Stała cena energii 890 zł/MWh; 15 lat; profil pracy jak w kampanii pomiarowej; koszty serwisu porównywalne wg ofert; pominięte zmiany cen i wartość pieniądza w czasie.", 3,
+      function (v) { z.zalozenia = v; }),
+    "Bez zapisanych założeń porównanie nie da się powtórzyć ani obronić. To pole jest w formularzu Toolkitu osobno — i nie bez powodu."));
+  z2.appendChild(zk);
+  host.appendChild(z2);
+
+  var o = el("div", "sekcja");
+  var ho = el("h3", null, "Oferty");
+  ho.appendChild(el("span", "chip " + ((z.oferty || []).length >= 2 && z.oferty.every(function (x) { return ofertaOk(z, x); }) ? "green" : "amber"),
+    (z.oferty || []).filter(function (x) { return ofertaOk(z, x); }).length + " / " + (z.oferty || []).length));
+  o.appendChild(ho);
+  (z.oferty || []).forEach(function (x, i) {
+    var kk = el("div", "poz" + (ofertaOk(z, x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.nazwa || "Oferta " + (i + 1))));
+    if (x.minimalne) g.appendChild(el("span", "chip " + (x.minimalne === "tak" ? "green" : "red"),
+      x.minimalne === "tak" ? "spełnia wymagania" : "nie spełnia wymagań"));
+    if (tylkoMocZnamionowa(x)) g.appendChild(el("span", "chip red", "tylko moc znamionowa"));
+    g.appendChild(przyciskUsun(function () { z.oferty.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Oferta", inp(x.nazwa, "np. Oferta A", function (v) { x.nazwa = v; })));
+    kk.appendChild(pole("Spełnia wymagania minimalne", sel(x.minimalne,
+      [["", "—"], ["tak", "Tak"], ["nie", "Nie"]], function (v) { x.minimalne = v; })));
+    kk.appendChild(pole("Cena zakupu z montażem i uruchomieniem [zł]", inp(x.cena, "np. 330000", function (v) { x.cena = v; })));
+    kk.appendChild(pole("Sposób podania zużycia", sel(x.tryb, TRYBY, function (v) { x.tryb = v; })));
+    if (x.tryb === "roczne")
+      kk.appendChild(pole("Przewidywane zużycie [MWh/rok]", inp(x.roczne, "np. 1660", function (v) { x.roczne = v; })));
+    if (x.tryb === "moc") {
+      kk.appendChild(pole("Średni pobór mocy przy profilu pracy [kW]", inp(x.moc, "np. 45", function (v) { x.moc = v; })));
+      kk.appendChild(pole("Godziny pracy w roku [h]", inp(x.godziny, "np. 4000", function (v) { x.godziny = v; })));
+    }
+    if (x.tryb === "jednostkowy") {
+      kk.appendChild(pole("Zużycie jednostkowe [kWh na jednostkę]", inp(x.jedn, "np. 0,110", function (v) { x.jedn = v; })));
+      kk.appendChild(pole("Ilość produktu w roku [jednostek]", inp(x.ilosc, "np. 14500000", function (v) { x.ilosc = v; }),
+        "Przy sprężonym powietrzu to objętość w Nm³. Samo kWh/Nm³ pomnożone przez godziny nie daje kosztu — brakuje ilości powietrza."));
+    }
+    kk.appendChild(poleChip("Źródło danych o zużyciu", "metodyka ENESA",
+      inp(x.zrodloDanych, "np. Dane dostawcy dla profilu pracy z załącznika (kampania 02–03.2026), z metodą obliczeń",
+        function (v) { x.zrodloDanych = v; }),
+      "To pole odróżnia dane dla Waszego profilu pracy od mocy z tabliczki."));
+    kk.appendChild(pole("Inne koszty, jeśli istotne [zł]", inp(x.inne, "np. 0", function (v) { x.inne = v; })));
+    var mwh = zuzycieRoczne(x), ker = kosztEnergiiRok(z, x), kc = kosztCalkowity(z, x);
+    if (mwh !== null) {
+      var w = el("div", "note");
+      w.appendChild(el("b", null, "Wyliczenie: "));
+      w.appendChild(document.createTextNode("zużycie " + lkw(mwh, 0) + " MWh/rok" +
+        (ker !== null ? "; koszt energii " + lkw(ker, 0) + " zł/rok" : "") +
+        (kc !== null ? "; koszt zakupu i energii w " + lcz(lb(z.lata), 0) + " lat: " + lkw(kc, 0) + " zł" : "")));
+      kk.appendChild(w);
+    }
+    if (tylkoMocZnamionowa(x))
+      kk.appendChild(hel("div", "warn", "Źródło danych wskazuje moc znamionową albo dane katalogowe. <b>Moc znamionowa z tabliczki to nie zużycie energii.</b> Poproście dostawcę o dane dla Waszego profilu pracy — tak jak w zapytaniu AutoParts: „oferentów, którzy podadzą tylko moc znamionową, poprosimy o uzupełnienie danych”."));
+    o.appendChild(kk);
+  });
+  o.appendChild(przyciskDodaj("+ dodaj ofertę", function () { if (!z.oferty) z.oferty = []; z.oferty.push({}); }));
+  if ((z.oferty || []).length < 2)
+    o.appendChild(el("div", "warn", "Do porównania potrzebne są co najmniej dwie oferty. Jeśli oferta jest jedna, zapiszcie to w uzasadnieniu „nie dotyczy” powyżej."));
+  host.appendChild(o);
+
+  if ((z.oferty || []).length >= 2) {
+    var t = el("div", "sekcja");
+    t.appendChild(el("h3", null, "Zestawienie"));
+    var naj = najlepszaOferta(z);
+    var wiersze = [["Spełnia wymagania minimalne"], ["Cena zakupu [zł]"], ["Zużycie [MWh/rok]"],
+      ["Koszt energii w roku [zł]"], ["Koszt zakupu i energii w " + (lb(z.lata) !== null ? lcz(lb(z.lata), 0) : "—") + " lat [zł]"],
+      ["Różnica wobec najlepszej [zł]"]];
+    (z.oferty || []).forEach(function (x) {
+      var mwh = zuzycieRoczne(x), ker = kosztEnergiiRok(z, x), kc = kosztCalkowity(z, x);
+      wiersze[0].push(x.minimalne === "tak" ? "tak" : x.minimalne === "nie" ? "nie" : "—");
+      wiersze[1].push(lb(x.cena) === null ? "—" : lkw(lb(x.cena), 0));
+      wiersze[2].push(mwh === null ? "—" : lkw(mwh, 0));
+      wiersze[3].push(ker === null ? "—" : lkw(ker, 0));
+      wiersze[4].push(kc === null ? "—" : lkw(kc, 0));
+      wiersze[5].push(naj && kc !== null ? (kc === naj.k ? "najniższy" : "+" + lkw(kc - naj.k, 0)) : "—");
+    });
+    t.appendChild(tabela(["Składnik"].concat((z.oferty || []).map(function (x, i) { return x.nazwa || "Oferta " + (i + 1); })),
+      wiersze));
+    if (naj)
+      t.appendChild(hel("div", "ok", "Najniższy koszt zakupu i energii wśród ofert spełniających wymagania minimalne: <b>" +
+        (naj.o.nazwa || "Oferta " + (naj.i + 1)) + "</b> — " + lkw(naj.k, 0) + " zł w " + lcz(lb(z.lata), 0) + " lat."));
+    t.appendChild(poleChip("Rekomendacja i uzasadnienie", "metodyka ENESA",
+      txt(z.rekomendacja, "np. Przy tych założeniach oferta B ma niższy koszt zakupu i energii i mieści się w budżecie. Przed decyzją: sprawdzić wymagania procesu i pozostałe koszty; zapisać uzasadnienie wyboru.", 3,
+        function (v) { z.rekomendacja = v; })));
+    var zle = (z.oferty || []).filter(function (x) { return x.minimalne === "nie"; });
+    if (zle.length && (z.rekomendacja || "").trim() &&
+      zle.some(function (x) { return (z.rekomendacja || "").indexOf(x.nazwa || "###") >= 0; }))
+      t.appendChild(el("div", "warn", "Rekomendacja wymienia ofertę, która nie spełnia wymagań minimalnych. Porównanie kosztem energii prowadzi się tylko wśród ofert spełniających wymagania."));
+    if (zielonaJakoPoprawa(z))
+      t.appendChild(hel("div", "warn", "Rekomendacja łączy pochodzenie energii z poprawą wyniku energetycznego. <b>Sprężarkownia zużyje tyle samo kWh na Nm³ powietrza, niezależnie od tego, skąd pochodzi prąd.</b>"));
+    host.appendChild(t);
+  }
+}
+
+/* ── zakładka 5: część E — odbiór ── */
+var POLA_ODBIOR = [
+  { kod: "deklaracje", nazwa: "Deklaracje dostawcy sprawdzone przy odbiorze — co, kto, wynik", podstawa: "M",
+    ph: "np. Dwie nastawy ciśnienia działają; przetworniki u odbiorców podłączone; dane eksportowane do monitoringu; przyłącza pod odzysk ciepła — sprawdził kierownik UR" },
+  { kod: "kryteria", nazwa: "Kryteria obsługi przekazane do punktu 8.1", podstawa: "N",
+    ph: "np. Karta kryteriów sprężarkowni F-EnMS-14 zaktualizowana przed uruchomieniem (do 05.2027) — kierownik UR",
+    pomoc: "Zamknięcie pętli: projekt → zakup → obsługa. Bez tego kryteria zostaną przy starej instalacji." },
+  { kod: "wynik", nazwa: "Sprawdzenie wyniku po uruchomieniu — termin i kto", podstawa: "M",
+    ph: "np. kWh/Nm³ cztery tygodnie po odbiorze i za rok 2027, w warunkach z części D formularza celów — Energy Manager (cel Z1.1); porównanie z deklaracją oferty" }
+];
+
+function rysujOdbior(host) {
+  var z = naglowekZakupu(host, "E. Odbiór i sprawdzenie");
+  if (!z) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "note", "<b>Deklaracje dostawcy niesprawdzone</b> to szósty błąd tego punktu. Przy odbiorze sprawdza się, czy dostarczono to, co zadeklarowano — a cztery tygodnie po uruchomieniu i po pełnym roku porównuje się wynik w porównywalnych warunkach."));
+  if (!z.E) z.E = {};
+  var k = el("div", "poz" + (eOk(z) ? "" : " brak"));
+  POLA_ODBIOR.forEach(function (f) {
+    k.appendChild(poleChip(f.nazwa, f.podstawa === "N" ? "wymóg normy" : "metodyka ENESA",
+      txt(z.E[f.kod], f.ph, 2, function (v) { z.E[f.kod] = v; }), f.pomoc));
+  });
+  s.appendChild(k);
+  s.appendChild(hel("div", "ok", "Usługi kupuje się tak samo. <b>Trzy zdania w zleceniu dla serwisu sprężarek z punktu 8.1 to też specyfikacja zakupu</b> — mówią wykonawcy, czego zakład oczekuje i jak oceni jego pracę."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var ist = ZAKUPY.filter(istotny);
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz zakupów: "));
+  n.appendChild(document.createTextNode(
+    ile(ZAKUPY.length, "zakup", "zakupy", "zakupów") + " · istotnych: " + ist.length +
+    " · zamkniętych na etapie A: " + ZAKUPY.filter(zamknietyNaA).length +
+    " · kategorii z kryteriami: " + KATEGORIE.filter(kategoriaOk).length + " z " + KATEGORIE.length +
+    " · kompletnych: " + ZAKUPY.filter(zakupOk).length));
+  s.appendChild(n);
+  var tab = ZAKUPY.reduce(function (a, z) { return a + (z.oferty || []).filter(tylkoMocZnamionowa).length; }, 0);
+  if (tab)
+    s.appendChild(el("div", "warn", ile(tab, "oferta opiera", "oferty opierają", "ofert opiera") +
+      " zużycie na mocy znamionowej albo danych katalogowych. To są oferty do uzupełnienia, nie do porównania."));
+  var bezInfo = ist.filter(function (z) { return dotyczySEU(z) && !(z.informacja || "").trim(); });
+  if (bezInfo.length)
+    s.appendChild(el("div", "warn", ile(bezInfo.length, "zakup dotyczący SEU nie informuje", "zakupy dotyczące SEU nie informują", "zakupów dotyczących SEU nie informuje") +
+      " dostawców, że wynik energetyczny jest kryterium oceny. To wprost wymaganie normy."));
+  var bezZal = ist.filter(function (z) { return !z.porownanieNd && (z.oferty || []).length >= 2 && !(z.zalozenia || "").trim(); });
+  if (bezZal.length)
+    s.appendChild(el("div", "warn", ile(bezZal.length, "porównanie nie ma", "porównania nie mają", "porównań nie ma") +
+      " zapisanych założeń. Bez nich wyniku nie da się powtórzyć ani obronić przed zarządem."));
+  var ziel = ZAKUPY.filter(zielonaJakoPoprawa);
+  if (ziel.length)
+    s.appendChild(el("div", "warn", "W " + ile(ziel.length, "zakupie", "zakupach", "zakupach") +
+      " pochodzenie energii występuje jako poprawa wyniku energetycznego. To rozmowa, nie poprawka w formularzu — zwykle wraca przy raportowaniu dla klienta."));
+  var bezE = ist.filter(function (z) { return !zamknietyNaA(z) && !eOk(z); });
+  if (bezE.length)
+    s.appendChild(el("div", "warn", ile(bezE.length, "zakup nie ma", "zakupy nie mają", "zakupów nie ma") +
+      " opisanego odbioru i sprawdzenia. To moment, w którym deklaracje dostawcy albo się potwierdzają, albo nie."));
+  var maUslugi = ZAKUPY.some(function (z) { return odp(z, "A", "usluga") === "tak"; });
+  if (!maUslugi && ZAKUPY.length)
+    s.appendChild(el("div", "note", "W rejestrze nie ma zakupu usługi. Do sprawdzenia: kto serwisuje znaczące użycia energii i czy to zlecenie przechodzi przez ocenę wpływu — usługa zmieniająca nastawy bywa istotniejsza od urządzenia."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-39, sekcja 8.3 ── */
+function stanPozycji(q) {
+  var ist = ZAKUPY.filter(istotny);
+  var f = {
+    kryteria: function () {
+      return KATEGORIE.length > 0 && KATEGORIE.every(kategoriaOk);
+    },
+    informuje: function () {
+      var s = ist.filter(dotyczySEU);
+      if (!s.length) return null;
+      return s.every(function (z) { return (z.informacja || "").trim() && odp(z, "C", "informacja") === "tak"; });
+    },
+    specyfikacje: function () {
+      if (!ist.length) return null;
+      return ist.every(function (z) {
+        return wymaganiaOk(z) && (odp(z, "C", "specyfikacja") === "tak" || uwaga(z, "C", "specyfikacja").trim());
+      });
+    },
+    wplyw: function () {
+      return ZAKUPY.length > 0 && ZAKUPY.every(function (z) { return pytaniaOk(z, "A", PYT_ZA); })
+        && ZAKUPY.every(function (z) { return !zamknietyNaA(z) || (z.uzasadnienieA || "").trim(); })
+        && ZAKUPY.some(function (z) { return odp(z, "A", "usluga") === "tak" || odp(z, "A", "energia") === "tak"; });
+    },
+    profil: function () {
+      var por = ist.filter(function (z) { return !z.porownanieNd; });
+      if (!por.length) return null;
+      return por.every(function (z) { return porownanieOk(z); })
+        && !ZAKUPY.some(function (z) { return (z.oferty || []).some(tylkoMocZnamionowa); });
+    },
+    zalozenia: function () {
+      var por = ist.filter(function (z) { return !z.porownanieNd; });
+      if (!por.length) return null;
+      return por.every(function (z) { return (z.zalozenia || "").trim() && lb(z.lata) !== null && cenaEnergiiZakupu(z) !== null; });
+    },
+    odbior: function () {
+      if (!ist.length) return null;
+      return ist.every(eOk);
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!ZAKUPY.length) b.push({ t: "Rejestr zakupów jest pusty.", kto: "klient" });
+  if (!KATEGORIE.length) b.push({ t: "Nie ustalono kryteriów oceny wyniku energetycznego dla żadnej kategorii zakupów.", kto: "klient" });
+  KATEGORIE.forEach(function (k, i) {
+    if (!kategoriaOk(k)) b.push({ t: "Kategoria " + (k.kategoria || i + 1) + " — niepełne kryterium (kryterium, minimum, dane, podstawa).", kto: "klient" });
+  });
+  if (ZAKUPY.some(zakupEnergii) && !KATEGORIE.some(function (k) { return /energi/i.test(k.kategoria || ""); }))
+    b.push({ t: "Jest zakup energii, a brak kategorii „Energia” z specyfikacją.", kto: "klient" });
+  if (lb(META.cenaEnergii) === null) b.push({ t: "Nie podano ceny energii do porównań.", kto: "klient", metodyka: true });
+  ZAKUPY.forEach(function (z, i) {
+    var nz = nazwaZakupu(z, i);
+    if (!metrykaOk(z)) b.push({ t: nz + " — niepełna metryka (źródło wymagań, kto prowadzi, data).", kto: "klient" });
+    if (!pytaniaOk(z, "A", PYT_ZA)) b.push({ t: nz + " — część A niewypełniona.", kto: "klient" });
+    if (zamknietyNaA(z) && !(z.uzasadnienieA || "").trim())
+      b.push({ t: nz + " — zamknięty na etapie A bez uzasadnienia.", kto: "klient", metodyka: true });
+    if (!istotny(z) || zamknietyNaA(z)) return;
+    if (!wymaganiaOk(z)) b.push({ t: nz + " — brak wymagań minimalnych albo ich źródła.", kto: "klient" });
+    if (!pytaniaOk(z, "C", PYT_ZC)) b.push({ t: nz + " — część C niepełna.", kto: "klient" });
+    if (dotyczySEU(z) && !(z.informacja || "").trim())
+      b.push({ t: nz + " — nie poinformowano dostawców, że wynik energetyczny jest kryterium oceny.", kto: "klient" });
+    if (!porownanieOk(z)) b.push({ t: nz + " — porównanie ofert niepełne (oferty, okres, cena energii, założenia, rekomendacja).", kto: "klient" });
+    (z.oferty || []).forEach(function (o, j) {
+      if (tylkoMocZnamionowa(o)) b.push({ t: nz + " / " + (o.nazwa || "oferta " + (j + 1)) + " — zużycie oparte na mocy znamionowej.", kto: "klient", metodyka: true });
+    });
+    if (zielonaJakoPoprawa(z)) b.push({ t: nz + " — pochodzenie energii potraktowane jako poprawa wyniku energetycznego.", kto: "klient" });
+    if (!eOk(z)) b.push({ t: nz + " — brak opisu odbioru i sprawdzenia (część E).", kto: "klient" });
+  });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia kryteriów zakupowych.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 7: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-ZKP-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_83, "Lista kontrolna III-39 — sekcja 8.3", stanPozycji);
+
+  var ist = ZAKUPY.filter(istotny);
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-ZKP-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Rejestr zakupów i ocena wpływu (A)", "zakładka 1",
+      ile(ZAKUPY.length, "zakup", "zakupy", "zakupów") + ", istotnych: " + ist.length],
+    ["B. Kryteria dla kategorii", "zakładka 2", KATEGORIE.filter(kategoriaOk).length + " z " + KATEGORIE.length],
+    ["C. Zapytanie ofertowe", "zakładka 3",
+      ist.filter(function (z) { return (z.informacja || "").trim(); }).length + " z " + ist.length + " z informacją dla dostawców"],
+    ["D. Porównanie ofert", "zakładka 4",
+      ist.filter(porownanieOk).length + " z " + ist.length + " kompletnych · ofert: " +
+      ZAKUPY.reduce(function (a, z) { return a + (z.oferty || []).length; }, 0)],
+    ["E. Odbiór i sprawdzenie", "zakładka 5", ist.filter(eOk).length + " z " + ist.length],
+    ["Wnioski konsultanta", "zakładka 6", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 7", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>kryteriów oceny wyniku energetycznego w okresie użytkowania</b>, <b>informowania dostawców</b> przy zakupach związanych ze znaczącymi użyciami energii oraz <b>specyfikacji tam, gdzie to właściwe — także przy zakupie energii</b>. Porównanie kosztu zakupu i energii to metoda, nie wymagany format. Dokument D-EnMS-ZKP-01 odpowiada formularzowi F-EnMS-16 (załącznik III-37)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "zakupy", t: "1. Zakupy i ocena (A)", f: rysujZakupy },
+  { id: "kategorie", t: "2. B — kryteria kategorii", f: rysujKategorie },
+  { id: "zapytanie", t: "3. C — zapytanie", f: rysujZapytanie },
+  { id: "porownanie", t: "4. D — porównanie ofert", f: rysujPorownanie },
+  { id: "odbior", t: "5. E — odbiór", f: rysujOdbior },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  var n = Math.max(ZAKUPY.length, 1);
+  return {
+    razem: n * 2 + Math.max(KATEGORIE.length, 1) + 2,
+    zrob: ZAKUPY.filter(metrykaOk).length + ZAKUPY.filter(zakupOk).length
+      + KATEGORIE.filter(kategoriaOk).length
+      + (lb(META.cenaEnergii) !== null ? 1 : 0)
+      + ((META.zatwierdzil || "").trim() && META.data ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_83", JSON.stringify({
+      ZAKUPY: ZAKUPY, KATEGORIE: KATEGORIE, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_83"); if (!s) return;
+    var d = JSON.parse(s);
+    ZAKUPY = d.ZAKUPY || []; KATEGORIE = d.KATEGORIE || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  ZAKUPY = JSON.parse(JSON.stringify(P_ZAKUPY));
+  KATEGORIE = JSON.parse(JSON.stringify(P_KATEGORIE));
+  META = JSON.parse(JSON.stringify(P_META));
+  AKTZ = 0;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić rejestr zakupów i kryteria kategorii?")) return;
+  ZAKUPY = []; KATEGORIE = []; WNIOSKI = []; AKTZ = 0;
+  META = { zatwierdzil: "", data: "", prog: "", cenaEnergii: "" };
+  try { localStorage.removeItem("enesa_83"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

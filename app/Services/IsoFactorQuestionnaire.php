@@ -94,8 +94,8 @@ class IsoFactorQuestionnaire
         $out = ['FAKT_KLIMAT_ISTOTNY' => $data['FAKT_KLIMAT_ISTOTNY'] ?? null, 'climate_reason' => $data['climate_reason'] ?? null, 'factors' => [], 'custom' => array_values($data['custom'] ?? [])];
         $errors = [];
         $out['PRAWO'] = $data['PRAWO'] ?? [];
-        if ($complete && (! $out['FAKT_KLIMAT_ISTOTNY'] || ! filled($out['climate_reason']))) {
-            $errors['climate_reason'] = 'Oceń istotność zmiany klimatu i podaj uzasadnienie.';
+        if ($complete && (! $out['FAKT_KLIMAT_ISTOTNY'] || ! $this->climateComplete($out['climate_reason']))) {
+            $errors['climate_reason'] = 'Oceń istotność zmiany klimatu i podaj uzasadnienie (co najmniej 20 znaków). Sama sezonowość zużycia nie uzasadnia oceny zmiany klimatu.';
         }
         foreach ($this->factors($facts, $out) as $factor) {
             $key = $factor['kod'];
@@ -133,7 +133,7 @@ class IsoFactorQuestionnaire
     public function progress(array $facts, array $answers): array
     {
         $total = 2;
-        $done = ! empty($answers['FAKT_KLIMAT_ISTOTNY']) && filled($answers['climate_reason'] ?? null) ? 1 : 0;
+        $done = ! empty($answers['FAKT_KLIMAT_ISTOTNY']) && $this->climateComplete($answers['climate_reason'] ?? null) ? 1 : 0;
         $done += filled(data_get($answers, 'PRAWO.data')) ? 1 : 0;
         foreach ($answers['custom'] ?? [] as $row) {
             $total++;
@@ -150,6 +150,14 @@ class IsoFactorQuestionnaire
         }
 
         return app(QuestionnaireCompletion::class)->result($done, $total);
+    }
+
+    private function climateComplete(?string $reason): bool
+    {
+        $reason = trim($reason ?? '');
+
+        return mb_strlen($reason) >= 20 && ! (preg_match('/(latem|zim[ąaei]|sezon|upał\w*\s+w\s+lipcu)/iu', $reason)
+            && ! preg_match('/(kolejn\w+ lat|przyszł\w+|wymagan\w+ (klient|stron|bank)|trend|prognoz)/iu', $reason));
     }
 
     public function formAnswers(mixed $input): array

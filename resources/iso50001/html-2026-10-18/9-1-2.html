@@ -1,0 +1,1508 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 9.1.2 Ocena zgodności</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 9</div>
+ <h1>9.1.2 Ocena zgodności z wymaganiami prawnymi i innymi</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 9.1.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 9.1.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>9.1.2 Ocena zgodności z wymaganiami prawnymi i innymi</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 9.1.2 i pięć kroków oceny.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 9.1.2<br>Ocena zgodności</div>
+   <div>
+    <h4>9.1.2 Ocena zgodności</h4>
+    <p>Rejestr a ocena. Pięć kroków dla każdego wymagania. Nie tylko przepisy.
+    Data stanu prawnego.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 9.1.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">9.1.2 — ocena zgodności<br>8 slajdów</div>
+   <div>
+    <h4>9.1.2 Ocena zgodności</h4>
+    <p>Lista kontra dowód. Wymagania klientów i banków. Jak często oceniać.
+    Brak zgodności to niezgodność.</p>
+    <p style="font-size:12.5px">8 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja w zaplanowanych odstępach ocenia, czy spełnia wymagania prawne
+ i inne wymagania, które przyjęła, dotyczące efektywności energetycznej, wykorzystania i zużycia energii
+ oraz systemu zarządzania energią. Zachowuje udokumentowane informacje o wynikach oceny zgodności
+ i o podjętych działaniach. Omówienie na podstawie punktu 9.1.2 PN-EN ISO 50001:2018; nie jest to dosłowne
+ brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> w zaplanowanych odstępach sprawdzaj,
+ czy rzeczywiście spełniasz wymagania prawne i inne, które dotyczą energii — i zapisuj wyniki oraz podjęte
+ działania.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 8, punkt 9.1.2. Zestawienie oceny: III-41, część D;
+ przykład AutoParts: III-42.</div>
+
+ <div class="ramka">
+  <h3>◧ Wiersz dziewiąty</h3>
+  <p style="font-size:13.5px">Wrzesień 2026 r. Jan Kowalski przechodzi wiersz po wierszu rejestr stron
+  zainteresowanych i ich wymagań. Rejestr jest aktualny: przy każdym wymaganiu jest źródło, sposób realizacji
+  i osoba odpowiedzialna. Wiersz dziewiąty: bank finansujący modernizację — coroczne wskaźniki zużycia energii
+  zakładu. Umowa kredytowa podaje termin: <b>30 czerwca</b>.</p>
+  <p style="font-size:13.5px">Kowalski prosi kontroling o potwierdzenie wysyłki. Raport wyszedł
+  <b>12 sierpnia</b> — po przypomnieniu z banku.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Rejestr był poprawny. Wymaganie było znane, osoba wyznaczona.
+  <b>Zabrakło jednego: sprawdzenia, czy obowiązek został rzeczywiście wykonany.</b> O tym jest
+  punkt 9.1.2.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Czym to się różni od rejestru wymagań?</h3>
+ <p style="font-size:14.5px">W punkcie 4.2 ustalacie, jakie wymagania Was obowiązują: przepisy, umowy
+ z klientami, warunki banku, zobowiązania, które firma przyjęła sama. W punkcie 9.1.2 sprawdzacie, czy je
+ rzeczywiście spełniacie. <b>Pierwsze to lista. Drugie to dowód.</b></p>
+ <p style="font-size:14.5px">Ocena obejmuje nie tylko prawo. Wymaganie klienta, który co roku chce danych
+ o energii i emisjach, albo warunek banku z umowy kredytowej to <b>„inne wymagania”</b> — jeśli organizacja
+ je przyjęła, sprawdzacie je tak samo jak przepisy.</p>
+
+ <h3 style="margin-top:22px">Jak to sprawdzić? Pięć kroków dla każdego wymagania</h3>
+ <p style="font-size:14.5px">Dla każdego wymagania przejdźcie tę samą drogę: <b>wymaganie → sposób
+ sprawdzenia → dowód → wynik → działanie, jeśli brak zgodności.</b> Tak wyglądało to w AutoParts we wrześniu
+ 2026 r.:</p>
+ <table class="tab">
+ <tr><th style="width:26%">Wymaganie</th><th style="width:18%">Jak sprawdzono</th><th style="width:20%">Dowód</th><th style="width:16%">Wynik</th><th>Działanie</th></tr>
+ <tr><td>Klient: dane o energii i emisjach do 31 marca</td><td>Data wysyłki i potwierdzenie odbioru</td><td>Potwierdzenie klienta z 24.03.2026</td><td>Zgodne</td><td>—</td></tr>
+ <tr><td>Ustawa o efektywności energetycznej: audyt co 4 lata, zawiadomienie Prezesa URE w ciągu 30 dni</td><td>Daty audytu i zawiadomienia; termin kolejnego</td><td>Raport z audytu 2024; kopia zawiadomienia</td><td>Do uzupełnienia datami</td><td>Śledzenie nowelizacji; termin kolejnego audytu w kalendarzu</td></tr>
+ <tr><td>Bank: wskaźniki zużycia energii do 30 czerwca</td><td>Data wysyłki</td><td>E-mail z 12.08.2026</td><td><b>Niezgodne — opóźnienie</b></td><td>Termin w kalendarzu kontrolingu; przypomnienie od Energy Managera 14 dni wcześniej (10.1)</td></tr>
+ </table>
+ <p style="font-size:14.5px">Opóźnienie raportu dla banku nie jest dramatem, ale <b>jest niezgodnością
+ z wymaganiem, które firma przyjęła.</b> Dlatego ma przyczynę — nikt nie miał tego terminu w swoim kalendarzu
+ — i działanie, które ją usuwa. Wynik oceny i działanie AutoParts zapisała; tego wymaga norma, a wnioski
+ trafią na przegląd zarządzania (9.3).</p>
+ <p style="font-size:13.5px">★ Ocenę zgodności robicie według przepisów obowiązujących w dniu oceny —
+ i <b>zapisujecie, na jaki dzień je sprawdziliście.</b></p>
+
+ <h3 style="margin-top:22px">Jak często?</h3>
+ <p style="font-size:14.5px">Norma mówi: <b>w zaplanowanych odstępach.</b> Nie narzuca jednej częstotliwości
+ dla wszystkich wymagań. Wymaganie z terminem rocznym sprawdzicie po terminie. Obowiązek raz na cztery lata —
+ w roku, w którym przypada. Zmianę przepisu — gdy wejdzie w życie.</p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> AutoParts ocenia zgodność raz w roku, we wrześniu, przed
+ przeglądem zarządzania. Dodatkowo przy każdej zmianie przepisu i nowej umowie. To przykład organizacji pracy
+ — dobierzcie rytm do terminów swoich wymagań.</p>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts: raport dla banku po terminie</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Warunek umowy kredytowej finansującej modernizację. Rejestr był poprawny, więc wymaganie nie zostało przeoczone — przeoczono sprawdzenie, czy je wykonano.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Wynik oceny: niezgodne. Przyczyna: termin 30 czerwca nie był w kalendarzu żadnej osoby; rejestr wskazywał właściciela, nie datę.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Termin wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem od Energy Managera 14 dni wcześniej. Karta niezgodności (10.1), odpowiedzialny: kontroler finansowy.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Skuteczność działania oceni kolejna ocena zgodności — po 30 czerwca 2027 r. Wynik oceny i działanie trafiły na przegląd zarządzania 29.09.2026 r.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Rejestr wymagań zamiast oceny zgodności</td><td>Przy każdym wymaganiu sprawdźcie wykonanie i wskażcie dowód</td></tr>
+ <tr><td>Ocena tylko przepisów</td><td>Obejmijcie wymagania klientów, banków i przyjęte zobowiązania</td></tr>
+ <tr><td>„Jesteśmy zgodni” bez dowodu</td><td>Zapiszcie, jak sprawdzono, jaki jest dowód i wynik</td></tr>
+ <tr><td>Brak zgodności zapisany, ale bez działania</td><td>Ustalcie przyczynę i działanie (10.1)</td></tr>
+ <tr><td>Ocena raz na kilka lat</td><td>Ustalcie rytm według terminów wymagań i przy zmianach przepisów</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Rejestr mówi, co musisz. Ocena zgodności mówi, czy to
+  robisz.<br><br>
+  <b>Zadanie:</b> wybierzcie z rejestru jedno wymaganie z konkretnym terminem i znajdźcie dowód, że ostatnio
+  zostało spełnione <b>w terminie</b>. Ankieta sprawdza przy każdym wymaganiu, czy sposób sprawdzenia
+  w ogóle odwołuje się do daty.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma porównuje zakres oceny z rejestrem z punktu 4.2 — oczekiwania nieprzyjęte
+  odlicza — i przy każdym wymaganiu z terminem sprawdza, czy sposób sprawdzenia odwołuje się do daty.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 9.1.2 w formacie stron 4.1–9.1.1.</b> Najmniejsza ankieta w serii — pięć zakładek —
+bo norma wymaga tu tylko dwóch rzeczy: oceny w zaplanowanych odstępach i zapisu wyników wraz z podjętymi
+działaniami. Cała trudność jest w jednej kolumnie: <b>dowód</b>. Formularz F-EnMS-17 jest wspólny z punktem
+9.1.1 — tutaj jest jego część D.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 8, punkt 9.1.2</td><td>Scena wiersza dziewiątego i raportu wysłanego 12 sierpnia wobec terminu 30 czerwca, akapit „pierwsze to lista, drugie to dowód”, zdanie o wymaganiach klientów i banków jako „innych wymaganiach”, pięć kroków dla każdego wymagania wraz z tabelą trzech przykładów, akapit o niezgodności z przyjętym wymaganiem, zdanie o dacie stanu prawnego, akapit „jak często” z czterema rytmami, rada o wrześniowej ocenie przed przeglądem, lista samosprawdzająca, tabela pięciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 7 — III-41 (F-EnMS-17), część D</td><td>Metryka: data oceny i stan prawny na dzień, oceniający. Tabela: wymaganie z rejestru III-04, jak sprawdzono, dowód, wynik, działanie przy braku zgodności.</td></tr>
+<tr><td>Część III, Moduł 7 — III-42, część D</td><td>Przykład z września 2026 (stan prawny na 15.09.2026): siedem ocenianych wymagań z numerami wierszy rejestru, w tym jedno niezgodne (bank) i jedno z dowodem do uzupełnienia datami (zawiadomienie URE).</td></tr>
+<tr><td>Część III, Moduł 1 — III-04 (F-EnMS-02)</td><td><b>Źródło numeracji i kwalifikacji wierszy.</b> Dziewięć wierszy rejestru; wiersze 3 i 5 zakwalifikowane jako „oczekiwanie nieprzyjęte”. Zasada z nagłówka rejestru: wymagania prawne, umowne i przyjęte zobowiązania przenosi się do oceny zgodności — oczekiwania nieprzyjęte zostają w rejestrze z powodem i terminem ponownej decyzji.<br><br><b>Uwaga o numeracji.</b> Numery wierszy w przykładzie (1, 2, 4, 6, 7, 8, 9) pochodzą z <b>przykładu III-04</b>, nie z platformy. Strona 4.2 nie koduje dziewięciu wierszy AutoParts na stałe — generuje rejestr z biblioteki stron zainteresowanych i profilu zakładu, więc u innego klienta numeracja i skład będą inne. W platformie pozycja oceny zgodności nie przechowuje numeru: wskazuje <b>klucz obcy do rekordu wymagania</b>, a numer porządkowy należy do rejestru. Pole numeru w tej makiecie istnieje tylko po to, żeby przykład dał się zestawić z III-42 wiersz po wierszu.</td></tr>
+<tr><td>Część III, Moduł 7 — III-47</td><td>Lista kontrolna sekcji 9.1.2: 3 pozycje — dwa wymagania normy i jedno zalecenie metodyki.</td></tr>
+<tr><td>Część III, Moduł 7 — III-48, pkt 4.2</td><td>Kroki 6–8 procedury P-EnMS-07: rytm oceny i dodatkowa ocena przy zmianie przepisu lub nowej umowie; pięć kolumn dla każdego wymagania z datą stanu prawnego; brak zgodności ścieżką P-EnMS-08, wyniki na przegląd zarządzania.</td></tr>
+</table>
+<div class="warn"><b>7 z 9 to poprawny stan, nie luka.</b> III-42 ocenia siedem wymagań, a rejestr III-04 ma
+dziewięć wierszy. Wiersze 3 i 5 są w rejestrze zakwalifikowane jako <b>oczekiwania nieprzyjęte</b> — ślad
+węglowy dostaw u drugiego klienta i preferencja chłodniejszych hal — i zgodnie z zasadą z nagłówka rejestru
+nie przechodzą do oceny zgodności. Platforma liczy to sama: liczba wierszy rejestru minus oczekiwania
+nieprzyjęte daje zakres oceny, a brak któregokolwiek wymagania z zakresu jest ostrzeżeniem. <b>Bez tego
+odliczenia każda poprawnie zrobiona ocena wyglądałaby na niekompletną</b> — i to jest najważniejsza decyzja
+projektowa tej strony.</div>
+<div class="note">Dwa elementy przykładu <b>wymagają potwierdzenia przy publikacji</b>. Pierwszy: termin
+„30 czerwca” przy wierszu 9 rejestru. Moduł 7 w sekcji „Do synchronizacji poza tym plikiem” każe go dopisać
+do III-04 — w obecnej wersji Modułu 1 wiersz 9 mówi tylko o „corocznych wskaźnikach”, bez daty. Bez tego
+terminu cała scena punktu 9.1.2 nie ma podstawy w rejestrze. Drugi: pola „przyczyna” przy wierszach 7 i 9
+oraz treść wniosków na przegląd są naszym rozwinięciem zdań z III-42 i książki — treść jest z nimi zgodna,
+ale dosłowne brzmienie jest nasze.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>ocena_zgodnosci</code></td><td>id, audyt_id, data_oceny, <b>stan_prawny_na</b>, oceniajacy, rytm, wierszy_w_rejestrze, oczekiwan_nieprzyjetych, zatwierdzil, data_zatwierdzenia, wnioski_na_przeglad, przeglad_stanu_prawnego.</td></tr>
+<tr><td><code>pozycja_oceny</code></td><td>id, ocena_id, <b>wymaganie_id</b> (klucz obcy do rejestru z 4.2), jak_sprawdzono, dowod, wynik ENUM('zgodne','wtoku','douzupelnienia','niezgodne'), przyczyna, dzialanie, karta_niezgodnosci_id, odpowiedzialny_termin.</td></tr>
+<tr><td><code>wymaganie</code> (z 4.2)</td><td>Numer wiersza, strona zainteresowana, treść wymagania, źródło i <b>kwalifikacja</b> ENUM('prawne','umowne','zobowiazanie','nieprzyjete') należą do rejestru z punktu 4.2. Makieta je kopiuje, bo jest samodzielna — przy wdrożeniu pozycja oceny ma tylko klucz obcy.</td></tr>
+</table>
+<div class="note">Liczby <code>wierszy_w_rejestrze</code> i <code>oczekiwan_nieprzyjetych</code> istnieją
+<b>wyłącznie w makiecie</b>. Po połączeniu z rejestrem z 4.2 platforma policzy jedno i drugie zapytaniem,
+a zakres oceny stanie się listą wymagań, a nie liczbą — wtedy ostrzeżenie o niepełnym pokryciu wskaże
+<b>konkretne brakujące wiersze</b>, a nie samą różnicę.</div>
+
+<h2>Wyniki oceny — cztery wartości</h2>
+<table>
+<tr><th style="width:24%">Wynik</th><th>Kiedy i co wymusza platforma</th></tr>
+<tr><td><b>Zgodne</b></td><td>Wymaga dowodu zawierającego datę albo nazwę dokumentu. Pole działania może być kreską.</td></tr>
+<tr><td><b>W toku, zgodnie z planem</b></td><td>Dla wymagań z terminem w przyszłości — w przykładzie certyfikacja od 2027 r. i zobowiązanie Zarządu do 2028 r. Wymaga działania opisującego, co utrzymuje plan.</td></tr>
+<tr><td><b>Ocena do uzupełnienia dowodem</b></td><td><b>Wartość dodana przez nas</b>, nie ma jej w formularzu. III-42 przy obowiązku URE pisze „ocena terminu do uzupełnienia datami” — to nie jest ani zgodność, ani niezgodność, bo nie wiadomo. Bez tej wartości taki wiersz trafiałby do „zgodne” i znikał. Wymaga przyczyny i działania, nie wymaga karty 10.1.</td></tr>
+<tr><td><b>Niezgodne</b></td><td>Wymaga przyczyny, działania, karty niezgodności (10.1) oraz odpowiedzialnego z terminem.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Rejestr zamiast oceny</b></td><td>Wymaganie w zakresie oceny bez wypełnionego pola „jak sprawdzono” → ostrzeżenie ze zdaniem z książki i wskazaniem, że to dokładnie to, co zdarzyło się z raportem dla banku. Pierwszy z pięciu błędów tego punktu.</td></tr>
+<tr><td><b>„Jesteśmy zgodni” bez dowodu</b></td><td>Wynik „zgodne”, a pole dowodu nie zawiera daty ani nazwy dokumentu (data w dowolnym formacie, nazwa miesiąca słownie, potwierdzenie, protokół, e-mail, kopia, raport, umowa, faktura, certyfikat, zawiadomienie, rejestr, harmonogram, budżet) → ostrzeżenie. Wszystkie siedem dowodów z przykładu przechodzi tę regułę.</td></tr>
+<tr><td><b>Termin bez sprawdzenia daty</b></td><td>Treść wymagania zawiera termin („do 30 czerwca”, „co 4 lata”, „w ciągu 30 dni”, „corocznie”, „miesięczne”), a sposób sprawdzenia nie odwołuje się do daty, terminu, kalendarza ani wysyłki → nota. <b>To reguła odtwarzająca morał całego podrozdziału:</b> rejestr może być poprawny, osoba wyznaczona, a i tak zabraknie sprawdzenia, czy obowiązek wykonano <i>w terminie</i>. W przykładzie wiersz 9 tej noty nie zapala, bo sposób sprawdzenia brzmi „data wysyłki raportu wobec terminu umownego”.<br><br><b>Uwaga dla implementacji:</b> wzorzec rozpoznający sprawdzenie daty musi szukać <b>prefiksów</b> (<code>\bdat</code>, <code>wysy[łl]</code>), nie całych form. Wpis „sprawdzenie <i>dat wysyłek</i>” zawiera oba słowa, ale żadne nie kończy się tak, jak podpowiada mianownik — pierwsza wersja reguły przepuściła wiersz 8 przykładu jako brak. Polska odmiana jest tu regułą, nie wyjątkiem.</td></tr>
+<tr><td>Brak zgodności bez przyczyny albo działania</td><td>Ostrzeżenie i pozycja w braki(). Norma wymaga zapisu podjętych działań; analiza przyczyny jest zaleceniem metodyki, ale bez niej działanie zwykle nie usuwa problemu.</td></tr>
+<tr><td>Niezgodność bez karty 10.1</td><td>Ostrzeżenie. Brak zgodności z wymaganiem prawnym, umownym albo przyjętym zobowiązaniem idzie ścieżką z punktu 10.1 — niezależnie od tego, jak drobne się wydaje.</td></tr>
+<tr><td><b>Ocena tylko przepisów</b></td><td>Gdy żadne wymaganie w zakresie nie jest umowne ani przyjętym zobowiązaniem → ostrzeżenie z liczbą z przykładu: w AutoParts <b>18 z 23</b> ocenianych wymagań nie jest przepisami. Drugi z pięciu błędów.</td></tr>
+<tr><td><b>Niepełne pokrycie rejestru</b></td><td>Liczba wierszy rejestru minus oczekiwania nieprzyjęte, porównana z liczbą ocenianych pozycji. Luka dodatnia → ostrzeżenie; ujemna → nota z pytaniem, czy nie trafiło tu oczekiwanie nieprzyjęte. Zero → komunikat potwierdzający. Pozycja listy kontrolnej o ocenie w zaplanowanych odstępach wymaga pokrycia równego zeru.</td></tr>
+<tr><td>Oczekiwanie nieprzyjęte w ocenie</td><td>Wiersz zwija się do pola powodu nieprzyjęcia i terminu ponownej decyzji; pola „jak sprawdzono”, „dowód” i „wynik” nie są pokazywane ani wymagane. Taki wiersz nie liczy się do zakresu oceny.</td></tr>
+<tr><td>Brak daty stanu prawnego</td><td>Ostrzeżenie w zakładce 1 i w analizie konsultanta: za rok nikt nie odtworzy, co obowiązywało w dniu oceny — a przy trwającej nowelizacji ustawy to nie jest formalność.</td></tr>
+<tr><td><b>Rytm rzadszy niż roczny</b></td><td>Podstawowy odstęp oceny jest <b>polem wyboru</b> (częściej niż raz w roku / raz w roku / rzadziej), a nie tekstem — wybór „rzadziej” daje ostrzeżenie: wymaganie z terminem rocznym trzeba sprawdzić po tym terminie, inaczej opóźnienie wyjdzie od strony zainteresowanej, nie z systemu. Piąty z pięciu błędów.<br><br><b>Dlaczego nie wyrażenie regularne:</b> opis rytmu w AutoParts zawiera zdanie „obowiązek raz na cztery lata — w roku, w którym przypada”. To częstotliwość <i>samego obowiązku</i>, nie oceny, a żadne wyrażenie nie rozróżni tych dwóch znaczeń w swobodnym tekście. Pierwsza wersja reguły podnosiła alarm na poprawnie wypełnionym przykładzie — stąd pole wyboru obok opisu.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-47 — sekcja 9.1.2</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>W zaplanowanych odstępach oceniana jest zgodność z wymaganiami prawnymi i innymi dotyczącymi energii i systemu.</td><td class='mono'>N</td><td><code>oceniana</code></td></tr><tr><td>Zachowano wyniki oceny i zapis podjętych działań.</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Przy ocenie zapisano datę stanu prawnego; przy braku zgodności przeanalizowano przyczynę.</td><td class='mono'>M</td><td><code>stanIPrzyczyna</code></td></tr></table>
+<div class="note">Trzy pozycje na całą sekcję — i wszystkie trzy zależą od tego samego: czy przy każdym
+wymaganiu jest dowód. Pozycja o zaplanowanych odstępach jest spełniona tylko wtedy, gdy <b>jednocześnie</b>
+ustalono rytm, pokrycie rejestru jest pełne i ocena nie obejmuje wyłącznie przepisów — bo ocena zrobiona
+w terminie, ale na połowie wymagań, nie jest oceną zgodności.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–3, 5</td><td>Wypełnia klient — Energy Manager, przy wymaganiach umownych razem z kontrolingiem i działem sprzedaży. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 4 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok liczy wymagania oznaczone jako zgodne bez dowodu, wymagania bez sposobu sprawdzenia, wymagania z terminem bez sprawdzenia daty i lukę pokrycia. Przy terminach dodaje pytanie, które w AutoParts rozstrzygnęło sprawę: <b>kto ma ten termin w kalendarzu — odpowiedź brzmiała: nikt.</b></td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-ZGD-01</code> — ocena zgodności z wymaganiami prawnymi i innymi</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-17 część D (załącznik III-41); przykład III-42 część D. Części A, B, C i E to dokument <code>D-EnMS-MON-01</code> w punkcie 9.1.1.</td></tr>
+<tr><td>Status w normie</td><td><b>Dwa wymagania dokumentacyjne:</b> wyniki oceny zgodności oraz zapis podjętych działań. Forma zestawienia należy do organizacji. W wykazie z punktu 7.5 pozycja pojawia się jako Z i N (9.1.2).</td></tr>
+<tr><td>Rytm</td><td>Raz w roku przed przeglądem zarządzania (tak robi AutoParts), a poza tym: przy zmianie przepisu w dniu jej wejścia w życie, przy nowej umowie oraz po terminie każdego wymagania z terminem rocznym.</td></tr>
+<tr><td>Dlaczego osobny dokument od 9.1.1</td><td>Inny rytm (raz w roku wobec co miesiąc), inny zakres danych (rejestr z 4.2 wobec wskaźników z 6.4) i inny adresat działań (właściciele wymagań, często poza obszarem energii — kontroling, sprzedaż). Wspólny formularz w Toolkicie jest wygodą edytorską, nie tożsamością procesu.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>4.2 Strony zainteresowane i ich wymagania</td><td><b>Wejście, rozstrzygające.</b> Rejestr dostarcza wiersze, ich kwalifikację i właścicieli. Kwalifikacja decyduje, czy wiersz w ogóle trafia do oceny. Zmiana rejestru — nowa umowa, nowy przepis — zmienia zakres tej oceny.</td></tr>
+<tr><td>5.2 Polityka energetyczna</td><td><b>Wejście.</b> Zobowiązanie do spełniania wymagań prawnych i innych jest elementem polityki; ta ocena jest dowodem, że zobowiązanie jest realizowane, a nie tylko zapisane.</td></tr>
+<tr><td>6.1 Ryzyka i szanse</td><td><b>Dwukierunkowo.</b> Niespełnienie wymagania umownego bywa ryzykiem z rejestru R; powtarzający się brak zgodności jest przesłanką do zmiany oceny ryzyka.</td></tr>
+<tr><td>9.1.1 Monitorowanie</td><td><b>Ten sam formularz, osobny proces.</b> Wynik oceny zgodności wchodzi do części E jako element oceny skuteczności systemu — w przykładzie zdanie „ocena zgodności: 1 niezgodność, działanie w toku”.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Wyjście.</b> Wymagania z rejestru są jednym z kryteriów audytu. Audytor sprawdza nie tylko, czy ocena się odbyła, ale czy dowody rzeczywiście dowodzą.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Wyjście, wymagane.</b> Wyniki oceny zgodności są jedną z wymaganych pozycji danych wejściowych przeglądu. Zakładka 3 przygotowuje tę pozycję wprost.</td></tr>
+<tr><td>10.1 Niezgodności</td><td><b>Wyjście.</b> Każdy brak zgodności idzie ścieżką 10.1 — z przyczyną, działaniem i sprawdzeniem skuteczności. Skuteczność działania dla raportu bankowego oceni dopiero ocena po 30 czerwca 2027 r.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Pozycja oceny jako klucz obcy do rejestru</b></td><td>Najważniejsza zmiana. Dziś ocena kopiuje treść wymagania, źródło i kwalifikację z 4.2 — i może się od nich rozjechać. Po połączeniu: ocena zakłada się <b>sama</b>, z jedną pozycją na każdy wiersz rejestru w zakresie, a Energy Manager wypełnia tylko cztery pola. Wtedy niepełne pokrycie przestaje być liczbą i staje się listą konkretnych wymagań, których nikt nie ocenił.</td></tr>
+<tr><td><b>Termin wymagania jako data</b></td><td>Dziś termin siedzi w treści wymagania jako tekst, a reguła wyłapuje go wyrażeniem. Przy wdrożeniu rejestr z 4.2 powinien mieć <b>osobne pole terminu</b> i jego powtarzalności. Wtedy platforma sama wie, że 30 czerwca minął, i pyta o dowód — zamiast czekać na wrześniową ocenę. To zamienia ten punkt z rocznego przeglądu w bieżące pilnowanie, a scena z wiersza dziewiątego przestaje być możliwa.</td></tr>
+<tr><td>Przypomnienie przed terminem</td><td>Działanie w przykładzie brzmi: przypomnienie od Energy Managera czternaście dni przed terminem. To zadanie dla <b>generycznego mechanizmu terminów</b> — ósme wystąpienie tej samej potrzeby (6.5, 7.2, 7.4, 7.5, 8.2, 8.3, 9.1.1, 9.1.2). Tutaj jest jednak różnica: przypomnienie trafia do osoby <b>poza obszarem energii</b>, więc musi działać bez zalogowania się do platformy — e-mailem albo wpisem do kalendarza.</td></tr>
+<tr><td>Śledzenie stanu prawnego</td><td>Zakładka 1 ma datę stanu prawnego, zakładka 3 — opis śledzenia zmian. Przy wdrożeniu warto <b>osobny rejestr sprawdzeń stanu prawnego</b> z datą i wynikiem każdego kwartalnego przeglądu, powiązany z wierszami prawnymi rejestru. Dziś nowelizacja UC77 jest wzmianką w dwóch polach tekstowych na trzech stronach platformy.</td></tr>
+<tr><td>Historia ocen</td><td>Makieta trzyma jedną ocenę. Docelowo <code>ocena_zgodnosci</code> z datą daje historię: czy to samo wymaganie było już kiedyś niezgodne i czy działanie zadziałało. <b>Przy ocenie zgodności powtarzalność jest sygnałem mocniejszym niż samo pojedyncze opóźnienie</b> — i to ona powinna wracać na przegląd zarządzania jako trend.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 9.1.2 wraz z oceną AutoParts z września 2026.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_912&quot;: [
+  {
+   &quot;tekst&quot;: &quot;W zaplanowanych odstępach oceniana jest zgodność z wymaganiami prawnymi i innymi dotyczącymi energii i systemu.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;oceniana&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano wyniki oceny i zapis podjętych działań.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Przy ocenie zapisano datę stanu prawnego; przy braku zgodności przeanalizowano przyczynę.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;stanIPrzyczyna&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;WYM&quot;: [
+   {
+    &quot;nr&quot;: &quot;1&quot;,
+    &quot;wym42&quot;: &quot;WYM-01&quot;,
+    &quot;strona&quot;: &quot;Zarząd / najwyższe kierownictwo&quot;,
+    &quot;wymaganie&quot;: &quot;Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów&quot;,
+    &quot;zrodlo&quot;: &quot;Strategia zakładu 2026–2028, cel: obniżenie kosztów energii o 8% do 2028 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Postęp celu Z3.1 i trend kosztów energii wobec roku bazowego — na dzień oceny&quot;,
+    &quot;dowod&quot;: &quot;Raport z monitorowania i oceny (III-42); budżet&quot;,
+    &quot;wynik&quot;: &quot;wtoku&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;Zobowiązanie realizowane przez cele energetyczne (6.2); status na przeglądzie zarządzania raz w roku&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2&quot;,
+    &quot;wym42&quot;: &quot;WYM-02&quot;,
+    &quot;strona&quot;: &quot;Właściciel / grupa kapitałowa&quot;,
+    &quot;wymaganie&quot;: &quot;Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny&quot;,
+    &quot;zrodlo&quot;: &quot;Polityka klimatyczna grupy kapitałowej, wersja 2025, rozdz. 3 — wskaźniki raportowane rocznie&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Porównanie definicji wskaźników z metodyką grupy; data wysyłki raportu rocznego&quot;,
+    &quot;dowod&quot;: &quot;Raport roczny za 2025 r. przyjęty przez spółkę matkę 28.02.2026&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;3&quot;,
+    &quot;wym42&quot;: &quot;WYM-03&quot;,
+    &quot;strona&quot;: &quot;Pracownicy&quot;,
+    &quot;wymaganie&quot;: &quot;Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP&quot;,
+    &quot;zrodlo&quot;: &quot;Rozporządzenie o ogólnych przepisach bhp; PN-EN 12464-1, wymagania dla mikroklimatu i oświetlenia stanowisk — stan na 10.02.2026 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;prawne&quot;,
+    &quot;jak&quot;: &quot;Przegląd ostatnich pomiarów okresowych i dat ich wykonania&quot;,
+    &quot;dowod&quot;: &quot;Protokoły pomiarów oświetlenia i mikroklimatu&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;4&quot;,
+    &quot;wym42&quot;: &quot;WYM-04&quot;,
+    &quot;strona&quot;: &quot;Pracownicy&quot;,
+    &quot;wymaganie&quot;: &quot;Preferencja: niższa temperatura w halach w czasie upałów&quot;,
+    &quot;zrodlo&quot;: &quot;Ankieta BHP, ankieta pracownicza 2025, pytanie 7&quot;,
+    &quot;kwalifikacja&quot;: &quot;nieprzyjete&quot;,
+    &quot;jak&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;,
+    &quot;wynik&quot;: &quot;&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;Powód nieprzyjęcia: wymaga analizy kosztów chłodzenia. Rozważane w planie działań na 2027 r.; decyzja przy planowaniu, Specjalista BHP.&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;5&quot;,
+    &quot;wym42&quot;: &quot;WYM-05&quot;,
+    &quot;strona&quot;: &quot;Służby utrzymania ruchu&quot;,
+    &quot;wymaganie&quot;: &quot;Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji&quot;,
+    &quot;zrodlo&quot;: &quot;Zarządzenie 3/2026 o rolach w systemie zarządzania energią, § 4 — uprawnienia utrzymania ruchu&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie, czy utrzymanie ruchu ma dostęp do danych i czy kryteria były z nim uzgadniane&quot;,
+    &quot;dowod&quot;: &quot;Uprawnienia do arkusza EnPI nadane 03.2026; protokół uzgodnienia kryteriów sprężarkowni z 15.05.2026&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;6&quot;,
+    &quot;wym42&quot;: &quot;WYM-06&quot;,
+    &quot;strona&quot;: &quot;Dział produkcji&quot;,
+    &quot;wymaganie&quot;: &quot;Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach&quot;,
+    &quot;zrodlo&quot;: &quot;Zarządzenie 3/2026, § 5 — pomiary bez wpływu na ciągłość produkcji&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Przegląd terminów pomiarów wobec planu produkcji&quot;,
+    &quot;dowod&quot;: &quot;Protokół z kampanii pomiarowej 02–03.2026 — pomiary w oknach postojowych, bez przestojów produkcji&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;7&quot;,
+    &quot;wym42&quot;: &quot;WYM-07&quot;,
+    &quot;strona&quot;: &quot;Dział zakupów&quot;,
+    &quot;wymaganie&quot;: &quot;Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert&quot;,
+    &quot;zrodlo&quot;: &quot;Zarządzenie 3/2026, § 6 — kryteria energetyczne w zakupach&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie, czy kryteria energetyczne znalazły się w zapytaniach ofertowych 2026 r.&quot;,
+    &quot;dowod&quot;: &quot;Procedura zakupowa z kryteriami obowiązuje od 03.2026; dwa z trzech postępowań zawierały kryteria&quot;,
+    &quot;wynik&quot;: &quot;wtoku&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;Uzupełnienie kryteriów w pozostałych kategoriach zakupowych — Dział Zakupów, 12.2026&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;8&quot;,
+    &quot;wym42&quot;: &quot;WYM-08&quot;,
+    &quot;strona&quot;: &quot;Kontroling / finanse&quot;,
+    &quot;wymaganie&quot;: &quot;Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć&quot;,
+    &quot;zrodlo&quot;: &quot;Zarządzenie 3/2026, § 7 — dane kosztowe dla systemu&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Zestawienie kosztów energii z faktur na dzień oceny&quot;,
+    &quot;dowod&quot;: &quot;Zestawienie kosztów energii I–VIII 2026 w arkuszu EnMS, uzgodnione z fakturami&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;9&quot;,
+    &quot;wym42&quot;: &quot;WYM-09&quot;,
+    &quot;strona&quot;: &quot;Dział BHP i ochrony środowiska&quot;,
+    &quot;wymaganie&quot;: &quot;Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów&quot;,
+    &quot;zrodlo&quot;: &quot;Dokumentacja ISO 14001 — rejestr aspektów i wymagań prawnych, wersja 6; zasada „jeden proces — jeden dokument”&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie, czy rejestr wymagań prawnych jest jeden dla obu systemów&quot;,
+    &quot;dowod&quot;: &quot;Wspólny rejestr wymagań prawnych, wersja 6 z 11.2025, rozszerzony o wymagania energetyczne&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;10&quot;,
+    &quot;wym42&quot;: &quot;WYM-10&quot;,
+    &quot;strona&quot;: &quot;Energy Manager / zespół ds. energii&quot;,
+    &quot;wymaganie&quot;: &quot;Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu&quot;,
+    &quot;zrodlo&quot;: &quot;Zarządzenie 3/2026, § 2 — zakres obowiązków i uprawnień Energy Managera&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Porównanie zakresu uprawnień w zarządzeniu z zadaniami przypisanymi w systemie&quot;,
+    &quot;dowod&quot;: &quot;Zarządzenie 3/2026 § 2 z 12.02.2026; plan zasobów na 2026 r. (7.1)&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;11&quot;,
+    &quot;wym42&quot;: &quot;WYM-12&quot;,
+    &quot;strona&quot;: &quot;Prezes URE&quot;,
+    &quot;wymaganie&quot;: &quot;Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania&quot;,
+    &quot;zrodlo&quot;: &quot;Ustawa o efektywności energetycznej; projekt nowelizacji UC77, obowiązek audytu energetycznego albo systemu zarządzania — stan na 10.02.2026 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;prawne&quot;,
+    &quot;jak&quot;: &quot;Zestawienie daty zakończenia audytu z datą zawiadomienia; sprawdzenie terminu kolejnego audytu&quot;,
+    &quot;dowod&quot;: &quot;Raport z audytu 2024 i kopia zawiadomienia. Do oceny dotrzymania terminu 30 dni brakuje w dowodzie dwóch dat: zakończenia audytu i wysłania zawiadomienia.&quot;,
+    &quot;wynik&quot;: &quot;douzupelnienia&quot;,
+    &quot;przyczyna&quot;: &quot;Dowód zawiera dokumenty, ale nie zawiera dat, na podstawie których można ocenić dotrzymanie 30-dniowego terminu. Przy pierwszej ocenie zgodności nikt nie wypisał dat z dokumentów.&quot;,
+    &quot;dzialanie&quot;: &quot;Uzupełnić dowód datami zakończenia audytu i wysłania zawiadomienia — Energy Manager, 10.2026. Termin kolejnego audytu wpisany do kalendarza. Śledzenie nowelizacji UC77 co kwartał do jej wejścia w życie.&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;12&quot;,
+    &quot;wym42&quot;: &quot;WYM-14&quot;,
+    &quot;strona&quot;: &quot;Urząd Dozoru Technicznego&quot;,
+    &quot;wymaganie&quot;: &quot;Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja&quot;,
+    &quot;zrodlo&quot;: &quot;Ustawa o dozorze technicznym, badania okresowe urządzeń podlegających dozorowi — stan na 10.02.2026 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;prawne&quot;,
+    &quot;jak&quot;: &quot;Zestawienie terminów badań UDT z datami ostatnich protokołów&quot;,
+    &quot;dowod&quot;: &quot;Protokoły badań kotła i zbiorników sprężonego powietrza — wszystkie ważne, najbliższy termin 04.2027&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;13&quot;,
+    &quot;wym42&quot;: &quot;WYM-16&quot;,
+    &quot;strona&quot;: &quot;Organ prowadzący rejestr f-gazów&quot;,
+    &quot;wymaganie&quot;: &quot;Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO&quot;,
+    &quot;zrodlo&quot;: &quot;Ustawa o substancjach zubożających warstwę ozonową i o f-gazach; rozporządzenie (UE) 2024/573, kontrole szczelności i karty urządzeń w CRO — stan na 10.02.2026 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;prawne&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie terminów kontroli szczelności i kompletności kart urządzeń w CRO&quot;,
+    &quot;dowod&quot;: &quot;Protokoły kontroli szczelności z 05.2026; karty urządzeń prowadzone w CRO&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;14&quot;,
+    &quot;wym42&quot;: &quot;WYM-17&quot;,
+    &quot;strona&quot;: &quot;Operator systemu świadectw efektywności&quot;,
+    &quot;wymaganie&quot;: &quot;Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa&quot;,
+    &quot;zrodlo&quot;: &quot;Ustawa o efektywności energetycznej — system świadectw, dokumentacja przedsięwzięcia i audyt efektywności energetycznej&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie, czy przy planowanych przedsięwzięciach oceniono możliwość uzyskania świadectw&quot;,
+    &quot;dowod&quot;: &quot;Notatka z oceny przy planie C1 z 20.05.2026 — próg oszczędności niespełniony; ponowna ocena przy INW/2027/04&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;15&quot;,
+    &quot;wym42&quot;: &quot;WYM-19&quot;,
+    &quot;strona&quot;: &quot;Operator systemu dystrybucyjnego&quot;,
+    &quot;wymaganie&quot;: &quot;Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji&quot;,
+    &quot;zrodlo&quot;: &quot;Umowa o świadczenie usług dystrybucji; Prawo energetyczne, moc umowna 1 400 kW, warunki przyłączenia — stan na 10.02.2026 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;prawne&quot;,
+    &quot;jak&quot;: &quot;Przegląd rozliczeń mocy piętnastominutowej za I–VIII 2026&quot;,
+    &quot;dowod&quot;: &quot;Faktury dystrybucyjne — brak przekroczeń mocy umownej 1 400 kW&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;16&quot;,
+    &quot;wym42&quot;: &quot;WYM-20&quot;,
+    &quot;strona&quot;: &quot;Sprzedawca energii elektrycznej&quot;,
+    &quot;wymaganie&quot;: &quot;Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży&quot;,
+    &quot;zrodlo&quot;: &quot;Umowa sprzedaży energii elektrycznej, § 7 — miesięczne prognozy zużycia; cena stała do 31.12.2026 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie dat wysyłek prognoz za miesiące I–VIII 2026&quot;,
+    &quot;dowod&quot;: &quot;E-maile do dostawcy — osiem wysyłek, wszystkie przed terminem umownym&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;17&quot;,
+    &quot;wym42&quot;: &quot;WYM-21&quot;,
+    &quot;strona&quot;: &quot;Dostawca gazu lub ciepła sieciowego&quot;,
+    &quot;wymaganie&quot;: &quot;Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy&quot;,
+    &quot;zrodlo&quot;: &quot;Umowa kompleksowa na dostawę gazu ziemnego, § 4 — moc zamówiona i warunki odbioru; umowa do 30.09.2027 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Przegląd rozliczeń mocy zamówionej kotłowni&quot;,
+    &quot;dowod&quot;: &quot;Faktury za gaz I–VIII 2026 — bez przekroczeń&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;18&quot;,
+    &quot;wym42&quot;: &quot;WYM-22&quot;,
+    &quot;strona&quot;: &quot;Dostawcy paliw transportowych&quot;,
+    &quot;wymaganie&quot;: &quot;Warunki umów flotowych; dane o zużyciu paliw do rozliczeń&quot;,
+    &quot;zrodlo&quot;: &quot;Umowa na dostawę LPG do wózków widłowych, § 3 — ewidencja wydań butli&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Zestawienie ewidencji wydań butli z fakturami dostawcy&quot;,
+    &quot;dowod&quot;: &quot;Zestawienie ewidencji wydań butli z fakturami dostawcy za II kw. 2026 — zgodne co do ilości&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;19&quot;,
+    &quot;wym42&quot;: &quot;WYM-23&quot;,
+    &quot;strona&quot;: &quot;Odbiorcy / klienci&quot;,
+    &quot;wymaganie&quot;: &quot;Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku&quot;,
+    &quot;zrodlo&quot;: &quot;Wymagania dla dostawców, wersja 2025, rozdz. 4, załącznik do umowy ramowej — raport co roku do 31 marca&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Data wysyłki raportu i potwierdzenie odbioru przez klienta&quot;,
+    &quot;dowod&quot;: &quot;Potwierdzenie klienta z 24.03.2026&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;20&quot;,
+    &quot;wym42&quot;: &quot;WYM-24&quot;,
+    &quot;strona&quot;: &quot;Odbiorcy / klienci&quot;,
+    &quot;wymaganie&quot;: &quot;Informacja o śladzie węglowym wyrobu&quot;,
+    &quot;zrodlo&quot;: &quot;E-mail działu zakupów klienta (dostawca systemów, Tier 1), korespondencja z 14.11.2025 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;nieprzyjete&quot;,
+    &quot;jak&quot;: &quot;&quot;,
+    &quot;dowod&quot;: &quot;&quot;,
+    &quot;wynik&quot;: &quot;&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;Powód nieprzyjęcia: plan działań energetycznych obejmuje tylko emisje z energii, a ślad węglowy także materiały i transport. Ponowna decyzja przy odnowieniu umowy — I kw. 2027 r., Dział Sprzedaży.&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;21&quot;,
+    &quot;wym42&quot;: &quot;WYM-25&quot;,
+    &quot;strona&quot;: &quot;Odbiorcy / klienci&quot;,
+    &quot;wymaganie&quot;: &quot;Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.&quot;,
+    &quot;zrodlo&quot;: &quot;Wymagania dla dostawców, wersja 2025, rozdz. 2 — certyfikat ISO 50001 dla nowych kontraktów od 2027 r.&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Porównanie harmonogramu wdrożenia z terminem wymagania&quot;,
+    &quot;dowod&quot;: &quot;Umowa z jednostką certyfikującą; audyt certyfikujący zaplanowany na XI–XII 2026&quot;,
+    &quot;wynik&quot;: &quot;wtoku&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;Utrzymanie harmonogramu wdrożenia — przegląd co miesiąc, Dyrektor Zakładu&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;22&quot;,
+    &quot;wym42&quot;: &quot;WYM-26&quot;,
+    &quot;strona&quot;: &quot;Dostawcy urządzeń i usług&quot;,
+    &quot;wymaganie&quot;: &quot;Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry&quot;,
+    &quot;zrodlo&quot;: &quot;Procedura zakupowa z kryteriami energetycznymi, wersja 1.0 — kryteria podawane w zapytaniach ofertowych&quot;,
+    &quot;kwalifikacja&quot;: &quot;zobowiazanie&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie, czy kryteria oceny były podane oferentom z góry&quot;,
+    &quot;dowod&quot;: &quot;Zapytanie ofertowe i karta oceny ofert na wymianę oświetlenia hali B z 08.06.2026 — kryteria energetyczne podane z góry&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;23&quot;,
+    &quot;wym42&quot;: &quot;WYM-28&quot;,
+    &quot;strona&quot;: &quot;Instytucje finansujące / banki&quot;,
+    &quot;wymaganie&quot;: &quot;Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”&quot;,
+    &quot;zrodlo&quot;: &quot;Umowa kredytowa na modernizację, załącznik ESG — coroczne wskaźniki zużycia energii zakładu&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Data wysyłki raportu wobec terminu umownego&quot;,
+    &quot;dowod&quot;: &quot;E-mail z 12.08.2026 — po przypomnieniu z banku&quot;,
+    &quot;wynik&quot;: &quot;niezgodne&quot;,
+    &quot;przyczyna&quot;: &quot;Termin 30 czerwca nie był w kalendarzu żadnej osoby. Rejestr wskazywał wymaganie, źródło i właściciela, ale nikt nie miał tej daty u siebie — i nikt nie sprawdzał, czy obowiązek wykonano w terminie.&quot;,
+    &quot;dzialanie&quot;: &quot;Termin wpisany do kalendarza kontrolingu jako zadanie cykliczne; przypomnienie od Energy Managera 14 dni przed terminem. Karta niezgodności założona (10.1).&quot;,
+    &quot;karta10&quot;: &quot;tak&quot;,
+    &quot;odp&quot;: &quot;Kontroler finansowy — wdrożenie do 10.2026&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;24&quot;,
+    &quot;wym42&quot;: &quot;WYM-30&quot;,
+    &quot;strona&quot;: &quot;Ubezpieczyciel&quot;,
+    &quot;wymaganie&quot;: &quot;Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności&quot;,
+    &quot;zrodlo&quot;: &quot;Polisa ubezpieczenia mienia i przerw w działalności, § 9 — wymogi utrzymania instalacji&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Sprawdzenie realizacji planu przeglądów instalacji&quot;,
+    &quot;dowod&quot;: &quot;Plan przeglądów 2026 r. wykonany w terminach; protokoły przeglądu sprężarkowni i kotłowni&quot;,
+    &quot;wynik&quot;: &quot;zgodne&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;—&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;25&quot;,
+    &quot;wym42&quot;: &quot;WYM-31&quot;,
+    &quot;strona&quot;: &quot;Jednostka certyfikująca&quot;,
+    &quot;wymaganie&quot;: &quot;Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres&quot;,
+    &quot;zrodlo&quot;: &quot;Umowa o certyfikację ISO 50001 i wymagania jednostki certyfikującej, pkt 4 — zakres i dostępność udokumentowanej informacji, wymagany okres dowodów&quot;,
+    &quot;kwalifikacja&quot;: &quot;umowne&quot;,
+    &quot;jak&quot;: &quot;Porównanie kompletności dokumentacji z wymaganiami jednostki i wymaganym okresem dowodów&quot;,
+    &quot;dowod&quot;: &quot;Umowa o certyfikację z 15.04.2026; dowody działania systemu zbierane od 03.2026&quot;,
+    &quot;wynik&quot;: &quot;wtoku&quot;,
+    &quot;przyczyna&quot;: &quot;&quot;,
+    &quot;dzialanie&quot;: &quot;Uzupełnienie dowodów do audytu certyfikującego XI–XII 2026 — Pełnomocnik ds. systemów zarządzania&quot;,
+    &quot;karta10&quot;: &quot;&quot;,
+    &quot;odp&quot;: &quot;&quot;
+   }
+  ],
+  &quot;OCENA&quot;: {
+   &quot;naPrzeglad&quot;: &quot;23 wymagań ocenianych z 25 w rejestrze punktu 4.2; 2 pozycje to oczekiwania nieprzyjęte i zostają poza oceną zgodności — ich wiersze pokazują powód i termin powrotu do decyzji. Wynik: 17 zgodnych, 4 w toku zgodnie z planem, 1 do uzupełnienia dowodem, 1 niezgodne. Niezgodność dotyczy raportu dla banku: wysłany 12.08.2026 wobec terminu umownego 30 czerwca — założono kartę niezgodności (10.1), działanie przyjęte, w toku. Przy obowiązku z ustawy o efektywności energetycznej dowód wymaga uzupełnienia datami zakończenia audytu i zawiadomienia URE; samo zawiadomienie i raport są w dokumentacji. Cztery pozycje w toku to wdrożenie i certyfikacja (termin klienta: 2027 r.), zobowiązanie zarządu rozliczane celami, kryteria energetyczne w pozostałych kategoriach zakupowych i komplet dowodów przed auditem certyfikującym. Rekomendacja: przyjąć działanie dla raportu bankowego i wyznaczyć termin uzupełnienia dowodu URE.&quot;,
+   &quot;przegladStanu&quot;: &quot;Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji ustawy o efektywności energetycznej — projekt UC77 pozostaje nieuchwalony, stan na 15.09.2026. Odpowiada Energy Manager; wynik przeglądu zapisywany z datą. Dodatkowa ocena zgodności przy każdej nowej umowie z klientem albo instytucją finansującą.&quot;
+  },
+  &quot;META&quot;: {
+   &quot;dataOceny&quot;: &quot;2026-09-18&quot;,
+   &quot;stanPrawny&quot;: &quot;2026-09-15&quot;,
+   &quot;oceniajacy&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+   &quot;rytmBaza&quot;: &quot;rocznie&quot;,
+   &quot;rytm&quot;: &quot;Raz w roku, we wrześniu, przed przeglądem zarządzania. Dodatkowo przy każdej zmianie przepisu i przy nowej umowie. Wymaganie z terminem rocznym oceniane po tym terminie; obowiązek raz na cztery lata — w roku, w którym przypada; zmiana przepisu — gdy wejdzie w życie.&quot;,
+   &quot;wRejestrze&quot;: &quot;25&quot;,
+   &quot;nieprzyjete&quot;: &quot;2&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;dataZatw&quot;: &quot;2026-09-29&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_912 = [{"tekst": "W zaplanowanych odstępach oceniana jest zgodność z wymaganiami prawnymi i innymi dotyczącymi energii i systemu.", "podstawa": "N", "auto": "oceniana"}, {"tekst": "Zachowano wyniki oceny i zapis podjętych działań.", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Przy ocenie zapisano datę stanu prawnego; przy braku zgodności przeanalizowano przyczynę.", "podstawa": "M", "auto": "stanIPrzyczyna"}];
+var PRZYKLAD = {"WYM": [{"nr": "1", "wym42": "WYM-01", "strona": "Zarząd / najwyższe kierownictwo", "wymaganie": "Ograniczenie i przewidywalność kosztów energii; zgodność z prawem bez ryzyka kar; wiarygodne raportowanie efektów", "zrodlo": "Strategia zakładu 2026–2028, cel: obniżenie kosztów energii o 8% do 2028 r.", "kwalifikacja": "zobowiazanie", "jak": "Postęp celu Z3.1 i trend kosztów energii wobec roku bazowego — na dzień oceny", "dowod": "Raport z monitorowania i oceny (III-42); budżet", "wynik": "wtoku", "przyczyna": "", "dzialanie": "Zobowiązanie realizowane przez cele energetyczne (6.2); status na przeglądzie zarządzania raz w roku", "karta10": "", "odp": ""}, {"nr": "2", "wym42": "WYM-02", "strona": "Właściciel / grupa kapitałowa", "wymaganie": "Realizacja celów klimatycznych grupy; porównywalność wskaźników między spółkami; certyfikat jako standard korporacyjny", "zrodlo": "Polityka klimatyczna grupy kapitałowej, wersja 2025, rozdz. 3 — wskaźniki raportowane rocznie", "kwalifikacja": "zobowiazanie", "jak": "Porównanie definicji wskaźników z metodyką grupy; data wysyłki raportu rocznego", "dowod": "Raport roczny za 2025 r. przyjęty przez spółkę matkę 28.02.2026", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "3", "wym42": "WYM-03", "strona": "Pracownicy", "wymaganie": "Warunki pracy: mikroklimat i oświetlenie stanowisk zgodne z przepisami BHP", "zrodlo": "Rozporządzenie o ogólnych przepisach bhp; PN-EN 12464-1, wymagania dla mikroklimatu i oświetlenia stanowisk — stan na 10.02.2026 r.", "kwalifikacja": "prawne", "jak": "Przegląd ostatnich pomiarów okresowych i dat ich wykonania", "dowod": "Protokoły pomiarów oświetlenia i mikroklimatu", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "4", "wym42": "WYM-04", "strona": "Pracownicy", "wymaganie": "Preferencja: niższa temperatura w halach w czasie upałów", "zrodlo": "Ankieta BHP, ankieta pracownicza 2025, pytanie 7", "kwalifikacja": "nieprzyjete", "jak": "", "dowod": "", "wynik": "", "przyczyna": "", "dzialanie": "Powód nieprzyjęcia: wymaga analizy kosztów chłodzenia. Rozważane w planie działań na 2027 r.; decyzja przy planowaniu, Specjalista BHP.", "karta10": "", "odp": ""}, {"nr": "5", "wym42": "WYM-05", "strona": "Służby utrzymania ruchu", "wymaganie": "Dostęp do danych pomiarowych; realny wpływ na decyzje eksploatacyjne; wykonalne kryteria eksploatacji", "zrodlo": "Zarządzenie 3/2026 o rolach w systemie zarządzania energią, § 4 — uprawnienia utrzymania ruchu", "kwalifikacja": "zobowiazanie", "jak": "Sprawdzenie, czy utrzymanie ruchu ma dostęp do danych i czy kryteria były z nim uzgadniane", "dowod": "Uprawnienia do arkusza EnPI nadane 03.2026; protokół uzgodnienia kryteriów sprężarkowni z 15.05.2026", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "6", "wym42": "WYM-06", "strona": "Dział produkcji", "wymaganie": "Brak ograniczeń dla ciągłości i wydajności produkcji; uwzględnienie harmonogramu przy pomiarach i wyłączeniach", "zrodlo": "Zarządzenie 3/2026, § 5 — pomiary bez wpływu na ciągłość produkcji", "kwalifikacja": "zobowiazanie", "jak": "Przegląd terminów pomiarów wobec planu produkcji", "dowod": "Protokół z kampanii pomiarowej 02–03.2026 — pomiary w oknach postojowych, bez przestojów produkcji", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "7", "wym42": "WYM-07", "strona": "Dział zakupów", "wymaganie": "Jednoznaczne kryteria energetyczne do stosowania w postępowaniach; wsparcie merytoryczne przy ocenie ofert", "zrodlo": "Zarządzenie 3/2026, § 6 — kryteria energetyczne w zakupach", "kwalifikacja": "zobowiazanie", "jak": "Sprawdzenie, czy kryteria energetyczne znalazły się w zapytaniach ofertowych 2026 r.", "dowod": "Procedura zakupowa z kryteriami obowiązuje od 03.2026; dwa z trzech postępowań zawierały kryteria", "wynik": "wtoku", "przyczyna": "", "dzialanie": "Uzupełnienie kryteriów w pozostałych kategoriach zakupowych — Dział Zakupów, 12.2026", "karta10": "", "odp": ""}, {"nr": "8", "wym42": "WYM-08", "strona": "Kontroling / finanse", "wymaganie": "Wiarygodne dane o kosztach energii; uzasadniona ekonomicznie priorytetyzacja przedsięwzięć", "zrodlo": "Zarządzenie 3/2026, § 7 — dane kosztowe dla systemu", "kwalifikacja": "zobowiazanie", "jak": "Zestawienie kosztów energii z faktur na dzień oceny", "dowod": "Zestawienie kosztów energii I–VIII 2026 w arkuszu EnMS, uzgodnione z fakturami", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "9", "wym42": "WYM-09", "strona": "Dział BHP i ochrony środowiska", "wymaganie": "Spójność wymagań energetycznych z wymaganiami środowiskowymi; brak dublowania rejestrów", "zrodlo": "Dokumentacja ISO 14001 — rejestr aspektów i wymagań prawnych, wersja 6; zasada „jeden proces — jeden dokument”", "kwalifikacja": "zobowiazanie", "jak": "Sprawdzenie, czy rejestr wymagań prawnych jest jeden dla obu systemów", "dowod": "Wspólny rejestr wymagań prawnych, wersja 6 z 11.2025, rozszerzony o wymagania energetyczne", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "10", "wym42": "WYM-10", "strona": "Energy Manager / zespół ds. energii", "wymaganie": "Uprawnienia decyzyjne adekwatne do odpowiedzialności; zasoby i czas na prowadzenie systemu", "zrodlo": "Zarządzenie 3/2026, § 2 — zakres obowiązków i uprawnień Energy Managera", "kwalifikacja": "zobowiazanie", "jak": "Porównanie zakresu uprawnień w zarządzeniu z zadaniami przypisanymi w systemie", "dowod": "Zarządzenie 3/2026 § 2 z 12.02.2026; plan zasobów na 2026 r. (7.1)", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "11", "wym42": "WYM-12", "strona": "Prezes URE", "wymaganie": "Wypełnienie obowiązków wynikających z ustawy o efektywności energetycznej; prawidłowe zawiadomienia i sprawozdania", "zrodlo": "Ustawa o efektywności energetycznej; projekt nowelizacji UC77, obowiązek audytu energetycznego albo systemu zarządzania — stan na 10.02.2026 r.", "kwalifikacja": "prawne", "jak": "Zestawienie daty zakończenia audytu z datą zawiadomienia; sprawdzenie terminu kolejnego audytu", "dowod": "Raport z audytu 2024 i kopia zawiadomienia. Do oceny dotrzymania terminu 30 dni brakuje w dowodzie dwóch dat: zakończenia audytu i wysłania zawiadomienia.", "wynik": "douzupelnienia", "przyczyna": "Dowód zawiera dokumenty, ale nie zawiera dat, na podstawie których można ocenić dotrzymanie 30-dniowego terminu. Przy pierwszej ocenie zgodności nikt nie wypisał dat z dokumentów.", "dzialanie": "Uzupełnić dowód datami zakończenia audytu i wysłania zawiadomienia — Energy Manager, 10.2026. Termin kolejnego audytu wpisany do kalendarza. Śledzenie nowelizacji UC77 co kwartał do jej wejścia w życie.", "karta10": "", "odp": ""}, {"nr": "12", "wym42": "WYM-14", "strona": "Urząd Dozoru Technicznego", "wymaganie": "Terminowe badania i przeglądy urządzeń podlegających dozorowi; aktualna dokumentacja", "zrodlo": "Ustawa o dozorze technicznym, badania okresowe urządzeń podlegających dozorowi — stan na 10.02.2026 r.", "kwalifikacja": "prawne", "jak": "Zestawienie terminów badań UDT z datami ostatnich protokołów", "dowod": "Protokoły badań kotła i zbiorników sprężonego powietrza — wszystkie ważne, najbliższy termin 04.2027", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "13", "wym42": "WYM-16", "strona": "Organ prowadzący rejestr f-gazów", "wymaganie": "Kontrole szczelności w wymaganych terminach; prowadzenie kart urządzeń w CRO", "zrodlo": "Ustawa o substancjach zubożających warstwę ozonową i o f-gazach; rozporządzenie (UE) 2024/573, kontrole szczelności i karty urządzeń w CRO — stan na 10.02.2026 r.", "kwalifikacja": "prawne", "jak": "Sprawdzenie terminów kontroli szczelności i kompletności kart urządzeń w CRO", "dowod": "Protokoły kontroli szczelności z 05.2026; karty urządzeń prowadzone w CRO", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "14", "wym42": "WYM-17", "strona": "Operator systemu świadectw efektywności", "wymaganie": "Poprawnie udokumentowane przedsięwzięcia i oszczędności przy ubieganiu się o świadectwa", "zrodlo": "Ustawa o efektywności energetycznej — system świadectw, dokumentacja przedsięwzięcia i audyt efektywności energetycznej", "kwalifikacja": "zobowiazanie", "jak": "Sprawdzenie, czy przy planowanych przedsięwzięciach oceniono możliwość uzyskania świadectw", "dowod": "Notatka z oceny przy planie C1 z 20.05.2026 — próg oszczędności niespełniony; ponowna ocena przy INW/2027/04", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "15", "wym42": "WYM-19", "strona": "Operator systemu dystrybucyjnego", "wymaganie": "Nieprzekraczanie mocy umownej; przestrzeganie warunków przyłączenia; zgłaszanie zmian w instalacji", "zrodlo": "Umowa o świadczenie usług dystrybucji; Prawo energetyczne, moc umowna 1 400 kW, warunki przyłączenia — stan na 10.02.2026 r.", "kwalifikacja": "prawne", "jak": "Przegląd rozliczeń mocy piętnastominutowej za I–VIII 2026", "dowod": "Faktury dystrybucyjne — brak przekroczeń mocy umownej 1 400 kW", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "16", "wym42": "WYM-20", "strona": "Sprzedawca energii elektrycznej", "wymaganie": "Przewidywalność profilu poboru; zgodność z warunkami umowy sprzedaży", "zrodlo": "Umowa sprzedaży energii elektrycznej, § 7 — miesięczne prognozy zużycia; cena stała do 31.12.2026 r.", "kwalifikacja": "umowne", "jak": "Sprawdzenie dat wysyłek prognoz za miesiące I–VIII 2026", "dowod": "E-maile do dostawcy — osiem wysyłek, wszystkie przed terminem umownym", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "17", "wym42": "WYM-21", "strona": "Dostawca gazu lub ciepła sieciowego", "wymaganie": "Zgodność z zamówioną mocą cieplną; przestrzeganie warunków umowy", "zrodlo": "Umowa kompleksowa na dostawę gazu ziemnego, § 4 — moc zamówiona i warunki odbioru; umowa do 30.09.2027 r.", "kwalifikacja": "umowne", "jak": "Przegląd rozliczeń mocy zamówionej kotłowni", "dowod": "Faktury za gaz I–VIII 2026 — bez przekroczeń", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "18", "wym42": "WYM-22", "strona": "Dostawcy paliw transportowych", "wymaganie": "Warunki umów flotowych; dane o zużyciu paliw do rozliczeń", "zrodlo": "Umowa na dostawę LPG do wózków widłowych, § 3 — ewidencja wydań butli", "kwalifikacja": "umowne", "jak": "Zestawienie ewidencji wydań butli z fakturami dostawcy", "dowod": "Zestawienie ewidencji wydań butli z fakturami dostawcy za II kw. 2026 — zgodne co do ilości", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "19", "wym42": "WYM-23", "strona": "Odbiorcy / klienci", "wymaganie": "Dane o zużyciu energii przypadającym na dostarczane wyroby, raz w roku", "zrodlo": "Wymagania dla dostawców, wersja 2025, rozdz. 4, załącznik do umowy ramowej — raport co roku do 31 marca", "kwalifikacja": "umowne", "jak": "Data wysyłki raportu i potwierdzenie odbioru przez klienta", "dowod": "Potwierdzenie klienta z 24.03.2026", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "20", "wym42": "WYM-24", "strona": "Odbiorcy / klienci", "wymaganie": "Informacja o śladzie węglowym wyrobu", "zrodlo": "E-mail działu zakupów klienta (dostawca systemów, Tier 1), korespondencja z 14.11.2025 r.", "kwalifikacja": "nieprzyjete", "jak": "", "dowod": "", "wynik": "", "przyczyna": "", "dzialanie": "Powód nieprzyjęcia: plan działań energetycznych obejmuje tylko emisje z energii, a ślad węglowy także materiały i transport. Ponowna decyzja przy odnowieniu umowy — I kw. 2027 r., Dział Sprzedaży.", "karta10": "", "odp": ""}, {"nr": "21", "wym42": "WYM-25", "strona": "Odbiorcy / klienci", "wymaganie": "Certyfikat ISO 50001 dla nowych kontraktów od 2027 r.", "zrodlo": "Wymagania dla dostawców, wersja 2025, rozdz. 2 — certyfikat ISO 50001 dla nowych kontraktów od 2027 r.", "kwalifikacja": "umowne", "jak": "Porównanie harmonogramu wdrożenia z terminem wymagania", "dowod": "Umowa z jednostką certyfikującą; audyt certyfikujący zaplanowany na XI–XII 2026", "wynik": "wtoku", "przyczyna": "", "dzialanie": "Utrzymanie harmonogramu wdrożenia — przegląd co miesiąc, Dyrektor Zakładu", "karta10": "", "odp": ""}, {"nr": "22", "wym42": "WYM-26", "strona": "Dostawcy urządzeń i usług", "wymaganie": "Jasne wymagania energetyczne w zapytaniach ofertowych; kryteria oceny znane z góry", "zrodlo": "Procedura zakupowa z kryteriami energetycznymi, wersja 1.0 — kryteria podawane w zapytaniach ofertowych", "kwalifikacja": "zobowiazanie", "jak": "Sprawdzenie, czy kryteria oceny były podane oferentom z góry", "dowod": "Zapytanie ofertowe i karta oceny ofert na wymianę oświetlenia hali B z 08.06.2026 — kryteria energetyczne podane z góry", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "23", "wym42": "WYM-28", "strona": "Instytucje finansujące / banki", "wymaganie": "Udokumentowane efekty energetyczne przy finansowaniu inwestycji; zgodność z taksonomią przy kredytach zrównoważonych. Przy wpisie podaj termin z umowy — na przykład „raz w roku do 30 czerwca”", "zrodlo": "Umowa kredytowa na modernizację, załącznik ESG — coroczne wskaźniki zużycia energii zakładu", "kwalifikacja": "umowne", "jak": "Data wysyłki raportu wobec terminu umownego", "dowod": "E-mail z 12.08.2026 — po przypomnieniu z banku", "wynik": "niezgodne", "przyczyna": "Termin 30 czerwca nie był w kalendarzu żadnej osoby. Rejestr wskazywał wymaganie, źródło i właściciela, ale nikt nie miał tej daty u siebie — i nikt nie sprawdzał, czy obowiązek wykonano w terminie.", "dzialanie": "Termin wpisany do kalendarza kontrolingu jako zadanie cykliczne; przypomnienie od Energy Managera 14 dni przed terminem. Karta niezgodności założona (10.1).", "karta10": "tak", "odp": "Kontroler finansowy — wdrożenie do 10.2026"}, {"nr": "24", "wym42": "WYM-30", "strona": "Ubezpieczyciel", "wymaganie": "Utrzymanie instalacji w stanie ograniczającym ryzyko awarii i przerw w działalności", "zrodlo": "Polisa ubezpieczenia mienia i przerw w działalności, § 9 — wymogi utrzymania instalacji", "kwalifikacja": "umowne", "jak": "Sprawdzenie realizacji planu przeglądów instalacji", "dowod": "Plan przeglądów 2026 r. wykonany w terminach; protokoły przeglądu sprężarkowni i kotłowni", "wynik": "zgodne", "przyczyna": "", "dzialanie": "—", "karta10": "", "odp": ""}, {"nr": "25", "wym42": "WYM-31", "strona": "Jednostka certyfikująca", "wymaganie": "Kompletność i dostępność udokumentowanej informacji; dowody funkcjonowania systemu przez odpowiedni okres", "zrodlo": "Umowa o certyfikację ISO 50001 i wymagania jednostki certyfikującej, pkt 4 — zakres i dostępność udokumentowanej informacji, wymagany okres dowodów", "kwalifikacja": "umowne", "jak": "Porównanie kompletności dokumentacji z wymaganiami jednostki i wymaganym okresem dowodów", "dowod": "Umowa o certyfikację z 15.04.2026; dowody działania systemu zbierane od 03.2026", "wynik": "wtoku", "przyczyna": "", "dzialanie": "Uzupełnienie dowodów do audytu certyfikującego XI–XII 2026 — Pełnomocnik ds. systemów zarządzania", "karta10": "", "odp": ""}], "OCENA": {"naPrzeglad": "23 wymagań ocenianych z 25 w rejestrze punktu 4.2; 2 pozycje to oczekiwania nieprzyjęte i zostają poza oceną zgodności — ich wiersze pokazują powód i termin powrotu do decyzji. Wynik: 17 zgodnych, 4 w toku zgodnie z planem, 1 do uzupełnienia dowodem, 1 niezgodne. Niezgodność dotyczy raportu dla banku: wysłany 12.08.2026 wobec terminu umownego 30 czerwca — założono kartę niezgodności (10.1), działanie przyjęte, w toku. Przy obowiązku z ustawy o efektywności energetycznej dowód wymaga uzupełnienia datami zakończenia audytu i zawiadomienia URE; samo zawiadomienie i raport są w dokumentacji. Cztery pozycje w toku to wdrożenie i certyfikacja (termin klienta: 2027 r.), zobowiązanie zarządu rozliczane celami, kryteria energetyczne w pozostałych kategoriach zakupowych i komplet dowodów przed auditem certyfikującym. Rekomendacja: przyjąć działanie dla raportu bankowego i wyznaczyć termin uzupełnienia dowodu URE.", "przegladStanu": "Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji ustawy o efektywności energetycznej — projekt UC77 pozostaje nieuchwalony, stan na 15.09.2026. Odpowiada Energy Manager; wynik przeglądu zapisywany z datą. Dodatkowa ocena zgodności przy każdej nowej umowie z klientem albo instytucją finansującą."}, "META": {"dataOceny": "2026-09-18", "stanPrawny": "2026-09-15", "oceniajacy": "Jan Kowalski — Energy Manager", "rytmBaza": "rocznie", "rytm": "Raz w roku, we wrześniu, przed przeglądem zarządzania. Dodatkowo przy każdej zmianie przepisu i przy nowej umowie. Wymaganie z terminem rocznym oceniane po tym terminie; obowiązek raz na cztery lata — w roku, w którym przypada; zmiana przepisu — gdy wejdzie w życie.", "wRejestrze": "25", "nieprzyjete": "2", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "dataZatw": "2026-09-29"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Rejestr z punktu 4.2 wskazywał wymaganie, źródło i właściciela, ale nie niósł terminu — i obowiązek wobec banku wykonano sześć tygodni po czasie.", "decyzja": "Przy wymaganiach z terminem rejestr ma nieść datę i powtarzalność, nie tylko właściciela.", "dzialanie": "Termin 30 czerwca wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem Energy Managera czternaście dni wcześniej; karta niezgodności w 10.1.", "sprawdzenie": "Kolejna ocena zgodności we wrześniu 2027 r. zestawia daty wysyłek z terminami umownymi — bez przekroczeń."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 9.1.2 — Ocena zgodności z wymaganiami prawnymi i innymi.
+   F-EnMS-17 (III-41) część D; przykład III-42 część D; lista kontrolna III-47 sekcja 9.1.2;
+   procedura P-EnMS-07 (III-48) pkt 4.2. */
+"use strict";
+
+var PUNKT = "9.1.2";
+var TERAZ = "11.10.2026 14:10";
+var WYM = [];
+var OCENA = { naPrzeglad: "", przegladStanu: "" };
+var META = { dataOceny: "", stanPrawny: "", oceniajacy: "", rytmBaza: "", rytm: "", wRejestrze: "",
+  nieprzyjete: "", zatwierdzil: "", dataZatw: "" };
+var WNIOSKI = [];
+var AKT = "ocena";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 14:05", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 9.1.2" }];
+
+var KWALIFIKACJE = [["", "—"],
+["prawne", "Prawne — wynika z przepisu"],
+["umowne", "Umowne — z umowy lub specyfikacji"],
+["zobowiazanie", "Przyjęte zobowiązanie"],
+["nieprzyjete", "Oczekiwanie nieprzyjęte"]];
+var WYNIKI = [["", "—"],
+["zgodne", "Zgodne"],
+["wtoku", "W toku, zgodnie z planem"],
+["douzupelnienia", "Ocena do uzupełnienia dowodem"],
+["niezgodne", "Niezgodne"]];
+
+function etykieta(lista, v) {
+  var x = lista.filter(function (y) { return y[0] === v; })[0];
+  return x ? x[1] : "—";
+}
+function wZakresie(w) { return w.kwalifikacja && w.kwalifikacja !== "nieprzyjete"; }
+function doOceny() {
+  var r = lb(META.wRejestrze), n = lb(META.nieprzyjete);
+  if (r === null) return null;
+  return r - (n || 0);
+}
+function ocenione() { return WYM.filter(wZakresie).length; }
+function lukaPokrycia() {
+  var d = doOceny();
+  if (d === null) return null;
+  return d - ocenione();
+}
+
+/* ── dowód ── */
+var RE_DOWOD_TWARDY = /(\d{1,2}[.\/-]\d{1,2}[.\/-]\d{2,4}|\d{1,2}\s+(stycznia|lutego|marca|kwietnia|maja|czerwca|lipca|sierpnia|wrze[śs]nia|pa[źz]dziernika|listopada|grudnia)|potwierdzeni|protok[óo]|e-?mail|kopia|kopi[ęe]|raport|umow|faktur|certyfikat|zawiadomieni|rejestr|harmonogram|budżet|budzet)/i;
+function zgodneBezDowodu(w) {
+  return w.wynik === "zgodne" && !RE_DOWOD_TWARDY.test(w.dowod || "");
+}
+/* „Rejestr zamiast oceny": wymaganie spisane, wykonania nikt nie sprawdził. */
+function rejestrZamiastOceny(w) {
+  return !!(w.wymaganie || "").trim() && wZakresie(w) && !(w.jak || "").trim();
+}
+var RE_TERMIN = /(do\s+\d{1,2}\s|do\s+\d{1,2}[.\/]|\d{1,2}\s+(stycznia|lutego|marca|kwietnia|maja|czerwca|lipca|sierpnia|wrze[śs]nia|pa[źz]dziernika|listopada|grudnia)|co\s+\d+\s+lat|w\s+ci[ąa]gu\s+\d+\s+dni|corocz|co\s+roku|rocznie|miesi[ęe]czn|kwartaln)/i;
+/* Prefiksy, nie całe formy: „dat wysyłek” ma i „dat”, i „wysył”, ale żadne
+   z nich nie kończy się tak, jak podpowiada mianownik. */
+var RE_SPR_DATA = /(\bdat|\btermin|kalendarz|wysy[łl]|przes[łl]an|\bkiedy|w\s+terminie|przed\s+terminem)/i;
+function terminBezSprawdzeniaDaty(w) {
+  return RE_TERMIN.test(w.wymaganie || "") && !!(w.jak || "").trim() && !RE_SPR_DATA.test(w.jak || "");
+}
+function brakZgodnosciBezDzialania(w) {
+  return w.wynik === "niezgodne" && !((w.przyczyna || "").trim() && (w.dzialanie || "").trim());
+}
+function niezgodneBezKarty(w) { return w.wynik === "niezgodne" && w.karta10 !== "tak"; }
+function wymOk(w) {
+  if (!((w.wymaganie || "").trim() && (w.zrodlo || "").trim() && w.kwalifikacja)) return false;
+  if (!wZakresie(w)) return true;
+  if (!((w.jak || "").trim() && (w.dowod || "").trim() && w.wynik)) return false;
+  if (w.wynik === "niezgodne") return !!((w.przyczyna || "").trim() && (w.dzialanie || "").trim()
+    && w.karta10 === "tak" && (w.odp || "").trim());
+  if (w.wynik === "douzupelnienia") return !!(w.dzialanie || "").trim();
+  return true;
+}
+/* Rytm jest polem wyboru, nie tekstem: w opisie rytmu AutoParts stoi „obowiązek raz
+   na cztery lata", ale to częstotliwość samego obowiązku, nie oceny. Wyrażenie
+   regularne nie potrafi tego rozróżnić i podnosiłoby alarm na poprawnym wpisie. */
+var RYTMY = [["", "—"],
+["czesciej", "Częściej niż raz w roku"],
+["rocznie", "Raz w roku"],
+["rzadziej", "Rzadziej niż raz w roku"]];
+function rytmZaRzadki() { return META.rytmBaza === "rzadziej"; }
+function metaOk() {
+  return !!(META.dataOceny && (META.stanPrawny || "").trim() && (META.oceniajacy || "").trim()
+    && META.rytmBaza && (META.rytm || "").trim() && lb(META.wRejestrze) !== null);
+}
+function tylkoPrzepisy() {
+  var z = WYM.filter(wZakresie);
+  return z.length > 0 && !z.some(function (w) { return w.kwalifikacja === "umowne" || w.kwalifikacja === "zobowiazanie"; });
+}
+
+/* ── zakładka 1 ── */
+function rysujOcene(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Metryka oceny zgodności"));
+  s.appendChild(hel("div", "warn", "Wrzesień 2026 r. Jan Kowalski przechodzi wiersz po wierszu rejestr stron zainteresowanych. Rejestr jest aktualny: przy każdym wymaganiu jest źródło, sposób realizacji i osoba odpowiedzialna. Wiersz dziewiąty: bank finansujący modernizację — coroczne wskaźniki zużycia energii. Umowa kredytowa podaje termin: <b>30 czerwca</b>.<br><br>Kontroling potwierdza wysyłkę: raport wyszedł <b>12 sierpnia</b> — po przypomnieniu z banku.<br><br>Rejestr był poprawny. Wymaganie było znane, osoba wyznaczona. <b>Zabrakło jednego: sprawdzenia, czy obowiązek został rzeczywiście wykonany.</b> O tym jest punkt 9.1.2."));
+  s.appendChild(hel("div", "note", "<b>Czym to się różni od rejestru wymagań?</b> W punkcie 4.2 ustalacie, jakie wymagania Was obowiązują. W punkcie 9.1.2 sprawdzacie, czy je rzeczywiście spełniacie. <b>Pierwsze to lista. Drugie to dowód.</b>"));
+  var k = el("div", "poz" + (metaOk() ? "" : " brak"));
+  k.appendChild(pole("Data oceny", inp(META.dataOceny, "", function (v) { META.dataOceny = v; }, "date")));
+  k.appendChild(poleChip("Stan prawny na dzień", "metodyka ENESA",
+    inp(META.stanPrawny, "np. 15.09.2026", function (v) { META.stanPrawny = v; }, "date"),
+    "Ocenę robi się według przepisów obowiązujących w dniu oceny — i zapisuje, na jaki dzień je sprawdzono. Bez tej daty za rok nikt nie odtworzy, co wtedy obowiązywało."));
+  k.appendChild(pole("Oceniający", inp(META.oceniajacy, "np. Jan Kowalski — Energy Manager", function (v) { META.oceniajacy = v; })));
+  k.appendChild(poleChip("Podstawowy odstęp oceny", "wymóg normy",
+    sel(META.rytmBaza, RYTMY, function (v) { META.rytmBaza = v; })));
+  k.appendChild(poleChip("Opis odstępów i wyjątków", "wymóg normy",
+    txt(META.rytm, "np. Raz w roku, we wrześniu, przed przeglądem zarządzania. Dodatkowo przy każdej zmianie przepisu i przy nowej umowie. Wymagania z terminem rocznym oceniane po terminie; obowiązek raz na cztery lata — w roku, w którym przypada.", 3,
+      function (v) { META.rytm = v; }),
+    "Norma mówi „w zaplanowanych odstępach” i nie narzuca jednej częstotliwości dla wszystkich wymagań. Rytm dobiera się do terminów własnych wymagań."));
+  s.appendChild(k);
+  if (rytmZaRzadki())
+    s.appendChild(hel("div", "warn", "Rytm oceny rzadszy niż roczny. <b>Ocena raz na kilka lat</b> to jeden z pięciu błędów tego punktu — wymaganie z terminem rocznym trzeba sprawdzić po tym terminie, inaczej opóźnienie wyjdzie dopiero przy następnej ocenie albo przy przypomnieniu od strony zainteresowanej."));
+  host.appendChild(s);
+
+  var z = el("div", "sekcja");
+  z.appendChild(el("h3", null, "Zakres oceny wobec rejestru z punktu 4.2"));
+  z.appendChild(hel("div", "note", "Do oceny zgodności przenosi się z rejestru stron zainteresowanych wymagania <b>prawne, umowne i przyjęte zobowiązania</b>. <b>Oczekiwania nieprzyjęte</b> — znane, ale świadomie nieprzyjęte — zostają w rejestrze z powodem i terminem ponownej decyzji; tutaj nie ma czego oceniać."));
+  var zk = el("div", "poz" + (lb(META.wRejestrze) !== null ? "" : " brak"));
+  zk.appendChild(pole("Wierszy w rejestrze (4.2)", inp(META.wRejestrze, "np. 9", function (v) { META.wRejestrze = v; })));
+  zk.appendChild(pole("Z tego oczekiwań nieprzyjętych", inp(META.nieprzyjete, "np. 2", function (v) { META.nieprzyjete = v; })));
+  var d = doOceny(), l = lukaPokrycia();
+  if (d !== null) {
+    var n = el("div", l === 0 ? "ok" : l > 0 ? "warn" : "note");
+    n.appendChild(el("b", null, "Pokrycie: "));
+    n.appendChild(document.createTextNode("do oceny " + d + " z " + lcz(lb(META.wRejestrze), 0) +
+      " wierszy rejestru; w tej ocenie " + ocenione() +
+      (l === 0 ? " — zgadza się." : l > 0 ? " — brakuje " + ile(l, "wymagania", "wymagań", "wymagań") + "." :
+        " — ocenianych jest więcej niż wynika z rejestru; sprawdźcie, czy nie trafiło tu oczekiwanie nieprzyjęte.")));
+    zk.appendChild(n);
+  }
+  z.appendChild(zk);
+  host.appendChild(z);
+
+  if (WYM.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(el("h3", null, "Podsumowanie wyników"));
+    var licz = {};
+    WYNIKI.slice(1).forEach(function (y) {
+      licz[y[0]] = WYM.filter(function (w) { return w.wynik === y[0]; }).length;
+    });
+    t.appendChild(tabela(["Wynik", "Wymagań"], WYNIKI.slice(1).map(function (y) {
+      return [y[1], el("span", "chip " + (y[0] === "zgodne" ? "green" : y[0] === "niezgodne" ? "red" : ""),
+        String(licz[y[0]]))];
+    })));
+    host.appendChild(t);
+  }
+}
+
+/* ── zakładka 2 ── */
+function rysujWymagania(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "D. Ocena zgodności — wymaganie po wymaganiu");
+  h.appendChild(el("span", "chip " + (WYM.length && WYM.every(wymOk) ? "green" : "amber"),
+    WYM.filter(wymOk).length + " / " + WYM.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "note", "Dla każdego wymagania ta sama droga: <b>wymaganie → sposób sprawdzenia → dowód → wynik → działanie, jeśli brak zgodności.</b> Ocena obejmuje nie tylko prawo: wymaganie klienta, który co roku chce danych o energii, albo warunek banku z umowy kredytowej to „inne wymagania” — jeśli organizacja je przyjęła, sprawdzacie je tak samo jak przepisy."));
+  host.appendChild(s);
+
+  if (WYM.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Nr", "Wymaganie", "Jak sprawdzono", "Dowód", "Wynik", "Działanie"],
+      WYM.map(function (w, i) {
+        return [w.nr || String(i + 1), w.wymaganie || "—",
+          wZakresie(w) ? (w.jak || "—") : "poza oceną zgodności",
+          w.dowod || "—",
+          el("span", "chip " + (w.wynik === "zgodne" ? "green" : w.wynik === "niezgodne" ? "red" : ""),
+            w.wynik ? etykieta(WYNIKI, w.wynik) : "—"),
+          w.dzialanie || "—"];
+      })));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Wymagania — edycja"));
+  WYM.forEach(function (w, i) {
+    var kk = el("div", "poz" + (wymOk(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wiersz " + (w.nr || i + 1)));
+    if (w.kwalifikacja) g.appendChild(el("span", "chip" + (w.kwalifikacja === "nieprzyjete" ? "" : ""),
+      etykieta(KWALIFIKACJE, w.kwalifikacja).split(" —")[0]));
+    if (w.wynik) g.appendChild(el("span", "chip " + (w.wynik === "zgodne" ? "green" : w.wynik === "niezgodne" ? "red" : ""),
+      etykieta(WYNIKI, w.wynik)));
+    g.appendChild(przyciskUsun(function () { WYM.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Numer wiersza w rejestrze (4.2)", inp(w.nr, "np. 9", function (v) { w.nr = v; })));
+    kk.appendChild(pole("Strona zainteresowana", inp(w.strona, "np. Bank finansujący modernizację", function (v) { w.strona = v; })));
+    kk.appendChild(pole("Wymaganie", txt(w.wymaganie, "np. Coroczne wskaźniki zużycia energii zakładu (EnPI) — termin 30 czerwca", 2,
+      function (v) { w.wymaganie = v; })));
+    kk.appendChild(pole("Źródło", inp(w.zrodlo, "np. Umowa kredytowa, załącznik dotyczący ESG", function (v) { w.zrodlo = v; })));
+    kk.appendChild(pole("Kwalifikacja", sel(w.kwalifikacja, KWALIFIKACJE, function (v) { w.kwalifikacja = v; })));
+    if (w.kwalifikacja === "nieprzyjete") {
+      kk.appendChild(hel("div", "note", "Oczekiwanie nieprzyjęte — <b>poza oceną zgodności.</b> Zostaje w rejestrze z powodem i terminem ponownej decyzji. Nie trzeba go tu oceniać, ale wpis przypomina, dlaczego nie jest oceniane."));
+      kk.appendChild(pole("Powód nieprzyjęcia i termin ponownej decyzji",
+        txt(w.dzialanie, "np. Plan działań obejmuje tylko emisje z energii; ponowna decyzja przy odnowieniu umowy (I kw. 2027)", 2,
+          function (v) { w.dzialanie = v; })));
+      e.appendChild(kk);
+      return;
+    }
+    kk.appendChild(poleChip("Jak sprawdzono", "wymóg normy",
+      txt(w.jak, "np. Data wysyłki raportu i potwierdzenie odbioru", 2, function (v) { w.jak = v; })));
+    kk.appendChild(poleChip("Dowód", "wymóg normy",
+      txt(w.dowod, "np. E-mail z 12.08.2026", 2, function (v) { w.dowod = v; }),
+      "„Jesteśmy zgodni” bez dowodu to jeden z pięciu błędów tego punktu. Dowód to dokument z datą, nie przekonanie."));
+    kk.appendChild(pole("Wynik", sel(w.wynik, WYNIKI, function (v) { w.wynik = v; })));
+    if (w.wynik === "niezgodne" || w.wynik === "douzupelnienia") {
+      kk.appendChild(poleChip("Przyczyna", "metodyka ENESA",
+        txt(w.przyczyna, "np. Termin 30 czerwca nie był w kalendarzu żadnej osoby — rejestr wskazywał właściciela, nie datę", 2,
+          function (v) { w.przyczyna = v; }),
+        "Przy braku zgodności analizuje się przyczynę. Opóźnienie raportu dla banku nie jest dramatem, ale jest niezgodnością z wymaganiem, które firma przyjęła — więc ma przyczynę i działanie, które ją usuwa."));
+    }
+    kk.appendChild(poleChip("Działanie", "wymóg normy",
+      txt(w.dzialanie, "np. Termin w kalendarzu kontrolingu; przypomnienie od Energy Managera 14 dni wcześniej", 2,
+        function (v) { w.dzialanie = v; }),
+      "Norma wymaga zachowania zapisu wyników oceny <b>i podjętych działań</b>. Przy zgodności wystarczy kreska."));
+    if (w.wynik === "niezgodne") {
+      kk.appendChild(pole("Karta niezgodności (10.1)",
+        sel(w.karta10, [["", "—"], ["tak", "Założona"], ["nie", "Nie założona"]], function (v) { w.karta10 = v; })));
+      kk.appendChild(pole("Odpowiedzialny i termin", inp(w.odp, "np. Kontroler finansowy, 10.2026", function (v) { w.odp = v; })));
+    }
+    if (rejestrZamiastOceny(w))
+      kk.appendChild(hel("div", "warn", "Wymaganie jest spisane, ale nie wskazano, jak sprawdzono jego wykonanie. <b>Rejestr zamiast oceny zgodności</b> to pierwszy z pięciu błędów tego punktu — i dokładnie to, co zdarzyło się w AutoParts z raportem dla banku."));
+    if (zgodneBezDowodu(w))
+      kk.appendChild(hel("div", "warn", "Wynik „zgodne”, a w polu dowodu nie ma dokumentu ani daty. <b>„Jesteśmy zgodni” bez dowodu</b> nie przechodzi na audycie — zapiszcie, jak sprawdzono, jaki jest dowód i jaki wynik."));
+    if (terminBezSprawdzeniaDaty(w))
+      kk.appendChild(hel("div", "note", "Wymaganie ma termin, a sposób sprawdzenia nie odwołuje się do daty. <b>To właśnie tu wymaganie wymyka się ocenie:</b> rejestr może być poprawny, osoba wyznaczona, a i tak zabraknie sprawdzenia, czy obowiązek wykonano <i>w terminie</i>."));
+    if (brakZgodnosciBezDzialania(w))
+      kk.appendChild(hel("div", "warn", "Brak zgodności zapisany, ale bez przyczyny albo bez działania. <b>Każdy brak zgodności ma przyczynę i działanie</b> — norma wymaga zapisu podjętych działań, a metodyka dodaje analizę przyczyny."));
+    if (niezgodneBezKarty(w))
+      kk.appendChild(el("div", "warn", "Wynik „niezgodne” bez założonej karty niezgodności. Brak zgodności z wymaganiem prawnym, umownym albo przyjętym zobowiązaniem idzie ścieżką z punktu 10.1."));
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj wymaganie", function () { WYM.push({}); }));
+  if (!WYM.length) e.appendChild(el("div", "warn", "Nie oceniono żadnego wymagania."));
+  if (tylkoPrzepisy())
+    e.appendChild(hel("div", "warn", "Ocena obejmuje wyłącznie wymagania prawne. <b>Ocena tylko przepisów</b> to drugi z pięciu błędów — obejmijcie wymagania klientów, banków i zobowiązania przyjęte przez firmę. W AutoParts pięć z siedmiu ocenianych wymagań nie jest przepisami."));
+  host.appendChild(e);
+}
+
+/* ── zakładka 3 ── */
+function rysujWnioskiP(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski i przekazanie");
+  h.appendChild(el("span", "chip " + ((OCENA.naPrzeglad || "").trim() && (OCENA.przegladStanu || "").trim() ? "green" : "amber"),
+    (OCENA.naPrzeglad || "").trim() && (OCENA.przegladStanu || "").trim() ? "kompletne" : "do uzupełnienia"));
+  s.appendChild(h);
+  var k = el("div", "poz" + ((OCENA.naPrzeglad || "").trim() && (OCENA.przegladStanu || "").trim() ? "" : " brak"));
+  k.appendChild(poleChip("Wnioski na przegląd zarządzania (9.3)", "metodyka ENESA",
+    txt(OCENA.naPrzeglad, "np. Siedem wymagań ocenianych, jedno niezgodne — raport dla banku wysłany 12.08 wobec terminu 30.06; działanie w toku. Termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Pozostałe wymagania zgodne albo w toku zgodnie z planem.", 4,
+      function (v) { OCENA.naPrzeglad = v; }),
+    "Wyniki oceny zgodności są jedną z wymaganych pozycji danych wejściowych przeglądu zarządzania."));
+  k.appendChild(pole("Śledzenie zmian stanu prawnego",
+    txt(OCENA.przegladStanu, "np. Przegląd stanu prawnego co kwartał do wejścia w życie nowelizacji ustawy o efektywności energetycznej (projekt UC77 — nieuchwalony, stan na 29.09.2026). Odpowiada Energy Manager.", 3,
+      function (v) { OCENA.przegladStanu = v; }),
+    "Zmianę przepisu ocenia się, gdy wejdzie w życie. Dopóki nowelizacja jest projektem, śledzi się jej stan i zapisuje datę sprawdzenia."));
+  s.appendChild(k);
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  w.appendChild(el("h3", null, "Skąd wiesz, że ocena zgodności działa"));
+  var lista = [
+    { t: "Przy każdym wymaganiu z rejestru wiadomo, jak sprawdzić jego spełnienie i gdzie jest dowód.",
+      ok: WYM.filter(wZakresie).length > 0 && !WYM.some(rejestrZamiastOceny) && !WYM.some(zgodneBezDowodu) },
+    { t: "Ocena obejmuje także wymagania klientów, banków i zobowiązania przyjęte przez firmę — nie tylko przepisy.",
+      ok: WYM.filter(wZakresie).length > 0 && !tylkoPrzepisy() },
+    { t: "Wynik ostatniej oceny jest zapisany, z datą stanu prawnego.",
+      ok: !!(META.dataOceny && (META.stanPrawny || "").trim()) },
+    { t: "Każdy brak zgodności ma przyczynę i działanie.",
+      ok: WYM.filter(function (x) { return x.wynik === "niezgodne"; }).length === 0 ? null
+        : !WYM.some(brakZgodnosciBezDzialania) && !WYM.some(niezgodneBezKarty) },
+    { t: "Wnioski z oceny trafiają na przegląd zarządzania.", ok: !!(OCENA.naPrzeglad || "").trim() },
+    { t: "Zakres oceny zgadza się z rejestrem z punktu 4.2.", ok: lukaPokrycia() === null ? null : lukaPokrycia() === 0 }
+  ];
+  lista.forEach(function (x) {
+    var kw = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "chip " + (x.ok === null ? "" : x.ok ? "green" : "amber"),
+      x.ok === null ? "nie dotyczy" : x.ok ? "tak" : "jeszcze nie"));
+    g.appendChild(el("span", null, x.t));
+    kw.appendChild(g);
+    w.appendChild(kw);
+  });
+  host.appendChild(w);
+}
+
+/* ── zakładka 4 ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz oceny zgodności: "));
+  n.appendChild(document.createTextNode(
+    ocenione() + " wymagań ocenianych" + (doOceny() !== null ? " z " + doOceny() + " w zakresie" : "") +
+    " · zgodnych: " + WYM.filter(function (w) { return w.wynik === "zgodne"; }).length +
+    " · niezgodnych: " + WYM.filter(function (w) { return w.wynik === "niezgodne"; }).length +
+    " · do uzupełnienia dowodem: " + WYM.filter(function (w) { return w.wynik === "douzupelnienia"; }).length +
+    " · stan prawny na: " + (META.stanPrawny || "nie podano")));
+  s.appendChild(n);
+  var bezD = WYM.filter(zgodneBezDowodu);
+  if (bezD.length)
+    s.appendChild(el("div", "warn", ile(bezD.length, "wymaganie jest oznaczone", "wymagania są oznaczone", "wymagań jest oznaczonych") +
+      " jako zgodne bez dokumentu ani daty w dowodzie. Na audycie to pierwsze miejsce, w które patrzy audytor — i jedyne, w którym ocena zgodności może wyglądać na zrobioną, a nie być zrobiona."));
+  var rz = WYM.filter(rejestrZamiastOceny);
+  if (rz.length)
+    s.appendChild(el("div", "warn", "W " + ile(rz.length, "wymaganiu", "wymaganiach", "wymaganiach") +
+      " nie ma sposobu sprawdzenia. To rejestr, nie ocena — rozmowa do odbycia z właścicielem wymagania, nie poprawka w formularzu."));
+  var term = WYM.filter(terminBezSprawdzeniaDaty);
+  if (term.length)
+    s.appendChild(el("div", "note", "W " + ile(term.length, "wymaganiu", "wymaganiach", "wymaganiach") +
+      " jest termin, a sprawdzenie nie dotyczy daty. Warto zapytać, kto ma ten termin w kalendarzu — w AutoParts odpowiedź brzmiała: nikt."));
+  if (tylkoPrzepisy())
+    s.appendChild(el("div", "warn", "Oceniane są wyłącznie przepisy. Umowy z klientami i warunki finansowania bywają ostrzejsze niż prawo i mają konkretne daty — a ich niespełnienie ma bezpośrednie skutki handlowe."));
+  var l = lukaPokrycia();
+  if (l !== null && l > 0)
+    s.appendChild(el("div", "warn", "Zakres oceny nie zgadza się z rejestrem — brakuje " +
+      ile(l, "wymagania", "wymagań", "wymagań") + ". Sprawdźcie, czy to pominięcie, czy wiersze zakwalifikowane w rejestrze jako oczekiwania nieprzyjęte."));
+  if (!(META.stanPrawny || "").trim())
+    s.appendChild(el("div", "warn", "Brak daty stanu prawnego. Za rok nikt nie odtworzy, co obowiązywało w dniu oceny — a przy trwającej nowelizacji ustawy to nie jest formalność."));
+  if (rytmZaRzadki())
+    s.appendChild(el("div", "warn", "Rytm oceny rzadszy niż roczny przy wymaganiach z terminami rocznymi. Rozmowa o tym, że opóźnienie wyjdzie wtedy od strony zainteresowanej, nie z systemu."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-47, sekcja 9.1.2 ── */
+function stanPozycji(q) {
+  var f = {
+    oceniana: function () {
+      return WYM.filter(wZakresie).length > 0 && WYM.every(wymOk)
+        && !!META.rytmBaza && !!(META.rytm || "").trim() && !rytmZaRzadki()
+        && lukaPokrycia() === 0 && !tylkoPrzepisy();
+    },
+    zapisy: function () {
+      return !!(META.dataOceny && (META.oceniajacy || "").trim())
+        && WYM.filter(wZakresie).every(function (w) { return (w.dowod || "").trim() && w.wynik; })
+        && !WYM.some(brakZgodnosciBezDzialania);
+    },
+    stanIPrzyczyna: function () {
+      if (!(META.stanPrawny || "").trim()) return false;
+      var nz = WYM.filter(function (w) { return w.wynik === "niezgodne" || w.wynik === "douzupelnienia"; });
+      if (!nz.length) return !!(META.stanPrawny || "").trim();
+      return nz.every(function (w) { return (w.przyczyna || "").trim(); });
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!META.dataOceny) b.push({ t: "Brak daty oceny.", kto: "klient" });
+  if (!(META.stanPrawny || "").trim()) b.push({ t: "Brak daty stanu prawnego.", kto: "klient", metodyka: true });
+  if (!(META.oceniajacy || "").trim()) b.push({ t: "Nie wskazano osoby oceniającej.", kto: "klient" });
+  if (!META.rytmBaza || !(META.rytm || "").trim()) b.push({ t: "Nie ustalono zaplanowanych odstępów oceny.", kto: "klient" });
+  if (lb(META.wRejestrze) === null) b.push({ t: "Nie podano liczby wierszy rejestru z punktu 4.2 — nie da się sprawdzić pokrycia.", kto: "klient", metodyka: true });
+  if (!WYM.length) b.push({ t: "Nie oceniono żadnego wymagania.", kto: "klient" });
+  var l = lukaPokrycia();
+  if (l !== null && l > 0) b.push({ t: "Zakres oceny mniejszy od rejestru — brakuje " + ile(l, "wymagania", "wymagań", "wymagań") + ".", kto: "klient" });
+  if (tylkoPrzepisy()) b.push({ t: "Ocena obejmuje wyłącznie wymagania prawne.", kto: "klient", metodyka: true });
+  WYM.forEach(function (w, i) {
+    var n = "Wiersz " + (w.nr || i + 1);
+    if (!wymOk(w)) b.push({ t: n + " — niepełna pozycja oceny.", kto: "klient" });
+    if (rejestrZamiastOceny(w)) b.push({ t: n + " — brak sposobu sprawdzenia (rejestr zamiast oceny).", kto: "klient" });
+    if (zgodneBezDowodu(w)) b.push({ t: n + " — wynik „zgodne” bez dowodu z datą albo dokumentem.", kto: "klient" });
+    if (brakZgodnosciBezDzialania(w)) b.push({ t: n + " — brak zgodności bez przyczyny albo działania.", kto: "klient" });
+    if (niezgodneBezKarty(w)) b.push({ t: n + " — niezgodność bez karty 10.1.", kto: "klient" });
+  });
+  if (!(OCENA.naPrzeglad || "").trim()) b.push({ t: "Brak wniosków na przegląd zarządzania.", kto: "klient", metodyka: true });
+  if (!META.dataZatw || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia oceny.", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 5 ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-ZGD-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.dataZatw, "", function (v) { META.dataZatw = v; }, "date")));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_912, "Lista kontrolna III-47 — sekcja 9.1.2", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-ZGD-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Metryka i rytm", "zakładka 1",
+      (META.dataOceny || "bez daty") + " · stan prawny na " + (META.stanPrawny || "nie podano")],
+    ["Zakres wobec rejestru 4.2", "zakładka 1",
+      doOceny() === null ? "nie sprawdzono" : ocenione() + " z " + doOceny() + " wymagań w zakresie"],
+    ["D. Ocena wymaganie po wymaganiu", "zakładka 2", WYM.filter(wymOk).length + " z " + WYM.length + " pozycji"],
+    ["Wnioski na przegląd zarządzania", "zakładka 3", (OCENA.naPrzeglad || "").trim() ? "przygotowane" : "do uzupełnienia"],
+    ["Wnioski konsultanta", "zakładka 4", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 5", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>oceny zgodności w zaplanowanych odstępach</b> oraz <b>zachowania informacji o wynikach oceny i o podjętych działaniach</b> — i nic więcej. Forma zestawienia, data stanu prawnego i analiza przyczyny przy braku zgodności są zaleceniami metodyki ENESA. Dokument D-EnMS-ZGD-01 odpowiada części D formularza F-EnMS-17 (załącznik III-41); części A, B, C i E są w punkcie 9.1.1."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "ocena", t: "1. Ocena i zakres", f: rysujOcene },
+  { id: "wymagania", t: "2. D — wymagania", f: rysujWymagania },
+  { id: "wnioski", t: "3. Wnioski i przekazanie", f: rysujWnioskiP },
+  { id: "kons", t: "4. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "5. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(WYM.length, 1) + 4,
+    zrob: WYM.filter(wymOk).length + (metaOk() ? 1 : 0)
+      + (lukaPokrycia() === 0 ? 1 : 0)
+      + ((OCENA.naPrzeglad || "").trim() && (OCENA.przegladStanu || "").trim() ? 1 : 0)
+      + ((META.zatwierdzil || "").trim() && META.dataZatw ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_912", JSON.stringify({ WYM: WYM, OCENA: OCENA, META: META, WNIOSKI: WNIOSKI }));
+    /* Wynik oceny zgodności jest wymaganą pozycją danych wejściowych przeglądu (9.3). */
+    localStorage.setItem("enesa_zgodnosc", JSON.stringify({
+      dataOceny: META.dataOceny, stanPrawny: META.stanPrawny,
+      ocenionych: ocenione(), niezgodnych: WYM.filter(function (w) { return w.wynik === "niezgodne"; }).length,
+      naPrzeglad: OCENA.naPrzeglad
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_912"); if (!s) return;
+    var d = JSON.parse(s);
+    WYM = d.WYM || []; OCENA = d.OCENA || OCENA; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var p = JSON.parse(JSON.stringify(PRZYKLAD));
+  WYM = p.WYM; OCENA = p.OCENA; META = p.META;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić ocenę zgodności?")) return;
+  WYM = []; WNIOSKI = []; OCENA = { naPrzeglad: "", przegladStanu: "" };
+  META = { dataOceny: "", stanPrawny: "", oceniajacy: "", rytmBaza: "", rytm: "", wRejestrze: "",
+    nieprzyjete: "", zatwierdzil: "", dataZatw: "" };
+  try { localStorage.removeItem("enesa_912"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

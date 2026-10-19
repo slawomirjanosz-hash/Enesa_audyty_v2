@@ -10,6 +10,8 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoStakeholderReview;
 use App\Services\AuditorAccessService;
+use App\Services\IsoFactorQuestionnaire;
+use App\Services\IsoHtmlState;
 use App\Services\IsoPlatformRelease;
 use App\Services\IsoSectionWorkbook;
 use App\Services\IsoStakeholderQuestionnaire;
@@ -102,8 +104,9 @@ class IsoStakeholderReviewController extends Controller
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile)
     {
         $client = $this->access($request, $audit, $profile, true);
+        $htmlState = $request->has('html_state') ? app(IsoHtmlState::class)->ingest($request, '4-2', ['facts' => app(IsoFactorQuestionnaire::class)->facts($profile)], IsoStakeholderReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->first()?->answers ?? []) : null;
         $data = $request->validate(['lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['save', 'submit', 'consultant', 'approve', 'return', 'withdraw'])], 'note' => 'nullable|string|max:3000']);
-        DB::transaction(function () use ($request, $audit, $profile, $client, $data) {
+        DB::transaction(function () use ($request, $audit, $profile, $client, $data, $htmlState) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             $this->access($request, $audit, $profile, true);
@@ -131,6 +134,9 @@ class IsoStakeholderReviewController extends Controller
                     }
                 } catch (ValidationException $error) {
                     throw ValidationException::withMessages(collect($error->errors())->mapWithKeys(fn ($messages, $key) => ['answers.'.$key => $messages])->all());
+                }
+                if ($htmlState !== null || isset($review->answers['_html'])) {
+                    $answers['_html'] = $htmlState ?? $review->answers['_html'];
                 }
                 $changed = $stale || $answers !== ($review->answers ?? []);
                 if (! $changed && $op === 'save') {

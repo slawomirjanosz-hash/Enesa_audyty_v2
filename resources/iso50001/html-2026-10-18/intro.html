@@ -1,0 +1,2583 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — Profil zakładu</title><style>/* ENESA — wspólny arkusz stylów ankiet platformy. Używają go: Profil zakładu, Czynniki kontekstowe 4.1. */
+:root{--forest:#1B3A2C;--leaf:#2F6B41;--ink:#22302a;--mut:#6b7a72;--line:#d7dfd9;--bg:#f2f5f3;
+--amber:#8a5a0f;--amberbg:#fdf4e4;--blue:#1c5678;--bluebg:#eaf2f7;--grn:#1e7b34;--grnbg:#e8f3ec;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.55 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--forest);color:#fff;padding:16px 26px 0}
+header h1{margin:0 0 2px;font-size:20px;font-weight:600}
+header p{margin:0 0 12px;font-size:12.5px;color:#a9c7b6}
+.tabs{display:flex;gap:6px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+.pasekbox{background:#fff;border-bottom:1px solid var(--line);padding:9px 26px;position:sticky;top:0;z-index:9;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tor{flex:1;min-width:180px;height:7px;background:#e6ece8;border-radius:4px;overflow:hidden}
+.tor div{height:100%;background:var(--leaf);width:0;transition:width .2s}
+.pasekbox .pc{font-size:12.5px;color:var(--mut);white-space:nowrap}
+.pasekbox button{background:#fff;border:1px solid var(--line);border-radius:4px;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.pasekbox button:hover{border-color:var(--leaf);color:var(--leaf)}
+.pasekbox button.glowny{background:var(--forest);color:#fff;border-color:var(--forest)}
+.pasekbox button.glowny:hover{color:#fff}
+.ukl{display:grid;grid-template-columns:250px 1fr;gap:22px;padding:20px 26px 70px;max-width:1500px;align-items:start}
+#rail{position:sticky;top:64px;display:flex;flex-direction:column;gap:6px}
+.railb{text-align:left;background:#fff;border:1px solid var(--line);border-left:4px solid #dfe6e1;border-radius:5px;padding:9px 11px;cursor:pointer;font:inherit}
+.railb b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+.railb .rmeta{display:block;font-size:11.5px;color:var(--mut);margin-top:1px}
+.railb .rpost{display:block;font-size:11.5px;color:var(--leaf);margin-top:3px;font-weight:600}
+.railb.akt{border-left-color:var(--forest);background:#fbfdfc}
+.railb[data-stan=pelna]{border-left-color:var(--grn)}
+.railb[data-stan=trakcie]{border-left-color:var(--amber)}
+.sekhead h2{font-size:19px;color:var(--forest);margin:0 0 2px}
+.sekhead .meta{margin:0 0 14px;font-size:12.5px;color:var(--mut)}
+.q{background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:9px}
+.q.qwar{border-left:4px solid #c6ddcd;background:#fbfdfc}
+.q.qbrak{border-right:4px solid #edd9a8}
+.q.qpot{border-left:4px solid var(--grn)}
+.q.qodrz{border-left:4px solid #c9ccca;opacity:.72}
+.qhead{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.kod{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--mut);background:#f2f5f3;padding:1px 6px;border-radius:3px}
+.tagw{font-size:10.5px;color:var(--blue);background:var(--bluebg);padding:1px 6px;border-radius:3px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.tagn{font-size:10.5px;color:var(--grn);background:var(--grnbg);padding:1px 6px;border-radius:9px;font-weight:700}
+.taga{font-size:10.5px;color:var(--amber);background:var(--amberbg);padding:1px 6px;border-radius:3px}
+.tagm{font-size:10.5px;color:var(--red);background:var(--redbg);padding:1px 6px;border-radius:9px}
+.qtxt{font-size:14.5px;font-weight:500}
+.qpom{font-size:12.5px;color:var(--mut);margin-top:3px}
+.qster{font-size:11px;color:#9aa8a1;margin-top:7px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.wej{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;background:#fff}
+.pill:hover{border-color:var(--leaf)}
+.pill:has(input:checked),.pill.on{background:var(--grnbg);border-color:var(--leaf);color:#17512a;font-weight:600}
+input.txt{border:1px solid var(--line);border-radius:4px;padding:6px 9px;font:inherit;font-size:13.5px;width:230px}
+input.pelny{border:1px solid var(--line);border-radius:4px;padding:6px 9px;font:inherit;font-size:13px;width:100%;margin-top:8px}
+input.powod{border:1px solid #edd9a8;background:var(--amberbg);border-radius:4px;padding:6px 9px;font:inherit;font-size:12.5px;width:100%;margin-top:8px}
+textarea.tresc{width:100%;border:1px solid transparent;background:#f8faf9;border-radius:4px;padding:8px 10px;font:inherit;font-size:14px;resize:vertical;margin-top:2px}
+textarea.tresc:focus{border-color:var(--leaf);background:#fff;outline:0}
+textarea.tresc[readonly]{background:#f2f5f3;color:var(--mut)}
+.jedn{font-size:12.5px;color:var(--mut)}
+.wycz{background:transparent;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline}
+.link{background:0;border:0;color:var(--leaf);font:inherit;font-size:11.5px;cursor:pointer;text-decoration:underline;padding:0 0 0 8px}
+.dodaj{background:#fff;border:1px dashed var(--leaf);color:var(--leaf);border-radius:4px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer;margin-top:6px}
+table.rep{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff}
+table.rep th{background:#f2f5f3;color:var(--mut);text-align:left;padding:5px 7px;font-size:11px;font-weight:600;border:1px solid var(--line)}
+table.rep td{border:1px solid #eef2ef;padding:3px 5px}
+table.rep input,table.rep select{border:1px solid transparent;background:#fbfdfc;border-radius:3px;padding:4px 6px;font:inherit;font-size:12.5px;width:100%}
+table.rep input:focus,table.rep select:focus{border-color:var(--leaf);outline:0}
+td.pusto{color:var(--mut);font-style:italic;text-align:center;padding:9px}
+.autoval{background:var(--amberbg);border:1px solid #ead9b5;border-radius:5px;padding:8px 12px}
+.autoval b{font-size:17px;color:var(--amber)}
+.autoval b.pusty{color:var(--mut)}
+.autoval span{display:block;font-size:12px;color:#6d4410;margin-top:2px}
+.stopka{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.prim{background:var(--forest);color:#fff;border:0;border-radius:4px;padding:8px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.prim:disabled{background:#c3ccc7;cursor:not-allowed}
+.stopinf{font-size:12.5px;color:var(--mut)}
+#podsumowanie h2{font-size:18px;color:var(--forest);margin:22px 0 4px}
+#podsumowanie h2:first-child{margin-top:0}
+.pods{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin:8px 0 4px}
+.pods th{background:var(--forest);color:#fff;text-align:left;padding:6px 9px;font-size:11px}
+.pods td{border-top:1px solid #eef2ef;padding:6px 9px;vertical-align:top}
+tr.s_tak td{background:var(--grnbg)}
+tr.s_brak_danych td{background:#fafbfa;color:var(--mut)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:11px 14px;font-size:13px;color:#17435f;border-radius:0 4px 4px 0;margin:10px 0}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:11px 14px;font-size:13px;color:#6d4410;border-radius:0 4px 4px 0;margin:10px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:11px 14px;font-size:13px;color:#17512a;border-radius:0 4px 4px 0;margin:10px 0}
+.note ul,.warn ul{margin:6px 0 0 18px;padding:0}
+.meta{font-size:12.5px;color:var(--mut)}
+.wpl{font-size:10.5px;padding:1px 8px;border-radius:10px}
+.wplp{background:var(--grnbg);color:var(--grn)}
+.wplm{background:var(--redbg);color:var(--red)}
+.wpln{background:#eef2ef;color:var(--mut)}
+.blokada{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:6px;padding:26px 24px;text-align:center}
+.blokada h3{margin:0 0 8px;font-size:17px;color:var(--forest)}
+.blokada p{margin:0 auto 14px;font-size:13.5px;color:var(--mut);max-width:560px}
+#widok_spec{padding:20px 26px 70px;max-width:1400px}
+#widok_spec h2{font-size:18px;color:var(--forest);margin:26px 0 4px}
+#widok_spec .sub{color:var(--mut);font-size:12.5px;margin:0 0 10px}
+#widok_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:10px}
+#widok_spec th{background:var(--forest);color:#fff;text-align:left;padding:6px 9px;font-size:11px}
+#widok_spec td{border-top:1px solid #eef2ef;padding:6px 9px;vertical-align:top}
+#widok_spec tr.sub2 td{background:#f7faf8}
+#widok_spec tr.sub2 td:nth-child(2){padding-left:24px;border-left:3px solid #c6ddcd}
+pre{background:#f6f8f7;border:1px solid var(--line);border-left:4px solid var(--leaf);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--forest);color:#fff;border:0;border-radius:4px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px}
+.nw{display:inline-block;background:var(--grnbg);color:var(--grn);font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:5px}
+.help{color:var(--mut);font-size:12px;margin-top:3px}
+@media(max-width:900px){.ukl{grid-template-columns:1fr}#rail{position:static;flex-direction:row;flex-wrap:wrap}.railb{flex:1 1 150px}}
+@media print{.pasekbox,#rail,.tabs,.stopka{display:none}.ukl{display:block}.q{break-inside:avoid}}
+
+/* ── 4.1 v1.5: istotność, łańcuch wniosku, ostrzeżenia merytoryczne ── */
+.metka{font-size:12px;color:var(--mut);margin-right:4px;align-self:center}
+.lancuch{margin-top:10px;padding:11px 13px;background:#fbfdfc;border:1px solid var(--line);border-left:4px solid var(--leaf);border-radius:0 6px 6px 0}
+.lanctyt{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);margin-bottom:7px}
+.lancuch .pole{margin-bottom:7px}
+.lancuch .pole:last-child{margin-bottom:0}
+.lancuch label{display:block;font-size:12px;color:var(--mut);margin-bottom:3px}
+.lancuch input{width:100%;border:1px solid var(--line);border-radius:4px;padding:6px 9px;font:inherit;font-size:13px;background:#fff}
+.lancuch input:focus{border-color:var(--leaf);outline:0}
+.ostrz{margin-top:8px;background:var(--amberbg);border-left:4px solid var(--amber);padding:9px 12px;font-size:12.5px;color:#6d4410;border-radius:0 4px 4px 0}
+</style></head><body>
+<header>
+ <h1>Profil zakładu — ankieta</h1>
+ <p>Punkt 3.6 platformy · projekt wersji 1.4 · 92 pytań w 6 sekcjach, w tym 33 warunkowych · ok. 37 min</p>
+ <div class="tabs">
+  <button id="tab_a" class="akt" onclick="zakladka('a')">Ankieta — do wypełnienia</button>
+  <button id="tab_s" onclick="zakladka('s')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="widok_ankieta">
+ <div class="pasekbox">
+  <div class="tor"><div id="pasek"></div></div>
+  <span class="pc" id="procent"></span>
+  <button type="button" onclick="przyklad()">Wypełnij przykładem</button>
+  <button type="button" onclick="pobierzJSON()">Pobierz odpowiedzi (JSON)</button>
+  <button type="button" onclick="document.getElementById('plik').click()">Wczytaj plik</button>
+  <input id="plik" type="file" accept="application/json" style="display:none" onchange="if(this.files[0])wczytajPlik(this.files[0])">
+  <button type="button" onclick="window.print()">Drukuj</button>
+  <button type="button" onclick="wyczyscWszystko()">Wyczyść</button>
+ </div>
+ <div class="ukl">
+  <aside id="rail"></aside>
+  <div>
+   <div id="sekcje"></div>
+   <div id="podsumowanie" style="display:none"><div id="podtresc"></div></div>
+  </div>
+ </div>
+</div>
+
+<div id="widok_spec" style="display:none"><div class='note'><b>Ta zakładka jest specyfikacją dla programisty.</b> Ankieta do wypełnienia jest w zakładce obok.
+Poniżej te same pytania w formie tabel, zmiany w bibliotece 4.1 oraz komplet danych w JSON.</div><h2>1. Organizacja i obiekty</h2><p class='sub'>Wypełnia: <b>Energy Manager</b> · 17 pytań · ok. 6 min</p><table><tr><th style='width:15%'>Kod</th><th style='width:34%'>Pytanie</th><th style='width:22%'>Odpowiedź</th><th style='width:16%'>Pokaż gdy</th><th style='width:13%'>Steruje</th></tr><tr><td class='mono'>FAKT_LOKALIZACJE</td><td>Ile lokalizacji obejmie system zarządzania energią?<div class=help>Liczymy odrębne adresy: zakład, magazyn zewnętrzny, oddział. Biuro w tym samym budynku to ta sama lokalizacja.</div></td><td>number [szt.]</td><td class='mono'>—</td><td class='mono'>WO-08</td></tr><tr class='sub2'><td class='mono'>FAKT_LOKALIZACJE_LISTA</td><td>Wymień lokalizacje<span class=nw>nowe</span><div class=help>Lista trafi do dokumentu zakresu systemu (pkt 4.3).</div></td><td>tabela: nazwa; adres; rodzaj; czy w zakresie systemu</td><td class='mono'>FAKT_LOKALIZACJE &gt; 0</td><td class='mono'>4.3</td></tr><tr><td class='mono'>FAKT_BRANZA</td><td>Główna działalność zakładu<span class=nw>nowe</span><div class=help>Kod PKD albo krótki opis, np. „produkcja elementów złącznych”. Służy do dobierania przykładów i porównań branżowych.</div></td><td>text</td><td class='mono'>—</td><td class='mono'>tagi biblioteki</td></tr><tr><td class='mono'>FAKT_PRACOWNICY</td><td>Liczba pracowników<span class=nw>nowe</span><div class=help>Łącznie we wszystkich lokalizacjach objętych systemem. Wartość przybliżona wystarczy.</div></td><td>number [osób]</td><td class='mono'>—</td><td class='mono'>7.2, 7.3</td></tr><tr><td class='mono'>FAKT_ZMIANY</td><td>Ile zmian pracuje zakład?<div class=help>Wartość 4 oznacza ruch ciągły — praca także w weekendy i święta.</div></td><td>1 | 2 | 3 | 4</td><td class='mono'>—</td><td class='mono'>WO-09</td></tr><tr><td class='mono'>FAKT_SEZONOWOSC</td><td>Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?<div class=help>Np. sezon produkcyjny, przestoje letnie, kampania cukrownicza.</div></td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZM-09</td></tr><tr><td class='mono'>FAKT_PODMIOT</td><td>Typ organizacji<div class=help>Spółka komunalna i podmiot publiczny stosują procedury zamówień publicznych.</div></td><td>prywatny | komunalny | publiczny</td><td class='mono'>—</td><td class='mono'>ZR-10</td></tr><tr><td class='mono'>FAKT_GRUPA_KAPITALOWA</td><td>Czy organizacja należy do grupy kapitałowej?<div class=help>Grupa często narzuca własne cele klimatyczne i sposób raportowania.</div></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>STK-W-02</td></tr><tr><td class='mono'>FAKT_ZWIAZKI</td><td>Czy działają związki zawodowe lub rada pracowników?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>STK-W-10</td></tr><tr><td class='mono'>FAKT_SYSTEM_BAZOWY</td><td>Czy organizacja ma wdrożony system zarządzania?<div class=help>Chodzi o system certyfikowany. Decyduje o trybie wdrożenia: od podstaw albo nadbudowa na istniejącym systemie.</div></td><td>brak — Brak certyfikowanego systemu | iso_9001 — ISO 9001 | iso_14001 — ISO 14001 | oba — ISO 9001 i ISO 14001 | inny — Inny system certyfikowany</td><td class='mono'>—</td><td class='mono'>WO-03 · tryb</td></tr><tr class='sub2'><td class='mono'>FAKT_SYSTEM_BAZOWY_ROK</td><td>Od którego roku system jest certyfikowany?<span class=nw>nowe</span></td><td>year</td><td class='mono'>FAKT_SYSTEM_BAZOWY != brak</td><td class='mono'>—</td></tr><tr class='sub2'><td class='mono'>FAKT_ZGODA_INTEGRACJA</td><td>Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?<div class=help>„Tak” oznacza, że nie tworzymy osobnych dokumentów, tylko rozszerzamy Wasze istniejące.</div></td><td>tak — Tak — rozszerzamy istniejącą dokumentację | nie — Nie — tworzymy odrębny system | brak decyzji — Decyzja jeszcze nie zapadła</td><td class='mono'>FAKT_SYSTEM_BAZOWY != brak</td><td class='mono'>tryb</td></tr><tr><td class='mono'>FAKT_ENERGY_MANAGER</td><td>Czy wyznaczono osobę odpowiedzialną za energię?<div class=help>Norma wymaga w klauzuli 5.3 wyznaczenia zespołu i przypisania odpowiedzialności na piśmie.</div></td><td>nie — Nie wyznaczono nikogo | nieformalnie — Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków | tak — Tak, z pisemnym zakresem obowiązków</td><td class='mono'>—</td><td class='mono'>WO-01, WO-02 · 5.3</td></tr><tr><td class='mono'>FAKT_UR_WLASNE</td><td>Kto prowadzi utrzymanie ruchu?<div class=help>Chodzi o bieżącą obsługę i przeglądy urządzeń energetycznych, nie o remonty inwestycyjne.</div></td><td>wlasne — Własne służby utrzymania ruchu | zewnetrzne — Firma zewnętrzna | mieszane — Częściowo własne służby, część prac zlecana</td><td class='mono'>—</td><td class='mono'>WO-11 · STK-Z-14</td></tr><tr><td class='mono'>FAKT_INSTRUKCJE_EKSPL</td><td>Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?<span class=nw>nowe</span><div class=help>Instrukcje używane w praktyce przez operatorów, nie tylko DTR od producenta.</div></td><td>tak — Tak, dla wszystkich głównych urządzeń | czesciowo — Dla części urządzeń | nie — Nie ma</td><td class='mono'>—</td><td class='mono'>WO-05 · 8.1</td></tr><tr><td class='mono'>FAKT_ZAKUPY_KRYTERIA</td><td>Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?<span class=nw>nowe</span><div class=help>Chodzi o urządzenia zużywające energię: silniki, sprężarki, piece, oświetlenie.</div></td><td>zawsze — Zawsze — to stałe kryterium zakupowe | czasami — Czasami, przy większych zakupach | nie — Nie — decyduje cena zakupu</td><td class='mono'>—</td><td class='mono'>WO-04 · 8.3</td></tr><tr><td class='mono'>FAKT_ROTACJA</td><td>Rotacja pracowników produkcji i utrzymania ruchu w skali roku<span class=nw>nowe</span><div class=help>Odejścia w stosunku do stanu zatrudnienia. Wysoka rotacja oznacza, że wiedza o eksploatacji urządzeń ucieka z zakładu.</div></td><td>niska — Niska — poniżej 5% rocznie | srednia — Średnia — od 5 do 15% rocznie | wysoka — Wysoka — powyżej 15% rocznie</td><td class='mono'>—</td><td class='mono'>WO-10 · 7.2</td></tr></table><h2>2. Energia i koszty</h2><p class='sub'>Wypełnia: <b>Kontroling / finanse</b> · 20 pytań · ok. 7 min</p><table><tr><th style='width:15%'>Kod</th><th style='width:34%'>Pytanie</th><th style='width:22%'>Odpowiedź</th><th style='width:16%'>Pokaż gdy</th><th style='width:13%'>Steruje</th></tr><tr><td class='mono'>FAKT_ROK_ODNIESIENIA</td><td>Za który rok podajesz dane?<span class=nw>nowe</span><div class=help>Ostatni zamknięty rok kalendarzowy. Wszystkie dane w tej sekcji dotyczą tego samego roku.</div></td><td>year</td><td class='mono'>—</td><td class='mono'>ZUZYCIE_TJ</td></tr><tr><td class='mono'>FAKT_NOSNIKI</td><td>Zużycie nośników energii w roku odniesienia<span class=nw>nowe</span><div class=help>Dane z faktur. Energia zakupiona oraz paliwa spalone we własnych źródłach. Nie odejmujemy energii sprzedanej. Nie dodajemy osobno energii wyprodukowanej z tych paliw.</div></td><td>tabela: nośnik; ilość; jednostka; koszt roczny netto, zł (opcjonalnie)</td><td class='mono'>—</td><td class='mono'>ZUZYCIE_TJ · 6.3</td></tr><tr><td class='mono'>ZUZYCIE_TJ</td><td>Roczne zużycie energii w TJ<div class=help>Liczone automatycznie z tabeli nośników. Decyduje o obowiązkach prawnych: poniżej 10, od 10 do 85, powyżej 85 TJ. Przeliczniki: gaz ziemny 0,0395 GJ/m³ (10,97 kWh/m³ — gaz wysokometanowy E), LPG 0,0246 GJ/l, olej napędowy 0,0386 GJ/l, energia elektryczna i ciepło 3,6 GJ/MWh. Książka zaokrągla gaz do 10 kWh/m³ dla czytelności obliczeń, dlatego przykład AutoParts wychodzi tu na 44,9 TJ zamiast 43 TJ z Załącznika III-02 — ten sam przedział obowiązków.</div></td><td>wyliczane automatycznie [TJ]</td><td class='mono'>—</td><td class='mono'>ZR-01, ZR-02, ZR-11</td></tr><tr><td class='mono'>FAKT_PRODUKCJA_JEDN</td><td>W czym mierzycie wielkość produkcji?<span class=nw>nowe</span><div class=help>Jednostka, w której będziecie liczyć wskaźniki wyniku energetycznego — na przykład kWh na tonę wyrobu. Dla zakładu wielobranżowego wybierzcie jednostkę wyrobu głównego.</div></td><td>t — tony wyrobu | szt — sztuki wyrobu | m2 — metry kwadratowe | m3 — metry sześcienne | mwh — MWh wyrobu (ciepło, chłód) | inna — Inna jednostka</td><td class='mono'>—</td><td class='mono'>6.4, 6.5</td></tr><tr class='sub2'><td class='mono'>FAKT_PRODUKCJA_INNA</td><td>Jaka jednostka?<span class=nw>nowe</span></td><td>text</td><td class='mono'>FAKT_PRODUKCJA_JEDN = inna</td><td class='mono'>6.4</td></tr><tr><td class='mono'>FAKT_PRODUKCJA</td><td>Wielkość produkcji w roku odniesienia<span class=nw>nowe</span><div class=help>W jednostce wskazanej wyżej. To najczęstsza zmienna istotna we wskaźnikach — bez niej wskaźnik pokazuje wahania produkcji, a nie efektywności.</div></td><td>number</td><td class='mono'>—</td><td class='mono'>6.3, 6.4, 6.5</td></tr><tr><td class='mono'>FAKT_PRODUKCJA_POPRZ</td><td>Wielkość produkcji w roku poprzednim<span class=nw>nowe</span><div class=help>Potrzebna do porównania „rok temu — dziś” i do oceny, czy zmiana zużycia wynika ze zmiany produkcji.</div></td><td>number</td><td class='mono'>—</td><td class='mono'>6.5</td></tr><tr><td class='mono'>FAKT_HDD</td><td>Stopniodni grzania (HDD) w roku odniesienia<span class=nw>nowe</span><div class=help>Miara surowości sezonu grzewczego dla Waszej lokalizacji — z IMGW albo z serwisów pogodowych. Zostaw puste, jeśli ogrzewanie nie ma u Was znaczenia dla zużycia.</div></td><td>number [°C·dzień]</td><td class='mono'>—</td><td class='mono'>6.4, 6.5</td></tr><tr class='sub2'><td class='mono'>FAKT_HDD_POPRZ</td><td>Stopniodni grzania w roku poprzednim<span class=nw>nowe</span><div class=help>Bez porównywalnej pogody nie da się rozstrzygnąć, czy wynik poprawiliście, czy zima była łagodniejsza.</div></td><td>number [°C·dzień]</td><td class='mono'>FAKT_HDD &gt; 0</td><td class='mono'>6.5</td></tr><tr><td class='mono'>FAKT_PRZYCHOD</td><td>Przychód ze sprzedaży w roku odniesienia<span class=nw>nowe</span><div class=help>Opcjonalne. Służy wyłącznie do wskaźnika zarządczego typu GJ na milion złotych przychodu — przydatnego w rozmowie z zarządem, ale nieobowiązkowego.</div></td><td>number [mln zł]</td><td class='mono'>—</td><td class='mono'>6.4</td></tr><tr><td class='mono'>FAKT_UDZIAL_ENERGII</td><td>Jaki procent kosztów operacyjnych stanowi energia?<div class=help>Wartość przybliżona. Jeśli nie liczycie tego wskaźnika, zostaw puste — policzymy z kosztu energii i kosztów operacyjnych.</div></td><td>number [%]</td><td class='mono'>—</td><td class='mono'>WF-01, WF-02</td></tr><tr><td class='mono'>FAKT_MOC_UMOWNA</td><td>Moc umowna energii elektrycznej<span class=nw>nowe</span><div class=help>Z umowy dystrybucyjnej albo z faktury. Przy kilku przyłączach — suma.</div></td><td>number [kW]</td><td class='mono'>—</td><td class='mono'>STK-Z-08</td></tr><tr><td class='mono'>FAKT_MOC_OGRANICZONA</td><td>Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?</td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZM-05</td></tr><tr><td class='mono'>FAKT_UMOWA_WYGASA</td><td>Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?</td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZM-02</td></tr><tr class='sub2'><td class='mono'>FAKT_UMOWA_DATA</td><td>Data wygaśnięcia umowy<span class=nw>nowe</span><div class=help>Pole informacyjne, nie wpływa na dobór czynników.</div></td><td>date</td><td class='mono'>FAKT_UMOWA_WYGASA = tak</td><td class='mono'>—</td></tr><tr><td class='mono'>FAKT_BUDZET</td><td>Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>WF-03</td></tr><tr><td class='mono'>FAKT_PBT_PROG</td><td>Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?</td><td>number [lat]</td><td class='mono'>—</td><td class='mono'>WF-04</td></tr><tr><td class='mono'>FAKT_INWESTYCJE</td><td>Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?<div class=help>Nowa linia, rozbudowa hali, wymiana źródła ciepła.</div></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>WF-07</td></tr><tr class='sub2'><td class='mono'>FAKT_INWESTYCJE_OPIS</td><td>Jakie?<span class=nw>nowe</span></td><td>text</td><td class='mono'>FAKT_INWESTYCJE = tak</td><td class='mono'>6.5</td></tr><tr><td class='mono'>FAKT_BIALE_MOZLIWE</td><td>Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?</td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>WF-05</td></tr></table><h2>3. Instalacje zasilane energią elektryczną</h2><p class='sub'>Wypełnia: <b>Utrzymanie ruchu</b> · 21 pytań · ok. 9 min</p><table><tr><th style='width:15%'>Kod</th><th style='width:34%'>Pytanie</th><th style='width:22%'>Odpowiedź</th><th style='width:16%'>Pokaż gdy</th><th style='width:13%'>Steruje</th></tr><tr><td class='mono'>FAKT_SPREZONE</td><td>Czy zakład ma instalację sprężonego powietrza?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>filtr grupy CA</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_LICZBA</td><td>Ile jest sprężarek?<span class=nw>nowe</span><div class=help>Łącznie z rezerwowymi.</div></td><td>number [szt.]</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>6.3</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_MOC</td><td>Łączna moc znamionowa sprężarek<span class=nw>nowe</span><div class=help>Suma z tabliczek znamionowych.</div></td><td>number [kW]</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>6.3 · kandydat SEU</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_VSD</td><td>Ile sprężarek ma regulację obrotów (falownik)?<span class=nw>nowe</span></td><td>number [szt.]</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>nowy czynnik</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_STEROWNIK</td><td>Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?<span class=nw>nowe</span><div class=help>Jedno urządzenie, które decyduje, które sprężarki włączyć i w jakiej kolejności. Nie chodzi o sterowniki w samych sprężarkach.</div></td><td>tak | nie | nie wiem</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>WT-05</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_SZCZELNOSC</td><td>Czy w ostatnich 12 miesiącach badano szczelność instalacji?<span class=nw>nowe</span><div class=help>Np. przeglądem z detektorem ultradźwiękowym albo pomiarem przecieków w dzień wolny.</div></td><td>tak | nie | nie wiem</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>WT-06</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_ODZYSK</td><td>Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?<span class=nw>nowe</span></td><td>tak | nie | nie wiem</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>nowy czynnik</td></tr><tr class='sub2'><td class='mono'>FAKT_CA_GODZINY</td><td>Ile godzin w roku pracuje sprężarkownia?<span class=nw>nowe</span><div class=help>Szacunkowo. Ruch ciągły to około 8 000 godzin.</div></td><td>number [h/rok]</td><td class='mono'>FAKT_SPREZONE = tak</td><td class='mono'>6.3</td></tr><tr><td class='mono'>FAKT_WENT</td><td>Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?<span class=nw>nowe</span></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>filtr grupy VAC</td></tr><tr class='sub2'><td class='mono'>FAKT_WENT_LICZBA</td><td>Ile jest central?<span class=nw>nowe</span></td><td>number [szt.]</td><td class='mono'>FAKT_WENT = tak</td><td class='mono'>6.3</td></tr><tr class='sub2'><td class='mono'>FAKT_WENT_ODZYSK</td><td>Czy centrale mają odzysk ciepła?<span class=nw>nowe</span></td><td>wszystkie — Wszystkie centrale mają odzysk | czesc — Część central ma odzysk | zadna — Żadna nie ma odzysku | nie wiem — Nie wiem</td><td class='mono'>FAKT_WENT = tak</td><td class='mono'>nowy czynnik</td></tr><tr class='sub2'><td class='mono'>FAKT_WENT_HARMONOGRAM</td><td>Czy centrale są wyłączane albo zwalniane poza godzinami pracy?<span class=nw>nowe</span></td><td>tak — Tak, wszystkie | czesciowo — Część central | nie — Nie — pracują tak samo cały czas</td><td class='mono'>FAKT_WENT = tak</td><td class='mono'>nowy czynnik</td></tr><tr><td class='mono'>FAKT_CHLODZENIE</td><td>Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>ZK-03</td></tr><tr class='sub2'><td class='mono'>FAKT_CHLODZENIE_MOC</td><td>Łączna moc chłodnicza<span class=nw>nowe</span><div class=help>Szacunkowo, jeśli brak danych.</div></td><td>number [kW]</td><td class='mono'>FAKT_CHLODZENIE = tak</td><td class='mono'>6.3</td></tr><tr class='sub2'><td class='mono'>FAKT_CHLODZENIE_WODNE</td><td>Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?</td><td>tak | nie</td><td class='mono'>FAKT_CHLODZENIE = tak</td><td class='mono'>ZK-06</td></tr><tr><td class='mono'>FAKT_FGAZ</td><td>Czy są urządzenia zawierające fluorowane gazy cieplarniane?<div class=help>Urządzenia chłodnicze, klimatyzacyjne, pompy ciepła. Mają karty w Centralnym Rejestrze Operatorów.</div></td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZR-07</td></tr><tr><td class='mono'>FAKT_NAPEDY_VSD</td><td>Jaka część dużych silników — pompy, wentylatory — ma falowniki?<span class=nw>nowe</span></td><td>brak — Żaden albo pojedyncze | czesc — Mniej więcej połowa | wiekszosc — Większość | nie wiem — Nie wiem</td><td class='mono'>—</td><td class='mono'>nowy czynnik</td></tr><tr><td class='mono'>FAKT_LED_UDZIAL</td><td>Jaki procent oświetlenia stanowią źródła LED?<span class=nw>nowe</span><div class=help>Szacunkowo, w odniesieniu do mocy zainstalowanej oświetlenia.</div></td><td>number [%]</td><td class='mono'>—</td><td class='mono'>ZT-04</td></tr><tr><td class='mono'>FAKT_OSW_STEROWANIE</td><td>Jak sterowane jest oświetlenie hal?<span class=nw>nowe</span></td><td>czujniki — Czujniki ruchu albo natężenia światła | harmonogram — Automatyczny harmonogram | recznie — Ręcznie — włącznikiem</td><td class='mono'>—</td><td class='mono'>nowy czynnik</td></tr><tr><td class='mono'>FAKT_WIEK_INFRA</td><td>Ile lat ma większość głównych urządzeń energetycznych?</td><td>number [lat]</td><td class='mono'>—</td><td class='mono'>WT-04</td></tr><tr><td class='mono'>FAKT_UDT</td><td>Czy eksploatowane są urządzenia pod dozorem technicznym UDT?<div class=help>Zbiorniki ciśnieniowe, kotły, dźwignice, wózki widłowe.</div></td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZR-06</td></tr></table><h2>4. Ciepło, procesy i źródła własne</h2><p class='sub'>Wypełnia: <b>Utrzymanie ruchu</b> · 18 pytań · ok. 7 min</p><table><tr><th style='width:15%'>Kod</th><th style='width:34%'>Pytanie</th><th style='width:22%'>Odpowiedź</th><th style='width:16%'>Pokaż gdy</th><th style='width:13%'>Steruje</th></tr><tr><td class='mono'>FAKT_KOTLOWNIA</td><td>Skąd pochodzi ciepło zużywane w zakładzie?<div class=help>Chodzi o ciepło na ogrzewanie i na procesy łącznie. Para technologiczna liczy się jako własne źródło.</div></td><td>wlasne — Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła) | siec — Wyłącznie z sieci ciepłowniczej | oba — Z własnego źródła i z sieci ciepłowniczej | brak — Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym</td><td class='mono'>—</td><td class='mono'>WT-12 · STK-Z-10</td></tr><tr class='sub2'><td class='mono'>FAKT_CIEPLO_PALIWO</td><td>Czym zasilane jest własne źródło ciepła?<span class=nw>nowe</span></td><td>wielokrotny: gaz ziemny, olej, węgiel, biomasa, biogaz, pompa ciepła, energia elektryczna</td><td class='mono'>FAKT_KOTLOWNIA IN (wlasne, oba)</td><td class='mono'>ZT-05</td></tr><tr><td class='mono'>FAKT_CIEPLO_PALIWA</td><td>Czy ciepło wytwarzane jest z paliw kopalnych?<div class=help>Wyliczane: tak, jeśli wśród paliw własnego źródła jest gaz ziemny, olej albo węgiel. Przy cieple z sieci wynik zależy od paliwa dostawcy — pole pokazuje „do potwierdzenia”.</div></td><td>wyliczane automatycznie</td><td class='mono'>—</td><td class='mono'>ZT-05</td></tr><tr class='sub2'><td class='mono'>FAKT_KOTLOWNIA_MOC</td><td>Moc zainstalowana źródeł ciepła<span class=nw>nowe</span></td><td>number [kW]</td><td class='mono'>FAKT_KOTLOWNIA IN (wlasne, oba)</td><td class='mono'>6.3</td></tr><tr class='sub2'><td class='mono'>FAKT_KOTLOWNIA_WIEK</td><td>Wiek najstarszego czynnego kotła<span class=nw>nowe</span></td><td>number [lat]</td><td class='mono'>FAKT_KOTLOWNIA IN (wlasne, oba)</td><td class='mono'>6.3</td></tr><tr class='sub2'><td class='mono'>FAKT_CIEPLO_MOC_ZAMOWIONA</td><td>Zamówiona moc cieplna z sieci<span class=nw>nowe</span><div class=help>Z umowy z dostawcą ciepła. Zawyżona moc zamówiona to typowy, łatwy do usunięcia koszt stały.</div></td><td>number [kW]</td><td class='mono'>FAKT_KOTLOWNIA IN (siec, oba)</td><td class='mono'>STK-Z-10 · 6.3</td></tr><tr><td class='mono'>FAKT_PROCESY</td><td>Które procesy zużywają najwięcej energii?<span class=nw>nowe</span><div class=help>Zaznacz maksymalnie trzy. To wstępne wskazanie kandydatów na znaczące obszary zużycia.</div></td><td>wielokrotny: piece i nagrzewnice, suszarnie, wtryskarki i wytłaczarki, prasy, malarnia, galwanizernia, pompy procesowe, chłodzenie procesu, inne</td><td class='mono'>—</td><td class='mono'>6.3 · kandydat SEU</td></tr><tr><td class='mono'>FAKT_CIEPLO_ODPADOWE</td><td>Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?<div class=help>Spaliny, gorące powietrze z pieców i suszarni, woda chłodząca, ciepło ze sprężarek.</div></td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>WT-14, ZT-08</td></tr><tr class='sub2'><td class='mono'>FAKT_ODZYSK_CIEPLA</td><td>Czy to ciepło jest odzyskiwane?<span class=nw>nowe</span></td><td>tak — Tak, w całości albo prawie w całości | czesciowo — Częściowo | nie — Nie jest odzyskiwane</td><td class='mono'>FAKT_CIEPLO_ODPADOWE = tak</td><td class='mono'>WT-14</td></tr><tr><td class='mono'>FAKT_PROCES_BEZ_ALTERNATYWY</td><td>Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?<div class=help>Np. piec gazowy, dla którego nie ma dojrzałej alternatywy elektrycznej.</div></td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZT-06</td></tr><tr><td class='mono'>FAKT_PV</td><td>Czy zakład ma instalację fotowoltaiczną?</td><td>tak — Tak, działa | nie — Nie | w planach — W planach albo w budowie</td><td class='mono'>—</td><td class='mono'>WT-07, WT-08</td></tr><tr class='sub2'><td class='mono'>FAKT_PV_MOC</td><td>Moc instalacji fotowoltaicznej<span class=nw>nowe</span></td><td>number [kWp]</td><td class='mono'>FAKT_PV = tak</td><td class='mono'>6.5</td></tr><tr><td class='mono'>FAKT_BESS</td><td>Czy zakład ma magazyn energii?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>WT-08</td></tr><tr class='sub2'><td class='mono'>FAKT_BESS_POJ</td><td>Pojemność magazynu<span class=nw>nowe</span></td><td>number [kWh]</td><td class='mono'>FAKT_BESS = tak</td><td class='mono'>—</td></tr><tr><td class='mono'>FAKT_CHP</td><td>Czy zakład ma kogenerację?<div class=help>Jednoczesna produkcja prądu i ciepła, np. z gazu albo biogazu.</div></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>WT-09</td></tr><tr class='sub2'><td class='mono'>FAKT_CHP_MOC</td><td>Moc elektryczna kogeneracji<span class=nw>nowe</span></td><td>number [kWe]</td><td class='mono'>FAKT_CHP = tak</td><td class='mono'>6.5</td></tr><tr><td class='mono'>FAKT_FLOTA</td><td>Czy w zakresie systemu jest flota pojazdów?<div class=help>Samochody, ciężarówki, maszyny jezdne. Wózki widłowe liczymy tylko spalinowe.</div></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>WT-13</td></tr><tr class='sub2'><td class='mono'>FAKT_FLOTA_LICZBA</td><td>Liczba pojazdów<span class=nw>nowe</span></td><td>number [szt.]</td><td class='mono'>FAKT_FLOTA = tak</td><td class='mono'>6.3</td></tr></table><h2>5. Opomiarowanie i dane</h2><p class='sub'>Wypełnia: <b>Utrzymanie ruchu / automatyka</b> · 8 pytań · ok. 4 min</p><table><tr><th style='width:15%'>Kod</th><th style='width:34%'>Pytanie</th><th style='width:22%'>Odpowiedź</th><th style='width:16%'>Pokaż gdy</th><th style='width:13%'>Steruje</th></tr><tr><td class='mono'>FAKT_PODLICZNIKI</td><td>Jak opomiarowana jest energia elektryczna?<div class=help>brak = tylko licznik na przyłączu; częściowo = główne rozdzielnie albo hale; kompleksowo = pojedyncze duże urządzenia.</div></td><td>brak — Tylko licznik główny | czesciowo — Podliczniki na części obiektów lub wydziałów | kompleksowo — Podliczniki na wszystkich znaczących odbiorach</td><td class='mono'>—</td><td class='mono'>WT-01, WT-02, WT-03, ZT-03</td></tr><tr class='sub2'><td class='mono'>FAKT_PODLICZNIKI_LICZBA</td><td>Ile jest podliczników?<span class=nw>nowe</span></td><td>number [szt.]</td><td class='mono'>FAKT_PODLICZNIKI != brak</td><td class='mono'>6.6</td></tr><tr class='sub2'><td class='mono'>FAKT_ODCZYT</td><td>Jak odczytywane są liczniki?<span class=nw>nowe</span></td><td>recznie — Ręcznie, spisywane z liczników | zdalnie — Zdalnie, automatycznie do systemu | mieszane — Część ręcznie, część zdalnie</td><td class='mono'>FAKT_PODLICZNIKI != brak</td><td class='mono'>6.6</td></tr><tr><td class='mono'>FAKT_SCADA</td><td>Czy działa system SCADA, BMS albo inny system nadrzędny?<div class=help>System, w którym na ekranie widać pracę urządzeń na bieżąco.</div></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>WT-10, WT-11</td></tr><tr class='sub2'><td class='mono'>FAKT_SCADA_ZAKRES</td><td>Jaki procent zużycia energii obejmuje?<span class=nw>nowe</span><div class=help>Szacunkowo.</div></td><td>number [%]</td><td class='mono'>FAKT_SCADA = tak</td><td class='mono'>6.6</td></tr><tr><td class='mono'>FAKT_DANE_HISTORIA</td><td>Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?<span class=nw>nowe</span><div class=help>Dane z podliczników, SCADA, arkuszy odczytów. Zero, jeśli są tylko faktury.</div></td><td>number [mies.]</td><td class='mono'>—</td><td class='mono'>6.5</td></tr><tr><td class='mono'>FAKT_MES</td><td>Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>ZT-07</td></tr><tr><td class='mono'>FAKT_ANALIZA_DANYCH</td><td>Czy dane o zużyciu energii są analizowane?<div class=help>nie = faktury służą tylko do płacenia; okresowo = raz na kwartał albo rok; systematycznie = co miesiąc albo częściej.</div></td><td>nie | okresowo | systematycznie</td><td class='mono'>—</td><td class='mono'>WO-06</td></tr></table><h2>6. Otoczenie prawne i rynkowe</h2><p class='sub'>Wypełnia: <b>Energy Manager</b> · 8 pytań · ok. 4 min</p><table><tr><th style='width:15%'>Kod</th><th style='width:34%'>Pytanie</th><th style='width:22%'>Odpowiedź</th><th style='width:16%'>Pokaż gdy</th><th style='width:13%'>Steruje</th></tr><tr><td class='mono'>FAKT_AUDYT_ENERG</td><td>Czy wykonano audyt energetyczny przedsiębiorstwa?<div class=help>Audyt w rozumieniu ustawy o efektywności energetycznej, zgłaszany do URE.</div></td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZR-03</td></tr><tr class='sub2'><td class='mono'>FAKT_AUDYT_ROK</td><td>W którym roku?<span class=nw>nowe</span></td><td>year</td><td class='mono'>FAKT_AUDYT_ENERG = tak</td><td class='mono'>6.3</td></tr><tr><td class='mono'>FAKT_ETS</td><td>Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?</td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZR-04</td></tr><tr><td class='mono'>FAKT_CSRD</td><td>Czy organizacja raportuje zgodnie z CSRD / ESRS?</td><td>tak | nie | nie wiem</td><td class='mono'>—</td><td class='mono'>ZR-05</td></tr><tr class='sub2'><td class='mono'>FAKT_CSRD_ROK</td><td>Od którego roku?<span class=nw>nowe</span></td><td>year</td><td class='mono'>FAKT_CSRD = tak</td><td class='mono'>—</td></tr><tr><td class='mono'>FAKT_ODBIORCY_CO2</td><td>Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?<div class=help>Ankiety od klientów, wymagania w umowach, pytania w zapytaniach ofertowych.</div></td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>ZM-03, ZM-04 · STK-Z-12</td></tr><tr><td class='mono'>FAKT_PRZETARGI</td><td>Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>ZM-07</td></tr><tr><td class='mono'>FAKT_PRZERWY_POGODA</td><td>Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?</td><td>tak | nie</td><td class='mono'>—</td><td class='mono'>ZK-05</td></tr></table><h2>Pytania, które zostają w punkcie 4.1</h2><p class='sub'>Oceny wymagane przez klauzulę, nie fakty o zakładzie.</p><table><tr><th>Kod</th><th>Pytanie</th><th>Odpowiedzi</th><th>Dlaczego nie w profilu</th></tr><tr><td class='mono'>FAKT_KLIMAT_ISTOTNY</td><td>Czy zmiana klimatu jest istotnym czynnikiem dla systemu zarządzania energią?</td><td>tak | nie  +  uzasadnienie (wymagane przy „nie”)</td><td>To nie jest fakt o zakładzie, tylko ocena, której norma wymaga w klauzuli 4.1. Musi zostać udokumentowana w tym punkcie. Odpowiedzi „nie oceniano” nie przewidujemy — brak odpowiedzi blokuje przekazanie sekcji.</td></tr></table><h2>Co zmienia się w bibliotece 4.1</h2><p class='sub'>Dzięki precyzyjnym pytaniom 7 czynników przestaje być oceną klienta i staje się propozycją opartą na fakcie. Liczba OCEN spada z 19 do 12.</p><table><tr><th>Kod</th><th>Czynnik</th><th>Warunek dotychczas</th><th>Rodzaj</th><th>Nowy warunek</th><th>Nowy rodzaj</th></tr><tr><td class='mono'>KTX-WT-05</td><td>brak sterowania nadrzędnego sprężarek</td><td class='mono'>FAKT_SPREZONE = tak</td><td>OCENA</td><td class='mono'>FAKT_CA_STEROWNIK = nie</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WT-06</td><td>brak kontroli szczelności</td><td class='mono'>FAKT_SPREZONE = tak</td><td>OCENA</td><td class='mono'>FAKT_CA_SZCZELNOSC = nie</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WT-14</td><td>brak odzysku ciepła odpadowego</td><td class='mono'>FAKT_CIEPLO_ODPADOWE = tak</td><td>OCENA</td><td class='mono'>FAKT_CIEPLO_ODPADOWE = tak AND FAKT_ODZYSK_CIEPLA = nie</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WO-03</td><td>brak systemu zarządzania</td><td class='mono'>FAKT_SYSTEM_BAZOWY = brak OR FAKT_ZGODA_INTEGRACJA = nie</td><td>OCENA</td><td class='mono'>FAKT_SYSTEM_BAZOWY = brak</td><td><b>AUTO</b></td></tr><tr><td class='mono'>KTX-WO-04</td><td>zakupy wg ceny nabycia</td><td class='mono'>ZAWSZE</td><td>OCENA</td><td class='mono'>FAKT_ZAKUPY_KRYTERIA IN (nie, czasami)</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WO-05</td><td>brak instrukcji eksploatacji</td><td class='mono'>ZAWSZE</td><td>OCENA</td><td class='mono'>FAKT_INSTRUKCJE_EKSPL IN (nie, czesciowo)</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WO-10</td><td>rotacja personelu</td><td class='mono'>ZAWSZE</td><td>OCENA</td><td class='mono'>FAKT_ROTACJA = wysoka</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-ZT-04</td><td>modernizacja oświetlenia LED</td><td class='mono'>FAKT_OSWIETLENIE_STARE != nie</td><td>PROPOZYCJA</td><td class='mono'>FAKT_LED_UDZIAL &lt; 70</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WT-12</td><td>ciepło z własnego źródła</td><td class='mono'>FAKT_KOTLOWNIA IN (tak, mieszane)</td><td>PROPOZYCJA</td><td class='mono'>FAKT_KOTLOWNIA IN (wlasne, oba)</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>KTX-WO-11</td><td>utrzymanie ruchu siłami własnymi</td><td class='mono'>FAKT_UR_WLASNE = tak</td><td>PROPOZYCJA</td><td class='mono'>FAKT_UR_WLASNE = wlasne</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>STK-Z-10</td><td>dostawca gazu lub ciepła sieciowego</td><td class='mono'>FAKT_KOTLOWNIA != tak</td><td>PROPOZYCJA</td><td class='mono'>FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny</td><td><b>PROPOZYCJA</b></td></tr><tr><td class='mono'>STK-Z-14</td><td>wykonawcy na terenie zakładu</td><td class='mono'>FAKT_UR_WLASNE != tak</td><td>PROPOZYCJA</td><td class='mono'>FAKT_UR_WLASNE IN (zewnetrzne, mieszane)</td><td><b>PROPOZYCJA</b></td></tr></table><div class='warn'><b>KTX-WO-03 miał błędny warunek.</b> Przy istniejącym systemie i braku zgody na integrację pokazywał zdanie „organizacja nie posiada wdrożonego systemu”, które byłoby wtedy nieprawdziwe. Poprawione — czynnik dotyczy wyłącznie organizacji bez systemu, i jako fakt jest teraz AUTO.</div><h2>Zmiana kodów odpowiedzi</h2>
+<p class='sub'>Dwa pytania miały odpowiedzi „tak / nie / mieszane”, choć nie były pytaniami rozstrzygnięcia.
+Kod zapisywany w bazie jest teraz osobny od etykiety widocznej dla klienta — warunki w bibliotece operują na kodzie, klient czyta zdanie po polsku.</p>
+<table><tr><th style='width:16%'>Pole</th><th style='width:14%'>Kody dotychczas</th><th style='width:18%'>Kody nowe</th><th style='width:32%'>Dlaczego</th><th style='width:20%'>Co trzeba poprawić</th></tr><tr><td class='mono'>FAKT_KOTLOWNIA</td><td class='mono'>tak / nie / mieszane</td><td class='mono'>wlasne / siec / oba / brak</td><td>Pytanie „Skąd pochodzi ciepło?” z odpowiedziami tak/nie było resztką po wcześniejszym „Czy macie własną kotłownię?”. Nowa lista rozróżnia też zakład bez zapotrzebowania na ciepło, którego stara wersja nie obsługiwała.</td><td class='mono'>KTX-WT-12, STK-Z-10, 3 pytania warunkowe w sekcji 4</td></tr><tr><td class='mono'>FAKT_UR_WLASNE</td><td class='mono'>tak / nie / mieszane</td><td class='mono'>wlasne / zewnetrzne / mieszane</td><td>To samo: pytanie „Kto prowadzi utrzymanie ruchu?” nie może mieć odpowiedzi „tak”.</td><td class='mono'>KTX-WO-11, STK-Z-14</td></tr></table><div class='warn'><b>Reguła dla pól wielokrotnego wyboru.</b> W warunku <span class='mono'>POLE = wartość</span>
+na polu typu multi sprawdzamy przynależność: warunek jest prawdziwy, gdy wartość jest wśród zaznaczonych.
+<span class='mono'>!=</span> jest prawdziwe, gdy wartości nie ma wśród zaznaczonych, a pole ma odpowiedź.
+Ta reguła jest potrzebna m.in. w nowym warunku STK-Z-10.</div><h2>Proponowane nowe czynniki</h2><p class='sub'>Nowe pytania ujawniają problemy, których biblioteka dziś nie opisuje. Treść sformułowań napiszę w wersji 1.4 — do tego czasu te pola zbieraj, ale nie podpinaj pod czynniki.</p><table><tr><th>Robocza treść czynnika</th><th>Warunek</th></tr><tr><td>sprężarki bez regulacji obrotów</td><td class='mono'>FAKT_CA_VSD = 0</td></tr><tr><td>ciepło ze sprężarek nie jest wykorzystywane</td><td class='mono'>FAKT_CA_ODZYSK = nie</td></tr><tr><td>centrale wentylacyjne bez odzysku ciepła</td><td class='mono'>FAKT_WENT_ODZYSK IN (czesc, zadna)</td></tr><tr><td>centrale pracujące poza godzinami pracy</td><td class='mono'>FAKT_WENT_HARMONOGRAM = nie</td></tr><tr><td>duże silniki bez falowników</td><td class='mono'>FAKT_NAPEDY_VSD IN (brak, czesc)</td></tr><tr><td>oświetlenie sterowane ręcznie</td><td class='mono'>FAKT_OSW_STEROWANIE = recznie</td></tr></table><h2>Zasady, które musi respektować silnik</h2><table>
+<tr><th style='width:26%'>Zasada</th><th>Znaczenie</th></tr>
+<tr><td>Warunek to dane, nie kod</td><td>Składnia: <span class='mono'>ZAWSZE</span>, <span class='mono'>= != &gt; &gt;= &lt; &lt;=</span>, <span class='mono'>IN (a, b)</span>, łączone przez <span class='mono'>AND</span> / <span class='mono'>OR</span> (OR wiąże słabiej). Parser własny, nigdy eval.</td></tr>
+<tr><td>Pytanie ukryte</td><td>Nie ma wartości. Każdy warunek na nim daje FAŁSZ — także warunek z <span class='mono'>!=</span>.</td></tr>
+<tr><td>„nie wiem”</td><td>Jest odpowiedzią, nie blokuje przekazania sekcji, ale każdy warunek na niej daje FAŁSZ.</td></tr>
+<tr><td>Pole wyliczane</td><td>Nie jest pytaniem. System liczy je z odpowiedzi i pokazuje wynik; klient go nie wpisuje.</td></tr>
+<tr><td>Propozycja a fakt</td><td>Spełniony warunek pokazuje <b>propozycję</b> czynnika. Potwierdza klient, zatwierdza konsultant.</td></tr>
+<tr><td>Stan sekcji</td><td>Każda sekcja ma własny stan i może być przypisana innej osobie. Przekazanie wymaga odpowiedzi na wszystkie widoczne pytania.</td></tr>
+<tr><td>Zatwierdzony profil</td><td>Warunek otwarcia punktu 4.1. Zmiana zatwierdzonej odpowiedzi unieważnia czynniki wyprowadzone z tej odpowiedzi.</td></tr>
+</table><h2>Dane w formacie JSON</h2><p class='sub'>Definicja ankiety do wczytania w aplikacji.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;meta&quot;: {
+    &quot;nazwa&quot;: &quot;Profil zakładu&quot;,
+    &quot;wersja&quot;: &quot;1.4-projekt&quot;,
+    &quot;miejsce_na_platformie&quot;: &quot;3.6 — etap przygotowania, nie punkt normy&quot;
+  },
+  &quot;sekcje&quot;: [
+    {
+      &quot;id&quot;: &quot;S1&quot;,
+      &quot;nazwa&quot;: &quot;Organizacja i obiekty&quot;,
+      &quot;wypelnia&quot;: &quot;Energy Manager&quot;,
+      &quot;czas_min&quot;: 6,
+      &quot;pytania&quot;: [
+        {
+          &quot;kod&quot;: &quot;FAKT_LOKALIZACJE&quot;,
+          &quot;pytanie&quot;: &quot;Ile lokalizacji obejmie system zarządzania energią?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;szt.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Liczymy odrębne adresy: zakład, magazyn zewnętrzny, oddział. Biuro w tym samym budynku to ta sama lokalizacja.&quot;,
+          &quot;steruje&quot;: &quot;WO-08&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_LOKALIZACJE_LISTA&quot;,
+          &quot;pytanie&quot;: &quot;Wymień lokalizacje&quot;,
+          &quot;typ&quot;: &quot;repeater&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_LOKALIZACJE &gt; 0&quot;,
+          &quot;pomoc&quot;: &quot;Lista trafi do dokumentu zakresu systemu (pkt 4.3).&quot;,
+          &quot;steruje&quot;: &quot;4.3&quot;,
+          &quot;nowe_w_1_4&quot;: true,
+          &quot;kolumny&quot;: [
+            {
+              &quot;label&quot;: &quot;nazwa&quot;,
+              &quot;typ&quot;: &quot;text&quot;,
+              &quot;opcje&quot;: []
+            },
+            {
+              &quot;label&quot;: &quot;adres&quot;,
+              &quot;typ&quot;: &quot;text&quot;,
+              &quot;opcje&quot;: []
+            },
+            {
+              &quot;label&quot;: &quot;rodzaj&quot;,
+              &quot;typ&quot;: &quot;select&quot;,
+              &quot;opcje&quot;: [
+                &quot;produkcja&quot;,
+                &quot;magazyn&quot;,
+                &quot;biuro&quot;,
+                &quot;inne&quot;
+              ]
+            },
+            {
+              &quot;label&quot;: &quot;czy w zakresie systemu&quot;,
+              &quot;typ&quot;: &quot;select&quot;,
+              &quot;opcje&quot;: [
+                &quot;tak&quot;,
+                &quot;nie&quot;
+              ]
+            }
+          ]
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_BRANZA&quot;,
+          &quot;pytanie&quot;: &quot;Główna działalność zakładu&quot;,
+          &quot;typ&quot;: &quot;text&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Kod PKD albo krótki opis, np. „produkcja elementów złącznych”. Służy do dobierania przykładów i porównań branżowych.&quot;,
+          &quot;steruje&quot;: &quot;tagi biblioteki&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRACOWNICY&quot;,
+          &quot;pytanie&quot;: &quot;Liczba pracowników&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;osób&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Łącznie we wszystkich lokalizacjach objętych systemem. Wartość przybliżona wystarczy.&quot;,
+          &quot;steruje&quot;: &quot;7.2, 7.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ZMIANY&quot;,
+          &quot;pytanie&quot;: &quot;Ile zmian pracuje zakład?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;1&quot;,
+              &quot;e&quot;: &quot;1&quot;
+            },
+            {
+              &quot;w&quot;: &quot;2&quot;,
+              &quot;e&quot;: &quot;2&quot;
+            },
+            {
+              &quot;w&quot;: &quot;3&quot;,
+              &quot;e&quot;: &quot;3&quot;
+            },
+            {
+              &quot;w&quot;: &quot;4&quot;,
+              &quot;e&quot;: &quot;4&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Wartość 4 oznacza ruch ciągły — praca także w weekendy i święta.&quot;,
+          &quot;steruje&quot;: &quot;WO-09&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_SEZONOWOSC&quot;,
+          &quot;pytanie&quot;: &quot;Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Np. sezon produkcyjny, przestoje letnie, kampania cukrownicza.&quot;,
+          &quot;steruje&quot;: &quot;ZM-09&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PODMIOT&quot;,
+          &quot;pytanie&quot;: &quot;Typ organizacji&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;prywatny&quot;,
+              &quot;e&quot;: &quot;prywatny&quot;
+            },
+            {
+              &quot;w&quot;: &quot;komunalny&quot;,
+              &quot;e&quot;: &quot;komunalny&quot;
+            },
+            {
+              &quot;w&quot;: &quot;publiczny&quot;,
+              &quot;e&quot;: &quot;publiczny&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Spółka komunalna i podmiot publiczny stosują procedury zamówień publicznych.&quot;,
+          &quot;steruje&quot;: &quot;ZR-10&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_GRUPA_KAPITALOWA&quot;,
+          &quot;pytanie&quot;: &quot;Czy organizacja należy do grupy kapitałowej?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Grupa często narzuca własne cele klimatyczne i sposób raportowania.&quot;,
+          &quot;steruje&quot;: &quot;STK-W-02&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ZWIAZKI&quot;,
+          &quot;pytanie&quot;: &quot;Czy działają związki zawodowe lub rada pracowników?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;STK-W-10&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_SYSTEM_BAZOWY&quot;,
+          &quot;pytanie&quot;: &quot;Czy organizacja ma wdrożony system zarządzania?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;brak&quot;,
+              &quot;e&quot;: &quot;Brak certyfikowanego systemu&quot;
+            },
+            {
+              &quot;w&quot;: &quot;iso_9001&quot;,
+              &quot;e&quot;: &quot;ISO 9001&quot;
+            },
+            {
+              &quot;w&quot;: &quot;iso_14001&quot;,
+              &quot;e&quot;: &quot;ISO 14001&quot;
+            },
+            {
+              &quot;w&quot;: &quot;oba&quot;,
+              &quot;e&quot;: &quot;ISO 9001 i ISO 14001&quot;
+            },
+            {
+              &quot;w&quot;: &quot;inny&quot;,
+              &quot;e&quot;: &quot;Inny system certyfikowany&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Chodzi o system certyfikowany. Decyduje o trybie wdrożenia: od podstaw albo nadbudowa na istniejącym systemie.&quot;,
+          &quot;steruje&quot;: &quot;WO-03 · tryb&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_SYSTEM_BAZOWY_ROK&quot;,
+          &quot;pytanie&quot;: &quot;Od którego roku system jest certyfikowany?&quot;,
+          &quot;typ&quot;: &quot;year&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SYSTEM_BAZOWY != brak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;—&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ZGODA_INTEGRACJA&quot;,
+          &quot;pytanie&quot;: &quot;Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;Tak — rozszerzamy istniejącą dokumentację&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie — tworzymy odrębny system&quot;
+            },
+            {
+              &quot;w&quot;: &quot;brak decyzji&quot;,
+              &quot;e&quot;: &quot;Decyzja jeszcze nie zapadła&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SYSTEM_BAZOWY != brak&quot;,
+          &quot;pomoc&quot;: &quot;„Tak” oznacza, że nie tworzymy osobnych dokumentów, tylko rozszerzamy Wasze istniejące.&quot;,
+          &quot;steruje&quot;: &quot;tryb&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ENERGY_MANAGER&quot;,
+          &quot;pytanie&quot;: &quot;Czy wyznaczono osobę odpowiedzialną za energię?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie wyznaczono nikogo&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nieformalnie&quot;,
+              &quot;e&quot;: &quot;Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków&quot;
+            },
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;Tak, z pisemnym zakresem obowiązków&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Norma wymaga w klauzuli 5.3 wyznaczenia zespołu i przypisania odpowiedzialności na piśmie.&quot;,
+          &quot;steruje&quot;: &quot;WO-01, WO-02 · 5.3&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_UR_WLASNE&quot;,
+          &quot;pytanie&quot;: &quot;Kto prowadzi utrzymanie ruchu?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;wlasne&quot;,
+              &quot;e&quot;: &quot;Własne służby utrzymania ruchu&quot;
+            },
+            {
+              &quot;w&quot;: &quot;zewnetrzne&quot;,
+              &quot;e&quot;: &quot;Firma zewnętrzna&quot;
+            },
+            {
+              &quot;w&quot;: &quot;mieszane&quot;,
+              &quot;e&quot;: &quot;Częściowo własne służby, część prac zlecana&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Chodzi o bieżącą obsługę i przeglądy urządzeń energetycznych, nie o remonty inwestycyjne.&quot;,
+          &quot;steruje&quot;: &quot;WO-11 · STK-Z-14&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_INSTRUKCJE_EKSPL&quot;,
+          &quot;pytanie&quot;: &quot;Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;Tak, dla wszystkich głównych urządzeń&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czesciowo&quot;,
+              &quot;e&quot;: &quot;Dla części urządzeń&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie ma&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Instrukcje używane w praktyce przez operatorów, nie tylko DTR od producenta.&quot;,
+          &quot;steruje&quot;: &quot;WO-05 · 8.1&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ZAKUPY_KRYTERIA&quot;,
+          &quot;pytanie&quot;: &quot;Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;zawsze&quot;,
+              &quot;e&quot;: &quot;Zawsze — to stałe kryterium zakupowe&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czasami&quot;,
+              &quot;e&quot;: &quot;Czasami, przy większych zakupach&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie — decyduje cena zakupu&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Chodzi o urządzenia zużywające energię: silniki, sprężarki, piece, oświetlenie.&quot;,
+          &quot;steruje&quot;: &quot;WO-04 · 8.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ROTACJA&quot;,
+          &quot;pytanie&quot;: &quot;Rotacja pracowników produkcji i utrzymania ruchu w skali roku&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;niska&quot;,
+              &quot;e&quot;: &quot;Niska — poniżej 5% rocznie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;srednia&quot;,
+              &quot;e&quot;: &quot;Średnia — od 5 do 15% rocznie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;wysoka&quot;,
+              &quot;e&quot;: &quot;Wysoka — powyżej 15% rocznie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Odejścia w stosunku do stanu zatrudnienia. Wysoka rotacja oznacza, że wiedza o eksploatacji urządzeń ucieka z zakładu.&quot;,
+          &quot;steruje&quot;: &quot;WO-10 · 7.2&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;S2&quot;,
+      &quot;nazwa&quot;: &quot;Energia i koszty&quot;,
+      &quot;wypelnia&quot;: &quot;Kontroling / finanse&quot;,
+      &quot;czas_min&quot;: 7,
+      &quot;pytania&quot;: [
+        {
+          &quot;kod&quot;: &quot;FAKT_ROK_ODNIESIENIA&quot;,
+          &quot;pytanie&quot;: &quot;Za który rok podajesz dane?&quot;,
+          &quot;typ&quot;: &quot;year&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Ostatni zamknięty rok kalendarzowy. Wszystkie dane w tej sekcji dotyczą tego samego roku.&quot;,
+          &quot;steruje&quot;: &quot;ZUZYCIE_TJ&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_NOSNIKI&quot;,
+          &quot;pytanie&quot;: &quot;Zużycie nośników energii w roku odniesienia&quot;,
+          &quot;typ&quot;: &quot;repeater&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Dane z faktur. Energia zakupiona oraz paliwa spalone we własnych źródłach. Nie odejmujemy energii sprzedanej. Nie dodajemy osobno energii wyprodukowanej z tych paliw.&quot;,
+          &quot;steruje&quot;: &quot;ZUZYCIE_TJ · 6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true,
+          &quot;kolumny&quot;: [
+            {
+              &quot;label&quot;: &quot;nośnik&quot;,
+              &quot;typ&quot;: &quot;select&quot;,
+              &quot;opcje&quot;: [
+                &quot;energia elektryczna&quot;,
+                &quot;gaz ziemny&quot;,
+                &quot;ciepło sieciowe&quot;,
+                &quot;olej opałowy&quot;,
+                &quot;LPG&quot;,
+                &quot;węgiel&quot;,
+                &quot;biomasa&quot;,
+                &quot;biogaz&quot;,
+                &quot;olej napędowy&quot;,
+                &quot;benzyna&quot;,
+                &quot;CNG&quot;,
+                &quot;inny&quot;
+              ]
+            },
+            {
+              &quot;label&quot;: &quot;ilość&quot;,
+              &quot;typ&quot;: &quot;number&quot;,
+              &quot;opcje&quot;: []
+            },
+            {
+              &quot;label&quot;: &quot;jednostka&quot;,
+              &quot;typ&quot;: &quot;select&quot;,
+              &quot;opcje&quot;: [
+                &quot;kWh&quot;,
+                &quot;MWh&quot;,
+                &quot;GJ&quot;,
+                &quot;m³&quot;,
+                &quot;l&quot;,
+                &quot;t&quot;
+              ]
+            },
+            {
+              &quot;label&quot;: &quot;koszt roczny netto, zł (opcjonalnie)&quot;,
+              &quot;typ&quot;: &quot;number&quot;,
+              &quot;opcje&quot;: []
+            }
+          ]
+        },
+        {
+          &quot;kod&quot;: &quot;ZUZYCIE_TJ&quot;,
+          &quot;pytanie&quot;: &quot;Roczne zużycie energii w TJ&quot;,
+          &quot;typ&quot;: &quot;auto&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;TJ&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Liczone automatycznie z tabeli nośników. Decyduje o obowiązkach prawnych: poniżej 10, od 10 do 85, powyżej 85 TJ. Przeliczniki: gaz ziemny 0,0395 GJ/m³ (10,97 kWh/m³ — gaz wysokometanowy E), LPG 0,0246 GJ/l, olej napędowy 0,0386 GJ/l, energia elektryczna i ciepło 3,6 GJ/MWh. Książka zaokrągla gaz do 10 kWh/m³ dla czytelności obliczeń, dlatego przykład AutoParts wychodzi tu na 44,9 TJ zamiast 43 TJ z Załącznika III-02 — ten sam przedział obowiązków.&quot;,
+          &quot;steruje&quot;: &quot;ZR-01, ZR-02, ZR-11&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRODUKCJA_JEDN&quot;,
+          &quot;pytanie&quot;: &quot;W czym mierzycie wielkość produkcji?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;t&quot;,
+              &quot;e&quot;: &quot;tony wyrobu&quot;
+            },
+            {
+              &quot;w&quot;: &quot;szt&quot;,
+              &quot;e&quot;: &quot;sztuki wyrobu&quot;
+            },
+            {
+              &quot;w&quot;: &quot;m2&quot;,
+              &quot;e&quot;: &quot;metry kwadratowe&quot;
+            },
+            {
+              &quot;w&quot;: &quot;m3&quot;,
+              &quot;e&quot;: &quot;metry sześcienne&quot;
+            },
+            {
+              &quot;w&quot;: &quot;mwh&quot;,
+              &quot;e&quot;: &quot;MWh wyrobu (ciepło, chłód)&quot;
+            },
+            {
+              &quot;w&quot;: &quot;inna&quot;,
+              &quot;e&quot;: &quot;Inna jednostka&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Jednostka, w której będziecie liczyć wskaźniki wyniku energetycznego — na przykład kWh na tonę wyrobu. Dla zakładu wielobranżowego wybierzcie jednostkę wyrobu głównego.&quot;,
+          &quot;steruje&quot;: &quot;6.4, 6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRODUKCJA_INNA&quot;,
+          &quot;pytanie&quot;: &quot;Jaka jednostka?&quot;,
+          &quot;typ&quot;: &quot;text&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_PRODUKCJA_JEDN = inna&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.4&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRODUKCJA&quot;,
+          &quot;pytanie&quot;: &quot;Wielkość produkcji w roku odniesienia&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;W jednostce wskazanej wyżej. To najczęstsza zmienna istotna we wskaźnikach — bez niej wskaźnik pokazuje wahania produkcji, a nie efektywności.&quot;,
+          &quot;steruje&quot;: &quot;6.3, 6.4, 6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRODUKCJA_POPRZ&quot;,
+          &quot;pytanie&quot;: &quot;Wielkość produkcji w roku poprzednim&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Potrzebna do porównania „rok temu — dziś” i do oceny, czy zmiana zużycia wynika ze zmiany produkcji.&quot;,
+          &quot;steruje&quot;: &quot;6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_HDD&quot;,
+          &quot;pytanie&quot;: &quot;Stopniodni grzania (HDD) w roku odniesienia&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;°C·dzień&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Miara surowości sezonu grzewczego dla Waszej lokalizacji — z IMGW albo z serwisów pogodowych. Zostaw puste, jeśli ogrzewanie nie ma u Was znaczenia dla zużycia.&quot;,
+          &quot;steruje&quot;: &quot;6.4, 6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_HDD_POPRZ&quot;,
+          &quot;pytanie&quot;: &quot;Stopniodni grzania w roku poprzednim&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;°C·dzień&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_HDD &gt; 0&quot;,
+          &quot;pomoc&quot;: &quot;Bez porównywalnej pogody nie da się rozstrzygnąć, czy wynik poprawiliście, czy zima była łagodniejsza.&quot;,
+          &quot;steruje&quot;: &quot;6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRZYCHOD&quot;,
+          &quot;pytanie&quot;: &quot;Przychód ze sprzedaży w roku odniesienia&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;mln zł&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Opcjonalne. Służy wyłącznie do wskaźnika zarządczego typu GJ na milion złotych przychodu — przydatnego w rozmowie z zarządem, ale nieobowiązkowego.&quot;,
+          &quot;steruje&quot;: &quot;6.4&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_UDZIAL_ENERGII&quot;,
+          &quot;pytanie&quot;: &quot;Jaki procent kosztów operacyjnych stanowi energia?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;%&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Wartość przybliżona. Jeśli nie liczycie tego wskaźnika, zostaw puste — policzymy z kosztu energii i kosztów operacyjnych.&quot;,
+          &quot;steruje&quot;: &quot;WF-01, WF-02&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_MOC_UMOWNA&quot;,
+          &quot;pytanie&quot;: &quot;Moc umowna energii elektrycznej&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kW&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Z umowy dystrybucyjnej albo z faktury. Przy kilku przyłączach — suma.&quot;,
+          &quot;steruje&quot;: &quot;STK-Z-08&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_MOC_OGRANICZONA&quot;,
+          &quot;pytanie&quot;: &quot;Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZM-05&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_UMOWA_WYGASA&quot;,
+          &quot;pytanie&quot;: &quot;Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZM-02&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_UMOWA_DATA&quot;,
+          &quot;pytanie&quot;: &quot;Data wygaśnięcia umowy&quot;,
+          &quot;typ&quot;: &quot;date&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_UMOWA_WYGASA = tak&quot;,
+          &quot;pomoc&quot;: &quot;Pole informacyjne, nie wpływa na dobór czynników.&quot;,
+          &quot;steruje&quot;: &quot;—&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_BUDZET&quot;,
+          &quot;pytanie&quot;: &quot;Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WF-03&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PBT_PROG&quot;,
+          &quot;pytanie&quot;: &quot;Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;lat&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WF-04&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_INWESTYCJE&quot;,
+          &quot;pytanie&quot;: &quot;Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Nowa linia, rozbudowa hali, wymiana źródła ciepła.&quot;,
+          &quot;steruje&quot;: &quot;WF-07&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_INWESTYCJE_OPIS&quot;,
+          &quot;pytanie&quot;: &quot;Jakie?&quot;,
+          &quot;typ&quot;: &quot;text&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_INWESTYCJE = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_BIALE_MOZLIWE&quot;,
+          &quot;pytanie&quot;: &quot;Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WF-05&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;S3&quot;,
+      &quot;nazwa&quot;: &quot;Instalacje zasilane energią elektryczną&quot;,
+      &quot;wypelnia&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;czas_min&quot;: 9,
+      &quot;pytania&quot;: [
+        {
+          &quot;kod&quot;: &quot;FAKT_SPREZONE&quot;,
+          &quot;pytanie&quot;: &quot;Czy zakład ma instalację sprężonego powietrza?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;filtr grupy CA&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_LICZBA&quot;,
+          &quot;pytanie&quot;: &quot;Ile jest sprężarek?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;szt.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;Łącznie z rezerwowymi.&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_MOC&quot;,
+          &quot;pytanie&quot;: &quot;Łączna moc znamionowa sprężarek&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kW&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;Suma z tabliczek znamionowych.&quot;,
+          &quot;steruje&quot;: &quot;6.3 · kandydat SEU&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_VSD&quot;,
+          &quot;pytanie&quot;: &quot;Ile sprężarek ma regulację obrotów (falownik)?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;szt.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;nowy czynnik&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_STEROWNIK&quot;,
+          &quot;pytanie&quot;: &quot;Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;Jedno urządzenie, które decyduje, które sprężarki włączyć i w jakiej kolejności. Nie chodzi o sterowniki w samych sprężarkach.&quot;,
+          &quot;steruje&quot;: &quot;WT-05&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_SZCZELNOSC&quot;,
+          &quot;pytanie&quot;: &quot;Czy w ostatnich 12 miesiącach badano szczelność instalacji?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;Np. przeglądem z detektorem ultradźwiękowym albo pomiarem przecieków w dzień wolny.&quot;,
+          &quot;steruje&quot;: &quot;WT-06&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_ODZYSK&quot;,
+          &quot;pytanie&quot;: &quot;Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;nowy czynnik&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CA_GODZINY&quot;,
+          &quot;pytanie&quot;: &quot;Ile godzin w roku pracuje sprężarkownia?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;h/rok&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SPREZONE = tak&quot;,
+          &quot;pomoc&quot;: &quot;Szacunkowo. Ruch ciągły to około 8 000 godzin.&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_WENT&quot;,
+          &quot;pytanie&quot;: &quot;Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;filtr grupy VAC&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_WENT_LICZBA&quot;,
+          &quot;pytanie&quot;: &quot;Ile jest central?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;szt.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_WENT = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_WENT_ODZYSK&quot;,
+          &quot;pytanie&quot;: &quot;Czy centrale mają odzysk ciepła?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;wszystkie&quot;,
+              &quot;e&quot;: &quot;Wszystkie centrale mają odzysk&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czesc&quot;,
+              &quot;e&quot;: &quot;Część central ma odzysk&quot;
+            },
+            {
+              &quot;w&quot;: &quot;zadna&quot;,
+              &quot;e&quot;: &quot;Żadna nie ma odzysku&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;Nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_WENT = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;nowy czynnik&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_WENT_HARMONOGRAM&quot;,
+          &quot;pytanie&quot;: &quot;Czy centrale są wyłączane albo zwalniane poza godzinami pracy?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;Tak, wszystkie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czesciowo&quot;,
+              &quot;e&quot;: &quot;Część central&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie — pracują tak samo cały czas&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_WENT = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;nowy czynnik&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CHLODZENIE&quot;,
+          &quot;pytanie&quot;: &quot;Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZK-03&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CHLODZENIE_MOC&quot;,
+          &quot;pytanie&quot;: &quot;Łączna moc chłodnicza&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kW&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_CHLODZENIE = tak&quot;,
+          &quot;pomoc&quot;: &quot;Szacunkowo, jeśli brak danych.&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CHLODZENIE_WODNE&quot;,
+          &quot;pytanie&quot;: &quot;Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_CHLODZENIE = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZK-06&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_FGAZ&quot;,
+          &quot;pytanie&quot;: &quot;Czy są urządzenia zawierające fluorowane gazy cieplarniane?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Urządzenia chłodnicze, klimatyzacyjne, pompy ciepła. Mają karty w Centralnym Rejestrze Operatorów.&quot;,
+          &quot;steruje&quot;: &quot;ZR-07&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_NAPEDY_VSD&quot;,
+          &quot;pytanie&quot;: &quot;Jaka część dużych silników — pompy, wentylatory — ma falowniki?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;brak&quot;,
+              &quot;e&quot;: &quot;Żaden albo pojedyncze&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czesc&quot;,
+              &quot;e&quot;: &quot;Mniej więcej połowa&quot;
+            },
+            {
+              &quot;w&quot;: &quot;wiekszosc&quot;,
+              &quot;e&quot;: &quot;Większość&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;Nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;nowy czynnik&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_LED_UDZIAL&quot;,
+          &quot;pytanie&quot;: &quot;Jaki procent oświetlenia stanowią źródła LED?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;%&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Szacunkowo, w odniesieniu do mocy zainstalowanej oświetlenia.&quot;,
+          &quot;steruje&quot;: &quot;ZT-04&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_OSW_STEROWANIE&quot;,
+          &quot;pytanie&quot;: &quot;Jak sterowane jest oświetlenie hal?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;czujniki&quot;,
+              &quot;e&quot;: &quot;Czujniki ruchu albo natężenia światła&quot;
+            },
+            {
+              &quot;w&quot;: &quot;harmonogram&quot;,
+              &quot;e&quot;: &quot;Automatyczny harmonogram&quot;
+            },
+            {
+              &quot;w&quot;: &quot;recznie&quot;,
+              &quot;e&quot;: &quot;Ręcznie — włącznikiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;nowy czynnik&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_WIEK_INFRA&quot;,
+          &quot;pytanie&quot;: &quot;Ile lat ma większość głównych urządzeń energetycznych?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;lat&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WT-04&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_UDT&quot;,
+          &quot;pytanie&quot;: &quot;Czy eksploatowane są urządzenia pod dozorem technicznym UDT?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Zbiorniki ciśnieniowe, kotły, dźwignice, wózki widłowe.&quot;,
+          &quot;steruje&quot;: &quot;ZR-06&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;S4&quot;,
+      &quot;nazwa&quot;: &quot;Ciepło, procesy i źródła własne&quot;,
+      &quot;wypelnia&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;czas_min&quot;: 7,
+      &quot;pytania&quot;: [
+        {
+          &quot;kod&quot;: &quot;FAKT_KOTLOWNIA&quot;,
+          &quot;pytanie&quot;: &quot;Skąd pochodzi ciepło zużywane w zakładzie?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;wlasne&quot;,
+              &quot;e&quot;: &quot;Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)&quot;
+            },
+            {
+              &quot;w&quot;: &quot;siec&quot;,
+              &quot;e&quot;: &quot;Wyłącznie z sieci ciepłowniczej&quot;
+            },
+            {
+              &quot;w&quot;: &quot;oba&quot;,
+              &quot;e&quot;: &quot;Z własnego źródła i z sieci ciepłowniczej&quot;
+            },
+            {
+              &quot;w&quot;: &quot;brak&quot;,
+              &quot;e&quot;: &quot;Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Chodzi o ciepło na ogrzewanie i na procesy łącznie. Para technologiczna liczy się jako własne źródło.&quot;,
+          &quot;steruje&quot;: &quot;WT-12 · STK-Z-10&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CIEPLO_PALIWO&quot;,
+          &quot;pytanie&quot;: &quot;Czym zasilane jest własne źródło ciepła?&quot;,
+          &quot;typ&quot;: &quot;multi&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;gaz ziemny&quot;,
+              &quot;e&quot;: &quot;gaz ziemny&quot;
+            },
+            {
+              &quot;w&quot;: &quot;olej&quot;,
+              &quot;e&quot;: &quot;olej&quot;
+            },
+            {
+              &quot;w&quot;: &quot;węgiel&quot;,
+              &quot;e&quot;: &quot;węgiel&quot;
+            },
+            {
+              &quot;w&quot;: &quot;biomasa&quot;,
+              &quot;e&quot;: &quot;biomasa&quot;
+            },
+            {
+              &quot;w&quot;: &quot;biogaz&quot;,
+              &quot;e&quot;: &quot;biogaz&quot;
+            },
+            {
+              &quot;w&quot;: &quot;pompa ciepła&quot;,
+              &quot;e&quot;: &quot;pompa ciepła&quot;
+            },
+            {
+              &quot;w&quot;: &quot;energia elektryczna&quot;,
+              &quot;e&quot;: &quot;energia elektryczna&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_KOTLOWNIA IN (wlasne, oba)&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZT-05&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CIEPLO_PALIWA&quot;,
+          &quot;pytanie&quot;: &quot;Czy ciepło wytwarzane jest z paliw kopalnych?&quot;,
+          &quot;typ&quot;: &quot;auto&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Wyliczane: tak, jeśli wśród paliw własnego źródła jest gaz ziemny, olej albo węgiel. Przy cieple z sieci wynik zależy od paliwa dostawcy — pole pokazuje „do potwierdzenia”.&quot;,
+          &quot;steruje&quot;: &quot;ZT-05&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_KOTLOWNIA_MOC&quot;,
+          &quot;pytanie&quot;: &quot;Moc zainstalowana źródeł ciepła&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kW&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_KOTLOWNIA IN (wlasne, oba)&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_KOTLOWNIA_WIEK&quot;,
+          &quot;pytanie&quot;: &quot;Wiek najstarszego czynnego kotła&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;lat&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_KOTLOWNIA IN (wlasne, oba)&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CIEPLO_MOC_ZAMOWIONA&quot;,
+          &quot;pytanie&quot;: &quot;Zamówiona moc cieplna z sieci&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kW&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_KOTLOWNIA IN (siec, oba)&quot;,
+          &quot;pomoc&quot;: &quot;Z umowy z dostawcą ciepła. Zawyżona moc zamówiona to typowy, łatwy do usunięcia koszt stały.&quot;,
+          &quot;steruje&quot;: &quot;STK-Z-10 · 6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PROCESY&quot;,
+          &quot;pytanie&quot;: &quot;Które procesy zużywają najwięcej energii?&quot;,
+          &quot;typ&quot;: &quot;multi&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;piece i nagrzewnice&quot;,
+              &quot;e&quot;: &quot;piece i nagrzewnice&quot;
+            },
+            {
+              &quot;w&quot;: &quot;suszarnie&quot;,
+              &quot;e&quot;: &quot;suszarnie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;wtryskarki i wytłaczarki&quot;,
+              &quot;e&quot;: &quot;wtryskarki i wytłaczarki&quot;
+            },
+            {
+              &quot;w&quot;: &quot;prasy&quot;,
+              &quot;e&quot;: &quot;prasy&quot;
+            },
+            {
+              &quot;w&quot;: &quot;malarnia&quot;,
+              &quot;e&quot;: &quot;malarnia&quot;
+            },
+            {
+              &quot;w&quot;: &quot;galwanizernia&quot;,
+              &quot;e&quot;: &quot;galwanizernia&quot;
+            },
+            {
+              &quot;w&quot;: &quot;pompy procesowe&quot;,
+              &quot;e&quot;: &quot;pompy procesowe&quot;
+            },
+            {
+              &quot;w&quot;: &quot;chłodzenie procesu&quot;,
+              &quot;e&quot;: &quot;chłodzenie procesu&quot;
+            },
+            {
+              &quot;w&quot;: &quot;inne&quot;,
+              &quot;e&quot;: &quot;inne&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Zaznacz maksymalnie trzy. To wstępne wskazanie kandydatów na znaczące obszary zużycia.&quot;,
+          &quot;steruje&quot;: &quot;6.3 · kandydat SEU&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CIEPLO_ODPADOWE&quot;,
+          &quot;pytanie&quot;: &quot;Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Spaliny, gorące powietrze z pieców i suszarni, woda chłodząca, ciepło ze sprężarek.&quot;,
+          &quot;steruje&quot;: &quot;WT-14, ZT-08&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ODZYSK_CIEPLA&quot;,
+          &quot;pytanie&quot;: &quot;Czy to ciepło jest odzyskiwane?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;Tak, w całości albo prawie w całości&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czesciowo&quot;,
+              &quot;e&quot;: &quot;Częściowo&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie jest odzyskiwane&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_CIEPLO_ODPADOWE = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WT-14&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PROCES_BEZ_ALTERNATYWY&quot;,
+          &quot;pytanie&quot;: &quot;Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Np. piec gazowy, dla którego nie ma dojrzałej alternatywy elektrycznej.&quot;,
+          &quot;steruje&quot;: &quot;ZT-06&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PV&quot;,
+          &quot;pytanie&quot;: &quot;Czy zakład ma instalację fotowoltaiczną?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;Tak, działa&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;Nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;w planach&quot;,
+              &quot;e&quot;: &quot;W planach albo w budowie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WT-07, WT-08&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PV_MOC&quot;,
+          &quot;pytanie&quot;: &quot;Moc instalacji fotowoltaicznej&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kWp&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_PV = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_BESS&quot;,
+          &quot;pytanie&quot;: &quot;Czy zakład ma magazyn energii?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;WT-08&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_BESS_POJ&quot;,
+          &quot;pytanie&quot;: &quot;Pojemność magazynu&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kWh&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_BESS = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;—&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CHP&quot;,
+          &quot;pytanie&quot;: &quot;Czy zakład ma kogenerację?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Jednoczesna produkcja prądu i ciepła, np. z gazu albo biogazu.&quot;,
+          &quot;steruje&quot;: &quot;WT-09&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CHP_MOC&quot;,
+          &quot;pytanie&quot;: &quot;Moc elektryczna kogeneracji&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;kWe&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_CHP = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_FLOTA&quot;,
+          &quot;pytanie&quot;: &quot;Czy w zakresie systemu jest flota pojazdów?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Samochody, ciężarówki, maszyny jezdne. Wózki widłowe liczymy tylko spalinowe.&quot;,
+          &quot;steruje&quot;: &quot;WT-13&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_FLOTA_LICZBA&quot;,
+          &quot;pytanie&quot;: &quot;Liczba pojazdów&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;szt.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_FLOTA = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;S5&quot;,
+      &quot;nazwa&quot;: &quot;Opomiarowanie i dane&quot;,
+      &quot;wypelnia&quot;: &quot;Utrzymanie ruchu / automatyka&quot;,
+      &quot;czas_min&quot;: 4,
+      &quot;pytania&quot;: [
+        {
+          &quot;kod&quot;: &quot;FAKT_PODLICZNIKI&quot;,
+          &quot;pytanie&quot;: &quot;Jak opomiarowana jest energia elektryczna?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;brak&quot;,
+              &quot;e&quot;: &quot;Tylko licznik główny&quot;
+            },
+            {
+              &quot;w&quot;: &quot;czesciowo&quot;,
+              &quot;e&quot;: &quot;Podliczniki na części obiektów lub wydziałów&quot;
+            },
+            {
+              &quot;w&quot;: &quot;kompleksowo&quot;,
+              &quot;e&quot;: &quot;Podliczniki na wszystkich znaczących odbiorach&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;brak = tylko licznik na przyłączu; częściowo = główne rozdzielnie albo hale; kompleksowo = pojedyncze duże urządzenia.&quot;,
+          &quot;steruje&quot;: &quot;WT-01, WT-02, WT-03, ZT-03&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PODLICZNIKI_LICZBA&quot;,
+          &quot;pytanie&quot;: &quot;Ile jest podliczników?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;szt.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_PODLICZNIKI != brak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.6&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ODCZYT&quot;,
+          &quot;pytanie&quot;: &quot;Jak odczytywane są liczniki?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;recznie&quot;,
+              &quot;e&quot;: &quot;Ręcznie, spisywane z liczników&quot;
+            },
+            {
+              &quot;w&quot;: &quot;zdalnie&quot;,
+              &quot;e&quot;: &quot;Zdalnie, automatycznie do systemu&quot;
+            },
+            {
+              &quot;w&quot;: &quot;mieszane&quot;,
+              &quot;e&quot;: &quot;Część ręcznie, część zdalnie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_PODLICZNIKI != brak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.6&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_SCADA&quot;,
+          &quot;pytanie&quot;: &quot;Czy działa system SCADA, BMS albo inny system nadrzędny?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;System, w którym na ekranie widać pracę urządzeń na bieżąco.&quot;,
+          &quot;steruje&quot;: &quot;WT-10, WT-11&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_SCADA_ZAKRES&quot;,
+          &quot;pytanie&quot;: &quot;Jaki procent zużycia energii obejmuje?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;%&quot;,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_SCADA = tak&quot;,
+          &quot;pomoc&quot;: &quot;Szacunkowo.&quot;,
+          &quot;steruje&quot;: &quot;6.6&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_DANE_HISTORIA&quot;,
+          &quot;pytanie&quot;: &quot;Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?&quot;,
+          &quot;typ&quot;: &quot;number&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: &quot;mies.&quot;,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Dane z podliczników, SCADA, arkuszy odczytów. Zero, jeśli są tylko faktury.&quot;,
+          &quot;steruje&quot;: &quot;6.5&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_MES&quot;,
+          &quot;pytanie&quot;: &quot;Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZT-07&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ANALIZA_DANYCH&quot;,
+          &quot;pytanie&quot;: &quot;Czy dane o zużyciu energii są analizowane?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;okresowo&quot;,
+              &quot;e&quot;: &quot;okresowo&quot;
+            },
+            {
+              &quot;w&quot;: &quot;systematycznie&quot;,
+              &quot;e&quot;: &quot;systematycznie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;nie = faktury służą tylko do płacenia; okresowo = raz na kwartał albo rok; systematycznie = co miesiąc albo częściej.&quot;,
+          &quot;steruje&quot;: &quot;WO-06&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;S6&quot;,
+      &quot;nazwa&quot;: &quot;Otoczenie prawne i rynkowe&quot;,
+      &quot;wypelnia&quot;: &quot;Energy Manager&quot;,
+      &quot;czas_min&quot;: 4,
+      &quot;pytania&quot;: [
+        {
+          &quot;kod&quot;: &quot;FAKT_AUDYT_ENERG&quot;,
+          &quot;pytanie&quot;: &quot;Czy wykonano audyt energetyczny przedsiębiorstwa?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Audyt w rozumieniu ustawy o efektywności energetycznej, zgłaszany do URE.&quot;,
+          &quot;steruje&quot;: &quot;ZR-03&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_AUDYT_ROK&quot;,
+          &quot;pytanie&quot;: &quot;W którym roku?&quot;,
+          &quot;typ&quot;: &quot;year&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_AUDYT_ENERG = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;6.3&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ETS&quot;,
+          &quot;pytanie&quot;: &quot;Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZR-04&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CSRD&quot;,
+          &quot;pytanie&quot;: &quot;Czy organizacja raportuje zgodnie z CSRD / ESRS?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie wiem&quot;,
+              &quot;e&quot;: &quot;nie wiem&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZR-05&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_CSRD_ROK&quot;,
+          &quot;pytanie&quot;: &quot;Od którego roku?&quot;,
+          &quot;typ&quot;: &quot;year&quot;,
+          &quot;opcje&quot;: [],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;FAKT_CSRD = tak&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;—&quot;,
+          &quot;nowe_w_1_4&quot;: true
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_ODBIORCY_CO2&quot;,
+          &quot;pytanie&quot;: &quot;Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;Ankiety od klientów, wymagania w umowach, pytania w zapytaniach ofertowych.&quot;,
+          &quot;steruje&quot;: &quot;ZM-03, ZM-04 · STK-Z-12&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRZETARGI&quot;,
+          &quot;pytanie&quot;: &quot;Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZM-07&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        },
+        {
+          &quot;kod&quot;: &quot;FAKT_PRZERWY_POGODA&quot;,
+          &quot;pytanie&quot;: &quot;Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?&quot;,
+          &quot;typ&quot;: &quot;select&quot;,
+          &quot;opcje&quot;: [
+            {
+              &quot;w&quot;: &quot;tak&quot;,
+              &quot;e&quot;: &quot;tak&quot;
+            },
+            {
+              &quot;w&quot;: &quot;nie&quot;,
+              &quot;e&quot;: &quot;nie&quot;
+            }
+          ],
+          &quot;jednostka&quot;: null,
+          &quot;pokaz_gdy&quot;: &quot;ZAWSZE&quot;,
+          &quot;pomoc&quot;: &quot;&quot;,
+          &quot;steruje&quot;: &quot;ZK-05&quot;,
+          &quot;nowe_w_1_4&quot;: false
+        }
+      ]
+    }
+  ],
+  &quot;czynniki_41&quot;: [
+    {
+      &quot;kod&quot;: &quot;KTX-WT-05&quot;,
+      &quot;czynnik&quot;: &quot;brak sterowania nadrzędnego sprężarek&quot;,
+      &quot;warunek&quot;: &quot;FAKT_CA_STEROWNIK = nie&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WT-06&quot;,
+      &quot;czynnik&quot;: &quot;brak kontroli szczelności&quot;,
+      &quot;warunek&quot;: &quot;FAKT_CA_SZCZELNOSC = nie&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WT-14&quot;,
+      &quot;czynnik&quot;: &quot;brak odzysku ciepła odpadowego&quot;,
+      &quot;warunek&quot;: &quot;FAKT_CIEPLO_ODPADOWE = tak AND FAKT_ODZYSK_CIEPLA = nie&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WO-03&quot;,
+      &quot;czynnik&quot;: &quot;brak systemu zarządzania&quot;,
+      &quot;warunek&quot;: &quot;FAKT_SYSTEM_BAZOWY = brak&quot;,
+      &quot;rodzaj&quot;: &quot;AUTO&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WO-04&quot;,
+      &quot;czynnik&quot;: &quot;zakupy wg ceny nabycia&quot;,
+      &quot;warunek&quot;: &quot;FAKT_ZAKUPY_KRYTERIA IN (nie, czasami)&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WO-05&quot;,
+      &quot;czynnik&quot;: &quot;brak instrukcji eksploatacji&quot;,
+      &quot;warunek&quot;: &quot;FAKT_INSTRUKCJE_EKSPL IN (nie, czesciowo)&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WO-10&quot;,
+      &quot;czynnik&quot;: &quot;rotacja personelu&quot;,
+      &quot;warunek&quot;: &quot;FAKT_ROTACJA = wysoka&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-ZT-04&quot;,
+      &quot;czynnik&quot;: &quot;modernizacja oświetlenia LED&quot;,
+      &quot;warunek&quot;: &quot;FAKT_LED_UDZIAL &lt; 70&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WT-12&quot;,
+      &quot;czynnik&quot;: &quot;ciepło z własnego źródła&quot;,
+      &quot;warunek&quot;: &quot;FAKT_KOTLOWNIA IN (wlasne, oba)&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;KTX-WO-11&quot;,
+      &quot;czynnik&quot;: &quot;utrzymanie ruchu siłami własnymi&quot;,
+      &quot;warunek&quot;: &quot;FAKT_UR_WLASNE = wlasne&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;STK-Z-10&quot;,
+      &quot;czynnik&quot;: &quot;dostawca gazu lub ciepła sieciowego&quot;,
+      &quot;warunek&quot;: &quot;FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;STK-Z-14&quot;,
+      &quot;czynnik&quot;: &quot;wykonawcy na terenie zakładu&quot;,
+      &quot;warunek&quot;: &quot;FAKT_UR_WLASNE IN (zewnetrzne, mieszane)&quot;,
+      &quot;rodzaj&quot;: &quot;PROPOZYCJA&quot;
+    }
+  ],
+  &quot;nowe_czynniki&quot;: [
+    {
+      &quot;tresc_robocza&quot;: &quot;sprężarki bez regulacji obrotów&quot;,
+      &quot;warunek&quot;: &quot;FAKT_CA_VSD = 0&quot;
+    },
+    {
+      &quot;tresc_robocza&quot;: &quot;ciepło ze sprężarek nie jest wykorzystywane&quot;,
+      &quot;warunek&quot;: &quot;FAKT_CA_ODZYSK = nie&quot;
+    },
+    {
+      &quot;tresc_robocza&quot;: &quot;centrale wentylacyjne bez odzysku ciepła&quot;,
+      &quot;warunek&quot;: &quot;FAKT_WENT_ODZYSK IN (czesc, zadna)&quot;
+    },
+    {
+      &quot;tresc_robocza&quot;: &quot;centrale pracujące poza godzinami pracy&quot;,
+      &quot;warunek&quot;: &quot;FAKT_WENT_HARMONOGRAM = nie&quot;
+    },
+    {
+      &quot;tresc_robocza&quot;: &quot;duże silniki bez falowników&quot;,
+      &quot;warunek&quot;: &quot;FAKT_NAPEDY_VSD IN (brak, czesc)&quot;
+    },
+    {
+      &quot;tresc_robocza&quot;: &quot;oświetlenie sterowane ręcznie&quot;,
+      &quot;warunek&quot;: &quot;FAKT_OSW_STEROWANIE = recznie&quot;
+    }
+  ]
+}</pre></div>
+
+<script>var SCHEMA = {"meta": {"nazwa": "Profil zakładu", "wersja": "1.4-projekt", "miejsce_na_platformie": "3.6 — etap przygotowania, nie punkt normy"}, "sekcje": [{"id": "S1", "nazwa": "Organizacja i obiekty", "wypelnia": "Energy Manager", "czas_min": 6, "pytania": [{"kod": "FAKT_LOKALIZACJE", "pytanie": "Ile lokalizacji obejmie system zarządzania energią?", "typ": "number", "opcje": [], "jednostka": "szt.", "pokaz_gdy": "ZAWSZE", "pomoc": "Liczymy odrębne adresy: zakład, magazyn zewnętrzny, oddział. Biuro w tym samym budynku to ta sama lokalizacja.", "steruje": "WO-08", "nowe_w_1_4": false}, {"kod": "FAKT_LOKALIZACJE_LISTA", "pytanie": "Wymień lokalizacje", "typ": "repeater", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_LOKALIZACJE > 0", "pomoc": "Lista trafi do dokumentu zakresu systemu (pkt 4.3).", "steruje": "4.3", "nowe_w_1_4": true, "kolumny": [{"label": "nazwa", "typ": "text", "opcje": []}, {"label": "adres", "typ": "text", "opcje": []}, {"label": "rodzaj", "typ": "select", "opcje": ["produkcja", "magazyn", "biuro", "inne"]}, {"label": "czy w zakresie systemu", "typ": "select", "opcje": ["tak", "nie"]}]}, {"kod": "FAKT_BRANZA", "pytanie": "Główna działalność zakładu", "typ": "text", "opcje": [], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Kod PKD albo krótki opis, np. „produkcja elementów złącznych”. Służy do dobierania przykładów i porównań branżowych.", "steruje": "tagi biblioteki", "nowe_w_1_4": true}, {"kod": "FAKT_PRACOWNICY", "pytanie": "Liczba pracowników", "typ": "number", "opcje": [], "jednostka": "osób", "pokaz_gdy": "ZAWSZE", "pomoc": "Łącznie we wszystkich lokalizacjach objętych systemem. Wartość przybliżona wystarczy.", "steruje": "7.2, 7.3", "nowe_w_1_4": true}, {"kod": "FAKT_ZMIANY", "pytanie": "Ile zmian pracuje zakład?", "typ": "select", "opcje": [{"w": "1", "e": "1"}, {"w": "2", "e": "2"}, {"w": "3", "e": "3"}, {"w": "4", "e": "4"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Wartość 4 oznacza ruch ciągły — praca także w weekendy i święta.", "steruje": "WO-09", "nowe_w_1_4": false}, {"kod": "FAKT_SEZONOWOSC", "pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Np. sezon produkcyjny, przestoje letnie, kampania cukrownicza.", "steruje": "ZM-09", "nowe_w_1_4": false}, {"kod": "FAKT_PODMIOT", "pytanie": "Typ organizacji", "typ": "select", "opcje": [{"w": "prywatny", "e": "prywatny"}, {"w": "komunalny", "e": "komunalny"}, {"w": "publiczny", "e": "publiczny"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Spółka komunalna i podmiot publiczny stosują procedury zamówień publicznych.", "steruje": "ZR-10", "nowe_w_1_4": false}, {"kod": "FAKT_GRUPA_KAPITALOWA", "pytanie": "Czy organizacja należy do grupy kapitałowej?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Grupa często narzuca własne cele klimatyczne i sposób raportowania.", "steruje": "STK-W-02", "nowe_w_1_4": false}, {"kod": "FAKT_ZWIAZKI", "pytanie": "Czy działają związki zawodowe lub rada pracowników?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "STK-W-10", "nowe_w_1_4": false}, {"kod": "FAKT_SYSTEM_BAZOWY", "pytanie": "Czy organizacja ma wdrożony system zarządzania?", "typ": "select", "opcje": [{"w": "brak", "e": "Brak certyfikowanego systemu"}, {"w": "iso_9001", "e": "ISO 9001"}, {"w": "iso_14001", "e": "ISO 14001"}, {"w": "oba", "e": "ISO 9001 i ISO 14001"}, {"w": "inny", "e": "Inny system certyfikowany"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Chodzi o system certyfikowany. Decyduje o trybie wdrożenia: od podstaw albo nadbudowa na istniejącym systemie.", "steruje": "WO-03 · tryb", "nowe_w_1_4": false}, {"kod": "FAKT_SYSTEM_BAZOWY_ROK", "pytanie": "Od którego roku system jest certyfikowany?", "typ": "year", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_SYSTEM_BAZOWY != brak", "pomoc": "", "steruje": "—", "nowe_w_1_4": true}, {"kod": "FAKT_ZGODA_INTEGRACJA", "pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?", "typ": "select", "opcje": [{"w": "tak", "e": "Tak — rozszerzamy istniejącą dokumentację"}, {"w": "nie", "e": "Nie — tworzymy odrębny system"}, {"w": "brak decyzji", "e": "Decyzja jeszcze nie zapadła"}], "jednostka": null, "pokaz_gdy": "FAKT_SYSTEM_BAZOWY != brak", "pomoc": "„Tak” oznacza, że nie tworzymy osobnych dokumentów, tylko rozszerzamy Wasze istniejące.", "steruje": "tryb", "nowe_w_1_4": false}, {"kod": "FAKT_ENERGY_MANAGER", "pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?", "typ": "select", "opcje": [{"w": "nie", "e": "Nie wyznaczono nikogo"}, {"w": "nieformalnie", "e": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków"}, {"w": "tak", "e": "Tak, z pisemnym zakresem obowiązków"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Norma wymaga w klauzuli 5.3 wyznaczenia zespołu i przypisania odpowiedzialności na piśmie.", "steruje": "WO-01, WO-02 · 5.3", "nowe_w_1_4": false}, {"kod": "FAKT_UR_WLASNE", "pytanie": "Kto prowadzi utrzymanie ruchu?", "typ": "select", "opcje": [{"w": "wlasne", "e": "Własne służby utrzymania ruchu"}, {"w": "zewnetrzne", "e": "Firma zewnętrzna"}, {"w": "mieszane", "e": "Częściowo własne służby, część prac zlecana"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Chodzi o bieżącą obsługę i przeglądy urządzeń energetycznych, nie o remonty inwestycyjne.", "steruje": "WO-11 · STK-Z-14", "nowe_w_1_4": false}, {"kod": "FAKT_INSTRUKCJE_EKSPL", "pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?", "typ": "select", "opcje": [{"w": "tak", "e": "Tak, dla wszystkich głównych urządzeń"}, {"w": "czesciowo", "e": "Dla części urządzeń"}, {"w": "nie", "e": "Nie ma"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Instrukcje używane w praktyce przez operatorów, nie tylko DTR od producenta.", "steruje": "WO-05 · 8.1", "nowe_w_1_4": true}, {"kod": "FAKT_ZAKUPY_KRYTERIA", "pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?", "typ": "select", "opcje": [{"w": "zawsze", "e": "Zawsze — to stałe kryterium zakupowe"}, {"w": "czasami", "e": "Czasami, przy większych zakupach"}, {"w": "nie", "e": "Nie — decyduje cena zakupu"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Chodzi o urządzenia zużywające energię: silniki, sprężarki, piece, oświetlenie.", "steruje": "WO-04 · 8.3", "nowe_w_1_4": true}, {"kod": "FAKT_ROTACJA", "pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku", "typ": "select", "opcje": [{"w": "niska", "e": "Niska — poniżej 5% rocznie"}, {"w": "srednia", "e": "Średnia — od 5 do 15% rocznie"}, {"w": "wysoka", "e": "Wysoka — powyżej 15% rocznie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Odejścia w stosunku do stanu zatrudnienia. Wysoka rotacja oznacza, że wiedza o eksploatacji urządzeń ucieka z zakładu.", "steruje": "WO-10 · 7.2", "nowe_w_1_4": true}]}, {"id": "S2", "nazwa": "Energia i koszty", "wypelnia": "Kontroling / finanse", "czas_min": 7, "pytania": [{"kod": "FAKT_ROK_ODNIESIENIA", "pytanie": "Za który rok podajesz dane?", "typ": "year", "opcje": [], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Ostatni zamknięty rok kalendarzowy. Wszystkie dane w tej sekcji dotyczą tego samego roku.", "steruje": "ZUZYCIE_TJ", "nowe_w_1_4": true}, {"kod": "FAKT_NOSNIKI", "pytanie": "Zużycie nośników energii w roku odniesienia", "typ": "repeater", "opcje": [], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Dane z faktur. Energia zakupiona oraz paliwa spalone we własnych źródłach. Nie odejmujemy energii sprzedanej. Nie dodajemy osobno energii wyprodukowanej z tych paliw.", "steruje": "ZUZYCIE_TJ · 6.3", "nowe_w_1_4": true, "kolumny": [{"label": "nośnik", "typ": "select", "opcje": ["energia elektryczna", "gaz ziemny", "ciepło sieciowe", "olej opałowy", "LPG", "węgiel", "biomasa", "biogaz", "olej napędowy", "benzyna", "CNG", "inny"]}, {"label": "ilość", "typ": "number", "opcje": []}, {"label": "jednostka", "typ": "select", "opcje": ["kWh", "MWh", "GJ", "m³", "l", "t"]}, {"label": "koszt roczny netto, zł (opcjonalnie)", "typ": "number", "opcje": []}]}, {"kod": "ZUZYCIE_TJ", "pytanie": "Roczne zużycie energii w TJ", "typ": "auto", "opcje": [], "jednostka": "TJ", "pokaz_gdy": "ZAWSZE", "pomoc": "Liczone automatycznie z tabeli nośników. Decyduje o obowiązkach prawnych: poniżej 10, od 10 do 85, powyżej 85 TJ. Przeliczniki: gaz ziemny 0,0395 GJ/m³ (10,97 kWh/m³ — gaz wysokometanowy E), LPG 0,0246 GJ/l, olej napędowy 0,0386 GJ/l, energia elektryczna i ciepło 3,6 GJ/MWh. Książka zaokrągla gaz do 10 kWh/m³ dla czytelności obliczeń, dlatego przykład AutoParts wychodzi tu na 44,9 TJ zamiast 43 TJ z Załącznika III-02 — ten sam przedział obowiązków.", "steruje": "ZR-01, ZR-02, ZR-11", "nowe_w_1_4": false}, {"kod": "FAKT_PRODUKCJA_JEDN", "pytanie": "W czym mierzycie wielkość produkcji?", "typ": "select", "opcje": [{"w": "t", "e": "tony wyrobu"}, {"w": "szt", "e": "sztuki wyrobu"}, {"w": "m2", "e": "metry kwadratowe"}, {"w": "m3", "e": "metry sześcienne"}, {"w": "mwh", "e": "MWh wyrobu (ciepło, chłód)"}, {"w": "inna", "e": "Inna jednostka"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Jednostka, w której będziecie liczyć wskaźniki wyniku energetycznego — na przykład kWh na tonę wyrobu. Dla zakładu wielobranżowego wybierzcie jednostkę wyrobu głównego.", "steruje": "6.4, 6.5", "nowe_w_1_4": true}, {"kod": "FAKT_PRODUKCJA_INNA", "pytanie": "Jaka jednostka?", "typ": "text", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_PRODUKCJA_JEDN = inna", "pomoc": "", "steruje": "6.4", "nowe_w_1_4": true}, {"kod": "FAKT_PRODUKCJA", "pytanie": "Wielkość produkcji w roku odniesienia", "typ": "number", "opcje": [], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "W jednostce wskazanej wyżej. To najczęstsza zmienna istotna we wskaźnikach — bez niej wskaźnik pokazuje wahania produkcji, a nie efektywności.", "steruje": "6.3, 6.4, 6.5", "nowe_w_1_4": true}, {"kod": "FAKT_PRODUKCJA_POPRZ", "pytanie": "Wielkość produkcji w roku poprzednim", "typ": "number", "opcje": [], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Potrzebna do porównania „rok temu — dziś” i do oceny, czy zmiana zużycia wynika ze zmiany produkcji.", "steruje": "6.5", "nowe_w_1_4": true}, {"kod": "FAKT_HDD", "pytanie": "Stopniodni grzania (HDD) w roku odniesienia", "typ": "number", "opcje": [], "jednostka": "°C·dzień", "pokaz_gdy": "ZAWSZE", "pomoc": "Miara surowości sezonu grzewczego dla Waszej lokalizacji — z IMGW albo z serwisów pogodowych. Zostaw puste, jeśli ogrzewanie nie ma u Was znaczenia dla zużycia.", "steruje": "6.4, 6.5", "nowe_w_1_4": true}, {"kod": "FAKT_HDD_POPRZ", "pytanie": "Stopniodni grzania w roku poprzednim", "typ": "number", "opcje": [], "jednostka": "°C·dzień", "pokaz_gdy": "FAKT_HDD > 0", "pomoc": "Bez porównywalnej pogody nie da się rozstrzygnąć, czy wynik poprawiliście, czy zima była łagodniejsza.", "steruje": "6.5", "nowe_w_1_4": true}, {"kod": "FAKT_PRZYCHOD", "pytanie": "Przychód ze sprzedaży w roku odniesienia", "typ": "number", "opcje": [], "jednostka": "mln zł", "pokaz_gdy": "ZAWSZE", "pomoc": "Opcjonalne. Służy wyłącznie do wskaźnika zarządczego typu GJ na milion złotych przychodu — przydatnego w rozmowie z zarządem, ale nieobowiązkowego.", "steruje": "6.4", "nowe_w_1_4": true}, {"kod": "FAKT_UDZIAL_ENERGII", "pytanie": "Jaki procent kosztów operacyjnych stanowi energia?", "typ": "number", "opcje": [], "jednostka": "%", "pokaz_gdy": "ZAWSZE", "pomoc": "Wartość przybliżona. Jeśli nie liczycie tego wskaźnika, zostaw puste — policzymy z kosztu energii i kosztów operacyjnych.", "steruje": "WF-01, WF-02", "nowe_w_1_4": false}, {"kod": "FAKT_MOC_UMOWNA", "pytanie": "Moc umowna energii elektrycznej", "typ": "number", "opcje": [], "jednostka": "kW", "pokaz_gdy": "ZAWSZE", "pomoc": "Z umowy dystrybucyjnej albo z faktury. Przy kilku przyłączach — suma.", "steruje": "STK-Z-08", "nowe_w_1_4": true}, {"kod": "FAKT_MOC_OGRANICZONA", "pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZM-05", "nowe_w_1_4": false}, {"kod": "FAKT_UMOWA_WYGASA", "pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZM-02", "nowe_w_1_4": false}, {"kod": "FAKT_UMOWA_DATA", "pytanie": "Data wygaśnięcia umowy", "typ": "date", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_UMOWA_WYGASA = tak", "pomoc": "Pole informacyjne, nie wpływa na dobór czynników.", "steruje": "—", "nowe_w_1_4": true}, {"kod": "FAKT_BUDZET", "pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "WF-03", "nowe_w_1_4": false}, {"kod": "FAKT_PBT_PROG", "pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?", "typ": "number", "opcje": [], "jednostka": "lat", "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "WF-04", "nowe_w_1_4": false}, {"kod": "FAKT_INWESTYCJE", "pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Nowa linia, rozbudowa hali, wymiana źródła ciepła.", "steruje": "WF-07", "nowe_w_1_4": false}, {"kod": "FAKT_INWESTYCJE_OPIS", "pytanie": "Jakie?", "typ": "text", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_INWESTYCJE = tak", "pomoc": "", "steruje": "6.5", "nowe_w_1_4": true}, {"kod": "FAKT_BIALE_MOZLIWE", "pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "WF-05", "nowe_w_1_4": false}]}, {"id": "S3", "nazwa": "Instalacje zasilane energią elektryczną", "wypelnia": "Utrzymanie ruchu", "czas_min": 9, "pytania": [{"kod": "FAKT_SPREZONE", "pytanie": "Czy zakład ma instalację sprężonego powietrza?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "filtr grupy CA", "nowe_w_1_4": false}, {"kod": "FAKT_CA_LICZBA", "pytanie": "Ile jest sprężarek?", "typ": "number", "opcje": [], "jednostka": "szt.", "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "Łącznie z rezerwowymi.", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_CA_MOC", "pytanie": "Łączna moc znamionowa sprężarek", "typ": "number", "opcje": [], "jednostka": "kW", "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "Suma z tabliczek znamionowych.", "steruje": "6.3 · kandydat SEU", "nowe_w_1_4": true}, {"kod": "FAKT_CA_VSD", "pytanie": "Ile sprężarek ma regulację obrotów (falownik)?", "typ": "number", "opcje": [], "jednostka": "szt.", "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "", "steruje": "nowy czynnik", "nowe_w_1_4": true}, {"kod": "FAKT_CA_STEROWNIK", "pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "Jedno urządzenie, które decyduje, które sprężarki włączyć i w jakiej kolejności. Nie chodzi o sterowniki w samych sprężarkach.", "steruje": "WT-05", "nowe_w_1_4": true}, {"kod": "FAKT_CA_SZCZELNOSC", "pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "Np. przeglądem z detektorem ultradźwiękowym albo pomiarem przecieków w dzień wolny.", "steruje": "WT-06", "nowe_w_1_4": true}, {"kod": "FAKT_CA_ODZYSK", "pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "", "steruje": "nowy czynnik", "nowe_w_1_4": true}, {"kod": "FAKT_CA_GODZINY", "pytanie": "Ile godzin w roku pracuje sprężarkownia?", "typ": "number", "opcje": [], "jednostka": "h/rok", "pokaz_gdy": "FAKT_SPREZONE = tak", "pomoc": "Szacunkowo. Ruch ciągły to około 8 000 godzin.", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_WENT", "pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "filtr grupy VAC", "nowe_w_1_4": true}, {"kod": "FAKT_WENT_LICZBA", "pytanie": "Ile jest central?", "typ": "number", "opcje": [], "jednostka": "szt.", "pokaz_gdy": "FAKT_WENT = tak", "pomoc": "", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_WENT_ODZYSK", "pytanie": "Czy centrale mają odzysk ciepła?", "typ": "select", "opcje": [{"w": "wszystkie", "e": "Wszystkie centrale mają odzysk"}, {"w": "czesc", "e": "Część central ma odzysk"}, {"w": "zadna", "e": "Żadna nie ma odzysku"}, {"w": "nie wiem", "e": "Nie wiem"}], "jednostka": null, "pokaz_gdy": "FAKT_WENT = tak", "pomoc": "", "steruje": "nowy czynnik", "nowe_w_1_4": true}, {"kod": "FAKT_WENT_HARMONOGRAM", "pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?", "typ": "select", "opcje": [{"w": "tak", "e": "Tak, wszystkie"}, {"w": "czesciowo", "e": "Część central"}, {"w": "nie", "e": "Nie — pracują tak samo cały czas"}], "jednostka": null, "pokaz_gdy": "FAKT_WENT = tak", "pomoc": "", "steruje": "nowy czynnik", "nowe_w_1_4": true}, {"kod": "FAKT_CHLODZENIE", "pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZK-03", "nowe_w_1_4": false}, {"kod": "FAKT_CHLODZENIE_MOC", "pytanie": "Łączna moc chłodnicza", "typ": "number", "opcje": [], "jednostka": "kW", "pokaz_gdy": "FAKT_CHLODZENIE = tak", "pomoc": "Szacunkowo, jeśli brak danych.", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_CHLODZENIE_WODNE", "pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "FAKT_CHLODZENIE = tak", "pomoc": "", "steruje": "ZK-06", "nowe_w_1_4": false}, {"kod": "FAKT_FGAZ", "pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Urządzenia chłodnicze, klimatyzacyjne, pompy ciepła. Mają karty w Centralnym Rejestrze Operatorów.", "steruje": "ZR-07", "nowe_w_1_4": false}, {"kod": "FAKT_NAPEDY_VSD", "pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?", "typ": "select", "opcje": [{"w": "brak", "e": "Żaden albo pojedyncze"}, {"w": "czesc", "e": "Mniej więcej połowa"}, {"w": "wiekszosc", "e": "Większość"}, {"w": "nie wiem", "e": "Nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "nowy czynnik", "nowe_w_1_4": true}, {"kod": "FAKT_LED_UDZIAL", "pytanie": "Jaki procent oświetlenia stanowią źródła LED?", "typ": "number", "opcje": [], "jednostka": "%", "pokaz_gdy": "ZAWSZE", "pomoc": "Szacunkowo, w odniesieniu do mocy zainstalowanej oświetlenia.", "steruje": "ZT-04", "nowe_w_1_4": true}, {"kod": "FAKT_OSW_STEROWANIE", "pytanie": "Jak sterowane jest oświetlenie hal?", "typ": "select", "opcje": [{"w": "czujniki", "e": "Czujniki ruchu albo natężenia światła"}, {"w": "harmonogram", "e": "Automatyczny harmonogram"}, {"w": "recznie", "e": "Ręcznie — włącznikiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "nowy czynnik", "nowe_w_1_4": true}, {"kod": "FAKT_WIEK_INFRA", "pytanie": "Ile lat ma większość głównych urządzeń energetycznych?", "typ": "number", "opcje": [], "jednostka": "lat", "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "WT-04", "nowe_w_1_4": false}, {"kod": "FAKT_UDT", "pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Zbiorniki ciśnieniowe, kotły, dźwignice, wózki widłowe.", "steruje": "ZR-06", "nowe_w_1_4": false}]}, {"id": "S4", "nazwa": "Ciepło, procesy i źródła własne", "wypelnia": "Utrzymanie ruchu", "czas_min": 7, "pytania": [{"kod": "FAKT_KOTLOWNIA", "pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?", "typ": "select", "opcje": [{"w": "wlasne", "e": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)"}, {"w": "siec", "e": "Wyłącznie z sieci ciepłowniczej"}, {"w": "oba", "e": "Z własnego źródła i z sieci ciepłowniczej"}, {"w": "brak", "e": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Chodzi o ciepło na ogrzewanie i na procesy łącznie. Para technologiczna liczy się jako własne źródło.", "steruje": "WT-12 · STK-Z-10", "nowe_w_1_4": false}, {"kod": "FAKT_CIEPLO_PALIWO", "pytanie": "Czym zasilane jest własne źródło ciepła?", "typ": "multi", "opcje": [{"w": "gaz ziemny", "e": "gaz ziemny"}, {"w": "olej", "e": "olej"}, {"w": "węgiel", "e": "węgiel"}, {"w": "biomasa", "e": "biomasa"}, {"w": "biogaz", "e": "biogaz"}, {"w": "pompa ciepła", "e": "pompa ciepła"}, {"w": "energia elektryczna", "e": "energia elektryczna"}], "jednostka": null, "pokaz_gdy": "FAKT_KOTLOWNIA IN (wlasne, oba)", "pomoc": "", "steruje": "ZT-05", "nowe_w_1_4": true}, {"kod": "FAKT_CIEPLO_PALIWA", "pytanie": "Czy ciepło wytwarzane jest z paliw kopalnych?", "typ": "auto", "opcje": [], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Wyliczane: tak, jeśli wśród paliw własnego źródła jest gaz ziemny, olej albo węgiel. Przy cieple z sieci wynik zależy od paliwa dostawcy — pole pokazuje „do potwierdzenia”.", "steruje": "ZT-05", "nowe_w_1_4": false}, {"kod": "FAKT_KOTLOWNIA_MOC", "pytanie": "Moc zainstalowana źródeł ciepła", "typ": "number", "opcje": [], "jednostka": "kW", "pokaz_gdy": "FAKT_KOTLOWNIA IN (wlasne, oba)", "pomoc": "", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_KOTLOWNIA_WIEK", "pytanie": "Wiek najstarszego czynnego kotła", "typ": "number", "opcje": [], "jednostka": "lat", "pokaz_gdy": "FAKT_KOTLOWNIA IN (wlasne, oba)", "pomoc": "", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_CIEPLO_MOC_ZAMOWIONA", "pytanie": "Zamówiona moc cieplna z sieci", "typ": "number", "opcje": [], "jednostka": "kW", "pokaz_gdy": "FAKT_KOTLOWNIA IN (siec, oba)", "pomoc": "Z umowy z dostawcą ciepła. Zawyżona moc zamówiona to typowy, łatwy do usunięcia koszt stały.", "steruje": "STK-Z-10 · 6.3", "nowe_w_1_4": true}, {"kod": "FAKT_PROCESY", "pytanie": "Które procesy zużywają najwięcej energii?", "typ": "multi", "opcje": [{"w": "piece i nagrzewnice", "e": "piece i nagrzewnice"}, {"w": "suszarnie", "e": "suszarnie"}, {"w": "wtryskarki i wytłaczarki", "e": "wtryskarki i wytłaczarki"}, {"w": "prasy", "e": "prasy"}, {"w": "malarnia", "e": "malarnia"}, {"w": "galwanizernia", "e": "galwanizernia"}, {"w": "pompy procesowe", "e": "pompy procesowe"}, {"w": "chłodzenie procesu", "e": "chłodzenie procesu"}, {"w": "inne", "e": "inne"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Zaznacz maksymalnie trzy. To wstępne wskazanie kandydatów na znaczące obszary zużycia.", "steruje": "6.3 · kandydat SEU", "nowe_w_1_4": true}, {"kod": "FAKT_CIEPLO_ODPADOWE", "pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Spaliny, gorące powietrze z pieców i suszarni, woda chłodząca, ciepło ze sprężarek.", "steruje": "WT-14, ZT-08", "nowe_w_1_4": false}, {"kod": "FAKT_ODZYSK_CIEPLA", "pytanie": "Czy to ciepło jest odzyskiwane?", "typ": "select", "opcje": [{"w": "tak", "e": "Tak, w całości albo prawie w całości"}, {"w": "czesciowo", "e": "Częściowo"}, {"w": "nie", "e": "Nie jest odzyskiwane"}], "jednostka": null, "pokaz_gdy": "FAKT_CIEPLO_ODPADOWE = tak", "pomoc": "", "steruje": "WT-14", "nowe_w_1_4": true}, {"kod": "FAKT_PROCES_BEZ_ALTERNATYWY", "pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Np. piec gazowy, dla którego nie ma dojrzałej alternatywy elektrycznej.", "steruje": "ZT-06", "nowe_w_1_4": false}, {"kod": "FAKT_PV", "pytanie": "Czy zakład ma instalację fotowoltaiczną?", "typ": "select", "opcje": [{"w": "tak", "e": "Tak, działa"}, {"w": "nie", "e": "Nie"}, {"w": "w planach", "e": "W planach albo w budowie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "WT-07, WT-08", "nowe_w_1_4": false}, {"kod": "FAKT_PV_MOC", "pytanie": "Moc instalacji fotowoltaicznej", "typ": "number", "opcje": [], "jednostka": "kWp", "pokaz_gdy": "FAKT_PV = tak", "pomoc": "", "steruje": "6.5", "nowe_w_1_4": true}, {"kod": "FAKT_BESS", "pytanie": "Czy zakład ma magazyn energii?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "WT-08", "nowe_w_1_4": false}, {"kod": "FAKT_BESS_POJ", "pytanie": "Pojemność magazynu", "typ": "number", "opcje": [], "jednostka": "kWh", "pokaz_gdy": "FAKT_BESS = tak", "pomoc": "", "steruje": "—", "nowe_w_1_4": true}, {"kod": "FAKT_CHP", "pytanie": "Czy zakład ma kogenerację?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Jednoczesna produkcja prądu i ciepła, np. z gazu albo biogazu.", "steruje": "WT-09", "nowe_w_1_4": false}, {"kod": "FAKT_CHP_MOC", "pytanie": "Moc elektryczna kogeneracji", "typ": "number", "opcje": [], "jednostka": "kWe", "pokaz_gdy": "FAKT_CHP = tak", "pomoc": "", "steruje": "6.5", "nowe_w_1_4": true}, {"kod": "FAKT_FLOTA", "pytanie": "Czy w zakresie systemu jest flota pojazdów?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Samochody, ciężarówki, maszyny jezdne. Wózki widłowe liczymy tylko spalinowe.", "steruje": "WT-13", "nowe_w_1_4": false}, {"kod": "FAKT_FLOTA_LICZBA", "pytanie": "Liczba pojazdów", "typ": "number", "opcje": [], "jednostka": "szt.", "pokaz_gdy": "FAKT_FLOTA = tak", "pomoc": "", "steruje": "6.3", "nowe_w_1_4": true}]}, {"id": "S5", "nazwa": "Opomiarowanie i dane", "wypelnia": "Utrzymanie ruchu / automatyka", "czas_min": 4, "pytania": [{"kod": "FAKT_PODLICZNIKI", "pytanie": "Jak opomiarowana jest energia elektryczna?", "typ": "select", "opcje": [{"w": "brak", "e": "Tylko licznik główny"}, {"w": "czesciowo", "e": "Podliczniki na części obiektów lub wydziałów"}, {"w": "kompleksowo", "e": "Podliczniki na wszystkich znaczących odbiorach"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "brak = tylko licznik na przyłączu; częściowo = główne rozdzielnie albo hale; kompleksowo = pojedyncze duże urządzenia.", "steruje": "WT-01, WT-02, WT-03, ZT-03", "nowe_w_1_4": false}, {"kod": "FAKT_PODLICZNIKI_LICZBA", "pytanie": "Ile jest podliczników?", "typ": "number", "opcje": [], "jednostka": "szt.", "pokaz_gdy": "FAKT_PODLICZNIKI != brak", "pomoc": "", "steruje": "6.6", "nowe_w_1_4": true}, {"kod": "FAKT_ODCZYT", "pytanie": "Jak odczytywane są liczniki?", "typ": "select", "opcje": [{"w": "recznie", "e": "Ręcznie, spisywane z liczników"}, {"w": "zdalnie", "e": "Zdalnie, automatycznie do systemu"}, {"w": "mieszane", "e": "Część ręcznie, część zdalnie"}], "jednostka": null, "pokaz_gdy": "FAKT_PODLICZNIKI != brak", "pomoc": "", "steruje": "6.6", "nowe_w_1_4": true}, {"kod": "FAKT_SCADA", "pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "System, w którym na ekranie widać pracę urządzeń na bieżąco.", "steruje": "WT-10, WT-11", "nowe_w_1_4": false}, {"kod": "FAKT_SCADA_ZAKRES", "pytanie": "Jaki procent zużycia energii obejmuje?", "typ": "number", "opcje": [], "jednostka": "%", "pokaz_gdy": "FAKT_SCADA = tak", "pomoc": "Szacunkowo.", "steruje": "6.6", "nowe_w_1_4": true}, {"kod": "FAKT_DANE_HISTORIA", "pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?", "typ": "number", "opcje": [], "jednostka": "mies.", "pokaz_gdy": "ZAWSZE", "pomoc": "Dane z podliczników, SCADA, arkuszy odczytów. Zero, jeśli są tylko faktury.", "steruje": "6.5", "nowe_w_1_4": true}, {"kod": "FAKT_MES", "pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZT-07", "nowe_w_1_4": false}, {"kod": "FAKT_ANALIZA_DANYCH", "pytanie": "Czy dane o zużyciu energii są analizowane?", "typ": "select", "opcje": [{"w": "nie", "e": "nie"}, {"w": "okresowo", "e": "okresowo"}, {"w": "systematycznie", "e": "systematycznie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "nie = faktury służą tylko do płacenia; okresowo = raz na kwartał albo rok; systematycznie = co miesiąc albo częściej.", "steruje": "WO-06", "nowe_w_1_4": false}]}, {"id": "S6", "nazwa": "Otoczenie prawne i rynkowe", "wypelnia": "Energy Manager", "czas_min": 4, "pytania": [{"kod": "FAKT_AUDYT_ENERG", "pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Audyt w rozumieniu ustawy o efektywności energetycznej, zgłaszany do URE.", "steruje": "ZR-03", "nowe_w_1_4": false}, {"kod": "FAKT_AUDYT_ROK", "pytanie": "W którym roku?", "typ": "year", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_AUDYT_ENERG = tak", "pomoc": "", "steruje": "6.3", "nowe_w_1_4": true}, {"kod": "FAKT_ETS", "pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZR-04", "nowe_w_1_4": false}, {"kod": "FAKT_CSRD", "pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}, {"w": "nie wiem", "e": "nie wiem"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZR-05", "nowe_w_1_4": false}, {"kod": "FAKT_CSRD_ROK", "pytanie": "Od którego roku?", "typ": "year", "opcje": [], "jednostka": null, "pokaz_gdy": "FAKT_CSRD = tak", "pomoc": "", "steruje": "—", "nowe_w_1_4": true}, {"kod": "FAKT_ODBIORCY_CO2", "pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "Ankiety od klientów, wymagania w umowach, pytania w zapytaniach ofertowych.", "steruje": "ZM-03, ZM-04 · STK-Z-12", "nowe_w_1_4": false}, {"kod": "FAKT_PRZETARGI", "pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZM-07", "nowe_w_1_4": false}, {"kod": "FAKT_PRZERWY_POGODA", "pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?", "typ": "select", "opcje": [{"w": "tak", "e": "tak"}, {"w": "nie", "e": "nie"}], "jednostka": null, "pokaz_gdy": "ZAWSZE", "pomoc": "", "steruje": "ZK-05", "nowe_w_1_4": false}]}], "czynniki_41": [{"kod": "KTX-WT-05", "czynnik": "brak sterowania nadrzędnego sprężarek", "warunek": "FAKT_CA_STEROWNIK = nie", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WT-06", "czynnik": "brak kontroli szczelności", "warunek": "FAKT_CA_SZCZELNOSC = nie", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WT-14", "czynnik": "brak odzysku ciepła odpadowego", "warunek": "FAKT_CIEPLO_ODPADOWE = tak AND FAKT_ODZYSK_CIEPLA = nie", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WO-03", "czynnik": "brak systemu zarządzania", "warunek": "FAKT_SYSTEM_BAZOWY = brak", "rodzaj": "AUTO"}, {"kod": "KTX-WO-04", "czynnik": "zakupy wg ceny nabycia", "warunek": "FAKT_ZAKUPY_KRYTERIA IN (nie, czasami)", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WO-05", "czynnik": "brak instrukcji eksploatacji", "warunek": "FAKT_INSTRUKCJE_EKSPL IN (nie, czesciowo)", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WO-10", "czynnik": "rotacja personelu", "warunek": "FAKT_ROTACJA = wysoka", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-ZT-04", "czynnik": "modernizacja oświetlenia LED", "warunek": "FAKT_LED_UDZIAL < 70", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WT-12", "czynnik": "ciepło z własnego źródła", "warunek": "FAKT_KOTLOWNIA IN (wlasne, oba)", "rodzaj": "PROPOZYCJA"}, {"kod": "KTX-WO-11", "czynnik": "utrzymanie ruchu siłami własnymi", "warunek": "FAKT_UR_WLASNE = wlasne", "rodzaj": "PROPOZYCJA"}, {"kod": "STK-Z-10", "czynnik": "dostawca gazu lub ciepła sieciowego", "warunek": "FAKT_KOTLOWNIA IN (siec, oba) OR FAKT_CIEPLO_PALIWO = gaz ziemny", "rodzaj": "PROPOZYCJA"}, {"kod": "STK-Z-14", "czynnik": "wykonawcy na terenie zakładu", "warunek": "FAKT_UR_WLASNE IN (zewnetrzne, mieszane)", "rodzaj": "PROPOZYCJA"}], "nowe_czynniki": [{"tresc_robocza": "sprężarki bez regulacji obrotów", "warunek": "FAKT_CA_VSD = 0"}, {"tresc_robocza": "ciepło ze sprężarek nie jest wykorzystywane", "warunek": "FAKT_CA_ODZYSK = nie"}, {"tresc_robocza": "centrale wentylacyjne bez odzysku ciepła", "warunek": "FAKT_WENT_ODZYSK IN (czesc, zadna)"}, {"tresc_robocza": "centrale pracujące poza godzinami pracy", "warunek": "FAKT_WENT_HARMONOGRAM = nie"}, {"tresc_robocza": "duże silniki bez falowników", "warunek": "FAKT_NAPEDY_VSD IN (brak, czesc)"}, {"tresc_robocza": "oświetlenie sterowane ręcznie", "warunek": "FAKT_OSW_STEROWANIE = recznie"}], "przyklad": {"FAKT_LOKALIZACJE": "2", "FAKT_LOKALIZACJE_LISTA": [{"c0": "Zakład produkcyjny", "c1": "ul. Przemysłowa 12, Katowice", "c2": "produkcja", "c3": "tak"}, {"c0": "Magazyn wyrobów gotowych", "c1": "ul. Składowa 11, Katowice", "c2": "magazyn", "c3": "tak"}], "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)", "FAKT_PRACOWNICY": "850", "FAKT_ZMIANY": "3", "FAKT_SEZONOWOSC": "nie", "FAKT_PODMIOT": "prywatny", "FAKT_GRUPA_KAPITALOWA": "tak", "FAKT_ZWIAZKI": "nie", "FAKT_SYSTEM_BAZOWY": "iso_14001", "FAKT_SYSTEM_BAZOWY_ROK": "2019", "FAKT_ZGODA_INTEGRACJA": "tak", "FAKT_ENERGY_MANAGER": "nieformalnie", "FAKT_UR_WLASNE": "wlasne", "FAKT_INSTRUKCJE_EKSPL": "czesciowo", "FAKT_ZAKUPY_KRYTERIA": "czasami", "FAKT_ROTACJA": "srednia", "FAKT_NOSNIKI": [{"c0": "energia elektryczna", "c1": "8500", "c2": "MWh", "c3": "7565000"}, {"c0": "gaz ziemny", "c1": "350000", "c2": "m³", "c3": "875000"}, {"c0": "LPG", "c1": "18000", "c2": "l", "c3": "54000"}], "FAKT_ROK_ODNIESIENIA": "2025", "FAKT_UDZIAL_ENERGII": "2,5", "FAKT_MOC_UMOWNA": "1400", "FAKT_SPREZONE": "tak", "FAKT_CA_LICZBA": "4", "FAKT_CA_MOC": "440", "FAKT_CA_VSD": "0", "FAKT_CA_STEROWNIK": "nie", "FAKT_CA_SZCZELNOSC": "nie", "FAKT_CA_ODZYSK": "nie", "FAKT_CA_GODZINY": "6000", "FAKT_KOTLOWNIA": "wlasne", "FAKT_CIEPLO_PALIWO": ["gaz ziemny"], "FAKT_KOTLOWNIA_MOC": "1200", "FAKT_KOTLOWNIA_WIEK": "18", "FAKT_PODLICZNIKI": "czesciowo", "FAKT_ODCZYT": "mieszane"}};</script>
+<script>/* ENESA — Profil zakładu. Silnik ankiety. Warunki są danymi, nie kodem: parser własny, bez eval. */
+"use strict";
+
+var ODP = {};          // kod -> wartość (string | array | array-of-row)
+var STAN = {};         // idSekcji -> 'nierozpoczeta' | 'w_trakcie' | 'przekazana'
+var VIS = {};          // kod -> bool
+var AUTO = {};         // kod -> {wartosc, opis}
+var AKT = SCHEMA.sekcje[0].id;
+var KLUCZ = "enesa_profil_v14";
+
+/* ─────────── parser warunków ─────────── */
+function norm(v) {
+  if (v === undefined || v === null) return null;
+  if (Array.isArray(v)) return v.length ? v : null;
+  var s = String(v).trim();
+  if (s === "" || s.toLowerCase() === "nie wiem" || s === "brak danych") return null;
+  return s;
+}
+function pobierz(kod) {
+  if (AUTO[kod] !== undefined) return norm(AUTO[kod].wartosc);
+  if (VIS[kod] === false) return null;          // ukryte nie ma wartości
+  return norm(ODP[kod]);
+}
+function liczba(v) { var n = parseFloat(String(v).replace(",", ".")); return isNaN(n) ? null : n; }
+
+function term(t) {
+  t = t.trim();
+  if (t === "" || t === "ZAWSZE") return true;
+  var m = t.match(/^([A-Z0-9_]+)\s+IN\s*\(([^)]*)\)$/i);
+  if (m) {
+    var v = pobierz(m[1]); if (v === null) return false;
+    var lista = m[2].split(",").map(function (x) { return x.trim().toLowerCase(); });
+    if (Array.isArray(v)) return v.some(function (x) { return lista.indexOf(String(x).toLowerCase()) >= 0; });
+    return lista.indexOf(String(v).toLowerCase()) >= 0;
+  }
+  m = t.match(/^([A-Z0-9_]+)\s*(>=|<=|!=|=|>|<)\s*(.+)$/);
+  if (!m) return false;
+  var pole = m[1], op = m[2], praw = m[3].trim();
+  var val = pobierz(pole);
+  if (val === null) return false;               // brak odpowiedzi i „nie wiem” → FAŁSZ
+  var a = liczba(val), b = liczba(praw);
+  if (op === ">" || op === "<" || op === ">=" || op === "<=") {
+    if (a === null || b === null) return false;
+    if (op === ">") return a > b;
+    if (op === "<") return a < b;
+    if (op === ">=") return a >= b;
+    return a <= b;
+  }
+  var rowne;
+  if (a !== null && b !== null) rowne = (a === b);
+  else if (Array.isArray(val)) rowne = val.some(function (x) { return String(x).toLowerCase() === praw.toLowerCase(); });
+  else rowne = (String(val).toLowerCase() === praw.toLowerCase());
+  return op === "=" ? rowne : !rowne;
+}
+function ocen(w) {
+  if (!w || w === "ZAWSZE") return true;
+  return w.split(/\s+OR\s+/i).some(function (grupa) {
+    return grupa.split(/\s+AND\s+/i).every(term);
+  });
+}
+
+/* ─────────── pola wyliczane ─────────── */
+var WO = {                       // GJ na jednostkę; orientacyjne, konsultant potwierdza
+  "energia elektryczna": { kWh: 0.0036, MWh: 3.6, GJ: 1 },
+  "gaz ziemny": { "m³": 0.0395, kWh: 0.0036, MWh: 3.6, GJ: 1 },
+  "ciepło sieciowe": { GJ: 1, MWh: 3.6, kWh: 0.0036 },
+  "olej opałowy": { l: 0.0387, t: 40.6 },
+  "LPG": { l: 0.0246, t: 46.0 },
+  "węgiel": { t: 23.0 },
+  "biomasa": { t: 15.0 },
+  "biogaz": { "m³": 0.023, GJ: 1 },
+  "olej napędowy": { l: 0.0386, t: 43.0 },
+  "benzyna": { l: 0.0329, t: 44.3 },
+  "CNG": { "m³": 0.0395, t: 48.0 },
+  "inny": { GJ: 1, MWh: 3.6, kWh: 0.0036 }
+};
+var BRAKI_WO = [];
+function policzTJ() {
+  var w = ODP["FAKT_NOSNIKI"]; BRAKI_WO = [];
+  if (!Array.isArray(w) || !w.length) return { wartosc: null, opis: "uzupełnij tabelę nośników w sekcji 2" };
+  var gj = 0, poz = 0;
+  w.forEach(function (r) {
+    var n = (r.c0 || "").trim(), il = liczba(r.c1), j = (r.c2 || "").trim();
+    if (!n || il === null || !j) return;
+    var tab = WO[n] || WO["inny"], f = tab[j];
+    if (f === undefined) { BRAKI_WO.push(n + " w jednostce " + j); return; }
+    gj += il * f; poz++;
+  });
+  if (!poz) return { wartosc: null, opis: "brak kompletnych wierszy (nośnik + ilość + jednostka)" };
+  var tj = gj / 1000;
+  return { wartosc: Math.round(tj * 100) / 100, opis: poz + " poz. · " + Math.round(gj) + " GJ · wartości opałowe orientacyjne" };
+}
+function policzPaliwa() {
+  var zrodlo = norm(ODP["FAKT_KOTLOWNIA"]);
+  if (zrodlo === null) return { wartosc: null, opis: "wynika z pytania o źródło ciepła" };
+  if (zrodlo === "brak") return { wartosc: "nie", opis: "zakład nie zużywa ciepła poza elektrycznym" };
+  var kopalne = ["gaz ziemny", "olej", "węgiel"];
+  var v = ODP["FAKT_CIEPLO_PALIWO"];
+  var wlasne = Array.isArray(v) ? v.filter(function (x) { return kopalne.indexOf(x) >= 0; }) : [];
+  if (wlasne.length) return { wartosc: "tak", opis: "własne źródło na paliwie kopalnym: " + wlasne.join(", ") };
+  if (zrodlo === "siec" || zrodlo === "oba")
+    return { wartosc: "do potwierdzenia", opis: "ciepło z sieci — paliwo zależy od dostawcy, konsultant sprawdza w umowie albo w świadectwie pochodzenia" };
+  if (Array.isArray(v) && v.length) return { wartosc: "nie", opis: "własne źródło bez paliw kopalnych: " + v.join(", ") };
+  return { wartosc: null, opis: "uzupełnij paliwo własnego źródła ciepła" };
+}
+
+/* ─────────── przeliczenie ─────────── */
+function przelicz() {
+  AUTO = {};
+  for (var p = 0; p < 6; p++) {                 // pętla: warunki mogą zależeć od pytań warunkowych
+    AUTO["ZUZYCIE_TJ"] = policzTJ();
+    AUTO["FAKT_CIEPLO_PALIWA"] = policzPaliwa();
+    var zm = false;
+    SCHEMA.sekcje.forEach(function (s) {
+      s.pytania.forEach(function (q) {
+        var v = ocen(q.pokaz_gdy);
+        if (VIS[q.kod] !== v) { VIS[q.kod] = v; zm = true; }
+      });
+    });
+    if (!zm) break;
+  }
+}
+
+/* ─────────── budowa DOM ─────────── */
+function el(t, c, txt) { var e = document.createElement(t); if (c) e.className = c; if (txt !== undefined) e.textContent = txt; return e; }
+
+function poleWejscia(q) {
+  var box = el("div", "wej");
+  var zap = function () { zmiana(); };
+  if (q.typ === "auto") {
+    var a = el("div", "autoval"); a.id = "auto_" + q.kod; box.appendChild(a); return box;
+  }
+  if (q.typ === "select") {
+    q.opcje.forEach(function (o) {
+      var lab = el("label", "pill");
+      var i = document.createElement("input");
+      i.type = "radio"; i.name = q.kod; i.value = o.w;
+      i.onchange = function () {
+        ODP[q.kod] = o.w;
+        Array.prototype.forEach.call(box.querySelectorAll("label.pill"), function (l) { l.classList.remove("on"); });
+        lab.classList.add("on");
+        zap();
+      };
+      lab.appendChild(i); lab.appendChild(document.createTextNode(o.e));
+      box.appendChild(lab);
+    });
+    var cz = el("button", "wycz", "wyczyść");
+    cz.type = "button";
+    cz.onclick = function () {
+      delete ODP[q.kod];
+      Array.prototype.forEach.call(box.querySelectorAll("input"), function (i) { i.checked = false; });
+      Array.prototype.forEach.call(box.querySelectorAll("label.pill"), function (l) { l.classList.remove("on"); });
+      zap();
+    };
+    box.appendChild(cz);
+    return box;
+  }
+  if (q.typ === "multi") {
+    q.opcje.forEach(function (o) {
+      var lab = el("label", "pill");
+      var i = document.createElement("input");
+      i.type = "checkbox"; i.value = o.w;
+      i.onchange = function () {
+        var t = ODP[q.kod] && Array.isArray(ODP[q.kod]) ? ODP[q.kod].slice() : [];
+        var k = t.indexOf(o.w);
+        if (i.checked && k < 0) t.push(o.w);
+        if (!i.checked && k >= 0) t.splice(k, 1);
+        ODP[q.kod] = t; lab.classList.toggle("on", i.checked); zap();
+      };
+      lab.appendChild(i); lab.appendChild(document.createTextNode(o.e));
+      box.appendChild(lab);
+    });
+    return box;
+  }
+  if (q.typ === "repeater") {
+    var t = el("table", "rep");
+    var thead = el("tr");
+    q.kolumny.forEach(function (k) { thead.appendChild(el("th", null, k.label)); });
+    thead.appendChild(el("th", null, ""));
+    t.appendChild(thead);
+    var ciało = el("tbody"); t.appendChild(ciało);
+    function rysuj() {
+      ciało.innerHTML = "";
+      var w = Array.isArray(ODP[q.kod]) ? ODP[q.kod] : (ODP[q.kod] = []);
+      w.forEach(function (row, idx) {
+        var tr = el("tr");
+        q.kolumny.forEach(function (k, ci) {
+          var td = el("td"), inp;
+          if (k.typ === "select") {
+            inp = document.createElement("select");
+            inp.appendChild(new Option("—", ""));
+            k.opcje.forEach(function (o) { inp.appendChild(new Option(o, o)); });
+          } else {
+            inp = document.createElement("input");
+            inp.type = k.typ === "number" ? "number" : "text";
+            if (k.typ === "number") inp.step = "any";
+          }
+          inp.value = row["c" + ci] || "";
+          inp.onchange = function () { row["c" + ci] = inp.value; zmiana(); };
+          inp.oninput = function () { row["c" + ci] = inp.value; };
+          td.appendChild(inp); tr.appendChild(td);
+        });
+        var td2 = el("td");
+        var us = el("button", "wycz", "usuń"); us.type = "button";
+        us.onclick = function () { w.splice(idx, 1); rysuj(); zmiana(); };
+        td2.appendChild(us); tr.appendChild(td2);
+        ciało.appendChild(tr);
+      });
+      if (!w.length) {
+        var tr0 = el("tr"), td0 = el("td", "pusto", "brak wierszy");
+        td0.colSpan = q.kolumny.length + 1; tr0.appendChild(td0); ciało.appendChild(tr0);
+      }
+    }
+    box.appendChild(t);
+    var dod = el("button", "dodaj", "+ dodaj wiersz"); dod.type = "button";
+    dod.onclick = function () {
+      if (!Array.isArray(ODP[q.kod])) ODP[q.kod] = [];
+      ODP[q.kod].push({}); rysuj(); zmiana();
+    };
+    box.appendChild(dod);
+    box._rysuj = rysuj;
+    rysuj();
+    return box;
+  }
+  // number | year | text | date
+  var i = document.createElement("input");
+  i.className = "txt";
+  i.type = q.typ === "number" || q.typ === "year" ? "number" : (q.typ === "date" ? "date" : "text");
+  if (q.typ === "number") i.step = "any";
+  if (q.typ === "year") { i.min = 1950; i.max = 2040; i.placeholder = "rrrr"; }
+  i.oninput = function () { ODP[q.kod] = i.value; };
+  i.onchange = function () { ODP[q.kod] = i.value; zmiana(); };
+  box.appendChild(i);
+  if (q.jednostka) box.appendChild(el("span", "jedn", q.jednostka));
+  return box;
+}
+
+function kartaPytania(q) {
+  var d = el("div", "q"); d.id = "q_" + q.kod;
+  var g = el("div", "qhead");
+  var kod = el("span", "kod", q.kod); g.appendChild(kod);
+  if (q.pokaz_gdy !== "ZAWSZE") { var wg = el("span", "tagw", "pokazane bo: " + q.pokaz_gdy); g.appendChild(wg); }
+  if (q.nowe_w_1_4) g.appendChild(el("span", "tagn", "nowe"));
+  if (q.typ === "auto") g.appendChild(el("span", "taga", "wyliczane"));
+  d.appendChild(g);
+  d.appendChild(el("div", "qtxt", q.pytanie));
+  if (q.pomoc) d.appendChild(el("div", "qpom", q.pomoc));
+  var w = poleWejscia(q); d.appendChild(w);
+  d._wej = w;
+  if (q.steruje) d.appendChild(el("div", "qster", "steruje: " + q.steruje));
+  return d;
+}
+
+function budujAnkiete() {
+  var host = document.getElementById("sekcje");
+  SCHEMA.sekcje.forEach(function (s) {
+    var sec = el("section", "sek"); sec.id = "sek_" + s.id;
+    var h = el("div", "sekhead");
+    h.appendChild(el("h2", null, s.id.substring(1) + ". " + s.nazwa));
+    h.appendChild(el("p", "meta", "Wypełnia: " + s.wypelnia + " · " + s.pytania.length + " pytań · ok. " + s.czas_min + " min"));
+    sec.appendChild(h);
+    s.pytania.forEach(function (q) { sec.appendChild(kartaPytania(q)); });
+    var stopka = el("div", "stopka");
+    var b = el("button", "prim", "Przekaż sekcję do weryfikacji"); b.type = "button";
+    b.onclick = function () { przekaz(s.id); };
+    stopka.appendChild(b);
+    var inf = el("span", "stopinf"); inf.id = "stop_" + s.id; stopka.appendChild(inf);
+    sec.appendChild(stopka);
+    host.appendChild(sec);
+  });
+  SCHEMA.sekcje.forEach(function (s) { STAN[s.id] = "nierozpoczeta"; });
+}
+
+function budujRail() {
+  var r = document.getElementById("rail");
+  SCHEMA.sekcje.forEach(function (s) {
+    var a = el("button", "railb"); a.type = "button"; a.id = "rail_" + s.id;
+    a.innerHTML = "<b>" + s.id.substring(1) + ". " + s.nazwa + "</b><span class='rmeta'>" + s.wypelnia + "</span><span class='rpost' id='rp_" + s.id + "'></span>";
+    a.onclick = function () { idz(s.id); };
+    r.appendChild(a);
+  });
+  var p = el("button", "railb"); p.type = "button"; p.id = "rail_POD";
+  p.innerHTML = "<b>Podsumowanie</b><span class='rmeta'>wynik dla punktu 4.1</span>";
+  p.onclick = function () { idz("POD"); };
+  r.appendChild(p);
+}
+
+/* ─────────── stan i odświeżanie ─────────── */
+function widoczne(s) { return s.pytania.filter(function (q) { return VIS[q.kod] && q.typ !== "auto"; }); }
+function odpowiedziane(s) { return widoczne(s).filter(function (q) { return pelna(q); }); }
+function pelna(q) {
+  var v = ODP[q.kod];
+  if (q.typ === "repeater") return Array.isArray(v) && v.length > 0 && v.some(function (r) { return Object.keys(r).some(function (k) { return String(r[k] || "").trim() !== ""; }); });
+  if (Array.isArray(v)) return v.length > 0;
+  return v !== undefined && String(v).trim() !== "";
+}
+
+function odswiez() {
+  przelicz();
+  SCHEMA.sekcje.forEach(function (s) {
+    s.pytania.forEach(function (q) {
+      var d = document.getElementById("q_" + q.kod);
+      if (!d) return;
+      d.style.display = VIS[q.kod] ? "" : "none";
+      d.className = "q" + (q.pokaz_gdy !== "ZAWSZE" ? " qwar" : "") + (VIS[q.kod] && !pelna(q) && q.typ !== "auto" ? " qbrak" : "");
+      if (q.typ === "auto") {
+        var a = document.getElementById("auto_" + q.kod), r = AUTO[q.kod] || {};
+        if (a) a.innerHTML = r.wartosc !== null && r.wartosc !== undefined
+          ? "<b>" + r.wartosc + (q.jednostka ? " " + q.jednostka : "") + "</b><span>" + r.opis + "</span>"
+          : "<b class='pusty'>—</b><span>" + (r.opis || "") + "</span>";
+      }
+    });
+    var w = widoczne(s).length, o = odpowiedziane(s).length;
+    var rp = document.getElementById("rp_" + s.id);
+    if (rp) rp.textContent = o + " / " + w + (STAN[s.id] === "przekazana" ? " · przekazana" : "");
+    var rb = document.getElementById("rail_" + s.id);
+    if (rb) rb.setAttribute("data-stan", w && o === w ? "pelna" : (o ? "trakcie" : "pusta"));
+    var st = document.getElementById("stop_" + s.id);
+    if (st) st.textContent = STAN[s.id] === "przekazana" ? "Sekcja przekazana — konsultant ją sprawdza." : (w - o) + " pytań bez odpowiedzi";
+  });
+  var wsz = 0, odp = 0;
+  SCHEMA.sekcje.forEach(function (s) { wsz += widoczne(s).length; odp += odpowiedziane(s).length; });
+  var proc = wsz ? Math.round(100 * odp / wsz) : 0;
+  document.getElementById("pasek").style.width = proc + "%";
+  document.getElementById("procent").textContent = proc + "% · " + odp + " z " + wsz + " widocznych pytań";
+  rysujPodsumowanie();
+}
+
+function zmiana() { odswiez(); zapiszLokalnie(); }
+
+function idz(id) {
+  AKT = id;
+  SCHEMA.sekcje.forEach(function (s) {
+    document.getElementById("sek_" + s.id).style.display = (s.id === id) ? "" : "none";
+    document.getElementById("rail_" + s.id).classList.toggle("akt", s.id === id);
+  });
+  document.getElementById("podsumowanie").style.display = (id === "POD") ? "" : "none";
+  document.getElementById("rail_POD").classList.toggle("akt", id === "POD");
+  window.scrollTo(0, 0);
+}
+
+function przekaz(id) {
+  var s = SCHEMA.sekcje.filter(function (x) { return x.id === id; })[0];
+  var brak = widoczne(s).filter(function (q) { return !pelna(q); });
+  if (brak.length) {
+    alert("Sekcja ma " + brak.length + " pytań bez odpowiedzi:\n\n" + brak.slice(0, 12).map(function (q) { return "• " + q.pytanie; }).join("\n") + (brak.length > 12 ? "\n… i " + (brak.length - 12) + " więcej" : "") + "\n\nOdpowiedź „nie wiem” jest odpowiedzią i nie blokuje przekazania.");
+    return;
+  }
+  STAN[id] = "przekazana"; odswiez(); zapiszLokalnie();
+  alert("Sekcja przekazana do weryfikacji. W aplikacji zadanie trafia w tym momencie do skrzynki konsultanta.");
+}
+
+/* ─────────── podsumowanie ─────────── */
+function stanWarunku(w) {
+  var pola = (w.match(/[A-Z0-9_]{4,}/g) || []).filter(function (x) { return x !== "IN" && x !== "AND" && x !== "OR"; });
+  var brakDanych = pola.some(function (p) { return pobierz(p) === null; });
+  if (ocen(w)) return "tak";
+  return brakDanych ? "brak danych" : "nie";
+}
+function rysujPodsumowanie() {
+  var h = "";
+  h += "<h2>Co wynika z profilu dla punktów 4.1 i 4.2</h2>";
+  h += "<p class='meta'>Kody KTX to czynniki kontekstowe punktu 4.1, kody STK to strony zainteresowane punktu 4.2. System je <b>zaproponuje</b> — propozycja nie jest rozstrzygnięciem: potwierdza ją klient, zatwierdza konsultant. Stan „brak danych” znaczy, że warunku nie da się jeszcze ocenić, i nie jest tym samym co „nie”.</p>";
+  h += "<table class='pods'><tr><th>Kod</th><th>Pozycja</th><th>Warunek</th><th>Stan</th><th>Rodzaj</th></tr>";
+  SCHEMA.czynniki_41.forEach(function (c) {
+    var st = stanWarunku(c.warunek);
+    h += "<tr class='s_" + st.replace(" ", "_") + "'><td class='mono'>" + c.kod + "</td><td>" + c.czynnik + "</td><td class='mono'>" + c.warunek + "</td><td><b>" + st + "</b></td><td>" + c.rodzaj + "</td></tr>";
+  });
+  h += "</table>";
+  h += "<h2>Czynniki proponowane do napisania w wersji 1.4</h2><table class='pods'><tr><th>Robocza treść</th><th>Warunek</th><th>Stan</th></tr>";
+  SCHEMA.nowe_czynniki.forEach(function (c) {
+    var st = stanWarunku(c.warunek);
+    h += "<tr class='s_" + st.replace(" ", "_") + "'><td>" + c.tresc_robocza + "</td><td class='mono'>" + c.warunek + "</td><td><b>" + st + "</b></td></tr>";
+  });
+  h += "</table>";
+  var tj = AUTO["ZUZYCIE_TJ"] || {};
+  h += "<h2>Pola wyliczane</h2><table class='pods'><tr><th>Kod</th><th>Wartość</th><th>Podstawa</th></tr>";
+  h += "<tr><td class='mono'>ZUZYCIE_TJ</td><td><b>" + (tj.wartosc === null || tj.wartosc === undefined ? "—" : tj.wartosc + " TJ") + "</b></td><td>" + (tj.opis || "") + "</td></tr>";
+  var pl = AUTO["FAKT_CIEPLO_PALIWA"] || {};
+  h += "<tr><td class='mono'>FAKT_CIEPLO_PALIWA</td><td><b>" + (pl.wartosc || "—") + "</b></td><td>" + (pl.opis || "") + "</td></tr></table>";
+  if (BRAKI_WO.length) h += "<div class='warn'>Nie umiem przeliczyć na TJ: " + BRAKI_WO.join("; ") + ". Wartość opałowa musi zostać podana przez konsultanta.</div>";
+  if (tj.wartosc !== null && tj.wartosc !== undefined) {
+    var t = tj.wartosc, k;
+    if (t > 85) k = "Powyżej 85 TJ — w zakresie obowiązku wdrożenia systemu zarządzania energią wg dyrektywy 2023/1791. Próg do potwierdzenia w aktualnym stanie transpozycji.";
+    else if (t > 10) k = "Między 10 a 85 TJ — w zakresie obowiązku audytu energetycznego. Próg do potwierdzenia w aktualnym stanie transpozycji.";
+    else k = "Poniżej 10 TJ — poza progami dyrektywy. Wdrożenie z własnej decyzji albo z wymagań rynku.";
+    h += "<div class='note'>" + k + "</div>";
+  }
+  var braki = [];
+  SCHEMA.sekcje.forEach(function (s) { widoczne(s).forEach(function (q) { if (!pelna(q)) braki.push({ s: s, q: q }); }); });
+  h += "<h2>Braki (" + braki.length + ")</h2>";
+  if (!braki.length) h += "<div class='ok'>Wszystkie widoczne pytania mają odpowiedź.</div>";
+  else {
+    h += "<table class='pods'><tr><th>Sekcja</th><th>Kod</th><th>Pytanie</th></tr>";
+    braki.forEach(function (b) { h += "<tr><td>" + b.s.id + "</td><td class='mono'>" + b.q.kod + "</td><td>" + b.q.pytanie + "</td></tr>"; });
+    h += "</table>";
+  }
+  document.getElementById("podtresc").innerHTML = h;
+}
+
+/* ─────────── zapis, odczyt, eksport ─────────── */
+function pakiet() {
+  var ukryte = [];
+  SCHEMA.sekcje.forEach(function (s) { s.pytania.forEach(function (q) { if (!VIS[q.kod]) ukryte.push(q.kod); }); });
+  var wyl = {}; Object.keys(AUTO).forEach(function (k) { wyl[k] = AUTO[k].wartosc; });
+  var czyn = SCHEMA.czynniki_41.filter(function (c) { return ocen(c.warunek); }).map(function (c) { return { kod: c.kod, czynnik: c.czynnik, rodzaj: c.rodzaj }; });
+  return {
+    meta: { ankieta: "Profil zakładu", wersja: SCHEMA.meta.wersja, zapisano: new Date().toISOString() },
+    stany_sekcji: STAN, odpowiedzi: ODP, ukryte_pytania: ukryte,
+    wyliczone: wyl, proponowane_czynniki_4_1: czyn
+  };
+}
+function zapiszLokalnie() { try { localStorage.setItem(KLUCZ, JSON.stringify({ ODP: ODP, STAN: STAN })); } catch (e) { } }
+function wczytajLokalnie() {
+  try {
+    var s = localStorage.getItem(KLUCZ); if (!s) return false;
+    var d = JSON.parse(s); ODP = d.ODP || {}; STAN = d.STAN || STAN; return true;
+  } catch (e) { return false; }
+}
+function wypelnijZOdp() {
+  SCHEMA.sekcje.forEach(function (s) {
+    s.pytania.forEach(function (q) {
+      var d = document.getElementById("q_" + q.kod); if (!d || !d._wej) return;
+      var v = ODP[q.kod];
+      if (q.typ === "select") {
+        Array.prototype.forEach.call(d._wej.querySelectorAll("input"), function (i) {
+          i.checked = (i.value === v);
+          if (i.parentNode.classList) i.parentNode.classList.toggle("on", i.checked);
+        });
+      } else if (q.typ === "multi") {
+        Array.prototype.forEach.call(d._wej.querySelectorAll("input"), function (i) {
+          i.checked = Array.isArray(v) && v.indexOf(i.value) >= 0;
+          if (i.parentNode.classList) i.parentNode.classList.toggle("on", i.checked);
+        });
+      } else if (q.typ === "repeater") {
+        if (d._wej._rysuj) d._wej._rysuj();
+      } else if (q.typ !== "auto") {
+        var i = d._wej.querySelector("input"); if (i) i.value = v === undefined ? "" : v;
+      }
+    });
+  });
+}
+function pobierzJSON() {
+  var b = new Blob([JSON.stringify(pakiet(), null, 2)], { type: "application/json" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(b); a.download = "profil_zakladu_odpowiedzi.json"; a.click();
+}
+function wczytajPlik(f) {
+  var r = new FileReader();
+  r.onload = function () {
+    try {
+      var d = JSON.parse(r.result);
+      ODP = d.odpowiedzi || d.ODP || {}; STAN = d.stany_sekcji || d.STAN || STAN;
+      wypelnijZOdp(); odswiez(); zapiszLokalnie();
+      alert("Wczytano odpowiedzi.");
+    } catch (e) { alert("Nie udało się odczytać pliku: " + e.message); }
+  };
+  r.readAsText(f);
+}
+function wyczyscWszystko() {
+  if (!confirm("Skasować wszystkie odpowiedzi?")) return;
+  ODP = {}; SCHEMA.sekcje.forEach(function (s) { STAN[s.id] = "nierozpoczeta"; });
+  wypelnijZOdp(); odswiez(); zapiszLokalnie();
+}
+function przyklad() {
+  ODP = SCHEMA.przyklad ? JSON.parse(JSON.stringify(SCHEMA.przyklad)) : {};
+  wypelnijZOdp(); odswiez(); zapiszLokalnie();
+}
+
+/* ─────────── zakładki ─────────── */
+function zakladka(n) {
+  document.getElementById("widok_ankieta").style.display = n === "a" ? "" : "none";
+  document.getElementById("widok_spec").style.display = n === "s" ? "" : "none";
+  document.getElementById("tab_a").classList.toggle("akt", n === "a");
+  document.getElementById("tab_s").classList.toggle("akt", n === "s");
+  window.scrollTo(0, 0);
+}
+
+/* ─────────── start ─────────── */
+budujRail();
+budujAnkiete();
+wczytajLokalnie();
+wypelnijZOdp();
+odswiez();
+idz(SCHEMA.sekcje[0].id);
+</script>
+</body></html>

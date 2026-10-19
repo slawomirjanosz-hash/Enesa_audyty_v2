@@ -1,0 +1,1659 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 8.2 Projektowanie</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 8</div>
+ <h1>8.2 Projektowanie</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 8.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 8.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>8.2 Projektowanie</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 8.2 i analizę energetyczną projektu.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 8.2<br>Projektowanie</div>
+   <div>
+    <h4>8.2 Projektowanie</h4>
+    <p>Które projekty wymagają analizy — i dlaczego nie decyduje o tym cena. Projektowanie obsługi:
+    wyłączanie, regulacja, pomiar. Gdzie trafiają wnioski.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 8.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">8.2 — projektowanie<br>11 slajdów</div>
+   <div>
+    <h4>8.2 Projektowanie</h4>
+    <p>Sygnały rozpoznania projektu. Możliwości poprawy a lista technologii. Trzy pytania
+    o obsługę. Zostawianie miejsca na później.</p>
+    <p style="font-size:12.5px">11 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Projektując nowe, zmieniane i odnawiane obiekty, urządzenia, systemy i procesy
+ zużywające energię, które mogą znacząco wpływać na wynik energetyczny, organizacja rozważa możliwości poprawy
+ wyniku energetycznego oraz nadzór operacyjny — w planowanym lub przewidywanym okresie eksploatacji. Tam, gdzie
+ ma to zastosowanie, wyniki tych rozważań uwzględnia w specyfikacjach, projektowaniu i zakupach. Zachowuje
+ udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym. Omówienie
+ na podstawie punktu 8.2 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> projektując lub przebudowując coś,
+ co może znacząco wpłynąć na wynik energetyczny, rozważ możliwości poprawy i to, jak będzie się to obsługiwać
+ przez cały okres eksploatacji — a wnioski przenieś do specyfikacji i zakupów.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 7, punkt 8.2. Lista kontrolna projektu:
+ III-36 (F-EnMS-15).</div>
+
+ <div class="ramka">
+  <h3>◧ Dokumentacja dzień przed zatwierdzeniem</h3>
+  <p style="font-size:13.5px">Początek września 2026 r. Dział techniczny kończy koncepcję modernizacji
+  sprężarkowni: sterownik nadrzędny i napęd o zmiennej prędkości dla jednej ze sprężarek. Inwestycja z planu
+  działań — 380 000 zł, uruchomienie w czerwcu 2027 r. Jan Kowalski dostaje dokumentację dzień przed spotkaniem,
+  na którym dyrektor zakładu ma ją zatwierdzić.</p>
+  <p style="font-size:13.5px">Czyta wieczorem i widzi trzy rzeczy. <b>Sterownik ma utrzymywać jedno stałe
+  ciśnienie</b>, bez możliwości obniżenia go poza produkcją. <b>Nikt nie przewidział pomiaru ciśnienia
+  u odbiorców</b> — więc nie da się sprawdzić, czy 6,3 bar to wciąż nie za dużo. A <b>odzysk ciepła
+  ze sprężarek</b>, jedna z możliwości z przeglądu energetycznego, nie jest częścią projektu — projekt
+  nie zostawia na niego nawet miejsca.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Każda z tych uwag jest słuszna. Ale dzień przed zatwierdzeniem
+  każda oznacza zmianę zakresu, kosztów i terminu. Dyrektor przesunął decyzję o trzy tygodnie i zatwierdził
+  koncepcję z uzupełnieniami pod koniec września. Uzupełnienia zmieściły się w budżecie, ale przetarg ruszy
+  miesiąc później, niż planowano. <b>Tę samą rozmowę można było odbyć na etapie założeń — w godzinę.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Których projektów to dotyczy?</h3>
+ <p style="font-size:14.5px">Nowych, zmienianych i odnawianych obiektów, urządzeń, systemów i procesów, które
+ mogą znacząco wpłynąć na wynik energetyczny. Kluczowe jest słowo <b>„znacząco”</b> — i to, że nie mierzy się
+ go ceną projektu. <b>Przebudowa sterowania sprężarkowni za kilkanaście tysięcy złotych może zmienić zużycie
+ bardziej niż remont biurowca za kilka milionów.</b></p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> ustalcie kilka prostych sygnałów, które uruchamiają analizę:
+ projekt dotyczy znaczącego użycia energii albo tworzy nowe; zmienia sposób sterowania lub nastawy; dotyczy
+ urządzenia, które będzie pracowało wiele godzin rocznie przez lata. <b>Próg kwotowy może być dodatkowym
+ sygnałem — nigdy jedynym.</b></p>
+
+ <h3 style="margin-top:22px">Co rozważyć? Dwie sprawy zamiast listy technologii</h3>
+ <table class="tab">
+ <tr><th style="width:30%">Sprawa</th><th>Na czym polega</th></tr>
+ <tr><td><b>Możliwości poprawy wyniku energetycznego</b></td>
+     <td>Czy rozwiązanie jest dobrane do rzeczywistych potrzeb, a nie „z zapasem na wszelki wypadek”? Czy są warianty o niższym zużyciu? Czy da się wykorzystać ciepło albo inną energię, która dziś ucieka? Najlepsze dostępne technologie i przyszłe potrzeby zakładu to dobre źródła pomysłów — ale <b>norma nie każe porównywać każdego projektu z najlepszą technologią na rynku.</b> Każe rozważyć możliwości poprawy i świadomie wybrać.</td></tr>
+ <tr><td><b>Nadzór operacyjny — czyli projektowanie obsługi</b></td>
+     <td>To najczęściej pomijana część. Projekt powinien odpowiadać na trzy pytania: czy operator będzie mógł wyłączyć to, co w danej chwili niepotrzebne; czy układ da się regulować do rzeczywistego zapotrzebowania — także poza produkcją; czy będzie można sprawdzić osiągany wynik, czyli czy jest pomiar, z którego policzycie wskaźnik.</td></tr>
+ </table>
+ <div class="warn" style="margin:14px 0">Te pytania łączą 8.2 z 8.1. <b>Kryterium „nie więcej niż 6,3 bar”
+ niewiele da, jeśli sterownik nie pozwala go ustawić, a nikt nie mierzy ciśnienia u odbiorców.</b></div>
+
+ <h3 style="margin-top:22px">„Przecież zawsze można to poprawić później”</h3>
+ <p style="font-size:14.5px">Można — ale później zwykle kosztuje więcej. Jeśli instalacja powstanie bez
+ regulacji, późniejsze jej dodanie może wymagać kosztownej przeróbki i postoju. To nie znaczy, że każdą
+ możliwość trzeba wdrożyć od razu. <b>Czasem wystarczy zostawić na nią miejsce:</b> przyłącza, zapas
+ w rozdzielnicy, wolne pole w sterowniku.</p>
+ <p style="font-size:14.5px">Tak AutoParts postąpiła z odzyskiem ciepła. Nie wchodzi on do tej inwestycji,
+ bo zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek po modernizacji. Ale projekt przewiduje
+ miejsce i przyłącza pod wymiennik — <b>żeby za dwa lata nie trzeba było przebudowywać pomieszczenia.</b></p>
+
+ <h3 style="margin-top:22px">Gdzie trafiają wnioski?</h3>
+ <p style="font-size:14.5px">Do specyfikacji, projektu i zakupów — tam, gdzie ma to zastosowanie.
+ <b>Wniosek, który zostaje w notatce, nie zmienia instalacji.</b> Norma wymaga też zachowania informacji
+ o działaniach projektowych związanych z wynikiem energetycznym. Nie musi to być osobny raport: wystarczy ślad,
+ co rozważono, co przyjęto, co odrzucono i dlaczego.</p>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts: koncepcja bez regulacji i pomiaru</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Sterownik i napęd będą pracowały kilkanaście lat; decyzje z koncepcji ustalą, czy kryteria z 8.1 da się w ogóle stosować.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Specyfikacja obejmie: obniżanie ciśnienia poza produkcją, zapis danych pracy sprężarek z przekazaniem do monitoringu, pomiar ciśnienia u odbiorców w lakierni i w najdalszym punkcie sieci, miejsce i przyłącza pod przyszły odzysk ciepła.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Wymagania wchodzą do zapytania ofertowego (8.3); notatka z przeglądu koncepcji zapisuje, dlaczego odzysk ciepła przesunięto. ★ Od tej pory koncepcje projektów dotyczących znaczących użyć energii trafiają do Energy Managera na etapie założeń.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Przed uruchomieniem kierownik utrzymania ruchu aktualizuje kryteria sprężarkowni (8.1); cztery tygodnie po odbiorze i po zamknięciu 2027 r. Energy Manager porównuje kWh/Nm³ z wartością sprzed modernizacji, w porównywalnych warunkach — wynik wchodzi do oceny celu Z1.1.</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ <b>Rada:</b> udział Energy Managera w zespole projektowym i formalna akceptacja
+ projektu przez niego to dobre rozwiązania organizacyjne. <b>Norma wymaga jednak rozważenia określonych spraw,
+ a nie udziału osoby na konkretnym stanowisku.</b> W małej firmie te pytania może zadać kierownik projektu
+ z listą kontrolną w ręku.</p>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Energia pojawia się dopiero przy zatwierdzaniu projektu</td><td>Zadajcie pytania o energię na etapie założeń</td></tr>
+ <tr><td>Próg analizy wyłącznie kwotowy</td><td>Oceniajcie wpływ: SEU, sterowanie, czas pracy; kwota jako sygnał dodatkowy</td></tr>
+ <tr><td>Lista „pożądanych technologii” zamiast analizy</td><td>Rozważcie możliwości dla tego projektu i zapiszcie, co wybraliście i dlaczego</td></tr>
+ <tr><td>Projekt bez regulacji i pomiaru</td><td>Projektujcie obsługę: wyłączanie, regulację, pomiar</td></tr>
+ <tr><td>Wnioski zostają w notatce</td><td>Przenieście je do specyfikacji i zapytania ofertowego</td></tr>
+ <tr><td>Brak sprawdzenia po uruchomieniu</td><td>Porównajcie wynik z wartością sprzed zmiany, w porównywalnych warunkach</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Na etapie projektu decydujecie, ile energii instalacja będzie
+  zużywać — i czy da się nią potem dobrze zarządzać.<br><br>
+  <b>Zadanie:</b> weźcie ostatni projekt, który dotyczył znaczącego użycia energii, i sprawdźcie: kiedy ktoś
+  pierwszy raz zapytał o energię — na etapie założeń czy przy zatwierdzaniu? Ankieta ma na to osobne pole
+  i pokazuje odpowiedź w tabeli projektów.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Część A decyduje o ścieżce: wszystkie „nie” zamykają analizę z uzasadnieniem, każde „tak”
+  otwiera części B–E. Platforma pilnuje etapu, na którym zadano pytania o energię, i tego, czy przyjęte wnioski
+  mają wskazane miejsce wprowadzenia.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 8.2 w formacie stron 4.1–8.1.</b> Pierwsza ankieta w serii, w której
+<b>odpowiedź rozgałęzia ścieżkę</b>: część A decyduje, czy projekt wymaga części B–E. Wszystkie „nie” zamykają
+analizę z uzasadnieniem — i to jest poprawne wypełnienie, nie brak. Razem 17 pytań w czterech częściach
+plus lista wniosków i sprawdzenie po uruchomieniu.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 7, punkt 8.2</td><td>Scena dokumentacji dostarczonej dzień przed zatwierdzeniem i trzech uwag Jana Kowalskiego, akapit „których projektów to dotyczy” z porównaniem sterowania sprężarkowni i remontu biurowca, rada o sygnałach rozpoznania, dwie sprawy zamiast listy technologii, trzy pytania o obsługę, akapit „przecież zawsze można to poprawić później” z odzyskiem ciepła, „gdzie trafiają wnioski”, przykład w czterech ogniwach, uwaga o tym, że norma nie wymaga osoby na stanowisku, tabela sześciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 6 — III-36 (F-EnMS-15)</td><td>Metryka projektu i pięć części: A rozpoznanie (4 pytania), B możliwości poprawy (6), C projektowanie obsługi (5), D wnioski (2 pytania plus tabela wniosków z kolumnami „przyjęty / odrzucony — dlaczego” i „gdzie wprowadzony”), E sprawdzenie po uruchomieniu (4 pola). Kolumny Tak / Nie / N.d. oraz N / M przy każdym pytaniu.</td></tr>
+<tr><td>Część III, Moduł 6 — III-39</td><td>Lista kontrolna sekcji 8.2: 6 pozycji, cztery wymagania normy i dwa zalecenia metodyki.</td></tr>
+<tr><td>Część III, Moduł 6 — III-40, pkt 4.3</td><td>Kroki 9–12 procedury P-EnMS-06: sprawdzenie na etapie założeń, rozważenie możliwości i nadzoru, wnioski do specyfikacji z zapisem odrzuconych, zachowanie listy jako zapisu działań projektowych.</td></tr>
+</table>
+<div class="note"><b>Trzy projekty przykładu.</b> Pierwszy — modernizacja sprężarkowni — pochodzi z książki
+i z III-38 (inwestycja nr 4, 380 000 zł, uruchomienie 06.2027). Drugi (LED w halach H1 i H2, cel C2) i trzeci
+(remont posadzki, zamknięty na etapie A) <b>są naszym rozszerzeniem</b>: bez nich nie widać ani rejestru
+projektów, ani ścieżki „wszystkie nie”. Dane drugiego projektu są spójne z celem C2 i ze zgłoszeniem 2026/08
+z rejestru 7.4, ale nie pochodzą z Toolkitu — przy publikacji wymagają potwierdzenia, zwłaszcza kwoty
+240 000 zł i oszczędności 270 MWh.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>projekt</code></td><td>id, audyt_id, nazwa, nr, kierownik, etap ENUM, <b>etap_analizy ENUM</b>, kto_analiza, data_analizy, wartosc, uzasadnienie_a.</td></tr>
+<tr><td><code>odpowiedz_projektu</code></td><td>projekt_id, czesc ENUM('A','B','C','D'), pytanie_kod, odpowiedz ENUM('tak','nie','nd'), uwagi. Jedna tabela na wszystkie części — pytania są słownikiem systemowym, nie danymi klienta.</td></tr>
+<tr><td><code>wniosek_projektu</code></td><td>id, projekt_id, tresc, decyzja ENUM('przyjety','odrzucony'), dlaczego, gdzie_wprowadzony. Część D.</td></tr>
+<tr><td><code>sprawdzenie_projektu</code></td><td>projekt_id plus cztery pola: kto aktualizuje kryteria i do kiedy, wskaźnik i wartość odniesienia, warunki porównania, termin i kto porównuje. Część E — jeden rekord na projekt.</td></tr>
+<tr><td><code>sygnaly_rozpoznania</code></td><td>Pole tekstowe w metryce audytu. Docelowo lista pozycji z progiem kwotowym jako osobną, wyłączalną pozycją.</td></tr>
+</table>
+
+<h2>Logika ścieżki</h2>
+<table>
+<tr><th style="width:30%">Stan części A</th><th>Co robi platforma</th></tr>
+<tr><td>Wszystkie cztery odpowiedzi „nie”</td><td>Projekt <b>zamknięty na etapie A</b>. Części B–E pokazują komunikat, że nie są wymagane, a zamiast nich pojawia się wymagane pole <b>uzasadnienia zakończenia</b>. Lista kontrolna i braki() traktują taki projekt jako kompletny. To jest ślad świadomej decyzji — bez niego nie da się odróżnić projektu przeanalizowanego od pominiętego.</td></tr>
+<tr><td>Co najmniej jedno „tak”</td><td>Projekt istotny — części B–E wymagane. Komunikat kieruje do kolejnych zakładek.</td></tr>
+<tr><td>Część A niepełna</td><td>Ostrzeżenie: od tych czterech odpowiedzi zależy, czy projekt wymaga dalszej analizy.</td></tr>
+<tr><td>„Tak” tylko przy progu kwotowym</td><td>Ostrzeżenie: <b>próg analizy wyłącznie kwotowy</b> to jeden z sześciu błędów tego punktu. Sprawdźcie jeszcze SEU, sterowanie i czas pracy.</td></tr>
+<tr><td>„Nie” przy progu, „tak” przy czymkolwiek innym</td><td>Komunikat potwierdzający: projekt jest istotny, mimo że nie przekracza progu. <b>Dokładnie tak powinno to działać</b> — kwota jest sygnałem dodatkowym, nie warunkiem. W przykładzie tę ścieżkę pokazuje remont posadzki w odwrotną stronę.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Analiza na etapie zatwierdzenia</b></td><td>Czerwony chip w tabeli projektów, ostrzeżenie przy metryce i pozycja w braki(). Komunikat podaje, co to kosztowało w AutoParts: trzy tygodnie decyzji i miesiąc przetargu. <b>To centralna teza punktu 8.2</b> — i jedyna rzecz, której nie da się nadrobić później.</td></tr>
+<tr><td>Analiza na etapie koncepcji</td><td>Pomarańczowy chip i nota: lepiej niż przy zatwierdzaniu, ale uwagi dotyczące układu i przyłączy są już kosztowne. Przykład AutoParts jest tak wypełniony — pokazuje stan faktyczny z książki, nie wzorcowy.</td></tr>
+<tr><td>Odpowiedź „nie” na pytanie oznaczone N</td><td>Ostrzeżenie przy pytaniu i wymóg uzasadnienia w uwagach; bez niego pozycja liczy się jako niewypełniona. Dotyczy czterech pytań: dwóch w częściach B i C („rozważono możliwości poprawy”, „rozważono nadzór operacyjny”) i dwóch w części D.</td></tr>
+<tr><td>Odpowiedź „nie dotyczy” bez uzasadnienia</td><td>Nota i stan niewypełniony. Jedno zdanie wystarcza, ale musi być — w przykładzie LED tak jest uzasadnione pytanie o ciepło odpadowe.</td></tr>
+<tr><td><b>Przyjęty wniosek bez miejsca wprowadzenia</b></td><td>Ostrzeżenie przy wniosku i osobna pozycja w braki(). „Wnioski zostają w notatce” to jedyny z sześciu błędów, który <b>nie zostawia żadnego śladu w instalacji</b>. Pole „gdzie wprowadzony” nie jest pokazywane przy wniosku odrzuconym.</td></tr>
+<tr><td>Odrzucony wniosek bez uzasadnienia</td><td>Ostrzeżenie: norma nie zabrania odrzucać — każe zostawić ślad decyzji. W przykładzie dwa wnioski są odrzucone, oba z liczbami w uzasadnieniu.</td></tr>
+<tr><td>Projekt istotny bez listy wniosków</td><td>Ostrzeżenie: albo analiza nie została przeprowadzona, albo jej wyniki nigdzie nie trafiły.</td></tr>
+<tr><td>Żaden przyjęty wniosek nie ma miejsca wprowadzenia</td><td>Ostrzeżenie o wprost niespełnionym wymaganiu normy — to ta pozycja listy kontrolnej, która zwykle decyduje o ocenie całego punktu.</td></tr>
+<tr><td>Brak części E</td><td>Pozycja w braki() jako metodyka. „Brak sprawdzenia po uruchomieniu” to szósty błąd; część E jest jednocześnie wejściem do oceny celu z 6.2.</td></tr>
+<tr><td>Brak sygnałów rozpoznania</td><td>Ostrzeżenie w zakładce 1 i w braki(): bez nich rozpoznanie projektów zależy od tego, czy ktoś sobie przypomni.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-39 — sekcja 8.2</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Rozpoznawane są projekty mogące znacząco wpłynąć na wynik energetyczny.</td><td class='mono'>N</td><td><code>rozpoznanie</code></td></tr><tr><td>W tych projektach rozważa się możliwości poprawy i nadzór operacyjny w okresie eksploatacji.</td><td class='mono'>N</td><td><code>rozwaza</code></td></tr><tr><td>Wyniki rozważań są w specyfikacjach, projekcie i zakupach (w stosownych przypadkach).</td><td class='mono'>N</td><td><code>wyniki</code></td></tr><tr><td>Zachowano udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym.</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Pytania o energię padają na etapie założeń; stosowana jest lista kontrolna projektu.</td><td class='mono'>M</td><td><code>zalozenia</code></td></tr><tr><td>Po uruchomieniu wynik porównuje się w porównywalnych warunkach.</td><td class='mono'>M</td><td><code>poUruchomieniu</code></td></tr></table>
+<div class="note">Cztery pozycje zwracają „nie dotyczy”, gdy żaden projekt nie jest istotny dla wyniku
+energetycznego — wtedy nie ma czego oceniać, a rejestr z samymi projektami zamkniętymi na etapie A jest
+poprawnym stanem systemu. Pozycja „pytania o energię padają na etapie założeń” jest spełniona tylko wtedy,
+gdy <b>żaden</b> projekt nie ma analizy na etapie zatwierdzenia i gdy sygnały rozpoznania są ustalone.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–5, 7</td><td>Wypełnia klient — zwykle kierownik projektu, przy projektach dotyczących SEU razem z Energy Managerem. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 6 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok nazywa projekty, w których analizę zrobiono za późno, i dodaje, że to <b>pytanie do zarządu, nie do kierownika projektu</b> — bo etap, na którym pyta się o energię, jest decyzją organizacyjną, nie błędem jednej osoby.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-PRO-01</code> — analizy energetyczne projektów</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-15, załącznik III-36</td></tr>
+<tr><td>Status w normie</td><td><b>Zachowanie udokumentowanych informacji o działaniach projektowych</b> to jedyne wymaganie dokumentacyjne 8.2 — i wypełniona lista może nim być. Nie trzeba osobnego raportu. W wykazie z punktu 7.5 pozycja pojawia się jako Z i N (8.2).</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Nowy projekt przechodzący sygnały rozpoznania, zmiana zakresu projektu, przegląd koncepcji, odbiór i uruchomienie (część E), aktualizacja przeglądu energetycznego zmieniająca listę SEU.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Wejście.</b> Modernizacja sprężarkowni jest inwestycją z planu działań celu C1; wymiana opraw na LED — działaniem celu C2. Projekt bez odpowiednika w planach bywa sygnałem, że powstał poza systemem.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Lista SEU rozstrzyga pierwsze pytanie części A; lista możliwości poprawy jest materiałem do części B — odzysk ciepła ze sprężarek pochodzi wprost z przeglądu.</td></tr>
+<tr><td>6.4 i 6.5 EnPI i EnB</td><td><b>Wyjście.</b> Część E ustala wskaźnik, wartość odniesienia i warunki porównania. Modernizacja zmienia czynniki statyczne SEU, więc bywa przesłanką b) rewizji linii bazowej.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Wyjście.</b> „Przewidziano pomiar, z którego da się policzyć wskaźnik” kończy się nowymi pozycjami planu danych — w przykładzie dwa przetworniki ciśnienia i podlicznik oświetlenia.</td></tr>
+<tr><td>8.1 Nadzór operacyjny</td><td><b>Dwukierunkowo i najściślej.</b> Pytanie o nadzór w części C sprawdza, czy kryteria z 8.1 da się po modernizacji stosować; część E zobowiązuje do aktualizacji karty kryteriów przed uruchomieniem. Pierwotna koncepcja AutoParts uniemożliwiałaby kryterium trybu postoju.</td></tr>
+<tr><td>8.3 Zakupy</td><td><b>Wyjście.</b> Przyjęte wnioski stają się wymaganiami minimalnymi specyfikacji zakupowej. W przykładzie wszystkie cztery trafiły do części A formularza III-38.</td></tr>
+<tr><td>7.4 Komunikacja</td><td><b>Wejście.</b> Zgłoszenie 2026/08 o jednym wyłączniku na całą halę jest źródłem wniosku w projekcie LED — zgłoszenie z hali dotarło do zakresu inwestycji.</td></tr>
+<tr><td>9.1 Monitorowanie</td><td><b>Wyjście.</b> Porównanie po uruchomieniu wykonuje się w rytmie 9.1, w warunkach z części E.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Wnioski jako zadania z terminem</b></td><td>Przyjęty wniosek ma miejsce wprowadzenia, ale nie ma właściciela ani terminu. Przy wdrożeniu powinien tworzyć <b>zadanie w zakresie projektu</b> — wtedy platforma odpowie, czy wniosek rzeczywiście wszedł do specyfikacji, zamiast wierzyć wpisowi w polu tekstowym. To ten sam brak co z terminami w 6.5, 7.2, 7.4 i 7.5; piąte wystąpienie tego samego mechanizmu.</td></tr>
+<tr><td>Powiązanie wniosku ze specyfikacją z 8.3</td><td>Dziś pole „gdzie wprowadzony” jest tekstem. Po zbudowaniu 8.3 powinno wskazywać <b>konkretne wymaganie minimalne</b> w formularzu zakupowym. Wtedy usunięcie wymagania ze specyfikacji zapali się w projekcie — a to jest dokładnie ten moment, w którym wnioski cicho wypadają z zakresu.</td></tr>
+<tr><td>Automatyczne rozpoznanie projektu</td><td>Platforma zna listę SEU (6.3) i działania z planów (6.2). Przy zakładaniu projektu mogłaby <b>wstępnie odpowiedzieć na pytania części A</b>: czy wskazany obszar jest SEU, czy projekt jest działaniem z planu. Klient potwierdzałby albo korygował — i trudniej byłoby przeoczyć projekt istotny.</td></tr>
+<tr><td>Próg kwotowy jako pole liczbowe</td><td>Dziś próg jest w tekście sygnałów, a odpowiedź na pytanie o próg wpisuje się ręcznie. Przy wdrożeniu: próg jako liczba w ustawieniach audytu i automatyczne porównanie z wartością projektu — z zachowaniem zasady, że to sygnał pomocniczy.</td></tr>
+<tr><td>Część E a termin uruchomienia</td><td>Część E ustala termin porównania, ale platforma nie wie, czy projekt został już uruchomiony. Pole <code>etap</code> ma wartość „uruchomione” — warto po jej ustawieniu uruchamiać przypomnienie o porównaniu i blokować zamknięcie projektu bez wyniku.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 8.2 wraz z trzema projektami przykładu.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;PYT_A&quot;: [
+  {
+   &quot;kod&quot;: &quot;seu&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Dotyczy znaczącego użycia energii albo tworzy nowe&quot;,
+   &quot;ph&quot;: &quot;np. Dotyczy SEU sprężarkownia — 17,5% zużycia zakładu&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;sterowanie&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Zmienia sposób sterowania lub nastawy&quot;,
+   &quot;ph&quot;: &quot;np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;godziny&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata&quot;,
+   &quot;ph&quot;: &quot;np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;prog&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Przekracza próg wartości ustalony w firmie — sygnał pomocniczy&quot;,
+   &quot;ph&quot;: &quot;np. 380 tys. zł, próg w firmie 100 tys. zł&quot;,
+   &quot;pomoc&quot;: &quot;Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym. Przebudowa sterowania za kilkanaście tysięcy może zmienić zużycie bardziej niż remont biurowca za kilka milionów.&quot;
+  }
+ ],
+ &quot;PYT_B&quot;: [
+  {
+   &quot;kod&quot;: &quot;mozliwosci&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;tekst&quot;: &quot;Rozważono możliwości poprawy wyniku energetycznego w okresie eksploatacji&quot;,
+   &quot;ph&quot;: &quot;np. Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy, odzysk ciepła ze sprężarek, wymianę wszystkich czterech sprężarek&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;oszacowano&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Oszacowano przewidywane zużycie energii w okresie eksploatacji&quot;,
+   &quot;ph&quot;: &quot;np. Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh po obniżeniu ciśnienia i usunięciu wycieków&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;potrzeby&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Rozwiązanie dobrano do rzeczywistych potrzeb — bez nadmiernego zapasu&quot;,
+   &quot;ph&quot;: &quot;np. Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia wymaga regulacji tylko jednej jednostki&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;warianty&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Rozważono warianty o niższym zużyciu&quot;,
+   &quot;ph&quot;: &quot;np. Porównano: sam sterownik, sterownik z jednym napędem, wymiana wszystkich sprężarek&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;cieplo&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Sprawdzono możliwość wykorzystania ciepła odpadowego lub innej odzyskiwalnej energii&quot;,
+   &quot;ph&quot;: &quot;np. Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, ale projekt zostawia miejsce i przyłącza&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;tco&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Porównano koszt zakupu i energii wariantów — uproszczone TCO&quot;,
+   &quot;ph&quot;: &quot;np. Porównanie w 15 lat przy cenie 890 zł/MWh — część D formularza zakupowego F-EnMS-16&quot;
+  }
+ ],
+ &quot;PYT_C&quot;: [
+  {
+   &quot;kod&quot;: &quot;nadzor&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;tekst&quot;: &quot;Rozważono nadzór operacyjny w okresie eksploatacji&quot;,
+   &quot;ph&quot;: &quot;np. Sprawdzono, czy kryteria z karty sprężarkowni (8.1) da się stosować po modernizacji&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;wylaczanie&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Można wyłączyć to, co w danej chwili niepotrzebne&quot;,
+   &quot;ph&quot;: &quot;np. Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy odbiorze&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;regulacja&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Układ ma regulację do rzeczywistego zapotrzebowania, także poza produkcją&quot;,
+   &quot;ph&quot;: &quot;np. Dwie nastawy ciśnienia: produkcja i postój — wymaganie minimalne w specyfikacji&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;pomiar&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Przewidziano pomiar, z którego da się policzyć wskaźnik&quot;,
+   &quot;ph&quot;: &quot;np. Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do monitoringu; dwa przetworniki ciśnienia u odbiorców&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;ktoObsluga&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;tekst&quot;: &quot;Wiadomo, kto będzie obsługiwał instalację i według jakich kryteriów (8.1)&quot;,
+   &quot;ph&quot;: &quot;np. Technicy UR według karty kryteriów F-EnMS-14 zaktualizowanej przed uruchomieniem; serwis według zlecenia&quot;
+  }
+ ],
+ &quot;PYT_D&quot;: [
+  {
+   &quot;kod&quot;: &quot;wprowadzono&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;tekst&quot;: &quot;Wyniki rozważań wprowadzono do specyfikacji, projektu i zakupów&quot;,
+   &quot;ph&quot;: &quot;np. Cztery wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zachowano&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;tekst&quot;: &quot;Zachowano informacje o działaniach projektowych — ta lista albo notatka&quot;,
+   &quot;ph&quot;: &quot;np. Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 w teczce projektu&quot;
+  }
+ ],
+ &quot;LISTA_82&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Rozpoznawane są projekty mogące znacząco wpłynąć na wynik energetyczny.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;rozpoznanie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;W tych projektach rozważa się możliwości poprawy i nadzór operacyjny w okresie eksploatacji.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;rozwaza&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Wyniki rozważań są w specyfikacjach, projekcie i zakupach (w stosownych przypadkach).&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wyniki&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Pytania o energię padają na etapie założeń; stosowana jest lista kontrolna projektu.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;zalozenia&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Po uruchomieniu wynik porównuje się w porównywalnych warunkach.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;poUruchomieniu&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;PROJEKTY&quot;: [
+   {
+    &quot;nazwa&quot;: &quot;Modernizacja sprężarkowni — sterownik nadrzędny i napęd o zmiennej prędkości&quot;,
+    &quot;nr&quot;: &quot;INW/2027/04&quot;,
+    &quot;kierownik&quot;: &quot;Dyrektor Techniczny&quot;,
+    &quot;etap&quot;: &quot;zatwierdzenie&quot;,
+    &quot;etapAnalizy&quot;: &quot;koncepcja&quot;,
+    &quot;ktoAnaliza&quot;: &quot;Kierownik projektu z Janem Kowalskim (Energy Manager)&quot;,
+    &quot;data&quot;: &quot;2026-09-08&quot;,
+    &quot;wartosc&quot;: &quot;380 000 zł, uruchomienie 06.2027 (inwestycja nr 4 w III-24)&quot;,
+    &quot;A&quot;: {
+     &quot;seu&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Dotyczy SEU sprężarkownia — 2 125 MWh, 17,5% zużycia zakładu&quot;
+     },
+     &quot;sterowanie&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji&quot;
+     },
+     &quot;godziny&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat&quot;
+     },
+     &quot;prog&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;380 tys. zł wobec progu 100 tys. zł w firmie — sygnał dodatkowy, nie decydujący&quot;
+     }
+    },
+    &quot;B&quot;: {
+     &quot;mozliwosci&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy dla jednej sprężarki, wymianę wszystkich czterech sprężarek, odzysk ciepła ze sprężarek, pomiar ciśnienia u odbiorców&quot;
+     },
+     &quot;oszacowano&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh/rok po obniżeniu ciśnienia i usunięciu wycieków — oszczędność ok. 230 MWh/rok, zgodna z przeglądem energetycznym&quot;
+     },
+     &quot;potrzeby&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka, a pozostałe pracują w trybie włącz–wyłącz&quot;
+     },
+     &quot;warianty&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Trzy warianty: sam sterownik (mniejszy efekt, 180 tys. zł), sterownik z jednym napędem (wybrany), wymiana wszystkich sprężarek (poza budżetem, ok. 1,2 mln zł)&quot;
+     },
+     &quot;cieplo&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, bo zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek. Projekt zostawia miejsce i przyłącza pod wymiennik&quot;
+     },
+     &quot;tco&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Porównanie kosztu zakupu i energii w 15 lat przy cenie 890 zł/MWh — wykonane w części D formularza zakupowego F-EnMS-16 (III-38)&quot;
+     }
+    },
+    &quot;C&quot;: {
+     &quot;nadzor&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sprawdzono, czy kryteria z karty sprężarkowni (F-EnMS-14) da się stosować po modernizacji. Pierwotna koncepcja utrzymywała jedno stałe ciśnienie — kryterium trybu postoju nie dałoby się wtedy wprowadzić&quot;
+     },
+     &quot;wylaczanie&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy faktycznym odbiorze&quot;
+     },
+     &quot;regulacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Dwie nastawy ciśnienia — produkcja i postój — jako wymaganie minimalne specyfikacji. Tego nie było w pierwotnej koncepcji&quot;
+     },
+     &quot;pomiar&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu oraz dwa przetworniki ciśnienia u odbiorców: w lakierni i w najdalszym punkcie sieci. Tego też nie było w pierwotnej koncepcji&quot;
+     },
+     &quot;ktoObsluga&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Technicy UR według karty kryteriów zaktualizowanej przed uruchomieniem (kierownik UR, do 05.2027); serwis według zlecenia z wymaganiami z sekcji C karty&quot;
+     }
+    },
+    &quot;D&quot;: {
+     &quot;wprowadzono&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Cztery przyjęte wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026&quot;
+     },
+     &quot;zachowano&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 — teczka projektu INW/2027/04&quot;
+     }
+    },
+    &quot;uzasadnienieA&quot;: &quot;&quot;,
+    &quot;wnioski&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Sterownik ma umożliwiać obniżanie ciśnienia poza produkcją — dwie nastawy, produkcja i postój&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Bez dwóch nastaw kryterium trybu postoju z karty sprężarkowni (8.1) nie da się stosować. Pierwotna koncepcja przewidywała jedno stałe ciśnienie&quot;,
+      &quot;gdzie&quot;: &quot;Specyfikacja zakupowa, część A — wymagania minimalne; zapytanie ofertowe 10.2026&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Bez pomiaru u odbiorcy nie da się sprawdzić, czy 6,3 bar to wciąż nie za dużo. Kryterium wyprowadzono z pomiaru z kampanii, a po modernizacji trzeba je móc zweryfikować&quot;,
+      &quot;gdzie&quot;: &quot;Specyfikacja zakupowa, część A; plan zbierania danych (6.6) — nowe pozycje dla przetworników&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Zapis danych pracy sprężarek (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Bez tych danych nie da się policzyć wskaźnika S-1 po modernizacji ani porównać wyniku z wartością sprzed zmiany&quot;,
+      &quot;gdzie&quot;: &quot;Specyfikacja zakupowa, część A; plan zbierania danych (6.6), pozycje 4 i 5&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Odzysk nie wchodzi do tej inwestycji, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia i postoju sprężarkowni. Zostawienie przyłączy kosztuje teraz niewiele&quot;,
+      &quot;gdzie&quot;: &quot;Specyfikacja zakupowa, część A — wymagania minimalne&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Odzysk ciepła ze sprężarek jako część tej inwestycji&quot;,
+      &quot;decyzja&quot;: &quot;odrzucony&quot;,
+      &quot;dlaczego&quot;: &quot;Zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek po modernizacji — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna. Decyzja do ponownego rozważenia po roku danych z nowego sterownika; miejsce i przyłącza zostają&quot;,
+      &quot;gdzie&quot;: &quot;&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Wymiana wszystkich czterech sprężarek na jednostki falownikowe&quot;,
+      &quot;decyzja&quot;: &quot;odrzucony&quot;,
+      &quot;dlaczego&quot;: &quot;Koszt ok. 1,2 mln zł, poza budżetem inwestycji. Profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka — sterownik nadrzędny z jednym napędem daje większość efektu przy 380 tys. zł&quot;,
+      &quot;gdzie&quot;: &quot;&quot;
+     }
+    ],
+    &quot;E&quot;: {
+     &quot;ktoAktualizuje&quot;: &quot;Kierownik UR aktualizuje kartę kryteriów sprężarkowni (F-EnMS-14) przed uruchomieniem — termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana przed uruchomieniem, po sprawdzeniu odbiorników w podtrzymaniu&quot;,
+     &quot;wskaznik&quot;: &quot;S-1 kWh/Nm³. Wartość sprzed modernizacji: 0,119 (VII–18.IX 2026, po obniżeniu ciśnienia i usunięciu nieszczelności) — z nią porównujemy wynik po uruchomieniu. Linia bazowa EnB: 0,125 (kampania pomiarowa 02–03.2026) — wobec niej liczona jest poprawa wyniku wykazywana w 10.2. Cel Z1.1: 0,110 do 12.2027&quot;,
+     &quot;warunki&quot;: &quot;Pełne miesiące pracy trzyzmianowej; ciśnienie 6,3 bar w trybie produkcji; temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją. Warunki jak w części D formularza celów (III-24)&quot;,
+     &quot;termin&quot;: &quot;Cztery tygodnie po odbiorze oraz po zamknięciu roku 2027 — Energy Manager. Wynik wchodzi do oceny celu Z1.1 i jest porównywany z deklaracją z wybranej oferty&quot;
+    }
+   },
+   {
+    &quot;nazwa&quot;: &quot;Wymiana opraw oświetleniowych na LED w halach H1 i H2&quot;,
+    &quot;nr&quot;: &quot;INW/2027/03&quot;,
+    &quot;kierownik&quot;: &quot;Dyrektor Techniczny&quot;,
+    &quot;etap&quot;: &quot;koncepcja&quot;,
+    &quot;etapAnalizy&quot;: &quot;zalozenia&quot;,
+    &quot;ktoAnaliza&quot;: &quot;Kierownik projektu z Energy Managerem&quot;,
+    &quot;data&quot;: &quot;2026-08-18&quot;,
+    &quot;wartosc&quot;: &quot;240 000 zł, uruchomienie III kw. 2027 (cel C2)&quot;,
+    &quot;A&quot;: {
+     &quot;seu&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Dotyczy SEU oświetlenie — 680 MWh/rok, 5,6% zużycia, wskazane kryterium B (potencjał poprawy)&quot;
+     },
+     &quot;sterowanie&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Projekt wprowadza podział na strefy i czujniki obecności — dziś jeden wyłącznik na całą halę&quot;
+     },
+     &quot;godziny&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Oświetlenie hal pracuje na trzech zmianach przez cały rok; oprawy LED przez kilkanaście lat&quot;
+     },
+     &quot;prog&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;240 tys. zł wobec progu 100 tys. zł&quot;
+     }
+    },
+    &quot;B&quot;: {
+     &quot;mozliwosci&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Rozważono: wymianę opraw na LED, podział na trzy strefy w hali B, czujniki obecności w magazynie i strefach socjalnych, obniżenie poziomu natężenia w strefach przejściowych do wartości normowej&quot;
+     },
+     &quot;oszacowano&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Po wymianie ok. 410 MWh/rok wobec 680 MWh — oszczędność ok. 270 MWh/rok (cel C2, zadanie Z2.1)&quot;
+     },
+     &quot;potrzeby&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Poziomy natężenia dobrane do wymagań stanowisk, nie jednolicie dla całej hali — strefy przejściowe mają niższe wymaganie niż stanowiska montażowe&quot;
+     },
+     &quot;warianty&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Porównano wymianę samych źródeł (tańsza, bez możliwości sterowania) z wymianą opraw ze sterowaniem — wybrano drugą&quot;
+     },
+     &quot;cieplo&quot;: {
+      &quot;o&quot;: &quot;nd&quot;,
+      &quot;u&quot;: &quot;Oświetlenie LED nie wytwarza użytecznego ciepła odpadowego; zmniejszenie zysków ciepła z opraw świetlówkowych uwzględnione jako pomijalne w bilansie ogrzewania hal&quot;
+     },
+     &quot;tco&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Porównanie kosztu zakupu i energii w 12 lat przy cenie 890 zł/MWh — w zapytaniu ofertowym&quot;
+     }
+    },
+    &quot;C&quot;: {
+     &quot;nadzor&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Rozważono: po wymianie kryteria oświetlenia (czas świecenia, strefy) wchodzą do karty kryteriów jako nowy wiersz&quot;
+     },
+     &quot;wylaczanie&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Podział na trzy strefy w hali B i czujniki obecności w magazynie oraz strefach socjalnych — dziś nie da się zgasić nieużywanej części hali (zgłoszenie 2026/08)&quot;
+     },
+     &quot;regulacja&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Sterowanie strefowe z harmonogramem; ściemnianie w strefach z dostępem światła dziennego&quot;
+     },
+     &quot;pomiar&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Podlicznik oświetlenia dla hal H1 i H2 — pozwoli policzyć OŚ-1 z pomiaru, a nie z inwentaryzacji opraw&quot;
+     },
+     &quot;ktoObsluga&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Utrzymanie ruchu według nowego wiersza karty kryteriów; harmonogram stref ustala kierownik produkcji&quot;
+     }
+    },
+    &quot;D&quot;: {
+     &quot;wprowadzono&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Wnioski weszły do zakresu projektu i do zapytania ofertowego planowanego na I kw. 2027&quot;
+     },
+     &quot;zachowano&quot;: {
+      &quot;o&quot;: &quot;tak&quot;,
+      &quot;u&quot;: &quot;Wypełniona lista F-EnMS-15 w teczce projektu INW/2027/03&quot;
+     }
+    },
+    &quot;uzasadnienieA&quot;: &quot;&quot;,
+    &quot;wnioski&quot;: [
+     {
+      &quot;tresc&quot;: &quot;Podział oświetlenia hali B na trzy strefy&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Dziś jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części (zgłoszenie 2026/08 z rejestru 7.4). Osobne przerabianie instalacji po wymianie opraw kosztowałoby drugie tyle&quot;,
+      &quot;gdzie&quot;: &quot;Zakres projektu; zapytanie ofertowe I kw. 2027&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Czujniki obecności w magazynie i strefach socjalnych&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Strefy używane nieregularnie; czujniki już zamontowane w ramach celu C2 jako działanie wcześniejsze — projekt obejmuje ich włączenie do sterowania strefowego&quot;,
+      &quot;gdzie&quot;: &quot;Zakres projektu&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Podlicznik oświetlenia dla hal H1 i H2&quot;,
+      &quot;decyzja&quot;: &quot;przyjety&quot;,
+      &quot;dlaczego&quot;: &quot;Dziś OŚ-1 liczony z inwentaryzacji opraw i czasu pracy. Bez podlicznika nie da się wykazać poprawy pomiarem, a cel C2 zakłada zejście z 680 do 410 MWh&quot;,
+      &quot;gdzie&quot;: &quot;Zakres projektu; plan zbierania danych (6.6) — pozycja 14 do aktualizacji&quot;
+     },
+     {
+      &quot;tresc&quot;: &quot;Wymiana samych źródeł światła bez wymiany opraw&quot;,
+      &quot;decyzja&quot;: &quot;odrzucony&quot;,
+      &quot;dlaczego&quot;: &quot;Tańsza o ok. 90 tys. zł, ale uniemożliwia sterowanie strefowe i ściemnianie — czyli większość efektu poza samą sprawnością źródła. Przy 680 MWh rocznie różnica w oszczędności przewyższa różnicę kosztu w pierwszych czterech latach&quot;,
+      &quot;gdzie&quot;: &quot;&quot;
+     }
+    ],
+    &quot;E&quot;: {
+     &quot;ktoAktualizuje&quot;: &quot;Kierownik UR dopisuje wiersz oświetlenia do karty kryteriów (F-EnMS-14) przed uruchomieniem; harmonogram stref ustala kierownik produkcji&quot;,
+     &quot;wskaznik&quot;: &quot;OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; wartość odniesienia 680 MWh (2025). Cel Z2.1: 410 MWh&quot;,
+     &quot;warunki&quot;: &quot;Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu. Po uruchomieniu podlicznika porównanie prowadzone na danych pomiarowych, z adnotacją o zmianie źródła danych&quot;,
+     &quot;termin&quot;: &quot;Po pełnym roku od uruchomienia (2028) — Energy Manager; pierwsze sprawdzenie cztery tygodnie po odbiorze na danych z podlicznika&quot;
+    }
+   },
+   {
+    &quot;nazwa&quot;: &quot;Remont posadzki w hali B&quot;,
+    &quot;nr&quot;: &quot;REM/2026/11&quot;,
+    &quot;kierownik&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;etap&quot;: &quot;realizacja&quot;,
+    &quot;etapAnalizy&quot;: &quot;zalozenia&quot;,
+    &quot;ktoAnaliza&quot;: &quot;Kierownik Utrzymania Ruchu z listą kontrolną F-EnMS-15&quot;,
+    &quot;data&quot;: &quot;2026-07-06&quot;,
+    &quot;wartosc&quot;: &quot;95 000 zł&quot;,
+    &quot;A&quot;: {
+     &quot;seu&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Remont posadzki nie dotyczy żadnego znaczącego użycia energii i nie wprowadza urządzeń zużywających energię&quot;
+     },
+     &quot;sterowanie&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Nie zmienia sterowania ani nastaw żadnej instalacji&quot;
+     },
+     &quot;godziny&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;Nie dotyczy urządzeń — zakres obejmuje wyłącznie warstwy posadzki&quot;
+     },
+     &quot;prog&quot;: {
+      &quot;o&quot;: &quot;nie&quot;,
+      &quot;u&quot;: &quot;95 tys. zł, poniżej progu 100 tys. zł&quot;
+     }
+    },
+    &quot;B&quot;: {},
+    &quot;C&quot;: {},
+    &quot;D&quot;: {},
+    &quot;uzasadnienieA&quot;: &quot;Remont posadzki nie dotyczy znaczącego użycia energii, nie zmienia sterowania ani nastaw i nie wprowadza urządzeń zużywających energię. Sprawdzono również, czy prace nie wymuszą zmiany pracy instalacji w hali — postoje są planowane w weekendy, bez pracy sprężarkowni poza podtrzymaniem. Analiza zakończona na etapie A; kierownik projektu z listą kontrolną, 06.07.2026.&quot;,
+    &quot;wnioski&quot;: [],
+    &quot;E&quot;: {}
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;data&quot;: &quot;2026-09-29&quot;,
+   &quot;sygnaly&quot;: &quot;Analizę energetyczną projektu uruchamia każdy z sygnałów: projekt dotyczy znaczącego użycia energii albo tworzy nowe; zmienia sposób sterowania lub nastawy; dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata; wartość powyżej 100 tys. zł — jako sygnał dodatkowy, nie warunek. Koncepcje projektów dotyczących SEU trafiają do Energy Managera na etapie założeń (zasada wprowadzona po przeglądzie koncepcji modernizacji sprężarkowni we wrześniu 2026 r.).&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var PYT_A = [{"kod": "seu", "podstawa": "M", "tekst": "Dotyczy znaczącego użycia energii albo tworzy nowe", "ph": "np. Dotyczy SEU sprężarkownia — 17,5% zużycia zakładu"}, {"kod": "sterowanie", "podstawa": "M", "tekst": "Zmienia sposób sterowania lub nastawy", "ph": "np. Sterownik nadrzędny przejmuje kolejność pracy sprężarek i utrzymanie ciśnienia"}, {"kod": "godziny", "podstawa": "M", "tekst": "Dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata", "ph": "np. Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"}, {"kod": "prog", "podstawa": "M", "tekst": "Przekracza próg wartości ustalony w firmie — sygnał pomocniczy", "ph": "np. 380 tys. zł, próg w firmie 100 tys. zł", "pomoc": "Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym. Przebudowa sterowania za kilkanaście tysięcy może zmienić zużycie bardziej niż remont biurowca za kilka milionów."}];
+var PYT_B = [{"kod": "mozliwosci", "podstawa": "N", "tekst": "Rozważono możliwości poprawy wyniku energetycznego w okresie eksploatacji", "ph": "np. Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy, odzysk ciepła ze sprężarek, wymianę wszystkich czterech sprężarek"}, {"kod": "oszacowano", "podstawa": "M", "tekst": "Oszacowano przewidywane zużycie energii w okresie eksploatacji", "ph": "np. Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh po obniżeniu ciśnienia i usunięciu wycieków"}, {"kod": "potrzeby", "podstawa": "M", "tekst": "Rozwiązanie dobrano do rzeczywistych potrzeb — bez nadmiernego zapasu", "ph": "np. Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia wymaga regulacji tylko jednej jednostki"}, {"kod": "warianty", "podstawa": "M", "tekst": "Rozważono warianty o niższym zużyciu", "ph": "np. Porównano: sam sterownik, sterownik z jednym napędem, wymiana wszystkich sprężarek"}, {"kod": "cieplo", "podstawa": "M", "tekst": "Sprawdzono możliwość wykorzystania ciepła odpadowego lub innej odzyskiwalnej energii", "ph": "np. Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, ale projekt zostawia miejsce i przyłącza"}, {"kod": "tco", "podstawa": "M", "tekst": "Porównano koszt zakupu i energii wariantów — uproszczone TCO", "ph": "np. Porównanie w 15 lat przy cenie 890 zł/MWh — część D formularza zakupowego F-EnMS-16"}];
+var PYT_C = [{"kod": "nadzor", "podstawa": "N", "tekst": "Rozważono nadzór operacyjny w okresie eksploatacji", "ph": "np. Sprawdzono, czy kryteria z karty sprężarkowni (8.1) da się stosować po modernizacji"}, {"kod": "wylaczanie", "podstawa": "M", "tekst": "Można wyłączyć to, co w danej chwili niepotrzebne", "ph": "np. Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy odbiorze"}, {"kod": "regulacja", "podstawa": "M", "tekst": "Układ ma regulację do rzeczywistego zapotrzebowania, także poza produkcją", "ph": "np. Dwie nastawy ciśnienia: produkcja i postój — wymaganie minimalne w specyfikacji"}, {"kod": "pomiar", "podstawa": "M", "tekst": "Przewidziano pomiar, z którego da się policzyć wskaźnik", "ph": "np. Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do monitoringu; dwa przetworniki ciśnienia u odbiorców"}, {"kod": "ktoObsluga", "podstawa": "M", "tekst": "Wiadomo, kto będzie obsługiwał instalację i według jakich kryteriów (8.1)", "ph": "np. Technicy UR według karty kryteriów F-EnMS-14 zaktualizowanej przed uruchomieniem; serwis według zlecenia"}];
+var PYT_D = [{"kod": "wprowadzono", "podstawa": "N", "tekst": "Wyniki rozważań wprowadzono do specyfikacji, projektu i zakupów", "ph": "np. Cztery wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"}, {"kod": "zachowano", "podstawa": "N", "tekst": "Zachowano informacje o działaniach projektowych — ta lista albo notatka", "ph": "np. Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 w teczce projektu"}];
+var LISTA_82 = [{"tekst": "Rozpoznawane są projekty mogące znacząco wpłynąć na wynik energetyczny.", "podstawa": "N", "auto": "rozpoznanie"}, {"tekst": "W tych projektach rozważa się możliwości poprawy i nadzór operacyjny w okresie eksploatacji.", "podstawa": "N", "auto": "rozwaza"}, {"tekst": "Wyniki rozważań są w specyfikacjach, projekcie i zakupach (w stosownych przypadkach).", "podstawa": "N", "auto": "wyniki"}, {"tekst": "Zachowano udokumentowane informacje o działaniach projektowych związanych z wynikiem energetycznym.", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Pytania o energię padają na etapie założeń; stosowana jest lista kontrolna projektu.", "podstawa": "M", "auto": "zalozenia"}, {"tekst": "Po uruchomieniu wynik porównuje się w porównywalnych warunkach.", "podstawa": "M", "auto": "poUruchomieniu"}];
+var P_PROJEKTY = [{"nazwa": "Modernizacja sprężarkowni — sterownik nadrzędny i napęd o zmiennej prędkości", "nr": "INW/2027/04", "kierownik": "Dyrektor Techniczny", "etap": "zatwierdzenie", "etapAnalizy": "koncepcja", "ktoAnaliza": "Kierownik projektu z Janem Kowalskim (Energy Manager)", "data": "2026-09-08", "wartosc": "380 000 zł, uruchomienie 06.2027 (inwestycja nr 4 w III-24)", "A": {"seu": {"o": "tak", "u": "Dotyczy SEU sprężarkownia — 2 125 MWh, 17,5% zużycia zakładu"}, "sterowanie": {"o": "tak", "u": "Sterownik nadrzędny przejmuje kolejność pracy czterech sprężarek i utrzymanie ciśnienia; napęd falownikowy zmienia sposób regulacji"}, "godziny": {"o": "tak", "u": "Sprężarkownia pracuje w trybie trzyzmianowym; sterownik i napęd przez kilkanaście lat"}, "prog": {"o": "tak", "u": "380 tys. zł wobec progu 100 tys. zł w firmie — sygnał dodatkowy, nie decydujący"}}, "B": {"mozliwosci": {"o": "tak", "u": "Rozważono: obniżanie ciśnienia poza produkcją, napęd falownikowy dla jednej sprężarki, wymianę wszystkich czterech sprężarek, odzysk ciepła ze sprężarek, pomiar ciśnienia u odbiorców"}, "oszacowano": {"o": "tak", "u": "Po modernizacji ok. 1 600 MWh/rok wobec 1 830 MWh/rok po obniżeniu ciśnienia i usunięciu wycieków — oszczędność ok. 230 MWh/rok, zgodna z przeglądem energetycznym"}, "potrzeby": {"o": "tak", "u": "Napęd falownikowy dla jednej sprężarki, nie dla wszystkich czterech — profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka, a pozostałe pracują w trybie włącz–wyłącz"}, "warianty": {"o": "tak", "u": "Trzy warianty: sam sterownik (mniejszy efekt, 180 tys. zł), sterownik z jednym napędem (wybrany), wymiana wszystkich sprężarek (poza budżetem, ok. 1,2 mln zł)"}, "cieplo": {"o": "tak", "u": "Odzysk ciepła ze sprężarek rozważony — przesunięty poza tę inwestycję, bo zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek. Projekt zostawia miejsce i przyłącza pod wymiennik"}, "tco": {"o": "tak", "u": "Porównanie kosztu zakupu i energii w 15 lat przy cenie 890 zł/MWh — wykonane w części D formularza zakupowego F-EnMS-16 (III-38)"}}, "C": {"nadzor": {"o": "tak", "u": "Sprawdzono, czy kryteria z karty sprężarkowni (F-EnMS-14) da się stosować po modernizacji. Pierwotna koncepcja utrzymywała jedno stałe ciśnienie — kryterium trybu postoju nie dałoby się wtedy wprowadzić"}, "wylaczanie": {"o": "tak", "u": "Sterownik wyłącza sprężarki poza produkcją; tryb postoju z jedną jednostką tylko przy faktycznym odbiorze"}, "regulacja": {"o": "tak", "u": "Dwie nastawy ciśnienia — produkcja i postój — jako wymaganie minimalne specyfikacji. Tego nie było w pierwotnej koncepcji"}, "pomiar": {"o": "tak", "u": "Zapis danych pracy (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu oraz dwa przetworniki ciśnienia u odbiorców: w lakierni i w najdalszym punkcie sieci. Tego też nie było w pierwotnej koncepcji"}, "ktoObsluga": {"o": "tak", "u": "Technicy UR według karty kryteriów zaktualizowanej przed uruchomieniem (kierownik UR, do 05.2027); serwis według zlecenia z wymaganiami z sekcji C karty"}}, "D": {"wprowadzono": {"o": "tak", "u": "Cztery przyjęte wnioski weszły do wymagań minimalnych specyfikacji zakupowej (III-38, część A) i do zapytania ofertowego z 10.2026"}, "zachowano": {"o": "tak", "u": "Wypełniona lista F-EnMS-15 oraz notatka z przeglądu koncepcji z 09.2026 — teczka projektu INW/2027/04"}}, "uzasadnienieA": "", "wnioski": [{"tresc": "Sterownik ma umożliwiać obniżanie ciśnienia poza produkcją — dwie nastawy, produkcja i postój", "decyzja": "przyjety", "dlaczego": "Bez dwóch nastaw kryterium trybu postoju z karty sprężarkowni (8.1) nie da się stosować. Pierwotna koncepcja przewidywała jedno stałe ciśnienie", "gdzie": "Specyfikacja zakupowa, część A — wymagania minimalne; zapytanie ofertowe 10.2026"}, {"tresc": "Dwa przetworniki ciśnienia u odbiorców — w lakierni i w najdalszym punkcie sieci — jako sygnał dla sterownika", "decyzja": "przyjety", "dlaczego": "Bez pomiaru u odbiorcy nie da się sprawdzić, czy 6,3 bar to wciąż nie za dużo. Kryterium wyprowadzono z pomiaru z kampanii, a po modernizacji trzeba je móc zweryfikować", "gdzie": "Specyfikacja zakupowa, część A; plan zbierania danych (6.6) — nowe pozycje dla przetworników"}, {"tresc": "Zapis danych pracy sprężarek (obciążenie, ciśnienie, godziny) z eksportem do systemu monitoringu", "decyzja": "przyjety", "dlaczego": "Bez tych danych nie da się policzyć wskaźnika S-1 po modernizacji ani porównać wyniku z wartością sprzed zmiany", "gdzie": "Specyfikacja zakupowa, część A; plan zbierania danych (6.6), pozycje 4 i 5"}, {"tresc": "Miejsce i przyłącza pod przyszły wymiennik odzysku ciepła ze sprężarek", "decyzja": "przyjety", "dlaczego": "Odzysk nie wchodzi do tej inwestycji, ale późniejsze dodanie wymagałoby przebudowy pomieszczenia i postoju sprężarkowni. Zostawienie przyłączy kosztuje teraz niewiele", "gdzie": "Specyfikacja zakupowa, część A — wymagania minimalne"}, {"tresc": "Odzysk ciepła ze sprężarek jako część tej inwestycji", "decyzja": "odrzucony", "dlaczego": "Zakład chce najpierw zobaczyć, jak zmieni się praca sprężarek po modernizacji — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna. Decyzja do ponownego rozważenia po roku danych z nowego sterownika; miejsce i przyłącza zostają", "gdzie": ""}, {"tresc": "Wymiana wszystkich czterech sprężarek na jednostki falownikowe", "decyzja": "odrzucony", "dlaczego": "Koszt ok. 1,2 mln zł, poza budżetem inwestycji. Profil obciążenia z kampanii pomiarowej pokazuje, że regulacji wymaga jedna jednostka — sterownik nadrzędny z jednym napędem daje większość efektu przy 380 tys. zł", "gdzie": ""}], "E": {"ktoAktualizuje": "Kierownik UR aktualizuje kartę kryteriów sprężarkowni (F-EnMS-14) przed uruchomieniem — termin 05.2027. Nowa wartość ciśnienia dla trybu postoju ustalana przed uruchomieniem, po sprawdzeniu odbiorników w podtrzymaniu", "wskaznik": "S-1 kWh/Nm³. Wartość sprzed modernizacji: 0,119 (VII–18.IX 2026, po obniżeniu ciśnienia i usunięciu nieszczelności) — z nią porównujemy wynik po uruchomieniu. Linia bazowa EnB: 0,125 (kampania pomiarowa 02–03.2026) — wobec niej liczona jest poprawa wyniku wykazywana w 10.2. Cel Z1.1: 0,110 do 12.2027", "warunki": "Pełne miesiące pracy trzyzmianowej; ciśnienie 6,3 bar w trybie produkcji; temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją. Warunki jak w części D formularza celów (III-24)", "termin": "Cztery tygodnie po odbiorze oraz po zamknięciu roku 2027 — Energy Manager. Wynik wchodzi do oceny celu Z1.1 i jest porównywany z deklaracją z wybranej oferty"}}, {"nazwa": "Wymiana opraw oświetleniowych na LED w halach H1 i H2", "nr": "INW/2027/03", "kierownik": "Dyrektor Techniczny", "etap": "koncepcja", "etapAnalizy": "zalozenia", "ktoAnaliza": "Kierownik projektu z Energy Managerem", "data": "2026-08-18", "wartosc": "240 000 zł, uruchomienie III kw. 2027 (cel C2)", "A": {"seu": {"o": "tak", "u": "Dotyczy SEU oświetlenie — 680 MWh/rok, 5,6% zużycia, wskazane kryterium B (potencjał poprawy)"}, "sterowanie": {"o": "tak", "u": "Projekt wprowadza podział na strefy i czujniki obecności — dziś jeden wyłącznik na całą halę"}, "godziny": {"o": "tak", "u": "Oświetlenie hal pracuje na trzech zmianach przez cały rok; oprawy LED przez kilkanaście lat"}, "prog": {"o": "tak", "u": "240 tys. zł wobec progu 100 tys. zł"}}, "B": {"mozliwosci": {"o": "tak", "u": "Rozważono: wymianę opraw na LED, podział na trzy strefy w hali B, czujniki obecności w magazynie i strefach socjalnych, obniżenie poziomu natężenia w strefach przejściowych do wartości normowej"}, "oszacowano": {"o": "tak", "u": "Po wymianie ok. 410 MWh/rok wobec 680 MWh — oszczędność ok. 270 MWh/rok (cel C2, zadanie Z2.1)"}, "potrzeby": {"o": "tak", "u": "Poziomy natężenia dobrane do wymagań stanowisk, nie jednolicie dla całej hali — strefy przejściowe mają niższe wymaganie niż stanowiska montażowe"}, "warianty": {"o": "tak", "u": "Porównano wymianę samych źródeł (tańsza, bez możliwości sterowania) z wymianą opraw ze sterowaniem — wybrano drugą"}, "cieplo": {"o": "nd", "u": "Oświetlenie LED nie wytwarza użytecznego ciepła odpadowego; zmniejszenie zysków ciepła z opraw świetlówkowych uwzględnione jako pomijalne w bilansie ogrzewania hal"}, "tco": {"o": "tak", "u": "Porównanie kosztu zakupu i energii w 12 lat przy cenie 890 zł/MWh — w zapytaniu ofertowym"}}, "C": {"nadzor": {"o": "tak", "u": "Rozważono: po wymianie kryteria oświetlenia (czas świecenia, strefy) wchodzą do karty kryteriów jako nowy wiersz"}, "wylaczanie": {"o": "tak", "u": "Podział na trzy strefy w hali B i czujniki obecności w magazynie oraz strefach socjalnych — dziś nie da się zgasić nieużywanej części hali (zgłoszenie 2026/08)"}, "regulacja": {"o": "tak", "u": "Sterowanie strefowe z harmonogramem; ściemnianie w strefach z dostępem światła dziennego"}, "pomiar": {"o": "tak", "u": "Podlicznik oświetlenia dla hal H1 i H2 — pozwoli policzyć OŚ-1 z pomiaru, a nie z inwentaryzacji opraw"}, "ktoObsluga": {"o": "tak", "u": "Utrzymanie ruchu według nowego wiersza karty kryteriów; harmonogram stref ustala kierownik produkcji"}}, "D": {"wprowadzono": {"o": "tak", "u": "Wnioski weszły do zakresu projektu i do zapytania ofertowego planowanego na I kw. 2027"}, "zachowano": {"o": "tak", "u": "Wypełniona lista F-EnMS-15 w teczce projektu INW/2027/03"}}, "uzasadnienieA": "", "wnioski": [{"tresc": "Podział oświetlenia hali B na trzy strefy", "decyzja": "przyjety", "dlaczego": "Dziś jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części (zgłoszenie 2026/08 z rejestru 7.4). Osobne przerabianie instalacji po wymianie opraw kosztowałoby drugie tyle", "gdzie": "Zakres projektu; zapytanie ofertowe I kw. 2027"}, {"tresc": "Czujniki obecności w magazynie i strefach socjalnych", "decyzja": "przyjety", "dlaczego": "Strefy używane nieregularnie; czujniki już zamontowane w ramach celu C2 jako działanie wcześniejsze — projekt obejmuje ich włączenie do sterowania strefowego", "gdzie": "Zakres projektu"}, {"tresc": "Podlicznik oświetlenia dla hal H1 i H2", "decyzja": "przyjety", "dlaczego": "Dziś OŚ-1 liczony z inwentaryzacji opraw i czasu pracy. Bez podlicznika nie da się wykazać poprawy pomiarem, a cel C2 zakłada zejście z 680 do 410 MWh", "gdzie": "Zakres projektu; plan zbierania danych (6.6) — pozycja 14 do aktualizacji"}, {"tresc": "Wymiana samych źródeł światła bez wymiany opraw", "decyzja": "odrzucony", "dlaczego": "Tańsza o ok. 90 tys. zł, ale uniemożliwia sterowanie strefowe i ściemnianie — czyli większość efektu poza samą sprawnością źródła. Przy 680 MWh rocznie różnica w oszczędności przewyższa różnicę kosztu w pierwszych czterech latach", "gdzie": ""}], "E": {"ktoAktualizuje": "Kierownik UR dopisuje wiersz oświetlenia do karty kryteriów (F-EnMS-14) przed uruchomieniem; harmonogram stref ustala kierownik produkcji", "wskaznik": "OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; wartość odniesienia 680 MWh (2025). Cel Z2.1: 410 MWh", "warunki": "Ten sam kalendarz pracy — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu. Po uruchomieniu podlicznika porównanie prowadzone na danych pomiarowych, z adnotacją o zmianie źródła danych", "termin": "Po pełnym roku od uruchomienia (2028) — Energy Manager; pierwsze sprawdzenie cztery tygodnie po odbiorze na danych z podlicznika"}}, {"nazwa": "Remont posadzki w hali B", "nr": "REM/2026/11", "kierownik": "Kierownik Utrzymania Ruchu", "etap": "realizacja", "etapAnalizy": "zalozenia", "ktoAnaliza": "Kierownik Utrzymania Ruchu z listą kontrolną F-EnMS-15", "data": "2026-07-06", "wartosc": "95 000 zł", "A": {"seu": {"o": "nie", "u": "Remont posadzki nie dotyczy żadnego znaczącego użycia energii i nie wprowadza urządzeń zużywających energię"}, "sterowanie": {"o": "nie", "u": "Nie zmienia sterowania ani nastaw żadnej instalacji"}, "godziny": {"o": "nie", "u": "Nie dotyczy urządzeń — zakres obejmuje wyłącznie warstwy posadzki"}, "prog": {"o": "nie", "u": "95 tys. zł, poniżej progu 100 tys. zł"}}, "B": {}, "C": {}, "D": {}, "uzasadnienieA": "Remont posadzki nie dotyczy znaczącego użycia energii, nie zmienia sterowania ani nastaw i nie wprowadza urządzeń zużywających energię. Sprawdzono również, czy prace nie wymuszą zmiany pracy instalacji w hali — postoje są planowane w weekendy, bez pracy sprężarkowni poza podtrzymaniem. Analiza zakończona na etapie A; kierownik projektu z listą kontrolną, 06.07.2026.", "wnioski": [], "E": {}}];
+var P_META = {"zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "data": "2026-09-29", "sygnaly": "Analizę energetyczną projektu uruchamia każdy z sygnałów: projekt dotyczy znaczącego użycia energii albo tworzy nowe; zmienia sposób sterowania lub nastawy; dotyczy urządzenia, które będzie pracowało wiele godzin rocznie przez lata; wartość powyżej 100 tys. zł — jako sygnał dodatkowy, nie warunek. Koncepcje projektów dotyczących SEU trafiają do Energy Managera na etapie założeń (zasada wprowadzona po przeglądzie koncepcji modernizacji sprężarkowni we wrześniu 2026 r.)."};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Decyzja projektowa przesądza o zużyciu na lata, a zapada w kilka tygodni.", "decyzja": "Przy modernizacji uwzględniamy wynik energetyczny w zakresie, w jakim mamy na niego wpływ.", "dzialanie": "Wymiana oświetlenia hali B na LED z kryterium mocy jednostkowej; wartość sprzed modernizacji 0,119 kWh/Nm³ zapisana osobno od linii bazowej 0,125 kWh/Nm³.", "sprawdzenie": "Pomiar po modernizacji wobec wartości sprzed modernizacji; wynik wchodzi do raportu monitorowania (9.1.1)."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 8.2 — Projektowanie.
+   F-EnMS-15 (III-36) części A–E; lista kontrolna III-39 sekcja 8.2;
+   procedura P-EnMS-06 (III-40) pkt 4.3. */
+"use strict";
+
+var PUNKT = "8.2";
+var TERAZ = "11.10.2026 11:40";
+var MAGAZYN = "enesa_projekty";          // czytane przez 8.3
+var PROJEKTY = [];
+var AKTP = 0;
+var META = { zatwierdzil: "", data: "", sygnaly: "" };
+var WNIOSKI = [];
+var AKT = "projekty";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 11:35", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 8.2" }];
+
+var ETAPY = [["", "Wybierz etap"], ["zalozenia", "Założenia"], ["koncepcja", "Koncepcja"],
+["zatwierdzenie", "Zatwierdzenie"], ["realizacja", "Realizacja"], ["uruchomione", "Uruchomione"]];
+var ODP = [["", "—"], ["tak", "Tak"], ["nie", "Nie"], ["nd", "N.d."]];
+
+function nowyProjekt() {
+  return { nazwa: "", nr: "", kierownik: "", etap: "", etapAnalizy: "", ktoAnaliza: "", data: "",
+    A: {}, B: {}, C: {}, D: {}, uzasadnienieA: "", wnioski: [], E: {} };
+}
+function proj() { return PROJEKTY[AKTP] || null; }
+function nazwaProjektu(p, i) { return (p.nazwa || "").trim() || ("Projekt " + (i + 1)); }
+
+/* ── odpowiedzi ── */
+function odp(p, czesc, kod) { return ((p[czesc] || {})[kod] || {}).o || ""; }
+function uwaga(p, czesc, kod) { return ((p[czesc] || {})[kod] || {}).u || ""; }
+function ustaw(p, czesc, kod, pole, v) {
+  if (!p[czesc]) p[czesc] = {};
+  if (!p[czesc][kod]) p[czesc][kod] = {};
+  p[czesc][kod][pole] = v;
+}
+function pytaniaOk(p, czesc, lista) {
+  return lista.every(function (q) {
+    var o = odp(p, czesc, q.kod);
+    if (!o) return false;
+    if (o === "nd" && !uwaga(p, czesc, q.kod).trim()) return false;
+    if (q.podstawa === "N" && o === "nie" && !uwaga(p, czesc, q.kod).trim()) return false;
+    return true;
+  });
+}
+function wymagaNieUzasadnione(p, czesc, lista) {
+  return lista.filter(function (q) {
+    return q.podstawa === "N" && odp(p, czesc, q.kod) === "nie";
+  });
+}
+
+/* ── ścieżka projektu ── */
+function istotny(p) {
+  return PYT_A.some(function (q) { return odp(p, "A", q.kod) === "tak"; });
+}
+function zamknietyNaA(p) {
+  return PYT_A.length > 0 && PYT_A.every(function (q) { return odp(p, "A", q.kod) === "nie"; });
+}
+function metrykaOk(p) {
+  return !!((p.nazwa || "").trim() && (p.kierownik || "").trim() && p.etap
+    && p.etapAnalizy && (p.ktoAnaliza || "").trim() && p.data);
+}
+function wniosekOk(w) {
+  return !!((w.tresc || "").trim() && w.decyzja && (w.dlaczego || "").trim())
+    && (w.decyzja === "odrzucony" || (w.gdzie || "").trim());
+}
+function eOk(p) {
+  return POLA_E.every(function (f) { return ((p.E || {})[f.kod] || "").trim(); });
+}
+function projektOk(p) {
+  if (!metrykaOk(p)) return false;
+  if (!pytaniaOk(p, "A", PYT_A)) return false;
+  if (zamknietyNaA(p)) return !!(p.uzasadnienieA || "").trim();
+  if (!istotny(p)) return false;
+  return pytaniaOk(p, "B", PYT_B) && pytaniaOk(p, "C", PYT_C) && pytaniaOk(p, "D", PYT_D)
+    && (p.wnioski || []).length > 0 && p.wnioski.every(wniosekOk)
+    && (p.wnioski || []).some(function (w) { return w.decyzja === "przyjety" && (w.gdzie || "").trim(); })
+    && eOk(p);
+}
+
+/* ── reguły z książki ── */
+function analizaPozno(p) { return p.etapAnalizy === "zatwierdzenie"; }
+function analizaNaKoncepcji(p) { return p.etapAnalizy === "koncepcja"; }
+function wnioskiWNotatce(p) {
+  return (p.wnioski || []).filter(function (w) {
+    return w.decyzja === "przyjety" && (w.tresc || "").trim() && !(w.gdzie || "").trim();
+  });
+}
+function odrzuconeBezPowodu(p) {
+  return (p.wnioski || []).filter(function (w) {
+    return w.decyzja === "odrzucony" && (w.tresc || "").trim() && !(w.dlaczego || "").trim();
+  });
+}
+function tylkoKwota(p) {
+  var kwota = odp(p, "A", "prog") === "tak";
+  var inne = ["seu", "sterowanie", "godziny"].some(function (k) { return odp(p, "A", k) === "tak"; });
+  return kwota && !inne;
+}
+function pominietoKwote(p) {
+  var kwota = odp(p, "A", "prog") === "nie";
+  var inne = ["seu", "sterowanie", "godziny"].some(function (k) { return odp(p, "A", k) === "tak"; });
+  return kwota && inne;
+}
+
+/* ── zakładka 1: projekty ── */
+function rysujProjekty(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Rejestr projektów");
+  h.appendChild(el("span", "chip " + (PROJEKTY.length && PROJEKTY.every(projektOk) ? "green" : "amber"),
+    PROJEKTY.filter(projektOk).length + " / " + PROJEKTY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Początek września 2026. Dział techniczny kończy koncepcję modernizacji sprężarkowni: sterownik nadrzędny i napęd o zmiennej prędkości. Inwestycja z planu działań — 380 000 zł, uruchomienie w czerwcu 2027. <b>Jan Kowalski dostaje dokumentację dzień przed spotkaniem, na którym dyrektor ma ją zatwierdzić.</b><br><br>Czyta wieczorem i widzi trzy rzeczy. Sterownik ma utrzymywać jedno stałe ciśnienie, bez możliwości obniżenia go poza produkcją. Nikt nie przewidział pomiaru ciśnienia u odbiorców — więc nie da się sprawdzić, czy 6,3 bar to wciąż nie za dużo. A odzysk ciepła ze sprężarek nie jest częścią projektu i <b>projekt nie zostawia na niego nawet miejsca</b>.<br><br>Każda z tych uwag jest słuszna. Ale dzień przed zatwierdzeniem każda oznacza zmianę zakresu, kosztów i terminu. <b>Tę samą rozmowę można było odbyć na etapie założeń — w godzinę.</b>"));
+  s.appendChild(pole("Sygnały uruchamiające analizę energetyczną projektu",
+    txt(META.sygnaly, "np. Projekt dotyczy SEU albo tworzy nowe; zmienia sposób sterowania lub nastawy; dotyczy urządzenia pracującego wiele godzin rocznie przez lata; wartość powyżej 100 tys. zł — jako sygnał dodatkowy", 2,
+      function (v) { META.sygnaly = v; }),
+    "★ Rada z książki: ustalcie kilka prostych sygnałów. Próg kwotowy może być sygnałem dodatkowym — nigdy jedynym."));
+  host.appendChild(s);
+
+  if (PROJEKTY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Nr", "Projekt", "Etap", "Analiza na etapie", "Istotny", "Wnioski", "Stan"],
+      PROJEKTY.map(function (p, i) {
+        var e = (ETAPY.filter(function (x) { return x[0] === p.etapAnalizy; })[0] || ["", "—"])[1];
+        return [p.nr || String(i + 1), nazwaProjektu(p, i),
+          (ETAPY.filter(function (x) { return x[0] === p.etap; })[0] || ["", "—"])[1],
+          analizaPozno(p) ? el("span", "chip red", e) : analizaNaKoncepcji(p) ? el("span", "chip amber", e) : e,
+          zamknietyNaA(p) ? "nie — zamknięty na A" : istotny(p) ? "tak" : "—",
+          String((p.wnioski || []).length),
+          el("span", "chip " + (projektOk(p) ? "green" : "amber"), projektOk(p) ? "OK" : "do uzupełnienia")];
+      }), ["mono"]));
+    host.appendChild(t);
+  }
+
+  PROJEKTY.forEach(function (p, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, nazwaProjektu(p, i));
+    hh.appendChild(el("span", "chip " + (projektOk(p) ? "green" : "amber"), projektOk(p) ? "kompletny" : "do uzupełnienia"));
+    if (zamknietyNaA(p)) hh.appendChild(el("span", "chip", "zamknięty na etapie A"));
+    var ot = el("button", "link", i === AKTP ? "otwarty" : "otwórz części A–E");
+    ot.onclick = function () { AKTP = i; AKT = "rozpoznanie"; rysuj(); window.scrollTo(0, 0); };
+    hh.appendChild(ot);
+    hh.appendChild(przyciskUsun(function () { PROJEKTY.splice(i, 1); if (AKTP >= PROJEKTY.length) AKTP = Math.max(0, PROJEKTY.length - 1); },
+      "usuń", "Usunąć projekt " + nazwaProjektu(p, i) + " wraz z analizą?"));
+    sec.appendChild(hh);
+    var k = el("div", "poz" + (metrykaOk(p) ? "" : " brak"));
+    k.appendChild(pole("Nazwa projektu", inp(p.nazwa, "np. Modernizacja sprężarkowni — sterownik nadrzędny i napęd o zmiennej prędkości",
+      function (v) { p.nazwa = v; })));
+    k.appendChild(pole("Numer", inp(p.nr, "np. INW/2027/04", function (v) { p.nr = v; })));
+    k.appendChild(pole("Kierownik projektu", inp(p.kierownik, "np. Dyrektor Techniczny", function (v) { p.kierownik = v; })));
+    k.appendChild(pole("Etap projektu", sel(p.etap, ETAPY, function (v) { p.etap = v; })));
+    k.appendChild(poleChip("Na jakim etapie przeprowadzono analizę energetyczną", "metodyka ENESA",
+      sel(p.etapAnalizy, ETAPY, function (v) { p.etapAnalizy = v; }),
+      "To pole odpowiada na pytanie z książki: kiedy ktoś pierwszy raz zapytał o energię. Na etapie założeń zmiana kosztuje najmniej."));
+    k.appendChild(pole("Kto przeprowadził analizę", inp(p.ktoAnaliza, "np. Kierownik projektu z Energy Managerem", function (v) { p.ktoAnaliza = v; }),
+      "Norma wymaga rozważenia określonych spraw, a nie udziału osoby na konkretnym stanowisku. W małej firmie te pytania może zadać kierownik projektu z listą kontrolną w ręku."));
+    k.appendChild(pole("Data analizy", inp(p.data, "", function (v) { p.data = v; }, "date")));
+    k.appendChild(pole("Wartość i termin uruchomienia", inp(p.wartosc, "np. 380 000 zł, uruchomienie 06.2027", function (v) { p.wartosc = v; })));
+    if (analizaPozno(p))
+      k.appendChild(hel("div", "warn", "Analizę przeprowadzono <b>na etapie zatwierdzenia</b> — to najdroższy moment. Każda uwaga oznacza wtedy zmianę zakresu, kosztów i terminu. W AutoParts taka rozmowa przesunęła decyzję o trzy tygodnie, a przetarg o miesiąc. „Energia pojawia się dopiero przy zatwierdzaniu projektu” to pierwszy z sześciu błędów tego punktu."));
+    else if (analizaNaKoncepcji(p))
+      k.appendChild(el("div", "note", "Analiza na etapie koncepcji — lepiej niż przy zatwierdzaniu, ale wciąż później, niż trzeba. Uwagi wymagające zmiany układu albo przyłączy są wtedy już kosztowne. Docelowo pytania o energię powinny padać na etapie założeń."));
+    sec.appendChild(k);
+    host.appendChild(sec);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj projekt", function () { PROJEKTY.push(nowyProjekt()); AKTP = PROJEKTY.length - 1; }));
+  if (!PROJEKTY.length) d.appendChild(el("div", "warn", "Rejestr projektów jest pusty."));
+  var pozno = PROJEKTY.filter(analizaPozno).length;
+  if (pozno)
+    d.appendChild(el("div", "warn", "W " + ile(pozno, "projekcie", "projektach", "projektach") +
+      " analizę przeprowadzono dopiero na etapie zatwierdzenia."));
+  if (!(META.sygnaly || "").trim() && PROJEKTY.length)
+    d.appendChild(el("div", "warn", "Nie ustalono sygnałów uruchamiających analizę. Bez nich rozpoznanie projektów o znaczącym wpływie zależy od tego, czy ktoś sobie przypomni."));
+  host.appendChild(d);
+}
+
+/* ── wspólny nagłówek ── */
+function naglowekProjektu(host, tytul) {
+  var p = proj();
+  if (!p) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "warn", "Nie wybrano projektu. Dodajcie projekt w zakładce 1."));
+    host.appendChild(x);
+    return null;
+  }
+  var s = el("div", "sekcja");
+  var h = el("h3", null, tytul);
+  h.appendChild(el("span", "chip", nazwaProjektu(p, AKTP)));
+  if (PROJEKTY.length > 1) {
+    var lab = el("span", "rola");
+    lab.appendChild(el("span", "rolaetyk", "Projekt:"));
+    lab.appendChild(sel(String(AKTP), PROJEKTY.map(function (x, i) { return [String(i), nazwaProjektu(x, i)]; }),
+      function (v) { AKTP = parseInt(v, 10); }));
+    h.appendChild(lab);
+  }
+  s.appendChild(h);
+  host.appendChild(s);
+  return p;
+}
+
+/* ── rysowanie bloku pytań ── */
+function rysujPytania(host, p, czesc, lista, tytul, opis, ostrzezenie) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, tytul);
+  h.appendChild(el("span", "chip " + (pytaniaOk(p, czesc, lista) ? "green" : "amber"),
+    lista.filter(function (q) { return odp(p, czesc, q.kod); }).length + " / " + lista.length));
+  s.appendChild(h);
+  if (opis) s.appendChild(el("p", "opis", opis));
+  if (ostrzezenie) s.appendChild(hel("div", "note", ostrzezenie));
+  lista.forEach(function (q) {
+    var o = odp(p, czesc, q.kod);
+    var brak = !o || (o === "nd" && !uwaga(p, czesc, q.kod).trim())
+      || (q.podstawa === "N" && o === "nie" && !uwaga(p, czesc, q.kod).trim());
+    var k = el("div", "poz" + (brak ? " brak" : ""));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, q.tekst));
+    g.appendChild(el("span", "chip " + (q.podstawa === "N" ? "red" : ""),
+      q.podstawa === "N" ? "wymóg normy" : "metodyka ENESA"));
+    k.appendChild(g);
+    k.appendChild(pole("", sel(o, ODP, function (v) { ustaw(p, czesc, q.kod, "o", v); })));
+    k.appendChild(pole("Uwagi i uzasadnienie", txt(uwaga(p, czesc, q.kod), q.ph || "", 2,
+      function (v) { ustaw(p, czesc, q.kod, "u", v); }), q.pomoc));
+    if (q.podstawa === "N" && o === "nie")
+      k.appendChild(el("div", "warn", "Odpowiedź „nie” na wymaganie normy. Jeśli w tym projekcie naprawdę nie ma czego rozważać, trzeba to uzasadnić — audytor zapyta wprost."));
+    if (o === "nd" && !uwaga(p, czesc, q.kod).trim())
+      k.appendChild(el("div", "note", "„Nie dotyczy” bez uzasadnienia. Jedno zdanie wystarcza, ale musi być."));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 2: część A ── */
+function rysujRozpoznanie(host) {
+  var p = naglowekProjektu(host, "A. Czy projekt może znacząco wpłynąć na wynik energetyczny?");
+  if (!p) return;
+  rysujPytania(host, p, "A", PYT_A, "Cztery sygnały rozpoznania", null,
+    "Kluczowe jest słowo <b>„znacząco”</b> — i to, że nie mierzy się go ceną projektu. <b>Przebudowa sterowania sprężarkowni za kilkanaście tysięcy złotych może zmienić zużycie bardziej niż remont biurowca za kilka milionów.</b>");
+  var s = el("div", "sekcja");
+  if (zamknietyNaA(p)) {
+    s.appendChild(hel("div", "ok", "Wszystkie odpowiedzi brzmią „nie” — projekt nie wymaga części B–E. <b>Zapiszcie uzasadnienie i zakończcie.</b> To poprawna ścieżka, a nie brak."));
+    s.appendChild(poleChip("Uzasadnienie zakończenia na etapie A", "wymóg normy",
+      txt(p.uzasadnienieA, "np. Remont posadzki nie dotyczy żadnego znaczącego użycia energii, nie zmienia sterowania ani nastaw i nie wprowadza urządzeń zużywających energię. Analiza zakończona na etapie A.", 2,
+        function (v) { p.uzasadnienieA = v; }),
+      "To jest ślad świadomej decyzji. Bez niego nie da się odróżnić projektu przeanalizowanego od pominiętego."));
+  } else if (istotny(p)) {
+    s.appendChild(el("div", "note", "Co najmniej jedna odpowiedź brzmi „tak” — wypełnijcie części B–E w kolejnych zakładkach."));
+    if (tylkoKwota(p))
+      s.appendChild(hel("div", "warn", "Jedynym sygnałem „tak” jest próg kwotowy. <b>Próg analizy wyłącznie kwotowy</b> to jeden z sześciu błędów tego punktu — sprawdźcie jeszcze, czy projekt dotyczy SEU, zmienia sterowanie albo dotyczy urządzenia pracującego wiele godzin przez lata."));
+    if (pominietoKwote(p))
+      s.appendChild(el("div", "ok", "Projekt jest istotny, mimo że nie przekracza progu kwotowego. Dokładnie tak powinno to działać: kwota jest sygnałem dodatkowym, nie warunkiem."));
+  } else {
+    s.appendChild(el("div", "warn", "Część A nie jest wypełniona do końca. Odpowiedzcie na wszystkie cztery pytania — od nich zależy, czy projekt wymaga dalszej analizy."));
+  }
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: części B i C ── */
+function rysujMozliwosci(host) {
+  var p = naglowekProjektu(host, "B. Możliwości poprawy wyniku energetycznego");
+  if (!p) return;
+  if (zamknietyNaA(p)) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "ok", "Projekt zamknięty na etapie A — części B–E nie są wymagane."));
+    host.appendChild(x); return;
+  }
+  rysujPytania(host, p, "B", PYT_B, null,
+    "Dwie sprawy zamiast listy technologii. Pierwsza: czy rozwiązanie jest dobrane do rzeczywistych potrzeb, a nie „z zapasem na wszelki wypadek”.",
+    "Najlepsze dostępne technologie i przyszłe potrzeby zakładu to dobre źródła pomysłów — ale <b>norma nie każe porównywać każdego projektu z najlepszą technologią na rynku</b>. Każe rozważyć możliwości poprawy i świadomie wybrać.");
+  rysujPytania(host, p, "C", PYT_C, "C. Nadzór operacyjny — projektowanie obsługi",
+    "To najczęściej pomijana część. Projekt powinien odpowiadać na trzy pytania: czy operator będzie mógł wyłączyć to, co niepotrzebne; czy układ da się regulować do rzeczywistego zapotrzebowania, także poza produkcją; czy będzie można sprawdzić osiągany wynik.",
+    "Te pytania łączą 8.2 z 8.1. <b>Kryterium „nie więcej niż 6,3 bar” niewiele da, jeśli sterownik nie pozwala go ustawić, a nikt nie mierzy ciśnienia u odbiorców.</b>");
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "note", "<b>„Przecież zawsze można to poprawić później”</b> — można, ale później zwykle kosztuje więcej. Jeśli instalacja powstanie bez regulacji, późniejsze jej dodanie może wymagać kosztownej przeróbki i postoju. To nie znaczy, że każdą możliwość trzeba wdrożyć od razu. <b>Czasem wystarczy zostawić na nią miejsce:</b> przyłącza, zapas w rozdzielnicy, wolne pole w sterowniku. Tak AutoParts postąpiła z odzyskiem ciepła."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 4: część D ── */
+var DECYZJE_W = [["", "Wybierz"], ["przyjety", "Przyjęty"], ["odrzucony", "Odrzucony"]];
+
+function rysujWnioskiProjektu(host) {
+  var p = naglowekProjektu(host, "D. Wnioski i ich miejsce");
+  if (!p) return;
+  if (zamknietyNaA(p)) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "ok", "Projekt zamknięty na etapie A — część D nie jest wymagana."));
+    host.appendChild(x); return;
+  }
+  rysujPytania(host, p, "D", PYT_D, null, null,
+    "<b>Wniosek, który zostaje w notatce, nie zmienia instalacji.</b> Norma wymaga, żeby wyniki rozważań znalazły się w specyfikacjach, projektowaniu i zakupach — tam, gdzie ma to zastosowanie.");
+
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Lista wniosków");
+  h.appendChild(el("span", "chip " + ((p.wnioski || []).length && p.wnioski.every(wniosekOk) ? "green" : "amber"),
+    (p.wnioski || []).filter(wniosekOk).length + " / " + (p.wnioski || []).length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Nie musi to być osobny raport: wystarczy ślad, co rozważono, co przyjęto, co odrzucono i dlaczego."));
+  (p.wnioski || []).forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekOk(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    if (w.decyzja) g.appendChild(el("span", "chip " + (w.decyzja === "przyjety" ? "green" : ""),
+      (DECYZJE_W.filter(function (o) { return o[0] === w.decyzja; })[0] || ["", ""])[1]));
+    g.appendChild(przyciskUsun(function () { p.wnioski.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Wniosek", txt(w.tresc, "np. Sterownik ma umożliwiać obniżanie ciśnienia poza produkcją — dwie nastawy", 2,
+      function (v) { w.tresc = v; })));
+    k.appendChild(pole("Decyzja", sel(w.decyzja, DECYZJE_W, function (v) { w.decyzja = v; })));
+    k.appendChild(poleChip("Dlaczego", "wymóg normy",
+      txt(w.dlaczego, "np. Przyjęty — bez dwóch nastaw kryterium z 8.1 nie da się stosować poza produkcją", 2,
+        function (v) { w.dlaczego = v; }),
+      "Przy odrzuceniu uzasadnienie jest tym, co odróżnia świadomą decyzję od przeoczenia."));
+    if (w.decyzja !== "odrzucony")
+      k.appendChild(poleChip("Gdzie wprowadzony", "wymóg normy",
+        inp(w.gdzie, "np. Specyfikacja zakupowa, część A — wymagania minimalne; zapytanie ofertowe 10.2026",
+          function (v) { w.gdzie = v; }),
+        "Specyfikacja, projekt albo zakupy. To pole jest różnicą między wnioskiem a notatką."));
+    if (w.decyzja === "przyjety" && !(w.gdzie || "").trim())
+      k.appendChild(hel("div", "warn", "Wniosek przyjęty, ale nie wskazano, gdzie został wprowadzony. <b>Wnioski zostają w notatce</b> to jeden z sześciu błędów tego punktu — i jedyny, który nie zostawia żadnego śladu w instalacji."));
+    if (w.decyzja === "odrzucony" && !(w.dlaczego || "").trim())
+      k.appendChild(el("div", "warn", "Wniosek odrzucony bez uzasadnienia. Norma nie zabrania odrzucać — każe zostawić ślad decyzji."));
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { if (!p.wnioski) p.wnioski = []; p.wnioski.push({}); }));
+  if (!(p.wnioski || []).length)
+    s.appendChild(el("div", "warn", "Lista wniosków jest pusta. Przy projekcie istotnym dla wyniku energetycznego to znaczy, że albo analiza nie została przeprowadzona, albo jej wyniki nigdzie nie trafiły."));
+  else if (!(p.wnioski || []).some(function (w) { return w.decyzja === "przyjety" && (w.gdzie || "").trim(); }))
+    s.appendChild(el("div", "warn", "Żaden przyjęty wniosek nie ma wskazanego miejsca wprowadzenia. To wprost niespełnienie wymagania normy: wyniki rozważań mają być w specyfikacjach, projekcie i zakupach."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: część E ── */
+var POLA_E = [
+  { kod: "ktoAktualizuje", nazwa: "Kto aktualizuje kryteria obsługi i do kiedy", podstawa: "M",
+    ph: "np. Kierownik UR aktualizuje kartę kryteriów sprężarkowni (8.1) przed uruchomieniem, do 05.2027" },
+  { kod: "wskaznik", nazwa: "Wskaźnik i wartość odniesienia", podstawa: "M",
+    ph: "np. S-1 kWh/Nm³. Wartość sprzed zmiany: 0,119 (07–09.2026). Linia bazowa EnB: 0,125 (02–03.2026) — to dwie różne liczby i obie są potrzebne",
+    pomoc: "Wynik po uruchomieniu porównuje się z <b>wartością sprzed zmiany</b>, żeby ocenić sam efekt modernizacji. Poprawę wyniku energetycznego wykazuje się natomiast wobec <b>linii bazowej</b> (10.2). Podajcie obie — inaczej przy ocenie efektu ktoś użyje nie tej liczby." },
+  { kod: "warunki", nazwa: "Warunki porównania — zmienne", podstawa: "M",
+    ph: "np. Pełne miesiące pracy trzyzmianowej przy ciśnieniu 6,3 bar i obciążeniu 60–90%; temperatura zasysania różna o więcej niż 10 °C — z adnotacją",
+    pomoc: "To te same warunki co w metodzie weryfikacji z punktu 6.2 i w karcie EnPI z 6.4." },
+  { kod: "termin", nazwa: "Termin i kto porównuje", podstawa: "M",
+    ph: "np. Cztery tygodnie po odbiorze i po zamknięciu roku 2027 — Energy Manager; wynik wchodzi do oceny celu Z1.1" }
+];
+
+function rysujSprawdzenie(host) {
+  var p = naglowekProjektu(host, "E. Sprawdzenie po uruchomieniu");
+  if (!p) return;
+  if (zamknietyNaA(p)) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "ok", "Projekt zamknięty na etapie A — część E nie jest wymagana."));
+    host.appendChild(x); return;
+  }
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Jak sprawdzicie, czy wyszło");
+  h.appendChild(el("span", "chip " + (eOk(p) ? "green" : "amber"),
+    POLA_E.filter(function (f) { return ((p.E || {})[f.kod] || "").trim(); }).length + " / " + POLA_E.length));
+  s.appendChild(h);
+  s.appendChild(el("div", "note", "„Brak sprawdzenia po uruchomieniu” to szósty błąd tego punktu. Porównanie w porównywalnych warunkach jest jednocześnie wejściem do oceny celu z punktu 6.2."));
+  if (!p.E) p.E = {};
+  var k = el("div", "poz" + (eOk(p) ? "" : " brak"));
+  POLA_E.forEach(function (f) {
+    k.appendChild(poleChip(f.nazwa, "metodyka ENESA", txt(p.E[f.kod], f.ph, 2, function (v) { p.E[f.kod] = v; }), f.pomoc));
+  });
+  s.appendChild(k);
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var ist = PROJEKTY.filter(istotny).length;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz projektów: "));
+  n.appendChild(document.createTextNode(
+    ile(PROJEKTY.length, "projekt", "projekty", "projektów") + " · istotnych dla wyniku: " + ist +
+    " · zamkniętych na etapie A: " + PROJEKTY.filter(zamknietyNaA).length +
+    " · kompletnych: " + PROJEKTY.filter(projektOk).length +
+    " · wniosków: " + PROJEKTY.reduce(function (a, p) { return a + (p.wnioski || []).length; }, 0)));
+  s.appendChild(n);
+  var pozno = PROJEKTY.filter(analizaPozno);
+  if (pozno.length)
+    s.appendChild(el("div", "warn", "Analiza na etapie zatwierdzenia: " +
+      pozno.map(function (p) { return nazwaProjektu(p, PROJEKTY.indexOf(p)); }).join("; ") +
+      ". To najdroższy moment — i pytanie do zarządu, nie do kierownika projektu."));
+  var konc = PROJEKTY.filter(analizaNaKoncepcji);
+  if (konc.length)
+    s.appendChild(el("div", "note", "Analiza na etapie koncepcji: " +
+      konc.map(function (p) { return nazwaProjektu(p, PROJEKTY.indexOf(p)); }).join("; ") +
+      ". Lepiej niż przy zatwierdzaniu, ale uwagi dotyczące układu i przyłączy są już kosztowne."));
+  var notatka = PROJEKTY.reduce(function (a, p) { return a + wnioskiWNotatce(p).length; }, 0);
+  if (notatka)
+    s.appendChild(el("div", "warn", ile(notatka, "przyjęty wniosek nie ma", "przyjęte wnioski nie mają", "przyjętych wniosków nie ma") +
+      " wskazanego miejsca wprowadzenia. To wnioski, które zostaną w notatce — i nie zmienią instalacji."));
+  var odrz = PROJEKTY.reduce(function (a, p) { return a + odrzuconeBezPowodu(p).length; }, 0);
+  if (odrz)
+    s.appendChild(el("div", "warn", ile(odrz, "wniosek odrzucono", "wnioski odrzucono", "wniosków odrzucono") +
+      " bez uzasadnienia."));
+  var kw = PROJEKTY.filter(tylkoKwota).length;
+  if (kw)
+    s.appendChild(el("div", "warn", "W " + ile(kw, "projekcie", "projektach", "projektach") +
+      " jedynym sygnałem rozpoznania jest próg kwotowy. Do rozmowy: czy ktoś sprawdził wpływ na SEU i czas pracy."));
+  var bezN = PROJEKTY.reduce(function (a, p) {
+    return a + wymagaNieUzasadnione(p, "B", PYT_B).length + wymagaNieUzasadnione(p, "C", PYT_C).length
+      + wymagaNieUzasadnione(p, "D", PYT_D).length;
+  }, 0);
+  if (bezN)
+    s.appendChild(el("div", "warn", "Odpowiedzi „nie” na wymagania normy: " + bezN +
+      ". Każda wymaga uzasadnienia — to są miejsca, w których audytor zatrzyma się najdłużej."));
+  if (!(META.sygnaly || "").trim())
+    s.appendChild(el("div", "warn", "Nie ustalono sygnałów uruchamiających analizę. Bez nich rozpoznanie projektów zależy od pamięci kierownika projektu."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-39, sekcja 8.2 ── */
+function stanPozycji(q) {
+  var f = {
+    rozpoznanie: function () {
+      return PROJEKTY.length > 0 && PROJEKTY.every(function (p) { return pytaniaOk(p, "A", PYT_A); })
+        && PROJEKTY.every(function (p) { return !zamknietyNaA(p) || (p.uzasadnienieA || "").trim(); });
+    },
+    rozwaza: function () {
+      var ist = PROJEKTY.filter(istotny);
+      if (!ist.length) return null;
+      return ist.every(function (p) { return pytaniaOk(p, "B", PYT_B) && pytaniaOk(p, "C", PYT_C); });
+    },
+    wyniki: function () {
+      var ist = PROJEKTY.filter(istotny);
+      if (!ist.length) return null;
+      return ist.every(function (p) {
+        return (p.wnioski || []).some(function (w) { return w.decyzja === "przyjety" && (w.gdzie || "").trim(); })
+          && !wnioskiWNotatce(p).length;
+      });
+    },
+    zapisy: function () {
+      var ist = PROJEKTY.filter(istotny);
+      if (!ist.length) return null;
+      return ist.every(function (p) {
+        return (p.wnioski || []).length > 0 && p.wnioski.every(wniosekOk) && odp(p, "D", "zachowano") === "tak";
+      });
+    },
+    zalozenia: function () {
+      return PROJEKTY.length > 0 && !!(META.sygnaly || "").trim()
+        && !PROJEKTY.some(analizaPozno) && PROJEKTY.every(metrykaOk);
+    },
+    poUruchomieniu: function () {
+      var ist = PROJEKTY.filter(istotny);
+      if (!ist.length) return null;
+      return ist.every(eOk);
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!PROJEKTY.length) b.push({ t: "Rejestr projektów jest pusty.", kto: "klient" });
+  if (!(META.sygnaly || "").trim()) b.push({ t: "Nie ustalono sygnałów uruchamiających analizę energetyczną projektu.", kto: "klient", metodyka: true });
+  PROJEKTY.forEach(function (p, i) {
+    var nz = nazwaProjektu(p, i);
+    if (!metrykaOk(p)) b.push({ t: nz + " — niepełna metryka (kierownik, etap, etap analizy, kto, data).", kto: "klient" });
+    if (!pytaniaOk(p, "A", PYT_A)) b.push({ t: nz + " — część A niewypełniona.", kto: "klient" });
+    if (zamknietyNaA(p) && !(p.uzasadnienieA || "").trim())
+      b.push({ t: nz + " — zamknięty na etapie A bez uzasadnienia.", kto: "klient" });
+    if (analizaPozno(p)) b.push({ t: nz + " — analizę przeprowadzono dopiero na etapie zatwierdzenia.", kto: "klient", metodyka: true });
+    if (tylkoKwota(p)) b.push({ t: nz + " — jedynym sygnałem rozpoznania jest próg kwotowy.", kto: "klient", metodyka: true });
+    if (!istotny(p) || zamknietyNaA(p)) return;
+    if (!pytaniaOk(p, "B", PYT_B)) b.push({ t: nz + " — część B niepełna.", kto: "klient" });
+    if (!pytaniaOk(p, "C", PYT_C)) b.push({ t: nz + " — część C niepełna (projektowanie obsługi).", kto: "klient" });
+    if (!pytaniaOk(p, "D", PYT_D)) b.push({ t: nz + " — część D niepełna.", kto: "klient" });
+    if (!(p.wnioski || []).length) b.push({ t: nz + " — brak listy wniosków.", kto: "klient" });
+    wnioskiWNotatce(p).forEach(function (w) {
+      b.push({ t: nz + " — przyjęty wniosek bez miejsca wprowadzenia: „" + (w.tresc || "").slice(0, 40) + "”.", kto: "klient" });
+    });
+    odrzuconeBezPowodu(p).forEach(function (w) {
+      b.push({ t: nz + " — odrzucony wniosek bez uzasadnienia: „" + (w.tresc || "").slice(0, 40) + "”.", kto: "klient" });
+    });
+    if (!eOk(p)) b.push({ t: nz + " — brak sprawdzenia po uruchomieniu (część E).", kto: "klient", metodyka: true });
+  });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia zestawu analiz projektowych.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 7: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-PRO-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_82, "Lista kontrolna III-39 — sekcja 8.2", stanPozycji);
+
+  var ist = PROJEKTY.filter(istotny);
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-PRO-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Rejestr projektów i sygnały rozpoznania", "zakładka 1",
+      ile(PROJEKTY.length, "projekt", "projekty", "projektów") + ", istotnych: " + ist.length],
+    ["A. Rozpoznanie", "zakładka 2", "zamkniętych na etapie A: " + PROJEKTY.filter(zamknietyNaA).length],
+    ["B i C. Możliwości i projektowanie obsługi", "zakładka 3",
+      ist.filter(function (p) { return pytaniaOk(p, "B", PYT_B) && pytaniaOk(p, "C", PYT_C); }).length + " z " + ist.length + " kompletnych"],
+    ["D. Wnioski i ich miejsce", "zakładka 4",
+      PROJEKTY.reduce(function (a, p) { return a + (p.wnioski || []).length; }, 0) + " wniosków, przyjętych z miejscem: " +
+      PROJEKTY.reduce(function (a, p) { return a + (p.wnioski || []).filter(function (w) { return w.decyzja === "przyjety" && (w.gdzie || "").trim(); }).length; }, 0)],
+    ["E. Sprawdzenie po uruchomieniu", "zakładka 5", ist.filter(eOk).length + " z " + ist.length],
+    ["Wnioski konsultanta", "zakładka 6", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 7", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>zachowania udokumentowanych informacji o działaniach projektowych</b> związanych z wynikiem energetycznym — i to jest jedyne wymaganie dokumentacyjne 8.2. <b>Wypełniona lista F-EnMS-15 może być tą informacją</b>; nie trzeba osobnego raportu. Dokument D-EnMS-PRO-01 odpowiada formularzowi F-EnMS-15 (załącznik III-36)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "projekty", t: "1. Projekty", f: rysujProjekty },
+  { id: "rozpoznanie", t: "2. A — rozpoznanie", f: rysujRozpoznanie },
+  { id: "mozliwosci", t: "3. B i C — możliwości, obsługa", f: rysujMozliwosci },
+  { id: "wnioskiP", t: "4. D — wnioski", f: rysujWnioskiProjektu },
+  { id: "sprawdzenie", t: "5. E — po uruchomieniu", f: rysujSprawdzenie },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  var n = Math.max(PROJEKTY.length, 1);
+  return {
+    razem: n * 2 + 2,
+    zrob: PROJEKTY.filter(metrykaOk).length + PROJEKTY.filter(projektOk).length
+      + ((META.sygnaly || "").trim() ? 1 : 0)
+      + ((META.zatwierdzil || "").trim() && META.data ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem(MAGAZYN, JSON.stringify({ PROJEKTY: PROJEKTY, META: META }));
+    localStorage.setItem("enesa_82", JSON.stringify({ WNIOSKI: WNIOSKI }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem(MAGAZYN);
+    if (s) { var d = JSON.parse(s); PROJEKTY = d.PROJEKTY || []; META = d.META || META; }
+    var s2 = localStorage.getItem("enesa_82");
+    if (s2) WNIOSKI = (JSON.parse(s2).WNIOSKI) || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  PROJEKTY = JSON.parse(JSON.stringify(P_PROJEKTY));
+  META = JSON.parse(JSON.stringify(P_META));
+  AKTP = 0;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić rejestr projektów i analizy?")) return;
+  PROJEKTY = []; WNIOSKI = []; AKTP = 0;
+  META = { zatwierdzil: "", data: "", sygnaly: "" };
+  try { localStorage.removeItem(MAGAZYN); localStorage.removeItem("enesa_82"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

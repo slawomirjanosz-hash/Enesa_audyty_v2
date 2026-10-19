@@ -10,6 +10,7 @@ use App\Models\IsoSectionDocument;
 use App\Models\IsoSystemReview;
 use App\Services\AuditorAccessService;
 use App\Services\IsoExecutionQuestionnaire;
+use App\Services\IsoHtmlState;
 use App\Services\IsoPlanningQuestionnaire;
 use App\Services\IsoPlatformRelease;
 use App\Services\IsoSectionWorkbook;
@@ -99,8 +100,9 @@ class IsoSystemReviewController extends Controller
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile, string $section)
     {
         $client = $this->access($request, $audit, $profile, $section, true);
+        $htmlState = $request->has('html_state') ? app(IsoHtmlState::class)->ingest($request, $section, $this->questionnaire->sources($profile, $section), IsoSystemReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->where('section', $section)->first()?->answers ?? []) : null;
         $data = $request->validate(['operation' => ['required', Rule::in(['save', 'submit', 'approve', 'return', 'withdraw', 'consultant'])], 'lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'note' => 'nullable|string|max:3000']);
-        DB::transaction(function () use ($request, $audit, $profile, $section, $client, $data) {
+        DB::transaction(function () use ($request, $audit, $profile, $section, $client, $data, $htmlState) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             $this->access($request, $audit, $profile, $section, true);
@@ -133,6 +135,9 @@ class IsoSystemReviewController extends Controller
                 $before = $review->answers ?? [];
                 if (str_starts_with($section, '7-')) {
                     app(IsoSupportQuestionnaire::class)->protectHistory($section, $before, $answers);
+                }
+                if ($htmlState !== null || isset($review->answers['_html'])) {
+                    $answers['_html'] = $htmlState ?? $review->answers['_html'];
                 }
                 $changed = $before !== $answers;
                 if ($changed || $stale) {

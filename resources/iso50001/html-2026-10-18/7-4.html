@@ -1,0 +1,1373 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 7.4 Komunikacja</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 7</div>
+ <h1>7.4 Komunikacja</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 7.4</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 7.4</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>7.4 Komunikacja</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 7.4 i budowę planu komunikacji.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 7.4<br>Komunikacja</div>
+   <div>
+    <h4>7.4 Komunikacja</h4>
+    <p>Pięć pytań planu komunikacji. Obieg zgłoszenia od kartki do informacji zwrotnej.
+    Dlaczego „zaoszczędziliśmy 14%” trzeba sprawdzić, zanim się to ogłosi.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 7.4. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">7.4 — komunikacja<br>11 slajdów</div>
+   <div>
+    <h4>7.4 Komunikacja</h4>
+    <p>Co, kiedy, komu, jak, kto. Droga dla uwag i pomysłów. Wiarygodność komunikatów.
+    Trzy sytuacje komunikacji zewnętrznej.</p>
+    <p style="font-size:12.5px">11 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja ustala komunikację wewnętrzną i zewnętrzną istotną dla systemu
+ zarządzania energią: o czym informuje, kiedy, z kim się komunikuje, w jaki sposób i kto przekazuje informację.
+ Dba, żeby przekazywane informacje były wiarygodne i zgodne z informacjami wytworzonymi w systemie. Ustanawia
+ i stosuje proces, w którym każda osoba pracująca pod jej nadzorem może zgłaszać uwagi i propozycje doskonalenia
+ systemu i wyniku energetycznego. Rozważa zachowanie zapisów zgłoszonych propozycji. Omówienie na podstawie
+ punktu 7.4 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> ustal, o czym, kiedy, z kim, jak
+ i przez kogo informujesz w sprawach energii — i stwórz drogę, którą każdy może zgłosić uwagę lub pomysł.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 6, punkt 7.4. Plan komunikacji i proces zgłaszania uwag:
+ III-30 (F-EnMS-13).</div>
+
+ <div class="ramka">
+  <h3>◧ Czwartej kartki już nie będzie</h3>
+  <p style="font-size:13.5px">Operator wtryskarki zauważa, że sprężone powietrze syczy przy złączce. Wrzuca
+  kartkę do skrzynki pomysłów. Tydzień — nic. Miesiąc — nic. Po trzech miesiącach zgłasza jeszcze jedną sprawę.
+  Też bez odpowiedzi.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Czwartej kartki już nie będzie. <b>Nie dlatego, że operatorowi
+  przestało zależeć. Dlatego, że nauczył się, że to nie ma sensu.</b><br><br>
+  Komunikacja w systemie nie polega na tym, żeby mówić do ludzi. Polega na tym, żeby informacja docierała tam,
+  gdzie ktoś może z nią coś zrobić — w obie strony.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Pięć pytań planu komunikacji</h3>
+ <p style="font-size:14.5px">Plan komunikacji odpowiada na pięć pytań: <b>co, kiedy, komu, jak — i kto.</b>
+ To ostatnie łatwo pominąć, a właśnie ono decyduje, czy informacja w ogóle wyjdzie. Przykład z AutoParts Polska:</p>
+ <table class="tab">
+ <tr><th>Co</th><th>Kiedy</th><th>Komu</th><th>Jak</th><th>Kto</th></tr>
+ <tr><td>Wskaźnik sprężarkowni i wycieki</td><td>Co miesiąc</td><td>Utrzymanie ruchu, liderzy zmian</td><td>Odprawa, tablica przy sprężarkowni</td><td>Kierownik UR</td></tr>
+ <tr><td>Wyniki energetyczne zakładu</td><td>Co kwartał</td><td>Wszyscy pracownicy</td><td>Tablica, intranet</td><td>Jan Kowalski</td></tr>
+ <tr><td>Dane o energii i emisjach</td><td>Wg umowy</td><td>Klient OEM</td><td>Raport wg wymaganej metody</td><td>Jan Kowalski i sprzedaż</td></tr>
+ </table>
+ <p style="font-size:13.5px">Forma planu jest dowolna. W ankiecie dochodzi jeszcze jedna kolumna —
+ <b>podstawa danych</b> — bo przy każdej informacji o wyniku trzeba wiedzieć, skąd się wzięła.</p>
+
+ <h3 style="margin-top:22px">Droga dla uwag i pomysłów — cały obieg</h3>
+ <p style="font-size:14.5px">Norma wymaga procesu, w którym każda osoba pracująca pod nadzorem organizacji może
+ zgłosić uwagę albo propozycję. Skrzynka, formularz w intranecie, punkt na odprawie — forma jest dowolna.
+ <b>Liczy się, co dzieje się dalej.</b></p>
+ <table class="tab">
+ <tr><th style="width:22%">Krok</th><th>Co się dzieje</th></tr>
+ <tr><td><b>Zgłoszenie</b></td><td>Operator zgłasza nieszczelność przy złączce.</td></tr>
+ <tr><td><b>Potwierdzenie</b></td><td>W ciągu kilku dni dostaje informację, że zgłoszenie przyjęto i kto się nim zajmie.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Utrzymanie ruchu usuwa nieszczelność.</td></tr>
+ <tr><td><b>Informacja zwrotna</b></td><td>Operator i jego zmiana dowiadują się, co zrobiono i ile to dało.</td></tr>
+ </table>
+ <div class="note" style="margin:14px 0">Nie każdy pomysł da się wdrożyć — i nie musicie tego obiecywać.
+ Sensowną odpowiedzią jest też uzasadniona odmowa: <i>„Wyłączanie tej linii na przerwy wydłuża jej rozruch
+ o 40 minut, więc zostajemy przy obecnym sposobie. Dziękujemy — sprawdzimy, czy da się skrócić rozruch.”</i><br><br>
+ <b>Ludzie przestają zgłaszać nie wtedy, gdy słyszą „nie”, tylko wtedy, gdy nie słyszą nic.</b></div>
+ <p style="font-size:13.5px">Norma każe też <b>rozważyć zachowanie zapisów</b> zgłoszonych propozycji. Prosty
+ rejestr z datą i odpowiedzią zwykle wystarcza — i przydaje się, gdy chcecie pokazać, ile pomysłów przyszło
+ z hali.</p>
+
+ <h3 style="margin-top:22px">„Zaoszczędziliśmy 14%!” — zanim to ogłosicie</h3>
+ <div class="warn" style="margin:14px 0">Norma wymaga, żeby przekazywane informacje były wiarygodne i zgodne
+ z danymi systemu. W praktyce to znaczy: <b>zanim ogłosicie wynik, ustalcie podstawę porównania i sprawdźcie
+ dane.</b><br><br>
+ 14% wobec czego? Wobec linii bazowej, po uwzględnieniu produkcji i pogody (6.5)? Czy wobec zeszłego miesiąca,
+ w którym zakład stał przez tydzień?<br><br>
+ Komunikat oparty na złym porównaniu podważy zaufanie do kolejnych — <b>także tych prawdziwych.</b></div>
+
+ <h3 style="margin-top:22px">Komunikacja zewnętrzna: trzy różne sytuacje</h3>
+ <table class="tab">
+ <tr><th style="width:24%">Rodzaj</th><th>Na czym polega</th></tr>
+ <tr><td><b>Obowiązek</b></td><td>Przepis albo umowa każe przekazać informacje: sprawozdanie dla urzędu, dane o energii i emisjach dla klienta. Tu nie decydujecie „czy”, tylko „jak”, i pilnujecie terminu oraz metody.</td></tr>
+ <tr><td><b>Polityka energetyczna</b></td><td>Ma być dostępna dla stron zainteresowanych stosownie do potrzeb (5.2). To element systemu, nie decyzja marketingowa.</td></tr>
+ <tr><td><b>Dobrowolna</b></td><td>Wyniki, którymi chcecie się pochwalić — to Wasza decyzja. Jeśli się na nią zdecydujecie, wymagania co do wiarygodności obowiązują tak samo.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:40%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Komunikacja tylko z góry na dół</td><td>Zapewnijcie drogę zgłoszeń i odpowiadajcie na każde zgłoszenie</td></tr>
+ <tr><td>Nie wiadomo, kto ma przekazać informację</td><td>Przy każdej pozycji planu wpiszcie osobę</td></tr>
+ <tr><td>Wyniki bez podstawy porównania</td><td>Podawajcie, wobec czego liczycie poprawę, i sprawdzajcie dane przed publikacją</td></tr>
+ <tr><td>Tylko złe wiadomości</td><td>Pokazujcie też postępy i dziękujcie za konkretne zgłoszenia</td></tr>
+ <tr><td>Jeden kanał dla wszystkich</td><td>Hala, biuro i zarząd potrzebują różnych form i rytmu</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Dobra komunikacja sprawia, że system żyje: ludzie wiedzą,
+  co się dzieje, ufają liczbom i widzą, że ich głos coś zmienia.<br><br>
+  <b>Zadanie:</b> sprawdźcie trzy ostatnie zgłoszenia od pracowników dotyczące energii. Czy zgłaszający
+  dostali odpowiedź? Wpiszcie je w zakładce 4 ankiety — platforma pokaże odsetek odpowiedzi i średni czas.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma nie przepuszcza pozycji, która mówi o wyniku bez podstawy danych, ani zgłoszenia
+  bez odpowiedzi. Liczy też odsetek odpowiedzi i średni czas reakcji.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 7.4 w formacie stron 4.1–7.3.</b> Trzy części formularza F-EnMS-13 w trzech
+zakładkach plus rejestr zgłoszeń. To pierwszy punkt rozdziału 7, w którym <b>platforma liczy wskaźnik
+zachowania organizacji</b>: odsetek zgłoszeń z odpowiedzią i średni czas reakcji.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 6, punkt 7.4</td><td>Scena czwartej kartki, pięć pytań planu komunikacji z tabelą AutoParts, czterostopniowy obieg zgłoszenia, przykład uzasadnionej odmowy o rozruchu linii, akapit „zaoszczędziliśmy 14%”, trzy sytuacje komunikacji zewnętrznej, tabela pięciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 5 — III-30 (F-EnMS-13)</td><td>Część A1: kolumny co, kiedy, komu, jak, <b>kto przekazuje</b>, podstawa danych — wraz z wierszami wzorcowymi (polityka, cele i postęp, wyniki EnPI, wyniki audytów, zmiany w instrukcjach). Część A2: komunikacja zewnętrzna <b>według rodzaju</b> (obowiązek / polityka / dobrowolna). Część B: sześć elementów procesu zgłaszania uwag.</td></tr>
+<tr><td>Część III, Moduł 5 — III-32</td><td>Lista kontrolna sekcji 7.4: 5 pozycji. Cztery to wymagania normy — w tym <b>rejestr zgłoszeń jako N</b>, bo norma każe „rozważyć” zachowanie zapisów.</td></tr>
+<tr><td>Część III, Moduł 5 — III-33, pkt 4.4</td><td>Kroki 12–14 procedury P-EnMS-05: utrzymywanie planu komunikacji, sprawdzenie danych i podstawy porównania przed przekazaniem wyniku, obieg zgłoszenia z potwierdzeniem w zadanym terminie.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>komunikacja_wew</code></td><td>id, audyt_id, co, kiedy, komu, jak, kto_przekazuje, podstawa_danych. Docelowo <code>podstawa_danych</code> jako referencja do karty EnPI, dokumentu albo pozycji planu danych — nie tekst.</td></tr>
+<tr><td><code>komunikacja_zew</code></td><td>id, audyt_id, co, rodzaj ENUM('obowiazek','polityka','dobrowolna'), komu, kiedy, jak, kto_przekazuje, podstawa_danych. Kolumna <code>rodzaj</code> jest z Toolkitu; <code>podstawa_danych</code> dodana przez nas.</td></tr>
+<tr><td><code>proces_zgloszen</code></td><td>audyt_id plus 6 pól tekstowych i <code>dni_potwierdzenia</code> SMALLINT. Jeden rekord na audyt.</td></tr>
+<tr><td><code>zgloszenie</code></td><td>id, audyt_id, nr, data, zglaszajacy (może być puste — anonimowe), kanal, tresc, data_potwierdzenia, osoba_prowadzaca, decyzja ENUM('wdrozone','odroczone','odmowa','wtoku'), data_odpowiedzi, tresc_odpowiedzi, efekt. <b>Append-only</b> — rejestr jest dowodem, że proces działa.</td></tr>
+</table>
+<div class="warn"><b>Najważniejsza decyzja projektowa tego punktu:</b> tabela <code>zgloszenie</code> powinna być
+<b>wspólna z rejestrem przeszkód z punktu 7.3</b>. Przeszkoda zgłoszona przez pracownika jest zgłoszeniem
+w rozumieniu 7.4 i musi dostać odpowiedź tą samą drogą. Propozycja: jedna tabela z polem
+<code>rodzaj</code> ('uwaga', 'propozycja', 'przeszkoda'), widoczna z obu stron. W przykładzie widać to wprost —
+zgłoszenie 2026/05 o zaworach na klucz jest tą samą sprawą co pierwsza przeszkoda w ankiecie 7.3.</div>
+
+<h2>Co platforma liczy sama</h2>
+<table>
+<tr><th style="width:26%">Wielkość</th><th>Sposób i reakcja</th></tr>
+<tr><td>Odsetek zgłoszeń z odpowiedzią</td><td>Liczba zgłoszeń z datą odpowiedzi ÷ liczba zgłoszeń z treścią. Chip zielony tylko przy 100% — bo każde zgłoszenie bez odpowiedzi jest tym samym mechanizmem, który wyłącza zgłaszanie na lata.</td></tr>
+<tr><td>Średni czas odpowiedzi</td><td>Średnia z różnic data odpowiedzi − data zgłoszenia. Pokazywana w podsumowaniu rejestru; nie ma progu, bo właściwy czas zależy od sprawy (nieszczelność — dni, przerobienie instalacji — miesiące).</td></tr>
+<tr><td>Potwierdzenia po terminie</td><td>Porównanie różnicy data potwierdzenia − data zgłoszenia z liczbą dni zadeklarowaną w procesie. Nota przy pozycji i licznik w podsumowaniu. Komunikat mówi wprost: jeśli termin jest nierealny, lepiej go zmienić niż go nie dotrzymywać.</td></tr>
+<tr><td>Liczba wdrożonych</td><td>Zgłoszenia z decyzją „wdrożone”. Przy co najmniej pięciu zgłoszeniach i zerze wdrożeń — ostrzeżenie w analizie konsultanta.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Wynik bez podstawy danych</b></td><td>Wzorzec <code>/(wynik|wskaźnik|EnPI|EnB|oszczędn|popraw|%|MWh|kWh|złot|redukcj|emisj|obniż)/i</code> w polu „co” → pole „podstawa danych” staje się wymagane. Chip „wynik bez podstawy” w nagłówku pozycji i czerwony znacznik w tabeli zbiorczej. To wprost wymaganie wiarygodności z normy.</td></tr>
+<tr><td>Pozycja bez osoby przekazującej</td><td>Pozycja niekompletna i wpis w braki(). Odpowiada błędowi „nie wiadomo, kto ma przekazać informację”.</td></tr>
+<tr><td>Brak pozycji o dostępności polityki w komunikacji zewnętrznej</td><td>Ostrzeżenie i pozycja w braki() jako N. Wymaganie pochodzi z punktu 5.2, ale realizuje się tutaj — i audytorzy pytają o nie wprost.</td></tr>
+<tr><td>Komunikacja obowiązkowa bez konkretnego terminu</td><td>Nota, gdy pole „kiedy” nie zawiera liczby, słowa „termin”, „umowa” ani „przepis”. Heurystyka — dlatego tylko nota.</td></tr>
+<tr><td>Zgłoszenie bez odpowiedzi</td><td>Ostrzeżenie przy pozycji, czerwony chip w tabeli, osobna pozycja w braki() <b>dla każdego takiego zgłoszenia</b>. Najmocniejsza walidacja w tym punkcie.</td></tr>
+<tr><td>Odmowa z uzasadnieniem krótszym niż 30 znaków</td><td>Ostrzeżenie: odmowa jest poprawną decyzją, ale bez wyjaśnienia działa jak brak odpowiedzi. Próg znakowy jest metodyką ENESA — prymitywny, ale wyłapuje „nie da się” i „odrzucono”.</td></tr>
+<tr><td>Wszystkie pozycje wewnętrzne tym samym kanałem (przy więcej niż trzech)</td><td>Nota: hala, biuro i zarząd potrzebują różnych form i rytmu.</td></tr>
+<tr><td>Pusty rejestr</td><td>Ostrzeżenie z rozróżnieniem: jeśli proces właśnie uruchomiono, to normalne; <b>pusty rejestr po kilku miesiącach zwykle znaczy, że ludzie już próbowali.</b></td></tr>
+</table>
+
+<h2>Lista kontrolna III-32 — sekcja 7.4</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Ustalono komunikację wewnętrzną i zewnętrzną: o czym, kiedy, z kim, w jaki sposób i kto przekazuje.</td><td class='mono'>N</td><td><code>ustalono</code></td></tr><tr><td>Przekazywane informacje są wiarygodne i zgodne z informacjami wytworzonymi w systemie.</td><td class='mono'>N</td><td><code>wiarygodne</code></td></tr><tr><td>Działa proces, w którym każda osoba pracująca pod nadzorem organizacji może zgłaszać uwagi i propozycje doskonalenia.</td><td class='mono'>N</td><td><code>proces</code></td></tr><tr><td>Rozważono zachowanie zapisów zgłoszonych propozycji (rejestr zgłoszeń).</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Każde zgłoszenie dostaje odpowiedź — także wtedy, gdy jest nią uzasadniona odmowa.</td><td class='mono'>M</td><td><code>odpowiedzi</code></td></tr></table>
+<div class="note">Pozycja <code>odpowiedzi</code> zwraca „nie dotyczy”, gdy rejestr jest pusty — nie ma czego
+oceniać. Pozostałe cztery są wymaganiami normy, więc ocenia je stan planu i procesu, nie liczba zgłoszeń.
+Warto zwrócić uwagę, że <b>rejestr zgłoszeń jest w III-32 oznaczony jako N</b>: norma każe „rozważyć”
+zachowanie zapisów, a lista traktuje samo rozważenie jako wymaganie. Prowadzenie rejestru jest naszym
+zaleceniem — i tak to jest opisane w interfejsie.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok ocenia m.in. czy pusty rejestr nie znaczy, że ludzie już próbowali — to zdanie o kulturze organizacji, nie o formularzu.</td></tr>
+<tr><td>Zgłoszenia anonimowe</td><td>Pole „kto zgłosił” może być puste. Wtedy informacja zwrotna musi iść do całej grupy — podpowiedź przy polu mówi to wprost, a przykład pokazuje rozwiązanie: odpowiedź na tablicy przy numerze zgłoszenia.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-INF-01</code> — plan komunikacji i proces zgłaszania uwag</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-13, załącznik III-30</td></tr>
+<tr><td>Status w normie</td><td>Norma wymaga <b>procesu</b> zgłaszania uwag, nie jego opisu, i każe <b>rozważyć</b> zachowanie zapisów propozycji. W wykazie z punktu 7.5 pozycja F-EnMS-13 jest oznaczona jako D / Z i M (7.4) — plan jest dokumentem, rejestr zapisem, oba z naszego zalecenia.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Zmiana polityki (5.2), nowe cele (6.2), nowe wymaganie klienta albo przepisu (4.2), zmiana kanałów, zmiana osób przekazujących (5.3), przegląd planu w ustalonym rytmie.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>4.2 Strony zainteresowane</td><td><b>Wejście.</b> Wymagania stron — w tym obowiązki sprawozdawcze i wymagania klientów wobec raportowania — wyznaczają wiersze komunikacji zewnętrznej.</td></tr>
+<tr><td>5.2 Polityka energetyczna</td><td><b>Wejście.</b> Dostępność polityki dla stron zainteresowanych realizuje się przez ten plan. Zmiana polityki uruchamia komunikację wewnętrzną i zewnętrzną.</td></tr>
+<tr><td>6.2 Cele i zadania</td><td><b>Wejście.</b> Cele i postęp są jednym z wierszy planu; podstawą danych jest F-EnMS-10.</td></tr>
+<tr><td>6.4 i 6.5 EnPI i EnB</td><td><b>Wejście krytyczne.</b> Każdy komunikat o wyniku musi wskazać kartę wskaźnika i linię bazową. To tu „zaoszczędziliśmy 14%” zamienia się w zdanie, które da się obronić.</td></tr>
+<tr><td>7.3 Świadomość</td><td><b>Blisko i dwukierunkowo.</b> Kanały z zakładki 1 to w praktyce te same kanały co w ankiecie świadomości; przeszkody z 7.3 przychodzą zwykle przez proces zgłaszania uwag.</td></tr>
+<tr><td>9.1 Monitorowanie</td><td><b>Wejście.</b> Wartości wskaźników, które się komunikuje, powstają w rytmie 9.1 — i stamtąd bierze się „zgodność z informacjami wytworzonymi w systemie”.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Dwukierunkowo.</b> Zgłoszenia wymagające większych środków trafiają na przegląd; decyzje przeglądu trafiają do komunikacji wewnętrznej.</td></tr>
+<tr><td>10.1 i 10.2 Doskonalenie</td><td><b>Wyjście.</b> Rejestr zgłoszeń jest jednym z najtańszych źródeł możliwości doskonalenia — i jedynym, który przychodzi z hali sam.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Wspólna tabela zgłoszeń z punktem 7.3</b></td><td>Opisane wyżej. To jedyna rzecz w tym punkcie, która przy złej decyzji spowoduje podwójne wpisywanie tej samej sprawy — albo jej zniknięcie z jednej strony. <b>Do rozstrzygnięcia przed pisaniem kodu.</b></td></tr>
+<tr><td>Podstawa danych jako referencja</td><td>Dziś tekst. Docelowo wybór z kart EnPI, dokumentów systemu i pozycji planu danych. Wtedy platforma odpowie na pytanie: „co się stanie z tym komunikatem, jeśli zrewidujemy linię bazową” — bo zmiana EnB unieważnia każdy komunikat, który się na nią powoływał.</td></tr>
+<tr><td>Powiadomienia o terminie potwierdzenia</td><td>Proces deklaruje termin w dniach, platforma sprawdza go po fakcie. Powinna przypominać <b>przed</b> jego upływem — ten sam brak co przy terminach w 6.5 i 7.2. Warto rozwiązać raz dla całego systemu.</td></tr>
+<tr><td>Podsumowanie kwartalne dla hali</td><td>Przykład AutoParts przewiduje „ile przyszło, ile wdrożono” na tablicy. Platforma ma te liczby — mogłaby generować jednostronicowe podsumowanie do wydruku. Mały nakład, duży efekt: to jest dokładnie ten komunikat, który sprawia, że piąta kartka się pojawia.</td></tr>
+<tr><td>Próg długości uzasadnienia odmowy</td><td>30 znaków. Liczba jest nasza i prymitywna — wyłapuje „nie da się”, nie wyłapie trzech zdań bez treści. Do potwierdzenia przez Martynę albo zastąpienia wymaganiem pól: powód, warunek powrotu.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 7.4 wraz z przykładem AutoParts (III-30).</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_74&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Ustalono komunikację wewnętrzną i zewnętrzną: o czym, kiedy, z kim, w jaki sposób i kto przekazuje.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;ustalono&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Przekazywane informacje są wiarygodne i zgodne z informacjami wytworzonymi w systemie.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wiarygodne&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Działa proces, w którym każda osoba pracująca pod nadzorem organizacji może zgłaszać uwagi i propozycje doskonalenia.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;proces&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Rozważono zachowanie zapisów zgłoszonych propozycji (rejestr zgłoszeń).&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Każde zgłoszenie dostaje odpowiedź — także wtedy, gdy jest nią uzasadniona odmowa.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;odpowiedzi&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;WEW&quot;: [
+   {
+    &quot;co&quot;: &quot;Polityka energetyczna&quot;,
+    &quot;kiedy&quot;: &quot;Po zatwierdzeniu i przy każdej zmianie&quot;,
+    &quot;komu&quot;: &quot;Wszyscy pracownicy oraz wykonawcy pracujący na terenie zakładu&quot;,
+    &quot;jak&quot;: &quot;Wprowadzenie, tablica przy wejściu do hali A, intranet&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;podstawa&quot;: &quot;&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Cele energetyczne i postęp ich realizacji&quot;,
+    &quot;kiedy&quot;: &quot;Co kwartał&quot;,
+    &quot;komu&quot;: &quot;Wszyscy pracownicy&quot;,
+    &quot;jak&quot;: &quot;Tablica przy stołówce, intranet&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;podstawa&quot;: &quot;F-EnMS-10 — cele, zadania i plany działań; statusy z części C&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Wyniki EnPI — wskaźnik ogólny zakładu wobec linii bazowej&quot;,
+    &quot;kiedy&quot;: &quot;Co miesiąc&quot;,
+    &quot;komu&quot;: &quot;Kierownicy działów i zarząd&quot;,
+    &quot;jak&quot;: &quot;Odprawa kierownictwa&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;podstawa&quot;: &quot;Karta EnPI O-1 (F-EnMS-09), model znormalizowany na produkcję i stopniodni; linia bazowa 2025&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Wskaźnik sprężarkowni i przepływ w czasie postoju&quot;,
+    &quot;kiedy&quot;: &quot;Co miesiąc&quot;,
+    &quot;komu&quot;: &quot;Utrzymanie ruchu, liderzy zmian&quot;,
+    &quot;jak&quot;: &quot;Odprawa UR, tablica przy sprężarkowni&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;podstawa&quot;: &quot;Karty S-1 i S-2 (F-EnMS-09); podlicznik sprężarkowni i przepływomierz, poz. 4, 5 i 7 planu danych&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Jeden temat tygodniowo — co w mojej pracy zmienia zużycie energii i ile to kosztuje&quot;,
+    &quot;kiedy&quot;: &quot;Raz w tygodniu, 10 minut&quot;,
+    &quot;komu&quot;: &quot;Operatorzy pras i lakierni, magazyn&quot;,
+    &quot;jak&quot;: &quot;Krótkie spotkanie na początku zmiany&quot;,
+    &quot;kto&quot;: &quot;Liderzy zmian&quot;,
+    &quot;podstawa&quot;: &quot;Liczby przeliczone z kart EnPI i cen energii: 890 zł/MWh, 250 zł/MWh gaz (ceny z 2025 r.)&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Wyniki audytów wewnętrznych i przeglądu zarządzania&quot;,
+    &quot;kiedy&quot;: &quot;Po każdym audycie i przeglądzie&quot;,
+    &quot;komu&quot;: &quot;Kierownicy działów, zespół EnMS&quot;,
+    &quot;jak&quot;: &quot;Protokół w intranecie i omówienie na odprawie&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;podstawa&quot;: &quot;&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Zmiany w instrukcjach i procedurach&quot;,
+    &quot;kiedy&quot;: &quot;Przy każdej zmianie, przed wejściem w życie&quot;,
+    &quot;komu&quot;: &quot;Osoby używające danej instrukcji&quot;,
+    &quot;jak&quot;: &quot;Informacja na spotkaniu zmiany i wymiana wersji na tablicy przy urządzeniu&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;podstawa&quot;: &quot;&quot;
+   }
+  ],
+  &quot;ZEW&quot;: [
+   {
+    &quot;co&quot;: &quot;Dane o energii i emisjach dla klienta&quot;,
+    &quot;rodzaj&quot;: &quot;obowiazek&quot;,
+    &quot;komu&quot;: &quot;Klient OEM — dział zrównoważonego rozwoju&quot;,
+    &quot;kiedy&quot;: &quot;Raz w roku do 31 stycznia, zgodnie z umową&quot;,
+    &quot;jak&quot;: &quot;Raport według metody wskazanej przez klienta&quot;,
+    &quot;kto&quot;: &quot;Energy Manager wspólnie z działem sprzedaży&quot;,
+    &quot;podstawa&quot;: &quot;Bilans z przeglądu energetycznego (F-EnMS-08), przeliczniki jak w F-EnMS-08; karty EnPI&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Zawiadomienie o przeprowadzeniu audytu energetycznego przedsiębiorstwa&quot;,
+    &quot;rodzaj&quot;: &quot;obowiazek&quot;,
+    &quot;komu&quot;: &quot;Prezes URE&quot;,
+    &quot;kiedy&quot;: &quot;W terminie wynikającym z przepisów, jeśli obowiązek dotyczy zakładu&quot;,
+    &quot;jak&quot;: &quot;Formularz zawiadomienia&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;podstawa&quot;: &quot;Wyniki audytu energetycznego; zużycie z F-EnMS-08&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Polityka energetyczna&quot;,
+    &quot;rodzaj&quot;: &quot;polityka&quot;,
+    &quot;komu&quot;: &quot;Strony zainteresowane — klienci, banki, kandydaci do pracy, lokalna społeczność&quot;,
+    &quot;kiedy&quot;: &quot;Stosownie do potrzeb; aktualna wersja stale dostępna&quot;,
+    &quot;jak&quot;: &quot;Strona internetowa zakładu; na prośbę przesyłana w pliku PDF&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;podstawa&quot;: &quot;&quot;
+   },
+   {
+    &quot;co&quot;: &quot;Certyfikat ISO 50001 i osiągnięta poprawa wyniku energetycznego&quot;,
+    &quot;rodzaj&quot;: &quot;dobrowolna&quot;,
+    &quot;komu&quot;: &quot;Klienci, kandydaci do pracy, lokalna społeczność&quot;,
+    &quot;kiedy&quot;: &quot;Po certyfikacji, potem raz w roku z wynikiem rocznym&quot;,
+    &quot;jak&quot;: &quot;Strona internetowa, materiały handlowe, komunikat prasowy&quot;,
+    &quot;kto&quot;: &quot;Dział sprzedaży wspólnie z Energy Managerem&quot;,
+    &quot;podstawa&quot;: &quot;Wskaźnik O-1 wobec linii bazowej 2025, znormalizowany na produkcję i stopniodni; podstawa porównania podawana w każdym komunikacie&quot;
+   }
+  ],
+  &quot;PROCES&quot;: {
+   &quot;ktoMoze&quot;: &quot;Każda osoba pracująca pod nadzorem organizacji — pracownicy wszystkich działów oraz wykonawcy na terenie zakładu (serwis, firma sprzątająca, ekipy remontowe).&quot;,
+   &quot;kanaly&quot;: &quot;Formularz w intranecie; skrzynka przy stołówce (zgłoszenia także anonimowe); punkt „energia” na spotkaniu zmiany; bezpośrednio do lidera zmiany albo do Energy Managera. Wykonawcy — przez kierownika zlecającego.&quot;,
+   &quot;potwierdzenie&quot;: &quot;W ciągu 5 dni roboczych zgłaszający dostaje informację, że zgłoszenie przyjęto, pod jakim numerem i kto się nim zajmie. Przy zgłoszeniu anonimowym potwierdzenie trafia na tablicę razem z numerem.&quot;,
+   &quot;dni&quot;: &quot;5&quot;,
+   &quot;rozpatrzenie&quot;: &quot;Energy Manager z kierownikiem obszaru, którego zgłoszenie dotyczy. Możliwe decyzje: wdrożenie, odroczenie z terminem albo uzasadniona odmowa. Sprawy wymagające powyżej 10 tys. zł trafiają na najbliższy przegląd zarządzania.&quot;,
+   &quot;zwrotna&quot;: &quot;Zgłaszający i jego zmiana dowiadują się na spotkaniu zmiany, co zrobiono i ile to dało. Przy odmowie podaje się powód i, jeśli to możliwe, warunek, przy którym sprawa wróci. Zgłoszenia anonimowe — odpowiedź na tablicy przy numerze zgłoszenia.&quot;,
+   &quot;rejestr&quot;: &quot;Arkusz EnMS, zakładka „zgłoszenia”: numer, data, kanał, treść, data potwierdzenia, osoba prowadząca, decyzja, data i treść odpowiedzi, efekt. Podsumowanie kwartalne na tablicy: ile przyszło, ile wdrożono.&quot;
+  },
+  &quot;ZGLOSZENIA&quot;: [
+   {
+    &quot;nr&quot;: &quot;2026/03&quot;,
+    &quot;data&quot;: &quot;2026-05-12&quot;,
+    &quot;zglaszajacy&quot;: &quot;Operator prasy nr 3, II zmiana&quot;,
+    &quot;kanal&quot;: &quot;Punkt „energia” na spotkaniu zmiany&quot;,
+    &quot;tresc&quot;: &quot;Syczenie przy złączce na kolektorze sprężonego powietrza przy prasie nr 3 — słychać przez całą zmianę.&quot;,
+    &quot;potwierdzenie&quot;: &quot;2026-05-14&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;decyzja&quot;: &quot;wdrozone&quot;,
+    &quot;odpowiedz&quot;: &quot;2026-05-26&quot;,
+    &quot;odpowiedzTresc&quot;: &quot;Nieszczelność usunięta 20 maja przy okazji przeglądu szczelności. Pomiar przepływu w postoju spadł z 7,1 do 6,8 Nm³/min — około 1,8 zł na każdej godzinie postoju. Dziękujemy, to było jedno z większych pojedynczych nieszczelności w tym przeglądzie.&quot;,
+    &quot;efekt&quot;: &quot;Punkt dopisany do stałej listy kontrolnej kwartalnego przeglądu szczelności&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2026/05&quot;,
+    &quot;data&quot;: &quot;2026-06-08&quot;,
+    &quot;zglaszajacy&quot;: &quot;Operator prasy nr 2, I zmiana&quot;,
+    &quot;kanal&quot;: &quot;Formularz w intranecie&quot;,
+    &quot;tresc&quot;: &quot;Nie da się zamknąć zaworu odcinającego powietrze na przerwie — zawór jest na klucz, a klucz ma tylko utrzymanie ruchu.&quot;,
+    &quot;potwierdzenie&quot;: &quot;2026-06-10&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;decyzja&quot;: &quot;wdrozone&quot;,
+    &quot;odpowiedz&quot;: &quot;2026-09-29&quot;,
+    &quot;odpowiedzTresc&quot;: &quot;Zawory przy czterech prasach wymienione na dźwigniowe (3 tys. zł), wykonane do 30 września. Po wymianie i po usunięciu nieszczelności przepływ w postoju spadł z 6,5 do 5,8 Nm³/min. Zgłoszenie zmieniło sposób pracy na wszystkich zmianach.&quot;,
+    &quot;efekt&quot;: &quot;Zamykanie zaworów wpisane do instrukcji stanowiskowej; temat tygodnia w 09.2026&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2026/06&quot;,
+    &quot;data&quot;: &quot;2026-06-19&quot;,
+    &quot;zglaszajacy&quot;: &quot;Anonimowo, skrzynka przy stołówce&quot;,
+    &quot;kanal&quot;: &quot;Skrzynka przy stołówce&quot;,
+    &quot;tresc&quot;: &quot;Proponuję wyłączać linię pras na każdą przerwę, a nie tylko na przerwę obiadową.&quot;,
+    &quot;potwierdzenie&quot;: &quot;2026-06-23&quot;,
+    &quot;kto&quot;: &quot;Energy Manager z kierownikiem produkcji&quot;,
+    &quot;decyzja&quot;: &quot;odmowa&quot;,
+    &quot;odpowiedz&quot;: &quot;2026-07-03&quot;,
+    &quot;odpowiedzTresc&quot;: &quot;Wyłączanie linii na krótkie przerwy wydłuża jej rozruch o około 40 minut i zużywa więcej energii, niż oszczędza — sprawdziliśmy to pomiarem na linii nr 2 w czerwcu. Zostajemy przy obecnym sposobie: wyłączanie na przerwę obiadową i na postoje dłuższe niż 45 minut. Dziękujemy — przy okazji sprawdzamy, czy da się skrócić rozruch; jeśli tak, wrócimy do tej propozycji.&quot;,
+    &quot;efekt&quot;: &quot;Zlecono serwisowi analizę skrócenia rozruchu; wynik na przegląd zarządzania 12.2026&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2026/08&quot;,
+    &quot;data&quot;: &quot;2026-07-21&quot;,
+    &quot;zglaszajacy&quot;: &quot;Magazynier&quot;,
+    &quot;kanal&quot;: &quot;Formularz w intranecie&quot;,
+    &quot;tresc&quot;: &quot;Oświetlenie hali B ma jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części.&quot;,
+    &quot;potwierdzenie&quot;: &quot;2026-07-24&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;decyzja&quot;: &quot;odroczone&quot;,
+    &quot;odpowiedz&quot;: &quot;2026-08-05&quot;,
+    &quot;odpowiedzTresc&quot;: &quot;Podział oświetlenia hali B na trzy strefy zrobimy razem z wymianą opraw na LED (cel C2, III kwartał 2027) — osobne przerabianie instalacji teraz kosztowałoby drugie tyle. Do tego czasu zmieniliśmy harmonogram sprzątania tak, żeby hale były sprzątane w jednym bloku: około 4 MWh rocznie mniej. Wrócimy do tego przy projekcie LED.&quot;,
+    &quot;efekt&quot;: &quot;Podział na strefy wpisany do zakresu projektu LED; harmonogram sprzątania zmieniony od 09.2026&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2026/09&quot;,
+    &quot;data&quot;: &quot;2026-07-28&quot;,
+    &quot;zglaszajacy&quot;: &quot;Technik UR&quot;,
+    &quot;kanal&quot;: &quot;Bezpośrednio do Energy Managera&quot;,
+    &quot;tresc&quot;: &quot;Instrukcja przy sprężarkowni podaje 7,0 bar, a od marca obowiązuje 6,3 bar. Nie wiem, która wartość jest właściwa.&quot;,
+    &quot;potwierdzenie&quot;: &quot;2026-07-29&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;decyzja&quot;: &quot;wdrozone&quot;,
+    &quot;odpowiedz&quot;: &quot;2026-08-07&quot;,
+    &quot;odpowiedzTresc&quot;: &quot;Masz rację — przy sprężarkowni wisiała nieaktualna wersja. Instrukcja I-SP-02 zaktualizowana i zatwierdzona 5 sierpnia, stara wersja zdjęta. Przy okazji przeszliśmy po hali A i znaleźliśmy jeszcze dwie nieaktualne instrukcje — też wycofane. To zgłoszenie uruchomiło przegląd całej dokumentacji przy maszynach.&quot;,
+    &quot;efekt&quot;: &quot;Przegląd instrukcji przy wszystkich SEU; sprawa dopisana do wykazu udokumentowanych informacji (7.5)&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2026/11&quot;,
+    &quot;data&quot;: &quot;2026-09-15&quot;,
+    &quot;zglaszajacy&quot;: &quot;Specjalista ds. zakupów&quot;,
+    &quot;kanal&quot;: &quot;Formularz w intranecie&quot;,
+    &quot;tresc&quot;: &quot;Przy zapytaniach na urządzenia nie mamy jednego wzoru na koszt cyklu życia — każdy liczy inaczej.&quot;,
+    &quot;potwierdzenie&quot;: &quot;2026-09-17&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;decyzja&quot;: &quot;wdrozone&quot;,
+    &quot;odpowiedz&quot;: &quot;2026-09-30&quot;,
+    &quot;odpowiedzTresc&quot;: &quot;Dodaliśmy jednostronicowy arkusz z wzorem i cenami energii do procedury zakupowej P-ZAK-01. Arkusz liczy koszt zakupu plus energia przez 10 lat przy cenach z roku bazowego. Zastosowany po raz pierwszy przy zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14).&quot;,
+    &quot;efekt&quot;: &quot;Arkusz w procedurze P-ZAK-01; wzór ten sam co w kolumnie SPBT w przeglądzie energetycznym&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;data&quot;: &quot;2026-04-15&quot;,
+   &quot;przeglad&quot;: &quot;Raz w roku przed przeglądem zarządzania oraz przy zmianie celów, polityki albo wymagań klienta wobec raportowania&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_74 = [{"tekst": "Ustalono komunikację wewnętrzną i zewnętrzną: o czym, kiedy, z kim, w jaki sposób i kto przekazuje.", "podstawa": "N", "auto": "ustalono"}, {"tekst": "Przekazywane informacje są wiarygodne i zgodne z informacjami wytworzonymi w systemie.", "podstawa": "N", "auto": "wiarygodne"}, {"tekst": "Działa proces, w którym każda osoba pracująca pod nadzorem organizacji może zgłaszać uwagi i propozycje doskonalenia.", "podstawa": "N", "auto": "proces"}, {"tekst": "Rozważono zachowanie zapisów zgłoszonych propozycji (rejestr zgłoszeń).", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Każde zgłoszenie dostaje odpowiedź — także wtedy, gdy jest nią uzasadniona odmowa.", "podstawa": "M", "auto": "odpowiedzi"}];
+var P_WEW = [{"co": "Polityka energetyczna", "kiedy": "Po zatwierdzeniu i przy każdej zmianie", "komu": "Wszyscy pracownicy oraz wykonawcy pracujący na terenie zakładu", "jak": "Wprowadzenie, tablica przy wejściu do hali A, intranet", "kto": "Energy Manager", "podstawa": ""}, {"co": "Cele energetyczne i postęp ich realizacji", "kiedy": "Co kwartał", "komu": "Wszyscy pracownicy", "jak": "Tablica przy stołówce, intranet", "kto": "Energy Manager", "podstawa": "F-EnMS-10 — cele, zadania i plany działań; statusy z części C"}, {"co": "Wyniki EnPI — wskaźnik ogólny zakładu wobec linii bazowej", "kiedy": "Co miesiąc", "komu": "Kierownicy działów i zarząd", "jak": "Odprawa kierownictwa", "kto": "Energy Manager", "podstawa": "Karta EnPI O-1 (F-EnMS-09), model znormalizowany na produkcję i stopniodni; linia bazowa 2025"}, {"co": "Wskaźnik sprężarkowni i przepływ w czasie postoju", "kiedy": "Co miesiąc", "komu": "Utrzymanie ruchu, liderzy zmian", "jak": "Odprawa UR, tablica przy sprężarkowni", "kto": "Kierownik Utrzymania Ruchu", "podstawa": "Karty S-1 i S-2 (F-EnMS-09); podlicznik sprężarkowni i przepływomierz, poz. 4, 5 i 7 planu danych"}, {"co": "Jeden temat tygodniowo — co w mojej pracy zmienia zużycie energii i ile to kosztuje", "kiedy": "Raz w tygodniu, 10 minut", "komu": "Operatorzy pras i lakierni, magazyn", "jak": "Krótkie spotkanie na początku zmiany", "kto": "Liderzy zmian", "podstawa": "Liczby przeliczone z kart EnPI i cen energii: 890 zł/MWh, 250 zł/MWh gaz (ceny z 2025 r.)"}, {"co": "Wyniki audytów wewnętrznych i przeglądu zarządzania", "kiedy": "Po każdym audycie i przeglądzie", "komu": "Kierownicy działów, zespół EnMS", "jak": "Protokół w intranecie i omówienie na odprawie", "kto": "Energy Manager", "podstawa": ""}, {"co": "Zmiany w instrukcjach i procedurach", "kiedy": "Przy każdej zmianie, przed wejściem w życie", "komu": "Osoby używające danej instrukcji", "jak": "Informacja na spotkaniu zmiany i wymiana wersji na tablicy przy urządzeniu", "kto": "Kierownik Utrzymania Ruchu", "podstawa": ""}];
+var P_ZEW = [{"co": "Dane o energii i emisjach dla klienta", "rodzaj": "obowiazek", "komu": "Klient OEM — dział zrównoważonego rozwoju", "kiedy": "Raz w roku do 31 stycznia, zgodnie z umową", "jak": "Raport według metody wskazanej przez klienta", "kto": "Energy Manager wspólnie z działem sprzedaży", "podstawa": "Bilans z przeglądu energetycznego (F-EnMS-08), przeliczniki jak w F-EnMS-08; karty EnPI"}, {"co": "Zawiadomienie o przeprowadzeniu audytu energetycznego przedsiębiorstwa", "rodzaj": "obowiazek", "komu": "Prezes URE", "kiedy": "W terminie wynikającym z przepisów, jeśli obowiązek dotyczy zakładu", "jak": "Formularz zawiadomienia", "kto": "Energy Manager", "podstawa": "Wyniki audytu energetycznego; zużycie z F-EnMS-08"}, {"co": "Polityka energetyczna", "rodzaj": "polityka", "komu": "Strony zainteresowane — klienci, banki, kandydaci do pracy, lokalna społeczność", "kiedy": "Stosownie do potrzeb; aktualna wersja stale dostępna", "jak": "Strona internetowa zakładu; na prośbę przesyłana w pliku PDF", "kto": "Energy Manager", "podstawa": ""}, {"co": "Certyfikat ISO 50001 i osiągnięta poprawa wyniku energetycznego", "rodzaj": "dobrowolna", "komu": "Klienci, kandydaci do pracy, lokalna społeczność", "kiedy": "Po certyfikacji, potem raz w roku z wynikiem rocznym", "jak": "Strona internetowa, materiały handlowe, komunikat prasowy", "kto": "Dział sprzedaży wspólnie z Energy Managerem", "podstawa": "Wskaźnik O-1 wobec linii bazowej 2025, znormalizowany na produkcję i stopniodni; podstawa porównania podawana w każdym komunikacie"}];
+var P_PROCES = {"ktoMoze": "Każda osoba pracująca pod nadzorem organizacji — pracownicy wszystkich działów oraz wykonawcy na terenie zakładu (serwis, firma sprzątająca, ekipy remontowe).", "kanaly": "Formularz w intranecie; skrzynka przy stołówce (zgłoszenia także anonimowe); punkt „energia” na spotkaniu zmiany; bezpośrednio do lidera zmiany albo do Energy Managera. Wykonawcy — przez kierownika zlecającego.", "potwierdzenie": "W ciągu 5 dni roboczych zgłaszający dostaje informację, że zgłoszenie przyjęto, pod jakim numerem i kto się nim zajmie. Przy zgłoszeniu anonimowym potwierdzenie trafia na tablicę razem z numerem.", "dni": "5", "rozpatrzenie": "Energy Manager z kierownikiem obszaru, którego zgłoszenie dotyczy. Możliwe decyzje: wdrożenie, odroczenie z terminem albo uzasadniona odmowa. Sprawy wymagające powyżej 10 tys. zł trafiają na najbliższy przegląd zarządzania.", "zwrotna": "Zgłaszający i jego zmiana dowiadują się na spotkaniu zmiany, co zrobiono i ile to dało. Przy odmowie podaje się powód i, jeśli to możliwe, warunek, przy którym sprawa wróci. Zgłoszenia anonimowe — odpowiedź na tablicy przy numerze zgłoszenia.", "rejestr": "Arkusz EnMS, zakładka „zgłoszenia”: numer, data, kanał, treść, data potwierdzenia, osoba prowadząca, decyzja, data i treść odpowiedzi, efekt. Podsumowanie kwartalne na tablicy: ile przyszło, ile wdrożono."};
+var P_ZGLOSZENIA = [{"nr": "2026/03", "data": "2026-05-12", "zglaszajacy": "Operator prasy nr 3, II zmiana", "kanal": "Punkt „energia” na spotkaniu zmiany", "tresc": "Syczenie przy złączce na kolektorze sprężonego powietrza przy prasie nr 3 — słychać przez całą zmianę.", "potwierdzenie": "2026-05-14", "kto": "Kierownik Utrzymania Ruchu", "decyzja": "wdrozone", "odpowiedz": "2026-05-26", "odpowiedzTresc": "Nieszczelność usunięta 20 maja przy okazji przeglądu szczelności. Pomiar przepływu w postoju spadł z 7,1 do 6,8 Nm³/min — około 1,8 zł na każdej godzinie postoju. Dziękujemy, to było jedno z większych pojedynczych nieszczelności w tym przeglądzie.", "efekt": "Punkt dopisany do stałej listy kontrolnej kwartalnego przeglądu szczelności"}, {"nr": "2026/05", "data": "2026-06-08", "zglaszajacy": "Operator prasy nr 2, I zmiana", "kanal": "Formularz w intranecie", "tresc": "Nie da się zamknąć zaworu odcinającego powietrze na przerwie — zawór jest na klucz, a klucz ma tylko utrzymanie ruchu.", "potwierdzenie": "2026-06-10", "kto": "Kierownik Utrzymania Ruchu", "decyzja": "wdrozone", "odpowiedz": "2026-09-29", "odpowiedzTresc": "Zawory przy czterech prasach wymienione na dźwigniowe (3 tys. zł), wykonane do 30 września. Po wymianie i po usunięciu nieszczelności przepływ w postoju spadł z 6,5 do 5,8 Nm³/min. Zgłoszenie zmieniło sposób pracy na wszystkich zmianach.", "efekt": "Zamykanie zaworów wpisane do instrukcji stanowiskowej; temat tygodnia w 09.2026"}, {"nr": "2026/06", "data": "2026-06-19", "zglaszajacy": "Anonimowo, skrzynka przy stołówce", "kanal": "Skrzynka przy stołówce", "tresc": "Proponuję wyłączać linię pras na każdą przerwę, a nie tylko na przerwę obiadową.", "potwierdzenie": "2026-06-23", "kto": "Energy Manager z kierownikiem produkcji", "decyzja": "odmowa", "odpowiedz": "2026-07-03", "odpowiedzTresc": "Wyłączanie linii na krótkie przerwy wydłuża jej rozruch o około 40 minut i zużywa więcej energii, niż oszczędza — sprawdziliśmy to pomiarem na linii nr 2 w czerwcu. Zostajemy przy obecnym sposobie: wyłączanie na przerwę obiadową i na postoje dłuższe niż 45 minut. Dziękujemy — przy okazji sprawdzamy, czy da się skrócić rozruch; jeśli tak, wrócimy do tej propozycji.", "efekt": "Zlecono serwisowi analizę skrócenia rozruchu; wynik na przegląd zarządzania 12.2026"}, {"nr": "2026/08", "data": "2026-07-21", "zglaszajacy": "Magazynier", "kanal": "Formularz w intranecie", "tresc": "Oświetlenie hali B ma jeden wyłącznik na całą halę — nie da się zgasić nieużywanej części.", "potwierdzenie": "2026-07-24", "kto": "Kierownik Utrzymania Ruchu", "decyzja": "odroczone", "odpowiedz": "2026-08-05", "odpowiedzTresc": "Podział oświetlenia hali B na trzy strefy zrobimy razem z wymianą opraw na LED (cel C2, III kwartał 2027) — osobne przerabianie instalacji teraz kosztowałoby drugie tyle. Do tego czasu zmieniliśmy harmonogram sprzątania tak, żeby hale były sprzątane w jednym bloku: około 4 MWh rocznie mniej. Wrócimy do tego przy projekcie LED.", "efekt": "Podział na strefy wpisany do zakresu projektu LED; harmonogram sprzątania zmieniony od 09.2026"}, {"nr": "2026/09", "data": "2026-07-28", "zglaszajacy": "Technik UR", "kanal": "Bezpośrednio do Energy Managera", "tresc": "Instrukcja przy sprężarkowni podaje 7,0 bar, a od marca obowiązuje 6,3 bar. Nie wiem, która wartość jest właściwa.", "potwierdzenie": "2026-07-29", "kto": "Energy Manager", "decyzja": "wdrozone", "odpowiedz": "2026-08-07", "odpowiedzTresc": "Masz rację — przy sprężarkowni wisiała nieaktualna wersja. Instrukcja I-SP-02 zaktualizowana i zatwierdzona 5 sierpnia, stara wersja zdjęta. Przy okazji przeszliśmy po hali A i znaleźliśmy jeszcze dwie nieaktualne instrukcje — też wycofane. To zgłoszenie uruchomiło przegląd całej dokumentacji przy maszynach.", "efekt": "Przegląd instrukcji przy wszystkich SEU; sprawa dopisana do wykazu udokumentowanych informacji (7.5)"}, {"nr": "2026/11", "data": "2026-09-15", "zglaszajacy": "Specjalista ds. zakupów", "kanal": "Formularz w intranecie", "tresc": "Przy zapytaniach na urządzenia nie mamy jednego wzoru na koszt cyklu życia — każdy liczy inaczej.", "potwierdzenie": "2026-09-17", "kto": "Energy Manager", "decyzja": "wdrozone", "odpowiedz": "2026-09-30", "odpowiedzTresc": "Dodaliśmy jednostronicowy arkusz z wzorem i cenami energii do procedury zakupowej P-ZAK-01. Arkusz liczy koszt zakupu plus energia przez 10 lat przy cenach z roku bazowego. Zastosowany po raz pierwszy przy zamówieniu sterownika nadrzędnego i napędu o zmiennej prędkości dla sprężarkowni (ZAP/2026/14).", "efekt": "Arkusz w procedurze P-ZAK-01; wzór ten sam co w kolumnie SPBT w przeglądzie energetycznym"}];
+var P_META = {"zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "data": "2026-04-15", "przeglad": "Raz w roku przed przeglądem zarządzania oraz przy zmianie celów, polityki albo wymagań klienta wobec raportowania"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Wynik energetyczny, o którym nikt nie mówi, nie wywołuje żadnej decyzji.", "decyzja": "Ustalono, co, komu i jak często komunikujemy — wewnątrz zakładu i na zewnątrz.", "dzialanie": "Raport miesięczny do kierownictwa, wynik S-1 na tablicy, roczny raport dla klienta i dla banku; wymagania energetyczne w zapytaniu ZAP/2026/14.", "sprawdzenie": "Potwierdzenia odbioru raportów zewnętrznych; punkt o energii obecny w agendzie spotkań produkcyjnych."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 7.4 — Komunikacja.
+   F-EnMS-13 (III-30): A1 komunikacja wewnętrzna, A2 zewnętrzna według rodzaju,
+   B proces zgłaszania uwag i propozycji. Lista kontrolna III-32 sekcja 7.4. */
+"use strict";
+
+var PUNKT = "7.4";
+var TERAZ = "11.10.2026 01:30";
+var WEW = [];
+var ZEW = [];
+var PROCES = {};
+var ZGLOSZENIA = [];
+var META = { zatwierdzil: "", data: "", przeglad: "" };
+var WNIOSKI = [];
+var AKT = "wew";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 01:25", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 7.4" }];
+
+var RODZAJE_ZEW = [["", "Wybierz rodzaj"],
+["obowiazek", "Obowiązek — przepis albo umowa"],
+["polityka", "Polityka energetyczna — dostępność dla stron (5.2)"],
+["dobrowolna", "Dobrowolna — wyniki, którymi chcecie się pochwalić"]];
+var DECYZJE_Z = [["", "Wybierz"], ["wdrozone", "Wdrożone"], ["odroczone", "Odroczone"],
+["odmowa", "Uzasadniona odmowa"], ["wtoku", "W rozpatrywaniu"]];
+
+/* ── reguła wiarygodności ── */
+/* Celowo nie łapiemy samego słowa „wynik”: „wyniki audytów” i „wyniki przeglądu”
+   nie są twierdzeniem o wyniku energetycznym i nie wymagają podstawy danych. */
+var RE_WYNIK = /(wynik\w*\s+energ|wska[źz]nik|enpi|enb|oszcz[ęe]dn|popraw|%|procent|mwh|kwh|z[łl]ot|redukcj|emisj|obni[żz]|zu[żz]yci)/i;
+function mowiOWyniku(x) { return RE_WYNIK.test((x.tresc || "") + " " + (x.co || "")); }
+function brakPodstawy(x) { return mowiOWyniku(x) && !(x.podstawa || "").trim(); }
+
+/* ── kompletność ── */
+function wewOk(x) {
+  return !!((x.co || "").trim() && (x.kiedy || "").trim() && (x.komu || "").trim()
+    && (x.jak || "").trim() && (x.kto || "").trim()) && !brakPodstawy(x);
+}
+function zewOk(x) {
+  return !!((x.co || "").trim() && x.rodzaj && (x.komu || "").trim() && (x.kiedy || "").trim()
+    && (x.jak || "").trim() && (x.kto || "").trim()) && !brakPodstawy(x);
+}
+function maPolityke() { return ZEW.some(function (x) { return x.rodzaj === "polityka"; }); }
+function procesOk() {
+  return POLA_PROCESU.every(function (p) { return (PROCES[p.kod] || "").trim(); });
+}
+function dniPotwierdzenia() { return lb(PROCES.dni); }
+
+/* ── rejestr zgłoszeń ── */
+function zgloszenieOk(z) {
+  return !!(z.data && (z.tresc || "").trim() && z.potwierdzenie && z.decyzja
+    && z.odpowiedz && (z.odpowiedzTresc || "").trim());
+}
+function bezOdpowiedzi() {
+  return ZGLOSZENIA.filter(function (z) { return (z.tresc || "").trim() && !z.odpowiedz; });
+}
+function dni(a, b) {
+  if (!a || !b) return null;
+  var d1 = new Date(a + "T00:00:00"), d2 = new Date(b + "T00:00:00");
+  return Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+}
+function spoznionePotwierdzenia() {
+  var lim = dniPotwierdzenia();
+  if (lim === null) return [];
+  return ZGLOSZENIA.filter(function (z) {
+    var d = dni(z.data, z.potwierdzenie);
+    return d !== null && d > lim;
+  });
+}
+function odsetekOdpowiedzi() {
+  var wsz = ZGLOSZENIA.filter(function (z) { return (z.tresc || "").trim(); });
+  if (!wsz.length) return null;
+  return Math.round(100 * wsz.filter(function (z) { return z.odpowiedz; }).length / wsz.length);
+}
+function sredniCzasOdpowiedzi() {
+  var d = ZGLOSZENIA.map(function (z) { return dni(z.data, z.odpowiedz); }).filter(function (x) { return x !== null; });
+  if (!d.length) return null;
+  return d.reduce(function (a, b) { return a + b; }, 0) / d.length;
+}
+function wdrozone() { return ZGLOSZENIA.filter(function (z) { return z.decyzja === "wdrozone"; }).length; }
+function odmowyBezUzasadnienia() {
+  return ZGLOSZENIA.filter(function (z) {
+    return z.decyzja === "odmowa" && (z.odpowiedzTresc || "").trim().length < 30;
+  }).length;
+}
+
+/* ── zakładka 1: komunikacja wewnętrzna ── */
+function rysujWew(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "A1. Komunikacja wewnętrzna");
+  h.appendChild(el("span", "chip " + (WEW.length && WEW.every(wewOk) ? "green" : "amber"),
+    WEW.filter(wewOk).length + " / " + WEW.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Plan komunikacji odpowiada na pięć pytań: co, kiedy, komu, jak — i kto. To ostatnie łatwo pominąć, a właśnie ono decyduje, czy informacja w ogóle wyjdzie."));
+  s.appendChild(hel("div", "warn", "Operator wtryskarki zauważa, że sprężone powietrze syczy przy złączce. Wrzuca kartkę do skrzynki pomysłów. Tydzień — nic. Miesiąc — nic. Po trzech miesiącach zgłasza jeszcze jedną sprawę. Też bez odpowiedzi.<br><br><b>Czwartej kartki już nie będzie.</b> Nie dlatego, że operatorowi przestało zależeć. Dlatego, że nauczył się, że to nie ma sensu."));
+  s.appendChild(el("div", "note", "Komunikacja w systemie nie polega na tym, żeby mówić do ludzi. Polega na tym, żeby informacja docierała tam, gdzie ktoś może z nią coś zrobić — w obie strony."));
+  host.appendChild(s);
+
+  if (WEW.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Co", "Kiedy", "Komu", "Jak", "Kto przekazuje", "Podstawa danych"],
+      WEW.map(function (x) {
+        return [(x.co || "—"), x.kiedy || "—", (x.komu || "—"), (x.jak || "—"), x.kto || "—",
+        (x.podstawa || "").trim() ? x.podstawa : (mowiOWyniku(x) ? el("span", "chip red", "brak") : "—")];
+      })));
+    host.appendChild(t);
+  }
+
+  WEW.forEach(function (x, i) {
+    var k = el("div", "poz" + (wewOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Pozycja " + (i + 1)));
+    if (mowiOWyniku(x)) g.appendChild(el("span", "chip " + ((x.podstawa || "").trim() ? "green" : "red"),
+      (x.podstawa || "").trim() ? "podstawa wskazana" : "wynik bez podstawy"));
+    g.appendChild(przyciskUsun(function () { WEW.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Co", inp(x.co, "np. Wyniki EnPI — wskaźnik ogólny zakładu", function (v) { x.co = v; })));
+    k.appendChild(pole("Kiedy", inp(x.kiedy, "np. Co miesiąc", function (v) { x.kiedy = v; })));
+    k.appendChild(pole("Komu", inp(x.komu, "np. Kierownicy działów i zarząd", function (v) { x.komu = v; })));
+    k.appendChild(pole("Jak", inp(x.jak, "np. Odprawa kierownictwa", function (v) { x.jak = v; })));
+    k.appendChild(poleChip("Kto przekazuje", "wymóg normy",
+      inp(x.kto, "np. Energy Manager", function (v) { x.kto = v; }),
+      "„Nie wiadomo, kto ma przekazać informację” to jeden z pięciu typowych błędów tego punktu. Przy każdej pozycji wpisujcie osobę."));
+    k.appendChild(pole("Podstawa danych", inp(x.podstawa, "np. Karty EnPI F-EnMS-09, model O-1 z normalizacją na produkcję i stopniodni",
+      function (v) { x.podstawa = v; }),
+      "Wymagane wtedy, gdy przekazujecie wynik, wskaźnik albo oszczędność. Przy informacji organizacyjnej można zostawić puste."));
+    if (brakPodstawy(x))
+      k.appendChild(hel("div", "warn", "Ta pozycja mówi o wyniku, a nie wskazuje podstawy danych. <b>Norma wymaga, żeby przekazywane informacje były wiarygodne i zgodne z danymi systemu.</b> Zanim ogłosicie wynik, ustalcie podstawę porównania i sprawdźcie dane: 14% wobec czego? Wobec linii bazowej, po uwzględnieniu produkcji i pogody — czy wobec zeszłego miesiąca, w którym zakład stał przez tydzień?"));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj pozycję", function () { WEW.push({}); }));
+  if (!WEW.length) d.appendChild(el("div", "warn", "Plan komunikacji wewnętrznej jest pusty."));
+  var jedenKanal = {};
+  WEW.forEach(function (x) { var j = (x.jak || "").trim(); if (j) jedenKanal[j] = true; });
+  if (WEW.length > 3 && Object.keys(jedenKanal).length === 1)
+    d.appendChild(el("div", "note", "Wszystkie pozycje idą tym samym kanałem. Hala, biuro i zarząd potrzebują różnych form i rytmu — to jeden z pięciu błędów tego punktu."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 2: komunikacja zewnętrzna ── */
+function rysujZew(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "A2. Komunikacja zewnętrzna");
+  h.appendChild(el("span", "chip " + (ZEW.length && ZEW.every(zewOk) && maPolityke() ? "green" : "amber"),
+    ZEW.filter(zewOk).length + " / " + ZEW.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Komunikacja zewnętrzna to trzy różne sytuacje — i w każdej decydujecie o czymś innym."));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Rodzaj", "Na czym polega"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["Obowiązek", "Przepis albo umowa każe przekazać informacje: sprawozdanie dla urzędu, dane o energii i emisjach dla klienta. Tu nie decydujecie „czy”, tylko „jak” — i pilnujecie terminu oraz metody."],
+  ["Polityka energetyczna", "Ma być dostępna dla stron zainteresowanych stosownie do potrzeb (5.2). To element systemu, nie decyzja marketingowa."],
+  ["Dobrowolna", "Wyniki, którymi chcecie się pochwalić. To Wasza decyzja — ale jeśli się na nią zdecydujecie, wymagania co do wiarygodności obowiązują tak samo."]].forEach(function (r) {
+    var row = el("tr");
+    row.appendChild(el("td", null, r[0]));
+    row.appendChild(el("td", null, r[1]));
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  host.appendChild(s);
+
+  if (ZEW.length) {
+    var tt = el("div", "sekcja");
+    tt.appendChild(tabela(["Co", "Rodzaj", "Komu", "Kiedy", "Jak", "Kto przekazuje"],
+      ZEW.map(function (x) {
+        return [(x.co || "—"),
+          (RODZAJE_ZEW.filter(function (o) { return o[0] === x.rodzaj; })[0] || ["", "—"])[1].split(" — ")[0],
+          x.komu || "—", x.kiedy || "—", (x.jak || "—"), x.kto || "—"];
+      })));
+    host.appendChild(tt);
+  }
+
+  ZEW.forEach(function (x, i) {
+    var k = el("div", "poz" + (zewOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Pozycja " + (i + 1)));
+    if (x.rodzaj) g.appendChild(el("span", "chip " + (x.rodzaj === "obowiazek" ? "red" : ""),
+      (RODZAJE_ZEW.filter(function (o) { return o[0] === x.rodzaj; })[0] || ["", ""])[1].split(" — ")[0]));
+    g.appendChild(przyciskUsun(function () { ZEW.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Co", inp(x.co, "np. Dane o energii i emisjach dla klienta", function (v) { x.co = v; })));
+    k.appendChild(pole("Rodzaj", sel(x.rodzaj, RODZAJE_ZEW, function (v) { x.rodzaj = v; })));
+    k.appendChild(pole("Komu", inp(x.komu, "np. Klient OEM — dział zrównoważonego rozwoju", function (v) { x.komu = v; })));
+    k.appendChild(pole("Kiedy", inp(x.kiedy, "np. Raz w roku do 31 stycznia, zgodnie z umową", function (v) { x.kiedy = v; })));
+    k.appendChild(pole("Jak", inp(x.jak, "np. Raport według metody wskazanej przez klienta", function (v) { x.jak = v; })));
+    k.appendChild(poleChip("Kto przekazuje", "wymóg normy",
+      inp(x.kto, "np. Energy Manager wspólnie z działem sprzedaży", function (v) { x.kto = v; })));
+    k.appendChild(poleChip("Podstawa danych", "metodyka ENESA",
+      inp(x.podstawa, "np. Karty EnPI F-EnMS-09 i bilans z przeglądu energetycznego; przeliczniki jak w F-EnMS-08",
+        function (v) { x.podstawa = v; }),
+      "Formularz III-30 nie ma tej kolumny w części A2 — dodaliśmy ją, bo wymaganie wiarygodności dotyczy całej komunikacji, a na zewnątrz błąd jest najtrudniejszy do odkręcenia."));
+    if (brakPodstawy(x))
+      k.appendChild(hel("div", "warn", "Pozycja mówi o wyniku, a nie wskazuje podstawy danych. Na zewnątrz to szczególnie kosztowne: <b>komunikat oparty na złym porównaniu podważy zaufanie do kolejnych — także tych prawdziwych.</b>"));
+    if (x.rodzaj === "obowiazek" && !/\d|termin|umow|przepis|do \w+/i.test(x.kiedy || ""))
+      k.appendChild(el("div", "note", "Przy komunikacji obowiązkowej nie decydujecie „czy”, tylko „jak” — i pilnujecie terminu. Warto zapisać go konkretnie, razem ze źródłem obowiązku."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj pozycję", function () { ZEW.push({}); }));
+  if (!ZEW.length) d.appendChild(el("div", "warn", "Plan komunikacji zewnętrznej jest pusty."));
+  if (ZEW.length && !maPolityke())
+    d.appendChild(hel("div", "warn", "Brak pozycji dotyczącej <b>dostępności polityki energetycznej dla stron zainteresowanych</b>. To wymaganie punktu 5.2, które realizuje się przez komunikację zewnętrzną — i jedna z rzeczy, o które audytor pyta wprost."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 3: proces zgłaszania uwag ── */
+var POLA_PROCESU = [
+  { kod: "ktoMoze", nazwa: "Kto może zgłaszać", rows: 1,
+    ph: "np. Każda osoba pracująca pod nadzorem organizacji, w tym wykonawcy",
+    pomoc: "Norma mówi o każdej osobie pracującej pod nadzorem organizacji. Zawężenie do pracowników jest zawężeniem wymagania." },
+  { kod: "kanaly", nazwa: "Kanały zgłaszania", rows: 2,
+    ph: "np. Formularz w intranecie; skrzynka przy stołówce; punkt na odprawie zmiany; bezpośrednio do lidera zmiany",
+    pomoc: "Forma jest dowolna — skrzynka, formularz, punkt na odprawie. Liczy się, co dzieje się dalej." },
+  { kod: "potwierdzenie", nazwa: "Potwierdzenie przyjęcia", rows: 2,
+    ph: "np. W ciągu 5 dni roboczych zgłaszający dostaje informację, że zgłoszenie przyjęto i kto się nim zajmie",
+    pomoc: "Pierwszy krok dobrego obiegu. Bez niego zgłaszający nie wie nawet, czy kartka nie wypadła ze skrzynki." },
+  { kod: "rozpatrzenie", nazwa: "Rozpatrzenie", rows: 2,
+    ph: "np. Energy Manager z kierownikiem obszaru; decyzja: wdrożenie, odroczenie albo uzasadniona odmowa; sprawy powyżej 10 tys. zł na przeglądzie zarządzania",
+    pomoc: "Kto decyduje i jakie decyzje są możliwe." },
+  { kod: "zwrotna", nazwa: "Informacja zwrotna", rows: 2,
+    ph: "np. Zgłaszający i jego zmiana dowiadują się na spotkaniu zmiany, co zrobiono i ile to dało; przy odmowie — uzasadnienie",
+    pomoc: "Ludzie przestają zgłaszać nie wtedy, gdy słyszą „nie”, tylko wtedy, gdy nie słyszą nic." },
+  { kod: "rejestr", nazwa: "Rejestr zgłoszeń", rows: 2,
+    ph: "np. Arkusz EnMS, zakładka „zgłoszenia”: data, treść, kanał, decyzja, data i treść odpowiedzi, efekt",
+    pomoc: "Norma każe rozważyć zachowanie zapisów zgłoszonych propozycji. Prosty rejestr z datą i odpowiedzią zwykle wystarcza — i przydaje się, gdy chcecie pokazać, ile pomysłów przyszło z hali." }
+];
+
+function rysujProces(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "B. Proces zgłaszania uwag i propozycji");
+  h.appendChild(el("span", "chip " + (procesOk() ? "green" : "amber"),
+    POLA_PROCESU.filter(function (p) { return (PROCES[p.kod] || "").trim(); }).length + " / " + POLA_PROCESU.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "<b>To jest wymaganie normy, nie zalecenie.</b> Organizacja ustanawia i stosuje proces, w którym każda osoba pracująca pod jej nadzorem może zgłaszać uwagi i propozycje doskonalenia systemu i wyniku energetycznego."));
+  s.appendChild(el("div", "note", "Dobry obieg ma cztery kroki: zgłoszenie → potwierdzenie w ciągu kilku dni → działanie → informacja zwrotna o tym, co zrobiono i ile to dało. Nie każdy pomysł da się wdrożyć i nie trzeba tego obiecywać. Sensowną odpowiedzią jest też uzasadniona odmowa."));
+  s.appendChild(hel("div", "note", "Przykład odmowy z książki: <i>„Wyłączanie tej linii na przerwy wydłuża jej rozruch o 40 minut, więc zostajemy przy obecnym sposobie. Dziękujemy — sprawdzimy, czy da się skrócić rozruch.”</i>"));
+
+  var k = el("div", "poz" + (procesOk() ? "" : " brak"));
+  POLA_PROCESU.forEach(function (f) {
+    k.appendChild(poleChip(f.nazwa, f.kod === "rejestr" ? "norma: rozważyć" : "wymóg normy",
+      txt(PROCES[f.kod], f.ph, f.rows, function (v) { PROCES[f.kod] = v; }), f.pomoc));
+    if (f.kod === "potwierdzenie")
+      k.appendChild(pole("Termin potwierdzenia — liczba dni roboczych",
+        inp(PROCES.dni, "np. 5", function (v) { PROCES.dni = v; }),
+        "Platforma sprawdza tę liczbę przy każdym zgłoszeniu w rejestrze."));
+  });
+  s.appendChild(k);
+  host.appendChild(s);
+
+  var o = el("div", "sekcja");
+  o.appendChild(el("h3", null, "Obieg zgłoszenia — jak to wygląda w AutoParts"));
+  o.appendChild(tabela(["Krok", "Co się dzieje"], [
+    ["Zgłoszenie", "Operator zgłasza nieszczelność przy złączce."],
+    ["Potwierdzenie", "W ciągu kilku dni dostaje informację, że zgłoszenie przyjęto i kto się nim zajmie."],
+    ["Działanie", "Utrzymanie ruchu usuwa nieszczelność."],
+    ["Informacja zwrotna", "Operator i jego zmiana dowiadują się, co zrobiono i ile to dało."]
+  ]));
+  host.appendChild(o);
+}
+
+/* ── zakładka 4: rejestr zgłoszeń ── */
+function rysujRejestr(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Rejestr zgłoszeń");
+  var odp = odsetekOdpowiedzi();
+  h.appendChild(el("span", "chip " + (odp === 100 ? "green" : odp === null ? "amber" : "red"),
+    odp === null ? "brak zgłoszeń" : odp + "% z odpowiedzią"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Data, treść, decyzja i odpowiedź. Rejestr przydaje się, gdy chcecie pokazać, ile pomysłów przyszło z hali — i co z nich wyszło."));
+  host.appendChild(s);
+
+  if (ZGLOSZENIA.length) {
+    var w = el("div", "sekcja");
+    var st = el("div", (bezOdpowiedzi().length || spoznionePotwierdzenia().length ? "warn" : "ok"));
+    st.appendChild(el("b", null, "Stan rejestru: "));
+    st.appendChild(document.createTextNode(
+      ile(ZGLOSZENIA.length, "zgłoszenie", "zgłoszenia", "zgłoszeń") +
+      " · z odpowiedzią: " + (odp === null ? "—" : odp + "%") +
+      " · wdrożonych: " + wdrozone() +
+      (sredniCzasOdpowiedzi() !== null ? " · średni czas odpowiedzi: " + lcz(sredniCzasOdpowiedzi(), 1) + " dnia" : "") +
+      (bezOdpowiedzi().length ? " · bez odpowiedzi: " + bezOdpowiedzi().length : "") +
+      (spoznionePotwierdzenia().length ? " · potwierdzeń po terminie: " + spoznionePotwierdzenia().length : "")));
+    w.appendChild(st);
+    w.appendChild(tabela(["Nr", "Data", "Treść", "Decyzja", "Odpowiedź", "Dni"],
+      ZGLOSZENIA.map(function (z, i) {
+        var d = dni(z.data, z.odpowiedz);
+        return [z.nr || String(i + 1), z.data || "—", (z.tresc || "—").slice(0, 60),
+          (DECYZJE_Z.filter(function (o) { return o[0] === z.decyzja; })[0] || ["", "—"])[1],
+          z.odpowiedz || el("span", "chip red", "brak"),
+          d === null ? "—" : String(d)];
+      }), ["mono", "mono"]));
+    host.appendChild(w);
+  }
+
+  ZGLOSZENIA.forEach(function (z, i) {
+    var k = el("div", "poz" + (zgloszenieOk(z) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Zgłoszenie " + (z.nr || (i + 1))));
+    if (z.decyzja) g.appendChild(el("span", "chip " + (z.decyzja === "wdrozone" ? "green" : z.decyzja === "odmowa" ? "" : "amber"),
+      (DECYZJE_Z.filter(function (o) { return o[0] === z.decyzja; })[0] || ["", ""])[1]));
+    if (!z.odpowiedz && (z.tresc || "").trim()) g.appendChild(el("span", "chip red", "bez odpowiedzi"));
+    g.appendChild(przyciskUsun(function () { ZGLOSZENIA.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Numer", inp(z.nr, "np. 2026/07", function (v) { z.nr = v; })));
+    k.appendChild(pole("Data zgłoszenia", inp(z.data, "", function (v) { z.data = v; }, "date")));
+    k.appendChild(pole("Kto zgłosił", inp(z.zglaszajacy, "np. Operator prasy nr 3, II zmiana (albo: anonimowo)", function (v) { z.zglaszajacy = v; }),
+      "Zgłoszenie anonimowe też jest zgłoszeniem — ale wtedy informacja zwrotna musi iść do całej grupy."));
+    k.appendChild(pole("Kanał", inp(z.kanal, "np. Formularz w intranecie", function (v) { z.kanal = v; })));
+    k.appendChild(pole("Treść", txt(z.tresc, "np. Syczenie przy złączce na kolektorze przy prasie nr 3", 2, function (v) { z.tresc = v; })));
+    k.appendChild(pole("Data potwierdzenia przyjęcia", inp(z.potwierdzenie, "", function (v) { z.potwierdzenie = v; }, "date")));
+    k.appendChild(pole("Kto się zajął", inp(z.kto, "np. Kierownik Utrzymania Ruchu", function (v) { z.kto = v; })));
+    k.appendChild(pole("Decyzja", sel(z.decyzja, DECYZJE_Z, function (v) { z.decyzja = v; })));
+    k.appendChild(pole("Data odpowiedzi", inp(z.odpowiedz, "", function (v) { z.odpowiedz = v; }, "date")));
+    k.appendChild(poleChip("Treść odpowiedzi", "wymóg obiegu",
+      txt(z.odpowiedzTresc, "np. Nieszczelność usunięta 12.07; przepływ w postoju spadł o 0,4 Nm³/min, czyli około 2,4 zł na godzinie postoju", 2,
+        function (v) { z.odpowiedzTresc = v; }),
+      "Przy odmowie to tutaj trafia uzasadnienie — i ono decyduje, czy człowiek zgłosi coś jeszcze."));
+    k.appendChild(pole("Efekt", inp(z.efekt, "np. Uwzględnione w kwartalnym przeglądzie szczelności", function (v) { z.efekt = v; })));
+    var dp = dni(z.data, z.potwierdzenie), lim = dniPotwierdzenia();
+    if (!z.odpowiedz && (z.tresc || "").trim())
+      k.appendChild(hel("div", "warn", "Zgłoszenie bez odpowiedzi. <b>Ludzie przestają zgłaszać nie wtedy, gdy słyszą „nie”, tylko wtedy, gdy nie słyszą nic.</b>"));
+    else if (dp !== null && lim !== null && dp > lim)
+      k.appendChild(el("div", "note", "Potwierdzenie przyjęcia po " + dp + " dniach, a proces przewiduje " + lcz(lim, 0) + ". Jeśli termin jest nierealny, lepiej go zmienić niż go nie dotrzymywać."));
+    if (z.decyzja === "odmowa" && (z.odpowiedzTresc || "").trim().length < 30)
+      k.appendChild(el("div", "warn", "Odmowa z bardzo krótkim uzasadnieniem. Odmowa jest poprawną decyzją — ale bez wyjaśnienia działa jak brak odpowiedzi."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj zgłoszenie", function () { ZGLOSZENIA.push({}); }));
+  if (!ZGLOSZENIA.length)
+    d.appendChild(hel("div", "warn", "Rejestr jest pusty. Jeśli proces działa, zgłoszenia powinny się pojawiać — <b>pusty rejestr po kilku miesiącach zwykle znaczy, że ludzie już próbowali</b>. Jeśli proces właśnie uruchomiono, zapiszcie to w analizie konsultanta."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz komunikacji: "));
+  n.appendChild(document.createTextNode(
+    ile(WEW.length, "pozycja", "pozycje", "pozycji") + " wewnętrznych · " +
+    ile(ZEW.length, "pozycja", "pozycje", "pozycji") + " zewnętrznych · proces: " +
+    (procesOk() ? "kompletny" : "niekompletny") + " · " +
+    ile(ZGLOSZENIA.length, "zgłoszenie", "zgłoszenia", "zgłoszeń") +
+    (odsetekOdpowiedzi() !== null ? " (" + odsetekOdpowiedzi() + "% z odpowiedzią, wdrożonych " + wdrozone() + ")" : "")));
+  s.appendChild(n);
+  var bp = WEW.filter(brakPodstawy).length + ZEW.filter(brakPodstawy).length;
+  if (bp)
+    s.appendChild(el("div", "warn", ile(bp, "pozycja mówi", "pozycje mówią", "pozycji mówi") +
+      " o wyniku bez wskazanej podstawy danych. To wprost wymaganie wiarygodności — i najczęstsza droga do podważenia zaufania do wszystkich kolejnych komunikatów."));
+  var bezKto = WEW.filter(function (x) { return (x.co || "").trim() && !(x.kto || "").trim(); }).length +
+    ZEW.filter(function (x) { return (x.co || "").trim() && !(x.kto || "").trim(); }).length;
+  if (bezKto)
+    s.appendChild(el("div", "warn", ile(bezKto, "pozycja nie wskazuje", "pozycje nie wskazują", "pozycji nie wskazuje") +
+      " osoby przekazującej. Informacja bez właściciela zwykle nie wychodzi."));
+  if (!maPolityke())
+    s.appendChild(el("div", "warn", "Brak pozycji o dostępności polityki energetycznej dla stron zainteresowanych — wymaganie 5.2 realizowane przez 7.4."));
+  if (bezOdpowiedzi().length)
+    s.appendChild(el("div", "warn", ile(bezOdpowiedzi().length, "zgłoszenie jest", "zgłoszenia są", "zgłoszeń jest") +
+      " bez odpowiedzi. To nie jest brak w dokumentacji — to mechanizm, który wyłącza zgłaszanie na lata."));
+  if (spoznionePotwierdzenia().length)
+    s.appendChild(el("div", "note", "Potwierdzeń po zadeklarowanym terminie: " + spoznionePotwierdzenia().length +
+      ". Do rozmowy: czy termin jest realny."));
+  if (odmowyBezUzasadnienia())
+    s.appendChild(el("div", "warn", "Odmowy bez rozbudowanego uzasadnienia: " + odmowyBezUzasadnienia() +
+      ". Odmowa jest dopuszczalna, uzasadniona odmowa jest skuteczna."));
+  if (!ZGLOSZENIA.length)
+    s.appendChild(el("div", "note", "Pusty rejestr. Do sprawdzenia: od kiedy proces działa i czy ktoś o nim wie. Pusty rejestr po kilku miesiącach zwykle znaczy, że ludzie już próbowali."));
+  var wdr = wdrozone(), wsz = ZGLOSZENIA.filter(function (z) { return (z.tresc || "").trim(); }).length;
+  if (wsz >= 5 && wdr === 0)
+    s.appendChild(el("div", "warn", "Żadne zgłoszenie nie zostało wdrożone. Nie każdy pomysł da się wdrożyć, ale zero na " + wsz + " warto umieć wyjaśnić."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-32, sekcja 7.4 ── */
+function stanPozycji(p) {
+  var f = {
+    ustalono: function () {
+      return WEW.length > 0 && ZEW.length > 0 && WEW.every(wewOk) && ZEW.every(zewOk) && maPolityke();
+    },
+    wiarygodne: function () {
+      return !WEW.some(brakPodstawy) && !ZEW.some(brakPodstawy) && (WEW.length > 0 || ZEW.length > 0);
+    },
+    proces: function () { return procesOk(); },
+    zapisy: function () {
+      return !!(PROCES.rejestr || "").trim() && ZGLOSZENIA.length > 0;
+    },
+    odpowiedzi: function () {
+      if (!ZGLOSZENIA.length) return null;
+      return !bezOdpowiedzi().length && !odmowyBezUzasadnienia();
+    }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!WEW.length) b.push({ t: "Plan komunikacji wewnętrznej jest pusty.", kto: "klient" });
+  WEW.forEach(function (x, i) {
+    if (!(x.co || "").trim()) b.push({ t: "Pozycja wewnętrzna " + (i + 1) + " — brak treści.", kto: "klient" });
+    else if (!wewOk(x)) b.push({ t: "„" + (x.co || "").slice(0, 40) + "” — brak kiedy, komu, jak, osoby przekazującej albo podstawy danych.", kto: "klient" });
+  });
+  if (!ZEW.length) b.push({ t: "Plan komunikacji zewnętrznej jest pusty.", kto: "klient" });
+  ZEW.forEach(function (x, i) {
+    if (!(x.co || "").trim()) b.push({ t: "Pozycja zewnętrzna " + (i + 1) + " — brak treści.", kto: "klient" });
+    else if (!zewOk(x)) b.push({ t: "„" + (x.co || "").slice(0, 40) + "” — pozycja zewnętrzna niekompletna.", kto: "klient" });
+  });
+  if (ZEW.length && !maPolityke())
+    b.push({ t: "Brak pozycji o dostępności polityki energetycznej dla stron zainteresowanych (5.2).", kto: "klient" });
+  POLA_PROCESU.forEach(function (p) {
+    if (!(PROCES[p.kod] || "").trim())
+      b.push({ t: "Proces zgłaszania uwag — brak elementu „" + p.nazwa.toLowerCase() + "”.", kto: "klient" });
+  });
+  if (!dniPotwierdzenia()) b.push({ t: "Nie podano terminu potwierdzenia przyjęcia zgłoszenia w dniach.", kto: "klient", metodyka: true });
+  if (!ZGLOSZENIA.length) b.push({ t: "Rejestr zgłoszeń jest pusty.", kto: "klient" });
+  bezOdpowiedzi().forEach(function (z) {
+    b.push({ t: "Zgłoszenie " + (z.nr || z.data || "?") + " — brak odpowiedzi dla zgłaszającego.", kto: "klient" });
+  });
+  ZGLOSZENIA.forEach(function (z, i) {
+    if ((z.tresc || "").trim() && !zgloszenieOk(z) && z.odpowiedz)
+      b.push({ t: "Zgłoszenie " + (z.nr || (i + 1)) + " — brak potwierdzenia, decyzji albo treści odpowiedzi.", kto: "klient" });
+  });
+  if (odmowyBezUzasadnienia()) b.push({ t: "Odmowy bez uzasadnienia: " + odmowyBezUzasadnienia() + ".", kto: "klient", metodyka: true });
+  if (!(META.przeglad || "").trim()) b.push({ t: "Nie ustalono, kiedy plan komunikacji jest przeglądany.", kto: "klient", metodyka: true });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia planu komunikacji.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-INF-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Kiedy plan komunikacji jest przeglądany",
+    inp(META.przeglad, "np. Raz w roku przed przeglądem zarządzania oraz przy zmianie celów, polityki albo wymagań klienta",
+      function (v) { META.przeglad = v; }),
+    "„Jeden kanał dla wszystkich” i plan, który się zestarzał, to dwa z pięciu błędów tego punktu."));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_74, "Lista kontrolna III-32 — sekcja 7.4", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-INF-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["A1. Komunikacja wewnętrzna", "zakładka 1", WEW.filter(wewOk).length + " z " + WEW.length + " kompletnych"],
+    ["A2. Komunikacja zewnętrzna", "zakładka 2", ZEW.filter(zewOk).length + " z " + ZEW.length +
+      " · polityka: " + (maPolityke() ? "ujęta" : "brak")],
+    ["B. Proces zgłaszania uwag", "zakładka 3", procesOk() ? "kompletny" : "do uzupełnienia"],
+    ["Rejestr zgłoszeń", "zakładka 4", ile(ZGLOSZENIA.length, "zgłoszenie", "zgłoszenia", "zgłoszeń") +
+      (odsetekOdpowiedzi() !== null ? ", " + odsetekOdpowiedzi() + "% z odpowiedzią" : "")],
+    ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>procesu</b> zgłaszania uwag, nie jego opisu — i każe <b>rozważyć</b> zachowanie zapisów propozycji. Plan komunikacji jest zaleceniem metodyki ENESA, ale wymaganie „ustal, o czym, kiedy, z kim, jak i przez kogo informujesz” bez planu jest trudne do wykazania. Dokument D-EnMS-INF-01 odpowiada formularzowi F-EnMS-13 (załącznik III-30)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "wew", t: "1. Wewnętrzna", f: rysujWew },
+  { id: "zew", t: "2. Zewnętrzna", f: rysujZew },
+  { id: "proces", t: "3. Proces zgłaszania", f: rysujProces },
+  { id: "rejestr", t: "4. Rejestr zgłoszeń", f: rysujRejestr },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(WEW.length, 1) + Math.max(ZEW.length, 1) + POLA_PROCESU.length + Math.max(ZGLOSZENIA.length, 1) + 1,
+    zrob: WEW.filter(wewOk).length + ZEW.filter(zewOk).length
+      + POLA_PROCESU.filter(function (p) { return (PROCES[p.kod] || "").trim(); }).length
+      + ZGLOSZENIA.filter(zgloszenieOk).length
+      + ((META.zatwierdzil || "").trim() && META.data && (META.przeglad || "").trim() ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_74", JSON.stringify({
+      WEW: WEW, ZEW: ZEW, PROCES: PROCES, ZGLOSZENIA: ZGLOSZENIA, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_74"); if (!s) return;
+    var d = JSON.parse(s);
+    WEW = d.WEW || []; ZEW = d.ZEW || []; PROCES = d.PROCES || {};
+    ZGLOSZENIA = d.ZGLOSZENIA || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  WEW = JSON.parse(JSON.stringify(P_WEW));
+  ZEW = JSON.parse(JSON.stringify(P_ZEW));
+  PROCES = JSON.parse(JSON.stringify(P_PROCES));
+  ZGLOSZENIA = JSON.parse(JSON.stringify(P_ZGLOSZENIA));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  WEW = []; ZEW = []; PROCES = {}; ZGLOSZENIA = []; WNIOSKI = [];
+  META = { zatwierdzil: "", data: "", przeglad: "" };
+  try { localStorage.removeItem("enesa_74"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

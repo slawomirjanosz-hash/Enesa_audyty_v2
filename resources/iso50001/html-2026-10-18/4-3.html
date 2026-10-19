@@ -1,0 +1,1013 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 4.3 Zakres systemu</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+
+.checki{display:flex;gap:6px;flex-wrap:wrap}
+.checki .pill{width:auto}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:20px;padding:5px 13px;font-size:13px;cursor:pointer;background:#fff}
+.pill.on{background:var(--grnbg);border-color:var(--zielen2);color:#17512a;font-weight:600}
+.pill input{width:auto}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 4</div>
+ <h1>4.3 Zakres systemu zarządzania energią</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 4.3</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 4.3</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>4.3 Określenie zakresu systemu zarządzania energią</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 4.3 i sposób przygotowania dokumentacji.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 4.3<br>Zakres systemu</div>
+   <div>
+    <h4>4.3 Określenie zakresu systemu zarządzania energią</h4>
+    <p>Trzy pytania, które kryją się za słowem „zakres”: co obejmuje system, gdzie przebiegają granice
+    i kto w tych granicach decyduje o energii. Oraz zasada, od której nie ma odstępstw: w granicach nie wybierasz rodzajów energii.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 4.3. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">4.3 — część A<br>13 slajdów</div>
+   <div>
+    <h4>4.3 Zakres systemu — część A</h4>
+    <p>Zakres, granice i uprawnienia. Najpierw granice, potem wszystkie rodzaje energii. Co zapisać o tym,
+    co zostaje za granicą.</p>
+    <p style="font-size:12.5px">13 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja określa granice i zastosowanie systemu zarządzania energią, aby ustalić
+ jego zakres. Przy ustalaniu zakresu bierze pod uwagę kwestie z punktu 4.1 i wymagania z punktu 4.2. Zapewnia,
+ że ma uprawnienia do sterowania efektywnością energetyczną, wykorzystaniem i zużyciem energii w ustalonym
+ zakresie i granicach. Nie wyłącza z nich żadnego rodzaju energii. Zakres i granice utrzymuje jako udokumentowaną
+ informację. Omówienie na podstawie punktu 4.3 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+ <p style="font-size:14.5px"><b>Granice systemu możesz wybrać — z uzasadnieniem i z myślą o wymaganiach stron.
+ Rodzajów energii w tych granicach — już nie.</b> Kolejność jest taka: najpierw działalność i granice, potem energia.
+ Zakres i granice to jedyny dokument z rozdziału 4, którego udokumentowania wymaga norma.</p>
+
+ <div class="note" style="margin:14px 0"><b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 1, punkt 4.3 — Zakres systemu.
+ Wróć tam, jeśli chcesz sobie przypomnieć różnicę między zakresem, granicami i uprawnieniami, zasadę
+ „najpierw granice, potem wszystkie rodzaje energii” i schemat z rysunku 1.2.</div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Co zapisać?</h3>
+   <ul>
+    <li>Jaką działalność obejmuje system i gdzie przebiegają jego granice.</li>
+    <li>Jak wnioski z analizy kontekstu (4.1) i wymagania stron (4.2) wpłynęły na ten wybór.</li>
+    <li>Jakie rodzaje energii występują w granicach — sprawdzone z fakturami i ewidencją, także LPG, olej i paliwa.</li>
+    <li>Kto decyduje o energii tam, gdzie nie jest to oczywiste — np. w wynajmowanej hali.</li>
+    <li>Co zostało za granicą i dlaczego — opis relacji, nie sam procent.</li>
+    <li>Kiedy i dlaczego zakres się zmieniał.</li>
+   </ul>
+   <p style="font-size:12.5px;color:#6f7d76;margin:8px 0 0">Te same pytania zada zresztą audytor.</p>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Oczekiwane dowody i dokumenty</h3>
+   <ul>
+    <li>Udokumentowany zakres i granice (F-EnMS-03 albo inny zapis), plan sytuacyjny</li>
+    <li>Lista rodzajów energii z faktur i ewidencji, z miejscem wykorzystania</li>
+    <li>Umowy i porozumienia potwierdzające uprawnienia</li>
+    <li>Historia zmian zakresu z uzasadnieniem</li>
+   </ul>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>☰ Zalecany sposób wdrożenia</h3>
+  <ol class="kroki">
+   <li>Zacznij od wyników 4.1 i 4.2 — sprawdź, jakie konsekwencje dla zakresu z nich wynikają.</li>
+   <li>Określ działalność objętą systemem. Pisz konkretnie, nie „cała działalność”.</li>
+   <li>Wyznacz granice fizyczne i organizacyjne; zapisz, co zostaje na zewnątrz i jaka jest relacja.</li>
+   <li>Sprawdź uprawnienia do sterowania energią — zwłaszcza w obiektach wynajmowanych i przy wspólnych instalacjach.</li>
+   <li>Zinwentaryzuj wszystkie rodzaje energii w granicach, z pochodzeniem i miejscem wykorzystania.</li>
+   <li>Udokumentuj zapis, przedstaw zarządowi do zatwierdzenia i aktualizuj przy zmianach.</li>
+  </ol>
+  <p style="font-size:13px;margin:10px 0 0"><b>★ Rada.</b> Jeśli macie kilka lokalizacji, zacznijcie od tej, której dotyczą
+  wymagania klientów albo która zużywa najwięcej energii. Działający system w jednym zakładzie jest lepszy niż niedokończony w pięciu.</p>
+  <p style="font-size:13px;margin:8px 0 0"><b>Twój ruch.</b> Wybierz zakład albo lokalizację, od której zaczniesz,
+  i spisz z faktur wszystkie rodzaje energii, które tam występują.</p>
+ </div>
+
+ <div class="ankbox">
+  <h3>4.3 Ankieta zakresu i granic</h3>
+  <p class="op">Siedem sekcji odpowiadających formularzowi F-EnMS-03 z książki. Granice i rodzaje energii wstępnie wypełnione z profilu zakładu.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz ankietę 4.3</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”, tom 1 i 2.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>Udokumentowany zakres i granice systemu</li>
+   <li>Plan sytuacyjny z zaznaczoną granicą</li>
+   <li>Lista rodzajów energii z pochodzeniem i miejscem wykorzystania</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia"><span id="postep">Wypełnienie: 0% · 0 / 0</span><span style="font-weight:400;color:#6f7d76">Wypełnianie</span></div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Zapisz odpowiedzi przed wyjściem. Zatwierdzenie zamraża zakres i przekazuje ankietę konsultantowi.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 4.3 w formacie stron 4.1, 4.2 i 4.4.</b> Siedem zakładek ankiety odpowiada
+jeden do jednego siedmiu sekcjom formularza <span class="mono">F-EnMS-03</span> z Załącznika III-05 (Toolkit Modułu 1, wersja 2.3).
+Procedura na stronie klauzuli to sześć kroków z Części II, Moduł 1, wersja 1.1.</div>
+
+<div class="note"><b>Przykład AutoParts — nowe, 18.10.2026.</b> Przycisk „Wypełnij przykładem” w stopce wypełnia
+całą ankietę treścią z Załącznika III-06: konsekwencje z 4.1 i 4.2, zakres, dwie lokalizacje, cztery pozycje
+uprawnień (w tym stacja SN/nN operatora i serwis zlecony), sześć rodzajów energii i dwie pozycje poza granicami.
+Wypełnienie 100% · 22/22, lista braków pusta. Dane siedzą w zmiennej <span class="mono">PRZYKLAD_43</span> —
+nie są wpisane w kod ekranów. Przy okazji dwie poprawki: <b>przeliczniki nośników</b> czytane są teraz z tej
+samej tabeli co w ankiecie 4.1 (wcześniej 4.3 miał własną, krótszą kopię bez LPG, biomasy i biogazu — zakład
+z wózkami na LPG dostawał inne TJ w 4.1 i w 4.3, a TJ decyduje o progach 10 i 85 TJ), oraz <b>rodzaj „paliwa
+pojazdów”</b> nie wynika już z samego faktu posiadania floty: wózki widłowe na LPG rozliczają się w pozycji LPG,
+tak jak w III-06, gdzie paliwa pojazdów nie występują mimo czterech wózków spalinowych.</div>
+
+<h2>Zgodność z książką — sekcja po sekcji</h2>
+<table>
+<tr><th style="width:22%">Zakładka na platformie</th><th style="width:24%">Sekcja F-EnMS-03 (III-05)</th><th>Kolumny i pola</th></tr>
+<tr><td>1. Konsekwencje z 4.1 i 4.2</td><td>1. KONSEKWENCJE Z 4.1 I 4.2 DLA ZAKRESU</td><td>Źródło (wniosek F-EnMS-01 / wpis F-EnMS-02) · Konsekwencja dla zakresu. <b>Na platformie wstępnie wypełniona</b> z potwierdzonych czynników i stron.</td></tr>
+<tr><td>2. Zakres</td><td>2. ZAKRES — DZIAŁALNOŚĆ OBJĘTA SYSTEMEM</td><td>Opis zakresu (działania, procesy, jednostki). Dodana lista obszarów do zaznaczenia — ułatwienie platformy, nie zmiana formularza.</td></tr>
+<tr><td>3. Granice</td><td>3. GRANICE</td><td>Lokalizacja / obiekt · Adres · Granica fizyczna · Jednostki organizacyjne. Wstępnie wypełnione z listy lokalizacji w profilu.</td></tr>
+<tr><td>4. Uprawnienia</td><td>4. UPRAWNIENIA DO STEROWANIA ENERGIĄ</td><td>Obiekt / instalacja / usługa · Kto decyduje · Podstawa · Uwagi. Dodane pole „czy brakuje uprawnień” i wymagany opis działań.</td></tr>
+<tr><td>5. Rodzaje energii</td><td>5. RODZAJE ENERGII W GRANICACH SYSTEMU</td><td>Rodzaj · Status · Pochodzenie · Gdzie wykorzystywany · Źródło danych. Siedem wierszy jak w formularzu, status wstępnie ustawiony z profilu.</td></tr>
+<tr><td>6. Poza granicami</td><td>6. DZIAŁALNOŚĆ POZA GRANICAMI</td><td>Działalność / obiekt · Dlaczego poza granicami · Relacja z działalnością objętą systemem.</td></tr>
+<tr><td>7. Zatwierdzenia</td><td>7. ZATWIERDZENIE, UDOSTĘPNIENIE I HISTORIA ZMIAN</td><td>Wersja · Data · Zmiana zakresu lub granic · Powód · Zatwierdził.</td></tr>
+</table>
+<p class="sub2">Dokument wyjściowy: <span class="mono">D-EnMS-ZAK-01</span> — odpowiednik F-EnMS-03 według tabeli
+„Zgodność z platformą ENESA” w Toolkicie 2.3.</p>
+
+<h2>Zasady z książki wbudowane w ankietę</h2>
+<p class="sub2">Pięć pozycji z listy „Typowe błędy” w Części II zamieniłem na zachowanie interfejsu, a nie na akapit do przeczytania.</p>
+<table>
+<tr><th style="width:34%">Błąd z książki</th><th>Co robi platforma</th></tr>
+<tr><td>Formularz z rubryką „w zakresie: tak / nie” przy rodzajach energii</td><td><b>Takiej rubryki nie ma.</b> Jedyny wybór to „występuje” albo „nie występuje” w granicach — zgodnie z zasadą, że w granicach nie wybiera się rodzajów energii.</td></tr>
+<tr><td>Wyłączanie „bo mały udział”</td><td>Sekcja 6 ma <b>trzy osobne, wymagane pola uzasadnienia</b>: przynależność, uprawnienia i przepływy energii. Udział procentowy jest polem opcjonalnym, opisanym jako informacja pomocnicza. Procent wpisany w którymkolwiek z trzech pól wymaganych wywołuje ostrzeżenie.</td></tr>
+<tr><td>Wyłączanie trudnych obszarów (kotłownia, sprężarkownia)</td><td>Jeśli profil wskazuje nośnik, a w ankiecie zaznaczono „nie występuje”, pojawia się ostrzeżenie z podpowiedzią, że rodzaj energii używany wyłącznie przez działalność spoza granic opisuje się w sekcji 6, a nie wyłącza w sekcji 5. Wpisanie kotłowni albo sprężarkowni w sekcji 6 wywołuje osobne ostrzeżenie — nie straszeniem niezgodnością, tylko zdaniem z książki: tam zwykle leżą największe oszczędności.</td></tr>
+<tr><td>Kolejność: najpierw granice, potem energia</td><td>Zakładka 5 jest zablokowana, dopóki w zakładce 3 nie ma ani jednej kompletnej lokalizacji. Zamiast pustej tabeli widać wyjaśnienie i przycisk prowadzący do granic.</td></tr>
+<tr><td>Lista nośników nieuzgodniona z fakturami</td><td>Osobna pozycja w zakładce 5: na jaki dzień i czym sprawdzono. Bez daty rejestr nie przechodzi do przekazania.</td></tr>
+<tr><td>Usługa zlecona potraktowana jak działalność poza systemem</td><td>W zakładce 4 pytanie, czy usługa jest wykonywana na terenie zakładu; odpowiedź „tak” otwiera wymagane pole o wymaganym nadzorze (kl. 8.1).</td></tr>
+<tr><td>Nieustalone uprawnienia</td><td>Przy odpowiedzi „decyduje ktoś inny” otwiera się wymagane pole „co robicie, żeby je uzyskać”, z przypomnieniem, że przesunięcie granicy jest ostatecznością.</td></tr>
+<tr><td>Zakres bez związku z 4.1 i 4.2</td><td>Zakładka 1 jest pierwsza i wstępnie wypełniona. Nierozstrzygnięta konsekwencja blokuje przekazanie ankiety.</td></tr>
+</table>
+
+<h2>Reguły wypełnienia wstępnego sekcji 1</h2>
+<p class="sub2">9 reguł; dla profilu testowego zakładu uruchomiło się 6.
+Każda daje propozycję konsekwencji, którą klient potwierdza albo odrzuca z uzasadnieniem — tak samo jak czynniki w 4.1.</p>
+<table>
+<tr><th style="width:20%">Źródło</th><th style="width:14%">Punkt</th><th style="width:24%">Warunek</th><th>Konsekwencja dla zakresu</th></tr>
+<tr style="background:#e6f2ea"><td class="mono">D-EnMS-STR-01, STK-Z-12</td><td>4.2</td><td class="mono">FAKT_ODBIORCY_CO2 = tak</td><td>Zakres musi obejmować produkcję wyrobów dostarczanych tym odbiorcom — system ograniczony do biura nie odpowie na to wymaganie.</td></tr><tr style=""><td class="mono">D-EnMS-STR-01, STK-Z-07</td><td>4.2</td><td class="mono">FAKT_PRZETARGI = tak</td><td>Certyfikat musi obejmować jednostkę, która składa oferty — sprawdź, czy to ta sama jednostka co zakład produkcyjny.</td></tr><tr style=""><td class="mono">D-EnMS-STR-01, STK-Z-02</td><td>4.2</td><td class="mono">ZUZYCIE_TJ &gt; 85</td><td>Zakres ma odpowiadać obowiązkowi dla przedsiębiorstwa, a nie dla wybranej części. Sprawdź, czy system obejmujący jedną lokalizację wystarcza w świetle aktualnych przepisów.</td></tr><tr style="background:#e6f2ea"><td class="mono">D-EnMS-STR-01, STK-Z-01</td><td>4.2</td><td class="mono">FAKT_AUDYT_ENERG = tak</td><td>Granice EnMS warto zestawić z zakresem audytu — rozjazd między nimi audytor zauważy i o niego zapyta.</td></tr><tr style="background:#e6f2ea"><td class="mono">D-EnMS-KON-01, KTX-WO-03</td><td>4.1</td><td class="mono">FAKT_SYSTEM_BAZOWY IN (iso_14001, oba)</td><td>Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic.</td></tr><tr style="background:#e6f2ea"><td class="mono">Profil zakładu, FAKT_LOKALIZACJE</td><td>3.6</td><td class="mono">FAKT_LOKALIZACJE &gt; 1</td><td>Rozstrzygnij, czy system obejmuje wszystkie lokalizacje, czy zaczynacie od jednej. Wybór musi odpowiadać wymaganiom z zakładki powyżej.</td></tr><tr style="background:#e6f2ea"><td class="mono">D-EnMS-KON-01, KTX-WT-12</td><td>4.1</td><td class="mono">FAKT_KOTLOWNIA IN (wlasne, oba)</td><td>Kotłownia leży w granicach i podlega systemowi. Wyłączenie jej jako „trudnego obszaru” jest typową niezgodnością.</td></tr><tr style=""><td class="mono">D-EnMS-KON-01, KTX-WO-11</td><td>4.1</td><td class="mono">FAKT_UR_WLASNE IN (zewnetrzne, mieszane)</td><td>Samo zlecenie usługi nie wyprowadza jej poza system. Oceń związek pracy serwisu z działalnością objętą systemem i ustal wymagany nadzór (kl. 8.1).</td></tr><tr style="background:#e6f2ea"><td class="mono">Profil zakładu, FAKT_FLOTA</td><td>3.6</td><td class="mono">FAKT_FLOTA = tak</td><td>Paliwo tych pojazdów jest uwzględnione w rodzajach energii — niezależnie od udziału w zużyciu.</td></tr></table><p class='sub2'>Wiersze na zielono to reguły spełnione dla profilu zakładu użytego w makiecie.</p><h2>Czego platforma nie rozstrzyga</h2>
+<div class="warn">Trzy rzeczy zostawiam konsultantowi, bo książka też ich nie automatyzuje:
+<ul>
+<li><b>Plan sytuacyjny.</b> Książka zaleca pokazanie granicy na planie. Platforma przyjmuje go jako załącznik w „Dokumentacji klienta” — nie rysuje go.</li>
+<li><b>Granica własności przy stacji transformatorowej.</b> W przykładzie AutoParts to osobny wiersz w sekcjach 4 i 6. Przebieg granicy wynika z umowy dystrybucyjnej i trzeba go odczytać z dokumentu.</li>
+<li><b>Czy zakres obejmujący jedną lokalizację wystarcza w świetle przepisów.</b> Reguła podnosi pytanie, odpowiedzi nie zna — zależy od aktualnego stanu transpozycji i od struktury przedsiębiorstwa.</li>
+</ul></div>
+
+<h2>Nierozstrzygnięte z poprzednich punktów</h2>
+<p class="sub2">Toolkit 2.3 w sekcji „Do synchronizacji poza tym plikiem” wymienia trzy rozbieżności między książką a platformą.
+Żadna nie dotyczy punktu 4.3, ale wszystkie trzy wciąż są otwarte: warunek „minimum 4 wnioski”, określenie „metoda PESTEL”
+wobec modelu „4 + 3” i sformułowanie czynnika KTX-ZR-01.</p>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Reguły wypełnienia wstępnego sekcji 1. Pozostałe sekcje nie mają biblioteki — są formularzem.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;konsekwencje_reguly&quot;: [
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-STR-01, STK-Z-12&quot;,
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_ODBIORCY_CO2&quot;: &quot;tak&quot;
+      },
+      &quot;podstawa&quot;: &quot;Odbiorcy pytają o ślad węglowy wyrobu i efektywność energetyczną produkcji.&quot;,
+      &quot;konsekwencja&quot;: &quot;Zakres musi obejmować produkcję wyrobów dostarczanych tym odbiorcom — system ograniczony do biura nie odpowie na to wymaganie.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-STR-01, STK-Z-07&quot;,
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_PRZETARGI&quot;: &quot;tak&quot;
+      },
+      &quot;podstawa&quot;: &quot;Organizacja startuje w postępowaniach, w których certyfikat bywa warunkiem lub kryterium.&quot;,
+      &quot;konsekwencja&quot;: &quot;Certyfikat musi obejmować jednostkę, która składa oferty — sprawdź, czy to ta sama jednostka co zakład produkcyjny.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-STR-01, STK-Z-02&quot;,
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;gdy&quot;: {
+        &quot;_TJ_powyzej&quot;: 85
+      },
+      &quot;podstawa&quot;: &quot;Zużycie przekracza próg z dyrektywy EED — obowiązek wdrożenia systemu zarządzania energią.&quot;,
+      &quot;konsekwencja&quot;: &quot;Zakres ma odpowiadać obowiązkowi dla przedsiębiorstwa, a nie dla wybranej części. Sprawdź, czy system obejmujący jedną lokalizację wystarcza w świetle aktualnych przepisów.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-STR-01, STK-Z-01&quot;,
+      &quot;punkt&quot;: &quot;4.2&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_AUDYT_ENERG&quot;: &quot;tak&quot;
+      },
+      &quot;podstawa&quot;: &quot;Wykonano audyt energetyczny przedsiębiorstwa zgłaszany do URE.&quot;,
+      &quot;konsekwencja&quot;: &quot;Granice EnMS warto zestawić z zakresem audytu — rozjazd między nimi audytor zauważy i o niego zapyta.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-KON-01, KTX-WO-03&quot;,
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_SYSTEM_BAZOWY&quot;: [
+          &quot;iso_14001&quot;,
+          &quot;oba&quot;
+        ]
+      },
+      &quot;podstawa&quot;: &quot;Organizacja ma certyfikowany system ISO 14001.&quot;,
+      &quot;konsekwencja&quot;: &quot;Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;Profil zakładu, FAKT_LOKALIZACJE&quot;,
+      &quot;punkt&quot;: &quot;3.6&quot;,
+      &quot;gdy&quot;: {
+        &quot;_lokalizacji_wiecej_niz&quot;: 1
+      },
+      &quot;podstawa&quot;: &quot;Organizacja ma więcej niż jedną lokalizację.&quot;,
+      &quot;konsekwencja&quot;: &quot;Rozstrzygnij, czy system obejmuje wszystkie lokalizacje, czy zaczynacie od jednej. Wybór musi odpowiadać wymaganiom z zakładki powyżej.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-KON-01, KTX-WT-12&quot;,
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_KOTLOWNIA&quot;: [
+          &quot;wlasne&quot;,
+          &quot;oba&quot;
+        ]
+      },
+      &quot;podstawa&quot;: &quot;Zapotrzebowanie na ciepło pokrywane jest z własnego źródła.&quot;,
+      &quot;konsekwencja&quot;: &quot;Kotłownia leży w granicach i podlega systemowi. Wyłączenie jej jako „trudnego obszaru” jest typową niezgodnością.&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;D-EnMS-KON-01, KTX-WO-11&quot;,
+      &quot;punkt&quot;: &quot;4.1&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_UR_WLASNE&quot;: [
+          &quot;zewnetrzne&quot;,
+          &quot;mieszane&quot;
+        ]
+      },
+      &quot;podstawa&quot;: &quot;Część utrzymania ruchu prowadzi firma zewnętrzna.&quot;,
+      &quot;konsekwencja&quot;: &quot;Samo zlecenie usługi nie wyprowadza jej poza system. Oceń związek pracy serwisu z działalnością objętą systemem i ustal wymagany nadzór (kl. 8.1).&quot;
+    },
+    {
+      &quot;zrodlo&quot;: &quot;Profil zakładu, FAKT_FLOTA&quot;,
+      &quot;punkt&quot;: &quot;3.6&quot;,
+      &quot;gdy&quot;: {
+        &quot;FAKT_FLOTA&quot;: &quot;tak&quot;
+      },
+      &quot;podstawa&quot;: &quot;W zakresie działalności są pojazdy należące do organizacji.&quot;,
+      &quot;konsekwencja&quot;: &quot;Paliwo tych pojazdów jest uwzględnione w rodzajach energii — niezależnie od udziału w zużyciu.&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var PROFIL = {"FAKT_LOKALIZACJE": "2", "FAKT_LOKALIZACJE_LISTA": [{"c0": "Zakład produkcyjny", "c1": "ul. Przemysłowa 12, Katowice", "c2": "produkcja", "c3": "tak"}, {"c0": "Magazyn wyrobów gotowych", "c1": "ul. Składowa 11, Katowice", "c2": "magazyn", "c3": "tak"}], "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)", "FAKT_PRACOWNICY": "850", "FAKT_ZMIANY": "3", "FAKT_SEZONOWOSC": "nie", "FAKT_PODMIOT": "prywatny", "FAKT_GRUPA_KAPITALOWA": "tak", "FAKT_ZWIAZKI": "nie", "FAKT_SYSTEM_BAZOWY": "iso_14001", "FAKT_SYSTEM_BAZOWY_ROK": "2019", "FAKT_ZGODA_INTEGRACJA": "tak", "FAKT_ENERGY_MANAGER": "nieformalnie", "FAKT_UR_WLASNE": "wlasne", "FAKT_INSTRUKCJE_EKSPL": "czesciowo", "FAKT_ZAKUPY_KRYTERIA": "czasami", "FAKT_ROTACJA": "srednia", "FAKT_NOSNIKI": [{"c0": "energia elektryczna", "c1": "8500", "c2": "MWh", "c3": "7565000"}, {"c0": "gaz ziemny", "c1": "350000", "c2": "m³", "c3": "875000"}, {"c0": "LPG", "c1": "18000", "c2": "l", "c3": "54000"}], "FAKT_ROK_ODNIESIENIA": "2025", "FAKT_UDZIAL_ENERGII": "2,5", "FAKT_MOC_UMOWNA": "1400", "FAKT_SPREZONE": "tak", "FAKT_CA_LICZBA": "4", "FAKT_CA_MOC": "440", "FAKT_CA_VSD": "0", "FAKT_CA_STEROWNIK": "nie", "FAKT_CA_SZCZELNOSC": "nie", "FAKT_CA_ODZYSK": "nie", "FAKT_CA_GODZINY": "6000", "FAKT_KOTLOWNIA": "wlasne", "FAKT_CIEPLO_PALIWO": ["gaz ziemny"], "FAKT_KOTLOWNIA_MOC": "1200", "FAKT_KOTLOWNIA_WIEK": "18", "FAKT_PODLICZNIKI": "czesciowo", "FAKT_ODCZYT": "mieszane", "FAKT_FLOTA": "tak", "FAKT_UDT": "tak", "FAKT_ODBIORCY_CO2": "tak", "FAKT_PRZETARGI": "nie", "FAKT_CSRD": "nie", "FAKT_AUDYT_ENERG": "tak"};
+var KONSEKWENCJE = [{"zrodlo": "D-EnMS-STR-01, STK-Z-12", "punkt": "4.2", "podstawa": "Odbiorcy pytają o ślad węglowy wyrobu i efektywność energetyczną produkcji.", "konsekwencja": "Zakres musi obejmować produkcję wyrobów dostarczanych tym odbiorcom — system ograniczony do biura nie odpowie na to wymaganie."}, {"zrodlo": "D-EnMS-STR-01, STK-Z-01", "punkt": "4.2", "podstawa": "Wykonano audyt energetyczny przedsiębiorstwa zgłaszany do URE.", "konsekwencja": "Granice EnMS warto zestawić z zakresem audytu — rozjazd między nimi audytor zauważy i o niego zapyta."}, {"zrodlo": "D-EnMS-KON-01, KTX-WO-03", "punkt": "4.1", "podstawa": "Organizacja ma certyfikowany system ISO 14001.", "konsekwencja": "Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic."}, {"zrodlo": "Profil zakładu, FAKT_LOKALIZACJE", "punkt": "3.6", "podstawa": "Organizacja ma więcej niż jedną lokalizację.", "konsekwencja": "Rozstrzygnij, czy system obejmuje wszystkie lokalizacje, czy zaczynacie od jednej. Wybór musi odpowiadać wymaganiom z zakładki powyżej."}, {"zrodlo": "D-EnMS-KON-01, KTX-WT-12", "punkt": "4.1", "podstawa": "Zapotrzebowanie na ciepło pokrywane jest z własnego źródła.", "konsekwencja": "Kotłownia leży w granicach i podlega systemowi. Wyłączenie jej jako „trudnego obszaru” jest typową niezgodnością."}, {"zrodlo": "Profil zakładu, FAKT_FLOTA", "punkt": "3.6", "podstawa": "W zakresie działalności są pojazdy należące do organizacji.", "konsekwencja": "Paliwo tych pojazdów jest uwzględnione w rodzajach energii — niezależnie od udziału w zużyciu."}];
+var PRZYKLAD_43 = {"kon": {"Profil zakładu, FAKT_LOKALIZACJE": "System obejmuje obie lokalizacje w Katowicach — zakład produkcyjny i magazyn wyrobów gotowych. Zakresu nie dzielimy: magazyn obsługuje wyłącznie wyroby tego zakładu.", "D-EnMS-KON-01, KTX-WO-03": "Granice EnMS takie same jak granice systemu środowiskowego — jeden zakład, jedna analiza, jeden zestaw granic (wniosek 4 z F-EnMS-01)."}, "zakres": {"opis": "Produkcja komponentów do samochodów osobowych (tłoczenie, montaż, lakierowanie) wraz z procesami pomocniczymi: utrzymanie ruchu, sprężarkownia, kotłownia, magazynowanie, transport wewnętrzny i biuro zakładu. Zakład w Katowicach jest jedynym miejscem działalności przedsiębiorstwa.", "dzialania": ["produkcja", "utrzymanie ruchu", "magazynowanie", "transport wewnętrzny", "biura"]}, "granice": [{"nazwa": "Zakład produkcyjny", "adres": "Katowice, ul. Przemysłowa 12", "fizyczna": "Teren w ogrodzeniu: hale A, B, C (produkcja), lakiernia, kotłownia, sprężarkownia, budynek biurowy — z wyjątkiem stacji transformatorowej SN/nN operatora, opisanej w zakładce 6. Granica zaznaczona na planie sytuacyjnym.", "jednostki": "Wszystkie działy zakładu"}, {"nazwa": "Magazyn wyrobów gotowych", "adres": "Katowice, ul. Składowa 11", "fizyczna": "Hala magazynowa z rampą załadunkową i teren utwardzony w ogrodzeniu.", "jednostki": "Logistyka wewnętrzna"}], "upraw": [{"obiekt": "Hale, lakiernia, kotłownia, sprężarkownia, biuro", "kto": "Dyrektor Zakładu, Kierownik Utrzymania Ruchu", "podstawa": "wlasnosc", "brakUprawnien": "nie", "usluga": "nie", "uwagi": "—"}, {"obiekt": "Stacja transformatorowa SN/nN na terenie zakładu", "kto": "Operator sieci (stacja); AutoParts — sieć i odbiory po stronie nN", "podstawa": "umowa", "brakUprawnien": "tak", "dzialanie": "Granica własności i eksploatacji opisana w umowie dystrybucyjnej (zaciski nN transformatora) i zaznaczona na planie razem z punktem pomiaru. Po stronie nN decydujemy my — tam prowadzimy nadzór operacyjny.", "usluga": "nie", "uwagi": "Punkt pomiaru: licznik główny"}, {"obiekt": "Wózki widłowe — 12 elektrycznych, 4 na LPG", "kto": "Kierownik Logistyki Wewnętrznej", "podstawa": "leasing", "brakUprawnien": "nie", "usluga": "nie", "uwagi": "Eksploatacja po stronie AutoParts — w granicach systemu"}, {"obiekt": "Serwis klimatyzacji budynku biurowego i przeglądy sprężarkowni", "kto": "Kierownik Utrzymania Ruchu", "podstawa": "umowa", "brakUprawnien": "nie", "usluga": "tak", "nadzor": "Wymagania energetyczne dopisane do umowy serwisowej (kl. 8.1): parametry nastaw po przeglądzie, raport z przeglądu sprężarkowni, instruktaż przed rozpoczęciem prac.", "uwagi": "Firma zewnętrzna pracuje na terenie zakładu"}], "energia": {"EE": {"status": "wystepuje", "pochodzenie": "zakup", "gdzie": "Produkcja, sprężarkownia, oświetlenie, wózki elektryczne, biuro — 8 500 MWh/rok. PV w analizie (F-EnMS-01, czynniki technologiczne).", "zrodlo": "Faktury, licznik główny"}, "GAZ": {"status": "wystepuje", "pochodzenie": "zakup", "gdzie": "Lakiernia (piece suszące), kotłownia — 350 000 m³/rok", "zrodlo": "Faktury, licznik główny"}, "CIEPLO": {"status": "wystepuje", "pochodzenie": "wlasne", "gdzie": "Ogrzewanie hal; w bilansie ujęte przez gaz kotłowni. Ciepło sieciowe nie występuje.", "zrodlo": "Licznik ciepła kotłowni (do montażu), do tego czasu szacunek"}, "OLEJ": {"status": "nie", "pochodzenie": "", "gdzie": "", "zrodlo": ""}, "LPG": {"status": "wystepuje", "pochodzenie": "zakup", "gdzie": "4 wózki widłowe — ok. 18 000 l/rok, czyli ok. 120 MWh (ok. 1% zużycia zakładu)", "zrodlo": "Faktury dostawcy LPG, ewidencja butli"}, "PALIWA": {"status": "nie", "pochodzenie": "", "gdzie": "Zakład nie eksploatuje własnych pojazdów drogowych; transport wyrobów opisany w zakładce 6.", "zrodlo": ""}}, "poza": [{"co": "Transport wyrobów do klientów", "przynaleznosc": "Usługa zlecona przewoźnikowi, wykonywana jego pojazdami poza zakładem; pojazdy i paliwo należą do przewoźnika.", "uprawnienia": "Nie decydujemy o doborze pojazdów ani o sposobie ich eksploatacji.", "przeplywy": "Energia nie przepływa przez granicę systemu — paliwo tankowane jest poza zakładem.", "dlaczego": "", "relacja": "Przy wyborze przewoźnika można uwzględniać kryteria efektywności (8.3) — decyzja zarządu przy odnowieniu umowy."}, {"co": "Stacja transformatorowa SN/nN i sieć SN operatora na terenie zakładu", "przynaleznosc": "Własność i eksploatacja operatora sieci — wyjątek od granicy „teren w ogrodzeniu”.", "uprawnienia": "Po stronie SN nie mamy uprawnień; po stronie nN decydujemy my.", "przeplywy": "Energia dostarczana do zakładu mierzona licznikiem głównym na granicy własności.", "dlaczego": "", "relacja": "Granica własności i eksploatacji według umowy dystrybucyjnej; obie granice zaznaczone na planie sytuacyjnym."}], "sprawdzone": {"data": "2026-02-18", "czym": "Faktury 2025 za energię elektryczną i gaz, ewidencja zakupu LPG, zestawienie z kontrolingiem"}};
+</script>
+<script>/* ENESA 4.3 — zakres i granice EnMS. Format jak 4.1/4.2/4.4 Sławka, sekcje jak F-EnMS-03 (III-05). */
+"use strict";
+
+var KON = {};        // indeks konsekwencji -> {decyzja, tresc}
+var ZAKRES = { opis: "", dzialania: [] };
+var GRANICE = [];
+var UPRAW = [];
+var ENERGIA = {};    // rodzaj -> {status, pochodzenie, gdzie, zrodlo}
+var POZA = [];
+var SPRAWDZONE = { data: "", czym: "" };   // zestawienie nośników z fakturami
+var AKT = "konsekwencje";
+var PIERWSZE = true;
+
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function pole(label, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (label) p.appendChild(el("label", null, label));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function input(val, ph, onChange, typ) {
+  var i = el("input"); i.type = typ || "text"; i.value = val || ""; i.placeholder = ph || "";
+  i.oninput = function () { onChange(i.value, true); };
+  i.onchange = function () { onChange(i.value, false); zapisz(); rysuj(); };
+  return i;
+}
+function select(val, opcje, onChange) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = val || "";
+  s.onchange = function () { onChange(s.value); zapisz(); rysuj(); };
+  return s;
+}
+
+/* ── wstępne wypełnienie z profilu ── */
+function start() {
+  if (!PIERWSZE) return;
+  PIERWSZE = false;
+  var lok = PROFIL["FAKT_LOKALIZACJE_LISTA"];
+  if (Array.isArray(lok) && !GRANICE.length) {
+    lok.forEach(function (r) {
+      if ((r.c3 || "").toLowerCase() === "nie") return;
+      GRANICE.push({ nazwa: r.c0 || "", adres: r.c1 || "", fizyczna: "", jednostki: "" });
+    });
+  }
+  if (!GRANICE.length) GRANICE.push({});
+  if (!UPRAW.length) UPRAW.push({});
+  if (!POZA.length) POZA.push({});
+  RODZAJE.forEach(function (r) {
+    if (ENERGIA[r.kod]) return;
+    var e = { status: "", pochodzenie: "", gdzie: "", zrodlo: "" };
+    if (r.wProfilu && r.wProfilu()) { e.status = "wystepuje"; e.zrodlo = "Faktury, profil zakładu"; }
+    ENERGIA[r.kod] = e;
+  });
+}
+
+/* ── czy rodzaj energii wynika z profilu ── */
+function nosnikWProfilu(nazwy) {
+  var w = PROFIL["FAKT_NOSNIKI"];
+  if (!Array.isArray(w)) return false;
+  return w.some(function (r) { return nazwy.indexOf((r.c0 || "").trim()) >= 0; });
+}
+var RODZAJE = [
+  { kod: "EE", nazwa: "Energia elektryczna", wProfilu: function () { return nosnikWProfilu(["energia elektryczna"]); } },
+  { kod: "GAZ", nazwa: "Gaz ziemny", wProfilu: function () { return nosnikWProfilu(["gaz ziemny"]); } },
+  { kod: "CIEPLO", nazwa: "Ciepło", wProfilu: function () { return nosnikWProfilu(["ciepło sieciowe"]) || ["wlasne", "siec", "oba"].indexOf(PROFIL["FAKT_KOTLOWNIA"]) >= 0; } },
+  { kod: "OLEJ", nazwa: "Olej opałowy", wProfilu: function () { return nosnikWProfilu(["olej opałowy"]); } },
+  { kod: "LPG", nazwa: "LPG", wProfilu: function () { return nosnikWProfilu(["LPG"]); } },
+  /* Flota w profilu nie znaczy jeszcze, że dochodzi osobny rodzaj energii. Wózki widłowe
+     na LPG rozliczają się w pozycji LPG — tak jest w III-06, gdzie „paliwa pojazdów”
+     nie występują, choć zakład ma cztery wózki spalinowe. Pytamy więc o paliwa pojazdów,
+     gdy w profilu jest olej napędowy, benzyna albo CNG, a przy samej flocie — tylko wtedy,
+     gdy żaden nośnik paliwowy nie został wymieniony. */
+  { kod: "PALIWA", nazwa: "Paliwa pojazdów", wProfilu: function () { return nosnikWProfilu(["olej napędowy", "benzyna", "CNG"]) || (PROFIL["FAKT_FLOTA"] === "tak" && !nosnikWProfilu(["LPG"])); } },
+  { kod: "INNE", nazwa: "Inne", wProfilu: null }
+];
+
+/* ── walidacje wzięte z „Typowych błędów” w książce ── */
+function procentWUzasadnieniu(t) {
+  return /%|mał[ye] udzia|niewielk|znikom|nieistotn.{0,6}udzia/i.test(t || "");
+}
+function ostrzezenia() {
+  var o = [];
+  RODZAJE.forEach(function (r) {
+    var e = ENERGIA[r.kod] || {};
+    if (e.status === "nie" && r.wProfilu && r.wProfilu())
+      o.push({ t: r.nazwa + ": zaznaczono „nie występuje”, ale profil zakładu wskazuje ten nośnik. Jeśli używa go wyłącznie działalność spoza granic, opisz to w sekcji „Poza granicami” — to nie jest wyłączenie rodzaju energii.", kod: r.kod });
+  });
+  POZA.forEach(function (p, i) {
+    var caloscUzas = [p.przynaleznosc, p.uprawnienia, p.przeplywy].join(" ");
+    if (procentWUzasadnieniu(caloscUzas))
+      o.push({ t: "Poza granicami, pozycja " + (i + 1) + ": procent to nie uzasadnienie. Opisz przynależność, uprawnienia do sterowania energią i przepływy energii przez granicę.", kod: "POZA" + i });
+  });
+  POZA.forEach(function (p, i) {
+    if (/kotłown|sprężarkown|sprezarkown/i.test(p.co || ""))
+      o.push({ t: "Kotłownia albo sprężarkownia poza granicami: kotłownia, która „psuje wyniki”, to zwykle miejsce, gdzie leżą największe oszczędności. W granicach uwzględniasz wszystkie rodzaje energii i ich użycia.", kod: "POZA" + i });
+  });
+  UPRAW.forEach(function (u, i) {
+    if (u.brakUprawnien === "tak" && !(u.dzialanie || "").trim())
+      o.push({ t: "Uprawnienia, pozycja " + (i + 1) + ": brak uprawnień wymaga opisania, co robicie, żeby je uzyskać. Przesunięcie granicy jest ostatecznością.", kod: "UPR" + i });
+  });
+  return o;
+}
+
+/* ── zakładka 1: konsekwencje z 4.1 i 4.2 ── */
+function rysujKonsekwencje(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Konsekwencje z 4.1 i 4.2 dla zakresu"));
+  s.appendChild(el("p", "opis", "Sekcja 1 formularza F-EnMS-03. Zakres nie zaczyna się od pustej kartki — system wyprowadza konsekwencje z potwierdzonych czynników punktu 4.1 i ze stron zainteresowanych z punktu 4.2. Potwierdź te, które faktycznie wiążą Wam ręce, i dopisz brakujące."));
+  KONSEKWENCJE.forEach(function (k, i) {
+    var d = KON[i] || (KON[i] = {});
+    var kk = el("div", "poz" + (d.decyzja ? (d.decyzja === "odrzucona" ? " odrz" : "") : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, k.zrodlo));
+    g.appendChild(el("span", "chip", k.punkt));
+    kk.appendChild(g);
+    kk.appendChild(el("div", "poznazwa", k.podstawa));
+    var ta = el("textarea"); ta.rows = 2;
+    ta.value = d.tresc !== undefined ? d.tresc : k.konsekwencja;
+    ta.oninput = function () { d.tresc = ta.value; };
+    ta.onchange = function () { zapisz(); };
+    kk.appendChild(pole("Konsekwencja dla zakresu — popraw, jeśli u Was wygląda inaczej", ta));
+    kk.appendChild(pole("Czy ta konsekwencja Was dotyczy?", select(d.decyzja, [["", "Wybierz"],
+    ["potwierdzona", "Tak — uwzględniamy przy ustalaniu zakresu"], ["odrzucona", "Nie dotyczy nas"]],
+      function (v) { d.decyzja = v; })));
+    if (d.decyzja === "odrzucona")
+      kk.appendChild(pole("Dlaczego nie dotyczy — uzasadnienie wymagane",
+        input(d.powod, "", function (v) { d.powod = v; })));
+    s.appendChild(kk);
+  });
+  if (!KONSEKWENCJE.length)
+    s.appendChild(el("div", "note", "Z punktów 4.1 i 4.2 nie wynikają na razie żadne ograniczenia zakresu. Sprawdź, czy oba punkty są zamknięte."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 2: zakres ── */
+function rysujZakres(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zakres — działalność objęta systemem"));
+  s.appendChild(el("p", "opis", "Sekcja 2 formularza. Odpowiada na pytanie CO. Pisz konkretnie: „produkcja komponentów (tłoczenie, montaż, lakierowanie) z procesami pomocniczymi w zakładzie X” zamiast „cała działalność”."));
+  var k = el("div", "poz" + (ZAKRES.opis.trim() ? "" : " brak"));
+  var ta = el("textarea"); ta.rows = 4; ta.value = ZAKRES.opis;
+  ta.placeholder = "Np. produkcja komponentów do samochodów osobowych (tłoczenie, montaż, lakierowanie) wraz z procesami pomocniczymi: utrzymanie ruchu, magazynowanie, transport wewnętrzny i biuro zakładu.";
+  ta.oninput = function () { ZAKRES.opis = ta.value; };
+  ta.onchange = function () { zapisz(); rysuj(); };
+  k.appendChild(pole("Opis zakresu — działania, procesy, jednostki", ta));
+  var d = el("div", "pole");
+  d.appendChild(el("label", null, "Co obejmuje system — zaznacz wszystkie, które wchodzą w zakres"));
+  var box = el("div", "checki");
+  ["produkcja", "utrzymanie ruchu", "magazynowanie", "transport wewnętrzny", "biura", "laboratorium", "stołówka / socjalne"].forEach(function (x) {
+    var lab = el("label", "pill" + (ZAKRES.dzialania.indexOf(x) >= 0 ? " on" : ""));
+    var i = document.createElement("input"); i.type = "checkbox";
+    i.checked = ZAKRES.dzialania.indexOf(x) >= 0;
+    i.onchange = function () {
+      var j = ZAKRES.dzialania.indexOf(x);
+      if (i.checked && j < 0) ZAKRES.dzialania.push(x);
+      if (!i.checked && j >= 0) ZAKRES.dzialania.splice(j, 1);
+      zapisz(); rysuj();
+    };
+    lab.appendChild(i); lab.appendChild(document.createTextNode(x));
+    box.appendChild(lab);
+  });
+  d.appendChild(box); k.appendChild(d);
+  s.appendChild(k);
+  s.appendChild(el("div", "note", "Możesz zacząć od jednej lokalizacji i rozszerzać zakres — jeśli pozwalają na to konsekwencje z zakładki 1."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: granice ── */
+function rysujGranice(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Granice"));
+  s.appendChild(el("p", "opis", "Sekcja 3 formularza. Odpowiada na pytanie GDZIE. Granice fizyczne opisz tak, żeby dało się je pokazać na planie sytuacyjnym: teren w ogrodzeniu, numery hal, wyjątki."));
+  GRANICE.forEach(function (g, i) {
+    var pelna = g.nazwa && g.adres && g.fizyczna;
+    var k = el("div", "poz" + (pelna ? "" : " brak"));
+    var h = el("div", "pozkod");
+    h.appendChild(el("b", null, "Lokalizacja " + (i + 1)));
+    if (GRANICE.length > 1) {
+      var us = el("button", "link", "usuń");
+      us.onclick = function () { GRANICE.splice(i, 1); zapisz(); rysuj(); };
+      h.appendChild(us);
+    }
+    k.appendChild(h);
+    k.appendChild(pole("Lokalizacja / obiekt", input(g.nazwa, "np. Zakład produkcyjny", function (v) { g.nazwa = v; })));
+    k.appendChild(pole("Adres", input(g.adres, "np. Katowice, ul. Przemysłowa 12", function (v) { g.adres = v; })));
+    var ta = el("textarea"); ta.rows = 2; ta.value = g.fizyczna || "";
+    ta.placeholder = "np. Teren w ogrodzeniu: hale A, B, C (produkcja), lakiernia, hala D (magazyn wyrobów gotowych)";
+    ta.oninput = function () { g.fizyczna = ta.value; };
+    ta.onchange = function () { zapisz(); rysuj(); };
+    k.appendChild(pole("Granica fizyczna — budynki, teren", ta));
+    k.appendChild(pole("Jednostki organizacyjne", input(g.jednostki, "np. wszystkie działy zakładu", function (v) { g.jednostki = v; })));
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj lokalizację");
+  dod.onclick = function () { GRANICE.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  host.appendChild(s);
+}
+
+/* ── zakładka 4: uprawnienia ── */
+function rysujUprawnienia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Uprawnienia do sterowania energią"));
+  s.appendChild(el("p", "opis", "Sekcja 4 formularza. Odpowiada na pytanie KTO DECYDUJE. Norma wymaga, żeby organizacja miała uprawnienia do sterowania efektywnością, wykorzystaniem i zużyciem energii w ustalonych granicach."));
+  var podp = el("div", "note");
+  podp.appendChild(el("b", null, "Sprawdź w szczególności cztery sytuacje: "));
+  podp.appendChild(document.createTextNode("obiekt wynajmowany (kto ustawia ogrzewanie i oświetlenie), wspólna instalacja z sąsiednią firmą (kto nią steruje i jak rozliczana jest energia), usługi zlecone (czy możecie stawiać wymagania energetyczne w umowie), ciepło lub sprężone powietrze kupowane od innego podmiotu (gdzie przebiega granica i jak mierzona jest dostawa)."));
+  s.appendChild(podp);
+  UPRAW.forEach(function (u, i) {
+    var pelna = u.obiekt && u.kto && u.podstawa && u.usluga && (u.usluga !== "tak" || (u.nadzor || "").trim());
+    var k = el("div", "poz" + (pelna ? "" : " brak"));
+    var h = el("div", "pozkod");
+    h.appendChild(el("b", null, "Pozycja " + (i + 1)));
+    if (UPRAW.length > 1) {
+      var us = el("button", "link", "usuń");
+      us.onclick = function () { UPRAW.splice(i, 1); zapisz(); rysuj(); };
+      h.appendChild(us);
+    }
+    k.appendChild(h);
+    k.appendChild(pole("Obiekt / instalacja / usługa", input(u.obiekt, "np. Hale, lakiernia, kotłownia, sprężarkownia", function (v) { u.obiekt = v; })));
+    k.appendChild(pole("Kto decyduje o efektywności, wykorzystaniu i zużyciu energii", input(u.kto, "np. Dyrektor Zakładu, Kierownik Utrzymania Ruchu", function (v) { u.kto = v; })));
+    k.appendChild(pole("Podstawa", select(u.podstawa, [["", "Wybierz"], ["wlasnosc", "Własność"], ["najem", "Umowa najmu"],
+    ["umowa", "Umowa serwisowa lub dystrybucyjna"], ["porozumienie", "Porozumienie z właścicielem"], ["leasing", "Leasing"]],
+      function (v) { u.podstawa = v; })));
+    k.appendChild(pole("Czy w tym obszarze brakuje Wam uprawnień?", select(u.brakUprawnien, [["", "Wybierz"],
+    ["nie", "Nie — decydujemy my"], ["tak", "Tak — decyduje ktoś inny"]], function (v) { u.brakUprawnien = v; })));
+    if (u.brakUprawnien === "tak") {
+      var ta = el("textarea"); ta.rows = 2; ta.value = u.dzialanie || "";
+      ta.placeholder = "np. zapis o wymaganiach energetycznych dopisany do umowy serwisowej; porozumienie z właścicielem hali w negocjacji";
+      ta.oninput = function () { u.dzialanie = ta.value; };
+      ta.onchange = function () { zapisz(); rysuj(); };
+      var p = pole("Co robicie, żeby je uzyskać — wymagane", ta,
+        "Brak uprawnień to sygnał, żeby je uzyskać, a nie powód do przesunięcia granicy. Zmiana granic jest ostatecznością i wymaga ponownej oceny względem kontekstu i wymagań stron.");
+      p.className = "pole kandydat";
+      k.appendChild(p);
+    }
+    k.appendChild(pole("Czy to usługa zlecona wykonywana na terenie zakładu?",
+      select(u.usluga, [["", "Wybierz"], ["nie", "Nie"], ["tak", "Tak — firma zewnętrzna pracuje u nas"]],
+        function (v) { u.usluga = v; }),
+      "Samo zlecenie usługi innemu podmiotowi nie wyprowadza jej poza system. Serwis sprężarkowni w Waszym zakładzie pracuje przy działalności objętej systemem; przewoźnik wożący wyroby własnymi pojazdami — nie."));
+    if (u.usluga === "tak") {
+      var tn = el("textarea"); tn.rows = 2; tn.value = u.nadzor || "";
+      tn.placeholder = "np. wymagania energetyczne dopisane do umowy serwisowej; instruktaż przed rozpoczęciem prac; raport z przeglądu sprężarkowni";
+      tn.oninput = function () { u.nadzor = tn.value; };
+      tn.onchange = function () { zapisz(); rysuj(); };
+      var pn = pole("Jaki nadzór jest potrzebny — wymagane (kl. 8.1)", tn);
+      pn.className = "pole kandydat";
+      k.appendChild(pn);
+    }
+    k.appendChild(pole("Uwagi", input(u.uwagi, "", function (v) { u.uwagi = v; })));
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj pozycję");
+  dod.onclick = function () { UPRAW.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: rodzaje energii ── */
+function granicePelne() {
+  return GRANICE.some(function (g) { return g.nazwa && g.adres && g.fizyczna; });
+}
+function rysujEnergie(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Rodzaje energii w granicach systemu"));
+  if (!granicePelne()) {
+    s.appendChild(el("p", "opis", "Sekcja 5 formularza."));
+    var bl = el("div", "warn");
+    bl.appendChild(el("b", null, "Najpierw działalność i granice, potem energia. "));
+    bl.appendChild(document.createTextNode("Rodzaje energii ustala się dla wyznaczonych granic — nie wybiera się ich wcześniej. Uzupełnij zakładkę 3, wtedy ta sekcja się otworzy."));
+    s.appendChild(bl);
+    var b = el("button", "prim", "Przejdź do zakładki 3 — Granice");
+    b.onclick = function () { AKT = "granice"; rysuj(); window.scrollTo(0, 0); };
+    s.appendChild(b);
+    host.appendChild(s); return;
+  }
+  s.appendChild(el("p", "opis", "Sekcja 5 formularza. To jest inwentaryzacja, nie decyzja. Nie wybierasz, czy dany rodzaj energii „jest w zakresie” — ustalasz, czy występuje w wyznaczonych granicach, skąd pochodzi i gdzie jest wykorzystywany."));
+  var w = el("div", "warn");
+  w.appendChild(el("b", null, "Twarda zasada. "));
+  w.appendChild(document.createTextNode("W ustalonych granicach nie wybierasz rodzajów energii — uwzględniasz wszystkie. Mały udział nie jest powodem do wyłączenia, a zły wynik tym bardziej. Zakład z własną kotłownią nie pominie jej paliwa dlatego, że kotłownia wypada źle. Jeśli ciepło kupujesz od odrębnego podmiotu, opisz tę relację i uwzględnij ciepło dostarczane do swojej działalności. Dlatego w tej tabeli nie ma rubryki „w zakresie: tak / nie”."));
+  s.appendChild(w);
+  RODZAJE.forEach(function (r) {
+    var e = ENERGIA[r.kod] || (ENERGIA[r.kod] = {});
+    var pelna = e.status === "nie" || (e.status === "wystepuje" && e.pochodzenie && (e.gdzie || "").trim());
+    var k = el("div", "poz" + (pelna ? "" : " brak"));
+    var h = el("div", "pozkod");
+    h.appendChild(el("b", null, r.kod === "INNE" ? "Inne" : r.nazwa));
+    if (r.wProfilu && r.wProfilu()) h.appendChild(el("span", "chip green", "wynika z profilu zakładu"));
+    k.appendChild(h);
+    if (r.kod === "INNE")
+      k.appendChild(pole("Jaki rodzaj", input(e.nazwa, "np. biomasa, biogaz, sprężone powietrze kupowane", function (v) { e.nazwa = v; })));
+    k.appendChild(pole("Status", select(e.status, [["", "Wybierz"], ["wystepuje", "Występuje w granicach systemu"],
+    ["nie", "Nie występuje"]], function (v) { e.status = v; })));
+    if (e.status === "wystepuje") {
+      k.appendChild(pole("Pochodzenie", select(e.pochodzenie, [["", "Wybierz"], ["zakup", "Zakup"],
+      ["wlasne", "Wytwarzanie własne"], ["oba", "Zakup i wytwarzanie własne"]], function (v) { e.pochodzenie = v; })));
+      var ta = el("textarea"); ta.rows = 2; ta.value = e.gdzie || "";
+      ta.placeholder = "np. Produkcja, sprężarkownia, oświetlenie, wózki elektryczne, biuro — 8 500 MWh/rok";
+      ta.oninput = function () { e.gdzie = ta.value; };
+      ta.onchange = function () { zapisz(); rysuj(); };
+      k.appendChild(pole("Gdzie wykorzystywany", ta));
+      k.appendChild(pole("Źródło danych", input(e.zrodlo, "np. faktury, licznik główny, ewidencja", function (v) { e.zrodlo = v; })));
+    }
+    var ost = ostrzezenia().filter(function (o) { return o.kod === r.kod; });
+    ost.forEach(function (o) { k.appendChild(el("div", "warn", o.t)); });
+    s.appendChild(k);
+  });
+  s.appendChild(el("div", "note", "Transport: jeśli wózki widłowe albo samochody należą do działalności objętej systemem, ich paliwo jest uwzględnione — niezależnie od udziału w zużyciu."));
+  s.appendChild(el("div", "note", "Uwzględnić nie znaczy zarządzać każdym nośnikiem tak samo intensywnie. Nośnik o małym udziale trafia do przeglądu energetycznego, ale jeśli nie jest znaczącym użyciem energii (SEU — obszar, który zużywa dużo energii albo ma duży potencjał poprawy), nie potrzebuje osobnego celu ani wskaźnika."));
+  var fk = el("div", "poz" + (SPRAWDZONE.data ? "" : " brak"));
+  fk.appendChild(el("div", "pozkod")).appendChild(el("b", null, "Sprawdzenie z fakturami"));
+  fk.appendChild(el("div", "poznazwa", "Czy lista nośników została zestawiona z fakturami i ewidencją zakupów?"));
+  fk.appendChild(el("div", "pozmeta", "Zadanie z książki: spisz z faktur wszystkie rodzaje energii, które występują w wybranych granicach — także LPG, olej i paliwa samochodów zakładu."));
+  fk.appendChild(pole("Na jaki dzień sprawdzono", input(SPRAWDZONE.data, "", function (v) { SPRAWDZONE.data = v; }, "date")));
+  fk.appendChild(pole("Czym sprawdzono", input(SPRAWDZONE.czym, "np. faktury 2025, ewidencja zakupu LPG, karty drogowe", function (v) { SPRAWDZONE.czym = v; })));
+  s.appendChild(fk);
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: poza granicami ── */
+function rysujPoza(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Działalność poza granicami"));
+  s.appendChild(el("p", "opis", "Sekcja 6 formularza. Jeśli coś zostaje na zewnątrz, nie wystarczy zapisać „wyłączone, bo mało”. Opisz, gdzie przebiega granica, czy ta działalność należy do organizacji, czy macie uprawnienia do sterowania jej energią i jak energia przepływa przez granicę."));
+  s.appendChild(el("div", "note", "Samo zlecenie usługi innemu podmiotowi nie przesądza o jej pozostawieniu poza systemem. Serwis sprężarkowni w Waszym zakładzie pracuje przy działalności objętej systemem; przewoźnik wożący wyroby własnymi pojazdami — nie."));
+  POZA.forEach(function (p, i) {
+    var pelna = p.co && p.przynaleznosc && p.uprawnienia && p.przeplywy && p.relacja;
+    var k = el("div", "poz" + (pelna ? "" : " brak"));
+    var h = el("div", "pozkod");
+    h.appendChild(el("b", null, "Pozycja " + (i + 1)));
+    if (POZA.length > 1) {
+      var us = el("button", "link", "usuń");
+      us.onclick = function () { POZA.splice(i, 1); zapisz(); rysuj(); };
+      h.appendChild(us);
+    }
+    k.appendChild(h);
+    k.appendChild(pole("Działalność / obiekt", input(p.co, "np. Transport wyrobów do klientów", function (v) { p.co = v; })));
+    k.appendChild(el("div", "pozmeta", "Uzasadnienie opiera się na trzech rzeczach, nie na procencie udziału: przynależności, uprawnieniach i przepływach energii."));
+    [["przynaleznosc", "Przynależność — czy ta działalność należy do organizacji?",
+      "np. przewoźnik to odrębny podmiot; pojazdy i paliwo nie należą do zakładu"],
+     ["uprawnienia", "Uprawnienia — czy macie uprawnienia do sterowania jej energią?",
+      "np. nie decydujemy o doborze pojazdów ani o sposobie ich eksploatacji"],
+     ["przeplywy", "Przepływy energii — jak energia przepływa przez granicę?",
+      "np. energia nie przepływa przez granicę systemu; przy wyborze przewoźnika można uwzględniać kryteria efektywności (8.3)"]
+    ].forEach(function (f) {
+      var t = el("textarea"); t.rows = 2; t.value = p[f[0]] || ""; t.placeholder = f[2];
+      t.oninput = function () { p[f[0]] = t.value; };
+      t.onchange = function () { zapisz(); rysuj(); };
+      k.appendChild(pole(f[1], t));
+    });
+    var t1 = el("textarea"); t1.rows = 1; t1.value = p.dlaczego || "";
+    t1.placeholder = "Opcjonalnie: udział w kosztach albo w zużyciu. To informacja pomocnicza, nie uzasadnienie.";
+    t1.oninput = function () { p.dlaczego = t1.value; };
+    t1.onchange = function () { zapisz(); rysuj(); };
+    k.appendChild(pole("Udział — opcjonalnie", t1));
+    var t2 = el("textarea"); t2.rows = 2; t2.value = p.relacja || "";
+    t2.placeholder = "np. Energia nie przepływa przez granicę systemu. Przy wyborze przewoźnika można uwzględniać kryteria efektywności (8.3)";
+    t2.oninput = function () { p.relacja = t2.value; };
+    t2.onchange = function () { zapisz(); rysuj(); };
+    k.appendChild(pole("Relacja z działalnością objętą systemem — podsumowanie do dokumentu", t2));
+    var ost = ostrzezenia().filter(function (o) { return o.kod === "POZA" + i; });
+    ost.forEach(function (o) { k.appendChild(el("div", "warn", o.t)); });
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj pozycję");
+  dod.onclick = function () { POZA.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  host.appendChild(s);
+}
+
+/* ── zakładka 7: zatwierdzenia ── */
+function braki() {
+  var b = [];
+  KONSEKWENCJE.forEach(function (k, i) {
+    var d = KON[i] || {};
+    if (!d.decyzja) b.push("Konsekwencja „" + k.zrodlo + "” — brak decyzji");
+    else if (d.decyzja === "odrzucona" && !(d.powod || "").trim()) b.push("Konsekwencja „" + k.zrodlo + "” — odrzucona bez uzasadnienia");
+  });
+  if (!ZAKRES.opis.trim()) b.push("Brak opisu zakresu (sekcja 2)");
+  if (!ZAKRES.dzialania.length) b.push("Nie zaznaczono, co obejmuje system (sekcja 2)");
+  GRANICE.forEach(function (g, i) {
+    if (!g.nazwa || !g.adres || !g.fizyczna) b.push("Lokalizacja " + (i + 1) + " — niekompletny opis granicy");
+  });
+  UPRAW.forEach(function (u, i) {
+    if (!u.obiekt || !u.kto || !u.podstawa) b.push("Uprawnienia, pozycja " + (i + 1) + " — niekompletna");
+    else if (!u.brakUprawnien) b.push("Uprawnienia, pozycja " + (i + 1) + " — nie wskazano, czy uprawnienia są");
+    else if (u.brakUprawnien === "tak" && !(u.dzialanie || "").trim()) b.push("Uprawnienia, pozycja " + (i + 1) + " — brak uprawnień bez opisu działań");
+    else if (!u.usluga) b.push("Uprawnienia, pozycja " + (i + 1) + " — nie wskazano, czy to usługa zlecona na terenie zakładu");
+    else if (u.usluga === "tak" && !(u.nadzor || "").trim()) b.push("Uprawnienia, pozycja " + (i + 1) + " — usługa zlecona bez opisu wymaganego nadzoru");
+  });
+  RODZAJE.forEach(function (r) {
+    var e = ENERGIA[r.kod] || {};
+    if (r.kod === "INNE" && !e.status) return;
+    if (!e.status) b.push(r.nazwa + " — nie ustalono statusu");
+    else if (e.status === "wystepuje" && (!e.pochodzenie || !(e.gdzie || "").trim()))
+      b.push(r.nazwa + " — występuje, ale brak pochodzenia albo miejsca wykorzystania");
+  });
+  POZA.forEach(function (p, i) {
+    if (!p.co) return;
+    var brak = [["przynaleznosc", "przynależność"], ["uprawnienia", "uprawnienia"],
+                ["przeplywy", "przepływy energii"], ["relacja", "relacja z systemem"]]
+      .filter(function (f) { return !(p[f[0]] || "").trim(); }).map(function (f) { return f[1]; });
+    if (brak.length) b.push("Poza granicami, pozycja " + (i + 1) + " — brakuje: " + brak.join(", "));
+  });
+  if (!SPRAWDZONE.data) b.push("Nie zapisano, na jaki dzień zestawiono nośniki z fakturami");
+  return b;
+}
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki(), o = ostrzezenia();
+  if (!b.length) s.appendChild(el("div", "ok", "Ankieta kompletna. Można ją przekazać konsultantowi."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia przed przekazaniem (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 14).forEach(function (x) { ul.appendChild(el("li", null, x)); });
+    if (b.length > 14) ul.appendChild(el("li", null, "… i " + (b.length - 14) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+  if (o.length) {
+    var w = el("div", "warn");
+    w.appendChild(el("b", null, "Ostrzeżenia merytoryczne (" + o.length + ") — nie blokują, ale audytor o nie zapyta:"));
+    var ul2 = el("ul");
+    o.forEach(function (x) { ul2.appendChild(el("li", null, x.t)); });
+    w.appendChild(ul2); s.appendChild(w);
+  }
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-ZAK-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja F-EnMS-03", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  var wyst = RODZAJE.filter(function (r) { return (ENERGIA[r.kod] || {}).status === "wystepuje"; }).length;
+  [["1. Konsekwencje z 4.1 i 4.2", KONSEKWENCJE.filter(function (_, i) { return (KON[i] || {}).decyzja === "potwierdzona"; }).length + " potwierdzonych konsekwencji"],
+  ["2. Zakres — działalność objęta systemem", ZAKRES.opis.trim() ? ZAKRES.dzialania.length + " obszarów działalności" : "do uzupełnienia"],
+  ["3. Granice", GRANICE.filter(function (g) { return g.nazwa; }).length + " lokalizacji z opisem granicy fizycznej"],
+  ["4. Uprawnienia do sterowania energią", UPRAW.filter(function (u) { return u.obiekt; }).length + " pozycji z podstawą"],
+  ["5. Rodzaje energii w granicach", wyst + " rodzajów występujących, " + (RODZAJE.length - 1 - wyst) + " niewystępujących"],
+  ["6. Działalność poza granicami", POZA.filter(function (p) { return p.co; }).length + " pozycji z opisem relacji"],
+  ["7. Zatwierdzenie i historia zmian", "Wersja, data, osoba zatwierdzająca, powód zmiany zakresu"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "konsekwencje", t: "1. Konsekwencje z 4.1 i 4.2" }, { id: "zakres", t: "2. Zakres" },
+  { id: "granice", t: "3. Granice" }, { id: "uprawnienia", t: "4. Uprawnienia" },
+  { id: "energia", t: "5. Rodzaje energii" }, { id: "poza", t: "6. Poza granicami" },
+  { id: "zatw", t: "7. Zatwierdzenia" }
+];
+function rysuj() {
+  start();
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  ({ konsekwencje: rysujKonsekwencje, zakres: rysujZakres, granice: rysujGranice, uprawnienia: rysujUprawnienia,
+    energia: rysujEnergie, poza: rysujPoza, zatw: rysujZatwierdzenia })[AKT](host);
+  aktualizujPasek();
+}
+function aktualizujPasek() {
+  var razem = KONSEKWENCJE.length + 2 + GRANICE.length + UPRAW.length + (RODZAJE.length - 1) + POZA.filter(function (p) { return p.co; }).length;
+  var zrob = KONSEKWENCJE.filter(function (_, i) { var d = KON[i] || {}; return d.decyzja && (d.decyzja !== "odrzucona" || (d.powod || "").trim()); }).length
+    + (ZAKRES.opis.trim() ? 1 : 0) + (ZAKRES.dzialania.length ? 1 : 0)
+    + GRANICE.filter(function (g) { return g.nazwa && g.adres && g.fizyczna; }).length
+    + UPRAW.filter(function (u) {
+      return u.obiekt && u.kto && u.podstawa && u.brakUprawnien && u.usluga
+        && (u.brakUprawnien !== "tak" || (u.dzialanie || "").trim())
+        && (u.usluga !== "tak" || (u.nadzor || "").trim());
+    }).length
+    + RODZAJE.filter(function (r) {
+      if (r.kod === "INNE") return false;
+      var e = ENERGIA[r.kod] || {};
+      return e.status === "nie" || (e.status === "wystepuje" && e.pochodzenie && (e.gdzie || "").trim());
+    }).length
+    + POZA.filter(function (p) { return p.co && p.przynaleznosc && p.uprawnienia && p.przeplywy && p.relacja; }).length;
+  var proc = razem ? Math.round(100 * zrob / razem) : 0;
+  document.getElementById("postep").textContent = "Wypełnienie: " + proc + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + proc + "%"; document.getElementById("tor_strona").style.width = proc + "%"; }
+}
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+
+var HISTORIA = [{ data: "02.10.2026 23:40", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 4.3" }];
+function zapisz() { try { localStorage.setItem("enesa_43", JSON.stringify({ KON: KON, ZAKRES: ZAKRES, GRANICE: GRANICE, UPRAW: UPRAW, ENERGIA: ENERGIA, POZA: POZA, SPRAWDZONE: SPRAWDZONE })); } catch (e) { } }
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_43"); if (!s) return;
+    var d = JSON.parse(s);
+    KON = d.KON || {}; ZAKRES = d.ZAKRES || ZAKRES; GRANICE = d.GRANICE || []; UPRAW = d.UPRAW || [];
+    ENERGIA = d.ENERGIA || {}; POZA = d.POZA || []; SPRAWDZONE = d.SPRAWDZONE || SPRAWDZONE;
+    if (GRANICE.length || UPRAW.length) PIERWSZE = false;
+  } catch (e) { }
+}
+/* Przykład wypełnia całą ankietę zakresu — tak samo jak na stronach 4.1 i 5.1–10.2.
+   Konsekwencje adresujemy po „zrodlo”, bo ich zestaw zależy od profilu i numery się przesuwają;
+   konsekwencja bez własnego wpisu zostaje przy brzmieniu wygenerowanym z reguły. */
+function przyklad() {
+  var p = PRZYKLAD_43;
+  PIERWSZE = false;
+  KON = {};
+  KONSEKWENCJE.forEach(function (k, i) {
+    KON[i] = { decyzja: "potwierdzona" };
+    if (p.kon[k.zrodlo]) KON[i].tresc = p.kon[k.zrodlo];
+  });
+  ZAKRES = JSON.parse(JSON.stringify(p.zakres));
+  GRANICE = JSON.parse(JSON.stringify(p.granice));
+  UPRAW = JSON.parse(JSON.stringify(p.upraw));
+  POZA = JSON.parse(JSON.stringify(p.poza));
+  SPRAWDZONE = JSON.parse(JSON.stringify(p.sprawdzone));
+  ENERGIA = {};
+  RODZAJE.forEach(function (r) {
+    ENERGIA[r.kod] = p.energia[r.kod]
+      ? JSON.parse(JSON.stringify(p.energia[r.kod]))
+      : { status: "nie", pochodzenie: "", gdzie: "", zrodlo: "" };
+  });
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić całą ankietę zakresu 4.3?")) return;
+  KON = {}; ZAKRES = { opis: "", dzialania: [] }; GRANICE = []; UPRAW = []; POZA = [];
+  ENERGIA = {}; SPRAWDZONE = { data: "", czym: "" }; PIERWSZE = true;
+  try { localStorage.removeItem("enesa_43"); } catch (e) { }
+  rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "02.10.2026 23:44", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę zakresu 4.3.");
+}
+function zatwierdz() {
+  var b = braki();
+  if (b.length) { AKT = "zatw"; rysuj(); alert("Nie można zatwierdzić — " + b.length + " pozycji do uzupełnienia. Lista w zakładce 7."); return; }
+  HISTORIA.unshift({ data: "02.10.2026 23:44", osoba: "Jan Kowalski", akcja: "Zatwierdzono jako klient" });
+  rysuj(); alert("Ankieta przekazana konsultantowi ENESA.");
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

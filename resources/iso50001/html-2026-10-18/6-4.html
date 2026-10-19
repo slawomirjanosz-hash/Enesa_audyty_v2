@@ -1,0 +1,1392 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 6.4 Wskaźniki EnPI</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 6</div>
+ <h1>6.4 Wskaźniki wyniku energetycznego (EnPI)</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 6.4</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 6.4</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>6.4 Wskaźniki wyniku energetycznego (EnPI)</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 6.4 i sposób doboru wskaźnika.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 6.4<br>Wskaźniki EnPI</div>
+   <div>
+    <h4>6.4 Wskaźniki wyniku energetycznego</h4>
+    <p>Trzy postaci wskaźnika i jak wybrać właściwą. Dlaczego kWh na sztukę nie zawsze jest lepsze
+    od samego zużycia. Jak ocenić model, nie patrząc tylko na R².</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 6.4. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">6.4 — wskaźniki<br>13 slajdów</div>
+   <div>
+    <h4>6.4 Wskaźniki wyniku energetycznego</h4>
+    <p>Wartość bezwzględna, wskaźnik jednostkowy, model. Udział zużycia stałego jako kryterium wyboru.
+    Analogia spalania samochodu. Pułapka wskaźników finansowych.</p>
+    <p style="font-size:12.5px">13 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja określa wskaźniki wyniku energetycznego (EnPI), które są odpowiednie
+ do mierzenia i monitorowania jej wyniku energetycznego i umożliwiają wykazanie jego poprawy. Metodę określania
+ i aktualizowania EnPI utrzymuje się jako udokumentowaną informację. Jeśli dane wskazują, że istotne zmienne
+ znacząco wpływają na wynik energetyczny, organizacja uwzględnia je przy ustalaniu odpowiednich EnPI. Wartości
+ EnPI przegląda się i — stosownie do potrzeb — porównuje z odpowiadającymi im liniami bazowymi (EnB). Wartości
+ EnPI zachowuje się jako udokumentowaną informację. Omówienie na podstawie punktu 6.4 PN-EN ISO 50001:2018;
+ nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> wybierz wskaźniki, które uczciwie
+ pokazują Twój wynik energetyczny — a jeśli produkcja czy pogoda istotnie wpływają na zużycie, uwzględnij
+ je.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 5, punkt 6.4. Karta EnPI i EnB: III-21 (F-EnMS-09),
+ przykład AutoParts: III-22. Ta sama karta obsługuje punkt 6.5.</div>
+
+ <div class="ramka">
+  <h3>◧ „Zużycie energii spadło o 10%!”</h3>
+  <p style="font-size:13.5px">Comiesięczna narada. Kierownik produkcji z uśmiechem ogłasza wynik. Brawa.
+  Kontroler finansowy podnosi rękę: „A produkcja spadła o 15%.” Brawa cichną.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Czy to był dobry miesiąc, czy zły? Nikt na sali nie wie.</b>
+  Samo zużycie mówi, ile energii poszło — ale nie mówi, czy zakład gospodaruje nią lepiej, czy gorzej.
+  Do tego potrzebny jest wskaźnik, który bierze pod uwagę warunki.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Trzy postaci wskaźnika</h3>
+ <p style="font-size:14.5px">Wskaźnik wyniku energetycznego nie musi być skomplikowany. Wybieracie tę postać,
+ która pasuje do tego, co naprawdę wpływa na zużycie.</p>
+ <table class="tab">
+ <tr><th style="width:22%">Postać</th><th>Kiedy pasuje</th><th style="width:30%">Przykłady</th></tr>
+ <tr><td><b>Wartość bezwzględna</b><br><span style="font-size:12.5px">„ile zużyliśmy”</span></td>
+     <td>Gdy nic istotnie nie zmienia zużycia. Oświetlenie hal pracujących na trzy zmiany przez cały rok
+     zużywa mniej więcej tyle samo każdego miesiąca.</td>
+     <td>MWh na miesiąc; przepływ powietrza w czasie postoju [Nm³/min]</td></tr>
+ <tr><td><b>Wskaźnik jednostkowy</b><br><span style="font-size:12.5px">„ile na sztukę, tonę, metr”</span></td>
+     <td>Gdy zużycie rośnie i spada razem z produkcją. Dzielicie jedno przez drugie — proste i zrozumiałe
+     dla każdego.</td>
+     <td>kWh/t wyrobu; kWh/Nm³ sprężonego powietrza; l/100 km</td></tr>
+ <tr><td><b>Model</b><br><span style="font-size:12.5px">„ile powinniśmy byli zużyć”</span></td>
+     <td>Gdy wpływa kilka rzeczy naraz — np. produkcja i pogoda — albo gdy zużycie stałe jest duże.
+     Wskaźnikiem jest stosunek zużycia rzeczywistego do oczekiwanego.</td>
+     <td>Model z produkcją i stopniodniami grzania (HDD); budynek z pogodą</td></tr>
+ </table>
+ <p style="font-size:13.5px">Stopniodni grzania (HDD) to miara tego, jak zimno było w danym okresie — im więcej
+ stopniodni, tym więcej ogrzewania.</p>
+
+ <div class="warn" style="margin:14px 0"><b>„Czy kWh na sztukę nie jest zawsze lepsze niż samo zużycie?”</b><br><br>
+ Nie zawsze. Wyobraźcie sobie zakład, w którym połowa energii idzie na rzeczy niezależne od produkcji:
+ oświetlenie, wentylację, ogrzewanie, czuwanie maszyn. Produkcja spada o 20%. Zużycie spada tylko o 10%,
+ bo „stała” połowa się nie zmienia. <b>kWh na sztukę rośnie o ponad 12% — choć nikt niczego nie zepsuł.</b><br><br>
+ I odwrotnie: samo zużycie wprowadza w błąd, gdy produkcja mocno się waha — jak na naradzie z początku
+ tego punktu.</div>
+
+ <div class="ramka">
+  <h3>◧ Analogia: spalanie samochodu</h3>
+  <p style="font-size:13.5px">„W tym miesiącu zatankowałem 200 litrów” to zużycie — nie wiecie, czy jechaliście
+  2 000 km, czy 4 000. „8 litrów na 100 km” mówi więcej. Ale zimą, z przyczepą i w korkach spalanie rośnie,
+  choć kierowca jeździ tak samo.</p>
+  <p style="font-size:13.5px;margin-bottom:0">W zakładzie „przyczepą” i „zimą” są produkcja i pogoda. Trwała
+  zmiana asortymentu to raczej przesiadka do innego auta — o tym jest punkt 6.5.
+  <b>Dobry wskaźnik uwzględnia te warunki, które naprawdę wpływają na zużycie — i tylko te.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Jak to wygląda w praktyce</h3>
+ <p style="font-size:14.5px">AutoParts Polska ma około 40% zużycia stałego — niezależnego ani od produkcji,
+ ani od pogody: oświetlenie, wentylacja, biuro, czuwanie maszyn. Dlatego dla całego zakładu wybrała model,
+ a nie kWh na tonę.</p>
+ <table class="tab">
+ <tr><th style="width:18%">Ogniwo</th><th>Treść</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Przy wyniku z 2025 roku zakład zużyłby przy 2 200 t stali i 500 stopniodniach 1 152 MWh. Zużył 1 082 MWh.</td></tr>
+ <tr><td><b>Wynik</b></td><td>EnPI = 1 082 / 1 152 = 0,939 — zakład zużył o 6,1% mniej, niż wynikałoby z warunków. Wartość poniżej 1,000 oznacza poprawę.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Na podstawie prognozy z przeglądu energetycznego zarząd zatwierdza cel Z3.1: EnPI za cały rok 2027 nie wyższy niż 0,95. Jeden dobry miesiąc to jeszcze nie wynik roku.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Energy Manager liczy wskaźnik co miesiąc i pokazuje trend na odprawie kierownictwa.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Za I półrocze 2026 r. wskaźnik wyniósł 0,97 — kierunek dobry, do celu brakuje dwóch setnych.</td></tr>
+ </table>
+ <p style="font-size:13.5px">Dla sprężarkowni ten sam zakład używa prostego wskaźnika kWh/Nm³ — bo tam zużycie
+ stałe jest niewielkie. <b>Każde znaczące użycie energii może mieć inną postać wskaźnika. Liczy się dopasowanie,
+ nie jednolitość.</b></p>
+
+ <h3 style="margin-top:22px">Po czym poznać dobry wskaźnik</h3>
+ <table class="tab">
+ <tr><th style="width:34%">Cecha</th><th>Co to znaczy w praktyce</th></tr>
+ <tr><td>Uczciwie pokazuje wynik</td><td>Uwzględnia zmienne, jeśli istotnie wpływają na zużycie.</td></tr>
+ <tr><td>Da się go policzyć</td><td>Macie dane — i są zaplanowane w punkcie 6.6.</td></tr>
+ <tr><td>Macie na niego wpływ</td><td>Możecie go poprawić swoimi działaniami.</td></tr>
+ <tr><td>Ludzie go rozumieją</td><td>Operator wie, co znaczy, gdy rośnie.</td></tr>
+ <tr><td>Liczycie go zawsze tak samo</td><td>Metoda jest zapisana — tego wymaga norma. Zapisujecie też kolejne wartości.</td></tr>
+ <tr><td>Wiecie, kiedy go przejrzeć</td><td>Np. przy aktualizacji przeglądu energetycznego sprawdzacie, czy nadal pasuje.</td></tr>
+ </table>
+
+ <div class="note" style="margin:14px 0"><b>Jeśli budujecie model, nie oceniajcie go tylko po R².</b> R² mówi,
+ jaką część zmienności zużycia model wyjaśnia — ale wysoki R² nie dowodzi, że model jest dobry. Zapytajcie też:
+ czy zmienne mają techniczny sens? czy dane obejmują typowe warunki? czy nie ma dziwnych miesięcy, które
+ wszystko psują? Progi R² z poradników to wskazówki, nie wymagania normy.</div>
+
+ <div class="warn" style="margin:14px 0"><b>Uwaga na wskaźniki finansowe</b>, np. GJ na milion złotych przychodu.
+ Zarząd je lubi, ale przychód rośnie także wtedy, gdy drożeją wyroby — bez żadnej poprawy energetycznej.
+ AutoParts pokazuje taki wskaźnik zarządowi, ale <b>nie używa go jako EnPI</b>.</div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:40%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>kWh na sztukę przy dużym zużyciu stałym</td><td>Sprawdźcie, ile zużycia nie zależy od produkcji; rozważcie model</td></tr>
+ <tr><td>Samo zużycie przy zmiennej produkcji</td><td>Uwzględnijcie produkcję we wskaźniku</td></tr>
+ <tr><td>Model oceniony tylko po R²</td><td>Sprawdźcie sens zmiennych, zakres danych, błędy, wartości odstające</td></tr>
+ <tr><td>Brak zapisanej metody</td><td>Zapiszcie wzór, dane, częstotliwość i odpowiedzialnego</td></tr>
+ <tr><td>Jeden wskaźnik dla wszystkiego</td><td>Dobierzcie postać osobno dla organizacji i dla każdego znaczącego użycia energii</td></tr>
+ </table>
+ <p style="font-size:13.5px">★ <b>Rada:</b> na początek wystarczy jeden wskaźnik dla całej organizacji
+ i po jednym dla każdego znaczącego użycia energii.</p>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Dobry EnPI nie musi być skomplikowany — musi uczciwie pokazywać
+  wynik energetyczny w warunkach, w jakich naprawdę pracujecie.<br><br>
+  <b>Zadanie:</b> oszacujcie, jaka część zużycia Waszego zakładu nie zależy od produkcji. Jeśli to więcej
+  niż kilkanaście procent, sprawdźcie, czy wskaźnik jednostkowy nie wprowadza Was w błąd. Tę liczbę wpisuje
+  się w zakładce 4 ankiety — platforma od razu ostrzeże przy wskaźnikach, które mogą mylić.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Karta F-EnMS-09 jest wspólna z punktem 6.5 — to, co wpiszecie tutaj, zobaczycie tam.
+  Platforma ostrzega przy wskaźniku jednostkowym mimo dużego zużycia stałego, przy modelu ocenionym samym R²
+  i przy wskaźniku finansowym.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 6.4 w formacie stron 4.1–6.3.</b> Pierwszy punkt, w którym <b>jeden rekord obsługuje
+dwa punkty normy</b>: karta F-EnMS-09 ma stronę wskaźnika (6.4) i stronę linii bazowej (6.5). W makiecie oba
+pliki czytają i zapisują ten sam magazyn <code>enesa_karty_enpi</code>; na platformie to jedna tabela.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 5, punkt 6.4</td><td>Scena narady („zużycie spadło o 10%, produkcja o 15%”), trzy postaci wskaźnika, akapit o zużyciu stałym i mylącym wskaźniku jednostkowym, analogia spalania samochodu, przykład AutoParts w czterech ogniwach, sześć cech dobrego wskaźnika, uwaga o R², ostrzeżenie o wskaźnikach finansowych, tabela pięciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 4 — III-21 (F-EnMS-09)</td><td>Wszystkie pola karty: nr i nazwa, obszar i zakres, postać z uzasadnieniem, wzór i jednostka, zmienne istotne z uzasadnieniem technicznym, czynniki statyczne w okresie bazowym, źródła danych jako pozycje planu F-EnMS-11, ocena modelu, częstotliwość i odpowiedzialny, przegląd metody. Plus zestawienie EnPI (rejestr) jako zakładka 1.</td></tr>
+<tr><td>Część III, Moduł 4 — III-22</td><td>Przykład AutoParts: 7 wskaźników w trzech postaciach, pełna karta O-1 z modelem i oceną, karta S-1 ze skróconym okresem bazowym, wskaźnik zarządczy 114,8 GJ/mln zł oznaczony jako nie-EnPI, 15 zapisanych wartości.</td></tr>
+<tr><td>Część III, Moduł 4 — III-25</td><td>Lista kontrolna sekcji 6.4: 6 pozycji z kolumną N / M.</td></tr>
+<tr><td>Część III, Moduł 4 — III-26, pkt 4.2</td><td>Kroki 8–12 procedury P-EnMS-04 jako treść zakładki „Metoda EnPI”.</td></tr>
+</table>
+
+<h2>Model danych — wspólna karta</h2>
+<table>
+<tr><th style="width:24%">Tabela / grupa pól</th><th>Zawartość</th></tr>
+<tr><td><code>karta_enpi</code> — część 6.4</td><td>id, audyt_id, nr, nazwa, obszar ENUM('organizacja','seu','inny'), obszar_nazwa, seu_id → SEU z przeglądu 6.3, postac ENUM('bezwzgledny','jednostkowy','model'), uzasadnienie_postaci, wzor, zmienne, statyczne, zrodla, ocena_modelu, czestotliwosc, odpowiedzialny, przeglad_metody.</td></tr>
+<tr><td><code>karta_enpi</code> — część 6.5</td><td>okres_bazowy, uzasadnienie_okresu, wartosc_enb, model_bazowy, normalizacja, warunki_porownania, rewizja_a, rewizja_b, rewizja_c, nie_rewizja.</td></tr>
+<tr><td><code>wartosc_enpi</code></td><td>id, karta_id → karta_enpi, okres, wartosc DECIMAL, adnotacja TEXT. To jest „zachowana udokumentowana informacja” wymagana przez 6.4.</td></tr>
+<tr><td><code>rewizja_enb</code></td><td>id, karta_id, data, powod ENUM('a','b','c'), stara_enb, nowa_enb, poprawa_do_dnia. Obsługiwane na stronie 6.5.</td></tr>
+<tr><td><code>metoda_enpi</code></td><td>audyt_id, 6 pól tekstowych — jedna na audyt, nie na kartę. To „metoda określania i aktualizowania EnPI”, którą norma każe utrzymywać.</td></tr>
+<tr><td><code>udzial_stalego</code></td><td>Pole liczbowe w metryce audytu. Steruje ostrzeżeniem przy wskaźniku jednostkowym dla organizacji.</td></tr>
+</table>
+<div class="warn"><b>Decyzja projektowa.</b> Strony 6.4 i 6.5 są osobne (tak jak punkty normy i tak jak rozdziały
+książki), ale <b>karta jest jedna</b>. Rozdzielenie kart na dwie tabele skończyłoby się tym, co widzieliśmy
+w 4.1: dwa opisy tego samego i rozjazd między nimi. Rejestr w zakładce 1 pokazuje chipy „6.4 OK” i „6.5 OK”,
+żeby było widać, która strona karty jest jeszcze pusta.</div>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td>Postać jednostkowa dla obszaru „organizacja” przy udziale zużycia stałego powyżej 15%</td><td>Ostrzeżenie z podaniem wpisanego udziału i wyjaśnieniem mechanizmu (produkcja spada o 20%, zużycie o 10%, wskaźnik rośnie o 12%). Nie blokuje — bywa świadomą decyzją. Próg 15% jest metodyką ENESA; norma mówi tylko „gdy zmienne znacząco wpływają”.</td></tr>
+<tr><td>Postać „model” bez oceny modelu</td><td>Ostrzeżenie. Pole „ocena modelu” jest pokazywane tylko przy tej postaci.</td></tr>
+<tr><td>Ocena modelu wspomina R², ale nic poza tym</td><td>Wzorzec: <code>/r²|r2/i</code> obecne i <code>/(zakres|miesi|odstaj|błąd|rmse|cv|sens|uzasadni|reszt)/i</code> nieobecne → ostrzeżenie z trzema pytaniami z książki.</td></tr>
+<tr><td>Nazwa albo wzór zawiera ślad wskaźnika finansowego</td><td>Wzorzec <code>/(przych|mln\s*zł|obrot|zł\b|pln\b|euro)/i</code> → ostrzeżenie, że taki wskaźnik można pokazywać zarządowi, ale nie powinien służyć do wykazania poprawy. Pozycja trafia do braków konsultanta, nie klienta.</td></tr>
+<tr><td>Postać bezwzględna, a wpisano istotne zmienne</td><td>Nota: albo zmienne są istotne i trzeba je uwzględnić (jednostkowy lub model), albo nie są i nie powinny tam stać.</td></tr>
+<tr><td>Brak wskaźnika dla całej organizacji</td><td>Ostrzeżenie w rejestrze i pozycja w braki().</td></tr>
+<tr><td>Karta bez ani jednej zapisanej wartości</td><td>Pozycja w braki() — norma wymaga zachowywania wartości EnPI.</td></tr>
+<tr><td>Karta bez EnB</td><td>Pozycja w braki() z odesłaniem do punktu 6.5. Przy wartości wskaźnika chip „brak EnB — uzupełnić w 6.5” zamiast odchylenia.</td></tr>
+<tr><td>Wartość odbiega od EnB o więcej niż 25%, a adnotacja jest pusta</td><td>Ostrzeżenie, które najpierw każe sprawdzić <b>porównywalność okresów</b>. To realna pułapka: półroczne 339 MWh zestawione z roczną EnB 680 MWh daje „poprawę 50%”, której nie było. W przykładzie AutoParts wartość OŚ-1 jest dlatego podana w przeliczeniu rocznym, z adnotacją.</td></tr>
+<tr><td>Powyżej 12 wskaźników</td><td>Ostrzeżenie w analizie konsultanta: „za dużo wskaźników to chaos”.</td></tr>
+<tr><td>Wszystkie wskaźniki tej samej postaci przy więcej niż jednym wskaźniku</td><td>Nota w analizie konsultanta — liczy się dopasowanie, nie jednolitość.</td></tr>
+</table>
+
+<h2>Co platforma liczy sama</h2>
+<table>
+<tr><th style="width:26%">Wielkość</th><th>Sposób</th></tr>
+<tr><td>Odchylenie od EnB</td><td>(wartość − EnB) ÷ EnB × 100%, przy każdej zapisanej wartości. Chip zielony przy spadku, czerwony przy wzroście — z zastrzeżeniem, że dla wskaźników typu „rzeczywiste / oczekiwane” kierunek interpretuje się tak samo, a dla wskaźników rosnących (np. sprawność) trzeba to odwrócić. <b>Do rozstrzygnięcia:</b> dodać do karty pole „kierunek poprawy (spadek / wzrost)”.</td></tr>
+<tr><td>Stan karty</td><td>Dwa niezależne chipy: część 6.4 (postać, uzasadnienie, wzór, zmienne, źródła, częstotliwość, osoba, ocena modelu gdy dotyczy) i część 6.5 (okres bazowy z uzasadnieniem, wartość EnB, normalizacja, warunki porównania, rewizje a–c).</td></tr>
+<tr><td>Pasek wypełnienia</td><td>Kompletne karty 6.4 + karty z zapisaną wartością + wypełnione pola metody + zatwierdzenie.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-25 — sekcja 6.4</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>EnPI są odpowiednie do mierzenia i monitorowania wyniku energetycznego i umożliwiają wykazanie jego poprawy.</td><td class='mono'>N</td><td><code>odpowiednie</code></td></tr><tr><td>Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, uwzględniono je przy ustalaniu EnPI.</td><td class='mono'>N</td><td><code>zmienne</code></td></tr><tr><td>Postać EnPI (bezwzględna / jednostkowa / model) ma uzasadnienie.</td><td class='mono'>M</td><td><code>postac</code></td></tr><tr><td>Model oceniono nie tylko po R² — z uzasadnieniem zmiennych, zakresem danych, błędem i wartościami odstającymi.</td><td class='mono'>M</td><td><code>modelocena</code></td></tr><tr><td>Metoda określania i aktualizowania EnPI jest utrzymywana jako udokumentowana informacja.</td><td class='mono'>N</td><td><code>metoda</code></td></tr><tr><td>Wartości EnPI są zachowane jako udokumentowana informacja i porównywane z odpowiadającymi im liniami bazowymi.</td><td class='mono'>N</td><td><code>wartosci</code></td></tr></table>
+<div class="note">Pozycja „model oceniony nie tylko po R²” zwraca <code>null</code> („nie dotyczy”), gdy żaden
+wskaźnik nie ma postaci modelu — lista nie powinna pokazywać braku tam, gdzie wymaganie nie ma zastosowania.
+Ten sam mechanizm przyda się w kolejnych listach kontrolnych.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Zawiera ocenę doboru wskaźników — w tym zdania, których klient nie powinien zobaczyć przed rozmową („wskaźnik finansowy do wyperswadowania”).</td></tr>
+<tr><td>Wnioski — cztery ogniwa</td><td>znaczenie → decyzja → działanie → sprawdzenie.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-WSK-01</code> — karty EnPI i metoda ich określania</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-09, załącznik III-21 (część dotycząca 6.4)</td></tr>
+<tr><td>Status w normie</td><td><b>Dwa wymagania naraz:</b> metoda określania i aktualizowania EnPI jest <b>utrzymywana</b>, a wartości wskaźników są <b>zachowywane</b>. Pierwsze ma wersje, drugie rośnie w czasie i nie jest nadpisywane.</td></tr>
+<tr><td>Relacja do D-EnMS-BAZ-01 (6.5)</td><td>Ta sama karta, inna część. Platforma generuje <b>dwa dokumenty z jednego rekordu</b> albo jeden dokument wspólny — do decyzji przy wdrożeniu. Proponuję dwa, bo audytor sprawdza 6.4 i 6.5 jako osobne punkty.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Lista SEU (pole <code>seu_id</code>), istotne zmienne, czynniki statyczne i bieżący wynik energetyczny każdego SEU. Brak karty dla któregoś SEU to sygnał, że 6.4 jest niekompletne.</td></tr>
+<tr><td>6.2 Cele i zadania</td><td><b>Wyjście.</b> Zadanie energetyczne wskazuje kartę EnPI. Po wdrożeniu tej strony pole tekstowe <code>enpi</code> w 6.2 należy zamienić na wybór z rejestru.</td></tr>
+<tr><td>6.5 Linia bazowa</td><td><b>Ta sama karta.</b> Bez EnB wskaźnika nie da się z czym porównać; bez wskaźnika EnB nie ma czego opisywać.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Dwukierunkowo.</b> Pole „źródła danych” wskazuje pozycje planu. Po zbudowaniu 6.6 zamienić na wybór pozycji.</td></tr>
+<tr><td>9.1 Monitorowanie</td><td><b>Wyjście.</b> Obliczanie wartości i porównanie z EnB wykonuje się w rytmie 9.1; odchylenia uruchamiają reakcję.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Wyjście.</b> Wartości EnPI i ich trend są obowiązkowym wejściem do przeglądu.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td>Kierunek poprawy wskaźnika</td><td>Dodać do karty pole „poprawa to spadek / wzrost wartości”. Bez niego chipy przy wartościach zakładają, że poprawa to spadek — prawda dla wszystkich wskaźników AutoParts, ale nie dla wskaźnika sprawności czy stopnia wykorzystania.</td></tr>
+<tr><td>Obliczanie wskaźnika przez platformę</td><td>Przy postaci jednostkowej platforma mogłaby liczyć wartość sama z dwóch pozycji planu danych. Przy modelu — przechowywać współczynniki i liczyć E_ocz. Na razie wartość jest wpisywana ręcznie; to świadoma decyzja na etapie makiety, ale docelowo warto to policzyć, bo ręczne wpisywanie jest źródłem błędów.</td></tr>
+<tr><td>Powiązanie karty z SEU</td><td>Pole <code>obszar_nazwa</code> jest dziś tekstem. Po wdrożeniu 6.3 zamienić na <code>seu_id</code> i wyliczać listę SEU bez karty.</td></tr>
+<tr><td>Wskaźnik zarządczy</td><td>AutoParts pokazuje 114,8 GJ/mln zł zarządowi, ale to nie EnPI. Proponuję osobny typ rekordu <code>wskaznik_zarzadczy</code> — żeby można było go trzymać w systemie bez mieszania z EnPI i bez zaniżania statystyk kompletności.</td></tr>
+<tr><td>Przychód 380 mln zł</td><td>Nadal niepotwierdzony — od niego zależy wartość 114,8 GJ/mln zł w III-22. Do potwierdzenia przed publikacją Toolkitu.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 6.4 wraz z przykładem AutoParts. Karty zawierają także pola punktu 6.5.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_64&quot;: [
+  {
+   &quot;tekst&quot;: &quot;EnPI są odpowiednie do mierzenia i monitorowania wyniku energetycznego i umożliwiają wykazanie jego poprawy.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;odpowiednie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, uwzględniono je przy ustalaniu EnPI.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zmienne&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Postać EnPI (bezwzględna / jednostkowa / model) ma uzasadnienie.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;postac&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Model oceniono nie tylko po R² — z uzasadnieniem zmiennych, zakresem danych, błędem i wartościami odstającymi.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;modelocena&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Metoda określania i aktualizowania EnPI jest utrzymywana jako udokumentowana informacja.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;metoda&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Wartości EnPI są zachowane jako udokumentowana informacja i porównywane z odpowiadającymi im liniami bazowymi.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wartosci&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;KARTY&quot;: [
+   {
+    &quot;nr&quot;: &quot;O-1&quot;,
+    &quot;nazwa&quot;: &quot;Zużycie rzeczywiste / zużycie oczekiwane według modelu bazowego&quot;,
+    &quot;obszar&quot;: &quot;organizacja&quot;,
+    &quot;obszarNazwa&quot;: &quot;Cała organizacja, wszystkie rodzaje energii (MWh)&quot;,
+    &quot;postac&quot;: &quot;model&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Model — na zużycie wpływa kilka zmiennych naraz, a zużycie stałe jest duże: oświetlenie, wentylacja, biuro i czuwanie maszyn to około 40% całości. Wskaźnik kWh/t rósłby przy spadku produkcji, choć nikt niczego nie zepsuł.&quot;,
+    &quot;wzor&quot;: &quot;E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]&quot;,
+    &quot;zmienne&quot;: &quot;Masa przetworzonej stali [t] — napędza prasy, lakiernię i zużycie sprężonego powietrza. Stopniodni grzania HDD (baza 18 °C) — ogrzewanie hal i nagrzewnice lakierni.&quot;,
+    &quot;statyczne&quot;: &quot;3 zmiany, 3 linie pras, hale A–D, asortyment — stan na 2025 r.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 1–3, 11, 13 planu zbierania danych F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;12 miesięcy 2025 r. (zakres danych: 1 750–2 150 t/mies., 0–650 HDD/mies.); R² = 0,86; CV(RMSE) 2,8%. Obie zmienne mają sens techniczny. Sierpień (postój 2 tygodnie) sprawdzony jako wartość odstająca i pozostawiony — reszta mieści się w ±2 błędach standardowych.&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie, do 10 dnia następnego miesiąca&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;przegladMetody&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca)&quot;,
+    &quot;okresBazowy&quot;: &quot;2025&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Pierwszy pełny rok z danymi produkcyjnymi i pogodowymi, bez dużych przestojów. Dwanaście miesięcy obejmuje pełny cykl pór roku.&quot;,
+    &quot;wartoscEnB&quot;: &quot;1,000&quot;,
+    &quot;modelBazowy&quot;: &quot;E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; w 2025 r. 12 120 MWh&quot;,
+    &quot;normalizacja&quot;: &quot;Zużycie oczekiwane liczone z modelu bazowego dla faktycznej produkcji i faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Model bazowy pozostaje bez zmian — normalizacja koryguje porównanie, nie linię bazową.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Miesiące pełnej pracy. Miesiąc z postojem dłuższym niż 10 dni roboczych porównywany z adnotacją, bo model był dopasowany do normalnego trybu pracy.&quot;,
+    &quot;rewizjaA&quot;: &quot;Zmiana asortymentu zmieniająca energochłonność wyrobu — wtedy wskaźnik przestaje pokazywać wynik gospodarowania energią.&quot;,
+    &quot;rewizjaB&quot;: &quot;Nowa linia produkcyjna, zmiana liczby zmian, zmiana powierzchni ogrzewanej, zmiana zakresu systemu, sprzedaż części zakładu.&quot;,
+    &quot;rewizjaC&quot;: &quot;Po 24 miesiącach danych — ponowne dopasowanie modelu bez zmiany okresu bazowego.&quot;,
+    &quot;nieRewizja&quot;: &quot;Sama poprawa wyniku energetycznego. Zmiana EnB po modernizacji wymazałaby z historii osiągniętą poprawę.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Produkcja 24 000 t stali (1 750–2 150 t/mies.); stopniodni 3 600 HDD, baza 18 °C (0–650/mies.); zużycie całkowite 12 120 MWh; 250 dni roboczych na 3 zmiany.&quot;,
+    &quot;przykladObliczenia&quot;: &quot;Miesiąc z 2 200 t i 500 HDD: E_ocz = 0,23·2 200 + 0,48·500 + 406 = 1 152 MWh. E_rzecz = 1 082 MWh. EnPI = 1 082 / 1 152 = 0,939 → poprawa 70 MWh, czyli 6,1%.&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;P-1&quot;,
+    &quot;nazwa&quot;: &quot;Energia jednostkowa pras — kWh na tonę przetworzonej stali&quot;,
+    &quot;obszar&quot;: &quot;seu&quot;,
+    &quot;obszarNazwa&quot;: &quot;Prasy — trzy linie, 24,5% zużycia zakładu&quot;,
+    &quot;postac&quot;: &quot;jednostkowy&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Wskaźnik jednostkowy — zużycie pras rośnie i spada razem z masą przetworzonej stali, a zużycie niezależne od produkcji (czuwanie, hydraulika w gotowości) to kilka procent zużycia obszaru.&quot;,
+    &quot;wzor&quot;: &quot;P-1 = energia pras [kWh] / masa przetworzonej stali [t]&quot;,
+    &quot;zmienne&quot;: &quot;Masa przetworzonej stali [t] — bezpośrednio określa liczbę i czas cykli prasowania.&quot;,
+    &quot;statyczne&quot;: &quot;3 linie pras, 3 zmiany, asortyment — stan na 2025 r.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 11 (masa stali) i poz. 12 (energia pras) planu F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;&quot;,
+    &quot;czestotliwosc&quot;: &quot;Kwartalnie — zgodnie z rytmem pomiarów analizatorem&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu; liczy Energy Manager&quot;,
+    &quot;przegladMetody&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego oraz po uruchomieniu podlicznika pras&quot;,
+    &quot;okresBazowy&quot;: &quot;2025&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Rok spójny z linią bazową organizacji; energia pras wyznaczona z pomiarów okresowych i obliczeń, bez podlicznika.&quot;,
+    &quot;wartoscEnB&quot;: &quot;124,0&quot;,
+    &quot;modelBazowy&quot;: &quot;124,0 kWh/t (2 970 MWh / 24 000 t, 2025 r.)&quot;,
+    &quot;normalizacja&quot;: &quot;Wskaźnik jest ilorazem energii i masy, więc normalizuje się względem produkcji. Dodatkowej korekty nie stosuje się — zużycie niezależne od produkcji w tym obszarze jest niewielkie.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Ten sam asortyment i ta sama liczba pracujących linii. Kwartał z wyłączoną linią porównywany z adnotacją.&quot;,
+    &quot;rewizjaA&quot;: &quot;Trwała zmiana asortymentu (inna grubość blachy, inny wyrób) — zmienia energochłonność tony.&quot;,
+    &quot;rewizjaB&quot;: &quot;Dodanie lub likwidacja linii pras, zmiana liczby zmian.&quot;,
+    &quot;rewizjaC&quot;: &quot;Po 12 miesiącach danych z podlicznika pras — przeliczenie EnB na danych pomiarowych zamiast obliczeniowych.&quot;,
+    &quot;nieRewizja&quot;: &quot;Poprawa kWh/t po zmianie parametrów pracy.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Masa przetworzonej stali 24 000 t (2025); energia pras 2 970 MWh, czyli 24,5% zużycia zakładu.&quot;,
+    &quot;przykladObliczenia&quot;: &quot;I półrocze 2026: 1 465 MWh / 12 000 t = 122,1 kWh/t wobec EnB 124,0 kWh/t → poprawa 1,5%. Ten sam asortyment, trzy linie czynne.&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;L-1&quot;,
+    &quot;nazwa&quot;: &quot;Zużycie rzeczywiste / oczekiwane — lakiernia&quot;,
+    &quot;obszar&quot;: &quot;seu&quot;,
+    &quot;obszarNazwa&quot;: &quot;Lakiernia — piec gazowy i dwie kabiny, 20,0% zużycia zakładu&quot;,
+    &quot;postac&quot;: &quot;model&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Model — na zużycie wpływa lakierowana powierzchnia i pogoda (nagrzewnice), a piec utrzymuje temperaturę także między zleceniami, więc zużycie stałe jest znaczne.&quot;,
+    &quot;wzor&quot;: &quot;E_ocz = a·m² + b·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]. Wskaźnik pomocniczy: 8,08 kWh/m² (2 425 MWh / 300 000 m², 2025 r.)&quot;,
+    &quot;zmienne&quot;: &quot;Lakierowana powierzchnia [m²] — określa liczbę cykli pieca. Stopniodni HDD — nagrzewnice i podgrzewanie powietrza kabin.&quot;,
+    &quot;statyczne&quot;: &quot;Jeden piec gazowy, dwie kabiny, technologia lakierowania — stan na 2025 r.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 8 (gaz pieca), poz. 9 (lakierowana powierzchnia), poz. 13 (HDD) planu F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;12 miesięcy 2025 r. (18 000–29 000 m²/mies.); R² = 0,81; CV(RMSE) 4,1%. Zmienne mają sens techniczny. Dwa miesiące z przestojem kabiny sprawdzone i opisane — pozostawione, reszty w granicach ±2 błędów standardowych. Model do przeliczenia po 12 miesiącach danych z podlicznika gazu.&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Technolog lakierni; liczy Energy Manager&quot;,
+    &quot;przegladMetody&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego&quot;,
+    &quot;okresBazowy&quot;: &quot;2025&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Rok spójny z linią bazową organizacji; obejmuje pełny cykl pogodowy, który dla lakierni jest istotny.&quot;,
+    &quot;wartoscEnB&quot;: &quot;1,000&quot;,
+    &quot;modelBazowy&quot;: &quot;Model jak wyżej; w 2025 r. 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh)&quot;,
+    &quot;normalizacja&quot;: &quot;Zużycie oczekiwane z modelu bazowego dla faktycznej powierzchni i stopniodni; EnPI = E_rzecz / E_ocz.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Obie kabiny czynne. Miesiąc z wyłączoną kabiną porównywany z adnotacją.&quot;,
+    &quot;rewizjaA&quot;: &quot;Zmiana technologii lakierowania albo rodzaju lakieru zmieniająca profil temperatur pieca.&quot;,
+    &quot;rewizjaB&quot;: &quot;Dodanie kabiny, wymiana pieca, zmiana powierzchni lakierni.&quot;,
+    &quot;rewizjaC&quot;: &quot;Po 12 miesiącach danych z podlicznika gazu pieca (07.2027) — przeliczenie modelu na danych pomiarowych.&quot;,
+    &quot;nieRewizja&quot;: &quot;Poprawa wskaźnika po regulacji harmonogramu pieca.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Lakierowana powierzchnia 300 000 m² (18 000–29 000 m²/mies.); stopniodni 3 600 HDD; zużycie lakierni 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh).&quot;,
+    &quot;przykladObliczenia&quot;: &quot;Miesiąc z 25 000 m² i 420 HDD: E_ocz z modelu bazowego 215 MWh; E_rzecz 211 MWh; EnPI = 0,98 → poprawa 4 MWh, czyli 2,0%.&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;S-1&quot;,
+    &quot;nazwa&quot;: &quot;Energia jednostkowa sprężarkowni — kWh na Nm³ sprężonego powietrza&quot;,
+    &quot;obszar&quot;: &quot;seu&quot;,
+    &quot;obszarNazwa&quot;: &quot;Sprężarkownia — cztery sprężarki śrubowe, kolektor główny, 17,5% zużycia zakładu&quot;,
+    &quot;postac&quot;: &quot;jednostkowy&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Wskaźnik jednostkowy kWh/Nm³ — zużycie zależy od objętości wytworzonego powietrza, a zużycie stałe w tym obszarze jest niewielkie.&quot;,
+    &quot;wzor&quot;: &quot;S-1 = energia sprężarkowni [kWh] / objętość sprężonego powietrza [Nm³]&quot;,
+    &quot;zmienne&quot;: &quot;Objętość wytworzonego powietrza [Nm³] — bezpośrednio określa pracę sprężarek. Temperatura powietrza zasysanego — wpływ drugorzędny, odnotowywany przy porównaniu.&quot;,
+    &quot;statyczne&quot;: &quot;Cztery sprężarki śrubowe pracujące w układzie włącz–wyłącz, układ sieci, ciśnienie nastawy — stan w okresie bazowym: 7,0 bar.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 4 (energia sprężarkowni), poz. 5 (wolumen powietrza), poz. 6 (ciśnienie sieci) planu F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie (od 06.2026 dane 15-minutowe z podlicznika i przepływomierza)&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu; liczy Energy Manager&quot;,
+    &quot;przegladMetody&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego oraz po 12 miesiącach danych z podlicznika&quot;,
+    &quot;okresBazowy&quot;: &quot;02–03.2026 (kampania pomiarowa, 4 tygodnie)&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Profil obciążenia jest podobny przez cały rok, a podliczników jeszcze nie było — krótszy okres jest uzasadniony. Kampania zimowa nie obejmuje jednak wpływu letnich upałów na sprężarki, dlatego z góry zapisano rewizję c) po 12 miesiącach danych z podlicznika.&quot;,
+    &quot;wartoscEnB&quot;: &quot;0,125&quot;,
+    &quot;modelBazowy&quot;: &quot;0,125 kWh/Nm³ przy ciśnieniu 7 bar&quot;,
+    &quot;normalizacja&quot;: &quot;Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem wolumenu. Porównanie przy innym ciśnieniu sieci nie jest uczciwe — ciśnienie jest kryterium eksploatacji, nie zmienną.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Ciśnienie i obciążenie porównywalne. Temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją.&quot;,
+    &quot;rewizjaA&quot;: &quot;Zmiana charakteru odbioru powietrza (nowe odbiorniki o innym profilu), po której kWh/Nm³ przestaje pokazywać wynik.&quot;,
+    &quot;rewizjaB&quot;: &quot;Wymiana sprężarki, dodanie sterownika nadrzędnego albo napędu o zmiennej prędkości, zmiana układu sieci, trwała zmiana ciśnienia nastawy.&quot;,
+    &quot;rewizjaC&quot;: &quot;Po 12 miesiącach danych z podlicznika i przepływomierza (07.2027) EnB zostanie przeliczona dla tych samych warunków; poprawa wykazana do tego dnia zostaje zapisana.&quot;,
+    &quot;nieRewizja&quot;: &quot;Poprawa kWh/Nm³ po obniżeniu ciśnienia i usunięciu nieszczelności.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Kampania 02–03.2026: energia sprężarkowni i wolumen powietrza mierzone przez 4 tygodnie; w ujęciu rocznym sprężarkownia to 2 121 MWh, czyli 17,5% zużycia zakładu. Ciśnienie w okresie bazowym 7,0 bar.&quot;,
+    &quot;przykladObliczenia&quot;: &quot;VII–IX 2026: 530 MWh / 4 454 000 Nm³ = 0,119 kWh/Nm³ wobec EnB 0,125 → poprawa 4,8%. Adnotacja: EnB pochodzi z kampanii zimowej, wynik z lata, a latem sprężarki pracują w trudniejszych warunkach — różnica raczej nie zawyża poprawy.&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;S-2&quot;,
+    &quot;nazwa&quot;: &quot;Przepływ sprężonego powietrza w czasie postoju&quot;,
+    &quot;obszar&quot;: &quot;seu&quot;,
+    &quot;obszarNazwa&quot;: &quot;Sprężarkownia — sieć sprężonego powietrza (nieszczelności)&quot;,
+    &quot;postac&quot;: &quot;bezwzgledny&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Wartość bezwzględna — przepływ w czasie postoju produkcji nie zależy ani od produkcji, ani od pogody. Mierzy wyłącznie nieszczelności. Osobny wskaźnik, bo usunięcie wycieków zmniejsza zużycie energii, ale nie musi poprawić kWh/Nm³.&quot;,
+    &quot;wzor&quot;: &quot;S-2 = przepływ na kolektorze głównym w czasie postoju [Nm³/min]&quot;,
+    &quot;zmienne&quot;: &quot;&quot;,
+    &quot;statyczne&quot;: &quot;Układ i długość sieci, liczba punktów odbioru, ciśnienie testu — stan w okresie bazowym.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 7 (przepływ w postoju) planu F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;&quot;,
+    &quot;czestotliwosc&quot;: &quot;Co kwartał, test weekendowy&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przegladMetody&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego&quot;,
+    &quot;okresBazowy&quot;: &quot;03.2026 (pomiar pojedynczy)&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Przepływ w postoju nie podlega sezonowości, więc jeden pomiar w ustalonych warunkach wystarcza jako punkt startu. Warunkiem jest powtarzalna procedura testu.&quot;,
+    &quot;wartoscEnB&quot;: &quot;9&quot;,
+    &quot;modelBazowy&quot;: &quot;9 Nm³/min (test weekendowy 12.01.2026 przy 6,3 bar)&quot;,
+    &quot;normalizacja&quot;: &quot;Normalizacja nie jest potrzebna — wskaźnik nie zależy od istotnych zmiennych. Warunkiem porównywalności jest ta sama procedura testu i to samo ciśnienie.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Postój całej produkcji, sieć pod ciśnieniem 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu powtarza się.&quot;,
+    &quot;rewizjaA&quot;: &quot;Zmiana sposobu odcinania odbiorników, po której test przestaje mierzyć same nieszczelności.&quot;,
+    &quot;rewizjaB&quot;: &quot;Rozbudowa sieci, nowa hala, zmiana liczby punktów odbioru.&quot;,
+    &quot;rewizjaC&quot;: &quot;Brak reguły ustalonej z góry — wskaźnik ma charakter jednorazowego testu, EnB pozostaje do zmiany czynników statycznych.&quot;,
+    &quot;nieRewizja&quot;: &quot;Spadek przepływu po usunięciu nieszczelności — to właśnie wynik, który ma być widoczny.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Nie dotyczy — wskaźnik nie zależy od istotnych zmiennych. Warunki pomiaru bazowego: postój weekendowy 12.01.2026, ciśnienie 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02.&quot;,
+    &quot;przykladObliczenia&quot;: &quot;Test 06.2026: 6 Nm³/min wobec 9 Nm³/min z pomiaru bazowego → spadek 3 Nm³/min, czyli 33%. Ta sama procedura testu i to samo ciśnienie.&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;K-1&quot;,
+    &quot;nazwa&quot;: &quot;Zużycie rzeczywiste / oczekiwane — kotłownia&quot;,
+    &quot;obszar&quot;: &quot;seu&quot;,
+    &quot;obszarNazwa&quot;: &quot;Kotłownia — ogrzewanie hal, 12,4% zużycia zakładu&quot;,
+    &quot;postac&quot;: &quot;model&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Model — zużycie zależy niemal wyłącznie od pogody, a wskaźnik jednostkowy na tonę produkcji byłby bezsensowny. Model na stopniodniach jest tu najprostszą uczciwą postacią.&quot;,
+    &quot;wzor&quot;: &quot;E_ocz = a·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]&quot;,
+    &quot;zmienne&quot;: &quot;Stopniodni grzania HDD (baza 18 °C) — bezpośrednio określają zapotrzebowanie na ciepło.&quot;,
+    &quot;statyczne&quot;: &quot;Powierzchnia ogrzewana hal A–D, nastawy temperatury, izolacja — stan na 2025 r.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 2 (gaz — organizacja, po odjęciu pieca lakierni) i poz. 13 (HDD) planu F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;12 miesięcy 2025 r. (0–650 HDD/mies.); R² = 0,92; CV(RMSE) 5,6%. Miesiące letnie (HDD = 0) pokazują zużycie stałe na ciepłą wodę — zgodne z oczekiwaniem technicznym. Zużycie kotłowni wyznaczone jako różnica licznika gazu i pieca lakierni, co powiększa niepewność — po uruchomieniu podlicznika pieca model zostanie przeliczony.&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu; liczy Energy Manager&quot;,
+    &quot;przegladMetody&quot;: &quot;Przy corocznej aktualizacji przeglądu energetycznego&quot;,
+    &quot;okresBazowy&quot;: &quot;2025&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Pełny rok jest konieczny, bo zużycie kotłowni jest sezonowe — krótszy okres nie objąłby ani zimy, ani lata.&quot;,
+    &quot;wartoscEnB&quot;: &quot;1,000&quot;,
+    &quot;modelBazowy&quot;: &quot;Model jak wyżej; w 2025 r. 1 500 MWh&quot;,
+    &quot;normalizacja&quot;: &quot;Zużycie oczekiwane z modelu bazowego dla faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Stacja pogodowa i baza stopniodni muszą być te same co w okresie bazowym.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Te same nastawy temperatury w halach. Zmiana nastaw jest zmianą kryterium eksploatacji i wymaga adnotacji.&quot;,
+    &quot;rewizjaA&quot;: &quot;Zmiana sposobu ogrzewania części hal (np. nagrzewnice elektryczne) — wtedy gaz przestaje opisywać całe ogrzewanie.&quot;,
+    &quot;rewizjaB&quot;: &quot;Nowa hala, docieplenie, zmiana powierzchni ogrzewanej, wymiana kotła.&quot;,
+    &quot;rewizjaC&quot;: &quot;Po 12 miesiącach danych z podlicznika gazu pieca lakierni — przeliczenie modelu na danych pomiarowych, bez zmiany okresu bazowego.&quot;,
+    &quot;nieRewizja&quot;: &quot;Poprawa wskaźnika po regulacji automatyki pogodowej.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Stopniodni 3 600 HDD, baza 18 °C, stacja Katowice (0–650/mies.); zużycie kotłowni 1 500 MWh, czyli 12,4% zużycia zakładu; nastawy temperatury w halach bez zmian.&quot;,
+    &quot;przykladObliczenia&quot;: &quot;I półrocze 2026: 2 600 HDD → E_ocz z modelu bazowego 1 085 MWh; E_rzecz 1 096 MWh; EnPI = 1,01 → brak poprawy, 11 MWh powyżej oczekiwania. Do sprawdzenia automatyka pogodowa.&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;OŚ-1&quot;,
+    &quot;nazwa&quot;: &quot;Roczne zużycie energii na oświetlenie&quot;,
+    &quot;obszar&quot;: &quot;seu&quot;,
+    &quot;obszarNazwa&quot;: &quot;Oświetlenie hal H1 i H2 — 5,6% zużycia, SEU z kryterium B (potencjał poprawy)&quot;,
+    &quot;postac&quot;: &quot;bezwzgledny&quot;,
+    &quot;uzasadnieniePostaci&quot;: &quot;Wartość bezwzględna — hale pracują na trzy zmiany przez cały rok, więc czas świecenia jest w praktyce stały i nic istotnie nie zmienia zużycia. MWh na rok jest tu uczciwym wskaźnikiem; kWh na tonę produkcji wprowadzałoby w błąd.&quot;,
+    &quot;wzor&quot;: &quot;OŚ-1 = roczne zużycie energii na oświetlenie [MWh/rok]; do 06.2026 obliczane jako moc opraw × czas pracy z harmonogramu zmian&quot;,
+    &quot;zmienne&quot;: &quot;&quot;,
+    &quot;statyczne&quot;: &quot;Liczba i moc opraw (420 szt.), powierzchnia hal H1 i H2, wymagane poziomy natężenia, 3 zmiany — stan na 2025 r.&quot;,
+    &quot;zrodla&quot;: &quot;Poz. 14 (oświetlenie) i poz. 15 (czynniki statyczne) planu F-EnMS-11&quot;,
+    &quot;ocenaModelu&quot;: &quot;&quot;,
+    &quot;czestotliwosc&quot;: &quot;Miesięcznie (zestawienie), rozliczenie roczne&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;przegladMetody&quot;: &quot;Po wymianie opraw na LED — sprawdzenie, czy postać bezwzględna nadal jest właściwa&quot;,
+    &quot;okresBazowy&quot;: &quot;2025&quot;,
+    &quot;uzasadnienieOkresu&quot;: &quot;Pełny rok, żeby objąć zmienność czasu pracy zakładu i urlopów; wartość wyznaczona z inwentaryzacji opraw i harmonogramu zmian.&quot;,
+    &quot;wartoscEnB&quot;: &quot;680&quot;,
+    &quot;modelBazowy&quot;: &quot;680 MWh/rok (2025 r., inwentaryzacja 420 opraw × czas pracy)&quot;,
+    &quot;normalizacja&quot;: &quot;Normalizacja nie jest potrzebna przy stałym czasie pracy. Gdyby liczba zmian się zmieniła, porównanie prowadzi się na MWh na godzinę pracy zakładu — i wtedy postać wskaźnika wymaga przeglądu.&quot;,
+    &quot;warunkiPorownania&quot;: &quot;Te same trzy zmiany i ten sam kalendarz pracy (250 dni). Zmiana liczby zmian wymaga przeliczenia.&quot;,
+    &quot;rewizjaA&quot;: &quot;Zmiana trybu pracy hal, po której roczne MWh przestaje odzwierciedlać gospodarowanie energią.&quot;,
+    &quot;rewizjaB&quot;: &quot;Zmiana powierzchni hal, liczby zmian albo wymaganych poziomów natężenia oświetlenia.&quot;,
+    &quot;rewizjaC&quot;: &quot;Po wymianie opraw na LED i 12 miesiącach danych z podlicznika — przeliczenie EnB na danych pomiarowych, z zapisaniem poprawy osiągniętej do dnia rewizji.&quot;,
+    &quot;nieRewizja&quot;: &quot;Spadek zużycia po wymianie opraw — to jest wynik celu C2, nie powód rewizji.&quot;,
+    &quot;historia&quot;: [],
+    &quot;daneZmiennych&quot;: &quot;Nie dotyczy — czas świecenia jest w praktyce stały. Stan bazowy: 420 opraw, 3 zmiany, 250 dni roboczych, zużycie 680 MWh w 2025 r.&quot;,
+    &quot;przykladObliczenia&quot;: &quot;I półrocze 2026: 339 MWh w sześciu miesiącach, czyli 678 MWh w przeliczeniu rocznym, wobec EnB 680 MWh → 0,3% poniżej linii bazowej, w granicach dokładności obliczenia z inwentaryzacji opraw.&quot;
+   }
+  ],
+  &quot;METODA&quot;: {
+   &quot;dobor&quot;: &quot;Dla organizacji i każdego znaczącego użycia energii szacujemy udział zużycia niezależnego od produkcji. Powyżej 15% wybieramy model; poniżej — wskaźnik jednostkowy. Gdy zużycie nie zależy ani od produkcji, ani od pogody (oświetlenie przy stałym czasie pracy, przepływ w postoju) — wartość bezwzględna. Wybór i jego uzasadnienie zapisujemy w karcie F-EnMS-09.&quot;,
+   &quot;model&quot;: &quot;Regresja liniowa na danych miesięcznych z 12 miesięcy okresu bazowego. Ocena modelu obejmuje: techniczny sens każdej zmiennej, zakres danych wejściowych, R², CV(RMSE), analizę reszt i wartości odstających. Miesiące odstające sprawdzamy indywidualnie i zapisujemy decyzję o pozostawieniu albo wyłączeniu wraz z powodem. Samo R² nie jest kryterium przyjęcia modelu.&quot;,
+   &quot;obliczanie&quot;: &quot;Energy Manager liczy wszystkie wskaźniki miesięcznie, do 10 dnia następnego miesiąca, w arkuszu EnMS. Przy każdym obliczeniu wskaźnik jest porównywany z odpowiadającą mu linią bazową, a warunki porównania sprawdzane według karty. Wartości i adnotacje zapisywane są w zakładce „EnPI”.&quot;,
+   &quot;aktualizacja&quot;: &quot;Przegląd wszystkich kart przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wyposażenia, asortymentu albo zakresu systemu. Zmianę postaci wskaźnika lub modelu zatwierdza Dyrektor Techniczny; zmianę linii bazowej — Zarząd.&quot;,
+   &quot;zapisy&quot;: &quot;Karty F-EnMS-09 w teczce EnMS, wersjonowane (data, autor, opis zmiany). Wartości wskaźników w arkuszu EnMS, kopia tygodniowa na serwerze. Dane o istotnych zmiennych przechowywane razem z wartościami wskaźników.&quot;,
+   &quot;komunikacja&quot;: &quot;Trend wskaźnika organizacji na comiesięcznej odprawie kierownictwa. Wskaźniki znaczących użyć energii na tablicach wydziałowych. Wskaźnik zarządczy 114,8 GJ/mln zł przychodu pokazywany zarządowi, ale w każdym zestawieniu oznaczony jako wskaźnik zarządczy, nie EnPI — zależy od cen i asortymentu.&quot;
+  },
+  &quot;WARTOSCI&quot;: [
+   {
+    &quot;enpi&quot;: &quot;O-1&quot;,
+    &quot;okres&quot;: &quot;2025 (rok bazowy)&quot;,
+    &quot;wartosc&quot;: &quot;1,000&quot;,
+    &quot;adnotacja&quot;: &quot;Wartość definicyjna linii bazowej.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;O-1&quot;,
+    &quot;okres&quot;: &quot;I półrocze 2026&quot;,
+    &quot;wartosc&quot;: &quot;0,97&quot;,
+    &quot;adnotacja&quot;: &quot;Produkcja i stopniodni uwzględnione modelem. Kierunek dobry, do celu Z3.1 (≤ 0,95) brakuje dwóch setnych.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;O-1&quot;,
+    &quot;okres&quot;: &quot;Miesiąc przykładowy: 2 200 t, 500 HDD&quot;,
+    &quot;wartosc&quot;: &quot;0,939&quot;,
+    &quot;adnotacja&quot;: &quot;E_ocz = 1 152 MWh, E_rzecz = 1 082 MWh — poprawa 70 MWh (6,1%). Jeden dobry miesiąc to jeszcze nie wynik roku.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;P-1&quot;,
+    &quot;okres&quot;: &quot;2025 (rok bazowy)&quot;,
+    &quot;wartosc&quot;: &quot;124,0&quot;,
+    &quot;adnotacja&quot;: &quot;Z pomiarów okresowych i obliczeń, bez podlicznika.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;P-1&quot;,
+    &quot;okres&quot;: &quot;I półrocze 2026&quot;,
+    &quot;wartosc&quot;: &quot;122,1&quot;,
+    &quot;adnotacja&quot;: &quot;Ten sam asortyment, trzy linie czynne. Monitorowanie — bez zadania energetycznego.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;L-1&quot;,
+    &quot;okres&quot;: &quot;2025 (rok bazowy)&quot;,
+    &quot;wartosc&quot;: &quot;1,000&quot;,
+    &quot;adnotacja&quot;: &quot;Wartość definicyjna; 2 425 MWh, 300 000 m².&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;L-1&quot;,
+    &quot;okres&quot;: &quot;I półrocze 2026&quot;,
+    &quot;wartosc&quot;: &quot;0,98&quot;,
+    &quot;adnotacja&quot;: &quot;Obie kabiny czynne. Zużycie pieca wyznaczone jako różnica — niepewność do zmniejszenia po uruchomieniu podlicznika.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;S-1&quot;,
+    &quot;okres&quot;: &quot;02–03.2026 (kampania bazowa)&quot;,
+    &quot;wartosc&quot;: &quot;0,125&quot;,
+    &quot;adnotacja&quot;: &quot;Przy ciśnieniu 7,0 bar, temperatura zasysania zimowa.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;S-1&quot;,
+    &quot;okres&quot;: &quot;VII–IX 2026&quot;,
+    &quot;wartosc&quot;: &quot;0,119&quot;,
+    &quot;adnotacja&quot;: &quot;Poprawa 4,8% po obniżeniu ciśnienia do 6,3 bar. EnB pochodzi z zimy, wynik z lata — latem sprężarki pracują w trudniejszych warunkach, więc ta różnica raczej nie zawyża poprawy. Do celu 0,110 zostało 0,009 kWh/Nm³, czyli około 7,6% obecnej wartości.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;S-2&quot;,
+    &quot;okres&quot;: &quot;03.2026 (pomiar bazowy)&quot;,
+    &quot;wartosc&quot;: &quot;9&quot;,
+    &quot;adnotacja&quot;: &quot;Test weekendowy 12.01.2026 przy 6,3 bar.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;S-2&quot;,
+    &quot;okres&quot;: &quot;06.2026&quot;,
+    &quot;wartosc&quot;: &quot;6&quot;,
+    &quot;adnotacja&quot;: &quot;Ta sama procedura testu. Usunięto 21 z 35 nieszczelności.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;K-1&quot;,
+    &quot;okres&quot;: &quot;2025 (rok bazowy)&quot;,
+    &quot;wartosc&quot;: &quot;1,000&quot;,
+    &quot;adnotacja&quot;: &quot;Wartość definicyjna; 1 500 MWh.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;K-1&quot;,
+    &quot;okres&quot;: &quot;I półrocze 2026&quot;,
+    &quot;wartosc&quot;: &quot;1,01&quot;,
+    &quot;adnotacja&quot;: &quot;Nieznacznie powyżej linii bazowej. Nastawy bez zmian — do sprawdzenia automatyka pogodowa.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;OŚ-1&quot;,
+    &quot;okres&quot;: &quot;2025 (rok bazowy)&quot;,
+    &quot;wartosc&quot;: &quot;680&quot;,
+    &quot;adnotacja&quot;: &quot;Z inwentaryzacji 420 opraw i harmonogramu zmian.&quot;
+   },
+   {
+    &quot;enpi&quot;: &quot;OŚ-1&quot;,
+    &quot;okres&quot;: &quot;I półrocze 2026, w przeliczeniu rocznym&quot;,
+    &quot;wartosc&quot;: &quot;678&quot;,
+    &quot;adnotacja&quot;: &quot;Zmierzone 339 MWh w sześciu miesiącach, czyli 56,5 MWh/miesiąc — przeliczone na rok, żeby okres był porównywalny z linią bazową roczną. W tempie roku bazowego; wymiana opraw na LED zaplanowana na III kwartał 2027.&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Techniczny (karty i metoda EnPI); Zarząd — linie bazowe&quot;,
+   &quot;data&quot;: &quot;2026-04-15&quot;,
+   &quot;stan&quot;: &quot;2026-09-30&quot;,
+   &quot;stale&quot;: &quot;40&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_64 = [{"tekst": "EnPI są odpowiednie do mierzenia i monitorowania wyniku energetycznego i umożliwiają wykazanie jego poprawy.", "podstawa": "N", "auto": "odpowiednie"}, {"tekst": "Gdy dane wskazują, że istotne zmienne znacząco wpływają na wynik energetyczny, uwzględniono je przy ustalaniu EnPI.", "podstawa": "N", "auto": "zmienne"}, {"tekst": "Postać EnPI (bezwzględna / jednostkowa / model) ma uzasadnienie.", "podstawa": "M", "auto": "postac"}, {"tekst": "Model oceniono nie tylko po R² — z uzasadnieniem zmiennych, zakresem danych, błędem i wartościami odstającymi.", "podstawa": "M", "auto": "modelocena"}, {"tekst": "Metoda określania i aktualizowania EnPI jest utrzymywana jako udokumentowana informacja.", "podstawa": "N", "auto": "metoda"}, {"tekst": "Wartości EnPI są zachowane jako udokumentowana informacja i porównywane z odpowiadającymi im liniami bazowymi.", "podstawa": "N", "auto": "wartosci"}];
+var P_KARTY = [{"nr": "O-1", "nazwa": "Zużycie rzeczywiste / zużycie oczekiwane według modelu bazowego", "obszar": "organizacja", "obszarNazwa": "Cała organizacja, wszystkie rodzaje energii (MWh)", "postac": "model", "uzasadnieniePostaci": "Model — na zużycie wpływa kilka zmiennych naraz, a zużycie stałe jest duże: oświetlenie, wentylacja, biuro i czuwanie maszyn to około 40% całości. Wskaźnik kWh/t rósłby przy spadku produkcji, choć nikt niczego nie zepsuł.", "wzor": "E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]", "zmienne": "Masa przetworzonej stali [t] — napędza prasy, lakiernię i zużycie sprężonego powietrza. Stopniodni grzania HDD (baza 18 °C) — ogrzewanie hal i nagrzewnice lakierni.", "statyczne": "3 zmiany, 3 linie pras, hale A–D, asortyment — stan na 2025 r.", "zrodla": "Poz. 1–3, 11, 13 planu zbierania danych F-EnMS-11", "ocenaModelu": "12 miesięcy 2025 r. (zakres danych: 1 750–2 150 t/mies., 0–650 HDD/mies.); R² = 0,86; CV(RMSE) 2,8%. Obie zmienne mają sens techniczny. Sierpień (postój 2 tygodnie) sprawdzony jako wartość odstająca i pozostawiony — reszta mieści się w ±2 błędach standardowych.", "czestotliwosc": "Miesięcznie, do 10 dnia następnego miesiąca", "odp": "Energy Manager", "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego (do 31 marca)", "okresBazowy": "2025", "uzasadnienieOkresu": "Pierwszy pełny rok z danymi produkcyjnymi i pogodowymi, bez dużych przestojów. Dwanaście miesięcy obejmuje pełny cykl pór roku.", "wartoscEnB": "1,000", "modelBazowy": "E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/miesiąc]; w 2025 r. 12 120 MWh", "normalizacja": "Zużycie oczekiwane liczone z modelu bazowego dla faktycznej produkcji i faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Model bazowy pozostaje bez zmian — normalizacja koryguje porównanie, nie linię bazową.", "warunkiPorownania": "Miesiące pełnej pracy. Miesiąc z postojem dłuższym niż 10 dni roboczych porównywany z adnotacją, bo model był dopasowany do normalnego trybu pracy.", "rewizjaA": "Zmiana asortymentu zmieniająca energochłonność wyrobu — wtedy wskaźnik przestaje pokazywać wynik gospodarowania energią.", "rewizjaB": "Nowa linia produkcyjna, zmiana liczby zmian, zmiana powierzchni ogrzewanej, zmiana zakresu systemu, sprzedaż części zakładu.", "rewizjaC": "Po 24 miesiącach danych — ponowne dopasowanie modelu bez zmiany okresu bazowego.", "nieRewizja": "Sama poprawa wyniku energetycznego. Zmiana EnB po modernizacji wymazałaby z historii osiągniętą poprawę.", "historia": [], "daneZmiennych": "Produkcja 24 000 t stali (1 750–2 150 t/mies.); stopniodni 3 600 HDD, baza 18 °C (0–650/mies.); zużycie całkowite 12 120 MWh; 250 dni roboczych na 3 zmiany.", "przykladObliczenia": "Miesiąc z 2 200 t i 500 HDD: E_ocz = 0,23·2 200 + 0,48·500 + 406 = 1 152 MWh. E_rzecz = 1 082 MWh. EnPI = 1 082 / 1 152 = 0,939 → poprawa 70 MWh, czyli 6,1%."}, {"nr": "P-1", "nazwa": "Energia jednostkowa pras — kWh na tonę przetworzonej stali", "obszar": "seu", "obszarNazwa": "Prasy — trzy linie, 24,5% zużycia zakładu", "postac": "jednostkowy", "uzasadnieniePostaci": "Wskaźnik jednostkowy — zużycie pras rośnie i spada razem z masą przetworzonej stali, a zużycie niezależne od produkcji (czuwanie, hydraulika w gotowości) to kilka procent zużycia obszaru.", "wzor": "P-1 = energia pras [kWh] / masa przetworzonej stali [t]", "zmienne": "Masa przetworzonej stali [t] — bezpośrednio określa liczbę i czas cykli prasowania.", "statyczne": "3 linie pras, 3 zmiany, asortyment — stan na 2025 r.", "zrodla": "Poz. 11 (masa stali) i poz. 12 (energia pras) planu F-EnMS-11", "ocenaModelu": "", "czestotliwosc": "Kwartalnie — zgodnie z rytmem pomiarów analizatorem", "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager", "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego oraz po uruchomieniu podlicznika pras", "okresBazowy": "2025", "uzasadnienieOkresu": "Rok spójny z linią bazową organizacji; energia pras wyznaczona z pomiarów okresowych i obliczeń, bez podlicznika.", "wartoscEnB": "124,0", "modelBazowy": "124,0 kWh/t (2 970 MWh / 24 000 t, 2025 r.)", "normalizacja": "Wskaźnik jest ilorazem energii i masy, więc normalizuje się względem produkcji. Dodatkowej korekty nie stosuje się — zużycie niezależne od produkcji w tym obszarze jest niewielkie.", "warunkiPorownania": "Ten sam asortyment i ta sama liczba pracujących linii. Kwartał z wyłączoną linią porównywany z adnotacją.", "rewizjaA": "Trwała zmiana asortymentu (inna grubość blachy, inny wyrób) — zmienia energochłonność tony.", "rewizjaB": "Dodanie lub likwidacja linii pras, zmiana liczby zmian.", "rewizjaC": "Po 12 miesiącach danych z podlicznika pras — przeliczenie EnB na danych pomiarowych zamiast obliczeniowych.", "nieRewizja": "Poprawa kWh/t po zmianie parametrów pracy.", "historia": [], "daneZmiennych": "Masa przetworzonej stali 24 000 t (2025); energia pras 2 970 MWh, czyli 24,5% zużycia zakładu.", "przykladObliczenia": "I półrocze 2026: 1 465 MWh / 12 000 t = 122,1 kWh/t wobec EnB 124,0 kWh/t → poprawa 1,5%. Ten sam asortyment, trzy linie czynne."}, {"nr": "L-1", "nazwa": "Zużycie rzeczywiste / oczekiwane — lakiernia", "obszar": "seu", "obszarNazwa": "Lakiernia — piec gazowy i dwie kabiny, 20,0% zużycia zakładu", "postac": "model", "uzasadnieniePostaci": "Model — na zużycie wpływa lakierowana powierzchnia i pogoda (nagrzewnice), a piec utrzymuje temperaturę także między zleceniami, więc zużycie stałe jest znaczne.", "wzor": "E_ocz = a·m² + b·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]. Wskaźnik pomocniczy: 8,08 kWh/m² (2 425 MWh / 300 000 m², 2025 r.)", "zmienne": "Lakierowana powierzchnia [m²] — określa liczbę cykli pieca. Stopniodni HDD — nagrzewnice i podgrzewanie powietrza kabin.", "statyczne": "Jeden piec gazowy, dwie kabiny, technologia lakierowania — stan na 2025 r.", "zrodla": "Poz. 8 (gaz pieca), poz. 9 (lakierowana powierzchnia), poz. 13 (HDD) planu F-EnMS-11", "ocenaModelu": "12 miesięcy 2025 r. (18 000–29 000 m²/mies.); R² = 0,81; CV(RMSE) 4,1%. Zmienne mają sens techniczny. Dwa miesiące z przestojem kabiny sprawdzone i opisane — pozostawione, reszty w granicach ±2 błędów standardowych. Model do przeliczenia po 12 miesiącach danych z podlicznika gazu.", "czestotliwosc": "Miesięcznie", "odp": "Technolog lakierni; liczy Energy Manager", "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego", "okresBazowy": "2025", "uzasadnienieOkresu": "Rok spójny z linią bazową organizacji; obejmuje pełny cykl pogodowy, który dla lakierni jest istotny.", "wartoscEnB": "1,000", "modelBazowy": "Model jak wyżej; w 2025 r. 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh)", "normalizacja": "Zużycie oczekiwane z modelu bazowego dla faktycznej powierzchni i stopniodni; EnPI = E_rzecz / E_ocz.", "warunkiPorownania": "Obie kabiny czynne. Miesiąc z wyłączoną kabiną porównywany z adnotacją.", "rewizjaA": "Zmiana technologii lakierowania albo rodzaju lakieru zmieniająca profil temperatur pieca.", "rewizjaB": "Dodanie kabiny, wymiana pieca, zmiana powierzchni lakierni.", "rewizjaC": "Po 12 miesiącach danych z podlicznika gazu pieca (07.2027) — przeliczenie modelu na danych pomiarowych.", "nieRewizja": "Poprawa wskaźnika po regulacji harmonogramu pieca.", "historia": [], "daneZmiennych": "Lakierowana powierzchnia 300 000 m² (18 000–29 000 m²/mies.); stopniodni 3 600 HDD; zużycie lakierni 2 425 MWh (gaz 2 000 MWh + energia elektryczna 425 MWh).", "przykladObliczenia": "Miesiąc z 25 000 m² i 420 HDD: E_ocz z modelu bazowego 215 MWh; E_rzecz 211 MWh; EnPI = 0,98 → poprawa 4 MWh, czyli 2,0%."}, {"nr": "S-1", "nazwa": "Energia jednostkowa sprężarkowni — kWh na Nm³ sprężonego powietrza", "obszar": "seu", "obszarNazwa": "Sprężarkownia — cztery sprężarki śrubowe, kolektor główny, 17,5% zużycia zakładu", "postac": "jednostkowy", "uzasadnieniePostaci": "Wskaźnik jednostkowy kWh/Nm³ — zużycie zależy od objętości wytworzonego powietrza, a zużycie stałe w tym obszarze jest niewielkie.", "wzor": "S-1 = energia sprężarkowni [kWh] / objętość sprężonego powietrza [Nm³]", "zmienne": "Objętość wytworzonego powietrza [Nm³] — bezpośrednio określa pracę sprężarek. Temperatura powietrza zasysanego — wpływ drugorzędny, odnotowywany przy porównaniu.", "statyczne": "Cztery sprężarki śrubowe pracujące w układzie włącz–wyłącz, układ sieci, ciśnienie nastawy — stan w okresie bazowym: 7,0 bar.", "zrodla": "Poz. 4 (energia sprężarkowni), poz. 5 (wolumen powietrza), poz. 6 (ciśnienie sieci) planu F-EnMS-11", "ocenaModelu": "", "czestotliwosc": "Miesięcznie (od 06.2026 dane 15-minutowe z podlicznika i przepływomierza)", "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager", "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego oraz po 12 miesiącach danych z podlicznika", "okresBazowy": "02–03.2026 (kampania pomiarowa, 4 tygodnie)", "uzasadnienieOkresu": "Profil obciążenia jest podobny przez cały rok, a podliczników jeszcze nie było — krótszy okres jest uzasadniony. Kampania zimowa nie obejmuje jednak wpływu letnich upałów na sprężarki, dlatego z góry zapisano rewizję c) po 12 miesiącach danych z podlicznika.", "wartoscEnB": "0,125", "modelBazowy": "0,125 kWh/Nm³ przy ciśnieniu 7 bar", "normalizacja": "Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem wolumenu. Porównanie przy innym ciśnieniu sieci nie jest uczciwe — ciśnienie jest kryterium eksploatacji, nie zmienną.", "warunkiPorownania": "Ciśnienie i obciążenie porównywalne. Temperatura powietrza zasysanego różna o więcej niż 10 °C — porównanie z adnotacją.", "rewizjaA": "Zmiana charakteru odbioru powietrza (nowe odbiorniki o innym profilu), po której kWh/Nm³ przestaje pokazywać wynik.", "rewizjaB": "Wymiana sprężarki, dodanie sterownika nadrzędnego albo napędu o zmiennej prędkości, zmiana układu sieci, trwała zmiana ciśnienia nastawy.", "rewizjaC": "Po 12 miesiącach danych z podlicznika i przepływomierza (07.2027) EnB zostanie przeliczona dla tych samych warunków; poprawa wykazana do tego dnia zostaje zapisana.", "nieRewizja": "Poprawa kWh/Nm³ po obniżeniu ciśnienia i usunięciu nieszczelności.", "historia": [], "daneZmiennych": "Kampania 02–03.2026: energia sprężarkowni i wolumen powietrza mierzone przez 4 tygodnie; w ujęciu rocznym sprężarkownia to 2 121 MWh, czyli 17,5% zużycia zakładu. Ciśnienie w okresie bazowym 7,0 bar.", "przykladObliczenia": "VII–IX 2026: 530 MWh / 4 454 000 Nm³ = 0,119 kWh/Nm³ wobec EnB 0,125 → poprawa 4,8%. Adnotacja: EnB pochodzi z kampanii zimowej, wynik z lata, a latem sprężarki pracują w trudniejszych warunkach — różnica raczej nie zawyża poprawy."}, {"nr": "S-2", "nazwa": "Przepływ sprężonego powietrza w czasie postoju", "obszar": "seu", "obszarNazwa": "Sprężarkownia — sieć sprężonego powietrza (nieszczelności)", "postac": "bezwzgledny", "uzasadnieniePostaci": "Wartość bezwzględna — przepływ w czasie postoju produkcji nie zależy ani od produkcji, ani od pogody. Mierzy wyłącznie nieszczelności. Osobny wskaźnik, bo usunięcie wycieków zmniejsza zużycie energii, ale nie musi poprawić kWh/Nm³.", "wzor": "S-2 = przepływ na kolektorze głównym w czasie postoju [Nm³/min]", "zmienne": "", "statyczne": "Układ i długość sieci, liczba punktów odbioru, ciśnienie testu — stan w okresie bazowym.", "zrodla": "Poz. 7 (przepływ w postoju) planu F-EnMS-11", "ocenaModelu": "", "czestotliwosc": "Co kwartał, test weekendowy", "odp": "Kierownik Utrzymania Ruchu", "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego", "okresBazowy": "03.2026 (pomiar pojedynczy)", "uzasadnienieOkresu": "Przepływ w postoju nie podlega sezonowości, więc jeden pomiar w ustalonych warunkach wystarcza jako punkt startu. Warunkiem jest powtarzalna procedura testu.", "wartoscEnB": "9", "modelBazowy": "9 Nm³/min (test weekendowy 12.01.2026 przy 6,3 bar)", "normalizacja": "Normalizacja nie jest potrzebna — wskaźnik nie zależy od istotnych zmiennych. Warunkiem porównywalności jest ta sama procedura testu i to samo ciśnienie.", "warunkiPorownania": "Postój całej produkcji, sieć pod ciśnieniem 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu powtarza się.", "rewizjaA": "Zmiana sposobu odcinania odbiorników, po której test przestaje mierzyć same nieszczelności.", "rewizjaB": "Rozbudowa sieci, nowa hala, zmiana liczby punktów odbioru.", "rewizjaC": "Brak reguły ustalonej z góry — wskaźnik ma charakter jednorazowego testu, EnB pozostaje do zmiany czynników statycznych.", "nieRewizja": "Spadek przepływu po usunięciu nieszczelności — to właśnie wynik, który ma być widoczny.", "historia": [], "daneZmiennych": "Nie dotyczy — wskaźnik nie zależy od istotnych zmiennych. Warunki pomiaru bazowego: postój weekendowy 12.01.2026, ciśnienie 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02.", "przykladObliczenia": "Test 06.2026: 6 Nm³/min wobec 9 Nm³/min z pomiaru bazowego → spadek 3 Nm³/min, czyli 33%. Ta sama procedura testu i to samo ciśnienie."}, {"nr": "K-1", "nazwa": "Zużycie rzeczywiste / oczekiwane — kotłownia", "obszar": "seu", "obszarNazwa": "Kotłownia — ogrzewanie hal, 12,4% zużycia zakładu", "postac": "model", "uzasadnieniePostaci": "Model — zużycie zależy niemal wyłącznie od pogody, a wskaźnik jednostkowy na tonę produkcji byłby bezsensowny. Model na stopniodniach jest tu najprostszą uczciwą postacią.", "wzor": "E_ocz = a·HDD + c [MWh/miesiąc]; EnPI = E_rzecz / E_ocz [—]", "zmienne": "Stopniodni grzania HDD (baza 18 °C) — bezpośrednio określają zapotrzebowanie na ciepło.", "statyczne": "Powierzchnia ogrzewana hal A–D, nastawy temperatury, izolacja — stan na 2025 r.", "zrodla": "Poz. 2 (gaz — organizacja, po odjęciu pieca lakierni) i poz. 13 (HDD) planu F-EnMS-11", "ocenaModelu": "12 miesięcy 2025 r. (0–650 HDD/mies.); R² = 0,92; CV(RMSE) 5,6%. Miesiące letnie (HDD = 0) pokazują zużycie stałe na ciepłą wodę — zgodne z oczekiwaniem technicznym. Zużycie kotłowni wyznaczone jako różnica licznika gazu i pieca lakierni, co powiększa niepewność — po uruchomieniu podlicznika pieca model zostanie przeliczony.", "czestotliwosc": "Miesięcznie", "odp": "Kierownik Utrzymania Ruchu; liczy Energy Manager", "przegladMetody": "Przy corocznej aktualizacji przeglądu energetycznego", "okresBazowy": "2025", "uzasadnienieOkresu": "Pełny rok jest konieczny, bo zużycie kotłowni jest sezonowe — krótszy okres nie objąłby ani zimy, ani lata.", "wartoscEnB": "1,000", "modelBazowy": "Model jak wyżej; w 2025 r. 1 500 MWh", "normalizacja": "Zużycie oczekiwane z modelu bazowego dla faktycznych stopniodni okresu porównania; EnPI = E_rzecz / E_ocz. Stacja pogodowa i baza stopniodni muszą być te same co w okresie bazowym.", "warunkiPorownania": "Te same nastawy temperatury w halach. Zmiana nastaw jest zmianą kryterium eksploatacji i wymaga adnotacji.", "rewizjaA": "Zmiana sposobu ogrzewania części hal (np. nagrzewnice elektryczne) — wtedy gaz przestaje opisywać całe ogrzewanie.", "rewizjaB": "Nowa hala, docieplenie, zmiana powierzchni ogrzewanej, wymiana kotła.", "rewizjaC": "Po 12 miesiącach danych z podlicznika gazu pieca lakierni — przeliczenie modelu na danych pomiarowych, bez zmiany okresu bazowego.", "nieRewizja": "Poprawa wskaźnika po regulacji automatyki pogodowej.", "historia": [], "daneZmiennych": "Stopniodni 3 600 HDD, baza 18 °C, stacja Katowice (0–650/mies.); zużycie kotłowni 1 500 MWh, czyli 12,4% zużycia zakładu; nastawy temperatury w halach bez zmian.", "przykladObliczenia": "I półrocze 2026: 2 600 HDD → E_ocz z modelu bazowego 1 085 MWh; E_rzecz 1 096 MWh; EnPI = 1,01 → brak poprawy, 11 MWh powyżej oczekiwania. Do sprawdzenia automatyka pogodowa."}, {"nr": "OŚ-1", "nazwa": "Roczne zużycie energii na oświetlenie", "obszar": "seu", "obszarNazwa": "Oświetlenie hal H1 i H2 — 5,6% zużycia, SEU z kryterium B (potencjał poprawy)", "postac": "bezwzgledny", "uzasadnieniePostaci": "Wartość bezwzględna — hale pracują na trzy zmiany przez cały rok, więc czas świecenia jest w praktyce stały i nic istotnie nie zmienia zużycia. MWh na rok jest tu uczciwym wskaźnikiem; kWh na tonę produkcji wprowadzałoby w błąd.", "wzor": "OŚ-1 = roczne zużycie energii na oświetlenie [MWh/rok]; do 06.2026 obliczane jako moc opraw × czas pracy z harmonogramu zmian", "zmienne": "", "statyczne": "Liczba i moc opraw (420 szt.), powierzchnia hal H1 i H2, wymagane poziomy natężenia, 3 zmiany — stan na 2025 r.", "zrodla": "Poz. 14 (oświetlenie) i poz. 15 (czynniki statyczne) planu F-EnMS-11", "ocenaModelu": "", "czestotliwosc": "Miesięcznie (zestawienie), rozliczenie roczne", "odp": "Kierownik Utrzymania Ruchu", "przegladMetody": "Po wymianie opraw na LED — sprawdzenie, czy postać bezwzględna nadal jest właściwa", "okresBazowy": "2025", "uzasadnienieOkresu": "Pełny rok, żeby objąć zmienność czasu pracy zakładu i urlopów; wartość wyznaczona z inwentaryzacji opraw i harmonogramu zmian.", "wartoscEnB": "680", "modelBazowy": "680 MWh/rok (2025 r., inwentaryzacja 420 opraw × czas pracy)", "normalizacja": "Normalizacja nie jest potrzebna przy stałym czasie pracy. Gdyby liczba zmian się zmieniła, porównanie prowadzi się na MWh na godzinę pracy zakładu — i wtedy postać wskaźnika wymaga przeglądu.", "warunkiPorownania": "Te same trzy zmiany i ten sam kalendarz pracy (250 dni). Zmiana liczby zmian wymaga przeliczenia.", "rewizjaA": "Zmiana trybu pracy hal, po której roczne MWh przestaje odzwierciedlać gospodarowanie energią.", "rewizjaB": "Zmiana powierzchni hal, liczby zmian albo wymaganych poziomów natężenia oświetlenia.", "rewizjaC": "Po wymianie opraw na LED i 12 miesiącach danych z podlicznika — przeliczenie EnB na danych pomiarowych, z zapisaniem poprawy osiągniętej do dnia rewizji.", "nieRewizja": "Spadek zużycia po wymianie opraw — to jest wynik celu C2, nie powód rewizji.", "historia": [], "daneZmiennych": "Nie dotyczy — czas świecenia jest w praktyce stały. Stan bazowy: 420 opraw, 3 zmiany, 250 dni roboczych, zużycie 680 MWh w 2025 r.", "przykladObliczenia": "I półrocze 2026: 339 MWh w sześciu miesiącach, czyli 678 MWh w przeliczeniu rocznym, wobec EnB 680 MWh → 0,3% poniżej linii bazowej, w granicach dokładności obliczenia z inwentaryzacji opraw."}];
+var P_METODA = {"dobor": "Dla organizacji i każdego znaczącego użycia energii szacujemy udział zużycia niezależnego od produkcji. Powyżej 15% wybieramy model; poniżej — wskaźnik jednostkowy. Gdy zużycie nie zależy ani od produkcji, ani od pogody (oświetlenie przy stałym czasie pracy, przepływ w postoju) — wartość bezwzględna. Wybór i jego uzasadnienie zapisujemy w karcie F-EnMS-09.", "model": "Regresja liniowa na danych miesięcznych z 12 miesięcy okresu bazowego. Ocena modelu obejmuje: techniczny sens każdej zmiennej, zakres danych wejściowych, R², CV(RMSE), analizę reszt i wartości odstających. Miesiące odstające sprawdzamy indywidualnie i zapisujemy decyzję o pozostawieniu albo wyłączeniu wraz z powodem. Samo R² nie jest kryterium przyjęcia modelu.", "obliczanie": "Energy Manager liczy wszystkie wskaźniki miesięcznie, do 10 dnia następnego miesiąca, w arkuszu EnMS. Przy każdym obliczeniu wskaźnik jest porównywany z odpowiadającą mu linią bazową, a warunki porównania sprawdzane według karty. Wartości i adnotacje zapisywane są w zakładce „EnPI”.", "aktualizacja": "Przegląd wszystkich kart przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz niezwłocznie przy zmianie znaczących użyć energii, wyposażenia, asortymentu albo zakresu systemu. Zmianę postaci wskaźnika lub modelu zatwierdza Dyrektor Techniczny; zmianę linii bazowej — Zarząd.", "zapisy": "Karty F-EnMS-09 w teczce EnMS, wersjonowane (data, autor, opis zmiany). Wartości wskaźników w arkuszu EnMS, kopia tygodniowa na serwerze. Dane o istotnych zmiennych przechowywane razem z wartościami wskaźników.", "komunikacja": "Trend wskaźnika organizacji na comiesięcznej odprawie kierownictwa. Wskaźniki znaczących użyć energii na tablicach wydziałowych. Wskaźnik zarządczy 114,8 GJ/mln zł przychodu pokazywany zarządowi, ale w każdym zestawieniu oznaczony jako wskaźnik zarządczy, nie EnPI — zależy od cen i asortymentu."};
+var P_WARTOSCI = [{"enpi": "O-1", "okres": "2025 (rok bazowy)", "wartosc": "1,000", "adnotacja": "Wartość definicyjna linii bazowej."}, {"enpi": "O-1", "okres": "I półrocze 2026", "wartosc": "0,97", "adnotacja": "Produkcja i stopniodni uwzględnione modelem. Kierunek dobry, do celu Z3.1 (≤ 0,95) brakuje dwóch setnych."}, {"enpi": "O-1", "okres": "Miesiąc przykładowy: 2 200 t, 500 HDD", "wartosc": "0,939", "adnotacja": "E_ocz = 1 152 MWh, E_rzecz = 1 082 MWh — poprawa 70 MWh (6,1%). Jeden dobry miesiąc to jeszcze nie wynik roku."}, {"enpi": "P-1", "okres": "2025 (rok bazowy)", "wartosc": "124,0", "adnotacja": "Z pomiarów okresowych i obliczeń, bez podlicznika."}, {"enpi": "P-1", "okres": "I półrocze 2026", "wartosc": "122,1", "adnotacja": "Ten sam asortyment, trzy linie czynne. Monitorowanie — bez zadania energetycznego."}, {"enpi": "L-1", "okres": "2025 (rok bazowy)", "wartosc": "1,000", "adnotacja": "Wartość definicyjna; 2 425 MWh, 300 000 m²."}, {"enpi": "L-1", "okres": "I półrocze 2026", "wartosc": "0,98", "adnotacja": "Obie kabiny czynne. Zużycie pieca wyznaczone jako różnica — niepewność do zmniejszenia po uruchomieniu podlicznika."}, {"enpi": "S-1", "okres": "02–03.2026 (kampania bazowa)", "wartosc": "0,125", "adnotacja": "Przy ciśnieniu 7,0 bar, temperatura zasysania zimowa."}, {"enpi": "S-1", "okres": "VII–IX 2026", "wartosc": "0,119", "adnotacja": "Poprawa 4,8% po obniżeniu ciśnienia do 6,3 bar. EnB pochodzi z zimy, wynik z lata — latem sprężarki pracują w trudniejszych warunkach, więc ta różnica raczej nie zawyża poprawy. Do celu 0,110 zostało 0,009 kWh/Nm³, czyli około 7,6% obecnej wartości."}, {"enpi": "S-2", "okres": "03.2026 (pomiar bazowy)", "wartosc": "9", "adnotacja": "Test weekendowy 12.01.2026 przy 6,3 bar."}, {"enpi": "S-2", "okres": "06.2026", "wartosc": "6", "adnotacja": "Ta sama procedura testu. Usunięto 21 z 35 nieszczelności."}, {"enpi": "K-1", "okres": "2025 (rok bazowy)", "wartosc": "1,000", "adnotacja": "Wartość definicyjna; 1 500 MWh."}, {"enpi": "K-1", "okres": "I półrocze 2026", "wartosc": "1,01", "adnotacja": "Nieznacznie powyżej linii bazowej. Nastawy bez zmian — do sprawdzenia automatyka pogodowa."}, {"enpi": "OŚ-1", "okres": "2025 (rok bazowy)", "wartosc": "680", "adnotacja": "Z inwentaryzacji 420 opraw i harmonogramu zmian."}, {"enpi": "OŚ-1", "okres": "I półrocze 2026, w przeliczeniu rocznym", "wartosc": "678", "adnotacja": "Zmierzone 339 MWh w sześciu miesiącach, czyli 56,5 MWh/miesiąc — przeliczone na rok, żeby okres był porównywalny z linią bazową roczną. W tempie roku bazowego; wymiana opraw na LED zaplanowana na III kwartał 2027."}];
+var P_META = {"zatwierdzil": "Piotr Nowak, Dyrektor Techniczny (karty i metoda EnPI); Zarząd — linie bazowe", "data": "2026-04-15", "stan": "2026-09-30", "stale": "40"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Wskaźnik bez zmiennych istotnych pokazuje pogodę i wielkość produkcji, nie zarządzanie energią.", "decyzja": "Model bazowy E_ocz = 0,23·t + 0,48·HDD + 406 MWh/miesiąc; EnPI jako iloraz zużycia rzeczywistego do oczekiwanego.", "dzialanie": "Karty wskaźników dla zakładu, pras i sprężarkowni; dla S-1 zmienną jest objętość powietrza, czynnikiem statycznym — cztery sprężarki śrubowe.", "sprawdzenie": "Raport miesięczny (9.1.1) podaje produkcję i stopniodnie obok zużycia; różnica temperatury powyżej 5 °C między okresami wymaga adnotacji."}];
+</script>
+<script>/* ENESA 6.4 — Wskaźniki wyniku energetycznego (EnPI).
+   Karta F-EnMS-09 jest wspólna dla 6.4 i 6.5 — oba punkty czytają i zapisują ten sam magazyn.
+   Zgodny z: Tom 2 rozdz. 5 pkt 6.4 oraz Część III Moduł 4 v2.1 (III-21 = F-EnMS-09, III-22, III-25). */
+"use strict";
+
+var MAGAZYN = "enesa_karty_enpi";   // wspólny z punktem 6.5
+var KARTY = [];
+var METODA = {};
+var WARTOSCI = [];
+var META = { zatwierdzil: "", data: "", stan: "", stale: "" };
+var WNIOSKI = [];
+var AKT = "rejestr";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v || "").replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+var POSTACIE = [["", "Wybierz postać"],
+["bezwzgledny", "Wartość bezwzględna — „ile zużyliśmy”"],
+["jednostkowy", "Wskaźnik jednostkowy — „ile na tonę, sztukę, m³”"],
+["model", "Model — „ile powinniśmy byli zużyć”"]];
+var OBSZARY = [["", "Wybierz"], ["organizacja", "Cała organizacja"], ["seu", "Znaczące użycie energii (SEU)"],
+["inny", "Inny obszar"]];
+function nazwaPostaci(p) {
+  var o = POSTACIE.filter(function (x) { return x[0] === p; })[0];
+  return o ? o[1].split(" — ")[0] : "—";
+}
+
+/* ── kompletność karty: strona 6.4 i strona 6.5 ── */
+var POLA_64 = ["nr", "nazwa", "obszar", "postac", "uzasadnieniePostaci", "wzor", "zrodla", "czestotliwosc", "odp"];
+var POLA_65 = ["okresBazowy", "uzasadnienieOkresu", "wartoscEnB", "normalizacja",
+  "warunkiPorownania", "rewizjaA", "rewizjaB", "rewizjaC"];
+function pelna64(k) {
+  if (!POLA_64.every(function (f) { return (k[f] || "").toString().trim(); })) return false;
+  if (k.postac === "model" && !(k.ocenaModelu || "").trim()) return false;
+  if (k.postac !== "bezwzgledny" && !(k.zmienne || "").trim()) return false;
+  return true;
+}
+function pelna65(k) { return POLA_65.every(function (f) { return (k[f] || "").toString().trim(); }); }
+function nrKarty(k, i) { return (k.nr || "").trim() || ("E" + (i + 1)); }
+
+/* ── reguły z książki ── */
+function udzialStalego() { return lb(META.stale); }
+function ryzykoJednostkowego(k) {
+  var u = udzialStalego();
+  return k.postac === "jednostkowy" && k.obszar === "organizacja" && u !== null && u > 15;
+}
+function tylkoR2(k) {
+  var t = (k.ocenaModelu || "");
+  if (!t.trim()) return false;
+  var maR2 = /r²|r2|r\^2/i.test(t);
+  var maInne = /(zakres|miesi|odstaj|błąd|blad|rmse|cv|sens|uzasadni|reszt)/i.test(t);
+  return maR2 && !maInne;
+}
+/* „zł\b" nigdy nie pasuje: \b wymaga po jednej stronie znaku [A-Za-z0-9_],
+   a „ł" nim nie jest. Zamiast granicy słowa — negatywny wgląd na literę. */
+var RE_FIN = /(przych|mln\s*z[łl]|mln\s*pln|obrot|obrót|z[łl](?![a-ząćęłńóśźż])|\bpln\b|euro|przychodu)/i;
+function wskaznikFinansowy(k) {
+  return RE_FIN.test((k.nazwa || "") + " " + (k.wzor || ""));
+}
+function bezwzglednyZeZmiennymi(k) {
+  return k.postac === "bezwzgledny" && (k.zmienne || "").trim().length > 3;
+}
+function kartyObszaru(o) { return KARTY.filter(function (k) { return k.obszar === o; }); }
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+function wartosciKarty(nr) { return WARTOSCI.filter(function (w) { return w.enpi === nr; }); }
+function opcjeKart() {
+  return [["", "Wybierz wskaźnik"]].concat(KARTY.map(function (k, i) {
+    return [nrKarty(k, i), nrKarty(k, i) + " — " + (k.nazwa || "").slice(0, 50)];
+  }));
+}
+
+/* ── zakładka 1: rejestr ── */
+function rysujRejestr(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Rejestr wskaźników EnPI");
+  h.appendChild(el("span", "chip " + (KARTY.length && KARTY.every(pelna64) ? "green" : "amber"),
+    KARTY.filter(pelna64).length + " / " + KARTY.length + " kart gotowych"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Jedna karta na każdy wskaźnik. Na początek wystarczy jeden wskaźnik dla całej organizacji i po jednym dla każdego znaczącego użycia energii."));
+  s.appendChild(hel("div", "warn", "Narada: „Zużycie spadło o 10%!”. Kontroler: „A produkcja spadła o 15%.” Czy to był dobry miesiąc? <b>Samo zużycie mówi, ile energii poszło — nie mówi, czy gospodarujecie nią lepiej.</b>"));
+
+  if (KARTY.length) {
+    var t = el("table", "tab");
+    var tr = el("tr");
+    ["Nr", "EnPI", "Obszar", "Postać", "EnB (okres)", "Ostatnia wartość", "Stan karty"].forEach(function (x) {
+      tr.appendChild(el("th", null, x));
+    });
+    t.appendChild(tr);
+    KARTY.forEach(function (k, i) {
+      var w = wartosciKarty(nrKarty(k, i));
+      var ost = w.length ? w[w.length - 1] : null;
+      var r = el("tr");
+      r.appendChild(el("td", "mono", nrKarty(k, i)));
+      r.appendChild(el("td", null, k.nazwa || "—"));
+      r.appendChild(el("td", null, k.obszar === "organizacja" ? "Organizacja" : (k.obszarNazwa || (k.obszar === "seu" ? "SEU" : "—"))));
+      r.appendChild(el("td", null, nazwaPostaci(k.postac)));
+      r.appendChild(el("td", null, (k.wartoscEnB || "—") + (k.okresBazowy ? " (" + k.okresBazowy + ")" : "")));
+      r.appendChild(el("td", null, ost ? (ost.wartosc + " (" + ost.okres + ")") : "—"));
+      var td = el("td");
+      td.appendChild(el("span", "chip " + (pelna64(k) ? "green" : "amber"), pelna64(k) ? "6.4 OK" : "6.4 brak"));
+      td.appendChild(el("span", "chip " + (pelna65(k) ? "green" : ""), pelna65(k) ? "6.5 OK" : "6.5 brak"));
+      r.appendChild(td);
+      t.appendChild(r);
+    });
+    s.appendChild(t);
+  }
+
+  KARTY.forEach(function (k, i) {
+    var kk = el("div", "poz" + (pelna64(k) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, nrKarty(k, i)));
+    if (k.postac) g.appendChild(el("span", "chip", nazwaPostaci(k.postac)));
+    var us = el("button", "link", "usuń kartę");
+    us.onclick = function () { if (confirm("Usunąć kartę " + nrKarty(k, i) + "? Zniknie także z punktu 6.5.")) { KARTY.splice(i, 1); zapisz(); rysuj(); } };
+    g.appendChild(us);
+    kk.appendChild(g);
+    kk.appendChild(pole("Numer", inp(k.nr, "np. O-1, S-1, OŚ-1", function (v) { k.nr = v; })));
+    kk.appendChild(pole("Nazwa wskaźnika", inp(k.nazwa, "np. kWh na Nm³ sprężonego powietrza", function (v) { k.nazwa = v; })));
+    kk.appendChild(pole("Obszar", sel(k.obszar, OBSZARY, function (v) { k.obszar = v; })));
+    if (k.obszar && k.obszar !== "organizacja")
+      kk.appendChild(pole("Nazwa obszaru i zakres", inp(k.obszarNazwa, "np. Sprężarkownia — cztery sprężarki śrubowe, kolektor główny", function (v) { k.obszarNazwa = v; })));
+    kk.appendChild(pole("Postać wskaźnika", sel(k.postac, POSTACIE, function (v) { k.postac = v; }),
+      "Wartość bezwzględna — gdy nic istotnie nie zmienia zużycia. Jednostkowy — gdy zużycie rośnie i spada razem z produkcją. Model — gdy wpływa kilka rzeczy naraz albo zużycie stałe jest duże."));
+    if (wskaznikFinansowy(k))
+      kk.appendChild(hel("div", "warn", "To wygląda na wskaźnik finansowy (np. GJ na milion złotych przychodu). Zarząd je lubi, ale przychód rośnie także wtedy, gdy drożeją wyroby — <b>bez żadnej poprawy energetycznej</b>. Taki wskaźnik można pokazywać kierownictwu, ale nie powinien służyć do wykazania poprawy. W AutoParts jest oznaczony jako „wskaźnik zarządczy, nie EnPI”."));
+    if (ryzykoJednostkowego(k))
+      kk.appendChild(hel("div", "warn", "Wskaźnik jednostkowy dla całej organizacji przy " + META.stale + "% zużycia niezależnego od produkcji. Gdy produkcja spadnie o 20%, zużycie spadnie o mniej — i wskaźnik <b>wzrośnie, choć nikt niczego nie zepsuł</b>. Rozważcie model."));
+    if (bezwzglednyZeZmiennymi(k))
+      kk.appendChild(el("div", "note", "Postać bezwzględna, a wpisano istotne zmienne. Jeśli te zmienne naprawdę znacząco wpływają na zużycie, norma wymaga ich uwzględnienia — czyli postaci jednostkowej albo modelu. Jeśli wpływ jest nieistotny, usuńcie je z pola zmiennych."));
+    s.appendChild(kk);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wskaźnik");
+  dod.onclick = function () { KARTY.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  if (!KARTY.length) s.appendChild(el("div", "warn", "Nie określono żadnego wskaźnika EnPI."));
+  else if (!kartyObszaru("organizacja").length)
+    s.appendChild(el("div", "warn", "Brak wskaźnika dla całej organizacji. Norma mówi o wskaźnikach „odpowiednich do mierzenia wyniku energetycznego organizacji” — jeden wskaźnik ogólny jest minimum."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 2: karty ── */
+var POLA_KARTY = [
+  { kod: "wzor", nazwa: "Wzór lub model; jednostka", rows: 2,
+    ph: "np. E_ocz = 0,23·t + 0,48·HDD + 406 [MWh/mies.]; EnPI = E_rzecz / E_ocz [—]",
+    pomoc: "Przy wskaźniku jednostkowym wystarczy licznik i mianownik z jednostką. Przy modelu — równanie ze współczynnikami." },
+  { kod: "uzasadnieniePostaci", nazwa: "Uzasadnienie wybranej postaci", rows: 2,
+    ph: "np. Model — kilka zmiennych i duże zużycie stałe (oświetlenie, HVAC, biuro, czuwanie maszyn ok. 40%)",
+    pomoc: "Wymaganie metodyki ENESA. Norma nie każe uzasadniać postaci, ale audytor zapyta „dlaczego właśnie taki wskaźnik”." },
+  { kod: "zmienne", nazwa: "Zmienne istotne i uzasadnienie techniczne", rows: 2,
+    ph: "np. Masa stali — napędza prasy, lakiernię i sprężone powietrze; HDD — ogrzewanie hal i nagrzewnice lakierni",
+    pomoc: "Nie wystarczy wymienić zmiennych — trzeba powiedzieć, dlaczego technicznie wpływają na zużycie. Zmienna bez sensu technicznego to przypadkowa korelacja." },
+  { kod: "statyczne", nazwa: "Czynniki statyczne — stan w okresie bazowym", rows: 2,
+    ph: "np. 3 zmiany, 3 linie pras, hale A–D, asortyment — stan na 2025 r.",
+    pomoc: "To, co wpływa na zużycie, ale zwykle się nie zmienia. Zapisany stan jest potrzebny, żeby w 6.5 dało się stwierdzić, czy zmiana była istotna." },
+  { kod: "zrodla", nazwa: "Źródła danych — pozycje planu zbierania danych", rows: 1,
+    ph: "np. Poz. 1–3, 11, 13 planu F-EnMS-11",
+    pomoc: "Każde źródło musi mieć odpowiednik w planie z punktu 6.6. Wskaźnik bez zaplanowanych danych nie będzie liczony." },
+  { kod: "ocenaModelu", nazwa: "Ocena modelu — zakres danych, R², błąd, wartości odstające", rows: 3,
+    ph: "np. 12 miesięcy 2025 (1 750–2 150 t/mies., 0–650 HDD/mies.); R² = 0,86; CV(RMSE) 2,8%; sierpień (postój 2 tygodnie) sprawdzony, pozostawiony — reszta mieści się w ±2 błędach standardowych",
+    pomoc: "Wypełniane tylko przy postaci „model”. Nie oceniajcie modelu samym R² — sprawdźcie sens zmiennych, zakres danych, błąd i wartości odstające.",
+    tylkoModel: true },
+  { kod: "czestotliwosc", nazwa: "Częstotliwość obliczania", rows: 1,
+    ph: "np. Miesięcznie",
+    pomoc: "Norma nie narzuca częstotliwości, ale każe ją zaplanować. Im częściej, tym szybciej wykryjecie problem." },
+  { kod: "odp", nazwa: "Odpowiedzialny za obliczanie", rows: 1,
+    ph: "np. Energy Manager" },
+  { kod: "przegladMetody", nazwa: "Przegląd metody EnPI — kiedy", rows: 1,
+    ph: "np. Przy corocznej aktualizacji przeglądu energetycznego",
+    pomoc: "Dobry wskaźnik to taki, o którym wiecie, kiedy go przejrzeć. Przy aktualizacji przeglądu energetycznego sprawdza się, czy nadal pasuje." }
+];
+
+function rysujKarty(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Karty wskaźników — część 6.4"));
+  s.appendChild(el("p", "opis", "To metoda określania wskaźnika: wzór, zmienne, dane, częstotliwość i osoba. Norma wymaga, żeby ta metoda była udokumentowana."));
+  s.appendChild(el("div", "note", "Karta F-EnMS-09 jest wspólna dla punktów 6.4 i 6.5. Tutaj wypełniacie stronę wskaźnika; okres bazowy, wartość EnB, normalizację i warunki rewizji — na stronie punktu 6.5. Jedna karta, dwa punkty normy."));
+  host.appendChild(s);
+
+  if (!KARTY.length) {
+    var p = el("div", "sekcja");
+    p.appendChild(el("div", "warn", "Najpierw dodajcie wskaźniki w zakładce 1."));
+    host.appendChild(p); return;
+  }
+  KARTY.forEach(function (k, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, "Karta " + nrKarty(k, i) + " — " + (k.nazwa || "(bez nazwy)"));
+    hh.appendChild(el("span", "chip " + (pelna64(k) ? "green" : "amber"), pelna64(k) ? "kompletna" : "do uzupełnienia"));
+    if (k.postac) hh.appendChild(el("span", "chip", nazwaPostaci(k.postac)));
+    sec.appendChild(hh);
+    var kk = el("div", "poz" + (pelna64(k) ? "" : " brak"));
+    POLA_KARTY.forEach(function (f) {
+      if (f.tylkoModel && k.postac !== "model") return;
+      kk.appendChild(pole(f.nazwa, txt(k[f.kod], f.ph, f.rows, function (v) { k[f.kod] = v; }), f.pomoc));
+      if (f.kod === "ocenaModelu" && tylkoR2(k))
+        kk.appendChild(hel("div", "warn", "Ocena modelu oparta wyłącznie na R². R² mówi, jaką część zmienności zużycia model wyjaśnia — ale wysoki R² nie dowodzi, że model jest dobry. Dopiszcie: <b>czy zmienne mają techniczny sens, czy dane obejmują typowe warunki, czy nie ma miesięcy odstających.</b> Progi R² z poradników to wskazówki, nie wymagania normy."));
+    });
+    if (k.postac === "model" && !(k.ocenaModelu || "").trim())
+      kk.appendChild(el("div", "warn", "Postać „model” bez oceny modelu. To najczęściej kwestionowany element kart EnPI."));
+    if (!(k.zrodla || "").trim())
+      kk.appendChild(el("div", "note", "Brak wskazania źródeł danych. Po zbudowaniu planu z punktu 6.6 to pole będzie wyborem pozycji planu, a nie tekstem."));
+    sec.appendChild(kk);
+    host.appendChild(sec);
+  });
+}
+
+/* ── zakładka 3: wartości EnPI ── */
+function rysujWartosci(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wartości wskaźników");
+  h.appendChild(el("span", "chip " + (WARTOSCI.length ? "green" : "amber"),
+    ile(WARTOSCI.length, "zapis", "zapisy", "zapisów")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Wartości EnPI zachowuje się jako udokumentowaną informację i porównuje z odpowiadającymi im liniami bazowymi. To wymaganie normy, nie dodatek."));
+  s.appendChild(el("div", "note", "Jeden dobry miesiąc to jeszcze nie wynik roku. Platforma liczy odchylenie od EnB, ale ocena, czy to poprawa, należy do Was — i wymaga sprawdzenia warunków porównania z punktu 6.5."));
+
+  WARTOSCI.forEach(function (w, i) {
+    var karta = KARTY.filter(function (k, j) { return nrKarty(k, j) === w.enpi; })[0];
+    var pelny = !!(w.enpi && (w.okres || "").trim() && (w.wartosc || "").toString().trim());
+    var kk = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (w.enpi || "—") + " · " + (w.okres || "—")));
+    if (karta) {
+      var a = lb(w.wartosc), b = lb(karta.wartoscEnB);
+      if (a !== null && b !== null && b !== 0) {
+        var zm = (a - b) / b * 100;
+        g.appendChild(el("span", "chip " + (zm < 0 ? "green" : "red"),
+          (zm < 0 ? "−" : "+") + Math.abs(zm).toFixed(1) + "% wobec EnB"));
+      } else if (b === null) {
+        g.appendChild(el("span", "chip", "brak EnB — uzupełnić w 6.5"));
+      }
+    }
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WARTOSCI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    kk.appendChild(g);
+    kk.appendChild(pole("Wskaźnik", sel(w.enpi, opcjeKart(), function (v) { w.enpi = v; })));
+    kk.appendChild(pole("Okres", inp(w.okres, "np. I półrocze 2026; VII–IX 2026; 2025", function (v) { w.okres = v; })));
+    kk.appendChild(pole("Wartość", inp(w.wartosc, "np. 0,119", function (v) { w.wartosc = v; })));
+    kk.appendChild(pole("Adnotacja — warunki porównania",
+      inp(w.adnotacja, "np. EnB z zimy, wynik z lata — latem sprężarki pracują w trudniejszych warunkach, więc różnica raczej nie zawyża poprawy",
+        function (v) { w.adnotacja = v; }),
+      "Tu wpisuje się wszystko, co odbiera porównaniu uczciwość: inna pora roku, postój, zmiana obciążenia."));
+    if (karta) {
+      var a2 = lb(w.wartosc), b2 = lb(karta.wartoscEnB);
+      if (a2 !== null && b2 !== null && b2 !== 0 && Math.abs((a2 - b2) / b2) > 0.25 && !(w.adnotacja || "").trim())
+        kk.appendChild(hel("div", "warn", "Odchylenie od linii bazowej powyżej 25% bez adnotacji. Sprawdźcie najpierw, czy <b>okres wartości jest porównywalny z okresem linii bazowej</b> — półrocze zestawione z linią bazową roczną da „poprawę” 50%, której nie było. Jeśli okres jest porównywalny, opiszcie w adnotacji, co tę zmianę spowodowało."));
+    }
+    s.appendChild(kk);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wartość");
+  dod.onclick = function () { WARTOSCI.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  var bez = KARTY.filter(function (k, i) { return !wartosciKarty(nrKarty(k, i)).length; }).length;
+  if (bez && KARTY.length)
+    s.appendChild(el("div", "warn", ile(bez, "wskaźnik nie ma", "wskaźniki nie mają", "wskaźników nie ma") + " ani jednej zapisanej wartości. Norma wymaga zachowywania wartości EnPI."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 4: metoda ── */
+var POLA_METODY = [
+  { kod: "dobor", nazwa: "Jak dobieracie postać wskaźnika", podstawa: "M", rows: 3,
+    ph: "np. Dla organizacji i każdego SEU szacujemy udział zużycia niezależnego od produkcji. Powyżej 15% wybieramy model, poniżej — wskaźnik jednostkowy. Przy zużyciu niezależnym od czegokolwiek (oświetlenie przy stałym czasie pracy) — wartość bezwzględna." },
+  { kod: "model", nazwa: "Jak budujecie i oceniacie model", podstawa: "M", rows: 3,
+    ph: "np. Regresja na danych miesięcznych z 12 miesięcy okresu bazowego. Ocena: techniczny sens zmiennych, zakres danych, R², CV(RMSE), analiza reszt i wartości odstających. Miesiące odstające sprawdzamy i opisujemy decyzję o pozostawieniu albo wyłączeniu." },
+  { kod: "obliczanie", nazwa: "Jak i jak często obliczacie wartości", podstawa: "N", rows: 2,
+    ph: "np. Energy Manager liczy wszystkie wskaźniki miesięcznie do 10 dnia następnego miesiąca, w arkuszu EnMS; porównanie z EnB przy każdym obliczeniu." },
+  { kod: "aktualizacja", nazwa: "Jak aktualizujecie wskaźniki i metodę", podstawa: "N", rows: 2,
+    ph: "np. Przegląd wszystkich kart przy corocznej aktualizacji przeglądu energetycznego (do 31 marca) oraz przy zmianie SEU, wyposażenia lub asortymentu. Zmianę metody zatwierdza najwyższe kierownictwo." },
+  { kod: "zapisy", nazwa: "Gdzie przechowujecie metodę i wartości", podstawa: "N", rows: 2,
+    ph: "np. Karty F-EnMS-09 w teczce EnMS (wersjonowane); wartości w arkuszu EnMS, zakładka „EnPI”, kopia tygodniowa." },
+  { kod: "komunikacja", nazwa: "Komu i jak pokazujecie wskaźniki", podstawa: "M", rows: 2,
+    ph: "np. Trend na odprawie kierownictwa co miesiąc; wskaźniki SEU na tablicy wydziałowej; wskaźnik zarządczy GJ/mln zł zarządowi — oznaczony jako nie-EnPI." }
+];
+
+function metodaOk() {
+  return POLA_METODY.filter(function (p) { return p.podstawa === "N"; })
+    .every(function (p) { return (METODA[p.kod] || "").trim(); });
+}
+function rysujMetoda(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Metoda określania i aktualizowania EnPI");
+  h.appendChild(el("span", "chip " + (metodaOk() ? "green" : "amber"),
+    POLA_METODY.filter(function (p) { return (METODA[p.kod] || "").trim(); }).length + " / " + POLA_METODY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Norma wymaga, żeby <b>metoda określania i aktualizowania EnPI</b> była utrzymywana jako udokumentowana informacja. To jedno z dwóch wymagań dokumentacyjnych punktu 6.4 — drugim są zachowane wartości wskaźników."));
+  var kk = el("div", "poz" + (metodaOk() ? "" : " brak"));
+  kk.appendChild(pole("Szacowany udział zużycia niezależnego od produkcji [%]",
+    inp(META.stale, "np. 40", function (v) { META.stale = v; }),
+    "Oświetlenie, wentylacja, ogrzewanie, biuro, czuwanie maszyn. Od tej liczby zależy, czy wskaźnik jednostkowy nie wprowadza w błąd — platforma ostrzega powyżej 15%."));
+  POLA_METODY.forEach(function (f) {
+    var p = pole(f.nazwa, txt(METODA[f.kod], f.ph, f.rows, function (v) { METODA[f.kod] = v; }));
+    p.querySelector("label").appendChild(el("span", "chip", f.podstawa === "N" ? "wymóg normy" : "metodyka ENESA"));
+    kk.appendChild(p);
+  });
+  s.appendChild(kk);
+  var u = udzialStalego();
+  if (u !== null && u > 15)
+    s.appendChild(el("div", "note", "Przy " + META.stale + "% zużycia stałego wskaźnik jednostkowy dla całego zakładu będzie mylący — tak samo jak w AutoParts, gdzie udział sięga 40% i dlatego wybrano model. Dla poszczególnych SEU z małym udziałem stałym wskaźnik jednostkowy nadal jest w porządku."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz wskaźników: "));
+  n.appendChild(document.createTextNode(
+    ile(KARTY.length, "wskaźnik", "wskaźniki", "wskaźników") + " · organizacja: " + kartyObszaru("organizacja").length +
+    " · SEU: " + kartyObszaru("seu").length + " · kart kompletnych po stronie 6.4: " + KARTY.filter(pelna64).length +
+    " · po stronie 6.5: " + KARTY.filter(pelna65).length + " · " + ile(WARTOSCI.length, "zapisana wartość", "zapisane wartości", "zapisanych wartości")));
+  s.appendChild(n);
+  var pst = {};
+  KARTY.forEach(function (k) { pst[k.postac || "brak"] = (pst[k.postac || "brak"] || 0) + 1; });
+  if (KARTY.length > 1 && Object.keys(pst).length === 1)
+    s.appendChild(el("div", "note", "Wszystkie wskaźniki mają tę samą postać. Każde znaczące użycie energii może mieć inną — liczy się dopasowanie, nie jednolitość. Warto sprawdzić, czy to świadoma decyzja."));
+  if (KARTY.length > 12)
+    s.appendChild(el("div", "warn", "Ponad dwanaście wskaźników. Za dużo wskaźników to chaos — kilka dobrych na początek wystarczy."));
+  var fin = KARTY.filter(wskaznikFinansowy).length;
+  if (fin) s.appendChild(el("div", "warn", ile(fin, "wskaźnik wygląda", "wskaźniki wyglądają", "wskaźników wygląda") + " na finansowy. Do rozmowy z klientem: pokazywać zarządowi, ale nie używać do wykazania poprawy."));
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var kk = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    kk.appendChild(g);
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      kk.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(kk);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-25, sekcja 6.4 ── */
+function stanPozycji(p) {
+  var f = {
+    odpowiednie: function () { return KARTY.length > 0 && kartyObszaru("organizacja").length > 0 && KARTY.every(pelna64); },
+    zmienne: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return k.postac === "bezwzgledny" ? !bezwzglednyZeZmiennymi(k) : !!(k.zmienne || "").trim();
+      });
+    },
+    postac: function () { return KARTY.length > 0 && KARTY.every(function (k) { return !!(k.uzasadnieniePostaci || "").trim(); }); },
+    modelocena: function () {
+      var m = KARTY.filter(function (k) { return k.postac === "model"; });
+      if (!m.length) return null;
+      return m.every(function (k) { return (k.ocenaModelu || "").trim() && !tylkoR2(k); });
+    },
+    metoda: function () { return metodaOk(); },
+    wartosci: function () {
+      return KARTY.length > 0 && KARTY.every(function (k, i) { return wartosciKarty(nrKarty(k, i)).length > 0; })
+        && KARTY.every(function (k) { return !!(k.wartoscEnB || "").toString().trim(); });
+    }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!KARTY.length) b.push({ t: "Nie określono żadnego wskaźnika EnPI.", kto: "klient" });
+  if (KARTY.length && !kartyObszaru("organizacja").length)
+    b.push({ t: "Brak wskaźnika dla całej organizacji.", kto: "klient" });
+  KARTY.forEach(function (k, i) {
+    var nr = nrKarty(k, i);
+    if (!pelna64(k)) b.push({ t: nr + " — karta niekompletna po stronie 6.4 (postać, uzasadnienie, wzór, zmienne, źródła, częstotliwość, osoba).", kto: "klient" });
+    if (k.postac === "model" && tylkoR2(k)) b.push({ t: nr + " — model oceniony tylko po R².", kto: "klient", metodyka: true });
+    if (wskaznikFinansowy(k)) b.push({ t: nr + " — wskaźnik finansowy nie powinien służyć do wykazania poprawy.", kto: "konsultant", metodyka: true });
+    if (ryzykoJednostkowego(k)) b.push({ t: nr + " — wskaźnik jednostkowy dla organizacji przy dużym zużyciu stałym.", kto: "klient", metodyka: true });
+    if (!wartosciKarty(nr).length) b.push({ t: nr + " — brak zapisanych wartości wskaźnika.", kto: "klient" });
+    if (!(k.wartoscEnB || "").toString().trim()) b.push({ t: nr + " — brak linii bazowej; wartości nie da się z czym porównać (punkt 6.5).", kto: "klient" });
+  });
+  if (!metodaOk()) b.push({ t: "Metoda określania i aktualizowania EnPI nie jest kompletna — to udokumentowana informacja wymagana przez normę.", kto: "klient" });
+  if (!META.data || !(META.zatwierdzil || "").trim())
+    b.push({ t: "Brak zatwierdzenia kart i metody.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-WSK-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak, Dyrektor Techniczny", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data zatwierdzenia", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Stan na dzień", inp(META.stan, "", function (v) { META.stan = v; }, "date")));
+  s.appendChild(m);
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-25 — sekcja 6.4"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_64.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-WSK-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Część", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["Rejestr EnPI", "zakładka 1", ile(KARTY.length, "wskaźnik", "wskaźniki", "wskaźników")],
+  ["Karty wskaźników — część 6.4", "zakładka 2", KARTY.filter(pelna64).length + " z " + KARTY.length + " kompletnych"],
+  ["Wartości wskaźników", "zakładka 3", ile(WARTOSCI.length, "zapis", "zapisy", "zapisów")],
+  ["Metoda określania i aktualizowania EnPI", "zakładka 4", metodaOk() ? "kompletna" : "do uzupełnienia"],
+  ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+  ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(hel("div", "ok", "Punkt 6.4 ma <b>dwa wymagania dokumentacyjne</b>: metoda określania i aktualizowania EnPI jest <b>utrzymywana</b> (zakładka 4), a wartości wskaźników są <b>zachowywane</b> (zakładka 3). Karta F-EnMS-09 obsługuje oba, wspólnie z punktem 6.5."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "rejestr", t: "1. Rejestr EnPI", f: rysujRejestr },
+  { id: "karty", t: "2. Karty wskaźników", f: rysujKarty },
+  { id: "wartosci", t: "3. Wartości", f: rysujWartosci },
+  { id: "metoda", t: "4. Metoda EnPI", f: rysujMetoda },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+function aktualizujPasek() {
+  var razem = Math.max(KARTY.length, 1) * 2 + POLA_METODY.length + 1;
+  var zrob = KARTY.filter(pelna64).length
+    + KARTY.filter(function (k, i) { return wartosciKarty(nrKarty(k, i)).length > 0; }).length
+    + POLA_METODY.filter(function (p) { return (METODA[p.kod] || "").trim(); }).length
+    + ((META.zatwierdzil || "").trim() && META.data ? 1 : 0);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+}
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 22:40", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 6.4" }];
+function zapisz() {
+  try {
+    localStorage.setItem(MAGAZYN, JSON.stringify({ KARTY: KARTY, META: META }));
+    localStorage.setItem("enesa_64", JSON.stringify({ METODA: METODA, WARTOSCI: WARTOSCI, WNIOSKI: WNIOSKI }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem(MAGAZYN);
+    if (s) { var d = JSON.parse(s); KARTY = d.KARTY || []; META = d.META || META; }
+    var s2 = localStorage.getItem("enesa_64");
+    if (s2) { var d2 = JSON.parse(s2); METODA = d2.METODA || {}; WARTOSCI = d2.WARTOSCI || []; WNIOSKI = d2.WNIOSKI || []; }
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  KARTY = JSON.parse(JSON.stringify(P_KARTY));
+  METODA = JSON.parse(JSON.stringify(P_METODA));
+  WARTOSCI = JSON.parse(JSON.stringify(P_WARTOSCI));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 22:45", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 6.4. Karty są wspólne z punktem 6.5.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić karty wskaźników? Zniknie także strona 6.5 tych kart.")) return;
+  KARTY = []; METODA = {}; WARTOSCI = []; WNIOSKI = [];
+  META = { zatwierdzil: "", data: "", stan: "", stale: "" };
+  try { localStorage.removeItem(MAGAZYN); localStorage.removeItem("enesa_64"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

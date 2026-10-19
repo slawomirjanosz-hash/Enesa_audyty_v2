@@ -1,0 +1,1280 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 6.2 Cele i plany działań</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 6</div>
+ <h1>6.2 Cele, zadania energetyczne i planowanie ich osiągnięcia</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 6.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 6.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>6.2 Cele, zadania energetyczne i planowanie ich osiągnięcia</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 6.2 i sposób ustanawiania celów.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 6.2<br>Cele i plany działań</div>
+   <div>
+    <h4>6.2 Cele, zadania energetyczne i plany działań</h4>
+    <p>Czym różni się cel od zadania energetycznego, skąd bierze się dobry cel i dlaczego metoda
+    weryfikacji poprawy to najczęściej gubiony element całego punktu.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 6.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">6.2 — cele i plany<br>14 slajdów</div>
+   <div>
+    <h4>6.2 Cele, zadania energetyczne i plany działań</h4>
+    <p>Cel wyniku i cel systemowy. Zadanie energetyczne jako wymierny cel poprawy. Pięć elementów planu
+    działań. Metoda weryfikacji poprawy krok po kroku.</p>
+    <p style="font-size:12.5px">14 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja ustanawia cele energetyczne na odpowiednich funkcjach i szczeblach.
+ Cele są spójne z polityką energetyczną, mierzalne, monitorowane, komunikowane, aktualizowane, gdy to właściwe,
+ oraz uwzględniają wymagania, znaczące użycia energii i możliwości poprawy wyniku energetycznego. Organizacja
+ ustanawia też zadania energetyczne. Planując, jak osiągnąć cele i zadania, określa: co będzie zrobione, jakie
+ będą potrzebne zasoby, kto będzie odpowiedzialny, kiedy działania zostaną zakończone, w jaki sposób zostaną
+ ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego. Organizacja rozważa,
+ jak włączyć działania w swoje procesy biznesowe. Cele, zadania energetyczne i plany działań utrzymuje się jako
+ udokumentowaną informację. Omówienie na podstawie punktu 6.2 PN-EN ISO 50001:2018; nie jest to dosłowne
+ brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> ustal, co chcesz osiągnąć, przelicz to na
+ wymierne zadania, zaplanuj kto–co–kiedy–za ile i z góry zapisz, jak sprawdzisz, że poprawa rzeczywiście
+ nastąpiła.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 5, punkt 6.2. Formularz: III-23 (F-EnMS-10),
+ przykład AutoParts: III-24.</div>
+
+ <div class="ramka">
+  <h3>◧ „Zmniejszymy zużycie o 20%!”</h3>
+  <p style="font-size:13.5px">Styczeń. Zarząd ogłasza cel na plakacie w holu. Grudzień. Wynik: 3%.
+  I nikt nie wie, czy to dużo, czy mało — bo nikt nie wiedział, skąd wzięło się 20%.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Dobry cel nie bierze się z ambicji, tylko z przeglądu
+  energetycznego.</b> Jeśli przegląd pokazał siedem możliwości poprawy wartych łącznie 9% zużycia, to cel
+  „minus 20%” jest życzeniem. Cel „minus 8% do końca 2027 roku” jest planem.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Cel a zadanie energetyczne</h3>
+ <p style="font-size:14.5px">Norma rozróżnia te dwa pojęcia i warto trzymać się rozróżnienia, bo audytor o nie
+ zapyta.</p>
+ <table class="tab">
+ <tr><th style="width:22%">Pojęcie</th><th>Co to jest</th><th style="width:34%">Przykład z AutoParts</th></tr>
+ <tr><td><b>Cel energetyczny</b></td>
+     <td>Zamierzony wynik. Może dotyczyć wyniku energetycznego albo samego systemu zarządzania.</td>
+     <td>C1 — ograniczyć zużycie energii na wytwarzanie sprężonego powietrza.<br>
+         C4 — wdrożyć opomiarowanie znaczących użyć (cel systemowy).</td></tr>
+ <tr><td><b>Zadanie energetyczne</b></td>
+     <td>Wymierny cel poprawy wyniku energetycznego: konkretna wartość wskaźnika, osiągnięta w terminie.</td>
+     <td>Z1.1 — S-1 z 0,125 do 0,110 kWh/Nm³ do 31.12.2027.<br>
+         Z1.2 — przepływ w czasie postoju z 9 do 4 Nm³/min do 30.06.2027.</td></tr>
+ </table>
+ <div class="note" style="margin:14px 0">Jeden cel może mieć kilka zadań. Przy sprężonym powietrzu ma to sens:
+ <b>kWh/Nm³</b> pokazuje sprawność wytwarzania powietrza, a nieszczelności zwiększają ilość powietrza, której
+ potrzebujecie. Usunięcie wycieków zmniejsza zużycie energii, ale nie musi poprawić kWh/Nm³ — dlatego mierzy
+ się je osobno, przepływem w czasie postoju. Cel systemowy (jak C4) może nie mieć żadnego zadania
+ energetycznego i to jest poprawne.</div>
+
+ <h3 style="margin-top:22px">Plan działań — cel bez planu to życzenie</h3>
+ <p style="font-size:14.5px">Dla każdego celu norma wymaga pięciu rzeczy. Pierwsze cztery są oczywiste.
+ Piąta ginie najczęściej.</p>
+ <table class="tab">
+ <tr><th style="width:30%">Element planu</th><th>Co trzeba zapisać</th></tr>
+ <tr><td>Co będzie zrobione</td><td>Konkretne działania, nie kierunki. „Usunięcie 35 nieszczelności”, nie „poprawa szczelności”.</td></tr>
+ <tr><td>Jakie będą potrzebne zasoby</td><td>Pieniądze, czas ludzi, sprzęt. Także wtedy, gdy zasobem jest tylko czyjaś praca.</td></tr>
+ <tr><td>Kto będzie odpowiedzialny</td><td>Funkcja albo nazwisko. Jedna osoba na działanie.</td></tr>
+ <tr><td>Kiedy działanie się zakończy</td><td>Data. Przy działaniach cyklicznych — data pierwszego wykonania i cykl.</td></tr>
+ <tr><td><b>Jak ocenicie wyniki i jaką metodą zweryfikujecie poprawę</b></td>
+     <td>Tu ginie najwięcej punktów. „Sprawdzimy na koniec roku” <b>to nie metoda.</b></td></tr>
+ </table>
+
+ <div class="warn" style="margin:14px 0"><b>Metoda weryfikacji poprawy musi powiedzieć:</b> który wskaźnik
+ i która linia bazowa, jaki okres porównania, jakie dane i z jakiego źródła, w jakich warunkach porównujecie,
+ jak uwzględniacie istotne zmienne i jak liczycie poprawę.<br><br>
+ Bez tego spadek zużycia oświetlenia z 680 do 410 MWh niczego nie dowodzi — mogła spaść produkcja albo
+ skrócić się czas pracy zakładu. Audytor nie pyta „czy spadło”, pyta „skąd wiecie, że to wasza zasługa”.</div>
+
+ <div class="ramka">
+  <h3>◧ Plan treningowy, nie postanowienie noworoczne</h3>
+  <p style="font-size:13.5px">„Schudnę 10 kg” to postanowienie. „Trzy treningi w tygodniu po 45 minut, deficyt
+  300 kcal dziennie, waga w każdą środę rano na czczo” to plan — i od razu wiadomo, po czym poznać, że działa.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Cel energetyczny działa tak samo. Różnica jest tylko w tym, że
+  wagę trzeba zastąpić wskaźnikiem EnPI, a „środę rano na czczo” — warunkami porównania.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Jak to wygląda w praktyce — zadanie Z1.1</h3>
+ <table class="tab">
+ <tr><th style="width:30%">Element</th><th>Zapis</th></tr>
+ <tr><td>Skąd ten cel</td><td>Przegląd energetyczny: sprężarkownia to SEU (17,5% zużycia), a możliwości M-1 i M-3 dają razem około 12% jej zużycia.</td></tr>
+ <tr><td>Wskaźnik</td><td>S-1 — kWh na Nm³ sprężonego powietrza (karta wskaźnika w punkcie 6.4).</td></tr>
+ <tr><td>Linia bazowa</td><td>0,125 kWh/Nm³ — kampania pomiarowa 02–03.2026 (punkt 6.5).</td></tr>
+ <tr><td>Wartość docelowa</td><td>0,110 kWh/Nm³, czyli poprawa o 12%.</td></tr>
+ <tr><td>Termin</td><td>31.12.2027.</td></tr>
+ <tr><td>Działania</td><td>Kampania pomiarowa i lokalizacja nieszczelności, usunięcie 35 nieszczelności z kwartalnym przeglądem szczelności, obniżenie ciśnienia z 7,0 do 6,3 bar, sterownik nadrzędny i napęd o zmiennej prędkości dla jednej z czterech sprężarek, weryfikacja zadań po uruchomieniu.</td></tr>
+ <tr><td>Metoda weryfikacji</td><td>Cztery tygodnie po odbiorze modernizacji oraz rok 2027 wobec linii bazowej z kampanii 02–03.2026, dane z podlicznika i przepływomierza, pełne miesiące pracy trzyzmianowej przy 6,3 bar i obciążeniu 60–90%, poprawa liczona jako (EnB − wynik) ÷ EnB.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:38%">Błąd</th><th>Dlaczego to problem</th></tr>
+ <tr><td>Cel z sufitu — „minus 20%”, bo tak ogłoszono</td><td>Norma wymaga, żeby cele uwzględniały możliwości poprawy z przeglądu energetycznego. Cel bez powiązania jest niemożliwy do obrony przed audytorem i demoralizuje zespół.</td></tr>
+ <tr><td>Cel bez planu działań</td><td>Norma wymaga planu dla każdego celu. Cel bez planu zostaje na plakacie.</td></tr>
+ <tr><td>Plan bez metody weryfikacji poprawy</td><td>Najczęstsza niezgodność w tym punkcie. „Sprawdzimy na koniec roku” nie mówi, co z czym porównacie.</td></tr>
+ <tr><td>Zadanie bez wartości wyjściowej</td><td>„Zmniejszyć zużycie sprężonego powietrza” bez EnB nie jest wymierne — nie da się stwierdzić osiągnięcia.</td></tr>
+ <tr><td>Działanie bez przypisania do procesu</td><td>Inwestycja, która nie trafiła do budżetu, i przegląd, który nie trafił do planu utrzymania ruchu, zwykle się nie wydarzają.</td></tr>
+ <tr><td>Cele ustanowione tylko na poziomie zakładu</td><td>Norma mówi o celach „na odpowiednich funkcjach i szczeblach”. Jeśli za SEU odpowiada wydział, cel powinien istnieć także tam.</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Weźcie listę możliwości poprawy z punktu 6.3 i wybierzcie trzy,
+  które macie szansę zrealizować w ciągu dwóch lat. Dla każdej napiszcie jedno zdanie: <b>który wskaźnik, z jakiej
+  wartości, do jakiej, do kiedy.</b> Jeśli któregoś zdania nie da się dokończyć, to znaczy, że brakuje Wam
+  wskaźnika albo linii bazowej — i to jest praca na punkty 6.4 i 6.5, nie na 6.2.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma pilnuje powiązań: cel wyniku bez zadania, cel bez planu, zadanie bez metody
+  weryfikacji — każdy taki brak jest nazwany po imieniu.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 6.2 w formacie stron 4.1–6.3.</b> Cztery części formularza F-EnMS-10 w czterech
+zakładkach ankiety. To pierwszy punkt, w którym <b>dane są powiązane relacyjnie</b>: zadanie wskazuje cel,
+działanie wskazuje cel, metoda weryfikacji wskazuje zadanie. Stąd walidacje krzyżowe, których nie było
+w poprzednich punktach.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 5, punkt 6.2</td><td>Scena plakatu „minus 20%”, rozróżnienie celu i zadania energetycznego, uzasadnienie dwóch zadań przy sprężonym powietrzu, pięć elementów planu działań, uwaga o „sprawdzimy na koniec roku”, analogia planu treningowego, praktyczne przejście przez Z1.1, tabela sześciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 4 — III-23 (F-EnMS-10)</td><td>Cztery części formularza i wszystkie pola: A. cele (nr, cel, rodzaj, powiązanie, termin, odpowiedzialny, status); B. zadania (nr, do celu, karta EnPI, EnB, wartość docelowa, termin); C. plan działań dla celu (działanie, zasoby, odpowiedzialny, termin, proces, status); D. metoda weryfikacji poprawy (8 pól).</td></tr>
+<tr><td>Część III, Moduł 4 — III-24</td><td>Przykład AutoParts jako wypełnienie demonstracyjne: 4 cele, 4 zadania, 11 działań, 4 kompletne metody weryfikacji.</td></tr>
+<tr><td>Część III, Moduł 4 — III-25</td><td>Lista kontrolna sekcji 6.2: 8 pozycji z kolumną N / M.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:22%">Tabela</th><th>Klucze i powiązania</th></tr>
+<tr><td><code>cel_energetyczny</code></td><td>id, audyt_id, nr (C1…), tresc, rodzaj ENUM('wynik','system'), powiazanie TEXT, termin DATE, odpowiedzialny, status ENUM.</td></tr>
+<tr><td><code>zadanie_energetyczne</code></td><td>id, cel_id → cel_energetyczny, nr (Z1.1…), enpi_karta_id → karta wskaźnika z 6.4, enb_id → linia bazowa z 6.5, wartosc_docelowa, termin DATE, postep TEXT.</td></tr>
+<tr><td><code>dzialanie</code></td><td>id, cel_id → cel_energetyczny, tresc, zasoby, odpowiedzialny, termin DATE, proces_biznesowy TEXT, status ENUM.</td></tr>
+<tr><td><code>metoda_weryfikacji</code></td><td>id, zadanie_id → zadanie_energetyczne (1:1), 8 pól tekstowych. Kolumna <code>wynik</code> wypełniana po terminie zadania.</td></tr>
+</table>
+<div class="note"><b>Uwaga dla punktów 6.4 i 6.5.</b> W tym pliku <code>enpi</code> i <code>enb</code> są polami
+tekstowymi, bo karty wskaźników jeszcze nie istnieją. Po zbudowaniu 6.4 i 6.5 należy je zamienić na
+<b>wybór z listy kart</b> (<code>enpi_karta_id</code>, <code>enb_id</code>) — tak, żeby zmiana wartości linii
+bazowej w 6.5 była widoczna w zadaniu, a nie wymagała ręcznej korekty w dwóch miejscach.</div>
+
+<h2>Walidacje krzyżowe</h2>
+<table>
+<tr><th style="width:34%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td>Cel rodzaju <code>wynik</code> bez żadnego zadania</td><td>Ostrzeżenie przy celu i pozycja w braki(): cel wyniku energetycznego wymaga wymiernego zadania. Cel rodzaju <code>system</code> bez zadania jest poprawny i nie generuje ostrzeżenia.</td></tr>
+<tr><td>Cel bez żadnego działania</td><td>Ostrzeżenie „cel bez planu działań to życzenie” i pozycja w braki().</td></tr>
+<tr><td>Cel bez pola <code>powiazanie</code></td><td>Pozycja w analizie konsultanta: kandydat na „cel z sufitu”. Nie blokuje zapisu, bo powiązanie bywa dopisywane po rozmowie.</td></tr>
+<tr><td>Zadanie bez EnPI, EnB, wartości docelowej albo terminu</td><td>Zadanie niekompletne — pozycja w braki(). Bez EnB zadanie nie jest wymierne.</td></tr>
+<tr><td>Metoda weryfikacji z niewypełnionym którymkolwiek z 7 pól wymaganych</td><td>Chip „metoda weryfikacji niepełna” przy zadaniu w zakładce 2 i pozycja w braki().</td></tr>
+<tr><td>Pole metody wypełnione frazą pustą</td><td>Wzorzec <code>/^\s*(na koniec roku|sprawdzimy na koniec roku|po roku|na bieżąco|okresowo)\s*\.?\s*$/i</code> — ostrzeżenie cytujące wpisaną treść. To wprost realizuje uwagę z książki.</td></tr>
+<tr><td>Działanie bez pola <code>proces_biznesowy</code></td><td>Nota, nie ostrzeżenie — norma każe „rozważyć”, nie „zapewnić”. W braki() oznaczone chipem „metodyka ENESA, nie wymóg normy”.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-25 — sekcja 6.2</h2>
+<table>
+<tr><th style="width:52%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Ustanowiono cele energetyczne na odpowiednich funkcjach i szczeblach organizacji.</td><td class='mono'>N</td><td><code>ustanowiono</code></td></tr><tr><td>Cele są spójne z polityką energetyczną i uwzględniają wymagania, znaczące użycia energii oraz możliwości poprawy wyniku energetycznego.</td><td class='mono'>N</td><td><code>spojne</code></td></tr><tr><td>Cele i zadania energetyczne są mierzalne, monitorowane, komunikowane i aktualizowane, gdy to właściwe.</td><td class='mono'>N</td><td><code>mierzalne</code></td></tr><tr><td>Dla celów i zadań zaplanowano: co będzie zrobione, jakie będą potrzebne zasoby, kto odpowiada i kiedy to się zakończy.</td><td class='mono'>N</td><td><code>plany</code></td></tr><tr><td>Plany określają, w jaki sposób zostaną ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego.</td><td class='mono'>N</td><td><code>weryfikacja</code></td></tr><tr><td>Metoda weryfikacji poprawy wskazuje wskaźnik i linię bazową, okres porównania, dane i ich źródło, warunki porównania, uwzględnienie istotnych zmiennych, sposób obliczenia i osobę weryfikującą.</td><td class='mono'>M</td><td><code>metoda_pelna</code></td></tr><tr><td>Rozważono, w jaki sposób włączyć działania w procesy biznesowe organizacji.</td><td class='mono'>N</td><td><code>procesy</code></td></tr><tr><td>Cele, zadania energetyczne i plany działań są utrzymywane jako udokumentowana informacja.</td><td class='mono'>N</td><td><code>udokumentowane</code></td></tr></table>
+<div class="note">Pozycja oznaczona <b>M</b> jest wymaganiem metodyki ENESA, nie normy. Norma wymaga „metody
+weryfikacji poprawy wyniku energetycznego”, ale nie wylicza jej składników — rozbicie na osiem pól to nasza
+interpretacja tego, co audytor i tak sprawdzi. Przy prezentacji klientowi trzeba to rozróżnienie utrzymać.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść wniosków i podsumowanie planowania nie są renderowane — nie trafiają do przeglądarki klienta w żadnej formie. Ukrywanie stylem jest tu niedopuszczalne: wnioski konsultanta zawierają ocenę jakości celów klienta.</td></tr>
+<tr><td>Wnioski — cztery ogniwa</td><td>znaczenie → decyzja → działanie → sprawdzenie. Wniosek niepełny jest liczony osobno i nie wchodzi do dokumentu.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-CEL-01</code></td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-10, załącznik III-23</td></tr>
+<tr><td>Status w normie</td><td>Udokumentowana informacja <b>utrzymywana</b> — cele, zadania i plany są aktualizowane, więc dokument ma wersje, a nie tylko zapis archiwalny.</td></tr>
+<tr><td>Zawartość</td><td>Części A–D z zakładek 1–4, zatwierdzenie z zakładki 6, wnioski konsultanta z zakładki 5 (tylko w wersji konsultanckiej).</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Zmiana wyników przeglądu energetycznego (6.3), nowa możliwość poprawy, zmiana polityki (5.2), decyzja przeglądu zarządzania (9.3), zmiana terminu albo statusu dowolnego zadania.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>5.2 Polityka</td><td><b>Wejście.</b> Cele mają być spójne z polityką — pole <code>powiazanie</code> zwykle cytuje jej punkt.</td></tr>
+<tr><td>6.1 Ryzyka i szanse</td><td><b>Wejście.</b> Szansa z rejestru 6.1 jest typowym źródłem celu; ryzyko bywa źródłem celu systemowego.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście, najważniejsze.</b> SEU i lista możliwości poprawy z SPBT. Cel bez oparcia w tej liście jest celem z sufitu.</td></tr>
+<tr><td>6.4 Wskaźniki EnPI</td><td><b>Dwukierunkowo.</b> Zadanie wskazuje kartę wskaźnika; brak karty dla zadania to sygnał, że 6.4 jest niekompletne.</td></tr>
+<tr><td>6.5 Linia bazowa EnB</td><td><b>Dwukierunkowo.</b> Wartość wyjściowa zadania to EnB. Zmiana EnB po normalizacji wymusza przeliczenie wartości docelowej.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Wyjście.</b> Każde pole „dane i źródło” z metody weryfikacji musi mieć odpowiednik w planie zbierania danych — inaczej weryfikacja nie będzie wykonalna.</td></tr>
+<tr><td>7.1 Zasoby</td><td><b>Wyjście.</b> Suma kolumny „zasoby” to wejście do budżetu systemu.</td></tr>
+<tr><td>9.1 Monitorowanie</td><td><b>Wyjście.</b> Postęp zadań jest monitorowany; metoda weryfikacji jest wykonywana w ramach 9.1.</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Dwukierunkowo.</b> Stopień osiągnięcia celów jest obowiązkowym wejściem do przeglądu; decyzje przeglądu zmieniają cele.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td>Typ pól <code>enpi</code> i <code>enb</code></td><td>Teraz tekst. Po zbudowaniu 6.4 i 6.5 zamienić na referencje do kart. Do tego czasu w bazie trzymać oba warianty, żeby migracja nie gubiła treści wpisanych przez pierwszych klientów.</td></tr>
+<tr><td>Automatyczne liczenie postępu zadania</td><td>Platforma mogłaby liczyć postęp sama, gdy ma EnB, wartość docelową i wartość bieżącą z 9.1. Na razie <code>postep</code> jest polem opisowym — celowo, bo przed 6.4 nie ma skąd wziąć wartości bieżącej.</td></tr>
+<tr><td>Cele „na odpowiednich funkcjach i szczeblach”</td><td>Formularz nie ma pola „szczebel”. Audytorzy czasem o to pytają. Proponuję dodać opcjonalne pole <code>szczebel</code> (zakład / wydział / obszar) i pokazywać w analizie konsultanta, gdy wszystkie cele są na jednym szczeblu.</td></tr>
+<tr><td>Status zadania a status celu</td><td>Status celu jest dziś wpisywany ręcznie. Rozważyć wyliczanie go z zadań i działań — z możliwością nadpisania przez odpowiedzialnego.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 6.2 wraz z przykładem AutoParts.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;POLA_WER&quot;: [
+  {
+   &quot;kod&quot;: &quot;enpi_enb&quot;,
+   &quot;nazwa&quot;: &quot;Wskaźnik EnPI i linia bazowa EnB&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Który wskaźnik z punktu 6.4 i która linia bazowa z punktu 6.5. Bez tej pary nie ma czego porównywać.&quot;,
+   &quot;przyklad&quot;: &quot;np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;okres&quot;,
+   &quot;nazwa&quot;: &quot;Okres porównania&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Jaki okres po działaniu porównujecie z jakim okresem linii bazowej. Tyle samo miesięcy po obu stronach.&quot;,
+   &quot;przyklad&quot;: &quot;np. 12 miesięcy po zakończeniu działań (I–XII 2028) wobec 12 miesięcy EnB (2025)&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;dane&quot;,
+   &quot;nazwa&quot;: &quot;Dane i ich źródło&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Skąd wezmą się liczby — licznik, podlicznik, faktura, ERP, protokół pomiaru. Kto je odczytuje i gdzie zapisuje.&quot;,
+   &quot;przyklad&quot;: &quot;np. Podlicznik sprężarkowni (odczyt miesięczny) i przepływomierz na kolektorze; arkusz EnMS, zakładka S-1&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;warunki&quot;,
+   &quot;nazwa&quot;: &quot;Warunki porównania&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Przy jakich warunkach pomiar jest porównywalny i co go unieważnia. To tutaj zapisuje się wyłączenia.&quot;,
+   &quot;przyklad&quot;: &quot;np. Pełne miesiące pracy trzyzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zmienne&quot;,
+   &quot;nazwa&quot;: &quot;Uwzględnienie istotnych zmiennych — normalizacja&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Jak porównanie radzi sobie ze zmianą produkcji, pogody i czasu pracy. Jeśli wskaźnik jest ilorazem, napiszcie to wprost.&quot;,
+   &quot;przyklad&quot;: &quot;np. Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem ilości powietrza. Dodatkowo odnotowuje się temperaturę w sprężarkowni — różnica powyżej 5 °C wymaga adnotacji.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;obliczenie&quot;,
+   &quot;nazwa&quot;: &quot;Sposób obliczenia poprawy&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Wzór i próg uznania poprawy. Konkretny, nie „porównamy wyniki”.&quot;,
+   &quot;przyklad&quot;: &quot;np. (EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy wskaźnik ≤ 0,110 kWh/Nm³ w średniej 12 miesięcy.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;kto&quot;,
+   &quot;nazwa&quot;: &quot;Kto weryfikuje&quot;,
+   &quot;wymagane&quot;: true,
+   &quot;pomoc&quot;: &quot;Osoba albo funkcja, która wykonuje obliczenie, i ta, która przyjmuje wynik.&quot;,
+   &quot;przyklad&quot;: &quot;np. Energy Manager; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;wynik&quot;,
+   &quot;nazwa&quot;: &quot;Wynik weryfikacji&quot;,
+   &quot;wymagane&quot;: false,
+   &quot;pomoc&quot;: &quot;Wypełniane po terminie zadania — wartość osiągnięta, data i decyzja (poprawa uznana / nieuznana / zadanie przedłużone).&quot;,
+   &quot;przyklad&quot;: &quot;np. 0,119 kWh/Nm³ (średnia I–XII 2027) — cel nieosiągnięty, zadanie przedłużone do 30.06.2028&quot;
+  }
+ ],
+ &quot;LISTA_62&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Ustanowiono cele energetyczne na odpowiednich funkcjach i szczeblach organizacji.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;ustanowiono&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Cele są spójne z polityką energetyczną i uwzględniają wymagania, znaczące użycia energii oraz możliwości poprawy wyniku energetycznego.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;spojne&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Cele i zadania energetyczne są mierzalne, monitorowane, komunikowane i aktualizowane, gdy to właściwe.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;mierzalne&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Dla celów i zadań zaplanowano: co będzie zrobione, jakie będą potrzebne zasoby, kto odpowiada i kiedy to się zakończy.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;plany&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Plany określają, w jaki sposób zostaną ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;weryfikacja&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Metoda weryfikacji poprawy wskazuje wskaźnik i linię bazową, okres porównania, dane i ich źródło, warunki porównania, uwzględnienie istotnych zmiennych, sposób obliczenia i osobę weryfikującą.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;metoda_pelna&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Rozważono, w jaki sposób włączyć działania w procesy biznesowe organizacji.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;procesy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Cele, zadania energetyczne i plany działań są utrzymywane jako udokumentowana informacja.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;udokumentowane&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;CELE&quot;: [
+   {
+    &quot;nr&quot;: &quot;C1&quot;,
+    &quot;tresc&quot;: &quot;Ograniczyć zużycie energii na wytwarzanie sprężonego powietrza.&quot;,
+    &quot;rodzaj&quot;: &quot;wynik&quot;,
+    &quot;powiazanie&quot;: &quot;SEU sprężarkownia (17,5% zużycia); możliwości M-1 (nieszczelności) i M-3 (ciśnienie sieci) z przeglądu energetycznego; polityka pkt 2&quot;,
+    &quot;termin&quot;: &quot;2027-12-31&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;C2&quot;,
+    &quot;tresc&quot;: &quot;Zmniejszyć zużycie energii na oświetlenie hal produkcyjnych H1 i H2.&quot;,
+    &quot;rodzaj&quot;: &quot;wynik&quot;,
+    &quot;powiazanie&quot;: &quot;SEU oświetlenie (5,6%, kryterium B — możliwość poprawy); możliwość M-5 (LED) z przeglądu energetycznego&quot;,
+    &quot;termin&quot;: &quot;2027-12-31&quot;,
+    &quot;odp&quot;: &quot;Dyrektor Techniczny&quot;,
+    &quot;status&quot;: &quot;zatwierdzone&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;C3&quot;,
+    &quot;tresc&quot;: &quot;Utrzymać poprawę wyniku energetycznego zakładu wobec roku bazowego 2025.&quot;,
+    &quot;rodzaj&quot;: &quot;wynik&quot;,
+    &quot;powiazanie&quot;: &quot;Polityka energetyczna pkt 1 (ciągłe doskonalenie wyniku); wskaźnik ogólny O-1 z punktu 6.4&quot;,
+    &quot;termin&quot;: &quot;2027-12-31&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;C4&quot;,
+    &quot;tresc&quot;: &quot;Wdrożyć opomiarowanie znaczących użyć energii i zebrać 12 miesięcy danych z podliczników.&quot;,
+    &quot;rodzaj&quot;: &quot;system&quot;,
+    &quot;powiazanie&quot;: &quot;Przegląd energetyczny — 4 z 5 SEU oszacowane, nie zmierzone; plan zbierania danych (6.6); wymaganie normy 6.6 i 9.1&quot;,
+    &quot;termin&quot;: &quot;2027-06-30&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   }
+  ],
+  &quot;ZADANIA&quot;: [
+   {
+    &quot;nr&quot;: &quot;Z1.1&quot;,
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;enpi&quot;: &quot;S-1 — energia jednostkowa sprężarkowni, kWh/Nm³&quot;,
+    &quot;enb&quot;: &quot;0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)&quot;,
+    &quot;cel&quot;: &quot;0,110 kWh/Nm³ (−12%)&quot;,
+    &quot;termin&quot;: &quot;2027-12-31&quot;,
+    &quot;postep&quot;: &quot;0,119 kWh/Nm³ (VII–18.IX 2026), poprawa 4,8% — po obniżeniu ciśnienia i usunięciu nieszczelności, przed modernizacją sprężarkowni&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;Z1.2&quot;,
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;enpi&quot;: &quot;S-2 — przepływ sprężonego powietrza w czasie postoju, Nm³/min&quot;,
+    &quot;enb&quot;: &quot;9 Nm³/min (pomiar 12.01.2026, postój weekendowy)&quot;,
+    &quot;cel&quot;: &quot;4 Nm³/min&quot;,
+    &quot;termin&quot;: &quot;2027-06-30&quot;,
+    &quot;postep&quot;: &quot;6 Nm³/min (pomiar 06.2026) — usunięto wszystkie 35 nieszczelności; następny test kwartalny 09.2026&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;Z2.1&quot;,
+    &quot;doCelu&quot;: &quot;C2&quot;,
+    &quot;enpi&quot;: &quot;OŚ-1 — roczne zużycie energii na oświetlenie, MWh/rok&quot;,
+    &quot;enb&quot;: &quot;680 MWh (2025, inwentaryzacja opraw × czas pracy)&quot;,
+    &quot;cel&quot;: &quot;410 MWh (−39,7%)&quot;,
+    &quot;termin&quot;: &quot;2027-12-31&quot;,
+    &quot;postep&quot;: &quot;Bez zmian — wymiana opraw zaplanowana na III kwartał 2027&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;Z3.1&quot;,
+    &quot;doCelu&quot;: &quot;C3&quot;,
+    &quot;enpi&quot;: &quot;O-1 — wskaźnik ogólny zakładu, indeks znormalizowany&quot;,
+    &quot;enb&quot;: &quot;1,000 (rok bazowy 2025)&quot;,
+    &quot;cel&quot;: &quot;≤ 0,950&quot;,
+    &quot;termin&quot;: &quot;2027-12-31&quot;,
+    &quot;postep&quot;: &quot;0,97 (I półrocze 2026) i 0,965 (sierpień 2026) — znormalizowane produkcją i stopniodniami&quot;
+   }
+  ],
+  &quot;DZIAL&quot;: [
+   {
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;tresc&quot;: &quot;Kampania pomiarowa i lokalizacja nieszczelności w sieci sprężonego powietrza.&quot;,
+    &quot;zasoby&quot;: &quot;15 000 zł (usługa zewnętrzna)&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;termin&quot;: &quot;2026-03-31&quot;,
+    &quot;proces&quot;: &quot;Przegląd energetyczny — kampania 02–03.2026; linia bazowa S-1&quot;,
+    &quot;status&quot;: &quot;wykonane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;tresc&quot;: &quot;Usunięcie 35 nieszczelności i wprowadzenie kwartalnego przeglądu szczelności detektorem ultradźwiękowym.&quot;,
+    &quot;zasoby&quot;: &quot;10 000 zł (uszczelnienia, złączki) i czas pracy UR; detektor wypożyczany&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;termin&quot;: &quot;2026-06-30&quot;,
+    &quot;proces&quot;: &quot;Plan utrzymania ruchu — zadanie UR/2026/18; harmonogram przeglądów okresowych (cyklicznie, od III kw. 2026)&quot;,
+    &quot;status&quot;: &quot;wykonane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;tresc&quot;: &quot;Obniżenie ciśnienia sieci z 7,0 do 6,3 bar po sprawdzeniu wymagań odbiorników.&quot;,
+    &quot;zasoby&quot;: &quot;5 000 zł i czas inżyniera procesu oraz UR&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;termin&quot;: &quot;2026-06-30&quot;,
+    &quot;proces&quot;: &quot;Instrukcja eksploatacji sprężarkowni I-SP-02 (zmiana kryterium eksploatacji); kryteria SEU w punkcie 8.1&quot;,
+    &quot;status&quot;: &quot;wykonane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;tresc&quot;: &quot;Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej z czterech sprężarek.&quot;,
+    &quot;zasoby&quot;: &quot;380 000 zł&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;termin&quot;: &quot;2027-06-30&quot;,
+    &quot;proces&quot;: &quot;Budżet inwestycji 2027, pozycja INW/2027/04; specyfikacja zakupowa z kryterium energetycznym (punkt 8.3)&quot;,
+    &quot;status&quot;: &quot;zatwierdzone&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C1&quot;,
+    &quot;tresc&quot;: &quot;Weryfikacja zadań Z1.1 i Z1.2 po uruchomieniu modernizacji.&quot;,
+    &quot;zasoby&quot;: &quot;Czas Energy Managera&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;termin&quot;: &quot;2027-07-31&quot;,
+    &quot;proces&quot;: &quot;Przegląd zarządzania (punkt 9.3); kolejna ocena po zamknięciu roku 2027 — 01.2028&quot;,
+    &quot;status&quot;: &quot;planowane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C2&quot;,
+    &quot;tresc&quot;: &quot;Wymiana 420 opraw świetlówkowych na LED w halach H1 i H2.&quot;,
+    &quot;zasoby&quot;: &quot;240 000 zł&quot;,
+    &quot;odp&quot;: &quot;Dyrektor Techniczny&quot;,
+    &quot;termin&quot;: &quot;2027-09-30&quot;,
+    &quot;proces&quot;: &quot;Budżet inwestycji 2027, pozycja INW/2027/03&quot;,
+    &quot;status&quot;: &quot;planowane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C2&quot;,
+    &quot;tresc&quot;: &quot;Montaż czujników obecności w magazynie wyrobów i strefach socjalnych.&quot;,
+    &quot;zasoby&quot;: &quot;18 000 zł&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;termin&quot;: &quot;2026-12-31&quot;,
+    &quot;proces&quot;: &quot;Plan utrzymania ruchu — zadanie UR/2026/31&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C3&quot;,
+    &quot;tresc&quot;: &quot;Włączenie kryteriów efektywności energetycznej do procedury zakupowej dla urządzeń powyżej 10 kW.&quot;,
+    &quot;zasoby&quot;: &quot;Czas Kierownika Zakupów i Energy Managera&quot;,
+    &quot;odp&quot;: &quot;Kierownik Zakupów&quot;,
+    &quot;termin&quot;: &quot;2026-06-30&quot;,
+    &quot;proces&quot;: &quot;Procedura zakupowa P-ZAK-01, par. 4 (zmiana wprowadzona)&quot;,
+    &quot;status&quot;: &quot;wykonane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C3&quot;,
+    &quot;tresc&quot;: &quot;Kwartalny przegląd wskaźników EnPI jako stały punkt narady produkcyjnej.&quot;,
+    &quot;zasoby&quot;: &quot;1 h zespołu kwartalnie&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;termin&quot;: &quot;2026-03-31&quot;,
+    &quot;proces&quot;: &quot;Narada produkcyjna — stały punkt agendy (cyklicznie)&quot;,
+    &quot;status&quot;: &quot;wykonane&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C4&quot;,
+    &quot;tresc&quot;: &quot;Montaż 6 podliczników energii (prasy, lakiernia, sprężarkownia, kotłownia, oświetlenie H1, oświetlenie H2) i przepływomierza na kolektorze głównym sprężonego powietrza.&quot;,
+    &quot;zasoby&quot;: &quot;77 000 zł&quot;,
+    &quot;odp&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;termin&quot;: &quot;2026-06-30&quot;,
+    &quot;proces&quot;: &quot;Budżet inwestycji 2026, pozycja INW/2026/11&quot;,
+    &quot;status&quot;: &quot;wtoku&quot;
+   },
+   {
+    &quot;doCelu&quot;: &quot;C4&quot;,
+    &quot;tresc&quot;: &quot;Konfiguracja zbierania odczytów do arkusza EnMS i comiesięczny raport zużycia po obszarach.&quot;,
+    &quot;zasoby&quot;: &quot;8 000 zł (konfiguracja) i 2 h miesięcznie&quot;,
+    &quot;odp&quot;: &quot;Energy Manager&quot;,
+    &quot;termin&quot;: &quot;2026-07-31&quot;,
+    &quot;proces&quot;: &quot;Plan zbierania danych (punkt 6.6); miesięczny raport produkcyjny&quot;,
+    &quot;status&quot;: &quot;planowane&quot;
+   }
+  ],
+  &quot;WER&quot;: {
+   &quot;Z1.1&quot;: {
+    &quot;enpi_enb&quot;: &quot;S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ — kampania pomiarowa 02–03.2026 (4 tygodnie pomiaru, uzasadnienie okresu w karcie EnB)&quot;,
+    &quot;okres&quot;: &quot;Cztery tygodnie po odbiorze modernizacji oraz rok 2027 — wobec linii bazowej z kampanii pomiarowej 02–03.2026&quot;,
+    &quot;dane&quot;: &quot;Podlicznik energii sprężarkowni — odczyt miesięczny; przepływomierz na kolektorze głównym — rejestracja ciągła. Arkusz EnMS, zakładka S-1. Odczytuje UR, sprawdza Energy Manager.&quot;,
+    &quot;warunki&quot;: &quot;Pełne miesiące pracy trzyzmianowej, ciśnienie sieci 6,3 bar, obciążenie sprężarek 60–90%. Miesiące z postojem dłuższym niż 5 dni roboczych wyłączone z porównania i opisane w adnotacji.&quot;,
+    &quot;zmienne&quot;: &quot;Wskaźnik jest ilorazem energii i objętości sprężonego powietrza, więc normalizuje się względem ilości powietrza — zmiana produkcji nie zaburza porównania. Dodatkowo odnotowuje się średnią temperaturę w sprężarkowni; różnica powyżej 5 °C między okresami wymaga adnotacji. Czynnik statyczny: liczba i typ sprężarek — cztery sprężarki śrubowe; dodanie sterownika nadrzędnego i napędu o zmiennej prędkości wymaga adnotacji przy EnB.&quot;,
+    &quot;obliczenie&quot;: &quot;(EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy średnia 12 miesięcy wynosi ≤ 0,110 kWh/Nm³.&quot;,
+    &quot;kto&quot;: &quot;Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny na przeglądzie zarządzania.&quot;,
+    &quot;wynik&quot;: &quot;&quot;
+   },
+   &quot;Z1.2&quot;: {
+    &quot;enpi_enb&quot;: &quot;S-2 przepływ w czasie postoju, Nm³/min; EnB 9 Nm³/min — pomiar 12.01.2026, postój weekendowy&quot;,
+    &quot;okres&quot;: &quot;Pomiar kontrolny po zakończeniu usuwania nieszczelności (VII 2027) wobec pomiaru bazowego 12.01.2026&quot;,
+    &quot;dane&quot;: &quot;Przepływomierz na kolektorze głównym; pomiar w czasie minimum 2 h postoju produkcji. Protokół pomiaru w teczce EnMS.&quot;,
+    &quot;warunki&quot;: &quot;Postój całej produkcji, sieć pod ciśnieniem roboczym 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu nie jest porównywalny — powtarza się go.&quot;,
+    &quot;zmienne&quot;: &quot;Przepływ w czasie postoju nie zależy od produkcji ani od pogody, więc normalizacja nie jest potrzebna. Warunkiem porównywalności jest to samo ciśnienie sieci i ta sama konfiguracja odcięć.&quot;,
+    &quot;obliczenie&quot;: &quot;Spadek przepływu w Nm³/min i w procentach wobec 9 Nm³/min. Cel: ≤ 4 Nm³/min.&quot;,
+    &quot;kto&quot;: &quot;Mierzy i liczy Kierownik Utrzymania Ruchu; sprawdza Energy Manager.&quot;,
+    &quot;wynik&quot;: &quot;Pomiar 06.2026: 6 Nm³/min — poprawa 33,3%, cel pośredni osiągnięty; następny test kwartalny 09.2026, cel końcowy 4 Nm³/min do 06.2027.&quot;
+   },
+   &quot;Z2.1&quot;: {
+    &quot;enpi_enb&quot;: &quot;OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; EnB 680 MWh (2025)&quot;,
+    &quot;okres&quot;: &quot;Rok 2028 wobec roku bazowego 2025&quot;,
+    &quot;dane&quot;: &quot;Podliczniki oświetlenia H1 i H2 (od VII 2026) — odczyt miesięczny. Za rok 2025: inwentaryzacja opraw × czas pracy według harmonogramu zmian; arkusz EnMS, zakładka OŚ-1.&quot;,
+    &quot;warunki&quot;: &quot;Ten sam czas pracy zakładu — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu.&quot;,
+    &quot;zmienne&quot;: &quot;Zużycie oświetlenia zależy od czasu świecenia, nie od wielkości produkcji — porównanie prowadzi się na godzinach pracy zakładu. Powierzchnia hal i wymagane poziomy natężenia są czynnikami statycznymi; ich zmiana unieważnia EnB.&quot;,
+    &quot;obliczenie&quot;: &quot;(680 − zużycie 2028) ÷ 680 × 100%. Cel: ≤ 410 MWh, czyli poprawa co najmniej 39,7%.&quot;,
+    &quot;kto&quot;: &quot;Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny.&quot;,
+    &quot;wynik&quot;: &quot;&quot;
+   },
+   &quot;Z3.1&quot;: {
+    &quot;enpi_enb&quot;: &quot;O-1 wskaźnik ogólny zakładu; EnB = indeks 1,000 dla roku 2025 (model: energia = f(produkcja, stopniodni))&quot;,
+    &quot;okres&quot;: &quot;Rok kalendarzowy wobec roku bazowego 2025&quot;,
+    &quot;dane&quot;: &quot;Dwa liczniki główne (energia elektryczna, gaz) i faktury LPG; ERP — masa stali w wyrobach; IMGW — stopniodni dla bazy 18 °C. Arkusz EnMS, zakładka O-1.&quot;,
+    &quot;warunki&quot;: &quot;Rok pełnej pracy zakładu. Zmiana asortymentu powyżej 20% masy wymaga sprawdzenia aktualności modelu regresji.&quot;,
+    &quot;zmienne&quot;: &quot;Normalizacja modelem regresji wielorakiej na produkcji (t) i stopniodniach — zużycie oczekiwane liczone z modelu, wskaźnik to iloraz zużycia rzeczywistego i oczekiwanego. Czynniki statyczne: powierzchnia hal, liczba zmian, linia technologiczna.&quot;,
+    &quot;obliczenie&quot;: &quot;Indeks = zużycie rzeczywiste ÷ zużycie oczekiwane z modelu. Cel: ≤ 0,950.&quot;,
+    &quot;kto&quot;: &quot;Liczy Energy Manager; wynik przyjmuje Zarząd na przeglądzie zarządzania.&quot;,
+    &quot;wynik&quot;: &quot;I–IX 2026: 0,978 — poprawa 2,2%, cel nieosiągnięty, zadanie w toku.&quot;
+   }
+  },
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Zarząd AutoParts Polska sp. z o.o., uchwała nr 4/2026 z 15 kwietnia 2026 r.&quot;,
+   &quot;data&quot;: &quot;2026-04-15&quot;,
+   &quot;stan&quot;: &quot;2026-09-30&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var POLA_WER = [{"kod": "enpi_enb", "nazwa": "Wskaźnik EnPI i linia bazowa EnB", "wymagane": true, "pomoc": "Który wskaźnik z punktu 6.4 i która linia bazowa z punktu 6.5. Bez tej pary nie ma czego porównywać.", "przyklad": "np. S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)"}, {"kod": "okres", "nazwa": "Okres porównania", "wymagane": true, "pomoc": "Jaki okres po działaniu porównujecie z jakim okresem linii bazowej. Tyle samo miesięcy po obu stronach.", "przyklad": "np. 12 miesięcy po zakończeniu działań (I–XII 2028) wobec 12 miesięcy EnB (2025)"}, {"kod": "dane", "nazwa": "Dane i ich źródło", "wymagane": true, "pomoc": "Skąd wezmą się liczby — licznik, podlicznik, faktura, ERP, protokół pomiaru. Kto je odczytuje i gdzie zapisuje.", "przyklad": "np. Podlicznik sprężarkowni (odczyt miesięczny) i przepływomierz na kolektorze; arkusz EnMS, zakładka S-1"}, {"kod": "warunki", "nazwa": "Warunki porównania", "wymagane": true, "pomoc": "Przy jakich warunkach pomiar jest porównywalny i co go unieważnia. To tutaj zapisuje się wyłączenia.", "przyklad": "np. Pełne miesiące pracy trzyzmianowej; miesiące z postojem dłuższym niż 5 dni roboczych wyłączone i opisane"}, {"kod": "zmienne", "nazwa": "Uwzględnienie istotnych zmiennych — normalizacja", "wymagane": true, "pomoc": "Jak porównanie radzi sobie ze zmianą produkcji, pogody i czasu pracy. Jeśli wskaźnik jest ilorazem, napiszcie to wprost.", "przyklad": "np. Wskaźnik jest ilorazem energii i objętości powietrza, więc normalizuje się względem ilości powietrza. Dodatkowo odnotowuje się temperaturę w sprężarkowni — różnica powyżej 5 °C wymaga adnotacji."}, {"kod": "obliczenie", "nazwa": "Sposób obliczenia poprawy", "wymagane": true, "pomoc": "Wzór i próg uznania poprawy. Konkretny, nie „porównamy wyniki”.", "przyklad": "np. (EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy wskaźnik ≤ 0,110 kWh/Nm³ w średniej 12 miesięcy."}, {"kod": "kto", "nazwa": "Kto weryfikuje", "wymagane": true, "pomoc": "Osoba albo funkcja, która wykonuje obliczenie, i ta, która przyjmuje wynik.", "przyklad": "np. Energy Manager; zatwierdza Dyrektor Techniczny na przeglądzie zarządzania"}, {"kod": "wynik", "nazwa": "Wynik weryfikacji", "wymagane": false, "pomoc": "Wypełniane po terminie zadania — wartość osiągnięta, data i decyzja (poprawa uznana / nieuznana / zadanie przedłużone).", "przyklad": "np. 0,119 kWh/Nm³ (średnia I–XII 2027) — cel nieosiągnięty, zadanie przedłużone do 30.06.2028"}];
+var LISTA_62 = [{"tekst": "Ustanowiono cele energetyczne na odpowiednich funkcjach i szczeblach organizacji.", "podstawa": "N", "auto": "ustanowiono"}, {"tekst": "Cele są spójne z polityką energetyczną i uwzględniają wymagania, znaczące użycia energii oraz możliwości poprawy wyniku energetycznego.", "podstawa": "N", "auto": "spojne"}, {"tekst": "Cele i zadania energetyczne są mierzalne, monitorowane, komunikowane i aktualizowane, gdy to właściwe.", "podstawa": "N", "auto": "mierzalne"}, {"tekst": "Dla celów i zadań zaplanowano: co będzie zrobione, jakie będą potrzebne zasoby, kto odpowiada i kiedy to się zakończy.", "podstawa": "N", "auto": "plany"}, {"tekst": "Plany określają, w jaki sposób zostaną ocenione wyniki oraz jaką metodą zostanie zweryfikowana poprawa wyniku energetycznego.", "podstawa": "N", "auto": "weryfikacja"}, {"tekst": "Metoda weryfikacji poprawy wskazuje wskaźnik i linię bazową, okres porównania, dane i ich źródło, warunki porównania, uwzględnienie istotnych zmiennych, sposób obliczenia i osobę weryfikującą.", "podstawa": "M", "auto": "metoda_pelna"}, {"tekst": "Rozważono, w jaki sposób włączyć działania w procesy biznesowe organizacji.", "podstawa": "N", "auto": "procesy"}, {"tekst": "Cele, zadania energetyczne i plany działań są utrzymywane jako udokumentowana informacja.", "podstawa": "N", "auto": "udokumentowane"}];
+var P_CELE = [{"nr": "C1", "tresc": "Ograniczyć zużycie energii na wytwarzanie sprężonego powietrza.", "rodzaj": "wynik", "powiazanie": "SEU sprężarkownia (17,5% zużycia); możliwości M-1 (nieszczelności) i M-3 (ciśnienie sieci) z przeglądu energetycznego; polityka pkt 2", "termin": "2027-12-31", "odp": "Kierownik Utrzymania Ruchu", "status": "wtoku"}, {"nr": "C2", "tresc": "Zmniejszyć zużycie energii na oświetlenie hal produkcyjnych H1 i H2.", "rodzaj": "wynik", "powiazanie": "SEU oświetlenie (5,6%, kryterium B — możliwość poprawy); możliwość M-5 (LED) z przeglądu energetycznego", "termin": "2027-12-31", "odp": "Dyrektor Techniczny", "status": "zatwierdzone"}, {"nr": "C3", "tresc": "Utrzymać poprawę wyniku energetycznego zakładu wobec roku bazowego 2025.", "rodzaj": "wynik", "powiazanie": "Polityka energetyczna pkt 1 (ciągłe doskonalenie wyniku); wskaźnik ogólny O-1 z punktu 6.4", "termin": "2027-12-31", "odp": "Energy Manager", "status": "wtoku"}, {"nr": "C4", "tresc": "Wdrożyć opomiarowanie znaczących użyć energii i zebrać 12 miesięcy danych z podliczników.", "rodzaj": "system", "powiazanie": "Przegląd energetyczny — 4 z 5 SEU oszacowane, nie zmierzone; plan zbierania danych (6.6); wymaganie normy 6.6 i 9.1", "termin": "2027-06-30", "odp": "Kierownik Utrzymania Ruchu", "status": "wtoku"}];
+var P_ZADANIA = [{"nr": "Z1.1", "doCelu": "C1", "enpi": "S-1 — energia jednostkowa sprężarkowni, kWh/Nm³", "enb": "0,125 kWh/Nm³ (kampania pomiarowa 02–03.2026)", "cel": "0,110 kWh/Nm³ (−12%)", "termin": "2027-12-31", "postep": "0,119 kWh/Nm³ (VII–18.IX 2026), poprawa 4,8% — po obniżeniu ciśnienia i usunięciu nieszczelności, przed modernizacją sprężarkowni"}, {"nr": "Z1.2", "doCelu": "C1", "enpi": "S-2 — przepływ sprężonego powietrza w czasie postoju, Nm³/min", "enb": "9 Nm³/min (pomiar 12.01.2026, postój weekendowy)", "cel": "4 Nm³/min", "termin": "2027-06-30", "postep": "6 Nm³/min (pomiar 06.2026) — usunięto wszystkie 35 nieszczelności; następny test kwartalny 09.2026"}, {"nr": "Z2.1", "doCelu": "C2", "enpi": "OŚ-1 — roczne zużycie energii na oświetlenie, MWh/rok", "enb": "680 MWh (2025, inwentaryzacja opraw × czas pracy)", "cel": "410 MWh (−39,7%)", "termin": "2027-12-31", "postep": "Bez zmian — wymiana opraw zaplanowana na III kwartał 2027"}, {"nr": "Z3.1", "doCelu": "C3", "enpi": "O-1 — wskaźnik ogólny zakładu, indeks znormalizowany", "enb": "1,000 (rok bazowy 2025)", "cel": "≤ 0,950", "termin": "2027-12-31", "postep": "0,97 (I półrocze 2026) i 0,965 (sierpień 2026) — znormalizowane produkcją i stopniodniami"}];
+var P_DZIAL = [{"doCelu": "C1", "tresc": "Kampania pomiarowa i lokalizacja nieszczelności w sieci sprężonego powietrza.", "zasoby": "15 000 zł (usługa zewnętrzna)", "odp": "Energy Manager", "termin": "2026-03-31", "proces": "Przegląd energetyczny — kampania 02–03.2026; linia bazowa S-1", "status": "wykonane"}, {"doCelu": "C1", "tresc": "Usunięcie 35 nieszczelności i wprowadzenie kwartalnego przeglądu szczelności detektorem ultradźwiękowym.", "zasoby": "10 000 zł (uszczelnienia, złączki) i czas pracy UR; detektor wypożyczany", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-06-30", "proces": "Plan utrzymania ruchu — zadanie UR/2026/18; harmonogram przeglądów okresowych (cyklicznie, od III kw. 2026)", "status": "wykonane"}, {"doCelu": "C1", "tresc": "Obniżenie ciśnienia sieci z 7,0 do 6,3 bar po sprawdzeniu wymagań odbiorników.", "zasoby": "5 000 zł i czas inżyniera procesu oraz UR", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-06-30", "proces": "Instrukcja eksploatacji sprężarkowni I-SP-02 (zmiana kryterium eksploatacji); kryteria SEU w punkcie 8.1", "status": "wykonane"}, {"doCelu": "C1", "tresc": "Sterownik nadrzędny sprężarkowni i napęd o zmiennej prędkości dla jednej z czterech sprężarek.", "zasoby": "380 000 zł", "odp": "Kierownik Utrzymania Ruchu", "termin": "2027-06-30", "proces": "Budżet inwestycji 2027, pozycja INW/2027/04; specyfikacja zakupowa z kryterium energetycznym (punkt 8.3)", "status": "zatwierdzone"}, {"doCelu": "C1", "tresc": "Weryfikacja zadań Z1.1 i Z1.2 po uruchomieniu modernizacji.", "zasoby": "Czas Energy Managera", "odp": "Energy Manager", "termin": "2027-07-31", "proces": "Przegląd zarządzania (punkt 9.3); kolejna ocena po zamknięciu roku 2027 — 01.2028", "status": "planowane"}, {"doCelu": "C2", "tresc": "Wymiana 420 opraw świetlówkowych na LED w halach H1 i H2.", "zasoby": "240 000 zł", "odp": "Dyrektor Techniczny", "termin": "2027-09-30", "proces": "Budżet inwestycji 2027, pozycja INW/2027/03", "status": "planowane"}, {"doCelu": "C2", "tresc": "Montaż czujników obecności w magazynie wyrobów i strefach socjalnych.", "zasoby": "18 000 zł", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-12-31", "proces": "Plan utrzymania ruchu — zadanie UR/2026/31", "status": "wtoku"}, {"doCelu": "C3", "tresc": "Włączenie kryteriów efektywności energetycznej do procedury zakupowej dla urządzeń powyżej 10 kW.", "zasoby": "Czas Kierownika Zakupów i Energy Managera", "odp": "Kierownik Zakupów", "termin": "2026-06-30", "proces": "Procedura zakupowa P-ZAK-01, par. 4 (zmiana wprowadzona)", "status": "wykonane"}, {"doCelu": "C3", "tresc": "Kwartalny przegląd wskaźników EnPI jako stały punkt narady produkcyjnej.", "zasoby": "1 h zespołu kwartalnie", "odp": "Energy Manager", "termin": "2026-03-31", "proces": "Narada produkcyjna — stały punkt agendy (cyklicznie)", "status": "wykonane"}, {"doCelu": "C4", "tresc": "Montaż 6 podliczników energii (prasy, lakiernia, sprężarkownia, kotłownia, oświetlenie H1, oświetlenie H2) i przepływomierza na kolektorze głównym sprężonego powietrza.", "zasoby": "77 000 zł", "odp": "Kierownik Utrzymania Ruchu", "termin": "2026-06-30", "proces": "Budżet inwestycji 2026, pozycja INW/2026/11", "status": "wtoku"}, {"doCelu": "C4", "tresc": "Konfiguracja zbierania odczytów do arkusza EnMS i comiesięczny raport zużycia po obszarach.", "zasoby": "8 000 zł (konfiguracja) i 2 h miesięcznie", "odp": "Energy Manager", "termin": "2026-07-31", "proces": "Plan zbierania danych (punkt 6.6); miesięczny raport produkcyjny", "status": "planowane"}];
+var P_WER = {"Z1.1": {"enpi_enb": "S-1 kWh/Nm³; EnB 0,125 kWh/Nm³ — kampania pomiarowa 02–03.2026 (4 tygodnie pomiaru, uzasadnienie okresu w karcie EnB)", "okres": "Cztery tygodnie po odbiorze modernizacji oraz rok 2027 — wobec linii bazowej z kampanii pomiarowej 02–03.2026", "dane": "Podlicznik energii sprężarkowni — odczyt miesięczny; przepływomierz na kolektorze głównym — rejestracja ciągła. Arkusz EnMS, zakładka S-1. Odczytuje UR, sprawdza Energy Manager.", "warunki": "Pełne miesiące pracy trzyzmianowej, ciśnienie sieci 6,3 bar, obciążenie sprężarek 60–90%. Miesiące z postojem dłuższym niż 5 dni roboczych wyłączone z porównania i opisane w adnotacji.", "zmienne": "Wskaźnik jest ilorazem energii i objętości sprężonego powietrza, więc normalizuje się względem ilości powietrza — zmiana produkcji nie zaburza porównania. Dodatkowo odnotowuje się średnią temperaturę w sprężarkowni; różnica powyżej 5 °C między okresami wymaga adnotacji. Czynnik statyczny: liczba i typ sprężarek — cztery sprężarki śrubowe; dodanie sterownika nadrzędnego i napędu o zmiennej prędkości wymaga adnotacji przy EnB.", "obliczenie": "(EnB − wartość osiągnięta) ÷ EnB × 100%. Poprawa uznana, gdy średnia 12 miesięcy wynosi ≤ 0,110 kWh/Nm³.", "kto": "Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny na przeglądzie zarządzania.", "wynik": ""}, "Z1.2": {"enpi_enb": "S-2 przepływ w czasie postoju, Nm³/min; EnB 9 Nm³/min — pomiar 12.01.2026, postój weekendowy", "okres": "Pomiar kontrolny po zakończeniu usuwania nieszczelności (VII 2027) wobec pomiaru bazowego 12.01.2026", "dane": "Przepływomierz na kolektorze głównym; pomiar w czasie minimum 2 h postoju produkcji. Protokół pomiaru w teczce EnMS.", "warunki": "Postój całej produkcji, sieć pod ciśnieniem roboczym 6,3 bar, odbiorniki odcięte zgodnie z instrukcją I-SP-02. Pomiar przy innym ciśnieniu nie jest porównywalny — powtarza się go.", "zmienne": "Przepływ w czasie postoju nie zależy od produkcji ani od pogody, więc normalizacja nie jest potrzebna. Warunkiem porównywalności jest to samo ciśnienie sieci i ta sama konfiguracja odcięć.", "obliczenie": "Spadek przepływu w Nm³/min i w procentach wobec 9 Nm³/min. Cel: ≤ 4 Nm³/min.", "kto": "Mierzy i liczy Kierownik Utrzymania Ruchu; sprawdza Energy Manager.", "wynik": "Pomiar 06.2026: 6 Nm³/min — poprawa 33,3%, cel pośredni osiągnięty; następny test kwartalny 09.2026, cel końcowy 4 Nm³/min do 06.2027."}, "Z2.1": {"enpi_enb": "OŚ-1 roczne zużycie energii na oświetlenie, MWh/rok; EnB 680 MWh (2025)", "okres": "Rok 2028 wobec roku bazowego 2025", "dane": "Podliczniki oświetlenia H1 i H2 (od VII 2026) — odczyt miesięczny. Za rok 2025: inwentaryzacja opraw × czas pracy według harmonogramu zmian; arkusz EnMS, zakładka OŚ-1.", "warunki": "Ten sam czas pracy zakładu — trzy zmiany, 250 dni roboczych. Zmiana liczby zmian wymaga przeliczenia na godzinę pracy zakładu.", "zmienne": "Zużycie oświetlenia zależy od czasu świecenia, nie od wielkości produkcji — porównanie prowadzi się na godzinach pracy zakładu. Powierzchnia hal i wymagane poziomy natężenia są czynnikami statycznymi; ich zmiana unieważnia EnB.", "obliczenie": "(680 − zużycie 2028) ÷ 680 × 100%. Cel: ≤ 410 MWh, czyli poprawa co najmniej 39,7%.", "kto": "Liczy Energy Manager; wynik przyjmuje Dyrektor Techniczny.", "wynik": ""}, "Z3.1": {"enpi_enb": "O-1 wskaźnik ogólny zakładu; EnB = indeks 1,000 dla roku 2025 (model: energia = f(produkcja, stopniodni))", "okres": "Rok kalendarzowy wobec roku bazowego 2025", "dane": "Dwa liczniki główne (energia elektryczna, gaz) i faktury LPG; ERP — masa stali w wyrobach; IMGW — stopniodni dla bazy 18 °C. Arkusz EnMS, zakładka O-1.", "warunki": "Rok pełnej pracy zakładu. Zmiana asortymentu powyżej 20% masy wymaga sprawdzenia aktualności modelu regresji.", "zmienne": "Normalizacja modelem regresji wielorakiej na produkcji (t) i stopniodniach — zużycie oczekiwane liczone z modelu, wskaźnik to iloraz zużycia rzeczywistego i oczekiwanego. Czynniki statyczne: powierzchnia hal, liczba zmian, linia technologiczna.", "obliczenie": "Indeks = zużycie rzeczywiste ÷ zużycie oczekiwane z modelu. Cel: ≤ 0,950.", "kto": "Liczy Energy Manager; wynik przyjmuje Zarząd na przeglądzie zarządzania.", "wynik": "I–IX 2026: 0,978 — poprawa 2,2%, cel nieosiągnięty, zadanie w toku."}};
+var P_META = {"zatwierdzil": "Zarząd AutoParts Polska sp. z o.o., uchwała nr 4/2026 z 15 kwietnia 2026 r.", "data": "2026-04-15", "stan": "2026-09-30"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Cel bez planu działań i bez wskaźnika zostaje deklaracją na przeglądzie.", "decyzja": "Z1.1 — wskaźnik S-1 z 0,125 na 0,110 kWh/Nm³ do 31.12.2027 r., z planem C1 i przypisanym budżetem.", "dzialanie": "Plan C1: kampania pomiarowa, usunięcie 35 nieszczelności z kwartalnym przeglądem, obniżenie ciśnienia, sterownik nadrzędny z napędem — INW/2027/04, 380 tys. zł.", "sprawdzenie": "Średnia z dwunastu miesięcy po odbiorze instalacji wobec linii bazowej 0,125 kWh/Nm³."}];
+</script>
+<script>/* ENESA 6.2 — Cele, zadania energetyczne i planowanie ich osiągnięcia.
+   Zgodny z: Tom 2 rozdz. 5 pkt 6.2 oraz Część III Moduł 4 v2.1 (III-23 = F-EnMS-10, III-24, III-25). */
+"use strict";
+
+var CELE = [];
+var ZADANIA = [];
+var DZIAL = [];
+var WER = {};        // nr zadania -> metoda weryfikacji
+var META = { zatwierdzil: "", data: "", stan: "" };
+var WNIOSKI = [];
+var AKT = "cele";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+var STATUSY = [["", "Wybierz"], ["planowane", "Planowane"], ["zatwierdzone", "Zatwierdzone"],
+["wtoku", "W toku"], ["wykonane", "Wykonane"], ["wstrzymane", "Wstrzymane"]];
+
+/* ── stan ── */
+function nrCelu(c, i) { return (c.nr || "").trim() || ("C" + (i + 1)); }
+function nrZadania(z, i) { return (z.nr || "").trim() || ("Z" + (i + 1)); }
+function celOk(c) {
+  return !!(c.tresc || "").trim() && !!c.rodzaj && !!(c.powiazanie || "").trim()
+    && !!c.termin && !!(c.odp || "").trim();
+}
+function zadanieOk(z) {
+  return !!z.doCelu && !!(z.enpi || "").trim() && !!(z.enb || "").trim()
+    && !!(z.cel || "").trim() && !!z.termin;
+}
+function dzialanieOk(d) {
+  return !!d.doCelu && !!(d.tresc || "").trim() && !!(d.odp || "").trim() && !!d.termin;
+}
+function pustaWeryfikacja(t) {
+  return /^\s*(na koniec roku|sprawdzimy na koniec roku|po roku|na bieżąco|okresowo)\s*\.?\s*$/i.test(t || "");
+}
+function werOk(nr) {
+  var w = WER[nr] || {};
+  return POLA_WER.filter(function (p) { return p.wymagane; }).every(function (p) {
+    return (w[p.kod] || "").trim() && !pustaWeryfikacja(w[p.kod]);
+  });
+}
+function celeWyniku() { return CELE.filter(function (c) { return c.rodzaj === "wynik"; }); }
+function zadaniaCelu(nr) { return ZADANIA.filter(function (z) { return z.doCelu === nr; }); }
+function dzialaniaCelu(nr) { return DZIAL.filter(function (d) { return d.doCelu === nr; }); }
+function celBezZadania(c, i) {
+  return c.rodzaj === "wynik" && !zadaniaCelu(nrCelu(c, i)).length;
+}
+function celBezPlanu(c, i) { return !dzialaniaCelu(nrCelu(c, i)).length; }
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+function opcjeCelow() {
+  return [["", "Wybierz cel"]].concat(CELE.map(function (c, i) {
+    return [nrCelu(c, i), nrCelu(c, i) + " — " + (c.tresc || "").slice(0, 60)];
+  }));
+}
+
+/* ── zakładka 1: cele ── */
+function rysujCele(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "A. Cele");
+  h.appendChild(el("span", "chip " + (CELE.length && CELE.every(celOk) ? "green" : "amber"),
+    CELE.filter(celOk).length + " / " + CELE.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Cel to zamierzony wynik. Może dotyczyć wyniku energetycznego („ograniczyć zużycie energii na sprężone powietrze”) albo samego systemu („wdrożyć opomiarowanie sprężarkowni”)."));
+  s.appendChild(hel("div", "warn", "Styczeń: zarząd ogłasza „zmniejszymy zużycie o 20%!”. Grudzień: wynik 3% i nikt nie wie, czy to dużo, czy mało — bo nikt nie wiedział, skąd wzięło się 20%. <b>Dobry cel nie bierze się z ambicji, tylko z przeglądu energetycznego.</b>"));
+  s.appendChild(el("div", "note", "Cel nie musi mieć postaci „linia bazowa minus X%”. Może dotyczyć zużycia znaczącego użycia („oświetlenie z 680 do 410 MWh rocznie”), kryterium eksploatacji („ciśnienie sieci nie wyższe niż 6,3 bar”) albo systemu („dane z podliczników za 12 miesięcy”)."));
+
+  CELE.forEach(function (c, i) {
+    var k = el("div", "poz" + (celOk(c) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, nrCelu(c, i)));
+    if (c.rodzaj) g.appendChild(el("span", "chip " + (c.rodzaj === "wynik" ? "red" : ""),
+      c.rodzaj === "wynik" ? "cel wyniku energetycznego" : "cel systemowy"));
+    var zc = zadaniaCelu(nrCelu(c, i)).length, dc = dzialaniaCelu(nrCelu(c, i)).length;
+    g.appendChild(el("span", "chip", ile(zc, "zadanie", "zadania", "zadań") + " · " + ile(dc, "działanie", "działania", "działań")));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { CELE.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Numer", inp(c.nr, "np. C1", function (v) { c.nr = v; })));
+    k.appendChild(pole("Cel", txt(c.tresc, "np. Ograniczyć zużycie energii na sprężone powietrze", 2, function (v) { c.tresc = v; })));
+    k.appendChild(pole("Rodzaj", sel(c.rodzaj, [["", "Wybierz"],
+    ["wynik", "Wynik energetyczny — wymaga zadania z wskaźnikiem"],
+    ["system", "System — może nie mieć zadania energetycznego"]], function (v) { c.rodzaj = v; })));
+    k.appendChild(pole("Powiązanie — z czego ten cel wynika",
+      inp(c.powiazanie, "np. SEU sprężarkownia; szansa S1 z rejestru 6.1; polityka pkt 2",
+        function (v) { c.powiazanie = v; }),
+      "Norma wymaga, żeby cele uwzględniały wymagania, znaczące użycia energii i możliwości poprawy. „Osiągalny” znaczy: oparty na możliwościach poprawy z przeglądu energetycznego."));
+    k.appendChild(pole("Termin", inp(c.termin, "", function (v) { c.termin = v; }, "date")));
+    k.appendChild(pole("Odpowiedzialny", inp(c.odp, "np. Kierownik Utrzymania Ruchu", function (v) { c.odp = v; })));
+    k.appendChild(pole("Status", sel(c.status, STATUSY, function (v) { c.status = v; })));
+    if (celBezZadania(c, i))
+      k.appendChild(el("div", "warn", "Cel wyniku energetycznego bez zadania. Zadanie energetyczne to wymierny cel poprawy — konkretna wartość wskaźnika do osiągnięcia w terminie. Dodajcie je w zakładce 2."));
+    if (celBezPlanu(c, i))
+      k.appendChild(el("div", "warn", "Cel bez planu działań to życzenie. Dodajcie działania w zakładce 3."));
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj cel");
+  dod.onclick = function () { CELE.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  if (!CELE.length) s.appendChild(el("div", "warn", "Nie ustanowiono żadnego celu."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 2: zadania energetyczne ── */
+function rysujZadania(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "B. Zadania energetyczne");
+  h.appendChild(el("span", "chip " + (ZADANIA.length && ZADANIA.every(zadanieOk) ? "green" : "amber"),
+    ZADANIA.filter(zadanieOk).length + " / " + ZADANIA.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Zadanie energetyczne to wymierny cel poprawy wyniku energetycznego — konkretna wartość wskaźnika do osiągnięcia w terminie, zwykle dla znaczącego użycia energii."));
+  s.appendChild(el("div", "note", "Dlaczego przy sprężonym powietrzu bywają dwa zadania? Bo kWh/Nm³ pokazuje sprawność wytwarzania powietrza, a nieszczelności zwiększają ilość powietrza, której potrzebujecie. Usunięcie wycieków zmniejsza zużycie energii, ale nie musi poprawić kWh/Nm³ — dlatego mierzy się je osobno, przepływem w czasie postoju."));
+  ZADANIA.forEach(function (z, i) {
+    var k = el("div", "poz" + (zadanieOk(z) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, nrZadania(z, i)));
+    if (z.doCelu) g.appendChild(el("span", "chip", "do celu " + z.doCelu));
+    g.appendChild(el("span", "chip " + (werOk(nrZadania(z, i)) ? "green" : "amber"),
+      werOk(nrZadania(z, i)) ? "metoda weryfikacji gotowa" : "metoda weryfikacji niepełna"));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { ZADANIA.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Numer", inp(z.nr, "np. Z1.1", function (v) { z.nr = v; })));
+    k.appendChild(pole("Do którego celu", sel(z.doCelu, opcjeCelow(), function (v) { z.doCelu = v; })));
+    k.appendChild(pole("Wskaźnik EnPI — karta z punktu 6.4",
+      inp(z.enpi, "np. S-1 kWh/Nm³", function (v) { z.enpi = v; })));
+    k.appendChild(pole("Linia bazowa EnB — wartość wyjściowa",
+      inp(z.enb, "np. 0,125 kWh/Nm³", function (v) { z.enb = v; })));
+    k.appendChild(pole("Wartość docelowa", inp(z.cel, "np. 0,110 (−12%)", function (v) { z.cel = v; })));
+    k.appendChild(pole("Termin", inp(z.termin, "", function (v) { z.termin = v; }, "date")));
+    k.appendChild(pole("Postęp — wartość bieżąca i uwagi",
+      inp(z.postep, "np. 0,119 kWh/Nm³ (VII–IX 2026), poprawa o 4,8%; adnotacja o różnicy temperatur zima–lato",
+        function (v) { z.postep = v; })));
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj zadanie energetyczne");
+  dod.onclick = function () { ZADANIA.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  var bezZ = CELE.filter(celBezZadania).length;
+  if (bezZ) s.appendChild(el("div", "warn", ile(bezZ, "cel wyniku energetycznego nie ma", "cele wyniku energetycznego nie mają", "celów wyniku energetycznego nie ma") + " przypisanego zadania."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: plany działań ── */
+function rysujDzialania(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "C. Plany działań");
+  h.appendChild(el("span", "chip " + (DZIAL.length && DZIAL.every(dzialanieOk) ? "green" : "amber"),
+    DZIAL.filter(dzialanieOk).length + " / " + DZIAL.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Dla każdego celu plan działań określa: co będzie zrobione, jakie zasoby, kto odpowiada, kiedy — i jak ocenicie wyniki."));
+  s.appendChild(el("div", "note", "Norma każe też rozważyć, jak włączyć działania w procesy biznesowe. W praktyce: inwestycja trafia do budżetu i planu inwestycji, przegląd szczelności — do planu utrzymania ruchu, kryteria energetyczne — do procedury zakupów."));
+  host.appendChild(s);
+
+  CELE.forEach(function (c, i) {
+    var nr = nrCelu(c, i);
+    var lista = DZIAL.map(function (d, j) { return { d: d, j: j }; }).filter(function (x) { return x.d.doCelu === nr; });
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, "Plan działań dla celu " + nr);
+    hh.appendChild(el("span", "chip " + (lista.length ? "green" : "amber"),
+      ile(lista.length, "działanie", "działania", "działań")));
+    sec.appendChild(hh);
+    sec.appendChild(el("p", "opis", (c.tresc || "(bez treści)")));
+    lista.forEach(function (x) {
+      var d = x.d;
+      var k = el("div", "poz" + (dzialanieOk(d) ? "" : " brak"));
+      var g = el("div", "pozkod");
+      g.appendChild(el("b", null, "Działanie " + (lista.indexOf(x) + 1)));
+      if (d.status) g.appendChild(el("span", "chip " + (d.status === "wykonane" ? "green" : ""),
+        STATUSY.filter(function (o) { return o[0] === d.status; })[0][1]));
+      var us = el("button", "link", "usuń");
+      us.onclick = function () { DZIAL.splice(x.j, 1); zapisz(); rysuj(); };
+      g.appendChild(us);
+      k.appendChild(g);
+      k.appendChild(pole("Co będzie zrobione",
+        txt(d.tresc, "np. Usunięcie nieszczelności (35 punktów) i kwartalny przegląd szczelności", 2,
+          function (v) { d.tresc = v; })));
+      k.appendChild(pole("Zasoby", inp(d.zasoby, "np. 10 000 zł i czas utrzymania ruchu", function (v) { d.zasoby = v; })));
+      k.appendChild(pole("Odpowiedzialny", inp(d.odp, "np. Kierownik Utrzymania Ruchu", function (v) { d.odp = v; })));
+      k.appendChild(pole("Termin", inp(d.termin, "", function (v) { d.termin = v; }, "date")));
+      k.appendChild(pole("Proces, w który włączono działanie",
+        inp(d.proces, "np. plan utrzymania ruchu; budżet inwestycji 2027; procedura zakupowa",
+          function (v) { d.proces = v; })));
+      k.appendChild(pole("Status", sel(d.status, STATUSY, function (v) { d.status = v; })));
+      if ((d.tresc || "").trim() && !(d.proces || "").trim())
+        k.appendChild(el("div", "note", "Nie wskazano procesu. Norma każe rozważyć włączenie działań w procesy biznesowe — działanie, które nie trafiło do żadnego planu ani budżetu, zwykle się nie wydarza."));
+      sec.appendChild(k);
+    });
+    var dod = el("button", "dodaj", "+ dodaj działanie do celu " + nr);
+    dod.onclick = function () { DZIAL.push({ doCelu: nr }); zapisz(); rysuj(); };
+    sec.appendChild(dod);
+    host.appendChild(sec);
+  });
+  if (!CELE.length) {
+    var p = el("div", "sekcja");
+    p.appendChild(el("div", "warn", "Najpierw ustanówcie cele w zakładce 1 — plany działań przypisuje się do celów."));
+    host.appendChild(p);
+  }
+}
+
+/* ── zakładka 4: metoda weryfikacji ── */
+function rysujWeryfikacja(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "D. Metoda weryfikacji poprawy");
+  var got = ZADANIA.filter(function (z, i) { return werOk(nrZadania(z, i)); }).length;
+  h.appendChild(el("span", "chip " + (ZADANIA.length && got === ZADANIA.length ? "green" : "amber"),
+    got + " / " + ZADANIA.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Ten element najczęściej się gubi. „Sprawdzimy na koniec roku” to nie metoda."));
+  s.appendChild(el("div", "warn", "Metoda weryfikacji mówi: który wskaźnik i która linia bazowa, jaki okres, jakie dane i z jakiego źródła, w jakich warunkach porównujecie i jak liczycie poprawę. Bez tego spadek zużycia z 800 do 680 MWh niczego nie dowodzi — mogła spaść produkcja albo skrócić się czas pracy."));
+  host.appendChild(s);
+
+  if (!ZADANIA.length) {
+    var p = el("div", "sekcja");
+    p.appendChild(el("div", "warn", "Brak zadań energetycznych. Metodę weryfikacji ustala się dla każdego zadania — dodajcie je w zakładce 2."));
+    host.appendChild(p); return;
+  }
+  ZADANIA.forEach(function (z, i) {
+    var nr = nrZadania(z, i);
+    var w = WER[nr] || (WER[nr] = {});
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, "Zadanie " + nr);
+    hh.appendChild(el("span", "chip " + (werOk(nr) ? "green" : "amber"), werOk(nr) ? "kompletna" : "do uzupełnienia"));
+    sec.appendChild(hh);
+    sec.appendChild(el("p", "opis", (z.enpi || "—") + " · z " + (z.enb || "—") + " do " + (z.cel || "—")));
+    var k = el("div", "poz" + (werOk(nr) ? "" : " brak"));
+    POLA_WER.forEach(function (f) {
+      k.appendChild(pole(f.nazwa + (f.wymagane ? "" : " — opcjonalne"),
+        inp(w[f.kod], f.przyklad, function (v) { w[f.kod] = v; }), f.pomoc));
+      if (f.wymagane && pustaWeryfikacja(w[f.kod]))
+        k.appendChild(el("div", "warn", "„" + w[f.kod] + "” to nie metoda. Napiszcie konkretnie: jakie dane, z jakiego źródła, w jakich warunkach."));
+    });
+    sec.appendChild(k);
+    host.appendChild(sec);
+  });
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz planowania: "));
+  n.appendChild(document.createTextNode(
+    ile(CELE.length, "cel", "cele", "celów") + " (w tym " + celeWyniku().length + " wyniku energetycznego) · " +
+    ile(ZADANIA.length, "zadanie", "zadania", "zadań") + " · " +
+    ile(DZIAL.length, "działanie", "działania", "działań") + " · metody weryfikacji: " +
+    ZADANIA.filter(function (z, i) { return werOk(nrZadania(z, i)); }).length + " z " + ZADANIA.length));
+  s.appendChild(n);
+  var bezPow = CELE.filter(function (c) { return (c.tresc || "").trim() && !(c.powiazanie || "").trim(); }).length;
+  if (bezPow) s.appendChild(el("div", "warn", ile(bezPow, "cel nie ma", "cele nie mają", "celów nie ma") + " wskazanego powiązania — to są kandydaci na „cele z sufitu”."));
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var k = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-25, sekcja 6.2 ── */
+function stanPozycji(p) {
+  var f = {
+    ustanowiono: function () { return CELE.length > 0 && CELE.every(celOk); },
+    spojne: function () { return CELE.length > 0 && CELE.every(function (c) { return (c.powiazanie || "").trim(); }); },
+    mierzalne: function () { return ZADANIA.length > 0 && ZADANIA.every(zadanieOk); },
+    plany: function () { return CELE.length > 0 && CELE.every(function (c, i) { return !celBezPlanu(c, i); }) && DZIAL.every(dzialanieOk); },
+    weryfikacja: function () {
+      return ZADANIA.length > 0 && ZADANIA.every(function (z, i) {
+        var w = WER[nrZadania(z, i)] || {};
+        return (w.obliczenie || "").trim() && (w.okres || "").trim() && !pustaWeryfikacja(w.okres);
+      });
+    },
+    metoda_pelna: function () { return ZADANIA.length > 0 && ZADANIA.every(function (z, i) { return werOk(nrZadania(z, i)); }); },
+    procesy: function () { return DZIAL.length > 0 && DZIAL.every(function (d) { return (d.proces || "").trim(); }); },
+    udokumentowane: function () { return !!META.data && !!(META.zatwierdzil || "").trim(); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!CELE.length) b.push({ t: "Nie ustanowiono żadnego celu.", kto: "klient" });
+  CELE.forEach(function (c, i) {
+    var nr = nrCelu(c, i);
+    if (!celOk(c)) b.push({ t: nr + " — cel niekompletny (treść, rodzaj, powiązanie, termin, odpowiedzialny).", kto: "klient" });
+    if (celBezZadania(c, i)) b.push({ t: nr + " — cel wyniku energetycznego bez zadania.", kto: "klient" });
+    if (celBezPlanu(c, i)) b.push({ t: nr + " — cel bez planu działań.", kto: "klient" });
+  });
+  ZADANIA.forEach(function (z, i) {
+    var nr = nrZadania(z, i);
+    if (!zadanieOk(z)) b.push({ t: nr + " — zadanie niekompletne (cel, EnPI, EnB, wartość docelowa, termin).", kto: "klient" });
+    else if (!werOk(nr)) b.push({ t: nr + " — niepełna metoda weryfikacji poprawy.", kto: "klient" });
+  });
+  DZIAL.forEach(function (d, i) {
+    if (!dzialanieOk(d)) b.push({ t: "Działanie " + (i + 1) + " — brak treści, osoby albo terminu.", kto: "klient" });
+    else if (!(d.proces || "").trim()) b.push({ t: "Działanie " + (i + 1) + " — nie wskazano procesu, w który je włączono.", kto: "klient", metodyka: true });
+  });
+  if (!META.data || !(META.zatwierdzil || "").trim())
+    b.push({ t: "Cele, zadania i plany mają być utrzymywane jako udokumentowana informacja — brak daty albo osoby zatwierdzającej.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-CEL-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Zarząd, uchwała z 15 kwietnia 2026 r.", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data zatwierdzenia", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Stan na dzień", inp(META.stan, "", function (v) { META.stan = v; }, "date")));
+  s.appendChild(m);
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-25 — sekcja 6.2"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_62.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "ocena konsultanta"));
+    r.appendChild(td);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-CEL-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Część", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["A. Cele", "zakładka 1", ile(CELE.length, "cel", "cele", "celów") + " (" + celeWyniku().length + " wyniku, " + (CELE.length - celeWyniku().length) + " systemowych)"],
+  ["B. Zadania energetyczne", "zakładka 2", ile(ZADANIA.length, "zadanie", "zadania", "zadań")],
+  ["C. Plany działań", "zakładka 3", ile(DZIAL.length, "działanie", "działania", "działań") + " w " + ile(CELE.length, "planie", "planach", "planach")],
+  ["D. Metody weryfikacji poprawy", "zakładka 4", ZADANIA.filter(function (z, i) { return werOk(nrZadania(z, i)); }).length + " z " + ZADANIA.length + " kompletnych"],
+  ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+  ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(hel("div", "ok", "Cele, zadania energetyczne i plany działań <b>utrzymuje się jako udokumentowaną informację</b> — to wymaganie normy. D-EnMS-CEL-01 odpowiada formularzowi F-EnMS-10 (załącznik III-23)."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "cele", t: "1. Cele", f: rysujCele },
+  { id: "zadania", t: "2. Zadania energetyczne", f: rysujZadania },
+  { id: "dzialania", t: "3. Plany działań", f: rysujDzialania },
+  { id: "weryfikacja", t: "4. Metoda weryfikacji", f: rysujWeryfikacja },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+function aktualizujPasek() {
+  var razem = Math.max(CELE.length, 1) + Math.max(ZADANIA.length, 1) + Math.max(DZIAL.length, 1) + Math.max(ZADANIA.length, 1);
+  var zrob = CELE.filter(celOk).length + ZADANIA.filter(zadanieOk).length + DZIAL.filter(dzialanieOk).length
+    + ZADANIA.filter(function (z, i) { return werOk(nrZadania(z, i)); }).length;
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 22:40", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 6.2" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_62", JSON.stringify({
+      CELE: CELE, ZADANIA: ZADANIA, DZIAL: DZIAL, WER: WER, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_62"); if (!s) return;
+    var d = JSON.parse(s);
+    CELE = d.CELE || []; ZADANIA = d.ZADANIA || []; DZIAL = d.DZIAL || [];
+    WER = d.WER || {}; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  CELE = JSON.parse(JSON.stringify(P_CELE));
+  ZADANIA = JSON.parse(JSON.stringify(P_ZADANIA));
+  DZIAL = JSON.parse(JSON.stringify(P_DZIAL));
+  WER = JSON.parse(JSON.stringify(P_WER));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 22:45", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 6.2.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  CELE = []; ZADANIA = []; DZIAL = []; WER = {};
+  META = { zatwierdzil: "", data: "", stan: "" }; WNIOSKI = [];
+  try { localStorage.removeItem("enesa_62"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

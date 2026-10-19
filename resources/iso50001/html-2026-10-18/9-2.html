@@ -1,0 +1,1448 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 9.2 Audyt wewnętrzny</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 9</div>
+ <h1>9.2 Audyt wewnętrzny</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 9.2</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 9.2</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>9.2 Audyt wewnętrzny</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 9.2 i różnicę między odhaczaniem a audytem.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 9.2<br>Audyt wewnętrzny</div>
+   <div>
+    <h4>9.2 Audyt wewnętrzny</h4>
+    <p>Trzy pytania audytu. Program według znaczenia procesów. Kto może audytować.
+    Niezgodność to nie miara jakości.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 9.2. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">9.2 — audyt wewnętrzny<br>10 slajdów</div>
+   <div>
+    <h4>9.2 Audyt wewnętrzny</h4>
+    <p>Po co ten audyt. Program i plan. Bezstronność w małej firmie. Jak audytor
+    zbiera dowody. Co dalej z wynikami.</p>
+    <p style="font-size:12.5px">10 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja przeprowadza audyty wewnętrzne w zaplanowanych odstępach, żeby
+ uzyskać informację, czy system zarządzania energią poprawia wynik energetyczny, jest zgodny z wymaganiami
+ organizacji oraz normy i jest skutecznie wdrożony i utrzymywany. Planuje i realizuje program audytów —
+ uwzględniając znaczenie audytowanych procesów i wyniki wcześniejszych audytów. Dla każdego audytu określa
+ kryteria i zakres. Dobiera audytorów tak, żeby zapewnić obiektywność i bezstronność. Przekazuje wyniki
+ odpowiedniemu kierownictwu, podejmuje odpowiednie działania i zachowuje udokumentowane informacje jako dowód
+ realizacji programu i wyników audytów. Omówienie na podstawie punktu 9.2 PN-EN ISO 50001:2018; nie jest to
+ dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> w zaplanowanych odstępach sprawdzaj,
+ na podstawie dowodów i bezstronnie, czy system poprawia wynik energetyczny, jest zgodny z wymaganiami
+ i działa — i przekazuj wyniki kierownictwu.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 9, punkt 9.2. Program audytów: III-43;
+ raport z audytu: III-44.</div>
+
+ <div class="ramka">
+  <h3>◧ Same „OK” na liście kontrolnej</h3>
+  <p style="font-size:13.5px">Wrzesień 2026 r., pierwszy audyt wewnętrzny systemu w AutoParts. Prowadzi go
+  specjalistka ds. środowiska — audytorka ISO 14001, która nie odpowiada za żaden z audytowanych obszarów.
+  Na biurku leży lista kontrolna wypełniona przez kierownika utrzymania ruchu. Przy punkcie 8.1 — same „OK”,
+  w tym: <b>„kryteria przekazane wykonawcom”</b>.</p>
+  <p style="font-size:13.5px">Audytorka nie podważa listy. Prosi o jedno: <b>zlecenie serwisowe i protokół
+  z ostatniego przeglądu sprężarki.</b> Zlecenie zawiera trzy zdania z lipca. Protokół z września jest
+  na wzorze serwisu — bez nastaw przed i po. Nikt tego nie zauważył, bo nikt nie sprawdzał protokołu przy
+  odbiorze usługi.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Lista kontrolna mówiła, że wymaganie jest spełnione. Dowody
+  pokazały, że spełnione jest połowicznie. <b>Na tym polega różnica między odhaczaniem a audytem.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Po co ten audyt? Trzy pytania</h3>
+ <table class="tab">
+ <tr><th style="width:8%">&nbsp;</th><th>Pytanie</th></tr>
+ <tr><td><b>a)</b></td><td>Czy system <b>poprawia wynik energetyczny</b>?</td></tr>
+ <tr><td><b>b)</b></td><td>Czy jest <b>zgodny z tym, co sami ustaliliście</b> — polityką, celami, procedurami — i z normą?</td></tr>
+ <tr><td><b>c)</b></td><td>Czy jest <b>skutecznie wdrożony i utrzymywany</b>, czyli czy ustalenia żyją na hali, a nie tylko w dokumentach?</td></tr>
+ </table>
+ <p style="font-size:14.5px"><b>Dobry audyt nie szuka winnych i nie poluje na niezgodności. Szuka dowodów.</b>
+ Czasem dowody pokażą niezgodność, czasem możliwość poprawy, a czasem — że wszystko działa. Każdy z tych
+ wyników jest prawidłowy, jeśli opiera się na dowodach.</p>
+
+ <h3 style="margin-top:22px">Program i plan: co, kiedy i kto</h3>
+ <p style="font-size:14.5px">Program audytów ustala, które obszary i jak często audytujecie, kto audytuje, jak
+ planujecie i raportujecie. Norma każe uwzględnić dwie rzeczy: <b>znaczenie procesów</b> i <b>wyniki
+ wcześniejszych audytów</b>. Sprężarkownię, która zużywa 17,5% energii i miała w tym roku odchylenie,
+ sprawdzicie uważniej niż obieg dokumentów, który od lat działa bez zarzutu.</p>
+ <p style="font-size:14.5px">Dla każdego audytu określacie <b>zakres</b> (co sprawdzacie) i <b>kryteria</b>
+ (według czego: norma, procedura, kryterium 6,3 bar, umowa z serwisem).</p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> wiele firm audytuje cały system raz w roku, a obszary ważne lub
+ problemowe częściej. <b>Przed pierwszym audytem certyfikującym warto przeprowadzić audyt obejmujący wszystkie
+ wymagania</b> — jednostki certyfikujące zwykle oczekują przed nim co najmniej jednego audytu wewnętrznego
+ i przeglądu zarządzania. Norma mówi tylko „w zaplanowanych odstępach”.</p>
+
+ <h3 style="margin-top:22px">Kto może audytować?</h3>
+ <p style="font-size:14.5px">Ktoś, kto umie prowadzić audyt i zna wymagania — i kto zapewni obiektywność
+ i bezstronność. W praktyce: <b>nie audytuje własnej pracy.</b> W AutoParts Energy Manager organizuje program,
+ ale nie audytuje systemu, który sam zbudował.</p>
+ <p style="font-size:14.5px">W małej firmie bywa trudniej. Rozwiązania: audyty krzyżowe między działami,
+ audytor z innego systemu zarządzania, zewnętrzny audytor wewnętrzny. <b>Liczy się rzeczywista bezstronność,
+ nie samo stanowisko.</b></p>
+
+ <h3 style="margin-top:22px">Jak audytor zbiera dowody?</h3>
+ <p style="font-size:14.5px">Czyta dokumenty i zapisy, rozmawia z ludźmi przy pracy, obserwuje. Najlepiej idzie
+ <b>jedną nitką przez kilka punktów normy</b>: od wskaźnika sprężarkowni, przez kryterium 6,3 bar, instrukcję
+ przy panelu i rozmowę z technikiem, po zlecenie dla serwisu i protokół z przeglądu. Pytania są proste:</p>
+ <table class="tab">
+ <tr><th>Pytanie audytora</th></tr>
+ <tr><td>„Jakie ciśnienie jest teraz ustawione i skąd wiesz, że takie ma być?”</td></tr>
+ <tr><td>„Co robisz, gdy wskaźnik w zestawieniu tygodniowym rośnie?”</td></tr>
+ <tr><td>„Pokaż ostatnie znaczące odchylenie i to, co z nim zrobiono.”</td></tr>
+ <tr><td>„Skąd serwis wie, że nie wolno mu zmieniać nastaw?”</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Niezgodność to nie miara jakości audytu</h3>
+ <p style="font-size:14.5px">Niezgodność to <b>niespełnienie wymagania</b> — normy, przepisu albo wymagania,
+ które ustaliła sama organizacja. Nic więcej. Możliwość doskonalenia nie staje się niezgodnością tylko dlatego,
+ że audyt „powinien coś znaleźć”.</p>
+ <p style="font-size:14.5px">Liczba niezgodności nie mówi, czy audyt był dobry. <b>Audyt bez niezgodności może
+ być rzetelny</b> — jeśli objął właściwy zakres i opierał się na dowodach. <b>Audyt z dziesięcioma
+ niezgodnościami może być słaby</b> — jeśli wszystkie dotyczą literówek w dokumentach. O jakości audytu
+ świadczą zakres, dowody i bezstronność.</p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> niektóre firmy dzielą niezgodności na duże i małe — tak robią
+ jednostki certyfikujące. W audycie wewnętrznym to wygodna, ale <b>nieobowiązkowa</b> klasyfikacja.
+ Ważniejsze, żeby każde ustalenie było jasno opisane, oparte na dowodzie i przypisane do wymagania.</p>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts: protokół serwisu bez nastaw</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Wymaganie, które firma sama ustaliła po czerwcowym zdarzeniu, działa tylko w połowie — zlecenie jest, kontroli odbioru nie ma.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Audytorka zapisuje niezgodność z wymaganiem organizacji (8.1, nadzór nad procesem zleconym) i dwie możliwości doskonalenia, m.in. wzór protokołu dla serwisu. Raport trafia do dyrektora zakładu i kierownika utrzymania ruchu.</td></tr>
+ <tr><td><b>Działanie</b></td><td>Kierownik UR wprowadza sprawdzenie protokołu przy odbiorze usługi i przekazuje serwisowi wzór protokołu z nastawami.</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Przy kolejnym przeglądzie sprężarek kierownik UR sprawdzi protokół; skuteczność działania oceni <b>następny audyt sprężarkowni</b> (pozycja 3 programu, III kw. 2027). Wnioski z audytu trafiły na przegląd zarządzania (9.3).</td></tr>
+ </table>
+
+ <div class="ramka">
+  <h3>✗ Czego unikać: osiem hoteli, jeden audytor</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Sieć hoteli, certyfikat ISO 50001 dla całej sieci. Audyty
+  wewnętrzne we wszystkich ośmiu hotelach prowadził Energy Manager z centrali — <b>ten sam, który zaprojektował
+  system</b>. Sprawdzał głównie dokumenty w biurze, z personelem rozmawiał rzadko. Na audycie nadzoru audytor
+  jednostki certyfikującej odwiedził dwa hotele. W jednym nikt z personelu nie słyszał o polityce energetycznej.
+  Przegląd energetyczny był kopią z innego hotelu — z niezmienioną nazwą. Cztery ustalenia zaklasyfikowano jako
+  niezgodności duże i <b>zawieszono certyfikat na trzy miesiące</b>. Koszty: audyt dodatkowy 8 000 zł,
+  konsultant 25 000 zł, kłopotliwe rozmowy z klientami korporacyjnymi. Problemem nie był sam udział Energy
+  Managera ani krótkie wizyty — <b>problemem było to, że audyt nie objął praktyki, audytor oceniał własne
+  rozwiązania, a ustalenia nie prowadziły do działań.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Lista kontrolna z samymi „OK” bez dowodów</td><td>Przy każdym ustaleniu wskażcie dowód; idźcie nitką od wskaźnika do praktyki</td></tr>
+ <tr><td>Audytor audytuje własną pracę</td><td>Zapewnijcie bezstronność: audyt krzyżowy, inny system, osoba z zewnątrz</td></tr>
+ <tr><td>Ocenianie audytu liczbą niezgodności</td><td>Oceniajcie zakres, dowody i bezstronność</td></tr>
+ <tr><td>Możliwość doskonalenia zapisana jako niezgodność</td><td>Niezgodność to niespełnienie wymagania — resztę zapiszcie jako możliwość doskonalenia</td></tr>
+ <tr><td>Program „po kolei przez normę”</td><td>Uwzględnijcie znaczenie procesów i wyniki wcześniejszych audytów</td></tr>
+ <tr><td>Wyniki bez działań i bez kierownictwa</td><td>Przekażcie wyniki osobom, które mogą działać; niezgodności — według 10.1</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Audyt wewnętrzny sprawdza, na podstawie dowodów, czy system
+  poprawia wynik, jest zgodny z wymaganiami i działa. Wynik może być dowolny — byle oparty
+  na dowodach.<br><br>
+  <b>Zadanie:</b> weźcie ostatni raport z audytu wewnętrznego i sprawdźcie, ile ustaleń opiera się na dowodach
+  z hali, a ile tylko na dokumentach. Ankieta liczy ten udział za Was.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma liczy udział ustaleń opartych na dowodach z praktyki, a liczbę niezgodności
+  pokazuje na końcu tabeli jakości audytu — celowo, bo audytu nie ocenia się liczbą ustaleń.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 9.2 w formacie stron 4.1–9.1.2.</b> Pierwsza strona łącząca <b>dwa formularze</b>:
+program audytów F-EnMS-18 (poziom organizacji, jeden na okres) i raport z audytu F-EnMS-19 (jeden na audyt).
+Oba trafiają do jednego dokumentu, bo norma wymaga zachowania dowodów realizacji programu <b>i</b> wyników
+audytów — a program bez raportów nie jest dowodem niczego.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 9, punkt 9.2</td><td>Scena listy kontrolnej z samymi „OK” i prośby o zlecenie oraz protokół, zdanie o różnicy między odhaczaniem a audytem, trzy pytania audytu, akapit o programie i dwóch kryteriach jego budowy, rada o audycie przed certyfikacją, akapit „kto może audytować” wraz z rozwiązaniami dla małej firmy, akapit o zbieraniu dowodów jedną nitką z czterema pytaniami audytora, akapit „niezgodność to nie miara jakości audytu”, rada o podziale na duże i małe, przykład w czterech ogniwach, przykład ilustracyjny sieci hoteli, tabela sześciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 7 — III-43 (F-EnMS-18)</td><td>Metryka programu (organizacja, organizuje, zatwierdził wraz z datą zmiany), siedem kolumn pozycji programu — w tym <b>„dlaczego teraz (znaczenie, wcześniejsze wyniki)”</b> — kryteria audytu wspólne dla programu, zasada planu dwa tygodnie przed audytem, przykładowy program AutoParts na wrzesień 2026 – wrzesień 2027 (cztery pozycje).</td></tr>
+<tr><td>Część III, Moduł 7 — III-44 (F-EnMS-19)</td><td>Metryka raportu z <b>potwierdzeniem bezstronności</b> i rozdzielnikiem, część A (ustalenia: nr, rodzaj, opis i dowód, wymaganie, działanie i odpowiedzialny), legenda rodzajów N / D / P z uwagą o nieobowiązkowym podziale niezgodności, część B jako trzy pytania punktu 9.2 wraz z uwagami do programu.</td></tr>
+<tr><td>Część III, Moduł 7 — III-47</td><td>Lista kontrolna sekcji 9.2: 7 pozycji — sześć wymagań normy i jedno zalecenie metodyki.</td></tr>
+<tr><td>Część III, Moduł 7 — III-48, pkt 4.3</td><td>Kroki 9–12 procedury P-EnMS-07: opracowanie programu z uwzględnieniem znaczenia procesów i wyników wcześniejszych audytów, zakres i kryteria każdego audytu, dobór audytorów, zbieranie dowodów czterema metodami, raport i przekazanie kierownictwu, niezgodności według P-EnMS-08.</td></tr>
+</table>
+<div class="note"><b>Co w przykładzie jest nasze.</b> Ustalenie N-1 i jego ogniwa pochodzą z książki, program
+— z III-43. Dwie możliwości doskonalenia i potwierdzenie zgodności są naszym rozwinięciem: książka mówi,
+że audytorka zapisała „niezgodność i <b>dwie</b> możliwości doskonalenia, m.in. wzór protokołu dla serwisu”,
+a III-46 wymienia wśród możliwości doskonalenia lukę w zakupach przy porównywaniu kosztu zakupu i energii —
+z tego zbudowaliśmy D-1 i D-2. Ustalenie P-1 (potwierdzenie stosowania kryterium ciśnienia) dodaliśmy,
+bo bez niego nie widać ani rodzaju P, ani dowodu z pomiaru, a przykład sugerowałby, że audyt zapisuje tylko
+problemy. Trzy odpowiedzi części B są nasze, zgodne z danymi III-42 i III-46. <b>Przy publikacji wymagają
+potwierdzenia:</b> treść D-1 i D-2, całe P-1 oraz liczba trzech ostatnich protokołów kotłowni i lakierni.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>program_audytow</code></td><td>id, audyt_id, organizacja_zakres, organizuje, zatwierdzil, data_zatwierdzenia, kryteria_wspolne, planowanie_raportowanie. Jeden rekord na okres programu; zmiany programu w historii wersji.</td></tr>
+<tr><td><code>pozycja_programu</code></td><td>id, program_id, nr, obszar, punkty_normy, <b>dlaczego_teraz</b>, termin, audytor, status ENUM('planowany','wtoku','wykonany','odwolany'), uwagi. Pozycja wykonana wskazuje <code>raport_id</code>.</td></tr>
+<tr><td><code>raport_audytu</code></td><td>id, pozycja_programu_id, nr, data, daty_szczegolowe, zakres, kryteria, audytor, <b>czy_wlasna_praca BOOL</b>, bezstronnosc, audytowani, rozdzielnik, uwagi_do_programu.</td></tr>
+<tr><td><code>ustalenie</code></td><td>id, raport_id, nr, rodzaj ENUM('N','D','P'), opis, dowod, <b>zrodlo_dowodu</b> ENUM('dokument','rozmowa','obserwacja','pomiar'), wymaganie, dzialanie, odpowiedzialny_termin, karta_niezgodnosci_id.</td></tr>
+<tr><td><code>wniosek_audytu</code></td><td>raport_id plus trzy pola odpowiadające pytaniom a), b) i c) punktu 9.2. Jeden rekord na raport.</td></tr>
+</table>
+<div class="warn"><b>Dlaczego <code>zrodlo_dowodu</code> jest polem wyboru, a nie tekstem.</b> To jedyne pole
+na tej stronie, którego nie ma w formularzu Toolkitu — dodaliśmy je, żeby dało się policzyć <b>udział ustaleń
+opartych na dowodach z praktyki</b>. Bez niego zdanie z książki „ustalenia opierają się na dowodach z hali,
+nie tylko na dokumentach” pozostaje postulatem, którego platforma nie umie sprawdzić. W przykładzie
+3 z 4 ustaleń ma źródło z praktyki (rozmowa, obserwacja albo pomiar) — czyli
+75%.</div>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Program „po kolei przez normę”</b></td><td>Pole „dlaczego teraz” puste → ostrzeżenie o wprost niespełnionym wymaganiu. Pole wypełnione, ale <b>bez żadnego słowa wskazującego znaczenie</b> (SEU, znaczący, procent, odchylenie, niezgodność, wcześniejszy, wynik, modernizacja, luka, ryzyko, pierwszy, certyfikacja, zmiana) albo odwołujące się wyłącznie do rytmu i kolejności → ostrzeżenie z piątym błędem. Pozycja listy kontrolnej o programie wymaga, by <b>żadna</b> pozycja nie miała tej wady.</td></tr>
+<tr><td><b>Audytor audytuje własną pracę</b></td><td>Pole wyboru „czy audytor odpowiada za którykolwiek z audytowanych obszarów” — <b>pytanie wprost, nie wykrywanie z tekstu</b>. Odpowiedź „tak” → ostrzeżenie cytujące przypadek sieci hoteli wraz z kosztami, raport liczony jako niekompletny, pozycja listy kontrolnej o bezstronności niespełniona. Rozpoznawanie tego z opisu audytora byłoby zgadywaniem — a tu zgadywać nie wolno.</td></tr>
+<tr><td><b>Audyt dokumentów, nie praktyki</b></td><td>Co najmniej dwa ustalenia ze wskazanym źródłem i <b>żadne</b> z praktyki → ostrzeżenie z radą o idzeniu jedną nitką od wskaźnika do praktyki. Udział dowodów z praktyki pokazywany jest jako chip przy raporcie i wiersz w tabeli jakości audytu.</td></tr>
+<tr><td><b>Niezgodność bez wskazania wymagania</b></td><td>Rodzaj N i puste pole wymagania → ostrzeżenie: <b>niezgodność to niespełnienie wymagania, nic więcej</b>; jeśli nie da się wskazać wymagania, to możliwość doskonalenia. Pole wymagania pokazuje się tylko przy rodzaju N i D, z różnymi podpowiedziami.</td></tr>
+<tr><td><b>Możliwość doskonalenia opisana jak niezgodność</b></td><td>Rodzaj D z wypełnionym wymaganiem albo z opisem zawierającym „nie spełnia”, „nie zastosowano”, „wbrew” → nota z propozycją: albo zmieńcie rodzaj na N, albo przeformułujcie opis. Odwrotny błąd — <b>możliwość doskonalenia zapisana jako niezgodność</b> — bierze się z przekonania, że audyt musi coś znaleźć.</td></tr>
+<tr><td>Ustalenie bez działania albo odpowiedzialnego</td><td>Rodzaj N lub D bez działania i osoby → ostrzeżenie z szóstym błędem i przypomnieniem o pułapce „działania na papierze”. Przy rodzaju P pola działania nie są pokazywane.</td></tr>
+<tr><td>Niezgodność bez karty 10.1</td><td>Ostrzeżenie; raport liczony jako niekompletny. Niezgodności idą ścieżką 10.1: przyczyna, działanie, sprawdzenie skuteczności.</td></tr>
+<tr><td>Brak rozdzielnika</td><td>Pole wymagane. Norma wymaga przekazania wyników <b>odpowiedniemu kierownictwu</b> — temu, które może podjąć działania. Bez rozdzielnika nie ma dowodu przekazania.</td></tr>
+<tr><td>Brak odpowiedzi na trzy pytania</td><td>Część B w całości wymagana. Audyt, który zebrał ustalenia, ale nie odpowiedział na pytania a), b) i c), nie wykonał zadania punktu 9.2.</td></tr>
+<tr><td>Żadna pozycja nie obejmuje całego systemu</td><td>Nota z radą o audycie obejmującym wszystkie wymagania przed pierwszą certyfikacją. Zalecenie, nie wymaganie — dlatego nota, nie ostrzeżenie.</td></tr>
+<tr><td>Raport bez uwag do programu</td><td>Nota w analizie konsultanta: pętla się nie zamyka, bo wyniki audytów są jednym z dwóch kryteriów budowy kolejnego programu.</td></tr>
+</table>
+
+<h2>Tabela jakości audytu — zamiast licznika niezgodności</h2>
+<div class="note">Zakładka 3 otwiera się tabelą <b>zakres · kryteria · bezstronność · udział dowodów
+z praktyki</b>, a liczba niezgodności jest w niej <b>ostatnim wierszem</b>. To nie jest kwestia układu:
+zdanie z książki „o jakości audytu świadczą zakres, dowody i bezstronność” daje się zamienić na cztery mierzalne
+pozycje, a „liczba niezgodności nie mówi, czy audyt był dobry” — na decyzję, czego <b>nie</b> stawiać na
+pierwszym miejscu. Pod tabelą platforma mówi to wprost. Gdyby licznik niezgodności był pierwszy, strona
+uczyłaby czegoś przeciwnego niż rozdział, z którego pochodzi.</div>
+
+<h2>Lista kontrolna III-47 — sekcja 9.2</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Audyty w zaplanowanych odstępach odpowiadają na pytania: poprawa wyniku, zgodność, skuteczne wdrożenie.</td><td class='mono'>N</td><td><code>trzyPytania</code></td></tr><tr><td>Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów.</td><td class='mono'>N</td><td><code>program</code></td></tr><tr><td>Dla każdego audytu określono zakres i kryteria.</td><td class='mono'>N</td><td><code>zakresKryteria</code></td></tr><tr><td>Audytorzy zapewniają obiektywność i bezstronność.</td><td class='mono'>N</td><td><code>bezstronnosc</code></td></tr><tr><td>Wyniki przekazano odpowiedniemu kierownictwu; podjęto odpowiednie działania.</td><td class='mono'>N</td><td><code>przekazanie</code></td></tr><tr><td>Zachowano dowody realizacji programu i wyniki audytów.</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Ustalenia opierają się na dowodach z praktyki; audytu nie ocenia się liczbą niezgodności.</td><td class='mono'>M</td><td><code>dowody</code></td></tr></table>
+<div class="note">Pozycja metodyczna o dowodach z praktyki zwraca „nie dotyczy”, gdy żadne ustalenie nie ma
+jeszcze wskazanego źródła. Wszystkie pozostałe pozycje wymagają co najmniej jednego raportu — <b>program bez
+raportu nie jest dowodem realizacji programu</b>, więc sam zatwierdzony harmonogram nie zalicza żadnej z nich.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładka 1 — program</td><td>Wypełnia Energy Manager, zatwierdza najwyższe kierownictwo. To jedyna zakładka na poziomie organizacji.</td></tr>
+<tr><td>Zakładki 2–4 — raporty</td><td>Wypełnia <b>audytor</b>, nie Energy Manager. W platformie oznacza to osobne uprawnienie: osoba prowadząca audyt powinna móc wypełnić raport bez dostępu do pozostałych ankiet audytu — i bez możliwości zmiany programu, który sama realizuje.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok liczy pozycje uzasadnione samym rytmem, audyty prowadzone przez osoby odpowiedzialne za obszar, raporty oparte wyłącznie na dokumentach, niezgodności bez wymagania i ustalenia bez działań. Przy audycie opartym na dokumentach dodaje pytanie, które w AutoParts wystarczyło: <b>z kim audytor rozmawiał i co zobaczył na hali — całe ustalenie wzięło się z poproszenia o dwa papiery i z pytania, kto je sprawdza.</b></td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-AUD-01</code> — program audytów wewnętrznych i raporty z audytów</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-18 (załącznik III-43) i F-EnMS-19 (załącznik III-44)</td></tr>
+<tr><td>Status w normie</td><td><b>Dwa wymagania dokumentacyjne w jednym:</b> dowód realizacji programu audytów oraz wyniki audytów. Forma raportu należy do organizacji. W wykazie z punktu 7.5 pozycja pojawia się jako Z i N (9.2).</td></tr>
+<tr><td>Rytm</td><td>Program — na okres ustalony przez organizację (w AutoParts wrzesień 2026 – wrzesień 2027, z rytmem rocznym dla całego systemu). Raport — po każdym audycie, ★ w ciągu dwóch tygodni. Plan pojedynczego audytu — ★ dwa tygodnie przed audytem.</td></tr>
+<tr><td>Wyzwalacze zmiany programu</td><td>Nowa niezgodność, znaczące odchylenie, decyzja przeglądu zarządzania (w AutoParts zmiana pozycji 2 i 3 z 29.09.2026), planowana modernizacja znaczącego użycia energii, zmiana zakresu systemu, zbliżający się audyt certyfikujący.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>Wszystkie punkty 4–10</td><td><b>Wejście.</b> Zakres audytu to punkty normy, a kryteria to norma, procedury, kryteria SEU i wymagania z rejestru. Audyt jest jedynym miejscem w systemie, które patrzy na wszystkie punkty naraz.</td></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Znaczenie procesów — pierwsze z dwóch kryteriów budowy programu — bierze się z listy SEU i ich udziału w zużyciu. Sprężarkownia z 17,5% zużycia trafia do programu z innego powodu niż obieg dokumentów.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Wejście.</b> Kompetencje audytorów potwierdza matryca III-28 (w przykładzie: matryca III-12 dla audytorów ISO 14001). Audytor bez potwierdzonych kompetencji w zakresie ISO 50001 jest ustaleniem sam w sobie.</td></tr>
+<tr><td>8.1 Nadzór operacyjny</td><td><b>Wejście i wyjście.</b> Kryteria eksploatacji SEU są kryteriami audytu; ustalenie N-1 dotyczy wprost sekcji C karty kryteriów (przekazanie wymagań wykonawcom). Audyt sprawdza nie samo istnienie kryteriów, ale ich stosowanie.</td></tr>
+<tr><td>9.1.1 Monitorowanie</td><td><b>Wejście.</b> Odpowiedź na pytanie a) opiera się na wynikach monitorowania; znaczące odchylenie z czerwca jest uzasadnieniem pozycji 3 programu. Audyt sprawdza także, czy odchylenia były badane i czy reakcje zapisano.</td></tr>
+<tr><td>9.1.2 Ocena zgodności</td><td><b>Wejście.</b> Wymagania z rejestru są kryteriami audytu, a wynik oceny zgodności — materiałem do odpowiedzi na pytanie b).</td></tr>
+<tr><td>9.3 Przegląd zarządzania</td><td><b>Wyjście, wymagane.</b> Wyniki audytów są jedną z wymaganych pozycji danych wejściowych przeglądu. Przegląd może też zmienić program — w AutoParts zmienił pozycje 2 i 3.</td></tr>
+<tr><td>10.1 Niezgodności</td><td><b>Wyjście.</b> Każda niezgodność z audytu idzie ścieżką 10.1. Skuteczność działania z ustalenia N-1 oceni dopiero <b>następny audyt sprężarkowni</b> — i dlatego pozycja 3 programu ma termin po uruchomieniu modernizacji.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Rola audytora w platformie</b></td><td>Najważniejsza decyzja tej strony. Dziś makieta ma dwie role: klienta i konsultanta. Audytor jest trzecią — <b>wypełnia raport, nie widzi pozostałych ankiet i nie może zmienić programu, który realizuje</b>. Bez tego rozdziału platforma pozwala Energy Managerowi wypełnić raport z audytu własnego systemu, czyli zrobić dokładnie to, za co zawieszono certyfikat sieci hoteli. Pole „czy audytor odpowiada za audytowany obszar” jest w makiecie protezą tego rozdziału.</td></tr>
+<tr><td><b>Ustalenie jako klucz obcy do punktu normy</b></td><td>Dziś „wymaganie” to tekst. Powinno wskazywać <b>konkretny punkt normy albo konkretną pozycję procedury czy karty kryteriów</b>. Wtedy platforma pokaże przy punkcie 8.1 historię ustaleń audytowych — a przy kolejnym audycie podpowie, co było ostatnio niezgodne. To również automatycznie zasili kolumnę „dlaczego teraz” w programie.</td></tr>
+<tr><td>Automatyczne zasilanie kolumny „dlaczego teraz”</td><td>Platforma zna udział SEU w zużyciu (6.3), znaczące odchylenia (9.1.1), niezgodności (10.1) i planowane inwestycje (6.2, 8.2). Przy zakładaniu pozycji programu mogłaby <b>zaproponować uzasadnienie</b> z tych danych, a Energy Manager by je potwierdzał. Dziś przepisuje je ręcznie — i stąd bierze się program „po kolei przez normę”.</td></tr>
+<tr><td>Sprawdzenie skuteczności działania przez kolejny audyt</td><td>Ustalenie N-1 ma działanie i termin, ale jego <b>skuteczność</b> ocenia następny audyt sprężarkowni. Pozycja programu powinna więc móc wskazać, <b>które ustalenia ma zweryfikować</b> — a raport z tego audytu zamknąć je albo otworzyć ponownie. Dziś to związek opisany słowami w dwóch polach tekstowych; karta NK-2026-01 została ponownie otwarta 18.09.2026 i platforma nie wie o tym nic.</td></tr>
+<tr><td>Plan audytu jako osobny zapis</td><td>Metodyka zaleca plan dwa tygodnie przed audytem (zakres, kryteria, harmonogram, kto kiedy jest potrzebny). Dziś to zdanie w polu „planowanie i raportowanie”. Przy wdrożeniu plan powinien być <b>osobnym rekordem z datą przekazania</b> — bo to on jest dowodem, że audyt był planowany, a nie improwizowany.</td></tr>
+<tr><td>Historia wersji programu</td><td>Program AutoParts zatwierdzono 30.06.2026 i zmieniono 29.09.2026 (pozycje 2 i 3). Makieta ma jedną datę zatwierdzenia i opis zmiany w polu tekstowym. Docelowo: wersjonowanie pozycji programu z powodem zmiany — zwykle jest nim decyzja przeglądu zarządzania, więc zmiana powinna wskazywać protokół z 9.3.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 9.2 wraz z programem AutoParts i raportem A-01/2026.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;PYT_B9&quot;: [
+  {
+   &quot;kod&quot;: &quot;poprawa&quot;,
+   &quot;tekst&quot;: &quot;Czy system poprawia wynik energetyczny?&quot;,
+   &quot;ph&quot;: &quot;np. Tak. O-1 0,965 wobec EnB 1,000 (VIII 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0. Poprawa wykazana pomiarem i modelem, nie samym spadkiem zużycia. K-1 wymaga analizy przed sezonem grzewczym.&quot;,
+   &quot;pomoc&quot;: &quot;Pytanie a) z punktu 9.2. Odpowiedź opiera się na wynikach monitorowania (9.1.1), nie na przekonaniu.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zgodnosc&quot;,
+   &quot;tekst&quot;: &quot;Czy system jest zgodny z wymaganiami organizacji, polityką, celami i zadaniami oraz z wymaganiami normy?&quot;,
+   &quot;ph&quot;: &quot;np. W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (8.1, nadzór nad procesem zleconym): protokół serwisu bez nastaw, protokołu nie sprawdzano przy odbiorze. Polityka, cele i zadania spójne z planami działań; wymagania normy dla punktów 4–8 spełnione.&quot;,
+   &quot;pomoc&quot;: &quot;Pytanie b). Dotyczy zgodności z tym, co organizacja sama ustaliła — &lt;b&gt;i&lt;/b&gt; z normą.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;wdrozenie&quot;,
+   &quot;tekst&quot;: &quot;Czy system jest skutecznie wdrożony i utrzymywany?&quot;,
+   &quot;ph&quot;: &quot;np. Tak, z zastrzeżeniem. Kryteria sprężarkowni są stosowane — potwierdzone trendem ciśnienia i rozmową z technikami. Słabe miejsce: nadzór nad wykonawcami — wymaganie ustalone po czerwcowym zdarzeniu działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma).&quot;,
+   &quot;pomoc&quot;: &quot;Pytanie c) — czyli czy ustalenia żyją na hali, a nie tylko w dokumentach.&quot;
+  }
+ ],
+ &quot;LISTA_92&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Audyty w zaplanowanych odstępach odpowiadają na pytania: poprawa wyniku, zgodność, skuteczne wdrożenie.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;trzyPytania&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;program&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Dla każdego audytu określono zakres i kryteria.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zakresKryteria&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Audytorzy zapewniają obiektywność i bezstronność.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;bezstronnosc&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Wyniki przekazano odpowiedniemu kierownictwu; podjęto odpowiednie działania.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;przekazanie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano dowody realizacji programu i wyniki audytów.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ustalenia opierają się na dowodach z praktyki; audytu nie ocenia się liczbą niezgodności.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;dowody&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;PROGRAM&quot;: [
+   {
+    &quot;nr&quot;: &quot;1&quot;,
+    &quot;obszar&quot;: &quot;Cały system — przed audytem certyfikującym&quot;,
+    &quot;punkty&quot;: &quot;4–10&quot;,
+    &quot;dlaczego&quot;: &quot;Pierwszy audyt systemu; wszystkie wymagania do sprawdzenia przed certyfikacją (audyt certyfikujący XI–XII 2026)&quot;,
+    &quot;termin&quot;: &quot;15–17.09.2026&quot;,
+    &quot;audytor&quot;: &quot;Audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001, spoza audytowanych obszarów; obszar Energy Managera — inny audytor ISO 14001 z kompetencjami ISO 50001&quot;,
+    &quot;status&quot;: &quot;wykonany&quot;,
+    &quot;uwagi&quot;: &quot;Wykonany; raport A-01/2026&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;2&quot;,
+    &quot;obszar&quot;: &quot;Zakupy i projekty związane ze znaczącymi użyciami energii&quot;,
+    &quot;punkty&quot;: &quot;8.2, 8.3&quot;,
+    &quot;dlaczego&quot;: &quot;Zakup sterownika i napędu sprężarkowni (380 tys. zł, uruchomienie 06.2027); luka kompetencyjna w zakupach wykryta w audycie 1 — porównywanie kosztu zakupu i energii&quot;,
+    &quot;termin&quot;: &quot;II kw. 2027&quot;,
+    &quot;audytor&quot;: &quot;Audytorka ISO 14001 z kompetencjami ISO 50001&quot;,
+    &quot;status&quot;: &quot;planowany&quot;,
+    &quot;uwagi&quot;: &quot;Zmiana terminu i zakresu wprowadzona 29.09.2026 po przeglądzie zarządzania&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;3&quot;,
+    &quot;obszar&quot;: &quot;Sprężarkownia i nadzór nad serwisem&quot;,
+    &quot;punkty&quot;: &quot;8.1, 9.1.1&quot;,
+    &quot;dlaczego&quot;: &quot;SEU 17,5% zużycia zakładu; znaczące odchylenie 06.2026; niezgodność z audytu 1 (protokół serwisu bez nastaw); modernizacja uruchamiana 06.2027 — kryteria do sprawdzenia po zmianie&quot;,
+    &quot;termin&quot;: &quot;III kw. 2027 (po uruchomieniu)&quot;,
+    &quot;audytor&quot;: &quot;Audytor ISO 14001 z kompetencjami ISO 50001, spoza utrzymania ruchu&quot;,
+    &quot;status&quot;: &quot;planowany&quot;,
+    &quot;uwagi&quot;: &quot;Zmiana wprowadzona 29.09.2026 — termin przesunięty za uruchomienie modernizacji&quot;
+   },
+   {
+    &quot;nr&quot;: &quot;4&quot;,
+    &quot;obszar&quot;: &quot;Cały system&quot;,
+    &quot;punkty&quot;: &quot;4–10&quot;,
+    &quot;dlaczego&quot;: &quot;Rytm roczny AutoParts (★ wybór organizacji); przegląd wszystkich wymagań po pierwszym pełnym roku działania systemu i po modernizacji sprężarkowni&quot;,
+    &quot;termin&quot;: &quot;09.2027&quot;,
+    &quot;audytor&quot;: &quot;Według dostępności, z rotacją audytorów między obszarami&quot;,
+    &quot;status&quot;: &quot;planowany&quot;,
+    &quot;uwagi&quot;: &quot;—&quot;
+   }
+  ],
+  &quot;RAPORTY&quot;: [
+   {
+    &quot;nr&quot;: &quot;A-01/2026&quot;,
+    &quot;pozycja&quot;: &quot;1&quot;,
+    &quot;data&quot;: &quot;2026-09-17&quot;,
+    &quot;daty&quot;: &quot;15–17.09.2026&quot;,
+    &quot;zakres&quot;: &quot;Cały system zarządzania energią, punkty 4–10 normy. Obszary: Energy Manager, utrzymanie ruchu (sprężarkownia, kotłownia, oświetlenie), produkcja, zakupy, kontroling. Audyt przed pierwszym audytem certyfikującym.&quot;,
+    &quot;kryteria&quot;: &quot;ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04); polityka energetyczna z 03.2026; cele i plany działań (III-24).&quot;,
+    &quot;audytor&quot;: &quot;Specjalistka ds. środowiska — audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001. Obszar Energy Managera audytował inny audytor ISO 14001 z kompetencjami ISO 50001.&quot;,
+    &quot;wlasnaPraca&quot;: &quot;nie&quot;,
+    &quot;bezstronnosc&quot;: &quot;Audytorka nie odpowiada za żaden z audytowanych obszarów. Energy Manager organizuje program, ale nie audytuje systemu, który sam zbudował — jego obszar audytowała inna osoba. Kompetencje obu audytorów potwierdzone w matrycy III-12.&quot;,
+    &quot;audytowani&quot;: &quot;Jan Kowalski — Energy Manager; kierownik utrzymania ruchu; dwóch techników sprężarkowni; kierownik produkcji; dział zakupów; kontroler finansowy&quot;,
+    &quot;rozdzielnik&quot;: &quot;Piotr Nowak — Dyrektor Zakładu; kierownik utrzymania ruchu; Jan Kowalski — Energy Manager&quot;,
+    &quot;ustalenia&quot;: [
+     {
+      &quot;nr&quot;: &quot;N-1&quot;,
+      &quot;rodzaj&quot;: &quot;N&quot;,
+      &quot;opis&quot;: &quot;Protokół z przeglądu sprężarki z września 2026 r. jest na wzorze serwisu i nie zawiera nastaw ciśnienia przed i po. Protokołu nie sprawdzano przy odbiorze usługi. Wymaganie wprowadzone przez organizację po zdarzeniu z czerwca 2026 r. działa więc tylko w połowie: zlecenie z wymaganiami jest, kontroli odbioru nie ma.&quot;,
+      &quot;dowod&quot;: &quot;Zlecenie serwisowe z 07.2026 — zawiera trzy zdania o zakazie zmiany nastaw bez zgłoszenia. Protokół serwisu z 09.2026 na wzorze wykonawcy, bez nastaw przed i po. Rozmowa z kierownikiem utrzymania ruchu: protokół nie jest sprawdzany przy odbiorze usługi.&quot;,
+      &quot;zrodlo&quot;: &quot;rozmowa&quot;,
+      &quot;wymaganie&quot;: &quot;Wymaganie organizacji z punktu 8.1 — nadzór nad procesami zleconymi: przekazanie wykonawcy kryteriów eksploatacji i sprawdzenie ich zastosowania. Zapisane w karcie kryteriów sprężarkowni F-EnMS-14, sekcja C, po zdarzeniu z 06.2026.&quot;,
+      &quot;dzialanie&quot;: &quot;Sprawdzanie protokołu przy odbiorze usługi wprowadzone do obiegu zleceń serwisowych. Przekazanie serwisowi wzoru protokołu z nastawami przed i po. Aktualizacja procedury P-EnMS-06.&quot;,
+      &quot;odp&quot;: &quot;Kierownik utrzymania ruchu — wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU&quot;,
+      &quot;karta10&quot;: &quot;tak&quot;
+     },
+     {
+      &quot;nr&quot;: &quot;D-1&quot;,
+      &quot;rodzaj&quot;: &quot;D&quot;,
+      &quot;opis&quot;: &quot;Wzór protokołu z nastawami przed i po jest przekazywany wykonawcy sprężarkowni. Warto rozciągnąć go na wykonawców wszystkich znaczących użyć energii — serwis kotłowni i lakierni pracuje dziś na własnych wzorach, bez pola na nastawy.&quot;,
+      &quot;dowod&quot;: &quot;Przegląd trzech ostatnich protokołów serwisowych kotłowni i lakierni — żaden nie zawiera pola na nastawy. Rozmowa z kierownikiem utrzymania ruchu: wzory pochodzą od wykonawców.&quot;,
+      &quot;zrodlo&quot;: &quot;dokument&quot;,
+      &quot;wymaganie&quot;: &quot;&quot;,
+      &quot;dzialanie&quot;: &quot;Jeden wzór protokołu z nastawami dla wykonawców przy wszystkich SEU, dołączany do zlecenia jako załącznik.&quot;,
+      &quot;odp&quot;: &quot;Kierownik utrzymania ruchu — 10.2026&quot;,
+      &quot;karta10&quot;: &quot;&quot;
+     },
+     {
+      &quot;nr&quot;: &quot;D-2&quot;,
+      &quot;rodzaj&quot;: &quot;D&quot;,
+      &quot;opis&quot;: &quot;Dział zakupów ocenia oferty na urządzenia pracujące wiele godzin w roku głównie ceną zakupu. Przy zakupie sterownika i napędu sprężarkowni porównanie kosztu zakupu i energii wykonał Energy Manager, nie dział zakupów. Przy kolejnych zakupach bez jego udziału porównanie może nie powstać.&quot;,
+      &quot;dowod&quot;: &quot;Rozmowa z działem zakupów — porównanie kosztu zakupu i energii nie jest częścią rutyny działu. Matryca kompetencji III-28 wskazuje lukę w tym obszarze. Specyfikacja ZAP/2026/14 zawiera porównanie przygotowane przez Energy Managera.&quot;,
+      &quot;zrodlo&quot;: &quot;rozmowa&quot;,
+      &quot;wymaganie&quot;: &quot;&quot;,
+      &quot;dzialanie&quot;: &quot;Warsztat dla działu zakupów z porównywania kosztu zakupu i energii w okresie użytkowania; wzór porównania dołączony do procedury zakupowej.&quot;,
+      &quot;odp&quot;: &quot;Energy Manager — 11.2026&quot;,
+      &quot;karta10&quot;: &quot;&quot;
+     },
+     {
+      &quot;nr&quot;: &quot;P-1&quot;,
+      &quot;rodzaj&quot;: &quot;P&quot;,
+      &quot;opis&quot;: &quot;Kryterium ciśnienia w sieci sprężonego powietrza nie wyżej niż 6,3 bar jest stosowane i rozumiane przez obsługę. Technicy wiedzą, jakie ciśnienie ma być ustawione i skąd to wiedzą.&quot;,
+      &quot;dowod&quot;: &quot;Trend ciśnienia z rejestratora sterownika za okres VII–IX 2026 — bez przekroczeń. Instrukcja przy panelu sterowania z aktualną wartością. Rozmowa z dwoma technikami: obaj podali 6,3 bar i wskazali instrukcję jako źródło.&quot;,
+      &quot;zrodlo&quot;: &quot;pomiar&quot;,
+      &quot;wymaganie&quot;: &quot;&quot;,
+      &quot;dzialanie&quot;: &quot;&quot;,
+      &quot;odp&quot;: &quot;&quot;,
+      &quot;karta10&quot;: &quot;&quot;
+     }
+    ],
+    &quot;B&quot;: {
+     &quot;poprawa&quot;: &quot;Tak. O-1 0,965 wobec EnB 1,000 (sierpień 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0 kWh/t. Poprawa wykazana modelem zużycia i pomiarem, nie samym spadkiem zużycia — zestawienia uwzględniają produkcję i stopniodni. K-1 (kotłownia) o 1% powyżej EnB w I półroczu, analiza przyczyn przed sezonem grzewczym. OŚ-1 bez zmian do wymiany opraw na LED.&quot;,
+     &quot;zgodnosc&quot;: &quot;W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (punkt 8.1, nadzór nad procesami zleconymi) — ustalenie N-1. Polityka energetyczna z 03.2026 spójna z kierunkiem firmy; cele i zadania powiązane z planami działań i rozliczane w raportach miesięcznych. Wymagania normy dla punktów 4–8 spełnione; ocena zgodności (9.1.2) przeprowadzona we wrześniu, z jedną niezgodnością po stronie terminu raportu dla banku.&quot;,
+     &quot;wdrozenie&quot;: &quot;Tak, z jednym zastrzeżeniem. Kryteria sprężarkowni są stosowane i rozumiane przez obsługę — potwierdzone trendem ciśnienia i rozmowami z technikami (ustalenie P-1). Znaczące odchylenie z czerwca zostało zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Słabe miejsce: nadzór nad wykonawcami. Wymaganie wprowadzone po czerwcowym zdarzeniu działa tylko w połowie — zlecenie zawiera kryteria, ale protokołu nikt nie sprawdza przy odbiorze.&quot;
+    },
+    &quot;uwagiProgram&quot;: &quot;Sprężarkownię i nadzór nad serwisem audytować po uruchomieniu modernizacji (III kw. 2027), z naciskiem na protokoły odbioru usług i skuteczność działania z ustalenia N-1. Zakupy i projekty — po warsztacie z porównywania kosztu zakupu i energii (II kw. 2027). Kolejny audyt całego systemu we wrześniu 2027 r., z rotacją audytorów między obszarami.&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;organizacja&quot;: &quot;AutoParts Polska Sp. z o.o. — program wspólny z ISO 14001&quot;,
+   &quot;organizuje&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;dataZatw&quot;: &quot;2026-06-30&quot;,
+   &quot;kryteria&quot;: &quot;ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04).&quot;,
+   &quot;planAudytu&quot;: &quot;Plan każdego audytu — zakres, kryteria, harmonogram — przekazywany audytowanym ★ dwa tygodnie przed audytem. Metody: przegląd dokumentów i zapisów, rozmowy z ludźmi przy pracy, obserwacja na hali. Raport na formularzu F-EnMS-19 (III-44) w ciągu dwóch tygodni po audycie. Zmiana programu z 29.09.2026 dotyczy pozycji 2 i 3 (terminy i zakres po przeglądzie zarządzania).&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var PYT_B9 = [{"kod": "poprawa", "tekst": "Czy system poprawia wynik energetyczny?", "ph": "np. Tak. O-1 0,965 wobec EnB 1,000 (VIII 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0. Poprawa wykazana pomiarem i modelem, nie samym spadkiem zużycia. K-1 wymaga analizy przed sezonem grzewczym.", "pomoc": "Pytanie a) z punktu 9.2. Odpowiedź opiera się na wynikach monitorowania (9.1.1), nie na przekonaniu."}, {"kod": "zgodnosc", "tekst": "Czy system jest zgodny z wymaganiami organizacji, polityką, celami i zadaniami oraz z wymaganiami normy?", "ph": "np. W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (8.1, nadzór nad procesem zleconym): protokół serwisu bez nastaw, protokołu nie sprawdzano przy odbiorze. Polityka, cele i zadania spójne z planami działań; wymagania normy dla punktów 4–8 spełnione.", "pomoc": "Pytanie b). Dotyczy zgodności z tym, co organizacja sama ustaliła — <b>i</b> z normą."}, {"kod": "wdrozenie", "tekst": "Czy system jest skutecznie wdrożony i utrzymywany?", "ph": "np. Tak, z zastrzeżeniem. Kryteria sprężarkowni są stosowane — potwierdzone trendem ciśnienia i rozmową z technikami. Słabe miejsce: nadzór nad wykonawcami — wymaganie ustalone po czerwcowym zdarzeniu działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma).", "pomoc": "Pytanie c) — czyli czy ustalenia żyją na hali, a nie tylko w dokumentach."}];
+var LISTA_92 = [{"tekst": "Audyty w zaplanowanych odstępach odpowiadają na pytania: poprawa wyniku, zgodność, skuteczne wdrożenie.", "podstawa": "N", "auto": "trzyPytania"}, {"tekst": "Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów.", "podstawa": "N", "auto": "program"}, {"tekst": "Dla każdego audytu określono zakres i kryteria.", "podstawa": "N", "auto": "zakresKryteria"}, {"tekst": "Audytorzy zapewniają obiektywność i bezstronność.", "podstawa": "N", "auto": "bezstronnosc"}, {"tekst": "Wyniki przekazano odpowiedniemu kierownictwu; podjęto odpowiednie działania.", "podstawa": "N", "auto": "przekazanie"}, {"tekst": "Zachowano dowody realizacji programu i wyniki audytów.", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Ustalenia opierają się na dowodach z praktyki; audytu nie ocenia się liczbą niezgodności.", "podstawa": "M", "auto": "dowody"}];
+var PRZYKLAD = {"PROGRAM": [{"nr": "1", "obszar": "Cały system — przed audytem certyfikującym", "punkty": "4–10", "dlaczego": "Pierwszy audyt systemu; wszystkie wymagania do sprawdzenia przed certyfikacją (audyt certyfikujący XI–XII 2026)", "termin": "15–17.09.2026", "audytor": "Audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001, spoza audytowanych obszarów; obszar Energy Managera — inny audytor ISO 14001 z kompetencjami ISO 50001", "status": "wykonany", "uwagi": "Wykonany; raport A-01/2026"}, {"nr": "2", "obszar": "Zakupy i projekty związane ze znaczącymi użyciami energii", "punkty": "8.2, 8.3", "dlaczego": "Zakup sterownika i napędu sprężarkowni (380 tys. zł, uruchomienie 06.2027); luka kompetencyjna w zakupach wykryta w audycie 1 — porównywanie kosztu zakupu i energii", "termin": "II kw. 2027", "audytor": "Audytorka ISO 14001 z kompetencjami ISO 50001", "status": "planowany", "uwagi": "Zmiana terminu i zakresu wprowadzona 29.09.2026 po przeglądzie zarządzania"}, {"nr": "3", "obszar": "Sprężarkownia i nadzór nad serwisem", "punkty": "8.1, 9.1.1", "dlaczego": "SEU 17,5% zużycia zakładu; znaczące odchylenie 06.2026; niezgodność z audytu 1 (protokół serwisu bez nastaw); modernizacja uruchamiana 06.2027 — kryteria do sprawdzenia po zmianie", "termin": "III kw. 2027 (po uruchomieniu)", "audytor": "Audytor ISO 14001 z kompetencjami ISO 50001, spoza utrzymania ruchu", "status": "planowany", "uwagi": "Zmiana wprowadzona 29.09.2026 — termin przesunięty za uruchomienie modernizacji"}, {"nr": "4", "obszar": "Cały system", "punkty": "4–10", "dlaczego": "Rytm roczny AutoParts (★ wybór organizacji); przegląd wszystkich wymagań po pierwszym pełnym roku działania systemu i po modernizacji sprężarkowni", "termin": "09.2027", "audytor": "Według dostępności, z rotacją audytorów między obszarami", "status": "planowany", "uwagi": "—"}], "RAPORTY": [{"nr": "A-01/2026", "pozycja": "1", "data": "2026-09-17", "daty": "15–17.09.2026", "zakres": "Cały system zarządzania energią, punkty 4–10 normy. Obszary: Energy Manager, utrzymanie ruchu (sprężarkownia, kotłownia, oświetlenie), produkcja, zakupy, kontroling. Audyt przed pierwszym audytem certyfikującym.", "kryteria": "ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04); polityka energetyczna z 03.2026; cele i plany działań (III-24).", "audytor": "Specjalistka ds. środowiska — audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001. Obszar Energy Managera audytował inny audytor ISO 14001 z kompetencjami ISO 50001.", "wlasnaPraca": "nie", "bezstronnosc": "Audytorka nie odpowiada za żaden z audytowanych obszarów. Energy Manager organizuje program, ale nie audytuje systemu, który sam zbudował — jego obszar audytowała inna osoba. Kompetencje obu audytorów potwierdzone w matrycy III-12.", "audytowani": "Jan Kowalski — Energy Manager; kierownik utrzymania ruchu; dwóch techników sprężarkowni; kierownik produkcji; dział zakupów; kontroler finansowy", "rozdzielnik": "Piotr Nowak — Dyrektor Zakładu; kierownik utrzymania ruchu; Jan Kowalski — Energy Manager", "ustalenia": [{"nr": "N-1", "rodzaj": "N", "opis": "Protokół z przeglądu sprężarki z września 2026 r. jest na wzorze serwisu i nie zawiera nastaw ciśnienia przed i po. Protokołu nie sprawdzano przy odbiorze usługi. Wymaganie wprowadzone przez organizację po zdarzeniu z czerwca 2026 r. działa więc tylko w połowie: zlecenie z wymaganiami jest, kontroli odbioru nie ma.", "dowod": "Zlecenie serwisowe z 07.2026 — zawiera trzy zdania o zakazie zmiany nastaw bez zgłoszenia. Protokół serwisu z 09.2026 na wzorze wykonawcy, bez nastaw przed i po. Rozmowa z kierownikiem utrzymania ruchu: protokół nie jest sprawdzany przy odbiorze usługi.", "zrodlo": "rozmowa", "wymaganie": "Wymaganie organizacji z punktu 8.1 — nadzór nad procesami zleconymi: przekazanie wykonawcy kryteriów eksploatacji i sprawdzenie ich zastosowania. Zapisane w karcie kryteriów sprężarkowni F-EnMS-14, sekcja C, po zdarzeniu z 06.2026.", "dzialanie": "Sprawdzanie protokołu przy odbiorze usługi wprowadzone do obiegu zleceń serwisowych. Przekazanie serwisowi wzoru protokołu z nastawami przed i po. Aktualizacja procedury P-EnMS-06.", "odp": "Kierownik utrzymania ruchu — wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU", "karta10": "tak"}, {"nr": "D-1", "rodzaj": "D", "opis": "Wzór protokołu z nastawami przed i po jest przekazywany wykonawcy sprężarkowni. Warto rozciągnąć go na wykonawców wszystkich znaczących użyć energii — serwis kotłowni i lakierni pracuje dziś na własnych wzorach, bez pola na nastawy.", "dowod": "Przegląd trzech ostatnich protokołów serwisowych kotłowni i lakierni — żaden nie zawiera pola na nastawy. Rozmowa z kierownikiem utrzymania ruchu: wzory pochodzą od wykonawców.", "zrodlo": "dokument", "wymaganie": "", "dzialanie": "Jeden wzór protokołu z nastawami dla wykonawców przy wszystkich SEU, dołączany do zlecenia jako załącznik.", "odp": "Kierownik utrzymania ruchu — 10.2026", "karta10": ""}, {"nr": "D-2", "rodzaj": "D", "opis": "Dział zakupów ocenia oferty na urządzenia pracujące wiele godzin w roku głównie ceną zakupu. Przy zakupie sterownika i napędu sprężarkowni porównanie kosztu zakupu i energii wykonał Energy Manager, nie dział zakupów. Przy kolejnych zakupach bez jego udziału porównanie może nie powstać.", "dowod": "Rozmowa z działem zakupów — porównanie kosztu zakupu i energii nie jest częścią rutyny działu. Matryca kompetencji III-28 wskazuje lukę w tym obszarze. Specyfikacja ZAP/2026/14 zawiera porównanie przygotowane przez Energy Managera.", "zrodlo": "rozmowa", "wymaganie": "", "dzialanie": "Warsztat dla działu zakupów z porównywania kosztu zakupu i energii w okresie użytkowania; wzór porównania dołączony do procedury zakupowej.", "odp": "Energy Manager — 11.2026", "karta10": ""}, {"nr": "P-1", "rodzaj": "P", "opis": "Kryterium ciśnienia w sieci sprężonego powietrza nie wyżej niż 6,3 bar jest stosowane i rozumiane przez obsługę. Technicy wiedzą, jakie ciśnienie ma być ustawione i skąd to wiedzą.", "dowod": "Trend ciśnienia z rejestratora sterownika za okres VII–IX 2026 — bez przekroczeń. Instrukcja przy panelu sterowania z aktualną wartością. Rozmowa z dwoma technikami: obaj podali 6,3 bar i wskazali instrukcję jako źródło.", "zrodlo": "pomiar", "wymaganie": "", "dzialanie": "", "odp": "", "karta10": ""}], "B": {"poprawa": "Tak. O-1 0,965 wobec EnB 1,000 (sierpień 2026); S-1 0,118 wobec 0,125; P-1 121,5 wobec 124,0 kWh/t. Poprawa wykazana modelem zużycia i pomiarem, nie samym spadkiem zużycia — zestawienia uwzględniają produkcję i stopniodni. K-1 (kotłownia) o 1% powyżej EnB w I półroczu, analiza przyczyn przed sezonem grzewczym. OŚ-1 bez zmian do wymiany opraw na LED.", "zgodnosc": "W większości tak. Jedna niezgodność z wymaganiem ustalonym przez samą organizację (punkt 8.1, nadzór nad procesami zleconymi) — ustalenie N-1. Polityka energetyczna z 03.2026 spójna z kierunkiem firmy; cele i zadania powiązane z planami działań i rozliczane w raportach miesięcznych. Wymagania normy dla punktów 4–8 spełnione; ocena zgodności (9.1.2) przeprowadzona we wrześniu, z jedną niezgodnością po stronie terminu raportu dla banku.", "wdrozenie": "Tak, z jednym zastrzeżeniem. Kryteria sprężarkowni są stosowane i rozumiane przez obsługę — potwierdzone trendem ciśnienia i rozmowami z technikami (ustalenie P-1). Znaczące odchylenie z czerwca zostało zbadane w ciągu tygodnia, z zapisaną przyczyną i reakcją. Słabe miejsce: nadzór nad wykonawcami. Wymaganie wprowadzone po czerwcowym zdarzeniu działa tylko w połowie — zlecenie zawiera kryteria, ale protokołu nikt nie sprawdza przy odbiorze."}, "uwagiProgram": "Sprężarkownię i nadzór nad serwisem audytować po uruchomieniu modernizacji (III kw. 2027), z naciskiem na protokoły odbioru usług i skuteczność działania z ustalenia N-1. Zakupy i projekty — po warsztacie z porównywania kosztu zakupu i energii (II kw. 2027). Kolejny audyt całego systemu we wrześniu 2027 r., z rotacją audytorów między obszarami."}], "META": {"organizacja": "AutoParts Polska Sp. z o.o. — program wspólny z ISO 14001", "organizuje": "Jan Kowalski — Energy Manager", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "dataZatw": "2026-06-30", "kryteria": "ISO 50001:2018; procedury P-EnMS-01…08; kryteria eksploatacji znaczących użyć energii (III-35); wymagania z rejestru wymagań prawnych i innych (III-04).", "planAudytu": "Plan każdego audytu — zakres, kryteria, harmonogram — przekazywany audytowanym ★ dwa tygodnie przed audytem. Metody: przegląd dokumentów i zapisów, rozmowy z ludźmi przy pracy, obserwacja na hali. Raport na formularzu F-EnMS-19 (III-44) w ciągu dwóch tygodni po audycie. Zmiana programu z 29.09.2026 dotyczy pozycji 2 i 3 (terminy i zakres po przeglądzie zarządzania)."}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Audit prowadzony tylko na dokumentach potwierdza, że dokumenty istnieją.", "decyzja": "Program auditów układany według procesów, z przewagą ustaleń opartych na praktyce nad ustaleniami z samych dokumentów.", "dzialanie": "Audit z września 2026 r.: rozmowy na stanowiskach, obserwacja nastaw i pomiar kontrolny obok przeglądu dokumentacji.", "sprawdzenie": "Udział ustaleń opartych na dokumencie podany w raporcie; niezgodności zamykane na dowodzie skuteczności (10.1)."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 9.2 — Audyt wewnętrzny.
+   F-EnMS-18 program audytów (III-43) i F-EnMS-19 raport z audytu (III-44);
+   lista kontrolna III-47 sekcja 9.2; procedura P-EnMS-07 (III-48) pkt 4.3. */
+"use strict";
+
+var PUNKT = "9.2";
+var TERAZ = "11.10.2026 15:05";
+var PROGRAM = [];
+var RAPORTY = [];
+var AKTR = 0;
+var META = { organizacja: "", organizuje: "", zatwierdzil: "", dataZatw: "", kryteria: "", planAudytu: "" };
+var WNIOSKI = [];
+var AKT = "program";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 15:00", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 9.2" }];
+
+var STATUSY = [["", "—"], ["planowany", "Planowany"], ["wtoku", "W toku"], ["wykonany", "Wykonany"],
+["odwolany", "Odwołany — z uzasadnieniem"]];
+var RODZAJE = [["", "—"],
+["N", "N — niezgodność (niespełnienie wymagania)"],
+["D", "D — możliwość doskonalenia"],
+["P", "P — potwierdzenie zgodności"]];
+var ZRODLA = [["", "—"],
+["dokument", "Dokument albo zapis w systemie"],
+["rozmowa", "Rozmowa z ludźmi przy pracy"],
+["obserwacja", "Obserwacja na hali"],
+["pomiar", "Zapis pomiarowy albo trend"]];
+var ZRODLA_PRAKTYKA = ["rozmowa", "obserwacja", "pomiar"];
+
+function etykieta(lista, v) {
+  var x = lista.filter(function (y) { return y[0] === v; })[0];
+  return x ? x[1] : "—";
+}
+
+/* ── program audytów ── */
+var RE_ZNACZENIE = /(seu|znacz[ąa]c|\d\s*%|odchyleni|niezgodn|wcze[śs]niejsz|poprzedni|wynik|modernizacj|luka|ryzyk|pierwszy|przed\s+audytem|certyfikac|nowy|zmian)/i;
+var RE_SAM_RYTM = /^(\s*(rytm\w*|zgodnie z planem|plan\w*|kolejno[śs][ćc]|wg programu|co roku|rocznie|standardowo|kolejny punkt\w*)[\s,.;–-]*)+$/i;
+function dlaczegoPuste(p) { return !(p.dlaczego || "").trim(); }
+function dlaczegoTylkoRytm(p) {
+  var t = (p.dlaczego || "").trim();
+  if (!t) return false;
+  return RE_SAM_RYTM.test(t) || !RE_ZNACZENIE.test(t);
+}
+function pozycjaOk(p) {
+  return !!((p.obszar || "").trim() && (p.punkty || "").trim() && (p.dlaczego || "").trim()
+    && (p.termin || "").trim() && (p.audytor || "").trim() && p.status
+    && (p.status !== "odwolany" || (p.uwagi || "").trim()));
+}
+function calySystem() {
+  return PROGRAM.some(function (p) { return /4\s*[–-]\s*10|ca[łl]y system|wszystkie wymagania/i.test((p.punkty || "") + " " + (p.obszar || "")); });
+}
+function metaProgramuOk() {
+  return !!((META.organizuje || "").trim() && (META.zatwierdzil || "").trim() && META.dataZatw
+    && (META.kryteria || "").trim() && (META.planAudytu || "").trim());
+}
+
+/* ── raporty z audytu ── */
+function nowyRaport() {
+  return { nr: "", pozycja: "", data: "", zakres: "", kryteria: "", audytor: "", wlasnaPraca: "",
+    bezstronnosc: "", audytowani: "", rozdzielnik: "", ustalenia: [], B: {}, uwagiProgram: "" };
+}
+function rap() { return RAPORTY[AKTR] || null; }
+function nazwaRaportu(r, i) { return (r.nr || "").trim() || ("Raport " + (i + 1)); }
+function metrykaRaportuOk(r) {
+  return !!((r.nr || "").trim() && r.data && (r.zakres || "").trim() && (r.kryteria || "").trim()
+    && (r.audytor || "").trim() && r.wlasnaPraca && (r.bezstronnosc || "").trim()
+    && (r.rozdzielnik || "").trim());
+}
+function audytujeSiebie(r) { return r.wlasnaPraca === "tak"; }
+
+/* ── ustalenia ── */
+function ustalenieOk(u) {
+  if (!((u.opis || "").trim() && (u.dowod || "").trim() && u.zrodlo && u.rodzaj)) return false;
+  if (u.rodzaj === "N") return !!((u.wymaganie || "").trim() && (u.dzialanie || "").trim()
+    && (u.odp || "").trim() && u.karta10 === "tak");
+  if (u.rodzaj === "D") return !!((u.dzialanie || "").trim() && (u.odp || "").trim());
+  return true;
+}
+/* „Niezgodność to niespełnienie wymagania. Nic więcej." */
+function niezgodnoscBezWymagania(u) { return u.rodzaj === "N" && !(u.wymaganie || "").trim(); }
+var RE_NIESPELNIA = /(nie spe[łl]ni|niespe[łl]nion|nie zastosowa|nie\s+(?:[^\s.;,]+\s+){0,2}(?:zastosowa|spe[łl]ni|wprowadz)|wbrew|brak wymaganego|nie ma wymaganego)/i;
+function doskonalenieJakPopNiezgodnosc(u) {
+  return u.rodzaj === "D" && (!!(u.wymaganie || "").trim() || RE_NIESPELNIA.test(u.opis || ""));
+}
+function ustalenieBezDzialania(u) {
+  return (u.rodzaj === "N" || u.rodzaj === "D") && !((u.dzialanie || "").trim() && (u.odp || "").trim());
+}
+function niezgodnoscBezKarty(u) { return u.rodzaj === "N" && u.karta10 !== "tak"; }
+function ustalenia(r) { return (r && r.ustalenia) || []; }
+function zPraktyki(r) {
+  return ustalenia(r).filter(function (u) { return ZRODLA_PRAKTYKA.indexOf(u.zrodlo) >= 0; });
+}
+/* „Audyt dokumentów, nie praktyki": papiery są, ale nikt nie sprawdził, czy ludzie je stosują. */
+function tylkoDokumenty(r) {
+  var u = ustalenia(r).filter(function (x) { return x.zrodlo; });
+  return u.length >= 2 && zPraktyki(r).length === 0;
+}
+function udzialPraktyki(r) {
+  var u = ustalenia(r).filter(function (x) { return x.zrodlo; });
+  if (!u.length) return null;
+  return zPraktyki(r).length / u.length * 100;
+}
+
+/* ── część B: trzy pytania 9.2 ── */
+function odpB(r, kod) { return ((r.B || {})[kod] || "").trim(); }
+function bOk(r) { return PYT_B9.every(function (q) { return odpB(r, q.kod); }); }
+function raportOk(r) {
+  return metrykaRaportuOk(r) && !audytujeSiebie(r) && ustalenia(r).length > 0
+    && ustalenia(r).every(ustalenieOk) && bOk(r) && !tylkoDokumenty(r);
+}
+
+/* ── zakładka 1: program ── */
+function rysujProgram(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Program audytów wewnętrznych"));
+  s.appendChild(hel("div", "warn", "Wrzesień 2026 r., pierwszy audyt wewnętrzny systemu w AutoParts. Na biurku audytorki leży lista kontrolna wypełniona przez kierownika utrzymania ruchu. Przy punkcie 8.1 — same „OK”, w tym: „kryteria przekazane wykonawcom”.<br><br>Audytorka nie podważa listy. Prosi o jedno: <b>zlecenie serwisowe i protokół z ostatniego przeglądu sprężarki.</b> Zlecenie zawiera trzy zdania z lipca. Protokół z września jest na wzorze serwisu — bez nastaw przed i po. Nikt tego nie zauważył, bo nikt nie sprawdzał protokołu przy odbiorze usługi.<br><br>Lista kontrolna mówiła, że wymaganie jest spełnione. Dowody pokazały, że spełnione jest połowicznie. <b>Na tym polega różnica między odhaczaniem a audytem.</b>"));
+  s.appendChild(hel("div", "note", "Norma każe uwzględnić w programie dwie rzeczy: <b>znaczenie audytowanych procesów</b> i <b>wyniki wcześniejszych audytów</b>. Sprężarkownię, która zużywa 17,5% energii i miała w tym roku odchylenie, sprawdzicie uważniej niż obieg dokumentów, który od lat działa bez zarzutu. Norma nie podaje częstotliwości — mówi „w zaplanowanych odstępach”."));
+  var m = el("div", "poz" + (metaProgramuOk() ? "" : " brak"));
+  m.appendChild(pole("Organizacja i zakres programu", inp(META.organizacja, "np. AutoParts Polska Sp. z o.o. — program wspólny z ISO 14001",
+    function (v) { META.organizacja = v; })));
+  m.appendChild(pole("Organizuje program", inp(META.organizuje, "np. Jan Kowalski — Energy Manager", function (v) { META.organizuje = v; }),
+    "Energy Manager może organizować program — ale nie audytuje systemu, który sam zbudował."));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data zatwierdzenia", inp(META.dataZatw, "", function (v) { META.dataZatw = v; }, "date")));
+  m.appendChild(poleChip("Kryteria audytu", "wymóg normy",
+    txt(META.kryteria, "np. ISO 50001:2018; procedury P-EnMS-01…08; kryteria SEU (III-35); wymagania z rejestru III-04", 2,
+      function (v) { META.kryteria = v; }),
+    "Dla każdego audytu określa się zakres (co sprawdzacie) i kryteria (według czego). Kryteria wspólne dla programu można podać raz tutaj i uszczegółowić w raporcie."));
+  m.appendChild(pole("Planowanie i raportowanie", txt(META.planAudytu, "np. Plan każdego audytu — zakres, kryteria, harmonogram — ★ dwa tygodnie przed audytem. Raport: F-EnMS-19. Metody: przegląd dokumentów i zapisów, rozmowy przy pracy, obserwacja.", 3,
+    function (v) { META.planAudytu = v; })));
+  s.appendChild(m);
+  host.appendChild(s);
+
+  if (PROGRAM.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Nr", "Obszar / procesy", "Punkty normy", "Dlaczego teraz", "Termin", "Audytor", "Status"],
+      PROGRAM.map(function (p, i) {
+        return [p.nr || String(i + 1), p.obszar || "—", p.punkty || "—", p.dlaczego || "—",
+          p.termin || "—", p.audytor || "—",
+          el("span", "chip " + (p.status === "wykonany" ? "green" : p.status === "odwolany" ? "red" : ""),
+            p.status ? etykieta(STATUSY, p.status).split(" —")[0] : "—")];
+      })));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Pozycje programu — edycja"));
+  PROGRAM.forEach(function (p, i) {
+    var kk = el("div", "poz" + (pozycjaOk(p) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Pozycja " + (p.nr || i + 1)));
+    if (p.status) g.appendChild(el("span", "chip " + (p.status === "wykonany" ? "green" : ""), etykieta(STATUSY, p.status).split(" —")[0]));
+    g.appendChild(przyciskUsun(function () { PROGRAM.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Numer", inp(p.nr, "np. 3", function (v) { p.nr = v; })));
+    kk.appendChild(pole("Obszar albo procesy", inp(p.obszar, "np. Sprężarkownia i nadzór nad serwisem", function (v) { p.obszar = v; })));
+    kk.appendChild(poleChip("Punkty normy — zakres", "wymóg normy",
+      inp(p.punkty, "np. 8.1, 9.1.1", function (v) { p.punkty = v; })));
+    kk.appendChild(poleChip("Dlaczego teraz — znaczenie procesu i wyniki wcześniejszych audytów", "wymóg normy",
+      txt(p.dlaczego, "np. SEU 17,5%; odchylenie 06.2026; niezgodność z audytu 1; modernizacja 06.2027", 2,
+        function (v) { p.dlaczego = v; }),
+      "To jedyna kolumna, którą norma w programie wprost wymaga uzasadnić. „Po kolei przez normę” nie jest uzasadnieniem."));
+    kk.appendChild(pole("Termin", inp(p.termin, "np. III kw. 2027 (po uruchomieniu)", function (v) { p.termin = v; })));
+    kk.appendChild(poleChip("Audytor", "wymóg normy",
+      txt(p.audytor, "np. Audytor ISO 14001 z kompetencjami ISO 50001, spoza utrzymania ruchu", 2,
+        function (v) { p.audytor = v; }),
+      "Liczy się rzeczywista bezstronność, nie samo stanowisko. W małej firmie: audyty krzyżowe między działami, audytor z innego systemu zarządzania, zewnętrzny audytor wewnętrzny."));
+    kk.appendChild(pole("Status", sel(p.status, STATUSY, function (v) { p.status = v; })));
+    kk.appendChild(pole("Uwagi" + (p.status === "odwolany" ? " — uzasadnienie odwołania" : ""),
+      txt(p.uwagi, "np. Wykonany; raport A-01/2026", 2, function (v) { p.uwagi = v; })));
+    if (dlaczegoPuste(p))
+      kk.appendChild(hel("div", "warn", "Brak uzasadnienia „dlaczego teraz”. Norma wymaga, żeby program uwzględniał <b>znaczenie audytowanych procesów i wyniki wcześniejszych audytów</b> — bez tej kolumny nie da się wykazać, że to zrobiono."));
+    else if (dlaczegoTylkoRytm(p))
+      kk.appendChild(hel("div", "warn", "Uzasadnienie odwołuje się tylko do rytmu albo kolejności. <b>Program „po kolei przez normę”</b> to jeden z sześciu błędów tego punktu — dopiszcie, co w tym obszarze jest znaczące: udział w zużyciu, odchylenie, ustalenie z poprzedniego audytu, planowana zmiana."));
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj pozycję programu", function () { PROGRAM.push({}); }));
+  if (!PROGRAM.length) e.appendChild(el("div", "warn", "Program audytów jest pusty."));
+  if (PROGRAM.length && !calySystem())
+    e.appendChild(hel("div", "note", "★ Żadna pozycja nie obejmuje całego systemu. <b>Przed pierwszym audytem certyfikującym</b> warto przeprowadzić audyt obejmujący wszystkie wymagania — jednostki certyfikujące zwykle oczekują przed nim co najmniej jednego audytu wewnętrznego i przeglądu zarządzania. To zalecenie, nie wymaganie normy."));
+  host.appendChild(e);
+}
+
+/* ── wspólny nagłówek raportu ── */
+function naglowekRaportu(host, tytul) {
+  var r = rap();
+  if (!r) {
+    var x = el("div", "sekcja");
+    x.appendChild(el("div", "warn", "Nie wybrano raportu. Dodajcie raport w zakładce 2."));
+    host.appendChild(x);
+    return null;
+  }
+  var s = el("div", "sekcja");
+  var h = el("h3", null, tytul);
+  h.appendChild(el("span", "chip", nazwaRaportu(r, AKTR)));
+  if (RAPORTY.length > 1) {
+    var lab = el("span", "rola");
+    lab.appendChild(el("span", "rolaetyk", "Raport:"));
+    lab.appendChild(sel(String(AKTR), RAPORTY.map(function (x, i) { return [String(i), nazwaRaportu(x, i)]; }),
+      function (v) { AKTR = parseInt(v, 10); }));
+    h.appendChild(lab);
+  }
+  s.appendChild(h);
+  host.appendChild(s);
+  return r;
+}
+
+/* ── zakładka 2: raporty ── */
+function rysujRaporty(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Raporty z audytu");
+  h.appendChild(el("span", "chip " + (RAPORTY.length && RAPORTY.every(raportOk) ? "green" : "amber"),
+    RAPORTY.filter(raportOk).length + " / " + RAPORTY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "note", "<b>Dobry audyt nie szuka winnych i nie poluje na niezgodności. Szuka dowodów.</b> Czasem dowody pokażą niezgodność, czasem możliwość poprawy, a czasem — że wszystko działa. Każdy z tych wyników jest prawidłowy, jeśli opiera się na dowodach."));
+  host.appendChild(s);
+
+  RAPORTY.forEach(function (r, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, nazwaRaportu(r, i));
+    hh.appendChild(el("span", "chip " + (raportOk(r) ? "green" : "amber"), raportOk(r) ? "kompletny" : "do uzupełnienia"));
+    var up = udzialPraktyki(r);
+    if (up !== null) hh.appendChild(el("span", "chip " + (up >= 50 ? "green" : up > 0 ? "amber" : "red"),
+      "dowody z praktyki: " + lcz(up, 0) + "%"));
+    var ot = el("button", "link", i === AKTR ? "otwarty" : "otwórz ustalenia i wnioski");
+    ot.onclick = function () { AKTR = i; AKT = "ustalenia"; rysuj(); window.scrollTo(0, 0); };
+    hh.appendChild(ot);
+    hh.appendChild(przyciskUsun(function () { RAPORTY.splice(i, 1); if (AKTR >= RAPORTY.length) AKTR = Math.max(0, RAPORTY.length - 1); },
+      "usuń", "Usunąć raport " + nazwaRaportu(r, i) + "?"));
+    sec.appendChild(hh);
+    var kk = el("div", "poz" + (metrykaRaportuOk(r) ? "" : " brak"));
+    kk.appendChild(pole("Numer audytu", inp(r.nr, "np. A-01/2026", function (v) { r.nr = v; })));
+    kk.appendChild(pole("Pozycja programu", inp(r.pozycja, "np. 1", function (v) { r.pozycja = v; })));
+    kk.appendChild(pole("Data", inp(r.data, "", function (v) { r.data = v; }, "date")));
+    kk.appendChild(pole("Daty szczegółowe", inp(r.daty, "np. 15–17.09.2026", function (v) { r.daty = v; })));
+    kk.appendChild(poleChip("Zakres", "wymóg normy",
+      txt(r.zakres, "np. Cały system zarządzania energią, punkty 4–10, przed audytem certyfikującym", 2,
+        function (v) { r.zakres = v; })));
+    kk.appendChild(poleChip("Kryteria", "wymóg normy",
+      txt(r.kryteria, "np. ISO 50001:2018; procedury P-EnMS-01…08; kryteria SEU (III-35); wymagania z rejestru III-04", 2,
+        function (v) { r.kryteria = v; })));
+    kk.appendChild(poleChip("Audytor", "wymóg normy",
+      txt(r.audytor, "np. Specjalistka ds. środowiska — audytorka ISO 14001 z potwierdzonymi kompetencjami ISO 50001", 2,
+        function (v) { r.audytor = v; })));
+    kk.appendChild(poleChip("Czy audytor odpowiada za którykolwiek z audytowanych obszarów?", "wymóg normy",
+      sel(r.wlasnaPraca, [["", "—"], ["nie", "Nie"], ["tak", "Tak"]], function (v) { r.wlasnaPraca = v; })));
+    kk.appendChild(poleChip("Jak zapewniono bezstronność", "wymóg normy",
+      txt(r.bezstronnosc, "np. Audytorka nie odpowiada za żaden z audytowanych obszarów; obszar Energy Managera audytował inny audytor ISO 14001 z kompetencjami ISO 50001 (matryca III-12)", 2,
+        function (v) { r.bezstronnosc = v; })));
+    kk.appendChild(pole("Audytowani", txt(r.audytowani, "np. Energy Manager, kierownik UR, technicy sprężarkowni, dział zakupów, kontroling", 2,
+      function (v) { r.audytowani = v; })));
+    kk.appendChild(poleChip("Rozdzielnik — komu przekazano wyniki", "wymóg normy",
+      txt(r.rozdzielnik, "np. Piotr Nowak — Dyrektor Zakładu; kierownik UR; Energy Manager", 2,
+        function (v) { r.rozdzielnik = v; }),
+      "Wyniki trafiają do tego kierownictwa, które może podjąć działania. Bez rozdzielnika nie ma dowodu przekazania."));
+    sec.appendChild(kk);
+    if (audytujeSiebie(r))
+      sec.appendChild(hel("div", "warn", "Audytor odpowiada za audytowany obszar. <b>Audytowanie siebie</b> to jeden z sześciu błędów tego punktu — w jednej z sieci hoteli audyty wszystkich ośmiu obiektów prowadził Energy Manager z centrali, ten sam, który zaprojektował system; jednostka certyfikująca zawiesiła certyfikat na trzy miesiące. Rozwiązania: audyt krzyżowy między działami, audytor z innego systemu zarządzania, osoba z zewnątrz."));
+    host.appendChild(sec);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj raport z audytu", function () { RAPORTY.push(nowyRaport()); AKTR = RAPORTY.length - 1; }));
+  if (!RAPORTY.length) d.appendChild(el("div", "warn", "Brak raportów z audytu. Norma wymaga zachowania dowodów realizacji programu i wyników audytów."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 3: ustalenia ── */
+function rysujUstalenia(host) {
+  var r = naglowekRaportu(host, "A. Ustalenia");
+  if (!r) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "warn", "<b>Niezgodność to niespełnienie wymagania</b> — normy, przepisu albo wymagania, które ustaliła sama organizacja. Nic więcej. Możliwość doskonalenia nie staje się niezgodnością tylko dlatego, że audyt „powinien coś znaleźć”.<br><br><b>Liczba niezgodności nie mówi, czy audyt był dobry.</b> Audyt bez niezgodności może być rzetelny — jeśli objął właściwy zakres i opierał się na dowodach. Audyt z dziesięcioma niezgodnościami może być słaby — jeśli wszystkie dotyczą literówek w dokumentach. O jakości audytu świadczą <b>zakres, dowody i bezstronność</b>."));
+  s.appendChild(hel("div", "note", "★ Podział niezgodności na duże i małe jest <b>nieobowiązkową</b> klasyfikacją — tak robią jednostki certyfikujące. W audycie wewnętrznym ważniejsze jest, żeby każde ustalenie było jasno opisane, oparte na dowodzie i przypisane do wymagania."));
+  host.appendChild(s);
+
+  var j = el("div", "sekcja");
+  j.appendChild(el("h3", null, "Jakość audytu — zakres, dowody, bezstronność"));
+  var up = udzialPraktyki(r);
+  j.appendChild(tabela(["Miara", "Stan"], [
+    ["Zakres — punkty normy", (r.zakres || "").trim() ? "określony" : el("span", "chip red", "brak")],
+    ["Kryteria", (r.kryteria || "").trim() ? "określone" : el("span", "chip red", "brak")],
+    ["Bezstronność potwierdzona", audytujeSiebie(r) ? el("span", "chip red", "audytor audytuje własny obszar")
+      : (r.bezstronnosc || "").trim() ? el("span", "chip green", "tak") : el("span", "chip amber", "nieopisana")],
+    ["Ustalenia oparte na dowodach z praktyki",
+      up === null ? "—" : el("span", "chip " + (up >= 50 ? "green" : up > 0 ? "amber" : "red"),
+        zPraktyki(r).length + " z " + ustalenia(r).filter(function (x) { return x.zrodlo; }).length + " (" + lcz(up, 0) + "%)")],
+    ["Ustalenia razem", ustalenia(r).length + " · niezgodności: " +
+      ustalenia(r).filter(function (u) { return u.rodzaj === "N"; }).length + " · możliwości doskonalenia: " +
+      ustalenia(r).filter(function (u) { return u.rodzaj === "D"; }).length + " · potwierdzenia: " +
+      ustalenia(r).filter(function (u) { return u.rodzaj === "P"; }).length]
+  ]));
+  j.appendChild(el("div", "note", "Liczba niezgodności jest tu ostatnim wierszem, a nie pierwszym — celowo. Audytu nie ocenia się liczbą ustaleń."));
+  if (tylkoDokumenty(r))
+    j.appendChild(hel("div", "warn", "Wszystkie ustalenia opierają się wyłącznie na dokumentach. <b>Audyt dokumentów, nie praktyki</b> — papiery są, ale nikt nie sprawdził, czy ludzie je stosują. Najlepiej idzie się jedną nitką przez kilka punktów normy: od wskaźnika sprężarkowni, przez kryterium 6,3 bar, instrukcję przy panelu i rozmowę z technikiem, po zlecenie dla serwisu i protokół z przeglądu."));
+  host.appendChild(j);
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Ustalenia — edycja"));
+  ustalenia(r).forEach(function (u, i) {
+    var kk = el("div", "poz" + (ustalenieOk(u) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (u.nr || "Ustalenie " + (i + 1))));
+    if (u.rodzaj) g.appendChild(el("span", "chip " + (u.rodzaj === "N" ? "red" : u.rodzaj === "P" ? "green" : ""),
+      u.rodzaj));
+    if (u.zrodlo) g.appendChild(el("span", "chip " + (ZRODLA_PRAKTYKA.indexOf(u.zrodlo) >= 0 ? "green" : ""),
+      etykieta(ZRODLA, u.zrodlo).split(" albo")[0]));
+    g.appendChild(przyciskUsun(function () { r.ustalenia.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Numer", inp(u.nr, "np. N-1", function (v) { u.nr = v; })));
+    kk.appendChild(pole("Rodzaj", sel(u.rodzaj, RODZAJE, function (v) { u.rodzaj = v; })));
+    kk.appendChild(poleChip("Opis", "wymóg normy",
+      txt(u.opis, "np. Protokół z przeglądu sprężarki z 09.2026 nie zawiera nastaw ciśnienia przed i po. Protokołu nie sprawdzano przy odbiorze usługi.", 3,
+        function (v) { u.opis = v; })));
+    kk.appendChild(poleChip("Dowód", "wymóg normy",
+      txt(u.dowod, "np. Zlecenie serwisowe z 07.2026 (trzy zdania o nastawach); protokół serwisu z 09.2026 na wzorze wykonawcy; rozmowa z kierownikiem UR", 3,
+        function (v) { u.dowod = v; }),
+      "<b>Lista kontrolna z samymi „OK” bez dowodów</b> to pierwszy z sześciu błędów. Przy każdym ustaleniu wskażcie dowód."));
+    kk.appendChild(poleChip("Skąd dowód", "metodyka ENESA", sel(u.zrodlo, ZRODLA, function (v) { u.zrodlo = v; }),
+      "Ustalenia powinny opierać się na dowodach z hali, nie tylko na dokumentach. To pole liczy udział dowodów z praktyki."));
+    if (u.rodzaj === "N")
+      kk.appendChild(poleChip("Niespełnione wymaganie — norma, przepis albo wymaganie organizacji", "wymóg normy",
+        txt(u.wymaganie, "np. Wymaganie organizacji z punktu 8.1 — nadzór nad procesem zleconym: przekazanie wykonawcy kryteriów i sprawdzenie protokołu przy odbiorze", 2,
+          function (v) { u.wymaganie = v; })));
+    if (u.rodzaj === "D")
+      kk.appendChild(pole("Czego dotyczy możliwość doskonalenia",
+        txt(u.wymaganie, "pozostaw puste — możliwość doskonalenia nie wskazuje niespełnionego wymagania", 2,
+          function (v) { u.wymaganie = v; })));
+    if (u.rodzaj !== "P") {
+      kk.appendChild(pole("Działanie", txt(u.dzialanie, "np. Sprawdzanie protokołu przy odbiorze usługi; przekazanie serwisowi wzoru protokołu z nastawami", 2,
+        function (v) { u.dzialanie = v; })));
+      kk.appendChild(pole("Odpowiedzialny i termin", inp(u.odp, "np. Kierownik UR — wdrożenie 10.2026", function (v) { u.odp = v; })));
+    }
+    if (u.rodzaj === "N")
+      kk.appendChild(pole("Karta niezgodności (10.1)",
+        sel(u.karta10, [["", "—"], ["tak", "Założona"], ["nie", "Nie założona"]], function (v) { u.karta10 = v; })));
+    if (niezgodnoscBezWymagania(u))
+      kk.appendChild(hel("div", "warn", "Ustalenie oznaczone jako niezgodność, a nie wskazano niespełnionego wymagania. <b>Niezgodność to niespełnienie wymagania — nic więcej.</b> Jeśli nie da się wskazać wymagania, to jest możliwość doskonalenia."));
+    if (doskonalenieJakPopNiezgodnosc(u))
+      kk.appendChild(hel("div", "note", "Możliwość doskonalenia opisana jak niespełnienie wymagania. Jeśli wymaganie rzeczywiście nie jest spełnione, zmieńcie rodzaj na <b>N</b>; jeśli nie — przeformułujcie opis. Odwrotny błąd, <b>możliwość doskonalenia zapisana jako niezgodność</b>, bierze się z przekonania, że audyt „musi coś znaleźć”."));
+    if (ustalenieBezDzialania(u))
+      kk.appendChild(hel("div", "warn", "Ustalenie bez działania albo bez odpowiedzialnego. <b>Wyniki bez działań</b> to szósty błąd tego punktu — a „działania na papierze” (ustalenie opisane, działanie wpisane, nikt nie sprawdził skuteczności) to pułapka tuż za nim."));
+    if (niezgodnoscBezKarty(u))
+      kk.appendChild(el("div", "warn", "Niezgodność bez założonej karty 10.1. Niezgodności idą ścieżką z punktu 10.1: przyczyna, działanie, sprawdzenie skuteczności."));
+    e.appendChild(kk);
+  });
+  e.appendChild(przyciskDodaj("+ dodaj ustalenie", function () { if (!r.ustalenia) r.ustalenia = []; r.ustalenia.push({}); }));
+  if (!ustalenia(r).length)
+    e.appendChild(el("div", "warn", "Brak ustaleń. Audyt bez niezgodności jest możliwy i prawidłowy, ale powinien zostawić ślad: potwierdzenia zgodności z dowodami albo możliwości doskonalenia."));
+  host.appendChild(e);
+}
+
+/* ── zakładka 4: część B ── */
+function rysujWnioskiB(host) {
+  var r = naglowekRaportu(host, "B. Wnioski — odpowiedzi na trzy pytania punktu 9.2");
+  if (!r) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "note", "Audyt przeprowadza się, <b>żeby uzyskać odpowiedź na trzy pytania</b>. Jeśli raport ich nie zawiera, zebrał ustalenia, ale nie wykonał zadania punktu 9.2."));
+  if (!r.B) r.B = {};
+  var kk = el("div", "poz" + (bOk(r) ? "" : " brak"));
+  PYT_B9.forEach(function (q) {
+    kk.appendChild(poleChip(q.tekst, "wymóg normy",
+      txt(r.B[q.kod], q.ph, 3, function (v) { r.B[q.kod] = v; }), q.pomoc));
+  });
+  s.appendChild(kk);
+  s.appendChild(pole("Uwagi do programu audytów — następne audyty",
+    txt(r.uwagiProgram, "np. Sprężarkownię i nadzór nad serwisem audytować po uruchomieniu modernizacji (III kw. 2027), z naciskiem na protokoły odbioru usług. Zakupy — po warsztacie z porównywania kosztu zakupu i energii.", 3,
+      function (v) { r.uwagiProgram = v; }),
+    "Wyniki audytu są jednym z dwóch kryteriów, które norma każe uwzględnić przy budowie programu. Te uwagi wracają do zakładki 1."));
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  w.appendChild(el("h3", null, "Skąd wiesz, że audyt wewnętrzny działa"));
+  var lista = [
+    { t: "Program uwzględnia znaczenie procesów i wyniki wcześniejszych audytów — a nie tylko kolejność punktów normy.",
+      ok: PROGRAM.length > 0 && !PROGRAM.some(dlaczegoPuste) && !PROGRAM.some(dlaczegoTylkoRytm) },
+    { t: "Każdy audyt ma zakres i kryteria, a audytor nie sprawdza własnej pracy.",
+      ok: RAPORTY.length > 0 && RAPORTY.every(function (x) {
+        return (x.zakres || "").trim() && (x.kryteria || "").trim() && !audytujeSiebie(x);
+      }) },
+    { t: "Ustalenia opierają się na dowodach z hali, nie tylko na dokumentach.",
+      ok: ustalenia(r).filter(function (x) { return x.zrodlo; }).length === 0 ? null : !tylkoDokumenty(r) },
+    { t: "Wyniki trafiają do kierownictwa, które może działać, a niezgodności mają działania i sprawdzenie skuteczności.",
+      ok: !!(r.rozdzielnik || "").trim() && !ustalenia(r).some(ustalenieBezDzialania) && !ustalenia(r).some(niezgodnoscBezKarty) },
+    { t: "Audyt oceniany po zakresie, dowodach i bezstronności — nie po liczbie niezgodności.",
+      ok: !!((r.zakres || "").trim() && (r.bezstronnosc || "").trim()) && !audytujeSiebie(r) && !tylkoDokumenty(r) }
+  ];
+  lista.forEach(function (x) {
+    var kw = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "chip " + (x.ok === null ? "" : x.ok ? "green" : "amber"),
+      x.ok === null ? "nie dotyczy" : x.ok ? "tak" : "jeszcze nie"));
+    g.appendChild(el("span", null, x.t));
+    kw.appendChild(g);
+    w.appendChild(kw);
+  });
+  host.appendChild(w);
+}
+
+/* ── zakładka 5 ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var wszystkie = RAPORTY.reduce(function (a, r) { return a.concat(ustalenia(r)); }, []);
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz audytów: "));
+  n.appendChild(document.createTextNode(
+    ile(PROGRAM.length, "pozycja programu", "pozycje programu", "pozycji programu") +
+    ", wykonanych: " + PROGRAM.filter(function (p) { return p.status === "wykonany"; }).length +
+    " · " + ile(RAPORTY.length, "raport", "raporty", "raportów") +
+    " · ustaleń: " + wszystkie.length +
+    " (N: " + wszystkie.filter(function (u) { return u.rodzaj === "N"; }).length +
+    ", D: " + wszystkie.filter(function (u) { return u.rodzaj === "D"; }).length +
+    ", P: " + wszystkie.filter(function (u) { return u.rodzaj === "P"; }).length + ")"));
+  s.appendChild(n);
+  var rytm = PROGRAM.filter(dlaczegoTylkoRytm);
+  if (rytm.length)
+    s.appendChild(el("div", "warn", "W " + ile(rytm.length, "pozycji programu", "pozycjach programu", "pozycjach programu") +
+      " uzasadnienie odwołuje się tylko do rytmu. To rozmowa o tym, po co jest program — a nie o wypełnieniu kolumny."));
+  var siebie = RAPORTY.filter(audytujeSiebie);
+  if (siebie.length)
+    s.appendChild(el("div", "warn", ile(siebie.length, "audyt prowadziła", "audyty prowadziły", "audytów prowadziły") +
+      " osoba odpowiedzialna za audytowany obszar. To ustalenie dla jednostki certyfikującej, nie uwaga porządkowa — przy audycie nadzoru w sieci hoteli skończyło się zawieszeniem certyfikatu."));
+  var dok = RAPORTY.filter(tylkoDokumenty);
+  if (dok.length)
+    s.appendChild(el("div", "warn", "W " + ile(dok.length, "raporcie", "raportach", "raportach") +
+      " wszystkie ustalenia opierają się na dokumentach. Pytanie do audytora: z kim rozmawiał i co zobaczył na hali. W AutoParts całe ustalenie wzięło się z poproszenia o dwa papiery — zlecenie i protokół — i z pytania, kto je sprawdza."));
+  var bezW = wszystkie.filter(niezgodnoscBezWymagania);
+  if (bezW.length)
+    s.appendChild(el("div", "warn", ile(bezW.length, "niezgodność nie wskazuje", "niezgodności nie wskazują", "niezgodności nie wskazuje") +
+      " niespełnionego wymagania. Zwykle znaczy to jedno z dwóch: albo to możliwość doskonalenia, albo wymaganie jest w systemie, ale nikt go nie zapisał."));
+  var bezD = wszystkie.filter(ustalenieBezDzialania);
+  if (bezD.length)
+    s.appendChild(el("div", "warn", ile(bezD.length, "ustalenie nie ma", "ustalenia nie mają", "ustaleń nie ma") +
+      " działania albo odpowiedzialnego. Ustalenia bez działań są najczęstszym powodem, dla którego ten sam problem wraca w kolejnym audycie."));
+  if (RAPORTY.length && !RAPORTY.some(function (r) { return (r.uwagiProgram || "").trim(); }))
+    s.appendChild(el("div", "note", "Żaden raport nie zostawia uwag do programu audytów. Pętla się nie zamyka: wyniki audytów są jednym z dwóch kryteriów, które norma każe uwzględnić przy planowaniu kolejnych."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-47, sekcja 9.2 ── */
+function stanPozycji(q) {
+  var f = {
+    trzyPytania: function () {
+      if (!RAPORTY.length) return false;
+      return RAPORTY.every(bOk);
+    },
+    program: function () {
+      return PROGRAM.length > 0 && PROGRAM.every(pozycjaOk)
+        && !PROGRAM.some(dlaczegoPuste) && !PROGRAM.some(dlaczegoTylkoRytm);
+    },
+    zakresKryteria: function () {
+      if (!RAPORTY.length) return false;
+      return RAPORTY.every(function (r) { return (r.zakres || "").trim() && (r.kryteria || "").trim(); });
+    },
+    bezstronnosc: function () {
+      if (!RAPORTY.length) return false;
+      return RAPORTY.every(function (r) { return !audytujeSiebie(r) && (r.bezstronnosc || "").trim(); });
+    },
+    przekazanie: function () {
+      if (!RAPORTY.length) return false;
+      return RAPORTY.every(function (r) {
+        return (r.rozdzielnik || "").trim() && !ustalenia(r).some(ustalenieBezDzialania)
+          && !ustalenia(r).some(niezgodnoscBezKarty);
+      });
+    },
+    zapisy: function () {
+      return metaProgramuOk() && PROGRAM.length > 0 && RAPORTY.length > 0
+        && RAPORTY.every(metrykaRaportuOk);
+    },
+    dowody: function () {
+      if (!RAPORTY.length) return null;
+      return RAPORTY.every(function (r) { return !tylkoDokumenty(r); })
+        && !RAPORTY.some(function (r) { return ustalenia(r).some(niezgodnoscBezWymagania); });
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!metaProgramuOk()) b.push({ t: "Niepełna metryka programu (organizuje, zatwierdził, kryteria, planowanie).", kto: "klient" });
+  if (!PROGRAM.length) b.push({ t: "Program audytów jest pusty.", kto: "klient" });
+  PROGRAM.forEach(function (p, i) {
+    var n = "Pozycja programu " + (p.nr || i + 1);
+    if (!pozycjaOk(p)) b.push({ t: n + " — niepełna (obszar, punkty, dlaczego teraz, termin, audytor, status).", kto: "klient" });
+    if (dlaczegoTylkoRytm(p) && !dlaczegoPuste(p))
+      b.push({ t: n + " — uzasadnienie bez znaczenia procesu i wyników wcześniejszych audytów.", kto: "klient" });
+  });
+  if (!RAPORTY.length) b.push({ t: "Brak raportów z audytu — nie ma dowodu realizacji programu.", kto: "klient" });
+  RAPORTY.forEach(function (r, i) {
+    var n = nazwaRaportu(r, i);
+    if (!metrykaRaportuOk(r)) b.push({ t: n + " — niepełna metryka (zakres, kryteria, audytor, bezstronność, rozdzielnik).", kto: "klient" });
+    if (audytujeSiebie(r)) b.push({ t: n + " — audytor odpowiada za audytowany obszar.", kto: "klient" });
+    if (!ustalenia(r).length) b.push({ t: n + " — brak ustaleń.", kto: "klient" });
+    if (tylkoDokumenty(r)) b.push({ t: n + " — wszystkie ustalenia oparte wyłącznie na dokumentach.", kto: "klient", metodyka: true });
+    if (!bOk(r)) b.push({ t: n + " — brak odpowiedzi na trzy pytania punktu 9.2.", kto: "klient" });
+    ustalenia(r).forEach(function (u, j) {
+      var m = n + " / " + (u.nr || "ustalenie " + (j + 1));
+      if (!ustalenieOk(u)) b.push({ t: m + " — niepełne ustalenie.", kto: "klient" });
+      if (niezgodnoscBezWymagania(u)) b.push({ t: m + " — niezgodność bez wskazania wymagania.", kto: "klient" });
+      if (ustalenieBezDzialania(u)) b.push({ t: m + " — brak działania albo odpowiedzialnego.", kto: "klient" });
+      if (niezgodnoscBezKarty(u)) b.push({ t: m + " — niezgodność bez karty 10.1.", kto: "klient" });
+    });
+  });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6 ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-AUD-01");
+  rysujListeKontrolna(s, LISTA_92, "Lista kontrolna III-47 — sekcja 9.2", stanPozycji);
+
+  var wszystkie = RAPORTY.reduce(function (a, r) { return a.concat(ustalenia(r)); }, []);
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-AUD-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Program audytów (F-EnMS-18)", "zakładka 1",
+      ile(PROGRAM.length, "pozycja", "pozycje", "pozycji") + " · zatwierdził: " + (META.zatwierdzil || "do uzupełnienia")],
+    ["Raporty z audytu (F-EnMS-19)", "zakładka 2",
+      RAPORTY.filter(raportOk).length + " z " + RAPORTY.length + " kompletnych"],
+    ["A. Ustalenia", "zakładka 3", wszystkie.length + " ustaleń · niezgodności: " +
+      wszystkie.filter(function (u) { return u.rodzaj === "N"; }).length],
+    ["B. Wnioski — trzy pytania 9.2", "zakładka 4", RAPORTY.filter(bOk).length + " z " + RAPORTY.length],
+    ["Wnioski konsultanta", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie: <b>audytów w zaplanowanych odstępach</b> dających odpowiedź na trzy pytania, <b>programu</b> uwzględniającego znaczenie procesów i wyniki wcześniejszych audytów, <b>zakresu i kryteriów</b> dla każdego audytu, <b>obiektywności i bezstronności</b> audytorów, <b>przekazania wyników</b> odpowiedniemu kierownictwu wraz z odpowiednimi działaniami oraz <b>zachowania dowodów</b> realizacji programu i wyników audytów. Podział niezgodności na duże i małe oraz sama forma raportu są zaleceniami metodyki. Dokument D-EnMS-AUD-01 łączy formularze F-EnMS-18 (III-43) i F-EnMS-19 (III-44)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "program", t: "1. Program audytów", f: rysujProgram },
+  { id: "raporty", t: "2. Raporty", f: rysujRaporty },
+  { id: "ustalenia", t: "3. A — ustalenia", f: rysujUstalenia },
+  { id: "wnioskiB", t: "4. B — wnioski", f: rysujWnioskiB },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(PROGRAM.length, 1) + Math.max(RAPORTY.length, 1) * 2 + 1,
+    zrob: PROGRAM.filter(pozycjaOk).length + RAPORTY.filter(metrykaRaportuOk).length
+      + RAPORTY.filter(raportOk).length + (metaProgramuOk() ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_92", JSON.stringify({ PROGRAM: PROGRAM, RAPORTY: RAPORTY, META: META, WNIOSKI: WNIOSKI }));
+    /* Wyniki audytów są wymaganą pozycją danych wejściowych przeglądu (9.3). */
+    var w = RAPORTY.reduce(function (a, r) { return a.concat(ustalenia(r)); }, []);
+    localStorage.setItem("enesa_audyty", JSON.stringify({
+      raportow: RAPORTY.length,
+      niezgodnosci: w.filter(function (u) { return u.rodzaj === "N"; }).length,
+      doskonalenia: w.filter(function (u) { return u.rodzaj === "D"; }).length,
+      ostatni: RAPORTY.length ? RAPORTY[RAPORTY.length - 1].nr : ""
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_92"); if (!s) return;
+    var d = JSON.parse(s);
+    PROGRAM = d.PROGRAM || []; RAPORTY = d.RAPORTY || []; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var p = JSON.parse(JSON.stringify(PRZYKLAD));
+  PROGRAM = p.PROGRAM; RAPORTY = p.RAPORTY; META = p.META; AKTR = 0;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić program audytów i raporty?")) return;
+  PROGRAM = []; RAPORTY = []; WNIOSKI = []; AKTR = 0;
+  META = { organizacja: "", organizuje: "", zatwierdzil: "", dataZatw: "", kryteria: "", planAudytu: "" };
+  try { localStorage.removeItem("enesa_92"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

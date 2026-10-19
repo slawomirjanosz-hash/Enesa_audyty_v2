@@ -1,0 +1,1380 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 9.3 Przegląd zarządzania</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 9</div>
+ <h1>9.3 Przegląd zarządzania</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 9.3</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 9.3</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>9.3 Przegląd zarządzania</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 9.3 i cztery pytania kierownictwa.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 9.3<br>Przegląd zarządzania</div>
+   <div>
+    <h4>9.3 Przegląd zarządzania</h4>
+    <p>Co mam dziś zdecydować. Cztery pytania kierownictwa. Co ma wyjść z przeglądu.
+    „Utrzymujemy” też jest decyzją.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 9.3. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">9.3 — przegląd zarządzania<br>9 slajdów</div>
+   <div>
+    <h4>9.3 Przegląd zarządzania</h4>
+    <p>Kto i w jakiej formie. Dane wejściowe jako agenda. Decyzje z właścicielami.
+    Rytm wobec budżetu.</p>
+    <p style="font-size:12.5px">9 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Najwyższe kierownictwo w zaplanowanych odstępach przegląda system zarządzania
+ energią, żeby zapewnić jego ciągłą przydatność, adekwatność, skuteczność i zgodność ze strategicznym kierunkiem
+ organizacji. Przegląd uwzględnia status działań z poprzednich przeglądów, zmiany kwestii zewnętrznych
+ i wewnętrznych oraz związanych z nimi ryzyk i szans, informacje o funkcjonowaniu systemu, możliwości ciągłego
+ doskonalenia i politykę energetyczną, a w zakresie wyniku energetycznego — stopień osiągnięcia celów i zadań,
+ wynik energetyczny i jego poprawę oraz status planów działań. Wyniki przeglądu obejmują decyzje dotyczące
+ możliwości ciągłego doskonalenia i potrzebnych zmian w systemie. Organizacja zachowuje udokumentowane
+ informacje jako dowód wyników przeglądów. Omówienie na podstawie punktu 9.3 PN-EN ISO 50001:2018; nie jest
+ to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> najwyższe kierownictwo w zaplanowanych
+ odstępach ocenia, czy system jest przydatny, adekwatny, skuteczny i zgodny z kierunkiem firmy — i podejmuje
+ decyzje, co zmienić.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 9, punkt 9.3. Protokół przeglądu: III-45;
+ przykład AutoParts: III-46; procedura P-EnMS-07: III-48.</div>
+
+ <div class="ramka">
+  <h3>◧ „Panie Janie, co mam dziś zdecydować?”</h3>
+  <p style="font-size:13.5px">29 września 2026 r., sala konferencyjna AutoParts. Po raz pierwszy przegląd
+  zarządzania systemem zarządzania energią — razem z przeglądem ISO 14001. Jan Kowalski pokazuje drugi wykres,
+  gdy dyrektor zakładu Piotr Nowak mu przerywa: <b>„Panie Janie, co mam dziś zdecydować?”</b></p>
+  <p style="font-size:13.5px">Kowalski był na to przygotowany. „Wskaźnik sprężarkowni spadł z 0,125
+  do 0,119 kWh/Nm³. To poprawa o prawie 5%, ale do celu 0,110 brakuje jeszcze półtora raza tyle, ile już
+  osiągnęliśmy. Samo ciśnienie więcej nie da. Proszę o utrzymanie modernizacji za 380 000 zł w budżecie
+  na 2027 r. Diagnostyki wycieków nie trzeba rozbudowywać — kwartalny przegląd działa, przepływ w postoju spadł
+  z 9 do 6 Nm³/min.”</p>
+  <p style="font-size:13.5px;margin-bottom:0">Wykres pokazuje, co się stało. Rekomendacja mówi, co z tym zrobić
+  — i dlaczego. <b>Przegląd zarządzania jest o decyzjach, nie o slajdach.</b></p>
+ </div>
+
+ <h3 style="margin-top:22px">Kto i w jakiej formie?</h3>
+ <p style="font-size:14.5px">Przegląd prowadzi <b>najwyższe kierownictwo właściwe dla zakresu systemu</b>.
+ W AutoParts to zarząd — w jego imieniu dyrektor zakładu, członek zarządu. Norma nie wymaga jednego spotkania
+ ani prezentacji o określonym kształcie. Przegląd może być połączony z przeglądem innego systemu, rozłożony
+ na kilka spotkań albo częściowo prowadzony na posiedzeniach zarządu. <b>Wymagane jest co innego: żeby
+ kierownictwo rozważyło określone sprawy, podjęło decyzje i żeby wyniki zostały zapisane.</b></p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> AutoParts robi pełny przegląd raz w roku, <b>przed sporządzeniem
+ budżetu</b>, a krótki punkt o energii ma co kwartał na zebraniu zarządu. Norma mówi tylko „w zaplanowanych
+ odstępach” — rytm dobierzcie tak, żeby decyzje zdążyły wpłynąć na budżet i plany.</p>
+
+ <h3 style="margin-top:22px">Co kierownictwo musi rozważyć? Cztery pytania</h3>
+ <p style="font-size:14.5px">Lista spraw, które norma każe uwzględnić, jest długa. Łatwiej ją zapamiętać
+ jako cztery pytania kierownictwa:</p>
+ <table class="tab">
+ <tr><th style="width:34%">Pytanie</th><th>Co obejmuje</th></tr>
+ <tr><td><b>Co się zmieniło wokół nas i w nas?</b></td><td>Kwestie zewnętrzne i wewnętrzne, związane z nimi ryzyka i szanse, polityka energetyczna.</td></tr>
+ <tr><td><b>Jak idzie wynik energetyczny?</b></td><td>EnPI i ich poprawa, stopień osiągnięcia celów, status planów działań.</td></tr>
+ <tr><td><b>Czy system działa?</b></td><td>Status działań z poprzedniego przeglądu; trendy w niezgodnościach i działaniach korygujących, w wynikach monitorowania, audytów i oceny zgodności.</td></tr>
+ <tr><td><b>Gdzie możemy być lepsi?</b></td><td>Możliwości doskonalenia — wyniku, systemu, a także kompetencji ludzi.</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Co ma wyjść z przeglądu?</h3>
+ <p style="font-size:14.5px">Decyzje o możliwościach doskonalenia i potrzebnych zmianach w systemie. Mogą
+ dotyczyć poprawy wyniku, polityki, EnPI i linii bazowych, celów i planów działań (także tego, co robić, gdy
+ cel nie jest osiągany), lepszego połączenia systemu z procesami firmy, zasobów oraz kompetencji, świadomości
+ i komunikacji.</p>
+ <p style="font-size:14.5px"><b>Decyzją jest też „utrzymujemy”</b> — jeśli wynika z rzetelnej oceny. Polityka,
+ która nadal pasuje, nie musi się zmieniać. Zasoby, które wystarczają, nie muszą rosnąć. <b>Nie produkujcie
+ zmian dla samej liczby decyzji.</b> Zapiszcie natomiast, co oceniono i dlaczego zdecydowano tak,
+ a nie inaczej.</p>
+
+ <h3 style="margin-top:22px">AutoParts: wyniki przeglądu z 29 września 2026 r.</h3>
+ <table class="tab">
+ <tr><th style="width:30%">Sprawa</th><th>Decyzja</th></tr>
+ <tr><td>Cel Z1.1 — sprężarkownia</td><td>Modernizacja za 380 000 zł zostaje w budżecie na 2027 r. — Energy Manager, kierownik UR</td></tr>
+ <tr><td>Ocena zgodności — raport dla banku</td><td>Działanie korygujące przyjęte; termin w kalendarzu kontrolingu — kontroler finansowy</td></tr>
+ <tr><td>Audyt — protokoły serwisu</td><td>Sprawdzanie protokołu przy odbiorze usługi; wzór protokołu dla serwisu — kierownik UR</td></tr>
+ <tr><td>Integracja z procesami firmy</td><td>Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy — dyrektor zakładu</td></tr>
+ <tr><td>Kompetencje</td><td>Warsztat dla działu zakupów z porównywania kosztu zakupu i energii (8.3) — Energy Manager</td></tr>
+ <tr><td>Kotłownia (K-1 = 1,01)</td><td>Analiza przyczyn przed sezonem grzewczym; wynik na zebraniu zarządu w IV kwartale — kierownik UR</td></tr>
+ <tr><td>Polityka energetyczna, EnPI i EnB</td><td><b>Bez zmian</b> — polityka zgodna z kierunkiem firmy; linie bazowe aktualne (brak przesłanek z 6.5)</td></tr>
+ </table>
+
+ <div class="ramka">
+  <h3>✓ Co zadziałało: audytor z zewnątrz i przeglądy z decyzjami</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Producent armatury sanitarnej, około 350 pracowników, certyfikat
+  od trzech lat. Wskaźnik zużycia energii na tonę wyrobów nie poprawiał się od półtora roku. Audyty wewnętrzne
+  wyglądały tak samo: ten sam audytor, ta sama lista, te same „OK”. <b>Przeglądy zarządzania kończyły się
+  podpisem bez decyzji</b>, a trzy cele były od początku nierealne — tylko nikt nie chciał tego powiedzieć.
+  Po zmianie: audytor spoza zakładu, rozmowy z ludźmi przy maszynach, instrukcje uzgodnione z operatorami,
+  dwie godziny tygodniowo na analizę danych, <b>przeglądy zarządzania krótsze, częstsze i z decyzjami</b>,
+  cele urealnione. Po roku zużycie energii na tonę wyrobów, po uwzględnieniu produkcji i pogody, było o 8,5%
+  niższe niż w roku bazowym.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Przegląd jako podpisanie protokołu</td><td>Przygotujcie sprawy do decyzji; zapiszcie, co oceniono i co postanowiono</td></tr>
+ <tr><td>Niepełne dane wejściowe (brak oceny zgodności, kompetencji, polityki)</td><td>Użyjcie pełnej listy jako agendy albo listy kontrolnej</td></tr>
+ <tr><td>Wykresy bez rekomendacji</td><td>Do każdego ważnego wyniku: co proponujecie i dlaczego</td></tr>
+ <tr><td>„Minimum trzy decyzje” — zmiany dla samej liczby</td><td>Decyzje z rzetelnej oceny; „utrzymujemy” z uzasadnieniem też jest decyzją</td></tr>
+ <tr><td>Decyzje bez właścicieli i terminów</td><td>Każda decyzja: kto, co, do kiedy</td></tr>
+ <tr><td>Przegląd tuż przed audytem, na danych z ostatniej chwili</td><td>Zaplanujcie go tak, żeby decyzje zdążyły wpłynąć na budżet i plany</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Przegląd zarządzania to moment, w którym kierownictwo ocenia
+  system i decyduje, co zmienić — albo świadomie postanawia, że nic zmieniać nie trzeba. Liczą się rozważone
+  sprawy, decyzje i ich zapis, nie forma spotkania.<br><br>
+  <b>Zadanie:</b> weźcie protokół ostatniego przeglądu zarządzania i sprawdźcie, ile decyzji ma właściciela
+  i termin oraz czy następny przegląd sprawdził ich status. Ankieta liczy jedno i drugie.</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Platforma pilnuje, by każda sprawa miała rekomendację, każda decyzja właściciela
+  i termin — a decyzja „bez zmian” uzasadnienie. Porównuje też datę przeglądu z terminem budżetu.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 9.3 w formacie stron 4.1–9.2.</b> Ostatnia strona rozdziału 9 i jedyna, w której
+ankietę wypełnia się <b>raz w roku</b> — a mimo to ma najwięcej pól wymaganych przez normę wprost:
+6 spraw do rozważenia i 7 obszarów, w których trzeba podjąć decyzję.
+Cała trudność polega na tym, że niczego z tego nie da się „wypełnić” sensownie bez danych z pozostałych
+dwudziestu stron platformy.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 9, punkt 9.3</td><td>Scena „Panie Janie, co mam dziś zdecydować?” z rekomendacją Kowalskiego, zdanie o wykresie i rekomendacji, akapit „kto i w jakiej formie” wraz z uwagą, że norma nie narzuca formy, rada o pełnym przeglądzie przed budżetem i kwartalnym punkcie na zebraniu Zarządu, cztery pytania kierownictwa, akapit „co ma wyjść z przeglądu” z tezą, że „utrzymujemy” też jest decyzją, tabela siedmiu wyników przeglądu AutoParts, lista samosprawdzająca, tabela sześciu błędów, przykład ilustracyjny producenta armatury, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 7 — III-45 (F-EnMS-20)</td><td>Metryka (data i forma, uczestnicy, przygotował dane), część A z 6 sprawami w układzie a–e plus wynik energetyczny, część B z 7 obszarami decyzji i kolumnami decyzja / uzasadnienie / kto / termin, część C — ocena ogólna w dwóch pozycjach. Zdanie z nagłówka formularza: <b>„Bez zmian” jest decyzją — zapisz uzasadnienie.</b></td></tr>
+<tr><td>Część III, Moduł 7 — III-46</td><td>Przykład przeglądu z 29.09.2026: forma wspólna z ISO 14001, skład uczestników z dyrektorem zakładu jako członkiem Zarządu, treść wszystkich spraw części A, osiem decyzji części B (siedem obszarów plus nadzór nad serwisem i ocena zgodności), ocena ogólna, status decyzji na zebraniu Zarządu w IV kw. i następny przegląd 09.2027.</td></tr>
+<tr><td>Część III, Moduł 7 — III-47</td><td>Lista kontrolna sekcji 9.3: 5 pozycji — cztery wymagania normy i jedno zalecenie metodyki.</td></tr>
+<tr><td>Część III, Moduł 7 — III-48, pkt 4.4</td><td>Kroki 13–16 procedury P-EnMS-07: rytm i forma przeglądu, przygotowanie wszystkich wymaganych danych wejściowych wraz z rekomendacjami, decyzje we wszystkich obszarach wyjść z uzasadnieniem przy „bez zmian”, zachowanie protokołu i sprawdzanie statusu decyzji.</td></tr>
+</table>
+<div class="note"><b>Co w przykładzie jest nasze.</b> Wszystkie sprawy części A i wszystkie decyzje części B
+pochodzą z III-46; rozwinęliśmy ich brzmienie do pełnych zdań i <b>dopisaliśmy rekomendacje</b> przy sprawach
+wejściowych, bo III-46 łączy podsumowanie z rekomendacją w jednej komórce, a formularz III-45 nazywa tę kolumnę
+„Podsumowanie i rekomendacja”. Rozdzielenie na dwa pola jest naszą decyzją projektową — bez niego nie da się
+sprawdzić błędu „wykresy bez rekomendacji”. Dodaliśmy też decyzję w obszarze <b>przydziału zasobów</b>:
+III-46 łączy ją z poprawą wyniku w jednym wierszu („Poprawa wyniku; zasoby”), a formularz wymienia te obszary
+osobno. Termin budżetu 31.10.2026 jest naszą wartością — III-46 mówi tylko „Projekt budżetu, 10.2026”.
+<b>Przy publikacji wymagają potwierdzenia:</b> treść rekomendacji, brzmienie decyzji o zasobach i data
+terminu budżetu.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>przeglad_zarzadzania</code></td><td>id, audyt_id, data, forma, uczestnicy, <b>czy_najwyzsze_kierownictwo BOOL</b>, przygotowal, czy_pierwszy BOOL, termin_budzetu, sposob_sprawdzania_statusu, nastepny_przeglad, ocena_przydatnosc, ocena_kierunek, podpis.</td></tr>
+<tr><td><code>dana_wejsciowa</code></td><td>id, przeglad_id, sprawa ENUM('status','zmiany','funkcjonowanie','doskonalenie','polityka','wynik'), podsumowanie, <b>rekomendacja</b>. Sześć wierszy obowiązkowych — to minimum normy.</td></tr>
+<tr><td><code>decyzja_przegladu</code></td><td>id, przeglad_id, obszar ENUM(siedem obszarów) albo NULL dla decyzji własnej, nazwa_wlasna, decyzja, uzasadnienie, kto, termin. Siedem obszarów obowiązkowych; decyzje własne dodawane bez ograniczeń.</td></tr>
+<tr><td><code>status_decyzji</code></td><td><b>Do zbudowania.</b> decyzja_id, data_sprawdzenia, stan ENUM('wykonana','w_toku','opoznona','odrzucona'), uwagi. Bez tej tabeli pozycja a) następnego przeglądu jest polem tekstowym, które ktoś musi napisać z pamięci.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Brak najwyższego kierownictwa</b></td><td>Pole wyboru wprost, nie wykrywanie z listy uczestników. Odpowiedź „nie” → ostrzeżenie o wprost niespełnionym wymaganiu: przegląd zarządzania jest <b>czynnością</b> najwyższego kierownictwa, nie prezentacją dla niego. Pozycja listy kontrolnej niespełniona. W bloku konsultanta: <b>to brak w procesie, a nie w dokumentacji — jedyna rzecz w tym punkcie, której nie da się nadrobić lepszym protokołem.</b></td></tr>
+<tr><td><b>Wykresy bez rekomendacji</b></td><td>Sprawa z wypełnionym podsumowaniem i puste pole rekomendacji → ostrzeżenie i pozycja w braki(). Ta walidacja jest możliwa tylko dlatego, że rozdzieliliśmy kolumnę formularza na dwa pola. Pytanie konsultanta: <b>co kierownictwo ma z tym zrobić? Jeśli nie ma odpowiedzi, sprawa nie jest gotowa na przegląd.</b></td></tr>
+<tr><td><b>„Bez zmian” bez uzasadnienia</b></td><td>Decyzja pasująca do wzorca „bez zmian” i puste uzasadnienie → ostrzeżenie zdaniem z formularza. Bez uzasadnienia po roku nikt nie odtworzy, czy sprawę rozważono, czy pominięto.</td></tr>
+<tr><td><b>Decyzje bez właścicieli i terminów</b></td><td>Decyzja niebędąca „bez zmian”, bez osoby albo bez terminu → ostrzeżenie, czerwony chip w tabeli decyzji i licznik w zakładce 1. Przy decyzji „bez zmian” pola właściciela i terminu <b>nie są pokazywane ani wymagane</b> — w III-46 polityka ma w nich kreski i jest to poprawne.<br><br><b>Uwaga dla implementacji:</b> wzorzec „bez zmian” musi być <b>wąski</b>. Pierwsza wersja obejmowała <code>utrzym\w*</code> i <code>pozostaj\w*</code> — i klasyfikowała jako „bez zmian” decyzję „modernizacja <i>pozostaje</i> w budżecie 2027”, czyli zwalniała z właściciela i terminu najważniejszą decyzję całego przeglądu. Wzorzec obejmuje teraz tylko jednoznaczne formy: „bez zmian”, „utrzymujemy”, „nie zmieniamy”, „bez rewizji”.</td></tr>
+<tr><td><b>Przegląd po terminie budżetu</b></td><td>Porównanie dwóch dat. Data przeglądu późniejsza niż termin budżetu → ostrzeżenie: decyzja o przydziale zasobów nie ma już gdzie trafić i czeka rok. Data wcześniejsza → komunikat potwierdzający. To jedyne liczenie na tej stronie i jednocześnie <b>najtańsza walidacja w całej platformie</b>: dwie daty, a wyłapuje szósty z sześciu błędów tego punktu.</td></tr>
+<tr><td>Brak jakiejkolwiek decyzji</td><td>Ostrzeżenie „przegląd bez decyzji” w zakładce 3: kierownictwo ogląda wykresy, nikt nie mówi, czego od niego oczekuje. To nie jest przegląd zarządzania w rozumieniu normy.</td></tr>
+<tr><td>Nierozważona sprawa części A</td><td>Każda z 6 spraw wymagana; brak → pozycja w braki() i niespełniona pozycja listy kontrolnej. Pełna lista działa tu <b>jako agenda</b> — i tak ją zaleca książka.</td></tr>
+<tr><td><b>Żadnej decyzji „utrzymujemy”</b></td><td>Wszystkie wymagane obszary rozstrzygnięte zmianą, żaden decyzją „bez zmian” → nota, nie ostrzeżenie. <b>„Minimum trzy decyzje” — zmiany dla samej liczby</b> to czwarty z sześciu błędów; platforma nie może orzekać, że zmiana jest zbędna, ale może zapytać. W przykładzie 3 z 9 decyzji brzmi „bez zmian”.</td></tr>
+<tr><td>Brak oceny ogólnej (część C)</td><td>Pozycja w braki(); nota w bloku konsultanta: to jedyne miejsce, w którym kierownictwo wypowiada się o systemie jako całości — i pierwsze, o które pyta audytor, szukając dowodu, że przegląd był przeglądem <b>kierownictwa</b>, a nie Energy Managera.</td></tr>
+<tr><td>Brak sposobu sprawdzania statusu albo terminu następnego przeglądu</td><td>Pozycje metodyczne. „Następny przegląd zaczyna się od statusu decyzji z poprzedniego” — bez tych dwóch pól pozycja a) kolejnego przeglądu nie ma skąd się wziąć.</td></tr>
+<tr><td>Pierwszy przegląd</td><td>Przy sprawie a) i odpowiedzi „to pierwszy przegląd” platforma pokazuje komunikat potwierdzający, że wystarczy odnotować wcześniejsze decyzje kierownictwa. <b>Bez tego pierwszy przegląd wyglądałby na niekompletny</b> — tak jak ocena zgodności wyglądałaby na niepełną bez odliczenia oczekiwań nieprzyjętych w punkcie 9.1.2.</td></tr>
+</table>
+
+<h2>Siedem obszarów i decyzje własne</h2>
+<div class="note">Formularz III-45 ma <b>7 stałych obszarów decyzji</b>, a przykład III-46 —
+osiem wierszy. Dwa dodatkowe (nadzór nad serwisem po audycie, działanie z oceny zgodności) nie są nowymi
+obszarami normy: mieszczą się w obszarze „cele, zadania, plany działań <b>lub inne elementy systemu</b>”.
+Platforma rozwiązuje to tak, jak zrobił to przykład: siedem obszarów jest stałych i wymaganych, a pod nimi
+jest miejsce na <b>decyzje w innych sprawach</b> z własną nazwą. Gdyby te dwie decyzje wtłoczyć do obszaru
+„cele”, protokół straciłby to, co w nim najcenniejsze — <b>widoczne powiązanie decyzji z ustaleniem audytu
+i z niezgodnością z oceny zgodności</b>.</div>
+
+<h2>Lista kontrolna III-47 — sekcja 9.3</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Najwyższe kierownictwo przegląda system w zaplanowanych odstępach.</td><td class='mono'>N</td><td><code>kierownictwo</code></td></tr><tr><td>Rozważono wszystkie wymagane dane wejściowe (a–e i wynik energetyczny).</td><td class='mono'>N</td><td><code>wejscia</code></td></tr><tr><td>Wyniki obejmują decyzje dotyczące doskonalenia i zmian w systemie (wszystkie obszary wyjść).</td><td class='mono'>N</td><td><code>wyjscia</code></td></tr><tr><td>Zachowano zapis wyników przeglądu.</td><td class='mono'>N</td><td><code>zapis</code></td></tr><tr><td>Decyzje mają właścicieli i terminy; status sprawdzany na następnym przeglądzie.</td><td class='mono'>M</td><td><code>wlasciciele</code></td></tr></table>
+<div class="note">Żadna pozycja nie zwraca „nie dotyczy” — i jest to jedyna sekcja listy kontrolnej w całej
+platformie, w której tak jest. Przegląd zarządzania albo się odbył i zostawił zapis, albo nie; nie ma tu stanu,
+w którym nie ma czego oceniać. Pozycja o zapisie wyników wymaga jednocześnie pełnej metryki, oceny ogólnej,
+podpisu i co najmniej jednej decyzji — <b>protokół bez decyzji nie jest dowodem wyników przeglądu.</b></div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładka 2 — dane wejściowe</td><td>Przygotowuje <b>Energy Manager</b>, przed spotkaniem. To jedyna zakładka w platformie, którą wypełnia się <i>po to, żeby</i> spotkanie mogło się odbyć, a nie w jego trakcie.</td></tr>
+<tr><td>Zakładki 3 i 4 — decyzje i ocena ogólna</td><td>Wypełnia się <b>w trakcie przeglądu albo bezpośrednio po nim</b>, a treść należy do najwyższego kierownictwa. W platformie warto to odwzorować: decyzje zatwierdza rola z uprawnieniem kierownictwa, nie Energy Manager — inaczej protokół przeglądu zarządzania powstaje w całości poza kierownictwem, co jest dokładnie tym, czego ten punkt ma nie dopuścić.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok liczy sprawy bez rekomendacji, decyzje bez właściciela i decyzje „bez zmian” bez uzasadnienia. Przy decyzjach bez właściciela dodaje konsekwencję, nie zarzut: <b>przy następnym przeglądzie pierwsza pozycja danych wejściowych będzie nie do wypełnienia.</b></td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-PZR-01</code> — protokół przeglądu zarządzania</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-20, załącznik III-45; przykład III-46</td></tr>
+<tr><td>Status w normie</td><td><b>Zachowanie udokumentowanych informacji jako dowodu wyników przeglądów</b> — jedno wymaganie dokumentacyjne, ale obejmujące rozważone sprawy <b>i</b> decyzje. Forma protokołu należy do organizacji. W wykazie z punktu 7.5 pozycja pojawia się jako Z i N (9.3).</td></tr>
+<tr><td>Rytm</td><td>Pełny przegląd raz w roku przed budżetem (AutoParts: wrzesień), krótki punkt o energii co kwartał na zebraniu Zarządu. Norma mówi tylko „w zaplanowanych odstępach”.</td></tr>
+<tr><td>Wyzwalacze poza rytmem</td><td>Duża niezgodność, zmiana zakresu systemu, zmiana właściciela albo strategii, nieosiągnięcie celu w terminie, znacząca zmiana kwestii zewnętrznych (w AutoParts: nowa umowa na energię od 2027 r.).</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>4.1 i 4.2 Kontekst i strony zainteresowane</td><td><b>Wejście.</b> Sprawa b) to wprost zmiany kwestii zewnętrznych i wewnętrznych — a te żyją w rejestrach z 4.1 i 4.2. Nowa umowa na energię od 2027 r. jest zmianą kwestii zewnętrznej, nie tematem przeglądu wymyślonym na spotkaniu.</td></tr>
+<tr><td>5.2 Polityka energetyczna</td><td><b>Dwukierunkowo.</b> Polityka jest wymaganą sprawą wejściową <b>i</b> wymaganym obszarem decyzji. „Bez zmian” z uzasadnieniem jest tu pełnoprawnym wynikiem.</td></tr>
+<tr><td>6.1 Ryzyka i szanse</td><td><b>Wejście.</b> Sprawa b) obejmuje ryzyka i szanse związane ze zmianami kontekstu — w przykładzie obniżenie ryzyka R5 po przeszkoleniu techników.</td></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Dwukierunkowo, najmocniej.</b> Status planów działań jest sprawą wejściową; cele, zadania i plany są obszarem decyzji — wraz z obowiązkiem rozstrzygnięcia, co robić, <b>gdy cel nie jest osiągany</b>. Decyzja o modernizacji za 380 000 zł jest odpowiedzią wprost na to, że cel Z1.1 nie jest osiągalny bez inwestycji.</td></tr>
+<tr><td>6.4 i 6.5 EnPI i EnB</td><td><b>Dwukierunkowo.</b> Wskaźniki i ich poprawa to sprawa wejściowa; EnPI i EnB to obszar decyzji. Rewizja linii bazowej jest decyzją kierownictwa, nie czynnością techniczną — a brak przesłanek z 6.5 jest jej uzasadnieniem.</td></tr>
+<tr><td>7.1 Zasoby i 7.2 Kompetencje</td><td><b>Wyjście.</b> Przydział zasobów oraz kompetencje, świadomość i komunikacja to dwa z siedmiu obszarów decyzji. Luka z matrycy kompetencji kończy się tu decyzją o warsztacie, a nie wnioskiem w notatce.</td></tr>
+<tr><td>9.1.1, 9.1.2 i 9.2</td><td><b>Wejście, wymagane.</b> Wyniki monitorowania, oceny zgodności i audytów są trzema z czterech źródeł sprawy c). Rekomendacje z części E raportu monitorowania i uwagi z części B raportu audytu trafiają tu wprost — i właśnie dlatego te trzy strony zapisują swoje wyniki do wspólnego magazynu.</td></tr>
+<tr><td>10.1 Niezgodności</td><td><b>Wejście i wyjście.</b> Trendy w niezgodnościach i działaniach korygujących to sprawa wejściowa; decyzja o nadzorze nad serwisem jest odpowiedzią na niezgodność z audytu i na ponownie otwartą kartę NK-2026-01.</td></tr>
+<tr><td>10.2 Ciągłe doskonalenie</td><td><b>Wyjście.</b> Przegląd jest miejscem, w którym ciągłe doskonalenie przestaje być hasłem i staje się listą decyzji z właścicielami i terminami.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Automatyczne zasilenie danych wejściowych</b></td><td>Najważniejsza zmiana i największa oszczędność czasu w całej platformie. Wszystkie sześć spraw części A istnieje już w innych punktach: status decyzji (poprzedni przegląd), zmiany kontekstu (4.1, 4.2, 6.1), funkcjonowanie systemu (9.1.1, 9.1.2, 9.2, 10.1), możliwości doskonalenia (6.3, 7.2, 8.2), polityka (5.2), wynik energetyczny (6.2, 6.4, 6.5, 9.1.1). Platforma powinna <b>wygenerować podsumowania automatycznie</b>, a Energy Manager dopisywać wyłącznie rekomendacje. Dziś przepisuje wszystko ręcznie — i stąd bierze się przegląd „na danych z ostatniej chwili”.</td></tr>
+<tr><td><b>Status decyzji jako tabela</b></td><td>Decyzje mają właścicieli i terminy, ale platforma nie wie, czy zostały wykonane. Potrzebna tabela <code>status_decyzji</code> ze sprawdzeniami w czasie — wtedy pozycja a) następnego przeglądu <b>wypełnia się sama</b>, a kwartalny punkt o energii na zebraniu Zarządu ma gotową agendę. To również dziewiąte wystąpienie potrzeby generycznego mechanizmu terminów z przypomnieniem (6.5, 7.2, 7.4, 7.5, 8.2, 8.3, 9.1.1, 9.1.2, 9.3) — tutaj z najwyższą stawką, bo właścicielem decyzji jest zwykle członek kierownictwa.</td></tr>
+<tr><td>Decyzja jako zadanie z powiązaniem zwrotnym</td><td>Decyzja „modernizacja wchodzi do budżetu 2027” powinna wskazywać <b>pozycję planu działań z 6.2</b>, a decyzja o warsztacie — <b>pozycję planu szkoleń z 7.2</b>. Wtedy usunięcie inwestycji z budżetu zapali się w protokole przeglądu, a nie zostanie zauważone rok później.</td></tr>
+<tr><td>Rola kierownictwa w platformie</td><td>Dziś decyzje może wpisać ta sama osoba, która przygotowała dane. Przy wdrożeniu część B i C powinny wymagać <b>zatwierdzenia rolą kierowniczą</b> — z zapisem, kto i kiedy zatwierdził. To jedyny techniczny sposób, by protokół przeglądu zarządzania nie powstawał w całości poza kierownictwem.</td></tr>
+<tr><td>Przegląd wspólny z innym systemem</td><td>AutoParts prowadzi przegląd razem z ISO 14001. Platforma zakłada przegląd tylko energetyczny. Warto przewidzieć pole na <b>odesłanie do protokołu wspólnego</b> i oznaczenie, które pozycje zostały rozważone w części wspólnej — inaczej firmy z dwoma systemami będą prowadzić dwa protokoły tego samego spotkania.</td></tr>
+<tr><td>Termin budżetu jako dana organizacji</td><td>Dziś wpisywany przy przeglądzie. Powinien być <b>w ustawieniach audytu</b>, razem z rokiem obrotowym — wtedy platforma podpowie termin przeglądu, zamiast oceniać go po fakcie.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 9.3 wraz z protokołem przeglądu AutoParts z 29.09.2026.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;WEJSCIA_DEF&quot;: [
+  {
+   &quot;kod&quot;: &quot;status&quot;,
+   &quot;litera&quot;: &quot;a&quot;,
+   &quot;nazwa&quot;: &quot;Status działań z poprzednich przeglądów&quot;,
+   &quot;ph&quot;: &quot;np. Pierwszy przegląd systemu. Decyzje Zarządu z 03.2026 — polityka energetyczna, budżet 300 tys. zł, certyfikacja do XII 2026 — realizowane zgodnie z harmonogramem.&quot;,
+   &quot;phR&quot;: &quot;np. Przyjąć zasadę, że następny przegląd zaczyna się od tabeli statusu decyzji z dzisiejszego.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zmiany&quot;,
+   &quot;litera&quot;: &quot;b&quot;,
+   &quot;nazwa&quot;: &quot;Zmiany kwestii zewnętrznych i wewnętrznych oraz związanych z nimi ryzyk i szans&quot;,
+   &quot;pomoc&quot;: &quot;Pierwsze z czterech pytań kierownictwa: co się zmieniło wokół nas i w nas.&quot;,
+   &quot;ph&quot;: &quot;np. Cena stała energii elektrycznej do 31.12.2026, od 2027 nowa umowa — każde 100 zł/MWh to około 850 tys. zł rocznie. Projekt nowelizacji UC77 nieuchwalony (stan na 29.09.2026). Ryzyko R5 — wiedza o nastawach tylko u serwisu — obniżone, technicy przeszkoleni.&quot;,
+   &quot;phR&quot;: &quot;np. Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację przed negocjacjami.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;funkcjonowanie&quot;,
+   &quot;litera&quot;: &quot;c&quot;,
+   &quot;nazwa&quot;: &quot;Funkcjonowanie systemu — trendy: niezgodności i działania korygujące, wyniki monitorowania i pomiarów, wyniki audytów, wyniki oceny zgodności&quot;,
+   &quot;pomoc&quot;: &quot;Trzecie pytanie kierownictwa: czy system działa. Cztery źródła w jednej pozycji — i wszystkie cztery norma wymienia osobno.&quot;,
+   &quot;ph&quot;: &quot;np. Niezgodności: 06.2026 nastawa po serwisie (działanie wdrożone, skuteczność niepotwierdzona — audyt A-01/2026); 09.2026 raport dla banku (działanie w toku). Audyt 15–17.09: 1 niezgodność (protokół serwisu bez nastaw), 2 możliwości doskonalenia. Monitorowanie: O-1 0,97 (I półrocze), 0,965 (VIII). Ocena zgodności: 7 wymagań ocenianych, 1 niezgodne; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Trendy — pierwszy rok, za mało danych.&quot;,
+   &quot;phR&quot;: &quot;np. Przyjąć działanie dla raportu bankowego; wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;doskonalenie&quot;,
+   &quot;litera&quot;: &quot;d&quot;,
+   &quot;nazwa&quot;: &quot;Możliwości ciągłego doskonalenia, w tym kompetencji&quot;,
+   &quot;pomoc&quot;: &quot;Czwarte pytanie: gdzie możemy być lepsi — wyniku, systemu, a także kompetencji ludzi.&quot;,
+   &quot;ph&quot;: &quot;np. Odzysk ciepła ze sprężarek — do rozważenia po ocenie pracy po modernizacji. LED w halach (zadanie Z2.1, 2027). Zakupy — luka w porównywaniu kosztu zakupu i energii (matryca III-28, ustalenie D-2 z audytu).&quot;,
+   &quot;phR&quot;: &quot;np. Warsztat dla działu zakupów w 11.2026; odzysk ciepła wrócić do planu po roku danych z nowego sterownika.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;polityka&quot;,
+   &quot;litera&quot;: &quot;e&quot;,
+   &quot;nazwa&quot;: &quot;Polityka energetyczna&quot;,
+   &quot;ph&quot;: &quot;np. Polityka z 03.2026 zgodna z kierunkiem firmy — wymaganie klienta i strategia 2026–2028.&quot;,
+   &quot;phR&quot;: &quot;np. Rekomendacja: bez zmian.&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;wynik&quot;,
+   &quot;litera&quot;: &quot;&quot;,
+   &quot;nazwa&quot;: &quot;Wynik energetyczny: stopień osiągnięcia celów i zadań, EnPI i ich poprawa, status planów działań&quot;,
+   &quot;pomoc&quot;: &quot;Drugie pytanie kierownictwa: jak idzie wynik energetyczny. Norma wymienia tę pozycję osobno od danych a–e.&quot;,
+   &quot;ph&quot;: &quot;np. O-1 0,965 wobec EnB 1,000 (cel ≤ 0,95 za rok 2027). S-1 0,119 za okres VII–18.IX wobec EnB 0,125 — cel 0,110, brakuje 0,009; samo ciśnienie więcej nie da. S-2 6 Nm³/min (cel pośredni osiągnięty, cel końcowy 4). Plan C1: pozycje 1–3 wykonane, pozycja 4 zatwierdzona, pozycja 5 planowana.&quot;,
+   &quot;phR&quot;: &quot;np. Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie 2027 — cel Z1.1 nie jest osiągalny bez inwestycji. Diagnostyki wycieków nie rozszerzać.&quot;
+  }
+ ],
+ &quot;OBSZARY_DEF&quot;: [
+  {
+   &quot;kod&quot;: &quot;poprawa&quot;,
+   &quot;nazwa&quot;: &quot;Możliwości poprawy wyniku energetycznego&quot;,
+   &quot;ph&quot;: &quot;np. Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.&quot;,
+   &quot;phU&quot;: &quot;np. Cel Z1.1 nie jest osiągalny bez inwestycji — samo ciśnienie więcej nie da&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;polityka&quot;,
+   &quot;nazwa&quot;: &quot;Polityka energetyczna&quot;,
+   &quot;ph&quot;: &quot;np. Bez zmian&quot;,
+   &quot;phU&quot;: &quot;np. Zgodna z kierunkiem firmy i wymaganiami klienta&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;enpi&quot;,
+   &quot;nazwa&quot;: &quot;EnPI lub EnB&quot;,
+   &quot;ph&quot;: &quot;np. Bez zmian; K-1 — analiza przyczyn przed sezonem grzewczym&quot;,
+   &quot;phU&quot;: &quot;np. Brak przesłanek do rewizji (6.5); K-1 = 1,01&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;cele&quot;,
+   &quot;nazwa&quot;: &quot;Cele, zadania, plany działań — i działania, gdy nie są osiągane&quot;,
+   &quot;pomoc&quot;: &quot;Obszar szerszy niż jeden wiersz: norma mówi o celach, zadaniach, planach działań &lt;b&gt;lub innych elementach systemu&lt;/b&gt;. Decyzje w pozostałych sprawach zapiszcie poniżej, w części „decyzje w innych sprawach”.&quot;,
+   &quot;ph&quot;: &quot;np. Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać&quot;,
+   &quot;phU&quot;: &quot;np. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;integracja&quot;,
+   &quot;nazwa&quot;: &quot;Integracja z procesami biznesowymi&quot;,
+   &quot;ph&quot;: &quot;np. Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy&quot;,
+   &quot;phU&quot;: &quot;np. Uwagi do koncepcji modernizacji zgłoszone za późno — trzy tygodnie decyzji i miesiąc przetargu&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;zasoby&quot;,
+   &quot;nazwa&quot;: &quot;Przydział zasobów&quot;,
+   &quot;ph&quot;: &quot;np. Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.&quot;,
+   &quot;phU&quot;: &quot;np. Obciążenie z punktu 7.1 mieści się w marginesie; inwestycja wymaga osobnej pozycji budżetowej&quot;
+  },
+  {
+   &quot;kod&quot;: &quot;kompetencje&quot;,
+   &quot;nazwa&quot;: &quot;Kompetencje, świadomość, komunikacja&quot;,
+   &quot;ph&quot;: &quot;np. Warsztat dla działu zakupów: porównanie kosztu zakupu i energii&quot;,
+   &quot;phU&quot;: &quot;np. Luka w matrycy III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026&quot;
+  }
+ ],
+ &quot;LISTA_93&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Najwyższe kierownictwo przegląda system w zaplanowanych odstępach.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;kierownictwo&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Rozważono wszystkie wymagane dane wejściowe (a–e i wynik energetyczny).&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wejscia&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Wyniki obejmują decyzje dotyczące doskonalenia i zmian w systemie (wszystkie obszary wyjść).&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wyjscia&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano zapis wyników przeglądu.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapis&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Decyzje mają właścicieli i terminy; status sprawdzany na następnym przeglądzie.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;wlasciciele&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;WEJSCIA&quot;: [
+   {
+    &quot;kod&quot;: &quot;status&quot;,
+    &quot;podsumowanie&quot;: &quot;Pierwszy przegląd systemu zarządzania energią. Decyzje Zarządu z marca 2026 r. — przyjęcie polityki energetycznej, budżet wdrożenia 300 tys. zł, certyfikacja do grudnia 2026 r. — realizowane zgodnie z harmonogramem.&quot;,
+    &quot;rekomendacja&quot;: &quot;Przyjąć zasadę, że każdy następny przegląd zaczyna się od tabeli statusu decyzji z poprzedniego. Status decyzji z dzisiejszego przeglądu na zebraniu Zarządu w IV kwartale 2026 r.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;zmiany&quot;,
+    &quot;podsumowanie&quot;: &quot;Cena stała energii elektrycznej obowiązuje do 31.12.2026; od 2027 r. nowa umowa — każde 100 zł/MWh różnicy to około 850 tys. zł rocznie przy obecnym zużyciu. Projekt nowelizacji ustawy o efektywności energetycznej (UC77) pozostaje nieuchwalony — stan na 29.09.2026. Ryzyko R5 z rejestru (wiedza o nastawach sprężarkowni tylko u serwisu) obniżone — technicy utrzymania ruchu przeszkoleni.&quot;,
+    &quot;rekomendacja&quot;: &quot;Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację — profil poboru, struktura cen, dane pomiarowe — przed negocjacjami. Śledzenie nowelizacji co kwartał.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;funkcjonowanie&quot;,
+    &quot;podsumowanie&quot;: &quot;Niezgodności: czerwiec 2026 — nastawa ciśnienia po przeglądzie serwisowym (działanie wdrożone, skuteczność niepotwierdzona — wykazał to audyt A-01/2026); wrzesień 2026 — raport dla banku po terminie (działanie w toku). Audyt wewnętrzny 15–17.09.2026: jedna niezgodność (protokół serwisu bez nastaw przed i po), dwie możliwości doskonalenia, jedno potwierdzenie zgodności. Monitorowanie: O-1 0,97 w I półroczu, 0,965 w sierpniu; poprawa także w P-1 i S-1. Ocena zgodności (09.2026): siedem wymagań ocenianych, jedno niezgodne, jedno z dowodem do uzupełnienia datami (zawiadomienie URE). Trendy — pierwszy rok systemu, za mało danych na wnioski o kierunku.&quot;,
+    &quot;rekomendacja&quot;: &quot;Przyjąć działanie dla raportu bankowego (termin w kalendarzu kontrolingu). Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii. Skuteczność działania z czerwca zweryfikować w audycie sprężarkowni po uruchomieniu modernizacji.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;doskonalenie&quot;,
+    &quot;podsumowanie&quot;: &quot;Odzysk ciepła ze sprężarek — rozważony w analizie projektu, przesunięty poza inwestycję; projekt zostawia miejsce i przyłącza. Wymiana opraw na LED w halach H1 i H2 (zadanie Z2.1, 2027). Kompetencje: luka w dziale zakupów w porównywaniu kosztu zakupu i energii — matryca III-28, potwierdzona ustaleniem D-2 z audytu.&quot;,
+    &quot;rekomendacja&quot;: &quot;Warsztat dla działu zakupów w listopadzie 2026 r. Odzysk ciepła wrócić do planu działań po roku danych z nowego sterownika — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;polityka&quot;,
+    &quot;podsumowanie&quot;: &quot;Polityka energetyczna przyjęta w marcu 2026 r. pozostaje zgodna z kierunkiem firmy: wymaganiem głównego klienta (certyfikat od 2027 r.) i strategią kosztową 2026–2028.&quot;,
+    &quot;rekomendacja&quot;: &quot;Bez zmian. Przy odnowieniu umowy z drugim klientem sprawdzić, czy oczekiwanie dotyczące śladu węglowego nie wymaga rozszerzenia zakresu zobowiązań.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;wynik&quot;,
+    &quot;podsumowanie&quot;: &quot;O-1 0,965 wobec EnB 1,000 — cel ≤ 0,95 za rok 2027. S-1 0,119 za okres VII–18.IX wobec EnB 0,125; cel 0,110, brakuje 0,009 — czyli więcej, niż już osiągnięto. S-2 6 Nm³/min — cel pośredni osiągnięty, cel końcowy 4 Nm³/min do 06.2027. Plan działań C1: pozycje 1–3 wykonane, pozycja 4 (sterownik i napęd) zatwierdzona, pozycja 5 (weryfikacja Z1.1 i Z1.2) planowana. K-1 o 1% powyżej EnB w I półroczu.&quot;,
+    &quot;rekomendacja&quot;: &quot;Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie na 2027 r. — cel Z1.1 nie jest osiągalny bez inwestycji, samo ciśnienie więcej nie da. Diagnostyki wycieków nie rozszerzać: kwartalny przegląd szczelności działa, przepływ w postoju spadł z 9 do 6 Nm³/min. K-1 — analiza przyczyn przed rozpoczęciem sezonu grzewczego.&quot;
+   }
+  ],
+  &quot;DECYZJE&quot;: [
+   {
+    &quot;kod&quot;: &quot;poprawa&quot;,
+    &quot;decyzja&quot;: &quot;Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Cel Z1.1 (0,110 kWh/Nm³) nie jest osiągalny bez inwestycji — do celu brakuje więcej, niż osiągnięto obniżeniem ciśnienia i usunięciem nieszczelności.&quot;,
+    &quot;kto&quot;: &quot;Energy Manager, kierownik utrzymania ruchu&quot;,
+    &quot;termin&quot;: &quot;Projekt budżetu, 10.2026&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;polityka&quot;,
+    &quot;decyzja&quot;: &quot;Bez zmian&quot;,
+    &quot;uzasadnienie&quot;: &quot;Polityka zgodna z kierunkiem firmy i wymaganiami głównego klienta; brak zmian w zakresie systemu i w kwestiach zewnętrznych, które wymagałyby jej korekty.&quot;,
+    &quot;kto&quot;: &quot;&quot;,
+    &quot;termin&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;enpi&quot;,
+    &quot;decyzja&quot;: &quot;Bez zmian w EnPI i liniach bazowych. K-1 — analiza przyczyn przed sezonem grzewczym.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Brak przesłanek rewizji z punktu 6.5: nie zmieniły się metody liczenia, czynniki statyczne ani zakres. K-1 = 1,01 w I półroczu — to pytanie o przyczynę, nie o linię bazową.&quot;,
+    &quot;kto&quot;: &quot;Kierownik utrzymania ruchu&quot;,
+    &quot;termin&quot;: &quot;Przed rozpoczęciem sezonu (plan: 10.2026); wynik na zebraniu Zarządu w IV kw.&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;cele&quot;,
+    &quot;decyzja&quot;: &quot;Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Kwartalny przegląd szczelności działa — przepływ w postoju spadł z 9 do 6 Nm³/min. Rozszerzanie diagnostyki nie przyniesie proporcjonalnego efektu, a cel końcowy 4 Nm³/min jest osiągalny w obecnym rytmie.&quot;,
+    &quot;kto&quot;: &quot;&quot;,
+    &quot;termin&quot;: &quot;&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;integracja&quot;,
+    &quot;decyzja&quot;: &quot;Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Uwagi do koncepcji modernizacji sprężarkowni zgłoszono dzień przed zatwierdzeniem — kosztowało to trzy tygodnie decyzji i miesiąc przetargu. Tę samą rozmowę można było odbyć na etapie założeń, w godzinę.&quot;,
+    &quot;kto&quot;: &quot;Dyrektor Zakładu&quot;,
+    &quot;termin&quot;: &quot;12.2026&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;zasoby&quot;,
+    &quot;decyzja&quot;: &quot;Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Obciążenie osób z punktu 7.1 mieści się w zadeklarowanym czasie; inwestycja wymaga osobnej pozycji budżetowej, nie dodatkowych etatów.&quot;,
+    &quot;kto&quot;: &quot;Dyrektor Zakładu, kontroler finansowy&quot;,
+    &quot;termin&quot;: &quot;Projekt budżetu, 10.2026&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;kompetencje&quot;,
+    &quot;decyzja&quot;: &quot;Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Luka w matrycy kompetencji III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026 — porównanie przy zakupie sterownika wykonał Energy Manager, nie dział zakupów.&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;termin&quot;: &quot;11.2026&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;inne_serwis&quot;,
+    &quot;wlasna&quot;: true,
+    &quot;nazwa&quot;: &quot;Nadzór nad serwisem&quot;,
+    &quot;decyzja&quot;: &quot;Sprawdzanie protokołu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii; aktualizacja procedury P-EnMS-06.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Niezgodność z audytu A-01/2026 — wymaganie wprowadzone po zdarzeniu z czerwca działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma). Karta NK-2026-01 otwarta ponownie 18.09.2026.&quot;,
+    &quot;kto&quot;: &quot;Kierownik utrzymania ruchu&quot;,
+    &quot;termin&quot;: &quot;Wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;inne_zgodnosc&quot;,
+    &quot;wlasna&quot;: true,
+    &quot;nazwa&quot;: &quot;Ocena zgodności — raport dla banku&quot;,
+    &quot;decyzja&quot;: &quot;Działanie korygujące przyjęte: termin 30 czerwca wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem od Energy Managera 14 dni wcześniej.&quot;,
+    &quot;uzasadnienie&quot;: &quot;Przyczyna niezgodności: termin umowny nie był w kalendarzu żadnej osoby — rejestr wskazywał wymaganie i właściciela, nie datę.&quot;,
+    &quot;kto&quot;: &quot;Kontroler finansowy&quot;,
+    &quot;termin&quot;: &quot;10.2026&quot;
+   }
+  ],
+  &quot;OCENA_C&quot;: {
+   &quot;przydatnosc&quot;: &quot;System jest przydatny i adekwatny do skali zakładu; skuteczny — poprawa wykazana w O-1, P-1 i S-1 w porównywalnych warunkach, znaczące odchylenia zbadane, ustalenia z audytu i oceny zgodności wdrażane. Słabym miejscem jest nadzór nad wykonawcami: wymaganie wprowadzone po czerwcowym zdarzeniu okazało się wdrożone połowicznie.&quot;,
+   &quot;kierunek&quot;: &quot;System zgodny z kierunkiem strategicznym organizacji — certyfikat ISO 50001 jest warunkiem kontraktu z głównym klientem (45% przychodów), a obniżenie kosztów energii elementem strategii kosztowej 2026–2028.&quot;
+  },
+  &quot;META&quot;: {
+   &quot;data&quot;: &quot;2026-09-29&quot;,
+   &quot;forma&quot;: &quot;Przegląd wspólny z ISO 14001 — część energetyczna 2 godziny. Dodatkowo krótki punkt o energii co kwartał na zebraniu Zarządu.&quot;,
+   &quot;uczestnicy&quot;: &quot;Piotr Nowak — Dyrektor Zakładu, członek Zarządu (przewodniczy, w imieniu Zarządu); Jan Kowalski — Energy Manager; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy; specjalistka ds. środowiska&quot;,
+   &quot;najwyzszeKier&quot;: &quot;tak&quot;,
+   &quot;przygotowal&quot;: &quot;Jan Kowalski — Energy Manager: raport z monitorowania i oceny (III-42), raport z audytu A-01/2026, rejestry III-04 i III-16&quot;,
+   &quot;terminBudzetu&quot;: &quot;2026-10-31&quot;,
+   &quot;statusDecyzji&quot;: &quot;Status decyzji sprawdzany na zebraniu Zarządu w IV kwartale 2026 r. oraz jako pierwsza pozycja danych wejściowych następnego przeglądu.&quot;,
+   &quot;nastepnyPrzeglad&quot;: &quot;Pełny przegląd: wrzesień 2027 r. Punkt o energii na każdym kwartalnym zebraniu Zarządu.&quot;,
+   &quot;pierwszy&quot;: &quot;tak&quot;,
+   &quot;podpis&quot;: &quot;Piotr Nowak — Dyrektor Zakładu, członek Zarządu&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var WEJSCIA_DEF = [{"kod": "status", "litera": "a", "nazwa": "Status działań z poprzednich przeglądów", "ph": "np. Pierwszy przegląd systemu. Decyzje Zarządu z 03.2026 — polityka energetyczna, budżet 300 tys. zł, certyfikacja do XII 2026 — realizowane zgodnie z harmonogramem.", "phR": "np. Przyjąć zasadę, że następny przegląd zaczyna się od tabeli statusu decyzji z dzisiejszego."}, {"kod": "zmiany", "litera": "b", "nazwa": "Zmiany kwestii zewnętrznych i wewnętrznych oraz związanych z nimi ryzyk i szans", "pomoc": "Pierwsze z czterech pytań kierownictwa: co się zmieniło wokół nas i w nas.", "ph": "np. Cena stała energii elektrycznej do 31.12.2026, od 2027 nowa umowa — każde 100 zł/MWh to około 850 tys. zł rocznie. Projekt nowelizacji UC77 nieuchwalony (stan na 29.09.2026). Ryzyko R5 — wiedza o nastawach tylko u serwisu — obniżone, technicy przeszkoleni.", "phR": "np. Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację przed negocjacjami."}, {"kod": "funkcjonowanie", "litera": "c", "nazwa": "Funkcjonowanie systemu — trendy: niezgodności i działania korygujące, wyniki monitorowania i pomiarów, wyniki audytów, wyniki oceny zgodności", "pomoc": "Trzecie pytanie kierownictwa: czy system działa. Cztery źródła w jednej pozycji — i wszystkie cztery norma wymienia osobno.", "ph": "np. Niezgodności: 06.2026 nastawa po serwisie (działanie wdrożone, skuteczność niepotwierdzona — audyt A-01/2026); 09.2026 raport dla banku (działanie w toku). Audyt 15–17.09: 1 niezgodność (protokół serwisu bez nastaw), 2 możliwości doskonalenia. Monitorowanie: O-1 0,97 (I półrocze), 0,965 (VIII). Ocena zgodności: 7 wymagań ocenianych, 1 niezgodne; termin zawiadomienia URE wymaga uzupełnienia dowodu datami. Trendy — pierwszy rok, za mało danych.", "phR": "np. Przyjąć działanie dla raportu bankowego; wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi."}, {"kod": "doskonalenie", "litera": "d", "nazwa": "Możliwości ciągłego doskonalenia, w tym kompetencji", "pomoc": "Czwarte pytanie: gdzie możemy być lepsi — wyniku, systemu, a także kompetencji ludzi.", "ph": "np. Odzysk ciepła ze sprężarek — do rozważenia po ocenie pracy po modernizacji. LED w halach (zadanie Z2.1, 2027). Zakupy — luka w porównywaniu kosztu zakupu i energii (matryca III-28, ustalenie D-2 z audytu).", "phR": "np. Warsztat dla działu zakupów w 11.2026; odzysk ciepła wrócić do planu po roku danych z nowego sterownika."}, {"kod": "polityka", "litera": "e", "nazwa": "Polityka energetyczna", "ph": "np. Polityka z 03.2026 zgodna z kierunkiem firmy — wymaganie klienta i strategia 2026–2028.", "phR": "np. Rekomendacja: bez zmian."}, {"kod": "wynik", "litera": "", "nazwa": "Wynik energetyczny: stopień osiągnięcia celów i zadań, EnPI i ich poprawa, status planów działań", "pomoc": "Drugie pytanie kierownictwa: jak idzie wynik energetyczny. Norma wymienia tę pozycję osobno od danych a–e.", "ph": "np. O-1 0,965 wobec EnB 1,000 (cel ≤ 0,95 za rok 2027). S-1 0,119 za okres VII–18.IX wobec EnB 0,125 — cel 0,110, brakuje 0,009; samo ciśnienie więcej nie da. S-2 6 Nm³/min (cel pośredni osiągnięty, cel końcowy 4). Plan C1: pozycje 1–3 wykonane, pozycja 4 zatwierdzona, pozycja 5 planowana.", "phR": "np. Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie 2027 — cel Z1.1 nie jest osiągalny bez inwestycji. Diagnostyki wycieków nie rozszerzać."}];
+var OBSZARY_DEF = [{"kod": "poprawa", "nazwa": "Możliwości poprawy wyniku energetycznego", "ph": "np. Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.", "phU": "np. Cel Z1.1 nie jest osiągalny bez inwestycji — samo ciśnienie więcej nie da"}, {"kod": "polityka", "nazwa": "Polityka energetyczna", "ph": "np. Bez zmian", "phU": "np. Zgodna z kierunkiem firmy i wymaganiami klienta"}, {"kod": "enpi", "nazwa": "EnPI lub EnB", "ph": "np. Bez zmian; K-1 — analiza przyczyn przed sezonem grzewczym", "phU": "np. Brak przesłanek do rewizji (6.5); K-1 = 1,01"}, {"kod": "cele", "nazwa": "Cele, zadania, plany działań — i działania, gdy nie są osiągane", "pomoc": "Obszar szerszy niż jeden wiersz: norma mówi o celach, zadaniach, planach działań <b>lub innych elementach systemu</b>. Decyzje w pozostałych sprawach zapiszcie poniżej, w części „decyzje w innych sprawach”.", "ph": "np. Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać", "phU": "np. Kwartalny przegląd szczelności działa — przepływ spadł z 9 do 6 Nm³/min"}, {"kod": "integracja", "nazwa": "Integracja z procesami biznesowymi", "ph": "np. Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy", "phU": "np. Uwagi do koncepcji modernizacji zgłoszone za późno — trzy tygodnie decyzji i miesiąc przetargu"}, {"kod": "zasoby", "nazwa": "Przydział zasobów", "ph": "np. Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.", "phU": "np. Obciążenie z punktu 7.1 mieści się w marginesie; inwestycja wymaga osobnej pozycji budżetowej"}, {"kod": "kompetencje", "nazwa": "Kompetencje, świadomość, komunikacja", "ph": "np. Warsztat dla działu zakupów: porównanie kosztu zakupu i energii", "phU": "np. Luka w matrycy III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026"}];
+var LISTA_93 = [{"tekst": "Najwyższe kierownictwo przegląda system w zaplanowanych odstępach.", "podstawa": "N", "auto": "kierownictwo"}, {"tekst": "Rozważono wszystkie wymagane dane wejściowe (a–e i wynik energetyczny).", "podstawa": "N", "auto": "wejscia"}, {"tekst": "Wyniki obejmują decyzje dotyczące doskonalenia i zmian w systemie (wszystkie obszary wyjść).", "podstawa": "N", "auto": "wyjscia"}, {"tekst": "Zachowano zapis wyników przeglądu.", "podstawa": "N", "auto": "zapis"}, {"tekst": "Decyzje mają właścicieli i terminy; status sprawdzany na następnym przeglądzie.", "podstawa": "M", "auto": "wlasciciele"}];
+var PRZYKLAD = {"WEJSCIA": [{"kod": "status", "podsumowanie": "Pierwszy przegląd systemu zarządzania energią. Decyzje Zarządu z marca 2026 r. — przyjęcie polityki energetycznej, budżet wdrożenia 300 tys. zł, certyfikacja do grudnia 2026 r. — realizowane zgodnie z harmonogramem.", "rekomendacja": "Przyjąć zasadę, że każdy następny przegląd zaczyna się od tabeli statusu decyzji z poprzedniego. Status decyzji z dzisiejszego przeglądu na zebraniu Zarządu w IV kwartale 2026 r."}, {"kod": "zmiany", "podsumowanie": "Cena stała energii elektrycznej obowiązuje do 31.12.2026; od 2027 r. nowa umowa — każde 100 zł/MWh różnicy to około 850 tys. zł rocznie przy obecnym zużyciu. Projekt nowelizacji ustawy o efektywności energetycznej (UC77) pozostaje nieuchwalony — stan na 29.09.2026. Ryzyko R5 z rejestru (wiedza o nastawach sprężarkowni tylko u serwisu) obniżone — technicy utrzymania ruchu przeszkoleni.", "rekomendacja": "Potraktować nową umowę na energię jako zakup o znaczącym wpływie (8.3) i przygotować specyfikację — profil poboru, struktura cen, dane pomiarowe — przed negocjacjami. Śledzenie nowelizacji co kwartał."}, {"kod": "funkcjonowanie", "podsumowanie": "Niezgodności: czerwiec 2026 — nastawa ciśnienia po przeglądzie serwisowym (działanie wdrożone, skuteczność niepotwierdzona — wykazał to audyt A-01/2026); wrzesień 2026 — raport dla banku po terminie (działanie w toku). Audyt wewnętrzny 15–17.09.2026: jedna niezgodność (protokół serwisu bez nastaw przed i po), dwie możliwości doskonalenia, jedno potwierdzenie zgodności. Monitorowanie: O-1 0,97 w I półroczu, 0,965 w sierpniu; poprawa także w P-1 i S-1. Ocena zgodności (09.2026): siedem wymagań ocenianych, jedno niezgodne, jedno z dowodem do uzupełnienia datami (zawiadomienie URE). Trendy — pierwszy rok systemu, za mało danych na wnioski o kierunku.", "rekomendacja": "Przyjąć działanie dla raportu bankowego (termin w kalendarzu kontrolingu). Wprowadzić sprawdzanie protokołu serwisu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii. Skuteczność działania z czerwca zweryfikować w audycie sprężarkowni po uruchomieniu modernizacji."}, {"kod": "doskonalenie", "podsumowanie": "Odzysk ciepła ze sprężarek — rozważony w analizie projektu, przesunięty poza inwestycję; projekt zostawia miejsce i przyłącza. Wymiana opraw na LED w halach H1 i H2 (zadanie Z2.1, 2027). Kompetencje: luka w dziale zakupów w porównywaniu kosztu zakupu i energii — matryca III-28, potwierdzona ustaleniem D-2 z audytu.", "rekomendacja": "Warsztat dla działu zakupów w listopadzie 2026 r. Odzysk ciepła wrócić do planu działań po roku danych z nowego sterownika — przy zmienionym profilu obciążenia ilość ciepła odpadowego będzie inna."}, {"kod": "polityka", "podsumowanie": "Polityka energetyczna przyjęta w marcu 2026 r. pozostaje zgodna z kierunkiem firmy: wymaganiem głównego klienta (certyfikat od 2027 r.) i strategią kosztową 2026–2028.", "rekomendacja": "Bez zmian. Przy odnowieniu umowy z drugim klientem sprawdzić, czy oczekiwanie dotyczące śladu węglowego nie wymaga rozszerzenia zakresu zobowiązań."}, {"kod": "wynik", "podsumowanie": "O-1 0,965 wobec EnB 1,000 — cel ≤ 0,95 za rok 2027. S-1 0,119 za okres VII–18.IX wobec EnB 0,125; cel 0,110, brakuje 0,009 — czyli więcej, niż już osiągnięto. S-2 6 Nm³/min — cel pośredni osiągnięty, cel końcowy 4 Nm³/min do 06.2027. Plan działań C1: pozycje 1–3 wykonane, pozycja 4 (sterownik i napęd) zatwierdzona, pozycja 5 (weryfikacja Z1.1 i Z1.2) planowana. K-1 o 1% powyżej EnB w I półroczu.", "rekomendacja": "Utrzymać modernizację sprężarkowni za 380 000 zł w budżecie na 2027 r. — cel Z1.1 nie jest osiągalny bez inwestycji, samo ciśnienie więcej nie da. Diagnostyki wycieków nie rozszerzać: kwartalny przegląd szczelności działa, przepływ w postoju spadł z 9 do 6 Nm³/min. K-1 — analiza przyczyn przed rozpoczęciem sezonu grzewczego."}], "DECYZJE": [{"kod": "poprawa", "decyzja": "Modernizacja sprężarkowni za 380 000 zł wchodzi do budżetu na 2027 r.", "uzasadnienie": "Cel Z1.1 (0,110 kWh/Nm³) nie jest osiągalny bez inwestycji — do celu brakuje więcej, niż osiągnięto obniżeniem ciśnienia i usunięciem nieszczelności.", "kto": "Energy Manager, kierownik utrzymania ruchu", "termin": "Projekt budżetu, 10.2026"}, {"kod": "polityka", "decyzja": "Bez zmian", "uzasadnienie": "Polityka zgodna z kierunkiem firmy i wymaganiami głównego klienta; brak zmian w zakresie systemu i w kwestiach zewnętrznych, które wymagałyby jej korekty.", "kto": "", "termin": ""}, {"kod": "enpi", "decyzja": "Bez zmian w EnPI i liniach bazowych. K-1 — analiza przyczyn przed sezonem grzewczym.", "uzasadnienie": "Brak przesłanek rewizji z punktu 6.5: nie zmieniły się metody liczenia, czynniki statyczne ani zakres. K-1 = 1,01 w I półroczu — to pytanie o przyczynę, nie o linię bazową.", "kto": "Kierownik utrzymania ruchu", "termin": "Przed rozpoczęciem sezonu (plan: 10.2026); wynik na zebraniu Zarządu w IV kw."}, {"kod": "cele", "decyzja": "Z1.1, Z1.2 i Z3.1 bez zmian; diagnostyki wycieków nie rozszerzać.", "uzasadnienie": "Kwartalny przegląd szczelności działa — przepływ w postoju spadł z 9 do 6 Nm³/min. Rozszerzanie diagnostyki nie przyniesie proporcjonalnego efektu, a cel końcowy 4 Nm³/min jest osiągalny w obecnym rytmie.", "kto": "", "termin": ""}, {"kod": "integracja", "decyzja": "Pytania o energię na etapie założeń (8.2) wpisane do procedury inwestycyjnej firmy.", "uzasadnienie": "Uwagi do koncepcji modernizacji sprężarkowni zgłoszono dzień przed zatwierdzeniem — kosztowało to trzy tygodnie decyzji i miesiąc przetargu. Tę samą rozmowę można było odbyć na etapie założeń, w godzinę.", "kto": "Dyrektor Zakładu", "termin": "12.2026"}, {"kod": "zasoby", "decyzja": "Budżet 2027 obejmuje 380 000 zł na modernizację sprężarkowni. Etaty i czas Energy Managera na dotychczasowym poziomie.", "uzasadnienie": "Obciążenie osób z punktu 7.1 mieści się w zadeklarowanym czasie; inwestycja wymaga osobnej pozycji budżetowej, nie dodatkowych etatów.", "kto": "Dyrektor Zakładu, kontroler finansowy", "termin": "Projekt budżetu, 10.2026"}, {"kod": "kompetencje", "decyzja": "Warsztat dla działu zakupów: porównanie kosztu zakupu i energii w okresie użytkowania.", "uzasadnienie": "Luka w matrycy kompetencji III-28, potwierdzona ustaleniem D-2 z audytu A-01/2026 — porównanie przy zakupie sterownika wykonał Energy Manager, nie dział zakupów.", "kto": "Energy Manager", "termin": "11.2026"}, {"kod": "inne_serwis", "wlasna": true, "nazwa": "Nadzór nad serwisem", "decyzja": "Sprawdzanie protokołu przy odbiorze usługi oraz jeden wzór protokołu z nastawami dla wykonawców przy wszystkich znaczących użyciach energii; aktualizacja procedury P-EnMS-06.", "uzasadnienie": "Niezgodność z audytu A-01/2026 — wymaganie wprowadzone po zdarzeniu z czerwca działa tylko w połowie (zlecenie jest, kontroli odbioru nie ma). Karta NK-2026-01 otwarta ponownie 18.09.2026.", "kto": "Kierownik utrzymania ruchu", "termin": "Wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU"}, {"kod": "inne_zgodnosc", "wlasna": true, "nazwa": "Ocena zgodności — raport dla banku", "decyzja": "Działanie korygujące przyjęte: termin 30 czerwca wpisany do kalendarza kontrolingu jako zadanie cykliczne, z przypomnieniem od Energy Managera 14 dni wcześniej.", "uzasadnienie": "Przyczyna niezgodności: termin umowny nie był w kalendarzu żadnej osoby — rejestr wskazywał wymaganie i właściciela, nie datę.", "kto": "Kontroler finansowy", "termin": "10.2026"}], "OCENA_C": {"przydatnosc": "System jest przydatny i adekwatny do skali zakładu; skuteczny — poprawa wykazana w O-1, P-1 i S-1 w porównywalnych warunkach, znaczące odchylenia zbadane, ustalenia z audytu i oceny zgodności wdrażane. Słabym miejscem jest nadzór nad wykonawcami: wymaganie wprowadzone po czerwcowym zdarzeniu okazało się wdrożone połowicznie.", "kierunek": "System zgodny z kierunkiem strategicznym organizacji — certyfikat ISO 50001 jest warunkiem kontraktu z głównym klientem (45% przychodów), a obniżenie kosztów energii elementem strategii kosztowej 2026–2028."}, "META": {"data": "2026-09-29", "forma": "Przegląd wspólny z ISO 14001 — część energetyczna 2 godziny. Dodatkowo krótki punkt o energii co kwartał na zebraniu Zarządu.", "uczestnicy": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu (przewodniczy, w imieniu Zarządu); Jan Kowalski — Energy Manager; kierownicy utrzymania ruchu, produkcji i zakupów; kontroler finansowy; specjalistka ds. środowiska", "najwyzszeKier": "tak", "przygotowal": "Jan Kowalski — Energy Manager: raport z monitorowania i oceny (III-42), raport z audytu A-01/2026, rejestry III-04 i III-16", "terminBudzetu": "2026-10-31", "statusDecyzji": "Status decyzji sprawdzany na zebraniu Zarządu w IV kwartale 2026 r. oraz jako pierwsza pozycja danych wejściowych następnego przeglądu.", "nastepnyPrzeglad": "Pełny przegląd: wrzesień 2027 r. Punkt o energii na każdym kwartalnym zebraniu Zarządu.", "pierwszy": "tak", "podpis": "Piotr Nowak — Dyrektor Zakładu, członek Zarządu"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Przegląd bez decyzji z właścicielem i terminem jest spotkaniem sprawozdawczym.", "decyzja": "Każdy wymagany wkład omawiany, a wynik zapisywany jako decyzja z właścicielem i terminem — także wtedy, gdy decyzją jest utrzymanie obecnego rozwiązania.", "dzialanie": "Protokół z 18.06.2026: siedem obszarów, decyzje o projekcie budżetu na 2027 r. i o rewizji linii bazowej po modernizacji sprężarkowni.", "sprawdzenie": "Na kolejnym przeglądzie sprawdzamy wykonanie decyzji poprzedniego; termin przeglądu wyprzedza termin prac nad budżetem."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 9.3 — Przegląd zarządzania.
+   F-EnMS-20 (III-45); przykład III-46; lista kontrolna III-47 sekcja 9.3;
+   procedura P-EnMS-07 (III-48) pkt 4.4. */
+"use strict";
+
+var PUNKT = "9.3";
+var TERAZ = "11.10.2026 16:20";
+var WEJSCIA = [];
+var DECYZJE = [];
+var OCENA_C = { przydatnosc: "", kierunek: "" };
+var META = { data: "", forma: "", uczestnicy: "", najwyzszeKier: "", przygotowal: "",
+  terminBudzetu: "", statusDecyzji: "", nastepnyPrzeglad: "", pierwszy: "", podpis: "" };
+var WNIOSKI = [];
+var AKT = "przeglad";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 16:15", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 9.3" }];
+
+/* ── dane wejściowe ── */
+function wejscie(kod) {
+  var w = WEJSCIA.filter(function (x) { return x.kod === kod; })[0];
+  if (!w) { w = { kod: kod }; WEJSCIA.push(w); }
+  return w;
+}
+function wejscieOk(w) { return !!(w && (w.podsumowanie || "").trim()); }
+/* „Wykresy bez rekomendacji": do każdego ważnego wyniku — co proponujesz i dlaczego. */
+function bezRekomendacji(w) {
+  return !!(w && (w.podsumowanie || "").trim()) && !(w.rekomendacja || "").trim();
+}
+function brakujaceWejscia() {
+  return WEJSCIA_DEF.filter(function (d) { return !wejscieOk(wejscie(d.kod)); });
+}
+
+/* ── decyzje ── */
+/* Celowo wąsko. „Modernizacja pozostaje w budżecie" i „utrzymanie modernizacji"
+   to decyzje o zmianie z właścicielem i terminem, nie decyzje „nic nie zmieniamy" —
+   luźny wzorzec (utrzym\w*, pozostaj\w*) zwalniałby je z wymogu właściciela. */
+var RE_BEZ_ZMIAN = /(\bbez\s+zmian|utrzymujemy|nie\s+zmieniamy|bez\s+rewizji|zostaje\s+bez\s+zmian)/i;
+function bezZmian(d) { return RE_BEZ_ZMIAN.test(d.decyzja || ""); }
+function decyzja(kod) {
+  var d = DECYZJE.filter(function (x) { return x.kod === kod; })[0];
+  if (!d) { d = { kod: kod }; DECYZJE.push(d); }
+  return d;
+}
+function decyzjaOk(d) {
+  if (!d || !(d.decyzja || "").trim()) return false;
+  if (!(d.uzasadnienie || "").trim()) return false;
+  if (bezZmian(d)) return true;
+  return !!((d.kto || "").trim() && (d.termin || "").trim());
+}
+function bezZmianBezUzasadnienia(d) {
+  return bezZmian(d) && !(d.uzasadnienie || "").trim();
+}
+function bezWlasciciela(d) {
+  return !!(d.decyzja || "").trim() && !bezZmian(d) && !((d.kto || "").trim() && (d.termin || "").trim());
+}
+function brakujaceDecyzje() {
+  return OBSZARY_DEF.filter(function (o) { return !decyzjaOk(decyzja(o.kod)); });
+}
+function decyzjeWlasne() { return DECYZJE.filter(function (d) { return d.wlasna; }); }
+function wszystkieDecyzje() { return DECYZJE.filter(function (d) { return (d.decyzja || "").trim(); }); }
+function pustyProtokol() { return wszystkieDecyzje().length === 0; }
+function zadnegoBezZmian() {
+  var w = wszystkieDecyzje();
+  return w.length >= OBSZARY_DEF.length && !w.some(bezZmian);
+}
+
+/* ── metryka ── */
+function brakNajwyzszegoKier() { return META.najwyzszeKier === "nie"; }
+function poTerminieBudzetu() {
+  if (!META.data || !META.terminBudzetu) return false;
+  return META.data > META.terminBudzetu;
+}
+function metaOk() {
+  return !!(META.data && (META.forma || "").trim() && (META.uczestnicy || "").trim()
+    && META.najwyzszeKier && (META.przygotowal || "").trim()
+    && (META.statusDecyzji || "").trim() && (META.nastepnyPrzeglad || "").trim());
+}
+function ocenaCOk() { return !!((OCENA_C.przydatnosc || "").trim() && (OCENA_C.kierunek || "").trim()); }
+
+/* ── zakładka 1: przegląd ── */
+function rysujPrzeglad(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Metryka przeglądu"));
+  s.appendChild(hel("div", "warn", "29 września 2026 r., sala konferencyjna AutoParts. Po raz pierwszy przegląd zarządzania systemem zarządzania energią — razem z przeglądem ISO 14001. Jan Kowalski pokazuje drugi wykres, gdy dyrektor zakładu mu przerywa: <b>„Panie Janie, co mam dziś zdecydować?”</b><br><br>Kowalski był na to przygotowany. „Wskaźnik sprężarkowni spadł z 0,125 do 0,119 kWh/Nm³. To poprawa o prawie 5%, ale do celu 0,110 brakuje jeszcze półtora raza tyle, ile już osiągnęliśmy. Samo ciśnienie więcej nie da. Proszę o utrzymanie modernizacji za 380 000 zł w budżecie na 2027 r. Diagnostyki wycieków nie trzeba rozbudowywać — kwartalny przegląd działa, przepływ w postoju spadł z 9 do 6 Nm³/min.”<br><br>Wykres pokazuje, co się stało. Rekomendacja mówi, co z tym zrobić — i dlaczego. <b>Przegląd zarządzania jest o decyzjach, nie o slajdach.</b>"));
+  s.appendChild(hel("div", "note", "Norma <b>nie narzuca formy</b>: przegląd może być jednym spotkaniem, kilkoma posiedzeniami, przeglądem wspólnym z innym systemem albo częściowo prowadzonym na posiedzeniach zarządu. Wymagane jest co innego — żeby kierownictwo <b>rozważyło określone sprawy</b>, <b>podjęło decyzje</b> i żeby <b>wyniki zostały zapisane</b>."));
+  var k = el("div", "poz" + (metaOk() ? "" : " brak"));
+  k.appendChild(pole("Data przeglądu", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  k.appendChild(pole("Forma", txt(META.forma, "np. Przegląd wspólny z ISO 14001 — część energetyczna 2 h; krótki punkt o energii co kwartał na zebraniu Zarządu", 2,
+    function (v) { META.forma = v; })));
+  k.appendChild(poleChip("Uczestnicy", "wymóg normy",
+    txt(META.uczestnicy, "np. Piotr Nowak — Dyrektor Zakładu, członek Zarządu (przewodniczy, w imieniu Zarządu); Jan Kowalski — Energy Manager; kierownicy UR, produkcji i zakupów; kontroler finansowy; specjalistka ds. środowiska", 3,
+      function (v) { META.uczestnicy = v; })));
+  k.appendChild(poleChip("Czy uczestniczyło najwyższe kierownictwo właściwe dla zakresu systemu?", "wymóg normy",
+    sel(META.najwyzszeKier, [["", "—"], ["tak", "Tak"], ["nie", "Nie"]], function (v) { META.najwyzszeKier = v; }),
+    "Przegląd prowadzi najwyższe kierownictwo właściwe dla zakresu systemu — osoby, które mogą decydować. W AutoParts to Zarząd, w jego imieniu dyrektor zakładu, członek Zarządu."));
+  k.appendChild(pole("Przygotował dane", inp(META.przygotowal, "np. Jan Kowalski — raport III-42, raport z audytu A-01/2026, rejestry III-04 i III-16",
+    function (v) { META.przygotowal = v; })));
+  k.appendChild(pole("Czy to pierwszy przegląd systemu",
+    sel(META.pierwszy, [["", "—"], ["tak", "Tak"], ["nie", "Nie"]], function (v) { META.pierwszy = v; })));
+  s.appendChild(k);
+  if (brakNajwyzszegoKier())
+    s.appendChild(hel("div", "warn", "W przeglądzie nie uczestniczyło najwyższe kierownictwo właściwe dla zakresu systemu. To <b>wprost niespełnione wymaganie normy</b> — przegląd zarządzania jest czynnością najwyższego kierownictwa, a nie prezentacją dla niego. Bez osób, które mogą decydować o budżecie i zasobach, decyzje z części B nie mają podstawy."));
+  host.appendChild(s);
+
+  var t = el("div", "sekcja");
+  t.appendChild(el("h3", null, "Rytm i wpływ na budżet"));
+  t.appendChild(hel("div", "note", "★ <b>Rada:</b> AutoParts robi pełny przegląd raz w roku, <b>przed sporządzeniem budżetu</b>, a krótki punkt o energii ma co kwartał na zebraniu Zarządu. Norma mówi tylko „w zaplanowanych odstępach” — rytm dobierzcie tak, żeby <b>decyzje zdążyły wpłynąć na budżet i plany</b>."));
+  var tk = el("div", "poz");
+  tk.appendChild(pole("Termin sporządzenia budżetu", inp(META.terminBudzetu, "", function (v) { META.terminBudzetu = v; }, "date"),
+    "Służy jednemu sprawdzeniu: czy przegląd odbył się na czas, żeby jego decyzje weszły do przydziału zasobów."));
+  tk.appendChild(poleChip("Jak sprawdzany jest status decyzji", "metodyka ENESA",
+    txt(META.statusDecyzji, "np. Status decyzji sprawdzany kwartalnie na zebraniu Zarządu i na następnym przeglądzie — pierwsza pozycja danych wejściowych", 2,
+      function (v) { META.statusDecyzji = v; })));
+  tk.appendChild(pole("Następny przegląd", inp(META.nastepnyPrzeglad, "np. Pełny przegląd 09.2027; status decyzji na zebraniu Zarządu w IV kw. 2026",
+    function (v) { META.nastepnyPrzeglad = v; })));
+  t.appendChild(tk);
+  if (poTerminieBudzetu())
+    t.appendChild(hel("div", "warn", "Przegląd odbył się <b>po</b> terminie sporządzenia budżetu. <b>Przegląd tuż przed audytem, na danych z ostatniej chwili</b> to jeden z sześciu błędów tego punktu — a przegląd po budżecie ma wadę jeszcze prostszą: decyzja o przydziale zasobów nie ma już gdzie trafić. W AutoParts przegląd z 29.09 zdążył do projektu budżetu z 10.2026."));
+  else if (META.data && META.terminBudzetu)
+    t.appendChild(hel("div", "ok", "Przegląd przed terminem budżetu — decyzje o zasobach mają gdzie trafić."));
+  host.appendChild(t);
+
+  var p = el("div", "sekcja");
+  p.appendChild(el("h3", null, "Stan przeglądu"));
+  p.appendChild(tabela(["Część", "Stan"], [
+    ["A. Dane wejściowe", el("span", "chip " + (!brakujaceWejscia().length ? "green" : "amber"),
+      (WEJSCIA_DEF.length - brakujaceWejscia().length) + " z " + WEJSCIA_DEF.length + " rozważonych")],
+    ["Rekomendacje przy danych wejściowych", el("span", "chip " + (!WEJSCIA.some(bezRekomendacji) ? "green" : "amber"),
+      WEJSCIA.filter(function (w) { return (w.rekomendacja || "").trim(); }).length + " z " +
+      WEJSCIA.filter(function (w) { return (w.podsumowanie || "").trim(); }).length)],
+    ["B. Decyzje w wymaganych obszarach", el("span", "chip " + (!brakujaceDecyzje().length ? "green" : "amber"),
+      (OBSZARY_DEF.length - brakujaceDecyzje().length) + " z " + OBSZARY_DEF.length)],
+    ["Decyzje dodatkowe", String(decyzjeWlasne().filter(function (d) { return (d.decyzja || "").trim(); }).length)],
+    ["Decyzje „bez zmian”", String(wszystkieDecyzje().filter(bezZmian).length)],
+    ["Decyzje bez właściciela i terminu", el("span", "chip " + (!wszystkieDecyzje().some(bezWlasciciela) ? "green" : "red"),
+      String(wszystkieDecyzje().filter(bezWlasciciela).length))],
+    ["C. Ocena ogólna", el("span", "chip " + (ocenaCOk() ? "green" : "amber"), ocenaCOk() ? "wypełniona" : "do uzupełnienia")]
+  ]));
+  host.appendChild(p);
+}
+
+/* ── zakładka 2: część A ── */
+function rysujWejscia(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "A. Dane wejściowe");
+  h.appendChild(el("span", "chip " + (!brakujaceWejscia().length ? "green" : "amber"),
+    (WEJSCIA_DEF.length - brakujaceWejscia().length) + " / " + WEJSCIA_DEF.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "note", "Lista spraw, które norma każe uwzględnić, jest długa. Łatwiej ją zapamiętać jako <b>cztery pytania kierownictwa</b>: co się zmieniło wokół nas i w nas; jak idzie wynik energetyczny; czy system działa; gdzie możemy być lepsi. Poniżej te same sprawy w układzie formularza."));
+  s.appendChild(hel("div", "warn", "<b>Wykresy bez rekomendacji</b> to jeden z sześciu błędów tego punktu. Do każdego ważnego wyniku: <b>co proponujecie i dlaczego.</b> Wykres pokazuje, co się stało — rekomendacja mówi, co z tym zrobić."));
+  host.appendChild(s);
+
+  WEJSCIA_DEF.forEach(function (d) {
+    var w = wejscie(d.kod);
+    var kk = el("div", "poz" + (wejscieOk(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (d.litera ? d.litera + ") " : "") + d.nazwa));
+    g.appendChild(el("span", "chip red", "wymóg normy"));
+    if ((w.rekomendacja || "").trim()) g.appendChild(el("span", "chip green", "z rekomendacją"));
+    kk.appendChild(g);
+    if (d.pomoc) kk.appendChild(el("p", "opis", d.pomoc));
+    kk.appendChild(pole("Podsumowanie", txt(w.podsumowanie, d.ph || "", 4, function (v) { w.podsumowanie = v; })));
+    kk.appendChild(poleChip("Rekomendacja", "metodyka ENESA",
+      txt(w.rekomendacja, d.phR || "", 3, function (v) { w.rekomendacja = v; }),
+      "Energy Manager przychodzi z rekomendacjami: co się stało, co proponuje i dlaczego."));
+    if (bezRekomendacji(w))
+      kk.appendChild(hel("div", "warn", "Sprawa rozważona, ale bez rekomendacji. Kierownictwo zobaczy wynik i nie będzie wiedziało, <b>czego od niego oczekujecie</b> — a to jest różnica między przeglądem a prezentacją."));
+    if (d.kod === "a" && META.pierwszy === "tak" && (w.podsumowanie || "").trim())
+      kk.appendChild(el("div", "ok", "Pierwszy przegląd systemu — w tej pozycji wystarczy odnotować wcześniejsze decyzje kierownictwa i stan ich realizacji. Od następnego przeglądu to miejsce zaczyna się od statusu decyzji z poprzedniego."));
+    s.appendChild(kk);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 3: część B ── */
+function rysujDecyzje(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "B. Decyzje");
+  h.appendChild(el("span", "chip " + (!brakujaceDecyzje().length ? "green" : "amber"),
+    (OBSZARY_DEF.length - brakujaceDecyzje().length) + " / " + OBSZARY_DEF.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Wyniki przeglądu obejmują <b>decyzje</b> dotyczące możliwości ciągłego doskonalenia i potrzebnych zmian w systemie — we wszystkich obszarach wymienionych przez normę. <b>Przegląd jako podpisanie protokołu</b> to pierwszy z sześciu błędów tego punktu."));
+  s.appendChild(hel("div", "note", "<b>Decyzją jest też „utrzymujemy”</b> — jeśli wynika z rzetelnej oceny. Polityka, która nadal pasuje, nie musi się zmieniać. Zasoby, które wystarczają, nie muszą rosnąć. <b>Nie produkujcie zmian dla samej liczby decyzji</b> — zapiszcie natomiast, co oceniono i dlaczego zdecydowano tak, a nie inaczej."));
+  if (pustyProtokol())
+    s.appendChild(hel("div", "warn", "Nie zapisano żadnej decyzji. <b>Przegląd bez decyzji</b> — kierownictwo ogląda wykresy, nikt nie mówi, czego od niego oczekuje. To nie jest przegląd zarządzania w rozumieniu normy."));
+  host.appendChild(s);
+
+  if (wszystkieDecyzje().length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Obszar decyzji", "Decyzja", "Uzasadnienie", "Kto", "Termin"],
+      DECYZJE.filter(function (d) { return (d.decyzja || "").trim(); }).map(function (d) {
+        var def = OBSZARY_DEF.filter(function (o) { return o.kod === d.kod; })[0];
+        return [def ? def.nazwa : (d.nazwa || "—"), d.decyzja || "—", d.uzasadnienie || "—",
+          d.kto || (bezZmian(d) ? "—" : el("span", "chip red", "brak")),
+          d.termin || (bezZmian(d) ? "—" : el("span", "chip red", "brak"))];
+      })));
+    host.appendChild(t);
+  }
+
+  var e = el("div", "sekcja");
+  e.appendChild(el("h3", null, "Obszary wymagane przez normę"));
+  OBSZARY_DEF.forEach(function (o) {
+    var d = decyzja(o.kod);
+    var kk = el("div", "poz" + (decyzjaOk(d) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, o.nazwa));
+    g.appendChild(el("span", "chip red", "wymóg normy"));
+    if (bezZmian(d) && (d.decyzja || "").trim()) g.appendChild(el("span", "chip", "bez zmian"));
+    kk.appendChild(g);
+    if (o.pomoc) kk.appendChild(el("p", "opis", o.pomoc));
+    kk.appendChild(pole("Decyzja", txt(d.decyzja, o.ph || "", 2, function (v) { d.decyzja = v; })));
+    kk.appendChild(pole("Uzasadnienie", txt(d.uzasadnienie, o.phU || "", 2, function (v) { d.uzasadnienie = v; })));
+    if (!bezZmian(d)) {
+      kk.appendChild(pole("Kto", inp(d.kto, "np. Energy Manager, kierownik UR", function (v) { d.kto = v; })));
+      kk.appendChild(pole("Termin", inp(d.termin, "np. Projekt budżetu, 10.2026", function (v) { d.termin = v; })));
+    }
+    if (bezZmianBezUzasadnienia(d))
+      kk.appendChild(hel("div", "warn", "Decyzja „bez zmian” bez uzasadnienia. <b>„Bez zmian” jest decyzją — zapiszcie uzasadnienie.</b> Inaczej po roku nikt nie odtworzy, czy sprawę rozważono, czy pominięto."));
+    if (bezWlasciciela(d))
+      kk.appendChild(hel("div", "warn", "Decyzja bez właściciela albo bez terminu. <b>Decyzje bez właścicieli i terminów</b> to piąty z sześciu błędów — każda decyzja: kto, co, do kiedy."));
+    e.appendChild(kk);
+  });
+  host.appendChild(e);
+
+  var w = el("div", "sekcja");
+  w.appendChild(el("h3", null, "Decyzje w innych sprawach"));
+  w.appendChild(el("p", "opis", "Obszar „cele, zadania, plany działań lub inne elementy systemu” bywa szerszy niż jeden wiersz. Tu zapisuje się decyzje w sprawach, które wyszły z danych wejściowych — w AutoParts były to nadzór nad serwisem po audycie i działanie z oceny zgodności."));
+  decyzjeWlasne().forEach(function (d, i) {
+    var kk = el("div", "poz" + (decyzjaOk(d) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, d.nazwa || "Decyzja " + (i + 1)));
+    if (bezZmian(d) && (d.decyzja || "").trim()) g.appendChild(el("span", "chip", "bez zmian"));
+    g.appendChild(przyciskUsun(function () {
+      DECYZJE.splice(DECYZJE.indexOf(d), 1);
+    }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Sprawa", inp(d.nazwa, "np. Nadzór nad serwisem", function (v) { d.nazwa = v; })));
+    kk.appendChild(pole("Decyzja", txt(d.decyzja, "np. Sprawdzanie protokołu przy odbiorze i wzór z nastawami dla wykonawców przy SEU; aktualizacja P-EnMS-06", 2,
+      function (v) { d.decyzja = v; })));
+    kk.appendChild(pole("Uzasadnienie", txt(d.uzasadnienie, "np. Niezgodność z audytu A-01/2026", 2, function (v) { d.uzasadnienie = v; })));
+    if (!bezZmian(d)) {
+      kk.appendChild(pole("Kto", inp(d.kto, "np. Kierownik UR", function (v) { d.kto = v; })));
+      kk.appendChild(pole("Termin", inp(d.termin, "np. Wdrożenie 10.2026; weryfikacja przy kolejnych usługach przy SEU", function (v) { d.termin = v; })));
+    }
+    if (bezZmianBezUzasadnienia(d))
+      kk.appendChild(hel("div", "warn", "Decyzja „bez zmian” bez uzasadnienia. <b>„Bez zmian” jest decyzją — zapiszcie uzasadnienie.</b>"));
+    if (bezWlasciciela(d))
+      kk.appendChild(el("div", "warn", "Decyzja bez właściciela albo bez terminu."));
+    w.appendChild(kk);
+  });
+  w.appendChild(przyciskDodaj("+ dodaj decyzję w innej sprawie", function () {
+    DECYZJE.push({ kod: "inne_" + Date.now(), wlasna: true });
+  }));
+  if (zadnegoBezZmian())
+    w.appendChild(hel("div", "note", "Każdy wymagany obszar skończył się zmianą, żaden decyzją „utrzymujemy”. Warto sprawdzić, czy to wynik rzetelnej oceny — <b>„minimum trzy decyzje”, czyli zmiany dla samej liczby</b>, to czwarty z sześciu błędów tego punktu."));
+  host.appendChild(w);
+}
+
+/* ── zakładka 4: część C ── */
+function rysujOcenaC(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "C. Ocena ogólna");
+  h.appendChild(el("span", "chip " + (ocenaCOk() ? "green" : "amber"), ocenaCOk() ? "wypełniona" : "do uzupełnienia"));
+  s.appendChild(h);
+  s.appendChild(hel("div", "note", "Najwyższe kierownictwo przegląda system, żeby zapewnić jego <b>ciągłą przydatność, adekwatność, skuteczność i zgodność ze strategicznym kierunkiem organizacji</b>. Te dwa pola są odpowiedzią na to zdanie — i jedynym miejscem, w którym kierownictwo wypowiada się o systemie jako całości."));
+  var k = el("div", "poz" + (ocenaCOk() ? "" : " brak"));
+  k.appendChild(poleChip("Przydatność, adekwatność i skuteczność systemu", "wymóg normy",
+    txt(OCENA_C.przydatnosc, "np. System przydatny i adekwatny do skali zakładu; skuteczny — poprawa w O-1, P-1 i S-1, odchylenia zbadane, ustalenia wdrażane. Słabe miejsce: nadzór nad wykonawcami.", 4,
+      function (v) { OCENA_C.przydatnosc = v; })));
+  k.appendChild(poleChip("Zgodność z kierunkiem strategicznym organizacji", "wymóg normy",
+    txt(OCENA_C.kierunek, "np. Zgodny — warunek kontraktu z klientem (45% przychodów) i strategia kosztowa 2026–2028.", 3,
+      function (v) { OCENA_C.kierunek = v; })));
+  k.appendChild(pole("Podpis przedstawiciela najwyższego kierownictwa",
+    inp(META.podpis, "np. Piotr Nowak — Dyrektor Zakładu, członek Zarządu", function (v) { META.podpis = v; })));
+  s.appendChild(k);
+  host.appendChild(s);
+
+  var w = el("div", "sekcja");
+  w.appendChild(el("h3", null, "Skąd wiesz, że przegląd zarządzania działa"));
+  var lista = [
+    { t: "Uczestniczy w nim najwyższe kierownictwo właściwe dla zakresu systemu — osoby, które mogą decydować.",
+      ok: META.najwyzszeKier === "tak" },
+    { t: "Rozważono wszystkie sprawy wymagane przez normę, także ocenę zgodności i kompetencje.",
+      ok: brakujaceWejscia().length === 0 },
+    { t: "Energy Manager przychodzi z rekomendacjami: co się stało, co proponuje i dlaczego.",
+      ok: WEJSCIA.filter(function (x) { return (x.podsumowanie || "").trim(); }).length === 0 ? null
+        : !WEJSCIA.some(bezRekomendacji) },
+    { t: "Każda decyzja ma właściciela i termin; „bez zmian” ma uzasadnienie.",
+      ok: wszystkieDecyzje().length === 0 ? false
+        : !wszystkieDecyzje().some(bezWlasciciela) && !wszystkieDecyzje().some(bezZmianBezUzasadnienia) },
+    { t: "Następny przegląd zaczyna się od statusu decyzji z poprzedniego.",
+      ok: !!((META.statusDecyzji || "").trim() && (META.nastepnyPrzeglad || "").trim()) },
+    { t: "Przegląd zaplanowany tak, żeby decyzje zdążyły wpłynąć na budżet i plany.",
+      ok: !META.terminBudzetu ? null : !poTerminieBudzetu() }
+  ];
+  lista.forEach(function (x) {
+    var kw = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("span", "chip " + (x.ok === null ? "" : x.ok ? "green" : "amber"),
+      x.ok === null ? "nie dotyczy" : x.ok ? "tak" : "jeszcze nie"));
+    g.appendChild(el("span", null, x.t));
+    kw.appendChild(g);
+    w.appendChild(kw);
+  });
+  host.appendChild(w);
+}
+
+/* ── zakładka 5 ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz przeglądu: "));
+  n.appendChild(document.createTextNode(
+    "dane wejściowe " + (WEJSCIA_DEF.length - brakujaceWejscia().length) + " z " + WEJSCIA_DEF.length +
+    " · rekomendacje przy " + WEJSCIA.filter(function (w) { return (w.rekomendacja || "").trim(); }).length + " sprawach" +
+    " · decyzje " + wszystkieDecyzje().length + " (wymagane obszary: " +
+    (OBSZARY_DEF.length - brakujaceDecyzje().length) + " z " + OBSZARY_DEF.length + ")" +
+    " · „bez zmian”: " + wszystkieDecyzje().filter(bezZmian).length +
+    " · bez właściciela: " + wszystkieDecyzje().filter(bezWlasciciela).length));
+  s.appendChild(n);
+  if (brakNajwyzszegoKier())
+    s.appendChild(el("div", "warn", "Przegląd bez najwyższego kierownictwa. To nie jest brak w dokumentacji — to brak w procesie, i jedyna rzecz w tym punkcie, której nie da się nadrobić lepszym protokołem."));
+  var bezRek = WEJSCIA.filter(bezRekomendacji);
+  if (bezRek.length)
+    s.appendChild(el("div", "warn", ile(bezRek.length, "sprawa nie ma", "sprawy nie mają", "spraw nie ma") +
+      " rekomendacji. Pytanie do klienta jest proste i zwykle rozstrzygające: <b>co kierownictwo ma z tym zrobić?</b> Jeśli nie ma odpowiedzi, sprawa nie jest gotowa na przegląd."));
+  var bezW = wszystkieDecyzje().filter(bezWlasciciela);
+  if (bezW.length)
+    s.appendChild(el("div", "warn", ile(bezW.length, "decyzja nie ma", "decyzje nie mają", "decyzji nie ma") +
+      " właściciela albo terminu. Przy następnym przeglądzie pierwsza pozycja danych wejściowych — status działań z poprzedniego przeglądu — będzie nie do wypełnienia."));
+  var bezU = wszystkieDecyzje().filter(bezZmianBezUzasadnienia);
+  if (bezU.length)
+    s.appendChild(el("div", "warn", "W " + ile(bezU.length, "decyzji", "decyzjach", "decyzjach") +
+      " „bez zmian” brakuje uzasadnienia. To najłatwiejsza do zapełnienia luka i jednocześnie ta, przez którą audytor najszybciej rozpozna przegląd zrobiony dla protokołu."));
+  if (poTerminieBudzetu())
+    s.appendChild(el("div", "warn", "Przegląd po terminie budżetu. Rozmowa nie o formularzu, a o kalendarzu: decyzja o zasobach podjęta po budżecie czeka rok."));
+  if (zadnegoBezZmian())
+    s.appendChild(el("div", "note", "Żadna decyzja nie brzmi „utrzymujemy”. Warto sprawdzić, czy w każdym obszarze rzeczywiście trzeba było coś zmienić — liczba decyzji nie jest miarą jakości przeglądu."));
+  if (!ocenaCOk())
+    s.appendChild(el("div", "note", "Brak oceny ogólnej. To jedyne miejsce, w którym kierownictwo wypowiada się o systemie jako całości — i pierwsze, o które pyta audytor, szukając dowodu, że przegląd był przeglądem kierownictwa, a nie Energy Managera."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-47, sekcja 9.3 ── */
+function stanPozycji(q) {
+  var f = {
+    kierownictwo: function () {
+      return META.najwyzszeKier === "tak" && !!META.data && !!(META.forma || "").trim();
+    },
+    wejscia: function () { return brakujaceWejscia().length === 0; },
+    wyjscia: function () {
+      return brakujaceDecyzje().length === 0 && !wszystkieDecyzje().some(bezZmianBezUzasadnienia);
+    },
+    zapis: function () {
+      return metaOk() && ocenaCOk() && (META.podpis || "").trim() && wszystkieDecyzje().length > 0;
+    },
+    wlasciciele: function () {
+      if (!wszystkieDecyzje().length) return false;
+      return !wszystkieDecyzje().some(bezWlasciciela) && !!(META.statusDecyzji || "").trim()
+        && !!(META.nastepnyPrzeglad || "").trim();
+    }
+  }[q.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!META.data) b.push({ t: "Brak daty przeglądu.", kto: "klient" });
+  if (!(META.forma || "").trim()) b.push({ t: "Nie opisano formy przeglądu.", kto: "klient" });
+  if (!(META.uczestnicy || "").trim()) b.push({ t: "Brak listy uczestników.", kto: "klient" });
+  if (!META.najwyzszeKier) b.push({ t: "Nie potwierdzono udziału najwyższego kierownictwa.", kto: "klient" });
+  if (brakNajwyzszegoKier()) b.push({ t: "Przegląd bez najwyższego kierownictwa właściwego dla zakresu systemu.", kto: "klient" });
+  if (!(META.przygotowal || "").trim()) b.push({ t: "Nie wskazano osoby przygotowującej dane.", kto: "klient", metodyka: true });
+  brakujaceWejscia().forEach(function (d) {
+    b.push({ t: "Dane wejściowe " + (d.litera ? d.litera + ") " : "") + d.nazwa + " — nierozważone.", kto: "klient" });
+  });
+  WEJSCIA.filter(bezRekomendacji).forEach(function (w) {
+    var d = WEJSCIA_DEF.filter(function (x) { return x.kod === w.kod; })[0];
+    b.push({ t: "Sprawa " + (d ? (d.litera ? d.litera + ") " : "") + d.nazwa.slice(0, 40) : w.kod) + " — bez rekomendacji dla kierownictwa.", kto: "klient", metodyka: true });
+  });
+  if (pustyProtokol()) b.push({ t: "Nie zapisano żadnej decyzji.", kto: "klient" });
+  brakujaceDecyzje().forEach(function (o) {
+    b.push({ t: "Obszar decyzji „" + o.nazwa + "” — brak decyzji, uzasadnienia albo właściciela.", kto: "klient" });
+  });
+  wszystkieDecyzje().filter(bezZmianBezUzasadnienia).forEach(function (d) {
+    var o = OBSZARY_DEF.filter(function (x) { return x.kod === d.kod; })[0];
+    b.push({ t: "Decyzja „bez zmian” bez uzasadnienia: " + (o ? o.nazwa : d.nazwa || "—") + ".", kto: "klient" });
+  });
+  wszystkieDecyzje().filter(bezWlasciciela).forEach(function (d) {
+    var o = OBSZARY_DEF.filter(function (x) { return x.kod === d.kod; })[0];
+    b.push({ t: "Decyzja bez właściciela albo terminu: " + (o ? o.nazwa : d.nazwa || "—") + ".", kto: "klient" });
+  });
+  if (poTerminieBudzetu()) b.push({ t: "Przegląd odbył się po terminie sporządzenia budżetu.", kto: "klient", metodyka: true });
+  if (!(META.statusDecyzji || "").trim()) b.push({ t: "Nie ustalono, jak sprawdzany jest status decyzji.", kto: "klient", metodyka: true });
+  if (!(META.nastepnyPrzeglad || "").trim()) b.push({ t: "Nie wskazano terminu następnego przeglądu.", kto: "klient", metodyka: true });
+  if (!ocenaCOk()) b.push({ t: "Brak oceny ogólnej (część C).", kto: "klient" });
+  if (!(META.podpis || "").trim()) b.push({ t: "Brak podpisu przedstawiciela najwyższego kierownictwa.", kto: "klient", metodyka: true });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6 ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-PZR-01");
+  rysujListeKontrolna(s, LISTA_93, "Lista kontrolna III-47 — sekcja 9.3", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-PZR-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Metryka przeglądu", "zakładka 1", (META.data || "bez daty") + " · " + (META.forma || "forma nieopisana").slice(0, 60)],
+    ["A. Dane wejściowe", "zakładka 2",
+      (WEJSCIA_DEF.length - brakujaceWejscia().length) + " z " + WEJSCIA_DEF.length + " spraw · rekomendacje: " +
+      WEJSCIA.filter(function (w) { return (w.rekomendacja || "").trim(); }).length],
+    ["B. Decyzje", "zakładka 3", ile(wszystkieDecyzje().length, "decyzja", "decyzje", "decyzji") +
+      " · obszary wymagane: " + (OBSZARY_DEF.length - brakujaceDecyzje().length) + " z " + OBSZARY_DEF.length],
+    ["C. Ocena ogólna", "zakładka 4", ocenaCOk() ? "wypełniona" : "do uzupełnienia"],
+    ["Wnioski konsultanta", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Podpis", "zakładka 4", META.podpis || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie: <b>przeglądu przez najwyższe kierownictwo w zaplanowanych odstępach</b>, <b>rozważenia wszystkich wymaganych danych wejściowych</b> (w tym oceny zgodności, ryzyk i szans, polityki, kompetencji oraz wyniku energetycznego), <b>decyzji we wszystkich obszarach wyjść</b> oraz <b>zachowania zapisu wyników przeglądu</b>. Forma przeglądu, właściciele i terminy decyzji oraz sprawdzanie ich statusu to zalecenia metodyki ENESA. Dokument D-EnMS-PZR-01 odpowiada formularzowi F-EnMS-20 (załącznik III-45)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "przeglad", t: "1. Przegląd", f: rysujPrzeglad },
+  { id: "wejscia", t: "2. A — dane wejściowe", f: rysujWejscia },
+  { id: "decyzje", t: "3. B — decyzje", f: rysujDecyzje },
+  { id: "ocenac", t: "4. C — ocena ogólna", f: rysujOcenaC },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: WEJSCIA_DEF.length + OBSZARY_DEF.length + 3,
+    zrob: (WEJSCIA_DEF.length - brakujaceWejscia().length)
+      + (OBSZARY_DEF.length - brakujaceDecyzje().length)
+      + (metaOk() ? 1 : 0) + (ocenaCOk() ? 1 : 0) + ((META.podpis || "").trim() ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_93", JSON.stringify({
+      WEJSCIA: WEJSCIA, DECYZJE: DECYZJE, OCENA_C: OCENA_C, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_93"); if (!s) return;
+    var d = JSON.parse(s);
+    WEJSCIA = d.WEJSCIA || []; DECYZJE = d.DECYZJE || []; OCENA_C = d.OCENA_C || OCENA_C;
+    META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  var p = JSON.parse(JSON.stringify(PRZYKLAD));
+  WEJSCIA = p.WEJSCIA; DECYZJE = p.DECYZJE; OCENA_C = p.OCENA_C; META = p.META;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić protokół przeglądu zarządzania?")) return;
+  WEJSCIA = []; DECYZJE = []; WNIOSKI = []; OCENA_C = { przydatnosc: "", kierunek: "" };
+  META = { data: "", forma: "", uczestnicy: "", najwyzszeKier: "", przygotowal: "",
+    terminBudzetu: "", statusDecyzji: "", nastepnyPrzeglad: "", pierwszy: "", podpis: "" };
+  try { localStorage.removeItem("enesa_93"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

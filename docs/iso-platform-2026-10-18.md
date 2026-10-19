@@ -45,3 +45,32 @@ Przykład ma dwie lokalizacje, choć wskazany załącznik książki opisuje jede
 Wzorcowy pomiar S-2 nie występuje w przykładzie monitorowania, a kotłownia jest poza sezonem.
 System wskazuje brak pomiaru zamiast wstawiać fikcyjną liczbę; przy braku wyniku wymaga opisu oceny.
 Nie utożsamia to kompletnego opisu z udowodnioną poprawą wyniku energetycznego.
+
+## Oryginalne interfejsy HTML
+
+Wcześniejszy import danych nie odwzorowywał układu formularzy. Interfejs korzysta teraz
+z wszystkich 28 oryginalnych dokumentów: Wstępu oraz 27 punktów normy. Ich kopie w
+`resources/iso50001/html-2026-10-18` pozostają identyczne bajtowo ze źródłem;
+manifest zawiera SHA-256. `tools/import_iso_html.py` odtwarza ten zestaw z rozpakowanego ZIP.
+Zakładki, kolejność, warunki i renderowanie pochodzą z oryginalnych skryptów,
+a strony punktów zachowują również treść zakładki „Specyfikacja dla Sławka” dla pracowników.
+
+`IsoHtmlQuestionnaire` osadza formularze w ramkach z odizolowanym pochodzeniem i CSP
+blokującą sieć. Adapter JS przekazuje zapis do istniejących kontrolerów Laravel;
+obowiązują dotychczasowe uprawnienia, blokady edycji, aktualność źródeł i zatwierdzenia.
+Profil i dane wcześniejszych punktów pochodzą z rzeczywistego audytu. Źródłowe
+role demonstracyjne działają tylko w podglądzie biblioteki; analiza wewnętrzna nie
+jest przekazywana klientowi. Most schowka umożliwia kopiowanie specyfikacji bez dostępu
+ramki do pochodzenia aplikacji. Formatowane komunikaty filtrują niezaufany HTML odpowiedzi.
+
+`IsoHtmlState` mapuje stan oryginalnych formularzy na stabilne pola i identyfikatory
+platformy. Dodatkowe dane źródłowe są zachowywane w `_html`, także po imporcie Excel.
+Źródło używa w kilku miejscach nazw opisowych zamiast formalnych odnośników do SEU
+i planów; adapter nie zgaduje tych odnośników. Przykład w podglądzie pochodzi wprost
+z funkcji demonstracyjnej HTML. W rzeczywistym audycie nie zastępuje danych źródłowych.
+
+Istniejący wydruk ankiety i generowanie dokumentu pozostają oddzielnymi operacjami.
+Ta integracja nie oznacza odtworzenia wszystkich docelowych generatorów opisanych
+w specyfikacjach: wskazane, lecz niedostarczone skoroszyty generatora i biblioteki
+interesariuszy nadal nie stanowią dostępnego materiału implementacyjnego. Odnośniki
+źródłowe bez adresu nie otrzymują wymyślonych plików ani filmów.

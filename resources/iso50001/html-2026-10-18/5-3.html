@@ -1,0 +1,1371 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 5.3 Role, odpowiedzialności i uprawnienia</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 5</div>
+ <h1>5.3 Role, odpowiedzialności i uprawnienia</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 5.3</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 5.3</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>5.3 Role, odpowiedzialności i uprawnienia w organizacji</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 5.3 i sposób przygotowania matrycy.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 5.3<br>Role i uprawnienia</div>
+   <div>
+    <h4>5.3 Role, odpowiedzialności i uprawnienia</h4>
+    <p>Pięć zadań zespołu, matryca Z / O / W / I i pytanie, które rozstrzyga wszystko:
+    co koordynator może zdecydować sam.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 5.3. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">5.3 — część A<br>9 slajdów</div>
+   <div>
+    <h4>5.3 Role, odpowiedzialności i uprawnienia — część A</h4>
+    <p>Jak zbudować matrycę, żeby nie była ozdobą. Uprawnienia koordynatora. Właściciele znaczących użyć energii.</p>
+    <p style="font-size:12.5px">9 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Najwyższe kierownictwo zapewnia, że odpowiedzialności i uprawnienia dla odpowiednich ról
+ są przypisane i zakomunikowane w organizacji. Przypisuje zespołowi ds. zarządzania energią odpowiedzialność
+ i uprawnienia do: zapewnienia, że system jest ustanowiony, wdrożony, utrzymywany i ciągle doskonalony; zapewnienia,
+ że system jest zgodny z wymaganiami normy; realizacji planów działań służących ciągłemu doskonaleniu wyniku
+ energetycznego; raportowania najwyższemu kierownictwu, w ustalonych odstępach czasu, o funkcjonowaniu systemu
+ i poprawie wyniku energetycznego; ustalenia kryteriów i metod potrzebnych do zapewnienia skutecznego działania
+ i nadzorowania systemu. Omówienie na podstawie punktu 5.3 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> przypisz i ogłoś, kto za co odpowiada
+ i co może zdecydować, a zespołowi ds. zarządzania energią powierz pięć konkretnych zadań.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 2, punkt 5.3. Matryca: formularz III-11 (F-EnMS-05)
+ i przykład AutoParts III-12; opcjonalny wzór decyzji o powołaniu zespołu: III-14, załącznik A.</div>
+
+ <div class="ramka">
+  <h3>◧ „Kto u nas odpowiada za energię?”</h3>
+  <p style="font-size:13.5px">Zebranie kierowników. Energy Manager pyta: „Kto u nas odpowiada za energię?”
+  Chór głosów: „Wszyscy!”</p>
+  <p style="font-size:13.5px">Drugie pytanie: „Kto zauważył, że w ostatni weekend sprężarka pracowała przez dwie doby
+  przy pustej hali?” Cisza.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Gdy odpowiadają wszyscy, nie odpowiada nikt.</b> Odpowiedzialność
+  działa dopiero wtedy, gdy ma nazwisko i granice. Punkt 5.3 jest o tym, żeby każdy wiedział, co jest jego robotą —
+  i co może zdecydować sam.</p>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>„Czy norma każe zatrudnić Energy Managera?”</b> Nie. Norma wymaga
+ <b>zespołu</b> ds. zarządzania energią — i przypisania odpowiedzialności oraz uprawnień. Stanowisko „przedstawiciela
+ kierownictwa” znała poprzednia wersja normy, z 2011 roku; obecna mówi o zespole. W praktyce prawie zawsze ktoś ten
+ zespół koordynuje — książka nazywa go Energy Managerem (★ rozwiązanie metody, nie wymóg normy). Może to być kierownik
+ utrzymania ruchu, główny energetyk albo pełnomocnik systemów zarządzania. <b>Jeśli koordynatora nie wyznaczycie,
+ kierownictwo musi rozdzielić jego zadania między członków zespołu.</b></div>
+
+ <div class="ramka">
+  <h3>✓ Pięć zadań zespołu — po ludzku</h3>
+  <table class="tab">
+   <tr><th style="width:5%">—</th><th style="width:34%">Zadanie</th><th>Co to znaczy</th></tr>
+<tr><td class="mono"><b>a)</b></td><td><b>Zapewnienie, że system zarządzania energią jest ustanowiony, wdrożony, utrzymywany i ciągle doskonalony</b></td><td>Zbudować system i utrzymać go przy życiu. Te same cztery czasowniki co w punkcie 4.4.</td></tr><tr><td class="mono"><b>b)</b></td><td><b>Zapewnienie, że system jest zgodny z wymaganiami normy</b></td><td>Pilnować zgodności — sprawdzać, czy system spełnia wymagania, a nie tylko czy działa.</td></tr><tr><td class="mono"><b>c)</b></td><td><b>Zapewnienie realizacji planów działań służących ciągłemu doskonaleniu wyniku energetycznego</b></td><td>Doprowadzić plany działań do końca. Zespół nie musi sam wymieniać silników — zapewnia realizację i nadzoruje postęp, a działania wykonują właściciele wskazani w planie.</td></tr><tr><td class="mono"><b>d)</b></td><td><b>Raportowanie najwyższemu kierownictwu o funkcjonowaniu systemu i poprawie wyniku energetycznego, w ustalonych odstępach czasu</b></td><td>Raportować kierownictwu: jak działa system i jak poprawia się wynik energetyczny.</td></tr><tr><td class="mono"><b>e)</b></td><td><b>Ustalenie kryteriów i metod potrzebnych do zapewnienia skutecznego działania i nadzorowania systemu</b></td><td>Ustalić zasady gry — kryteria i metody, dzięki którym system działa i da się go nadzorować.</td></tr>
+  </table>
+ </div>
+
+ <div class="ramka">
+  <h3>⚽ Analogia: drużyna piłkarska</h3>
+  <p style="font-size:13.5px">Zarząd klubu ustala cel na sezon, daje budżet i rozstrzyga sprawy kluczowe. Trener
+  układa taktykę, prowadzi treningi i mówi zarządowi, jak idzie. Zawodnicy wiedzą, na jakiej pozycji grają.
+  Bez przypisanych pozycji nawet najlepsi biegają bez sensu.</p>
+  <p style="font-size:13.5px;margin-bottom:0">W zakładzie te pozycje wyglądają tak: <b>najwyższe kierownictwo</b>
+  przypisuje role, zapewnia zasoby i rozstrzyga — często wskazuje jednego członka kierownictwa jako sponsora systemu.
+  <b>Zespół ds. zarządzania energią</b> realizuje pięć zadań z listy wyżej. <b>Koordynator</b> zbiera wyniki, raportuje
+  i łączy działy; jest pierwszym rozmówcą audytora, ale nie jedynym. <b>Właściciele znaczących użyć energii</b> —
+  na przykład kierownik utrzymania ruchu dla sprężarkowni. <b>Pozostali kierownicy</b> odpowiadają za energię
+  w swoich obszarach.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>▦ Matryca: oznaczenia Z / O / W / I</h3>
+  <p class="op">Formularz F-EnMS-05 rozpisuje 18 zadań systemu na role. Matryca nie musi rozpisywać każdego punktu
+  normy — ma pokazać, że wszystkie istotne obowiązki mają właściciela.</p>
+  <table class="tab">
+   <tr><th style="width:10%">Oznaczenie</th><th>Znaczenie</th></tr>
+   <tr><td class="mono"><b>Z</b></td><td>zatwierdza, podejmuje decyzję</td></tr>
+   <tr><td class="mono"><b>O</b></td><td>odpowiada za wykonanie — przygotowuje, prowadzi</td></tr>
+   <tr><td class="mono"><b>W</b></td><td>współpracuje — dostarcza danych, opiniuje</td></tr>
+   <tr><td class="mono"><b>I</b></td><td>jest informowany</td></tr>
+  </table>
+  <p style="font-size:13.5px;margin:10px 0 0"><b>W każdym wierszu co najmniej jedno O.</b> Jeśli O jest więcej,
+  zapiszcie pod tabelą, kto za co — na przykład: zespół zapewnia realizację i nadzoruje postęp, a O ma właściciel
+  działania wskazany w planie. Ankieta tego pilnuje i nie przepuści wiersza bez litery O.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>🔑 Uprawnienia — co koordynator może zdecydować sam?</h3>
+  <p style="font-size:13.5px">Odpowiedzialność bez uprawnień to frustracja. Koordynator nie musi mieć własnego
+  budżetu. Potrzebuje trzech rzeczy: <b>dostępu do danych</b>, <b>jasnych granic samodzielnych decyzji</b>
+  i <b>skutecznej drogi do decyzji kierownictwa</b>, gdy sprawa wykracza poza te granice. Zapiszcie to — w decyzji
+  o powołaniu zespołu, w matrycy albo w opisie stanowiska. Forma jest dowolna.</p>
+  <p style="font-size:13.5px">W AutoParts Polska matryca mówi, że Energy Manager: zwołuje zespół i zleca analizy
+  oraz pomiary okresowe; może wstrzymać zakup urządzenia energochłonnego do czasu oceny energetycznej — najdłużej
+  na 5 dni roboczych; wydaje do 20 tys. zł rocznie na drobne usprawnienia; a w sprawach większych przygotowuje
+  wniosek dla dyrektora zakładu, który zatwierdza cele, plany działań i budżet.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Sprawdzenie jest proste:</b> przy pierwszym wstrzymanym zakupie
+  zobaczcie, czy ocena zmieściła się w 5 dniach i czy zakupy wiedziały, do kogo się zwrócić. Jeśli nie — poprawcie
+  zapis, zanim stanie się martwy. Limity kwotowe i terminy są decyzją firmy, nie wymaganiem normy.</p>
+ </div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Skąd wiesz, że role działają?</h3>
+   <ul>
+    <li>Przy każdym znaczącym użyciu energii stoi nazwisko, a nie „dział techniczny”.</li>
+    <li>Członkowie zespołu wiedzą, że w nim są, i znają swoje zadania — bo ktoś im to zakomunikował.</li>
+    <li>Wiadomo, jak i jak często zespół raportuje kierownictwu, i jest przykład takiego raportu.</li>
+    <li>Koordynator wie, co może zdecydować sam, a co musi przekazać wyżej.</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Ankieta odpowiada na te cztery pytania sama —
+   z tego, co wpiszecie w zakładkach 1–5.</p>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Dokumenty do przygotowania</h3>
+   <ul>
+    <li><b>Przypisanie i zakomunikowanie ról, odpowiedzialności i uprawnień, w tym zadań zespołu
+    — forma dowolna.</b> To jest wymaganie 5.3.</li>
+    <li>★ Matryca odpowiedzialności i uprawnień albo decyzja o powołaniu zespołu — wygodne formy, nie wymóg normy</li>
+    <li>★ Zakres zadań koordynatora — jeśli go wyznaczacie</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Szczegółowe szablony: Część II, Moduł 2, punkt 5.3;
+   Część III: III-11 (formularz), III-12 (przykład), III-14 zał. A (wzór decyzji).</p>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>⚠ Na co uważać — najczęstsze błędy</h3>
+  <table class="tab">
+   <tr><th style="width:38%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+   <tr><td>Jedna osoba bez wsparcia</td><td>Jedna osoba może pełnić funkcję zespołu — ale z dostępem do produkcji i utrzymania ruchu</td></tr>
+   <tr><td>Odpowiedzialność bez uprawnień</td><td>Zapiszcie, co zespół może zdecydować sam i jak dociera do kierownictwa</td></tr>
+   <tr><td>Zespół, który się nie spotyka</td><td>Stały rytm spotkań i zapisane ustalenia (★ np. raz w miesiącu w okresie wdrożenia)</td></tr>
+   <tr><td>Nikt nie wie, że jest w zespole</td><td>Ogłoście skład i zadania — norma wymaga, żeby były zakomunikowane</td></tr>
+   <tr><td>Znaczące użycia energii bez właściciela</td><td>Każde ma konkretną osobę odpowiedzialną za sterowanie i poprawę</td></tr>
+   <tr><td>Czas „z doskoku”</td><td>Przydzielony czas musi wystarczać do zadań (zob. punkt 7.1 i zakładka „Zasoby” w 5.1)</td></tr>
+  </table>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>„Ile osób powinno być w zespole?”</b> Tyle, ile wymaga Wasz zakład:
+ liczba procesów, znaczących użyć energii, dostępność danych. W małej firmie funkcję zespołu może pełnić jedna osoba
+ — byle miała dostęp do ludzi, którzy znają urządzenia i procesy.<br>
+ <b>★ Rada orientacyjnie:</b> do ok. 50 osób — jedna osoba; 50–250 — koordynator i 2–3 osoby z kluczowych działów;
+ powyżej 250 — zespół z przedstawicielami produkcji, utrzymania ruchu, zakupów i finansów. Ostatecznie decydują
+ zadania, nie liczba pracowników.</div>
+
+ <div class="note" style="margin:14px 0"><b>Twój ruch.</b> W systemie każdy musi wiedzieć, za co odpowiada i co może
+ zdecydować — bo jeśli odpowiadają wszyscy, to nie odpowiada nikt.<br>
+ <b>Zadanie:</b> wypiszcie znaczące użycia energii w swoim zakładzie i przy każdym wpiszcie jedno nazwisko.
+ Tam, gdzie się wahacie, macie pierwszą sprawę dla kierownictwa.</div>
+
+ <div class="ankbox">
+  <h3>5.3 Ankieta ról, odpowiedzialności i uprawnień</h3>
+  <p class="op">Pięć zadań zespołu, matryca 18 zadań × role, uprawnienia kluczowych ról, właściciele SEU
+  i zakomunikowanie. Siedem zakładek.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz ankietę 5.3</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”,
+ Tom 2 rozdział 2 punkt 5.3 oraz Część III (Toolkit) Moduł 2 wersja 2.1.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>D-EnMS-ROL-01 Matryca odpowiedzialności i uprawnień (= formularz F-EnMS-05, załącznik III-11)</li>
+   <li>Decyzja o powołaniu zespołu z zakresem zadań (wzór: III-14, załącznik A)</li>
+   <li>Dowód zakomunikowania ról: zarządzenie, protokół odprawy, tablica, intranet</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">W każdym wierszu matrycy musi być co najmniej jedno O. Jeśli jest ich więcej — zapiszcie,
+  kto za co odpowiada.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij matrycę przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 5.3 w formacie stron 4.1–4.4.</b> Domyka rozdział 5. Centralnym elementem jest matryca
+18 zadań × role z oznaczeniami Z / O / W / I — odwzorowanie formularza F-EnMS-05 (III-11).</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 2, punkt 5.3</td><td>Scena „Kto u nas odpowiada za energię?”, pięć zadań po ludzku, analogia drużyny piłkarskiej, akapit o uprawnieniach koordynatora wraz ze sprawdzeniem na pierwszym wstrzymanym zakupie, cztery pytania „skąd wiesz, że role działają”, tabela błędów, ★ Rada o liczebności zespołu, „Twój ruch”, akapit „Czy norma każe zatrudnić Energy Managera”.</td></tr>
+<tr><td>Część III, Moduł 2 — III-11 (F-EnMS-05)</td><td>Oznaczenia Z / O / W / I, 18 zadań matrycy, zasada „w każdym wierszu co najmniej jedno O”, uwagi do wierszy z kilkoma O, tabela uprawnień kluczowych ról z trzema kolumnami, możliwość dodania własnych ról i zadań.</td></tr>
+<tr><td>Część III, Moduł 2 — III-12</td><td>Wypełnienie przykładowe matrycy (przycisk w stopce) oraz wyjaśnienia dotyczące budżetu, audytów, przeglądu i właścicieli SEU.</td></tr>
+<tr><td>Część III, Moduł 2 — III-13</td><td>Lista kontrolna sekcji 5.3: 14 pozycji z kolumną N / M.</td></tr>
+<tr><td>Część III, Moduł 2 — III-14</td><td>Procedura P-EnMS-02 i wzór decyzji o powołaniu zespołu (załącznik A) — odesłania; rozdział zadań, gdy nie wyznaczono koordynatora (sekcja 4 i krok 14).</td></tr>
+</table>
+
+<h2>Reguły, które tu obowiązują</h2>
+<table>
+<tr><th style="width:30%">Reguła</th><th>Działanie</th></tr>
+<tr><td>Każdy wiersz ma O</td><td>Wiersz bez litery O jest podświetlany i blokuje przekazanie. Komunikat: „zadania, za które nikt nie odpowiada”.</td></tr>
+<tr><td>Kilka O w wierszu</td><td>Pod wierszem otwiera się wymagane pole na wyjaśnienie, kto za co. To zasada wprost z III-11, zastosowana w III-12 przy realizacji planów i sterowaniu SEU.</td></tr>
+<tr><td>Rozdzielenie audytów</td><td>Platforma porównuje, kto ma O w wierszu „Organizacja programu audytów” i w wierszu „Przeprowadzenie audytów”. Ta sama rola w obu daje ostrzeżenie — pozycja M z III-13.</td></tr>
+<tr><td>Brak koordynatora</td><td>Puste pole koordynatora otwiera wymagane pole „jak rozdzielono jego zadania między członków zespołu”. Norma nie wymaga koordynatora, ale pięć zadań musi mieć wykonawcę.</td></tr>
+<tr><td>Raportowanie w ustalonych odstępach</td><td>Zadanie d) ma dodatkowe pole „jak często”. Norma nie podaje częstotliwości, ale wymaga, żeby była ustalona — brak wartości blokuje przekazanie.</td></tr>
+<tr><td>Cztery sprawdzenia</td><td>Zakładka 5 odpowiada na cztery pytania „skąd wiesz, że role działają” wyliczane z zakładek 1–4, bez pytania klienta o to drugi raz.</td></tr>
+</table>
+
+<h2>Zakładki ankiety</h2>
+<table>
+<tr><th style="width:24%">Zakładka</th><th style="width:12%">Rola</th><th style="width:28%">Skąd treść</th><th>Co wypełnia klient</th></tr>
+<tr><td>1. Pięć zadań zespołu</td><td>wejście</td><td>5 zadań a–e z punktu 5.3</td><td>Kto realizuje, w jaki sposób; przy d) także jak często</td></tr>
+<tr><td>2. Matryca odpowiedzialności</td><td>wejście</td><td>18 zadań × 6 ról domyślnych, role edytowalne</td><td>Oznaczenia Z / O / W / I; uwagi przy kilku O</td></tr>
+<tr><td>3. Uprawnienia</td><td>wejście</td><td>Tabela uprawnień z III-11, rozszerzona o kolumnę „jak sprawdzicie, że działa”</td><td>Rola, decyzje własne, dostęp do danych, eskalacja, sprawdzenie</td></tr>
+<tr><td>4. Właściciele SEU</td><td>wejście</td><td>Lista pusta — SEU wyznacza się w 6.3</td><td>Nazwa SEU, właściciel, zakres odpowiedzialności, zastępca</td></tr>
+<tr><td>5. Zakomunikowanie ról</td><td>wejście + wynik</td><td>Wymaganie normy + cztery sprawdzenia z książki</td><td>Jak i kiedy ogłoszono; koordynator albo rozdział jego zadań</td></tr>
+<tr><td>6. Analiza konsultanta</td><td>wynik</td><td>Kandydaci na wnioski z pustych wierszy matrycy i braków</td><td>Nic — rola konsultanta</td></tr>
+<tr><td>7. Zatwierdzenia</td><td>—</td><td>braki, lista kontrolna III-13 sekcja 5.3, zawartość dokumentu</td><td>Przekazanie konsultantowi</td></tr>
+</table>
+
+<h2>Lista kontrolna III-13 — sekcja 5.3 i sposób liczenia</h2>
+<table>
+<tr><th style="width:54%">Pozycja</th><th style="width:8%">N / M</th><th>Jak wyliczana</th></tr>
+<tr><td>Odpowiedzialności i uprawnienia dla odpowiednich ról są przypisane</td><td class="mono">N</td><td>wszystkie wiersze matrycy mają O (i wyjaśnienie przy kilku O)</td></tr><tr><td>…i zakomunikowane w organizacji</td><td class="mono">N</td><td>wypełnione: jak i kiedy ogłoszono role</td></tr><tr><td>Powołano zespół ds. zarządzania energią</td><td class="mono">N</td><td>ocena konsultanta</td></tr><tr><td>Zespołowi przypisano: ustanowienie, wdrożenie, utrzymanie i doskonalenie systemu (a)</td><td class="mono">N</td><td>zadanie zespołu opisane: kto i w jaki sposób</td></tr><tr><td>…zapewnienie zgodności systemu z wymaganiami normy (b)</td><td class="mono">N</td><td>zadanie zespołu opisane: kto i w jaki sposób</td></tr><tr><td>…realizację planów działań (c)</td><td class="mono">N</td><td>zadanie zespołu opisane: kto i w jaki sposób</td></tr><tr><td>…raportowanie najwyższemu kierownictwu o systemie i poprawie wyniku, w ustalonych odstępach (d)</td><td class="mono">N</td><td>zadanie zespołu opisane: kto i w jaki sposób</td></tr><tr><td>…ustalenie kryteriów i metod skutecznego działania i nadzorowania systemu (e)</td><td class="mono">N</td><td>zadanie zespołu opisane: kto i w jaki sposób</td></tr><tr><td>Wyznaczono koordynatora zespołu (Energy Managera)</td><td class="mono">M</td><td>wskazany koordynator albo opisany rozdział jego zadań</td></tr><tr><td>Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań</td><td class="mono">N</td><td>punkt 5.1, zakładka „Zasoby” — przeniesienie po połączeniu punktów</td></tr><tr><td>Ustalono i zapisano sposób przydziału czasu i zasobów (np. udział etatu, budżet)</td><td class="mono">M</td><td>punkt 5.1, zakładka „Zasoby” — przeniesienie po połączeniu punktów</td></tr><tr><td>Uprawnienia kluczowych ról są zapisane (decyzje, dostęp do danych, przekazywanie spraw wyżej)</td><td class="mono">M</td><td>co najmniej jedna rola z kompletem: decyzje, dane, eskalacja</td></tr><tr><td>Każde SEU ma właściciela</td><td class="mono">M</td><td>każde wpisane SEU ma właściciela</td></tr><tr><td>Organizacja audytów wewnętrznych jest oddzielona od ich przeprowadzania</td><td class="mono">M</td><td>rola z O przy organizacji audytów nie ma O przy ich przeprowadzaniu</td></tr></table>
+<h2>Dwie rzeczy do uzgodnienia</h2>
+<div class="warn">
+<ul>
+<li><b>Dwie pozycje listy III-13 należą do punktu 5.1.</b> „Zasoby, w tym czas, wystarczają zespołowi” oraz
+„ustalono i zapisano sposób przydziału czasu i zasobów” klient wypełnia w zakładce „Zasoby” punktu 5.1. Na platformie
+trzeba przenieść ten stan między punktami — tak jak 4.4 czyta stan punktów 4.1–4.3. Do czasu połączenia obie pozycje
+pokazują „ocena konsultanta”.</li>
+<li><b>Przykładowa matryca w wierszu „Przeprowadzenie audytów” zostaje pusta.</b> W III-12 audyty prowadzi rola
+spoza zespołu (Śr./BHP), której nie ma wśród sześciu ról domyślnych. Celowo nie wstawiłem tam nikogo — klient ma
+świadomie wskazać osobę spoza audytowanego obszaru. Alternatywa: dodać siódmą rolę domyślną. <b>Do decyzji.</b></li>
+</ul>
+</div>
+
+<h2>Rozdział 5 — komplet</h2>
+<table>
+<tr><th style="width:10%">Punkt</th><th style="width:30%">Dokument</th><th style="width:22%">Formularz książki</th><th>Czy norma wymaga udokumentowania</th></tr>
+<tr><td class="mono">5.1</td><td class="mono">D-EnMS-PRZ-01</td><td>— (lista kontrolna III-13)</td><td>Nie — dowodem są zapisy z innych punktów</td></tr>
+<tr><td class="mono">5.2</td><td class="mono">D-EnMS-POL-01</td><td>F-EnMS-04 = III-09, przykład III-10</td><td><b>Tak — jedyny dokument rozdziału 5</b></td></tr>
+<tr><td class="mono">5.3</td><td class="mono">D-EnMS-ROL-01</td><td>F-EnMS-05 = III-11, przykład III-12</td><td>Nie — wymagane jest przypisanie i zakomunikowanie, forma dowolna</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 5.3. Format pól zgodny z 4.1–4.4 i 5.1–5.2.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;zadania&quot;: [
+    {
+      &quot;kod&quot;: &quot;ZAD-A&quot;,
+      &quot;litera&quot;: &quot;a&quot;,
+      &quot;tresc&quot;: &quot;Zapewnienie, że system zarządzania energią jest ustanowiony, wdrożony, utrzymywany i ciągle doskonalony&quot;,
+      &quot;poludzku&quot;: &quot;Zbudować system i utrzymać go przy życiu. Te same cztery czasowniki co w punkcie 4.4.&quot;,
+      &quot;klauzula&quot;: &quot;4.4&quot;,
+      &quot;sugestia&quot;: &quot;np. Energy Manager z zespołem&quot;,
+      &quot;placeholder&quot;: &quot;np. zespół spotyka się raz w miesiącu w okresie wdrożenia; Energy Manager prowadzi rejestr zadań i pilnuje terminów&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAD-B&quot;,
+      &quot;litera&quot;: &quot;b&quot;,
+      &quot;tresc&quot;: &quot;Zapewnienie, że system jest zgodny z wymaganiami normy&quot;,
+      &quot;poludzku&quot;: &quot;Pilnować zgodności — sprawdzać, czy system spełnia wymagania, a nie tylko czy działa.&quot;,
+      &quot;klauzula&quot;: &quot;9.2&quot;,
+      &quot;sugestia&quot;: &quot;np. Energy Manager / pełnomocnik systemów zarządzania&quot;,
+      &quot;placeholder&quot;: &quot;np. lista kontrolna przed każdym audytem wewnętrznym; przegląd zgodności przy każdej zmianie w systemie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAD-C&quot;,
+      &quot;litera&quot;: &quot;c&quot;,
+      &quot;tresc&quot;: &quot;Zapewnienie realizacji planów działań służących ciągłemu doskonaleniu wyniku energetycznego&quot;,
+      &quot;poludzku&quot;: &quot;Doprowadzić plany działań do końca. Zespół nie musi sam wymieniać silników — zapewnia realizację i nadzoruje postęp, a działania wykonują właściciele wskazani w planie.&quot;,
+      &quot;klauzula&quot;: &quot;6.2&quot;,
+      &quot;sugestia&quot;: &quot;np. Energy Manager koordynuje, właściciele działań wykonują&quot;,
+      &quot;placeholder&quot;: &quot;np. miesięczny przegląd postępu działań z planu; właściciel każdego działania wskazany w planie; eskalacja do Dyrektora przy zagrożeniu terminu&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAD-D&quot;,
+      &quot;litera&quot;: &quot;d&quot;,
+      &quot;tresc&quot;: &quot;Raportowanie najwyższemu kierownictwu o funkcjonowaniu systemu i poprawie wyniku energetycznego, w ustalonych odstępach czasu&quot;,
+      &quot;poludzku&quot;: &quot;Raportować kierownictwu: jak działa system i jak poprawia się wynik energetyczny.&quot;,
+      &quot;klauzula&quot;: &quot;9.3&quot;,
+      &quot;sugestia&quot;: &quot;np. Energy Manager&quot;,
+      &quot;placeholder&quot;: &quot;np. raport miesięczny do Dyrektora Zakładu: wskaźniki, odchylenia, postęp działań; pełne sprawozdanie na przegląd zarządzania&quot;,
+      &quot;rytm&quot;: &quot;np. raport miesięczny i pełne sprawozdanie dwa razy w roku&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;ZAD-E&quot;,
+      &quot;litera&quot;: &quot;e&quot;,
+      &quot;tresc&quot;: &quot;Ustalenie kryteriów i metod potrzebnych do zapewnienia skutecznego działania i nadzorowania systemu&quot;,
+      &quot;poludzku&quot;: &quot;Ustalić zasady gry — kryteria i metody, dzięki którym system działa i da się go nadzorować.&quot;,
+      &quot;klauzula&quot;: &quot;8.1, 9.1&quot;,
+      &quot;sugestia&quot;: &quot;np. Energy Manager z Kierownikiem UR&quot;,
+      &quot;placeholder&quot;: &quot;np. kryteria eksploatacji dla sprężarkowni i kotłowni; progi alarmowe; metoda liczenia wskaźników i zasady porównań&quot;
+    }
+  ],
+  &quot;role_domyslne&quot;: [
+    {
+      &quot;id&quot;: &quot;zarzad&quot;,
+      &quot;skrot&quot;: &quot;Zarząd&quot;,
+      &quot;nazwa&quot;: &quot;Najwyższe kierownictwo&quot;,
+      &quot;staly&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;em&quot;,
+      &quot;skrot&quot;: &quot;EM&quot;,
+      &quot;nazwa&quot;: &quot;Energy Manager (koordynator zespołu)&quot;,
+      &quot;staly&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;prod&quot;,
+      &quot;skrot&quot;: &quot;Prod.&quot;,
+      &quot;nazwa&quot;: &quot;Kierownik Produkcji&quot;,
+      &quot;staly&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;ur&quot;,
+      &quot;skrot&quot;: &quot;UR&quot;,
+      &quot;nazwa&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+      &quot;staly&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;zak&quot;,
+      &quot;skrot&quot;: &quot;Zak.&quot;,
+      &quot;nazwa&quot;: &quot;Zakupy&quot;,
+      &quot;staly&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;fin&quot;,
+      &quot;skrot&quot;: &quot;Fin.&quot;,
+      &quot;nazwa&quot;: &quot;Finanse&quot;,
+      &quot;staly&quot;: true
+    }
+  ],
+  &quot;mat_zadania&quot;: [
+    {
+      &quot;kod&quot;: &quot;MAT-01&quot;,
+      &quot;nazwa&quot;: &quot;Powołanie zespołu, przypisanie ról&quot;,
+      &quot;klauzula&quot;: &quot;5.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-02&quot;,
+      &quot;nazwa&quot;: &quot;Zakres i granice systemu&quot;,
+      &quot;klauzula&quot;: &quot;4.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-03&quot;,
+      &quot;nazwa&quot;: &quot;Polityka energetyczna&quot;,
+      &quot;klauzula&quot;: &quot;5.2&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-04&quot;,
+      &quot;nazwa&quot;: &quot;Cele, zadania i plany działań&quot;,
+      &quot;klauzula&quot;: &quot;6.2&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-05&quot;,
+      &quot;nazwa&quot;: &quot;Przegląd energetyczny, SEU&quot;,
+      &quot;klauzula&quot;: &quot;6.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-06&quot;,
+      &quot;nazwa&quot;: &quot;Wskaźniki EnPI i linie bazowe&quot;,
+      &quot;klauzula&quot;: &quot;6.4, 6.5&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-07&quot;,
+      &quot;nazwa&quot;: &quot;Plan zbierania danych, monitoring&quot;,
+      &quot;klauzula&quot;: &quot;6.6, 9.1&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-08&quot;,
+      &quot;nazwa&quot;: &quot;Realizacja planów działań&quot;,
+      &quot;klauzula&quot;: &quot;6.2&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-09&quot;,
+      &quot;nazwa&quot;: &quot;Sterowanie operacyjne SEU&quot;,
+      &quot;klauzula&quot;: &quot;8.1&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-10&quot;,
+      &quot;nazwa&quot;: &quot;Kryteria w projektowaniu i zakupach&quot;,
+      &quot;klauzula&quot;: &quot;8.2, 8.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-11&quot;,
+      &quot;nazwa&quot;: &quot;Kompetencje i świadomość&quot;,
+      &quot;klauzula&quot;: &quot;7.2, 7.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-12&quot;,
+      &quot;nazwa&quot;: &quot;Komunikacja&quot;,
+      &quot;klauzula&quot;: &quot;7.4&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-13&quot;,
+      &quot;nazwa&quot;: &quot;Budżet systemu i inwestycje energetyczne&quot;,
+      &quot;klauzula&quot;: &quot;7.1&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-14&quot;,
+      &quot;nazwa&quot;: &quot;Organizacja programu audytów wewnętrznych&quot;,
+      &quot;klauzula&quot;: &quot;9.2&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-15&quot;,
+      &quot;nazwa&quot;: &quot;Przeprowadzenie audytów wewnętrznych&quot;,
+      &quot;klauzula&quot;: &quot;9.2&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-16&quot;,
+      &quot;nazwa&quot;: &quot;Raportowanie kierownictwu o systemie i wyniku&quot;,
+      &quot;klauzula&quot;: &quot;5.3 d&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-17&quot;,
+      &quot;nazwa&quot;: &quot;Przegląd zarządzania&quot;,
+      &quot;klauzula&quot;: &quot;9.3&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MAT-18&quot;,
+      &quot;nazwa&quot;: &quot;Niezgodności i działania korygujące&quot;,
+      &quot;klauzula&quot;: &quot;10.1&quot;
+    }
+  ],
+  &quot;lista_53&quot;: [
+    {
+      &quot;tekst&quot;: &quot;Odpowiedzialności i uprawnienia dla odpowiednich ról są przypisane&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;przypisane&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…i zakomunikowane w organizacji&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zakomunikowane&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Powołano zespół ds. zarządzania energią&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: null
+    },
+    {
+      &quot;tekst&quot;: &quot;Zespołowi przypisano: ustanowienie, wdrożenie, utrzymanie i doskonalenie systemu (a)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zad&quot;,
+      &quot;zad&quot;: &quot;ZAD-A&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…zapewnienie zgodności systemu z wymaganiami normy (b)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zad&quot;,
+      &quot;zad&quot;: &quot;ZAD-B&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…realizację planów działań (c)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zad&quot;,
+      &quot;zad&quot;: &quot;ZAD-C&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…raportowanie najwyższemu kierownictwu o systemie i poprawie wyniku, w ustalonych odstępach (d)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zad&quot;,
+      &quot;zad&quot;: &quot;ZAD-D&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;…ustalenie kryteriów i metod skutecznego działania i nadzorowania systemu (e)&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zad&quot;,
+      &quot;zad&quot;: &quot;ZAD-E&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Wyznaczono koordynatora zespołu (Energy Managera)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;koordynator&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zasoby&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Ustalono i zapisano sposób przydziału czasu i zasobów (np. udział etatu, budżet)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;przydzial&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Uprawnienia kluczowych ról są zapisane (decyzje, dostęp do danych, przekazywanie spraw wyżej)&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;uprawnienia&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Każde SEU ma właściciela&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;seu&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Organizacja audytów wewnętrznych jest oddzielona od ich przeprowadzania&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;audyty&quot;
+    }
+  ]
+}</pre></div>
+
+<script>
+var ZADANIA = [{"kod": "ZAD-A", "litera": "a", "tresc": "Zapewnienie, że system zarządzania energią jest ustanowiony, wdrożony, utrzymywany i ciągle doskonalony", "poludzku": "Zbudować system i utrzymać go przy życiu. Te same cztery czasowniki co w punkcie 4.4.", "klauzula": "4.4", "sugestia": "np. Energy Manager z zespołem", "placeholder": "np. zespół spotyka się raz w miesiącu w okresie wdrożenia; Energy Manager prowadzi rejestr zadań i pilnuje terminów"}, {"kod": "ZAD-B", "litera": "b", "tresc": "Zapewnienie, że system jest zgodny z wymaganiami normy", "poludzku": "Pilnować zgodności — sprawdzać, czy system spełnia wymagania, a nie tylko czy działa.", "klauzula": "9.2", "sugestia": "np. Energy Manager / pełnomocnik systemów zarządzania", "placeholder": "np. lista kontrolna przed każdym audytem wewnętrznym; przegląd zgodności przy każdej zmianie w systemie"}, {"kod": "ZAD-C", "litera": "c", "tresc": "Zapewnienie realizacji planów działań służących ciągłemu doskonaleniu wyniku energetycznego", "poludzku": "Doprowadzić plany działań do końca. Zespół nie musi sam wymieniać silników — zapewnia realizację i nadzoruje postęp, a działania wykonują właściciele wskazani w planie.", "klauzula": "6.2", "sugestia": "np. Energy Manager koordynuje, właściciele działań wykonują", "placeholder": "np. miesięczny przegląd postępu działań z planu; właściciel każdego działania wskazany w planie; eskalacja do Dyrektora przy zagrożeniu terminu"}, {"kod": "ZAD-D", "litera": "d", "tresc": "Raportowanie najwyższemu kierownictwu o funkcjonowaniu systemu i poprawie wyniku energetycznego, w ustalonych odstępach czasu", "poludzku": "Raportować kierownictwu: jak działa system i jak poprawia się wynik energetyczny.", "klauzula": "9.3", "sugestia": "np. Energy Manager", "placeholder": "np. raport miesięczny do Dyrektora Zakładu: wskaźniki, odchylenia, postęp działań; pełne sprawozdanie na przegląd zarządzania", "rytm": "np. raport miesięczny i pełne sprawozdanie dwa razy w roku"}, {"kod": "ZAD-E", "litera": "e", "tresc": "Ustalenie kryteriów i metod potrzebnych do zapewnienia skutecznego działania i nadzorowania systemu", "poludzku": "Ustalić zasady gry — kryteria i metody, dzięki którym system działa i da się go nadzorować.", "klauzula": "8.1, 9.1", "sugestia": "np. Energy Manager z Kierownikiem UR", "placeholder": "np. kryteria eksploatacji dla sprężarkowni i kotłowni; progi alarmowe; metoda liczenia wskaźników i zasady porównań"}];
+var ROLE_DOM = [{"id": "zarzad", "skrot": "Zarząd", "nazwa": "Najwyższe kierownictwo", "staly": true}, {"id": "em", "skrot": "EM", "nazwa": "Energy Manager (koordynator zespołu)", "staly": true}, {"id": "prod", "skrot": "Prod.", "nazwa": "Kierownik Produkcji", "staly": true}, {"id": "ur", "skrot": "UR", "nazwa": "Kierownik Utrzymania Ruchu", "staly": true}, {"id": "zak", "skrot": "Zak.", "nazwa": "Zakupy", "staly": true}, {"id": "fin", "skrot": "Fin.", "nazwa": "Finanse", "staly": true}];
+var MAT_ZADANIA = [{"kod": "MAT-01", "nazwa": "Powołanie zespołu, przypisanie ról", "klauzula": "5.3"}, {"kod": "MAT-02", "nazwa": "Zakres i granice systemu", "klauzula": "4.3"}, {"kod": "MAT-03", "nazwa": "Polityka energetyczna", "klauzula": "5.2"}, {"kod": "MAT-04", "nazwa": "Cele, zadania i plany działań", "klauzula": "6.2"}, {"kod": "MAT-05", "nazwa": "Przegląd energetyczny, SEU", "klauzula": "6.3"}, {"kod": "MAT-06", "nazwa": "Wskaźniki EnPI i linie bazowe", "klauzula": "6.4, 6.5"}, {"kod": "MAT-07", "nazwa": "Plan zbierania danych, monitoring", "klauzula": "6.6, 9.1"}, {"kod": "MAT-08", "nazwa": "Realizacja planów działań", "klauzula": "6.2"}, {"kod": "MAT-09", "nazwa": "Sterowanie operacyjne SEU", "klauzula": "8.1"}, {"kod": "MAT-10", "nazwa": "Kryteria w projektowaniu i zakupach", "klauzula": "8.2, 8.3"}, {"kod": "MAT-11", "nazwa": "Kompetencje i świadomość", "klauzula": "7.2, 7.3"}, {"kod": "MAT-12", "nazwa": "Komunikacja", "klauzula": "7.4"}, {"kod": "MAT-13", "nazwa": "Budżet systemu i inwestycje energetyczne", "klauzula": "7.1"}, {"kod": "MAT-14", "nazwa": "Organizacja programu audytów wewnętrznych", "klauzula": "9.2"}, {"kod": "MAT-15", "nazwa": "Przeprowadzenie audytów wewnętrznych", "klauzula": "9.2"}, {"kod": "MAT-16", "nazwa": "Raportowanie kierownictwu o systemie i wyniku", "klauzula": "5.3 d"}, {"kod": "MAT-17", "nazwa": "Przegląd zarządzania", "klauzula": "9.3"}, {"kod": "MAT-18", "nazwa": "Niezgodności i działania korygujące", "klauzula": "10.1"}];
+var MAT_PRZYKLAD = {"MAT-01|zarzad": "Z", "MAT-01|em": "O", "MAT-01|prod": "W", "MAT-01|ur": "W", "MAT-01|zak": "I", "MAT-01|fin": "I", "MAT-02|zarzad": "Z", "MAT-02|em": "O", "MAT-02|prod": "W", "MAT-02|ur": "W", "MAT-02|zak": "I", "MAT-02|fin": "I", "MAT-03|zarzad": "Z", "MAT-03|em": "O", "MAT-03|prod": "W", "MAT-03|ur": "W", "MAT-03|zak": "W", "MAT-03|fin": "W", "MAT-04|zarzad": "Z", "MAT-04|em": "O", "MAT-04|prod": "W", "MAT-04|ur": "W", "MAT-04|zak": "I", "MAT-04|fin": "W", "MAT-05|zarzad": "I", "MAT-05|em": "O", "MAT-05|prod": "W", "MAT-05|ur": "W", "MAT-05|zak": "I", "MAT-05|fin": "W", "MAT-06|zarzad": "Z", "MAT-06|em": "O", "MAT-06|prod": "W", "MAT-06|ur": "W", "MAT-06|fin": "I", "MAT-07|zarzad": "I", "MAT-07|em": "O", "MAT-07|prod": "W", "MAT-07|ur": "W", "MAT-07|fin": "I", "MAT-08|zarzad": "I", "MAT-08|em": "W", "MAT-08|prod": "O", "MAT-08|ur": "O", "MAT-08|zak": "W", "MAT-08|fin": "I", "MAT-09|em": "W", "MAT-09|prod": "O", "MAT-09|ur": "O", "MAT-09|zak": "I", "MAT-10|zarzad": "Z", "MAT-10|em": "W", "MAT-10|prod": "W", "MAT-10|ur": "W", "MAT-10|zak": "O", "MAT-10|fin": "W", "MAT-11|zarzad": "I", "MAT-11|em": "O", "MAT-11|prod": "W", "MAT-11|ur": "W", "MAT-11|zak": "I", "MAT-11|fin": "I", "MAT-12|zarzad": "W", "MAT-12|em": "O", "MAT-12|prod": "W", "MAT-12|ur": "W", "MAT-12|zak": "I", "MAT-12|fin": "I", "MAT-13|zarzad": "Z", "MAT-13|em": "W", "MAT-13|prod": "W", "MAT-13|ur": "W", "MAT-13|zak": "I", "MAT-13|fin": "O", "MAT-14|zarzad": "I", "MAT-14|em": "O", "MAT-14|prod": "W", "MAT-14|ur": "W", "MAT-14|zak": "W", "MAT-14|fin": "I", "MAT-15|zarzad": "I", "MAT-15|em": "W", "MAT-15|prod": "W", "MAT-15|ur": "W", "MAT-15|zak": "W", "MAT-15|fin": "I", "MAT-16|zarzad": "I", "MAT-16|em": "O", "MAT-16|prod": "W", "MAT-16|ur": "W", "MAT-16|fin": "W", "MAT-17|zarzad": "Z", "MAT-17|em": "O", "MAT-17|prod": "W", "MAT-17|ur": "W", "MAT-17|zak": "W", "MAT-17|fin": "W", "MAT-18|zarzad": "I", "MAT-18|em": "O", "MAT-18|prod": "W", "MAT-18|ur": "W", "MAT-18|zak": "W"};
+var LISTA_53 = [{"tekst": "Odpowiedzialności i uprawnienia dla odpowiednich ról są przypisane", "podstawa": "N", "auto": "przypisane"}, {"tekst": "…i zakomunikowane w organizacji", "podstawa": "N", "auto": "zakomunikowane"}, {"tekst": "Powołano zespół ds. zarządzania energią", "podstawa": "N", "auto": null}, {"tekst": "Zespołowi przypisano: ustanowienie, wdrożenie, utrzymanie i doskonalenie systemu (a)", "podstawa": "N", "auto": "zad", "zad": "ZAD-A"}, {"tekst": "…zapewnienie zgodności systemu z wymaganiami normy (b)", "podstawa": "N", "auto": "zad", "zad": "ZAD-B"}, {"tekst": "…realizację planów działań (c)", "podstawa": "N", "auto": "zad", "zad": "ZAD-C"}, {"tekst": "…raportowanie najwyższemu kierownictwu o systemie i poprawie wyniku, w ustalonych odstępach (d)", "podstawa": "N", "auto": "zad", "zad": "ZAD-D"}, {"tekst": "…ustalenie kryteriów i metod skutecznego działania i nadzorowania systemu (e)", "podstawa": "N", "auto": "zad", "zad": "ZAD-E"}, {"tekst": "Wyznaczono koordynatora zespołu (Energy Managera)", "podstawa": "M", "auto": "koordynator"}, {"tekst": "Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań", "podstawa": "N", "auto": "zasoby"}, {"tekst": "Ustalono i zapisano sposób przydziału czasu i zasobów (np. udział etatu, budżet)", "podstawa": "M", "auto": "przydzial"}, {"tekst": "Uprawnienia kluczowych ról są zapisane (decyzje, dostęp do danych, przekazywanie spraw wyżej)", "podstawa": "M", "auto": "uprawnienia"}, {"tekst": "Każde SEU ma właściciela", "podstawa": "M", "auto": "seu"}, {"tekst": "Organizacja audytów wewnętrznych jest oddzielona od ich przeprowadzania", "podstawa": "M", "auto": "audyty"}];
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Energy Manager bez uprawnień decyzyjnych może raportować, ale nie zmienić sposobu eksploatacji instalacji.", "decyzja": "Zakres obowiązków i uprawnień Energy Managera oraz jego stałego zastępcy sformalizowany zarządzeniem, nie ustaleniem ustnym.", "dzialanie": "Zarządzenie 3/2026 z 12.02.2026: uprawnienie do wstrzymania pracy instalacji poza kryteriami eksploatacji, stałe zastępstwo Kierownika Utrzymania Ruchu.", "sprawdzenie": "Test ciągłości w punkcie 4.4 — na cztery z pięciu pytań jest wskazana osoba, piąte ma termin naprawy 30.11.2026 r."}];
+</script>
+<script>/* ENESA 5.3 — Role, odpowiedzialności i uprawnienia. Format jak strony 4.1–4.4.
+   Zgodny z: Tom 2 rozdz. 2 pkt 5.3 oraz Część III Moduł 2 v2.1 (III-11 = F-EnMS-05, III-12, III-13, III-14). */
+"use strict";
+
+var ZAD = {};        // kod zadania zespołu -> {kto, jak, rytm}
+var ROLE = [];       // kolumny matrycy
+var MAT = {};        // "kodZadania|idRoli" -> Z/O/W/I/-
+var UWAGI = {};      // kod zadania -> uwaga przy kilku O
+var UPR = [];        // uprawnienia kluczowych ról
+var SEU = [];        // właściciele znaczących użyć energii
+var KOM = { sposob: "", data: "", koordynator: "", bezKoordynatora: "" };
+var WNIOSKI = [];
+var AKT = "zadania";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OZN = [["", "–"], ["Z", "Z"], ["O", "O"], ["W", "W"], ["I", "I"]];
+
+/* ── pomocnicze ── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+
+/* ── stan ── */
+function zadOk(z) { var d = ZAD[z.kod] || {}; return !!(d.kto || "").trim() && !!(d.jak || "").trim(); }
+function ozn(zadanie, rola) { return MAT[zadanie + "|" + rola] || ""; }
+function liczO(zadanie) {
+  return ROLE.filter(function (r) { return ozn(zadanie, r.id) === "O"; }).length;
+}
+function wierszOk(z) {
+  var o = liczO(z.kod);
+  if (o === 0) return false;
+  if (o > 1 && !(UWAGI[z.kod] || "").trim()) return false;
+  return true;
+}
+function uprOk(u) {
+  return !!(u.rola || "").trim() && !!(u.decyzje || "").trim() && !!(u.dane || "").trim() && !!(u.eskalacja || "").trim();
+}
+function seuOk(s) { return !!(s.nazwa || "").trim() && !!(s.wlasciciel || "").trim(); }
+function komOk() { return !!(KOM.sposob || "").trim() && !!KOM.data; }
+function koordynator() {
+  return (KOM.koordynator || "").trim() ? KOM.koordynator.trim() : null;
+}
+function audytRozdzielony() {
+  var org = ROLE.filter(function (r) { return ozn("MAT-14", r.id) === "O"; }).map(function (r) { return r.id; });
+  var prz = ROLE.filter(function (r) { return ozn("MAT-15", r.id) === "O"; }).map(function (r) { return r.id; });
+  if (!org.length || !prz.length) return null;
+  return !org.some(function (x) { return prz.indexOf(x) >= 0; });
+}
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+
+/* ── zakładka 1: pięć zadań zespołu ── */
+function rysujZadania(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Pięć zadań zespołu ds. zarządzania energią"));
+  s.appendChild(el("p", "opis", "Norma wymienia pięć zadań, które najwyższe kierownictwo przypisuje zespołowi. To jedyna lista w punkcie 5.3, której nie można skrócić — przy każdym zadaniu wskażcie, kto je realizuje i w jaki sposób."));
+  s.appendChild(el("div", "note", "Zespół powołaliście w punkcie 5.1. Tutaj rozdzielacie jego zadania. Jeśli nie wyznaczyliście koordynatora, kierownictwo musi rozdzielić zadania między członków zespołu — pole na to jest w zakładce 5."));
+  ZADANIA.forEach(function (z) {
+    var d = ZAD[z.kod] || (ZAD[z.kod] = {});
+    var k = el("div", "poz" + (zadOk(z) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, z.kod + " · " + z.litera + ")"));
+    g.appendChild(el("span", "chip red", "wymaganie normy"));
+    if (z.klauzula) g.appendChild(el("span", "chip", "dalej: " + z.klauzula));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", z.tresc));
+    k.appendChild(el("div", "pozmeta", z.poludzku));
+    k.appendChild(pole("Kto to realizuje — stanowisko albo rola w zespole",
+      inp(d.kto, z.sugestia, function (v) { d.kto = v; })));
+    k.appendChild(pole("W jaki sposób — wymagane", txt(d.jak, z.placeholder, 2, function (v) { d.jak = v; })));
+    if (z.rytm)
+      k.appendChild(pole("Jak często", inp(d.rytm, z.rytm, function (v) { d.rytm = v; }),
+        "Norma mówi „w ustalonych odstępach czasu” i nie podaje częstotliwości. Ustalacie ją sami — ważne, żeby była ustalona."));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+}
+
+/* ── zakładka 2: matryca odpowiedzialności ── */
+function rysujMatryce(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Matryca odpowiedzialności i uprawnień");
+  var got = MAT_ZADANIA.filter(wierszOk).length;
+  h.appendChild(el("span", "chip " + (got === MAT_ZADANIA.length ? "green" : "amber"),
+    got + " / " + MAT_ZADANIA.length + " wierszy"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Odpowiednik formularza F-EnMS-05 (załącznik III-11). Matryca nie musi rozpisywać każdego punktu normy — ma pokazać, że wszystkie istotne obowiązki mają właściciela."));
+  var leg = el("div", "note");
+  leg.appendChild(el("b", null, "Oznaczenia: "));
+  leg.appendChild(document.createTextNode("Z — zatwierdza, podejmuje decyzję · O — odpowiada za wykonanie (przygotowuje, prowadzi) · W — współpracuje (dostarcza danych, opiniuje) · I — jest informowany. W każdym wierszu co najmniej jedno O; jeśli O jest więcej, zapiszcie pod tabelą, kto za co."));
+  s.appendChild(leg);
+
+  var wrap = el("div"); wrap.style.overflowX = "auto";
+  var t = el("table", "tab");
+  var tr = el("tr");
+  tr.appendChild(el("th", null, "Zadanie / rola"));
+  ROLE.forEach(function (r) {
+    var th = el("th", null, r.skrot);
+    th.title = r.nazwa;
+    tr.appendChild(th);
+  });
+  tr.appendChild(el("th", null, ""));
+  t.appendChild(tr);
+
+  MAT_ZADANIA.forEach(function (z) {
+    var r = el("tr");
+    if (!wierszOk(z)) r.style.background = "#fdf6e3";
+    var td0 = el("td");
+    td0.appendChild(el("div", null, z.nazwa));
+    if (z.klauzula) td0.appendChild(el("div", "pozmeta", z.klauzula));
+    r.appendChild(td0);
+    ROLE.forEach(function (rl) {
+      var td = el("td");
+      var sl = document.createElement("select");
+      sl.style.padding = "3px 6px"; sl.style.fontSize = "12.5px"; sl.style.minWidth = "52px";
+      OZN.forEach(function (o) { sl.appendChild(new Option(o[1], o[0])); });
+      sl.value = ozn(z.kod, rl.id);
+      sl.onchange = function () { MAT[z.kod + "|" + rl.id] = sl.value; zapisz(); rysuj(); };
+      td.appendChild(sl);
+      r.appendChild(td);
+    });
+    var tdS = el("td");
+    var o = liczO(z.kod);
+    tdS.appendChild(el("span", "chip " + (wierszOk(z) ? "green" : "amber"),
+      o === 0 ? "brak O" : o > 1 ? o + "× O" : "ok"));
+    r.appendChild(tdS);
+    t.appendChild(r);
+
+    if (o > 1) {
+      var ru = el("tr");
+      var tdu = el("td"); tdu.colSpan = ROLE.length + 2;
+      var p = pole("Kilka O w tym wierszu — zapiszcie, kto za co odpowiada (wymagane)",
+        inp(UWAGI[z.kod], "np. zespół zapewnia realizację i nadzoruje postęp, a O ma właściciel działania wskazany w planie: sprężarkownia — Kierownik UR, prasy — Kierownik Produkcji",
+          function (v) { UWAGI[z.kod] = v; }));
+      p.style.margin = "0";
+      tdu.appendChild(p);
+      ru.appendChild(tdu); t.appendChild(ru);
+    }
+  });
+  wrap.appendChild(t);
+  s.appendChild(wrap);
+
+  var ar = audytRozdzielony();
+  if (ar === false)
+    s.appendChild(el("div", "warn", "Organizacja programu audytów i ich przeprowadzanie mają tę samą rolę z literą O. Audytor nie powinien audytować własnego obszaru — w przykładzie AutoParts program organizuje Energy Manager, a audyty prowadzą audytorzy spoza audytowanego obszaru. To pozycja listy kontrolnej III-13."));
+  if (MAT_ZADANIA.some(function (z) { return liczO(z.kod) === 0; }))
+    s.appendChild(el("div", "warn", "Wiersze bez litery O to zadania, za które nikt nie odpowiada. „Gdy odpowiadają wszyscy, nie odpowiada nikt” — a gdy nie odpowiada nikt, jest jeszcze gorzej."));
+  host.appendChild(s);
+
+  var rs = el("div", "sekcja");
+  rs.appendChild(el("h3", null, "Role w matrycy"));
+  rs.appendChild(el("p", "opis", "Formularz jest punktem wyjścia: dodajcie własne role, usuńcie te, których nie potrzebujecie."));
+  ROLE.forEach(function (r, i) {
+    var k = el("div", "poz");
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, r.skrot));
+    if (r.staly) g.appendChild(el("span", "chip", "z formularza III-11"));
+    if (!r.staly) {
+      var us = el("button", "link", "usuń");
+      us.onclick = function () {
+        MAT_ZADANIA.forEach(function (z) { delete MAT[z.kod + "|" + r.id]; });
+        ROLE.splice(i, 1); zapisz(); rysuj();
+      };
+      g.appendChild(us);
+    }
+    k.appendChild(g);
+    k.appendChild(pole("Skrót w nagłówku", inp(r.skrot, "", function (v) { r.skrot = v; })));
+    k.appendChild(pole("Pełna nazwa roli", inp(r.nazwa, "", function (v) { r.nazwa = v; })));
+    rs.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj rolę");
+  dod.onclick = function () {
+    ROLE.push({ id: "R" + Date.now(), skrot: "Nowa", nazwa: "" });
+    zapisz(); rysuj();
+  };
+  rs.appendChild(dod);
+  host.appendChild(rs);
+}
+
+/* ── zakładka 3: uprawnienia ── */
+function rysujUprawnienia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Uprawnienia kluczowych ról"));
+  s.appendChild(el("p", "opis", "Odpowiedzialność bez uprawnień to frustracja. Koordynator nie musi mieć własnego budżetu — potrzebuje trzech rzeczy: dostępu do danych, jasnych granic samodzielnych decyzji i skutecznej drogi do decyzji kierownictwa, gdy sprawa wykracza poza te granice."));
+  s.appendChild(el("div", "note", "Forma jest dowolna: decyzja o powołaniu zespołu, matryca albo opis stanowiska. Ważne, żeby to było zapisane — inaczej przy pierwszym sporze nikt nie będzie wiedział, kto rozstrzyga."));
+  UPR.forEach(function (u, i) {
+    var k = el("div", "poz" + (uprOk(u) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Rola " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { UPR.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Rola", inp(u.rola, "np. Energy Manager", function (v) { u.rola = v; })));
+    k.appendChild(pole("Może zdecydować samodzielnie",
+      txt(u.decyzje, "np. zwołuje zespół; zleca analizy i pomiary okresowe; wstrzymuje zakup urządzenia energochłonnego do czasu oceny energetycznej — najdłużej na 5 dni roboczych; wydaje do 20 tys. zł rocznie na drobne usprawnienia", 3,
+        function (v) { u.decyzje = v; }),
+      "Limity kwotowe i terminy to decyzja Waszej firmy, nie wymaganie normy."));
+    k.appendChild(pole("Dostęp do danych",
+      inp(u.dane, "np. faktury za energię, dane z liczników głównych i pomiarów, plany produkcji", function (v) { u.dane = v; })));
+    k.appendChild(pole("Kiedy i do kogo przekazuje sprawę wyżej",
+      inp(u.eskalacja, "np. do Dyrektora Zakładu: gdy niekorzystne odchylenie na SEU utrzymuje się dłużej niż 2 tygodnie albo działanie z planu jest zagrożone",
+        function (v) { u.eskalacja = v; })));
+    k.appendChild(pole("Jak sprawdzicie, że to działa",
+      inp(u.sprawdzenie, "np. przy pierwszym wstrzymanym zakupie: czy ocena zmieściła się w 5 dniach i czy zakupy wiedziały, do kogo się zwrócić",
+        function (v) { u.sprawdzenie = v; }),
+      "Książka radzi sprawdzić zapis na pierwszym realnym przypadku i poprawić go, zanim stanie się martwy."));
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj rolę");
+  dod.onclick = function () { UPR.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  if (!UPR.length)
+    s.appendChild(el("div", "warn", "Nie opisano uprawnień żadnej roli. To pozycja listy kontrolnej III-13: uprawnienia kluczowych ról są zapisane — decyzje, dostęp do danych, przekazywanie spraw wyżej."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 4: właściciele znaczących użyć energii ── */
+function rysujSeu(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Właściciele znaczących użyć energii");
+  h.appendChild(el("span", "chip " + (SEU.length && SEU.every(seuOk) ? "green" : "amber"),
+    ile(SEU.filter(seuOk).length, "pozycja", "pozycje", "pozycji")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Przy każdym znaczącym użyciu energii ma stać nazwisko, a nie „dział techniczny”. To zadanie z punktu 5.3, choć same SEU wyznaczacie dopiero w przeglądzie energetycznym (6.3)."));
+  s.appendChild(el("div", "note", "Zebranie kierowników. Energy Manager pyta: „Kto u nas odpowiada za energię?” Chór głosów: „Wszyscy!” Drugie pytanie: „Kto zauważył, że w ostatni weekend sprężarka pracowała przez dwie doby przy pustej hali?” Cisza. Gdy odpowiadają wszyscy, nie odpowiada nikt."));
+  SEU.forEach(function (x, i) {
+    var k = el("div", "poz" + (seuOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "SEU " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { SEU.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    k.appendChild(pole("Znaczące użycie energii", inp(x.nazwa, "np. sprężarkownia", function (v) { x.nazwa = v; })));
+    k.appendChild(pole("Właściciel — stanowisko, nie dział",
+      inp(x.wlasciciel, "np. Kierownik Utrzymania Ruchu", function (v) { x.wlasciciel = v; })));
+    k.appendChild(pole("Za co konkretnie odpowiada",
+      inp(x.zakres, "np. sterowanie, kryteria eksploatacji, reakcja na przekroczenie progu", function (v) { x.zakres = v; })));
+    k.appendChild(pole("Zastępca", inp(x.zastepca, "", function (v) { x.zastepca = v; })));
+    s.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj znaczące użycie energii");
+  dod.onclick = function () { SEU.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+  if (!SEU.length)
+    s.appendChild(el("div", "warn", "Lista jest pusta. Jeśli nie macie jeszcze wyznaczonych SEU — wrócicie tu po przeglądzie energetycznym (6.3). Jeśli macie, a lista jest pusta, to znaczy, że przy żadnym nie stoi nazwisko."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 5: zakomunikowanie ról ── */
+function rysujKomunikacja(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zakomunikowanie ról"));
+  s.appendChild(el("p", "opis", "Norma wymaga dwóch rzeczy naraz: żeby odpowiedzialności i uprawnienia były przypisane <b>i</b> zakomunikowane w organizacji. Drugie bywa pomijane — i wtedy nikt nie wie, że jest w zespole."));
+  var k = el("div", "poz" + (komOk() ? "" : " brak"));
+  k.appendChild(pole("Jak ogłoszono role i skład zespołu",
+    txt(KOM.sposob, "np. zarządzenie rozesłane mailem do wszystkich kierowników, omówienie na odprawie 22.02.2026, skład na tablicy informacyjnej i w intranecie", 2,
+      function (v) { KOM.sposob = v; })));
+  k.appendChild(pole("Data ogłoszenia", inp(KOM.data, "", function (v) { KOM.data = v; }, "date")));
+  s.appendChild(k);
+
+  var kk = el("div", "poz");
+  kk.appendChild(el("div", "poznazwa", "Koordynator zespołu (Energy Manager)"));
+  kk.appendChild(el("div", "pozmeta", "Pozycja metodyczna, nie wymaganie normy. Norma wymaga zespołu; stanowisko „przedstawiciela kierownictwa” znała poprzednia wersja, z 2011 roku."));
+  kk.appendChild(pole("Kto koordynuje zespół", inp(KOM.koordynator,
+    "np. Kierownik Utrzymania Ruchu jako Energy Manager — zostaw puste, jeśli nie wyznaczacie koordynatora",
+    function (v) { KOM.koordynator = v; })));
+  if (!koordynator()) {
+    var p = pole("Nie wyznaczono koordynatora — jak rozdzielono jego zadania między członków zespołu? (wymagane)",
+      txt(KOM.bezKoordynatora, "np. raportowanie kierownictwu — Kierownik Produkcji; zwoływanie zespołu i analizy — Kierownik UR; kryteria i metody — pełnomocnik ISO 14001", 2,
+        function (v) { KOM.bezKoordynatora = v; }));
+    p.className = "pole kandydat";
+    kk.appendChild(p);
+    kk.appendChild(el("div", "note", "Brak koordynatora jest dopuszczalny. Ale wtedy kierownictwo musi rozdzielić jego zadania — inaczej pięć zadań zespołu zostaje bez wykonawcy."));
+  }
+  s.appendChild(kk);
+
+  var sp = el("div", "sekcja");
+  sp.appendChild(el("h3", null, "Skąd wiesz, że role działają?"));
+  sp.appendChild(el("p", "opis", "Cztery sprawdzenia z książki. Platforma odpowiada na nie z tego, co wpisaliście w poprzednich zakładkach."));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sprawdzenie", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["Przy każdym znaczącym użyciu energii stoi nazwisko, a nie „dział techniczny”",
+    SEU.length > 0 && SEU.every(seuOk)],
+  ["Członkowie zespołu wiedzą, że w nim są, i znają swoje zadania — bo ktoś im to zakomunikował", komOk()],
+  ["Wiadomo, jak i jak często zespół raportuje kierownictwu", !!((ZAD["ZAD-D"] || {}).rytm || "").trim()],
+  ["Koordynator wie, co może zdecydować sam, a co musi przekazać wyżej", UPR.length > 0 && UPR.every(uprOk)]
+  ].forEach(function (r) {
+    var row = el("tr");
+    row.appendChild(el("td", null, r[0]));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (r[1] ? "green" : "amber"), r[1] ? "tak" : "jeszcze nie"));
+    row.appendChild(td);
+    t.appendChild(row);
+  });
+  sp.appendChild(t);
+  s.appendChild(sp);
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  var kand = [];
+  MAT_ZADANIA.forEach(function (z) { if (liczO(z.kod) === 0) kand.push(z.kod + " — brak O"); });
+  if (audytRozdzielony() === false) kand.push("Audyty — organizacja i przeprowadzanie nierozdzielone");
+  if (!SEU.length || !SEU.every(seuOk)) kand.push("SEU bez właścicieli");
+  if (!UPR.length) kand.push("Brak zapisanych uprawnień");
+  s.appendChild(el("p", "opis", "Wnioski powstają z pustych wierszy matrycy, z braku właścicieli SEU i z nieopisanych uprawnień."));
+  if (kand.length) {
+    var n = el("div", "note");
+    n.appendChild(el("b", null, "Kandydaci na wnioski (" + kand.length + "): "));
+    n.appendChild(document.createTextNode(kand.join(" · ")));
+    s.appendChild(n);
+  }
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie. Ten sam łańcuch co w punktach 4.1, 4.4, 5.1 i 5.2."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var k = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-13, sekcja 5.3 ── */
+function stanPozycji(p) {
+  var f = {
+    przypisane: function () { return MAT_ZADANIA.every(wierszOk); },
+    zakomunikowane: function () { return komOk(); },
+    zespol: function () { return ZADANIA.every(zadOk); },
+    zad: function () { return zadOk({ kod: p.zad }); },
+    koordynator: function () { return !!koordynator() || !!(KOM.bezKoordynatora || "").trim(); },
+    zasoby: function () { return null; },
+    przydzial: function () { return null; },
+    uprawnienia: function () { return UPR.length > 0 && UPR.every(uprOk); },
+    seu: function () { return SEU.length > 0 && SEU.every(seuOk); },
+    audyty: function () { return audytRozdzielony(); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  ZADANIA.forEach(function (z) {
+    if (!zadOk(z)) b.push({ t: "Zadanie zespołu " + z.litera + ") — brak wykonawcy albo opisu sposobu.", kto: "klient" });
+  });
+  if (!(ZAD["ZAD-D"] || {}).rytm)
+    b.push({ t: "Raportowanie kierownictwu — nie ustalono odstępów czasu.", kto: "klient" });
+  MAT_ZADANIA.forEach(function (z) {
+    var o = liczO(z.kod);
+    if (o === 0) b.push({ t: "Matryca: „" + z.nazwa + "” — nikt nie ma litery O.", kto: "klient" });
+    else if (o > 1 && !(UWAGI[z.kod] || "").trim())
+      b.push({ t: "Matryca: „" + z.nazwa + "” — kilka O bez wyjaśnienia, kto za co.", kto: "klient" });
+  });
+  if (audytRozdzielony() === false)
+    b.push({ t: "Organizacja audytów nie jest oddzielona od ich przeprowadzania.", kto: "klient", metodyka: true });
+  if (!UPR.length) b.push({ t: "Nie opisano uprawnień żadnej roli.", kto: "klient", metodyka: true });
+  UPR.forEach(function (u, i) {
+    if (!uprOk(u)) b.push({ t: "Uprawnienia, rola " + (i + 1) + " — niekompletne.", kto: "klient", metodyka: true });
+  });
+  if (!SEU.length) b.push({ t: "Nie wskazano właścicieli znaczących użyć energii.", kto: "klient", metodyka: true });
+  SEU.forEach(function (x, i) {
+    if (!seuOk(x)) b.push({ t: "SEU " + (i + 1) + " — brak nazwy albo właściciela.", kto: "klient", metodyka: true });
+  });
+  if (!komOk()) b.push({ t: "Nie opisano, jak i kiedy ogłoszono role.", kto: "klient" });
+  if (!koordynator() && !(KOM.bezKoordynatora || "").trim())
+    b.push({ t: "Brak koordynatora i brak opisu, jak rozdzielono jego zadania.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 7: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-ROL-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-13 — sekcja 5.3"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_53.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "ocena konsultanta"));
+    r.appendChild(td);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+  s.appendChild(el("div", "note", "Dwie pozycje listy — „zasoby, w tym czas, wystarczają zespołowi” oraz „ustalono i zapisano sposób przydziału czasu i zasobów” — wypełniacie w punkcie 5.1, zakładka „Zasoby”. Platforma przeniesie tam stan po połączeniu obu punktów na produkcji."));
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-ROL-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["1. Pięć zadań zespołu", "zakładka 1", ZADANIA.filter(zadOk).length + " z " + ZADANIA.length + " opisanych"],
+  ["2. Matryca odpowiedzialności i uprawnień", "zakładka 2", MAT_ZADANIA.filter(wierszOk).length + " z " + MAT_ZADANIA.length + " wierszy · " + ROLE.length + " ról"],
+  ["3. Uwagi do wierszy z kilkoma O", "zakładka 2", ile(Object.keys(UWAGI).filter(function (k) { return (UWAGI[k] || "").trim(); }).length, "uwaga", "uwagi", "uwag")],
+  ["4. Uprawnienia kluczowych ról", "zakładka 3", ile(UPR.filter(uprOk).length, "rola", "role", "ról")],
+  ["5. Właściciele znaczących użyć energii", "zakładka 4", ile(SEU.filter(seuOk).length, "pozycja", "pozycje", "pozycji")],
+  ["6. Zakomunikowanie ról", "zakładka 5", komOk() ? "ogłoszone " + KOM.data : "do uzupełnienia"],
+  ["7. Lista kontrolna III-13, sekcja 5.3", "zakładka 7", LISTA_53.length + " pozycji ze stanem na dzień wydania"],
+  ["8. Zatwierdzenie i historia zmian", "stopka", "Wersja, data, osoba zatwierdzająca"]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(el("div", "note", "Punkt 5.3 wymaga przypisania i zakomunikowania ról, ale <b>nie narzuca formy</b>. Matryca i decyzja o powołaniu zespołu to wygodne formy zaproponowane przez ENESA i książkę (III-11, III-14 zał. A), nie wymóg normy. D-EnMS-ROL-01 odpowiada formularzowi F-EnMS-05."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "zadania", t: "1. Pięć zadań zespołu", f: rysujZadania },
+  { id: "matryca", t: "2. Matryca odpowiedzialności", f: rysujMatryce },
+  { id: "uprawnienia", t: "3. Uprawnienia", f: rysujUprawnienia },
+  { id: "seu", t: "4. Właściciele SEU", f: rysujSeu },
+  { id: "komunikacja", t: "5. Zakomunikowanie ról", f: rysujKomunikacja },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+
+function aktualizujPasek() {
+  var razem = ZADANIA.length + MAT_ZADANIA.length + Math.max(UPR.length, 1) + Math.max(SEU.length, 1) + 1;
+  var zrob = ZADANIA.filter(zadOk).length + MAT_ZADANIA.filter(wierszOk).length
+    + UPR.filter(uprOk).length + SEU.filter(seuOk).length + (komOk() ? 1 : 0);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 17:30", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 5.3" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_53", JSON.stringify({
+      ZAD: ZAD, ROLE: ROLE, MAT: MAT, UWAGI: UWAGI, UPR: UPR, SEU: SEU, KOM: KOM, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_53");
+    if (!s) { ROLE = JSON.parse(JSON.stringify(ROLE_DOM)); return; }
+    var d = JSON.parse(s);
+    ZAD = d.ZAD || {}; ROLE = d.ROLE && d.ROLE.length ? d.ROLE : JSON.parse(JSON.stringify(ROLE_DOM));
+    MAT = d.MAT || {}; UWAGI = d.UWAGI || {}; UPR = d.UPR || []; SEU = d.SEU || [];
+    KOM = d.KOM || KOM; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { ROLE = JSON.parse(JSON.stringify(ROLE_DOM)); }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  /* Przykład wypełniał dotąd samą matrycę — a punkt 5.3 jest o tym, kto co może, nie o tabeli.
+     Teraz wypełnia wszystkie pięć zadań zespołu, uprawnienia ról, właścicieli znaczących użyć
+     i ogłoszenie ról. Dodajemy też kolumnę auditora: przeprowadzenie auditu musi mieć właściciela
+     innego niż organizacja programu, inaczej audit sprawdza sam siebie. */
+  ROLE = JSON.parse(JSON.stringify(ROLE_DOM));
+  ROLE.push({ id: "aud", skrot: "Aud.", nazwa: "Auditor wewnętrzny (ISO 14001, przeszkolony z 50001)" });
+  MAT = {};
+  Object.keys(MAT_PRZYKLAD).forEach(function (k) { MAT[k] = MAT_PRZYKLAD[k]; });
+  MAT["MAT-15|aud"] = "O";
+  MAT["MAT-15|em"] = "W";
+  MAT["MAT-14|em"] = "O";
+
+  ZAD = {
+    "ZAD-A": { kto: "Energy Manager z zespołem: Kierownik Produkcji, Kierownik Utrzymania Ruchu, Zakupy, Finanse",
+      jak: "Zespół spotyka się raz w miesiącu w okresie wdrożenia; Energy Manager prowadzi rejestr zadań "
+        + "z terminami i raportuje postęp na spotkaniu produkcyjnym.", rytm: "miesiac" },
+    "ZAD-B": { kto: "Pełnomocnik ds. systemów zarządzania",
+      jak: "Zgodność sprawdzana listą kontrolną przy każdym punkcie normy i auditem wewnętrznym przed "
+        + "certyfikacją; rozbieżności trafiają do rejestru niezgodności (10.1).", rytm: "kwartal" },
+    "ZAD-C": { kto: "Dyrektor Zakładu",
+      jak: "Zasoby zatwierdzane w planie zasobów (7.1) i w budżecie rocznym; zmiany obciążeń przeglądane "
+        + "przy przeglądzie zarządzania.", rytm: "rok" },
+    "ZAD-D": { kto: "Energy Manager",
+      jak: "Raport miesięczny o wyniku energetycznym i postępie planów działań dla Dyrektora Zakładu; "
+        + "raz na kwartał punkt na naradzie produkcyjnej; raz w roku na przeglądzie zarządzania.",
+      rytm: "miesiac" },
+    "ZAD-E": { kto: "Dyrektor Zakładu wspólnie z Energy Managerem",
+      jak: "Decyzje o celach i inwestycjach energetycznych podejmowane na przeglądzie zarządzania "
+        + "i zapisywane w protokole z właścicielem i terminem.", rytm: "rok" }
+  };
+  UWAGI = {
+    "MAT-08": "Energy Manager odpowiada za plan i rozliczenie działań, Kierownik Utrzymania Ruchu — "
+      + "za ich wykonanie na instalacjach. Granica: wszystko, co wymaga wejścia na instalację, należy do UR.",
+    "MAT-09": "Kierownik Utrzymania Ruchu odpowiada za sprężarkownię i kotłownię, Kierownik Produkcji "
+      + "za prasy i lakiernię. Kryteria ustala Energy Manager wspólnie z właścicielem instalacji."
+  };
+  UPR = [
+    { rola: "Energy Manager",
+      decyzje: "Zwołuje zespół; zleca analizy i pomiary okresowe; wstrzymuje zakup urządzenia energochłonnego "
+        + "do czasu oceny energetycznej — najdłużej na 5 dni roboczych; dysponuje kwotą do 20 tys. zł rocznie "
+        + "na drobne usprawnienia.",
+      dane: "Faktury za energię, odczyty liczników i pomiarów, plany produkcji, dane kadrowe o obsadzie zmian.",
+      eskalacja: "Do Dyrektora Zakładu, gdy niekorzystne odchylenie na znaczącym użyciu utrzymuje się dłużej "
+        + "niż dwa tygodnie albo działanie z planu jest zagrożone." },
+    { rola: "Kierownik Utrzymania Ruchu",
+      decyzje: "Ustala nastawy w granicach kryteriów eksploatacji; zleca przeglądy i naprawy do 15 tys. zł; "
+        + "wstrzymuje pracę instalacji poza kryteriami.",
+      dane: "Dane z liczników i pomiarów na instalacjach, plan przeglądów, dokumentacja techniczna (DTR).",
+      eskalacja: "Do Energy Managera przy odchyleniu przekraczającym próg; do Dyrektora Zakładu przy "
+        + "przekroczeniu kwoty albo przy postoju produkcji." },
+    { rola: "Dyrektor Zakładu",
+      decyzje: "Zatwierdza politykę, cele, plany działań i budżet; rozstrzyga konflikt między wynikiem "
+        + "energetycznym a planem produkcji.",
+      dane: "Raport miesięczny o wyniku, dane kosztowe z kontrolingu, wyniki auditów.",
+      eskalacja: "Do zarządu spółki przy nakładzie przekraczającym budżet roczny albo przy ryzyku utraty "
+        + "kluczowego klienta." }
+  ];
+  SEU = [
+    { nazwa: "Sprężarkownia — cztery sprężarki śrubowe, 17,5% zużycia zakładu",
+      wlasciciel: "Kierownik Utrzymania Ruchu", zakres: "Kryteria eksploatacji, przeglądy szczelności, "
+        + "nastawy ciśnienia, wskaźnik S-1" },
+    { nazwa: "Linie pras — 24,5% zużycia zakładu",
+      wlasciciel: "Kierownik Produkcji", zakres: "Harmonogram pracy, wyłączenia w przerwach, wskaźnik kWh/t" },
+    { nazwa: "Lakiernia — piece suszące zasilane gazem",
+      wlasciciel: "Kierownik Produkcji", zakres: "Temperatury i czasy suszenia, wyłączenia poza produkcją" }
+  ];
+  KOM = {
+    sposob: "Zarządzenie 3/2026 ogłoszone na spotkaniu kierownictwa, wywieszone na tablicy przy portierni "
+      + "i opublikowane w intranecie; zakresy obowiązków zaktualizowane aneksami.",
+    data: "2026-02-12",
+    koordynator: "Energy Manager — Jan Kowalski; zastępstwo stałe: Kierownik Utrzymania Ruchu",
+    bezKoordynatora: ""
+  };
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 17:35", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 5.3.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  ZAD = {}; ROLE = JSON.parse(JSON.stringify(ROLE_DOM)); MAT = {}; UWAGI = {};
+  UPR = []; SEU = []; KOM = { sposob: "", data: "", koordynator: "", bezKoordynatora: "" }; WNIOSKI = [];
+  try { localStorage.removeItem("enesa_53"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

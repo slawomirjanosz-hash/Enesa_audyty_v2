@@ -1,0 +1,1539 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 8.1 Nadzór operacyjny</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 8</div>
+ <h1>8.1 Planowanie i nadzór nad działaniami operacyjnymi</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 8.1</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 8.1</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>8.1 Planowanie i nadzór nad działaniami operacyjnymi</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 8.1 i sposób ustalania kryteriów.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 8.1<br>Nadzór operacyjny</div>
+   <div>
+    <h4>8.1 Planowanie i nadzór nad działaniami operacyjnymi</h4>
+    <p>Jak wyprowadzić kryterium z potrzeb procesu, a nie przepisać czyjąś nastawę. Co zrobić, gdy
+    serwis przywraca nastawy fabryczne. Kolejność sprawdzeń przy odchyleniu.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 8.1. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">8.1 — kryteria<br>13 slajdów</div>
+   <div>
+    <h4>8.1 Nadzór operacyjny</h4>
+    <p>Pięć pytań do kryterium. Tryby pracy i postój. Zmiany planowane i niezamierzone.
+    Procesy zlecone na zewnątrz. Zapisy w potrzebnym zakresie.</p>
+    <p style="font-size:12.5px">13 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>◧ Jedna sprężarkownia, trzy decyzje</h3>
+  <p style="font-size:13.5px">Sprężarkownia AutoParts Polska zużywa około 2,1 GWh energii elektrycznej
+  rocznie — 17,5% energii całego zakładu. W rozdziale 8 wracamy do niej trzy razy: najpierw jak jest
+  obsługiwana na co dzień (8.1), potem jak zakład planuje jej modernizację (8.2), na koniec jak wybiera,
+  co kupić (8.3).</p>
+  <p style="font-size:13.5px;margin-bottom:0">W życiu urządzenia kolejność jest odwrotna: najpierw się
+  je projektuje, potem kupuje, a dopiero potem obsługuje. <b>Norma zaczyna od obsługi, bo to codzienność
+  każdego zakładu.</b> Ale czytajcie te trzy punkty jak jeden proces: decyzja z projektu trafia
+  do zapytania ofertowego, a stamtąd — do instrukcji przy urządzeniu.</p>
+ </div>
+
+ <p style="font-size:14.5px;margin-top:18px">Organizacja planuje, wdraża i nadzoruje procesy związane
+ ze znaczącymi użyciami energii, potrzebne do spełnienia wymagań i realizacji planów działań. Robi to przez:
+ a) ustalenie kryteriów dla tych procesów — w tym dla skutecznej eksploatacji i utrzymania obiektów, urządzeń,
+ systemów i procesów zużywających energię — tam, gdzie ich brak może prowadzić do znaczącego odchylenia
+ od zamierzonego wyniku energetycznego; b) przekazanie tych kryteriów odpowiednim osobom wykonującym pracę
+ pod nadzorem organizacji; c) nadzorowanie procesów zgodnie z kryteriami, w tym eksploatacji i utrzymania;
+ d) zachowanie udokumentowanych informacji w zakresie potrzebnym, żeby mieć pewność, że procesy przebiegały
+ zgodnie z planem. Organizacja nadzoruje planowane zmiany, przegląda skutki zmian niezamierzonych i w razie
+ potrzeby ogranicza ich niekorzystne skutki. Zapewnia też nadzór nad zleconymi na zewnątrz znaczącymi użyciami
+ energii i procesami z nimi związanymi. Omówienie na podstawie punktu 8.1 PN-EN ISO 50001:2018; nie jest
+ to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> tam, gdzie od sposobu obsługi zależy
+ wynik energetyczny, ustal kryteria, przekaż je ludziom i pracuj według nich — pilnując też zmian, w tym
+ wprowadzanych przez firmy zewnętrzne.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 7, punkt 8.1. Formularz kryteriów: III-34 (F-EnMS-14),
+ przykład sprężarkowni AutoParts: III-35.</div>
+
+ <div class="ramka">
+  <h3>◧ Ciśnienie zmienia się razem z obsadą zmiany</h3>
+  <p style="font-size:13.5px">Luty 2026 r. Trwa czterotygodniowa kampania pomiarowa. Analizator pokazuje coś,
+  czego nikt się nie spodziewał.</p>
+  <p style="font-size:13.5px">Technik na zmianie rannej trzyma 7 bar — „bo tak było zawsze”. Jego kolega
+  z nocnej podnosi nastawę do 7,4 bar — „bo kiedyś lakiernia zgłosiła spadek ciśnienia, a ja nie chcę telefonu
+  o trzeciej w nocy”.</p>
+  <p style="font-size:13.5px;margin-bottom:0">Obaj są pewni, że robią dobrze, i obaj mają swoje powody. Tyle że
+  <b>nikt nie ustalił, ile ciśnienia naprawdę potrzebują odbiorcy.</b> Każdy ustawia więc według własnego
+  doświadczenia — a każdy dodatkowy bar zakład opłaca w rachunku za energię.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Co trzeba nadzorować — i czy wszystko jednakowo?</h3>
+ <p style="font-size:14.5px">Nie wszystko jednakowo. Zaczynacie od znaczących użyć energii i od działań
+ z planów — to procesy, od których zależy, czy osiągniecie zamierzony wynik. Kryteria są potrzebne tam, gdzie
+ ich brak może prowadzić do znaczącego odchylenia. <b>W sprężarkowni, która pracuje całą dobę, wystarczy jedna
+ zła nastawa. W biurowym klimatyzatorze — raczej nie.</b></p>
+ <div class="warn" style="margin:14px 0">Uważajcie na wygodne zdanie <b>„dla pozostałych urządzeń wystarczą
+ ogólne zasady”</b>. Bywa prawdziwe — ale tylko wtedy, gdy świadomie sprawdziliście, że brak kryteriów niczego
+ istotnego nie zepsuje. Jeśli działanie z planu dotyczy urządzenia spoza listy znaczących użyć, na przykład
+ wyłączania wentylacji magazynu poza zmianami, <b>ono także potrzebuje ustaleń. Inaczej zostanie na papierze.</b></div>
+
+ <h3 style="margin-top:22px">Jak ustalić kryterium, a nie przepisać czyjąś nastawę</h3>
+ <p style="font-size:14.5px">Najprostsza droga — przepisać nastawę z instrukcji producenta, z innego zakładu
+ albo z książki — jest też najbardziej zawodna. Zamiast liczby potrzebujecie sposobu myślenia. Dla sprężonego
+ powietrza to pięć pytań:</p>
+ <table class="tab">
+ <tr><th style="width:8%">#</th><th style="width:38%">Pytanie</th><th>Na czym polega</th></tr>
+ <tr><td class="mono"><b>1</b></td><td>Czego naprawdę potrzebuje proces?</td><td>Jakie ciśnienie jest potrzebne u najbardziej wymagającego odbiorcy — <b>u niego, nie przy sprężarce.</b></td></tr>
+ <tr><td class="mono"><b>2</b></td><td>Ile tracicie po drodze?</td><td>Jaki jest spadek ciśnienia na filtrach, osuszaczu i w sieci — <b>zmierzony, nie zgadywany.</b></td></tr>
+ <tr><td class="mono"><b>3</b></td><td>Jak ma działać sterowanie?</td><td>Które sprężarki pracują w jakich warunkach, co dzieje się poza produkcją.</td></tr>
+ <tr><td class="mono"><b>4</b></td><td>Kto może zmienić nastawę?</td><td>I co musi zrobić, zanim ją zmieni.</td></tr>
+ <tr><td class="mono"><b>5</b></td><td>Po czym poznacie odchylenie i co wtedy robicie?</td><td>Jaki sygnał, kto sprawdza, w jakiej kolejności.</td></tr>
+ </table>
+ <p style="font-size:13.5px">Te same pytania, w innych słowach, zadacie kotłowni, lakierni czy chłodni.</p>
+
+ <table class="tab" style="margin-top:14px">
+ <tr><th style="width:18%">Ogniwo</th><th>AutoParts: dwie nastawy, żadnego kryterium</th></tr>
+ <tr><td><b>Znaczenie</b></td><td>Pomiary z kampanii pokazały, że najbardziej wymagające urządzenia w lakierni potrzebują u siebie około 5,8 bar, a spadek ciśnienia w sieci w szczycie poboru to około 0,4 bar. Sieć pracowała więc z zapasem, za który nikt świadomie nie zdecydował się płacić.</td></tr>
+ <tr><td><b>Decyzja</b></td><td>Kryterium: ciśnienie w sieci nie wyższe niż 6,3 bar na wyjściu ze sprężarkowni — potrzeba odbiorców, straty w sieci i niewielki zapas regulacji. Nastawę zmienia tylko kierownik utrzymania ruchu po uzgodnieniu z Energy Managerem.</td></tr>
+ <tr><td><b>Działanie</b></td><td>W czerwcu 2026 r., po sprawdzeniu odbiorników, ciśnienie obniżono do 6,3 bar. Kryterium trafiło do instrukcji przy panelu sprężarkowni i do szkolenia techników (7.2).</td></tr>
+ <tr><td><b>Sprawdzenie</b></td><td>Tygodniowy wskaźnik kWh/Nm³ i zgłoszenia z lakierni. W lipcu–wrześniu 2026 r. wskaźnik wyniósł 0,119 kWh/Nm³ wobec 0,125 w kampanii zimowej (z adnotacją o różnicy sezonów); zgłoszeń o spadku ciśnienia nie było.</td></tr>
+ </table>
+ <p style="font-size:13.5px">Wartości z tego przykładu są wartościami AutoParts. W Waszym zakładzie wyjdą
+ inne — <b>i właśnie o to chodzi.</b></p>
+ <p style="font-size:13.5px">★ <b>Rada:</b> nie utrzymujcie wyższego ciśnienia, niż potrzebuje proces.
+ To zasada, nie liczba: liczbę ustalicie sami, z pomiaru u odbiorców.</p>
+
+ <h3 style="margin-top:22px">Gdy wskaźnik rośnie, co sprawdzić najpierw?</h3>
+ <div class="warn" style="margin:14px 0">Wysokie ciśnienie albo rosnące zużycie mogą mieć kilka przyczyn:
+ zmienioną nastawę, niewłaściwą kolejność pracy sprężarek, nowe wycieki, zabrudzone filtry, zmianę
+ zapotrzebowania w produkcji. Dlatego <b>instrukcja nie powinna zgadywać jednej przyczyny</b> w rodzaju
+ „ciśnienie za wysokie — szukaj wycieków”. Ma powiedzieć, <b>kto sprawdza i w jakiej kolejności</b>, komu
+ zgłasza wynik i kiedy sprawa trafia do Energy Managera.</div>
+
+ <h3 style="margin-top:22px">Serwis przyjechał, instalacja działa — a zużycie rośnie</h3>
+ <p style="font-size:14.5px">Tydzień po obniżeniu ciśnienia odbył się planowy przegląd sprężarek. Serwisant
+ zrobił to, co robił zawsze: po przeglądzie <b>przywrócił nastawy fabryczne — 7 bar.</b> Wszystko działało,
+ nikt niczego nie zgłosił. Energy Manager zobaczył zmianę dopiero w tygodniowym zestawieniu wskaźnika.</p>
+ <p style="font-size:14.5px">Dwa pytania pokazały, gdzie był problem. Kto zatwierdził zmianę? Nikt. Czy ktoś
+ sprawdził jej skutki? Też nikt. <b>Serwisant nie zrobił nic złego — po prostu nikt mu nie powiedział,
+ że nastawa 6,3 bar jest kryterium, a nie przypadkiem.</b></p>
+ <div class="ok" style="margin:14px 0">Od tamtej pory zlecenie dla serwisu zawiera trzy zdania: nastawy
+ ciśnienia i kolejności pracy sprężarek zmienia się tylko za zgodą kierownika utrzymania ruchu; protokół
+ z przeglądu podaje nastawy przed i po; wykryte wycieki serwis zgłasza w protokole.<br><br>
+ <b>To jest właśnie nadzór nad procesem zleconym na zewnątrz i nad zmianą — bez osobnej procedury.</b></div>
+
+ <h3 style="margin-top:22px">Ile zapisywać?</h3>
+ <p style="font-size:14.5px">Tyle, żeby mieć pewność, że procesy przebiegały zgodnie z planem. W AutoParts
+ są to: instrukcja z kryteriami, tygodniowy wskaźnik sprężarkowni, protokoły serwisu z nastawami i zapis każdej
+ zmiany nastawy. <b>Nie stosy list kontrolnych, których nikt nie czyta — tylko zapisy, z których ktoś
+ korzysta.</b></p>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:42%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Każda zmiana ustawia „po swojemu”</td><td>Ustalcie kryteria z potrzeb procesu i umieśćcie je tam, gdzie zapada decyzja</td></tr>
+ <tr><td>Nastawa przepisana z instrukcji producenta lub z innego zakładu</td><td>Wyliczcie ją z wymagań odbiorców i strat w sieci; sprawdźcie pomiarem</td></tr>
+ <tr><td>Serwis zmienia nastawy bez wiedzy zakładu</td><td>W zleceniu: kto zatwierdza zmiany; protokół z nastawami przed i po</td></tr>
+ <tr><td>Instrukcja zgaduje przyczynę odchylenia</td><td>Opiszcie, kto sprawdza i w jakiej kolejności możliwe przyczyny</td></tr>
+ <tr><td>„Pozostałe urządzenia — ogólne zasady” bez sprawdzenia</td><td>Sprawdźcie, czy działania z planów i inne ważne procesy mają ustalenia</td></tr>
+ <tr><td>Zapisy dla audytora, nie dla siebie</td><td>Zapisujcie tyle, ile potrzeba do pewności — i korzystajcie z tych zapisów</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Kryteria operacyjne to różnica między „urządzenie działa”
+  a „urządzenie działa tak, jak zaplanowaliśmy”.<br><br>
+  <b>Zadanie:</b> stańcie przy jednym znaczącym użyciu energii i zapytajcie dwie osoby z różnych zmian,
+  jaką nastawę stosują i dlaczego. <b>Jeśli odpowiedzi się różnią, macie pierwsze kryterium do ustalenia.</b></p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Jedna karta na każde znaczące użycie energii, sześć części w pięciu zakładkach.
+  Platforma wyłapuje kryteria bez potrzeby procesu, sygnały zgadujące jedną przyczynę i karty,
+  w których kryteriów nie przekazano wykonawcy.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 8.1 w formacie stron 4.1–7.5.</b> Pierwszy punkt, w którym ankieta jest
+<b>zbiorem kart, a nie jedną listą</b>: jedna karta F-EnMS-14 na każde znaczące użycie energii, a w niej sześć
+części. Zakładki 2–5 pracują na karcie wybranej w zakładce 1 — przełącznik karty jest w nagłówku każdej z nich.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 7 — wstęp</td><td>„Jedna sprężarkownia, trzy decyzje”: zapowiedź, że 8.1, 8.2 i 8.3 to jeden proces czytany w odwrotnej kolejności niż życie urządzenia. Otwiera stronę 8.1, bo wprowadza cały rozdział.</td></tr>
+<tr><td>Tom 2, rozdział 7, punkt 8.1</td><td>Scena ciśnienia zmieniającego się z obsadą zmiany, akapit „czy wszystko jednakowo” z ostrzeżeniem o ogólnych zasadach, pięć pytań do kryterium, przykład wyliczenia 5,8 + 0,4 + 0,1 bar w czterech ogniwach, akapit o kolejności sprawdzeń, „kryterium, które zna tylko Energy Manager, nie działa”, scena serwisu przywracającego 7 bar, akapit „ile zapisywać”, pięć sprawdzeń, tabela sześciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 6 — III-34 (F-EnMS-14)</td><td>Metryka karty i sześć części: A kryteria z kolumnami potrzeba / straty i zapas / kryterium / jak kontrolowane; B tryby pracy; C zmiany i wykonawcy (cztery pytania); D monitoring z kolumną „kto sprawdza i w jakiej kolejności”; E utrzymanie ruchu; F przekazanie kryteriów ze sprawdzeniem zrozumienia.</td></tr>
+<tr><td>Część III, Moduł 6 — III-35</td><td>Przykład sprężarkowni: 4 kryteria, 3 tryby, 3 sygnały z pełną kolejnością sprawdzeń, 4 czynności utrzymania, 3 pozycje przekazania. Druga karta (lakiernia) jest naszym rozszerzeniem — patrz niżej.</td></tr>
+<tr><td>Część III, Moduł 6 — III-39</td><td>Lista kontrolna sekcji 8.1: 9 pozycji, z czego siedem to wymagania normy.</td></tr>
+<tr><td>Część III, Moduł 6 — III-40, pkt 4.1 i 4.2</td><td>Kroki 1–8 procedury P-EnMS-06, w tym wymóg zgody na zmianę nastaw, protokołu z nastawami przed i po oraz przeglądu skutków zmian niezamierzonych.</td></tr>
+</table>
+<div class="note"><b>Druga karta przykładu — lakiernia — jest nasza, nie z Toolkitu.</b> III-35 pokazuje tylko
+sprężarkownię. Dodałem lakiernię, bo jedna karta nie pokazuje, że ankieta obsługuje wiele znaczących użyć,
+a przełącznik kart i tabela zbiorcza są istotną częścią tej strony. Dane lakierni są spójne z przeglądem
+energetycznym (2 425 MWh, 20,0%, model L-1) i z instrukcją I-LAK-01 z wykazu 7.5, ale <b>nie pochodzą
+z Toolkitu i przy publikacji wymagają potwierdzenia</b> — zwłaszcza czas nagrzewania 70 minut i profil
+wygrzewania.</div>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>karta_kryteriow</code></td><td>id, audyt_id, seu_id → SEU z przeglądu 6.3, lokalizacja, zuzycie_udzial, osoby, wskaznik (→ karta EnPI z 6.4), utworzono, aktualizacja, opracowal, zatwierdzil.</td></tr>
+<tr><td><code>kryterium</code></td><td>id, karta_id, parametr, potrzeba_procesu, straty_zapas, kryterium, jak_kontrolowane. Część A.</td></tr>
+<tr><td><code>tryb_pracy</code></td><td>id, karta_id, tryb, jak_pracuje, uwagi. Część B.</td></tr>
+<tr><td><code>zmiany_karty</code></td><td>karta_id plus pięć pól tekstowych (kto zmienia, wykonawcy, zmiany planowane, zmiany niezamierzone, gdzie zapis). Część C — jeden rekord na kartę.</td></tr>
+<tr><td><code>sygnal_odchylenia</code></td><td>id, karta_id, sygnal, prog, kolejnosc_sprawdzen, kto, komu_zglasza, zapis. Część D.</td></tr>
+<tr><td><code>czynnosc_utrzymania</code></td><td>id, karta_id, czynnosc, czestotliwosc_lub_warunek, wykonuje, zapis. Część E.</td></tr>
+<tr><td><code>przekazanie_kryteriow</code></td><td>id, karta_id, komu, wykonawca BOOL, jak, data, sprawdzenie_zrozumienia. Część F.</td></tr>
+<tr><td><code>rejestr_zmian_nastaw</code></td><td><b>Nie ma go w makiecie</b>, a powinien być: id, karta_id, data, kto, z_wartosci, na_wartosc, powod, zgoda_kto. Część C opisuje tylko, gdzie się go prowadzi. Patrz uwagi na końcu.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Kryterium bez potrzeby procesu</b></td><td>Ostrzeżenie: skąd wiadomo, że ta wartość jest właściwa dla tej instalacji. Pozycja w braki() jako metodyka ENESA, bo norma nie wymaga wprost udokumentowania wyprowadzenia — ale lista III-39 ma to jako pozycję M, a bez tego pola kryterium jest nieodróżnialne od przepisanej nastawy.</td></tr>
+<tr><td><b>Nastawa przepisana</b></td><td>Wzorzec <code>/(wg producenta|nastawa fabryczna|fabryczn|jak w innym|standardowo|z katalogu)/i</code> w polu kryterium przy pustej potrzebie procesu → ostrzeżenie z wyjaśnieniem, że przy parametrach wynikających z dokumentacji urządzenia (spadek na filtrze, punkt rosy) <b>powołanie się na producenta jest poprawne</b> — trzeba tylko napisać w potrzebie procesu, że źródłem jest wymaganie techniczne. Przykład AutoParts jest tak wypełniony.</td></tr>
+<tr><td>Parametr ciśnieniowy, temperaturowy albo przepływowy bez pola strat</td><td>Nota: jeśli strat nie ma albo są pomijalne, warto to napisać. Heurystyka na nazwie parametru — dlatego tylko nota.</td></tr>
+<tr><td><b>Sygnał zgadujący jedną przyczynę</b></td><td>Platforma liczy kroki w polu „kto sprawdza i w jakiej kolejności”: najpierw wzorce <code>n)</code>, w razie ich braku podział po średnikach i przecinkach. Mniej niż dwa kroki → ostrzeżenie „instrukcja zgaduje przyczynę”. Chip przy sygnale pokazuje liczbę kroków. To wprost błąd z tabeli w książce.</td></tr>
+<tr><td>Karta bez sygnałów odchylenia</td><td>Ostrzeżenie: bez tego kryterium obowiązuje tylko na papierze — nikt nie dowie się, że przestało być spełniane.</td></tr>
+<tr><td><b>Kryteriów nie przekazano wykonawcy</b></td><td>Ostrzeżenie przy liście przekazania i pozycja w braki() jako N. Jeśli SEU serwisuje firma zewnętrzna, to właśnie ona najczęściej zmienia nastawy — scena z przywróconymi 7 bar. Pozycja listy kontrolnej „procesy zlecone na zewnątrz” wymaga zarówno opisu w części C, jak i przekazania w części F.</td></tr>
+<tr><td>Niepełna część C</td><td>Pozycja w braki() dla każdego brakującego pola. Nadzór nad zmianami planowanymi, przegląd skutków zmian niezamierzonych i nadzór nad procesami zleconymi to <b>trzy osobne wymagania normy</b>, które w praktyce pomija się razem.</td></tr>
+<tr><td>Brak czynności utrzymania</td><td>Ostrzeżenie. Norma wymienia eksploatację i utrzymanie osobno — kryteria dotyczą obu, a utrzymanie bywa pomijane, bo „to przecież serwis”.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-39 — sekcja 8.1</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>Określono procesy związane ze znaczącymi użyciami energii i działaniami z planów, które wymagają kryteriów.</td><td class='mono'>N</td><td><code>procesy</code></td></tr><tr><td>Ustalono kryteria tam, gdzie ich brak może prowadzić do znaczącego odchylenia — w tym dla eksploatacji i utrzymania.</td><td class='mono'>N</td><td><code>kryteria</code></td></tr><tr><td>Kryteria przekazano osobom, które ich używają, także wykonawcom.</td><td class='mono'>N</td><td><code>przekazano</code></td></tr><tr><td>Procesy prowadzi się zgodnie z kryteriami — opisano tryby pracy i sposób sterowania.</td><td class='mono'>N</td><td><code>zgodnie</code></td></tr><tr><td>Zachowano zapisy w zakresie potrzebnym do pewności, że procesy przebiegały zgodnie z planem.</td><td class='mono'>N</td><td><code>zapisy</code></td></tr><tr><td>Nadzorowane są zmiany planowane; skutki zmian niezamierzonych są przeglądane i ograniczane.</td><td class='mono'>N</td><td><code>zmiany</code></td></tr><tr><td>Nadzorowane są zlecone na zewnątrz znaczące użycia energii i procesy z nimi związane (np. serwis).</td><td class='mono'>N</td><td><code>zlecone</code></td></tr><tr><td>Kryteria wyprowadzono z potrzeb procesu i pomiarów.</td><td class='mono'>M</td><td><code>zPotrzeb</code></td></tr><tr><td>Odchylenie widać w ciągu dni; wiadomo, kto reaguje i w jakiej kolejności sprawdza.</td><td class='mono'>M</td><td><code>reakcja</code></td></tr></table>
+<div class="note">Pozycja „procesy zlecone na zewnątrz” wymaga dwóch rzeczy naraz: opisu wymagań w części C
+<b>i</b> faktycznego przekazania kryteriów wykonawcy w części F. Samo zdanie w zleceniu bez przekazania nikomu
+nie jest nadzorem — i odwrotnie.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–5, 7</td><td>Wypełnia klient, zwykle kierownik utrzymania ruchu z Energy Managerem. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 6 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok wskazuje kryteria będące kandydatami na przepisane nastawy i karty, w których nie wiadomo, kto serwisuje instalację — to zdania do rozmowy z kierownikiem UR, nie do formularza, który on sam wypełnia.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-OPE-01</code> — kryteria operacyjne znaczących użyć energii</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>F-EnMS-14, załącznik III-34 (przykład: III-35)</td></tr>
+<tr><td>Status w normie</td><td>Wymagane są <b>kryteria, ich przekazanie, nadzór i zapisy w potrzebnym zakresie</b> — forma formularza jest zaleceniem metodyki. W wykazie z punktu 7.5 pozycja pojawia się jako D / Z i N (8.1, w zakresie potrzebnym).</td></tr>
+<tr><td>Relacja do instrukcji stanowiskowych</td><td>Karta jest dokumentem systemu; <b>instrukcja przy urządzeniu jest jej wyciągiem</b>. W wykazie 7.5 I-SP-02 i I-LAK-01 stoją osobno, z własnymi wersjami i miejscami — i to one wiszą przy maszynie. Zmiana kryterium w karcie musi uruchomić wymianę wydruku; patrz uwagi na końcu.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Planowana zmiana instalacji, nowy odbiornik, zmiana asortymentu albo technologii, aktualizacja przeglądu energetycznego (6.3), nowy cel albo działanie (6.2), odchylenie nieusunięte w terminie, zmiana wykonawcy serwisu.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>6.3 Przegląd energetyczny</td><td><b>Wejście.</b> Lista SEU, ich udziały, osoby wpływające i istotne zmienne. Karta bez odpowiednika w przeglądzie jest sygnałem rozjazdu w jedną stronę; SEU bez karty — w drugą.</td></tr>
+<tr><td>6.2 Cele i plany działań</td><td><b>Wejście dwojakie.</b> Kryteria są potrzebne nie tylko dla SEU, ale i dla działań z planów — także wtedy, gdy dotyczą urządzeń spoza listy SEU. Odwrotnie: kryterium bywa samo działaniem (obniżenie ciśnienia do 6,3 bar jest działaniem 3 celu C1).</td></tr>
+<tr><td>6.4 Wskaźniki EnPI</td><td><b>Dwukierunkowo.</b> Sygnał odchylenia w części D to zwykle wskaźnik z 6.4, a jego próg odnosi się do wartości wskaźnika albo linii bazowej. Zmiana kryterium (ciśnienie 7,0 → 6,3 bar) jest zmianą warunków porównania i wymaga adnotacji w karcie EnPI.</td></tr>
+<tr><td>6.6 Plan zbierania danych</td><td><b>Dwukierunkowo.</b> Kryteria eksploatacji to kategoria c) planu danych; bez pozycji w planie nie da się stwierdzić, czy kryterium jest spełniane.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Dwukierunkowo.</b> „Stosuje nastawy sprężarkowni (6,3 bar)” jest wierszem matrycy kompetencji, a sprawdzenie zrozumienia w części F to to samo „pokaż — rozpoznaj — powiedz”.</td></tr>
+<tr><td>7.3 Świadomość</td><td><b>Wyjście.</b> Element c) świadomości — co konkretnie w mojej pracy zmienia zużycie — dla operatorów jest w praktyce treścią kryteriów z tej karty.</td></tr>
+<tr><td>7.5 Udokumentowane informacje</td><td><b>Dwukierunkowo.</b> Karta i instrukcje przy urządzeniach są pozycjami wykazu; scena z dwiema instrukcjami na drzwiach chłodni dotyczy właśnie tych dokumentów.</td></tr>
+<tr><td>8.2 Projektowanie</td><td><b>Wejście i wyjście.</b> Kryterium „≤ 6,3 bar” niewiele da, jeśli sterownik nie pozwala go ustawić — dlatego projekt musi przewidzieć regulację i pomiar. Po modernizacji kryteria aktualizuje się przed uruchomieniem.</td></tr>
+<tr><td>8.3 Zakupy</td><td><b>Wyjście.</b> Trzy zdania w zleceniu dla serwisu to jednocześnie specyfikacja zakupu usługi. Przy odbiorze urządzenia kryteria obsługi wracają tutaj.</td></tr>
+<tr><td>9.1 Monitorowanie</td><td><b>Wyjście.</b> Część D jest wprost planem reakcji wykonywanym w rytmie 9.1; „odchylenie widać w ciągu dni, nie po rocznym rachunku”.</td></tr>
+<tr><td>10.2 Niezgodności</td><td><b>Wyjście.</b> Zmiana nastaw bez zgody jest niezgodnością z własnym kryterium; przywrócenie nastaw fabrycznych przez serwis to podręcznikowy przykład działania korygującego z przyczyną źródłową w zleceniu.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Rejestr zmian nastaw jako tabela</b></td><td>Część C mówi tylko, gdzie rejestr się prowadzi. Powinien być tabelą w platformie: data, kto, z czego na co, dlaczego, zgoda. Wtedy platforma odpowie na pytanie z książki — „kto zatwierdził zmianę i czy ktoś sprawdził jej skutki” — a zmiana nastawy stanie się widoczna obok wskaźnika z 6.4. <b>To najmocniejsza pojedyncza funkcja w tym punkcie</b>: scena z 7 bar wyszłaby na wierzch w dniu zmiany, nie w tygodniowym zestawieniu.</td></tr>
+<tr><td>Instrukcja jako wyciąg z karty</td><td>Karta jest dokumentem systemu, instrukcja przy maszynie — jej wyciągiem. Platforma mogłaby <b>generować instrukcję z karty</b> (części A, B i D) i przy każdej zmianie kryterium tworzyć zadanie „wymienić wydruk przy urządzeniu, wycofać wersję n−1”, z osobą i terminem. To ta sama propozycja co w punkcie 7.5 — i to drugi punkt, w którym jej brak kosztuje.</td></tr>
+<tr><td>Liczenie kroków kolejności sprawdzeń</td><td>Heurystyka tekstowa: najpierw wzorce <code>n)</code>, potem podział po średnikach. Przy wdrożeniu lepiej zrobić z tego listę pozycji (osobna tabela <code>krok_sprawdzenia</code> z kolejnością) — wtedy liczba kroków jest twarda, a technik dostaje przy odchyleniu listę do odhaczania, nie akapit.</td></tr>
+<tr><td>Kryteria dla działań z planów spoza SEU</td><td>Dziś karta zakłada SEU. Książka wyraźnie mówi, że działanie z planu dotyczące urządzenia spoza listy SEU też potrzebuje ustaleń (wyłączanie wentylacji magazynu). Proponuję dodać do karty pole „podstawa: SEU / działanie z planu” i pozwolić wiązać kartę z działaniem z 6.2 zamiast z SEU.</td></tr>
+<tr><td>Próg sygnału odniesiony do wskaźnika</td><td>Dziś próg jest tekstem („> 0,122, ok. 2,5% powyżej średniej”). Po powiązaniu z kartą EnPI platforma mogłaby liczyć go sama jako procent od wartości bieżącej albo od EnB — i przeliczać po każdej rewizji linii bazowej.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 8.1 wraz z przykładem AutoParts (III-35 oraz karta lakierni dodana przez nas).</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;LISTA_81&quot;: [
+  {
+   &quot;tekst&quot;: &quot;Określono procesy związane ze znaczącymi użyciami energii i działaniami z planów, które wymagają kryteriów.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;procesy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ustalono kryteria tam, gdzie ich brak może prowadzić do znaczącego odchylenia — w tym dla eksploatacji i utrzymania.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;kryteria&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Kryteria przekazano osobom, które ich używają, także wykonawcom.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;przekazano&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Procesy prowadzi się zgodnie z kryteriami — opisano tryby pracy i sposób sterowania.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zgodnie&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zachowano zapisy w zakresie potrzebnym do pewności, że procesy przebiegały zgodnie z planem.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zapisy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Nadzorowane są zmiany planowane; skutki zmian niezamierzonych są przeglądane i ograniczane.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zmiany&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Nadzorowane są zlecone na zewnątrz znaczące użycia energii i procesy z nimi związane (np. serwis).&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zlecone&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Kryteria wyprowadzono z potrzeb procesu i pomiarów.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;zPotrzeb&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Odchylenie widać w ciągu dni; wiadomo, kto reaguje i w jakiej kolejności sprawdza.&quot;,
+   &quot;podstawa&quot;: &quot;M&quot;,
+   &quot;auto&quot;: &quot;reakcja&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;KARTY&quot;: [
+   {
+    &quot;seu&quot;: &quot;Sprężarkownia — 4 sprężarki śrubowe, sterownik, osuszacz, sieć do hal i lakierni&quot;,
+    &quot;lokalizacja&quot;: &quot;Hala A, pomieszczenie A-05&quot;,
+    &quot;zuzycie&quot;: &quot;2 125 MWh (2025), 17,5% zużycia zakładu (III-20)&quot;,
+    &quot;osoby&quot;: &quot;Technicy UR (3 zmiany), kierownik UR, serwis zewnętrzny (przeglądy), Energy Manager&quot;,
+    &quot;wskaznik&quot;: &quot;S-1 kWh/Nm³: 0,125 → 0,110 do 12.2027 (Z1.1); S-2 przepływ w postoju: 9 → 4 Nm³/min do 06.2027 (Z1.2)&quot;,
+    &quot;utworzono&quot;: &quot;2026-06-15&quot;,
+    &quot;aktualizacja&quot;: &quot;2026-07-20&quot;,
+    &quot;opracowal&quot;: &quot;Kierownik UR z Janem Kowalskim (Energy Manager)&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+    &quot;kryteria&quot;: [
+     {
+      &quot;parametr&quot;: &quot;Ciśnienie w sieci&quot;,
+      &quot;potrzeba&quot;: &quot;Najbardziej wymagające urządzenia lakierni: ok. 5,8 bar u odbiorcy (pomiar 02–03.2026)&quot;,
+      &quot;straty&quot;: &quot;Spadek w sieci w szczycie ok. 0,4 bar; zapas regulacji 0,1 bar&quot;,
+      &quot;kryterium&quot;: &quot;≤ 6,3 bar na wyjściu ze sprężarkowni&quot;,
+      &quot;kontrola&quot;: &quot;Ciągle — sterownik; tygodniowo — zestawienie&quot;
+     },
+     {
+      &quot;parametr&quot;: &quot;Punkt rosy&quot;,
+      &quot;potrzeba&quot;: &quot;Wymaganie procesu lakierni — wg specyfikacji linii lakierniczej (DTR, wydanie 2/2019)&quot;,
+      &quot;straty&quot;: &quot;—&quot;,
+      &quot;kryterium&quot;: &quot;Wg wymagania lakierni — nie niżej, niż potrzeba&quot;,
+      &quot;kontrola&quot;: &quot;Odczyt osuszacza, tygodniowo&quot;
+     },
+     {
+      &quot;parametr&quot;: &quot;Spadek ciśnienia na filtrach&quot;,
+      &quot;potrzeba&quot;: &quot;Wartość graniczna z dokumentacji producenta sprężarek — wymaganie techniczne, nie wybór zakładu&quot;,
+      &quot;straty&quot;: &quot;Rosnący spadek na filtrze podnosi ciśnienie wyjściowe potrzebne do utrzymania 5,8 bar u odbiorcy&quot;,
+      &quot;kryterium&quot;: &quot;Wymiana filtra po przekroczeniu wartości producenta&quot;,
+      &quot;kontrola&quot;: &quot;Odczyt przy obchodzie, tygodniowo&quot;
+     },
+     {
+      &quot;parametr&quot;: &quot;Przepływ w postoju&quot;,
+      &quot;potrzeba&quot;: &quot;Brak odbioru w czasie postoju — każdy przepływ to wycieki (test weekendowy 12.01.2026)&quot;,
+      &quot;straty&quot;: &quot;—&quot;,
+      &quot;kryterium&quot;: &quot;≤ 6 Nm³/min (stan 06.2026); cel 4 Nm³/min (06.2027)&quot;,
+      &quot;kontrola&quot;: &quot;Test weekendowy, kwartalnie&quot;
+     }
+    ],
+    &quot;tryby&quot;: [
+     {
+      &quot;tryb&quot;: &quot;Produkcja (pon.–pt., 3 zmiany)&quot;,
+      &quot;jak&quot;: &quot;Sprężarki według kolejności ustalonej w sterowniku; ciśnienie ≤ 6,3 bar&quot;,
+      &quot;uwagi&quot;: &quot;Zmiana kolejności — tylko kierownik UR&quot;
+     },
+     {
+      &quot;tryb&quot;: &quot;Postój (weekend, święta)&quot;,
+      &quot;jak&quot;: &quot;Jedna sprężarka tylko wtedy, gdy potrzebują jej odbiorcy w podtrzymaniu; w przeciwnym razie wyłączone&quot;,
+      &quot;uwagi&quot;: &quot;Decyzję o pracy w postoju zapisuje kierownik zmiany&quot;
+     },
+     {
+      &quot;tryb&quot;: &quot;Po modernizacji (06.2027)&quot;,
+      &quot;jak&quot;: &quot;Obniżanie ciśnienia poza produkcją — wartość ustalona przed uruchomieniem&quot;,
+      &quot;uwagi&quot;: &quot;Aktualizacja kryteriów: kierownik UR, do 05.2027&quot;
+     }
+    ],
+    &quot;zmiany&quot;: {
+     &quot;ktoZmienia&quot;: &quot;Kierownik UR po uzgodnieniu z Energy Managerem; technik — tylko w trybie awaryjnym, z wpisem do rejestru i zgłoszeniem w ciągu zmiany.&quot;,
+     &quot;wykonawcy&quot;: &quot;Nastawy ciśnienia i kolejności pracy sprężarek zmienia się tylko za zgodą kierownika UR; protokół z przeglądu podaje nastawy przed i po; wykryte wycieki serwis zgłasza w protokole. Wprowadzone po zdarzeniu z czerwca 2026 r. — przywróceniu nastaw fabrycznych 7 bar po planowym przeglądzie.&quot;,
+     &quot;planowane&quot;: &quot;Modernizacja (sterownik nadrzędny i napęd o zmiennej prędkości, uruchomienie 06.2027) — kryteria aktualizowane przed uruchomieniem, odpowiada kierownik UR, termin 05.2027. Nowe odbiorniki — sprawdzenie potrzeby ciśnienia przed podłączeniem.&quot;,
+     &quot;niezamierzone&quot;: &quot;Zmiana wykryta w tygodniowym zestawieniu wskaźnika: przegląd skutków (o ile wzrosło zużycie i za jaki okres), przywrócenie kryterium w ciągu zmiany, usunięcie przyczyny. W czerwcu 2026 r. skutkiem był wzrost kWh/Nm³ widoczny w zestawieniu tygodniowym; przyczynę usunięto aneksem do zlecenia serwisowego.&quot;,
+     &quot;zapisZmian&quot;: &quot;Rejestr zmian nastaw przy panelu sprężarkowni: data, kto, z czego na co, dlaczego, zgoda.&quot;
+    },
+    &quot;sygnaly&quot;: [
+     {
+      &quot;sygnal&quot;: &quot;Tygodniowy kWh/Nm³ (S-1)&quot;,
+      &quot;prog&quot;: &quot;&gt; 0,122 (ok. 2,5% powyżej średniej 07–09.2026)&quot;,
+      &quot;kolejnosc&quot;: &quot;1) nastawa i rejestr zmian nastaw, 2) kolejność pracy sprężarek w sterowniku, 3) filtry i osuszacz, 4) wycieki — detektor ultradźwiękowy, 5) zmiana zapotrzebowania w produkcji&quot;,
+      &quot;kto&quot;: &quot;Technik UR&quot;,
+      &quot;zglasza&quot;: &quot;Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 5 dni roboczych&quot;,
+      &quot;zapis&quot;: &quot;Zestawienie tygodniowe z adnotacją&quot;
+     },
+     {
+      &quot;sygnal&quot;: &quot;Ciśnienie w sieci&quot;,
+      &quot;prog&quot;: &quot;&gt; 6,3 bar dłużej niż 1 h&quot;,
+      &quot;kolejnosc&quot;: &quot;1) nastawa w sterowniku i rejestr zmian, 2) praca sterownika i kolejność sprężarek&quot;,
+      &quot;kto&quot;: &quot;Technik UR&quot;,
+      &quot;zglasza&quot;: &quot;Kierownik UR&quot;,
+      &quot;zapis&quot;: &quot;Rejestr zmian nastaw&quot;
+     },
+     {
+      &quot;sygnal&quot;: &quot;Przepływ w postoju (S-2)&quot;,
+      &quot;prog&quot;: &quot;&gt; 6 Nm³/min&quot;,
+      &quot;kolejnosc&quot;: &quot;1) lokalizacja wycieków detektorem w obiegu hal, 2) złączki i szybkozłącza przy prasach, 3) zawory odcinające i ich stan, 4) osuszacz i odwodnienia&quot;,
+      &quot;kto&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;zglasza&quot;: &quot;Kierownik UR; wynik do Energy Managera&quot;,
+      &quot;zapis&quot;: &quot;Protokół testu weekendowego, lista wycieków&quot;
+     }
+    ],
+    &quot;utrzymanie&quot;: [
+     {
+      &quot;czynnosc&quot;: &quot;Przegląd szczelności sieci — test w postoju i detektor ultradźwiękowy&quot;,
+      &quot;czestotliwosc&quot;: &quot;Kwartalnie (III-24, działanie 2 celu C1)&quot;,
+      &quot;wykonuje&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;zapis&quot;: &quot;Protokół testu, lista wycieków&quot;
+     },
+     {
+      &quot;czynnosc&quot;: &quot;Wymiana filtrów&quot;,
+      &quot;czestotliwosc&quot;: &quot;Po przekroczeniu spadku ciśnienia wg producenta albo według harmonogramu producenta — co nastąpi pierwsze&quot;,
+      &quot;wykonuje&quot;: &quot;Serwis zewnętrzny&quot;,
+      &quot;zapis&quot;: &quot;Protokół serwisu z nastawami przed i po&quot;
+     },
+     {
+      &quot;czynnosc&quot;: &quot;Przegląd sprężarek&quot;,
+      &quot;czestotliwosc&quot;: &quot;Wg dokumentacji producenta (motogodziny)&quot;,
+      &quot;wykonuje&quot;: &quot;Serwis zewnętrzny&quot;,
+      &quot;zapis&quot;: &quot;Protokół serwisu z nastawami przed i po&quot;
+     },
+     {
+      &quot;czynnosc&quot;: &quot;Czyszczenie chłodnic&quot;,
+      &quot;czestotliwosc&quot;: &quot;Wg instrukcji producenta i stanu — częściej latem&quot;,
+      &quot;wykonuje&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;zapis&quot;: &quot;Karta obchodu&quot;
+     }
+    ],
+    &quot;przekazanie&quot;: [
+     {
+      &quot;komu&quot;: &quot;Technicy UR (3 zmiany)&quot;,
+      &quot;wykonawca&quot;: false,
+      &quot;jak&quot;: &quot;Instrukcja I-SP-02 w koszulce przy panelu; szkolenie z serwisem&quot;,
+      &quot;data&quot;: &quot;2026-06-30&quot;,
+      &quot;sprawdzenie&quot;: &quot;„Pokaż — rozpoznaj — powiedz” przy sprężarkowni (III-28)&quot;
+     },
+     {
+      &quot;komu&quot;: &quot;Kierownicy zmian produkcji&quot;,
+      &quot;wykonawca&quot;: false,
+      &quot;jak&quot;: &quot;Informacja o trybie postoju na odprawie&quot;,
+      &quot;data&quot;: &quot;2026-06-30&quot;,
+      &quot;sprawdzenie&quot;: &quot;Rozmowa przy obchodzie&quot;
+     },
+     {
+      &quot;komu&quot;: &quot;Serwis sprężarek&quot;,
+      &quot;wykonawca&quot;: true,
+      &quot;jak&quot;: &quot;Zlecenie serwisowe — sekcja C (aneks do umowy z 28.04.2026)&quot;,
+      &quot;data&quot;: &quot;2026-07-20&quot;,
+      &quot;sprawdzenie&quot;: &quot;Protokół z nastawami przy kolejnym przeglądzie&quot;
+     }
+    ]
+   },
+   {
+    &quot;seu&quot;: &quot;Lakiernia — piec gazowy i dwie kabiny&quot;,
+    &quot;lokalizacja&quot;: &quot;Hala C&quot;,
+    &quot;zuzycie&quot;: &quot;2 425 MWh (2025), 20,0% zużycia zakładu — gaz 2 000 MWh i energia elektryczna 425 MWh&quot;,
+    &quot;osoby&quot;: &quot;Operatorzy lakierni (3 zmiany), technolog lakierni, kierownik UR, serwis linii lakierniczej&quot;,
+    &quot;wskaznik&quot;: &quot;L-1 zużycie rzeczywiste / oczekiwane (model na powierzchni i stopniodniach): 1,000 → monitorowanie&quot;,
+    &quot;utworzono&quot;: &quot;2026-06-20&quot;,
+    &quot;aktualizacja&quot;: &quot;2026-09-30&quot;,
+    &quot;opracowal&quot;: &quot;Technolog lakierni z Energy Managerem&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+    &quot;kryteria&quot;: [
+     {
+      &quot;parametr&quot;: &quot;Temperatura pieca&quot;,
+      &quot;potrzeba&quot;: &quot;Wymaganie technologii lakierowania dla stosowanego lakieru proszkowego — profil wygrzewania z karty technicznej lakieru&quot;,
+      &quot;straty&quot;: &quot;Straty przez otwarcia i wentylację — uwzględnione w profilu nagrzewania&quot;,
+      &quot;kryterium&quot;: &quot;Wg profilu z instrukcji I-LAK-01; bez podnoszenia nastawy „na zapas”&quot;,
+      &quot;kontrola&quot;: &quot;Ciągle — sterownik pieca; raport tygodniowy&quot;
+     },
+     {
+      &quot;parametr&quot;: &quot;Harmonogram pracy pieca&quot;,
+      &quot;potrzeba&quot;: &quot;Piec musi być w temperaturze na początek zmiany; nagrzewanie trwa ok. 70 minut (pomiar 06.2026)&quot;,
+      &quot;straty&quot;: &quot;Nagrzewanie wcześniejsze niż potrzebne to zużycie bez produkcji&quot;,
+      &quot;kryterium&quot;: &quot;Start nagrzewania 70 minut przed pierwszym zleceniem zmiany, nie wcześniej; wyłączenie po ostatnim zleceniu&quot;,
+      &quot;kontrola&quot;: &quot;Harmonogram w sterowniku; sprawdzenie przy obchodzie&quot;
+     },
+     {
+      &quot;parametr&quot;: &quot;Wentylacja kabin&quot;,
+      &quot;potrzeba&quot;: &quot;Wymaganie bezpieczeństwa i jakości powłoki w czasie natrysku i odparowania&quot;,
+      &quot;straty&quot;: &quot;Praca wentylacji po zakończeniu cyklu to zużycie bez efektu&quot;,
+      &quot;kryterium&quot;: &quot;Wentylacja pracuje w czasie cyklu i przez czas odparowania wg I-LAK-01; nie dłużej&quot;,
+      &quot;kontrola&quot;: &quot;Sterownik kabiny; obchód&quot;
+     }
+    ],
+    &quot;tryby&quot;: [
+     {
+      &quot;tryb&quot;: &quot;Produkcja (3 zmiany)&quot;,
+      &quot;jak&quot;: &quot;Piec w temperaturze wg profilu; kabiny według zleceń&quot;,
+      &quot;uwagi&quot;: &quot;Zmianę profilu uzgadnia technolog z Energy Managerem&quot;
+     },
+     {
+      &quot;tryb&quot;: &quot;Przerwa między zleceniami dłuższa niż 2 h&quot;,
+      &quot;jak&quot;: &quot;Piec w trybie obniżonym wg I-LAK-01; wentylacja kabin wyłączona&quot;,
+      &quot;uwagi&quot;: &quot;Decyzję podejmuje operator, zapisuje w karcie zmiany&quot;
+     },
+     {
+      &quot;tryb&quot;: &quot;Postój (weekend)&quot;,
+      &quot;jak&quot;: &quot;Piec i kabiny wyłączone&quot;,
+      &quot;uwagi&quot;: &quot;Ponowne nagrzewanie planowane na koniec postoju, nie na jego początek&quot;
+     }
+    ],
+    &quot;zmiany&quot;: {
+     &quot;ktoZmienia&quot;: &quot;Profil temperatur i harmonogram — technolog lakierni po uzgodnieniu z Energy Managerem. Operator nie zmienia nastaw; w razie problemu zgłasza technologowi.&quot;,
+     &quot;wykonawcy&quot;: &quot;Serwis linii lakierniczej: zmiana profilu albo parametrów sterownika tylko za zgodą technologa; protokół serwisu podaje parametry przed i po; wykryte nieszczelności komory i nieprawidłowości wentylacji serwis zgłasza w protokole.&quot;,
+     &quot;planowane&quot;: &quot;Zmiana lakieru albo asortymentu — technolog sprawdza, czy profil wygrzewania pozostaje właściwy, przed pierwszym zleceniem w nowej technologii. Montaż podlicznika gazu pieca (06.2026) — kryteria uzupełnione o kontrolę zużycia dziennego.&quot;,
+     &quot;niezamierzone&quot;: &quot;Odchylenie wskaźnika L-1: przegląd skutków w raporcie miesięcznym, sprawdzenie profilu w sterowniku wobec I-LAK-01, przywrócenie profilu i zapis przyczyny w karcie zmiany.&quot;,
+     &quot;zapisZmian&quot;: &quot;Rejestr zmian parametrów w karcie pieca (teczka techniczna UR) oraz adnotacja w raporcie tygodniowym.&quot;
+    },
+    &quot;sygnaly&quot;: [
+     {
+      &quot;sygnal&quot;: &quot;Miesięczny wskaźnik L-1&quot;,
+      &quot;prog&quot;: &quot;&gt; 1,03 (3% powyżej zużycia oczekiwanego z modelu)&quot;,
+      &quot;kolejnosc&quot;: &quot;1) profil temperatur w sterowniku wobec I-LAK-01, 2) harmonogram startu nagrzewania, 3) czas pracy wentylacji kabin, 4) szczelność komory i stan uszczelek, 5) zmiana asortymentu albo lakieru&quot;,
+      &quot;kto&quot;: &quot;Technolog lakierni&quot;,
+      &quot;zglasza&quot;: &quot;Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 10 dni&quot;,
+      &quot;zapis&quot;: &quot;Raport miesięczny z adnotacją&quot;
+     },
+     {
+      &quot;sygnal&quot;: &quot;Dzienne zużycie gazu pieca&quot;,
+      &quot;prog&quot;: &quot;&gt; 15% powyżej średniej dla porównywalnej liczby zleceń&quot;,
+      &quot;kolejnosc&quot;: &quot;1) godzina startu nagrzewania w sterowniku, 2) tryb obniżony w przerwach, 3) liczba i czas otwarć komory&quot;,
+      &quot;kto&quot;: &quot;Operator zgłasza, sprawdza technolog&quot;,
+      &quot;zglasza&quot;: &quot;Technolog; wynik do Energy Managera w raporcie miesięcznym&quot;,
+      &quot;zapis&quot;: &quot;Odczyt podlicznika w arkuszu EnMS&quot;
+     }
+    ],
+    &quot;utrzymanie&quot;: [
+     {
+      &quot;czynnosc&quot;: &quot;Sprawdzenie szczelności komory i stanu uszczelek&quot;,
+      &quot;czestotliwosc&quot;: &quot;Kwartalnie&quot;,
+      &quot;wykonuje&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;zapis&quot;: &quot;Karta obchodu&quot;
+     },
+     {
+      &quot;czynnosc&quot;: &quot;Sprawdzenie czujnika temperatury pieca&quot;,
+      &quot;czestotliwosc&quot;: &quot;Raz w roku&quot;,
+      &quot;wykonuje&quot;: &quot;Serwis linii lakierniczej&quot;,
+      &quot;zapis&quot;: &quot;Protokół serwisu z parametrami&quot;
+     },
+     {
+      &quot;czynnosc&quot;: &quot;Czyszczenie filtrów wentylacji kabin&quot;,
+      &quot;czestotliwosc&quot;: &quot;Wg instrukcji producenta i wskazania spadku ciśnienia&quot;,
+      &quot;wykonuje&quot;: &quot;Utrzymanie ruchu&quot;,
+      &quot;zapis&quot;: &quot;Karta obchodu&quot;
+     }
+    ],
+    &quot;przekazanie&quot;: [
+     {
+      &quot;komu&quot;: &quot;Operatorzy lakierni (3 zmiany)&quot;,
+      &quot;wykonawca&quot;: false,
+      &quot;jak&quot;: &quot;Instrukcja I-LAK-01 przy kabinie; instruktaż na stanowisku (plan F-EnMS-12, poz. 2)&quot;,
+      &quot;data&quot;: &quot;2026-09-30&quot;,
+      &quot;sprawdzenie&quot;: &quot;Obserwacja przy pracy — start nagrzewania i wyłączanie wentylacji&quot;
+     },
+     {
+      &quot;komu&quot;: &quot;Serwis linii lakierniczej&quot;,
+      &quot;wykonawca&quot;: true,
+      &quot;jak&quot;: &quot;Zlecenie serwisowe — wymagania jak w sekcji C&quot;,
+      &quot;data&quot;: &quot;2026-08-10&quot;,
+      &quot;sprawdzenie&quot;: &quot;Protokół z parametrami przy kolejnym przeglądzie&quot;
+     }
+    ]
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;data&quot;: &quot;2026-07-20&quot;,
+   &quot;przeglad&quot;: &quot;Przed każdą planowaną zmianą instalacji, przy podłączeniu nowego odbiornika, przy corocznej aktualizacji przeglądu energetycznego oraz po każdym odchyleniu nieusuniętym w terminie z części D&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var LISTA_81 = [{"tekst": "Określono procesy związane ze znaczącymi użyciami energii i działaniami z planów, które wymagają kryteriów.", "podstawa": "N", "auto": "procesy"}, {"tekst": "Ustalono kryteria tam, gdzie ich brak może prowadzić do znaczącego odchylenia — w tym dla eksploatacji i utrzymania.", "podstawa": "N", "auto": "kryteria"}, {"tekst": "Kryteria przekazano osobom, które ich używają, także wykonawcom.", "podstawa": "N", "auto": "przekazano"}, {"tekst": "Procesy prowadzi się zgodnie z kryteriami — opisano tryby pracy i sposób sterowania.", "podstawa": "N", "auto": "zgodnie"}, {"tekst": "Zachowano zapisy w zakresie potrzebnym do pewności, że procesy przebiegały zgodnie z planem.", "podstawa": "N", "auto": "zapisy"}, {"tekst": "Nadzorowane są zmiany planowane; skutki zmian niezamierzonych są przeglądane i ograniczane.", "podstawa": "N", "auto": "zmiany"}, {"tekst": "Nadzorowane są zlecone na zewnątrz znaczące użycia energii i procesy z nimi związane (np. serwis).", "podstawa": "N", "auto": "zlecone"}, {"tekst": "Kryteria wyprowadzono z potrzeb procesu i pomiarów.", "podstawa": "M", "auto": "zPotrzeb"}, {"tekst": "Odchylenie widać w ciągu dni; wiadomo, kto reaguje i w jakiej kolejności sprawdza.", "podstawa": "M", "auto": "reakcja"}];
+var P_KARTY = [{"seu": "Sprężarkownia — 4 sprężarki śrubowe, sterownik, osuszacz, sieć do hal i lakierni", "lokalizacja": "Hala A, pomieszczenie A-05", "zuzycie": "2 125 MWh (2025), 17,5% zużycia zakładu (III-20)", "osoby": "Technicy UR (3 zmiany), kierownik UR, serwis zewnętrzny (przeglądy), Energy Manager", "wskaznik": "S-1 kWh/Nm³: 0,125 → 0,110 do 12.2027 (Z1.1); S-2 przepływ w postoju: 9 → 4 Nm³/min do 06.2027 (Z1.2)", "utworzono": "2026-06-15", "aktualizacja": "2026-07-20", "opracowal": "Kierownik UR z Janem Kowalskim (Energy Manager)", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "kryteria": [{"parametr": "Ciśnienie w sieci", "potrzeba": "Najbardziej wymagające urządzenia lakierni: ok. 5,8 bar u odbiorcy (pomiar 02–03.2026)", "straty": "Spadek w sieci w szczycie ok. 0,4 bar; zapas regulacji 0,1 bar", "kryterium": "≤ 6,3 bar na wyjściu ze sprężarkowni", "kontrola": "Ciągle — sterownik; tygodniowo — zestawienie"}, {"parametr": "Punkt rosy", "potrzeba": "Wymaganie procesu lakierni — wg specyfikacji linii lakierniczej (DTR, wydanie 2/2019)", "straty": "—", "kryterium": "Wg wymagania lakierni — nie niżej, niż potrzeba", "kontrola": "Odczyt osuszacza, tygodniowo"}, {"parametr": "Spadek ciśnienia na filtrach", "potrzeba": "Wartość graniczna z dokumentacji producenta sprężarek — wymaganie techniczne, nie wybór zakładu", "straty": "Rosnący spadek na filtrze podnosi ciśnienie wyjściowe potrzebne do utrzymania 5,8 bar u odbiorcy", "kryterium": "Wymiana filtra po przekroczeniu wartości producenta", "kontrola": "Odczyt przy obchodzie, tygodniowo"}, {"parametr": "Przepływ w postoju", "potrzeba": "Brak odbioru w czasie postoju — każdy przepływ to wycieki (test weekendowy 12.01.2026)", "straty": "—", "kryterium": "≤ 6 Nm³/min (stan 06.2026); cel 4 Nm³/min (06.2027)", "kontrola": "Test weekendowy, kwartalnie"}], "tryby": [{"tryb": "Produkcja (pon.–pt., 3 zmiany)", "jak": "Sprężarki według kolejności ustalonej w sterowniku; ciśnienie ≤ 6,3 bar", "uwagi": "Zmiana kolejności — tylko kierownik UR"}, {"tryb": "Postój (weekend, święta)", "jak": "Jedna sprężarka tylko wtedy, gdy potrzebują jej odbiorcy w podtrzymaniu; w przeciwnym razie wyłączone", "uwagi": "Decyzję o pracy w postoju zapisuje kierownik zmiany"}, {"tryb": "Po modernizacji (06.2027)", "jak": "Obniżanie ciśnienia poza produkcją — wartość ustalona przed uruchomieniem", "uwagi": "Aktualizacja kryteriów: kierownik UR, do 05.2027"}], "zmiany": {"ktoZmienia": "Kierownik UR po uzgodnieniu z Energy Managerem; technik — tylko w trybie awaryjnym, z wpisem do rejestru i zgłoszeniem w ciągu zmiany.", "wykonawcy": "Nastawy ciśnienia i kolejności pracy sprężarek zmienia się tylko za zgodą kierownika UR; protokół z przeglądu podaje nastawy przed i po; wykryte wycieki serwis zgłasza w protokole. Wprowadzone po zdarzeniu z czerwca 2026 r. — przywróceniu nastaw fabrycznych 7 bar po planowym przeglądzie.", "planowane": "Modernizacja (sterownik nadrzędny i napęd o zmiennej prędkości, uruchomienie 06.2027) — kryteria aktualizowane przed uruchomieniem, odpowiada kierownik UR, termin 05.2027. Nowe odbiorniki — sprawdzenie potrzeby ciśnienia przed podłączeniem.", "niezamierzone": "Zmiana wykryta w tygodniowym zestawieniu wskaźnika: przegląd skutków (o ile wzrosło zużycie i za jaki okres), przywrócenie kryterium w ciągu zmiany, usunięcie przyczyny. W czerwcu 2026 r. skutkiem był wzrost kWh/Nm³ widoczny w zestawieniu tygodniowym; przyczynę usunięto aneksem do zlecenia serwisowego.", "zapisZmian": "Rejestr zmian nastaw przy panelu sprężarkowni: data, kto, z czego na co, dlaczego, zgoda."}, "sygnaly": [{"sygnal": "Tygodniowy kWh/Nm³ (S-1)", "prog": "> 0,122 (ok. 2,5% powyżej średniej 07–09.2026)", "kolejnosc": "1) nastawa i rejestr zmian nastaw, 2) kolejność pracy sprężarek w sterowniku, 3) filtry i osuszacz, 4) wycieki — detektor ultradźwiękowy, 5) zmiana zapotrzebowania w produkcji", "kto": "Technik UR", "zglasza": "Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 5 dni roboczych", "zapis": "Zestawienie tygodniowe z adnotacją"}, {"sygnal": "Ciśnienie w sieci", "prog": "> 6,3 bar dłużej niż 1 h", "kolejnosc": "1) nastawa w sterowniku i rejestr zmian, 2) praca sterownika i kolejność sprężarek", "kto": "Technik UR", "zglasza": "Kierownik UR", "zapis": "Rejestr zmian nastaw"}, {"sygnal": "Przepływ w postoju (S-2)", "prog": "> 6 Nm³/min", "kolejnosc": "1) lokalizacja wycieków detektorem w obiegu hal, 2) złączki i szybkozłącza przy prasach, 3) zawory odcinające i ich stan, 4) osuszacz i odwodnienia", "kto": "Utrzymanie ruchu", "zglasza": "Kierownik UR; wynik do Energy Managera", "zapis": "Protokół testu weekendowego, lista wycieków"}], "utrzymanie": [{"czynnosc": "Przegląd szczelności sieci — test w postoju i detektor ultradźwiękowy", "czestotliwosc": "Kwartalnie (III-24, działanie 2 celu C1)", "wykonuje": "Utrzymanie ruchu", "zapis": "Protokół testu, lista wycieków"}, {"czynnosc": "Wymiana filtrów", "czestotliwosc": "Po przekroczeniu spadku ciśnienia wg producenta albo według harmonogramu producenta — co nastąpi pierwsze", "wykonuje": "Serwis zewnętrzny", "zapis": "Protokół serwisu z nastawami przed i po"}, {"czynnosc": "Przegląd sprężarek", "czestotliwosc": "Wg dokumentacji producenta (motogodziny)", "wykonuje": "Serwis zewnętrzny", "zapis": "Protokół serwisu z nastawami przed i po"}, {"czynnosc": "Czyszczenie chłodnic", "czestotliwosc": "Wg instrukcji producenta i stanu — częściej latem", "wykonuje": "Utrzymanie ruchu", "zapis": "Karta obchodu"}], "przekazanie": [{"komu": "Technicy UR (3 zmiany)", "wykonawca": false, "jak": "Instrukcja I-SP-02 w koszulce przy panelu; szkolenie z serwisem", "data": "2026-06-30", "sprawdzenie": "„Pokaż — rozpoznaj — powiedz” przy sprężarkowni (III-28)"}, {"komu": "Kierownicy zmian produkcji", "wykonawca": false, "jak": "Informacja o trybie postoju na odprawie", "data": "2026-06-30", "sprawdzenie": "Rozmowa przy obchodzie"}, {"komu": "Serwis sprężarek", "wykonawca": true, "jak": "Zlecenie serwisowe — sekcja C (aneks do umowy z 28.04.2026)", "data": "2026-07-20", "sprawdzenie": "Protokół z nastawami przy kolejnym przeglądzie"}]}, {"seu": "Lakiernia — piec gazowy i dwie kabiny", "lokalizacja": "Hala C", "zuzycie": "2 425 MWh (2025), 20,0% zużycia zakładu — gaz 2 000 MWh i energia elektryczna 425 MWh", "osoby": "Operatorzy lakierni (3 zmiany), technolog lakierni, kierownik UR, serwis linii lakierniczej", "wskaznik": "L-1 zużycie rzeczywiste / oczekiwane (model na powierzchni i stopniodniach): 1,000 → monitorowanie", "utworzono": "2026-06-20", "aktualizacja": "2026-09-30", "opracowal": "Technolog lakierni z Energy Managerem", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "kryteria": [{"parametr": "Temperatura pieca", "potrzeba": "Wymaganie technologii lakierowania dla stosowanego lakieru proszkowego — profil wygrzewania z karty technicznej lakieru", "straty": "Straty przez otwarcia i wentylację — uwzględnione w profilu nagrzewania", "kryterium": "Wg profilu z instrukcji I-LAK-01; bez podnoszenia nastawy „na zapas”", "kontrola": "Ciągle — sterownik pieca; raport tygodniowy"}, {"parametr": "Harmonogram pracy pieca", "potrzeba": "Piec musi być w temperaturze na początek zmiany; nagrzewanie trwa ok. 70 minut (pomiar 06.2026)", "straty": "Nagrzewanie wcześniejsze niż potrzebne to zużycie bez produkcji", "kryterium": "Start nagrzewania 70 minut przed pierwszym zleceniem zmiany, nie wcześniej; wyłączenie po ostatnim zleceniu", "kontrola": "Harmonogram w sterowniku; sprawdzenie przy obchodzie"}, {"parametr": "Wentylacja kabin", "potrzeba": "Wymaganie bezpieczeństwa i jakości powłoki w czasie natrysku i odparowania", "straty": "Praca wentylacji po zakończeniu cyklu to zużycie bez efektu", "kryterium": "Wentylacja pracuje w czasie cyklu i przez czas odparowania wg I-LAK-01; nie dłużej", "kontrola": "Sterownik kabiny; obchód"}], "tryby": [{"tryb": "Produkcja (3 zmiany)", "jak": "Piec w temperaturze wg profilu; kabiny według zleceń", "uwagi": "Zmianę profilu uzgadnia technolog z Energy Managerem"}, {"tryb": "Przerwa między zleceniami dłuższa niż 2 h", "jak": "Piec w trybie obniżonym wg I-LAK-01; wentylacja kabin wyłączona", "uwagi": "Decyzję podejmuje operator, zapisuje w karcie zmiany"}, {"tryb": "Postój (weekend)", "jak": "Piec i kabiny wyłączone", "uwagi": "Ponowne nagrzewanie planowane na koniec postoju, nie na jego początek"}], "zmiany": {"ktoZmienia": "Profil temperatur i harmonogram — technolog lakierni po uzgodnieniu z Energy Managerem. Operator nie zmienia nastaw; w razie problemu zgłasza technologowi.", "wykonawcy": "Serwis linii lakierniczej: zmiana profilu albo parametrów sterownika tylko za zgodą technologa; protokół serwisu podaje parametry przed i po; wykryte nieszczelności komory i nieprawidłowości wentylacji serwis zgłasza w protokole.", "planowane": "Zmiana lakieru albo asortymentu — technolog sprawdza, czy profil wygrzewania pozostaje właściwy, przed pierwszym zleceniem w nowej technologii. Montaż podlicznika gazu pieca (06.2026) — kryteria uzupełnione o kontrolę zużycia dziennego.", "niezamierzone": "Odchylenie wskaźnika L-1: przegląd skutków w raporcie miesięcznym, sprawdzenie profilu w sterowniku wobec I-LAK-01, przywrócenie profilu i zapis przyczyny w karcie zmiany.", "zapisZmian": "Rejestr zmian parametrów w karcie pieca (teczka techniczna UR) oraz adnotacja w raporcie tygodniowym."}, "sygnaly": [{"sygnal": "Miesięczny wskaźnik L-1", "prog": "> 1,03 (3% powyżej zużycia oczekiwanego z modelu)", "kolejnosc": "1) profil temperatur w sterowniku wobec I-LAK-01, 2) harmonogram startu nagrzewania, 3) czas pracy wentylacji kabin, 4) szczelność komory i stan uszczelek, 5) zmiana asortymentu albo lakieru", "kto": "Technolog lakierni", "zglasza": "Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 10 dni", "zapis": "Raport miesięczny z adnotacją"}, {"sygnal": "Dzienne zużycie gazu pieca", "prog": "> 15% powyżej średniej dla porównywalnej liczby zleceń", "kolejnosc": "1) godzina startu nagrzewania w sterowniku, 2) tryb obniżony w przerwach, 3) liczba i czas otwarć komory", "kto": "Operator zgłasza, sprawdza technolog", "zglasza": "Technolog; wynik do Energy Managera w raporcie miesięcznym", "zapis": "Odczyt podlicznika w arkuszu EnMS"}], "utrzymanie": [{"czynnosc": "Sprawdzenie szczelności komory i stanu uszczelek", "czestotliwosc": "Kwartalnie", "wykonuje": "Utrzymanie ruchu", "zapis": "Karta obchodu"}, {"czynnosc": "Sprawdzenie czujnika temperatury pieca", "czestotliwosc": "Raz w roku", "wykonuje": "Serwis linii lakierniczej", "zapis": "Protokół serwisu z parametrami"}, {"czynnosc": "Czyszczenie filtrów wentylacji kabin", "czestotliwosc": "Wg instrukcji producenta i wskazania spadku ciśnienia", "wykonuje": "Utrzymanie ruchu", "zapis": "Karta obchodu"}], "przekazanie": [{"komu": "Operatorzy lakierni (3 zmiany)", "wykonawca": false, "jak": "Instrukcja I-LAK-01 przy kabinie; instruktaż na stanowisku (plan F-EnMS-12, poz. 2)", "data": "2026-09-30", "sprawdzenie": "Obserwacja przy pracy — start nagrzewania i wyłączanie wentylacji"}, {"komu": "Serwis linii lakierniczej", "wykonawca": true, "jak": "Zlecenie serwisowe — wymagania jak w sekcji C", "data": "2026-08-10", "sprawdzenie": "Protokół z parametrami przy kolejnym przeglądzie"}]}];
+var P_META = {"zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "data": "2026-07-20", "przeglad": "Przed każdą planowaną zmianą instalacji, przy podłączeniu nowego odbiornika, przy corocznej aktualizacji przeglądu energetycznego oraz po każdym odchyleniu nieusuniętym w terminie z części D"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Znaczące użycie bez kryteriów eksploatacji zależy od tego, kto ma zmianę.", "decyzja": "Kryteria eksploatacji ustalone dla sprężarkowni i lakierni razem z utrzymaniem ruchu, a nie narzucone zza biurka.", "dzialanie": "Obniżone ciśnienie robocze zapisane jako kryterium; kwartalny przegląd szczelności; nadzór nad serwisem zewnętrznym wpisany do umowy.", "sprawdzenie": "Odchylenie od kryterium widoczne w raporcie miesięcznym; ciśnienie nie wraca do wartości sprzed zmiany."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 8.1 — Planowanie i nadzór nad działaniami operacyjnymi.
+   F-EnMS-14 (III-34) części A–F; przykład III-35; lista kontrolna III-39 sekcja 8.1;
+   procedura P-EnMS-06 (III-40) pkt 4.1 i 4.2. */
+"use strict";
+
+var PUNKT = "8.1";
+var TERAZ = "11.10.2026 11:10";
+var MAGAZYN = "enesa_kryteria_seu";      // czytane przez 8.2 i 8.3
+var KARTY = [];
+var AKTK = 0;                            // indeks otwartej karty SEU
+var META = { zatwierdzil: "", data: "", przeglad: "" };
+var WNIOSKI = [];
+var AKT = "karty";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 11:05", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 8.1" }];
+
+/* ── struktura karty ── */
+function nowaKarta() {
+  return {
+    seu: "", lokalizacja: "", zuzycie: "", osoby: "", wskaznik: "",
+    utworzono: "", aktualizacja: "", opracowal: "", zatwierdzil: "",
+    kryteria: [], tryby: [], zmiany: {}, sygnaly: [], utrzymanie: [], przekazanie: []
+  };
+}
+function karta() { return KARTY[AKTK] || null; }
+function nazwaKarty(k, i) { return (k.seu || "").trim() || ("SEU " + (i + 1)); }
+
+/* ── kompletność ── */
+function kryteriumOk(x) {
+  return !!((x.parametr || "").trim() && (x.potrzeba || "").trim() && (x.kryterium || "").trim() && (x.kontrola || "").trim());
+}
+function trybOk(x) { return !!((x.tryb || "").trim() && (x.jak || "").trim()); }
+function sygnalOk(x) {
+  return !!((x.sygnal || "").trim() && (x.prog || "").trim() && (x.kto || "").trim() && (x.zapis || "").trim())
+    && liczbaSprawdzen(x) >= 2;
+}
+function utrzymanieOk(x) {
+  return !!((x.czynnosc || "").trim() && (x.czestotliwosc || "").trim() && (x.wykonuje || "").trim() && (x.zapis || "").trim());
+}
+function przekazanieOk(x) {
+  return !!((x.komu || "").trim() && (x.jak || "").trim() && x.data && (x.sprawdzenie || "").trim());
+}
+var POLA_ZMIAN = [
+  { kod: "ktoZmienia", nazwa: "Kto może zmienić nastawy i co musi zrobić przed zmianą", podstawa: "N",
+    ph: "np. Kierownik UR po uzgodnieniu z Energy Managerem; technik — tylko w trybie awaryjnym, z wpisem i zgłoszeniem w ciągu zmiany" },
+  { kod: "wykonawcy", nazwa: "Wykonawcy zewnętrzni — co mają w zleceniu", podstawa: "N",
+    ph: "np. Nastawy zmienia się tylko za zgodą kierownika UR; protokół z przeglądu podaje nastawy przed i po; wykryte wycieki serwis zgłasza w protokole",
+    pomoc: "Norma wymaga nadzoru nad zleconymi na zewnątrz znaczącymi użyciami energii. Trzy zdania w zleceniu wystarczą — bez osobnej procedury." },
+  { kod: "planowane", nazwa: "Planowane zmiany instalacji — kiedy i kto aktualizuje kryteria", podstawa: "N",
+    ph: "np. Modernizacja (sterownik i napęd, 06.2027) — kryteria aktualizowane przed uruchomieniem; nowe odbiorniki — sprawdzenie potrzeby ciśnienia przed podłączeniem" },
+  { kod: "niezamierzone", nazwa: "Zmiany niezamierzone — przegląd skutków", podstawa: "N",
+    ph: "np. Po wykryciu zmiany nastawy bez zgody: przegląd skutków w tygodniowym wskaźniku, przywrócenie kryterium, usunięcie przyczyny (aneks do zlecenia serwisowego)",
+    pomoc: "Norma każe przeglądać skutki zmian niezamierzonych i ograniczać ich niekorzystne skutki — to osobne wymaganie od nadzoru nad zmianami planowanymi." },
+  { kod: "zapisZmian", nazwa: "Gdzie zapisuje się zmiany nastaw", podstawa: "N",
+    ph: "np. Rejestr zmian nastaw przy panelu: data, kto, z czego na co, dlaczego, zgoda" }
+];
+function zmianyOk(k) {
+  return POLA_ZMIAN.every(function (p) { return ((k.zmiany || {})[p.kod] || "").trim(); });
+}
+function metrykaOk(k) {
+  return !!((k.seu || "").trim() && (k.zuzycie || "").trim() && (k.osoby || "").trim()
+    && (k.wskaznik || "").trim() && (k.zatwierdzil || "").trim());
+}
+function kartaOk(k) {
+  return metrykaOk(k) && k.kryteria.length > 0 && k.kryteria.every(kryteriumOk)
+    && k.tryby.length > 0 && k.tryby.every(trybOk) && zmianyOk(k)
+    && k.sygnaly.length > 0 && k.sygnaly.every(sygnalOk)
+    && k.utrzymanie.length > 0 && k.utrzymanie.every(utrzymanieOk)
+    && k.przekazanie.length > 0 && k.przekazanie.every(przekazanieOk) && maWykonawce(k);
+}
+function maWykonawce(k) {
+  return (k.przekazanie || []).some(function (x) { return x.wykonawca; });
+}
+
+/* ── reguły z książki ── */
+function liczbaSprawdzen(x) {
+  var t = (x.kolejnosc || "").trim();
+  if (!t) return 0;
+  var n = (t.match(/\d\)/g) || []).length;
+  if (n) return n;
+  return t.split(/[;\n]|,\s*(?=[a-ząćęłńóśźż])/).filter(function (s) { return s.trim().length > 3; }).length;
+}
+function zgadujePrzyczyne(x) {
+  return (x.kolejnosc || "").trim() && liczbaSprawdzen(x) < 2;
+}
+var RE_PRZEPISANA = /(wg producenta|według producenta|z instrukcji producenta|nastawa fabryczna|fabryczn|jak w innym|standardowo|zalecane przez producenta|z katalogu)/i;
+function przepisanaNastawa(x) {
+  return RE_PRZEPISANA.test(x.kryterium || "") && !(x.potrzeba || "").trim();
+}
+function brakPotrzeby(x) {
+  return (x.kryterium || "").trim() && !(x.potrzeba || "").trim();
+}
+function brakStrat(x) {
+  return /bar|ciśnien|cisnien|temperatur|przepływ|przeplyw/i.test((x.parametr || "")) && !(x.straty || "").trim();
+}
+function pelneWnioskiK() { return pelneWnioski(); }
+
+/* ── zakładka 1: karty SEU ── */
+function rysujKarty(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Karty kryteriów operacyjnych");
+  h.appendChild(el("span", "chip " + (KARTY.length && KARTY.every(kartaOk) ? "green" : "amber"),
+    KARTY.filter(kartaOk).length + " / " + KARTY.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Luty 2026, sprężarkownia. Trwa kampania pomiarowa. Analizator pokazuje coś, czego nikt się nie spodziewał: <b>ciśnienie w sieci zmienia się razem z obsadą zmiany.</b><br><br>Technik na zmianie rannej trzyma 7 bar — „bo tak było zawsze”. Jego kolega z nocnej podnosi nastawę do 7,4 bar — „bo kiedyś lakiernia zgłosiła spadek ciśnienia, a ja nie chcę telefonu o trzeciej w nocy”.<br><br>Obaj są pewni, że robią dobrze, i obaj mają swoje powody. Tyle że <b>nikt nie ustalił, ile ciśnienia naprawdę potrzebują odbiorcy.</b>"));
+  s.appendChild(el("div", "note", "Kryteria ustala się tam, gdzie ich brak może prowadzić do znaczącego odchylenia od zamierzonego wyniku — dla znaczących użyć energii i dla działań z planów. Szczegółowość dopasujcie do wagi sprawy: dla sprężarkowni instrukcja z kryteriami i tygodniowym wskaźnikiem, dla klimatyzatora w biurze — ustalona nastawa i informacja, kto może ją zmienić."));
+  host.appendChild(s);
+
+  if (KARTY.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["SEU", "Udział", "Kryteriów", "Sygnałów", "Przekazano", "Stan"],
+      KARTY.map(function (k, i) {
+        var przek = (k.przekazanie || []).length;
+        return [nazwaKarty(k, i), (k.zuzycie || "—").slice(0, 34),
+          String((k.kryteria || []).length), String((k.sygnaly || []).length),
+          przek + (maWykonawce(k) ? " (z wykonawcą)" : ""),
+          el("span", "chip " + (kartaOk(k) ? "green" : "amber"), kartaOk(k) ? "OK" : "do uzupełnienia")];
+      }), [null, null, "mono", "mono", "mono"]));
+    host.appendChild(t);
+  }
+
+  KARTY.forEach(function (k, i) {
+    var sec = el("div", "sekcja");
+    var hh = el("h3", null, nazwaKarty(k, i));
+    hh.appendChild(el("span", "chip " + (kartaOk(k) ? "green" : "amber"), kartaOk(k) ? "karta kompletna" : "do uzupełnienia"));
+    var ot = el("button", "link", i === AKTK ? "otwarta" : "otwórz części A–F");
+    ot.onclick = function () { AKTK = i; AKT = "kryteria"; rysuj(); window.scrollTo(0, 0); };
+    hh.appendChild(ot);
+    hh.appendChild(przyciskUsun(function () { KARTY.splice(i, 1); if (AKTK >= KARTY.length) AKTK = Math.max(0, KARTY.length - 1); },
+      "usuń kartę", "Usunąć kartę " + nazwaKarty(k, i) + " wraz z wszystkimi kryteriami?"));
+    sec.appendChild(hh);
+    var kk = el("div", "poz" + (metrykaOk(k) ? "" : " brak"));
+    kk.appendChild(pole("Znaczące użycie energii", inp(k.seu, "np. Sprężarkownia — 4 sprężarki śrubowe, sterownik, osuszacz, sieć do hal i lakierni",
+      function (v) { k.seu = v; })));
+    kk.appendChild(pole("Lokalizacja", inp(k.lokalizacja, "np. Hala A, pomieszczenie A-05", function (v) { k.lokalizacja = v; })));
+    kk.appendChild(pole("Zużycie i udział — z przeglądu energetycznego",
+      inp(k.zuzycie, "np. 2 125 MWh (2025), 17,5% zużycia zakładu", function (v) { k.zuzycie = v; })));
+    kk.appendChild(pole("Osoby i wykonawcy wpływający na SEU",
+      inp(k.osoby, "np. Technicy UR (3 zmiany), kierownik UR, serwis zewnętrzny, Energy Manager", function (v) { k.osoby = v; }),
+      "Ta lista pochodzi z przeglądu energetycznego (6.3) i z matrycy kompetencji (7.2). To ona wyznacza, komu trzeba przekazać kryteria."));
+    kk.appendChild(pole("Wskaźnik EnPI i cel", inp(k.wskaznik, "np. S-1 kWh/Nm³: 0,125 → 0,110 do 12.2027 (Z1.1)", function (v) { k.wskaznik = v; })));
+    kk.appendChild(pole("Opracował", inp(k.opracowal, "np. Kierownik UR z Energy Managerem", function (v) { k.opracowal = v; })));
+    kk.appendChild(pole("Zatwierdził", inp(k.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { k.zatwierdzil = v; })));
+    kk.appendChild(pole("Data utworzenia", inp(k.utworzono, "", function (v) { k.utworzono = v; }, "date")));
+    kk.appendChild(pole("Ostatnia aktualizacja", inp(k.aktualizacja, "", function (v) { k.aktualizacja = v; }, "date")));
+    sec.appendChild(kk);
+    host.appendChild(sec);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj kartę SEU", function () { KARTY.push(nowaKarta()); AKTK = KARTY.length - 1; }));
+  if (!KARTY.length) d.appendChild(el("div", "warn", "Nie ma ani jednej karty kryteriów."));
+  else d.appendChild(hel("div", "note", "Uwaga na wygodne zdanie <b>„dla pozostałych urządzeń wystarczą ogólne zasady”</b>. Bywa prawdziwe — ale tylko wtedy, gdy świadomie sprawdziliście, że brak kryteriów niczego istotnego nie zepsuje. Jeśli działanie z planu dotyczy urządzenia spoza listy SEU, na przykład wyłączania wentylacji magazynu poza zmianami, ono także potrzebuje ustaleń."));
+  host.appendChild(d);
+}
+
+/* ── wspólny nagłówek części A–F ── */
+function naglowekKarty(host, tytul) {
+  var k = karta();
+  if (!k) {
+    var p = el("div", "sekcja");
+    p.appendChild(el("div", "warn", "Nie wybrano karty. Dodajcie kartę SEU w zakładce 1."));
+    host.appendChild(p);
+    return null;
+  }
+  var s = el("div", "sekcja");
+  var h = el("h3", null, tytul);
+  h.appendChild(el("span", "chip", nazwaKarty(k, AKTK)));
+  if (KARTY.length > 1) {
+    var sw = sel(String(AKTK), KARTY.map(function (x, i) { return [String(i), nazwaKarty(x, i)]; }),
+      function (v) { AKTK = parseInt(v, 10); });
+    var lab = el("span", "rola");
+    lab.appendChild(el("span", "rolaetyk", "Karta:"));
+    lab.appendChild(sw);
+    h.appendChild(lab);
+  }
+  s.appendChild(h);
+  host.appendChild(s);
+  return k;
+}
+
+/* ── zakładka 2: część A — kryteria ── */
+function rysujKryteria(host) {
+  var k = naglowekKarty(host, "A. Kryteria — z potrzeb procesu");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "note", "<b>Pięć pytań zamiast przepisanej nastawy:</b> czego naprawdę potrzebuje proces (u najbardziej wymagającego odbiorcy, nie przy urządzeniu); ile tracicie po drodze (zmierzone, nie zgadywane); jak ma działać sterowanie; kto może zmienić nastawę; po czym poznacie odchylenie i co wtedy robicie."));
+  s.appendChild(hel("div", "warn", "Najprostsza droga — przepisać nastawę z instrukcji producenta, z innego zakładu albo z książki — jest też najbardziej zawodna. <b>Instalacja, wymagania odbiorców i straty w sieci są w każdym zakładzie inne.</b>"));
+  s.appendChild(el("div", "ok", "Przykład wyliczenia z AutoParts: najbardziej wymagające urządzenia lakierni potrzebują u siebie około 5,8 bar; spadek ciśnienia w sieci w szczycie to około 0,4 bar; zapas regulacji 0,1 bar. Kryterium: ≤ 6,3 bar na wyjściu ze sprężarkowni. Liczba wyszła z pomiaru, nie z katalogu."));
+  host.appendChild(s);
+
+  (k.kryteria || []).forEach(function (x, i) {
+    var kk = el("div", "poz" + (kryteriumOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.parametr || "Parametr " + (i + 1))));
+    g.appendChild(przyciskUsun(function () { k.kryteria.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Parametr", inp(x.parametr, "np. Ciśnienie w sieci", function (v) { x.parametr = v; })));
+    kk.appendChild(poleChip("Potrzeba procesu — gdzie, ile, źródło", "metodyka ENESA",
+      txt(x.potrzeba, "np. Najbardziej wymagające urządzenia lakierni: ok. 5,8 bar u odbiorcy (pomiar 02–03.2026)", 2,
+        function (v) { x.potrzeba = v; }),
+      "Pomiar u odbiorcy, nie przy urządzeniu. To pole odróżnia kryterium wyprowadzone od nastawy przepisanej."));
+    kk.appendChild(pole("Straty i zapas", inp(x.straty, "np. Spadek w sieci w szczycie ok. 0,4 bar; zapas regulacji 0,1 bar",
+      function (v) { x.straty = v; })));
+    kk.appendChild(poleChip("Kryterium", "wymóg normy",
+      inp(x.kryterium, "np. ≤ 6,3 bar na wyjściu ze sprężarkowni", function (v) { x.kryterium = v; })));
+    kk.appendChild(pole("Jak kontrolowane", inp(x.kontrola, "np. Ciągle — sterownik; tygodniowo — zestawienie",
+      function (v) { x.kontrola = v; })));
+    if (przepisanaNastawa(x))
+      kk.appendChild(hel("div", "warn", "Kryterium powołuje się na producenta albo na nastawę fabryczną, a potrzeba procesu nie jest opisana. Przy parametrach wynikających wprost z dokumentacji urządzenia (spadek na filtrze, punkt rosy) to poprawne — ale wtedy <b>wpiszcie w potrzebę procesu, że źródłem jest wymaganie techniczne i jakie</b>. Nastawa przepisana bez sprawdzenia potrzeby to pierwszy z błędów tego punktu."));
+    else if (brakPotrzeby(x))
+      kk.appendChild(el("div", "warn", "Kryterium bez opisanej potrzeby procesu. Skąd wiadomo, że ta wartość jest właściwa dla tej instalacji?"));
+    if (brakStrat(x))
+      kk.appendChild(el("div", "note", "Parametr, przy którym zwykle występują straty po drodze, a pole strat jest puste. Jeśli strat nie ma albo są pomijalne, warto to napisać — inaczej wygląda to na pominięty krok."));
+    s.appendChild(kk);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj parametr", function () { k.kryteria.push({}); }));
+  if (!(k.kryteria || []).length) d.appendChild(el("div", "warn", "Karta nie ma ani jednego kryterium."));
+  d.appendChild(el("div", "note", "★ Rada: nie utrzymujcie wyższego ciśnienia, niż potrzebuje proces. To zasada, nie liczba — liczbę ustalicie sami, z pomiaru u odbiorców. Wartości z przykładu są wartościami AutoParts i nie należy ich przenosić do innych instalacji."));
+  host.appendChild(d);
+}
+
+/* ── zakładka 3: części B i C — tryby, zmiany ── */
+function rysujSterowanie(host) {
+  var k = naglowekKarty(host, "B. Sterowanie i tryby pracy");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(el("p", "opis", "Które urządzenia pracują w jakich warunkach i co dzieje się poza produkcją."));
+  (k.tryby || []).forEach(function (x, i) {
+    var kk = el("div", "poz" + (trybOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.tryb || "Tryb " + (i + 1))));
+    g.appendChild(przyciskUsun(function () { k.tryby.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Tryb albo okres", inp(x.tryb, "np. Postój (weekend, święta)", function (v) { x.tryb = v; })));
+    kk.appendChild(pole("Jak ma pracować", txt(x.jak, "np. Jedna sprężarka tylko wtedy, gdy potrzebują jej odbiorcy w podtrzymaniu; w przeciwnym razie wyłączone", 2,
+      function (v) { x.jak = v; })));
+    kk.appendChild(pole("Uwagi", inp(x.uwagi, "np. Decyzję o pracy w postoju zapisuje kierownik zmiany", function (v) { x.uwagi = v; })));
+    s.appendChild(kk);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj tryb", function () { k.tryby.push({}); }));
+  if (!(k.tryby || []).length) s.appendChild(el("div", "warn", "Nie opisano trybów pracy. Praca poza produkcją to najczęstsze miejsce, w którym zużycie powstaje bez powodu."));
+  host.appendChild(s);
+
+  var z = el("div", "sekcja");
+  var hz = el("h3", null, "C. Zmiany i wykonawcy");
+  hz.appendChild(el("span", "chip " + (zmianyOk(k) ? "green" : "amber"),
+    POLA_ZMIAN.filter(function (p) { return ((k.zmiany || {})[p.kod] || "").trim(); }).length + " / " + POLA_ZMIAN.length));
+  z.appendChild(hz);
+  z.appendChild(hel("div", "warn", "Tydzień po obniżeniu ciśnienia odbył się planowy przegląd sprężarek. Serwisant zrobił to, co robił zawsze: po przeglądzie <b>przywrócił nastawy fabryczne — 7 bar</b>. Wszystko działało, nikt niczego nie zgłosił. Energy Manager zobaczył zmianę dopiero w tygodniowym zestawieniu wskaźnika.<br><br>Kto zatwierdził zmianę? Nikt. Czy ktoś sprawdził jej skutki? Też nikt. <b>Serwisant nie zrobił nic złego — po prostu nikt mu nie powiedział, że nastawa 6,3 bar jest kryterium, a nie przypadkiem.</b>"));
+  var zk = el("div", "poz" + (zmianyOk(k) ? "" : " brak"));
+  if (!k.zmiany) k.zmiany = {};
+  POLA_ZMIAN.forEach(function (p) {
+    zk.appendChild(poleChip(p.nazwa, "wymóg normy", txt(k.zmiany[p.kod], p.ph, 2, function (v) { k.zmiany[p.kod] = v; }), p.pomoc));
+  });
+  z.appendChild(zk);
+  z.appendChild(el("div", "note", "Trzy zdania w zleceniu dla serwisu wystarczają, żeby to był nadzór nad procesem zleconym na zewnątrz — bez osobnej procedury."));
+  host.appendChild(z);
+}
+
+/* ── zakładka 4: części D i E — monitoring, utrzymanie ── */
+function rysujMonitoring(host) {
+  var k = naglowekKarty(host, "D. Monitoring i reakcja na odchylenia");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "warn", "Wysokie ciśnienie albo rosnące zużycie mogą mieć kilka przyczyn: zmienioną nastawę, niewłaściwą kolejność pracy, nowe wycieki, zabrudzone filtry, zmianę zapotrzebowania w produkcji. Dlatego <b>instrukcja nie powinna zgadywać jednej przyczyny</b> w rodzaju „ciśnienie za wysokie — szukaj wycieków”. Ma powiedzieć, <b>kto sprawdza i w jakiej kolejności</b>, komu zgłasza wynik i kiedy sprawa trafia do Energy Managera."));
+  (k.sygnaly || []).forEach(function (x, i) {
+    var kk = el("div", "poz" + (sygnalOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.sygnal || "Sygnał " + (i + 1))));
+    if ((x.kolejnosc || "").trim()) g.appendChild(el("span", "chip " + (liczbaSprawdzen(x) >= 2 ? "green" : "red"),
+      ile(liczbaSprawdzen(x), "krok sprawdzenia", "kroki sprawdzenia", "kroków sprawdzenia")));
+    g.appendChild(przyciskUsun(function () { k.sygnaly.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Sygnał — wskaźnik albo parametr", inp(x.sygnal, "np. Tygodniowy kWh/Nm³ (S-1)", function (v) { x.sygnal = v; })));
+    kk.appendChild(pole("Próg", inp(x.prog, "np. > 0,122 (ok. 2,5% powyżej średniej 07–09.2026)", function (v) { x.prog = v; }),
+      "Próg powinien dać się uzasadnić — najlepiej odniesieniem do wartości wskaźnika albo linii bazowej z punktów 6.4 i 6.5."));
+    kk.appendChild(poleChip("Kto sprawdza i w jakiej kolejności", "metodyka ENESA",
+      txt(x.kolejnosc, "np. Technik UR: 1) nastawa i rejestr zmian, 2) kolejność pracy sprężarek, 3) filtry i osuszacz, 4) wycieki (detektor), 5) zmiana zapotrzebowania w produkcji", 3,
+        function (v) { x.kolejnosc = v; }),
+      "Numerujcie kroki. Platforma liczy, ile możliwych przyczyn uwzględniono — jedna to zgadywanie."));
+    kk.appendChild(pole("Kto odpowiada za sprawdzenie", inp(x.kto, "np. Technik UR", function (v) { x.kto = v; })));
+    kk.appendChild(pole("Komu zgłasza i kiedy do Energy Managera",
+      inp(x.zglasza, "np. Kierownik UR; do Energy Managera, jeśli przyczyna nieusunięta w 5 dni roboczych", function (v) { x.zglasza = v; })));
+    kk.appendChild(poleChip("Zapis", "wymóg normy",
+      inp(x.zapis, "np. Zestawienie tygodniowe z adnotacją", function (v) { x.zapis = v; }),
+      "Zapisy w zakresie potrzebnym, żeby mieć pewność, że procesy przebiegały zgodnie z planem."));
+    if (zgadujePrzyczyne(x))
+      kk.appendChild(hel("div", "warn", "Opisano tylko jedną możliwą przyczynę. <b>Instrukcja, która zgaduje przyczynę odchylenia</b>, to jeden z typowych błędów tego punktu — technik sprawdzi to jedno miejsce i wróci z niczym. Wypiszcie kolejność: 1), 2), 3)…"));
+    s.appendChild(kk);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj sygnał", function () { k.sygnaly.push({}); }));
+  if (!(k.sygnaly || []).length)
+    s.appendChild(el("div", "warn", "Nie opisano żadnego sygnału odchylenia. Bez tego kryterium obowiązuje tylko na papierze — nikt nie dowie się, że przestało być spełniane."));
+  host.appendChild(s);
+
+  var u = el("div", "sekcja");
+  var hu = el("h3", null, "E. Utrzymanie ruchu wpływające na energię");
+  hu.appendChild(el("span", "chip " + ((k.utrzymanie || []).length && k.utrzymanie.every(utrzymanieOk) ? "green" : "amber"),
+    (k.utrzymanie || []).filter(utrzymanieOk).length + " / " + (k.utrzymanie || []).length));
+  u.appendChild(hu);
+  u.appendChild(el("p", "opis", "Norma wymienia eksploatację i utrzymanie osobno — kryteria dotyczą obu."));
+  (k.utrzymanie || []).forEach(function (x, i) {
+    var kk = el("div", "poz" + (utrzymanieOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.czynnosc || "Czynność " + (i + 1)).slice(0, 60)));
+    g.appendChild(przyciskUsun(function () { k.utrzymanie.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Czynność", inp(x.czynnosc, "np. Przegląd szczelności sieci (test w postoju i detektor)", function (v) { x.czynnosc = v; })));
+    kk.appendChild(pole("Częstotliwość albo warunek", inp(x.czestotliwosc, "np. Kwartalnie; albo: po przekroczeniu spadku ciśnienia wg producenta",
+      function (v) { x.czestotliwosc = v; }),
+      "Warunek stanu bywa lepszy od sztywnego okresu — wymiana filtra po przekroczeniu spadku ciśnienia, nie „co pół roku”."));
+    kk.appendChild(pole("Wykonuje", inp(x.wykonuje, "np. Utrzymanie ruchu; albo: serwis zewnętrzny", function (v) { x.wykonuje = v; })));
+    kk.appendChild(pole("Zapis", inp(x.zapis, "np. Protokół testu, lista wycieków", function (v) { x.zapis = v; })));
+    u.appendChild(kk);
+  });
+  u.appendChild(przyciskDodaj("+ dodaj czynność", function () { k.utrzymanie.push({}); }));
+  if (!(k.utrzymanie || []).length) u.appendChild(el("div", "warn", "Nie opisano czynności utrzymania ruchu wpływających na energię."));
+  host.appendChild(u);
+}
+
+/* ── zakładka 5: część F — przekazanie ── */
+function rysujPrzekazanie(host) {
+  var k = naglowekKarty(host, "F. Przekazanie kryteriów");
+  if (!k) return;
+  var s = el("div", "sekcja");
+  s.appendChild(hel("div", "warn", "<b>Kryterium, które zna tylko Energy Manager, nie działa.</b> Norma wymaga przekazania kryteriów osobom, które ich używają — także tym, którzy pracują pod nadzorem organizacji, choć nie są jej pracownikami. Kryterium powinno być tam, gdzie zapada decyzja: przy panelu, w zleceniu serwisowym, w instrukcji stanowiskowej."));
+  s.appendChild(el("div", "note", "Kryterium nie odbiera technikowi fachowości. Technik nadal decyduje, którą sprężarkę odstawić do przeglądu i jak zareagować na alarm. Przestał tylko zgadywać, ile ciśnienia potrzebuje lakiernia."));
+  (k.przekazanie || []).forEach(function (x, i) {
+    var kk = el("div", "poz" + (przekazanieOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.komu || "Pozycja " + (i + 1))));
+    if (x.wykonawca) g.appendChild(el("span", "chip red", "wykonawca zewnętrzny"));
+    g.appendChild(przyciskUsun(function () { k.przekazanie.splice(i, 1); }));
+    kk.appendChild(g);
+    kk.appendChild(pole("Komu", inp(x.komu, "np. Technicy UR (3 zmiany)", function (v) { x.komu = v; })));
+    kk.appendChild(pole("Rodzaj", sel(x.wykonawca ? "tak" : "nie",
+      [["nie", "Pracownicy organizacji"], ["tak", "Wykonawca pracujący pod nadzorem organizacji"]],
+      function (v) { x.wykonawca = (v === "tak"); })));
+    kk.appendChild(pole("Jak", inp(x.jak, "np. Instrukcja przy panelu; szkolenie", function (v) { x.jak = v; }),
+      "Instrukcja, szkolenie albo zlecenie — zależnie od tego, kto to jest."));
+    kk.appendChild(pole("Data", inp(x.data, "", function (v) { x.data = v; }, "date")));
+    kk.appendChild(poleChip("Sprawdzenie zrozumienia", "metodyka ENESA",
+      inp(x.sprawdzenie, "np. „Pokaż — rozpoznaj — powiedz” przy sprężarkowni", function (v) { x.sprawdzenie = v; }),
+      "To ten sam sposób co przy ocenie skuteczności działań kompetencyjnych w punkcie 7.2."));
+    s.appendChild(kk);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj odbiorcę kryteriów", function () { k.przekazanie.push({}); }));
+  if (!(k.przekazanie || []).length)
+    s.appendChild(el("div", "warn", "Nie zapisano przekazania kryteriów. To osobne wymaganie normy — litera b) punktu 8.1."));
+  else if (!maWykonawce(k))
+    s.appendChild(hel("div", "warn", "Kryteriów nie przekazano żadnemu wykonawcy zewnętrznemu. Jeśli SEU serwisuje firma zewnętrzna, <b>to właśnie ona najczęściej zmienia nastawy</b> — i to jest scena z przywróconymi 7 bar. Jeśli naprawdę nikt z zewnątrz nie dotyka tej instalacji, zapiszcie to w analizie konsultanta."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var kr = KARTY.reduce(function (a, k) { return a + (k.kryteria || []).length; }, 0);
+  var sy = KARTY.reduce(function (a, k) { return a + (k.sygnaly || []).length; }, 0);
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz nadzoru: "));
+  n.appendChild(document.createTextNode(
+    ile(KARTY.length, "karta", "karty", "kart") + " (kompletnych: " + KARTY.filter(kartaOk).length + ") · " +
+    ile(kr, "kryterium", "kryteria", "kryteriów") + " · " + ile(sy, "sygnał", "sygnały", "sygnałów") +
+    " · karty z przekazaniem wykonawcy: " + KARTY.filter(maWykonawce).length));
+  s.appendChild(n);
+  var bezPotrzeby = KARTY.reduce(function (a, k) { return a + (k.kryteria || []).filter(brakPotrzeby).length; }, 0);
+  if (bezPotrzeby)
+    s.appendChild(el("div", "warn", ile(bezPotrzeby, "kryterium nie ma", "kryteria nie mają", "kryteriów nie ma") +
+      " opisanej potrzeby procesu. To są kandydaci na nastawy przepisane — do sprawdzenia pomiarem u odbiorcy, nie w rozmowie."));
+  var zgaduje = KARTY.reduce(function (a, k) { return a + (k.sygnaly || []).filter(zgadujePrzyczyne).length; }, 0);
+  if (zgaduje)
+    s.appendChild(el("div", "warn", ile(zgaduje, "sygnał zgaduje", "sygnały zgadują", "sygnałów zgaduje") +
+      " jedną przyczynę odchylenia. Technik sprawdzi to jedno miejsce i wróci z niczym — a wskaźnik dalej będzie rósł."));
+  var bezWyk = KARTY.filter(function (k) { return (k.przekazanie || []).length && !maWykonawce(k); });
+  if (bezWyk.length)
+    s.appendChild(el("div", "warn", "Karty bez przekazania kryteriów wykonawcy: " +
+      bezWyk.map(function (k, i) { return nazwaKarty(k, KARTY.indexOf(k)); }).join("; ") +
+      ". Do sprawdzenia: kto serwisuje te instalacje i czy ma to w zleceniu."));
+  var bezZmian = KARTY.filter(function (k) { return (k.seu || "").trim() && !zmianyOk(k); }).length;
+  if (bezZmian)
+    s.appendChild(el("div", "warn", ile(bezZmian, "karta nie ma", "karty nie mają", "kart nie ma") +
+      " pełnej części C. Nadzór nad zmianami i procesami zleconymi to dwa osobne wymagania normy, często pomijane razem."));
+  if (!(META.przeglad || "").trim())
+    s.appendChild(el("div", "note", "Nie zapisano, kiedy kryteria są przeglądane. Procedura P-EnMS-06 wiąże przegląd ze zmianą instalacji, nowym odbiornikiem i aktualizacją przeglądu energetycznego."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-39, sekcja 8.1 ── */
+function stanPozycji(p) {
+  var f = {
+    procesy: function () { return KARTY.length > 0 && KARTY.every(metrykaOk); },
+    kryteria: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return (k.kryteria || []).length > 0 && k.kryteria.every(kryteriumOk) && (k.utrzymanie || []).length > 0;
+      });
+    },
+    przekazano: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return (k.przekazanie || []).length > 0 && k.przekazanie.every(przekazanieOk) && maWykonawce(k);
+      });
+    },
+    zgodnie: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) { return (k.tryby || []).length > 0 && k.tryby.every(trybOk); });
+    },
+    zapisy: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return (k.sygnaly || []).length > 0 && k.sygnaly.every(function (x) { return (x.zapis || "").trim(); })
+          && (k.utrzymanie || []).every(function (x) { return (x.zapis || "").trim(); })
+          && ((k.zmiany || {}).zapisZmian || "").trim();
+      });
+    },
+    zmiany: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return ((k.zmiany || {}).ktoZmienia || "").trim() && ((k.zmiany || {}).planowane || "").trim()
+          && ((k.zmiany || {}).niezamierzone || "").trim();
+      });
+    },
+    zlecone: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) { return ((k.zmiany || {}).wykonawcy || "").trim(); }) &&
+        KARTY.every(maWykonawce);
+    },
+    zPotrzeb: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return (k.kryteria || []).length > 0 && !k.kryteria.some(brakPotrzeby);
+      });
+    },
+    reakcja: function () {
+      return KARTY.length > 0 && KARTY.every(function (k) {
+        return (k.sygnaly || []).length > 0 && k.sygnaly.every(sygnalOk);
+      });
+    }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!KARTY.length) b.push({ t: "Nie ma ani jednej karty kryteriów operacyjnych.", kto: "klient" });
+  KARTY.forEach(function (k, i) {
+    var nz = nazwaKarty(k, i);
+    if (!metrykaOk(k)) b.push({ t: nz + " — niepełna metryka karty (SEU, zużycie, osoby, wskaźnik, zatwierdzenie).", kto: "klient" });
+    if (!(k.kryteria || []).length) b.push({ t: nz + " — brak kryteriów.", kto: "klient" });
+    (k.kryteria || []).forEach(function (x, j) {
+      if (!kryteriumOk(x)) b.push({ t: nz + " / " + (x.parametr || "parametr " + (j + 1)) + " — niepełne kryterium.", kto: "klient" });
+      else if (brakPotrzeby(x)) b.push({ t: nz + " / " + x.parametr + " — kryterium bez potrzeby procesu.", kto: "klient", metodyka: true });
+    });
+    if (!(k.tryby || []).length) b.push({ t: nz + " — nie opisano trybów pracy.", kto: "klient" });
+    POLA_ZMIAN.forEach(function (p) {
+      if (!((k.zmiany || {})[p.kod] || "").trim())
+        b.push({ t: nz + " — brak w części C: " + p.nazwa.toLowerCase() + ".", kto: "klient" });
+    });
+    if (!(k.sygnaly || []).length) b.push({ t: nz + " — brak sygnałów odchylenia.", kto: "klient" });
+    (k.sygnaly || []).forEach(function (x, j) {
+      if (zgadujePrzyczyne(x)) b.push({ t: nz + " / " + (x.sygnal || "sygnał " + (j + 1)) + " — opisano jedną przyczynę zamiast kolejności sprawdzeń.", kto: "klient", metodyka: true });
+      else if (!sygnalOk(x)) b.push({ t: nz + " / " + (x.sygnal || "sygnał " + (j + 1)) + " — niepełny sygnał (próg, osoba, zapis).", kto: "klient" });
+    });
+    if (!(k.utrzymanie || []).length) b.push({ t: nz + " — nie opisano czynności utrzymania ruchu.", kto: "klient" });
+    if (!(k.przekazanie || []).length) b.push({ t: nz + " — nie zapisano przekazania kryteriów.", kto: "klient" });
+    else if (!maWykonawce(k)) b.push({ t: nz + " — kryteriów nie przekazano wykonawcy zewnętrznemu.", kto: "klient" });
+  });
+  if (!(META.przeglad || "").trim()) b.push({ t: "Nie ustalono, kiedy kryteria są przeglądane.", kto: "klient", metodyka: true });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia zestawu kryteriów.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 7: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-OPE-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Kiedy kryteria są przeglądane",
+    inp(META.przeglad, "np. Przed każdą planowaną zmianą instalacji, przy nowym odbiorniku, przy aktualizacji przeglądu energetycznego oraz po każdym odchyleniu nieusuniętym w 5 dni",
+      function (v) { META.przeglad = v; })));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_81, "Lista kontrolna III-39 — sekcja 8.1", stanPozycji);
+
+  var kr = KARTY.reduce(function (a, k) { return a + (k.kryteria || []).length; }, 0);
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-OPE-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Metryki kart SEU", "zakładka 1", ile(KARTY.length, "karta", "karty", "kart") + ", kompletnych: " + KARTY.filter(kartaOk).length],
+    ["A. Kryteria z potrzeb procesu", "zakładka 2", ile(kr, "kryterium", "kryteria", "kryteriów")],
+    ["B. Tryby pracy · C. Zmiany i wykonawcy", "zakładka 3",
+      KARTY.reduce(function (a, k) { return a + (k.tryby || []).length; }, 0) + " trybów · części C kompletnych: " + KARTY.filter(zmianyOk).length],
+    ["D. Monitoring · E. Utrzymanie", "zakładka 4",
+      KARTY.reduce(function (a, k) { return a + (k.sygnaly || []).length; }, 0) + " sygnałów · " +
+      KARTY.reduce(function (a, k) { return a + (k.utrzymanie || []).length; }, 0) + " czynności"],
+    ["F. Przekazanie kryteriów", "zakładka 5",
+      KARTY.reduce(function (a, k) { return a + (k.przekazanie || []).length; }, 0) + " pozycji, kart z wykonawcą: " + KARTY.filter(maWykonawce).length],
+    ["Wnioski", "zakładka 6", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 7", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Norma wymaga w tym punkcie <b>kryteriów, ich przekazania, nadzoru i zapisów w potrzebnym zakresie</b> — forma formularza jest zaleceniem metodyki. W wykazie z punktu 7.5 pozycja pojawia się jako D / Z i N (8.1, w zakresie potrzebnym). Dokument D-EnMS-OPE-01 odpowiada formularzowi F-EnMS-14 (załącznik III-34)."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "karty", t: "1. Karty SEU", f: rysujKarty },
+  { id: "kryteria", t: "2. A — kryteria", f: rysujKryteria },
+  { id: "sterowanie", t: "3. B i C — tryby, zmiany", f: rysujSterowanie },
+  { id: "monitoring", t: "4. D i E — monitoring", f: rysujMonitoring },
+  { id: "przekazanie", t: "5. F — przekazanie", f: rysujPrzekazanie },
+  { id: "kons", t: "6. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "7. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  var n = Math.max(KARTY.length, 1);
+  return {
+    razem: n * 6 + 1,
+    zrob: KARTY.filter(metrykaOk).length
+      + KARTY.filter(function (k) { return (k.kryteria || []).length && k.kryteria.every(kryteriumOk); }).length
+      + KARTY.filter(function (k) { return (k.tryby || []).length && k.tryby.every(trybOk); }).length
+      + KARTY.filter(zmianyOk).length
+      + KARTY.filter(function (k) { return (k.sygnaly || []).length && k.sygnaly.every(sygnalOk) && (k.utrzymanie || []).length && k.utrzymanie.every(utrzymanieOk); }).length
+      + KARTY.filter(function (k) { return (k.przekazanie || []).length && k.przekazanie.every(przekazanieOk) && maWykonawce(k); }).length
+      + ((META.zatwierdzil || "").trim() && META.data && (META.przeglad || "").trim() ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem(MAGAZYN, JSON.stringify({ KARTY: KARTY, META: META }));
+    localStorage.setItem("enesa_81", JSON.stringify({ WNIOSKI: WNIOSKI }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem(MAGAZYN);
+    if (s) { var d = JSON.parse(s); KARTY = d.KARTY || []; META = d.META || META; }
+    var s2 = localStorage.getItem("enesa_81");
+    if (s2) WNIOSKI = (JSON.parse(s2).WNIOSKI) || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  KARTY = JSON.parse(JSON.stringify(P_KARTY));
+  META = JSON.parse(JSON.stringify(P_META));
+  AKTK = 0;
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie karty kryteriów?")) return;
+  KARTY = []; WNIOSKI = []; AKTK = 0;
+  META = { zatwierdzil: "", data: "", przeglad: "" };
+  try { localStorage.removeItem(MAGAZYN); localStorage.removeItem("enesa_81"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

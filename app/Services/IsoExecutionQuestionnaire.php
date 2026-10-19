@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 class IsoExecutionQuestionnaire
 {
     public const TITLES = [
-        '7-4' => '7.4 Komunikacja D-EnMS-KOM-01', '7-5' => '7.5 Udokumentowane informacje D-EnMS-DOK-01',
+        '7-4' => '7.4 Komunikacja D-EnMS-INF-01', '7-5' => '7.5 Udokumentowane informacje D-EnMS-DOK-01',
         '8-1' => '8.1 Nadzór operacyjny D-EnMS-OPE-01', '8-2' => '8.2 Projektowanie D-EnMS-PRO-01', '8-3' => '8.3 Zakupy D-EnMS-ZKP-01',
         '9-1-1' => '9.1.1 Monitorowanie D-EnMS-MON-01', '9-1-2' => '9.1.2 Ocena zgodności D-EnMS-ZGD-01', '9-2' => '9.2 Audyt wewnętrzny D-EnMS-AUD-01', '9-3' => '9.3 Przegląd zarządzania D-EnMS-PZR-01',
         '10-1' => '10.1 Niezgodności D-EnMS-NKR-01', '10-2' => '10.2 Ciągłe doskonalenie D-EnMS-DOS-01',

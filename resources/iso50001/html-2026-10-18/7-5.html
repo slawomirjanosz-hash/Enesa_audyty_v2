@@ -1,0 +1,1537 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 7.5 Udokumentowane informacje</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 7</div>
+ <h1>7.5 Udokumentowane informacje</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 7.5</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 7.5</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>7.5 Udokumentowane informacje</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 7.5 i zasady nadzoru nad dokumentacją.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 7.5<br>Dokumentacja</div>
+   <div>
+    <h4>7.5 Udokumentowane informacje</h4>
+    <p>Dokument i zapis — jaka to różnica. Trzy pytania zamiast jednej długiej listy.
+    Siedem aspektów nadzoru i okres przechowywania, który trzeba uzasadnić.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 7.5. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">7.5 — dokumentacja<br>10 slajdów</div>
+   <div>
+    <h4>7.5 Udokumentowane informacje</h4>
+    <p>Co musi być udokumentowane. Co warto zapisać. Jak tym zarządzać.
+    Dlaczego osobny „system dokumentów energetycznych” jest błędem.</p>
+    <p style="font-size:12.5px">10 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">System obejmuje udokumentowane informacje, których wymaga norma, oraz te, które
+ organizacja uznała za niezbędne dla skuteczności systemu. Ich zakres może się różnić w zależności od wielkości
+ organizacji, złożoności procesów i kompetencji ludzi. Tworząc i aktualizując udokumentowane informacje,
+ organizacja zapewnia ich odpowiednią identyfikację i opis, format i nośnik oraz przegląd i zatwierdzenie.
+ Nadzoruje je tak, żeby były dostępne i przydatne tam i wtedy, gdzie są potrzebne, oraz odpowiednio chronione.
+ Ustala zasady dystrybucji, dostępu, wyszukiwania i używania; przechowywania i zabezpieczenia; nadzoru nad
+ zmianami; okresu przechowywania i usuwania. Nadzoruje także potrzebne dokumenty pochodzenia zewnętrznego.
+ Omówienie na podstawie punktu 7.5 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> zapisz to, czego wymaga norma, i to,
+ czego potrzebuje Twój system — a potem pilnuj, żeby właściwa wersja była dostępna tam, gdzie się jej
+ używa.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 6, punkt 7.5. Wykaz udokumentowanych informacji: III-31.</div>
+
+ <div class="ramka">
+  <h3>◧ Dwie instrukcje na drzwiach chłodni</h3>
+  <p style="font-size:13.5px">Na drzwiach wisi instrukcja: „Nastawa temperatury: 0 °C”. Obok, w koszulce,
+  druga — nowsza, bez daty: „+2 °C”. Operator nocnej zmiany wybiera tę, która wisi wyżej.</p>
+  <p style="font-size:13.5px">Która jest właściwa? Jeśli ta z +2 °C, bo tyle wymaga proces i bezpieczeństwo
+  produktu — to każda noc na 0 °C kosztuje energię, której nikt nie potrzebował. Jeśli odwrotnie —
+  ryzykujecie jakość produktu.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Tak czy inaczej, decyzja należy do przypadku, a nie
+  do systemu.</b> Udokumentowane informacje to pamięć systemu. Punkt 7.5 dba o to, żeby ta pamięć była
+  właściwa, aktualna i pod ręką.</p>
+ </div>
+
+ <h3 style="margin-top:22px">Dokument i zapis — jaka to różnica?</h3>
+ <p style="font-size:14.5px">Norma mówi o „udokumentowanych informacjach” i obejmuje tym słowem dwie różne
+ rzeczy.</p>
+ <table class="tab">
+ <tr><th style="width:18%">Rodzaj</th><th style="width:34%">Co to jest</th><th>Przykład</th></tr>
+ <tr><td class="mono"><b>D</b> — dokument</td><td>Mówi, <b>jak pracować</b>. Dokumenty się aktualizuje.</td><td>Instrukcja kontroli szczelności sprężonego powietrza</td></tr>
+ <tr><td class="mono"><b>Z</b> — zapis</td><td>Pokazuje, <b>co wykonano i z jakim wynikiem</b>. Zapisów nie pisze się na nowo — przechowuje się je jako ślad tego, co się wydarzyło.</td><td>Protokół z czerwcowego pomiaru wycieków w AutoParts — 6 Nm³/min</td></tr>
+ </table>
+
+ <h3 style="margin-top:22px">Trzy pytania zamiast jednej długiej listy</h3>
+ <table class="tab">
+ <tr><th style="width:8%">#</th><th style="width:30%">Pytanie</th><th>Odpowiedź</th></tr>
+ <tr><td class="mono"><b>1</b></td><td>Co <b>musi</b> być udokumentowane?</td>
+     <td>To, czego norma wymaga wprost w poszczególnych punktach: zakres i granice systemu (4.3), polityka energetyczna (5.2), linia bazowa i dane o zmiennych (6.5), dowody kompetencji (7.2), wyniki audytów wewnętrznych (9.2) i przeglądów zarządzania (9.3). Przy każdym wymaganiu norma mówi „udokumentowana informacja” — <b>nie narzuca nazwy dokumentu ani jego formy.</b> Pełne zestawienie jest w zakładce 2 ankiety.</td></tr>
+ <tr><td class="mono"><b>2</b></td><td>Co <b>warto</b> zapisać, żeby system działał?</td>
+     <td>To Wasza decyzja. Pytanie kontrolne: <b>czy bez tego zapisu ktoś mógłby zrobić coś źle albo nie zrobić wcale?</b> Instrukcja z nastawami przy chłodni — tak. Dziesięciostronicowa procedura „obiegu informacji o energii” w firmie, w której wszyscy siedzą przy jednym stole — raczej nie.</td></tr>
+ <tr><td class="mono"><b>3</b></td><td><b>Jak</b> tym zarządzamy?</td>
+     <td>Siedem aspektów nadzoru — identyfikacja, przegląd i zatwierdzenie, dostępność, ochrona, zmiany, przechowywanie i usuwanie, dokumenty z zewnątrz. Zakładka 3 ankiety.</td></tr>
+ </table>
+ <div class="note" style="margin:14px 0"><b>Dobra wiadomość:</b> możecie korzystać z tego, co już macie.
+ Instrukcje stanowiskowe, dokumentacja techniczno-ruchowa urządzeń, procedury z ISO 9001 czy ISO 14001 —
+ wystarczy dopisać do nich wymagania energetyczne. <b>Nie musicie budować osobnego systemu dokumentów.</b></div>
+
+ <h3 style="margin-top:22px">Siedem aspektów nadzoru</h3>
+ <table class="tab">
+ <tr><th style="width:30%">Aspekt</th><th>Na czym polega</th></tr>
+ <tr><td>Identyfikacja</td><td>Po czym poznać, co to za dokument i która to wersja. ★ Np. tytuł, numer, data, wersja — to przykład standardu, który możecie przyjąć; ważne, żeby był jeden.</td></tr>
+ <tr><td>Przegląd i zatwierdzenie</td><td>Kto sprawdza, czy dokument jest właściwy, zanim trafi do użycia.</td></tr>
+ <tr><td>Dostępność</td><td>Tam, gdzie się go używa: <b>instrukcja przy chłodni, nie w segregatorze w biurze.</b></td></tr>
+ <tr><td>Ochrona</td><td>Przed utratą, przypadkową zmianą, dostępem osób niepowołanych.</td></tr>
+ <tr><td>Zmiany</td><td>Kto może zmieniać i jak wycofać starą wersję, żeby nie wisiała obok nowej.</td></tr>
+ <tr><td>Przechowywanie i usuwanie</td><td>Jak długo trzymacie zapisy. <b>Norma nie podaje okresu.</b> Ustalcie go sami, z uzasadnieniem: wymagania prawne i umowy z klientami, cykl certyfikacji, potrzeba porównań z linią bazową.</td></tr>
+ <tr><td>Dokumenty z zewnątrz</td><td>Instrukcje producentów, przepisy, specyfikacje klientów. Też muszą być aktualne.</td></tr>
+ </table>
+ <p style="font-size:13.5px">Dokumentacja ma pomagać, nie przeszkadzać. <b>Jej wartość nie zależy od liczby
+ stron, tylko od tego, czy ludzie znajdują w niej właściwą odpowiedź — wtedy, kiedy jej potrzebują.</b></p>
+
+ <h3 style="margin-top:22px">Najczęstsze błędy</h3>
+ <table class="tab">
+ <tr><th style="width:40%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+ <tr><td>Dwie wersje w obiegu</td><td>Wydając nową wersję, fizycznie wycofajcie starą — także z tablic przy maszynach</td></tr>
+ <tr><td>Dokumenty pisane pod audyt</td><td>Piszcie dla osoby, która będzie z nich korzystać; sprawdźcie to, pytając ją</td></tr>
+ <tr><td>Osobny system dokumentów „energetycznych”</td><td>Dopiszcie energię do istniejących instrukcji i procedur</td></tr>
+ <tr><td>Zapisy, których nie da się znaleźć</td><td>Jedno uzgodnione miejsce i zasady nazewnictwa</td></tr>
+ <tr><td>Brak kopii zapasowych danych</td><td>Regularna kopia — dane o zużyciu z kilku lat są potrzebne do porównań</td></tr>
+ </table>
+
+ <div class="ramka" style="margin-top:18px">
+  <h3>◉ Twój ruch</h3>
+  <p style="font-size:13.5px;margin-bottom:0">Udokumentowane informacje to pamięć systemu — mają być właściwe,
+  aktualne i dostępne tam, gdzie zapadają decyzje.<br><br>
+  <b>Zadanie:</b> przejdźcie się po hali i sprawdźcie trzy instrukcje przy znaczących użyciach energii.
+  Czy są aktualne? Czy obok nie wisi stara wersja?</p>
+ </div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Zakładka 2 pokazuje stan całej dokumentacji systemu: które wymagania normy mają już
+  dokument, a które czekają. Platforma wyłapuje też powtórzone tytuły i okresy przechowywania bez uzasadnienia.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 7.5 w formacie stron 4.1–7.4</b> — i jedyny, który <b>patrzy na cały system naraz</b>.
+Zakładka 2 zestawia 8 wymagań normy z punktów 4–7 z pozycjami wykazu i odpowiada na pytanie,
+na które do tej pory nie odpowiadał żaden ekran platformy: czy dokumentacja jest kompletna.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 6, punkt 7.5</td><td>Scena dwóch instrukcji na drzwiach chłodni, rozróżnienie dokumentu i zapisu z przykładami, trzy pytania („co musi”, „co warto”, „jak tym zarządzamy”) z pytaniem kontrolnym, siedem aspektów nadzoru, uwaga o korzystaniu z istniejących procedur ISO 9001 i ISO 14001, tabela pięciu błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 5 — III-31</td><td>Osiem kolumn wykazu: kod, tytuł, D / Z, N / M z punktem, wersja, zatwierdził, miejsce, okres przechowywania <b>z uzasadnieniem</b>. Wiersze wzorcowe dla F-EnMS-03, 04, 08, 09, 10, 11, 24 i 13, procedur oraz instrukcji przy SEU. Adnotacja, że punkty 8–10 dopisuje się z Modułami 6–8.</td></tr>
+<tr><td>Część III, Moduł 5 — III-32</td><td>Lista kontrolna sekcji 7.5: 7 pozycji — <b>wszystkie są wymaganiami normy</b>, najwięcej w całym rozdziale 7.</td></tr>
+<tr><td>Część III, Moduł 5 — III-33, pkt 4.5</td><td>Kroki 15–19 procedury P-EnMS-05: prowadzenie wykazu z rozróżnieniem wymagane / ustalone, standard identyfikacji, zatwierdzanie przed wydaniem, wycofywanie starych wersji także z tablic, ochrona zapisów i kopie zapasowe, sprawdzanie dokumentów zewnętrznych.</td></tr>
+<tr><td>Punkty 4.1–7.4 platformy</td><td>Wykaz w przykładzie jest <b>wypełniony wszystkimi dokumentami, które platforma już generuje</b> — od D-EnMS-KON-01 po D-EnMS-DOK-01, z poprawnym oznaczeniem N / M i punktem normy.</td></tr>
+</table>
+
+<h2>Model danych</h2>
+<table>
+<tr><th style="width:24%">Tabela</th><th>Zawartość</th></tr>
+<tr><td><code>pozycja_wykazu</code></td><td>id, audyt_id, kod, tytul, rodzaj ENUM('D','Z','DZ'), podstawa ENUM('N','M'), punkt (lista punktów normy), wersja, zatwierdzil, miejsce, okres_przechowywania. Docelowo <code>dokument_id</code> — referencja do dokumentu wygenerowanego przez platformę, żeby wersja i data zatwierdzenia brały się same.</td></tr>
+<tr><td><code>zasady_nadzoru</code></td><td>audyt_id plus 7 pól tekstowych — siedem aspektów z normy. Jeden rekord na audyt.</td></tr>
+<tr><td><code>dokument_zewnetrzny</code></td><td>id, audyt_id, tytul, zrodlo, dotyczy, miejsce, kto_sprawdza, data_sprawdzenia, wynik_sprawdzenia. Sprawdzenia docelowo jako historia, nie jedno pole — patrz uwagi na końcu.</td></tr>
+<tr><td><code>wymaganie_dokumentacyjne</code></td><td>Słownik systemowy, nie dane klienta: punkt, opis, moduł Toolkitu, czy aktywne. 15 wierszy, z których 8 dotyczy punktów 4–7, a 7 czeka na Moduły 6–8.</td></tr>
+</table>
+
+<h2>Co platforma liczy sama</h2>
+<table>
+<tr><th style="width:26%">Wielkość</th><th>Sposób i reakcja</th></tr>
+<tr><td><b>Pokrycie wymagań normy</b></td><td>Dla każdego punktu ze słownika sprawdzenie, czy w wykazie jest pozycja z tym punktem w polu <code>punkt</code> (pole przyjmuje listę: „6.4, 6.5” dla karty F-EnMS-09, która obsługuje oba). Brak → ostrzeżenie z treścią wymagania. To najważniejsza liczba w tym punkcie.</td></tr>
+<tr><td>Proporcja N do M</td><td>Gdy pozycji metodyki ENESA jest ponad dwa razy więcej niż wymaganych, zakładka 2 przypomina pytanie kontrolne z książki. Nie ostrzeżenie — bo duża liczba dokumentów własnych bywa uzasadniona.</td></tr>
+<tr><td>Powtórzone tytuły</td><td>Porównanie znormalizowanych tytułów. Powtórzenie → ostrzeżenie „dwie wersje w obiegu”, czyli pierwszy z pięciu błędów tego punktu. Komunikat rozróżnia dwie możliwości: albo to dwa różne dokumenty o tej samej nazwie, albo jeden w dwóch wersjach.</td></tr>
+<tr><td>Wiek sprawdzenia dokumentu zewnętrznego</td><td>Miesiące od daty sprawdzenia. Powyżej 12 — ostrzeżenie, powyżej 9 — chip ostrzegawczy. Progi są metodyką ENESA; data odniesienia w makiecie jest wpisana na stałe.</td></tr>
+</table>
+
+<h2>Walidacje</h2>
+<table>
+<tr><th style="width:36%">Reguła</th><th>Reakcja platformy</th></tr>
+<tr><td><b>Okres przechowywania bez uzasadnienia</b></td><td>Wzorzec <code>/^\s*(bez ogranicze\w*|\d+\s*(lat\w*|rok\w*|miesi\w*)|do odwo\w*|bezterminowo)\s*\.?\s*$/i</code> — czyli sam okres i nic więcej → ostrzeżenie cytujące wpisaną treść. Moduł 5 zmienił ten wiersz formularza właśnie z tego powodu („bez «3 lat»”). Norma nie podaje okresu, więc uzasadnienie jest jedyną rzeczą, która czyni wpis obronnym.</td></tr>
+<tr><td>Pozycja N bez punktu normy</td><td>Ostrzeżenie i pozycja w braki(). Bez punktu nie da się policzyć pokrycia ani obronić pozycji przed audytorem. Pole punktu pokazuje się dopiero po wybraniu N albo M — przy M jest opcjonalne.</td></tr>
+<tr><td><b>Zapis z numerem wersji</b></td><td>Nota: zapisów nie pisze się na nowo, więc pozycja z wersjami jest raczej dokumentem albo jednym i drugim. To rozróżnienie decyduje o tym, <b>czy wolno tę pozycję nadpisywać</b> — i dlatego warto je rozstrzygnąć, a nie zostawiać.</td></tr>
+<tr><td>Pozycja bez miejsca</td><td>Ostrzeżenie w analizie konsultanta i pozycja w braki(). Dokument, którego nie da się znaleźć, nie jest dostępny w rozumieniu normy.</td></tr>
+<tr><td>Pozycja bez zatwierdzenia</td><td>Pozycja w braki(). Przegląd i zatwierdzenie przed wydaniem to wymaganie normy, a nie formalność.</td></tr>
+<tr><td>Dokument zewnętrzny bez sprawdzenia aktualności albo sprawdzony dawniej niż rok</td><td>Ostrzeżenie przy pozycji i w braki(). To ten aspekt nadzoru, o którym zapomina się najczęściej.</td></tr>
+<tr><td>Pusty rejestr dokumentów zewnętrznych</td><td>Ostrzeżenie: prawie każdy zakład ma dokumentację techniczno-ruchową urządzeń objętych SEU i przepisy dotyczące efektywności. Pusty rejestr prawie zawsze znaczy, że nikt o nich nie pomyślał.</td></tr>
+</table>
+
+<h2>Lista kontrolna III-32 — sekcja 7.5</h2>
+<table>
+<tr><th style="width:56%">Pozycja</th><th style="width:8%">N / M</th><th>Funkcja oceniająca</th></tr>
+<tr><td>System zawiera udokumentowane informacje wymagane przez normę.</td><td class='mono'>N</td><td><code>wymagane</code></td></tr><tr><td>System zawiera informacje uznane przez organizację za niezbędne dla jego skuteczności.</td><td class='mono'>N</td><td><code>wlasne</code></td></tr><tr><td>Zapewniono identyfikację, opis, format i nośnik oraz przegląd i zatwierdzenie.</td><td class='mono'>N</td><td><code>identyfikacja</code></td></tr><tr><td>Dokumenty są dostępne i przydatne tam, gdzie są potrzebne, oraz odpowiednio chronione.</td><td class='mono'>N</td><td><code>dostepnosc</code></td></tr><tr><td>Nadzorowane są zmiany; stare wersje są wycofane z miejsc użycia.</td><td class='mono'>N</td><td><code>zmiany</code></td></tr><tr><td>Ustalono okresy przechowywania i usuwania — z uzasadnieniem.</td><td class='mono'>N</td><td><code>okresy</code></td></tr><tr><td>Nadzorowane są dokumenty pochodzenia zewnętrznego.</td><td class='mono'>N</td><td><code>zewnetrzne</code></td></tr></table>
+<div class="note">Wszystkie 7 pozycji są wymaganiami normy — tu nie ma ani jednej pozycji
+metodyki. Zwracają one uwagę na coś, co łatwo przeoczyć: pokrycie wymagań ocenia <b>tylko punkty 4–7</b>,
+bo pozycje dla punktów 8–10 pojawią się dopiero z Modułami 6–8. Zakładka 2 pokazuje je osobno, jako listę
+oczekującą, żeby nikt nie uznał systemu za udokumentowany w całości.</div>
+
+<h2>Wykaz w przykładzie — pełna dokumentacja platformy</h2>
+<div class="note">Przykład AutoParts zawiera <b>20 pozycji</b>: wszystkie dokumenty, które platforma
+generuje dla punktów 4.1–7.5, plus procedury P-EnMS-01…05 i dwie instrukcje przy znaczących użyciach energii.
+Przy każdej pozycji poprawne oznaczenie N / M i punkt normy, a okres przechowywania z uzasadnieniem — żeby
+pokazać, jak powinien wyglądać. Trzy uzasadnienia warto przeczytać osobno, bo wprowadzają rozróżnienia,
+których nie ma w książce:
+<ul>
+<li><b>F-EnMS-09 (karty EnPI i EnB):</b> „bez ograniczenia, dopóki linia bazowa 2025 obowiązuje — dane z roku
+bazowego są potrzebne do każdego porównania; po rewizji EnB stare dane jeszcze przez jeden cykl certyfikacji”.</li>
+<li><b>F-EnMS-24 (dowody kompetencji):</b> „przez czas zatrudnienia osoby i 3 lata po jego zakończeniu —
+audytor może pytać o kompetencje osoby, która już nie pracuje”.</li>
+<li><b>F-EnMS-08 (przegląd energetyczny):</b> „wszystkie wersje bez ograniczenia — każda jest podstawą SEU
+i możliwości poprawy dla swojego okresu”.</li>
+</ul>
+To są odpowiedzi, które klient sam musiałby wymyślić, a audytor o nie zapyta.</div>
+
+<h2>Role i blok konsultanta</h2>
+<table>
+<tr><th style="width:26%">Element</th><th>Zasada</th></tr>
+<tr><td>Zakładki 1–4, 6</td><td>Wypełnia klient. Konsultant widzi to samo plus pełną listę braków.</td></tr>
+<tr><td>Zakładka 5 — analiza konsultanta</td><td><b>Gatowanie po stronie serwera.</b> Przy <code>ROLA==="klient"</code> treść nie jest renderowana. Blok mówi wprost, że powtórzone tytuły trzeba sprawdzić na hali, a nie w arkuszu — i że pusty rejestr dokumentów zewnętrznych prawie zawsze znaczy, że nikt o nich nie pomyślał.</td></tr>
+</table>
+
+<h2>Dokument wyjściowy</h2>
+<table>
+<tr><th style="width:26%">Pozycja</th><th>Wartość</th></tr>
+<tr><td>Kod dokumentu</td><td><code>D-EnMS-DOK-01</code> — wykaz udokumentowanych informacji systemu</td></tr>
+<tr><td>Odpowiednik w Toolkicie</td><td>Załącznik III-31. <b>Bez kodu F-EnMS</b> — Moduł 5 nie nadaje go temu formularzowi.</td></tr>
+<tr><td>Status w normie</td><td>Szczególny: <b>sam wykaz nie jest wymagany</b>, ale wymagane jest to, co w nim stoi, oraz nadzór nad tym. Wykaz jest narzędziem — i jedynym miejscem, w którym stan całej dokumentacji widać naraz.</td></tr>
+<tr><td>Wyzwalacze aktualizacji</td><td>Każdy nowy dokument systemu, każda nowa wersja, zmiana zakresu systemu (4.3), zmiana przepisu albo specyfikacji klienta, upływ okresu przechowywania, dopisanie pozycji dla punktów 8–10 razem z Modułami 6–8.</td></tr>
+</table>
+
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:18%">Punkt</th><th>Kierunek i treść powiązania</th></tr>
+<tr><td>Wszystkie punkty 4–10</td><td><b>Wejście.</b> Każdy punkt, który wymaga udokumentowanej informacji, dodaje wiersz do tego wykazu. To jedyna strona platformy, która zależy od wszystkich pozostałych.</td></tr>
+<tr><td>4.2 Strony zainteresowane</td><td><b>Dwukierunkowo.</b> Wymagania prawne i umowne są dokumentami zewnętrznymi i jednocześnie wyznaczają okresy przechowywania.</td></tr>
+<tr><td>4.3 Zakres systemu</td><td><b>Wejście.</b> Zmiana zakresu unieważnia porównania z linią bazową, dlatego w przykładzie każda wersja F-EnMS-03 jest zachowywana osobno.</td></tr>
+<tr><td>6.5 Linia bazowa</td><td><b>Wejście do okresów przechowywania.</b> Dane z roku bazowego muszą przeżyć całe życie linii bazowej — to najdłuższy okres w całym wykazie i najczęstszy powód, dla którego zapisów nie wolno usunąć po trzech latach.</td></tr>
+<tr><td>7.2 Kompetencje</td><td><b>Wejście.</b> Dowody kompetencji to jedyna udokumentowana informacja wymagana w rozdziale 7 — i jedyna, której okres przechowywania wiąże się z zatrudnieniem osoby, a nie z cyklem systemu.</td></tr>
+<tr><td>8.1 Działania operacyjne</td><td><b>Wejście.</b> Instrukcje z kryteriami eksploatacji przy znaczących użyciach energii. Scena z dwiema instrukcjami na drzwiach dotyczy właśnie tych dokumentów.</td></tr>
+<tr><td>9.2 Audyt wewnętrzny</td><td><b>Dwukierunkowo.</b> Audytor sprawdza wykaz jako pierwszy, bo pokazuje, czego szukać. Wyniki audytu dopisują do wykazu własną pozycję.</td></tr>
+</table>
+
+<h2>Do rozstrzygnięcia przed wdrożeniem</h2>
+<table>
+<tr><th style="width:30%">Sprawa</th><th>Propozycja</th></tr>
+<tr><td><b>Wykaz zasilany automatycznie</b></td><td>Platforma zna każdy dokument, który wygenerowała: kod, tytuł, wersję, datę i osobę zatwierdzającą, punkt normy i to, czy jest wymagany. <b>Wykaz powinien powstawać sam</b>, a klient uzupełniałby tylko miejsce i okres przechowywania z uzasadnieniem — oraz dopisywał dokumenty, których platforma nie generuje (instrukcje stanowiskowe, procedury, dokumenty zewnętrzne). To największa oszczędność pracy w całym rozdziale 7 i jednocześnie jedyny sposób, żeby wykaz nie rozjechał się z rzeczywistością po trzech miesiącach. Przykład w tej makiecie jest wypełniony dokładnie tak, jak powinien wyglądać wynik takiego zasilenia.</td></tr>
+<tr><td>Słownik wymagań dokumentacyjnych</td><td>15 wierszy wpisanych w kod makiety. Przy wdrożeniu to tabela systemowa, wspólna dla wszystkich audytów, rozszerzana razem z Modułami 6–8. Warto, żeby każdy punkt normy w platformie miał znacznik „wymaga udokumentowanej informacji” — wtedy ten słownik wyliczy się sam.</td></tr>
+<tr><td>Historia sprawdzeń dokumentów zewnętrznych</td><td>Dziś jedno pole z datą. Powinna to być historia, bo norma wymaga nadzoru ciągłego, a jedna data nie pokazuje rytmu. Ten sam zabieg co z historią rewizji EnB w punkcie 6.5.</td></tr>
+<tr><td>Przypomnienia o okresach przechowywania</td><td>Wykaz zna okresy, ale nic nie przypomina o ich upływie ani o rocznym przeglądzie. Trzeci punkt w rozdziale 7, w którym brakuje tego samego mechanizmu — po 7.2 i 7.4. <b>Warto rozwiązać raz dla całego systemu.</b></td></tr>
+<tr><td>Wycofywanie starych wersji z tablic</td><td>Zasada jest opisana, ale platforma nie ma jak sprawdzić, czy ktoś zdjął wydruk. Propozycja: przy publikacji nowej wersji dokumentu, który ma w wykazie miejsce typu „wydruk przy urządzeniu”, platforma tworzy zadanie „wycofać wersję n−1 z: …” z osobą i terminem. Niska cena, a zamyka najczęstszy błąd tego punktu.</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 7.5 wraz z przykładem AutoParts (III-31) i słownikiem wymagań dokumentacyjnych.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent);this.textContent='Skopiowano'">Kopiuj JSON</button><pre id='js'>{
+ &quot;WYMAGANIA_N&quot;: [
+  {
+   &quot;punkt&quot;: &quot;4.3&quot;,
+   &quot;co&quot;: &quot;Zakres i granice systemu&quot;,
+   &quot;modul&quot;: &quot;1&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;5.2&quot;,
+   &quot;co&quot;: &quot;Polityka energetyczna&quot;,
+   &quot;modul&quot;: &quot;2&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;6.2&quot;,
+   &quot;co&quot;: &quot;Cele, zadania energetyczne i plany działań&quot;,
+   &quot;modul&quot;: &quot;4&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;6.3&quot;,
+   &quot;co&quot;: &quot;Metody i kryteria przeglądu energetycznego oraz jego wyniki&quot;,
+   &quot;modul&quot;: &quot;4&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;6.4&quot;,
+   &quot;co&quot;: &quot;Metoda określania i aktualizowania EnPI oraz wartości wskaźników&quot;,
+   &quot;modul&quot;: &quot;4&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;6.5&quot;,
+   &quot;co&quot;: &quot;Linie bazowe, dane o istotnych zmiennych i zmiany EnB&quot;,
+   &quot;modul&quot;: &quot;4&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;6.6&quot;,
+   &quot;co&quot;: &quot;Plan zbierania danych, dane a–e oraz dowody dokładności pomiarów&quot;,
+   &quot;modul&quot;: &quot;4&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;7.2&quot;,
+   &quot;co&quot;: &quot;Dowody kompetencji osób wpływających na wynik energetyczny&quot;,
+   &quot;modul&quot;: &quot;5&quot;
+  },
+  {
+   &quot;punkt&quot;: &quot;8.1&quot;,
+   &quot;co&quot;: &quot;Kryteria eksploatacji i zapisy potwierdzające przebieg procesów&quot;,
+   &quot;modul&quot;: &quot;6&quot;,
+   &quot;pozniej&quot;: true
+  },
+  {
+   &quot;punkt&quot;: &quot;8.2&quot;,
+   &quot;co&quot;: &quot;Wyniki działań projektowych związanych z wynikiem energetycznym&quot;,
+   &quot;modul&quot;: &quot;6&quot;,
+   &quot;pozniej&quot;: true
+  },
+  {
+   &quot;punkt&quot;: &quot;8.3&quot;,
+   &quot;co&quot;: &quot;Kryteria oceny wyniku energetycznego dla znaczących zakupów i specyfikacje&quot;,
+   &quot;modul&quot;: &quot;6&quot;,
+   &quot;pozniej&quot;: true
+  },
+  {
+   &quot;punkt&quot;: &quot;9.1&quot;,
+   &quot;co&quot;: &quot;Wyniki monitorowania, pomiarów i oceny wyniku energetycznego&quot;,
+   &quot;modul&quot;: &quot;7&quot;,
+   &quot;pozniej&quot;: true
+  },
+  {
+   &quot;punkt&quot;: &quot;9.2&quot;,
+   &quot;co&quot;: &quot;Program audytów i wyniki audytów wewnętrznych&quot;,
+   &quot;modul&quot;: &quot;7&quot;,
+   &quot;pozniej&quot;: true
+  },
+  {
+   &quot;punkt&quot;: &quot;9.3&quot;,
+   &quot;co&quot;: &quot;Wyniki przeglądów zarządzania&quot;,
+   &quot;modul&quot;: &quot;7&quot;,
+   &quot;pozniej&quot;: true
+  },
+  {
+   &quot;punkt&quot;: &quot;10.2&quot;,
+   &quot;co&quot;: &quot;Niezgodności, podjęte działania i ich skuteczność&quot;,
+   &quot;modul&quot;: &quot;8&quot;,
+   &quot;pozniej&quot;: true
+  }
+ ],
+ &quot;LISTA_75&quot;: [
+  {
+   &quot;tekst&quot;: &quot;System zawiera udokumentowane informacje wymagane przez normę.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wymagane&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;System zawiera informacje uznane przez organizację za niezbędne dla jego skuteczności.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;wlasne&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Zapewniono identyfikację, opis, format i nośnik oraz przegląd i zatwierdzenie.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;identyfikacja&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Dokumenty są dostępne i przydatne tam, gdzie są potrzebne, oraz odpowiednio chronione.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;dostepnosc&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Nadzorowane są zmiany; stare wersje są wycofane z miejsc użycia.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zmiany&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Ustalono okresy przechowywania i usuwania — z uzasadnieniem.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;okresy&quot;
+  },
+  {
+   &quot;tekst&quot;: &quot;Nadzorowane są dokumenty pochodzenia zewnętrznego.&quot;,
+   &quot;podstawa&quot;: &quot;N&quot;,
+   &quot;auto&quot;: &quot;zewnetrzne&quot;
+  }
+ ],
+ &quot;przyklad&quot;: {
+  &quot;WYKAZ&quot;: [
+   {
+    &quot;kod&quot;: &quot;D-EnMS-KON-01&quot;,
+    &quot;tytul&quot;: &quot;Kontekst organizacji — czynniki zewnętrzne i wewnętrzne&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;4.1&quot;,
+    &quot;wersja&quot;: &quot;2.1&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Do następnej aktualizacji kontekstu i jeden cykl certyfikacji wstecz — poprzednia wersja pokazuje, co się zmieniło i dlaczego&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-STR-01&quot;,
+    &quot;tytul&quot;: &quot;Strony zainteresowane i ich wymagania&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;4.2&quot;,
+    &quot;wersja&quot;: &quot;2.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Jak wyżej — wykaz wymagań prawnych i umownych musi dać się odtworzyć dla okresu, w którym obowiązywał&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-03&quot;,
+    &quot;tytul&quot;: &quot;Zakres i granice systemu zarządzania energią&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;4.3&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Zarząd, uchwała nr 2/2026 z 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciąg na tablicy przy wejściu&quot;,
+    &quot;okres&quot;: &quot;Bez ograniczenia, dopóki system działa; każda zmiana zakresu zachowywana jako osobna wersja, bo unieważnia porównania z linią bazową&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-SYS-01&quot;,
+    &quot;tytul&quot;: &quot;System zarządzania energią — struktura i powiązania procesów&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;4.4&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Do następnej wersji; starsze wersje przez jeden cykl certyfikacji&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-PRZ-01&quot;,
+    &quot;tytul&quot;: &quot;Przywództwo i zaangażowanie najwyższego kierownictwa&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;5.1&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Zarząd, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Zapisy z decyzji kierownictwa — Pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-04&quot;,
+    &quot;tytul&quot;: &quot;Polityka energetyczna&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;5.2&quot;,
+    &quot;wersja&quot;: &quot;1.1&quot;,
+    &quot;zatwierdzil&quot;: &quot;Zarząd, uchwała nr 3/2026 z 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); tablica przy wejściu do hali A; intranet; strona internetowa&quot;,
+    &quot;okres&quot;: &quot;Bez ograniczenia, dopóki obowiązuje; wersje poprzednie bez ograniczenia — polityka jest dowodem zobowiązania kierownictwa w danym okresie&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-ROL-01&quot;,
+    &quot;tytul&quot;: &quot;Role, odpowiedzialności i uprawnienia w systemie&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;5.3&quot;,
+    &quot;wersja&quot;: &quot;1.2&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 30.09.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciągi w zakresach obowiązków&quot;,
+    &quot;okres&quot;: &quot;Do następnej wersji; starsze przez okres zatrudnienia osób, których dotyczyły, i jeden cykl certyfikacji&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-07&quot;,
+    &quot;tytul&quot;: &quot;Rejestr ryzyk i szans&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;6.1&quot;,
+    &quot;wersja&quot;: &quot;1.1&quot;,
+    &quot;zatwierdzil&quot;: &quot;Jan Kowalski, Energy Manager, 30.09.2026; przyjęte przez zarząd 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Bez ograniczenia, dopóki pozycja jest otwarta; pozycje zamknięte przez pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-10&quot;,
+    &quot;tytul&quot;: &quot;Cele, zadania energetyczne i plany działań&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;6.2&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Zarząd, uchwała nr 4/2026 z 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); statusy zadań w arkuszu EnMS&quot;,
+    &quot;okres&quot;: &quot;Bez ograniczenia, dopóki cel obowiązuje; po jego zamknięciu — do końca cyklu certyfikacji, w którym poprawę wykazano&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-08&quot;,
+    &quot;tytul&quot;: &quot;Przegląd energetyczny — metody, kryteria i wyniki&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;6.3&quot;,
+    &quot;wersja&quot;: &quot;2.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Techniczny, 31.03.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Wszystkie wersje bez ograniczenia — każda jest podstawą SEU i możliwości poprawy dla swojego okresu, a kolejne przeglądy porównuje się z poprzednimi&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-09&quot;,
+    &quot;tytul&quot;: &quot;Karty EnPI i EnB; wartości wskaźników&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;6.4, 6.5&quot;,
+    &quot;wersja&quot;: &quot;1.2&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Techniczny (karty); zarząd (linie bazowe), 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wartości w arkuszu EnMS, zakładka „EnPI”&quot;,
+    &quot;okres&quot;: &quot;Bez ograniczenia, dopóki linia bazowa 2025 obowiązuje — dane z roku bazowego są potrzebne do każdego porównania; po rewizji EnB stare dane jeszcze przez jeden cykl certyfikacji&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-11&quot;,
+    &quot;tytul&quot;: &quot;Plan zbierania danych; dane a–e; dowody dokładności pomiarów&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;6.6&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Techniczny, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); dane w arkuszu EnMS i systemie monitoringu&quot;,
+    &quot;okres&quot;: &quot;Plan — do następnej wersji. Dane o zużyciu i zmiennych — minimum 5 lat, bo linia bazowa i porównania wieloletnie tego wymagają. Świadectwa wzorcowania — do kolejnego wzorcowania i jeden rok po&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-ZAS-01&quot;,
+    &quot;tytul&quot;: &quot;Zasoby systemu — zadania, obciążenie osób, decyzje&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;7.1&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Spis zadań — do końca okresu, którego dotyczy, plus rok. Decyzje o zasobach — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-24&quot;,
+    &quot;tytul&quot;: &quot;Matryca kompetencji oraz dowody kompetencji — zapisy z oceny&quot;,
+    &quot;rodzaj&quot;: &quot;Z&quot;,
+    &quot;podstawa&quot;: &quot;N&quot;,
+    &quot;punkt&quot;: &quot;7.2&quot;,
+    &quot;wersja&quot;: &quot;&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 30.09.2026&quot;,
+    &quot;miejsce&quot;: &quot;Matryca: teczka EnMS. Dowody kompetencji: akta osobowe (HR)&quot;,
+    &quot;okres&quot;: &quot;Przez czas zatrudnienia osoby i 3 lata po jego zakończeniu — audytor może pytać o kompetencje osoby, która już nie pracuje. Dla wykonawców: czas obowiązywania umowy i 3 lata po&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-SWI-01&quot;,
+    &quot;tytul&quot;: &quot;Świadomość — grupy, kanały, sprawdzenia i rejestr przeszkód&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;7.3&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Jan Kowalski, Energy Manager, 30.09.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Zapisy ze sprawdzeń świadomości — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; są jedynym dowodem rytmu sprawdzeń&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;F-EnMS-13&quot;,
+    &quot;tytul&quot;: &quot;Plan komunikacji i rejestr zgłoszeń&quot;,
+    &quot;rodzaj&quot;: &quot;D / Z&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;7.4&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); rejestr w arkuszu EnMS, zakładka „zgłoszenia”&quot;,
+    &quot;okres&quot;: &quot;Plan — do następnej wersji. Rejestr zgłoszeń — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; służy wykazaniu, że proces zgłaszania naprawdę działa&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;D-EnMS-DOK-01&quot;,
+    &quot;tytul&quot;: &quot;Wykaz udokumentowanych informacji systemu&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;7.5&quot;,
+    &quot;wersja&quot;: &quot;1.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Do następnej wersji; starsze przez jeden cykl certyfikacji — pokazują, jak dokumentacja systemu rosła&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;P-EnMS-01…05&quot;,
+    &quot;tytul&quot;: &quot;Procedury systemu — Moduły 1–5&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;&quot;,
+    &quot;wersja&quot;: &quot;2.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Piotr Nowak, Dyrektor Zakładu, 15.04.2026&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)&quot;,
+    &quot;okres&quot;: &quot;Do następnej wersji; starsze wersje przez jeden cykl certyfikacji, bo audyt może dotyczyć okresu, w którym obowiązywały&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;I-SP-02&quot;,
+    &quot;tytul&quot;: &quot;Instrukcja eksploatacji sprężarkowni — nastawy i kryteria&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;8.1&quot;,
+    &quot;wersja&quot;: &quot;3.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Kierownik Utrzymania Ruchu, 05.08.2026&quot;,
+    &quot;miejsce&quot;: &quot;Wydruk w koszulce przy sprężarkowni; teczka techniczna UR&quot;,
+    &quot;okres&quot;: &quot;Do następnej wersji. Wersje poprzednie przez jeden rok — przy sporze o wynik trzeba wiedzieć, jakie kryterium obowiązywało w danym okresie&quot;
+   },
+   {
+    &quot;kod&quot;: &quot;I-LAK-01&quot;,
+    &quot;tytul&quot;: &quot;Instrukcja eksploatacji pieca lakierni — temperatury i harmonogram&quot;,
+    &quot;rodzaj&quot;: &quot;D&quot;,
+    &quot;podstawa&quot;: &quot;M&quot;,
+    &quot;punkt&quot;: &quot;8.1&quot;,
+    &quot;wersja&quot;: &quot;2.0&quot;,
+    &quot;zatwierdzil&quot;: &quot;Technolog lakierni, 20.06.2026&quot;,
+    &quot;miejsce&quot;: &quot;Wydruk przy kabinie; teczka techniczna UR&quot;,
+    &quot;okres&quot;: &quot;Jak przy I-SP-02&quot;
+   }
+  ],
+  &quot;ZASADY&quot;: {
+   &quot;identyfikacja&quot;: &quot;Każdy dokument ma w stopce tytuł, kod, numer wersji i datę zatwierdzenia. Kody: D-EnMS-… dokumenty systemu, F-EnMS-… formularze z Toolkitu, P-EnMS-… procedury, I-… instrukcje stanowiskowe. Zapisy nazywane według wzoru: kod formularza, obszar, okres (np. F-EnMS-09_S-1_2026-09).&quot;,
+   &quot;zatwierdzanie&quot;: &quot;Politykę i linie bazowe zatwierdza zarząd. Dokumenty systemu i karty EnPI — Dyrektor Techniczny po sprawdzeniu przez Energy Managera. Instrukcje stanowiskowe — kierownik obszaru. Zatwierdzenie zawsze przed wydaniem do użycia; podpis i data w stopce.&quot;,
+   &quot;dostepnosc&quot;: &quot;Instrukcje z nastawami — wydruk w koszulce przy urządzeniu, zawsze aktualna wersja i tylko ona. Dokumenty systemu — serwer, folder EnMS, dostęp dla kierowników i zespołu EnMS. Wykonawcy dostają wyciąg z instrukcji razem ze zleceniem. Polityka — tablica przy wejściu, intranet, strona internetowa.&quot;,
+   &quot;ochrona&quot;: &quot;Folder EnMS tylko do odczytu dla większości; prawa zapisu ma Energy Manager i kierownicy w swoim zakresie. Kopia zapasowa serwera co tydzień, przechowywana poza zakładem. Arkusz z danymi energetycznymi dodatkowo kopiowany po każdym zamknięciu miesiąca. Dowody kompetencji w aktach osobowych, dostęp HR i przełożony.&quot;,
+   &quot;zmiany&quot;: &quot;Zmianę wprowadza się przez nową wersję z opisem zmiany w historii dokumentu. Wydając nową wersję, autor fizycznie zdejmuje starą z tablic i z miejsc przy urządzeniach i potwierdza to wpisem w rejestrze zmian. Przegląd instrukcji przy wszystkich SEU po każdej zmianie kryteriów eksploatacji.&quot;,
+   &quot;przechowywanie&quot;: &quot;Okresy ustalone w wykazie, przy każdej pozycji z uzasadnieniem. Przegląd okresów raz w roku przy przeglądzie wykazu. Usunięcie zapisów po upływie okresu potwierdza Energy Manager notatką — żeby dało się wykazać, że zapisy nie zniknęły przypadkiem.&quot;,
+   &quot;zewnetrzne&quot;: &quot;Rejestr dokumentów zewnętrznych prowadzi Energy Manager. Aktualność dokumentacji urządzeń sprawdza Kierownik UR raz w roku; przepisy — Energy Manager przy każdej informacji o zmianie, nie rzadziej niż raz w roku; specyfikacje klientów — dział sprzedaży przy odnowieniu umowy.&quot;
+  },
+  &quot;ZEWN&quot;: [
+   {
+    &quot;tytul&quot;: &quot;DTR czterech sprężarek śrubowych — instrukcje eksploatacji producenta&quot;,
+    &quot;zrodlo&quot;: &quot;Producent sprężarek, wydanie 4/2023&quot;,
+    &quot;dotyczy&quot;: &quot;Kryteria eksploatacji sprężarkowni (8.1), dopuszczalne nastawy ciśnienia, warunki gwarancji&quot;,
+    &quot;miejsce&quot;: &quot;Teczka techniczna UR; kopia przy sprężarkowni&quot;,
+    &quot;kto&quot;: &quot;Kierownik Utrzymania Ruchu&quot;,
+    &quot;sprawdzono&quot;: &quot;2026-04-20&quot;,
+    &quot;wynik&quot;: &quot;Aktualna — producent nie wydał nowszej wersji. Dopuszczalny zakres ciśnienia 5,5–8,0 bar, nastawa 6,3 bar mieści się w zakresie&quot;
+   },
+   {
+    &quot;tytul&quot;: &quot;DTR pieca lakierni i kabin&quot;,
+    &quot;zrodlo&quot;: &quot;Producent linii lakierniczej, wydanie 2/2019&quot;,
+    &quot;dotyczy&quot;: &quot;Kryteria eksploatacji lakierni (8.1), profile temperaturowe, czasy nagrzewania&quot;,
+    &quot;miejsce&quot;: &quot;Teczka techniczna UR&quot;,
+    &quot;kto&quot;: &quot;Technolog lakierni&quot;,
+    &quot;sprawdzono&quot;: &quot;2026-06-20&quot;,
+    &quot;wynik&quot;: &quot;Aktualna. Przy okazji ustalono, że harmonogram pieca może startować 20 minut później niż dotychczas — zgłoszone jako możliwość poprawy&quot;
+   },
+   {
+    &quot;tytul&quot;: &quot;Ustawa o efektywności energetycznej i przepisy wykonawcze&quot;,
+    &quot;zrodlo&quot;: &quot;Dziennik Ustaw; monitorowane przez Energy Managera&quot;,
+    &quot;dotyczy&quot;: &quot;Obowiązek audytu energetycznego przedsiębiorstwa (4.2), zawiadomienie do Prezesa URE (7.4)&quot;,
+    &quot;miejsce&quot;: &quot;Intranet, folder „wymagania prawne”; wykaz wymagań w D-EnMS-STR-01&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;sprawdzono&quot;: &quot;2026-09-01&quot;,
+    &quot;wynik&quot;: &quot;Sprawdzono stan prac nad nowelizacją (UC77) — obowiązek posiadania certyfikowanego systemu nie wszedł jeszcze w życie; pozycja do ponownego sprawdzenia po publikacji&quot;
+   },
+   {
+    &quot;tytul&quot;: &quot;Specyfikacja klienta OEM — wymagania raportowania energii i emisji&quot;,
+    &quot;zrodlo&quot;: &quot;Klient OEM, załącznik nr 7 do umowy ramowej, wersja 3&quot;,
+    &quot;dotyczy&quot;: &quot;Komunikacja zewnętrzna obowiązkowa (7.4), metoda przeliczania emisji, termin raportu&quot;,
+    &quot;miejsce&quot;: &quot;Dokumentacja umowy (dział sprzedaży); kopia w teczce EnMS&quot;,
+    &quot;kto&quot;: &quot;Dział sprzedaży wspólnie z Energy Managerem&quot;,
+    &quot;sprawdzono&quot;: &quot;2026-08-12&quot;,
+    &quot;wynik&quot;: &quot;Wersja 3 obowiązuje od 01.2026 — zmieniony współczynnik emisyjności dla energii elektrycznej. Raport za 2026 r. liczony już według nowej wersji&quot;
+   },
+   {
+    &quot;tytul&quot;: &quot;PN-EN ISO 50001:2018 wraz ze zmianą Amd 1:2024&quot;,
+    &quot;zrodlo&quot;: &quot;Polski Komitet Normalizacyjny&quot;,
+    &quot;dotyczy&quot;: &quot;Cały system; zmiana Amd 1:2024 wprowadza kwestię zmiany klimatu do punktów 4.1 i 4.2&quot;,
+    &quot;miejsce&quot;: &quot;Teczka EnMS (egzemplarz licencjonowany), dostęp u Energy Managera&quot;,
+    &quot;kto&quot;: &quot;Energy Manager&quot;,
+    &quot;sprawdzono&quot;: &quot;2026-03-31&quot;,
+    &quot;wynik&quot;: &quot;Aktualna wersja z Amd 1:2024 — istotność zmiany klimatu rozpatrzona i udokumentowana w D-EnMS-KON-01 i D-EnMS-STR-01&quot;
+   }
+  ],
+  &quot;META&quot;: {
+   &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;,
+   &quot;data&quot;: &quot;2026-09-30&quot;,
+   &quot;przeglad&quot;: &quot;Raz w roku przed audytem wewnętrznym oraz przy każdym nowym dokumencie systemu i przy każdej zmianie zakresu systemu&quot;
+  }
+ }
+}</pre></div>
+
+<script>
+var WYMAGANIA_N = [{"punkt": "4.3", "co": "Zakres i granice systemu", "modul": "1"}, {"punkt": "5.2", "co": "Polityka energetyczna", "modul": "2"}, {"punkt": "6.2", "co": "Cele, zadania energetyczne i plany działań", "modul": "4"}, {"punkt": "6.3", "co": "Metody i kryteria przeglądu energetycznego oraz jego wyniki", "modul": "4"}, {"punkt": "6.4", "co": "Metoda określania i aktualizowania EnPI oraz wartości wskaźników", "modul": "4"}, {"punkt": "6.5", "co": "Linie bazowe, dane o istotnych zmiennych i zmiany EnB", "modul": "4"}, {"punkt": "6.6", "co": "Plan zbierania danych, dane a–e oraz dowody dokładności pomiarów", "modul": "4"}, {"punkt": "7.2", "co": "Dowody kompetencji osób wpływających na wynik energetyczny", "modul": "5"}, {"punkt": "8.1", "co": "Kryteria eksploatacji i zapisy potwierdzające przebieg procesów", "modul": "6", "pozniej": true}, {"punkt": "8.2", "co": "Wyniki działań projektowych związanych z wynikiem energetycznym", "modul": "6", "pozniej": true}, {"punkt": "8.3", "co": "Kryteria oceny wyniku energetycznego dla znaczących zakupów i specyfikacje", "modul": "6", "pozniej": true}, {"punkt": "9.1", "co": "Wyniki monitorowania, pomiarów i oceny wyniku energetycznego", "modul": "7", "pozniej": true}, {"punkt": "9.2", "co": "Program audytów i wyniki audytów wewnętrznych", "modul": "7", "pozniej": true}, {"punkt": "9.3", "co": "Wyniki przeglądów zarządzania", "modul": "7", "pozniej": true}, {"punkt": "10.2", "co": "Niezgodności, podjęte działania i ich skuteczność", "modul": "8", "pozniej": true}];
+var LISTA_75 = [{"tekst": "System zawiera udokumentowane informacje wymagane przez normę.", "podstawa": "N", "auto": "wymagane"}, {"tekst": "System zawiera informacje uznane przez organizację za niezbędne dla jego skuteczności.", "podstawa": "N", "auto": "wlasne"}, {"tekst": "Zapewniono identyfikację, opis, format i nośnik oraz przegląd i zatwierdzenie.", "podstawa": "N", "auto": "identyfikacja"}, {"tekst": "Dokumenty są dostępne i przydatne tam, gdzie są potrzebne, oraz odpowiednio chronione.", "podstawa": "N", "auto": "dostepnosc"}, {"tekst": "Nadzorowane są zmiany; stare wersje są wycofane z miejsc użycia.", "podstawa": "N", "auto": "zmiany"}, {"tekst": "Ustalono okresy przechowywania i usuwania — z uzasadnieniem.", "podstawa": "N", "auto": "okresy"}, {"tekst": "Nadzorowane są dokumenty pochodzenia zewnętrznego.", "podstawa": "N", "auto": "zewnetrzne"}];
+var P_WYKAZ = [{"kod": "D-EnMS-KON-01", "tytul": "Kontekst organizacji — czynniki zewnętrzne i wewnętrzne", "rodzaj": "D", "podstawa": "M", "punkt": "4.1", "wersja": "2.1", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Do następnej aktualizacji kontekstu i jeden cykl certyfikacji wstecz — poprzednia wersja pokazuje, co się zmieniło i dlaczego"}, {"kod": "D-EnMS-STR-01", "tytul": "Strony zainteresowane i ich wymagania", "rodzaj": "D", "podstawa": "M", "punkt": "4.2", "wersja": "2.0", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Jak wyżej — wykaz wymagań prawnych i umownych musi dać się odtworzyć dla okresu, w którym obowiązywał"}, {"kod": "F-EnMS-03", "tytul": "Zakres i granice systemu zarządzania energią", "rodzaj": "D", "podstawa": "N", "punkt": "4.3", "wersja": "1.0", "zatwierdzil": "Zarząd, uchwała nr 2/2026 z 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciąg na tablicy przy wejściu", "okres": "Bez ograniczenia, dopóki system działa; każda zmiana zakresu zachowywana jako osobna wersja, bo unieważnia porównania z linią bazową"}, {"kod": "D-EnMS-SYS-01", "tytul": "System zarządzania energią — struktura i powiązania procesów", "rodzaj": "D", "podstawa": "M", "punkt": "4.4", "wersja": "1.0", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Do następnej wersji; starsze wersje przez jeden cykl certyfikacji"}, {"kod": "D-EnMS-PRZ-01", "tytul": "Przywództwo i zaangażowanie najwyższego kierownictwa", "rodzaj": "D / Z", "podstawa": "M", "punkt": "5.1", "wersja": "1.0", "zatwierdzil": "Zarząd, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Zapisy z decyzji kierownictwa — Pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"}, {"kod": "F-EnMS-04", "tytul": "Polityka energetyczna", "rodzaj": "D", "podstawa": "N", "punkt": "5.2", "wersja": "1.1", "zatwierdzil": "Zarząd, uchwała nr 3/2026 z 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); tablica przy wejściu do hali A; intranet; strona internetowa", "okres": "Bez ograniczenia, dopóki obowiązuje; wersje poprzednie bez ograniczenia — polityka jest dowodem zobowiązania kierownictwa w danym okresie"}, {"kod": "D-EnMS-ROL-01", "tytul": "Role, odpowiedzialności i uprawnienia w systemie", "rodzaj": "D", "podstawa": "M", "punkt": "5.3", "wersja": "1.2", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 30.09.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wyciągi w zakresach obowiązków", "okres": "Do następnej wersji; starsze przez okres zatrudnienia osób, których dotyczyły, i jeden cykl certyfikacji"}, {"kod": "F-EnMS-07", "tytul": "Rejestr ryzyk i szans", "rodzaj": "D / Z", "podstawa": "M", "punkt": "6.1", "wersja": "1.1", "zatwierdzil": "Jan Kowalski, Energy Manager, 30.09.2026; przyjęte przez zarząd 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Bez ograniczenia, dopóki pozycja jest otwarta; pozycje zamknięte przez pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"}, {"kod": "F-EnMS-10", "tytul": "Cele, zadania energetyczne i plany działań", "rodzaj": "D", "podstawa": "N", "punkt": "6.2", "wersja": "1.0", "zatwierdzil": "Zarząd, uchwała nr 4/2026 z 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); statusy zadań w arkuszu EnMS", "okres": "Bez ograniczenia, dopóki cel obowiązuje; po jego zamknięciu — do końca cyklu certyfikacji, w którym poprawę wykazano"}, {"kod": "F-EnMS-08", "tytul": "Przegląd energetyczny — metody, kryteria i wyniki", "rodzaj": "D / Z", "podstawa": "N", "punkt": "6.3", "wersja": "2.0", "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny, 31.03.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Wszystkie wersje bez ograniczenia — każda jest podstawą SEU i możliwości poprawy dla swojego okresu, a kolejne przeglądy porównuje się z poprzednimi"}, {"kod": "F-EnMS-09", "tytul": "Karty EnPI i EnB; wartości wskaźników", "rodzaj": "D / Z", "podstawa": "N", "punkt": "6.4, 6.5", "wersja": "1.2", "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny (karty); zarząd (linie bazowe), 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); wartości w arkuszu EnMS, zakładka „EnPI”", "okres": "Bez ograniczenia, dopóki linia bazowa 2025 obowiązuje — dane z roku bazowego są potrzebne do każdego porównania; po rewizji EnB stare dane jeszcze przez jeden cykl certyfikacji"}, {"kod": "F-EnMS-11", "tytul": "Plan zbierania danych; dane a–e; dowody dokładności pomiarów", "rodzaj": "D / Z", "podstawa": "N", "punkt": "6.6", "wersja": "1.0", "zatwierdzil": "Piotr Nowak, Dyrektor Techniczny, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); dane w arkuszu EnMS i systemie monitoringu", "okres": "Plan — do następnej wersji. Dane o zużyciu i zmiennych — minimum 5 lat, bo linia bazowa i porównania wieloletnie tego wymagają. Świadectwa wzorcowania — do kolejnego wzorcowania i jeden rok po"}, {"kod": "D-EnMS-ZAS-01", "tytul": "Zasoby systemu — zadania, obciążenie osób, decyzje", "rodzaj": "D / Z", "podstawa": "M", "punkt": "7.1", "wersja": "1.0", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Spis zadań — do końca okresu, którego dotyczy, plus rok. Decyzje o zasobach — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu"}, {"kod": "F-EnMS-24", "tytul": "Matryca kompetencji oraz dowody kompetencji — zapisy z oceny", "rodzaj": "Z", "podstawa": "N", "punkt": "7.2", "wersja": "", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 30.09.2026", "miejsce": "Matryca: teczka EnMS. Dowody kompetencji: akta osobowe (HR)", "okres": "Przez czas zatrudnienia osoby i 3 lata po jego zakończeniu — audytor może pytać o kompetencje osoby, która już nie pracuje. Dla wykonawców: czas obowiązywania umowy i 3 lata po"}, {"kod": "D-EnMS-SWI-01", "tytul": "Świadomość — grupy, kanały, sprawdzenia i rejestr przeszkód", "rodzaj": "D / Z", "podstawa": "M", "punkt": "7.3", "wersja": "1.0", "zatwierdzil": "Jan Kowalski, Energy Manager, 30.09.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Zapisy ze sprawdzeń świadomości — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; są jedynym dowodem rytmu sprawdzeń"}, {"kod": "F-EnMS-13", "tytul": "Plan komunikacji i rejestr zgłoszeń", "rodzaj": "D / Z", "podstawa": "M", "punkt": "7.4", "wersja": "1.0", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa); rejestr w arkuszu EnMS, zakładka „zgłoszenia”", "okres": "Plan — do następnej wersji. Rejestr zgłoszeń — pełny cykl certyfikacji (3 lata) i jeden rok po nim — audytor jednostki certyfikującej może sięgnąć do poprzedniego cyklu; służy wykazaniu, że proces zgłaszania naprawdę działa"}, {"kod": "D-EnMS-DOK-01", "tytul": "Wykaz udokumentowanych informacji systemu", "rodzaj": "D", "podstawa": "M", "punkt": "7.5", "wersja": "1.0", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Do następnej wersji; starsze przez jeden cykl certyfikacji — pokazują, jak dokumentacja systemu rosła"}, {"kod": "P-EnMS-01…05", "tytul": "Procedury systemu — Moduły 1–5", "rodzaj": "D", "podstawa": "M", "punkt": "", "wersja": "2.0", "zatwierdzil": "Piotr Nowak, Dyrektor Zakładu, 15.04.2026", "miejsce": "Teczka EnMS, serwer firmowy, folder EnMS (kopia tygodniowa)", "okres": "Do następnej wersji; starsze wersje przez jeden cykl certyfikacji, bo audyt może dotyczyć okresu, w którym obowiązywały"}, {"kod": "I-SP-02", "tytul": "Instrukcja eksploatacji sprężarkowni — nastawy i kryteria", "rodzaj": "D", "podstawa": "M", "punkt": "8.1", "wersja": "3.0", "zatwierdzil": "Kierownik Utrzymania Ruchu, 05.08.2026", "miejsce": "Wydruk w koszulce przy sprężarkowni; teczka techniczna UR", "okres": "Do następnej wersji. Wersje poprzednie przez jeden rok — przy sporze o wynik trzeba wiedzieć, jakie kryterium obowiązywało w danym okresie"}, {"kod": "I-LAK-01", "tytul": "Instrukcja eksploatacji pieca lakierni — temperatury i harmonogram", "rodzaj": "D", "podstawa": "M", "punkt": "8.1", "wersja": "2.0", "zatwierdzil": "Technolog lakierni, 20.06.2026", "miejsce": "Wydruk przy kabinie; teczka techniczna UR", "okres": "Jak przy I-SP-02"}];
+var P_ZASADY = {"identyfikacja": "Każdy dokument ma w stopce tytuł, kod, numer wersji i datę zatwierdzenia. Kody: D-EnMS-… dokumenty systemu, F-EnMS-… formularze z Toolkitu, P-EnMS-… procedury, I-… instrukcje stanowiskowe. Zapisy nazywane według wzoru: kod formularza, obszar, okres (np. F-EnMS-09_S-1_2026-09).", "zatwierdzanie": "Politykę i linie bazowe zatwierdza zarząd. Dokumenty systemu i karty EnPI — Dyrektor Techniczny po sprawdzeniu przez Energy Managera. Instrukcje stanowiskowe — kierownik obszaru. Zatwierdzenie zawsze przed wydaniem do użycia; podpis i data w stopce.", "dostepnosc": "Instrukcje z nastawami — wydruk w koszulce przy urządzeniu, zawsze aktualna wersja i tylko ona. Dokumenty systemu — serwer, folder EnMS, dostęp dla kierowników i zespołu EnMS. Wykonawcy dostają wyciąg z instrukcji razem ze zleceniem. Polityka — tablica przy wejściu, intranet, strona internetowa.", "ochrona": "Folder EnMS tylko do odczytu dla większości; prawa zapisu ma Energy Manager i kierownicy w swoim zakresie. Kopia zapasowa serwera co tydzień, przechowywana poza zakładem. Arkusz z danymi energetycznymi dodatkowo kopiowany po każdym zamknięciu miesiąca. Dowody kompetencji w aktach osobowych, dostęp HR i przełożony.", "zmiany": "Zmianę wprowadza się przez nową wersję z opisem zmiany w historii dokumentu. Wydając nową wersję, autor fizycznie zdejmuje starą z tablic i z miejsc przy urządzeniach i potwierdza to wpisem w rejestrze zmian. Przegląd instrukcji przy wszystkich SEU po każdej zmianie kryteriów eksploatacji.", "przechowywanie": "Okresy ustalone w wykazie, przy każdej pozycji z uzasadnieniem. Przegląd okresów raz w roku przy przeglądzie wykazu. Usunięcie zapisów po upływie okresu potwierdza Energy Manager notatką — żeby dało się wykazać, że zapisy nie zniknęły przypadkiem.", "zewnetrzne": "Rejestr dokumentów zewnętrznych prowadzi Energy Manager. Aktualność dokumentacji urządzeń sprawdza Kierownik UR raz w roku; przepisy — Energy Manager przy każdej informacji o zmianie, nie rzadziej niż raz w roku; specyfikacje klientów — dział sprzedaży przy odnowieniu umowy."};
+var P_ZEWN = [{"tytul": "DTR czterech sprężarek śrubowych — instrukcje eksploatacji producenta", "zrodlo": "Producent sprężarek, wydanie 4/2023", "dotyczy": "Kryteria eksploatacji sprężarkowni (8.1), dopuszczalne nastawy ciśnienia, warunki gwarancji", "miejsce": "Teczka techniczna UR; kopia przy sprężarkowni", "kto": "Kierownik Utrzymania Ruchu", "sprawdzono": "2026-04-20", "wynik": "Aktualna — producent nie wydał nowszej wersji. Dopuszczalny zakres ciśnienia 5,5–8,0 bar, nastawa 6,3 bar mieści się w zakresie"}, {"tytul": "DTR pieca lakierni i kabin", "zrodlo": "Producent linii lakierniczej, wydanie 2/2019", "dotyczy": "Kryteria eksploatacji lakierni (8.1), profile temperaturowe, czasy nagrzewania", "miejsce": "Teczka techniczna UR", "kto": "Technolog lakierni", "sprawdzono": "2026-06-20", "wynik": "Aktualna. Przy okazji ustalono, że harmonogram pieca może startować 20 minut później niż dotychczas — zgłoszone jako możliwość poprawy"}, {"tytul": "Ustawa o efektywności energetycznej i przepisy wykonawcze", "zrodlo": "Dziennik Ustaw; monitorowane przez Energy Managera", "dotyczy": "Obowiązek audytu energetycznego przedsiębiorstwa (4.2), zawiadomienie do Prezesa URE (7.4)", "miejsce": "Intranet, folder „wymagania prawne”; wykaz wymagań w D-EnMS-STR-01", "kto": "Energy Manager", "sprawdzono": "2026-09-01", "wynik": "Sprawdzono stan prac nad nowelizacją (UC77) — obowiązek posiadania certyfikowanego systemu nie wszedł jeszcze w życie; pozycja do ponownego sprawdzenia po publikacji"}, {"tytul": "Specyfikacja klienta OEM — wymagania raportowania energii i emisji", "zrodlo": "Klient OEM, załącznik nr 7 do umowy ramowej, wersja 3", "dotyczy": "Komunikacja zewnętrzna obowiązkowa (7.4), metoda przeliczania emisji, termin raportu", "miejsce": "Dokumentacja umowy (dział sprzedaży); kopia w teczce EnMS", "kto": "Dział sprzedaży wspólnie z Energy Managerem", "sprawdzono": "2026-08-12", "wynik": "Wersja 3 obowiązuje od 01.2026 — zmieniony współczynnik emisyjności dla energii elektrycznej. Raport za 2026 r. liczony już według nowej wersji"}, {"tytul": "PN-EN ISO 50001:2018 wraz ze zmianą Amd 1:2024", "zrodlo": "Polski Komitet Normalizacyjny", "dotyczy": "Cały system; zmiana Amd 1:2024 wprowadza kwestię zmiany klimatu do punktów 4.1 i 4.2", "miejsce": "Teczka EnMS (egzemplarz licencjonowany), dostęp u Energy Managera", "kto": "Energy Manager", "sprawdzono": "2026-03-31", "wynik": "Aktualna wersja z Amd 1:2024 — istotność zmiany klimatu rozpatrzona i udokumentowana w D-EnMS-KON-01 i D-EnMS-STR-01"}];
+var P_META = {"zatwierdzil": "Piotr Nowak — Dyrektor Zakładu", "data": "2026-09-30", "przeglad": "Raz w roku przed audytem wewnętrznym oraz przy każdym nowym dokumencie systemu i przy każdej zmianie zakresu systemu"};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Dokument bez wersji i właściciela przestaje być dowodem w dniu pierwszej zmiany.", "decyzja": "Wykaz udokumentowanej informacji prowadzony jako rozszerzenie nadzoru działającego w ISO 14001, bez drugiego równoległego systemu.", "dzialanie": "Wykaz z wersją, właścicielem i miejscem przechowywania; DTR czterech sprężarek śrubowych i karty wskaźników objęte nadzorem.", "sprawdzenie": "Audit wewnętrzny (9.2) sprawdza, czy dokumenty używane na stanowiskach są w wersji z wykazu."}];
+</script>
+<script>/* ENESA — wspólne elementy stron punktów normy.
+   Wyciągnięte z plików 4.1–6.6, w których powtarzały się dosłownie.
+   Dołączane przy budowie przed plikiem konkretnego punktu. */
+"use strict";
+
+/* ─────────── budowanie elementów ─────────── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function hel(t, c, h) { var e = document.createElement(t); if (c) e.className = c; e.innerHTML = h; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) { var x = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/\s/g, "")); return isNaN(x) ? null : x; }
+function lcz(x, d) {
+  if (x === null || x === undefined) return "—";
+  return x.toFixed(d === undefined ? 0 : d).replace(".", ",").replace(/^-/, "−");
+}
+
+/* ─────────── kontrolki ─────────── */
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = (v === undefined || v === null) ? "" : v; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function poleChip(etykieta, chip, kontrolka, pomoc) {
+  var p = pole(etykieta, kontrolka, pomoc);
+  p.querySelector("label").appendChild(el("span", "chip", chip));
+  return p;
+}
+function kratki(wybrane, opcje, on) {
+  var w = el("div", "wej");
+  opcje.forEach(function (o) {
+    var b = el("button", "pill" + ((wybrane || []).indexOf(o[0]) >= 0 ? " on" : ""), o[1]);
+    b.onclick = function () {
+      var lista = (wybrane || []).slice(), i = lista.indexOf(o[0]);
+      if (i >= 0) lista.splice(i, 1); else lista.push(o[0]);
+      on(lista); zapisz(); rysuj();
+    };
+    w.appendChild(b);
+  });
+  return w;
+}
+function tabela(naglowki, wiersze, klasy) {
+  var t = el("table", "tab");
+  var tr = el("tr");
+  naglowki.forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  wiersze.forEach(function (w) {
+    var r = el("tr");
+    w.forEach(function (v, i) {
+      if (v instanceof Node) { var td = el("td", klasy && klasy[i]); td.appendChild(v); r.appendChild(td); }
+      else r.appendChild(el("td", klasy && klasy[i], v === null || v === undefined ? "—" : String(v)));
+    });
+    t.appendChild(r);
+  });
+  return t;
+}
+function przyciskDodaj(etykieta, fn) {
+  var b = el("button", "dodaj", etykieta);
+  b.onclick = function () { fn(); zapisz(); rysuj(); };
+  return b;
+}
+function przyciskUsun(fn, etykieta, pytanie) {
+  var b = el("button", "link", etykieta || "usuń");
+  b.onclick = function () { if (pytanie && !confirm(pytanie)) return; fn(); zapisz(); rysuj(); };
+  return b;
+}
+
+/* ─────────── wnioski konsultanta: cztery ogniwa ─────────── */
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+var OGNIWA_PYT = [
+  ["znaczenie", "Co to znaczy dla systemu?"],
+  ["decyzja", "Co postanawiamy?"],
+  ["dzialanie", "Co konkretnie robimy?"],
+  ["sprawdzenie", "Po czym poznamy, że zadziałało?"]
+];
+function wniosekPelny(w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }
+function pelneWnioski() { return WNIOSKI.filter(wniosekPelny).length; }
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) && !wniosekPelny(w);
+  }).length;
+}
+function rysujWnioski(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie."));
+  WNIOSKI.forEach(function (w, i) {
+    var k = el("div", "poz" + (wniosekPelny(w) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    g.appendChild(przyciskUsun(function () { WNIOSKI.splice(i, 1); }));
+    k.appendChild(g);
+    OGNIWA_PYT.forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    s.appendChild(k);
+  });
+  s.appendChild(przyciskDodaj("+ dodaj wniosek", function () { WNIOSKI.push({}); }));
+  host.appendChild(s);
+}
+/* Blok konsultanta: zwraca true, gdy wolno rysować treść.
+   Przy roli „klient” treść nie jest renderowana — nie jest ukrywana stylem. */
+function blokKonsultanta(host, opis) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", opis || "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return null;
+  }
+  host.appendChild(s);
+  return s;
+}
+
+/* ─────────── braki, lista kontrolna, historia ─────────── */
+function rysujBraki(host, lista, kodDokumentu) {
+  var b = lista.filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) {
+    host.appendChild(el("div", "ok", ROLA === "klient"
+      ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+      : "Komplet. Dokument " + kodDokumentu + " można wygenerować i opublikować."));
+    return;
+  }
+  var d = el("div", "warn");
+  d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+  var ul = el("ul");
+  b.slice(0, 16).forEach(function (x) {
+    var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+    if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+    ul.appendChild(li);
+  });
+  if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+  d.appendChild(ul);
+  host.appendChild(d);
+}
+function rysujListeKontrolna(host, lista, tytul, ocen) {
+  host.appendChild(el("h4", null, tytul));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  lista.forEach(function (p) {
+    var ok = ocen(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "nie dotyczy / ocena konsultanta"));
+    r.appendChild(td);
+    t.appendChild(r);
+  });
+  host.appendChild(t);
+}
+function rysujHistorie(host) {
+  host.appendChild(el("h4", null, "Historia"));
+  host.appendChild(tabela(["Data", "Osoba", "Działanie"],
+    HISTORIA.map(function (x) { return [x.data, x.osoba, x.akcja]; })));
+}
+
+/* ─────────── szkielet strony ─────────── */
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  var p = postep();
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + (p.razem ? Math.round(100 * p.zrob / p.razem) : 0) + "% · " + p.zrob + " / " + p.razem;
+  ZAKLADKI.forEach(function (x) {
+    var b = document.getElementById("zak_" + x.id);
+    if (b) b.classList.toggle("on", x.id === AKT);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: TERAZ, osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj();
+  alert("Zapisano ankietę " + PUNKT + ".");
+}
+function zatwierdz() {
+  AKT = ZAKLADKI[ZAKLADKI.length - 1].id; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+
+/* ENESA 7.5 — Udokumentowane informacje.
+   Wykaz III-31 (D/Z, N/M z punktem, wersja, zatwierdził, miejsce, okres z uzasadnieniem),
+   siedem aspektów nadzoru z Tomu 2, rejestr dokumentów zewnętrznych, lista kontrolna III-32 sekcja 7.5. */
+"use strict";
+
+var PUNKT = "7.5";
+var TERAZ = "11.10.2026 10:40";
+var WYKAZ = [];
+var ZASADY = {};
+var ZEWN = [];
+var META = { zatwierdzil: "", data: "", przeglad: "" };
+var WNIOSKI = [];
+var AKT = "wykaz";
+var ROLA = "klient";
+var HISTORIA = [{ data: "11.10.2026 10:35", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 7.5" }];
+
+var RODZAJE = [["", "Wybierz"],
+["D", "D — dokument: jak pracować; aktualizuje się"],
+["Z", "Z — zapis: co wykonano i z jakim wynikiem; przechowuje się"],
+["DZ", "D / Z — jedno i drugie"]];
+var PODSTAWY = [["", "Wybierz"],
+["N", "N — wymaga norma"],
+["M", "M — organizacja uznała za potrzebne"]];
+
+/* ── kompletność ── */
+function pozOk(x) {
+  return !!((x.tytul || "").trim() && x.rodzaj && x.podstawa && (x.miejsce || "").trim()
+    && (x.zatwierdzil || "").trim() && (x.okres || "").trim())
+    && !(x.podstawa === "N" && !(x.punkt || "").trim())
+    && !okresBezUzasadnienia(x);
+}
+function zewnOk(x) {
+  return !!((x.tytul || "").trim() && (x.zrodlo || "").trim() && (x.kto || "").trim() && x.sprawdzono);
+}
+function zasadyOk() {
+  return ASPEKTY.every(function (a) { return (ZASADY[a.kod] || "").trim(); });
+}
+
+/* ── reguły z książki ── */
+var RE_GOLY_OKRES = /^\s*(bez ogranicze\w*|\d+\s*(lat\w*|rok\w*|miesi\w*|m-c\w*)|do odwo\w*|bezterminowo)\s*\.?\s*$/i;
+function okresBezUzasadnienia(x) {
+  var t = (x.okres || "").trim();
+  return !!t && RE_GOLY_OKRES.test(t);
+}
+function zapisZWersja(x) {
+  return x.rodzaj === "Z" && !!(x.wersja || "").trim();
+}
+function norm(s) { return String(s || "").toLowerCase().replace(/\s+/g, " ").trim(); }
+function dwieWersje() {
+  var m = {}, out = [];
+  WYKAZ.forEach(function (x) {
+    var t = norm(x.tytul);
+    if (!t) return;
+    if (m[t]) { if (out.indexOf(t) < 0) out.push(t); } else m[t] = true;
+  });
+  return out;
+}
+function bezMiejsca() { return WYKAZ.filter(function (x) { return (x.tytul || "").trim() && !(x.miejsce || "").trim(); }); }
+function bezZatwierdzenia() { return WYKAZ.filter(function (x) { return (x.tytul || "").trim() && !(x.zatwierdzil || "").trim(); }); }
+function pozycjeN() { return WYKAZ.filter(function (x) { return x.podstawa === "N"; }); }
+function nBezPunktu() { return pozycjeN().filter(function (x) { return !(x.punkt || "").trim(); }); }
+
+/* pokrycie wymagań normy */
+function dokumentyPunktu(p) {
+  return WYKAZ.filter(function (x) {
+    return (x.punkt || "").split(/[,;]/).map(function (s) { return s.trim(); }).indexOf(p) >= 0;
+  });
+}
+function wymaganiaAktywne() { return WYMAGANIA_N.filter(function (w) { return !w.pozniej; }); }
+function brakujaceWymagania() {
+  return wymaganiaAktywne().filter(function (w) { return !dokumentyPunktu(w.punkt).length; });
+}
+
+/* dokumenty zewnętrzne */
+function miesiaceOd(d) {
+  if (!d) return null;
+  var t = new Date(d + "T00:00:00"), teraz = new Date("2026-10-11T00:00:00");
+  return (teraz - t) / (1000 * 60 * 60 * 24 * 30.4);
+}
+function zewnPrzestarzale() {
+  return ZEWN.filter(function (x) {
+    var m = miesiaceOd(x.sprawdzono);
+    return (x.tytul || "").trim() && (m === null || m > 12);
+  });
+}
+
+/* ── zakładka 1: wykaz ── */
+function rysujWykaz(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Wykaz udokumentowanych informacji");
+  h.appendChild(el("span", "chip " + (WYKAZ.length && WYKAZ.every(pozOk) ? "green" : "amber"),
+    WYKAZ.filter(pozOk).length + " / " + WYKAZ.length));
+  s.appendChild(h);
+  s.appendChild(hel("div", "warn", "Chłodnia. Na drzwiach wisi instrukcja: „Nastawa temperatury: 0 °C”. Obok, w koszulce, druga — nowsza, bez daty: „+2 °C”. Operator nocnej zmiany wybiera tę, która wisi wyżej.<br><br>Która jest właściwa? Jeśli ta z +2 °C, bo tyle wymaga proces i bezpieczeństwo produktu — to każda noc na 0 °C kosztuje energię, której nikt nie potrzebował. Jeśli odwrotnie — ryzykujecie jakość produktu. <b>Tak czy inaczej, decyzja należy do przypadku, a nie do systemu.</b>"));
+  s.appendChild(hel("div", "note", "<b>Dokument i zapis — jaka to różnica?</b> Instrukcja mówi, jak pracować. Zapis pokazuje, co wykonano i z jakim wynikiem. Instrukcja kontroli szczelności to dokument; protokół z czerwcowego pomiaru wycieków — 6 Nm³/min — to zapis. <b>Dokumenty się aktualizuje. Zapisów nie pisze się na nowo</b> — przechowuje się je jako ślad tego, co się wydarzyło."));
+  host.appendChild(s);
+
+  if (WYKAZ.length) {
+    var t = el("div", "sekcja");
+    t.appendChild(tabela(["Kod", "Tytuł", "D / Z", "N / M", "Punkt", "Wersja", "Miejsce", "Stan"],
+      WYKAZ.map(function (x) {
+        return [x.kod || "—", (x.tytul || "—"), x.rodzaj === "DZ" ? "D / Z" : (x.rodzaj || "—"),
+          x.podstawa || "—", x.punkt || "—", x.wersja || "—", (x.miejsce || "—"),
+          el("span", "chip " + (pozOk(x) ? "green" : "amber"), pozOk(x) ? "OK" : "brak")];
+      }), ["mono", null, "mono", "mono", "mono", "mono"]));
+    host.appendChild(t);
+  }
+
+  WYKAZ.forEach(function (x, i) {
+    var k = el("div", "poz" + (pozOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, x.kod || "Pozycja " + (i + 1)));
+    if (x.rodzaj) g.appendChild(el("span", "chip", x.rodzaj === "DZ" ? "dokument i zapis" : x.rodzaj === "D" ? "dokument" : "zapis"));
+    if (x.podstawa) g.appendChild(el("span", "chip " + (x.podstawa === "N" ? "red" : ""),
+      x.podstawa === "N" ? "wymaga norma" + (x.punkt ? " (" + x.punkt + ")" : "") : "metodyka ENESA"));
+    g.appendChild(przyciskUsun(function () { WYKAZ.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Numer albo kod", inp(x.kod, "np. F-EnMS-09, D-EnMS-WSK-01, I-SP-02", function (v) { x.kod = v; })));
+    k.appendChild(pole("Tytuł", inp(x.tytul, "np. Karty EnPI i EnB, wartości wskaźników", function (v) { x.tytul = v; })));
+    k.appendChild(pole("Rodzaj", sel(x.rodzaj, RODZAJE, function (v) { x.rodzaj = v; })));
+    k.appendChild(pole("N / M", sel(x.podstawa, PODSTAWY, function (v) { x.podstawa = v; })));
+    if (x.podstawa === "N")
+      k.appendChild(pole("Punkt normy", inp(x.punkt, "np. 6.4; przy dwóch punktach: 6.4, 6.5", function (v) { x.punkt = v; }),
+        "Przy pozycji oznaczonej N trzeba podać punkt. Bez niego nie da się sprawdzić pokrycia wymagań — ani obronić pozycji przed audytorem."));
+    else if (x.podstawa === "M")
+      k.appendChild(pole("Punkt normy — jeśli dotyczy", inp(x.punkt, "np. 7.1 (dokument własny)", function (v) { x.punkt = v; })));
+    k.appendChild(pole("Wersja", inp(x.wersja, "np. 2.0", function (v) { x.wersja = v; })));
+    k.appendChild(poleChip("Zatwierdził", "wymóg normy",
+      inp(x.zatwierdzil, "np. Piotr Nowak, Dyrektor Zakładu, 15.04.2026", function (v) { x.zatwierdzil = v; }),
+      "Norma wymaga przeglądu i zatwierdzenia przed wydaniem do użycia."));
+    k.appendChild(poleChip("Miejsce", "wymóg normy",
+      inp(x.miejsce, "np. Teczka EnMS, serwer \\\\enesa\\EnMS; wydruk przy sprężarkowni", function (v) { x.miejsce = v; }),
+      "Dokument ma być dostępny tam, gdzie się go używa — instrukcja przy chłodni, nie w segregatorze w biurze."));
+    k.appendChild(poleChip("Okres przechowywania i uzasadnienie", "wymóg normy",
+      txt(x.okres, "np. Bez ograniczenia, dopóki linia bazowa 2025 obowiązuje — dane z roku bazowego są potrzebne do każdego porównania; po rewizji jeszcze jeden cykl certyfikacji", 2,
+        function (v) { x.okres = v; }),
+      "Norma nie podaje okresu. Ustalcie go sami, z uzasadnieniem: wymagania prawne i umowy z klientami, cykl certyfikacji, potrzeba porównań z linią bazową."));
+    if (okresBezUzasadnienia(x))
+      kratkaOkres(k, x);
+    if (zapisZWersja(x))
+      kratkaZapis(k);
+    if (x.podstawa === "N" && !(x.punkt || "").trim())
+      k.appendChild(el("div", "warn", "Pozycja oznaczona jako wymagana przez normę, ale bez wskazania punktu."));
+    host.appendChild(k);
+  });
+
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj pozycję", function () { WYKAZ.push({}); }));
+  if (!WYKAZ.length) d.appendChild(el("div", "warn", "Wykaz jest pusty."));
+  var dw = dwieWersje();
+  if (dw.length)
+    d.appendChild(hel("div", "warn", "Ten sam tytuł występuje w wykazie więcej niż raz: " +
+      dw.map(function (t) { return "„" + t.slice(0, 50) + "”"; }).join(", ") +
+      ". <b>Dwie wersje w obiegu</b> to pierwszy z pięciu błędów tego punktu — i dokładnie scena z dwiema instrukcjami na drzwiach chłodni. Jeśli to dwa różne dokumenty, rozróżnijcie tytuły; jeśli jeden, wydając nową wersję wycofajcie starą."));
+  host.appendChild(d);
+}
+function kratkaOkres(k, x) {
+  k.appendChild(hel("div", "warn", "„" + (x.okres || "").trim() + "” to okres bez uzasadnienia. " +
+    "Norma nie podaje okresu — ustalacie go sami, ale <b>trzeba napisać, z czego wynika</b>: z wymagań prawnych, z umowy z klientem, z cyklu certyfikacji albo z potrzeby porównań z linią bazową."));
+}
+function kratkaZapis(k) {
+  k.appendChild(hel("div", "note", "Pozycja oznaczona jako zapis, a ma numer wersji. <b>Zapisów nie pisze się na nowo</b> — przechowuje się je jako ślad tego, co się wydarzyło. Jeśli ta pozycja ma wersje, jest raczej dokumentem albo jednym i drugim (D / Z)."));
+}
+
+/* ── zakładka 2: pokrycie wymagań ── */
+function rysujPokrycie(host) {
+  var s = el("div", "sekcja");
+  var brak = brakujaceWymagania();
+  var h = el("h3", null, "Pokrycie wymagań normy");
+  h.appendChild(el("span", "chip " + (brak.length ? "amber" : "green"),
+    (wymaganiaAktywne().length - brak.length) + " / " + wymaganiaAktywne().length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Co musi być udokumentowane: to, czego norma wymaga wprost w poszczególnych punktach. Przy każdym wymaganiu norma mówi „udokumentowana informacja” — nie narzuca nazwy dokumentu ani jego formy."));
+  s.appendChild(el("div", "note", "Ta zakładka pokazuje stan całego systemu w jednym miejscu: które wymagania mają już dokument, a które czekają. To jedyny ekran w całej platformie, który odpowiada na pytanie „czy jesteśmy gotowi do audytu”."));
+  host.appendChild(s);
+
+  var t = el("div", "sekcja");
+  t.appendChild(el("h3", null, "Punkty 4–7 — objęte Modułami 1–5 Toolkitu"));
+  t.appendChild(tabela(["Punkt", "Czego wymaga norma", "Dokument w wykazie", "Stan"],
+    wymaganiaAktywne().map(function (w) {
+      var d = dokumentyPunktu(w.punkt);
+      return [w.punkt, w.co,
+        d.length ? d.map(function (x) { return x.kod || x.tytul; }).join(", ") : "—",
+        el("span", "chip " + (d.length ? "green" : "amber"), d.length ? "ujęte" : "brak")];
+    }), ["mono"]));
+  brak.forEach(function (w) {
+    t.appendChild(el("div", "warn", "Punkt " + w.punkt + " — " + w.co.toLowerCase() +
+      " — nie ma pozycji w wykazie. To udokumentowana informacja wymagana przez normę."));
+  });
+  host.appendChild(t);
+
+  var p = el("div", "sekcja");
+  p.appendChild(el("h3", null, "Punkty 8–10 — do dopisania z Modułami 6–8"));
+  p.appendChild(el("p", "opis", "Formularz III-31 mówi wprost: wymagane udokumentowane informacje dla sterowania operacyjnego, projektowania, monitorowania, audytu, przeglądu i niezgodności dopisuje się razem z kolejnymi modułami."));
+  p.appendChild(tabela(["Punkt", "Czego wymaga norma", "Stan"],
+    WYMAGANIA_N.filter(function (w) { return w.pozniej; }).map(function (w) {
+      var d = dokumentyPunktu(w.punkt);
+      return [w.punkt, w.co, el("span", "chip " + (d.length ? "green" : ""),
+        d.length ? "już ujęte: " + d.map(function (x) { return x.kod || x.tytul; }).join(", ") : "z Modułem " + w.modul)];
+    }), ["mono"]));
+  host.appendChild(p);
+
+  var st = el("div", "sekcja");
+  st.appendChild(el("h3", null, "Co jeszcze warto zapisać"));
+  st.appendChild(hel("div", "note", "<b>Pytanie kontrolne:</b> czy bez tego zapisu ktoś mógłby zrobić coś źle albo nie zrobić wcale? Instrukcja z nastawami przy chłodni — tak. Dziesięciostronicowa procedura „obiegu informacji o energii” w firmie, w której wszyscy siedzą przy jednym stole — raczej nie.<br><br>I dobra wiadomość: <b>możecie korzystać z tego, co już macie.</b> Instrukcje stanowiskowe, dokumentacja techniczno-ruchowa urządzeń, procedury z ISO 9001 czy ISO 14001 — wystarczy dopisać do nich wymagania energetyczne. Nie musicie budować osobnego systemu dokumentów."));
+  var m = WYKAZ.filter(function (x) { return x.podstawa === "M"; }).length;
+  st.appendChild(el("div", m ? "ok" : "note",
+    "W wykazie jest " + ile(m, "pozycja", "pozycje", "pozycji") + " oznaczonych jako metodyka ENESA — czyli uznanych przez organizację za potrzebne, choć norma ich nie wymaga. " +
+    (m > pozycjeN().length * 2
+      ? "To dużo w stosunku do pozycji wymaganych. Warto przy każdej zadać pytanie kontrolne powyżej."
+      : "Proporcja wygląda rozsądnie.")));
+  host.appendChild(st);
+}
+
+/* ── zakładka 3: zasady nadzoru ── */
+var ASPEKTY = [
+  { kod: "identyfikacja", nazwa: "Identyfikacja", podstawa: "N", rows: 2,
+    ph: "np. Każdy dokument ma tytuł, numer, wersję i datę zatwierdzenia w stopce. Kody: D-EnMS-… dla dokumentów systemu, F-EnMS-… dla formularzy, I-… dla instrukcji stanowiskowych, P-EnMS-… dla procedur.",
+    pomoc: "Po czym poznać, co to za dokument i która to wersja. Ważne, żeby standard był jeden." },
+  { kod: "zatwierdzanie", nazwa: "Przegląd i zatwierdzenie", podstawa: "N", rows: 2,
+    ph: "np. Dokumenty systemu zatwierdza Dyrektor Zakładu po sprawdzeniu przez Energy Managera; instrukcje stanowiskowe — kierownik obszaru. Zatwierdzenie przed wydaniem do użycia, podpis i data w stopce.",
+    pomoc: "Kto sprawdza, czy dokument jest właściwy, zanim trafi do użycia." },
+  { kod: "dostepnosc", nazwa: "Dostępność w miejscu użycia", podstawa: "N", rows: 2,
+    ph: "np. Instrukcje z nastawami — wydruk w koszulce przy urządzeniu. Dokumenty systemu — serwer, folder EnMS, dostęp dla kierowników. Wykonawcy dostają wyciąg z instrukcji razem ze zleceniem.",
+    pomoc: "Instrukcja przy chłodni, nie w segregatorze w biurze." },
+  { kod: "ochrona", nazwa: "Ochrona", podstawa: "N", rows: 2,
+    ph: "np. Folder EnMS tylko do odczytu dla większości, prawa zapisu dla Energy Managera i kierowników. Kopia zapasowa serwera co tydzień. Arkusz z danymi energetycznymi dodatkowo kopiowany po każdym zamknięciu miesiąca.",
+    pomoc: "Przed utratą, przypadkową zmianą i dostępem osób niepowołanych. Dane o zużyciu z kilku lat są potrzebne do porównań." },
+  { kod: "zmiany", nazwa: "Nadzór nad zmianami", podstawa: "N", rows: 2,
+    ph: "np. Zmianę wprowadza się przez nową wersję z opisem zmiany w historii. Wydając nową wersję, autor fizycznie zdejmuje starą z tablic i z miejsc przy urządzeniach i potwierdza to w rejestrze zmian.",
+    pomoc: "Kto może zmieniać i jak wycofać starą wersję, żeby nie wisiała obok nowej." },
+  { kod: "przechowywanie", nazwa: "Przechowywanie i usuwanie", podstawa: "N", rows: 2,
+    ph: "np. Okresy ustalone w wykazie, przy każdej pozycji z uzasadnieniem. Przegląd okresów raz w roku; usunięcie zapisów po upływie okresu potwierdza Energy Manager notatką.",
+    pomoc: "Norma nie podaje okresu. Ustalacie go sami, z uzasadnieniem." },
+  { kod: "zewnetrzne", nazwa: "Dokumenty pochodzenia zewnętrznego", podstawa: "N", rows: 2,
+    ph: "np. Instrukcje producentów urządzeń, przepisy, specyfikacje klientów. Rejestr w zakładce 4; aktualność sprawdza Energy Manager raz w roku, a przy przepisach — przy każdej informacji o zmianie.",
+    pomoc: "Też muszą być aktualne. To ten aspekt, o którym zapomina się najczęściej." }
+];
+
+function rysujZasady(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Zasady nadzoru — siedem aspektów");
+  h.appendChild(el("span", "chip " + (zasadyOk() ? "green" : "amber"),
+    ASPEKTY.filter(function (a) { return (ZASADY[a.kod] || "").trim(); }).length + " / " + ASPEKTY.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Jak tym zarządzacie. Wszystkie siedem aspektów norma wymienia wprost — i wszystkie siedem może być częścią istniejącego systemu, jeśli macie ISO 9001 albo ISO 14001."));
+  s.appendChild(hel("div", "note", "Dokumentacja ma pomagać, nie przeszkadzać. <b>Jej wartość nie zależy od liczby stron, tylko od tego, czy ludzie znajdują w niej właściwą odpowiedź — wtedy, kiedy jej potrzebują.</b>"));
+  var k = el("div", "poz" + (zasadyOk() ? "" : " brak"));
+  ASPEKTY.forEach(function (a) {
+    k.appendChild(poleChip(a.nazwa, "wymóg normy", txt(ZASADY[a.kod], a.ph, a.rows, function (v) { ZASADY[a.kod] = v; }), a.pomoc));
+  });
+  s.appendChild(k);
+  host.appendChild(s);
+
+  var b = el("div", "sekcja");
+  b.appendChild(el("h3", null, "Najczęstsze błędy"));
+  b.appendChild(tabela(["Błąd", "Co zrobić zamiast tego"], [
+    ["Dwie wersje w obiegu", "Wydając nową wersję, fizycznie wycofajcie starą — także z tablic przy maszynach"],
+    ["Dokumenty pisane pod audyt", "Piszcie dla osoby, która będzie z nich korzystać; sprawdźcie to, pytając ją"],
+    ["Osobny system dokumentów „energetycznych”", "Dopiszcie energię do istniejących instrukcji i procedur"],
+    ["Zapisy, których nie da się znaleźć", "Jedno uzgodnione miejsce i zasady nazewnictwa"],
+    ["Brak kopii zapasowych danych", "Regularna kopia — dane o zużyciu z kilku lat są potrzebne do porównań"]
+  ]));
+  host.appendChild(b);
+}
+
+/* ── zakładka 4: dokumenty zewnętrzne ── */
+function rysujZewn(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "Dokumenty pochodzenia zewnętrznego");
+  h.appendChild(el("span", "chip " + (ZEWN.length && !zewnPrzestarzale().length ? "green" : "amber"),
+    ZEWN.filter(zewnOk).length + " / " + ZEWN.length));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Instrukcje producentów, przepisy, specyfikacje klientów. Norma każe nadzorować także te dokumenty — a to aspekt, o którym zapomina się najczęściej."));
+  host.appendChild(s);
+
+  ZEWN.forEach(function (x, i) {
+    var m = miesiaceOd(x.sprawdzono);
+    var k = el("div", "poz" + (zewnOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, (x.tytul || "Dokument " + (i + 1)).slice(0, 60)));
+    if (m !== null) g.appendChild(el("span", "chip " + (m > 12 ? "red" : m > 9 ? "amber" : "green"),
+      "sprawdzono " + Math.round(m) + " mies. temu"));
+    g.appendChild(przyciskUsun(function () { ZEWN.splice(i, 1); }));
+    k.appendChild(g);
+    k.appendChild(pole("Tytuł", inp(x.tytul, "np. DTR sprężarki śrubowej — instrukcja eksploatacji producenta", function (v) { x.tytul = v; })));
+    k.appendChild(pole("Źródło", inp(x.zrodlo, "np. Producent sprężarek, wersja 4/2023", function (v) { x.zrodlo = v; })));
+    k.appendChild(pole("Czego dotyczy w systemie", inp(x.dotyczy, "np. Kryteria eksploatacji sprężarkowni (8.1), nastawy ciśnienia", function (v) { x.dotyczy = v; })));
+    k.appendChild(pole("Miejsce", inp(x.miejsce, "np. Teczka techniczna UR; kopia przy sprężarkowni", function (v) { x.miejsce = v; })));
+    k.appendChild(poleChip("Kto sprawdza aktualność", "wymóg normy",
+      inp(x.kto, "np. Kierownik Utrzymania Ruchu", function (v) { x.kto = v; })));
+    k.appendChild(pole("Data ostatniego sprawdzenia", inp(x.sprawdzono, "", function (v) { x.sprawdzono = v; }, "date")));
+    k.appendChild(pole("Wynik sprawdzenia", inp(x.wynik, "np. Aktualna; producent nie wydał nowej wersji", function (v) { x.wynik = v; })));
+    if (m !== null && m > 12)
+      k.appendChild(el("div", "warn", "Aktualność sprawdzona " + ile(Math.round(m), "miesiąc", "miesiące", "miesięcy") + " temu. Przy rytmie rocznym to już luka — przepisy i specyfikacje klientów zmieniają się częściej niż dokumentacja urządzeń."));
+    else if (!x.sprawdzono && (x.tytul || "").trim())
+      k.appendChild(el("div", "warn", "Nie zapisano, kiedy sprawdzono aktualność tego dokumentu."));
+    host.appendChild(k);
+  });
+  var d = el("div", "sekcja");
+  d.appendChild(przyciskDodaj("+ dodaj dokument zewnętrzny", function () { ZEWN.push({}); }));
+  if (!ZEWN.length)
+    d.appendChild(hel("div", "warn", "Rejestr dokumentów zewnętrznych jest pusty. Prawie każdy zakład ma przynajmniej dokumentację techniczno-ruchową urządzeń objętych znaczącym użyciem energii i przepisy dotyczące efektywności — <b>norma wymaga nadzoru także nad nimi.</b>"));
+  host.appendChild(d);
+}
+
+/* ── zakładka 5: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = blokKonsultanta(host);
+  if (!s) return;
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz dokumentacji: "));
+  n.appendChild(document.createTextNode(
+    ile(WYKAZ.length, "pozycja", "pozycje", "pozycji") + " (N: " + pozycjeN().length +
+    ", M: " + WYKAZ.filter(function (x) { return x.podstawa === "M"; }).length + ") · pokrycie punktów 4–7: " +
+    (wymaganiaAktywne().length - brakujaceWymagania().length) + " z " + wymaganiaAktywne().length +
+    " · zasady nadzoru: " + ASPEKTY.filter(function (a) { return (ZASADY[a.kod] || "").trim(); }).length + " z " + ASPEKTY.length +
+    " · dokumentów zewnętrznych: " + ZEWN.length));
+  s.appendChild(n);
+  var brak = brakujaceWymagania();
+  if (brak.length)
+    s.appendChild(el("div", "warn", "Wymagania normy bez dokumentu: " +
+      brak.map(function (w) { return w.punkt; }).join(", ") + ". To pierwsza rzecz, którą sprawdzi audytor."));
+  var dw = dwieWersje();
+  if (dw.length)
+    s.appendChild(el("div", "warn", "Powtórzone tytuły w wykazie: " + dw.length +
+      ". Do sprawdzenia na hali, nie w arkuszu — scena z dwiema instrukcjami na drzwiach zdarza się częściej, niż klienci przypuszczają."));
+  if (bezMiejsca().length)
+    s.appendChild(el("div", "warn", ile(bezMiejsca().length, "pozycja nie ma", "pozycje nie mają", "pozycji nie ma") +
+      " wskazanego miejsca. Dokument, którego nie da się znaleźć, nie jest dostępny w rozumieniu normy."));
+  if (bezZatwierdzenia().length)
+    s.appendChild(el("div", "warn", ile(bezZatwierdzenia().length, "pozycja nie ma", "pozycje nie mają", "pozycji nie ma") +
+      " zatwierdzenia. Przegląd i zatwierdzenie przed wydaniem to wymaganie normy."));
+  var bezUz = WYKAZ.filter(okresBezUzasadnienia).length;
+  if (bezUz)
+    s.appendChild(el("div", "warn", ile(bezUz, "pozycja ma", "pozycje mają", "pozycji ma") +
+      " okres przechowywania bez uzasadnienia. Samo „3 lata” nie wystarcza — Moduł 5 zmienił ten wiersz formularza właśnie z tego powodu."));
+  var zw = WYKAZ.filter(zapisZWersja).length;
+  if (zw)
+    s.appendChild(el("div", "note", ile(zw, "zapis ma", "zapisy mają", "zapisów ma") +
+      " numer wersji. Zwykle znaczy to, że pozycja jest w istocie dokumentem albo jednym i drugim — warto to z klientem rozstrzygnąć, bo od tego zależy, czy wolno ją nadpisywać."));
+  if (zewnPrzestarzale().length)
+    s.appendChild(el("div", "warn", ile(zewnPrzestarzale().length, "dokument zewnętrzny nie ma", "dokumenty zewnętrzne nie mają", "dokumentów zewnętrznych nie ma") +
+      " sprawdzonej aktualności albo sprawdzenie jest starsze niż rok."));
+  if (!ZEWN.length)
+    s.appendChild(el("div", "warn", "Pusty rejestr dokumentów zewnętrznych. Prawie zawsze znaczy, że nikt o nich nie pomyślał — a norma wymienia je wprost."));
+  rysujWnioski(s);
+}
+
+/* ── lista kontrolna III-32, sekcja 7.5 ── */
+function stanPozycji(p) {
+  var f = {
+    wymagane: function () { return WYKAZ.length > 0 && !brakujaceWymagania().length && !nBezPunktu().length; },
+    wlasne: function () { return WYKAZ.some(function (x) { return x.podstawa === "M"; }); },
+    identyfikacja: function () {
+      return !!(ZASADY.identyfikacja || "").trim() && !!(ZASADY.zatwierdzanie || "").trim()
+        && WYKAZ.length > 0 && !bezZatwierdzenia().length;
+    },
+    dostepnosc: function () {
+      return !!(ZASADY.dostepnosc || "").trim() && !!(ZASADY.ochrona || "").trim()
+        && WYKAZ.length > 0 && !bezMiejsca().length;
+    },
+    zmiany: function () { return !!(ZASADY.zmiany || "").trim() && !dwieWersje().length; },
+    okresy: function () {
+      return !!(ZASADY.przechowywanie || "").trim() && WYKAZ.length > 0
+        && WYKAZ.every(function (x) { return (x.okres || "").trim(); }) && !WYKAZ.some(okresBezUzasadnienia);
+    },
+    zewnetrzne: function () {
+      return !!(ZASADY.zewnetrzne || "").trim() && ZEWN.length > 0 && !zewnPrzestarzale().length;
+    }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  if (!WYKAZ.length) b.push({ t: "Wykaz udokumentowanych informacji jest pusty.", kto: "klient" });
+  brakujaceWymagania().forEach(function (w) {
+    b.push({ t: "Punkt " + w.punkt + " — brak pozycji w wykazie (" + w.co.toLowerCase() + ").", kto: "klient" });
+  });
+  WYKAZ.forEach(function (x, i) {
+    var naz = x.kod || x.tytul || ("Pozycja " + (i + 1));
+    if (!(x.tytul || "").trim()) b.push({ t: "Pozycja " + (i + 1) + " — brak tytułu.", kto: "klient" });
+    if (!x.rodzaj) b.push({ t: naz + " — nie wskazano, czy to dokument, czy zapis.", kto: "klient" });
+    if (!x.podstawa) b.push({ t: naz + " — nie wskazano N / M.", kto: "klient" });
+    if (x.podstawa === "N" && !(x.punkt || "").trim()) b.push({ t: naz + " — pozycja wymagana przez normę bez wskazania punktu.", kto: "klient" });
+    if (!(x.zatwierdzil || "").trim()) b.push({ t: naz + " — brak zatwierdzenia.", kto: "klient" });
+    if (!(x.miejsce || "").trim()) b.push({ t: naz + " — brak miejsca przechowywania.", kto: "klient" });
+    if (!(x.okres || "").trim()) b.push({ t: naz + " — brak okresu przechowywania.", kto: "klient" });
+    else if (okresBezUzasadnienia(x)) b.push({ t: naz + " — okres przechowywania bez uzasadnienia.", kto: "klient" });
+  });
+  dwieWersje().forEach(function (t) {
+    b.push({ t: "Powtórzony tytuł w wykazie: „" + t.slice(0, 40) + "” — sprawdźcie, czy nie ma dwóch wersji w obiegu.", kto: "klient" });
+  });
+  ASPEKTY.forEach(function (a) {
+    if (!(ZASADY[a.kod] || "").trim()) b.push({ t: "Zasady nadzoru — brak aspektu „" + a.nazwa.toLowerCase() + "”.", kto: "klient" });
+  });
+  if (!ZEWN.length) b.push({ t: "Rejestr dokumentów pochodzenia zewnętrznego jest pusty.", kto: "klient" });
+  zewnPrzestarzale().forEach(function (x) {
+    b.push({ t: "„" + (x.tytul || "?").slice(0, 40) + "” — brak sprawdzenia aktualności albo sprawdzenie starsze niż rok.", kto: "klient" });
+  });
+  if (!(META.przeglad || "").trim()) b.push({ t: "Nie ustalono, kiedy wykaz jest przeglądany.", kto: "klient", metodyka: true });
+  if (!META.data || !(META.zatwierdzil || "").trim()) b.push({ t: "Brak zatwierdzenia wykazu.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 6: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  rysujBraki(s, braki(), "D-EnMS-DOK-01");
+
+  var m = el("div", "poz");
+  m.appendChild(el("div", "poznazwa", "Zatwierdzenie"));
+  m.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(pole("Data", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  m.appendChild(pole("Kiedy wykaz jest przeglądany",
+    inp(META.przeglad, "np. Raz w roku przed audytem wewnętrznym oraz przy każdym nowym dokumencie systemu",
+      function (v) { META.przeglad = v; })));
+  s.appendChild(m);
+
+  rysujListeKontrolna(s, LISTA_75, "Lista kontrolna III-32 — sekcja 7.5", stanPozycji);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-DOK-01"));
+  s.appendChild(tabela(["Część", "Źródło", "Zawartość"], [
+    ["Wykaz udokumentowanych informacji", "zakładka 1", WYKAZ.filter(pozOk).length + " z " + WYKAZ.length +
+      " kompletnych (N: " + pozycjeN().length + ")"],
+    ["Pokrycie wymagań normy", "zakładka 2", (wymaganiaAktywne().length - brakujaceWymagania().length) +
+      " z " + wymaganiaAktywne().length + " punktów 4–7"],
+    ["Zasady nadzoru", "zakładka 3", ASPEKTY.filter(function (a) { return (ZASADY[a.kod] || "").trim(); }).length + " z " + ASPEKTY.length + " aspektów"],
+    ["Dokumenty zewnętrzne", "zakładka 4", ile(ZEWN.length, "dokument", "dokumenty", "dokumentów")],
+    ["Wnioski", "zakładka 5", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")],
+    ["Zatwierdzenie", "zakładka 6", META.zatwierdzil || "do uzupełnienia"]
+  ]));
+  s.appendChild(hel("div", "ok", "Punkt 7.5 jest szczególny: <b>sam wykaz nie jest wymagany przez normę</b>, ale wymagane jest to, co w nim stoi — i nadzór nad tym. Dokument D-EnMS-DOK-01 odpowiada formularzowi III-31 i jest jedynym miejscem, w którym widać stan całej dokumentacji systemu naraz."));
+
+  rysujHistorie(s);
+  host.appendChild(s);
+}
+
+/* ── szkielet ── */
+var ZAKLADKI = [
+  { id: "wykaz", t: "1. Wykaz", f: rysujWykaz },
+  { id: "pokrycie", t: "2. Pokrycie wymagań", f: rysujPokrycie },
+  { id: "zasady", t: "3. Zasady nadzoru", f: rysujZasady },
+  { id: "zewn", t: "4. Dokumenty zewnętrzne", f: rysujZewn },
+  { id: "kons", t: "5. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "6. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+function postep() {
+  return {
+    razem: Math.max(WYKAZ.length, 1) + ASPEKTY.length + Math.max(ZEWN.length, 1) + 1,
+    zrob: WYKAZ.filter(pozOk).length
+      + ASPEKTY.filter(function (a) { return (ZASADY[a.kod] || "").trim(); }).length
+      + ZEWN.filter(zewnOk).length
+      + ((META.zatwierdzil || "").trim() && META.data && (META.przeglad || "").trim() ? 1 : 0)
+  };
+}
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_75", JSON.stringify({
+      WYKAZ: WYKAZ, ZASADY: ZASADY, ZEWN: ZEWN, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_75"); if (!s) return;
+    var d = JSON.parse(s);
+    WYKAZ = d.WYKAZ || []; ZASADY = d.ZASADY || {}; ZEWN = d.ZEWN || [];
+    META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  WYKAZ = JSON.parse(JSON.stringify(P_WYKAZ));
+  ZASADY = JSON.parse(JSON.stringify(P_ZASADY));
+  ZEWN = JSON.parse(JSON.stringify(P_ZEWN));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wykaz, zasady nadzoru i rejestr dokumentów zewnętrznych?")) return;
+  WYKAZ = []; ZASADY = {}; ZEWN = []; WNIOSKI = [];
+  META = { zatwierdzil: "", data: "", przeglad: "" };
+  try { localStorage.removeItem("enesa_75"); } catch (e) { }
+  rysuj();
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>

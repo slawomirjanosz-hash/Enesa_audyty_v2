@@ -1,0 +1,1807 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENESA — 6.3 Przegląd energetyczny</title><style>
+:root{--zielen:#14352A;--zielen2:#2F6B41;--ink:#23302b;--mut:#6f7d76;--line:#dcdbd3;--tlo:#F5F2EC;
+--amber:#8a5a0f;--amberbg:#fdf6e3;--amberbrzeg:#e6c77a;--blue:#1c5678;--bluebg:#e8f1f6;
+--grn:#1e7b34;--grnbg:#e6f2ea;--red:#a8342b;--redbg:#fbeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tlo);color:var(--ink);font:15px/1.6 "Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--zielen);color:#fff;padding:16px 32px 0}
+header .kru{font-size:11.5px;color:#8cae9b;letter-spacing:.4px}
+header h1{margin:3px 0 2px;font-size:23px;font-weight:600}
+header .sub{margin:0 0 14px;font-size:13px;color:#a9c7b6}
+header .wroc{float:right;font-size:13px;color:#cfe3d7;text-decoration:underline;margin-top:6px}
+.tabs{display:flex;gap:4px}
+.tabs button{background:transparent;color:#a9c7b6;border:0;border-bottom:3px solid transparent;padding:9px 16px;font:inherit;font-size:13.5px;cursor:pointer}
+.tabs button.akt{color:#fff;border-bottom-color:#7fc39a}
+main{padding:22px 32px 80px;max-width:1180px}
+.karta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.karta h2{margin:0 0 16px;font-size:20px;font-weight:600}
+.ramka{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:#fcfcfa}
+.ramka h3{margin:0 0 3px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ramka .op{margin:0 0 12px;font-size:13px;color:var(--mut)}
+.media{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px}
+.miniat{width:150px;height:92px;border-radius:7px;background:linear-gradient(135deg,#14352A,#2F6B41);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;text-align:center;padding:8px;line-height:1.35}
+.media h4{margin:0 0 5px;font-size:15px;font-weight:600}
+.media p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dwie ul{margin:0;padding-left:20px;font-size:13.5px}
+.dwie li{margin-bottom:6px}
+ol.kroki{margin:0;padding-left:22px;font-size:13.5px}
+ol.kroki li{margin-bottom:7px}
+.ankbox{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+.ankbox h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.ankbox .op{font-size:13px;color:var(--mut);margin:0 0 12px}
+.tor{height:8px;background:#eceee9;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.tor div{height:100%;background:var(--zielen2)}
+.prim{background:var(--zielen);color:#fff;border:0;border-radius:8px;padding:10px 20px;font:inherit;font-size:14px;cursor:pointer}
+.wtor{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer}
+.pusto2{border:1px solid var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--mut);font-size:13.5px;background:#fcfcfa}
+/* ankieta */
+.pasekank{background:#fff;border-bottom:1px solid var(--line);padding:11px 32px;position:sticky;top:0;z-index:9}
+.pasekank .linia{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px}
+#zakladki{display:flex;gap:6px;flex-wrap:wrap}
+.zak{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.zak:hover{border-color:var(--zielen2)}
+.zak.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.sekcja{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.sekcja h3{margin:0 0 3px;font-size:18px;font-weight:600}
+.sekcja h4{margin:22px 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+.sekcja .opis{margin:0 0 16px;font-size:13px;color:var(--mut)}
+.poz{border-left:4px solid transparent;padding:14px 16px;margin-bottom:12px;border-radius:0 8px 8px 0}
+.poz.brak{background:var(--amberbg);border-left-color:var(--amberbrzeg)}
+.poz.odrz{background:#fafaf8;opacity:.72}
+.poz.wlasna{background:var(--bluebg);border-left-color:var(--blue)}
+.pozkod{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:4px}
+.poznazwa{font-size:16px;font-weight:600;margin-bottom:2px}
+.pozmeta{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+.chip{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#eceee9;color:var(--mut)}
+.chip.red{background:var(--redbg);color:var(--red);font-weight:600}
+.chip.amber{background:#f8ebd0;color:var(--amber);font-weight:600}
+.pole{margin-bottom:10px}
+.pole label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.pole.kandydat{background:#fff;border:1px solid var(--amberbrzeg);border-radius:8px;padding:11px 13px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font:inherit;font-size:13.5px;background:#fff}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--zielen2);outline:0}
+.pole.kandydat input{margin-top:8px}
+details{margin-top:6px}
+summary{font-size:12.5px;color:var(--zielen2);cursor:pointer}
+.zrodlo{padding:10px 12px;background:#fbfcfa;border:1px solid var(--line);border-radius:7px;margin-top:7px}
+.zr_tyt{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:4px}
+.zr_w{font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.pominiete{margin-top:14px}
+.tab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line)}
+.tab th{background:#f4f6f3;color:var(--mut);text-align:left;padding:7px 10px;font-size:11px;font-weight:600}
+.tab td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+td.pusto{color:var(--mut);font-style:italic;text-align:center}
+.dodaj{background:#fff;border:1px dashed var(--zielen2);color:var(--zielen2);border-radius:8px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer}
+.link{background:0;border:0;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:auto}
+.warn{background:var(--amberbg);border-left:4px solid var(--amber);padding:12px 15px;font-size:13px;color:#6d4410;border-radius:0 6px 6px 0}
+.ok{background:var(--grnbg);border-left:4px solid var(--grn);padding:12px 15px;font-size:13px;color:#17512a;border-radius:0 6px 6px 0}
+.note{background:var(--bluebg);border-left:4px solid var(--blue);padding:12px 15px;font-size:13px;color:#17435f;border-radius:0 6px 6px 0;margin:10px 0}
+.warn ul{margin:7px 0 0 18px;padding:0}
+.stopka{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stopka .meta{font-size:12.5px;color:var(--mut);flex:1}
+.kodpola{font-size:11.5px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace;margin-bottom:5px}
+#w_spec{padding:22px 32px 80px;max-width:1260px}
+#w_spec h2{font-size:18px;margin:26px 0 4px}
+#w_spec .sub2{color:var(--mut);font-size:13px;margin:0 0 10px}
+#w_spec table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-bottom:12px}
+#w_spec th{background:var(--zielen);color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+#w_spec td{border-top:1px solid #eef0ec;padding:7px 10px;vertical-align:top}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
+pre{background:#fbfcfa;border:1px solid var(--line);border-left:4px solid var(--zielen2);padding:13px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:420px}
+button.cp{background:var(--zielen);color:#fff;border:0;border-radius:7px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;margin-bottom:8px;width:auto}
+@media(max-width:820px){.dwie{grid-template-columns:1fr}.media{flex-direction:column}}
+.chip.green{background:var(--grnbg);color:var(--grn);font-weight:600}
+.tab tr.grupa td{background:#eef1ec;font-weight:700;font-size:11.5px;color:var(--zielen);letter-spacing:.04em}
+.ogniwo{display:flex;gap:10px;align-items:flex-start}
+.ognr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zielen);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.lanc{font-size:12.5px;color:var(--mut);margin:6px 0 12px}
+.wej{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;background:#fff;cursor:pointer}
+.pill input{width:auto;margin:0}
+.pill.on{border-color:var(--zielen);background:var(--grnbg);color:var(--zielen);font-weight:600}
+.sekcja h3 .chip{margin-left:9px;vertical-align:middle}
+.rola{display:flex;gap:7px;align-items:center}
+.rola button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 13px;font:inherit;font-size:12.5px;cursor:pointer;width:auto}
+.rola button.on{background:var(--zielen);color:#fff;border-color:var(--zielen)}
+.rolaetyk{font-size:12px;color:var(--mut);margin-right:3px}
+
+/* ── matryca kompetencji (7.2) ───────────────────────────────── */
+.mat{border-collapse:collapse;width:100%;font-size:12.5px;margin:10px 0}
+.mat th,.mat td{border:1px solid #DDD6C8;padding:5px 6px;vertical-align:middle}
+.mat th{background:#EFEADF;font-weight:600;text-align:left;font-size:11.5px;line-height:1.25}
+.mat th.rot{text-align:center;width:62px}
+.mat td.kom{width:34%;line-height:1.3}
+.mat td.cel{text-align:center;padding:3px}
+.mat input.wa{width:46px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;padding:3px 2px;border:1px solid #CFC7B6;border-radius:4px;background:#FFF}
+.mat input.wa.zle{border-color:#A8342B;background:#FBF0EE}
+.mat td.cel.luka1{background:#FDF6E3}
+.mat td.cel.luka2{background:#FBEDE9}
+.mat td.cel.nd{background:#F4F1EA}
+.lukachip{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:600;color:#A8342B}
+.skala{font-size:12px;color:#6A6356;line-height:1.5;margin:8px 0}
+.skala b{color:#14352A}
+</style></head><body>
+
+<header>
+ <a class="wroc" href="#">← Wróć do audytu</a>
+ <div class="kru">ISO 50001 · PUNKT 6</div>
+ <h1>6.3 Przegląd energetyczny</h1>
+ <div class="sub">AutoParts Polska Sp. z o.o. · Zakład produkcyjny w Katowicach · AUD/001</div>
+ <div class="tabs">
+  <button id="t_strona" class="akt" onclick="widok('strona')">Strona punktu 6.3</button>
+  <button id="t_ankieta" onclick="widok('ankieta')">Ankieta 6.3</button>
+  <button id="t_spec" onclick="widok('spec')">Specyfikacja dla Sławka</button>
+ </div>
+</header>
+
+<div id="w_strona">
+<main>
+<div class="karta">
+ <h2>6.3 Przegląd energetyczny</h2>
+
+ <div class="ramka">
+  <h3>▷ Film szkoleniowy</h3>
+  <p class="op">Materiały wyjaśniające wymagania punktu 6.3 i sposób przeprowadzenia przeglądu.</p>
+  <div class="media">
+   <div class="miniat">ISO 50001<br>ROZDZIAŁ 6.3<br>Przegląd energetyczny</div>
+   <div>
+    <h4>6.3 Przegląd energetyczny</h4>
+    <p>Osiem kroków od metod i kryteriów do prognozy. Jak wskazać znaczące użycia i czym różni się zmienna
+    od czynnika statycznego.</p>
+    <a href="#" style="font-size:13px;color:#a8342b">▷ Otwórz w YouTube</a>
+   </div>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>▣ Prezentacje szkoleniowe</h3>
+  <p class="op">Slajdy do punktu 6.3. Oglądaj w małym lub dużym oknie.</p>
+  <div class="media">
+   <div class="miniat">6.3 — część A<br>16 slajdów</div>
+   <div>
+    <h4>6.3 Przegląd energetyczny — część A</h4>
+    <p>Bilans, który się zamyka. Kryteria SEU. Zmienne i czynniki statyczne. Szeregowanie możliwości według SPBT.</p>
+    <p style="font-size:12.5px">16 slajdów</p>
+    <button class="prim" style="padding:7px 15px;font-size:13px">Otwórz prezentację</button>
+    <button class="wtor" style="padding:7px 15px;font-size:13px">Duże okno</button>
+   </div>
+  </div>
+ </div>
+
+ <p style="font-size:14.5px">Organizacja opracowuje i przeprowadza przegląd energetyczny. W tym celu: analizuje
+ wykorzystanie i zużycie energii na podstawie pomiarów i innych danych — określa obecne rodzaje energii oraz ocenia
+ przeszłe i bieżące wykorzystanie i zużycie energii; na podstawie tej analizy identyfikuje znaczące użycia energii;
+ dla każdego z nich określa istotne zmienne, bieżący wynik energetyczny oraz osoby wykonujące pracę pod nadzorem
+ organizacji, które wpływają lub mogą wpływać na to użycie; określa możliwości poprawy wyniku energetycznego
+ i ustala ich priorytety; szacuje przyszłe wykorzystanie i zużycie energii. Przegląd aktualizuje się w określonych
+ odstępach oraz w odpowiedzi na istotne zmiany obiektów, wyposażenia, systemów lub procesów wykorzystujących energię.
+ Metody i kryteria opracowania przeglądu utrzymuje się jako udokumentowaną informację, a jego wyniki zachowuje jako
+ udokumentowaną informację. Omówienie na podstawie punktu 6.3 PN-EN ISO 50001:2018; nie jest to dosłowne brzmienie normy.</p>
+
+ <div class="note" style="margin:14px 0"><b>Norma w jednym zdaniu:</b> przeanalizuj, ile i na co zużywasz energii,
+ wskaż znaczące użycia, znajdź możliwości poprawy i oszacuj przyszłe zużycie — według zapisanych metod
+ i z zapisanymi wynikami.<br><br>
+ <b>Zanim zaczniesz:</b> → Część I, Tom 2, rozdział 4, punkt 6.3. Formularz: III-19 (F-EnMS-08),
+ przykład AutoParts: III-20.</div>
+
+ <div class="ramka">
+  <h3>◧ „Najwięcej biorą maszyny drukarskie. Reszta to grosze.”</h3>
+  <p style="font-size:13.5px">Właściciel drukarni wielkoformatowej nie miał wątpliwości. Przegląd energetyczny
+  pokazał co innego: najwięcej energii elektrycznej — 38% — szło na sprężone powietrze. Na „kompresory w piwnicy”,
+  o których nikt nie myślał.</p>
+  <p style="font-size:13.5px;margin-bottom:0"><b>Intuicja co do zużycia energii myli się częściej, niż chcielibyśmy
+  przyznać.</b> Przegląd energetyczny zastępuje ją danymi — i to on wskazuje, gdzie warto działać.</p>
+ </div>
+
+ <div class="warn" style="margin:14px 0"><b>Przegląd to proces, nie tabela.</b> Wypełnienie tabeli zużycia według
+ nośników to jeszcze nie przegląd. Wszystkie osiem elementów jest wymagane przez normę — kolejność pracy
+ to ★ propozycja książki, odwzorowana w zakładkach ankiety.</div>
+
+ <div class="ramka">
+  <h3>☰ Osiem kroków przeglądu</h3>
+  <ol class="kroki">
+   <li><b>Zapisz metody i kryteria.</b> Skąd dane, jak podzielisz zużycie, jak wybierzesz znaczące użycia,
+   jak uszeregujesz możliwości. Norma wymaga tego na piśmie — bez tego nikt nie powtórzy analizy za rok.</li>
+   <li><b>Przeanalizuj zużycie — przeszłe i bieżące.</b> Faktury z 12–36 miesięcy, liczniki, dane produkcyjne
+   i pogodowe z tego samego okresu. Jedna podstawa przeliczeń dla całego bilansu.</li>
+   <li><b>Zrób bilans.</b> Rozdziel zużycie na obszary i sprawdź, czy suma zgadza się z całością.
+   Uwaga na podwójne liczenie przy kogeneracji i fotowoltaice.</li>
+   <li><b>Wskaż znaczące użycia energii.</b> Według kryteriów, które sam ustalasz i zapisujesz.</li>
+   <li><b>Dla każdego: zmienne, czynniki statyczne, bieżący wynik, ludzie.</b></li>
+   <li><b>Znajdź i uszereguj możliwości poprawy</b> — bezkosztowe, niskokosztowe i inwestycyjne.</li>
+   <li><b>Oszacuj przyszłe zużycie.</b> Bez prognozy łatwo pomylić wzrost produkcji z pogorszeniem wyniku.</li>
+   <li><b>Zapisz wyniki i zaplanuj aktualizację.</b></li>
+  </ol>
+ </div>
+
+ <div class="ramka">
+  <h3>◉ Zasada Pareto i kryteria znaczących użyć</h3>
+  <p style="font-size:13.5px">80% efektów pochodzi zwykle z 20% przyczyn. W energii jest podobnie: kilka systemów
+  odpowiada za większość zużycia. Nie traćcie czasu na żarówkę w magazynie, gdy macie sprężarkę, która zużywa tyle
+  co tysiące żarówek.</p>
+  <p style="font-size:13.5px">W AutoParts pięć znaczących użyć — prasy, lakiernia, sprężarkownia, kotłownia
+  i oświetlenie — to 80% zużycia zakładu. Kryteria są dwa: <b>A</b> — udział co najmniej 10% całkowitego zużycia;
+  <b>B</b> — mniejszy udział, ale potencjał poprawy co najmniej 100 MWh rocznie lub wymaganie strony zainteresowanej.
+  Oświetlenie ma tylko 5,6%, ale weszło przez kryterium B: potencjał ok. 270 MWh rocznie.</p>
+  <p style="font-size:13.5px;margin-bottom:0">★ Progi możecie przyjąć inne — ważne, żeby stosować jedne kryteria
+  i uzasadnić każdy wybór. ★ Z doświadczenia autora znaczących użyć jest zwykle 3–7.</p>
+ </div>
+
+ <div class="ramka">
+  <h3>⇄ Zmienne istotne a czynniki statyczne</h3>
+  <p style="font-size:13.5px"><b>Zmienne istotne</b> — czynniki, które regularnie się zmieniają i wpływają na zużycie:
+  produkcja, pogoda, czas pracy. <b>Czynniki statyczne</b> — warunki, które zwykle się nie zmieniają, ale gdy się
+  zmienią, zmieniają zużycie: powierzchnia hali, izolacja, liczba zmian, asortyment.</p>
+  <table class="tab">
+   <tr><th style="width:22%">Znaczące użycie</th><th style="width:40%">Typowe zmienne istotne</th><th>Czynniki statyczne</th></tr>
+   <tr><td>Sprężarki</td><td>Zapotrzebowanie na powietrze [Nm³], godziny pracy, temperatura zasysanego powietrza</td><td>Liczba i typ sprężarek, ciśnienie sieci</td></tr>
+   <tr><td>Ogrzewanie</td><td>Stopniodni grzania, godziny pracy</td><td>Powierzchnia ogrzewana, izolacja, kubatura</td></tr>
+   <tr><td>Chłodnictwo</td><td>Temperatura zewnętrzna, obciążenie chłodnicze</td><td>Wielkość komór, rodzaj czynnika</td></tr>
+   <tr><td>Linia produkcyjna</td><td>Wolumen produkcji, czas pracy</td><td>Liczba i typ maszyn, asortyment</td></tr>
+   <tr><td>Oświetlenie</td><td>Czas pracy, długość dnia (przy świetlikach)</td><td>Powierzchnia, rodzaj opraw</td></tr>
+  </table>
+  <p style="font-size:13.5px;margin:10px 0 0">W styczniu zakład zużył 100 000 kWh, w lipcu 80 000 kWh. Poprawa o 20%?
+  Niekoniecznie — w lipcu nie grzał hal. Dopiero gdy uwzględnicie stopniodni, powiecie, czy poprawiliście wynik,
+  czy pomogła Wam pogoda.</p>
+  <div class="warn" style="margin-bottom:0"><b>Uwaga na wycieki sprężonego powietrza:</b> to nie zmienna, tylko stan
+  techniczny. Nie „normalizujcie” ich tak, żeby usprawiedliwić wzrost zużycia. Ankieta ostrzega, gdy w polu zmiennych
+  pojawi się słowo „nieszczelności”.</div>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>„Mamy tylko licznik główny. Czy da się zrobić przegląd?”</b>
+ Tak — większość firm zaczyna właśnie tak. Szacujecie <b>od góry do dołu</b> (dzielicie całkowite zużycie według
+ godzin pracy, mocy i pomiarów okresowych) albo <b>od dołu do góry</b> (spisujecie urządzenia, ich moce i czas pracy
+ i sumujecie). Obie metody są dopuszczalne, jeśli zapiszecie metodę i założenia, a bilans się zamyka. Norma nie
+ wymaga dokładności co do kilowatogodziny — wymaga logicznego, zapisanego procesu opartego na pomiarach i innych danych.</div>
+
+ <div class="dwie" style="margin:16px 0">
+  <div class="ramka" style="margin:0">
+   <h3>🔍 Skąd wiesz, że Twój przegląd jest kompletny?</h3>
+   <ul>
+    <li>Macie zapisane metody i kryteria — i stosowaliście te same w całym przeglądzie.</li>
+    <li>Bilans zamyka się na licznikach głównych, a przy każdej liczbie wiadomo, czy to pomiar, obliczenie
+    czy oszacowanie.</li>
+    <li>Każde znaczące użycie ma uzasadnienie wyboru, zmienne, bieżący wynik i osoby.</li>
+    <li>Macie uszeregowaną listę możliwości poprawy i prognozę zużycia.</li>
+    <li>Wiecie, kiedy przegląd będzie aktualizowany — i co wywoła aktualizację wcześniej.</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">Ankieta odpowiada na te pięć pytań sama,
+   w zakładce „Prognoza i aktualizacja”.</p>
+  </div>
+  <div class="ramka" style="margin:0">
+   <h3>🗎 Dokumenty do przygotowania</h3>
+   <ul>
+    <li><b>Metody i kryteria przeglądu</b> — wymaganie normy: utrzymywać jako udokumentowaną informację</li>
+    <li><b>Wyniki przeglądu</b> — wymaganie normy: zachować. W tym: zużycie przeszłe i bieżące według rodzajów
+    energii oraz bilans; znaczące użycia z podstawą wyboru, zmiennymi, bieżącym wynikiem i osobami; uszeregowane
+    możliwości poprawy i prognoza</li>
+   </ul>
+   <p style="font-size:13px;color:#6f7d76;margin:8px 0 0">To jedyny punkt rozdziału 6, w którym norma wymaga
+   <b>dwóch</b> rzeczy na piśmie.<br>
+   Szczegółowe szablony: Część II, Moduł 4; Część III: III-19 i III-20.</p>
+  </div>
+ </div>
+
+ <div class="ramka">
+  <h3>⚠ Na co uważać — najczęstsze błędy</h3>
+  <table class="tab">
+   <tr><th style="width:38%">Błąd</th><th>Co zrobić zamiast tego</th></tr>
+   <tr><td>Przegląd bez danych</td><td>★ Zbierzcie dane z co najmniej pełnego cyklu — zwykle 12 miesięcy</td></tr>
+   <tr><td>Różne kryteria w różnych dokumentach</td><td>Jedne zapisane kryteria i ta sama podstawa procentów w przeglądzie, procedurze i formularzu</td></tr>
+   <tr><td>Za mało lub za dużo znaczących użyć</td><td>★ Z doświadczenia autora zwykle 3–7. Za mało — pomijacie ważne obszary; za dużo — rozpraszacie uwagę</td></tr>
+   <tr><td>Brak zmiennych</td><td>Dla każdego znaczącego użycia zapiszcie zmienne — albo to, że żadna nie wpływa istotnie</td></tr>
+   <tr><td>Brak prognozy</td><td>Oszacujcie przyszłe zużycie — norma tego wymaga, a bez prognozy cele bywają nierealne</td></tr>
+   <tr><td>Przegląd zza biurka</td><td>Wyjdźcie na halę, porozmawiajcie z operatorami, zmierzcie</td></tr>
+   <tr><td>Przegląd sprzed lat</td><td>Aktualizujcie w ustalonych odstępach (★ co roku) i przy istotnych zmianach</td></tr>
+  </table>
+ </div>
+
+ <div class="note" style="margin:14px 0"><b>Twój ruch.</b> Przegląd energetyczny to rentgen zakładu — pokazuje,
+ gdzie naprawdę płynie energia i gdzie są możliwości poprawy. Na nim stoją wskaźniki, linia bazowa i cele.<br>
+ <b>Zadanie:</b> zapytajcie trzy osoby z kierownictwa, co ich zdaniem zużywa w zakładzie najwięcej energii.
+ Porównajcie odpowiedzi z fakturami i pomiarami.</div>
+
+ <div class="ankbox">
+  <h3>6.3 Ankieta przeglądu energetycznego</h3>
+  <p class="op">Osiem sekcji formularza F-EnMS-08. Bilans, udziały i prosty okres zwrotu liczone automatycznie;
+  nośniki wczytywane z profilu zakładu. Osiem zakładek.</p>
+  <div style="font-size:13.5px;font-weight:600">Zakład produkcyjny w Katowicach · Wypełnianie</div>
+  <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f7d76;margin-top:8px">
+   <span>Wypełnienie ankiety</span><span id="postep_strona">0 / 0 · 0%</span>
+  </div>
+  <div class="tor"><div id="tor_strona" style="width:0%"></div></div>
+  <button class="prim" onclick="widok('ankieta')" style="margin-top:10px">Otwórz ankietę 6.3</button>
+ </div>
+
+ <p style="font-size:12.5px;color:#6f7d76;margin-top:16px">Opracowano na podstawie materiałów „Energia pod kontrolą”,
+ Tom 2 rozdział 4 punkt 6.3 oraz Część III (Toolkit) Moduł 4 wersja 2.1.</p>
+
+ <h3 style="font-size:15px;margin:22px 0 3px">🗀 Dokumentacja punktu</h3>
+ <p class="op" style="font-size:13px;color:#6f7d76;margin-bottom:12px">Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+ <div class="ramka">
+  <b style="font-size:13.5px">Przewidywane dokumenty i dowody:</b>
+  <ul style="font-size:13.5px;margin:7px 0 0 20px">
+   <li>D-EnMS-PEN-01 Przegląd energetyczny (= formularz F-EnMS-08, załącznik III-19)</li>
+   <li>Zapisy pomiarów i kampanii pomiarowych</li>
+   <li>Zestawienie faktur i danych produkcyjnych z okresu analizy</li>
+  </ul>
+ </div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja klienta</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentacji klienta.</div></div>
+ <div class="ramka"><b style="font-size:14px">Dokumentacja wzorcowa</b><div class="pusto2" style="margin-top:10px">Nie dodano jeszcze dokumentów wzorcowych.</div></div>
+</div>
+</main>
+</div>
+<div id="w_ankieta" style="display:none">
+<div class="pasekank">
+ <div class="linia">
+  <span id="postep">Wypełnienie: 0% · 0 / 0</span>
+  <span class="rola"><span class="rolaetyk">Podgląd jako:</span>
+   <button id="rola_klient" class="on" onclick="rola('klient')">Klient</button>
+   <button id="rola_kons" onclick="rola('konsultant')">Konsultant</button>
+  </span>
+ </div>
+ <div id="zakladki"></div>
+</div>
+<main>
+ <div id="tresc"></div>
+ <div class="stopka">
+  <span class="meta">Bilans ma się zamykać na licznikach głównych. Platforma liczy różnicę bilansową, udziały
+  i prosty okres zwrotu — Wy wpisujecie dane i metody.</span>
+  <button class="wtor" onclick="przyklad()">Wypełnij przykładem</button>
+  <button class="wtor" onclick="wyczysc()">Wyczyść</button>
+  <button class="prim" onclick="zapiszRecznie()">Zapisz</button>
+  <button class="wtor" onclick="zatwierdz()">Zatwierdź jako klient</button>
+ </div>
+</main>
+</div>
+<div id="w_spec" style="display:none">
+<div class="note"><b>Punkt 6.3 w formacie stron 4.1–6.1.</b> Najobszerniejszy punkt rozdziału 6: osiem sekcji
+formularza F-EnMS-08 w ośmiu zakładkach. To także pierwszy punkt, w którym platforma <b>liczy bilans</b> —
+udziały, różnicę bilansową i prosty okres zwrotu.</div>
+
+<h2>Źródła</h2>
+<table>
+<tr><th style="width:34%">Źródło</th><th>Co z niego wzięte</th></tr>
+<tr><td>Tom 2, rozdział 4, punkt 6.3</td><td>Scena drukarni, osiem kroków, zasada Pareto i kryteria SEU, tabela zmiennych i czynników statycznych, przykład stycznia i lipca, uwaga o wyciekach, akapit „mamy tylko licznik główny”, pięć pytań samosprawdzenia, tabela błędów, „Twój ruch”.</td></tr>
+<tr><td>Część III, Moduł 4 — III-19 (F-EnMS-08)</td><td>Osiem sekcji i wszystkie pola: metryka, metody i kryteria, tabela nośników z udziałami, bilans z kolumną metody P / O / Sz, tabela SEU z podstawą wyboru, tabela obszarów nieuznanych za SEU, tabela „dla każdego SEU”, możliwości z SPBT, prognoza w trzech wierszach, aktualizacja z historią wersji.</td></tr>
+<tr><td>Część III, Moduł 4 — III-20</td><td>Pełny przegląd AutoParts jako wypełnienie demonstracyjne: 3 nośniki, 10 obszarów, 5 znaczących użyć, 7 możliwości plus fotowoltaika, prognoza i zasady aktualizacji.</td></tr>
+<tr><td>Część III, Moduł 4 — III-25</td><td>Lista kontrolna sekcji 6.3: 15 pozycji z kolumną N / M.</td></tr>
+</table>
+
+<h2>Co platforma liczy sama</h2>
+<table>
+<tr><th style="width:26%">Wielkość</th><th>Sposób i reakcja</th></tr>
+<tr><td>MWh każdego nośnika</td><td>ilość × przelicznik ÷ 1000. Przeliczniki wstępnie wypełnione według wartości opałowej, edytowalne przy każdym nośniku — bo norma wymaga <b>jednej podstawy dla całego bilansu</b>, a dane dostawców bywają inne.</td></tr>
+<tr><td>Udziały procentowe</td><td>Nośniki i obszary liczone od sumy z sekcji 2 — jedna podstawa procentów w całym przeglądzie.</td></tr>
+<tr><td>Różnica bilansowa</td><td>(suma obszarów − suma nośników) ÷ suma nośników. Powyżej 5% ostrzeżenie o niezamkniętym bilansie; od 0,5 do 5% nota, żeby zapisać, co jest w pozycji „pozostałe”.</td></tr>
+<tr><td>Porównanie z rokiem poprzednim</td><td>Zmiana zużycia zestawiona ze zmianą produkcji i stopniodni <b>z profilu zakładu</b> — z zastrzeżeniem, że sama zmiana zużycia nie mówi jeszcze o wyniku energetycznym.</td></tr>
+<tr><td>Prosty okres zwrotu</td><td>CAPEX ÷ roczna oszczędność kosztów, przy każdej możliwości. Przycisk „uszereguj według SPBT” sortuje listę.</td></tr>
+<tr><td>Suma oszczędności</td><td>Liczona bez pozycji oznaczonych jako „zakup” — fotowoltaika zmniejsza zakup, a nie zużycie, więc nie wchodzi do sumy.</td></tr>
+<tr><td>Udział znaczących użyć</td><td>Suma SEU ÷ całkowite zużycie. Plakietka przy nagłówku zakładki 4.</td></tr>
+</table>
+
+<h2>Ostrzeżenia merytoryczne</h2>
+<table>
+<tr><th style="width:30%">Sytuacja</th><th>Reakcja platformy</th></tr>
+<tr><td>Bilans nie zamyka się (ponad 5%)</td><td>Ostrzeżenie z podpowiedzią: dodać pozycję „pozostałe” z różnicą bilansową albo poprawić podział.</td></tr>
+<tr><td>Obszar bez metody P / O / Sz</td><td>Ostrzeżenie: przy każdej liczbie ma być wiadomo, czy to pomiar, obliczenie czy oszacowanie.</td></tr>
+<tr><td>Mniej niż 3 albo więcej niż 7 znaczących użyć</td><td>Ostrzeżenie oznaczone jako ★ doświadczenie autora, nie wymóg normy.</td></tr>
+<tr><td>Obszar z udziałem ≥ 10% nieuznany za SEU</td><td>Ostrzeżenie, że uzasadnienie musi być mocne i spójne z kryteriami z sekcji 1.</td></tr>
+<tr><td>„Nieszczelności” albo „wycieki” w polu zmiennych</td><td>Ostrzeżenie: to nie zmienna, tylko stan techniczny — mierzony osobno, na przykład przepływem w postoju.</td></tr>
+<tr><td>Puste pole zmiennych</td><td>Osobny znacznik „żadna zmienna nie wpływa istotnie” — świadoma odpowiedź zamiast pustego pola.</td></tr>
+<tr><td>Prognoza z działaniami wyższa niż bez działań</td><td>Ostrzeżenie o prawdopodobnej pomyłce w liczbach.</td></tr>
+<tr><td>Profil zakładu: tylko licznik główny</td><td>Nota w zakładce 3, że podział będzie pochodził z pomiarów okresowych i obliczeń — i że trzeba to zapisać w sekcji 1.</td></tr>
+</table>
+
+<h2>Zakładki ankiety</h2>
+<table>
+<tr><th style="width:22%">Zakładka</th><th style="width:16%">Sekcja formularza</th><th>Co wypełnia klient</th></tr>
+<tr><td>1. Metody i kryteria</td><td>1 + metryka</td><td>6 pól metodycznych, okres analizy, osoby</td></tr>
+<tr><td>2. Rodzaje energii</td><td>2</td><td>Tabela nośników (wczytywana z profilu), przeliczniki, trend, wytwarzanie własne</td></tr>
+<tr><td>3. Bilans i obszary</td><td>3</td><td>Podział na obszary z metodą i oznaczeniem SEU</td></tr>
+<tr><td>4. Znaczące użycia</td><td>4 + 5</td><td>Podstawa wyboru, zmienne, czynniki statyczne, bieżący wynik, osoby; uzasadnienia obszarów nieuznanych za SEU</td></tr>
+<tr><td>5. Możliwości poprawy</td><td>6</td><td>Możliwości z MWh, zł, CAPEX; SPBT liczony</td></tr>
+<tr><td>6. Prognoza i aktualizacja</td><td>7 + 8</td><td>Prognoza w dwóch wariantach, odstęp i powody aktualizacji</td></tr>
+<tr><td>7. Analiza konsultanta</td><td>—</td><td>Nic — rola konsultanta</td></tr>
+<tr><td>8. Zatwierdzenia</td><td>—</td><td>Przekazanie konsultantowi</td></tr>
+</table>
+
+<h2>Przeliczniki wbudowane w platformę</h2>
+<p class="sub2">Wartości domyślne, wstawiane przy wczytywaniu nośników z profilu. Klient może je nadpisać przy każdym
+nośniku — zgodnie z wymaganiem, żeby zapisać jedną podstawę i jej źródło.</p>
+<table>
+<tr><th style="width:26%">Nośnik</th><th>kWh na jednostkę</th></tr>
+<tr><td class="mono">energia elektryczna</td><td>kWh: 1 · MWh: 1000 · GJ: 277.8</td></tr><tr><td class="mono">gaz ziemny</td><td>m³: 10 · kWh: 1 · MWh: 1000 · GJ: 277.8</td></tr><tr><td class="mono">ciepło sieciowe</td><td>GJ: 277.8 · MWh: 1000 · kWh: 1</td></tr><tr><td class="mono">olej opałowy</td><td>l: 10.75 · t: 11280</td></tr><tr><td class="mono">LPG</td><td>l: 6.67 · t: 12780</td></tr><tr><td class="mono">węgiel</td><td>t: 6390</td></tr><tr><td class="mono">biomasa</td><td>t: 4170</td></tr><tr><td class="mono">biogaz</td><td>m³: 6.39 · GJ: 277.8</td></tr><tr><td class="mono">olej napędowy</td><td>l: 10.72 · t: 11940</td></tr><tr><td class="mono">benzyna</td><td>l: 9.14 · t: 12310</td></tr><tr><td class="mono">CNG</td><td>m³: 10.97 · t: 13330</td></tr><tr><td class="mono">inny</td><td>GJ: 277.8 · MWh: 1000 · kWh: 1</td></tr></table>
+<div class="warn"><b>Rozbieżność do uzgodnienia.</b> Profil zakładu liczy wskaźnik <span class="mono">ZUZYCIE_TJ</span>
+własną tabelą przeliczników — dla gazu ziemnego przyjmuje 0,0395 GJ/m³, czyli ok. 10,97 kWh/m³. Przegląd energetyczny
+w książce (III-20) używa wartości opałowej z danych dostawcy: <b>10 kWh/m³</b>. Przy 350 000 m³ różnica to ok. 340 MWh,
+czyli blisko 3% zużycia zakładu. <b>Trzeba wybrać jedną podstawę dla całej platformy</b> — proponuję wartość opałową
+jak w książce, z przeliczeniem tabeli w profilu. Do rozstrzygnięcia przed wdrożeniem.</div>
+
+<h2>Lista kontrolna III-25 — sekcja 6.3 i sposób liczenia</h2>
+<table>
+<tr><th style="width:52%">Pozycja</th><th style="width:8%">N / M</th><th>Jak wyliczana</th></tr>
+<tr><td>Metody i kryteria przeglądu są udokumentowane</td><td class="mono">N</td><td>wszystkie pola metod i kryteriów wypełnione</td></tr><tr><td>Określono rodzaje energii</td><td class="mono">N</td><td>tabela nośników niepusta, każdy z ilością i przelicznikiem</td></tr><tr><td>Oceniono przeszłe i bieżące wykorzystanie i zużycie energii</td><td class="mono">N</td><td>wypełnione dane roku poprzedniego i opis trendu</td></tr><tr><td>Bilans zamyka się na licznikach głównych; zapisano, skąd pochodzi każda liczba</td><td class="mono">M</td><td>różnica bilansowa do 5% i każdy obszar z metodą P / O / Sz</td></tr><tr><td>Nie liczy się podwójnie energii z wytwarzania własnego</td><td class="mono">M</td><td>wypełnione pole o wytwarzaniu własnym</td></tr><tr><td>Zidentyfikowano znaczące użycia energii na podstawie analizy</td><td class="mono">N</td><td>oznaczono co najmniej jedno znaczące użycie</td></tr><tr><td>Kryteria SEU są jednakowe w przeglądzie, procedurze i formularzu; każde SEU ma podstawę wyboru</td><td class="mono">M</td><td>każde znaczące użycie ma podstawę wyboru</td></tr><tr><td>Dla każdego SEU określono istotne zmienne</td><td class="mono">N</td><td>każde SEU ma zmienne albo świadomy znacznik „brak istotnych”</td></tr><tr><td>Dla każdego SEU określono bieżący wynik energetyczny</td><td class="mono">N</td><td>każde SEU ma bieżący wynik energetyczny</td></tr><tr><td>Dla każdego SEU określono osoby, które na nie wpływają</td><td class="mono">N</td><td>każde SEU ma wskazane osoby</td></tr><tr><td>Odróżniono zmienne od czynników statycznych</td><td class="mono">M</td><td>każde SEU ma wypełnione czynniki statyczne</td></tr><tr><td>Określono i uszeregowano możliwości poprawy</td><td class="mono">N</td><td>lista możliwości niepusta, każda z MWh, zł i CAPEX</td></tr><tr><td>Oszacowano przyszłe wykorzystanie i zużycie energii</td><td class="mono">N</td><td>wypełnione oba warianty prognozy i założenia</td></tr><tr><td>Wyniki przeglądu zachowano jako udokumentowaną informację</td><td class="mono">N</td><td>data opracowania i osoba zatwierdzająca</td></tr><tr><td>Ustalono odstępy i powody aktualizacji przeglądu</td><td class="mono">N</td><td>odstęp i powody aktualizacji</td></tr></table>
+<h2>Powiązania z innymi punktami</h2>
+<table>
+<tr><th style="width:22%">Kierunek</th><th>Co przechodzi</th></tr>
+<tr><td class="mono">3.6 Profil → 6.3</td><td>Tabela nośników energii (przycisk „wczytaj z profilu”), wielkość produkcji i stopniodni do porównania rok do roku, informacja o opomiarowaniu</td></tr>
+<tr><td class="mono">4.3 Zakres → 6.3</td><td>Granice systemu — przegląd obejmuje wszystkie rodzaje energii w tych granicach</td></tr>
+<tr><td class="mono">6.3 → 6.1</td><td>Możliwości poprawy jako źródło szans w rejestrze ryzyk i szans</td></tr>
+<tr><td class="mono">6.3 → 6.4 i 6.5</td><td><b>Znaczące użycia, ich zmienne i bieżący wynik to materiał wejściowy do wskaźników i linii bazowej.</b> Na produkcji karta EnPI powinna czytać te dane, nie prosić o nie drugi raz.</td></tr>
+<tr><td class="mono">6.3 → 6.2</td><td>Uszeregowane możliwości poprawy jako kandydaci na cele i zadania energetyczne</td></tr>
+<tr><td class="mono">6.3 → 6.6</td><td>Zmienne i czynniki statyczne znaczących użyć jako pozycje planu zbierania danych</td></tr>
+<tr><td class="mono">6.3 → 5.3</td><td>Właściciele znaczących użyć — matryca ról czyta tę listę</td></tr>
+</table>
+<h2>Dane w formacie JSON</h2><p class='sub2'>Definicja ankiety 6.3 wraz z przykładem AutoParts i tabelą przeliczników.</p><button class='cp' onclick="navigator.clipboard.writeText(document.getElementById('js').textContent).then(()=>{this.textContent='Skopiowano';setTimeout(()=>this.textContent='Kopiuj cały JSON',1600)})">Kopiuj cały JSON</button><pre id='js'>{
+  &quot;metody&quot;: [
+    {
+      &quot;kod&quot;: &quot;MET-ZR&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;nazwa&quot;: &quot;Źródła danych&quot;,
+      &quot;pomoc&quot;: &quot;Faktury, liczniki, system produkcyjny, dane pogodowe, pomiary. Z jakiego okresu.&quot;,
+      &quot;przyklad&quot;: &quot;np. Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MET-POD&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;nazwa&quot;: &quot;Metody podziału zużycia na obszary&quot;,
+      &quot;pomoc&quot;: &quot;Dla każdego obszaru: pomiar, obliczenie czy oszacowanie — i na jakiej podstawie.&quot;,
+      &quot;przyklad&quot;: &quot;np. Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MET-PRZ&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;nazwa&quot;: &quot;Przeliczniki na wspólną jednostkę i ich źródło&quot;,
+      &quot;pomoc&quot;: &quot;Jedna podstawa dla całego bilansu: ciepło spalania albo wartość opałowa. Zapiszcie, którą wybraliście i skąd pochodzą liczby.&quot;,
+      &quot;przyklad&quot;: &quot;np. Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MET-SEU&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;nazwa&quot;: &quot;Kryteria wyboru znaczących użyć energii&quot;,
+      &quot;pomoc&quot;: &quot;Z podstawą procentów: od czego liczycie udział. ★ Progi możecie przyjąć własne — ważne, żeby stosować jedne kryteria i uzasadnić każdy wybór.&quot;,
+      &quot;przyklad&quot;: &quot;np. A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział &lt; 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MET-SZE&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;nazwa&quot;: &quot;Kryteria szeregowania możliwości poprawy&quot;,
+      &quot;pomoc&quot;: &quot;Na przykład oszczędność i prosty okres zwrotu nakładów.&quot;,
+      &quot;przyklad&quot;: &quot;np. Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno&quot;
+    },
+    {
+      &quot;kod&quot;: &quot;MET-PRO&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;nazwa&quot;: &quot;Metoda prognozy&quot;,
+      &quot;pomoc&quot;: &quot;Jak oszacujecie przyszłe zużycie: model, ekstrapolacja, plan produkcji.&quot;,
+      &quot;przyklad&quot;: &quot;np. Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami&quot;
+    }
+  ],
+  &quot;lista_63&quot;: [
+    {
+      &quot;tekst&quot;: &quot;Metody i kryteria przeglądu są udokumentowane&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;metody&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Określono rodzaje energii&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;rodzaje&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Oceniono przeszłe i bieżące wykorzystanie i zużycie energii&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;przeszle&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Bilans zamyka się na licznikach głównych; zapisano, skąd pochodzi każda liczba&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;bilans&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Nie liczy się podwójnie energii z wytwarzania własnego&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;podwojne&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Zidentyfikowano znaczące użycia energii na podstawie analizy&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;seu&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Kryteria SEU są jednakowe w przeglądzie, procedurze i formularzu; każde SEU ma podstawę wyboru&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;kryteria&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Dla każdego SEU określono istotne zmienne&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zmienne&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Dla każdego SEU określono bieżący wynik energetyczny&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;wynik&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Dla każdego SEU określono osoby, które na nie wpływają&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;osoby&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Odróżniono zmienne od czynników statycznych&quot;,
+      &quot;podstawa&quot;: &quot;M&quot;,
+      &quot;auto&quot;: &quot;statyczne&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Określono i uszeregowano możliwości poprawy&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;mozliwosci&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Oszacowano przyszłe wykorzystanie i zużycie energii&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;prognoza&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Wyniki przeglądu zachowano jako udokumentowaną informację&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;zachowano&quot;
+    },
+    {
+      &quot;tekst&quot;: &quot;Ustalono odstępy i powody aktualizacji przeglądu&quot;,
+      &quot;podstawa&quot;: &quot;N&quot;,
+      &quot;auto&quot;: &quot;aktualizacja&quot;
+    }
+  ],
+  &quot;przeliczniki&quot;: {
+    &quot;energia elektryczna&quot;: {
+      &quot;kWh&quot;: 1,
+      &quot;MWh&quot;: 1000,
+      &quot;GJ&quot;: 277.8
+    },
+    &quot;gaz ziemny&quot;: {
+      &quot;m³&quot;: 10,
+      &quot;kWh&quot;: 1,
+      &quot;MWh&quot;: 1000,
+      &quot;GJ&quot;: 277.8
+    },
+    &quot;ciepło sieciowe&quot;: {
+      &quot;GJ&quot;: 277.8,
+      &quot;MWh&quot;: 1000,
+      &quot;kWh&quot;: 1
+    },
+    &quot;olej opałowy&quot;: {
+      &quot;l&quot;: 10.75,
+      &quot;t&quot;: 11280
+    },
+    &quot;LPG&quot;: {
+      &quot;l&quot;: 6.67,
+      &quot;t&quot;: 12780
+    },
+    &quot;węgiel&quot;: {
+      &quot;t&quot;: 6390
+    },
+    &quot;biomasa&quot;: {
+      &quot;t&quot;: 4170
+    },
+    &quot;biogaz&quot;: {
+      &quot;m³&quot;: 6.39,
+      &quot;GJ&quot;: 277.8
+    },
+    &quot;olej napędowy&quot;: {
+      &quot;l&quot;: 10.72,
+      &quot;t&quot;: 11940
+    },
+    &quot;benzyna&quot;: {
+      &quot;l&quot;: 9.14,
+      &quot;t&quot;: 12310
+    },
+    &quot;CNG&quot;: {
+      &quot;m³&quot;: 10.97,
+      &quot;t&quot;: 13330
+    },
+    &quot;inny&quot;: {
+      &quot;GJ&quot;: 277.8,
+      &quot;MWh&quot;: 1000,
+      &quot;kWh&quot;: 1
+    }
+  },
+  &quot;przyklad&quot;: {
+    &quot;metody&quot;: {
+      &quot;MET-ZR&quot;: &quot;Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem&quot;,
+      &quot;MET-POD&quot;: &quot;Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie&quot;,
+      &quot;MET-PRZ&quot;: &quot;Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ&quot;,
+      &quot;MET-SEU&quot;: &quot;A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział &lt; 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej&quot;,
+      &quot;MET-SZE&quot;: &quot;Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno&quot;,
+      &quot;MET-PRO&quot;: &quot;Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami&quot;
+    },
+    &quot;nosniki&quot;: [
+      {
+        &quot;nazwa&quot;: &quot;Energia elektryczna&quot;,
+        &quot;jednostka&quot;: &quot;MWh&quot;,
+        &quot;poprzedni&quot;: &quot;8700&quot;,
+        &quot;biezacy&quot;: &quot;8500&quot;,
+        &quot;przelicznik&quot;: &quot;1000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Gaz ziemny&quot;,
+        &quot;jednostka&quot;: &quot;m³&quot;,
+        &quot;poprzedni&quot;: &quot;365000&quot;,
+        &quot;biezacy&quot;: &quot;350000&quot;,
+        &quot;przelicznik&quot;: &quot;10&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;LPG (wózki widłowe)&quot;,
+        &quot;jednostka&quot;: &quot;l&quot;,
+        &quot;poprzedni&quot;: &quot;18800&quot;,
+        &quot;biezacy&quot;: &quot;18000&quot;,
+        &quot;przelicznik&quot;: &quot;6.67&quot;
+      }
+    ],
+    &quot;trend&quot;: {
+      &quot;opis&quot;: &quot;2024: 12 475 MWh przy 23 500 t stali i 3 450 HDD; 2025: 12 120 MWh przy 24 000 t i 3 600 HDD. Zużycie −2,8% przy produkcji +2,1% i chłodniejszym roku — według modelu wynik 2025 jest o ok. 4% lepszy niż 2024, głównie dzięki nowym harmonogramom kotłowni.&quot;,
+      &quot;wlasne&quot;: &quot;Brak. Fotowoltaika jest szansą S2 w rejestrze 6.1 — analiza w 2026 r.&quot;
+    },
+    &quot;obszary&quot;: [
+      {
+        &quot;nazwa&quot;: &quot;Prasy (3 linie tłoczenia)&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;2975&quot;,
+        &quot;metoda&quot;: &quot;P&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Lakiernia — piec i nagrzewnice&quot;,
+        &quot;rodzaj&quot;: &quot;gaz&quot;,
+        &quot;mwh&quot;: &quot;2000&quot;,
+        &quot;metoda&quot;: &quot;O&quot;,
+        &quot;grupa&quot;: &quot;Lakiernia&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Lakiernia — wentylatory, kabiny&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;425&quot;,
+        &quot;metoda&quot;: &quot;O&quot;,
+        &quot;grupa&quot;: &quot;Lakiernia&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Sprężarkownia (4 sprężarki)&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;2125&quot;,
+        &quot;metoda&quot;: &quot;P&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Kotłownia — ogrzewanie hal, CWU&quot;,
+        &quot;rodzaj&quot;: &quot;gaz&quot;,
+        &quot;mwh&quot;: &quot;1500&quot;,
+        &quot;metoda&quot;: &quot;O&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Oświetlenie hal A–D&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;680&quot;,
+        &quot;metoda&quot;: &quot;O&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Wentylacja i klimatyzacja&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;765&quot;,
+        &quot;metoda&quot;: &quot;Sz&quot;,
+        &quot;uzasadnienieNie&quot;: &quot;Potencjał poniżej 100 MWh rocznie (ocena 2026); ponowna ocena przy aktualizacji&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Montaż, spawanie, pozostałe (z różnicą bilansową)&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;1105&quot;,
+        &quot;metoda&quot;: &quot;Sz&quot;,
+        &quot;uzasadnienieNie&quot;: &quot;Wiele małych odbiorników; potencjał poniżej 100 MWh rocznie&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Biuro, IT, socjal&quot;,
+        &quot;rodzaj&quot;: &quot;en. el.&quot;,
+        &quot;mwh&quot;: &quot;425&quot;,
+        &quot;metoda&quot;: &quot;Sz&quot;,
+        &quot;uzasadnienieNie&quot;: &quot;Mały udział i potencjał&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Wózki widłowe&quot;,
+        &quot;rodzaj&quot;: &quot;LPG&quot;,
+        &quot;mwh&quot;: &quot;120&quot;,
+        &quot;metoda&quot;: &quot;P&quot;,
+        &quot;uzasadnienieNie&quot;: &quot;Mały udział; w zakresie systemu, monitorowane z faktur&quot;
+      }
+    ],
+    &quot;seu&quot;: {
+      &quot;0&quot;: {
+        &quot;kryterium&quot;: &quot;A&quot;,
+        &quot;uzasadnienie&quot;: &quot;Udział 24,5% — powyżej progu 10% z kryterium A&quot;,
+        &quot;zmienne&quot;: &quot;Masa przetworzonej stali [t]&quot;,
+        &quot;statyczne&quot;: &quot;3 linie, 3 zmiany, asortyment&quot;,
+        &quot;wynik&quot;: &quot;124,0 kWh/t&quot;,
+        &quot;osoby&quot;: &quot;Operatorzy, ustawiacze, Kierownik Produkcji&quot;
+      },
+      &quot;G:Lakiernia&quot;: {
+        &quot;kryterium&quot;: &quot;A&quot;,
+        &quot;uzasadnienie&quot;: &quot;Lakiernia łącznie — gaz i energia elektryczna — udział 20,0%, kryterium A&quot;,
+        &quot;zmienne&quot;: &quot;Lakierowana powierzchnia [m²], stopniodni [HDD]&quot;,
+        &quot;statyczne&quot;: &quot;Piec gazowy, 2 kabiny&quot;,
+        &quot;wynik&quot;: &quot;8,08 kWh/m² (2 425 MWh / 300 000 m²)&quot;,
+        &quot;osoby&quot;: &quot;Operatorzy, technolog, utrzymanie ruchu&quot;
+      },
+      &quot;3&quot;: {
+        &quot;kryterium&quot;: &quot;A&quot;,
+        &quot;uzasadnienie&quot;: &quot;Udział 17,5% — kryterium A&quot;,
+        &quot;zmienne&quot;: &quot;Wolumen sprężonego powietrza [Nm³]&quot;,
+        &quot;statyczne&quot;: &quot;4 sprężarki, sieć 7 bar&quot;,
+        &quot;wynik&quot;: &quot;0,125 kWh/Nm³ (kampania 02–03.2026); przepływ w postoju 9 Nm³/min&quot;,
+        &quot;osoby&quot;: &quot;Kierownik UR, serwis zewnętrzny, operatorzy&quot;
+      },
+      &quot;4&quot;: {
+        &quot;kryterium&quot;: &quot;A&quot;,
+        &quot;uzasadnienie&quot;: &quot;Udział 12,4% — kryterium A&quot;,
+        &quot;zmienne&quot;: &quot;Stopniodni [HDD]&quot;,
+        &quot;statyczne&quot;: &quot;Kubatura i izolacja hal A–D&quot;,
+        &quot;wynik&quot;: &quot;Model: 0,36 MWh/HDD + 17 MWh miesięcznie&quot;,
+        &quot;osoby&quot;: &quot;Kierownik UR, konserwator, użytkownicy hal&quot;
+      },
+      &quot;5&quot;: {
+        &quot;kryterium&quot;: &quot;B&quot;,
+        &quot;uzasadnienie&quot;: &quot;Udział 5,6%, ale potencjał poprawy ok. 270 MWh rocznie (LED ze sterowaniem) — kryterium B&quot;,
+        &quot;brakZmiennych&quot;: true,
+        &quot;zmienne&quot;: &quot;&quot;,
+        &quot;statyczne&quot;: &quot;Powierzchnia, rodzaj opraw, 3 zmiany&quot;,
+        &quot;wynik&quot;: &quot;680 MWh rocznie&quot;,
+        &quot;osoby&quot;: &quot;Kierownik UR, brygadziści&quot;
+      }
+    },
+    &quot;mozliwosci&quot;: [
+      {
+        &quot;nazwa&quot;: &quot;Obniżenie ciśnienia 7 → 6,3 bar&quot;,
+        &quot;seu&quot;: &quot;Sprężarkownia (4 sprężarki)&quot;,
+        &quot;mwh&quot;: &quot;85&quot;,
+        &quot;zl&quot;: &quot;75650&quot;,
+        &quot;capex&quot;: &quot;5000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Usunięcie nieszczelności i kwartalny przegląd&quot;,
+        &quot;seu&quot;: &quot;Sprężarkownia (4 sprężarki)&quot;,
+        &quot;mwh&quot;: &quot;210&quot;,
+        &quot;zl&quot;: &quot;186900&quot;,
+        &quot;capex&quot;: &quot;25000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Harmonogram pieca — rozgrzewanie, postoje&quot;,
+        &quot;seu&quot;: &quot;Lakiernia — piec i nagrzewnice&quot;,
+        &quot;mwh&quot;: &quot;180&quot;,
+        &quot;zl&quot;: &quot;45000&quot;,
+        &quot;capex&quot;: &quot;10000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Tryb czuwania pras, wyłączanie hydrauliki&quot;,
+        &quot;seu&quot;: &quot;Prasy (3 linie tłoczenia)&quot;,
+        &quot;mwh&quot;: &quot;150&quot;,
+        &quot;zl&quot;: &quot;133500&quot;,
+        &quot;capex&quot;: &quot;60000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Sterownik nadrzędny i napęd o zmiennej prędkości na jednej sprężarce&quot;,
+        &quot;seu&quot;: &quot;Sprężarkownia (4 sprężarki)&quot;,
+        &quot;mwh&quot;: &quot;230&quot;,
+        &quot;zl&quot;: &quot;204700&quot;,
+        &quot;capex&quot;: &quot;380000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;LED w halach A–D ze sterowaniem&quot;,
+        &quot;seu&quot;: &quot;Oświetlenie hal A–D&quot;,
+        &quot;mwh&quot;: &quot;270&quot;,
+        &quot;zl&quot;: &quot;240300&quot;,
+        &quot;capex&quot;: &quot;520000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Odzysk ciepła ze sprężarek&quot;,
+        &quot;seu&quot;: &quot;Sprężarkownia (4 sprężarki)&quot;,
+        &quot;mwh&quot;: &quot;250&quot;,
+        &quot;zl&quot;: &quot;62500&quot;,
+        &quot;capex&quot;: &quot;140000&quot;
+      },
+      {
+        &quot;nazwa&quot;: &quot;Fotowoltaika 1,5 MWp — mniejszy zakup, nie zużycie&quot;,
+        &quot;seu&quot;: &quot;&quot;,
+        &quot;mwh&quot;: &quot;1400&quot;,
+        &quot;zl&quot;: &quot;1246000&quot;,
+        &quot;capex&quot;: &quot;4500000&quot;,
+        &quot;zakup&quot;: true
+      }
+    ],
+    &quot;prognoza&quot;: {
+      &quot;bez&quot;: &quot;12550&quot;,
+      &quot;zalozeniaBez&quot;: &quot;Nowy projekt dla odbiorcy: produkcja +8% (ok. 25 900 t), średnie stopniodni; model organizacji&quot;,
+      &quot;zDzial&quot;: &quot;11600&quot;,
+      &quot;zalozeniaZ&quot;: &quot;Oszczędność ok. 975 MWh rocznie z pozycji 1, 2, 3, 5 i 6&quot;
+    },
+    &quot;aktualizacja&quot;: {
+      &quot;odstep&quot;: &quot;Co roku do 31 marca, przed przeglądem zarządzania&quot;,
+      &quot;zmiany&quot;: &quot;Nowa linia lub wycofanie linii, zmiana liczby zmian, nowy rodzaj energii, zmiana zakresu, uruchomienie fotowoltaiki&quot;
+    },
+    &quot;meta&quot;: {
+      &quot;okres&quot;: &quot;rok 2025&quot;,
+      &quot;porownawczy&quot;: &quot;rok 2024&quot;,
+      &quot;data&quot;: &quot;2026-03-31&quot;,
+      &quot;opracowal&quot;: &quot;Jan Kowalski — Energy Manager&quot;,
+      &quot;zatwierdzil&quot;: &quot;Piotr Nowak — Dyrektor Zakładu&quot;
+    }
+  }
+}</pre></div>
+
+<script>
+var METODY = [{"kod": "MET-ZR", "podstawa": "N", "nazwa": "Źródła danych", "pomoc": "Faktury, liczniki, system produkcyjny, dane pogodowe, pomiary. Z jakiego okresu.", "przyklad": "np. Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem"}, {"kod": "MET-POD", "podstawa": "N", "nazwa": "Metody podziału zużycia na obszary", "pomoc": "Dla każdego obszaru: pomiar, obliczenie czy oszacowanie — i na jakiej podstawie.", "przyklad": "np. Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie"}, {"kod": "MET-PRZ", "podstawa": "N", "nazwa": "Przeliczniki na wspólną jednostkę i ich źródło", "pomoc": "Jedna podstawa dla całego bilansu: ciepło spalania albo wartość opałowa. Zapiszcie, którą wybraliście i skąd pochodzą liczby.", "przyklad": "np. Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ"}, {"kod": "MET-SEU", "podstawa": "N", "nazwa": "Kryteria wyboru znaczących użyć energii", "pomoc": "Z podstawą procentów: od czego liczycie udział. ★ Progi możecie przyjąć własne — ważne, żeby stosować jedne kryteria i uzasadnić każdy wybór.", "przyklad": "np. A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej"}, {"kod": "MET-SZE", "podstawa": "N", "nazwa": "Kryteria szeregowania możliwości poprawy", "pomoc": "Na przykład oszczędność i prosty okres zwrotu nakładów.", "przyklad": "np. Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno"}, {"kod": "MET-PRO", "podstawa": "N", "nazwa": "Metoda prognozy", "pomoc": "Jak oszacujecie przyszłe zużycie: model, ekstrapolacja, plan produkcji.", "przyklad": "np. Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"}];
+var LISTA_63 = [{"tekst": "Metody i kryteria przeglądu są udokumentowane", "podstawa": "N", "auto": "metody"}, {"tekst": "Określono rodzaje energii", "podstawa": "N", "auto": "rodzaje"}, {"tekst": "Oceniono przeszłe i bieżące wykorzystanie i zużycie energii", "podstawa": "N", "auto": "przeszle"}, {"tekst": "Bilans zamyka się na licznikach głównych; zapisano, skąd pochodzi każda liczba", "podstawa": "M", "auto": "bilans"}, {"tekst": "Nie liczy się podwójnie energii z wytwarzania własnego", "podstawa": "M", "auto": "podwojne"}, {"tekst": "Zidentyfikowano znaczące użycia energii na podstawie analizy", "podstawa": "N", "auto": "seu"}, {"tekst": "Kryteria SEU są jednakowe w przeglądzie, procedurze i formularzu; każde SEU ma podstawę wyboru", "podstawa": "M", "auto": "kryteria"}, {"tekst": "Dla każdego SEU określono istotne zmienne", "podstawa": "N", "auto": "zmienne"}, {"tekst": "Dla każdego SEU określono bieżący wynik energetyczny", "podstawa": "N", "auto": "wynik"}, {"tekst": "Dla każdego SEU określono osoby, które na nie wpływają", "podstawa": "N", "auto": "osoby"}, {"tekst": "Odróżniono zmienne od czynników statycznych", "podstawa": "M", "auto": "statyczne"}, {"tekst": "Określono i uszeregowano możliwości poprawy", "podstawa": "N", "auto": "mozliwosci"}, {"tekst": "Oszacowano przyszłe wykorzystanie i zużycie energii", "podstawa": "N", "auto": "prognoza"}, {"tekst": "Wyniki przeglądu zachowano jako udokumentowaną informację", "podstawa": "N", "auto": "zachowano"}, {"tekst": "Ustalono odstępy i powody aktualizacji przeglądu", "podstawa": "N", "auto": "aktualizacja"}];
+var PRZELICZNIKI = {"energia elektryczna": {"kWh": 1, "MWh": 1000, "GJ": 277.8}, "gaz ziemny": {"m³": 10, "kWh": 1, "MWh": 1000, "GJ": 277.8}, "ciepło sieciowe": {"GJ": 277.8, "MWh": 1000, "kWh": 1}, "olej opałowy": {"l": 10.75, "t": 11280}, "LPG": {"l": 6.67, "t": 12780}, "węgiel": {"t": 6390}, "biomasa": {"t": 4170}, "biogaz": {"m³": 6.39, "GJ": 277.8}, "olej napędowy": {"l": 10.72, "t": 11940}, "benzyna": {"l": 9.14, "t": 12310}, "CNG": {"m³": 10.97, "t": 13330}, "inny": {"GJ": 277.8, "MWh": 1000, "kWh": 1}};
+var P_MET = {"MET-ZR": "Faktury (en. el., gaz, LPG) 2024–2025; dwa liczniki główne; ERP (masa stali); IMGW (stopniodni, baza 18 °C); pomiary analizatorem", "MET-POD": "Prasy i sprężarkownia — pomiary analizatorem przez 2–4 tygodnie i ekstrapolacja; oświetlenie — inwentaryzacja opraw × czas pracy; kotłownia — różnica licznika gazu i lakierni; reszta — oszacowanie", "MET-PRZ": "Wszystkie paliwa według wartości opałowej (dane dostawców): gaz 10 kWh/m³, LPG 6,67 kWh/l; 1 MWh = 3,6 GJ", "MET-SEU": "A — udział ≥ 10% całkowitego zużycia energii organizacji (wszystkie rodzaje, MWh); B — udział < 10%, ale potencjał poprawy ≥ 100 MWh rocznie albo wymaganie strony zainteresowanej", "MET-SZE": "Najpierw działania bez- i niskokosztowe (CAPEX poniżej 100 tys. zł) według SPBT, potem inwestycyjne według SPBT; działania zmniejszające zakup energii osobno", "MET-PRO": "Model organizacji z karty EnPI, z prognozą produkcji na kolejny rok i średnimi stopniodniami"};
+var P_NOSNIKI = [{"nazwa": "Energia elektryczna", "jednostka": "MWh", "poprzedni": "8700", "biezacy": "8500", "przelicznik": "1000"}, {"nazwa": "Gaz ziemny", "jednostka": "m³", "poprzedni": "365000", "biezacy": "350000", "przelicznik": "10"}, {"nazwa": "LPG (wózki widłowe)", "jednostka": "l", "poprzedni": "18800", "biezacy": "18000", "przelicznik": "6.67"}];
+var P_TREND = {"opis": "2024: 12 475 MWh przy 23 500 t stali i 3 450 HDD; 2025: 12 120 MWh przy 24 000 t i 3 600 HDD. Zużycie −2,8% przy produkcji +2,1% i chłodniejszym roku — według modelu wynik 2025 jest o ok. 4% lepszy niż 2024, głównie dzięki nowym harmonogramom kotłowni.", "wlasne": "Brak. Fotowoltaika jest szansą S2 w rejestrze 6.1 — analiza w 2026 r."};
+var P_OBSZARY = [{"nazwa": "Prasy (3 linie tłoczenia)", "rodzaj": "en. el.", "mwh": "2975", "metoda": "P"}, {"nazwa": "Lakiernia — piec i nagrzewnice", "rodzaj": "gaz", "mwh": "2000", "metoda": "O", "grupa": "Lakiernia"}, {"nazwa": "Lakiernia — wentylatory, kabiny", "rodzaj": "en. el.", "mwh": "425", "metoda": "O", "grupa": "Lakiernia"}, {"nazwa": "Sprężarkownia (4 sprężarki)", "rodzaj": "en. el.", "mwh": "2125", "metoda": "P"}, {"nazwa": "Kotłownia — ogrzewanie hal, CWU", "rodzaj": "gaz", "mwh": "1500", "metoda": "O"}, {"nazwa": "Oświetlenie hal A–D", "rodzaj": "en. el.", "mwh": "680", "metoda": "O"}, {"nazwa": "Wentylacja i klimatyzacja", "rodzaj": "en. el.", "mwh": "765", "metoda": "Sz", "uzasadnienieNie": "Potencjał poniżej 100 MWh rocznie (ocena 2026); ponowna ocena przy aktualizacji"}, {"nazwa": "Montaż, spawanie, pozostałe (z różnicą bilansową)", "rodzaj": "en. el.", "mwh": "1105", "metoda": "Sz", "uzasadnienieNie": "Wiele małych odbiorników; potencjał poniżej 100 MWh rocznie"}, {"nazwa": "Biuro, IT, socjal", "rodzaj": "en. el.", "mwh": "425", "metoda": "Sz", "uzasadnienieNie": "Mały udział i potencjał"}, {"nazwa": "Wózki widłowe", "rodzaj": "LPG", "mwh": "120", "metoda": "P", "uzasadnienieNie": "Mały udział; w zakresie systemu, monitorowane z faktur"}];
+var P_SEU = {"0": {"kryterium": "A", "uzasadnienie": "Udział 24,5% — powyżej progu 10% z kryterium A", "zmienne": "Masa przetworzonej stali [t]", "statyczne": "3 linie, 3 zmiany, asortyment", "wynik": "124,0 kWh/t", "osoby": "Operatorzy, ustawiacze, Kierownik Produkcji"}, "G:Lakiernia": {"kryterium": "A", "uzasadnienie": "Lakiernia łącznie — gaz i energia elektryczna — udział 20,0%, kryterium A", "zmienne": "Lakierowana powierzchnia [m²], stopniodni [HDD]", "statyczne": "Piec gazowy, 2 kabiny", "wynik": "8,08 kWh/m² (2 425 MWh / 300 000 m²)", "osoby": "Operatorzy, technolog, utrzymanie ruchu"}, "3": {"kryterium": "A", "uzasadnienie": "Udział 17,5% — kryterium A", "zmienne": "Wolumen sprężonego powietrza [Nm³]", "statyczne": "4 sprężarki, sieć 7 bar", "wynik": "0,125 kWh/Nm³ (kampania 02–03.2026); przepływ w postoju 9 Nm³/min", "osoby": "Kierownik UR, serwis zewnętrzny, operatorzy"}, "4": {"kryterium": "A", "uzasadnienie": "Udział 12,4% — kryterium A", "zmienne": "Stopniodni [HDD]", "statyczne": "Kubatura i izolacja hal A–D", "wynik": "Model: 0,36 MWh/HDD + 17 MWh miesięcznie", "osoby": "Kierownik UR, konserwator, użytkownicy hal"}, "5": {"kryterium": "B", "uzasadnienie": "Udział 5,6%, ale potencjał poprawy ok. 270 MWh rocznie (LED ze sterowaniem) — kryterium B", "brakZmiennych": true, "zmienne": "", "statyczne": "Powierzchnia, rodzaj opraw, 3 zmiany", "wynik": "680 MWh rocznie", "osoby": "Kierownik UR, brygadziści"}};
+var P_MOZL = [{"nazwa": "Obniżenie ciśnienia 7 → 6,3 bar", "seu": "Sprężarkownia (4 sprężarki)", "mwh": "85", "zl": "75650", "capex": "5000"}, {"nazwa": "Usunięcie nieszczelności i kwartalny przegląd", "seu": "Sprężarkownia (4 sprężarki)", "mwh": "210", "zl": "186900", "capex": "25000"}, {"nazwa": "Harmonogram pieca — rozgrzewanie, postoje", "seu": "Lakiernia — piec i nagrzewnice", "mwh": "180", "zl": "45000", "capex": "10000"}, {"nazwa": "Tryb czuwania pras, wyłączanie hydrauliki", "seu": "Prasy (3 linie tłoczenia)", "mwh": "150", "zl": "133500", "capex": "60000"}, {"nazwa": "Sterownik nadrzędny i napęd o zmiennej prędkości na jednej sprężarce", "seu": "Sprężarkownia (4 sprężarki)", "mwh": "230", "zl": "204700", "capex": "380000"}, {"nazwa": "LED w halach A–D ze sterowaniem", "seu": "Oświetlenie hal A–D", "mwh": "270", "zl": "240300", "capex": "520000"}, {"nazwa": "Odzysk ciepła ze sprężarek", "seu": "Sprężarkownia (4 sprężarki)", "mwh": "250", "zl": "62500", "capex": "140000"}, {"nazwa": "Fotowoltaika 1,5 MWp — mniejszy zakup, nie zużycie", "seu": "", "mwh": "1400", "zl": "1246000", "capex": "4500000", "zakup": true}];
+var P_PROG = {"bez": "12550", "zalozeniaBez": "Nowy projekt dla odbiorcy: produkcja +8% (ok. 25 900 t), średnie stopniodni; model organizacji", "zDzial": "11600", "zalozeniaZ": "Oszczędność ok. 975 MWh rocznie z pozycji 1, 2, 3, 5 i 6"};
+var P_AKTUAL = {"odstep": "Co roku do 31 marca, przed przeglądem zarządzania", "zmiany": "Nowa linia lub wycofanie linii, zmiana liczby zmian, nowy rodzaj energii, zmiana zakresu, uruchomienie fotowoltaiki"};
+var P_META = {"okres": "rok 2025", "porownawczy": "rok 2024", "data": "2026-03-31", "opracowal": "Jan Kowalski — Energy Manager", "zatwierdzil": "Piotr Nowak — Dyrektor Zakładu"};
+var PROFIL = {"FAKT_LOKALIZACJE": "2", "FAKT_LOKALIZACJE_LISTA": [{"c0": "Zakład produkcyjny", "c1": "ul. Przemysłowa 12, Katowice", "c2": "produkcja", "c3": "tak"}, {"c0": "Magazyn wyrobów gotowych", "c1": "ul. Składowa 11, Katowice", "c2": "magazyn", "c3": "tak"}], "FAKT_BRANZA": "produkcja komponentów dla motoryzacji, dostawca Tier 1 (PKD 29.32.Z)", "FAKT_PRACOWNICY": "850", "FAKT_ZMIANY": "3", "FAKT_SEZONOWOSC": "nie", "FAKT_PODMIOT": "prywatny", "FAKT_GRUPA_KAPITALOWA": "tak", "FAKT_ZWIAZKI": "nie", "FAKT_SYSTEM_BAZOWY": "iso_14001", "FAKT_SYSTEM_BAZOWY_ROK": "2019", "FAKT_ZGODA_INTEGRACJA": "tak", "FAKT_ENERGY_MANAGER": "nieformalnie", "FAKT_UR_WLASNE": "wlasne", "FAKT_INSTRUKCJE_EKSPL": "czesciowo", "FAKT_ZAKUPY_KRYTERIA": "czasami", "FAKT_ROTACJA": "srednia", "FAKT_NOSNIKI": [{"c0": "energia elektryczna", "c1": "8500", "c2": "MWh", "c3": "7565000"}, {"c0": "gaz ziemny", "c1": "350000", "c2": "m³", "c3": "875000"}, {"c0": "LPG", "c1": "18000", "c2": "l", "c3": "54000"}], "FAKT_ROK_ODNIESIENIA": "2025", "FAKT_UDZIAL_ENERGII": "2,5", "FAKT_MOC_UMOWNA": "1400", "FAKT_SPREZONE": "tak", "FAKT_CA_LICZBA": "4", "FAKT_CA_MOC": "440", "FAKT_CA_VSD": "0", "FAKT_CA_STEROWNIK": "nie", "FAKT_CA_SZCZELNOSC": "nie", "FAKT_CA_ODZYSK": "nie", "FAKT_CA_GODZINY": "6000", "FAKT_KOTLOWNIA": "wlasne", "FAKT_CIEPLO_PALIWO": ["gaz ziemny"], "FAKT_KOTLOWNIA_MOC": "1200", "FAKT_KOTLOWNIA_WIEK": "18", "FAKT_PODLICZNIKI": "czesciowo", "FAKT_ODCZYT": "mieszane", "FAKT_PRODUKCJA_JEDN": "t", "FAKT_PRODUKCJA": "24000", "FAKT_PRODUKCJA_POPRZ": "23500", "FAKT_HDD": "3600", "FAKT_HDD_POPRZ": "3450", "FAKT_PRZYCHOD": "380", "FAKT_SCADA": "nie", "FAKT_MES": "nie", "FAKT_ANALIZA_DANYCH": "arkusz", "FAKT_AUDYT_ENERG": "tak", "FAKT_ETS": "nie", "FAKT_CSRD": "nie", "FAKT_PRZETARGI": "nie", "FAKT_ODBIORCY_CO2": "tak", "FAKT_MOC_OGRANICZONA": "nie", "FAKT_UMOWA_WYGASA": "tak", "FAKT_BUDZET": "nie", "FAKT_PBT_PROG": "3", "FAKT_INWESTYCJE": "tak", "FAKT_BIALE_MOZLIWE": "nie", "FAKT_CHLODZENIE": "tak", "FAKT_CHLODZENIE_WODNE": "nie", "FAKT_FGAZ": "tak", "FAKT_UDT": "tak", "FAKT_WIEK_INFRA": "22", "FAKT_LED_UDZIAL": "35", "FAKT_OSW_STEROWANIE": "recznie", "FAKT_NAPEDY_VSD": "czesc", "FAKT_WENT": "tak", "FAKT_WENT_LICZBA": "6", "FAKT_WENT_ODZYSK": "czesc", "FAKT_WENT_HARMONOGRAM": "nie", "FAKT_CIEPLO_ODPADOWE": "tak", "FAKT_ODZYSK_CIEPLA": "nie", "FAKT_PROCES_BEZ_ALTERNATYWY": "tak", "FAKT_PROCESY": ["piece i nagrzewnice", "pompy procesowe"], "FAKT_PV": "nie", "FAKT_BESS": "nie", "FAKT_CHP": "nie", "FAKT_FLOTA": "tak", "FAKT_FLOTA_LICZBA": "4", "FAKT_PRZERWY_POGODA": "nie"};
+var PYT = {"FAKT_LOKALIZACJE": {"pytanie": "Ile lokalizacji obejmie system zarządzania energią?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S1"}, "FAKT_LOKALIZACJE_LISTA": {"pytanie": "Wymień lokalizacje", "typ": "repeater", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_BRANZA": {"pytanie": "Główna działalność zakładu", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_PRACOWNICY": {"pytanie": "Liczba pracowników", "typ": "number", "jednostka": "osób", "etykiety": {}, "sekcja": "S1"}, "FAKT_ZMIANY": {"pytanie": "Ile zmian pracuje zakład?", "typ": "select", "jednostka": "", "etykiety": {"1": "1", "2": "2", "3": "3", "4": "4"}, "sekcja": "S1"}, "FAKT_SEZONOWOSC": {"pytanie": "Czy zużycie energii wyraźnie zmienia się między miesiącami z powodów innych niż pogoda?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S1"}, "FAKT_PODMIOT": {"pytanie": "Typ organizacji", "typ": "select", "jednostka": "", "etykiety": {"prywatny": "prywatny", "komunalny": "komunalny", "publiczny": "publiczny"}, "sekcja": "S1"}, "FAKT_GRUPA_KAPITALOWA": {"pytanie": "Czy organizacja należy do grupy kapitałowej?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S1"}, "FAKT_ZWIAZKI": {"pytanie": "Czy działają związki zawodowe lub rada pracowników?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S1"}, "FAKT_SYSTEM_BAZOWY": {"pytanie": "Czy organizacja ma wdrożony system zarządzania?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Brak certyfikowanego systemu", "iso_9001": "ISO 9001", "iso_14001": "ISO 14001", "oba": "ISO 9001 i ISO 14001", "inny": "Inny system certyfikowany"}, "sekcja": "S1"}, "FAKT_SYSTEM_BAZOWY_ROK": {"pytanie": "Od którego roku system jest certyfikowany?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S1"}, "FAKT_ZGODA_INTEGRACJA": {"pytanie": "Czy dokumentacja energetyczna ma zostać włączona do istniejącego systemu?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak — rozszerzamy istniejącą dokumentację", "nie": "Nie — tworzymy odrębny system", "brak decyzji": "Decyzja jeszcze nie zapadła"}, "sekcja": "S1"}, "FAKT_ENERGY_MANAGER": {"pytanie": "Czy wyznaczono osobę odpowiedzialną za energię?", "typ": "select", "jednostka": "", "etykiety": {"nie": "Nie wyznaczono nikogo", "nieformalnie": "Ktoś się tym zajmuje, ale nie ma tego w zakresie obowiązków", "tak": "Tak, z pisemnym zakresem obowiązków"}, "sekcja": "S1"}, "FAKT_UR_WLASNE": {"pytanie": "Kto prowadzi utrzymanie ruchu?", "typ": "select", "jednostka": "", "etykiety": {"wlasne": "Własne służby utrzymania ruchu", "zewnetrzne": "Firma zewnętrzna", "mieszane": "Częściowo własne służby, część prac zlecana"}, "sekcja": "S1"}, "FAKT_INSTRUKCJE_EKSPL": {"pytanie": "Czy dla głównych urządzeń energetycznych są pisemne instrukcje eksploatacji?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, dla wszystkich głównych urządzeń", "czesciowo": "Dla części urządzeń", "nie": "Nie ma"}, "sekcja": "S1"}, "FAKT_ZAKUPY_KRYTERIA": {"pytanie": "Czy przy zakupie urządzeń porównuje się ich zużycie energii albo koszt w całym okresie użytkowania?", "typ": "select", "jednostka": "", "etykiety": {"zawsze": "Zawsze — to stałe kryterium zakupowe", "czasami": "Czasami, przy większych zakupach", "nie": "Nie — decyduje cena zakupu"}, "sekcja": "S1"}, "FAKT_ROTACJA": {"pytanie": "Rotacja pracowników produkcji i utrzymania ruchu w skali roku", "typ": "select", "jednostka": "", "etykiety": {"niska": "Niska — poniżej 5% rocznie", "srednia": "Średnia — od 5 do 15% rocznie", "wysoka": "Wysoka — powyżej 15% rocznie"}, "sekcja": "S1"}, "FAKT_ROK_ODNIESIENIA": {"pytanie": "Za który rok podajesz dane?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_NOSNIKI": {"pytanie": "Zużycie nośników energii w roku odniesienia", "typ": "repeater", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "ZUZYCIE_TJ": {"pytanie": "Roczne zużycie energii", "typ": "auto", "jednostka": "TJ", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA_JEDN": {"pytanie": "W czym mierzycie wielkość produkcji?", "typ": "select", "jednostka": "", "etykiety": {"t": "tony wyrobu", "szt": "sztuki wyrobu", "m2": "metry kwadratowe", "m3": "metry sześcienne", "mwh": "MWh wyrobu (ciepło, chłód)", "inna": "Inna jednostka"}, "sekcja": "S2"}, "FAKT_PRODUKCJA_INNA": {"pytanie": "Jaka jednostka?", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA": {"pytanie": "Wielkość produkcji w roku odniesienia", "typ": "number", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRODUKCJA_POPRZ": {"pytanie": "Wielkość produkcji w roku poprzednim", "typ": "number", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_HDD": {"pytanie": "Stopniodni grzania (HDD) w roku odniesienia", "typ": "number", "jednostka": "°C·dzień", "etykiety": {}, "sekcja": "S2"}, "FAKT_HDD_POPRZ": {"pytanie": "Stopniodni grzania w roku poprzednim", "typ": "number", "jednostka": "°C·dzień", "etykiety": {}, "sekcja": "S2"}, "FAKT_PRZYCHOD": {"pytanie": "Przychód ze sprzedaży w roku odniesienia", "typ": "number", "jednostka": "mln zł", "etykiety": {}, "sekcja": "S2"}, "FAKT_UDZIAL_ENERGII": {"pytanie": "Jaki procent kosztów operacyjnych stanowi energia?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S2"}, "FAKT_MOC_UMOWNA": {"pytanie": "Moc umowna energii elektrycznej", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S2"}, "FAKT_MOC_OGRANICZONA": {"pytanie": "Czy dostępna moc przyłączeniowa ogranicza rozwój zakładu?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_UMOWA_WYGASA": {"pytanie": "Czy umowa sprzedaży energii elektrycznej wygasa w ciągu najbliższych 24 miesięcy?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_UMOWA_DATA": {"pytanie": "Data wygaśnięcia umowy", "typ": "date", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_BUDZET": {"pytanie": "Czy w budżecie jest osobna pozycja na poprawę efektywności energetycznej?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S2"}, "FAKT_PBT_PROG": {"pytanie": "Jaki najdłuższy okres zwrotu inwestycji akceptuje organizacja?", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S2"}, "FAKT_INWESTYCJE": {"pytanie": "Czy w najbliższych 3 latach planowane są inwestycje zmieniające zużycie energii?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S2"}, "FAKT_INWESTYCJE_OPIS": {"pytanie": "Jakie?", "typ": "text", "jednostka": "", "etykiety": {}, "sekcja": "S2"}, "FAKT_BIALE_MOZLIWE": {"pytanie": "Czy organizacja korzystała ze świadectw efektywności energetycznej (białych certyfikatów)?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S2"}, "FAKT_SPREZONE": {"pytanie": "Czy zakład ma instalację sprężonego powietrza?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_CA_LICZBA": {"pytanie": "Ile jest sprężarek?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_MOC": {"pytanie": "Łączna moc znamionowa sprężarek", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_VSD": {"pytanie": "Ile sprężarek ma regulację obrotów (falownik)?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_CA_STEROWNIK": {"pytanie": "Czy sprężarki pracują pod wspólnym sterownikiem nadrzędnym?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_SZCZELNOSC": {"pytanie": "Czy w ostatnich 12 miesiącach badano szczelność instalacji?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_ODZYSK": {"pytanie": "Czy ciepło ze sprężarek jest wykorzystywane, np. do ogrzewania?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_CA_GODZINY": {"pytanie": "Ile godzin w roku pracuje sprężarkownia?", "typ": "number", "jednostka": "h/rok", "etykiety": {}, "sekcja": "S3"}, "FAKT_WENT": {"pytanie": "Czy są centrale wentylacyjne lub klimatyzacyjne, poza klimatyzatorami biurowymi?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_WENT_LICZBA": {"pytanie": "Ile jest central?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S3"}, "FAKT_WENT_ODZYSK": {"pytanie": "Czy centrale mają odzysk ciepła?", "typ": "select", "jednostka": "", "etykiety": {"wszystkie": "Wszystkie centrale mają odzysk", "czesc": "Część central ma odzysk", "zadna": "Żadna nie ma odzysku", "nie wiem": "Nie wiem"}, "sekcja": "S3"}, "FAKT_WENT_HARMONOGRAM": {"pytanie": "Czy centrale są wyłączane albo zwalniane poza godzinami pracy?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, wszystkie", "czesciowo": "Część central", "nie": "Nie — pracują tak samo cały czas"}, "sekcja": "S3"}, "FAKT_CHLODZENIE": {"pytanie": "Czy zakład ma znaczące zapotrzebowanie na chłód — technologiczny albo klimatyzację hal?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_CHLODZENIE_MOC": {"pytanie": "Łączna moc chłodnicza", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S3"}, "FAKT_CHLODZENIE_WODNE": {"pytanie": "Czy układy chłodzenia zużywają wodę, np. wieże chłodnicze?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S3"}, "FAKT_FGAZ": {"pytanie": "Czy są urządzenia zawierające fluorowane gazy cieplarniane?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_NAPEDY_VSD": {"pytanie": "Jaka część dużych silników — pompy, wentylatory — ma falowniki?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Żaden albo pojedyncze", "czesc": "Mniej więcej połowa", "wiekszosc": "Większość", "nie wiem": "Nie wiem"}, "sekcja": "S3"}, "FAKT_LED_UDZIAL": {"pytanie": "Jaki procent oświetlenia stanowią źródła LED?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S3"}, "FAKT_OSW_STEROWANIE": {"pytanie": "Jak sterowane jest oświetlenie hal?", "typ": "select", "jednostka": "", "etykiety": {"czujniki": "Czujniki ruchu albo natężenia światła", "harmonogram": "Automatyczny harmonogram", "recznie": "Ręcznie — włącznikiem"}, "sekcja": "S3"}, "FAKT_WIEK_INFRA": {"pytanie": "Ile lat ma większość głównych urządzeń energetycznych?", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S3"}, "FAKT_UDT": {"pytanie": "Czy eksploatowane są urządzenia pod dozorem technicznym UDT?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S3"}, "FAKT_KOTLOWNIA": {"pytanie": "Skąd pochodzi ciepło zużywane w zakładzie?", "typ": "select", "jednostka": "", "etykiety": {"wlasne": "Wyłącznie z własnego źródła (kotłownia, kogeneracja, pompy ciepła)", "siec": "Wyłącznie z sieci ciepłowniczej", "oba": "Z własnego źródła i z sieci ciepłowniczej", "brak": "Zakład nie zużywa ciepła poza ogrzewaniem elektrycznym"}, "sekcja": "S4"}, "FAKT_CIEPLO_PALIWO": {"pytanie": "Czym zasilane jest własne źródło ciepła?", "typ": "multi", "jednostka": "", "etykiety": {"gaz ziemny": "gaz ziemny", "olej": "olej", "węgiel": "węgiel", "biomasa": "biomasa", "biogaz": "biogaz", "pompa ciepła": "pompa ciepła", "energia elektryczna": "energia elektryczna"}, "sekcja": "S4"}, "FAKT_CIEPLO_PALIWA": {"pytanie": "Czy ciepło pochodzi z paliw kopalnych?", "typ": "auto", "jednostka": "", "etykiety": {}, "sekcja": "S4"}, "FAKT_KOTLOWNIA_MOC": {"pytanie": "Moc zainstalowana źródeł ciepła", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S4"}, "FAKT_KOTLOWNIA_WIEK": {"pytanie": "Wiek najstarszego czynnego kotła", "typ": "number", "jednostka": "lat", "etykiety": {}, "sekcja": "S4"}, "FAKT_CIEPLO_MOC_ZAMOWIONA": {"pytanie": "Zamówiona moc cieplna z sieci", "typ": "number", "jednostka": "kW", "etykiety": {}, "sekcja": "S4"}, "FAKT_PROCESY": {"pytanie": "Które procesy zużywają najwięcej energii?", "typ": "multi", "jednostka": "", "etykiety": {"piece i nagrzewnice": "piece i nagrzewnice", "suszarnie": "suszarnie", "wtryskarki i wytłaczarki": "wtryskarki i wytłaczarki", "prasy": "prasy", "malarnia": "malarnia", "galwanizernia": "galwanizernia", "pompy procesowe": "pompy procesowe", "chłodzenie procesu": "chłodzenie procesu", "inne": "inne"}, "sekcja": "S4"}, "FAKT_CIEPLO_ODPADOWE": {"pytanie": "Czy w procesach powstaje ciepło odpadowe o temperaturze powyżej 60°C?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S4"}, "FAKT_ODZYSK_CIEPLA": {"pytanie": "Czy to ciepło jest odzyskiwane?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, w całości albo prawie w całości", "czesciowo": "Częściowo", "nie": "Nie jest odzyskiwane"}, "sekcja": "S4"}, "FAKT_PROCES_BEZ_ALTERNATYWY": {"pytanie": "Czy główny proces technologiczny wymaga konkretnego nośnika, bez możliwości zmiany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S4"}, "FAKT_PV": {"pytanie": "Czy zakład ma instalację fotowoltaiczną?", "typ": "select", "jednostka": "", "etykiety": {"tak": "Tak, działa", "nie": "Nie", "w planach": "W planach albo w budowie"}, "sekcja": "S4"}, "FAKT_PV_MOC": {"pytanie": "Moc instalacji fotowoltaicznej", "typ": "number", "jednostka": "kWp", "etykiety": {}, "sekcja": "S4"}, "FAKT_BESS": {"pytanie": "Czy zakład ma magazyn energii?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_BESS_POJ": {"pytanie": "Pojemność magazynu", "typ": "number", "jednostka": "kWh", "etykiety": {}, "sekcja": "S4"}, "FAKT_CHP": {"pytanie": "Czy zakład ma kogenerację?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_CHP_MOC": {"pytanie": "Moc elektryczna kogeneracji", "typ": "number", "jednostka": "kWe", "etykiety": {}, "sekcja": "S4"}, "FAKT_FLOTA": {"pytanie": "Czy w zakresie systemu jest flota pojazdów?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S4"}, "FAKT_FLOTA_LICZBA": {"pytanie": "Liczba pojazdów", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S4"}, "FAKT_PODLICZNIKI": {"pytanie": "Jak opomiarowana jest energia elektryczna?", "typ": "select", "jednostka": "", "etykiety": {"brak": "Tylko licznik główny", "czesciowo": "Podliczniki na części obiektów lub wydziałów", "kompleksowo": "Podliczniki na wszystkich znaczących odbiorach"}, "sekcja": "S5"}, "FAKT_PODLICZNIKI_LICZBA": {"pytanie": "Ile jest podliczników?", "typ": "number", "jednostka": "szt.", "etykiety": {}, "sekcja": "S5"}, "FAKT_ODCZYT": {"pytanie": "Jak odczytywane są liczniki?", "typ": "select", "jednostka": "", "etykiety": {"recznie": "Ręcznie, spisywane z liczników", "zdalnie": "Zdalnie, automatycznie do systemu", "mieszane": "Część ręcznie, część zdalnie"}, "sekcja": "S5"}, "FAKT_SCADA": {"pytanie": "Czy działa system SCADA, BMS albo inny system nadrzędny?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S5"}, "FAKT_SCADA_ZAKRES": {"pytanie": "Jaki procent zużycia energii obejmuje?", "typ": "number", "jednostka": "%", "etykiety": {}, "sekcja": "S5"}, "FAKT_DANE_HISTORIA": {"pytanie": "Za ile miesięcy wstecz dostępne są dane o zużyciu inne niż faktury?", "typ": "number", "jednostka": "mies.", "etykiety": {}, "sekcja": "S5"}, "FAKT_MES": {"pytanie": "Czy produkcja jest rejestrowana w systemie (MES, ERP) z dokładnością do dnia albo zmiany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S5"}, "FAKT_ANALIZA_DANYCH": {"pytanie": "Czy dane o zużyciu energii są analizowane?", "typ": "select", "jednostka": "", "etykiety": {"nie": "nie", "okresowo": "okresowo", "systematycznie": "systematycznie"}, "sekcja": "S5"}, "FAKT_AUDYT_ENERG": {"pytanie": "Czy wykonano audyt energetyczny przedsiębiorstwa?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_AUDYT_ROK": {"pytanie": "W którym roku?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S6"}, "FAKT_ETS": {"pytanie": "Czy instalacja objęta jest systemem handlu uprawnieniami do emisji (EU ETS)?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_CSRD": {"pytanie": "Czy organizacja raportuje zgodnie z CSRD / ESRS?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie", "nie wiem": "nie wiem"}, "sekcja": "S6"}, "FAKT_CSRD_ROK": {"pytanie": "Od którego roku?", "typ": "year", "jednostka": "", "etykiety": {}, "sekcja": "S6"}, "FAKT_ODBIORCY_CO2": {"pytanie": "Czy odbiorcy pytają o ślad węglowy albo efektywność energetyczną?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}, "FAKT_PRZETARGI": {"pytanie": "Czy startujecie w przetargach, w których certyfikat ISO 50001 jest wymagany albo punktowany?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}, "FAKT_PRZERWY_POGODA": {"pytanie": "Czy w ostatnich 3 latach wystąpiły przerwy w zasilaniu z przyczyn pogodowych?", "typ": "select", "jednostka": "", "etykiety": {"tak": "tak", "nie": "nie"}, "sekcja": "S6"}};
+var WNIOSKI_PRZYKLAD = [{"znaczenie": "Bez pomiaru na poziomie obszarów znaczące użycia wskazuje się z szacunku, a poprawy nie da się rozliczyć.", "decyzja": "Sprężarkownia i lakiernia uznane za znaczące użycia energii; dla sprężarkowni podlicznik i przepływomierz w planie C4.", "dzialanie": "Kampania pomiarowa 02–03.2026; kryteria A i B zastosowane do dziesięciu obszarów; możliwości poprawy wycenione prostym okresem zwrotu.", "sprawdzenie": "Każde znaczące użycie ma w planie zbierania danych (6.6) przypisane źródło danych i częstotliwość odczytu."}];
+</script>
+<script>/* ENESA 6.3 — Przegląd energetyczny. Format jak strony 4.1–6.1.
+   Zgodny z: Tom 2 rozdz. 4 pkt 6.3 oraz Część III Moduł 4 v2.1 (III-19 = F-EnMS-08, III-20, III-25). */
+"use strict";
+
+var MET = {};        // metody i kryteria — sekcja 1
+var NOSNIKI = [];    // sekcja 2
+var TREND = { opis: "", wlasne: "" };
+var OBSZARY = [];    // sekcja 3
+var SEU = {};        // indeks obszaru -> {kryterium, uzasadnienie, zmienne, statyczne, wynik, osoby, brakZmiennych}
+var MOZL = [];       // sekcja 6
+var PROG = { bez: "", zalozeniaBez: "", zDzial: "", zalozeniaZ: "" };
+var AKTUAL = { odstep: "", zmiany: "" };
+var META = { okres: "", porownawczy: "", opracowal: "", zatwierdzil: "", data: "" };
+var WNIOSKI = [];
+var AKT = "metody";
+var ROLA = "klient";
+var OGNIWA = ["znaczenie", "decyzja", "dzialanie", "sprawdzenie"];
+
+/* ── pomocnicze ── */
+function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e; }
+function ile(n, a, b, c) {
+  var d = n % 10, s = n % 100;
+  return n + " " + (n === 1 ? a : (d >= 2 && d <= 4 && (s < 12 || s > 14) ? b : c));
+}
+function lb(v) {
+  var n = parseFloat(String(v).replace(",", ".").replace(/\s/g, ""));
+  return isNaN(n) ? null : n;
+}
+function fmt(n, d) {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  return n.toLocaleString("pl-PL", { minimumFractionDigits: d === undefined ? 0 : d, maximumFractionDigits: d === undefined ? 0 : d });
+}
+function txt(v, ph, rows, on) {
+  var t = el("textarea"); t.rows = rows || 2; t.value = v || ""; t.placeholder = ph || "";
+  t.oninput = function () { on(t.value); };
+  t.onchange = function () { zapisz(); rysuj(); };
+  return t;
+}
+function inp(v, ph, on, typ) {
+  var i = el("input"); if (typ) i.type = typ; i.value = v || ""; i.placeholder = ph || "";
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function mini(v, ph, on, szer) {
+  var i = el("input"); i.value = v === undefined || v === null ? "" : v; i.placeholder = ph || "";
+  i.style.padding = "5px 8px"; i.style.fontSize = "12.5px";
+  if (szer) i.style.width = szer;
+  i.oninput = function () { on(i.value); };
+  i.onchange = function () { zapisz(); rysuj(); };
+  return i;
+}
+function sel(v, opcje, on) {
+  var s = document.createElement("select");
+  opcje.forEach(function (o) { s.appendChild(new Option(o[1], o[0])); });
+  s.value = v || "";
+  s.onchange = function () { on(s.value); zapisz(); rysuj(); };
+  return s;
+}
+function minisel(v, opcje, on) {
+  var s = sel(v, opcje, on);
+  s.style.padding = "5px 8px"; s.style.fontSize = "12.5px"; s.style.minWidth = "70px";
+  return s;
+}
+function pole(etykieta, kontrolka, pomoc) {
+  var p = el("div", "pole");
+  if (etykieta) p.appendChild(el("label", null, etykieta));
+  p.appendChild(kontrolka);
+  if (pomoc) p.appendChild(el("div", "pozmeta", pomoc));
+  return p;
+}
+function pr(k) { return PROFIL[k]; }
+
+/* ── obliczenia ── */
+function mwhNosnika(n) {
+  var il = lb(n.biezacy), pk = lb(n.przelicznik);
+  if (il === null || pk === null) return null;
+  return il * pk / 1000;
+}
+function mwhPoprz(n) {
+  var il = lb(n.poprzedni), pk = lb(n.przelicznik);
+  if (il === null || pk === null) return null;
+  return il * pk / 1000;
+}
+function sumaMWh() {
+  var s = 0, ok = false;
+  NOSNIKI.forEach(function (n) { var m = mwhNosnika(n); if (m !== null) { s += m; ok = true; } });
+  return ok ? s : null;
+}
+function sumaMWhPoprz() {
+  var s = 0, ok = false;
+  NOSNIKI.forEach(function (n) { var m = mwhPoprz(n); if (m !== null) { s += m; ok = true; } });
+  return ok ? s : null;
+}
+function udzialNosnika(n) {
+  var c = sumaMWh(), m = mwhNosnika(n);
+  return c && m !== null ? 100 * m / c : null;
+}
+function sumaObszarow() {
+  var s = 0, ok = false;
+  OBSZARY.forEach(function (o) { var m = lb(o.mwh); if (m !== null) { s += m; ok = true; } });
+  return ok ? s : null;
+}
+function roznicaBilansu() {
+  var c = sumaMWh(), o = sumaObszarow();
+  if (c === null || o === null || !c) return null;
+  return 100 * (o - c) / c;
+}
+function udzialObszaru(o) {
+  var c = sumaMWh(), m = lb(o.mwh);
+  return c && m !== null ? 100 * m / c : null;
+}
+/* Znaczące użycie może obejmować kilka wierszy bilansu — w III-20 lakiernia to gaz i energia
+   elektryczna razem. Wiersze o tej samej nazwie grupy tworzą jedno SEU. */
+function kluczSEU(o, i) {
+  var g = (o.grupa || "").trim();
+  return g ? "G:" + g : String(i);
+}
+function jestSEU(o, i) { return !!(SEU[kluczSEU(o, i)] || {}).kryterium; }
+function jednostkiSEU() {
+  var out = [], mapa = {};
+  OBSZARY.forEach(function (o, i) {
+    if (!jestSEU(o, i)) return;
+    var k = kluczSEU(o, i), m = lb(o.mwh);
+    if (mapa[k]) { if (m !== null) mapa[k].mwh += m; mapa[k].idx.push(i); return; }
+    mapa[k] = { klucz: k, nazwa: (o.grupa || "").trim() || o.nazwa, mwh: m === null ? 0 : m, idx: [i] };
+    out.push(mapa[k]);
+  });
+  return out;
+}
+function listaSEU() { return jednostkiSEU(); }
+function udzialSEU() {
+  var c = sumaMWh();
+  if (!c) return null;
+  var s = 0;
+  jednostkiSEU().forEach(function (j) { s += j.mwh; });
+  return 100 * s / c;
+}
+function seuOk(k) {
+  var d = SEU[k] || {};
+  if (!d.kryterium) return true;
+  if (!(d.uzasadnienie || "").trim()) return false;
+  if (!d.brakZmiennych && !(d.zmienne || "").trim()) return false;
+  if (!(d.wynik || "").trim() || !(d.osoby || "").trim()) return false;
+  return true;
+}
+function nieSeuOk(i) {
+  var o = OBSZARY[i];
+  if (jestSEU(o, i)) return true;
+  if (udzialObszaru(o) === null) return true;
+  return !!(o.uzasadnienieNie || "").trim();
+}
+function spbt(m) {
+  var c = lb(m.capex), z = lb(m.zl);
+  if (c === null || z === null || z <= 0) return null;
+  return c / z;
+}
+function mozlOk(m) {
+  return !!(m.nazwa || "").trim() && lb(m.mwh) !== null && lb(m.zl) !== null && lb(m.capex) !== null;
+}
+function metOk(x) { return !!(MET[x.kod] || "").trim(); }
+function obszarOk(o) { return !!(o.nazwa || "").trim() && lb(o.mwh) !== null && !!o.metoda; }
+function nosnikOk(n) { return !!(n.nazwa || "").trim() && mwhNosnika(n) !== null; }
+function prognozaOk() { return lb(PROG.bez) !== null && lb(PROG.zDzial) !== null && !!(PROG.zalozeniaBez || "").trim(); }
+function aktualOk() { return !!(AKTUAL.odstep || "").trim() && !!(AKTUAL.zmiany || "").trim(); }
+function zmiennaPodejrzana(t) { return /nieszczeln|wyciek|przeciek/i.test(t || ""); }
+function pelneWnioski() {
+  return WNIOSKI.filter(function (w) { return OGNIWA.every(function (f) { return (w[f] || "").trim(); }); }).length;
+}
+function urwaneWnioski() {
+  return WNIOSKI.filter(function (w) {
+    return OGNIWA.some(function (f) { return (w[f] || "").trim(); }) &&
+      !OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+  }).length;
+}
+
+/* ── zakładka 1: metody i kryteria ── */
+function rysujMetody(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "1. Metody i kryteria");
+  h.appendChild(el("span", "chip red", "udokumentowana informacja — wymaganie normy"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Zanim zaczniecie liczyć, zapiszcie, skąd weźmiecie dane, jak podzielicie zużycie na obszary, jak wybierzecie znaczące użycia i jak uszeregujecie możliwości poprawy."));
+  s.appendChild(el("div", "note", "Norma wymaga, żeby metody i kryteria były udokumentowane — bo bez nich nikt nie powtórzy Waszej analizy za rok. To jedna z dwóch rzeczy, których norma wymaga na piśmie w punkcie 6.3; druga to wyniki przeglądu."));
+  METODY.forEach(function (x) {
+    var k = el("div", "poz" + (metOk(x) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, x.kod));
+    g.appendChild(el("span", "chip " + (x.podstawa === "N" ? "red" : ""),
+      x.podstawa === "N" ? "wymaganie normy" : "metoda ENESA"));
+    k.appendChild(g);
+    k.appendChild(el("div", "poznazwa", x.nazwa));
+    if (x.pomoc) k.appendChild(el("div", "pozmeta", x.pomoc));
+    k.appendChild(pole(null, txt(MET[x.kod], x.przyklad, 2, function (v) { MET[x.kod] = v; })));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+
+  var m = el("div", "sekcja");
+  m.appendChild(el("h3", null, "Metryka przeglądu"));
+  var k2 = el("div", "poz");
+  k2.appendChild(pole("Okres analizy (bieżący)", inp(META.okres, "np. rok 2025", function (v) { META.okres = v; })));
+  k2.appendChild(pole("Okres porównawczy", inp(META.porownawczy, "np. rok 2024", function (v) { META.porownawczy = v; })));
+  k2.appendChild(pole("Data opracowania albo aktualizacji", inp(META.data, "", function (v) { META.data = v; }, "date")));
+  k2.appendChild(pole("Opracował", inp(META.opracowal, "np. Jan Kowalski — Energy Manager", function (v) { META.opracowal = v; })));
+  k2.appendChild(pole("Zatwierdził", inp(META.zatwierdzil, "np. Piotr Nowak — Dyrektor Zakładu", function (v) { META.zatwierdzil = v; })));
+  m.appendChild(k2);
+  host.appendChild(m);
+}
+
+/* ── zakładka 2: rodzaje energii ── */
+function rysujNosniki(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "2. Rodzaje energii oraz zużycie przeszłe i bieżące");
+  var cal = sumaMWh();
+  if (cal !== null) h.appendChild(el("span", "chip green", fmt(cal) + " MWh"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Jakie rodzaje energii występują, ile ich zużywacie dziś i ile zużywaliście wcześniej. Dane z faktur za 12–36 miesięcy oraz z liczników."));
+  s.appendChild(el("div", "note", "Przy przeliczaniu nośników na wspólną jednostkę przyjmijcie <b>jedną podstawę dla całego bilansu</b> i zapiszcie ją w sekcji 1. Przeliczniki poniżej są wstępnie wypełnione według wartości opałowej — możecie je zmienić na dane swoich dostawców."));
+  if (!NOSNIKI.length)
+    s.appendChild(el("div", "note", "Lista jest pusta. Kliknijcie „wczytaj nośniki z profilu zakładu”, żeby pobrać tabelę z punktu 3.6, albo dodajcie pozycje ręcznie."));
+
+  var wrap = el("div"); wrap.style.overflowX = "auto";
+  var t = el("table", "tab");
+  var tr = el("tr");
+  ["Rodzaj energii", "Jednostka", "Rok poprzedni", "Rok bieżący", "kWh / jedn.", "MWh bieżący", "Udział", ""]
+    .forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  NOSNIKI.forEach(function (n, i) {
+    var r = el("tr");
+    if (!nosnikOk(n)) r.style.background = "#fdf6e3";
+    var c0 = el("td"); c0.appendChild(mini(n.nazwa, "np. energia elektryczna", function (v) { n.nazwa = v; }, "150px")); r.appendChild(c0);
+    var c1 = el("td"); c1.appendChild(mini(n.jednostka, "MWh", function (v) { n.jednostka = v; }, "66px")); r.appendChild(c1);
+    var c2 = el("td"); c2.appendChild(mini(n.poprzedni, "", function (v) { n.poprzedni = v; }, "86px")); r.appendChild(c2);
+    var c3 = el("td"); c3.appendChild(mini(n.biezacy, "", function (v) { n.biezacy = v; }, "86px")); r.appendChild(c3);
+    var c4 = el("td"); c4.appendChild(mini(n.przelicznik, "", function (v) { n.przelicznik = v; }, "74px")); r.appendChild(c4);
+    r.appendChild(el("td", "mono", fmt(mwhNosnika(n), 0)));
+    var u = udzialNosnika(n);
+    r.appendChild(el("td", "mono", u === null ? "—" : fmt(u, 1) + "%"));
+    var c7 = el("td");
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { NOSNIKI.splice(i, 1); zapisz(); rysuj(); };
+    c7.appendChild(us); r.appendChild(c7);
+    t.appendChild(r);
+  });
+  var rr = el("tr");
+  rr.appendChild(el("td", null, "RAZEM"));
+  rr.appendChild(el("td", null, ""));
+  rr.appendChild(el("td", "mono", sumaMWhPoprz() === null ? "—" : fmt(sumaMWhPoprz()) + " MWh"));
+  rr.appendChild(el("td", null, ""));
+  rr.appendChild(el("td", null, ""));
+  rr.appendChild(el("td", "mono", fmt(cal)));
+  rr.appendChild(el("td", "mono", cal === null ? "—" : "100%"));
+  rr.appendChild(el("td", null, ""));
+  rr.style.fontWeight = "600";
+  t.appendChild(rr);
+  wrap.appendChild(t);
+  s.appendChild(wrap);
+
+  var pa = el("div"); pa.style.marginTop = "10px";
+  var dod = el("button", "dodaj", "+ dodaj rodzaj energii");
+  dod.onclick = function () { NOSNIKI.push({ przelicznik: "1000" }); zapisz(); rysuj(); };
+  pa.appendChild(dod);
+  var wcz = el("button", "wtor", "wczytaj nośniki z profilu zakładu");
+  wcz.style.marginLeft = "8px";
+  wcz.onclick = function () { zProfilu(); };
+  pa.appendChild(wcz);
+  s.appendChild(pa);
+
+  var pop = sumaMWhPoprz(), biez = sumaMWh();
+  if (pop !== null && biez !== null && pop > 0) {
+    var zm = 100 * (biez - pop) / pop;
+    var pr1 = lb(pr("FAKT_PRODUKCJA")), pr0 = lb(pr("FAKT_PRODUKCJA_POPRZ"));
+    var hd1 = lb(pr("FAKT_HDD")), hd0 = lb(pr("FAKT_HDD_POPRZ"));
+    var tekst = "Zużycie " + (zm < 0 ? "spadło" : "wzrosło") + " o " + fmt(Math.abs(zm), 1) + "%";
+    if (pr1 !== null && pr0 !== null && pr0 > 0)
+      tekst += ", przy zmianie produkcji o " + fmt(100 * (pr1 - pr0) / pr0, 1) + "%";
+    if (hd1 !== null && hd0 !== null && hd0 > 0)
+      tekst += " i zmianie stopniodni o " + fmt(100 * (hd1 - hd0) / hd0, 1) + "%";
+    tekst += " (dane z profilu zakładu).";
+    var n2 = el("div", "note");
+    n2.appendChild(el("b", null, "Porównanie z rokiem poprzednim: "));
+    n2.appendChild(document.createTextNode(tekst + " Sama zmiana zużycia nie mówi jeszcze o wyniku energetycznym — opiszcie to niżej."));
+    s.appendChild(n2);
+  }
+
+  var k = el("div", "poz" + ((TREND.opis || "").trim() ? "" : " brak"));
+  k.appendChild(pole("Trend i jego wyjaśnienie — produkcja, pogoda, zmiany",
+    txt(TREND.opis, "np. 2024: 12 475 MWh przy 23 500 t i 3 450 HDD; 2025: 12 120 MWh przy 24 000 t i 3 600 HDD. Zużycie −2,8% przy produkcji +2,1% i chłodniejszym roku — według modelu wynik 2025 jest o ok. 4% lepszy.", 3,
+      function (v) { TREND.opis = v; })));
+  k.appendChild(pole("Wytwarzanie własne — fotowoltaika, kogeneracja — pokazane osobno",
+    inp(TREND.wlasne, "np. brak; PV w analizie na 2026 r.", function (v) { TREND.wlasne = v; }),
+    "Uwaga na podwójne liczenie: przy kogeneracji gaz zużyty w agregacie i wytworzona z niego energia elektryczna to nie dwie pozycje do zsumowania. Fotowoltaika zmniejsza zakup z sieci, ale nie zużycie zakładu."));
+  s.appendChild(k);
+  host.appendChild(s);
+}
+
+function zProfilu() {
+  var w = PROFIL["FAKT_NOSNIKI"];
+  if (!Array.isArray(w) || !w.length) { alert("Profil zakładu nie zawiera tabeli nośników."); return; }
+  NOSNIKI = w.map(function (r) {
+    var nazwa = (r.c0 || "").trim(), jedn = (r.c2 || "").trim();
+    var p = (PRZELICZNIKI[nazwa] || {})[jedn];
+    return {
+      nazwa: nazwa, jednostka: jedn, biezacy: r.c1 || "",
+      przelicznik: p === undefined ? "" : String(p)
+    };
+  });
+  zapisz(); rysuj();
+}
+
+/* ── zakładka 3: bilans ── */
+function rysujBilans(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "3. Bilans i podział na obszary");
+  var r = roznicaBilansu();
+  if (r !== null) h.appendChild(el("span", "chip " + (Math.abs(r) <= 5 ? "green" : "amber"),
+    "różnica bilansowa " + (r > 0 ? "+" : "") + fmt(r, 1) + "%"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Rozdzielcie zużycie na główne obszary i sprawdźcie, czy suma części zgadza się z całością. Przy każdej liczbie zaznaczcie, czy to pomiar, obliczenie czy oszacowanie."));
+  s.appendChild(el("div", "note", "Kolumna „Grupa SEU” łączy kilka wierszy w jedno znaczące użycie — na przykład lakiernię zasilaną gazem i energią elektryczną. Wpiszcie tę samą nazwę grupy w obu wierszach; udział policzy się z sumy. Puste pole oznacza, że wiersz jest osobnym użyciem."));
+  s.appendChild(el("div", "note", "„Mamy tylko licznik główny. Czy da się zrobić przegląd?” Tak — większość firm zaczyna właśnie tak. Szacujecie od góry do dołu (dzielicie całość według godzin pracy, mocy i pomiarów okresowych) albo od dołu do góry (spisujecie urządzenia, ich moce i czas pracy). Obie metody są dopuszczalne, jeśli zapiszecie metodę i założenia, a bilans się zamyka. Norma nie wymaga dokładności co do kilowatogodziny."));
+  if (pr("FAKT_PODLICZNIKI") === "brak")
+    s.appendChild(el("div", "note", "Profil zakładu: tylko licznik główny. Podział na obszary będzie pochodził z pomiarów okresowych i obliczeń — zapiszcie to w sekcji 1, w polu o metodach podziału."));
+
+  var wrap = el("div"); wrap.style.overflowX = "auto";
+  var t = el("table", "tab");
+  var tr = el("tr");
+  ["Obszar / użycie", "Rodzaj energii", "MWh/rok", "Udział", "Metoda", "Grupa SEU", "SEU", ""].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  OBSZARY.forEach(function (o, i) {
+    var row = el("tr");
+    if (!obszarOk(o) || !nieSeuOk(i)) row.style.background = "#fdf6e3";
+    var c0 = el("td"); c0.appendChild(mini(o.nazwa, "np. sprężarkownia", function (v) { o.nazwa = v; }, "200px")); row.appendChild(c0);
+    var c1 = el("td"); c1.appendChild(mini(o.rodzaj, "np. en. el.", function (v) { o.rodzaj = v; }, "100px")); row.appendChild(c1);
+    var c2 = el("td"); c2.appendChild(mini(o.mwh, "", function (v) { o.mwh = v; }, "80px")); row.appendChild(c2);
+    var u = udzialObszaru(o);
+    row.appendChild(el("td", "mono", u === null ? "—" : fmt(u, 1) + "%"));
+    var c4 = el("td");
+    c4.appendChild(minisel(o.metoda, [["", "–"], ["P", "P — pomiar"], ["O", "O — obliczenie"], ["Sz", "Sz — oszacowanie"]],
+      function (v) { o.metoda = v; }));
+    row.appendChild(c4);
+    var cg = el("td");
+    cg.appendChild(mini(o.grupa, "—", function (v) { o.grupa = v; }, "110px"));
+    row.appendChild(cg);
+    var c5 = el("td");
+    var kl = kluczSEU(o, i);
+    var d = SEU[kl] || (SEU[kl] = {});
+    c5.appendChild(minisel(d.kryterium, [["", "nie"], ["A", "A"], ["B", "B"]], function (v) {
+      SEU[kluczSEU(o, i)] = SEU[kluczSEU(o, i)] || {};
+      SEU[kluczSEU(o, i)].kryterium = v;
+    }));
+    row.appendChild(c5);
+    var c6 = el("td");
+    var us = el("button", "link", "usuń");
+    us.onclick = function () {
+      OBSZARY.splice(i, 1);
+      var nowe = {}; Object.keys(SEU).forEach(function (k) {
+        if (k.indexOf("G:") === 0) { nowe[k] = SEU[k]; return; }
+        var ki = parseInt(k, 10);
+        if (ki < i) nowe[ki] = SEU[k]; else if (ki > i) nowe[ki - 1] = SEU[k];
+      });
+      SEU = nowe; zapisz(); rysuj();
+    };
+    c6.appendChild(us); row.appendChild(c6);
+    t.appendChild(row);
+  });
+  var rr = el("tr"); rr.style.fontWeight = "600";
+  rr.appendChild(el("td", null, "RAZEM obszary"));
+  rr.appendChild(el("td", null, ""));
+  rr.appendChild(el("td", "mono", fmt(sumaObszarow())));
+  var so = sumaObszarow(), cal = sumaMWh();
+  rr.appendChild(el("td", "mono", so !== null && cal ? fmt(100 * so / cal, 1) + "%" : "—"));
+  rr.appendChild(el("td", null, "")); rr.appendChild(el("td", null, ""));
+  rr.appendChild(el("td", null, "")); rr.appendChild(el("td", null, ""));
+  t.appendChild(rr);
+  wrap.appendChild(t);
+  s.appendChild(wrap);
+
+  var dod = el("button", "dodaj", "+ dodaj obszar");
+  dod.onclick = function () { OBSZARY.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+
+  if (r !== null && Math.abs(r) > 5)
+    s.appendChild(el("div", "warn", "Suma obszarów różni się od zużycia z sekcji 2 o " + fmt(Math.abs(r), 1) +
+      "%. Bilans powinien zamykać się na licznikach głównych. Dodajcie pozycję „pozostałe” z różnicą bilansową albo popraw podział — i zapiszcie, skąd różnica wynika."));
+  else if (r !== null && Math.abs(r) > 0.5)
+    s.appendChild(el("div", "note", "Różnica bilansowa " + fmt(r, 1) + "% mieści się w granicach rozsądku. Zapiszcie ją w opisie metody — audytor zapyta, co jest w pozycji „pozostałe”."));
+
+  var bezM = OBSZARY.filter(function (o) { return (o.nazwa || "").trim() && !o.metoda; }).length;
+  if (bezM)
+    s.appendChild(el("div", "warn", ile(bezM, "obszar nie ma", "obszary nie mają", "obszarów nie ma") + " wskazanej metody. Przy każdej liczbie ma być wiadomo, czy to pomiar, obliczenie czy oszacowanie."));
+
+  var nieuz = OBSZARY.map(function (o, i) { return i; }).filter(function (i) { return !nieSeuOk(i); });
+  if (nieuz.length)
+    s.appendChild(el("div", "warn", "Obszary nieuznane za znaczące użycie wymagają uzasadnienia — pola otwierają się w zakładce 4."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 4: znaczące użycia ── */
+function rysujSeu(host) {
+  var s = el("div", "sekcja");
+  var lista = listaSEU();
+  var h = el("h3", null, "4 i 5. Znaczące użycia energii");
+  var us = udzialSEU();
+  h.appendChild(el("span", "chip " + (lista.length >= 3 && lista.length <= 7 ? "green" : "amber"),
+    ile(lista.length, "użycie", "użycia", "użyć") + (us !== null ? " · " + fmt(us, 1) + "% zużycia" : "")));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Znaczące użycie energii to urządzenie, system lub proces, który zużywa dużo energii albo ma duży potencjał poprawy. Oznaczacie je w zakładce 3, w kolumnie SEU; tutaj uzupełniacie szczegóły wymagane przez normę."));
+  s.appendChild(el("div", "note", "Zasada Pareto: kilka systemów odpowiada zwykle za większość zużycia. Nie traćcie czasu na żarówkę w magazynie, gdy macie sprężarkę, która zużywa tyle co tysiące żarówek. ★ Z doświadczenia autora znaczących użyć jest zwykle 3–7: za mało — pomijacie ważne obszary, za dużo — rozpraszacie uwagę."));
+
+  if (!lista.length) {
+    s.appendChild(el("div", "warn", "Nie oznaczono żadnego znaczącego użycia. Wróćcie do zakładki 3 i w kolumnie SEU wskażcie kryterium A albo B."));
+    host.appendChild(s); return;
+  }
+  if (lista.length < 3)
+    s.appendChild(el("div", "warn", "Tylko " + ile(lista.length, "znaczące użycie", "znaczące użycia", "znaczących użyć") + ". ★ Zwykle jest ich 3–7 — sprawdźcie, czy nie pominęliście ważnego obszaru."));
+  if (lista.length > 7)
+    s.appendChild(el("div", "warn", ile(lista.length, "znaczące użycie", "znaczące użycia", "znaczących użyć") + " to dużo. ★ Przy ponad siedmiu uwaga zespołu się rozprasza — rozważcie zaostrzenie kryteriów."));
+
+  var calosc = sumaMWh();
+  lista.forEach(function (x) {
+    var d = SEU[x.klucz];
+    var k = el("div", "poz" + (seuOk(x.klucz) ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, x.nazwa || "(bez nazwy)"));
+    g.appendChild(el("span", "chip " + (d.kryterium === "A" ? "red" : "amber"), "kryterium " + d.kryterium));
+    var u = calosc ? 100 * x.mwh / calosc : null;
+    if (u !== null) g.appendChild(el("span", "chip", fmt(u, 1) + "% · " + fmt(x.mwh) + " MWh"));
+    if (x.idx.length > 1) g.appendChild(el("span", "chip", ile(x.idx.length, "wiersz bilansu", "wiersze bilansu", "wierszy bilansu")));
+    k.appendChild(g);
+    k.appendChild(pole("Podstawa wyboru — dlaczego to jest znaczące użycie",
+      inp(d.uzasadnienie, d.kryterium === "A"
+        ? "np. udział 17,5% — powyżej progu 10% z kryterium A"
+        : "np. udział 5,6%, ale potencjał poprawy ok. 270 MWh rocznie (LED ze sterowaniem) — kryterium B",
+        function (v) { d.uzasadnienie = v; }),
+      "Każde znaczące użycie ma mieć zapisaną podstawę wyboru — to pozycja listy kontrolnej III-25."));
+
+    var pz = pole("Zmienne istotne — czynniki, które regularnie się zmieniają i wpływają na zużycie",
+      inp(d.zmienne, "np. masa przetworzonej stali [t]; stopniodni [HDD]; wolumen powietrza [Nm³]",
+        function (v) { d.zmienne = v; }));
+    k.appendChild(pz);
+    var lab = el("label", "pill" + (d.brakZmiennych ? " on" : ""));
+    var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!d.brakZmiennych;
+    cb.onchange = function () { d.brakZmiennych = cb.checked; zapisz(); rysuj(); };
+    lab.appendChild(cb); lab.appendChild(document.createTextNode("Żadna zmienna nie wpływa istotnie na to użycie"));
+    var ww = el("div", "wej"); ww.appendChild(lab);
+    k.appendChild(ww);
+    k.appendChild(el("div", "pozmeta", "Norma wymaga określenia zmiennych dla każdego znaczącego użycia. Jeśli żadna nie wpływa istotnie — zaznaczcie to świadomie, zamiast zostawiać puste pole."));
+    if (zmiennaPodejrzana(d.zmienne))
+      k.appendChild(el("div", "warn", "Nieszczelności i wycieki to nie zmienna, tylko stan techniczny — mierzony osobno, na przykład przepływem w czasie postoju. Nie „normalizujcie” ich tak, żeby usprawiedliwić wzrost zużycia."));
+
+    k.appendChild(pole("Czynniki statyczne — warunki, które zwykle się nie zmieniają",
+      inp(d.statyczne, "np. 3 linie, 3 zmiany, asortyment; kubatura i izolacja hal; 4 sprężarki, sieć 7 bar",
+        function (v) { d.statyczne = v; }),
+      "Gdy się zmienią, zmieniają zużycie. Zapiszcie ich stan — przyda się przy linii bazowej (6.5)."));
+    k.appendChild(pole("Bieżący wynik energetyczny",
+      inp(d.wynik, "np. 124,0 kWh/t; 0,125 kWh/Nm³; model 0,36 MWh/HDD + 17 MWh/mies.",
+        function (v) { d.wynik = v; })));
+    k.appendChild(pole("Osoby, które wpływają na to użycie",
+      inp(d.osoby, "np. operatorzy, ustawiacze, Kierownik Produkcji; serwis zewnętrzny",
+        function (v) { d.osoby = v; }),
+      "Norma wymaga wskazania osób wykonujących pracę pod nadzorem organizacji, które wpływają lub mogą wpływać na to użycie."));
+    s.appendChild(k);
+  });
+  host.appendChild(s);
+
+  var nie = OBSZARY.map(function (o, i) { return { o: o, i: i }; }).filter(function (x) {
+    return !jestSEU(x.o, x.i) && (x.o.nazwa || "").trim();
+  });
+  if (nie.length) {
+    var n = el("div", "sekcja");
+    n.appendChild(el("h3", null, "Obszary nieuznane za znaczące użycie"));
+    n.appendChild(el("p", "opis", "Formularz F-EnMS-08 wymaga uzasadnienia również tam, gdzie zdecydowaliście, że to nie jest znaczące użycie. Bez tego audytor zapyta, dlaczego obszar z udziałem kilkunastu procent nie trafił na listę."));
+    nie.forEach(function (x) {
+      var k = el("div", "poz" + (nieSeuOk(x.i) ? "" : " brak"));
+      var g = el("div", "pozkod");
+      g.appendChild(el("b", null, x.o.nazwa));
+      var u = udzialObszaru(x.o);
+      if (u !== null) g.appendChild(el("span", "chip " + (u >= 10 ? "amber" : ""), fmt(u, 1) + "%"));
+      k.appendChild(g);
+      k.appendChild(pole("Uzasadnienie",
+        inp(x.o.uzasadnienieNie, "np. wiele małych odbiorników; potencjał poniżej 100 MWh rocznie; ponowna ocena przy aktualizacji",
+          function (v) { x.o.uzasadnienieNie = v; })));
+      if (u !== null && u >= 10)
+        k.appendChild(el("div", "warn", "Udział " + fmt(u, 1) + "% przekracza typowy próg kryterium A. Jeśli zostaje poza listą, uzasadnienie musi być mocne — i spójne z kryteriami zapisanymi w sekcji 1."));
+      n.appendChild(k);
+    });
+    host.appendChild(n);
+  }
+}
+
+/* ── zakładka 5: możliwości poprawy ── */
+function rysujMozliwosci(host) {
+  var s = el("div", "sekcja");
+  var h = el("h3", null, "6. Możliwości poprawy");
+  var suma = 0, sumaZl = 0;
+  MOZL.forEach(function (m) {
+    var a = lb(m.mwh), z = lb(m.zl);
+    if (a !== null && !m.zakup) suma += a;
+    if (z !== null && !m.zakup) sumaZl += z;
+  });
+  if (MOZL.length) h.appendChild(el("span", "chip green", fmt(suma) + " MWh/rok · " + fmt(sumaZl) + " zł/rok"));
+  s.appendChild(h);
+  s.appendChild(el("p", "opis", "Działania bezkosztowe (nastawy, wyłączanie), niskokosztowe (uszczelnienia, harmonogramy) i inwestycyjne (wymiana urządzeń, odzysk ciepła) — uszeregowane według kryteriów zapisanych w sekcji 1."));
+  s.appendChild(el("div", "note", "Prosty okres zwrotu (SPBT) liczy się sam: nakład ÷ roczna oszczędność kosztów. Działania zmniejszające <b>zakup</b> energii — na przykład fotowoltaikę — zaznaczcie osobnym znacznikiem; nie wchodzą do sumy oszczędności zużycia."));
+
+  var wrap = el("div"); wrap.style.overflowX = "auto";
+  var t = el("table", "tab");
+  var tr = el("tr");
+  ["#", "Możliwość", "Znaczące użycie", "MWh/rok", "zł/rok", "CAPEX zł", "SPBT [lata]", "Zakup", ""]
+    .forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  var posort = MOZL.map(function (m, i) { return { m: m, i: i, s: spbt(m) }; });
+  posort.forEach(function (x, poz) {
+    var m = x.m;
+    var r = el("tr");
+    if (!mozlOk(m)) r.style.background = "#fdf6e3";
+    r.appendChild(el("td", "mono", String(poz + 1)));
+    var c1 = el("td"); c1.appendChild(mini(m.nazwa, "np. obniżenie ciśnienia 7 → 6,3 bar", function (v) { m.nazwa = v; }, "230px")); r.appendChild(c1);
+    var c2 = el("td");
+    var opcje = [["", "–"]].concat(jednostkiSEU().map(function (y) { return [y.nazwa, y.nazwa]; }));
+    c2.appendChild(minisel(m.seu, opcje, function (v) { m.seu = v; }));
+    r.appendChild(c2);
+    var c3 = el("td"); c3.appendChild(mini(m.mwh, "", function (v) { m.mwh = v; }, "72px")); r.appendChild(c3);
+    var c4 = el("td"); c4.appendChild(mini(m.zl, "", function (v) { m.zl = v; }, "86px")); r.appendChild(c4);
+    var c5 = el("td"); c5.appendChild(mini(m.capex, "", function (v) { m.capex = v; }, "86px")); r.appendChild(c5);
+    var sp = spbt(m);
+    r.appendChild(el("td", "mono", sp === null ? "—" : fmt(sp, 2)));
+    var c7 = el("td");
+    var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!m.zakup; cb.style.width = "auto";
+    cb.onchange = function () { m.zakup = cb.checked; zapisz(); rysuj(); };
+    c7.appendChild(cb); r.appendChild(c7);
+    var c8 = el("td");
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { MOZL.splice(x.i, 1); zapisz(); rysuj(); };
+    c8.appendChild(us); r.appendChild(c8);
+    t.appendChild(r);
+  });
+  wrap.appendChild(t);
+  s.appendChild(wrap);
+  var dod = el("button", "dodaj", "+ dodaj możliwość");
+  dod.onclick = function () { MOZL.push({}); zapisz(); rysuj(); };
+  s.appendChild(dod);
+
+  var sort = el("button", "wtor", "uszereguj według SPBT");
+  sort.style.marginLeft = "8px";
+  sort.onclick = function () {
+    MOZL.sort(function (a, b) {
+      var sa = spbt(a), sb = spbt(b);
+      if (sa === null) return 1;
+      if (sb === null) return -1;
+      return sa - sb;
+    });
+    zapisz(); rysuj();
+  };
+  s.appendChild(sort);
+
+  if (!MOZL.length)
+    s.appendChild(el("div", "warn", "Lista możliwości jest pusta. Norma wymaga określenia możliwości poprawy wyniku energetycznego i ustalenia ich priorytetów."));
+  var bezSeu = MOZL.filter(function (m) { return (m.nazwa || "").trim() && !m.seu && !m.zakup; }).length;
+  if (bezSeu)
+    s.appendChild(el("div", "note", ile(bezSeu, "możliwość nie jest przypisana", "możliwości nie są przypisane", "możliwości nie jest przypisanych") + " do znaczącego użycia. To dopuszczalne, ale warto sprawdzić, czy nie pominęliście obszaru, który powinien być SEU."));
+  host.appendChild(s);
+}
+
+/* ── zakładka 6: prognoza i aktualizacja ── */
+function rysujPrognoza(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "7. Prognoza przyszłego wykorzystania i zużycia"));
+  s.appendChild(el("p", "opis", "Co się zmieni w najbliższym roku lub dwóch? Bez prognozy łatwo pomylić wzrost produkcji z pogorszeniem wyniku — albo ustalić cel, którego nie da się osiągnąć."));
+  var cal = sumaMWh();
+  var k = el("div", "poz" + (prognozaOk() ? "" : " brak"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Pozycja", "MWh", "Założenia"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  var r0 = el("tr");
+  r0.appendChild(el("td", null, "Rok bieżący — rzeczywiste"));
+  r0.appendChild(el("td", "mono", fmt(cal)));
+  r0.appendChild(el("td", "pozmeta", "z sekcji 2"));
+  t.appendChild(r0);
+  var r1 = el("tr");
+  r1.appendChild(el("td", null, "Rok prognozy — bez działań"));
+  var c1 = el("td"); c1.appendChild(mini(PROG.bez, "", function (v) { PROG.bez = v; }, "90px")); r1.appendChild(c1);
+  var c1b = el("td"); c1b.appendChild(mini(PROG.zalozeniaBez, "np. nowy projekt: produkcja +8%, średnie stopniodni", function (v) { PROG.zalozeniaBez = v; }, "100%")); r1.appendChild(c1b);
+  t.appendChild(r1);
+  var r2 = el("tr");
+  r2.appendChild(el("td", null, "Rok prognozy — z zaplanowanymi działaniami"));
+  var c2 = el("td"); c2.appendChild(mini(PROG.zDzial, "", function (v) { PROG.zDzial = v; }, "90px")); r2.appendChild(c2);
+  var c2b = el("td"); c2b.appendChild(mini(PROG.zalozeniaZ, "np. oszczędność ok. 975 MWh z pozycji 1, 2, 3, 5 i 6", function (v) { PROG.zalozeniaZ = v; }, "100%")); r2.appendChild(c2b);
+  t.appendChild(r2);
+  k.appendChild(t);
+  s.appendChild(k);
+
+  var bez = lb(PROG.bez), zd = lb(PROG.zDzial);
+  if (bez !== null && zd !== null && bez > 0)
+    s.appendChild(el("div", "note", "Różnica prognoz: " + fmt(bez - zd) + " MWh, czyli " + fmt(100 * (bez - zd) / bez, 1) +
+      "% zużycia bez działań. Ta liczba powinna odpowiadać sumie oszczędności z możliwości, które zamierzacie zrealizować."));
+  if (bez !== null && zd !== null && zd > bez)
+    s.appendChild(el("div", "warn", "Prognoza z działaniami jest wyższa niż bez działań. Sprawdźcie liczby."));
+  host.appendChild(s);
+
+  var a = el("div", "sekcja");
+  a.appendChild(el("h3", null, "8. Aktualizacja"));
+  a.appendChild(el("div", "warn", "<b>Twarda zasada.</b> Przegląd energetyczny to nie jest jednorazowe ćwiczenie. Norma wymaga aktualizacji w określonych odstępach i przy istotnych zmianach obiektów, wyposażenia, systemów lub procesów. Przegląd sprzed trzech lat, gdy zakład miał połowę obecnej produkcji, nie opisuje dzisiejszego zakładu."));
+  var k2 = el("div", "poz" + (aktualOk() ? "" : " brak"));
+  k2.appendChild(pole("Odstęp aktualizacji",
+    inp(AKTUAL.odstep, "np. co roku do 31 marca, przed przeglądem zarządzania", function (v) { AKTUAL.odstep = v; })));
+  k2.appendChild(pole("Zmiany wywołujące aktualizację wcześniej",
+    txt(AKTUAL.zmiany, "np. nowa linia lub wycofanie linii, zmiana liczby zmian, nowy rodzaj energii, zmiana zakresu, uruchomienie fotowoltaiki", 2,
+      function (v) { AKTUAL.zmiany = v; })));
+  a.appendChild(k2);
+  host.appendChild(a);
+
+  var sp = el("div", "sekcja");
+  sp.appendChild(el("h3", null, "Skąd wiesz, że Twój przegląd jest kompletny?"));
+  var tt = el("table", "tab");
+  var tr2 = el("tr"); ["Sprawdzenie", "Stan"].forEach(function (x) { tr2.appendChild(el("th", null, x)); });
+  tt.appendChild(tr2);
+  var lista = listaSEU();
+  var rb = roznicaBilansu();
+  [["Macie zapisane metody i kryteria — i stosowaliście te same w całym przeglądzie", METODY.every(metOk)],
+  ["Bilans zamyka się na licznikach głównych, a przy każdej liczbie wiadomo, czy to pomiar, obliczenie czy oszacowanie",
+    rb !== null && Math.abs(rb) <= 5 && OBSZARY.length > 0 && OBSZARY.every(function (o) { return !(o.nazwa || "").trim() || !!o.metoda; })],
+  ["Każde znaczące użycie ma uzasadnienie wyboru, zmienne, bieżący wynik i osoby",
+    lista.length > 0 && lista.every(function (x) { return seuOk(x.klucz); })],
+  ["Macie uszeregowaną listę możliwości poprawy i prognozę zużycia", MOZL.length > 0 && prognozaOk()],
+  ["Wiecie, kiedy przegląd będzie aktualizowany — i co wywoła aktualizację wcześniej", aktualOk()]
+  ].forEach(function (r) {
+    var row = el("tr");
+    row.appendChild(el("td", null, r[0]));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (r[1] ? "green" : "amber"), r[1] ? "tak" : "jeszcze nie"));
+    row.appendChild(td);
+    tt.appendChild(row);
+  });
+  sp.appendChild(tt);
+  host.appendChild(sp);
+}
+
+/* ── zakładka 7: analiza konsultanta ── */
+function rysujKonsultanta(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Analiza konsultanta"));
+  if (ROLA === "klient") {
+    s.appendChild(el("p", "opis", "Tę część wypełnia konsultant ENESA po zatwierdzeniu ankiety."));
+    var z = el("div", "note");
+    z.appendChild(el("b", null, "Treść niedostępna dla klienta. "));
+    z.appendChild(document.createTextNode("Blok nie jest ukrywany stylem — wnioski w ogóle nie docierają do przeglądarki klienta. Przełącz podgląd na „Konsultant” w nagłówku ankiety."));
+    s.appendChild(z);
+    host.appendChild(s);
+    return;
+  }
+  var lista = listaSEU(), rb = roznicaBilansu();
+  var n = el("div", "note");
+  n.appendChild(el("b", null, "Obraz przeglądu: "));
+  n.appendChild(document.createTextNode(
+    (sumaMWh() === null ? "brak danych o zużyciu" : fmt(sumaMWh()) + " MWh") +
+    " · " + ile(lista.length, "znaczące użycie", "znaczące użycia", "znaczących użyć") +
+    (udzialSEU() !== null ? " pokrywających " + fmt(udzialSEU(), 1) + "% zużycia" : "") +
+    " · " + ile(MOZL.length, "możliwość", "możliwości", "możliwości") +
+    (rb !== null ? " · różnica bilansowa " + fmt(rb, 1) + "%" : "")));
+  s.appendChild(n);
+  s.appendChild(el("div", "warn", "Przegląd zza biurka to najdroższy błąd w tym punkcie. W przykładzie z książki konsultant oparł się na podziale kosztów z systemu finansowego i zaproponował wymianę linii za 2,5 mln zł przy zwrocie 14 lat. Tydzień z analizatorem na hali pokazał, że problemem był zaniedbany układ chłodzenia — remont za 180 tys. zł i 210 tys. zł oszczędności rocznie."));
+
+  var wn = el("div", "sekcja");
+  var h = el("h3", null, "Wnioski — cztery ogniwa");
+  h.appendChild(el("span", "chip " + (pelneWnioski() && !urwaneWnioski() ? "green" : "amber"),
+    ile(pelneWnioski(), "pełny", "pełne", "pełnych") + (urwaneWnioski() ? " · " + urwaneWnioski() + " niedokończonych" : "")));
+  wn.appendChild(h);
+  wn.appendChild(el("p", "opis", "Znaczenie → decyzja → działanie → sprawdzenie. Wnioski z przeglądu wchodzą do celów i planów działań (6.2) oraz do rejestru szans (6.1)."));
+  WNIOSKI.forEach(function (w, i) {
+    var pelny = OGNIWA.every(function (f) { return (w[f] || "").trim(); });
+    var k = el("div", "poz" + (pelny ? "" : " brak"));
+    var g = el("div", "pozkod");
+    g.appendChild(el("b", null, "Wniosek " + (i + 1)));
+    var us = el("button", "link", "usuń");
+    us.onclick = function () { WNIOSKI.splice(i, 1); zapisz(); rysuj(); };
+    g.appendChild(us);
+    k.appendChild(g);
+    [["znaczenie", "Co to znaczy dla systemu?"], ["decyzja", "Co postanawiamy?"],
+    ["dzialanie", "Co konkretnie robimy?"], ["sprawdzenie", "Po czym poznamy, że zadziałało?"]].forEach(function (f) {
+      k.appendChild(pole(f[1], inp(w[f[0]], "", function (v) { w[f[0]] = v; })));
+    });
+    wn.appendChild(k);
+  });
+  var dod = el("button", "dodaj", "+ dodaj wniosek");
+  dod.onclick = function () { WNIOSKI.push({}); zapisz(); rysuj(); };
+  wn.appendChild(dod);
+  s.appendChild(wn);
+  host.appendChild(s);
+}
+
+/* ── lista kontrolna III-25, sekcja 6.3 ── */
+function stanPozycji(p) {
+  var lista = listaSEU(), rb = roznicaBilansu();
+  var f = {
+    metody: function () { return METODY.every(metOk); },
+    rodzaje: function () { return NOSNIKI.length > 0 && NOSNIKI.every(nosnikOk); },
+    przeszle: function () { return sumaMWhPoprz() !== null && !!(TREND.opis || "").trim(); },
+    bilans: function () {
+      return rb !== null && Math.abs(rb) <= 5 &&
+        OBSZARY.every(function (o) { return !(o.nazwa || "").trim() || !!o.metoda; });
+    },
+    podwojne: function () { return !!(TREND.wlasne || "").trim(); },
+    seu: function () { return lista.length > 0; },
+    kryteria: function () { return lista.length > 0 && lista.every(function (x) { return (SEU[x.klucz].uzasadnienie || "").trim(); }); },
+    zmienne: function () {
+      return lista.length > 0 && lista.every(function (x) {
+        var d = SEU[x.klucz]; return d.brakZmiennych || (d.zmienne || "").trim();
+      });
+    },
+    wynik: function () { return lista.length > 0 && lista.every(function (x) { return (SEU[x.klucz].wynik || "").trim(); }); },
+    osoby: function () { return lista.length > 0 && lista.every(function (x) { return (SEU[x.klucz].osoby || "").trim(); }); },
+    statyczne: function () { return lista.length > 0 && lista.every(function (x) { return (SEU[x.klucz].statyczne || "").trim(); }); },
+    mozliwosci: function () { return MOZL.length > 0 && MOZL.every(mozlOk); },
+    prognoza: function () { return prognozaOk(); },
+    zachowano: function () { return !!META.data && !!(META.zatwierdzil || "").trim(); },
+    aktualizacja: function () { return aktualOk(); }
+  }[p.auto];
+  return f ? f() : null;
+}
+
+/* ── braki ── */
+function braki() {
+  var b = [];
+  METODY.forEach(function (x) {
+    if (!metOk(x)) b.push({ t: "Metody i kryteria: " + x.nazwa + " — brak opisu.", kto: "klient", metodyka: x.podstawa === "M" });
+  });
+  if (!NOSNIKI.length) b.push({ t: "Nie wypełniono tabeli rodzajów energii.", kto: "klient" });
+  NOSNIKI.forEach(function (n, i) {
+    if (!nosnikOk(n)) b.push({ t: "Rodzaj energii " + (i + 1) + " — brak nazwy, ilości albo przelicznika.", kto: "klient" });
+  });
+  if (!(TREND.opis || "").trim()) b.push({ t: "Nie opisano trendu zużycia i jego wyjaśnienia.", kto: "klient" });
+  if (!(TREND.wlasne || "").trim()) b.push({ t: "Nie wskazano, czy występuje wytwarzanie własne.", kto: "klient", metodyka: true });
+  if (!OBSZARY.length) b.push({ t: "Nie wykonano podziału zużycia na obszary.", kto: "klient" });
+  OBSZARY.forEach(function (o, i) {
+    if (!obszarOk(o)) b.push({ t: "Obszar " + (i + 1) + " — brak nazwy, zużycia albo metody.", kto: "klient" });
+    else if (!nieSeuOk(i)) b.push({ t: "Obszar „" + o.nazwa + "” — nieuznany za SEU bez uzasadnienia.", kto: "klient", metodyka: true });
+  });
+  var rb = roznicaBilansu();
+  if (rb !== null && Math.abs(rb) > 5) b.push({ t: "Bilans nie zamyka się — różnica " + fmt(rb, 1) + "%.", kto: "klient", metodyka: true });
+  var lista = listaSEU();
+  if (!lista.length) b.push({ t: "Nie wskazano żadnego znaczącego użycia energii.", kto: "klient" });
+  lista.forEach(function (x) {
+    var d = SEU[x.klucz], nz = x.nazwa || "(bez nazwy)";
+    if (!(d.uzasadnienie || "").trim()) b.push({ t: "SEU „" + nz + "” — brak podstawy wyboru.", kto: "klient", metodyka: true });
+    else if (!d.brakZmiennych && !(d.zmienne || "").trim()) b.push({ t: "SEU „" + nz + "” — nie określono zmiennych istotnych.", kto: "klient" });
+    else if (!(d.wynik || "").trim()) b.push({ t: "SEU „" + nz + "” — brak bieżącego wyniku energetycznego.", kto: "klient" });
+    else if (!(d.osoby || "").trim()) b.push({ t: "SEU „" + nz + "” — nie wskazano osób wpływających.", kto: "klient" });
+  });
+  if (!MOZL.length) b.push({ t: "Nie określono możliwości poprawy wyniku energetycznego.", kto: "klient" });
+  MOZL.forEach(function (m, i) {
+    if (!mozlOk(m)) b.push({ t: "Możliwość " + (i + 1) + " — niekompletna (nazwa, MWh, zł, CAPEX).", kto: "klient", metodyka: true });
+  });
+  if (!prognozaOk()) b.push({ t: "Nie oszacowano przyszłego zużycia — wymaganie normy.", kto: "klient" });
+  if (!aktualOk()) b.push({ t: "Nie ustalono odstępów i powodów aktualizacji przeglądu.", kto: "klient" });
+  if (!META.data || !(META.zatwierdzil || "").trim())
+    b.push({ t: "Brak daty opracowania albo osoby zatwierdzającej — wyniki przeglądu mają być zachowane jako udokumentowana informacja.", kto: "klient" });
+  if (!pelneWnioski()) b.push({ t: "Brak choćby jednego pełnego wniosku.", kto: "konsultant", metodyka: true });
+  if (urwaneWnioski()) b.push({ t: "Niedokończone wnioski: " + ile(urwaneWnioski(), "pozycja", "pozycje", "pozycji") + ".", kto: "konsultant", metodyka: true });
+  return b;
+}
+
+/* ── zakładka 8: zatwierdzenia ── */
+function rysujZatwierdzenia(host) {
+  var s = el("div", "sekcja");
+  s.appendChild(el("h3", null, "Zatwierdzenia i dokument"));
+  var b = braki().filter(function (x) { return ROLA === "konsultant" || x.kto === "klient"; });
+  if (!b.length) s.appendChild(el("div", "ok", ROLA === "klient"
+    ? "Twoja część ankiety jest kompletna. Można ją przekazać konsultantowi."
+    : "Komplet. Dokument D-EnMS-PEN-01 można wygenerować i opublikować."));
+  else {
+    var d = el("div", "warn");
+    d.appendChild(el("b", null, "Do uzupełnienia (" + b.length + "):"));
+    var ul = el("ul");
+    b.slice(0, 16).forEach(function (x) {
+      var li = el("li", null, x.t + (x.metodyka ? " " : ""));
+      if (x.metodyka) li.appendChild(el("span", "chip", "metodyka ENESA, nie wymóg normy"));
+      ul.appendChild(li);
+    });
+    if (b.length > 16) ul.appendChild(el("li", null, "… i " + (b.length - 16) + " więcej"));
+    d.appendChild(ul); s.appendChild(d);
+  }
+
+  s.appendChild(el("h4", null, "Lista kontrolna III-25 — sekcja 6.3"));
+  var lk = el("table", "tab");
+  var lr = el("tr"); ["Pozycja", "N / M", "Stan"].forEach(function (x) { lr.appendChild(el("th", null, x)); });
+  lk.appendChild(lr);
+  LISTA_63.forEach(function (p) {
+    var ok = stanPozycji(p);
+    var r = el("tr");
+    r.appendChild(el("td", null, p.tekst));
+    r.appendChild(el("td", "mono", p.podstawa));
+    var td = el("td");
+    td.appendChild(el("span", "chip " + (ok === true ? "green" : ok === false ? "amber" : ""),
+      ok === true ? "spełnione" : ok === false ? "do zrobienia" : "ocena konsultanta"));
+    r.appendChild(td);
+    lk.appendChild(r);
+  });
+  s.appendChild(lk);
+
+  s.appendChild(el("h4", null, "Co trafi do dokumentu D-EnMS-PEN-01"));
+  var t = el("table", "tab");
+  var tr = el("tr"); ["Sekcja", "Źródło", "Zawartość"].forEach(function (x) { tr.appendChild(el("th", null, x)); });
+  t.appendChild(tr);
+  [["1. Metody i kryteria", "zakładka 1", METODY.filter(metOk).length + " z " + METODY.length + " opisanych"],
+  ["2. Rodzaje energii, zużycie przeszłe i bieżące", "zakładka 2", (sumaMWh() === null ? "—" : fmt(sumaMWh()) + " MWh") + " · " + ile(NOSNIKI.length, "nośnik", "nośniki", "nośników")],
+  ["3. Bilans i podział na obszary", "zakładka 3", ile(OBSZARY.length, "obszar", "obszary", "obszarów") + (roznicaBilansu() !== null ? " · różnica " + fmt(roznicaBilansu(), 1) + "%" : "")],
+  ["4 i 5. Znaczące użycia ze zmiennymi, wynikiem i osobami", "zakładka 4", ile(jednostkiSEU().length, "użycie", "użycia", "użyć") + (udzialSEU() !== null ? " · " + fmt(udzialSEU(), 1) + "% zużycia" : "")],
+  ["6. Uszeregowane możliwości poprawy", "zakładka 5", ile(MOZL.length, "pozycja", "pozycje", "pozycji")],
+  ["7. Prognoza przyszłego zużycia", "zakładka 6", prognozaOk() ? "wypełniona" : "do uzupełnienia"],
+  ["8. Aktualizacja", "zakładka 6", AKTUAL.odstep || "do uzupełnienia"],
+  ["9. Wnioski", "zakładka 7", ile(pelneWnioski(), "pełny wniosek", "pełne wnioski", "pełnych wniosków")]].forEach(function (r) {
+    var row = el("tr");
+    r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+    t.appendChild(row);
+  });
+  s.appendChild(t);
+  s.appendChild(el("div", "ok", "Punkt 6.3 wymaga <b>dwóch</b> rzeczy na piśmie: metod i kryteriów przeglądu (utrzymywane jako udokumentowana informacja) oraz wyników przeglądu (zachowane). D-EnMS-PEN-01 obejmuje oba — odpowiada formularzowi F-EnMS-08 (załącznik III-19)."));
+
+  s.appendChild(el("h4", null, "Historia"));
+  var h = el("table", "tab");
+  var hr = el("tr"); ["Data", "Osoba", "Działanie"].forEach(function (x) { hr.appendChild(el("th", null, x)); });
+  h.appendChild(hr);
+  HISTORIA.forEach(function (x) {
+    var r = el("tr");
+    [x.data, x.osoba, x.akcja].forEach(function (v) { r.appendChild(el("td", null, v)); });
+    h.appendChild(r);
+  });
+  s.appendChild(h);
+  host.appendChild(s);
+}
+
+/* ── render ── */
+var ZAKLADKI = [
+  { id: "metody", t: "1. Metody i kryteria", f: rysujMetody },
+  { id: "nosniki", t: "2. Rodzaje energii", f: rysujNosniki },
+  { id: "bilans", t: "3. Bilans i obszary", f: rysujBilans },
+  { id: "seu", t: "4. Znaczące użycia", f: rysujSeu },
+  { id: "mozliwosci", t: "5. Możliwości poprawy", f: rysujMozliwosci },
+  { id: "prognoza", t: "6. Prognoza i aktualizacja", f: rysujPrognoza },
+  { id: "kons", t: "7. Analiza konsultanta", f: rysujKonsultanta },
+  { id: "zatw", t: "8. Zatwierdzenia", f: rysujZatwierdzenia }
+];
+
+function rysuj() {
+  var host = document.getElementById("tresc"); host.innerHTML = "";
+  var z = ZAKLADKI.filter(function (x) { return x.id === AKT; })[0] || ZAKLADKI[0];
+  z.f(host);
+  aktualizujPasek();
+}
+
+function aktualizujPasek() {
+  var lista = listaSEU();
+  var razem = METODY.length + Math.max(NOSNIKI.length, 1) + Math.max(OBSZARY.length, 1)
+    + Math.max(lista.length, 1) + Math.max(MOZL.length, 1) + 2;
+  var zrob = METODY.filter(metOk).length + NOSNIKI.filter(nosnikOk).length
+    + OBSZARY.filter(obszarOk).length + lista.filter(function (x) { return seuOk(x.klucz); }).length
+    + MOZL.filter(mozlOk).length + (prognozaOk() ? 1 : 0) + (aktualOk() ? 1 : 0);
+  var p = razem ? Math.round(100 * zrob / razem) : 0;
+  var e1 = document.getElementById("postep");
+  if (e1) e1.textContent = "Wypełnienie: " + p + "% · " + zrob + " / " + razem;
+  ZAKLADKI.forEach(function (z) {
+    var b = document.getElementById("zak_" + z.id);
+    if (b) b.classList.toggle("on", z.id === AKT);
+  });
+  var ps = document.getElementById("postep_strona");
+  if (ps) { ps.textContent = zrob + " / " + razem + " · " + p + "%"; document.getElementById("tor_strona").style.width = p + "%"; }
+}
+
+function budujZakladki() {
+  var n = document.getElementById("zakladki");
+  ZAKLADKI.forEach(function (z) {
+    var b = el("button", "zak", z.t); b.id = "zak_" + z.id;
+    b.onclick = function () { AKT = z.id; rysuj(); window.scrollTo(0, 0); };
+    n.appendChild(b);
+  });
+}
+function rola(r) {
+  ROLA = r;
+  document.getElementById("rola_klient").classList.toggle("on", r === "klient");
+  document.getElementById("rola_kons").classList.toggle("on", r === "konsultant");
+  rysuj();
+}
+
+var HISTORIA = [{ data: "10.10.2026 20:30", osoba: "Jan Kowalski", akcja: "Otwarto ankietę 6.3" }];
+function zapisz() {
+  try {
+    localStorage.setItem("enesa_63", JSON.stringify({
+      MET: MET, NOSNIKI: NOSNIKI, TREND: TREND, OBSZARY: OBSZARY, SEU: SEU,
+      MOZL: MOZL, PROG: PROG, AKTUAL: AKTUAL, META: META, WNIOSKI: WNIOSKI
+    }));
+  } catch (e) { }
+}
+function wczytaj() {
+  try {
+    var s = localStorage.getItem("enesa_63"); if (!s) return;
+    var d = JSON.parse(s);
+    MET = d.MET || {}; NOSNIKI = d.NOSNIKI || []; TREND = d.TREND || TREND;
+    OBSZARY = d.OBSZARY || []; SEU = d.SEU || {}; MOZL = d.MOZL || [];
+    PROG = d.PROG || PROG; AKTUAL = d.AKTUAL || AKTUAL; META = d.META || META; WNIOSKI = d.WNIOSKI || [];
+  } catch (e) { }
+}
+function przyklad() {
+  /* Wniosek konsultanta — jednakowo na wszystkich punktach normy (wnioski_przykladu.py). */
+  WNIOSKI = (typeof WNIOSKI_PRZYKLAD !== "undefined") ? JSON.parse(JSON.stringify(WNIOSKI_PRZYKLAD)) : [];
+  MET = JSON.parse(JSON.stringify(P_MET));
+  NOSNIKI = JSON.parse(JSON.stringify(P_NOSNIKI));
+  TREND = JSON.parse(JSON.stringify(P_TREND));
+  OBSZARY = JSON.parse(JSON.stringify(P_OBSZARY));
+  SEU = JSON.parse(JSON.stringify(P_SEU));
+  MOZL = JSON.parse(JSON.stringify(P_MOZL));
+  PROG = JSON.parse(JSON.stringify(P_PROG));
+  AKTUAL = JSON.parse(JSON.stringify(P_AKTUAL));
+  META = JSON.parse(JSON.stringify(P_META));
+  zapisz(); rysuj();
+}
+function zapiszRecznie() {
+  HISTORIA.unshift({ data: "10.10.2026 20:35", osoba: "Jan Kowalski", akcja: "Zapisano odpowiedzi" });
+  zapisz(); rysuj(); alert("Zapisano ankietę 6.3.");
+}
+function zatwierdz() {
+  AKT = "zatw"; rysuj();
+  alert("Sprawdź listę braków w zakładce „Zatwierdzenia”. Przekazanie jest możliwe dopiero po ich uzupełnieniu.");
+}
+function wyczysc() {
+  if (!confirm("Wyczyścić wszystkie odpowiedzi tej ankiety?")) return;
+  MET = {}; NOSNIKI = []; TREND = { opis: "", wlasne: "" }; OBSZARY = []; SEU = {}; MOZL = [];
+  PROG = { bez: "", zalozeniaBez: "", zDzial: "", zalozeniaZ: "" };
+  AKTUAL = { odstep: "", zmiany: "" };
+  META = { okres: "", porownawczy: "", opracowal: "", zatwierdzil: "", data: "" };
+  WNIOSKI = [];
+  try { localStorage.removeItem("enesa_63"); } catch (e) { }
+  rysuj();
+}
+function widok(n) {
+  ["strona", "ankieta", "spec"].forEach(function (x) {
+    document.getElementById("w_" + x).style.display = x === n ? "" : "none";
+    document.getElementById("t_" + x).classList.toggle("akt", x === n);
+  });
+  window.scrollTo(0, 0);
+}
+
+wczytaj();
+budujZakladki();
+rysuj();
+</script>
+</body></html>
