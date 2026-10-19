@@ -6,6 +6,16 @@
 @endphp
 <section data-iso-html-editor data-channel="{{$htmlConfiguration['channel']}}" data-section="{{$htmlSection}}" data-approvals="approvals">
 <div data-iso-html-tools></div>
+@if($htmlSection==='4-1')
+@php
+ $unresolvedFactors=collect(app(\App\Services\IsoFactorQuestionnaire::class)->factors(app(\App\Services\IsoFactorQuestionnaire::class)->facts($profile),$answers??[]))->filter(fn($factor)=>!$factor['visible'] && in_array(null,$factor['dependencies'],true));
+ $currentEnergy=app(\App\Services\IsoPlantCalculations::class)->apply($profile->definition,$profile->answers)['ZUZYCIE_TJ']??[];
+@endphp
+@if($unresolvedFactors->isNotEmpty())<details class="plant-card"><summary>Niektórych czynników nie można ocenić — brakuje danych źródłowych ({{$unresolvedFactors->count()}})</summary>
+@if(($currentEnergy['value']??null)===null)<p>{{ $currentEnergy['detail']??'Uzupełnij zużycie energii w profilu zakładu.' }}</p>@endif
+<ul>@foreach($unresolvedFactors as $factor)<li>{{$factor['kod']}}: brak odpowiedzi {{implode(', ',array_keys(array_filter($factor['dependencies'],fn($value)=>$value===null)))}}. Uzupełnij właściwe pola profilu lub ocenę klimatu w tej ankiecie.</li>@endforeach</ul></details>@endif
+@endif
+@if(app(\App\Services\IsoPlantCalculations::class)->energyNeedsReview($profile->definition,$profile->answers))<div class="plant-notice" role="status">Przelicznik energii został poprawiony. Widoczny wynik i dane wejściowe kolejnych punktów są przeliczone z odpowiedzi profilu. Zapisany wynik lub dane wierszy wymagają sprawdzenia — profil wymaga ponownego zapisu oraz zatwierdzenia w zwykłym obiegu; następnie sprawdzenia zależnych ankiet i dokumentów. Dotychczasowe zatwierdzenia i dokumenty nie zostały automatycznie zmienione.</div>@endif
 @if(session('success'))<div class="plant-notice success" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź odpowiedzi:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if($stale??false)<div class="plant-notice">Dane źródłowe zmieniły się. Sprawdź odpowiedzi i zatwierdź ankietę ponownie.</div>@endif

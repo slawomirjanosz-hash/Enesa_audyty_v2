@@ -70,6 +70,25 @@ class IsoPlantQuestionnaire
                 continue;
             }
             $rules = ['unknown' => 'nullable|boolean', 'detail' => 'nullable|string|max:3000', 'source' => 'nullable|string|max:500'];
+            if ($q['key'] === 'FAKT_NOSNIKI' && in_array($raw['unknown'] ?? false, [true, 1, '1'], true)) {
+                $raw['value'] = null;
+            }
+            if ($q['type'] === 'number' && is_string($raw['value'] ?? null) && ($number = IsoPlantCalculations::number($raw['value'] ?? null)) !== null) {
+                $raw['value'] = json_encode($number, JSON_THROW_ON_ERROR);
+            }
+            if ($q['type'] === 'rows' && is_array($raw['value'] ?? null)) {
+                foreach ($raw['value'] as &$numberRow) {
+                    if (! is_array($numberRow)) {
+                        continue;
+                    }
+                    foreach ($q['fields'] as $column => $field) {
+                        if ($field['type'] === 'number' && is_string($numberRow[$column] ?? null) && ($number = IsoPlantCalculations::number($numberRow[$column] ?? null)) !== null) {
+                            $numberRow[$column] = json_encode($number, JSON_THROW_ON_ERROR);
+                        }
+                    }
+                }
+                unset($numberRow);
+            }
             $valueRule = match ($q['type']) {
                 'select' => ['nullable', Rule::in(array_keys($q['options']))],
                 'multi', 'rows' => ['nullable', 'array', 'max:'.($q['max_items'] ?? 50)],
@@ -78,6 +97,11 @@ class IsoPlantQuestionnaire
                 default => ['nullable', 'string', 'max:2000'],
             };
             $rules['value'] = $valueRule;
+            if ($q['key'] === 'FAKT_NOSNIKI') {
+                foreach (app(IsoPlantCalculations::class)->energy($raw['value'] ?? [], (bool) ($raw['unknown'] ?? false))['errors'] as $rowIndex => $message) {
+                    $errors[$prefix.'.value.'.$rowIndex.'.c2'][] = $message;
+                }
+            }
             if ($q['type'] === 'multi') {
                 $rules['value.*'] = ['required', Rule::in(array_keys($q['options'])), 'distinct'];
             }
@@ -224,6 +248,10 @@ class IsoPlantQuestionnaire
         }
         if ($q['type'] === 'multi') {
             return implode(', ', array_map(fn ($v) => $q['options'][$v] ?? $v, $value));
+        }
+
+        if ($q['key'] === 'ZUZYCIE_TJ' && is_numeric($value)) {
+            return json_encode((float) $value, JSON_THROW_ON_ERROR);
         }
 
         return (string) ($q['options'][$value] ?? $value);

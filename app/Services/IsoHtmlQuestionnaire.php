@@ -70,6 +70,7 @@ class IsoHtmlQuestionnaire
     public function frame(string $section, array $configuration): string
     {
         $html = $this->document($section);
+        $configuration['energyFactors'] = IsoPlantCalculations::factors();
         $configuration['roots'] = $section === 'intro' ? ['ODP', 'STAN'] : collect($this->manifest())->firstWhere('section', $section)['state'];
         $json = json_encode($configuration, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
         // The prototype's browser storage is replaced by a frame-local memory store.
@@ -79,7 +80,7 @@ class IsoHtmlQuestionnaire
         $actions = file_get_contents(public_path('js/table-actions.js'));
         preg_match('/export function isActionHeading\(.*?(?=export function enhanceAction)/s', $actions, $heading);
         $sort = preg_replace('/^import .*?;\s*/', '', file_get_contents(public_path('js/table-sort.js')));
-        $bridge = '<script>'.file_get_contents(public_path('js/iso-html-clipboard-frame.js')).file_get_contents(public_path('js/iso-html-frame.js')).'</script><script type="module">'.$heading[0].$sort.'</script>';
+        $bridge = '<script>'.file_get_contents(public_path('js/iso-plant-energy.js')).file_get_contents(public_path('js/iso-html-clipboard-frame.js')).file_get_contents(public_path('js/iso-html-frame.js')).'</script><script type="module">'.$heading[0].$sort.'</script>';
 
         return str_replace('</body>', $bridge.'</body>', $html);
     }

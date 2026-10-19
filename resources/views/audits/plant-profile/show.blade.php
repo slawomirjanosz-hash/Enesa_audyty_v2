@@ -23,7 +23,7 @@
 @if(isset($profile->auditor_changes['_as_of_date']))<div class="plant-correction"><strong>Audytor zmienił datę „Stan danych na dzień”</strong><p>Przed: {{$profile->auditor_changes['_as_of_date']['before']}} → Po korekcie: {{$profile->auditor_changes['_as_of_date']['after']}}</p></div>@endif
 <nav class="plant-nav" aria-label="Części profilu">@foreach($profile->definition['groups'] as $group)<a href="#group-{{ $loop->index }}">{{ $group['title'] }}</a>@endforeach<a href="#approvals">Zatwierdzenia i historia</a></nav>
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="plant-form" @if($profile->lock_version > 0) data-highlight-unanswered @endif method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ old('lock_version',$profile->lock_version) }}">
-<script type="application/json" id="plant-energy-factors">@json(\App\Services\IsoPlantCalculations::FACTORS)</script>
+<script type="application/json" id="plant-energy-factors">@json(\App\Services\IsoPlantCalculations::factors())</script>
 @include('audits.plant-profile.fields')
 @if($editable)<div class="plant-actions"><span id="plant-save-state" role="status">Zapisz odpowiedzi przed wyjściem.</span><button name="operation" value="save" class="primary">Zapisz</button>@if($canClientApprove)<button name="operation" value="submit" data-confirm="Potwierdzasz dane tej wersji profilu i przekazujesz je do przeglądu audytora?">Zatwierdź jako klient</button>@elseif($client)<small>Zatwierdza administrator klienta.</small>@endif</div>@endif
 <input type="hidden" name="complete_form" value="1"></form>

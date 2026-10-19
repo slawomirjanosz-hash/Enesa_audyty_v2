@@ -54,6 +54,8 @@ class IsoQuestionnaireWorkbook
 
     public function export(IsoPlantProfile $profile, string $kind, ?IsoFactorReview $review = null): Spreadsheet
     {
+        $profile = clone $profile;
+        $profile->answers = app(IsoPlantCalculations::class)->apply($profile->definition, $profile->answers);
         $this->book = new Spreadsheet;
         $this->book->removeSheetByIndex(0);
         $this->listColumn = 0;

@@ -30,20 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (note) note.textContent = help;
         };
         const rows = [...form.querySelectorAll('[data-question="FAKT_NOSNIKI"] [data-rows] .plant-repeat-row')];
-        let total = 0, complete = rows.length > 0 && !form.elements.namedItem('answers[FAKT_NOSNIKI][unknown]')?.checked;
-        rows.forEach(row => {
-            const cell = key => row.querySelector(`[name$="[${key}]"]`)?.value;
-            const f = factors[cell('c0')]?.[cell('c2')];
-            if (f === undefined || cell('c1') === '' || !Number.isFinite(Number(cell('c1')))) complete = false;
-            else total += Number(cell('c1')) * f;
-        });
-        put('ZUZYCIE_TJ', complete ? `${Math.round(total / 1000 * 1e6) / 1e6} TJ` : null, complete ? 'Suma wszystkich pozycji. Wartości opałowe orientacyjne — wymagają weryfikacji.' : 'Uzupełnij wszystkie nośniki, ilości i obsługiwane jednostki. Nie podajemy sumy częściowej.');
+        const result = EnesaPlantEnergy.calculate(rows.map(row => Object.fromEntries(['c0','c1','c2','c3'].map(key => [key, row.querySelector(`[name$="[${key}]"]`)?.value]))), factors, form.elements.namedItem('answers[FAKT_NOSNIKI][unknown]')?.checked);
+        rows.forEach((row, index) => { row.title = result.errors[index] || ''; row.querySelectorAll('input,select').forEach(control => control.setAttribute('aria-invalid', result.errors[index] ? 'true' : 'false')); });
+        put('ZUZYCIE_TJ', result.value === null ? null : `${result.value} TJ`, result.detail);
         const heat = get('FAKT_KOTLOWNIA');
         const fuels = [...form.querySelectorAll('[name="answers[FAKT_CIEPLO_PALIWO][value][]"]:checked')].map(input => input.value);
-        let fossil = null;
-        if (heat === 'brak') fossil = 'nie';
-        else if (heat === 'siec') fossil = 'do potwierdzenia';
-        else if (['wlasne','oba'].includes(heat)) fossil = fuels.some(v => ['gaz ziemny','olej','węgiel'].includes(v)) ? 'tak' : heat === 'oba' ? 'do potwierdzenia' : fuels.length ? 'nie' : null;
+        const fossil = EnesaPlantEnergy.fossil(heat, fuels, form.elements.namedItem('answers[FAKT_CIEPLO_PALIWO][unknown]')?.checked);
         put('FAKT_CIEPLO_PALIWA', fossil, fossil === 'do potwierdzenia' ? 'Potwierdź paliwo ciepła sieciowego u dostawcy.' : 'Obliczane na podstawie źródła ciepła i wybranych paliw.');
     };
     form?.addEventListener('input', event => {

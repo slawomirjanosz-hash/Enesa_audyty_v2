@@ -21,6 +21,56 @@
     const clone = value => JSON.parse(JSON.stringify(value));
     const capture = () => Object.fromEntries(config.roots.filter(key => key in window).map(key => [key, clone(window[key])]));
     const applyContext = () => Object.entries(config.context || {}).forEach(([key, value]) => { window[key] = clone(value); });
+    if (config.section === 'intro') {
+        // Correct the supplied prototype's partial sum without changing its archived source.
+        WO = config.energyFactors;
+        window.policzTJ = () => {
+            const result = EnesaPlantEnergy.calculate(ODP.FAKT_NOSNIKI, config.energyFactors, ['nie wiem','unknown'].includes(ODP.FAKT_NOSNIKI));
+            // Detailed diagnostics below already distinguish quantities from units;
+            // the prototype's blanket calorific-value warning would be misleading.
+            BRAKI_WO = [];
+            return {wartosc: result.value, opis: result.detail};
+        };
+        const fillAnswers = window.wypelnijZOdp;
+        window.wypelnijZOdp = () => {
+            SCHEMA.sekcje.flatMap(section => section.pytania).forEach(question => {
+                if (['number','year'].includes(question.typ)) {
+                    const number = EnesaPlantEnergy.number(ODP[question.kod]);
+                    if (number !== null) ODP[question.kod] = String(number);
+                }
+                if (question.typ === 'repeater' && Array.isArray(ODP[question.kod])) ODP[question.kod].forEach(row => {
+                    if (!row || typeof row !== 'object') return;
+                    question.kolumny.forEach((column, index) => {
+                        const number = EnesaPlantEnergy.number(row['c' + index]);
+                        if (column.typ === 'number' && number !== null) row['c' + index] = String(number);
+                    });
+                });
+            });
+            fillAnswers();
+        };
+        window.policzPaliwa = () => {
+            const value = EnesaPlantEnergy.fossil(ODP.FAKT_KOTLOWNIA, ODP.FAKT_CIEPLO_PALIWO);
+            return {wartosc: value, opis: value === 'do potwierdzenia' ? 'Paliwo ciepła sieciowego należy potwierdzić u dostawcy.' : value === null ? 'Uzupełnij źródło ciepła i paliwa.' : 'Obliczane na podstawie aktualnego źródła ciepła i wybranych paliw.'};
+        };
+        const refresh = window.odswiez;
+        window.odswiez = () => {
+            refresh();
+            const question = document.getElementById('q_FAKT_NOSNIKI');
+            if (!question) return;
+            const result = EnesaPlantEnergy.calculate(ODP.FAKT_NOSNIKI, config.energyFactors, ['nie wiem','unknown'].includes(ODP.FAKT_NOSNIKI));
+            let notice = question.querySelector('[data-energy-errors]');
+            if (!notice) { notice = document.createElement('div'); notice.dataset.energyErrors = ''; notice.className = 'warn'; notice.setAttribute('role','status'); question.append(notice); }
+            notice.textContent = result.value === null ? result.detail : '';
+            notice.hidden = result.value !== null;
+            question.querySelectorAll('tbody tr').forEach((row, i) => {
+                row.dataset.energyIndex ??= String(i);
+                const invalid = result.errors[row.dataset.energyIndex];
+                row.title = invalid || '';
+                row.querySelectorAll('input,select').forEach(control => { control.setAttribute('aria-invalid', invalid ? 'true' : 'false'); control.style.borderColor = invalid ? '#c62828' : ''; });
+            });
+        };
+        document.addEventListener('input', event => { if (event.target.closest('#q_FAKT_NOSNIKI')) odswiez(); });
+    }
     const initial = capture();
     // The supplied examples declare the renderer's types (in particular boolean
     // switches). Platform form strings must not turn "nie" into a truthy flag.

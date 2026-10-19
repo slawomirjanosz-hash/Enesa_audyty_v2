@@ -6,7 +6,9 @@ use App\Models\Company;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\User;
+use App\Services\IsoPlantCalculations;
 use App\Services\IsoPlantElaboration;
+use App\Services\IsoPlantQuestionnaire;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -27,6 +29,7 @@ function elaborationFixture(): array
     foreach (['organization.name' => $company->name, 'organization.tax_id' => '1234567890', 'site.name' => 'Zakład A', 'site.address' => 'Katowice', 'profile.contact_person' => 'Anna Testowa', 'FAKT_BRANZA' => 'Obróbka metalu', 'FAKT_PRACOWNICY' => 0, 'FAKT_ROK_ODNIESIENIA' => 2025, 'FAKT_SYSTEM_BAZOWY' => 'brak', 'FAKT_ZGODA_INTEGRACJA' => 'tak', 'FAKT_ENERGY_MANAGER' => 'nie', 'FAKT_PODLICZNIKI' => 'brak', 'FAKT_ANALIZA_DANYCH' => 'nie', 'FAKT_NOSNIKI' => [['c0' => 'energia elektryczna', 'c1' => 1000, 'c2' => 'MWh', 'c3' => 0]]] as $key => $value) {
         $answers[$key] = ['value' => $value, 'unknown' => false, 'source' => 'Źródło testowe'];
     }
+    $answers = app(IsoPlantCalculations::class)->apply(app(IsoPlantQuestionnaire::class)->definition(), $answers);
     $profile = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $site, 'revision' => 1, 'lock_version' => 2, 'status' => 'approved', 'as_of_date' => '2026-10-11', 'definition' => json_decode(file_get_contents(resource_path('iso50001/plant-profile-v2.json')), true), 'answers' => $answers, 'client_approval' => ['name' => $client->name, 'user_id' => $client->id, 'at' => now()->toIso8601String()], 'auditor_approval' => ['name' => $staff->name, 'user_id' => $staff->id, 'at' => now()->toIso8601String()], 'issuer' => ['name' => 'ENESA', 'color' => '#204060'], 'review_note' => 'Potwierdzono źródła danych; braki do uzupełnienia w dalszych etapach.']);
 
     return [$audit, $profile, $staff, $client];

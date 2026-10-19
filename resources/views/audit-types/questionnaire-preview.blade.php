@@ -15,7 +15,7 @@
 <div class="plant-summary"><strong data-system-progress id="factor-progress">Podgląd pól ankiety</strong></div>
 @include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>false])
 <form id="{{ $formId }}" data-questionnaire-form data-preview-form onsubmit="return false">
-@if($kind==='plant-profile')<script type="application/json" id="plant-energy-factors">@json(\App\Services\IsoPlantCalculations::FACTORS)</script>@endif
+@if($kind==='plant-profile')<script type="application/json" id="plant-energy-factors">@json(\App\Services\IsoPlantCalculations::factors())</script><script src="{{asset('js/iso-plant-energy.js')}}" defer></script>@endif
 @include('audits.'.$kind.'.fields')
 </form>
 <section class="plant-card"><h2>Zatwierdzenia i dokument</h2><p>W audycie klienta: zapis odpowiedzi → zatwierdzenie klienta → zatwierdzenie audytora → wygenerowanie dokumentu. W bibliotece te działania są wyłączone.</p><div class="plant-actions"><button disabled>Zapisz</button><button disabled>Zatwierdź jako klient</button><button disabled>Generuj dokument</button></div></section>

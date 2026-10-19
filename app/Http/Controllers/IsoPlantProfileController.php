@@ -9,6 +9,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
 use App\Services\IsoHtmlState;
+use App\Services\IsoPlantCalculations;
 use App\Services\IsoPlantElaboration;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\IsoPlatformRelease;
@@ -213,6 +214,7 @@ class IsoPlantProfileController extends Controller
                 }
             } elseif ($op === 'approve') {
                 abort_unless(! $client && $current->status === 'submitted' && $current->client_approval, 403);
+                abort_if(app(IsoPlantCalculations::class)->energyNeedsReview($current->definition, $current->answers), 409, 'Poprawiony wynik energii wymaga ponownego zapisu profilu i zatwierdzenia przez klienta przed przeglądem audytora.');
                 abort_if(($current->client_approval['user_id'] ?? null) === $request->user()->id, 403, 'Przegląd musi zatwierdzić inna osoba niż przedstawiciel klienta.');
                 $request->validate(['note' => 'required|string|max:3000']);
                 $current->status = 'approved';
@@ -286,6 +288,7 @@ class IsoPlantProfileController extends Controller
             $current = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             abort_unless($current->lock_version === (int) $data['lock_version'], 409);
             abort_unless($current->status === 'approved' && $current->client_approval && $current->auditor_approval, 403, 'PDF wymaga zatwierdzenia przez klienta i audytora.');
+            abort_if(app(IsoPlantCalculations::class)->energyNeedsReview($current->definition, $current->answers), 409, 'Przelicznik energii został poprawiony. Profil wymaga ponownego zapisu i zatwierdzenia przed wygenerowaniem lub pobraniem aktualnego PDF. Poprzedni dokument pozostaje w dokumentacji.');
             if ($elaboration) {
                 abort_if(IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $current->site_id)->where('revision', '>', $current->revision)->exists(), 409, 'Otwórz aktualną wersję profilu.');
             }

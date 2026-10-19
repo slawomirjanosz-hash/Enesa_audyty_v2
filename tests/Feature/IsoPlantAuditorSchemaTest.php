@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\IsoPlantProfile;
+use App\Services\IsoPlantCalculations;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\QuestionnaireCompletion;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,8 @@ test('server calculates energy and fossil fuel facts without trusting submitted 
         ->and($answers['old.variable']['value'])->toBe('Zachowaj');
     $input['FAKT_NOSNIKI']['value'][] = ['c0' => 'węgiel', 'c1' => 2, 'c2' => 'l'];
     $input['FAKT_KOTLOWNIA']['value'] = 'siec';
-    $answers = $s->normalize($input, $s->definition(), [], 1, false);
+    expect(fn () => $s->normalize($input, $s->definition(), [], 1, false))->toThrow(ValidationException::class);
+    $answers = app(IsoPlantCalculations::class)->apply($s->definition(), $input);
     expect($answers['ZUZYCIE_TJ']['value'])->toBeNull()->and($answers['FAKT_CIEPLO_PALIWA']['value'])->toBe('do potwierdzenia');
     expect($s->facts($s->definition(), $answers)['FAKT_CIEPLO_PALIWO'])->toBeNull();
 });

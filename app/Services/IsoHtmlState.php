@@ -259,6 +259,19 @@ class IsoHtmlState
                     $out['ODP'][$key] = ! empty($answer['unknown']) ? 'nie wiem' : ($answer['value'] ?? '');
                 }
             }
+            foreach (app(IsoPlantQuestionnaire::class)->questions(app(IsoPlantQuestionnaire::class)->definition()) as $question) {
+                if ($question['type'] !== 'rows' || ! is_array($out['ODP'][$question['key']] ?? null)) {
+                    continue;
+                }
+                foreach ($out['ODP'][$question['key']] as &$row) {
+                    foreach ($question['fields'] as $key => $field) {
+                        if ($field['type'] === 'number' && ($number = IsoPlantCalculations::number($row[$key] ?? null)) !== null) {
+                            $row[$key] = json_encode($number, JSON_THROW_ON_ERROR);
+                        }
+                    }
+                }
+                unset($row);
+            }
 
             return $out;
         }
