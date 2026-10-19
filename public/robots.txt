@@ -1,2 +1,4 @@
 User-agent: *
+# Allow crawling so search engines can read the application's X-Robots-Tag: noindex.
+# Disallowing crawling would prevent removal of already indexed pages.
 Disallow:
