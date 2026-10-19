@@ -9,6 +9,7 @@
 </style>
 
 <div class="s-head"><div><a class="back" href="{{route('suppliers.index')}}">← Wszyscy dostawcy</a><div class="s-kicker" style="margin-top:12px">Dostawca</div><h1>{{$supplier->name}}</h1><div class="s-contact"><span><i class="ti ti-map-pin"></i> {{$supplier->address}} {{$supplier->city}}</span><span><i class="ti ti-mail"></i> {{$supplier->email ?: '—'}}</span><span><i class="ti ti-phone"></i> {{$supplier->phone ?: '—'}}</span><span>NIP {{$supplier->nip ?: '—'}}</span></div></div>@if($canEdit)<button type="button" class="btn" onclick="document.getElementById('supplier-edit-modal').classList.add('open')"><i class="ti ti-edit"></i> Edytuj dostawcę</button>@endif</div>
+<div style="display:flex;justify-content:flex-end;margin-bottom:14px">@include('suppliers._delete-button')</div>
 @if(session('success'))<div style="padding:11px 14px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:14px">{{session('success')}}</div>@endif
 
 @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $supplier))

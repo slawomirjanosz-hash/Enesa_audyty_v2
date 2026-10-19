@@ -539,6 +539,7 @@ Route::prefix('suppliers')->name('suppliers.')->middleware(['auth', 'staff.role'
     Route::get('/', [SupplierController::class, 'index'])->name('index');
     Route::get('/{supplier}', [SupplierController::class, 'show'])->name('show');
     Route::put('/{supplier}', [SupplierController::class, 'update'])->name('update');
+    Route::delete('/{supplier}', [SupplierController::class, 'destroy'])->name('destroy');
 });
 
 // Session check endpoint (used by session-expired modal JS)

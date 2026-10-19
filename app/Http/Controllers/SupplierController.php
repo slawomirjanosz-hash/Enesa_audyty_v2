@@ -107,4 +107,20 @@ class SupplierController extends Controller
 
         return redirect()->route('suppliers.show', $supplier)->with('success', 'Dane dostawcy zostały zapisane.');
     }
+
+    public function destroy(Company $supplier): RedirectResponse
+    {
+        abort_unless($supplier->company_type === 'supplier', 404);
+        $this->authorize('view', $supplier);
+        $this->authorize('delete', $supplier);
+        abort_if($supplier->is_owner, 403, 'Nie można usunąć firmy właściciela platformy.');
+
+        // Preserve project, warehouse and financial history, including repeated requests.
+        if (! $supplier->archived_at) {
+            $supplier->update(['archived_at' => now(), 'status' => 'archived', 'show_in_dashboard' => false]);
+        }
+
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Dostawca został usunięty z aktywnej listy i przeniesiony do archiwum. Historia współpracy została zachowana.');
+    }
 }

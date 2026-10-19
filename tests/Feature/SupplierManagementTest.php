@@ -1,10 +1,14 @@
 <?php
 
 use App\Mail\ClientRegistered;
+use App\Models\AuditorCompanyAccess;
 use App\Models\Company;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -12,6 +16,71 @@ beforeEach(function () {
         Role::findOrCreate($role);
     }
     Mail::fake();
+    // The historical archive migration extends this enum only on MySQL.
+    // Match the production schema without disabling SQLite constraint checks.
+    if (DB::getDriverName() === 'sqlite') {
+        Schema::table('companies', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'active', 'inactive', 'archived'])->default('pending')->change();
+        });
+    }
+});
+
+test('supplier removal archives without deleting history and is safe to repeat', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $supplier = Company::create(['name' => 'Archive supplier', 'company_type' => 'supplier', 'status' => 'active']);
+
+    foreach ([route('suppliers.index'), route('suppliers.show', $supplier), route('crm.index', ['tab' => 'suppliers'])] as $url) {
+        $this->actingAs($admin)->get($url)->assertOk()->assertSee(route('suppliers.destroy', $supplier), false)->assertSee('Usuń dostawcę');
+    }
+    $this->delete(route('suppliers.destroy', $supplier))->assertRedirect(route('suppliers.index'));
+    expect($supplier->fresh()->archived_at)->not->toBeNull();
+    $archivedAt = $supplier->fresh()->archived_at;
+    $this->delete(route('suppliers.destroy', $supplier))->assertRedirect();
+    expect($supplier->fresh()->archived_at->equalTo($archivedAt))->toBeTrue();
+    $this->get(route('suppliers.index'))->assertDontSee('Archive supplier');
+    $this->get(route('crm.index', ['tab' => 'suppliers']))->assertDontSee('Archive supplier');
+    $this->assertDatabaseHas('companies', ['id' => $supplier->id, 'status' => 'archived']);
+});
+
+test('supplier deletion rejects clients and users without permission or company access', function () {
+    $supplier = Company::create(['name' => 'Protected supplier', 'company_type' => 'supplier', 'status' => 'active']);
+    $user = User::factory()->create();
+    $user->assignRole('auditor');
+    $user->givePermissionTo('crm.suppliers.create');
+    $this->actingAs($user)->delete(route('suppliers.destroy', $supplier))->assertForbidden();
+    $user->givePermissionTo('crm.companies.manage');
+    $this->delete(route('suppliers.destroy', $supplier))->assertForbidden();
+    $client = User::factory()->create();
+    $client->assignRole('client_admin');
+    $this->actingAs($client)->delete(route('suppliers.destroy', $supplier))->assertForbidden();
+    expect($supplier->fresh()->archived_at)->toBeNull();
+});
+
+test('supplier removal does not accept a client company', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $company = Company::create(['name' => 'Client', 'company_type' => 'client', 'status' => 'active']);
+    $this->actingAs($admin)->delete(route('suppliers.destroy', $company))->assertNotFound();
+    expect($company->fresh()->archived_at)->toBeNull();
+});
+
+test('authorized delegated staff can remove accessible suppliers but cannot remove platform owner', function () {
+    $supplier = Company::create(['name' => 'Accessible supplier', 'company_type' => 'supplier', 'status' => 'active']);
+    $user = User::factory()->create();
+    $user->assignRole('auditor');
+    AuditorCompanyAccess::create(['auditor_id' => $user->id, 'company_id' => $supplier->id, 'can_view_dashboard' => true]);
+    $this->actingAs($user)->get(route('suppliers.show', $supplier))->assertOk()->assertDontSee('title="Usuń dostawcę"', false);
+    $this->delete(route('suppliers.destroy', $supplier))->assertForbidden();
+    $user->givePermissionTo('crm.companies.manage');
+    $this->get(route('suppliers.show', $supplier))->assertOk()->assertSee('title="Usuń dostawcę"', false);
+    $this->delete(route('suppliers.destroy', $supplier))->assertRedirect();
+
+    $owner = Company::create(['name' => 'Owner', 'company_type' => 'supplier', 'status' => 'active', 'is_owner' => true]);
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $this->actingAs($admin)->delete(route('suppliers.destroy', $owner))->assertForbidden();
+    expect($owner->fresh()->archived_at)->toBeNull();
 });
 
 test('delegated auditor can create suppliers with explicit permission but cannot create clients', function () {
@@ -123,6 +192,11 @@ test('supplier profile lists materials and projects in which supplier participat
         ->assertSee('Projekt tylko finansowy')
         ->assertSee('Kabel YKY')
         ->assertSee('Rozdzielnice');
+
+    $financeId = $financeOnlyProject->financialEntries()->firstOrFail()->id;
+    $this->delete(route('suppliers.destroy', $supplier))->assertRedirect(route('suppliers.index'));
+    expect($requirement->fresh()->supplier_company_id)->toBe($supplier->id)
+        ->and($financeOnlyProject->financialEntries()->findOrFail($financeId)->supplier_company_id)->toBe($supplier->id);
 });
 
 test('client cannot be assigned as a registered project supplier', function () {
