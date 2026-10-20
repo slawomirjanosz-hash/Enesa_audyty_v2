@@ -15,14 +15,21 @@ class IsoHtmlQuestionnaire
 
     public function manifest(): array
     {
-        return self::$manifest ??= json_decode(file_get_contents(resource_path('iso50001/html-2026-10-18/manifest.json')), true, 512, JSON_THROW_ON_ERROR);
+        if (self::$manifest === null) {
+            $base = json_decode(file_get_contents(resource_path('iso50001/html-2026-10-18/manifest.json')), true, 512, JSON_THROW_ON_ERROR);
+            $updates = collect(json_decode(file_get_contents(resource_path('iso50001/html-2026-10-20/manifest.json')), true, 512, JSON_THROW_ON_ERROR))->keyBy('section');
+            self::$manifest = array_map(fn ($entry) => array_replace($entry, $updates[$entry['section']] ?? []), $base);
+        }
+
+        return self::$manifest;
     }
 
     public function document(string $section): string
     {
-        abort_unless(in_array($section, array_column($this->manifest(), 'section'), true), 404);
+        $entry = collect($this->manifest())->firstWhere('section', $section);
+        abort_unless($entry, 404);
 
-        return self::$documents[$section] ??= file_get_contents(resource_path('iso50001/html-2026-10-18/'.$section.'.html'));
+        return self::$documents[$section] ??= file_get_contents(resource_path('iso50001/html-'.($entry['release'] ?? '2026-10-18').'/'.$section.'.html'));
     }
 
     public function point(string $section, string $cards, string $channel, string $identity, bool $client): string

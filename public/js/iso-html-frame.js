@@ -119,7 +119,11 @@
     if (config.section !== 'intro' && config.identity) {
         const identity = document.querySelector('header .sub'); if (identity) identity.textContent = config.identity;
     }
-    if (config.client && !config.preview) document.querySelectorAll('#t_spec,#tab_s').forEach(button => button.remove());
+    // Original navigation functions keep references to these buttons. Removing them
+    // throws before save/approval handlers are connected for the client role.
+    if (config.client && !config.preview) document.querySelectorAll('#t_spec,#tab_s').forEach(button => {
+        button.hidden = true; button.disabled = true; button.style.display = 'none';
+    });
     const nativeDraw = window.rysuj;
     if (nativeDraw) window.rysuj = function () {
         if (config.section === '7-5' && typeof WYKAZ !== 'undefined') WYKAZ.forEach(row => { if ((row.rodzaj || '').replaceAll(' ', '') === 'D/Z') row.rodzaj = 'DZ'; });
@@ -195,6 +199,11 @@
         const tabs = typeof ZAKLADKI === 'function' ? ZAKLADKI() : ZAKLADKI;
         if (tabs?.length) { AKT = tabs[tabs.length - 1].id; rysuj(); }
         if (!config.submit) return;
+        if (config.section === '4-1' && typeof brakiKlienta === 'function') {
+            if (brakiKlienta().length) return;
+            operation('submit');
+            return;
+        }
         if (typeof braki === 'function' && braki().some(item => typeof item === 'string' || item.kto === 'klient')) return;
         operation('submit');
     };

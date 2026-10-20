@@ -18,6 +18,16 @@ test('supplied HTML remains byte identical to the reviewed source package', func
     expect($html->document('4-1'))->toContain('1. Klimat i stan prawny', '2. Czynniki zewnętrzne', '3. Czynniki wewnętrzne', 'Specyfikacja dla Sławka');
 });
 
+test('latest 4.1 source is selected while the previous source and persistence contract stay intact', function () {
+    $html = app(IsoHtmlQuestionnaire::class);
+    $entry = collect($html->manifest())->firstWhere('section', '4-1');
+    expect($entry['release'])->toBe('2026-10-20');
+    expect($html->document('4-1'))->toContain('function brakiKlienta()', 'var b = brakiKlienta();');
+    $previous = collect(json_decode(file_get_contents(resource_path('iso50001/html-2026-10-18/manifest.json')), true))->firstWhere('section', '4-1');
+    expect(hash_file('sha256', resource_path('iso50001/html-2026-10-18/4-1.html')))->toBe($previous['sha256']);
+    expect($entry['tabs'])->toBe($previous['tabs'])->and($entry['state'])->toBe($previous['state']);
+});
+
 test('each clause page uses the source page and actual profile chooser instead of demo progress', function (string $section) {
     $html = app(IsoHtmlQuestionnaire::class)->point($section, '<div>REAL-PROFILES</div>', 'test-channel', 'Rzeczywisty klient', false);
     expect($html)->toContain('REAL-PROFILES', 'Rzeczywisty klient', 'Specyfikacja dla Sławka')->not->toContain('ENESA_PROFILE_CARDS');
