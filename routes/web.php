@@ -62,10 +62,13 @@ use App\Http\Controllers\PublicProjectDocumentFolderController;
 use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\Settings;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupportMailTestController;
 use App\Http\Controllers\TaskArchiveController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
+Route::match(['get', 'post'], '/support/mail-test', SupportMailTestController::class)
+    ->middleware(['signed', 'throttle:30,1'])->name('support.mail-test');
 Route::middleware(['auth', 'throttle:60,1'])->prefix('form-drafts')->group(function () {
     Route::get('/{key}', [FormDraftController::class, 'show'])->where('key', '[a-f0-9]{64}')->name('form-drafts.show');
     Route::put('/{key}', [FormDraftController::class, 'update'])->where('key', '[a-f0-9]{64}')->name('form-drafts.update');

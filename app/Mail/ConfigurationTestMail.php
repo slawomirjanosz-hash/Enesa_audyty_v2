@@ -6,7 +6,7 @@ use Illuminate\Mail\Mailable;
 
 class ConfigurationTestMail extends Mailable
 {
-    public function __construct(public string $companyName) {}
+    public function __construct(public string $companyName, public bool $supportTest = false) {}
 
     public function build()
     {
