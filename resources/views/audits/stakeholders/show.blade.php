@@ -1,8 +1,6 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4.2 Strony zainteresowane</title><link rel="stylesheet" href="{{asset('css/iso-plant-profile.css')}}"><style>.stakeholder-change{background:#edf6ff;border-left:4px solid #2877b5;padding:15px}.stakeholder-empty{background:#fff8dc;border-left:4px solid #e6b948}textarea{min-height:90px}.stakeholder-read{white-space:pre-wrap;overflow-wrap:anywhere}.stakeholder-tag{display:inline-block;background:#f8ebd0;padding:4px 10px;border-radius:12px;font-size:12px}.plant-question{padding:18px;margin:16px 0;border:1px solid #dce5df;border-radius:10px}.plant-scroll{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #dce5df}button{cursor:pointer}</style></head><body>
 <header class="plant-header"><div><small>ISO 50001 · Punkt 4.2</small><h1>Strony zainteresowane</h1><span>{{$audit->company->name}} · {{$profile->answers['site.name']['value']??'Zakład'}}</span></div><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'4-2'])}}">← Wróć do audytu</a></header>
 <main class="plant-main">
-@include('audits.partials.iso-html-editor', ['htmlSection'=>'4-2'])
-<div hidden data-iso-html-native>
 @php
  $editable=$ready && $canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected']));
  $consultantEditable=$ready && !$stale && !$client && $canWrite && $review->exists;
@@ -46,5 +44,5 @@
 <h3>Historia zmian</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{$operations[$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div>
 </section>
 @include('partials.field-validation') @include('partials.questionnaire-navigation')
-</div></main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-stakeholders.js')}}" defer></script>@include('partials.form-drafts')
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-stakeholders.js')}}" defer></script>@include('partials.form-drafts')
 </body></html>

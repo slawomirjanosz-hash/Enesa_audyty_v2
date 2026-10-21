@@ -1,8 +1,6 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{$title}}</title><link rel="stylesheet" href="{{asset('css/iso-plant-profile.css')}}"><style>:root{--brand:{{$appBrand?->primaryColor()?:'#1a4d3a'}}}.system-changed{background:#eaf2ff;border-left:4px solid #4575bb;padding:14px}.system-row{border:1px solid #dce4df;border-radius:9px;padding:16px;margin:16px 0}.system-status{padding:12px;background:#edf3ef;border-radius:8px}</style></head><body>
 <header class="plant-header"><div><h1>{{$title}}</h1><span>{{$audit->company->name}} · {{$profile->answers['site.name']['value']??'Zakład'}} · {{$client?'Strefa klienta':'Panel audytora'}}</span></div><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>$section])}}">← Wróć do audytu</a></header>
 <main class="plant-main">
-@include('audits.partials.iso-html-editor', ['htmlSection'=>$section])
-<div hidden data-iso-html-native>
 @if(\App\Services\IsoExecutionQuestionnaire::handles($section))<style>.system-row .plant-help{overflow-wrap:anywhere}.system-row{min-width:0}.system-row input[readonly]{background:#f2f5f3;color:#52665c}@media(max-width:600px){.system-row{padding:10px;margin:10px 0}.system-row .system-row{padding:8px}}</style>@endif
 @if(session('success'))<div class="plant-notice success">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź oznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
@@ -53,5 +51,5 @@
 @include('partials.field-validation') @include('partials.questionnaire-navigation')
 @if(str_starts_with($section,'7-'))<script src="{{asset('js/iso-support.js')}}" defer></script>@endif
 @if(\App\Services\IsoExecutionQuestionnaire::handles($section))<script src="{{asset('js/iso-execution.js')}}" defer></script>@endif
-</div></main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-system.js')}}" defer></script>@include('partials.form-drafts')
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-system.js')}}" defer></script>@include('partials.form-drafts')
 </body></html>

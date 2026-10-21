@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -30,22 +29,12 @@ class IsoHtmlState
             }
         }
         if ($request->routeIs('client.*')) {
-            unset($state['SWOT'], $state['PODSUM']);
-            if ($section !== '4-1') {
-                unset($state['WNIOSKI']);
-            }
-        }
-        if ($section === '4-1') {
-            $ids = Validator::make(['ids' => $state['ID_SEQ'] ?? []], ['ids' => 'array:WL,WN', 'ids.*' => 'integer|min:0|max:1000000000'])->validate()['ids'];
-            foreach (['WL', 'WN'] as $kind) {
-                $state['ID_SEQ'][$kind] = max((int) ($previous['_html']['ID_SEQ'][$kind] ?? 0), (int) ($ids[$kind] ?? 0));
-            }
-            $request->merge(['factor_conclusions' => $state['WNIOSKI'] ?? []]);
+            unset($state['WNIOSKI'], $state['SWOT']);
         }
         if ($request->input('operation') === 'consultant' && $section !== '4-2') {
             $request->merge(['consultant' => ['WNIOSKI' => $state['WNIOSKI'] ?? []]]);
-        } elseif (in_array($request->input('operation'), ['save_swot', 'publish']) && $section === '4-1') {
-            $swot = ['wnioski' => $state['WNIOSKI'] ?? [], 'podsum' => $state['PODSUM'] ?? []];
+        } elseif ($request->input('operation') === 'save_swot') {
+            $swot = ['wnioski' => $state['WNIOSKI'] ?? []];
             foreach (['S' => 'strengths', 'W' => 'weaknesses', 'O' => 'opportunities', 'T' => 'threats'] as $key => $field) {
                 $swot[$field] = $state['SWOT'][$key] ?? '';
             }
@@ -57,14 +46,13 @@ class IsoHtmlState
             throw ValidationException::withMessages(['html_state' => 'Nieprawidłowa struktura odpowiedzi ankiety.']);
         }
         $request->merge(['answers' => $answers, 'complete_form' => '1']);
-        unset($state['WNIOSKI'], $state['SWOT'], $state['PROFIL'], $state['PODSUM']);
+        unset($state['WNIOSKI'], $state['SWOT'], $state['PROFIL']);
         $state['_ids'] = $previous['_html']['_ids'] ?? [];
         foreach ($this->numberedRoots($section) as $root => $prefix) {
             $state['_ids'][$root] = $this->maximumNumber($answers[$root] ?? [], $prefix, (int) ($state['_ids'][$root] ?? 0));
         }
         if ($section === '4-1') {
             unset($state['ODP']);
-            $state['_schema'] = '4.1/3';
         }
 
         return $state;
@@ -101,9 +89,6 @@ class IsoHtmlState
             return $out;
         } elseif ($section === '4-1') {
             $out = ['FAKT_KLIMAT_ISTOTNY' => $state['KLIMAT']['odp'] ?? '', 'climate_reason' => $state['KLIMAT']['uzas'] ?? '', 'PRAWO' => $state['PRAWO'] ?? [], 'factors' => $state['DEC'] ?? [], 'custom' => $state['WLASNE'] ?? []];
-            if (isset($state['WNIOSKI'])) {
-                $out = app(IsoFactorConclusions::class)->legacyFields($out, array_map(fn ($row) => $row + ['scope' => 'client'], $state['WNIOSKI']));
-            }
         } elseif ($section === '4-2') {
             $mapping = $this->requirementIds();
             $out = ['FAKT_KLIMAT_STRONY' => $state['KLIMAT']['odp'] ?? '', 'climate_reason' => $state['KLIMAT']['lista'] ?? '', 'review_interval' => $state['KLIMAT']['odstep'] ?? '', 'parties' => [], 'custom' => $state['WLASNE'] ?? []];
@@ -268,7 +253,7 @@ class IsoHtmlState
         }
         $out = $this->merge($out, $answers);
         if ($section === 'intro') {
-            $out = ['ODP' => $original['ODP'] ?? [], 'STAN' => $out['STAN'] ?? []];
+            $out = ['ODP' => [], 'STAN' => $out['STAN'] ?? []];
             foreach ($answers as $key => $answer) {
                 if (str_starts_with($key, 'FAKT_') && is_array($answer)) {
                     $out['ODP'][$key] = ! empty($answer['unknown']) ? 'nie wiem' : ($answer['value'] ?? '');
@@ -291,10 +276,6 @@ class IsoHtmlState
             return $out;
         }
         if ($section === '4-1') {
-            if (! in_array($original['_schema'] ?? null, [null, '4.1/3'], true)) {
-                throw ValidationException::withMessages(['html_state' => 'Nieobsługiwana wersja danych 4.1. Odpowiedzi zachowano; wymagany jest adapter tego układu przed edycją.']);
-            }
-
             return ['DEC' => $answers['factors'] ?? [], 'WLASNE' => $answers['custom'] ?? [], 'KLIMAT' => ['odp' => $answers['FAKT_KLIMAT_ISTOTNY'] ?? '', 'uzas' => $answers['climate_reason'] ?? ''], 'PRAWO' => $answers['PRAWO'] ?? [], 'ODP' => $sources['facts'] ?? []];
         }
         if ($section === '4-2') {

@@ -37,6 +37,16 @@ class IsoFactorQuestionnaire
             $factor['dependencies'] = array_replace($factor['dependencies'], $dependencies);
             $factor['basis'] = hash('sha256', json_encode($factor['dependencies'], JSON_THROW_ON_ERROR));
             $factor['visible'] = app(IsoContextLibrary::class)->matches($factor['pokaz_gdy'], $facts);
+            if ($factor['kod'] === 'KTX-WO-12') {
+                $factor['rodzaj'] = 'PROPOZYCJA';
+                $factor['verification'] = 'Nowa propozycja z wydania 18.10.2026 — wymaga zatwierdzenia merytorycznego przez audytora.';
+            }
+            // A consumption threshold alone does not establish a legal obligation.
+            // Likewise absence of certification is not absence of management processes.
+            if ($factor['rodzaj'] === 'AUTO' && (str_starts_with($factor['kod'], 'KTX-ZR-') || $factor['kod'] === 'KTX-WO-03')) {
+                $factor['rodzaj'] = 'PROPOZYCJA';
+                $factor['verification'] = 'Wniosek wymaga weryfikacji zakresu obowiązków i danych przez audytora; można zmienić treść lub odrzucić.';
+            }
             if ($factor['kod'] === 'KTX-ZK-02') {
                 $factor['tresc'] = 'Oceniono zmianę klimatu jako nieistotną dla zdolności systemu zarządzania energią do osiągania zamierzonych wyników. Uzasadnienie: '.($answers['climate_reason'] ?? '');
             }
@@ -74,17 +84,8 @@ class IsoFactorQuestionnaire
             'factors.*.decyzja_w' => 'nullable|string|max:5000',
             'factors.*.dzialanie' => 'nullable|string|max:5000',
             'factors.*.sprawdzenie' => 'nullable|string|max:5000',
-            'factors.*.skutek' => 'nullable|string|max:5000',
-            'factors.*.podstawa' => 'nullable|array:rodzaj,zrodlo,okres',
-            'factors.*.podstawa.rodzaj' => ['nullable', Rule::in(['pomiar', 'dokument', 'deklaracja', 'szacunek'])],
-            'factors.*.podstawa.zrodlo' => 'nullable|string|max:3000',
-            'factors.*.podstawa.okres' => 'nullable|string|max:500',
-            'custom.*.podstawa' => 'nullable|array:rodzaj,zrodlo,okres',
-            'custom.*.podstawa.rodzaj' => ['nullable', Rule::in(['pomiar', 'dokument', 'deklaracja', 'szacunek'])],
-            'custom.*.podstawa.zrodlo' => 'nullable|string|max:3000',
-            'custom.*.podstawa.okres' => 'nullable|string|max:500',
             'custom' => 'nullable|array|max:20',
-            'custom.*.id' => ['required', 'string', 'max:80', 'distinct', 'regex:/^(?:WL-[1-9][0-9]*|[0-9a-fA-F-]{36})$/'],
+            'custom.*.id' => 'required|uuid|distinct',
             'custom.*.tresc' => 'required|string|max:5000',
             'custom.*.wplyw' => ['required', Rule::in(['+', '−', '○'])],
             'custom.*.wymiar' => [$complete ? 'required' : 'nullable', Rule::in(array_column($this->schema()['sekcje'], 'id'))],
@@ -103,11 +104,6 @@ class IsoFactorQuestionnaire
             }
             $row = $data['factors'][$key] ?? [];
             $out['factors'][$key] = ['decyzja' => $row['decyzja'] ?? null, 'tresc' => $row['tresc'] ?? $factor['tresc'], 'powod' => $row['powod'] ?? null];
-            $out['factors'][$key]['skutek'] = $row['skutek'] ?? $factor['skutek'];
-            $out['factors'][$key]['podstawa'] = $row['podstawa'] ?? [];
-            if ($complete && $factor['visible'] && ($row['decyzja'] ?? '') === 'potwierdzony' && ($row['istotnosc'] ?? '') === 'W' && ! collect(['rodzaj', 'zrodlo', 'okres'])->every(fn ($field) => filled($row['podstawa'][$field] ?? null))) {
-                $errors["factors.$key.podstawa"] = "$key: wysoka istotność wymaga podstawy ustalenia: rodzaju, źródła i okresu.";
-            }
             foreach (['istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'] as $field) {
                 $out['factors'][$key][$field] = $row[$field] ?? null;
                 if ($complete && $factor['visible'] && ($row['decyzja'] ?? '') === 'potwierdzony' && ($field === 'istotnosc' || ($row['istotnosc'] ?? '') === 'W') && ! filled($row[$field] ?? null)) {
@@ -150,7 +146,6 @@ class IsoFactorQuestionnaire
             $total++;
             $row = $answers['factors'][$factor['kod']] ?? [];
             $conclusion = ($row['istotnosc'] ?? '') !== 'W' || collect(['znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'])->every(fn ($key) => filled($row[$key] ?? null));
-            $conclusion = $conclusion && (($row['istotnosc'] ?? '') !== 'W' || collect(['rodzaj', 'zrodlo', 'okres'])->every(fn ($key) => filled($row['podstawa'][$key] ?? null)));
             $done += (($row['decyzja'] ?? '') === 'potwierdzony' && filled($row['tresc'] ?? null) && filled($row['istotnosc'] ?? null) && $conclusion) || (($row['decyzja'] ?? '') === 'odrzucony' && filled($row['powod'] ?? null)) ? 1 : 0;
         }
 

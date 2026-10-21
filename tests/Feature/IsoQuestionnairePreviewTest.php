@@ -11,7 +11,9 @@ test('ISO library previews every questionnaire without a customer or audit', fun
     $user->assignRole(Role::findOrCreate('superadmin'));
     $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
     $this->actingAs($user)->get(route('audit-types.questionnaire-preview', [$type, $section]))
-        ->assertOk()->assertSee('Podgląd bez zakładania klienta')->assertSee('sandbox="allow-scripts allow-modals allow-downloads"', false)
+        ->assertOk()->assertSee('Podgląd bez danych klienta.')->assertSee('data-preview-form', false)
+        ->assertDontSee('<iframe', false)->assertDontSee('Specyfikacja dla Sławka')
+        ->assertDontSee('data-iso-html-editor', false)
         ->assertDontSee('data-autosave', false)->assertDontSee('name="_token"', false);
     $this->assertDatabaseCount('audits', 0);
     $this->assertDatabaseCount('iso_plant_profiles', 0);

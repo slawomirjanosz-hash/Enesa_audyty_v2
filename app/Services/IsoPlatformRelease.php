@@ -10,9 +10,6 @@ class IsoPlatformRelease
 {
     public function source(string $section): array
     {
-        if ($section === '4-1') {
-            return json_decode(file_get_contents(resource_path('iso50001/html-2026-10-21/4-1-data.json')), true, 512, JSON_THROW_ON_ERROR);
-        }
         abort_unless(in_array($section, array_column(json_decode(file_get_contents(resource_path('iso50001/platform-2026-10-18/manifest.json')), true, 512, JSON_THROW_ON_ERROR), 'section'), true), 404);
 
         return json_decode(file_get_contents(resource_path('iso50001/platform-2026-10-18/'.$section.'.json')), true, 512, JSON_THROW_ON_ERROR);
@@ -28,7 +25,7 @@ class IsoPlatformRelease
     public function swot(): array
     {
         $example = $this->source('4-1')['data']['przyklad_41'];
-        $out = ['wnioski' => $example['wnioski'], 'podsum' => $example['podsum'] ?? []];
+        $out = ['wnioski' => $example['wnioski']];
         foreach (['S' => 'strengths', 'W' => 'weaknesses', 'O' => 'opportunities', 'T' => 'threats'] as $key => $field) {
             $out[$field] = $example['swot'][$key];
         }
@@ -106,7 +103,7 @@ class IsoPlatformRelease
                 $out['factors'][$factor['kod']] = array_replace(['decyzja' => 'potwierdzony', 'istotnosc' => $example['istotnoscDomyslna'], 'tresc' => $factor['tresc']], $example['dec'][$factor['kod']] ?? []);
             }
 
-            return app(IsoFactorConclusions::class)->legacyFields($out, array_map(fn ($row) => $row + ['scope' => 'client'], $example['wnioski'] ?? []));
+            return $out;
         }
         if ($section === '4-2') {
             $example = $vars['PRZYKLAD_42'];

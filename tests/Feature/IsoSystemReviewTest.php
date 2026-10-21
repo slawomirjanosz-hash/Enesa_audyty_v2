@@ -104,7 +104,7 @@ test('scope and system approvals documents and source invalidation work end to e
             file_put_contents(base_path('tmp/iso-'.$section.'.pdf'), $document->contents());
             file_put_contents(base_path('tmp/iso-'.$section.'.html'), $this->get(route('audits.system.show', [$audit, $profile, $section]))->getContent());
         }
-        $this->get(route('audits.show', [$audit, 'tab' => 'iso50001', 'section' => $section]))->assertOk()->assertSee('data-iso-html-point', false)->assertSee(route('audits.system.show', [$audit, $profile, $section]), false);
+        $this->get(route('audits.show', [$audit, 'tab' => 'iso50001', 'section' => $section]))->assertOk()->assertSee('Otwórz ankietę '.str_replace('-', '.', $section))->assertSee(route('audits.system.show', [$audit, $profile, $section]), false);
         $this->post($staffUrl, ['operation' => 'approve', 'lock_version' => 0, 'source_hash' => $sources['hash']])->assertStatus(409);
     }
     $scope = IsoSystemReview::where('section', '4-3')->sole();

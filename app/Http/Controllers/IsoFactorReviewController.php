@@ -9,8 +9,6 @@ use App\Models\IsoFactorReview;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
-use App\Services\IsoFactorConclusions;
-use App\Services\IsoFactorDocument;
 use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoHtmlState;
 use App\Services\IsoPlatformRelease;
@@ -75,7 +73,7 @@ class IsoFactorReviewController extends Controller
     {
         $client = $this->access($request, $audit, $profile, true);
         $htmlState = $request->has('html_state') ? app(IsoHtmlState::class)->ingest($request, '4-1', ['facts' => $this->questionnaire->facts($profile)], IsoFactorReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->first()?->answers ?? []) : null;
-        $data = $request->validate(['lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['save', 'submit', 'approve', 'save_swot', 'publish', 'return', 'withdraw'])], 'answers' => 'nullable|array', 'note' => 'nullable|string|max:3000']);
+        $data = $request->validate(['lock_version' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['save', 'submit', 'approve', 'save_swot', 'return', 'withdraw'])], 'answers' => 'nullable|array', 'note' => 'nullable|string|max:3000']);
         DB::transaction(function () use ($request, $audit, $profile, $client, $data, $htmlState) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
@@ -85,33 +83,15 @@ class IsoFactorReviewController extends Controller
             abort_unless(hash_equals($hash, $data['source_hash']), 409, 'Profil zakładu zmienił się. Odśwież ankietę, aby wczytać aktualne czynniki.');
             $review = IsoFactorReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->lockForUpdate()->first() ?? new IsoFactorReview(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'status' => 'editing', 'lock_version' => 0, 'answers' => [], 'basis' => []]);
             abort_unless($review->lock_version === (int) $data['lock_version'], 409, 'Ankieta zmieniła się w innym oknie. Odśwież stronę.');
-            $publishing = $data['operation'] === 'publish';
-            $op = $publishing ? 'approve' : $data['operation'];
-            $registry = app(IsoFactorConclusions::class);
-            $oldRegistry = $registry->registry($review);
+            $op = $data['operation'];
             $stale = $review->exists && $review->source_hash !== $hash;
             abort_if($stale && ! in_array($op, ['save', 'submit']), 409, 'Zapisz ponownie ankietę po aktualizacji profilu zakładu.');
             $facts = $this->questionnaire->facts($profile);
-            if ($publishing && $htmlState !== null) {
-                $proposed = $this->questionnaire->normalize($request->input('answers', []), $facts, true);
-                $stored = $this->questionnaire->normalize($review->answers ?? [], $facts, true);
-                abort_unless($proposed === $stored, 409, 'Odpowiedzi klienta zmieniły się. Zapisz je i uzyskaj ponowne zatwierdzenie przed publikacją.');
-            }
             if (in_array($op, ['save_swot', 'approve'])) {
                 abort_unless(! $client && $review->client_approval && in_array($review->status, ['submitted', 'approved']), 403);
                 $confirmedCodes = array_column(array_filter($this->questionnaire->factors($facts, $review->answers ?? []), fn ($factor) => $factor['visible'] && ($factor['rodzaj'] === 'AUTO' || data_get($review->answers, 'factors.'.$factor['kod'].'.decyzja') === 'potwierdzony')), 'kod');
-                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions,wnioski,podsum',
-                    'swot.wnioski' => ($op === 'approve' ? 'required' : 'nullable').'|array|min:1|max:100',
-                    'swot.podsum' => 'nullable|array:ocena,ustalenia,decyzje,braki',
-                    'swot.podsum.ocena' => 'nullable|string|max:10000',
-                    'swot.podsum.ustalenia' => 'nullable|array|max:30',
-                    'swot.podsum.ustalenia.*.czynnik' => ['nullable', Rule::in(array_merge($confirmedCodes, array_column($review->answers['custom'] ?? [], 'id')))],
-                    'swot.podsum.ustalenia.*.komentarz' => 'nullable|string|max:3000',
-                    'swot.podsum.decyzje' => 'nullable|array|max:30',
-                    'swot.podsum.decyzje.*' => 'array:przedmiot,rekomendacja,uzasadnienie,termin,status,zatwierdzil',
-                    'swot.podsum.decyzje.*.*' => 'nullable|string|max:3000',
-                    'swot.podsum.braki' => 'nullable|array|max:30',
-                    'swot.podsum.braki.*.t' => 'nullable|string|max:3000',
+                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions,wnioski',
+                    'swot.wnioski' => ($op === 'approve' ? 'required' : 'nullable').'|array|min:1|max:20',
                     'swot.wnioski.*' => 'array',
                     'swot.wnioski.*.czynnik' => ['nullable', Rule::in($confirmedCodes)],
                 ];
@@ -127,19 +107,7 @@ class IsoFactorReviewController extends Controller
                 if ($op === 'save_swot' && $validated['swot'] === array_intersect_key($review->swot ?? [], IsoFactorReview::SWOT_FIELDS + ['wnioski' => 'Wnioski'])) {
                     return;
                 }
-                if ($htmlState !== null) {
-                    $rows = $registry->validate($validated['swot']['wnioski'] ?? [], array_merge(array_column($this->questionnaire->schema()['czynniki'], 'kod'), array_column($review->answers['custom'] ?? [], 'id')), $op === 'approve');
-                    foreach ($rows as &$row) {
-                        $row['scope'] = collect($oldRegistry)->firstWhere('id', $row['id'])['scope'] ?? 'consultant';
-                    }
-                    unset($row);
-                    abort_unless($registry->forClient($rows) === $registry->forClient($oldRegistry), 409, 'Zmieniono wniosek należący do odpowiedzi klienta. Zapisz korektę odpowiedzi i uzyskaj ponowne zatwierdzenie klienta.');
-                    $validated['swot']['wnioski'] = $rows;
-                }
                 $review->swot = $validated['swot'] + ['author' => $this->approval($request)];
-                if ($htmlState !== null) {
-                    $review->answers = array_replace_recursive($review->answers ?? [], ['_html' => array_intersect_key($htmlState, array_flip(['ID_SEQ', '_schema']))]);
-                }
             }
             if (in_array($op, ['save', 'submit'])) {
                 abort_unless(! $client || $stale || in_array($review->status, ['editing', 'returned', 'auditor_corrected']), 409);
@@ -147,7 +115,7 @@ class IsoFactorReviewController extends Controller
                 $request->validate(['answers' => 'required|array', 'complete_form' => 'required|accepted']);
                 $input = $data['answers'];
                 $previous = $this->questionnaire->currentAnswers($review->answers ?? [], $review->basis ?? [], $facts);
-                $input['factors'] = array_replace_recursive($previous['factors'] ?? [], is_array($input['factors'] ?? null) ? $input['factors'] : []);
+                $input['factors'] = array_replace($previous['factors'] ?? [], is_array($input['factors'] ?? null) ? $input['factors'] : []);
                 if ($htmlState === null && ($input['FAKT_KLIMAT_ISTOTNY'] ?? null) !== ($previous['FAKT_KLIMAT_ISTOTNY'] ?? null)) {
                     foreach ($this->questionnaire->factors($facts, $previous) as $factor) {
                         if (array_key_exists('FAKT_KLIMAT_ISTOTNY', $factor['dependencies'])) {
@@ -163,30 +131,7 @@ class IsoFactorReviewController extends Controller
                 if ($htmlState !== null || isset($review->answers['_html'])) {
                     $answers['_html'] = $htmlState ?? $review->answers['_html'];
                 }
-                $newRegistry = $oldRegistry;
-                if ($htmlState === null) {
-                    foreach ($answers['factors'] as $code => $answer) {
-                        foreach ($newRegistry as &$row) {
-                            if ($row['scope'] === 'client' && in_array($code, $row['czynniki'], true)) {
-                                foreach (['znaczenie' => 'znaczenie', 'decyzja' => 'decyzja_w', 'dzialanie' => 'dzialanie', 'sprawdzenie' => 'sprawdzenie'] as $key => $field) {
-                                    $row[$key] = $answer[$field] ?? '';
-                                }
-                            }
-                        }
-                    }
-                    unset($row);
-                }
-                if ($htmlState !== null) {
-                    $rows = $registry->validate($request->input('factor_conclusions', []), array_merge(array_column($this->questionnaire->schema()['czynniki'], 'kod'), array_column($answers['custom'] ?? [], 'id')));
-                    foreach ($rows as &$row) {
-                        $oldRow = collect($oldRegistry)->firstWhere('id', $row['id']);
-                        abort_if($client && $oldRow && $oldRow['scope'] !== 'client', 403);
-                        $row['scope'] = $oldRow['scope'] ?? 'client';
-                    }
-                    unset($row);
-                    $newRegistry = $client ? array_merge(array_values(array_filter($oldRegistry, fn ($row) => $row['scope'] !== 'client')), $rows) : $rows;
-                }
-                $changed = $stale || $answers !== ($review->answers ?? []) || $newRegistry !== $oldRegistry;
+                $changed = $stale || $answers !== ($review->answers ?? []);
                 if (! $client && ! $changed) {
                     return;
                 }
@@ -203,14 +148,12 @@ class IsoFactorReviewController extends Controller
                     }
                 }
                 if ($review->document_id) {
-                    app(IsoFactorDocument::class)->retainLegacyAssociation($review);
                     IsoSectionDocument::whereKey($review->document_id)->update(['description' => 'Dokument historyczny — ankieta 4.1 została zmieniona.']);
                 }
                 $review->$changeField = $changes ?: null;
                 if ($op === 'submit') {
                     $review->auditor_changes = null;
                 }
-                $review->swot = array_replace($review->swot ?? [], ['wnioski' => $newRegistry]);
                 $review->answers = $answers;
                 $review->basis = array_column($this->questionnaire->factors($facts, $answers), 'basis', 'kod');
                 $review->status = $op === 'submit' ? 'submitted' : (! $client || $review->status === 'auditor_corrected' ? 'auditor_corrected' : 'editing');
@@ -222,14 +165,16 @@ class IsoFactorReviewController extends Controller
             } elseif ($op === 'save_swot') {
                 $wasApproved = $review->status === 'approved';
                 if ($review->document_id) {
-                    app(IsoFactorDocument::class)->retainLegacyAssociation($review);
                     IsoSectionDocument::whereKey($review->document_id)->update(['description' => 'Dokument historyczny — analiza SWOT została zmieniona.']);
                 }
                 $review->document_id = null;
                 $review->auditor_approval = null;
-                $review->status = 'submitted';
+                $review->status = $wasApproved ? 'auditor_corrected' : 'submitted';
+                if ($wasApproved) {
+                    $review->client_approval = null;
+                }
             } elseif ($op === 'approve') {
-                abort_unless(! $client && in_array($review->status, ['submitted', 'approved']) && $review->client_approval, 403);
+                abort_unless(! $client && $review->status === 'submitted' && $review->client_approval, 403);
                 abort_if(($review->client_approval['user_id'] ?? null) === $request->user()->id, 403);
                 $request->validate(['note' => 'required|string|max:3000']);
                 $this->questionnaire->normalize($review->answers, $facts, true);
@@ -254,9 +199,6 @@ class IsoFactorReviewController extends Controller
             $review->source_hash = $hash;
             $review->lock_version++;
             $review->save();
-            if ($publishing) {
-                app(IsoFactorDocument::class)->publish($review, $profile, $request->user());
-            }
             DB::table('iso_factor_events')->insert(['review_id' => $review->id, 'user_name' => $request->user()->name, 'action' => $op, 'snapshot' => json_encode($review->only(['swot', 'answers', 'basis', 'source_profile_id', 'source_hash', 'status', 'client_approval', 'auditor_approval', 'auditor_changes', 'client_changes', 'review_note']), JSON_THROW_ON_ERROR), 'created_at' => now()]);
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'update', 'auditable_type' => Audit::class, 'auditable_id' => $audit->id, 'subject_label' => 'Ankieta czynników 4.1 — '.$op, 'route_name' => $request->route()->getName()]);
         });
@@ -291,9 +233,9 @@ class IsoFactorReviewController extends Controller
 
     public function pdf(Request $request, Audit $audit, IsoPlantProfile $profile)
     {
-        $client = $this->access($request, $audit, $profile, ! $request->boolean('preview'));
+        $client = $this->access($request, $audit, $profile);
         $data = $request->validate(['lock_version' => 'required|integer|min:0', 'preview' => 'nullable|boolean']);
-        $contents = DB::transaction(function () use ($request, $audit, $profile, $data, $client) {
+        $contents = DB::transaction(function () use ($request, $audit, $profile, $data) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             $this->access($request, $audit, $profile);
@@ -302,11 +244,12 @@ class IsoFactorReviewController extends Controller
             abort_unless($profile->status === 'approved' && $profile->client_approval && $profile->auditor_approval && $review->source_hash === $this->questionnaire->hash($profile), 409, 'Profil zakładu zmienił się — ponownie zatwierdź ankietę.');
             abort_unless($review->status === 'approved' && $review->client_approval && $review->auditor_approval, 403);
             $document = $review->document_id ? IsoSectionDocument::find($review->document_id) : null;
-            abort_if($client && ! $document, 403, 'Dokument publikuje konsultant.');
+            $contents = $document?->contents() ?: Pdf::loadView('audits.factors.pdf', ['review' => $review, 'profile' => $profile, 'questionnaire' => $this->questionnaire, 'facts' => $this->questionnaire->facts($profile)])->setPaper('a4')->output();
             if (! ($data['preview'] ?? false) && ! $document) {
-                $document = app(IsoFactorDocument::class)->publish($review, $profile, $request->user());
+                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => '4-1', 'scope' => 'client', 'title' => IsoFactorReview::DOCUMENT_TITLE, 'description' => 'Zakład: '.($profile->answers['site.name']['value'] ?? '').'. Zatwierdzony przez klienta i audytora.', 'document_year' => now()->year, 'version_number' => '1.0', 'original_filename' => IsoFactorReview::DOCUMENT_TITLE.'.pdf', 'stored_path' => 'iso50001/client/'.$audit->id.'/4-1/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
+                $review->document_id = $document->id;
+                $review->save();
             }
-            $contents = $document?->contents() ?: Pdf::loadView('audits.factors.pdf', ['review' => $review, 'profile' => $profile])->setPaper('a4')->output();
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'download', 'auditable_type' => Audit::class, 'auditable_id' => $audit->id, 'subject_label' => IsoFactorReview::DOCUMENT_TITLE, 'route_name' => $request->route()->getName()]);
 
             return $contents;
@@ -316,32 +259,5 @@ class IsoFactorReviewController extends Controller
         }
 
         return redirect()->route($this->prefix($client).'show', [$audit, $profile])->with('success', 'PDF zapisano w Dokumentacji punktu 4.1.');
-    }
-
-    public function document(Request $request, Audit $audit, IsoPlantProfile $profile)
-    {
-        $client = $this->access($request, $audit, $profile);
-        $request->validate(['edition' => 'nullable|integer|min:1', 'format' => ['nullable', Rule::in(['html', 'pdf'])]]);
-        $review = IsoFactorReview::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->firstOrFail();
-        $service = app(IsoFactorDocument::class);
-        $edition = $request->filled('edition') ? $service->editions($review)->firstWhere('id', (int) $request->edition) : ($client ? $service->editions($review)->first() : null);
-        abort_if($request->filled('edition') && ! $edition, 404);
-        abort_if($client && ! $edition, 403, 'Dokument nie został jeszcze opublikowany.');
-        if ($edition && empty($edition->generation_metadata['html'])) {
-            abort_unless($contents = $edition->contents(), 404);
-
-            return response($contents, 200, ['Content-Type' => 'application/pdf', 'Cache-Control' => 'private, no-store']);
-        }
-        $body = $edition?->generation_metadata['html'] ?? $service->body($review, $profile);
-        if ($edition) {
-            $review->issuer = $edition->generation_metadata['issuer'] ?? $review->issuer;
-        }
-        if ($request->input('format') === 'pdf') {
-            $contents = $edition ? $edition->contents() : Pdf::loadView('audits.factors.pdf', compact('body', 'review', 'profile'))->setPaper('a4')->output();
-
-            return response($contents, 200, ['Content-Type' => 'application/pdf', 'Cache-Control' => 'private, no-store']);
-        }
-
-        return response()->view('audits.factors.pdf', compact('body', 'review', 'profile'))->header('Cache-Control', 'private, no-store');
     }
 }

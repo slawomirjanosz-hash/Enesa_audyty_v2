@@ -1,7 +1,4 @@
 @php($guidance = config('iso50001-guidance.'.$item['id'], []))
-@if($item['id']!=='intro' && in_array($item['id'],array_column(app(\App\Services\IsoHtmlQuestionnaire::class)->manifest(),'section'),true))
-@include('audit-types.partials.iso-html-point')
-@else
 @if($guidance)
 <div class="iso-guidance">
     <section class="iso-guide-card iso-guide-verify">
@@ -41,5 +38,4 @@
 <style>.iso-sample-table{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:#dfe6e1;border:1px solid #dfe6e1;border-radius:7px;overflow:hidden;margin:10px 0}.iso-sample-table>div{background:#fff;padding:9px 11px;display:flex;justify-content:space-between;gap:12px}.iso-sample-table span{color:#66736b}.iso-sample-table strong{text-align:right}</style>
 <script>document.addEventListener('click',event=>{const button=event.target.closest('[data-iso-toggle]');if(!button)return;document.getElementById(button.dataset.isoToggle)?.classList.toggle('open')})</script>
 @endonce
-@endif
 @endif

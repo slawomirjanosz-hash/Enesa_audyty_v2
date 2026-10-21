@@ -455,7 +455,7 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
 
     $this->actingAs($superadmin)->get(route('audit-types.show', ['auditType' => $isoType, 'section' => '4-1']))
         ->assertOk()->assertSee('Film szkoleniowy')->assertSee('Jak analizować kontekst EnMS')
-        ->assertSee('data-iso-html-point', false)->assertSee('D-EnMS-KON-01')
+        ->assertSee('Ankieta kontekstu organizacji')->assertSee('D-EnMS-KON-01')
         ->assertSee(route('audit-types.questionnaire-preview', [$isoType, '4-1']), false);
 
     $this->actingAs($superadmin)->get(route('audit-types.iso50001.context', $isoType))
@@ -502,7 +502,7 @@ test('ISO 50001 point 4.1 provides a context generator with Word and PDF output'
     $documents->each(fn ($document) => Storage::disk('local')->assertExists($document->stored_path));
 
     $this->actingAs($client)->get(route('client.audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-1']))
-        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('data-iso-html-point', false)
+        ->assertOk()->assertSee('Jak analizować kontekst EnMS')->assertSee('4.1 Ankieta czynników kontekstowych')
         ->assertSee('Dokument Word wygenerowany z ankiety kontekstu organizacji.')
         ->assertSee('PDF wygenerowany z ankiety kontekstu organizacji.');
 

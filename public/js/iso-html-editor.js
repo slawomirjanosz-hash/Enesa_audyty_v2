@@ -16,19 +16,12 @@ document.querySelectorAll('[data-iso-html-editor]').forEach(host => {
     const analysis = document.querySelector('[data-swot-form]');
     const approve = analysis?.querySelector('[name="operation"][value="approve"]');
     if (approve) {
-        if (host.dataset.section === '4-1') {
-            const button = approve.cloneNode(true); button.type = 'button';
-            button.textContent = 'Zatwierdź jako konsultant i opublikuj dokument';
-            button.addEventListener('click', () => frame.contentWindow.postMessage({enesa:host.dataset.channel, action:'capture', operation:'publish'}, '*'));
-            approvals.append(button);
-        } else {
         const action = document.createElement('form'); action.method = 'post'; action.action = analysis.action;
         for (const [name, value] of new FormData(analysis)) {
             if (name === 'operation') continue;
             const input = document.createElement('input'); input.type = 'hidden'; input.name = name; input.value = value; action.append(input);
         }
         action.append(approve.cloneNode(true)); approvals.append(action);
-        }
     }
     if (host.dataset.section === '4-2') {
         const consultant = document.getElementById('consultant');
@@ -49,24 +42,11 @@ document.querySelectorAll('[data-iso-html-editor]').forEach(host => {
             return;
         }
         if (message.action === 'dirty') { dirty = true; return; }
-        if (['document','documentation'].includes(message.action) && host.dataset.section === '4-1') {
-            if (message.action === 'document' && dirty) { alert('Najpierw zapisz zmiany, aby podgląd odpowiadał zapisanym danym.'); return; }
-            const edition = Number.isInteger(message.state?.edition) && message.state.edition > 0 ? '&edition=' + message.state.edition : '';
-            const url = message.action === 'documentation' ? host.dataset.documentationUrl : host.dataset.documentUrl + '?format=pdf' + edition;
-            if (message.action === 'documentation') location.href = url;
-            else window.open(url, '_blank', 'noopener');
-            return;
-        }
-        if (message.action === 'tab') { approvals.hidden = host.dataset.section !== 'intro' && !['zatw','dok'].includes(message.state.id); return; }
-        if (!['save', 'submit', 'consultant', 'publish'].includes(message.action)) return;
+        if (message.action === 'tab') { approvals.hidden = host.dataset.section !== 'intro' && message.state.id !== 'zatw'; return; }
+        if (!['save', 'submit', 'consultant'].includes(message.action)) return;
         if (!message.state || typeof message.state !== 'object') return;
         form.elements.operation.value = message.action === 'consultant' && host.dataset.section === '4-1' ? 'save_swot' : message.action;
         form.elements.html_state.value = JSON.stringify(message.state);
-        if (message.action === 'publish') {
-            let note = form.querySelector('[name="note"]');
-            if (!note) { note = document.createElement('input'); note.type = 'hidden'; note.name = 'note'; form.append(note); }
-            note.value = message.state._reviewNote || '';
-        }
         dirty = false;
         form.requestSubmit();
     });

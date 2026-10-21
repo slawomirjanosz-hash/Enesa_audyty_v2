@@ -3,8 +3,6 @@
 </style></head><body>
 <header class="plant-header"><div><small>ISO 50001 · Punkt 4</small><h1>4.1 Czynniki kontekstowe</h1><span>{{$audit->company->name}} · {{$profile->answers['site.name']['value']??'Zakład'}}</span></div><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'4-1'])}}">← Wróć do audytu</a></header>
 <main class="plant-main">
-@include('audits.partials.iso-html-editor', ['htmlSection'=>'4-1'])
-<div hidden data-iso-html-native>
 @php
  $editable=$ready && $canWrite && (!$client || $stale || in_array($review->status,['editing','returned','auditor_corrected']));
  $display=$questionnaire->formAnswers(old('answers',$answers));
@@ -39,5 +37,5 @@
 <h3>Historia</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{$event->created_at}}">{{\Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i')}}</td><td>{{$event->user_name}}</td><td>{{$operations[$event->action]??$event->action}}</td></tr>@endforeach</tbody></table></div></section>
 @include('partials.field-validation')
 @include('partials.questionnaire-navigation')
-</div></main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}?v=guidelines-2" defer></script>@include('partials.form-drafts')
+</main><script type="module" src="{{asset('js/table-sort.js')}}"></script><script src="{{asset('js/iso-factors.js')}}?v=guidelines-2" defer></script>@include('partials.form-drafts')
 </body></html>

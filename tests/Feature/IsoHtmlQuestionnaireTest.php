@@ -21,11 +21,11 @@ test('supplied HTML remains byte identical to the reviewed source package', func
 test('latest 4.1 source is selected while the previous source and persistence contract stay intact', function () {
     $html = app(IsoHtmlQuestionnaire::class);
     $entry = collect($html->manifest())->firstWhere('section', '4-1');
-    expect($entry['release'])->toBe('2026-10-21');
+    expect($entry['release'])->toBe('2026-10-20');
     expect($html->document('4-1'))->toContain('function brakiKlienta()', 'var b = brakiKlienta();');
     $previous = collect(json_decode(file_get_contents(resource_path('iso50001/html-2026-10-18/manifest.json')), true))->firstWhere('section', '4-1');
     expect(hash_file('sha256', resource_path('iso50001/html-2026-10-18/4-1.html')))->toBe($previous['sha256']);
-    expect($entry['tabs'])->toHaveCount(7)->and($entry['state'])->toContain('PODSUM', 'WNIOSKI', 'ID_SEQ');
+    expect($entry['tabs'])->toBe($previous['tabs'])->and($entry['state'])->toBe($previous['state']);
 });
 
 test('each clause page uses the source page and actual profile chooser instead of demo progress', function (string $section) {
@@ -112,26 +112,27 @@ test('HTML factor save uses ordinary locks and never accepts client consultant c
     [$audit, $client, $staff, $profile] = factorFixture();
     $payload = factorInput($profile);
     $state = app(IsoHtmlState::class)->fromAnswers('4-1', $payload['answers']);
-    $state['WNIOSKI'] = [['id' => 'WN-1', 'czynniki' => ['KTX-WT-01'], 'znaczenie' => 'Wniosek klienta']];
+    $state['WNIOSKI'] = [['znaczenie' => 'Niedozwolony wpis klienta']];
     $state['SWOT'] = ['S' => 'Prywatne pole'];
     $url = route('client.audits.factors.update', [$audit, $profile]);
     $this->actingAs($client)->post($url, ['operation' => 'save', 'lock_version' => 0, 'source_hash' => $payload['source_hash'], 'html_state' => json_encode($state)])
         ->assertRedirect()->assertSessionHasNoErrors();
     $review = IsoFactorReview::firstOrFail();
-    expect($review->answers['FAKT_KLIMAT_ISTOTNY'])->toBe('nie')->and($review->swot['wnioski'][0]['scope'])->toBe('client')->and($review->swot)->not->toHaveKey('strengths');
+    expect($review->answers['FAKT_KLIMAT_ISTOTNY'])->toBe('nie')->and($review->swot)->toBeNull();
     expect($review->answers['_html'])->not->toHaveKeys(['WNIOSKI', 'SWOT', 'ODP', 'PROFIL']);
     $this->post($url, ['operation' => 'save', 'lock_version' => 0, 'source_hash' => $payload['source_hash'], 'html_state' => json_encode($state)])->assertStatus(409);
     expect($review->fresh()->lock_version)->toBe(1);
 });
 
-test('client HTML receives real scoped facts and never receives private analysis', function () {
+test('restored platform questionnaire hides private analysis and does not embed source HTML', function () {
     [$audit, $client, $staff, $profile] = factorFixture();
     $service = app(IsoFactorQuestionnaire::class);
     $review = IsoFactorReview::create(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'source_profile_id' => $profile->id, 'status' => 'editing', 'lock_version' => 0, 'source_hash' => $service->hash($profile), 'answers' => [], 'swot' => ['strengths' => 'SECRET-INTERNAL-HTML-ANALYSIS']]);
     $this->actingAs($client)->get(route('client.audits.factors.show', [$audit, $profile]))
-        ->assertOk()->assertSee('sandbox="allow-scripts allow-modals allow-downloads"', false)
-        ->assertDontSee('SECRET-INTERNAL-HTML-ANALYSIS');
-    $this->actingAs($staff)->get(route('audits.factors.show', [$audit, $profile]))->assertOk()->assertSee('SECRET-INTERNAL-HTML-ANALYSIS');
+        ->assertOk()->assertSee('factor-form', false)->assertDontSee('<iframe', false)
+        ->assertDontSee('Specyfikacja dla Sławka')->assertDontSee('SECRET-INTERNAL-HTML-ANALYSIS');
+    $this->actingAs($staff)->get(route('audits.factors.show', [$audit, $profile]))->assertOk()->assertSee('SECRET-INTERNAL-HTML-ANALYSIS')
+        ->assertDontSee('<iframe', false)->assertDontSee('Specyfikacja dla Sławka');
 });
 
 test('profile source answers preserve unknown answers and repeater identities', function () {

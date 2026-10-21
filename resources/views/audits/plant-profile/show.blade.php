@@ -7,9 +7,6 @@
     $operations['schema_upgrade'] = 'Rozszerzono profil według ankiety audytorów — odpowiedzi zachowane';
     $operations['elaborate'] = 'Opracowano charakterystykę zakładu i podstawy wdrożenia EnMS';
 @endphp
-@php($sourceProfile=collect($questionnaire->questions($profile->definition))->contains(fn($question)=>str_starts_with($question['key'],'FAKT_')))
-@if($sourceProfile) @include('audits.partials.iso-html-editor', ['htmlSection'=>'intro']) @endif
-<div @if($sourceProfile) hidden data-iso-html-native @endif>
 @include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'plant-form'])
 @include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
@@ -50,5 +47,4 @@
 @if($profile->elaboration_document_id)<p><a href="{{route($client ? 'client.audits.show' : 'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'intro'])}}#iso-documents-intro">Opracowanie zapisane — otwórz Dokumentację punktu →</a></p>@endif
 @endif
 <h3>Historia</h3><div class="plant-scroll"><table><thead><tr><th>Data</th><th>Osoba</th><th>Działanie</th></tr></thead><tbody>@foreach($events as $event)<tr><td data-sort-value="{{ $event->created_at }}">{{ \Carbon\Carbon::parse($event->created_at)->format('d.m.Y H:i:s') }}</td><td>{{ $event->user_name }}</td><td>{{ $operations[$event->action]??$event->action }}</td></tr>@endforeach</tbody></table></div></section>
-</div>
 @endsection

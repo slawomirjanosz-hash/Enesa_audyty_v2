@@ -66,7 +66,7 @@ class IsoQuestionnairePreviewController extends Controller
             $data = array_replace($data, compact('service', 'sources', 'answers', 'sections'), ['kind' => 'system', 'formId' => 'system-form', 'script' => 'iso-system.js']);
         }
 
-        return view('audit-types.iso-html-preview', $data);
+        return view('audit-types.questionnaire-preview', $data);
     }
 
     private function blankTree(array $node): mixed

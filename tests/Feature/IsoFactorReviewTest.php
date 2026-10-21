@@ -11,7 +11,7 @@ function factorFixture(): array
 {
     [$audit, $client, $staff] = plantFixture();
     $site = DB::table('iso_plant_sites')->insertGetId(['company_id' => $audit->company_id, 'name' => 'Zakład', 'created_at' => now(), 'updated_at' => now()]);
-    $profile = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $site, 'revision' => 1, 'lock_version' => 0, 'status' => 'approved', 'as_of_date' => today(), 'definition' => app(IsoPlantQuestionnaire::class)->definition(), 'answers' => ['site.name' => ['value' => 'Zakład'], 'FAKT_PODLICZNIKI' => ['value' => 'brak'], 'FAKT_NOSNIKI' => ['value' => [['c0' => 'LPG', 'c1' => '20000', 'c2' => 'MWh']]]], 'client_approval' => ['user_id' => $client->id], 'auditor_approval' => ['user_id' => $staff->id]]);
+    $profile = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $site, 'revision' => 1, 'lock_version' => 0, 'status' => 'approved', 'as_of_date' => today(), 'definition' => app(IsoPlantQuestionnaire::class)->definition(), 'answers' => ['site.name' => ['value' => 'Zakład'], 'FAKT_PODLICZNIKI' => ['value' => 'brak']], 'client_approval' => ['user_id' => $client->id], 'auditor_approval' => ['user_id' => $staff->id]]);
 
     return [$audit, $client, $staff, $profile];
 }
@@ -48,7 +48,7 @@ test('SWOT is written only by staff after client approval and included in docume
     $payload['lock_version'] = 3;
     $payload['swot']['threats'] = 'Przerwy w dostawach energii';
     $this->post($url, $payload)->assertSessionHasNoErrors();
-    expect($review->fresh()->document_id)->toBeNull()->and($review->fresh()->auditor_approval)->toBeNull()->and($review->fresh()->client_approval)->not->toBeNull()->and($review->fresh()->status)->toBe('submitted')->and($document->fresh()->description)->toContain('historyczny');
+    expect($review->fresh()->document_id)->toBeNull()->and($review->fresh()->auditor_approval)->toBeNull()->and($review->fresh()->client_approval)->toBeNull()->and($review->fresh()->status)->toBe('auditor_corrected')->and($document->fresh()->description)->toContain('historyczny');
     $this->post(route('audits.factors.pdf', [$audit, $profile]), ['lock_version' => 4])->assertForbidden();
     expect(DB::table('iso_factor_events')->where('action', 'save_swot')->count())->toBe(2);
 });
@@ -73,7 +73,7 @@ test('factor schema preserves 70 codes seven groups and references plant facts s
     $factors = collect($s->factors(['FAKT_PODLICZNIKI' => 'brak'], []))->keyBy('kod');
     expect($factors['KTX-WT-01']['visible'])->toBeTrue()->and($factors['KTX-WT-02']['visible'])->toBeFalse();
     expect(collect($s->factors([], []))->where('visible', true)->where('kod', 'KTX-WT-01'))->toHaveCount(0);
-    expect($factors['KTX-ZR-01']['rodzaj'])->toBe('AUTO');
+    expect($factors['KTX-ZR-01']['rodzaj'])->toBe('PROPOZYCJA');
 });
 
 test('factor review completes two approvals PDF and same record correction exchange', function () {

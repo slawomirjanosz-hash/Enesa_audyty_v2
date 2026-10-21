@@ -12,7 +12,7 @@ test('auditor schema retains all 85 stable codes and all six departments', funct
     $service = app(IsoPlantQuestionnaire::class);
     $definition = $service->definition();
     $questions = collect($service->questions($definition))->keyBy('key');
-    expect($definition['groups'])->toHaveCount(6)->and($questions)->toHaveCount(97);
+    expect($definition['groups'])->toHaveCount(6)->and($questions)->toHaveCount(90);
     foreach ($source['sekcje'] as $section) {
         foreach ($section['pytania'] as $q) {
             expect($questions[$q['kod']]['label'])->toBe($q['pytanie']);
@@ -26,7 +26,7 @@ test('auditor schema retains all 85 stable codes and all six departments', funct
     expect($service->visible($questions['FAKT_SYSTEM_BAZOWY_ROK'], ['FAKT_SYSTEM_BAZOWY' => ['value' => 'iso_9001']]))->toBeTrue();
     expect($service->visible($questions['FAKT_LOKALIZACJE_LISTA'], ['FAKT_LOKALIZACJE' => ['value' => 0]]))->toBeFalse();
     expect($service->visible($questions['FAKT_LOKALIZACJE_LISTA'], ['FAKT_LOKALIZACJE' => ['value' => 2]]))->toBeTrue();
-    expect(app(QuestionnaireCompletion::class)->plant($definition, [])['total'])->toBe(62);
+    expect(app(QuestionnaireCompletion::class)->plant($definition, [])['total'])->toBe(57);
 });
 
 test('server calculates energy and fossil fuel facts without trusting submitted automatic fields', function () {

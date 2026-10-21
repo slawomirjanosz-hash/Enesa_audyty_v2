@@ -78,7 +78,7 @@ test('climate decision activates the corresponding library factor and preserves 
     $no = collect($service->factors($facts, ['FAKT_KLIMAT_ISTOTNY' => 'nie']))->keyBy('kod');
     expect($yes['KTX-ZK-01']['visible'])->toBeTrue()->and($yes['KTX-ZK-02']['visible'])->toBeFalse();
     expect($no['KTX-ZK-02']['visible'])->toBeTrue()->and($no['KTX-ZK-01']['visible'])->toBeFalse();
-    expect($yes['KTX-WO-12']['rodzaj'])->toBe('PROPOZYCJA')->and($yes['KTX-WO-12']['pokaz_gdy'])->toBe('FAKT_SYSTEM_BAZOWY != brak');
+    expect($yes['KTX-WO-12']['rodzaj'])->toBe('PROPOZYCJA')->and($yes['KTX-WO-12']['verification'])->toContain('zatwierdzenia merytorycznego');
 });
 
 test('documentation control rejects missing coverage duplicates and outdated external documents', function () {
