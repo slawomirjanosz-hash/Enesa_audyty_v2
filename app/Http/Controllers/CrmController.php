@@ -217,6 +217,7 @@ class CrmController extends Controller
     public function storeOpportunity(Request $request): RedirectResponse
     {
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
+        $action = $this->validatedLeadAction($request);
         $data = $request->validateWithBag('leadCreate', [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -235,9 +236,14 @@ class CrmController extends Controller
         $relatedUsers = $data['related_users'] ?? [];
         unset($data['company_context_id']);
         unset($data['related_users']);
-        $opportunity = CrmOpportunity::create(array_merge($data, ['created_by' => auth()->id()]));
-        $opportunity->relatedUsers()->sync($relatedUsers);
-        app(CrmActivityLogger::class)->leadCreated($opportunity);
+        $opportunity = DB::transaction(function () use ($data, $relatedUsers, $action) {
+            $opportunity = CrmOpportunity::create(array_merge($data, ['created_by' => auth()->id()]));
+            $opportunity->relatedUsers()->sync($relatedUsers);
+            app(CrmActivityLogger::class)->leadCreated($opportunity);
+            $this->createLeadAction($opportunity, $action);
+
+            return $opportunity;
+        });
 
         if ($companyContextId && (int) $companyContextId === (int) $opportunity->company_id) {
             return redirect()->to(route('companies.show', $opportunity->company_id).'#crm')
@@ -396,6 +402,7 @@ class CrmController extends Controller
     public function updateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse
     {
         $this->authorize('update', $opportunity);
+        $action = $this->validatedLeadAction($request);
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -414,12 +421,15 @@ class CrmController extends Controller
         $companyContextId = $data['company_context_id'] ?? null;
         unset($data['related_users']);
         unset($data['company_context_id']);
-        $previousStage = $opportunity->stage;
-        $opportunity->update($data);
-        $opportunity->relatedUsers()->sync($relatedUsers);
-        if ($previousStage !== $opportunity->stage) {
-            app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
-        }
+        DB::transaction(function () use ($opportunity, $data, $relatedUsers, $action) {
+            $previousStage = $opportunity->stage;
+            $opportunity->update($data);
+            $opportunity->relatedUsers()->sync($relatedUsers);
+            if ($previousStage !== $opportunity->stage) {
+                app(CrmActivityLogger::class)->leadStageChanged($opportunity, $previousStage, $opportunity->stage);
+            }
+            $this->createLeadAction($opportunity, $action);
+        });
 
         if ($companyContextId && (int) $companyContextId === (int) $opportunity->company_id) {
             return redirect()->to(route('companies.show', $companyContextId).'#crm')
@@ -427,6 +437,43 @@ class CrmController extends Controller
         }
 
         return redirect()->route('crm.index', ['tab' => 'pipeline'])->with('success', 'Szansa została zaktualizowana.');
+    }
+
+    private function validatedLeadAction(Request $request): array
+    {
+        $data = $request->validate([
+            'action_description' => ['nullable', 'required_with:action_due_date,action_assigned_to', 'string', 'max:10000'],
+            'action_due_date' => ['nullable', 'required_with:action_description,action_assigned_to', 'date_format:Y-m-d'],
+            'action_assigned_to' => ['nullable', 'required_with:action_description,action_due_date', 'integer', 'exists:users,id'],
+        ]);
+        if (! isset($data['action_description']) || $data['action_description'] === '') {
+            return [];
+        }
+        $actor = $request->user();
+        $team = app(AuditorAccessService::class)->hasFullAccess($actor) || $actor->can('crm.tasks.team.manage');
+        abort_unless($team || ($actor->can('crm.tasks.own.manage') && (int) $data['action_assigned_to'] === $actor->id), 403);
+        abort_unless(User::whereKey($data['action_assigned_to'])->where('is_active', true)
+            ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))->exists(), 422, 'Wybierz aktywnego pracownika.');
+
+        return $data;
+    }
+
+    private function createLeadAction(CrmOpportunity $opportunity, array $action): void
+    {
+        if ($action === []) {
+            return;
+        }
+        Task::create([
+            'title' => mb_substr($action['action_description'], 0, 255),
+            'description' => $action['action_description'],
+            'due_date' => $action['action_due_date'],
+            'assigned_to' => $action['action_assigned_to'],
+            'created_by' => auth()->id(),
+            'company_id' => $opportunity->company_id,
+            'crm_opportunity_id' => $opportunity->id,
+            'status' => 'todo',
+            'priority' => 'medium',
+        ]);
     }
 
     public function duplicateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse

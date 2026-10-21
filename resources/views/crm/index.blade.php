@@ -941,7 +941,7 @@
 
 {{-- ═══ MODAL: NOWA SZANSA ═══ --}}
 <div id="modal-opp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
             <div style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;"><i class="ti ti-target" style="color:var(--green);margin-right:8px;"></i>Nowa szansa</div>
             <button onclick="document.getElementById('modal-opp').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:20px;color:#888;">×</button>
@@ -999,6 +999,7 @@
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Notatki</label>
                 <textarea name="notes" rows="2" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
+            @include('crm.lead-action')
             <div style="display:flex;gap:10px;justify-content:flex-end;">
                 <button type="button" onclick="document.getElementById('modal-opp').style.display='none'" class="btn-secondary">Anuluj</button>
                 <button type="submit" class="btn-primary"><i class="ti ti-plus"></i> Dodaj szansę</button>
@@ -1294,6 +1295,7 @@
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
 
+            @include('crm.lead-action')
             <div id="opportunity-linked-tasks-section" style="margin-bottom:20px;">
                 <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#555;margin-bottom:7px;">Powiązane zadania <span id="opportunity-linked-tasks-count" style="color:#888;font-weight:400;"></span></div>
                 <div id="opportunity-linked-tasks" style="display:grid;gap:7px;"></div>
@@ -1700,6 +1702,7 @@ function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, 
 }
 
 function populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {
+    document.querySelectorAll('#form-edit-opp .lead-action').forEach(section => { section.open = false; section.querySelectorAll('input, textarea, select').forEach(field => field.value = ''); });
     document.getElementById('edit-opp-id').value = id;
     document.getElementById('edit-opp-title').value = title;
     document.getElementById('edit-opp-company').value = companyId || '';
@@ -1720,6 +1723,7 @@ function populateOpportunityModal(id, title, companyId, stage, value, closeDate,
 
 function setOpportunityModalMode(editing, companyUrl = null) {
     const form = document.getElementById('form-edit-opp');
+    form.querySelectorAll('.lead-action').forEach(section => section.hidden = !editing);
     form.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(field => {
         field.disabled = !editing;
     });
