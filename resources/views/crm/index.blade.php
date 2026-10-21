@@ -1310,6 +1310,9 @@
         <div id="opportunity-view-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;">
             <a id="opportunity-company-link" href="#" class="btn-secondary"><i class="ti ti-building"></i> Przejdź do karty klienta</a>
             @if($canManageCrm || auth()->user()->can('crm.leads.manage'))
+                @if($canManageOwnTasks)
+                <button type="button" onclick="enableOpportunityEdit(); const section = document.querySelector('#form-edit-opp .lead-action'); section.open = true; section.scrollIntoView({block:'center'}); section.querySelector('textarea').focus();" class="btn-secondary"><i class="ti ti-plus"></i> Dodaj działanie</button>
+                @endif
                 <button type="button" onclick="enableOpportunityEdit()" class="btn-primary"><i class="ti ti-pencil"></i> Edytuj szansę</button>
             @endif
         </div>
