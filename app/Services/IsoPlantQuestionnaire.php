@@ -9,19 +9,56 @@ use Illuminate\Validation\ValidationException;
 
 class IsoPlantQuestionnaire
 {
+    private ?array $currentDefinition = null;
+
     public function definition(): array
     {
-        return json_decode(file_get_contents(resource_path('iso50001/plant-profile-v2.json')), true, 512, JSON_THROW_ON_ERROR);
+        return $this->currentDefinition ??= json_decode(file_get_contents(resource_path('iso50001/plant-profile-v2.json')), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /** Optional source fields omitted from earlier v2 snapshots; no stored data is rewritten. */
+    public function expandedDefinition(array $definition): array
+    {
+        if (($definition['version'] ?? '') !== '2.0') {
+            return $definition;
+        }
+        $known = array_column(array_merge(...array_column($definition['groups'], 'questions')), 'key');
+        foreach ($this->definition()['groups'] as $group) {
+            foreach ($group['questions'] as $question) {
+                if (empty($question['source_added']) || in_array($question['key'], $known, true)) {
+                    continue;
+                }
+                foreach ($definition['groups'] as &$target) {
+                    if ($target['id'] === $group['id']) {
+                        $target['questions'][] = $question;
+                    }
+                }
+                unset($target);
+            }
+        }
+
+        return $definition;
     }
 
     public function questions(array $definition): array
     {
-        return array_merge(...array_column($definition['groups'], 'questions'));
+        return array_merge(...array_column($this->expandedDefinition($definition)['groups'], 'questions'));
     }
 
     /** Stable identifiers for later questionnaires; inactive/unknown values are never facts. */
     public function facts(array $definition, array $answers): array
     {
+        foreach ($this->questions($definition) as $question) {
+            if (array_key_exists($question['key'], $answers) || empty($question['source_added'])) {
+                continue;
+            }
+            $value = $answers['_html']['ODP'][$question['key']] ?? null;
+            $value = $question['type'] === 'number' ? IsoPlantCalculations::number($value) : (is_string($value) ? $value : null);
+            if ($question['type'] === 'select' && ! array_key_exists($value ?? '', $question['options'])) {
+                $value = null;
+            }
+            $answers[$question['key']] = ['value' => $value];
+        }
         $answers = app(IsoPlantCalculations::class)->apply($definition, $answers);
         $facts = [];
         foreach ($this->questions($definition) as $q) {

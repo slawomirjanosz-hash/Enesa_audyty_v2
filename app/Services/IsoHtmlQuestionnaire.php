@@ -18,6 +18,7 @@ class IsoHtmlQuestionnaire
         if (self::$manifest === null) {
             $base = json_decode(file_get_contents(resource_path('iso50001/html-2026-10-18/manifest.json')), true, 512, JSON_THROW_ON_ERROR);
             $updates = collect(json_decode(file_get_contents(resource_path('iso50001/html-2026-10-20/manifest.json')), true, 512, JSON_THROW_ON_ERROR))->keyBy('section');
+            $updates = $updates->replace(collect(json_decode(file_get_contents(resource_path('iso50001/html-2026-10-21/manifest.json')), true, 512, JSON_THROW_ON_ERROR))->keyBy('section'));
             self::$manifest = array_map(fn ($entry) => array_replace($entry, $updates[$entry['section']] ?? []), $base);
         }
 
@@ -83,13 +84,15 @@ class IsoHtmlQuestionnaire
         // The prototype's browser storage is replaced by a frame-local memory store.
         // The sandbox has no origin or network permission; only the parent can save.
         $bootstrap = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data:; form-action \'none\'"><script>var ENESA_HOST='.$json.';var localStorage={getItem:function(){return null},setItem:function(){},removeItem:function(){}};</script>';
-        $html = str_replace('<head>', '<head>'.$bootstrap, $html);
+        // The source also contains HTML strings for its print window. Inject only
+        // into the real document, never into a quoted <head> or </body> in JavaScript.
+        $html = substr_replace($html, $bootstrap, strpos($html, '<head>') + strlen('<head>'), 0);
         $actions = file_get_contents(public_path('js/table-actions.js'));
         preg_match('/export function isActionHeading\(.*?(?=export function enhanceAction)/s', $actions, $heading);
         $sort = preg_replace('/^import .*?;\s*/', '', file_get_contents(public_path('js/table-sort.js')));
         $bridge = '<script>'.file_get_contents(public_path('js/iso-plant-energy.js')).file_get_contents(public_path('js/iso-html-clipboard-frame.js')).file_get_contents(public_path('js/iso-html-frame.js')).'</script><script type="module">'.$heading[0].$sort.'</script>';
 
-        return str_replace('</body>', $bridge.'</body>', $html);
+        return substr_replace($html, $bridge, strrpos($html, '</body>'), 0);
     }
 
     public function configuration(string $section, array $data): array
@@ -103,6 +106,9 @@ class IsoHtmlQuestionnaire
         $state = app(IsoHtmlState::class)->fromAnswers($section, $answers, $sources);
         $context = ['PROFIL' => $sources['facts'] ?? [], 'TERAZ' => now()->format('d.m.Y H:i'), 'DZIS' => today()->toDateString()];
         if ($section === '4-1') {
+            if (! $review instanceof IsoFactorReview) {
+                $review = new IsoFactorReview(['answers' => $answers, 'swot' => $data['exampleSwot'] ?? [], 'status' => 'editing']);
+            }
             $context['ODP'] = $sources['facts'] ?? [];
             $context['PROFIL'] = ['nazwa' => $profile->answers['site.name']['value'] ?? '', 'odpowiedzi' => count($sources['facts'] ?? [])];
             if (! $client) {
@@ -110,8 +116,26 @@ class IsoHtmlQuestionnaire
                 foreach (['S' => 'strengths', 'W' => 'weaknesses', 'O' => 'opportunities', 'T' => 'threats'] as $key => $field) {
                     $state['SWOT'][$key] = $swot[$field] ?? '';
                 }
-                $state['WNIOSKI'] = $swot['wnioski'] ?? [];
+                $state['PODSUM'] = array_replace(['ocena' => '', 'ustalenia' => [], 'decyzje' => [], 'braki' => []], $swot['podsum'] ?? []);
             }
+            $registry = app(IsoFactorConclusions::class)->registry($review);
+            $state['ID_SEQ'] = $review->answers['_html']['ID_SEQ'] ?? ['WL' => 0, 'WN' => 0];
+            foreach ($registry as $row) {
+                if (preg_match('/^WN-([0-9]+)$/', $row['id'], $match)) {
+                    $state['ID_SEQ']['WN'] = max((int) ($state['ID_SEQ']['WN'] ?? 0), (int) $match[1]);
+                }
+            }
+            $state['WNIOSKI'] = $client ? app(IsoFactorConclusions::class)->forClient($registry) : $registry;
+            $editions = app(IsoFactorDocument::class)->editions($review);
+            $latest = $editions->first();
+            $unpublishedBody = $latest ? '<p>Dotychczasowe wydanie PDF jest dostępne w Dokumentacji punktu 4.1. Użyj przycisku podglądu PDF.</p>' : '<p>Dokument nie został jeszcze wydany. Gotowy PDF będzie dostępny w Dokumentacji punktu 4.1.</p>';
+            $context['PRZEKAZANIE'] = $review->client_approval ? ['data' => $review->client_approval['at'] ?? '', 'osoba' => $review->client_approval['name'] ?? '', 'odcisk' => ''] : null;
+            $context['PUBLIKACJE'] = [];
+            $context['PUBLIKACJA'] = null;
+            $documentConfig = ['body' => $client ? ($latest?->generation_metadata['html'] ?? $unpublishedBody) : app(IsoFactorDocument::class)->body($review, $profile),
+                'publishedBody' => $latest?->generation_metadata['html'], 'editionId' => $latest?->id,
+                'previewUrl' => isset($data['audit']) ? route(($client ? 'client.' : '').'audits.factors.document', [$data['audit'], $profile]) : null,
+                'documentationUrl' => isset($data['audit']) ? route($client ? 'client.audits.show' : 'audits.show', ['audit' => $data['audit'], 'tab' => 'iso50001', 'section' => '4-1']).'#iso-documents-4-1' : null];
         } elseif ($section === '4-2') {
             $factor = ! empty($data['questionnairePreview']) ? null : IsoFactorReview::where('audit_id', $profile->audit_id)->where('site_id', $profile->site_id)->first();
             $confirmed = [];
@@ -148,7 +172,7 @@ class IsoHtmlQuestionnaire
         }
         $sourceReady = $section === 'intro' || (in_array($section, ['4-1', '4-2']) ? ($data['ready'] ?? false) : ($sources['ready'] ?? false));
 
-        return ['section' => $section, 'channel' => (string) Str::uuid(), 'state' => $state, 'context' => $context, 'client' => $client, 'editable' => $editable,
+        return ['factorDocument' => $documentConfig ?? null, 'section' => $section, 'channel' => (string) Str::uuid(), 'state' => $state, 'context' => $context, 'client' => $client, 'editable' => $editable,
             'initialDirty' => request()->boolean('source_example'),
             'unknown' => $section === 'intro' ? array_keys(array_filter($answers, fn ($answer) => is_array($answer) && ! empty($answer['unknown']))) : [],
             'identity' => isset($data['audit']) ? $data['audit']->company->name.' · '.($profile->answers['site.name']['value'] ?? '').' · '.(($data['stale'] ?? false) ? 'Wymaga ponownego zatwierdzenia' : IsoPlantProfile::STATUSES[$review->status]) : 'Podgląd bez danych klienta',

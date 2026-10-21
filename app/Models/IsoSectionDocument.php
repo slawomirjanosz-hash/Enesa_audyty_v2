@@ -14,12 +14,12 @@ class IsoSectionDocument extends Model
     protected $fillable = [
         'audit_id', 'section_id', 'scope', 'title', 'description', 'document_year',
         'version_number', 'original_filename', 'stored_path', 'mime_type', 'size', 'uploaded_by',
-        'content_base64', 'storage_owner_id',
+        'content_base64', 'storage_owner_id', 'generation_metadata',
     ];
 
     protected $hidden = ['content_base64'];
 
-    protected $casts = ['document_year' => 'integer'];
+    protected $casts = ['document_year' => 'integer', 'generation_metadata' => 'array'];
 
     public function scopeMetadata($query)
     {

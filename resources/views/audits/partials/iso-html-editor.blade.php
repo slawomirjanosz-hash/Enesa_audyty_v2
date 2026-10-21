@@ -4,9 +4,10 @@
     $htmlFrame=app(\App\Services\IsoHtmlQuestionnaire::class)->frame($htmlSection,$htmlConfiguration);
     $htmlParameters=in_array($htmlSection,['intro','4-1','4-2'])?[$audit,$profile]:[$audit,$profile,$htmlSection];
 @endphp
-<section data-iso-html-editor data-channel="{{$htmlConfiguration['channel']}}" data-section="{{$htmlSection}}" data-approvals="approvals">
+<section data-iso-html-editor data-channel="{{$htmlConfiguration['channel']}}" data-section="{{$htmlSection}}" data-approvals="approvals" data-document-url="{{$htmlConfiguration['factorDocument']['previewUrl']??''}}" data-documentation-url="{{$htmlConfiguration['factorDocument']['documentationUrl']??''}}">
 <div data-iso-html-tools></div>
 @if($htmlSection==='4-1')
+@if($review->exists && ($review->answers['_html']['_schema']??null)!=='4.1/3')<div class="plant-notice">Wczytano starszy zapis 4.1 przez adapter: zachowano odpowiedzi, identyfikatory i wnioski. Nowe pola podstawy ustalenia wymagają sprawdzenia; nie uzupełniono ich danymi przykładowymi. Zatwierdzenia i wydane dokumenty nie zostały automatycznie zmienione.</div>@endif
 @php
  $unresolvedFactors=collect(app(\App\Services\IsoFactorQuestionnaire::class)->factors(app(\App\Services\IsoFactorQuestionnaire::class)->facts($profile),$answers??[]))->filter(fn($factor)=>!$factor['visible'] && in_array(null,$factor['dependencies'],true));
  $currentEnergy=app(\App\Services\IsoPlantCalculations::class)->apply($profile->definition,$profile->answers)['ZUZYCIE_TJ']??[];

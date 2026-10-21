@@ -4,7 +4,7 @@
     // Source helpers concatenate some answer text into formatted notices. Keep
     // their formatting, but never execute markup supplied in a customer answer.
     const html = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-    const tags = new Set(['B','STRONG','EM','I','BR','CODE','SMALL','SPAN','P','UL','OL','LI','DIV','SUP','SUB','H2','H3','H4','TABLE','THEAD','TBODY','TFOOT','TR','TH','TD']);
+    const tags = new Set(['ARTICLE','B','STRONG','EM','I','BR','CODE','SMALL','SPAN','P','UL','OL','LI','DIV','SUP','SUB','H2','H3','H4','TABLE','THEAD','TBODY','TFOOT','TR','TH','TD']);
     Object.defineProperty(Element.prototype, 'innerHTML', {...html, set(value) {
         if (!value) { html.set.call(this, value); return; }
         const template = document.createElement('template');
@@ -81,6 +81,7 @@
             Object.assign(WYL, EnesaPlantEnergy.sourceFacts(facts, config.energyFactors, !config.preview));
         };
     }
+    if (config.section === '4-1') window.ID_SEQ = {WL:0,WN:0};
     const initial = capture();
     // The supplied examples declare the renderer's types (in particular boolean
     // switches). Platform form strings must not turn "nie" into a truthy flag.
@@ -116,6 +117,10 @@
     if ('HISTORIA' in window) HISTORIA = config.history || [];
     if ('ROLA' in window) ROLA = config.client ? 'klient' : 'konsultant';
     if (!config.preview) document.querySelectorAll('#rola_klient,#rola_kons').forEach(button => button.remove());
+    if (!config.preview && config.section === '4-1') {
+        const role = document.querySelector('.rola');
+        if (role) role.textContent = 'Rola: ' + (config.client ? 'Klient' : 'Konsultant');
+    }
     if (config.section !== 'intro' && config.identity) {
         const identity = document.querySelector('header .sub'); if (identity) identity.textContent = config.identity;
     }
@@ -143,6 +148,46 @@
         if (!config.editable && name === 'save') return;
         send(name, capture());
     };
+    if (config.section === '4-1' && !config.preview) {
+        let publishedDocument = config.client;
+        const nextId = (kind, rows) => {
+            const numbers = rows.map(row => new RegExp('^' + kind + '-(\\d+)$').exec(row.id || '')).filter(Boolean).map(match => Number(match[1]));
+            ID_SEQ[kind] = Math.max(ID_SEQ[kind] || 0, ...numbers) + 1;
+            return kind + '-' + ID_SEQ[kind];
+        };
+        window.nowyIdWlasnego = () => nextId('WL', WLASNE);
+        window.nowyIdWniosku = () => nextId('WN', WNIOSKI);
+        // Approval and publication belong to Laravel, never the prototype's browser store.
+        if (PRZEKAZANIE) PRZEKAZANIE.odcisk = odciskKlienta();
+        window.zatwierdzKonsultanta = () => {
+            if (!config.consultant) { alert('Publikacja wymaga aktualnego zatwierdzenia klienta i uprawnień audytora.'); return; }
+            const note = prompt('Wynik przeglądu / uzasadnienie zatwierdzenia dokumentu:');
+            if (!note?.trim()) return;
+            send('publish', {...capture(), _reviewNote: note.trim()});
+        };
+        window.drukujDokument = () => send('document', {format: 'pdf'});
+        window.rysujDokument = host => {
+            const notice = document.createElement('p'); notice.className = 'note';
+            notice.textContent = 'Podgląd przedstawia ostatnio zapisane dane. Po zmianach zapisz ankietę lub analizę. Wydania PDF są przechowywane w Dokumentacji punktu 4.1.';
+            host.append(notice);
+            for (const [label, action, format] of [['Podgląd PDF','document','pdf'],['Dokumentacja punktu 4.1','documentation',null]]) {
+                const button = document.createElement('button'); button.type = 'button'; button.textContent = label;
+                button.onclick = () => send(action, {format, edition: publishedDocument ? config.factorDocument?.editionId : null}); host.append(button);
+            }
+            if (!config.client && config.factorDocument?.publishedBody) {
+                for (const [label, published] of [['Wersja robocza',false],['Wersja opublikowana',true]]) {
+                    const button = document.createElement('button'); button.textContent = label;
+                    button.onclick = () => { publishedDocument = published; rysuj(); }; host.append(button);
+                }
+            }
+            const body = document.createElement('div'); body.className = 'sekcja'; body.dataset.sortable = 'false';
+            body.innerHTML = (publishedDocument ? config.factorDocument?.publishedBody : config.factorDocument?.body) || config.factorDocument?.body || 'Dokument nie został jeszcze wydany.';
+            host.append(body);
+        };
+        ZAKLADKI.find(tab => tab.id === 'dok').f = window.rysujDokument;
+        const publicationButton = document.getElementById('b_zatw_kons');
+        if (publicationButton) publicationButton.disabled = !config.consultant;
+    }
     if (config.section === 'intro') window.przekaz = id => {
         if (!config.editable) return;
         const section = SCHEMA.sekcje.find(item => item.id === id);
@@ -260,7 +305,10 @@
     }
     window.addEventListener('message', event => {
         if (event.source !== parent || event.data?.enesa !== config.channel) return;
-        if (event.data.action === 'capture') operation(event.data.operation);
+        if (event.data.action === 'capture') {
+            if (config.section === '4-1' && event.data.operation === 'publish') window.zatwierdzKonsultanta();
+            else operation(event.data.operation);
+        }
     });
     if (config.initialDirty && !config.preview) send('dirty');
 })();

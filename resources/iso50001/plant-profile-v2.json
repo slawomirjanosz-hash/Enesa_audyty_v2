@@ -514,6 +514,94 @@
             "nie": "nie",
             "nie wiem": "nie wiem"
           }
+        },
+        {
+          "key": "FAKT_PRODUKCJA_JEDN",
+          "label": "W czym mierzycie wielkość produkcji?",
+          "type": "select",
+          "required": false,
+          "hint": "Jednostka, w której będziecie liczyć wskaźniki wyniku energetycznego — na przykład kWh na tonę wyrobu. Dla zakładu wielobranżowego wybierzcie jednostkę wyrobu głównego.",
+          "references": "6.4, 6.5",
+          "source_added": "2026-10-21",
+          "options": {
+            "t": "tony wyrobu",
+            "szt": "sztuki wyrobu",
+            "m2": "metry kwadratowe",
+            "m3": "metry sześcienne",
+            "mwh": "MWh wyrobu (ciepło, chłód)",
+            "inna": "Inna jednostka"
+          }
+        },
+        {
+          "key": "FAKT_PRODUKCJA_INNA",
+          "label": "Jaka jednostka?",
+          "type": "text",
+          "required": false,
+          "hint": "",
+          "references": "6.4",
+          "source_added": "2026-10-21",
+          "condition": {
+            "key": "FAKT_PRODUKCJA_JEDN",
+            "operator": "in",
+            "values": [
+              "inna"
+            ]
+          }
+        },
+        {
+          "key": "FAKT_PRODUKCJA",
+          "label": "Wielkość produkcji w roku odniesienia",
+          "type": "number",
+          "required": false,
+          "hint": "W jednostce wskazanej wyżej. To najczęstsza zmienna istotna we wskaźnikach — bez niej wskaźnik pokazuje wahania produkcji, a nie efektywności.",
+          "references": "6.3, 6.4, 6.5",
+          "source_added": "2026-10-21"
+        },
+        {
+          "key": "FAKT_PRODUKCJA_POPRZ",
+          "label": "Wielkość produkcji w roku poprzednim",
+          "type": "number",
+          "required": false,
+          "hint": "Potrzebna do porównania „rok temu — dziś” i do oceny, czy zmiana zużycia wynika ze zmiany produkcji.",
+          "references": "6.5",
+          "source_added": "2026-10-21"
+        },
+        {
+          "key": "FAKT_HDD",
+          "label": "Stopniodni grzania (HDD) w roku odniesienia",
+          "type": "number",
+          "required": false,
+          "hint": "Miara surowości sezonu grzewczego dla Waszej lokalizacji — z IMGW albo z serwisów pogodowych. Zostaw puste, jeśli ogrzewanie nie ma u Was znaczenia dla zużycia.",
+          "references": "6.4, 6.5",
+          "source_added": "2026-10-21",
+          "unit": "°C·dzień"
+        },
+        {
+          "key": "FAKT_HDD_POPRZ",
+          "label": "Stopniodni grzania w roku poprzednim",
+          "type": "number",
+          "required": false,
+          "hint": "Bez porównywalnej pogody nie da się rozstrzygnąć, czy wynik poprawiliście, czy zima była łagodniejsza.",
+          "references": "6.5",
+          "source_added": "2026-10-21",
+          "unit": "°C·dzień",
+          "condition": {
+            "key": "FAKT_HDD",
+            "operator": ">",
+            "values": [
+              0
+            ]
+          }
+        },
+        {
+          "key": "FAKT_PRZYCHOD",
+          "label": "Przychód ze sprzedaży w roku odniesienia",
+          "type": "number",
+          "required": false,
+          "hint": "Opcjonalne. Służy wyłącznie do wskaźnika zarządczego typu GJ na milion złotych przychodu — przydatnego w rozmowie z zarządem, ale nieobowiązkowego.",
+          "references": "6.4",
+          "source_added": "2026-10-21",
+          "unit": "mln zł"
         }
       ]
     },

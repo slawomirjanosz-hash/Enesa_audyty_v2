@@ -61,7 +61,7 @@ test('plant excel round trip imports stable codes choices rows decimals and keep
     [$audit,$profile,$client,$staff] = workbookFixture();
     $book = app(IsoQuestionnaireWorkbook::class)->export($profile, 'plant');
     $sheet = $book->getSheetByName('Pytania');
-    expect($sheet->getHighestDataRow())->toBe(92);
+    expect($sheet->getHighestDataRow())->toBe(99);
     $questions = app(IsoPlantQuestionnaire::class)->questions($profile->definition);
     $text = collect($questions)->firstWhere('type', 'text')['key'];
     $select = collect($questions)->firstWhere('type', 'select');
