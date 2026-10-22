@@ -438,6 +438,7 @@ th, td { margin: 0; }
 @php
     $totalNet = $netServices + ($totalDel ?? 0);
 @endphp
+@if($offer->show_total ?? true)
 <table class="sum-tbl">
     @if($offer->show_unit_prices)
     <tr>
@@ -456,6 +457,7 @@ th, td { margin: 0; }
         <td class="r">{{ number_format($totalNet, 2, ',', ' ') }} zł</td>
     </tr>
 </table>
+@endif
 @if($keepPricingTogether)</div>@endif
 
 {{-- SEKCJE OPISOWE (po wycenie) --}}

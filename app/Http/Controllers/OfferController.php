@@ -204,6 +204,7 @@ class OfferController extends Controller
             'content_deadline' => ['nullable', 'string'],
             'content_payment' => ['nullable', 'string'],
             'show_unit_prices' => ['nullable'],
+            'show_total' => ['sometimes', 'boolean'],
             'price_sections' => ['nullable', 'string'],
             'text_sections' => ['nullable', 'string'],
             'delegations' => ['nullable', 'string'],
@@ -263,6 +264,7 @@ class OfferController extends Controller
             'content_deadline' => $this->offerContent->cleanHtml($data['content_deadline'] ?? null),
             'content_payment' => $this->offerContent->cleanHtml($data['content_payment'] ?? null),
             'show_unit_prices' => $request->input('show_unit_prices') === '1',
+            'show_total' => $request->boolean('show_total', true),
             'price_sections' => $priceSections,
             'text_sections' => $textSections,
             'delegations' => $delegations,
@@ -461,6 +463,7 @@ class OfferController extends Controller
             'content_deadline' => ['nullable', 'string'],
             'content_payment' => ['nullable', 'string'],
             'show_unit_prices' => ['nullable'],
+            'show_total' => ['sometimes', 'boolean'],
             'price_sections' => ['nullable', 'string'],
             'text_sections' => ['nullable', 'string'],
             'delegations' => ['nullable', 'string'],
@@ -519,6 +522,7 @@ class OfferController extends Controller
             'content_deadline' => $this->offerContent->cleanHtml($data['content_deadline'] ?? null),
             'content_payment' => $this->offerContent->cleanHtml($data['content_payment'] ?? null),
             'show_unit_prices' => $request->input('show_unit_prices') === '1',
+            'show_total' => $request->boolean('show_total', $offer->show_total ?? true),
             'price_sections' => $priceSections,
             'text_sections' => $textSections,
             'delegations' => $delegations,
@@ -923,23 +927,25 @@ class OfferController extends Controller
             }
 
             // Łącznie netto
-            $totalTable = $section->addTable([
-                'borderSize' => 0,
-                'borderColor' => 'FFFFFF',
-                'cellMargin' => 100, 'cellSpacing' => 0,
-                'width' => $pageW,
-                'unit' => TblWidth::TWIP,
-            ]);
-            $tRow = $totalTable->addRow(Converter::cmToTwip(1.2));
-            $tRow->addCell(Converter::cmToTwip(13), ['bgColor' => $lightGreen])
-                ->addText('Łącznie netto', ['bold' => true, 'size' => 13, 'color' => '1A1A1A']);
-            $tRow->addCell(Converter::cmToTwip(4), ['bgColor' => $lightGreen])
-                ->addText(
-                    number_format($grandTotal, 2, ',', ' ').' zł',
-                    ['bold' => true, 'size' => 13, 'color' => '1A1A1A'],
-                    ['alignment' => Jc::RIGHT]
-                );
+            if ($offer->show_total ?? true) {
+                $totalTable = $section->addTable([
+                    'borderSize' => 0,
+                    'borderColor' => 'FFFFFF',
+                    'cellMargin' => 100, 'cellSpacing' => 0,
+                    'width' => $pageW,
+                    'unit' => TblWidth::TWIP,
+                ]);
+                $tRow = $totalTable->addRow(Converter::cmToTwip(1.2));
+                $tRow->addCell(Converter::cmToTwip(13), ['bgColor' => $lightGreen])
+                    ->addText('Łącznie netto', ['bold' => true, 'size' => 13, 'color' => '1A1A1A']);
+                $tRow->addCell(Converter::cmToTwip(4), ['bgColor' => $lightGreen])
+                    ->addText(
+                        number_format($grandTotal, 2, ',', ' ').' zł',
+                        ['bold' => true, 'size' => 13, 'color' => '1A1A1A'],
+                        ['alignment' => Jc::RIGHT]
+                    );
 
+            }
             $section->addTextBreak(1);
         }
 

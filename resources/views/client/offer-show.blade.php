@@ -485,7 +485,7 @@
 @endif
 
 {{-- Summary --}}
-@if($offer->kwota_netto !== null)
+@if(($offer->show_total ?? true) && $offer->kwota_netto !== null)
 <div class="summary-card">
     <div>
         <div class="summary-label">Wartość oferty netto</div>

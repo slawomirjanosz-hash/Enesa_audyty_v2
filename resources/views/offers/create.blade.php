@@ -460,7 +460,12 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
             <span class="summary-value" id="sum-markup" style="color:#92400E;">0,00 zł</span>
         </div>
         <div class="summary-row total">
-            <span class="summary-label" style="font-size:15px;">ŁĄCZNIE NETTO</span>
+            <span class="summary-label" style="font-size:15px;">ŁĄCZNIE NETTO<br>
+                <input type="hidden" name="show_total" value="0">
+                <label style="font-size:12px;font-weight:400;">
+                    <input type="checkbox" name="show_total" value="1" @checked(old('show_total', true))> Pokaż sumę w ofercie
+                </label>
+            </span>
             <span class="summary-value" id="sum-total">0,00 zł</span>
         </div>
     </div>
