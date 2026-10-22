@@ -31,6 +31,8 @@ test('offer total visibility defaults on and persists independently of variant p
         expect($offer->show_total)->toBe($visible)->and($offer->show_unit_prices)->toBeTrue();
         $this->get(route('offers.edit', $offer))->assertOk()
             ->assertSee('name="show_total" value="1"'.($visible ? ' checked' : ''), false);
+        $show = $this->get(route('offers.show', $offer))->assertOk()->getContent();
+        expect(str_contains($show, 'class="section-total"'))->toBe($visible);
 
         foreach ([false, true] as $sectionsOnly) {
             $response = $this->get(route('offers.pdf', ['offer' => $offer, 'sections_only' => (int) $sectionsOnly]))->assertOk();
@@ -38,7 +40,12 @@ test('offer total visibility defaults on and persists independently of variant p
             if (getenv('OFFER_TOTAL_PREVIEW_DIR')) {
                 file_put_contents(getenv('OFFER_TOTAL_PREVIEW_DIR').'/offer-'.(int) $visible.'-'.(int) $sectionsOnly.'.pdf', $response->getContent());
             }
-            expect($text)->toContain('Wariant 1', 'Wariant 2', '100,00', '200,00');
+            expect($text)->toContain('Wariant 1', 'Wariant 2');
+            // With one item per section, its price occurs once as a line item
+            // and once more as a subtotal only when totals are enabled.
+            $priceOccurrences = $sectionsOnly ? (int) $visible : 1 + (int) $visible;
+            expect(substr_count($text, '100,00'))->toBe($priceOccurrences);
+            expect(substr_count($text, '200,00'))->toBe($priceOccurrences);
             expect(str_contains($text, 'Łącznie netto'))->toBe($visible);
             expect(str_contains($text, '300,00'))->toBe($visible);
         }

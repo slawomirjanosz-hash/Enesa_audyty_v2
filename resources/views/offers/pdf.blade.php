@@ -305,7 +305,7 @@ th, td { margin: 0; }
         @if($sectionsOnly)
         <tr>
             <th>Sekcja</th>
-            @if($offer->show_unit_prices)
+            @if($offer->show_unit_prices && ($offer->show_total ?? true))
             <th class="r" style="width:24%">Wartość netto</th>
             @endif
         </tr>
@@ -330,18 +330,18 @@ th, td { margin: 0; }
             @if($sectionsOnly)
             <tr class="section-summary-row">
                 <td class="section-summary-name">{{ $section['name'] }}</td>
-                @if($offer->show_unit_prices)
+                @if($offer->show_unit_prices && ($offer->show_total ?? true))
                 <td class="section-summary-value">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
                 @endif
             </tr>
             @else
             @if($multiSection || $offer->show_unit_prices)
             <tr class="section-name-row">
-                @if($offer->show_unit_prices)
+                @if($offer->show_unit_prices && ($offer->show_total ?? true))
                     <td colspan="4">{{ $section['name'] }}</td>
                     <td class="section-name-total">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
                 @else
-                    <td colspan="4">{{ $section['name'] }}</td>
+                    <td colspan="{{ $offer->show_unit_prices ? 5 : 4 }}">{{ $section['name'] }}</td>
                 @endif
             </tr>
             @endif

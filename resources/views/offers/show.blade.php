@@ -344,8 +344,10 @@
                             $sectionTotal = collect($section['rows'] ?? [])->sum(fn ($row) => (float) ($row['z_narzutem'] ?? 0));
                         @endphp
                         <tr class="section-row">
-                            <td colspan="3">{{ $section['name'] ?? 'Sekcja' }}</td>
+                            <td colspan="{{ ($offer->show_total ?? true) ? 3 : 4 }}">{{ $section['name'] ?? 'Sekcja' }}</td>
+                            @if($offer->show_total ?? true)
                             <td class="section-total">{{ number_format($sectionTotal, 2, ',', ' ') }} zł</td>
+                            @endif
                         </tr>
                         @foreach($section['rows'] ?? [] as $row)
                             <tr>

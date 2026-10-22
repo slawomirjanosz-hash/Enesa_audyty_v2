@@ -5,6 +5,7 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <style>
+#offer-form:has(input[name="show_total"][type="checkbox"]:not(:checked)) .section-price-total { display: none; }
 /* ── Editor topbar ─────────────────────────────────── */
 #editor-topbar {
     position: sticky;
