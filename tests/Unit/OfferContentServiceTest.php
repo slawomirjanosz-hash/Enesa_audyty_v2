@@ -34,6 +34,15 @@ test('it preserves safe table column widths and removes other table styles', fun
         ->toBe('<table><tr><th style="width: 180px">Nazwa</th><td style="width: 2000px">Opis</td></tr></table>');
 });
 
+test('Word HTML repairs editor markup without enabling unsafe tags', function () {
+    $service = new OfferContentService;
+    $html = $service->wordHtml('<table><tr><td>Zażółć<br>gęślą &amp; jaźń<td>Opis</tr></table><img src="file:///secret"><p>Koniec');
+    $document = new DOMDocument;
+    expect($document->loadXML('<body>'.$html.'</body>'))->toBeTrue();
+    expect($html)->toContain('<br/>', 'Zażółć', '&amp;', '</td>', '</p>')->not->toContain('<img');
+    expect($service->wordHtml(null))->toBe('');
+});
+
 test('it removes price data from an in-memory offer', function () {
     $offer = new Offer([
         'kwota_netto' => 100,

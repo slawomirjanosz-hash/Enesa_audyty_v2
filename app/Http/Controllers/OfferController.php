@@ -34,6 +34,7 @@ use Illuminate\View\View;
 use Mpdf\Mpdf;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\SimpleType\Jc;
@@ -707,6 +708,7 @@ class OfferController extends Controller
         $companySettings = CompanySettings::first();
         $ownerName = $companySettings?->name ?: config('app.name', 'Firma');
 
+        Settings::setOutputEscapingEnabled(true);
         $phpWord = new PhpWord;
         $phpWord->getSettings()->setThemeFontLang(new Language('pl-PL'));
         $phpWord->setDefaultFontName('Calibri');
@@ -850,7 +852,7 @@ class OfferController extends Controller
             }
 
             $addSectionHeader($item['name']);
-            Html::addHtml($section, $item['content'], false, false);
+            Html::addHtml($section, $this->offerContent->wordHtml($item['content']), false, false);
             $section->addTextBreak(1);
         };
 

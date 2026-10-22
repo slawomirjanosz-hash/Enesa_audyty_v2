@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use DOMDocument;
 
 class OfferContentService
 {
@@ -58,6 +59,35 @@ class OfferContentService
         );
 
         return trim($html);
+    }
+
+    public function wordHtml(?string $html): string
+    {
+        $html = $this->cleanHtml($html);
+        if ($html === '') {
+            return '';
+        }
+
+        // PHPWord parses XML, while editor content is HTML (including bare br tags).
+        // Parse as HTML first so line breaks, entities and unclosed tags become XML.
+        $document = new DOMDocument('1.0', 'UTF-8');
+        $previous = libxml_use_internal_errors(true);
+        try {
+            $document->loadHTML(
+                '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>'.$html.'</body></html>',
+                LIBXML_NONET
+            );
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+
+        $result = '';
+        foreach ($document->getElementsByTagName('body')->item(0)->childNodes as $node) {
+            $result .= $document->saveXML($node);
+        }
+
+        return $result;
     }
 
     public function normalizeTextSections(mixed $sections): ?array
