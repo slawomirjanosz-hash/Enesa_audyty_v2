@@ -32,7 +32,7 @@ function systemAnswers(string $section, array $sources): array
         foreach ($service->sections($section, $answers, $sources) as $group) {
             foreach ($group['fields'] as $field) {
                 if ($field['required'] && $service->visible($field, $answers) && ! filled(data_get($answers, $field['key']))) {
-                    $value = $field['options'] ? array_key_first($field['options']) : ($field['type'] === 'date' ? today()->format('Y-m-d') : 'Przykład: opis potwierdzony podczas przeglądu zakładu.');
+                    $value = $field['options'] ? array_key_first($field['options']) : ($field['type'] === 'date' ? today()->format('Y-m-d') : (str_starts_with($field['key'], 'WYNIK.wartosc') ? '0,125 kWh/Nm3' : 'Przykład: opis potwierdzony podczas przeglądu zakładu.'));
                     Arr::set($answers, $field['key'], $field['type'] === 'multi' ? [$value] : $value);
                 }
             }

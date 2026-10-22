@@ -37,6 +37,11 @@ class IsoFactorQuestionnaire
             $factor['dependencies'] = array_replace($factor['dependencies'], $dependencies);
             $factor['basis'] = hash('sha256', json_encode($factor['dependencies'], JSON_THROW_ON_ERROR));
             $factor['visible'] = app(IsoContextLibrary::class)->matches($factor['pokaz_gdy'], $facts);
+            if (array_key_exists('FAKT_KLIMAT_ISTOTNY', $factor['dependencies'])) {
+                foreach (['tak', 'nie'] as $choice) {
+                    $factor['climate_visibility'][$choice] = app(IsoContextLibrary::class)->matches($factor['pokaz_gdy'], array_replace($facts, ['FAKT_KLIMAT_ISTOTNY' => $choice]));
+                }
+            }
             if ($factor['kod'] === 'KTX-WO-12') {
                 $factor['rodzaj'] = 'PROPOZYCJA';
                 $factor['verification'] = 'Nowa propozycja z wydania 18.10.2026 — wymaga zatwierdzenia merytorycznego przez audytora.';
@@ -84,12 +89,24 @@ class IsoFactorQuestionnaire
             'factors.*.decyzja_w' => 'nullable|string|max:5000',
             'factors.*.dzialanie' => 'nullable|string|max:5000',
             'factors.*.sprawdzenie' => 'nullable|string|max:5000',
+            'factors.*.skutek' => 'nullable|string|max:5000',
+            'factors.*.podstawa.rodzaj' => ['nullable', Rule::in(['pomiar', 'dokument', 'deklaracja', 'szacunek'])],
+            'factors.*.podstawa.zrodlo' => 'nullable|string|max:3000',
+            'factors.*.podstawa.okres' => 'nullable|string|max:255',
             'custom' => 'nullable|array|max:20',
             'custom.*.id' => 'required|uuid|distinct',
             'custom.*.tresc' => 'required|string|max:5000',
             'custom.*.wplyw' => ['required', Rule::in(['+', '−', '○'])],
             'custom.*.wymiar' => [$complete ? 'required' : 'nullable', Rule::in(array_column($this->schema()['sekcje'], 'id'))],
             'custom.*.skutek' => ($complete ? 'required' : 'nullable').'|string|max:5000',
+            'custom.*.podstawa.rodzaj' => ['nullable', Rule::in(['pomiar', 'dokument', 'deklaracja', 'szacunek'])],
+            'custom.*.podstawa.zrodlo' => 'nullable|string|max:3000',
+            'custom.*.podstawa.okres' => 'nullable|string|max:255',
+            'custom.*.istotnosc' => ['nullable', Rule::in(['W', 'S', 'N'])],
+            'custom.*.znaczenie' => 'nullable|string|max:5000',
+            'custom.*.decyzja_w' => 'nullable|string|max:5000',
+            'custom.*.dzialanie' => 'nullable|string|max:5000',
+            'custom.*.sprawdzenie' => 'nullable|string|max:5000',
         ])->validate();
         $out = ['FAKT_KLIMAT_ISTOTNY' => $data['FAKT_KLIMAT_ISTOTNY'] ?? null, 'climate_reason' => $data['climate_reason'] ?? null, 'factors' => [], 'custom' => array_values($data['custom'] ?? [])];
         $errors = [];
@@ -104,6 +121,12 @@ class IsoFactorQuestionnaire
             }
             $row = $data['factors'][$key] ?? [];
             $out['factors'][$key] = ['decyzja' => $row['decyzja'] ?? null, 'tresc' => $row['tresc'] ?? $factor['tresc'], 'powod' => $row['powod'] ?? null];
+            if (array_key_exists('skutek', $row)) {
+                $out['factors'][$key]['skutek'] = $row['skutek'];
+            }
+            if (isset($row['podstawa'])) {
+                $out['factors'][$key]['podstawa'] = $row['podstawa'];
+            }
             foreach (['istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'] as $field) {
                 $out['factors'][$key][$field] = $row[$field] ?? null;
                 if ($complete && $factor['visible'] && ($row['decyzja'] ?? '') === 'potwierdzony' && ($field === 'istotnosc' || ($row['istotnosc'] ?? '') === 'W') && ! filled($row[$field] ?? null)) {
@@ -121,6 +144,26 @@ class IsoFactorQuestionnaire
             }
             if (($row['decyzja'] ?? '') === 'potwierdzony' && ! filled($out['factors'][$key]['tresc'])) {
                 $errors["factors.$key.tresc"] = "$key: uzupełnij treść do dokumentu.";
+            }
+        }
+        if ($complete) {
+            $assessed = $out['custom'];
+            foreach ($this->factors($facts, $out) as $factor) {
+                $row = $out['factors'][$factor['kod']] ?? [];
+                if ($factor['visible'] && ($row['decyzja'] ?? '') === 'potwierdzony') {
+                    $assessed['factor:'.$factor['kod']] = $row;
+                }
+            }
+            foreach ($assessed as $key => $row) {
+                if (($row['istotnosc'] ?? '') !== 'W') {
+                    continue;
+                }
+                $prefix = str_starts_with((string) $key, 'factor:') ? 'factors.'.substr($key, 7) : 'custom.'.$key;
+                foreach (['podstawa.rodzaj', 'podstawa.zrodlo', 'podstawa.okres', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'] as $field) {
+                    if (! filled(data_get($row, $field))) {
+                        $errors[$prefix.'.'.$field] = 'Wysoka istotność: uzupełnij podstawę oceny (rodzaj, źródło i okres) oraz cztery części wniosku.';
+                    }
+                }
             }
         }
         if ($errors) {
@@ -145,7 +188,7 @@ class IsoFactorQuestionnaire
             }
             $total++;
             $row = $answers['factors'][$factor['kod']] ?? [];
-            $conclusion = ($row['istotnosc'] ?? '') !== 'W' || collect(['znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'])->every(fn ($key) => filled($row[$key] ?? null));
+            $conclusion = ($row['istotnosc'] ?? '') !== 'W' || collect(['znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie', 'podstawa.rodzaj', 'podstawa.zrodlo', 'podstawa.okres'])->every(fn ($key) => filled(data_get($row, $key)));
             $done += (($row['decyzja'] ?? '') === 'potwierdzony' && filled($row['tresc'] ?? null) && filled($row['istotnosc'] ?? null) && $conclusion) || (($row['decyzja'] ?? '') === 'odrzucony' && filled($row['powod'] ?? null)) ? 1 : 0;
         }
 
@@ -170,15 +213,22 @@ class IsoFactorQuestionnaire
         $out['PRAWO'] = ['data' => $text(data_get($input, 'PRAWO.data')), 'notatka' => $text(data_get($input, 'PRAWO.notatka'))];
         foreach ($this->schema()['czynniki'] as $factor) {
             $row = $input['factors'][$factor['kod']] ?? [];
-            foreach (['decyzja', 'tresc', 'powod', 'istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'] as $field) {
+            foreach (['decyzja', 'tresc', 'powod', 'istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie', 'skutek'] as $field) {
                 if (is_array($row) && array_key_exists($field, $row)) {
                     $out['factors'][$factor['kod']][$field] = $text($row[$field]);
                 }
             }
+            if (is_array($row['podstawa'] ?? null)) {
+                $out['factors'][$factor['kod']]['podstawa'] = array_map($text, array_intersect_key($row['podstawa'], array_flip(['rodzaj', 'zrodlo', 'okres'])));
+            }
         }
         foreach (array_slice(is_array($input['custom'] ?? null) ? $input['custom'] : [], 0, 20) as $row) {
             if (is_array($row)) {
-                $out['custom'][] = array_map($text, array_intersect_key($row, array_flip(['id', 'tresc', 'wplyw', 'wymiar', 'skutek'])));
+                $custom = array_map($text, array_intersect_key($row, array_flip(['id', 'tresc', 'wplyw', 'wymiar', 'skutek', 'istotnosc', 'znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie'])));
+                if (is_array($row['podstawa'] ?? null)) {
+                    $custom['podstawa'] = array_map($text, array_intersect_key($row['podstawa'], array_flip(['rodzaj', 'zrodlo', 'okres'])));
+                }
+                $out['custom'][] = $custom;
             }
         }
 

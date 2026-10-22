@@ -10,6 +10,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoStakeholderReview;
 use App\Services\AuditorAccessService;
+use App\Services\IsoChapterFourReport;
 use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoHtmlState;
 use App\Services\IsoPlatformRelease;
@@ -157,7 +158,9 @@ class IsoStakeholderReviewController extends Controller
                     'consultant.*.zgodnosc' => ['nullable', Rule::in(['tak', 'nie', 'pending'])],
                     'consultant.*.reason' => 'nullable|string|max:3000', 'consultant.*.legal_basis' => 'nullable|string|max:5000',
                     'consultant.*.owner' => 'nullable|string|max:255', 'consultant.*.deadline' => 'nullable|date_format:Y-m-d',
-                    'analysis' => 'nullable|array:summary,owner,reviewed_on,next_review', 'analysis.summary' => 'nullable|string|max:10000',
+                    'analysis' => 'nullable|array:summary,owner,reviewed_on,next_review,PODSUM,WNIOSKI', 'analysis.summary' => 'nullable|string|max:10000',
+                    ...app(IsoChapterFourReport::class)->rules('analysis'),
+                    ...app(IsoChapterFourReport::class)->conclusionRules('analysis.WNIOSKI', array_column($this->questionnaire->register($review->answers ?? [], $parties, $review->consultant ?? []), 'kod')),
                     'analysis.owner' => 'nullable|string|max:255', 'analysis.reviewed_on' => 'nullable|date_format:Y-m-d', 'analysis.next_review' => 'nullable|date_format:Y-m-d|after_or_equal:analysis.reviewed_on',
                 ]);
                 $decisions = $review->consultant ?? [];
@@ -182,7 +185,11 @@ class IsoStakeholderReviewController extends Controller
                     return;
                 }
                 $review->consultant = $decisions;
-                $review->analysis = $validated['analysis'] ?? [];
+                $analysis = $validated['analysis'] ?? [];
+                if (isset($analysis['WNIOSKI'])) {
+                    $analysis['WNIOSKI'] = app(IsoChapterFourReport::class)->identify($analysis['WNIOSKI']);
+                }
+                $review->analysis = $analysis;
                 $this->invalidateDocuments($review);
                 $review->client_approval = null;
                 $review->status = 'auditor_corrected';

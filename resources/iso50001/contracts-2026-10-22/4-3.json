@@ -1,0 +1,11 @@
+{
+  "source": {
+    "filename": "ENESA_4.3_Zakres_systemu_platforma-2.html",
+    "sha256": "755fcbe2da4dd83cca4dc1d05d9bff357f86a20ca610f76a257873de9eaccd40"
+  },
+  "descriptions": {
+    "konsekwencje": "Sekcja 1 formularza F-EnMS-03. Zakres nie zaczyna się od pustej kartki — system wyprowadza konsekwencje z potwierdzonych czynników punktu 4.1 i ze stron zainteresowanych z punktu 4.2. Potwierdź te, które faktycznie wiążą Wam ręce, i dopisz brakujące.",
+    "zakres": "Sekcja 2 formularza. Odpowiada na pytanie CO. Pisz konkretnie: „produkcja komponentów (tłoczenie, montaż, lakierowanie) z procesami pomocniczymi w zakładzie X” zamiast „cała działalność”.",
+    "poza": "Sekcja 6 formularza. Jeśli coś zostaje na zewnątrz, nie wystarczy zapisać „wyłączone, bo mało”. Opisz, gdzie przebiega granica, czy ta działalność należy do organizacji, czy macie uprawnienia do sterowania jej energią i jak energia przepływa przez granicę."
+  }
+}

@@ -7,6 +7,7 @@ use App\Models\Audit;
 use App\Models\IsoFactorReview;
 use App\Models\IsoPlantProfile;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -247,7 +248,7 @@ class IsoQuestionnaireWorkbook
             $this->editable($climate, 'C'.$r);
         }
         $sheet = $this->sheet('Czynniki', ['Kod', 'Czynnik', 'Decyzja', 'Treść do dokumentu', 'Powód odrzucenia', 'Zastosowanie / warunek']);
-        foreach (['G' => 'Istotność W/S/N', 'H' => 'Znaczenie', 'I' => 'Decyzja', 'J' => 'Działanie', 'K' => 'Sprawdzenie'] as $column => $label) {
+        foreach (['G' => 'Istotność W/S/N', 'H' => 'Znaczenie', 'I' => 'Decyzja', 'J' => 'Działanie', 'K' => 'Sprawdzenie', 'L' => 'Skutek dla systemu', 'M' => 'Podstawa — rodzaj', 'N' => 'Podstawa — źródło', 'O' => 'Podstawa — okres'] as $column => $label) {
             $sheet->setCellValue($column.'1', $label);
         }
         $r = 2;
@@ -258,22 +259,25 @@ class IsoQuestionnaireWorkbook
                 $this->editable($sheet, 'C'.$r, ['potwierdzony', 'odrzucony']);
                 $this->editable($sheet, 'D'.$r);
                 $this->editable($sheet, 'E'.$r);
-                foreach (['G' => 'istotnosc', 'H' => 'znaczenie', 'I' => 'decyzja_w', 'J' => 'dzialanie', 'K' => 'sprawdzenie'] as $column => $key) {
-                    $sheet->setCellValueExplicit($column.$r, $answer[$key] ?? '', DataType::TYPE_STRING);
+                foreach (['G' => 'istotnosc', 'H' => 'znaczenie', 'I' => 'decyzja_w', 'J' => 'dzialanie', 'K' => 'sprawdzenie', 'L' => 'skutek', 'M' => 'podstawa.rodzaj', 'N' => 'podstawa.zrodlo', 'O' => 'podstawa.okres'] as $column => $key) {
+                    $sheet->setCellValueExplicit($column.$r, data_get($answer, $key, ''), DataType::TYPE_STRING);
                     $this->editable($sheet, $column.$r, $key === 'istotnosc' ? ['W', 'S', 'N'] : []);
                 }
             }$r++;
         }
-        $table = $this->sheet('Własne czynniki', ['Id', 'Treść', 'Wpływ', 'Wymiar', 'Skutek dla systemu']);
+        $table = $this->sheet('Własne czynniki', ['Id', 'Treść', 'Wpływ', 'Wymiar', 'Skutek dla systemu', 'Podstawa — rodzaj', 'Podstawa — źródło', 'Podstawa — okres', 'Istotność', 'Znaczenie', 'Decyzja', 'Działanie', 'Sprawdzenie']);
         $ids = [];
         for ($i = 0; $i < 20; $i++) {
             $row = $answers['custom'][$i] ?? [];
             $ids[] = $id = $row['id'] ?? (string) Str::uuid();
-            $this->row($table, $i + 2, [$id, $row['tresc'] ?? '', $row['wplyw'] ?? '', $row['wymiar'] ?? '', $row['skutek'] ?? '']);
+            $this->row($table, $i + 2, [$id, $row['tresc'] ?? '', $row['wplyw'] ?? '', $row['wymiar'] ?? '', $row['skutek'] ?? '', data_get($row, 'podstawa.rodzaj', ''), data_get($row, 'podstawa.zrodlo', ''), data_get($row, 'podstawa.okres', ''), $row['istotnosc'] ?? '', $row['znaczenie'] ?? '', $row['decyzja_w'] ?? '', $row['dzialanie'] ?? '', $row['sprawdzenie'] ?? '']);
             $this->editable($table, 'B'.($i + 2));
             $this->editable($table, 'C'.($i + 2), ['+', '−', '○']);
             $this->editable($table, 'D'.($i + 2), array_column($service->schema()['sekcje'], 'id'));
             $this->editable($table, 'E'.($i + 2));
+            foreach (['F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'] as $column) {
+                $this->editable($table, $column.($i + 2));
+            }
         }
         $table->getColumnDimension('A')->setVisible(false);
         $context['tables']['Własne czynniki'] = ['ids' => $ids];
@@ -481,8 +485,10 @@ class IsoQuestionnaireWorkbook
                 continue;
             }$r = $rows[$factor['kod']];
             $answers['factors'][$factor['kod']] = ['decyzja' => $this->value($sheet, 'C'.$r, ['options' => ['potwierdzony' => 'potwierdzony', 'odrzucony' => 'odrzucony']]), 'tresc' => $this->value($sheet, 'D'.$r), 'powod' => $this->value($sheet, 'E'.$r)];
-            foreach (['G' => 'istotnosc', 'H' => 'znaczenie', 'I' => 'decyzja_w', 'J' => 'dzialanie', 'K' => 'sprawdzenie'] as $column => $key) {
-                $answers['factors'][$factor['kod']][$key] = $this->value($sheet, $column.$r);
+            foreach (['G' => 'istotnosc', 'H' => 'znaczenie', 'I' => 'decyzja_w', 'J' => 'dzialanie', 'K' => 'sprawdzenie', 'L' => 'skutek', 'M' => 'podstawa.rodzaj', 'N' => 'podstawa.zrodlo', 'O' => 'podstawa.okres'] as $column => $key) {
+                if ($sheet->getCell($column.'1')->getValue() !== null) {
+                    Arr::set($answers['factors'][$factor['kod']], $key, $this->value($sheet, $column.$r));
+                }
             }
         }
         $custom = $book->getSheetByName('Własne czynniki');
@@ -492,7 +498,18 @@ class IsoQuestionnaireWorkbook
             $text = $this->value($custom, 'B'.$r);
             $impact = $this->value($custom, 'C'.$r);
             if (filled($text) || filled($impact)) {
-                $answers['custom'][] = ['id' => $id, 'tresc' => $text, 'wplyw' => $impact, 'wymiar' => $this->value($custom, 'D'.$r), 'skutek' => $this->value($custom, 'E'.$r)];
+                $customRow = ['id' => $id, 'tresc' => $text, 'wplyw' => $impact, 'wymiar' => $this->value($custom, 'D'.$r), 'skutek' => $this->value($custom, 'E'.$r)];
+                foreach (['F' => 'rodzaj', 'G' => 'zrodlo', 'H' => 'okres'] as $column => $key) {
+                    if ($custom->getCell($column.'1')->getValue() !== null) {
+                        $customRow['podstawa'][$key] = $this->value($custom, $column.$r);
+                    }
+                }
+                foreach (['I' => 'istotnosc', 'J' => 'znaczenie', 'K' => 'decyzja_w', 'L' => 'dzialanie', 'M' => 'sprawdzenie'] as $column => $key) {
+                    if ($custom->getCell($column.'1')->getValue() !== null) {
+                        $customRow[$key] = $this->value($custom, $column.$r);
+                    }
+                }
+                $answers['custom'][] = $customRow;
             }
         }
 

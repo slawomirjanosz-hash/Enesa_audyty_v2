@@ -9,6 +9,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoSystemReview;
 use App\Services\AuditorAccessService;
+use App\Services\IsoChapterFourReport;
 use App\Services\IsoExecutionQuestionnaire;
 use App\Services\IsoHtmlState;
 use App\Services\IsoPlanningQuestionnaire;
@@ -171,12 +172,19 @@ class IsoSystemReviewController extends Controller
             } else {
                 abort_if($stale, 409, 'Źródła zmieniły się. Zapisz ankietę i zatwierdź ponownie.');
                 if ($op === 'consultant') {
-                    abort_unless(! $client && preg_match('/^(?:[5-9]|10)-/', $section) && $review->status === 'submitted', 403);
-                    $notes = $request->validate(['consultant.WNIOSKI' => 'required|array|min:1|max:20', 'consultant.WNIOSKI.*' => 'array', 'consultant.WNIOSKI.*.znaczenie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.decyzja' => 'required|string|max:3000', 'consultant.WNIOSKI.*.dzialanie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.sprawdzenie' => 'required|string|max:3000']);
+                    abort_unless(! $client && preg_match('/^(?:[4-9]|10)-/', $section) && $review->status === 'submitted', 403);
+                    $notes = $request->validate([...(in_array($section, ['4-3', '4-4']) ? app(IsoChapterFourReport::class)->rules('consultant') : []), 'consultant.WNIOSKI' => 'required|array|min:1|max:20', 'consultant.WNIOSKI.*' => 'array', 'consultant.WNIOSKI.*.znaczenie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.decyzja' => 'required|string|max:3000', 'consultant.WNIOSKI.*.dzialanie' => 'required|string|max:3000', 'consultant.WNIOSKI.*.sprawdzenie' => 'required|string|max:3000']);
+                    if (in_array($section, ['4-3', '4-4'])) {
+                        $linked = $request->validate(app(IsoChapterFourReport::class)->conclusionRules('consultant.WNIOSKI', array_keys($this->questionnaire->sections($section, $review->answers, $sources))));
+                        $notes['consultant']['WNIOSKI'] = app(IsoChapterFourReport::class)->identify($linked['consultant']['WNIOSKI'] ?? []);
+                    }
                     $review->consultant = $notes['consultant'] + ['answers_hash' => hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR))];
                 } elseif ($op === 'approve') {
                     abort_unless(! $client && $review->status === 'submitted' && $review->client_approval && $review->client_approval['user_id'] !== $request->user()->id, 403);
                     $this->questionnaire->normalize($section, $review->answers, $sources, true);
+                    if (in_array($section, ['4-3', '4-4']) && ! empty($review->consultant) && ($review->consultant['answers_hash'] ?? '') !== hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR))) {
+                        throw ValidationException::withMessages(['consultant' => 'Odpowiedzi zmieniły się. Sprawdź i zapisz analizę konsultanta ponownie przed zatwierdzeniem.']);
+                    }
                     if (preg_match('/^(?:[5-9]|10)-/', $section) && (empty($review->consultant['WNIOSKI']) || ($review->consultant['answers_hash'] ?? '') !== hash('sha256', json_encode($review->answers, JSON_THROW_ON_ERROR)))) {
                         throw ValidationException::withMessages(['consultant' => 'Zapisz przynajmniej jeden pełny wniosek konsultanta przed zatwierdzeniem.']);
                     }

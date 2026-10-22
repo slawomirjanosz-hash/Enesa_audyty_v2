@@ -9,6 +9,7 @@ use App\Models\IsoStakeholderReview;
 use App\Models\IsoSystemReview;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -174,7 +175,7 @@ class IsoSystemQuestionnaire
         $names = array_column($facts['FAKT_NOSNIKI'] ?? [], 'c0');
         $out = [];
         foreach (['EE' => ['Energia elektryczna', ['energia elektryczna']], 'GAZ' => ['Gaz ziemny', ['gaz ziemny']], 'CIEPLO' => ['Ciepło', ['ciepło sieciowe']], 'OLEJ' => ['Olej opałowy', ['olej opałowy']], 'LPG' => ['LPG', ['LPG']], 'PALIWA' => ['Paliwa pojazdów', ['olej napędowy', 'benzyna', 'CNG']], 'INNE' => ['Inne', []]] as $code => [$label, $carriers]) {
-            $suggested = count(array_intersect($names, $carriers)) > 0 || ($code === 'CIEPLO' && in_array($facts['FAKT_KOTLOWNIA'] ?? '', ['wlasne', 'siec', 'oba'])) || ($code === 'PALIWA' && ($facts['FAKT_FLOTA'] ?? '') === 'tak');
+            $suggested = count(array_intersect($names, $carriers)) > 0 || ($code === 'CIEPLO' && in_array($facts['FAKT_KOTLOWNIA'] ?? '', ['wlasne', 'siec', 'oba'])) || ($code === 'PALIWA' && ($facts['FAKT_FLOTA'] ?? '') === 'tak' && ! in_array('LPG', $names, true));
             $out[$code] = ['label' => $label, 'suggested' => $suggested];
         }
 
@@ -250,7 +251,10 @@ class IsoSystemQuestionnaire
             $groups['czasowniki']['fields'][] = $f("$b.dowod", 'Dowody: '.implode(', ', $q['dowod']), [], true, ["$b.stan", ['tak', 'czesciowo']], 'textarea');
             $groups['czasowniki']['fields'][] = $f("$b.plan", 'Plan: co powstanie, kiedy i kto odpowiada', [], true, ["$b.stan", ['nie']], 'textarea');
             if ($q['wskazniki'] ?? false) {
-                $groups['czasowniki']['fields'][] = $f("$b.wskazniki", 'Poprawa wyniku na wskaźnikach wobec linii bazowej', [], true, ["$b.stan", ['tak', 'czesciowo']], 'textarea');
+                $groups['czasowniki']['fields'][] = $f("$b.wskazniki", 'Dotychczasowy opis poprawy wyniku — informacje uzupełniające', [], false, ["$b.stan", ['tak', 'czesciowo']], 'textarea');
+                foreach (['wskaznik' => 'Wskaźnik', 'okresOdniesienia' => 'Okres odniesienia', 'wartoscOdniesienia' => 'Wartość w okresie odniesienia', 'okresOceny' => 'Okres oceny', 'wartoscOceny' => 'Wartość w okresie oceny', 'porownywalnosc' => 'Podstawa porównywalności okresów', 'planowane' => 'Wartość planowana — opcjonalnie'] as $key => $label) {
+                    $groups['czasowniki']['fields'][] = $f('WYNIK.'.$key, $label, [], $key !== 'planowane', ["$b.stan", ['tak', 'czesciowo']], 'textarea', $key === 'planowane' ? 'Zamiar, nie osiągnięta poprawa.' : 'Porównanie wyniku energetycznego na wskaźnikach, przy porównywalnych warunkach.');
+                }
             }
         }
         foreach ($schema['obieg'] as $q) {
@@ -268,10 +272,13 @@ class IsoSystemQuestionnaire
         }
         foreach ($schema['procesy'] as $q) {
             $b = 'PROC.'.$q['kod'];
-            $when = ($q['pokrywaIso'] ?? false) ? ['ODP.SYS-01', ['procedury', 'jeden', '']] : null;
+            // Existing ISO documentation changes the reference, never removes ownership.
+            $when = null;
             $groups['procesy']['fields'][] = $f("$b.wlasciciel", $q['kod'].' '.$q['nazwa'].' — właściciel', [], true, $when, 'text', 'Wynik: '.$q['wynik'].'. '.($q['ksiazka'] ?? 'Numer procedury do uzgodnienia'));
             $groups['procesy']['fields'][] = $f("$b.zastepca", $q['kod'].' — zastępca', [], (bool) ($q['kluczowy'] ?? false), $when);
-            $groups['procesy']['fields'][] = $f("$b.forma", $q['kod'].' — forma zapisu', ['procedura' => 'Procedura', 'instrukcja' => 'Instrukcja', 'system' => 'Opis w systemie', 'inne' => 'Inny zapis', 'brak' => 'Brak opisu'], true, $when);
+            $groups['procesy']['fields'][] = $f("$b.forma", $q['kod'].' — forma zapisu', ['procedura' => 'Procedura', 'instrukcja' => 'Instrukcja', 'system' => 'Opis w systemie', 'opis' => 'Opis w dokumencie systemu', 'nadbudowa' => 'Rozszerzenie istniejącej dokumentacji', 'inne' => 'Inny zapis', 'brak' => 'Brak opisu'], true, $when);
+            $groups['procesy']['fields'][] = $f("$b.odniesienie", $q['kod'].' — dokument, numer i wersja', [], true, ["$b.forma", ['nadbudowa']]);
+            $groups['procesy']['fields'][] = $f("$b.ciaglosc", $q['kod'].' — sposób zapewnienia ciągłości', ['zastepca' => 'Wyznaczony zastępca', 'podzial' => 'Podział obowiązków', 'zespol' => 'Zespół'], false);
             $groups['procesy']['fields'][] = $f("$b.uwagi", $q['kod'].' — uzasadnienie braku opisu', [], true, ["$b.forma", ['brak']]);
             $groups['procesy']['fields'][] = $f("$b.trafia", $q['kod'].' — komu przekazywany jest wynik', [], true, $when, 'text', $q['trafia']);
             if ($q['pokrywaIso'] ?? false) {
@@ -279,11 +286,17 @@ class IsoSystemQuestionnaire
             }
         }
         foreach ($schema['powiazania'] as $i => $q) {
-            $groups['powiazania']['fields'][] = $f("POW.$i.potwierdzone", $q['z'].' → '.$q['do'].' — '.$q['wynik'], ['tak' => 'Działa', 'planowane' => 'Zaplanowane we wdrożeniu'], true, null, 'text', $q['sposob']);
+            $groups['powiazania']['fields'][] = $f("POW.$i.potwierdzone", $q['z'].' → '.$q['do'].' — '.$q['wynik'], ['tak' => 'Działa', 'planowane' => 'Zaplanowane we wdrożeniu', 'nie_dotyczy' => 'Nie dotyczy'], true, null, 'text', $q['sposob']);
+            $groups['powiazania']['fields'][] = $f("POW.$i.powod", 'Dlaczego powiązanie nie dotyczy systemu?', [], true, ["POW.$i.potwierdzone", ['nie_dotyczy']], 'textarea');
         }
-        foreach (['decyzje' => '1. Decyzje o systemie', 'czasowniki' => '2. Cztery pytania kontrolne', 'obieg' => '3. Obieg informacji', 'test' => '4. Test ciągłości', 'procesy' => '5. Procesy systemu', 'powiazania' => '6. Mapa powiązań'] as $key => $title) {
+        foreach (['decyzje' => '1. Decyzje o systemie', 'czasowniki' => '2. Cztery czasowniki', 'obieg' => '3. Obieg informacji', 'test' => '4. Test ciągłości', 'procesy' => '5. Procesy systemu', 'powiazania' => '6. Powiązania procesów'] as $key => $title) {
             $groups[$key]['title'] = $title;
         }
+        $fields = [];
+        foreach (array_slice(is_array($answers['WLASNE'] ?? null) ? $answers['WLASNE'] : [], 0, 20, true) as $i => $row) {
+            array_push($fields, ...$this->rowFields('WLASNE', (string) $i, '4-4'));
+        }
+        $groups['wlasne-procesy'] = ['title' => 'Własne procesy systemu', 'fields' => $fields, 'repeater' => 'WLASNE'];
 
         return $groups;
     }
@@ -300,6 +313,7 @@ class IsoSystemQuestionnaire
             return app(IsoLeadershipQuestionnaire::class)->rowFields($root, $i);
         }
         $labels = match ($root) {
+            'WLASNE' => ['id' => 'Trwały identyfikator procesu', 'nazwa' => 'Nazwa procesu', 'klauzula' => 'Punkt normy', 'wlasciciel' => 'Właściciel procesu', 'zastepca' => 'Zastępca', 'wynik' => 'Wynik procesu', 'forma' => 'Forma zapisu'],
             'GRANICE' => ['nazwa' => 'Lokalizacja / obiekt', 'adres' => 'Adres', 'fizyczna' => 'Granica fizyczna — budynki i teren', 'jednostki' => 'Jednostki organizacyjne'],
             'UPRAW' => ['obiekt' => 'Obiekt / instalacja / usługa', 'kto' => 'Kto decyduje o energii', 'podstawa' => 'Podstawa uprawnień', 'brakUprawnien' => 'Czy brakuje uprawnień?', 'dzialanie' => 'Co robicie, aby uzyskać uprawnienia?', 'usluga' => 'Usługa zlecona na terenie zakładu?', 'nadzor' => 'Nadzór nad usługą (8.1)', 'uwagi' => 'Uwagi'],
             default => ['co' => 'Działalność / obiekt poza granicami', 'przynaleznosc' => 'Przynależność do organizacji', 'uprawnienia' => 'Uprawnienia do sterowania energią', 'przeplywy' => 'Przepływy energii przez granicę', 'dlaczego' => 'Udział procentowy — tylko pomocniczo', 'relacja' => 'Relacja z działalnością objętą systemem'],
@@ -310,7 +324,10 @@ class IsoSystemQuestionnaire
             $when = match ($key) {
                 'dzialanie' => ["$root.$i.brakUprawnien", ['tak']], 'nadzor' => ["$root.$i.usluga", ['tak']], default => null
             };
-            $out[] = $this->field("$root.$i.$key", $label, $options, ! in_array($key, ['uwagi', 'dlaczego']), $when, $options ? 'text' : 'textarea');
+            if ($root === 'WLASNE' && $key === 'forma') {
+                $options = ['procedura' => 'Procedura', 'opis' => 'Opis w dokumencie systemu', 'nadbudowa' => 'Rozszerzenie istniejącej dokumentacji'];
+            }
+            $out[] = $this->field("$root.$i.$key", $label, $options, ! in_array($key, ['uwagi', 'dlaczego']) && ! ($root === 'WLASNE' && in_array($key, ['id', 'zastepca'])), $when, $root === 'WLASNE' && $key === 'id' ? 'hidden' : ($options ? 'text' : 'textarea'));
         }
 
         return $out;
@@ -335,8 +352,8 @@ class IsoSystemQuestionnaire
         if (str_starts_with($section, '5-')) {
             app(IsoLeadershipQuestionnaire::class)->validateRows($section, $input, $complete);
         }
-        Validator::make($input, ['GRANICE' => 'sometimes|array|max:20', 'UPRAW' => 'sometimes|array|max:20', 'POZA' => 'sometimes|array|max:20', 'GRANICE.*' => 'array', 'UPRAW.*' => 'array', 'POZA.*' => 'array'])->validate();
-        foreach (['GRANICE', 'UPRAW', 'POZA'] as $root) {
+        Validator::make($input, ['GRANICE' => 'sometimes|array|max:20', 'UPRAW' => 'sometimes|array|max:20', 'POZA' => 'sometimes|array|max:20', 'GRANICE.*' => 'array', 'UPRAW.*' => 'array', 'POZA.*' => 'array', 'WLASNE' => 'sometimes|array|max:20', 'WLASNE.*' => 'array', 'WLASNE.*.id' => ['nullable', 'string', 'distinct', 'regex:/^WL-[a-zA-Z0-9-]{1,40}$/']])->validate();
+        foreach (['GRANICE', 'UPRAW', 'POZA', 'WLASNE'] as $root) {
             foreach (array_keys($input[$root] ?? []) as $index) {
                 if (! ctype_digit((string) $index) || (int) $index > 100000) {
                     throw ValidationException::withMessages([$root => 'Nieprawidłowy identyfikator wiersza.']);
@@ -344,6 +361,11 @@ class IsoSystemQuestionnaire
             }
         }
         $rules = [];
+        if ($section === '4-4') {
+            foreach ($input['WLASNE'] ?? [] as $i => $row) {
+                $input['WLASNE'][$i]['id'] = filled($row['id'] ?? null) ? $row['id'] : 'WL-'.Str::uuid();
+            }
+        }
         foreach ($this->sections($section, $input, $sources) as $group) {
             foreach ($group['fields'] as $field) {
                 $key = $field['key'];
@@ -367,6 +389,9 @@ class IsoSystemQuestionnaire
             }
         }
         $validated = Validator::make($input, $rules)->validate();
+        if ($section === '4-4') {
+            Validator::make($input, ['WYNIK.wartoscOdniesienia' => ['nullable', 'regex:/[0-9]/'], 'WYNIK.wartoscOceny' => ['nullable', 'regex:/[0-9]/']])->validate();
+        }
         $out = [];
         foreach (array_keys($rules) as $key) {
             if (! str_contains($key, '*')) {
@@ -481,12 +506,12 @@ class IsoSystemQuestionnaire
         $schema = $this->schema('4-4');
         $ok = match ($kind) {
             'czasowniki' => collect($schema['czasowniki'])->every(fn ($q) => data_get($answers, 'CZ.'.$q['kod'].'.stan') === 'tak' && filled(data_get($answers, 'CZ.'.$q['kod'].'.dowod'))),
-            'wskazniki' => data_get($answers, 'CZ.CZ-04.stan') === 'tak' && filled(data_get($answers, 'CZ.CZ-04.wskazniki')),
+            'wskazniki' => data_get($answers, 'CZ.CZ-04.stan') === 'tak' && collect(['wskaznik', 'okresOdniesienia', 'wartoscOdniesienia', 'okresOceny', 'wartoscOceny', 'porownywalnosc'])->every(fn ($key) => filled(data_get($answers, 'WYNIK.'.$key))),
             'obieg' => collect($schema['obieg'])->every(fn ($q) => filled(data_get($answers, 'OB.'.$q['kod'].'.kto')) && filled(data_get($answers, 'OB.'.$q['kod'].'.kiedy'))),
             'sprawdzenie' => filled(data_get($answers, 'OB.OB-5.kto')) && filled(data_get($answers, 'OB.OB-5.kiedy')),
             'progi' => collect($schema['progi'])->every(fn ($q) => filled(data_get($answers, 'PG.'.$q['kod']))),
             'test' => collect($schema['test'])->every(fn ($q) => data_get($answers, 'TS.'.$q['kod'].'.stan') === 'jest' && filled(data_get($answers, 'TS.'.$q['kod'].'.kto'))),
-            'procesy' => collect($schema['procesy'])->every(fn ($q) => (($q['pokrywaIso'] ?? false) && data_get($answers, 'ODP.SYS-01') === 'nadbudowa') ? filled(data_get($answers, 'PROC.'.$q['kod'].'.integracja')) : (filled(data_get($answers, 'PROC.'.$q['kod'].'.wlasciciel')) && filled(data_get($answers, 'PROC.'.$q['kod'].'.forma')) && data_get($answers, 'PROC.'.$q['kod'].'.forma') !== 'brak' && (! ($q['kluczowy'] ?? false) || filled(data_get($answers, 'PROC.'.$q['kod'].'.zastepca'))))),
+            'procesy' => collect($schema['procesy'])->every(fn ($q) => filled(data_get($answers, 'PROC.'.$q['kod'].'.wlasciciel')) && filled(data_get($answers, 'PROC.'.$q['kod'].'.forma')) && data_get($answers, 'PROC.'.$q['kod'].'.forma') !== 'brak' && (! ($q['kluczowy'] ?? false) || filled(data_get($answers, 'PROC.'.$q['kod'].'.zastepca')))),
             default => false,
         };
 

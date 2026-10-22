@@ -102,6 +102,10 @@ class IsoPlatformRelease
             foreach (app(IsoFactorQuestionnaire::class)->factors($facts, $out) as $factor) {
                 $out['factors'][$factor['kod']] = array_replace(['decyzja' => 'potwierdzony', 'istotnosc' => $example['istotnoscDomyslna'], 'tresc' => $factor['tresc']], $example['dec'][$factor['kod']] ?? []);
             }
+            $evidence = json_decode(file_get_contents(resource_path('iso50001/contracts-2026-10-22/4-1.json')), true, 512, JSON_THROW_ON_ERROR)['example_evidence'];
+            foreach ($evidence as $code => $basis) {
+                $out['factors'][$code]['podstawa'] = $basis;
+            }
 
             return $out;
         }
@@ -138,7 +142,9 @@ class IsoPlatformRelease
         }
         if ($section === '4-4') {
             $example = $vars['PRZYKLAD_44'];
-            $out = [];
+            // Explicit example action only; never a default for a client's answers.
+            $latest = json_decode(file_get_contents(resource_path('iso50001/contracts-2026-10-22/4-4.json')), true, 512, JSON_THROW_ON_ERROR)['example_client'];
+            $out = ['WYNIK' => $latest['wynik'], 'WLASNE' => $latest['wlasne']];
             foreach (['odp', 'cz', 'ob', 'pg', 'ts', 'proc'] as $key) {
                 $out[strtoupper($key)] = $example[$key];
             }

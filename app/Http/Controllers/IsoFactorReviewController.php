@@ -9,6 +9,7 @@ use App\Models\IsoFactorReview;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
+use App\Services\IsoChapterFourReport;
 use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoHtmlState;
 use App\Services\IsoPlatformRelease;
@@ -90,21 +91,24 @@ class IsoFactorReviewController extends Controller
             if (in_array($op, ['save_swot', 'approve'])) {
                 abort_unless(! $client && $review->client_approval && in_array($review->status, ['submitted', 'approved']), 403);
                 $confirmedCodes = array_column(array_filter($this->questionnaire->factors($facts, $review->answers ?? []), fn ($factor) => $factor['visible'] && ($factor['rodzaj'] === 'AUTO' || data_get($review->answers, 'factors.'.$factor['kod'].'.decyzja') === 'potwierdzony')), 'kod');
-                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions,wnioski',
+                $rules = ['swot' => 'required|array:strengths,weaknesses,opportunities,threats,conclusions,wnioski,PODSUM',
                     'swot.wnioski' => ($op === 'approve' ? 'required' : 'nullable').'|array|min:1|max:20',
                     'swot.wnioski.*' => 'array',
                     'swot.wnioski.*.czynnik' => ['nullable', Rule::in($confirmedCodes)],
+                    'swot.wnioski.*.czynniki' => 'nullable|array|max:100',
+                    'swot.wnioski.*.czynniki.*' => ['string', Rule::in(array_merge($confirmedCodes, array_column($review->answers['custom'] ?? [], 'id')))],
                 ];
                 foreach (['znaczenie', 'decyzja', 'dzialanie', 'sprawdzenie'] as $key) {
                     $rules['swot.wnioski.*.'.$key] = ($op === 'approve' ? 'required' : 'nullable').'|string|max:5000';
                 }
+                $rules += app(IsoChapterFourReport::class)->rules('swot');
                 $labels = [];
                 foreach (IsoFactorReview::SWOT_FIELDS as $key => $label) {
                     $rules['swot.'.$key] = 'nullable|string|max:10000';
                     $labels['swot.'.$key] = $label;
                 }
                 $validated = $request->validate($rules, [], $labels);
-                if ($op === 'save_swot' && $validated['swot'] === array_intersect_key($review->swot ?? [], IsoFactorReview::SWOT_FIELDS + ['wnioski' => 'Wnioski'])) {
+                if ($op === 'save_swot' && $validated['swot'] === array_intersect_key($review->swot ?? [], IsoFactorReview::SWOT_FIELDS + ['wnioski' => 'Wnioski', 'PODSUM' => 'Podsumowanie'])) {
                     return;
                 }
                 $review->swot = $validated['swot'] + ['author' => $this->approval($request)];
@@ -118,7 +122,7 @@ class IsoFactorReviewController extends Controller
                 $input['factors'] = array_replace($previous['factors'] ?? [], is_array($input['factors'] ?? null) ? $input['factors'] : []);
                 if ($htmlState === null && ($input['FAKT_KLIMAT_ISTOTNY'] ?? null) !== ($previous['FAKT_KLIMAT_ISTOTNY'] ?? null)) {
                     foreach ($this->questionnaire->factors($facts, $previous) as $factor) {
-                        if (array_key_exists('FAKT_KLIMAT_ISTOTNY', $factor['dependencies'])) {
+                        if (array_key_exists('FAKT_KLIMAT_ISTOTNY', $factor['dependencies']) && ($input['factors'][$factor['kod']]['climate_basis'] ?? null) !== ($input['FAKT_KLIMAT_ISTOTNY'] ?? null)) {
                             unset($input['factors'][$factor['kod']]['decyzja']);
                         }
                     }

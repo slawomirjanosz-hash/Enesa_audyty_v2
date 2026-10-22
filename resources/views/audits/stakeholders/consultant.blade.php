@@ -16,5 +16,7 @@
 @foreach(['summary'=>'Wnioski, powiązanie wymagań z celami, ryzykami i planami działań','owner'=>'Odpowiedzialny za przegląd rejestru','reviewed_on'=>'Data przeglądu','next_review'=>'Termin kolejnego przeglądu'] as $key=>$label)
 @if($consultantEditable)<label>{{$label}}@if($key==='summary')<textarea name="analysis[{{$key}}]" maxlength="10000">{{$safeOld('analysis.'.$key,$review->analysis[$key]??'')}}</textarea>@else<input type="{{in_array($key,['reviewed_on','next_review'])?'date':'text'}}" name="analysis[{{$key}}]" value="{{$safeOld('analysis.'.$key,$review->analysis[$key]??'')}}" @if($key==='owner') maxlength="255" @endif>@endif</label>@else<h4>{{$label}}</h4><p class="stakeholder-read">{{$review->analysis[$key]??'Do uzupełnienia przez konsultanta'}}</p>@endif
 @endforeach
+@if($consultantEditable)@include('audits.partials.iso-conclusions-fields',['reportRoot'=>'analysis','reportData'=>$review->analysis??[],'reportChoices'=>collect($register)->pluck('wymagania','kod')->all()])@endif
+@if($consultantEditable)@include('audits.partials.iso-report-summary-fields',['reportRoot'=>'analysis','reportData'=>$review->analysis??[],'reportChoices'=>collect($register)->pluck('wymagania','kod')->all()])@endif
 @if($consultantEditable)<p class="plant-help">Zmiana oceny konsultanta wymaga ponownego zatwierdzenia klienta. Nie powstaje nowa ankieta.</p><button class="primary" type="submit">Zapisz ocenę konsultanta</button></form>@endif
 </section>

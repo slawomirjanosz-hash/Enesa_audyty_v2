@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = document.createElement('a');
         link.href = '#' + card.id;
         link.textContent = heading.textContent;
-        nav.append(link);
+        nav?.append(link);
     });
     document.getElementById('preview-section').addEventListener('change', event => { location.href = event.target.value; });
     document.getElementById('preview-reset').addEventListener('click', () => {

@@ -2,6 +2,7 @@
 @if(!$client && $editable)<button type="button" id="system-example">Wypełnij przykładowo puste odpowiedzi klienta</button><small class="plant-help">Dane testowe pojawią się w formularzu. Nie są zapisywane ani zatwierdzane automatycznie.</small>@endif
 @foreach($sections as $id=>$group)
 <section id="{{$id}}" class="plant-card"><h2>{{$group['title']}}</h2>
+@if(in_array($section,['4-3','4-4']))<p class="plant-help">{{app(\App\Services\IsoChapterFourPresentation::class)->description($section,$id)}}</p>@endif
 @if(isset($group['tree']))
 @include('audits.system.execution-tree', ['node'=>$group['tree'], 'path'=>$group['root'], 'depth'=>0])
 @elseif(isset($group['repeater']))
@@ -14,7 +15,9 @@
 @if($root==='POZA')<p class="plant-help">Brak pozycji oznacza, że nie wskazano działalności poza granicami. Udział procentowy nie zastępuje uzasadnienia.</p>@endif
 @else
 @if($id==='energia')<div data-energy-locked class="plant-notice" hidden>Najpierw opisz przynajmniej jedną lokalizację, adres i granicę fizyczną w sekcji 3.</div><div data-energy-fields>@endif
-@foreach($group['fields'] as $field)@include('audits.system.field')@endforeach
+@if($section==='4-4')
+@foreach(collect($group['fields'])->groupBy(fn($field)=>implode('.',array_slice(explode('.',$field['key']),0,2))) as $cardFields)<article class="iso-process-card">@foreach($cardFields as $field)@include('audits.system.field')@endforeach</article>@endforeach
+@else @foreach($group['fields'] as $field)@include('audits.system.field')@endforeach @endif
 @if($id==='energia')</div>@endif
 @endif
 </section>@endforeach

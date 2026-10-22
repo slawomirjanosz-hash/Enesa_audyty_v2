@@ -20,17 +20,32 @@
     form.addEventListener('draft:restored', () => { index = Math.max(-1,...[...form.querySelectorAll('#custom-rows [name]')].map(el=>Number(el.name.match(/\[(\d+)\]/)?.[1]??-1)))+1; });
     form.addEventListener('draft:discarded', () => { dirty = false; });
     swotForm?.addEventListener('draft:discarded', () => { swotDirty = false; });
+    let previousClimate = form.querySelector('[name="answers[FAKT_KLIMAT_ISTOTNY]"]').value;
     function update() {
+        const climate = form.querySelector('[name="answers[FAKT_KLIMAT_ISTOTNY]"]').value;
+        form.querySelectorAll('[data-climate-visibility]').forEach(row => {
+            const choices = JSON.parse(row.dataset.climateVisibility);
+            row.hidden = !choices[climate];
+            if (climate !== previousClimate) {
+                const decision = row.querySelector('[data-decision]');
+                if (decision) decision.value = '';
+            }
+            const basis = row.querySelector('[data-climate-basis]');
+            if (basis) basis.value = climate;
+        });
+        previousClimate = climate;
+        const climateText = form.querySelector('[data-factor="KTX-ZK-02"] [data-factor-text]');
+        if(climateText) climateText.textContent = 'Oceniono zmianę klimatu jako nieistotną dla zdolności systemu zarządzania energią do osiągania zamierzonych wyników. Uzasadnienie: ' + form.querySelector('[name="answers[climate_reason]"]').value;
         let done = form.querySelector('[name="answers[FAKT_KLIMAT_ISTOTNY]"]').value && form.querySelector('[name="answers[climate_reason]"]').value.trim() ? 1 : 0;
         done += form.querySelector('[name="answers[PRAWO][data]"]').value ? 1 : 0;
-        const decisions = form.querySelectorAll('[data-decision]');
+        const decisions = [...form.querySelectorAll('[data-decision]')].filter(el=>!el.closest('[data-factor]').hidden);
         decisions.forEach(select => {
             const row = select.closest('[data-factor]');
             const reason = row.querySelector('[data-reason]');
             reason.classList.toggle('factor-hidden', select.value !== 'odrzucony');
             row.querySelector('[data-significance]').classList.toggle('factor-hidden', select.value !== 'potwierdzony');
             const importance = row.querySelector('[data-importance]').value;
-            const conclusion = importance !== 'W' || [...row.querySelectorAll('[data-conclusion]')].every(el => el.value.trim());
+            const conclusion = importance !== 'W' || [...row.querySelectorAll('[data-conclusion],[name*="[podstawa]"]')].every(el => el.value.trim());
             if (select.value === 'potwierdzony' && importance && conclusion && row.querySelector('details textarea').value.trim() || select.value === 'odrzucony' && reason.querySelector('textarea').value.trim()) done++;
         });
         const customRows = [...form.querySelectorAll('#custom-rows [data-custom-row]')];

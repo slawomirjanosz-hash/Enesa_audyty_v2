@@ -60,7 +60,7 @@
       "kod": "SYS-07",
       "norma": false,
       "pytanie": "Czy w systemie odróżniacie odchylenie od niezgodności?",
-      "pomoc": "Na każde niekorzystne odchylenie trzeba zareagować. Działanie korygujące (10.2) podejmujecie dopiero wtedy, gdy nie spełniono wymagania. Mylenie obu pojęć zamienia rejestr niezgodności w listę wahań wskaźnika.",
+      "pomoc": "Na każde niekorzystne odchylenie trzeba zareagować. Działanie korygujące (10.1) podejmujecie dopiero wtedy, gdy nie spełniono wymagania. Mylenie obu pojęć zamienia rejestr niezgodności w listę wahań wskaźnika.",
       "opcje": [
         [
           "tak",
@@ -345,7 +345,7 @@
       "wynik": "Program auditów, raporty",
       "sugestia": "Auditor wewnętrzny",
       "pokrywaIso": true,
-      "trafia": "9.3, 10.2"
+      "trafia": "9.3, 10.1 działania korygujące"
     },
     {
       "kod": "PR-10",
@@ -361,8 +361,8 @@
     {
       "kod": "PR-11",
       "nazwa": "Niezgodności i działania korygujące",
-      "klauzula": "10.1–10.2",
-      "klauzulaKod": "10.2",
+      "klauzula": "10.1",
+      "klauzulaKod": "10.1",
       "uzgodnic": true,
       "wynik": "Rejestr niezgodności i działań",
       "sugestia": "Energy Manager",
