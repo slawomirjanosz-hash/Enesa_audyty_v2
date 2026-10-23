@@ -410,6 +410,8 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('roles', [Settings\RoleController::class, 'store'])->middleware('app.permission:settings.roles.manage')->name('roles.store');
         Route::put('roles/{role}', [Settings\RoleController::class, 'update'])->middleware('app.permission:settings.roles.manage')->name('roles.update');
         Route::delete('roles/{role}', [Settings\RoleController::class, 'destroy'])->middleware('app.permission:settings.roles.manage')->name('roles.destroy');
+        Route::get('users/permission-access', [Settings\UserController::class, 'permissionAccess'])->middleware('app.permission:settings.users.manage')->name('users.permission-access');
+        Route::delete('users/{user}/permission-access', [Settings\UserController::class, 'revokePermission'])->middleware('app.permission:settings.users.manage')->name('users.permission-access.revoke');
         Route::resource('users', Settings\UserController::class)->names('users')->except('destroy')->middlewareFor(['index', 'show'], 'app.permission:settings.users.view')->middlewareFor(['store', 'update'], 'app.permission:settings.users.manage');
         Route::delete('users/{user}', [Settings\UserController::class, 'destroy'])
             ->middleware(['auth', 'app.permission:settings.users.manage'])

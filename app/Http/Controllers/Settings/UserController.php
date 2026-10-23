@@ -11,6 +11,7 @@ use App\Models\CompanySettings;
 use App\Models\Document;
 use App\Models\User;
 use App\Services\AccountSecurityService;
+use App\Services\ActivityLogService;
 use App\Services\AuditorAccessService;
 use App\Services\TaskReminderMailConfiguration;
 use App\Services\UserPermissions;
@@ -89,6 +90,60 @@ class UserController extends Controller
             && $this->roleRank($manager) > $this->roleRank($user))->pluck('id')->all();
 
         return view('settings.users.index', compact('roles', 'archivedStaff', 'archivedClients', 'orphanUsers', 'companies', 'archivedCompanies', 'allUsers', 'permissionGroups', 'rolePermissionSets', 'permissionSources', 'userPermissionSets', 'manageableUserIds'));
+    }
+
+    public function permissionAccess(Request $request)
+    {
+        $manager = $request->user();
+        abort_unless($manager->hasRole('superadmin') || $manager->can('settings.users.manage'), 403);
+        $service = app(UserPermissions::class);
+        $permissionGroups = $service->groups($manager);
+        $data = $request->validate([
+            'permissions' => ['sometimes', 'array', 'max:200'],
+            'permissions.*' => ['string', Rule::in($service->editableNames($manager))],
+            'match' => ['sometimes', Rule::in(['any', 'all'])],
+        ]);
+        $selected = array_values(array_unique($data['permissions'] ?? []));
+        $match = $data['match'] ?? 'any';
+        $labels = collect($permissionGroups)->flatMap(fn ($group) => $group['permissions']);
+        $rows = collect();
+        if ($selected !== []) {
+            $rows = User::with(['roles.permissions', 'permissions'])->orderBy('name')->get()
+                ->map(function (User $user) use ($selected, $manager) {
+                    $grants = $user->getAllPermissions()->pluck('name')->all();
+                    $full = $user->hasRole('superadmin') || in_array('system.full_access', $grants, true);
+                    $access = collect($selected)->filter(fn ($name) => ($user->hasRole('superadmin') && $name !== 'hr.vehicles.responsible')
+                        || in_array($name, $grants, true)
+                        || ($full && ! in_array($name, ['settings.company.manage', 'settings.roles.manage', 'settings.users.manage', 'activity_log.view', 'hr.vehicles.responsible'], true)))->values()->all();
+
+                    return ['user' => $user, 'grants' => $grants, 'access' => $access, 'full' => $full,
+                        'manageable' => $this->roleRank($manager) > $this->roleRank($user)];
+                })->filter(fn ($row) => $match === 'all' ? count($row['access']) === count($selected) : $row['access'] !== []);
+        }
+
+        return view('settings.users.permission-access', compact('permissionGroups', 'selected', 'match', 'labels', 'rows'));
+    }
+
+    public function revokePermission(Request $request, User $user)
+    {
+        $manager = $request->user();
+        abort_unless($manager->hasRole('superadmin') || $manager->can('settings.users.manage'), 403);
+        $this->ensureCanManageUser($manager, $user);
+        $service = app(UserPermissions::class);
+        $data = $request->validate([
+            'permission' => ['required', 'string', Rule::in($service->editableNames($manager))],
+        ]);
+        DB::transaction(function () use ($service, $user, $data): void {
+            $target = User::lockForUpdate()->findOrFail($user->id);
+            $service->initialize($target);
+            $before = $target->permissions->pluck('name')->all();
+            $target->revokePermissionTo($data['permission']);
+            app(ActivityLogService::class)->recordUserPermissions(
+                $target, $before, $target->permissions->pluck('name')->all()
+            );
+        });
+
+        return redirect()->back()->with('success', 'Uprawnienie zostało odłączone od użytkownika.');
     }
 
     public function showAuditorAccess(User $user)

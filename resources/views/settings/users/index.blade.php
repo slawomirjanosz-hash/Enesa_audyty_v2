@@ -204,6 +204,9 @@
 @endpush
 
 @section('content')
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.users.manage'))
+<p style="margin-bottom:18px"><a class="btn-sm" href="{{ route('settings.users.permission-access') }}">Dostęp według uprawnień</a></p>
+@endif
 @php
     $storageUsage = app(\App\Services\DocumentQuotaService::class)->usedMany($allUsers->modelKeys());
 @endphp
