@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BoardTask;
 use App\Services\BoardAccessService;
 use App\Services\PersonalBoardService;
+use App\Services\TaskCompletionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,9 +30,18 @@ class TaskArchiveController extends Controller
             }
             $field = $kind === 'board' ? 'revision' : 'board_revision';
             abort_unless((int) $task->$field === (int) $data['revision'], 409, 'Zadanie zmieniło się. Odśwież stronę.');
+            if (! $data['restore']) {
+                abort_unless(app(TaskCompletionService::class)->complete($task), 422, 'Archiwizować można tylko zadania wykonane i potwierdzone przez wszystkich wykonawców.');
+            }
             if ($kind === 'board') {
+                if ($data['restore']) {
+                    app(TaskCompletionService::class)->participantsChanged($task);
+                }
                 $task->update(['revision' => $task->revision + 1]);
             } else {
+                if ($data['restore']) {
+                    app(TaskCompletionService::class)->participantsChanged($task);
+                }
                 $task->update(['deleted_by' => $data['restore'] ? null : $request->user()->id]);
             }
             $data['restore'] ? $task->restore() : $task->delete();

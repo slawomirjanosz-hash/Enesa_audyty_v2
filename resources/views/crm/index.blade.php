@@ -578,7 +578,7 @@
                         <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
                             <x-user-avatar :user="$task->assignedUser" />
                         </div>
-                        <span style="font-size:12px;">{{ $task->assignedUser?->name ?? '—' }}</span>
+                        @include('partials.task-confirmations', ['completionTask' => $task])
                     </div>
                 </td>
                 <td style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
@@ -592,10 +592,13 @@
                         @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
+                        @if(app(\App\Services\TaskCompletionService::class)->complete($task))
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Zarchiwizować zadanie?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn-icon btn-icon-archive" title="Archiwizuj zadanie" aria-label="Archiwizuj zadanie"><i class="ti ti-archive" aria-hidden="true"></i></button>
                         </form>
+                        @endif
+                        @include('partials.task-delete-button', ['deletionTask' => $task])
                         @endif
                     </div>
                 </td>
@@ -643,7 +646,7 @@
                         <div style="width:26px;height:26px;border-radius:50%;background:#94C4B0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
                             <x-user-avatar :user="$task->assignedUser" />
                         </div>
-                        <span style="font-size:12px;">{{ $task->assignedUser?->name ?? '—' }}</span>
+                        @include('partials.task-confirmations', ['completionTask' => $task])
                     </div>
                 </td>
                 <td style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
@@ -657,10 +660,13 @@
                         <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
                             <i class="ti ti-pencil"></i>
                         </button>
+                        @if(app(\App\Services\TaskCompletionService::class)->complete($task))
                         <form method="POST" action="{{ route('crm.tasks.destroy', $task) }}" style="display:inline;" onsubmit="return confirm('Zarchiwizować zadanie?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn-icon btn-icon-archive" title="Archiwizuj zadanie" aria-label="Archiwizuj zadanie"><i class="ti ti-archive" aria-hidden="true"></i></button>
                         </form>
+                        @endif
+                        @include('partials.task-delete-button', ['deletionTask' => $task])
                     </div>
                 </td>
             </tr>
@@ -715,7 +721,7 @@
                     <tr>
                         <td><div style="font-weight:700;">{{ $task->title }}</div>@if($task->description)<div style="font-size:11px;color:#888;">{{ \Illuminate\Support\Str::limit($task->description, 90) }}</div>@endif</td>
                         <td style="font-size:12px;color:#666;">{{ $task->company?->name ?? '—' }}</td>
-                        <td style="font-size:12px;">{{ $task->assignedUser?->name ?? 'Nieprzypisane' }}</td>
+                        <td style="font-size:12px;">@include('partials.task-confirmations', ['completionTask' => $task])</td>
                         <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:#666;">{{ $task->due_date?->format('d.m.Y') ?? '—' }}</td>
                         <td data-sort-value="{{ $task->deleted_at?->timestamp }}" style="font-size:12px;color:#666;">{{ $task->deleted_at?->format('d.m.Y H:i') ?? '—' }}</td>
                         <td style="font-size:12px;color:#666;">{{ $task->deletedBy?->name ?? '—' }}</td>
@@ -724,6 +730,7 @@
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn-secondary" style="padding:5px 9px;"><i class="ti ti-restore"></i> Przywróć</button>
                             </form>
+                            @include('partials.task-delete-button', ['deletionTask' => $task])
                         </td>
                     </tr>
                 @empty
@@ -1169,6 +1176,7 @@
                         <option value="in_progress">W toku</option>
                         <option value="done">Zrobione</option>
                     </select>
+                    <small style="color:#7a8a80;">Przy zadaniu wspólnym „Zrobione” potwierdza Twoje wykonanie. Zadanie zamknie się po potwierdzeniu przez wszystkich.</small>
                 </div>
             </div>
             <div style="margin-bottom:16px;">

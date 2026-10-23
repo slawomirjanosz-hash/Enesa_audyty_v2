@@ -556,6 +556,7 @@ require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('/my-board', [BoardController::class, 'index'])->name('board.mine');
+    Route::delete('/my-board/{kind}/{id}', [\App\Http\Controllers\TaskDeletionController::class, 'destroy'])->name('board.permanent-delete');
     Route::patch('/my-board/{kind}/{id}/archive', [TaskArchiveController::class, 'update'])->name('board.archive');
     Route::put('/my-board/{kind}/{id}/participants', [BoardCollaborationController::class, 'participants'])->name('board.participants');
     Route::patch('/my-board/crm/{task}/status', [BoardCollaborationController::class, 'crmStatus'])->name('board.crm.status');

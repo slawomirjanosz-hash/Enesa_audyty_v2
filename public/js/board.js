@@ -30,11 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         card.dataset.busy = '1'; select.disabled = true; message.hidden = true;
         try {
             const result = await request(card.dataset.statusUrl, 'PATCH', {status:next,revision:Number(card.dataset.revision)});
-            card.dataset.revision = result.revision; card.dataset.status = next; select.value = next;
-            card.classList.remove('board-gray','board-orange','board-green','board-red'); card.classList.add(`board-${result.color}`);
-            const overdue = card.querySelector('.board-overdue'); if(overdue) overdue.hidden = result.color !== 'red';
-            board.querySelector(`[data-column="${next}"] [data-card-list]`).append(card);
-            board.querySelectorAll('[data-column]').forEach(column => column.querySelector('[data-count]').textContent = column.querySelectorAll('[data-card]').length);
+            card.dataset.status = result.status;
+            location.reload();
         } catch(error) { select.value = card.dataset.status; report(message,error.message); }
         finally { delete card.dataset.busy; select.disabled = false; }
     }
@@ -65,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const edit = event.target.closest('[data-board-edit]');
         if(edit) { const values = JSON.parse(edit.dataset.values); values.revision = Number(edit.closest('[data-card]').dataset.revision); values.status = edit.closest('[data-card]').dataset.status; form.reset(); Object.entries(values).forEach(([key,value])=>{if(form.elements.namedItem(key)) form.elements.namedItem(key).value=value ?? '';}); form.dataset.updateUrl=edit.dataset.updateUrl; form.querySelector('[data-board-heading]').textContent='Edytuj zadanie'; form.querySelector('[data-board-error]').hidden=true; dialog.showModal(); }
         const remove = event.target.closest('[data-board-delete]');
-        if(remove && confirm('Usunąć to zadanie z tablicy?')) { remove.disabled=true; try { await request(remove.dataset.deleteUrl,'DELETE',{revision:Number(remove.closest('[data-card]').dataset.revision)}); location.reload(); } catch(error){report(message,error.message);remove.disabled=false;} }
+        if(remove && confirm('Trwale usunąć to zadanie? Tej operacji nie można cofnąć.')) { remove.disabled=true; try { await request(remove.dataset.deleteUrl,'DELETE',{revision:Number(remove.closest('[data-card]').dataset.revision)}); location.reload(); } catch(error){report(message,error.message);remove.disabled=false;} }
     });
     if(!form) return;
     dialog.querySelectorAll('[data-board-close]').forEach(button=>button.addEventListener('click',()=>dialog.close()));

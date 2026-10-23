@@ -70,7 +70,9 @@ test('boards create edit move and delete cards for both owner types with isolate
         $this->patchJson(route('board.status', $card), ['status' => 'done', 'revision' => 1])->assertStatus(409);
         $this->putJson(route('board.update', $card), array_replace($data, ['revision' => 2, 'title' => 'Edytowana', 'due_date' => '2026-10-22']))->assertOk();
         expect($card->fresh()->stage_offset_days)->toBe(2);
-        $this->deleteJson(route('board.destroy', $card), ['revision' => 3])->assertOk();
+        $this->deleteJson(route('board.destroy', $card), ['revision' => 3])->assertStatus(422);
+        $this->patchJson(route('board.status', $card), ['status' => 'done', 'revision' => 3])->assertOk();
+        $this->deleteJson(route('board.destroy', $card), ['revision' => 4])->assertOk();
         $this->assertSoftDeleted($card);
     }
 });

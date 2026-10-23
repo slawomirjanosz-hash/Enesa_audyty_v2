@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\BoardAccessService;
 use App\Services\PersonalBoardService;
+use App\Services\TaskCompletionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -41,12 +42,13 @@ class BoardCollaborationController extends Controller
             abort_if(array_diff($data['participants'], self::candidates($card)->pluck('id')->all()), 422, 'Wybierz aktywne osoby mające dostęp do tego modułu i zespołu.');
             $before = $card->participants()->pluck('users.id')->all();
             $card->participants()->sync(array_values(array_diff($data['participants'], [$card->assigned_to])));
+            app(TaskCompletionService::class)->participantsChanged($card);
             if ($kind === 'board') {
                 $card->revision++;
             } else {
                 $card->board_revision = (int) $card->board_revision + 1;
             }
-            $card->touch();
+            $card->save();
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'updated', 'auditable_type' => $card::class, 'auditable_id' => $card->id, 'subject_label' => 'Uczestnicy zadania: '.$card->title, 'changes' => ['participants' => ['old' => $before, 'new' => $data['participants']]]]);
 
             return response()->json(['saved' => true]);
@@ -59,14 +61,15 @@ class BoardCollaborationController extends Controller
         $this->authorize('update', $task);
         $data = $request->validate(['status' => ['required', Rule::in(['todo', 'in_progress', 'done'])], 'revision' => 'required|integer|min:1']);
 
-        return DB::transaction(function () use ($task, $data) {
-            $task = Task::lockForUpdate()->findOrFail($task->id);
+        return DB::transaction(function () use ($task, $data, $request) {
+            $task = app(PersonalBoardService::class)->crm($request->user())->lockForUpdate()->findOrFail($task->id);
             $this->authorize('update', $task);
             abort_unless((int) $task->board_revision === (int) $data['revision'], 409, 'Zadanie zmieniło się. Odśwież tablicę.');
-            $task->update(['status' => $data['status']]);
+            app(TaskCompletionService::class)->apply($task, ['status' => $data['status']], auth()->user());
+            $task->save();
             $color = $task->status === 'done' ? 'green' : ($task->due_date?->lt(today()) ? 'red' : ($task->status === 'in_progress' ? 'orange' : 'gray'));
 
-            return response()->json(['revision' => $task->board_revision, 'color' => $color]);
+            return response()->json(['status' => $task->status, 'revision' => $task->board_revision, 'color' => $color]);
         });
     }
 }

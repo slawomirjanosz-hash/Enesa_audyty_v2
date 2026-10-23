@@ -35,7 +35,8 @@ class BoardTaskService
                 'revision' => ($card?->revision ?? 0) + 1,
             ];
             if ($card) {
-                $card->update($values);
+                app(TaskCompletionService::class)->apply($card, $values, $actor);
+                $card->save();
 
                 return $card;
             }

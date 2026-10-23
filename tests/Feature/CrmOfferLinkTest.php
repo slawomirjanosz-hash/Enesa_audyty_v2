@@ -610,7 +610,7 @@ test('deleted CRM task is visible in trash statistics and can be restored', func
         'company_id' => $company->id,
         'assigned_to' => $employee->id,
         'created_by' => $admin->id,
-        'status' => 'todo',
+        'status' => 'done',
         'priority' => 'medium',
         'due_date' => '2026-08-30',
     ]);

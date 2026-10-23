@@ -183,7 +183,7 @@ class CompanyController extends Controller
         $stats['crm_opportunities_count'] = $crmOpportunities->count();
 
         $crmTasks = $access->scopeByCompanyAccess(
-            Task::with(['assignedUser', 'offer', 'crmOpportunity'])
+            Task::with(['participants', 'assignedUser', 'offer', 'crmOpportunity'])
                 ->where('company_id', $company->id)
                 ->whereNull('project_id')
                 ->whereNull('audit_id')

@@ -1341,7 +1341,7 @@
                                     @if($task->description)<div style="font-size:11px;color:#888;margin-top:2px;">{{ \Illuminate\Support\Str::limit($task->description, 100) }}</div>@endif
                                 </td>
                                 <td style="font-size:12px;color:#555;">{{ $task->crmOpportunity?->title ?? '—' }}</td>
-                                <td style="font-size:12px;color:#555;">{{ $task->assignedUser?->name ?? '—' }}</td>
+                                <td style="font-size:12px;color:#555;">@include('partials.task-confirmations', ['completionTask' => $task])</td>
                                 <td style="font-size:12px;color:{{ $taskOverdue ? '#B91C1C' : '#7a8a80' }};font-weight:{{ $taskOverdue ? '700' : '400' }};">
                                     {{ $task->due_date?->format('d.m.Y') ?? '—' }}
                                     @if($taskOverdue)<span title="Po terminie"> ⚠</span>@endif

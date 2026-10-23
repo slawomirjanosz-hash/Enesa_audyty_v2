@@ -8,8 +8,8 @@ test('tasks archive and restore without losing owner lead or participants', func
     [$admin, $project, $audit] = boardFixture();
     $lead = CrmOpportunity::create(['company_id' => $project->company_id, 'title' => 'Szansa archiwalna', 'stage' => 'new_lead', 'created_by' => $admin->id]);
     $tasks = [
-        ['board', BoardTask::create(['project_id' => $project->id, 'title' => 'Archiwalne projektowe', 'assigned_to' => $admin->id])],
-        ['board', BoardTask::create(['audit_id' => $audit->id, 'title' => 'Archiwalne audytowe', 'assigned_to' => $admin->id])],
+        ['board', BoardTask::create(['project_id' => $project->id, 'title' => 'Archiwalne projektowe', 'assigned_to' => $admin->id, 'status' => 'done'])],
+        ['board', BoardTask::create(['audit_id' => $audit->id, 'title' => 'Archiwalne audytowe', 'assigned_to' => $admin->id, 'status' => 'done'])],
         ['crm', Task::create(['crm_opportunity_id' => $lead->id, 'company_id' => $project->company_id, 'title' => 'Archiwalne CRM', 'assigned_to' => $admin->id, 'status' => 'done'])],
     ];
     $this->actingAs($admin);
@@ -42,7 +42,7 @@ test('archive permission follows task write permission not team visibility', fun
     [$admin, $project] = boardFixture();
     $worker = boardWorker($project);
     $worker->givePermissionTo('board.team.view');
-    $own = BoardTask::create(['project_id' => $project->id, 'title' => 'Własne', 'assigned_to' => $worker->id]);
+    $own = BoardTask::create(['project_id' => $project->id, 'title' => 'Własne', 'assigned_to' => $worker->id, 'status' => 'done']);
     $foreign = BoardTask::create(['project_id' => $project->id, 'title' => 'Cudze', 'assigned_to' => $admin->id]);
     $crm = Task::create(['company_id' => $project->company_id, 'title' => 'Cudze CRM', 'assigned_to' => $admin->id, 'status' => 'todo']);
     $this->actingAs($worker)->patchJson(route('board.archive', ['board', $own->id]), ['revision' => 1, 'restore' => false])->assertOk();

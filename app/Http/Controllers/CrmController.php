@@ -14,6 +14,8 @@ use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
 use App\Services\OfferCrmStageSynchronizer;
+use App\Services\PersonalBoardService;
+use App\Services\TaskCompletionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -97,18 +99,18 @@ class CrmController extends Controller
             'can_view_offers'
         )->get() : collect();
 
-        $tasks = $currentTab === 'tasks' && $canManageTeamTasks ? Task::crm()->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])
+        $tasks = $currentTab === 'tasks' && $canManageTeamTasks ? Task::crm()->with(['participants', 'assignedUser', 'company', 'offer', 'crmOpportunity'])
             ->orderBy('due_date')
             ->get() : collect();
 
         $myTasks = $currentTab === 'tasks' && $canManageOwnTasks ? Task::crm()->forUser(auth()->id())
-            ->with(['assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date')
+            ->with(['participants', 'assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date')
             ->get() : collect();
 
         $trashTasksQuery = Task::onlyTrashed()->crm();
         $trashTasksCount = $canManageTeamTasks ? (clone $trashTasksQuery)->count() : 0;
         $trashTasks = $currentTab === 'trash' && $canManageTeamTasks
-            ? $trashTasksQuery->with(['assignedUser', 'company', 'deletedBy'])
+            ? $trashTasksQuery->with(['participants', 'assignedUser', 'company', 'deletedBy'])
                 ->orderByDesc('deleted_at')
                 ->get()
             : collect();
@@ -356,7 +358,13 @@ class CrmController extends Controller
             }
         }
 
-        $task->update($data);
+        DB::transaction(function () use ($task, $data, $request) {
+            $locked = app(PersonalBoardService::class)->crm($request->user())->lockForUpdate()->findOrFail($task->id);
+            $this->authorize('update', $locked);
+            app(TaskCompletionService::class)->apply($locked, $data, $request->user());
+            $locked->save();
+            $task->setRawAttributes($locked->getAttributes(), true);
+        });
 
         if ($companyContextId && (int) $companyContextId === (int) $task->company_id) {
             return redirect()->to(route('companies.show', $companyContextId).'#crm')
@@ -370,18 +378,26 @@ class CrmController extends Controller
     {
         abort_if($task->project_id !== null || $task->audit_id !== null, 404);
         $this->authorize('delete', $task);
-        $task->update(['deleted_by' => auth()->id()]);
-        $task->delete();
+        DB::transaction(function () use ($task) {
+            $task = app(PersonalBoardService::class)->crm(auth()->user())->lockForUpdate()->findOrFail($task->id);
+            $this->authorize('delete', $task);
+            abort_unless(app(TaskCompletionService::class)->complete($task), 422, 'Archiwizować można tylko wykonane zadania potwierdzone przez wszystkich wykonawców.');
+            $task->update(['deleted_by' => auth()->id()]);
+            $task->delete();
+        });
 
         return redirect()->route('crm.index', ['tab' => 'tasks'])->with('success', 'Zadanie zostało zarchiwizowane.');
     }
 
     public function restoreTask(Request $request, int $taskId): RedirectResponse
     {
-        $task = Task::onlyTrashed()->crm()->findOrFail($taskId);
-        $this->authorize('update', $task);
-        $task->restore();
-        $task->update(['deleted_by' => null]);
+        DB::transaction(function () use ($request, $taskId) {
+            $task = app(PersonalBoardService::class)->crm($request->user())->onlyTrashed()->lockForUpdate()->findOrFail($taskId);
+            $this->authorize('update', $task);
+            app(TaskCompletionService::class)->participantsChanged($task);
+            $task->restore();
+            $task->update(['deleted_by' => null]);
+        });
 
         return redirect()->route('crm.index', ['tab' => 'trash'])
             ->with('success', 'Zadanie zostało przywrócone.');
@@ -394,9 +410,15 @@ class CrmController extends Controller
         $data = $request->validate([
             'status' => ['required', 'in:todo,in_progress,done'],
         ]);
-        $task->update($data);
 
-        return response()->json(['status' => $task->status]);
+        return DB::transaction(function () use ($task, $data, $request) {
+            $task = app(PersonalBoardService::class)->crm($request->user())->lockForUpdate()->findOrFail($task->id);
+            $this->authorize('update', $task);
+            app(TaskCompletionService::class)->apply($task, $data, $request->user());
+            $task->save();
+
+            return response()->json(['status' => $task->status]);
+        });
     }
 
     public function updateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse

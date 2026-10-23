@@ -37,6 +37,7 @@ class Task extends Model
     ];
 
     protected $casts = [
+        'completion_confirmations' => 'array',
         'due_date' => 'date',
         'start_date' => 'date',
         'progress' => 'integer',

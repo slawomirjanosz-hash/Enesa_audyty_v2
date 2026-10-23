@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Services\BoardAccessService;
 use App\Services\BoardTaskService;
 use App\Services\PersonalBoardService;
+use App\Services\TaskCompletionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -45,9 +46,10 @@ class BoardController extends Controller
             $card = BoardTask::lockForUpdate()->findOrFail($card->id);
             abort_unless($access->changeStatus($request->user(), $card), 403);
             abort_unless($card->revision === (int) $data['revision'], 409, 'Zadanie zmieniło się w międzyczasie. Odśwież tablicę.');
-            $card->update(['status' => $data['status'], 'revision' => $card->revision + 1]);
+            app(TaskCompletionService::class)->apply($card, ['status' => $data['status'], 'revision' => $card->revision + 1], $request->user());
+            $card->save();
 
-            return response()->json(['revision' => $card->revision, 'color' => $card->color()]);
+            return response()->json(['status' => $card->status, 'revision' => $card->revision, 'color' => $card->color()]);
         });
     }
 
@@ -59,6 +61,7 @@ class BoardController extends Controller
             $owner = $card->project ?? $card->audit;
             abort_unless($owner && $access->manage($request->user(), $owner), 403);
             abort_unless($card->revision === (int) $data['revision'], 409, 'Zadanie zmieniło się w międzyczasie. Odśwież tablicę.');
+            abort_unless(app(TaskCompletionService::class)->complete($card), 422, 'Archiwizować można tylko zadania wykonane i potwierdzone przez wszystkich wykonawców.');
             $card->delete();
         });
 
