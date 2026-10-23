@@ -204,9 +204,6 @@
 @endpush
 
 @section('content')
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.users.manage'))
-<p style="margin-bottom:18px"><a class="btn-sm" href="{{ route('settings.users.permission-access') }}">Dostęp według uprawnień</a></p>
-@endif
 @php
     $storageUsage = app(\App\Services\DocumentQuotaService::class)->usedMany($allUsers->modelKeys());
 @endphp
@@ -215,7 +212,12 @@
 @include('partials.header-search-styles')
 <div class="app-search-header">
     <h1 style="margin:0;font-size:22px;color:var(--green)">Użytkownicy</h1>
-    <div class="app-search-toolbar">@include('partials.list-search', ['searchTargets' => '.users-table tbody tr', 'searchPlaceholder' => 'Szukaj: imię, nazwisko, e-mail, rola…'])</div>
+    <div class="app-search-toolbar">
+        @include('partials.list-search', ['searchTargets' => '.users-table tbody tr', 'searchPlaceholder' => 'Szukaj: imię, nazwisko, e-mail, rola…'])
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.users.manage'))
+        <a class="btn-primary" style="text-decoration:none" href="{{ route('settings.users.permission-access') }}"><i class="ti ti-shield-lock" aria-hidden="true"></i> Dostęp według uprawnień</a>
+        @endif
+    </div>
 </div>
 <div class="settings-tabs">
     <a href="{{ route('settings.users.index') }}" class="settings-tab {{ !request()->has('tab') ? 'active' : '' }}">
