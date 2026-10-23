@@ -86,6 +86,10 @@ class RolePermissionCatalog
                 'documents.upload' => 'Dodawanie dokumentów',
                 'documents.delete' => 'Usuwanie dokumentów',
             ]],
+            'expenses' => ['label' => 'Rozliczenia faktur', 'permissions' => [
+                'expenses.use' => 'Własne zakupy i wspólna lista faktur do przypisania; odczyt zdjęcia WZ',
+                'expenses.accounting' => 'Księgowość — wszystkie faktury, publikowanie do przypisania i rozliczanie',
+            ]],
             'warehouse' => ['label' => 'Magazyn', 'permissions' => [
                 'warehouse.view' => 'Podgląd całego magazynu, cen i historii dokumentów firmy',
                 'warehouse.manage' => 'Dodawanie, edycja i archiwizacja katalogu magazynu',

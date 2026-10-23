@@ -22,11 +22,12 @@ class CompanySettings extends Model
         'client_zone' => 'Strefa klienta',
         'cylinders' => 'Przeglądy urządzeń',
         'warehouse' => 'Magazyn',
+        'expenses' => 'Rozliczenia faktur',
     ];
 
     public static function defaultModules(): array
     {
-        return array_values(array_diff(array_keys(self::APP_MODULES), ['cylinders', 'warehouse']));
+        return array_values(array_diff(array_keys(self::APP_MODULES), ['cylinders', 'warehouse', 'expenses']));
     }
 
     protected $fillable = [

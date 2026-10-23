@@ -487,6 +487,9 @@
                 <a href="{{ route('warehouse.index') }}" class="nav-link {{ request()->routeIs('warehouse.*') ? 'active' : '' }}"><i class="ti ti-building-warehouse"></i> Magazyn</a>
             </li>
             @endif
+            @if(($appBrand?->moduleEnabled('expenses') ?? false) && (auth()->user()->hasRole('superadmin') || auth()->user()->canAny(['expenses.use', 'expenses.accounting'])))
+            <li class="nav-item"><a href="{{route('expenses.index')}}" class="nav-link {{request()->routeIs('expenses.*') ? 'active' : ''}}"><i class="ti ti-receipt"></i> Rozliczenia faktur</a></li>
+            @endif
             @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
             <li class="nav-item nav-group {{ request()->is('audit*', 'energy-passports*') ? 'open' : '' }}">
                 <span class="nav-link" onclick="toggleGroup(this)">

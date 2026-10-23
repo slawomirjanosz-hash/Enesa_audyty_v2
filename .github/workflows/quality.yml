@@ -56,6 +56,8 @@ jobs:
 
       - name: Test account creation mail choice
         run: node --test tests/js/user-create-mail.test.mjs
+      - name: Test expense photo extraction review
+        run: node --test tests/js/expense-scan.test.mjs
       - name: Test individual user permission editor
         run: node --test tests/js/user-permissions.test.mjs
 
