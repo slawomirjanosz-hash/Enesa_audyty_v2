@@ -4,4 +4,4 @@
 .app-table-sort-marker{opacity:.6;font-size:12px;white-space:nowrap}th[aria-sort] .app-table-sort-marker{opacity:1}
 @media print{.app-table-sort-marker{display:none}}
 </style>
-<script type="module" src="{{asset('js/table-sort.js')}}?v={{filemtime(public_path('js/table-sort.js'))}}"></script>
+<script type="module" src="{{$tableSortScriptUrl ?? asset('js/table-sort.js')}}?v={{filemtime(public_path('js/table-sort.js'))}}"></script>
