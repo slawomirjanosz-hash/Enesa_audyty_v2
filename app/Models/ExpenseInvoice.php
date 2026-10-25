@@ -11,7 +11,7 @@ class ExpenseInvoice extends Model
 
     public const SOURCES = ['unknown' => 'Nieustalone', 'company' => 'Firmowe', 'personal' => 'Prywatne'];
 
-    public const PAYMENTS = ['unknown' => 'Nieustalone', 'unpaid' => 'Nieopłacona', 'paid' => 'Opłacona', 'partial' => 'Częściowo opłacona'];
+    public const PAYMENTS = ['unknown' => 'Nieustalone', 'unpaid' => 'Nieopłacona', 'paid' => 'Opłacona', 'partial' => 'Częściowo opłacona', 'settled' => 'Rozliczona — zamknięta'];
 
     protected $guarded = ['id'];
 

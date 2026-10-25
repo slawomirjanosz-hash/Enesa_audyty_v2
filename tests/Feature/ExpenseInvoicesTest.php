@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\ExpenseInvoice;
 use App\Models\User;
@@ -194,4 +195,63 @@ test('repeated identical photos reuse the extraction and daily budget blocks new
     }
     $this->postJson(route('expenses.scan'), ['photo' => UploadedFile::fake()->image('new.jpg', 2, 2)])->assertStatus(422);
     Http::assertSentCount(1);
+});
+
+test('manual buyers remain private to accounting and are preserved during editing', function () {
+    $finance = expenseUser(true);
+    $employee = expenseUser();
+    $this->actingAs($finance)->post(route('expenses.store'), expenseData(['owner_mode' => 'manual', 'owner_name' => 'Kupujący spoza bazy']))->assertSessionHasNoErrors();
+    $invoice = ExpenseInvoice::firstOrFail();
+    expect($invoice->owner_id)->toBeNull()->and($invoice->owner_name)->toBe('Kupujący spoza bazy')->and($invoice->is_unassigned)->toBeFalse();
+    $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Kupujący spoza bazy')->assertSee('Wpisz ręcznie');
+    $this->put(route('expenses.update', $invoice), expenseData(['revision' => 1, 'owner_mode' => 'manual', 'owner_name' => 'Poprawiony kupujący']))->assertSessionHasNoErrors();
+    expect($invoice->fresh()->owner_name)->toBe('Poprawiony kupujący');
+    $this->actingAs($employee)->get(route('expenses.index', ['tab' => 'pool']))->assertDontSee('FV/23/2026');
+    $this->get(route('expenses.edit', $invoice))->assertNotFound();
+});
+
+test('accounting closes invoices through payment status with inline validation and revision protection', function () {
+    $finance = expenseUser(true);
+    $invoice = expenseRecord($finance);
+    $data = expenseData(['revision' => 1, 'owner_mode' => 'user', 'owner_id' => $finance->id, 'payment_status' => 'settled']);
+    $this->actingAs($finance)->from(route('expenses.edit', $invoice))->put(route('expenses.update', $invoice), $data)
+        ->assertRedirect(route('expenses.edit', $invoice))->assertSessionHasErrors(['gross_amount', 'payment_method', 'payment_source', 'paid_by']);
+    expect($invoice->fresh()->settled_at)->toBeNull();
+    $complete = array_replace($data, ['gross_amount' => '123.00', 'net_amount' => '100.00', 'vat_rate' => '23', 'payment_method' => 'card', 'payment_source' => 'company', 'paid_by' => $finance->name]);
+    $this->put(route('expenses.update', $invoice), $complete)->assertSessionHasNoErrors();
+    expect($invoice->fresh()->payment_status)->toBe('settled')->and($invoice->fresh()->settled_by)->toBe($finance->id)->and($invoice->fresh()->settled_at)->not->toBeNull();
+    $this->put(route('expenses.update', $invoice), array_replace($complete, ['revision' => 2]))->assertForbidden();
+    $employee = expenseUser();
+    $own = expenseRecord($employee);
+    $this->actingAs($employee)->put(route('expenses.update', $own), $complete)->assertForbidden();
+    expect($own->fresh()->settled_at)->toBeNull();
+});
+
+test('dynamic filtering searches all accessible rows and returns only table results', function () {
+    $owner = expenseUser();
+    $other = expenseUser();
+    expenseRecord($owner, ['invoice_number' => 'OWN-DYNAMIC', 'description' => 'Sprężarka unikalna']);
+    expenseRecord($other, ['invoice_number' => 'PRIVATE-DYNAMIC', 'description' => 'Sprężarka unikalna']);
+    $this->actingAs($owner)->withHeader('X-Expense-Results', '1')->get(route('expenses.index', ['search' => 'Sprężarka', 'table_sort' => 'gross_amount', 'table_direction' => 'asc']))
+        ->assertOk()->assertSee('OWN-DYNAMIC')->assertDontSee('PRIVATE-DYNAMIC')->assertDontSee('<html', false)->assertSee('Edytuj');
+});
+
+test('supplier choices include only accessible active suppliers and supply the NIP', function () {
+    $finance = expenseUser(true);
+    Company::create(['name' => 'Dostawca do wyboru', 'company_type' => 'supplier', 'nip' => '1234567890']);
+    Company::create(['name' => 'Zwykły klient ukryty', 'company_type' => 'client']);
+    Company::create(['name' => 'Dostawca archiwalny', 'company_type' => 'supplier', 'archived_at' => now()]);
+    $this->actingAs($finance)->get(route('expenses.create'))->assertOk()->assertSee('Dostawca do wyboru')->assertSee('data-nip="1234567890"', false)->assertDontSee('Zwykły klient ukryty')->assertDontSee('Dostawca archiwalny');
+    $finance->assignRole(Role::findOrCreate('auditor'));
+    $this->get(route('expenses.create'))->assertOk()->assertDontSee('Dostawca do wyboru');
+});
+
+test('payment sorting matches the displayed closed status for older settled invoices', function () {
+    $owner = expenseUser();
+    expenseRecord($owner, ['invoice_number' => 'SORT-PAID', 'payment_status' => 'paid']);
+    expenseRecord($owner, ['invoice_number' => 'SORT-CLOSED', 'payment_status' => 'paid', 'settled_at' => now()]);
+    $this->actingAs($owner)->get(route('expenses.index', ['table_sort' => 'payment_status', 'table_direction' => 'asc']))
+        ->assertOk()->assertSeeInOrder(['SORT-PAID', 'SORT-CLOSED']);
+    $this->get(route('expenses.index', ['table_sort' => 'payment_status', 'table_direction' => 'desc']))
+        ->assertOk()->assertSeeInOrder(['SORT-CLOSED', 'SORT-PAID']);
 });

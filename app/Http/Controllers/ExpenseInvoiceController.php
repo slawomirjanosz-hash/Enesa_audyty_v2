@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\ExpenseInvoice;
 use App\Models\User;
+use App\Services\AuditorAccessService;
 use App\Services\ExpenseScan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ExpenseInvoiceController extends Controller
 {
@@ -53,7 +56,11 @@ class ExpenseInvoiceController extends Controller
         }
         if (! empty($filters['search'])) {
             $search = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $filters['search']).'%';
-            $query->where(fn ($q) => $q->where('invoice_number', 'like', $search)->orWhere('supplier_name', 'like', $search)->orWhere('cost_center', 'like', $search));
+            $query->where(function ($q) use ($search) {
+                foreach (['invoice_number', 'wz_number', 'ksef_number', 'supplier_name', 'supplier_nip', 'owner_name', 'cost_center', 'paid_by', 'description'] as $field) {
+                    $q->orWhere($field, 'like', $search);
+                }
+            });
         }
         $sorts = ['id', 'purchase_date', 'invoice_number', 'ksef_number', 'wz_number', 'supplier_name', 'net_amount', 'gross_amount', 'owner_name', 'payment_method', 'payment_source', 'payment_status', 'paid_by', 'cost_center', 'description'];
         $sort = in_array($request->input('table_sort'), $sorts, true) ? $request->input('table_sort') : 'purchase_date';
@@ -63,21 +70,21 @@ class ExpenseInvoiceController extends Controller
         } else {
             $labels = ['payment_method' => ExpenseInvoice::METHODS, 'payment_source' => ExpenseInvoice::SOURCES, 'payment_status' => ExpenseInvoice::PAYMENTS];
             if (isset($labels[$sort])) {
-                $expression = 'CASE '.$sort;
+                $expression = $sort === 'payment_status' ? "CASE WHEN settled_at IS NOT NULL THEN 'Rozliczona — zamknięta' ELSE CASE ".$sort : 'CASE '.$sort;
                 $bindings = [];
                 foreach ($labels[$sort] as $key => $label) {
                     $expression .= ' WHEN ? THEN ?';
                     $bindings[] = $key;
                     $bindings[] = $label;
                 }
-                $query->orderByRaw($expression.' ELSE NULL END '.$direction, $bindings);
+                $query->orderByRaw($expression.' ELSE NULL END'.($sort === 'payment_status' ? ' END' : '').' '.$direction, $bindings);
             } else {
                 $query->orderBy($sort, $direction);
             }
         }
         $invoices = $query->orderBy('id', $direction)->paginate(30)->withQueryString();
 
-        return view('expenses.index', compact('invoices', 'accounting', 'tab'));
+        return view($request->header('X-Expense-Results') === '1' ? 'expenses.results' : 'expenses.index', compact('invoices', 'accounting', 'tab'));
     }
 
     public function create(Request $request)
@@ -100,8 +107,15 @@ class ExpenseInvoiceController extends Controller
         $accounting = $this->accounting($request->user());
         $editable = ! $invoice->settled_at && ($accounting || ! $invoice->exists || $invoice->owner_id === $request->user()->id);
         $employees = $accounting ? User::where('is_active', true)->whereHas('roles')->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get(['id', 'name']) : collect();
+        // Expense entry needs only supplier names and NIPs, not access to CRM records.
+        $supplierQuery = Company::suppliers()->active();
+        $companyAccess = app(AuditorAccessService::class);
+        if ($companyAccess->isDelegatedAuditor($request->user())) {
+            $companyAccess->scopeByCompanyAccess($supplierQuery, $request->user(), 'can_view_dashboard', 'id');
+        }
+        $suppliers = $supplierQuery->orderBy('name')->get(['id', 'name', 'nip']);
 
-        return view('expenses.form', compact('invoice', 'accounting', 'editable', 'employees'));
+        return view('expenses.form', compact('invoice', 'accounting', 'editable', 'employees', 'suppliers'));
     }
 
     private function data(Request $request, ?ExpenseInvoice $invoice = null): array
@@ -112,6 +126,7 @@ class ExpenseInvoiceController extends Controller
             'supplier_name' => ['required', 'string', 'max:255'], 'supplier_nip' => ['nullable', 'string', 'max:20'],
             'net_amount' => ['nullable', 'numeric', 'min:0', 'max:999999999999.99', 'decimal:0,2'],
             'gross_amount' => ['nullable', 'numeric', 'min:0', 'max:999999999999.99', 'decimal:0,2'],
+            'vat_rate' => ['nullable', Rule::in(['0', '5', '8', '23', '0.00', '5.00', '8.00', '23.00'])],
             'payment_method' => ['required', Rule::in(array_keys(ExpenseInvoice::METHODS))],
             'payment_source' => ['required', Rule::in(array_keys(ExpenseInvoice::SOURCES))],
             'payment_status' => ['required', Rule::in(array_keys(ExpenseInvoice::PAYMENTS))],
@@ -124,22 +139,47 @@ class ExpenseInvoiceController extends Controller
             $rules['revision'] = ['required', 'integer', 'min:1'];
         }
         if ($this->accounting($request->user())) {
+            $rules['owner_mode'] = ['nullable', Rule::in(['user', 'manual', 'pool'])];
+            $rules['owner_name'] = ['nullable', 'string', 'max:255', 'required_if:owner_mode,manual'];
             $rules['owner_id'] = ['nullable', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)];
             $rules['accounting_note'] = ['nullable', 'string', 'max:5000'];
         }
         $data = $request->validate($rules);
         if ($this->accounting($request->user())) {
-            $owner = ! empty($data['owner_id']) ? User::findOrFail($data['owner_id']) : null;
+            $mode = $data['owner_mode'] ?? (! empty($data['owner_id']) ? 'user' : 'pool');
+            if ($mode === 'user') {
+                $request->validate(['owner_id' => ['required', 'integer']]);
+            }
+            $owner = $mode === 'user' && ! empty($data['owner_id']) ? User::findOrFail($data['owner_id']) : null;
             abort_if($owner && ($owner->roles->isEmpty() || $owner->hasAnyRole(['client_admin', 'client_user'])), 422, 'Wybierz pracownika.');
             $data['owner_id'] = $owner?->id;
-            $data['owner_name'] = $owner?->name;
-            $data['is_unassigned'] = $owner === null;
+            $data['owner_name'] = $mode === 'manual' ? $data['owner_name'] : $owner?->name;
+            $data['is_unassigned'] = $mode === 'pool';
         } elseif (! $invoice) {
             $data['owner_id'] = $request->user()->id;
             $data['owner_name'] = $request->user()->name;
             $data['is_unassigned'] = false;
         }
-        unset($data['revision']);
+        if ($data['payment_status'] === 'settled') {
+            abort_unless($this->accounting($request->user()), 403);
+            $request->validate([
+                'gross_amount' => ['required', 'numeric'],
+                'payment_method' => [Rule::notIn(['unknown'])],
+                'payment_source' => [Rule::notIn(['unknown'])],
+                'paid_by' => ['required', 'string'],
+            ], [
+                'gross_amount.required' => 'Przed zamknięciem wpisz kwotę brutto.',
+                'payment_method.not_in' => 'Przed zamknięciem wybierz sposób płatności.',
+                'payment_source.not_in' => 'Przed zamknięciem wybierz źródło środków.',
+                'paid_by.required' => 'Przed zamknięciem wpisz, kto zapłacił.',
+            ]);
+            if ($data['is_unassigned'] ?? false) {
+                throw ValidationException::withMessages(['owner_id' => 'Przed zamknięciem wybierz lub wpisz kupującego.']);
+            }
+            $data['settled_at'] = now();
+            $data['settled_by'] = $request->user()->id;
+        }
+        unset($data['revision'], $data['owner_mode']);
 
         return $data;
     }
