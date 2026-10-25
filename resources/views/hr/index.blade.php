@@ -111,4 +111,5 @@ async function calculateGoogleRoute() {
 function setupPlaceSuggestions(inputId,listId){const input=document.getElementById(inputId),list=document.getElementById(listId);let timer;input.addEventListener('input',()=>{clearTimeout(timer);const query=input.value.trim();if(query.length<3){list.replaceChildren();return}timer=setTimeout(async()=>{try{const response=await fetch(`${@js(route('hr.places.autocomplete'))}?q=${encodeURIComponent(query)}`,{headers:{Accept:'application/json'}}),data=await response.json();list.replaceChildren(...(data.suggestions||[]).map(text=>{const option=document.createElement('option');option.value=text;return option}))}catch(error){list.replaceChildren()}},250)})}
 setupPlaceSuggestions('trip-origin','trip-origin-suggestions');setupPlaceSuggestions('trip-destination','trip-destination-suggestions');
 </script>
+<script src="{{asset('js/hr-leave-submit.js')}}?v={{filemtime(public_path('js/hr-leave-submit.js'))}}"></script>
 @endsection

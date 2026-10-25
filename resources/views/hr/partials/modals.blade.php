@@ -48,7 +48,7 @@
  <div id="leave-end-date" class="hr-full hr-rate-info" style="font-weight:800;color:var(--green)">Wybierz datę początku</div>
  <div class="hr-field hr-full"><label>Uwagi</label><textarea id="leave-notes" name="notes" rows="3" maxlength="2000" placeholder="Opcjonalnie: dodatkowe informacje dotyczące nieobecności"></textarea></div>
  <div class="hr-full hr-rate-info"><i class="ti ti-info-circle"></i> Urlop na żądanie jest częścią urlopu wypoczynkowego. L4 jest rejestrowane oddzielnie jako zwolnienie chorobowe.</div>
-</div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">Anuluj</button><button class="hr-btn">Wyślij wniosek / zarejestruj L4</button></div></form></div></div>
+</div><p id="leave-submit-error" role="alert" hidden style="color:#991b1b;white-space:pre-line"></p><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">Anuluj</button><button class="hr-btn">Wyślij wniosek / zarejestruj L4</button></div></form></div></div>
 @endif
 
 @if($canDelegations)
