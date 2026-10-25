@@ -255,3 +255,40 @@ test('payment sorting matches the displayed closed status for older settled invo
     $this->get(route('expenses.index', ['table_sort' => 'payment_status', 'table_direction' => 'desc']))
         ->assertOk()->assertSeeInOrder(['SORT-CLOSED', 'SORT-PAID']);
 });
+
+test('employees can delete only their own open invoices with confirmation and a current revision', function () {
+    $owner = expenseUser();
+    $other = expenseUser();
+    $invoice = expenseRecord($owner, ['invoice_number' => 'DELETE-OWN']);
+    $foreign = expenseRecord($other);
+    $closed = expenseRecord($owner, ['settled_at' => now()]);
+    $pool = ExpenseInvoice::create(expenseData(['is_unassigned' => true]));
+    $this->actingAs($owner)->delete(route('expenses.destroy', $invoice), ['revision' => 1])->assertSessionHasErrors('confirm');
+    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 2])->assertStatus(409);
+    foreach ([$foreign, $closed, $pool] as $forbidden) {
+        $this->delete(route('expenses.destroy', $forbidden), ['confirm' => 1, 'revision' => 1])->assertForbidden();
+        expect($forbidden->fresh()->deleted_at)->toBeNull();
+    }
+    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 1])->assertRedirect(route('expenses.index', ['tab' => 'own']));
+    $this->assertSoftDeleted('expense_invoices', ['id' => $invoice->id, 'deleted_by' => $owner->id]);
+    $this->get(route('expenses.index'))->assertDontSee('DELETE-OWN');
+    $this->get(route('expenses.edit', $invoice))->assertNotFound();
+    $this->put(route('expenses.update', $invoice), expenseData(['revision' => 2]))->assertNotFound();
+    $this->post(route('expenses.claim', $invoice), ['confirm' => 1])->assertNotFound();
+    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 2])->assertNotFound();
+});
+
+test('accounting can remove shared manually assigned and closed invoices without publishing them', function () {
+    $finance = expenseUser(true);
+    $owner = expenseUser();
+    $records = [expenseRecord($owner, ['settled_at' => now()]),
+        ExpenseInvoice::create(expenseData(['is_unassigned' => true])),
+        ExpenseInvoice::create(expenseData(['owner_name' => 'Ręczny kupujący', 'is_unassigned' => false]))];
+    $this->actingAs($finance);
+    foreach ($records as $invoice) {
+        $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee(route('expenses.destroy', $invoice), false);
+        $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 1])->assertSessionHas('success');
+        $this->assertSoftDeleted('expense_invoices', ['id' => $invoice->id, 'deleted_by' => $finance->id]);
+    }
+    expect(ExpenseInvoice::count())->toBe(0)->and(ExpenseInvoice::withTrashed()->count())->toBe(3);
+});

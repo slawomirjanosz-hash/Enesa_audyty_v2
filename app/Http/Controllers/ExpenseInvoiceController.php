@@ -236,6 +236,21 @@ class ExpenseInvoiceController extends Controller
         return back()->with('success', 'Faktura została oznaczona jako rozliczona.');
     }
 
+    public function destroy(Request $request, ExpenseInvoice $invoice)
+    {
+        $this->access($request->user());
+        $request->validate(['confirm' => ['required', 'accepted'], 'revision' => ['required', 'integer', 'min:1']]);
+        DB::transaction(function () use ($request, $invoice): void {
+            $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
+            abort_unless($this->accounting($request->user()) || ($current->owner_id === $request->user()->id && ! $current->is_unassigned && ! $current->settled_at), 403);
+            abort_unless($current->revision === (int) $request->input('revision'), 409, 'Faktura została zmieniona. Odśwież stronę przed usunięciem.');
+            $current->forceFill(['deleted_by' => $request->user()->id, 'revision' => $current->revision + 1])->save();
+            $current->delete();
+        });
+
+        return redirect()->route('expenses.index', ['tab' => $this->accounting($request->user()) ? 'all' : 'own'])->with('success', 'Faktura została usunięta z rejestru.');
+    }
+
     public function scan(Request $request, ExpenseScan $scanner)
     {
         $this->access($request->user());

@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExpenseInvoice extends Model
 {
+    use SoftDeletes;
+
     public const METHODS = ['unknown' => 'Nieustalona', 'card' => 'Karta', 'cash' => 'Gotówka', 'transfer' => 'Przelew'];
 
     public const SOURCES = ['unknown' => 'Nieustalone', 'company' => 'Firmowe', 'personal' => 'Prywatne'];

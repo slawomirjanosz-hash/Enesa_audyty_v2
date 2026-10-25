@@ -10,6 +10,7 @@ Route::prefix('expenses')->name('expenses.')->middleware(['auth', 'staff.role', 
     Route::post('/scan', [ExpenseInvoiceController::class, 'scan'])->middleware('throttle:10,1')->name('scan');
     Route::get('/{invoice}/edit', [ExpenseInvoiceController::class, 'edit'])->name('edit');
     Route::put('/{invoice}', [ExpenseInvoiceController::class, 'update'])->name('update');
+    Route::delete('/{invoice}', [ExpenseInvoiceController::class, 'destroy'])->name('destroy');
     Route::post('/{invoice}/claim', [ExpenseInvoiceController::class, 'claim'])->name('claim');
     Route::post('/{invoice}/settle', [ExpenseInvoiceController::class, 'settle'])->name('settle');
 });
