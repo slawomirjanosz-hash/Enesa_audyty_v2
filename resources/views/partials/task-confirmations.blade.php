@@ -10,3 +10,4 @@
 @empty<span>Nieprzypisane</span>@endforelse
 </span>
 @if($confirmationPeople->count() > 1)<small style="display:block;color:#7a8a80;font-size:10px;">Potwierdzenia: {{ $confirmationPeople->filter(fn ($person) => isset($confirmations[$person->id]))->count() }}/{{ $confirmationPeople->count() }}</small>@endif
+<small style="display:block;color:#7a8a80;font-size:11px;">Wyznaczył(a): {{ $completionTask->createdBy?->name ?? 'Brak informacji' }}</small>

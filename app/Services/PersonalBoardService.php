@@ -92,8 +92,8 @@ class PersonalBoardService
         ListSearch::apply($crmBase, $request, ['title', 'description'], ['company' => ['name'], 'crmOpportunity' => ['title'], 'assignedUser' => ['name']]);
         $union = $base->selectRaw("id, due_date, 'board' AS kind")->toBase()->unionAll($crmBase->selectRaw("id, due_date, 'crm' AS kind")->toBase());
         $cards = DB::query()->fromSub($union, 'board_rows')->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('kind')->orderBy('id')->paginate(90)->withQueryString();
-        $boardRows = BoardTask::withTrashed()->with(['project', 'audit', 'stage', 'assignee', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'board')->pluck('id'))->get()->keyBy('id');
-        $crmRows = Task::withTrashed()->with(['company', 'crmOpportunity', 'assignedUser', 'participants'])->whereIn('id', $cards->getCollection()->where('kind', 'crm')->pluck('id'))->get()->keyBy('id');
+        $boardRows = BoardTask::withTrashed()->with(['project', 'audit', 'stage', 'assignee', 'participants', 'createdBy'])->whereIn('id', $cards->getCollection()->where('kind', 'board')->pluck('id'))->get()->keyBy('id');
+        $crmRows = Task::withTrashed()->with(['company', 'crmOpportunity', 'assignedUser', 'participants', 'createdBy'])->whereIn('id', $cards->getCollection()->where('kind', 'crm')->pluck('id'))->get()->keyBy('id');
         $cards->setCollection($cards->getCollection()->map(function ($row) use ($boardRows, $crmRows) {
             if ($row->kind === 'board') {
                 return $boardRows[$row->id];

@@ -141,3 +141,33 @@ test('resend requires a key and a non-placeholder sender', function () {
     Mail::assertNothingSent();
     $this->assertDatabaseCount('task_reminder_deliveries', 0);
 });
+
+test('one digest combines CRM schedule and board tasks for each responsible person and participant', function () {
+    [$owner, $project, $audit] = reminderBoardFixture();
+    $participant = reminderUser();
+    $crm = reminderTask($owner, ['title' => 'CRM zbiorczy']);
+    $schedule = reminderTask($owner, ['title' => 'Harmonogram zbiorczy', 'project_id' => $project->id]);
+    $board = BoardTask::create(['title' => 'Tablica zbiorcza', 'audit_id' => $audit->id, 'assigned_to' => $owner->id, 'status' => 'in_progress', 'due_date' => '2026-10-13']);
+    foreach ([$crm, $schedule, $board] as $task) {
+        $task->participants()->sync([$participant->id, $owner->id]);
+    }
+    $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
+    $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
+    Mail::assertSentCount(2);
+    foreach ([$owner, $participant] as $person) {
+        Mail::assertSent(TaskOverdue::class, fn ($mail) => $mail->hasTo($person->email) && $mail->tasks->count() === 3);
+    }
+    $participant->update(['is_active' => false]);
+    expect(app(TaskReminderSelection::class)->groups()->keys()->all())->toBe([$owner->id]);
+});
+
+test('task cards show the recorded creator including an archived creator', function () {
+    [$owner, $project] = reminderBoardFixture();
+    $creator = reminderUser();
+    $creator->update(['name' => 'Autor zadania testowego']);
+    $board = BoardTask::create(['title' => 'Zlecona karta', 'project_id' => $project->id, 'assigned_to' => $owner->id, 'created_by' => $creator->id, 'status' => 'todo']);
+    reminderTask($owner, ['created_by' => $creator->id]);
+    $creator->delete();
+    $this->actingAs($owner)->get(route('board.mine'))->assertOk()->assertSee('Wyznaczył(a):')->assertSee('Autor zadania testowego');
+    expect($board->fresh()->createdBy->id)->toBe($creator->id);
+});

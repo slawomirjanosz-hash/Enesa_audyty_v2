@@ -13,15 +13,27 @@ class TaskReminderSelection
     public function groups(): Collection
     {
         $date = now('Europe/Warsaw')->toDateString();
-        $tasks = Task::with(['company', 'assignedUser.roles', 'project.members', 'audit'])
-            ->where('due_date', '<', $date)->where('status', '!=', 'done')->whereNotNull('assigned_to')
-            ->get()->filter(fn (Task $task) => $this->allowed($task->assignedUser, $task));
-        $cards = BoardTask::with(['assignee.roles', 'project.members', 'project.company', 'audit.company'])
-            ->where('due_date', '<', $date)->where('status', '!=', 'done')->whereNotNull('assigned_to')
-            ->get()->filter(fn (BoardTask $task) => $this->allowed($task->assignee, $task));
+        $tasks = Task::with(['company', 'assignedUser.roles', 'participants.roles', 'project.members', 'audit'])
+            ->where('due_date', '<', $date)->where('status', '!=', 'done')->get();
+        $cards = BoardTask::with(['assignee.roles', 'participants.roles', 'project.members', 'project.company', 'audit.company'])
+            ->where('due_date', '<', $date)->where('status', '!=', 'done')->get();
 
         // IDs in these two tables are independent sequences.
-        return collect($tasks->all())->concat($cards->all())->groupBy('assigned_to');
+        $groups = collect();
+        foreach (collect($tasks->all())->concat($cards->all()) as $task) {
+            $responsible = $task instanceof BoardTask ? $task->assignee : $task->assignedUser;
+            $people = collect([$responsible])->filter()->merge($task->participants)->unique('id');
+            foreach ($people as $person) {
+                if ($this->allowed($person, $task)) {
+                    if (! $groups->has($person->id)) {
+                        $groups->put($person->id, collect());
+                    }
+                    $groups->get($person->id)->push($task);
+                }
+            }
+        }
+
+        return $groups;
     }
 
     private function allowed(?User $user, Task|BoardTask $task): bool

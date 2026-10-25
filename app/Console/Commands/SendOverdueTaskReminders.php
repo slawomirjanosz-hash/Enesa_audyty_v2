@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\TaskOverdue;
-use App\Models\BoardTask;
+use App\Models\User;
 use App\Services\TaskReminderMailConfiguration;
 use App\Services\TaskReminderSelection;
 use Illuminate\Console\Command;
@@ -59,8 +59,7 @@ class SendOverdueTaskReminders extends Command
             }
             $record = DB::table('task_reminder_deliveries')->where('reminder_date', $date)->where('user_id', $userId);
             try {
-                $task = $tasks->first();
-                $user = $task instanceof BoardTask ? $task->assignee : $task->assignedUser;
+                $user = User::findOrFail($userId);
                 Mail::to($user->email)->send(new TaskOverdue($tasks));
                 $record->update(['status' => 'accepted', 'accepted_at' => now(), 'updated_at' => now()]);
                 $sent++;
