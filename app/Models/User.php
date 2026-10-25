@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,6 +52,7 @@ class User extends Authenticatable
         'password',
         'is_active',
         'has_employment_contract',
+        'supervisor_id',
         'last_seen_at',
         'dashboard_tasks_seen_id',
     ];
@@ -180,9 +182,14 @@ class User extends Authenticatable
         return $this->hasMany(HrLeave::class);
     }
 
+    public function supervisor(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'supervisor_id');
+    }
+
     public function annualLeaveUsedDays(int $year): int
     {
-        return $this->hrLeaves()->whereIn('type', ['annual', 'on_demand'])
+        return $this->hrLeaves()->whereIn('approval_status', ['legacy', 'approved'])->whereIn('type', ['annual', 'on_demand'])
             ->whereYear('start_date', '<=', $year)->whereYear('end_date', '>=', $year)->get()
             ->sum(function (HrLeave $leave) use ($year): int {
                 $date = $leave->start_date->copy();

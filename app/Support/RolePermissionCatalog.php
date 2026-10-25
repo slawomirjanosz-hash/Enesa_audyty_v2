@@ -29,6 +29,7 @@ class RolePermissionCatalog
             ]],
             'hr' => ['label' => 'HR', 'permissions' => [
                 'hr.delegations.view' => 'Dostęp do własnych delegacji i samochodów',
+                'hr.leaves.accounting' => 'Księgowość — podgląd wszystkich wniosków urlopowych i decyzji',
                 'hr.leaves.view' => 'Dostęp do własnych urlopów i zwolnień L4',
                 'hr.attendance.view' => 'Dostęp do własnej listy obecności',
                 'hr.vehicles.responsible' => 'Odpowiedzialność za samochody — powiadomienia o terminach i brakujących danych',

@@ -98,7 +98,7 @@ class CalendarController extends Controller
         }
 
         if ($hrEnabled && ($user->hasRole('superadmin') || $user->canAny(['system.full_access', 'hr.leaves.view']))) {
-            $leaves = HrLeave::with('user')->whereDate('start_date', '<=', $gridEnd)
+            $leaves = HrLeave::with('user')->whereIn('approval_status', ['legacy', 'approved', 'recorded'])->whereDate('start_date', '<=', $gridEnd)
                 ->whereDate('end_date', '>=', $gridStart)
                 ->when($hrUserId, fn ($query) => $query->where('user_id', $hrUserId))->get();
             foreach ($leaves as $leave) {

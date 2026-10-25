@@ -7,13 +7,17 @@
     $boardAccess = app(\App\Services\BoardAccessService::class);
     $boardPermissions = [];
     $participantOptions = [];
+    $leaveTaskRows = ($personalBoard ?? false) ? ($leaveTasks ?? collect()) : collect();
 @endphp
 <div class="task-board" data-board>
     <header class="board-toolbar"><div><h2>{{$archivedBoard ? 'Zarchiwizowane zadania' : 'Zadania'}}</h2><p class="board-muted">Szary: do zrobienia · Pomarańczowy: w trakcie · Zielony: gotowe · Czerwony: po terminie</p></div>@if(($boardManage ?? false) && !$archivedBoard)<button type="button" class="board-primary" data-board-new>+ Dodaj zadanie</button>@endif</header>
     <p data-board-message role="alert" hidden></p>
     <div class="board-columns">
     @foreach(['todo'=>'Do zrobienia','in_progress'=>'W trakcie','done'=>'Zrobione'] as $status=>$label)
-    <section class="board-column" data-column="{{$status}}" aria-label="{{$label}}"><h3>{{$label}} <span data-count>{{$cards->where('status',$status)->count()}}</span></h3><div data-card-list>
+    <section class="board-column" data-column="{{$status}}" aria-label="{{$label}}"><h3>{{$label}} <span data-count>{{$cards->where('status',$status)->count()+$leaveTaskRows->where('status',$status)->count()}}</span></h3><div data-card-list>
+    @foreach($leaveTaskRows->where('status',$status) as $approvalTask)
+        @include('boards.leave-approval-tasks')
+    @endforeach
     @foreach($cards->where('status',$status) as $card)
     @php
         $owner = $card->project ?? $card->audit;

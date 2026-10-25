@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BoardTask;
 use App\Models\CompanySettings;
+use App\Models\HrLeaveApprovalTask;
 use App\Models\Task;
 use App\Models\User;
 use App\Support\ListSearch;
@@ -42,7 +43,7 @@ class PersonalBoardService
             $base->onlyTrashed();
             $crmBase->onlyTrashed();
         }
-        $modules = collect(['projects' => 'Projekty', 'audits' => 'Audyty', 'crm' => 'CRM'])->filter(fn ($label, $key) => CompanySettings::moduleIsEnabled($key))->all();
+        $modules = collect(['projects' => 'Projekty', 'audits' => 'Audyty', 'crm' => 'CRM', 'hr' => 'HR — urlopy'])->filter(fn ($label, $key) => CompanySettings::moduleIsEnabled($key))->all();
         $options = [];
         foreach (['projects' => 'project', 'audits' => 'audit'] as $key => $relation) {
             if (isset($modules[$key])) {
@@ -51,6 +52,9 @@ class PersonalBoardService
         }
         if (isset($modules['crm'])) {
             $options['crm'] = ['tasks' => 'Zadania CRM i szans sprzedaży'];
+        }
+        if (isset($modules['hr']) && ($user->hasRole('superadmin') || $user->canAny(['hr.leaves.view', 'system.full_access']))) {
+            $options['hr'] = ['leaves' => 'Wnioski urlopowe do rozpatrzenia'];
         }
         // Only expose names attached to an accessible task, not a directory of all users.
         $people = collect([$user]);
@@ -61,7 +65,7 @@ class PersonalBoardService
             $people = User::whereIn('id', $ids->push($user->id)->unique())->whereDoesntHave('roles', fn ($r) => $r->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get();
             $options['users'] = $people->mapWithKeys(fn ($p) => [$p->id => $p->id === $user->id ? 'Moje zadania' : $p->name])->all();
         }
-        $request->validate(['projects' => 'sometimes|array|max:500', 'audits' => 'sometimes|array|max:500', 'crm' => 'sometimes|array|max:2', 'users' => 'sometimes|array|max:500', 'group' => 'sometimes|string|max:100']);
+        $request->validate(['projects' => 'sometimes|array|max:500', 'audits' => 'sometimes|array|max:500', 'crm' => 'sometimes|array|max:2', 'hr' => 'sometimes|array|max:2', 'users' => 'sometimes|array|max:500', 'group' => 'sometimes|string|max:100']);
         abort_if(! $team && $request->has('users'), 403);
         $selected = [];
         foreach ($options as $key => $values) {
@@ -75,7 +79,7 @@ class PersonalBoardService
             [$kind, $id] = array_pad(explode('-', $request->input('group'), 2), 2, '');
             $key = ['project' => 'projects', 'audit' => 'audits'][$kind] ?? '';
             abort_unless(isset($options[$key][$id]), 404);
-            foreach (['projects', 'audits', 'crm'] as $group) {
+            foreach (['projects', 'audits', 'crm', 'hr'] as $group) {
                 $selected[$group] = $key === $group ? [$id] : [];
             }
         }
@@ -106,6 +110,11 @@ class PersonalBoardService
             return $card;
         }));
 
-        return compact('cards', 'modules', 'options', 'selected', 'team', 'archivedBoard');
+        $leaveTasks = CompanySettings::moduleIsEnabled('hr') && ($user->hasRole('superadmin') || $user->canAny(['hr.leaves.view', 'system.full_access']))
+            ? HrLeaveApprovalTask::with('leave.user')->where('assigned_to', $user->id)->whereIn('assigned_to', $userIds)->whereHas('leave')->when(! in_array('leaves', $selected['hr'] ?? []), fn ($q) => $q->whereRaw('1=0'))
+                ->when($archivedBoard, fn ($q) => $q->whereNotNull('archived_at'), fn ($q) => $q->whereNull('archived_at'))->latest()->get()
+            : collect();
+
+        return compact('leaveTasks', 'cards', 'modules', 'options', 'selected', 'team', 'archivedBoard');
     }
 }

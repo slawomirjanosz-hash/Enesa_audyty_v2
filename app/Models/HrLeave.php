@@ -23,9 +23,11 @@ class HrLeave extends Model
         'sick_leave' => 'Zwolnienie chorobowe (L4)',
     ];
 
-    protected $fillable = ['user_id', 'type', 'start_date', 'end_date', 'days', 'include_weekends', 'document_date', 'notes', 'created_by'];
+    protected $fillable = ['user_id', 'type', 'start_date', 'end_date', 'days', 'include_weekends', 'document_date', 'notes', 'created_by', 'approval_status', 'approver_id', 'approver_name', 'decided_at', 'decision_note', 'approval_revision'];
 
-    protected $casts = ['start_date' => 'date', 'end_date' => 'date', 'document_date' => 'date', 'include_weekends' => 'boolean'];
+    protected $casts = ['start_date' => 'date', 'end_date' => 'date', 'document_date' => 'date', 'include_weekends' => 'boolean', 'decided_at' => 'datetime', 'approval_revision' => 'integer', 'approver_id' => 'integer'];
+
+    public const APPROVAL_STATUSES = ['legacy' => 'Wpis historyczny', 'recorded' => 'Zarejestrowane L4', 'pending' => 'Oczekuje na akceptację', 'approved' => 'Zaakceptowany', 'rejected' => 'Odrzucony'];
 
     public function user(): BelongsTo
     {

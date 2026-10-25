@@ -23,7 +23,7 @@ class HrController extends Controller
         $tab = in_array($request->string('tab')->toString(), ['delegations', 'leaves', 'attendance', 'vehicles'], true)
             ? $request->string('tab')->toString() : 'delegations';
         $canDelegations = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.delegations.view');
-        $canLeaves = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.leaves.view');
+        $canLeaves = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->canAny(['hr.leaves.view', 'hr.leaves.accounting']);
         $canAttendance = $user->hasRole('superadmin') || $user->can('system.full_access') || $user->can('hr.attendance.view');
         if (in_array($tab, ['delegations', 'vehicles'], true) && ! $canDelegations) {
             $tab = 'attendance';
@@ -34,6 +34,9 @@ class HrController extends Controller
         if ($tab === 'leaves' && ! $canLeaves) {
             $tab = $canDelegations ? 'delegations' : 'attendance';
         }
+        if (! $canDelegations && ! $canAttendance && $canLeaves) {
+            $tab = 'leaves';
+        }
         if ($request->boolean('settings') && HrAccess::canManageSettings($user)) {
             return redirect()->route('hr.settings', ['section' => $tab]);
         }
@@ -42,7 +45,22 @@ class HrController extends Controller
 
         $users = $canTeam ? User::query()->where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get() : collect([$user]);
         $trips = $canDelegations ? HrBusinessTrip::with(['user', 'vehicle'])->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('departure_at')->get() : collect();
-        $leaves = $canLeaves ? HrLeave::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('start_date')->get() : collect();
+        $canAllLeaves = HrAccess::canViewAllLeaves($user);
+        $hasReports = HrLeave::where('approver_id', $user->id)->exists() || User::where('supervisor_id', $user->id)->exists();
+        $leaveScope = $request->input('leave_scope', $canAllLeaves ? 'all' : 'own');
+        abort_unless(in_array($leaveScope, ['own', 'team', 'all'], true) && ($leaveScope !== 'all' || $canAllLeaves) && ($leaveScope !== 'team' || $hasReports), 403);
+        $leaves = $canLeaves ? HrLeave::with('user')
+            ->when($leaveScope === 'own', fn ($q) => $q->where('user_id', $user->id))
+            ->when($leaveScope === 'team', fn ($q) => $q->where('approver_id', $user->id))
+            ->when($leaveScope === 'all' && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))
+            ->latest('start_date')->get() : collect();
+        $leaveRecipients = $users->mapWithKeys(function (User $person) {
+            $manager = $person->supervisor;
+            $valid = $manager && $manager->id !== $person->id && $manager->is_active && ! $manager->hasAnyRole(['client_admin', 'client_user']) && ($manager->hasRole('superadmin') || $manager->canAny(['hr.leaves.view', 'system.full_access']));
+
+            return [$person->id => $valid ? $manager->name : null];
+        });
+
         $attendances = $canAttendance ? HrAttendance::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('work_date')->get() : collect();
         $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->visibleTo($user)->orderBy('type')->orderBy('name')->get() : collect();
         $rateOwnerId = $canTeam ? $selectedUserId : $user->id;
@@ -57,7 +75,7 @@ class HrController extends Controller
             ? $leaveBalanceUser->annualLeaveBalance($leaveYear)
             : null;
 
-        return view('hr.index', compact('vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
+        return view('hr.index', compact('canAllLeaves', 'hasReports', 'leaveScope', 'leaveRecipients', 'vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
     public function settings(Request $request): View

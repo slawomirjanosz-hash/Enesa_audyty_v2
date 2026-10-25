@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Throwable;
 
@@ -36,6 +37,26 @@ class UserController extends Controller
         'admin' => 40,
         'superadmin' => 50,
     ];
+
+    private function validateSupervisor(array $data, ?User $employee = null): void
+    {
+        if (empty($data['supervisor_id'])) {
+            return;
+        }
+        $supervisor = User::findOrFail($data['supervisor_id']);
+        $visited = $employee ? [$employee->id] : [];
+        $cursor = $supervisor;
+        while ($cursor) {
+            if (in_array($cursor->id, $visited, true)) {
+                throw ValidationException::withMessages(['supervisor_id' => 'Przełożony nie może tworzyć zależności do samego pracownika.']);
+            }
+            $visited[] = $cursor->id;
+            $cursor = $cursor->supervisor;
+        }
+        if ($supervisor->hasAnyRole(['client_admin', 'client_user']) || in_array($data['role'], ['client_admin', 'client_user'], true) || ! ($supervisor->hasRole('superadmin') || $supervisor->canAny(['system.full_access', 'hr.leaves.view']))) {
+            throw ValidationException::withMessages(['supervisor_id' => 'Wybierz pracownika z dostępem do urlopów jako przełożonego.']);
+        }
+    }
 
     public function index()
     {
@@ -261,6 +282,7 @@ class UserController extends Controller
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', Rule::in(RolePermissionCatalog::names())],
             'has_employment_contract' => ['nullable', 'boolean'],
+            'supervisor_id' => ['sometimes', 'nullable', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)],
             'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
             'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
         ], [
@@ -278,6 +300,7 @@ class UserController extends Controller
             app(UserPermissions::class)->validateSelection($request->user(), $data['permissions'] ?? [], in_array($data['role'], ['client_admin', 'client_user'], true));
         }
 
+        $this->validateSupervisor($data);
         $generatedPassword = empty($data['password']);
         $temporaryPassword = $data['password'] ?? str()->random(16);
         $user = DB::transaction(function () use ($data, $request, $temporaryPassword): User {
@@ -288,6 +311,7 @@ class UserController extends Controller
                 'password' => Hash::make($temporaryPassword),
                 'is_active' => true,
                 'has_employment_contract' => $request->boolean('has_employment_contract'),
+                'supervisor_id' => $data['supervisor_id'] ?? null,
             ]);
 
             if ($user->has_employment_contract) {
@@ -377,6 +401,7 @@ class UserController extends Controller
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', Rule::in(RolePermissionCatalog::names())],
             'has_employment_contract' => ['nullable', 'boolean'],
+            'supervisor_id' => ['sometimes', 'nullable', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)],
             'leave_year' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:2020,2100'],
             'leave_entitled_days' => ['nullable', 'required_if:has_employment_contract,1', 'integer', 'between:0,366'],
         ], [
@@ -394,6 +419,7 @@ class UserController extends Controller
         if ($request->has('permissions_present')) {
             app(UserPermissions::class)->validateSelection($request->user(), $data['permissions'] ?? [], in_array($data['role'], ['client_admin', 'client_user'], true));
         }
+        $this->validateSupervisor($data, $user);
         app(UserPermissions::class)->initialize($user);
 
         DB::transaction(function () use ($user, $data, $request): void {
@@ -401,6 +427,9 @@ class UserController extends Controller
             $user->name = $data['name'];
             $user->email = $data['email'];
             $user->phone = $data['phone'] ?? null;
+            if (array_key_exists('supervisor_id', $data)) {
+                $user->supervisor_id = $data['supervisor_id'];
+            }
             $user->has_employment_contract = $request->boolean('has_employment_contract');
 
             if (! empty($data['password'])) {

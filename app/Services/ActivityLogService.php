@@ -8,6 +8,8 @@ use App\Models\CylinderImport;
 use App\Models\CylinderInspection;
 use App\Models\CylinderProtocol;
 use App\Models\ExpenseInvoice;
+use App\Models\HrLeave;
+use App\Models\HrLeaveApprovalTask;
 use App\Models\User;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +26,7 @@ class ActivityLogService
 
     public function recordModel(Model $model, string $action): void
     {
-        if ($model instanceof ActivityLog || $model instanceof ExpenseInvoice || ! app()->bound('request') || ! request()->route()) {
+        if ($model instanceof ActivityLog || $model instanceof ExpenseInvoice || $model instanceof HrLeave || $model instanceof HrLeaveApprovalTask || ! app()->bound('request') || ! request()->route()) {
             return;
         }
 

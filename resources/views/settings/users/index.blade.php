@@ -697,7 +697,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                                             '{{ $role }}',
                                             {{ $user->has_employment_contract ? 'true' : 'false' }},
                                             @js($user->leaveEntitlements->pluck('entitled_days', 'year')),
-                                            @js($user->has_employment_contract ? $user->annualLeaveBalance(now()->year) : null)
+                                            @js($user->has_employment_contract ? $user->annualLeaveBalance(now()->year) : null),
+                                            @js($user->supervisor_id)
                                         )">
                                         <i class="ti ti-pencil"></i>
                                     </button>
@@ -785,7 +786,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                 <input id="add_password" type="password" name="password" class="mf-input" placeholder="min. 8 znaków">
                 <button type="button" class="btn-sm" data-generate-password="add_password">Generuj hasło</button>
             </div>
-            <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="add_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('add')" @checked(old('has_employment_contract'))> Zatrudniony na umowę o pracę</label>
+            <div class="mf-group"><label class="mf-label" for="add_supervisor_id">Przełożony — odbiorca wniosków urlopowych</label><select id="add_supervisor_id" name="supervisor_id" class="mf-select mf-input"><option value="">Nie wskazano</option>@foreach($allUsers->filter(fn($candidate)=>$candidate->is_active && !$candidate->hasAnyRole(['client_admin','client_user']) && ($candidate->hasRole('superadmin') || $candidate->canAny(['hr.leaves.view','system.full_access']))) as $candidate)<option value="{{$candidate->id}}" @selected((string)old('supervisor_id') === (string)$candidate->id)>{{$candidate->name}}</option>@endforeach</select><small>Odbiorca nowych wniosków. Wysłane wcześniej wnioski zachowują wskazanego w nich przełożonego.</small></div>
+<label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="add_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('add')" @checked(old('has_employment_contract'))> Zatrudniony na umowę o pracę</label>
             <div id="add_leave_fields" class="mf-row" hidden>
                 <div class="mf-group"><label class="mf-label" for="add_leave_year">Rok puli urlopowej</label><input id="add_leave_year" class="mf-input" type="number" name="leave_year" min="2020" max="2100" value="{{old('leave_year',now()->year)}}"></div>
                 <div class="mf-group"><label class="mf-label" for="add_leave_days">Pula startowa w tym roku (dni)</label><input id="add_leave_days" class="mf-input" type="number" name="leave_entitled_days" min="0" max="366" value="{{old('leave_entitled_days',26)}}"><small style="color:#718078">Wpisz liczbę dni, od której pracownik ma rozpocząć pracę w systemie.</small></div>
@@ -855,7 +857,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                 <button type="button" class="btn-sm" data-generate-password="edit_password">Generuj nowe hasło</button>
                 <small style="display:block;margin-top:6px">Hasło zmieni się po zapisaniu. Przed zapisem wybierzesz, czy wysłać je e-mailem.</small>
             </div>
-            <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="edit_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('edit')"> Zatrudniony na umowę o pracę</label>
+            <div class="mf-group"><label class="mf-label" for="edit_supervisor_id">Przełożony — odbiorca wniosków urlopowych</label><select id="edit_supervisor_id" name="supervisor_id" class="mf-select mf-input"><option value="">Nie wskazano</option>@foreach($allUsers->filter(fn($candidate)=>$candidate->is_active && !$candidate->hasAnyRole(['client_admin','client_user']) && ($candidate->hasRole('superadmin') || $candidate->canAny(['hr.leaves.view','system.full_access']))) as $candidate)<option value="{{$candidate->id}}" @selected((string)old('supervisor_id') === (string)$candidate->id)>{{$candidate->name}}</option>@endforeach</select><small>Odbiorca nowych wniosków. Wysłane wcześniej wnioski zachowują wskazanego w nich przełożonego.</small></div>
+<label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="edit_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('edit')"> Zatrudniony na umowę o pracę</label>
             <div id="edit_leave_fields" class="mf-row" hidden>
                 <div class="mf-group"><label class="mf-label" for="edit_leave_year">Rok puli urlopowej</label><input id="edit_leave_year" class="mf-input" type="number" name="leave_year" min="2020" max="2100" value="{{now()->year}}" onchange="loadEditLeaveEntitlement()"></div>
                 <div class="mf-group"><label class="mf-label" for="edit_leave_days">Pula przyznana w tym roku (dni)</label><input id="edit_leave_days" class="mf-input" type="number" name="leave_entitled_days" min="0" max="366" value="0"><small id="edit_leave_balance" style="color:#718078"></small></div>
@@ -889,7 +892,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
     // Auto-open add modal if there were validation errors
     @if($errors->any() && old('editing_user_id') && in_array((int) old('editing_user_id'), $manageableUserIds, true))
     document.addEventListener('DOMContentLoaded', function() {
-        openEditModal(@js((int) old('editing_user_id')), @js(old('name')), @js(old('email')), @js(old('phone')), @js(old('role')), @js((bool) old('has_employment_contract')), {}, null);
+        openEditModal(@js((int) old('editing_user_id')), @js(old('name')), @js(old('email')), @js(old('phone')), @js(old('role')), @js((bool) old('has_employment_contract')), {}, null, @js(old('supervisor_id')));
         document.getElementById('edit_leave_year').value = @js(old('leave_year', now()->year));
         document.getElementById('edit_leave_days').value = @js(old('leave_entitled_days', 0));
         const selected = new Set(@js((array) old('permissions', [])));
@@ -914,7 +917,8 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
             ? `Wykorzystano: ${editCurrentLeaveBalance.used} dni · pozostało: ${editCurrentLeaveBalance.remaining} dni`
             : 'Po zapisaniu ta pula będzie obowiązywać dla wybranego roku.';
     }
-    function openEditModal(id, name, email, phone, role, employmentContract, entitlements, currentBalance) {
+    function openEditModal(id, name, email, phone, role, employmentContract, entitlements, currentBalance, supervisorId = null) {
+        document.getElementById('edit_supervisor_id').value = supervisorId ?? '';
         const form = document.getElementById('editForm');
         document.getElementById('editing_user_id').value = id;
         form.action = '/settings/users/' + id;

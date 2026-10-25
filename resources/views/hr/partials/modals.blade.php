@@ -38,17 +38,17 @@
 @endif
 
 @if($canLeaves)
-<div id="leave-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:650px"><div class="hr-head"><div><h2 id="leave-modal-title" style="margin:0">Nowy urlop / L4</h2><small style="color:#6b7280">Zapisz planowaną lub trwającą nieobecność.</small></div><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">×</button></div>
-<form id="leave-form" method="POST" action="{{route('hr.leaves.store')}}">@csrf<input id="leave-method" type="hidden" name="_method" value="PUT" disabled><div class="hr-grid">
- @if($canTeam)<div class="hr-field hr-full"><label>Pracownik</label><select id="leave-user-id" name="user_id">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif
- <div class="hr-field hr-full"><label>Rodzaj nieobecności *</label><select id="leave-type" name="type" required>@foreach(\App\Models\HrLeave::TYPES as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></div>
+<div id="leave-modal" class="hr-modal"><div class="hr-modal-card" style="max-width:650px"><div class="hr-head"><div><h2 id="leave-modal-title" style="margin:0">Nowy urlop / L4</h2><small style="color:#6b7280">Wypełnij wniosek urlopowy i wyślij go do przełożonego.</small></div><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">×</button></div>
+<form id="leave-form" data-form-draft="false" method="POST" action="{{route('hr.leaves.store')}}">@csrf<input id="leave-approval-revision" type="hidden" name="approval_revision"><p id="leave-recipient" role="status" class="hr-rate-info">@if($leaveRecipients[$selectedUserId] ?? null)Wniosek zostanie wysłany do przełożonego: <strong>{{$leaveRecipients[$selectedUserId]}}</strong>.@else Nie wskazano przełożonego — poproś osobę uprawnioną o uzupełnienie profilu pracownika.@endif</p><input id="leave-method" type="hidden" name="_method" value="PUT" disabled><div class="hr-grid">
+ @if($canTeam)<div class="hr-field hr-full"><label>Pracownik</label><select id="leave-user-id" name="user_id" onchange="updateLeaveRecipient()">@foreach($users as $person)<option value="{{$person->id}}" @selected($selectedUserId===$person->id)>{{$person->name}}</option>@endforeach</select></div>@endif
+ <div class="hr-field hr-full"><label>Rodzaj nieobecności *</label><select id="leave-type" name="type" onchange="updateLeaveRecipient()" required>@foreach(\App\Models\HrLeave::TYPES as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></div>
  <div class="hr-field"><label>Data dokumentu *</label><input id="leave-document-date" type="date" name="document_date" required></div><div></div>
  <div class="hr-field"><label>Początek *</label><input id="leave-start-date" type="date" name="start_date" onchange="calculateLeaveEnd()" required></div><div class="hr-field"><label>Liczba dni *</label><input id="leave-days" type="number" name="days" value="1" min="1" max="730" oninput="calculateLeaveEnd()" required></div>
  <label class="hr-private-car-check hr-full"><input id="leave-include-weekends" type="checkbox" name="include_weekends" value="1" onchange="calculateLeaveEnd()"><span><strong>Uwzględnij weekendy w liczbie dni</strong><small>Po wyłączeniu soboty i niedziele nie zmniejszają podanej puli dni.</small></span></label>
  <div id="leave-end-date" class="hr-full hr-rate-info" style="font-weight:800;color:var(--green)">Wybierz datę początku</div>
  <div class="hr-field hr-full"><label>Uwagi</label><textarea id="leave-notes" name="notes" rows="3" maxlength="2000" placeholder="Opcjonalnie: dodatkowe informacje dotyczące nieobecności"></textarea></div>
  <div class="hr-full hr-rate-info"><i class="ti ti-info-circle"></i> Urlop na żądanie jest częścią urlopu wypoczynkowego. L4 jest rejestrowane oddzielnie jako zwolnienie chorobowe.</div>
-</div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">Anuluj</button><button class="hr-btn">Zapisz nieobecność</button></div></form></div></div>
+</div><div class="hr-actions" style="justify-content:flex-end;margin-top:18px"><button type="button" class="hr-btn danger" onclick="closeHrModal('leave-modal')">Anuluj</button><button class="hr-btn">Wyślij wniosek / zarejestruj L4</button></div></form></div></div>
 @endif
 
 @if($canDelegations)

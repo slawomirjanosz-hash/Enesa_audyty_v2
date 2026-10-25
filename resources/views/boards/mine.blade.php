@@ -18,6 +18,6 @@
 <button class="board-primary" type="submit">Pokaż zadania</button><a class="board-reset" href="{{route('board.mine',$archivedBoard ? ['archive'=>1] : [])}}">Moje zadania · wszystkie źródła</a>
 </form>
 @include('boards.cards',['personalBoard'=>true,'boardManage'=>false])
-@if($cards->isEmpty())<p>Nie masz przypisanych zadań w tym widoku.</p>@endif
-<p>Wyświetlono {{$cards->count()}} z {{$cards->total()}} zadań.@if($cards->hasPages()) Liczniki kolumn dotyczą tej strony.@endif</p>{{$cards->links()}}
+@if($cards->isEmpty() && $leaveTasks->isEmpty())<p>Nie masz przypisanych zadań w tym widoku.</p>@endif
+<p>Wyświetlono {{$cards->count()+$leaveTasks->count()}} z {{$cards->total()+$leaveTasks->count()}} zadań.@if($cards->hasPages()) Liczniki kolumn dotyczą tej strony.@endif</p>{{$cards->links()}}
 @endsection

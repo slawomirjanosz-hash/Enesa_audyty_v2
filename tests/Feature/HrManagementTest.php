@@ -239,6 +239,7 @@ test('employee manages own leave and a manager can register leave for another us
     $managerRole = Role::findOrCreate('manager_hr');
     $managerRole->givePermissionTo([Permission::findOrCreate('hr.leaves.view'), Permission::findOrCreate('hr.team.view')]);
     $manager->assignRole($managerRole);
+    $employee->update(['supervisor_id' => $manager->id]);
 
     $this->actingAs($employee)->post(route('hr.leaves.store'), [
         'type' => 'annual', 'document_date' => '2026-08-20', 'start_date' => '2026-09-07', 'days' => 5, 'notes' => 'Planowany wypoczynek',
@@ -251,13 +252,13 @@ test('employee manages own leave and a manager can register leave for another us
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))
         ->assertOk()->assertSee('Urlopy / L4')->assertSee('Urlop wypoczynkowy')->assertSee('Planowany wypoczynek')
         ->assertSee('Uwzględnij weekendy w liczbie dni')->assertSee('Pobierz PDF')
-        ->assertSee('Pula przyznana')->assertSee('Pozostało')->assertSee('10 dni');
+        ->assertSee('Pula przyznana')->assertSee('Pozostało')->assertSee('15 dni');
 
     $this->actingAs($employee)->get(route('hr.leaves.pdf', $leave))
         ->assertOk()->assertHeader('content-type', 'application/pdf');
 
-    $this->actingAs($manager)->put(route('hr.leaves.update', $leave), [
-        'type' => 'sick_leave', 'document_date' => '2026-09-01', 'start_date' => '2026-09-08', 'days' => 3, 'notes' => 'Zwolnienie lekarskie',
+    $this->actingAs($employee)->put(route('hr.leaves.update', $leave), [
+        'type' => 'sick_leave', 'document_date' => '2026-09-01', 'start_date' => '2026-09-08', 'days' => 3, 'notes' => 'Zwolnienie lekarskie', 'approval_revision' => 1,
     ])->assertSessionHas('success');
     expect($leave->fresh()->type)->toBe('sick_leave')->and($leave->fresh()->days)->toBe(3);
 
@@ -308,7 +309,7 @@ test('leave-only role sees the leave tab without delegation access', function ()
     $this->actingAs($user)->get(route('hr.index', ['tab' => 'leaves']))
         ->assertOk()
         ->assertSee('Urlopy / L4')
-        ->assertSee('Dodaj urlop / L4')
+        ->assertSee('Złóż wniosek / zarejestruj L4')
         ->assertDontSee('Dodaj delegację');
 });
 
