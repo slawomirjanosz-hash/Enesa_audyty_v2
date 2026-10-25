@@ -20,6 +20,9 @@ class SendOverdueTaskReminders extends Command
 
     public function handle(TaskReminderSelection $selection, TaskReminderMailConfiguration $configuration): int
     {
+        if (now('Europe/Warsaw')->isWeekend()) {
+            return self::SUCCESS;
+        }
         if ($this->option('scheduled') && now('Europe/Warsaw')->hour !== 8) {
             return self::SUCCESS;
         }

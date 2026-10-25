@@ -13,7 +13,7 @@ use App\Services\AccountSecurityService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::command('tasks:send-overdue-reminders')->dailyAt('08:00')->timezone('Europe/Warsaw')->withoutOverlapping();
+Schedule::command('tasks:send-overdue-reminders')->weekdays()->at('08:00')->timezone('Europe/Warsaw')->withoutOverlapping();
 Schedule::command('hr:send-vehicle-reminders')->dailyAt('08:00')->timezone('Europe/Warsaw')->withoutOverlapping();
 
 Artisan::command('accounts:block-inactive', function () {

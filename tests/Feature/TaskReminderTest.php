@@ -72,7 +72,7 @@ test('scheduled worker respects Polish time including daylight saving', function
     reminderTask(reminderUser(), ['due_date' => '2026-01-01']);
     $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
     Mail::assertSent(TaskOverdue::class, $send ? 1 : 0);
-})->with([['2026-07-01 06:00', true], ['2026-12-01 07:00', true], ['2026-12-01 06:59', false], ['2026-07-01 07:00', false]]);
+})->with([['2026-07-01 06:00', true], ['2026-12-01 07:00', true], ['2026-12-01 06:59', false], ['2026-07-01 07:00', false], ['2026-10-17 06:00', false], ['2026-10-18 06:00', false], ['2026-10-19 06:00', true]]);
 
 test('only overdue active assigned tasks are selected, not today or archived tasks', function () {
     $user = reminderUser();
@@ -89,6 +89,15 @@ test('only overdue active assigned tasks are selected, not today or archived tas
     $client->assignRole(Role::findOrCreate('client_admin'));
     reminderTask($client);
     expect(app(TaskReminderSelection::class)->groups()->flatten()->pluck('id')->all())->toBe([$wanted->id]);
+});
+
+test('weekend skips both scheduler and direct command without claiming a delivery', function () {
+    reminderTask(reminderUser());
+    $this->travelTo(Carbon::parse('2026-10-17 08:00', 'Europe/Warsaw'));
+    $this->artisan('tasks:send-overdue-reminders')->assertSuccessful();
+    $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
+    Mail::assertNothingSent();
+    $this->assertDatabaseCount('task_reminder_deliveries', 0);
 });
 
 test('tablica tasks are included with correct links, archives and completed owners are excluded', function () {
