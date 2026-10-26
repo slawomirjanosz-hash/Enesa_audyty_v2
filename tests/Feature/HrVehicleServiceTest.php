@@ -36,13 +36,35 @@ test('vehicle editors record each service type with actual author and history st
     $this->get(route('hr.vehicles.edit', $vehicle))->assertOk()->assertSee('Książka serwisowa auta');
 });
 
-test('assigned company car reader may view history but cannot add entries', function () {
+test('assigned company car user can maintain service book without editing vehicle data', function () {
     $reader = serviceBookUser();
     $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto', 'registration_number' => 'SRV124']);
     $vehicle->forceFill(['responsible_user_id' => $reader->id])->save();
-    $this->actingAs($reader)->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertDontSee('Dodaj wykonany serwis');
-    $this->post(route('hr.vehicles.service.store', $vehicle), ['type' => 'engine_oil', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 100])->assertForbidden();
+    $this->actingAs($reader)->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertSee('Dodaj wykonany serwis');
+    $data = ['type' => 'engine_oil', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 100];
+    $this->post(route('hr.vehicles.service.store', $vehicle), $data)->assertRedirect(route('hr.vehicles.service.index', $vehicle))->assertSessionHasNoErrors();
+    expect($vehicle->serviceEntries()->firstOrFail()->created_by)->toBe($reader->id);
+    $this->get(route('hr.vehicles.edit', $vehicle))->assertForbidden();
+    $this->put(route('hr.vehicles.update', $vehicle), ['name' => 'Zmiana'])->assertForbidden();
+    $this->delete(route('hr.vehicles.destroy', $vehicle))->assertForbidden();
     $this->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertSee(route('hr.vehicles.service.index', $vehicle), false);
+    $replacement = serviceBookUser();
+    $vehicle->forceFill(['responsible_user_id' => $replacement->id])->save();
+    $this->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertDontSee('Dodaj wykonany serwis');
+    $this->post(route('hr.vehicles.service.store', $vehicle), $data)->assertForbidden();
+    $this->actingAs($replacement)->post(route('hr.vehicles.service.store', $vehicle), $data)->assertSessionHasNoErrors();
+});
+
+test('HR team permission permits company service entries but notification permission does not', function () {
+    $user = serviceBookUser();
+    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto zespołu', 'registration_number' => 'SRV127']);
+    $data = ['type' => 'timing', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 200000];
+    $user->givePermissionTo(Permission::findOrCreate('hr.vehicles.responsible'));
+    $this->actingAs($user)->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertDontSee('Dodaj wykonany serwis');
+    $this->post(route('hr.vehicles.service.store', $vehicle), $data)->assertForbidden();
+    $user->givePermissionTo(Permission::findOrCreate('hr.team.view'));
+    $this->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertSee('Dodaj wykonany serwis');
+    $this->post(route('hr.vehicles.service.store', $vehicle), $data)->assertSessionHasNoErrors();
 });
 
 test('private history is visible and writable only to its creator and inactive cars reject writes', function () {
@@ -51,6 +73,8 @@ test('private history is visible and writable only to its creator and inactive c
     $vehicle = HrVehicle::create(['type' => 'private', 'name' => 'Prywatne', 'registration_number' => 'SRV125', 'created_by' => $owner->id, 'user_id' => $owner->id]);
     $data = ['type' => 'engine_oil', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 500];
     $this->actingAs($other)->get(route('hr.vehicles.service.index', $vehicle))->assertNotFound();
+    $this->post(route('hr.vehicles.service.store', $vehicle), $data)->assertForbidden();
+    $vehicle->forceFill(['responsible_user_id' => $other->id])->save();
     $this->post(route('hr.vehicles.service.store', $vehicle), $data)->assertForbidden();
     $this->actingAs($owner)->post(route('hr.vehicles.service.store', $vehicle), $data)->assertSessionHasNoErrors();
     $this->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertSee('Dodaj wykonany serwis');

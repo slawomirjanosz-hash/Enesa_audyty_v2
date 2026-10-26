@@ -95,6 +95,12 @@ class HrVehicle extends Model
             : HrAccess::canViewTeam($user);
     }
 
+    public function canMaintainServiceBook(User $user): bool
+    {
+        return $this->canEdit($user)
+            || ($this->type === 'company' && $this->getAttribute('responsible_user_id') === $user->id);
+    }
+
     public function deadlineState(string $field): string
     {
         $date = $this->getAttribute($field);

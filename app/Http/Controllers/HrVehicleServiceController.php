@@ -17,14 +17,14 @@ class HrVehicleServiceController extends Controller
 
         return view('hr.vehicle-service', [
             'vehicle' => $vehicle,
-            'canEdit' => $vehicle->canEdit($request->user()),
+            'canEdit' => $vehicle->canMaintainServiceBook($request->user()),
             'entries' => $vehicle->serviceEntries()->with('author')->orderByDesc('performed_on')->orderByDesc('id')->get(),
         ]);
     }
 
     public function store(Request $request, HrVehicle $vehicle): RedirectResponse
     {
-        abort_unless($vehicle->canEdit($request->user()), 403);
+        abort_unless($vehicle->canMaintainServiceBook($request->user()), 403);
         abort_unless($vehicle->is_active, 404);
         $data = $request->validate([
             'performed_on' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
