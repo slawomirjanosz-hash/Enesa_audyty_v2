@@ -6,9 +6,15 @@ use App\Support\HrAccess;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class HrVehicle extends Model
 {
+    public function serviceEntries(): HasMany
+    {
+        return $this->hasMany(HrVehicleServiceEntry::class);
+    }
+
     public function responsibleUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'responsible_user_id');

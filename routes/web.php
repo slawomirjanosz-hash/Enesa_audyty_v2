@@ -39,6 +39,7 @@ use App\Http\Controllers\HrRouteController;
 use App\Http\Controllers\HrTripController;
 use App\Http\Controllers\HrVehicleController;
 use App\Http\Controllers\HrVehicleLocationController;
+use App\Http\Controllers\HrVehicleServiceController;
 use App\Http\Controllers\ImportantContactController;
 use App\Http\Controllers\IsoContextReviewController;
 use App\Http\Controllers\IsoDocumentCopyController;
@@ -180,6 +181,8 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::put('/vehicles/columns', [HrVehicleController::class, 'columns'])->middleware('app.permission:hr.delegations.view')->name('vehicles.columns');
     Route::patch('/vehicles/{vehicle}/location', [HrVehicleController::class, 'location'])->middleware('app.permission:hr.delegations.view')->name('vehicles.location');
     Route::get('/vehicles/{vehicle}/edit', [HrVehicleController::class, 'edit'])->middleware('app.permission:hr.delegations.view')->name('vehicles.edit');
+    Route::get('/vehicles/{vehicle}/service-book', [HrVehicleServiceController::class, 'index'])->middleware('app.permission:hr.delegations.view')->name('vehicles.service.index');
+    Route::post('/vehicles/{vehicle}/service-book', [HrVehicleServiceController::class, 'store'])->middleware('app.permission:hr.delegations.view')->name('vehicles.service.store');
     Route::put('/vehicles/{vehicle}', [HrVehicleController::class, 'update'])->middleware('app.permission:hr.delegations.view')->name('vehicles.update');
     Route::delete('/vehicles/{vehicle}', [HrVehicleController::class, 'destroyVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.destroy');
 });
