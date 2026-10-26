@@ -121,3 +121,15 @@ test('revoking the administrator session also revokes the preview', function () 
     $this->get(route('board.mine'))->assertRedirect(route('login'))->assertSessionMissing('support_user_preview');
     $this->assertGuest();
 });
+
+test('route bindings also resolve resources using the previewed user rather than the administrator', function () {
+    [$super, $worker] = userPreviewFixture();
+    $own = Task::create(['title' => 'Pracownik', 'assigned_to' => $worker->id, 'status' => 'todo']);
+    $foreign = Task::create(['title' => 'Administrator', 'assigned_to' => $super->id, 'status' => 'todo']);
+    Route::bind('previewRecord', fn ($id) => Task::forUser(auth()->id())->findOrFail($id));
+    Route::middleware(['web', 'auth'])->get('/preview-binding-fixture/{previewRecord}', fn (Task $previewRecord) => response($previewRecord->title));
+    $this->actingAs($super)->post(route('user-preview.start', $worker), ['reason' => 'Kontrola zakresów']);
+    $this->get('/preview-binding-fixture/'.$own->id)->assertOk()->assertSee('Pracownik');
+    $this->get('/preview-binding-fixture/'.$foreign->id)->assertNotFound();
+    $this->post(route('user-preview.stop'))->assertRedirect();
+});

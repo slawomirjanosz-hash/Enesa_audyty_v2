@@ -17,6 +17,7 @@ use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,6 +29,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
         $middleware->append(SecurityHeaders::class);
         $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class, PreviewUser::class, CommitFormDraft::class]);
+        $middleware->prependToPriorityList(SubstituteBindings::class, CheckAccountSecurity::class);
+        $middleware->prependToPriorityList(SubstituteBindings::class, LogDocumentDownloads::class);
+        $middleware->prependToPriorityList(SubstituteBindings::class, PreviewUser::class);
 
         $middleware->alias([
             'auth' => Authenticate::class,
