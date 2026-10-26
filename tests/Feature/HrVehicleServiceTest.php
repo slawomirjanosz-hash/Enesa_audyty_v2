@@ -94,3 +94,48 @@ test('service entry validates mileage date and description and preserves histori
     }
     expect($vehicle->serviceEntries()->count())->toBe(2);
 });
+
+test('administrators and authorized managers can delete service entries with audit trail', function (string $access) {
+    $user = serviceBookUser(in_array($access, ['admin', 'superadmin']) ? $access : 'service_manager');
+    if (! in_array($access, ['admin', 'superadmin'])) {
+        $user->givePermissionTo(Permission::findOrCreate($access));
+    }
+    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto', 'registration_number' => 'DEL001']);
+    $entry = $vehicle->serviceEntries()->create(['type' => 'engine_oil', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 15000]);
+    $html = $this->actingAs($user)->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertSee('Usuń wpis serwisowy')->getContent();
+    expect($html)->toContain('data-sortable="false">Akcje', 'data-sort-value="15000"');
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertRedirect(route('hr.vehicles.service.index', $vehicle));
+    $this->assertDatabaseMissing('hr_vehicle_service_entries', ['id' => $entry->id]);
+    $this->assertDatabaseHas('activity_logs', ['user_id' => $user->id, 'action' => 'deleted', 'auditable_type' => HrVehicleServiceEntry::class, 'auditable_id' => $entry->id]);
+    $this->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertSee('colspan="6"', false);
+})->with(['admin', 'superadmin', 'hr.team.view', 'system.full_access']);
+
+test('assigned users private owners and notification recipients cannot delete history', function () {
+    $owner = serviceBookUser();
+    $owner->givePermissionTo(Permission::findOrCreate('hr.vehicles.responsible'));
+    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto', 'registration_number' => 'DEL002']);
+    $vehicle->forceFill(['responsible_user_id' => $owner->id])->save();
+    $entry = $vehicle->serviceEntries()->create(['type' => 'timing', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 150000]);
+    $this->actingAs($owner)->get(route('hr.vehicles.service.index', $vehicle))->assertOk()->assertSee('Dodaj wykonany serwis')->assertDontSee('Usuń wpis serwisowy');
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertForbidden();
+    $vehicle->update(['type' => 'private', 'created_by' => $owner->id, 'user_id' => $owner->id]);
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertForbidden();
+    $this->assertDatabaseHas('hr_vehicle_service_entries', ['id' => $entry->id]);
+});
+
+test('deleting service history enforces vehicle relation private scope and active vehicle', function () {
+    $admin = serviceBookUser('admin');
+    $other = serviceBookUser();
+    $vehicle = HrVehicle::create(['type' => 'company', 'name' => 'Auto', 'registration_number' => 'DEL003']);
+    $second = HrVehicle::create(['type' => 'company', 'name' => 'Drugie auto', 'registration_number' => 'DEL004']);
+    $entry = $vehicle->serviceEntries()->create(['type' => 'timing', 'performed_on' => today()->format('Y-m-d'), 'mileage' => 150000]);
+    $this->actingAs($admin)->delete(route('hr.vehicles.service.destroy', [$second, $entry]))->assertNotFound();
+    $vehicle->update(['type' => 'private', 'created_by' => $other->id, 'user_id' => $other->id]);
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertNotFound();
+    $vehicle->update(['type' => 'company', 'is_active' => false]);
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertNotFound();
+    $this->assertDatabaseHas('hr_vehicle_service_entries', ['id' => $entry->id]);
+    $vehicle->update(['is_active' => true]);
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertRedirect();
+    $this->delete(route('hr.vehicles.service.destroy', [$vehicle, $entry]))->assertNotFound();
+});

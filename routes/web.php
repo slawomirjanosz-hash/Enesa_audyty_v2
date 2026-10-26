@@ -183,6 +183,7 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::get('/vehicles/{vehicle}/edit', [HrVehicleController::class, 'edit'])->middleware('app.permission:hr.delegations.view')->name('vehicles.edit');
     Route::get('/vehicles/{vehicle}/service-book', [HrVehicleServiceController::class, 'index'])->middleware('app.permission:hr.delegations.view')->name('vehicles.service.index');
     Route::post('/vehicles/{vehicle}/service-book', [HrVehicleServiceController::class, 'store'])->middleware('app.permission:hr.delegations.view')->name('vehicles.service.store');
+    Route::delete('/vehicles/{vehicle}/service-book/{entry}', [HrVehicleServiceController::class, 'destroy'])->middleware('app.permission:hr.delegations.view')->name('vehicles.service.destroy');
     Route::put('/vehicles/{vehicle}', [HrVehicleController::class, 'update'])->middleware('app.permission:hr.delegations.view')->name('vehicles.update');
     Route::delete('/vehicles/{vehicle}', [HrVehicleController::class, 'destroyVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.destroy');
 });
