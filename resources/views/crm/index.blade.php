@@ -581,12 +581,12 @@
                         @include('partials.task-confirmations', ['completionTask' => $task])
                     </div>
                 </td>
-                <td style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
+                <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
                     {{ $task->due_date?->format('d.m.Y') ?? '—' }}
                     @if($overdue)<span style="font-size:10px;margin-left:4px;">⚠</span>@endif
                 </td>
                 <td><span class="badge {{ $priorityMeta[$task->priority]['class'] }}">{{ $priorityMeta[$task->priority]['label'] }}</span></td>
-                <td><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
+                <td data-sort-value="{{ ['todo' => 0, 'in_progress' => 1, 'done' => 2][$task->status] ?? 3 }}"><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
                         @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }}, {{ count(app(\App\Services\TaskCompletionService::class)->people($task)) }}, {{ count(array_intersect(app(\App\Services\TaskCompletionService::class)->people($task), array_keys($task->completion_confirmations ?? []))) }})">
@@ -649,12 +649,12 @@
                         @include('partials.task-confirmations', ['completionTask' => $task])
                     </div>
                 </td>
-                <td style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
+                <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
                     {{ $task->due_date?->format('d.m.Y') ?? '—' }}
                     @if($overdue)<span style="font-size:10px;margin-left:4px;">⚠</span>@endif
                 </td>
                 <td><span class="badge {{ $priorityMeta[$task->priority]['class'] }}">{{ $priorityMeta[$task->priority]['label'] }}</span></td>
-                <td><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
+                <td data-sort-value="{{ ['todo' => 0, 'in_progress' => 1, 'done' => 2][$task->status] ?? 3 }}"><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
                         <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }}, {{ count(app(\App\Services\TaskCompletionService::class)->people($task)) }}, {{ count(array_intersect(app(\App\Services\TaskCompletionService::class)->people($task), array_keys($task->completion_confirmations ?? []))) }})">
@@ -1304,6 +1304,10 @@
             </div>
 
             @include('crm.lead-action')
+            <section style="margin-bottom:20px;" aria-label="Historia działań CRM">
+                <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:7px;">Historia działań</div>
+                <div id="opportunity-activity-history" style="display:grid;gap:8px;"></div>
+            </section>
             <div id="opportunity-linked-tasks-section" style="margin-bottom:20px;">
                 <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#555;margin-bottom:7px;">Powiązane zadania <span id="opportunity-linked-tasks-count" style="color:#888;font-weight:400;"></span></div>
                 <div id="opportunity-linked-tasks" style="display:grid;gap:7px;"></div>
@@ -1317,10 +1321,9 @@
 
         <div id="opportunity-view-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;">
             <a id="opportunity-company-link" href="#" class="btn-secondary"><i class="ti ti-building"></i> Przejdź do karty klienta</a>
+            @if($canManageOwnTasks)<button type="button" onclick="openOpportunityTask()" class="btn-secondary"><i class="ti ti-checklist"></i> Dodaj zadanie</button>@endif
             @if($canManageCrm || auth()->user()->can('crm.leads.manage'))
-                @if($canManageOwnTasks)
                 <button type="button" onclick="enableOpportunityEdit(); const section = document.querySelector('#form-edit-opp .lead-action'); section.open = true; section.scrollIntoView({block:'center'}); section.querySelector('textarea').focus();" class="btn-secondary"><i class="ti ti-plus"></i> Dodaj działanie</button>
-                @endif
                 <button type="button" onclick="enableOpportunityEdit()" class="btn-primary"><i class="ti ti-pencil"></i> Edytuj szansę</button>
             @endif
         </div>
@@ -1599,6 +1602,18 @@ document.getElementById('important-contact-search')?.addEventListener('input', e
 document.addEventListener('DOMContentLoaded', () => openImportantContactModal());
 @endif
 
+function openOpportunityTask() {
+    const opportunityId = document.getElementById('edit-opp-id').value;
+    const companyId = document.getElementById('edit-opp-company').value;
+    closeEditOpp();
+    const modal = document.getElementById('modal-task');
+    modal.querySelector('form').reset();
+    document.getElementById('task-company').value = companyId;
+    filterTaskOpportunities('task-company', 'task-opportunity');
+    document.getElementById('task-opportunity').value = opportunityId;
+    modal.style.display = 'flex';
+}
+
 function openEditTask(id, title, description, assignedTo, companyId, dueDate, priority, status, opportunityId, peopleCount = 1, confirmedCount = 0) {
     const baseUrl = '{{ url('/crm/tasks') }}/';
     document.getElementById('form-task-edit').action = baseUrl + id;
@@ -1716,7 +1731,34 @@ function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, 
     document.body.style.overflow = 'hidden';
 }
 
+const opportunityActivityHistory = @js($opportunities->mapWithKeys(fn ($opportunity) => [$opportunity->id => $opportunity->activities->map(fn ($activity) => ['description' => $activity->description, 'date' => $activity->occurred_on?->format('d.m.Y'), 'person' => $activity->performedBy?->name ?? 'Usunięty użytkownik', 'recorder' => $activity->user?->name ?? 'System'])->values()]));
+
+function renderOpportunityActivityHistory(id) {
+    const container = document.getElementById('opportunity-activity-history');
+    container.replaceChildren();
+    const activities = opportunityActivityHistory[id] || [];
+    if (!activities.length) {
+        const empty = document.createElement('p');
+        empty.textContent = 'Brak wpisów w historii działań.';
+        empty.style.cssText = 'font-size:12px;color:#888;margin:0;';
+        container.append(empty);
+    }
+    activities.forEach(activity => {
+        const row = document.createElement('div');
+        row.style.cssText = 'border-left:2px solid #d8e5dd;padding:4px 10px;';
+        const description = document.createElement('div');
+        description.textContent = activity.description;
+        description.style.cssText = 'font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;';
+        const meta = document.createElement('small');
+        meta.textContent = [activity.date, activity.person, 'Zapisał(a): ' + activity.recorder].filter(Boolean).join(' · ');
+        meta.style.color = '#7a8a80';
+        row.append(description, meta);
+        container.append(row);
+    });
+}
+
 function populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {
+    renderOpportunityActivityHistory(id);
     document.querySelectorAll('#form-edit-opp .lead-action').forEach(section => { section.open = false; section.querySelectorAll('input, textarea, select').forEach(field => field.value = ''); });
     document.getElementById('edit-opp-id').value = id;
     document.getElementById('edit-opp-title').value = title;

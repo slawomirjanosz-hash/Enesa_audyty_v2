@@ -1373,8 +1373,8 @@
                         <i class="ti {{ str_starts_with($activity->type, 'offer_') ? 'ti-file-invoice' : 'ti-target' }}"></i>
                     </div>
                     <div style="min-width:0;flex:1;">
-                        <div style="font-size:13px;color:#333;">{{ $activity->description }}</div>
-                        <div style="font-size:11px;color:#888;margin-top:3px;">{{ $activity->user?->name ?? 'System' }} · {{ $activity->created_at->format('d.m.Y H:i') }}</div>
+                        <div style="font-size:13px;color:#333;white-space:pre-line;">{{ $activity->description }}</div>
+                        <div style="font-size:11px;color:#888;margin-top:3px;">{{ $activity->performedBy?->name ?? $activity->user?->name ?? 'System' }} · {{ $activity->occurred_on?->format('d.m.Y') ?? $activity->created_at->format('d.m.Y H:i') }}</div>
                     </div>
                 </div>
             @empty

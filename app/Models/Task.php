@@ -110,6 +110,12 @@ class Task extends Model
         return $query->whereNull('project_id')->whereNull('audit_id');
     }
 
+    public function scopeCrmDefaultOrder($query)
+    {
+        return $query->orderByRaw("CASE status WHEN 'todo' THEN 0 WHEN 'in_progress' THEN 1 WHEN 'done' THEN 2 ELSE 3 END")
+            ->orderByRaw('due_date IS NULL')->orderBy('due_date')->orderBy('id');
+    }
+
     public function scopeOverdue($query)
     {
         return $query->where('due_date', '<', now())->where('status', '!=', 'done');

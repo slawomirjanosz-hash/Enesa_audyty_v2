@@ -210,7 +210,7 @@ class CompanyController extends Controller
             ? User::where('is_active', true)->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get()
             : collect();
 
-        $crmActivitiesQuery = CrmActivity::with(['user', 'crmOpportunity', 'offer'])
+        $crmActivitiesQuery = CrmActivity::with(['user', 'performedBy', 'crmOpportunity', 'offer'])
             ->where('company_id', $company->id)
             ->orderByDesc('created_at');
 

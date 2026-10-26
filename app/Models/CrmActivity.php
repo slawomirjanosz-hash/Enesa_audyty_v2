@@ -15,10 +15,13 @@ class CrmActivity extends Model
         'type',
         'description',
         'metadata',
+        'occurred_on',
+        'performed_by',
     ];
 
     protected $casts = [
         'metadata' => 'array',
+        'occurred_on' => 'date',
     ];
 
     public function company(): BelongsTo
@@ -39,5 +42,10 @@ class CrmActivity extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function performedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'performed_by')->withTrashed();
     }
 }

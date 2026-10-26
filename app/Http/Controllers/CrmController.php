@@ -6,6 +6,7 @@ use App\Mail\TaskAssigned;
 use App\Models\Audit;
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\CrmActivity;
 use App\Models\CrmOpportunity;
 use App\Models\ImportantContact;
 use App\Models\Offer;
@@ -86,10 +87,11 @@ class CrmController extends Controller
             ? (clone $opportunitiesQuery)->with([
                 'company', 'assignedUser', 'relatedUsers', 'offers',
                 'tasks' => fn ($tasks) => $tasks->crm()->withTrashed()->with('assignedUser'),
+                'activities' => fn ($activities) => $activities->where('type', 'lead_action')->with(['performedBy', 'user'])->orderByDesc('occurred_on')->orderByDesc('id'),
             ])->get()
             : collect();
 
-        $taskOpportunities = $currentTab === 'tasks'
+        $taskOpportunities = in_array($currentTab, ['tasks', 'pipeline'], true)
             ? (clone $opportunitiesQuery)->with('company')->get()
             : collect();
 
@@ -99,12 +101,12 @@ class CrmController extends Controller
             'can_view_offers'
         )->get() : collect();
 
-        $tasks = $currentTab === 'tasks' && $canManageTeamTasks ? Task::crm()->with(['participants', 'assignedUser', 'company', 'offer', 'crmOpportunity'])
-            ->orderBy('due_date')
+        $tasks = $currentTab === 'tasks' && $canManageTeamTasks ? app(PersonalBoardService::class)->crm($authUser)->with(['participants', 'assignedUser', 'company', 'offer', 'crmOpportunity'])
+            ->crmDefaultOrder()
             ->get() : collect();
 
-        $myTasks = $currentTab === 'tasks' && $canManageOwnTasks ? Task::crm()->forUser(auth()->id())
-            ->with(['participants', 'assignedUser', 'company', 'offer', 'crmOpportunity'])->orderBy('due_date')
+        $myTasks = $currentTab === 'tasks' && $canManageOwnTasks ? app(PersonalBoardService::class)->crm($authUser)->forUser(auth()->id())
+            ->with(['participants', 'assignedUser', 'company', 'offer', 'crmOpportunity'])->crmDefaultOrder()
             ->get() : collect();
 
         $trashTasksQuery = Task::onlyTrashed()->crm();
@@ -123,7 +125,7 @@ class CrmController extends Controller
             ? $access->scopeByCompanyAccess(Audit::with('company')->orderByDesc('created_at'), $authUser, 'can_view_audits')->get()
             : collect();
 
-        $users = $canManageTeamTasks
+        $users = ($canManageTeamTasks || $authUser->can('crm.leads.manage'))
             ? User::query()->where('is_active', true)
                 ->whereHas('roles', fn ($roles) => $roles->whereNotIn('name', ['client_admin', 'client_user']))
                 ->orderBy('name')->get()
@@ -424,6 +426,9 @@ class CrmController extends Controller
     public function updateOpportunity(Request $request, CrmOpportunity $opportunity): RedirectResponse
     {
         $this->authorize('update', $opportunity);
+        if (app(AuditorAccessService::class)->isDelegatedAuditor($request->user()) && ! app(AuditorAccessService::class)->hasFullAccess($request->user())) {
+            abort_unless((int) $opportunity->assigned_to === $request->user()->id || (int) $opportunity->created_by === $request->user()->id || $opportunity->relatedUsers()->whereKey($request->user()->id)->exists(), 403);
+        }
         $action = $this->validatedLeadAction($request);
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -471,9 +476,6 @@ class CrmController extends Controller
         if (! isset($data['action_description']) || $data['action_description'] === '') {
             return [];
         }
-        $actor = $request->user();
-        $team = app(AuditorAccessService::class)->hasFullAccess($actor) || $actor->can('crm.tasks.team.manage');
-        abort_unless($team || ($actor->can('crm.tasks.own.manage') && (int) $data['action_assigned_to'] === $actor->id), 403);
         abort_unless(User::whereKey($data['action_assigned_to'])->where('is_active', true)
             ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))->exists(), 422, 'Wybierz aktywnego pracownika.');
 
@@ -485,16 +487,14 @@ class CrmController extends Controller
         if ($action === []) {
             return;
         }
-        Task::create([
-            'title' => mb_substr($action['action_description'], 0, 255),
+        CrmActivity::create([
+            'type' => 'lead_action',
             'description' => $action['action_description'],
-            'due_date' => $action['action_due_date'],
-            'assigned_to' => $action['action_assigned_to'],
-            'created_by' => auth()->id(),
+            'occurred_on' => $action['action_due_date'],
+            'performed_by' => $action['action_assigned_to'],
+            'user_id' => auth()->id(),
             'company_id' => $opportunity->company_id,
             'crm_opportunity_id' => $opportunity->id,
-            'status' => 'todo',
-            'priority' => 'medium',
         ]);
     }
 
