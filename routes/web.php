@@ -65,9 +65,12 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupportMailTestController;
 use App\Http\Controllers\TaskArchiveController;
 use App\Http\Controllers\TaskDeletionController;
+use App\Http\Controllers\UserPreviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'show'])->name('home');
+Route::post('/user-preview/{user}', [UserPreviewController::class, 'store'])->middleware(['auth', 'superadmin.only', 'throttle:10,1'])->name('user-preview.start');
+Route::post('/user-preview-stop', [UserPreviewController::class, 'destroy'])->middleware('auth')->name('user-preview.stop');
 Route::match(['get', 'post'], '/support/mail-test', SupportMailTestController::class)
     ->middleware(['signed', 'throttle:30,1'])->name('support.mail-test');
 Route::middleware(['auth', 'throttle:60,1'])->prefix('form-drafts')->group(function () {

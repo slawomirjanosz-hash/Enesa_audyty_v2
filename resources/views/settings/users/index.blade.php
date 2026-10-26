@@ -676,6 +676,9 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                         <td data-sort-value="{{$user->security_activity_at?->toIso8601String() ?? ''}}" style="white-space:nowrap">{{$user->security_activity_at?->format('d.m.Y H:i') ?? 'Brak'}}</td>
                         <td>
                             <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                @if($currentUser->hasRole('superadmin') && app(\App\Services\UserPreviewService::class)->eligible($user))
+                                <button type="button" class="btn-action" title="Podgląd jako użytkownik" aria-label="Podgląd jako użytkownik: {{$user->name}}" data-preview-url="{{route('user-preview.start',$user)}}" data-preview-name="{{$user->name}}" onclick="const dialog=document.getElementById('user-preview-dialog'); dialog.querySelector('form').action=this.dataset.previewUrl; dialog.querySelector('[data-preview-person]').textContent=this.dataset.previewName; dialog.querySelector('textarea').value=''; dialog.showModal();"><i class="ti ti-user-search" aria-hidden="true"></i></button>
+                                @endif
                                 @if($currentUser->hasAnyRole(['admin','superadmin']) && (!$user->hasRole('superadmin') || $currentUser->hasRole('superadmin')) && (!$user->is_active || $user->security_block_reason || $user->login_locked_until?->isFuture()))
                                     <form method="POST" action="{{route('settings.users.unlock', $user)}}">@csrf<button class="btn-action success" title="Odblokuj konto" aria-label="Odblokuj konto: {{$user->name}}"><i class="ti ti-lock-open" aria-hidden="true"></i></button></form>
                                 @endif
@@ -872,6 +875,17 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
     </div>
 </div>
 
+<style>#user-preview-dialog::backdrop{background:#142b2580}#user-preview-dialog button{font:inherit;font-size:13px;padding:8px 12px;border:1px solid #ccd8d2;border-radius:6px;cursor:pointer}</style>
+<dialog id="user-preview-dialog" style="position:fixed;inset:0;margin:auto;border:1px solid #dbe3df;border-radius:12px;padding:24px;width:min(480px,90vw);max-height:90vh;overflow:auto;font-family:inherit;box-shadow:0 20px 60px #0003;">
+    <form method="POST">@csrf
+        <h3 style="margin:0 0 12px;font-size:17px;">Podgląd jako użytkownik</h3>
+        <p data-preview-person style="font-weight:700;"></p>
+        <p style="font-size:12px;color:#666;">Zobaczysz dostęp wybranej osoby. Zapisy będą zablokowane. Wejście i zakończenie zostaną zapisane w historii.</p>
+        <label for="user-preview-reason">Powód serwisowy</label>
+        <textarea id="user-preview-reason" name="reason" required minlength="5" maxlength="500" rows="3" style="display:block;width:100%;box-sizing:border-box;margin:8px 0 16px;border:1px solid #ccd8d2;border-radius:6px;padding:9px;font:inherit;font-size:13px;" placeholder="Np. sprawdzenie zgłoszonego braku widoczności projektu"></textarea>
+        <div style="display:flex;gap:8px;justify-content:flex-end;"><button type="button" class="btn-secondary" onclick="this.closest('dialog').close()">Anuluj</button><button type="submit" class="btn-primary">Rozpocznij podgląd</button></div>
+    </form>
+</dialog>
 @endsection
 
 @push('scripts')

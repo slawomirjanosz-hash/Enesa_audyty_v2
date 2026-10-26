@@ -12,6 +12,7 @@ use App\Http\Middleware\EnsurePermission;
 use App\Http\Middleware\EnsureStaffRole;
 use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\LogDocumentDownloads;
+use App\Http\Middleware\PreviewUser;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -26,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
         $middleware->append(SecurityHeaders::class);
-        $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class, CommitFormDraft::class]);
+        $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class, PreviewUser::class, CommitFormDraft::class]);
 
         $middleware->alias([
             'auth' => Authenticate::class,

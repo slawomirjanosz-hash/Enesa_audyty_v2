@@ -14,10 +14,7 @@ class DashboardController extends Controller
     {
         $company = auth()->user()->companies->first();
 
-        if (! $company) {
-            return redirect()->route('client.login')
-                ->with('error', 'Brak przypisanej firmy.');
-        }
+        abort_unless($company, 403, 'Brak przypisanej firmy.');
 
         $offers = CompanySettings::moduleIsEnabled('offers')
             ? Offer::where('company_id', $company->id)
