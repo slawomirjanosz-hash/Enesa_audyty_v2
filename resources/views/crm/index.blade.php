@@ -589,7 +589,7 @@
                 <td><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
-                        @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
+                        @if($canManageOwnTasks)<button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }}, {{ count(app(\App\Services\TaskCompletionService::class)->people($task)) }}, {{ count(array_intersect(app(\App\Services\TaskCompletionService::class)->people($task), array_keys($task->completion_confirmations ?? []))) }})">
                             <i class="ti ti-pencil"></i>
                         </button>
                         @if(app(\App\Services\TaskCompletionService::class)->complete($task))
@@ -657,7 +657,7 @@
                 <td><span class="badge {{ $overdue ? 'badge-red' : $statusMeta[$task->status]['class'] }}">{{ $statusMeta[$task->status]['label'] }}</span></td>
                 <td style="text-align:center;">
                     <div style="display:flex;gap:4px;justify-content:center;">
-                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }})">
+                        <button class="btn-icon btn-icon-edit" title="Edytuj" onclick="openEditTask({{ $task->id }}, @js($task->title), @js($task->description), {{ $task->assigned_to ?? 'null' }}, {{ $task->company_id ?? 'null' }}, @js($task->due_date?->format('Y-m-d')), '{{ $task->priority }}', '{{ $task->status }}', {{ $task->crm_opportunity_id ?? 'null' }}, {{ count(app(\App\Services\TaskCompletionService::class)->people($task)) }}, {{ count(array_intersect(app(\App\Services\TaskCompletionService::class)->people($task), array_keys($task->completion_confirmations ?? []))) }})">
                             <i class="ti ti-pencil"></i>
                         </button>
                         @if(app(\App\Services\TaskCompletionService::class)->complete($task))
@@ -1176,13 +1176,13 @@
                         <option value="in_progress">W toku</option>
                         <option value="done">Zrobione</option>
                     </select>
-                    <small style="color:#7a8a80;">Przy zadaniu wspólnym „Zrobione” potwierdza Twoje wykonanie. Zadanie zamknie się po potwierdzeniu przez wszystkich.</small>
                 </div>
             </div>
-            <div style="margin-bottom:16px;">
-                <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Opis</label>
-                <textarea name="description" id="edit-task-desc" rows="2" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
-            </div>
+            <p id="edit-task-completion-note" hidden style="margin:0 0 12px;font-size:11px;line-height:1.5;color:#7a8a80;"></p>
+            <details id="edit-task-description-section" style="margin-bottom:16px;">
+                <summary style="cursor:pointer;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;">Opis (opcjonalnie)</summary>
+                <textarea name="description" id="edit-task-desc" aria-label="Opis zadania" rows="2" placeholder="Dodatkowe informacje do zadania" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
+            </details>
             <div style="display:flex;gap:10px;justify-content:flex-end;">
                 <button type="button" onclick="document.getElementById('modal-task-edit').style.display='none'" class="btn-secondary">Anuluj</button>
                 <button type="submit" class="btn-primary"><i class="ti ti-check"></i> Zapisz zmiany</button>
@@ -1599,11 +1599,15 @@ document.getElementById('important-contact-search')?.addEventListener('input', e
 document.addEventListener('DOMContentLoaded', () => openImportantContactModal());
 @endif
 
-function openEditTask(id, title, description, assignedTo, companyId, dueDate, priority, status, opportunityId) {
+function openEditTask(id, title, description, assignedTo, companyId, dueDate, priority, status, opportunityId, peopleCount = 1, confirmedCount = 0) {
     const baseUrl = '{{ url('/crm/tasks') }}/';
     document.getElementById('form-task-edit').action = baseUrl + id;
     document.getElementById('edit-task-title').value = title || '';
     document.getElementById('edit-task-desc').value = description || '';
+    document.getElementById('edit-task-description-section').open = Boolean(description?.trim());
+    const completionNote = document.getElementById('edit-task-completion-note');
+    completionNote.hidden = peopleCount < 2;
+    completionNote.textContent = peopleCount > 1 ? `Potwierdzono wykonanie: ${confirmedCount} z ${peopleCount} osób. „Zrobione” potwierdza Twój udział.` : '';
     document.getElementById('edit-task-due').value = dueDate || '';
     const sel = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
     sel('edit-task-assigned', assignedTo);
