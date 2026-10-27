@@ -1,0 +1,16 @@
+.project-finance-dialog{width:min(1120px,calc(100vw - 32px));max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);margin:auto;padding:0;border:0;border-radius:14px;background:#fff;color:#25372e;box-shadow:0 24px 90px #0005;overflow:hidden;white-space:normal}
+.project-finance-dialog::backdrop{background:rgba(15,28,21,.6)}
+.project-finance-dialog form{display:flex;flex-direction:column;max-height:calc(100dvh - 32px);margin:0}
+.project-finance-dialog-head,.project-finance-dialog-foot{display:flex;align-items:center;gap:16px;padding:20px 24px;flex-shrink:0;background:#fff}
+.project-finance-dialog-head{justify-content:space-between;border-bottom:1px solid #e1e8e2}
+.project-finance-dialog-head h2{margin:0;font-size:21px}.project-finance-dialog-head p{margin:6px 0 0;font-size:12px;color:#68786e}
+.project-finance-dialog-body{overflow-y:auto;overflow-x:hidden;min-height:0;padding:22px 24px;overscroll-behavior:contain}
+.project-finance-dialog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.project-finance-dialog .field{display:flex;flex-direction:column;gap:7px;min-width:0;font-size:12px;font-weight:700}
+.project-finance-dialog .field input,.project-finance-dialog .field select,.project-finance-dialog .field textarea{box-sizing:border-box;min-width:0;width:100%;max-width:100%;padding:11px 12px;border:1px solid #cdd8cf;border-radius:7px;background:#fff;font:inherit;font-weight:400;color:inherit}
+.project-finance-dialog .field textarea{resize:vertical;min-height:90px}.project-finance-dialog-full{grid-column:1/-1}
+.project-finance-dialog-foot{justify-content:flex-end;border-top:1px solid #e1e8e2}
+.project-finance-dialog [hidden]{display:none!important}#project-finance-copy-note{margin:0 0 20px;line-height:1.6}
+.mini-btn.finance-copy{background:#0f766e}
+@media(max-width:900px){.project-finance-dialog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.project-finance-dialog{width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}.project-finance-dialog form{max-height:calc(100dvh - 16px)}.project-finance-dialog-grid{grid-template-columns:minmax(0,1fr)}.project-finance-dialog-head,.project-finance-dialog-foot,.project-finance-dialog-body{padding:16px}.project-finance-dialog-head h2{font-size:18px}}

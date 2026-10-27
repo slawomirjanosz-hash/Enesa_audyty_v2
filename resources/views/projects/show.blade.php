@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.0/dist/frappe-gantt.css">
 @php
     $canEdit = auth()->user()->can('update', $project);
+    $canManageFinanceEntries = $canEdit && (app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user()) || auth()->user()->can('projects.finances.manage'));
     $projectTeam = collect([$project->manager])->filter()->merge($project->members)->unique('id')->values();
     $statusLabels = ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'];
     $requirementStatusLabels = ['planned'=>'Planowane','requested'=>'Zapotrzebowanie','ordered'=>'Zamówione','in_progress'=>'W realizacji','purchased'=>'Kupione','cancelled'=>'Anulowane'];
@@ -314,7 +315,11 @@
                     <td>@if($canEdit)<select class="status-select project-async-status" data-kind="finance" data-id="{{$entry->id}}" data-current="{{$entry->status}}" data-url="{{route('projects.finances.status',[$project,$entry])}}" aria-label="Status pozycji finansowej {{$entry->name}}">@foreach($financeStatusLabels as $value=>$label)<option value="{{$value}}" {{$entry->status === $value ? 'selected' : ''}}>{{$label}}</option>@endforeach</select>@else{{$financeStatusLabels[$entry->status] ?? $entry->status}}@endif</td>
                     <td class="finance-amount-column" style="font-weight:800;color:{{$entry->type === 'invoice' ? '#15803d' : '#b91c1c'}}">{{number_format((float) $entry->amount, 2, ',', ' ')}} zł</td>
                     <td><span class="source-badge">{{match($entry->source){'excel_import'=>'Excel','requirement'=>'Materiały',default=>'Ręcznie'} }}</span></td>
-                    <td>@if($canEdit)<div class="mini-actions"><details class="finance-edit"><summary class="mini-btn edit" title="Edytuj">✎</summary><div class="finance-edit-box"><form method="POST" action="{{route('projects.finances.update',[$project,$entry])}}" class="finance-entry-form">@csrf @method('PATCH')<div class="grid2"><div class="field"><label>Rodzaj</label><select name="type" class="finance-entry-type"><option value="cost" {{$entry->type === 'cost' ? 'selected' : ''}}>Koszt</option><option value="invoice" {{$entry->type === 'invoice' ? 'selected' : ''}}>Faktura dla klienta</option></select></div><div class="field"><label>Nazwa</label><input name="name" value="{{$entry->name}}" required></div><div class="field"><label>Dokument</label><input name="document_number" value="{{$entry->document_number}}"></div><div class="field" data-finance-supplier-field><label>Dostawca z bazy</label><select name="supplier_company_id"><option value="">Niepowiązany</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}" {{$entry->supplier_company_id === $supplier->id ? 'selected' : ''}}>{{$supplier->name}}</option>@endforeach</select></div><div class="field" data-finance-supplier-field><label>Dostawca spoza bazy</label><input name="supplier" value="{{$entry->supplier}}"></div><div class="field"><label>Data</label><input type="date" name="entry_date" value="{{$entry->entry_date->format('Y-m-d')}}" required></div><div class="field"><label>Termin płatności</label><input type="date" name="payment_date" value="{{$entry->payment_date?->format('Y-m-d')}}"></div><div class="field"><label>Kwota</label><input type="number" step="0.01" min="0" name="amount" value="{{$entry->amount}}" required></div><div class="field"><label>Status</label><select name="status">@foreach($financeStatusLabels as $value=>$label)<option value="{{$value}}" {{$entry->status === $value ? 'selected' : ''}}>{{$label}}</option>@endforeach</select></div><div class="field" data-finance-cost-group><label>Grupa</label><select name="finance_group_id"><option value="">Bez grupy</option>@foreach($project->financeGroups as $group)<option value="{{$group->id}}" {{$entry->finance_group_id === $group->id ? 'selected' : ''}}>{{$group->name}}</option>@endforeach</select></div><div class="field finance-invoice-note" data-finance-invoice-note hidden>Faktura klienta pozostaje w grupie „Wystawione” i nie ma dostawcy.</div><div class="field full"><label>Uwagi</label><textarea name="notes">{{$entry->notes}}</textarea></div></div><button class="btn" style="margin-top:10px">Zapisz</button></form></div></details><form method="POST" action="{{route('projects.finances.destroy',[$project,$entry])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form></div>@endif</td>
+                    <td>@if($canManageFinanceEntries)<div class="mini-actions">
+                        <button type="button" class="mini-btn edit" data-finance-editor-open="edit" data-finance-entry="{{$entry->id}}" aria-haspopup="dialog" aria-controls="project-finance-dialog" title="Edytuj pozycję finansową">✎</button>
+                        @if($entry->type === 'invoice')<button type="button" class="mini-btn finance-copy" data-finance-editor-open="copy" data-finance-entry="{{$entry->id}}" aria-haspopup="dialog" aria-controls="project-finance-dialog" title="Kopiuj fakturę dla klienta">Kopiuj</button>@endif
+                        <form method="POST" action="{{route('projects.finances.destroy',[$project,$entry])}}" onsubmit="return confirm('Usunąć tę pozycję?')">@csrf @method('DELETE')<button class="mini-btn delete" title="Usuń">×</button></form>
+                    </div>@endif</td>
                 </tr>
                 @endforeach
                 </tbody></table></div>
@@ -323,6 +328,7 @@
         </div>
     </details>
 </section>
+@if($canManageFinanceEntries)@include('projects.partials.finance-editor')@endif
 @endif
 
 @if(false && $canViewFinances)
