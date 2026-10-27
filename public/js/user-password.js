@@ -26,22 +26,53 @@
         });
     });
     const form = document.getElementById('editForm');
-    if (!form) return;
-    let submitting = false;
+    const dialog = document.getElementById('edit-user-password-dialog');
+    if (!form || !dialog) return;
+    const choice = document.getElementById('edit-user-send-email');
+    let submitting = false, confirmed = false;
     form.addEventListener('submit', event => {
         if (submitting) { event.preventDefault(); return; }
-        const choice = document.getElementById('edit-user-send-email');
-        choice.value = '0';
-        if (document.getElementById('edit_password').value) {
-            choice.value = window.confirm(`Czy wysłać wiadomość z nowym hasłem na adres ${document.getElementById('edit_email').value}?\n\nOK — zapisz i wyślij e-mail.\nAnuluj — zapisz bez wysyłania e-maila.`) ? '1' : '0';
+        if (!confirmed) {
+            choice.value = '0';
+            if (document.getElementById('edit_password').value) {
+                event.preventDefault();
+                document.getElementById('edit-user-password-recipient').textContent = document.getElementById('edit_email').value;
+                if (!dialog.open) dialog.showModal();
+                return;
+            }
         }
+        confirmed = false;
         submitting = true;
         form.querySelectorAll('[type="submit"]').forEach(button => button.disabled = true);
     });
+    dialog.querySelectorAll('[data-edit-user-mail]').forEach(button => button.addEventListener('click', () => {
+        if (submitting) return;
+        choice.value = button.dataset.editUserMail;
+        confirmed = true;
+        dialog.close();
+        form.requestSubmit();
+        if (!submitting) { confirmed = false; choice.value = '0'; }
+    }));
+    document.getElementById('edit-user-password-back').addEventListener('click', () => {
+        confirmed = false;
+        choice.value = '0';
+        dialog.close();
+    });
+    document.getElementById('edit-user-password-discard').addEventListener('click', () => {
+        confirmed = false;
+        choice.value = '0';
+        form.reset();
+        document.getElementById('edit_password').value = '';
+        document.getElementById('edit_password').type = 'password';
+        dialog.close();
+        window.closeEditModal();
+    });
+    dialog.addEventListener('cancel', () => { confirmed = false; choice.value = '0'; });
     window.addEventListener('pageshow', event => {
         if (!event.persisted) return;
-        submitting = false;
-        document.getElementById('edit-user-send-email').value = '0';
+        submitting = confirmed = false;
+        choice.value = '0';
+        if (dialog.open) dialog.close();
         form.querySelectorAll('[type="submit"]').forEach(button => button.disabled = false);
     });
 })();

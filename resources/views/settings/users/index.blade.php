@@ -813,6 +813,28 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
 <button type="button" class="btn-sm" id="create-user-mail-cancel">Wróć do formularza</button>
 </div></dialog>
 
+<style>
+#edit-user-password-dialog{position:fixed;inset:0;margin:auto;border:1px solid #e5e1d8;border-radius:14px;padding:28px;width:min(480px,calc(100% - 48px));max-height:90vh;overflow:auto;color:inherit;box-shadow:0 20px 60px #0003}
+#edit-user-password-dialog::backdrop{background:#142b2580}
+#edit-user-password-dialog p{font-size:13px;line-height:1.6;color:#6b7a70;margin-top:12px;overflow-wrap:anywhere}
+#edit-user-password-dialog .password-actions{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+#edit-user-password-dialog button{justify-content:center;min-height:40px}
+#edit-user-password-dialog .password-secondary{font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;border:1px solid #e5e1d8;border-radius:8px;padding:9px 18px;background:#fff;color:#5a6a60;cursor:pointer}
+#edit-user-password-dialog .password-secondary:hover{background:#f4f1ea}
+#edit-user-password-dialog .password-discard{color:#b91c1c;border-color:#fecaca}
+#edit-user-password-dialog .password-discard:hover{background:#fef2f2}
+</style>
+<dialog id="edit-user-password-dialog" aria-labelledby="edit-user-password-title" aria-describedby="edit-user-password-description">
+    <h2 id="edit-user-password-title" class="modal-title">Zapisać zmiany i nowe hasło?</h2>
+    <p id="edit-user-password-description">Hasło i pozostałe zmiany nie zostały jeszcze zapisane. Możesz wysłać nowe hasło na adres <strong id="edit-user-password-recipient"></strong>, zapisać bez maila albo zrezygnować.</p>
+    <div class="password-actions">
+        <button type="button" class="btn-primary" data-edit-user-mail="1">Zapisz i wyślij nowe hasło</button>
+        <button type="button" class="btn-primary" data-edit-user-mail="0">Zapisz bez wysyłania maila</button>
+        <button type="button" class="password-secondary" id="edit-user-password-back" autofocus>Wróć do edycji</button>
+        <button type="button" class="password-secondary password-discard" id="edit-user-password-discard">Odrzuć wszystkie zmiany</button>
+    </div>
+</dialog>
+
 {{-- ══════ MODAL EDYTUJ ══════ --}}
 <div id="editModal" class="modal-overlay-edit">
     <div class="modal-box">
@@ -858,7 +880,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
                 <label class="mf-label" for="edit_password">Nowe hasło (zostaw puste, by nie zmieniać)</label>
                 <input id="edit_password" type="password" name="password" class="mf-input" placeholder="min. 8 znaków">
                 <button type="button" class="btn-sm" data-generate-password="edit_password">Generuj nowe hasło</button>
-                <small style="display:block;margin-top:6px">Hasło zmieni się po zapisaniu. Przed zapisem wybierzesz, czy wysłać je e-mailem.</small>
+                <small style="display:block;margin-top:6px">Hasło zmieni się dopiero po zapisaniu. Przed zapisem możesz też wrócić do edycji lub odrzucić wszystkie zmiany.</small>
             </div>
             <div class="mf-group"><label class="mf-label" for="edit_supervisor_id">Przełożony — odbiorca wniosków urlopowych</label><select id="edit_supervisor_id" name="supervisor_id" class="mf-select mf-input"><option value="">Nie wskazano</option>@foreach($allUsers->filter(fn($candidate)=>$candidate->is_active && !$candidate->hasAnyRole(['client_admin','client_user']) && ($candidate->hasRole('superadmin') || $candidate->canAny(['hr.leaves.view','system.full_access']))) as $candidate)<option value="{{$candidate->id}}" @selected((string)old('supervisor_id') === (string)$candidate->id)>{{$candidate->name}}</option>@endforeach</select><small>Odbiorca nowych wniosków. Wysłane wcześniej wnioski zachowują wskazanego w nich przełożonego.</small></div>
 <label style="display:flex;align-items:center;gap:9px;margin:14px 0;font-size:13px;font-weight:700;cursor:pointer"><input id="edit_employment_contract" type="checkbox" name="has_employment_contract" value="1" onchange="toggleEmploymentFields('edit')"> Zatrudniony na umowę o pracę</label>
@@ -891,7 +913,7 @@ Login: {{session('new_user_credentials.login')}}<br>Hasło: <code style="white-s
 @push('scripts')
 <script id="user-permission-data" type="application/json">{!! json_encode(['roles' => $rolePermissionSets, 'users' => $userPermissionSets], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 <script src="{{asset('js/user-permissions.js')}}?v=1" defer></script>
-<script src="{{asset('js/user-password.js')}}?v=1" defer></script>
+<script src="{{asset('js/user-password.js')}}?v=2" defer></script>
 <script src="{{asset('js/user-create-mail.js')}}?v=1" defer></script>
 <script>
     function openAddModal() {
