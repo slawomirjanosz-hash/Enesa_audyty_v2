@@ -13,7 +13,9 @@ use App\Models\ProjectFinancialEntry;
 use App\Models\ProjectRequirement;
 use App\Models\User;
 use App\Services\FinancialPlanCalculator;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -265,4 +267,36 @@ test('manual overrides remain stable when an offer source value changes', functi
     $line->update(['revenue_override' => 150000]);
     $offer->update(['kwota_netto' => 300000]);
     expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager)['forecast']['pipeline']))->toBe(15000000);
+});
+
+test('financial installation resumes partial MySQL style DDL without dropping existing rows', function () {
+    $migration = require database_path('migrations/2026_10_27_120000_create_department_financial_plans.php');
+    $migration->down();
+    Schema::create('financial_departments', function (Blueprint $table) {
+        $table->id();
+        $table->string('name', 150);
+        $table->foreignId('owner_id')->constrained('users')->restrictOnDelete();
+        $table->timestamps();
+    });
+    Schema::create('financial_department_members', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('financial_department_id');
+        $table->unsignedBigInteger('user_id');
+    });
+    DB::table('financial_departments')->insert(['id' => 123, 'name' => 'Zachowany dział', 'owner_id' => $this->manager->id]);
+    DB::table('financial_department_members')->insert(['financial_department_id' => 123, 'user_id' => $this->manager->id]);
+    $migration->up();
+    $migration->up();
+    expect(DB::table('financial_departments')->where('id', 123)->value('name'))->toBe('Zachowany dział');
+    expect(DB::table('financial_department_members')->count())->toBe(1);
+    foreach (['financial_department_members', 'financial_department_access'] as $table) {
+        $index = $table === 'financial_department_members' ? 'finance_department_member_unique' : 'finance_department_access_unique';
+        expect(Schema::hasIndex($table, $index))->toBeTrue();
+        expect(Schema::getForeignKeys($table))->toHaveCount(2);
+    }
+    foreach (['financial_departments', 'financial_department_members', 'financial_department_access', 'financial_plans', 'financial_plan_lines', 'financial_plan_changes'] as $table) {
+        foreach (Schema::getIndexes($table) as $index) {
+            expect(strlen($index['name']))->toBeLessThanOrEqual(64);
+        }
+    }
 });

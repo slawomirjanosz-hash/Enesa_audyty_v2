@@ -11,21 +11,49 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('financial_departments', function (Blueprint $table) {
+        $mysql = DB::getDriverName() === 'mysql';
+        if ($mysql && (int) DB::selectOne('SELECT GET_LOCK(?, 60) AS acquired', ['department_financial_plans_v1'])->acquired !== 1) {
+            throw new RuntimeException('Nie udało się uzyskać blokady instalacji planów finansowych.');
+        }
+        try {
+            $this->install();
+        } finally {
+            if ($mysql) {
+                DB::selectOne('SELECT RELEASE_LOCK(?)', ['department_financial_plans_v1']);
+            }
+        }
+    }
+
+    private function install(): void
+    {
+        $this->createIfMissing('financial_departments', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
             $table->foreignId('owner_id')->constrained('users')->restrictOnDelete();
             $table->timestamps();
         });
         foreach (['financial_department_members', 'financial_department_access'] as $name) {
-            Schema::create($name, function (Blueprint $table) {
+            $index = $name === 'financial_department_members' ? 'finance_department_member_unique' : 'finance_department_access_unique';
+            $this->createIfMissing($name, function (Blueprint $table) use ($index) {
                 $table->id();
                 $table->foreignId('financial_department_id')->constrained()->cascadeOnDelete();
                 $table->foreignId('user_id')->constrained()->restrictOnDelete();
-                $table->unique(['financial_department_id', 'user_id']);
+                $table->unique(['financial_department_id', 'user_id'], $index);
             });
+            // MySQL persists CREATE TABLE even when a later index statement fails.
+            // Resume the partial installation without dropping tables or their rows.
+            if (! Schema::hasIndex($name, $index)) {
+                Schema::table($name, fn (Blueprint $table) => $table->unique(['financial_department_id', 'user_id'], $index));
+            }
+            $foreignKeys = collect(Schema::getForeignKeys($name));
+            if (! $foreignKeys->contains(fn ($key) => $key['columns'] === ['financial_department_id'])) {
+                Schema::table($name, fn (Blueprint $table) => $table->foreign('financial_department_id')->references('id')->on('financial_departments')->cascadeOnDelete());
+            }
+            if (! $foreignKeys->contains(fn ($key) => $key['columns'] === ['user_id'])) {
+                Schema::table($name, fn (Blueprint $table) => $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete());
+            }
         }
-        Schema::create('financial_plans', function (Blueprint $table) {
+        $this->createIfMissing('financial_plans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('financial_department_id')->constrained()->cascadeOnDelete();
             $table->unsignedSmallInteger('year');
@@ -36,7 +64,7 @@ return new class extends Migration
             $table->timestamps();
             $table->unique(['financial_department_id', 'year']);
         });
-        Schema::create('financial_plan_lines', function (Blueprint $table) {
+        $this->createIfMissing('financial_plan_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('financial_plan_id')->constrained()->cascadeOnDelete();
             $table->string('kind', 20);
@@ -63,7 +91,7 @@ return new class extends Migration
             $table->foreignId('updated_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
         });
-        Schema::create('financial_plan_changes', function (Blueprint $table) {
+        $this->createIfMissing('financial_plan_changes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('financial_plan_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->restrictOnDelete();
@@ -85,6 +113,13 @@ return new class extends Migration
             }
         }
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+    }
+
+    private function createIfMissing(string $name, Closure $definition): void
+    {
+        if (! Schema::hasTable($name)) {
+            Schema::create($name, $definition);
+        }
     }
 
     public function down(): void
