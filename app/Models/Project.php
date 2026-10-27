@@ -76,7 +76,7 @@ class Project extends Model
         return $this->hasMany(ProjectFinancialEntry::class)
             ->where(fn ($entries) => $entries
                 ->where('source', '!=', 'requirement')
-                ->orWhereHas('projectRequirement', fn ($requirement) => $requirement->where('status', 'purchased')))
+                ->orWhereHas('projectRequirement', fn ($requirement) => $requirement->whereIn('status', ['purchased', 'completed'])))
             ->orderBy('entry_date');
     }
 
@@ -131,7 +131,7 @@ class Project extends Model
     public function effectiveFinancialEntries(): Collection
     {
         return $this->financialEntries->filter(fn (ProjectFinancialEntry $entry) => $entry->source !== 'requirement'
-            || ($entry->project_requirement_id !== null && $entry->projectRequirement?->status === 'purchased'));
+            || ($entry->project_requirement_id !== null && in_array($entry->projectRequirement?->status, ['purchased', 'completed'], true)));
     }
 
     public function result(): float

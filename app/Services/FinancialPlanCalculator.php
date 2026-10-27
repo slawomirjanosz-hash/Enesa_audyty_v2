@@ -22,7 +22,7 @@ class FinancialPlanCalculator
 
     public const EXPLANATIONS = [
         'contracted' => 'Suma faktur klienta z dodanych projektów: planowanych, wystawionych i opłaconych, według daty dokumentu. Wartość umowy bez zaplanowanych faktur nie jest doliczana.',
-        'pipeline' => 'Przychody ofert rozłożone na okres realizacji i pomnożone przez współczynnik scenariusza. Bazowy: realne oferty według szansy, potwierdzone 100%. Przegrane i zastąpione projektem są pomijane.',
+        'pipeline' => 'Przychody ofert według harmonogramu płatności i współczynnika scenariusza. Bez harmonogramu: równy rozkład na okres realizacji, bez uwzględniania w przepływach. Bazowy: realne oferty według szansy, potwierdzone 100%. Przegrane i zastąpione projektem są pomijane.',
         'manual_revenue' => 'Ręcznie wpisana planowana sprzedaż, rozłożona równo na okres pozycji. Wspólna dla wszystkich scenariuszy.',
         'direct_cost' => 'Koszty zapisane w finansach projektów oraz planowane i zrealizowane dostawy, według ich dat. Dostawa ujęta w finansach jest liczona raz. Dodatkowo szacowane koszty ofert i ręcznej sprzedaży z rezerwą, ważone scenariuszem.',
         'margin' => 'Marża = przychody z projektów + przychody z ofert + pozostała sprzedaż − bezpośrednie koszty realizacji. Ta kwota służy pokryciu utrzymania działu.',
@@ -32,9 +32,9 @@ class FinancialPlanCalculator
         'result' => 'Wynik działu = marża na pokrycie działu − wynagrodzenia − samochody − pozostałe koszty działu. Kwota ujemna oznacza niedobór pokrycia kosztów.',
         'gap' => 'W miesiącu: brakująca kwota do wyjścia na zero, gdy wynik jest ujemny. W sumie okresu: niedobór po zbilansowaniu wyników wszystkich miesięcy, a nie suma miesięcznych niedoborów.',
         'revenue' => 'Wykonanie: wyłącznie wystawione i opłacone faktury klienta według daty dokumentu. Planowane faktury są tylko w prognozie.',
-        'in' => 'Wpływy z faktur klienta według terminu płatności. Jeśli go brak, przyjmujemy datę dokumentu + 30 dni. Obejmuje również planowane faktury; to harmonogram netto, nie stan rachunku.',
-        'out' => 'Wydatki według terminu płatności kosztów zapisanych w finansach projektów. Jeśli go brak, data dokumentu + 30 dni. Bez płatności dostaw niezapisanych w finansach oraz kosztów utrzymania działu.',
-        'balance' => 'Saldo harmonogramu projektów = wpływy − wydatki danego miesiąca. Nie obejmuje VAT, salda rachunku ani kosztów utrzymania działu.',
+        'in' => 'Wpływy z faktur klienta według terminu płatności (bez terminu: data dokumentu + 30 dni) oraz raty ofert według harmonogramu, ważone scenariuszem. Obejmuje planowane faktury; kwoty netto.',
+        'out' => 'Koszty finansowe projektów według terminu płatności (bez terminu: data dokumentu + 30 dni) oraz koszty ofert z harmonogramu, ważone scenariuszem. Bez kosztów utrzymania działu i dostaw niezapisanych w finansach.',
+        'balance' => 'Saldo harmonogramu projektów i ofert = wpływy − wydatki danego miesiąca. Bez VAT, salda rachunku i kosztów utrzymania działu.',
     ];
 
     public function calculate(FinancialPlan $plan, User $user, string $scenario = 'base'): array
@@ -51,8 +51,10 @@ class FinancialPlanCalculator
         $details = [];
         $breakdown = [];
         $accountEntries = [];
+        $projectCosts = 0;
+        $offerForecast = $this->emptyRows(['revenue', 'cost', 'value'], $months);
         $complete = true;
-        $linkedProjects = FinancialPlanLine::where('kind', 'project')
+        $linkedProjects = FinancialPlanLine::where('kind', 'project')->where('enabled', true)
             ->whereIn('financial_plan_id', FinancialPlan::overlapping($plan)->where(fn ($q) => $q->whereKey($plan->id)->orWhere('financial_department_id', '!=', $plan->financial_department_id))->select('id'))->with('offer:id,crm_opportunity_id')->get();
         $representedOffers = $linkedProjects->pluck('offer_id')->filter()->all();
         $representedOpportunities = $linkedProjects->map(fn ($line) => $line->offer?->crm_opportunity_id)->filter()->all();
@@ -78,6 +80,11 @@ class FinancialPlanCalculator
                 'person' => $line->person?->name ?? $line->name,
                 default => $line->name,
             };
+            if (! $line->enabled) {
+                $details[$line->id] = ['sourceRevenue' => null, 'sourceCost' => null, 'lineRevenue' => 0, 'lineCost' => 0, 'factor' => 0, 'lineWarnings' => ['Pozycja wyłączona z wyliczeń.'], 'sourceItems' => []];
+
+                continue;
+            }
             $lineWarnings = [];
             $beforeForecast = $forecast;
             $sourceItems = [];
@@ -193,8 +200,36 @@ class FinancialPlanCalculator
                     $lineWarnings[] = 'Brak kwoty przychodu.';
                 }
                 $key = ['offer' => 'pipeline', 'project' => 'contracted', 'revenue' => 'manual_revenue'][$line->kind];
-                $lineRevenue = $this->spread($forecast[$key], (int) round($this->cents($revenue) * $factor), $line, $plan);
-                $lineCost = $this->spread($forecast['direct_cost'], (int) round(($this->cents($remainingCost) + $this->cents($line->risk_reserve)) * $factor), $line, $plan);
+                if ($line->kind === 'offer' && $line->offer_schedule) {
+                    $scheduled = collect($line->offer_schedule);
+                    if ($scheduled->where('direction', 'in')->sum(fn ($row) => $this->cents($row['amount'])) !== $this->cents($revenue) && $factor > 0) {
+                        $lineWarnings[] = 'Wartość oferty zmieniła się — zaktualizuj harmonogram wpływów.';
+                    }
+                    foreach ($line->offer_schedule as $payment) {
+                        $amount = (int) round($this->cents($payment['amount']) * $factor);
+                        $date = CarbonImmutable::parse($payment['date']);
+                        $sourceItems[] = ['name' => $payment['direction'] === 'in' ? 'Płatność oferty' : 'Koszt oferty', 'type' => $payment['direction'] === 'in' ? 'invoice' : 'cost', 'amount' => $this->cents($payment['amount']), 'date' => $date->format('d.m.Y'), 'included' => $date->betweenIncluded($plan->periodStart(), $plan->periodEnd())];
+                        $this->atDate($forecast[$payment['direction'] === 'in' ? 'pipeline' : 'direct_cost'], $amount, $date, $plan);
+                        $this->atDate($cash[$payment['direction']], $amount, $date, $plan);
+                        if ($payment['direction'] === 'in' && $factor > 0) {
+                            $this->atDate($offerForecast['value'], $this->cents($payment['amount']), $date, $plan);
+                        }
+                    }
+                    $this->spread($forecast['direct_cost'], (int) round($this->cents($line->risk_reserve) * $factor), $line, $plan);
+                } else {
+                    $lineRevenue = $this->spread($forecast[$key], (int) round($this->cents($revenue) * $factor), $line, $plan);
+                    $lineCost = $this->spread($forecast['direct_cost'], (int) round(($this->cents($remainingCost) + $this->cents($line->risk_reserve)) * $factor), $line, $plan);
+                    if ($line->kind === 'offer' && $factor > 0) {
+                        $this->spread($offerForecast['value'], $this->cents($revenue), $line, $plan);
+                        $lineWarnings[] = 'Brak harmonogramu płatności oferty — oferta nie wchodzi do przepływów.';
+                    }
+                }
+                if ($line->kind === 'offer') {
+                    foreach (array_keys($months) as $month) {
+                        $offerForecast['revenue'][$month] += $forecast['pipeline'][$month] - $beforeForecast['pipeline'][$month];
+                        $offerForecast['cost'][$month] += $forecast['direct_cost'][$month] - $beforeForecast['direct_cost'][$month];
+                    }
+                }
             } elseif ($line->kind === 'person') {
                 $lineCost = $this->monthly($forecast['salary'], $this->cents($line->salary_cost), $line, $plan)
                     + $this->monthly($forecast['car'], $this->cents($line->car_cost), $line, $plan);
@@ -220,6 +255,9 @@ class FinancialPlanCalculator
             }
             $lineRevenue = array_sum($forecast['contracted']) + array_sum($forecast['pipeline']) + array_sum($forecast['manual_revenue']) - $revenueBefore;
             $lineCost = array_sum($forecast['direct_cost']) + array_sum($forecast['salary']) + array_sum($forecast['car']) + array_sum($forecast['overhead']) - $costBefore;
+            if ($line->kind === 'project') {
+                $projectCosts += $lineCost;
+            }
             foreach (['contracted', 'pipeline', 'manual_revenue', 'direct_cost', 'salary', 'car', 'overhead'] as $row) {
                 foreach ($forecast[$row] as $month => $amount) {
                     $contribution = $amount - $beforeForecast[$row][$month];
@@ -240,7 +278,7 @@ class FinancialPlanCalculator
 
         $account = $this->account($plan, $accountEntries, $complete);
 
-        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'account' => $account, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
+        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'account' => $account, 'offerForecast' => $offerForecast, 'projectCosts' => $projectCosts, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
     }
 
     private function account(FinancialPlan $plan, array $entries, bool $sourcesComplete): array

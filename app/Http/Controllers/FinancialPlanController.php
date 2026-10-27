@@ -191,7 +191,7 @@ class FinancialPlanController extends Controller
             'canManage' => $canManage,
             'canViewBaseline' => $canViewBaseline,
             'projects' => $canManage ? $this->access->projects($request->user())->orderBy('number')->get(['id', 'number', 'name']) : collect(),
-            'offers' => $canManage ? $this->access->offers($request->user())->orderByDesc('id')->get(['id', 'offer_number', 'offer_title', 'crm_opportunity_id']) : collect(),
+            'offers' => $canManage ? $this->access->offers($request->user())->orderByDesc('id')->get(['id', 'offer_number', 'offer_title', 'crm_opportunity_id', 'kwota_netto']) : collect(),
             'members' => $plan->department->members()->orderBy('name')->get(['users.id', 'users.name'])
                 ->when($editing?->person, fn ($members) => $members->push($editing->person)->unique('id')),
             'changes' => $history,
@@ -232,6 +232,11 @@ class FinancialPlanController extends Controller
                 ->mapWithKeys(fn ($key) => [$key => ['nullable', 'numeric', 'min:0', 'max:999999999.99', 'decimal:0,2']])->all(),
             'car_name' => ['nullable', 'string', 'max:150'],
             'notes' => ['nullable', 'string', 'max:5000'],
+            'offer_schedule' => ['exclude_unless:kind,offer', 'nullable', 'array', 'max:100'],
+            'offer_schedule.*' => ['array:direction,date,amount'],
+            'offer_schedule.*.direction' => ['required', Rule::in(['in', 'out'])],
+            'offer_schedule.*.date' => ['required', 'date_format:Y-m-d', 'after_or_equal:2020-01-01', 'before_or_equal:2100-12-31'],
+            'offer_schedule.*.amount' => ['required', 'numeric', 'min:0', 'max:999999999.99', 'decimal:0,2'],
         ]);
         if ($data['kind'] === 'project') {
             $data['start_date'] = $plan->periodStart()->toDateString();
@@ -259,6 +264,23 @@ class FinancialPlanController extends Controller
             default => $data['name'],
         }, 200, '');
         $data['notes'] ??= null;
+        $data['offer_schedule'] = $data['kind'] === 'offer' ? array_values($data['offer_schedule'] ?? []) : null;
+        if ($data['offer_schedule']) {
+            $scheduled = collect($data['offer_schedule']);
+            $revenue = $data['revenue_override'] ?? $this->access->offers($request->user())->findOrFail($data['offer_id'])->kwota_netto;
+            $incoming = $scheduled->where('direction', 'in')->sum(fn ($row) => (int) round((float) $row['amount'] * 100));
+            $outgoing = $scheduled->where('direction', 'out')->sum(fn ($row) => (int) round((float) $row['amount'] * 100));
+            if ($incoming !== (int) round((float) $revenue * 100)) {
+                throw ValidationException::withMessages(['offer_schedule' => 'Suma wpływów musi odpowiadać wartości netto oferty lub ręcznie podanemu przychodowi.']);
+            }
+            if (! $scheduled->contains('direction', 'out')) {
+                throw ValidationException::withMessages(['offer_schedule' => 'Dodaj koszty z datami, także jawne 0, jeśli ich nie przewidujesz.']);
+            }
+            if (($data['cost_override'] ?? null) !== null && $outgoing !== (int) round((float) $data['cost_override'] * 100)) {
+                throw ValidationException::withMessages(['offer_schedule' => 'Suma kosztów harmonogramu musi odpowiadać podanemu kosztowi.']);
+            }
+            $data['cost_override'] = number_format($outgoing / 100, 2, '.', '');
+        }
         if ($data['kind'] === 'person' && ($data['salary_cost'] ?? null) === null) {
             throw ValidationException::withMessages(['salary_cost' => 'Wpisz miesięczny pełny koszt zatrudnienia.']);
         }
@@ -292,15 +314,31 @@ class FinancialPlanController extends Controller
         return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano pozycję prognozy. Wyliczenia korzystają z aktualnych danych.');
     }
 
+    public function updateLineEnabled(Request $request, FinancialPlan $plan, FinancialPlanLine $line)
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department, true);
+        abort_unless($line->financial_plan_id === $plan->id, 404);
+        $this->authorizeSource($request, $line->toArray());
+        $data = $request->validate(['revision' => ['required', 'integer', 'min:0'], 'enabled' => ['required', 'boolean']]);
+        DB::transaction(function () use ($plan, $line, $request, $data) {
+            $locked = $this->lockPlan($plan, (int) $data['revision']);
+            $before = $line->toArray();
+            $line->update(['enabled' => $data['enabled'], 'updated_by' => $request->user()->id]);
+            $this->record($locked, $request, 'updated', ['before' => $before, 'after' => $line->toArray()]);
+        });
+
+        return back()->with('success', $data['enabled'] ? 'Włączono pozycję do wyliczeń.' : 'Wyłączono pozycję z wyliczeń.');
+    }
+
     public function destroyLine(Request $request, FinancialPlan $plan, FinancialPlanLine $line)
     {
         $this->access->authorizeDepartment($request->user(), $plan->department, true);
         abort_unless($line->financial_plan_id === $plan->id, 404);
         $this->authorizeSource($request, $line->toArray());
-        $data = $request->validate(['revision' => ['required', 'integer'], 'reason' => ['required', 'string', 'max:1000']]);
+        $data = $request->validate(['revision' => ['required', 'integer']]);
         DB::transaction(function () use ($plan, $line, $request, $data) {
             $locked = $this->lockPlan($plan, (int) $data['revision']);
-            $this->record($locked, $request, 'deleted', ['before' => $line->toArray(), 'reason' => $data['reason']]);
+            $this->record($locked, $request, 'deleted', ['before' => $line->toArray()]);
             $line->delete();
         });
 

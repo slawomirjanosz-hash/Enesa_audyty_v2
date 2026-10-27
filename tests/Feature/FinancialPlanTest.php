@@ -52,6 +52,96 @@ function financialProject(User $manager, array $overrides = []): Project
     ], $overrides));
 }
 
+test('plan lines can be excluded and restored without losing their values', function () {
+    $line = addFinancialLine($this->plan, $this->manager);
+    $calculator = app(FinancialPlanCalculator::class);
+    expect(array_sum($calculator->calculate($this->plan, $this->manager)['forecast']['manual_revenue']))->toBe(12000000);
+    $this->actingAs($this->manager)->put(route('financial-plans.lines.enabled', [$this->plan, $line]), ['revision' => 0, 'enabled' => false])->assertSessionHasNoErrors();
+    $result = $calculator->calculate($this->plan->fresh(), $this->manager);
+    expect(array_sum($result['forecast']['manual_revenue']))->toBe(0)
+        ->and(array_sum($result['forecast']['direct_cost']))->toBe(0)
+        ->and($result['details'][$line->id]['lineRevenue'])->toBe(0)
+        ->and((float) $line->fresh()->revenue_override)->toBe(120000.0);
+    $this->put(route('financial-plans.lines.enabled', [$this->plan, $line]), ['revision' => 0, 'enabled' => true])->assertStatus(409);
+    $this->put(route('financial-plans.lines.enabled', [$this->plan, $line]), ['revision' => 1, 'enabled' => true])->assertSessionHasNoErrors();
+    expect(array_sum($calculator->calculate($this->plan->fresh(), $this->manager)['forecast']['manual_revenue']))->toBe(12000000);
+});
+
+test('offer payment schedule drives monthly forecast cash and separate full offer values', function () {
+    $company = Company::create(['name' => 'Klient harmonogramu', 'type' => 'client']);
+    $offer = Offer::create(['offer_number' => 'SCHEDULE', 'status' => 'w_toku', 'company_id' => $company->id, 'created_by_id' => $this->manager->id, 'kwota_netto' => 1000, 'is_template' => false]);
+    $schedule = [
+        ['direction' => 'in', 'date' => '2027-01-10', 'amount' => '300'],
+        ['direction' => 'in', 'date' => '2027-02-10', 'amount' => '700'],
+        ['direction' => 'out', 'date' => '2027-01-05', 'amount' => '100'],
+        ['direction' => 'out', 'date' => '2027-03-05', 'amount' => '300'],
+    ];
+    $data = financialLineData(['kind' => 'offer', 'offer_id' => $offer->id, 'revenue_override' => null, 'cost_override' => null, 'offer_schedule' => $schedule]);
+    $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasNoErrors();
+    $line = $this->plan->lines()->first();
+    expect($line->offer_schedule)->toBe($schedule)->and((float) $line->cost_override)->toBe(400.0);
+    expect(DB::table('financial_plan_lines')->value('offer_schedule'))->not->toContain('2027-01-10');
+    $calc = app(FinancialPlanCalculator::class);
+    $result = $calc->calculate($this->plan->fresh(), $this->manager);
+    expect(array_slice(array_values($result['forecast']['pipeline']), 0, 3))->toBe([15000, 35000, 0])
+        ->and(array_slice(array_values($result['cash']['out']), 0, 3))->toBe([5000, 0, 15000])
+        ->and(array_sum($result['cash']['in']))->toBe(50000)
+        ->and(array_sum($result['offerForecast']['value']))->toBe(100000);
+    $html = $this->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
+    $xpath = financialLiveXPath($html);
+    $first = $xpath->query('//table[@data-fp-table="fp-result-chart-values"]/tbody/tr')->item(0);
+    $values = collect(iterator_to_array($first->getElementsByTagName('td')))->slice(1)->map(fn ($cell) => $cell->getAttribute('data-sort-value'))->values()->all();
+    expect($values)->toBe(['0', '0', '0', '0', '100', '300']);
+    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager, 'cautious')['cash']['in']))->toBe(0);
+    $line->update(['enabled' => false]);
+    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager)['cash']['in']))->toBe(0);
+});
+
+test('offer schedule rejects incomplete totals and retains dates beyond selected months', function () {
+    $company = Company::create(['name' => 'Klient walidacji', 'type' => 'client']);
+    $offer = Offer::create(['offer_number' => 'VALIDATE', 'status' => 'w_toku', 'company_id' => $company->id, 'created_by_id' => $this->manager->id, 'kwota_netto' => 1000, 'is_template' => false]);
+    $data = financialLineData(['kind' => 'offer', 'offer_id' => $offer->id, 'revenue_override' => null, 'cost_override' => null, 'offer_schedule' => [['direction' => 'in', 'date' => '2027-02-01', 'amount' => 900], ['direction' => 'out', 'date' => '2027-01-01', 'amount' => 0]]]);
+    $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasErrors('offer_schedule');
+    $data['offer_schedule'][0]['amount'] = 1000;
+    $data['offer_schedule'][0]['date'] = '2028-02-01';
+    $this->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasNoErrors();
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
+    expect(array_sum($result['cash']['in']))->toBe(0);
+    $this->plan->update(['end_date' => '2028-03-31']);
+    expect(array_sum(app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager)['cash']['in']))->toBe(50000);
+});
+
+test('line controls enforce department ownership and deletion needs no reason', function () {
+    $line = addFinancialLine($this->plan, $this->manager);
+    $other = FinancialDepartment::create(['name' => 'Inny dział', 'owner_id' => $this->manager->id])->plans()->create(['year' => 2027]);
+    $this->actingAs($this->manager)->put(route('financial-plans.lines.enabled', [$other, $line]), ['revision' => 0, 'enabled' => false])->assertNotFound();
+    $viewer = User::factory()->create();
+    $viewer->assignRole(Role::findOrCreate('employee'));
+    $this->actingAs($viewer)->put(route('financial-plans.lines.enabled', [$this->plan, $line]), ['revision' => 0, 'enabled' => false])->assertForbidden();
+    $this->actingAs($this->manager)->delete(route('financial-plans.lines.destroy', [$this->plan, $line]), ['revision' => 0])->assertSessionHasNoErrors();
+    expect($line->fresh())->toBeNull()
+        ->and($this->plan->changes()->where('action', 'deleted')->first()->payload)->not->toHaveKey('reason');
+});
+
+test('compact totals separate issued invoices and project costs from offers and planned sales', function () {
+    $project = financialProject($this->manager);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    foreach ([['invoice', 'issued', 100], ['invoice', 'paid', 200], ['invoice', 'planned', 300], ['cost', 'planned', 40], ['cost', 'paid', 50]] as [$type, $status, $amount]) {
+        $project->financialEntries()->create(['type' => $type, 'status' => $status, 'name' => 'Pozycja', 'entry_date' => '2027-02-01', 'amount' => $amount, 'created_by' => $this->manager->id]);
+    }
+    addFinancialLine($this->plan, $this->manager);
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager);
+    expect(array_sum($result['actual']['revenue']))->toBe(30000)->and($result['projectCosts'])->toBe(9000);
+    $this->actingAs($this->manager)->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Wystawione faktury')->assertSee('Wydatki projektowe')->assertSee('Wyłącz z wyliczeń')->assertDontSee('Powód usunięcia');
+    $line = $this->plan->lines()->where('kind', 'project')->first();
+    $line->update(['enabled' => false]);
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
+    expect(array_sum($result['actual']['revenue']))->toBe(0)
+        ->and($result['projectCosts'])->toBe(0)
+        ->and(array_sum($result['cash']['in']))->toBe(0)
+        ->and($result['account']['transactions'])->toBe([]);
+});
+
 test('linked financial lines derive their names and accept no description', function (string $kind) {
     $expected = 'Wybrane źródło';
     if ($kind === 'person') {
@@ -487,7 +577,7 @@ test('live calculation reflects changed project amounts dates statuses and sourc
     expect($second['html'])->toContain('Zmieniona nazwa projektu: 700,00 zł')->toContain('Etap pierwszy: 700,00 zł');
     $actual = '//table[@data-fp-table="actual"]/tbody/tr[td[@data-sort-value="Przychody zafakturowane"]]/td[3]';
     expect($xpath->query($actual)->item(0)->getAttribute('data-sort-value'))->toBe('700');
-    $cash = '//table[@data-fp-table="cash"]/tbody/tr[td[@data-sort-value="Wpływy wg terminów płatności"]]/td[4]';
+    $cash = '//table[@data-fp-table="cash"]/tbody/tr[td[@data-sort-value="Wpływy · projekty i oferty"]]/td[4]';
     expect($xpath->query($cash)->item(0)->getAttribute('data-sort-value'))->toBe('700');
 });
 
@@ -566,8 +656,8 @@ test('profit and loss chart accumulates gains and losses with a signed net resul
     foreach ($xpath->query('//table[@data-fp-table="fp-result-chart-values"]/tbody/tr') as $row) {
         $values[] = collect(iterator_to_array($row->getElementsByTagName('td')))->slice(1)->map(fn ($cell) => $cell->getAttribute('data-sort-value'))->values()->all();
     }
-    expect($values)->toBe([['-50', '0', '-50', '-50'], ['300', '300', '-50', '250'], ['-100', '300', '-150', '150']]);
-    foreach (['chart-cost-monthly', 'chart-cost-cumulative', 'fp-result-chart', 'fp-account-chart'] as $key) {
+    expect($values)->toBe([['-50', '0', '-50', '-50', '-50', '0'], ['300', '300', '-50', '250', '250', '0'], ['-100', '300', '-150', '150', '150', '0']]);
+    foreach (['chart-cost-monthly', 'chart-cost-cumulative', 'fp-result-chart'] as $key) {
         expect($xpath->query('//details[@data-fp-details="'.$key.'"]/summary')->length)->toBe(1);
     }
     foreach ($xpath->query('//svg[@aria-labelledby="fp-result-chart-title fp-result-chart-desc"]/polyline') as $line) {
@@ -597,7 +687,7 @@ test('cash account uses opening balance gross settled amounts actual dates and d
     expect($account['transactions'])->toHaveCount(4);
     $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
     $xpath = financialLiveXPath($html);
-    expect($xpath->query('//svg[@aria-labelledby="fp-account-chart-title fp-account-chart-desc"]')->length)->toBe(1);
+    expect($xpath->query('//svg[@aria-labelledby="fp-account-chart-title fp-account-chart-desc"]')->length)->toBe(0);
     $this->travelBack();
 });
 

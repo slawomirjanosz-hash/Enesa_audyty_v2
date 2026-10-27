@@ -21,6 +21,7 @@ class ProjectRequirementsListExport implements FromArray, WithStyles, WithTitle
         'ordered' => 'Zamówione',
         'in_progress' => 'W realizacji',
         'purchased' => 'Kupione',
+        'completed' => 'Zrealizowane',
         'cancelled' => 'Anulowane',
     ];
 

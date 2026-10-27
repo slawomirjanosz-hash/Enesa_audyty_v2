@@ -22,7 +22,7 @@ class ProjectRequirement extends Model
         });
 
         static::saved(function (self $requirement): void {
-            if ($requirement->status === 'purchased') {
+            if (in_array($requirement->status, ['purchased', 'completed'], true)) {
                 $requirement->syncPurchasedFinancialEntry();
 
                 return;

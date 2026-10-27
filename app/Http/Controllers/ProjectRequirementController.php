@@ -50,6 +50,7 @@ class ProjectRequirementController extends Controller
             'ordered' => 'Zamówione',
             'in_progress' => 'W realizacji',
             'purchased' => 'Kupione',
+            'completed' => 'Zrealizowane',
             'cancelled' => 'Anulowane',
         ];
         $data = $request->validateWithBag('requirementsExport', [
@@ -154,7 +155,7 @@ class ProjectRequirementController extends Controller
     {
         $this->authorize('update', $project);
         abort_unless($requirement->project_id === $project->id, 404);
-        $data = $request->validate(['status' => ['required', 'in:planned,requested,ordered,in_progress,purchased,cancelled']]);
+        $data = $request->validate(['status' => ['required', 'in:planned,requested,ordered,in_progress,purchased,completed,cancelled']]);
         $previousFinancialEntryId = $requirement->financialEntry()->where('source', 'requirement')->value('id');
         $requirement->update(['status' => $data['status']]);
         $requirement->load('financialEntry');
@@ -163,10 +164,10 @@ class ProjectRequirementController extends Controller
         return response()->json([
             'status' => $requirement->status,
             'committed_requirements' => (float) $project->requirements()
-                ->whereIn('status', ['ordered', 'in_progress', 'purchased'])
+                ->whereIn('status', ['ordered', 'in_progress', 'purchased', 'completed'])
                 ->sum('estimated_cost'),
             'planned_requirements' => (float) $project->requirements()->where('status', 'planned')->sum('estimated_cost'),
-            'financial_entry' => $requirement->status === 'purchased' && $requirement->financialEntry ? [
+            'financial_entry' => in_array($requirement->status, ['purchased', 'completed'], true) && $requirement->financialEntry ? [
                 'id' => $requirement->financialEntry->id,
                 'date' => $requirement->financialEntry->entry_date->format('Y-m-d'),
                 'amount' => (float) $requirement->financialEntry->amount,
@@ -174,7 +175,7 @@ class ProjectRequirementController extends Controller
                 'status' => $requirement->financialEntry->status,
                 'name' => $requirement->financialEntry->name,
             ] : null,
-            'removed_financial_entry_id' => $requirement->status !== 'purchased' ? $previousFinancialEntryId : null,
+            'removed_financial_entry_id' => ! in_array($requirement->status, ['purchased', 'completed'], true) ? $previousFinancialEntryId : null,
             'planned_requirement_entry' => $requirement->status === 'planned' && $requirement->estimated_cost !== null ? [
                 'id' => 'requirement-'.$requirement->id,
                 'date' => $requirement->needed_by?->format('Y-m-d') ?? now()->toDateString(),
@@ -200,7 +201,7 @@ class ProjectRequirementController extends Controller
             'requirement_ids' => ['required', 'array', 'min:1'],
             'requirement_ids.*' => ['required', 'integer', 'distinct'],
             'action' => ['required', 'in:delete,set_status,set_supplier,set_responsible,set_needed_by,set_type,set_technology,set_group'],
-            'status' => ['nullable', 'required_if:action,set_status', 'in:planned,requested,ordered,in_progress,purchased,cancelled'],
+            'status' => ['nullable', 'required_if:action,set_status', 'in:planned,requested,ordered,in_progress,purchased,completed,cancelled'],
             'supplier_company_id' => [
                 'nullable', 'integer',
                 Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->where('status', 'active')->whereNull('archived_at')),
@@ -288,7 +289,7 @@ class ProjectRequirementController extends Controller
                 'nullable', 'integer',
                 Rule::exists('companies', 'id')->where(fn ($query) => $query->where('company_type', 'supplier')->whereNull('archived_at')),
             ],
-            'status' => ['required', 'in:planned,requested,ordered,in_progress,purchased,cancelled'],
+            'status' => ['required', 'in:planned,requested,ordered,in_progress,purchased,completed,cancelled'],
             'needed_by' => ['nullable', 'date'],
             'responsible_id' => ['nullable', 'exists:users,id'],
         ]);

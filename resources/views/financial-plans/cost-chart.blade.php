@@ -56,6 +56,6 @@
         @endforeach
     </div>
     <details data-fp-details="chart-values"><summary>Pokaż wartości wykresu</summary><div class="fp-scroll" data-fp-scroll="chart-values"><table data-fp-table="chart-values"><thead><tr><th>Miesiąc</th><th>Wynagrodzenia</th><th>Samochody</th><th>Pozostałe koszty</th><th>Razem w miesiącu</th><th>Narastająco</th></tr></thead><tbody>
-        @foreach($costMonths as $i => $costMonth)<tr><td data-sort-value="{{ $calculation['months'][$i + 1]->format('Y-m') }}">{{ $costMonth['label'] }}</td>@foreach(['salary', 'car', 'overhead', 'monthly', 'cumulative'] as $component)<td class="number" data-sort-value="{{ $costMonth[$component] / 100 }}">{{ $money($costMonth[$component]) }}</td>@endforeach</tr>@endforeach
+        @foreach($costMonths as $i => $costMonth)<tr><td data-sort-value="{{ $calculation['months'][$i + 1]->format('Y-m') }}">{{ $costMonth['label'] }}</td>@foreach(['salary', 'car', 'overhead', 'monthly', 'cumulative'] as $component)<td class="number negative" data-sort-value="{{ $costMonth[$component] / 100 }}">{{ $money($costMonth[$component]) }}</td>@endforeach</tr>@endforeach
     </tbody></table></div></details>
 </section>

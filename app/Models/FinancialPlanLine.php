@@ -16,6 +16,8 @@ class FinancialPlanLine extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
+        'enabled' => 'boolean',
+        'offer_schedule' => 'encrypted:array',
         'start_date' => 'date', 'end_date' => 'date', 'probability' => 'integer',
         'revenue_override' => 'encrypted', 'cost_override' => 'encrypted',
         'salary_cost' => 'encrypted', 'car_cost' => 'encrypted', 'risk_reserve' => 'encrypted',

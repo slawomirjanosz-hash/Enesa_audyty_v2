@@ -690,6 +690,13 @@ test('finance and requirement statuses are saved through background endpoints', 
         ->assertJsonPath('financial_entry.id', $copiedEntryId);
     expect($project->financialEntries()->where('project_requirement_id', $requirement->id)->count())->toBe(1);
 
+    $this->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'completed'])
+        ->assertOk()->assertJsonPath('status', 'completed')
+        ->assertJsonPath('financial_entry.id', $copiedEntryId)
+        ->assertJsonPath('removed_financial_entry_id', null)
+        ->assertJsonPath('summary.costs', 4200);
+    expect($requirement->fresh()->status)->toBe('completed');
+
     $this->actingAs($manager)
         ->patchJson(route('projects.requirements.status', [$project, $requirement]), ['status' => 'in_progress'])
         ->assertOk()

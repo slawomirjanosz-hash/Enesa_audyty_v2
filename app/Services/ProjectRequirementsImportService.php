@@ -313,6 +313,9 @@ class ProjectRequirementsImportService
         if (Str::contains($value, ['kupion', 'zakupion', 'dostarcz', 'odebran', 'purchased'])) {
             return 'purchased';
         }
+        if (Str::contains($value, ['zrealizowan', 'completed'])) {
+            return 'completed';
+        }
         if (Str::contains($value, ['w realizacji', 'realizowan', 'w drodze', 'in progress'])) {
             return 'in_progress';
         }

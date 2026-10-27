@@ -17,4 +17,5 @@ Route::prefix('financial-plans')->name('financial-plans.')->middleware(['auth', 
     Route::post('/{plan}/lines', [FinancialPlanController::class, 'storeLine'])->name('lines.store');
     Route::put('/{plan}/lines/{line}', [FinancialPlanController::class, 'updateLine'])->name('lines.update');
     Route::delete('/{plan}/lines/{line}', [FinancialPlanController::class, 'destroyLine'])->name('lines.destroy');
+    Route::put('/{plan}/lines/{line}/enabled', [FinancialPlanController::class, 'updateLineEnabled'])->name('lines.enabled');
 });

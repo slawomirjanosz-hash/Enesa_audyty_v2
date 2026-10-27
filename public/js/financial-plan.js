@@ -1,6 +1,53 @@
 const host = document.getElementById('line-form');
 const selector = host?.querySelector('[data-fp-kind]');
 
+const scheduleRows = host?.querySelector('[data-offer-schedule-rows]');
+if (scheduleRows) {
+    let nextIndex = Math.max(-1, ...Array.from(scheduleRows.querySelectorAll('select')).map(el => Number(el.name.match(/\[(\d+)\]/)?.[1] ?? -1))) + 1;
+    const offer = host.querySelector('[name="offer_id"]');
+    const revenue = host.querySelector('[name="revenue_override"]');
+    const cost = host.querySelector('[name="cost_override"]');
+    const totals = () => {
+        let incoming = 0, outgoing = 0;
+        scheduleRows.querySelectorAll('[data-offer-payment-row]').forEach(row => {
+            const amount = Math.round(Number(row.querySelector('input[type="number"]').value || 0) * 100);
+            if (row.querySelector('select').value === 'in') incoming += amount;
+            else outgoing += amount;
+        });
+        const target = Number(revenue.value || offer.selectedOptions[0]?.dataset.offerAmount || 0);
+        const money = cents => (cents / 100).toLocaleString('pl-PL', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        host.querySelector('[data-offer-payment-totals]').textContent = `Wpływy: ${money(incoming)} zł · do rozpisania: ${money(Math.round(target * 100) - incoming)} zł · koszty: ${money(outgoing)} zł`;
+    };
+    const add = direction => {
+        const template = host.querySelector('[data-offer-payment-template]');
+        const fragment = template.content.cloneNode(true);
+        fragment.querySelectorAll('[name]').forEach(el => { el.name = el.name.replace('__INDEX__', nextIndex); });
+        nextIndex++;
+        const row = fragment.querySelector('[data-offer-payment-row]');
+        row.querySelector('select').value = direction;
+        row.querySelector('input[type="date"]').value = host.querySelector('[name="start_date"]').value;
+        scheduleRows.append(fragment);
+        totals();
+        return row;
+    };
+    host.querySelectorAll('[data-offer-payment-add]').forEach(button => button.addEventListener('click', () => add(button.dataset.offerPaymentAdd)));
+    scheduleRows.addEventListener('click', event => {
+        const button = event.target.closest('[data-offer-payment-remove]');
+        if (button) { button.closest('[data-offer-payment-row]').remove(); totals(); }
+    });
+    scheduleRows.addEventListener('input', totals);
+    scheduleRows.addEventListener('change', totals);
+    revenue.addEventListener('input', totals);
+    offer.addEventListener('change', () => {
+        if (selector.value === 'offer' && !scheduleRows.children.length) {
+            add('in').querySelector('input[type="number"]').value = revenue.value || offer.selectedOptions[0]?.dataset.offerAmount || '';
+            add('out').querySelector('input[type="number"]').value = cost.value;
+        }
+        totals();
+    });
+    totals();
+}
+
 if (host && selector) {
     const refresh = () => {
         host.querySelectorAll('[data-fp-kinds]').forEach(group => {
