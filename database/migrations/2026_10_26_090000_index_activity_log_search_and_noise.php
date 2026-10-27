@@ -13,7 +13,9 @@ return new class extends Migration
     {
         // MySQL DDL survives a failed migration; resume without dropping history.
         if (! Schema::hasColumn('activity_logs', 'search_text')) {
-            Schema::table('activity_logs', fn (Blueprint $table) => $table->text('search_text')->nullable());
+            Schema::table('activity_logs', fn (Blueprint $table) => $table->longText('search_text')->nullable());
+        } elseif (DB::getDriverName() === 'mysql' && Schema::getColumnType('activity_logs', 'search_text') !== 'longtext') {
+            Schema::table('activity_logs', fn (Blueprint $table) => $table->longText('search_text')->nullable()->change());
         }
         if (! Schema::hasColumn('activity_logs', 'actor_name')) {
             Schema::table('activity_logs', fn (Blueprint $table) => $table->string('actor_name')->nullable());

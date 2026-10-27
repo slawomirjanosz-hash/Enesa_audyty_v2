@@ -214,11 +214,13 @@ test('backfill makes older records searchable and suppresses noise without rewri
     DB::table('activity_logs')->insert(['action' => 'updated', 'auditable_type' => HrVehicle::class, 'subject_label' => 'Stary samochód', 'changes' => json_encode(['responsible_person' => ['old' => 'Żółty', 'new' => 'Łukasz']])]);
     $legacy = ['responsible_person' => 'Paweł Historyczny', 'revision' => 12, 'legacy_list' => ['Pierwszy', 'Drugi']];
     $legacyId = DB::table('activity_logs')->insertGetId(['action' => 'updated', 'auditable_type' => HrVehicle::class, 'subject_label' => 'Starszy format', 'changes' => json_encode($legacy)]);
+    $longId = DB::table('activity_logs')->insertGetId(['action' => 'updated', 'subject_label' => 'Duży historyczny wpis', 'changes' => json_encode(['description' => ['old' => null, 'new' => str_repeat('Historyczna treść ', 5000)]])]);
     $migration->up();
     $migration->up();
     expect(ActivityLog::findOrFail($id)->changes)->toBe($original)->and(ActivityLog::findOrFail($id)->is_noise)->toBeTrue();
     expect(ActivityLog::where('subject_label', 'Stary samochód')->firstOrFail()->search_text)->toContain('żółty', 'łukasz');
     expect(ActivityLog::findOrFail($legacyId)->changes)->toBe($legacy)->and(ActivityLog::findOrFail($legacyId)->search_text)->toContain('paweł historyczny', 'brak zapisanej poprzedniej wartości', 'pierwszy');
+    expect(strlen(ActivityLog::findOrFail($longId)->search_text))->toBeGreaterThan(65535);
 });
 
 test('search treats wildcard symbols as literal text', function () {
