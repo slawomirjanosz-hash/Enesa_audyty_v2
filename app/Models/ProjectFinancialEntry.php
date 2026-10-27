@@ -9,11 +9,11 @@ class ProjectFinancialEntry extends Model
 {
     protected $fillable = [
         'project_id', 'project_requirement_id', 'finance_group_id', 'type', 'name', 'document_number', 'supplier', 'supplier_company_id',
-        'entry_date', 'payment_date', 'amount', 'status', 'source', 'import_row_order',
+        'entry_date', 'payment_date', 'settled_on', 'settled_amount', 'amount', 'status', 'source', 'import_row_order',
         'import_fingerprint', 'notes', 'created_by',
     ];
 
-    protected $casts = ['entry_date' => 'date', 'payment_date' => 'date', 'amount' => 'decimal:2'];
+    protected $casts = ['entry_date' => 'date', 'payment_date' => 'date', 'settled_on' => 'date', 'settled_amount' => 'decimal:2', 'amount' => 'decimal:2'];
 
     public function project(): BelongsTo
     {

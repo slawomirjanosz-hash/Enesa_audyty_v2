@@ -4,7 +4,7 @@ const configElement = document.getElementById('project-finance-editor-config');
 if (dialog && configElement) {
     const config = JSON.parse(configElement.textContent);
     const form = dialog.querySelector('form');
-    const fields = ['type', 'name', 'document_number', 'supplier_company_id', 'supplier', 'entry_date', 'payment_date', 'amount', 'status', 'finance_group_id', 'notes'];
+    const fields = ['type', 'name', 'document_number', 'supplier_company_id', 'supplier', 'entry_date', 'payment_date', 'settled_on', 'settled_amount', 'amount', 'status', 'finance_group_id', 'notes'];
     let opener = null;
     let previousOverflow = '';
 
@@ -15,7 +15,7 @@ if (dialog && configElement) {
         form.reset();
         const copying = mode === 'copy';
         const liveStatus = document.querySelector(`[data-finance-entry-id="${id}"] .project-async-status`)?.value;
-        const values = {...entry, ...(liveStatus ? {status: liveStatus} : {}), ...(copying ? {document_number: '', status: 'planned'} : {}), ...(recovery || {})};
+        const values = {...entry, ...(liveStatus ? {status: liveStatus} : {}), ...(copying ? {document_number: '', status: 'planned', settled_on: '', settled_amount: ''} : {}), ...(recovery || {})};
         fields.forEach(name => {
             const value = values[name];
             form.elements.namedItem(name).value = ['string', 'number'].includes(typeof value) ? value : '';

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\FinancialDepartmentPayment;
 use App\Models\FinancialPlan;
 use App\Models\FinancialPlanLine;
 use App\Models\User;
@@ -49,6 +50,7 @@ class FinancialPlanCalculator
         $warnings = [];
         $details = [];
         $breakdown = [];
+        $accountEntries = [];
         $complete = true;
         $linkedProjects = FinancialPlanLine::where('kind', 'project')
             ->whereIn('financial_plan_id', FinancialPlan::overlapping($plan)->where(fn ($q) => $q->whereKey($plan->id)->orWhere('financial_department_id', '!=', $plan->financial_department_id))->select('id'))->with('offer:id,crm_opportunity_id')->get();
@@ -118,6 +120,9 @@ class FinancialPlanCalculator
                 $project = $line->project;
                 $entries = $project->financialEntries->filter(fn ($entry) => $entry->source !== 'requirement'
                     || in_array($entry->projectRequirement?->status, ['purchased', 'completed'], true));
+                foreach ($entries->where('status', 'paid') as $entry) {
+                    $accountEntries[$entry->id] = $entry;
+                }
                 $invoices = $entries->where('type', 'invoice')->whereIn('status', ['planned', 'issued', 'paid']);
                 $costEntries = $entries->where('type', 'cost')->whereIn('status', ['planned', 'issued', 'paid']);
                 $requirements = $project->requirements->where('status', '!=', 'cancelled')
@@ -233,7 +238,63 @@ class FinancialPlanCalculator
             $actual['result'][$month] = $actual['revenue'][$month] - $actual['direct_cost'][$month] - $actual['salary'][$month] - $actual['car'][$month] - $actual['overhead'][$month];
         }
 
-        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
+        $account = $this->account($plan, $accountEntries, $complete);
+
+        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'account' => $account, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
+    }
+
+    private function account(FinancialPlan $plan, array $entries, bool $sourcesComplete): array
+    {
+        $today = CarbonImmutable::now('Europe/Warsaw')->endOfDay();
+        $cutoff = $today->min($plan->periodEnd());
+        $transactions = [];
+        $warnings = [];
+        foreach ($entries as $entry) {
+            if (! $entry->settled_on || $entry->settled_amount === null) {
+                if ($entry->entry_date->lte($cutoff)) {
+                    $warnings[] = $entry->name.': opłacona pozycja bez faktycznej daty lub kwoty zapłaty. Uzupełnij dane w edycji finansów projektu.';
+                }
+
+                continue;
+            }
+            if (! $entry->settled_on->betweenIncluded($plan->periodStart(), $cutoff)) {
+                continue;
+            }
+            $transactions[] = ['id' => 'project-'.$entry->id, 'manual_id' => null, 'date' => $entry->settled_on->format('Y-m-d'), 'description' => $entry->name, 'direction' => $entry->type === 'invoice' ? 'in' : 'out', 'amount' => $this->cents($entry->settled_amount), 'source' => 'Faktura projektu', 'project_id' => $entry->project_id];
+        }
+        $payments = FinancialDepartmentPayment::where('financial_department_id', $plan->financial_department_id)
+            ->whereDate('paid_on', '>=', $plan->periodStart()->toDateString())->whereDate('paid_on', '<=', $cutoff->toDateString())->get();
+        foreach ($payments as $payment) {
+            $transactions[] = ['id' => 'manual-'.$payment->id, 'manual_id' => $payment->id, 'date' => $payment->paid_on->format('Y-m-d'), 'description' => $payment->description, 'direction' => $payment->direction, 'amount' => $this->cents($payment->amount), 'source' => 'Płatność działu', 'project_id' => null];
+        }
+        $transactions = collect($transactions)->sortBy('date')->values()->all();
+        $balance = $plan->opening_balance !== null ? $this->cents($plan->opening_balance) : null;
+        $initialBalance = $balance;
+        $received = $spent = 0;
+        $months = [];
+        foreach ($plan->months() as $month) {
+            if ($month->gt($today)) {
+                break;
+            }
+            $monthlyIn = $monthlyOut = 0;
+            foreach ($transactions as $transaction) {
+                if (substr($transaction['date'], 0, 7) === $month->format('Y-m')) {
+                    if ($transaction['direction'] === 'in') {
+                        $monthlyIn += $transaction['amount'];
+                    } else {
+                        $monthlyOut += $transaction['amount'];
+                    }
+                }
+            }
+            $received += $monthlyIn;
+            $spent += $monthlyOut;
+            if ($balance !== null) {
+                $balance += $monthlyIn - $monthlyOut;
+            }
+            $months[] = ['date' => $month->format('Y-m'), 'label' => $month->format('m.Y'), 'received' => $received, 'spent' => $spent, 'monthlyIn' => $monthlyIn, 'monthlyOut' => $monthlyOut, 'balance' => $balance];
+        }
+
+        return ['opening' => $initialBalance, 'balance' => $months ? $balance : null, 'received' => $received, 'spent' => $spent, 'months' => $months, 'transactions' => $transactions, 'warnings' => array_values(array_unique($warnings)), 'complete' => $initialBalance !== null && $sourcesComplete && ! $warnings, 'asOf' => $cutoff->toDateString()];
     }
 
     private function factor(FinancialPlanLine $line, string $scenario): float

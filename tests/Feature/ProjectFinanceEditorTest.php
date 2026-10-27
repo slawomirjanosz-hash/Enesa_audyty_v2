@@ -17,6 +17,7 @@ beforeEach(function () {
         'amount' => 12000, 'status' => 'paid', 'entry_date' => '2026-10-01', 'payment_date' => '2026-10-15',
         'source' => 'excel_import', 'import_fingerprint' => str_repeat('a', 64), 'import_row_order' => 5,
         'notes' => 'Opis faktury', 'created_by' => $this->manager->id,
+        'settled_on' => '2026-10-12', 'settled_amount' => '14760.00',
     ]);
 });
 
@@ -46,6 +47,8 @@ test('finance edit and invoice copy use one dialog outside the scrolling registe
     expect($xpath->query('//details[contains(@class,"finance-edit")]')->length)->toBe(0);
     $config = projectFinanceEditorConfig($html);
     expect($config['entries'][$this->invoice->id]['amount'])->toBe('12000.00');
+    expect($config['entries'][$this->invoice->id]['settled_on'])->toBe('2026-10-12');
+    expect($config['entries'][$this->invoice->id]['settled_amount'])->toBe('14760.00');
     expect($config['entries'][$cost->id]['type'])->toBe('cost');
     expect($config['store_url'])->toBe(route('projects.finances.store', $this->project));
 });
@@ -107,4 +110,16 @@ test('invalid copied invoice keeps user changes for reopening the full dialog wi
     expect($config['recovery']['mode'])->toBe('copy')->and($config['recovery']['id'])->toBe($this->invoice->id)
         ->and($config['recovery']['values']['name'])->toBe('Dane do poprawy');
     expect($this->project->financialEntries()->count())->toBe(1);
+});
+
+test('actual project payment accepts transfer amounts independently of invoice net and rejects future dates', function () {
+    $url = route('projects.finances.update', [$this->project, $this->invoice]);
+    $data = ['type' => 'invoice', 'name' => 'Faktura etapowa', 'amount' => 12000, 'status' => 'paid', 'entry_date' => '2026-10-01', 'settled_on' => now()->toDateString(), 'settled_amount' => '14760.00'];
+    $this->actingAs($this->manager)->patch($url, $data)->assertSessionHasNoErrors();
+    expect($this->invoice->fresh()->settled_amount)->toBe('14760.00')->and($this->invoice->fresh()->amount)->toBe('12000.00');
+    $data['settled_on'] = now()->addDay()->toDateString();
+    $this->patch($url, $data)->assertSessionHasErrors('settled_on');
+    $data['settled_on'] = now()->toDateString();
+    $data['settled_amount'] = -1;
+    $this->patch($url, $data)->assertSessionHasErrors('settled_amount');
 });

@@ -5,6 +5,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\CrmOpportunity;
 use App\Models\FinancialDepartment;
+use App\Models\FinancialDepartmentPayment;
 use App\Models\FinancialPlan;
 use App\Models\FinancialPlanLine;
 use App\Models\Offer;
@@ -13,6 +14,7 @@ use App\Models\ProjectFinancialEntry;
 use App\Models\ProjectRequirement;
 use App\Models\User;
 use App\Services\FinancialPlanCalculator;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -92,7 +94,7 @@ test('manual lines need a name while descriptions can be omitted or cleared', fu
     $this->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasErrors('name');
     $form = $this->get(route('financial-plans.show', $this->plan))->assertOk()->getContent();
     expect($form)->toContain('Opis (opcjonalnie)')->not->toContain('Założenie / uzasadnienie zmiany');
-    expect($form)->toMatch('/data-fp-kinds="revenue overhead">Nazwa pozycji/');
+    expect($form)->toMatch('/data-fp-kinds="revenue overhead"><span class="fp-field-title"><span>Nazwa pozycji/');
     expect($form)->not->toMatch('/<textarea[^>]*name="notes"[^>]*required/');
 });
 
@@ -499,7 +501,7 @@ test('cost charts sum monthly department components and cumulative values exclud
     addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
     $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
     $xpath = financialLiveXPath($html);
-    expect($xpath->query('//svg[@role="img"]')->length)->toBe(2);
+    expect($xpath->query('//section[contains(@class,"fp-cost-chart")]//svg[@role="img"]')->length)->toBe(2);
     $monthly = [];
     $cumulative = [];
     foreach ($xpath->query('//table[@data-fp-table="chart-values"]/tbody/tr') as $row) {
@@ -518,7 +520,7 @@ test('live source warnings use compact escaped popovers with unique accessible i
     $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
     $xpath = financialLiveXPath($html);
     $badge = $xpath->query('//button[@data-fp-tip="fp-line-notes-'.$line->id.'"]')->item(0);
-    expect($badge->textContent)->toStartWith('Uwagi (');
+    expect($badge->textContent)->toStartWith('Uw. (');
     expect($xpath->query('//*[@id="fp-line-notes-'.$line->id.'"][@popover="manual"][@role="tooltip"]')->length)->toBe(1);
     expect($xpath->query('//script')->length)->toBe(0);
     $ids = [];
@@ -548,4 +550,129 @@ test('live endpoint rechecks project and department access on every request', fu
     $this->department->planners()->detach($viewer);
     $this->getJson($url)->assertForbidden();
     $this->actingAs($this->manager)->getJson($url.'?scenario=invalid')->assertUnprocessable();
+});
+
+test('profit and loss chart accumulates gains and losses with a signed net result', function () {
+    $this->plan->update(['start_date' => '2027-01-01', 'end_date' => '2027-03-31']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'salary_cost' => 100, 'car_cost' => 0]);
+    $project = financialProject($this->manager);
+    foreach ([['2027-01-10', 50], ['2027-02-10', 400]] as [$date, $amount]) {
+        $project->financialEntries()->create(['type' => 'invoice', 'name' => 'Etap', 'amount' => $amount, 'status' => 'planned', 'entry_date' => $date, 'created_by' => $this->manager->id]);
+    }
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
+    $xpath = financialLiveXPath($html);
+    $values = [];
+    foreach ($xpath->query('//table[@data-fp-table="fp-result-chart-values"]/tbody/tr') as $row) {
+        $values[] = collect(iterator_to_array($row->getElementsByTagName('td')))->slice(1)->map(fn ($cell) => $cell->getAttribute('data-sort-value'))->values()->all();
+    }
+    expect($values)->toBe([['-50', '0', '-50', '-50'], ['300', '300', '-50', '250'], ['-100', '300', '-150', '150']]);
+    foreach (['chart-cost-monthly', 'chart-cost-cumulative', 'fp-result-chart', 'fp-account-chart'] as $key) {
+        expect($xpath->query('//details[@data-fp-details="'.$key.'"]/summary')->length)->toBe(1);
+    }
+    foreach ($xpath->query('//svg[@aria-labelledby="fp-result-chart-title fp-result-chart-desc"]/polyline') as $line) {
+        foreach (explode(' ', $line->getAttribute('points')) as $point) {
+            [$x, $y] = array_map('floatval', explode(',', $point));
+            expect(is_finite($x) && is_finite($y) && $y >= 40 && $y <= 220)->toBeTrue();
+        }
+    }
+});
+
+test('cash account uses opening balance gross settled amounts actual dates and department payments only once', function () {
+    $this->travelTo(CarbonImmutable::parse('2027-03-15 12:00:00', 'Europe/Warsaw'));
+    $this->manager->forceFill(['security_activity_at' => now()])->saveQuietly();
+    $this->plan->update(['start_date' => '2027-01-01', 'end_date' => '2027-03-31', 'opening_balance' => '1000.00']);
+    $project = financialProject($this->manager);
+    foreach ([['invoice', 'paid', 100, '2027-02-20', 123], ['cost', 'paid', 50, '2027-03-02', 61.5], ['invoice', 'issued', 500, '2027-02-22', 615], ['invoice', 'paid', 100, '2027-03-30', 123]] as [$type, $status, $net, $date, $gross]) {
+        $project->financialEntries()->create(['type' => $type, 'name' => 'Faktura', 'amount' => $net, 'entry_date' => '2027-01-10', 'payment_date' => '2027-01-31', 'status' => $status, 'settled_on' => $date, 'settled_amount' => $gross, 'created_by' => $this->manager->id]);
+    }
+    foreach ([['in', '2027-01-15', 200], ['out', '2027-01-31', 70]] as [$direction, $date, $amount]) {
+        FinancialDepartmentPayment::create(['financial_department_id' => $this->department->id, 'direction' => $direction, 'paid_on' => $date, 'amount' => $amount, 'description' => 'Przelew działu', 'created_by' => $this->manager->id]);
+    }
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $account = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager)['account'];
+    expect($account['complete'])->toBeTrue()->and($account['balance'])->toBe(119150);
+    expect(array_column($account['months'], 'balance'))->toBe([113000, 125300, 119150]);
+    expect($account['received'])->toBe(32300)->and($account['spent'])->toBe(13150);
+    expect($account['transactions'])->toHaveCount(4);
+    $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
+    $xpath = financialLiveXPath($html);
+    expect($xpath->query('//svg[@aria-labelledby="fp-account-chart-title fp-account-chart-desc"]')->length)->toBe(1);
+    $this->travelBack();
+});
+
+test('cash account never invents opening balance or missing payment facts', function () {
+    $this->travelTo(CarbonImmutable::parse('2027-03-15 12:00:00', 'Europe/Warsaw'));
+    $this->manager->forceFill(['security_activity_at' => now()])->saveQuietly();
+    $this->plan->update(['start_date' => '2027-01-01', 'end_date' => '2027-03-31']);
+    $project = financialProject($this->manager);
+    $entry = $project->financialEntries()->create(['type' => 'invoice', 'name' => 'Brak danych przelewu', 'amount' => 100, 'status' => 'paid', 'entry_date' => '2027-01-01', 'created_by' => $this->manager->id]);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $calc = app(FinancialPlanCalculator::class);
+    $account = $calc->calculate($this->plan, $this->manager)['account'];
+    expect($account['balance'])->toBeNull()->and($account['transactions'])->toBeEmpty()->and($account['complete'])->toBeFalse();
+    expect($account['warnings'])->toHaveCount(1);
+    $this->plan->update(['opening_balance' => '0.00']);
+    $entry->update(['settled_on' => '2027-02-10', 'settled_amount' => '123.00']);
+    $account = $calc->calculate($this->plan->fresh(), $this->manager)['account'];
+    expect($account['balance'])->toBe(12300)->and($account['complete'])->toBeTrue();
+    $this->travelBack();
+});
+
+test('opening balance and manual payments are encrypted revision protected and department scoped', function () {
+    $this->travelTo(CarbonImmutable::parse('2027-03-15 12:00:00', 'Europe/Warsaw'));
+    $this->manager->forceFill(['security_activity_at' => now()])->saveQuietly();
+    $this->plan->update(['start_date' => '2027-01-01', 'end_date' => '2027-03-31']);
+    $this->actingAs($this->manager)->put(route('financial-plans.opening-balance.update', $this->plan), ['revision' => 0, 'opening_balance' => '-12345.67'])->assertSessionHasNoErrors();
+    expect(DB::table('financial_plans')->where('id', $this->plan->id)->value('opening_balance'))->not->toContain('12345.67');
+    $this->put(route('financial-plans.opening-balance.update', $this->plan), ['revision' => 0, 'opening_balance' => 0])->assertConflict();
+    $payload = ['revision' => 1, 'direction' => 'out', 'paid_on' => '2027-02-28', 'amount' => '9876.54', 'description' => 'Wypłaty', 'created_by' => 999999];
+    $this->post(route('financial-plans.payments.store', $this->plan), $payload)->assertSessionHasNoErrors();
+    $payment = FinancialDepartmentPayment::firstOrFail();
+    expect($payment->created_by)->toBe($this->manager->id);
+    expect(DB::table('financial_department_payments')->value('amount'))->not->toContain('9876.54');
+    $otherDepartment = FinancialDepartment::create(['name' => 'Inny dział konta', 'owner_id' => $this->manager->id]);
+    $otherPlan = $otherDepartment->plans()->create(['year' => 2027]);
+    $this->delete(route('financial-plans.payments.destroy', [$otherPlan, $payment]), ['revision' => 0])->assertNotFound();
+    $this->post(route('financial-plans.payments.store', $this->plan), array_replace($payload, ['revision' => 2, 'paid_on' => '2027-03-30']))->assertSessionHasErrors('paid_on');
+    $this->put(route('financial-plans.period.update', $this->plan), ['revision' => 2, 'start_month' => '2027-02', 'end_month' => '2027-03'])->assertSessionHasNoErrors();
+    expect($this->plan->fresh()->opening_balance)->toBeNull();
+    $this->delete(route('financial-plans.payments.destroy', [$this->plan, $payment]), ['revision' => 3])->assertSessionHasNoErrors();
+    expect(FinancialDepartmentPayment::count())->toBe(0);
+    $this->travelBack();
+});
+
+test('cash inputs are unavailable to read only planners and invisible project payments never leak', function () {
+    $this->travelTo(CarbonImmutable::parse('2027-03-15 12:00:00', 'Europe/Warsaw'));
+    $this->manager->forceFill(['security_activity_at' => now()])->saveQuietly();
+    $this->plan->update(['opening_balance' => '0.00']);
+    $project = financialProject($this->manager, ['name' => 'Poufne przepływy']);
+    $project->financialEntries()->create(['type' => 'invoice', 'name' => 'Poufny przelew', 'amount' => 500, 'status' => 'paid', 'entry_date' => '2027-01-01', 'settled_on' => '2027-01-02', 'settled_amount' => '615.00', 'created_by' => $this->manager->id]);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $viewer = User::factory()->create(['individual_permissions' => true]);
+    $viewer->assignRole('admin');
+    $viewer->givePermissionTo('financial_plans.view');
+    $this->department->planners()->attach($viewer);
+    $this->actingAs($viewer)->put(route('financial-plans.opening-balance.update', $this->plan), [])->assertForbidden();
+    $this->post(route('financial-plans.payments.store', $this->plan), [])->assertForbidden();
+    $html = $this->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->assertJsonPath('complete', false)->json('html');
+    expect($html)->not->toContain('Poufny przelew')->not->toContain('Poufne przepływy');
+    $this->get(route('financial-plans.show', $this->plan))->assertOk()->assertDontSee('id="fp-account-form"', false);
+    $this->travelBack();
+});
+
+test('department payments are shared across alternative periods while opening balance prevents recounting past cash', function () {
+    $this->travelTo(CarbonImmutable::parse('2027-03-15 12:00:00', 'Europe/Warsaw'));
+    $this->plan->update(['start_date' => '2027-02-01', 'end_date' => '2027-03-31', 'opening_balance' => '100.00']);
+    FinancialDepartmentPayment::create(['financial_department_id' => $this->department->id, 'direction' => 'in', 'paid_on' => '2027-01-15', 'amount' => 500, 'description' => 'Przed okresem', 'created_by' => $this->manager->id]);
+    FinancialDepartmentPayment::create(['financial_department_id' => $this->department->id, 'direction' => 'out', 'paid_on' => '2027-02-10', 'amount' => 30, 'description' => 'Koszt wspólny działu', 'created_by' => $this->manager->id]);
+    $otherDepartment = FinancialDepartment::create(['name' => 'Obce płatności', 'owner_id' => $this->manager->id]);
+    FinancialDepartmentPayment::create(['financial_department_id' => $otherDepartment->id, 'direction' => 'out', 'paid_on' => '2027-02-10', 'amount' => 999, 'description' => 'Inny dział', 'created_by' => $this->manager->id]);
+    $alternative = $this->department->plans()->create(['year' => 2027, 'start_date' => '2027-02-01', 'end_date' => '2027-04-30', 'opening_balance' => '100.00']);
+    $calc = app(FinancialPlanCalculator::class);
+    foreach ([$this->plan, $alternative] as $plan) {
+        $account = $calc->calculate($plan, $this->manager)['account'];
+        expect($account['balance'])->toBe(7000)->and($account['transactions'])->toHaveCount(1);
+    }
+    $this->travelBack();
 });

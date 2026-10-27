@@ -7,6 +7,8 @@
         'supplier' => $entry->supplier,
         'entry_date' => $entry->entry_date->format('Y-m-d'),
         'payment_date' => $entry->payment_date?->format('Y-m-d'),
+        'settled_on' => $entry->settled_on?->format('Y-m-d'),
+        'settled_amount' => $entry->settled_amount,
         'amount' => $entry->amount,
         'status' => $entry->status,
         'finance_group_id' => $entry->finance_group_id,
@@ -16,7 +18,7 @@
     $financeEditorRecovery = session()->hasOldInput('_finance_editor_mode') ? [
         'mode' => old('_finance_editor_mode'),
         'id' => old('_finance_editor_entry'),
-        'values' => collect(session()->getOldInput())->only(['type', 'name', 'document_number', 'supplier_company_id', 'supplier', 'entry_date', 'payment_date', 'amount', 'status', 'finance_group_id', 'notes'])->all(),
+        'values' => collect(session()->getOldInput())->only(['type', 'name', 'document_number', 'supplier_company_id', 'supplier', 'entry_date', 'payment_date', 'settled_on', 'settled_amount', 'amount', 'status', 'finance_group_id', 'notes'])->all(),
     ] : null;
     $financeEditorConfig = ['entries' => $financeEditorEntries, 'store_url' => route('projects.finances.store', $project), 'recovery' => $financeEditorRecovery];
 @endphp
@@ -45,6 +47,8 @@
                 <label class="field">Status<select name="status">@foreach($financeStatusLabels as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach</select></label>
                 <label class="field" data-finance-cost-group>Grupa<select name="finance_group_id"><option value="">Bez grupy</option>@foreach($project->financeGroups as $group)<option value="{{ $group->id }}">{{ $group->name }}</option>@endforeach</select></label>
                 <div class="finance-invoice-note project-finance-dialog-full" data-finance-invoice-note hidden>Faktura klienta pozostaje w grupie „Wystawione” i nie ma dostawcy.</div>
+                <label class="field">Faktyczna data zapłaty<input type="date" name="settled_on" max="{{ now('Europe/Warsaw')->toDateString() }}"></label>
+                <label class="field">Faktycznie zapłacono / otrzymano (PLN)<input type="number" step="0.01" min="0" max="999999999.99" name="settled_amount"><small>Kwota z przelewu, z VAT jeśli dotyczy. Stan konta działu uwzględnia ją tylko przy statusie „Opłacona”.</small></label>
                 <label class="field project-finance-dialog-full">Uwagi<textarea name="notes" rows="3"></textarea></label>
             </div>
         </div>
@@ -52,4 +56,4 @@
     </form>
 </dialog>
 <script type="application/json" id="project-finance-editor-config">@json($financeEditorConfig)</script>
-<script type="module" src="{{ asset('js/project-finance-editor.js') }}"></script>
+<script type="module" src="{{ asset('js/project-finance-editor.js') }}?v={{ filemtime(public_path('js/project-finance-editor.js')) }}"></script>

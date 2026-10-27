@@ -11,7 +11,7 @@
     $step = $plotWidth / count($costMonths);
 @endphp
 <section class="fp-card fp-cost-chart" aria-labelledby="fp-cost-chart-title">
-    <div class="fp-head"><div><h2 id="fp-cost-chart-title">Koszty utrzymania działu w czasie</h2><p class="fp-muted">Wynagrodzenia + samochody + pozostałe koszty działu. Bez kosztów realizacji projektów.</p></div><strong class="fp-chart-total">{{ $money($runningCost) }} <small>w całym okresie</small></strong></div>
+    <div class="fp-head"><div><h2 id="fp-cost-chart-title">Koszty utrzymania działu w czasie @include('financial-plans.hint', ['hintId' => 'fp-cost-chart-description-help', 'hintLabel' => '?', 'hintTitle' => 'Koszty utrzymania działu', 'hintText' => 'Wynagrodzenia + samochody + pozostałe koszty działu. Bez kosztów realizacji projektów.', 'hintItems' => [], 'hintClass' => 'fp-info'])</h2></div><strong class="fp-chart-total">{{ $money($runningCost) }} <small>w całym okresie</small></strong></div>
     <div class="fp-chart-legend"><span><i style="background:#245b45"></i>Wynagrodzenia</span><span><i style="background:#56a394"></i>Samochody</span><span><i style="background:#d7ad53"></i>Pozostałe koszty działu</span></div>
     <div class="fp-chart-grid">
         @foreach(['monthly' => 'Poszczególne miesiące', 'cumulative' => 'Narastająco od początku okresu'] as $chartKind => $chartTitle)
@@ -21,7 +21,7 @@
                 $points = [];
                 foreach ($costMonths as $i => $costMonth) $points[] = (75 + $step * ($i + .5)).','.round(210 - $costMonth[$chartKind] * $scale, 2);
             @endphp
-            <div class="fp-chart-panel"><h3>{{ $chartTitle }}</h3><div class="fp-chart-scroll" data-fp-scroll="chart-{{ $chartKind }}">
+            <details class="fp-chart-panel" data-fp-details="chart-cost-{{ $chartKind }}" open><summary>{{ $chartTitle }}</summary><div class="fp-chart-scroll" data-fp-scroll="chart-{{ $chartKind }}">
                 <svg viewBox="0 0 {{ $chartWidth }} 265" style="min-width:{{ $chartWidth }}px" role="img" aria-labelledby="fp-chart-{{ $chartKind }}-title fp-chart-{{ $chartKind }}-desc">
                     <title id="fp-chart-{{ $chartKind }}-title">{{ $chartTitle }} · koszty utrzymania działu</title>
                     <desc id="fp-chart-{{ $chartKind }}-desc">Kwoty w PLN. Wartości każdego miesiąca są dostępne po najechaniu lub przejściu klawiszem Tab oraz w tabeli pod wykresami.</desc>
@@ -49,7 +49,7 @@
                         <text x="{{ $x }}" y="240" text-anchor="middle" class="fp-chart-axis">{{ $costMonth['label'] }}</text>
                     @endforeach
                 </svg>
-            </div></div>
+            </div></details>
             @foreach($costMonths as $i => $costMonth)
                 <div id="fp-chart-tip-{{ $chartKind }}-{{ $i }}" popover="manual" role="tooltip" class="fp-tooltip"><strong>{{ $chartTitle }} · {{ $costMonth['label'] }}</strong><ul><li>Wynagrodzenia: {{ $money($costMonth['salary']) }}</li><li>Samochody: {{ $money($costMonth['car']) }}</li><li>Pozostałe koszty: {{ $money($costMonth['overhead']) }}</li><li>Razem w miesiącu: {{ $money($costMonth['monthly']) }}</li><li>Narastająco: {{ $money($costMonth['cumulative']) }}</li></ul></div>
             @endforeach

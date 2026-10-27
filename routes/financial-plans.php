@@ -11,6 +11,9 @@ Route::prefix('financial-plans')->name('financial-plans.')->middleware(['auth', 
     Route::get('/{plan}', [FinancialPlanController::class, 'show'])->name('show');
     Route::get('/{plan}/calculation', [FinancialPlanController::class, 'calculation'])->name('calculation');
     Route::put('/{plan}/period', [FinancialPlanController::class, 'updatePeriod'])->name('period.update');
+    Route::put('/{plan}/opening-balance', [FinancialPlanController::class, 'updateOpeningBalance'])->name('opening-balance.update');
+    Route::post('/{plan}/payments', [FinancialPlanController::class, 'storePayment'])->name('payments.store');
+    Route::delete('/{plan}/payments/{payment}', [FinancialPlanController::class, 'destroyPayment'])->name('payments.destroy');
     Route::post('/{plan}/lines', [FinancialPlanController::class, 'storeLine'])->name('lines.store');
     Route::put('/{plan}/lines/{line}', [FinancialPlanController::class, 'updateLine'])->name('lines.update');
     Route::delete('/{plan}/lines/{line}', [FinancialPlanController::class, 'destroyLine'])->name('lines.destroy');

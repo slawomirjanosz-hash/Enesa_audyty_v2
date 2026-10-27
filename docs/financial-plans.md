@@ -27,7 +27,20 @@ Moduł obok Projektów. Plan obejmuje wybrany zakres miesięcy, także na przeł
 - Zmiana kwot i dat w projekcie aktualizuje prognozę. Dawne ręczne korekty projektów i rezerwy nie są już używane w prognozie; zatwierdzone wcześniej bazowe plany pozostają zachowane.
 - Wykonanie obejmuje faktury/koszty wystawione lub opłacone; planowane zapisy nie są wykonaniem.
 
-## Płatności
+## Wykresy wyniku i stanu konta
+
+Każdy wykres można osobno zwinąć i rozwinąć. Stan zwinięcia pozostaje zachowany przy automatycznym odświeżaniu. Wykres wyniku sumuje osobno dodatnie wyniki miesięcy i straty; linia netto pokazuje ich bilans narastająco. To prognoza netto dla wybranego scenariusza, obejmująca wszystkie koszty realizacji oraz utrzymania działu.
+
+Stan konta korzysta z rzeczywistych płatności, niezależnie od scenariusza:
+
+- W „Ustawienia konta” podaj saldo początkowe przed pierwszą płatnością okresu, również jawne zero. Brak kwoty nie oznacza zera. Zmiana miesiąca początkowego usuwa poprzednie saldo początkowe, aby wymagać prawidłowej kwoty na nową datę.
+- Faktury projektów dodanych do planu są liczone raz, wyłącznie ze statusem paid, według settled_on i settled_amount: faktycznej daty i kwoty przelewu (z VAT, jeżeli dotyczy). Pola są dostępne w dużym oknie edycji finansów projektu. Kopia faktury czyści te dane. Zmiana statusu na paid nie wymyśla daty ani kwoty.
+- Termin płatności, data dokumentu i kwota netto nie zastępują faktów przelewu. Opłacona faktura bez danych daje ostrzeżenie i nie wchodzi do salda; kwota jest wtedy oznaczona jako częściowa. Nie ma połączenia z bankiem: kompletność wynika z wprowadzonych płatności.
+- Wpłaty i wydatki spoza faktur (np. wynagrodzenia, samochód, zasilenie konta) zapisuje się w rejestrze płatności działu. Nie należy powtarzać w nim faktur pobieranych z projektów. Rejestr jest wspólny dla planów tego samego działu, a daty ograniczają widoczność do danego okresu.
+- Saldo = saldo początkowe + otrzymane wpłaty − zapłacone wydatki. Przyszłe płatności, oferty i prognozy nie wchodzą do salda. Bieżący miesiąc obejmuje tylko dane do dziś; przyszły okres nie pokazuje fikcyjnego stanu konta. Ręczne wykonanie wynagrodzeń nie jest automatycznie przelewem bankowym.
+- Saldo początkowe, ręczne płatności oraz historia są szyfrowane. Nowe zapisy są chronione uprawnieniami działu i rewizją. Saldo aktualizuje się z pozostałymi wyliczeniami co 5 sekund.
+
+## Harmonogram płatności netto
 
 Przepływy projektowe korzystają z terminu płatności. Jeśli go brakuje, przyjmują datę dokumentu + 30 dni kalendarzowych, zarówno dla faktur klienta, jak i kosztów. To założenie budżetowe: nie zapisuje terminu w projekcie. Płatność może wypaść poza wybranym okresem, nawet gdy dokument jest w tym okresie. Kwoty netto; widok nie obejmuje VAT, salda rachunku, kosztów wydziałowych, ofert ani dostaw bez zapisu finansowego.
 

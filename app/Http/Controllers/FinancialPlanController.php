@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FinancialDepartment;
+use App\Models\FinancialDepartmentPayment;
 use App\Models\FinancialPlan;
 use App\Models\FinancialPlanLine;
 use App\Models\Offer;
@@ -84,6 +85,9 @@ class FinancialPlanController extends Controller
                 throw ValidationException::withMessages(['start_month' => 'Plan na ten okres już istnieje. Otwórz go na liście działów.']);
             }
             $before = ['start_date' => $locked->periodStart()->toDateString(), 'end_date' => $locked->periodEnd()->toDateString()];
+            if ($before['start_date'] !== $data['start_date']) {
+                $locked->opening_balance = null;
+            }
             $locked->update($data + ['year' => (int) substr($data['start_date'], 0, 4)]);
             foreach ($locked->lines as $line) {
                 $this->authorizeSource($request, $line->toArray());
@@ -106,6 +110,53 @@ class FinancialPlanController extends Controller
         $end = isset($data['end_month']) ? CarbonImmutable::createFromFormat('!Y-m', $data['end_month'])->endOfMonth() : $start->endOfYear();
 
         return ['start_date' => $start->toDateString(), 'end_date' => $end->toDateString()];
+    }
+
+    public function updateOpeningBalance(Request $request, FinancialPlan $plan)
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department, true);
+        $data = $request->validate(['revision' => ['required', 'integer', 'min:0'], 'opening_balance' => ['required', 'numeric', 'min:-999999999.99', 'max:999999999.99', 'decimal:0,2']]);
+        DB::transaction(function () use ($request, $plan, $data) {
+            $locked = $this->lockPlan($plan, (int) $data['revision']);
+            $before = $locked->opening_balance;
+            $locked->update(['opening_balance' => number_format((float) $data['opening_balance'], 2, '.', '')]);
+            $this->record($locked, $request, 'opening_balance_updated', ['before' => ['opening_balance' => $before], 'after' => ['opening_balance' => $locked->opening_balance]]);
+        });
+
+        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano saldo początkowe konta działu.');
+    }
+
+    public function storePayment(Request $request, FinancialPlan $plan)
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department, true);
+        $data = $request->validate([
+            'revision' => ['required', 'integer', 'min:0'], 'direction' => ['required', Rule::in(['in', 'out'])],
+            'paid_on' => ['required', 'date_format:Y-m-d', 'before_or_equal:today', 'after_or_equal:'.$plan->periodStart()->toDateString(), 'before_or_equal:'.$plan->periodEnd()->toDateString()],
+            'amount' => ['required', 'numeric', 'min:0.01', 'max:999999999.99', 'decimal:0,2'],
+            'description' => ['required', 'string', 'max:255'],
+        ]);
+        DB::transaction(function () use ($request, $plan, $data) {
+            $locked = $this->lockPlan($plan, (int) $data['revision']);
+            unset($data['revision']);
+            $payment = FinancialDepartmentPayment::create($data + ['financial_department_id' => $locked->financial_department_id, 'created_by' => $request->user()->id]);
+            $this->record($locked, $request, 'payment_created', ['after' => $payment->toArray()]);
+        });
+
+        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano rzeczywistą płatność działu.');
+    }
+
+    public function destroyPayment(Request $request, FinancialPlan $plan, FinancialDepartmentPayment $payment)
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department, true);
+        abort_unless($payment->financial_department_id === $plan->financial_department_id, 404);
+        $data = $request->validate(['revision' => ['required', 'integer', 'min:0']]);
+        DB::transaction(function () use ($request, $plan, $payment, $data) {
+            $locked = $this->lockPlan($plan, (int) $data['revision']);
+            $this->record($locked, $request, 'payment_deleted', ['before' => $payment->toArray()]);
+            $payment->delete();
+        });
+
+        return redirect()->route('financial-plans.show', $plan)->with('success', 'Usunięto płatność działu.');
     }
 
     public function show(Request $request, FinancialPlan $plan)
