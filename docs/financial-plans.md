@@ -1,38 +1,34 @@
 # Plan finansowy działu
 
-Moduł znajduje się w menu obok Projektów. Każdy dział ma osobne plany roczne. Po wybraniu osoby, projektu lub oferty nazwa pozycji jest pobierana automatycznie. Własną nazwę wpisuje się tylko dla planowanej sprzedaży i pozostałych kosztów działu. Opis jest opcjonalny.
+Moduł obok Projektów. Plan obejmuje wybrany zakres miesięcy, także na przełomie lat, np. 11.2027–02.2028. Nagłówek, kolumny i sumy pokazują ten zakres. Zakres planu roboczego można zmienić bez ponownego dodawania źródeł. Daty faktur, dostaw i okresy wynagrodzeń pozostają zachowane. Zatwierdzony okres i bazowy plan są niezmienne.
 
-## Uruchomienie
+## Obsługa
 
-1. W ustawieniach firmy włącz „Plan finansowy działu”. Migracja włącza go automatycznie we wdrożeniach z włączonym modułem Projektów.
-2. Superadmin ma dostęp administracyjny. Pozostałym pracownikom nadaj jawnie `financial_plans.view` albo `financial_plans.manage`. Uprawnienie operacyjne `system.full_access` nie daje dostępu do wynagrodzeń.
-3. Utwórz dział, wybierz jego pracowników i ewentualnie osoby uprawnione do planowania. Skład działu i dostęp do planu to osobne listy. Delegować dostęp może właściciel działu lub superadmin.
-4. Otwórz rok i dodaj projekty, oferty, planowaną sprzedaż, koszty osób i pozostałe koszty działu. Pracownicy widoczni w selektorze są aktywnymi kontami wewnętrznymi.
+1. Włącz moduł „Plan finansowy działu” w ustawieniach firmy.
+2. Nadaj jawnie uprawnienie financial_plans.view lub financial_plans.manage i przypisz osobę do planowania działu. Skład działu nie daje dostępu do wynagrodzeń. Superadmin ma dostęp administracyjny; system.full_access nie daje dostępu do wynagrodzeń.
+3. Utwórz dział i wybierz miesiąc początkowy i końcowy planu. Ponowne wybranie tych samych miesięcy otwiera istniejący plan.
+4. Dodaj projekty, oferty i koszty zespołu. Nazwy osób, projektów i ofert są automatyczne; opis jest opcjonalny.
 
-## Zasady obliczeń
+## Projekty
 
-- Wszystkie kwoty są w PLN. Przychody i koszty projektowe są netto. Wynagrodzenie oznacza pełny koszt firmy.
-- Wynik = przychody − bezpośrednie koszty realizacji − wynagrodzenia − samochody − pozostałe koszty działu.
-- Koszt osoby i samochodu jest miesięczny. Okresy obejmują całe miesiące, bez proporcji dziennych. Podwyżkę zapisuje się w kolejnej pozycji na nowy, nienakładający się okres. Ta sama osoba nie może być naliczona dwa razy w różnych działach w tym samym miesiącu i roku planu.
-- Dla pozostałych kosztów działu również wpisuje się kwotę miesięczną. Pozostałe kwoty w pozycji oferty, projektu lub sprzedaży dotyczą całego wskazanego okresu, również jeśli przekracza granicę roku.
-- Projekt korzysta z wartości umowy, wystawionych i planowanych faktur, poniesionych i planowanych kosztów oraz zakupów. Faktury zastępują odpowiednią część wartości umowy. Zakup ujęty w finansach nie jest doliczany ponownie jako wymaganie.
-- Zapisy finansowe i zakupy z określoną datą trafiają do odpowiedniego miesiąca. Pozostała wartość umowy i koszty bez daty są rozkładane równo na okres pozycji, z zachowaniem groszy.
-- Ręczna korekta przychodu zastępuje wartość umowy lub oferty. Ręczny koszt projektu to **pozostały koszt realizacji**, który zastępuje planowane koszty źródłowe; koszty już poniesione pozostają doliczone. Rezerwa jest dodatkowa.
-- Wykonanie projektów jest fakturowe: statusy `issued` i `paid`, według `entry_date`. Wykonanie kosztów osób i działu wpisuje się osobno. Braki wykonania są oznaczane ostrzeżeniami, nie są dowodem zerowego kosztu.
-- Przepływy pieniężne są częściowym harmonogramem zapisów projektowych według `payment_date`, łącznie z planowanymi pozycjami. Nie obejmują kosztów wydziałowych, niewprowadzonych płatności, VAT ani salda rachunku.
+- Projekt nie wymaga okresu pozycji ani ręcznej kwoty przychodu/kosztu. Przychód to wyłącznie faktury planowane, wystawione i opłacone według daty dokumentu. Brakująca część wartości umowy nie jest rozkładana na miesiące; harmonogram uzupełnia się w finansach projektu.
+- Koszty pochodzą z zapisów finansowych oraz planowanych i realizowanych materiałów/usług (dostaw), według daty dokumentu lub terminu dostawy. Koszt dostawy ujęty w finansach jest liczony tylko raz. Anulowane dostawy są pomijane.
+- Dostawa bez terminu wymaga uzupełnienia daty w projekcie; jej koszt nie jest rozkładany automatycznie. Zrealizowana dostawa bez zapisu finansowego i terminu korzysta z daty ostatniej aktualizacji jako dostępnej daty realizacji.
+- Brak wyceny dostawy jest oznaczany i blokuje zatwierdzenie. Jawne zero w źródle jest dopuszczalne. Brak jakichkolwiek kosztów projektu wymaga uzupełnienia źródła.
+- Zmiana kwot i dat w projekcie aktualizuje prognozę. Dawne ręczne korekty projektów i rezerwy nie są już używane w prognozie; zatwierdzone wcześniej bazowe plany pozostają zachowane.
+- Wykonanie obejmuje faktury/koszty wystawione lub opłacone; planowane zapisy nie są wykonaniem.
 
-## Oferty i scenariusze
+## Płatności
 
-- Wykluczona oferta nie wchodzi do prognozy. Przegrana i archiwalna oferta oraz utracona lub odrzucona szansa CRM są automatycznie pomijane.
-- Ostrożny: projekty i oferty potwierdzone. Bazowy: dodatkowo realne oferty przemnożone przez ręcznie ocenioną szansę. Optymistyczny: realne i rezerwowe oferty w pełnej wartości. Przychód i koszt oferty mają ten sam współczynnik.
-- Ręczna planowana sprzedaż i koszty wydziałowe są wspólne dla scenariuszy.
-- Jedna szansa CRM może mieć tylko jedną ofertę w planach danego roku. Projekt może wskazywać ofertę, którą zastępuje; wtedy oferta przestaje być liczona, także jeśli była przypisana do innego działu.
-- Projekt i oferta mogą być przypisane tylko raz w danym roku. Podział tego samego projektu pomiędzy działy nie jest obsługiwany.
+Przepływy projektowe korzystają z terminu płatności. Jeśli go brakuje, przyjmują datę dokumentu + 30 dni kalendarzowych, zarówno dla faktur klienta, jak i kosztów. To założenie budżetowe: nie zapisuje terminu w projekcie. Płatność może wypaść poza wybranym okresem, nawet gdy dokument jest w tym okresie. Kwoty netto; widok nie obejmuje VAT, salda rachunku, kosztów wydziałowych, ofert ani dostaw bez zapisu finansowego.
 
-## Zatwierdzanie i poufność
+## Pozostałe pozycje
 
-Zatwierdzenie zapisuje niezmienny plan roczny według scenariusza bazowego. Kolejne edycje i aktualizacje źródeł zmieniają prognozę. Brak kosztu, przychodu, wynagrodzenia wybranego pracownika lub dostępu do źródła blokuje zatwierdzenie. Jawne zero jest dopuszczalnym oszacowaniem. Ponowne zatwierdzenie tego samego planu jest blokowane.
+- Wynik działu = przychody − bezpośrednie koszty − wynagrodzenia − samochody − pozostałe koszty działu. Wszystkie kwoty w PLN; projekty netto, wynagrodzenia jako pełny koszt firmy.
+- Koszty osób, samochodów i pozostałe koszty działu są miesięczne, za całe wskazane miesiące. Ich okresy pozostają potrzebne do zmian zatrudnienia, wynagrodzeń i samochodów. Brak pokrycia kosztu pracownika w części okresu jest sygnalizowany.
+- Oferty i ręczna sprzedaż mają okres szacowanej realizacji; kwoty są dzielone na te miesiące z zachowaniem groszy. Scenariusz ostrożny: potwierdzone oferty; bazowy: także realne ważone szansą; optymistyczny: także rezerwowe w pełnej wartości. Przegrane i wykluczone oferty są pomijane. Projekt zastępuje wskazaną ofertę.
+- W tym samym planie źródło można przypisać raz. Nakładające się okresy różnych działów chronią przed podwójnym przypisaniem źródeł i kosztów tej samej osoby, także na przełomie lat. Różne plany tego samego działu są osobnymi wariantami i nie są sumowane ze sobą.
 
-Źródła zachowują istniejące zakresy dostępu do projektów, ofert i cen. Niepełny dostęp daje częściową prognozę z ostrzeżeniem. Zatwierdzony plan i historia zmian zachowują ochronę źródeł także po usunięciu pozycji z aktualnej prognozy.
+## Poufność i zgodność
 
-Kwoty ręczne, wynagrodzenia, zatwierdzony plan i szczegółowa historia są szyfrowane w bazie. Ogólna lista zmian nie zawiera ich wartości. Każda zmiana prognozy zapisuje autora i jest chroniona numerem rewizji przed nadpisaniem zmian z innej karty. Opis zmiany jest opcjonalny. Utrata klucza aplikacji uniemożliwia odczyt zaszyfrowanych danych.
+Kwoty ręczne, wynagrodzenia, plan bazowy i historia są szyfrowane. Dostęp do projektów, ofert i cen zachowuje istniejące ograniczenia. Niepełny dostęp oznacza częściowe sumy i blokuje zatwierdzenie. Historia i zatwierdzony plan zachowują ochronę źródeł po usunięciu pozycji. Rewizja chroni przed równoczesnym nadpisaniem. Dotychczasowe roczne plany są zachowane jako zakres styczeń–grudzień, bez zmiany zatwierdzonych wartości.

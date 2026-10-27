@@ -41,7 +41,7 @@ class FinancialPlanController extends Controller
             $department->planners()->sync($data['planner_ids'] ?? []);
         });
 
-        return back()->with('success', 'Dział został utworzony. Wybierz rok planu.');
+        return back()->with('success', 'Dział został utworzony. Wybierz zakres miesięcy planu.');
     }
 
     public function updateDepartment(Request $request, FinancialDepartment $department)
@@ -62,10 +62,51 @@ class FinancialPlanController extends Controller
     public function storePlan(Request $request, FinancialDepartment $department)
     {
         $this->access->authorizeDepartment($request->user(), $department, true);
-        $data = $request->validate(['year' => ['required', 'integer', 'between:2020,2100']]);
-        $plan = $department->plans()->firstOrCreate(['year' => $data['year']]);
+        $data = $this->periodData($request);
+        $plan = DB::transaction(function () use ($department, $data) {
+            FinancialDepartment::whereKey($department->id)->lockForUpdate()->firstOrFail();
+
+            return $department->plans()->whereDate('start_date', $data['start_date'])->whereDate('end_date', $data['end_date'])->first()
+                ?? $department->plans()->create($data + ['year' => (int) substr($data['start_date'], 0, 4)]);
+        });
 
         return redirect()->route('financial-plans.show', $plan);
+    }
+
+    public function updatePeriod(Request $request, FinancialPlan $plan)
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department, true);
+        $data = $this->periodData($request);
+        $revision = $request->validate(['revision' => ['required', 'integer', 'min:0']])['revision'];
+        DB::transaction(function () use ($request, $plan, $data, $revision) {
+            $locked = $this->lockPlan($plan, $revision);
+            abort_if($locked->approved_at !== null, 409, 'Okres zatwierdzonego planu jest stały. Utwórz plan na nowy okres.');
+            if ($locked->department->plans()->where('id', '!=', $locked->id)->whereDate('start_date', $data['start_date'])->whereDate('end_date', $data['end_date'])->exists()) {
+                throw ValidationException::withMessages(['start_month' => 'Plan na ten okres już istnieje. Otwórz go na liście działów.']);
+            }
+            $before = ['start_date' => $locked->periodStart()->toDateString(), 'end_date' => $locked->periodEnd()->toDateString()];
+            $locked->update($data + ['year' => (int) substr($data['start_date'], 0, 4)]);
+            foreach ($locked->lines as $line) {
+                $this->authorizeSource($request, $line->toArray());
+                $this->validateDuplicates($locked, $line->toArray(), $line);
+            }
+            $this->record($locked, $request, 'period_updated', ['before' => $before, 'after' => $data]);
+        });
+
+        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zmieniono zakres miesięcy planu. Daty źródłowe i okresy kosztów osób pozostają zachowane.');
+    }
+
+    private function periodData(Request $request): array
+    {
+        $data = $request->validate([
+            'start_month' => ['required_without:year', 'date_format:Y-m', 'after_or_equal:2020-01', 'before_or_equal:2100-12'],
+            'end_month' => ['required_with:start_month', 'date_format:Y-m', 'after_or_equal:start_month', 'before_or_equal:2100-12'],
+            'year' => ['nullable', 'integer', 'between:2020,2100'],
+        ]);
+        $start = isset($data['start_month']) ? CarbonImmutable::createFromFormat('!Y-m', $data['start_month']) : CarbonImmutable::create($data['year'], 1, 1);
+        $end = isset($data['end_month']) ? CarbonImmutable::createFromFormat('!Y-m', $data['end_month'])->endOfMonth() : $start->endOfYear();
+
+        return ['start_date' => $start->toDateString(), 'end_date' => $end->toDateString()];
     }
 
     public function show(Request $request, FinancialPlan $plan)
@@ -136,15 +177,19 @@ class FinancialPlanController extends Controller
             'qualification' => ['required_if:kind,offer', 'nullable', Rule::in(array_keys(FinancialPlanLine::QUALIFICATIONS))],
             'probability' => ['required_if:kind,offer', 'nullable', 'integer', 'between:0,100'],
             'budget_accuracy' => ['required_if:kind,project', 'nullable', Rule::in(array_keys(FinancialPlanLine::ACCURACY))],
-            'start_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:2020-01-01', 'before_or_equal:2100-12-31'],
-            'end_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:start_date', 'before_or_equal:2100-12-31'],
+            'start_date' => ['exclude_if:kind,project', 'required_unless:kind,project', 'date_format:Y-m-d', 'after_or_equal:2020-01-01', 'before_or_equal:2100-12-31'],
+            'end_date' => ['exclude_if:kind,project', 'required_unless:kind,project', 'date_format:Y-m-d', 'after_or_equal:start_date', 'before_or_equal:2100-12-31'],
             ...collect(['revenue_override', 'cost_override', 'salary_cost', 'car_cost', 'risk_reserve', 'actual_salary_cost', 'actual_car_cost', 'actual_cost'])
                 ->mapWithKeys(fn ($key) => [$key => ['nullable', 'numeric', 'min:0', 'max:999999999.99', 'decimal:0,2']])->all(),
             'car_name' => ['nullable', 'string', 'max:150'],
             'notes' => ['nullable', 'string', 'max:5000'],
         ]);
-        if ((int) substr($data['start_date'], 0, 4) > $plan->year || (int) substr($data['end_date'], 0, 4) < $plan->year) {
-            throw ValidationException::withMessages(['start_date' => 'Okres musi obejmować co najmniej jeden miesiąc wybranego roku.']);
+        if ($data['kind'] === 'project') {
+            $data['start_date'] = $plan->periodStart()->toDateString();
+            $data['end_date'] = $plan->periodEnd()->toDateString();
+        }
+        if (CarbonImmutable::parse($data['start_date'])->startOfMonth()->gt($plan->periodEnd()) || CarbonImmutable::parse($data['end_date'])->endOfMonth()->lt($plan->periodStart())) {
+            throw ValidationException::withMessages(['start_date' => 'Okres musi obejmować co najmniej jeden miesiąc wybranego planu.']);
         }
         $data['start_date'] = CarbonImmutable::parse($data['start_date'])->startOfMonth()->toDateString();
         $data['end_date'] = CarbonImmutable::parse($data['end_date'])->endOfMonth()->toDateString();
@@ -175,6 +220,7 @@ class FinancialPlanController extends Controller
             throw ValidationException::withMessages(['revenue_override' => 'Wpisz planowany przychód.']);
         }
         $allowedAmounts = match ($data['kind']) {
+            'project' => [],
             'person' => ['salary_cost', 'car_cost', 'actual_salary_cost', 'actual_car_cost'],
             'overhead' => ['cost_override', 'actual_cost'],
             default => ['revenue_override', 'cost_override', 'risk_reserve'],
@@ -194,7 +240,7 @@ class FinancialPlanController extends Controller
             $this->record($locked, $request, $line ? 'updated' : 'created', ['before' => $before, 'after' => $saved->toArray()]);
         });
 
-        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano pozycję prognozy. Zatwierdzony plan roczny pozostaje bez zmian.');
+        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano pozycję prognozy. Zatwierdzony plan pozostaje bez zmian.');
     }
 
     public function destroyLine(Request $request, FinancialPlan $plan, FinancialPlanLine $line)
@@ -218,7 +264,7 @@ class FinancialPlanController extends Controller
         $data = $request->validate(['revision' => ['required', 'integer']]);
         DB::transaction(function () use ($request, $plan, $data) {
             $locked = $this->lockPlan($plan, (int) $data['revision']);
-            abort_if($locked->approved_at !== null, 409, 'Plan roczny został już zatwierdzony. Aktualizuj prognozę.');
+            abort_if($locked->approved_at !== null, 409, 'Plan został już zatwierdzony. Aktualizuj prognozę.');
             $result = $this->calculator->calculate($locked, $request->user());
             if (! $result['complete'] || $locked->lines->isEmpty()) {
                 throw ValidationException::withMessages(['plan' => 'Zatwierdzenie wymaga pozycji planu i dostępu do wszystkich źródeł.']);
@@ -236,13 +282,13 @@ class FinancialPlanController extends Controller
             $this->record($locked, $request, 'approved', ['scenario' => 'base', 'snapshot' => $result['forecast']]);
         });
 
-        return back()->with('success', 'Zatwierdzono plan roczny według scenariusza bazowego. Kolejne zmiany dotyczą prognozy.');
+        return back()->with('success', 'Zatwierdzono plan wybranego okresu według scenariusza bazowego. Kolejne zmiany dotyczą prognozy.');
     }
 
     private function lockPlan(FinancialPlan $plan, int $revision): FinancialPlan
     {
-        // Acquire annual locks in the same order for cross-department duplicate checks.
-        $locked = FinancialPlan::where('year', $plan->year)->orderBy('id')->lockForUpdate()->get()->keyBy('id')->get($plan->id);
+        // Keep the same lock order across departments, including periods spanning years.
+        $locked = FinancialPlan::orderBy('id')->lockForUpdate()->get()->keyBy('id')->get($plan->id);
         abort_unless($locked, 404);
         abort_unless($locked->revision === $revision, 409, 'Plan zmienił się w międzyczasie. Odśwież stronę przed zapisem.');
 
@@ -267,7 +313,8 @@ class FinancialPlanController extends Controller
 
     private function validateDuplicates(FinancialPlan $plan, array $data, ?FinancialPlanLine $line): void
     {
-        $query = FinancialPlanLine::whereIn('financial_plan_id', FinancialPlan::where('year', $plan->year)->select('id'))
+        $query = FinancialPlanLine::whereIn('financial_plan_id', FinancialPlan::overlapping($plan)
+            ->where(fn ($q) => $q->whereKey($plan->id)->orWhere('financial_department_id', '!=', $plan->financial_department_id))->select('id'))
             ->when($line, fn ($q) => $q->where('id', '!=', $line->id));
         if ($data['kind'] === 'person') {
             $duplicate = (clone $query)->where('kind', 'person')->where('user_id', $data['user_id'])
@@ -278,7 +325,7 @@ class FinancialPlanController extends Controller
         }
         foreach (['project_id', 'offer_id'] as $field) {
             if (! empty($data[$field]) && (clone $query)->where($field, $data[$field])->where('kind', $data['kind'])->exists()) {
-                throw ValidationException::withMessages([$field => 'To źródło jest już przypisane do planu w tym roku.']);
+                throw ValidationException::withMessages([$field => 'To źródło jest już przypisane do tego planu lub innego działu w nakładającym się okresie.']);
             }
         }
         if ($data['kind'] === 'offer') {

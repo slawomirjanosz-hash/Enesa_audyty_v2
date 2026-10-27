@@ -25,21 +25,22 @@ class FinancialPlanCalculator
         $projectIds = $access->projects($user)->pluck('id')->all();
         $offerIds = $access->offers($user)->pluck('id')->all();
         $plan->load('lines.project.financialEntries.projectRequirement', 'lines.project.requirements', 'lines.offer.crmOpportunity', 'lines.person');
-        $forecast = $this->emptyRows(array_keys(self::ROWS));
-        $actual = $this->emptyRows(['revenue', 'direct_cost', 'salary', 'car', 'overhead', 'result']);
-        $cash = $this->emptyRows(['in', 'out', 'balance']);
+        $months = $plan->months();
+        $forecast = $this->emptyRows(array_keys(self::ROWS), $months);
+        $actual = $this->emptyRows(['revenue', 'direct_cost', 'salary', 'car', 'overhead', 'result'], $months);
+        $cash = $this->emptyRows(['in', 'out', 'balance'], $months);
         $warnings = [];
         $details = [];
         $complete = true;
         $linkedProjects = FinancialPlanLine::where('kind', 'project')
-            ->whereIn('financial_plan_id', FinancialPlan::where('year', $plan->year)->select('id'))->with('offer:id,crm_opportunity_id')->get();
+            ->whereIn('financial_plan_id', FinancialPlan::overlapping($plan)->where(fn ($q) => $q->whereKey($plan->id)->orWhere('financial_department_id', '!=', $plan->financial_department_id))->select('id'))->with('offer:id,crm_opportunity_id')->get();
         $representedOffers = $linkedProjects->pluck('offer_id')->filter()->all();
         $representedOpportunities = $linkedProjects->map(fn ($line) => $line->offer?->crm_opportunity_id)->filter()->all();
         $seenOpportunities = [];
-        $costedPeople = $plan->lines->where('kind', 'person')->pluck('user_id');
         foreach ($plan->department->members as $member) {
-            if (! $costedPeople->contains($member->id)) {
-                $warnings[] = $member->name.': koszt osoby nieoszacowany — dodaj wynagrodzenie i okres przypisania do działu.';
+            $personLines = $plan->lines->where('kind', 'person')->where('user_id', $member->id);
+            if (collect($months)->contains(fn ($month) => ! $personLines->contains(fn ($line) => $month->betweenIncluded($line->start_date->copy()->startOfMonth(), $line->end_date->copy()->endOfMonth())))) {
+                $warnings[] = $member->name.': koszt osoby nieoszacowany w części okresu — dodaj wynagrodzenie i okres przypisania do działu.';
             }
         }
 
@@ -89,67 +90,67 @@ class FinancialPlanCalculator
                 }
             } elseif ($line->kind === 'project') {
                 $project = $line->project;
-                $sourceRevenue = $project->contract_value;
-                $revenue ??= $sourceRevenue;
-                $entries = $project->effectiveFinancialEntries();
-                $costEntries = $entries->where('type', 'cost');
-                $committed = $costEntries->whereIn('status', ['issued', 'paid']);
-                $planned = $costEntries->where('status', 'planned');
-                $requirements = $project->requirements->whereNotIn('status', ['cancelled', 'purchased', 'completed'])
+                $entries = $project->financialEntries->filter(fn ($entry) => $entry->source !== 'requirement'
+                    || in_array($entry->projectRequirement?->status, ['purchased', 'completed'], true));
+                $invoices = $entries->where('type', 'invoice')->whereIn('status', ['planned', 'issued', 'paid']);
+                $costEntries = $entries->where('type', 'cost')->whereIn('status', ['planned', 'issued', 'paid']);
+                $requirements = $project->requirements->where('status', '!=', 'cancelled')
                     ->reject(fn ($requirement) => $costEntries->contains('project_requirement_id', $requirement->id));
-                $sourceCost = (float) $planned->sum('amount') + (float) $requirements->sum('estimated_cost');
-                $remainingCost ??= $sourceCost;
-                if ($line->cost_override === null && ($requirements->contains(fn ($requirement) => $requirement->estimated_cost === null)
-                    || ($requirements->isEmpty() && $planned->isEmpty() && ($committed->isEmpty() || $line->budget_accuracy === 'initial')))) {
-                    $lineWarnings[] = 'Koszt projektu nieoszacowany — uzupełnij pozostały koszt realizacji (także jawne 0).';
+                $sourceRevenue = (float) $invoices->sum('amount');
+                $sourceCost = (float) $costEntries->sum('amount') + (float) $requirements->sum('estimated_cost');
+                foreach ($invoices as $entry) {
+                    $amount = $this->cents($entry->amount);
+                    $this->atDate($forecast['contracted'], $amount, $entry->entry_date, $plan);
+                    if (in_array($entry->status, ['issued', 'paid'], true)) {
+                        $this->atDate($actual['revenue'], $amount, $entry->entry_date, $plan);
+                    }
+                }
+                foreach ($costEntries as $entry) {
+                    $amount = $this->cents($entry->amount);
+                    $this->atDate($forecast['direct_cost'], $amount, $entry->entry_date, $plan);
+                    if (in_array($entry->status, ['issued', 'paid'], true)) {
+                        $this->atDate($actual['direct_cost'], $amount, $entry->entry_date, $plan);
+                    }
+                    if ($entry->projectRequirement && $entry->projectRequirement->estimated_cost === null) {
+                        $lineWarnings[] = 'Koszt dostawy nieoszacowany — uzupełnij wycenę w materiałach i usługach projektu.';
+                    }
+                }
+                foreach ($requirements as $requirement) {
+                    if ($requirement->estimated_cost === null) {
+                        $lineWarnings[] = 'Koszt dostawy nieoszacowany — uzupełnij wycenę w materiałach i usługach projektu.';
+                    }
+                    $realized = in_array($requirement->status, ['purchased', 'completed'], true);
+                    $date = $requirement->needed_by ?? ($realized ? $requirement->updated_at : null);
+                    if ($date) {
+                        $this->atDate($forecast['direct_cost'], $this->cents($requirement->estimated_cost), $date, $plan);
+                        if ($realized) {
+                            $this->atDate($actual['direct_cost'], $this->cents($requirement->estimated_cost), $date, $plan);
+                        }
+                    } else {
+                        $lineWarnings[] = 'Brak terminu dostawy — uzupełnij datę w materiałach i usługach projektu. Koszt nie został rozłożony na miesiące.';
+                    }
+                }
+                if ($invoices->isEmpty() || $sourceRevenue < (float) $project->contract_value) {
+                    $lineWarnings[] = 'Harmonogram faktur nie obejmuje całej wartości umowy. Uzupełnij planowane faktury w finansach projektu; brakująca kwota nie jest rozkładana automatycznie.';
+                }
+                if ($sourceRevenue > (float) $project->contract_value) {
+                    $lineWarnings[] = 'Faktury wystawione i planowane przekraczają wartość umowy.';
+                }
+                if ($costEntries->isEmpty() && $requirements->isEmpty()) {
+                    $lineWarnings[] = 'Koszt projektu nieoszacowany — uzupełnij planowane dostawy lub realizacje w projekcie (dopuszczalna wycena 0).';
                 }
                 if ($project->status === 'cancelled') {
                     $lineWarnings[] = 'Projekt jest anulowany. Sprawdź wartość i pozostałe zobowiązania.';
                 }
-                $invoices = $entries->where('type', 'invoice')->whereIn('status', ['issued', 'paid']);
-                $plannedInvoices = $entries->where('type', 'invoice')->where('status', 'planned');
-                foreach ($invoices as $entry) {
-                    $amount = $this->cents($entry->amount);
-                    $this->atDate($forecast['contracted'], $amount, $entry->entry_date, $plan->year);
-                    $this->atDate($actual['revenue'], $amount, $entry->entry_date, $plan->year);
-                }
-                foreach ($plannedInvoices as $entry) {
-                    $this->atDate($forecast['contracted'], $this->cents($entry->amount), $entry->entry_date, $plan->year);
-                }
-                // The contract remainder replaces, rather than repeats, already issued invoices.
-                $scheduledRevenue = $this->cents($invoices->sum('amount')) + $this->cents($plannedInvoices->sum('amount'));
-                $revenue = max(0, $this->cents($revenue) - $scheduledRevenue) / 100;
-                if ($scheduledRevenue > $this->cents($line->revenue_override ?? $sourceRevenue)) {
-                    $lineWarnings[] = 'Faktury wystawione i planowane przekraczają przyjętą wartość umowy.';
-                }
-                foreach ($committed as $entry) {
-                    $amount = $this->cents($entry->amount);
-                    $this->atDate($forecast['direct_cost'], $amount, $entry->entry_date, $plan->year);
-                    $this->atDate($actual['direct_cost'], $amount, $entry->entry_date, $plan->year);
-                }
-                if ($line->cost_override === null) {
-                    foreach ($planned as $entry) {
-                        $this->atDate($forecast['direct_cost'], $this->cents($entry->amount), $entry->entry_date, $plan->year);
-                    }
-                    foreach ($requirements as $requirement) {
-                        if ($requirement->needed_by) {
-                            $this->atDate($forecast['direct_cost'], $this->cents($requirement->estimated_cost), $requirement->needed_by, $plan->year);
-                        } else {
-                            $this->spread($forecast['direct_cost'], $this->cents($requirement->estimated_cost), $line, $plan->year);
-                        }
-                    }
-                    $remainingCost = 0;
-                }
                 foreach ($entries->whereIn('status', ['issued', 'paid', 'planned']) as $entry) {
-                    if ($entry->payment_date) {
-                        $this->atDate($cash[$entry->type === 'invoice' ? 'in' : 'out'], $this->cents($entry->amount), $entry->payment_date, $plan->year);
-                    } else {
-                        $lineWarnings[] = 'Brak terminu płatności części zapisów — przepływy pieniężne są niepełne.';
-                    }
+                    // Budgeting assumption only: do not change the saved source date.
+                    $paymentDate = $entry->payment_date ?? $entry->entry_date->copy()->addDays(30);
+                    $this->atDate($cash[$entry->type === 'invoice' ? 'in' : 'out'], $this->cents($entry->amount), $paymentDate, $plan);
                 }
+
             }
 
-            if (in_array($line->kind, ['offer', 'project', 'revenue'], true)) {
+            if (in_array($line->kind, ['offer', 'revenue'], true)) {
                 if ($line->kind === 'revenue' && $remainingCost === null) {
                     $lineWarnings[] = 'Koszt planowanej sprzedaży nieoszacowany — wpisz także jawne 0.';
                 }
@@ -157,24 +158,24 @@ class FinancialPlanCalculator
                     $lineWarnings[] = 'Brak kwoty przychodu.';
                 }
                 $key = ['offer' => 'pipeline', 'project' => 'contracted', 'revenue' => 'manual_revenue'][$line->kind];
-                $lineRevenue = $this->spread($forecast[$key], (int) round($this->cents($revenue) * $factor), $line, $plan->year);
-                $lineCost = $this->spread($forecast['direct_cost'], (int) round(($this->cents($remainingCost) + $this->cents($line->risk_reserve)) * $factor), $line, $plan->year);
+                $lineRevenue = $this->spread($forecast[$key], (int) round($this->cents($revenue) * $factor), $line, $plan);
+                $lineCost = $this->spread($forecast['direct_cost'], (int) round(($this->cents($remainingCost) + $this->cents($line->risk_reserve)) * $factor), $line, $plan);
             } elseif ($line->kind === 'person') {
-                $lineCost = $this->monthly($forecast['salary'], $this->cents($line->salary_cost), $line, $plan->year)
-                    + $this->monthly($forecast['car'], $this->cents($line->car_cost), $line, $plan->year);
+                $lineCost = $this->monthly($forecast['salary'], $this->cents($line->salary_cost), $line, $plan)
+                    + $this->monthly($forecast['car'], $this->cents($line->car_cost), $line, $plan);
                 if ($line->actual_salary_cost !== null) {
-                    $this->monthly($actual['salary'], $this->cents($line->actual_salary_cost), $line, $plan->year);
+                    $this->monthly($actual['salary'], $this->cents($line->actual_salary_cost), $line, $plan);
                 }
                 if ($line->actual_car_cost !== null) {
-                    $this->monthly($actual['car'], $this->cents($line->actual_car_cost), $line, $plan->year);
+                    $this->monthly($actual['car'], $this->cents($line->actual_car_cost), $line, $plan);
                 }
                 if ($line->actual_salary_cost === null || ($this->cents($line->car_cost) > 0 && $line->actual_car_cost === null)) {
                     $lineWarnings[] = 'Nie uzupełniono wykonania kosztów wydziałowych — wynik wykonania jest częściowy.';
                 }
             } elseif ($line->kind === 'overhead') {
-                $lineCost = $this->monthly($forecast['overhead'], $this->cents($line->cost_override), $line, $plan->year);
+                $lineCost = $this->monthly($forecast['overhead'], $this->cents($line->cost_override), $line, $plan);
                 if ($line->actual_cost !== null) {
-                    $this->monthly($actual['overhead'], $this->cents($line->actual_cost), $line, $plan->year);
+                    $this->monthly($actual['overhead'], $this->cents($line->actual_cost), $line, $plan);
                 } else {
                     $lineWarnings[] = 'Nie uzupełniono wykonania pozostałego kosztu działu — wynik wykonania jest częściowy.';
                 }
@@ -186,7 +187,7 @@ class FinancialPlanCalculator
             $lineCost = array_sum($forecast['direct_cost']) + array_sum($forecast['salary']) + array_sum($forecast['car']) + array_sum($forecast['overhead']) - $costBefore;
             $details[$line->id] = compact('sourceRevenue', 'sourceCost', 'lineRevenue', 'lineCost', 'factor', 'lineWarnings');
         }
-        foreach (range(1, 12) as $month) {
+        foreach (array_keys($months) as $month) {
             $forecast['margin'][$month] = $forecast['contracted'][$month] + $forecast['pipeline'][$month] + $forecast['manual_revenue'][$month] - $forecast['direct_cost'][$month];
             $forecast['result'][$month] = $forecast['margin'][$month] - $forecast['salary'][$month] - $forecast['car'][$month] - $forecast['overhead'][$month];
             $forecast['gap'][$month] = max(0, -$forecast['result'][$month]);
@@ -194,7 +195,7 @@ class FinancialPlanCalculator
             $actual['result'][$month] = $actual['revenue'][$month] - $actual['direct_cost'][$month] - $actual['salary'][$month] - $actual['car'][$month] - $actual['overhead'][$month];
         }
 
-        return ['forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'details' => $details, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
+        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'details' => $details, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
     }
 
     private function factor(FinancialPlanLine $line, string $scenario): float
@@ -215,9 +216,9 @@ class FinancialPlanCalculator
         return $scenario === 'optimistic' ? 1 : $line->probability / 100;
     }
 
-    private function emptyRows(array $keys): array
+    private function emptyRows(array $keys, array $months): array
     {
-        return array_fill_keys($keys, array_fill(1, 12, 0));
+        return array_fill_keys($keys, array_fill_keys(array_keys($months), 0));
     }
 
     private function cents(mixed $value): int
@@ -225,14 +226,15 @@ class FinancialPlanCalculator
         return (int) round((float) ($value ?? 0) * 100);
     }
 
-    private function atDate(array &$months, int $amount, mixed $date, int $year): void
+    private function atDate(array &$months, int $amount, mixed $date, FinancialPlan $plan): void
     {
-        if ($date && (int) $date->format('Y') === $year) {
-            $months[(int) $date->format('n')] += $amount;
+        if ($date && $date->betweenIncluded($plan->periodStart(), $plan->periodEnd())) {
+            $index = (int) $plan->periodStart()->startOfMonth()->diffInMonths(CarbonImmutable::parse($date)->startOfMonth()) + 1;
+            $months[$index] += $amount;
         }
     }
 
-    private function spread(array &$months, int $amount, FinancialPlanLine $line, int $year): int
+    private function spread(array &$months, int $amount, FinancialPlanLine $line, FinancialPlan $plan): int
     {
         $start = CarbonImmutable::parse($line->start_date)->startOfMonth();
         $end = CarbonImmutable::parse($line->end_date)->startOfMonth();
@@ -243,8 +245,8 @@ class FinancialPlanCalculator
         for ($index = 0; $index < $count; $index++) {
             $date = $start->addMonths($index);
             $value = $part + ($index < $remainder ? 1 : 0);
-            $this->atDate($months, $value, $date, $year);
-            if ($date->year === $year) {
+            $this->atDate($months, $value, $date, $plan);
+            if ($date->betweenIncluded($plan->periodStart(), $plan->periodEnd())) {
                 $total += $value;
             }
         }
@@ -252,11 +254,10 @@ class FinancialPlanCalculator
         return $total;
     }
 
-    private function monthly(array &$months, int $amount, FinancialPlanLine $line, int $year): int
+    private function monthly(array &$months, int $amount, FinancialPlanLine $line, FinancialPlan $plan): int
     {
         $total = 0;
-        foreach (range(1, 12) as $month) {
-            $date = CarbonImmutable::create($year, $month, 1);
+        foreach ($plan->months() as $month => $date) {
             if ($date->betweenIncluded(CarbonImmutable::parse($line->start_date)->startOfMonth(), CarbonImmutable::parse($line->end_date)->startOfMonth())) {
                 $months[$month] += $amount;
                 $total += $amount;

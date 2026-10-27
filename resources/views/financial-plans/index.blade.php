@@ -3,15 +3,15 @@
 @section('content')
 @include('financial-plans.styles')
 <div class="fp">
-    <div class="fp-head"><div><h1>Plan finansowy działu</h1><div class="fp-muted">Plan roczny, aktualna prognoza i wykonanie. Wszystkie kwoty w PLN.</div></div><span class="fp-badge">Dane poufne · wynagrodzenia</span></div>
+    <div class="fp-head"><div><h1>Plan finansowy działu</h1><div class="fp-muted">Plan na wybrany zakres miesięcy, aktualna prognoza i wykonanie. Wszystkie kwoty w PLN.</div></div><span class="fp-badge">Dane poufne · wynagrodzenia</span></div>
     @if(session('success'))<div class="fp-note" role="status">{{ session('success') }}</div>@endif
     @if($errors->any())<div class="fp-note fp-error" role="alert">@foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>@endif
     <div class="fp-note">Wynik działu = przychody − bezpośrednie koszty realizacji − wynagrodzenia − samochody − pozostałe koszty działu. Przypisanie do zespołu nie daje dostępu do wynagrodzeń.</div>
     @forelse($departments as $department)
         <section class="fp-card">
             <div class="fp-head"><div><h2>{{ $department->name }}</h2><div class="fp-muted">{{ $department->members->pluck('name')->join(', ') ?: 'Uzupełnij skład działu.' }}</div></div>
-            @if($canManage)<form method="POST" action="{{ route('financial-plans.store', $department) }}" class="fp-actions">@csrf<label>Rok<input type="number" name="year" min="2020" max="2100" value="{{ now('Europe/Warsaw')->year }}" required></label><button class="fp-btn primary">Otwórz / utwórz plan</button></form>@endif</div>
-            <div class="fp-tabs">@foreach($department->plans as $plan)<a href="{{ route('financial-plans.show', $plan) }}">{{ $plan->year }} · {{ $plan->approved_at ? 'plan zatwierdzony' : 'wersja robocza' }}</a>@endforeach</div>
+            @if($canManage)<form method="POST" action="{{ route('financial-plans.store', $department) }}" class="fp-actions">@csrf<label>Od miesiąca<input type="month" name="start_month" min="2020-01" max="2100-12" value="{{ old('start_month', now('Europe/Warsaw')->format('Y-m')) }}" required></label><label>Do miesiąca<input type="month" name="end_month" min="2020-01" max="2100-12" value="{{ old('end_month', now('Europe/Warsaw')->addMonthsNoOverflow(5)->format('Y-m')) }}" required></label><button class="fp-btn primary">Otwórz / utwórz plan</button></form>@endif</div>
+            <div class="fp-tabs">@foreach($department->plans as $plan)<a href="{{ route('financial-plans.show', $plan) }}">{{ $plan->periodLabel() }} · {{ $plan->approved_at ? 'plan zatwierdzony' : 'wersja robocza' }}</a>@endforeach</div>
             @if($canManage && (auth()->user()->hasRole('superadmin') || $department->owner_id === auth()->id()))
                 <details><summary>Skład działu i dostęp do planowania</summary>
                     <form method="POST" action="{{ route('financial-plans.departments.update', $department) }}">@csrf @method('PUT')

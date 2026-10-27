@@ -172,18 +172,18 @@ test('project contract invoices and purchased requirements are counted only once
     ProjectFinancialEntry::create(['project_id' => $project->id, 'type' => 'invoice', 'name' => 'Faktura', 'amount' => 30000, 'status' => 'issued', 'entry_date' => '2027-02-01', 'payment_date' => '2027-03-01', 'created_by' => $this->manager->id]);
     ProjectRequirement::create(['project_id' => $project->id, 'type' => 'material', 'name' => 'Zakup', 'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 10000, 'status' => 'purchased', 'created_by' => $this->manager->id]);
     ProjectFinancialEntry::where('project_id', $project->id)->where('type', 'cost')->update(['entry_date' => '2027-02-01', 'payment_date' => '2027-04-01']);
-    ProjectRequirement::create(['project_id' => $project->id, 'type' => 'material', 'name' => 'Planowany zakup', 'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 20000, 'status' => 'planned', 'created_by' => $this->manager->id]);
+    ProjectRequirement::create(['project_id' => $project->id, 'type' => 'material', 'name' => 'Planowany zakup', 'quantity' => 1, 'unit' => 'szt.', 'estimated_cost' => 20000, 'status' => 'planned', 'needed_by' => '2027-05-01', 'created_by' => $this->manager->id]);
     addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'revenue_override' => null, 'cost_override' => null, 'risk_reserve' => 5000]);
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager);
-    expect(array_sum($result['forecast']['contracted']))->toBe(12000000);
-    expect(array_sum($result['forecast']['direct_cost']))->toBe(3500000);
+    expect(array_sum($result['forecast']['contracted']))->toBe(3000000);
+    expect(array_sum($result['forecast']['direct_cost']))->toBe(3000000);
     expect(array_sum($result['actual']['direct_cost']))->toBe(1000000);
     expect($result['cash']['in'][3])->toBe(3000000);
     expect($result['cash']['out'][4])->toBe(1000000);
     $line = $this->plan->lines()->first();
     $line->update(['cost_override' => 12000]);
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
-    expect(array_sum($result['forecast']['direct_cost']))->toBe(2700000);
+    expect(array_sum($result['forecast']['direct_cost']))->toBe(3000000);
 });
 
 test('offers use scenarios exclude lost deals and are replaced by linked projects', function () {
@@ -237,7 +237,7 @@ test('missing project cost is flagged and blocks approval until explicitly estim
     $project = financialProject($this->manager);
     $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'revenue_override' => null, 'cost_override' => null]);
     $this->actingAs($this->manager)->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasErrors('plan');
-    $line->update(['cost_override' => 0]);
+    $project->requirements()->create(['type' => 'service', 'name' => 'Brak kosztu dostawy', 'quantity' => 1, 'estimated_cost' => 0, 'status' => 'planned', 'needed_by' => '2027-01-15', 'created_by' => $this->manager->id]);
     $this->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasNoErrors();
     expect($this->plan->fresh()->approved_at)->not->toBeNull();
 });
@@ -286,6 +286,7 @@ test('project planned invoice and purchase dates drive the automatic monthly for
 test('approved sources remain protected after their forecast line is removed', function () {
     $project = financialProject($this->manager);
     $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'name' => 'Zastrzeżona historia']);
+    $project->requirements()->create(['type' => 'service', 'name' => 'Wycena', 'quantity' => 1, 'estimated_cost' => 0, 'status' => 'planned', 'needed_by' => '2027-01-15', 'created_by' => $this->manager->id]);
     $this->actingAs($this->manager)->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasNoErrors();
     $this->delete(route('financial-plans.lines.destroy', [$this->plan, $line]), ['revision' => 1, 'reason' => 'Usunięcie poufnego źródła'])->assertSessionHasNoErrors();
     $viewer = User::factory()->create(['individual_permissions' => true]);
@@ -345,4 +346,113 @@ test('financial installation resumes partial MySQL style DDL without dropping ex
             expect(strlen($index['name']))->toBeLessThanOrEqual(64);
         }
     }
+});
+
+test('plans accept reusable month ranges spanning years and display only selected months', function () {
+    $this->actingAs($this->manager);
+    foreach (range(1, 2) as $attempt) {
+        $this->post(route('financial-plans.store', $this->department), ['start_month' => '2027-11', 'end_month' => '2028-02'])->assertSessionHasNoErrors();
+    }
+    $plan = $this->department->plans()->where('year', 2027)->whereNotNull('start_date')->firstOrFail();
+    expect($this->department->plans()->count())->toBe(2);
+    expect($plan->periodLabel())->toBe('11.2027 – 02.2028');
+    addFinancialLine($plan, $this->manager, ['start_date' => '2027-11-01', 'end_date' => '2028-02-29', 'revenue_override' => '100.01', 'cost_override' => 0]);
+    $result = app(FinancialPlanCalculator::class)->calculate($plan, $this->manager);
+    expect($result['forecast']['manual_revenue'])->toBe([1 => 2501, 2 => 2500, 3 => 2500, 4 => 2500]);
+    $this->get(route('financial-plans.show', $plan))->assertOk()->assertSee('11.2027 – 02.2028')->assertSee('<th>01.2028</th>', false)
+        ->assertDontSee('<th>03.2028</th>', false)->assertSee('Razem w okresie')->assertDontSee('Plan roczny');
+    $this->post(route('financial-plans.store', $this->department), ['start_month' => '2028-03', 'end_month' => '2028-01'])->assertSessionHasErrors('end_month');
+    $this->post(route('financial-plans.store', $this->department), ['start_month' => '2028-03'])->assertSessionHasErrors('end_month');
+});
+
+test('draft period changes keep existing lines and enforce revision approval and department access', function () {
+    addFinancialLine($this->plan, $this->manager);
+    $url = route('financial-plans.period.update', $this->plan);
+    $this->actingAs($this->manager)->put($url, ['start_month' => '2027-03', 'end_month' => '2027-05', 'revision' => 0])->assertSessionHasNoErrors();
+    expect($this->plan->fresh()->periodLabel())->toBe('03.2027 – 05.2027');
+    expect($this->plan->lines()->count())->toBe(1);
+    $this->put($url, ['start_month' => '2027-04', 'end_month' => '2027-06', 'revision' => 0])->assertConflict();
+    $this->post(route('financial-plans.approve', $this->plan), ['revision' => 1])->assertSessionHasNoErrors();
+    $this->put($url, ['start_month' => '2027-04', 'end_month' => '2027-06', 'revision' => 2])->assertConflict();
+    $viewer = User::factory()->create(['individual_permissions' => true]);
+    $viewer->assignRole('admin');
+    $viewer->givePermissionTo('financial_plans.view');
+    $this->department->planners()->attach($viewer);
+    $this->actingAs($viewer)->put($url, [])->assertForbidden();
+});
+
+test('project needs no line dates and uses source schedules without spreading contract or overrides', function () {
+    $this->plan->update(['start_date' => '2027-11-01', 'end_date' => '2028-02-29']);
+    $project = financialProject($this->manager);
+    $project->financialEntries()->create(['type' => 'invoice', 'name' => 'Etap', 'amount' => 12000, 'status' => 'planned', 'entry_date' => '2028-01-10', 'created_by' => $this->manager->id]);
+    $delivery = $project->requirements()->create(['type' => 'material', 'name' => 'Dostawa', 'quantity' => 1, 'estimated_cost' => 2000, 'status' => 'ordered', 'needed_by' => '2027-12-15', 'created_by' => $this->manager->id]);
+    $data = financialLineData(['kind' => 'project', 'project_id' => $project->id, 'cost_override' => 999999]);
+    unset($data['start_date'], $data['end_date']);
+    $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasNoErrors();
+    $line = $this->plan->lines()->firstOrFail();
+    expect($line->cost_override)->toBeNull()->and($line->revenue_override)->toBeNull();
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
+    expect($result['forecast']['contracted'])->toBe([1 => 0, 2 => 0, 3 => 1200000, 4 => 0]);
+    expect($result['forecast']['direct_cost'])->toBe([1 => 0, 2 => 200000, 3 => 0, 4 => 0]);
+    $delivery->update(['estimated_cost' => 2500]);
+    expect(array_sum(app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager)['forecast']['direct_cost']))->toBe(250000);
+    $delivery->update(['status' => 'purchased']);
+    $delivery->financialEntry->update(['entry_date' => '2028-02-01']);
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
+    expect($result['forecast']['direct_cost'])->toBe([1 => 0, 2 => 0, 3 => 0, 4 => 250000]);
+    expect(array_sum($result['actual']['direct_cost']))->toBe(250000);
+});
+
+test('missing invoice due dates assume thirty days in budget only across year and leap day boundaries', function () {
+    $this->plan->update(['start_date' => '2027-12-01', 'end_date' => '2028-03-31']);
+    $project = financialProject($this->manager);
+    foreach ([['invoice', 'planned', '2027-12-15', null, 100], ['cost', 'issued', '2028-01-31', null, 200], ['invoice', 'issued', '2028-02-28', '2028-02-29', 300], ['invoice', 'paid', '2028-03-20', null, 400]] as [$type, $status, $date, $due, $amount]) {
+        $project->financialEntries()->create(['type' => $type, 'status' => $status, 'entry_date' => $date, 'payment_date' => $due, 'amount' => $amount, 'name' => 'Faktura', 'created_by' => $this->manager->id]);
+    }
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
+    expect($result['cash']['in'])->toBe([1 => 0, 2 => 10000, 3 => 30000, 4 => 0]);
+    expect($result['cash']['out'])->toBe([1 => 0, 2 => 0, 3 => 0, 4 => 20000]);
+    expect($project->financialEntries()->whereNull('payment_date')->count())->toBe(3);
+    expect(implode(' ', $result['warnings']))->not->toContain('Brak terminu płatności');
+});
+
+test('overlapping periods protect source allocation across departments but allow alternative plans within one department', function () {
+    $project = financialProject($this->manager);
+    $this->plan->update(['start_date' => '2027-11-01', 'end_date' => '2028-02-29']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $other = FinancialDepartment::create(['name' => 'Inny dział', 'owner_id' => $this->manager->id]);
+    $overlapping = $other->plans()->create(['year' => 2028, 'start_date' => '2028-01-01', 'end_date' => '2028-04-30']);
+    $data = financialLineData(['kind' => 'project', 'project_id' => $project->id]);
+    unset($data['start_date'], $data['end_date']);
+    $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $overlapping), $data)->assertSessionHasErrors('project_id');
+    $alternative = $this->department->plans()->create(['year' => 2028, 'start_date' => '2028-01-01', 'end_date' => '2028-04-30']);
+    $this->post(route('financial-plans.lines.store', $alternative), $data)->assertSessionHasNoErrors();
+    $later = $other->plans()->create(['year' => 2028, 'start_date' => '2028-05-01', 'end_date' => '2028-06-30']);
+    $this->post(route('financial-plans.lines.store', $later), $data)->assertSessionHasNoErrors();
+});
+
+test('period migration preserves old annual snapshots and can resume safely', function () {
+    $snapshot = ['rows' => ['result' => array_fill(1, 12, 12345)], 'project_ids' => [], 'offer_ids' => []];
+    $this->plan->update(['approved_snapshot' => $snapshot, 'approved_at' => now()]);
+    $encrypted = DB::table('financial_plans')->where('id', $this->plan->id)->value('approved_snapshot');
+    $migration = require database_path('migrations/2026_10_28_000000_add_month_period_to_financial_plans.php');
+    $migration->up();
+    $migration->up();
+    expect($this->plan->fresh()->periodLabel())->toBe('01.2027 – 12.2027');
+    expect($this->plan->fresh()->approved_snapshot)->toBe($snapshot);
+    expect(DB::table('financial_plans')->where('id', $this->plan->id)->value('approved_snapshot'))->toBe($encrypted);
+    expect(Schema::hasIndex('financial_plans', 'finance_plan_period_unique'))->toBeTrue();
+    expect(Schema::hasIndex('financial_plans', 'financial_plans_financial_department_id_year_unique'))->toBeFalse();
+});
+
+test('undated deliveries are flagged instead of spread and cancelled deliveries are excluded', function () {
+    $project = financialProject($this->manager);
+    foreach ([['planned', null, 1000], ['cancelled', '2027-04-01', 5000]] as [$status, $date, $amount]) {
+        $project->requirements()->create(['type' => 'material', 'name' => 'Dostawa', 'quantity' => 1, 'estimated_cost' => $amount, 'status' => $status, 'needed_by' => $date, 'created_by' => $this->manager->id]);
+    }
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $result = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager);
+    expect(array_sum($result['forecast']['direct_cost']))->toBe(0);
+    expect(implode(' ', $result['warnings']))->toContain('Brak terminu dostawy');
 });
