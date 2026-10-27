@@ -49,6 +49,16 @@ function completionFixture(): array
     return [$admin, $worker, $project, $audit];
 }
 
+test('a sole executor has a green completion indicator without individual confirmation records', function () {
+    [$admin] = completionFixture();
+    $task = Task::create(['title' => 'Samodzielne', 'assigned_to' => $admin->id, 'status' => 'done']);
+    $html = view('partials.task-confirmations', ['completionTask' => $task])->render();
+    expect($html)->toContain('data-task-person="'.$admin->id.'" data-completion="done"', '#15803d', '— Zrobione');
+    $task->status = 'todo';
+    $html = view('partials.task-confirmations', ['completionTask' => $task])->render();
+    expect($html)->toContain('data-completion="pending"', '#d97706', '— Do zrobienia')->not->toContain('— Zrobione');
+});
+
 test('each executor confirms independently before completion and archiving across all modules', function (string $kind) {
     [$admin, $worker, $project, $audit] = completionFixture();
     $task = match ($kind) {
@@ -62,11 +72,18 @@ test('each executor confirms independently before completion and archiving acros
     $revision = $kind === 'crm' ? 'board_revision' : 'revision';
     $archive = route('board.archive', [$type, $task->id]);
     $this->actingAs($admin)->patchJson($archive, ['revision' => 1, 'restore' => false])->assertStatus(422);
-    $this->actingAs($worker)->patchJson($status, ['revision' => 1, 'status' => 'done'])->assertOk()->assertJsonPath('status', 'in_progress');
+    $this->actingAs($worker)->patchJson($status, ['revision' => 1, 'status' => 'in_progress'])->assertOk()->assertJsonPath('status', 'in_progress');
+    expect($task->fresh()->completion_confirmations)->toBe([]);
+    $this->actingAs($admin)->patchJson($status, ['revision' => $task->fresh()->$revision, 'status' => 'todo'])->assertOk()->assertJsonPath('status', 'todo');
+    $this->patchJson($status, ['revision' => $task->fresh()->$revision, 'status' => 'in_progress'])->assertOk()->assertJsonPath('status', 'in_progress');
+    $this->actingAs($worker)->patchJson($status, ['revision' => $task->fresh()->$revision, 'status' => 'done'])->assertOk()->assertJsonPath('status', 'in_progress');
     expect(array_keys($task->fresh()->completion_confirmations))->toBe([$worker->id]);
-    $this->get(route('board.mine'))->assertOk()->assertSee('Potwierdzenia: 1/2')->assertSee('Potwierdzono wykonanie');
+    $this->get(route('board.mine'))->assertOk()
+        ->assertSee('data-task-person="'.$worker->id.'" data-completion="done"', false)
+        ->assertSee('data-task-person="'.$admin->id.'" data-completion="pending"', false)
+        ->assertSee('— Zrobione')->assertSee('— W trakcie')->assertDontSee('Potwierdzenia: 1/2');
     $this->patchJson($status, ['revision' => 1, 'status' => 'done'])->assertStatus(409);
-    $this->patchJson($status, ['revision' => 2, 'status' => 'done'])->assertOk()->assertJsonPath('status', 'in_progress');
+    $this->patchJson($status, ['revision' => $task->fresh()->$revision, 'status' => 'done'])->assertOk()->assertJsonPath('status', 'in_progress');
     $this->patchJson($archive, ['revision' => $task->fresh()->$revision, 'restore' => false])->assertStatus(422);
     $this->actingAs($admin)->patchJson($status, ['revision' => $task->fresh()->$revision, 'status' => 'done'])->assertOk()->assertJsonPath('status', 'done');
     expect(count($task->fresh()->completion_confirmations))->toBe(2);

@@ -4,10 +4,16 @@
     $confirmationPeople = collect([$responsible])->filter()->merge($confirmationPeople)->unique('id');
     $confirmations = $completionTask->completion_confirmations ?? [];
 @endphp
-<span style="display:inline-flex;flex-wrap:wrap;gap:3px 8px;font-size:12px;" data-task-confirmations>
+<span style="display:flex;flex-direction:column;gap:6px;font-size:12px;margin-bottom:6px;" data-task-confirmations>
 @forelse($confirmationPeople as $person)
-    <span>{{ $person->name }}@if($confirmationPeople->count() > 1)<small title="{{ isset($confirmations[$person->id]) ? 'Potwierdzono wykonanie' : 'Oczekuje na potwierdzenie' }}" style="color:{{ isset($confirmations[$person->id]) ? '#15803d' : '#9ca3af' }};">{{ isset($confirmations[$person->id]) ? '✓' : '·' }}</small>@endif</span>
+    @php
+        $personDone = isset($confirmations[$person->id]) || ($confirmationPeople->count() === 1 && $completionTask->status === 'done');
+        $personStatus = $personDone ? 'Zrobione' : ($completionTask->status === 'todo' ? 'Do zrobienia' : 'W trakcie');
+    @endphp
+    <span style="display:flex;align-items:baseline;gap:7px;" data-task-person="{{ $person->id }}" data-completion="{{ $personDone ? 'done' : 'pending' }}">
+        <span aria-hidden="true" style="display:inline-block;width:10px;height:10px;flex:0 0 10px;border-radius:50%;background:{{ $personDone ? '#15803d' : '#d97706' }};"></span>
+        <span>{{ $person->name }} <small style="color:{{ $personDone ? '#15803d' : '#92400e' }};">— {{ $personStatus }}</small></span>
+    </span>
 @empty<span>Nieprzypisane</span>@endforelse
 </span>
-@if($confirmationPeople->count() > 1)<small style="display:block;color:#7a8a80;font-size:10px;">Potwierdzenia: {{ $confirmationPeople->filter(fn ($person) => isset($confirmations[$person->id]))->count() }}/{{ $confirmationPeople->count() }}</small>@endif
 <small style="display:block;color:#7a8a80;font-size:11px;">Wyznaczył(a): {{ $completionTask->createdBy?->name ?? 'Brak informacji' }}</small>
