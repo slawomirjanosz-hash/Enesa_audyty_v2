@@ -1,0 +1,34 @@
+@php
+    $value = fn ($key, $fallback = '') => old($key, $editing?->getAttribute($key) ?? $fallback);
+    $kind = $value('kind', 'project');
+@endphp
+<section class="fp-card" id="line-form">
+    <div class="fp-head"><h2>{{ $editing ? 'Edytuj pozycję prognozy' : 'Dodaj pozycję prognozy' }}</h2>@if($editing)<a class="fp-btn" href="{{ route('financial-plans.show', $plan) }}#line-form">Anuluj edycję / nowa pozycja</a>@endif</div>
+    <form method="POST" action="{{ $editing ? route('financial-plans.lines.update', [$plan, $editing]) : route('financial-plans.lines.store', $plan) }}">
+        @csrf @if($editing) @method('PUT') @endif<input type="hidden" name="revision" value="{{ $plan->revision }}">
+        <div class="fp-grid">
+            <label>Rodzaj pozycji<select name="kind" data-fp-kind>@foreach(\App\Models\FinancialPlanLine::KINDS as $key => $label)<option value="{{ $key }}" @selected($kind === $key)>{{ $label }}</option>@endforeach</select></label>
+            <label>Nazwa pozycji<input name="name" value="{{ $value('name') }}" maxlength="200" required placeholder="Np. modernizacja instalacji / koszt osoby"></label>
+            <label data-fp-kinds="project">Projekt<select name="project_id"><option value="">Wybierz projekt</option>@foreach($projects as $project)<option value="{{ $project->id }}" @selected($value('project_id') == $project->id)>{{ $project->number }} · {{ $project->name }}</option>@endforeach</select></label>
+            <label data-fp-kinds="offer project">Oferta <small data-fp-kinds="project">Opcjonalnie: oferta zastępowana tym projektem</small><select name="offer_id"><option value="">Wybierz ofertę</option>@foreach($offers as $offer)<option value="{{ $offer->id }}" @selected($value('offer_id') == $offer->id)>{{ $offer->offer_number }} · {{ $offer->offer_title }}</option>@endforeach</select></label>
+            <label data-fp-kinds="person">Osoba z działu<select name="user_id"><option value="">Wybierz osobę</option>@foreach($members as $member)<option value="{{ $member->id }}" @selected($value('user_id') == $member->id)>{{ $member->name }}</option>@endforeach</select><small>Skład działu zmienisz na liście działów.</small></label>
+            <label>Początek okresu<input type="date" name="start_date" required value="{{ old('start_date', $editing?->start_date?->format('Y-m-d') ?? $plan->year.'-01-01') }}"></label>
+            <label>Koniec okresu<input type="date" name="end_date" required value="{{ old('end_date', $editing?->end_date?->format('Y-m-d') ?? $plan->year.'-12-31') }}"></label>
+            <label data-fp-kinds="offer">Kwalifikacja oferty<select name="qualification">@foreach(\App\Models\FinancialPlanLine::QUALIFICATIONS as $key => $label)<option value="{{ $key }}" @selected($value('qualification', 'real') === $key)>{{ $label }}</option>@endforeach</select></label>
+            <label data-fp-kinds="offer">Szansa wygrania oferty (%)<input type="number" min="0" max="100" name="probability" required value="{{ $value('probability', 50) }}"><small>Potwierdzona oferta jest liczona w 100%.</small></label>
+            <label data-fp-kinds="project">Dokładność budżetu projektu<select name="budget_accuracy">@foreach(\App\Models\FinancialPlanLine::ACCURACY as $key => $label)<option value="{{ $key }}" @selected($value('budget_accuracy', 'initial') === $key)>{{ $label }}</option>@endforeach</select></label>
+            <label data-fp-kinds="project offer revenue">Przychód za cały okres (PLN netto)<input type="number" min="0" max="999999999.99" step="0.01" name="revenue_override" value="{{ $value('revenue_override') }}"><small>Puste: aktualna wartość projektu / oferty. Wpisana kwota zastępuje źródło. Rozłożona równo na wskazane miesiące.</small></label>
+            <label data-fp-kinds="project offer revenue overhead">Koszt (PLN netto)<input type="number" min="0" max="999999999.99" step="0.01" name="cost_override" value="{{ $value('cost_override') }}"><small data-fp-kinds="project">Pozostały koszt do zakończenia, bez kosztów już poniesionych. Puste: planowane zakupy i zapisy projektu. Jawne 0: brak pozostałych kosztów.</small><small data-fp-kinds="offer revenue">Łączny szacowany koszt realizacji za cały okres. Wpisz 0, jeśli nie przewidujesz kosztów.</small><small data-fp-kinds="overhead">Miesięczny koszt działu. Aby zmienić kwotę od danego miesiąca, dodaj osobną pozycję na nowy okres.</small></label>
+            <label data-fp-kinds="project offer revenue">Rezerwa na ryzyko (PLN netto)<input type="number" min="0" step="0.01" name="risk_reserve" value="{{ $value('risk_reserve') }}"><small>Łącznie za cały okres, dodatkowo do pozostałego kosztu.</small></label>
+            <label data-fp-kinds="person">Pełny koszt zatrudnienia / miesiąc (PLN)<input type="number" min="0" step="0.01" name="salary_cost" value="{{ $value('salary_cost') }}"><small>Koszt firmy, wraz z narzutami pracodawcy.</small></label>
+            <label data-fp-kinds="person">Samochód (opcjonalnie)<input name="car_name" maxlength="150" value="{{ $value('car_name') }}" placeholder="Np. nazwa / rejestracja"></label>
+            <label data-fp-kinds="person">Koszt samochodu / miesiąc (PLN)<input type="number" min="0" step="0.01" name="car_cost" value="{{ $value('car_cost') }}"><small>Nie doliczaj ponownie wydatków już ujętych w projektach.</small></label>
+            <label data-fp-kinds="person">Wykonanie: zatrudnienie / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_salary_cost" value="{{ $value('actual_salary_cost') }}"><small>Opcjonalne. Dla różnych kwot lub zamkniętych miesięcy podziel pozycję na osobne okresy.</small></label>
+            <label data-fp-kinds="person">Wykonanie: samochód / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_car_cost" value="{{ $value('actual_car_cost') }}"></label>
+            <label data-fp-kinds="overhead">Wykonanie: koszt / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_cost" value="{{ $value('actual_cost') }}"><small>Opcjonalne; za wskazany okres.</small></label>
+            <label class="fp-wide">Założenie / uzasadnienie zmiany<textarea name="notes" maxlength="5000" rows="3" required>{{ $value('notes') }}</textarea><small>Zapisujemy autora, datę i historię zmian. Nie wpisuj tu kwot wynagrodzeń innych osób.</small></label>
+        </div>
+        <div class="fp-note">Koszty osób i samochodów są miesięczne. Uwzględniamy całe wskazane miesiące, bez proporcji dziennych. Podwyżkę lub zmianę samochodu zapisz jako kolejny okres bez nakładania miesięcy. Dane źródłowe aktualizują się przy otwarciu planu; ręczne korekty pozostają zachowane.</div>
+        <button class="fp-btn primary">{{ $editing ? 'Zapisz zmianę prognozy' : 'Dodaj do prognozy' }}</button>
+    </form>
+</section>

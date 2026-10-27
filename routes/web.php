@@ -84,6 +84,7 @@ require __DIR__.'/iso-stakeholders.php';
 require __DIR__.'/iso-system.php';
 require __DIR__.'/warehouse.php';
 require __DIR__.'/expenses.php';
+require __DIR__.'/financial-plans.php';
 require __DIR__.'/company-reliability.php';
 Route::middleware(['auth', 'staff.role', 'app.module:audits', 'app.permission:audits.manage'])->group(function () {
     Route::get('/audits/{audit}/iso-context-review', [IsoContextReviewController::class, 'show'])->name('audits.iso-review.show');

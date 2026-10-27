@@ -17,6 +17,7 @@ class CompanySettings extends Model
         'crm' => 'CRM i firmy',
         'offers' => 'Oferty i zapytania',
         'projects' => 'Projekty',
+        'financial_plans' => 'Plan finansowy działu',
         'audits' => 'Audyty',
         'documents' => 'Dokumenty',
         'client_zone' => 'Strefa klienta',

@@ -70,6 +70,10 @@ class RolePermissionCatalog
                 'projects.protocols.view' => 'Podgląd protokołów odbioru dostawców (wraz z cenami)',
                 'projects.protocols.manage' => 'Tworzenie i edycja protokołów odbioru (wraz z cenami)',
             ]],
+            'financial_plans' => ['label' => 'Plan finansowy działu (poufne)', 'permissions' => [
+                'financial_plans.view' => 'Podgląd przypisanych planów działu, w tym wynagrodzeń i kosztów samochodów',
+                'financial_plans.manage' => 'Tworzenie, edycja i zatwierdzanie przypisanych planów działu, w tym wynagrodzeń',
+            ]],
             'audits' => ['label' => 'Audyty', 'permissions' => [
                 'audits.view' => 'Podgląd modułu audytów',
                 'audits.manage' => 'Tworzenie i edycja audytów',

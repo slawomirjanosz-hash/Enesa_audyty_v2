@@ -8,6 +8,9 @@ use App\Models\CylinderImport;
 use App\Models\CylinderInspection;
 use App\Models\CylinderProtocol;
 use App\Models\ExpenseInvoice;
+use App\Models\FinancialPlan;
+use App\Models\FinancialPlanChange;
+use App\Models\FinancialPlanLine;
 use App\Models\HrLeave;
 use App\Models\HrLeaveApprovalTask;
 use App\Models\HrVehicle;
@@ -78,6 +81,10 @@ class ActivityLogService
 
     private function modelChanges(Model $model, string $action): array
     {
+        if ($model instanceof FinancialPlan || $model instanceof FinancialPlanLine || $model instanceof FinancialPlanChange) {
+            // Detailed financial history is encrypted and available only inside the assigned plan.
+            return [];
+        }
         if ($model instanceof CompanyReliabilityReport) {
             // The general change log must not disclose the confidential report or its rating.
             return [];
