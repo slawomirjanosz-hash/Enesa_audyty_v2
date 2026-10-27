@@ -60,7 +60,7 @@
     </tbody><tfoot><tr class="total-row"><td>Razem koszty wydziałowe</td><td colspan="4"></td><td class="number">{{ $money(array_sum($forecast['salary']) + array_sum($forecast['car'])) }}</td></tr></tfoot></table></div></section>
     @if($canManage)@include('financial-plans.line-form')@endif
     @if($calculation['complete'])<details class="fp-card"><summary>Historia zmian i decyzji</summary><div style="margin-top:16px">
-        @foreach($changes as $change)<details><summary>{{ $change->created_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') }} · {{ $change->author?->name }} · {{ ['created' => 'Dodanie pozycji', 'updated' => 'Zmiana pozycji', 'deleted' => 'Usunięcie pozycji', 'approved' => 'Zatwierdzenie planu'][$change->action] ?? $change->action }}</summary><p class="fp-muted">{{ $change->payload['after']['name'] ?? $change->payload['before']['name'] ?? 'Plan roczny' }} · {{ $change->payload['after']['notes'] ?? $change->payload['reason'] ?? 'Zapisano plan bazowy' }}</p></details>@endforeach
+        @foreach($changes as $change)<details><summary>{{ $change->created_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') }} · {{ $change->author?->name }} · {{ ['created' => 'Dodanie pozycji', 'updated' => 'Zmiana pozycji', 'deleted' => 'Usunięcie pozycji', 'approved' => 'Zatwierdzenie planu'][$change->action] ?? $change->action }}</summary><p class="fp-muted">{{ $change->payload['after']['name'] ?? $change->payload['before']['name'] ?? 'Plan roczny' }} · {{ $change->payload['after']['notes'] ?? $change->payload['reason'] ?? ($change->action === 'approved' ? 'Zapisano plan bazowy' : 'Bez opisu') }}</p></details>@endforeach
         {{ $changes->links() }}
     </div></details>@endif
 </div>

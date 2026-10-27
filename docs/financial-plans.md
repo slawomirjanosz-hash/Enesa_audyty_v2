@@ -1,6 +1,6 @@
 # Plan finansowy działu
 
-Moduł znajduje się w menu obok Projektów. Każdy dział ma osobne plany roczne.
+Moduł znajduje się w menu obok Projektów. Każdy dział ma osobne plany roczne. Po wybraniu osoby, projektu lub oferty nazwa pozycji jest pobierana automatycznie. Własną nazwę wpisuje się tylko dla planowanej sprzedaży i pozostałych kosztów działu. Opis jest opcjonalny.
 
 ## Uruchomienie
 
@@ -35,4 +35,4 @@ Zatwierdzenie zapisuje niezmienny plan roczny według scenariusza bazowego. Kole
 
 Źródła zachowują istniejące zakresy dostępu do projektów, ofert i cen. Niepełny dostęp daje częściową prognozę z ostrzeżeniem. Zatwierdzony plan i historia zmian zachowują ochronę źródeł także po usunięciu pozycji z aktualnej prognozy.
 
-Kwoty ręczne, wynagrodzenia, zatwierdzony plan i szczegółowa historia są szyfrowane w bazie. Ogólna lista zmian nie zawiera ich wartości. Każda zmiana prognozy wymaga uzasadnienia, zapisuje autora i jest chroniona numerem rewizji przed nadpisaniem zmian z innej karty. Utrata klucza aplikacji uniemożliwia odczyt zaszyfrowanych danych.
+Kwoty ręczne, wynagrodzenia, zatwierdzony plan i szczegółowa historia są szyfrowane w bazie. Ogólna lista zmian nie zawiera ich wartości. Każda zmiana prognozy zapisuje autora i jest chroniona numerem rewizji przed nadpisaniem zmian z innej karty. Opis zmiany jest opcjonalny. Utrata klucza aplikacji uniemożliwia odczyt zaszyfrowanych danych.

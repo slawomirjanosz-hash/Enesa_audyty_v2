@@ -8,7 +8,7 @@
         @csrf @if($editing) @method('PUT') @endif<input type="hidden" name="revision" value="{{ $plan->revision }}">
         <div class="fp-grid">
             <label>Rodzaj pozycji<select name="kind" data-fp-kind>@foreach(\App\Models\FinancialPlanLine::KINDS as $key => $label)<option value="{{ $key }}" @selected($kind === $key)>{{ $label }}</option>@endforeach</select></label>
-            <label>Nazwa pozycji<input name="name" value="{{ $value('name') }}" maxlength="200" required placeholder="Np. modernizacja instalacji / koszt osoby"></label>
+            <label data-fp-kinds="revenue overhead">Nazwa pozycji<input name="name" value="{{ $value('name') }}" maxlength="200" required placeholder="Np. planowana sprzedaż / oprogramowanie"></label>
             <label data-fp-kinds="project">Projekt<select name="project_id"><option value="">Wybierz projekt</option>@foreach($projects as $project)<option value="{{ $project->id }}" @selected($value('project_id') == $project->id)>{{ $project->number }} · {{ $project->name }}</option>@endforeach</select></label>
             <label data-fp-kinds="offer project">Oferta <small data-fp-kinds="project">Opcjonalnie: oferta zastępowana tym projektem</small><select name="offer_id"><option value="">Wybierz ofertę</option>@foreach($offers as $offer)<option value="{{ $offer->id }}" @selected($value('offer_id') == $offer->id)>{{ $offer->offer_number }} · {{ $offer->offer_title }}</option>@endforeach</select></label>
             <label data-fp-kinds="person">Osoba z działu<select name="user_id"><option value="">Wybierz osobę</option>@foreach($members as $member)<option value="{{ $member->id }}" @selected($value('user_id') == $member->id)>{{ $member->name }}</option>@endforeach</select><small>Skład działu zmienisz na liście działów.</small></label>
@@ -26,7 +26,7 @@
             <label data-fp-kinds="person">Wykonanie: zatrudnienie / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_salary_cost" value="{{ $value('actual_salary_cost') }}"><small>Opcjonalne. Dla różnych kwot lub zamkniętych miesięcy podziel pozycję na osobne okresy.</small></label>
             <label data-fp-kinds="person">Wykonanie: samochód / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_car_cost" value="{{ $value('actual_car_cost') }}"></label>
             <label data-fp-kinds="overhead">Wykonanie: koszt / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_cost" value="{{ $value('actual_cost') }}"><small>Opcjonalne; za wskazany okres.</small></label>
-            <label class="fp-wide">Założenie / uzasadnienie zmiany<textarea name="notes" maxlength="5000" rows="3" required>{{ $value('notes') }}</textarea><small>Zapisujemy autora, datę i historię zmian. Nie wpisuj tu kwot wynagrodzeń innych osób.</small></label>
+            <label class="fp-wide">Opis (opcjonalnie)<textarea name="notes" maxlength="5000" rows="3">{{ $value('notes') }}</textarea></label>
         </div>
         <div class="fp-note">Koszty osób i samochodów są miesięczne. Uwzględniamy całe wskazane miesiące, bez proporcji dziennych. Podwyżkę lub zmianę samochodu zapisz jako kolejny okres bez nakładania miesięcy. Dane źródłowe aktualizują się przy otwarciu planu; ręczne korekty pozostają zachowane.</div>
         <button class="fp-btn primary">{{ $editing ? 'Zapisz zmianę prognozy' : 'Dodaj do prognozy' }}</button>

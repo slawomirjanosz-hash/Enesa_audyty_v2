@@ -12,6 +12,7 @@ use App\Services\FinancialPlanCalculator;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -128,7 +129,7 @@ class FinancialPlanController extends Controller
         $data = $request->validate([
             'revision' => ['required', 'integer', 'min:0'],
             'kind' => ['required', Rule::in(array_keys(FinancialPlanLine::KINDS))],
-            'name' => ['required', 'string', 'max:200'],
+            'name' => ['exclude_if:kind,person,project,offer', 'required_if:kind,revenue,overhead', 'string', 'max:200'],
             'project_id' => ['nullable', 'required_if:kind,project', 'integer'],
             'offer_id' => ['nullable', 'required_if:kind,offer', 'integer'],
             'user_id' => ['nullable', 'required_if:kind,person', 'integer'],
@@ -140,7 +141,7 @@ class FinancialPlanController extends Controller
             ...collect(['revenue_override', 'cost_override', 'salary_cost', 'car_cost', 'risk_reserve', 'actual_salary_cost', 'actual_car_cost', 'actual_cost'])
                 ->mapWithKeys(fn ($key) => [$key => ['nullable', 'numeric', 'min:0', 'max:999999999.99', 'decimal:0,2']])->all(),
             'car_name' => ['nullable', 'string', 'max:150'],
-            'notes' => ['required', 'string', 'max:5000'],
+            'notes' => ['nullable', 'string', 'max:5000'],
         ]);
         if ((int) substr($data['start_date'], 0, 4) > $plan->year || (int) substr($data['end_date'], 0, 4) < $plan->year) {
             throw ValidationException::withMessages(['start_date' => 'Okres musi obejmować co najmniej jeden miesiąc wybranego roku.']);
@@ -157,6 +158,13 @@ class FinancialPlanController extends Controller
         if ($data['user_id'] && $data['user_id'] != $line?->user_id && ! $plan->department->members()->whereKey($data['user_id'])->exists()) {
             throw ValidationException::withMessages(['user_id' => 'Wybierz osobę ze składu tego działu.']);
         }
+        $data['name'] = Str::limit(match ($data['kind']) {
+            'person' => User::withTrashed()->findOrFail($data['user_id'])->name,
+            'project' => $this->access->projects($request->user())->findOrFail($data['project_id'])->name,
+            'offer' => ($offer = $this->access->offers($request->user())->findOrFail($data['offer_id']))->offer_title ?: $offer->fullNumber(),
+            default => $data['name'],
+        }, 200, '');
+        $data['notes'] ??= null;
         if ($data['kind'] === 'person' && ($data['salary_cost'] ?? null) === null) {
             throw ValidationException::withMessages(['salary_cost' => 'Wpisz miesięczny pełny koszt zatrudnienia.']);
         }

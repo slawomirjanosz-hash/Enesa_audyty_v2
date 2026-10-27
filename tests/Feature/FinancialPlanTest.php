@@ -50,6 +50,52 @@ function financialProject(User $manager, array $overrides = []): Project
     ], $overrides));
 }
 
+test('linked financial lines derive their names and accept no description', function (string $kind) {
+    $expected = 'Wybrane źródło';
+    if ($kind === 'person') {
+        $person = User::factory()->create(['name' => $expected]);
+        $this->department->members()->attach($person);
+        $source = ['user_id' => $person->id, 'salary_cost' => 12000];
+    } elseif ($kind === 'project') {
+        $project = financialProject($this->manager, ['name' => $expected]);
+        $source = ['project_id' => $project->id];
+    } else {
+        $company = Company::create(['name' => 'Klient nazwy', 'type' => 'client']);
+        $offer = Offer::create(['offer_number' => 'FP-NAME', 'offer_title' => $expected, 'status' => 'w_toku', 'company_id' => $company->id, 'created_by_id' => $this->manager->id, 'kwota_netto' => 100000, 'is_template' => false]);
+        $source = ['offer_id' => $offer->id];
+    }
+    $data = financialLineData(['kind' => $kind] + $source);
+    unset($data['name'], $data['notes']);
+    $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasNoErrors();
+    $line = $this->plan->lines()->firstOrFail();
+    expect($line->name)->toBe($expected)->and($line->notes)->toBeNull();
+    $data['revision'] = 1;
+    $data['name'] = 'Nazwa przesłana z ukrytego pola';
+    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), $data)->assertSessionHasNoErrors();
+    expect($line->fresh()->name)->toBe($expected)->and($line->fresh()->notes)->toBeNull();
+})->with(['person', 'project', 'offer']);
+
+test('manual lines need a name while descriptions can be omitted or cleared', function () {
+    $data = financialLineData();
+    unset($data['notes']);
+    $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasNoErrors();
+    $line = $this->plan->lines()->firstOrFail();
+    expect($line->notes)->toBeNull();
+    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), $data + ['notes' => 'Dodatkowy opis'])->assertConflict();
+    $data['revision'] = 1;
+    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), $data + ['notes' => 'Dodatkowy opis'])->assertSessionHasNoErrors();
+    $data['revision'] = 2;
+    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), $data)->assertSessionHasNoErrors();
+    expect($line->fresh()->notes)->toBeNull();
+    unset($data['name']);
+    $data['revision'] = 3;
+    $this->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasErrors('name');
+    $form = $this->get(route('financial-plans.show', $this->plan))->assertOk()->getContent();
+    expect($form)->toContain('Opis (opcjonalnie)')->not->toContain('Założenie / uzasadnienie zmiany');
+    expect($form)->toMatch('/data-fp-kinds="revenue overhead">Nazwa pozycji/');
+    expect($form)->not->toMatch('/<textarea[^>]*name="notes"[^>]*required/');
+});
+
 test('department roster does not grant salary access and operational full access cannot bypass it', function () {
     $employee = User::factory()->create();
     $employee->assignRole('admin');
