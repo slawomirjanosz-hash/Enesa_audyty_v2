@@ -1,6 +1,6 @@
 # Plan finansowy działu
 
-Moduł obok Projektów. Plan obejmuje wybrany zakres miesięcy, także na przełomie lat, np. 11.2027–02.2028. Nagłówek, kolumny i sumy pokazują ten zakres. Zakres planu roboczego można zmienić bez ponownego dodawania źródeł. Daty faktur, dostaw i okresy wynagrodzeń pozostają zachowane. Zatwierdzony okres i bazowy plan są niezmienne.
+Moduł obok Projektów. Plan obejmuje wybrany zakres miesięcy, także na przełomie lat, np. 11.2027–02.2028. Nagłówek, kolumny i sumy pokazują ten zakres. Zakres planu można zmienić bez ponownego dodawania źródeł. Daty faktur, dostaw i okresy wynagrodzeń pozostają zachowane. Plan jest bieżącą prognozą i nie wymaga zatwierdzania.
 
 ## Obsługa
 
@@ -9,12 +9,21 @@ Moduł obok Projektów. Plan obejmuje wybrany zakres miesięcy, także na przeł
 3. Utwórz dział i wybierz miesiąc początkowy i końcowy planu. Ponowne wybranie tych samych miesięcy otwiera istniejący plan.
 4. Dodaj projekty, oferty i koszty zespołu. Nazwy osób, projektów i ofert są automatyczne; opis jest opcjonalny.
 
+## Bieżące wyliczenia i czytelność
+
+- Otwarta karta odświeża wyliczenia co 5 sekund oraz po powrocie do niej; przycisk „Odśwież teraz” uruchamia odczyt od razu. Nieaktywna karta nie wysyła cyklicznych zapytań.
+- Endpoint za każdym razem przelicza źródła i kontroluje zakres działu, projektów oraz cen. Odpowiedzi mają prywatny zakaz buforowania. Niezmienione dane są rozpoznawane po skrócie zawartości.
+- Aktualizowane są sumy, prognoza, wykonanie, harmonogram płatności, źródła i wykresy. Wpisywany formularz, sortowanie tabel, pozycje przewijania i rozwinięte szczegóły pozostają zachowane. Zmiana rewizji w innej karcie wymaga odświeżenia formularza przed zapisem, aby nie nadpisać cudzych zmian.
+- Znaki zapytania i podkreślone kwoty pokazują chmurki: wzory oraz udział konkretnych projektów/osób w miesiącu. Kwoty źródłowe projektu pokazują faktury i dostawy wraz z datami i oznaczeniem pozycji spoza okresu. Chmurki działają po najechaniu, kliknięciu i uzyskaniu fokusu z klawiatury.
+- Uwagi w źródłach są krótkim znacznikiem z liczbą. Pełne opisy są w chmurce ponad tabelą, bez rozciągania wierszy.
+- Wykresy pod prognozą obejmują wynagrodzenia, samochody i pozostałe koszty utrzymania działu. Słupki pokazują miesiące i składniki, linia ich sumę narastająco. Koszty realizacji projektów są wyłączone. Wartości można sprawdzić w chmurkach i sortowalnej tabeli wykresu.
+
 ## Projekty
 
 - Projekt nie wymaga okresu pozycji ani ręcznej kwoty przychodu/kosztu. Przychód to wyłącznie faktury planowane, wystawione i opłacone według daty dokumentu. Brakująca część wartości umowy nie jest rozkładana na miesiące; harmonogram uzupełnia się w finansach projektu.
 - Koszty pochodzą z zapisów finansowych oraz planowanych i realizowanych materiałów/usług (dostaw), według daty dokumentu lub terminu dostawy. Koszt dostawy ujęty w finansach jest liczony tylko raz. Anulowane dostawy są pomijane.
 - Dostawa bez terminu wymaga uzupełnienia daty w projekcie; jej koszt nie jest rozkładany automatycznie. Zrealizowana dostawa bez zapisu finansowego i terminu korzysta z daty ostatniej aktualizacji jako dostępnej daty realizacji.
-- Brak wyceny dostawy jest oznaczany i blokuje zatwierdzenie. Jawne zero w źródle jest dopuszczalne. Brak jakichkolwiek kosztów projektu wymaga uzupełnienia źródła.
+- Brak wyceny dostawy jest oznaczany jako uwaga. Jawne zero w źródle jest dopuszczalne. Brak jakichkolwiek kosztów projektu wymaga uzupełnienia źródła.
 - Zmiana kwot i dat w projekcie aktualizuje prognozę. Dawne ręczne korekty projektów i rezerwy nie są już używane w prognozie; zatwierdzone wcześniej bazowe plany pozostają zachowane.
 - Wykonanie obejmuje faktury/koszty wystawione lub opłacone; planowane zapisy nie są wykonaniem.
 
@@ -31,4 +40,4 @@ Przepływy projektowe korzystają z terminu płatności. Jeśli go brakuje, przy
 
 ## Poufność i zgodność
 
-Kwoty ręczne, wynagrodzenia, plan bazowy i historia są szyfrowane. Dostęp do projektów, ofert i cen zachowuje istniejące ograniczenia. Niepełny dostęp oznacza częściowe sumy i blokuje zatwierdzenie. Historia i zatwierdzony plan zachowują ochronę źródeł po usunięciu pozycji. Rewizja chroni przed równoczesnym nadpisaniem. Dotychczasowe roczne plany są zachowane jako zakres styczeń–grudzień, bez zmiany zatwierdzonych wartości.
+Kwoty ręczne, wynagrodzenia, plan bazowy i historia są szyfrowane. Dostęp do projektów, ofert i cen zachowuje istniejące ograniczenia. Niepełny dostęp oznacza częściowe sumy. Historyczne decyzje zachowują ochronę źródeł po usunięciu pozycji. Dawne zaszyfrowane zatwierdzenia są zachowane w bazie, ale etap zatwierdzania i porównanie z planem bazowym usunięto z aplikacji. Rewizja chroni przed równoczesnym nadpisaniem. Dotychczasowe roczne plany są zachowane jako zakres styczeń–grudzień, bez zmiany zatwierdzonych wartości.

@@ -2,68 +2,19 @@
 @section('title', 'Plan finansowy · '.$plan->department->name.' · '.$plan->periodLabel())
 @section('content')
 @include('financial-plans.styles')
-@php
-    $forecast = $calculation['forecast'];
-    $approved = $canViewBaseline ? $plan->approved_snapshot['rows'] : null;
-    $money = fn ($cents) => number_format($cents / 100, 2, ',', ' ').' zł';
-@endphp
-<div class="fp">
-    <div class="fp-head"><div><a href="{{ route('financial-plans.index') }}" class="fp-muted">← Działy i okresy</a><h1>{{ $plan->department->name }} · {{ $plan->periodLabel() }}</h1><div class="fp-muted">Plan finansowy działu · kwoty przychodów i kosztów projektów netto · pełny koszt zatrudnienia</div></div><span class="fp-badge {{ $plan->approved_at ? '' : 'warn' }}">{{ $plan->approved_at ? 'Plan zatwierdzony '.$plan->approved_at->format('d.m.Y') : 'Plan wybranego okresu: wersja robocza' }}</span></div>
+<div class="fp" id="financial-plan" data-calculation-url="{{ route('financial-plans.calculation', [$plan, 'scenario' => $scenario]) }}" data-revision="{{ $plan->revision }}">
+    <div class="fp-head"><div><a href="{{ route('financial-plans.index') }}" class="fp-muted">← Działy i okresy</a><h1>{{ $plan->department->name }} · <span id="fp-period-label">{{ $plan->periodLabel() }}</span></h1><div class="fp-muted">Plan finansowy działu · kwoty przychodów i kosztów projektów netto · pełny koszt zatrudnienia</div></div><div class="fp-live-status"><span id="fp-refresh-status" role="status">Aktualizowanie na bieżąco</span><button type="button" class="fp-btn" id="fp-refresh">Odśwież teraz</button></div></div>
     @if(session('success'))<div class="fp-note" role="status">{{ session('success') }}</div>@endif
     @if($errors->any())<div class="fp-note fp-error" role="alert">@foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>@endif
-    @if($canManage && !$plan->approved_at)<form class="fp-card fp-actions" method="POST" action="{{ route('financial-plans.period.update', $plan) }}">@csrf @method('PUT')<input type="hidden" name="revision" value="{{ $plan->revision }}"><label>Od miesiąca<input type="month" name="start_month" min="2020-01" max="2100-12" value="{{ old('start_month', $plan->periodStart()->format('Y-m')) }}" required></label><label>Do miesiąca<input type="month" name="end_month" min="2020-01" max="2100-12" value="{{ old('end_month', $plan->periodEnd()->format('Y-m')) }}" required></label><button class="fp-btn">Zmień okres planu</button></form>@endif
+    @if($canManage)<form class="fp-card fp-actions" method="POST" action="{{ route('financial-plans.period.update', $plan) }}">@csrf @method('PUT')<input type="hidden" name="revision" value="{{ $plan->revision }}"><label>Od miesiąca<input type="month" name="start_month" min="2020-01" max="2100-12" value="{{ old('start_month', $plan->periodStart()->format('Y-m')) }}" required></label><label>Do miesiąca<input type="month" name="end_month" min="2020-01" max="2100-12" value="{{ old('end_month', $plan->periodEnd()->format('Y-m')) }}" required></label><button class="fp-btn">Zmień okres planu</button></form>@endif
     <div class="fp-tabs">@foreach(\App\Services\FinancialPlanCalculator::SCENARIOS as $key => $label)<a class="{{ $scenario === $key ? 'active' : '' }}" href="{{ route('financial-plans.show', [$plan, 'scenario' => $key]) }}">{{ $label }}</a>@endforeach</div>
-    <p class="fp-muted">Ostrożny: projekty i potwierdzone oferty. Bazowy: dodatkowo realne oferty ważone szansą. Optymistyczny: także rezerwowe oferty, w pełnej wartości. Oferty wykluczone i przegrane nie wchodzą do żadnego scenariusza. Ręczna sprzedaż jest założeniem wspólnym scenariuszy.</p>
-    <div class="fp-grid">
-        <div class="fp-card"><div class="fp-metric-title">Przychody prognozowane</div><div class="fp-kpi">{{ $money(array_sum($forecast['contracted']) + array_sum($forecast['pipeline']) + array_sum($forecast['manual_revenue'])) }}</div></div>
-        <div class="fp-card"><div class="fp-metric-title">Koszty wydziałowe · ludzie i samochody</div><div class="fp-kpi">{{ $money(array_sum($forecast['salary']) + array_sum($forecast['car'])) }}</div></div>
-        <div class="fp-card"><div class="fp-metric-title">Wynik działu · {{ \App\Services\FinancialPlanCalculator::SCENARIOS[$scenario] }}</div><div class="fp-kpi {{ array_sum($forecast['result']) < 0 ? 'negative' : '' }}">{{ $money(array_sum($forecast['result'])) }}</div></div>
-    </div>
-    @if($calculation['warnings'])<details class="fp-note fp-warning" open><summary>Dane wymagające uwagi ({{ count($calculation['warnings']) }})</summary><ul>@foreach($calculation['warnings'] as $warning)<li>{{ $warning }}</li>@endforeach</ul></details>@endif
-    <section class="fp-card"><div class="fp-head"><h2>Aktualna prognoza miesięczna</h2>@if($canManage)<a href="#line-form" class="fp-btn primary">Dodaj pozycję</a>@endif</div>
-        @include('financial-plans.months', ['rows' => $forecast, 'labels' => \App\Services\FinancialPlanCalculator::ROWS])
-        <p class="fp-muted">Projekty: przychody według dat wystawionych i planowanych faktur, koszty według zapisów finansowych oraz planowanych i zrealizowanych dostaw. Nie rozkładamy wartości umowy ani kosztów projektu na miesiące. Kwoty wynagrodzeń i samochodów są miesięczne.</p>
-    </section>
-    <section class="fp-card"><h2>Plan wybranego okresu i odchylenie prognozy</h2>
-        @if($approved)
-            @php $comparison = ['plan' => $approved['result'], 'forecast' => $forecast['result'], 'deviation' => []]; foreach(array_keys($calculation['months']) as $month) { $comparison['deviation'][$month] = $forecast['result'][$month] - $approved['result'][$month]; } @endphp
-            @include('financial-plans.months', ['rows' => $comparison, 'labels' => ['plan' => 'Wynik zatwierdzonego planu', 'forecast' => 'Wynik aktualnej prognozy', 'deviation' => 'Odchylenie od planu']])
-            <details style="margin-top:18px"><summary>Pełny zatwierdzony plan wybranego okresu · scenariusz bazowy</summary>@include('financial-plans.months', ['rows' => $approved, 'labels' => \App\Services\FinancialPlanCalculator::ROWS])</details>
-        @elseif($plan->approved_at)<p>Podgląd zatwierdzonego planu wymaga dostępu do wszystkich jego źródeł.</p>
-        @else<p class="fp-muted">Zatwierdzenie zapisze niezmienny plan bazowy. Późniejsze zmiany ofert, projektów i założeń będą aktualizowały prognozę.</p>
-            @if($canManage)<form method="POST" action="{{ route('financial-plans.approve', $plan) }}">@csrf<input type="hidden" name="revision" value="{{ $plan->revision }}"><button class="fp-btn primary">Zatwierdź plan wybranego okresu · scenariusz bazowy</button></form>@endif
-        @endif
-    </section>
-    <section class="fp-card"><h2>Wykonanie</h2>
-        <p class="fp-muted">Przychody i koszty bezpośrednie: zapisy projektowe ze statusem „wystawiona” lub „opłacona”, według daty zapisu. To wykonanie fakturowe. Koszty wydziałowe i pozostałe: ręcznie wpisane kwoty wykonania. Brakujące kwoty są sygnalizowane powyżej; wynik wykonania pozostaje wtedy częściowy.</p>
-        @include('financial-plans.months', ['rows' => $calculation['actual'], 'labels' => ['revenue' => 'Przychody zafakturowane', 'direct_cost' => 'Koszty bezpośrednie', 'salary' => 'Wynagrodzenia · wykonanie', 'car' => 'Samochody · wykonanie', 'overhead' => 'Pozostałe koszty · wykonanie', 'result' => 'Wynik wykonania (dostępne dane)']])
-    </section>
-    <details class="fp-card"><summary>Przepływy pieniężne · harmonogram zapisów projektowych</summary><p class="fp-muted">Wpływy i wydatki według zapisanych terminów płatności, łącznie z pozycjami planowanymi. Brak terminu płatności: przyjmujemy datę dokumentu + 30 dni wyłącznie w tym planie. Widok obejmuje tylko zapisy finansowe projektów; nie obejmuje niewprowadzonych płatności z ofert, pozostałej wartości umów ani kosztów wydziałowych. Kwoty netto — nie jest to pełny stan gotówki ani rozliczenie VAT.</p>
-        @include('financial-plans.months', ['rows' => $calculation['cash'], 'labels' => ['in' => 'Wpływy wg terminów płatności', 'out' => 'Wydatki wg terminów płatności', 'balance' => 'Saldo harmonogramu projektów']])
-    </details>
-    <section class="fp-card"><h2>Źródła i założenia prognozy</h2><div class="fp-scroll"><table><thead><tr><th>Pozycja</th><th>Rodzaj</th><th>Okres</th><th>Kwalifikacja / dokładność</th><th>Szansa</th><th>Przychód źródłowy</th><th>Koszt źródłowy</th><th>Przychód prognozy w okresie</th><th>Koszt prognozy w okresie</th><th>Uwagi</th>@if($canManage)<th data-sortable="false">Działania</th>@endif</tr></thead><tbody>
-        @foreach($lines as $line)@php $detail = $calculation['details'][$line->id]; @endphp
-            <tr><td>@if($line->kind === 'project')<a href="{{ route('projects.show', $line->project_id) }}">{{ $line->name }}</a>@elseif($line->kind === 'offer')<a href="{{ route('offers.show', $line->offer_id) }}">{{ $line->name }}</a>@else{{ $line->name }}@endif</td>
-                <td>{{ \App\Models\FinancialPlanLine::KINDS[$line->kind] }}</td><td data-sort-value="{{ $line->start_date->format('Y-m-d') }}">{{ $line->kind === 'project' ? 'Według dat w projekcie' : $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y') }}</td>
-                <td>{{ $line->kind === 'offer' ? \App\Models\FinancialPlanLine::QUALIFICATIONS[$line->qualification] : ($line->kind === 'project' ? \App\Models\FinancialPlanLine::ACCURACY[$line->budget_accuracy] : '—') }}</td>
-                <td data-sort-value="{{ $line->kind === 'offer' ? $line->probability : '' }}">{{ $line->kind === 'offer' ? $line->probability.'%' : '—' }}</td>
-                <td class="number" data-sort-value="{{ $detail['sourceRevenue'] }}">{{ $detail['sourceRevenue'] !== null ? $money((int) round($detail['sourceRevenue'] * 100)) : '—' }}</td>
-                <td class="number" data-sort-value="{{ $detail['sourceCost'] }}">{{ $detail['sourceCost'] !== null ? $money((int) round($detail['sourceCost'] * 100)) : '—' }}</td>
-                <td class="number" data-sort-value="{{ $detail['lineRevenue'] / 100 }}">{{ $money($detail['lineRevenue']) }}</td><td class="number" data-sort-value="{{ $detail['lineCost'] / 100 }}">{{ $money($detail['lineCost']) }}</td>
-                <td class="fp-line-note">{{ $line->notes }}@foreach($detail['lineWarnings'] as $warning)<div>{{ $warning }}</div>@endforeach</td>
-                @if($canManage)<td><a class="fp-btn" href="{{ route('financial-plans.show', [$plan, 'edit' => $line->id, 'scenario' => $scenario]) }}#line-form">Edytuj</a><details style="margin-top:8px"><summary>Usuń</summary><form method="POST" action="{{ route('financial-plans.lines.destroy', [$plan, $line]) }}">@csrf @method('DELETE')<input type="hidden" name="revision" value="{{ $plan->revision }}"><label>Powód usunięcia<input name="reason" required maxlength="1000"></label><button class="fp-btn danger">Usuń z prognozy</button></form></details></td>@endif
-            </tr>
-        @endforeach
-    </tbody></table></div>
-    @if($lines->isEmpty())<p class="fp-muted">Dodaj projekty, realne oferty oraz koszty osób z działu.</p>@endif</section>
-    <section class="fp-card"><h2>Koszty wydziałowe · osoby i samochody</h2><div class="fp-scroll"><table><thead><tr><th>Osoba</th><th>Okres</th><th>Wynagrodzenie / mies.</th><th>Samochód</th><th>Samochód / mies.</th><th>Razem w okresie</th></tr></thead><tbody>
-        @foreach($lines->where('kind', 'person') as $line)<tr><td>{{ $line->person?->name ?? 'Osoba archiwalna' }}</td><td data-sort-value="{{ $line->start_date->format('Y-m-d') }}">{{ $line->start_date->format('m.Y') }} – {{ $line->end_date->format('m.Y') }}</td><td class="number" data-sort-value="{{ $line->salary_cost }}">{{ $money((int) round($line->salary_cost * 100)) }}</td><td>{{ $line->car_name ?: '—' }}</td><td class="number" data-sort-value="{{ $line->car_cost }}">{{ $money((int) round(($line->car_cost ?? 0) * 100)) }}</td><td class="number" data-sort-value="{{ $calculation['details'][$line->id]['lineCost'] / 100 }}">{{ $money($calculation['details'][$line->id]['lineCost']) }}</td></tr>@endforeach
-    </tbody><tfoot><tr class="total-row"><td>Razem koszty wydziałowe</td><td colspan="4"></td><td class="number">{{ $money(array_sum($forecast['salary']) + array_sum($forecast['car'])) }}</td></tr></tfoot></table></div></section>
+    <p class="fp-muted">Scenariusz określa, które oferty wchodzą do przychodów i kosztów. @include('financial-plans.hint', ['hintId' => 'fp-scenarios-help', 'hintLabel' => 'Jak liczymy scenariusze?', 'hintTitle' => 'Scenariusze', 'hintText' => 'Ostrożny: projekty i potwierdzone oferty. Bazowy: także realne oferty ważone szansą. Optymistyczny: także rezerwowe oferty w pełnej wartości. Wykluczone, przegrane i zastąpione projektem oferty są pomijane. Ręczna sprzedaż i koszty utrzymania działu są wspólne dla scenariuszy.', 'hintItems' => []])</p>
+    <div id="fp-live-calculation">@include('financial-plans.calculation')</div>
     @if($canManage)@include('financial-plans.line-form')@endif
-    @if($calculation['complete'])<details class="fp-card"><summary>Historia zmian i decyzji</summary><div style="margin-top:16px">
+    @if($calculation['complete'])<details class="fp-card" id="fp-history"><summary>Historia zmian</summary><div style="margin-top:16px">
         @foreach($changes as $change)<details><summary>{{ $change->created_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') }} · {{ $change->author?->name }} · {{ ['created' => 'Dodanie pozycji', 'updated' => 'Zmiana pozycji', 'deleted' => 'Usunięcie pozycji', 'approved' => 'Zatwierdzenie planu', 'period_updated' => 'Zmiana okresu planu'][$change->action] ?? $change->action }}</summary><p class="fp-muted">{{ $change->payload['after']['name'] ?? $change->payload['before']['name'] ?? 'Plan wybranego okresu' }} · {{ $change->payload['after']['notes'] ?? $change->payload['reason'] ?? ($change->action === 'approved' ? 'Zapisano plan bazowy' : 'Bez opisu') }}</p></details>@endforeach
         {{ $changes->links() }}
     </div></details>@endif
 </div>
-<script type="module" src="{{ asset('js/financial-plan.js') }}"></script>
+<script type="module" src="{{ asset('js/financial-plan.js') }}?v={{ filemtime(public_path('js/financial-plan.js')) }}"></script>
 @endsection

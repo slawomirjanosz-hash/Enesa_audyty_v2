@@ -19,6 +19,23 @@ class FinancialPlanCalculator
         'result' => 'Wynik działu', 'gap' => 'Brakuje do pokrycia kosztów',
     ];
 
+    public const EXPLANATIONS = [
+        'contracted' => 'Suma faktur klienta z dodanych projektów: planowanych, wystawionych i opłaconych, według daty dokumentu. Wartość umowy bez zaplanowanych faktur nie jest doliczana.',
+        'pipeline' => 'Przychody ofert rozłożone na okres realizacji i pomnożone przez współczynnik scenariusza. Bazowy: realne oferty według szansy, potwierdzone 100%. Przegrane i zastąpione projektem są pomijane.',
+        'manual_revenue' => 'Ręcznie wpisana planowana sprzedaż, rozłożona równo na okres pozycji. Wspólna dla wszystkich scenariuszy.',
+        'direct_cost' => 'Koszty zapisane w finansach projektów oraz planowane i zrealizowane dostawy, według ich dat. Dostawa ujęta w finansach jest liczona raz. Dodatkowo szacowane koszty ofert i ręcznej sprzedaży z rezerwą, ważone scenariuszem.',
+        'margin' => 'Marża = przychody z projektów + przychody z ofert + pozostała sprzedaż − bezpośrednie koszty realizacji. Ta kwota służy pokryciu utrzymania działu.',
+        'salary' => 'Miesięczny pełny koszt zatrudnienia wskazanych osób, wraz z narzutami pracodawcy. Naliczany tylko w miesiącach przypisania osoby.',
+        'car' => 'Miesięczne koszty samochodów przypisanych do osób, tylko w miesiącach obowiązywania pozycji.',
+        'overhead' => 'Pozostałe miesięczne koszty utrzymania działu wpisane ręcznie, np. oprogramowanie i biuro. Bez kosztów realizacji projektów.',
+        'result' => 'Wynik działu = marża na pokrycie działu − wynagrodzenia − samochody − pozostałe koszty działu. Kwota ujemna oznacza niedobór pokrycia kosztów.',
+        'gap' => 'W miesiącu: brakująca kwota do wyjścia na zero, gdy wynik jest ujemny. W sumie okresu: niedobór po zbilansowaniu wyników wszystkich miesięcy, a nie suma miesięcznych niedoborów.',
+        'revenue' => 'Wykonanie: wyłącznie wystawione i opłacone faktury klienta według daty dokumentu. Planowane faktury są tylko w prognozie.',
+        'in' => 'Wpływy z faktur klienta według terminu płatności. Jeśli go brak, przyjmujemy datę dokumentu + 30 dni. Obejmuje również planowane faktury; to harmonogram netto, nie stan rachunku.',
+        'out' => 'Wydatki według terminu płatności kosztów zapisanych w finansach projektów. Jeśli go brak, data dokumentu + 30 dni. Bez płatności dostaw niezapisanych w finansach oraz kosztów utrzymania działu.',
+        'balance' => 'Saldo harmonogramu projektów = wpływy − wydatki danego miesiąca. Nie obejmuje VAT, salda rachunku ani kosztów utrzymania działu.',
+    ];
+
     public function calculate(FinancialPlan $plan, User $user, string $scenario = 'base'): array
     {
         $access = app(FinancialPlanAccess::class);
@@ -31,6 +48,7 @@ class FinancialPlanCalculator
         $cash = $this->emptyRows(['in', 'out', 'balance'], $months);
         $warnings = [];
         $details = [];
+        $breakdown = [];
         $complete = true;
         $linkedProjects = FinancialPlanLine::where('kind', 'project')
             ->whereIn('financial_plan_id', FinancialPlan::overlapping($plan)->where(fn ($q) => $q->whereKey($plan->id)->orWhere('financial_department_id', '!=', $plan->financial_department_id))->select('id'))->with('offer:id,crm_opportunity_id')->get();
@@ -48,11 +66,19 @@ class FinancialPlanCalculator
             if (($line->project_id && ! in_array($line->project_id, $projectIds, true))
                 || ($line->offer_id && ! in_array($line->offer_id, $offerIds, true))) {
                 $complete = false;
-                $warnings[] = 'Część źródeł jest niedostępna w Twoim zakresie uprawnień. Sumy są częściowe; zatwierdzanie jest zablokowane.';
+                $warnings[] = 'Część źródeł jest niedostępna w Twoim zakresie uprawnień. Sumy są częściowe.';
 
                 continue;
             }
+            $line->name = match ($line->kind) {
+                'project' => $line->project->name,
+                'offer' => $line->offer?->offer_title ?: $line->name,
+                'person' => $line->person?->name ?? $line->name,
+                default => $line->name,
+            };
             $lineWarnings = [];
+            $beforeForecast = $forecast;
+            $sourceItems = [];
             $revenueBefore = array_sum($forecast['contracted']) + array_sum($forecast['pipeline']) + array_sum($forecast['manual_revenue']);
             $costBefore = array_sum($forecast['direct_cost']) + array_sum($forecast['salary']) + array_sum($forecast['car']) + array_sum($forecast['overhead']);
             $revenue = $line->revenue_override;
@@ -98,6 +124,9 @@ class FinancialPlanCalculator
                     ->reject(fn ($requirement) => $costEntries->contains('project_requirement_id', $requirement->id));
                 $sourceRevenue = (float) $invoices->sum('amount');
                 $sourceCost = (float) $costEntries->sum('amount') + (float) $requirements->sum('estimated_cost');
+                foreach ($invoices->merge($costEntries) as $entry) {
+                    $sourceItems[] = ['name' => $entry->name.($entry->document_number ? ' · '.$entry->document_number : ''), 'type' => $entry->type, 'amount' => $this->cents($entry->amount), 'date' => $entry->entry_date->format('d.m.Y'), 'included' => $entry->entry_date->betweenIncluded($plan->periodStart(), $plan->periodEnd())];
+                }
                 foreach ($invoices as $entry) {
                     $amount = $this->cents($entry->amount);
                     $this->atDate($forecast['contracted'], $amount, $entry->entry_date, $plan);
@@ -121,6 +150,7 @@ class FinancialPlanCalculator
                     }
                     $realized = in_array($requirement->status, ['purchased', 'completed'], true);
                     $date = $requirement->needed_by ?? ($realized ? $requirement->updated_at : null);
+                    $sourceItems[] = ['name' => $requirement->name, 'type' => 'cost', 'amount' => $this->cents($requirement->estimated_cost), 'date' => $date?->format('d.m.Y') ?? 'brak daty', 'included' => $date?->betweenIncluded($plan->periodStart(), $plan->periodEnd()) ?? false];
                     if ($date) {
                         $this->atDate($forecast['direct_cost'], $this->cents($requirement->estimated_cost), $date, $plan);
                         if ($realized) {
@@ -185,7 +215,15 @@ class FinancialPlanCalculator
             }
             $lineRevenue = array_sum($forecast['contracted']) + array_sum($forecast['pipeline']) + array_sum($forecast['manual_revenue']) - $revenueBefore;
             $lineCost = array_sum($forecast['direct_cost']) + array_sum($forecast['salary']) + array_sum($forecast['car']) + array_sum($forecast['overhead']) - $costBefore;
-            $details[$line->id] = compact('sourceRevenue', 'sourceCost', 'lineRevenue', 'lineCost', 'factor', 'lineWarnings');
+            foreach (['contracted', 'pipeline', 'manual_revenue', 'direct_cost', 'salary', 'car', 'overhead'] as $row) {
+                foreach ($forecast[$row] as $month => $amount) {
+                    $contribution = $amount - $beforeForecast[$row][$month];
+                    if ($contribution !== 0) {
+                        $breakdown[$row][$month][] = ['name' => $line->name, 'amount' => $contribution];
+                    }
+                }
+            }
+            $details[$line->id] = compact('sourceRevenue', 'sourceCost', 'lineRevenue', 'lineCost', 'factor', 'lineWarnings', 'sourceItems');
         }
         foreach (array_keys($months) as $month) {
             $forecast['margin'][$month] = $forecast['contracted'][$month] + $forecast['pipeline'][$month] + $forecast['manual_revenue'][$month] - $forecast['direct_cost'][$month];
@@ -195,7 +233,7 @@ class FinancialPlanCalculator
             $actual['result'][$month] = $actual['revenue'][$month] - $actual['direct_cost'][$month] - $actual['salary'][$month] - $actual['car'][$month] - $actual['overhead'][$month];
         }
 
-        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'details' => $details, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
+        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
     }
 
     private function factor(FinancialPlanLine $line, string $scenario): float

@@ -80,7 +80,6 @@ class FinancialPlanController extends Controller
         $revision = $request->validate(['revision' => ['required', 'integer', 'min:0']])['revision'];
         DB::transaction(function () use ($request, $plan, $data, $revision) {
             $locked = $this->lockPlan($plan, $revision);
-            abort_if($locked->approved_at !== null, 409, 'Okres zatwierdzonego planu jest stały. Utwórz plan na nowy okres.');
             if ($locked->department->plans()->where('id', '!=', $locked->id)->whereDate('start_date', $data['start_date'])->whereDate('end_date', $data['end_date'])->exists()) {
                 throw ValidationException::withMessages(['start_month' => 'Plan na ten okres już istnieje. Otwórz go na liście działów.']);
             }
@@ -111,11 +110,10 @@ class FinancialPlanController extends Controller
 
     public function show(Request $request, FinancialPlan $plan)
     {
-        $this->access->authorizeDepartment($request->user(), $plan->department);
-        $data = $request->validate(['scenario' => ['nullable', Rule::in(array_keys(FinancialPlanCalculator::SCENARIOS))]]);
-        $scenario = $data['scenario'] ?? 'base';
-        $calculation = $this->calculator->calculate($plan, $request->user(), $scenario);
-        $lines = $plan->lines->filter(fn ($line) => isset($calculation['details'][$line->id]));
+        $viewData = $this->calculationViewData($request, $plan);
+        $scenario = $viewData['scenario'];
+        $calculation = $viewData['calculation'];
+        $lines = $viewData['lines'];
         $editing = $request->filled('edit') ? $lines->firstWhere('id', (int) $request->input('edit')) : null;
         $canManage = $this->access->allowed($request->user(), true);
         $history = $plan->changes()->with('author:id,name')->latest('id')->paginate(15, ['*'], 'history_page')->withQueryString();
@@ -240,7 +238,7 @@ class FinancialPlanController extends Controller
             $this->record($locked, $request, $line ? 'updated' : 'created', ['before' => $before, 'after' => $saved->toArray()]);
         });
 
-        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano pozycję prognozy. Zatwierdzony plan pozostaje bez zmian.');
+        return redirect()->route('financial-plans.show', $plan)->with('success', 'Zapisano pozycję prognozy. Wyliczenia korzystają z aktualnych danych.');
     }
 
     public function destroyLine(Request $request, FinancialPlan $plan, FinancialPlanLine $line)
@@ -258,31 +256,31 @@ class FinancialPlanController extends Controller
         return back()->with('success', 'Usunięto pozycję z prognozy.');
     }
 
-    public function approve(Request $request, FinancialPlan $plan)
+    public function calculation(Request $request, FinancialPlan $plan)
     {
-        $this->access->authorizeDepartment($request->user(), $plan->department, true);
-        $data = $request->validate(['revision' => ['required', 'integer']]);
-        DB::transaction(function () use ($request, $plan, $data) {
-            $locked = $this->lockPlan($plan, (int) $data['revision']);
-            abort_if($locked->approved_at !== null, 409, 'Plan został już zatwierdzony. Aktualizuj prognozę.');
-            $result = $this->calculator->calculate($locked, $request->user());
-            if (! $result['complete'] || $locked->lines->isEmpty()) {
-                throw ValidationException::withMessages(['plan' => 'Zatwierdzenie wymaga pozycji planu i dostępu do wszystkich źródeł.']);
-            }
-            foreach ($result['warnings'] as $warning) {
-                if (str_contains($warning, 'nieoszacowany') || str_contains($warning, 'Brak kwoty przychodu')) {
-                    throw ValidationException::withMessages(['plan' => 'Uzupełnij brakujące wyceny przed zatwierdzeniem.']);
-                }
-            }
-            $locked->update(['approved_snapshot' => [
-                'rows' => $result['forecast'],
-                'project_ids' => $locked->lines->pluck('project_id')->filter()->unique()->values()->all(),
-                'offer_ids' => $locked->lines->pluck('offer_id')->filter()->unique()->values()->all(),
-            ], 'approved_by' => $request->user()->id, 'approved_at' => now()]);
-            $this->record($locked, $request, 'approved', ['scenario' => 'base', 'snapshot' => $result['forecast']]);
-        });
+        $data = $this->calculationViewData($request, $plan);
+        $html = view('financial-plans.calculation', $data)->render();
+        $fingerprint = hash('sha256', $html);
 
-        return back()->with('success', 'Zatwierdzono plan wybranego okresu według scenariusza bazowego. Kolejne zmiany dotyczą prognozy.');
+        return response()->json([
+            'html' => hash_equals($fingerprint, $request->header('X-Plan-Fingerprint', '')) ? null : $html,
+            'fingerprint' => $fingerprint,
+            'revision' => $plan->revision,
+            'period' => $plan->periodLabel(),
+            'complete' => $data['calculation']['complete'],
+        ])->header('Cache-Control', 'private, no-store');
+    }
+
+    private function calculationViewData(Request $request, FinancialPlan $plan): array
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department);
+        $data = $request->validate(['scenario' => ['nullable', Rule::in(array_keys(FinancialPlanCalculator::SCENARIOS))]]);
+        $scenario = $data['scenario'] ?? 'base';
+        $calculation = $this->calculator->calculate($plan, $request->user(), $scenario);
+        $lines = $plan->lines->filter(fn ($line) => isset($calculation['details'][$line->id]));
+        $canManage = $this->access->allowed($request->user(), true);
+
+        return compact('plan', 'scenario', 'calculation', 'lines', 'canManage');
     }
 
     private function lockPlan(FinancialPlan $plan, int $revision): FinancialPlan

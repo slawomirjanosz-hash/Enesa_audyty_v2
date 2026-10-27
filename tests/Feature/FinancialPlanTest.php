@@ -221,25 +221,22 @@ test('annual totals allocate across years without losing rounding cents', functi
     expect(array_sum($result['forecast']['manual_revenue']))->toBe(6666);
 });
 
-test('approved baseline stays fixed while forecast changes and stale writes are rejected', function () {
+test('live planning has no approval step and still rejects stale writes', function () {
     $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), financialLineData())->assertSessionHasNoErrors();
-    $this->post(route('financial-plans.approve', $this->plan), ['revision' => 1])->assertSessionHasNoErrors();
-    $snapshot = $this->plan->fresh()->approved_snapshot;
     $line = $this->plan->lines()->first();
-    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), financialLineData(['revision' => 2, 'revenue_override' => 240000]))->assertSessionHasNoErrors();
-    expect($this->plan->fresh()->approved_snapshot)->toBe($snapshot);
+    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), financialLineData(['revision' => 1, 'revenue_override' => 240000]))->assertSessionHasNoErrors();
     expect(array_sum(app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager)['forecast']['manual_revenue']))->toBe(24000000);
-    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), financialLineData(['revision' => 2]))->assertConflict();
-    $this->post(route('financial-plans.approve', $this->plan), ['revision' => 3])->assertConflict();
+    $this->put(route('financial-plans.lines.update', [$this->plan, $line]), financialLineData(['revision' => 1]))->assertConflict();
+    $this->post('/financial-plans/'.$this->plan->id.'/approve', ['revision' => 2])->assertNotFound();
+    $this->get(route('financial-plans.show', $this->plan))->assertOk()->assertDontSee('Zatwierdź')->assertDontSee('odchylenie prognozy');
 });
 
-test('missing project cost is flagged and blocks approval until explicitly estimated', function () {
+test('missing source costs remain visible as warnings without blocking live planning', function () {
     $project = financialProject($this->manager);
-    $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'revenue_override' => null, 'cost_override' => null]);
-    $this->actingAs($this->manager)->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasErrors('plan');
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'revenue_override' => null, 'cost_override' => null]);
+    $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->assertSee('Koszt projektu nieoszacowany');
     $project->requirements()->create(['type' => 'service', 'name' => 'Brak kosztu dostawy', 'quantity' => 1, 'estimated_cost' => 0, 'status' => 'planned', 'needed_by' => '2027-01-15', 'created_by' => $this->manager->id]);
-    $this->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasNoErrors();
-    expect($this->plan->fresh()->approved_at)->not->toBeNull();
+    $this->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->assertDontSee('Koszt projektu nieoszacowany');
 });
 
 test('source permission boundaries apply to selection totals snapshots and writes', function () {
@@ -254,7 +251,6 @@ test('source permission boundaries apply to selection totals snapshots and write
     $response->assertOk()->assertDontSee('Poufny projekt')->assertSee('Sumy są częściowe');
     $this->post(route('financial-plans.lines.store', $this->plan), financialLineData(['kind' => 'project', 'project_id' => $project->id]))->assertForbidden();
     $this->put(route('financial-plans.lines.update', [$this->plan, $line]), financialLineData())->assertForbidden();
-    $this->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasErrors('plan');
 });
 
 test('nested line identifiers cannot modify another department plan', function () {
@@ -287,21 +283,23 @@ test('approved sources remain protected after their forecast line is removed', f
     $project = financialProject($this->manager);
     $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'name' => 'Zastrzeżona historia']);
     $project->requirements()->create(['type' => 'service', 'name' => 'Wycena', 'quantity' => 1, 'estimated_cost' => 0, 'status' => 'planned', 'needed_by' => '2027-01-15', 'created_by' => $this->manager->id]);
-    $this->actingAs($this->manager)->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasNoErrors();
-    $this->delete(route('financial-plans.lines.destroy', [$this->plan, $line]), ['revision' => 1, 'reason' => 'Usunięcie poufnego źródła'])->assertSessionHasNoErrors();
+    $this->plan->update(['approved_snapshot' => ['rows' => [], 'project_ids' => [$project->id], 'offer_ids' => []], 'approved_at' => now()]);
+    $this->plan->changes()->create(['action' => 'approved', 'user_id' => $this->manager->id, 'payload' => ['snapshot' => ['Poufna historyczna kwota' => 123456]]]);
+    $this->actingAs($this->manager);
+    $this->delete(route('financial-plans.lines.destroy', [$this->plan, $line]), ['revision' => 0, 'reason' => 'Usunięcie poufnego źródła'])->assertSessionHasNoErrors();
     $viewer = User::factory()->create(['individual_permissions' => true]);
     $viewer->assignRole('admin');
     $viewer->givePermissionTo('financial_plans.view');
     $this->department->planners()->attach($viewer);
     $this->actingAs($viewer)->get(route('financial-plans.show', $this->plan))->assertOk()
         ->assertDontSee('Zastrzeżona historia')->assertDontSee('Usunięcie poufnego źródła')
-        ->assertSee('Podgląd zatwierdzonego planu wymaga dostępu do wszystkich jego źródeł.');
+        ->assertDontSee('Poufna historyczna kwota');
 });
 
-test('selected department members need a salary estimate before annual approval', function () {
+test('selected department members have missing salary estimates indicated in the live plan', function () {
     $this->department->members()->attach($this->manager);
     addFinancialLine($this->plan, $this->manager);
-    $this->actingAs($this->manager)->post(route('financial-plans.approve', $this->plan), ['revision' => 0])->assertSessionHasErrors('plan');
+    $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->assertSee('koszt osoby nieoszacowany');
 });
 
 test('manual overrides remain stable when an offer source value changes', function () {
@@ -365,15 +363,15 @@ test('plans accept reusable month ranges spanning years and display only selecte
     $this->post(route('financial-plans.store', $this->department), ['start_month' => '2028-03'])->assertSessionHasErrors('end_month');
 });
 
-test('draft period changes keep existing lines and enforce revision approval and department access', function () {
+test('period changes keep existing lines and enforce revision and department access', function () {
     addFinancialLine($this->plan, $this->manager);
     $url = route('financial-plans.period.update', $this->plan);
     $this->actingAs($this->manager)->put($url, ['start_month' => '2027-03', 'end_month' => '2027-05', 'revision' => 0])->assertSessionHasNoErrors();
     expect($this->plan->fresh()->periodLabel())->toBe('03.2027 – 05.2027');
     expect($this->plan->lines()->count())->toBe(1);
     $this->put($url, ['start_month' => '2027-04', 'end_month' => '2027-06', 'revision' => 0])->assertConflict();
-    $this->post(route('financial-plans.approve', $this->plan), ['revision' => 1])->assertSessionHasNoErrors();
-    $this->put($url, ['start_month' => '2027-04', 'end_month' => '2027-06', 'revision' => 2])->assertConflict();
+    $this->plan->update(['approved_at' => now()]);
+    $this->put($url, ['start_month' => '2027-04', 'end_month' => '2027-06', 'revision' => 1])->assertSessionHasNoErrors();
     $viewer = User::factory()->create(['individual_permissions' => true]);
     $viewer->assignRole('admin');
     $viewer->givePermissionTo('financial_plans.view');
@@ -455,4 +453,99 @@ test('undated deliveries are flagged instead of spread and cancelled deliveries 
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager);
     expect(array_sum($result['forecast']['direct_cost']))->toBe(0);
     expect(implode(' ', $result['warnings']))->toContain('Brak terminu dostawy');
+});
+
+function financialLiveXPath(string $html): DOMXPath
+{
+    $document = new DOMDocument;
+    @$document->loadHTML('<?xml encoding="UTF-8">'.$html);
+
+    return new DOMXPath($document);
+}
+
+test('live calculation reflects changed project amounts dates statuses and source names without changing plan revision', function () {
+    $this->plan->update(['start_date' => '2027-01-01', 'end_date' => '2027-03-31']);
+    $project = financialProject($this->manager, ['name' => 'Źródło dynamiczne']);
+    $invoice = $project->financialEntries()->create(['type' => 'invoice', 'name' => 'Etap pierwszy', 'amount' => 500, 'status' => 'planned', 'entry_date' => '2027-01-10', 'created_by' => $this->manager->id]);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $url = route('financial-plans.calculation', $this->plan);
+    $first = $this->actingAs($this->manager)->getJson($url)->assertOk()->assertHeader('Cache-Control', 'no-store, private')->json();
+    $xpath = financialLiveXPath($first['html']);
+    $query = '//table[@data-fp-table="forecast"]/tbody/tr[td[@data-sort-value="Przychody z projektów"]]';
+    expect($xpath->query($query.'/td[2]')->item(0)->getAttribute('data-sort-value'))->toBe('500');
+    $this->withHeader('X-Plan-Fingerprint', $first['fingerprint'])->getJson($url)->assertOk()->assertJsonPath('html', null);
+    $invoice->update(['amount' => 700, 'entry_date' => '2027-02-10', 'status' => 'issued']);
+    $project->update(['name' => 'Zmieniona nazwa projektu']);
+    $second = $this->getJson($url)->assertOk()->json();
+    expect($second['fingerprint'])->not->toBe($first['fingerprint']);
+    expect($second['revision'])->toBe(0);
+    $xpath = financialLiveXPath($second['html']);
+    expect($xpath->query($query.'/td[2]')->item(0)->getAttribute('data-sort-value'))->toBe('0');
+    expect($xpath->query($query.'/td[3]')->item(0)->getAttribute('data-sort-value'))->toBe('700');
+    expect($second['html'])->toContain('Zmieniona nazwa projektu: 700,00 zł')->toContain('Etap pierwszy: 700,00 zł');
+    $actual = '//table[@data-fp-table="actual"]/tbody/tr[td[@data-sort-value="Przychody zafakturowane"]]/td[3]';
+    expect($xpath->query($actual)->item(0)->getAttribute('data-sort-value'))->toBe('700');
+    $cash = '//table[@data-fp-table="cash"]/tbody/tr[td[@data-sort-value="Wpływy wg terminów płatności"]]/td[4]';
+    expect($xpath->query($cash)->item(0)->getAttribute('data-sort-value'))->toBe('700');
+});
+
+test('cost charts sum monthly department components and cumulative values excluding direct project costs', function () {
+    $this->plan->update(['start_date' => '2027-01-01', 'end_date' => '2027-03-31']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'salary_cost' => 1000, 'car_cost' => 100, 'start_date' => '2027-01-01', 'end_date' => '2027-01-31']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'salary_cost' => 2000, 'car_cost' => 0, 'start_date' => '2027-02-01', 'end_date' => '2027-03-31']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'overhead', 'cost_override' => 50]);
+    $project = financialProject($this->manager);
+    $project->financialEntries()->create(['type' => 'cost', 'name' => 'Koszt projektu', 'amount' => 9000, 'status' => 'planned', 'entry_date' => '2027-01-10', 'created_by' => $this->manager->id]);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
+    $xpath = financialLiveXPath($html);
+    expect($xpath->query('//svg[@role="img"]')->length)->toBe(2);
+    $monthly = [];
+    $cumulative = [];
+    foreach ($xpath->query('//table[@data-fp-table="chart-values"]/tbody/tr') as $row) {
+        $cells = $row->getElementsByTagName('td');
+        $monthly[] = $cells->item(4)->getAttribute('data-sort-value');
+        $cumulative[] = $cells->item(5)->getAttribute('data-sort-value');
+    }
+    expect($monthly)->toBe(['1150', '2050', '2050']);
+    expect($cumulative)->toBe(['1150', '3200', '5250']);
+    expect($xpath->query('//table[@data-fp-table="forecast"]/ancestor::section/following-sibling::*[1][contains(@class,"fp-cost-chart")]')->length)->toBe(1);
+});
+
+test('live source warnings use compact escaped popovers with unique accessible identifiers', function () {
+    $project = financialProject($this->manager);
+    $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id, 'notes' => '<script>danger()</script> '.str_repeat('Długi opis ', 100)]);
+    $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
+    $xpath = financialLiveXPath($html);
+    $badge = $xpath->query('//button[@data-fp-tip="fp-line-notes-'.$line->id.'"]')->item(0);
+    expect($badge->textContent)->toStartWith('Uwagi (');
+    expect($xpath->query('//*[@id="fp-line-notes-'.$line->id.'"][@popover="manual"][@role="tooltip"]')->length)->toBe(1);
+    expect($xpath->query('//script')->length)->toBe(0);
+    $ids = [];
+    foreach ($xpath->query('//*[@id]') as $element) {
+        $ids[] = $element->getAttribute('id');
+    }
+    expect($ids)->toHaveCount(count(array_unique($ids)));
+    foreach ($xpath->query('//*[@data-fp-tip]') as $trigger) {
+        expect($xpath->query('//*[@id="'.$trigger->getAttribute('aria-describedby').'"]')->length)->toBe(1);
+    }
+});
+
+test('live endpoint rechecks project and department access on every request', function () {
+    $project = financialProject($this->manager, ['name' => 'Poufna nazwa źródła']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $viewer = User::factory()->create(['individual_permissions' => true]);
+    $viewer->assignRole('admin');
+    $viewer->givePermissionTo(['financial_plans.view', 'projects.view', 'projects.finances.view', 'projects.requirements.material_prices.view', 'projects.requirements.service_prices.view']);
+    $this->department->planners()->attach($viewer);
+    $project->members()->attach($viewer);
+    $url = route('financial-plans.calculation', $this->plan);
+    $visible = $this->actingAs($viewer)->getJson($url)->assertOk()->assertJsonPath('complete', true)->json('html');
+    expect($visible)->toContain('Poufna nazwa źródła');
+    $project->members()->detach($viewer);
+    $hidden = $this->getJson($url)->assertOk()->assertJsonPath('complete', false)->json('html');
+    expect($hidden)->not->toContain('Poufna nazwa źródła');
+    $this->department->planners()->detach($viewer);
+    $this->getJson($url)->assertForbidden();
+    $this->actingAs($this->manager)->getJson($url.'?scenario=invalid')->assertUnprocessable();
 });

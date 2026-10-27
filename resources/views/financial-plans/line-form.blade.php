@@ -28,7 +28,7 @@
             <label data-fp-kinds="overhead">Wykonanie: koszt / miesiąc (PLN)<input type="number" min="0" step="0.01" name="actual_cost" value="{{ $value('actual_cost') }}"><small>Opcjonalne; za wskazany okres.</small></label>
             <label class="fp-wide">Opis (opcjonalnie)<textarea name="notes" maxlength="5000" rows="3">{{ $value('notes') }}</textarea></label>
         </div>
-        <div class="fp-note">Koszty osób i samochodów są miesięczne. Uwzględniamy całe wskazane miesiące, bez proporcji dziennych. Podwyżkę lub zmianę samochodu zapisz jako kolejny okres bez nakładania miesięcy. Dane źródłowe aktualizują się przy otwarciu planu; ręczne korekty pozostają zachowane.</div>
+        <div class="fp-note">Koszty osób i samochodów są miesięczne. Uwzględniamy całe wskazane miesiące, bez proporcji dziennych. Podwyżkę lub zmianę samochodu zapisz jako kolejny okres bez nakładania miesięcy. Wyliczenia odświeżają się automatycznie co 5 sekund i po powrocie do karty. Wpisywany formularz pozostaje zachowany.</div>
         <button class="fp-btn primary">{{ $editing ? 'Zapisz zmianę prognozy' : 'Dodaj do prognozy' }}</button>
     </form>
 </section>
