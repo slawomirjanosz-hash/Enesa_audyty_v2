@@ -11,11 +11,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('activity_logs', function (Blueprint $table) {
-            $table->text('search_text')->nullable();
-            $table->string('actor_name')->nullable();
-            $table->boolean('is_noise')->default(false)->index();
-        });
+        // MySQL DDL survives a failed migration; resume without dropping history.
+        if (! Schema::hasColumn('activity_logs', 'search_text')) {
+            Schema::table('activity_logs', fn (Blueprint $table) => $table->text('search_text')->nullable());
+        }
+        if (! Schema::hasColumn('activity_logs', 'actor_name')) {
+            Schema::table('activity_logs', fn (Blueprint $table) => $table->string('actor_name')->nullable());
+        }
+        if (! Schema::hasColumn('activity_logs', 'is_noise')) {
+            Schema::table('activity_logs', fn (Blueprint $table) => $table->boolean('is_noise')->default(false));
+        }
+        if (! Schema::hasIndex('activity_logs', 'activity_logs_is_noise_index')) {
+            Schema::table('activity_logs', fn (Blueprint $table) => $table->index('is_noise'));
+        }
         $presentation = new ActivityLogPresentation;
         ActivityLog::with('user')->chunkById(250, function ($logs) use ($presentation) {
             foreach ($logs as $log) {

@@ -149,8 +149,11 @@ class ActivityLogPresentation
             $excluded = [...$excluded, ...ActivityLogService::VOLATILE_USER_FIELDS];
         }
 
-        return array_filter($log->changes ?? [], fn ($field) => ! in_array($field, $excluded, true)
+        $changes = array_filter($log->changes ?? [], fn ($field) => ! in_array($field, $excluded, true)
             && ! preg_match('/password|token|secret|signature_data|avatar_data|logo_data/i', $field), ARRAY_FILTER_USE_KEY);
+
+        return array_map(fn ($change) => is_array($change) && (array_key_exists('old', $change) || array_key_exists('new', $change))
+            ? $change : ['old' => null, 'new' => $change, 'old_display' => 'Brak zapisanej poprzedniej wartości'], $changes);
     }
 
     public function changeValue(string $field, array $change, string $side): string
@@ -177,8 +180,9 @@ class ActivityLogPresentation
         $changes = $log->changes ?? [];
         foreach ($this->visibleChanges($log) as $field => $change) {
             if (in_array($field, [...self::USER_FIELDS, ...self::USER_LIST_FIELDS], true)) {
+                $changes[$field] = $change;
                 foreach (['old', 'new'] as $side) {
-                    $changes[$field][$side.'_display'] = $this->value($field, $change[$side] ?? null);
+                    $changes[$field][$side.'_display'] = $change[$side.'_display'] ?? $this->value($field, $change[$side] ?? null);
                 }
             }
         }

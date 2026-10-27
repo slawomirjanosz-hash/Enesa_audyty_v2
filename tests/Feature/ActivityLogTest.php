@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Support\ActivityLogPresentation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -207,12 +208,17 @@ test('search respects login tabs and month filters and never indexes protected v
 test('backfill makes older records searchable and suppresses noise without rewriting original changes', function () {
     $migration = require database_path('migrations/2026_10_26_090000_index_activity_log_search_and_noise.php');
     $migration->down();
+    Schema::table('activity_logs', fn ($table) => $table->text('search_text')->nullable());
     $original = ['security_activity_at' => ['old' => null, 'new' => '2026-10-26 08:00:00']];
     $id = DB::table('activity_logs')->insertGetId(['action' => 'updated', 'auditable_type' => User::class, 'subject_label' => 'Dawna aktywność', 'changes' => json_encode($original)]);
     DB::table('activity_logs')->insert(['action' => 'updated', 'auditable_type' => HrVehicle::class, 'subject_label' => 'Stary samochód', 'changes' => json_encode(['responsible_person' => ['old' => 'Żółty', 'new' => 'Łukasz']])]);
+    $legacy = ['responsible_person' => 'Paweł Historyczny', 'revision' => 12, 'legacy_list' => ['Pierwszy', 'Drugi']];
+    $legacyId = DB::table('activity_logs')->insertGetId(['action' => 'updated', 'auditable_type' => HrVehicle::class, 'subject_label' => 'Starszy format', 'changes' => json_encode($legacy)]);
+    $migration->up();
     $migration->up();
     expect(ActivityLog::findOrFail($id)->changes)->toBe($original)->and(ActivityLog::findOrFail($id)->is_noise)->toBeTrue();
     expect(ActivityLog::where('subject_label', 'Stary samochód')->firstOrFail()->search_text)->toContain('żółty', 'łukasz');
+    expect(ActivityLog::findOrFail($legacyId)->changes)->toBe($legacy)->and(ActivityLog::findOrFail($legacyId)->search_text)->toContain('paweł historyczny', 'brak zapisanej poprzedniej wartości', 'pierwszy');
 });
 
 test('search treats wildcard symbols as literal text', function () {
