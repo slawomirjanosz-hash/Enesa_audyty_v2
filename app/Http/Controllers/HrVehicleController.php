@@ -3,15 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\HrVehicle;
+use App\Models\HrVehicleColumnResponsibility;
 use App\Models\User;
 use App\Support\HrAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class HrVehicleController extends Controller
 {
+    public function responsibility(Request $request, string $column): RedirectResponse
+    {
+        abort_unless(HrAccess::canManageSettings($request->user()), 403);
+        abort_unless(array_key_exists($column, HrVehicle::COLUMNS), 404);
+        $eligible = HrVehicleColumnResponsibility::eligiblePeople()->pluck('id')->all();
+        $data = $request->validate([
+            'user_ids' => ['sometimes', 'array', 'max:100'],
+            'user_ids.*' => ['required', 'integer', 'distinct', Rule::in($eligible)],
+            'revision' => ['required', 'integer', 'min:1'],
+        ], ['user_ids.*.in' => 'Wybierz aktywną osobę z uprawnieniem odpowiedzialności za samochody.']);
+        DB::transaction(function () use ($column, $data, $request): void {
+            $assignment = HrVehicleColumnResponsibility::where('column_key', $column)->lockForUpdate()->firstOrFail();
+            abort_unless($assignment->revision === (int) $data['revision'], 409, 'Przypisanie zostało zmienione. Odśwież tabelę samochodów.');
+            $ids = array_map('intval', $data['user_ids'] ?? []);
+            sort($ids);
+            if ($assignment->user_ids !== $ids) {
+                $assignment->forceFill(['user_ids' => $ids, 'updated_by' => $request->user()->id, 'revision' => $assignment->revision + 1])->save();
+            }
+        });
+
+        return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Zapisano odpowiedzialność za kolumnę „'.HrVehicle::COLUMNS[$column].'”.');
+    }
+
     public function location(Request $request, HrVehicle $vehicle): RedirectResponse
     {
         abort_unless($vehicle->canEdit($request->user()), 403);

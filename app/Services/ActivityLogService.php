@@ -11,6 +11,7 @@ use App\Models\ExpenseInvoice;
 use App\Models\HrLeave;
 use App\Models\HrLeaveApprovalTask;
 use App\Models\HrVehicle;
+use App\Models\HrVehicleColumnResponsibility;
 use App\Models\User;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -87,6 +88,9 @@ class ActivityLogService
 
         $newValues = $action === 'created' ? $model->getAttributes() : $model->getChanges();
         $excluded = [...self::HIDDEN_FIELDS, 'signature_data', 'issuer_snapshot'];
+        if ($model instanceof HrVehicleColumnResponsibility) {
+            $excluded = [...$excluded, 'revision', 'updated_by'];
+        }
         if ($model instanceof CylinderProtocol) {
             $excluded = [...$excluded, 'snapshot'];
         }
@@ -129,6 +133,9 @@ class ActivityLogService
 
     private function subjectLabel(Model $model): string
     {
+        if ($model instanceof HrVehicleColumnResponsibility) {
+            return 'Kolumna: '.(HrVehicle::COLUMNS[$model->column_key] ?? $model->column_key);
+        }
         if ($model instanceof HrVehicle) {
             return Str::limit($model->name, 200).' · '.$model->registration_number;
         }

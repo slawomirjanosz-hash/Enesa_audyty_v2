@@ -7,6 +7,7 @@ use App\Models\HrAttendance;
 use App\Models\HrBusinessTrip;
 use App\Models\HrLeave;
 use App\Models\HrVehicle;
+use App\Models\HrVehicleColumnResponsibility;
 use App\Models\HrVehicleLocation;
 use App\Models\User;
 use App\Support\HrAccess;
@@ -70,12 +71,14 @@ class HrController extends Controller
         $defaultOrigin = HrBusinessTrip::where('user_id', $rateOwnerId)->latest()->value('origin') ?? '';
         $canManageHrSettings = HrAccess::canManageSettings($user);
         $vehicleLocations = HrVehicleLocation::orderBy('name')->get();
+        $vehicleColumnResponsibilities = $tab === 'vehicles' ? HrVehicleColumnResponsibility::all()->keyBy('column_key') : collect();
+        $vehicleResponsibilityPeople = $tab === 'vehicles' && $canManageHrSettings ? HrVehicleColumnResponsibility::eligiblePeople() : collect();
         $leaveBalanceUser = $canTeam && ! $request->integer('user_id') ? null : User::find($selectedUserId);
         $leaveBalance = $leaveBalanceUser?->has_employment_contract
             ? $leaveBalanceUser->annualLeaveBalance($leaveYear)
             : null;
 
-        return view('hr.index', compact('canAllLeaves', 'hasReports', 'leaveScope', 'leaveRecipients', 'vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
+        return view('hr.index', compact('vehicleColumnResponsibilities', 'vehicleResponsibilityPeople', 'canAllLeaves', 'hasReports', 'leaveScope', 'leaveRecipients', 'vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
     public function settings(Request $request): View

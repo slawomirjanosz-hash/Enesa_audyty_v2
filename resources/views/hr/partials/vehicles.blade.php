@@ -20,7 +20,12 @@
 <button class="hr-btn" type="button" onclick="openHrModal('vehicle-modal')"><i class="ti ti-plus"></i> Dodaj auto</button></div></div>
 <div class="vehicle-legend">Terminy ubezpieczenia i przeglądu: żółty — do 14 dni, czerwony — do 7 dni (także dzisiaj), czerwony wiersz — po terminie. Prywatne auta są widoczne tylko dla autora.</div>
 <div class="vehicle-table-wrap"><table class="hr-table vehicle-table" style="--columns:{{count($visibleColumns)+2}}"><thead><tr><th>Lp.</th>
-@foreach($visibleColumns as $key=>$label)<th title="{{$label}}" data-sort-label="{{$label}}" @if(in_array($key,['registration_number','fuel_card_number'])) data-sort-type="text" @endif>{{\App\Models\HrVehicle::SHORT_COLUMNS[$key] ?? $label}}</th>@endforeach<th data-sortable="false">Akcje</th></tr></thead><tbody>
+@foreach($visibleColumns as $key=>$label)
+@php
+    $columnPeople = $vehicleColumnResponsibilities->get($key)?->user_ids ?? [];
+@endphp
+<th title="{{$label}}" data-sort-label="{{$label}}" @if(in_array($key,['registration_number','fuel_card_number'])) data-sort-type="text" @endif><span data-sort-title>{{\App\Models\HrVehicle::SHORT_COLUMNS[$key] ?? $label}}</span><span data-table-header-controls><button class="vehicle-column-person {{$columnPeople ? 'assigned' : ''}}" type="button" @disabled(!$canManageHrSettings) aria-label="Odpowiedzialni za: {{$label}}" title="{{$columnPeople ? 'Przypisane osoby: '.count($columnPeople).'. Kliknij, aby sprawdzić lub zmienić.' : 'Wszyscy z uprawnieniem odpowiedzialności za samochody. Kliknij, aby wybrać osoby.'}}" @if($canManageHrSettings) onclick="event.stopPropagation();openVehicleColumnResponsibility(@js($key))" @endif><i class="ti ti-user-cog" aria-hidden="true"></i>@if($columnPeople)<small>{{count($columnPeople)}}</small>@endif</button></span></th>
+@endforeach<th data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($vehicles as $vehicle)
 @php
     $insuranceState = $vehicle->deadlineState('insurance_expires_at');
@@ -76,3 +81,5 @@ if(!window.hrVehicleNavigationReady){
     });
 }
 </script>
+@if($canManageHrSettings)@include('hr.partials.vehicle-column-responsibility')@endif
+<style>.vehicle-column-person{display:inline-flex;align-items:center;justify-content:center;gap:1px;border:0;background:transparent;color:#82918b;cursor:pointer;padding:3px;font-size:13px;border-radius:4px}.vehicle-column-person.assigned{color:#1f3a5f;background:#e6edf7}.vehicle-column-person small{font-size:9px}.vehicle-column-person:disabled{cursor:default}.vehicle-column-person:hover:not(:disabled){background:#dbeafe}.vehicle-column-people{display:grid;gap:8px;max-height:45vh;overflow:auto;margin:15px 0}.vehicle-column-people label{display:flex;align-items:center;gap:9px;padding:6px}.vehicle-column-people input{width:17px;height:17px;accent-color:var(--green)}.vehicle-table th>[data-table-header-controls]{display:inline-block}</style>

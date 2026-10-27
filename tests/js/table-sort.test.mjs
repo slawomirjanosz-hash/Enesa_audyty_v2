@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {compareValues, sortValue, sortBody} from '../../public/js/table-sort.js';
+import {compareValues, sortValue, sortBody, enhanceTable} from '../../public/js/table-sort.js';
 
 test('Polish amounts, negative amounts, decimals and percentages sort numerically', () => {
     assert.deepEqual(['1 234,50 zł', '12,40 zł', '-100,00 zł'].sort(compareValues), ['-100,00 zł', '12,40 zł', '1 234,50 zł']);
@@ -27,6 +27,38 @@ test('versions and identifiers use natural ordering, not decimal ordering', () =
     assert.ok(compareValues('2.9', '2.10', 'asc', 'text') < 0);
     assert.ok(compareValues('AUD/2', 'AUD/10') < 0);
     assert.equal(sortValue('12/2026'), '12/2026');
+});
+
+test('column responsibility controls remain clickable beside the shared sort button', () => {
+    const previousDocument = globalThis.document, previousWindow = globalThis.window;
+    const person = {onClick: () => 'choose-person'};
+    const controls = {contains: node => node === person};
+    const attributes = new Map();
+    let children;
+    const header = {
+        dataset: {}, textContent: 'Ubezpieczenie 2',
+        querySelector: selector => selector === '[data-table-header-controls]' ? controls : selector === '[data-sort-title]' ? {textContent: 'Ubezpieczenie'} : null,
+        querySelectorAll: () => [person],
+        removeAttribute: key => attributes.delete(key),
+        replaceChildren: (...nodes) => {children = nodes;},
+        setAttribute: (key, value) => attributes.set(key, value),
+        getAttribute: key => attributes.get(key),
+    };
+    const makeElement = () => ({textContent: '', setAttribute() {}, append() {}, addEventListener(event, callback) {this[event] = callback;}});
+    globalThis.document = {createElement: makeElement};
+    globalThis.window = {location: {search: ''}};
+    try {
+        enhanceTable({closest: () => null, tHead: {rows: [{cells: [header]}]}, dataset: {}});
+        assert.equal(children.length, 2);
+        assert.equal(children[0].className, 'app-table-sort');
+        assert.equal(children[0].textContent, 'Ubezpieczenie');
+        assert.equal(typeof children[0].click, 'function');
+        assert.equal(children[1], controls);
+        assert.equal(person.onClick(), 'choose-person');
+    } finally {
+        if (previousDocument === undefined) delete globalThis.document; else globalThis.document = previousDocument;
+        if (previousWindow === undefined) delete globalThis.window; else globalThis.window = previousWindow;
+    }
 });
 function row(value, options = {}) {
     return {

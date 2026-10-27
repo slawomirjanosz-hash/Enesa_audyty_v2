@@ -63,11 +63,12 @@ export function enhanceTable(table) {
     headers.forEach((header, column) => {
         if (initialized.has(header)) return;
         initialized.add(header);
-        const label = header.textContent.replace(/[⇅↕↑↓]/g, '').trim();
+        const controls = header.querySelector('[data-table-header-controls]');
+        const label = (header.querySelector('[data-sort-title]') || header).textContent.replace(/[⇅↕↑↓]/g, '').trim();
         if (!label || isActionHeading(label) || /^(lp\.?|#|wybierz|zaznacz)$/i.test(label) || header.querySelector('input') || header.dataset.sortable === 'false') return;
         const keys = table.dataset.serverSort?.split(',');
         // Preserve dedicated sort controls; supplement only missing columns.
-        if (!keys && header.querySelector('button,a')) return;
+        if (!keys && [...header.querySelectorAll('button,a')].some(control => !controls?.contains(control))) return;
         header.removeAttribute('onclick');
         header.onclick = null;
         const button = document.createElement('button');
@@ -81,7 +82,7 @@ export function enhanceTable(table) {
         marker.setAttribute('aria-hidden', 'true');
         marker.textContent = '↕';
         button.append(' ', marker);
-        header.replaceChildren(button);
+        header.replaceChildren(button, ...(controls ? [controls] : []));
         const params = new URLSearchParams(window.location.search);
         const prefix = table.dataset.sortPrefix || 'table';
         if (keys && params.get(`${prefix}_sort`) === keys[column]) {

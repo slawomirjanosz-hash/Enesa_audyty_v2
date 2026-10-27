@@ -15,7 +15,9 @@ class ActivityLogPresentation
 
     private array $vehicleRegistrations = [];
 
-    private const USER_FIELDS = ['assigned_to', 'user_id', 'created_by', 'manager_id', 'responsible_user_id', 'supervisor_id', 'owner_id', 'deleted_by', 'settled_by'];
+    private const USER_FIELDS = ['assigned_to', 'user_id', 'created_by', 'manager_id', 'responsible_user_id', 'supervisor_id', 'owner_id', 'deleted_by', 'settled_by', 'updated_by'];
+
+    private const USER_LIST_FIELDS = ['user_ids', 'participants', 'hr_vehicle_manager_ids'];
 
     private const LABELS = [
         'hr_km_rate' => 'Stawka za kilometr delegacji', 'hr_diet_rate' => 'Dieta za dobę delegacji',
@@ -29,6 +31,7 @@ class ActivityLogPresentation
         'assigned_to' => 'Osoba odpowiedzialna', 'user_id' => 'Użytkownik',
         'created_by' => 'Autor', 'company_id' => 'Firma — ID', 'project_id' => 'Projekt — ID',
         'responsible_user_id' => 'Przypisany pracownik', 'supervisor_id' => 'Przełożony', 'owner_id' => 'Kupujący',
+        'user_ids' => 'Osoby odpowiedzialne za kolumnę', 'updated_by' => 'Zmienił(a)',
         'audit_id' => 'Audyt — ID', 'manager_id' => 'Kierownik — ID', 'supplier_id' => 'Dostawca — ID',
         'due_date' => 'Termin wykonania', 'start_date' => 'Data rozpoczęcia', 'end_date' => 'Data zakończenia',
         'is_active' => 'Aktywne', 'is_blocked' => 'Zablokowane', 'blocked_at' => 'Data zablokowania',
@@ -104,7 +107,10 @@ class ActivityLogPresentation
         }
         if (is_array($value)) {
             if ($value === []) {
-                return 'Brak pozycji';
+                return $field === 'user_ids' ? 'Wszyscy uprawnieni za samochody (domyślnie)' : 'Brak pozycji';
+            }
+            if (in_array($field, self::USER_LIST_FIELDS, true)) {
+                return implode("\n", array_map(fn ($id) => $this->value('user_id', $id), $value));
             }
 
             return implode("\n", array_map(fn ($item) => $field === 'enabled_modules' && is_string($item)
@@ -170,7 +176,7 @@ class ActivityLogPresentation
     {
         $changes = $log->changes ?? [];
         foreach ($this->visibleChanges($log) as $field => $change) {
-            if (in_array($field, self::USER_FIELDS, true)) {
+            if (in_array($field, [...self::USER_FIELDS, ...self::USER_LIST_FIELDS], true)) {
                 foreach (['old', 'new'] as $side) {
                     $changes[$field][$side.'_display'] = $this->value($field, $change[$side] ?? null);
                 }

@@ -68,6 +68,7 @@ class ActivityLog extends Model
             'ImportantContact' => 'CRM / ważny kontakt',
             'HrBusinessTrip' => 'HR / delegacja', 'HrAttendance' => 'HR / lista obecności',
             'HrVehicle' => 'HR / samochód',
+            'HrVehicleColumnResponsibility' => 'HR / odpowiedzialność za kolumny samochodów',
             'WarehouseItem' => 'Magazyn / pozycja',
             'WarehouseDocument' => 'Magazyn / dokument',
             'WarehouseDocumentLine' => 'Magazyn / ruch',
