@@ -10,6 +10,7 @@ use App\Models\CylinderProtocol;
 use App\Models\ExpenseInvoice;
 use App\Models\HrLeave;
 use App\Models\HrLeaveApprovalTask;
+use App\Models\HrVehicle;
 use App\Models\User;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -17,12 +18,12 @@ use Illuminate\Support\Str;
 
 class ActivityLogService
 {
-    private const HIDDEN_FIELDS = [
+    public const HIDDEN_FIELDS = [
         'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes', 'external_url',
         'avatar_data', 'signature_data', 'public_gantt_token', 'token', 'api_token', 'created_at', 'updated_at',
     ];
 
-    private const VOLATILE_USER_FIELDS = ['last_seen_at', 'dashboard_tasks_seen_id'];
+    public const VOLATILE_USER_FIELDS = ['last_seen_at', 'dashboard_tasks_seen_id', 'security_activity_at', 'last_login_at', 'failed_login_count', 'failed_login_attempts', 'failed_login_at', 'login_locked_until'];
 
     public function recordModel(Model $model, string $action): void
     {
@@ -128,6 +129,9 @@ class ActivityLogService
 
     private function subjectLabel(Model $model): string
     {
+        if ($model instanceof HrVehicle) {
+            return Str::limit($model->name, 200).' · '.$model->registration_number;
+        }
         foreach (['name', 'title', 'number', 'original_filename', 'email'] as $field) {
             if (filled($model->getAttribute($field))) {
                 return (string) $model->getAttribute($field);

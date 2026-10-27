@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\ActivityLogPresentation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,7 +18,18 @@ class ActivityLog extends Model
     protected $casts = [
         'changes' => 'array',
         'created_at' => 'datetime',
+        'is_noise' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (ActivityLog $log): void {
+            $log->created_at ??= now();
+            $presentation = new ActivityLogPresentation;
+            $presentation->snapshotUserNames($log);
+            $log->forceFill($presentation->indexData($log));
+        });
+    }
 
     public function user(): BelongsTo
     {

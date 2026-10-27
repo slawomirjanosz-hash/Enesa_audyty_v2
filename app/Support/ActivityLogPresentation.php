@@ -5,10 +5,18 @@ namespace App\Support;
 use App\Models\ActivityLog;
 use App\Models\CompanySettings;
 use App\Models\HrVehicle;
+use App\Models\User;
+use App\Services\ActivityLogService;
 use Carbon\Carbon;
 
 class ActivityLogPresentation
 {
+    private array $userNames = [];
+
+    private array $vehicleRegistrations = [];
+
+    private const USER_FIELDS = ['assigned_to', 'user_id', 'created_by', 'manager_id', 'responsible_user_id', 'supervisor_id', 'owner_id', 'deleted_by', 'settled_by'];
+
     private const LABELS = [
         'hr_km_rate' => 'Stawka za kilometr delegacji', 'hr_diet_rate' => 'Dieta za dobę delegacji',
         'hr_vehicle_manager_ids' => 'Osoby zarządzające samochodami',
@@ -18,8 +26,9 @@ class ActivityLogPresentation
         'short_name' => 'Skrócona nazwa firmy', 'tagline' => 'Opis firmy', 'offer_tagline' => 'Opis na ofertach',
         'primary_color' => 'Kolor firmowy', 'enabled_modules' => 'Włączone moduły', 'welcome_page_mode' => 'Strona powitalna',
         'status' => 'Status', 'priority' => 'Priorytet', 'progress' => 'Postęp', 'number' => 'Numer',
-        'assigned_to' => 'Osoba odpowiedzialna — ID', 'user_id' => 'Użytkownik — ID',
-        'created_by' => 'Autor — ID', 'company_id' => 'Firma — ID', 'project_id' => 'Projekt — ID',
+        'assigned_to' => 'Osoba odpowiedzialna', 'user_id' => 'Użytkownik',
+        'created_by' => 'Autor', 'company_id' => 'Firma — ID', 'project_id' => 'Projekt — ID',
+        'responsible_user_id' => 'Przypisany pracownik', 'supervisor_id' => 'Przełożony', 'owner_id' => 'Kupujący',
         'audit_id' => 'Audyt — ID', 'manager_id' => 'Kierownik — ID', 'supplier_id' => 'Dostawca — ID',
         'due_date' => 'Termin wykonania', 'start_date' => 'Data rozpoczęcia', 'end_date' => 'Data zakończenia',
         'is_active' => 'Aktywne', 'is_blocked' => 'Zablokowane', 'blocked_at' => 'Data zablokowania',
@@ -40,8 +49,29 @@ class ActivityLogPresentation
         return self::LABELS[$field] ?? HrVehicle::COLUMNS[$field] ?? ucfirst(str_replace('_', ' ', $field));
     }
 
+    public function subject(ActivityLog $log): string
+    {
+        $subject = $log->subject_label ?: '—';
+        if ($log->auditable_type === HrVehicle::class && $log->auditable_id) {
+            $id = $log->auditable_id;
+            if (! array_key_exists($id, $this->vehicleRegistrations)) {
+                $this->vehicleRegistrations[$id] = HrVehicle::whereKey($id)->value('registration_number');
+            }
+            $registration = $this->vehicleRegistrations[$id];
+            if ($registration && ! str_contains($subject, $registration)) {
+                return $subject.' · nr rej. obecnie: '.$registration;
+            }
+        }
+
+        return $subject;
+    }
+
     public function context(ActivityLog $log): string
     {
+        if ($log->auditable_type === HrVehicle::class && array_intersect(['responsible_person', 'responsible_user_id', 'user_id'], array_keys($this->visibleChanges($log)))) {
+            return 'Zmiana przypisania samochodu';
+        }
+
         return match ($log->route_name) {
             'hr.settings.update' => 'Ustawienia rozliczania delegacji i samochodów',
             'settings.company.update' => 'Dane i ustawienia firmy',
@@ -56,6 +86,12 @@ class ActivityLogPresentation
         }
         if ($value === null || $value === '') {
             return 'Brak wartości';
+        }
+        if (in_array($field, self::USER_FIELDS, true) && is_numeric($value)) {
+            $id = (int) $value;
+            $this->userNames[$id] ??= User::withTrashed()->whereKey($id)->value('name') ?: 'Usunięty użytkownik';
+
+            return $this->userNames[$id].' (#'.$id.')';
         }
         if (is_bool($value) || in_array($field, ['vat_26', 'gps', 'registration_document_present', 'is_active', 'is_blocked'], true)) {
             return $value ? 'Tak' : 'Nie';
@@ -98,5 +134,48 @@ class ActivityLogPresentation
         }
 
         return (string) $value;
+    }
+
+    public function visibleChanges(ActivityLog $log): array
+    {
+        $excluded = ActivityLogService::HIDDEN_FIELDS;
+        if ($log->auditable_type === User::class) {
+            $excluded = [...$excluded, ...ActivityLogService::VOLATILE_USER_FIELDS];
+        }
+
+        return array_filter($log->changes ?? [], fn ($field) => ! in_array($field, $excluded, true)
+            && ! preg_match('/password|token|secret|signature_data|avatar_data|logo_data/i', $field), ARRAY_FILTER_USE_KEY);
+    }
+
+    public function changeValue(string $field, array $change, string $side): string
+    {
+        return $change[$side.'_display'] ?? $this->value($field, $change[$side] ?? null);
+    }
+
+    public function indexData(ActivityLog $log): array
+    {
+        $changes = $this->visibleChanges($log);
+        $text = [$this->subject($log), $log->areaLabel(), $log->actionLabel(), $log->action, $log->route_name, $this->context($log),
+            $log->user?->name ?? $log->actor_name, $log->user?->email, $log->created_at?->format('d.m.Y H:i:s')];
+        foreach ($changes as $field => $change) {
+            $text = [...$text, $field, $this->fieldLabel($field), $this->changeValue($field, $change, 'old'), $this->changeValue($field, $change, 'new')];
+        }
+
+        return ['search_text' => mb_strtolower(implode("\n", array_filter($text, fn ($value) => $value !== null))),
+            'actor_name' => $log->actor_name ?? $log->user?->name,
+            'is_noise' => $log->action === 'updated' && $log->auditable_type === User::class && ! empty($log->changes) && $changes === []];
+    }
+
+    public function snapshotUserNames(ActivityLog $log): void
+    {
+        $changes = $log->changes ?? [];
+        foreach ($this->visibleChanges($log) as $field => $change) {
+            if (in_array($field, self::USER_FIELDS, true)) {
+                foreach (['old', 'new'] as $side) {
+                    $changes[$field][$side.'_display'] = $this->value($field, $change[$side] ?? null);
+                }
+            }
+        }
+        $log->changes = $changes ?: null;
     }
 }
