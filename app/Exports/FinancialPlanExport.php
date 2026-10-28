@@ -22,7 +22,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FinancialPlanExport extends DefaultValueBinder implements FromArray, WithCharts, WithCustomValueBinder, WithStrictNullComparison, WithStyles, WithTitle
 {
-    public function __construct(private array $rows, private string $label, private array $chartColumns = [], private array $moneyColumns = []) {}
+    public function __construct(private array $rows, private string $label, private array $chartColumns = [], private array $moneyColumns = [], private array $formulas = []) {}
 
     public function array(): array
     {
@@ -47,6 +47,11 @@ class FinancialPlanExport extends DefaultValueBinder implements FromArray, WithC
 
     public function styles(Worksheet $sheet): array
     {
+        foreach ($this->formulas as $address => $formula) {
+            $cell = $sheet->getCell($address);
+            $value = $cell->getValue();
+            $cell->setValueExplicit($formula, DataType::TYPE_FORMULA)->setCalculatedValue($value);
+        }
         $last = count($this->rows);
         $lastColumn = Coordinate::stringFromColumnIndex(count($this->rows[6]));
         $sheet->freezePane('B8');

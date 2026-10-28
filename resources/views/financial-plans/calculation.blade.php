@@ -34,7 +34,7 @@
         ];
     @endphp
     <section class="fp-card"><div class="fp-head"><h2>Źródła i założenia prognozy</h2>@include('financial-plans.export-link', ['exportSection' => 'sources'])</div><p class="fp-muted fp-source-legend">Kwoty w PLN · opisy w chmurkach.</p><div class="fp-scroll" data-fp-scroll="sources"><table data-fp-table="sources" data-action-icons="false" class="fp-source-table"><thead><tr>
-        @foreach($sourceHeaders as $headerKey => [$short, $full, $description, $width])<th style="width:{{ $width }}%" data-sort-label="{{ $full }}" data-fp-tip="fp-source-heading-{{ $headerKey }}" aria-describedby="fp-source-heading-{{ $headerKey }}">{{ $short }}</th>@endforeach
+        @foreach($sourceHeaders as $headerKey => [$short, $full, $description, $width])<th @class(['number' => in_array($headerKey, ['source-revenue', 'source-cost', 'plan-revenue', 'plan-cost'])]) style="width:{{ $width }}%" data-sort-label="{{ $full }}" data-fp-tip="fp-source-heading-{{ $headerKey }}" aria-describedby="fp-source-heading-{{ $headerKey }}">{{ $short }}</th>@endforeach
         @if($canManage)<th style="width:10%" data-sortable="false">Akcje</th>@endif
     </tr></thead><tbody>
         @foreach($lines as $line)@php

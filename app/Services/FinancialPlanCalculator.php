@@ -267,7 +267,7 @@ class FinancialPlanCalculator
                 foreach ($forecast[$row] as $month => $amount) {
                     $contribution = $amount - $beforeForecast[$row][$month];
                     if ($contribution !== 0) {
-                        $breakdown[$row][$month][] = ['name' => $line->name, 'amount' => $contribution];
+                        $breakdown[$row][$month][] = ['line_id' => $line->id, 'name' => $line->name, 'amount' => $contribution];
                     }
                 }
             }

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Services\FinancialPlanAccess;
 use App\Services\FinancialPlanCalculator;
 use App\Services\FinancialPlanChartData;
+use App\Services\FinancialPlanExcelFormulas;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -398,31 +399,55 @@ class FinancialPlanController extends Controller
             }
             $moneyColumns = range(2, count($rows[6]));
         } elseif ($section === 'people') {
-            $rows[] = ['Osoba', 'Okres', 'Wynagrodzenie / mies.', 'Samochód', 'Samochód / mies.', 'Razem w okresie'];
+            $rows[] = ['Osoba', 'Okres', 'Wynagrodzenie / mies.', 'Samochód', 'Samochód / mies.', 'Razem w okresie', 'Liczba miesięcy w planie'];
             foreach ($data['lines']->where('kind', 'person')->where('enabled', true) as $line) {
-                $rows[] = [$line->person?->name ?? 'Osoba archiwalna', $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y'), (float) $line->salary_cost, $line->car_name, (float) $line->car_cost, $calculation['details'][$line->id]['lineCost'] / 100];
+                $months = count(array_filter($calculation['months'], fn ($month) => $month->betweenIncluded($line->start_date->copy()->startOfMonth(), $line->end_date->copy()->endOfMonth())));
+                $rows[] = [$line->person?->name ?? 'Osoba archiwalna', $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y'), (float) $line->salary_cost, $line->car_name, (float) $line->car_cost, $calculation['details'][$line->id]['lineCost'] / 100, $months];
             }
             $moneyColumns = [3, 5, 6];
         } elseif ($section === 'sources') {
             $rows[] = ['Pozycja', 'Rodzaj', 'Okres', 'Uwzględniona', 'Ocena', 'Szansa (%)', 'Przychód źródłowy (PLN)', 'Koszt źródłowy (PLN)', 'Przychód planu (PLN)', 'Koszt planu (PLN)', 'Opis i uwagi'];
+            foreach ($calculation['months'] as $month) {
+                $rows[6][] = 'Przychód '.$month->format('m.Y');
+                $rows[6][] = 'Koszt '.$month->format('m.Y');
+            }
             foreach ($data['lines'] as $line) {
                 $detail = $calculation['details'][$line->id];
                 $rating = $line->kind === 'offer' ? FinancialPlanLine::QUALIFICATIONS[$line->qualification] : ($line->kind === 'project' ? FinancialPlanLine::ACCURACY[$line->budget_accuracy] : '');
                 $rows[] = [$line->name, FinancialPlanLine::KINDS[$line->kind], $line->kind === 'project' ? 'Według dat faktur i dostaw' : $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y'), $line->enabled ? 'Tak' : 'Nie', $rating, $line->kind === 'offer' ? $line->probability : null, $detail['sourceRevenue'] === null ? null : (float) $detail['sourceRevenue'], $detail['sourceCost'] === null ? null : (float) $detail['sourceCost'], $detail['lineRevenue'] / 100, $detail['lineCost'] / 100, implode("\n", array_filter(array_merge([$line->notes], $detail['lineWarnings'])))];
+                foreach (array_keys($calculation['months']) as $month) {
+                    $income = $cost = 0;
+                    foreach (['contracted', 'pipeline', 'manual_revenue', 'direct_cost', 'salary', 'car', 'overhead'] as $key) {
+                        $amount = collect($calculation['breakdown'][$key][$month] ?? [])->where('line_id', $line->id)->sum('amount');
+                        if (in_array($key, ['contracted', 'pipeline', 'manual_revenue'], true)) {
+                            $income += $amount;
+                        } else {
+                            $cost += $amount;
+                        }
+                    }
+                    $rows[array_key_last($rows)][] = $income / 100;
+                    $rows[array_key_last($rows)][] = $cost / 100;
+                }
             }
             $moneyColumns = [7, 8, 9, 10];
+            $moneyColumns = array_merge($moneyColumns, range(12, count($rows[6])));
         } elseif ($section === 'result') {
-            $rows[] = ['Miesiąc', 'Wynik miesiąca bez ofert', 'Zyski narastająco', 'Straty narastająco', 'Wynik bez ofert', 'Prognoza z ofertami', 'Wartość ofert (100%)'];
-            foreach (FinancialPlanChartData::result($calculation) as $month) {
+            $rows[] = ['Miesiąc', 'Wynik miesiąca bez ofert', 'Zyski narastająco', 'Straty narastająco', 'Wynik bez ofert', 'Prognoza z ofertami', 'Wartość ofert (100%)', 'Przychód bez ofert w miesiącu', 'Koszty realizacji bez ofert w miesiącu', 'Koszty wydziałowe w miesiącu', 'Przychód ofert ważony w miesiącu', 'Koszt ofert ważony w miesiącu', 'Wartość ofert 100% w miesiącu'];
+            foreach (FinancialPlanChartData::result($calculation) as $index => $month) {
                 $rows[] = [$month['label'], $month['monthlyResult'] / 100, $month['profit'] / 100, $month['loss'] / 100, $month['balance'] / 100, $month['predicted'] / 100, $month['offers'] / 100];
+                $key = $index + 1;
+                $forecast = $calculation['forecast'];
+                $rows[array_key_last($rows)] = array_merge($rows[array_key_last($rows)], [($forecast['contracted'][$key] + $forecast['manual_revenue'][$key]) / 100, ($forecast['direct_cost'][$key] - $calculation['offerForecast']['cost'][$key]) / 100, ($forecast['salary'][$key] + $forecast['car'][$key] + $forecast['overhead'][$key]) / 100, $calculation['offerForecast']['revenue'][$key] / 100, $calculation['offerForecast']['cost'][$key] / 100, $calculation['offerForecast']['value'][$key] / 100]);
             }
             $chartColumns = [3, 4, 5, 6, 7];
-            $moneyColumns = [2, 3, 4, 5, 6, 7];
+            $moneyColumns = range(2, 13);
         } else {
             $cumulative = $section === 'cost-cumulative';
             $rows[] = ['Miesiąc', 'Wynagrodzenia', 'Samochody', 'Pozostałe koszty działu', $cumulative ? 'Razem narastająco' : 'Razem w miesiącu'];
             if ($section === 'cost-values') {
                 $rows[6][] = 'Narastająco';
+            } elseif ($cumulative) {
+                $rows[6] = array_merge($rows[6], ['Wynagrodzenia w miesiącu', 'Samochody w miesiącu', 'Pozostałe koszty w miesiącu']);
             }
             $running = ['salary' => 0, 'car' => 0, 'overhead' => 0];
             foreach (FinancialPlanChartData::costs($calculation) as $month) {
@@ -433,17 +458,22 @@ class FinancialPlanController extends Controller
                 $rows[] = [$month['label'], $values['salary'] / 100, $values['car'] / 100, $values['overhead'] / 100, $month[$cumulative ? 'cumulative' : 'monthly'] / 100];
                 if ($section === 'cost-values') {
                     $rows[array_key_last($rows)][] = $month['cumulative'] / 100;
+                } elseif ($cumulative) {
+                    $rows[array_key_last($rows)] = array_merge($rows[array_key_last($rows)], [$month['salary'] / 100, $month['car'] / 100, $month['overhead'] / 100]);
                 }
             }
             $chartColumns = $cumulative ? [5] : [2, 3, 4];
             $moneyColumns = [2, 3, 4, 5];
+            if ($cumulative) {
+                $moneyColumns = range(2, 8);
+            }
             if ($section === 'cost-values') {
                 $chartColumns = [];
                 $moneyColumns[] = 6;
             }
         }
 
-        $response = Excel::download(new FinancialPlanExport($rows, $label, $chartColumns, $moneyColumns), 'plan-'.$plan->id.'-'.$section.'.xlsx');
+        $response = Excel::download(new FinancialPlanExport($rows, $label, $chartColumns, $moneyColumns, FinancialPlanExcelFormulas::build($section, $rows)), 'plan-'.$plan->id.'-'.$section.'.xlsx');
         $response->headers->set('Cache-Control', 'private, no-store');
 
         return $response;

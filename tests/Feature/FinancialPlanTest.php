@@ -94,13 +94,15 @@ test('Excel exports contain numeric chart values and preserve literal source tex
     if ($section === 'sources') {
         expect($sheet->getCell('A9')->getValue())->toStartWith('=HYPERLINK')
             ->and($sheet->getCell('A9')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
-            ->and($sheet->getCell('J8')->getValue())->toBe(1500);
+            ->and($sheet->getCell('J8')->getCalculatedValue())->toEqual(1500)
+            ->and($sheet->getCell('J8')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
     } else {
         expect($sheet->getChartCount())->toBe(1);
         if ($section !== 'result') {
-            expect($sheet->getCell('B8')->getValue())->toBe(100)
-                ->and($sheet->getCell('D8')->getValue())->toBe(0)
-                ->and($sheet->getCell('E9')->getValue())->toBe($section === 'cost-cumulative' ? 250 : 125);
+            expect($sheet->getCell('B8')->getCalculatedValue())->toEqual(100)
+                ->and($sheet->getCell('D8')->getCalculatedValue())->toEqual(0)
+                ->and($sheet->getCell('E9')->getCalculatedValue())->toEqual($section === 'cost-cumulative' ? 250 : 125)
+                ->and($sheet->getCell('E9')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
         }
     }
     $book->disconnectWorksheets();
@@ -132,21 +134,44 @@ test('forecast cash and people tables export their current numeric values', func
     $sheet = $book->getActiveSheet();
     if ($section === 'forecast') {
         expect($sheet->getCell('A10')->getValue())->toBe('Pozostała planowana sprzedaż')
-            ->and($sheet->getCell('N10')->getValue())->toBe(120000)
+            ->and($sheet->getCell('N10')->getCalculatedValue())->toEqual(120000)
             ->and($sheet->getCell('B13')->getValue())->toBe(100);
     } elseif ($section === 'cash') {
         expect($sheet->getCell('A8')->getValue())->toBe('Wpływy · projekty i oferty')
             ->and($sheet->getCell('B8')->getValue())->toBe(0)
-            ->and($sheet->getCell('N10')->getValue())->toBe(0);
+            ->and($sheet->getCell('N10')->getCalculatedValue())->toEqual(0);
     } elseif ($section === 'cost-values') {
-        expect($sheet->getCell('F9')->getValue())->toBe(250);
+        expect($sheet->getCell('F9')->getCalculatedValue())->toEqual(250);
     } else {
         expect($sheet->getCell('A8')->getValue())->toBe($this->manager->name)
             ->and($sheet->getCell('C8')->getValue())->toBe(100.0)
-            ->and($sheet->getCell('F8')->getValue())->toBe(1500);
+            ->and($sheet->getCell('F8')->getCalculatedValue())->toEqual(1500);
     }
     $book->disconnectWorksheets();
 })->with(['forecast', 'cash', 'people', 'cost-values']);
+
+test('exported formulas recalculate after changing their input cells', function (string $section, string $input, int $value, string $output, float $expected) {
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'user_id' => $this->manager->id, 'salary_cost' => 100, 'car_cost' => 25]);
+    addFinancialLine($this->plan, $this->manager);
+    $response = $this->actingAs($this->manager)->get(route('financial-plans.export', [$this->plan, 'section' => $section]))->assertOk();
+    \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder(new \PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder);
+    $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($response->baseResponse->getFile()->getPathname());
+    $sheet = $book->getActiveSheet();
+    expect($sheet->getCell($output)->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
+    $sheet->setCellValue($input, $value);
+    \PhpOffice\PhpSpreadsheet\Calculation\Calculation::getInstance($book)->clearCalculationCache();
+    expect((float) $sheet->getCell($output)->getCalculatedValue())->toEqualWithDelta($expected, 0.00001);
+    $book->disconnectWorksheets();
+})->with([
+    ['forecast', 'B10', 2000, 'N10', 112000.0],
+    ['cash', 'B8', 2000, 'N10', 2000.0],
+    ['people', 'C8', 200, 'F8', 2700.0],
+    ['sources', 'L9', 2000, 'I9', 112000.0],
+    ['result', 'H8', 2000, 'E8', 208.33],
+    ['cost-monthly', 'B8', 200, 'E8', 225.0],
+    ['cost-cumulative', 'F8', 200, 'E9', 350.0],
+    ['cost-values', 'B8', 200, 'F9', 350.0],
+]);
 
 test('four forecast tiles reconcile revenue realization costs department costs and result', function () {
     addFinancialLine($this->plan, $this->manager);

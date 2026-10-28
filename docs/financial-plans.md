@@ -54,3 +54,7 @@ Lista działu pokazuje zwarte wiersze planów: nazwa (domyślnie nazwa działu),
 ## Eksport Excel
 
 Każdy wykres (koszty miesięczne, narastające, zysk i strata) oraz tabele prognozy miesięcznej, przepływów, źródeł, osób i danych wykresów mają Excel w prawym górnym rogu. Pełna tabela kosztów eksportuje również kolumnę narastającą. Pobierany XLSX zawiera aktualne dane, wybrany okres i scenariusz; eksport wykresu zawiera również edytowalny wykres Excel. Obliczenia dla widoku i arkusza korzystają ze wspólnego zestawu danych. Eksport respektuje dostęp do działu, projektów i ofert, pomija niedostępne źródła i oznacza częściowe sumy. Nazwy i opisy są zapisywane jako tekst, nie formuły. Sekcja Wykonanie została usunięta z widoku, lecz dane wykonania pozostają do wyliczeń kafelków i kosztów.
+
+## Wyrównanie i formuły eksportu
+
+Nagłówki kwot w źródłach są wyrównane do prawej krawędzi wartości, a delikatne pionowe linie rozdzielają kolumny. XLSX zachowuje formuły sum, marży, wyniku, niedoboru i wartości narastających. Eksport źródeł zawiera miesięczne wkłady każdej pozycji i formuły sum okresu, z rozróżnieniem pozycji po identyfikatorze (również przy jednakowych nazwach). Eksport osób zawiera liczbę miesięcy i formułę miesięczny koszt × miesiące. Eksport wyniku oraz kosztów narastających zawiera dodatkowe kolumny wejściowe. Dane źródłowe pozostają migawką z systemu; arkusz po edycji wejść przelicza pochodne wartości. Tylko wewnętrznie zbudowane formuły są zapisywane jako formuły — nazwy i opisy nadal są tekstem.
