@@ -14,7 +14,7 @@
     $summaryKey = $chartSummaryKey ?? 'balance';
 @endphp
 <details class="fp-card fp-trend-chart fp-exportable" data-fp-details="{{ $chartId }}" open>
-    <summary class="fp-trend-summary"><span><span class="fp-trend-title">{{ $chartTitle }} @include('financial-plans.hint', ['hintId' => $chartId.'-description-help', 'hintLabel' => '?', 'hintTitle' => $chartTitle, 'hintText' => $chartDescription, 'hintItems' => [], 'hintClass' => 'fp-info'])</span><span class="fp-muted">{{ $chartMeta ?? $plan->periodLabel().' · '.\App\Services\FinancialPlanCalculator::SCENARIOS[$scenario] }}</span></span></summary>
+    <summary class="fp-trend-summary"><span><span class="fp-trend-title">{{ $chartTitle }} @include('financial-plans.hint', ['hintId' => $chartId.'-description-help', 'hintLabel' => '?', 'hintTitle' => $chartTitle, 'hintText' => $chartDescription, 'hintItems' => [], 'hintClass' => 'fp-info'])</span><span class="fp-muted">{{ $chartMeta ?? $plan->periodLabel() }}</span></span></summary>
     @if($chartId === 'fp-result-chart')@include('financial-plans.export-link', ['exportSection' => 'result'])@endif<div class="fp-trend-body">
         <div class="fp-chart-legend">@foreach($chartSeries as $key => $series)<div class="fp-legend-item"><span><i style="background:{{ $series['color'] }}"></i>{{ $series['label'] }}</span><span class="fp-legend-amount {{ $lastMonth[$key] < 0 ? 'negative' : '' }}">{{ $money($lastMonth[$key]) }}</span></div>@endforeach</div>
         <div class="fp-chart-scroll" data-fp-scroll="{{ $chartId }}">

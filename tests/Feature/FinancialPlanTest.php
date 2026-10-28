@@ -90,7 +90,7 @@ test('Excel exports contain numeric chart values and preserve literal source tex
     $reader->setIncludeCharts(true);
     $book = $reader->load($response->baseResponse->getFile()->getPathname());
     $sheet = $book->getActiveSheet();
-    expect($sheet->getCell('B4')->getValue())->toBe('Bazowy');
+    expect($sheet->getCell('B4')->getValue())->toBe('100% kwot z harmonogramu');
     if ($section === 'sources') {
         expect($sheet->getCell('A9')->getValue())->toStartWith('=HYPERLINK')
             ->and($sheet->getCell('A9')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
@@ -224,22 +224,27 @@ test('offer payment schedule drives monthly forecast cash and separate full offe
         ['direction' => 'out', 'date' => '2027-03-05', 'amount' => '300'],
     ];
     $data = financialLineData(['kind' => 'offer', 'offer_id' => $offer->id, 'revenue_override' => null, 'cost_override' => null, 'offer_schedule' => $schedule]);
+    unset($data['probability'], $data['qualification']);
     $this->actingAs($this->manager)->post(route('financial-plans.lines.store', $this->plan), $data)->assertSessionHasNoErrors();
     $line = $this->plan->lines()->first();
     expect($line->offer_schedule)->toBe($schedule)->and((float) $line->cost_override)->toBe(400.0);
     expect(DB::table('financial_plan_lines')->value('offer_schedule'))->not->toContain('2027-01-10');
+    // Existing offers also use the schedule in full, irrespective of old risk settings.
+    $line->update(['probability' => 0, 'qualification' => 'excluded', 'risk_reserve' => 999]);
     $calc = app(FinancialPlanCalculator::class);
     $result = $calc->calculate($this->plan->fresh(), $this->manager);
-    expect(array_slice(array_values($result['forecast']['pipeline']), 0, 3))->toBe([15000, 35000, 0])
-        ->and(array_slice(array_values($result['cash']['out']), 0, 3))->toBe([5000, 0, 15000])
-        ->and(array_sum($result['cash']['in']))->toBe(50000)
+    expect(array_slice(array_values($result['forecast']['pipeline']), 0, 3))->toBe([30000, 70000, 0])
+        ->and(array_slice(array_values($result['cash']['out']), 0, 3))->toBe([10000, 0, 30000])
+        ->and(array_sum($result['cash']['in']))->toBe(100000)
+        ->and(array_sum($result['forecast']['direct_cost']))->toBe(40000)
+        ->and(array_sum($result['forecast']['result']))->toBe(60000)
         ->and(array_sum($result['offerForecast']['value']))->toBe(100000);
     $html = $this->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
     $xpath = financialLiveXPath($html);
     $first = $xpath->query('//table[@data-fp-table="fp-result-chart-values"]/tbody/tr')->item(0);
     $values = collect(iterator_to_array($first->getElementsByTagName('td')))->slice(1)->map(fn ($cell) => $cell->getAttribute('data-sort-value'))->values()->all();
-    expect($values)->toBe(['0', '0', '0', '0', '100', '300']);
-    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager, 'cautious')['cash']['in']))->toBe(0);
+    expect($values)->toBe(['0', '0', '0', '0', '200', '300']);
+    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager, 'cautious')['cash']['in']))->toBe(100000);
     $line->update(['enabled' => false]);
     expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager)['cash']['in']))->toBe(0);
 });
@@ -255,7 +260,7 @@ test('offer schedule rejects incomplete totals and retains dates beyond selected
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
     expect(array_sum($result['cash']['in']))->toBe(0);
     $this->plan->update(['end_date' => '2028-03-31']);
-    expect(array_sum(app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager)['cash']['in']))->toBe(50000);
+    expect(array_sum(app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager)['cash']['in']))->toBe(100000);
 });
 
 test('line controls enforce department ownership and deletion needs no reason', function () {
@@ -445,19 +450,19 @@ test('project contract invoices and purchased requirements are counted only once
     expect(array_sum($result['forecast']['direct_cost']))->toBe(3000000);
 });
 
-test('offers use scenarios exclude lost deals and are replaced by linked projects', function () {
+test('offers count fully regardless of chance qualification or status and are replaced by linked projects', function () {
     $company = Company::create(['name' => 'Klient', 'type' => 'client']);
     $offer = Offer::create(['offer_number' => 'FP-OF-1', 'offer_title' => 'Oferta', 'status' => 'w_toku', 'company_id' => $company->id, 'created_by_id' => $this->manager->id, 'kwota_netto' => 100000, 'is_template' => false]);
     $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'offer', 'offer_id' => $offer->id, 'probability' => 40, 'revenue_override' => null, 'cost_override' => 30000]);
     $calc = app(FinancialPlanCalculator::class);
-    expect(array_sum($calc->calculate($this->plan, $this->manager, 'base')['forecast']['pipeline']))->toBe(4000000);
-    expect(array_sum($calc->calculate($this->plan, $this->manager, 'cautious')['forecast']['pipeline']))->toBe(0);
+    expect(array_sum($calc->calculate($this->plan, $this->manager, 'base')['forecast']['pipeline']))->toBe(10000000);
+    expect(array_sum($calc->calculate($this->plan, $this->manager, 'cautious')['forecast']['pipeline']))->toBe(10000000);
     expect(array_sum($calc->calculate($this->plan, $this->manager, 'optimistic')['forecast']['pipeline']))->toBe(10000000);
-    $line->update(['qualification' => 'reserve']);
-    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager)['forecast']['pipeline']))->toBe(0);
+    $line->update(['qualification' => 'reserve', 'probability' => 0]);
+    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager)['forecast']['pipeline']))->toBe(10000000);
     $line->update(['qualification' => 'confirmed']);
     $offer->update(['status' => 'przegrana']);
-    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager, 'optimistic')['forecast']['pipeline']))->toBe(0);
+    expect(array_sum($calc->calculate($this->plan->fresh(), $this->manager, 'optimistic')['forecast']['pipeline']))->toBe(10000000);
     $offer->update(['status' => 'wygrana']);
     $project = financialProject($this->manager);
     addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'offer_id' => $offer->id, 'project_id' => $project->id]);

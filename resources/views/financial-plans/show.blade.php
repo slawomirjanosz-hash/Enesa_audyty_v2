@@ -10,8 +10,7 @@
         @include('financial-plans.plan-settings', ['department' => $plan->department])
         <button class="fp-btn primary">Zapisz plan</button>
     </form></details>@endif
-    <div class="fp-tabs">@foreach(\App\Services\FinancialPlanCalculator::SCENARIOS as $key => $label)<a class="{{ $scenario === $key ? 'active' : '' }}" href="{{ route('financial-plans.show', [$plan, 'scenario' => $key]) }}">{{ $label }}</a>@endforeach</div>
-    <p class="fp-muted">Scenariusz określa, które oferty wchodzą do przychodów i kosztów. @include('financial-plans.hint', ['hintId' => 'fp-scenarios-help', 'hintLabel' => 'Jak liczymy scenariusze?', 'hintTitle' => 'Scenariusze', 'hintText' => 'Ostrożny: projekty i potwierdzone oferty. Bazowy: także realne oferty ważone szansą. Optymistyczny: także rezerwowe oferty w pełnej wartości. Wykluczone, przegrane i zastąpione projektem oferty są pomijane. Ręczna sprzedaż i koszty utrzymania działu są wspólne dla scenariuszy.', 'hintItems' => []])</p>
+    <p class="fp-muted">Dodane oferty są liczone w 100% według harmonogramu przychodów i kosztów. Pozycję możesz wyłączyć ikoną oka.</p>
     <div id="fp-live-calculation">@include('financial-plans.calculation')</div>
 
     @if($canManage)@include('financial-plans.line-form')@endif

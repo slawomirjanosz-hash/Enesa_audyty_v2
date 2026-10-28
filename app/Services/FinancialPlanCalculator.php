@@ -22,9 +22,9 @@ class FinancialPlanCalculator
 
     public const EXPLANATIONS = [
         'contracted' => 'Suma faktur klienta z dodanych projektów: planowanych, wystawionych i opłaconych, według daty dokumentu. Wartość umowy bez zaplanowanych faktur nie jest doliczana.',
-        'pipeline' => 'Przychody ofert według harmonogramu płatności i współczynnika scenariusza. Bez harmonogramu: równy rozkład na okres realizacji, bez uwzględniania w przepływach. Bazowy: realne oferty według szansy, potwierdzone 100%. Przegrane i zastąpione projektem są pomijane.',
-        'manual_revenue' => 'Ręcznie wpisana planowana sprzedaż, rozłożona równo na okres pozycji. Wspólna dla wszystkich scenariuszy.',
-        'direct_cost' => 'Koszty zapisane w finansach projektów oraz planowane i zrealizowane dostawy, według ich dat. Dostawa ujęta w finansach jest liczona raz. Dodatkowo szacowane koszty ofert i ręcznej sprzedaży z rezerwą, ważone scenariuszem.',
+        'pipeline' => 'Przychody ofert w 100% według kwot i dat wpisanego harmonogramu. Bez harmonogramu: równy rozkład na okres realizacji, bez przepływów. Oferty zastąpione projektem lub inną wersją tej samej oferty są pomijane.',
+        'manual_revenue' => 'Ręcznie wpisana planowana sprzedaż, rozłożona równo na okres pozycji.',
+        'direct_cost' => 'Koszty zapisane w finansach projektów oraz planowane i zrealizowane dostawy, według ich dat. Dostawa ujęta w finansach jest liczona raz. Koszty ofert w 100% według harmonogramu oraz koszty ręcznej sprzedaży z rezerwą.',
         'margin' => 'Marża = przychody z projektów + przychody z ofert + pozostała sprzedaż − bezpośrednie koszty realizacji. Ta kwota służy pokryciu utrzymania działu.',
         'salary' => 'Miesięczny pełny koszt zatrudnienia wskazanych osób, wraz z narzutami pracodawcy. Naliczany tylko w miesiącach przypisania osoby.',
         'car' => 'Miesięczne koszty samochodów przypisanych do osób, tylko w miesiącach obowiązywania pozycji.',
@@ -32,8 +32,8 @@ class FinancialPlanCalculator
         'result' => 'Wynik działu = marża na pokrycie działu − wynagrodzenia − samochody − pozostałe koszty działu. Kwota ujemna oznacza niedobór pokrycia kosztów.',
         'gap' => 'W miesiącu: brakująca kwota do wyjścia na zero, gdy wynik jest ujemny. W sumie okresu: niedobór po zbilansowaniu wyników wszystkich miesięcy, a nie suma miesięcznych niedoborów.',
         'revenue' => 'Wykonanie: wyłącznie wystawione i opłacone faktury klienta według daty dokumentu. Planowane faktury są tylko w prognozie.',
-        'in' => 'Wpływy z faktur klienta według terminu płatności (bez terminu: data dokumentu + 30 dni) oraz raty ofert według harmonogramu, ważone scenariuszem. Obejmuje planowane faktury; kwoty netto.',
-        'out' => 'Koszty finansowe projektów według terminu płatności (bez terminu: data dokumentu + 30 dni) oraz koszty ofert z harmonogramu, ważone scenariuszem. Bez kosztów utrzymania działu i dostaw niezapisanych w finansach.',
+        'in' => 'Wpływy z faktur klienta według terminu płatności (bez terminu: data dokumentu + 30 dni) oraz raty ofert według harmonogramu, w pełnej kwocie. Obejmuje planowane faktury; kwoty netto.',
+        'out' => 'Koszty finansowe projektów według terminu płatności (bez terminu: data dokumentu + 30 dni) oraz koszty ofert z harmonogramu, w pełnej kwocie. Bez kosztów utrzymania działu i dostaw niezapisanych w finansach.',
         'balance' => 'Saldo harmonogramu projektów i ofert = wpływy − wydatki danego miesiąca. Bez VAT, salda rachunku i kosztów utrzymania działu.',
     ];
 
@@ -101,28 +101,27 @@ class FinancialPlanCalculator
             if ($line->kind === 'offer') {
                 $offer = $line->offer;
                 $opportunity = $offer?->crm_opportunity_id;
-                $excluded = ! $offer || in_array($offer->status, ['przegrana', 'zarchiwizowana'], true)
-                    || in_array($offer->crmOpportunity?->stage, ['lost', 'rejected'], true)
+                $excluded = ! $offer
                     || in_array($offer->id, $representedOffers, true)
                     || ($opportunity && in_array($opportunity, $representedOpportunities, true));
                 if ($opportunity && in_array($opportunity, $seenOpportunities, true)) {
                     $excluded = true;
                     $lineWarnings[] = 'Inna oferta tej samej szansy CRM jest już ujęta. Ta pozycja jest pominięta.';
                 }
-                if (! $excluded && $line->qualification !== 'excluded' && $opportunity) {
+                if (! $excluded && $opportunity) {
                     $seenOpportunities[] = $opportunity;
                 }
-                $factor = $excluded ? 0 : $this->factor($line, $scenario);
+                $factor = $excluded ? 0 : 1.0;
                 if ($excluded) {
-                    $lineWarnings[] = 'Oferta pominięta: przegrana, archiwalna albo zastąpiona projektem / inną ofertą.';
+                    $lineWarnings[] = 'Oferta pominięta: brak źródła albo zastąpiona projektem / inną ofertą.';
                 }
                 $sourceRevenue = $offer?->kwota_netto;
                 $revenue ??= $sourceRevenue;
-                if ($remainingCost === null && $factor > 0) {
+                $sourceCost = $line->offer_schedule
+                    ? collect($line->offer_schedule)->where('direction', 'out')->sum('amount')
+                    : $remainingCost;
+                if ($sourceCost === null && $factor > 0) {
                     $lineWarnings[] = 'Koszt oferty nieoszacowany — wynik wymaga uzupełnienia.';
-                }
-                if ($line->updated_at->lt(now()->subDays(30)) && $factor > 0) {
-                    $lineWarnings[] = 'Ocena szans nie była aktualizowana od ponad 30 dni.';
                 }
             } elseif ($line->kind === 'project') {
                 $project = $line->project;
@@ -220,10 +219,10 @@ class FinancialPlanCalculator
                             $this->atDate($offerForecast['value'], $this->cents($payment['amount']), $date, $plan);
                         }
                     }
-                    $this->spread($forecast['direct_cost'], (int) round($this->cents($line->risk_reserve) * $factor), $line, $plan);
                 } else {
                     $lineRevenue = $this->spread($forecast[$key], (int) round($this->cents($revenue) * $factor), $line, $plan);
-                    $lineCost = $this->spread($forecast['direct_cost'], (int) round(($this->cents($remainingCost) + $this->cents($line->risk_reserve)) * $factor), $line, $plan);
+                    $reserve = $line->kind === 'revenue' ? $this->cents($line->risk_reserve) : 0;
+                    $lineCost = $this->spread($forecast['direct_cost'], (int) round(($this->cents($remainingCost) + $reserve) * $factor), $line, $plan);
                     if ($line->kind === 'offer' && $factor > 0) {
                         $this->spread($offerForecast['value'], $this->cents($revenue), $line, $plan);
                         $lineWarnings[] = 'Brak harmonogramu płatności oferty — oferta nie wchodzi do przepływów.';
@@ -339,25 +338,6 @@ class FinancialPlanCalculator
 
         return ['opening' => $initialBalance, 'balance' => $months ? $balance : null, 'received' => $received, 'spent' => $spent, 'months' => $months, 'transactions' => $transactions, 'warnings' => array_values(array_unique($warnings)), 'complete' => $initialBalance !== null && $sourcesComplete && ! $warnings, 'asOf' => $cutoff->toDateString()];
     }
-
-    private function factor(FinancialPlanLine $line, string $scenario): float
-    {
-        if ($line->qualification === 'excluded') {
-            return 0;
-        }
-        if ($line->qualification === 'confirmed') {
-            return 1;
-        }
-        if ($scenario === 'cautious') {
-            return 0;
-        }
-        if ($line->qualification === 'reserve' && $scenario !== 'optimistic') {
-            return 0;
-        }
-
-        return $scenario === 'optimistic' ? 1 : $line->probability / 100;
-    }
-
     private function emptyRows(array $keys, array $months): array
     {
         return array_fill_keys($keys, array_fill_keys(array_keys($months), 0));

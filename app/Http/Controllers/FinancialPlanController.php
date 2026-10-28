@@ -244,8 +244,8 @@ class FinancialPlanController extends Controller
             'project_id' => ['nullable', 'required_if:kind,project', 'integer'],
             'offer_id' => ['nullable', 'required_if:kind,offer', 'integer'],
             'user_id' => ['nullable', 'required_if:kind,person', 'integer'],
-            'qualification' => ['required_if:kind,offer', 'nullable', Rule::in(array_keys(FinancialPlanLine::QUALIFICATIONS))],
-            'probability' => ['required_if:kind,offer', 'nullable', 'integer', 'between:0,100'],
+            'qualification' => ['nullable', Rule::in(array_keys(FinancialPlanLine::QUALIFICATIONS))],
+            'probability' => ['nullable', 'integer', 'between:0,100'],
             'budget_accuracy' => ['required_if:kind,project', 'nullable', Rule::in(array_keys(FinancialPlanLine::ACCURACY))],
             'start_date' => ['exclude_if:kind,project', 'required_unless:kind,project', 'date_format:Y-m-d', 'after_or_equal:2020-01-01', 'before_or_equal:2100-12-31'],
             'end_date' => ['exclude_if:kind,project', 'required_unless:kind,project', 'date_format:Y-m-d', 'after_or_equal:start_date', 'before_or_equal:2100-12-31'],
@@ -268,8 +268,8 @@ class FinancialPlanController extends Controller
         }
         $data['start_date'] = CarbonImmutable::parse($data['start_date'])->startOfMonth()->toDateString();
         $data['end_date'] = CarbonImmutable::parse($data['end_date'])->endOfMonth()->toDateString();
-        $data['qualification'] ??= 'real';
-        $data['probability'] ??= 50;
+        $data['probability'] = 100;
+        $data['qualification'] = 'confirmed';
         $data['budget_accuracy'] ??= 'initial';
         $data['project_id'] = $data['kind'] === 'project' ? ($data['project_id'] ?? null) : null;
         $data['offer_id'] = in_array($data['kind'], ['project', 'offer'], true) ? ($data['offer_id'] ?? null) : null;
@@ -387,7 +387,7 @@ class FinancialPlanController extends Controller
         $data = $this->calculationViewData($request, $plan);
         $calculation = $data['calculation'];
         $label = ['cost-monthly' => 'Koszty miesięczne', 'cost-cumulative' => 'Koszty narastająco', 'cost-values' => 'Wartości kosztów', 'result' => 'Zysk i strata', 'sources' => 'Źródła i założenia', 'forecast' => 'Prognoza miesięczna', 'cash' => 'Przepływy pieniężne', 'people' => 'Koszty wydziałowe'][$section];
-        $rows = [[$label], ['Plan', $plan->name ?: $plan->department->name], ['Okres', $plan->periodLabel()], ['Scenariusz', FinancialPlanCalculator::SCENARIOS[$data['scenario']]], ['Zakres', $calculation['complete'] ? 'Dane dostępne w Twoich uprawnieniach' : 'Sumy częściowe — część źródeł jest niedostępna'], [null]];
+        $rows = [[$label], ['Plan', $plan->name ?: $plan->department->name], ['Okres', $plan->periodLabel()], ['Sposób liczenia ofert', '100% kwot z harmonogramu'], ['Zakres', $calculation['complete'] ? 'Dane dostępne w Twoich uprawnieniach' : 'Sumy częściowe — część źródeł jest niedostępna'], [null]];
         $chartColumns = $moneyColumns = [];
         if (in_array($section, ['forecast', 'cash'], true)) {
             $labels = $section === 'forecast' ? FinancialPlanCalculator::ROWS : ['in' => 'Wpływy · projekty i oferty', 'out' => 'Wydatki · projekty i oferty', 'balance' => 'Saldo przepływów'];
@@ -406,15 +406,15 @@ class FinancialPlanController extends Controller
             }
             $moneyColumns = [3, 5, 6];
         } elseif ($section === 'sources') {
-            $rows[] = ['Pozycja', 'Rodzaj', 'Okres', 'Uwzględniona', 'Ocena', 'Szansa (%)', 'Przychód źródłowy (PLN)', 'Koszt źródłowy (PLN)', 'Przychód planu (PLN)', 'Koszt planu (PLN)', 'Opis i uwagi'];
+            $rows[] = ['Pozycja', 'Rodzaj', 'Okres', 'Uwzględniona', 'Ocena', 'Ujęcie w planie (%)', 'Przychód źródłowy (PLN)', 'Koszt źródłowy (PLN)', 'Przychód planu (PLN)', 'Koszt planu (PLN)', 'Opis i uwagi'];
             foreach ($calculation['months'] as $month) {
                 $rows[6][] = 'Przychód '.$month->format('m.Y');
                 $rows[6][] = 'Koszt '.$month->format('m.Y');
             }
             foreach ($data['lines'] as $line) {
                 $detail = $calculation['details'][$line->id];
-                $rating = $line->kind === 'offer' ? FinancialPlanLine::QUALIFICATIONS[$line->qualification] : ($line->kind === 'project' ? FinancialPlanLine::ACCURACY[$line->budget_accuracy] : '');
-                $rows[] = [$line->name, FinancialPlanLine::KINDS[$line->kind], $line->kind === 'project' ? 'Według dat faktur i dostaw' : $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y'), $line->enabled ? 'Tak' : 'Nie', $rating, $line->kind === 'offer' ? $line->probability : null, $detail['sourceRevenue'] === null ? null : (float) $detail['sourceRevenue'], $detail['sourceCost'] === null ? null : (float) $detail['sourceCost'], $detail['lineRevenue'] / 100, $detail['lineCost'] / 100, implode("\n", array_filter(array_merge([$line->notes], $detail['lineWarnings'])))];
+                $rating = $line->kind === 'offer' ? 'W planie (100%)' : ($line->kind === 'project' ? FinancialPlanLine::ACCURACY[$line->budget_accuracy] : '');
+                $rows[] = [$line->name, FinancialPlanLine::KINDS[$line->kind], $line->kind === 'project' ? 'Według dat faktur i dostaw' : $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y'), $line->enabled ? 'Tak' : 'Nie', $rating, $line->kind === 'offer' ? 100 : null, $detail['sourceRevenue'] === null ? null : (float) $detail['sourceRevenue'], $detail['sourceCost'] === null ? null : (float) $detail['sourceCost'], $detail['lineRevenue'] / 100, $detail['lineCost'] / 100, implode("\n", array_filter(array_merge([$line->notes], $detail['lineWarnings'])))];
                 foreach (array_keys($calculation['months']) as $month) {
                     $income = $cost = 0;
                     foreach (['contracted', 'pipeline', 'manual_revenue', 'direct_cost', 'salary', 'car', 'overhead'] as $key) {
@@ -432,7 +432,7 @@ class FinancialPlanController extends Controller
             $moneyColumns = [7, 8, 9, 10];
             $moneyColumns = array_merge($moneyColumns, range(12, count($rows[6])));
         } elseif ($section === 'result') {
-            $rows[] = ['Miesiąc', 'Wynik miesiąca bez ofert', 'Zyski narastająco', 'Straty narastająco', 'Wynik bez ofert', 'Prognoza z ofertami', 'Wartość ofert (100%)', 'Przychód bez ofert w miesiącu', 'Koszty realizacji bez ofert w miesiącu', 'Koszty wydziałowe w miesiącu', 'Przychód ofert ważony w miesiącu', 'Koszt ofert ważony w miesiącu', 'Wartość ofert 100% w miesiącu'];
+            $rows[] = ['Miesiąc', 'Wynik miesiąca bez ofert', 'Zyski narastająco', 'Straty narastająco', 'Wynik bez ofert', 'Prognoza z ofertami', 'Wartość ofert (100%)', 'Przychód bez ofert w miesiącu', 'Koszty realizacji bez ofert w miesiącu', 'Koszty wydziałowe w miesiącu', 'Przychód ofert z harmonogramu w miesiącu', 'Koszt ofert z harmonogramu w miesiącu', 'Wartość ofert 100% w miesiącu'];
             foreach (FinancialPlanChartData::result($calculation) as $index => $month) {
                 $rows[] = [$month['label'], $month['monthlyResult'] / 100, $month['profit'] / 100, $month['loss'] / 100, $month['balance'] / 100, $month['predicted'] / 100, $month['offers'] / 100];
                 $key = $index + 1;
