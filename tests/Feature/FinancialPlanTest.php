@@ -123,6 +123,48 @@ test('Excel exports enforce access and omit inaccessible sources', function () {
     $this->get(route('financial-plans.export', [$this->plan, 'section' => 'unknown']))->assertSessionHasErrors('section');
 });
 
+test('forecast cash and people tables export their current numeric values', function (string $section) {
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'user_id' => $this->manager->id, 'salary_cost' => 100, 'car_cost' => 25]);
+    addFinancialLine($this->plan, $this->manager);
+    $response = $this->actingAs($this->manager)->get(route('financial-plans.export', [$this->plan, 'section' => $section]))->assertOk()->assertDownload('plan-'.$this->plan->id.'-'.$section.'.xlsx');
+    \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder(new \PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder);
+    $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($response->baseResponse->getFile()->getPathname());
+    $sheet = $book->getActiveSheet();
+    if ($section === 'forecast') {
+        expect($sheet->getCell('A10')->getValue())->toBe('Pozostała planowana sprzedaż')
+            ->and($sheet->getCell('N10')->getValue())->toBe(120000)
+            ->and($sheet->getCell('B13')->getValue())->toBe(100);
+    } elseif ($section === 'cash') {
+        expect($sheet->getCell('A8')->getValue())->toBe('Wpływy · projekty i oferty')
+            ->and($sheet->getCell('B8')->getValue())->toBe(0)
+            ->and($sheet->getCell('N10')->getValue())->toBe(0);
+    } elseif ($section === 'cost-values') {
+        expect($sheet->getCell('F9')->getValue())->toBe(250);
+    } else {
+        expect($sheet->getCell('A8')->getValue())->toBe($this->manager->name)
+            ->and($sheet->getCell('C8')->getValue())->toBe(100.0)
+            ->and($sheet->getCell('F8')->getValue())->toBe(1500);
+    }
+    $book->disconnectWorksheets();
+})->with(['forecast', 'cash', 'people', 'cost-values']);
+
+test('four forecast tiles reconcile revenue realization costs department costs and result', function () {
+    addFinancialLine($this->plan, $this->manager);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'salary_cost' => 100, 'car_cost' => 25]);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'overhead', 'cost_override' => 50]);
+    $html = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json('html');
+    $xpath = financialLiveXPath($html);
+    $values = [];
+    foreach ($xpath->query('//div[contains(@class,"fp-kpi-grid")]/div/div[contains(@class,"fp-kpi")]') as $cell) {
+        $values[] = (float) str_replace(',', '.', preg_replace('/[^\d,\-]/u', '', $cell->textContent));
+    }
+    expect($values)->toBe([120000.0, 20000.0, 2100.0, 97900.0]);
+    expect($values[0] - $values[1] - $values[2])->toBe($values[3]);
+    foreach (['forecast', 'cash', 'sources', 'people', 'cost-monthly', 'cost-cumulative', 'result'] as $section) {
+        expect($html)->toContain('section='.$section);
+    }
+});
+
 test('creating named plans and deleting a plan preserves project sources and shared payments', function () {
     $this->actingAs($this->manager)->post(route('financial-plans.store', $this->department), ['name' => 'Nowy plan', 'start_month' => '2028-01', 'end_month' => '2028-06'])->assertSessionHasNoErrors();
     expect($this->department->plans()->where('name', 'Nowy plan')->exists())->toBeTrue();
@@ -212,7 +254,7 @@ test('compact totals separate issued invoices and project costs from offers and 
     addFinancialLine($this->plan, $this->manager);
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager);
     expect(array_sum($result['actual']['revenue']))->toBe(30000)->and($result['projectCosts'])->toBe(9000);
-    $this->actingAs($this->manager)->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Przychody nieopłacone')->assertSee('Wydatki nieopłacone')->assertSee('Wyłącz z wyliczeń')->assertDontSee('Powód usunięcia');
+    $this->actingAs($this->manager)->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Koszty realizacji')->assertDontSee('Przychody nieopłacone')->assertDontSee('Wydatki nieopłacone')->assertSee('Wyłącz z wyliczeń')->assertDontSee('Powód usunięcia');
     $line = $this->plan->lines()->where('kind', 'project')->first();
     $line->update(['enabled' => false]);
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
@@ -233,10 +275,10 @@ test('unpaid tiles count only issued project invoices and costs in the selected 
     $calculator = app(FinancialPlanCalculator::class);
     expect($calculator->calculate($this->plan->fresh(), $this->manager)['unpaid'])->toBe(['revenue' => 35000, 'cost' => 8000, 'invoiceCount' => 2, 'costCount' => 1]);
     $first = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json();
-    expect($first['html'])->toContain('Liczba faktur: 2')->toContain('Liczba zapisów: 1');
+    expect($first['html'])->not->toContain('Liczba faktur:')->not->toContain('Liczba zapisów:');
     $project->financialEntries()->where('type', 'invoice')->where('amount', 100)->first()->update(['status' => 'paid']);
     $second = $this->withHeader('X-Plan-Fingerprint', $first['fingerprint'])->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json();
-    expect($second['fingerprint'])->not->toBe($first['fingerprint']);
+    expect($second['fingerprint'])->toBe($first['fingerprint']);
     expect($calculator->calculate($this->plan->fresh(), $this->manager)['unpaid']['revenue'])->toBe(25000);
     $line->update(['enabled' => false]);
     expect($calculator->calculate($this->plan->fresh(), $this->manager)['unpaid'])->toBe(['revenue' => 0, 'cost' => 0, 'invoiceCount' => 0, 'costCount' => 0]);

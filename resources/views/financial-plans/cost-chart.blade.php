@@ -16,7 +16,7 @@
                 $points = [];
                 foreach ($costMonths as $i => $costMonth) $points[] = (75 + $step * ($i + .5)).','.round(210 - $costMonth[$chartKind] * $scale, 2);
             @endphp
-            <details class="fp-chart-panel" data-fp-details="chart-cost-{{ $chartKind }}" open><summary>{{ $chartTitle }}</summary>@include('financial-plans.export-link', ['exportSection' => 'cost-'.$chartKind])<div class="fp-chart-scroll" data-fp-scroll="chart-{{ $chartKind }}">
+            <details class="fp-chart-panel fp-exportable" data-fp-details="chart-cost-{{ $chartKind }}" open><summary>{{ $chartTitle }}</summary>@include('financial-plans.export-link', ['exportSection' => 'cost-'.$chartKind])<div class="fp-chart-scroll" data-fp-scroll="chart-{{ $chartKind }}">
                 <svg viewBox="0 0 {{ $chartWidth }} 265" style="min-width:{{ $chartWidth }}px" role="img" aria-labelledby="fp-chart-{{ $chartKind }}-title fp-chart-{{ $chartKind }}-desc">
                     <title id="fp-chart-{{ $chartKind }}-title">{{ $chartTitle }} · koszty utrzymania działu</title>
                     <desc id="fp-chart-{{ $chartKind }}-desc">Kwoty w PLN. Wartości każdego miesiąca są dostępne po najechaniu lub przejściu klawiszem Tab oraz w tabeli pod wykresami.</desc>
@@ -50,7 +50,7 @@
             @endforeach
         @endforeach
     </div>
-    <details data-fp-details="chart-values"><summary>Pokaż wartości wykresu</summary><div class="fp-scroll" data-fp-scroll="chart-values"><table data-fp-table="chart-values"><thead><tr><th>Miesiąc</th><th>Wynagrodzenia</th><th>Samochody</th><th>Pozostałe koszty</th><th>Razem w miesiącu</th><th>Narastająco</th></tr></thead><tbody>
+    <details class="fp-exportable" data-fp-details="chart-values"><summary>Pokaż wartości wykresu</summary>@include('financial-plans.export-link', ['exportSection' => 'cost-values'])<div class="fp-scroll" data-fp-scroll="chart-values"><table data-fp-table="chart-values"><thead><tr><th>Miesiąc</th><th>Wynagrodzenia</th><th>Samochody</th><th>Pozostałe koszty</th><th>Razem w miesiącu</th><th>Narastająco</th></tr></thead><tbody>
         @foreach($costMonths as $i => $costMonth)<tr><td data-sort-value="{{ $calculation['months'][$i + 1]->format('Y-m') }}">{{ $costMonth['label'] }}</td>@foreach(['salary', 'car', 'overhead', 'monthly', 'cumulative'] as $component)<td class="number negative" data-sort-value="{{ $costMonth[$component] / 100 }}">{{ $money($costMonth[$component]) }}</td>@endforeach</tr>@endforeach
     </tbody></table></div></details>
 </section>

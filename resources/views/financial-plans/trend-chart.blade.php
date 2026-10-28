@@ -13,9 +13,9 @@
     $lastMonth = $chartMonths[array_key_last($chartMonths)];
     $summaryKey = $chartSummaryKey ?? 'balance';
 @endphp
-<details class="fp-card fp-trend-chart" data-fp-details="{{ $chartId }}" open>
+<details class="fp-card fp-trend-chart fp-exportable" data-fp-details="{{ $chartId }}" open>
     <summary class="fp-trend-summary"><span><span class="fp-trend-title">{{ $chartTitle }} @include('financial-plans.hint', ['hintId' => $chartId.'-description-help', 'hintLabel' => '?', 'hintTitle' => $chartTitle, 'hintText' => $chartDescription, 'hintItems' => [], 'hintClass' => 'fp-info'])</span><span class="fp-muted">{{ $chartMeta ?? $plan->periodLabel().' · '.\App\Services\FinancialPlanCalculator::SCENARIOS[$scenario] }}</span></span></summary>
-    <div class="fp-trend-body">@if($chartId === 'fp-result-chart')<div class="fp-export-actions">@include('financial-plans.export-link', ['exportSection' => 'result'])</div>@endif
+    @if($chartId === 'fp-result-chart')@include('financial-plans.export-link', ['exportSection' => 'result'])@endif<div class="fp-trend-body">
         <div class="fp-chart-legend">@foreach($chartSeries as $key => $series)<div class="fp-legend-item"><span><i style="background:{{ $series['color'] }}"></i>{{ $series['label'] }}</span><span class="fp-legend-amount {{ $lastMonth[$key] < 0 ? 'negative' : '' }}">{{ $money($lastMonth[$key]) }}</span></div>@endforeach</div>
         <div class="fp-chart-scroll" data-fp-scroll="{{ $chartId }}">
             <svg viewBox="0 0 {{ $chartWidth }} 280" style="min-width:{{ $chartWidth }}px" role="img" aria-labelledby="{{ $chartId }}-title {{ $chartId }}-desc">
@@ -40,7 +40,7 @@
             </svg>
         </div>
         @foreach($chartMonths as $index => $chartMonth)<div id="{{ $chartId }}-tip-{{ $index }}" popover="manual" role="tooltip" class="fp-tooltip"><strong>{{ $chartTitle }} · {{ $chartMonth['label'] }}</strong><ul>@foreach($chartColumns as $key => $label)<li>{{ $label }}: {{ $money($chartMonth[$key]) }}</li>@endforeach</ul></div>@endforeach
-        <details data-fp-details="{{ $chartId }}-values"><summary>Pokaż wartości wykresu</summary><div class="fp-scroll" data-fp-scroll="{{ $chartId }}-values"><table data-fp-table="{{ $chartId }}-values"><thead><tr><th>Miesiąc</th>@foreach($chartColumns as $label)<th>{{ $label }}</th>@endforeach</tr></thead><tbody>
+        <details class="fp-exportable" data-fp-details="{{ $chartId }}-values"><summary>Pokaż wartości wykresu</summary>@if($chartId === 'fp-result-chart')@include('financial-plans.export-link', ['exportSection' => 'result'])@endif<div class="fp-scroll" data-fp-scroll="{{ $chartId }}-values"><table data-fp-table="{{ $chartId }}-values"><thead><tr><th>Miesiąc</th>@foreach($chartColumns as $label)<th>{{ $label }}</th>@endforeach</tr></thead><tbody>
             @foreach($chartMonths as $chartMonth)<tr><td data-sort-value="{{ $chartMonth['date'] }}">{{ $chartMonth['label'] }}</td>@foreach($chartColumns as $key => $label)<td class="number {{ $chartMonth[$key] < 0 || in_array($key, ['loss', 'monthlyOut', 'spent']) ? 'negative' : '' }}" data-sort-value="{{ $chartMonth[$key] / 100 }}">{{ $money($chartMonth[$key]) }}</td>@endforeach</tr>@endforeach
         </tbody></table></div></details>
     </div>
