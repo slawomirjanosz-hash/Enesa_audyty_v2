@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FinancialPlanExport;
 use App\Models\FinancialDepartment;
 use App\Models\FinancialDepartmentPayment;
 use App\Models\FinancialPlan;
@@ -10,12 +11,14 @@ use App\Models\Offer;
 use App\Models\User;
 use App\Services\FinancialPlanAccess;
 use App\Services\FinancialPlanCalculator;
+use App\Services\FinancialPlanChartData;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FinancialPlanController extends Controller
 {
@@ -375,6 +378,50 @@ class FinancialPlanController extends Controller
             'period' => $plan->periodLabel(),
             'complete' => $data['calculation']['complete'],
         ])->header('Cache-Control', 'private, no-store');
+    }
+
+    public function export(Request $request, FinancialPlan $plan)
+    {
+        $section = $request->validate(['section' => ['required', Rule::in(['cost-monthly', 'cost-cumulative', 'result', 'sources'])]])['section'];
+        $data = $this->calculationViewData($request, $plan);
+        $calculation = $data['calculation'];
+        $label = ['cost-monthly' => 'Koszty miesięczne', 'cost-cumulative' => 'Koszty narastająco', 'result' => 'Zysk i strata', 'sources' => 'Źródła i założenia'][$section];
+        $rows = [[$label], ['Plan', $plan->name ?: $plan->department->name], ['Okres', $plan->periodLabel()], ['Scenariusz', FinancialPlanCalculator::SCENARIOS[$data['scenario']]], ['Zakres', $calculation['complete'] ? 'Dane dostępne w Twoich uprawnieniach' : 'Sumy częściowe — część źródeł jest niedostępna'], [null]];
+        $chartColumns = $moneyColumns = [];
+        if ($section === 'sources') {
+            $rows[] = ['Pozycja', 'Rodzaj', 'Okres', 'Uwzględniona', 'Ocena', 'Szansa (%)', 'Przychód źródłowy (PLN)', 'Koszt źródłowy (PLN)', 'Przychód planu (PLN)', 'Koszt planu (PLN)', 'Opis i uwagi'];
+            foreach ($data['lines'] as $line) {
+                $detail = $calculation['details'][$line->id];
+                $rating = $line->kind === 'offer' ? FinancialPlanLine::QUALIFICATIONS[$line->qualification] : ($line->kind === 'project' ? FinancialPlanLine::ACCURACY[$line->budget_accuracy] : '');
+                $rows[] = [$line->name, FinancialPlanLine::KINDS[$line->kind], $line->kind === 'project' ? 'Według dat faktur i dostaw' : $line->start_date->format('m.Y').' – '.$line->end_date->format('m.Y'), $line->enabled ? 'Tak' : 'Nie', $rating, $line->kind === 'offer' ? $line->probability : null, $detail['sourceRevenue'] === null ? null : (float) $detail['sourceRevenue'], $detail['sourceCost'] === null ? null : (float) $detail['sourceCost'], $detail['lineRevenue'] / 100, $detail['lineCost'] / 100, implode("\n", array_filter(array_merge([$line->notes], $detail['lineWarnings'])))];
+            }
+            $moneyColumns = [7, 8, 9, 10];
+        } elseif ($section === 'result') {
+            $rows[] = ['Miesiąc', 'Wynik miesiąca bez ofert', 'Zyski narastająco', 'Straty narastająco', 'Wynik bez ofert', 'Prognoza z ofertami', 'Wartość ofert (100%)'];
+            foreach (FinancialPlanChartData::result($calculation) as $month) {
+                $rows[] = [$month['label'], $month['monthlyResult'] / 100, $month['profit'] / 100, $month['loss'] / 100, $month['balance'] / 100, $month['predicted'] / 100, $month['offers'] / 100];
+            }
+            $chartColumns = [3, 4, 5, 6, 7];
+            $moneyColumns = [2, 3, 4, 5, 6, 7];
+        } else {
+            $cumulative = $section === 'cost-cumulative';
+            $rows[] = ['Miesiąc', 'Wynagrodzenia', 'Samochody', 'Pozostałe koszty działu', $cumulative ? 'Razem narastająco' : 'Razem w miesiącu'];
+            $running = ['salary' => 0, 'car' => 0, 'overhead' => 0];
+            foreach (FinancialPlanChartData::costs($calculation) as $month) {
+                foreach (array_keys($running) as $key) {
+                    $running[$key] += $month[$key];
+                }
+                $values = $cumulative ? $running : $month;
+                $rows[] = [$month['label'], $values['salary'] / 100, $values['car'] / 100, $values['overhead'] / 100, $month[$cumulative ? 'cumulative' : 'monthly'] / 100];
+            }
+            $chartColumns = $cumulative ? [5] : [2, 3, 4];
+            $moneyColumns = [2, 3, 4, 5];
+        }
+
+        $response = Excel::download(new FinancialPlanExport($rows, $label, $chartColumns, $moneyColumns), 'plan-'.$plan->id.'-'.$section.'.xlsx');
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
     }
 
     private function calculationViewData(Request $request, FinancialPlan $plan): array

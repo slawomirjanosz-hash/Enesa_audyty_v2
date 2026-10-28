@@ -1,18 +1,5 @@
 @php
-    $chartMonths = [];
-    $revenueTotal = $costTotal = $profitTotal = $lossTotal = $predictedTotal = $offerTotal = 0;
-    foreach ($calculation['months'] as $index => $month) {
-        $revenue = $forecast['contracted'][$index] + $forecast['pipeline'][$index] + $forecast['manual_revenue'][$index];
-        $cost = $forecast['direct_cost'][$index] + $forecast['salary'][$index] + $forecast['car'][$index] + $forecast['overhead'][$index];
-        $monthlyResult = $forecast['result'][$index] - $calculation['offerForecast']['revenue'][$index] + $calculation['offerForecast']['cost'][$index];
-        $predictedTotal += $forecast['result'][$index];
-        $offerTotal += $calculation['offerForecast']['value'][$index];
-        $revenueTotal += $revenue;
-        $costTotal += $cost;
-        $profitTotal += max(0, $monthlyResult);
-        $lossTotal += min(0, $monthlyResult);
-        $chartMonths[] = ['date' => $month->format('Y-m'), 'label' => $month->format('m.Y'), 'revenue' => $revenueTotal, 'cost' => $costTotal, 'profit' => $profitTotal, 'loss' => $lossTotal, 'balance' => $profitTotal + $lossTotal, 'predicted' => $predictedTotal, 'offers' => $offerTotal, 'monthlyResult' => $monthlyResult];
-    }
+    $chartMonths = \App\Services\FinancialPlanChartData::result($calculation);
 @endphp
 @include('financial-plans.trend-chart', [
     'chartSummaryKey' => 'predicted', 'chartSummaryNote' => 'prognoza z ofertami',

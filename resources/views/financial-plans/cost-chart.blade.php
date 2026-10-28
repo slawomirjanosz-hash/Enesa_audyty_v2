@@ -1,11 +1,6 @@
 @php
-    $costMonths = [];
-    $runningCost = 0;
-    foreach ($calculation['months'] as $index => $date) {
-        $monthlyCost = $forecast['salary'][$index] + $forecast['car'][$index] + $forecast['overhead'][$index];
-        $runningCost += $monthlyCost;
-        $costMonths[] = ['label' => $date->format('m.Y'), 'salary' => $forecast['salary'][$index], 'car' => $forecast['car'][$index], 'overhead' => $forecast['overhead'][$index], 'monthly' => $monthlyCost, 'cumulative' => $runningCost];
-    }
+    $costMonths = \App\Services\FinancialPlanChartData::costs($calculation);
+    $runningCost = $costMonths[array_key_last($costMonths)]['cumulative'];
     $chartWidth = max(400, count($costMonths) * 64 + 90);
     $plotWidth = $chartWidth - 100;
     $step = $plotWidth / count($costMonths);
@@ -21,7 +16,7 @@
                 $points = [];
                 foreach ($costMonths as $i => $costMonth) $points[] = (75 + $step * ($i + .5)).','.round(210 - $costMonth[$chartKind] * $scale, 2);
             @endphp
-            <details class="fp-chart-panel" data-fp-details="chart-cost-{{ $chartKind }}" open><summary>{{ $chartTitle }}</summary><div class="fp-chart-scroll" data-fp-scroll="chart-{{ $chartKind }}">
+            <details class="fp-chart-panel" data-fp-details="chart-cost-{{ $chartKind }}" open><summary>{{ $chartTitle }}</summary>@include('financial-plans.export-link', ['exportSection' => 'cost-'.$chartKind])<div class="fp-chart-scroll" data-fp-scroll="chart-{{ $chartKind }}">
                 <svg viewBox="0 0 {{ $chartWidth }} 265" style="min-width:{{ $chartWidth }}px" role="img" aria-labelledby="fp-chart-{{ $chartKind }}-title fp-chart-{{ $chartKind }}-desc">
                     <title id="fp-chart-{{ $chartKind }}-title">{{ $chartTitle }} · koszty utrzymania działu</title>
                     <desc id="fp-chart-{{ $chartKind }}-desc">Kwoty w PLN. Wartości każdego miesiąca są dostępne po najechaniu lub przejściu klawiszem Tab oraz w tabeli pod wykresami.</desc>

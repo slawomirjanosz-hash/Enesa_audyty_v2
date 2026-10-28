@@ -74,9 +74,53 @@ test('department plan list shows names periods creation dates and compact action
         ->assertSee('Energetyka')->assertSee('Budżet rozwoju')->assertSee('Utworzono')->assertSee('Edytuj plan')->assertSee('Usuń plan')->assertDontSee('bieżąca prognoza')->assertDontSee('Otwórz / utwórz plan');
     $xpath = financialLiveXPath($response->getContent());
     expect($xpath->query('//input[@type="month" and not(ancestor::details)]')->length)->toBe(0);
+    expect($xpath->query('//details[contains(@class,"fp-plan-edit")]')->length)->toBe(0);
+    expect($xpath->query('//a[@aria-label="Edytuj plan"]/@href')->item(0)->nodeValue)->toBe(route('financial-plans.show', $this->plan));
     $this->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Budżet rozwoju');
     $this->put(route('financial-plans.period.update', $this->plan), ['revision' => 0, 'name' => 'Plan bazowy', 'start_month' => '2027-01', 'end_month' => '2027-12'])->assertSessionHasNoErrors();
     expect($this->plan->fresh()->name)->toBe('Plan bazowy');
+});
+
+test('Excel exports contain numeric chart values and preserve literal source text', function (string $section) {
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'user_id' => $this->manager->id, 'salary_cost' => 100, 'car_cost' => 25]);
+    addFinancialLine($this->plan, $this->manager, ['name' => '=HYPERLINK("https://example.invalid")']);
+    $response = $this->actingAs($this->manager)->get(route('financial-plans.export', [$this->plan, 'section' => $section, 'scenario' => 'base']))->assertOk()->assertDownload('plan-'.$this->plan->id.'-'.$section.'.xlsx')->assertHeader('Cache-Control', 'no-store, private');
+    \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder(new \PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder);
+    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+    $reader->setIncludeCharts(true);
+    $book = $reader->load($response->baseResponse->getFile()->getPathname());
+    $sheet = $book->getActiveSheet();
+    expect($sheet->getCell('B4')->getValue())->toBe('Bazowy');
+    if ($section === 'sources') {
+        expect($sheet->getCell('A9')->getValue())->toStartWith('=HYPERLINK')
+            ->and($sheet->getCell('A9')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
+            ->and($sheet->getCell('J8')->getValue())->toBe(1500);
+    } else {
+        expect($sheet->getChartCount())->toBe(1);
+        if ($section !== 'result') {
+            expect($sheet->getCell('B8')->getValue())->toBe(100)
+                ->and($sheet->getCell('D8')->getValue())->toBe(0)
+                ->and($sheet->getCell('E9')->getValue())->toBe($section === 'cost-cumulative' ? 250 : 125);
+        }
+    }
+    $book->disconnectWorksheets();
+})->with(['cost-monthly', 'cost-cumulative', 'result', 'sources']);
+
+test('Excel exports enforce access and omit inaccessible sources', function () {
+    $project = financialProject($this->manager, ['name' => 'Tajny projekt eksportu']);
+    addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $viewer = User::factory()->create();
+    $viewer->assignRole(Role::findOrCreate('employee'));
+    $viewer->givePermissionTo('financial_plans.view');
+    $url = route('financial-plans.export', [$this->plan, 'section' => 'sources']);
+    $this->actingAs($viewer)->get($url)->assertForbidden();
+    $this->department->planners()->attach($viewer);
+    $response = $this->get($url)->assertOk();
+    $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($response->baseResponse->getFile()->getPathname());
+    expect(json_encode($book->getActiveSheet()->toArray()))->not->toContain('Tajny projekt eksportu');
+    expect($book->getActiveSheet()->getCell('B5')->getValue())->toContain('Sumy częściowe');
+    $book->disconnectWorksheets();
+    $this->get(route('financial-plans.export', [$this->plan, 'section' => 'unknown']))->assertSessionHasErrors('section');
 });
 
 test('creating named plans and deleting a plan preserves project sources and shared payments', function () {
@@ -631,8 +675,7 @@ test('live calculation reflects changed project amounts dates statuses and sourc
     expect($xpath->query($query.'/td[2]')->item(0)->getAttribute('data-sort-value'))->toBe('0');
     expect($xpath->query($query.'/td[3]')->item(0)->getAttribute('data-sort-value'))->toBe('700');
     expect($second['html'])->toContain('Zmieniona nazwa projektu: 700,00 zł')->toContain('Etap pierwszy: 700,00 zł');
-    $actual = '//table[@data-fp-table="actual"]/tbody/tr[td[@data-sort-value="Przychody zafakturowane"]]/td[3]';
-    expect($xpath->query($actual)->item(0)->getAttribute('data-sort-value'))->toBe('700');
+    expect($xpath->query('//table[@data-fp-table="actual"]')->length)->toBe(0);
     $cash = '//table[@data-fp-table="cash"]/tbody/tr[td[@data-sort-value="Wpływy · projekty i oferty"]]/td[4]';
     expect($xpath->query($cash)->item(0)->getAttribute('data-sort-value'))->toBe('700');
 });

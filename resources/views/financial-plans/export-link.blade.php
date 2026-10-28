@@ -1,0 +1,1 @@
+<a class="fp-btn fp-export-link" href="{{ route('financial-plans.export', [$plan, 'section' => $exportSection, 'scenario' => $scenario]) }}" title="Pobierz dane tej sekcji jako plik Excel">Excel ↓</a>

@@ -3,7 +3,7 @@
 @section('content')
 @include('financial-plans.styles')
 <div class="fp">
-    <div class="fp-head"><div><h1>Plan finansowy działu</h1><div class="fp-muted">Plan na wybrany zakres miesięcy, aktualna prognoza i wykonanie. Wszystkie kwoty w PLN.</div></div><span class="fp-badge">Dane poufne · wynagrodzenia</span></div>
+    <div class="fp-head"><div><h1>Plan finansowy działu</h1><div class="fp-muted">Plan na wybrany zakres miesięcy, aktualna prognoza i przepływy. Wszystkie kwoty w PLN.</div></div><span class="fp-badge">Dane poufne · wynagrodzenia</span></div>
     @if(session('success'))<div class="fp-note" role="status">{{ session('success') }}</div>@endif
     @if($errors->any())<div class="fp-note fp-error" role="alert">@foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>@endif
     <div class="fp-note">Wynik działu = przychody − bezpośrednie koszty realizacji − wynagrodzenia − samochody − pozostałe koszty działu. Przypisanie do zespołu nie daje dostępu do wynagrodzeń.</div>
@@ -19,10 +19,7 @@
                 @forelse($department->plans as $plan)<li class="fp-plan-item">
                     <div class="fp-plan-description"><a class="fp-plan-name" href="{{ route('financial-plans.show', $plan) }}">{{ $plan->name ?: $department->name }}</a><div class="fp-plan-meta"><span>{{ $plan->periodLabel() }}</span><span>Utworzono <time datetime="{{ $plan->created_at->toIso8601String() }}">{{ $plan->created_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') }}</time></span></div></div>
                     @if($canManage)<div class="fp-plan-controls">
-                        <details class="fp-plan-edit"><summary class="fp-btn fp-icon-btn" title="Edytuj plan" aria-label="Edytuj plan">@include('financial-plans.action-icon', ['icon' => 'edit'])</summary><form method="POST" action="{{ route('financial-plans.period.update', $plan) }}" class="fp-plan-settings">@csrf @method('PUT')<input type="hidden" name="revision" value="{{ $plan->revision }}">
-                            @include('financial-plans.plan-settings', ['plan' => $plan])
-                            <button class="fp-btn primary">Zapisz plan</button>
-                        </form></details>
+                        <a class="fp-btn fp-icon-btn" href="{{ route('financial-plans.show', $plan) }}" title="Edytuj plan" aria-label="Edytuj plan">@include('financial-plans.action-icon', ['icon' => 'edit'])</a>
                         <form method="POST" action="{{ route('financial-plans.destroy', $plan) }}" onsubmit="return confirm('Usunąć ten plan wraz z jego pozycjami? Projekty i oferty pozostaną zachowane.')">@csrf @method('DELETE')<input type="hidden" name="revision" value="{{ $plan->revision }}"><button class="fp-btn danger fp-icon-btn" title="Usuń plan" aria-label="Usuń plan">@include('financial-plans.action-icon', ['icon' => 'trash'])</button></form>
                     </div>@endif
                 </li>@empty<li class="fp-plan-empty">Brak planów. Utwórz pierwszy plan dla tego działu.</li>@endforelse

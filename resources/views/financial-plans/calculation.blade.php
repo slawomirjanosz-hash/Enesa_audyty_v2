@@ -16,10 +16,6 @@
     </section>
     @include('financial-plans.cost-chart')
     @include('financial-plans.result-charts')
-    <section class="fp-card"><h2>Wykonanie @include('financial-plans.hint', ['hintId' => 'fp-actual-description', 'hintLabel' => '?', 'hintTitle' => 'Wykonanie', 'hintText' => 'Przychody i koszty bezpośrednie: zapisy projektowe ze statusem „wystawiona” lub „opłacona”, według daty zapisu. To wykonanie fakturowe. Koszty wydziałowe i pozostałe: ręcznie wpisane kwoty wykonania. Brakujące kwoty są sygnalizowane powyżej; wynik wykonania pozostaje wtedy częściowy.', 'hintItems' => [], 'hintClass' => 'fp-info'])</h2>
-
-        @include('financial-plans.months', ['tableKey' => 'actual', 'rows' => $calculation['actual'], 'labels' => ['revenue' => 'Przychody zafakturowane', 'direct_cost' => 'Koszty bezpośrednie', 'salary' => 'Wynagrodzenia · wykonanie', 'car' => 'Samochody · wykonanie', 'overhead' => 'Pozostałe koszty · wykonanie', 'result' => 'Wynik wykonania (dostępne dane)']])
-    </section>
     <details class="fp-card" data-fp-details="cash"><summary>Przepływy pieniężne · projekty i oferty</summary><p class="fp-muted">Wpływy i wydatki według zapisanych terminów płatności, łącznie z pozycjami planowanymi. Brak terminu płatności: przyjmujemy datę dokumentu + 30 dni wyłącznie w tym planie. Oferty uwzględniamy według ręcznego harmonogramu płatności i wybranego scenariusza. Bez harmonogramu oferta nie wchodzi do przepływów. Widok nie obejmuje pozostałej wartości umów ani kosztów wydziałowych. Kwoty netto — nie jest to pełny stan gotówki ani rozliczenie VAT.</p>
         @include('financial-plans.months', ['tableKey' => 'cash', 'rows' => $calculation['cash'], 'labels' => ['in' => 'Wpływy · projekty i oferty', 'out' => 'Wydatki · projekty i oferty', 'balance' => 'Saldo przepływów']])
     </details>
@@ -38,7 +34,7 @@
             'notes' => ['Uwagi', 'Uwagi', 'Liczba uwag i opcjonalny opis pozycji. Najedź na znacznik, aby przeczytać pełną treść.', 7],
         ];
     @endphp
-    <section class="fp-card"><h2>Źródła i założenia prognozy</h2><p class="fp-muted fp-source-legend">Kwoty w PLN · opisy w chmurkach.</p><div class="fp-scroll" data-fp-scroll="sources"><table data-fp-table="sources" data-action-icons="false" class="fp-source-table"><thead><tr>
+    <section class="fp-card"><div class="fp-head"><h2>Źródła i założenia prognozy</h2>@include('financial-plans.export-link', ['exportSection' => 'sources'])</div><p class="fp-muted fp-source-legend">Kwoty w PLN · opisy w chmurkach.</p><div class="fp-scroll" data-fp-scroll="sources"><table data-fp-table="sources" data-action-icons="false" class="fp-source-table"><thead><tr>
         @foreach($sourceHeaders as $headerKey => [$short, $full, $description, $width])<th style="width:{{ $width }}%" data-sort-label="{{ $full }}" data-fp-tip="fp-source-heading-{{ $headerKey }}" aria-describedby="fp-source-heading-{{ $headerKey }}">{{ $short }}</th>@endforeach
         @if($canManage)<th style="width:10%" data-sortable="false">Akcje</th>@endif
     </tr></thead><tbody>
