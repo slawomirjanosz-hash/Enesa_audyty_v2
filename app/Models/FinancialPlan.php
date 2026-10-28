@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class FinancialPlan extends Model
 {
-    protected $fillable = ['financial_department_id', 'year', 'start_date', 'end_date', 'opening_balance', 'approved_snapshot', 'approved_by', 'approved_at', 'revision'];
+    protected $fillable = ['financial_department_id', 'name', 'year', 'start_date', 'end_date', 'opening_balance', 'approved_snapshot', 'approved_by', 'approved_at', 'revision'];
 
     protected $casts = ['year' => 'integer', 'start_date' => 'immutable_date', 'end_date' => 'immutable_date', 'opening_balance' => 'encrypted', 'approved_snapshot' => 'encrypted:array', 'approved_at' => 'datetime'];
 

@@ -52,6 +52,7 @@ class FinancialPlanCalculator
         $breakdown = [];
         $accountEntries = [];
         $projectCosts = 0;
+        $unpaid = ['revenue' => 0, 'cost' => 0, 'invoiceCount' => 0, 'costCount' => 0];
         $offerForecast = $this->emptyRows(['revenue', 'cost', 'value'], $months);
         $complete = true;
         $linkedProjects = FinancialPlanLine::where('kind', 'project')->where('enabled', true)
@@ -137,6 +138,10 @@ class FinancialPlanCalculator
                 $sourceRevenue = (float) $invoices->sum('amount');
                 $sourceCost = (float) $costEntries->sum('amount') + (float) $requirements->sum('estimated_cost');
                 foreach ($invoices->merge($costEntries) as $entry) {
+                    if ($entry->status === 'issued' && $entry->entry_date->betweenIncluded($plan->periodStart(), $plan->periodEnd())) {
+                        $unpaid[$entry->type === 'invoice' ? 'revenue' : 'cost'] += $this->cents($entry->amount);
+                        $unpaid[$entry->type === 'invoice' ? 'invoiceCount' : 'costCount']++;
+                    }
                     $sourceItems[] = ['name' => $entry->name.($entry->document_number ? ' · '.$entry->document_number : ''), 'type' => $entry->type, 'amount' => $this->cents($entry->amount), 'date' => $entry->entry_date->format('d.m.Y'), 'included' => $entry->entry_date->betweenIncluded($plan->periodStart(), $plan->periodEnd())];
                 }
                 foreach ($invoices as $entry) {
@@ -278,7 +283,7 @@ class FinancialPlanCalculator
 
         $account = $this->account($plan, $accountEntries, $complete);
 
-        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'account' => $account, 'offerForecast' => $offerForecast, 'projectCosts' => $projectCosts, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
+        return ['months' => $months, 'forecast' => $forecast, 'actual' => $actual, 'cash' => $cash, 'account' => $account, 'offerForecast' => $offerForecast, 'projectCosts' => $projectCosts, 'unpaid' => $unpaid, 'details' => $details, 'breakdown' => $breakdown, 'warnings' => array_values(array_unique($warnings)), 'complete' => $complete];
     }
 
     private function account(FinancialPlan $plan, array $entries, bool $sourcesComplete): array

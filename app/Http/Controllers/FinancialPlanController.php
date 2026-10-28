@@ -64,6 +64,7 @@ class FinancialPlanController extends Controller
     {
         $this->access->authorizeDepartment($request->user(), $department, true);
         $data = $this->periodData($request);
+        $data += $request->validate(['name' => ['nullable', 'string', 'max:150']]);
         $plan = DB::transaction(function () use ($department, $data) {
             FinancialDepartment::whereKey($department->id)->lockForUpdate()->firstOrFail();
 
@@ -78,13 +79,14 @@ class FinancialPlanController extends Controller
     {
         $this->access->authorizeDepartment($request->user(), $plan->department, true);
         $data = $this->periodData($request);
+        $data += $request->validate(['name' => ['sometimes', 'nullable', 'string', 'max:150']]);
         $revision = $request->validate(['revision' => ['required', 'integer', 'min:0']])['revision'];
         DB::transaction(function () use ($request, $plan, $data, $revision) {
             $locked = $this->lockPlan($plan, $revision);
             if ($locked->department->plans()->where('id', '!=', $locked->id)->whereDate('start_date', $data['start_date'])->whereDate('end_date', $data['end_date'])->exists()) {
                 throw ValidationException::withMessages(['start_month' => 'Plan na ten okres już istnieje. Otwórz go na liście działów.']);
             }
-            $before = ['start_date' => $locked->periodStart()->toDateString(), 'end_date' => $locked->periodEnd()->toDateString()];
+            $before = ['start_date' => $locked->periodStart()->toDateString(), 'end_date' => $locked->periodEnd()->toDateString(), 'name' => $locked->name];
             if ($before['start_date'] !== $data['start_date']) {
                 $locked->opening_balance = null;
             }
@@ -110,6 +112,21 @@ class FinancialPlanController extends Controller
         $end = isset($data['end_month']) ? CarbonImmutable::createFromFormat('!Y-m', $data['end_month'])->endOfMonth() : $start->endOfYear();
 
         return ['start_date' => $start->toDateString(), 'end_date' => $end->toDateString()];
+    }
+
+    public function destroyPlan(Request $request, FinancialPlan $plan)
+    {
+        $this->access->authorizeDepartment($request->user(), $plan->department, true);
+        $data = $request->validate(['revision' => ['required', 'integer', 'min:0']]);
+        DB::transaction(function () use ($request, $plan, $data) {
+            $locked = $this->lockPlan($plan, (int) $data['revision']);
+            foreach ($locked->lines as $line) {
+                $this->authorizeSource($request, $line->toArray());
+            }
+            $locked->delete();
+        });
+
+        return redirect()->route('financial-plans.index')->with('success', 'Usunięto plan. Projekty, oferty i płatności działu pozostają zachowane.');
     }
 
     public function updateOpeningBalance(Request $request, FinancialPlan $plan)

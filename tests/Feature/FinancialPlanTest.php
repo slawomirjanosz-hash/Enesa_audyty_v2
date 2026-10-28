@@ -67,6 +67,42 @@ test('plan lines can be excluded and restored without losing their values', func
     expect(array_sum($calculator->calculate($this->plan->fresh(), $this->manager)['forecast']['manual_revenue']))->toBe(12000000);
 });
 
+test('department plan list shows names periods creation dates and compact actions', function () {
+    $this->department->update(['name' => 'Energetyka']);
+    $this->plan->update(['name' => 'Budżet rozwoju']);
+    $response = $this->actingAs($this->manager)->get(route('financial-plans.index'))->assertOk()
+        ->assertSee('Energetyka')->assertSee('Budżet rozwoju')->assertSee('Utworzono')->assertSee('Edytuj plan')->assertSee('Usuń plan')->assertDontSee('bieżąca prognoza')->assertDontSee('Otwórz / utwórz plan');
+    $xpath = financialLiveXPath($response->getContent());
+    expect($xpath->query('//input[@type="month" and not(ancestor::details)]')->length)->toBe(0);
+    $this->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Budżet rozwoju');
+    $this->put(route('financial-plans.period.update', $this->plan), ['revision' => 0, 'name' => 'Plan bazowy', 'start_month' => '2027-01', 'end_month' => '2027-12'])->assertSessionHasNoErrors();
+    expect($this->plan->fresh()->name)->toBe('Plan bazowy');
+});
+
+test('creating named plans and deleting a plan preserves project sources and shared payments', function () {
+    $this->actingAs($this->manager)->post(route('financial-plans.store', $this->department), ['name' => 'Nowy plan', 'start_month' => '2028-01', 'end_month' => '2028-06'])->assertSessionHasNoErrors();
+    expect($this->department->plans()->where('name', 'Nowy plan')->exists())->toBeTrue();
+    $project = financialProject($this->manager);
+    $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    $this->plan->changes()->create(['user_id' => $this->manager->id, 'action' => 'created', 'payload' => []]);
+    $payment = FinancialDepartmentPayment::create(['financial_department_id' => $this->department->id, 'direction' => 'in', 'paid_on' => '2027-01-01', 'amount' => 50, 'description' => 'Wpłata', 'created_by' => $this->manager->id]);
+    $this->delete(route('financial-plans.destroy', $this->plan), ['revision' => 3])->assertConflict();
+    $this->delete(route('financial-plans.destroy', $this->plan), ['revision' => 0])->assertRedirect(route('financial-plans.index'));
+    expect($this->plan->fresh())->toBeNull()->and($line->fresh())->toBeNull()->and($project->fresh())->not->toBeNull()->and($payment->fresh())->not->toBeNull();
+});
+
+test('plan deletion requires management permission and department access', function () {
+    $user = User::factory()->create();
+    $user->assignRole(Role::findOrCreate('employee'));
+    $user->givePermissionTo('financial_plans.manage');
+    $this->actingAs($user)->delete(route('financial-plans.destroy', $this->plan), ['revision' => 0])->assertForbidden();
+    $this->department->planners()->attach($user);
+    $user->revokePermissionTo('financial_plans.manage');
+    $user->givePermissionTo('financial_plans.view');
+    $this->delete(route('financial-plans.destroy', $this->plan), ['revision' => 0])->assertForbidden();
+    expect($this->plan->fresh())->not->toBeNull();
+});
+
 test('offer payment schedule drives monthly forecast cash and separate full offer values', function () {
     $company = Company::create(['name' => 'Klient harmonogramu', 'type' => 'client']);
     $offer = Offer::create(['offer_number' => 'SCHEDULE', 'status' => 'w_toku', 'company_id' => $company->id, 'created_by_id' => $this->manager->id, 'kwota_netto' => 1000, 'is_template' => false]);
@@ -132,7 +168,7 @@ test('compact totals separate issued invoices and project costs from offers and 
     addFinancialLine($this->plan, $this->manager);
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan, $this->manager);
     expect(array_sum($result['actual']['revenue']))->toBe(30000)->and($result['projectCosts'])->toBe(9000);
-    $this->actingAs($this->manager)->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Wystawione faktury')->assertSee('Wydatki projektowe')->assertSee('Wyłącz z wyliczeń')->assertDontSee('Powód usunięcia');
+    $this->actingAs($this->manager)->get(route('financial-plans.show', $this->plan))->assertOk()->assertSee('Przychody nieopłacone')->assertSee('Wydatki nieopłacone')->assertSee('Wyłącz z wyliczeń')->assertDontSee('Powód usunięcia');
     $line = $this->plan->lines()->where('kind', 'project')->first();
     $line->update(['enabled' => false]);
     $result = app(FinancialPlanCalculator::class)->calculate($this->plan->fresh(), $this->manager);
@@ -140,6 +176,26 @@ test('compact totals separate issued invoices and project costs from offers and 
         ->and($result['projectCosts'])->toBe(0)
         ->and(array_sum($result['cash']['in']))->toBe(0)
         ->and($result['account']['transactions'])->toBe([]);
+});
+
+test('unpaid tiles count only issued project invoices and costs in the selected period', function () {
+    $this->plan->update(['start_date' => '2027-02-01', 'end_date' => '2027-02-28']);
+    $project = financialProject($this->manager);
+    $line = addFinancialLine($this->plan, $this->manager, ['kind' => 'project', 'project_id' => $project->id]);
+    foreach ([['invoice', 'issued', '2027-02-01', 100], ['invoice', 'issued', '2027-02-28', 250], ['invoice', 'paid', '2027-02-10', 700], ['invoice', 'planned', '2027-02-10', 900], ['invoice', 'issued', '2027-03-01', 500], ['cost', 'issued', '2027-02-10', 80], ['cost', 'paid', '2027-02-10', 40], ['cost', 'planned', '2027-02-10', 60], ['cost', 'issued', '2027-01-31', 30]] as [$type, $status, $date, $amount]) {
+        $project->financialEntries()->create(['type' => $type, 'status' => $status, 'name' => 'Pozycja', 'entry_date' => $date, 'amount' => $amount, 'created_by' => $this->manager->id]);
+    }
+    addFinancialLine($this->plan, $this->manager);
+    $calculator = app(FinancialPlanCalculator::class);
+    expect($calculator->calculate($this->plan->fresh(), $this->manager)['unpaid'])->toBe(['revenue' => 35000, 'cost' => 8000, 'invoiceCount' => 2, 'costCount' => 1]);
+    $first = $this->actingAs($this->manager)->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json();
+    expect($first['html'])->toContain('Liczba faktur: 2')->toContain('Liczba zapisów: 1');
+    $project->financialEntries()->where('type', 'invoice')->where('amount', 100)->first()->update(['status' => 'paid']);
+    $second = $this->withHeader('X-Plan-Fingerprint', $first['fingerprint'])->getJson(route('financial-plans.calculation', $this->plan))->assertOk()->json();
+    expect($second['fingerprint'])->not->toBe($first['fingerprint']);
+    expect($calculator->calculate($this->plan->fresh(), $this->manager)['unpaid']['revenue'])->toBe(25000);
+    $line->update(['enabled' => false]);
+    expect($calculator->calculate($this->plan->fresh(), $this->manager)['unpaid'])->toBe(['revenue' => 0, 'cost' => 0, 'invoiceCount' => 0, 'costCount' => 0]);
 });
 
 test('linked financial lines derive their names and accept no description', function (string $kind) {

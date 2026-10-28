@@ -1,0 +1,2 @@
+<label>Nazwa planu<input name="name" maxlength="150" value="{{ $plan?->name ?? '' }}" placeholder="{{ $department->name }}"></label>
+<div class="fp-grid"><label>Od miesiąca<input type="month" name="start_month" min="2020-01" max="2100-12" value="{{ $plan?->periodStart()->format('Y-m') ?? now('Europe/Warsaw')->format('Y-m') }}" required></label><label>Do miesiąca<input type="month" name="end_month" min="2020-01" max="2100-12" value="{{ $plan?->periodEnd()->format('Y-m') ?? now('Europe/Warsaw')->addMonthsNoOverflow(5)->format('Y-m') }}" required></label></div>

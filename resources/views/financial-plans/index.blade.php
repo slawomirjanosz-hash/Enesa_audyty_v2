@@ -9,9 +9,24 @@
     <div class="fp-note">Wynik działu = przychody − bezpośrednie koszty realizacji − wynagrodzenia − samochody − pozostałe koszty działu. Przypisanie do zespołu nie daje dostępu do wynagrodzeń.</div>
     @forelse($departments as $department)
         <section class="fp-card">
-            <div class="fp-head"><div><h2>{{ $department->name }}</h2><div class="fp-muted">{{ $department->members->pluck('name')->join(', ') ?: 'Uzupełnij skład działu.' }}</div></div>
-            @if($canManage)<form method="POST" action="{{ route('financial-plans.store', $department) }}" class="fp-actions">@csrf<label>Od miesiąca<input type="month" name="start_month" min="2020-01" max="2100-12" value="{{ old('start_month', now('Europe/Warsaw')->format('Y-m')) }}" required></label><label>Do miesiąca<input type="month" name="end_month" min="2020-01" max="2100-12" value="{{ old('end_month', now('Europe/Warsaw')->addMonthsNoOverflow(5)->format('Y-m')) }}" required></label><button class="fp-btn primary">Otwórz / utwórz plan</button></form>@endif</div>
-            <div class="fp-tabs">@foreach($department->plans as $plan)<a href="{{ route('financial-plans.show', $plan) }}">{{ $plan->periodLabel() }} · bieżąca prognoza</a>@endforeach</div>
+            <div class="fp-head fp-department-heading"><h2>{{ $department->name }}</h2>
+                @if($canManage)<details class="fp-new-plan"><summary class="fp-btn primary">+ Nowy plan</summary><form method="POST" action="{{ route('financial-plans.store', $department) }}" class="fp-plan-settings">@csrf
+                    @include('financial-plans.plan-settings', ['plan' => null])
+                    <button class="fp-btn primary">Utwórz plan</button>
+                </form></details>@endif
+            </div>
+            <ul class="fp-plan-list">
+                @forelse($department->plans as $plan)<li class="fp-plan-item">
+                    <div class="fp-plan-description"><a class="fp-plan-name" href="{{ route('financial-plans.show', $plan) }}">{{ $plan->name ?: $department->name }}</a><div class="fp-plan-meta"><span>{{ $plan->periodLabel() }}</span><span>Utworzono <time datetime="{{ $plan->created_at->toIso8601String() }}">{{ $plan->created_at->timezone('Europe/Warsaw')->format('d.m.Y H:i') }}</time></span></div></div>
+                    @if($canManage)<div class="fp-plan-controls">
+                        <details class="fp-plan-edit"><summary class="fp-btn fp-icon-btn" title="Edytuj plan" aria-label="Edytuj plan">@include('financial-plans.action-icon', ['icon' => 'edit'])</summary><form method="POST" action="{{ route('financial-plans.period.update', $plan) }}" class="fp-plan-settings">@csrf @method('PUT')<input type="hidden" name="revision" value="{{ $plan->revision }}">
+                            @include('financial-plans.plan-settings', ['plan' => $plan])
+                            <button class="fp-btn primary">Zapisz plan</button>
+                        </form></details>
+                        <form method="POST" action="{{ route('financial-plans.destroy', $plan) }}" onsubmit="return confirm('Usunąć ten plan wraz z jego pozycjami? Projekty i oferty pozostaną zachowane.')">@csrf @method('DELETE')<input type="hidden" name="revision" value="{{ $plan->revision }}"><button class="fp-btn danger fp-icon-btn" title="Usuń plan" aria-label="Usuń plan">@include('financial-plans.action-icon', ['icon' => 'trash'])</button></form>
+                    </div>@endif
+                </li>@empty<li class="fp-plan-empty">Brak planów. Utwórz pierwszy plan dla tego działu.</li>@endforelse
+            </ul>
             @if($canManage && (auth()->user()->hasRole('superadmin') || $department->owner_id === auth()->id()))
                 <details><summary>Skład działu i dostęp do planowania</summary>
                     <form method="POST" action="{{ route('financial-plans.departments.update', $department) }}">@csrf @method('PUT')
