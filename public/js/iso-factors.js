@@ -49,7 +49,11 @@
             if (select.value === 'potwierdzony' && importance && conclusion && row.querySelector('details textarea').value.trim() || select.value === 'odrzucony' && reason.querySelector('textarea').value.trim()) done++;
         });
         const customRows = [...form.querySelectorAll('#custom-rows [data-custom-row]')];
-        customRows.forEach(row => { if (['tresc', 'wplyw', 'wymiar', 'skutek'].every(key => row.querySelector(`[name$="[${key}]"]`)?.value.trim())) done++; });
+        customRows.forEach(row => {
+            const value = key => row.querySelector(`[name$="[${key}]"]`)?.value.trim();
+            const conclusion = value('istotnosc') !== 'W' || ['znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie', 'rodzaj', 'zrodlo', 'okres'].every(value);
+            if (conclusion && ['tresc', 'wplyw', 'wymiar', 'skutek', 'istotnosc'].every(value)) done++;
+        });
         const total = decisions.length + 2 + customRows.length;
         document.getElementById('factor-progress').textContent = `Wypełnienie: ${Math.floor(100 * done / total)}% · ${done} / ${total}`;
     }

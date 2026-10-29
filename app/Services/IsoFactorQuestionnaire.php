@@ -102,7 +102,7 @@ class IsoFactorQuestionnaire
             'custom.*.podstawa.rodzaj' => ['nullable', Rule::in(['pomiar', 'dokument', 'deklaracja', 'szacunek'])],
             'custom.*.podstawa.zrodlo' => 'nullable|string|max:3000',
             'custom.*.podstawa.okres' => 'nullable|string|max:255',
-            'custom.*.istotnosc' => ['nullable', Rule::in(['W', 'S', 'N'])],
+            'custom.*.istotnosc' => [$complete ? 'required' : 'nullable', Rule::in(['W', 'S', 'N'])],
             'custom.*.znaczenie' => 'nullable|string|max:5000',
             'custom.*.decyzja_w' => 'nullable|string|max:5000',
             'custom.*.dzialanie' => 'nullable|string|max:5000',
@@ -180,7 +180,8 @@ class IsoFactorQuestionnaire
         $done += filled(data_get($answers, 'PRAWO.data')) ? 1 : 0;
         foreach ($answers['custom'] ?? [] as $row) {
             $total++;
-            $done += collect(['tresc', 'wplyw', 'wymiar', 'skutek'])->every(fn ($key) => filled($row[$key] ?? null)) ? 1 : 0;
+            $conclusion = ($row['istotnosc'] ?? '') !== 'W' || collect(['znaczenie', 'decyzja_w', 'dzialanie', 'sprawdzenie', 'podstawa.rodzaj', 'podstawa.zrodlo', 'podstawa.okres'])->every(fn ($key) => filled(data_get($row, $key)));
+            $done += $conclusion && collect(['tresc', 'wplyw', 'wymiar', 'skutek', 'istotnosc'])->every(fn ($key) => filled($row[$key] ?? null)) ? 1 : 0;
         }
         foreach ($this->factors($facts, $answers) as $factor) {
             if (! $factor['visible'] || $factor['rodzaj'] === 'AUTO') {

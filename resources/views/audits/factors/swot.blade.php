@@ -8,7 +8,7 @@
 <input type="hidden" name="lock_version" value="{{$review->lock_version}}">
 <input type="hidden" name="source_hash" value="{{$questionnaire->hash($profile)}}">
 @foreach(\App\Models\IsoFactorReview::SWOT_FIELDS as $key=>$label)
-<label for="swot-{{$key}}">{{$label}}</label>
+<label for="swot-text-{{$key}}">{{$label}}</label>
 <p class="plant-help">{{[
  'strengths'=>'Czynniki wewnętrzne sprzyjające poprawie: np. kompetencje zespołu, opomiarowanie, sprawne urządzenia.',
  'weaknesses'=>'Ograniczenia wewnętrzne: np. braki pomiarów, straty energii, niewystarczające zasoby.',
@@ -16,7 +16,7 @@
  'threats'=>'Ryzyka zewnętrzne: np. zmienność cen, dostępność energii, skutki zmiany klimatu.',
  'conclusions'=>'Określ najważniejsze priorytety, proponowane działania, odpowiedzialność i sposób sprawdzenia efektu.'
 ][$key]}}</p>
-<textarea id="swot-{{$key}}" name="swot[{{$key}}]" maxlength="10000" rows="5" @if($errors->has('swot.'.$key)) aria-invalid="true" style="border:2px solid #b91c1c;background:#fff0f0" @endif>{{old('swot.'.$key,$exampleSwot[$key]??$review->swot[$key]??'')}}</textarea>
+<textarea id="swot-text-{{$key}}" name="swot[{{$key}}]" maxlength="10000" rows="5" @if($errors->has('swot.'.$key)) aria-invalid="true" style="border:2px solid #b91c1c;background:#fff0f0" @endif>{{old('swot.'.$key,$exampleSwot[$key]??$review->swot[$key]??'')}}</textarea>
 @endforeach
 @include('audits.partials.iso-report-summary-fields',['reportRoot'=>'swot','reportData'=>$review->swot??[],'reportChoices'=>collect($factors)->filter(fn($factor)=>$factor['visible']&&($factor['rodzaj']==='AUTO'||($display['factors'][$factor['kod']]['decyzja']??'')==='potwierdzony'))->pluck('tresc','kod')->all()])
 <button name="operation" value="save_swot">Zapisz analizę SWOT</button>

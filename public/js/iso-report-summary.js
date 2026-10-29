@@ -1,3 +1,6 @@
+(() => {
+if (document.documentElement.dataset.isoReportSummaryBound) return;
+document.documentElement.dataset.isoReportSummaryBound = 'true';
 document.addEventListener('click',event=>{
     const add=event.target.closest('[data-report-add]');
     const remove=event.target.closest('[data-report-remove]');
@@ -14,3 +17,4 @@ document.addEventListener('click',event=>{
     }else remove.closest('[data-report-row]').remove();
     section.dispatchEvent(new Event('input',{bubbles:true}));
 });
+})();

@@ -7,7 +7,29 @@ use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoQuestionnaireWorkbook;
 use App\Services\IsoSystemQuestionnaire;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+
+test('custom context factors require significance and the completion indicator includes high significance evidence', function () {
+    [$audit, $client, $staff, $profile] = factorFixture();
+    $service = app(IsoFactorQuestionnaire::class);
+    $facts = $service->facts($profile);
+    $input = factorInput($profile)['answers'];
+    $input['custom'] = [['id' => (string) Str::uuid(), 'tresc' => 'Własny czynnik', 'wplyw' => '+', 'wymiar' => 'wewn. techniczny', 'skutek' => 'Ocena możliwości poprawy']];
+    expect($service->normalize($input, $facts, false)['custom'])->toHaveCount(1);
+    try {
+        $service->normalize($input, $facts, true);
+        $this->fail('Missing custom significance accepted');
+    } catch (ValidationException $error) {
+        expect($error->errors())->toHaveKey('custom.0.istotnosc');
+    }
+    expect($service->progress($facts, $input)['percent'])->toBeLessThan(100);
+    $input['custom'][0]['istotnosc'] = 'W';
+    expect($service->progress($facts, $input)['percent'])->toBeLessThan(100);
+    $input['custom'][0] += ['podstawa' => ['rodzaj' => 'pomiar', 'zrodlo' => 'Raport pomiarowy', 'okres' => '2026'], 'znaczenie' => 'Znaczące straty', 'decyzja_w' => 'Usunąć straty', 'dzialanie' => 'Modernizacja układu', 'sprawdzenie' => 'Pomiar po modernizacji'];
+    expect($service->normalize($input, $facts, true)['custom'][0])->toEqual($input['custom'][0]);
+    expect($service->progress($facts, $input)['percent'])->toBe(100);
+});
 
 test('chapter four energy suggestions keep LPG fleet distinct from vehicle fuels', function () {
     $service = app(IsoSystemQuestionnaire::class);

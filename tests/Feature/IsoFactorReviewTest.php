@@ -48,9 +48,11 @@ test('SWOT is written only by staff after client approval and included in docume
     $payload['lock_version'] = 3;
     $payload['swot']['threats'] = 'Przerwy w dostawach energii';
     $this->post($url, $payload)->assertSessionHasNoErrors();
-    expect($review->fresh()->document_id)->toBeNull()->and($review->fresh()->auditor_approval)->toBeNull()->and($review->fresh()->client_approval)->toBeNull()->and($review->fresh()->status)->toBe('auditor_corrected')->and($document->fresh()->description)->toContain('historyczny');
+    expect($review->fresh()->document_id)->toBeNull()->and($review->fresh()->auditor_approval)->toBeNull()->and($review->fresh()->client_approval)->toBe($review->client_approval)->and($review->fresh()->status)->toBe('submitted')->and($document->fresh()->description)->toContain('historyczny');
     $this->post(route('audits.factors.pdf', [$audit, $profile]), ['lock_version' => 4])->assertForbidden();
     expect(DB::table('iso_factor_events')->where('action', 'save_swot')->count())->toBe(2);
+    $this->post($url, array_replace($payload, ['operation' => 'approve', 'lock_version' => 4, 'note' => 'Ponownie sprawdzono analizę']))->assertSessionHasNoErrors();
+    expect($review->fresh()->status)->toBe('approved')->and($review->fresh()->client_approval)->toBe($review->client_approval);
 });
 
 function factorInput(IsoPlantProfile $profile): array

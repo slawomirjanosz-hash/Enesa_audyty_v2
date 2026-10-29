@@ -12,4 +12,4 @@
 @endforeach
 <label>Braki wpływające na decyzję<textarea name="{{$reportRoot}}[PODSUM][braki]" maxlength="10000">{{$summary['braki']??''}}</textarea></label>
 </section>
-@once<script src="{{asset('js/iso-report-summary.js')}}" defer></script>@endonce
+@once('iso-report-summary-script')<script src="{{asset('js/iso-report-summary.js')}}" defer></script>@endonce

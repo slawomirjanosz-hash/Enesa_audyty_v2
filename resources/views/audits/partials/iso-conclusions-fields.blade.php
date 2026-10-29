@@ -3,5 +3,5 @@
 <div data-report-rows="wnioski">@foreach($conclusionRows as $reportIndex=>$reportRow)@include('audits.partials.iso-conclusion-row')@endforeach</div>
 <template data-report-template="wnioski">@include('audits.partials.iso-conclusion-row',['reportIndex'=>'__INDEX__','reportRow'=>[]])</template>
 <button type="button" data-report-add="wnioski">+ Dodaj wniosek</button>
-@once<script src="{{asset('js/iso-report-summary.js')}}" defer></script>@endonce
+@once('iso-report-summary-script')<script src="{{asset('js/iso-report-summary.js')}}" defer></script>@endonce
 </section>
