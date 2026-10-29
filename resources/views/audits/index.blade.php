@@ -8,12 +8,12 @@
 <div class="app-search-header">
     <div><h1 style="margin:0 0 5px;">Audyty</h1><p style="margin:0;color:#6b7a70;">Bieżące audyty, ich zespoły i terminy w jednym miejscu.</p></div>
     <div class="app-search-toolbar">
+        @include('partials.workspace-view-toggle')
         @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: audyt, numer, firma, kierownik…'])
         @if($canCreate)<button type="button" class="audit-create-button" onclick="document.getElementById('audit-create-dialog').showModal()"><i class="ti ti-plus"></i> Nowy audyt</button>@endif
     </div>
 </div>
 @php($statuses = ['draft' => 'Roboczy', 'in_progress' => 'W toku', 'done' => 'Zakończony', 'cancelled' => 'Anulowany'])
-@include('partials.workspace-view-toggle')
 <form class="audit-filters" method="GET" action="{{ route('audits.index') }}">
     <input type="hidden" name="view" value="{{ request('view') === 'list' ? 'list' : 'tiles' }}">
     <input type="hidden" name="q" value="{{ request('q', '') }}">

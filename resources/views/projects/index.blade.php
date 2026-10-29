@@ -13,6 +13,7 @@
 <div class="app-search-header">
     <div><h1 style="margin:0 0 5px;">Projekty</h1><p style="margin:0;color:#6b7a70;">Harmonogramy, finanse, zadania, zakupy i dokumenty w jednym miejscu.</p></div>
     <div class="app-search-toolbar">
+        @include('partials.workspace-view-toggle')
         @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: projekt, numer, firma, kierownik…'])
         @can('projects.create')<button class="btn" type="button" onclick="document.getElementById('project-modal').classList.add('open')"><i class="ti ti-plus"></i> Nowy projekt</button>@endcan
     </div>
@@ -20,7 +21,6 @@
 
 @if(session('success'))<div style="padding:12px 15px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:16px;">{{ session('success') }}</div>@endif
 
-@include('partials.workspace-view-toggle')
 <form class="filters" method="GET">
     <input type="hidden" name="view" value="{{ request('view') === 'list' ? 'list' : 'tiles' }}">
     <input type="hidden" name="q" value="{{ is_string(request('q')) ? request('q') : '' }}">
