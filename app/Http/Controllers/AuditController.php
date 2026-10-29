@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\ProjectGanttImportService;
 use App\Support\ListSearch;
+use App\Support\TableSort;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class AuditController extends Controller
     public function index(Request $request): View
     {
         $request->validate(['status' => ['nullable', 'in:active,all,draft,in_progress,done,cancelled']]);
-        $status = $request->input('status') ?: 'active';
+        $status = $request->input('status') ?: 'all';
         $query = Audit::query()->with(['company', 'manager'])
             ->withCount('members')->orderByDesc('created_at')->orderByDesc('id');
         $this->access->scopeByCompanyAccess($query, $request->user(), 'can_view_audits');
@@ -48,8 +49,20 @@ class AuditController extends Controller
             'company' => ['name', 'nip'], 'manager' => ['name'],
         ]);
 
+        $columns = [
+            'number' => 'number', 'name' => 'title', 'team' => 'members_count', 'date' => 'start_date',
+            'end' => 'end_date', 'status' => 'status',
+            'company' => Company::select('name')->whereColumn('companies.id', 'audits.company_id')->limit(1),
+            'manager' => User::select('name')->whereColumn('users.id', 'audits.manager_id')->limit(1),
+        ];
+        $activeQuery = (clone $query)->where('status', '!=', 'done');
+        $completedQuery = (clone $query)->where('status', 'done');
+        TableSort::apply($activeQuery, $request, $columns, 'active');
+        TableSort::apply($completedQuery, $request, $columns, 'completed');
+
         return view('audits.index', [
-            'audits' => $query->paginate(20)->withQueryString(),
+            'audits' => $activeQuery->paginate(20)->withQueryString(),
+            'completedAudits' => $completedQuery->paginate(20, ['*'], 'completed_page')->withQueryString(),
             'status' => $status,
         ]);
     }

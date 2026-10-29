@@ -48,10 +48,14 @@ class ProjectController extends Controller
         if ($this->canViewProjectFinances($user)) {
             $sortColumns['amount'] = 'contract_value';
         }
+        $sortColumns['status'] = DB::raw("CASE status WHEN 'active' THEN 'Aktywny' WHEN 'cancelled' THEN 'Anulowany' WHEN 'planned' THEN 'Planowany' WHEN 'on_hold' THEN 'Wstrzymany' WHEN 'completed' THEN 'Zakończony' ELSE status END");
+        $sortColumns['end'] = 'end_date';
         TableSort::apply($completedQuery, $request, $sortColumns, 'completed');
+        $activeQuery = (clone $query)->where('status', '!=', 'completed')->withCount('members');
+        TableSort::apply($activeQuery, $request, $sortColumns, 'active');
 
         return view('projects.index', [
-            'projects' => (clone $query)->where('status', '!=', 'completed')->paginate(20)->withQueryString(),
+            'projects' => $activeQuery->paginate(20)->withQueryString(),
             'completedProjects' => $completedQuery->paginate(20, ['*'], 'completed_page')->withQueryString(),
             'companies' => Company::clients()->active()->orderBy('name')->get(),
             'users' => $this->staffUsers(),

@@ -12,32 +12,30 @@
     </div>
 </div>
 @php($statuses = ['draft' => 'Roboczy', 'in_progress' => 'W toku', 'done' => 'Zakończony', 'cancelled' => 'Anulowany'])
+@include('partials.workspace-view-toggle')
 <form class="audit-filters" method="GET" action="{{ route('audits.index') }}">
+    <input type="hidden" name="view" value="{{ request('view') === 'list' ? 'list' : 'tiles' }}">
     <input type="hidden" name="q" value="{{ request('q', '') }}">
     <label for="audit-status">Status</label>
     <select id="audit-status" name="status" onchange="this.form.submit()">
-        @foreach(['active' => 'Aktywne (robocze i w toku)', 'all' => 'Wszystkie statusy'] + $statuses as $value => $label)
+        @foreach(['all' => 'Wszystkie statusy', 'active' => 'Aktywne (robocze i w toku)'] + $statuses as $value => $label)
         <option value="{{ $value }}" @selected($status === $value)>{{ $label }}</option>
         @endforeach
     </select>
-    <span>Liczba audytów: {{ $audits->total() }}</span>
+    <span>Liczba audytów: {{ $audits->total() + $completedAudits->total() }}</span>
 </form>
-<div class="audit-grid">
-    @foreach($audits as $audit)
-    <a class="audit-card" href="{{ route('audits.show', $audit) }}">
-        <div class="audit-card-head"><span class="audit-number">{{ $audit->number }}</span><span class="audit-status">{{ $statuses[$audit->status] ?? $audit->status }}</span></div>
-        <h2>{{ $audit->title }}</h2>
-        <div class="audit-meta">
-            <span><i class="ti ti-building"></i> {{ $audit->company?->name ?? '—' }}</span>
-            <span><i class="ti ti-user-star"></i> {{ $audit->manager?->name ?? 'Brak kierownika' }}</span>
-            <span><i class="ti ti-users"></i> Zespół: {{ $audit->members_count }}</span>
-            <span><i class="ti ti-calendar"></i> {{ $audit->start_date?->format('d.m.Y') ?? '—' }} – {{ $audit->end_date?->format('d.m.Y') ?? '—' }}</span>
-        </div>
-    </a>
-    @endforeach
-</div>
-@if($audits->isEmpty())
+@if($audits->isNotEmpty())
+@include('partials.workspace-collection', ['items' => $audits, 'kind' => 'audits', 'prefix' => 'active'])
+<div style="margin-top:20px;">{{ $audits->links() }}</div>
+@endif
+@if($completedAudits->total() > 0)
+<section style="margin-top:32px" aria-labelledby="completed-audits-title">
+    <h2 id="completed-audits-title">Audyty zakończone ({{ $completedAudits->total() }})</h2>
+    @include('partials.workspace-collection', ['items' => $completedAudits, 'kind' => 'audits', 'prefix' => 'completed'])
+    <div style="margin-top:20px;">{{ $completedAudits->fragment('completed-audits-title')->links() }}</div>
+</section>
+@endif
+@if($audits->isEmpty() && $completedAudits->isEmpty())
 <div class="audit-empty"><i class="ti ti-clipboard-check" style="font-size:36px;"></i><p>Brak audytów spełniających wybrane kryteria.</p></div>
 @endif
-<div style="margin-top:20px;">{{ $audits->links() }}</div>
 @endsection

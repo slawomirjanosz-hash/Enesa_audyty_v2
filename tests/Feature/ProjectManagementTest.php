@@ -28,7 +28,7 @@ beforeEach(function () {
     }
 });
 
-test('completed projects have a separate paginated table with project access and financial permissions preserved', function () {
+test('completed projects have a separate paginated section with project access and financial permissions preserved', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $member = User::factory()->create();
@@ -47,10 +47,10 @@ test('completed projects have a separate paginated table with project access and
         ->assertDontSee('Niedostępny zakończony')->assertDontSee('987 654,32');
     expect($response->viewData('projects')->total())->toBe(1)
         ->and($response->viewData('completedProjects')->total())->toBe(21)
-        ->and(substr_count($response->getContent(), 'class="project-card"'))->toBe(1);
+        ->and(substr_count($response->getContent(), 'class="workspace-tile"'))->toBe(21);
     $page = $this->get(route('projects.index', ['completed_page' => 2]))->assertOk()->assertSee('Bieżący projekt');
     expect($page->viewData('completedProjects')->count())->toBe(1);
-    $this->get(route('projects.index', ['status' => 'completed']))->assertOk()->assertDontSee('class="project-card"', false);
+    expect($this->get(route('projects.index', ['status' => 'completed']))->assertOk()->viewData('projects')->total())->toBe(0);
     $this->get(route('projects.index', ['status' => 'active']))->assertOk()->assertDontSee('id="completed-projects-title"', false);
 });
 

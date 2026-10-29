@@ -22,10 +22,10 @@ test('audit index defaults to current audits and searches related companies', fu
     $deleted = Audit::create(['company_id' => $this->company->id, 'number' => 'deleted', 'title' => 'Usunięty', 'status' => 'draft']);
     $deleted->delete();
     $response = $this->actingAs($this->viewer)->get(route('audits.index'));
-    $response->assertOk()->assertSee('Audyt draft')->assertSee('Audyt in_progress')->assertDontSee('Audyt done')->assertDontSee('Usunięty');
-    expect($response->viewData('audits')->total())->toBe(2);
+    $response->assertOk()->assertSee('Audyt draft')->assertSee('Audyt in_progress')->assertSee('Audyt done')->assertSee('Audyty zakończone')->assertDontSee('Usunięty');
+    expect($response->viewData('audits')->total())->toBe(3);
     $this->get(route('audits.index', ['status' => 'done', 'q' => 'Firma audytowana']))->assertOk()->assertSee('Audyt done')->assertDontSee('Audyt draft');
-    expect($this->get(route('audits.index', ['status' => 'all']))->viewData('audits')->total())->toBe(4);
+    expect($this->get(route('audits.index', ['status' => 'all']))->viewData('audits')->total())->toBe(3);
     expect($this->get(route('audits.index', ['q' => 'Brak dopasowania']))->viewData('audits')->total())->toBe(0);
 });
 
@@ -54,7 +54,7 @@ test('audit index paginates and retains search and status', function () {
     }
     $response = $this->actingAs($this->viewer)->get(route('audits.index', ['status' => 'done', 'q' => 'LIST']));
     $response->assertOk();
-    $audits = $response->viewData('audits');
+    $audits = $response->viewData('completedAudits');
     expect($audits->count())->toBe(20)->and($audits->total())->toBe(21)
         ->and($audits->nextPageUrl())->toContain('status=done', 'q=LIST');
 });

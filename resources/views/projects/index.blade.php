@@ -20,7 +20,9 @@
 
 @if(session('success'))<div style="padding:12px 15px;background:#ecfdf5;color:#166534;border-radius:8px;margin-bottom:16px;">{{ session('success') }}</div>@endif
 
+@include('partials.workspace-view-toggle')
 <form class="filters" method="GET">
+    <input type="hidden" name="view" value="{{ request('view') === 'list' ? 'list' : 'tiles' }}">
     <input type="hidden" name="q" value="{{ is_string(request('q')) ? request('q') : '' }}">
     <select name="status" onchange="this.form.submit()">
         <option value="">Wszystkie statusy</option>
@@ -34,23 +36,7 @@
     <div class="empty"><i class="ti ti-briefcase-off" style="font-size:36px;"></i><p>Nie ma jeszcze żadnych projektów.</p></div>
 @else
 @if($projects->isNotEmpty())
-<div class="project-grid">
-    @foreach($projects as $project)
-    <article class="project-card">
-    <a class="project-card-content" href="{{ route('projects.show',$project) }}">
-        <div style="display:flex;justify-content:space-between;gap:10px;"><span class="project-number">{{ $project->number }} @if($project->overdue_tasks_count > 0)<span class="project-overdue-alert" title="{{ $project->overdue_tasks_count }} zadań po terminie">!</span>@endif</span><span class="status">{{ ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'][$project->status] ?? $project->status }}</span></div>
-        <h2>{{ $project->name }}</h2>
-        <div class="meta">
-            <span><i class="ti ti-building"></i> {{ $project->company?->name ?? 'Projekt wewnętrzny' }}</span>
-            <span><i class="ti ti-user-star"></i> {{ $project->manager?->name ?? 'Brak kierownika' }}</span>
-            <span><i class="ti ti-users"></i> Zespół: {{ $project->members->count() }}</span>
-            <span><i class="ti ti-calendar"></i> {{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span>
-        </div>
-        @if($canViewFinances)<div class="money">{{ number_format((float)$project->contract_value,2,',',' ') }} zł</div>@endif
-    </a>
-    </article>
-    @endforeach
-</div>
+@include('partials.workspace-collection', ['items' => $projects, 'kind' => 'projects', 'prefix' => 'active'])
 <div style="margin-top:20px;">{{ $projects->links() }}</div>
 @endif
 @endif
@@ -58,25 +44,7 @@
 @if($completedProjects->total() > 0)
 <section class="completed-projects" aria-labelledby="completed-projects-title">
     <h2 id="completed-projects-title">Projekty zakończone <span>({{ $completedProjects->total() }})</span></h2>
-    <div class="completed-projects-scroll">
-        <table class="completed-projects-table" data-server-sort="number,name,company,manager,team,date{{ $canViewFinances ? ',amount' : '' }}" data-sort-prefix="completed" data-page-parameter="completed_page">
-            <thead><tr><th>Numer projektu</th><th>Nazwa projektu</th><th>Firma / klient</th><th>Kierownik</th><th>Zespół</th><th>Termin realizacji</th>@if($canViewFinances)<th>Wartość netto</th>@endif<th>Akcje</th></tr></thead>
-            <tbody>
-            @foreach($completedProjects as $project)
-                <tr>
-                    <td class="nowrap"><a href="{{ route('projects.show', $project) }}">{{ $project->number }}</a></td>
-                    <td><a href="{{ route('projects.show', $project) }}">{{ $project->name }}</a></td>
-                    <td>{{ $project->company?->name ?? 'Projekt wewnętrzny' }}</td>
-                    <td>{{ $project->manager?->name ?? 'Brak kierownika' }}</td>
-                    <td>{{ $project->members->count() }}</td>
-                    <td class="nowrap">{{ $project->start_date?->format('d.m.Y') ?? '—' }} – {{ $project->end_date?->format('d.m.Y') ?? '—' }}</td>
-                    @if($canViewFinances)<td class="nowrap">{{ number_format((float) $project->contract_value, 2, ',', ' ') }} zł</td>@endif
-                    <td><div class="project-row-actions"><a href="{{ route('projects.show', $project) }}">Otwórz</a></div></td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
+    @include('partials.workspace-collection', ['items' => $completedProjects, 'kind' => 'projects', 'prefix' => 'completed'])
     <div style="margin-top:16px;">{{ $completedProjects->fragment('completed-projects-title')->links() }}</div>
 </section>
 @endif
