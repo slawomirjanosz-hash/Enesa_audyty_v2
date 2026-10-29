@@ -17,6 +17,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\ProjectGanttImportService;
+use App\Support\ListSearch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,6 +31,28 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class AuditController extends Controller
 {
     public function __construct(private readonly AuditorAccessService $access) {}
+
+    public function index(Request $request): View
+    {
+        $request->validate(['status' => ['nullable', 'in:active,all,draft,in_progress,done,cancelled']]);
+        $status = $request->input('status') ?: 'active';
+        $query = Audit::query()->with(['company', 'manager'])
+            ->withCount('members')->orderByDesc('created_at')->orderByDesc('id');
+        $this->access->scopeByCompanyAccess($query, $request->user(), 'can_view_audits');
+        if ($status === 'active') {
+            $query->whereIn('status', ['draft', 'in_progress']);
+        } elseif ($status !== 'all') {
+            $query->where('status', $status);
+        }
+        ListSearch::apply($query, $request, ['number', 'title'], [
+            'company' => ['name', 'nip'], 'manager' => ['name'],
+        ]);
+
+        return view('audits.index', [
+            'audits' => $query->paginate(20)->withQueryString(),
+            'status' => $status,
+        ]);
+    }
 
     public function store(Request $request): RedirectResponse
     {

@@ -557,6 +557,14 @@
             </li>
             @endif
 
+            @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
+            <li class="nav-item">
+                <a href="{{ route('audits.index') }}" class="nav-link {{ request()->routeIs('audits.*') ? 'active' : '' }}">
+                    <i class="ti ti-clipboard-check"></i> Audyty
+                </a>
+            </li>
+            @endif
+
             @if($appModuleEnabled('financial_plans') && app(\App\Services\FinancialPlanAccess::class)->allowed($layoutUser))
             <li class="nav-item"><a href="{{ route('financial-plans.index') }}" class="nav-link {{ request()->routeIs('financial-plans.*') ? 'active' : '' }}"><i class="ti ti-chart-bar"></i> Plan finansowy działu</a></li>
             @endif
