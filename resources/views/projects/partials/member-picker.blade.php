@@ -1,10 +1,14 @@
 @php($selectedMembers = array_map('intval', (array) $selectedMembers))
+@php($selectableMembers = $users->loadMissing('roles')->reject(fn ($person) => $person->hasRole('superadmin')))
+@foreach($users->diff($selectableMembers) as $person)
+    @if(in_array((int)$person->id, $selectedMembers, true))<input type="hidden" name="member_ids[]" value="{{$person->id}}">@endif
+@endforeach
 <details class="project-member-picker" data-member-picker>
-    <summary>Kto może widzieć projekt <span data-member-count>Wybrano: {{count($selectedMembers)}}</span></summary>
+    <summary>Kto może widzieć projekt <span data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span></summary>
     <div class="project-member-panel">
         <input type="search" data-member-search aria-label="Szukaj użytkownika" placeholder="Szukaj po imieniu lub nazwisku…" autocomplete="off">
         <div class="project-member-options">
-            @foreach($users as $user)
+            @foreach($selectableMembers as $user)
             <label class="project-member-option"><input type="checkbox" name="member_ids[]" value="{{$user->id}}" @checked(in_array((int)$user->id, $selectedMembers, true))><span>{{$user->name}}</span></label>
             @endforeach
         </div>
