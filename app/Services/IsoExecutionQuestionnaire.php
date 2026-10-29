@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\IsoEnergyCards;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSystemReview;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -317,6 +318,11 @@ class IsoExecutionQuestionnaire
             $required = false;
         }
         if ($section === '7-5' && $parts[0] === 'WYKAZ') {
+            if ($leaf === 'powodPodstawy' && filled($row['punkt'] ?? null) && in_array($row['podstawa'] ?? '', ['N', 'M'], true)) {
+                $coverage = $this->documentationCoverage(['WYKAZ' => [$row]]);
+                $suggested = collect($coverage)->contains('covered', true) ? 'N' : 'M';
+                $required = $suggested !== $row['podstawa'];
+            }
             if ($leaf === 'punkt') {
                 $required = true;
                 $when = [$rowPath.'.podstawa', ['N']];
@@ -470,26 +476,12 @@ class IsoExecutionQuestionnaire
             }
         }
         if ($complete && $section === '7-5') {
-            foreach ($this->schema($section)['definitions']['WYMAGANIA_N'] as $requirement) {
-                if ($requirement['pozniej'] ?? false) {
-                    continue;
-                }
-                $covered = collect($out['WYKAZ'] ?? [])->contains(fn ($row) => ($row['podstawa'] ?? '') === 'N' && preg_match('/(?<![\d.])'.preg_quote($requirement['punkt'], '/').'(?![\d.])/', $row['punkt'] ?? ''));
-                if (! $covered) {
-                    $errors['WYKAZ'] = 'Uzupełnij wykaz dokumentacji wymaganej w punkcie '.$requirement['punkt'].': '.$requirement['co'];
-                }
+            if (isset($errors['WYKAZ'])) {
+                $errors['WYKAZ'] = (array) $errors['WYKAZ'];
             }
-            $titles = [];
-            foreach ($out['WYKAZ'] ?? [] as $i => $row) {
-                $title = mb_strtolower(preg_replace('/\s+/u', ' ', trim($row['tytul'] ?? '')));
-                if (in_array($title, $titles, true)) {
-                    $errors['WYKAZ.'.$i.'.tytul'] = 'Powtórzony tytuł — sprawdź, czy w obiegu nie ma dwóch wersji.';
-                }
-                $titles[] = $title;
-            }
-            foreach ($out['ZEWN'] ?? [] as $i => $row) {
-                if (($row['sprawdzono'] ?? '') < today()->subYear()->toDateString()) {
-                    $errors['ZEWN.'.$i.'.sprawdzono'] = 'Sprawdź aktualność dokumentu zewnętrznego — ostatni przegląd jest starszy niż rok.';
+            foreach ($this->documentationCoverage($out) as $requirement) {
+                if (! $requirement['covered']) {
+                    $errors['WYKAZ'][] = 'Uzupełnij wykaz dokumentacji wymaganej w punkcie '.$requirement['punkt'].': '.$requirement['co'];
                 }
             }
         }
@@ -531,6 +523,13 @@ class IsoExecutionQuestionnaire
                         }
                     }
                 }
+            }
+        }
+
+        if ($section === '7-5') {
+            foreach ($this->documentationCoverage($answers) as $requirement) {
+                $total++;
+                $done += $requirement['covered'] ? 1 : 0;
             }
         }
 
@@ -619,6 +618,33 @@ class IsoExecutionQuestionnaire
     public function warnings(string $section, array $answers, array $sources): array
     {
         $out = [];
+        if ($section === '7-5') {
+            $titles = [];
+            foreach ($answers['WYKAZ'] ?? [] as $row) {
+                $title = mb_strtolower(preg_replace('/\s+/u', ' ', trim($row['tytul'] ?? '')));
+                if ($title !== '') {
+                    $titles[$title][] = ($row['kod'] ?? '').' (wersja '.($row['wersja'] ?? 'nie podano').')';
+                }
+            }
+            foreach ($titles as $title => $positions) {
+                if (count($positions) > 1) {
+                    $out[] = 'Powtórzony tytuł „'.$title.'”: '.implode(', ', $positions).'. Sprawdź na hali, czy są to różne dokumenty o tej samej nazwie, czy jeden dokument w dwóch wersjach. Ostrzeżenie nie blokuje wydania.';
+                }
+            }
+            foreach ($answers['ZEWN'] ?? [] as $row) {
+                $date = $row['sprawdzono'] ?? '';
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/D', $date) && strtotime($date) !== false) {
+                    $checked = CarbonImmutable::parse($date);
+                    $months = ($checked->year === today()->year && $checked->month === today()->month)
+                        ? 0 : (today()->year - $checked->year) * 12 + today()->month - $checked->month - (today()->day < $checked->day ? 1 : 0);
+                    if ($months > 12) {
+                        $out[] = 'Dokument zewnętrzny „'.($row['tytul'] ?? '').'”: od sprawdzenia aktualności minęło '.$months.' pełnych miesięcy. Sprawdź aktualność. Próg 12 miesięcy jest wskazówką metodyki ENESA i nie blokuje wydania.';
+                    } elseif ($months > 9) {
+                        $out[] = 'Dokument zewnętrzny „'.($row['tytul'] ?? '').'”: zbliża się termin sprawdzenia aktualności ('.$months.' pełnych miesięcy). Próg 9 miesięcy jest wskazówką metodyki ENESA i nie blokuje wydania.';
+                    }
+                }
+            }
+        }
         if ($section === '9-1-2' && empty($answers['WYM'])) {
             $out[] = 'Brak przyjętych wymagań zgodności z punktu 4.2. Zweryfikuj rejestr źródłowy; brak pozycji nie oznacza potwierdzenia zgodności.';
         }
@@ -645,6 +671,18 @@ class IsoExecutionQuestionnaire
         }
 
         return array_values(array_unique($out));
+    }
+
+    /** The stored `punkt` key is also used by existing Excel workbooks. */
+    public function documentationCoverage(array $answers): array
+    {
+        return array_values(array_map(function ($requirement) use ($answers) {
+            $requirement['covered'] = collect($answers['WYKAZ'] ?? [])->contains(
+                fn ($row) => preg_match('/(?<![\d.])'.preg_quote($requirement['punkt'], '/').'(?![\d.])/', $row['punkt'] ?? '') === 1
+            );
+
+            return $requirement;
+        }, array_filter($this->schema('7-5')['definitions']['WYMAGANIA_N'], fn ($requirement) => ! ($requirement['pozniej'] ?? false))));
     }
 
     public function checklist(string $section): array

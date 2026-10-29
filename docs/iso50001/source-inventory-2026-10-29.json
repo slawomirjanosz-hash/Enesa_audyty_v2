@@ -1,0 +1,1777 @@
+{
+  "verified_on": "2026-10-29",
+  "scope": "Source inventory only. This is not confirmation of native implementation or browser acceptance.",
+  "decision_9_1": "Combined 9.1 only for new audits. Existing audits retain 9.1.1 and 9.1.2, answers, documents and approvals. User confirmed 2026-10-29.",
+  "clauses": [
+    {
+      "clause": "4.1",
+      "source_file": "ENESA_4.1_Kontekst_platforma-12.html",
+      "sha256": "3c7fede35b451a071789b9db8a81c2c9b2cbd381cc3338bad6e068bd8a2c2680",
+      "tabs": [
+        {
+          "id": "klimat",
+          "tytul": "1. Klimat i stan prawny"
+        },
+        {
+          "id": "zewn",
+          "tytul": "2. Czynniki zewnętrzne"
+        },
+        {
+          "id": "wewn",
+          "tytul": "3. Czynniki wewnętrzne"
+        },
+        {
+          "id": "wlasne",
+          "tytul": "4. Czynniki własne"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-KON-01"
+        }
+      ],
+      "state_fields": [
+        "DEC",
+        "WLASNE",
+        "KLIMAT",
+        "PRAWO",
+        "SWOT",
+        "ODP",
+        "PROFIL",
+        "WEJSCIE"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Rozstrzygnięcie w sprawie zmiany klimatu",
+        "3. Stan prawny",
+        "4. Czynniki zewnętrzne",
+        "5. Czynniki wewnętrzne",
+        "6. Czynniki spoza biblioteki",
+        "7. Czynniki rozpatrzone i nieuwzględnione",
+        "8. Analiza SWOT",
+        "9. Wnioski i dalsze postępowanie",
+        "10. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "4.2",
+      "source_file": "ENESA_4.2_Strony_zainteresowane_platforma-6.html",
+      "sha256": "b3a52171e121855408e37f8154e62da89cc72416b27bdc9a40b9988c19a802e8",
+      "tabs": [
+        {
+          "id": "klimat",
+          "tytul": "Klimat i przegląd"
+        },
+        {
+          "id": "wewn",
+          "tytul": "Strony wewnętrzne"
+        },
+        {
+          "id": "organy",
+          "tytul": "Organy i regulatorzy"
+        },
+        {
+          "id": "rynek",
+          "tytul": "Rynek i dostawcy"
+        },
+        {
+          "id": "finanse",
+          "tytul": "Finansowanie i nadzór"
+        },
+        {
+          "id": "wlasne",
+          "tytul": "Własne wymagania"
+        },
+        {
+          "id": "kons",
+          "tytul": "Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "Dokument D-EnMS-STR-01"
+        }
+      ],
+      "state_fields": [
+        "W",
+        "WLASNE",
+        "KLIMAT",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Wymagania stron zainteresowanych związane ze zmianą klimatu",
+        "3. Strony zainteresowane i ich wymagania",
+        "4. Wymagania spoza biblioteki",
+        "5. Wymagania rozpatrzone i nieuwzględnione",
+        "6. Wyciąg do rejestru wymagań prawnych i innych",
+        "7. Wnioski i dalsze postępowanie",
+        "8. Zasady przeglądu rejestru",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "4.3",
+      "source_file": "ENESA_4.3_Zakres_systemu_platforma-4.html",
+      "sha256": "913ae42c79447ad1a4c1a3f180683ca920dc171bd9dd999bb6bb4c1a31a9291a",
+      "tabs": [
+        {
+          "id": "konsekwencje",
+          "tytul": "1. Konsekwencje z 4.1 i 4.2"
+        },
+        {
+          "id": "zakres",
+          "tytul": "2. Zakres"
+        },
+        {
+          "id": "granice",
+          "tytul": "3. Granice"
+        },
+        {
+          "id": "uprawnienia",
+          "tytul": "4. Uprawnienia"
+        },
+        {
+          "id": "energia",
+          "tytul": "5. Rodzaje energii"
+        },
+        {
+          "id": "poza",
+          "tytul": "6. Poza granicami"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-ZAK-01"
+        }
+      ],
+      "state_fields": [
+        "KON",
+        "ZAKRES",
+        "GRANICE",
+        "UPRAW",
+        "ENERGIA",
+        "POZA",
+        "SPRAWDZONE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Zakres systemu zarządzania energią",
+        "3. Granice fizyczne i organizacyjne",
+        "4. Uprawnienia do sterowania zużyciem energii",
+        "5. Rodzaje energii w granicach systemu",
+        "6. Co pozostaje poza granicami i dlaczego",
+        "7. Konsekwencje z analizy kontekstu i wymagań stron",
+        "8. Wnioski i dalsze postępowanie",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "4.4",
+      "source_file": "ENESA_4.4_System_zarzadzania_energia_platforma-5.html",
+      "sha256": "142bc257ba6cc55f880079d97ecad3dcd52903d24b181ab6a59e93aff4cf4d69",
+      "tabs": [
+        {
+          "id": "pytania",
+          "tytul": "1. Decyzje o systemie"
+        },
+        {
+          "id": "czasowniki",
+          "tytul": "2. Cztery czasowniki"
+        },
+        {
+          "id": "obieg",
+          "tytul": "3. Obieg informacji"
+        },
+        {
+          "id": "test",
+          "tytul": "4. Test ciągłości"
+        },
+        {
+          "id": "procesy",
+          "tytul": "5. Procesy systemu"
+        },
+        {
+          "id": "powiazania",
+          "tytul": "6. Powiązania procesów"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-SYS-01"
+        }
+      ],
+      "state_fields": [
+        "ODP",
+        "CZ",
+        "WYNIK",
+        "OB",
+        "PG",
+        "TS",
+        "PROC",
+        "POW",
+        "WLASNE",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Forma systemu i odpowiedzialność",
+        "3. Ustanowienie, wdrożenie, utrzymanie i doskonalenie",
+        "4. Procesy systemu i ich właściciele",
+        "5. Wzajemne oddziaływania procesów",
+        "6. Obieg informacji i progi reakcji",
+        "7. Test ciągłości systemu",
+        "8. Stan przygotowania wymagań listy kontrolnej",
+        "9. Wnioski i dalsze postępowanie",
+        "10. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "5.1",
+      "source_file": "ENESA_5.1_Przywodztwo_i_zaangazowanie_platforma-2.html",
+      "sha256": "15d659481965a25e43874aab36748f75c62f10391bd67d9c3a90953e2be18216",
+      "tabs": [
+        {
+          "id": "pytania",
+          "tytul": "1. Cztery pytania kontrolne"
+        },
+        {
+          "id": "zobowiazania",
+          "tytul": "2. Zobowiązania kierownictwa"
+        },
+        {
+          "id": "procesy",
+          "tytul": "3. Procesy firmy"
+        },
+        {
+          "id": "zasoby",
+          "tytul": "4. Zasoby"
+        },
+        {
+          "id": "zespol",
+          "tytul": "5. Zespół i decyzje"
+        },
+        {
+          "id": "nawyki",
+          "tytul": "6. Nawyki kierownictwa"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-PRZ-01"
+        }
+      ],
+      "state_fields": [
+        "SAMO",
+        "ZOB",
+        "INT",
+        "ZAS",
+        "ZESPOL",
+        "STYK",
+        "DECYZJE",
+        "NAW",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Najwyższe kierownictwo dla tego systemu",
+        "3. Zobowiązania kierownictwa — stan i dowody",
+        "4. Wymagania systemu w procesach firmy",
+        "5. Zasoby zapewnione przez kierownictwo",
+        "6. Zespół ds. zarządzania energią i punkty styku kierownictwa",
+        "7. Decyzje, w których energia miała znaczenie",
+        "8. Samoocena kierownictwa — cztery pytania kontrolne",
+        "9. Nawyki kierownictwa — obserwacje z wdrożeń",
+        "10. Stan przygotowania punktów normy",
+        "11. Stan listy kontrolnej III-13",
+        "12. Wnioski i dalsze postępowanie",
+        "13. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "5.2",
+      "source_file": "ENESA_5.2_Polityka_energetyczna_platforma.html",
+      "sha256": "4e6456483fe0c99f67a7bb46f20db8742bf5ca3ba9c460e38f3f0a2604fb9e17",
+      "tabs": [
+        {
+          "id": "wstep",
+          "tytul": "1. Wstęp polityki"
+        },
+        {
+          "id": "elementy",
+          "tytul": "2. Siedem elementów"
+        },
+        {
+          "id": "dodatkowe",
+          "tytul": "3. Zobowiązania dodatkowe"
+        },
+        {
+          "id": "utrzymanie",
+          "tytul": "4. Utrzymywanie polityki"
+        },
+        {
+          "id": "zatwierdzenie",
+          "tytul": "5. Zatwierdzenie i przeglądy"
+        },
+        {
+          "id": "podglad",
+          "tytul": "6. Podgląd polityki"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-POL-01"
+        }
+      ],
+      "state_fields": [
+        "POL",
+        "TRESC",
+        "DODATKOWE",
+        "UTRZ",
+        "ZATW",
+        "PRZEGLADY",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Polityka energetyczna — treść przedłożona do oceny",
+        "3. Zgodność treści z wymaganiami punktu 5.2",
+        "4. Zobowiązania dodatkowe",
+        "5. Utrzymywanie polityki",
+        "6. Zatwierdzenie i wersja polityki",
+        "7. Przeglądy polityki",
+        "8. Stan przygotowania punktów normy",
+        "9. Stan listy kontrolnej III-13 (sekcja 5.2)",
+        "10. Wnioski i dalsze postępowanie",
+        "11. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "5.3",
+      "source_file": "ENESA_5.3_Role_i_uprawnienia_platforma.html",
+      "sha256": "b494a83d04cd2cae0242837dcc7014d2851eaf8094be6716f11554de278f13e2",
+      "tabs": [
+        {
+          "id": "zadania",
+          "tytul": "1. Pięć zadań zespołu"
+        },
+        {
+          "id": "matryca",
+          "tytul": "2. Matryca odpowiedzialności"
+        },
+        {
+          "id": "uprawnienia",
+          "tytul": "3. Uprawnienia ról"
+        },
+        {
+          "id": "seu",
+          "tytul": "4. Właściciele SEU"
+        },
+        {
+          "id": "ogloszenie",
+          "tytul": "5. Ogłoszenie ról"
+        },
+        {
+          "id": "kons",
+          "tytul": "6. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "7. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "8. Dokument D-EnMS-ROL-01"
+        }
+      ],
+      "state_fields": [
+        "ZAD",
+        "ROLE",
+        "MAT",
+        "UWAGI",
+        "UPR",
+        "SEU",
+        "KOM",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe analizy",
+        "2. Zespół ds. zarządzania energią i jego koordynator",
+        "3. Pięć zadań zespołu wymaganych przez normę",
+        "4. Matryca odpowiedzialności",
+        "5. Granice odpowiedzialności przy kilku właścicielach",
+        "6. Uprawnienia kluczowych ról",
+        "7. Właściciele znaczących użyć energii",
+        "8. Ogłoszenie ról w organizacji",
+        "9. Rozdzielenie organizacji audytów od ich przeprowadzania",
+        "10. Stan przygotowania punktów normy",
+        "11. Stan listy kontrolnej III-13 (sekcja 5.3)",
+        "12. Wnioski i dalsze postępowanie",
+        "13. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "6.1",
+      "source_file": "ENESA_6.1_Ryzyka_i_szanse_platforma-kopia.html",
+      "sha256": "42268d055426d554fe165172df0f25cb01344721a453399bbcf686ae00d2045f",
+      "tabs": [
+        {
+          "id": "wejscie",
+          "tytul": "1. Dane wejściowe"
+        },
+        {
+          "id": "ryzyka",
+          "tytul": "2. Rejestr ryzyk"
+        },
+        {
+          "id": "szanse",
+          "tytul": "3. Rejestr szans"
+        },
+        {
+          "id": "przeglad",
+          "tytul": "4. Przegląd rejestru"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-RYZ-01"
+        }
+      ],
+      "state_fields": [
+        "KON",
+        "PROCESY",
+        "RYZYKA",
+        "SZANSE",
+        "METODA",
+        "PRZEGLAD",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Dane wejściowe planowania",
+        "2. Przegląd działań i procesów wpływających na wynik energetyczny",
+        "3. Metoda oceny ryzyk i szans",
+        "4. Rejestr ryzyk",
+        "5. Rejestr szans",
+        "6. Działania wymagające decyzji kierownictwa",
+        "7. Ocena skuteczności działań",
+        "8. Przegląd rejestru i przekazanie do celów energetycznych",
+        "9. Metryka rejestru i stan przygotowania punktów normy",
+        "10. Stan listy kontrolnej III-17 (sekcja 6.1)",
+        "11. Wnioski i dalsze postępowanie",
+        "12. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "6.2",
+      "source_file": "ENESA_6.2_Cele_i_plany_dzialan_platforma-kopia.html",
+      "sha256": "ce44e03838b80ab465f8fc94de24fe845be85db40277dc4ab324a09d0da09520",
+      "tabs": [
+        {
+          "id": "cele",
+          "tytul": "1. Cele energetyczne"
+        },
+        {
+          "id": "zadania",
+          "tytul": "2. Zadania energetyczne"
+        },
+        {
+          "id": "dzialania",
+          "tytul": "3. Plan działań"
+        },
+        {
+          "id": "aktual",
+          "tytul": "4. Aktualizacja i metryka"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-CEL-01"
+        }
+      ],
+      "state_fields": [
+        "CELE",
+        "ZADANIA",
+        "DZIALANIA",
+        "AKTUAL",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Cele energetyczne",
+        "2. Zadania energetyczne",
+        "3. Plan działań",
+        "4. Metody weryfikacji poprawy wyniku energetycznego",
+        "5. Przegląd i aktualizacja celów",
+        "6. Metryka dokumentu i stan przygotowania punktów normy",
+        "7. Stan listy kontrolnej III-25 (sekcja 6.2)",
+        "8. Wnioski i dalsze postępowanie",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "6.3",
+      "source_file": "ENESA_6.3_Przeglad_energetyczny_platforma-kopia.html",
+      "sha256": "29a6f62bfd24a790debd6ba63bfd01e7e393270141bf27c4d35e31c21a5a0f84",
+      "tabs": [
+        {
+          "id": "metody",
+          "tytul": "1. Metody i kryteria"
+        },
+        {
+          "id": "nosniki",
+          "tytul": "2. Rodzaje energii"
+        },
+        {
+          "id": "bilans",
+          "tytul": "3. Bilans i obszary"
+        },
+        {
+          "id": "seu",
+          "tytul": "4. Znaczące użycia"
+        },
+        {
+          "id": "mozliwosci",
+          "tytul": "5. Możliwości poprawy"
+        },
+        {
+          "id": "prognoza",
+          "tytul": "6. Prognoza i aktualizacja"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-PEN-01"
+        }
+      ],
+      "state_fields": [
+        "MET",
+        "METODY_DOWOD",
+        "METODA",
+        "NOSNIKI",
+        "TREND",
+        "OBSZARY",
+        "SEU",
+        "NIESEU",
+        "GRUPY",
+        "MOZL",
+        "PROG",
+        "AKTUAL",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Metody i kryteria przeglądu",
+        "2. Rodzaje energii — zużycie przeszłe i bieżące",
+        "3. Podział zużycia na obszary",
+        "4. Znaczące użycia energii",
+        "5. Możliwości poprawy wyniku energetycznego",
+        "6. Szacunek przyszłego wykorzystania i zużycia energii",
+        "7. Aktualizacja przeglądu",
+        "8. Metryka przeglądu i stan przygotowania punktów normy",
+        "9. Stan listy kontrolnej III-25 (sekcja 6.3)",
+        "10. Wnioski i dalsze postępowanie",
+        "11. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "6.4",
+      "source_file": "ENESA_6.4_Wskazniki_EnPI_platforma-kopia 2.html",
+      "sha256": "50bb2dce3790583ad4285ea9da2c708b0f199a178e158b05950b27e7b4c5d260",
+      "tabs": [
+        {
+          "id": "metoda",
+          "tytul": "1. Metoda i progi"
+        },
+        {
+          "id": "wskazniki",
+          "tytul": "2. Wskaźniki EnPI"
+        },
+        {
+          "id": "wartosci",
+          "tytul": "3. Zachowane wartości"
+        },
+        {
+          "id": "zarzadcze",
+          "tytul": "4. Zarządcze i aktualizacja"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-WSK-01"
+        }
+      ],
+      "state_fields": [
+        "MET",
+        "METODY_DOWOD",
+        "METODA",
+        "STALE",
+        "KARTY",
+        "WARTOSCI",
+        "NIEWSK",
+        "ZARZADCZE",
+        "AKTUAL",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Metoda określania i aktualizowania wskaźników",
+        "2. Udział zużycia niezależnego od produkcji",
+        "3. Karty wskaźników wyniku energetycznego",
+        "4. Znaczące użycia energii a wskaźniki",
+        "5. Zachowane wartości wskaźników",
+        "6. Wskaźniki zarządcze, które nie są wskaźnikami wyniku",
+        "7. Przegląd i aktualizacja wskaźników",
+        "8. Metryka wskaźników i stan przygotowania punktów normy",
+        "9. Stan listy kontrolnej III-25 (sekcja 6.4)",
+        "10. Wnioski i dalsze postępowanie",
+        "11. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "6.5",
+      "source_file": "ENESA_6.5_Linia_bazowa_platforma-kopia.html",
+      "sha256": "2f91e5e0b76aaa0837cd4a5b136ca49ee763ea76693e803563e1068fc327522b",
+      "tabs": [
+        {
+          "id": "metoda",
+          "tytul": "1. Metoda i progi"
+        },
+        {
+          "id": "linie",
+          "tytul": "2. Linie bazowe"
+        },
+        {
+          "id": "zmiany",
+          "tytul": "3. Historia zmian"
+        },
+        {
+          "id": "aktual",
+          "tytul": "4. Aktualizacja i metryka"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-ENB-01"
+        }
+      ],
+      "state_fields": [
+        "MET",
+        "METODY_DOWOD",
+        "METODA",
+        "LINIE",
+        "ZMIANY",
+        "NIEENB",
+        "AKTUAL",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Metoda ustalania i rewizji linii bazowych",
+        "2. Energetyczne stany odniesienia",
+        "3. Wskaźniki a linie bazowe",
+        "4. Zmiany stanów odniesienia",
+        "5. Przegląd i aktualizacja linii bazowych",
+        "6. Metryka linii bazowych i stan przygotowania punktów normy",
+        "7. Stan listy kontrolnej III-25 (sekcja 6.5)",
+        "8. Wnioski i dalsze postępowanie",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "6.6",
+      "source_file": "ENESA_6.6_Plan_zbierania_danych_platforma-kopia.html",
+      "sha256": "b94a012fa0a57759e8d93789d88631cfef2621b5d7e7665b406c4a98047ff54c",
+      "tabs": [
+        {
+          "id": "plan",
+          "tytul": "1. Plan zbierania danych"
+        },
+        {
+          "id": "kategorie",
+          "tytul": "2. Pokrycie"
+        },
+        {
+          "id": "zasady",
+          "tytul": "3. Zasady i dokładność"
+        },
+        {
+          "id": "kons",
+          "tytul": "4. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "5. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "6. Dokument D-EnMS-DAN-01"
+        }
+      ],
+      "state_fields": [
+        "POZYCJE",
+        "ZASADY",
+        "META",
+        "DOWOD_PLANU",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres planu i dane wejściowe",
+        "2. Pokrycie pięciu rodzajów danych wymienionych w normie",
+        "3. Plan zbierania danych",
+        "4. Kluczowe charakterystyki i zapewnienie dokładności",
+        "5. Zasady wspólne planu",
+        "6. Metryka planu i stan przygotowania punktów normy",
+        "7. Stan listy kontrolnej III-25 (sekcja 6.6)",
+        "8. Wnioski i dalsze postępowanie",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "7.1",
+      "source_file": "ENESA_7.1_Zasoby_platforma-2.html",
+      "sha256": "8030cc909bd86e98e2bd60fdd1068c0fd70b4928f0396a1978b80c2a7af42a9a",
+      "tabs": [
+        {
+          "id": "zadania",
+          "tytul": "1. Spis zadań systemu"
+        },
+        {
+          "id": "osoby",
+          "tytul": "2. Osoby i bilans czasu"
+        },
+        {
+          "id": "zasoby",
+          "tytul": "3. Cztery rodzaje zasobów"
+        },
+        {
+          "id": "decyzje",
+          "tytul": "4. Decyzje, progi i metryka"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-ZAS-01"
+        }
+      ],
+      "state_fields": [
+        "OSOBY",
+        "ZADANIA",
+        "ZASOBY",
+        "DECYZJE",
+        "META",
+        "PROGI",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres spisu i dane wejściowe",
+        "2. Zasoby potrzebne i zapewnione — cztery rodzaje",
+        "3. Spis zadań systemu",
+        "4. Obciążenie osób i bilans okresu",
+        "5. Decyzje o zapewnieniu zasobów",
+        "6. Metryka i stan przygotowania punktów normy",
+        "7. Stan listy kontrolnej III-32 (sekcja 7.1)",
+        "8. Wnioski i dalsze postępowanie",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "7.2",
+      "source_file": "ENESA_7.2_Kompetencje_platforma-kopia.html",
+      "sha256": "a1f17671f76f665758f21d6b47e7251fbc5f1f78e3875a528b278723e5a122e9",
+      "tabs": [
+        {
+          "id": "matryca",
+          "tytul": "1. Matryca kompetencji"
+        },
+        {
+          "id": "luki",
+          "tytul": "2. Działania i dowody"
+        },
+        {
+          "id": "plan",
+          "tytul": "3. Plan działań i szkoleń"
+        },
+        {
+          "id": "metryka",
+          "tytul": "4. Próg i metryka"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-KMP-01"
+        }
+      ],
+      "state_fields": [
+        "KOMPETENCJE",
+        "ROLE_M",
+        "POZIOMY",
+        "LUKI",
+        "PLAN",
+        "BEZ_KOLUMNY",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres matrycy i dane wejściowe",
+        "2. Skala poziomów kompetencji",
+        "3. Część A — matryca kompetencji (F-EnMS-24)",
+        "4. Część B — działania, ocena skuteczności i dowody",
+        "5. Plan działań i szkoleń (F-EnMS-12)",
+        "6. Powiązanie z matrycą odpowiedzialności (5.3)",
+        "7. Metryka matrycy i stan przygotowania punktów normy",
+        "8. Stan listy kontrolnej III-32 (sekcja 7.2)",
+        "9. Wnioski i dalsze postępowanie",
+        "10. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "7.3",
+      "source_file": "ENESA_7.3_Swiadomosc_platforma-kopia.html",
+      "sha256": "dec76064aa490c96ffa203487881115e40dd8a2deb16bd09027c1a52b681ad48",
+      "tabs": [
+        {
+          "id": "grupy",
+          "tytul": "1. Grupy i cztery elementy"
+        },
+        {
+          "id": "kanaly",
+          "tytul": "2. Kanały"
+        },
+        {
+          "id": "sprawdzenia",
+          "tytul": "3. Sprawdzenia świadomości"
+        },
+        {
+          "id": "zgloszenia",
+          "tytul": "4. Zgłoszenia i przeszkody"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-SWI-01"
+        }
+      ],
+      "state_fields": [
+        "GRUPY",
+        "KANALY",
+        "SPRAWDZENIA",
+        "ZGLOSZENIA",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres i dane wejściowe",
+        "2. Cztery elementy świadomości",
+        "3. Grupy osób i opisy elementów",
+        "4. Kanały — czym świadomość dociera",
+        "5. Sprawdzenia świadomości",
+        "6. Rejestr zgłoszeń i przeszkód (wspólny z punktem 7.4)",
+        "7. Plan działań i szkoleń F-EnMS-12 — pozycje oznaczone 7.3",
+        "8. Metryka i stan przygotowania punktów normy",
+        "9. Stan listy kontrolnej III-32 (sekcja 7.3)",
+        "10. Wnioski i dalsze postępowanie",
+        "11. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "7.4",
+      "source_file": "ENESA_7.4_Komunikacja_platforma-kopia.html",
+      "sha256": "d7482d5b878c4ed770b255d798e4f18fe14e3b26563a00346908590ef5c6e1fa",
+      "tabs": [
+        {
+          "id": "wew",
+          "tytul": "1. Komunikacja wewnętrzna"
+        },
+        {
+          "id": "zew",
+          "tytul": "2. Komunikacja zewnętrzna"
+        },
+        {
+          "id": "proces",
+          "tytul": "3. Proces zgłaszania uwag"
+        },
+        {
+          "id": "rejestr",
+          "tytul": "4. Rejestr zgłoszeń"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-INF-01"
+        }
+      ],
+      "state_fields": [
+        "WEW",
+        "ZEW",
+        "PROCES",
+        "ZGLOSZENIA",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres planu i dane wejściowe",
+        "2. Komunikacja wewnętrzna (F-EnMS-13, część A1)",
+        "3. Komunikacja zewnętrzna (F-EnMS-13, część A2)",
+        "4. Komunikaty o wyniku i ich podstawa",
+        "5. Proces zgłaszania uwag i propozycji (F-EnMS-13, część B)",
+        "6. Rejestr zgłoszeń (wspólny z punktem 7.3)",
+        "7. Metryka i stan przygotowania punktów normy",
+        "8. Stan listy kontrolnej III-32 (sekcja 7.4)",
+        "9. Wnioski i dalsze postępowanie",
+        "10. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "7.5",
+      "source_file": "ENESA_7.5_Udokumentowane_informacje_platforma-2.html",
+      "sha256": "b064d650e0be138a9bd007d0cbc76c94fb5dbb92b9112e002a2f348d8f14281f",
+      "tabs": [
+        {
+          "id": "wykaz",
+          "tytul": "1. Wykaz dokumentów i zapisów"
+        },
+        {
+          "id": "pokrycie",
+          "tytul": "2. Pokrycie wymagań normy"
+        },
+        {
+          "id": "zasady",
+          "tytul": "3. Zasady nadzoru"
+        },
+        {
+          "id": "zewn",
+          "tytul": "4. Dokumenty zewnętrzne"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-DOK-01"
+        }
+      ],
+      "state_fields": [
+        "WYKAZ",
+        "ZASADY",
+        "ZEWN",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres wykazu i dane wejściowe",
+        "2. Wykaz dokumentów i zapisów systemu",
+        "3. Pokrycie wymagań normy",
+        "4. Zasady nadzoru nad udokumentowaną informacją",
+        "5. Dokumenty pochodzenia zewnętrznego",
+        "6. Metryka i stan przygotowania punktów normy",
+        "7. Stan listy kontrolnej III-32 (sekcja 7.5)",
+        "8. Wnioski i dalsze postępowanie",
+        "9. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "8.1",
+      "source_file": "ENESA_8.1_Nadzor_operacyjny_platforma.html",
+      "sha256": "7c6134d320342ee2eb5a6f3a8ceee7454721203141c4345442a01157920bf580",
+      "tabs": [
+        {
+          "id": "karty",
+          "tytul": "1. Karty i kryteria (A)"
+        },
+        {
+          "id": "tryby",
+          "tytul": "2. Tryby pracy (B)"
+        },
+        {
+          "id": "zmiany",
+          "tytul": "3. Nadzór nad zmianami (C)"
+        },
+        {
+          "id": "sygnaly",
+          "tytul": "4. Sygnały odchylenia (D)"
+        },
+        {
+          "id": "utrzym",
+          "tytul": "5. Utrzymanie (E)"
+        },
+        {
+          "id": "przek",
+          "tytul": "6. Przekazanie (F)"
+        },
+        {
+          "id": "pokrycie",
+          "tytul": "7. Użycia bez karty"
+        },
+        {
+          "id": "kons",
+          "tytul": "8. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "9. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "10. Dokument D-EnMS-OPE-01"
+        }
+      ],
+      "state_fields": [
+        "KARTY",
+        "UZASADNIENIA",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres i dane wejściowe",
+        "2. Znaczące użycia a karty kryteriów",
+        "3. Część A — kryteria operacyjne",
+        "Sprężarkownia (4 sprężarki) — Hala A, pomieszczenie A-05 (sprężarkownia) i sieć do hal A–C oraz lakierni",
+        "Lakiernia — Hala C — piec lakierniczy, dwie kabiny natryskowe, nagrzewnice",
+        "Prasy (3 linie tłoczenia) — Hala B — trzy linie tłoczenia, prasy 1–6",
+        "4. Część B — tryby pracy",
+        "Sprężarkownia (4 sprężarki)",
+        "Lakiernia",
+        "Prasy (3 linie tłoczenia)",
+        "5. Część C — nadzór nad zmianami",
+        "Sprężarkownia (4 sprężarki)",
+        "Lakiernia",
+        "Prasy (3 linie tłoczenia)",
+        "6. Część D — sygnały odchylenia i kolejność sprawdzeń",
+        "Sprężarkownia (4 sprężarki)",
+        "Lakiernia",
+        "Prasy (3 linie tłoczenia)",
+        "7. Część E — eksploatacja i utrzymanie",
+        "Sprężarkownia (4 sprężarki)",
+        "Lakiernia",
+        "Prasy (3 linie tłoczenia)",
+        "8. Część F — przekazanie kryteriów",
+        "Sprężarkownia (4 sprężarki)",
+        "Lakiernia",
+        "Prasy (3 linie tłoczenia)",
+        "9. Metryka i stan przygotowania punktów normy",
+        "10. Stan listy kontrolnej III-39 (sekcja 8.1)",
+        "11. Wnioski i dalsze postępowanie",
+        "12. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "8.2",
+      "source_file": "ENESA_8.2_Projektowanie_platforma.html",
+      "sha256": "8475807e8caeeed06b46c4e3468a450bef86355df3abce475906b5612268b774",
+      "tabs": [
+        {
+          "id": "projekty",
+          "tytul": "1. Projekty"
+        },
+        {
+          "id": "rozp",
+          "tytul": "2. A — rozpoznanie"
+        },
+        {
+          "id": "mozl",
+          "tytul": "3. B — możliwości"
+        },
+        {
+          "id": "obsl",
+          "tytul": "4. C — projektowanie obsługi"
+        },
+        {
+          "id": "wnio",
+          "tytul": "5. D — wnioski"
+        },
+        {
+          "id": "spr",
+          "tytul": "6. E — po uruchomieniu"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-PRO-01"
+        }
+      ],
+      "state_fields": [
+        "PROJEKTY",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres i dane wejściowe",
+        "2. Sygnały uruchamiające analizę energetyczną projektu",
+        "3. Rejestr projektów",
+        "4. Część A — rozpoznanie",
+        "5. Projekty zamknięte na etapie A",
+        "6. Część B — możliwości poprawy wyniku energetycznego",
+        "7. Część C — nadzór operacyjny i projektowanie obsługi",
+        "8. Część D — wyniki rozważań",
+        "9. Wnioski projektowe i ich miejsce wprowadzenia",
+        "10. Część E — sprawdzenie po uruchomieniu",
+        "11. Powiązania z pozostałymi punktami systemu",
+        "12. Stan listy kontrolnej III-39 (sekcja 8.2)",
+        "13. Wnioski i dalsze postępowanie",
+        "14. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "8.3",
+      "source_file": "ENESA_8.3_Zakupy_platforma.html",
+      "sha256": "19e6ff1f0b634969f7ef5ad693f0146aba93ce5fa8a84dbc7df511743fee27b8",
+      "tabs": [
+        {
+          "id": "zakupy",
+          "tytul": "1. Zakupy i ocena (A)"
+        },
+        {
+          "id": "kategorie",
+          "tytul": "2. B — kryteria kategorii"
+        },
+        {
+          "id": "zapytanie",
+          "tytul": "3. C — zapytanie"
+        },
+        {
+          "id": "porownanie",
+          "tytul": "4. D — porównanie ofert"
+        },
+        {
+          "id": "odbior",
+          "tytul": "5. E — odbiór"
+        },
+        {
+          "id": "kons",
+          "tytul": "6. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "7. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "8. Dokument D-EnMS-ZKP-01"
+        }
+      ],
+      "state_fields": [
+        "ZAKUPY",
+        "KATEGORIE",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres i dane wejściowe",
+        "2. Część B — kryteria oceny wyniku energetycznego dla kategorii zakupów",
+        "3. Część A — rejestr zakupów i ocena wpływu",
+        "4. Zakupy zamknięte na etapie oceny wpływu",
+        "5. Część C — zapytanie ofertowe i wymagania minimalne",
+        "6. Część D — porównanie ofert: koszt zakupu i energii",
+        "7. Część E — odbiór i sprawdzenie",
+        "8. Powiązania z pozostałymi punktami systemu",
+        "9. Stan listy kontrolnej III-39 (sekcja 8.3)",
+        "10. Wnioski i dalsze postępowanie",
+        "11. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "9.1",
+      "source_file": "ENESA_9.1_Monitorowanie_platforma.html",
+      "sha256": "2b1eea60e1b3001cbafed2104fa6fcc5c0742f76692d0675942895473ad5953d",
+      "tabs": [
+        {
+          "id": "ustalenia",
+          "tytul": "1. Ustalenia monitorowania"
+        },
+        {
+          "id": "zuzycie",
+          "tytul": "2. A — rzeczywiste a oczekiwane"
+        },
+        {
+          "id": "wskazniki",
+          "tytul": "3. B — EnPI wobec EnB"
+        },
+        {
+          "id": "seu",
+          "tytul": "4. C — SEU i odchylenia"
+        },
+        {
+          "id": "zgodnosc",
+          "tytul": "5. D — ocena zgodności"
+        },
+        {
+          "id": "ocena",
+          "tytul": "6. E — wnioski i system"
+        },
+        {
+          "id": "kons",
+          "tytul": "7. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "8. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "9. Dokument D-EnMS-MON-01"
+        }
+      ],
+      "state_fields": [
+        "USTALENIA",
+        "MODEL",
+        "OKRESY",
+        "WSKAZNIKI",
+        "CZESC_C",
+        "ODCH",
+        "ZGODNOSC",
+        "OCENA_E",
+        "PROGI",
+        "META",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres i dane wejściowe",
+        "2. Ustalenia monitorowania — cztery kluczowe charakterystyki",
+        "3. Część A — zużycie rzeczywiste w porównaniu z oczekiwanym",
+        "4. Część B — wskaźniki wyniku energetycznego wobec linii bazowych",
+        "5. Część C — działanie znaczących użyć energii i skuteczność planów działań",
+        "6. Znaczące odchylenia, ich badanie i reakcje",
+        "7. Część D — ocena zgodności z wymaganiami prawnymi i innymi",
+        "8. Część D — zakres oceny wobec rejestru wymagań z punktu 4.2",
+        "9. Część E — ocena wyniku energetycznego i skuteczności systemu",
+        "10. Powiązania z pozostałymi punktami systemu",
+        "11. Stan listy kontrolnej III-47 (sekcje 9.1.1 i 9.1.2)",
+        "12. Wnioski i dalsze postępowanie",
+        "13. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "9.2",
+      "source_file": "ENESA_9.2_Audyt_wewnetrzny_platforma.html",
+      "sha256": "01ed81ae12cb6c35a76d0b04062d512bafd99c0f8924a6a6a12723504bcf1ae7",
+      "tabs": [
+        {
+          "id": "program",
+          "tytul": "1. Program audytów"
+        },
+        {
+          "id": "raporty",
+          "tytul": "2. Raporty z audytu"
+        },
+        {
+          "id": "ustalenia",
+          "tytul": "3. A — ustalenia"
+        },
+        {
+          "id": "wnioskiB",
+          "tytul": "4. B — trzy pytania"
+        },
+        {
+          "id": "kons",
+          "tytul": "5. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "6. Metryka i zatwierdzenia"
+        },
+        {
+          "id": "dok",
+          "tytul": "7. Dokument D-EnMS-AUD-01"
+        }
+      ],
+      "state_fields": [
+        "META",
+        "PROGRAM",
+        "RAPORTY",
+        "PROGI",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META",
+        "AKTR"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres dokumentu i dane wejściowe",
+        "2. Program audytów — metryka (F-EnMS-18)",
+        "3. Program audytów — pozycje",
+        "4. Pokrycie punktów normy programem",
+        "5. Raporty z audytu — metryki (F-EnMS-19)",
+        "6. Część A — ustalenia audytowe",
+        "7. Część B — wnioski: trzy pytania punktu 9.2",
+        "8. Weryfikacja skuteczności wcześniejszych działań",
+        "9. Jakość audytu — zakres, dowody, bezstronność",
+        "10. Powiązania z pozostałymi punktami systemu",
+        "11. Stan listy kontrolnej III-47 (sekcja 9.2)",
+        "12. Wnioski i dalsze postępowanie",
+        "Najważniejsze ustalenia",
+        "Decyzje",
+        "Braki wpływające na decyzję",
+        "13. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "9.3",
+      "source_file": "ENESA_9.3_Przeglad_zarzadzania_platforma.html",
+      "sha256": "03d4f6a7d874b5924c9cf6d8eb3f2070c79eecb6d036168a840c1790d0e5d407",
+      "tabs": [
+        {
+          "id": "metryka",
+          "tytul": "1. Metryka przeglądu"
+        },
+        {
+          "id": "status",
+          "tytul": "2. a — status decyzji"
+        },
+        {
+          "id": "zmiany",
+          "tytul": "3. b, c — zmiany i funkcjonowanie"
+        },
+        {
+          "id": "doskonalenie",
+          "tytul": "4. d, e — doskonalenie i wynik"
+        },
+        {
+          "id": "decyzje",
+          "tytul": "5. B, C — decyzje i ocena"
+        },
+        {
+          "id": "kons",
+          "tytul": "6. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "7. Metryka i lista kontrolna"
+        },
+        {
+          "id": "dok",
+          "tytul": "8. Dokument D-EnMS-PZR-01"
+        }
+      ],
+      "state_fields": [
+        "META",
+        "STATUS",
+        "WEJSCIA",
+        "DECYZJE",
+        "OCENA_C",
+        "PROGI",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres dokumentu i dane wejściowe",
+        "2. Metryka przeglądu (F-EnMS-20, część nagłówkowa)",
+        "3. Rytm przeglądów i powiązanie z budżetem",
+        "4. Część A, pozycja a) — status decyzji poprzednich przeglądów",
+        "5. Część A — pozostałe dane wejściowe przeglądu",
+        "6. Część B — decyzje w obszarach wyjść przeglądu",
+        "7. Część B — decyzje w innych sprawach",
+        "8. Źródła decyzji w obszarach wyjść",
+        "9. Część C — ocena ogólna systemu",
+        "10. Powiązania z pozostałymi punktami systemu",
+        "11. Stan listy kontrolnej III-47 (sekcja 9.3)",
+        "12. Wnioski i dalsze postępowanie",
+        "Najważniejsze ustalenia",
+        "Decyzje",
+        "Braki wpływające na decyzję",
+        "13. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "10.1",
+      "source_file": "ENESA_10.1_Niezgodnosci_platforma.html",
+      "sha256": "1fd18c2620870a62f3bd66bf3572b2f76b69a1d404ca29df7ba851e7ff1eaa46",
+      "tabs": [
+        {
+          "id": "rejestr",
+          "tytul": "1. Rejestr i metryka"
+        },
+        {
+          "id": "karta",
+          "tytul": "2. Karta — A i B"
+        },
+        {
+          "id": "przyczyna",
+          "tytul": "3. Karta — C i D"
+        },
+        {
+          "id": "dzialania",
+          "tytul": "4. Karta — E"
+        },
+        {
+          "id": "skutecznosc",
+          "tytul": "5. Karta — F"
+        },
+        {
+          "id": "kons",
+          "tytul": "6. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "7. Metryka i lista kontrolna"
+        },
+        {
+          "id": "dok",
+          "tytul": "8. Dokument D-EnMS-NKR-01"
+        }
+      ],
+      "state_fields": [
+        "META",
+        "KARTY",
+        "PROGI",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META",
+        "AKTK"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres dokumentu i dane wejściowe",
+        "2. Metryka rejestru",
+        "3. Rejestr niezgodności (F-EnMS-22)",
+        "4. Miary rejestru",
+        "5. Karty — część A: identyfikacja",
+        "6. Karty — część B: korekcja i konsekwencje",
+        "7. Karty — część C: przyczyna",
+        "8. Karty — część D: czy problem występuje gdzie indziej",
+        "9. Karty — część E: ocena potrzeby działania i zmiana systemu",
+        "10. Karty — część F: skuteczność i zamknięcie",
+        "11. Powiązania z pozostałymi punktami systemu",
+        "12. Stan listy kontrolnej III-54 (sekcja 10.1)",
+        "13. Wnioski i dalsze postępowanie",
+        "Najważniejsze ustalenia",
+        "Decyzje",
+        "Braki wpływające na decyzję",
+        "14. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    },
+    {
+      "clause": "10.2",
+      "source_file": "ENESA_10.2_Ciagle_doskonalenie_platforma.html",
+      "sha256": "1fb871106a20aaba964a6761e2b0fc5f6ef026e6648f0664ea7564937c17fe79",
+      "tabs": [
+        {
+          "id": "metryka",
+          "tytul": "1. Metryka planu"
+        },
+        {
+          "id": "wykazanie",
+          "tytul": "2. Wykazanie poprawy"
+        },
+        {
+          "id": "mozliwosci",
+          "tytul": "3. Możliwości poprawy"
+        },
+        {
+          "id": "plan",
+          "tytul": "4. Plan doskonalenia"
+        },
+        {
+          "id": "pozycja",
+          "tytul": "5. Pozycja planu"
+        },
+        {
+          "id": "kons",
+          "tytul": "6. Analiza konsultanta"
+        },
+        {
+          "id": "zatw",
+          "tytul": "7. Metryka i lista kontrolna"
+        },
+        {
+          "id": "dok",
+          "tytul": "8. Dokument D-EnMS-DOS-01"
+        }
+      ],
+      "state_fields": [
+        "META",
+        "WYJ",
+        "OCENY",
+        "POZYCJE",
+        "PROGI",
+        "KLAUZULE",
+        "DEMO",
+        "WEJSCIE",
+        "PROFIL_META",
+        "AKTP"
+      ],
+      "document_sections": [
+        "Część A — podsumowanie dla Zarządu",
+        "Część B — analiza szczegółowa",
+        "1. Zakres dokumentu i dane wejściowe",
+        "2. Wykazanie poprawy wyniku energetycznego — wskaźniki",
+        "3. Wykazanie poprawy — okresy porównania zużycia",
+        "4. Warunki porównania i czynniki statyczne",
+        "5. Wyjaśnienia przy wskaźnikach bez wykazanej poprawy",
+        "6. Zmiany linii bazowych i ich wpływ na wykazanie",
+        "7. Możliwości poprawy — stałe źródła",
+        "8. Możliwości poprawy — ocena i rozdzielenie",
+        "9. Pokrycie potencjału wyniku energetycznego",
+        "10. Plan doskonalenia — obszar S — system zarządzania energią",
+        "11. Plan doskonalenia — obszar W — wynik energetyczny",
+        "12. Rozdzielenie wobec planu działań (6.2)",
+        "13. Lista kontrolna III-54 — sekcja 10.2",
+        "14. Wnioski i rekomendacje konsultanta",
+        "Najważniejsze ustalenia",
+        "Decyzje",
+        "Braki wpływające na decyzję",
+        "15. Zatwierdzenie i historia zmian"
+      ],
+      "implementation_acceptance": "pending"
+    }
+  ]
+}

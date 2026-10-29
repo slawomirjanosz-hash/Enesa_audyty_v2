@@ -26,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const values = key => [...form.querySelectorAll('[name]')].filter(el => el.name === name(key) || el.name === name(key) + '[]').filter(el => el.type !== 'hidden' && (el.type !== 'checkbox' || el.checked)).map(el => el.value.trim()).filter(Boolean);
     function update() {
         let total = 0, done = 0;
+        if (document.getElementById('documentation-coverage')) {
+            const requiredClauses = [...document.querySelectorAll('[data-coverage-clause]')].map(row => row.dataset.coverageClause);
+            form.querySelectorAll('[data-system-field]').forEach(field => {
+                if (!/^WYKAZ\.[^.]+\.powodPodstawy$/.test(field.dataset.key)) return;
+                const root = field.dataset.key.replace(/\.powodPodstawy$/, '');
+                const point = values(root + '.punkt')[0] || '';
+                const basis = values(root + '.podstawa')[0] || '';
+                const normative = requiredClauses.some(clause => new RegExp('(^|[^\\d.])' + clause.replaceAll('.', '\\.') + '(?![\\d.])').test(point));
+                field.dataset.required = point && ['N','M'].includes(basis) && basis !== (normative ? 'N' : 'M') ? '1' : '0';
+            });
+        }
         form.querySelectorAll('[data-system-field]').forEach(el => {
             const condition = JSON.parse(el.dataset.when || 'null');
             const visible = !condition || condition[1].includes(values(condition[0])[0] || '');
@@ -36,6 +47,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         const section = window.location.pathname.split('/').filter(Boolean).pop();
+        if (section === '7-5') {
+            const points = [...form.querySelectorAll('[data-system-field]')]
+                .filter(el => /^WYKAZ\.[^.]+\.punkt$/.test(el.dataset.key))
+                .flatMap(el => values(el.dataset.key));
+            let covered = 0;
+            document.querySelectorAll('[data-coverage-clause]').forEach(row => {
+                const clause = row.dataset.coverageClause.replaceAll('.', '\\.');
+                const pattern = new RegExp('(^|[^\\d.])' + clause + '(?![\\d.])');
+                const present = points.some(point => pattern.test(point));
+                total++;
+                if (present) { done++; covered++; }
+                row.querySelector('[data-coverage-status]').textContent = present ? 'Wskazano w wykazie' : 'Brak pozycji w wykazie';
+            });
+            const counter = document.querySelector('[data-coverage-count]');
+            if (counter) counter.textContent = covered;
+        }
         const minimum = section.startsWith('7-') ? ({'7-1':{OSOBY:1,ZADANIA:1,DECYZJE:1},'7-2':{ROLE:1,KOMPETENCJE:1,PLAN:1},'7-3':{GRUPY:1,KANALY:1,SPRAWDZENIA:1}}[section] || {}) : section.startsWith('6-') ? Object.fromEntries([...form.querySelectorAll('[data-repeater]')].filter(el=>el.dataset.repeater!=='REWIZJE').map(el=>[el.dataset.repeater,1])) : section === '5-1' ? {CZLON:1,DECYZJE:3} : section === '5-2' ? {PRZEGLADY:1} : section === '5-3' ? {ROLE:1,UPR:1} : {GRANICE:1,UPRAW:1};
         Object.entries(minimum).forEach(([root,min]) => {
             const container = form.querySelector(`[data-repeater="${root}"]`);

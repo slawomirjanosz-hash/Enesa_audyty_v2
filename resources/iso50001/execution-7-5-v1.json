@@ -27,7 +27,7 @@
       },
       {
         "punkt": "6.4",
-        "co": "Metoda określania i aktualizowania EnPI oraz wartości wskaźników",
+        "co": "Metoda określania i aktualizowania wskaźników oraz ich wartości",
         "modul": "4"
       },
       {
@@ -48,44 +48,37 @@
       {
         "punkt": "8.1",
         "co": "Kryteria eksploatacji i zapisy potwierdzające przebieg procesów",
-        "modul": "6",
-        "pozniej": true
+        "modul": "6"
       },
       {
         "punkt": "8.2",
         "co": "Wyniki działań projektowych związanych z wynikiem energetycznym",
-        "modul": "6",
-        "pozniej": true
+        "modul": "6"
       },
       {
         "punkt": "8.3",
-        "co": "Kryteria oceny wyniku energetycznego dla znaczących zakupów i specyfikacje",
-        "modul": "6",
-        "pozniej": true
+        "co": "Kryteria oceny wyniku dla znaczących zakupów i specyfikacje",
+        "modul": "6"
       },
       {
         "punkt": "9.1",
         "co": "Wyniki monitorowania, pomiarów i oceny wyniku energetycznego",
-        "modul": "7",
-        "pozniej": true
+        "modul": "7"
       },
       {
         "punkt": "9.2",
         "co": "Program audytów i wyniki audytów wewnętrznych",
-        "modul": "7",
-        "pozniej": true
+        "modul": "7"
       },
       {
         "punkt": "9.3",
         "co": "Wyniki przeglądów zarządzania",
-        "modul": "7",
-        "pozniej": true
+        "modul": "7"
       },
       {
-        "punkt": "10.2",
+        "punkt": "10.1",
         "co": "Niezgodności, podjęte działania i ich skuteczność",
-        "modul": "8",
-        "pozniej": true
+        "modul": "8"
       }
     ],
     "LISTA_75": [
@@ -192,6 +185,13 @@
           "label": "Okres",
           "required": true,
           "options": {}
+        },
+        "powodPodstawy": {
+          "type": "textarea",
+          "label": "Powód podstawy innej niż sugerowana przez słownik wymagań",
+          "required": false,
+          "options": {},
+          "help": "Jeżeli wskazany punkt wymaga dokumentacji, sugerowana podstawa to N. Inne oznaczenie wymaga uzasadnienia."
         }
       }
     },
@@ -315,6 +315,13 @@
           "options": {}
         }
       }
+    }
+  },
+  "definitions_source": {
+    "WYMAGANIA_N": {
+      "file": "ENESA_7.5_Udokumentowane_informacje_platforma-2.html",
+      "sha256": "b064d650e0be138a9bd007d0cbc76c94fb5dbb92b9112e002a2f348d8f14281f",
+      "json_key": "wymaganiaDokumentacyjne"
     }
   }
 }

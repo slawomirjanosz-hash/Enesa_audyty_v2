@@ -289,12 +289,10 @@ class IsoPlatformRelease
             unset($row);
         }
         if ($section === '7-5') {
-            foreach ($out['WYKAZ'] as &$row) {
-                if (str_replace(' ', '', $row['rodzaj']) === 'D/Z') {
-                    $row['rodzaj'] = 'DZ';
-                }
-            }
-            unset($row);
+            // The example is opt-in and never supplies production dependencies.
+            $example = json_decode(file_get_contents(resource_path('iso50001/examples-2026-10-29/7-5.json')), true, 512, JSON_THROW_ON_ERROR);
+            $out = ['WYKAZ' => array_map(fn ($row) => array_replace($row, ['kod' => $row['symbol'], 'punkt' => $row['punkty']]), $example['wykaz']),
+                'ZASADY' => $example['zasady'], 'ZEWN' => $example['zewn'], 'META' => $example['meta']];
         }
         if ($section === '7-2') {
             $out['MAC'] = [];

@@ -81,7 +81,7 @@ test('climate decision activates the corresponding library factor and preserves 
     expect($yes['KTX-WO-12']['rodzaj'])->toBe('PROPOZYCJA')->and($yes['KTX-WO-12']['verification'])->toContain('zatwierdzenia merytorycznego');
 });
 
-test('documentation control rejects missing coverage duplicates and outdated external documents', function () {
+test('documentation control rejects missing coverage but only warns about titles and outdated checks', function () {
     $service = app(IsoSystemQuestionnaire::class);
     $answers = app(IsoPlatformRelease::class)->answers('7-5');
     $answers['WYKAZ'] = [$answers['WYKAZ'][0], $answers['WYKAZ'][0]];
@@ -90,6 +90,7 @@ test('documentation control rejects missing coverage duplicates and outdated ext
         $service->normalize('7-5', $answers, ['ready' => true], true);
         $this->fail('Incomplete documentation was approved.');
     } catch (ValidationException $e) {
-        expect($e->errors())->toHaveKeys(['WYKAZ', 'WYKAZ.1.tytul', 'ZEWN.0.sprawdzono']);
+        expect($e->errors())->toHaveKey('WYKAZ')->not->toHaveKeys(['WYKAZ.1.tytul', 'ZEWN.0.sprawdzono']);
     }
+    expect(implode(' ', $service->warnings('7-5', $answers, [])))->toContain('Powtórzony tytuł', '24 pełnych miesięcy');
 });
