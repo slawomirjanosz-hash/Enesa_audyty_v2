@@ -288,6 +288,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
     Route::get('versioning', [AuditTypeController::class, 'versioning'])->middleware('app.module:audits')->name('audits.versioning');
     Route::prefix('audits')->name('audits.')->middleware(['app.module:audits', 'app.permission:audits.view'])->group(function () {
         Route::get('/', [AuditController::class, 'index'])->name('index');
+        Route::post('/{audit}/copy', [AuditController::class, 'copy'])->middleware('app.permission:audits.manage')->name('copy');
         Route::post('/', [AuditController::class, 'store'])->middleware('app.permission:audits.manage')->name('store');
         Route::get('/{audit}', [AuditController::class, 'show'])->name('show');
         Route::delete('/{audit}', [AuditController::class, 'destroy'])->name('destroy');

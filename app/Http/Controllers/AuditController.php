@@ -82,6 +82,46 @@ class AuditController extends Controller
         return redirect()->route('audits.show', $audit)->with('success', 'Audyt został utworzony.');
     }
 
+    public function copy(Request $request, Audit $audit): RedirectResponse
+    {
+        $this->ensureAccess($request, $audit);
+        abort_unless($this->canManage($request), 403);
+        $data = $request->validateWithBag('auditCopy', [
+            'number' => ['required', 'string', 'max:80', 'unique:audits,number'],
+            'title' => ['required', 'string', 'max:255'],
+        ]);
+        $copy = DB::transaction(function () use ($request, $audit, $data) {
+            $audit->load(['members', 'tasks', 'surveys']);
+            $copy = $audit->replicate(['public_gantt_token']);
+            $copy->fill($data + ['status' => 'draft', 'created_by' => $request->user()->id]);
+            $copy->save();
+            $copy->members()->sync($audit->members->modelKeys());
+            $taskCopies = [];
+            foreach ($audit->tasks as $task) {
+                $taskCopy = $task->replicate(['depends_on_task_id', 'deleted_by', 'completion_confirmations', 'board_revision']);
+                $taskCopy->fill(['audit_id' => $copy->id, 'status' => 'todo', 'progress' => 0,
+                    'created_by' => $request->user()->id]);
+                $taskCopy->save();
+                $taskCopies[$task->id] = $taskCopy;
+            }
+            foreach ($audit->tasks as $task) {
+                if (isset($taskCopies[$task->depends_on_task_id])) {
+                    $taskCopies[$task->id]->update(['depends_on_task_id' => $taskCopies[$task->depends_on_task_id]->id]);
+                }
+            }
+            foreach ($audit->surveys as $survey) {
+                $copy->surveys()->create([
+                    'audit_type_id' => $survey->audit_type_id, 'audit_type_version_id' => $survey->audit_type_version_id,
+                    'title' => $survey->title, 'status' => 'draft', 'created_by' => $request->user()->id,
+                ]);
+            }
+
+            return $copy;
+        });
+
+        return redirect()->route('audits.show', $copy)->with('success', 'Utworzono kopię audytu z pustymi ankietami.');
+    }
+
     public function destroy(Request $request, Audit $audit): RedirectResponse
     {
         abort_unless($request->user()->hasAnyRole(['admin', 'superadmin']), 403);
