@@ -51,7 +51,8 @@ test('archive permission follows task write permission not team visibility', fun
     }
     $project->members()->detach($worker);
     $this->patchJson(route('board.archive', ['board', $own->id]), ['revision' => 2, 'restore' => true])->assertForbidden();
-    $this->get(route('board.mine', ['archive' => 1]))->assertDontSee('Własne');
+    $this->get(route('board.mine', ['archive' => 1]))->assertOk()
+        ->assertViewHas('cards', fn ($cards) => ! $cards->contains(fn ($card) => ! $card->relationLoaded('crmTask') && $card->id === $own->id));
     $schedule = Task::create(['project_id' => $project->id, 'title' => 'Etap', 'status' => 'todo']);
     $this->actingAs($admin)->patchJson(route('board.archive', ['crm', $schedule->id]), ['revision' => 1, 'restore' => false])->assertNotFound();
 });
