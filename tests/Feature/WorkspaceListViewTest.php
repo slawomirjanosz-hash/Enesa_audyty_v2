@@ -33,9 +33,7 @@ test('workspace lists sort every data column in both directions and preserve sec
     }
     $this->actingAs($user);
     $keys = ['number', 'name', 'company', 'manager', 'team', 'date', 'end', 'status'];
-    if ($kind === 'projects') {
-        $keys[] = 'amount';
-    }
+    $keys[] = 'amount';
     foreach (['active', 'completed'] as $section) {
         $variable = $section === 'active' ? $kind : ($kind === 'projects' ? 'completedProjects' : 'completedAudits');
         foreach ($keys as $key) {
@@ -65,5 +63,8 @@ test('both workspace modes keep company and membership scopes including complete
     } else {
         AuditorCompanyAccess::create(['auditor_id' => $user->id, 'company_id' => $company->id, 'can_view_audits' => true]);
     }
-    $this->get(route($kind.'.index', ['view' => $view]))->assertOk()->assertSee('Prywatna pozycja')->assertDontSee('Wartość netto');
+    $response = $this->get(route($kind.'.index', ['view' => $view]))->assertOk()->assertSee('Prywatna pozycja');
+    if ($kind === 'projects') {
+        $response->assertDontSee('Wartość netto');
+    }
 })->with(['projects', 'audits'])->with(['tiles', 'list']);

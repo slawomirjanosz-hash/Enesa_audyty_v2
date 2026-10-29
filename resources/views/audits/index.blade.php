@@ -9,6 +9,7 @@
     <div><h1 style="margin:0 0 5px;">Audyty</h1><p style="margin:0;color:#6b7a70;">Bieżące audyty, ich zespoły i terminy w jednym miejscu.</p></div>
     <div class="app-search-toolbar">
         @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: audyt, numer, firma, kierownik…'])
+        @if($canCreate)<button type="button" class="audit-create-button" onclick="document.getElementById('audit-create-dialog').showModal()"><i class="ti ti-plus"></i> Nowy audyt</button>@endif
     </div>
 </div>
 @php($statuses = ['draft' => 'Roboczy', 'in_progress' => 'W toku', 'done' => 'Zakończony', 'cancelled' => 'Anulowany'])
@@ -38,4 +39,5 @@
 @if($audits->isEmpty() && $completedAudits->isEmpty())
 <div class="audit-empty"><i class="ti ti-clipboard-check" style="font-size:36px;"></i><p>Brak audytów spełniających wybrane kryteria.</p></div>
 @endif
+@if($canCreate)@include('audits.create-modal')@endif
 @endsection

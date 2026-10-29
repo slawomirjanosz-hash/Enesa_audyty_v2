@@ -1,6 +1,6 @@
 @php
     $isProject = $kind === 'projects';
-    $moneyVisible = $isProject && $canViewFinances;
+    $moneyVisible = $canViewFinances ?? false;
     $labels = $isProject ? ['planned'=>'Planowany','active'=>'Aktywny','on_hold'=>'Wstrzymany','completed'=>'Zakończony','cancelled'=>'Anulowany'] : ['draft'=>'Roboczy','in_progress'=>'W toku','done'=>'Zakończony','cancelled'=>'Anulowany'];
 @endphp
 @if(request('view') === 'list')

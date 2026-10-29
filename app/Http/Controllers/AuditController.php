@@ -51,7 +51,7 @@ class AuditController extends Controller
 
         $columns = [
             'number' => 'number', 'name' => 'title', 'team' => 'members_count', 'date' => 'start_date',
-            'end' => 'end_date', 'status' => 'status',
+            'end' => 'end_date', 'status' => 'status', 'amount' => 'contract_value',
             'company' => Company::select('name')->whereColumn('companies.id', 'audits.company_id')->limit(1),
             'manager' => User::select('name')->whereColumn('users.id', 'audits.manager_id')->limit(1),
         ];
@@ -59,11 +59,20 @@ class AuditController extends Controller
         $completedQuery = (clone $query)->where('status', 'done');
         TableSort::apply($activeQuery, $request, $columns, 'active');
         TableSort::apply($completedQuery, $request, $columns, 'completed');
+        $canCreate = $this->canManage($request);
+        $companies = Company::clients()->active()->orderBy('name');
+        $this->access->scopeByCompanyAccess($companies, $request->user(), 'can_view_audits', 'id');
 
         return view('audits.index', [
             'audits' => $activeQuery->paginate(20)->withQueryString(),
             'completedAudits' => $completedQuery->paginate(20, ['*'], 'completed_page')->withQueryString(),
             'status' => $status,
+            // Staff can already view finances within each accessible audit.
+            'canViewFinances' => true,
+            'canCreate' => $canCreate,
+            'companies' => $canCreate ? $companies->get() : collect(),
+            'auditTypes' => $canCreate ? AuditType::orderBy('name')->get() : collect(),
+            'auditUsers' => $canCreate ? User::where('is_active', true)->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get() : collect(),
         ]);
     }
 
