@@ -45,6 +45,8 @@ class PersonalBoardService
         }
         $modules = collect(['projects' => 'Projekty', 'audits' => 'Audyty', 'crm' => 'CRM', 'hr' => 'HR — urlopy'])->filter(fn ($label, $key) => CompanySettings::moduleIsEnabled($key))->all();
         $options = [];
+        $modules['personal'] = 'Kalendarz';
+        $options['personal'] = ['task' => 'Własne zadania', 'meeting' => 'Spotkania'];
         foreach (['projects' => 'project', 'audits' => 'audit'] as $key => $relation) {
             if (isset($modules[$key])) {
                 $options[$key] = (clone $base)->whereNotNull($relation.'_id')->select($relation.'_id')->distinct()->with($relation)->get()->mapWithKeys(fn ($row) => [$row->{$relation.'_id'} => $row->$relation->number.' · '.($row->$relation->name ?? $row->$relation->title)])->sort()->all();
@@ -65,7 +67,7 @@ class PersonalBoardService
             $people = User::whereIn('id', $ids->push($user->id)->unique())->whereDoesntHave('roles', fn ($r) => $r->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get();
             $options['users'] = $people->mapWithKeys(fn ($p) => [$p->id => $p->id === $user->id ? 'Moje zadania' : $p->name])->all();
         }
-        $request->validate(['projects' => 'sometimes|array|max:500', 'audits' => 'sometimes|array|max:500', 'crm' => 'sometimes|array|max:2', 'hr' => 'sometimes|array|max:2', 'users' => 'sometimes|array|max:500', 'group' => 'sometimes|string|max:100']);
+        $request->validate(['personal' => 'sometimes|array|max:3', 'projects' => 'sometimes|array|max:500', 'audits' => 'sometimes|array|max:500', 'crm' => 'sometimes|array|max:2', 'hr' => 'sometimes|array|max:2', 'users' => 'sometimes|array|max:500', 'group' => 'sometimes|string|max:100']);
         abort_if(! $team && $request->has('users'), 403);
         $selected = [];
         foreach ($options as $key => $values) {
@@ -79,13 +81,14 @@ class PersonalBoardService
             [$kind, $id] = array_pad(explode('-', $request->input('group'), 2), 2, '');
             $key = ['project' => 'projects', 'audit' => 'audits'][$kind] ?? '';
             abort_unless(isset($options[$key][$id]), 404);
-            foreach (['projects', 'audits', 'crm', 'hr'] as $group) {
+            foreach (['projects', 'audits', 'crm', 'hr', 'personal'] as $group) {
                 $selected[$group] = $key === $group ? [$id] : [];
             }
         }
         $userIds = $selected['users'] ?? [$user->id];
         $assigned = fn ($q) => $q->whereIn('assigned_to', $userIds)->orWhereHas('participants', fn ($p) => $p->whereKey($userIds));
-        $base->where($assigned)->where(fn ($q) => $q->whereIn('project_id', $selected['projects'] ?? [])->orWhereIn('audit_id', $selected['audits'] ?? []));
+        $base->where($assigned)->where(fn ($q) => $q->whereIn('project_id', $selected['projects'] ?? [])->orWhereIn('audit_id', $selected['audits'] ?? [])
+            ->orWhere(fn ($personal) => $personal->calendarEntries()->whereIn('calendar_kind', $selected['personal'] ?? [])));
         $crmBase->where($assigned)->when(! in_array('tasks', $selected['crm'] ?? []), fn ($q) => $q->whereRaw('1=0'));
         // Union identifiers first: filters and access restrictions apply before shared pagination.
         ListSearch::apply($base, $request, ['title', 'description'], ['project' => ['number', 'name'], 'audit' => ['number', 'title'], 'assignee' => ['name']]);

@@ -4,7 +4,13 @@
 @section('page-title', 'Kalendarz')
 
 @push('styles')
+<link rel="stylesheet" href="{{ asset('css/board.css') }}">
 <style>
+    #calendar-editor { margin:auto; }
+    .calendar-day[data-calendar-date] { cursor:pointer; }
+    button.calendar-day-number { border:0;background:transparent;cursor:pointer;font:inherit; }
+    .calendar-day[data-calendar-date]:hover { box-shadow:inset 0 0 0 1px var(--green); }
+    .calendar-event.meeting { border-left-color:var(--green);background:#eef6f2; }
     .calendar-header { display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:20px; }
     .calendar-header h1 { margin:0;color:var(--green);font:700 24px 'Lato',sans-serif;display:flex;align-items:center;gap:10px; }
     .calendar-header p { margin:6px 0 0;color:#728078;font-size:13px; }
@@ -63,9 +69,11 @@
 <div class="calendar-header">
     <div>
         <h1><i class="ti ti-calendar-month"></i> Kalendarz zadań</h1>
-        <p>Zadania CRM i projektowe oraz delegacje i nieobecności HR.</p>
+        <p>Kliknij dzień, aby dodać własne zadanie lub spotkanie. Wpis pojawi się także na Mojej tablicy.</p>
     </div>
     <div class="calendar-actions">
+        <button type="button" class="calendar-btn" data-calendar-new="task" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-plus"></i> Dodaj zadanie</button>
+        <button type="button" class="calendar-btn" data-calendar-new="meeting" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-calendar-plus"></i> Dodaj spotkanie</button>
         <a class="calendar-btn {{ $scope === 'mine' ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'mine']) }}"><i class="ti ti-user"></i> Moje zadania</a>
         @if($canViewTeam)
             <a class="calendar-btn {{ $scope === 'team' && !$selectedUserId ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'team']) }}"><i class="ti ti-users"></i> Cały zespół</a>
@@ -111,14 +119,25 @@
                 @php
                     $dayTasks = $tasksByDate->get($day->format('Y-m-d'), collect());
                     $dayHrEvents = $hrEventsByDate->get($day->format('Y-m-d'), collect());
+                    $dayPersonal = $personalByDate->get($day->format('Y-m-d'), collect());
                 @endphp
                 @if($day->isMonday())<div class="calendar-week-number" title="Numer tygodnia">Tydz.<br>{{ $day->isoWeek() }}</div>@endif
-                <div class="calendar-day {{ !$day->isSameMonth($month) ? 'outside' : '' }} {{ $day->isToday() ? 'today' : '' }} {{ $day->isSunday() ? 'sunday' : '' }}">
+                <div data-calendar-date="{{ $day->format('Y-m-d') }}" class="calendar-day {{ !$day->isSameMonth($month) ? 'outside' : '' }} {{ $day->isToday() ? 'today' : '' }} {{ $day->isSunday() ? 'sunday' : '' }}">
                     <div class="calendar-day-head">
-                        <span class="calendar-day-number">{{ $day->day }}</span>
-                        @if($dayTasks->isNotEmpty())<span class="calendar-day-count">{{ $dayTasks->count() }} zadań</span>@endif
+                        <button type="button" class="calendar-day-number" data-calendar-new="task" data-date="{{ $day->format('Y-m-d') }}" title="Dodaj zadanie lub spotkanie" aria-label="Dodaj zadanie lub spotkanie: {{ $day->format('d.m.Y') }}">{{ $day->day }}</button>
+                        @if($dayTasks->count() + $dayPersonal->count())<span class="calendar-day-count">Wpisy: {{ $dayTasks->count() + $dayPersonal->count() }}</span>@endif
                     </div>
                     <div class="calendar-events">
+                        @foreach($dayPersonal as $entry)
+                            @php
+                                $canOpenEntry = $entry->assigned_to === auth()->id() || auth()->user()->can('board.team.view');
+                                $entryQuery = ['q' => $entry->title] + ($entry->assigned_to !== auth()->id() ? ['users' => [$entry->assigned_to]] : []);
+                            @endphp
+                            <a @if($canOpenEntry) href="{{ route('board.mine', $entryQuery) }}#board-task-{{ $entry->id }}" @endif class="calendar-event {{ $entry->calendar_kind === 'meeting' ? 'meeting' : 'priority-low' }} {{ $entry->status === 'done' ? 'done' : '' }}" title="{{ $entry->title }} · {{ $entry->assignee?->name }} · {{ $statusLabels[$entry->status] }}">
+                                <span class="calendar-event-title">{{ substr($entry->scheduled_time ?? '', 0, 5) }} · {{ $entry->title }}</span>
+                                <span class="calendar-event-meta">{{ $entry->calendar_kind === 'meeting' ? 'Spotkanie' : 'Zadanie własne' }} · {{ $entry->assignee?->name }}</span>
+                            </a>
+                        @endforeach
                         @foreach($dayTasks as $task)
                             @php
                                 $taskUrl = $task->project ? route('projects.show', $task->project) : route('crm.index', ['tab' => 'tasks']);
@@ -152,4 +171,23 @@
         <span>◆ kamień milowy projektu</span>
     </div>
 </section>
+<dialog id="calendar-editor" class="board-dialog" aria-labelledby="calendar-editor-title" @if($errors->any()) data-reopen @endif>
+    <form method="POST" action="{{ route('calendar.store') }}">
+        @csrf
+        <header><h2 id="calendar-editor-title">Dodaj zadanie lub spotkanie</h2><button type="button" data-calendar-close aria-label="Zamknij">×</button></header>
+        @if($errors->any())<p role="alert">{{ $errors->first() }}</p>@endif
+        <label>Rodzaj<select name="calendar_kind"><option value="task" @selected(old('calendar_kind') === 'task')>Zadanie</option><option value="meeting" @selected(old('calendar_kind') === 'meeting')>Spotkanie</option></select></label>
+        <label>Nazwa *<input name="title" required maxlength="255" value="{{ old('title') }}"></label>
+        <div class="board-form-grid">
+            <label>Data *<input type="date" name="due_date" required value="{{ old('due_date', today()->format('Y-m-d')) }}"></label>
+            <label>Godzina *<input type="time" name="scheduled_time" required value="{{ old('scheduled_time') }}"></label>
+        </div>
+        <label>Opis<textarea name="description" rows="3" maxlength="10000">{{ old('description') }}</textarea></label>
+        <p class="board-muted">Wpis zostanie przypisany do Ciebie i pojawi się również na Mojej tablicy. Osoby z uprawnieniami do podglądu zadań zespołu mogą go zobaczyć.</p>
+        <footer><button type="button" data-calendar-close>Anuluj</button><button type="submit" class="board-primary">Zapisz</button></footer>
+    </form>
+</dialog>
 @endsection
+@push('scripts')
+<script src="{{ asset('js/calendar-entry.js') }}" defer></script>
+@endpush

@@ -195,6 +195,9 @@ Route::patch('/dashboard/companies/order', [DashboardController::class, 'reorder
 Route::get('/calendar', [CalendarController::class, 'index'])
     ->middleware(['auth', 'staff.role', 'app.module:calendar', 'app.permission:calendar.view'])
     ->name('calendar.index');
+Route::post('/calendar/entries', [CalendarController::class, 'store'])
+    ->middleware(['auth', 'staff.role', 'app.module:calendar', 'app.permission:calendar.view'])
+    ->name('calendar.store');
 Route::get('/lista-zmian', [ActivityLogController::class, 'index'])
     ->middleware(['auth', 'staff.role', 'app.permission:activity_log.view'])
     ->name('activity-log.index');

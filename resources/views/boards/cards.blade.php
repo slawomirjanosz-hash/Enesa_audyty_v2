@@ -22,10 +22,11 @@
     @php
         $owner = $card->project ?? $card->audit;
         $crmTask = $card->relationLoaded('crmTask') ? $card->getRelation('crmTask') : null;
-        $permissionKey = $crmTask ? 'crm' : ($card->project_id ? 'p' : 'a').$owner->id;
+        $calendarEntry = $card->isCalendarEntry();
+        $permissionKey = $crmTask ? 'crm' : ($calendarEntry ? 'calendar-'.$card->id : ($card->project_id ? 'p' : 'a').$owner->id);
         $boardPermissions[$permissionKey] ??= [
-            'view' => $crmTask ? true : $boardAccess->view(auth()->user(), $owner),
-            'manage' => $crmTask ? false : $boardAccess->manage(auth()->user(), $owner),
+            'view' => $crmTask || $calendarEntry ? true : $boardAccess->view(auth()->user(), $owner),
+            'manage' => $crmTask || $calendarEntry ? false : $boardAccess->manage(auth()->user(), $owner),
         ];
         $permissions = $boardPermissions[$permissionKey];
         $canStatus = $crmTask ? auth()->user()->can('update',$crmTask) : (!auth()->user()->hasAnyRole(['client_admin','client_user']) && $permissions['view'] && ($card->assignedToUser(auth()->id()) || $permissions['manage']));
@@ -34,13 +35,14 @@
         $canEditCard = ($boardManage ?? false) && $permissions['manage'] && !$archivedBoard;
         if($canStatus) $participantOptions[$permissionKey] ??= \App\Http\Controllers\BoardCollaborationController::candidates($crmTask ?? $card);
     @endphp
-    <article class="board-card board-{{$card->color()}}" data-card="{{$crmTask?'crm-':''}}{{$card->id}}" data-revision="{{$card->revision}}" data-status="{{$card->status}}" draggable="{{$canStatus?'true':'false'}}" data-status-url="{{$crmTask?route('board.crm.status',$crmTask):route('board.status',$card)}}">
+    <article id="{{$crmTask?'crm-task':'board-task'}}-{{$card->id}}" class="board-card board-{{$card->color()}}" data-card="{{$crmTask?'crm-':''}}{{$card->id}}" data-revision="{{$card->revision}}" data-status="{{$card->status}}" draggable="{{$canStatus?'true':'false'}}" data-status-url="{{$crmTask?route('board.crm.status',$crmTask):route('board.status',$card)}}">
         @if($crmTask)<span class="board-owner">CRM · {{$crmTask->company?->name ?? 'Zadanie ogólne'}}@if($crmTask->crmOpportunity) · {{$crmTask->crmOpportunity->title}}@endif</span>
+        @elseif($calendarEntry)<span class="board-owner">Kalendarz · {{$card->calendar_kind === 'meeting' ? 'Spotkanie' : 'Zadanie własne'}}</span>
         @elseif($personalBoard ?? false)<a class="board-owner" href="{{route($card->project_id?'projects.show':'audits.show',[$owner,'tab'=>'tasks'])}}">{{$owner->number}} · {{$card->project_id?$owner->name:$owner->title}}</a>@endif
         <h4>{{$card->title}}</h4>
         @if($card->description)<p class="board-description">{{$card->description}}</p>@endif
-        @unless($crmTask)<div class="board-muted">Etap: {{$card->stage?->title ?? 'Bez etapu'}}</div>@endunless
-        <div class="board-card-meta"><div>@include('partials.task-confirmations', ['completionTask' => $crmTask ?? $card])</div><time datetime="{{$card->due_date?->format('Y-m-d')}}">{{$card->due_date?->format('d.m.Y') ?? 'Bez terminu'}}</time></div>
+        @unless($crmTask || $calendarEntry)<div class="board-muted">Etap: {{$card->stage?->title ?? 'Bez etapu'}}</div>@endunless
+        <div class="board-card-meta"><div>@include('partials.task-confirmations', ['completionTask' => $crmTask ?? $card])</div><time datetime="{{$card->due_date?->format('Y-m-d')}}">{{$card->due_date?->format('d.m.Y') ?? 'Bez terminu'}} @if($calendarEntry) · {{substr($card->scheduled_time ?? '',0,5)}}@endif</time></div>
         <small class="board-overdue" @if($card->color()!=='red') hidden @endif>Po terminie</small>
         <div class="board-card-actions">
         @if($canStatus && count(app(\App\Services\TaskCompletionService::class)->people($crmTask ?? $card)) > 1)<small class="board-muted">Wybierz „Zrobione”, aby potwierdzić własne wykonanie.</small>@endif
@@ -50,7 +52,7 @@
         @if($archivedBoard)<p class="board-muted">Zarchiwizowano: {{$card->deleted_at?->format('d.m.Y H:i')}}</p>@endif
         @if($canArchive)<button type="button" data-board-archive data-restore="{{$archivedBoard ? '1' : '0'}}" data-archive-url="{{route('board.archive',[$crmTask ? 'crm' : 'board',$card->id])}}">{{$archivedBoard ? 'Przywróć' : 'Archiwizuj'}}</button>@endif
         @if(\App\Http\Controllers\TaskDeletionController::administrator(auth()->user()))<button type="button" data-board-delete data-delete-url="{{route('board.permanent-delete',[$crmTask?'crm':'board',$card->id])}}" title="Usuń zadanie trwale" aria-label="Usuń zadanie trwale" style="width:28px;height:28px;padding:0;color:#b91c1c;"><i class="ti ti-trash" aria-hidden="true"></i></button>@endif
-        @if($canStatus)<details class="board-people"><summary>Osoby przy zadaniu</summary><form data-participants action="{{route('board.participants',[$crmTask?'crm':'board',$card->id])}}"><p class="board-muted">Osoba odpowiedzialna: {{$card->assignee?->name ?? 'Nieprzypisane'}}. Wybierz dodatkowych współwykonawców.</p>
+        @if($canStatus && !$calendarEntry)<details class="board-people"><summary>Osoby przy zadaniu</summary><form data-participants action="{{route('board.participants',[$crmTask?'crm':'board',$card->id])}}"><p class="board-muted">Osoba odpowiedzialna: {{$card->assignee?->name ?? 'Nieprzypisane'}}. Wybierz dodatkowych współwykonawców.</p>
         @foreach($participantOptions[$permissionKey] as $person)@if($person->id!==$card->assigned_to)<label><input type="checkbox" name="participants[]" value="{{$person->id}}" @checked($card->participants->contains('id',$person->id))> {{$person->name}}</label>@endif @endforeach
         <button type="submit">Zapisz osoby</button></form></details>@endif
     </article>

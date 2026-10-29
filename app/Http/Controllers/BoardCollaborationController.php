@@ -19,6 +19,9 @@ class BoardCollaborationController extends Controller
     public static function candidates(BoardTask|Task $card)
     {
         if ($card instanceof BoardTask) {
+            if ($card->isCalendarEntry()) {
+                return collect([$card->assignee])->filter();
+            }
             $owner = $card->project ?? $card->audit;
 
             return collect([$owner->manager])->filter()->merge($owner->members)->unique('id')

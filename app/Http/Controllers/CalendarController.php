@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoardTask;
 use App\Models\CompanySettings;
 use App\Models\HrBusinessTrip;
 use App\Models\HrLeave;
@@ -14,6 +15,23 @@ use Illuminate\View\View;
 
 class CalendarController extends Controller
 {
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:10000'],
+            'due_date' => ['required', 'date_format:Y-m-d'],
+            'scheduled_time' => ['required', 'date_format:H:i'],
+            'calendar_kind' => ['required', 'in:task,meeting'],
+        ]);
+        $card = new BoardTask;
+        $card->forceFill($data + ['assigned_to' => $request->user()->id, 'created_by' => $request->user()->id, 'status' => 'todo', 'revision' => 1]);
+        $card->save();
+
+        return redirect()->route('calendar.index', ['month' => substr($data['due_date'], 0, 7)])
+            ->with('success', 'Zapisano wpis w kalendarzu i na Mojej tablicy.');
+    }
+
     public function index(Request $request): View
     {
         $user = $request->user();
@@ -63,6 +81,12 @@ class CalendarController extends Controller
         }
 
         $tasks = $tasksQuery->get();
+        $personalTasks = BoardTask::calendarEntries()->with('assignee')
+            ->whereBetween('due_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
+            ->when($scope === 'mine', fn ($q) => $q->where('assigned_to', $user->id))
+            ->when($selectedUserId, fn ($q) => $q->where('assigned_to', $selectedUserId))
+            ->orderBy('scheduled_time')->orderBy('id')->get();
+        $personalByDate = $personalTasks->groupBy(fn ($task) => $task->due_date->format('Y-m-d'));
         $tasksByDate = $tasks->groupBy(fn (Task $task) => $task->due_date->format('Y-m-d'));
         $hrEventsByDate = collect();
         $hrEnabled = CompanySettings::moduleIsEnabled('hr');
@@ -126,17 +150,17 @@ class CalendarController extends Controller
                 ->get()
             : collect([$user]);
 
-        $monthTasks = $tasks->filter(fn (Task $task) => $task->due_date->betweenIncluded($month, $month->endOfMonth()));
+        $monthTasks = $tasks->toBase()->concat($personalTasks)->filter(fn ($task) => $task->due_date->betweenIncluded($month, $month->endOfMonth()));
         $stats = [
             'month' => $monthTasks->count(),
             'open' => $monthTasks->where('status', '!=', 'done')->count(),
-            'overdue' => $monthTasks->filter(fn (Task $task) => $task->status !== 'done' && $task->due_date->isBefore(today()))->count(),
+            'overdue' => $monthTasks->filter(fn ($task) => $task->status !== 'done' && $task->due_date->isBefore(today()))->count(),
             'done' => $monthTasks->where('status', 'done')->count(),
         ];
 
         return view('calendar.index', compact(
             'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
-            'scope', 'selectedUserId', 'canViewTeam', 'stats'
+            'scope', 'selectedUserId', 'canViewTeam', 'stats', 'personalByDate'
         ));
     }
 }

@@ -37,6 +37,9 @@ class BoardAccessService
 
     public function changeStatus(User $user, BoardTask $card): bool
     {
+        if ($card->isCalendarEntry()) {
+            return ! $user->hasAnyRole(['client_admin', 'client_user']) && $card->assignedToUser($user->id);
+        }
         $owner = $card->project ?? $card->audit;
 
         return $owner && ! $user->hasAnyRole(['client_admin', 'client_user']) && $this->view($user, $owner)
@@ -54,6 +57,10 @@ class BoardAccessService
 
         return BoardTask::query()->where(function ($q) use ($user, $full) {
             $q->whereRaw('1=0');
+            if (! $user->hasAnyRole(['client_admin', 'client_user'])) {
+                $q->orWhere(fn ($personal) => $personal->calendarEntries()
+                    ->when(! $user->can('board.team.view'), fn ($own) => $own->where('assigned_to', $user->id)));
+            }
             if (CompanySettings::moduleIsEnabled('projects') && ($full || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']))) {
                 $q->orWhereHas('project', function ($projects) use ($user, $full) {
                     if (! $full) {
