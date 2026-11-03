@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('page-title', 'Raport wiarygodności firmy')
 @section('content')
-<link rel="stylesheet" href="{{asset('css/company-reliability.css')}}">
+<link rel="stylesheet" href="{{asset('css/company-reliability.css')}}?v=20261103">
 <div class="rel-wrap">
 <a href="{{$company->company_type === 'supplier' ? route('suppliers.show',$company) : route('companies.show',$company)}}">← Karta firmy</a>
 <h1>Raport wiarygodności firmy</h1><h2>{{$company->name}} <small class="rel-muted">NIP {{$company->nip ?: 'brak'}}</small></h2>

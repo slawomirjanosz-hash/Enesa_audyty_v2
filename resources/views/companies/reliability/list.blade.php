@@ -1,4 +1,4 @@
-@once<link rel="stylesheet" href="{{asset('css/company-reliability.css')}}">@endonce
+@once<link rel="stylesheet" href="{{asset('css/company-reliability.css')}}?v=20261103">@endonce
 <section class="rel-card rel-documents">
     <h3 style="margin:0 0 12px">Poufne dokumenty — raporty wiarygodności</h3>
     <p>Wyłącznie dla upoważnionych pracowników. Raporty nie są udostępniane w strefie klienta.</p>
