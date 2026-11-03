@@ -581,8 +581,8 @@
                         @include('partials.task-confirmations', ['completionTask' => $task])
                     </div>
                 </td>
-                <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
-                    {{ $task->due_date?->format('d.m.Y') ?? '—' }}
+                <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }} {{ $task->scheduled_time }}" style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
+                    {{ $task->due_date?->format('d.m.Y') ?? '—' }} @if($task->scheduled_time) · {{ substr($task->scheduled_time,0,5) }} @endif
                     @if($overdue)<span style="font-size:10px;margin-left:4px;">⚠</span>@endif
                 </td>
                 <td><span class="badge {{ $priorityMeta[$task->priority]['class'] }}">{{ $priorityMeta[$task->priority]['label'] }}</span></td>
@@ -649,8 +649,8 @@
                         @include('partials.task-confirmations', ['completionTask' => $task])
                     </div>
                 </td>
-                <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
-                    {{ $task->due_date?->format('d.m.Y') ?? '—' }}
+                <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }} {{ $task->scheduled_time }}" style="font-size:12px;color:{{ $overdue ? '#B91C1C' : '#888' }};font-weight:{{ $overdue ? '700' : '400' }};">
+                    {{ $task->due_date?->format('d.m.Y') ?? '—' }} @if($task->scheduled_time) · {{ substr($task->scheduled_time,0,5) }} @endif
                     @if($overdue)<span style="font-size:10px;margin-left:4px;">⚠</span>@endif
                 </td>
                 <td><span class="badge {{ $priorityMeta[$task->priority]['class'] }}">{{ $priorityMeta[$task->priority]['label'] }}</span></td>
@@ -722,7 +722,7 @@
                         <td><div style="font-weight:700;">{{ $task->title }}</div>@if($task->description)<div style="font-size:11px;color:#888;">{{ \Illuminate\Support\Str::limit($task->description, 90) }}</div>@endif</td>
                         <td style="font-size:12px;color:#666;">{{ $task->company?->name ?? '—' }}</td>
                         <td style="font-size:12px;">@include('partials.task-confirmations', ['completionTask' => $task])</td>
-                        <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }}" style="font-size:12px;color:#666;">{{ $task->due_date?->format('d.m.Y') ?? '—' }}</td>
+                        <td data-sort-value="{{ $task->due_date?->format('Y-m-d') }} {{ $task->scheduled_time }}" style="font-size:12px;color:#666;">{{ $task->due_date?->format('d.m.Y') ?? '—' }} @if($task->scheduled_time) · {{ substr($task->scheduled_time,0,5) }} @endif</td>
                         <td data-sort-value="{{ $task->deleted_at?->timestamp }}" style="font-size:12px;color:#666;">{{ $task->deleted_at?->format('d.m.Y H:i') ?? '—' }}</td>
                         <td style="font-size:12px;color:#666;">{{ $task->deletedBy?->name ?? '—' }}</td>
                         <td>
@@ -1102,6 +1102,7 @@
                     </select>
                 </div>
             </div>
+            <label style="display:block;margin-bottom:12px;">Godzina (opcjonalnie)<input type="time" name="scheduled_time" style="display:block;width:100%;padding:8px;border:1px solid #D0CCC0;border-radius:7px;"></label>
             <div style="margin-bottom:16px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Opis</label>
                 <textarea name="description" rows="2" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
@@ -1179,6 +1180,7 @@
                 </div>
             </div>
             <p id="edit-task-completion-note" hidden style="margin:0 0 12px;font-size:11px;line-height:1.5;color:#7a8a80;"></p>
+            <label style="display:block;margin-bottom:12px;">Godzina (opcjonalnie)<input type="time" name="scheduled_time" id="edit-task-time" style="display:block;width:100%;padding:8px;border:1px solid #D0CCC0;border-radius:7px;"></label>
             <details id="edit-task-description-section" style="margin-bottom:16px;">
                 <summary style="cursor:pointer;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;">Opis (opcjonalnie)</summary>
                 <textarea name="description" id="edit-task-desc" aria-label="Opis zadania" rows="2" placeholder="Dodatkowe informacje do zadania" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
@@ -1618,6 +1620,7 @@ function openEditTask(id, title, description, assignedTo, companyId, dueDate, pr
     completionNote.hidden = peopleCount < 2;
     completionNote.textContent = peopleCount > 1 ? `Potwierdzono wykonanie: ${confirmedCount} z ${peopleCount} osób. „Zrobione” potwierdza Twój udział.` : '';
     document.getElementById('edit-task-due').value = dueDate || '';
+    document.getElementById('edit-task-time').value = (@js($tasks->concat($myTasks)->pluck('scheduled_time', 'id'))[id] || '').slice(0, 5);
     const sel = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
     sel('edit-task-assigned', assignedTo);
     sel('edit-task-company', companyId);

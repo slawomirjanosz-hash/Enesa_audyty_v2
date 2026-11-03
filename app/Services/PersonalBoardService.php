@@ -103,6 +103,7 @@ class PersonalBoardService
             }
             $task = $crmRows[$row->id];
             $card = new BoardTask($task->only(['title', 'description', 'assigned_to', 'status', 'due_date']));
+            $card->scheduled_time = $task->scheduled_time;
             $card->id = $task->id;
             $card->revision = $task->board_revision;
             $card->deleted_at = $task->deleted_at;

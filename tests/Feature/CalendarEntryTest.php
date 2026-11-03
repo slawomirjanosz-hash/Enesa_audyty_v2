@@ -21,7 +21,7 @@ function calendarEntryData(string $kind = 'meeting'): array
     return ['title' => 'Spotkanie harmonogramowe', 'description' => 'Ustalenie terminów', 'due_date' => '2026-11-12', 'scheduled_time' => '14:30', 'calendar_kind' => $kind];
 }
 
-test('calendar creates own tasks and meetings visible on board without crm projects or audits', function (string $kind) {
+test('calendar creates meetings visible on board without crm projects or audits', function (string $kind) {
     CompanySettings::create(['name' => 'Kalendarz', 'enabled_modules' => ['calendar']]);
     $user = calendarEntryUser();
     $other = calendarEntryUser();
@@ -49,7 +49,7 @@ test('calendar creates own tasks and meetings visible on board without crm proje
     $this->get(route('board.mine', ['archive' => 1]))->assertOk()->assertSee('Spotkanie harmonogramowe');
     $this->patchJson(route('board.archive', ['board', $card->id]), ['restore' => true, 'revision' => 3])->assertOk();
     $this->get(route('calendar.index', ['month' => '2026-11']))->assertOk()->assertSee('Spotkanie harmonogramowe');
-})->with(['task', 'meeting']);
+})->with(['meeting']);
 
 test('calendar entry validation and permission boundaries', function () {
     $user = calendarEntryUser();

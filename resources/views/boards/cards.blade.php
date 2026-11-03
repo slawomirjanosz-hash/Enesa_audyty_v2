@@ -42,7 +42,7 @@
         <h4>{{$card->title}}</h4>
         @if($card->description)<p class="board-description">{{$card->description}}</p>@endif
         @unless($crmTask || $calendarEntry)<div class="board-muted">Etap: {{$card->stage?->title ?? 'Bez etapu'}}</div>@endunless
-        <div class="board-card-meta"><div>@include('partials.task-confirmations', ['completionTask' => $crmTask ?? $card])</div><time datetime="{{$card->due_date?->format('Y-m-d')}}">{{$card->due_date?->format('d.m.Y') ?? 'Bez terminu'}} @if($calendarEntry) · {{substr($card->scheduled_time ?? '',0,5)}}@endif</time></div>
+        <div class="board-card-meta"><div>@include('partials.task-confirmations', ['completionTask' => $crmTask ?? $card])</div><time datetime="{{$card->due_date?->format('Y-m-d')}}">{{$card->due_date?->format('d.m.Y') ?? 'Bez terminu'}} @if($card->scheduled_time) · {{substr($card->scheduled_time,0,5)}}@endif</time></div>
         <small class="board-overdue" @if($card->color()!=='red') hidden @endif>Po terminie</small>
         <div class="board-card-actions">
         @if($canStatus && count(app(\App\Services\TaskCompletionService::class)->people($crmTask ?? $card)) > 1)<small class="board-muted">Wybierz „Zrobione”, aby potwierdzić własne wykonanie.</small>@endif

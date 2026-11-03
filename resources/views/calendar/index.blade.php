@@ -69,10 +69,10 @@
 <div class="calendar-header">
     <div>
         <h1><i class="ti ti-calendar-month"></i> Kalendarz zadań</h1>
-        <p>Kliknij dzień, aby dodać własne zadanie lub spotkanie. Wpis pojawi się także na Mojej tablicy.</p>
+        <p>Kliknij dzień, aby dodać {{ $canCreateCrmTasks ? 'zadanie CRM lub spotkanie' : 'spotkanie' }}. Wpis pojawi się także na Mojej tablicy.</p>
     </div>
     <div class="calendar-actions">
-        <button type="button" class="calendar-btn" data-calendar-new="task" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-plus"></i> Dodaj zadanie</button>
+        @if($canCreateCrmTasks)<button type="button" class="calendar-btn" data-calendar-new="task" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-plus"></i> Dodaj zadanie</button>@endif
         <button type="button" class="calendar-btn" data-calendar-new="meeting" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-calendar-plus"></i> Dodaj spotkanie</button>
         <a class="calendar-btn {{ $scope === 'mine' ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'mine']) }}"><i class="ti ti-user"></i> Moje zadania</a>
         @if($canViewTeam)
@@ -124,7 +124,7 @@
                 @if($day->isMonday())<div class="calendar-week-number" title="Numer tygodnia">Tydz.<br>{{ $day->isoWeek() }}</div>@endif
                 <div data-calendar-date="{{ $day->format('Y-m-d') }}" class="calendar-day {{ !$day->isSameMonth($month) ? 'outside' : '' }} {{ $day->isToday() ? 'today' : '' }} {{ $day->isSunday() ? 'sunday' : '' }}">
                     <div class="calendar-day-head">
-                        <button type="button" class="calendar-day-number" data-calendar-new="task" data-date="{{ $day->format('Y-m-d') }}" title="Dodaj zadanie lub spotkanie" aria-label="Dodaj zadanie lub spotkanie: {{ $day->format('d.m.Y') }}">{{ $day->day }}</button>
+                        <button type="button" class="calendar-day-number" data-calendar-new="{{ $canCreateCrmTasks ? 'task' : 'meeting' }}" data-date="{{ $day->format('Y-m-d') }}" title="{{ $canCreateCrmTasks ? 'Dodaj zadanie lub spotkanie' : 'Dodaj spotkanie' }}" aria-label="{{ $canCreateCrmTasks ? 'Dodaj zadanie lub spotkanie' : 'Dodaj spotkanie' }}: {{ $day->format('d.m.Y') }}">{{ $day->day }}</button>
                         @if($dayTasks->count() + $dayPersonal->count())<span class="calendar-day-count">Wpisy: {{ $dayTasks->count() + $dayPersonal->count() }}</span>@endif
                     </div>
                     <div class="calendar-events">
@@ -144,7 +144,7 @@
                                 $context = $task->project?->name ?? $task->company?->name ?? 'Bez firmy';
                             @endphp
                             <a href="{{ $taskUrl }}" class="calendar-event priority-{{ $task->priority }} {{ $task->status === 'done' ? 'done' : '' }}" title="{{ $task->title }} · {{ $task->assignedUser?->name ?? 'Nieprzypisane' }} · {{ $statusLabels[$task->status] ?? $task->status }}">
-                                <span class="calendar-event-title">{{ $task->is_milestone ? '◆ ' : '' }}{{ $task->title }}</span>
+                                <span class="calendar-event-title">{{ $task->scheduled_time ? substr($task->scheduled_time, 0, 5).' · ' : '' }}{{ $task->is_milestone ? '◆ ' : '' }}{{ $task->title }}</span>
                                 <span class="calendar-event-meta">{{ $task->assignedUser?->name ?? 'Nieprzypisane' }} · {{ $context }}</span>
                             </a>
                         @endforeach
@@ -176,18 +176,32 @@
         @csrf
         <header><h2 id="calendar-editor-title">Dodaj zadanie lub spotkanie</h2><button type="button" data-calendar-close aria-label="Zamknij">×</button></header>
         @if($errors->any())<p role="alert">{{ $errors->first() }}</p>@endif
-        <label>Rodzaj<select name="calendar_kind"><option value="task" @selected(old('calendar_kind') === 'task')>Zadanie</option><option value="meeting" @selected(old('calendar_kind') === 'meeting')>Spotkanie</option></select></label>
+        <label>Rodzaj<select name="calendar_kind">@if($canCreateCrmTasks)<option value="task" @selected(old('calendar_kind') === 'task')>Zadanie CRM</option>@endif<option value="meeting" @selected(old('calendar_kind') === 'meeting')>Spotkanie</option></select></label>
         <label>Nazwa *<input name="title" required maxlength="255" value="{{ old('title') }}"></label>
         <div class="board-form-grid">
             <label>Data *<input type="date" name="due_date" required value="{{ old('due_date', today()->format('Y-m-d')) }}"></label>
             <label>Godzina *<input type="time" name="scheduled_time" required value="{{ old('scheduled_time') }}"></label>
         </div>
+        @if($canCreateCrmTasks)
+        <div data-crm-task-fields>
+            <div class="board-form-grid">
+                <label>Przypisany<select name="assigned_to">@foreach($taskUsers as $person)<option value="{{ $person->id }}" @selected((string)old('assigned_to',auth()->id())===(string)$person->id)>{{ $person->name }}</option>@endforeach</select></label>
+                <label>Firma<select name="company_id"><option value="">— bez firmy —</option>@foreach($taskCompanies as $company)<option value="{{ $company->id }}" @selected((string)old('company_id')===(string)$company->id)>{{ $company->name }}</option>@endforeach</select></label>
+            </div>
+            <label>Szansa CRM<select name="crm_opportunity_id"><option value="">— bez powiązania —</option>@foreach($taskOpportunities as $opportunity)<option value="{{ $opportunity->id }}" data-company-id="{{ $opportunity->company_id }}" @selected((string)old('crm_opportunity_id')===(string)$opportunity->id)>{{ $opportunity->title }}</option>@endforeach</select></label>
+            <div class="board-form-grid">
+                <label>Priorytet<select name="priority">@foreach(['low'=>'Niski','medium'=>'Średni','high'=>'Wysoki'] as $value=>$label)<option value="{{ $value }}" @selected(old('priority','medium')===$value)>{{ $label }}</option>@endforeach</select></label>
+                <label>Status<select name="status">@foreach(['todo'=>'Do zrobienia','in_progress'=>'W trakcie','done'=>'Zrobione'] as $value=>$label)<option value="{{ $value }}" @selected(old('status','todo')===$value)>{{ $label }}</option>@endforeach</select></label>
+            </div>
+        </div>
+        @endif
         <label>Opis<textarea name="description" rows="3" maxlength="10000">{{ old('description') }}</textarea></label>
-        <p class="board-muted">Wpis zostanie przypisany do Ciebie i pojawi się również na Mojej tablicy. Osoby z uprawnieniami do podglądu zadań zespołu mogą go zobaczyć.</p>
+        <p class="board-muted" data-calendar-task-note>Zadanie pojawi się w CRM i na Mojej tablicy. Uczestników, potwierdzenia wykonania i archiwizację obsłużysz tak samo jak przy innych zadaniach CRM.</p>
+        <p class="board-muted" data-calendar-meeting-note>Spotkanie zostanie przypisane do Ciebie i pojawi się również na Mojej tablicy.</p>
         <footer><button type="button" data-calendar-close>Anuluj</button><button type="submit" class="board-primary">Zapisz</button></footer>
     </form>
 </dialog>
 @endsection
 @push('scripts')
-<script src="{{ asset('js/calendar-entry.js') }}" defer></script>
+<script src="{{ asset('js/calendar-entry.js') }}?v=2" defer></script>
 @endpush

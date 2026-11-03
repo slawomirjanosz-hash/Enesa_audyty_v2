@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\TaskAssigned;
 use App\Models\Audit;
 use App\Models\Company;
 use App\Models\CompanySettings;
@@ -14,6 +13,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\CrmActivityLogger;
+use App\Services\CrmTaskCreator;
 use App\Services\OfferCrmStageSynchronizer;
 use App\Services\PersonalBoardService;
 use App\Services\TaskCompletionService;
@@ -21,7 +21,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class CrmController extends Controller
@@ -274,51 +273,8 @@ class CrmController extends Controller
 
     public function storeTask(Request $request): RedirectResponse
     {
-        $canManageTeam = app(AuditorAccessService::class)->hasFullAccess($request->user())
-            || $request->user()->can('crm.tasks.team.manage');
-        abort_unless($canManageTeam || $request->user()->can('crm.tasks.own.manage'), 403);
-        $data = $request->validateWithBag('taskCreate', [
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'assigned_to' => ['nullable', 'exists:users,id'],
-            'company_id' => ['nullable', 'exists:companies,id'],
-            'crm_opportunity_id' => ['nullable', 'exists:crm_opportunities,id'],
-            'offer_id' => ['nullable', 'exists:offers,id'],
-            'status' => ['required', 'in:todo,in_progress,done'],
-            'priority' => ['required', 'in:low,medium,high'],
-            'due_date' => ['nullable', 'date'],
-            'company_context_id' => ['nullable', 'integer', 'exists:companies,id'],
-        ]);
-
-        $companyContextId = $data['company_context_id'] ?? null;
-        unset($data['company_context_id']);
-
-        if (! $canManageTeam) {
-            $data['assigned_to'] = $request->user()->id;
-        }
-
-        if (! empty($data['crm_opportunity_id'])) {
-            $leadBelongsToCompany = CrmOpportunity::query()
-                ->whereKey($data['crm_opportunity_id'])
-                ->where('company_id', $data['company_id'] ?? null)
-                ->exists();
-
-            if (! $leadBelongsToCompany) {
-                return back()->withErrors([
-                    'crm_opportunity_id' => 'Wybrany lead nie należy do wskazanego klienta.',
-                ], 'taskCreate')->withInput();
-            }
-        }
-
-        $task = Task::create(array_merge($data, ['created_by' => auth()->id()]));
-
-        if ($task->assigned_to && $task->assigned_to !== auth()->id()) {
-            $assignedUser = $task->assignedUser;
-            if ($assignedUser && $assignedUser->email) {
-                Mail::to($assignedUser->email)
-                    ->send(new TaskAssigned($task));
-            }
-        }
+        $task = app(CrmTaskCreator::class)->create($request);
+        $companyContextId = $request->integer('company_context_id');
 
         if ($companyContextId && (int) $companyContextId === (int) $task->company_id) {
             return redirect()->to(route('companies.show', $companyContextId).'#crm')
@@ -341,6 +297,7 @@ class CrmController extends Controller
             'status' => ['required', 'in:todo,in_progress,done'],
             'priority' => ['required', 'in:low,medium,high'],
             'due_date' => ['nullable', 'date'],
+            'scheduled_time' => ['nullable', 'date_format:H:i'],
             'company_context_id' => ['nullable', 'integer', 'exists:companies,id'],
         ]);
 

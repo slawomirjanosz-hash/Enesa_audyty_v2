@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\BoardTask;
+use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\CrmOpportunity;
 use App\Models\HrBusinessTrip;
 use App\Models\HrLeave;
 use App\Models\Task;
 use App\Models\User;
+use App\Services\AuditorAccessService;
+use App\Services\CrmTaskCreator;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
@@ -24,12 +28,18 @@ class CalendarController extends Controller
             'scheduled_time' => ['required', 'date_format:H:i'],
             'calendar_kind' => ['required', 'in:task,meeting'],
         ]);
-        $card = new BoardTask;
-        $card->forceFill($data + ['assigned_to' => $request->user()->id, 'created_by' => $request->user()->id, 'status' => 'todo', 'revision' => 1]);
-        $card->save();
+        if ($data['calendar_kind'] === 'task') {
+            abort_unless(CompanySettings::moduleIsEnabled('crm'), 403);
+            $request->mergeIfMissing(['status' => 'todo', 'priority' => 'medium', 'assigned_to' => $request->user()->id]);
+            app(CrmTaskCreator::class)->create($request, 'default');
+        } else {
+            $card = new BoardTask;
+            $card->forceFill($data + ['assigned_to' => $request->user()->id, 'created_by' => $request->user()->id, 'status' => 'todo', 'revision' => 1]);
+            $card->save();
+        }
 
         return redirect()->route('calendar.index', ['month' => substr($data['due_date'], 0, 7)])
-            ->with('success', 'Zapisano wpis w kalendarzu i na Mojej tablicy.');
+            ->with('success', $data['calendar_kind'] === 'task' ? 'Zadanie zostało zapisane w kalendarzu, CRM i na Mojej tablicy.' : 'Zapisano spotkanie w kalendarzu i na Mojej tablicy.');
     }
 
     public function index(Request $request): View
@@ -75,9 +85,9 @@ class CalendarController extends Controller
         }
 
         if ($scope === 'mine') {
-            $tasksQuery->where('assigned_to', $user->id);
+            $tasksQuery->forUser($user->id);
         } elseif ($selectedUserId) {
-            $tasksQuery->where('assigned_to', $selectedUserId);
+            $tasksQuery->forUser($selectedUserId);
         }
 
         $tasks = $tasksQuery->get();
@@ -158,9 +168,15 @@ class CalendarController extends Controller
             'done' => $monthTasks->where('status', 'done')->count(),
         ];
 
+        $canCreateCrmTasks = $crmEnabled && (app(AuditorAccessService::class)->hasFullAccess($user) || $user->canAny(['crm.tasks.own.manage', 'crm.tasks.team.manage']));
+        $canAssignCrmTeam = $canCreateCrmTasks && (app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('crm.tasks.team.manage'));
+        $taskUsers = $canAssignCrmTeam ? User::where('is_active', true)->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get() : collect([$user]);
+        $taskCompanies = $canCreateCrmTasks ? app(AuditorAccessService::class)->scopeByCompanyAccess(Company::clients()->where('status', '!=', 'archived')->orderBy('name'), $user, 'can_view_dashboard', 'id')->get() : collect();
+        $taskOpportunities = $canCreateCrmTasks ? app(AuditorAccessService::class)->scopeByCompanyAccess(CrmOpportunity::orderBy('title'), $user, 'can_view_dashboard')->get() : collect();
+
         return view('calendar.index', compact(
             'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
-            'scope', 'selectedUserId', 'canViewTeam', 'stats', 'personalByDate'
+            'scope', 'selectedUserId', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities'
         ));
     }
 }
