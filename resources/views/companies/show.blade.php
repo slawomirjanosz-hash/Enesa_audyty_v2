@@ -630,6 +630,19 @@
         'assigned_to' => $opportunity->assigned_to,
         'assigned_name' => $opportunity->assignedUser?->name ?? '—',
         'notes' => $opportunity->notes,
+        'activities' => $opportunity->activities->map(fn ($activity) => [
+            'description' => $activity->description,
+            'date' => $activity->occurred_on?->format('d.m.Y'),
+            'person' => $activity->performedBy?->name ?? 'Usunięty użytkownik',
+            'recorder' => $activity->user?->name ?? 'System',
+        ])->values(),
+        'tasks' => $opportunity->tasks->map(fn ($task) => [
+            'archived' => $task->trashed(),
+            'title' => $task->title,
+            'assigned' => $task->assignedUser?->name,
+            'due_date' => $task->due_date?->format('d.m.Y'),
+            'status' => ['todo' => 'Do zrobienia', 'in_progress' => 'W trakcie', 'done' => 'Zrobione'][$task->status] ?? $task->status,
+        ])->values(),
         'related_user_ids' => $opportunity->relatedUsers->pluck('id')->values(),
         'related_user_names' => $opportunity->relatedUsers->pluck('name')->values(),
         'offers' => $opportunity->offers->map(fn ($offer) => [
@@ -2010,10 +2023,13 @@
             <div class="modal-field"><label>Notatki</label><div id="opportunityPreviewNotes" style="white-space:pre-wrap;background:#FAFAF6;border:1px solid #E5E1D8;border-radius:8px;padding:11px;min-height:44px;"></div></div>
             <div class="modal-field"><label>Osoby powiązane</label><div id="opportunityPreviewUsers" style="color:#555;"></div></div>
             <div class="modal-field"><label>Powiązane oferty</label><div id="opportunityPreviewOffers" style="display:flex;gap:6px;flex-wrap:wrap;"></div></div>
-            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
+            @include('crm.opportunity-history', ['historyPrefix' => 'company-opportunity'])
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap;">
                 <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="closeCompanyOpportunityModal()">Zamknij</button>
                 @if($canManageCrm)
-                    <button type="button" class="btn-action btn-primary-action" style="border:0;cursor:pointer;" onclick="editCompanyOpportunity()"><i class="ti ti-pencil"></i> Edytuj</button>
+                    <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;" onclick="openCompanyOpportunityTask()"><i class="ti ti-checklist"></i> Dodaj zadanie</button>
+                    <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;" onclick="editCompanyOpportunity(true)"><i class="ti ti-plus"></i> Dodaj działanie</button>
+                    <button type="button" class="btn-action btn-primary-action" style="border:0;cursor:pointer;" onclick="editCompanyOpportunity()"><i class="ti ti-pencil"></i> Edytuj szansę</button>
                 @endif
             </div>
         </div>
@@ -2036,6 +2052,8 @@
             </div>
             <div class="modal-field"><label>Osoby powiązane</label><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;">@foreach($crmAssignableUsers as $crmUser)<label style="display:flex;align-items:center;gap:7px;font-weight:500;"><input type="checkbox" name="related_users[]" value="{{ $crmUser->id }}" style="width:auto;"> {{ $crmUser->name }}</label>@endforeach</div></div>
             <div class="modal-field"><label for="opportunityEditNotes">Notatki</label><textarea id="opportunityEditNotes" name="notes"></textarea></div>
+            @include('crm.lead-action', ['users' => $crmAssignableUsers])
+            @include('crm.opportunity-history', ['historyPrefix' => 'company-edit-opportunity'])
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;"><button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="cancelCompanyOpportunityEdit()">Anuluj</button><button type="submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-device-floppy"></i> Zapisz</button></div>
         </form>
         @endif
@@ -2323,6 +2341,7 @@ document.addEventListener('DOMContentLoaded', () => openEditModal());
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/crm-opportunity-history.js') }}?v=1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{if(new URLSearchParams(location.search).get('tab')==='audits'){document.getElementById('tab-btn-audits')?.click()}});</script>
 @if($errors->any())
 <script>
@@ -2406,6 +2425,8 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         document.getElementById('opportunityPreviewDate').textContent = opportunity.expected_close_date_label || '—';
         document.getElementById('opportunityPreviewDescription').textContent = opportunity.description || 'Brak opisu';
         document.getElementById('opportunityPreviewNotes').textContent = opportunity.notes || 'Brak notatek';
+        CrmOpportunityHistory.activities('company-opportunity', opportunity.activities);
+        CrmOpportunityHistory.tasks('company-opportunity', opportunity.tasks);
         document.getElementById('opportunityPreviewUsers').textContent = opportunity.related_user_names?.length ? opportunity.related_user_names.join(', ') : 'Brak';
 
         const offers = document.getElementById('opportunityPreviewOffers');
@@ -2433,9 +2454,22 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         document.getElementById('companyOpportunityModal').style.display = 'none';
     }
 
-    function editCompanyOpportunity() {
+    function openCompanyOpportunityTask() {
+        if (!selectedCompanyOpportunity) return;
+        closeCompanyOpportunityModal();
+        openCompanyTaskModal();
+        document.getElementById('company-task-lead').value = selectedCompanyOpportunity.id;
+    }
+
+    function editCompanyOpportunity(addAction = false) {
         if (!selectedCompanyOpportunity) return;
         const form = document.getElementById('companyOpportunityEdit');
+        CrmOpportunityHistory.activities('company-edit-opportunity', selectedCompanyOpportunity.activities);
+        CrmOpportunityHistory.tasks('company-edit-opportunity', selectedCompanyOpportunity.tasks);
+        form.querySelectorAll('.lead-action').forEach(section => {
+            section.open = addAction;
+            section.querySelectorAll('input,textarea,select').forEach(field => field.value = '');
+        });
         form.action = selectedCompanyOpportunity.update_url;
         form.querySelector('#opportunityEditTitle').value = selectedCompanyOpportunity.title || '';
         form.querySelector('#opportunityEditDescription').value = selectedCompanyOpportunity.description || '';
@@ -2449,6 +2483,11 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         document.getElementById('companyOpportunityPreview').style.display = 'none';
         form.style.display = 'block';
         form.querySelector('#opportunityEditTitle').focus();
+        if (addAction) {
+            const action = form.querySelector('.lead-action');
+            action?.scrollIntoView({block:'center'});
+            action?.querySelector('textarea').focus();
+        }
     }
 
     function cancelCompanyOpportunityEdit() {

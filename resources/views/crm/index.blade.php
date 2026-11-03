@@ -1304,14 +1304,7 @@
             </div>
 
             @include('crm.lead-action')
-            <section style="margin-bottom:20px;" aria-label="Historia działań CRM">
-                <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:7px;">Historia działań</div>
-                <div id="opportunity-activity-history" style="display:grid;gap:8px;"></div>
-            </section>
-            <div id="opportunity-linked-tasks-section" style="margin-bottom:20px;">
-                <div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#555;margin-bottom:7px;">Powiązane zadania <span id="opportunity-linked-tasks-count" style="color:#888;font-weight:400;"></span></div>
-                <div id="opportunity-linked-tasks" style="display:grid;gap:7px;"></div>
-            </div>
+            @include('crm.opportunity-history', ['historyPrefix' => 'opportunity'])
 
             <div id="opportunity-edit-actions" style="display:none;gap:8px;justify-content:flex-end;">
                 <button type="button" onclick="closeEditOpp()" class="btn-secondary">Anuluj</button>
@@ -1496,6 +1489,7 @@ function fetchCompanyEditFromGus() {
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/crm-opportunity-history.js') }}?v=1"></script>
 <script>
 function toggleDashboard(companyId, btn) {
     fetch(`/crm/companies/${companyId}/dashboard`, {
@@ -1694,34 +1688,7 @@ function selectTaskOpportunityCompany(opportunitySelectId, companySelectId) {
 }
 
 function renderOpportunityTasks(tasks = []) {
-    const container = document.getElementById('opportunity-linked-tasks');
-    const count = document.getElementById('opportunity-linked-tasks-count');
-    container.replaceChildren();
-    count.textContent = '(' + tasks.length + ')';
-    if (!tasks.length) {
-        const empty = document.createElement('div');
-        empty.textContent = 'Brak zadań powiązanych z tą szansą.';
-        empty.style.cssText = 'font-size:12px;color:#999;padding:9px 0;';
-        container.appendChild(empty);
-        return;
-    }
-    const archive = document.createElement('details');
-    const summary = document.createElement('summary');
-    summary.textContent = 'Zarchiwizowane zadania (' + tasks.filter(task=>task.archived).length + ')';
-    archive.appendChild(summary);
-    tasks.forEach(task => {
-        const row = document.createElement('div');
-        row.style.cssText = 'border:1px solid #E5E1D8;border-radius:7px;padding:9px 10px;background:#FAFAF6;';
-        const title = document.createElement('div');
-        title.textContent = task.title;
-        title.style.cssText = 'font-size:12px;font-weight:700;color:#333;';
-        const meta = document.createElement('div');
-        meta.textContent = [task.status, task.assigned, task.due_date].filter(Boolean).join(' · ');
-        meta.style.cssText = 'font-size:11px;color:#777;margin-top:3px;';
-        row.append(title, meta);
-        (task.archived ? archive : container).appendChild(row);
-    });
-    if(tasks.some(task=>task.archived)) container.appendChild(archive);
+    CrmOpportunityHistory.tasks('opportunity', tasks);
 }
 
 function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {
@@ -1734,27 +1701,7 @@ function openEditOpp(id, title, companyId, stage, value, closeDate, assignedTo, 
 const opportunityActivityHistory = @js($opportunities->mapWithKeys(fn ($opportunity) => [$opportunity->id => $opportunity->activities->map(fn ($activity) => ['description' => $activity->description, 'date' => $activity->occurred_on?->format('d.m.Y'), 'person' => $activity->performedBy?->name ?? 'Usunięty użytkownik', 'recorder' => $activity->user?->name ?? 'System'])->values()]));
 
 function renderOpportunityActivityHistory(id) {
-    const container = document.getElementById('opportunity-activity-history');
-    container.replaceChildren();
-    const activities = opportunityActivityHistory[id] || [];
-    if (!activities.length) {
-        const empty = document.createElement('p');
-        empty.textContent = 'Brak wpisów w historii działań.';
-        empty.style.cssText = 'font-size:12px;color:#888;margin:0;';
-        container.append(empty);
-    }
-    activities.forEach(activity => {
-        const row = document.createElement('div');
-        row.style.cssText = 'border-left:2px solid #d8e5dd;padding:4px 10px;';
-        const description = document.createElement('div');
-        description.textContent = activity.description;
-        description.style.cssText = 'font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;';
-        const meta = document.createElement('small');
-        meta.textContent = [activity.date, activity.person, 'Zapisał(a): ' + activity.recorder].filter(Boolean).join(' · ');
-        meta.style.color = '#7a8a80';
-        row.append(description, meta);
-        container.append(row);
-    });
+    CrmOpportunityHistory.activities('opportunity', opportunityActivityHistory[id] || []);
 }
 
 function populateOpportunityModal(id, title, companyId, stage, value, closeDate, assignedTo, description, notes, relatedUsers = []) {

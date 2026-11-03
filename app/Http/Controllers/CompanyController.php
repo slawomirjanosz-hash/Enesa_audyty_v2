@@ -169,7 +169,13 @@ class CompanyController extends Controller
         $stats['projects_count'] = $projects->count();
 
         $crmOpportunities = $access->scopeByCompanyAccess(
-            CrmOpportunity::with(['assignedUser', 'relatedUsers', 'offers'])
+            CrmOpportunity::with([
+                'assignedUser', 'relatedUsers', 'offers',
+                'tasks' => fn ($tasks) => $tasks->crm()->withTrashed()->with('assignedUser'),
+                'activities' => fn ($activities) => $activities->where('type', 'lead_action')
+                    ->when(! $access->canViewCompany($user, $company->id, 'can_view_offers'), fn ($query) => $query->whereNull('offer_id'))
+                    ->with(['performedBy', 'user'])->orderByDesc('occurred_on')->orderByDesc('id'),
+            ])
                 ->where('company_id', $company->id)
                 ->orderByDesc('created_at'),
             $user,
