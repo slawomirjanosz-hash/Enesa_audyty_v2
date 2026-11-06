@@ -1909,7 +1909,7 @@
             </div>
             <div class="modal-field">
                 <label for="company-lead-notes">Notatki</label>
-                <textarea id="company-lead-notes" name="notes" rows="2">{{ old('notes') }}</textarea>
+                <textarea id="company-lead-notes" name="notes" rows="2" data-lead-notes-autogrow>{{ old('notes') }}</textarea>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
                 <button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="closeCompanyLeadModal()">Anuluj</button>
@@ -2051,7 +2051,7 @@
                 <div class="modal-field"><label for="opportunityEditDate">Planowane zamknięcie</label><input id="opportunityEditDate" type="date" name="expected_close_date"></div>
             </div>
             <div class="modal-field"><label>Osoby powiązane</label><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;">@foreach($crmAssignableUsers as $crmUser)<label style="display:flex;align-items:center;gap:7px;font-weight:500;"><input type="checkbox" name="related_users[]" value="{{ $crmUser->id }}" style="width:auto;"> {{ $crmUser->name }}</label>@endforeach</div></div>
-            <div class="modal-field"><label for="opportunityEditNotes">Notatki</label><textarea id="opportunityEditNotes" name="notes"></textarea></div>
+            <div class="modal-field"><label for="opportunityEditNotes">Notatki</label><textarea id="opportunityEditNotes" name="notes" data-lead-notes-autogrow></textarea></div>
             @include('crm.lead-action', ['users' => $crmAssignableUsers])
             @include('crm.opportunity-history', ['historyPrefix' => 'company-edit-opportunity'])
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;"><button type="button" class="btn-action btn-secondary-action" style="border:1px solid #D0CCC0;cursor:pointer;" onclick="cancelCompanyOpportunityEdit()">Anuluj</button><button type="submit" class="btn-action btn-primary-action" style="border:0;cursor:pointer;"><i class="ti ti-device-floppy"></i> Zapisz</button></div>
@@ -2340,6 +2340,7 @@ document.addEventListener('DOMContentLoaded', () => openEditModal());
 @endif
 @endsection
 
+@include('partials.lead-notes-autogrow')
 @push('scripts')
 <script src="{{ asset('js/crm-opportunity-history.js') }}?v=1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{if(new URLSearchParams(location.search).get('tab')==='audits'){document.getElementById('tab-btn-audits')?.click()}});</script>

@@ -25,6 +25,10 @@ test('company and pipeline opportunity previews share full history and linked ac
     expect($companyLead->tasks->pluck('id')->sort()->values()->all())->toBe([$active->id, $archived->id]);
     expect($companyLead->tasks->firstWhere('id', $archived->id)->trashed())->toBeTrue();
     $pipeline = $this->get(route('crm.index', ['tab' => 'pipeline']))->assertOk()->assertSee('crm-opportunity-history.js');
+    foreach ([$response, $pipeline] as $page) {
+        $page->assertSee('lead-notes-autogrow.js');
+        expect(substr_count($page->getContent(), 'data-lead-notes-autogrow'))->toBe(2);
+    }
     expect($pipeline->viewData('opportunities')->sole()->activities->pluck('id')->all())->toBe($companyLead->activities->pluck('id')->all());
     $this->get(route('companies.show', $company))->assertViewHas('crmTasks', fn ($tasks) => $tasks->pluck('id')->all() === [$active->id]);
     if (getenv('CRM_PREVIEW_QA')) {

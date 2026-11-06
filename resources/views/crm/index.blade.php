@@ -1004,7 +1004,7 @@
             </div>
             <div style="margin-bottom:16px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Notatki</label>
-                <textarea name="notes" rows="2" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
+                <textarea name="notes" rows="2" data-lead-notes-autogrow style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
             @include('crm.lead-action')
             <div style="display:flex;gap:10px;justify-content:flex-end;">
@@ -1301,7 +1301,7 @@
 
             <div style="margin-bottom:20px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Notatki</label>
-                <textarea id="edit-opp-notes" name="notes" rows="2"
+                <textarea id="edit-opp-notes" name="notes" rows="2" data-lead-notes-autogrow
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>
             </div>
 
@@ -1490,6 +1490,7 @@ function fetchCompanyEditFromGus() {
 
 @endsection
 
+@include('partials.lead-notes-autogrow')
 @push('scripts')
 <script src="{{ asset('js/crm-opportunity-history.js') }}?v=1"></script>
 <script>
