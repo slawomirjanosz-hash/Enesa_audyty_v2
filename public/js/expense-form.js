@@ -20,11 +20,17 @@ if (typeof document !== 'undefined') {
             field(name).addEventListener('input', () => { source = name; recalculate(); });
         }
         field('vat_rate').addEventListener('change', recalculate);
-        document.getElementById('expense-supplier').addEventListener('change', event => {
-            const option = event.target.selectedOptions[0];
-            if (!option?.value) return;
-            field('supplier_name').value = option.dataset.name;
-            field('supplier_nip').value = option.dataset.nip;
+        let selectedNip = null;
+        document.getElementById('expense-supplier').addEventListener('input', event => {
+            if (!event.isTrusted) return; // OCR supplies the seller's NIP independently.
+            const options = [...document.querySelectorAll('#expense-suppliers option')].filter(option => option.value === event.target.value);
+            if (options.length === 1) {
+                selectedNip = options[0].dataset.nip || '';
+                field('supplier_nip').value = selectedNip;
+            } else if (selectedNip !== null) {
+                if (field('supplier_nip').value === selectedNip) field('supplier_nip').value = '';
+                selectedNip = null;
+            }
         });
         const mode = field('owner_mode');
         const updateOwner = () => {

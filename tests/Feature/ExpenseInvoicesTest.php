@@ -140,7 +140,7 @@ test('photo extraction only returns reviewed fields deletes the upload and never
     Http::fake(['api.anthropic.com/*' => Http::response(['stop_reason' => 'end_turn', 'content' => [['text' => json_encode(['invoice_number' => 'FV/PHOTO', 'wz_number' => 'WZ/123', 'purchase_date' => '2026-10-22', 'supplier_name' => 'Odczytany dostawca', 'supplier_nip' => '1234567890', 'notes' => 'Sprawdź datę', 'owner_id' => 999, 'payment_status' => 'paid'])]]])]);
     $photo = UploadedFile::fake()->image('wz.jpg');
     $path = $photo->getRealPath();
-    $this->actingAs(expenseUser())->postJson(route('expenses.scan'), ['photo' => $photo])->assertOk()->assertJsonPath('proposal.invoice_number', 'FV/PHOTO')->assertJsonMissingPath('proposal.owner_id')->assertJsonMissingPath('proposal.payment_status');
+    $this->actingAs(expenseUser())->postJson(route('expenses.scan'), ['photo' => $photo])->assertOk()->assertJsonPath('proposal.invoice_number', 'FV/PHOTO')->assertJsonMissingPath('proposal.owner_id')->assertJsonPath('proposal.payment_status', null);
     expect(is_file($path))->toBeFalse();
     expect(Storage::disk('local')->allFiles())->toBeEmpty();
     $this->assertDatabaseCount('expense_invoices', 0);
