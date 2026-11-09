@@ -31,6 +31,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $request->session()->forget('workspace_tabs_scope');
 
         $user = $request->user();
         $request->session()->forget(['sms_verified', 'totp_verified', 'totp_pending', 'totp_recovery_display']);

@@ -687,6 +687,7 @@
 
 {{-- =============== MAIN =============== --}}
 <main id="main">
+    @include('partials.workspace-tabs')
     <div class="content-area">
         @yield('content')
     </div>
