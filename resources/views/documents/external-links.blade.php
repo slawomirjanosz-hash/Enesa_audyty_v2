@@ -1,4 +1,5 @@
-@php($linkPrefix = $owner instanceof \App\Models\Audit ? 'audits' : 'projects')
+@php($isCompanyLink = $owner instanceof \App\Models\Company)
+@php($linkPrefix = $isCompanyLink ? 'companies' : ($owner instanceof \App\Models\Audit ? 'audits' : 'projects'))
 @once
 <style>
 .workspace-links .workspace-help{font-size:12px;line-height:1.5;color:#66736b;margin:0 0 6px}
@@ -14,18 +15,18 @@
 @media(max-width:700px){.workspace-link-form,#pane-documents form[enctype="multipart/form-data"]>div{grid-template-columns:1fr}.workspace-link-form .btn{justify-self:end}.workspace-links-table{min-width:570px}}
 </style>
 @endonce
-<div class="aw-card card workspace-links">
-<h2><i class="ti ti-link"></i> Dyski zewnętrzne</h2>
-<p class="workspace-help">Pliki pozostają na zewnętrznym dysku. Kliknij nazwę lub adres, aby otworzyć dysk w nowej karcie. Nie wpisuj tu haseł ani kluczy dostępu.</p>
-@if($canManageLinks)<p class="workspace-help">Link będzie widoczny dla osób mających dostęp do dokumentów tego {{$linkPrefix === 'audits' ? 'audytu, również klienta' : 'projektu'}}.</p>@endif
+<div class="aw-card card workspace-links {{$isCompanyLink ? 'card-section' : ''}}">
+<h2><i class="ti ti-link"></i> {{$isCompanyLink ? 'Ważne linki firmy' : 'Dyski zewnętrzne'}}</h2>
+<p class="workspace-help">{{$isCompanyLink ? 'Dyski zewnętrzne, dokumenty Office i strony internetowe. Kliknij nazwę lub adres, aby otworzyć link w nowej karcie.' : 'Pliki pozostają na zewnętrznym dysku. Kliknij nazwę lub adres, aby otworzyć dysk w nowej karcie.'}} Nie wpisuj tu haseł ani kluczy dostępu.</p>
+@if($canManageLinks)<p class="workspace-help">{{$isCompanyLink ? 'Linki są widoczne dla użytkowników mających dostęp do karty tej firmy.' : 'Link będzie widoczny dla osób mających dostęp do dokumentów tego '.($linkPrefix === 'audits' ? 'audytu, również klienta' : 'projektu').'.'}}</p>@endif
 @if($canManageLinks)
 <form class="workspace-link-form" method="POST" action="{{route($linkPrefix.'.document-links.store',$owner)}}">@csrf
-<label>Nazwa dysku / folderu<input name="name" maxlength="160" placeholder="np. Dokumentacja klienta – OneDrive" required></label>
+<label>{{$isCompanyLink ? 'Nazwa linku' : 'Nazwa dysku / folderu'}}<input name="name" maxlength="160" placeholder="{{$isCompanyLink ? 'np. Cennik – Excel, dysk firmy, strona WWW' : 'np. Dokumentacja klienta – OneDrive'}}" required></label>
 <label>Adres HTTPS<input type="url" name="url" maxlength="2048" placeholder="https://…" required></label>
-<button class="aw-btn btn">Dodaj link</button>
+<button class="aw-btn btn {{$isCompanyLink ? 'btn-action btn-primary-action' : ''}}">Dodaj link</button>
 </form>
 @endif
-<div style="overflow:auto"><table class="aw-table workspace-links-table"><thead><tr><th class="link-name">Nazwa</th><th>Adres dysku</th><th class="link-date">Dodano</th><th class="link-actions" data-sortable="false">Akcje</th></tr></thead><tbody>
+<div style="overflow:auto"><table class="aw-table data-table workspace-links-table"><thead><tr><th class="link-name">Nazwa</th><th>{{$isCompanyLink ? 'Adres' : 'Adres dysku'}}</th><th class="link-date">Dodano</th><th class="link-actions" data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($owner->documentLinks as $link)
 <tr><td><a class="drive-name" href="{{$link->url}}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{$link->name}}</a></td><td><a class="drive-url" href="{{$link->url}}" title="{{$link->url}}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{$link->url}}</a></td><td class="link-date" data-sort-value="{{$link->created_at->toIso8601String()}}">{{$link->created_at->format('d.m.Y H:i')}}</td><td class="link-actions">
 @if($canManageLinks)<form method="POST" action="{{route($linkPrefix.'.document-links.destroy',[$owner,$link])}}" onsubmit="return confirm('Usunąć tylko link z aplikacji? Pliki na dysku pozostaną bez zmian.')">@csrf @method('DELETE')<button class="workspace-delete" title="Usuń link" aria-label="Usuń link: {{$link->name}}"><i class="ti ti-trash" aria-hidden="true"></i></button></form>@endif

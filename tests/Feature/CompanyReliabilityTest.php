@@ -28,6 +28,20 @@ beforeEach(function () {
         'notes' => 'Poufne zalecenia: wymagana dalsza weryfikacja.', 'verified_on' => now()->format('Y-m-d')];
 });
 
+test('financial previews do not consume the report limit and report protection remains active', function () {
+    $this->actingAs($this->admin);
+    for ($i = 0; $i < 6; $i++) {
+        $this->postJson(route('companies.reliability.financial-preview', $this->company), [])->assertOk();
+    }
+    $this->post(route('companies.reliability.store', $this->company), ['status' => 'auto'])->assertSessionHasNoErrors()->assertRedirect();
+    expect($this->company->reliabilityReports()->count())->toBe(1);
+    for ($i = 0; $i < 4; $i++) {
+        $this->postJson(route('companies.reliability.store', $this->company), ['status' => 'invalid'])->assertUnprocessable();
+    }
+    $this->postJson(route('companies.reliability.store', $this->company), ['status' => 'auto'])->assertStatus(429);
+    $this->postJson(route('companies.reliability.financial-preview', $this->company), [])->assertOk();
+});
+
 test('bankruptcy lookup displays a prominent alert and saves a red automatic report', function () {
     Http::fake(['wl-api.mf.gov.pl/*' => Http::response([], 503), 'api-krs.ms.gov.pl/*' => Http::response(['odpis' => ['dane' => [
         'dzial1' => ['danePodmiotu' => ['identyfikatory' => ['nip' => $this->company->nip], 'nazwa' => 'TEST W UPADŁOŚCI']],

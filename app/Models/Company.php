@@ -86,6 +86,11 @@ class Company extends Model
         return $this->hasMany(Document::class);
     }
 
+    public function documentLinks(): HasMany
+    {
+        return $this->hasMany(DocumentLink::class);
+    }
+
     public function reliabilityReports(): HasMany
     {
         return $this->hasMany(CompanyReliabilityReport::class);

@@ -848,7 +848,7 @@
         <button class="tab-btn" onclick="switchTab('chat', this)">
             <i class="ti ti-message-circle"></i> Chat
         </button>
-        <button class="tab-btn" onclick="switchTab('documents', this)">
+        <button id="tab-btn-documents" class="tab-btn" onclick="switchTab('documents', this)">
             <i class="ti ti-paperclip"></i> Dokumenty
         </button>
         @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $company))
@@ -1725,6 +1725,7 @@
 
     {{-- ═══ ZAKŁADKA: DOKUMENTY ═══ --}}
     <div id="tab-documents" class="tab-panel">
+        @include('documents.external-links', ['owner' => $company, 'canManageLinks' => auth()->user()->can('update', $company)])
         @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $company))
             @include('companies.reliability.list', ['reports'=>$company->reliabilityReports()->with('author')->latest('id')->get()])
         @endif
@@ -2497,6 +2498,10 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
     }
 
     // Auto-open Zapytania tab when URL has #zapytania
+    if (window.location.hash === '#documents') {
+        const btn = document.getElementById('tab-btn-documents');
+        if (btn) switchTab('documents', btn);
+    }
     if (window.location.hash === '#zapytania') {
         const btn = document.getElementById('tab-btn-requests');
         if (btn) switchTab('requests', btn);

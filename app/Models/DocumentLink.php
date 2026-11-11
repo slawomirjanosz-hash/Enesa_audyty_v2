@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocumentLink extends Model
 {
-    protected $fillable = ['audit_id', 'project_id', 'name', 'url', 'created_by'];
+    protected $fillable = ['audit_id', 'project_id', 'company_id', 'name', 'url', 'created_by'];
 }
