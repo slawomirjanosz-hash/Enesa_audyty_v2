@@ -14,5 +14,5 @@
 .app-header-search{margin:0}.app-view-toggle{display:inline-flex;gap:4px;padding:4px;border-radius:7px;background:#F4F1EA;height:38px;box-sizing:border-box;flex-shrink:0}.app-view-toggle button{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:0;border-radius:5px;padding:0;background:transparent;color:#6b7a70;cursor:pointer}.app-view-toggle button.active{background:var(--green);color:#fff}
 .app-search-toolbar>button,.app-search-toolbar>a{box-sizing:border-box;height:38px;display:inline-flex;align-items:center;justify-content:center}
 </style>
-<script type="module" src="{{ asset('js/list-search.js') }}?v=1"></script>
+<script type="module" src="{{ asset('js/list-search.js') }}?v=2"></script>
 @endonce

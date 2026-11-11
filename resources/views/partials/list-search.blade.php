@@ -3,7 +3,7 @@
     $serverSearch = $serverSearch ?? false;
 @endphp
 @if($serverSearch)
-<form method="GET" action="{{ url()->current() }}" class="app-header-search" data-list-search-form role="search">
+<form method="GET" action="{{ url()->current() }}" class="app-header-search" data-list-search-form @isset($searchDelay) data-search-delay="{{ $searchDelay }}" @endisset role="search">
     @foreach(\Illuminate\Support\Arr::dot(request()->except(['q', 'page', 'completed_page'])) as $key => $value)
         @if(is_scalar($value))<input type="hidden" name="{{ preg_replace('/\.([^\.]+)/', '[$1]', $key) }}" value="{{ $value }}">@endif
     @endforeach

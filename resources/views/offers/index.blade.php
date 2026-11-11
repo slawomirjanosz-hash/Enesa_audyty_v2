@@ -226,7 +226,7 @@
         @endif
     </div>
     <div class="app-search-toolbar">
-    @include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: numer, oferta, klient, osoba…'])
+    @include('partials.list-search', ['serverSearch' => true, 'searchDelay' => 1500, 'searchPlaceholder' => 'Szukaj: numer, oferta, klient, osoba…'])
     <a href="{{ route('offers.create') }}" class="btn-primary">
         <i class="ti ti-plus"></i> Nowa oferta
     </a>

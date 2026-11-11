@@ -42,7 +42,7 @@ if (typeof document !== 'undefined') {
         } catch (_) { /* Storage may be disabled. */ }
         input.addEventListener('input', () => {
             clearTimeout(timer);
-            timer = setTimeout(() => form.requestSubmit(), 650);
+            timer = setTimeout(() => form.requestSubmit(), Number(form.dataset.searchDelay ?? 650));
         });
         form.addEventListener('submit', () => {
             clearTimeout(timer);
