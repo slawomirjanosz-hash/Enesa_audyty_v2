@@ -146,7 +146,7 @@
                 <input type="search" id="pipeline-search" autocomplete="off" aria-label="Szukaj w lejku sprzedaży" placeholder="Szukaj: szansa, firma, oferta, osoba…">
                 <div id="pipeline-search-result" class="app-header-search-result" aria-live="polite"></div>
             </div>
-            <button onclick="document.getElementById('modal-opp').style.display='flex'" class="btn-primary">
+            <button onclick="const modal = document.getElementById('modal-opp'); modal.querySelector('[name=company_id]').dispatchEvent(new Event('crm-company-reset')); modal.style.display='flex'" class="btn-primary">
                 <i class="ti ti-plus"></i> Nowa szansa
             </button>
         @elseif($currentTab === 'tasks' && $canManageOwnTasks)
@@ -961,8 +961,9 @@
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                 <div>
-                    <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
-                    <select name="company_id" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
+                    <label for="new-opp-company" style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
+                    @include('crm.company-search')
+                    <select id="new-opp-company" name="company_id" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— bez klienta —</option>
                         @foreach($companies as $c)
                         <option value="{{ $c->id }}">{{ $c->name }}</option>
@@ -1240,7 +1241,8 @@
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                 <div>
-                    <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
+                    <label for="edit-opp-company" style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Firma</label>
+                    @include('crm.company-search')
                     <select id="edit-opp-company" name="company_id"
                         style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— bez klienta —</option>
@@ -1492,6 +1494,7 @@ function fetchCompanyEditFromGus() {
 
 @include('partials.lead-notes-autogrow')
 @push('scripts')
+<script type="module" src="{{ asset('js/crm-company-picker.js') }}"></script>
 <script src="{{ asset('js/crm-opportunity-history.js') }}?v=1"></script>
 <script>
 function toggleDashboard(companyId, btn) {
@@ -1713,7 +1716,9 @@ function populateOpportunityModal(id, title, companyId, stage, value, closeDate,
     document.querySelectorAll('#form-edit-opp .lead-action').forEach(section => { section.open = false; section.querySelectorAll('input, textarea, select').forEach(field => field.value = ''); });
     document.getElementById('edit-opp-id').value = id;
     document.getElementById('edit-opp-title').value = title;
-    document.getElementById('edit-opp-company').value = companyId || '';
+    const companySelect = document.getElementById('edit-opp-company');
+    companySelect.dispatchEvent(new Event('crm-company-reset'));
+    companySelect.value = companyId || '';
     document.getElementById('edit-opp-stage').value = stage;
     document.getElementById('edit-opp-value').value = value || '';
     document.getElementById('edit-opp-date').value = closeDate || '';
@@ -1731,6 +1736,7 @@ function populateOpportunityModal(id, title, companyId, stage, value, closeDate,
 
 function setOpportunityModalMode(editing, companyUrl = null) {
     const form = document.getElementById('form-edit-opp');
+    form.querySelectorAll('[data-company-picker-search]').forEach(section => section.hidden = !editing);
     form.querySelectorAll('.lead-action').forEach(section => section.hidden = !editing);
     form.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(field => {
         field.disabled = !editing;
