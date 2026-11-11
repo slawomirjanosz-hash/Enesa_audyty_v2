@@ -184,16 +184,20 @@
 
     .tabs-nav {
         display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
         border-bottom: 1px solid #E5E1D8;
         padding: 0 4px;
-        overflow-x: auto;
     }
 
     .tab-btn {
         display: flex;
         align-items: center;
         gap: 7px;
-        padding: 14px 20px;
+        padding: 12px 14px;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex: 0 0 auto;
         border: none;
         background: none;
         cursor: pointer;
@@ -202,8 +206,10 @@
         font-weight: 600;
         color: #7a8a80;
         border-bottom: 2px solid transparent;
-        margin-bottom: -1px;
-        white-space: nowrap;
+        margin-bottom: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: left;
         transition: color .15s, border-color .15s;
     }
 
