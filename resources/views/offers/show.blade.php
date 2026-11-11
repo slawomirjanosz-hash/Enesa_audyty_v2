@@ -226,6 +226,8 @@
         'w_toku'         => 'W toku',
         'wygrana'        => 'Wygrana',
         'przegrana'      => 'Przegrana',
+        'anulowana' => 'Anulowana',
+        'w_negocjacji' => 'W negocjacjach',
         'zarchiwizowana' => 'Zarchiwizowana',
         default          => $offer->status,
     };
@@ -480,10 +482,9 @@
             <div style="margin-bottom:12px;">
                 <label class="field-label" for="status">Status</label>
                 <select name="status" id="statusSelect" class="field-input" onchange="toggleWonAs(this)">
-                    <option value="w_toku"         {{ $offer->status === 'w_toku'         ? 'selected' : '' }}>W toku</option>
-                    <option value="wygrana"        {{ $offer->status === 'wygrana'        ? 'selected' : '' }}>Wygrana</option>
-                    <option value="przegrana"      {{ $offer->status === 'przegrana'      ? 'selected' : '' }}>Przegrana</option>
-                    <option value="zarchiwizowana" {{ $offer->status === 'zarchiwizowana' ? 'selected' : '' }}>Zarchiwizowana</option>
+                    @foreach(\App\Models\OfferStatus::options() as $value => $label)
+                        <option value="{{ $value }}" @selected(old('status', $offer->status) === (string) $value)>{{ $label }}</option>
+                    @endforeach
                 </select>
             </div>
             <div id="wonAsSection" style="margin-bottom:12px;{{ $offer->status === 'wygrana' ? '' : 'display:none;' }}">

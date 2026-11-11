@@ -53,6 +53,17 @@ class Offer extends Model
         'is_template' => 'boolean',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (Offer $offer): void {
+            if ($offer->isDirty('status')) {
+                $offer->archived_from_status = $offer->exists && $offer->status === 'zarchiwizowana'
+                    ? $offer->getOriginal('status')
+                    : null;
+            }
+        });
+    }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

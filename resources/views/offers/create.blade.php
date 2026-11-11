@@ -341,10 +341,9 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
         <div>
             <label class="field-label">Status <span style="color:#DC2626;">*</span></label>
             <select name="status" class="field-input" required>
-                <option value="w_toku" selected>W toku</option>
-                <option value="wygrana">Wygrana</option>
-                <option value="przegrana">Przegrana</option>
-                <option value="zarchiwizowana">Zarchiwizowana</option>
+                @foreach(\App\Models\OfferStatus::options() as $value => $label)
+                    <option value="{{ $value }}" @selected(old('status', 'w_toku') === (string) $value)>{{ $label }}</option>
+                @endforeach
             </select>
         </div>
         <div>

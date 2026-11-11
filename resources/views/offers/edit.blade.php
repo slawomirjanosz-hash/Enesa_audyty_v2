@@ -264,6 +264,8 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
         'w_toku'         => ['label' => 'W toku',        'class' => 'badge-blue'],
         'wygrana'        => ['label' => 'Wygrana',       'class' => 'badge-green'],
         'przegrana'      => ['label' => 'Przegrana',     'class' => 'badge-red'],
+        'anulowana' => ['label' => 'Anulowana', 'class' => 'badge-gray'],
+        'w_negocjacji' => ['label' => 'W negocjacjach', 'class' => 'badge-blue'],
         'zarchiwizowana' => ['label' => 'Zarchiwizowana','class' => 'badge-gray'],
         default          => ['label' => $offer->status,  'class' => 'badge-gray'],
     };
@@ -616,10 +618,9 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     <div>
         <label class="field-label">Status</label>
         <select name="status" class="field-input" required>
-            <option value="w_toku"         {{ $offer->status === 'w_toku'         ? 'selected' : '' }}>W toku</option>
-            <option value="wygrana"        {{ $offer->status === 'wygrana'        ? 'selected' : '' }}>Wygrana</option>
-            <option value="przegrana"      {{ $offer->status === 'przegrana'      ? 'selected' : '' }}>Przegrana</option>
-            <option value="zarchiwizowana" {{ $offer->status === 'zarchiwizowana' ? 'selected' : '' }}>Zarchiwizowana</option>
+            @foreach(\App\Models\OfferStatus::options() as $value => $label)
+                <option value="{{ $value }}" @selected(old('status', $offer->status) === (string) $value)>{{ $label }}</option>
+            @endforeach
         </select>
     </div>
     <div>

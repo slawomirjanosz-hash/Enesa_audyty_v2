@@ -11,6 +11,7 @@ use App\Models\OfferDelegation;
 use App\Models\OfferMessage;
 use App\Models\OfferRequest;
 use App\Models\OfferSavedTemplate;
+use App\Models\OfferStatus;
 use App\Models\OfferTemplateType;
 use App\Models\User;
 use App\Services\AuditorAccessService;
@@ -24,12 +25,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Mpdf\Mpdf;
 use PhpOffice\PhpWord\IOFactory;
@@ -62,9 +65,8 @@ class OfferController extends Controller
             ->where('is_template', $isTemplate)
             ->orderByDesc('created_at');
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+        $activeStatus = $request->query('status');
+        $activeStatus = is_string($activeStatus) && $activeStatus !== '' ? $activeStatus : null;
 
         ListSearch::apply($query, $request, ['offer_full_number', 'offer_number', 'offer_title'], ['company' => ['name', 'nip'], 'assignedUser' => ['name']]);
         $sortColumns = [
@@ -81,14 +83,27 @@ class OfferController extends Controller
                 ->whereColumn('sortable_offers.id', 'offers.id')
                 ->whereIn('sortable_offers.company_id', $access->accessibleCompanyIds($user, 'can_view_offer_prices'))->limit(1);
         }
-        TableSort::apply($query, $request, $sortColumns);
-        $offers = $query->paginate(20)->withQueryString();
+        $activeQuery = (clone $query)->where('status', '!=', 'zarchiwizowana');
+        if ($activeStatus !== null) {
+            $activeQuery->where('status', $activeStatus);
+        }
+        $offers = TableSort::apply($activeQuery, $request, $sortColumns)->paginate(20)->withQueryString();
 
-        $offers->each(function (Offer $offer) use ($user) {
-            if (! $user->can('viewPrices', $offer)) {
-                $this->offerContent->hidePrices($offer);
-            }
-        });
+        $archivedOffers = null;
+        if ($activeStatus === null || $activeStatus === 'zarchiwizowana') {
+            $archiveQuery = (clone $query)->where('status', 'zarchiwizowana');
+            $archiveSortColumns = array_replace($sortColumns, ['status' => 'archived_from_status']);
+            $archivedOffers = TableSort::apply($archiveQuery, $request, $archiveSortColumns, 'archive')
+                ->paginate(20, ['*'], 'archive_page')->withQueryString();
+        }
+
+        foreach (array_filter([$offers, $archivedOffers]) as $list) {
+            $list->each(function (Offer $offer) use ($user) {
+                if (! $user->can('viewPrices', $offer)) {
+                    $this->offerContent->hidePrices($offer);
+                }
+            });
+        }
 
         $visibleOffers = $access->scopeByCompanyAccess(
             Offer::query(),
@@ -103,7 +118,9 @@ class OfferController extends Controller
             'zarchiwizowana' => (clone $visibleOffers)->where('status', 'zarchiwizowana')->count(),
         ];
 
-        return view('offers.index', compact('offers', 'stats'));
+        $statusLabels = OfferStatus::options();
+
+        return view('offers.index', compact('offers', 'archivedOffers', 'stats', 'statusLabels', 'activeStatus'));
     }
 
     public function create(Request $request): View
@@ -183,7 +200,7 @@ class OfferController extends Controller
             'offer_number' => ['required', 'string', 'unique:offers,offer_number'],
             'offer_slug' => ['nullable', 'string', 'max:255'],
             'offer_title' => ['nullable', 'string', 'max:500'],
-            'status' => ['required', 'in:w_toku,wygrana,przegrana,zarchiwizowana'],
+            'status' => ['required', 'string', Rule::in(array_keys(OfferStatus::options()))],
             'assigned_user_id' => ['nullable', 'exists:users,id'],
             'kwota_netto' => ['nullable', 'numeric', 'min:0'],
             'valid_until' => ['nullable', 'date'],
@@ -442,7 +459,7 @@ class OfferController extends Controller
             'offer_number' => ['required', 'string', 'unique:offers,offer_number,'.$offer->id],
             'offer_slug' => ['nullable', 'string', 'max:255'],
             'offer_title' => ['nullable', 'string', 'max:500'],
-            'status' => ['required', 'in:w_toku,wygrana,przegrana,zarchiwizowana'],
+            'status' => ['required', 'string', Rule::in(array_keys(OfferStatus::options()))],
             'assigned_user_id' => ['nullable', 'exists:users,id'],
             'kwota_netto' => ['nullable', 'numeric', 'min:0'],
             'valid_until' => ['nullable', 'date'],
@@ -567,19 +584,37 @@ class OfferController extends Controller
     public function updateStatus(Request $request, Offer $offer): RedirectResponse
     {
         $this->authorize('update', $offer);
+        $this->authorize('view', $offer);
         $data = $request->validate([
-            'status' => ['required', 'in:w_toku,wygrana,przegrana,zarchiwizowana'],
+            'status' => ['exclude_with:new_status', 'required', 'string', Rule::in(array_keys(OfferStatus::options()))],
+            'new_status' => ['nullable', 'string', 'max:100', 'regex:/^[\pL\pN][\pL\pN ._()\/-]*$/u'],
             'won_as' => ['nullable', 'in:audyt,projekt,inne'],
         ]);
 
-        $previousStatus = $offer->status;
-        $offer->update($data);
+        DB::transaction(function () use ($offer, $data): void {
+            $offer = Offer::query()->lockForUpdate()->findOrFail($offer->id);
+            $newStatus = $data['new_status'] ?? null;
+            if ($newStatus !== null) {
+                $normalized = Str::lower($newStatus);
+                $reserved = array_merge(array_keys(OfferStatus::BUILT_IN), array_values(OfferStatus::BUILT_IN));
+                // Match the case and accent insensitivity of the production database.
+                $fold = fn (string $value): string => Str::lower(Str::ascii($value));
+                if (in_array($fold($newStatus), array_map($fold, $reserved), true)) {
+                    throw ValidationException::withMessages(['new_status' => 'Status o tej nazwie jest już dostępny na liście.']);
+                }
 
-        if ($offer->status !== $previousStatus) {
-            app(CrmActivityLogger::class)->offerStatusChanged($offer, $previousStatus, $offer->status);
-        }
+                $data['status'] = OfferStatus::firstOrCreate(['normalized_name' => $normalized], ['name' => $newStatus])->name;
+            }
 
-        $this->crmStageSynchronizer->synchronize($offer);
+            $previousStatus = $offer->status;
+            $offer->update(Arr::only($data, ['status', 'won_as']));
+
+            if ($offer->status !== $previousStatus) {
+                app(CrmActivityLogger::class)->offerStatusChanged($offer, $previousStatus, $offer->status);
+            }
+
+            $this->crmStageSynchronizer->synchronize($offer);
+        });
 
         return redirect()->back()->with('success', 'Status oferty został zaktualizowany.');
     }

@@ -191,23 +191,13 @@
     .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:220px; font-family:'Lato',sans-serif; }
     .search-box input:focus { border-color:var(--green); }
     .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
-    .sort-icon { font-size:10px; color:#bbb; margin-left:3px; }
+    .offer-status-select { max-width:210px; border:0; cursor:pointer; text-overflow:ellipsis; }
     .offers-table th { cursor:pointer; user-select:none; }
     .offers-table th:hover { color:var(--green); }
 </style>
 @endpush
 
 @section('content')
-
-@php
-    $statusLabels = [
-        'w_toku'         => 'W toku',
-        'wygrana'        => 'Wygrana',
-        'przegrana'      => 'Przegrana',
-        'zarchiwizowana' => 'Zarchiwizowana',
-    ];
-    $activeStatus = request('status');
-@endphp
 
 {{-- Nagłówek strony --}}
 @include('partials.header-search-styles')
@@ -226,7 +216,7 @@
         @endif
     </div>
     <div class="app-search-toolbar">
-    @include('partials.list-search', ['serverSearch' => true, 'searchDelay' => 1500, 'searchPlaceholder' => 'Szukaj: numer, oferta, klient, osoba…'])
+    @include('partials.list-search', ['serverSearch' => true, 'searchDelay' => 1500, 'searchResetParameters' => ['archive_page'], 'searchPlaceholder' => 'Szukaj: numer, oferta, klient, osoba…'])
     <a href="{{ route('offers.create') }}" class="btn-primary">
         <i class="ti ti-plus"></i> Nowa oferta
     </a>
@@ -236,6 +226,12 @@
 @if(session('success'))
     <div style="background:#F0FDF4;border:1px solid #86EFAC;color:#166534;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:10px;">
         <i class="ti ti-circle-check"></i> {{ session('success') }}
+    </div>
+@endif
+
+@if($errors->has('status') || $errors->has('new_status'))
+    <div role="alert" style="background:#FEF2F2;border:1px solid #FCA5A5;color:#991B1B;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+        {{ $errors->first('new_status') ?: $errors->first('status') }}
     </div>
 @endif
 
@@ -271,171 +267,31 @@
     </a>
 </div>
 
-{{-- Tabela --}}
-<div class="table-card">
-    <div class="table-card-header">
-        <div class="table-card-title">
-            <i class="ti ti-list"></i>
-            @if($activeStatus)
-                {{ $statusLabels[$activeStatus] ?? $activeStatus }}
-                <span style="font-weight:400;color:#888;">({{ $offers->total() }})</span>
-            @else
-                Wszystkie oferty
-                <span style="font-weight:400;color:#888;">({{ $offers->total() }})</span>
-            @endif
-        </div>
-    </div>
+@if($activeStatus !== 'zarchiwizowana')
+    @include('offers.partials.index-table', ['rows' => $offers, 'isArchive' => false])
+@endif
 
-    @if($offers->isEmpty())
-        <div class="empty-state">
-            <div><i class="ti ti-file-off"></i></div>
-            <p>Brak ofert{{ $activeStatus ? ' o tym statusie' : '' }}.</p>
-            @if(!$activeStatus)
-                <a href="{{ route('offers.create') }}" class="btn-primary" style="display:inline-flex;">
-                    <i class="ti ti-plus"></i> Utwórz pierwszą ofertę
-                </a>
-            @endif
-        </div>
-    @else
-        <div style="overflow-x:auto;">
-            <table class="offers-table" data-server-sort="number,title,company,owner,amount,status,date">
-                <thead>
-                    <tr>
-                        <th onclick="sortOffersTable(0)">Numer oferty <span class="sort-icon">⇅</span></th>
-                        <th onclick="sortOffersTable(1)">Tytuł <span class="sort-icon">⇅</span></th>
-                        <th onclick="sortOffersTable(2)">Klient <span class="sort-icon">⇅</span></th>
-                        <th onclick="sortOffersTable(3)">Prowadzi <span class="sort-icon">⇅</span></th>
-                        <th onclick="sortOffersTable(4,true)">Kwota netto <span class="sort-icon">⇅</span></th>
-                        <th onclick="sortOffersTable(5)">Status <span class="sort-icon">⇅</span></th>
-                        <th onclick="sortOffersTable(6)">Data <span class="sort-icon">⇅</span></th>
-                        <th style="text-align:center;">Akcje</th>
-                    </tr>
-                </thead>
-                <tbody id="offers-tbody">
-                    @foreach($offers as $offer)
-                    <tr>
-                        <td>
-                            <a href="{{ route('offers.show', $offer) }}"
-                               style="color:var(--green);font-weight:700;text-decoration:none;font-family:'Manrope',sans-serif;font-size:13px;">
-                                {{ $offer->fullNumber() }}
-                            </a>
-                        </td>
-                        <td style="color:#555;">{{ $offer->offer_title ?? '—' }}</td>
-                        <td style="color:#333;">{{ $offer->company?->name ?? '—' }}</td>
-                        <td style="color:#555;">{{ $offer->assignedUser?->name ?? '—' }}</td>
-                        <td>
-                            @if($offer->kwota_netto && $offer->kwota_netto > 0)
-                                <span style="font-family:'Lato',sans-serif;font-weight:700;">
-                                    {{ number_format($offer->kwota_netto, 2, ',', ' ') }} zł
-                                </span>
-                            @else
-                                <em style="color:#aaa;font-size:12px;">— brak —</em>
-                            @endif
-                        </td>
-                        <td>
-                            @php
-                                $badgeClass = match($offer->status) {
-                                    'w_toku'         => 'badge-blue',
-                                    'wygrana'        => 'badge-green',
-                                    'przegrana'      => 'badge-red',
-                                    'zarchiwizowana' => 'badge-gray',
-                                    default          => 'badge-gray',
-                                };
-                                $badgeLabel = match($offer->status) {
-                                    'w_toku'         => 'W toku',
-                                    'wygrana'        => 'Wygrana',
-                                    'przegrana'      => 'Przegrana',
-                                    'zarchiwizowana' => 'Zarchiwizowana',
-                                    default          => $offer->status,
-                                };
-                            @endphp
-                            <span class="badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
-                        </td>
-                        <td style="color:#666;font-size:13px;white-space:nowrap;">
-                            {{ $offer->created_at->format('d.m.Y') }}
-                        </td>
-                        <td style="text-align:center;white-space:nowrap;">
-                            <a href="{{ route('offers.show', $offer) }}" class="btn-icon btn-icon-view" title="Podgląd">
-                                <i class="ti ti-eye"></i>
-                            </a>
-                            <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-icon btn-icon-pdf" title="Podgląd PDF" style="margin-left:4px;border:none;cursor:pointer;">
-                                <i class="ti ti-file-type-pdf"></i>
-                            </button>
-                            <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;margin-left:4px;">
-                                @csrf
-                                <button type="submit" class="btn-icon" style="background:#EFF6FF;color:#2563EB;border:none;cursor:pointer;" title="Zapisz na dysku">
-                                    <i class="ti ti-device-floppy"></i>
-                                </button>
-                            </form>
-                            <a href="{{ route('offers.edit', $offer) }}" class="btn-icon btn-icon-edit" title="Edytuj" style="margin-left:4px;">
-                                <i class="ti ti-pencil"></i>
-                            </a>
-                            <form method="POST" action="{{ route('offers.clone', $offer) }}" style="display:inline;margin-left:4px;">
-                                @csrf
-                                <input type="hidden" name="mode" value="offer">
-                                <button type="submit"
-                                        style="background:#F0F7F3;border:none;cursor:pointer;color:var(--green);padding:6px 7px;border-radius:6px;display:inline-flex;align-items:center;"
-                                        title="Kopiuj ofertę">
-                                    <i class="ti ti-copy"></i>
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('offers.destroy', $offer) }}"
-                                  onsubmit="return confirm('Czy na pewno chcesz usunąć ofertę {{ $offer->offer_full_number }}?')"
-                                  style="display:inline;margin-left:4px;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        style="background:none;border:none;cursor:pointer;color:#DC2626;padding:4px 6px;border-radius:6px;display:inline-flex;align-items:center;"
-                                        title="Usuń ofertę">
-                                    <i class="ti ti-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        @if($offers->hasPages())
-            <div style="padding:16px 20px;border-top:1px solid #F0EDE6;">
-                {{ $offers->links() }}
-            </div>
-        @endif
-    @endif
-</div>
+@if($archivedOffers !== null)
+    @include('offers.partials.index-table', ['rows' => $archivedOffers, 'isArchive' => true])
+@endif
 
 @endsection
 
 @push('scripts')
 <script>
-function filterOffersTable(query) {
-    const q = query.toLowerCase();
-    document.querySelectorAll('#offers-tbody tr').forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = !q || text.includes(q) ? '' : 'none';
-    });
-}
-
-const offersSortState = {};
-function sortOffersTable(colIdx, numeric = false) {
-    const tbody = document.getElementById('offers-tbody');
-    if (!tbody) return;
-    offersSortState[colIdx] = offersSortState[colIdx] === 'asc' ? 'desc' : 'asc';
-    const dir = offersSortState[colIdx];
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    rows.sort((a, b) => {
-        let av = a.cells[colIdx]?.textContent.trim() || '';
-        let bv = b.cells[colIdx]?.textContent.trim() || '';
-        if (numeric) {
-            av = parseFloat(av.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
-            bv = parseFloat(bv.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+document.querySelectorAll('[data-offer-status-select]').forEach(select => {
+    select.addEventListener('change', () => {
+        const form = select.form;
+        if (select.value === '__add') {
+            select.value = select.dataset.currentStatus;
+            const name = window.prompt('Wpisz nazwę nowego statusu oferty:')?.trim();
+            if (!name) return;
+            form.elements.new_status.value = name;
+        } else {
+            form.elements.new_status.value = '';
         }
-        if (av < bv) return dir === 'asc' ? -1 : 1;
-        if (av > bv) return dir === 'asc' ? 1 : -1;
-        return 0;
+        form.requestSubmit();
     });
-    rows.forEach(r => tbody.appendChild(r));
-}
+});
 </script>
 @endpush
