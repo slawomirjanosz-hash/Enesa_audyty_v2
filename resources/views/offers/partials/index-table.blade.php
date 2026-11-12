@@ -46,8 +46,8 @@
                         <td style="color:#555;">{{ $offer->assignedUser?->name ?? '—' }}</td>
                         <td>
                             @if($offer->kwota_netto && $offer->kwota_netto > 0)
-                                <span style="font-family:'Lato',sans-serif;font-weight:700;">
-                                    {{ number_format($offer->kwota_netto, 2, ',', ' ') }} zł
+                                <span class="offer-amount">
+                                    {{ number_format($offer->kwota_netto, 2, ',', ' ') }}&nbsp;zł
                                 </span>
                             @else
                                 <em style="color:#aaa;font-size:12px;">— brak —</em>
@@ -59,42 +59,8 @@
                         <td style="color:#666;font-size:13px;white-space:nowrap;">
                             {{ $offer->created_at->format('d.m.Y') }}
                         </td>
-                        <td style="text-align:center;white-space:nowrap;">
-                            <a href="{{ route('offers.show', $offer) }}" class="btn-icon btn-icon-view" title="Podgląd">
-                                <i class="ti ti-eye"></i>
-                            </a>
-                            <button type="button" onclick="openPdfModal('{{ route('offers.pdf', $offer) }}', 'Oferta {{ $offer->offer_full_number }}')" class="btn-icon btn-icon-pdf" title="Podgląd PDF" style="margin-left:4px;border:none;cursor:pointer;">
-                                <i class="ti ti-file-type-pdf"></i>
-                            </button>
-                            <form method="POST" action="{{ route('offers.save-to-storage', $offer) }}" style="display:inline;margin-left:4px;">
-                                @csrf
-                                <button type="submit" class="btn-icon" style="background:#EFF6FF;color:#2563EB;border:none;cursor:pointer;" title="Zapisz na dysku">
-                                    <i class="ti ti-device-floppy"></i>
-                                </button>
-                            </form>
-                            <a href="{{ route('offers.edit', $offer) }}" class="btn-icon btn-icon-edit" title="Edytuj" style="margin-left:4px;">
-                                <i class="ti ti-pencil"></i>
-                            </a>
-                            <form method="POST" action="{{ route('offers.clone', $offer) }}" style="display:inline;margin-left:4px;">
-                                @csrf
-                                <input type="hidden" name="mode" value="offer">
-                                <button type="submit"
-                                        style="background:#F0F7F3;border:none;cursor:pointer;color:var(--green);padding:6px 7px;border-radius:6px;display:inline-flex;align-items:center;"
-                                        title="Kopiuj ofertę">
-                                    <i class="ti ti-copy"></i>
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('offers.destroy', $offer) }}"
-                                  onsubmit="return confirm('Czy na pewno chcesz usunąć ofertę {{ $offer->offer_full_number }}?')"
-                                  style="display:inline;margin-left:4px;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        style="background:none;border:none;cursor:pointer;color:#DC2626;padding:4px 6px;border-radius:6px;display:inline-flex;align-items:center;"
-                                        title="Usuń ofertę">
-                                    <i class="ti ti-trash"></i>
-                                </button>
-                            </form>
+                        <td class="offer-actions-cell">
+                            @include('offers.partials.index-actions')
                         </td>
                     </tr>
                     @endforeach

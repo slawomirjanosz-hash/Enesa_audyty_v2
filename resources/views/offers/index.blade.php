@@ -93,18 +93,22 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 30px; height: 30px;
+        width: 27px; height: 27px;
         border-radius: 7px;
         text-decoration: none;
-        font-size: 16px;
+        font-size: 15px;
+        border: 0;
+        cursor: pointer;
         transition: background .12s;
     }
-    .btn-icon-view  { color: var(--green); background: #F0F7F3; }
-    .btn-icon-view:hover  { background: #d4edde; }
     .btn-icon-edit  { color: #1D4ED8; background: #EFF6FF; }
     .btn-icon-edit:hover  { background: #DBEAFE; }
     .btn-icon-pdf   { color: #B91C1C; background: #FEF2F2; }
     .btn-icon-pdf:hover   { background: #FEE2E2; }
+    .offer-amount { font-family:'Lato',sans-serif; font-weight:700; white-space:nowrap; }
+    .offer-actions-cell { text-align:center; white-space:nowrap; }
+    .offer-actions { display:inline-flex; align-items:center; gap:4px; }
+    .offer-more-actions { width:38px; height:27px; border:1px solid #cfd8d2; border-radius:6px; background:#fff; color:var(--green); cursor:pointer; }
 
     /* ── Card wrapper ───────────────────────────────── */
     .table-card {
@@ -191,7 +195,7 @@
     .search-box input { font-size:12px; padding:6px 10px 6px 30px; border-radius:6px; border:1px solid #D0CCC0; outline:none; width:220px; font-family:'Lato',sans-serif; }
     .search-box input:focus { border-color:var(--green); }
     .search-box i { position:absolute; left:8px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px; }
-    .offer-status-select { max-width:210px; border:0; cursor:pointer; text-overflow:ellipsis; }
+    .offer-status-select { field-sizing:content; max-width:130px; padding:2px 5px; border:0; cursor:pointer; text-overflow:ellipsis; }
     .offers-table th { cursor:pointer; user-select:none; }
     .offers-table th:hover { color:var(--green); }
 </style>
@@ -279,6 +283,16 @@
 
 @push('scripts')
 <script>
+document.querySelectorAll('[data-offer-action]').forEach(select => {
+    select.addEventListener('change', () => {
+        const action = select.value;
+        select.value = '';
+        if (!action) return;
+        const forms = select.closest('.offer-actions').querySelectorAll('form[data-action]');
+        [...forms].find(form => form.dataset.action === action)?.requestSubmit();
+    });
+});
+
 document.querySelectorAll('[data-offer-status-select]').forEach(select => {
     select.addEventListener('change', () => {
         const form = select.form;
