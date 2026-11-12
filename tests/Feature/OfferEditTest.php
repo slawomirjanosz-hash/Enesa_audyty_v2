@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
-test('main price section keeps its custom name through reopening and repeated saves', function () {
+test('offer sections keep their names and collapsed state through reopening and repeated saves', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
     $company = Company::create(['name' => 'Klient nazwy wyceny', 'company_type' => 'client', 'status' => 'active']);
@@ -19,10 +19,14 @@ test('main price section keeps its custom name through reopening and repeated sa
     $name = 'Pomiary "A&B" — etap 1';
     $sections = [['id' => 'main', 'name' => $name, 'rows' => []], ['id' => 'extra', 'name' => 'Drugi etap', 'rows' => []]];
     for ($i = 0; $i < 2; $i++) {
-        $this->put(route('offers.update', $offer), ['company_id' => $company->id, 'offer_number' => $offer->offer_number, 'status' => 'w_toku', 'price_sections' => json_encode($sections), 'delegations' => '[]', 'liczba_wyjazdow' => 1, 'liczba_noc' => 0, 'liczba_osob' => 1, 'stawka_noc' => 0])
+        $sections[0]['collapsed'] = $i === 0;
+        $sections[1]['collapsed'] = $i === 1;
+        $text = [['name' => 'Zakres', 'content' => '<p>Pomiary</p>', 'collapsed' => $i === 0]];
+        $this->put(route('offers.update', $offer), ['company_id' => $company->id, 'offer_number' => $offer->offer_number, 'status' => 'w_toku', 'price_sections' => json_encode($sections), 'text_sections' => json_encode($text), 'delegations' => '[]', 'liczba_wyjazdow' => 1, 'liczba_noc' => 0, 'liczba_osob' => 1, 'stawka_noc' => 0])
             ->assertSessionHasNoErrors()->assertRedirect();
-        expect($offer->fresh()->price_sections[0]['name'])->toBe($name);
-        $this->get(route('offers.edit', $offer))->assertOk()->assertSee('id="section-main-name" value="'.e($name).'"', false);
+        $this->get(route('offers.edit', $offer))->assertOk()->assertSee('id="section-main-name" value="'.e($name).'"', false)
+            ->assertViewHas('editorPriceSections', fn ($price) => $price === $sections)
+            ->assertViewHas('editorTextSections', fn ($text) => ($text[0]['collapsed'] ?? false) === ($i === 0) && $text[0]['content'] === '<p>Pomiary</p>');
     }
 });
 

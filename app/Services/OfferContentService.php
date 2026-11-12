@@ -197,6 +197,9 @@ class OfferContentService
             if (array_key_exists('photos', $section)) {
                 $normalized[array_key_last($normalized)]['photos'] = $section['photos'];
             }
+            if (($section['collapsed'] ?? false) === true) {
+                $normalized[array_key_last($normalized)]['collapsed'] = true;
+            }
         }
 
         return $normalized;

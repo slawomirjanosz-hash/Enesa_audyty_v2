@@ -5,6 +5,7 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <style>
+.offer-section-collapsed > :not(.ed-card-header) { display:none !important; }
 .offer-section-photos{padding:10px 14px;border-top:1px solid #e5e1d8}.offer-section-photos [role=status]{margin-left:8px;font-size:12px}.offer-section-photo-list{display:flex;flex-wrap:wrap;gap:8px}.offer-section-photo-list figure{margin:8px 0 0;display:grid;gap:4px}.offer-section-photo-list img{width:104px;height:74px;object-fit:contain;background:#f4f1ea;border-radius:6px}
 #offer-form:has(input[name="show_total"][type="checkbox"]:not(:checked)) .section-price-total { display: none; }
 /* ── Editor topbar ─────────────────────────────────── */
@@ -537,7 +538,8 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @push('scripts')
 <script src="{{asset('js/offer-validity.js')}}" defer></script>
 <script src="{{asset('js/offer-section-photos.js')}}"></script>
-<script src="{{asset('js/offer-drafts.js')}}?v=2" defer></script>
+<script src="{{asset('js/offer-section-collapse.js')}}"></script>
+<script src="{{asset('js/offer-drafts.js')}}?v=3" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
 let priceSections = null;
@@ -806,6 +808,7 @@ function addSection(sectionData) {
     `;
     document.getElementById('dynamic-sections').appendChild(card);
     offerSectionPhotos.mount(card, sectionData?.photos);
+    offerSectionCollapse.mount(card, sectionData?.collapsed);
     if (sectionData?.rows?.length) {
         sectionData.rows.forEach(r => addRow('tbody-' + sid, r));
     } else {
@@ -830,12 +833,14 @@ function collectSections() {
     document.querySelectorAll('#tbody-main tr').forEach(tr => main.rows.push(collectRow(tr)));
     const mainPhotos = offerSectionPhotos.collect(document.getElementById('section-main'));
     if (mainPhotos.length) main.photos = mainPhotos;
+    if (offerSectionCollapse.isCollapsed(document.getElementById('section-main'))) main.collapsed = true;
     sections.push(main);
     document.querySelectorAll('#dynamic-sections .ed-card').forEach(card => {
         const sec = { id: card.id.replace('section-', ''), name: card.querySelector('.section-name-input')?.value || 'Sekcja', rows: [] };
         card.querySelectorAll('tbody tr').forEach(tr => sec.rows.push(collectRow(tr)));
         const photos = offerSectionPhotos.collect(card);
         if (photos.length) sec.photos = photos;
+        if (offerSectionCollapse.isCollapsed(card)) sec.collapsed = true;
         sections.push(sec);
     });
     return sections;
@@ -920,6 +925,7 @@ function addTextSection(sectionData) {
     `;
     document.getElementById('text-sections-container').appendChild(card);
     offerSectionPhotos.mount(card, sectionData?.photos);
+    offerSectionCollapse.mount(card, sectionData?.collapsed);
 
     const toolbarOptions = [['bold','italic','underline'],[{header:[2,3,false]}],[{list:'ordered'},{list:'bullet'}],['clean']];
     textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { table: true, toolbar: toolbarOptions } });
@@ -1072,7 +1078,7 @@ function collectTextSections() {
         const content = textQuills[sid] ? textQuills[sid].root.innerHTML : '';
         const placement = card.querySelector('.text-section-placement')?.value || 'before_price';
         const photos = offerSectionPhotos.collect(card);
-        sections.push({ name, content, placement, ...(photos.length ? {photos} : {}) });
+        sections.push({ name, content, placement, ...(photos.length ? {photos} : {}), ...(offerSectionCollapse.isCollapsed(card) ? {collapsed: true} : {}) });
     });
     return sections;
 }
@@ -1153,6 +1159,7 @@ document.addEventListener('DOMContentLoaded', function () {
 window.scrollTo(0, 0);
 addRow('tbody-main');
 offerSectionPhotos.mount(document.getElementById('section-main'));
+offerSectionCollapse.mount(document.getElementById('section-main'));
 DEFAULT_TEXT_SECTIONS.forEach(s => addTextSection(s));
 toggleUnitPrices(document.getElementById('show-unit-toggle'));
 delegRender();
@@ -1309,6 +1316,7 @@ function pickTemplate(templateId) {
                     if (i === 0) {
                         document.getElementById('section-main-name').value = sec.name || 'Wycena ogólna';
                         offerSectionPhotos.mount(document.getElementById('section-main'), sec.photos);
+                        offerSectionCollapse.mount(document.getElementById('section-main'), sec.collapsed);
                         (sec.rows || []).forEach(r => addRow('tbody-main', r));
                     } else {
                         addSection(sec);

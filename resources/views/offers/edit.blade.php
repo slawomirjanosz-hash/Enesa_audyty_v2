@@ -5,6 +5,7 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <style>
+.offer-section-collapsed > :not(.ed-card-header) { display:none !important; }
 .offer-section-photos{padding:10px 14px;border-top:1px solid #e5e1d8}.offer-section-photos [role=status]{margin-left:8px;font-size:12px}.offer-section-photo-list{display:flex;flex-wrap:wrap;gap:8px}.offer-section-photo-list figure{margin:8px 0 0;display:grid;gap:4px}.offer-section-photo-list img{width:104px;height:74px;object-fit:contain;background:#f4f1ea;border-radius:6px}
 #offer-form:has(input[name="show_total"][type="checkbox"]:not(:checked)) .section-price-total { display: none; }
 /* â”€â”€ Editor topbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -714,7 +715,8 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @push('scripts')
 <script src="{{asset('js/offer-validity.js')}}" defer></script>
 <script src="{{asset('js/offer-section-photos.js')}}"></script>
-<script src="{{asset('js/offer-drafts.js')}}?v=2" defer></script>
+<script src="{{asset('js/offer-section-collapse.js')}}"></script>
+<script src="{{asset('js/offer-drafts.js')}}?v=3" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -944,6 +946,7 @@ function addSection(sectionData) {
     `;
     container.appendChild(card);
     offerSectionPhotos.mount(card, sectionData?.photos);
+    offerSectionCollapse.mount(card, sectionData?.collapsed);
 
     // Apply current unit visibility
     const unitToggle = document.getElementById('show-unit-toggle');
@@ -984,6 +987,7 @@ function collectSections() {
     });
     const mainPhotos = offerSectionPhotos.collect(document.getElementById('section-main'));
     if (mainPhotos.length) mainSection.photos = mainPhotos;
+    if (offerSectionCollapse.isCollapsed(document.getElementById('section-main'))) mainSection.collapsed = true;
     sections.push(mainSection);
 
     // Dynamic sections
@@ -995,6 +999,7 @@ function collectSections() {
         });
         const photos = offerSectionPhotos.collect(card);
         if (photos.length) sec.photos = photos;
+        if (offerSectionCollapse.isCollapsed(card)) sec.collapsed = true;
         sections.push(sec);
     });
 
@@ -1192,6 +1197,7 @@ function collectRow(tr) {
 document.addEventListener('DOMContentLoaded', function () {
     // Load main section rows
     offerSectionPhotos.mount(document.getElementById('section-main'), priceSections[0]?.photos);
+    offerSectionCollapse.mount(document.getElementById('section-main'), priceSections[0]?.collapsed);
     const mainRows = priceSections[0]?.rows || [];
     if (mainRows.length > 0) {
         mainRows.forEach(r => addRow('tbody-main', r));
@@ -1521,6 +1527,7 @@ function addTextSection(sectionData) {
     `;
     document.getElementById('text-sections-container').appendChild(card);
     offerSectionPhotos.mount(card, sectionData?.photos);
+    offerSectionCollapse.mount(card, sectionData?.collapsed);
 
     const toolbarOptions = [['bold','italic','underline'],[{header:[2,3,false]}],[{list:'ordered'},{list:'bullet'}],['clean']];
     textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { table: true, toolbar: toolbarOptions } });
@@ -1667,7 +1674,7 @@ function collectTextSections() {
         const content = textQuills[sid] ? textQuills[sid].root.innerHTML : '';
         const placement = card.querySelector('.text-section-placement')?.value || 'before_price';
         const photos = offerSectionPhotos.collect(card);
-        sections.push({ name, content, placement, ...(photos.length ? {photos} : {}) });
+        sections.push({ name, content, placement, ...(photos.length ? {photos} : {}), ...(offerSectionCollapse.isCollapsed(card) ? {collapsed: true} : {}) });
     });
     return sections;
 }
