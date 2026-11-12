@@ -144,7 +144,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 
 @section('content')
 @php
-    $validUntilDefault = now()->addDays(30)->format('Y-m-d');
+    $validUntilDefault = now()->addDays(\App\Models\Offer::DEFAULT_VALIDITY_DAYS)->format('Y-m-d');
 @endphp
 
 {{-- ═══ MODAL WYBORU SZABLONU ═══ --}}
@@ -485,6 +485,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
                 <label class="field-label">Ważna do <span style="color:#DC2626;">*</span></label>
                 <input type="date" name="valid_until" class="field-input" 
                        value="{{ old('valid_until', $validUntilDefault) }}" required>
+                @error('valid_until')<p role="alert" style="color:#B91C1C;">{{ $message }}</p>@enderror
             </div>
         </div>
     </div>
@@ -534,6 +535,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @endsection
 
 @push('scripts')
+<script src="{{asset('js/offer-validity.js')}}" defer></script>
 <script src="{{asset('js/offer-section-photos.js')}}"></script>
 <script src="{{asset('js/offer-drafts.js')}}?v=2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>

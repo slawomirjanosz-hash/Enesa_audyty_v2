@@ -488,19 +488,6 @@ th, td { margin: 0; }
     </div>
 @endforeach
 
-{{-- TERMIN WAŻNOŚCI --}}
-@if($offer->valid_until)
-<div class="sec-block" style="page-break-inside: avoid;">
-    <table class="sec-hdr-tbl"><tr>
-        <td class="sec-lbl-text">Termin ważności oferty</td>
-        <td class="sec-lbl-line"></td>
-    </tr></table>
-    <div class="sec-content">
-        Niniejsza oferta ważna jest do dnia <strong>{{ $offer->valid_until->format('d.m.Y') }}</strong>.
-    </div>
-</div>
-@endif
-
 {{-- OPIS DODATKOWY --}}
 @if(!empty($offer->additional_description))
 <div class="sec-block">
@@ -553,7 +540,7 @@ th, td { margin: 0; }
         @if($companySettings?->nip)NIP: {{ $companySettings->nip }} · @endif
         @if($companySettings?->email){{ $companySettings->email }}@endif
         <br>
-        Oferta ważna 30 dni od daty wystawienia. Wszystkie ceny podano w kwotach netto.
+        {{ $offer->validityStatement() }} Wszystkie ceny podano w kwotach netto.
     </td>
     <td class="sign-cell">
         @if(!empty($signature))

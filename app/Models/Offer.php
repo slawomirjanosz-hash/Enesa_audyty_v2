@@ -7,11 +7,33 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class Offer extends Model
 {
     use SoftDeletes;
+
+    public const DEFAULT_VALIDITY_DAYS = 30;
+
+    public function effectiveValidUntil(): Carbon
+    {
+        $issued = ($this->created_at ?? now())->copy()->startOfDay();
+        $until = $this->valid_until;
+
+        return $until && $until->gte($issued) ? $until : $issued->addDays(self::DEFAULT_VALIDITY_DAYS);
+    }
+
+    public function validityStatement(): string
+    {
+        $issued = ($this->created_at ?? now())->copy()->startOfDay();
+        $until = $this->effectiveValidUntil();
+        $date = $until->format('d.m.Y');
+
+        return $until->isSameDay($issued->addDays(self::DEFAULT_VALIDITY_DAYS))
+            ? 'Oferta ważna 30 dni od daty wystawienia (do '.$date.').'
+            : 'Oferta ważna do dnia '.$date.'.';
+    }
 
     protected $fillable = [
         'offer_number',

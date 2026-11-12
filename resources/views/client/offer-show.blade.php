@@ -435,10 +435,10 @@
                 <span style="font-size:16px;font-weight:700;color:var(--green);">{{ $offer->offer_title }}</span>
             </div>
         @endif
-        @if($offer->valid_until)
+        @if($offer->created_at)
             <div class="meta-item">
                 <label>Ważna do</label>
-                <span>{{ $offer->valid_until->format('d.m.Y') }}</span>
+                <span>{{ $offer->effectiveValidUntil()->format('d.m.Y') }}</span>
             </div>
         @endif
         @if($offer->assignedUser)

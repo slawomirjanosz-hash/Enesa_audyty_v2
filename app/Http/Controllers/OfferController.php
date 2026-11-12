@@ -263,6 +263,7 @@ class OfferController extends Controller
             $delegations = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
         }
 
+        $issuedOn = Carbon::parse($data['created_at'] ?? now())->startOfDay();
         $offer = Offer::create([
             'company_id' => $data['company_id'],
             'offer_number' => $data['offer_number'],
@@ -273,7 +274,7 @@ class OfferController extends Controller
             'assigned_user_id' => $data['assigned_user_id'] ?? null,
             'created_by_id' => auth()->id(),
             'kwota_netto' => $data['kwota_netto'] ?? null,
-            'valid_until' => $data['valid_until'] ?? null,
+            'valid_until' => $this->resolveValidity($issuedOn, $data['valid_until'] ?? null),
             'notes' => $data['notes'] ?? null,
             'additional_description' => $data['additional_description'] ?? null,
             'offer_template_version_id' => $data['offer_template_version_id'] ?? null,
@@ -348,7 +349,10 @@ class OfferController extends Controller
     {
         $this->authorize('update', $offer);
         $editorCreatedAt = $this->safeEditorDate($offer, 'created_at') ?? now();
-        $editorValidUntil = $this->safeEditorDate($offer, 'valid_until') ?? now()->addDays(30);
+        $editorValidUntil = $this->safeEditorDate($offer, 'valid_until');
+        if (! $editorValidUntil || $editorValidUntil->lt($editorCreatedAt->copy()->startOfDay())) {
+            $editorValidUntil = $editorCreatedAt->copy()->addDays(Offer::DEFAULT_VALIDITY_DAYS);
+        }
         $editorPriceSections = $this->safeEditorArray($offer, 'price_sections');
         $editorTextSections = $this->safeEditorArray($offer, 'text_sections');
         $editorDelegations = $this->safeEditorArray($offer, 'delegations');
@@ -385,6 +389,16 @@ class OfferController extends Controller
             'editorDelegations',
             'editorUsesLegacyDelegation',
         ));
+    }
+
+    private function resolveValidity(Carbon $issuedOn, ?string $value): string
+    {
+        $until = $value ? Carbon::parse($value)->startOfDay() : $issuedOn->copy()->addDays(Offer::DEFAULT_VALIDITY_DAYS);
+        if ($until->lt($issuedOn)) {
+            throw ValidationException::withMessages(['valid_until' => 'Termin ważności nie może być wcześniejszy od daty wystawienia.']);
+        }
+
+        return $until->toDateString();
     }
 
     private function safeEditorDate(Offer $offer, string $attribute): ?Carbon
@@ -538,6 +552,7 @@ class OfferController extends Controller
             }
         }
 
+        $issuedOn = Carbon::parse($data['created_at'] ?? $this->safeEditorDate($offer, 'created_at') ?? now())->startOfDay();
         $offer->update([
             'signature_user_id' => $signatureUserId,
             'company_id' => $offer->is_template ? null : $data['company_id'],
@@ -548,7 +563,7 @@ class OfferController extends Controller
             'status' => $data['status'],
             'assigned_user_id' => $data['assigned_user_id'] ?? null,
             'kwota_netto' => $data['kwota_netto'] ?? null,
-            'valid_until' => $data['valid_until'] ?? null,
+            'valid_until' => $this->resolveValidity($issuedOn, $data['valid_until'] ?? null),
             'notes' => $data['notes'] ?? null,
             'additional_description' => $data['additional_description'] ?? null,
             'offer_template_version_id' => $data['offer_template_version_id'] ?? null,
@@ -1086,17 +1101,6 @@ class OfferController extends Controller
             $addTextSection($textSection);
         }
 
-        // ── TERMIN WAŻNOŚCI ──────────────────────────────────────────────────
-        if ($offer->valid_until) {
-            $addSectionHeader('Termin ważności oferty');
-            $section->addText(
-                'Niniejsza oferta ważna jest do dnia '.Carbon::parse($offer->valid_until)->format('d.m.Y').'.',
-                ['size' => 11],
-                ['spaceAfter' => Converter::pointToTwip(10)]
-            );
-            $section->addTextBreak(1);
-        }
-
         // ── STOPKA ───────────────────────────────────────────────────────────
         if ($signature = $this->offerContent->signatureFor($offer)) {
             $section->addImage($signature['bytes'], [
@@ -1120,7 +1124,7 @@ class OfferController extends Controller
             ['alignment' => Jc::CENTER]
         );
         $footer->addText(
-            'Oferta ważna 30 dni od daty wystawienia. Wszystkie ceny podano w kwotach netto.',
+            $offer->validityStatement().' Wszystkie ceny podano w kwotach netto.',
             ['size' => 8, 'color' => '999999', 'italic' => true],
             ['alignment' => Jc::CENTER]
         );
@@ -1365,6 +1369,7 @@ Formatowanie HTML:
         $newOffer->offer_number = Offer::generateNumber($isTemplate);
         $newOffer->offer_full_number = $newOffer->offer_number;
         $newOffer->status = 'w_toku';
+        $newOffer->valid_until = now()->addDays(Offer::DEFAULT_VALIDITY_DAYS)->toDateString();
         $newOffer->is_template = $isTemplate;
         $newOffer->created_by_id = auth()->id();
         $newOffer->kwota_netto = $offer->kwota_netto;

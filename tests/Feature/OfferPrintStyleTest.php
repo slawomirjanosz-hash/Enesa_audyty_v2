@@ -17,16 +17,18 @@ test('offer exports use a half strength company color and natural Polish heading
         'offer_title' => 'Przegląd urządzeń', 'valid_until' => '2026-12-31', 'show_unit_prices' => true,
         'price_sections' => [['name' => 'Pomiary', 'rows' => [['opis' => 'Usługa', 'ilosc' => 1, 'jedn' => 'szt.', 'cena_jedn' => 100, 'z_narzutem' => 100]]]],
     ]);
+    $offer->forceFill(['created_at' => '2026-11-12 12:00:00'])->save();
     $html = view('offers.pdf', ['offer' => $offer->load(['company', 'assignedUser', 'offerDelegation']), 'companySettings' => $settings, 'logoBase64' => null, 'sectionsOnly' => false])->render();
-    expect($html)->toContain('background: #90A0B0;', 'border-spacing: 0;', 'Termin ważności oferty')
+    expect($html)->toContain('background: #90A0B0;', 'border-spacing: 0;', 'Oferta ważna do dnia 31.12.2026.')
         ->not->toContain('text-transform: uppercase', 'border-collapse:separate', '#1A4D3A');
     expect($html)->toContain('<th class="c" style="width:10%">Ilość</th>', '<th class="c" style="width:12%">Jedn.</th>', '<td class="c">1</td>', '<td class="c">szt.</td>', '<td class="r"><strong>100,00 zł</strong></td>');
     $response = $this->actingAs($admin)->get(route('offers.download-word', $offer))->assertOk();
     $zip = new ZipArchive;
     expect($zip->open($response->baseResponse->getFile()->getPathname()))->toBeTrue();
     $xml = $zip->getFromName('word/document.xml');
+    expect($zip->getFromName('word/footer1.xml'))->toContain('Oferta ważna do dnia 31.12.2026.');
     $zip->close();
-    expect($xml)->toContain('w:fill="90A0B0"', 'Termin ważności oferty', 'w:tblCellSpacing w:w="0"')
+    expect($xml)->toContain('w:fill="90A0B0"', 'w:tblCellSpacing w:w="0"')
         ->not->toContain('TERMIN WAżNOśCI', 'w:fill="1A4D3A"');
     $document = new DOMDocument;
     $document->loadXML($xml);
