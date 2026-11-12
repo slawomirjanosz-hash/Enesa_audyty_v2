@@ -484,6 +484,7 @@ class OfferController extends Controller
             'content_payment' => ['nullable', 'string'],
             'show_unit_prices' => ['nullable'],
             'show_total' => ['sometimes', 'boolean'],
+            'use_signature' => ['sometimes', 'boolean'],
             'price_sections' => ['nullable', 'string'],
             'text_sections' => ['nullable', 'string'],
             'delegations' => ['nullable', 'string'],
@@ -524,7 +525,21 @@ class OfferController extends Controller
             $delegations = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
         }
 
+        $signatureUserId = $offer->signature_user_id;
+        if (array_key_exists('use_signature', $data)) {
+            $actor = $request->user();
+            if ($request->boolean('use_signature')) {
+                if (! $actor->signature_data || ($signatureUserId && (int) $signatureUserId !== $actor->id)) {
+                    throw ValidationException::withMessages(['use_signature' => 'Możesz dołączyć wyłącznie własny zapisany podpis do niepodpisanej oferty.']);
+                }
+                $signatureUserId = $actor->id;
+            } elseif ((int) $signatureUserId === $actor->id) {
+                $signatureUserId = null;
+            }
+        }
+
         $offer->update([
+            'signature_user_id' => $signatureUserId,
             'company_id' => $offer->is_template ? null : $data['company_id'],
             'offer_number' => $data['offer_number'],
             'offer_slug' => $data['offer_slug'] ?? null,
@@ -721,7 +736,8 @@ class OfferController extends Controller
 
         $logoBase64 = $companySettings?->logoDataUri();
 
-        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64', 'sectionsOnly'))->render();
+        $signature = $this->offerContent->signatureFor($offer);
+        $html = view('offers.pdf', compact('offer', 'companySettings', 'logoBase64', 'sectionsOnly', 'signature'))->render();
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
@@ -1082,6 +1098,15 @@ class OfferController extends Controller
         }
 
         // ── STOPKA ───────────────────────────────────────────────────────────
+        if ($signature = $this->offerContent->signatureFor($offer)) {
+            $section->addImage($signature['bytes'], [
+                'width' => max(1, (int) round($signature['width'] * 0.75)),
+                'height' => max(1, (int) round($signature['height'] * 0.75)),
+                'alignment' => Jc::RIGHT,
+            ]);
+            $section->addText($signature['name'], ['size' => 9], ['alignment' => Jc::RIGHT]);
+        }
+
         $footer = $section->addFooter();
         $footerCompanyData = array_filter([
             $ownerName,
@@ -1336,7 +1361,7 @@ Formatowanie HTML:
 
         $isTemplate = $data['mode'] === 'template';
 
-        $newOffer = $offer->replicate();
+        $newOffer = $offer->replicate(['signature_user_id']);
         $newOffer->offer_number = Offer::generateNumber($isTemplate);
         $newOffer->offer_full_number = $newOffer->offer_number;
         $newOffer->status = 'w_toku';

@@ -568,8 +568,12 @@ th, td { margin: 0; }
         Oferta ważna 30 dni od daty wystawienia. Wszystkie ceny podano w kwotach netto.
     </td>
     <td class="sign-cell">
-        <div class="sign-line-div"></div>
-        <div class="sign-label">{{ $offer->assignedUser->name ?? 'Przedstawiciel firmy' }}<br>Podpis i pieczęć</div>
+        @if(!empty($signature))
+            <img src="{{ $signature['source'] }}" width="{{ $signature['width'] }}" height="{{ $signature['height'] }}" alt="Podpis">
+        @else
+            <div class="sign-line-div"></div>
+        @endif
+        <div class="sign-label">{{ $signature['name'] ?? $offer->assignedUser->name ?? 'Przedstawiciel firmy' }}<br>Podpis i pieczęć</div>
     </td>
 </tr>
 </table>

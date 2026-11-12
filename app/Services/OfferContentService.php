@@ -8,6 +8,37 @@ use Illuminate\Validation\ValidationException;
 
 class OfferContentService
 {
+    public function signatureFor(Offer $offer): ?array
+    {
+        $signer = $offer->signatureUser;
+        if (! $signer?->signature_data) {
+            return null;
+        }
+
+        $raw = base64_decode($signer->signature_data, true);
+        $size = $raw === false ? false : @getimagesizefromstring($raw);
+        if ($size === false || $size[0] < 1 || $size[1] < 1 || $size[0] * $size[1] > 16000000
+            || ! in_array($size[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+            return null;
+        }
+        $image = @imagecreatefromstring($raw);
+        if ($image === false) {
+            return null;
+        }
+
+        $scale = min(1, 180 / $size[0], 64 / $size[1]);
+        $width = max(1, (int) round($size[0] * $scale));
+        $height = max(1, (int) round($size[1] * $scale));
+        $small = imagecreatetruecolor($width, $height);
+        imagefill($small, 0, 0, imagecolorallocate($small, 255, 255, 255));
+        imagecopyresampled($small, $image, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
+        ob_start();
+        imagepng($small);
+        $bytes = ob_get_clean();
+
+        return ['name' => $signer->name, 'bytes' => $bytes, 'source' => 'data:image/png;base64,'.base64_encode($bytes), 'width' => $width, 'height' => $height];
+    }
+
     public function sectionPhotos(array $section): array
     {
         $photos = [];

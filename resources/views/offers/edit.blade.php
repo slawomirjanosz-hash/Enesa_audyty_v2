@@ -649,6 +649,14 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 <input type="hidden" name="czas_dojazdu_min" id="h-czas">
 <input type="hidden" name="czy_kilkudniowy"  id="h-kilkudniowy" value="0">
 
+@if(auth()->user()->signature_data && (!$offer->signature_user_id || (int) $offer->signature_user_id === auth()->id()))
+    <div class="ed-card" style="padding:14px 16px;">
+        <input type="hidden" name="use_signature" value="0">
+        <label><input type="checkbox" name="use_signature" value="1" @checked(old('use_signature', (bool) $offer->signature_user_id))> Pokaż mój zapisany podpis na ofercie</label>
+        @error('use_signature')<p role="alert" style="color:#B91C1C;">{{ $message }}</p>@enderror
+    </div>
+@endif
+
 </form>
 
 {{-- ═══ MODAL: ZAPISZ JAKO... ═══ --}}

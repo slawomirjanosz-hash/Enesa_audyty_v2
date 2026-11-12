@@ -22,6 +22,7 @@ class Offer extends Model
         'won_as',
         'company_id',
         'assigned_user_id',
+        'signature_user_id',
         'created_by_id',
         'offer_template_version_id',
         'offer_request_id',
@@ -72,6 +73,11 @@ class Offer extends Model
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    public function signatureUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'signature_user_id');
     }
 
     public function createdBy(): BelongsTo
