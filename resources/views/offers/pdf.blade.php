@@ -170,50 +170,38 @@ th, td { margin: 0; }
 <table style="width:100%; border-collapse:collapse; border-spacing:0; margin-bottom:22px;">
 <tr>
     {{-- Wystawca --}}
-    <td style="width:50%; padding:0; vertical-align:top;">
-        <table style="width:100%; border-collapse:collapse;">
-        <tr>
-            <td class="party-accent">&nbsp;</td>
-            <td class="party-inner">
-                <div class="party-lbl">Wystawca oferty</div>
-                <div class="party-name">{{ $companySettings->name ?? config('app.name', 'Firma') }}</div>
-                <div class="party-det">
-                    @if($companySettings?->address){{ $companySettings->address }}<br>@endif
-                    @if($companySettings?->postcode || $companySettings?->city)
-                        {{ trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')) }}<br>
-                    @endif
-                    @if($companySettings?->nip)NIP: {{ $companySettings->nip }}<br>@endif
-                    @if($companySettings?->phone)tel. {{ $companySettings->phone }}<br>@endif
-                    @if($companySettings?->email){{ $companySettings->email }}<br>@endif
-                    @if($offer->assignedUser)
-                        Opiekun: {{ $offer->assignedUser->name }}
-                    @endif
-                </div>
-            </td>
-        </tr>
-        </table>
+    <td class="party-accent">&nbsp;</td>
+    <td class="party-inner" style="width:48%;">
+        <div class="party-lbl">Wystawca oferty</div>
+        <div class="party-name">{{ $companySettings->name ?? config('app.name', 'Firma') }}</div>
+        <div class="party-det">
+            @if($companySettings?->address){{ $companySettings->address }}<br>@endif
+            @if($companySettings?->postcode || $companySettings?->city)
+                {{ trim(($companySettings->postcode ?? '').' '.($companySettings->city ?? '')) }}<br>
+            @endif
+            @if($companySettings?->nip)NIP: {{ $companySettings->nip }}<br>@endif
+            @if($companySettings?->phone)tel. {{ $companySettings->phone }}<br>@endif
+            @if($companySettings?->email){{ $companySettings->email }}<br>@endif
+            @if($offer->assignedUser)
+                Opiekun: {{ $offer->assignedUser->name }}
+            @endif
+        </div>
     </td>
 
-    <td style="width:12px;"></td>
+    <td style="width:12px; padding:0;"></td>
 
     {{-- Odbiorca --}}
-    <td style="width:50%; padding:0; vertical-align:top;">
-        <table style="width:100%; border-collapse:collapse;">
-        <tr>
-            <td class="party-accent">&nbsp;</td>
-            <td class="party-inner">
-                <div class="party-lbl">Odbiorca oferty</div>
-                <div class="party-name">{{ $offer->company->name ?? '—' }}</div>
-                <div class="party-det">
-                    @if($offer->company->address ?? false){{ $offer->company->address }}<br>@endif
-                    @if($offer->company->city ?? false){{ $offer->company->city }}<br>@endif
-                    @if($offer->company->nip ?? false)NIP: {{ $offer->company->nip }}<br>@endif
-                    @if($offer->company->email ?? false){{ $offer->company->email }}<br>@endif
-                    @if($offer->company->phone ?? false)tel. {{ $offer->company->phone }}@endif
-                </div>
-            </td>
-        </tr>
-        </table>
+    <td class="party-accent">&nbsp;</td>
+    <td class="party-inner" style="width:48%;">
+        <div class="party-lbl">Odbiorca oferty</div>
+        <div class="party-name">{{ $offer->company->name ?? '—' }}</div>
+        <div class="party-det">
+            @if($offer->company->address ?? false){{ $offer->company->address }}<br>@endif
+            @if($offer->company->city ?? false){{ $offer->company->city }}<br>@endif
+            @if($offer->company->nip ?? false)NIP: {{ $offer->company->nip }}<br>@endif
+            @if($offer->company->email ?? false){{ $offer->company->email }}<br>@endif
+            @if($offer->company->phone ?? false)tel. {{ $offer->company->phone }}@endif
+        </div>
     </td>
 </tr>
 </table>
