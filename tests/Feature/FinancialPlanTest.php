@@ -18,6 +18,12 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -85,24 +91,24 @@ test('Excel exports contain numeric chart values and preserve literal source tex
     addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'user_id' => $this->manager->id, 'salary_cost' => 100, 'car_cost' => 25]);
     addFinancialLine($this->plan, $this->manager, ['name' => '=HYPERLINK("https://example.invalid")']);
     $response = $this->actingAs($this->manager)->get(route('financial-plans.export', [$this->plan, 'section' => $section, 'scenario' => 'base']))->assertOk()->assertDownload('plan-'.$this->plan->id.'-'.$section.'.xlsx')->assertHeader('Cache-Control', 'no-store, private');
-    \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder(new \PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder);
-    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+    Cell::setValueBinder(new DefaultValueBinder);
+    $reader = new Xlsx;
     $reader->setIncludeCharts(true);
     $book = $reader->load($response->baseResponse->getFile()->getPathname());
     $sheet = $book->getActiveSheet();
     expect($sheet->getCell('B4')->getValue())->toBe('100% kwot z harmonogramu');
     if ($section === 'sources') {
         expect($sheet->getCell('A9')->getValue())->toStartWith('=HYPERLINK')
-            ->and($sheet->getCell('A9')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
+            ->and($sheet->getCell('A9')->getDataType())->toBe(DataType::TYPE_STRING)
             ->and($sheet->getCell('J8')->getCalculatedValue())->toEqual(1500)
-            ->and($sheet->getCell('J8')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
+            ->and($sheet->getCell('J8')->getDataType())->toBe(DataType::TYPE_FORMULA);
     } else {
         expect($sheet->getChartCount())->toBe(1);
         if ($section !== 'result') {
             expect($sheet->getCell('B8')->getCalculatedValue())->toEqual(100)
                 ->and($sheet->getCell('D8')->getCalculatedValue())->toEqual(0)
                 ->and($sheet->getCell('E9')->getCalculatedValue())->toEqual($section === 'cost-cumulative' ? 250 : 125)
-                ->and($sheet->getCell('E9')->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
+                ->and($sheet->getCell('E9')->getDataType())->toBe(DataType::TYPE_FORMULA);
         }
     }
     $book->disconnectWorksheets();
@@ -118,7 +124,7 @@ test('Excel exports enforce access and omit inaccessible sources', function () {
     $this->actingAs($viewer)->get($url)->assertForbidden();
     $this->department->planners()->attach($viewer);
     $response = $this->get($url)->assertOk();
-    $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($response->baseResponse->getFile()->getPathname());
+    $book = IOFactory::load($response->baseResponse->getFile()->getPathname());
     expect(json_encode($book->getActiveSheet()->toArray()))->not->toContain('Tajny projekt eksportu');
     expect($book->getActiveSheet()->getCell('B5')->getValue())->toContain('Sumy częściowe');
     $book->disconnectWorksheets();
@@ -129,8 +135,8 @@ test('forecast cash and people tables export their current numeric values', func
     addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'user_id' => $this->manager->id, 'salary_cost' => 100, 'car_cost' => 25]);
     addFinancialLine($this->plan, $this->manager);
     $response = $this->actingAs($this->manager)->get(route('financial-plans.export', [$this->plan, 'section' => $section]))->assertOk()->assertDownload('plan-'.$this->plan->id.'-'.$section.'.xlsx');
-    \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder(new \PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder);
-    $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($response->baseResponse->getFile()->getPathname());
+    Cell::setValueBinder(new DefaultValueBinder);
+    $book = IOFactory::load($response->baseResponse->getFile()->getPathname());
     $sheet = $book->getActiveSheet();
     if ($section === 'forecast') {
         expect($sheet->getCell('A10')->getValue())->toBe('Pozostała planowana sprzedaż')
@@ -154,12 +160,12 @@ test('exported formulas recalculate after changing their input cells', function 
     addFinancialLine($this->plan, $this->manager, ['kind' => 'person', 'user_id' => $this->manager->id, 'salary_cost' => 100, 'car_cost' => 25]);
     addFinancialLine($this->plan, $this->manager);
     $response = $this->actingAs($this->manager)->get(route('financial-plans.export', [$this->plan, 'section' => $section]))->assertOk();
-    \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder(new \PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder);
-    $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($response->baseResponse->getFile()->getPathname());
+    Cell::setValueBinder(new DefaultValueBinder);
+    $book = IOFactory::load($response->baseResponse->getFile()->getPathname());
     $sheet = $book->getActiveSheet();
-    expect($sheet->getCell($output)->getDataType())->toBe(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_FORMULA);
+    expect($sheet->getCell($output)->getDataType())->toBe(DataType::TYPE_FORMULA);
     $sheet->setCellValue($input, $value);
-    \PhpOffice\PhpSpreadsheet\Calculation\Calculation::getInstance($book)->clearCalculationCache();
+    Calculation::getInstance($book)->clearCalculationCache();
     expect((float) $sheet->getCell($output)->getCalculatedValue())->toEqualWithDelta($expected, 0.00001);
     $book->disconnectWorksheets();
 })->with([

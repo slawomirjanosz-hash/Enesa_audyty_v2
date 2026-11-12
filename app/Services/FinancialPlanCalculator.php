@@ -338,6 +338,7 @@ class FinancialPlanCalculator
 
         return ['opening' => $initialBalance, 'balance' => $months ? $balance : null, 'received' => $received, 'spent' => $spent, 'months' => $months, 'transactions' => $transactions, 'warnings' => array_values(array_unique($warnings)), 'complete' => $initialBalance !== null && $sourcesComplete && ! $warnings, 'asOf' => $cutoff->toDateString()];
     }
+
     private function emptyRows(array $keys, array $months): array
     {
         return array_fill_keys($keys, array_fill_keys(array_keys($months), 0));
