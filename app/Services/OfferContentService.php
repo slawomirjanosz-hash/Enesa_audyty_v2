@@ -4,9 +4,59 @@ namespace App\Services;
 
 use App\Models\Offer;
 use DOMDocument;
+use Illuminate\Validation\ValidationException;
 
 class OfferContentService
 {
+    public function sectionPhotos(array $section): array
+    {
+        $photos = [];
+        foreach (array_slice((array) ($section['photos'] ?? []), 0, 4) as $source) {
+            $photo = $this->photo($source);
+            if ($photo !== null) {
+                $photos[] = $photo;
+            }
+        }
+
+        return $photos;
+    }
+
+    public function validateSectionPhotos(?array $priceSections, ?array $textSections): void
+    {
+        $count = 0;
+        foreach (array_merge($priceSections ?? [], $textSections ?? []) as $section) {
+            $photos = $section['photos'] ?? [];
+            if (! is_array($photos) || count($photos) > 4 || ($count += count($photos)) > 8) {
+                throw ValidationException::withMessages(['text_sections' => 'Możesz dodać do 4 zdjęć w sekcji i 8 w ofercie.']);
+            }
+            foreach ($photos as $source) {
+                $photo = $this->photo($source);
+                if ($photo === null || @imagecreatefromstring($photo['bytes']) === false) {
+                    throw ValidationException::withMessages(['text_sections' => 'Nie można odczytać zdjęcia w sekcji. Dodaj je ponownie.']);
+                }
+            }
+        }
+    }
+
+    private function photo(mixed $source): ?array
+    {
+        $prefix = 'data:image/jpeg;base64,';
+        if (! is_string($source) || strlen($source) > 140000 || ! str_starts_with($source, $prefix)) {
+            return null;
+        }
+
+        $bytes = base64_decode(substr($source, strlen($prefix)), true);
+        // PHPWord also accepts file/archive sources; never let image bytes select those modes.
+        $size = $bytes === false || str_contains($bytes, 'zip://') || str_ends_with(strtolower($bytes), '.php')
+            ? false : @getimagesizefromstring($bytes);
+        if ($size === false || $size[2] !== IMAGETYPE_JPEG || min($size[0], $size[1]) < 1 || max($size[0], $size[1]) > 1500) {
+            return null;
+        }
+        $scale = min(1, 570 / $size[0], 250 / $size[1]);
+
+        return ['source' => $prefix.base64_encode($bytes), 'bytes' => $bytes, 'width' => max(1, (int) round($size[0] * $scale)), 'height' => max(1, (int) round($size[1] * $scale))];
+    }
+
     public function hidePrices(Offer $offer): void
     {
         $offer->setAttribute('kwota_netto', null);
@@ -113,6 +163,9 @@ class OfferContentService
                     ? $placement
                     : ($index < 2 ? 'before_price' : 'after_price'),
             ];
+            if (array_key_exists('photos', $section)) {
+                $normalized[array_key_last($normalized)]['photos'] = $section['photos'];
+            }
         }
 
         return $normalized;

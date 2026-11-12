@@ -21,6 +21,7 @@ window.formDraftAdapters['offer-form'] = {
         document.getElementById('dynamic-sections').replaceChildren();
         document.getElementById('text-sections-container').replaceChildren();
         textQuills = {};
+        offerSectionPhotos.mount(document.getElementById('section-main'), data.prices?.[0]?.photos);
         (data.prices||[]).forEach((section,i)=>{
             if(i===0){document.getElementById('section-main-name').value=section.name;(section.rows||[]).forEach(row=>addRow('tbody-main',row));}
             else addSection(section);

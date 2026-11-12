@@ -252,7 +252,10 @@ th, td { margin: 0; }
 @endphp
 
 @foreach($__firstTwoTextSections as $section)
-    @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    @php
+        $photos = app(\App\Services\OfferContentService::class)->sectionPhotos($section);
+    @endphp
+    @continue(empty(trim(strip_tags($section['content'] ?? ''))) && !$photos)
     @php
         [$sectionIntro, $sectionRest] = $__splitTextSection($section['content'] ?? '');
     @endphp
@@ -263,8 +266,12 @@ th, td { margin: 0; }
                 <td class="sec-lbl-line"></td>
             </tr></table>
             @if($sectionIntro)<div class="sec-content">{!! $sectionIntro !!}</div>@endif
+            @if(!$sectionIntro && !$sectionRest && $photos)
+                @include('offers.partials.section-photos', ['photos' => [array_shift($photos)]])
+            @endif
         </div>
         @if($sectionRest)<div class="sec-content">{!! $sectionRest !!}</div>@endif
+        @include('offers.partials.section-photos', ['photos' => $photos])
     </div>
 @endforeach
 
@@ -335,7 +342,7 @@ th, td { margin: 0; }
                 @endif
             </tr>
             @else
-            @if($multiSection || $offer->show_unit_prices)
+            @if($multiSection || $offer->show_unit_prices || !empty($section['photos']))
             <tr class="section-name-row">
                 @if($offer->show_unit_prices && ($offer->show_total ?? true))
                     <td colspan="4">{{ $section['name'] }}</td>
@@ -357,6 +364,14 @@ th, td { margin: 0; }
             </tr>
             @endforeach
             @endif
+            @php
+                $photos = app(\App\Services\OfferContentService::class)->sectionPhotos($section);
+            @endphp
+            @foreach($photos as $photo)
+            <tr><td style="text-align:center;" colspan="{{ $sectionsOnly ? (($offer->show_unit_prices && ($offer->show_total ?? true)) ? 2 : 1) : ($offer->show_unit_prices ? 5 : 4) }}">
+                @include('offers.partials.section-photos', ['photos' => [$photo]])
+            </td></tr>
+            @endforeach
         @endforeach
         </tbody>
     </table>
@@ -462,7 +477,10 @@ th, td { margin: 0; }
 
 {{-- SEKCJE OPISOWE (po wycenie) --}}
 @foreach($__restTextSections as $section)
-    @continue(empty(trim(strip_tags($section['content'] ?? ''))))
+    @php
+        $photos = app(\App\Services\OfferContentService::class)->sectionPhotos($section);
+    @endphp
+    @continue(empty(trim(strip_tags($section['content'] ?? ''))) && !$photos)
     @php
         [$sectionIntro, $sectionRest] = $__splitTextSection($section['content'] ?? '');
     @endphp
@@ -473,8 +491,12 @@ th, td { margin: 0; }
                 <td class="sec-lbl-line"></td>
             </tr></table>
             @if($sectionIntro)<div class="sec-content">{!! $sectionIntro !!}</div>@endif
+            @if(!$sectionIntro && !$sectionRest && $photos)
+                @include('offers.partials.section-photos', ['photos' => [array_shift($photos)]])
+            @endif
         </div>
         @if($sectionRest)<div class="sec-content">{!! $sectionRest !!}</div>@endif
+        @include('offers.partials.section-photos', ['photos' => $photos])
     </div>
 @endforeach
 

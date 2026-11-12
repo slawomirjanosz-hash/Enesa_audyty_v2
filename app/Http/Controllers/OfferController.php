@@ -244,7 +244,7 @@ class OfferController extends Controller
         $priceSections = null;
         if ($request->filled('price_sections')) {
             $decoded = json_decode($request->input('price_sections'), true);
-            $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+            $priceSections = is_array($decoded) ? $decoded : null;
         }
 
         $textSections = null;
@@ -254,6 +254,8 @@ class OfferController extends Controller
                 ? $this->offerContent->normalizeTextSections($decoded)
                 : null;
         }
+
+        $this->offerContent->validateSectionPhotos($priceSections, $textSections);
 
         $delegations = null;
         if ($request->filled('delegations')) {
@@ -503,7 +505,7 @@ class OfferController extends Controller
         $priceSections = null;
         if ($request->filled('price_sections')) {
             $decoded = json_decode($request->input('price_sections'), true);
-            $priceSections = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+            $priceSections = is_array($decoded) ? $decoded : null;
         }
 
         $textSections = null;
@@ -513,6 +515,8 @@ class OfferController extends Controller
                 ? $this->offerContent->normalizeTextSections($decoded)
                 : null;
         }
+
+        $this->offerContent->validateSectionPhotos($priceSections, $textSections);
 
         $delegations = null;
         if ($request->filled('delegations')) {
@@ -881,13 +885,24 @@ class OfferController extends Controller
             fn (array $item) => $item['placement'] === 'after_price'
         ));
 
-        $addTextSection = function (array $item) use ($section, $addSectionHeader): void {
-            if (trim(strip_tags($item['content'])) === '') {
+        $addPhotos = function (array $item) use ($section): void {
+            foreach ($this->offerContent->sectionPhotos($item) as $photo) {
+                $section->addImage($photo['bytes'], [
+                    'width' => max(1, (int) round($photo['width'] * 0.75)),
+                    'height' => max(1, (int) round($photo['height'] * 0.75)),
+                    'alignment' => Jc::CENTER,
+                ]);
+            }
+        };
+
+        $addTextSection = function (array $item) use ($section, $addSectionHeader, $addPhotos): void {
+            if (trim(strip_tags($item['content'])) === '' && empty($item['photos'])) {
                 return;
             }
 
             $addSectionHeader($item['name']);
             Html::addHtml($section, $this->offerContent->wordHtml($item['content']), false, false);
+            $addPhotos($item);
             $section->addTextBreak(1);
         };
 
@@ -903,7 +918,7 @@ class OfferController extends Controller
             $addSectionHeader('Wycena');
 
             foreach ($priceSections as $ps) {
-                if (count($priceSections) > 1 && ! empty($ps['name'])) {
+                if ((count($priceSections) > 1 || ! empty($ps['photos'])) && ! empty($ps['name'])) {
                     $section->addText(
                         $ps['name'],
                         ['bold' => true, 'size' => 11, 'color' => $green],
@@ -960,6 +975,7 @@ class OfferController extends Controller
                         ->addText(number_format($znarzutem, 2, ',', ' '), ['bold' => true, 'size' => 10], ['alignment' => Jc::RIGHT]);
                 }
 
+                $addPhotos($ps);
                 $section->addTextBreak(1);
             }
 

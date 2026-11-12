@@ -5,6 +5,7 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <style>
+.offer-section-photos{padding:10px 14px;border-top:1px solid #e5e1d8}.offer-section-photos [role=status]{margin-left:8px;font-size:12px}.offer-section-photo-list{display:flex;flex-wrap:wrap;gap:8px}.offer-section-photo-list figure{margin:8px 0 0;display:grid;gap:4px}.offer-section-photo-list img{width:104px;height:74px;object-fit:contain;background:#f4f1ea;border-radius:6px}
 #offer-form:has(input[name="show_total"][type="checkbox"]:not(:checked)) .section-price-total { display: none; }
 /* ── Editor topbar ─────────────────────────────────── */
 #editor-topbar {
@@ -366,6 +367,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @endif
 
 {{-- ── SEKCJE OPISOWE (dynamiczne) ───────────── --}}
+@error('text_sections')<p role="alert" style="color:#B91C1C;margin:8px 0;">{{ $message }}</p>@enderror
 <div id="text-sections-container"></div>
 <div style="margin-bottom:16px;">
     <button type="button" class="btn-add-section" onclick="addTextSection()">
@@ -532,7 +534,8 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 @endsection
 
 @push('scripts')
-<script src="{{asset('js/offer-drafts.js')}}" defer></script>
+<script src="{{asset('js/offer-section-photos.js')}}"></script>
+<script src="{{asset('js/offer-drafts.js')}}?v=2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
 let priceSections = null;
@@ -800,6 +803,7 @@ function addSection(sectionData) {
         </div>
     `;
     document.getElementById('dynamic-sections').appendChild(card);
+    offerSectionPhotos.mount(card, sectionData?.photos);
     if (sectionData?.rows?.length) {
         sectionData.rows.forEach(r => addRow('tbody-' + sid, r));
     } else {
@@ -822,10 +826,14 @@ function collectSections() {
         rows: [],
     };
     document.querySelectorAll('#tbody-main tr').forEach(tr => main.rows.push(collectRow(tr)));
+    const mainPhotos = offerSectionPhotos.collect(document.getElementById('section-main'));
+    if (mainPhotos.length) main.photos = mainPhotos;
     sections.push(main);
     document.querySelectorAll('#dynamic-sections .ed-card').forEach(card => {
         const sec = { id: card.id.replace('section-', ''), name: card.querySelector('.section-name-input')?.value || 'Sekcja', rows: [] };
         card.querySelectorAll('tbody tr').forEach(tr => sec.rows.push(collectRow(tr)));
+        const photos = offerSectionPhotos.collect(card);
+        if (photos.length) sec.photos = photos;
         sections.push(sec);
     });
     return sections;
@@ -909,6 +917,7 @@ function addTextSection(sectionData) {
         <div id="editor-${sid}" style="min-height:90px;font-size:14px;"></div>
     `;
     document.getElementById('text-sections-container').appendChild(card);
+    offerSectionPhotos.mount(card, sectionData?.photos);
 
     const toolbarOptions = [['bold','italic','underline'],[{header:[2,3,false]}],[{list:'ordered'},{list:'bullet'}],['clean']];
     textQuills[sid] = new Quill('#editor-' + sid, { theme: 'snow', modules: { table: true, toolbar: toolbarOptions } });
@@ -962,10 +971,13 @@ function clearTextSection(sid) {
     const quill = textQuills[sid];
     if (!quill) return;
 
-    const hasContent = quill.getText().trim() !== '' || quill.root.querySelector('table, img');
+    const card = document.getElementById('text-section-' + sid);
+    const hasContent = quill.getText().trim() !== '' || quill.root.querySelector('table, img') || offerSectionPhotos.collect(card).length;
     if (hasContent && !confirm('Wyczyścić całą zawartość tej sekcji? Jej nazwa pozostanie bez zmian.')) return;
 
+    offerSectionPhotos.mount(card);
     quill.setContents([]);
+    card.dispatchEvent(new Event('change', {bubbles: true}));
     quill.focus();
 }
 
@@ -1057,7 +1069,8 @@ function collectTextSections() {
         const name = card.querySelector('.text-section-name')?.value || 'Sekcja';
         const content = textQuills[sid] ? textQuills[sid].root.innerHTML : '';
         const placement = card.querySelector('.text-section-placement')?.value || 'before_price';
-        sections.push({ name, content, placement });
+        const photos = offerSectionPhotos.collect(card);
+        sections.push({ name, content, placement, ...(photos.length ? {photos} : {}) });
     });
     return sections;
 }
@@ -1137,6 +1150,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 window.scrollTo(0, 0);
 addRow('tbody-main');
+offerSectionPhotos.mount(document.getElementById('section-main'));
 DEFAULT_TEXT_SECTIONS.forEach(s => addTextSection(s));
 toggleUnitPrices(document.getElementById('show-unit-toggle'));
 delegRender();
@@ -1292,6 +1306,7 @@ function pickTemplate(templateId) {
                 sections.forEach((sec, i) => {
                     if (i === 0) {
                         document.getElementById('section-main-name').value = sec.name || 'Wycena ogólna';
+                        offerSectionPhotos.mount(document.getElementById('section-main'), sec.photos);
                         (sec.rows || []).forEach(r => addRow('tbody-main', r));
                     } else {
                         addSection(sec);
