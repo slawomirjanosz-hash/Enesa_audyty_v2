@@ -31,10 +31,10 @@ test('completed projects sort globally across pages by each visible column', fun
     foreach (range(1, 23) as $i) {
         Project::create(['number' => sprintf('PR-%02d', $i), 'name' => sprintf('Projekt %02d', $i), 'status' => 'completed', 'contract_value' => $i]);
     }
-    foreach (['number', 'name', 'company', 'manager', 'team', 'date', 'amount'] as $column) {
-        $this->get(route('projects.index', ['completed_sort' => $column, 'completed_direction' => 'desc']))->assertOk();
+    foreach (['number', 'name', 'company', 'manager', 'team', 'date', 'end', 'status', 'amount'] as $column) {
+        $this->get(route('projects.index', ['view' => 'list', 'completed_sort' => $column, 'completed_direction' => 'desc']))->assertOk();
     }
-    $this->get(route('projects.index', ['completed_sort' => 'amount', 'completed_direction' => 'desc']))
+    $this->get(route('projects.index', ['view' => 'list', 'completed_sort' => 'amount', 'completed_direction' => 'desc']))
         ->assertViewHas('completedProjects', fn ($page) => $page->first()->number === 'PR-23' && $page->count() === 20)
         ->assertSee('data-server-sort=', false)->assertSee('js/table-sort.js', false);
 });

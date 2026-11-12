@@ -1,9 +1,10 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 test('project member picker is collapsed and preserves selected member ids', function () {
-    $users = collect([
+    $users = new Collection([
         (new User)->forceFill(['id' => 11, 'name' => 'Anna Kowalska']),
         (new User)->forceFill(['id' => 22, 'name' => 'Jan Nowak']),
     ]);
