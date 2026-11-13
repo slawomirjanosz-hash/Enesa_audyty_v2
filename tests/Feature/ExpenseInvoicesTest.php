@@ -3,6 +3,7 @@
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\ExpenseInvoice;
+use App\Models\Project;
 use App\Models\User;
 use App\Services\UserPermissions;
 use Illuminate\Http\UploadedFile;
@@ -267,14 +268,23 @@ test('dynamic filtering searches all accessible rows and returns only table resu
         ->assertOk()->assertSee('OWN-DYNAMIC')->assertDontSee('PRIVATE-DYNAMIC')->assertDontSee('<html', false)->assertSee('Edytuj');
 });
 
-test('supplier choices include only accessible active suppliers and supply the NIP', function () {
-    $finance = expenseUser(true);
-    Company::create(['name' => 'Dostawca do wyboru', 'company_type' => 'supplier', 'nip' => '1234567890']);
-    Company::create(['name' => 'Zwykły klient ukryty', 'company_type' => 'client']);
-    Company::create(['name' => 'Dostawca archiwalny', 'company_type' => 'supplier', 'archived_at' => now()]);
-    $this->actingAs($finance)->get(route('expenses.create'))->assertOk()->assertSee('Dostawca do wyboru')->assertSee('data-nip="1234567890"', false)->assertDontSee('Zwykły klient ukryty')->assertDontSee('Dostawca archiwalny');
-    $finance->assignRole(Role::findOrCreate('auditor'));
-    $this->get(route('expenses.create'))->assertOk()->assertDontSee('Dostawca do wyboru');
+test('simple entry requires date and gross and only links accessible projects', function () {
+    CompanySettings::firstOrFail()->update(['enabled_modules' => ['expenses', 'projects']]);
+    $owner = expenseUser();
+    $other = expenseUser();
+    $company = Company::create(['name' => 'Klient projektu']);
+    $own = Project::create(['name' => 'Dostępny projekt', 'number' => 'P-1', 'manager_id' => $owner->id, 'created_by' => $owner->id, 'company_id' => $company->id, 'status' => 'active']);
+    $private = Project::create(['name' => 'Ukryty projekt', 'number' => 'P-2', 'manager_id' => $other->id, 'created_by' => $other->id, 'company_id' => $company->id, 'status' => 'active']);
+    $this->actingAs($owner)->get(route('expenses.create'))->assertOk()->assertSee('Dostępny projekt')->assertDontSee('Ukryty projekt')->assertDontSee('name="supplier_name"', false);
+    $data = ['simple_entry' => 1, 'payment_choice' => 'personal'];
+    $this->post(route('expenses.store'), $data)->assertSessionHasErrors(['purchase_date', 'gross_amount']);
+    $data += ['purchase_date' => '2026-11-13', 'gross_amount' => '123.45'];
+    $this->post(route('expenses.store'), $data + ['project_id' => $private->id])->assertSessionHasErrors('project_id');
+    $this->post(route('expenses.store'), $data + ['project_id' => $own->id, 'workflow_status' => 'closed'])->assertSessionHasNoErrors();
+    $invoice = ExpenseInvoice::sole();
+    expect($invoice->project_id)->toBe($own->id)->and($invoice->paid_by)->toBe($owner->name)->and($invoice->workflow_status)->toBe('new')->and($invoice->invoice_number)->toBeNull();
+    $this->put(route('expenses.update', $invoice), array_replace($data, ['revision' => $invoice->revision, 'payment_choice' => 'unpaid', 'project_id' => null, 'cost_center' => 'Magazyn']))->assertSessionHasNoErrors();
+    expect($invoice->fresh()->project_id)->toBeNull()->and($invoice->fresh()->cost_center)->toBe('Magazyn')->and($invoice->fresh()->payment_status)->toBe('unpaid');
 });
 
 test('payment sorting matches the displayed closed status for older settled invoices', function () {

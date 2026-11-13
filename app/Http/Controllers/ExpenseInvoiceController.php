@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use App\Models\CompanySettings;
 use App\Models\ExpenseInvoice;
+use App\Models\Project;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\ExpenseScan;
@@ -131,19 +132,81 @@ class ExpenseInvoiceController extends Controller
         $accounting = $this->accounting($request->user());
         $editable = ! $invoice->settled_at && ($accounting || ! $invoice->exists || $invoice->owner_id === $request->user()->id);
         $employees = $accounting ? User::where('is_active', true)->whereHas('roles')->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get(['id', 'name']) : collect();
-        // Expense entry needs only supplier names and NIPs, not access to CRM records.
-        $supplierQuery = Company::suppliers()->active();
-        $companyAccess = app(AuditorAccessService::class);
-        if ($companyAccess->isDelegatedAuditor($request->user())) {
-            $companyAccess->scopeByCompanyAccess($supplierQuery, $request->user(), 'can_view_dashboard', 'id');
-        }
-        $suppliers = $supplierQuery->orderBy('name')->get(['id', 'name', 'nip']);
+        $projects = $this->expenseProjects($request->user())->orderBy('name')->get(['id', 'name', 'number']);
 
-        return view('expenses.form', compact('invoice', 'accounting', 'editable', 'employees', 'suppliers'));
+        return view('expenses.form', compact('invoice', 'accounting', 'editable', 'employees', 'projects'));
+    }
+
+    private function expenseProjects(User $user): Builder
+    {
+        $query = Project::query();
+        if (! CompanySettings::moduleIsEnabled('projects')) {
+            return $query->whereRaw('1 = 0');
+        }
+        if (app(AuditorAccessService::class)->hasFullAccess($user)) {
+            return $query;
+        }
+
+        return $query->where(fn ($projects) => $projects->where('manager_id', $user->id)
+            ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));
+    }
+
+    private function simpleData(Request $request, ?ExpenseInvoice $invoice): array
+    {
+        $user = $request->user();
+        $data = $request->validate([
+            'purchase_date' => ['required', 'date_format:Y-m-d'],
+            'invoice_number' => ['nullable', 'string', 'max:255'],
+            'gross_amount' => ['required', 'numeric', 'min:0', 'max:999999999999.99', 'decimal:0,2'],
+            'paid_by' => ['nullable', 'string', 'max:255'],
+            'project_id' => ['nullable', 'integer'],
+            'cost_center' => ['nullable', 'string', 'max:255'],
+            'payment_choice' => ['required', Rule::in($invoice && ! $invoice->simple_entry ? ['personal', 'company', 'unpaid', 'unchanged'] : ['personal', 'company', 'unpaid'])],
+            'description' => ['nullable', 'string', 'max:5000'],
+        ]);
+        $projectId = $data['project_id'] ?? null;
+        if ($projectId && (int) $projectId !== (int) $invoice?->project_id) {
+            $project = $this->expenseProjects($user)->find($projectId);
+            if (! $project) {
+                throw ValidationException::withMessages(['project_id' => 'Wybierz dostępny projekt.']);
+            }
+            $data['cost_center'] = mb_substr(trim($project->number.' · '.$project->name), 0, 255);
+        } elseif ($projectId) {
+            $data['cost_center'] = $invoice->cost_center;
+        }
+        $choice = $data['payment_choice'];
+        unset($data['payment_choice']);
+        $data['simple_entry'] = $choice !== 'unchanged';
+        $data['project_id'] = $projectId;
+        if ($choice !== 'unchanged') {
+            $data['payment_source'] = $choice === 'unpaid' ? 'unknown' : $choice;
+            $data['payment_status'] = $choice === 'unpaid' ? 'unpaid' : 'paid';
+            $data['paid_by'] = $choice === 'unpaid' ? null : ($data['paid_by'] ?? $invoice?->paid_by ?? $user->name);
+        }
+        if ($invoice && $this->accounting($user) && $request->has('owner_mode')) {
+            $ownerData = $request->validate([
+                'owner_mode' => ['required', Rule::in(['user', 'manual', 'pool'])],
+                'owner_id' => ['nullable', 'required_if:owner_mode,user', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)],
+                'owner_name' => ['nullable', 'required_if:owner_mode,manual', 'string', 'max:255'],
+            ]);
+            $owner = $ownerData['owner_mode'] === 'user' ? User::findOrFail($ownerData['owner_id']) : null;
+            abort_if($owner && ($owner->roles->isEmpty() || $owner->hasAnyRole(['client_admin', 'client_user'])), 422, 'Wybierz pracownika.');
+            $data['owner_id'] = $owner?->id;
+            $data['owner_name'] = $ownerData['owner_mode'] === 'manual' ? $ownerData['owner_name'] : $owner?->name;
+            $data['is_unassigned'] = $ownerData['owner_mode'] === 'pool';
+        }
+        if (! $invoice) {
+            $data += ['supplier_name' => '—', 'payment_method' => 'unknown', 'owner_id' => $user->id, 'owner_name' => $user->name, 'is_unassigned' => false];
+        }
+
+        return $data;
     }
 
     private function data(Request $request, ?ExpenseInvoice $invoice = null): array
     {
+        if ($request->boolean('simple_entry') || $invoice?->simple_entry) {
+            return $this->simpleData($request, $invoice);
+        }
         $rules = [
             'purchase_date' => ['required', 'date_format:Y-m-d'], 'invoice_number' => ['nullable', 'string', 'max:255'],
             'ksef_number' => ['nullable', 'string', 'max:100', Rule::unique('expense_invoices', 'ksef_number')->ignore($invoice?->id)], 'wz_number' => ['nullable', 'string', 'max:255'],
@@ -296,7 +359,9 @@ class ExpenseInvoiceController extends Controller
                 : $current->workflow_status === 'settled', 409, 'Ta czynność jest niedostępna w bieżącym statusie.');
 
             if ($action === 'settled') {
-                abort_unless($current->gross_amount !== null && $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by), 422, 'Uzupełnij dane płatności przed rozliczeniem.');
+                abort_unless($current->gross_amount !== null && ($current->simple_entry
+                    ? $current->payment_status === 'paid'
+                    : $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by)), 422, 'Uzupełnij dane płatności przed rozliczeniem. Nieopłaconą fakturę najpierw oznacz jako opłaconą.');
                 $amount = (float) $data['settlement_amount'];
                 if ($data['settlement_method'] === 'none' ? $amount !== 0.0 : $amount <= 0 || $amount > (float) $current->gross_amount) {
                     throw ValidationException::withMessages(['settlement_amount' => 'Podaj kwotę rozliczenia do wysokości brutto albo 0 przy rozliczeniu bez zwrotu.']);

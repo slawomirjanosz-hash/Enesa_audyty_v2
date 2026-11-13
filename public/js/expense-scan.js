@@ -28,8 +28,11 @@
             const data = await response.json();
             if (!response.ok) throw new Error(Object.values(data.errors || {}).flat().join(' ') || 'Nie udało się odczytać zdjęcia. Wpisz dane ręcznie.');
             const proposal = data.proposal || {};
-            const fields = ['invoice_number','wz_number','purchase_date','supplier_name','supplier_nip'];
-            if (['paid','unpaid','partial'].includes(proposal.payment_status) && typeof proposal.payment_evidence === 'string' && proposal.payment_evidence.trim()) fields.push('payment_status');
+            const fields = ['invoice_number','purchase_date','gross_amount'];
+            if (proposal.payment_status === 'unpaid' && proposal.payment_evidence?.trim()) {
+                proposal.payment_choice = 'unpaid';
+                fields.push('payment_choice');
+            }
             const found = fields.filter(name => typeof proposal[name] === 'string' && proposal[name].trim());
             const conflicts = found.some(name => dirty.has(name) || (invoice.dataset.existing === '1' && invoice.elements.namedItem(name)?.value && invoice.elements.namedItem(name).value !== proposal[name]));
             if (found.length && (!conflicts || window.confirm('Odczytane dane zastąpią uzupełnione pola. Czy je wczytać?'))) {
@@ -39,9 +42,11 @@
                 }
             }
             reveal();
-            status.textContent = (found.length ? 'Odczyt zakończony. Sprawdź dane poniżej i zapisz zakup.' : 'Nie znaleziono czytelnych danych. Uzupełnij formularz ręcznie.') + '\n' + (proposal.notes || '') + (fields.includes('payment_status') ? '\nInformacja o zapłacie na dokumencie: '+proposal.payment_evidence : '');
+            invoice.dispatchEvent(new Event('expense-photo-ready'));
+            status.textContent = (found.length ? 'Odczyt zakończony. Sprawdź dane poniżej i zapisz zakup.' : 'Nie znaleziono czytelnych danych. Uzupełnij formularz ręcznie.') + '\n' + (proposal.notes || '') + (proposal.payment_evidence ? '\nInformacja o zapłacie na dokumencie: '+proposal.payment_evidence : '');
         } catch (error) {
             reveal();
+            invoice.dispatchEvent(new Event('expense-photo-ready'));
             status.textContent = error.message === 'Failed to fetch' ? 'Nie potwierdzono odczytu. Nie ponawiamy go automatycznie. Wpisz dane ręcznie.' : error.message;
         } finally {
             photo.value = ''; pending = false;

@@ -41,7 +41,7 @@ class ExpenseInvoice extends Model
 
     protected $guarded = ['id'];
 
-    protected $casts = ['purchase_date' => 'date', 'net_amount' => 'decimal:2', 'gross_amount' => 'decimal:2', 'is_unassigned' => 'boolean', 'settled_at' => 'datetime', 'revision' => 'integer', 'workflow_history' => 'array', 'settlement_amount' => 'decimal:2'];
+    protected $casts = ['purchase_date' => 'date', 'net_amount' => 'decimal:2', 'gross_amount' => 'decimal:2', 'is_unassigned' => 'boolean', 'settled_at' => 'datetime', 'revision' => 'integer', 'workflow_history' => 'array', 'settlement_amount' => 'decimal:2', 'simple_entry' => 'boolean'];
 
     public function owner(): BelongsTo
     {
