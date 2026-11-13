@@ -51,13 +51,13 @@ test('presentation library includes sixteen example slides but never a source do
         ->assertSee('data-slide-dialog', false)->assertDontSee('download="', false);
 });
 
-test('client can view slides only through an owned audit with ISO assigned', function () {
+test('client can view slides only through an owned audit with ISO assigned', function (string $section) {
     $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
     $company = Company::create(['name' => 'Firma klienta']);
     $client = presentationUser('client_user');
     $client->companies()->attach($company);
     $audit = Audit::create(['company_id' => $company->id, 'number' => 'PRES/1', 'title' => 'Audyt ISO', 'status' => 'draft']);
-    $presentation = IsoPresentation::firstOrFail();
+    $presentation = IsoPresentation::where('section_id', $section)->firstOrFail();
     $url = route('client.audits.presentations.slide', [$audit, $presentation, 1]);
     $this->get($url)->assertRedirect(route('login'));
     $this->actingAs($client)->get($url)->assertNotFound();
@@ -70,6 +70,39 @@ test('client can view slides only through an owned audit with ISO assigned', fun
     $this->actingAs($client)->get(route('audit-types.presentations.slide', [$type, $presentation, 1]))->assertForbidden();
     $this->post(route('audit-types.presentations.store', $type), ['section_id' => '4-1', 'title' => 'Nie', 'presentation_file' => presentationFixture()])->assertForbidden();
     $this->delete(route('audit-types.presentations.destroy', [$type, $presentation]))->assertForbidden();
+})->with(['4-1', '4-2']);
+
+test('stakeholder training adds a complete deck without replacing existing presentations', function () {
+    $deck = IsoPresentation::where('section_id', '4-2')->firstOrFail();
+    $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $this->actingAs(presentationUser('superadmin'));
+    expect($deck->slide_count)->toBe(16);
+    for ($position = 1; $position <= 16; $position++) {
+        $bytes = $this->get(route('audit-types.presentations.slide', [$type, $deck, $position]))
+            ->assertOk()->assertHeader('Content-Type', 'image/png')
+            ->assertHeader('X-Content-Type-Options', 'nosniff')->getContent();
+        $size = getimagesizefromstring($bytes);
+        expect([$size[0], $size[1]])->toBe([1280, 720]);
+        expect(hash('sha256', $bytes))->toBe(hash_file('sha256', resource_path('training/iso50001-4-2/slide-'.$position.'.png')));
+    }
+
+    $deck->update(['title' => 'Tytuł zmieniony przez administratora']);
+    $custom = $deck->replicate();
+    $custom->original_filename = 'material-administratora.pptx';
+    $custom->save();
+    $before = IsoPresentation::orderBy('id')->get()->toArray();
+    $slideCount = DB::table('iso_presentation_slides')->count();
+    $migration = require database_path('migrations/2026_11_13_140000_add_iso_stakeholder_presentation.php');
+    $migration->up();
+    $migration->down();
+    expect(IsoPresentation::orderBy('id')->get()->toArray())->toBe($before)
+        ->and(DB::table('iso_presentation_slides')->count())->toBe($slideCount);
+
+    $deck->delete();
+    $migration->up();
+    expect($custom->fresh()->original_filename)->toBe('material-administratora.pptx')
+        ->and(IsoPresentation::where('section_id', '4-2')->count())->toBe(2)
+        ->and(IsoPresentation::where('section_id', '4-1')->count())->toBe(1);
 });
 
 test('authorized manager uploads edits and replaces presentation and failed conversion keeps previous slides', function () {
