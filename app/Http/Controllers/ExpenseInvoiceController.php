@@ -90,7 +90,13 @@ class ExpenseInvoiceController extends Controller
         }
         $invoices = $query->orderBy('id', $direction)->paginate(30)->withQueryString();
 
-        return view($request->header('X-Expense-Results') === '1' ? 'expenses.results' : 'expenses.index', compact('invoices', 'accounting', 'tab'));
+        if ($request->header('X-Expense-Results') === '1') {
+            return view('expenses.results', compact('invoices', 'accounting', 'tab'));
+        }
+
+        $poolCount = ExpenseInvoice::where('is_unassigned', true)->whereNull('owner_id')->count();
+
+        return view('expenses.index', compact('invoices', 'accounting', 'tab', 'poolCount'));
     }
 
     public function create(Request $request)
@@ -183,7 +189,10 @@ class ExpenseInvoiceController extends Controller
             $data['payment_status'] = $choice === 'unpaid' ? 'unpaid' : 'paid';
             $data['paid_by'] = $choice === 'unpaid' ? null : ($data['paid_by'] ?? $invoice?->paid_by ?? $user->name);
         }
-        if ($invoice && $this->accounting($user) && $request->has('owner_mode')) {
+        if (! $invoice && $this->accounting($user)) {
+            $request->mergeIfMissing(['owner_mode' => 'pool']);
+        }
+        if ($this->accounting($user) && $request->has('owner_mode')) {
             $ownerData = $request->validate([
                 'owner_mode' => ['required', Rule::in(['user', 'manual', 'pool'])],
                 'owner_id' => ['nullable', 'required_if:owner_mode,user', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)],

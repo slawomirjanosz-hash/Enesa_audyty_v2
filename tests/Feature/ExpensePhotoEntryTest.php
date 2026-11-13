@@ -37,13 +37,9 @@ test('photo payment proposals require evidence and cannot settle an invoice', fu
     expect(ExpenseInvoice::count())->toBe(0);
 })->with([['paid', 'Zapłacono 123 zł', 'paid'], ['partial', 'Zapłacono 50 zł, pozostało 73 zł', 'partial'], ['unpaid', 'Nie zapłacono', 'unpaid'], ['paid', null, null], [null, null, null], ['settled', 'Zapłacono', null]]);
 
-test('purchase entry provides camera gallery and manual choices without a duplicate supplier or visible WZ', function () {
-    $response = $this->actingAs(expensePhotoUser())->get(route('expenses.create'))->assertOk()
-        ->assertSee('Zrób zdjęcie')->assertSee('Wybierz z galerii')->assertSee('Wprowadź ręcznie')->assertSee('Wybierz zdjęcie z dysku')
-        ->assertSee('data-entry-choice="1"', false)->assertSee('capture="environment"', false)
-        ->assertDontSee('Wybierz dostawcę z bazy')->assertDontSee('Numer WZ (jeśli znany)');
-    expect(substr_count($response->getContent(), 'name="supplier_name"'))->toBe(1);
-    if (getenv('EXPENSE_PHOTO_QA')) {
-        file_put_contents(base_path('tmp/expense-photo-entry.html'), $response->getContent());
-    }
+test('purchase entry opens the manual wizard without photo controls', function () {
+    $this->actingAs(expensePhotoUser())->get(route('expenses.create'))->assertOk()
+        ->assertSee('data-entry-wizard="1"', false)
+        ->assertDontSee('Zrób zdjęcie')->assertDontSee('Wybierz z galerii')->assertDontSee('Wybierz zdjęcie z dysku')
+        ->assertDontSee('type="file"', false)->assertDontSee('expense-scan.js');
 });

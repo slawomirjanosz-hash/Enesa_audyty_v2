@@ -6,10 +6,10 @@
 @if(session('success'))<div class="exp-message">{{session('success')}}</div>@endif
 <nav class="exp-tabs" aria-label="Rejestry faktur">
 <a class="exp-btn {{$tab==='own'?'active':''}}" href="{{route('expenses.index')}}">Moje faktury</a>
-<a class="exp-btn {{$tab==='pool'?'active':''}}" href="{{route('expenses.index',['tab'=>'pool'])}}">Faktury do przypisania</a>
+<a class="exp-btn {{$tab==='pool'?'active':''}}" href="{{route('expenses.index',['tab'=>'pool'])}}">Faktury do przypisania @if($poolCount > 0)({{ $poolCount }})@endif</a>
 @if($accounting)<a class="exp-btn {{$tab==='all'?'active':''}}" href="{{route('expenses.index',['tab'=>'all'])}}">Wszystkie — księgowość</a>@endif
 </nav>
-@if($tab==='pool')<p class="exp-muted">Tutaj znajdują się wyłącznie faktury opublikowane przez księgowość. Rozpoznajesz swój zakup? Otwórz fakturę i przypisz ją do siebie. Zniknie wtedy z tej listy dla innych pracowników.</p>@endif
+@if($tab==='pool')<p class="exp-muted">Tutaj znajdują się wyłącznie faktury opublikowane przez księgowość. Rozpoznajesz swój zakup? Kliknij „Moja”, aby przypisać fakturę do siebie.</p>@endif
 <form id="expense-filters" class="exp-filters" method="GET"><input type="hidden" name="tab" value="{{$tab}}"><label>Status <select name="workflow"><option value="">Wszystkie</option><option value="pending" @selected(request("workflow")==="pending")>Do obsłużenia</option>@foreach(\App\Models\ExpenseInvoice::WORKFLOW as $value=>$label)<option value="{{$value}}" @selected(request("workflow")===$value)>{{$label}}</option>@endforeach</select></label><label>Miesiąc <input name="month" type="month" value="{{request('month')}}"></label><label>Szukaj <input name="search" value="{{request('search')}}" maxlength="100" placeholder="Faktura, dostawca, kupujący, opis…"></label><button class="exp-btn">Filtruj</button><label class="exp-columns"><input id="expense-extra-columns" type="checkbox"> Więcej kolumn</label></form><p id="expense-filter-status" class="exp-muted" role="status"></p>
 @if($errors->any())<div class="exp-message error">{{$errors->first()}}</div>@endif
 <div id="expense-results" aria-live="polite">@include('expenses.results')</div>

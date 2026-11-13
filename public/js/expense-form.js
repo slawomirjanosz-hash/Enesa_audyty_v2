@@ -37,8 +37,6 @@ if (typeof document !== 'undefined') {
             if (invalid) return invalid.reportValidity();
             if (current < steps.length - 1) show(current + 1);
         };
-        document.getElementById('expense-manual')?.addEventListener('click', () => show(0));
-        form.addEventListener('expense-photo-ready', () => show(null));
         back?.addEventListener('click', () => show(current - 1));
         next?.addEventListener('click', advance);
         form.addEventListener('keydown', event => {
@@ -58,5 +56,6 @@ if (typeof document !== 'undefined') {
             field('owner_name').disabled = mode.value !== 'manual';
         };
         if (mode) { mode.addEventListener('change', updateOwner); updateOwner(); }
+        if (form.dataset.entryWizard === '1') show(0);
     }
 }

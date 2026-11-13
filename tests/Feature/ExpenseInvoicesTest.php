@@ -96,7 +96,7 @@ test('accounting publishes only chosen invoices and claiming atomically hides th
     expect($invoice->is_unassigned)->toBeTrue()->and($invoice->owner_id)->toBeNull();
     foreach ([$first, $second] as $employee) {
         $this->actingAs($employee)->get(route('expenses.index', ['tab' => 'pool']))->assertOk()->assertSee('FV/23/2026');
-        $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('To mój zakup')->assertDontSee('Poufne księgowość');
+        $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('>Moja</button>', false)->assertDontSee('Poufne księgowość');
         $this->put(route('expenses.update', $invoice), expenseData(['revision' => 1]))->assertForbidden();
     }
     $this->actingAs($first)->post(route('expenses.claim', $invoice), ['confirm' => 1, 'owner_id' => $second->id])->assertSessionHas('success');
@@ -332,4 +332,33 @@ test('accounting can remove shared manually assigned and closed invoices without
         $this->assertSoftDeleted('expense_invoices', ['id' => $invoice->id, 'deleted_by' => $finance->id]);
     }
     expect(ExpenseInvoice::count())->toBe(0)->and(ExpenseInvoice::withTrashed()->count())->toBe(3);
+});
+
+test('accounting can publish a simple invoice and remove it from the pool by assigning an outside buyer', function () {
+    $accountant = expenseUser(true);
+    $employee = expenseUser();
+    $data = [
+        'simple_entry' => 1,
+        'payment_choice' => 'unpaid',
+        'purchase_date' => '2026-11-13',
+        'gross_amount' => '123.45',
+        'invoice_number' => 'SIMPLE-POOL',
+    ];
+
+    $this->actingAs($accountant)->post(route('expenses.store'), $data)->assertSessionHasNoErrors();
+    $invoice = ExpenseInvoice::sole();
+    expect($invoice->is_unassigned)->toBeTrue()->and($invoice->owner_id)->toBeNull();
+
+    $pool = route('expenses.index', ['tab' => 'pool']);
+    $this->actingAs($employee)->get($pool)->assertOk()->assertSee('SIMPLE-POOL')->assertSee('Moja');
+
+    $this->actingAs($accountant)->put(route('expenses.update', $invoice), $data + [
+        'revision' => $invoice->revision,
+        'owner_mode' => 'manual',
+        'owner_name' => 'Osoba spoza systemu',
+    ])->assertSessionHasNoErrors();
+
+    expect($invoice->fresh()->owner_name)->toBe('Osoba spoza systemu');
+    $this->actingAs($employee)->get($pool)->assertOk()->assertDontSee('SIMPLE-POOL');
+    $this->get(route('expenses.edit', $invoice))->assertNotFound();
 });
